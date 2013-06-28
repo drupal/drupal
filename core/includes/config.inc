@@ -72,6 +72,9 @@ function config_get_storage_names_with_prefix($prefix = '') {
  * @code config('book.admin') @endcode will return a configuration object in
  * which the book module can store its administrative settings.
  *
+ * @deprecated This function has been replaced by the \Drupal::config() method.
+ * Use that instead.
+ *
  * @param string $name
  *   The name of the configuration object to retrieve. The name corresponds to
  *   a configuration file. For @code config('book.admin') @endcode, the config

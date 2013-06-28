@@ -37,17 +37,17 @@ class DownloadTest extends FileManagedTestBase {
     // URLs can't contain characters outside the ASCII set so $filename has to be
     // encoded.
     $filename = $GLOBALS['base_url'] . '/' . file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath() . '/' . rawurlencode($file->getFilename());
-    $this->assertEqual($filename, $url, t('Correctly generated a URL for a created file.'));
+    $this->assertEqual($filename, $url, 'Correctly generated a URL for a created file.');
     $this->drupalHead($url);
-    $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the created file.'));
+    $this->assertResponse(200, 'Confirmed that the generated URL is correct by downloading the created file.');
 
     // Test generating an URL to a shipped file (i.e. a file that is part of
     // Drupal core, a module or a theme, for example a JavaScript file).
     $filepath = 'core/misc/jquery.js';
     $url = file_create_url($filepath);
-    $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath, $url, t('Correctly generated a URL for a shipped file.'));
+    $this->assertEqual($GLOBALS['base_url'] . '/' . $filepath, $url, 'Correctly generated a URL for a shipped file.');
     $this->drupalHead($url);
-    $this->assertResponse(200, t('Confirmed that the generated URL is correct by downloading the shipped file.'));
+    $this->assertResponse(200, 'Confirmed that the generated URL is correct by downloading the shipped file.');
   }
 
   /**
@@ -65,21 +65,21 @@ class DownloadTest extends FileManagedTestBase {
     file_test_set_return('download', array('x-foo' => 'Bar'));
     $this->drupalGet($url);
     $headers = $this->drupalGetHeaders();
-    $this->assertEqual($headers['x-foo'], 'Bar', t('Found header set by file_test module on private download.'));
-    $this->assertResponse(200, t('Correctly allowed access to a file when file_test provides headers.'));
+    $this->assertEqual($headers['x-foo'], 'Bar', 'Found header set by file_test module on private download.');
+    $this->assertResponse(200, 'Correctly allowed access to a file when file_test provides headers.');
 
     // Test that the file transfered correctly.
-    $this->assertEqual($contents, $this->content, t('Contents of the file are correct.'));
+    $this->assertEqual($contents, $this->content, 'Contents of the file are correct.');
 
     // Deny access to all downloads via a -1 header.
     file_test_set_return('download', -1);
     $this->drupalHead($url);
-    $this->assertResponse(403, t('Correctly denied access to a file when file_test sets the header to -1.'));
+    $this->assertResponse(403, 'Correctly denied access to a file when file_test sets the header to -1.');
 
     // Try non-existent file.
     $url = file_create_url('private://' . $this->randomName());
     $this->drupalHead($url);
-    $this->assertResponse(404, t('Correctly returned 404 response for a non-existent file.'));
+    $this->assertResponse(404, 'Correctly returned 404 response for a non-existent file.');
   }
 
   /**
@@ -141,7 +141,7 @@ class DownloadTest extends FileManagedTestBase {
     $file = $this->createFile($filepath, NULL, $scheme);
 
     $url = file_create_url($file->getFileUri());
-    $this->assertEqual($url, $expected_url, t('Generated URL matches expected URL.'));
+    $this->assertEqual($url, $expected_url, 'Generated URL matches expected URL.');
 
     if ($scheme == 'private') {
       // Tell the implementation of hook_file_download() in file_test.module
@@ -151,7 +151,7 @@ class DownloadTest extends FileManagedTestBase {
 
     $this->drupalGet($url);
     if ($this->assertResponse(200) == 'pass') {
-      $this->assertRaw(file_get_contents($file->getFileUri()), t('Contents of the file are correct.'));
+      $this->assertRaw(file_get_contents($file->getFileUri()), 'Contents of the file are correct.');
     }
 
     $file->delete();

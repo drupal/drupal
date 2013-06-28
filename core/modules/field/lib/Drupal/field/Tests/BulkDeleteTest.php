@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests;
 
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\Core\Entity\EntityInterface;
 
 use Drupal\Core\Language\Language;
 
@@ -60,36 +61,6 @@ class BulkDeleteTest extends FieldUnitTestBase {
   }
 
   /**
-   * Converts the passed entities to partially created ones.
-   *
-   * This replicates the partial entities created in field_purge_data_batch(),
-   * which only have the ids and the to be deleted field defined.
-   *
-   * @param $entities
-   *   An array of entities of type test_entity.
-   * @param $field_name
-   *   A field name whose data should be copied from $entities into the returned
-   *   partial entities.
-   * @return array An array of partial entities corresponding to $entities.
-   */
-  protected function convertToPartialEntities($entities, $field_name) {
-    $partial_entities = array();
-    foreach ($entities as $id => $entity) {
-      // Re-create the entity to match what is expected
-      // _field_create_entity_from_ids().
-      $ids = (object) array(
-        'entity_id' => $entity->ftid,
-        'revision_id' => $entity->ftvid,
-        'bundle' => $entity->fttype,
-        'entity_type' => 'test_entity',
-      );
-      $partial_entities[$id] = _field_create_entity_from_ids($ids);
-      $partial_entities[$id]->$field_name = $entity->$field_name;
-    }
-    return $partial_entities;
-  }
-
-  /**
    * Tests that the expected hooks have been invoked on the expected entities.
    *
    * @param $expected_hooks
@@ -110,8 +81,15 @@ class BulkDeleteTest extends FieldUnitTestBase {
       foreach ($invocations as $argument) {
         $found = FALSE;
         foreach ($actual_invocations as $actual_arguments) {
-          // $entity is sometimes the first and sometimes the second argument.
-          if ($actual_arguments[0] == $argument || $actual_arguments[1] == $argument) {
+          // The argument we are looking for is either an array of entities as
+          // the second argument or a single entity object as the first.
+          if ($argument instanceof EntityInterface && $actual_arguments[0]->id() == $argument->id()) {
+            $found = TRUE;
+            break;
+          }
+          // In case of an array, compare the array size and make sure it
+          // contains the same elements.
+          elseif (is_array($argument) && count($actual_arguments[1]) == count($argument) && count(array_diff_key($actual_arguments[1], $argument)) == 0) {
             $found = TRUE;
             break;
           }
@@ -131,7 +109,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
     // Create two bundles.
     $this->bundles = array('bb_1' => 'bb_1', 'bb_2' => 'bb_2');
     foreach ($this->bundles as $name => $desc) {
-      field_test_create_bundle($name, $desc);
+      entity_test_create_bundle($name, $desc);
     }
 
     // Create two fields.
@@ -152,7 +130,7 @@ class BulkDeleteTest extends FieldUnitTestBase {
 
     // For each bundle, create an instance of each field, and 10
     // entities with values for each field.
-    $id = 1;
+    $this->entity_type = 'entity_test';
     foreach ($this->bundles as $bundle) {
       foreach ($this->fields as $field) {
         entity_create('field_instance', array(
@@ -161,20 +139,18 @@ class BulkDeleteTest extends FieldUnitTestBase {
           'bundle' => $bundle,
         ))->save();
       }
-
       for ($i = 0; $i < 10; $i++) {
-        $entity = field_test_create_entity($id, $id, $bundle);
+        $entity = entity_create($this->entity_type, array('type' => $bundle));
         foreach ($this->fields as $field) {
-          $entity->{$field->id()}[Language::LANGCODE_NOT_SPECIFIED] = $this->_generateTestFieldValues($field->cardinality);
+          $entity->{$field['field_name']}->setValue($this->_generateTestFieldValues($field->cardinality));
         }
         $entity->save();
-        $id++;
       }
     }
-    $this->entities = entity_load_multiple($this->entity_type, range(1, $id));
+    $this->entities = entity_load_multiple($this->entity_type);
     foreach ($this->entities as $entity) {
       // Also keep track of the entities per bundle.
-      $this->entities_by_bundles[$entity->fttype][$entity->ftid] = $entity;
+      $this->entities_by_bundles[$entity->bundle()][$entity->id()] = $entity;
     }
   }
 
@@ -193,8 +169,8 @@ class BulkDeleteTest extends FieldUnitTestBase {
     $factory = \Drupal::service('entity.query');
 
     // There are 10 entities of this bundle.
-    $found = $factory->get('test_entity')
-      ->condition('fttype', $bundle)
+    $found = $factory->get('entity_test')
+      ->condition('type', $bundle)
       ->execute();
     $this->assertEqual(count($found), 10, 'Correct number of entities found before deleting');
 
@@ -205,24 +181,25 @@ class BulkDeleteTest extends FieldUnitTestBase {
     // The instance still exists, deleted.
     $instances = field_read_instances(array('field_id' => $field->uuid, 'deleted' => TRUE), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
     $this->assertEqual(count($instances), 1, 'There is one deleted instance');
-    $this->assertEqual($instances[0]['bundle'], $bundle, 'The deleted instance is for the correct bundle');
+    $instance = $instances[0];
+    $this->assertEqual($instance['bundle'], $bundle, 'The deleted instance is for the correct bundle');
 
     // There are 0 entities of this bundle with non-deleted data.
-    $found = $factory->get('test_entity')
-      ->condition('fttype', $bundle)
+    $found = $factory->get('entity_test')
+      ->condition('type', $bundle)
       ->condition("$field_name.deleted", 0)
       ->execute();
     $this->assertFalse($found, 'No entities found after deleting');
 
     // There are 10 entities of this bundle when deleted fields are allowed, and
     // their values are correct.
-    $found = $factory->get('test_entity')
-      ->condition('fttype', $bundle)
+    $found = $factory->get('entity_test')
+      ->condition('type', $bundle)
       ->condition("$field_name.deleted", 1)
-      ->sort('ftid')
+      ->sort('id')
       ->execute();
     $ids = (object) array(
-      'entity_type' => 'test_entity',
+      'entity_type' => 'entity_test',
       'bundle' => $bundle,
     );
     $entities = array();
@@ -230,10 +207,10 @@ class BulkDeleteTest extends FieldUnitTestBase {
       $ids->entity_id = $entity_id;
       $entities[$entity_id] = _field_create_entity_from_ids($ids);
     }
-    field_attach_load($this->entity_type, $entities, FIELD_LOAD_CURRENT, array('field_id' => $field->uuid, 'deleted' => TRUE));
+    field_attach_load($this->entity_type, $entities, FIELD_LOAD_CURRENT, array('instance' => $instance));
     $this->assertEqual(count($found), 10, 'Correct number of entities found after deleting');
     foreach ($entities as $id => $entity) {
-      $this->assertEqual($this->entities[$id]->{$field->id()}, $entity->{$field->id()}, "Entity $id with deleted data loaded correctly");
+      $this->assertEqual($this->entities[$id]->{$field->id()}->value, $entity->{$field->id()}[Language::LANGCODE_NOT_SPECIFIED][0]['value'], "Entity $id with deleted data loaded correctly");
     }
   }
 
@@ -262,25 +239,21 @@ class BulkDeleteTest extends FieldUnitTestBase {
       field_purge_batch($batch_size);
 
       // There are $count deleted entities left.
-      $found = \Drupal::entityQuery('test_entity')
-        ->condition('fttype', $bundle)
+      $found = \Drupal::entityQuery('entity_test')
+        ->condition('type', $bundle)
         ->condition($field->id() . '.deleted', 1)
         ->execute();
       $this->assertEqual(count($found), $count, 'Correct number of entities found after purging 2');
     }
 
     // Check hooks invocations.
-    // - hook_field_load() (multiple hook) should have been called on all
-    // entities by pairs of two.
-    // - hook_field_delete() should have been called once for each entity in the
-    // bundle.
+    // hook_field_load() and hook_field_delete() should have been called once
+    // for each entity in the bundle.
     $actual_hooks = field_test_memorize();
     $hooks = array();
-    $entities = $this->convertToPartialEntities($this->entities_by_bundles[$bundle], $field->id());
-    foreach (array_chunk($entities, $batch_size, TRUE) as $chunk_entity) {
-      $hooks['field_test_field_load'][] = $chunk_entity;
-    }
-    foreach ($entities as $entity) {
+    $entities = $this->entities_by_bundles[$bundle];
+    foreach ($entities as $id => $entity) {
+      $hooks['field_test_field_load'][] = array($id => $entity);
       $hooks['field_test_field_delete'][] = $entity;
     }
     $this->checkHooksInvocations($hooks, $actual_hooks);
@@ -324,15 +297,15 @@ class BulkDeleteTest extends FieldUnitTestBase {
     field_purge_batch(10);
 
     // Check hooks invocations.
-    // - hook_field_load() (multiple hook) should have been called once, for all
-    // entities in the bundle.
-    // - hook_field_delete() should have been called once for each entity in the
-    // bundle.
+    // hook_field_load() and hook_field_delete() should have been called once
+    // for each entity in the bundle.
     $actual_hooks = field_test_memorize();
     $hooks = array();
-    $entities = $this->convertToPartialEntities($this->entities_by_bundles[$bundle], $field->id());
-    $hooks['field_test_field_load'][] = $entities;
-    $hooks['field_test_field_delete'] = $entities;
+    $entities = $this->entities_by_bundles[$bundle];
+    foreach ($entities as $id => $entity) {
+      $hooks['field_test_field_load'][] = array($id => $entity);
+      $hooks['field_test_field_delete'][] = $entity;
+    }
     $this->checkHooksInvocations($hooks, $actual_hooks);
 
     // Purge again to purge the instance.
@@ -357,9 +330,11 @@ class BulkDeleteTest extends FieldUnitTestBase {
     // Check hooks invocations (same as above, for the 2nd bundle).
     $actual_hooks = field_test_memorize();
     $hooks = array();
-    $entities = $this->convertToPartialEntities($this->entities_by_bundles[$bundle], $field->id());
-    $hooks['field_test_field_load'][] = $entities;
-    $hooks['field_test_field_delete'] = $entities;
+    $entities = $this->entities_by_bundles[$bundle];
+    foreach ($entities as $id => $entity) {
+      $hooks['field_test_field_load'][] = array($id => $entity);
+      $hooks['field_test_field_delete'][] = $entity;
+    }
     $this->checkHooksInvocations($hooks, $actual_hooks);
 
     // The field still exists, deleted.

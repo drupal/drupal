@@ -31,11 +31,16 @@ use Drupal\field\Field;
  */
 function field_info_cache_clear() {
   drupal_static_reset('field_view_mode_settings');
+  drupal_static_reset('field_form_mode_settings');
   drupal_static_reset('field_available_languages');
 
   // @todo: Remove this when field_attach_*_bundle() bundle management
   // functions are moved to the entity API.
   entity_info_cache_clear();
+
+  // Clear typed data definitions.
+  Drupal::typedData()->clearCachedDefinitions();
+  Drupal::service('plugin.manager.entity.field.field_type')->clearCachedDefinitions();
 
   _field_info_collate_types_reset();
   Field::fieldInfo()->flush();
@@ -46,11 +51,6 @@ function field_info_cache_clear() {
  *
  * @return
  *   An associative array containing:
- *   - 'field types': Array of hook_field_info() results, keyed by field_type.
- *     Each element has the following components: label, description, settings,
- *     instance_settings, default_widget, default_formatter, and behaviors
- *     from hook_field_info(), as well as module, giving the module that exposes
- *     the field type.
  *   - 'storage types': Array of hook_field_storage_info() results, keyed by
  *     storage type names. Each element has the following components: label,
  *     description, and settings from hook_field_storage_info(), as well as
@@ -79,24 +79,8 @@ function _field_info_collate_types() {
     }
     else {
       $info = array(
-        'field types' => array(),
         'storage types' => array(),
       );
-
-      // Populate field types.
-      foreach (module_implements('field_info') as $module) {
-        $field_types = (array) module_invoke($module, 'field_info');
-        foreach ($field_types as $name => $field_info) {
-          // Provide defaults.
-          $field_info += array(
-            'settings' => array(),
-            'instance_settings' => array(),
-          );
-          $info['field types'][$name] = $field_info;
-          $info['field types'][$name]['module'] = $module;
-        }
-      }
-      drupal_alter('field_info', $info['field types']);
 
       // Populate storage types.
       foreach (module_implements('field_storage_info') as $module) {
@@ -172,31 +156,30 @@ function field_behaviors_widget($op, $instance) {
  *   ),
  * );
  * @endcode
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   Field::fieldInfo()->getFieldMap().
  */
 function field_info_field_map() {
   return Field::fieldInfo()->getFieldMap();
 }
 
 /**
- * Returns information about field types from hook_field_info().
+ * Returns information about field types.
  *
  * @param $field_type
  *   (optional) A field type name. If omitted, all field types will be returned.
  *
  * @return
- *   Either a field type description, as provided by hook_field_info(), or an
- *   array of all existing field types, keyed by field type name.
+ *   Either a field type definition, or an array of all existing field types,
+ *   keyed by field type name.
  */
 function field_info_field_types($field_type = NULL) {
-  $info = _field_info_collate_types();
-  $field_types = $info['field types'];
   if ($field_type) {
-    if (isset($field_types[$field_type])) {
-      return $field_types[$field_type];
-    }
+    return Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field_type);
   }
   else {
-    return $field_types;
+    return Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
   }
 }
 
@@ -313,6 +296,9 @@ function field_info_fields() {
  *   found.
  *
  * @see field_info_field_by_id()
+
+ * @deprecated as of Drupal 8.0. Use
+ *   Field::fieldInfo()->getField($field_name).
  */
 function field_info_field($field_name) {
   return Field::fieldInfo()->getField($field_name);
@@ -331,6 +317,9 @@ function field_info_field($field_name) {
  *   belongs to.
  *
  * @see field_info_field()
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   Field::fieldInfo()->getFieldById($field_id).
  */
 function field_info_field_by_id($field_id) {
   return Field::fieldInfo()->getFieldById($field_id);
@@ -353,6 +342,9 @@ function field_info_field_by_id($field_id) {
  *
  * @see field_info_field()
  * @see field_info_field_by_id()
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   Field::fieldInfo()->getFields().
  */
 function field_info_field_by_ids() {
   return Field::fieldInfo()->getFields();
@@ -382,6 +374,11 @@ function field_info_field_by_ids() {
  *   bundle name. If $entity_type is set, return all instances for that entity
  *   type, keyed by bundle name. If $entity_type and $bundle_name are set,
  *   return all instances for that bundle.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   Field::fieldInfo()->getInstances(),
+ *   Field::fieldInfo()->getInstances($entity_type) or
+ *   Field::fieldInfo()->getBundleInstances($entity_type, $bundle_name).
  */
 function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
   $cache = Field::fieldInfo();
@@ -414,12 +411,12 @@ function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
  * @return
  *   An associative array of instance data for the specific field and bundle;
  *   NULL if the instance does not exist.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   Field::fieldInfo()->getBundleInstance($entity_type, $bundle, $field_name).
  */
 function field_info_instance($entity_type, $field_name, $bundle_name) {
-  $info = Field::fieldInfo()->getBundleInstances($entity_type, $bundle_name);
-  if (isset($info[$field_name])) {
-    return $info[$field_name];
-  }
+  return Field::fieldInfo()->getInstance($entity_type, $bundle_name, $field_name);
 }
 
 /**
@@ -488,8 +485,8 @@ function field_info_extra_fields($entity_type, $bundle, $context) {
  *   A field type name.
  *
  * @return
- *   The field type's default settings, as provided by hook_field_info(), or an
- *   empty array if type or settings are not defined.
+ *   The field type's default settings, or an empty array if type or settings
+ *   are not defined.
  */
 function field_info_field_settings($type) {
   $info = field_info_field_types($type);
@@ -503,8 +500,8 @@ function field_info_field_settings($type) {
  *   A field type name.
  *
  * @return
- *   The field type's default instance settings, as provided by
- *   hook_field_info(), or an empty array if type or settings are not defined.
+ *   The field type's default instance settings, or an empty array if type or
+ *   settings are not defined.
  */
 function field_info_instance_settings($type) {
   $info = field_info_field_types($type);

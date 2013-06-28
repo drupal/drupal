@@ -56,10 +56,8 @@ function field_ui_menu() {
   $items['admin/reports/fields'] = array(
     'title' => 'Field list',
     'description' => 'Overview of fields on all entity types.',
-    'page callback' => 'field_ui_fields_list',
-    'access arguments' => array('administer content types'),
+    'route_name' => 'field_list',
     'type' => MENU_NORMAL_ITEM,
-    'file' => 'field_ui.admin.inc',
   );
   $items['admin/reports/fields/list'] = array(
     'title' => 'Entities',
@@ -83,7 +81,7 @@ function field_ui_menu() {
         'weight' => 1,
       );
       $items["$path/fields/%"] = array(
-        'title callback' => 'field_ui_instance_title',
+        'title callback' => 'entity_page_label',
         'title arguments' => array($field_position),
         'route_name' => "field_ui.instance_edit.$entity_type",
       );
@@ -96,11 +94,6 @@ function field_ui_menu() {
         'type' => MENU_LOCAL_TASK,
         'route_name' => "field_ui.field_edit.$entity_type",
       );
-      $items["$path/fields/%/widget-type"] = array(
-        'title' => 'Widget type',
-        'type' => MENU_LOCAL_TASK,
-        'route_name' => "field_ui.widget_type.$entity_type",
-      );
       $items["$path/fields/%/delete"] = array(
         'title' => 'Delete',
         'type' => MENU_VISIBLE_IN_BREADCRUMB,
@@ -108,25 +101,46 @@ function field_ui_menu() {
         'weight' => 10,
       );
 
+      // 'Manage form display' tab.
+      $items["$path/form-display"] = array(
+        'title' => 'Manage form display',
+        'type' => MENU_LOCAL_TASK,
+        'route_name' => "field_ui.form_display_overview.$entity_type",
+        'weight' => 2,
+      );
+
       // 'Manage display' tab.
       $items["$path/display"] = array(
         'title' => 'Manage display',
         'type' => MENU_LOCAL_TASK,
         'route_name' => "field_ui.display_overview.$entity_type",
-        'weight' => 2,
+        'weight' => 3,
       );
 
-      // View modes secondary tabs.
+      // View and form modes secondary tabs.
       // The same base $path for the menu item (with a placeholder) can be
       // used for all bundles of a given entity type; but depending on
       // administrator settings, each bundle has a different set of view
       // modes available for customisation. So we define menu items for all
       // view modes, and use a route requirement to determine which ones are
       // actually visible for a given bundle.
+      $items["$default_path/form-display/default"] = array(
+        'title' => t('Default'),
+        'type' => MENU_DEFAULT_LOCAL_TASK,
+      );
       $items["$default_path/display/default"] = array(
         'title' => t('Default'),
         'type' => MENU_DEFAULT_LOCAL_TASK,
       );
+      $weight = 0;
+      foreach (entity_get_form_modes($entity_type) as $form_mode => $form_mode_info) {
+        $items["$path/form-display/$form_mode"] = array(
+          'title' => $form_mode_info['label'],
+          'type' => MENU_LOCAL_TASK,
+          'weight' => $weight++,
+          'route_name' => "field_ui.form_display_overview.$entity_type.$form_mode",
+        );
+      }
       $weight = 0;
       foreach (entity_get_view_modes($entity_type) as $view_mode => $view_mode_info) {
         $items["$path/display/$view_mode"] = array(
@@ -154,6 +168,9 @@ function field_ui_permission() {
       $permissions['administer ' . $entity_type . ' fields'] = array(
         'title' => t('%entity_label: Administer fields', array('%entity_label' => $entity_info['label'])),
         'restrict access' => TRUE,
+      );
+      $permissions['administer ' . $entity_type . ' form display'] = array(
+        'title' => t('%entity_label: Administer form display', array('%entity_label' => $entity_info['label']))
       );
       $permissions['administer ' . $entity_type . ' display'] = array(
         'title' => t('%entity_label: Administer display', array('%entity_label' => $entity_info['label']))
@@ -210,23 +227,12 @@ function field_ui_instance_load($field_name, $entity_type, $bundle_name, $bundle
 }
 
 /**
- * Title callback: Returns the name of a given instance.
- *
- * @see field_ui_menu()
- */
-function field_ui_instance_title($instance) {
-  $entity = entity_load('field_instance', $instance);
-  return $entity->label();
-}
-
-/**
  * Implements hook_theme().
  */
 function field_ui_theme() {
   return array(
     'field_ui_table' => array(
       'render element' => 'elements',
-      'file' => 'field_ui.admin.inc',
     ),
   );
 }
@@ -248,6 +254,7 @@ function field_ui_element_info() {
  */
 function field_ui_entity_info(&$entity_info) {
   $entity_info['field_instance']['controllers']['form']['delete'] = 'Drupal\field_ui\Form\FieldDeleteForm';
+  $entity_info['field_entity']['controllers']['list'] = 'Drupal\field_ui\FieldListController';
 }
 
 /**
@@ -278,13 +285,11 @@ function field_ui_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
  */
 function field_ui_form_node_type_form_alter(&$form, $form_state) {
   // We want to display the button only on add page.
-  if (empty($form['#node_type']->type)) {
-    $form['actions']['save_continue'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save and manage fields'),
-      '#weight' => 45,
-    );
-    $form['#submit'][] = 'field_ui_form_node_type_form_submit';
+  if ($form_state['controller']->getEntity()->isNew()) {
+    $form['actions']['save_continue'] = $form['actions']['submit'];
+    $form['actions']['save_continue']['#value'] = t('Save and manage fields');
+    $form['actions']['save_continue']['#weight'] = $form['actions']['save_continue']['#weight'] + 5;
+    $form['actions']['save_continue']['#submit'][] = 'field_ui_form_node_type_form_submit';
   }
 }
 
@@ -337,3 +342,85 @@ function field_ui_view_mode_presave(EntityViewModeInterface $view_mode) {
 function field_ui_view_mode_delete(EntityViewModeInterface $view_mode) {
   Drupal::state()->set('menu_rebuild_needed', TRUE);
 }
+
+/**
+ * Returns HTML for Field UI overview tables.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing a Form API structure to be
+ *     rendered as a table.
+ *
+ * @ingroup themeable
+ */
+function theme_field_ui_table($variables) {
+  $elements = $variables['elements'];
+  $table = array();
+
+  // Add table headers and attributes.
+  foreach (array('header', 'attributes') as $key) {
+    if (isset($elements["#$key"])) {
+      $table[$key] = $elements["#$key"];
+    }
+  }
+
+  // Determine the colspan to use for region rows, by checking the number of
+  // columns in the headers.
+  $columns_count = 0;
+  foreach ($table['header'] as $header) {
+    $columns_count += (is_array($header) && isset($header['colspan']) ? $header['colspan'] : 1);
+  }
+
+  // Render rows, region by region.
+  foreach ($elements['#regions'] as $region_name => $region) {
+    $region_name_class = drupal_html_class($region_name);
+
+    // Add region rows.
+    if (isset($region['title']) && empty($region['invisible'])) {
+      $table['rows'][] = array(
+        'class' => array('region-title', 'region-' . $region_name_class . '-title'),
+        'no_striping' => TRUE,
+        'data' => array(
+          array('data' => $region['title'], 'colspan' => $columns_count),
+        ),
+      );
+    }
+    if (isset($region['message'])) {
+      $class = (empty($region['rows_order']) ? 'region-empty' : 'region-populated');
+      $table['rows'][] = array(
+        'class' => array('region-message', 'region-' . $region_name_class . '-message', $class),
+        'no_striping' => TRUE,
+        'data' => array(
+          array('data' => $region['message'], 'colspan' => $columns_count),
+        ),
+      );
+    }
+
+    // Add form rows, in the order determined at pre-render time.
+    foreach ($region['rows_order'] as $name) {
+      $element = $elements[$name];
+
+      $row = array('data' => array());
+      if (isset($element['#attributes'])) {
+        $row += $element['#attributes'];
+      }
+
+      // Render children as table cells.
+      foreach (element_children($element) as $cell_key) {
+        $child = &$element[$cell_key];
+        // Do not render a cell for children of #type 'value'.
+        if (!(isset($child['#type']) && $child['#type'] == 'value')) {
+          $cell = array('data' => drupal_render($child));
+          if (isset($child['#cell_attributes'])) {
+            $cell += $child['#cell_attributes'];
+          }
+          $row['data'][] = $cell;
+        }
+      }
+      $table['rows'][] = $row;
+    }
+  }
+
+  return theme('table', $table);
+}
+

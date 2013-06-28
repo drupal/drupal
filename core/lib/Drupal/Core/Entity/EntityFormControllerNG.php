@@ -31,33 +31,10 @@ class EntityFormControllerNG extends EntityFormController {
       field_attach_form($entity, $form, $form_state, $this->getFormLangcode($form_state));
     }
 
-    // Assign the weights configured in the form display.
-    foreach ($this->getFormDisplay($form_state)->getComponents() as $name => $options) {
-      if (isset($form[$name])) {
-        $form[$name]['#weight'] = $options['weight'];
-      }
-    }
+    // Add a process callback so we can assign weights and hide extra fields.
+    $form['#process'][] = array($this, 'processForm');
 
     return $form;
-  }
-
-  /**
-   * Overrides EntityFormController::validate().
-   */
-  public function validate(array $form, array &$form_state) {
-    // @todo Exploit the Field API to validate the values submitted for the
-    // entity fields.
-    $entity = $this->buildEntity($form, $form_state);
-    $info = $entity->entityInfo();
-
-    if (!empty($info['fieldable'])) {
-      field_attach_form_validate($entity, $form, $form_state);
-    }
-
-    // @todo Remove this.
-    // Execute legacy global validation handlers.
-    unset($form_state['validate_handlers']);
-    form_execute_handlers('validate', $form, $form_state);
   }
 
   /**

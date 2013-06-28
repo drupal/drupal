@@ -97,6 +97,10 @@ function dblog_event($id) {
         $message = t($dblog->message, unserialize($dblog->variables));
       }
     }
+    $username = array(
+      '#theme' => 'username',
+      '#account' => $dblog,
+    );
     $rows = array(
       array(
         array('data' => t('Type'), 'header' => TRUE),
@@ -108,7 +112,7 @@ function dblog_event($id) {
       ),
       array(
         array('data' => t('User'), 'header' => TRUE),
-        theme('username', array('account' => $dblog)),
+        drupal_render($username),
       ),
       array(
         array('data' => t('Location'), 'header' => TRUE),

@@ -20,7 +20,6 @@ function user_admin_account() {
 
   $query = db_select('users', 'u');
   $query->condition('u.uid', 0, '<>');
-  user_build_filter_query($query);
 
   $count_query = clone $query;
   $count_query->addExpression('COUNT(u.uid)');
@@ -68,7 +67,7 @@ function user_admin_account() {
       'href' => 'user/' . $account->uid . '/edit',
       'query' => $destination,
     );
-    if (module_invoke('translation_entity', 'translate_access', $account)) {
+    if (module_invoke('content_translation', 'translate_access', $account)) {
       $links['translate'] = array(
         'title' => t('Translate'),
         'href' => 'user/' . $account->uid . '/translations',
@@ -105,7 +104,6 @@ function user_admin_account() {
  * @see theme_user_admin_permissions()
  */
 function user_admin_permissions($form, $form_state, $rid = NULL) {
-
   // Retrieve role names for columns.
   $role_names = user_role_names();
   if (isset($rid)) {
@@ -158,7 +156,7 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
         );
         foreach ($role_names as $rid => $name) {
           // Builds arrays for checked boxes for each role
-          if (isset($role_permissions[$rid][$perm])) {
+          if (in_array($perm, $role_permissions[$rid])) {
             $status[$rid][] = $perm;
           }
         }

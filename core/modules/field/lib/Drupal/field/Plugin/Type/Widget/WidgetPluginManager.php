@@ -64,9 +64,8 @@ class WidgetPluginManager extends PluginManagerBase {
    *     following key value pairs are allowed, and are all optional if
    *     'prepare' is TRUE:
    *     - type: (string) The widget to use. Defaults to the
-   *       'default_widget' for the field type, specified in
-   *       hook_field_info(). The default widget will also be used if the
-   *       requested widget is not available.
+   *       'default_widget' for the field type. The default widget will also be
+   *       used if the requested widget is not available.
    *     - settings: (array) Settings specific to the widget. Each setting
    *       defaults to the default value specified in the widget definition.
    *
@@ -160,6 +159,21 @@ class WidgetPluginManager extends PluginManagerBase {
     }
 
     return $this->widgetOptions;
+  }
+
+  /**
+   * Returns the default settings of a field widget.
+   *
+   * @param string $type
+   *   A field widget type name.
+   *
+   * @return array
+   *   The widget type's default settings, as provided by the plugin
+   *   definition, or an empty array if type or settings are undefined.
+   */
+  public function getDefaultSettings($type) {
+    $info = $this->getDefinition($type);
+    return isset($info['settings']) ? $info['settings'] : array();
   }
 
 }

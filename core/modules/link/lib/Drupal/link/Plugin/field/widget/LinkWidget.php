@@ -105,6 +105,30 @@ class LinkWidget extends WidgetBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = array();
+
+    $placeholder_title = $this->getSetting('placeholder_title');
+    $placeholder_url = $this->getSetting('placeholder_url');
+    if (empty($placeholder_title) && empty($placeholder_url)) {
+      $summary[] = t('No placeholders');
+    }
+    else {
+      if (!empty($placeholder_title)) {
+        $summary[] = t('Title placeholder: @placeholder_title', array('@placeholder_title' => $placeholder_title));
+      }
+      if (!empty($placeholder_url)) {
+        $summary[] = t('URL placeholder: @placeholder_url', array('@placeholder_url' => $placeholder_url));
+      }
+    }
+
+    return $summary;
+  }
+
+
+  /**
    * Form element validation handler for link_field_widget_form().
    *
    * Conditionally requires the link title if a URL value was filled in.

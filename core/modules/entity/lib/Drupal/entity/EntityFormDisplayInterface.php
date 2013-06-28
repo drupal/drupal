@@ -14,15 +14,4 @@ use Drupal\entity\EntityDisplayBaseInterface;
  */
 interface EntityFormDisplayInterface extends EntityDisplayBaseInterface {
 
-  /**
-   * Returns the Widget plugin for a field.
-   *
-   * @param string $field_name
-   *   The field name.
-   *
-   * @return \Drupal\field\Plugin\Type\Widget\WidgetInterface|null
-   *   A Widget plugin or NULL if the field does not exist.
-   */
-  public function getWidget($field_name);
-
 }

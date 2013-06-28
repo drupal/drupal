@@ -18,6 +18,13 @@ use Drupal\Core\Language\Language;
 class NodeFormController extends EntityFormController {
 
   /**
+   * Default settings for this content/node type.
+   *
+   * @var array
+   */
+  protected $settings;
+
+  /**
    * Prepares the node object.
    *
    * Fills in a few default values, and then invokes hook_node_prepare() on all
@@ -28,13 +35,20 @@ class NodeFormController extends EntityFormController {
   protected function prepareEntity() {
     $node = $this->entity;
     // Set up default values, if required.
-    $node_options = variable_get('node_options_' . $node->type, array('status', 'promote'));
+    $type = entity_load('node_type', $node->bundle());
+    $this->settings = $type->getModuleSettings('node');
+    $this->settings += array(
+      'options' => array('status', 'promote'),
+      'preview' => DRUPAL_OPTIONAL,
+      'submitted' => TRUE,
+    );
+
     // If this is a new node, fill in the default values.
     if (!isset($node->nid) || isset($node->is_new)) {
       foreach (array('status', 'promote', 'sticky') as $key) {
         // Multistep node forms might have filled in something already.
         if (!isset($node->$key)) {
-          $node->$key = (int) in_array($key, $node_options);
+          $node->$key = (int) in_array($key, $this->settings['options']);
         }
       }
       global $user;
@@ -47,7 +61,7 @@ class NodeFormController extends EntityFormController {
       $node->log = NULL;
     }
     // Always use the default revision setting.
-    $node->setNewRevision(in_array('revision', $node_options));
+    $node->setNewRevision(in_array('revision', $this->settings['options']));
 
     module_invoke_all('node_prepare', $node);
   }
@@ -240,7 +254,7 @@ class NodeFormController extends EntityFormController {
   protected function actions(array $form, array &$form_state) {
     $element = parent::actions($form, $form_state);
     $node = $this->entity;
-    $preview_mode = variable_get('node_preview_' . $node->type, DRUPAL_OPTIONAL);
+    $preview_mode = $this->settings['preview'];
 
     $element['submit']['#access'] = $preview_mode != DRUPAL_REQUIRED || (!form_get_errors() && isset($form_state['node_preview']));
 

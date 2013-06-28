@@ -60,6 +60,20 @@ class Field extends ItemList implements FieldInterface {
   }
 
   /**
+   * {@inheritdoc}
+   * @todo Revisit the need when all entity types are converted to NG entities.
+   */
+  public function getValue($include_computed = FALSE) {
+    if (isset($this->list)) {
+      $values = array();
+      foreach ($this->list as $delta => $item) {
+        $values[$delta] = $item->getValue($include_computed);
+      }
+      return $values;
+    }
+  }
+
+  /**
    * Overrides \Drupal\Core\TypedData\ItemList::setValue().
    */
   public function setValue($values, $notify = TRUE) {
@@ -226,4 +240,57 @@ class Field extends ItemList implements FieldInterface {
     }
     return $constraints;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave() {
+    // Filter out empty items.
+    $this->filterEmptyValues();
+
+    $this->delegateMethod('presave');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function insert() {
+    $this->delegateMethod('insert');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function update() {
+    $this->delegateMethod('update');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function delete() {
+    $this->delegateMethod('delete');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteRevision() {
+    $this->delegateMethod('deleteRevision');
+  }
+
+  /**
+   * Calls a method on each FieldItem.
+   *
+   * @param string $method
+   *   The name of the method.
+   */
+  protected function delegateMethod($method) {
+    if (isset($this->list)) {
+      foreach ($this->list as $item) {
+        $item->{$method}();
+      }
+    }
+  }
+
 }

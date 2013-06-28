@@ -68,6 +68,13 @@ class Role extends ConfigEntityBase implements RoleInterface {
   public $weight;
 
   /**
+   * The permissions belonging to this role.
+   *
+   * @var array
+   */
+  public $permissions = array();
+
+  /**
    * {@inheritdoc}
    */
   public function uri() {
@@ -78,6 +85,38 @@ class Role extends ConfigEntityBase implements RoleInterface {
         'entity' => $this,
       ),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPermissions() {
+    return $this->permissions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasPermission($permission) {
+    return in_array($permission, $this->permissions);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function grantPermission($permission) {
+    if (!$this->hasPermission($permission)) {
+      $this->permissions[] = $permission;
+    }
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function revokePermission($permission) {
+    $this->permissions = array_diff($this->permissions, array($permission));
+    return $this;
   }
 
   /**

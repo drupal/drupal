@@ -30,8 +30,10 @@ class VocabularyListController extends ConfigEntityListController implements For
     $operations = parent::getOperations($entity);
     $uri = $entity->uri();
 
-    $operations['edit']['title'] = t('edit vocabulary');
-    $operations['edit']['href'] = $uri['path'] . '/edit';
+    if (isset($operations['edit'])) {
+      $operations['edit']['title'] = t('edit vocabulary');
+      $operations['edit']['href'] = $uri['path'] . '/edit';
+    }
 
     $operations['list'] = array(
       'title' => t('list terms'),

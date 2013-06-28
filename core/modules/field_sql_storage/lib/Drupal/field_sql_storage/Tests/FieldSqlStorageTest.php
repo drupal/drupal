@@ -26,7 +26,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('field_test', 'text', 'number');
+  public static $modules = array('field_sql_storage', 'field', 'field_test', 'text', 'number', 'entity_test');
 
   /**
    * The name of the created field.
@@ -66,7 +66,8 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
 
   function setUp() {
     parent::setUp();
-    $this->installSchema('field_test', array('test_entity', 'test_entity_revision', 'test_entity_bundle'));
+    $this->installSchema('entity_test', array('entity_test_rev', 'entity_test_rev_revision'));
+    $entity_type = 'entity_test_rev';
 
     $this->field_name = strtolower($this->randomName());
     $this->field = entity_create('field_entity', array(
@@ -77,8 +78,8 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $this->field->save();
     $this->instance = entity_create('field_instance', array(
       'field_name' => $this->field_name,
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle'
+      'entity_type' => $entity_type,
+      'bundle' => $entity_type
     ));
     $this->instance->save();
     $this->table = _field_sql_storage_tablename($this->field);
@@ -90,7 +91,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    * field_load_revision works correctly.
    */
   function testFieldAttachLoad() {
-    $entity_type = 'test_entity';
+    $entity_type = 'entity_test_rev';
     $eid = 0;
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
@@ -117,27 +118,33 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $query->execute();
 
     // Load the "most current revision"
-    $entity = field_test_create_entity($eid, 0, $this->instance['bundle']);
+    $entity = entity_create($entity_type, array(
+      'id' => 0,
+      'revision_id' => 0,
+    ));
     field_attach_load($entity_type, array($eid => $entity));
     foreach ($values[0] as $delta => $value) {
       if ($delta < $this->field['cardinality']) {
-        $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['value'], $value, "Value $delta is loaded correctly for current revision");
+        $this->assertEqual($entity->{$this->field_name}[$delta]->value, $value, "Value $delta is loaded correctly for current revision");
       }
       else {
-        $this->assertFalse(array_key_exists($delta, $entity->{$this->field_name}[$langcode]), "No extraneous value gets loaded for current revision.");
+        $this->assertFalse(array_key_exists($delta, $entity->{$this->field_name}), "No extraneous value gets loaded for current revision.");
       }
     }
 
     // Load every revision
     for ($evid = 0; $evid < 4; ++$evid) {
-      $entity = field_test_create_entity($eid, $evid, $this->instance['bundle']);
+      $entity = entity_create($entity_type, array(
+        'id' => $eid,
+        'revision_id' => $evid,
+      ));
       field_attach_load_revision($entity_type, array($eid => $entity));
       foreach ($values[$evid] as $delta => $value) {
         if ($delta < $this->field['cardinality']) {
-          $this->assertEqual($entity->{$this->field_name}[$langcode][$delta]['value'], $value, "Value $delta for revision $evid is loaded correctly");
+          $this->assertEqual($entity->{$this->field_name}[$delta]->value, $value, "Value $delta for revision $evid is loaded correctly");
         }
         else {
-          $this->assertFalse(array_key_exists($delta, $entity->{$this->field_name}[$langcode]), "No extraneous value gets loaded for revision $evid.");
+          $this->assertFalse(array_key_exists($delta, $entity->{$this->field_name}), "No extraneous value gets loaded for revision $evid.");
         }
       }
     }
@@ -146,7 +153,10 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     // loaded.
     $eid = $evid = 1;
     $unavailable_langcode = 'xx';
-    $entity = field_test_create_entity($eid, $evid, $this->instance['bundle']);
+    $entity = entity_create($entity_type, array(
+      'id' => $eid,
+      'revision_id' => $evid,
+    ));
     $values = array($entity_type, $eid, $evid, 0, $unavailable_langcode, mt_rand(1, 127));
     db_insert($this->table)->fields($columns)->values($values)->execute();
     db_insert($this->revision_table)->fields($columns)->values($values)->execute();
@@ -159,8 +169,11 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    * written when using insert and update.
    */
   function testFieldAttachInsertAndUpdate() {
-    $entity_type = 'test_entity';
-    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
+    $entity_type = 'entity_test_rev';
+    $entity = entity_create($entity_type, array(
+      'id' => 0,
+      'revision_id' => 0,
+    ));
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Test insert.
@@ -170,7 +183,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
       $values[$delta]['value'] = mt_rand(1, 127);
     }
-    $entity->{$this->field_name}[$langcode] = $rev_values[0] = $values;
+    $entity->{$this->field_name} = $rev_values[0] = $values;
     field_attach_insert($entity);
 
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
@@ -184,13 +197,17 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     }
 
     // Test update.
-    $entity = field_test_create_entity(0, 1, $this->instance->bundle);
+    $entity = entity_create($entity_type, array(
+      'id' => 0,
+      'revision_id' => 1,
+    ));
     $values = array();
     // Note: we try to update one extra value ('<=' instead of '<').
     for ($delta = 0; $delta <= $this->field['cardinality']; $delta++) {
       $values[$delta]['value'] = mt_rand(1, 127);
     }
-    $entity->{$this->field_name}[$langcode] = $rev_values[1] = $values;
+    $rev_values[1] = $values;
+    $entity->{$this->field_name}->setValue($values);
     field_attach_update($entity);
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
     foreach ($values as $delta => $value) {
@@ -230,19 +247,21 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     }
 
     // Check that update with an empty $entity->$field_name empties the field.
-    $entity->{$this->field_name} = NULL;
+    $entity->getBCEntity()->{$this->field_name} = NULL;
     field_attach_update($entity);
     $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
     $this->assertEqual(count($rows), 0, t("Update with an empty field_name entry empties the field."));
   }
 
   /**
-   * Tests insert and update with missing or NULL fields.
+   * Tests insert and update with empty and NULL fields.
    */
   function testFieldAttachSaveMissingData() {
-    $entity_type = 'test_entity';
-    $entity = field_test_create_entity(0, 0, $this->instance->bundle);
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
+    $entity_type = 'entity_test_rev';
+    $entity = entity_create($entity_type, array(
+      'id' => 0,
+      'revision_id' => 0,
+    ));
 
     // Insert: Field is missing
     field_attach_insert($entity);
@@ -262,7 +281,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $this->assertEqual($count, 0, 'NULL field results in no inserts');
 
     // Add some real data
-    $entity->{$this->field_name}[$langcode] = array(0 => array('value' => 1));
+    $entity->{$this->field_name}->value = 1;
     field_attach_insert($entity);
     $count = db_select($this->table)
       ->countQuery()
@@ -270,17 +289,8 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
       ->fetchField();
     $this->assertEqual($count, 1, 'Field data saved');
 
-    // Update: Field is missing. Data should survive.
-    unset($entity->{$this->field_name});
-    field_attach_update($entity);
-    $count = db_select($this->table)
-      ->countQuery()
-      ->execute()
-      ->fetchField();
-    $this->assertEqual($count, 1, 'Missing field leaves data in table');
-
     // Update: Field is NULL. Data should be wiped.
-    $entity->{$this->field_name} = NULL;
+    $entity->getBCEntity()->{$this->field_name} = NULL;
     field_attach_update($entity);
     $count = db_select($this->table)
       ->countQuery()
@@ -301,7 +311,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $this->assertEqual($count, 1, 'Field translation in an unavailable language saved.');
 
     // Again add some real data.
-    $entity->{$this->field_name}[$langcode] = array(0 => array('value' => 1));
+    $entity->{$this->field_name}->value = 1;
     field_attach_insert($entity);
     $count = db_select($this->table)
       ->countQuery()
@@ -311,8 +321,8 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
 
     // Update: Field translation is missing but field is not empty. Translation
     // data should survive.
-    $entity->{$this->field_name}[$unavailable_langcode] = array(mt_rand(1, 127));
-    unset($entity->{$this->field_name}[$langcode]);
+    $entity->getTranslation($unavailable_langcode)->{$this->field_name} = mt_rand(1, 127);
+    unset($entity->{$this->field_name});
     field_attach_update($entity);
     $count = db_select($this->table)
       ->countQuery()
@@ -322,7 +332,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
 
     // Update: Field translation is NULL but field is not empty. Translation
     // data should be wiped.
-    $entity->{$this->field_name}[$langcode] = NULL;
+    $entity->getBCEntity()->{$this->field_name}[Language::LANGCODE_NOT_SPECIFIED] = NULL;
     field_attach_update($entity);
     $count = db_select($this->table)
       ->countQuery()
@@ -335,6 +345,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    * Test trying to update a field with data.
    */
   function testUpdateFieldSchemaWithData() {
+    $entity_type = 'entity_test_rev';
     // Create a decimal 5.2 field and add some data.
     $field = entity_create('field_entity', array(
       'field_name' => 'decimal52',
@@ -344,12 +355,15 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $field->save();
     $instance = entity_create('field_instance', array(
       'field_name' => 'decimal52',
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => $entity_type,
+      'bundle' => $entity_type,
     ));
     $instance->save();
-    $entity = field_test_create_entity(0, 0, $instance->bundle);
-    $entity->decimal52[Language::LANGCODE_NOT_SPECIFIED][0]['value'] = '1.235';
+    $entity = entity_create($entity_type, array(
+      'id' => 0,
+      'revision_id' => 0,
+    ));
+    $entity->decimal52->value = '1.235';
     $entity->save();
 
     // Attempt to update the field in a way that would work without data.
@@ -398,14 +412,15 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
   function testFieldUpdateIndexesWithData() {
     // Create a decimal field.
     $field_name = 'testfield';
+    $entity_type = 'entity_test_rev';
     $field = entity_create('field_entity', array(
       'field_name' => $field_name,
       'type' => 'text'));
     $field->save();
     $instance = entity_create('field_instance', array(
       'field_name' => $field_name,
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => $entity_type,
+      'bundle' => $entity_type,
     ));
     $instance->save();
     $tables = array(_field_sql_storage_tablename($field), _field_sql_storage_revision_tablename($field));
@@ -417,8 +432,12 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     }
 
     // Add data so the table cannot be dropped.
-    $entity = field_test_create_entity(1, 1, $instance->bundle);
-    $entity->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['value'] = 'field data';
+    $entity = entity_create($entity_type, array(
+      'id' => 1,
+      'revision_id' => 1,
+    ));
+    $entity->$field_name->value = 'field data';
+    $entity->enforceIsNew();
     $entity->save();
 
     // Add an index.
@@ -437,9 +456,12 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     }
 
     // Verify that the tables were not dropped.
-    $entity = field_test_create_entity(1, 1, $instance->bundle);
-    field_attach_load('test_entity', array(1 => $entity));
-    $this->assertEqual($entity->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['value'], 'field data', t("Index changes performed without dropping the tables"));
+    $entity = entity_create($entity_type, array(
+      'id' => 1,
+      'revision_id' => 1,
+    ));
+    field_attach_load($entity_type, array(1 => $entity));
+    $this->assertEqual($entity->$field_name->value, 'field data', t("Index changes performed without dropping the tables"));
   }
 
   /**

@@ -1,0 +1,14 @@
+id: entity_test.entity_test.field_test_import
+langcode: und
+field_name: field_test_import
+entity_type: entity_test
+bundle: entity_test
+label: 'Test import field'
+description: ''
+required: '0'
+default_value: {  }
+default_value_function: ''
+settings:
+  text_processing: '0'
+  user_register_form: false
+field_type: text

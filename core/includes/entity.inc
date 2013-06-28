@@ -44,6 +44,7 @@ function entity_info_cache_clear() {
   drupal_static_reset('entity_get_bundles');
   // Clear all languages.
   Drupal::entityManager()->clearCachedDefinitions();
+  Drupal::entityManager()->clearCachedFieldDefinitions();
 }
 
 /**
@@ -102,6 +103,44 @@ function entity_get_bundles($entity_type = NULL) {
 function entity_invoke_bundle_hook($hook, $entity_type, $bundle, $bundle_new = NULL) {
   entity_info_cache_clear();
   module_invoke_all('entity_bundle_' . $hook, $entity_type, $bundle, $bundle_new);
+}
+
+/**
+ * Returns the entity form mode info.
+ *
+ * @param string|null $entity_type
+ *   The entity type whose form mode info should be returned, or NULL for all
+ *   form mode info. Defaults to NULL.
+ *
+ * @return array
+ *   The form mode info for a specific entity type, or all entity types.
+ */
+function entity_get_form_modes($entity_type = NULL) {
+  $form_modes = &drupal_static(__FUNCTION__);
+  if (!$form_modes) {
+    $langcode = language(Language::TYPE_INTERFACE)->langcode;
+    if ($cache = cache()->get("entity_form_mode_info:$langcode")) {
+      $form_modes = $cache->data;
+    }
+    else {
+      $form_modes = array();
+      foreach (entity_load_multiple('form_mode') as $form_mode) {
+        list($form_mode_entity_type, $form_mode_name) = explode('.', $form_mode->id(), 2);
+        $form_modes[$form_mode_entity_type][$form_mode_name] = (array) $form_mode;
+      }
+      drupal_alter('entity_form_mode_info', $form_modes);
+      cache()->set("entity_form_mode_info:$langcode", $form_modes, CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
+    }
+  }
+
+  if (empty($entity_type)) {
+    return $form_modes;
+  }
+  elseif (isset($form_modes[$entity_type])) {
+    return $form_modes[$entity_type];
+  }
+
+  return array();
 }
 
 /**
@@ -790,9 +829,13 @@ function entity_get_render_form_display(EntityInterface $entity, $form_mode) {
   $entity_type = $entity->entityType();
   $bundle = $entity->bundle();
 
-  // @todo Form modes don't have custom settings yet, so just return the display
-  // for the form mode that was requested.
-  $form_display = entity_get_form_display($entity_type, $bundle, $form_mode);
+  // Determine the form display to use for rendering this entity form. Depending
+  // on the configuration of the form mode for this bundle, this will be either
+  // the form display associated to the form mode, or the 'default' display.
+  $form_mode_settings = field_form_mode_settings($entity_type, $bundle);
+  $render_form_mode = !empty($form_mode_settings[$form_mode]['status']) ? $form_mode : 'default';
+
+  $form_display = entity_get_form_display($entity_type, $bundle, $render_form_mode);
   $form_display->originalMode = $form_mode;
 
   return $form_display;

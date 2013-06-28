@@ -1,0 +1,6 @@
+id: taxonomy_term.forums
+targetEntityType: taxonomy_term
+bundle: forums
+types:
+  - 'sioc:Container'
+  - 'sioc:Forum'

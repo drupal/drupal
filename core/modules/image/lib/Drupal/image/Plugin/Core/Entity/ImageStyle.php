@@ -59,6 +59,13 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
   public $label;
 
   /**
+   * The UUID for this entity.
+   *
+   * @var string
+   */
+  public $uuid;
+
+  /**
    * The array of image effects for this image style.
    *
    * @var string

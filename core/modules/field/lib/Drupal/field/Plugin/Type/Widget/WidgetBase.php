@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\field\Plugin\PluginSettingsBase;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Base class for 'Field widget' plugin implementations.
@@ -68,7 +69,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       $field_state = array(
         'items_count' => count($items),
         'array_parents' => array(),
-        'errors' => array(),
+        'constraint_violations' => array(),
       );
       field_form_set_state($parents, $field_name, $langcode, $form_state, $field_state);
     }
@@ -315,7 +316,15 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       $this->sortItems($items);
 
       // Remove empty values.
-      $items = _field_filter_items($this->fieldDefinition->getFieldType(), $items);
+      if ($entity instanceof \Drupal\Core\Entity\EntityNG) {
+        $itemsNG = \Drupal::typedData()->getPropertyInstance($entity, $field_name, $items);
+      }
+      else {
+        $definitions = \Drupal::entityManager()->getFieldDefinitions($entity->entityType(), $entity->bundle());
+        $itemsNG = \Drupal::typedData()->create($definitions[$field_name], $items, $field_name, $entity);
+      }
+      $itemsNG->filterEmptyValues();
+      $items = $itemsNG->getValue(TRUE);
 
       // Put delta mapping in $form_state, so that flagErrors() can use it.
       $field_state = field_form_get_state($form['#parents'], $field_name, $langcode, $form_state);
@@ -335,7 +344,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
 
     $field_state = field_form_get_state($form['#parents'], $field_name, $langcode, $form_state);
 
-    if (!empty($field_state['errors'])) {
+    if (!empty($field_state['constraint_violations'])) {
       // Locate the correct element in the the form.
       $element = NestedArray::getValue($form_state['complete_form'], $field_state['array_parents']);
 
@@ -344,7 +353,16 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         $definition = $this->getPluginDefinition();
         $is_multiple = $definition['multiple_values'];
 
-        foreach ($field_state['errors'] as $delta => $delta_errors) {
+        $violations_by_delta = array();
+        foreach ($field_state['constraint_violations'] as $violation) {
+          // Separate violations by delta.
+          $property_path = explode('.', $violation->getPropertyPath());
+          $delta = array_shift($property_path);
+          $violation->arrayPropertyPath = $property_path;
+          $violations_by_delta[$delta][] = $violation;
+        }
+
+        foreach ($violations_by_delta as $delta => $delta_violations) {
           // For a multiple-value widget, pass all errors to the main widget.
           // For single-value widgets, pass errors by delta.
           if ($is_multiple) {
@@ -354,13 +372,14 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
             $original_delta = $field_state['original_deltas'][$delta];
             $delta_element = $element[$original_delta];
           }
-          foreach ($delta_errors as $error) {
-            $error_element = $this->errorElement($delta_element, $error, $form, $form_state);
-            form_error($error_element, $error['message']);
+          foreach ($delta_violations as $violation) {
+            // @todo: Pass $violation->arrayPropertyPath as property path.
+            $error_element = $this->errorElement($delta_element, $violation, $form, $form_state);
+            form_error($error_element, $violation->getMessage());
           }
         }
         // Reinitialize the errors list for the next submit.
-        $field_state['errors'] = array();
+        $field_state['constraint_violations'] = array();
         field_form_set_state($form['#parents'], $field_name, $langcode, $form_state, $field_state);
       }
     }
@@ -374,9 +393,16 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    return array();
+  }
+
+  /**
    * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::errorElement().
    */
-  public function errorElement(array $element, array $error, array $form, array &$form_state) {
+  public function errorElement(array $element, ConstraintViolationInterface $error, array $form, array &$form_state) {
     return $element;
   }
 

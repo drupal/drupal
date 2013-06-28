@@ -389,12 +389,8 @@ function comment_menu() {
   );
   $items['comment/%comment/approve'] = array(
     'title' => 'Approve',
-    'page callback' => 'comment_approve',
-    'page arguments' => array(1),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'approve'),
-    'file' => 'comment.pages.inc',
     'weight' => 10,
+    'route_name' => 'comment_approve',
   );
   $items['comment/%comment/delete'] = array(
     'title' => 'Delete',
@@ -435,6 +431,14 @@ function comment_menu() {
 function comment_entity_reply_load($entity_id, $args) {
   list(, ,$entity_type, $entity_id, $field_name) = $args;
   return entity_load($entity_type, $entity_id);
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function comment_menu_alter(&$items) {
+  // Add comments to the description for admin/content.
+  $items['admin/content']['description'] = 'Administer content and comments.';
 }
 
 /**
@@ -986,7 +990,7 @@ function comment_links(CommentInterface $comment, EntityInterface $entity, $fiel
   }
 
   // Add translations link for translation-enabled comment bundles.
-  if (module_exists('translation_entity') && translation_entity_translate_access($comment)) {
+  if (module_exists('content_translation') && content_translation_translate_access($comment)) {
     $links['comment-translations'] = array(
       'title' => t('translate'),
       'href' => 'comment/' . $comment->id() . '/translations',
@@ -1076,11 +1080,11 @@ function comment_translation_configuration_element_submit($form, &$form_state) {
   // host entity.
   $key = 'language_configuration';
   $comment_form_state = array(
-    'translation_entity' => array('key' => $key),
+    'content_translation' => array('key' => $key),
     'language' => array($key => array('entity_type' => 'comment', 'bundle' => $form['#field']['field_name'])),
-    'values' => array($key => array('translation_entity' => $form_state['values']['translation_entity'])),
+    'values' => array($key => array('content_translation' => $form_state['values']['content_translation'])),
   );
-  translation_entity_language_configuration_element_submit($form, $comment_form_state);
+  content_translation_language_configuration_element_submit($form, $comment_form_state);
 }
 
 /**
@@ -1179,20 +1183,24 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
   $index_comments = &drupal_static(__FUNCTION__);
 
   if ($index_comments === NULL) {
-    // Find and save roles that can 'access comments' or 'search content'.
-    $perms = array('access comments' => array(), 'search content' => array());
-    $result = db_query("SELECT rid, permission FROM {role_permission} WHERE permission IN ('access comments', 'search content')");
-    foreach ($result as $record) {
-      $perms[$record->permission][$record->rid] = $record->rid;
-    }
-
-    // Prevent indexing of comments if there are any roles that can search but
-    // not view comments.
+    // Do not index in the following three cases:
+    // 1. 'Authenticated user' can search content but can't access comments.
+    // 2. 'Anonymous user' can search content but can't access comments.
+    // 3. Any role can search content but can't access comments and access
+    // comments is not granted by the 'authenticated user' role. In this case
+    // all users might have both permissions from various roles but it is also
+    // possible to set up a user to have only search content and so a user
+    // edit could change the security situation so it is not safe to index the
+    // comments.
     $index_comments = TRUE;
-    foreach ($perms['search content'] as $rid) {
-      if (!isset($perms['access comments'][$rid]) && (($rid == DRUPAL_AUTHENTICATED_RID || $rid == DRUPAL_ANONYMOUS_RID) || !isset($perms['access comments'][DRUPAL_AUTHENTICATED_RID]))) {
-        $index_comments = FALSE;
-        break;
+    $roles = Drupal::entityManager()->getStorageController('user_role')->load();
+    $authenticated_can_access = $roles[DRUPAL_AUTHENTICATED_RID]->hasPermission('access comments');
+    foreach ($roles as $rid => $role) {
+      if ($role->hasPermission('search content') && !$role->hasPermission('access comments')) {
+        if ($rid == DRUPAL_AUTHENTICATED_RID || $rid == DRUPAL_ANONYMOUS_RID || !$authenticated_can_access) {
+          $index_comments = FALSE;
+          break;
+        }
       }
     }
   }
@@ -1811,48 +1819,6 @@ function comment_ranking() {
       // Inverse law that maps the highest reply count on the site to 1 and 0 to 0.
       'score' => '2.0 - 2.0 / (1.0 + ces.comment_count * CAST(:scale AS DECIMAL))',
       'arguments' => array(':scale' => Drupal::state()->get('comment.node_comment_statistics_scale') ?: 0),
-    ),
-  );
-}
-
-/**
- * Implements hook_rdf_mapping().
- */
-function comment_rdf_mapping() {
-  return array(
-    array(
-      'type' => 'comment',
-      'bundle' => RDF_DEFAULT_BUNDLE,
-      'mapping' => array(
-        'rdftype' => array('sioc:Post', 'sioct:Comment'),
-        'title' => array(
-          'predicates' => array('dc:title'),
-        ),
-        'created' => array(
-          'predicates' => array('dc:date', 'dc:created'),
-          'datatype' => 'xsd:dateTime',
-          'callback' => 'date_iso8601',
-        ),
-        'changed' => array(
-          'predicates' => array('dc:modified'),
-          'datatype' => 'xsd:dateTime',
-          'callback' => 'date_iso8601',
-        ),
-        'comment_body' => array(
-          'predicates' => array('content:encoded'),
-        ),
-        'pid' => array(
-          'predicates' => array('sioc:reply_of'),
-          'type' => 'rel',
-        ),
-        'uid' => array(
-          'predicates' => array('sioc:has_creator'),
-          'type' => 'rel',
-        ),
-        'name' => array(
-          'predicates' => array('foaf:name'),
-        ),
-      ),
     ),
   );
 }

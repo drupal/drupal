@@ -314,16 +314,16 @@ function contact_mail($key, &$message, $params) {
  *
  * Add the enable personal contact form to an individual user's account page.
  *
- * @see user_profile_form()
+ * @see \Drupal\user\ProfileFormController::form()
  */
-function contact_form_user_profile_form_alter(&$form, &$form_state) {
+function contact_form_user_form_alter(&$form, &$form_state) {
   $form['contact'] = array(
     '#type' => 'details',
     '#title' => t('Contact settings'),
     '#weight' => 5,
   );
   $account = $form_state['controller']->getEntity();
-  $account_data = Drupal::service('user.data')->get('contact', $account->id(), 'enabled');
+  $account_data = !user_is_anonymous() ? Drupal::service('user.data')->get('contact', $account->id(), 'enabled') : NULL;
   $form['contact']['contact'] = array(
     '#type' => 'checkbox',
     '#title' => t('Personal contact form'),

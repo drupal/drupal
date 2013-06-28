@@ -37,24 +37,24 @@ class ValidatorTest extends FileManagedTestBase {
   function testFileValidateExtensions() {
     $file = entity_create('file', array('filename' => 'asdf.txt'));
     $errors = file_validate_extensions($file, 'asdf txt pork');
-    $this->assertEqual(count($errors), 0, t('Valid extension accepted.'), 'File');
+    $this->assertEqual(count($errors), 0, 'Valid extension accepted.', 'File');
 
     $file->setFilename('asdf.txt');
     $errors = file_validate_extensions($file, 'exe png');
-    $this->assertEqual(count($errors), 1, t('Invalid extension blocked.'), 'File');
+    $this->assertEqual(count($errors), 1, 'Invalid extension blocked.', 'File');
   }
 
   /**
    *  This ensures a specific file is actually an image.
    */
   function testFileValidateIsImage() {
-    $this->assertTrue(file_exists($this->image->getFileUri()), t('The image being tested exists.'), 'File');
+    $this->assertTrue(file_exists($this->image->getFileUri()), 'The image being tested exists.', 'File');
     $errors = file_validate_is_image($this->image);
-    $this->assertEqual(count($errors), 0, t('No error reported for our image file.'), 'File');
+    $this->assertEqual(count($errors), 0, 'No error reported for our image file.', 'File');
 
-    $this->assertTrue(file_exists($this->non_image->getFileUri()), t('The non-image being tested exists.'), 'File');
+    $this->assertTrue(file_exists($this->non_image->getFileUri()), 'The non-image being tested exists.', 'File');
     $errors = file_validate_is_image($this->non_image);
-    $this->assertEqual(count($errors), 1, t('An error reported for our non-image file.'), 'File');
+    $this->assertEqual(count($errors), 1, 'An error reported for our non-image file.', 'File');
   }
 
   /**
@@ -64,19 +64,19 @@ class ValidatorTest extends FileManagedTestBase {
   function testFileValidateImageResolution() {
     // Non-images.
     $errors = file_validate_image_resolution($this->non_image);
-    $this->assertEqual(count($errors), 0, t("Shouldn't get any errors for a non-image file."), 'File');
+    $this->assertEqual(count($errors), 0, 'Should not get any errors for a non-image file.', 'File');
     $errors = file_validate_image_resolution($this->non_image, '50x50', '100x100');
-    $this->assertEqual(count($errors), 0, t("Don't check the resolution on non files."), 'File');
+    $this->assertEqual(count($errors), 0, 'Do not check the resolution on non files.', 'File');
 
     // Minimum size.
     $errors = file_validate_image_resolution($this->image);
-    $this->assertEqual(count($errors), 0, t('No errors for an image when there is no minimum or maximum resolution.'), 'File');
+    $this->assertEqual(count($errors), 0, 'No errors for an image when there is no minimum or maximum resolution.', 'File');
     $errors = file_validate_image_resolution($this->image, 0, '200x1');
-    $this->assertEqual(count($errors), 1, t("Got an error for an image that wasn't wide enough."), 'File');
+    $this->assertEqual(count($errors), 1, 'Got an error for an image that was not wide enough.', 'File');
     $errors = file_validate_image_resolution($this->image, 0, '1x200');
-    $this->assertEqual(count($errors), 1, t("Got an error for an image that wasn't tall enough."), 'File');
+    $this->assertEqual(count($errors), 1, 'Got an error for an image that was not tall enough.', 'File');
     $errors = file_validate_image_resolution($this->image, 0, '200x200');
-    $this->assertEqual(count($errors), 1, t('Small images report an error.'), 'File');
+    $this->assertEqual(count($errors), 1, 'Small images report an error.', 'File');
 
     // Maximum size.
     if ($this->container->has('image.toolkit')) {
@@ -85,18 +85,18 @@ class ValidatorTest extends FileManagedTestBase {
       $this->image->setFileUri('temporary://druplicon.png');
 
       $errors = file_validate_image_resolution($this->image, '10x5');
-      $this->assertEqual(count($errors), 0, t('No errors should be reported when an oversized image can be scaled down.'), 'File');
+      $this->assertEqual(count($errors), 0, 'No errors should be reported when an oversized image can be scaled down.', 'File');
 
       $info = image_get_info($this->image->getFileUri());
-      $this->assertTrue($info['width'] <= 10, t('Image scaled to correct width.'), 'File');
-      $this->assertTrue($info['height'] <= 5, t('Image scaled to correct height.'), 'File');
+      $this->assertTrue($info['width'] <= 10, 'Image scaled to correct width.', 'File');
+      $this->assertTrue($info['height'] <= 5, 'Image scaled to correct height.', 'File');
 
       drupal_unlink('temporary://druplicon.png');
     }
     else {
       // TODO: should check that the error is returned if no toolkit is available.
       $errors = file_validate_image_resolution($this->image, '5x10');
-      $this->assertEqual(count($errors), 1, t("Oversize images that can't be scaled get an error."), 'File');
+      $this->assertEqual(count($errors), 1, 'Oversize images that cannot be scaled get an error.', 'File');
     }
   }
 
@@ -111,17 +111,17 @@ class ValidatorTest extends FileManagedTestBase {
     $file->setFilename(str_repeat('x', 240));
     $this->assertEqual(strlen($file->getFilename()), 240);
     $errors = file_validate_name_length($file);
-    $this->assertEqual(count($errors), 0, t('No errors reported for 240 length filename.'), 'File');
+    $this->assertEqual(count($errors), 0, 'No errors reported for 240 length filename.', 'File');
 
     // Add a filename with a length too long and test it.
     $file->setFilename(str_repeat('x', 241));
     $errors = file_validate_name_length($file);
-    $this->assertEqual(count($errors), 1, t('An error reported for 241 length filename.'), 'File');
+    $this->assertEqual(count($errors), 1, 'An error reported for 241 length filename.', 'File');
 
     // Add a filename with an empty string and test it.
     $file->setFilename('');
     $errors = file_validate_name_length($file);
-    $this->assertEqual(count($errors), 1, t('An error reported for 0 length filename.'), 'File');
+    $this->assertEqual(count($errors), 1, 'An error reported for 0 length filename.', 'File');
   }
 
 
@@ -139,13 +139,13 @@ class ValidatorTest extends FileManagedTestBase {
     // Create a file with a size of 1000 bytes, and quotas of only 1 byte.
     $file = entity_create('file', array('filesize' => 1000));
     $errors = file_validate_size($file, 0, 0);
-    $this->assertEqual(count($errors), 0, t('No limits means no errors.'), 'File');
+    $this->assertEqual(count($errors), 0, 'No limits means no errors.', 'File');
     $errors = file_validate_size($file, 1, 0);
-    $this->assertEqual(count($errors), 1, t('Error for the file being over the limit.'), 'File');
+    $this->assertEqual(count($errors), 1, 'Error for the file being over the limit.', 'File');
     $errors = file_validate_size($file, 0, 1);
-    $this->assertEqual(count($errors), 1, t('Error for the user being over their limit.'), 'File');
+    $this->assertEqual(count($errors), 1, 'Error for the user being over their limit.', 'File');
     $errors = file_validate_size($file, 1, 1);
-    $this->assertEqual(count($errors), 2, t('Errors for both the file and their limit.'), 'File');
+    $this->assertEqual(count($errors), 2, 'Errors for both the file and their limit.', 'File');
 
     $user = $original_user;
     drupal_save_session(TRUE);

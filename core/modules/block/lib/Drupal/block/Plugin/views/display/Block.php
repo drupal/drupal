@@ -54,8 +54,10 @@ class Block extends DisplayPluginBase {
     // display, and arguments should be set on the view.
     $element = $this->view->render();
     if (!empty($this->view->result) || $this->getOption('empty') || !empty($this->view->style_plugin->definition['even empty'])) {
-      return drupal_render($element);
+      return $element;
     }
+
+    return array();
   }
 
   /**

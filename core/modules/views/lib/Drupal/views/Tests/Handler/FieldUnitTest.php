@@ -38,11 +38,6 @@ class FieldUnitTest extends ViewUnitTestBase {
     );
   }
 
-  public function setUp() {
-    parent::setUp();
-    $this->installSchema('user', 'role_permission');
-  }
-
   /**
    * Overrides Drupal\views\Tests\ViewTestBase::viewsData().
    */

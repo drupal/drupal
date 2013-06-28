@@ -83,6 +83,11 @@ abstract class OverviewBase implements FormInterface, ControllerInterface {
     $this->entity_type = $entity_type;
     $this->bundle = $bundle;
     $this->adminPath = $this->entityManager->getAdminPath($this->entity_type, $this->bundle);
+
+    // When displaying the form, make sure the list of fields is up-to-date.
+    if (empty($form_state['post'])) {
+      field_info_cache_clear();
+    }
   }
 
   /**

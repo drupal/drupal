@@ -7,12 +7,12 @@
 
 namespace Drupal\Core\Entity\Field\Type;
 
-use Drupal\Core\Entity\Field\FieldItemBase;
+use Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem;
 
 /**
  * Defines the 'email_field' entity field item.
  */
-class EmailItem extends FieldItemBase {
+class EmailItem extends LegacyConfigFieldItem {
 
   /**
    * Definitions of the contained properties.
@@ -35,5 +35,12 @@ class EmailItem extends FieldItemBase {
       );
     }
     return static::$propertyDefinitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEmpty() {
+    return !isset($this->values['value']) || $this->values['value'] === '';
   }
 }

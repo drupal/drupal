@@ -432,7 +432,23 @@ function menu_test_menu() {
     'type' => MENU_LOCAL_ACTION,
   );
 
+  $items['menu-test-local-action/dynamic-title'] = array(
+    'title' => 'My dynamic title action',
+    'title callback' => 'menu_test_local_action_dynamic_title',
+    'title arguments' => array(1),
+    'route_name' => 'menu_test_local_action4',
+    'weight' => -10,
+    'type' => MENU_LOCAL_ACTION,
+  );
+
   return $items;
+}
+
+/**
+ * Title callback: Set a dynamic title for a local action.
+ */
+function menu_test_local_action_dynamic_title($arg) {
+  return t('My @arg action', array('@arg' => $arg));
 }
 
 /**

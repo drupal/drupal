@@ -215,7 +215,7 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
         'query' => $destination,
       ),
     );
-    if (module_invoke('translation_entity', 'translate_access', $term)) {
+    if (module_invoke('content_translation', 'translate_access', $term)) {
       $operations['translate'] = array(
         'title' => t('translate'),
         'href' => 'taxonomy/term/' . $term->id() . '/translations',

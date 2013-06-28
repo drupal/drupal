@@ -35,8 +35,8 @@ class FileFieldPathTest extends FileFieldTestBase {
 
     // Check that the file was uploaded to the file root.
     $node = node_load($nid, TRUE);
-    $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
-    $this->assertPathMatch('public://' . $test_file->getFilename(), $node_file->getFileUri(), t('The file %file was uploaded to the correct path.', array('%file' => $node_file->getFileUri())));
+    $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id']);
+    $this->assertPathMatch('public://' . $test_file->getFilename(), $node_file->getFileUri(), format_string('The file %file was uploaded to the correct path.', array('%file' => $node_file->getFileUri())));
 
     // Change the path to contain multiple subdirectories.
     $this->updateFileField($field_name, $type_name, array('file_directory' => 'foo/bar/baz'));
@@ -46,8 +46,8 @@ class FileFieldPathTest extends FileFieldTestBase {
 
     // Check that the file was uploaded into the subdirectory.
     $node = node_load($nid, TRUE);
-    $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid'], TRUE);
-    $this->assertPathMatch('public://foo/bar/baz/' . $test_file->getFilename(), $node_file->getFileUri(), t('The file %file was uploaded to the correct path.', array('%file' => $node_file->getFileUri())));
+    $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'], TRUE);
+    $this->assertPathMatch('public://foo/bar/baz/' . $test_file->getFilename(), $node_file->getFileUri(), format_string('The file %file was uploaded to the correct path.', array('%file' => $node_file->getFileUri())));
 
     // Check the path when used with tokens.
     // Change the path to contain multiple token directories.
@@ -58,12 +58,12 @@ class FileFieldPathTest extends FileFieldTestBase {
 
     // Check that the file was uploaded into the subdirectory.
     $node = node_load($nid, TRUE);
-    $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['fid']);
+    $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id']);
     // Do token replacement using the same user which uploaded the file, not
     // the user running the test case.
     $data = array('user' => $this->admin_user);
     $subdirectory = \Drupal::token()->replace('[user:uid]/[user:name]', $data);
-    $this->assertPathMatch('public://' . $subdirectory . '/' . $test_file->getFilename(), $node_file->getFileUri(), t('The file %file was uploaded to the correct path with token replacements.', array('%file' => $node_file->getFileUri())));
+    $this->assertPathMatch('public://' . $subdirectory . '/' . $test_file->getFilename(), $node_file->getFileUri(), format_string('The file %file was uploaded to the correct path with token replacements.', array('%file' => $node_file->getFileUri())));
   }
 
   /**

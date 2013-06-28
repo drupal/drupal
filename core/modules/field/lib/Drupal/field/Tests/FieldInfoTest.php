@@ -24,10 +24,6 @@ class FieldInfoTest extends FieldUnitTestBase {
     // Test that field_test module's fields, widgets, and formatters show up.
 
     $field_test_info = field_test_field_info();
-    // We need to account for the existence of user_field_info_alter().
-    foreach (array_keys($field_test_info) as $name) {
-      $field_test_info[$name]['instance_settings']['user_register_form'] = FALSE;
-    }
     $info = field_info_field_types();
     foreach ($field_test_info as $t_key => $field_type) {
       foreach ($field_type as $key => $val) {
@@ -46,11 +42,11 @@ class FieldInfoTest extends FieldUnitTestBase {
     }
 
     // Verify that no unexpected instances exist.
-    $instances = field_info_instances('test_entity');
+    $instances = field_info_instances('entity_test');
     $expected = array();
-    $this->assertIdentical($instances, $expected, format_string("field_info_instances('test_entity') returns %expected.", array('%expected' => var_export($expected, TRUE))));
-    $instances = field_info_instances('test_entity', 'test_bundle');
-    $this->assertIdentical($instances, array(), "field_info_instances('test_entity', 'test_bundle') returns an empty array.");
+    $this->assertIdentical($instances, $expected, format_string("field_info_instances('entity_test') returns %expected.", array('%expected' => var_export($expected, TRUE))));
+    $instances = field_info_instances('entity_test', 'entity_test');
+    $this->assertIdentical($instances, array(), "field_info_instances('entity_test', 'entity_test') returns an empty array.");
 
     // Create a field, verify it shows up.
     $core_fields = field_info_fields();
@@ -74,8 +70,8 @@ class FieldInfoTest extends FieldUnitTestBase {
     // Create an instance, verify that it shows up
     $instance_definition = array(
       'field_name' => $field['field_name'],
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
       'label' => $this->randomName(),
       'description' => $this->randomName(),
       'weight' => mt_rand(0, 127),
@@ -83,20 +79,20 @@ class FieldInfoTest extends FieldUnitTestBase {
     $instance = entity_create('field_instance', $instance_definition);
     $instance->save();
 
-    $info = entity_get_info('test_entity');
-    $instances = field_info_instances('test_entity', $instance['bundle']);
+    $info = entity_get_info('entity_test');
+    $instances = field_info_instances('entity_test', $instance['bundle']);
     $this->assertEqual(count($instances), 1, format_string('One instance shows up in info when attached to a bundle on a @label.', array(
       '@label' => $info['label']
     )));
     $this->assertTrue($instance_definition < $instances[$instance['field_name']], 'Instance appears in info correctly');
 
     // Test a valid entity type but an invalid bundle.
-    $instances = field_info_instances('test_entity', 'invalid_bundle');
-    $this->assertIdentical($instances, array(), "field_info_instances('test_entity', 'invalid_bundle') returns an empty array.");
+    $instances = field_info_instances('entity_test', 'invalid_bundle');
+    $this->assertIdentical($instances, array(), "field_info_instances('entity_test', 'invalid_bundle') returns an empty array.");
 
     // Test invalid entity type and bundle.
     $instances = field_info_instances('invalid_entity', $instance['bundle']);
-    $this->assertIdentical($instances, array(), "field_info_instances('invalid_entity', 'test_bundle') returns an empty array.");
+    $this->assertIdentical($instances, array(), "field_info_instances('invalid_entity', 'entity_test') returns an empty array.");
 
     // Test invalid entity type, no bundle provided.
     $instances = field_info_instances('invalid_entity');
@@ -158,19 +154,17 @@ class FieldInfoTest extends FieldUnitTestBase {
     entity_create('field_entity', $field_definition)->save();
     $instance_definition = array(
       'field_name' => $field_definition['field_name'],
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
     );
     $instance = entity_create('field_instance', $instance_definition);
     $instance->save();
 
     // Simulate a stored instance definition missing various settings (e.g. a
-    // third-party module adding instance or widget settings has been enabled,
-    // but existing instances do not know the new settings).
+    // third-party module adding instance settings has been enabled, but
+    // existing instances do not know the new settings).
     \Drupal::config('field.instance.' . $instance->id())
       ->set('settings', array())
-      ->set('widget.type', 'unavailable_widget')
-      ->set('widget.settings', array())
       ->save();
     field_info_cache_clear();
 
@@ -212,8 +206,8 @@ class FieldInfoTest extends FieldUnitTestBase {
     // We will overlook fields created by the 'standard' installation profile.
     $exclude = field_info_field_map();
 
-    // Create a new bundle for 'test_entity' entity type.
-    field_test_create_bundle('test_bundle_2');
+    // Create a new bundle for 'entity_test' entity type.
+    entity_test_create_bundle('test_bundle_2');
 
     // Create a couple fields.
     $fields  = array(
@@ -234,23 +228,23 @@ class FieldInfoTest extends FieldUnitTestBase {
     $instances = array(
       array(
         'field_name' => 'field_1',
-        'entity_type' => 'test_entity',
-        'bundle' => 'test_bundle',
+        'entity_type' => 'entity_test',
+        'bundle' => 'entity_test',
       ),
       array(
         'field_name' => 'field_1',
-        'entity_type' => 'test_entity',
+        'entity_type' => 'entity_test',
         'bundle' => 'test_bundle_2',
       ),
       array(
         'field_name' => 'field_2',
-        'entity_type' => 'test_entity',
-        'bundle' => 'test_bundle',
+        'entity_type' => 'entity_test',
+        'bundle' => 'entity_test',
       ),
       array(
         'field_name' => 'field_2',
-        'entity_type' => 'test_cacheable_entity',
-        'bundle' => 'test_bundle',
+        'entity_type' => 'entity_test_cache',
+        'bundle' => 'entity_test',
       ),
     );
     foreach ($instances as $instance) {
@@ -261,14 +255,14 @@ class FieldInfoTest extends FieldUnitTestBase {
       'field_1' => array(
         'type' => 'test_field',
         'bundles' => array(
-          'test_entity' => array('test_bundle', 'test_bundle_2'),
+          'entity_test' => array('entity_test', 'test_bundle_2'),
         ),
       ),
       'field_2' => array(
         'type' => 'hidden_test_field',
         'bundles' => array(
-          'test_entity' => array('test_bundle'),
-          'test_cacheable_entity' => array('test_bundle'),
+          'entity_test' => array('entity_test'),
+          'entity_test_cache' => array('entity_test'),
         ),
       ),
     );
@@ -284,10 +278,6 @@ class FieldInfoTest extends FieldUnitTestBase {
    */
   function testSettingsInfo() {
     $info = field_test_field_info();
-    // We need to account for the existence of user_field_info_alter().
-    foreach (array_keys($info) as $name) {
-      $info[$name]['instance_settings']['user_register_form'] = FALSE;
-    }
     foreach ($info as $type => $data) {
       $this->assertIdentical(field_info_field_settings($type), $data['settings'], format_string("field_info_field_settings returns %type's field settings", array('%type' => $type)));
       $this->assertIdentical(field_info_instance_settings($type), $data['instance_settings'], format_string("field_info_field_settings returns %type's field instance settings", array('%type' => $type)));

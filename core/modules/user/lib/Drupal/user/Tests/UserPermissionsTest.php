@@ -8,6 +8,7 @@
 namespace Drupal\user\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\user\RoleStorageController;
 
 class UserPermissionsTest extends WebTestBase {
   protected $admin_user;
@@ -46,8 +47,8 @@ class UserPermissionsTest extends WebTestBase {
     $edit[$rid . '[administer nodes]'] = TRUE;
     $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), 'Successful save message displayed.');
-    drupal_static_reset('user_access');
-    drupal_static_reset('user_role_permissions');
+    $storage_controller = $this->container->get('plugin.manager.entity')->getStorageController('user_role');
+    $storage_controller->resetCache();
     $this->assertTrue(user_access('administer nodes', $account), 'User now has "administer nodes" permission.');
 
     // Remove a permission.
@@ -56,8 +57,7 @@ class UserPermissionsTest extends WebTestBase {
     $edit[$rid . '[access user profiles]'] = FALSE;
     $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), 'Successful save message displayed.');
-    drupal_static_reset('user_access');
-    drupal_static_reset('user_role_permissions');
+    $storage_controller->resetCache();
     $this->assertFalse(user_access('access user profiles', $account), 'User no longer has "access user profiles" permission.');
   }
 

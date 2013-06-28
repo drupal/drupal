@@ -29,7 +29,7 @@ class ViewModeAccessCheck implements AccessCheckInterface {
   public function access(Route $route, Request $request) {
     if ($entity_type = $request->attributes->get('entity_type')) {
       $bundle = $request->attributes->get('bundle');
-      $view_mode = $request->attributes->get('view_mode');
+      $view_mode = $request->attributes->get('mode');
 
       $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
       $visibility = ($view_mode == 'default') || !empty($view_mode_settings[$view_mode]['status']);

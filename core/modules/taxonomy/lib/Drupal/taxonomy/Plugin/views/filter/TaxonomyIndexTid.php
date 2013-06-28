@@ -11,6 +11,7 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\filter\ManyToOne;
+use Drupal\Component\Utility\Tags;
 
 /**
  * Filter by term id.
@@ -217,7 +218,7 @@ class TaxonomyIndexTid extends ManyToOne {
       return;
     }
 
-    $values = drupal_explode_tags($form_state['values']['options']['value']);
+    $values = Tags::explode($form_state['values']['options']['value']);
     $tids = $this->validate_term_strings($form['value'], $values);
 
     if ($tids) {
@@ -271,7 +272,7 @@ class TaxonomyIndexTid extends ManyToOne {
       return;
     }
 
-    $values = drupal_explode_tags($form_state['values'][$identifier]);
+    $values = Tags::explode($form_state['values'][$identifier]);
 
     $tids = $this->validate_term_strings($form[$identifier], $values);
     if ($tids) {

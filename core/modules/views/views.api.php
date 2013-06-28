@@ -98,6 +98,26 @@
  */
 
 /**
+ * Analyze a view to provide warnings about its configuration.
+ *
+ * @param \Drupal\views\ViewExecutable $view
+ *   The view being executed.
+ *
+ * @return array
+ *   Array of warning messages built by Analyzer::formatMessage to be displayed
+ *   to the user following analysis of the view.
+ */
+function hook_views_analyze(Drupal\views\ViewExecutable $view) {
+  $messages = array();
+
+  if ($view->display_handler->options['pager']['type'] == 'none') {
+    $messages[] = Drupal\views\Analyzer::formatMessage(t('This view has no pager. This could cause performance issues when the view contains many items.'), 'warning');
+  }
+
+  return $messages;
+}
+
+/**
  * Describe data tables (or the equivalent) to Views.
  *
  * The data described with this hook is fetched and retrieved by

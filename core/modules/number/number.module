@@ -31,7 +31,7 @@ function number_field_info() {
       'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
       'default_widget' => 'number',
       'default_formatter' => 'number_integer',
-      'field item class' => '\Drupal\number\Type\IntegerItem',
+      'class' => '\Drupal\number\Type\IntegerItem',
     ),
     'number_decimal' => array(
       'label' => t('Decimal'),
@@ -40,7 +40,7 @@ function number_field_info() {
       'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
       'default_widget' => 'number',
       'default_formatter' => 'number_decimal',
-      'field item class' => '\Drupal\number\Type\DecimalItem',
+      'class' => '\Drupal\number\Type\DecimalItem',
     ),
     'number_float' => array(
       'label' => t('Float'),
@@ -48,7 +48,7 @@ function number_field_info() {
       'instance_settings' => array('min' => '', 'max' => '', 'prefix' => '', 'suffix' => ''),
       'default_widget' => 'number',
       'default_formatter' => 'number_decimal',
-      'field item class' => '\Drupal\number\Type\FloatItem',
+      'class' => '\Drupal\number\Type\FloatItem',
     ),
   );
 }

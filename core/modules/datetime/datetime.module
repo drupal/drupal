@@ -106,8 +106,7 @@ function datetime_field_info() {
       ),
       'default_widget' => 'datetime_default',
       'default_formatter' => 'datetime_default',
-      'default_token_formatter' => 'datetime_plain',
-      'field item class' => '\Drupal\datetime\Type\DateTimeItem',
+      'class' => '\Drupal\datetime\Type\DateTimeItem',
     ),
   );
 }

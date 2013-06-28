@@ -502,14 +502,14 @@ function locale_translation_status_form($form, &$form_state) {
   module_load_include('compare.inc', 'locale');
   $updates = $options = array();
   $languages_update = $languages_not_found = array();
+  $projects_update = array();
 
   // @todo Calling locale_translation_build_projects() is an expensive way to
   //   get a module name. In follow-up issue http://drupal.org/node/1842362
   //   the project name will be stored to display use, like here.
   $project_data = locale_translation_build_projects();
   $languages = locale_translatable_language_list();
-  $projects = locale_translation_get_projects();
-  $status = Drupal::state()->get('locale.translation_status');
+  $status = locale_translation_get_status();
 
   // Prepare information about projects which have available translation
   // updates.
@@ -517,7 +517,7 @@ function locale_translation_status_form($form, &$form_state) {
     foreach ($status as $project_id => $project) {
       foreach ($project as $langcode => $project_info) {
         // No translation file found for this project-language combination.
-        if (!isset($project_info->type)) {
+        if (empty($project_info->type)) {
           $updates[$langcode]['not_found'][] = array(
             'name' => $project_info->name == 'drupal' ? t('Drupal core') : $project_data[$project_info->name]->info['name'],
             'version' => $project_info->version,
@@ -536,6 +536,7 @@ function locale_translation_status_form($form, &$form_state) {
             'timestamp' => $recent->timestamp,
           );
           $languages_update[$langcode] = $langcode;
+          $projects_update[$project_info->name] = $project_info->name;
         }
       }
     }
@@ -578,6 +579,12 @@ function locale_translation_status_form($form, &$form_state) {
   else  {
     $empty = t('No translation status available. <a href="@check">Check manually</a>.', array('@check' => url('admin/reports/translations/check')));
   }
+
+  // The projects which require an update. Used by the _submit callback.
+  $form['projects_update'] = array(
+    '#type' => 'value',
+    '#value' => $projects_update,
+  );
 
   $form['langcodes'] = array(
     '#type' => 'tableselect',
@@ -622,6 +629,7 @@ function locale_translation_status_form_validate($form, &$form_state) {
 function locale_translation_status_form_submit($form, &$form_state) {
   module_load_include('fetch.inc', 'locale');
   $langcodes = array_filter($form_state['values']['langcodes']);
+  $projects = array_filter($form_state['values']['projects_update']);
 
   // Set the translation import options. This determines if existing
   // translations will be overwritten by imported strings.
@@ -637,7 +645,7 @@ function locale_translation_status_form_submit($form, &$form_state) {
     batch_set($batch);
   }
   else {
-    $batch = locale_translation_batch_fetch_build(array(), $langcodes, $options);
+    $batch = locale_translation_batch_fetch_build($projects, $langcodes, $options);
     batch_set($batch);
   }
 }

@@ -52,6 +52,21 @@ class TextareaWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
+  public function settingsSummary() {
+    $summary = array();
+
+    $summary[] = t('Number of rows: !rows', array('!rows' => $this->getSetting('rows')));
+    $placeholder = $this->getSetting('placeholder');
+    if (!empty($placeholder)) {
+      $summary[] = t('Placeholder: @placeholder', array('@placeholder' => $placeholder));
+    }
+
+    return $summary;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $main_widget = $element + array(
       '#type' => 'textarea',

@@ -32,7 +32,7 @@ function link_field_info() {
     ),
     'default_widget' => 'link_default',
     'default_formatter' => 'link',
-    'field item class' => '\Drupal\link\Type\LinkItem',
+    'class' => '\Drupal\link\Type\LinkItem',
   );
   return $types;
 }
@@ -55,24 +55,6 @@ function link_field_instance_settings_form($field, $instance) {
 }
 
 /**
- * Implements hook_field_load().
- */
-function link_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
-  foreach ($entities as $id => $entity) {
-    foreach ($items[$id] as $delta => &$item) {
-      // Unserialize the attributes into an array. The value stored in the
-      // field data should either be NULL or a non-empty serialized array.
-      if (empty($item['attributes'])) {
-        $item['attributes'] = array();
-      }
-      else {
-        $item['attributes'] = unserialize($item['attributes']);
-      }
-    }
-  }
-}
-
-/**
  * Implements hook_field_is_empty().
  */
 function link_field_is_empty($item, $field_type) {
@@ -87,9 +69,6 @@ function link_field_presave(EntityInterface $entity, $field, $instance, $langcod
     // Trim any spaces around the URL and link text.
     $item['url'] = trim($item['url']);
     $item['title'] = trim($item['title']);
-
-    // Serialize the attributes array.
-    $item['attributes'] = !empty($item['attributes']) ? serialize($item['attributes']) : NULL;
   }
 }
 

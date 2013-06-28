@@ -91,22 +91,29 @@ class EntityListController implements EntityListControllerInterface, EntityContr
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityListControllerInterface::getOperations().
+   * {@inheritdoc}
    */
   public function getOperations(EntityInterface $entity) {
     $uri = $entity->uri();
-    $operations['edit'] = array(
-      'title' => t('Edit'),
-      'href' => $uri['path'] . '/edit',
-      'options' => $uri['options'],
-      'weight' => 10,
-    );
-    $operations['delete'] = array(
-      'title' => t('Delete'),
-      'href' => $uri['path'] . '/delete',
-      'options' => $uri['options'],
-      'weight' => 100,
-    );
+
+    $operations = array();
+    if ($entity->access('update')) {
+      $operations['edit'] = array(
+        'title' => t('Edit'),
+        'href' => $uri['path'] . '/edit',
+        'options' => $uri['options'],
+        'weight' => 10,
+      );
+    }
+    if ($entity->access('delete')) {
+      $operations['delete'] = array(
+        'title' => t('Delete'),
+        'href' => $uri['path'] . '/delete',
+        'options' => $uri['options'],
+        'weight' => 100,
+      );
+    }
+
     return $operations;
   }
 
@@ -182,7 +189,9 @@ class EntityListController implements EntityListControllerInterface, EntityContr
       '#empty' => t('There is no @label yet.', array('@label' => $this->entityInfo['label'])),
     );
     foreach ($this->load() as $entity) {
-      $build['#rows'][$entity->id()] = $this->buildRow($entity);
+      if ($row = $this->buildRow($entity)) {
+        $build['#rows'][$entity->id()] = $row;
+      }
     }
     return $build;
   }

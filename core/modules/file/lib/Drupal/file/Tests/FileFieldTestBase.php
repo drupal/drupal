@@ -155,7 +155,7 @@ abstract class FileFieldTestBase extends WebTestBase {
       $node->setNewRevision();
       $node->save();
       $node = node_load($nid, TRUE);
-      $this->assertNotEqual($nid, $node->vid, t('Node revision exists.'));
+      $this->assertNotEqual($nid, $node->vid, 'Node revision exists.');
     }
 
     // Attach a file to the node.
@@ -201,7 +201,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    * Asserts that a file exists physically on disk.
    */
   function assertFileExists($file, $message = NULL) {
-    $message = isset($message) ? $message : t('File %file exists on the disk.', array('%file' => $file->getFileUri()));
+    $message = isset($message) ? $message : format_string('File %file exists on the disk.', array('%file' => $file->getFileUri()));
     $this->assertTrue(is_file($file->getFileUri()), $message);
   }
 
@@ -211,7 +211,7 @@ abstract class FileFieldTestBase extends WebTestBase {
   function assertFileEntryExists($file, $message = NULL) {
     $this->container->get('plugin.manager.entity')->getStorageController('file')->resetCache();
     $db_file = file_load($file->id());
-    $message = isset($message) ? $message : t('File %file exists in database at the correct path.', array('%file' => $file->getFileUri()));
+    $message = isset($message) ? $message : format_string('File %file exists in database at the correct path.', array('%file' => $file->getFileUri()));
     $this->assertEqual($db_file->getFileUri(), $file->getFileUri(), $message);
   }
 
@@ -219,7 +219,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    * Asserts that a file does not exist on disk.
    */
   function assertFileNotExists($file, $message = NULL) {
-    $message = isset($message) ? $message : t('File %file exists on the disk.', array('%file' => $file->getFileUri()));
+    $message = isset($message) ? $message : format_string('File %file exists on the disk.', array('%file' => $file->getFileUri()));
     $this->assertFalse(is_file($file->getFileUri()), $message);
   }
 
@@ -228,7 +228,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    */
   function assertFileEntryNotExists($file, $message) {
     $this->container->get('plugin.manager.entity')->getStorageController('file')->resetCache();
-    $message = isset($message) ? $message : t('File %file exists in database at the correct path.', array('%file' => $file->getFileUri()));
+    $message = isset($message) ? $message : format_string('File %file exists in database at the correct path.', array('%file' => $file->getFileUri()));
     $this->assertFalse(file_load($file->id()), $message);
   }
 
@@ -236,7 +236,7 @@ abstract class FileFieldTestBase extends WebTestBase {
    * Asserts that a file's status is set to permanent in the database.
    */
   function assertFileIsPermanent(FileInterface $file, $message = NULL) {
-    $message = isset($message) ? $message : t('File %file is permanent.', array('%file' => $file->getFileUri()));
+    $message = isset($message) ? $message : format_string('File %file is permanent.', array('%file' => $file->getFileUri()));
     $this->assertTrue($file->isPermanent(), $message);
   }
 

@@ -102,7 +102,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    * Field-type specific settings.
    *
    * An array of key/value pairs. The keys and default values are defined by the
-   * field type in the 'instance_settings' entry of hook_field_info().
+   * field type.
    *
    * @var array
    */
@@ -199,6 +199,13 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    * @var bool
    */
   protected $bundle_rename_allowed = FALSE;
+
+  /**
+   * The original instance.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   */
+  public $original = NULL;
 
   /**
    * Constructs a FieldInstance object.
@@ -371,10 +378,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
     $result = parent::save();
     field_cache_clear();
 
-    // Invoke hook_field_create_instance() after the cache is cleared for API
-    // consistency.
-    $module_handler->invokeAll('field_create_instance', array($this));
-
     return $result;
   }
 
@@ -395,6 +398,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
     $instance_controller = \Drupal::entityManager()->getStorageController($this->entityType);
 
     $original = $instance_controller->loadUnchanged($this->getOriginalID());
+    $this->original = $original;
 
     // Some updates are always disallowed.
     if ($this->entity_type != $original->entity_type) {
@@ -413,10 +417,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
     // Save the configuration.
     $result = parent::save();
     field_cache_clear();
-
-    // Invoke hook_field_update_instance() after the cache is cleared for API
-    // consistency.
-    $module_handler->invokeAll('field_update_instance', array($this, $original));
 
     return $result;
   }
@@ -461,10 +461,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
       // Mark instance data for deletion by invoking
       // hook_field_storage_delete_instance().
       $module_handler->invoke($this->field->storage['module'], 'field_storage_delete_instance', array($this));
-
-      // Let modules react to the deletion of the instance with
-      // hook_field_delete_instance().
-      $module_handler->invokeAll('field_delete_instance', array($this));
 
       // Remove the instance from the entity form displays.
       if ($form_display = entity_load('entity_form_display', $this->entity_type . '.' . $this->bundle . '.default')) {

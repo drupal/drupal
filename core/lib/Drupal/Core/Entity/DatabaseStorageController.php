@@ -214,6 +214,7 @@ class DatabaseStorageController extends EntityStorageControllerBase {
       $this->database->delete($this->revisionTable)
         ->condition($this->revisionKey, $revision->getRevisionId())
         ->execute();
+      $this->invokeFieldMethod('deleteRevision', $revision);
       $this->invokeHook('revision_delete', $revision);
     }
   }
@@ -406,6 +407,7 @@ class DatabaseStorageController extends EntityStorageControllerBase {
 
       $entity_class::postDelete($this, $entities);
       foreach ($entities as $id => $entity) {
+        $this->invokeFieldMethod('delete', $entity);
         $this->invokeHook('delete', $entity);
       }
       // Ignore slave server temporarily.
@@ -430,6 +432,7 @@ class DatabaseStorageController extends EntityStorageControllerBase {
       }
 
       $entity->preSave($this);
+      $this->invokeFieldMethod('preSave', $entity);
       $this->invokeHook('presave', $entity);
 
       if (!$entity->isNew()) {
@@ -446,6 +449,7 @@ class DatabaseStorageController extends EntityStorageControllerBase {
         }
         $this->resetCache(array($entity->id()));
         $entity->postSave($this, TRUE);
+        $this->invokeFieldMethod('update', $entity);
         $this->invokeHook('update', $entity);
       }
       else {
@@ -458,6 +462,7 @@ class DatabaseStorageController extends EntityStorageControllerBase {
 
         $entity->enforceIsNew(FALSE);
         $entity->postSave($this, FALSE);
+        $this->invokeFieldMethod('insert', $entity);
         $this->invokeHook('insert', $entity);
       }
 
@@ -518,7 +523,8 @@ class DatabaseStorageController extends EntityStorageControllerBase {
    * Invokes a hook on behalf of the entity.
    *
    * @param $hook
-   *   One of 'presave', 'insert', 'update', 'predelete', or 'delete'.
+   *   One of 'presave', 'insert', 'update', 'predelete', 'delete', or
+   *  'revision_delete'.
    * @param $entity
    *   The entity object.
    */
@@ -550,6 +556,6 @@ class DatabaseStorageController extends EntityStorageControllerBase {
    * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::getQueryServiceName().
    */
   public function getQueryServiceName() {
-    return 'entity.query.field_sql_storage';
+    return 'entity.query.sql';
   }
 }

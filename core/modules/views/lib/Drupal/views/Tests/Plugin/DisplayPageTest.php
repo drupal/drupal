@@ -60,7 +60,6 @@ class DisplayPageTest extends ViewUnitTestBase {
     $this->installSchema('system', 'router');
     $this->installSchema('system', 'url_alias');
     $this->installSchema('system', 'menu_router');
-    $this->installSchema('user', 'role_permission');
   }
 
   /**

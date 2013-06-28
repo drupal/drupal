@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\field\Plugin\Type\FieldType\ConfigField.
+ */
+
+namespace Drupal\field\Plugin\Type\FieldType;
+
+use Drupal\Core\TypedData\TypedDataInterface;
+use Drupal\Core\Entity\Field\Type\Field;
+use Drupal\field\Field as FieldAPI;
+
+/**
+ * Represents a configurable entity field.
+ */
+class ConfigField extends Field implements ConfigFieldInterface {
+
+  /**
+   * The Field instance definition.
+   *
+   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   */
+  protected $instance;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $definition, $name = NULL, TypedDataInterface $parent = NULL) {
+    parent::__construct($definition, $name, $parent);
+    if (isset($definition['instance'])) {
+      $this->instance = $definition['instance'];
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getInstance() {
+    if (!isset($this->instance) && $parent = $this->getParent()) {
+      $instances = FieldAPI::fieldInfo()->getBundleInstances($parent->entityType(), $parent->bundle());
+      $this->instance = $instances[$this->getName()];
+    }
+    return $this->instance;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConstraints() {
+    $constraints = array();
+    // Check that the number of values doesn't exceed the field cardinality. For
+    // form submitted values, this can only happen with 'multiple value'
+    // widgets.
+    $cardinality = $this->getInstance()->getField()->cardinality;
+    if ($cardinality != FIELD_CARDINALITY_UNLIMITED) {
+      $constraints[] = \Drupal::typedData()
+        ->getValidationConstraintManager()
+        ->create('Count', array(
+          'max' => $cardinality,
+          'maxMessage' => t('%name: this field cannot hold more than @count values.', array('%name' => $this->getInstance()->label, '@count' => $cardinality)),
+        ));
+    }
+
+    return $constraints;
+  }
+
+}

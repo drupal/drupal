@@ -2299,6 +2299,11 @@ function system_data_type_info() {
         ),
       ),
     ),
+    // Expose each field type as a data type. We add one single entry, which
+    // will be expanded through plugin derivatives.
+    'field_item' => array(
+      'derivative' => '\Drupal\Core\Entity\Plugin\DataType\FieldDataTypeDerivative',
+    ),
   );
 }
 
@@ -2551,7 +2556,7 @@ function system_custom_theme() {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function system_form_user_profile_form_alter(&$form, &$form_state) {
+function system_form_user_form_alter(&$form, &$form_state) {
   if (config('system.timezone')->get('user.configurable')) {
     system_user_timezone($form, $form_state);
   }
@@ -2603,7 +2608,7 @@ function system_user_timezone(&$form, &$form_state) {
   $form['timezone']['timezone'] = array(
     '#type' => 'select',
     '#title' => t('Time zone'),
-    '#default_value' => isset($account->timezone) ? $account->timezone : ($account->uid == $user->uid ? config('system.date')->get('timezone.default') : ''),
+    '#default_value' => isset($account->timezone) ? $account->timezone : ($account->uid == $user->uid ? config('system.timezone')->get('default') : ''),
     '#options' => system_time_zones($account->uid != $user->uid),
     '#description' => t('Select the desired local time and time zone. Dates and times throughout this site will be displayed using this time zone.'),
   );
@@ -3186,64 +3191,6 @@ function system_system_info_alter(&$info, $file, $type) {
 function system_default_region($theme) {
   $regions = array_keys(system_region_list($theme, REGIONS_VISIBLE));
   return isset($regions[0]) ? $regions[0] : '';
-}
-
-/**
- * Adds default behavior to a configuration form.
- *
- * This includes a consistent 'Save configuration' button, theme definition,
- * and submit handler.
- *
- * @param array $form
- *   An associative array containing the structure of the form.
- * @param array $form_state
- *   Reference to an associative array containing state of the form.
- *
- * @return array
- *   The form structure.
- *
- * @see system_config_form_submit()
- * @ingroup forms
- */
-function system_config_form($form, &$form_state) {
-  $form['actions']['#type'] = 'actions';
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save configuration'),
-    '#button_type' => 'primary',
-  );
-
-  // Add system_config_form_submit() to output a consistent confirmation
-  // message. Since this prevents drupal_prepare_form() from adding the form's
-  // primary submit handler, do that first, using the same logic.
-  if (!isset($form['#submit'])) {
-    $form['#submit'] = array();
-    if (isset($form_state['build_info']['callback_object'])) {
-      $form['#submit'][] = array($form_state['build_info']['callback_object'], 'submitForm');
-    }
-    elseif (function_exists($form_state['build_info']['form_id'] . '_submit')) {
-      $form['#submit'][] = $form_state['build_info']['form_id'] . '_submit';
-    }
-    elseif (isset($form_state['build_info']['base_form_id']) && function_exists($form_state['build_info']['base_form_id'] . '_submit')) {
-      $form['#submit'][] = $form_state['build_info']['base_form_id'] . '_submit';
-    }
-  }
-  $form['#submit'][] = 'system_config_form_submit';
-
-  // By default, render the form using theme_system_config_form().
-  if (!isset($form['#theme'])) {
-    $form['#theme'] = 'system_config_form';
-  }
-  return $form;
-}
-
-/**
- * Form submission handler for system_config_form().
- *
- * @see system_config_form()
- */
-function system_config_form_submit($form, &$form_state) {
-  drupal_set_message(t('The configuration options have been saved.'));
 }
 
 /**

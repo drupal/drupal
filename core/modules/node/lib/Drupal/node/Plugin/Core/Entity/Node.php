@@ -60,163 +60,6 @@ use Drupal\node\NodeBCDecorator;
 class Node extends EntityNG implements NodeInterface {
 
   /**
-   * The node ID.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $nid;
-
-  /**
-   * The node revision ID.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $vid;
-
-  /**
-   * The node UUID.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $uuid;
-
-  /**
-   * The node content type (bundle).
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $type;
-
-  /**
-   * The node language code.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $langcode;
-
-  /**
-   * The node title.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $title;
-
-  /**
-   * The node owner's user ID.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $uid;
-
-  /**
-   * The node published status indicator.
-   *
-   * Unpublished nodes are only visible to their authors and to administrators.
-   * The value is either NODE_PUBLISHED or NODE_NOT_PUBLISHED.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $status;
-
-  /**
-   * The node creation timestamp.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $created;
-
-  /**
-   * The node modification timestamp.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $changed;
-
-  /**
-   * The node promotion status.
-   *
-   * Promoted nodes should be displayed on the front page of the site. The value
-   * is either NODE_PROMOTED or NODE_NOT_PROMOTED.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $promote;
-
-  /**
-   * The node sticky status.
-   *
-   * Sticky nodes should be displayed at the top of lists in which they appear.
-   * The value is either NODE_STICKY or NODE_NOT_STICKY.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $sticky;
-
-  /**
-   * The node translation set ID.
-   *
-   * Translations sets are based on the ID of the node containing the source
-   * text for the translation set.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $tnid;
-
-  /**
-   * The node translation status.
-   *
-   * If the translation page needs to be updated, the value is 1; otherwise 0.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $translate;
-
-  /**
-   * The node revision creation timestamp.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $revision_timestamp;
-
-  /**
-   * The node revision author's user ID.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $revision_uid;
-
-  /**
-   * The node revision log message.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $log;
-
-  /**
-   * Overrides \Drupal\Core\Entity\EntityNG::init().
-   */
-  protected function init() {
-    parent::init();
-    // We unset all defined properties, so magic getters apply.
-    unset($this->nid);
-    unset($this->vid);
-    unset($this->uuid);
-    unset($this->type);
-    unset($this->title);
-    unset($this->uid);
-    unset($this->status);
-    unset($this->created);
-    unset($this->changed);
-    unset($this->promote);
-    unset($this->sticky);
-    unset($this->tnid);
-    unset($this->translate);
-    unset($this->revision_timestamp);
-    unset($this->revision_uid);
-    unset($this->log);
-  }
-
-  /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
@@ -298,5 +141,136 @@ class Node extends EntityNG implements NodeInterface {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function setTitle($title) {
+    $this->set('title', $title);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCreatedTime() {
+    return $this->get('created')->value;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setCreatedTime($timestamp) {
+    $this->set('created', $timestamp);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getChangedTime() {
+    return $this->get('changed')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isPromoted() {
+    return (bool) $this->get('promote')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPromoted($promoted) {
+    $this->set('promoted', $promoted ? NODE_PROMOTED : NODE_NOT_PROMOTED);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isSticky() {
+    return (bool) $this->get('sticky')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setSticky($sticky) {
+    $this->set('sticky', $sticky ? NODE_STICKY : NODE_NOT_STICKY);
+    return $this;
+  }
+  /**
+   * {@inheritdoc}
+   */
+  public function isPublished() {
+    return (bool) $this->get('status')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPublished($published) {
+    $this->set('status', $published ? NODE_PUBLISHED : NODE_NOT_PUBLISHED);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAuthor() {
+    $entity = $this->get('uid')->entity;
+    // If no user is given, default to the anonymous user.
+    if (!$entity) {
+      return user_load(0)->getBCentity();
+    }
+    return $entity->getBCEntity();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAuthorId() {
+    return $this->get('uid')->target_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setAuthorId($uid) {
+    $this->set('uid', $uid);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRevisionCreationTime() {
+    return $this->get('revision_timestamp')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRevisionCreationTime($timestamp) {
+    $this->set('revision_timestamp', $timestamp);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRevisionAuthor() {
+    return $this->get('revision_uid')->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRevisionAuthorId($uid) {
+    $this->set('revision_uid', $uid);
+    return $this;
+  }
 
 }

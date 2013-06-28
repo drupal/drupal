@@ -42,14 +42,8 @@ class RegisterFormController extends AccountFormController {
     // Start with the default user account fields.
     $form = parent::form($form, $form_state, $account);
 
-    // Attach field widgets, and hide the ones where the 'user_register_form'
-    // setting is not on.
+    // Attach field widgets.
     field_attach_form($account, $form, $form_state);
-    foreach (field_info_instances('user', 'user') as $field_name => $instance) {
-      if (empty($instance['settings']['user_register_form'])) {
-        $form[$field_name]['#access'] = FALSE;
-      }
-    }
 
     if ($admin) {
       // Redirect back to page which initiated the create request; usually
@@ -120,8 +114,7 @@ class RegisterFormController extends AccountFormController {
     // No e-mail verification required; log in user immediately.
     elseif (!$admin && !config('user.settings')->get('verify_mail') && $account->status) {
       _user_mail_notify('register_no_approval_required', $account);
-      $form_state['uid'] = $account->uid;
-      user_login_form_submit(array(), $form_state);
+      user_login_finalize($account);
       drupal_set_message(t('Registration successful. You are now logged in.'));
       $form_state['redirect'] = '';
     }

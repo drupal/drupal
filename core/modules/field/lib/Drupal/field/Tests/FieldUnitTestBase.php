@@ -36,7 +36,6 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
     parent::setUp();
     $this->installSchema('system', array('sequences', 'variable', 'config_snapshot'));
     $this->installSchema('entity_test', 'entity_test');
-    $this->installSchema('field_test', array('test_entity', 'test_entity_revision', 'test_entity_bundle'));
 
     // Set default storage backend and configure the theme system.
     $this->installConfig(array('field', 'system'));
@@ -48,8 +47,17 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
    * @param string $suffix
    *   (optional) A string that should only contain characters that are valid in
    *   PHP variable names as well.
+   * @param string $entity_type
+   *   (optional) The entity type on which the instance should be created.
+   *   Defaults to "entity_test".
+   * @param string $bundle
+   *   (optional) The entity type on which the instance should be created.
+   *   Defaults to the default bundle of the entity type.
    */
-  function createFieldWithInstance($suffix = '') {
+  function createFieldWithInstance($suffix = '', $entity_type = 'entity_test', $bundle = NULL) {
+    if (empty($bundle)) {
+      $bundle = $entity_type;
+    }
     $field_name = 'field_name' . $suffix;
     $field = 'field' . $suffix;
     $field_id = 'field_id' . $suffix;
@@ -62,11 +70,10 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
     $this->$field_id = $this->{$field}['uuid'];
     $this->$instance_definition = array(
       'field_name' => $this->$field_name,
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => $entity_type,
+      'bundle' => $bundle,
       'label' => $this->randomName() . '_label',
       'description' => $this->randomName() . '_description',
-      'weight' => mt_rand(0, 127),
       'settings' => array(
         'test_instance_setting' => $this->randomName(),
       ),
@@ -74,7 +81,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
     $this->$instance = entity_create('field_instance', $this->$instance_definition);
     $this->$instance->save();
 
-    entity_get_form_display('test_entity', 'test_bundle', 'default')
+    entity_get_form_display($entity_type, $bundle, 'default')
       ->setComponent($this->$field_name, array(
         'type' => 'test_field_widget',
         'settings' => array(
@@ -119,7 +126,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
    */
   function assertFieldValues(EntityInterface $entity, $field_name, $langcode, $expected_values, $column = 'value') {
     $e = clone $entity;
-    field_attach_load('test_entity', array($e->ftid => $e));
+    field_attach_load('entity_test', array($e->id() => $e));
     $values = isset($e->{$field_name}[$langcode]) ? $e->{$field_name}[$langcode] : array();
     $this->assertEqual(count($values), count($expected_values), 'Expected number of values were saved.');
     foreach ($expected_values as $key => $value) {

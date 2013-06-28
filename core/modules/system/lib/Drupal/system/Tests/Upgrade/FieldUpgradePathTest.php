@@ -170,7 +170,9 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
         'settings' => array(
           'display_summary' => TRUE,
           'text_processing' => 1,
-          'user_register_form' => FALSE,
+          // This setting has been removed in field_update_8005(). We keep it
+          // here, commented out, to prove that the upgrade path is working.
+          //'user_register_form' => FALSE,
         ),
         'status' => 1,
         'langcode' => 'und',
@@ -214,7 +216,7 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
       'entity_id' => 2,
       'revision_id' => 2,
     ));
-    field_attach_load('node', array(2 => $entity), FIELD_LOAD_CURRENT, array('field_id' => $deleted_field['uuid'], 'deleted' => 1));
+    field_attach_load('node', array(2 => $entity), FIELD_LOAD_CURRENT, array('instance' => entity_create('field_instance', $deleted_instance)));
     $deleted_value = $entity->get('test_deleted_field');
     $this->assertEqual($deleted_value[Language::LANGCODE_NOT_SPECIFIED][0]['value'], 'Some deleted value');
 

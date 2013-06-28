@@ -10,7 +10,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\field\FieldInterface;
 use Drupal\field\FieldUpdateForbiddenException;
-use Drupal\options\Plugin\field\widget\OptionsWidgetBase;
 
 /**
  * Implements hook_help().
@@ -36,7 +35,7 @@ function options_field_info() {
       'settings' => array('allowed_values' => array(), 'allowed_values_function' => ''),
       'default_widget' => 'options_select',
       'default_formatter' => 'list_default',
-      'field item class' => '\Drupal\number\Type\IntegerItem',
+      'class' => '\Drupal\options\Type\ListIntegerItem',
     ),
     'list_float' => array(
       'label' => t('List (float)'),
@@ -44,7 +43,7 @@ function options_field_info() {
       'settings' => array('allowed_values' => array(), 'allowed_values_function' => ''),
       'default_widget' => 'options_select',
       'default_formatter' => 'list_default',
-      'field item class' => '\Drupal\number\Type\FloatItem',
+      'class' => '\Drupal\options\Type\ListFloatItem',
     ),
     'list_text' => array(
       'label' => t('List (text)'),
@@ -52,7 +51,7 @@ function options_field_info() {
       'settings' => array('allowed_values' => array(), 'allowed_values_function' => ''),
       'default_widget' => 'options_select',
       'default_formatter' => 'list_default',
-      'field item class' => '\Drupal\text\Type\TextItem',
+      'class' => '\Drupal\options\Type\ListTextItem',
     ),
     'list_boolean' => array(
       'label' => t('Boolean'),
@@ -60,7 +59,7 @@ function options_field_info() {
       'settings' => array('allowed_values' => array(), 'allowed_values_function' => ''),
       'default_widget' => 'options_buttons',
       'default_formatter' => 'list_default',
-      'field item class' => '\Drupal\number\Type\IntegerItem',
+      'class' => '\Drupal\options\Type\ListBooleanItem',
     ),
   );
 }
@@ -215,9 +214,9 @@ function options_field_settings_form_value_boolean_allowed_values($element, $inp
 }
 
 /**
- * Implements hook_field_update_field().
+ * Implements hook_ENTITY_TYPE_update() for 'field_entity'.
  */
-function options_field_update_field($field, $prior_field) {
+function options_field_entity_update(FieldInterface $field) {
   drupal_static_reset('options_allowed_values');
 }
 

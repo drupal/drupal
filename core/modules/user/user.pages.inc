@@ -53,10 +53,9 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
         // First stage is a confirmation form, then login
         if ($action == 'login') {
           // Set the new user.
-          $user = $account;
           // user_login_finalize() also updates the login timestamp of the
           // user, which invalidates further use of the one-time login link.
-          user_login_finalize();
+          user_login_finalize($account);
           watchdog('user', 'User %name used one-time login link at time %timestamp.', array('%name' => $account->name, '%timestamp' => $timestamp));
           drupal_set_message(t('You have just used your one-time login link. It is no longer necessary to use this link to log in. Please change your password.'));
           // Let the user's password be changed without the current password check.
@@ -323,20 +322,4 @@ function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
     }
   }
   throw new AccessDeniedHttpException();
-}
-
-/**
- * Access callback for path /user.
- *
- * Displays user profile if user is logged in, or login form for anonymous
- * users.
- */
-function user_page() {
-  global $user;
-  if ($user->uid) {
-    return new RedirectResponse(url('user/' . $user->uid, array('absolute' => TRUE)));
-  }
-  else {
-    return drupal_get_form('user_login_form');
-  }
 }

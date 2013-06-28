@@ -83,7 +83,9 @@ class TextProcessed extends TypedData {
    */
   public function setValue($value, $notify = TRUE) {
     if (isset($value)) {
-      throw new ReadOnlyException('Unable to set a computed property.');
+      // @todo This is triggered from DatabaseStorageController::invokeFieldMethod()
+      // in the case of case of non-NG entity types.
+      // throw new ReadOnlyException('Unable to set a computed property.');
     }
   }
 }

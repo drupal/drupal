@@ -60,10 +60,14 @@ class RolesRidTest extends UnitTestCase {
     $config_factory = $this->getConfigFactoryStub($config);
     $config_storage = $this->getConfigStorageStub($config);
 
+    $entity_query_factory = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryFactory')
+      ->disableOriginalConstructor()
+      ->getMock();
+
     // Creates a stub role storage controller and replace the attachLoad()
     // method with an empty version, because attachLoad() calls
     // module_implements().
-    $role_storage_controller = $this->getMock('Drupal\user\RoleStorageController', array('attachLoad'), array('user_role', static::$entityInfo, $config_factory, $config_storage));
+    $role_storage_controller = $this->getMock('Drupal\user\RoleStorageController', array('attachLoad'), array('user_role', static::$entityInfo, $config_factory, $config_storage, $entity_query_factory));
 
 
     $entity_manager = $this->getMockBuilder('Drupal\Core\Entity\EntityManager')

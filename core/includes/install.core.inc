@@ -936,7 +936,7 @@ function install_display_output($output, $install_state) {
     // Let the theming function know when every step of the installation has
     // been completed.
     $active_task = $install_state['installation_finished'] ? NULL : $install_state['active_task'];
-    drupal_add_region_content('sidebar_first', theme('task_list', array('items' => install_tasks_to_display($install_state), 'active' => $active_task)));
+    drupal_add_region_content('sidebar_first', theme('task_list', array('items' => install_tasks_to_display($install_state), 'active' => $active_task, 'variant' => 'install')));
   }
   print theme('install_page', array('content' => $output));
   exit;
@@ -2096,7 +2096,7 @@ function install_check_translations($install_state) {
   else {
     $requirements['translations directory exists'] = array(
       'title'       => t('Translations directory'),
-      'value'       => t('The diretory %translations_directory exists.', array('%translations_directory' => $translations_directory)),
+      'value'       => t('The directory %translations_directory exists.', array('%translations_directory' => $translations_directory)),
     );
     // If the translations directory is not readable, throw an error.
     if (!$readable) {
@@ -2529,8 +2529,8 @@ function install_configure_form_submit($form, &$form_state) {
   $account->name = $form_state['values']['account']['name'];
   $account->save();
   // Load global $user and perform final login tasks.
-  $user = user_load(1);
-  user_login_finalize();
+  $account = user_load(1);
+  user_login_finalize($account);
 
   // Record when this install ran.
   variable_set('install_time', $_SERVER['REQUEST_TIME']);

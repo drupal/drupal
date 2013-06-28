@@ -8,16 +8,15 @@
 namespace Drupal\node\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Condition\Annotation\Condition;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a 'Node Type' condition.
  *
- * @Plugin(
+ * @Condition(
  *   id = "node_type",
  *   label = @Translation("Node Bundle"),
- *   module = "node",
  *   context = {
  *     "node" = {
  *       "type" = "entity",

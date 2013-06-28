@@ -39,6 +39,14 @@ class UserPasswordResetTest extends WebTestBase {
 
     $this->account = user_load($account->uid);
     $this->drupalLogout();
+
+    // Set the last login time that is used to generate the one-time link so
+    // that it is definitely over a second ago.
+    $account->login = REQUEST_TIME - mt_rand(10, 100000);
+    db_update('users')
+      ->fields(array('login' => $account->login))
+      ->condition('uid', $account->uid)
+      ->execute();
   }
 
   /**

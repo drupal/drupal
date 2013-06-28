@@ -30,6 +30,13 @@ services:
     factory_method: get
     factory_service: cache_factory
     arguments: [cache]
+  cache.entity:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [entity]
   cache.menu:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
@@ -151,6 +158,9 @@ services:
   plugin.manager.entity:
     class: Drupal\Core\Entity\EntityManager
     arguments: ['@container.namespaces', '@service_container', '@module_handler', '@cache.cache', '@language_manager']
+  plugin.manager.entity.field.field_type:
+    class: Drupal\Core\Entity\Field\FieldTypePluginManager
+    arguments: ['@container.namespaces', '@cache.entity', '@language_manager', '@module_handler']
   plugin.manager.archiver:
     class: Drupal\Core\Archiver\ArchiverManager
     arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
@@ -243,6 +253,9 @@ services:
   entity.query.config:
     class: Drupal\Core\Config\Entity\Query\QueryFactory
     arguments: ['@config.storage']
+  entity.query.sql:
+    class: Drupal\Core\Entity\Query\Sql\QueryFactory
+    arguments: ['@database']
   router.dumper:
     class: Drupal\Core\Routing\MatcherDumper
     arguments: ['@database']
@@ -453,7 +466,7 @@ services:
     class: Drupal\Core\Utility\Token
     arguments: ['@module_handler']
   batch.storage:
-    class: Drupal\Core\Utility\BatchStorage
+    class: Drupal\Core\Batch\BatchStorage
     arguments: ['@database']
   slave_database_ignore__subscriber:
     class: Drupal\Core\EventSubscriber\SlaveDatabaseIgnoreSubscriber

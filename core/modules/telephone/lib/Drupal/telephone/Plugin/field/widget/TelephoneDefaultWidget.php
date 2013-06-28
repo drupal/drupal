@@ -28,6 +28,7 @@ use Drupal\field\Plugin\Type\Widget\WidgetBase;
  */
 class TelephoneDefaultWidget extends WidgetBase {
 
+
   /**
    * Implements Drupal\field\Plugin\Type\Widget\WidgetInterface::settingsForm().
    */
@@ -39,6 +40,23 @@ class TelephoneDefaultWidget extends WidgetBase {
       '#description' => t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
     );
     return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = array();
+
+    $placeholder = $this->getSetting('placeholder');
+    if (!empty($placeholder)) {
+      $summary[] = t('Placeholder: @placeholder', array('@placeholder' => $placeholder));
+    }
+    else {
+      $summary[] = t('No placeholder');
+    }
+
+    return $summary;
   }
 
   /**

@@ -26,7 +26,7 @@ abstract class RelationshipJoinTestBase extends PluginUnitTestBase {
    * Overrides \Drupal\views\Tests\ViewUnitTestBase::setUpFixtures().
    */
   protected function setUpFixtures() {
-    $this->installSchema('user', array('users', 'users_roles', 'role_permission'));
+    $this->installSchema('user', array('users', 'users_roles'));
     $this->installConfig(array('user'));
     parent::setUpFixtures();
 

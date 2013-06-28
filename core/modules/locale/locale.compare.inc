@@ -207,31 +207,6 @@ function locale_translation_default_translation_server() {
 }
 
 /**
- * Build path to translation source, out of a server path replacement pattern.
- *
- * @param stdClass $project
- *   Project object containing data to be inserted in the template.
- * @param string $template
- *   String containing placeholders. Available placeholders:
- *   - "%project": Project name.
- *   - "%version": Project version.
- *   - "%core": Project core version.
- *   - "%language": Language code.
- *
- * @return string
- *   String with replaced placeholders.
- */
-function locale_translation_build_server_pattern($project, $template) {
-  $variables = array(
-    '%project' => $project->name,
-    '%version' => $project->version,
-    '%core' => $project->core,
-    '%language' => isset($project->langcode) ? $project->langcode : '%language',
-  );
-  return strtr($template, $variables);
-}
-
-/**
  * Check for the latest release of project translations.
  *
  * @param array $projects
@@ -242,6 +217,7 @@ function locale_translation_build_server_pattern($project, $template) {
  * @return array
  *   Available sources indexed by project and language.
  */
+// @todo Return batch or NULL
 function locale_translation_check_projects($projects = array(), $langcodes = array()) {
   if (locale_translation_use_remote_source()) {
     // Retrieve the status of both remote and local translation sources by
@@ -251,6 +227,7 @@ function locale_translation_check_projects($projects = array(), $langcodes = arr
   else {
     // Retrieve and save the status of local translations only.
     locale_translation_check_projects_local($projects, $langcodes);
+    Drupal::state()->set('locale.translation_last_checked', REQUEST_TIME);
   }
 }
 
@@ -276,7 +253,7 @@ function locale_translation_check_projects_batch($projects = array(), $langcodes
 /**
  * Builds a batch to get the status of remote and local translation files.
  *
- * The batch process fetches the state of both remote and (if configured) local
+ * The batch process fetches the state of both local and (if configured) remote
  * translation files. The data of the most recent translation is stored per
  * per project and per language. This data is stored in a state variable
  * 'locale.translation_status'. The timestamp it was last updated is stored
@@ -294,8 +271,9 @@ function locale_translation_check_projects_batch($projects = array(), $langcodes
 function locale_translation_batch_status_build($projects = array(), $langcodes = array()) {
   $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
+  $options = _locale_translation_default_update_options();
 
-  $operations = _locale_translation_batch_status_operations($projects, $langcodes);
+  $operations = _locale_translation_batch_status_operations($projects, $langcodes, $options);
 
   $batch = array(
     'operations' => $operations,
@@ -312,29 +290,25 @@ function locale_translation_batch_status_build($projects = array(), $langcodes =
  * Helper function to construct batch operations checking remote translation
  * status.
  *
- * @param array projects
+ * @param array $projects
  *   Array of project names to be processed.
- * @param array langcodes
+ * @param array $langcodes
  *   Array of language codes.
+ * @param array $options
+ *   Batch processing options.
  *
  * @return array
  *   Array of batch operations.
  */
-function _locale_translation_batch_status_operations($projects, $langcodes) {
+function _locale_translation_batch_status_operations($projects, $langcodes, $options = array()) {
   $operations = array();
 
-  // Set the batch processes for remote sources.
-  $sources = locale_translation_build_sources($projects, $langcodes);
-  if (locale_translation_use_remote_source()) {
-    foreach ($sources as $source) {
-      $operations[] = array('locale_translation_batch_status_fetch_remote', array($source));
+  foreach ($projects as $project) {
+    foreach ($langcodes as $langcode) {
+      // Check status of local and remote translation sources.
+      $operations[] = array('locale_translation_batch_status_check', array($project, $langcode, $options));
     }
   }
-
-  // Check for local sources, compare the results of local and remote and store
-  // the most recent.
-  $operations[] = array('locale_translation_batch_status_fetch_local', array($sources));
-  $operations[] = array('locale_translation_batch_status_compare', array());
 
   return $operations;
 }
@@ -343,8 +317,7 @@ function _locale_translation_batch_status_operations($projects, $langcodes) {
  * Check and store the status and timestamp of local po files.
  *
  * Only po files in the local file system are checked. Any remote translation
- * sources will be ignored. Results are stored in the state variable
- * 'locale.translation_status'.
+ * files will be ignored.
  *
  * Projects may contain a server_pattern option containing a pattern of the
  * path to the po source files. If no server_pattern is defined the default
@@ -362,8 +335,6 @@ function _locale_translation_batch_status_operations($projects, $langcodes) {
 function locale_translation_check_projects_local($projects = array(), $langcodes = array()) {
   $projects = locale_translation_get_projects($projects);
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
-  $history = locale_translation_get_file_history();
-  $results = array();
 
   // For each project and each language we check if a local po file is
   // available. When found the source object is updated with the appropriate
@@ -371,35 +342,8 @@ function locale_translation_check_projects_local($projects = array(), $langcodes
   foreach ($projects as $name => $project) {
     foreach ($langcodes as $langcode) {
       $source = locale_translation_source_build($project, $langcode);
-      if (locale_translation_source_check_file($source)) {
-        $source->type = 'local';
-        $source->timestamp = $source->files['local']->timestamp;
-      }
-
-      // Compare the available translation with the current translations status.
-      // If the project/language was translated before and it is more recent
-      // than the most recent translation, the translation is up to date. Which
-      // is marked in the source object with type "current".
-      if (isset($history[$source->project][$source->langcode])) {
-        $current = $history[$source->project][$source->langcode];
-        // Add the current translation to the source object to save it in
-        // the status cache.
-        $source->files[LOCALE_TRANSLATION_CURRENT] = $current;
-
-        if (isset($source->type)) {
-          $available = $source->files[$source->type];
-          $result = _locale_translation_source_compare($current, $available) == LOCALE_TRANSLATION_SOURCE_COMPARE_LT ? $available : $current;
-          $source->type = $result->type;
-          $source->timestamp = $result->timestamp;
-        }
-        else {
-          $source->type = $current->type;
-          $source->timestamp = $current->timestamp;
-        }
-      }
-
-      $results[$name][$langcode] = $source;
+      $file = locale_translation_source_check_file($source);
+      locale_translation_status_save($name, $langcode, LOCALE_TRANSLATION_LOCAL, $file);
     }
   }
-  locale_translation_status_save($results);
 }

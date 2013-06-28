@@ -7,16 +7,26 @@
 
 namespace Drupal\menu_link;
 
+use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Path\AliasManagerInterface;
+use Drupal\Core\Routing\UrlGenerator;
+use Drupal\menu_link\MenuLinkStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for the node edit forms.
  */
 class MenuLinkFormController extends EntityFormController implements EntityControllerInterface {
+
+  /**
+   * The menu link storage controller.
+   *
+   * @var \Drupal\menu_link\MenuLinkStorageControllerInterface
+   */
+  protected $menuLinkStorageController;
 
   /**
    * The path alias manager.
@@ -26,26 +36,41 @@ class MenuLinkFormController extends EntityFormController implements EntityContr
   protected $pathAliasManager;
 
   /**
+   * The URL generator.
+   *
+   * @var \Drupal\Core\Routing\UrlGenerator
+   */
+  protected $urlGenerator;
+
+  /**
+   * The module handler
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a new MenuLinkFormController object.
    *
-   * @param string $operation
-   *   The name of the current operation.
    * @param \Drupal\Core\Path\AliasManagerInterface $path_alias_manager
    *   The path alias manager.
    */
-  public function __construct($operation, AliasManagerInterface $path_alias_manager) {
-    parent::__construct($operation);
-
+  public function __construct(MenuLinkStorageControllerInterface $menu_link_storage_controller, AliasManagerInterface $path_alias_manager, UrlGenerator $url_generator, ModuleHandlerInterface $module_handler) {
+    $this->menuLinkStorageController = $menu_link_storage_controller;
     $this->pathAliasManager = $path_alias_manager;
+    $this->urlGenerator = $url_generator;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info, $operation = NULL) {
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
-      $operation,
-      $container->get('path.alias_manager.cached')
+      $container->get('plugin.manager.entity')->getStorageController('menu_link'),
+      $container->get('path.alias_manager.cached'),
+      $container->get('url_generator'),
+      $container->get('module_handler')
     );
   }
 
@@ -86,7 +111,7 @@ class MenuLinkFormController extends EntityFormController implements EntityContr
     // $base_path.
     $path = $menu_link->link_path;
     if (isset($menu_link->options['query'])) {
-      $path .= '?' . drupal_http_build_query($menu_link->options['query']);
+      $path .= '?' . $this->urlGenerator->httpBuildQuery($menu_link->options['query']);
     }
     if (isset($menu_link->options['fragment'])) {
       $path .= '#' . $menu_link->options['fragment'];
@@ -145,8 +170,7 @@ class MenuLinkFormController extends EntityFormController implements EntityContr
     );
 
     // Get number of items in menu so the weight selector is sized appropriately.
-    $delta = \Drupal::entityManager()
-      ->getStorageController('menu_link')->countMenuLinks($menu_link->menu_name);
+    $delta = $this->menuLinkStorageController->countMenuLinks($menu_link->menu_name);
     $form['weight'] = array(
       '#type' => 'weight',
       '#title' => t('Weight'),
@@ -156,11 +180,28 @@ class MenuLinkFormController extends EntityFormController implements EntityContr
       '#description' => t('Optional. In the menu, the heavier links will sink and the lighter links will be positioned nearer the top.'),
     );
 
+    // Language module allows to configure the menu link language independently
+    // of the menu language. It also allows to optionally show the language
+    // selector on the menu link form so that the language of each menu link can
+    // be configured individually.
+    if ($this->moduleHandler->moduleExists('language')) {
+      $language_configuration = language_get_default_configuration('menu_link', $menu_link->bundle());
+      $default_langcode = ($menu_link->isNew() ? $language_configuration['langcode'] : $menu_link->langcode);
+      $language_show = $language_configuration['language_show'];
+    }
+    // Without Language module menu links inherit the menu language and no
+    // language selector is shown.
+    else {
+      $default_langcode = ($menu_link->isNew() ? entity_load('menu', $menu_link->menu_name)->langcode : $menu_link->langcode);
+      $language_show = FALSE;
+    }
+
     $form['langcode'] = array(
       '#type' => 'language_select',
       '#title' => t('Language'),
       '#languages' => Language::STATE_ALL,
-      '#default_value' => $menu_link->langcode,
+      '#default_value' => $default_langcode,
+      '#access' => $language_show,
     );
 
     return parent::form($form, $form_state, $menu_link);

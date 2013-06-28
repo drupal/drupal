@@ -32,7 +32,7 @@ class FieldImportChangeTest extends FieldUnitTestBase {
    */
   function testImportChange() {
     $field_id = 'field_test_import';
-    $instance_id = "test_entity.test_bundle.$field_id";
+    $instance_id = "entity_test.entity_test.$field_id";
     $instance_config_name = "field.instance.$instance_id";
 
     // Import default config.

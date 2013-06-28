@@ -7,27 +7,38 @@
 
 namespace Drupal\user\Controller;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\user\Form\UserLoginForm;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Drupal\Core\Controller\ControllerInterface;
 
 /**
  * Controller routines for user routes.
  */
-class UserController implements ControllerInterface {
+class UserController extends ContainerAware {
 
   /**
-   * Constructs an UserController object.
+   * Returns the user page.
+   *
+   * Displays user profile if user is logged in, or login form for anonymous
+   * users.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse|array
+   *   Returns either a redirect to the user page or the render
+   *   array of the login form.
    */
-  public function __construct() {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static();
+  public function userPage(Request $request) {
+    global $user;
+    if ($user->uid) {
+      $response = new RedirectResponse(url('user/' . $user->uid, array('absolute' => TRUE)));
+    }
+    else {
+      $response = drupal_get_form(UserLoginForm::create($this->container), $request);
+    }
+    return $response;
   }
 
   /**

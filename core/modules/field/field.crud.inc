@@ -41,6 +41,9 @@ use Drupal\field\FieldException;
  *
  * @return
  *   A field definition array, or FALSE.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   entity_load('field_entity', 'field_name').
  */
 function field_read_field($field_name, $include_additional = array()) {
   $fields = field_read_fields(array('field_name' => $field_name), $include_additional);
@@ -63,6 +66,9 @@ function field_read_field($field_name, $include_additional = array()) {
  *   An array of fields matching $params. If
  *   $include_additional['include_deleted'] is TRUE, the array is keyed by
  *   field ID, otherwise it is keyed by field name.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   entity_load_multiple_by_properties('field_entity', $conditions).
  */
 function field_read_fields($conditions = array(), $include_additional = array()) {
   // Include inactive fields if specified in the $include_additional parameter.
@@ -99,6 +105,9 @@ function field_read_fields($conditions = array(), $include_additional = array())
  *
  * @return
  *   An instance structure, or FALSE.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   entity_load('field_instance', 'field_name').
  */
 function field_read_instance($entity_type, $field_name, $bundle, $include_additional = array()) {
   $instances = field_read_instances(array('entity_type' => $entity_type, 'field_name' => $field_name, 'bundle' => $bundle), $include_additional);
@@ -120,6 +129,9 @@ function field_read_instance($entity_type, $field_name, $bundle, $include_additi
  *
  * @return
  *   An array of instances matching the arguments.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   entity_load_multiple_by_properties('field_instance', $conditions).
  */
 function field_read_instances($conditions = array(), $include_additional = array()) {
   // Include instances of inactive fields if specified in the
@@ -263,7 +275,7 @@ function field_purge_batch($batch_size) {
         $ids->entity_id = $entity_id;
         $entities[$entity_id] = _field_create_entity_from_ids($ids);
       }
-      field_attach_load($entity_type, $entities, FIELD_LOAD_CURRENT, array('field_id' => $field['uuid'], 'deleted' => 1));
+      field_attach_load($entity_type, $entities, FIELD_LOAD_CURRENT, array('instance' => $instance));
       foreach ($entities as $entity) {
         // Purge the data for the entity.
         field_purge_data($entity, $field, $instance);
@@ -301,10 +313,11 @@ function field_purge_batch($batch_size) {
  *   The deleted field instance whose data is being purged.
  */
 function field_purge_data(EntityInterface $entity, $field, $instance) {
-  // Each field type's hook_field_delete() only expects to operate on a single
-  // field at a time, so we can use it as-is for purging.
-  $options = array('field_id' => $instance['field_id'], 'deleted' => TRUE);
-  _field_invoke('delete', $entity, $dummy, $dummy, $options);
+  foreach ($entity->{$field->id()} as $value) {
+    $definition = _field_generate_entity_field_definition($field, $instance);
+    $items = \Drupal::typedData()->create($definition, $value, $field->id(), $entity);
+    $items->delete();
+  }
 
   // Tell the field storage system to purge the data.
   module_invoke($field['storage']['module'], 'field_storage_purge', $entity, $field, $instance);

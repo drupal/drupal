@@ -9,6 +9,7 @@ namespace Drupal\text\Plugin\field\widget;
 
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Plugin implementation of the 'text_textarea_with_summary' widget.
@@ -28,6 +29,32 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class TextareaWithSummaryWidget extends TextareaWidget {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, array &$form_state) {
+    $element = parent::settingsForm($form, $form_state);
+    $element['summary_rows'] = array(
+      '#type' => 'number',
+      '#title' => t('Summary rows'),
+      '#default_value' => $this->getSetting('summary_rows'),
+      '#required' => TRUE,
+      '#min' => 1,
+    );
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = parent::settingsSummary();
+
+    $summary[] = t('Number of summary rows: !rows', array('!rows' => $this->getSetting('summary_rows')));
+
+    return $summary;
+  }
 
   /**
    * {@inheritdoc}
@@ -57,18 +84,8 @@ class TextareaWithSummaryWidget extends TextareaWidget {
   /**
    * {@inheritdoc}
    */
-  public function errorElement(array $element, array $error, array $form, array &$form_state) {
-    switch ($error['error']) {
-      case 'text_summary_max_length':
-        $error_element = $element['summary'];
-        break;
-
-      default:
-        $error_element = $element;
-        break;
-    }
-
-    return $error_element;
+  public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, array &$form_state) {
+    return $element[$violation->arrayPropertyPath[0]];
   }
 
 }

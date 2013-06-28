@@ -8,7 +8,6 @@
 namespace Drupal\text\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\field\FieldValidationException;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -64,17 +63,16 @@ class TextFieldTest extends WebTestBase {
       'bundle' => 'entity_test',
     ))->save();
 
-    // Test valid and invalid values with field_attach_validate().
+    // Test validation with valid and invalid values.
     $entity = entity_create('entity_test', array());
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     for ($i = 0; $i <= $max_length + 2; $i++) {
       $entity->{$this->field->id()}->value = str_repeat('x', $i);
-      try {
-        field_attach_validate($entity);
-        $this->assertTrue($i <= $max_length, "Length $i does not cause validation error when max_length is $max_length");
+      $violations = $entity->{$this->field->id()}->validate();
+      if ($i <= $max_length) {
+        $this->assertEqual(count($violations), 0, "Length $i does not cause validation error when max_length is $max_length");
       }
-      catch (FieldValidationException $e) {
-        $this->assertTrue($i > $max_length, "Length $i causes validation error when max_length is $max_length");
+      else {
+        $this->assertEqual(count($violations), 1, "Length $i causes validation error when max_length is $max_length");
       }
     }
   }
@@ -191,7 +189,7 @@ class TextFieldTest extends WebTestBase {
     $this->drupalLogin($this->admin_user);
     foreach (filter_formats() as $format) {
       if ($format->format != filter_fallback_format()) {
-        $this->drupalPost('admin/config/content/formats/' . $format->format . '/disable', array(), t('Disable'));
+        $this->drupalPost('admin/config/content/formats/manage/' . $format->format . '/disable', array(), t('Disable'));
       }
     }
     $this->drupalLogin($this->web_user);

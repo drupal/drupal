@@ -186,7 +186,7 @@ class PagePreviewTest extends NodeTestBase {
     $body_key = "body[$langcode][0][value]";
     $term_key = "{$this->field_name}[$langcode]";
     // Force revision on "Basic page" content.
-    variable_set('node_options_page', array('status', 'revision'));
+    $this->container->get('config.factory')->get('node.type.page')->set('settings.node.options', array('status', 'revision'))->save();
 
     // Fill in node creation form and preview node.
     $edit = array();

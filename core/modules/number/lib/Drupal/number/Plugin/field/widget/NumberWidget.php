@@ -10,6 +10,7 @@ namespace Drupal\number\Plugin\field\widget;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Plugin implementation of the 'number' widget.
@@ -41,6 +42,23 @@ class NumberWidget extends WidgetBase {
       '#description' => t('Text that will be shown inside the field until a value is entered. This hint is usually a sample value or a brief description of the expected format.'),
     );
     return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = array();
+
+    $placeholder = $this->getSetting('placeholder');
+    if (!empty($placeholder)) {
+      $summary[] = t('Placeholder: @placeholder', array('@placeholder' => $placeholder));
+    }
+    else {
+      $summary[] = t('No placeholder');
+    }
+
+    return $summary;
   }
 
   /**
@@ -91,7 +109,7 @@ class NumberWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function errorElement(array $element, array $error, array $form, array &$form_state) {
+  public function errorElement(array $element, ConstraintViolationInterface $error, array $form, array &$form_state) {
     return $element['value'];
   }
 

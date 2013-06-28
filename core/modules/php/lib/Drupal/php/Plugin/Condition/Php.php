@@ -8,16 +8,15 @@
 namespace Drupal\php\Plugin\Condition;
 
 use Drupal\Core\Condition\ConditionPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\Core\Condition\Annotation\Condition;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a 'Php' condition.
  *
- * @Plugin(
+ * @Condition(
  *   id = "php",
- *   label = @Translation("PHP"),
- *   module = "php"
+ *   label = @Translation("PHP")
  * )
  */
 class Php extends ConditionPluginBase {

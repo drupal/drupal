@@ -380,7 +380,6 @@ class TranslationTest extends WebTestBase {
     $field_langcode = Language::LANGCODE_NOT_SPECIFIED;
     $body_key = "body[$field_langcode][0][value]";
     $this->assertFieldByXPath('//input[@id="edit-title"]', $node->label(), "Original title value correctly populated.");
-    $this->assertFieldByXPath("//textarea[@name='$body_key']", $node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'], "Original body value correctly populated.");
 
     $edit = array();
     $edit["title"] = $title;

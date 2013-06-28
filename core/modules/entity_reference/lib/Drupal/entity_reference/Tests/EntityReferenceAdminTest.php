@@ -70,7 +70,6 @@ class EntityReferenceAdminTest extends WebTestBase {
       'fields[_add_new_field][label]' => 'Test label',
       'fields[_add_new_field][field_name]' => 'test',
       'fields[_add_new_field][type]' => 'entity_reference',
-      'fields[_add_new_field][widget_type]' => 'entity_reference_autocomplete',
     ), t('Save'));
 
     // Node should be selected by default.

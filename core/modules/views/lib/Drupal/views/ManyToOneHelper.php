@@ -309,7 +309,7 @@ class ManyToOneHelper {
       else {
         $placeholder = $this->placeholder();
         if (count($this->handler->value) > 1) {
-          $this->query->addWhereExpression(0, "$field $operator($placeholder)", array($placeholder => $value));
+          $this->handler->query->addWhereExpression(0, "$field $operator($placeholder)", array($placeholder => $value));
         }
         else {
           $this->handler->query->addWhereExpression(0, "$field $operator $placeholder", array($placeholder => $value));

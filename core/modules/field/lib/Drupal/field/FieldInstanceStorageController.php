@@ -9,6 +9,7 @@ namespace Drupal\field;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\Entity\ConfigStorageController;
+use Drupal\Core\Entity\Query\QueryFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\StorageInterface;
@@ -65,8 +66,8 @@ class FieldInstanceStorageController extends ConfigStorageController {
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state
    *   The state key value store.
    */
-  public function __construct($entity_type, array $entity_info, ConfigFactory $config_factory, StorageInterface $config_storage, EntityManager $entity_manager, ModuleHandler $module_handler, KeyValueStoreInterface $state) {
-    parent::__construct($entity_type, $entity_info, $config_factory, $config_storage);
+  public function __construct($entity_type, array $entity_info, ConfigFactory $config_factory, StorageInterface $config_storage, QueryFactory $entity_query_factory, EntityManager $entity_manager, ModuleHandler $module_handler, KeyValueStoreInterface $state) {
+    parent::__construct($entity_type, $entity_info, $config_factory, $config_storage, $entity_query_factory);
     $this->entityManager = $entity_manager;
     $this->moduleHandler = $module_handler;
     $this->state = $state;
@@ -81,6 +82,7 @@ class FieldInstanceStorageController extends ConfigStorageController {
       $entity_info,
       $container->get('config.factory'),
       $container->get('config.storage'),
+      $container->get('entity.query'),
       $container->get('plugin.manager.entity'),
       $container->get('module_handler'),
       $container->get('state')

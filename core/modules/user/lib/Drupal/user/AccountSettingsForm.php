@@ -98,14 +98,14 @@ class AccountSettingsForm extends SystemConfigFormBase {
     );
 
     // @todo Remove this check once language settings are generalized.
-    if ($this->moduleHandler->moduleExists('translation_entity')) {
+    if ($this->moduleHandler->moduleExists('content_translation')) {
       $form['language'] = array(
         '#type' => 'details',
         '#title' => t('Language settings'),
         '#tree' => TRUE,
       );
-      $form_state['translation_entity']['key'] = 'language';
-      $form['language'] += translation_entity_enable_widget('user', 'user', $form, $form_state);
+      $form_state['content_translation']['key'] = 'language';
+      $form['language'] += content_translation_enable_widget('user', 'user', $form, $form_state);
     }
 
     // User registration settings.

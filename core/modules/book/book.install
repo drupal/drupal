@@ -6,14 +6,6 @@
  */
 
 /**
- * Implements hook_install().
- */
-function book_install() {
-  // Add the node type.
-  _book_install_type_create();
-}
-
-/**
  * Implements hook_uninstall().
  */
 function book_uninstall() {
@@ -22,28 +14,6 @@ function book_uninstall() {
     ->condition('module', 'book')
     ->execute();
   menu_cache_clear_all();
-}
-
-/**
- * Creates the book content type.
- */
-function _book_install_type_create() {
-  // Create an additional node type.
-  $book_node_type = array(
-    'type' => 'book',
-    'name' => t('Book page'),
-    'base' => 'node_content',
-    'description' => t('<em>Books</em> have a built-in hierarchical navigation. Use for handbooks or tutorials.'),
-    'custom' => 1,
-    'modified' => 1,
-    'locked' => 0,
-  );
-
-  $book_node_type = node_type_set_defaults($book_node_type);
-  node_type_save($book_node_type);
-  node_add_body_field($book_node_type);
-  // Default to not promoted.
-  variable_set('node_options_book', array('status'));
 }
 
 /**

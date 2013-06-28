@@ -4,12 +4,22 @@ comment_edit_page:
     _entity_form: 'comment.default'
   requirements:
     _entity_access: 'comment.update'
+
+comment_approve:
+  pattern: '/comment/{comment}/approve'
+  defaults:
+    _content: '\Drupal\comment\Controller\CommentController::commentApprove'
+    entity_type: 'comment'
+  requirements:
+    _entity_access: 'comment.approve'
+
 comment_overview_bundles:
   pattern: '/admin/structure/comments'
   defaults:
     _content: 'Drupal\comment\Controller\AdminController::overviewBundles'
   requirements:
     _permission: 'administer comments'
+
 comment_bundle:
   pattern: '/admin/structure/comments/manage/{field_name}'
   defaults:

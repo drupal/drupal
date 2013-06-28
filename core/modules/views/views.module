@@ -16,6 +16,7 @@ use Drupal\views\ViewExecutable;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\views\Plugin\Core\Entity\View;
 use Drupal\views\Views;
+use Drupal\field\FieldInstanceInterface;
 
 /**
  * Implements hook_forms().
@@ -308,6 +309,7 @@ function views_menu() {
   // does not support a vid a argument anymore
   $items['admin/views/ajax/autocomplete/taxonomy/%'] = array(
     'page callback' => 'views_ajax_autocomplete_taxonomy',
+    'page arguments' => array(5),
     'theme callback' => 'ajax_base_page_theme',
     'access callback' => 'user_access',
     'access arguments' => array('access content'),
@@ -645,24 +647,25 @@ function views_language_list($field = 'name', $flags = Language::STATE_ALL) {
 }
 
 /**
- * Implements hook_field_create_instance.
+ * Implements hook_ENTITY_TYPE_create() for 'field_instance'.
  */
-function views_field_create_instance($instance) {
-  cache('views_info')->deleteAll();
-  cache('views_results')->deleteAll();
-}
-/**
- * Implements hook_field_update_instance.
- */
-function views_field_update_instance($instance, $prior_instance) {
+function views_field_instance_create(FieldInstanceInterface $field_instance) {
   cache('views_info')->deleteAll();
   cache('views_results')->deleteAll();
 }
 
 /**
- * Implements hook_field_delete_instance.
+ * Implements hook_ENTITY_TYPE_update() for 'field_instance'.
  */
-function views_field_delete_instance($instance) {
+function views_field_instance_update(FieldInstanceInterface $field_instance) {
+  cache('views_info')->deleteAll();
+  cache('views_results')->deleteAll();
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for 'field_instance'.
+ */
+function views_field_instance_delete(FieldInstanceInterface $field_instance) {
   cache('views_info')->deleteAll();
   cache('views_results')->deleteAll();
 }

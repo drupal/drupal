@@ -14,7 +14,7 @@ use Drupal\Core\Entity\EntityInterface;
  *
  * Each content type is maintained by a primary module, which is either
  * node.module (for content types created in the user interface) or the module
- * that implements hook_node_info() to define the content type.
+ * that defines the content type by providing configuration file.
  *
  * During node operations (create, insert, update, view, delete, etc.), there
  * are several sets of hooks that get invoked to allow modules to modify the
@@ -99,7 +99,6 @@ use Drupal\Core\Entity\EntityInterface;
  * - Validating a node during editing form submit (calling
  *   node_form_validate()):
  *   - hook_node_validate() (all)
- *   - field_attach_form_validate()
  * - Searching (calling node_search_execute()):
  *   - hook_ranking() (all)
  *   - Query is executed to find matching nodes
@@ -605,8 +604,8 @@ function hook_node_access($node, $op, $account, $langcode) {
  * @ingroup node_api_hooks
  */
 function hook_node_prepare(\Drupal\Core\Entity\EntityInterface $node) {
-  if (!isset($node->widgets)) {
-    $node->widgets = config("widgets_{$node->type}")->get('per_page');
+  if (!isset($node->my_rating)) {
+    $node->my_rating = Drupal::config("my_rating_{$node->type}")->get('enabled');
   }
 }
 
@@ -633,8 +632,8 @@ function hook_node_prepare(\Drupal\Core\Entity\EntityInterface $node) {
  * @ingroup node_api_hooks
  */
 function hook_node_search_result(\Drupal\Core\Entity\EntityInterface $node, $langcode) {
-  $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
-  return array('comment' => format_plural($comments, '1 comment', '@count comments'));
+  $rating = db_query('SELECT SUM(points) FROM {my_rating} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
+  return array('rating' => format_plural($rating, '1 point', '@count points'));
 }
 
 /**
@@ -702,9 +701,9 @@ function hook_node_update(\Drupal\Core\Entity\EntityInterface $node) {
  */
 function hook_node_update_index(\Drupal\Core\Entity\EntityInterface $node, $langcode) {
   $text = '';
-  $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(':nid' => $node->nid, ':status' => COMMENT_PUBLISHED));
-  foreach ($comments as $comment) {
-    $text .= '<h2>' . check_plain($comment->subject->value) . '</h2>' . $comment->comment_body->processed;
+  $ratings = db_query('SELECT title, description FROM {my_ratings} WHERE nid = :nid', array(':nid' => $node->nid));
+  foreach ($ratings as $rating) {
+    $text .= '<h2>' . check_plain($rating->title) . '</h2>' . $rating->description;
   }
   return $text;
 }
@@ -791,7 +790,6 @@ function hook_node_submit(\Drupal\Core\Entity\EntityInterface $node, $form, &$fo
  *   The language code used for rendering.
  *
  * @see forum_node_view()
- * @see comment_node_view()
  * @see hook_entity_view()
  *
  * @ingroup node_api_hooks
@@ -842,62 +840,6 @@ function hook_node_view_alter(&$build, \Drupal\Core\Entity\EntityInterface $node
 
   // Add a #post_render callback to act on the rendered HTML of the node.
   $build['#post_render'][] = 'my_module_node_post_render';
-}
-
-/**
- * Define module-provided node types.
- *
- * This hook allows a module to define one or more of its own node types. For
- * example, the forum module uses it to define a forum node-type named "Forum
- * topic." The name and attributes of each desired node type are specified in an
- * array returned by the hook.
- *
- * Only module-provided node types should be defined through this hook. User-
- * provided (or 'custom') node types should be defined only in the 'node_type'
- * database table, and should be maintained by using the node_type_save() and
- * node_type_delete() functions.
- *
- * @return
- *   An array of information defining the module's node types. The array
- *   contains a sub-array for each node type, with the the machine name of a
- *   content type as the key. Each sub-array has up to 10 attributes.
- *   Possible attributes:
- *   - name: (required) The human-readable name of the node type.
- *   - base: (required) The base string used to construct callbacks
- *     corresponding to this node type (for example, if base is defined as
- *     example_foo, then example_foo_insert will be called when inserting a node
- *     of that type). This string is usually the name of the module, but not
- *     always.
- *   - description: (required) A brief description of the node type.
- *   - help: (optional) Help information shown to the user when creating a node
- *     of this type.
- *   - has_title: (optional) A Boolean indicating whether or not this node type
- *     has a title field.
- *   - title_label: (optional) The label for the title field of this content
- *     type.
- *   - locked: (optional) A Boolean indicating whether the administrator can
- *     change the machine name of this type. FALSE = changeable (not locked),
- *     TRUE = unchangeable (locked).
- *
- * The machine name of a node type should contain only letters, numbers, and
- * underscores. Underscores will be converted into hyphens for the purpose of
- * constructing URLs.
- *
- * All attributes of a node type that are defined through this hook (except for
- * 'locked') can be edited by a site administrator. This includes the
- * machine-readable name of a node type, if 'locked' is set to FALSE.
- *
- * @ingroup node_api_hooks
- */
-function hook_node_info() {
-  return array(
-    'forum' => array(
-      'name' => t('Forum topic'),
-      'base' => 'forum',
-      'description' => t('A <em>forum topic</em> starts a new discussion thread within a forum.'),
-      'title_label' => t('Subject'),
-    )
-  );
 }
 
 /**
@@ -965,43 +907,33 @@ function hook_ranking() {
 /**
  * Respond to node type creation.
  *
- * This hook is invoked from node_type_save() after the node type is added to
- * the database.
- *
- * @param $info
- *   The node type object that is being created.
+ * @param \Drupal\node\NodeTypeInterface $type
+ *   The node type entity that was created.
  */
-function hook_node_type_insert($info) {
-  drupal_set_message(t('You have just created a content type with a machine name %type.', array('%type' => $info->type)));
+function hook_node_type_insert(\Drupal\node\NodeTypeInterface $type) {
+  drupal_set_message(t('You have just created a content type with a machine name %type.', array('%type' => $type->id())));
 }
 
 /**
  * Respond to node type updates.
  *
- * This hook is invoked from node_type_save() after the node type is updated in
- * the database.
- *
- * @param $info
- *   The node type object that is being updated.
+ * @param \Drupal\node\NodeTypeInterface $type
+ *   The node type entity that was updated.
  */
-function hook_node_type_update($info) {
-  if (!empty($info->old_type) && $info->old_type != $info->type) {
-    language_save_default_configuration('node', $info->type, language_get_default_configuration('node', $info->old_type));
-    language_clear_default_configuration('node', $info->old_type);
+function hook_node_type_update(\Drupal\node\NodeTypeInterface $type) {
+  if ($type->original->id() != $type->id()) {
+    drupal_set_message(t('You have just changed the machine name of a content type from %old_type to %type.', array('%old_type' => $type->original->id(), '%type' => $type->id())));
   }
 }
 
 /**
  * Respond to node type deletion.
  *
- * This hook is invoked from node_type_delete() after the node type is removed
- * from the database.
- *
- * @param $info
- *   The node type object that is being deleted.
+ * @param \Drupal\node\NodeTypeInterface $type
+ *   The node type entity that was deleted.
  */
-function hook_node_type_delete($info) {
-  variable_del('comment_' . $info->type);
+function hook_node_type_delete(\Drupal\node\NodeTypeInterface $type) {
+  drupal_set_message(t('You have just deleted a content type with the machine name %type.', array('%type' => $type->id())));
 }
 
 /**

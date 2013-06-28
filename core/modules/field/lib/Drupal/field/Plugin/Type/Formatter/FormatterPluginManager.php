@@ -65,9 +65,8 @@ class FormatterPluginManager extends PluginManagerBase {
    *       implementation supports the values 'inline', 'above' and 'hidden'.
    *       Defaults to 'above'.
    *     - type: (string) The formatter to use. Defaults to the
-   *       'default_formatter' for the field type, specified in
-   *       hook_field_info(). The default formatter will also be used if the
-   *       requested formatter is not available.
+   *       'default_formatter' for the field type, The default formatter will
+   *       also be used if the requested formatter is not available.
    *     - settings: (array) Settings specific to the formatter. Each setting
    *       defaults to the default value specified in the formatter definition.
    *
@@ -159,6 +158,21 @@ class FormatterPluginManager extends PluginManagerBase {
       return !empty($this->formatterOptions[$field_type]) ? $this->formatterOptions[$field_type] : array();
     }
     return $this->formatterOptions;
+  }
+
+  /**
+   * Returns the default settings of a field formatter.
+   *
+   * @param string $type
+   *   A field formatter type name.
+   *
+   * @return array
+   *   The formatter type's default settings, as provided by the plugin
+   *   definition, or an empty array if type or settings are undefined.
+   */
+  public function getDefaultSettings($type) {
+    $info = $this->getDefinition($type);
+    return isset($info['settings']) ? $info['settings'] : array();
   }
 
 }

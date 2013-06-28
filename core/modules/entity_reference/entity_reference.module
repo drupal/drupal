@@ -9,6 +9,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\field\FieldInterface;
 
 /**
  * Implements hook_field_info().
@@ -29,8 +30,7 @@ function entity_reference_field_info() {
     ),
     'default_widget' => 'entity_reference_autocomplete',
     'default_formatter' => 'entity_reference_label',
-    'data_type' => 'entity_reference_configurable_field',
-    'field item class' => '\Drupal\entity_reference\Type\ConfigurableEntityReferenceItem',
+    'class' => '\Drupal\entity_reference\Type\ConfigurableEntityReferenceItem',
   );
   return $field_info;
 }
@@ -87,17 +87,6 @@ function entity_reference_get_selection_handler(FieldDefinitionInterface $field_
     'entity' => $entity,
   );
   return Drupal::service('plugin.manager.entity_reference.selection')->getInstance($options);
-}
-
-/**
- * Implements hook_field_is_empty().
- */
-function entity_reference_field_is_empty($item, $field_type) {
-  if (empty($item['target_id']) && !empty($item['entity']) && $item['entity']->isNew()) {
-    // Allow auto-create entities.
-    return FALSE;
-  }
-  return !isset($item['target_id']) || !is_numeric($item['target_id']);
 }
 
 /**
@@ -169,29 +158,29 @@ function entity_reference_field_settings_form($field, $instance) {
 }
 
 /**
- * Implements hook_field_update_field().
+ * Implements hook_ENTITY_TYPE_update() for 'field_entity'.
  *
  * Reset the instance handler settings, when the target type is changed.
  */
-function entity_reference_field_update_field($field, $prior_field) {
-  if ($field['type'] != 'entity_reference') {
-    // Not an entity reference field.
+function entity_reference_field_entity_update(FieldInterface $field) {
+  if ($field->type != 'entity_reference') {
+    // Only act on entity reference fields.
     return;
   }
 
-  if ($field['settings']['target_type'] == $prior_field['settings']['target_type']) {
+  if ($field->settings['target_type'] == $field->original->settings['target_type']) {
     // Target type didn't change.
     return;
   }
 
-  if (empty($field['bundles'])) {
+  if (empty($field->bundles)) {
     // Field has no instances.
     return;
   }
 
-  $field_name = $field['field_name'];
+  $field_name = $field->id();
 
-  foreach ($field['bundles'] as $entity_type => $bundles) {
+  foreach ($field->bundles() as $entity_type => $bundles) {
     foreach ($bundles as $bundle) {
       $instance = field_info_instance($entity_type, $field_name, $bundle);
       $instance->settings['handler_settings'] = array();

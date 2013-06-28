@@ -7,108 +7,6 @@
 
 "use strict";
 
-Drupal.behaviors.fieldUIFieldOverview = {
-  attach: function (context, settings) {
-    $(context).find('table#field-overview').once('field-overview', function () {
-      Drupal.fieldUIFieldOverview.attachUpdateSelects(this, settings);
-    });
-  }
-};
-
-Drupal.fieldUIFieldOverview = {
-  /**
-   * Implements dependent select dropdowns on the 'Manage fields' screen.
-   */
-  attachUpdateSelects: function(table, settings) {
-    var widgetTypes = settings.fieldWidgetTypes;
-    var fields = settings.fields;
-    var $table = $(table);
-
-    // Store the default text of widget selects.
-    $table.find('.widget-type-select').each(function () {
-      this.initialValue = this.options[0].text;
-    });
-
-    // 'Field type' select updates its 'Widget' select.
-    $table.find('.field-type-select').each(function () {
-      var $this = $(this);
-      this.targetSelect = $this.closest('tr').find('.widget-type-select');
-
-      $this.bind('change keyup', function () {
-        var selectedFieldType = this.options[this.selectedIndex].value;
-        var options = (selectedFieldType in widgetTypes ? widgetTypes[selectedFieldType] : []);
-        this.targetSelect.fieldUIPopulateOptions(options);
-      });
-
-      // Trigger change on initial pageload to get the right widget options
-      // when field type comes pre-selected (on failed validation).
-      $this.trigger('change', false);
-    });
-
-    // 'Existing field' select updates its 'Widget' select and 'Label' textfield.
-    $table.find('.field-select').each(function () {
-      var $this = $(this);
-      var $tr = $this.closest('tr');
-      this.targetSelect = $tr.find('.widget-type-select');
-      this.targetTextfield = $tr.find('.label-textfield');
-      this.targetTextfield
-        .data('field_ui_edited', false)
-        .bind('keyup', function (e) {
-          $(this).data('field_ui_edited', $(this).val() !== '');
-        });
-
-      $this.bind('change keyup', function (e, updateText) {
-        updateText = (typeof updateText === 'undefined' ? true : updateText);
-        var selectedField = this.options[this.selectedIndex].value;
-        var selectedFieldType = (selectedField in fields ? fields[selectedField].type : null);
-        var selectedFieldWidget = (selectedField in fields ? fields[selectedField].widget : null);
-        var options = (selectedFieldType && (selectedFieldType in widgetTypes) ? widgetTypes[selectedFieldType] : []);
-        this.targetSelect.fieldUIPopulateOptions(options, selectedFieldWidget);
-
-        // Only overwrite the "Label" input if it has not been manually
-        // changed, or if it is empty.
-        if (updateText && !this.targetTextfield.data('field_ui_edited')) {
-          this.targetTextfield.val(selectedField in fields ? fields[selectedField].label : '');
-        }
-      });
-
-      // Trigger change on initial pageload to get the right widget options
-      // and label when field type comes pre-selected (on failed validation).
-      $this.trigger('change', false);
-    });
-  }
-};
-
-/**
- * Populates options in a select input.
- */
-jQuery.fn.fieldUIPopulateOptions = function (options, selected) {
-  return this.each(function () {
-    var disabled = false;
-    if (options.length === 0) {
-      options = [this.initialValue];
-      disabled = true;
-    }
-
-    // If possible, keep the same widget selected when changing field type.
-    // This is based on textual value, since the internal value might be
-    // different (options_buttons vs. node_reference_buttons).
-    var previousSelectedText = this.options[this.selectedIndex].text;
-
-    var html = '';
-    for (var value in options) {
-      if (options.hasOwnProperty(value)) {
-        // Figure out which value should be selected. The 'selected' param
-        // takes precedence.
-        var is_selected = ((typeof selected !== 'undefined' && value === selected) || (typeof selected === 'undefined' && options[value] === previousSelectedText));
-        html += '<option value="' + value + '"' + (is_selected ? ' selected="selected"' : '') + '>' + options[value] + '</option>';
-      }
-    }
-
-    $(this).html(html).prop('disabled', disabled);
-  });
-};
-
 Drupal.behaviors.fieldUIDisplayOverview = {
   attach: function (context, settings) {
     $(context).find('table#field-display-overview').once('field-display-overview', function() {
@@ -290,9 +188,9 @@ Drupal.fieldUIDisplayOverview.field = function (row, data) {
   this.region = data.region;
   this.tableDrag = data.tableDrag;
 
-  // Attach change listener to the 'formatter type' select.
-  this.$formatSelect = $(row).find('select.field-formatter-type');
-  this.$formatSelect.change(Drupal.fieldUIOverview.onChange);
+  // Attach change listener to the 'plugin type' select.
+  this.$pluginSelect = $(row).find('select.field-plugin-type');
+  this.$pluginSelect.change(Drupal.fieldUIOverview.onChange);
 
   return this;
 };
@@ -302,7 +200,7 @@ Drupal.fieldUIDisplayOverview.field.prototype = {
    * Returns the region corresponding to the current form values of the row.
    */
   getRegion: function () {
-    return (this.$formatSelect.val() === 'hidden') ? 'hidden' : 'content';
+    return (this.$pluginSelect.val() === 'hidden') ? 'hidden' : 'content';
   },
 
   /**
@@ -326,7 +224,7 @@ Drupal.fieldUIDisplayOverview.field.prototype = {
 
     // When triggered by a row drag, the 'format' select needs to be adjusted
     // to the new region.
-    var currentValue = this.$formatSelect.val();
+    var currentValue = this.$pluginSelect.val();
     var value;
     // @TODO Check if this couldn't just be like
     // if (region !== 'hidden') {
@@ -334,7 +232,7 @@ Drupal.fieldUIDisplayOverview.field.prototype = {
       if (currentValue === 'hidden') {
         // Restore the formatter back to the default formatter. Pseudo-fields do
         // not have default formatters, we just return to 'visible' for those.
-        value = (typeof this.defaultFormatter !== 'undefined') ? this.defaultFormatter : this.$formatSelect.find('option').val();
+        value = (typeof this.defaultPlugin !== 'undefined') ? this.defaultPlugin : this.$pluginSelect.find('option').val();
       }
     }
     else {
@@ -342,11 +240,11 @@ Drupal.fieldUIDisplayOverview.field.prototype = {
     }
 
     if (typeof value !== 'undefined') {
-      this.$formatSelect.val(value);
+      this.$pluginSelect.val(value);
     }
 
     var refreshRows = {};
-    refreshRows[this.name] = this.$formatSelect.get(0);
+    refreshRows[this.name] = this.$pluginSelect.get(0);
 
     return refreshRows;
   }

@@ -5,45 +5,56 @@
  * Install, update and uninstall functions for the rdf module.
  */
 
-/**
- * Implements hook_schema().
- */
-function rdf_schema() {
-  $schema['rdf_mapping'] = array(
-    'description' => 'Stores custom RDF mappings for user defined content types or overriden module-defined mappings',
-    'fields' => array(
-      'type' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'description' => 'The name of the entity type a mapping applies to (node, user, comment, etc.).',
-      ),
-      'bundle' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'description' => 'The name of the bundle a mapping applies to.',
-      ),
-      'mapping' => array(
-        'description' => 'The serialized mapping of the bundle type and fields to RDF terms.',
-        'type' => 'blob',
-        'not null' => FALSE,
-        'size' => 'big',
-        'serialize' => TRUE,
-      ),
-    ),
-    'primary key' => array('type', 'bundle'),
-  );
-
-  return $schema;
-}
+use Drupal\Component\Uuid\Uuid;
 
 /**
- * Implements hook_install().
+ * Convert RDF mappings to configuration.
+ *
+ * @ingroup config_upgrade
  */
-function rdf_install() {
-  // Collect any RDF mappings that were declared by modules installed before
-  // this one.
-  $modules = module_implements('rdf_mapping');
-  rdf_modules_installed($modules);
+function rdf_update_8000() {
+  $uuid = new Uuid();
+  $query = db_query("SELECT * FROM {rdf_mapping}");
+
+  // Iterate through all the stored mappings.
+  while ($row = $query->fetchAssoc()) {
+    $mapping = unserialize($row['mapping']);
+    $entity_type = $row['type'];
+    $bundle = $row['bundle'];
+
+    // Create a config object for the mapping.
+    $config = config("rdf.mapping.$entity_type.$bundle")
+      ->set('id', "$entity_type.$bundle")
+      ->set('uuid', $uuid->generate())
+      ->set('targetEntityType', $entity_type)
+      ->set('bundle', $bundle);
+
+    // Add the bundle and field mappings.
+    $field_mappings = array();
+    foreach ($mapping as $key => $value) {
+      // If this is the rdftype entry, add the types to the config object.
+      if ($key == 'rdftype') {
+        $config->set('types', $value);
+      }
+      // Otherwise, this key is a field. Process the field mapping into the new
+      // structure.
+      else {
+        // Since reverse relations are not supported in D8, drop any mappings
+        // which use the 'rev' type.
+        if (!empty($value['type'])) {
+          if ($value['type'] == 'rev') {
+            continue;
+          }
+          $field_mappings[$key]['mapping_type'] = $value['type'];
+        }
+        !empty($value['predicates']) ? $field_mappings[$key]['properties'] = $value['predicates'] : NULL;
+        !empty($value['datatype']) ? $field_mappings[$key]['datatype'] = $value['datatype'] : NULL;
+        !empty($value['callback']) ? $field_mappings[$key]['datatype_callback'] = $value['callback'] : NULL;
+      }
+    }
+    $config->set('fieldMappings', $field_mappings);
+
+    // Save the mapping config object.
+    $config->save();
+  }
 }

@@ -45,7 +45,7 @@ class EntityFormDisplay extends EntityDisplayBase implements EntityFormDisplayIn
   /**
    * {@inheritdoc}
    */
-  public function getWidget($field_name) {
+  public function getRenderer($field_name) {
     if (isset($this->plugins[$field_name])) {
       return $this->plugins[$field_name];
     }

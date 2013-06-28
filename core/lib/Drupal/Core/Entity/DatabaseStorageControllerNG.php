@@ -219,28 +219,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
     // Map the loaded stdclass records into entity objects and according fields.
     $queried_entities = $this->mapFromStorageRecords($queried_entities, $load_revision);
-
-    if ($this->entityInfo['fieldable']) {
-      if ($load_revision) {
-        field_attach_load_revision($this->entityType, $queried_entities);
-      }
-      else {
-        field_attach_load($this->entityType, $queried_entities);
-      }
-    }
-
-    // Call hook_entity_load().
-    foreach (module_implements('entity_load') as $module) {
-      $function = $module . '_entity_load';
-      $function($queried_entities, $this->entityType);
-    }
-    // Call hook_TYPE_load(). The first argument for hook_TYPE_load() are
-    // always the queried entities, followed by additional arguments set in
-    // $this->hookLoadArguments.
-    $args = array_merge(array($queried_entities), $this->hookLoadArguments);
-    foreach (module_implements($this->entityType . '_load') as $module) {
-      call_user_func_array($module . '_' . $this->entityType . '_load', $args);
-    }
+    parent::attachLoad($queried_entities, $load_revision);
   }
 
   /**
@@ -363,6 +342,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       }
 
       $entity->preSave($this);
+      $this->invokeFieldMethod('preSave', $entity);
       $this->invokeHook('presave', $entity);
 
       // Create the storage record to be saved.
@@ -385,6 +365,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         }
         $this->resetCache(array($entity->id()));
         $entity->postSave($this, TRUE);
+        $this->invokeFieldMethod('update', $entity);
         $this->invokeHook('update', $entity);
       }
       else {
@@ -403,6 +384,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
 
         $entity->enforceIsNew(FALSE);
         $entity->postSave($this, FALSE);
+        $this->invokeFieldMethod('insert', $entity);
         $this->invokeHook('insert', $entity);
       }
 
@@ -501,28 +483,6 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
     }
 
     $query->execute();
-  }
-
-  /**
-   * Overrides DatabaseStorageController::invokeHook().
-   *
-   * Invokes field API attachers with a BC entity.
-   */
-  protected function invokeHook($hook, EntityInterface $entity) {
-    $function = 'field_attach_' . $hook;
-    // @todo: field_attach_delete_revision() is named the wrong way round,
-    // consider renaming it.
-    if ($function == 'field_attach_revision_delete') {
-      $function = 'field_attach_delete_revision';
-    }
-    if (!empty($this->entityInfo['fieldable']) && function_exists($function)) {
-      $function($entity);
-    }
-
-    // Invoke the hook.
-    module_invoke_all($this->entityType . '_' . $hook, $entity);
-    // Invoke the respective entity-level hook.
-    module_invoke_all('entity_' . $hook, $entity, $this->entityType);
   }
 
   /**
@@ -638,6 +598,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
 
       $entity_class::postDelete($this, $entities);
       foreach ($entities as $id => $entity) {
+        $this->invokeFieldMethod('delete', $entity);
         $this->invokeHook('delete', $entity);
       }
       // Ignore slave server temporarily.

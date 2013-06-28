@@ -10,7 +10,7 @@ namespace Drupal\entity;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
- * Provides an interface defining an entity view mode entity.
+ * Provides an interface defining an entity view mode entity type.
  */
 interface EntityViewModeInterface extends ConfigEntityInterface {
 

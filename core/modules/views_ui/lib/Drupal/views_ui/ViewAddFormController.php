@@ -28,23 +28,18 @@ class ViewAddFormController extends ViewFormControllerBase implements EntityCont
   /**
    * Constructs a new ViewEditFormController object.
    *
-   * @param string $operation
-   *   The name of the current operation.
    * @param \Drupal\views\Plugin\ViewsPluginManager $wizard_manager
    *   The wizard plugin manager.
    */
-  public function __construct($operation, ViewsPluginManager $wizard_manager) {
-    parent::__construct($operation);
-
+  public function __construct(ViewsPluginManager $wizard_manager) {
     $this->wizardManager = $wizard_manager;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info, $operation = NULL) {
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
-      $operation,
       $container->get('plugin.manager.views.wizard')
     );
   }

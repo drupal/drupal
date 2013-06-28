@@ -18,10 +18,10 @@ Drupal.behaviors.contentTypes = {
     });
     $context.find('#edit-workflow').drupalSetSummary(function(context) {
       var vals = [];
-      $(context).find("input[name^='node_options']:checked").parent().each(function() {
+      $(context).find("input[name^='settings[node][options']:checked").parent().each(function() {
         vals.push(Drupal.checkPlain($(this).text()));
       });
-      if (!$(context).find('#edit-node-options-status').is(':checked')) {
+      if (!$(context).find('#edit-settings-node-options-status').is(':checked')) {
         vals.unshift(Drupal.t('Not published'));
       }
       return vals.join(', ');
@@ -43,7 +43,7 @@ Drupal.behaviors.contentTypes = {
       $context.find('input:checked').next('label').each(function() {
         vals.push(Drupal.checkPlain($(this).text()));
       });
-      if (!$context.find('#edit-node-submitted').is(':checked')) {
+      if (!$context.find('#edit-settings-node-submitted').is(':checked')) {
         vals.unshift(Drupal.t("Don't display post information"));
       }
       return vals.join(', ');

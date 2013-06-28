@@ -281,12 +281,12 @@ function user_views_data() {
     ),
   );
 
-  if (Drupal::moduleHandler()->moduleExists('translation_entity')) {
+  if (Drupal::moduleHandler()->moduleExists('content_translation')) {
     $data['users']['translation_link'] = array(
       'title' => t('Translation link'),
       'help' => t('Provide a link to the translations overview for users.'),
       'field' => array(
-        'id' => 'translation_entity_link',
+        'id' => 'content_translation_link',
       ),
     );
   }
@@ -359,19 +359,7 @@ function user_views_data() {
     ),
   );
 
-  // Define the base group of this table. Fields that don't have a group defined
-  // will go into this field by default.
-  $data['role_permission']['table']['group']  = t('User');
-  // Explain how this table joins to others.
-  $data['role_permission']['table']['join'] = array(
-    'users' => array(
-      'left_table' => 'users_roles',
-      'left_field' => 'rid',
-      'field' => 'rid',
-    ),
-  );
-
-  $data['role_permission']['permission'] = array(
+  $data['users_roles']['permission'] = array(
     'title' => t('Permission'),
     'help' => t('The user permissions.'),
     'field' => array(
@@ -380,6 +368,7 @@ function user_views_data() {
     ),
     'filter' => array(
       'id' => 'user_permissions',
+      'real field' => 'rid',
     ),
   );
 

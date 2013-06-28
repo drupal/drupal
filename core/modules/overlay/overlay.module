@@ -100,7 +100,7 @@ function overlay_field_extra_fields() {
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function overlay_form_user_profile_form_alter(&$form, &$form_state) {
+function overlay_form_user_form_alter(&$form, &$form_state) {
   $account = $form_state['controller']->getEntity();
   if (user_access('access overlay', $account)) {
     $account_data = Drupal::service('user.data')->get('overlay', $account->id(), 'enabled');
@@ -586,7 +586,8 @@ function overlay_overlay_child_initialize() {
   // actually did change, and, if so, trigger an immediate Ajax refresh
   // of the parent window.
   $token = Drupal::request()->query->get('token');
-  if (!empty($_POST) || isset($token)) {
+  $post = Drupal::request()->request->count();
+  if (!empty($post) || isset($token)) {
     foreach (overlay_supplemental_regions() as $region) {
       overlay_store_rendered_content($region, overlay_render_region($region));
     }

@@ -23,11 +23,6 @@ class BlockInterfaceTest extends DrupalUnitTestBase {
     );
   }
 
-  protected function setUp() {
-    parent::setUp();
-    $this->installSchema('user', 'role_permission');
-  }
-
   /**
    * Test configuration and subsequent form() and build() method calls.
    *

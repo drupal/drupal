@@ -5,6 +5,7 @@
  * Add language handling functionality to Drupal.
  */
 
+use Drupal\node\NodeTypeInterface;
 use Drupal\Core\Language\Language;
 
 /**
@@ -322,6 +323,18 @@ function language_configuration_element_process($element, &$form_state, &$form) 
     ),
   );
 
+  // Do not add the submit callback for the language content settings page,
+  // which is handled separately.
+  if (array_search('language_content_settings_form_submit', $form['#submit']) === FALSE) {
+    // Determine where to attach the language_configuration element submit handler.
+    // @todo Form API: Allow form widgets/sections to declare #submit handlers.
+    if (isset($form['actions']['submit']['#submit']) && array_search('language_configuration_element_submit', $form['actions']['submit']['#submit']) === FALSE) {
+      $form['actions']['submit']['#submit'][] = 'language_configuration_element_submit';
+    }
+    elseif (array_search('language_configuration_element_submit', $form['#submit']) === FALSE) {
+      $form['#submit'][] = 'language_configuration_element_submit';
+    }
+  }
   return $element;
 }
 
@@ -412,10 +425,10 @@ function language_get_default_configuration_settings_key($entity_type, $bundle) 
 /**
  * Implements hook_node_type_update().
  */
-function language_node_type_update($info) {
-  if (!empty($info->old_type) && $info->old_type != $info->type) {
-    language_save_default_configuration('node', $info->type, language_get_default_configuration('node', $info->old_type));
-    language_clear_default_configuration('node', $info->old_type);
+function language_node_type_update(NodeTypeInterface $type) {
+  if ($type->original->id() != $type->id()) {
+    language_save_default_configuration('node', $type->id(), language_get_default_configuration('node', $type->original->id()));
+    language_clear_default_configuration('node', $type->original->id());
   }
 }
 

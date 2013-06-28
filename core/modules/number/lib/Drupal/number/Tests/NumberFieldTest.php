@@ -167,7 +167,6 @@ class NumberFieldTest extends WebTestBase {
       'fields[_add_new_field][label]'=> $label,
       'fields[_add_new_field][field_name]' => $field_name,
       'fields[_add_new_field][type]' => 'number_integer',
-      'fields[_add_new_field][widget_type]' => 'number',
     );
     $this->drupalPost(NULL, $edit, t('Save'));
 

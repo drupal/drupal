@@ -74,8 +74,9 @@ class ViewCloneFormController extends ViewFormControllerBase {
    * Overrides \Drupal\Core\Entity\EntityFormController::form().
    */
   public function submit(array $form, array &$form_state) {
-    $this->entity = parent::submit($form, $form_state);
-    $this->entity->setOriginalID(NULL);
+    $original = parent::submit($form, $form_state);
+    $this->entity = $original->createDuplicate();
+    $this->entity->set('id', $form_state['values']['id']);
     $this->entity->save();
 
     // Redirect the user to the view admin form.

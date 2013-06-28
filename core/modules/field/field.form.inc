@@ -183,8 +183,8 @@ function field_add_more_js($form, $form_state) {
  *   - items_count: The number of widgets to display for the field.
  *   - array_parents: The location of the field's widgets within the $form
  *     structure. This entry is populated at '#after_build' time.
- *   - errors: The array of field validation errors reported on the field. This
- *     entry is populated at field_attach_form_validate() time.
+ *   - constraint_violations: The array of validation errors reported on the
+ *     field. This entry is populated at form validate time.
  *
  * @see field_form_set_state()
  */

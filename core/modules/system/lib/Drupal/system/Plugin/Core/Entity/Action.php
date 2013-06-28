@@ -23,7 +23,8 @@ use Drupal\Core\Action\ConfigurableActionInterface;
  *   label = @Translation("Action"),
  *   module = "system",
  *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *     "access" = "Drupal\action\ActionAccessController"
  *   },
  *   config_prefix = "action.action",
  *   entity_keys = {

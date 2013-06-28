@@ -8,7 +8,6 @@
 namespace Drupal\field\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\field\FieldValidationException;
 
 /**
  * Unit test class for non-storage related field_attach_* functions.
@@ -48,16 +47,16 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
   function testFieldAttachView() {
     $this->createFieldWithInstance('_2');
 
-    $entity_type = 'test_entity';
-    $entity_init = field_test_create_entity();
+    $entity_type = 'entity_test';
+    $entity_init = entity_create($entity_type, array());
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $options = array('field_name' => $this->field_name_2);
 
     // Populate values to be displayed.
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
-    $entity_init->{$this->field_name}[$langcode] = $values;
+    $entity_init->{$this->field_name}->setValue($values);
     $values_2 = $this->_generateTestFieldValues($this->field_2['cardinality']);
-    $entity_init->{$this->field_name_2}[$langcode] = $values_2;
+    $entity_init->{$this->field_name_2}->setValue($values_2);
 
     // Simple formatter, label displayed.
     $entity = clone($entity_init);
@@ -85,9 +84,9 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $display->setComponent($this->field_2['field_name'], $display_options_2);
 
     // View all fields.
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays);
-    $entity->content = field_attach_view($entity, $display);
-    $output = drupal_render($entity->content);
+    field_attach_prepare_view($entity_type, array($entity->id() => $entity), $displays);
+    $content = field_attach_view($entity, $display);
+    $output = drupal_render($content);
     $this->content = $output;
     $this->assertRaw($this->instance['label'], "First field's label is displayed.");
     foreach ($values as $delta => $value) {
@@ -99,27 +98,12 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
       $this->content = $output;
       $this->assertRaw("$formatter_setting_2|{$value['value']}", "Value $delta is displayed, formatter settings are applied.");
     }
-    // View single field (the second field).
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays, $langcode, $options);
-    $entity->content = field_attach_view($entity, $display, $langcode, $options);
-    $output = drupal_render($entity->content);
-    $this->content = $output;
-    $this->assertNoRaw($this->instance['label'], "First field's label is not displayed.");
-    foreach ($values as $delta => $value) {
-      $this->content = $output;
-      $this->assertNoRaw("$formatter_setting|{$value['value']}", "Value $delta is displayed, formatter settings are applied.");
-    }
-    $this->assertRaw($this->instance_2['label'], "Second field's label is displayed.");
-    foreach ($values_2 as $delta => $value) {
-      $this->content = $output;
-      $this->assertRaw("$formatter_setting_2|{$value['value']}", "Value $delta is displayed, formatter settings are applied.");
-    }
 
     // Label hidden.
     $entity = clone($entity_init);
     $display_options['label'] = 'hidden';
     $display->setComponent($this->field['field_name'], $display_options);
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays);
+    field_attach_prepare_view($entity_type, array($entity->id() => $entity), $displays);
     $entity->content = field_attach_view($entity, $display);
     $output = drupal_render($entity->content);
     $this->content = $output;
@@ -128,7 +112,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     // Field hidden.
     $entity = clone($entity_init);
     $display->removeComponent($this->field['field_name']);
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays);
+    field_attach_prepare_view($entity_type, array($entity->id() => $entity), $displays);
     $entity->content = field_attach_view($entity, $display);
     $output = drupal_render($entity->content);
     $this->content = $output;
@@ -147,7 +131,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
         'test_formatter_setting_multiple' => $formatter_setting,
       ),
     ));
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays);
+    field_attach_prepare_view($entity_type, array($entity->id() => $entity), $displays);
     $entity->content = field_attach_view($entity, $display);
     $output = drupal_render($entity->content);
     $expected_output = $formatter_setting;
@@ -167,7 +151,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
         'test_formatter_setting_additional' => $formatter_setting,
       ),
     ));
-    field_attach_prepare_view($entity_type, array($entity->ftid => $entity), $displays);
+    field_attach_prepare_view($entity_type, array($entity->id() => $entity), $displays);
     $entity->content = field_attach_view($entity, $display);
     $output = drupal_render($entity->content);
     $this->content = $output;
@@ -196,23 +180,22 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
    * Tests the 'multiple entity' behavior of field_attach_prepare_view().
    */
   function testFieldAttachPrepareViewMultiple() {
-    $entity_type = 'test_entity';
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
+    $entity_type = 'entity_test';
 
     // Set the instance to be hidden.
-    $display = entity_get_display('test_entity', 'test_bundle', 'full')
+    $display = entity_get_display('entity_test', 'entity_test', 'full')
       ->removeComponent($this->field['field_name']);
 
     // Set up a second instance on another bundle, with a formatter that uses
     // hook_field_formatter_prepare_view().
-    field_test_create_bundle('test_bundle_2');
+    entity_test_create_bundle('test_bundle_2');
     $formatter_setting = $this->randomName();
     $instance_definition = $this->instance_definition;
     $instance_definition['bundle'] = 'test_bundle_2';
     $this->instance2 = entity_create('field_instance', $instance_definition);
     $this->instance2->save();
 
-    $display_2 = entity_get_display('test_entity', 'test_bundle_2', 'full')
+    $display_2 = entity_get_display('entity_test', 'test_bundle_2', 'full')
       ->setComponent($this->field['field_name'], array(
         'type' => 'field_test_with_prepare_view',
         'settings' => array(
@@ -220,32 +203,32 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
         ),
       ));
 
-    $displays = array('test_bundle' => $display, 'test_bundle_2' => $display_2);
+    $displays = array('entity_test' => $display, 'test_bundle_2' => $display_2);
 
     // Create one entity in each bundle.
-    $entity1_init = field_test_create_entity(1, 1, 'test_bundle');
+    $entity1_init = entity_create('entity_test', array('id' => 1, 'type' => 'entity_test'));
     $values1 = $this->_generateTestFieldValues($this->field['cardinality']);
-    $entity1_init->{$this->field_name}[$langcode] = $values1;
+    $entity1_init->{$this->field_name}->setValue($values1);
 
-    $entity2_init = field_test_create_entity(2, 2, 'test_bundle_2');
+    $entity2_init = entity_create('entity_test', array('id' => 2, 'type' => 'test_bundle_2'));
     $values2 = $this->_generateTestFieldValues($this->field['cardinality']);
-    $entity2_init->{$this->field_name}[$langcode] = $values2;
+    $entity2_init->{$this->field_name}->setValue($values2);
 
     // Run prepare_view, and check that the entities come out as expected.
     $entity1 = clone($entity1_init);
     $entity2 = clone($entity2_init);
-    $entities = array($entity1->ftid => $entity1, $entity2->ftid => $entity2);
+    $entities = array($entity1->id() => $entity1, $entity2->id() => $entity2);
     field_attach_prepare_view($entity_type, $entities, $displays);
-    $this->assertFalse(isset($entity1->{$this->field_name}[$langcode][0]['additional_formatter_value']), 'Entity 1 did not run through the prepare_view hook.');
-    $this->assertTrue(isset($entity2->{$this->field_name}[$langcode][0]['additional_formatter_value']), 'Entity 2 ran through the prepare_view hook.');
+    $this->assertFalse(isset($entity1->{$this->field_name}->additional_formatter_value), 'Entity 1 did not run through the prepare_view hook.');
+    $this->assertTrue(isset($entity2->{$this->field_name}->additional_formatter_value), 'Entity 2 ran through the prepare_view hook.');
 
     // Same thing, reversed order.
     $entity1 = clone($entity1_init);
     $entity2 = clone($entity2_init);
-    $entities = array($entity1->ftid => $entity1, $entity2->ftid => $entity2);
+    $entities = array($entity1->id() => $entity1, $entity2->id() => $entity2);
     field_attach_prepare_view($entity_type, $entities, $displays);
-    $this->assertFalse(isset($entity1->{$this->field_name}[$langcode][0]['additional_formatter_value']), 'Entity 1 did not run through the prepare_view hook.');
-    $this->assertTrue(isset($entity2->{$this->field_name}[$langcode][0]['additional_formatter_value']), 'Entity 2 ran through the prepare_view hook.');
+    $this->assertFalse(isset($entity1->{$this->field_name}->additional_formatter_value), 'Entity 1 did not run through the prepare_view hook.');
+    $this->assertTrue(isset($entity2->{$this->field_name}->additional_formatter_value), 'Entity 2 ran through the prepare_view hook.');
   }
 
   /**
@@ -253,189 +236,102 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
    */
   function testFieldAttachCache() {
     // Initialize random values and a test entity.
-    $entity_init = field_test_create_entity(1, 1, $this->instance['bundle']);
+    $entity_init = entity_create('entity_test', array('id' => 1, 'revision_id' => 1, 'type' => $this->instance['bundle']));
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
 
     // Non-cacheable entity type.
-    $entity_type = 'test_entity';
-    $cid = "field:$entity_type:{$entity_init->ftid}";
+    $entity_type = 'entity_test';
+    $cid = "field:$entity_type:" . $entity_init->id();
 
     // Check that no initial cache entry is present.
     $this->assertFalse(cache('field')->get($cid), 'Non-cached: no initial cache entry');
 
     // Save, and check that no cache entry is present.
     $entity = clone($entity_init);
-    $entity->{$this->field_name}[$langcode] = $values;
+    $entity->{$this->field_name}->setValue($values);
     field_attach_insert($entity);
     $this->assertFalse(cache('field')->get($cid), 'Non-cached: no cache entry on insert');
 
     // Load, and check that no cache entry is present.
     $entity = clone($entity_init);
-    field_attach_load($entity_type, array($entity->ftid => $entity));
+    field_attach_load($entity_type, array($entity->id() => $entity));
     $this->assertFalse(cache('field')->get($cid), 'Non-cached: no cache entry on load');
 
 
     // Cacheable entity type.
-    $entity_type = 'test_cacheable_entity';
-    $entity_init = entity_create($entity_type, array(
-      'ftid' => 1,
-      'ftvid' => 1,
-      'fttype' => $this->instance['bundle'],
-    ));
-    $cid = "field:$entity_type:{$entity_init->ftid}";
+    $entity_type = 'entity_test_cache';
+    $cid = "field:$entity_type:" . $entity_init->id();
     $instance_definition = $this->instance_definition;
     $instance_definition['entity_type'] = $entity_type;
+    $instance_definition['bundle'] = $entity_type;
     entity_create('field_instance', $instance_definition)->save();
+
+    entity_info_cache_clear();
+
+    $entity_init = entity_create($entity_type, array(
+      'id' => 1,
+      'revision_id' => 1,
+      'type' => $entity_type,
+    ));
 
     // Check that no initial cache entry is present.
     $this->assertFalse(cache('field')->get($cid), 'Cached: no initial cache entry');
 
     // Save, and check that no cache entry is present.
     $entity = clone($entity_init);
-    $entity->{$this->field_name}[$langcode] = $values;
+    $entity->{$this->field_name} = $values;
     field_attach_insert($entity);
     $this->assertFalse(cache('field')->get($cid), 'Cached: no cache entry on insert');
 
     // Load a single field, and check that no cache entry is present.
     $entity = clone($entity_init);
-    field_attach_load($entity_type, array($entity->ftid => $entity), FIELD_LOAD_CURRENT, array('field_id' => $this->field_id));
+    $instance = field_info_instance($entity->entityType(), $this->field_name, $entity->bundle());
+    field_attach_load($entity_type, array($entity->id() => $entity), FIELD_LOAD_CURRENT, array('instance' => $instance));
     $cache = cache('field')->get($cid);
-    $this->assertFalse(cache('field')->get($cid), 'Cached: no cache entry on loading a single field');
+    $this->assertFalse($cache, 'Cached: no cache entry on loading a single field');
 
     // Load, and check that a cache entry is present with the expected values.
     $entity = clone($entity_init);
-    field_attach_load($entity_type, array($entity->ftid => $entity));
+    field_attach_load($entity_type, array($entity->id() => $entity));
     $cache = cache('field')->get($cid);
     $this->assertEqual($cache->data[$this->field_name][$langcode], $values, 'Cached: correct cache entry on load');
 
     // Update with different values, and check that the cache entry is wiped.
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
     $entity = clone($entity_init);
-    $entity->{$this->field_name}[$langcode] = $values;
+    $entity->{$this->field_name} = $values;
     field_attach_update($entity);
     $this->assertFalse(cache('field')->get($cid), 'Cached: no cache entry on update');
 
     // Load, and check that a cache entry is present with the expected values.
     $entity = clone($entity_init);
-    field_attach_load($entity_type, array($entity->ftid => $entity));
+    field_attach_load($entity_type, array($entity->id() => $entity));
     $cache = cache('field')->get($cid);
     $this->assertEqual($cache->data[$this->field_name][$langcode], $values, 'Cached: correct cache entry on load');
 
     // Create a new revision, and check that the cache entry is wiped.
     $entity_init = entity_create($entity_type, array(
-      'ftid' => 1,
-      'ftvid' => 2,
-      'fttype' => $this->instance['bundle'],
+      'id' => 1,
+      'revision_id' => 2,
+      'type' => $entity_type,
     ));
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
     $entity = clone($entity_init);
-    $entity->{$this->field_name}[$langcode] = $values;
+    $entity->{$this->field_name} = $values;
     field_attach_update($entity);
     $cache = cache('field')->get($cid);
     $this->assertFalse(cache('field')->get($cid), 'Cached: no cache entry on new revision creation');
 
     // Load, and check that a cache entry is present with the expected values.
     $entity = clone($entity_init);
-    field_attach_load($entity_type, array($entity->ftid => $entity));
+    field_attach_load($entity_type, array($entity->id() => $entity));
     $cache = cache('field')->get($cid);
     $this->assertEqual($cache->data[$this->field_name][$langcode], $values, 'Cached: correct cache entry on load');
 
     // Delete, and check that the cache entry is wiped.
     field_attach_delete($entity);
     $this->assertFalse(cache('field')->get($cid), 'Cached: no cache entry after delete');
-  }
-
-  /**
-   * Test field_attach_validate().
-   *
-   * Verify that field_attach_validate() invokes the correct
-   * hook_field_validate.
-   */
-  function testFieldAttachValidate() {
-    $this->createFieldWithInstance('_2');
-
-    $entity_type = 'test_entity';
-    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
-    // Set up all but one values of the first field to generate errors.
-    $values = array();
-    for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
-      $values[$delta]['value'] = -1;
-    }
-    // Arrange for item 1 not to generate an error.
-    $values[1]['value'] = 1;
-    $entity->{$this->field_name}[$langcode] = $values;
-
-    // Set up all values of the second field to generate errors.
-    $values_2 = array();
-    for ($delta = 0; $delta < $this->field_2['cardinality']; $delta++) {
-      $values_2[$delta]['value'] = -1;
-    }
-    $entity->{$this->field_name_2}[$langcode] = $values_2;
-
-    // Validate all fields.
-    try {
-      field_attach_validate($entity);
-    }
-    catch (FieldValidationException $e) {
-      $errors = $e->errors;
-    }
-
-    foreach ($values as $delta => $value) {
-      if ($value['value'] != 1) {
-        $this->assertIdentical($errors[$this->field_name][$langcode][$delta][0]['error'], 'field_test_invalid', "Error set on first field's value $delta");
-        $this->assertEqual(count($errors[$this->field_name][$langcode][$delta]), 1, "Only one error set on first field's value $delta");
-        unset($errors[$this->field_name][$langcode][$delta]);
-      }
-      else {
-        $this->assertFalse(isset($errors[$this->field_name][$langcode][$delta]), "No error set on first field's value $delta");
-      }
-    }
-    foreach ($values_2 as $delta => $value) {
-      $this->assertIdentical($errors[$this->field_name_2][$langcode][$delta][0]['error'], 'field_test_invalid', "Error set on second field's value $delta");
-      $this->assertEqual(count($errors[$this->field_name_2][$langcode][$delta]), 1, "Only one error set on second field's value $delta");
-      unset($errors[$this->field_name_2][$langcode][$delta]);
-    }
-    $this->assertEqual(count($errors[$this->field_name][$langcode]), 0, 'No extraneous errors set for first field');
-    $this->assertEqual(count($errors[$this->field_name_2][$langcode]), 0, 'No extraneous errors set for second field');
-
-    // Validate a single field.
-    $options = array('field_name' => $this->field_name_2);
-    try {
-      field_attach_validate($entity, $options);
-    }
-    catch (FieldValidationException $e) {
-      $errors = $e->errors;
-    }
-
-    foreach ($values_2 as $delta => $value) {
-      $this->assertIdentical($errors[$this->field_name_2][$langcode][$delta][0]['error'], 'field_test_invalid', "Error set on second field's value $delta");
-      $this->assertEqual(count($errors[$this->field_name_2][$langcode][$delta]), 1, "Only one error set on second field's value $delta");
-      unset($errors[$this->field_name_2][$langcode][$delta]);
-    }
-    $this->assertFalse(isset($errors[$this->field_name]), 'No validation errors are set for the first field, despite it having errors');
-    $this->assertEqual(count($errors[$this->field_name_2][$langcode]), 0, 'No extraneous errors set for second field');
-
-    // Check that cardinality is validated.
-    $entity->{$this->field_name_2}[$langcode] = $this->_generateTestFieldValues($this->field_2['cardinality'] + 1);
-    // When validating all fields.
-    try {
-      field_attach_validate($entity);
-    }
-    catch (FieldValidationException $e) {
-      $errors = $e->errors;
-    }
-    $this->assertEqual($errors[$this->field_name_2][$langcode][0][0]['error'], 'field_cardinality', 'Cardinality validation failed.');
-    // When validating a single field (the second field).
-    try {
-      field_attach_validate($entity, $options);
-    }
-    catch (FieldValidationException $e) {
-      $errors = $e->errors;
-    }
-    $this->assertEqual($errors[$this->field_name_2][$langcode][0][0]['error'], 'field_cardinality', 'Cardinality validation failed.');
   }
 
   /**
@@ -447,8 +343,8 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
   function testFieldAttachForm() {
     $this->createFieldWithInstance('_2');
 
-    $entity_type = 'test_entity';
-    $entity = field_test_create_entity(0, 0, $this->instance['bundle']);
+    $entity_type = 'entity_test';
+    $entity = entity_create($entity_type, array('id' => 1, 'revision_id' => 1, 'type' => $this->instance['bundle']));
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // When generating form for all fields.
@@ -489,8 +385,8 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
   function testFieldAttachExtractFormValues() {
     $this->createFieldWithInstance('_2');
 
-    $entity_type = 'test_entity';
-    $entity_init = field_test_create_entity(0, 0, $this->instance['bundle']);
+    $entity_type = 'entity_test';
+    $entity_init = entity_create($entity_type, array('id' => 1, 'revision_id' => 1, 'type' => $this->instance['bundle']));
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Build the form for all fields.
@@ -548,13 +444,13 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
         $expected_values[] = array('value' => $values[$key]['value']);
       }
     }
-    $this->assertIdentical($entity->{$this->field_name}[$langcode], $expected_values, 'Submit filters empty values');
+    $this->assertIdentical($entity->{$this->field_name}->getValue(), $expected_values, 'Submit filters empty values');
     foreach ($weights_2 as $key => $value) {
       if ($key != 1) {
         $expected_values_2[] = array('value' => $values_2[$key]['value']);
       }
     }
-    $this->assertIdentical($entity->{$this->field_name_2}[$langcode], $expected_values_2, 'Submit filters empty values');
+    $this->assertIdentical($entity->{$this->field_name_2}->getValue(), $expected_values_2, 'Submit filters empty values');
 
     // Call field_attach_extract_form_values() for a single field (the second field).
     $options = array('field_name' => $this->field_name_2);
@@ -566,8 +462,8 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
         $expected_values_2[] = array('value' => $values_2[$key]['value']);
       }
     }
-    $this->assertFalse(isset($entity->{$this->field_name}), 'The first field does not exist in the entity object');
-    $this->assertIdentical($entity->{$this->field_name_2}[$langcode], $expected_values_2, 'Submit filters empty values');
+    $this->assertTrue($entity->{$this->field_name}->isEmpty(), 'The first field does is empty in the entity object');
+    $this->assertIdentical($entity->{$this->field_name_2}->getValue(), $expected_values_2, 'Submit filters empty values');
   }
 
 }

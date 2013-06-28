@@ -19,7 +19,7 @@ class GetRdfNamespacesTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('rdf', 'rdf_test');
+  public static $modules = array('rdf', 'rdf_test_namespaces');
 
   public static function getInfo() {
     return array(

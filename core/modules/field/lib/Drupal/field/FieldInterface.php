@@ -34,6 +34,17 @@ interface FieldInterface extends ConfigEntityInterface, FieldDefinitionInterface
   public function getSchema();
 
   /**
+   * Returns the field columns, as defined in the field schema.
+   *
+   * @return array
+   *   The array of field columns, keyed by column name, in the same format
+   *   returned by getSchema().
+   *
+   * @see \Drupal\field\Plugin\Core\Entity\FieldInterface::getSchema()
+   */
+  public function getColumns();
+
+  /**
    * Returns information about how the storage backend stores the field data.
    *
    * The content of the returned value depends on the storage backend, and some

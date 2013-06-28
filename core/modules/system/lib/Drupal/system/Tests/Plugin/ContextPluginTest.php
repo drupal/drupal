@@ -27,11 +27,6 @@ class ContextPluginTest extends DrupalUnitTestBase {
     );
   }
 
-  protected function setUp() {
-    parent::setUp();
-    $this->installSchema('node', 'node_type');
-  }
-
   /**
    * Tests basic context definition and value getters and setters.
    */

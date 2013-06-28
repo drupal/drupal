@@ -147,10 +147,6 @@ class BreadcrumbTest extends MenuTestBase {
       "admin/structure/types/manage/$type/fields" => t('Manage fields'),
     );
     $this->assertBreadcrumb("admin/structure/types/manage/$type/fields/node.$type.body", $trail);
-    $trail += array(
-      "admin/structure/types/manage/$type/fields/node.$type.body" => t('Body'),
-    );
-    $this->assertBreadcrumb("admin/structure/types/manage/$type/fields/node.$type.body/widget-type", $trail);
 
     // Verify Filter text format administration breadcrumbs.
     $filter_formats = filter_formats();
@@ -165,11 +161,11 @@ class BreadcrumbTest extends MenuTestBase {
       'admin/config/content/formats' => t('Text formats and editors'),
     );
     $this->assertBreadcrumb('admin/config/content/formats/add', $trail);
-    $this->assertBreadcrumb("admin/config/content/formats/$format_id", $trail);
+    $this->assertBreadcrumb("admin/config/content/formats/manage/$format_id", $trail);
     $trail += array(
-      "admin/config/content/formats/$format_id" => $format->name,
+      "admin/config/content/formats/manage/$format_id" => $format->name,
     );
-    $this->assertBreadcrumb("admin/config/content/formats/$format_id/disable", $trail);
+    $this->assertBreadcrumb("admin/config/content/formats/manage/$format_id/disable", $trail);
 
     // Verify node breadcrumbs (without menu link).
     $node1 = $this->drupalCreateNode();

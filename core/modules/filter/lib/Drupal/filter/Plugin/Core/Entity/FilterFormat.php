@@ -23,8 +23,11 @@ use Drupal\filter\FilterBag;
  *   module = "filter",
  *   controllers = {
  *     "form" = {
+ *       "add" = "Drupal\filter\FilterFormatAddFormController",
+ *       "edit" = "Drupal\filter\FilterFormatEditFormController",
  *       "disable" = "Drupal\filter\Form\FilterDisableForm"
  *     },
+ *     "list" = "Drupal\filter\FilterFormatListController",
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
  *   },
  *   config_prefix = "filter.format",
@@ -186,6 +189,19 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
   /**
    * {@inheritdoc}
    */
+  public function uri() {
+    return array(
+      'path' => 'admin/config/content/formats/manage/' . $this->id(),
+      'options' => array(
+        'entity_type' => $this->entityType,
+        'entity' => $this,
+      ),
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
     $this->name = trim($this->label());
 
@@ -229,4 +245,18 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
       }
     }
   }
+
+  /**
+   * Returns if this format is the fallback format.
+   *
+   * The fallback format can never be disabled. It must always be available.
+   *
+   * @return bool
+   *   TRUE if this format is the fallback format, FALSE otherwise.
+   */
+  public function isFallbackFormat() {
+    $fallback_format = \Drupal::config('filter.settings')->get('fallback_format');
+    return $this->id() == $fallback_format;
+  }
+
 }

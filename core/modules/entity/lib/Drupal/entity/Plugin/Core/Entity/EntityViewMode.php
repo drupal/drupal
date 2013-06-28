@@ -7,9 +7,9 @@
 
 namespace Drupal\entity\Plugin\Core\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\entity\EntityDisplayModeBase;
 use Drupal\entity\EntityViewModeInterface;
 
 /**
@@ -35,7 +35,7 @@ use Drupal\entity\EntityViewModeInterface;
  *   label = @Translation("View mode"),
  *   module = "entity",
  *   controllers = {
- *     "storage" = "Drupal\entity\EntityViewModeStorageController"
+ *     "storage" = "Drupal\entity\EntityDisplayModeStorageController"
  *   },
  *   config_prefix = "entity.view_mode",
  *   entity_keys = {
@@ -45,50 +45,6 @@ use Drupal\entity\EntityViewModeInterface;
  *   }
  * )
  */
-class EntityViewMode extends ConfigEntityBase implements EntityViewModeInterface {
-
-  /**
-   * The ID of the view mode.
-   *
-   * @var string
-   */
-  public $id;
-
-  /**
-   * The UUID of the view mode.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
-   * The human-readable name of the view mode.
-   *
-   * @var string
-   */
-  public $label;
-
-  /**
-   * The entity type this view mode is used for.
-   *
-   * This is not to be confused with EntityViewMode::entityType which is
-   * inherited from Entity::entityType and equals 'view_mode' for any view mode
-   * entity.
-   *
-   * @var string
-   */
-  public $targetEntityType;
-
-  /**
-   * Whether or not this view mode has custom settings by default.
-   *
-   * If FALSE, entities displayed in this view mode will reuse the 'default'
-   * display settings by default (e.g. right after the module exposing the view
-   * mode is enabled), but administrators can later use the Field UI to apply
-   * custom display settings specific to the view mode.
-   *
-   * @var bool
-   */
-  public $status = FALSE;
+class EntityViewMode extends EntityDisplayModeBase implements EntityViewModeInterface {
 
 }

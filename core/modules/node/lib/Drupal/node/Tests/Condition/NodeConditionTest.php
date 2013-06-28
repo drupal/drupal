@@ -26,7 +26,6 @@ class NodeConditionTest extends DrupalUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('node', 'node_type');
     $this->installSchema('node', 'node');
     $this->installSchema('node', 'node_field_data');
     $this->installSchema('node', 'node_field_revision');

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\rdf\Tests\TrackerAttributesTest.
+ * Contains \Drupal\rdf\Tests\TrackerAttributesTest.
  */
 
 namespace Drupal\rdf\Tests;
@@ -36,6 +36,48 @@ class TrackerAttributesTest extends WebTestBase {
 
     // Creates article content type.
     $this->drupalCreateContentType(array('type' => 'article', 'name' => t('Article')));
+
+    // Set bundle RDF mapping config for article.
+    $mapping = rdf_get_mapping('node', 'article');
+    // Set fields RDF mapping config for article.
+    $node_shared_field_mappings = array(
+      'title' => array(
+        'properties' => array('dc:title'),
+      ),
+      'created' => array(
+        'properties' => array('dc:date', 'dc:created'),
+        'datatype' => 'xsd:dateTime',
+        'datatype_callback' => 'date_iso8601',
+      ),
+      'changed' => array(
+        'properties' => array('dc:modified'),
+        'datatype' => 'xsd:dateTime',
+        'datatype_callback' => 'date_iso8601',
+      ),
+      'body' => array(
+        'properties' => array('content:encoded'),
+      ),
+      'uid' => array(
+        'properties' => array('sioc:has_creator'),
+        'mapping_type' => 'rel',
+      ),
+      'name' => array(
+        'properties' => array('foaf:name'),
+      ),
+      'comment_count' => array(
+        'properties' => array('sioc:num_replies'),
+        'datatype' => 'xsd:integer',
+      ),
+      'last_activity' => array(
+        'properties' => array('sioc:last_activity_date'),
+        'datatype' => 'xsd:dateTime',
+        'datatype_callback' => 'date_iso8601',
+      ),
+    );
+    // Iterate over field mappings and save.
+    foreach ($node_shared_field_mappings as $field_name => $field_mapping) {
+      $mapping->setFieldMapping($field_name, $field_mapping)->save();
+    }
 
     // Enables anonymous posting of content.
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(

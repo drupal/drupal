@@ -150,7 +150,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
       'href' => 'comment/' . $comment->id() . '/edit',
       'query' => $destination,
     );
-    if (module_invoke('translation_entity', 'translate_access', $comment)) {
+    if (module_invoke('content_translation', 'translate_access', $comment)) {
       $links['translate'] = array(
         'title' => t('translate'),
         'href' => 'comment/' . $comment->id() . '/translations',

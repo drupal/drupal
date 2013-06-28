@@ -4,12 +4,10 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\comment\Plugin\Core\Entity\Comment;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\user\Plugin\Core\Entity\User;
 use Drupal\user\UserInterface;
-use Drupal\user\UserRole;
 use Drupal\user\RoleInterface;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -82,7 +80,9 @@ function user_help($path, $arg) {
       $output .= '</ul>';
       return $output;
     case 'admin/config/people/accounts/fields':
-      return '<p>' . t('This form lets administrators add, edit, and arrange fields for storing user data.') . '</p>';
+      return '<p>' . t('This form lets administrators add and edit fields for storing user data.') . '</p>';
+    case 'admin/config/people/accounts/form-display':
+      return '<p>' . t('This form lets administrators configure how form fields should be displayed when editing a user profile.') . '</p>';
     case 'admin/config/people/accounts/display':
       return '<p>' . t('This form lets administrators configure how fields should be displayed when rendering a user profile page.') . '</p>';
     case 'admin/people/search':
@@ -199,19 +199,6 @@ function user_attach_accounts(array $entities) {
  */
 function user_picture_enabled() {
   return (bool) field_info_instance('user', 'user_picture', 'user');
-}
-
-/**
- * Implements hook_field_info_alter().
- */
-function user_field_info_alter(&$info) {
-  // Add the 'user_register_form' instance setting to all field types.
-  foreach ($info as $field_type => &$field_type_info) {
-    $field_type_info += array('instance_settings' => array());
-    $field_type_info['instance_settings'] += array(
-      'user_register_form' => FALSE,
-    );
-  }
 }
 
 /**
@@ -410,44 +397,44 @@ function user_password($length = 10) {
 /**
  * Determine the permissions for one or more roles.
  *
- * @param $roles
- *   An array whose values are the role IDs of interest, such as $user->roles.
+ * @param array $roles
+ *   An array of role IDs.
  *
- * @return
- *   An array indexed by role ID. Each value is an array whose keys are the
- *   permission strings for the given role ID.
+ * @return array
+ *   An array indexed by role ID. Each value is an array of permission strings
+ *   for the given role.
  */
-function user_role_permissions($roles) {
-  $cache = &drupal_static(__FUNCTION__, array());
-
-  $role_permissions = $fetch = array();
-
+function user_role_permissions(array $roles) {
+  if (defined('MAINTENANCE_MODE') && MAINTENANCE_MODE == 'update') {
+    return _user_role_permissions_update($roles);
+  }
+  $entities = entity_load_multiple('user_role', $roles);
+  $role_permissions = array();
   foreach ($roles as $rid) {
-    if (isset($cache[$rid])) {
-      $role_permissions[$rid] = $cache[$rid];
-    }
-    else {
-      // Add this rid to the list of those needing to be fetched.
-      $fetch[] = $rid;
-      // Prepare in case no permissions are returned.
-      $cache[$rid] = array();
-    }
+    $role_permissions[$rid] = isset($entities[$rid]) ? $entities[$rid]->getPermissions() : array();
   }
+  return $role_permissions;
+}
 
-  if ($fetch) {
-    // Get from the database permissions that were not in the static variable.
-    // Only role IDs with at least one permission assigned will return rows.
-    $result = db_query("SELECT rid, permission FROM {role_permission} WHERE rid IN (:fetch)", array(':fetch' => $fetch));
-
-    foreach ($result as $row) {
-      $cache[$row->rid][$row->permission] = TRUE;
-    }
-    foreach ($fetch as $rid) {
-      // For every rid, we know we at least assigned an empty array.
-      $role_permissions[$rid] = $cache[$rid];
-    }
+/**
+ * Determine the permissions for one or more roles during update.
+ *
+ * A separate version is needed because during update the entity system can't
+ * be used and in non-update situations the entity system is preferred because
+ * of the hook system.
+ *
+ * @param array $roles
+ *   An array of role IDs.
+ *
+ * @return array
+ *   An array indexed by role ID. Each value is an array of permission strings
+ *   for the given role.
+ */
+function _user_role_permissions_update($roles) {
+  $role_permissions = array();
+  foreach ($roles as $rid) {
+    $role_permissions[$rid] = Drupal::config("user.role.$rid")->get('permissions') ?: array();
   }
-
   return $role_permissions;
 }
 
@@ -490,13 +477,10 @@ function user_access($string, AccountInterface $account = NULL) {
   }
   $perm = &$drupal_static_fast['perm'];
   if (!isset($perm[$account->uid])) {
-    $role_permissions = user_role_permissions($account->getRoles());
-
-    $perms = array();
-    foreach ($role_permissions as $one_role) {
-      $perms += $one_role;
+    $perm[$account->uid] = array();
+    foreach (user_role_permissions($account->getRoles()) as $role_permissions) {
+      $perm[$account->uid] += array_fill_keys($role_permissions, TRUE);
     }
-    $perm[$account->uid] = $perms;
   }
 
   return isset($perm[$account->uid][$string]);
@@ -855,16 +839,13 @@ function user_menu() {
   $items['user'] = array(
     'title' => 'User account',
     'title callback' => 'user_menu_title',
-    'page callback' => 'user_page',
-    'access callback' => TRUE,
-    'file' => 'user.pages.inc',
     'weight' => -10,
+    'route_name' => 'user_page',
     'menu_name' => 'account',
   );
 
   $items['user/login'] = array(
     'title' => 'Log in',
-    'access callback' => 'user_is_anonymous',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   // Other authentication methods may add pages below user/login/.
@@ -1015,7 +996,7 @@ function user_menu() {
   $items['user/%user/edit'] = array(
     'title' => 'Edit',
     'page callback' => 'entity_get_form',
-    'page arguments' => array(1, 'profile'),
+    'page arguments' => array(1),
     'access callback' => 'entity_page_access',
     'access arguments' => array(1, 'update'),
     'type' => MENU_LOCAL_TASK,
@@ -1156,44 +1137,6 @@ function user_page_title($account) {
 }
 
 /**
- * Form builder; the main user login form.
- *
- * @ingroup forms
- */
-function user_login_form($form, &$form_state) {
-  // Display login form:
-  $form['name'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Username'),
-    '#size' => 60,
-    '#maxlength' => USERNAME_MAX_LENGTH,
-    '#description' => t('Enter your @s username.', array('@s' => config('system.site')->get('name'))),
-    '#required' => TRUE,
-    '#attributes' => array(
-      'autocorrect' => 'off',
-      'autocapitalize' => 'off',
-      'spellcheck' => 'false',
-      'autofocus' => 'autofocus',
-    ),
-  );
-
-  $form['pass'] = array(
-    '#type' => 'password',
-    '#title' => t('Password'),
-    '#size' => 60,
-    '#description' => t('Enter the password that accompanies your username.'),
-    '#required' => TRUE,
-  );
-
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
-
-  $form['#validate'] = user_login_default_validators();
-
-  return $form;
-}
-
-/**
  * Set up a series for validators which check for blocked users,
  * then authenticate against local database, then return an error if
  * authentication fails. Distributed authentication modules are welcome
@@ -1213,109 +1156,6 @@ function user_login_form($form, &$form_state) {
  */
 function user_login_default_validators() {
   return array('user_login_name_validate', 'user_login_authenticate_validate', 'user_login_final_validate');
-}
-
-/**
- * A FAPI validate handler. Sets an error if supplied username has been blocked.
- */
-function user_login_name_validate($form, &$form_state) {
-  if (!empty($form_state['values']['name']) && user_is_blocked($form_state['values']['name'])) {
-    // Blocked in user administration.
-    form_set_error('name', t('The username %name has not been activated or is blocked.', array('%name' => $form_state['values']['name'])));
-  }
-}
-
-/**
- * A validate handler on the login form. Check supplied username/password
- * against local users table. If successful, $form_state['uid']
- * is set to the matching user ID.
- */
-function user_login_authenticate_validate($form, &$form_state) {
-  $password = trim($form_state['values']['pass']);
-  $flood_config = config('user.flood');
-  $flood = Drupal::service('flood');
-  if (!empty($form_state['values']['name']) && !empty($password)) {
-    // Do not allow any login from the current user's IP if the limit has been
-    // reached. Default is 50 failed attempts allowed in one hour. This is
-    // independent of the per-user limit to catch attempts from one IP to log
-    // in to many different user accounts.  We have a reasonably high limit
-    // since there may be only one apparent IP for all users at an institution.
-    if (!$flood->isAllowed('user.failed_login_ip', $flood_config->get('ip_limit'), $flood_config->get('ip_window'))) {
-      $form_state['flood_control_triggered'] = 'ip';
-      return;
-    }
-    $account = db_query("SELECT * FROM {users} WHERE name = :name AND status = 1", array(':name' => $form_state['values']['name']))->fetchObject();
-    if ($account) {
-      if ($flood_config->get('uid_only')) {
-        // Register flood events based on the uid only, so they apply for any
-        // IP address. This is the most secure option.
-        $identifier = $account->uid;
-      }
-      else {
-        // The default identifier is a combination of uid and IP address. This
-        // is less secure but more resistant to denial-of-service attacks that
-        // could lock out all users with public user names.
-        $identifier = $account->uid . '-' . Drupal::request()->getClientIP();
-      }
-      $form_state['flood_control_user_identifier'] = $identifier;
-
-      // Don't allow login if the limit for this user has been reached.
-      // Default is to allow 5 failed attempts every 6 hours.
-      if (!$flood->isAllowed('user.failed_login_user', $flood_config->get('user_limit'), $flood_config->get('user_window'), $identifier)) {
-        $form_state['flood_control_triggered'] = 'user';
-        return;
-      }
-    }
-    // We are not limited by flood control, so try to authenticate.
-    // Set $form_state['uid'] as a flag for user_login_final_validate().
-    $form_state['uid'] = user_authenticate($form_state['values']['name'], $password);
-  }
-}
-
-/**
- * The final validation handler on the login form.
- *
- * Sets a form error if user has not been authenticated, or if too many
- * logins have been attempted. This validation function should always
- * be the last one.
- */
-function user_login_final_validate($form, &$form_state) {
-  $flood_config = config('user.flood');
-  $flood = Drupal::service('flood');
-  if (empty($form_state['uid'])) {
-    // Always register an IP-based failed login event.
-    $flood->register('user.failed_login_ip', $flood_config->get('ip_window'));
-    // Register a per-user failed login event.
-    if (isset($form_state['flood_control_user_identifier'])) {
-      $flood->register('user.failed_login_user', $flood_config->get('user_window'), $form_state['flood_control_user_identifier']);
-    }
-
-    if (isset($form_state['flood_control_triggered'])) {
-      if ($form_state['flood_control_triggered'] == 'user') {
-        form_set_error('name', format_plural($flood_config->get('user_limit'), 'Sorry, there has been more than one failed login attempt for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', 'Sorry, there have been more than @count failed login attempts for this account. It is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
-      }
-      else {
-        // We did not find a uid, so the limit is IP-based.
-        form_set_error('name', t('Sorry, too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
-      }
-    }
-    else {
-      form_set_error('name', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password', array('query' => array('name' => $form_state['values']['name']))))));
-      if (user_load_by_name($form_state['values']['name'])) {
-        watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
-      }
-      else {
-        // If the username entered is not a valid user,
-        // only store the IP address.
-        watchdog('user', 'Login attempt failed from %ip.', array('%ip' => Drupal::request()->getClientIp()));
-      }
-    }
-  }
-  elseif (isset($form_state['flood_control_user_identifier'])) {
-    // Clear past failures for this user so as not to block a user who might
-    // log in and out more than once in an hour.
-    $flood->clear('user.failed_login_user', $form_state['flood_control_user_identifier']);
-  }
 }
 
 /**
@@ -1350,18 +1190,22 @@ function user_authenticate($name, $password) {
 }
 
 /**
- * Finalize the login process. Must be called when logging in a user.
+ * Finalizes the login process and logs in a user.
  *
- * The function records a watchdog message about the new session, saves the
- * login timestamp, calls hook_user_login(), and generates a new session.
+ * The function logs in the user, records a watchdog message about the new
+ * session, saves the login timestamp, calls hook_user_login(), and generates a
+ * new session.
  *
- * @param array $edit
- *   The array of form values submitted by the user.
+ * The global $user object is replaced with the passed in account.
+ *
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *   The account to log in.
  *
  * @see hook_user_login()
  */
-function user_login_finalize(&$edit = array()) {
+function user_login_finalize(AccountInterface $account) {
   global $user;
+  $user = $account;
   watchdog('user', 'Session opened for %name.', array('%name' => $user->name));
   // Update the user table timestamp noting user has logged in.
   // This is also used to invalidate one-time login links.
@@ -1377,19 +1221,6 @@ function user_login_finalize(&$edit = array()) {
   drupal_session_regenerate();
 
   module_invoke_all('user_login', $user);
-}
-
-/**
- * Submit handler for the login form. Load $user object and perform standard login
- * tasks. The user is then redirected to the My Account page. Setting the
- * destination in the query string overrides the redirect.
- */
-function user_login_form_submit($form, &$form_state) {
-  global $user;
-  $user = user_load($form_state['uid']);
-  $form_state['redirect'] = 'user/' . $user->uid;
-
-  user_login_finalize($form_state);
 }
 
 /**
@@ -1759,7 +1590,7 @@ function user_mail_tokens(&$replacements, $data, $options) {
  *   value.
  */
 function user_role_names($membersonly = FALSE, $permission = NULL) {
-  return array_map(function($item) {
+  return array_map(function ($item) {
     return $item->label();
   }, user_roles($membersonly, $permission));
 }
@@ -1844,12 +1675,9 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
   }
 
   if (!empty($permission)) {
-    $result = db_select('role_permission', 'p')
-      ->fields('p', array('rid'))
-      ->condition('p.rid', array_keys($roles))
-      ->condition('p.permission', $permission)
-      ->execute()->fetchCol();
-    $roles = array_intersect_key($roles, array_flip($result));
+    $roles = array_filter($roles, function ($role) use ($permission) {
+      return $role->hasPermission($permission);
+    });
   }
 
   if (empty($permission)) {
@@ -1944,23 +1772,14 @@ function user_role_change_permissions($rid, array $permissions = array()) {
  * @see user_role_revoke_permissions()
  */
 function user_role_grant_permissions($rid, array $permissions = array()) {
-  $modules = user_permission_get_modules();
   // Grant new permissions for the role.
-  foreach ($permissions as $name) {
-    db_merge('role_permission')
-      ->key(array(
-        'rid' => $rid,
-        'permission' => $name,
-      ))
-      ->fields(array(
-        'module' => $modules[$name],
-      ))
-      ->execute();
+  $role = entity_load('user_role', $rid);
+  foreach ($permissions as $permission) {
+    $role->grantPermission($permission);
   }
-
+  $role->save();
   // Clear the user access cache.
   drupal_static_reset('user_access');
-  drupal_static_reset('user_role_permissions');
 }
 
 /**
@@ -1976,14 +1795,13 @@ function user_role_grant_permissions($rid, array $permissions = array()) {
  */
 function user_role_revoke_permissions($rid, array $permissions = array()) {
   // Revoke permissions for the role.
-  db_delete('role_permission')
-    ->condition('rid', $rid)
-    ->condition('permission', $permissions, 'IN')
-    ->execute();
-
+  $role = entity_load('user_role', $rid);
+  foreach ($permissions as $permission) {
+    $role->revokePermission($permission);
+  }
+  $role->save();
   // Clear the user access cache.
   drupal_static_reset('user_access');
-  drupal_static_reset('user_role_permissions');
 }
 
 function user_multiple_cancel_confirm($form, &$form_state) {
@@ -2078,90 +1896,6 @@ function user_multiple_cancel_confirm_submit($form, &$form_state) {
     }
   }
   $form_state['redirect'] = 'admin/people';
-}
-
-/**
- * List user administration filters that can be applied.
- */
-function user_filters() {
-  // Regular filters
-  $filters = array();
-  $roles = user_role_names(TRUE);
-  unset($roles[DRUPAL_AUTHENTICATED_RID]); // Don't list authorized role.
-  if (count($roles)) {
-    $filters['role'] = array(
-      'title' => t('role'),
-      'field' => 'ur.rid',
-      'options' => array(
-        '[any]' => t('any'),
-      ) + $roles,
-    );
-  }
-
-  $options = array();
-  foreach (module_implements('permission') as $module) {
-    $function = $module . '_permission';
-    if ($permissions = $function()) {
-      asort($permissions);
-      foreach ($permissions as $permission => $description) {
-        $options[t('@module module', array('@module' => $module))][$permission] = t($permission);
-      }
-    }
-  }
-  ksort($options);
-  $filters['permission'] = array(
-    'title' => t('permission'),
-    'options' => array(
-      '[any]' => t('any'),
-    ) + $options,
-  );
-
-  $filters['status'] = array(
-    'title' => t('status'),
-    'field' => 'u.status',
-    'options' => array(
-      '[any]' => t('any'),
-      1 => t('active'),
-      0 => t('blocked'),
-    ),
-  );
-  return $filters;
-}
-
-/**
- * Extends a query object for user administration filters based on session.
- *
- * @param $query
- *   Query object that should be filtered.
- */
-function user_build_filter_query(SelectInterface $query) {
-  $filters = user_filters();
-  // Extend Query with filter conditions.
-  foreach (isset($_SESSION['user_overview_filter']) ? $_SESSION['user_overview_filter'] : array() as $filter) {
-    list($key, $value) = $filter;
-    // This checks to see if this permission filter is an enabled permission for
-    // the authenticated role. If so, then all users would be listed, and we can
-    // skip adding it to the filter query.
-    if ($key == 'permission') {
-      $account = entity_create('user', array(
-        'uid' => 'user_filter',
-        'roles' => array(DRUPAL_AUTHENTICATED_RID),
-      ));
-      if (user_access($value, $account)) {
-        continue;
-      }
-      $users_roles_alias = $query->join('users_roles', 'ur', '%alias.uid = u.uid');
-      $permission_alias = $query->join('role_permission', 'p', $users_roles_alias . '.rid = %alias.rid');
-      $query->condition($permission_alias . '.permission', $value);
-    }
-    elseif ($key == 'role') {
-      $users_roles_alias = $query->join('users_roles', 'ur', '%alias.uid = u.uid');
-      $query->condition($users_roles_alias . '.rid' , $value);
-    }
-    else {
-      $query->condition($filters[$key]['field'], $value);
-    }
-  }
 }
 
 /**
@@ -2356,55 +2090,6 @@ function user_node_load($nodes, $types) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for 'field_ui_field_instance_edit_form'.
- *
- * Add a checkbox for the 'user_register_form' instance settings on the 'Edit
- * field instance' form.
- */
-function user_form_field_ui_field_instance_edit_form_alter(&$form, &$form_state, $form_id) {
-  $instance = $form_state['instance'];
-
-  if ($instance['entity_type'] == 'user') {
-    $form['instance']['settings']['user_register_form'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Display on user registration form.'),
-      '#description' => t("This is compulsory for 'required' fields."),
-      // Field instances created in D7 beta releases before the setting was
-      // introduced might be set as 'required' and 'not shown on user_register
-      // form'. We make sure the checkbox comes as 'checked' for those.
-      '#default_value' => $instance['settings']['user_register_form'] || $instance['required'],
-      // Display just below the 'required' checkbox.
-      '#weight' => $form['instance']['required']['#weight'] + .1,
-      // Disabled when the 'required' checkbox is checked.
-      '#states' => array(
-        'enabled' => array('input[name="instance[required]"]' => array('checked' => FALSE)),
-      ),
-      // Checked when the 'required' checkbox is checked. This is done through
-      // a custom behavior, since the #states system would also synchronize on
-      // uncheck.
-      '#attached' => array(
-        'library' => array(array('user', 'drupal.user')),
-      ),
-    );
-
-    array_unshift($form['#submit'], 'user_form_field_ui_field_instance_edit_form_submit');
-  }
-}
-
-/**
- * Additional submit handler for the 'Edit field instance' form.
- *
- * Make sure the 'user_register_form' setting is set for required fields.
- */
-function user_form_field_ui_field_instance_edit_form_submit($form, &$form_state) {
-  $instance = $form_state['values']['instance'];
-
-  if (!empty($instance['required'])) {
-    form_set_value($form['instance']['settings']['user_register_form'], 1, $form_state);
-  }
-}
-
-/**
  * Implements hook_modules_installed().
  */
 function user_modules_installed($modules) {
@@ -2427,26 +2112,8 @@ function user_modules_installed($modules) {
  * Implements hook_modules_uninstalled().
  */
 function user_modules_uninstalled($modules) {
-   db_delete('role_permission')
-     ->condition('module', $modules, 'IN')
-     ->execute();
   // Remove any potentially orphan module data stored for users.
   drupal_container()->get('user.data')->delete($modules);
-}
-
-/**
- * Helper function to rewrite the destination to avoid redirecting to login page after login.
- *
- * Third-party authentication modules may use this function to determine the
- * proper destination after a user has been properly logged in.
- */
-function user_login_destination() {
-  $destination = drupal_get_destination();
-  // Modules may provide login pages under the "user/login/" path prefix.
-  if (preg_match('@^user/login(/.*|)$@', $destination['destination'])) {
-    $destination['destination'] = 'user';
-  }
-  return $destination;
 }
 
 /**
@@ -2470,28 +2137,6 @@ function user_cookie_save(array $values) {
  */
 function user_cookie_delete($cookie_name) {
   setrawcookie('Drupal.visitor.' . $cookie_name, '', REQUEST_TIME - 3600, '/');
-}
-
-/**
- * Implements hook_rdf_mapping().
- */
-function user_rdf_mapping() {
-  return array(
-    array(
-      'type' => 'user',
-      'bundle' => RDF_DEFAULT_BUNDLE,
-      'mapping' => array(
-        'rdftype' => array('sioc:UserAccount'),
-        'name' => array(
-          'predicates' => array('foaf:name'),
-        ),
-        'homepage' => array(
-          'predicates' => array('foaf:page'),
-          'type' => 'rel',
-        ),
-      ),
-    ),
-  );
 }
 
 /**

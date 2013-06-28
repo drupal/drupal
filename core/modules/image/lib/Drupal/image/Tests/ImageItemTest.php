@@ -66,7 +66,7 @@ class ImageItemTest extends FieldUnitTestBase {
   public function testImageItem() {
     // Create a test entity with the image field set.
     $entity = entity_create('entity_test', array());
-    $entity->image_test->fid = $this->image->id();
+    $entity->image_test->target_id = $this->image->id();
     $entity->image_test->alt = $alt = $this->randomName();
     $entity->image_test->title = $title = $this->randomName();
     $entity->name->value = $this->randomName();
@@ -75,7 +75,7 @@ class ImageItemTest extends FieldUnitTestBase {
     $entity = entity_load('entity_test', $entity->id());
     $this->assertTrue($entity->image_test instanceof FieldInterface, 'Field implements interface.');
     $this->assertTrue($entity->image_test[0] instanceof FieldItemInterface, 'Field item implements interface.');
-    $this->assertEqual($entity->image_test->fid, $this->image->id());
+    $this->assertEqual($entity->image_test->target_id, $this->image->id());
     $this->assertEqual($entity->image_test->alt, $alt);
     $this->assertEqual($entity->image_test->title, $title);
     $info = image_get_info('public://example.jpg');
@@ -91,7 +91,7 @@ class ImageItemTest extends FieldUnitTestBase {
     ));
     $image2->save();
 
-    $entity->image_test->fid = $image2->id();
+    $entity->image_test->target_id = $image2->id();
     $entity->image_test->alt = $new_alt = $this->randomName();
     // The width and height is only updated when width is not set.
     $entity->image_test->width = NULL;
@@ -105,7 +105,7 @@ class ImageItemTest extends FieldUnitTestBase {
 
     // Check that the image item can be set to the referenced file directly.
     $entity->image_test = $this->image;
-    $this->assertEqual($entity->image_test->fid, $this->image->id());
+    $this->assertEqual($entity->image_test->target_id, $this->image->id());
 
     // Delete the image and try to save the entity again.
     $this->image->delete();

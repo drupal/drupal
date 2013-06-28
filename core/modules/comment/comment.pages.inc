@@ -123,33 +123,3 @@ function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
 
   return $build;
 }
-
-/**
- * Page callback: Publishes the specified comment.
- *
- * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
- *   A comment entity.
- *
- * @see comment_menu()
- */
-function comment_approve(Comment $comment) {
-  // @todo CSRF tokens are validated in page callbacks rather than access
-  //   callbacks, because access callbacks are also invoked during menu link
-  //   generation. Add token support to routing: http://drupal.org/node/755584.
-  $token = drupal_container()->get('request')->query->get('token');
-  if (!isset($token) || !drupal_valid_token($token, 'comment/' . $comment->id() . '/approve')) {
-    throw new AccessDeniedHttpException();
-  }
-
-  $comment->status->value = COMMENT_PUBLISHED;
-  $comment->save();
-
-  drupal_set_message(t('Comment approved.'));
-  $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
-  if ($entity) {
-    $uri = $entity->uri();
-    $uri['options']['absolute'] = TRUE;
-    return new RedirectResponse(url($uri['path'], $uri['options']));
-  }
-  throw new NotFoundHttpException();
-}

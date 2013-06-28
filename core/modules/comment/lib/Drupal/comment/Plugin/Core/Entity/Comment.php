@@ -70,6 +70,15 @@ class Comment extends EntityNG implements CommentInterface {
   public $uuid;
 
   /**
+   * The parent comment ID if this is a reply to a comment.
+   *
+   * @todo: Rename to 'parent_id'.
+   *
+   * @var \Drupal\Core\Entity\Field\FieldInterface
+   */
+  public $pid;
+
+  /**
    * The entity ID to which this comment is attached.
    *
    * @var \Drupal\Core\Entity\Field\FieldInterface
@@ -89,15 +98,6 @@ class Comment extends EntityNG implements CommentInterface {
    * @var \Drupal\Core\Entity\Field\FieldInterface
    */
   public $field_name;
-
-  /**
-   * The parent comment ID if this is a reply to a comment.
-   *
-   * @todo: Rename to 'parent_id'.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $pid;
 
   /**
    * The comment language code.

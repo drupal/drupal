@@ -11,13 +11,10 @@
 function forum_install() {
   // Set the weight of the forum.module to 1 so it is loaded after the taxonomy.module.
   module_set_weight('forum', 1);
-  // Forum topics are published by default, but do not have any other default
-  // options set (for example, they are not promoted to the front page).
-  // @todo Convert to default module configuration, once Node module's content
-  //   types are converted.
-  variable_set('node_options_forum', array('status'));
-  // Make sure the comment module is loaded.
-  drupal_load('module', 'comment');
+  // Do not allow to delete the forum's node type machine name.
+  $locked = Drupal::state()->get('node.type.locked');
+  $locked['forum'] = 'forum';
+  Drupal::state()->set('node.type.locked', $locked);
 }
 
 /**
@@ -108,13 +105,10 @@ function forum_enable() {
       ))
       ->save();
   }
-
-  // Ensure the forum node type is available.
-  node_types_rebuild();
-  $types = node_type_get_types();
-  node_add_body_field($types['forum']);
   // Add the comment field.
   if (!field_read_field('comment_node_forum', array('include_inactive' => TRUE))) {
+    // Make sure the comment module is loaded.
+    drupal_load('module', 'comment');
     comment_add_default_comment_field('node', 'forum', 'comment_node_forum', COMMENT_OPEN);
   }
 }
@@ -125,8 +119,6 @@ function forum_enable() {
 function forum_uninstall() {
   // Load the dependent Taxonomy module, in case it has been disabled.
   drupal_load('module', 'taxonomy');
-
-  variable_del('node_options_forum');
 
   if ($field = field_info_field('taxonomy_forums')) {
     $field->delete();
@@ -146,6 +138,10 @@ function forum_uninstall() {
   foreach (array('data', 'instances', 'fields') as $step) {
     field_purge_batch(10);
   }
+  // Allow to delete a forum's node type.
+  $locked = Drupal::state()->get('node.type.locked');
+  unset($locked['forum']);
+  Drupal::state()->set('node.type.locked', $locked);
 }
 
 /**

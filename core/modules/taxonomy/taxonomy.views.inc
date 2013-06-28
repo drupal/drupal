@@ -176,13 +176,13 @@ function taxonomy_views_data() {
     ),
   );
 
-  // Entity translation field.
-  if (Drupal::moduleHandler()->moduleExists('translation_entity')) {
+  // Content translation field.
+  if (Drupal::moduleHandler()->moduleExists('content_translation')) {
     $data['taxonomy_term_data']['translation_link'] = array(
       'title' => t('Translation link'),
       'help' => t('Provide a link to the translations overview for taxonomy terms.'),
       'field' => array(
-        'id' => 'translation_entity_link',
+        'id' => 'content_translation_link',
       ),
     );
   }

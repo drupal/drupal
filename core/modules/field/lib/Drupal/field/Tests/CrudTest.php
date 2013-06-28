@@ -44,8 +44,8 @@ class CrudTest extends FieldUnitTestBase {
     $field = entity_create('field_entity', $field_definition);
     $field->save();
     $mem = field_test_memorize();
-    $this->assertIdentical($mem['field_test_field_create_field'][0][0]['field_name'], $field_definition['field_name'], 'hook_field_create_field() called with correct arguments.');
-    $this->assertIdentical($mem['field_test_field_create_field'][0][0]['type'], $field_definition['type'], 'hook_field_create_field() called with correct arguments.');
+    $this->assertIdentical($mem['field_test_field_entity_create'][0][0]['field_name'], $field_definition['field_name'], 'hook_entity_create() called with correct arguments.');
+    $this->assertIdentical($mem['field_test_field_entity_create'][0][0]['type'], $field_definition['type'], 'hook_entity_create() called with correct arguments.');
 
     // Read the configuration. Check against raw configuration data rather than
     // the loaded ConfigEntity, to be sure we check that the defaults are
@@ -139,11 +139,11 @@ class CrudTest extends FieldUnitTestBase {
     }
 
     // Check that field name can not be an entity key.
-    // "ftvid" is known as an entity key from the "test_entity" type.
+    // "id" is known as an entity key from the "entity_test" type.
     try {
       $field_definition = array(
         'type' => 'test_field',
-        'field_name' => 'ftvid',
+        'field_name' => 'id',
       );
       entity_create('field_entity', $field_definition)->save();
       $this->fail(t('Cannot create a field bearing the name of an entity key.'));
@@ -216,8 +216,8 @@ class CrudTest extends FieldUnitTestBase {
     // Create an instance of the field.
     $instance_definition = array(
       'field_name' => $field_definition['field_name'],
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
     );
     entity_create('field_instance', $instance_definition)->save();
   }
@@ -283,8 +283,8 @@ class CrudTest extends FieldUnitTestBase {
     // Create instances for each.
     $this->instance_definition = array(
       'field_name' => $this->field['field_name'],
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
     );
     entity_create('field_instance', $this->instance_definition)->save();
     $another_instance_definition = $this->instance_definition;
@@ -303,7 +303,7 @@ class CrudTest extends FieldUnitTestBase {
 
     // Make sure that this field's instance is marked as deleted when it is
     // specifically loaded.
-    $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle'], array('include_deleted' => TRUE));
+    $instance = field_read_instance('entity_test', $this->instance_definition['field_name'], $this->instance_definition['bundle'], array('include_deleted' => TRUE));
     $this->assertTrue(!empty($instance['deleted']), 'An instance for a deleted field is marked for deletion.');
 
     // Try to load the field normally and make sure it does not show up.
@@ -311,13 +311,13 @@ class CrudTest extends FieldUnitTestBase {
     $this->assertTrue(empty($field), 'A deleted field is not loaded by default.');
 
     // Try to load the instance normally and make sure it does not show up.
-    $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
+    $instance = field_read_instance('entity_test', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
     $this->assertTrue(empty($instance), 'An instance for a deleted field is not loaded by default.');
 
     // Make sure the other field (and its field instance) are not deleted.
     $another_field = field_read_field($this->another_field['field_name']);
     $this->assertTrue(!empty($another_field) && empty($another_field['deleted']), 'A non-deleted field is not marked for deletion.');
-    $another_instance = field_read_instance('test_entity', $another_instance_definition['field_name'], $another_instance_definition['bundle']);
+    $another_instance = field_read_instance('entity_test', $another_instance_definition['field_name'], $another_instance_definition['bundle']);
     $this->assertTrue(!empty($another_instance) && empty($another_instance['deleted']), 'An instance of a non-deleted field is not marked for deletion.');
 
     // Try to create a new field the same name as a deleted field and
@@ -326,23 +326,22 @@ class CrudTest extends FieldUnitTestBase {
     entity_create('field_instance', $this->instance_definition)->save();
     $field = field_read_field($this->field['field_name']);
     $this->assertTrue(!empty($field) && empty($field['deleted']), 'A new field with a previously used name is created.');
-    $instance = field_read_instance('test_entity', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
+    $instance = field_read_instance('entity_test', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
     $this->assertTrue(!empty($instance) && empty($instance['deleted']), 'A new instance for a previously used field name is created.');
 
     // Save an entity with data for the field
-    $entity = field_test_create_entity(0, 0, $instance['bundle']);
+    $entity = entity_create('entity_test', array('id' => 0, 'revision_id' => 0));
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $values[0]['value'] = mt_rand(1, 127);
-    $entity->{$field['field_name']}[$langcode] = $values;
-    $entity_type = 'test_entity';
+    $entity->{$field['field_name']}->value = $values[0]['value'];
     field_attach_insert($entity);
 
     // Verify the field is present on load
-    $entity = field_test_create_entity(0, 0, $this->instance_definition['bundle']);
-    field_attach_load($entity_type, array(0 => $entity));
-    $this->assertIdentical(count($entity->{$field['field_name']}[$langcode]), count($values), "Data in previously deleted field saves and loads correctly");
+    $entity = entity_create('entity_test', array('id' => 0, 'revision_id' => 0));
+    field_attach_load('entity_test', array(0 => $entity));
+    $this->assertIdentical(count($entity->{$field['field_name']}), count($values), "Data in previously deleted field saves and loads correctly");
     foreach ($values as $delta => $value) {
-      $this->assertEqual($entity->{$field['field_name']}[$langcode][$delta]['value'], $values[$delta]['value'], "Data in previously deleted field saves and loads correctly");
+      $this->assertEqual($entity->{$field['field_name']}[$delta]->value, $values[$delta]['value'], "Data in previously deleted field saves and loads correctly");
     }
   }
 
@@ -377,28 +376,28 @@ class CrudTest extends FieldUnitTestBase {
     $field->save();
     $instance = entity_create('field_instance', array(
       'field_name' => 'field_update',
-      'entity_type' => 'test_entity',
-      'bundle' => 'test_bundle',
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
     ));
     $instance->save();
 
     do {
       // We need a unique ID for our entity. $cardinality will do.
       $id = $cardinality;
-      $entity = field_test_create_entity($id, $id, $instance->bundle);
+      $entity = entity_create('entity_test', array('id' => $id, 'revision_id' => $id));
       // Fill in the entity with more values than $cardinality.
       for ($i = 0; $i < 20; $i++) {
-        $entity->field_update[Language::LANGCODE_NOT_SPECIFIED][$i]['value'] = $i;
+        $entity->field_update[$i]->value = $i;
       }
       // Save the entity.
       field_attach_insert($entity);
       // Load back and assert there are $cardinality number of values.
-      $entity = field_test_create_entity($id, $id, $instance->bundle);
-      field_attach_load('test_entity', array($id => $entity));
-      $this->assertEqual(count($entity->field_update[Language::LANGCODE_NOT_SPECIFIED]), $field->cardinality, 'Cardinality is kept');
+      $entity = entity_create('entity_test', array('id' => $id, 'revision_id' => $id));
+      field_attach_load('entity_test', array($id => $entity));
+      $this->assertEqual(count($entity->field_update), $field->cardinality, 'Cardinality is kept');
       // Now check the values themselves.
       for ($delta = 0; $delta < $cardinality; $delta++) {
-        $this->assertEqual($entity->field_update[Language::LANGCODE_NOT_SPECIFIED][$delta]['value'], $delta, 'Value is kept');
+        $this->assertEqual($entity->field_update[$delta]->value, $delta, 'Value is kept');
       }
       // Increase $cardinality and set the field cardinality to the new value.
       $field->cardinality = ++$cardinality;

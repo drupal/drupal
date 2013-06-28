@@ -26,23 +26,18 @@ class ViewPreviewFormController extends ViewFormControllerBase implements Entity
   /**
    * Constructs a new ViewPreviewFormController object.
    *
-   * @param string $operation
-   *   The name of the current operation.
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    */
-  public function __construct($operation, TempStoreFactory $temp_store_factory) {
-    parent::__construct($operation);
-
+  public function __construct(TempStoreFactory $temp_store_factory) {
     $this->tempStore = $temp_store_factory->get('views');
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info, $operation = NULL) {
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
-      $operation,
       $container->get('user.tempstore')
     );
   }

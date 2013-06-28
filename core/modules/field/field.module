@@ -5,10 +5,11 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
 use Drupal\field\FieldInterface;
+use Drupal\field\FieldInstanceInterface;
+use Drupal\Core\Entity\EntityNG;
 
 /*
  * Load all public Field API functions. Drupal currently has no
@@ -16,7 +17,6 @@ use Drupal\field\FieldInterface;
  * every page request.
  */
 require_once __DIR__ . '/field.crud.inc';
-require_once __DIR__ . '/field.default.inc';
 require_once __DIR__ . '/field.info.inc';
 require_once __DIR__ . '/field.multilingual.inc';
 require_once __DIR__ . '/field.attach.inc';
@@ -230,25 +230,6 @@ function field_system_info_alter(&$info, $file, $type) {
 }
 
 /**
- * Implements hook_data_type_info() to register data types for all field types.
- */
-function field_data_type_info() {
-  $field_types = field_info_field_types();
-  $items = array();
-
-  // Expose data types for all the field type items.
-  foreach ($field_types as $type_name => $type_info) {
-    $data_type = isset($type_info['data_type']) ? $type_info['data_type'] : $type_name . '_field';
-    $items[$data_type] = array(
-      'label' => t('Field !label item', array('!label' => $type_info['label'])),
-      'class' => $type_info['field item class'],
-      'list class' => !empty($type_info['field class']) ? $type_info['field class'] : '\Drupal\Core\Entity\Field\Type\Field',
-    );
-  }
-  return $items;
-}
-
-/**
  * Implements hook_entity_create().
  */
 function field_entity_create(EntityInterface $entity) {
@@ -293,21 +274,12 @@ function field_populate_default_values(EntityInterface $entity, $langcode = NULL
  */
 function field_entity_field_info($entity_type) {
   $property_info = array();
-  $field_types = field_info_field_types();
 
   foreach (field_info_instances($entity_type) as $bundle_name => $instances) {
     $optional = $bundle_name != $entity_type;
 
     foreach ($instances as $field_name => $instance) {
-      $field = field_info_field($field_name);
-
-      // @todo: Allow for adding field type settings.
-      $definition = array(
-        'label' => t('Field !name', array('!name' => $field_name)),
-        'type' => isset($field_types[$field['type']]['data_type']) ? $field_types[$field['type']]['data_type'] :  $field['type'] . '_field',
-        'configurable' => TRUE,
-        'translatable' => !empty($field['translatable'])
-      );
+      $definition = _field_generate_entity_field_definition($instance->getField());
 
       if ($optional) {
         $property_info['optional'][$field_name] = $definition;
@@ -320,6 +292,33 @@ function field_entity_field_info($entity_type) {
   }
 
   return $property_info;
+}
+
+/**
+ * Generates an entity field definition for a configurable field.
+ *
+ * @param \Drupal\field\FieldInterface $field
+ *   The field definition.
+ * @param \Drupal\field\FieldInstanceInterface $instance
+ *   (Optional) The field instance definition.
+ *
+ * @return array
+ *   The entity field definition.
+ */
+function _field_generate_entity_field_definition(FieldInterface $field, FieldInstanceInterface $instance = NULL) {
+  // @todo: Allow for adding field type settings.
+  $definition = array(
+    'label' => t('Field !name', array('!name' => $field->id())),
+    'type' => 'field_item:' . $field->type,
+    'list' => TRUE,
+    'configurable' => TRUE,
+    'translatable' => !empty($field->translatable),
+  );
+  if ($instance) {
+    $definition['instance'] = $instance;
+  }
+
+  return $definition;
 }
 
 /**
@@ -500,64 +499,6 @@ function field_get_default_value(EntityInterface $entity, $field, $instance, $la
 }
 
 /**
- * Filters out empty field values.
- *
- * @param $field_type
- *   The field type.
- * @param $items
- *   The field values to filter.
- *
- * @return
- *   The array of items without empty field values. The function also renumbers
- *   the array keys to ensure sequential deltas.
- */
-function _field_filter_items($field_type, $items) {
-  $field_type_info = field_info_field_types($field_type);
-  $function = $field_type_info['module'] . '_field_is_empty';
-  foreach ((array) $items as $delta => $item) {
-    // Explicitly break if the function is undefined.
-    if ($function($item, $field_type)) {
-      unset($items[$delta]);
-    }
-  }
-  return array_values($items);
-}
-
-/**
- * Sorts items in a field according to user drag-and-drop reordering.
- *
- * @param $field
- *   The field definition.
- * @param $items
- *   The field values to sort.
- *
- * @return
- *   The sorted array of field items.
- */
-function _field_sort_items($field, $items) {
-  if (($field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED) && isset($items[0]['_weight'])) {
-    usort($items, '_field_sort_items_helper');
-    foreach ($items as $delta => $item) {
-      if (is_array($items[$delta])) {
-        unset($items[$delta]['_weight']);
-      }
-    }
-  }
-  return $items;
-}
-
-/**
- * Callback for usort() within _field_sort_items().
- *
- * Copied form element_sort(), which acts on #weight keys.
- */
-function _field_sort_items_helper($a, $b) {
-  $a_weight = (is_array($a) ? $a['_weight'] : 0);
-  $b_weight = (is_array($b) ? $b['_weight'] : 0);
-  return $a_weight - $b_weight;
-}
-
-/**
  * Callback for usort() within theme_field_multiple_value_form().
  *
  * Sorts using ['_weight']['#value']
@@ -609,10 +550,46 @@ function field_bundle_settings($entity_type, $bundle, $settings = NULL) {
     $settings = variable_get('field_bundle_settings_' . $entity_type . '__' . $bundle, array());
     $settings += array(
       'view_modes' => array(),
+      'form_modes' => array(),
     );
 
     return $settings;
   }
+}
+
+/**
+ * Returns form mode settings in a given bundle.
+ *
+ * @param string $entity_type
+ *   The type of entity; e.g. 'node' or 'user'.
+ * @param string $bundle
+ *   The bundle name to return form mode settings for.
+ *
+ * @return
+ *   An array keyed by form mode, with the following key/value pairs:
+ *   - status: Boolean specifying whether the form mode uses a dedicated set of
+ *     display options (TRUE), or the 'default' options (FALSE). Defaults to
+ *     FALSE.
+ */
+function field_form_mode_settings($entity_type, $bundle) {
+  $cache = &drupal_static(__FUNCTION__, array());
+
+  if (!isset($cache[$entity_type][$bundle])) {
+    $bundle_settings = field_bundle_settings($entity_type, $bundle);
+    $settings = $bundle_settings['form_modes'];
+    // Include form modes for which nothing has been stored yet, but whose
+    // definition in hook_entity_info_alter() specify they should use custom
+    // settings by default.
+    $form_modes = entity_get_form_modes($entity_type);
+    foreach ($form_modes as $form_mode => $form_mode_info) {
+      if (!isset($settings[$form_mode]['status']) && $form_mode_info['status']) {
+        $settings[$form_mode]['status'] = TRUE;
+      }
+    }
+    $cache[$entity_type][$bundle] = $settings;
+  }
+
+  return $cache[$entity_type][$bundle];
 }
 
 /**
@@ -716,6 +693,9 @@ function _field_filter_xss_display_allowed_tags() {
 function field_view_value(EntityInterface $entity, $field_name, $item, $display = array(), $langcode = NULL) {
   $output = array();
 
+  // Ensure we are working with a BC mode entity.
+  $entity = $entity->getBCEntity();
+
   if ($field = field_info_field($field_name)) {
     // Determine the langcode that will be used by language fallback.
     $langcode = field_language($entity, $field_name, $langcode);
@@ -769,11 +749,10 @@ function field_view_value(EntityInterface $entity, $field_name, $item, $display 
  *       implementation supports the values 'inline', 'above' and 'hidden'.
  *       Defaults to 'above'.
  *     - type: (string) The formatter to use. Defaults to the
- *       'default_formatter' for the field type, specified in hook_field_info().
- *       The default formatter will also be used if the requested formatter is
- *       not available.
+ *       'default_formatter' for the field type. The default formatter will also
+ *       be used if the requested formatter is not available.
  *     - settings: (array) Settings specific to the formatter. Defaults to the
- *       formatter's default settings, specified in hook_field_formatter_info().
+ *       formatter's default settings.
  *     - weight: (float) The weight to assign to the renderable element.
  *       Defaults to 0.
  * @param $langcode
@@ -790,9 +769,10 @@ function field_view_value(EntityInterface $entity, $field_name, $item, $display 
 function field_view_field(EntityInterface $entity, $field_name, $display_options = array(), $langcode = NULL) {
   $output = array();
   $bundle = $entity->bundle();
+  $entity_type = $entity->entityType();
 
   // Return nothing if the field doesn't exist.
-  $instance = field_info_instance($entity->entityType(), $field_name, $bundle);
+  $instance = field_info_instance($entity_type, $field_name, $bundle);
   if (!$instance) {
     return $output;
   }
@@ -800,7 +780,7 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
   // Get the formatter object.
   if (is_string($display_options)) {
     $view_mode = $display_options;
-    $formatter = entity_get_render_display($entity, $view_mode)->getFormatter($field_name);
+    $formatter = entity_get_render_display($entity, $view_mode)->getRenderer($field_name);
   }
   else {
     $view_mode = '_custom';
@@ -819,37 +799,25 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
 
   if ($formatter) {
     $display_langcode = field_language($entity, $field_name, $langcode);
-    $items = array();
-    // Ensure the BC entity is used.
-    $entity = $entity->getBCEntity();
-    if (isset($entity->{$field_name}[$display_langcode])) {
-      $items = $entity->{$field_name}[$display_langcode];
+
+    // Get the items.
+    if ($entity->getNGEntity() instanceof EntityNG) {
+      $items = $entity->getTranslation($display_langcode)->get($field_name);
+      $definition = $entity->getPropertyDefinition($field_name);
+    }
+    else {
+      $definitions = \Drupal::entityManager()->getFieldDefinitions($entity_type, $bundle);
+      $definition = $definitions[$field_name];
+      $itemsBC = isset($entity->{$field_name}[$display_langcode]) ? $entity->{$field_name}[$display_langcode] : array();
+      $items = \Drupal::typedData()->create($definitions[$field_name], $itemsBC, $field_name, $entity);
     }
 
-    // Invoke prepare_view steps if needed.
-    if (empty($entity->_field_view_prepared)) {
-      $id = $entity->id();
-
-      // First let the field types do their preparation.
-      $options = array('field_name' => $field_name, 'langcode' => $display_langcode);
-      $null = NULL;
-      _field_invoke_multiple('prepare_view', $entity->entityType(), array($id => $entity), $null, $null, $options);
-
-      // Then let the formatter do its own specific massaging.
-      // @todo Drop once every entity got converted to entityNG.
-      if ($entity instanceof EntityNG) {
-        $items_multi = array($id => $entity_translation->get($field_name)->getValue());
-      }
-      else {
-        $items_multi = array($id => empty($entity->{$field_name}[$display_langcode]) ? array() : $entity->{$field_name}[$display_langcode]);
-      }
-
-      $formatter->prepareView(array($id => $entity), $display_langcode, $items_multi);
-      $items = $items_multi[$id];
-    }
-
-    // Build the renderable array.
-    $result = $formatter->view($entity, $display_langcode, $items);
+    // Invoke the formatter's prepareView() and view() methods.
+    $id = $entity->id();
+    $itemsBC_multi = array($id => $items->getValue());
+    $formatter->prepareView(array($id => $entity), $display_langcode, $itemsBC_multi);
+    $itemsBC = $itemsBC_multi[$id];
+    $result = $formatter->view($entity, $display_langcode, $itemsBC);
 
     // Invoke hook_field_attach_view_alter() to let other modules alter the
     // renderable array, as in a full field_attach_view() execution.

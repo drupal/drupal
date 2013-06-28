@@ -530,7 +530,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 
     // Create admin user.
-    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer taxonomy'));
+    $admin_user = $this->drupalCreateUser(array('access content', 'administer content types', 'administer node fields', 'administer node form display', 'administer taxonomy'));
     $this->drupalLogin($admin_user);
 
     // Create a test field instance.
@@ -549,39 +549,37 @@ class OptionsWidgetsTest extends FieldTestBase {
       ))
       ->save();
 
-    // Go to the edit page and check if the default settings works as expected
-    $fieldEditUrl = 'admin/structure/types/manage/page/fields/node.page.bool';
+    // Go to the form display page and check if the default settings works as
+    // expected.
+    $fieldEditUrl = 'admin/structure/types/manage/page/form-display';
     $this->drupalGet($fieldEditUrl);
+
+    $field_name = $this->bool['field_name'];
+    // Click on the widget settings button to open the widget settings form.
+    $this->drupalPostAJAX(NULL, array(), $field_name . "_settings_edit");
 
     $this->assertText(
       'Use field label instead of the "On value" as label',
       t('Display setting checkbox available.')
     );
 
-    $this->assertFieldByXPath(
-      '*//label[@for="edit-' . $this->bool['field_name'] . '-und" and text()="MyOnValue"]',
-      TRUE,
-      t('Default case shows "On value"')
-    );
+    // Enable setting.
+    $edit = array('fields[' . $field_name . '][settings_edit_form][settings][display_label]' => 1);
+    $this->drupalPostAJAX(NULL, $edit, $field_name . "_plugin_settings_update");
+    $this->drupalPost(NULL, NULL, 'Save');
 
-    // Enable setting
-    $edit = array('instance[widget][settings][display_label]' => 1);
-    // Save the new Settings
-    $this->drupalPost($fieldEditUrl, $edit, t('Save settings'));
-
-    // Go again to the edit page and check if the setting
-    // is stored and has the expected effect
+    // Go again to the form display page and check if the setting
+    // is stored and has the expected effect.
     $this->drupalGet($fieldEditUrl);
+    $this->assertText('Use field label: Yes', 'Checking the display settings checkbox updated the value.');
+
+    $this->drupalPostAJAX(NULL, array(), $field_name . "_settings_edit");
     $this->assertText(
       'Use field label instead of the "On value" as label',
       t('Display setting checkbox is available')
     );
-    $this->assertFieldChecked(
-      'edit-instance-widget-settings-display-label',
-      t('Display settings checkbox checked')
-    );
     $this->assertFieldByXPath(
-      '*//label[@for="edit-' . $this->bool['field_name'] . '-und" and text()="' . $this->bool['field_name'] . '"]',
+      '*//input[@id="edit-fields-' . $field_name . '-settings-edit-form-settings-display-label" and @value="1"]',
       TRUE,
       t('Display label changes label of the checkbox')
     );

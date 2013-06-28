@@ -67,6 +67,32 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
   }
 
   /**
+   * Create a default custom block.
+   *
+   * Creates a custom block from defaults and ensures that the 'basic block'
+   * type is being used.
+   */
+  public function testDefaultCustomBlockCreation() {
+    $edit = array();
+    $langcode = Language::LANGCODE_NOT_SPECIFIED;
+    $edit['info'] = $this->randomName(8);
+    $edit["block_body[$langcode][0][value]"] = $this->randomName(16);
+    // Don't pass the custom block type in the url so the default is forced.
+    $this->drupalPost('block/add', $edit, t('Save'));
+
+    // Check that the block has been created and that it is a basic block.
+    $this->assertRaw(format_string('!block %name has been created.', array(
+      '!block' => 'Basic block',
+      '%name' => $edit["info"],
+    )), 'Basic block created.');
+
+    // Check that the block exists in the database.
+    $blocks = entity_load_multiple_by_properties('custom_block', array('info' => $edit['info']));
+    $block = reset($blocks);
+    $this->assertTrue($block, 'Default Custom Block found in database.');
+  }
+
+  /**
    * Verifies that a transaction rolls back the failed creation.
    */
   public function testFailedBlockCreation() {

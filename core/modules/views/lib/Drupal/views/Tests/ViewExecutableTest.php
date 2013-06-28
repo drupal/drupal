@@ -80,8 +80,8 @@ class ViewExecutableTest extends ViewUnitTestBase {
   }
 
   protected function setUpFixtures() {
-    $this->installSchema('user', array('users', 'role_permission'));
-    $this->installSchema('node', array('node_type', 'node', 'node_field_data'));
+    $this->installSchema('user', array('users'));
+    $this->installSchema('node', array('node', 'node_field_data'));
     $this->installSchema('comment', array('comment', 'comment_entity_statistics'));
     $this->installConfig(array('field'));
     comment_add_default_comment_field('node', 'page');

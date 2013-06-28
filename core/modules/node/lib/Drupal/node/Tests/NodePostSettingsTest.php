@@ -36,7 +36,7 @@ class NodePostSettingsTest extends NodeTestBase {
 
     // Set "Basic page" content type to display post information.
     $edit = array();
-    $edit['node_submitted'] = TRUE;
+    $edit['settings[node][submitted]'] = TRUE;
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
 
     // Create a node.
@@ -50,16 +50,11 @@ class NodePostSettingsTest extends NodeTestBase {
     $node = $this->drupalGetNodeByTitle($edit["title"]);
     $elements = $this->xpath('//*[contains(@class,:class)]', array(':class' => 'submitted'));
     $this->assertEqual(count($elements), 1, 'Post information is displayed.');
-  }
-
-  /**
-   * Confirms absence of post information on a new node.
-   */
-  function testPageNotPostInfo() {
+    $node->delete();
 
     // Set "Basic page" content type to display post information.
     $edit = array();
-    $edit['node_submitted'] = FALSE;
+    $edit['settings[node][submitted]'] = FALSE;
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
 
     // Create a node.

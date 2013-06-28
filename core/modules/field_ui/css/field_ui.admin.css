@@ -38,31 +38,31 @@
   white-space: nowrap;
 }
 
-/* 'Manage display' overview */
-.field-ui-overview .field-formatter-summary-cell {
+/* 'Manage form display' and 'Manage display' overview */
+.field-ui-overview .field-plugin-summary-cell {
   line-height: 1em;
 }
-.field-ui-overview .field-formatter-summary {
+.field-ui-overview .field-plugin-summary {
   float: left;
   font-size: .9em;
 }
-.field-ui-overview .field-formatter-summary-cell .warning {
+.field-ui-overview .field-plugin-summary-cell .warning {
   display: block;
   float: left;
   margin-right: .5em;
 }
-.field-ui-overview .field-formatter-settings-edit-wrapper {
+.field-ui-overview .field-plugin-settings-edit-wrapper {
   float: right;
 }
-.field-ui-overview .field-formatter-settings-edit {
+.field-ui-overview .field-plugin-settings-edit {
   float: right;
 }
-.field-ui-overview .field-formatter-settings-editing td {
+.field-ui-overview .field-plugin-settings-editing td {
   vertical-align: top;
 }
-.field-ui-overview .field-formatter-settings-editing .field-formatter-type {
+.field-ui-overview .field-plugin-settings-editing .field-plugin-type {
   display: none;
 }
-.field-ui-overview .field-formatter-settings-edit-form .formatter-name{
+.field-ui-overview .field-plugin-settings-edit-form .plugin-name {
   font-weight: bold;
 }

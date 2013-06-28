@@ -32,8 +32,8 @@ class LocaleSettingsForm extends SystemConfigFormBase {
       '#default_value' => $config->get('translation.update_interval_days'),
       '#options' => array(
         '0' => t('Never (manually)'),
-        '1' => t('Daily'),
         '7' => t('Weekly'),
+        '30' => t('Monthly'),
       ),
       '#description' => t('Select how frequently you want to check for new interface translations for your currently installed modules and themes. <a href="@url">Check updates now</a>.', array('@url' => url('admin/reports/translations/check'))),
     );

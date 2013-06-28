@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\rdf\Tests\NodeAttributesTest.
+ * Contains \Drupal\rdf\Tests\NodeAttributesTest.
  */
 
 namespace Drupal\rdf\Tests;
@@ -27,6 +27,24 @@ class NodeAttributesTest extends NodeTestBase {
       'description' => 'Tests the RDFa markup of nodes.',
       'group' => 'RDF',
     );
+  }
+
+  public function setUp() {
+    parent::setUp();
+
+    rdf_get_mapping('node', 'article')
+      ->setBundleMapping(array(
+        'types' => array('sioc:Item', 'foaf:Document'),
+      ))
+      ->setFieldMapping('title', array(
+        'properties' => array('dc:title'),
+      ))
+      ->setFieldMapping('created', array(
+        'properties' => array('dc:date', 'dc:created'),
+        'datatype' => 'xsd:dateTime',
+        'datatype_callback' => 'date_iso8601',
+      ))
+      ->save();
   }
 
   /**

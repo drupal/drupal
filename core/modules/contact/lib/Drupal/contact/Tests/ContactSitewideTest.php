@@ -237,7 +237,6 @@ class ContactSitewideTest extends WebTestBase {
       'fields[_add_new_field][label]' => $field_label = $this->randomName(),
       'fields[_add_new_field][field_name]' => Unicode::strtolower($this->randomName()),
       'fields[_add_new_field][type]' => 'text',
-      'fields[_add_new_field][widget_type]' => 'text_textfield',
     );
     $field_name = 'field_' . $edit['fields[_add_new_field][field_name]'];
     $this->drupalPost(NULL, $edit, t('Save'));

@@ -7,12 +7,12 @@
 
 namespace Drupal\taxonomy\Type;
 
-use Drupal\Core\Entity\Field\Type\EntityReferenceItem;
+use Drupal\field\Plugin\Type\FieldType\ConfigEntityReferenceItemBase;
 
 /**
  * Defines the 'taxonomy_term_reference' entity field item.
  */
-class TaxonomyTermReferenceItem extends EntityReferenceItem {
+class TaxonomyTermReferenceItem extends ConfigEntityReferenceItemBase {
 
   /**
    * Property definitions of the contained properties.

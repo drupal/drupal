@@ -149,42 +149,6 @@ function user_schema() {
     ),
   );
 
-  $schema['role_permission'] = array(
-    'description' => 'Stores the permissions assigned to user roles.',
-    'fields' => array(
-      'rid' => array(
-        'type' => 'varchar',
-        'length' => 64,
-        'not null' => TRUE,
-        'description' => 'Foreign Key: {role}.rid.',
-      ),
-      'permission' => array(
-        'type' => 'varchar',
-        'length' => 128,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'A single permission granted to the role identified by rid.',
-      ),
-      'module' => array(
-        'type' => 'varchar',
-        'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => "The module declaring the permission.",
-      ),
-    ),
-    'primary key' => array('rid', 'permission'),
-    'indexes' => array(
-      'permission' => array('permission'),
-    ),
-    'foreign keys' => array(
-      'role' => array(
-        'table' => 'role',
-        'columns' => array('rid' => 'rid'),
-      ),
-    ),
-  );
-
   $schema['users_data'] = array(
     'description' => 'Stores module data as key/value pairs per user.',
     'fields' => array(
@@ -309,7 +273,7 @@ function user_install_picture_field() {
     'type' => 'image',
     'cardinality' => 1,
     'locked' => FALSE,
-    'indexes' => array('fid' => array('fid')),
+    'indexes' => array('target_id' => array('target_id')),
     'settings' => array(
       'uri_scheme' => 'public',
       'default_image' => FALSE,
@@ -386,6 +350,7 @@ function user_update_dependencies() {
   return $dependencies;
 }
 
+
 /**
  * @addtogroup updates-7.x-to-8.x
  * @{
@@ -451,9 +416,6 @@ function user_update_8002() {
   );
   db_change_field('role', 'rid', 'rid', $column);
 
-  $column['description'] = 'Foreign Key: {role}.rid.';
-  db_change_field('role_permission', 'rid', 'rid', $column);
-
   $column['description'] = 'Primary Key: {role}.rid for role.';
   db_change_field('users_roles', 'rid', 'rid', $column);
 
@@ -470,32 +432,16 @@ function user_update_8002() {
   db_drop_unique_key('role', 'name');
 
   // Rename the built-in serial role IDs into the hardcoded machine names.
-  db_update('role')
-    ->fields(array('rid' => DRUPAL_ANONYMOUS_RID))
-    ->condition('rid', 1)
-    ->execute();
-  db_update('role')
-    ->fields(array('rid' => DRUPAL_AUTHENTICATED_RID))
-    ->condition('rid', 2)
-    ->execute();
-
-  db_update('role_permission')
-    ->fields(array('rid' => DRUPAL_ANONYMOUS_RID))
-    ->condition('rid', 1)
-    ->execute();
-  db_update('role_permission')
-    ->fields(array('rid' => DRUPAL_AUTHENTICATED_RID))
-    ->condition('rid', 2)
-    ->execute();
-
-  db_update('users_roles')
-    ->fields(array('rid' => DRUPAL_ANONYMOUS_RID))
-    ->condition('rid', 1)
-    ->execute();
-  db_update('users_roles')
-    ->fields(array('rid' => DRUPAL_AUTHENTICATED_RID))
-    ->condition('rid', 2)
-    ->execute();
+  foreach (array(1, 2) as $rid) {
+    db_update('role')
+      ->fields(array('rid' => _user_update_map_rid($rid)))
+      ->condition('rid', $rid)
+      ->execute();
+    db_update('users_roles')
+      ->fields(array('rid' => _user_update_map_rid($rid)))
+      ->condition('rid', $rid)
+      ->execute();
+  }
 }
 
 /**
@@ -714,7 +660,7 @@ function user_update_8011() {
     'type' => 'image',
     'cardinality' => 1,
     'locked' => FALSE,
-    'indexes' => array('fid' => array('fid')),
+    'indexes' => array('target_id' => array('target_id')),
     'settings' => array(
       'uri_scheme' => 'public',
       'default_image' => FALSE,
@@ -837,7 +783,7 @@ function user_update_8012(&$sandbox) {
           'revision_id' => $uid,
           'langcode' => Language::LANGCODE_NOT_SPECIFIED,
           'delta' => 0,
-          'user_picture_fid' => $fid,
+          'user_picture_target_id' => $fid,
         ))
         ->execute();
       db_insert('field_revision_user_picture')
@@ -848,7 +794,7 @@ function user_update_8012(&$sandbox) {
           'revision_id' => $uid,
           'langcode' => Language::LANGCODE_NOT_SPECIFIED,
           'delta' => 0,
-          'user_picture_fid' => $fid,
+          'user_picture_target_id' => $fid,
         ))
         ->execute();
 
@@ -1085,6 +1031,62 @@ function user_update_8018() {
     );
     db_change_field('users', 'theme', 'theme', $spec);
   }
+}
+
+/**
+ * Maps a role id to the new string.
+ *
+ * @param int $rid
+ *   A D7 numeric role ID.
+ *
+ * @return string
+ *   A D8 string role ID.
+ */
+function _user_update_map_rid($rid) {
+  $rid_map = array(
+    1 => DRUPAL_ANONYMOUS_RID,
+    2 => DRUPAL_AUTHENTICATED_RID,
+  );
+  return isset($rid_map[$rid]) ? $rid_map[$rid] : $rid;
+}
+
+/**
+ * Migrate roles permissions into configuration.
+ *
+ * @ingroup config_upgrade
+ */
+function user_update_8019() {
+  $db_permissions = db_select('role_permission', 'p')
+    ->fields('p')
+    ->execute()
+    ->fetchAll();
+  $new_permissions = array();
+  foreach ($db_permissions as $permission) {
+    $rid = _user_update_map_rid($permission->rid);
+    if (!isset($new_permissions[$rid]) || !in_array($permission->permission, $new_permissions[$rid])) {
+      $new_permissions[$rid][] = $permission->permission;
+    }
+  }
+  foreach ($new_permissions as $rid => $permissions) {
+    config("user.role.$rid")
+      ->set('permissions', $permissions)
+      ->save();
+  }
+}
+
+/**
+ * Create the 'register' form mode.
+ */
+function user_update_8020() {
+  $uuid = new Uuid();
+
+  config("entity.form_mode.user.register")
+    ->set('id', "user.register")
+    ->set('uuid', $uuid->generate())
+    ->set('label', 'Register')
+    ->set('targetEntityType', 'user')
+    ->set('status', '1')
+    ->save();
 }
 
 /**

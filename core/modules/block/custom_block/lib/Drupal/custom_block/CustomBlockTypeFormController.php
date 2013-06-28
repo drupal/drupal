@@ -52,7 +52,7 @@ class CustomBlockTypeFormController extends EntityFormController {
       '#description' => t('Create a new revision by default for this block type.')
     );
 
-    if (module_exists('translation_entity')) {
+    if (module_exists('content_translation')) {
       $form['language'] = array(
         '#type' => 'details',
         '#title' => t('Language settings'),

@@ -45,7 +45,8 @@ class Type extends Node {
     */
   function render_name($data, $values) {
     if ($this->options['machine_name'] != 1 && $data !== NULL && $data !== '') {
-      return t($this->sanitizeValue(node_type_get_label($data)));
+      $type = entity_load('node_type', $data);
+      return $type ? t($this->sanitizeValue($type->label())) : '';
     }
     return $this->sanitizeValue($data);
   }

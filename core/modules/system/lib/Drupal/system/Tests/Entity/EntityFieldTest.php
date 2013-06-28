@@ -36,7 +36,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
   public function setUp() {
     parent::setUp();
     $this->installSchema('user', array('users_roles', 'users_data'));
-    $this->installSchema('node', array('node', 'node_field_data', 'node_field_revision', 'node_type', 'node_access'));
+    $this->installSchema('node', array('node', 'node_field_data', 'node_field_revision', 'node_access'));
     $this->installSchema('entity_test', array(
       'entity_test_mul',
       'entity_test_mul_property_data',
@@ -362,7 +362,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $definitions = $wrapped_entity->getPropertyDefinitions($definition);
     $this->assertEqual($definitions['name']['type'], 'string_field', $entity_type .': Name field found.');
     $this->assertEqual($definitions['user_id']['type'], 'entity_reference_field', $entity_type .': User field found.');
-    $this->assertEqual($definitions['field_test_text']['type'], 'text_field', $entity_type .': Test-text-field field found.');
+    $this->assertEqual($definitions['field_test_text']['type'], 'field_item:text', $entity_type .': Test-text-field field found.');
 
     // Test introspecting an entity object.
     // @todo: Add bundles and test bundles as well.
@@ -371,7 +371,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $definitions = $entity->getPropertyDefinitions();
     $this->assertEqual($definitions['name']['type'], 'string_field', $entity_type .': Name field found.');
     $this->assertEqual($definitions['user_id']['type'], 'entity_reference_field', $entity_type .': User field found.');
-    $this->assertEqual($definitions['field_test_text']['type'], 'text_field', $entity_type .': Test-text-field field found.');
+    $this->assertEqual($definitions['field_test_text']['type'], 'field_item:text', $entity_type .': Test-text-field field found.');
 
     $name_properties = $entity->name->getPropertyDefinitions();
     $this->assertEqual($name_properties['value']['type'], 'string', $entity_type .': String value property of the name found.');

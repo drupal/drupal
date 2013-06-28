@@ -1,5 +1,0 @@
-services:
-  rdf_test_mapping.mapping:
-    class: Drupal\rdf_test_mapping\EventSubscriber\TestMappingSubscriber
-    tags:
-      - { name: event_subscriber }

@@ -8,7 +8,6 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\entity\EntityFormDisplayInterface;
-
 use Drupal\Core\Language\Language;
 
 /**
@@ -60,7 +59,15 @@ class EntityFormController implements EntityFormControllerInterface {
    * {@inheritdoc}
    */
   public function getBaseFormID() {
-    return $this->entity->entityType() . '_form';
+    // Assign ENTITYTYPE_form as base form ID to invoke corresponding
+    // hook_form_alter(), #validate, #submit, and #theme callbacks, but only if
+    // it is different from the actual form ID, since callbacks would be invoked
+    // twice otherwise.
+    $base_form_id = $this->entity->entityType() . '_form';
+    if ($base_form_id == $this->getFormID()) {
+      $base_form_id = '';
+    }
+    return $base_form_id;
   }
 
   /**
@@ -122,15 +129,13 @@ class EntityFormController implements EntityFormControllerInterface {
     $form_state['controller'] = $this;
     $this->prepareEntity();
 
-    // @todo Allow the usage of different form modes by exposing a hook and the
-    // UI for them.
-    $form_display = entity_get_render_form_display($this->entity, 'default');
+    $form_display = entity_get_render_form_display($this->entity, $this->getOperation());
 
     // Let modules alter the form display.
     $form_display_context = array(
       'entity_type' => $this->entity->entityType(),
       'bundle' => $this->entity->bundle(),
-      'form_mode' => 'default',
+      'form_mode' => $this->getOperation(),
     );
     \Drupal::moduleHandler()->alter('entity_form_display', $form_display, $form_display_context);
 
@@ -151,12 +156,8 @@ class EntityFormController implements EntityFormControllerInterface {
       field_attach_form($entity, $form, $form_state, $this->getFormLangcode($form_state));
     }
 
-    // Assign the weights configured in the form display.
-    foreach ($this->getFormDisplay($form_state)->getComponents() as $name => $options) {
-      if (isset($form[$name])) {
-        $form[$name]['#weight'] = $options['weight'];
-      }
-    }
+    // Add a process callback so we can assign weights and hide extra fields.
+    $form['#process'][] = array($this, 'processForm');
 
     if (!isset($form['langcode'])) {
       // If the form did not specify otherwise, default to keeping the existing
@@ -168,6 +169,30 @@ class EntityFormController implements EntityFormControllerInterface {
       );
     }
     return $form;
+  }
+
+  /**
+   * Process callback: assigns weights and hides extra fields.
+   *
+   * @see \Drupal\Core\Entity\EntityFormController::form()
+   */
+  public function processForm($element, $form_state, $form) {
+    // Assign the weights configured in the form display.
+    foreach ($this->getFormDisplay($form_state)->getComponents() as $name => $options) {
+      if (isset($element[$name])) {
+        $element[$name]['#weight'] = $options['weight'];
+      }
+    }
+
+    // Hide extra fields.
+    $extra_fields = field_info_extra_fields($this->entity->entityType(), $this->entity->bundle(), 'form');
+    foreach ($extra_fields as $extra_field => $info) {
+      if (!$this->getFormDisplay($form_state)->getComponent($extra_field)) {
+        $element[$extra_field]['#access'] = FALSE;
+      }
+    }
+
+    return $element;
   }
 
   /**
@@ -241,13 +266,49 @@ class EntityFormController implements EntityFormControllerInterface {
    * Implements \Drupal\Core\Entity\EntityFormControllerInterface::validate().
    */
   public function validate(array $form, array &$form_state) {
-    // @todo Exploit the Field API to validate the values submitted for the
-    // entity properties.
     $entity = $this->buildEntity($form, $form_state);
-    $info = $entity->entityInfo();
+    $entity_langcode = $entity->language()->langcode;
 
-    if (!empty($info['fieldable'])) {
-      field_attach_form_validate($entity, $form, $form_state);
+    $violations = array();
+
+    // @todo Simplify when all entity types are converted to EntityNG.
+    if ($entity instanceof EntityNG) {
+      foreach ($entity as $field_name => $field) {
+        $field_violations = $field->validate();
+        if (count($field_violations)) {
+          $violations[$field_name] = $field_violations;
+        }
+      }
+    }
+    else {
+      // For BC entities, iterate through each field instance and
+      // instantiate NG items objects manually.
+      $definitions = \Drupal::entityManager()->getFieldDefinitions($entity->entityType(), $entity->bundle());
+      foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $field_name => $instance) {
+        $langcode = field_is_translatable($entity->entityType(), $instance->getField()) ? $entity_langcode : Language::LANGCODE_NOT_SPECIFIED;
+
+        // Create the field object.
+        $items = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
+        // @todo Exception : calls setValue(), tries to set the 'formatted'
+        // property.
+        $field = \Drupal::typedData()->create($definitions[$field_name], $items, $field_name, $entity);
+        $field_violations = $field->validate();
+        if (count($field_violations)) {
+          $violations[$field->getName()] = $field_violations;
+        }
+      }
+    }
+
+    // Map errors back to form elements.
+    if ($violations) {
+      foreach ($violations as $field_name => $field_violations) {
+        $langcode = field_is_translatable($entity->entityType(), field_info_field($field_name)) ? $entity_langcode : Language::LANGCODE_NOT_SPECIFIED;
+        $field_state = field_form_get_state($form['#parents'], $field_name, $langcode, $form_state);
+        $field_state['constraint_violations'] = $field_violations;
+        field_form_set_state($form['#parents'], $field_name, $langcode, $form_state, $field_state);
+      }
+
+      field_invoke_method('flagErrors', _field_invoke_widget_target($form_state['form_display']), $entity, $form, $form_state);
     }
 
     // @todo Remove this.
@@ -391,6 +452,10 @@ class EntityFormController implements EntityFormControllerInterface {
    */
   public function buildEntity(array $form, array &$form_state) {
     $entity = clone $this->entity;
+    // If you submit a form, the form state comes from caching, which forces
+    // the controller to be the one before caching. Ensure to have the
+    // controller of the current request.
+    $form_state['controller'] = $this;
     // @todo Move entity_form_submit_build_entity() here.
     // @todo Exploit the Field API to process the submitted entity field.
     entity_form_submit_build_entity($entity->entityType(), $entity, $form, $form_state);

@@ -1,6 +1,7 @@
 <?php
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\field\FieldInterface;
 
 /**
  * @file
@@ -24,10 +25,6 @@ require_once __DIR__ . '/field_test.storage.inc';
  */
 function field_test_permission() {
   $perms = array(
-    'access field_test content' => array(
-      'title' => t('Access field_test content'),
-      'description' => t('View published field_test content.'),
-    ),
     'view test_view_field content' => array(
       'title' => t('View test field content'),
       'description' => t('View published test_view_field content.'),
@@ -45,61 +42,15 @@ function field_test_permission() {
  */
 function field_test_menu() {
   $items = array();
-
-  foreach (entity_get_bundles('test_entity') as $bundle_name => $bundle_info) {
-    $items['test-entity/add/' . $bundle_name] = array(
-      'title' => t('Add %bundle test_entity', array('%bundle' => $bundle_info['label'])),
-      'page callback' => 'field_test_entity_add',
-      'page arguments' => array(2),
-      'access arguments' => array('administer field_test content'),
-      'type' => MENU_NORMAL_ITEM,
-    );
-  }
-  $items['test-entity/manage/%field_test_entity_test/edit'] = array(
-    'title' => 'Edit test entity',
-    'page callback' => 'field_test_entity_edit',
-    'page arguments' => array(2),
-    'access arguments' => array('administer field_test content'),
-    'type' => MENU_NORMAL_ITEM,
-  );
-
-  $items['test-entity/nested/%field_test_entity_test/%field_test_entity_test'] = array(
+  $items['test-entity/nested/%entity_test/%entity_test'] = array(
     'title' => 'Nested entity form',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('field_test_entity_nested_form', 2, 3),
-    'access arguments' => array('administer field_test content'),
+    'access arguments' => array('administer entity_test content'),
     'type' => MENU_NORMAL_ITEM,
   );
 
   return $items;
-}
-
-/**
- * Generic op to test _field_invoke behavior.
- *
- * This simulates a field operation callback to be invoked by _field_invoke().
- */
-function field_test_field_test_op(EntityInterface $entity, $field, $instance, $langcode, &$items) {
-  return array($langcode => hash('sha256', serialize(array($entity, $field['field_name'], $langcode, $items))));
-}
-
-/**
- * Generic op to test _field_invoke_multiple behavior.
- *
- * This simulates a multiple field operation callback to be invoked by
- * _field_invoke_multiple().
- */
-function field_test_field_test_op_multiple($entity_type, $entities, $field, $instances, $langcode, &$items) {
-  $result = array();
-  foreach ($entities as $id => $entity) {
-    // Entities, instances and items are assumed to be consistently grouped by
-    // language. To verify this we try to access all the passed data structures
-    // by entity id. If they are grouped correctly, one entity, one instance and
-    // one array of items should be available for each entity id.
-    $field_name = $instances[$id]['field_name'];
-    $result[$id] = array($langcode => hash('sha256', serialize(array($entity_type, $entity, $field_name, $langcode, $items[$id]))));
-  }
-  return $result;
 }
 
 /**
@@ -153,8 +104,8 @@ function field_test_field_language_alter(&$display_langcode, $context) {
  *   $mem = field_test_memorize();
  *
  *   // make sure hook_field_create_field() is invoked correctly
- *   assertEqual(count($mem['field_test_field_create_field']), 1);
- *   assertEqual($mem['field_test_field_create_field'][0], array($field));
+ *   assertEqual(count($mem['field_test_field_entity_create']), 1);
+ *   assertEqual($mem['field_test_field_entity_create'][0], array($field));
  * @endcode
  *
  * @param $key
@@ -179,9 +130,9 @@ function field_test_memorize($key = NULL, $value = NULL) {
 }
 
 /**
- * Memorize calls to hook_field_create_field().
+ * Memorize calls to field_test_field_entity_create() for field creation.
  */
-function field_test_field_create_field($field) {
+function field_test_field_entity_create(FieldInterface $field) {
   $args = func_get_args();
   field_test_memorize(__FUNCTION__, $args);
 }
@@ -227,7 +178,7 @@ function field_test_field_widget_form_alter(&$element, &$form_state, $context) {
 function field_test_query_efq_table_prefixing_test_alter(&$query) {
   // Add an additional join onto the entity base table. This will cause an
   // exception if the EFQ does not properly prefix the base table.
-  $query->join('test_entity','te2','%alias.ftid = test_entity.ftid');
+  $query->join('entity_test','et2','%alias.id = entity_test.id');
 }
 
 
@@ -239,6 +190,25 @@ function field_test_query_efq_table_prefixing_test_alter(&$query) {
 function field_test_query_efq_metadata_test_alter(&$query) {
   global $efq_test_metadata;
   $efq_test_metadata = $query->getMetadata('foo');
+}
+
+/**
+ * Implements hook_field_widget_settings_form_alter().
+ */
+function field_test_field_widget_settings_form_alter(&$element, &$form_state, $context) {
+  $element['field_test_widget_settings_form_alter'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Widget settings form alter'),
+    '#default_value' => $context['widget']->getSetting('field_test_widget_settings_form_alter'),
+  );
+}
+
+/**
+ * Implements hook_field_widget_settings_summary_alter().
+ */
+function field_test_field_widget_settings_summary_alter(&$summary, $context) {
+  $summary[] = 'field_test_field_widget_settings_summary_alter';
+  return $summary;
 }
 
 /**

@@ -8,12 +8,12 @@
 namespace Drupal\taxonomy\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\translation_entity\Tests\EntityTranslationUITest;
+use Drupal\content_translation\Tests\ContentTranslationUITest;
 
 /**
  * Tests the Term Translation UI.
  */
-class TermTranslationUITest extends EntityTranslationUITest {
+class TermTranslationUITest extends ContentTranslationUITest {
 
   /**
    * The name of the test taxonomy term.
@@ -32,7 +32,7 @@ class TermTranslationUITest extends EntityTranslationUITest {
    *
    * @var array
    */
-  public static $modules = array('language', 'translation_entity', 'taxonomy');
+  public static $modules = array('language', 'content_translation', 'taxonomy');
 
   public static function getInfo() {
     return array(
@@ -50,7 +50,7 @@ class TermTranslationUITest extends EntityTranslationUITest {
   }
 
   /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::setupBundle().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::setupBundle().
    */
   protected function setupBundle() {
     parent::setupBundle();
@@ -67,14 +67,14 @@ class TermTranslationUITest extends EntityTranslationUITest {
   }
 
   /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getTranslatorPermission().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getTranslatorPermission().
    */
   protected function getTranslatorPermissions() {
     return array_merge(parent::getTranslatorPermissions(), array('administer taxonomy'));
   }
 
   /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::getNewEntityValues().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getNewEntityValues().
    */
   protected function getNewEntityValues($langcode) {
     // Term name is not translatable hence we use a fixed value.
@@ -82,14 +82,14 @@ class TermTranslationUITest extends EntityTranslationUITest {
   }
 
   /**
-   * Overrides \Drupal\translation_entity\Tests\EntityTranslationUITest::testTranslationUI().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::testTranslationUI().
    */
   public function testTranslationUI() {
     parent::testTranslationUI();
 
     // Make sure that no row was inserted for taxonomy vocabularies, which do
     // not have translations enabled.
-    $rows = db_query('SELECT * FROM {translation_entity}')->fetchAll();
+    $rows = db_query('SELECT * FROM {content_translation}')->fetchAll();
     $this->assertEqual(2, count($rows));
     $this->assertEqual('taxonomy_term', $rows[0]->entity_type);
     $this->assertEqual('taxonomy_term', $rows[1]->entity_type);

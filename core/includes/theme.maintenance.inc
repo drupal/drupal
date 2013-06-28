@@ -92,8 +92,8 @@ function _drupal_maintenance_theme() {
   }
   _drupal_theme_initialize($themes[$theme], array_reverse($base_theme), '_theme_load_offline_registry');
 
-  // These are usually added from system_init() -except maintenance.css.
-  // When the database is inactive it's not called so we add it here.
+  // These CSS files are normally added by system_page_build() -except maintenance.css.
+  // When the database is inactive it's not called so we add them here.
   $path = drupal_get_path('module', 'system');
   drupal_add_css($path . '/css/system.module.css');
   drupal_add_css($path . '/css/system.theme.css');
@@ -115,16 +115,23 @@ function _theme_load_offline_registry($theme, $base_theme = NULL, $theme_engine 
  *   An associative array containing:
  *   - items: An associative array of maintenance tasks.
  *   - active: The key for the currently active maintenance task.
+ *   - variant: A variant name to be used for a CSS class.
  *
  * @ingroup themeable
  */
 function theme_task_list($variables) {
   $items = $variables['items'];
   $active = $variables['active'];
+  if (isset($variables['variant'])) {
+    $class = $variables['variant'] . '-task-list';
+  }
+  else {
+    $class = 'task-list';
+  }
 
   $done = isset($items[$active]) || $active == NULL;
   $output = '<h2 class="visually-hidden">Installation tasks</h2>';
-  $output .= '<ol class="task-list">';
+  $output .= '<ol class="' . $class . '">';
 
   foreach ($items as $k => $item) {
     if ($active == $k) {
@@ -144,20 +151,6 @@ function theme_task_list($variables) {
   }
   $output .= '</ol>';
   return $output;
-}
-
-/**
- * Returns HTML for the installation page.
- *
- * Note: this function is not themeable.
- *
- * @param $variables
- *   An associative array containing:
- *   - content: The page content to show.
- */
-function theme_install_page($variables) {
-  drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-  return theme('maintenance_page', $variables);
 }
 
 /**

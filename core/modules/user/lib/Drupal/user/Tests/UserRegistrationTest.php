@@ -207,7 +207,6 @@ class UserRegistrationTest extends WebTestBase {
       'label' => 'Some user field',
       'bundle' => 'user',
       'required' => TRUE,
-      'settings' => array('user_register_form' => FALSE),
     ));
     $instance->save();
     entity_get_form_display('user', 'user', 'default')
@@ -219,8 +218,10 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertNoText($instance->label(), 'The field does not appear on user registration form');
 
     // Have the field appear on the registration form.
-    $instance->settings['user_register_form'] = TRUE;
-    $instance->save();
+    entity_get_form_display('user', 'user', 'register')
+      ->setComponent('test_user_field', array('type' => 'test_field_widget'))
+      ->save();
+
     $this->drupalGet('user/register');
     $this->assertText($instance->label(), 'The field appears on user registration form');
 

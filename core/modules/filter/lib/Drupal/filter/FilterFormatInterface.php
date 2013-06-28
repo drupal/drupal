@@ -39,4 +39,14 @@ interface FilterFormatInterface extends ConfigEntityInterface {
    */
   public function setFilterConfig($instance_id, array $configuration);
 
+  /**
+   * Returns if this format is the fallback format.
+   *
+   * The fallback format can never be disabled. It must always be available.
+   *
+   * @return bool
+   *   TRUE if this format is the fallback format, FALSE otherwise.
+   */
+  public function isFallbackFormat();
+
 }

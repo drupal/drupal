@@ -39,16 +39,12 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
   /**
    * Constructs a new ViewEditFormController object.
    *
-   * @param string $operation
-   *   The name of the current operation.
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    */
-  public function __construct($operation, TempStoreFactory $temp_store_factory, Request $request) {
-    parent::__construct($operation);
-
+  public function __construct(TempStoreFactory $temp_store_factory, Request $request) {
     $this->tempStore = $temp_store_factory->get('views');
     $this->request = $request;
   }
@@ -56,9 +52,8 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info, $operation = NULL) {
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
-      $operation,
       $container->get('user.tempstore'),
       $container->get('request')
     );

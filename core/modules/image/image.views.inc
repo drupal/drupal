@@ -18,11 +18,11 @@
 function image_field_views_data($field) {
   $data = field_views_field_default_views_data($field);
   foreach ($data as $table_name => $table_data) {
-    // Add the relationship only on the fid field.
-    $data[$table_name][$field['field_name'] . '_fid']['relationship'] = array(
+    // Add the relationship only on the target_id field.
+    $data[$table_name][$field['field_name'] . '_target_id']['relationship'] = array(
       'id' => 'standard',
       'base' => 'file_managed',
-      'base field' => 'fid',
+      'base field' => 'target_id',
       'label' => t('image from !field_name', array('!field_name' => $field['field_name'])),
     );
   }
@@ -52,7 +52,7 @@ function image_field_views_data_views_data_alter(&$data, $field) {
       'id' => 'entity_reverse',
       'field_name' => $field['field_name'],
       'field table' => _field_sql_storage_tablename($field),
-      'field field' => $field['field_name'] . '_fid',
+      'field field' => $field['field_name'] . '_target_id',
       'base' => $entity_info['base_table'],
       'base field' => $entity_info['entity_keys']['id'],
       'label' => t('!field_name', array('!field_name' => $field['field_name'])),

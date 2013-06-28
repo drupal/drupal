@@ -9,7 +9,6 @@ namespace Drupal\file\Plugin\field\formatter;
 
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
-use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -24,7 +23,7 @@ use Drupal\Core\Entity\EntityInterface;
  *   }
  * )
  */
-class GenericFileFormatter extends FormatterBase {
+class GenericFileFormatter extends FileFormatterBase {
 
   /**
    * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().

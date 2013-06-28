@@ -51,7 +51,6 @@ class LinkFieldUITest extends WebTestBase {
       'fields[_add_new_field][label]' => $label,
       'fields[_add_new_field][field_name]' => $field_name,
       'fields[_add_new_field][type]' => 'link',
-      'fields[_add_new_field][widget_type]' => 'link_default',
     );
     $this->drupalPost("$type_path/fields", $edit, t('Save'));
     // Proceed to the Edit (field instance settings) page.
