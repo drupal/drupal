@@ -190,10 +190,10 @@ function common_test_library_info() {
     'website' => 'http://code.google.com/p/farbtastic/',
     'version' => '5.3',
     'js' => array(
-      'core/misc/farbtastic/farbtastic.js' => array(),
+      'core/assets/vendor/farbtastic/farbtastic.js' => array(),
     ),
     'css' => array(
-      'core/misc/farbtastic/farbtastic.css' => array(),
+      'core/assets/vendor/farbtastic/farbtastic.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),

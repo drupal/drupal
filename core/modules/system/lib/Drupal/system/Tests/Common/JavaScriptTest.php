@@ -222,7 +222,7 @@ class JavaScriptTest extends WebTestBase {
     drupal_add_library('system', 'jquery');
     $inline = 'jQuery(function () { });';
     $javascript = drupal_add_js($inline, array('type' => 'inline', 'scope' => 'footer'));
-    $this->assertTrue(array_key_exists('core/misc/jquery.js', $javascript), 'jQuery is added when inline scripts are added.');
+    $this->assertTrue(array_key_exists('core/assets/vendor/jquery/jquery.js', $javascript), 'jQuery is added when inline scripts are added.');
     $data = end($javascript);
     $this->assertEqual($inline, $data['data'], 'Inline JavaScript is correctly added to the footer.');
   }
@@ -447,7 +447,7 @@ class JavaScriptTest extends WebTestBase {
     drupal_add_library('system', 'jquery');
     drupal_add_js('core/misc/collapse.js', array('group' => JS_LIBRARY, 'every_page' => TRUE, 'weight' => -21));
     $javascript = drupal_get_js();
-    $this->assertTrue(strpos($javascript, 'core/misc/collapse.js') < strpos($javascript, 'core/misc/jquery.js'), 'Rendering a JavaScript file above jQuery.');
+    $this->assertTrue(strpos($javascript, 'core/misc/collapse.js') < strpos($javascript, 'core/assets/vendor/jquery/jquery.js'), 'Rendering a JavaScript file above jQuery.');
   }
 
   /**
@@ -475,8 +475,8 @@ class JavaScriptTest extends WebTestBase {
     $this->assertTrue($result !== FALSE, 'Library was added without errors.');
     $scripts = drupal_get_js();
     $styles = drupal_get_css();
-    $this->assertTrue(strpos($scripts, 'core/misc/farbtastic/farbtastic.js'), 'JavaScript of library was added to the page.');
-    $this->assertTrue(strpos($styles, 'core/misc/farbtastic/farbtastic.css'), 'Stylesheet of library was added to the page.');
+    $this->assertTrue(strpos($scripts, 'core/assets/vendor/farbtastic/farbtastic.js'), 'JavaScript of library was added to the page.');
+    $this->assertTrue(strpos($styles, 'core/assets/vendor/farbtastic/farbtastic.css'), 'Stylesheet of library was added to the page.');
 
     $result = drupal_add_library('common_test', 'shorthand.plugin');
     $path = drupal_get_path('module', 'common_test') . '/js/shorthand.js';
@@ -497,7 +497,7 @@ class JavaScriptTest extends WebTestBase {
     // common_test_library_info_alter() also added a dependency on jQuery Form.
     drupal_add_library('system', 'jquery.farbtastic');
     $scripts = drupal_get_js();
-    $this->assertTrue(strpos($scripts, 'core/misc/jquery.form.js'), 'Altered library dependencies are added to the page.');
+    $this->assertTrue(strpos($scripts, 'core/assets/vendor/jquery-form/jquery.form.js'), 'Altered library dependencies are added to the page.');
   }
 
   /**
@@ -531,7 +531,7 @@ class JavaScriptTest extends WebTestBase {
     $element['#attached']['library'][] = array('system', 'jquery.farbtastic');
     drupal_render($element);
     $scripts = drupal_get_js();
-    $this->assertTrue(strpos($scripts, 'core/misc/farbtastic/farbtastic.js'), 'The attached_library property adds the additional libraries.');
+    $this->assertTrue(strpos($scripts, 'core/assets/vendor/farbtastic/farbtastic.js'), 'The attached_library property adds the additional libraries.');
   }
 
   /**

@@ -37,7 +37,7 @@ function ckeditor_library_info() {
     ),
     'css' => array(
       $module_path . '/css/ckeditor.admin.css' => array(),
-      'core/misc/ckeditor/skins/moono/editor.css' => array(),
+      'core/assets/vendor/ckeditor/skins/moono/editor.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),
@@ -72,7 +72,7 @@ function ckeditor_library_info() {
     'title' => 'Loads the main CKEditor library.',
     'version' => '4.1',
     'js' => array(
-      'core/misc/ckeditor/ckeditor.js' => array(
+      'core/assets/vendor/ckeditor/ckeditor.js' => array(
         'preprocess' => FALSE,
       ),
     ),

@@ -329,7 +329,7 @@ function hook_element_info_alter(&$type) {
  */
 function hook_js_alter(&$javascript) {
   // Swap out jQuery to use an updated version of the library.
-  $javascript['core/misc/jquery.js']['data'] = drupal_get_path('module', 'jquery_update') . '/jquery.js';
+  $javascript['core/assets/vendor/jquery/jquery.js']['data'] = drupal_get_path('module', 'jquery_update') . '/jquery.js';
 }
 
 /**
