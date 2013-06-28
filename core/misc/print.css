@@ -3,10 +3,16 @@ body {
   margin: 1em;
   background-color: #fff;
 }
+[dir=rtl] body {
+  direction: rtl;
+}
 th {
   text-align: left; /* LTR */
   color: #006;
   border-bottom: 1px solid #ccc;
+}
+[dir=rtl] th {
+  text-align: right;
 }
 tr.odd {
   background-color: #ddd;

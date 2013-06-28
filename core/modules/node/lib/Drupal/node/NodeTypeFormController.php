@@ -10,42 +10,11 @@ namespace Drupal\node;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Form controller for node type forms.
  */
 class NodeTypeFormController extends EntityFormController implements EntityControllerInterface {
-
-  /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * Constructs a NodeTypeFormController object.
-   *
-   * @param string $operation
-   *   The name of the current operation.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to invoke hooks on.
-   */
-  public function __construct($operation, ModuleHandlerInterface $module_handler) {
-    parent::__construct($operation);
-    $this->moduleHandler = $module_handler;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info, $operation = NULL) {
-    return new static(
-      $operation,
-      $container->get('module_handler')
-    );
-  }
 
   /**
    * {@inheritdoc}

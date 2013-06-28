@@ -43,34 +43,29 @@ class MenuLinkFormController extends EntityFormController implements EntityContr
   protected $urlGenerator;
 
   /**
-   * The module handler
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Constructs a new MenuLinkFormController object.
    *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
    * @param \Drupal\Core\Path\AliasManagerInterface $path_alias_manager
    *   The path alias manager.
    */
-  public function __construct(MenuLinkStorageControllerInterface $menu_link_storage_controller, AliasManagerInterface $path_alias_manager, UrlGenerator $url_generator, ModuleHandlerInterface $module_handler) {
+  public function __construct(ModuleHandlerInterface $module_handler, MenuLinkStorageControllerInterface $menu_link_storage_controller, AliasManagerInterface $path_alias_manager, UrlGenerator $url_generator) {
+    parent::__construct($module_handler);
     $this->menuLinkStorageController = $menu_link_storage_controller;
     $this->pathAliasManager = $path_alias_manager;
     $this->urlGenerator = $url_generator;
-    $this->moduleHandler = $module_handler;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info, $operation = NULL) {
     return new static(
+      $container->get('module_handler'),
       $container->get('plugin.manager.entity')->getStorageController('menu_link'),
       $container->get('path.alias_manager.cached'),
-      $container->get('url_generator'),
-      $container->get('module_handler')
+      $container->get('url_generator')
     );
   }
 

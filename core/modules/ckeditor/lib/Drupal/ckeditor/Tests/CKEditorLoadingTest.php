@@ -111,7 +111,7 @@ class CKEditorLoadingTest extends WebTestBase {
     $specific_format_selector = $this->xpath('//select[contains(@class, "filter-list") and contains(@class, "editor") and @data-editor-for="edit-body-und-0-value"]');
     $this->assertTrue(count($specific_format_selector) === 1, 'A single text format selector exists on the page and has the "editor" class and a "data-editor-for" attribute with the correct value.');
     $this->assertTrue(isset($settings['ajaxPageState']['js']['core/modules/ckeditor/js/ckeditor.js']), 'CKEditor glue JS is present.');
-    $this->assertTrue(isset($settings['ajaxPageState']['js']['core/misc/ckeditor/ckeditor.js']), 'CKEditor lib JS is present.');
+    $this->assertTrue(isset($settings['ajaxPageState']['js']['core/assets/vendor/ckeditor/ckeditor.js']), 'CKEditor lib JS is present.');
 
     // Enable the ckeditor_test module, customize configuration. In this case,
     // there is additional CSS and JS to be loaded.
@@ -133,7 +133,7 @@ class CKEditorLoadingTest extends WebTestBase {
     $this->assertIdentical($expected, $settings['editor'], "Text Editor module's JavaScript settings on the page are correct.");
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
     $this->assertTrue(isset($settings['ajaxPageState']['js']['core/modules/ckeditor/js/ckeditor.js']), 'CKEditor glue JS is present.');
-    $this->assertTrue(isset($settings['ajaxPageState']['js']['core/misc/ckeditor/ckeditor.js']), 'CKEditor lib JS is present.');
+    $this->assertTrue(isset($settings['ajaxPageState']['js']['core/assets/vendor/ckeditor/ckeditor.js']), 'CKEditor lib JS is present.');
   }
 
   protected function getThingsToCheck() {

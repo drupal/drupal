@@ -12,6 +12,7 @@ use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\Core\Template\Attribute;
 use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorageController;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_help().
@@ -875,9 +876,9 @@ function book_node_predelete(EntityInterface $node) {
 }
 
 /**
- * Implements hook_node_prepare().
+ * Implements hook_node_prepare_form().
  */
-function book_node_prepare(EntityInterface $node) {
+function book_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
   // Prepare defaults for the add/edit form.
   if (empty($node->book) && (user_access('add content to books') || user_access('administer book outlines'))) {
     $node->book = array();

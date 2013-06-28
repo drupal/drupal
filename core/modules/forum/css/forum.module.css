@@ -23,11 +23,19 @@
   margin: 0 9px 0 0; /* LTR */
   width: 24px;
 }
+[dir=rtl] #forum .icon {
+  float: right;
+  margin: 0 0 0 9px;
+}
 #forum .title {
   overflow: hidden;
 }
 #forum div.indent {
   margin-left: 20px; /* LTR */
+}
+[dir=rtl] #forum div.indent {
+  margin-left: 0;
+  margin-right: 20px;
 }
 
 #forum .topic-status-new {
@@ -44,4 +52,16 @@
 }
 #forum .topic-status-closed {
   background-position: -120px 0;
+}
+
+[dir=rtl] .forum-topic-navigation {
+  padding: 1em 3em 0 0;
+}
+[dir=rtl] .forum-topic-navigation .topic-previous {
+  text-align: left;
+  float: right;
+}
+[dir=rtl] .forum-topic-navigation .topic-next {
+  text-align: right;
+  float: left;
 }

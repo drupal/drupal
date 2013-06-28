@@ -3,6 +3,10 @@
  * Basic styling for the Overlay child pages.
  */
 
+html[dir=rtl] {
+  direction: rtl;
+}
+
 .js {
   background: transparent !important;
   overflow-y: scroll;
@@ -49,6 +53,10 @@
   margin: 0;
   padding: 0.3em 0;
 }
+[dir=rtl] #overlay-title {
+  float: right;
+  left: auto;
+}
 #overlay-title:active,
 #overlay-title:focus {
   outline: 0;
@@ -60,6 +68,10 @@
 #overlay-close-wrapper {
   position: absolute;
   right: 0; /* LTR */
+}
+[dir=rtl] #overlay-close-wrapper {
+  left: 0;
+  right: auto;
 }
 #overlay-close,
 #overlay-close:hover {
@@ -73,6 +85,10 @@
   position: absolute;
   width: 26px;
 }
+[dir=rtl] #overlay-close,
+[dir=rtl] #overlay-close:hover {
+  border-radius: 12px 0 0 12px;
+}
 
 /**
  * Tabs on the overlay.
@@ -83,6 +99,10 @@
   position: absolute;
   right: 20px; /* LTR */
   text-transform: uppercase;
+}
+[dir=rtl] #overlay-tabs {
+  left: 20px;
+  right: auto;
 }
 #overlay-tabs li {
   display: inline-block;

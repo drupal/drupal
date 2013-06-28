@@ -2997,7 +2997,6 @@ function template_process_maintenance_page(&$variables) {
   // selected should result in RTL stylesheets loaded properly already.
   $variables['css'] = $css = drupal_add_css();
   include_once DRUPAL_ROOT . '/core/modules/language/language.module';
-  language_css_alter($css);
   $variables['styles'] = drupal_get_css($css);
 
   $variables['scripts'] = drupal_get_js();

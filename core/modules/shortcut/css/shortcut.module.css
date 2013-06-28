@@ -16,6 +16,10 @@
   float: left; /* LTR */
   padding-top: 2px;
 }
+[dir=rtl] .add-or-remove-shortcuts .icon,
+[dir=rtl] .add-or-remove-shortcuts .text {
+  float: right;
+}
 .add-or-remove-shortcuts a:focus .text,
 .add-or-remove-shortcuts a:hover .text {
   display: block;

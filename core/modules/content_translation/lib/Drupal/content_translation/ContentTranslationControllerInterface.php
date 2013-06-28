@@ -112,24 +112,6 @@ interface ContentTranslationControllerInterface {
   public function getViewPath(EntityInterface $entity);
 
   /**
-   * Checks if the user can perform the given operation on the wrapped entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity access should be checked for.
-   * @param string $op
-   *   The operation to be performed. Possible values are:
-   *   - "view"
-   *   - "update"
-   *   - "delete"
-   *   - "create"
-   *
-   * @return
-   *   TRUE if the user is allowed to perform the given operation, FALSE
-   *   otherwise.
-   */
-  public function getAccess(EntityInterface $entity, $op);
-
-  /**
    * Checks if the user can perform the given operation on translations of the
    * wrapped entity.
    *

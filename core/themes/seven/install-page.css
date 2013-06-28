@@ -50,6 +50,9 @@ body.install-page {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     padding: 1em 2em 1em 0; /* LTR */
   }
+  [dir=rtl] body.install-page #page {
+    padding: 1em 0 1em 2em;
+  }
   body.install-page #content {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -58,6 +61,10 @@ body.install-page {
     float: left;
     padding-left: 30px; /* LTR */
     width: 65%;
+  }
+  [dir=rtl] body.install-page #content {
+    padding-left: 0;
+    padding-right: 30px;
   }
   body.install-page #sidebar-first {
     float: left;
@@ -69,6 +76,9 @@ body.install-page #site-name {
   line-height: 1.2em;
   color: #0074bd;
   margin: 0.75em 0 0.75em 50px; /* LTR */
+}
+[dir=rtl] body.install-page #site-name {
+  margin: 0.75em 50px 0.75em 0;
 }
 body.install-page #page-title {
   background: transparent;
@@ -93,9 +103,16 @@ body.install-page #page-title {
   padding-left: 0; /* LTR */
   padding-bottom: 1em;
 }
+[dir=rtl] .install-task-list {
+  margin-right: 0;
+  padding-right: 0;
+}
 .install-task-list li {
   padding: 0.5em 1em 0.5em 50px; /* LTR */
   color: #1a1a1a;
+}
+[dir=rtl] .install-task-list li {
+  padding: 0.5em 20px 0.5em 1em;
 }
 .install-task-list li.active {
   background: #ebeae4;
@@ -115,6 +132,12 @@ body.install-page #page-title {
   pointer-events: none;
   top: 50%;
   margin-top: -17px;
+}
+[dir=rtl] .install-task-list li.active:after {
+  left: auto;
+  right: 100%;
+  border-left-color: transparent;
+  border-right-color: #ebeae4;
 }
 .install-task-list li.done {
   color: #adadad;
@@ -136,6 +159,10 @@ body.install-page #page-title {
     position: absolute;
     top: 1.9em;
     right: 40px;
+  }
+  [dir=rtl] .step-indicator {
+  left: 40px;
+  right: auto;
   }
 }
 .install-page .password-parent {

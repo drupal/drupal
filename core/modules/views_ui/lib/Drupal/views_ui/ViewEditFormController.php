@@ -10,6 +10,7 @@ namespace Drupal\views_ui;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Entity\EntityControllerInterface;
@@ -39,12 +40,16 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
   /**
    * Constructs a new ViewEditFormController object.
    *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    */
-  public function __construct(TempStoreFactory $temp_store_factory, Request $request) {
+  public function __construct(ModuleHandlerInterface $module_handler, TempStoreFactory $temp_store_factory, Request $request) {
+    parent::__construct($module_handler);
+
     $this->tempStore = $temp_store_factory->get('views');
     $this->request = $request;
   }
@@ -52,8 +57,9 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info, $operation = NULL) {
     return new static(
+      $container->get('module_handler'),
       $container->get('user.tempstore'),
       $container->get('request')
     );

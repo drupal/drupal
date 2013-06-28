@@ -81,7 +81,7 @@ class Full extends SqlBase {
    * Overrides \Drupal\views\Plugin\views\pager\PagerPluginBase::render().
    */
   function render($input) {
-    $pager_theme = views_theme_functions('pager', $this->view, $this->view->display_handler->display);
+    $pager_theme = $this->view->buildThemeFunctions('pager');
     // The 0, 1, 3, 4 index are correct. See theme_pager documentation.
     $tags = array(
       0 => $this->options['tags']['first'],

@@ -9,7 +9,6 @@ namespace Drupal\menu;
 
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityFormController;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -17,37 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Base form controller for menu edit forms.
  */
 class MenuFormController extends EntityFormController implements EntityControllerInterface {
-
-  /**
-   * The module handler to invoke hooks on.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info, $operation = NULL) {
-    return new static(
-      $operation,
-      $container->get('module_handler')
-    );
-  }
-
-  /**
-   * Constructs a new EntityListController object.
-   *
-   * @param string $operation
-   *   The name of the current operation.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to invoke hooks on.
-   */
-  public function __construct($operation, ModuleHandlerInterface $module_handler) {
-    parent::__construct($operation);
-
-    $this->moduleHandler = $module_handler;
-  }
 
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().

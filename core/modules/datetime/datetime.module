@@ -1147,9 +1147,9 @@ function datetime_form_node_form_alter(&$form, &$form_state, $form_id) {
 }
 
 /**
- * Implements hook_node_prepare().
+ * Implements hook_node_prepare_form().
  */
-function datetime_node_prepare(NodeInterface $node) {
+function datetime_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
   // Prepare the 'Authored on' date to use datetime.
   $node->date = new DrupalDateTime($node->created);
 }

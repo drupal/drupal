@@ -17,6 +17,7 @@ use Drupal\system\Plugin\Core\Entity\Menu;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorageController;
+use Drupal\node\NodeInterface;
 
 /**
  * Maximum length of menu name as entered by the user. Database length is 32
@@ -490,9 +491,9 @@ function menu_node_predelete(EntityInterface $node) {
 }
 
 /**
- * Implements hook_node_prepare().
+ * Implements hook_node_prepare_form().
  */
-function menu_node_prepare(EntityInterface $node) {
+function menu_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
   if (empty($node->menu)) {
     // Prepare the node for the edit form so that $node->menu always exists.
     $menu_name = strtok(variable_get('menu_parent_' . $node->type, 'main:0'), ':');

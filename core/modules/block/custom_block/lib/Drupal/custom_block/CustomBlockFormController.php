@@ -34,8 +34,6 @@ class CustomBlockFormController extends EntityFormControllerNG {
     }
     // Always use the default revision setting.
     $block->setNewRevision($block_type->revision);
-
-    module_invoke_all('custom_block_prepare', $block);
   }
 
   /**

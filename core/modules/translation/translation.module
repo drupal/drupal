@@ -20,8 +20,10 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityFormControllerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_help().
@@ -304,9 +306,9 @@ function translation_node_view(EntityInterface $node, EntityDisplay $display, $v
 }
 
 /**
- * Implements hook_node_prepare().
+ * Implements hook_node_prepare_form().
  */
-function translation_node_prepare(EntityInterface $node) {
+function translation_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
   $query = Drupal::request()->query;
   $translation = $query->get('translation');
   $target = $query->get('target');

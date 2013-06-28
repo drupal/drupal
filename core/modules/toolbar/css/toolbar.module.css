@@ -25,6 +25,11 @@ html.js .toolbar {
   top: 0;
   width: 100%;
 }
+html.js[dir=rtl] .toolbar {
+   left: auto;
+   right: 0;
+ }
+
 /**
  * Very specific overrides for Drupal system CSS.
  */
@@ -47,6 +52,10 @@ html.js .toolbar {
 .js .toolbar .horizontal .tab  {
   float: left; /* LTR */
 }
+.js[dir=rtl] .toolbar .bar .tab,
+.js[dir=rtl] .toolbar .horizontal .tab {
+  float: right;
+}
 .js .toolbar a {
   display: block;
   line-height: 1;
@@ -61,16 +70,28 @@ html.js .toolbar {
   z-index: 1250;
   width: 100%;
 }
+.js[dir=rtl] .toolbar .bar {
+  left: auto;
+  right: 0;
+}
 @media only screen {
   .js .toolbar .bar .tab,
   .js .toolbar .tray li {
     float: none; /* LTR */
+  }
+  .js[dir=rtl] .toolbar .bar .tab,
+  .js[dir=rtl] .toolbar .tray li {
+    float: none;
   }
 }
 @media only screen and (min-width: 16.5em) {
   .js .toolbar .bar .tab,
   .js .toolbar .horizontal li {
     float: left; /* LTR */
+  }
+  .js[dir=rtl] .toolbar .bar .tab,
+  .js[dir=rtl] .toolbar .horizontal li {
+    float: right;
   }
 }
 @media only screen and (min-width: 28.125em) {
@@ -106,11 +127,19 @@ html.js .toolbar {
   left: -100%; /* LTR */
   position: absolute;
 }
+[dir=rtl] .toolbar .vertical {
+  left: auto;
+  right: -100%;
+}
 .toolbar .horizontal {
   left: 0; /* LTR */
   height: 0;
   /* Set one higher than the contextual links gear. */
   z-index: 1000;
+}
+[dir=rtl] .toolbar .horizontal {
+  left: auto;
+  right: 0;
 }
 .toolar .tray .lining {
   position: relative;
@@ -123,6 +152,11 @@ html.js .toolbar {
   overflow-y: auto;
   position: absolute;
   width: 100%;
+}
+[dir=rtl] .toolbar .vertical > .lining,
+[dir=rtl] .toolbar .vertical > .lining:before {
+  left: auto;
+  right: -100%;
 }
 .toolbar .vertical > .lining:before {
   bottom: 0;
@@ -150,6 +184,11 @@ html.js .toolbar {
   bottom: 0;
   left: 0; /* LTR */
   top: 0;
+}
+[dir=rtl] .toolbar .vertical.active,
+[dir=rtl] .toolbar .vertical.active > .lining {
+  left: auto;
+  right: 0;
 }
 /* Make vertical toolbar tray scroll with page for touch devices. */
 .touch .toolbar .vertical.active,
@@ -181,6 +220,10 @@ html.js .toolbar {
     display: block;
     left: -1px; /* LTR */
   }
+  [dir=rtl] .toolbar .vertical.active > .lining:before {
+    left: auto;
+    right: -1px;
+  }
 }
 @media only screen and (min-width: 28.125em) {
   .toolbar .tray.horizontal {
@@ -194,6 +237,11 @@ html.js .toolbar {
   body.toolbar-tray-open.toolbar-vertical {
     margin-left: 240px; /* LTR */
     margin-left: 15rem; /* LTR */
+  }
+  [dir=rtl] body.toolbar-tray-open.toolbar-vertical {
+    margin-left: 0;
+    margin-right: 240px;
+    margin-right: 15rem;
   }
 }
 /**
@@ -221,7 +269,14 @@ html.js .toolbar {
   right: 0; /* LTR */
   top: 0;
 }
+[dir=rtl] .toolbar .horizontal .toggle-orientation {
+  left: 0;
+  right: auto;
+}
 .toolbar .vertical .toggle-orientation {
   float: right; /* LTR */
   width: 100%;
+}
+[dir=rtl] .toolbar .vertical .toggle-orientation {
+  float: left;
 }

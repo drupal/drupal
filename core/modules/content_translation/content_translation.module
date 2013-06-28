@@ -867,7 +867,7 @@ function content_translation_field_info_alter(&$info) {
 function content_translation_entity_presave(EntityInterface $entity) {
   $entity_info = $entity->entityInfo();
   if ($entity->isTranslatable() && !empty($entity_info['fieldable'])) {
-    $attributes = drupal_container()->get('request')->attributes;
+    $attributes = Drupal::request()->attributes;
     Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $attributes->get('working_langcode'), $attributes->get('source_langcode'));
   }
 }

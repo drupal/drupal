@@ -10,6 +10,7 @@ namespace Drupal\views;
 use Drupal;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\views\ViewStorageInterface;
+use Drupal\Component\Utility\Tags;
 
 /**
  * @defgroup views_objects Objects that represent a View or part of a view
@@ -2109,6 +2110,39 @@ class ViewExecutable {
     foreach ($this->displayHandlers as $display) {
       $display->mergeDefaults();
     }
+  }
+
+  /**
+   * Provide a full array of possible theme functions to try for a given hook.
+   *
+   * @param string $hook
+   *   The hook to use. This is the base theme/template name.
+   *
+   * @return array
+   *   An array of theme hook suggestions.
+   */
+  public function buildThemeFunctions($hook) {
+    $themes = array();
+    $display = isset($this->display_handler) ? $this->display_handler->display : NULL;
+    $id = $this->storage->id();
+
+    if ($display) {
+      $themes[] = $hook . '__' . $id . '__' . $display['id'];
+      $themes[] = $hook . '__' . $display['id'];
+      // Add theme suggestions for each single tag.
+      foreach (Tags::explode($this->storage->get('tag')) as $tag) {
+        $themes[] = $hook . '__' . preg_replace('/[^a-z0-9]/', '_', strtolower($tag));
+      }
+
+      if ($display['id'] != $display['display_plugin']) {
+        $themes[] = $hook . '__' . $id . '__' . $display['display_plugin'];
+        $themes[] = $hook . '__' . $display['display_plugin'];
+      }
+    }
+    $themes[] = $hook . '__' . $id;
+    $themes[] = $hook;
+
+    return $themes;
   }
 
 }

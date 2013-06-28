@@ -43,6 +43,10 @@
   background-position: left top; /* LTR */
   background-repeat: no-repeat;
 }
+[dir=rtl] .views-admin .icon,
+[dir=rtl] .views-admin .icon-text {
+  background-position: right top;
+}
 
 .views-admin a.icon {
   background-image:
@@ -100,6 +104,10 @@
 /* Targets any element with an icon -> text combo */
 .views-admin .icon-text {
   padding-left: 19px; /* LTR */
+}
+[dir=rtl] .views-admin .icon-text {
+  padding-left: 0;
+  padding-right: 19px;
 }
 
 .views-admin .icon.linked {
@@ -173,6 +181,10 @@ input.form-radio {
 .views-admin a.button:not(.js-hide) + a.button {
   margin-left: 1em; /* LTR */
 }
+[dir=rtl] .form-submit:not(.js-hide) + .form-submit,
+[dir=rtl] .views-admin a.button:not(.js-hide) + a.button {
+  margin-right: 1em;
+}
 
 .container-inline {
   padding-top: 15px;
@@ -181,6 +193,11 @@ input.form-radio {
 .container-inline > * + *,
 .container-inline .details-wrapper > * + * {
   padding-left: 4px; /* LTR */
+}
+[dir=rtl] .container-inline > * + *,
+[dir=rtl] .container-inline .details-wrapper > * + * {
+  padding-left: 0;
+  padding-right: 4px;
 }
 
 .views-admin details details.container-inline {
@@ -196,6 +213,10 @@ input.form-radio {
 /* Indent form elements so they're directly underneath the label of the checkbox that reveals them */
 .views-admin .form-type-checkbox + .form-wrapper {
   margin-left: 16px; /* LTR */
+}
+[dir=rtl] .views-admin .form-type-checkbox + .form-wrapper {
+  margin-left: 0;
+  margin-right: 16px;
 }
 
 /* Hide 'remove' checkboxes. */
@@ -225,6 +246,10 @@ input.form-radio {
 .horizontal > * + * {
   margin-left: 9px; /* LTR */
   padding-left: 9px; /* LTR */
+}
+[dir=rtl] .horizontal > * + * {
+  margin-right: 9px;
+  padding-right: 9px;
 }
 
 .views-ui-view-title {
@@ -373,6 +398,10 @@ td.group-title {
   padding-left: 0.5em; /* LTR */
   text-transform: uppercase;
 }
+[dir=rtl] .views-operator-label {
+  padding-left: 0;
+  padding-right: 0.5em;
+}
 
 .grouped-description,
 .exposed-description {
@@ -409,6 +438,9 @@ td.group-title {
   border-bottom: 1px solid #ccc;
   padding: 8px 8px 8px; /* LTR */
   position: relative;
+}
+[dir=rtl] .views-display-top {
+  padding: 8px 8px 8px;
 }
 
 .views-display-top .secondary {
@@ -715,6 +747,10 @@ ul#views-display-menu-tabs li.add ul.action-list li{
 .views-display-setting .label {
   margin-right: 3px; /* LTR */
 }
+[dir=rtl] .views-display-setting .label {
+  margin-left: 3px;
+  margin-right: 0;
+}
 
 /* @end */
 
@@ -820,6 +856,10 @@ ul#views-display-menu-tabs li.add ul.action-list li{
   width: 45%;
   margin-right: 2%; /* LTR */
 }
+[dir=rtl] #views-filterable-options-controls .form-item {
+  margin-left: 2%;
+  margin-right: 0;
+}
 
 #views-filterable-options-controls input,
 #views-filterable-options-controls select {
@@ -866,6 +906,10 @@ ul#views-display-menu-tabs li.add ul.action-list li{
   position: absolute;
   right: 10px; /* LTR */
   top: 8px;
+}
+[dir=rtl] .views-ui-dialog #views-progress-indicator {
+  left: 10px;
+  right: auto;
 }
 
 .views-ui-dialog #views-progress-indicator:before {
@@ -1042,6 +1086,10 @@ ul#views-display-menu-tabs li.add ul.action-list li{
 #views-live-preview .view-content > .item-list > ul {
   list-style-position: outside;
   padding-left: 21px; /* LTR */
+}
+[dir=rtl] #views-live-preview .view-content > .item-list > ul {
+  padding-left: 0;
+  padding-right: 21px;
 }
 
 /* @end */

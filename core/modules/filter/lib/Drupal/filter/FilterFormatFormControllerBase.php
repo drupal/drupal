@@ -11,6 +11,7 @@ use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -35,12 +36,15 @@ abstract class FilterFormatFormControllerBase extends EntityFormController imple
   /**
    * Constructs a new FilterFormatFormControllerBase.
    *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory.
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
    *   The entity query factory.
    */
-  public function __construct(ConfigFactory $config_factory, QueryFactory $query_factory) {
+  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactory $config_factory, QueryFactory $query_factory) {
+    parent::__construct($module_handler);
     $this->configFactory = $config_factory;
     $this->queryFactory = $query_factory;
   }
@@ -50,6 +54,7 @@ abstract class FilterFormatFormControllerBase extends EntityFormController imple
    */
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
+      $container->get('module_handler'),
       $container->get('config.factory'),
       $container->get('entity.query')
     );

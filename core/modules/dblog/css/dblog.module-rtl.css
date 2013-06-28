@@ -1,9 +1,0 @@
-/**
- * @file
- * Right-to-Left styling for the Database Logging module.
- */
-
-.dblog-filter-form .form-item-type,
-.dblog-filter-form .form-item-severity {
-  margin: .1em .1em .1em .9em;
-}

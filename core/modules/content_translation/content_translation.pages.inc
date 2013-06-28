@@ -86,7 +86,7 @@ function content_translation_overview(EntityInterface $entity) {
         // If the user is allowed to edit the entity we point the edit link to
         // the entity form, otherwise if we are not dealing with the original
         // language we point the link to the translation form.
-        if ($edit_path && $controller->getAccess($entity, 'update')) {
+        if ($edit_path && $entity->access('update')) {
           $links['edit'] = isset($edit_links->links[$langcode]['href']) ? $edit_links->links[$langcode] : array('href' => $edit_path, 'language' => $language);
         }
         elseif (!$is_original && $controller->getTranslationAccess($entity, 'update')) {
@@ -201,7 +201,7 @@ function content_translation_add_page(EntityInterface $entity, Language $source 
   $form_state['content_translation']['source'] = $source;
   $form_state['content_translation']['target'] = $target;
   $controller = content_translation_controller($entity->entityType());
-  $form_state['content_translation']['translation_form'] = !$controller->getAccess($entity, 'update');
+  $form_state['content_translation']['translation_form'] = !$entity->access('update');
   return Drupal::entityManager()->getForm($entity, $operation, $form_state);
 }
 
@@ -294,7 +294,7 @@ function content_translation_delete_confirm_submit(array $form, array &$form_sta
   // @todo This should be taken care of by the Path module.
   if (module_exists('path')) {
     $conditions = array('source' => $controller->getViewPath($entity), 'langcode' => $language->langcode);
-    drupal_container()->get('path.crud')->delete($conditions);
+    Drupal::service('path.crud')->delete($conditions);
   }
 
   $form_state['redirect'] = $controller->getBasePath($entity) . '/translations';

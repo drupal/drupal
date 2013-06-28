@@ -143,9 +143,7 @@ function aggregator_menu() {
   );
   $items['aggregator/categories'] = array(
     'title' => 'Categories',
-    'page callback' => 'aggregator_page_categories',
-    'access callback' => '_aggregator_has_categories',
-    'file' => 'aggregator.pages.inc',
+    'route_name' => 'aggregator_categories',
   );
   $items['aggregator/rss'] = array(
     'title' => 'RSS feed',
@@ -252,17 +250,6 @@ function aggregator_menu() {
  */
 function _aggregator_category_title($category) {
   return $category->title;
-}
-
-/**
- * Access callback: Determines whether there are any aggregator categories.
- *
- * @return
- *   TRUE if there is at least one category and the user has access to them;
- *   FALSE otherwise.
- */
-function _aggregator_has_categories() {
-  return user_access('access news feeds') && (bool) db_query_range('SELECT 1 FROM {aggregator_category}', 0, 1)->fetchField();
 }
 
 /**

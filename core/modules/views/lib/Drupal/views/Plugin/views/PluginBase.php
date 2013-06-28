@@ -207,7 +207,7 @@ abstract class PluginBase extends ContainerFactoryPluginBase {
    * Provide a full list of possible theme templates used by this style.
    */
   public function themeFunctions() {
-    return views_theme_functions($this->definition['theme'], $this->view, $this->view->display_handler->display);
+    return $this->view->buildThemeFunctions($this->definition['theme']);
   }
 
   /**

@@ -13,6 +13,10 @@
   top: 0;
   right: 0; /* LTR */
 }
+[dir=rtl] #placeholder {
+  left: 0;
+  right: auto;
+}
 
 /* Palette */
 .color-form .form-item {
@@ -21,39 +25,67 @@
   padding-left: 1em; /* LTR */
   margin: 0.5em 0;
 }
+[dir=rtl] .color-form .form-item {
+  padding-left: 0;
+  padding-right: 1em;
+}
 .color-form label {
   float: left; /* LTR */
   clear: left; /* LTR */
   width: 10em;
 }
+[dir=rtl] .color-form label {
+  float: right;
+  clear: right;
+}
 .color-form .form-text,
 .color-form .form-select {
   float: left; /* LTR */
+}
+[dir=rtl] .color-form .form-text,
+[dir=rtl] .color-form .form-select {
+  float: right;
 }
 .color-form .form-text {
   text-align: center;
   margin-right: 5px; /* LTR */
   cursor: pointer;
 }
-
+[dir=rtl] .color-form .form-text {
+  margin-right: 0;
+  margin-left: 5px;
+}
 #palette .hook {
   float: left; /* LTR */
   margin-top: 3px;
   width: 16px;
   height: 16px;
 }
+[dir=rtl] #palette .hook {
+  float: right;
+}
 #palette .down,
 #palette .up,
 #palette .both {
   background: url(../images/hook.png) no-repeat 100% 0; /* LTR */
 }
+[dir=rtl] #palette .down,
+[dir=rtl] #palette .up,
+[dir=rtl] #palette .both {
+  background: url(images/hook-rtl.png) no-repeat 0 0;
+}
 #palette .up {
   background-position: 100% -27px; /* LTR */
+}
+[dir=rtl] #palette .up {
+  background-position: 0 -27px;
 }
 #palette .both {
   background-position: 100% -54px; /* LTR */
 }
-
+[dir=rtl] #palette .both {
+  background-position: 0 -54px;
+}
 #palette .lock {
   float: left; /* LTR */
   position: relative;
@@ -63,6 +95,10 @@
   height: 25px;
   background: url(../images/lock.png) no-repeat 50% 2px;
   cursor: pointer;
+}
+[dir=rtl] #palette .lock {
+  float: right;
+  right: -10px;
 }
 #palette .unlocked {
   background-position: 50% -22px;
@@ -82,4 +118,7 @@
   display: block;
   position: relative;
   float: left; /* LTR */
+}
+.js[dir=rtl] #preview {
+  float: right;
 }

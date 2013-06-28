@@ -79,20 +79,29 @@ function link_theme() {
   return array(
     'link_formatter_link_separate' => array(
       'variables' => array('title' => NULL, 'url_title' => NULL, 'href' => NULL, 'options' => array()),
+      'template' => 'link-formatter-link-separate',
     ),
   );
 }
 
 /**
- * Formats a link as separate link title and URL elements.
+ * Prepares variables for separated link field templates.
+ *
+ * This template outputs a separate title and link.
+ *
+ * Default template: link-formatter-link-separate.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - title: (optional) A descriptive or alternate title for the link, which
+ *     may be different than the actual link text.
+ *   - url_title: The anchor text for the link.
+ *   - href: The link URL.
+ *   - options: (optional) An array of options to pass to l().
  */
-function theme_link_formatter_link_separate($vars) {
-  $output = '';
-  $output .= '<div class="link-item">';
-  if (!empty($vars['title'])) {
-    $output .= '<div class="link-title">' . check_plain($vars['title']) . '</div>';
+function template_preprocess_link_formatter_link_separate(&$variables) {
+  if (!empty($variables['title'])) {
+    $variables['title'] = check_plain($variables['title']);
   }
-  $output .= '<div class="link-url">' . l($vars['url_title'], $vars['href'], $vars['options']) . '</div>';
-  $output .= '</div>';
-  return $output;
+  $variables['link'] = l($variables['url_title'], $variables['href'], $variables['options']);
 }

@@ -25,12 +25,7 @@ class NodeFormController extends EntityFormController {
   protected $settings;
 
   /**
-   * Prepares the node object.
-   *
-   * Fills in a few default values, and then invokes hook_node_prepare() on all
-   * modules.
-   *
-   * Overrides Drupal\Core\Entity\EntityFormController::prepareEntity().
+   * {@inheritdoc}
    */
   protected function prepareEntity() {
     $node = $this->entity;
@@ -62,8 +57,6 @@ class NodeFormController extends EntityFormController {
     }
     // Always use the default revision setting.
     $node->setNewRevision(in_array('revision', $this->settings['options']));
-
-    module_invoke_all('node_prepare', $node);
   }
 
   /**

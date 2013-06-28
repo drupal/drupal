@@ -8,6 +8,7 @@
 namespace Drupal\views_ui;
 
 use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
 use Drupal\views\Plugin\views\wizard\WizardException;
 use Drupal\views\Plugin\ViewsPluginManager;
@@ -28,10 +29,14 @@ class ViewAddFormController extends ViewFormControllerBase implements EntityCont
   /**
    * Constructs a new ViewEditFormController object.
    *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
    * @param \Drupal\views\Plugin\ViewsPluginManager $wizard_manager
    *   The wizard plugin manager.
    */
-  public function __construct(ViewsPluginManager $wizard_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, ViewsPluginManager $wizard_manager) {
+    parent::__construct($module_handler);
+
     $this->wizardManager = $wizard_manager;
   }
 
@@ -40,6 +45,7 @@ class ViewAddFormController extends ViewFormControllerBase implements EntityCont
    */
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
+      $container->get('module_handler'),
       $container->get('plugin.manager.views.wizard')
     );
   }

@@ -33,28 +33,48 @@ img {
     width: 67%;
     float: right; /* LTR */
   }
+  [dir=rtl] body.sidebar-first #content,
+  [dir=rtl] body.two-sidebars #content {
+    float: left;
+  }
   body.sidebar-second #content {
     width: 67%;
     float: left; /* LTR */
+  }
+  [dir=rtl] body.sidebar-second #content {
+    float: right;
   }
 
   #sidebar-first {
     width: 33%;
     float: left; /* LTR */
   }
+  [dir=rtl] #sidebar-first {
+    float: right;
+  }
 
   #sidebar-second {
     width: 33%;
     float: right; /* LTR */
   }
+  [dir=rtl] #sidebar-second {
+    float: left;
+  }
   body.two-sidebars #sidebar-second {
     clear: both;
     width: 100%;
+  }
+  [dir=rtl] body.two-sidebars #sidebar-second {
+    float: right;
+    clear: right;
   }
 
   body.two-sidebars #sidebar-second .block {
     float: left; /* LTR */
     width: 33%;
+  }
+  [dir=rtl] body.two-sidebars #sidebar-second .block {
+    float: right;
   }
   body.two-sidebars #sidebar-second .block:nth-child(3n+1) {
     clear: both;
@@ -66,9 +86,16 @@ img {
     width: 100%;
     float: left; /* LTR */
   }
+  [dir=rtl] #content {
+    float: right;
+  }
   body.sidebar-first #content {
     width: 80%;
     left: 20%; /* LTR */
+  }
+  [dir=rtl] body.sidebar-first #content {
+    left: 0;
+    right: 20%;
   }
   body.sidebar-second #content {
     width: 80%;
@@ -77,19 +104,35 @@ img {
     width: 60%;
     left: 20%; /* LTR */
   }
+  [dir=rtl] body.two-sidebars #content {
+    left: 0;
+    right: 20%;
+  }
 
   #sidebar-first {
     width: 20%;
     float: left; /* LTR */
     left: -80%; /* LTR */
   }
+  [dir=rtl] #sidebar-first {
+    float: right;
+    left: 0;
+    right: -80%;
+  }
   body.two-sidebars #sidebar-first {
     left: -60%; /* LTR */
+  }
+  [dir=rtl] body.two-sidebars #sidebar-first {
+    left: 0;
+    right: -60%;
   }
 
   #sidebar-second {
     float: right; /* LTR */
     width: 20%;
+  }
+  [dir=rtl] #sidebar-second {
+    float: left;
   }
 }
 

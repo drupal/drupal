@@ -27,7 +27,7 @@ class ValidatorTest extends FileManagedTestBase {
     $this->image->setFilename(drupal_basename($this->image->getFileUri()));
 
     $this->non_image = entity_create('file', array());
-    $this->non_image->setFileUri('core/misc/jquery.js');
+    $this->non_image->setFileUri('core/assets/vendor/jquery/jquery.js');
     $this->non_image->setFilename(drupal_basename($this->non_image->getFileUri()));
   }
 
