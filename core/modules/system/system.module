@@ -637,13 +637,6 @@ function system_menu() {
     'file path' => 'core/includes',
     'file' => 'form.inc',
   );
-  $items['system/timezone'] = array(
-    'title' => 'Time zone',
-    'page callback' => 'system_timezone',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-    'file' => 'system.admin.inc',
-  );
   $items['admin'] = array(
     'title' => 'Administration',
     'access arguments' => array('access administration pages'),
@@ -3461,17 +3454,6 @@ function system_time_zones($blank = NULL) {
   // Sort the translated time zones alphabetically.
   asort($zones);
   return $zones;
-}
-
-/**
- * Menu callback; Retrieve a JSON object containing a suggested time zone name.
- */
-function system_timezone($abbreviation = '', $offset = -1, $is_daylight_saving_time = NULL) {
-  // An abbreviation of "0" passed in the callback arguments should be
-  // interpreted as the empty string.
-  $abbreviation = $abbreviation ? $abbreviation : '';
-  $timezone = timezone_name_from_abbr($abbreviation, intval($offset), $is_daylight_saving_time);
-  return new JsonResponse($timezone);
 }
 
 /**

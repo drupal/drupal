@@ -157,3 +157,10 @@ system_theme_settings_global:
     _form: '\Drupal\system\Form\ThemeSettingsForm'
   requirements:
     _permission: 'administer themes'
+
+system_timezone:
+  pattern: '/system/timezone'
+  defaults:
+    _controller: '\Drupal\system\Controller\TimezoneController::getTimezone'
+  requirements:
+    _access: 'TRUE'
