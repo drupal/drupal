@@ -6,35 +6,14 @@
  */
 
 /**
- * Implements hook_field_info().
- */
-function telephone_field_info() {
-  return array(
-    'telephone' => array(
-      'label' => t('Telephone number'),
-      'description' => t('This field stores a telephone number in the database.'),
-      'default_widget' => 'telephone_default',
-      'default_formatter' => 'telephone_link',
-      'class' => 'Drupal\telephone\Type\TelephoneItem',
-    ),
-  );
-}
-
-/**
  * Implements hook_field_info_alter().
  */
 function telephone_field_info_alter(&$info) {
-  if (module_exists('text')) {
+  if (Drupal::moduleHandler()->moduleExists('text')) {
     $info['telephone']['default_formatter'] = 'text_plain';
   }
 }
 
-/**
- * Implements hook_field_is_empty().
- */
-function telephone_field_is_empty($item, $field_type) {
-  return !isset($item['value']) || $item['value'] === '';
-}
 
 /**
  * Implements hook_field_formatter_info_alter().
