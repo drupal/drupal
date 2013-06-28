@@ -7,14 +7,14 @@ settings:
         - Bold
         - Italic
         - '|'
-        - Link
-        - Unlink
+        - DrupalLink
+        - DrupalUnlink
         - '|'
         - BulletedList
         - NumberedList
         - '|'
         - Blockquote
-        - Image
+        - DrupalImage
         - '|'
         - Source
   plugins:

@@ -63,7 +63,7 @@ function theme_ckeditor_settings_toolbar($variables) {
         '#uri' => $button['image' . $rtl],
         '#title' => $button['label'],
       );
-      $value = drupal_render($image);
+      $value = '<a href="#" class="cke_button" role="button" title="' . $button['label'] . '" aria-label="' . $button['label'] . '"><span class="cke_button_icon">' . drupal_render($image) . '</span></a>';
     }
     else {
       $value = '?';

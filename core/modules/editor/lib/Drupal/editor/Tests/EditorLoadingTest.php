@@ -93,6 +93,7 @@ class EditorLoadingTest extends WebTestBase {
     $this->drupalGet('node/add/article');
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
     $expected = array('formats' => array('full_html' => array(
+      'format' => 'full_html',
       'editor' => 'unicorn',
       'editorSettings' => array('ponyModeEnabled' => TRUE),
     )));
@@ -119,6 +120,7 @@ class EditorLoadingTest extends WebTestBase {
     $this->drupalGet('node/add/article');
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
     $expected = array('formats' => array('plain_text' => array(
+      'format' => 'plain_text',
       'editor' => 'unicorn',
       'editorSettings' => array('ponyModeEnabled' => TRUE),
     )));

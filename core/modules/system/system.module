@@ -1234,9 +1234,13 @@ function system_library_info() {
     'js' => array(
       'core/misc/dialog.js' => array('group' => JS_LIBRARY),
     ),
+    'css' => array(
+      'core/misc/dialog.theme.css' => array('weight' => 1),
+    ),
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
+      array('system', 'drupal.debounce'),
       array('system', 'drupalSettings'),
       array('system', 'jquery.ui.dialog')
     ),

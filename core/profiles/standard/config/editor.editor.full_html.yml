@@ -12,14 +12,14 @@ settings:
         - -
         - RemoveFormat
         - '|'
-        - Link
-        - Unlink
+        - DrupalLink
+        - DrupalUnlink
         - '|'
         - BulletedList
         - NumberedList
         - '|'
         - Blockquote
-        - Image
+        - DrupalImage
         - Table
         - HorizontalRule
         - '|'

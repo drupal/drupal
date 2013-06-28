@@ -83,11 +83,28 @@ function editor_library_info() {
     'js' => array(
       $path . '/js/editor.js' => array(),
     ),
+    'css' => array(
+      $path . '/css/editor.css' => array(),
+    ),
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
       array('system', 'jquery.once'),
+    ),
+  );
+
+  $libraries['drupal.editor.dialog'] = array(
+    'title' => 'Text Editor Dialog',
+    'version' => VERSION,
+    'js' => array(
+      $path . '/js/editor.dialog.js' => array('weight' => 2),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal.dialog'),
+      array('system', 'drupal.ajax'),
+      array('system', 'drupalSettings'),
     ),
   );
 

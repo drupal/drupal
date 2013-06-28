@@ -7,6 +7,10 @@ Drupal.editors.ckeditor = {
   attach: function (element, format) {
     this._loadExternalPlugins(format);
     this._ACF_HACK_to_support_blacklisted_attributes(element, format);
+    // Also pass settings that are Drupal-specific.
+    format.editorSettings.drupal = {
+      format: format.format
+    };
     return !!CKEDITOR.replace(element, format.editorSettings);
   },
 
@@ -175,6 +179,99 @@ Drupal.editors.ckeditor = {
       }
     });
   }
+
 };
+
+Drupal.ckeditor = {
+  /**
+   * Variable storing the current dialog's save callback.
+   */
+  saveCallack: null,
+
+  /**
+   * Open a dialog for a Drupal-based plugin.
+   *
+   * This dynamically loads jQuery UI (if necessary) using the Drupal AJAX
+   * framework, then opens a dialog at the specified Drupal path.
+   *
+   * @param editor
+   *   The CKEditor instance that is opening the dialog.
+   * @param string url
+   *   The URL that contains the contents of the dialog.
+   * @param Object existingValues
+   *   Existing values that will be sent via POST to the url for the dialog
+   *   contents.
+   * @param Function saveCallback
+   *   A function to be called upon saving the dialog.
+   * @param Object dialogSettings
+   *   An object containing settings to be passed to the jQuery UI.
+   */
+  openDialog: function (editor, url, existingValues, saveCallback, dialogSettings) {
+    // Locate a suitable place to display our loading indicator.
+    var $target = $(editor.container.$);
+    if (editor.elementMode === CKEDITOR.ELEMENT_MODE_REPLACE) {
+      $target = $target.find('.cke_contents');
+    }
+
+    // Remove any previous loading indicator.
+    $target.css('position', 'relative').find('.ckeditor-dialog-loading').remove();
+
+    // Add a consistent dialog class.
+    var classes = dialogSettings.dialogClass ? dialogSettings.dialogClass.split(' ') : [];
+    classes.push('editor-dialog');
+    dialogSettings.dialogClass = classes.join(' ');
+    dialogSettings.maxHeight = '95%';
+    dialogSettings.resizable = false;
+    dialogSettings.autoResize = $(window).width() > 600;
+
+    // Add a "Loading…" message, hide it underneath the CKEditor toolbar, create
+    // a Drupal.ajax instance to load the dialog and trigger it.
+    var $content = $('<div class="ckeditor-dialog-loading"><span style="top: -40px;" class="ckeditor-dialog-loading-link"><a>' + Drupal.t('Loading...') + '</a></span></div>');
+    $content.appendTo($target);
+    new Drupal.ajax('ckeditor-dialog', $content.find('a').get(0), {
+      accepts: 'application/vnd.drupal-modal',
+      dialog: dialogSettings,
+      selector: '.ckeditor-dialog-loading-link',
+      url: url,
+      event: 'ckeditor-internal.ckeditor',
+      progress: { 'type': 'throbber' },
+      submit: {
+        editor_object: existingValues
+      }
+    });
+    $content.find('a')
+      .on('click', function () { return false; })
+      .trigger('ckeditor-internal.ckeditor');
+
+    // After a short delay, show "Loading…" message.
+    window.setTimeout(function () {
+      $content.find('span').animate({ top: '0px' });
+    }, 1000);
+
+    // Store the save callback to be executed when this dialog is closed.
+    Drupal.ckeditor.saveCallback = saveCallback;
+  }
+};
+
+// Respond to new dialogs that are opened by CKEditor, closing the AJAX loader.
+$(window).on('dialog:beforecreate', function (e, dialog, $element, settings) {
+  $('.ckeditor-dialog-loading').animate({ top: '-40px' }, function () {
+    $(this).remove();
+  });
+});
+
+// Respond to dialogs that are saved, sending data back to CKEditor.
+$(window).on('editor:dialogsave', function (e, values) {
+  if (Drupal.ckeditor.saveCallback) {
+    Drupal.ckeditor.saveCallback(values);
+  }
+});
+
+// Respond to dialogs that are closed, removing the current save handler.
+$(window).on('dialog:afterclose', function (e, dialog, $element) {
+  if (Drupal.ckeditor.saveCallback) {
+    Drupal.ckeditor.saveCallback = null;
+  }
+});
 
 })(Drupal, CKEDITOR, jQuery);

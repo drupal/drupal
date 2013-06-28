@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\editor\Plugin\InPlaceEditorManager.
+ * Contains \Drupal\editor\Plugin\EditorManager.
  */
 
 namespace Drupal\editor\Plugin;
 
 use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
+use Drupal\Core\Plugin\Factory\ContainerFactory;
 
 /**
  * Configurable text editor manager.
@@ -31,7 +31,7 @@ class EditorManager extends PluginManagerBase {
     $this->discovery = new AnnotatedClassDiscovery('Editor', $namespaces, $annotation_namespaces, 'Drupal\editor\Annotation\Editor');
     $this->discovery = new AlterDecorator($this->discovery, 'editor_info');
     $this->discovery = new CacheDecorator($this->discovery, 'editor');
-    $this->factory = new DefaultFactory($this->discovery);
+    $this->factory = new ContainerFactory($this->discovery);
   }
 
   /**
@@ -76,6 +76,7 @@ class EditorManager extends PluginManagerBase {
 
       // JavaScript settings.
       $settings[$format_id] = array(
+        'format' => $format_id,
         'editor' => $editor->editor,
         'editorSettings' => $plugin->getJSSettings($editor),
       );

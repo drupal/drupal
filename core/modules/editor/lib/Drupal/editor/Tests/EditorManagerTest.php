@@ -102,6 +102,7 @@ class EditorManagerTest extends DrupalUnitTestBase {
           'type' => 'setting',
           'data' => array('editor' => array('formats' => array(
             'full_html' => array(
+              'format'  => 'full_html',
               'editor' => 'unicorn',
               'editorSettings' => $unicorn_plugin->getJSSettings($editor),
             )

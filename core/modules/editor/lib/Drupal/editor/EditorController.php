@@ -9,8 +9,13 @@ namespace Drupal\editor;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\OpenModalDialogCommand;
+use Drupal\Core\Ajax\CloseModalDialogCommand;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\editor\Ajax\GetUntransformedTextCommand;
+use Drupal\editor\Form\EditorImageDialog;
+use Drupal\editor\Form\EditorLinkDialog;
+use Drupal\filter\Plugin\Core\Entity\FilterFormat;
 
 /**
  * Returns responses for Editor module routes.

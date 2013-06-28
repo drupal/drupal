@@ -23,6 +23,9 @@ function ckeditor_library_info() {
       $module_path . '/js/ckeditor.js' => array(),
       array('data' => $settings, 'type' => 'setting'),
     ),
+    'css' => array(
+      $module_path . '/css/ckeditor.css' => array(),
+    ),
     'dependencies' => array(
       array('system', 'drupal'),
       array('ckeditor', 'ckeditor'),

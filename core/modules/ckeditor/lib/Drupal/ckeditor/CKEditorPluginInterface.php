@@ -41,6 +41,31 @@ interface CKEditorPluginInterface extends PluginInspectionInterface {
   public function isInternal();
 
   /**
+   * Returns a list of plugins this plugin requires.
+   *
+   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   *   A configured text editor object.
+   * @return array
+   *   An unindexed array of plugin names this plugin requires. Each plugin is
+   *   is identified by its annotated ID.
+   */
+  public function getDependencies(Editor $editor);
+
+  /**
+   * Returns a list of libraries this plugin requires.
+   *
+   * These libraries will be attached to the text_format element on which the
+   * editor is being loaded.
+   *
+   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   *   A configured text editor object.
+   * @return array
+   *   An array of libraries suitable for usage in a render API #attached
+   *   property.
+   */
+  public function getLibraries(Editor $editor);
+
+  /**
    * Returns the Drupal root-relative file path to the plugin JavaScript file.
    *
    * Note: this does not use a Drupal library because this uses CKEditor's API,

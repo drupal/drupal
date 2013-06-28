@@ -81,9 +81,9 @@ class CKEditorAdminTest extends WebTestBase {
         'buttons' => array(
           array(
             'Bold', 'Italic',
-            '|', 'Link', 'Unlink',
+            '|', 'DrupalLink', 'DrupalUnlink',
             '|', 'BulletedList', 'NumberedList',
-            '|', 'Blockquote', 'Image',
+            '|', 'Blockquote', 'DrupalImage',
             '|', 'Source',
           ),
         ),

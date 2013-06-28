@@ -46,13 +46,7 @@ class Internal extends CKEditorPluginBase {
     $config = array(
       'customConfig' => '', // Don't load CKEditor's config.js file.
       'pasteFromWordPromptCleanup' => TRUE,
-      'removeDialogTabs' => 'image:Link;image:advanced;link:advanced',
       'resize_dir' => 'vertical',
-      'keystrokes' =>  array(
-        // 0x11000 is CKEDITOR.CTRL, see http://docs.ckeditor.com/#!/api/CKEDITOR-property-CTRL.
-        array(0x110000 + 75, 'link'),
-        array(0x110000 + 76, NULL),
-      ),
     );
 
     // Add the allowedContent setting, which ensures CKEditor only allows tags
@@ -136,20 +130,6 @@ class Internal extends CKEditorPluginBase {
         'image_alternative' => $button('redo'),
         'image_alternative_rtl' => $button('redo', 'rtl'),
       ),
-      // "link" plugin.
-      'Link' => array(
-        'label' => t('Link'),
-        'image_alternative' => $button('link'),
-      ),
-      'Unlink' => array(
-        'label' => t('Unlink'),
-        'image_alternative' => $button('unlink'),
-      ),
-      'Anchor' => array(
-        'label' => t('Anchor'),
-        'image_alternative' => $button('anchor'),
-        'image_alternative_rtl' => $button('anchor', 'rtl'),
-      ),
       // "blockquote" plugin.
       'Blockquote' => array(
         'label' => t('Blockquote'),
@@ -196,11 +176,6 @@ class Internal extends CKEditorPluginBase {
       'Format' => array(
         'label' => t('HTML block format'),
         'image_alternative' => '<a href="#" role="button" aria-label="' . t('Format') . '"><span class="ckeditor-button-dropdown">' . t('Format') . '<span class="ckeditor-button-arrow"></span></span></a>',
-      ),
-      // "image" plugin.
-      'Image' => array(
-        'label' => t('Image'),
-        'image_alternative' => $button('image'),
       ),
       // "table" plugin.
       'Table' => array(

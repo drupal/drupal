@@ -248,6 +248,15 @@ Drupal.behaviors.ckeditorAdmin = {
       if (CKEDITOR.instances[hiddenCKEditorID]) {
         CKEDITOR.instances[hiddenCKEditorID].destroy(true);
       }
+      // Load external plugins, if any.
+      if (hiddenCKEditorConfig.drupalExternalPlugins) {
+        var externalPlugins = hiddenCKEditorConfig.drupalExternalPlugins;
+        for (var pluginName in externalPlugins) {
+          if (externalPlugins.hasOwnProperty(pluginName)) {
+            CKEDITOR.plugins.addExternal(pluginName, externalPlugins[pluginName], '');
+          }
+        }
+      }
       CKEDITOR.inline($('#' + hiddenCKEditorID).get(0), CKEditorConfig);
 
       // Once the instance is ready, retrieve the allowedContent filter rules

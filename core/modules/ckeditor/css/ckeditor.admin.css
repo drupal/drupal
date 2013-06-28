@@ -92,8 +92,10 @@ ul.ckeditor-buttons li .cke-icon-only {
   text-indent: -9999px;
   width: 16px;
 }
-ul.ckeditor-buttons li a:focus {
+ul.ckeditor-buttons li a:focus,
+ul.ckeditor-multiple-buttons li a:focus {
   z-index: 11; /* Ensure focused buttons show their outline on all sides. */
+  outline: 1px dotted #333;
 }
 ul.ckeditor-buttons li:first-child a {
   border-top-left-radius: 2px; /* LTR */
