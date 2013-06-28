@@ -319,41 +319,6 @@ function template_preprocess_aggregator_item(&$variables) {
 }
 
 /**
- * Page callback: Displays all the categories used by the Aggregator module.
- *
- * @return string
- *   An HTML formatted string.
- *
- * @see aggregator_menu()
- */
-function aggregator_page_categories() {
-  $result = db_query('SELECT c.cid, c.title, c.description FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid LEFT JOIN {aggregator_item} i ON ci.iid = i.iid GROUP BY c.cid, c.title, c.description');
-
-  $build = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('aggregator-wrapper')),
-    '#sorted' => TRUE,
-  );
-  $aggregator_summary_items = config('aggregator.settings')->get('source.list_max');
-  foreach ($result as $category) {
-    $summary_items = array();
-    if ($aggregator_summary_items) {
-      if ($items = aggregator_load_feed_items('category', $category, $aggregator_summary_items)) {
-        $summary_items = entity_view_multiple($items, 'summary');
-      }
-    }
-    $category->url = url('aggregator/categories/' . $category->cid);
-    $build[$category->cid] = array(
-      '#theme' => 'aggregator_summary_items',
-      '#summary_items' => $summary_items,
-      '#source' => $category,
-    );
-  }
-
-  return $build;
-}
-
-/**
  * Page callback: Generates an RSS 0.92 feed of aggregator items or categories.
  *
  * @return string

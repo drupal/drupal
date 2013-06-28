@@ -60,3 +60,10 @@ aggregator_sources:
     _content: '\Drupal\aggregator\Controller\AggregatorController::sources'
   requirements:
     _permission: 'access news feeds'
+
+aggregator_categories:
+  pattern: '/aggregator/categories'
+  defaults:
+    _content: '\Drupal\aggregator\Controller\AggregatorController::categories'
+  requirements:
+    _access_aggregator_categories: 'TRUE'
