@@ -2223,7 +2223,7 @@ function template_preprocess_tablesort_indicator(&$variables) {
  *     MARK_UPDATED, MARK_READ.
  */
 function theme_mark($variables) {
-  $type = $variables['mark_type'];
+  $type = $variables['status'];
   global $user;
   if ($user->uid) {
     if ($type == MARK_NEW) {
@@ -3113,7 +3113,7 @@ function drupal_common_theme() {
       'template' => 'tablesort-indicator',
     ),
     'mark' => array(
-      'variables' => array('mark_type' => MARK_NEW),
+      'variables' => array('status' => MARK_NEW),
     ),
     'item_list' => array(
       'variables' => array('items' => array(), 'title' => '', 'list_type' => 'ul', 'attributes' => array()),
