@@ -54,7 +54,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     // Add another comment field with new bundle to page content type.
     comment_add_default_comment_field('node', 'page');
     // Mark this bundle as translatable.
-    translation_entity_set_config('comment', 'comment_article', 'enabled', TRUE);
+    content_translation_set_config('comment', 'comment_article', 'enabled', TRUE);
     // Refresh entity info.
     entity_info_cache_clear();
     // Flush the permissions after adding the translatable comment bundle.

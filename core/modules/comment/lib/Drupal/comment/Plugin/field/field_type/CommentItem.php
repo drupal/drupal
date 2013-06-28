@@ -148,7 +148,9 @@ class CommentItem extends ConfigFieldItemBase {
    * {@inheritdoc}
    */
   public function applyDefaultValue($notify = TRUE) {
-    $this->setValue($this->getInstance()->default_value, $notify);
+    // Retrieve the configured default value for the instance. The configured
+    $defaults = $this->getInstance()->default_value;
+    $this->setValue(reset($defaults), $notify);
     return $this;
   }
 

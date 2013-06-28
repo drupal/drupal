@@ -1025,7 +1025,7 @@ function comment_view_multiple($comments, $view_mode = 'full', $langcode = NULL)
 function comment_form_field_ui_field_instance_edit_form_alter(&$form, $form_state) {
   if ($form['#field']['type'] == 'comment') {
     // Collect translation settings.
-    if (module_exists('translation_entity')) {
+    if (module_exists('content_translation')) {
       array_unshift($form['#submit'], 'comment_translation_configuration_element_submit');
     }
 
@@ -2029,12 +2029,12 @@ function _comment_field_instance_settings_form_process($element, $form_state) {
   array_pop($parents);
   $element['#parents'] = $parents;
   // Add translation entity handlers.
-  if (Drupal::moduleHandler()->moduleExists('translation_entity')) {
+  if (Drupal::moduleHandler()->moduleExists('content_translation')) {
     $comment_form = $element;
-    $comment_form_state['translation_entity']['key'] = 'language_configuration';
-    $element += translation_entity_enable_widget('comment', $element['#field_name'], $comment_form, $comment_form_state);
-    $element['translation_entity']['#parents'] = $element['translation_entity']['#array_parents'] = array(
-      'translation_entity'
+    $comment_form_state['content_translation']['key'] = 'language_configuration';
+    $element += content_translation_enable_widget('comment', $element['#field_name'], $comment_form, $comment_form_state);
+    $element['content_translation']['#parents'] = $element['content_translation']['#array_parents'] = array(
+      'content_translation'
     );
   }
   return $element;
