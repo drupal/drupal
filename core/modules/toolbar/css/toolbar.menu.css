@@ -23,6 +23,10 @@
 .toolbar .vertical .handle + a {
   margin-right: 3em; /* LTR */
 }
+[dir=rtl] .toolbar .vertical .handle + a {
+  margin-left: 3em;
+  margin-right: 0;
+}
 .toolbar .tray .active-trail > .box a,
 .toolbar .tray a.active {
   color: #000;
@@ -86,9 +90,17 @@
   width: 3em;
   z-index: 1;
 }
+[dir=rtl] .toolbar .icon.handle {
+  left: 0;
+  right: auto;
+}
 .toolbar .icon.handle:before {
   background-image: url("../images/icon-open.png");
   left: 0; /* LTR */
+}
+[dir=rtl] .toolbar .icon.handle:before {
+  left: auto;
+  right: 0;
 }
 .toolbar .icon.handle.open:before {
   background-image: url("../images/icon-collapse.png");

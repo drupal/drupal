@@ -575,33 +575,6 @@ function language_delete($langcode) {
 }
 
 /**
- * Implements hook_css_alter().
- *
- * This function checks all CSS files currently added via drupal_add_css() and
- * and checks to see if a related right to left CSS file should be included.
- */
-function language_css_alter(&$css) {
-  $language_interface = language(Language::TYPE_INTERFACE);
-
-  // If the current language is RTL, add the CSS file with the RTL overrides.
-  if ($language_interface->direction == Language::DIRECTION_RTL) {
-    foreach ($css as $data => $item) {
-      // Only provide RTL overrides for files.
-      if ($item['type'] == 'file') {
-        $rtl_path = str_replace('.css', '-rtl.css', $item['data']);
-        if (file_exists($rtl_path) && !isset($css[$rtl_path])) {
-          // Replicate the same item, but with the RTL path and a little larger
-          // weight so that it appears directly after the original CSS file.
-          $item['data'] = $rtl_path;
-          $item['weight'] += 0.01;
-          $css[$rtl_path] = $item;
-        }
-      }
-    }
-  }
-}
-
-/**
  * Implements hook_language_types_info().
  *
  * Defines the three core language types:

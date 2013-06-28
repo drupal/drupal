@@ -27,12 +27,19 @@
 .filter-help {
   float: right; /* LTR */
 }
+[dir=rtl] .filter-help {
+  float: left;
+}
 .filter-help p {
   margin: 0;
 }
 .filter-help a {
   background: transparent url(../../../misc/help.png) right center no-repeat; /* LTR */
   padding: 0 20px 0 0; /* LTR */
+}
+[dir=rtl] .filter-help a {
+  background-position: left center;
+  padding: 0 0 0 20px;
 }
 
 .text-format-wrapper .description {
@@ -51,4 +58,7 @@
  */
 .tips {
   padding-left: 0; /* LTR */
+}
+[dir=rtl] .tips {
+  padding-right: 0;
 }

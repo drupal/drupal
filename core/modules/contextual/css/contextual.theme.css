@@ -12,6 +12,10 @@
   top: 2px;
   z-index: 500;
 }
+[dir=rtl] .contextual {
+  left: 0;
+  right: auto;
+}
 
 /**
  * Contextual region.
@@ -47,6 +51,11 @@
   text-indent: -9999px;
   cursor: pointer;
 }
+[dir=rtl] .contextual .trigger {
+  float: left;
+  right: auto;
+  left: 2px;
+}
 .contextual.open .trigger {
   border-bottom-color: transparent;
   border-radius: 13px 13px 0 0;
@@ -72,6 +81,13 @@
   text-align: left; /* LTR */
   top: -1px;
   white-space: nowrap;
+}
+[dir=rtl] .contextual-region .contextual .contextual-links {
+  border-radius: 0 4px 4px 4px;
+  float: left;
+  left: 2px;
+  right: auto;
+  text-align: right;
 }
 .contextual-region .contextual .contextual-links li {
   background-color: #fff;

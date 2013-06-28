@@ -29,6 +29,9 @@ body,
   margin: .5em 5px .75em;
   border: 1px solid #ccc;
 }
+[dir=rtl] .region-header {
+  float: left;
+}
 #secondary-menu {
   width: 100%;
   margin: 0 auto;
@@ -85,6 +88,16 @@ body,
     float: left; /* LTR */
     position: relative;
   }
+  [dir=rtl] #sidebar-first,
+  [dir=rtl] .region-triptych-first,
+  [dir=rtl] .region-triptych-middle,
+  [dir=rtl] .region-triptych-last,
+  [dir=rtl] .region-footer-firstcolumn,
+  [dir=rtl] .region-footer-secondcolumn,
+  [dir=rtl] .region-footer-thirdcolumn,
+  [dir=rtl] .region-footer-fourthcolumn {
+    float: right;
+  }
   #sidebar-first,
   #sidebar-second {
     width: 50%;
@@ -92,12 +105,18 @@ body,
   #sidebar-second {
     margin-left: 50%; /* LTR */
   }
+  [dir=rtl] #sidebar-second {
+    margin-right: 50%;
+  }
   .one-sidebar #sidebar-first,
   .one-sidebar #sidebar-second {
     width: 100%;
   }
   .one-sidebar #sidebar-second {
     margin-left: 0; /* LTR */
+  }
+  [dir=rtl] .one-sidebar #sidebar-second {
+    margin-right: 0;
   }
   .region-triptych-first,
   .region-triptych-middle,
@@ -157,6 +176,18 @@ body,
     float: left; /* LTR */
     position: relative;
   }
+  [dir=rtl] #content,
+  [dir=rtl] #sidebar-first,
+  [dir=rtl] #sidebar-second,
+  [dir=rtl] .region-triptych-first,
+  [dir=rtl] .region-triptych-middle,
+  [dir=rtl] .region-triptych-last,
+  [dir=rtl] .region-footer-firstcolumn,
+  [dir=rtl] .region-footer-secondcolumn,
+  [dir=rtl] .region-footer-thirdcolumn,
+  [dir=rtl] .region-footer-fourthcolumn {
+    float: right;
+  }
   .two-sidebars #content {
     margin-left: 25%;
     margin-right: 25%;
@@ -172,18 +203,32 @@ body,
     margin-left: 25%; /* LTR */
     margin-right: 0; /* LTR */
   }
+  [dir=rtl] .sidebar-first #content {
+    margin-left: 0;
+    margin-right: 25%;
+  }
   .sidebar-second #content {
     margin-right: 25%; /* LTR */
     margin-left: 0; /* LTR */
+  }
+  [dir=rtl] .sidebar-second #content {
+    margin-right: 0;
+    margin-left: 25%;
   }
   #sidebar-first {
     width: 25%;
     margin-left: -100%; /* LTR */
   }
+  [dir=rtl] #sidebar-first {
+    margin-right: -100%;
+  }
   #sidebar-second {
     width: 25%;
     margin-left: -25%; /* LTR */
     clear: none;
+  }
+  [dir=rtl] #sidebar-second {
+    margin-right: -25%;
   }
   .region-triptych-first,
   .region-triptych-middle,

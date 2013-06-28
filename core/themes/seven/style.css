@@ -63,6 +63,10 @@ dl dl {
   margin-left: 20px; /* LTR */
   margin-bottom: 10px;
 }
+[dir=rtl] dl dd,
+[dir=rtl] dl dl {
+  margin-right: 20px;
+}
 blockquote {
   margin: 1em 40px;
 }
@@ -107,6 +111,10 @@ ul,
   list-style-image: none;
   margin: 0.25em 0 0.25em 1.5em; /* LTR */
 }
+[dir=rtl] ul,
+[dir=rtl] .item-list ul {
+  margin: 0.25em 1.5em 0.25em 0;
+}
 .item-list .pager li {
   padding: 0.5em;
 }
@@ -122,6 +130,9 @@ ul.menu li {
 ol {
   list-style-type: decimal;
   margin: 0.25em 0 0.25em 2em; /* LTR */
+}
+[dir=rtl] ol {
+  margin: 0.25em 2em 0.25em 0;
 }
 .item-list ul li.collapsed,
 ul.menu li.collapsed {
@@ -158,6 +169,10 @@ pre {
   width: auto;
   z-index: 50;
 }
+[dir=rtl] #skip-link {
+  right: 50%;
+  margin-right: -5.25em;
+}
 #skip-link a,
 #skip-link a:link,
 #skip-link a:visited {
@@ -168,6 +183,11 @@ pre {
   padding: 1px 10px 2px 10px; /* LTR */
   text-decoration: none;
   border-radius: 0 0 10px 10px;
+}
+[dir=rtl] #skip-link a,
+[dir=rtl] #skip-link a:link,
+[dir=rtl] #skip-link a:visited {
+  padding: 1px 10px 2px 10px;
 }
 #skip-link a:hover,
 #skip-link a:focus,
@@ -183,6 +203,9 @@ pre {
   padding: 20px 20px 0 20px; /* LTR */
   position: relative;
   background-color: #e0e0d8;
+}
+[dir=rtl] #branding {
+  padding: 20px 20px 0 20px;
 }
 .breadcrumb {
   font-size: 0.846em;
@@ -202,6 +225,9 @@ pre {
 #help div.more-help-link {
   text-align: right; /* LTR */
 }
+[dir=rtl] #help div.more-help-link {
+  text-align: left;
+}
 
 /**
  * Page title.
@@ -217,6 +243,9 @@ pre {
   font-size: 1.385em;
   font-weight: normal;
   float: left; /* LTR */
+}
+[dir=rtl] #branding h1.page-title {
+  float: right;
 }
 
 /**
@@ -237,11 +266,17 @@ ul.primary {
   margin: 0;
   padding-top: 0;
 }
+[dir=rtl] ul.primary {
+  float: left;
+}
 ul.primary li {
   float: left; /* LTR */
   list-style: none;
   height: 2.60em;
   margin: 0 2px;
+}
+[dir=rtl] ul.primary li {
+  float: right;
 }
 ul.primary li a:link,
 ul.primary li a.active,
@@ -259,6 +294,14 @@ ul.primary li.active a {
   border-style: solid;
   border-color: #a6a7a2;
   border-radius: 8px 8px 0 0;
+}
+[dir=rtl] ul.primary li a:link,
+[dir=rtl] ul.primary li a.active,
+[dir=rtl] ul.primary li a:active,
+[dir=rtl] ul.primary li a:visited,
+[dir=rtl] ul.primary li a:hover,
+[dir=rtl] ul.primary li.active a {
+  float: right;
 }
 ul.primary li.active a,
 ul.primary li.active a.active,
@@ -284,9 +327,15 @@ ul.secondary {
   overflow: hidden;
   background-color: #fff;
 }
+[dir=rtl] ul.secondary {
+  float: left;
+}
 ul.secondary li {
   margin: 0 5px;
   float: none; /* LTR */
+}
+[dir=rtl] ul.secondary li {
+  float: none;
 }
 ul.secondary li a {
   background-color: #ddd;
@@ -383,6 +432,10 @@ ul.links li,
 ul.inline li {
   padding-right: 1em; /* LTR */
 }
+[dir=rtl] ul.links li,
+[dir=rtl] ul.inline li {
+  padding-left: 1em;
+}
 ul.inline li {
   display: inline;
 }
@@ -406,6 +459,10 @@ ul.inline li {
   display: block;
   padding: 9px 9px 9px 39px; /* LTR */
   min-height: 0;
+}
+[dir=rtl] .admin-list li a {
+  background: url(images/list-item-rtl.png) no-repeat right 11px;
+  padding: 9px 39px 9px 9px;
 }
 .admin-list.compact li a {
   background-image:  none;
@@ -477,10 +534,17 @@ table th a {
 table th.active a {
   padding: 0 25px 0 0; /* LTR */
 }
+[dir=rtl] table th.active a {
+  padding: 0 0 0 25px;
+}
 table th.active img {
   position: absolute;
   top: 3px;
   right: 3px; /* LTR */
+}
+[dir=rtl] table th.active img {
+  left: 3px;
+  right: auto;
 }
 /**
  * Force browsers to calculate the width of a 'select all' TH element.
@@ -600,9 +664,17 @@ div.description,
 ul.tips li {
   margin: 0.25em 0 0.25em 1.5em; /* LTR */
 }
+[dir=rtl] ul.tips li {
+  margin: 0.25em 1.5em 0.25em 0;
+}
 body div.form-type-radio div.description,
 body div.form-type-checkbox div.description {
   margin-left: 1.5em; /* LTR */
+}
+[dir=rtl] body div.form-type-radio div.description,
+[dir=rtl] body div.form-type-checkbox div.description {
+  margin-left: 0;
+  margin-right: 1.5em;
 }
 .button {
   cursor: pointer;
@@ -754,6 +826,10 @@ select.form-select:focus {
 #edit-cancel {
   margin-left: 10px; /* LTR */
 }
+[dir=rtl] #edit-cancel {
+  margin-left: 0;
+  margin-right: 10px;
+}
 
 /**
  * Improve form element usability on narrow devices.
@@ -896,6 +972,12 @@ div.admin-options div.form-item {
   margin-right: 10px; /* LTR */
   float: left; /* LTR */
 }
+[dir=rtl] div.admin-options label,
+[dir=rtl] div.admin-options div.form-item {
+  margin-left: 10px;
+  margin-right: 0;
+  float: right;
+}
 div.admin-options div.form-item {
   padding: 0;
   border: 0;
@@ -912,10 +994,16 @@ body.in-maintenance #sidebar-first {
   max-width: 200px;
   width: 25%;
 }
+[dir=rtl] body.in-maintenance #sidebar-first {
+  float: right;
+}
 body.in-maintenance #content {
   float: right; /* LTR */
   clear: none;
   width: 72%;
+}
+[dir=rtl] body.in-maintenance #content {
+  float: left;
 }
 body.in-maintenance #page {
   max-width: 770px;
@@ -952,20 +1040,29 @@ body.in-maintenance #logo {
     width: auto;
   }
 }
-
 .task-list {
   margin-left: 0; /* LTR */
   list-style-type: none;
   list-style-image: none;
 }
+[dir=rtl] .task-list {
+  margin-right: 0;
+}
 .task-list li {
   padding: 0.5em 1em 0.5em 20px; /* LTR */
   color: #adadad;
+}
+[dir=rtl] .task-list li {
+  padding: 0.5em 20px 0.5em 1em;
 }
 .task-list li.active {
   background: transparent url(images/task-item.png) no-repeat 3px 50%; /* LTR */
   padding: 0.5em 1em 0.5em 20px; /* LTR */
   color: #000;
+}
+[dir=rtl] .task-list li.active {
+  background: transparent url(images/task-item-rtl.png) no-repeat right 50%;
+  padding: 0.5em 20px 0.5em 1em;
 }
 .task-list li.done {
   background: transparent url(images/task-check.png) no-repeat 0 50%;
@@ -992,6 +1089,9 @@ body.in-maintenance #logo {
   position: relative;
   z-index: 10;
 }
+[dir=rtl] .overlay #branding .breadcrumb {
+  float: right;
+}
 #overlay-tabs {
   bottom: -1px;
   font-size: 1.54em;
@@ -1002,6 +1102,9 @@ body.in-maintenance #logo {
   background: transparent none;
   margin: -1.4em 0 0.3em 0; /* LTR */
   overflow: visible;
+}
+[dir=rtl] .overlay ul.secondary {
+  margin: -1.4em 0 0.3em 0;
 }
 .overlay #content {
   padding: 0;
@@ -1081,6 +1184,9 @@ h1#overlay-title {
 }
 #block-node-recent .more-link {
   padding: 0 5px 5px 0; /* LTR */
+}
+[dir=rtl] #block-node-recent .more-link {
+  padding: 0 0 5px 5px;
 }
 
 /* Dropbutton */
@@ -1191,6 +1297,12 @@ details.fieldset-no-legend {
   margin-right: 0; /* LTR */
   margin-top: 0;
 }
+[dir=rtl] .views-admin input.form-submit,
+[dir=rtl] .views-ui-dialog input.form-submit,
+[dir=rtl] .views-admin a.button,
+[dir=rtl] .views-ui-dialog a.button {
+  margin-left: 0;
+}
 
 /* Override for a button on the edit display screen */
 #edit-displays-preview-controls .form-submit {
@@ -1259,9 +1371,15 @@ details.fieldset-no-legend {
 .views-admin .links li {
   padding-right: 0; /* LTR */
 }
+[dir=rtl] .views-admin .links li {
+  padding-left: 0;
+}
 
 .views-admin .button .links li {
   padding-right: 12px; /* LTR */
+}
+[dir=rtl] .views-admin .button .links li {
+  padding-left: 12px;
 }
 
 .views-display-top ul.secondary {
@@ -1300,6 +1418,9 @@ details.fieldset-no-legend {
 
 .views-displays .secondary {
  text-align: left; /* LTR */
+}
+[dir=rtl] .views-displays .secondary {
+  text-align: right;
 }
 
 .views-admin .icon.add {

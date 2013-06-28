@@ -171,24 +171,6 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests Locale module's CSS Alter to include RTL overrides.
-   */
-  function testAlter() {
-    // Switch the language to a right to left language and add system.module.css.
-    $language_interface = language(Language::TYPE_INTERFACE);
-    $language_interface->direction = Language::DIRECTION_RTL;
-    $path = drupal_get_path('module', 'system');
-    drupal_add_css($path . '/css/system.module.css');
-
-    // Check to see if system.module-rtl.css was also added.
-    $styles = drupal_get_css();
-    $this->assert(strpos($styles, $path . '/css/system.module-rtl.css') !== FALSE, 'CSS is alterable as right to left overrides are added.');
-
-    // Change the language back to left to right.
-    $language_interface->direction = Language::DIRECTION_LTR;
-  }
-
-  /**
    * Tests that CSS query string remains intact when added to file.
    */
   function testAddCssFileWithQueryString() {

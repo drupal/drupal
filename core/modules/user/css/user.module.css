@@ -4,6 +4,10 @@
 #permissions td.permission {
   padding-left: 1.5em; /* LTR */
 }
+[dir=rtl] #permissions td.permission {
+  padding-left: 0;
+  padding-right: 1.5em;
+}
 #permissions tr.odd .form-item,
 #permissions tr.even .form-item {
   white-space: normal;
@@ -20,12 +24,18 @@
   width: 17em;
   float: right;  /* LTR */
 }
+[dir=rtl] .password-strength {
+  float: left;
+}
 .password-strength-title {
   display: inline;
 }
 .password-strength-text {
   float: right; /* LTR */
   font-weight: bold;
+}
+[dir=rtl] .password-strength-text {
+  float: left;
 }
 .password-indicator {
   background-color: #c4c4c4;
@@ -47,6 +57,9 @@ div.password-confirm {
   visibility: hidden;
   width: 17em;
 }
+[dir=rtl] div.password-confirm {
+  float: left;
+}
 div.form-item div.password-suggestions {
   padding: 0.2em 0.5em;
   margin: 0.7em 0;
@@ -61,6 +74,10 @@ div.password-suggestions ul {
   clear: left; /* LTR */
   margin: 0;
   width: 36.3em;
+}
+[dir=rtl] .confirm-parent,
+[dir=rtl] .password-parent {
+  clear: right;
 }
 
  /**

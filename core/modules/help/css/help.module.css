@@ -4,9 +4,19 @@
   width: 22%;
   margin-right: 3%; /* LTR */
 }
+[dir=rtl] .help-items {
+  float: right;
+  margin-right: 0;
+  margin-left: 3%;
+}
 .help-items-last {
   margin-right: 0; /* LTR */
 }
+[dir=rtl] .help-items-last {
+  margin-right: 0;
+  margin-left: 0;
+}
+
 
 /**
  * Avoid text overlapping on a narrow viewport.
