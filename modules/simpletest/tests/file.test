@@ -288,13 +288,13 @@ class FileHookTestCase extends FileTestCase {
 
     if (!isset($message)) {
       if ($actual_count == $expected_count) {
-        $message = t('hook_file_@name was called correctly.', array('@name' => $hook));
+        $message = format_string('hook_file_@name was called correctly.', array('@name' => $hook));
       }
       elseif ($expected_count == 0) {
         $message = format_plural($actual_count, 'hook_file_@name was not expected to be called but was actually called once.', 'hook_file_@name was not expected to be called but was actually called @count times.', array('@name' => $hook, '@count' => $actual_count));
       }
       else {
-        $message = t('hook_file_@name was expected to be called %expected times but was called %actual times.', array('@name' => $hook, '%expected' => $expected_count, '%actual' => $actual_count));
+        $message = format_string('hook_file_@name was expected to be called %expected times but was called %actual times.', array('@name' => $hook, '%expected' => $expected_count, '%actual' => $actual_count));
       }
     }
     $this->assertEqual($actual_count, $expected_count, $message);
@@ -415,17 +415,17 @@ class FileValidatorTest extends DrupalWebTestCase {
   function testFileValidateImageResolution() {
     // Non-images.
     $errors = file_validate_image_resolution($this->non_image);
-    $this->assertEqual(count($errors), 0, "Shouldn't get any errors for a non-image file.", 'File');
+    $this->assertEqual(count($errors), 0, 'Should not get any errors for a non-image file.', 'File');
     $errors = file_validate_image_resolution($this->non_image, '50x50', '100x100');
-    $this->assertEqual(count($errors), 0, "Don't check the resolution on non files.", 'File');
+    $this->assertEqual(count($errors), 0, 'Do not check the resolution on non files.', 'File');
 
     // Minimum size.
     $errors = file_validate_image_resolution($this->image);
     $this->assertEqual(count($errors), 0, 'No errors for an image when there is no minimum or maximum resolution.', 'File');
     $errors = file_validate_image_resolution($this->image, 0, '200x1');
-    $this->assertEqual(count($errors), 1, "Got an error for an image that wasn't wide enough.", 'File');
+    $this->assertEqual(count($errors), 1, 'Got an error for an image that was not wide enough.', 'File');
     $errors = file_validate_image_resolution($this->image, 0, '1x200');
-    $this->assertEqual(count($errors), 1, "Got an error for an image that wasn't tall enough.", 'File');
+    $this->assertEqual(count($errors), 1, 'Got an error for an image that was not tall enough.', 'File');
     $errors = file_validate_image_resolution($this->image, 0, '200x200');
     $this->assertEqual(count($errors), 1, 'Small images report an error.', 'File');
 
@@ -447,7 +447,7 @@ class FileValidatorTest extends DrupalWebTestCase {
     else {
       // TODO: should check that the error is returned if no toolkit is available.
       $errors = file_validate_image_resolution($this->image, '5x10');
-      $this->assertEqual(count($errors), 1, "Oversize images that can't be scaled get an error.", 'File');
+      $this->assertEqual(count($errors), 1, 'Oversize images that cannot be scaled get an error.', 'File');
     }
   }
 
@@ -692,7 +692,7 @@ class FileSaveUploadTest extends FileHookTestCase {
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
     $this->assertResponse(200, 'Received a 200 response for posted test file.');
     $message = t('Only files with the following extensions are allowed:') . ' <em class="placeholder">' . $extensions . '</em>';
-    $this->assertRaw($message, "Can't upload a disallowed extension");
+    $this->assertRaw($message, 'Cannot upload a disallowed extension');
     $this->assertRaw(t('Epic upload FAIL!'), 'Found the failure message.');
 
     // Check that the correct hooks were called.
@@ -1657,7 +1657,7 @@ class FileMoveTest extends FileHookTestCase {
     // Compare the source and results.
     $loaded_source = file_load($source->fid, TRUE);
     $this->assertEqual($loaded_source->fid, $result->fid, "Returned file's id matches the source.");
-    $this->assertNotEqual($loaded_source->uri, $source->uri, "Returned file path has changed from the original.");
+    $this->assertNotEqual($loaded_source->uri, $source->uri, 'Returned file path has changed from the original.');
   }
 
   /**
@@ -1938,11 +1938,11 @@ class FileLoadTest extends FileHookTestCase {
     $by_fid_file = file_load($file->fid);
     $this->assertFileHookCalled('load');
     $this->assertTrue(is_object($by_fid_file), 'file_load() returned an object.');
-    $this->assertEqual($by_fid_file->fid, $file->fid, "Loading by fid got the same fid.", 'File');
-    $this->assertEqual($by_fid_file->uri, $file->uri, "Loading by fid got the correct filepath.", 'File');
-    $this->assertEqual($by_fid_file->filename, $file->filename, "Loading by fid got the correct filename.", 'File');
-    $this->assertEqual($by_fid_file->filemime, $file->filemime, "Loading by fid got the correct MIME type.", 'File');
-    $this->assertEqual($by_fid_file->status, $file->status, "Loading by fid got the correct status.", 'File');
+    $this->assertEqual($by_fid_file->fid, $file->fid, 'Loading by fid got the same fid.', 'File');
+    $this->assertEqual($by_fid_file->uri, $file->uri, 'Loading by fid got the correct filepath.', 'File');
+    $this->assertEqual($by_fid_file->filename, $file->filename, 'Loading by fid got the correct filename.', 'File');
+    $this->assertEqual($by_fid_file->filemime, $file->filemime, 'Loading by fid got the correct MIME type.', 'File');
+    $this->assertEqual($by_fid_file->status, $file->status, 'Loading by fid got the correct status.', 'File');
     $this->assertTrue($by_fid_file->file_test['loaded'], 'file_test_file_load() was able to modify the file during load.');
   }
 
@@ -1960,7 +1960,7 @@ class FileLoadTest extends FileHookTestCase {
     $this->assertEqual(1, count($by_path_files), 'file_load_multiple() returned an array of the correct size.');
     $by_path_file = reset($by_path_files);
     $this->assertTrue($by_path_file->file_test['loaded'], 'file_test_file_load() was able to modify the file during load.');
-    $this->assertEqual($by_path_file->fid, $file->fid, "Loading by filepath got the correct fid.", 'File');
+    $this->assertEqual($by_path_file->fid, $file->fid, 'Loading by filepath got the correct fid.', 'File');
 
     // Load by fid.
     file_test_reset();
@@ -1969,7 +1969,7 @@ class FileLoadTest extends FileHookTestCase {
     $this->assertEqual(1, count($by_fid_files), 'file_load_multiple() returned an array of the correct size.');
     $by_fid_file = reset($by_fid_files);
     $this->assertTrue($by_fid_file->file_test['loaded'], 'file_test_file_load() was able to modify the file during load.');
-    $this->assertEqual($by_fid_file->uri, $file->uri, "Loading by fid got the correct filepath.", 'File');
+    $this->assertEqual($by_fid_file->uri, $file->uri, 'Loading by fid got the correct filepath.', 'File');
   }
 }
 
@@ -2004,13 +2004,13 @@ class FileSaveTest extends FileHookTestCase {
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled(array('insert'));
 
-    $this->assertNotNull($saved_file, "Saving the file should give us back a file object.", 'File');
-    $this->assertTrue($saved_file->fid > 0, "A new file ID is set when saving a new file to the database.", 'File');
+    $this->assertNotNull($saved_file, 'Saving the file should give us back a file object.', 'File');
+    $this->assertTrue($saved_file->fid > 0, 'A new file ID is set when saving a new file to the database.', 'File');
     $loaded_file = db_query('SELECT * FROM {file_managed} f WHERE f.fid = :fid', array(':fid' => $saved_file->fid))->fetch(PDO::FETCH_OBJ);
-    $this->assertNotNull($loaded_file, "Record exists in the database.");
-    $this->assertEqual($loaded_file->status, $file->status, "Status was saved correctly.");
-    $this->assertEqual($saved_file->filesize, filesize($file->uri), "File size was set correctly.", 'File');
-    $this->assertTrue($saved_file->timestamp > 1, "File size was set correctly.", 'File');
+    $this->assertNotNull($loaded_file, 'Record exists in the database.');
+    $this->assertEqual($loaded_file->status, $file->status, 'Status was saved correctly.');
+    $this->assertEqual($saved_file->filesize, filesize($file->uri), 'File size was set correctly.', 'File');
+    $this->assertTrue($saved_file->timestamp > 1, 'File size was set correctly.', 'File');
 
 
     // Resave the file, updating the existing record.
@@ -2021,11 +2021,11 @@ class FileSaveTest extends FileHookTestCase {
     // Check that the correct hooks were called.
     $this->assertFileHooksCalled(array('load', 'update'));
 
-    $this->assertEqual($resaved_file->fid, $saved_file->fid, "The file ID of an existing file is not changed when updating the database.", 'File');
+    $this->assertEqual($resaved_file->fid, $saved_file->fid, 'The file ID of an existing file is not changed when updating the database.', 'File');
     $this->assertTrue($resaved_file->timestamp >= $saved_file->timestamp, "Timestamp didn't go backwards.", 'File');
     $loaded_file = db_query('SELECT * FROM {file_managed} f WHERE f.fid = :fid', array(':fid' => $saved_file->fid))->fetch(PDO::FETCH_OBJ);
-    $this->assertNotNull($loaded_file, "Record still exists in the database.", 'File');
-    $this->assertEqual($loaded_file->status, $saved_file->status, "Status was saved correctly.");
+    $this->assertNotNull($loaded_file, 'Record still exists in the database.', 'File');
+    $this->assertEqual($loaded_file->status, $saved_file->status, 'Status was saved correctly.');
 
     // Try to insert a second file with the same name apart from case insensitivity
     // to ensure the 'uri' index allows for filenames with different cases.
@@ -2263,12 +2263,12 @@ class FileSaveDataTest extends FileHookTestCase {
     $contents = $this->randomName(8);
 
     $result = file_save_data($contents, $existing->uri, FILE_EXISTS_RENAME);
-    $this->assertTrue($result, "File saved successfully.");
+    $this->assertTrue($result, 'File saved successfully.');
 
     $this->assertEqual('public', file_uri_scheme($result->uri), "File was placed in Drupal's files directory.");
-    $this->assertEqual($result->filename, $existing->filename, "Filename was set to the basename of the source, rather than that of the renamed file.");
-    $this->assertEqual($contents, file_get_contents($result->uri), "Contents of the file are correct.");
-    $this->assertEqual($result->filemime, 'application/octet-stream', "A MIME type was set.");
+    $this->assertEqual($result->filename, $existing->filename, 'Filename was set to the basename of the source, rather than that of the renamed file.');
+    $this->assertEqual($contents, file_get_contents($result->uri), 'Contents of the file are correct.');
+    $this->assertEqual($result->filemime, 'application/octet-stream', 'A MIME type was set.');
     $this->assertEqual($result->status, FILE_STATUS_PERMANENT, "The file's status was set to permanent.");
 
     // Check that the correct hooks were called.
