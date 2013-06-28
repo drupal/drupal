@@ -227,11 +227,11 @@ class EntityManager extends PluginManagerBase {
       $class = $this->getControllerClass($entity_type, 'form', $operation);
       if (in_array('Drupal\Core\Entity\EntityControllerInterface', class_implements($class))) {
         $this->controllers['form'][$operation][$entity_type] = $class::createInstance($this->container, $entity_type, $this->getDefinition($entity_type));
-        $this->controllers['form'][$operation][$entity_type]->setOperation($operation);
       }
       else {
-        $this->controllers['form'][$operation][$entity_type] = new $class($operation);
+        $this->controllers['form'][$operation][$entity_type] = new $class($this->container->get('module_handler'));
       }
+      $this->controllers['form'][$operation][$entity_type]->setOperation($operation);
     }
     return $this->controllers['form'][$operation][$entity_type];
   }

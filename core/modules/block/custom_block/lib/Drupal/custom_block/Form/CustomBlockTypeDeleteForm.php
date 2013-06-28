@@ -10,6 +10,7 @@ namespace Drupal\custom_block\Form;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,10 +29,13 @@ class CustomBlockTypeDeleteForm extends EntityConfirmFormBase implements EntityC
   /**
    * Constructs a query factory object.
    *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
    *   The entity query object.
    */
-  public function __construct(QueryFactory $query_factory) {
+  public function __construct(ModuleHandlerInterface $module_handler, QueryFactory $query_factory) {
+    parent::__construct($module_handler);
     $this->queryFactory = $query_factory;
   }
 
@@ -40,6 +44,7 @@ class CustomBlockTypeDeleteForm extends EntityConfirmFormBase implements EntityC
    */
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
+      $container->get('module_handler'),
       $container->get('entity.query')
     );
   }

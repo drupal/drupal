@@ -9,6 +9,7 @@ namespace Drupal\node\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Database\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,10 +29,13 @@ class NodeTypeDeleteConfirm extends EntityConfirmFormBase implements EntityContr
   /**
    * Constructs a new NodeTypeDeleteConfirm object.
    *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    */
-  public function __construct(Connection $database) {
+  public function __construct(ModuleHandlerInterface $module_handler, Connection $database) {
+    parent::__construct($module_handler);
     $this->database = $database;
   }
 
@@ -40,6 +44,7 @@ class NodeTypeDeleteConfirm extends EntityConfirmFormBase implements EntityContr
    */
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
+      $container->get('module_handler'),
       $container->get('database')
     );
   }

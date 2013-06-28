@@ -94,7 +94,8 @@ use Drupal\Core\Entity\EntityInterface;
  *   - field_attach_delete_revision()
  * - Preparing a node for editing (calling node_form() - note that if it is an
  *   existing node, it will already be loaded; see the Loading section above):
- *   - hook_node_prepare() (all)
+ *   - hook_node_prepare_form() (all)
+ *   - hook_entity_prepare_form() (all)
  *   - field_attach_form()
  * - Validating a node during editing form submit (calling
  *   node_form_validate()):
@@ -598,12 +599,18 @@ function hook_node_access($node, $op, $account, $langcode) {
  *
  * This hook is invoked from NodeFormController::prepareEntity().
  *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The node that is about to be shown on the add/edit form.
+ * @param \Drupal\node\NodeInterface $node
+ *   The node that is about to be shown on the form.
+ * @param $form_display
+ *   The current form display.
+ * @param $operation
+ *   The current operation.
+ * @param array $form_state
+ *   An associative array containing the current state of the form.
  *
  * @ingroup node_api_hooks
  */
-function hook_node_prepare(\Drupal\Core\Entity\EntityInterface $node) {
+function hook_node_prepare_form(\Drupal\node\NodeInterface $node, $form_display, $operation, array &$form_state) {
   if (!isset($node->comment)) {
     $node->comment = variable_get("comment_$node->type", COMMENT_NODE_OPEN);
   }

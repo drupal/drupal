@@ -8,7 +8,9 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\entity\EntityFormDisplayInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for entity form controllers.
@@ -26,6 +28,13 @@ class EntityFormController implements EntityFormControllerInterface {
   protected $operation;
 
   /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * The entity being used by this form.
    *
    * @var \Drupal\Core\Entity\EntityInterface
@@ -35,11 +44,20 @@ class EntityFormController implements EntityFormControllerInterface {
   /**
    * Constructs an EntityFormController object.
    *
-   * @param string|null $operation
-   *   (optional) The name of the current operation, defaults to NULL.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
    */
-  public function __construct($operation = NULL) {
-    $this->setOperation($operation);
+  public function __construct(ModuleHandlerInterface $module_handler) {
+    $this->moduleHandler = $module_handler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+    return new static(
+      $container->get('module_handler')
+    );
   }
 
   /**
@@ -127,6 +145,7 @@ class EntityFormController implements EntityFormControllerInterface {
     // Add the controller to the form state so it can be easily accessed by
     // module-provided form handlers there.
     $form_state['controller'] = $this;
+
     $this->prepareEntity();
 
     $form_display = entity_get_render_form_display($this->entity, $this->getOperation());
@@ -137,9 +156,13 @@ class EntityFormController implements EntityFormControllerInterface {
       'bundle' => $this->entity->bundle(),
       'form_mode' => $this->getOperation(),
     );
-    \Drupal::moduleHandler()->alter('entity_form_display', $form_display, $form_display_context);
+    $this->moduleHandler->alter('entity_form_display', $form_display, $form_display_context);
 
     $this->setFormDisplay($form_display, $form_state);
+
+    // Invoke the prepare form hooks.
+    $this->prepareInvokeAll('entity_prepare_form', $form_state);
+    $this->prepareInvokeAll($this->entity->entityType() . '_prepare_form', $form_state);
   }
 
   /**
@@ -466,6 +489,7 @@ class EntityFormController implements EntityFormControllerInterface {
    * Implements \Drupal\Core\Entity\EntityFormControllerInterface::getEntity().
    */
   public function getEntity() {
+    // @todo Pick the proper translation object based on the form language here.
     return $this->entity;
   }
 
@@ -480,8 +504,27 @@ class EntityFormController implements EntityFormControllerInterface {
   /**
    * Prepares the entity object before the form is built first.
    */
-  protected function prepareEntity() {
-    // @todo Perform common prepare operations and add a hook.
+  protected function prepareEntity() {}
+
+  /**
+   * Invokes the specified prepare hook variant.
+   *
+   * @param string $hook
+   *   The hook variant name.
+   * @param array $form_state
+   *   An associative array containing the current state of the form.
+   */
+  protected function prepareInvokeAll($hook, array &$form_state) {
+    $implementations = $this->moduleHandler->getImplementations($hook);
+    foreach ($implementations as $module) {
+      $function = $module . '_' . $hook;
+      if (function_exists($function)) {
+        // Ensure we pass an updated translation object and form display at
+        // each invocation, since they depend on form state which is alterable.
+        $args = array($this->getEntity(), $this->getFormDisplay($form_state), $this->operation, &$form_state);
+        call_user_func_array($function, $args);
+      }
+    }
   }
 
   /**

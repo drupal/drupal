@@ -8,6 +8,7 @@
 namespace Drupal\views_ui;
 
 use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -26,10 +27,14 @@ class ViewPreviewFormController extends ViewFormControllerBase implements Entity
   /**
    * Constructs a new ViewPreviewFormController object.
    *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    */
-  public function __construct(TempStoreFactory $temp_store_factory) {
+  public function __construct(ModuleHandlerInterface $module_handler, TempStoreFactory $temp_store_factory) {
+    parent::__construct($module_handler);
+
     $this->tempStore = $temp_store_factory->get('views');
   }
 
@@ -38,6 +43,7 @@ class ViewPreviewFormController extends ViewFormControllerBase implements Entity
    */
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
+      $container->get('module_handler'),
       $container->get('user.tempstore')
     );
   }

@@ -452,6 +452,31 @@ function hook_entity_display_alter(\Drupal\entity\Plugin\Core\Entity\EntityDispl
 }
 
 /**
+ * Acts on an entity object about to be shown on an entity form.
+ *
+ * This can be typically used to pre-fill entity values or change the form state
+ * before the entity form is built. It is invoked just once when first building
+ * the entity form. Rebuilds will not trigger a new invocation.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity that is about to be shown on the form.
+ * @param $form_display
+ *   The current form display.
+ * @param $operation
+ *   The current operation.
+ * @param array $form_state
+ *   An associative array containing the current state of the form.
+ *
+ * @see \Drupal\Core\Entity\EntityFormController::prepareEntity()
+ */
+function hook_entity_prepare_form(\Drupal\Core\Entity\EntityInterface $entity, $form_display, $operation, array &$form_state) {
+  if ($operation == 'edit') {
+    $entity->label->value = 'Altered label';
+    $form_state['mymodule']['label_altered'] = TRUE;
+  }
+}
+
+/**
  * Alters the settings used for displaying an entity form.
  *
  * @param \Drupal\entity\Plugin\Core\Entity\EntityFormDisplay $form_display

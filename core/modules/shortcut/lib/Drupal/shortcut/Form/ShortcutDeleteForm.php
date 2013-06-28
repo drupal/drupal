@@ -9,10 +9,10 @@ namespace Drupal\shortcut\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\shortcut\ShortcutStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -28,13 +28,6 @@ class ShortcutDeleteForm extends EntityConfirmFormBase implements EntityControll
   protected $database;
 
   /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * The shortcut storage controller.
    *
    * @var \Drupal\shortcut\ShortcutStorageControllerInterface
@@ -44,9 +37,9 @@ class ShortcutDeleteForm extends EntityConfirmFormBase implements EntityControll
   /**
    * Constructs a ShortcutDeleteForm object.
    */
-  public function __construct(Connection $database, ModuleHandlerInterface $module_handler, ShortcutStorageControllerInterface $storage_controller) {
+  public function __construct(ModuleHandlerInterface $module_handler, Connection $database, ShortcutStorageControllerInterface $storage_controller) {
+    parent::__construct($module_handler);
     $this->database = $database;
-    $this->moduleHandler = $module_handler;
     $this->storageController = $storage_controller;
   }
 
@@ -55,8 +48,8 @@ class ShortcutDeleteForm extends EntityConfirmFormBase implements EntityControll
    */
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
-      $container->get('database'),
       $container->get('module_handler'),
+      $container->get('database'),
       $container->get('plugin.manager.entity')->getStorageController('shortcut')
     );
   }

@@ -10,6 +10,7 @@ namespace Drupal\field_ui\Form;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -27,10 +28,13 @@ class FieldDeleteForm extends EntityConfirmFormBase implements EntityControllerI
   /**
    * Constructs a new FieldDeleteForm object.
    *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The entity manager.
    */
-  public function __construct(EntityManager $entity_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, EntityManager $entity_manager) {
+    parent::__construct($module_handler);
     $this->entityManager = $entity_manager;
   }
 
@@ -39,6 +43,7 @@ class FieldDeleteForm extends EntityConfirmFormBase implements EntityControllerI
    */
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
+      $container->get('module_handler'),
       $container->get('plugin.manager.entity')
     );
   }

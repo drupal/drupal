@@ -13,6 +13,7 @@ use Drupal\node\NodeTypeInterface;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -1158,9 +1159,9 @@ function comment_node_load($nodes, $types) {
 }
 
 /**
- * Implements hook_node_prepare().
+ * Implements hook_node_prepare_form().
  */
-function comment_node_prepare(EntityInterface $node) {
+function comment_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
   if (!isset($node->comment)) {
     $node->comment = variable_get("comment_$node->type", COMMENT_NODE_OPEN);
   }

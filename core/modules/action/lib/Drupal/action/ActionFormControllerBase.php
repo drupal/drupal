@@ -9,6 +9,7 @@ namespace Drupal\action;
 
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Action\ConfigurableActionInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -35,11 +36,13 @@ abstract class ActionFormControllerBase extends EntityFormController implements 
   /**
    * Constructs a new action form.
    *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The module handler service.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
    *   The action storage controller.
    */
-  public function __construct(EntityStorageControllerInterface $storage_controller) {
-    parent::__construct();
+  public function __construct(ModuleHandlerInterface $module_handler, EntityStorageControllerInterface $storage_controller) {
+    parent::__construct($module_handler);
 
     $this->storageController = $storage_controller;
   }
@@ -49,6 +52,7 @@ abstract class ActionFormControllerBase extends EntityFormController implements 
    */
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
+      $container->get('module_handler'),
       $container->get('plugin.manager.entity')->getStorageController($entity_type)
     );
   }
