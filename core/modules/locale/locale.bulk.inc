@@ -793,8 +793,22 @@ function locale_config_batch_update_components(array $options, $langcodes = arra
  */
 function locale_config_batch_build(array $names, array $langcodes, $options = array()) {
   $options += array('finish_feedback' => TRUE);
+  $i = 0;
+  $batch_names = array();
   foreach ($names as $name) {
-    $operations[] = array('locale_config_batch_refresh_name', array($name, $langcodes));
+    $batch_names[] = $name;
+    $i++;
+    // During installation the caching of configuration objects is disabled
+    // so it is very expensive to initialize the config() object on each request.
+    // We batch a small number of configuration object upgrades together to
+    // improve the overall performance of the process.
+    if ($i % 20 == 0) {
+      $operations[] = array('locale_config_batch_refresh_name', array($batch_names, $langcodes));
+      $batch_names = array();
+    }
+  }
+  if (!empty($batch_names)) {
+    $operations[] = array('locale_config_batch_refresh_name', array($batch_names, $langcodes));
   }
   $batch = array(
     'operations'    => $operations,
@@ -821,12 +835,14 @@ function locale_config_batch_build(array $names, array $langcodes, $options = ar
  *
  * @see locale_config_batch_build()
  */
-function locale_config_batch_refresh_name($name, array $langcodes, array &$context) {
+function locale_config_batch_refresh_name(array $names, array $langcodes, array &$context) {
   if (!isset($context['result']['stats']['config'])) {
     $context['result']['stats']['config'] = 0;
   }
-  $context['result']['stats']['config'] += locale_config_update_multiple(array($name), $langcodes);
-  $context['result']['names'][] = $name;
+  $context['result']['stats']['config'] += locale_config_update_multiple($names, $langcodes);
+  foreach ($names as $name) {
+    $context['result']['names'][] = $name;
+  }
   $context['result']['langcodes'] = $langcodes;
   $context['finished'] = 1;
 }
