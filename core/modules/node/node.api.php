@@ -1,6 +1,8 @@
 <?php
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Xss;
 
 /**
  * @file
@@ -515,6 +517,7 @@ function hook_node_create(\Drupal\Core\Entity\EntityInterface $node) {
  */
 function hook_node_load($nodes, $types) {
   // Decide whether any of $types are relevant to our purposes.
+  $types_we_want_to_process = Drupal::config('my_types')->get('types');
   if (count(array_intersect($types_we_want_to_process, $types))) {
     // Gather our extra data for each of these nodes.
     $result = db_query('SELECT nid, foo FROM {mytable} WHERE nid IN(:nids)', array(':nids' => array_keys($nodes)));
@@ -605,7 +608,7 @@ function hook_node_access($node, $op, $account, $langcode) {
  */
 function hook_node_prepare(\Drupal\Core\Entity\EntityInterface $node) {
   if (!isset($node->my_rating)) {
-    $node->my_rating = Drupal::config("my_rating_{$node->type}")->get('enabled');
+    $node->my_rating = Drupal::config("my_rating_{$node->bundle()}")->get('enabled');
   }
 }
 
@@ -632,7 +635,7 @@ function hook_node_prepare(\Drupal\Core\Entity\EntityInterface $node) {
  * @ingroup node_api_hooks
  */
 function hook_node_search_result(\Drupal\Core\Entity\EntityInterface $node, $langcode) {
-  $rating = db_query('SELECT SUM(points) FROM {my_rating} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
+  $rating = db_query('SELECT SUM(points) FROM {my_rating} WHERE nid = :nid', array('nid' => $node->id()))->fetchField();
   return array('rating' => format_plural($rating, '1 point', '@count points'));
 }
 
@@ -701,9 +704,9 @@ function hook_node_update(\Drupal\Core\Entity\EntityInterface $node) {
  */
 function hook_node_update_index(\Drupal\Core\Entity\EntityInterface $node, $langcode) {
   $text = '';
-  $ratings = db_query('SELECT title, description FROM {my_ratings} WHERE nid = :nid', array(':nid' => $node->nid));
+  $ratings = db_query('SELECT title, description FROM {my_ratings} WHERE nid = :nid', array(':nid' => $node->id()));
   foreach ($ratings as $rating) {
-    $text .= '<h2>' . check_plain($rating->title) . '</h2>' . $rating->description;
+    $text .= '<h2>' . String::checkPlain($rating->title) . '</h2>' . Xss::filter($rating->description);
   }
   return $text;
 }
