@@ -7,35 +7,16 @@
 
 namespace Drupal\system\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeInterface;
+use Drupal\Component\Plugin\Derivative\DerivativeBase;
 
 /**
  * Provides block plugin definitions for system menus.
  *
  * @see \Drupal\system\Plugin\block\block\SystemMenuBlock
  */
-class SystemMenuBlock implements DerivativeInterface {
-
+class SystemMenuBlock extends DerivativeBase {
   /**
-   * List of derivative definitions.
-   *
-   * @var array
-   */
-  protected $derivatives = array();
-
-  /**
-   * Implements \Drupal\Component\Plugin\Derivative\DerivativeInterface::getDerivativeDefinition().
-   */
-  public function getDerivativeDefinition($derivative_id, array $base_plugin_definition) {
-    if (!empty($this->derivatives) && !empty($this->derivatives[$derivative_id])) {
-      return $this->derivatives[$derivative_id];
-    }
-    $this->getDerivativeDefinitions($base_plugin_definition);
-    return $this->derivatives[$derivative_id];
-  }
-
-  /**
-   * Implements \Drupal\Component\Plugin\Derivative\DerivativeInterface::getDerivativeDefinitions().
+   * {@inheritdoc}
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     // Provide a block plugin definition for each system menu.
@@ -51,7 +32,6 @@ class SystemMenuBlock implements DerivativeInterface {
       $this->derivatives[$menu_key]['admin_label'] = !empty($entity) ? $entity->label() : $name;
       $this->derivatives[$menu_key]['cache'] = DRUPAL_NO_CACHE;
     }
-    return $this->derivatives;
+    return parent::getDerivativeDefinitions($base_plugin_definition);
   }
-
 }

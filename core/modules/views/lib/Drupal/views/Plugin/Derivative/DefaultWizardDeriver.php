@@ -7,33 +7,17 @@
 
 namespace Drupal\views\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeInterface;
+use Drupal\Component\Plugin\Derivative\DerivativeBase;
 use Drupal\views\Views;
 
 /**
  * A derivative class which provides automatic wizards for all base tables.
+ *
+ * The derivatives store all base table plugin information.
  */
-class DefaultWizardDeriver implements DerivativeInterface {
+class DefaultWizardDeriver extends DerivativeBase {
   /**
-   * Stores all base table plugin information.
-   *
-   * @var array
-   */
-  protected $derivatives = array();
-
-  /**
-   * Implements Drupal\Component\Plugin\Derivative\DerivativeInterface::getDerivativeDefinition().
-   */
-  public function getDerivativeDefinition($derivative_id, array $base_plugin_definition) {
-    if (!empty($this->derivatives) && !empty($this->derivatives[$derivative_id])) {
-      return $this->derivatives[$derivative_id];
-    }
-    $this->getDerivativeDefinitions($base_plugin_definition);
-    return $this->derivatives[$derivative_id];
-  }
-
-  /**
-   * Implements Drupal\Component\Plugin\Derivative\DerivativeInterface::getDerivativeDefinitions().
+   * {@inheritdoc}
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     $views_data = Views::viewsData();
@@ -50,8 +34,6 @@ class DefaultWizardDeriver implements DerivativeInterface {
         );
       }
     }
-    return $this->derivatives;
-
+    return parent::getDerivativeDefinitions($base_plugin_definition);
   }
-
 }

@@ -15,9 +15,8 @@ use Drupal\system\Plugin\Derivative\SystemMenuBlock;
  * @see \Drupal\menu\Plugin\block\block\MenuBlock
  */
 class MenuBlock extends SystemMenuBlock {
-
   /**
-   * Implements \Drupal\Component\Plugin\Derivative\DerivativeInterface::getDerivativeDefinitions().
+   * {@inheritdoc}
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     // Provide block plugin definitions for all user-defined (custom) menus.
