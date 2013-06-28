@@ -235,15 +235,7 @@ function node_views_data() {
     ),
   );
 
-  // Define some fields based upon views_handler_field_entity in the entity
-  // table so they can be re-used with other query backends.
-  // @see views_handler_field_entity
-
-  // Define the base group of this table. Fields that don't have a group defined
-  // will go into this field by default.
-  $data['views_entity_node']['table']['group'] = t('Content');
-
-  $data['views_entity_node']['view_node'] = array(
+  $data['node']['view_node'] = array(
     'field' => array(
       'title' => t('Link to content'),
       'help' => t('Provide a simple link to the content.'),
@@ -251,7 +243,7 @@ function node_views_data() {
     ),
   );
 
-  $data['views_entity_node']['edit_node'] = array(
+  $data['node']['edit_node'] = array(
     'field' => array(
       'title' => t('Link to edit content'),
       'help' => t('Provide a simple link to edit the content.'),
@@ -259,7 +251,7 @@ function node_views_data() {
     ),
   );
 
-  $data['views_entity_node']['delete_node'] = array(
+  $data['node']['delete_node'] = array(
     'field' => array(
       'title' => t('Link to delete content'),
       'help' => t('Provide a simple link to delete the content.'),

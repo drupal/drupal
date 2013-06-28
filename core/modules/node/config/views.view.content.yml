@@ -200,7 +200,7 @@ display:
           plugin_id: date
         edit_node:
           id: edit_node
-          table: views_entity_node
+          table: node
           field: edit_node
           label: ''
           exclude: '1'
@@ -208,7 +208,7 @@ display:
           plugin_id: node_link_edit
         delete_node:
           id: delete_node
-          table: views_entity_node
+          table: node
           field: delete_node
           label: ''
           exclude: '1'
