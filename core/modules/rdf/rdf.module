@@ -152,8 +152,6 @@ function rdf_get_namespaces() {
  *
  * @return array
  *   RDFa attributes suitable for Drupal\Core\Template\Attribute.
- *
- * @see theme_rdf_template_variable_wrapper()
  */
 function rdf_rdfa_attributes($mapping, $data = NULL) {
   $attributes = array();
@@ -215,61 +213,10 @@ function rdf_comment_load($comments) {
  */
 function rdf_theme() {
   return array(
-    'rdf_template_variable_wrapper' => array(
-      'variables' => array('content' => NULL, 'attributes' => array(), 'context' => array(), 'inline' => TRUE),
-    ),
     'rdf_metadata' => array(
       'variables' => array('metadata' => array()),
     ),
   );
-}
-
-/**
- * Implements MODULE_process().
- *
- * Template process function for adding extra tags to hold RDFa attributes.
- *
- * Since template files already have built-in support for $attributes,
- * $title_attributes, and $content_attributes, and field templates have support
- * for $item_attributes, we try to leverage those as much as possible. However,
- * in some cases additional attributes are needed not covered by these. We deal
- * with those here.
- */
-function rdf_process(&$variables, $hook) {
-  // Handles attributes needed for content not covered by title, content, and
-  // field items. It does this by adjusting the variable sent to the template
-  // so that the template doesn't have to worry about it. See
-  // theme_rdf_template_variable_wrapper().
-  if (!empty($variables['rdf_template_variable_attributes'])) {
-    foreach ($variables['rdf_template_variable_attributes'] as $variable_name => $attributes) {
-      $context = array(
-        'hook' => $hook,
-        'variable_name' => $variable_name,
-        'variables' => $variables,
-      );
-      $rdf_template_variable_wrapper = array(
-        '#theme' => 'rdf_template_variable_wrapper',
-        '#content' => $variables[$variable_name],
-        '#attributes' => $attributes,
-        '#context' => $context,
-      );
-      $variables[$variable_name] = drupal_render($rdf_template_variable_wrapper);
-    }
-  }
-  // Handles additional attributes about a template entity that for RDF parsing
-  // reasons, can't be placed into that template's $attributes variable. This
-  // is "meta" information that is related to particular content, so render it
-  // close to that content.
-  if (!empty($variables['rdf_metadata_attributes'])) {
-    if (!isset($variables['content']['#prefix'])) {
-      $variables['content']['#prefix'] = '';
-    }
-    $rdf_metadata = array(
-      '#theme' => 'rdf_metadata',
-      '#metadata' => $variables['rdf_metadata_attributes'],
-    );
-    $variables['content']['#prefix'] = drupal_render($rdf_metadata) . $variables['content']['#prefix'];
-  }
 }
 
 /**
@@ -325,22 +272,18 @@ function rdf_preprocess_node(&$variables) {
     drupal_add_html_head($element, 'rdf_node_title');
   }
 
+  // Adds RDFa markup for the relation between the node and its author.
+  $author_mapping = $mapping->getPreparedFieldMapping('uid');
+  if (!empty($author_mapping['properties']) && $variables['submitted']) {
+    $author_attributes = array('rel' => $author_mapping['properties']);
+    $variables['submitted'] = '<span ' . new Attribute($author_attributes) . '>' . $variables['submitted'] . '</span>';
+  }
+
   // Adds RDFa markup for the date.
   $created_mapping = $mapping->getPreparedFieldMapping('created');
-  if (!empty($created_mapping)) {
+  if (!empty($created_mapping) && $variables['submitted']) {
     $date_attributes = rdf_rdfa_attributes($created_mapping, $variables['node']->created);
-    $variables['rdf_template_variable_attributes']['date'] = $date_attributes;
-    if ($variables['submitted']) {
-      $variables['rdf_template_variable_attributes']['submitted'] = $date_attributes;
-    }
-  }
-  // Adds RDFa markup for the relation between the node and its author.
-  $uid_mapping = $mapping->getPreparedFieldMapping('uid');
-  if (!empty($uid_mapping)) {
-    $variables['rdf_template_variable_attributes']['name']['rel'] = $uid_mapping['properties'];
-    if ($variables['submitted']) {
-      $variables['rdf_template_variable_attributes']['submitted']['rel'] = $uid_mapping['properties'];
-    }
+    $variables['submitted'] .= theme('rdf_metadata', array('metadata' => array($date_attributes)));
   }
 
   // Adds RDFa markup annotating the number of comments a node has.
@@ -532,20 +475,19 @@ function rdf_preprocess_comment(&$variables) {
     $variables['attributes']['typeof'] = $bundle_mapping['types'];
   }
 
+  // Adds RDFa markup for the relation between the comment and its author.
+  $author_mapping = $mapping->getPreparedFieldMapping('uid');
+  if (!empty($author_mapping)) {
+    $author_attributes = array('rel' => $author_mapping['properties']);
+    $variables['submitted'] = '<span ' . new Attribute($author_attributes) . '>' . $variables['submitted'] . '</span>';
+  }
   // Adds RDFa markup for the date of the comment.
   $created_mapping = $mapping->getPreparedFieldMapping('created');
   if (!empty($created_mapping)) {
     // The comment date is precomputed as part of the rdf_data so that it can be
     // cached as part of the entity.
     $date_attributes = $comment->rdf_data['date'];
-    $variables['rdf_template_variable_attributes']['created'] = $date_attributes;
-    $variables['rdf_template_variable_attributes']['submitted'] = $date_attributes;
-  }
-  // Adds RDFa markup for the relation between the comment and its author.
-  $uid_mapping = $mapping->getPreparedFieldMapping('uid');
-  if (!empty($uid_mapping)) {
-    $variables['rdf_template_variable_attributes']['author']['rel'] = $uid_mapping['properties'];
-    $variables['rdf_template_variable_attributes']['submitted']['rel'] = $uid_mapping['properties'];
+    $variables['submitted'] .= theme('rdf_metadata', array('metadata' => array($date_attributes)));
   }
   $title_mapping = $mapping->getPreparedFieldMapping('title');
   if (!empty($title_mapping)) {
@@ -576,6 +518,13 @@ function rdf_preprocess_comment(&$variables) {
       $parent_comment_attributes['resource'] = $comment->rdf_data['pid_uri'];
       $variables['rdf_metadata_attributes'][] = $parent_comment_attributes;
     }
+  }
+  // Adds RDF metadata markup above comment body.
+  if (!empty($variables['rdf_metadata_attributes'])) {
+    if (!isset($variables['content']['comment_body']['#prefix'])) {
+      $variables['content']['comment_body']['#prefix'] = '';
+    }
+    $variables['content']['comment_body']['#prefix'] = theme('rdf_metadata', array('metadata' => $variables['rdf_metadata_attributes'])) . $variables['content']['comment_body']['#prefix'];
   }
 }
 
@@ -640,68 +589,6 @@ function rdf_preprocess_image(&$variables) {
   // to get 'foaf:Image' because image does not have its own entity type or
   // bundle.
   $variables['attributes']['typeof'] = array('foaf:Image');
-}
-
-/**
- * Returns HTML for a template variable wrapped in an HTML element with the
- * RDF attributes.
- *
- * This is called by rdf_process() shortly before the theme system renders
- * a template file. It is called once for each template variable for which
- * additional attributes are needed. While template files are responsible for
- * rendering the attributes for the template's primary object (via the
- * $attributes variable), title (via the $title_attributes variable), and
- * content (via the $content_attributes variable), additional template
- * variables that need containing attributes are routed through this function,
- * allowing the template file to receive properly wrapped variables.
- *
- * Tip for themers: if you're already outputting a wrapper element around a
- * particular template variable in your template file, and if you don't want
- * an extra wrapper element, you can override this function to not wrap that
- * variable and instead print the following inside your template file:
- * @code
- *   new Drupal\Core\Template\Attribute($rdf_template_variable_attributes[$variable_name])
- * @endcode
- *
- * @param $variables
- *   An associative array containing:
- *   - content: A string of content to be wrapped with attributes.
- *   - attributes: An array of attributes to be placed on the wrapping element.
- *   - context: An array of context information about the content to be wrapped:
- *     - hook: The theme hook that will use the wrapped content. This
- *       corresponds to the key within the theme registry for this template.
- *       For example, if this content is about to be used in node.html.twig or
- *       node-[type].html.twig, then the 'hook' is 'node'.
- *     - variable_name: The name of the variable by which the template will
- *       refer to this content. Each template file has documentation about
- *       the variables it uses. For example, if this function is called in
- *       preparing the $author variable for comment.html.twig, then the
- *       'variable_name' is 'author'.
- *     - variables: The full array of variables about to be passed to the
- *       template.
- *   - inline: TRUE if the content contains only inline HTML elements and
- *     therefore can be validly wrapped by a <span> tag. FALSE if the content
- *     might contain block level HTML elements and therefore cannot be validly
- *     wrapped by a <span> tag. Modules implementing preprocess functions that
- *     set 'rdf_template_variable_attributes' for a particular template
- *     variable that might contain block level HTML must also implement
- *     hook_preprocess_HOOK() for theme_rdf_template_variable_wrapper() and set
- *     'inline' to FALSE for that context. Themes that render normally inline
- *     content with block level HTML must similarly implement
- *     hook_preprocess_HOOK() for theme_rdf_template_variable_wrapper() and set
- *     'inline' accordingly.
- *
- * @see rdf_process()
- * @ingroup themeable
- * @ingroup rdf
- */
-function theme_rdf_template_variable_wrapper($variables) {
-  $output = $variables['content'];
-  if (!empty($output) && !empty($variables['attributes'])) {
-    $attributes = new Attribute($variables['attributes']);
-    $output = $variables['inline'] ? "<span$attributes>$output</span>" : "<div$attributes>$output</div>";
-  }
-  return $output;
 }
 
 /**
