@@ -16,13 +16,6 @@ use Drupal\content_translation\ContentTranslationControllerNG;
 class CustomBlockTranslationController extends ContentTranslationControllerNG {
 
   /**
-   * Overrides ContentTranslationController::getAccess().
-   */
-  public function getAccess(EntityInterface $entity, $op) {
-    return user_access('administer blocks');
-  }
-
-  /**
    * Overrides ContentTranslationController::entityFormAlter().
    */
   public function entityFormAlter(array &$form, array &$form_state, EntityInterface $entity) {

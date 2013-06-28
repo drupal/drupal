@@ -91,13 +91,6 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   }
 
   /**
-   * Implements ContentTranslationControllerInterface::getAccess().
-   */
-  public function getAccess(EntityInterface $entity, $op) {
-    return TRUE;
-  }
-
-  /**
    * Implements ContentTranslationControllerInterface::getTranslationAccess().
    */
   public function getTranslationAccess(EntityInterface $entity, $op) {

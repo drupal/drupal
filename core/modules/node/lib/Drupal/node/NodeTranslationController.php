@@ -16,13 +16,6 @@ use Drupal\content_translation\ContentTranslationController;
 class NodeTranslationController extends ContentTranslationController {
 
   /**
-   * Overrides ContentTranslationController::getAccess().
-   */
-  public function getAccess(EntityInterface $entity, $op) {
-    return node_access($op, $entity);
-  }
-
-  /**
    * Overrides ContentTranslationController::entityFormAlter().
    */
   public function entityFormAlter(array &$form, array &$form_state, EntityInterface $entity) {
