@@ -11,37 +11,6 @@ use Drupal\Core\Template\Attribute;
 use Drupal\views\ViewExecutable;
 
 /**
- * Provide a full array of possible themes to try for a given hook.
- *
- * @param string $hook
- *   The hook to use. This is the base theme/template name.
- * @param \Drupal\views\ViewExecutable $view
- *   The view being rendered.
- * @param string|null $display
- *   The display being rendered, if applicable.
- */
-function _views_theme_functions($hook, ViewExecutable $view, $display = NULL) {
-  $themes = array();
-
-  if ($display) {
-    $themes[] = $hook . '__' . $view->storage->id() . '__' . $display['id'];
-    $themes[] = $hook . '__' . $display['id'];
-    // Add theme suggestions for each single tag.
-    foreach (drupal_explode_tags($view->storage->get('tag')) as $tag) {
-      $themes[] = $hook . '__' . preg_replace('/[^a-z0-9]/', '_', strtolower($tag));
-    }
-
-    if ($display['id'] != $display['display_plugin']) {
-      $themes[] = $hook . '__' . $view->storage->id() . '__' . $display['display_plugin'];
-      $themes[] = $hook . '__' . $display['display_plugin'];
-    }
-  }
-  $themes[] = $hook . '__' . $view->storage->id();
-  $themes[] = $hook;
-  return $themes;
-}
-
-/**
  * Prepares variables for view templates.
  *
  * Default template: views-view.html.twig.
@@ -1252,6 +1221,6 @@ function theme_views_mini_pager($vars) {
  * Important! When adding a new template to your theme, be sure to flush the
  * theme registry cache!
  *
- * @see _views_theme_functions()
+ * @see \Drupal\views\ViewExecutable::buildThemeFunctions()
  * @}
  */

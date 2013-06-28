@@ -1360,7 +1360,7 @@ function views_exposed_form($form, &$form_state) {
   );
 
   $form['#action'] = url($view->display_handler->getUrl());
-  $form['#theme'] = views_theme_functions('views_exposed_form', $view, $display);
+  $form['#theme'] = $view->buildThemeFunctions('views_exposed_form');
   $form['#id'] = drupal_clean_css_identifier('views_exposed_form-' . check_plain($view->storage->id()) . '-' . check_plain($display['id']));
 //  $form['#attributes']['class'] = array('views-exposed-form');
 
@@ -1448,14 +1448,6 @@ function views_exposed_form_cache($views_name, $display_name, $form_output = NUL
 
   // Return the form output, if any
   return empty($views_exposed[$views_name][$display_name]) ? FALSE : $views_exposed[$views_name][$display_name];
-}
-
-/**
- * Build a list of theme function names for use most everywhere.
- */
-function views_theme_functions($hook, ViewExecutable $view, $display = NULL) {
-  Drupal::moduleHandler()->loadInclude('views', 'inc', 'views.theme');
-  return _views_theme_functions($hook, $view, $display);
 }
 
 /**

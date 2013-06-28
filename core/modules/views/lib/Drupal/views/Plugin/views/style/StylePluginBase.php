@@ -457,7 +457,7 @@ abstract class StylePluginBase extends PluginBase {
    */
   public function renderGroupingSets($sets, $level = 0) {
     $output = array();
-    $theme_functions = views_theme_functions($this->groupingTheme, $this->view, $this->view->display_handler->display);
+    $theme_functions = $this->view->buildThemeFunctions($this->groupingTheme);
     foreach ($sets as $set) {
       $row = reset($set['rows']);
       // Render as a grouping set.
