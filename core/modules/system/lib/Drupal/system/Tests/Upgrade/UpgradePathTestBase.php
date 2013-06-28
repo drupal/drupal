@@ -114,7 +114,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
     // Build a minimal, partially mocked environment for unit tests.
     $this->containerBuild(drupal_container());
     // Make sure it survives kernel rebuilds.
-    $conf['container_bundles'][] = 'Drupal\simpletest\TestBundle';
+    $conf['container_service_providers']['TestServiceProvider'] = 'Drupal\simpletest\TestServiceProvider';
 
     // Change the database prefix.
     // All static variables need to be reset before the database prefix is

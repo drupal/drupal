@@ -1889,8 +1889,7 @@ function drupal_handle_request($test_only = FALSE) {
     exit;
   }
 
-  // @todo Figure out how best to handle the Kernel constructor parameters.
-  $kernel = new DrupalKernel('prod', FALSE, drupal_classloader(), !$test_only);
+  $kernel = new DrupalKernel('prod', drupal_classloader(), !$test_only);
 
   // @todo Remove this once everything in the bootstrap has been
   //   converted to services in the DIC.
@@ -2026,7 +2025,7 @@ function _drupal_bootstrap_kernel() {
   // Normally, index.php puts a container in drupal_container() by creating a
   // kernel. If there is no container yet, create one.
   if (!drupal_container()) {
-    $kernel = new DrupalKernel('prod', FALSE, drupal_classloader());
+    $kernel = new DrupalKernel('prod', drupal_classloader());
     $kernel->boot();
   }
 }

@@ -2,12 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\Core\CoreBundle.
+ * Definition of Drupal\Core\CoreServiceProvider.
  */
 
 namespace Drupal\Core;
 
 use Drupal\Core\Cache\ListCacheBinsPass;
+use Drupal\Core\DependencyInjection\ServiceProviderInterface;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\Compiler\ModifyServiceDefinitionsPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterKernelListenersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAccessChecksPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterMatchersPass;
@@ -18,16 +21,14 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterParamConvertersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterStringTranslatorsPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterBreadcrumbBuilderPass;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Scope;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 
 /**
- * Bundle class for mandatory core services.
+ * ServiceProvider class for mandatory core services.
  *
  * This is where Drupal core registers all of its compiler passes.
  * The service definitions themselves are in core/core.services.yml with a
@@ -36,12 +37,12 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
  * Modules wishing to register services to the container should use
  * modulename.services.yml in their respective directories.
  */
-class CoreBundle extends Bundle {
+class CoreServiceProvider implements ServiceProviderInterface  {
 
   /**
-   * Implements \Symfony\Component\HttpKernel\Bundle\BundleInterface::build().
+   * {@inheritdoc}
    */
-  public function build(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container) {
     // The 'request' scope and service enable services to depend on the Request
     // object and get reconstructed when the request object changes (e.g.,
     // during a subrequest).
@@ -67,6 +68,9 @@ class CoreBundle extends Bundle {
     // Add the compiler pass that will process the tagged breadcrumb builder
     // services.
     $container->addCompilerPass(new RegisterBreadcrumbBuilderPass());
+    // Add the compiler pass that lets service providers modify existing
+    // service definitions.
+    $container->addCompilerPass(new ModifyServiceDefinitionsPass());
   }
 
   /**

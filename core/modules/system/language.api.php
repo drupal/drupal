@@ -201,7 +201,7 @@ function hook_language_fallback_candidates_alter(array &$fallback_candidates) {
  * hook_transliteration_overrides_alter() to provide further language-specific
  * overrides (including providing transliteration for Unicode characters that
  * are longer than 4 bytes). Modules can also completely override the
- * transliteration classes in \Drupal\Core\CoreBundle.
+ * transliteration classes in \Drupal\Core\CoreServiceProvider.
  */
 
 /**

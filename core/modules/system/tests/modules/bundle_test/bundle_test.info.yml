@@ -1,7 +1,0 @@
-name: 'Bundle test'
-type: module
-description: 'Support module for bundle testing.'
-package: Testing
-version: VERSION
-core: 8.x
-hidden: true

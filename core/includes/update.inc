@@ -103,10 +103,9 @@ function update_prepare_d8_bootstrap() {
   $settings['cache']['default'] = 'cache.backend.memory';
   new Settings($settings);
 
-  // Enable UpdateBundle service overrides. While the container_bundles array
-  // does not need a key, let's use so it can be removed once the upgrade are
-  // finished. @see update_flush_all_caches()
-  $GLOBALS['conf']['container_bundles']['UpdateBundle'] = 'Drupal\Core\DependencyInjection\UpdateBundle';
+  // Enable UpdateServiceProvider service overrides.
+  // @see update_flush_all_caches()
+  $GLOBALS['conf']['container_service_providers']['UpdateServiceProvider'] = 'Drupal\Core\DependencyInjection\UpdateServiceProvider';
 
   // Check whether settings.php needs to be rewritten.
   $settings_exist = !empty($GLOBALS['config_directories']);
@@ -117,7 +116,7 @@ function update_prepare_d8_bootstrap() {
 
   // Bootstrap the kernel.
   // Do not attempt to dump and write it.
-  $kernel = new DrupalKernel('update', FALSE, drupal_classloader(), FALSE);
+  $kernel = new DrupalKernel('update', drupal_classloader(), FALSE);
   $kernel->boot();
 
   // If any of the required settings needs to be written, then settings.php
@@ -440,7 +439,7 @@ function update_prepare_d8_bootstrap() {
   $settings = settings()->getAll();
   unset($settings['cache']['default']);
   new Settings($settings);
-  $kernel = new DrupalKernel('update', FALSE, drupal_classloader(), FALSE);
+  $kernel = new DrupalKernel('update', drupal_classloader(), FALSE);
   $kernel->boot();
 }
 

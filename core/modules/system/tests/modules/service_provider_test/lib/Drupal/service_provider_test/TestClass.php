@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\bundle_test\TestClass.
+ * Definition of Drupal\service_provider_test\TestClass.
  */
 
-namespace Drupal\bundle_test;
+namespace Drupal\service_provider_test;
 
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\DestructableInterface;
@@ -36,7 +36,7 @@ class TestClass implements EventSubscriberInterface, DestructableInterface {
    * A simple kernel listener method.
    */
   public function onKernelRequestTest(GetResponseEvent $event) {
-    drupal_set_message(t('The bundle_test event subscriber fired!'));
+    drupal_set_message(t('The service_provider_test event subscriber fired!'));
   }
 
   /**
@@ -54,6 +54,6 @@ class TestClass implements EventSubscriberInterface, DestructableInterface {
    * Implements \Drupal\Core\DestructableInterface::destruct().
    */
   public function destruct() {
-    $this->state->set('bundle_test.destructed', TRUE);
+    $this->state->set('service_provider_test.destructed', TRUE);
   }
 }

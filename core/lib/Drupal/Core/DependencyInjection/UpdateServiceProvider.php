@@ -2,27 +2,27 @@
 
 /**
  * @file
- * Contains \Drupal\Core\DependencyInjection\UpdateBundle.
+ * Contains \Drupal\Core\DependencyInjection\UpdateServiceProvider.
  */
 
 namespace Drupal\Core\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder as SymfonyContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 
 /**
- * Bundle class for update.php service overrides.
+ * ServiceProvider class for update.php service overrides.
  *
- * This bundle is manually added by update.php via $conf['container_bundles']
+ * This class is manually added by update.php via $conf['container_service_providers']
  * and required to prevent various services from trying to retrieve data from
  * storages that do not exist yet.
  */
-class UpdateBundle extends Bundle {
+class UpdateServiceProvider implements ServiceProviderInterface {
 
   /**
-   * Implements \Symfony\Component\HttpKernel\Bundle\BundleInterface::build().
+   * {@inheritdoc}
    */
-  public function build(SymfonyContainerBuilder $container) {
+  public function register(ContainerBuilder $container) {
     // Disable the Lock service.
     $container
       ->register('lock', 'Drupal\Core\Lock\NullLockBackend');

@@ -698,7 +698,7 @@ abstract class TestBase {
    *   methods during debugging.
    */
   public function run(array $methods = array()) {
-    TestBundle::$currentTest = $this;
+    TestServiceProvider::$currentTest = $this;
     $simpletest_config = config('simpletest.settings');
 
     $class = get_class($this);
@@ -770,7 +770,7 @@ abstract class TestBase {
         }
       }
     }
-    TestBundle::$currentTest = NULL;
+    TestServiceProvider::$currentTest = NULL;
     // Clear out the error messages and restore error handler.
     drupal_get_messages();
     restore_error_handler();
@@ -993,7 +993,7 @@ abstract class TestBase {
    * @see TestBase::tearDown()
    */
   protected function rebuildContainer() {
-    $this->kernel = new DrupalKernel('testing', FALSE, drupal_classloader(), FALSE);
+    $this->kernel = new DrupalKernel('testing', drupal_classloader(), FALSE);
     $this->kernel->boot();
     // DrupalKernel replaces the container in drupal_container() with a
     // different object, so we need to replace the instance on this test class.

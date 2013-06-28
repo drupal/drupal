@@ -6,7 +6,7 @@
  *
  * This provides a Twig extension that registers various Drupal specific extensions to Twig.
  *
- * @see \Drupal\Core\CoreBundle
+ * @see \Drupal\Core\CoreServiceProvider
  */
 
 namespace Drupal\Core\Template;
@@ -14,7 +14,7 @@ namespace Drupal\Core\Template;
 /**
  * A class for providing Twig extensions (specific Twig_NodeVisitors, filters and functions).
  *
- * @see \Drupal\Core\CoreBundle
+ * @see \Drupal\Core\CoreServiceProvider
  */
 class TwigExtension extends \Twig_Extension {
   public function getFunctions() {

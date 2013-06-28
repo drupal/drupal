@@ -4,14 +4,14 @@ use Drupal\Component\Utility\Crypt;
 
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\CoreBundle;
+use Drupal\Core\CoreServiceProvider;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Install\TaskException;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\StringTranslation\Translator\FileTranslation;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -354,7 +354,7 @@ function install_begin_request(&$install_state) {
   // @see drupal_install_config_directories()
   // @see install_settings_form_submit()
   if ($install_state['settings_verified']) {
-    $kernel = new DrupalKernel('install', FALSE, drupal_classloader(), FALSE);
+    $kernel = new DrupalKernel('install', drupal_classloader(), FALSE);
     $kernel->boot();
     $container = $kernel->getContainer();
     // Add the file translation service to the container.
@@ -426,7 +426,7 @@ function install_begin_request(&$install_state) {
     $conf['keyvalue_expirable_default'] = 'keyvalue.expirable.null';
 
     // Register Twig template engine for use during install.
-    CoreBundle::registerTwig($container);
+    CoreServiceProvider::registerTwig($container);
 
     $container->register('url_generator', 'Drupal\Core\Routing\NullGenerator');
 

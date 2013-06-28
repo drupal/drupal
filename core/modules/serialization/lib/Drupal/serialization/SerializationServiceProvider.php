@@ -2,23 +2,23 @@
 
 /**
  * @file
- * Contains \Drupal\serialization\SerializationBundle.
+ * Contains \Drupal\serialization\SerializationServiceProvider.
  */
 
 namespace Drupal\serialization;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 
 /**
  * Serialization dependency injection container.
  */
-class SerializationBundle extends Bundle {
+class SerializationServiceProvider implements ServiceProviderInterface {
 
   /**
-   * Overrides \Symfony\Component\HttpKernel\Bundle\Bundle::build().
+   * {@inheritdoc}
    */
-  public function build(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container) {
     // Add a compiler pass for adding Normalizers and Encoders to Serializer.
     $container->addCompilerPass(new RegisterSerializationClassesCompilerPass());
     // Add a compiler pass for adding concrete Resolvers to chain Resolver.

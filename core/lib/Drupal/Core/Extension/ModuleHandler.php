@@ -81,7 +81,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    *   %container.modules% parameter being set up by DrupalKernel.
    *
    * @see \Drupal\Core\DrupalKernel
-   * @see \Drupal\Core\CoreBundle
+   * @see \Drupal\Core\CoreServiceProvider
    */
   public function __construct(array $module_list = array()) {
     $this->moduleList = $module_list;

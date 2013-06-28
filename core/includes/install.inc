@@ -619,7 +619,7 @@ function drupal_install_system() {
 
   if (!drupal_container()->has('kernel')) {
     // Immediately boot a kernel to have real services ready.
-    $kernel = new DrupalKernel('install', FALSE, drupal_classloader(), FALSE);
+    $kernel = new DrupalKernel('install', drupal_classloader(), FALSE);
     $kernel->boot();
   }
 

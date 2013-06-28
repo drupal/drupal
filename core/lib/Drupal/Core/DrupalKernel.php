@@ -9,26 +9,55 @@ namespace Drupal\Core;
 
 use Drupal\Component\PhpStorage\PhpStorageFactory;
 use Drupal\Core\Config\BootstrapConfigStorageFactory;
-use Drupal\Core\CoreBundle;
+use Drupal\Core\CoreServiceProvider;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
 use Symfony\Component\ClassLoader\ClassLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
-use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\TerminableInterface;
 
 /**
  * The DrupalKernel class is the core of Drupal itself.
  *
  * This class is responsible for building the Dependency Injection Container and
- * also deals with the registration of bundles. It allows registered bundles to
- * add their services to the container. Core provides the CoreBundle, which adds
- * the services required for all core subsystems. Each module can then add its
- * own bundle, i.e. a subclass of Symfony\Component\HttpKernel\Bundle, to
- * register services to the container.
+ * also deals with the registration of service providers. It allows registered
+ * service providers to add their services to the container. Core provides the
+ * CoreServiceProvider, which, in addition to registering any core services that
+ * cannot be registered in the core.services.yaml file, adds any compiler passes
+ * needed by core, e.g. for processing tagged services. Each module can add its
+ * own service provider, i.e. a class implementing
+ * Drupal\Core\DependencyInjection\ServiceProvider, to register services to the
+ * container, or modify existing services.
  */
-class DrupalKernel extends Kernel implements DrupalKernelInterface {
+class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
+
+  const CONTAINER_BASE_CLASS = 'Container';
+
+  /**
+   * Holds the container instance.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   */
+  protected $container;
+
+  /**
+   * The environment, e.g. 'testing', 'install'.
+   *
+   * @var string
+   */
+  protected $environment;
+
+  /**
+   * Whether the kernel has been booted.
+   *
+   * @var bool
+   */
+  protected $booted;
 
   /**
    * Holds the list of enabled modules.
@@ -80,11 +109,11 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
   protected $configStorage;
 
   /**
-   * The list of the classnames of the bundles in this kernel.
+   * The list of the classnames of the service providers in this kernel.
    *
    * @var array
    */
-  protected $bundleClasses;
+  protected $serviceProviderClasses;
 
   /**
    * Whether the container can be dumped.
@@ -108,27 +137,31 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
   protected $serviceYamls;
 
   /**
+   * The array of registered service providers.
+   *
+   * @var array
+   */
+  protected $serviceProviders;
+
+  /**
    * Constructs a DrupalKernel object.
    *
    * @param string $environment
    *   String indicating the environment, e.g. 'prod' or 'dev'. Used by
    *   Symfony\Component\HttpKernel\Kernel::__construct(). Drupal does not use
    *   this value currently. Pass 'prod'.
-   * @param bool $debug
-   *   Boolean indicating whether we are in debug mode. Used by
-   *   Symfony\Component\HttpKernel\Kernel::__construct(). Drupal does not use
-   *   this value currently. Pass TRUE.
    * @param \Symfony\Component\ClassLoader\ClassLoader $class_loader
    *   (optional) The classloader is only used if $storage is not given or
    *   the load from storage fails and a container rebuild is required. In
    *   this case, the loaded modules will be registered with this loader in
-   *   order to be able to find the module bundles.
+   *   order to be able to find the module serviceProviders.
    * @param bool $allow_dumping
    *   (optional) FALSE to stop the container from being written to or read
    *   from disk. Defaults to TRUE.
    */
-  public function __construct($environment, $debug, ClassLoader $class_loader, $allow_dumping = TRUE) {
-    parent::__construct($environment, $debug);
+  public function __construct($environment, ClassLoader $class_loader, $allow_dumping = TRUE) {
+    $this->environment = $environment;
+    $this->booted = false;
     $this->classLoader = $class_loader;
     $this->allowDumping = $allow_dumping;
   }
@@ -137,29 +170,19 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
    * {@inheritdoc}
    */
   public function serialize() {
-    return serialize(array($this->environment, $this->debug, $this->classLoader, $this->allowDumping));
+    return serialize(array($this->environment, $this->classLoader, $this->allowDumping));
   }
 
   /**
    * {@inheritdoc}
    */
   public function unserialize($data) {
-    list($environment, $debug, $class_loader, $allow_dumping) = unserialize($data);
-    $this->__construct($environment, $debug, $class_loader, $allow_dumping);
+    list($environment, $class_loader, $allow_dumping) = unserialize($data);
+    $this->__construct($environment, $class_loader, $allow_dumping);
   }
 
   /**
-   * Overrides Kernel::init().
-   */
-  public function init() {
-    // Intentionally empty. The sole purpose is to not execute Kernel::init(),
-    // since that overrides/breaks Drupal's current error handling.
-    // @todo Investigate whether it is possible to migrate Drupal's error
-    //   handling to the one of Kernel without losing functionality.
-  }
-
-  /**
-   * Overrides Kernel::boot().
+   * {@inheritdoc}
    */
   public function boot() {
     if ($this->booted) {
@@ -167,26 +190,41 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     }
     $this->initializeContainer();
     $this->booted = TRUE;
-    if ($this->containerNeedsDumping && !$this->dumpDrupalContainer($this->container, $this->getContainerBaseClass())) {
+    if ($this->containerNeedsDumping && !$this->dumpDrupalContainer($this->container, static::CONTAINER_BASE_CLASS)) {
       watchdog('DrupalKernel', 'Container cannot be written to disk');
     }
   }
 
   /**
-   * Returns an array of available bundles.
-   *
-   * @return array
-   *   The available bundles.
+   * {@inheritdoc}
    */
-  public function registerBundles() {
+  public function shutdown() {
+    if (FALSE === $this->booted) {
+      return;
+    }
+    $this->booted = FALSE;
+    $this->container = null;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getContainer() {
+    return $this->container;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function discoverServiceProviders() {
     $this->configStorage = BootstrapConfigStorageFactory::get();
-    $bundles = array(
-      new CoreBundle(),
+    $serviceProviders = array(
+      'CoreServiceProvider' => new CoreServiceProvider(),
     );
     $this->serviceYamls = array(
       'core/core.services.yml'
     );
-    $this->bundleClasses = array('Drupal\Core\CoreBundle');
+    $this->serviceProviderClasses = array('Drupal\Core\CoreServiceProvider');
 
     // Ensure we know what modules are enabled and that their namespaces are
     // registered.
@@ -197,13 +235,14 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     $module_filenames = $this->getModuleFileNames();
     $this->registerNamespaces($this->getModuleNamespaces($module_filenames));
 
-    // Load each module's bundle class.
+    // Load each module's serviceProvider class.
     foreach ($this->moduleList as $module => $weight) {
       $camelized = ContainerBuilder::camelize($module);
-      $class = "Drupal\\{$module}\\{$camelized}Bundle";
+      $name = "{$camelized}ServiceProvider";
+      $class = "Drupal\\{$module}\\{$name}";
       if (class_exists($class)) {
-        $bundles[] = new $class();
-        $this->bundleClasses[] = $class;
+        $serviceProviders[$name] = new $class();
+        $this->serviceProviderClasses[] = $class;
       }
       $filename = dirname($module_filenames[$module]) . "/$module.services.yml";
       if (file_exists($filename)) {
@@ -211,18 +250,50 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
       }
     }
 
-    // Add site specific or test bundles.
-    if (!empty($GLOBALS['conf']['container_bundles'])) {
-      foreach ($GLOBALS['conf']['container_bundles'] as $class) {
-        $bundles[] = new $class();
-        $this->bundleClasses[] = $class;
+    // Add site specific or test service providers.
+    if (!empty($GLOBALS['conf']['container_service_providers'])) {
+      foreach ($GLOBALS['conf']['container_service_providers'] as $name => $class) {
+        $serviceProviders[$name] = new $class();
+        $this->serviceProviderClasses[] = $class;
       }
     }
     // Add site specific or test YAMLs.
     if (!empty($GLOBALS['conf']['container_yamls'])) {
       $this->serviceYamls = array_merge($this->serviceYamls, $GLOBALS['conf']['container_yamls']);
     }
-    return $bundles;
+    return $serviceProviders;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getServiceProviders() {
+    return $this->serviceProviders;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function terminate(Request $request, Response $response) {
+    if (FALSE === $this->booted) {
+      return;
+    }
+
+    if ($this->getHttpKernel() instanceof TerminableInterface) {
+      $this->getHttpKernel()->terminate($request, $response);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true) {
+    if (FALSE === $this->booted) {
+      $this->boot();
+    }
+
+    return $this->getHttpKernel()->handle($request, $type, $catch);
   }
 
   /**
@@ -269,7 +340,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     }
     // If we haven't yet booted, we don't need to do anything: the new module
     // list will take effect when boot() is called. If we have already booted,
-    // then reboot in order to refresh the bundle list and container.
+    // then reboot in order to refresh the serviceProvider list and container.
     if ($this->booted) {
       $this->booted = FALSE;
       $this->boot();
@@ -277,13 +348,13 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
   }
 
   /**
-   * Returns the classname based on environment, debug and testing prefix.
+   * Returns the classname based on environment and testing prefix.
    *
    * @return string
    *   The class name.
    */
   protected function getClassName() {
-    $parts = array('service_container', $this->environment, $this->debug);
+    $parts = array('service_container', $this->environment);
     // Make sure to use a testing-specific container even in the parent site.
     if (!empty($GLOBALS['drupal_test_info']['test_run_id'])) {
       $parts[] = $GLOBALS['drupal_test_info']['test_run_id'];
@@ -292,6 +363,18 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
       $parts[] = $prefix;
     }
     return implode('_', $parts);
+  }
+
+
+  /**
+   * Returns the kernel parameters.
+   *
+   * @return array An array of kernel parameters
+   */
+  protected function getKernelParameters() {
+    return array(
+      'kernel.environment' => $this->environment,
+    );
   }
 
   /**
@@ -371,6 +454,7 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     }
 
     $this->container->set('kernel', $this);
+
     // Set the class loader which was registered as a synthetic service.
     $this->container->set('class_loader', $this->classLoader);
     // If we have a request set it back to the new container.
@@ -416,9 +500,10 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
    * @return ContainerBuilder The compiled service container
    */
   protected function buildContainer() {
-    $this->initializeBundles();
+    $this->initializeServiceProviders();
     $container = $this->getContainerBuilder();
-    $container->setParameter('container.bundles', $this->bundleClasses);
+    $container->set('kernel', $this);
+    $container->setParameter('container.service_providers', $this->serviceProviderClasses);
     $container->setParameter('container.modules', $this->getModuleFileNames());
 
     // Get a list of namespaces and put it onto the container.
@@ -443,8 +528,8 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     foreach ($this->serviceYamls as $filename) {
       $yaml_loader->load($filename);
     }
-    foreach ($this->bundles as $bundle) {
-      $bundle->build($container);
+    foreach ($this->serviceProviders as $provider) {
+      $provider->register($container);
     }
 
     // Identify all services whose instances should be persisted when rebuilding
@@ -461,6 +546,22 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
 
     $container->compile();
     return $container;
+  }
+
+  /**
+   * Registers all service providers to the kernel.
+   *
+   * @throws \LogicException
+   */
+  protected function initializeServiceProviders() {
+    $this->serviceProviders = array();
+
+    foreach ($this->discoverServiceProviders() as $name => $provider) {
+      if (isset($this->serviceProviders[$name])) {
+        throw new \LogicException(sprintf('Trying to register two service providers with the same name "%s"', $name));
+      }
+      $this->serviceProviders[$name] = $provider;
+    }
   }
 
   /**
@@ -495,6 +596,16 @@ class DrupalKernel extends Kernel implements DrupalKernelInterface {
     $class = $this->getClassName();
     $content = $dumper->dump(array('class' => $class, 'base_class' => $baseClass));
     return $this->storage()->save($class . '.php', $content);
+  }
+
+
+  /**
+   * Gets a http kernel from the container
+   *
+   * @return HttpKernel
+   */
+  protected function getHttpKernel() {
+    return $this->container->get('http_kernel');
   }
 
   /**
