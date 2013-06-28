@@ -332,22 +332,6 @@ function comment_schema() {
 }
 
 /**
- * Implements hook_field_schema().
- */
-function comment_field_schema($field) {
-  return array(
-    'columns' => array(
-      'status' => array(
-        'description' => 'Whether comments are allowed on this entity: 0 = no, 1 = closed (read only), 2 = open (read/write).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-    ),
-  );
-}
-
-/**
  * @addtogroup updates-7.x-to-8.x
  * @{
  */

@@ -21,9 +21,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Drupal\Core\Language\Language;
 
-// Load all Field module hooks for Comment.
-require __DIR__ . '/comment.field.inc';
-
 /**
  * Comment is awaiting approval.
  */
@@ -2018,4 +2015,27 @@ function comment_field_delete_instance($instance) {
 function _comment_get_default_status($values) {
   // We only ever process first value if any.
   return isset($values[0]['status']) ? $values[0]['status'] : COMMENT_OPEN;
+}
+
+/**
+ * Process callback to add submit handler for instance settings form.
+ *
+ * Attaches the required translation entity handlers for the instance which
+ * correlates one to one with the comment bundle.
+ */
+function _comment_field_instance_settings_form_process($element, $form_state) {
+  // Settings should not be stored as nested.
+  $parents = $element['#parents'];
+  array_pop($parents);
+  $element['#parents'] = $parents;
+  // Add translation entity handlers.
+  if (Drupal::moduleHandler()->moduleExists('translation_entity')) {
+    $comment_form = $element;
+    $comment_form_state['translation_entity']['key'] = 'language_configuration';
+    $element += translation_entity_enable_widget('comment', $element['#field_name'], $comment_form, $comment_form_state);
+    $element['translation_entity']['#parents'] = $element['translation_entity']['#array_parents'] = array(
+      'translation_entity'
+    );
+  }
+  return $element;
 }
