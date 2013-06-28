@@ -294,7 +294,7 @@ function content_translation_delete_confirm_submit(array $form, array &$form_sta
   // @todo This should be taken care of by the Path module.
   if (module_exists('path')) {
     $conditions = array('source' => $controller->getViewPath($entity), 'langcode' => $language->langcode);
-    drupal_container()->get('path.crud')->delete($conditions);
+    Drupal::service('path.crud')->delete($conditions);
   }
 
   $form_state['redirect'] = $controller->getBasePath($entity) . '/translations';
