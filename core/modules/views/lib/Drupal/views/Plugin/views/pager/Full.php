@@ -82,7 +82,8 @@ class Full extends SqlBase {
    */
   function render($input) {
     $pager_theme = $this->view->buildThemeFunctions('pager');
-    // The 0, 1, 3, 4 index are correct. See theme_pager documentation.
+    // The 0, 1, 3, 4 indexes are correct. See the template_preprocess_pager()
+    // documentation.
     $tags = array(
       0 => $this->options['tags']['first'],
       1 => $this->options['tags']['previous'],
