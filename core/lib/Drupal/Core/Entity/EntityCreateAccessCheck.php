@@ -24,6 +24,13 @@ class EntityCreateAccessCheck implements AccessCheckInterface {
   protected $entityManager;
 
   /**
+   * The key used by the routing requirement.
+   *
+   * @var string
+   */
+  protected $requirementsKey = '_entity_create_access';
+
+  /**
    * Constructs a EntityCreateAccessCheck object.
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
@@ -37,14 +44,14 @@ class EntityCreateAccessCheck implements AccessCheckInterface {
    * {@inheritdoc}
    */
   public function applies(Route $route) {
-    return array_key_exists('_entity_create_access', $route->getRequirements());
+    return array_key_exists($this->requirementsKey, $route->getRequirements());
   }
 
   /**
    * {@inheritdoc}
    */
   public function access(Route $route, Request $request) {
-    list($entity_type, $bundle) = explode(':', $route->getRequirement('_entity_create_access') . ':');
+    list($entity_type, $bundle) = explode(':', $route->getRequirement($this->requirementsKey) . ':');
 
     $definition = $this->entityManager->getDefinition($entity_type);
 
