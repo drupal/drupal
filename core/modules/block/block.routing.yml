@@ -12,3 +12,10 @@ block_admin_display:
     entity_type: 'block'
   requirements:
     _permission: 'administer blocks'
+
+block_admin_add:
+  pattern: '/admin/structure/block/add/{plugin_id}/{theme}'
+  defaults:
+    _content: '\Drupal\block\Controller\BlockAddController::blockAddConfigureForm'
+  requirements:
+    _permission: 'administer blocks'
