@@ -20,9 +20,6 @@ use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase;
  *   module = "comment",
  *   label = @Translation("Comments"),
  *   description = @Translation("This field manages configuration and presentation of comments on an entity."),
- *   settings = {
- *     "max_length" = "255"
- *   },
  *   instance_settings = {
  *     "default_mode" = COMMENT_MODE_THREADED,
  *     "per_page" = 50,
@@ -148,7 +145,7 @@ class CommentItem extends ConfigFieldItemBase {
    * {@inheritdoc}
    */
   public function applyDefaultValue($notify = TRUE) {
-    // Retrieve the configured default value for the instance. The configured
+    // Retrieve the configured default value for the instance.
     $defaults = $this->getInstance()->default_value;
     $this->setValue(reset($defaults), $notify);
     return $this;
