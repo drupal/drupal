@@ -109,7 +109,7 @@ function entity_reference_field_presave(EntityInterface $entity, $field, $instan
 function entity_reference_field_validate(EntityInterface $entity = NULL, $field, $instance, $langcode, $items, &$errors) {
   $ids = array();
   foreach ($items as $delta => $item) {
-    if (!empty($item['target_id']) && !$item['entity'] && !$item['entity']->isNew()) {
+    if (!empty($item['target_id']) && (!empty($item['entity']) && !$item['entity']->isNew())) {
       $ids[$item['target_id']] = $delta;
     }
   }

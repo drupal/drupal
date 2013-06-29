@@ -47,6 +47,7 @@ class Internal extends CKEditorPluginBase {
       'customConfig' => '', // Don't load CKEditor's config.js file.
       'pasteFromWordPromptCleanup' => TRUE,
       'resize_dir' => 'vertical',
+      'justifyClasses' => array('align-left', 'align-center', 'align-right', 'align-justify'),
     );
 
     // Add the allowedContent setting, which ensures CKEditor only allows tags
@@ -80,6 +81,10 @@ class Internal extends CKEditorPluginBase {
         'label' => t('Italic'),
         'image_alternative' => $button('italic'),
       ),
+      'Underline' => array(
+        'label' => t('Underline'),
+        'image_alternative' => $button('underline'),
+      ),
       'Strike' => array(
         'label' => t('Strike-through'),
         'image_alternative' => $button('strike'),
@@ -96,6 +101,23 @@ class Internal extends CKEditorPluginBase {
       'RemoveFormat' => array(
         'label' => t('Remove format'),
         'image_alternative' => $button('remove format'),
+      ),
+      // "justify" plugin.
+      'JustifyLeft' => array(
+        'label' => t('Align left'),
+        'image_alternative' => $button('justify left'),
+      ),
+      'JustifyCenter' => array(
+        'label' => t('Align center'),
+        'image_alternative' => $button('justify center'),
+      ),
+      'JustifyRight' => array(
+        'label' => t('Align right'),
+        'image_alternative' => $button('justify right'),
+      ),
+      'JustifyBlock' => array(
+        'label' => t('Justify'),
+        'image_alternative' => $button('justify block'),
       ),
       // "list" plugin.
       'BulletedList' => array(

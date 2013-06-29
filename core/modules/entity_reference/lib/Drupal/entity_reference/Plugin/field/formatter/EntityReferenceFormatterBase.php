@@ -40,7 +40,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
       }
     }
 
-    $target_type = $this->field['settings']['target_type'];
+    $target_type = $this->getFieldSetting('target_type');
 
     $target_entities = array();
 
