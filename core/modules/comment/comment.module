@@ -535,7 +535,11 @@ function theme_comment_block($variables) {
   }
 
   if ($items) {
-    return theme('item_list', array('items' => $items));
+    $item_list = array(
+      '#theme' => 'item_list',
+      '#items' => $items,
+    );
+    return drupal_render($item_list);
   }
   else {
     return t('No comments available.');
@@ -596,8 +600,12 @@ function comment_node_view(EntityInterface $node, EntityDisplay $display, $view_
           }
         }
         else {
+          $comment_post_forbidden = array(
+            '#theme' => 'comment_post_forbidden',
+            '#node' => $node,
+          );
           $links['comment-forbidden'] = array(
-            'title' => theme('comment_post_forbidden', array('node' => $node)),
+            'title' => drupal_render($comment_post_forbidden),
             'html' => TRUE,
           );
         }
@@ -626,8 +634,12 @@ function comment_node_view(EntityInterface $node, EntityDisplay $display, $view_
           }
         }
         else {
+          $comment_post_forbidden = array(
+            '#theme' => 'comment_post_forbidden',
+            '#node' => $node,
+          );
           $links['comment-forbidden'] = array(
-            'title' => theme('comment_post_forbidden', array('node' => $node)),
+            'title' => drupal_render($comment_post_forbidden),
             'html' => TRUE,
           );
         }
@@ -929,7 +941,11 @@ function comment_links(Comment $comment, EntityInterface $node) {
       );
     }
     if (empty($links)) {
-      $links['comment-forbidden']['title'] = theme('comment_post_forbidden', array('node' => $node));
+      $comment_post_forbidden = array(
+        '#theme' => 'comment_post_forbidden',
+        '#node' => $node,
+      );
+      $links['comment-forbidden']['title'] = drupal_render($comment_post_forbidden);
       $links['comment-forbidden']['html'] = TRUE;
     }
   }
@@ -1526,7 +1542,11 @@ function template_preprocess_comment(&$variables) {
 
   $account = comment_prepare_author($comment);
   // @todo Do not call theme() here. We do this for purposes of t().
-  $variables['author'] = theme('username', array('account' => $account));
+  $username = array(
+    '#theme' => 'username',
+    '#account' => $account,
+  );
+  $variables['author'] = drupal_render($username);
   $variables['new'] = $comment->new->value ? t('new') : '';
   $variables['created'] = format_date($comment->created->value);
   // Avoid calling format_date() twice on the same timestamp.
@@ -1567,7 +1587,11 @@ function template_preprocess_comment(&$variables) {
     $account_parent = comment_prepare_author($comment_parent);
     $variables['parent_comment'] = $comment_parent;
     // @todo Do not call theme() here. We do this for purposes of t().
-    $variables['parent_author'] = theme('username', array('account' => $account_parent));
+    $username = array(
+      '#theme' => 'username',
+      '#account' => $account_parent,
+    );
+    $variables['parent_author'] = drupal_render($username);
     $variables['parent_created'] = format_date($comment_parent->created->value);
     // Avoid calling format_date() twice on the same timestamp.
     if ($comment_parent->changed->value == $comment_parent->created->value) {

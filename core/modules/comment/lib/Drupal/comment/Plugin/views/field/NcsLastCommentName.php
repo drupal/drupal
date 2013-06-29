@@ -61,9 +61,11 @@ class NcsLastCommentName extends FieldPluginBase {
       $account = entity_create('user', array());
       $account->name = $this->getValue($values);
       $account->uid = $values->{$this->uid};
-      return theme('username', array(
-        'account' => $account
-      ));
+      $username = array(
+        '#theme' => 'username',
+        '#account' => $account,
+      );
+      return drupal_render($username);
     }
     else {
       return $this->sanitizeValue($this->getValue($values));

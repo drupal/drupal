@@ -154,11 +154,13 @@ class Rss extends RowPluginBase {
     $item->elements = $comment->rss_elements;
     $item->cid = $comment->id();
 
-    return theme($this->themeFunctions(), array(
-      'view' => $this->view,
-      'options' => $this->options,
-      'row' => $item
-    ));
+    $build = array(
+      '#theme' => $this->themeFunctions(),
+      '#view' => $this->view,
+      '#options' => $this->options,
+      '#row' => $item,
+    );
+    return drupal_render($build);
   }
 
 }

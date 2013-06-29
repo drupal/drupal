@@ -54,10 +54,11 @@ class Username extends FieldPluginBase {
       $account->uid = $this->getValue($values, 'uid');
       $account->name = $this->getValue($values);
       $account->homepage = $this->getValue($values, 'homepage');
-
-      return theme('username', array(
-        'account' => $account
-      ));
+      $username = array(
+        '#theme' => 'username',
+        '#account' => $account,
+      );
+      return drupal_render($username);
     }
     else {
       return $data;

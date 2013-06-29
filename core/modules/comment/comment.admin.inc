@@ -114,6 +114,10 @@ function comment_admin_overview($form, &$form_state, $arg) {
     // Remove the first node title from the node_titles array and attach to
     // the comment.
     $node_title = $comment->nid->entity->label();
+    $username = array(
+      '#theme' => 'username',
+      '#account' => comment_prepare_author($comment),
+    );
     $options[$comment->id()] = array(
       'subject' => array(
         'data' => array(
@@ -123,7 +127,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
           '#options' => array('attributes' => array('title' => truncate_utf8($comment->comment_body->value, 128)), 'fragment' => 'comment-' . $comment->id()),
         ),
       ),
-      'author' => theme('username', array('account' => comment_prepare_author($comment))),
+      'author' => drupal_render($username),
       'posted_in' => array(
         'data' => array(
           '#type' => 'link',

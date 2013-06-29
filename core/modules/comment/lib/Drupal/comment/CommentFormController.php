@@ -92,7 +92,11 @@ class CommentFormController extends EntityFormControllerNG {
     elseif ($user->uid) {
       $form['author']['name']['#type'] = 'item';
       $form['author']['name']['#value'] = $form['author']['name']['#default_value'];
-      $form['author']['name']['#markup'] = theme('username', array('account' => $user));
+      $username = array(
+        '#theme' => 'username',
+        '#account' => $user,
+      );
+      $form['author']['name']['#markup'] = drupal_render($username);
     }
 
     // Add author e-mail and homepage fields depending on the current user.
