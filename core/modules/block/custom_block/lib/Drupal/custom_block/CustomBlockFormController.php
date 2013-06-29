@@ -69,7 +69,7 @@ class CustomBlockFormController extends EntityFormControllerNG {
     // Set the correct default language.
     if ($block->isNew() && !empty($language_configuration['langcode'])) {
       $language_default = language($language_configuration['langcode']);
-      $block->langcode->value = $language_default->langcode;
+      $block->langcode->value = $language_default->id;
     }
 
     $form['langcode'] = array(

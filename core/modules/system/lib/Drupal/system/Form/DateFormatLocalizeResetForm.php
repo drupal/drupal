@@ -102,7 +102,7 @@ class DateFormatLocalizeResetForm extends ConfirmFormBase implements ControllerI
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $this->configFactory->get('locale.config.' . $this->language->langcode . '.system.date')->delete();
+    $this->configFactory->get('locale.config.' . $this->language->id . '.system.date')->delete();
 
     $form_state['redirect'] = 'admin/config/regional/date-time/locale';
   }

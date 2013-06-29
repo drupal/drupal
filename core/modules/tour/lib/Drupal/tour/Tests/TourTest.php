@@ -88,7 +88,7 @@ class TourTest extends WebTestBase {
 
     // Enable Italian language and navigate to it/tour-test1 and verify italian
     // version of tip is found.
-    language_save(new Language(array('langcode' => 'it')));
+    language_save(new Language(array('id' => 'it')));
     $this->drupalGet('it/tour-test-1');
 
     $elements = $this->xpath('//li[@data-id=:data_id and ./h2[contains(., :text)]]', array(
@@ -103,7 +103,7 @@ class TourTest extends WebTestBase {
     ));
     $this->assertNotEqual(count($elements), 1, 'Did not find English variant of tip 1.');
 
-    language_save(new Language(array('langcode' => 'en')));
+    language_save(new Language(array('id' => 'en')));
 
     // Programmatically create a tour for use through the remainder of the test.
     entity_create('tour', array(

@@ -36,12 +36,12 @@ class SearchMultilingualEntityTest extends SearchTestBase {
 
     // Add two new languages.
     $language = new Language(array(
-      'langcode' => 'hu',
+      'id' => 'hu',
       'name' => 'Hungarian',
     ));
     language_save($language);
     $language = new Language(array(
-      'langcode' => 'sv',
+      'id' => 'sv',
       'name' => 'Swedish',
     ));
     language_save($language);

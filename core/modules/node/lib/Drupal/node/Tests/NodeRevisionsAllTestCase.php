@@ -59,7 +59,7 @@ class NodeRevisionsAllTestCase extends NodeTestBase {
 
       // Create revision with a random title and body and update variables.
       $node->title = $this->randomName();
-      $node->body[$node->language()->langcode][0] = array(
+      $node->body[$node->language()->id][0] = array(
         'value' => $this->randomName(32),
         'format' => filter_default_format(),
       );

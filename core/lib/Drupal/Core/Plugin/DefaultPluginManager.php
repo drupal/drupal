@@ -120,7 +120,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
     $this->languageManager = $language_manager;
     $this->cacheBackend = $cache_backend;
     $this->cacheKeyPrefix = $cache_key_prefix;
-    $this->cacheKey = $cache_key_prefix . ':' . $language_manager->getLanguage(Language::TYPE_INTERFACE)->langcode;
+    $this->cacheKey = $cache_key_prefix . ':' . $language_manager->getLanguage(Language::TYPE_INTERFACE)->id;
   }
 
   /**

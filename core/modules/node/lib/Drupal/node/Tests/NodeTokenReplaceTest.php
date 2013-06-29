@@ -62,14 +62,14 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $tests['[node:author]'] = check_plain(user_format_name($account));
     $tests['[node:author:uid]'] = $node->uid;
     $tests['[node:author:name]'] = check_plain(user_format_name($account));
-    $tests['[node:created:since]'] = format_interval(REQUEST_TIME - $node->created, 2, $language_interface->langcode);
-    $tests['[node:changed:since]'] = format_interval(REQUEST_TIME - $node->changed, 2, $language_interface->langcode);
+    $tests['[node:created:since]'] = format_interval(REQUEST_TIME - $node->created, 2, $language_interface->id);
+    $tests['[node:changed:since]'] = format_interval(REQUEST_TIME - $node->changed, 2, $language_interface->id);
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('node' => $node), array('langcode' => $language_interface->langcode));
+      $output = $token_service->replace($input, array('node' => $node), array('langcode' => $language_interface->id));
       $this->assertEqual($output, $expected, format_string('Sanitized node token %token replaced.', array('%token' => $input)));
     }
 
@@ -81,7 +81,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $tests['[node:author:name]'] = user_format_name($account);
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('node' => $node), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
+      $output = $token_service->replace($input, array('node' => $node), array('langcode' => $language_interface->id, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized node token %token replaced.', array('%token' => $input)));
     }
 

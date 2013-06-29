@@ -33,13 +33,13 @@ class VocabularyLanguageTest extends TaxonomyTestBase {
 
     // Add some custom languages.
     $language = new Language(array(
-      'langcode' => 'aa',
+      'id' => 'aa',
       'name' => $this->randomName(),
     ));
     language_save($language);
 
     $language = new Language(array(
-      'langcode' => 'bb',
+      'id' => 'bb',
       'name' => $this->randomName(),
     ));
     language_save($language);

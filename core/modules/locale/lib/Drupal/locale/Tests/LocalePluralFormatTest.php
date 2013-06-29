@@ -173,7 +173,10 @@ class LocalePluralFormatTest extends WebTestBase {
 
     // Look up editing page for this plural string and check fields.
     $path = 'admin/config/regional/translate/';
-    $this->drupalGet($path);
+    $search = array(
+      'langcode' => 'hr',
+    );
+    $this->drupalPost($path, $search, t('Filter'));
     // Labels for plural editing elements.
     $this->assertText('Singular form');
     $this->assertText('First plural form');

@@ -154,7 +154,7 @@ class CommentFormController extends EntityFormControllerNG {
     // set.
     if ($comment->isNew()) {
       $language_content = language(Language::TYPE_CONTENT);
-      $comment->langcode->value = $language_content->langcode;
+      $comment->langcode->value = $language_content->id;
     }
 
     // Add internal comment properties.

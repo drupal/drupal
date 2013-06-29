@@ -159,7 +159,7 @@ class MessageFormController extends EntityFormControllerNG {
       $params['contact_category'] = $category;
 
       $to = implode(', ', $category->recipients);
-      $recipient_langcode = language_default()->langcode;
+      $recipient_langcode = language_default()->id;
     }
     elseif ($recipient = $message->getPersonalRecipient()) {
       // Send to the user in the user's preferred language.
@@ -177,14 +177,14 @@ class MessageFormController extends EntityFormControllerNG {
 
     // If requested, send a copy to the user, using the current language.
     if ($message->copySender()) {
-      drupal_mail('contact', $key_prefix . '_copy', $sender->mail, $language_interface->langcode, $params, $sender->mail);
+      drupal_mail('contact', $key_prefix . '_copy', $sender->mail, $language_interface->id, $params, $sender->mail);
     }
 
     // If configured, send an auto-reply, using the current language.
     if (!$message->isPersonal() && $category->reply) {
       // User contact forms do not support an auto-reply message, so this
       // message always originates from the site.
-      drupal_mail('contact', 'page_autoreply', $sender->mail, $language_interface->langcode, $params);
+      drupal_mail('contact', 'page_autoreply', $sender->mail, $language_interface->id, $params);
     }
 
     \Drupal::service('flood')->register('contact', config('contact.settings')->get('flood.interval'));

@@ -904,7 +904,7 @@ function filter_xss_bad_protocol($string) {
  * Arbitrary elements may be added using the $args associative array.
  */
 function format_rss_channel($title, $link, $description, $items, $langcode = NULL, $args = array()) {
-  $langcode = $langcode ? $langcode : language(Language::TYPE_CONTENT)->langcode;
+  $langcode = $langcode ? $langcode : language(Language::TYPE_CONTENT)->id;
 
   $output = "<channel>\n";
   $output .= ' <title>' . check_plain($title) . "</title>\n";
@@ -1417,7 +1417,7 @@ function l($text, $path, array $options = array()) {
     $active = array(
       'path' => current_path(),
       'front_page' => drupal_is_front_page(),
-      'language' => language(Language::TYPE_URL)->langcode,
+      'language' => language(Language::TYPE_URL)->id,
       'query' => Drupal::service('request')->query->all(),
     );
   }
@@ -1428,7 +1428,7 @@ function l($text, $path, array $options = array()) {
   // An active link's path is equal to the current path.
   $variables['url_is_active'] = ($path == $active['path'] || ($path == '<front>' && $active['front_page']))
   // The language of an active link is equal to the current language.
-  && (empty($variables['options']['language']) || $variables['options']['language']->langcode == $active['language'])
+  && (empty($variables['options']['language']) || $variables['options']['language']->id == $active['language'])
   // The query parameters of an active link are equal to the current parameters.
   && ($variables['options']['query'] == $active['query']);
 
@@ -5041,7 +5041,7 @@ function drupal_render_cid_parts($granularity = NULL) {
   // part.
   if (language_multilingual()) {
     foreach (language_types_get_configurable() as $language_type) {
-      $cid_parts[] = language($language_type)->langcode;
+      $cid_parts[] = language($language_type)->id;
     }
   }
 

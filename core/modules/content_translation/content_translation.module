@@ -316,7 +316,7 @@ function content_translation_add_access(EntityInterface $entity, Language $sourc
   $target = !empty($target) ? $target : language(Language::TYPE_CONTENT);
   $translations = $entity->getTranslationLanguages();
   $languages = language_list();
-  return $source->langcode != $target->langcode && isset($languages[$source->langcode]) && isset($languages[$target->langcode]) && !isset($translations[$target->langcode]) && content_translation_access($entity, 'create');
+  return $source->id != $target->id && isset($languages[$source->id]) && isset($languages[$target->id]) && !isset($translations[$target->id]) && content_translation_access($entity, 'create');
 }
 
 /**
@@ -332,7 +332,7 @@ function content_translation_edit_access(EntityInterface $entity, Language $lang
   $language = !empty($language) ? $language : language(Language::TYPE_CONTENT);
   $translations = $entity->getTranslationLanguages();
   $languages = language_list();
-  return isset($languages[$language->langcode]) && $language->langcode != $entity->language()->langcode && isset($translations[$language->langcode]) && content_translation_access($entity, 'update');
+  return isset($languages[$language->id]) && $language->id != $entity->language()->id && isset($translations[$language->id]) && content_translation_access($entity, 'update');
 }
 
 /**
@@ -348,7 +348,7 @@ function content_translation_delete_access(EntityInterface $entity, Language $la
   $language = !empty($language) ? $language : language(Language::TYPE_CONTENT);
   $translations = $entity->getTranslationLanguages();
   $languages = language_list();
-  return isset($languages[$language->langcode]) && $language->langcode != $entity->language()->langcode && isset($translations[$language->langcode]) && content_translation_access($entity, 'delete');
+  return isset($languages[$language->id]) && $language->id != $entity->language()->id && isset($translations[$language->id]) && content_translation_access($entity, 'delete');
 }
 
 /**
@@ -645,7 +645,7 @@ function content_translation_field_language_alter(&$display_language, $context) 
     $instances = field_info_instances($entity_type, $entity->bundle());
     // Avoid altering the real entity.
     $entity = clone($entity);
-    $entity_langcode = $entity->language()->langcode;
+    $entity_langcode = $entity->language()->id;
 
     foreach ($entity->translation as $langcode => $translation) {
       if ($langcode == $context['langcode'] || !content_translation_view_access($entity, $langcode)) {

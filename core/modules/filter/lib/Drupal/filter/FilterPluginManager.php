@@ -33,7 +33,7 @@ class FilterPluginManager extends PluginManagerBase {
     $annotation_namespaces = array('Drupal\filter\Annotation' => $namespaces['Drupal\filter']);
     $this->discovery = new AnnotatedClassDiscovery('Filter', $namespaces, $annotation_namespaces, 'Drupal\filter\Annotation\Filter');
     $this->discovery = new AlterDecorator($this->discovery, 'filter_info');
-    $cache_key = 'filter_plugins:' . language(Language::TYPE_INTERFACE)->langcode;
+    $cache_key = 'filter_plugins:' . language(Language::TYPE_INTERFACE)->id;
     $cache_tags = array('filter_formats' => TRUE);
     $this->discovery = new CacheDecorator($this->discovery, $cache_key, 'cache', CacheBackendInterface::CACHE_PERMANENT, $cache_tags);
   }

@@ -115,7 +115,7 @@ function locale_translate_import_form_submit($form, &$form_state) {
     $language = language_load($form_state['values']['langcode']);
     if (empty($language)) {
       $language = new Language(array(
-        'langcode' => $form_state['values']['langcode']
+        'id' => $form_state['values']['langcode']
       ));
       $language = language_save($language);
       drupal_set_message(t('The language %language has been created.', array('%language' => t($language->name))));
@@ -171,7 +171,7 @@ function locale_translate_export_form($form, &$form_state) {
       '#type' => 'select',
       '#title' => t('Language'),
       '#options' => $language_options,
-      '#default_value' => $language_default->langcode,
+      '#default_value' => $language_default->id,
       '#empty_option' => t('Source text only, no translations'),
       '#empty_value' => Language::LANGCODE_SYSTEM,
     );
@@ -228,11 +228,11 @@ function locale_translate_export_form_submit($form, &$form_state) {
   $reader = new PoDatabaseReader();
   $languageName = '';
   if ($language != NULL) {
-    $reader->setLangcode($language->langcode);
+    $reader->setLangcode($language->id);
     $reader->setOptions($content_options);
     $languages = language_list();
-    $languageName = isset($languages[$language->langcode]) ? $languages[$language->langcode]->name : '';
-    $filename = $language->langcode .'.po';
+    $languageName = isset($languages[$language->id]) ? $languages[$language->id]->name : '';
+    $filename = $language->id .'.po';
   }
   else {
     // Template required.

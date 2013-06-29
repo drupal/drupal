@@ -42,7 +42,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
 
     // Add a new language.
     $language = new Language(array(
-      'langcode' => 'it',
+      'id' => 'it',
       'name' => 'Italian',
     ));
     language_save($language);
@@ -84,7 +84,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key])->getNGEntity();
     $this->assertTrue($node, 'Node found in database.');
-    $this->assertTrue($node->language()->langcode == $langcode && $node->body->value == $body_value, 'Field language correctly set.');
+    $this->assertTrue($node->language()->id == $langcode && $node->body->value == $body_value, 'Field language correctly set.');
 
     // Change node language.
     $langcode = 'it';
@@ -96,7 +96,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
     $this->drupalPost(NULL, $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit[$title_key], TRUE)->getNGEntity();
     $this->assertTrue($node, 'Node found in database.');
-    $this->assertTrue($node->language()->langcode == $langcode && $node->body->value == $body_value, 'Field language correctly changed.');
+    $this->assertTrue($node->language()->id == $langcode && $node->body->value == $body_value, 'Field language correctly changed.');
 
     // Enable content language URL detection.
     language_negotiation_set(Language::TYPE_CONTENT, array(LANGUAGE_NEGOTIATION_URL => 0));

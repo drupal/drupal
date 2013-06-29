@@ -220,7 +220,7 @@ function field_valid_language($langcode, $default = TRUE) {
   if (in_array($langcode, $languages)) {
     return $langcode;
   }
-  return $default ? language_default()->langcode : language(Language::TYPE_CONTENT)->langcode;
+  return $default ? language_default()->id : language(Language::TYPE_CONTENT)->id;
 }
 
 /**
@@ -275,8 +275,8 @@ function field_language(EntityInterface $entity, $field_name = NULL, $langcode =
         // Language::LANGCODE_NOT_SPECIFIED.
         $display_langcode[$instance['field_name']] = Language::LANGCODE_NOT_SPECIFIED;
         foreach (language_list(Language::STATE_LOCKED) as $language_locked) {
-          if (isset($entity->{$instance['field_name']}[$language_locked->langcode])) {
-            $display_langcode[$instance['field_name']] = $language_locked->langcode;
+          if (isset($entity->{$instance['field_name']}[$language_locked->id])) {
+            $display_langcode[$instance['field_name']] = $language_locked->id;
             break;
           }
         }

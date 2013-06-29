@@ -87,7 +87,7 @@ class TranslationWebTest extends FieldTestBase {
 
     for ($i = 0; $i < 3; ++$i) {
       $language = new Language(array(
-        'langcode' => 'l' . $i,
+        'id' => 'l' . $i,
         'name' => $this->randomString(),
       ));
       language_save($language);

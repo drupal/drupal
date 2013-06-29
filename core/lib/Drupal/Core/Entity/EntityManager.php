@@ -115,7 +115,7 @@ class EntityManager extends PluginManagerBase {
     $this->discovery = new AnnotatedClassDiscovery('Core/Entity', $namespaces, $annotation_namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
     $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
-    $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->langcode, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
+    $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->id, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
 
     $this->factory = new DefaultFactory($this->discovery);
     $this->container = $container;
@@ -370,7 +370,7 @@ class EntityManager extends PluginManagerBase {
   public function getFieldDefinitions($entity_type, $bundle = NULL) {
     if (!isset($this->entityFieldInfo[$entity_type])) {
       // First, try to load from cache.
-      $cid = 'entity_field_definitions:' . $entity_type . ':' . $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->langcode;
+      $cid = 'entity_field_definitions:' . $entity_type . ':' . $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->id;
       if ($cache = $this->cache->get($cid)) {
         $this->entityFieldInfo[$entity_type] = $cache->data;
       }

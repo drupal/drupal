@@ -39,11 +39,11 @@ class Language extends TypedData {
    */
   public function getValue() {
     if (!empty($this->definition['settings']['langcode source'])) {
-      $this->langcode = $this->parent->__get($this->definition['settings']['langcode source']);
+      $this->id = $this->parent->__get($this->definition['settings']['langcode source']);
     }
-   if ($this->langcode) {
-      $language = language_load($this->langcode);
-      return $language ?: new LanguageObject(array('langcode' => $this->langcode));
+   if ($this->id) {
+      $language = language_load($this->id);
+      return $language ?: new LanguageObject(array('id' => $this->id));
     }
   }
 
@@ -55,7 +55,7 @@ class Language extends TypedData {
   public function setValue($value, $notify = TRUE) {
     // Support passing language objects.
     if (is_object($value)) {
-      $value = $value->langcode;
+      $value = $value->id;
     }
     elseif (isset($value) && !is_scalar($value)) {
       throw new InvalidArgumentException('Value is no valid langcode or language object.');
@@ -69,7 +69,7 @@ class Language extends TypedData {
       if ($notify && isset($this->parent)) {
         $this->parent->onChange($this->name);
       }
-      $this->langcode = $value;
+      $this->id = $value;
     }
   }
 

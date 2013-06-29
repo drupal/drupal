@@ -31,7 +31,7 @@ class EntityAccessTest extends EntityUnitTestBase  {
     parent::setUp();
     $this->installSchema('user', array('users_roles'));
     $this->installSchema('system', array('variable', 'url_alias'));
-    $this->installSchema('language', 'language');
+    $this->installConfig(array('language'));
 
     // Create the default languages.
     $default_language = language_save(language_default());
@@ -119,7 +119,7 @@ class EntityAccessTest extends EntityUnitTestBase  {
     // Create two test languages.
     foreach (array('foo', 'bar') as $langcode) {
       $language = new Language(array(
-        'langcode' => $langcode,
+        'id' => $langcode,
         'name' => $this->randomString(),
       ));
       language_save($language);

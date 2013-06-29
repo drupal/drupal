@@ -52,7 +52,7 @@ function language_admin_overview_form($form, &$form_state) {
       'title' => t('edit'),
       'href' => 'admin/config/regional/language/edit/' . $langcode,
     );
-    if ($langcode != $default->langcode) {
+    if ($langcode != $default->id) {
       $links['delete'] = array(
         'title' => t('delete'),
         'href' => 'admin/config/regional/language/delete/' . $langcode,
@@ -161,17 +161,17 @@ function language_admin_edit_form($form, &$form_state, $language) {
  */
 function _language_admin_common_controls(&$form, $language = NULL) {
   if (!is_object($language)) {
-    $language = new Language(array('langcode' => NULL, 'name' => NULL,));
+    $language = new Language(array('id' => NULL, 'name' => NULL,));
   }
-  if (isset($language->langcode)) {
+  if (isset($language->id)) {
     $form['langcode_view'] = array(
       '#type' => 'item',
       '#title' => t('Language code'),
-      '#markup' => $language->langcode
+      '#markup' => $language->id
     );
     $form['langcode'] = array(
       '#type' => 'value',
-      '#value' => $language->langcode
+      '#value' => $language->id
     );
   }
   else {
@@ -245,13 +245,13 @@ function language_admin_add_form_submit($form, &$form_state) {
     $langcode = $form_state['values']['langcode'];
     // Custom language form.
     $language = new Language(array(
-      'langcode' => $langcode,
+      'id' => $langcode,
       'name' => $form_state['values']['name'],
       'direction' => $form_state['values']['direction'],
     ));
   }
   else {
-    $language = new Language(array('langcode' => $langcode));
+    $language = new Language(array('id' => $langcode));
   }
   // Save the language and inform the user that it happened.
   $language = language_save($language);
@@ -295,9 +295,9 @@ function language_admin_edit_form_submit($form, &$form_state) {
  * User interface for the language deletion confirmation screen.
  */
 function language_admin_delete_form($form, &$form_state, $language) {
-  $langcode = $language->langcode;
+  $langcode = $language->id;
 
-  if (language_default()->langcode == $langcode) {
+  if (language_default()->id == $langcode) {
     drupal_set_message(t('The default language cannot be deleted.'));
     return new RedirectResponse(url('admin/config/regional/language', array('absolute' => TRUE)));
   }
@@ -325,7 +325,7 @@ function language_admin_delete_form_submit($form, &$form_state) {
   $success = language_delete($langcode);
 
   if ($success) {
-    $t_args = array('%language' => $language->name, '%langcode' => $language->langcode);
+    $t_args = array('%language' => $language->name, '%langcode' => $language->id);
     drupal_set_message(t('The %language (%langcode) language has been removed.', $t_args));
   }
 

@@ -27,8 +27,8 @@
 function hook_language_switch_links_alter(array &$links, $type, $path) {
   $language_interface = language(\Drupal\Core\Language\Language::TYPE_INTERFACE);
 
-  if ($type == \Drupal\Core\Language\Language::TYPE_CONTENT && isset($links[$language_interface->langcode])) {
-    foreach ($links[$language_interface->langcode] as $link) {
+  if ($type == \Drupal\Core\Language\Language::TYPE_CONTENT && isset($links[$language_interface->id])) {
+    foreach ($links[$language_interface->id] as $link) {
       $link['attributes']['class'][] = 'active-language';
     }
   }
@@ -189,7 +189,7 @@ function hook_language_fallback_candidates_alter(array &$fallback_candidates) {
  * Here is a code snippet to transliterate some text:
  * @code
  * // Use the current default interface language.
- * $langcode = language(\Drupal\Core\Language\Language::TYPE_INTERFACE)->langcode;
+ * $langcode = language(\Drupal\Core\Language\Language::TYPE_INTERFACE)->id;
  * // Instantiate the transliteration class.
  * $trans = drupal_container()->get('transliteration');
  * // Use this to transliterate some text.

@@ -25,6 +25,6 @@ class CachedMockBlockManager extends MockBlockManager {
     // The CacheDecorator allows us to cache these plugin definitions for
     // quicker retrieval. In this case we are generating a cache key by
     // language.
-    $this->discovery = new CacheDecorator($this->discovery, 'mock_block:' . language(Language::TYPE_INTERFACE)->langcode, 'cache',  1542646800, array('plugin_test'));
+    $this->discovery = new CacheDecorator($this->discovery, 'mock_block:' . language(Language::TYPE_INTERFACE)->id, 'cache',  1542646800, array('plugin_test'));
   }
 }

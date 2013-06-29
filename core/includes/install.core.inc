@@ -298,8 +298,14 @@ function install_begin_request(&$install_state) {
   // (eg. pre-database data screens we are unable to persistently store
   // the default language), we should set language_default so the proper
   // language is used to display installer pages as early as possible.
-  if (!empty($install_state['parameters']['langcode']) && language_default()->langcode != $install_state['parameters']['langcode']) {
-    $GLOBALS['conf']['language_default'] = array('langcode' => $install_state['parameters']['langcode']);
+  // The language list is stored in configuration and cannot be saved either
+  // until later in the process. Language negotiation bootstrapping needs
+  // the new default language to be in the list though, so inject it in.
+  if (!empty($install_state['parameters']['langcode']) && language_default()->id != $install_state['parameters']['langcode']) {
+    $GLOBALS['conf']['language_default'] = array('id' => $install_state['parameters']['langcode']);
+
+    $languages = &drupal_static('language_list');
+    $languages[$install_state['parameters']['langcode']] = new Language($GLOBALS['conf']['language_default']);
   }
 
   require_once __DIR__ . '/../modules/system/system.install';
@@ -1547,7 +1553,7 @@ function install_select_language_form($form, &$form_state, $files = array()) {
     foreach ($files as $langcode => $uri) {
       $select_options[$langcode] = isset($standard_languages[$langcode]) ? $standard_languages[$langcode][1] : $langcode;
       $browser_options[$langcode] = new Language(array(
-        'langcode' => $langcode,
+        'id' => $langcode,
       ));
     }
   }
@@ -1556,7 +1562,7 @@ function install_select_language_form($form, &$form_state, $files = array()) {
     foreach ($standard_languages as $langcode => $language_names) {
       $select_options[$langcode] = $language_names[1];
       $browser_options[$langcode] = new Language(array(
-        'langcode' => $langcode,
+        'id' => $langcode,
       ));
     }
   }
@@ -1819,7 +1825,7 @@ function install_import_translations(&$install_state) {
     // Drupal does not know about this language, so we prefill its values with
     // our best guess. The user will be able to edit afterwards.
     $language = new Language(array(
-      'langcode' => $langcode,
+      'id' => $langcode,
       'name' => $langcode,
       'default' => TRUE,
     ));
@@ -1828,7 +1834,7 @@ function install_import_translations(&$install_state) {
   else {
     // A known predefined language, details will be filled in properly.
     $language = new Language(array(
-      'langcode' => $langcode,
+      'id' => $langcode,
       'default' => TRUE,
     ));
     language_save($language);
@@ -2497,7 +2503,7 @@ function install_configure_form_submit($form, &$form_state) {
   config('system.site')
     ->set('name', $form_state['values']['site_name'])
     ->set('mail', $form_state['values']['site_mail'])
-    ->set('langcode', language_default()->langcode)
+    ->set('langcode', language_default()->id)
     ->save();
 
   config('system.timezone')

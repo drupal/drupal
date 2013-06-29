@@ -41,10 +41,10 @@ class EntityTranslationFormTest extends WebTestBase {
     $this->langcodes = array();
     for ($i = 0; $i < 2; ++$i) {
       $language = new Language(array(
-        'langcode' => 'l' . $i,
+        'id' => 'l' . $i,
         'name' => $this->randomString(),
       ));
-      $this->langcodes[$i] = $language->langcode;
+      $this->langcodes[$i] = $language->id;
       language_save($language);
     }
   }

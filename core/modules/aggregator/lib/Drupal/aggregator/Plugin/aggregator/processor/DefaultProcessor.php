@@ -128,7 +128,7 @@ class DefaultProcessor extends PluginBase implements ProcessorInterface {
         $entry = reset($entry);
       }
       else {
-        $entry = entity_create('aggregator_item', array('langcode' => $feed->language()->langcode));
+        $entry = entity_create('aggregator_item', array('langcode' => $feed->language()->id));
       }
       if ($item['timestamp']) {
         $entry->timestamp->value = $item['timestamp'];

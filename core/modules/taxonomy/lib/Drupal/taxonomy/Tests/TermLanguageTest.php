@@ -37,7 +37,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     // Add some custom languages.
     foreach (array('aa', 'bb', 'cc') as $language_code) {
       $language = new Language(array(
-        'langcode' => $language_code,
+        'id' => $language_code,
         'name' => $this->randomName(),
       ));
       language_save($language);
@@ -63,7 +63,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     $this->drupalPost(NULL, $edit, t('Save'));
     $terms = taxonomy_term_load_multiple_by_name($edit['name']);
     $term = reset($terms);
-    $this->assertEqual($term->language()->langcode, $edit['langcode']);
+    $this->assertEqual($term->language()->id, $edit['langcode']);
 
     // Check if on the edit page the language is correct.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');

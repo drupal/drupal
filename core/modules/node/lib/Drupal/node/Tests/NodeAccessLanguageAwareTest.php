@@ -58,11 +58,11 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
 
     // Add Hungarian and Catalan.
     $language = new Language(array(
-      'langcode' => 'hu',
+      'id' => 'hu',
     ));
     language_save($language);
     $language = new Language(array(
-      'langcode' => 'ca',
+      'id' => 'ca',
     ));
     language_save($language);
 

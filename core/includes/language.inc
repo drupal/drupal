@@ -92,7 +92,7 @@ const LANGUAGE_NEGOTIATION_SELECTED = 'language-selected';
  *
  *   // If we are on an administrative path, override with the default language.
  *   if (isset($_GET['q']) && strtok($_GET['q'], '/') == 'admin') {
- *     return language_default()->langcode;
+ *     return language_default()->id;
  *   }
  *   return $langcode;
  * }
@@ -409,7 +409,7 @@ function language_negotiation_info() {
     $languages = language_list();
     $selected_language = $languages[language_from_selected($languages)];
     $description = 'Language based on a selected language. ';
-    $description .= ($selected_language->langcode == language_default()->langcode) ? "(Site's default language (@language_name))" : '(@language_name)';
+    $description .= ($selected_language->id == language_default()->id) ? "(Site's default language (@language_name))" : '(@language_name)';
     // Add the default language negotiation method.
     $negotiation_info[LANGUAGE_NEGOTIATION_SELECTED] = array(
       'callbacks' => array(
@@ -488,9 +488,9 @@ function language_from_selected($languages) {
   $langcode = (string) config('language.negotiation')->get('selected_langcode');
   // Replace the site's default langcode by its real value.
   if ($langcode == 'site_default') {
-    $langcode = language_default()->langcode;
+    $langcode = language_default()->id;
   }
-  return isset($languages[$langcode]) ? $langcode : language_default()->langcode;
+  return isset($languages[$langcode]) ? $langcode : language_default()->id;
 }
 
 /**
@@ -517,7 +517,7 @@ function language_url_split_prefix($path, $languages) {
   // Search prefix within enabled languages.
   $prefixes = language_negotiation_url_prefixes();
   foreach ($languages as $language) {
-    if (isset($prefixes[$language->langcode]) && $prefixes[$language->langcode] == $prefix) {
+    if (isset($prefixes[$language->id]) && $prefixes[$language->id] == $prefix) {
       // Rebuild $path with the language removed.
       return array($language, implode('/', $args));
     }

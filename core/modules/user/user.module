@@ -1948,10 +1948,10 @@ function user_preferred_langcode($account, $type = NULL, $default = NULL) {
     $preferred_langcode = $account->preferred_langcode;
   }
   if (!empty($preferred_langcode) && isset($language_list[$preferred_langcode])) {
-    return $language_list[$preferred_langcode]->langcode;
+    return $language_list[$preferred_langcode]->id;
   }
   else {
-    return $default ? $default : language_default()->langcode;
+    return $default ? $default : language_default()->id;
   }
 }
 
@@ -2007,7 +2007,7 @@ function _user_mail_notify($op, $account, $langcode = NULL) {
     if ($op == 'register_pending_approval') {
       // If a user registered requiring admin approval, notify the admin, too.
       // We use the site default language for this.
-      drupal_mail('user', 'register_pending_approval_admin', $site_mail, language_default()->langcode, $params);
+      drupal_mail('user', 'register_pending_approval_admin', $site_mail, language_default()->id, $params);
     }
   }
   return empty($mail) ? NULL : $mail['result'];

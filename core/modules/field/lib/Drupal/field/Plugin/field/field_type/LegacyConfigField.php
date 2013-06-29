@@ -40,7 +40,7 @@ class LegacyConfigField extends ConfigField {
     $this->legacyCallback('validate', array(&$legacy_errors));
 
     $entity = $this->getParent();
-    $langcode = $entity->language()->langcode;
+    $langcode = $entity->language()->id;
 
     if (isset($legacy_errors[$this->getInstance()->getField()->id()][$langcode])) {
       foreach ($legacy_errors[$this->getInstance()->getField()->id()][$langcode] as $delta => $item_errors) {
@@ -106,7 +106,7 @@ class LegacyConfigField extends ConfigField {
     $callback = "{$module}_field_{$hook}";
     if (function_exists($callback)) {
       $entity = $this->getParent();
-      $langcode = $entity->language()->langcode;
+      $langcode = $entity->language()->id;
 
       // We need to remove the empty "prototype" item here.
       // @todo Revisit after http://drupal.org/node/1988492.

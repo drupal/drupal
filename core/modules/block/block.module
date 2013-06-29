@@ -621,8 +621,8 @@ function block_language_delete($language) {
   // Remove the block visibility settings for the deleted language.
   foreach (entity_load_multiple('block') as $block_id => $block) {
     $visibility = $block->get('visibility');
-    if (isset($visibility['language']['langcodes'][$language->langcode])) {
-      unset($visibility['language']['langcodes'][$language->langcode]);
+    if (isset($visibility['language']['langcodes'][$language->id])) {
+      unset($visibility['language']['langcodes'][$language->id]);
       $block->set('visibility', $visibility);
       $block->save();
     }

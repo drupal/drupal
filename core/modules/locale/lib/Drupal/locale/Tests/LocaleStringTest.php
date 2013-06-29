@@ -48,7 +48,7 @@ class LocaleStringTest extends WebTestBase {
     $this->storage = $this->container->get('locale.storage');
     // Create two languages: Spanish and German.
     foreach (array('es', 'de') as $langcode) {
-      $language = new Language(array('langcode' => $langcode));
+      $language = new Language(array('id' => $langcode));
       $languages[$langcode] = language_save($language);
     }
   }
@@ -180,7 +180,7 @@ class LocaleStringTest extends WebTestBase {
   function createAllTranslations($source, $values = array()) {
     $list = array();
     foreach (language_list() as $language) {
-      $list[$language->langcode] = $this->createTranslation($source, $language->langcode, $values);
+      $list[$language->id] = $this->createTranslation($source, $language->id, $values);
     }
     return $list;
   }

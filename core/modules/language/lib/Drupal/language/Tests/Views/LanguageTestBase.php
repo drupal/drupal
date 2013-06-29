@@ -24,14 +24,13 @@ abstract class LanguageTestBase extends ViewUnitTestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->installSchema('language', 'language');
     $this->installSchema('system', 'variable');
-
+    $this->installConfig(array('language'));
 
     // Create English and another language beside English.
-    $language = new Language(array('langcode' => 'en'));
+    $language = new Language(array('id' => 'en'));
     language_save($language);
-    $language = new Language(array('langcode' => 'xx-lolspeak', 'name' => 'Lolspeak'));
+    $language = new Language(array('id' => 'xx-lolspeak', 'name' => 'Lolspeak'));
     language_save($language);
   }
 

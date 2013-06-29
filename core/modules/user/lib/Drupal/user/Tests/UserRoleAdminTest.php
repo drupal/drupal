@@ -32,7 +32,7 @@ class UserRoleAdminTest extends WebTestBase {
    */
   function testRoleAdministration() {
     $this->drupalLogin($this->admin_user);
-    $default_langcode = language_default()->langcode;
+    $default_langcode = language_default()->id;
 
     // Test adding a role. (In doing so, we use a role name that happens to
     // correspond to an integer, to test that the role administration pages

@@ -37,9 +37,7 @@ class Language extends ConditionPluginBase {
       $languages = language_list(Lang::STATE_ALL);
       $langcodes_options = array();
       foreach ($languages as $language) {
-        // @todo $language->name is not wrapped with t(), it should be replaced
-        //   by CMI translation implementation.
-        $langcodes_options[$language->langcode] = $language->name;
+        $langcodes_options[$language->id] = $language->label();
       }
       $form['langcodes'] = array(
         '#type' => 'checkboxes',
@@ -76,8 +74,8 @@ class Language extends ConditionPluginBase {
     $language_names = array_reduce($language_list, function(&$result, $item) use ($selected) {
       // If the current item of the $language_list array is one of the selected
       // languages, add it to the $results array.
-      if (!empty($selected[$item->langcode])) {
-        $result[$item->langcode] = $item->name;
+      if (!empty($selected[$item->id])) {
+        $result[$item->id] = $item->name;
       }
       return $result;
     }, array());
@@ -103,7 +101,7 @@ class Language extends ConditionPluginBase {
     $language = $this->getContextValue('language');
     // Language visibility settings.
     if (!empty($this->configuration['langcodes'])) {
-      return !empty($this->configuration['langcodes'][$language->langcode]);
+      return !empty($this->configuration['langcodes'][$language->id]);
     }
     return TRUE;
   }

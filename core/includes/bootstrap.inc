@@ -2395,7 +2395,7 @@ function drupal_installation_attempted() {
 function drupal_language_initialize() {
   $language_manager = Drupal::languageManager();
   $language_manager->init();
-  Drupal::translation()->setDefaultLangcode($language_manager->getLanguage(Language::TYPE_INTERFACE)->langcode);
+  Drupal::translation()->setDefaultLangcode($language_manager->getLanguage(Language::TYPE_INTERFACE)->id);
 }
 
 /**
@@ -2476,18 +2476,27 @@ function language_list($flags = Language::STATE_CONFIGURABLE) {
     $default = language_default();
     if (language_multilingual() || module_exists('language')) {
       // Use language module configuration if available.
-      $languages = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode', PDO::FETCH_ASSOC);
+      $language_entities = config_get_storage_names_with_prefix('language.entity');
 
       // Initialize default property so callers have an easy reference and can
       // save the same object without data loss.
-      foreach ($languages as $langcode => $info) {
-        $info['default'] = ($langcode == $default->langcode);
-        $languages[$langcode] = new Language($info);
+      foreach ($language_entities as $langcode_config_name) {
+        $langcode = substr($langcode_config_name, strlen('language.entity.'));
+        $info = config($langcode_config_name)->get();
+        $languages[$langcode] = new Language(array(
+          'default' => ($info['id'] == $default->id),
+          'name' => $info['label'],
+          'id' => $info['id'],
+          'direction' => $info['direction'],
+          'locked' => $info['locked'],
+          'weight' => $info['weight'],
+        ));
       }
+      Language::sort($languages);
     }
     else {
       // No language module, so use the default language only.
-      $languages = array($default->langcode => $default);
+      $languages = array($default->id => $default);
       // Add the special languages, they will be filtered later if needed.
       $languages += language_default_locked_languages($default->weight);
     }
@@ -2535,12 +2544,12 @@ function language_default_locked_languages($weight = 0) {
 
   $languages = array();
   $languages[Language::LANGCODE_NOT_SPECIFIED] = new Language(array(
-    'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+    'id' => Language::LANGCODE_NOT_SPECIFIED,
     'name' => t('Not specified'),
     'weight' => ++$weight,
   ) + $locked_language);
   $languages[Language::LANGCODE_NOT_APPLICABLE] = new Language(array(
-    'langcode' => Language::LANGCODE_NOT_APPLICABLE,
+    'id' => Language::LANGCODE_NOT_APPLICABLE,
     'name' => t('Not applicable'),
     'weight' => ++$weight,
   ) + $locked_language);
@@ -2606,7 +2615,7 @@ function language_is_locked($langcode) {
  */
 function language_default() {
   $info = variable_get('language_default', array(
-    'langcode' => 'en',
+    'id' => 'en',
     'name' => 'English',
     'direction' => 0,
     'weight' => 0,

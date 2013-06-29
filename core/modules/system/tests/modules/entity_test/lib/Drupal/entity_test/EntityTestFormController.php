@@ -47,7 +47,7 @@ class EntityTestFormController extends EntityFormControllerNG {
     $form['langcode'] = array(
       '#title' => t('Language'),
       '#type' => 'language_select',
-      '#default_value' => $entity->language()->langcode,
+      '#default_value' => $entity->language()->id,
       '#languages' => Language::STATE_ALL,
     );
 

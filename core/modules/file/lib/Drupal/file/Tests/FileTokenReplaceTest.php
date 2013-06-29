@@ -57,8 +57,8 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $tests['[file:mime]'] = check_plain($file->getMimeType());
     $tests['[file:size]'] = format_size($file->getSize());
     $tests['[file:url]'] = check_plain(file_create_url($file->getFileUri()));
-    $tests['[file:timestamp]'] = format_date($file->getChangedTime(), 'medium', '', NULL, $language_interface->langcode);
-    $tests['[file:timestamp:short]'] = format_date($file->getChangedTime(), 'short', '', NULL, $language_interface->langcode);
+    $tests['[file:timestamp]'] = format_date($file->getChangedTime(), 'medium', '', NULL, $language_interface->id);
+    $tests['[file:timestamp:short]'] = format_date($file->getChangedTime(), 'short', '', NULL, $language_interface->id);
     $tests['[file:owner]'] = check_plain(user_format_name($this->admin_user));
     $tests['[file:owner:uid]'] = $file->getOwner()->id();
 
@@ -66,7 +66,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('file' => $file), array('langcode' => $language_interface->langcode));
+      $output = $token_service->replace($input, array('file' => $file), array('langcode' => $language_interface->id));
       $this->assertEqual($output, $expected, format_string('Sanitized file token %token replaced.', array('%token' => $input)));
     }
 
@@ -77,7 +77,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     $tests['[file:size]'] = format_size($file->getSize());
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('file' => $file), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
+      $output = $token_service->replace($input, array('file' => $file), array('langcode' => $language_interface->id, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized file token %token replaced.', array('%token' => $input)));
     }
   }

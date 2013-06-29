@@ -39,8 +39,9 @@ class DependencyTest extends ModuleTestBase {
 
     $this->assertModules(array('content_translation', 'language'), TRUE);
 
-    // Assert that the language tables were enabled.
-    $this->assertTableCount('language', TRUE);
+    // Assert that the language YAML files were created.
+    $storage = $this->container->get('config.storage');
+    $this->assertTrue(count($storage->listAll('language.entity.')) > 0, 'Language config entity files exist.');
   }
 
   /**

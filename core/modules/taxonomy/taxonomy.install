@@ -247,7 +247,7 @@ function taxonomy_update_8001() {
       // When updating from a site that did not already have taxonomy
       // internationalization, initialize all existing vocabularies and terms as
       // being in the site's default language.
-      $langcode_field['initial'] = language_default()->langcode;
+      $langcode_field['initial'] = language_default()->id;
       db_add_field($table, 'langcode', $langcode_field);
     }
   }

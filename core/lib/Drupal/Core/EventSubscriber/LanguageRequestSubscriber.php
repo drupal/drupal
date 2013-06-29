@@ -59,7 +59,7 @@ class LanguageRequestSubscriber implements EventSubscriberInterface {
       $this->languageManager->setRequest($event->getRequest());
       // After the language manager has initialized, set the default langcode
       // for the string translations.
-      $langcode = $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->langcode;
+      $langcode = $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->id;
       $this->translation->setDefaultLangcode($langcode);
     }
   }

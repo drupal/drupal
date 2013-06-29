@@ -61,7 +61,7 @@ class CacheDecoratorLanguageTest extends WebTestBase {
     // Create two languages: Spanish and German.
     $this->languages = array('de', 'es');
     foreach ($this->languages as $langcode) {
-      $language = new Language(array('langcode' => $langcode));
+      $language = new Language(array('id' => $langcode));
       $languages[$langcode] = language_save($language);
       // Set up translations for each mock block label.
       $custom_strings = array();

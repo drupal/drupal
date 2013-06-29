@@ -392,7 +392,7 @@ db_insert('variable')->fields(array(
 ))
 ->values(array(
   'name' => 'language_default',
-  'value' => 'O:8:"stdClass":7:{s:8:"langcode";s:2:"ca";s:4:"name";s:7:"Catalan";s:9:"direction";i:0;s:7:"enabled";b:1;s:6:"weight";i:0;s:7:"default";b:1;s:6:"is_new";b:1;}',
+  'value' => 'O:8:"stdClass":7:{s:8:"language";s:2:"ca";s:4:"name";s:7:"Catalan";s:9:"direction";i:0;s:7:"enabled";b:1;s:6:"weight";i:0;s:7:"default";b:1;s:6:"is_new";b:1;}',
 ))
 ->values(array(
   'name' => 'language_negotiation_language',

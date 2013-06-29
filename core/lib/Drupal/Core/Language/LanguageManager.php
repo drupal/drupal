@@ -157,13 +157,14 @@ class LanguageManager {
    */
   protected function getLanguageDefault() {
     $default_info = variable_get('language_default', array(
-      'langcode' => 'en',
+      'id' => 'en',
       'name' => 'English',
       'direction' => 0,
       'weight' => 0,
       'locked' => 0,
     ));
-    return new Language($default_info + array('default' => TRUE));
+    $default_info['default'] = TRUE;
+    return new Language($default_info);
   }
 
   /**

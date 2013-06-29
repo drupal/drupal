@@ -42,11 +42,25 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
     db_update('users')->fields(array('language' => 'ca'))->condition('uid', '1')->execute();
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
+    // Check that the configuration for the 'Catalan' language is correct.
+    $config = $this->container->get('config.factory')->get('language.entity.ca')->get();
+    // We cannot predict the value of the UUID, we just check it's present.
+    $this->assertFalse(empty($config['uuid']));
+    unset($config['uuid']);
+    $this->assertEqual($config, array(
+      'id' => 'ca',
+      'label' => 'Catalan',
+      'direction' => 0,
+      'weight' => 0,
+      'locked' => 0,
+      'langcode' => 'en',
+    ));
+
     // Ensure Catalan was properly upgraded to be the new default language.
-    $this->assertTrue(language_default()->langcode == 'ca', 'Catalan is the default language');
+    $this->assertTrue(language_default()->id == 'ca', 'Catalan is the default language');
     $languages = language_list(Language::STATE_ALL);
     foreach ($languages as $language) {
-      $this->assertTrue($language->default == ($language->langcode == 'ca'), format_string('@language default property properly set', array('@language' => $language->name)));
+      $this->assertTrue($language->default == ($language->id == 'ca'), format_string('@language default property properly set', array('@language' => $language->name)));
     }
 
     // Check that both comments display on the node.

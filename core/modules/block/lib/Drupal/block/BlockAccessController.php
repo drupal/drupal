@@ -87,7 +87,7 @@ class BlockAccessController extends EntityAccessController {
 
     // Language visibility settings.
     if (!empty($visibility['language']['langcodes']) && array_filter($visibility['language']['langcodes'])) {
-      if (empty($visibility['language']['langcodes'][language($visibility['language']['language_type'])->langcode])) {
+      if (empty($visibility['language']['langcodes'][language($visibility['language']['language_type'])->id])) {
         return FALSE;
       }
     }

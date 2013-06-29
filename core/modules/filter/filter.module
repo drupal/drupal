@@ -272,7 +272,7 @@ function filter_formats($account = NULL) {
 
   // All available formats are cached for performance.
   if (!isset($formats['all'])) {
-    if ($cache = cache()->get("filter_formats:{$language_interface->langcode}")) {
+    if ($cache = cache()->get("filter_formats:{$language_interface->id}")) {
       $formats['all'] = $cache->data;
     }
     else {
@@ -285,7 +285,7 @@ function filter_formats($account = NULL) {
       }
       uasort($formats['all'], 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
 
-      cache()->set("filter_formats:{$language_interface->langcode}", $formats['all'], CacheBackendInterface::CACHE_PERMANENT, array('filter_formats' => TRUE));
+      cache()->set("filter_formats:{$language_interface->id}", $formats['all'], CacheBackendInterface::CACHE_PERMANENT, array('filter_formats' => TRUE));
     }
   }
 

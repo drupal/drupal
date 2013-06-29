@@ -309,7 +309,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
     $class::preCreate($this, $values);
 
     // Set default language to site default if not provided.
-    $values += array('langcode' => language_default()->langcode);
+    $values += array('langcode' => language_default()->id);
 
     $entity = new $class($values, $this->entityType);
     // Mark this entity as new, so isNew() returns TRUE. This does not check

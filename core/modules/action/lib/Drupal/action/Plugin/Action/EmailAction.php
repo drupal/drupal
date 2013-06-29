@@ -89,7 +89,7 @@ class EmailAction extends ConfigurableActionBase {
       $langcode = user_preferred_langcode($recipient_account);
     }
     else {
-      $langcode = language_default()->langcode;
+      $langcode = language_default()->id;
     }
     $params = array('context' => $this->configuration);
 

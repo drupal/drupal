@@ -64,18 +64,18 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
    */
   function testConfigLocaleUserOverride() {
     $this->installSchema('system', 'variable');
-    $this->installSchema('language', 'language');
+    $this->installConfig(array('language'));
     language_save(new Language(array(
       'name' => 'French',
-      'langcode' => 'fr',
+      'id' => 'fr',
     )));
     language_save(new Language(array(
       'name' => 'English',
-      'langcode' => 'en',
+      'id' => 'en',
     )));
     language_save(new Language(array(
       'name' => 'German',
-      'langcode' => 'de',
+      'id' => 'de',
     )));
 
     $this->installSchema('user', 'users');
@@ -154,18 +154,18 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
    */
   function testConfigLocaleLanguageOverride() {
     $this->installSchema('system', 'variable');
-    $this->installSchema('language', 'language');
+    $this->installConfig(array('language'));
     language_save(new Language(array(
       'name' => 'French',
-      'langcode' => 'fr',
+      'id' => 'fr',
     )));
     language_save(new Language(array(
       'name' => 'English',
-      'langcode' => 'en',
+      'id' => 'en',
     )));
     language_save(new Language(array(
       'name' => 'German',
-      'langcode' => 'de',
+      'id' => 'de',
     )));
 
     $language = language_load('fr');
@@ -231,10 +231,10 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
     $conf['config_test.system']['404'] = 'global herp';
 
     $this->installSchema('system', 'variable');
-    $this->installSchema('language', 'language');
+    $this->installConfig(array('language'));
     language_save(new Language(array(
       'name' => 'French',
-      'langcode' => 'fr',
+      'id' => 'fr',
     )));
 
     $this->installSchema('user', 'users');

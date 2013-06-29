@@ -37,7 +37,7 @@ function forum_enable() {
       $vocabulary = entity_create('taxonomy_vocabulary', array(
         'name' => t('Forums'),
         'vid' => 'forums',
-        'langcode' => language_default()->langcode,
+        'langcode' => language_default()->id,
         'description' => t('Forum navigation vocabulary'),
         'hierarchy' => 1,
         'module' => 'forum',
@@ -68,7 +68,7 @@ function forum_enable() {
     // Create a default forum so forum posts can be created.
     $term = entity_create('taxonomy_term', array(
       'name' => t('General discussion'),
-      'langcode' => language_default()->langcode,
+      'langcode' => language_default()->id,
       'description' => '',
       'parent' => array(0),
       'vid' => $vocabulary->id(),

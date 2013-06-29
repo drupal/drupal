@@ -480,7 +480,7 @@ class LocaleTranslationUiTest extends WebTestBase {
   function testUICustomizedStrings(){
     $user = $this->drupalCreateUser(array('translate interface', 'administer languages', 'access administration pages'));
     $this->drupalLogin($user);
-    $language = new Language(array('langcode' => 'de'));
+    $language = new Language(array('id' => 'de'));
     language_save($language);
 
     // Create test source string

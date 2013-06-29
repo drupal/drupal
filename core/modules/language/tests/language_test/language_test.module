@@ -15,7 +15,7 @@ use Drupal\Core\Language\Language;
  */
 function language_test_page_build() {
   language_test_store_language_negotiation();
-  if (isset(language(Language::TYPE_INTERFACE)->langcode) && isset(language(Language::TYPE_INTERFACE)->method_id)) {
+  if (isset(language(Language::TYPE_INTERFACE)->id) && isset(language(Language::TYPE_INTERFACE)->method_id)) {
     drupal_set_message(t('Language negotiation method: @name', array('@name' => language(Language::TYPE_INTERFACE)->method_id)));
   }
 }
@@ -88,7 +88,7 @@ function language_test_language_negotiation_info_alter(array &$negotiation_info)
 function language_test_store_language_negotiation() {
   $last = array();
   foreach (language_types_get_all() as $type) {
-    $last[$type] = language($type)->langcode;
+    $last[$type] = language($type)->id;
   }
   Drupal::state()->set('language_test.language_negotiation_last', $last);
 }

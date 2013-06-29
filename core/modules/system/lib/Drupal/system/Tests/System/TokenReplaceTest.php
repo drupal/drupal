@@ -45,18 +45,18 @@ class TokenReplaceTest extends WebTestBase {
 
     $target  = check_plain($node->title);
     $target .= check_plain($account->name);
-    $target .= format_interval(REQUEST_TIME - $node->created, 2, $language_interface->langcode);
+    $target .= format_interval(REQUEST_TIME - $node->created, 2, $language_interface->id);
     $target .= check_plain($user->name);
-    $target .= format_date(REQUEST_TIME, 'short', '', NULL, $language_interface->langcode);
+    $target .= format_date(REQUEST_TIME, 'short', '', NULL, $language_interface->id);
 
     // Test that the clear parameter cleans out non-existent tokens.
-    $result = $token_service->replace($source, array('node' => $node), array('langcode' => $language_interface->langcode, 'clear' => TRUE));
+    $result = $token_service->replace($source, array('node' => $node), array('langcode' => $language_interface->id, 'clear' => TRUE));
     $result = $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens cleared out.');
 
     // Test without using the clear parameter (non-existent token untouched).
     $target .= '[user:name]';
     $target .= '[bogus:token]';
-    $result = $token_service->replace($source, array('node' => $node), array('langcode' => $language_interface->langcode));
+    $result = $token_service->replace($source, array('node' => $node), array('langcode' => $language_interface->id));
     $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens ignored.');
 
     // Check that the results of Token::generate are sanitized properly. This
@@ -99,7 +99,7 @@ class TokenReplaceTest extends WebTestBase {
     foreach ($tests as $test) {
       $input = $test['prefix'] . '[site:name]' . $test['suffix'];
       $expected = $test['prefix'] . 'Drupal' . $test['suffix'];
-      $output = $token_service->replace($input, array(), array('langcode' => $language_interface->langcode));
+      $output = $token_service->replace($input, array(), array('langcode' => $language_interface->id));
       $this->assertTrue($output == $expected, format_string('Token recognized in string %string', array('%string' => $input)));
     }
   }
@@ -134,7 +134,7 @@ class TokenReplaceTest extends WebTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array(), array('langcode' => $language_interface->langcode));
+      $output = $token_service->replace($input, array(), array('langcode' => $language_interface->id));
       $this->assertEqual($output, $expected, format_string('Sanitized system site information token %token replaced.', array('%token' => $input)));
     }
 
@@ -143,7 +143,7 @@ class TokenReplaceTest extends WebTestBase {
     $tests['[site:slogan]'] = config('system.site')->get('slogan');
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array(), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
+      $output = $token_service->replace($input, array(), array('langcode' => $language_interface->id, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized system site information token %token replaced.', array('%token' => $input)));
     }
   }
@@ -160,18 +160,18 @@ class TokenReplaceTest extends WebTestBase {
 
     // Generate and test tokens.
     $tests = array();
-    $tests['[date:short]'] = format_date($date, 'short', '', NULL, $language_interface->langcode);
-    $tests['[date:medium]'] = format_date($date, 'medium', '', NULL, $language_interface->langcode);
-    $tests['[date:long]'] = format_date($date, 'long', '', NULL, $language_interface->langcode);
-    $tests['[date:custom:m/j/Y]'] = format_date($date, 'custom', 'm/j/Y', NULL, $language_interface->langcode);
-    $tests['[date:since]'] = format_interval((REQUEST_TIME - $date), 2, $language_interface->langcode);
+    $tests['[date:short]'] = format_date($date, 'short', '', NULL, $language_interface->id);
+    $tests['[date:medium]'] = format_date($date, 'medium', '', NULL, $language_interface->id);
+    $tests['[date:long]'] = format_date($date, 'long', '', NULL, $language_interface->id);
+    $tests['[date:custom:m/j/Y]'] = format_date($date, 'custom', 'm/j/Y', NULL, $language_interface->id);
+    $tests['[date:since]'] = format_interval((REQUEST_TIME - $date), 2, $language_interface->id);
     $tests['[date:raw]'] = filter_xss($date);
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('date' => $date), array('langcode' => $language_interface->langcode));
+      $output = $token_service->replace($input, array('date' => $date), array('langcode' => $language_interface->id));
       $this->assertEqual($output, $expected, format_string('Date token %token replaced.', array('%token' => $input)));
     }
   }

@@ -64,7 +64,7 @@ class LanguageDependencyInjectionTest extends WebTestBase {
   function testDependencyInjectedNewDefaultLanguage() {
     // Change the language default object to different values.
     $new_language_default = array(
-      'langcode' => 'fr',
+      'id' => 'fr',
       'name' => 'French',
       'direction' => 0,
       'weight' => 0,

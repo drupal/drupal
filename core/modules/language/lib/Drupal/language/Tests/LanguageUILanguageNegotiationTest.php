@@ -90,11 +90,11 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
 
     // Setup the site languages by installing two languages.
     $language = new Language(array(
-      'langcode' => $langcode_browser_fallback,
+      'id' => $langcode_browser_fallback,
     ));
     language_save($language);
     $language = new Language(array(
-      'langcode' => $langcode,
+      'id' => $langcode,
     ));
     language_save($language);
 
@@ -387,7 +387,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // Add the Italian language.
     $langcode_browser_fallback = 'it';
     $language = new Language(array(
-      'langcode' => $langcode_browser_fallback,
+      'id' => $langcode_browser_fallback,
     ));
     language_save($language);
     $languages = language_list();
@@ -413,7 +413,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // Access the front page without specifying any valid URL language prefix
     // and having as browser language preference a non-default language.
     $http_header = array("Accept-Language: $langcode_browser_fallback;q=1");
-    $language = new Language(array('langcode' => ''));
+    $language = new Language(array('id' => ''));
     $this->drupalGet('', array('language' => $language), $http_header);
 
     // Check that the language switcher active link matches the given browser
@@ -434,7 +434,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     // Add the Italian language.
     $langcode = 'it';
     $language = new Language(array(
-      'langcode' => $langcode,
+      'id' => $langcode,
     ));
     language_save($language);
     $languages = language_list();

@@ -237,7 +237,7 @@ class EntityNG extends Entity {
         }
         // @todo Remove this once the BC decorator is gone.
         elseif ($property_name != 'langcode') {
-          $default_langcode = $this->language()->langcode;
+          $default_langcode = $this->language()->id;
           if ($langcode == Language::LANGCODE_DEFAULT && isset($this->values[$property_name][$default_langcode])) {
             $value = $this->values[$property_name][$default_langcode];
           }
@@ -349,7 +349,7 @@ class EntityNG extends Entity {
       }
       if (empty($this->language)) {
         // Make sure we return a proper language object.
-        $this->language = new Language(array('langcode' => Language::LANGCODE_NOT_SPECIFIED));
+        $this->language = new Language(array('id' => Language::LANGCODE_NOT_SPECIFIED));
       }
     }
     return $this->language;
@@ -374,7 +374,7 @@ class EntityNG extends Entity {
   public function getTranslation($langcode, $strict = TRUE) {
     // If the default language is Language::LANGCODE_NOT_SPECIFIED, the entity is not
     // translatable, so we use Language::LANGCODE_DEFAULT.
-    if ($langcode == Language::LANGCODE_DEFAULT || in_array($this->language()->langcode, array(Language::LANGCODE_NOT_SPECIFIED, $langcode))) {
+    if ($langcode == Language::LANGCODE_DEFAULT || in_array($this->language()->id, array(Language::LANGCODE_NOT_SPECIFIED, $langcode))) {
       // No translation needed, return the entity.
       return $this;
     }
@@ -438,7 +438,7 @@ class EntityNG extends Entity {
     unset($translations[Language::LANGCODE_DEFAULT]);
 
     if ($include_default) {
-      $translations[$this->language()->langcode] = TRUE;
+      $translations[$this->language()->id] = TRUE;
     }
     // Now load language objects based upon translation langcodes.
     return array_intersect_key(language_list(Language::STATE_ALL), $translations);

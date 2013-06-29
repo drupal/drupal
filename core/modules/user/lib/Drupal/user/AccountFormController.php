@@ -176,9 +176,9 @@ abstract class AccountFormController extends EntityFormController {
       '#format' => isset($account->signature_format) ? $account->signature_format : NULL,
     );
 
-    $user_preferred_langcode = $register ? $language_interface->langcode : user_preferred_langcode($account);
+    $user_preferred_langcode = $register ? $language_interface->id : user_preferred_langcode($account);
 
-    $user_preferred_admin_langcode = $register ? $language_interface->langcode : user_preferred_langcode($account, 'admin');
+    $user_preferred_admin_langcode = $register ? $language_interface->id : user_preferred_langcode($account, 'admin');
 
     // Is default the interface language?
     include_once DRUPAL_ROOT . '/core/includes/language.inc';

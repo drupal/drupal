@@ -319,9 +319,9 @@ function update_prepare_d8_bootstrap() {
       // triggers a call into system_stream_wrappers(), which calls t(), which
       // calls into language_default().
       $language_default = variable_get('language_default');
-      if (!empty($language_default) && (isset($language_default->langcode) || isset($language_default->language))) {
-        if (!isset($language_default->langcode)) {
-          $language_default->langcode = $language_default->language;
+      if (!empty($language_default) && (isset($language_default->id) || isset($language_default->language))) {
+        if (!isset($language_default->id)) {
+          $language_default->id = $language_default->language;
         }
         unset($language_default->language);
         // In D8, the 'language_default' is not anymore an object, but an array,
@@ -534,7 +534,7 @@ function update_prepare_d8_language() {
       foreach ($languages as $language) {
         db_insert('language')
           ->fields(array(
-            'langcode' => $language->langcode,
+            'langcode' => $language->id,
             'name' => $language->name,
             'weight' => $language->weight,
             // These languages are locked, default to enabled.
@@ -548,14 +548,31 @@ function update_prepare_d8_language() {
     $language_default = variable_get('language_default');
     if (!empty($language_default)) {
       if (isset($language_default->language)) {
-        $language_default->langcode = $language_default->language;
+        $language_default->id = $language_default->language;
         unset($language_default->language);
       }
       unset($language_default->enabled);
       // In D8, the 'language_default' is not anymore an object, but an array,
       // so make sure that the new value that is saved into this variable is an
       // array.
-      variable_set('language_default', (array) $language_default);
+      $language_default = (array) $language_default;
+      $language_default['langcode'] = 'en';
+      variable_set('language_default', $language_default);
+    }
+
+    // Convert languages to config entities.
+    $result = db_query('SELECT * FROM {language}');
+    $uuid = new Uuid();
+    foreach ($result as $language) {
+      config('language.entity.' . $language->langcode)
+        ->set('id', $language->langcode)
+        ->set('uuid', $uuid->generate())
+        ->set('label', $language->name)
+        ->set('direction', $language->direction)
+        ->set('weight', $language->weight)
+        ->set('locked', $language->locked)
+        ->set('langcode', 'en')
+        ->save();
     }
 
     // Add column to track customized string status to locales_target.
@@ -1571,4 +1588,79 @@ function update_replace_permissions($replace) {
       ->set('permissions', $permissions)
       ->save();
   }
+}
+
+/**
+ * Returns a list of languages set up on the site during upgrades.
+ *
+ * @param $flags
+ *   (optional) Specifies the state of the languages that have to be returned.
+ *   It can be: Language::STATE_CONFIGURABLE, Language::STATE_LOCKED,
+ *   Language::STATE_ALL.
+ *
+ * @return array
+ *   An associative array of languages, keyed by the language code, ordered by
+ *   weight ascending and name ascending.
+ */
+function update_language_list($flags = Language::STATE_CONFIGURABLE) {
+
+  $languages = &drupal_static(__FUNCTION__);
+
+  // Initialize master language list.
+  if (!isset($languages)) {
+    // Initialize local language list cache.
+   $languages = array();
+
+    // Fill in master language list based on current configuration.
+    $default = language_default();
+    if (language_multilingual() || module_exists('language')) {
+      // Use language module configuration if available. We can not use
+      // entity_load_multiple() because this breaks during updates.
+      $language_entities = config_get_storage_names_with_prefix('language.entity');
+
+      // Initialize default property so callers have an easy reference and can
+      // save the same object without data loss.
+      foreach ($language_entities as $langcode_config_name) {
+        $langcode = substr($langcode_config_name, strlen('language.entity.'));
+        $info = config($langcode_config_name)->get();
+        $languages[$langcode] = new Language(array(
+          'default' => ($info['id'] == $default->id),
+          'name' => $info['label'],
+          'id' => $info['id'],
+          'direction' => $info['direction'],
+          'locked' => $info['locked'],
+          'weight' => $info['weight'],
+        ));
+      }
+      Language::sort($languages);
+    }
+    else {
+      // No language module, so use the default language only.
+      $languages = array($default->id => $default);
+      // Add the special languages, they will be filtered later if needed.
+      $languages += language_default_locked_languages($default->weight);
+    }
+  }
+
+  // Filter the full list of languages based on the value of the $all flag. By
+  // default we remove the locked languages, but the caller may request for
+  // those languages to be added as well.
+  $filtered_languages = array();
+
+  // Add the site's default language if flagged as allowed value.
+  if ($flags & Language::STATE_SITE_DEFAULT) {
+    $default = isset($default) ? $default : language_default();
+    // Rename the default language.
+    $default->name = t("Site's default language (@lang_name)", array('@lang_name' => $default->name));
+    $filtered_languages['site_default'] = $default;
+  }
+
+  foreach ($languages as $langcode => $language) {
+    if (($language->locked && !($flags & Language::STATE_LOCKED)) || (!$language->locked && !($flags & Language::STATE_CONFIGURABLE))) {
+      continue;
+     }
+    $filtered_languages[$langcode] = $language;
+  }
+
+  return $filtered_languages;
 }

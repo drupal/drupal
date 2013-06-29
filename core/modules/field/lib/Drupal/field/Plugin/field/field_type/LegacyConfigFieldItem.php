@@ -86,7 +86,7 @@ abstract class LegacyConfigFieldItem extends ConfigFieldItemBase {
   public function prepareCache() {
     if ($callback = $this->getLegacyCallback('load')) {
       $entity = $this->getParent()->getParent();
-      $langcode = $entity->language()->langcode;
+      $langcode = $entity->language()->id;
       $entity_id = $entity->id();
 
       // hook_field_attach_load() receives items keyed by entity id, and alter

@@ -26,6 +26,6 @@ class LocaleUninstallFrenchTest extends LocaleUninstallTest {
 
   function setUp() {
     parent::setUp();
-    $this->langcode = 'fr';
+    $this->id = 'fr';
   }
 }
