@@ -2,21 +2,22 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\argument_default\Php.
+ * Contains \Drupal\php\Plugin\views\argument_default\Php.
  */
 
-namespace Drupal\views\Plugin\views\argument_default;
+namespace Drupal\php\Plugin\views\argument_default;
 
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
+
 
 /**
  * Default argument plugin to provide a PHP code block.
  *
- * @ingroup views_argument_default_plugins
- *
  * @Plugin(
  *   id = "php",
+ *   module = "php",
  *   title = @Translation("PHP Code")
  * )
  */

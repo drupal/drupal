@@ -2,21 +2,22 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\argument_validator\Php.
+ * Contains \Drupal\views\Plugin\views\argument_validator\Php.
  */
 
-namespace Drupal\views\Plugin\views\argument_validator;
+namespace Drupal\php\Plugin\views\argument_validator;
 
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
+
 
 /**
  * Provide PHP code to validate whether or not an argument is ok.
  *
- * @ingroup views_argument_validate_plugins
- *
  * @Plugin(
  *   id = "php",
+ *   module = "php",
  *   title = @Translation("PHP Code")
  * )
  */

@@ -19,7 +19,7 @@ class ArgumentValidatorTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view_argument_validate_php', 'test_view_argument_validate_numeric');
+  public static $testViews = array('test_view_argument_validate_numeric');
 
   public static function getInfo() {
     return array(
@@ -27,19 +27,6 @@ class ArgumentValidatorTest extends ViewUnitTestBase {
       'group' => 'Views Plugins',
       'description' => 'Test argument validator tests.',
     );
-  }
-
-  function testArgumentValidatePhp() {
-    $string = $this->randomName();
-    $view = views_get_view('test_view_argument_validate_php');
-    $view->setDisplay();
-    $view->displayHandlers->get('default')->options['arguments']['null']['validate_options']['code'] = 'return $argument == \''. $string .'\';';
-
-    $view->initHandlers();
-    $this->assertTrue($view->argument['null']->validateArgument($string));
-    // Reset safed argument validation.
-    $view->argument['null']->argument_validated = NULL;
-    $this->assertFalse($view->argument['null']->validateArgument($this->randomName()));
   }
 
   function testArgumentValidateNumeric() {
