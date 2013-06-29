@@ -3106,7 +3106,7 @@ function drupal_common_theme() {
       'template' => 'breadcrumb',
     ),
     'table' => array(
-      'variables' => array('header' => NULL, 'rows' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => TRUE, 'responsive' => TRUE, 'empty' => ''),
+      'variables' => array('header' => NULL, 'rows' => NULL, 'attributes' => array(), 'caption' => NULL, 'colgroups' => array(), 'sticky' => FALSE, 'responsive' => TRUE, 'empty' => ''),
     ),
     'tablesort_indicator' => array(
       'variables' => array('style' => NULL),

@@ -246,6 +246,7 @@ function theme_user_admin_permissions($variables) {
     '#attributes' => array(
       'id' => 'permissions',
     ),
+    '#sticky' => TRUE,
   );
   $output = drupal_render($system_compact_link);
   $output .= drupal_render($table);

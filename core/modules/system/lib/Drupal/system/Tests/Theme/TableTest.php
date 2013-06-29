@@ -27,7 +27,7 @@ class TableTest extends WebTestBase {
   function testThemeTableStickyHeaders() {
     $header = array('one', 'two', 'three');
     $rows = array(array(1,2,3), array(4,5,6), array(7,8,9));
-    $this->content = theme('table', array('header' => $header, 'rows' => $rows));
+    $this->content = theme('table', array('header' => $header, 'rows' => $rows, 'sticky' => TRUE));
     $js = drupal_add_js();
     $this->assertTrue(isset($js['core/misc/tableheader.js']), 'tableheader.js was included when $sticky = TRUE.');
     $this->assertRaw('sticky-enabled',  'Table has a class of sticky-enabled when $sticky = TRUE.');
