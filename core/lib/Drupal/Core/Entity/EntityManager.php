@@ -255,7 +255,7 @@ class EntityManager extends PluginManagerBase {
    * @param string $entity_type
    *   The entity type for this access controller.
    *
-   * @return \Drupal\Core\Entity\EntityRenderControllerInterface.
+   * @return \Drupal\Core\Entity\EntityAccessControllerInterface.
    *   A access controller instance.
    */
   public function getAccessController($entity_type) {
