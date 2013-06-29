@@ -751,7 +751,11 @@ function theme_image_scale_summary($variables) {
  * @ingroup themeable
  */
 function theme_image_crop_summary($variables) {
-  return theme('image_resize_summary', $variables);
+  $image_resize_summary = array(
+    '#theme' => 'image_resize_summary',
+    '#data' => $variables['data'],
+  );
+  return drupal_render($image_resize_summary);
 }
 
 /**
