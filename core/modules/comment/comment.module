@@ -140,7 +140,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
     $links = array();
     $commenting_status = _comment_get_default_status(field_get_items($entity, $field_name));
     if ($commenting_status) {
-      $instance = field_info_instance('node', $field_name, $entity->bundle());
+      $instance = Drupal::service('field.info')->getInstance('node', $entity->bundle(), $field_name);
       // Entity have commenting open or close.
       $uri = $entity->uri();
       if ($view_mode == 'rss') {
@@ -182,7 +182,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
         }
         // Provide a link to new comment form.
         if ($commenting_status == COMMENT_OPEN) {
-          $comment_form_location = $instance['settings']['form_location'];
+          $comment_form_location = $instance->settings['form_location'];
           if (user_access('post comments')) {
             $links['comment-add'] = array(
               'title' => t('Add new comment'),
@@ -213,7 +213,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
         // But we don't want this link if we're building the entity for search
         // indexing or constructing a search result excerpt.
         if ($commenting_status == COMMENT_OPEN) {
-          $comment_form_location = $instance['settings']['form_location'];
+          $comment_form_location = $instance->settings['form_location'];
           if (user_access('post comments')) {
             // Show the "post comment" link if the form is on another page, or
             // if there are existing comments that the link will skip past.
@@ -956,8 +956,8 @@ function comment_links(CommentInterface $comment, EntityInterface $entity, $fiel
     if (empty($links)) {
       $comment_post_forbidden = array(
         '#theme' => 'comment_post_forbidden',
-        'entity' => $entity,
-        'field_name' => $field_name,
+        '#entity' => $entity,
+        '#field_name' => $field_name,
       );
       $links['comment-forbidden']['title'] = drupal_render($comment_post_forbidden);
       $links['comment-forbidden']['html'] = TRUE;
