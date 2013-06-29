@@ -210,10 +210,18 @@ function theme_views_ui_build_group_filter_form($variables) {
     );
     $rows[] = array('data' => $data, 'id' => 'views-row-' . $group_id, 'class' => array('draggable'));
   }
-  $table = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('class' => array('views-filter-groups'), 'id' => 'views-filter-groups'))) . drupal_render($form['add_group']);
+  $table = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#attributes' => array(
+      'class' => array('views-filter-groups'),
+      'id' => 'views-filter-groups',
+    ),
+  );
   drupal_add_tabledrag('views-filter-groups', 'order', 'sibling', 'weight');
   $render_form = drupal_render_children($form);
-  return $output . $render_form . $table . $more;
+  return $output . $render_form . drupal_render($table) . drupal_render($form['add_group']) . $more;
 }
 
 /**
@@ -292,12 +300,29 @@ function theme_views_ui_rearrange_filter_form(&$vars) {
   if (!empty($ungroupable_rows)) {
     drupal_add_tabledrag('views-rearrange-filters-ungroupable', 'order', 'sibling', 'weight');
     $header = array(t('Ungroupable filters'), t('Weight'), array('class' => array('views-hide-label'), 'data' => t('Group')), array('class' => array('views-hide-label'), 'data' => t('Remove')));
-    $output .= theme('table', array('header' => $header, 'rows' => $ungroupable_rows, 'attributes' => array('id' => 'views-rearrange-filters-ungroupable', 'class' => array('arrange'))));
+    $table = array(
+      '#theme' => 'table',
+      '#header' => $header,
+      '#rows' => $ungroupable_rows,
+      '#attributes' => array(
+        'id' => 'views-rearrange-filters-ungroupable',
+        'class' => array('arrange'),
+      ),
+    );
+    $output .= drupal_render($table);
   }
 
   // Set up tabledrag so that the weights are changed when rows are dragged.
   drupal_add_tabledrag('views-rearrange-filters', 'order', 'sibling', 'weight');
-  $output .= theme('table', array('rows' => $rows, 'attributes' => array('id' => 'views-rearrange-filters', 'class' => array('arrange'))));
+  $table = array(
+    '#theme' => 'table',
+    '#rows' => $rows,
+    '#attributes' => array(
+      'id' => 'views-rearrange-filters',
+      'class' => array('arrange'),
+    ),
+  );
+  $output .= drupal_render($table);
   $output .= '</div>';
 
   // When JavaScript is enabled, the button for adding a new group should be
@@ -383,7 +408,12 @@ function theme_views_ui_style_plugin_table($variables) {
   // Add the special 'None' row.
   $rows[] = array(t('None'), '', '', '', '', '', array('align' => 'center', 'data' => drupal_render($form['default'][-1])), '', '');
 
-  $output .= theme('table', array('header' => $header, 'rows' => $rows));
+  $table = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+  );
+  $output .= drupal_render($table);
   $output .= drupal_render_children($form);
   return $output;
 }
