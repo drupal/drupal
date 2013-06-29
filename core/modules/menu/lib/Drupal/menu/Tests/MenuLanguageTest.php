@@ -42,7 +42,7 @@ class MenuLanguageTest extends MenuWebTestBase {
     // Add some custom languages.
     foreach (array('aa', 'bb', 'cc') as $language_code) {
       $language = new Language(array(
-        'langcode' => $language_code,
+        'id' => $language_code,
         'name' => $this->randomName(),
       ));
       language_save($language);

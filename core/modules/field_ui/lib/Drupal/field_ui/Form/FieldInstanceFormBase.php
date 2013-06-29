@@ -66,7 +66,6 @@ abstract class FieldInstanceFormBase implements FormInterface, ControllerInterfa
    */
   public function buildForm(array $form, array &$form_state, FieldInstanceInterface $field_instance = NULL) {
     $this->instance = $form_state['instance'] = $field_instance;
-    form_load_include($form_state, 'inc', 'field_ui', 'field_ui.admin');
   }
 
   /**

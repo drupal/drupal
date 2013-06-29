@@ -1,0 +1,47 @@
+/**
+ * @file
+ * Caption filter: default styling for displaying image captions.
+ */
+
+/**
+ * Essentials, based on http://stackoverflow.com/a/13363408.
+ */
+.caption {
+  display: table;
+}
+.caption > * {
+  display: block;
+  max-width: 100%;
+}
+.caption > figcaption {
+  display: table-caption;
+  caption-side: bottom;
+  max-width: none;
+}
+
+/**
+ * Caption alignment.
+ */
+.caption-left {
+  float: left; /* LTR */
+  margin-left: 0; /* LTR */
+}
+[dir=rtl] .caption-left {
+  float: right;
+  margin-left: auto;
+  margin-right: 0;
+}
+.caption-right {
+  float: right; /* LTR */
+  margin-right: 0; /* LTR */
+}
+[dir=rtl] .caption-right {
+  float: left;
+  margin-left: 0;
+  margin-right: auto;
+}
+.caption-center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}

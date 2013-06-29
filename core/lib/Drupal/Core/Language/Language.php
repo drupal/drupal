@@ -19,7 +19,7 @@ namespace Drupal\Core\Language;
 class Language {
   // Properties within the Language are set up as the default language.
   public $name = '';
-  public $langcode = '';
+  public $id = '';
   public $direction = Language::DIRECTION_LTR;
   public $weight = 0;
   public $default = FALSE;
@@ -119,17 +119,17 @@ class Language {
   public function __construct(array $options = array()) {
     // Set all the provided properties for the language.
     foreach ($options as $name => $value) {
-      $this->$name = $value;
+      $this->{$name} = $value;
     }
     // If some options were not set, set sane defaults of a predefined language.
     if (!isset($options['name']) || !isset($options['direction'])) {
       $predefined = LanguageManager::getStandardLanguageList();
-      if (isset($predefined[$this->langcode])) {
+      if (isset($predefined[$this->id])) {
         if (!isset($options['name'])) {
-          $this->name = $predefined[$this->langcode][0];
+          $this->name = $predefined[$this->id][0];
         }
-        if (!isset($options['direction']) && isset($predefined[$this->langcode][2])) {
-          $this->direction = $predefined[$this->langcode][2];
+        if (!isset($options['direction']) && isset($predefined[$this->id][2])) {
+          $this->direction = $predefined[$this->id][2];
         }
       }
     }
@@ -146,4 +146,22 @@ class Language {
       $this->$var = $value;
     }
   }
+
+  /**
+   * Sort language objects.
+   *
+   * @param array $languages
+   *   The array of language objects keyed by langcode.
+   */
+  public static function sort($languages) {
+    uasort($languages, function ($a, $b) {
+      $a_weight = isset($a->weight) ? $a->weight : 0;
+      $b_weight = isset($b->weight) ? $b->weight : 0;
+      if ($a_weight == $b_weight) {
+        return strnatcasecmp($a->name, $b->name);
+      }
+      return ($a_weight < $b_weight) ? -1 : 1;
+    });
+  }
+
 }

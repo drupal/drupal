@@ -10,6 +10,7 @@ namespace Drupal\views;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\PluginBag;
 use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Component\Utility\MapArray;
 
 /**
  * A class which wraps the displays of a view so you can lazy-initialize them.
@@ -46,7 +47,7 @@ class DisplayBag extends PluginBag {
 
     // Store all display IDs to access them easy and fast.
     $display = $this->view->storage->get('display');
-    $this->instanceIDs = drupal_map_assoc(array_keys($display));
+    $this->instanceIDs = MapArray::copyValuesToKeys(array_keys($display));
   }
 
   /**

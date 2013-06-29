@@ -132,57 +132,6 @@ function hook_cron() {
 }
 
 /**
- * Defines available data types for the typed data API.
- *
- * The typed data API allows modules to support any kind of data based upon
- * pre-defined primitive types and interfaces for complex data and lists.
- *
- * Defined data types may map to one of the pre-defined primitive types in
- * \Drupal\Core\TypedData\Primitive or may be complex data types, containing one
- * or more data properties. Typed data objects for complex data types have to
- * implement the \Drupal\Core\TypedData\ComplexDataInterface. Further interfaces
- * that may be implemented are:
- *  - \Drupal\Core\TypedData\AccessibleInterface
- *  - \Drupal\Core\TypedData\TranslatableInterface
- *
- * Furthermore, lists of data items are represented by objects implementing
- * the \Drupal\Core\TypedData\ListInterface. A list contains items of the same
- * data type, is ordered and may contain duplicates. The classed used for a list
- * of items of a certain type may be specified using the 'list class' key.
- *
- * @return array
- *   An associative array where the key is the data type name and the value is
- *   again an associative array. Supported keys are:
- *   - label: The human readable label of the data type.
- *   - class: The associated typed data class. Must implement the
- *     \Drupal\Core\TypedData\TypedDataInterface.
- *   - list class: (optional) A typed data class used for wrapping multiple
- *     data items of the type. Must implement the
- *     \Drupal\Core\TypedData\ListInterface. Defaults to
- *     \Drupal\Core\TypedData\ItemList;
- *   - primitive type: (optional) Maps the data type to one of the pre-defined
- *     primitive types in \Drupal\Core\TypedData\Primitive. If set, it must be
- *     a constant defined by \Drupal\Core\TypedData\Primitive such as
- *     \Drupal\Core\TypedData\Primitive::STRING.
- *   - constraints: An array of validation constraints for this type. See
- *     \Drupal\Core\TypedData\TypedDataManager::getConstraints() for details.
- *
- * @see \Drupal::typedData()
- * @see Drupal\Core\TypedData\TypedDataManager::create()
- * @see hook_data_type_info_alter()
- */
-function hook_data_type_info() {
-  return array(
-    'email' => array(
-      'label' => t('Email'),
-      'class' => '\Drupal\email\Type\Email',
-      'primitive type' => \Drupal\Core\TypedData\Primitive::STRING,
-      'constraints' => array('Email' => array()),
-    ),
-  );
-}
-
-/**
  * Alter available data types for typed data wrappers.
  *
  * @param array $data_types
@@ -1856,7 +1805,7 @@ function hook_watchdog(array $log_entry) {
     '@message'       => strip_tags($log_entry['message']),
   ));
 
-  drupal_mail('emaillog', 'entry', $to, $language_interface->langcode, $params);
+  drupal_mail('emaillog', 'entry', $to, $language_interface->id, $params);
 }
 
 /**

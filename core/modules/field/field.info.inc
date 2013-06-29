@@ -71,7 +71,7 @@ function _field_info_collate_types() {
 
   // The _info() hooks invoked below include translated strings, so each
   // language is cached separately.
-  $langcode = $language_interface->langcode;
+  $langcode = $language_interface->id;
 
   if (!isset($info)) {
     if ($cached = cache('field')->get("field_info_types:$langcode")) {

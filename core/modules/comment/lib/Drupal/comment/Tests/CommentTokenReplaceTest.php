@@ -62,8 +62,8 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:body]'] = $comment->comment_body->processed;
     $tests['[comment:url]'] = url('comment/' . $comment->id(), $url_options + array('fragment' => 'comment-' . $comment->id()));
     $tests['[comment:edit-url]'] = url('comment/' . $comment->id() . '/edit', $url_options);
-    $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->created->value, 2, $language_interface->langcode);
-    $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->changed->value, 2, $language_interface->langcode);
+    $tests['[comment:created:since]'] = format_interval(REQUEST_TIME - $comment->created->value, 2, $language_interface->id);
+    $tests['[comment:changed:since]'] = format_interval(REQUEST_TIME - $comment->changed->value, 2, $language_interface->id);
     $tests['[comment:parent:cid]'] = $comment->pid->target_id;
     $tests['[comment:parent:title]'] = check_plain($parent_comment->subject->value);
     $tests['[comment:node:nid]'] = $comment->entity_id->value;
@@ -75,7 +75,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->langcode));
+      $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->id));
       $this->assertEqual($output, $expected, format_string('Sanitized comment token %token replaced.', array('%token' => $input)));
     }
 
@@ -91,7 +91,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:author:name]'] = $this->admin_user->name;
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->langcode, 'sanitize' => FALSE));
+      $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->id, 'sanitize' => FALSE));
       $this->assertEqual($output, $expected, format_string('Unsanitized comment token %token replaced.', array('%token' => $input)));
     }
 
@@ -104,7 +104,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[entity:comment-count-new]'] = 2;
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('entity' => $node), array('langcode' => $language_interface->langcode));
+      $output = $token_service->replace($input, array('entity' => $node), array('langcode' => $language_interface->id));
       $this->assertEqual($output, $expected, format_string('Node comment token %token replaced.', array('%token' => $input)));
     }
   }

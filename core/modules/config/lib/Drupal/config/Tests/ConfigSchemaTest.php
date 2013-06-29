@@ -66,7 +66,7 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $definition = $config['testitem']->getDefinition();
     $expected = array();
     $expected['label'] = 'Test item';
-    $expected['class'] = '\Drupal\Core\TypedData\Type\String';
+    $expected['class'] = '\Drupal\Core\TypedData\Plugin\DataType\String';
     $expected['type'] = 'string';
     $this->assertEqual($definition, $expected, 'Automatic type detection on string item worked.');
     $definition = $config['testlist']->getDefinition();
@@ -162,12 +162,12 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     // Try some simple properties.
     $meta = config_typed()->get('system.site');
     $property = $meta->get('name');
-    $this->assertTrue(is_a($property, 'Drupal\Core\TypedData\Type\String'), 'Got the right wrapper fo the site name property.');
+    $this->assertTrue(is_a($property, 'Drupal\Core\TypedData\Plugin\DataType\String'), 'Got the right wrapper fo the site name property.');
     $this->assertEqual($property->getType(), 'label', 'Got the right string type for site name data.');
     $this->assertEqual($property->getValue(), 'Drupal', 'Got the right string value for site name data.');
 
     $property = $meta->get('page')->get('front');
-    $this->assertTrue(is_a($property, 'Drupal\Core\TypedData\Type\String'), 'Got the right wrapper fo the page.front property.');
+    $this->assertTrue(is_a($property, 'Drupal\Core\TypedData\Plugin\DataType\String'), 'Got the right wrapper fo the page.front property.');
     $this->assertEqual($property->getType(), 'path', 'Got the right type for page.front data (undefined).');
     $this->assertEqual($property->getValue(), 'user', 'Got the right value for page.front data.');
 

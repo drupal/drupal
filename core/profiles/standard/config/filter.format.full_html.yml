@@ -6,6 +6,11 @@ roles:
   - administrator
 cache: '1'
 filters:
+  filter_caption:
+    module: filter
+    status: '1'
+    weight: '9'
+    settings: {  }
   filter_htmlcorrector:
     module: filter
     status: '1'

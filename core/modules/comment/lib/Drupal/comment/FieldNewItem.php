@@ -7,7 +7,7 @@
 
 namespace Drupal\comment;
 
-use Drupal\Core\Entity\Field\Type\IntegerItem;
+use Drupal\Core\Entity\Plugin\DataType\IntegerItem;
 
 /**
  * The field item for the 'new' field.

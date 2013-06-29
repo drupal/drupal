@@ -3854,7 +3854,7 @@ function form_process_machine_name($element, &$form_state) {
       'machineName' => array(
         '#' . $source['#id'] => $element['#machine_name'],
       ),
-      'langcode' => $language->langcode,
+      'langcode' => $language->id,
     ),
   );
   $element['#attached']['library'][] = array('system', 'drupal.machine-name');

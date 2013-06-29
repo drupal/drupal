@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 function comment_admin($type = 'new') {
   $edit = Drupal::request()->request->all();
 
-  if (isset($edit['operation']) && ($edit['operation'] == 'delete') && !empty($edit['comments'])) {
+  if (isset($edit['operation']) && ($edit['operation'] == 'delete') && isset($edit['comments']) && $edit['comments']) {
     return drupal_get_form('comment_multiple_delete_confirm');
   }
   else {
@@ -95,7 +95,6 @@ function comment_admin_overview($form, &$form_state, $arg) {
     ->orderByHeader($header)
     ->execute();
 
-  $nids = array();
   $cids = array();
   $entity_ids = array();
   $entities = array();
@@ -111,8 +110,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
   }
   // Ensure all nodes are statically cached so that we do not have to load them
   // individually when getting their labels below.
-  node_load_multiple($nids);
-  $comments = comment_load_multiple($cids);
+  $comments = entity_load_multiple('comment', $cids);
 
   // Build a table listing the appropriate comments.
   $options = array();
@@ -121,9 +119,13 @@ function comment_admin_overview($form, &$form_state, $arg) {
   foreach ($comments as $comment) {
     // Use the first entity label.
     $entity = $entities[$comment->entity_type->value][$comment->entity_id->value];
-    $comment->entity_title = $entity->label();
-    $comment->entity_uri = $entity->uri();
-    $comment_body = field_get_items($comment, 'comment_body');
+    $entity_uri = $entity->uri();
+    // Remove the first node title from the node_titles array and attach to
+    // the comment.
+    $username = array(
+      '#theme' => 'username',
+      '#account' => comment_prepare_author($comment),
+    );
     $options[$comment->id()] = array(
       'subject' => array(
         'data' => array(
@@ -133,13 +135,13 @@ function comment_admin_overview($form, &$form_state, $arg) {
           '#options' => array('attributes' => array('title' => truncate_utf8($comment->comment_body->value, 128)), 'fragment' => 'comment-' . $comment->id()),
         ),
       ),
-      'author' => theme('username', array('account' => comment_prepare_author($comment))),
+      'author' => drupal_render($username),
       'posted_in' => array(
         'data' => array(
           '#type' => 'link',
-          '#title' => $comment->entity_title,
-          '#href' => $comment->entity_uri['path'],
-          '#options' => $comment->entity_uri['options']
+          '#title' => $entity->label(),
+          '#href' => $entity_uri['path'],
+          '#options' => $entity_uri['options']
         ),
       ),
       'changed' => format_date($comment->changed->value, 'short'),

@@ -632,7 +632,7 @@ function toolbar_library_info() {
  */
 function _toolbar_get_subtree_hash() {
   global $user;
-  $cid = $user->uid . ':' . language(Language::TYPE_INTERFACE)->langcode;
+  $cid = $user->uid . ':' . language(Language::TYPE_INTERFACE)->id;
   if ($cache = cache('toolbar')->get($cid)) {
     $hash = $cache->data;
   }

@@ -22,25 +22,6 @@ function block_admin_demo($theme = NULL) {
 }
 
 /**
- * Page callback: Build the block instance add form.
- *
- * @param string $plugin_id
- *   The plugin ID for the block instance.
- * @param string $theme
- *   The name of the theme for the block instance.
- *
- * @return array
- *   The block instance edit form.
- */
-function block_admin_add($plugin_id, $theme) {
-  $entity = entity_create('block', array(
-    'plugin' => $plugin_id,
-    'theme' => $theme,
-  ));
-  return Drupal::entityManager()->getForm($entity);
-}
-
-/**
  * Page callback: Build the block instance edit form.
  *
  * @param \Drupal\block\Plugin\Core\Entity\Block $entity

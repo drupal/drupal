@@ -55,7 +55,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     $response->headers->set('X-UA-Compatible', 'IE=edge,chrome=1', FALSE);
 
     // Set the Content-language header.
-    $response->headers->set('Content-language', $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->langcode);
+    $response->headers->set('Content-language', $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->id);
 
     // Because pages are highly dynamic, set the last-modified time to now
     // since the page is in fact being regenerated right now.
@@ -91,8 +91,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // @todo Revisit whether or not this is still appropriate now that the
     //   Response object does its own cache control processing and we intend to
     //   use partial page caching more extensively.
-    // Commit the user session, if needed.
-    drupal_session_commit();
 
     // Attach globally-declared headers to the response object so that Symfony
     // can send them for us correctly.

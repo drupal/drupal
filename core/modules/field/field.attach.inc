@@ -790,7 +790,7 @@ function field_attach_form_validate(EntityInterface $entity, $form, &$form_state
         $has_violations = TRUE;
 
         // Place violations in $form_state.
-        $langcode = field_is_translatable($entity->entityType(), field_info_field($field_name)) ? $entity->language()->langcode : Language::LANGCODE_NOT_SPECIFIED;
+        $langcode = field_is_translatable($entity->entityType(), field_info_field($field_name)) ? $entity->language()->id : Language::LANGCODE_NOT_SPECIFIED;
         $field_state = field_form_get_state($form['#parents'], $field_name, $langcode, $form_state);
         $field_state['constraint_violations'] = $field_violations;
         field_form_set_state($form['#parents'], $field_name, $langcode, $form_state, $field_state);

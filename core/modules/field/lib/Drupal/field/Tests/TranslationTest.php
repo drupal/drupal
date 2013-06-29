@@ -79,7 +79,6 @@ class TranslationTest extends FieldUnitTestBase {
 
   function setUp() {
     parent::setUp();
-    $this->installSchema('language', array('language'));
 
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
 
@@ -104,7 +103,7 @@ class TranslationTest extends FieldUnitTestBase {
 
     for ($i = 0; $i < 3; ++$i) {
       $language = new Language(array(
-        'langcode' => 'l' . $i,
+        'id' => 'l' . $i,
         'name' => $this->randomString(),
       ));
       language_save($language);
@@ -213,7 +212,7 @@ class TranslationTest extends FieldUnitTestBase {
 
     // @todo Test every translation once the Entity Translation API allows for
     //   multilingual defaults.
-    $langcode = $entity->language()->langcode;
+    $langcode = $entity->language()->id;
     $this->assertEqual($entity->getTranslation($langcode)->{$field_name_default}->getValue(), $instance['default_value'], format_string('Default value correctly populated for language %language.', array('%language' => $langcode)));
 
     // Check that explicit empty values are not overridden with default values.

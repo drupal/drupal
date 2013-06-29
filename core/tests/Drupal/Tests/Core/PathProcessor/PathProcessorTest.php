@@ -39,7 +39,7 @@ class PathProcessorTest extends UnitTestCase {
     $languages = array();
     foreach (array('en' => 'English', 'fr' => 'French') as $langcode => $language_name) {
       $language = new \stdClass();
-      $language->langcode = $langcode;
+      $language->id = $langcode;
       $language->name = $language_name;
       $languages[$langcode] = $language;
     }

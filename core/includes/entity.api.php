@@ -583,13 +583,13 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
 /**
  * Control access to fields.
  *
- * This hook is invoked from \Drupal\Core\Entity\Field\Type\Field::access() to
+ * This hook is invoked from \Drupal\Core\Entity\Field\Field::access() to
  * let modules grant or deny operations on fields.
  *
  * @param string $operation
  *   The operation to be performed. See
  *   \Drupal\Core\TypedData\AccessibleInterface::access() for possible values.
- * @param \Drupal\Core\Entity\Field\Type\Field $field
+ * @param \Drupal\Core\Entity\Field\Field $field
  *   The entity field object on which the operation is to be performed.
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The user account to check.
@@ -617,7 +617,7 @@ function hook_entity_field_access($operation, $field, \Drupal\Core\Session\Accou
  * @param array $context
  *   Context array on the performed operation with the following keys:
  *   - operation: The operation to be performed (string).
- *   - field: The entity field object (\Drupal\Core\Entity\Field\Type\Field).
+ *   - field: The entity field object (\Drupal\Core\Entity\Field\Field).
  *   - account: The user account to check access for
  *     (Drupal\user\Plugin\Core\Entity\User).
  */

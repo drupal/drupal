@@ -535,7 +535,7 @@ function content_translation_translatable_batch($translatable, $field_name, &$co
       $context['sandbox']['max_entity_type'][$entity_type] -= count($result);
       $context['sandbox']['progress_entity_type'][$entity_type]++;
       $context['sandbox']['progress']++;
-      $langcode = $entity->language()->langcode;
+      $langcode = $entity->language()->id;
 
       // Skip process for language neutral entities.
       if ($langcode == Language::LANGCODE_NOT_SPECIFIED) {

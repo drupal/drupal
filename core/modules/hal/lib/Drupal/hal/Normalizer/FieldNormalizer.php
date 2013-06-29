@@ -45,8 +45,8 @@ class FieldNormalizer extends NormalizerBase {
     // to the field item values.
     else {
       foreach ($entity->getTranslationLanguages() as $lang) {
-        $context['langcode'] = $lang->langcode == 'und' ? Language::LANGCODE_DEFAULT : $lang->langcode;
-        $translation = $entity->getTranslation($lang->langcode);
+        $context['langcode'] = $lang->id == 'und' ? Language::LANGCODE_DEFAULT : $lang->id;
+        $translation = $entity->getTranslation($lang->id);
         $translated_field = $translation->get($field_name);
         $normalized_field_items = array_merge($normalized_field_items, $this->normalizeFieldItems($translated_field, $format, $context));
       }

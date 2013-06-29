@@ -641,7 +641,7 @@ function views_language_list($field = 'name', $flags = Language::STATE_ALL) {
   $languages = language_list($flags);
   $list = array();
   foreach ($languages as $language) {
-    $list[$language->langcode] = ($field == 'name') ? t($language->name) : $language->$field;
+    $list[$language->id] = ($field == 'name') ? t($language->name) : $language->$field;
   }
   return $list;
 }
@@ -1627,7 +1627,7 @@ function views_cache_set($cid, $data, $use_language = FALSE) {
     return;
   }
   if ($use_language) {
-    $cid .= ':' . language(Language::TYPE_INTERFACE)->langcode;
+    $cid .= ':' . language(Language::TYPE_INTERFACE)->id;
   }
 
   cache('views_info')->set($cid, $data);
@@ -1651,7 +1651,7 @@ function views_cache_get($cid, $use_language = FALSE) {
     return FALSE;
   }
   if ($use_language) {
-    $cid .= ':' . language(Language::TYPE_INTERFACE)->langcode;
+    $cid .= ':' . language(Language::TYPE_INTERFACE)->id;
   }
 
   return cache('views_info')->get($cid);

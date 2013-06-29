@@ -98,7 +98,7 @@ abstract class TextItemBase extends ConfigFieldItemBase implements PrepareCacheI
     // field in the filter cache separately.
     if (!$this->getInstance()->settings['text_processing'] || filter_format_allowcache($this->get('format')->getValue())) {
       $itemBC = $this->getValue();
-      $langcode = $this->getParent()->getParent()->language()->langcode;
+      $langcode = $this->getParent()->getParent()->language()->id;
       $this->set('safe_value', text_sanitize($this->getInstance()->settings['text_processing'], $langcode, $itemBC, 'value'));
       if ($this->getType() == 'field_item:text_with_summary') {
         $this->set('safe_summary', text_sanitize($this->getInstance()->settings['text_processing'], $langcode, $itemBC, 'summary'));

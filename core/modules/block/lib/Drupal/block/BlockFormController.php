@@ -116,7 +116,7 @@ class BlockFormController extends EntityFormController {
       foreach ($languages as $language) {
         // @todo $language->name is not wrapped with t(), it should be replaced
         //   by CMI translation implementation.
-        $langcodes_options[$language->langcode] = $language->name;
+        $langcodes_options[$language->id] = $language->name;
       }
       $form['visibility']['language'] = array(
         '#type' => 'details',

@@ -7,6 +7,8 @@
 
 namespace Drupal\Tests;
 
+use Drupal\Component\Utility\Random;
+
 /**
  * Provides a base class and helpers for Drupal unit tests.
  */
@@ -33,33 +35,18 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
   }
 
   /**
-   * Generates a random string containing letters and numbers.
-   *
-   * The string will always start with a letter. The letters may be upper or
-   * lower case. This method is better for restricted inputs that do not accept
-   * certain characters. For example, when testing input fields that require
-   * machine readable values (i.e. without spaces and non-standard characters)
-   * this method is best.
-   *
-   * Do not use this method when testing unvalidated user input. Instead, use
-   * Drupal\simpletest\TestBase::randomString().
+   * Generates a unique random string containing letters and numbers.
    *
    * @param int $length
    *   Length of random string to generate.
    *
    * @return string
-   *   Randomly generated string.
+   *   Randomly generated unique string.
    *
-   * @see Drupal\simpletest\TestBase::randomString()
+   * @see \Drupal\Component\Utility::string()
    */
-  public static function randomName($length = 8) {
-    $values = array_merge(range(65, 90), range(97, 122), range(48, 57));
-    $max = count($values) - 1;
-    $str = chr(mt_rand(97, 122));
-    for ($i = 1; $i < $length; $i++) {
-      $str .= chr($values[mt_rand(0, $max)]);
-    }
-    return $str;
+  public function randomName($length = 8) {
+    return Random::name($length, TRUE);
   }
 
   /**

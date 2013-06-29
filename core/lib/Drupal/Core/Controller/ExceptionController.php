@@ -42,12 +42,12 @@ class ExceptionController extends ContainerAware {
   /**
    * Handles an exception on a request.
    *
-   * @param Symfony\Component\HttpKernel\Exception\FlattenException $exception
+   * @param \Symfony\Component\HttpKernel\Exception\FlattenException $exception
    *   The flattened exception.
-   * @param Symfony\Component\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request that generated the exception.
    *
-   * @return Symfony\Component\HttpFoundation\Response
+   * @return \Symfony\Component\HttpFoundation\Response
    *   A response object to be sent to the server.
    */
   public function execute(FlattenException $exception, Request $request) {
@@ -57,7 +57,7 @@ class ExceptionController extends ContainerAware {
       return $this->$method($exception, $request);
     }
 
-    return new Response('A fatal error occurred: ' . $exception->getMessage(), $exception->getStatusCode());
+    return new Response('A fatal error occurred: ' . $exception->getMessage(), $exception->getStatusCode(), $exception->getHeaders());
   }
 
   /**

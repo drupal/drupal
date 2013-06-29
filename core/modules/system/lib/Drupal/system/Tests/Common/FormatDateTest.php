@@ -127,8 +127,8 @@ class FormatDateTest extends WebTestBase {
     // Save the original user and language and then replace it with the test user and language.
     $real_user = $user;
     $user = user_load($test_user->uid, TRUE);
-    $real_language = $language_interface->langcode;
-    $language_interface->langcode = $user->preferred_langcode;
+    $real_language = $language_interface->id;
+    $language_interface->id = $user->preferred_langcode;
     // Simulate a Drupal bootstrap with the logged-in user.
     date_default_timezone_set(drupal_get_user_timezone());
 
@@ -150,7 +150,7 @@ class FormatDateTest extends WebTestBase {
 
     // Restore the original user and language, and enable session saving.
     $user = $real_user;
-    $language_interface->langcode = $real_language;
+    $language_interface->id = $real_language;
     // Restore default time zone.
     date_default_timezone_set(drupal_get_user_timezone());
     drupal_save_session(TRUE);

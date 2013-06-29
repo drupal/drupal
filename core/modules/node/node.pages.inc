@@ -90,7 +90,7 @@ function node_add($node_type) {
     'uid' => $user->uid,
     'name' => (isset($user->name) ? $user->name : ''),
     'type' => $type,
-    'langcode' => $langcode ? $langcode : language_default()->langcode,
+    'langcode' => $langcode ? $langcode : language_default()->id,
   ))->getBCEntity();
   drupal_set_title(t('Create @name', array('@name' => $node_type->name)), PASS_THROUGH);
   return Drupal::entityManager()->getForm($node);

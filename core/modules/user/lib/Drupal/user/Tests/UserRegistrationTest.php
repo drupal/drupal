@@ -185,8 +185,8 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertTrue(($new_user->created->value > REQUEST_TIME - 20 ), 'Correct creation time.');
     $this->assertEqual($new_user->status->value, $config_user_settings->get('register') == USER_REGISTER_VISITORS ? 1 : 0, 'Correct status field.');
     $this->assertEqual($new_user->timezone->value, $config_system_timezone->get('default'), 'Correct time zone field.');
-    $this->assertEqual($new_user->langcode->value, language_default()->langcode, 'Correct language field.');
-    $this->assertEqual($new_user->preferred_langcode->value, language_default()->langcode, 'Correct preferred language field.');
+    $this->assertEqual($new_user->langcode->value, language_default()->id, 'Correct language field.');
+    $this->assertEqual($new_user->preferred_langcode->value, language_default()->id, 'Correct preferred language field.');
     $this->assertEqual($new_user->init->value, $mail, 'Correct init field.');
   }
 

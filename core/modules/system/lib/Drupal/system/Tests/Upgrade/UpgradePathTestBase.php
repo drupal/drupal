@@ -93,6 +93,10 @@ abstract class UpgradePathTestBase extends WebTestBase {
     // Load the Update API.
     require_once DRUPAL_ROOT . '/core/includes/update.inc';
 
+    // Load Session API.
+    require_once DRUPAL_ROOT . '/core/includes/session.inc';
+    drupal_session_initialize();
+
     // Reset flags.
     $this->upgradedSite = FALSE;
     $this->upgradeErrors = array();

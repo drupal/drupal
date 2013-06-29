@@ -1,22 +1,22 @@
 # Basic scalar data types from typed data.
 boolean:
   label: 'Boolean'
-  class: '\Drupal\Core\TypedData\Type\Boolean'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\Boolean'
 email:
   label: 'Email'
-  class: '\Drupal\Core\TypedData\Type\Email'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\Email'
 integer:
   label: 'Integer'
-  class: '\Drupal\Core\TypedData\Type\Integer'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\Integer'
 float:
   label: 'Float'
-  class: '\Drupal\Core\TypedData\Type\Float'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\Float'
 string:
   label: 'String'
-  class: '\Drupal\Core\TypedData\Type\String'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\String'
 uri:
   label: 'Uri'
-  class: '\Drupal\Core\TypedData\Type\Uri'
+  class: '\Drupal\Core\TypedData\Plugin\DataType\Uri'
 
 # Basic data types for configuration.
 undefined:

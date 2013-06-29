@@ -73,8 +73,6 @@ class FieldDeleteForm extends EntityConfirmFormBase implements EntityControllerI
    * {@inheritdoc}
    */
   public function submit(array $form, array &$form_state) {
-    form_load_include($form_state, 'inc', 'field_ui', 'field_ui.admin');
-
     $field = $this->entity->getField();
     $bundles = entity_get_bundles();
     $bundle_label = $bundles[$this->entity->entity_type][$this->entity->bundle]['label'];

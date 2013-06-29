@@ -158,19 +158,14 @@ const DRUPAL_BOOTSTRAP_DATABASE = 3;
 const DRUPAL_BOOTSTRAP_VARIABLES = 4;
 
 /**
- * Sixth bootstrap phase: initialize session handling.
- */
-const DRUPAL_BOOTSTRAP_SESSION = 5;
-
-/**
  * Eighth bootstrap phase: load code for subsystems and modules.
  */
-const DRUPAL_BOOTSTRAP_CODE = 6;
+const DRUPAL_BOOTSTRAP_CODE = 5;
 
 /**
  * Final bootstrap phase: initialize language, path, theme, and modules.
  */
-const DRUPAL_BOOTSTRAP_FULL = 7;
+const DRUPAL_BOOTSTRAP_FULL = 6;
 
 /**
  * Role ID for anonymous users; should match what's in the "role" table.
@@ -1770,7 +1765,6 @@ function drupal_anonymous_user() {
  *   - DRUPAL_BOOTSTRAP_PAGE_CACHE: Tries to serve a cached page.
  *   - DRUPAL_BOOTSTRAP_DATABASE: Initializes the database layer.
  *   - DRUPAL_BOOTSTRAP_VARIABLES: Initializes the variable system.
- *   - DRUPAL_BOOTSTRAP_SESSION: Initializes session handling.
  *   - DRUPAL_BOOTSTRAP_CODE: Loads code for subsystems and modules.
  *   - DRUPAL_BOOTSTRAP_FULL: Fully loads Drupal. Validates and fixes input
  *     data.
@@ -1789,7 +1783,6 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
     DRUPAL_BOOTSTRAP_PAGE_CACHE,
     DRUPAL_BOOTSTRAP_DATABASE,
     DRUPAL_BOOTSTRAP_VARIABLES,
-    DRUPAL_BOOTSTRAP_SESSION,
     DRUPAL_BOOTSTRAP_CODE,
     DRUPAL_BOOTSTRAP_FULL,
   );
@@ -1837,11 +1830,6 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
 
         case DRUPAL_BOOTSTRAP_VARIABLES:
           _drupal_bootstrap_variables();
-          break;
-
-        case DRUPAL_BOOTSTRAP_SESSION:
-          require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/session.inc');
-          drupal_session_initialize();
           break;
 
         case DRUPAL_BOOTSTRAP_CODE:
@@ -1910,7 +1898,7 @@ function drupal_get_user_timezone() {
   global $user;
   $config = config('system.timezone');
 
-  if ($config->get('user.configurable') && $user->uid && $user->timezone) {
+  if ($user && $config->get('user.configurable') && $user->uid && $user->timezone) {
     return $user->timezone;
   }
   else {
@@ -2395,7 +2383,7 @@ function drupal_installation_attempted() {
 function drupal_language_initialize() {
   $language_manager = Drupal::languageManager();
   $language_manager->init();
-  Drupal::translation()->setDefaultLangcode($language_manager->getLanguage(Language::TYPE_INTERFACE)->langcode);
+  Drupal::translation()->setDefaultLangcode($language_manager->getLanguage(Language::TYPE_INTERFACE)->id);
 }
 
 /**
@@ -2476,18 +2464,27 @@ function language_list($flags = Language::STATE_CONFIGURABLE) {
     $default = language_default();
     if (language_multilingual() || module_exists('language')) {
       // Use language module configuration if available.
-      $languages = db_query('SELECT * FROM {language} ORDER BY weight ASC, name ASC')->fetchAllAssoc('langcode', PDO::FETCH_ASSOC);
+      $language_entities = config_get_storage_names_with_prefix('language.entity');
 
       // Initialize default property so callers have an easy reference and can
       // save the same object without data loss.
-      foreach ($languages as $langcode => $info) {
-        $info['default'] = ($langcode == $default->langcode);
-        $languages[$langcode] = new Language($info);
+      foreach ($language_entities as $langcode_config_name) {
+        $langcode = substr($langcode_config_name, strlen('language.entity.'));
+        $info = config($langcode_config_name)->get();
+        $languages[$langcode] = new Language(array(
+          'default' => ($info['id'] == $default->id),
+          'name' => $info['label'],
+          'id' => $info['id'],
+          'direction' => $info['direction'],
+          'locked' => $info['locked'],
+          'weight' => $info['weight'],
+        ));
       }
+      Language::sort($languages);
     }
     else {
       // No language module, so use the default language only.
-      $languages = array($default->langcode => $default);
+      $languages = array($default->id => $default);
       // Add the special languages, they will be filtered later if needed.
       $languages += language_default_locked_languages($default->weight);
     }
@@ -2535,12 +2532,12 @@ function language_default_locked_languages($weight = 0) {
 
   $languages = array();
   $languages[Language::LANGCODE_NOT_SPECIFIED] = new Language(array(
-    'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+    'id' => Language::LANGCODE_NOT_SPECIFIED,
     'name' => t('Not specified'),
     'weight' => ++$weight,
   ) + $locked_language);
   $languages[Language::LANGCODE_NOT_APPLICABLE] = new Language(array(
-    'langcode' => Language::LANGCODE_NOT_APPLICABLE,
+    'id' => Language::LANGCODE_NOT_APPLICABLE,
     'name' => t('Not applicable'),
     'weight' => ++$weight,
   ) + $locked_language);
@@ -2606,7 +2603,7 @@ function language_is_locked($langcode) {
  */
 function language_default() {
   $info = variable_get('language_default', array(
-    'langcode' => 'en',
+    'id' => 'en',
     'name' => 'English',
     'direction' => 0,
     'weight' => 0,

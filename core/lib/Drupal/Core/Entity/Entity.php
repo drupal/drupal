@@ -287,7 +287,7 @@ class Entity implements IteratorAggregate, EntityInterface {
     $language = language_load($this->langcode);
     if (!$language) {
       // Make sure we return a proper language object.
-      $language = new Language(array('langcode' => Language::LANGCODE_NOT_SPECIFIED));
+      $language = new Language(array('id' => Language::LANGCODE_NOT_SPECIFIED));
     }
     return $language;
   }
@@ -318,7 +318,7 @@ class Entity implements IteratorAggregate, EntityInterface {
     // @todo: Replace by EntityNG implementation once all entity types have been
     // converted to use the entity field API.
     $default_language = $this->language();
-    $languages = array($default_language->langcode => $default_language);
+    $languages = array($default_language->id => $default_language);
     $entity_info = $this->entityInfo();
 
     if ($entity_info['fieldable']) {
@@ -336,7 +336,7 @@ class Entity implements IteratorAggregate, EntityInterface {
     }
 
     if (empty($include_default)) {
-      unset($languages[$default_language->langcode]);
+      unset($languages[$default_language->id]);
     }
 
     return $languages;

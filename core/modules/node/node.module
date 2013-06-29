@@ -319,7 +319,7 @@ function node_type_get_types() {
  *   An array of node type labels, keyed by the node type name.
  */
 function node_type_get_names() {
-  $cid = 'node_type:names:' . language(Language::TYPE_INTERFACE)->langcode;
+  $cid = 'node_type:names:' . language(Language::TYPE_INTERFACE)->id;
   if ($cache = cache()->get($cid)) {
     return $cache->data;
   }
@@ -547,7 +547,7 @@ function node_rdf_mapping() {
   );
 }
 
-/**s
+/**
  * Loads node entities from the database.
  *
  * This function should be used whenever you need to load more than one node
@@ -1010,7 +1010,7 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
       'extra' => $extra,
       'score' => $item->calculated_score,
       'snippet' => search_excerpt($keys, $node->rendered, $item->langcode),
-      'langcode' => $node->language()->langcode,
+      'langcode' => $node->language()->id,
     );
   }
   return $results;
@@ -1189,7 +1189,7 @@ function _node_revision_access(EntityInterface $node, $op = 'view', $account = N
 
   // If no language code was provided, default to the node revision's langcode.
   if (empty($langcode)) {
-    $langcode = $node->language()->langcode;
+    $langcode = $node->language()->id;
   }
 
   // Statically cache access by revision ID, language code, user account ID,
@@ -1754,7 +1754,7 @@ function node_feed($nids = FALSE, $channel = array()) {
     'title'       => config('system.site')->get('name'),
     'link'        => $base_url,
     'description' => $rss_config->get('channel.description'),
-    'language'    => $language_content->langcode
+    'language'    => $language_content->id
   );
   $channel_extras = array_diff_key($channel, $channel_defaults);
   $channel = array_merge($channel_defaults, $channel);
@@ -1875,21 +1875,21 @@ function _node_index_node(EntityInterface $node) {
 
   foreach ($languages as $language) {
     // Render the node.
-    $build = node_view($node, 'search_index', $language->langcode);
+    $build = node_view($node, 'search_index', $language->id);
 
     unset($build['#theme']);
     $node->rendered = drupal_render($build);
 
-    $text = '<h1>' . check_plain($node->label($language->langcode)) . '</h1>' . $node->rendered;
+    $text = '<h1>' . check_plain($node->label($language->id)) . '</h1>' . $node->rendered;
 
     // Fetch extra data normally not visible.
-    $extra = module_invoke_all('node_update_index', $node, $language->langcode);
+    $extra = module_invoke_all('node_update_index', $node, $language->id);
     foreach ($extra as $t) {
       $text .= $t;
     }
 
     // Update index.
-    search_index($node->id(), 'node', $text, $language->langcode);
+    search_index($node->nid, 'node', $text, $language->id);
   }
 }
 
@@ -2171,7 +2171,7 @@ function node_access($op, $node, $account = NULL, $langcode = NULL) {
       // Load languages the node exists in.
       $node_translations = $node->getTranslationLanguages();
       // Load the language from content negotiation.
-      $content_negotiation_langcode = language(Language::TYPE_CONTENT)->langcode;
+      $content_negotiation_langcode = language(Language::TYPE_CONTENT)->id;
       // If there is a translation available, use it.
       if (isset($node_translations[$content_negotiation_langcode])) {
         $langcode = $content_negotiation_langcode;
@@ -2848,7 +2848,7 @@ function node_language_delete($language) {
   // On nodes with this language, unset the language.
   db_update('node')
     ->fields(array('langcode' => ''))
-    ->condition('langcode', $language->langcode)
+    ->condition('langcode', $language->id)
     ->execute();
 }
 

@@ -93,7 +93,7 @@ class Date {
     }
 
     if (empty($langcode)) {
-      $langcode = $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->langcode;
+      $langcode = $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->id;
     }
 
     // Create a DrupalDateTime object from the timestamp and timezone.

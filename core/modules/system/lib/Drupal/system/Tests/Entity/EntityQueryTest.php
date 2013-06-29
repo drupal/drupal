@@ -56,8 +56,9 @@ class EntityQueryTest extends EntityUnitTestBase {
   function setUp() {
     parent::setUp();
     $this->installSchema('entity_test', array('entity_test_mulrev', 'entity_test_mulrev_property_data', 'entity_test_mulrev_property_revision'));
-    $this->installSchema('language', array('language'));
     $this->installSchema('system', array('variable'));
+    $this->installConfig(array('language'));
+
     $figures = drupal_strtolower($this->randomName());
     $greetings = drupal_strtolower($this->randomName());
     foreach (array($figures => 'shape', $greetings => 'text') as $field_name => $field_type) {
@@ -108,17 +109,17 @@ class EntityQueryTest extends EntityUnitTestBase {
     ));
     // Make these languages available to the greetings field.
     $langcode = new Language(array(
-      'langcode' => 'en',
+      'id' => 'en',
       'name' => $this->randomString(),
     ));
     language_save($langcode);
     $langcode = new Language(array(
-      'langcode' => 'tr',
+      'id' => 'tr',
       'name' => $this->randomString(),
     ));
     language_save($langcode);
     $langcode = new Language(array(
-      'langcode' => 'pl',
+      'id' => 'pl',
       'name' => $this->randomString(),
     ));
     language_save($langcode);

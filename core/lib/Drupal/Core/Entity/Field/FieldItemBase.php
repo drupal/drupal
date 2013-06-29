@@ -8,7 +8,7 @@
 namespace Drupal\Core\Entity\Field;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\TypedData\Type\Map;
+use Drupal\Core\TypedData\Plugin\DataType\Map;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\user;
 
@@ -80,7 +80,7 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\TypedData\Type\Map::set().
+   * {@inheritdoc}
    */
   public function set($property_name, $value, $notify = TRUE) {
     // Notify the parent of any changes to be made.

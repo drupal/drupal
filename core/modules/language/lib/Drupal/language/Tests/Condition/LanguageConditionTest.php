@@ -48,17 +48,17 @@ class LanguageConditionTest extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('language', 'language');
     // This is needed for language_default().
     // @todo remove this when language_default() no longer needs variable_get().
     $this->installSchema('system', 'variable');
+    $this->installConfig(array('language'));
 
     // Setup English.
     language_save(language_default());
 
     // Setup Italian.
     $language = new Language(array(
-      'langcode' => 'it',
+      'id' => 'it',
       'name' => 'Italian',
       'direction' => '0',
     ));

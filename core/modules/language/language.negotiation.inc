@@ -61,7 +61,7 @@ const LANGUAGE_NEGOTIATION_URL_DOMAIN = 'domain';
  *   The current interface language code.
  */
 function language_from_interface() {
-  return language(Language::TYPE_INTERFACE)->langcode;
+  return language(Language::TYPE_INTERFACE)->id;
 }
 
 /**
@@ -175,7 +175,7 @@ function language_from_browser($languages) {
 
     // Find the best match.
     if ($qvalue > $max_qvalue) {
-      $best_match_langcode = $language->langcode;
+      $best_match_langcode = $language->id;
       $max_qvalue = $qvalue;
     }
   }
@@ -287,7 +287,7 @@ function language_from_url($languages, Request $request = NULL) {
       list($language, $path) = language_url_split_prefix($request_path, $languages);
 
       if ($language !== FALSE) {
-        $language_url = $language->langcode;
+        $language_url = $language->id;
       }
       break;
 
@@ -301,13 +301,13 @@ function language_from_url($languages, Request $request = NULL) {
       $domains = language_negotiation_url_domains();
       foreach ($languages as $language) {
         // Skip the check if the language doesn't have a domain.
-        if (!empty($domains[$language->langcode])) {
+        if (!empty($domains[$language->id])) {
           // Ensure that there is exactly one protocol in the URL when checking
           // the hostname.
-          $host = 'http://' . str_replace(array('http://', 'https://'), '', $domains[$language->langcode]);
+          $host = 'http://' . str_replace(array('http://', 'https://'), '', $domains[$language->id]);
           $host = parse_url($host, PHP_URL_HOST);
           if ($http_host == $host) {
-            $language_url = $language->langcode;
+            $language_url = $language->id;
             break;
           }
         }
@@ -363,11 +363,11 @@ function language_url_fallback($language = NULL, $request = NULL, $language_type
   // the default one, otherwise we fall back to an already detected language.
   $domains = language_negotiation_url_domains();
   $prefixes = language_negotiation_url_prefixes();
-  if (($prefix && empty($prefixes[$default->langcode])) || (!$prefix && empty($domains[$default->langcode]))) {
-    return $default->langcode;
+  if (($prefix && empty($prefixes[$default->id])) || (!$prefix && empty($domains[$default->id]))) {
+    return $default->id;
   }
   else {
-    $langcode = language($language_type)->langcode;
+    $langcode = language($language_type)->id;
     return $langcode;
   }
 }
@@ -382,7 +382,7 @@ function language_switcher_url($type, $path) {
   $links = array();
 
   foreach ($languages as $language) {
-    $links[$language->langcode] = array(
+    $links[$language->id] = array(
       'href'       => $path,
       'title'      => $language->name,
       'language'   => $language,
@@ -398,7 +398,7 @@ function language_switcher_url($type, $path) {
  */
 function language_switcher_session($type, $path) {
   $param = config('language.negotiation')->get('session.parameter');
-  $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : language($type)->langcode;
+  $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : language($type)->id;
 
   $languages = language_list();
   $links = array();
@@ -406,7 +406,7 @@ function language_switcher_session($type, $path) {
   $query = $_GET;
 
   foreach ($languages as $language) {
-    $langcode = $language->langcode;
+    $langcode = $language->id;
     $links[$langcode] = array(
       'href'       => $path,
       'title'      => $language->name,
@@ -439,10 +439,10 @@ function language_negotiation_url_prefixes_update() {
   foreach (language_list() as $language) {
     // The prefix for this language should be updated if it's not assigned yet
     // or the prefix is set to the empty string.
-    if (empty($prefixes[$language->langcode])) {
+    if (empty($prefixes[$language->id])) {
       // For the default language, set the prefix to the empty string,
       // otherwise use the langcode.
-      $prefixes[$language->langcode] = !empty($language->default) ? '' : $language->langcode;
+      $prefixes[$language->id] = !empty($language->default) ? '' : $language->id;
     }
     // Otherwise we keep the configured prefix.
   }

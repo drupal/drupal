@@ -40,7 +40,7 @@ function entity_reference_field_info() {
  *
  * Set the "target_type" property definition for entity reference fields.
  *
- * @see \Drupal\Core\Entity\Field\Type\EntityReferenceItem::getPropertyDefinitions()
+ * @see \Drupal\Core\Entity\Plugin\DataType\EntityReferenceItem::getPropertyDefinitions()
  *
  * @param array $info
  *   The property info array as returned by hook_entity_field_info().

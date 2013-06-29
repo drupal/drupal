@@ -149,7 +149,7 @@ class ConfigImporterTest extends DrupalUnitTestBase {
       'weight' => '0',
       'style' => '',
       'status' => '1',
-      'langcode' => language_default()->langcode,
+      'langcode' => language_default()->id,
       'protected_property' => '',
     );
     $staging->write($dynamic_name, $original_dynamic_data);

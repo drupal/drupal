@@ -125,7 +125,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
    *   The localized config name.
    */
   public function getLocaleConfigName($name, Language $language) {
-    return 'locale.config.' . $language->langcode . '.' . $name;
+    return 'locale.config.' . $language->id . '.' . $name;
   }
 
   /**

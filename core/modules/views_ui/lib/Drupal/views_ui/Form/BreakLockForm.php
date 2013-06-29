@@ -76,7 +76,11 @@ class BreakLockForm extends EntityConfirmFormBase implements EntityControllerInt
   public function getDescription() {
     $locked = $this->tempStore->getMetadata($this->entity->id());
     $accounts = $this->entityManager->getStorageController('user')->load(array($locked->owner));
-    return t('By breaking this lock, any unsaved changes made by !user will be lost.', array('!user' => theme('username', array('account' => reset($accounts)))));
+    $username = array(
+      '#theme' => 'username',
+      '#account' => reset($accounts),
+    );
+    return t('By breaking this lock, any unsaved changes made by !user will be lost.', array('!user' => drupal_render($username)));
   }
 
   /**

@@ -38,11 +38,6 @@ class FieldDataTypeDerivative implements DerivativeInterface {
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     foreach (\Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions() as $plugin_id => $definition) {
-      // Typed data API expects a 'list class' property, but annotations do not
-      // support spaces in property names.
-      $definition['list class'] = $definition['list_class'];
-      unset($definition['list_class']);
-
       $this->derivatives[$plugin_id] = $definition;
     }
     return $this->derivatives;

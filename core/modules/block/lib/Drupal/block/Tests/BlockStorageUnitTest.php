@@ -96,7 +96,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
       'id' => 'stark.test_block',
       'weight' => '',
       'status' => '1',
-      'langcode' => language_default()->langcode,
+      'langcode' => language_default()->id,
       'region' => '-1',
       'plugin' => 'test_html_id',
       'settings' => array(

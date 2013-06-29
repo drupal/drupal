@@ -110,7 +110,7 @@ class ContactSitewideTest extends WebTestBase {
 
     // Check that the category was created in site default language.
     $langcode = config('contact.category.' . $id)->get('langcode');
-    $default_langcode = language_default()->langcode;
+    $default_langcode = language_default()->id;
     $this->assertEqual($langcode, $default_langcode);
 
     // Make sure the newly created category is included in the list of categories.

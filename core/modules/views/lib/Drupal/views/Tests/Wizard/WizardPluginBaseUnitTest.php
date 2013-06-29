@@ -43,8 +43,8 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->installSchema('language', 'language');
     $this->installSchema('system', 'variable');
+    $this->installConfig(array('language'));
 
     $this->enableModules(array('views_ui'));
 
@@ -66,7 +66,7 @@ class WizardPluginBaseUnitTest extends ViewUnitTestBase {
 
     // Add a new language and mark it as default.
     $language = new Language(array(
-      'langcode' => 'it',
+      'id' => 'it',
       'name' => 'Italian',
       'default' => TRUE,
     ));

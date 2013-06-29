@@ -44,7 +44,7 @@ class StorageTest extends UITestBase {
   public function testDetails() {
     $view_name = 'test_view';
 
-    $language = new Language(array('name' => 'French', 'langcode' => 'fr'));
+    $language = new Language(array('name' => 'French', 'id' => 'fr'));
     language_save($language);
 
     $edit = array(

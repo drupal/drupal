@@ -60,19 +60,18 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
     parent::setUp();
     $this->installSchema('system', array('variable', 'url_alias'));
     $this->installSchema('user', array('users'));
-    $this->installSchema('language', array('language'));
     $this->installSchema('entity_test', array('entity_test'));
-    $this->installConfig(array('field'));
+    $this->installConfig(array('field', 'language'));
 
     // Add English as a language.
     $english = new Language(array(
-      'langcode' => 'en',
+      'id' => 'en',
       'name' => 'English',
     ));
     language_save($english);
     // Add German as a language.
     $german = new Language(array(
-      'langcode' => 'de',
+      'id' => 'de',
       'name' => 'Deutsch',
     ));
     language_save($german);

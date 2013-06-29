@@ -94,9 +94,9 @@ abstract class ContentTranslationTestBase extends WebTestBase {
   protected function setupLanguages() {
     $this->langcodes = array('it', 'fr');
     foreach ($this->langcodes as $langcode) {
-      language_save(new Language(array('langcode' => $langcode)));
+      language_save(new Language(array('id' => $langcode)));
     }
-    array_unshift($this->langcodes, language_default()->langcode);
+    array_unshift($this->langcodes, language_default()->id);
   }
 
   /**

@@ -87,7 +87,7 @@ class FilterCrudTest extends DrupalUnitTestBase {
    */
   function verifyTextFormat($format) {
     $t_args = array('%format' => $format->name);
-    $default_langcode = language_default()->langcode;
+    $default_langcode = language_default()->id;
 
     // Verify filter_format_load().
     $filter_format = filter_format_load($format->format);

@@ -39,7 +39,7 @@ class AggregatorPluginManager extends PluginManagerBase {
     );
 
     $this->discovery = new AnnotatedClassDiscovery("aggregator/$type", $namespaces, $annotation_namespaces, $type_annotations[$type]);
-    $this->discovery = new CacheDecorator($this->discovery, "aggregator_$type:" . language(Language::TYPE_INTERFACE)->langcode);
+    $this->discovery = new CacheDecorator($this->discovery, "aggregator_$type:" . language(Language::TYPE_INTERFACE)->id);
     $this->factory = new DefaultFactory($this->discovery);
   }
 }

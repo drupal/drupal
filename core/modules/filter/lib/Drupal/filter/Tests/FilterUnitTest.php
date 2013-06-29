@@ -9,6 +9,8 @@ namespace Drupal\filter\Tests;
 
 use Drupal\simpletest\DrupalUnitTestBase;
 use stdClass;
+use Drupal\filter\FilterBag;
+use Drupal\filter\Plugin\Filter\FilterCaption;
 
 /**
  * Unit tests for core filters.
@@ -33,15 +35,121 @@ class FilterUnitTest extends DrupalUnitTestBase {
   protected function setUp() {
     parent::setUp();
     config_install_default_config('module', 'system');
+
+    $manager = $this->container->get('plugin.manager.filter');
+    $bag = new FilterBag($manager, array());
+    $this->filters = $bag->getAll();
+  }
+
+  /**
+   * Tests the caption filter.
+   */
+  function testCaptionFilter() {
+    $filter = $this->filters['filter_caption'];
+
+    $test = function($input) use ($filter) {
+      return $filter->process($input, 'und', FALSE, '');
+    };
+
+    // No data-caption nor data-align attributes.
+    $input = '<img src="llama.jpg" />';
+    $expected = $input;
+    $this->assertIdentical($expected, $test($input));
+
+    // Only data-caption attribute.
+    $input = '<img src="llama.jpg" data-caption="Loquacious llama!" />';
+    $expected = '<figure class="caption caption-img"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $this->assertIdentical($expected, $test($input));
+
+    // Empty data-caption attribute.
+    $input = '<img src="llama.jpg" data-caption="" />';
+    $expected = '<img src="llama.jpg" />';
+    $this->assertIdentical($expected, $test($input));
+
+    // HTML entities in the caption.
+    $input = '<img src="llama.jpg" data-caption="&ldquo;Loquacious llama!&rdquo;" />';
+    $expected = '<figure class="caption caption-img"><img src="llama.jpg" /><figcaption>“Loquacious llama!”</figcaption></figure>';
+    $this->assertIdentical($expected, $test($input));
+
+    // HTML encoded as HTML entities in data-caption attribute.
+    $input = '<img src="llama.jpg" data-caption="&lt;em&gt;Loquacious llama!&lt;/em&gt;" />';
+    $expected = '<figure class="caption caption-img"><img src="llama.jpg" /><figcaption><em>Loquacious llama!</em></figcaption></figure>';
+    $this->assertIdentical($expected, $test($input));
+
+    // HTML (not encoded as HTML entities) in data-caption attribute, which is
+    // not allowed by the HTML spec, but may happen when people manually write
+    // HTML, so we explicitly support it.
+    $input = '<img src="llama.jpg" data-caption="<em>Loquacious llama!</em>" />';
+    $expected = '<figure class="caption caption-img"><img src="llama.jpg" /><figcaption><em>Loquacious llama!</em></figcaption></figure>';
+    $this->assertIdentical($expected, $test($input));
+
+    // Security test: attempt an XSS.
+    $input = '<img src="llama.jpg" data-caption="<script>alert(\'Loquacious llama!\')</script>" />';
+    $expected = '<figure class="caption caption-img"><img src="llama.jpg" /><figcaption>alert(\'Loquacious llama!\')</figcaption></figure>';
+    $this->assertIdentical($expected, $test($input));
+
+    // Only data-align attribute: all 3 allowed values.
+    $input = '<img src="llama.jpg" data-align="left" />';
+    $expected = '<figure class="caption caption-img caption-left"><img src="llama.jpg" /></figure>';
+    $this->assertIdentical($expected, $test($input));
+    $input = '<img src="llama.jpg" data-align="center" />';
+    $expected = '<figure class="caption caption-img caption-center"><img src="llama.jpg" /></figure>';
+    $this->assertIdentical($expected, $test($input));
+    $input = '<img src="llama.jpg" data-align="right" />';
+    $expected = '<figure class="caption caption-img caption-right"><img src="llama.jpg" /></figure>';
+    $this->assertIdentical($expected, $test($input));
+
+    // Only data-align attribute: a disallowed value.
+    $input = '<img src="llama.jpg" data-align="left foobar" />';
+    $expected = '<img src="llama.jpg" />';
+    $this->assertIdentical($expected, $test($input));
+
+    // Empty data-align attribute.
+    $input = '<img src="llama.jpg" data-align="" />';
+    $expected = '<img src="llama.jpg" />';
+    $this->assertIdentical($expected, $test($input));
+
+    // Both data-caption and data-align attributes.
+    $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="right" />';
+    $expected = '<figure class="caption caption-img caption-right"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $this->assertIdentical($expected, $test($input));
+
+    // Both data-caption and data-align attributes, but a disallowed data-align
+    // attribute value.
+    $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="left foobar" />';
+    $expected = '<figure class="caption caption-img"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $this->assertIdentical($expected, $test($input));
+
+    // Ensure the filter also works with uncommon yet valid attribute quoting.
+    $input = '<img src=llama.jpg data-caption=\'Loquacious llama!\' data-align=right />';
+    $expected = '<figure class="caption caption-img caption-right"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $this->assertIdentical($expected, $test($input));
+
+    // Security test: attempt to inject an additional class.
+    $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="center another-class-here" />';
+    $expected = '<figure class="caption caption-img"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $this->assertIdentical($expected, $test($input));
+
+    // Security test: attempt an XSS.
+    $input = '<img src="llama.jpg" data-caption="Loquacious llama!" data-align="center \'onclick=\'alert(foo);" />';
+    $expected = '<figure class="caption caption-img"><img src="llama.jpg" /><figcaption>Loquacious llama!</figcaption></figure>';
+    $this->assertIdentical($expected, $test($input));
+
+    // Finally, ensure that this also works on any other tag.
+    $input = '<video src="llama.jpg" data-caption="Loquacious llama!" />';
+    $expected = '<figure class="caption caption-video"><video src="llama.jpg"></video><figcaption>Loquacious llama!</figcaption></figure>';
+    $this->assertIdentical($expected, $test($input));
+    $input = '<foobar data-caption="Loquacious llama!">baz</foobar>';
+    $expected = '<figure class="caption caption-foobar"><foobar>baz</foobar><figcaption>Loquacious llama!</figcaption></figure>';
+    $this->assertIdentical($expected, $test($input));
   }
 
   /**
    * Tests the line break filter.
    */
   function testLineBreakFilter() {
-    // Setup dummy filter object.
-    $filter = new stdClass();
-    $filter->callback = '_filter_autop';
+    // Get FilterAutoP object.
+    $filter = $this->filters['filter_autop'];
 
     // Since the line break filter naturally needs plenty of newlines in test
     // strings and expectations, we're using "\n" instead of regular newlines
@@ -128,13 +236,15 @@ class FilterUnitTest extends DrupalUnitTestBase {
    *   or better a whitelist approach should be used for that too.
    */
   function testHtmlFilter() {
-    // Setup dummy filter object.
-    $filter = new stdClass();
-    $filter->settings = array(
-      'allowed_html' => '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd>',
-      'filter_html_help' => 1,
-      'filter_html_nofollow' => 0,
-    );
+    // Get FilterHtml object.
+    $filter = $this->filters['filter_html'];
+    $filter->setPluginConfiguration(array(
+      'settings' => array(
+        'allowed_html' => '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd>',
+        'filter_html_help' => 1,
+        'filter_html_nofollow' => 0,
+      )
+    ));
 
     // HTML filter is not able to secure some tags, these should never be
     // allowed.
@@ -173,13 +283,15 @@ class FilterUnitTest extends DrupalUnitTestBase {
    * Tests the spam deterrent.
    */
   function testNoFollowFilter() {
-    // Setup dummy filter object.
-    $filter = new stdClass();
-    $filter->settings = array(
-      'allowed_html' => '<a>',
-      'filter_html_help' => 1,
-      'filter_html_nofollow' => 1,
-    );
+    // Get FilterHtml object.
+    $filter = $this->filters['filter_html'];
+    $filter->setPluginConfiguration(array(
+      'settings' => array(
+        'allowed_html' => '<a>',
+        'filter_html_help' => 1,
+        'filter_html_nofollow' => 1,
+      )
+    ));
 
     // Test if the rel="nofollow" attribute is added, even if we try to prevent
     // it.
@@ -206,9 +318,8 @@ class FilterUnitTest extends DrupalUnitTestBase {
    * check_plain() is not tested here.
    */
   function testHtmlEscapeFilter() {
-    // Setup dummy filter object.
-    $filter = new stdClass();
-    $filter->callback = '_filter_html_escape';
+    // Get FilterHtmlEscape object.
+    $filter = $this->filters['filter_html_escape'];
 
     $tests = array(
       "   One. <!-- \"comment\" --> Two'.\n<p>Three.</p>\n    " => array(
@@ -224,12 +335,14 @@ class FilterUnitTest extends DrupalUnitTestBase {
    * Tests the URL filter.
    */
   function testUrlFilter() {
-    // Setup dummy filter object.
-    $filter = new stdClass();
-    $filter->callback = '_filter_url';
-    $filter->settings = array(
-      'filter_url_length' => 496,
-    );
+    // Get FilterUrl object.
+    $filter = $this->filters['filter_url'];
+    $filter->setPluginConfiguration(array(
+      'settings' => array(
+        'filter_url_length' => 496,
+      )
+    ));
+
     // @todo Possible categories:
     // - absolute, mail, partial
     // - characters/encoding, surrounding markup, security
@@ -516,7 +629,11 @@ www.example.com with a newline in comments -->
     $this->assertFilteredString($filter, $tests);
 
     // URL trimming.
-    $filter->settings['filter_url_length'] = 20;
+    $filter->setPluginConfiguration(array(
+      'settings' => array(
+        'filter_url_length' => 20,
+      )
+    ));
     $tests = array(
       'www.trimmed.com/d/ff.ext?a=1&b=2#a1' => array(
         '<a href="http://www.trimmed.com/d/ff.ext?a=1&amp;b=2#a1">www.trimmed.com/d/ff...</a>' => TRUE,
@@ -528,7 +645,7 @@ www.example.com with a newline in comments -->
   /**
    * Asserts multiple filter output expectations for multiple input strings.
    *
-   * @param $filter
+   * @param FilterInterface $filter
    *   A input filter object.
    * @param $tests
    *   An associative array, whereas each key is an arbitrary input string and
@@ -548,8 +665,7 @@ www.example.com with a newline in comments -->
    */
   function assertFilteredString($filter, $tests) {
     foreach ($tests as $source => $tasks) {
-      $function = $filter->callback;
-      $result = $function($source, $filter);
+      $result = $filter->process($source, $filter, FALSE, '');
       foreach ($tasks as $value => $is_expected) {
         // Not using assertIdentical, since combination with strpos() is hard to grok.
         if ($is_expected) {
@@ -593,11 +709,13 @@ www.example.com with a newline in comments -->
    * - Mix of absolute and partial URLs, and e-mail addresses in one content.
    */
   function testUrlFilterContent() {
-    // Setup dummy filter object.
-    $filter = new stdClass();
-    $filter->settings = array(
-      'filter_url_length' => 496,
-    );
+    // Get FilterUrl object.
+    $filter = $this->filters['filter_url'];
+    $filter->setPluginConfiguration(array(
+      'settings' => array(
+        'filter_url_length' => 496,
+      )
+    ));
     $path = drupal_get_path('module', 'filter') . '/tests';
 
     $input = file_get_contents($path . '/filter.url-input.txt');

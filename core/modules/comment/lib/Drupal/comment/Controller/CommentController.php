@@ -11,13 +11,14 @@ use Drupal\comment\CommentInterface;
 use Drupal\comment\Plugin\Core\Entity\Comment;
 use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Routing\PathBasedGeneratorInterface;
-use Drupal\field\FieldInfo;
-use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Drupal\field\FieldInfo;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Controller for the comment entity.
@@ -34,6 +35,13 @@ class CommentController implements ControllerInterface {
   protected $urlGenerator;
 
   /**
+   * The HTTP kernel.
+   *
+   * @var \Symfony\Component\HttpKernel\HttpKernelInterface
+   */
+  protected $httpKernel;
+
+  /**
    * Field info service.
    *
    * @var \Drupal\field\FieldInfo
@@ -45,11 +53,14 @@ class CommentController implements ControllerInterface {
    *
    * @param \Drupal\Core\Routing\PathBasedGeneratorInterface $url_generator
    *   The url generator service.
+   * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
+   *   HTTP kernel to handle requests.
    * @param \Drupal\field\FieldInfo $field_info
    *   Field Info service.
    */
-  public function __construct(PathBasedGeneratorInterface $url_generator, FieldInfo $field_info) {
+  public function __construct(PathBasedGeneratorInterface $url_generator, HttpKernelInterface $httpKernel, FieldInfo $field_info) {
     $this->urlGenerator = $url_generator;
+    $this->httpKernel = $httpKernel;
     $this->fieldInfo = $field_info;
   }
 
@@ -59,6 +70,7 @@ class CommentController implements ControllerInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('url_generator'),
+      $container->get('http_kernel'),
       $container->get('field.info')
     );
   }
@@ -95,6 +107,49 @@ class CommentController implements ControllerInterface {
   }
 
   /**
+   * Redirects comment links to the correct page depending on comment settings.
+   *
+   * Since comments are paged there is no way to guarantee which page a comment
+   * appears on. Comment paging and threading settings may be changed at any
+   * time. With threaded comments, an individual comment may move between pages
+   * as comments can be added either before or after it in the overall
+   * discussion. Therefore we use a central routing function for comment links,
+   * which calculates the page number based on current comment settings and
+   * returns the full comment view with the pager set dynamically.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request of the page.
+   * @param \Drupal\comment\CommentInterface $comment
+   *   A comment entity.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *   The comment listing set to the page on which the comment appears.
+   */
+  public function commentPermalink(Request $request, CommentInterface $comment) {
+    if ($entity = entity_load($comment->entity_type->value, $comment->entity_id->value)) {
+      // Check access permissions for the entity.
+      if (!$entity->access('view')) {
+        throw new AccessDeniedHttpException();
+      }
+      $instance = $this->fieldInfo->getInstance($entity->entityType(), $entity->bundle(), $comment->field_name->value);
+
+      // Find the current display page for this comment.
+      $page = comment_get_display_page($comment->id(), $instance);
+      // @todo: Cleaner sub request handling.
+      $uri = $entity->uri();
+      $redirect_request = Request::create($uri['path'], 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
+      $redirect_request->query->set('page', $page);
+      // @todo: Convert the pager to use the request object.
+      $request->query->set('page', $page);
+      return $this->httpKernel->handle($redirect_request, HttpKernelInterface::SUB_REQUEST);
+    }
+    throw new NotFoundHttpException();
+  }
+
+  /**
    * Redirects legacy node links to new path.
    *
    * @param \Drupal\Core\Entity\EntityInterface $node
@@ -111,7 +166,6 @@ class CommentController implements ControllerInterface {
     if (!empty($fields) && ($field_names = array_keys($fields)) && ($field_name = reset($field_names))) {
       return new RedirectResponse(url('comment/reply/node/' . $node->id() . '/' . $field_name, array('absolute' => TRUE)));
     }
-
     throw new NotFoundHttpException();
   }
 

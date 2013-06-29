@@ -187,14 +187,14 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertEqual(language_load(Language::LANGCODE_NOT_SPECIFIED), $entity->langcode->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
 
     // Change the language by code.
-    $entity->langcode->value = language_default()->langcode;
-    $this->assertEqual(language_default()->langcode, $entity->langcode->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
+    $entity->langcode->value = language_default()->id;
+    $this->assertEqual(language_default()->id, $entity->langcode->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual(language_default(), $entity->langcode->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
 
     // Revert language by code then try setting it by language object.
     $entity->langcode->value = Language::LANGCODE_NOT_SPECIFIED;
     $entity->langcode->language = language_default();
-    $this->assertEqual(language_default()->langcode, $entity->langcode->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
+    $this->assertEqual(language_default()->id, $entity->langcode->value, format_string('%entity_type: Language code can be read.', array('%entity_type' => $entity_type)));
     $this->assertEqual(language_default(), $entity->langcode->language, format_string('%entity_type: Language object can be read.', array('%entity_type' => $entity_type)));
 
     // Access the text field and test updating.

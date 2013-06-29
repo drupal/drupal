@@ -138,7 +138,7 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
       // Language::LANGCODE_DEFAULT. This is necessary as EntityNG always keys
       // default language values with Language::LANGCODE_DEFAULT while field API
       // expects them to be keyed by langcode.
-      $langcode = $this->decorated->language()->langcode;
+      $langcode = $this->decorated->language()->id;
       if ($langcode != Language::LANGCODE_DEFAULT && isset($this->decorated->values[$name]) && is_array($this->decorated->values[$name])) {
         if (isset($this->decorated->values[$name][Language::LANGCODE_DEFAULT]) && !isset($this->decorated->values[$name][$langcode])) {
           $this->decorated->values[$name][$langcode] = &$this->decorated->values[$name][Language::LANGCODE_DEFAULT];
@@ -172,7 +172,7 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
         // with Language::LANGCODE_DEFAULT while field API expects them to be
         // keyed by langcode.
         foreach ($value as $langcode => $data) {
-          if ($langcode != Language::LANGCODE_DEFAULT && $langcode == $this->decorated->language()->langcode) {
+          if ($langcode != Language::LANGCODE_DEFAULT && $langcode == $this->decorated->language()->id) {
             $value[Language::LANGCODE_DEFAULT] = $data;
             unset($value[$langcode]);
           }

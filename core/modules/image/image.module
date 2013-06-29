@@ -719,7 +719,7 @@ function image_effect_definitions() {
 
   // hook_image_effect_info() includes translated strings, so each language is
   // cached separately.
-  $langcode = $language_interface->langcode;
+  $langcode = $language_interface->id;
 
   $effects = &drupal_static(__FUNCTION__);
 

@@ -44,7 +44,7 @@ class BlockLanguageCacheTest extends AggregatorTestBase {
     $this->langcodes = array(language_load('en'));
     for ($i = 1; $i < 3; ++$i) {
       $language = new Language(array(
-        'langcode' => 'l' . $i,
+        'id' => 'l' . $i,
         'name' => $this->randomString(),
       ));
       language_save($language);

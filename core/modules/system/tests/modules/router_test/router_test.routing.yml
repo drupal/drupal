@@ -60,3 +60,12 @@ router_test_10:
     _content: '\Drupal\router_test\TestContent::test1'
   requirements:
     _access: 'TRUE'
+
+router_test_11:
+  pattern: '/router_test/test11'
+  options:
+    _auth: [ 'http_basic' ]
+  requirements:
+    _user_is_logged_in: 'TRUE'
+  defaults:
+    _content: '\Drupal\router_test\TestContent::test11'

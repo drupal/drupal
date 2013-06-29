@@ -62,7 +62,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
    * Implements ContentTranslationControllerInterface::retranslate().
    */
   public function retranslate(EntityInterface $entity, $langcode = NULL) {
-    $updated_langcode = !empty($langcode) ? $langcode : $entity->language()->langcode;
+    $updated_langcode = !empty($langcode) ? $langcode : $entity->language()->id;
     $translations = $entity->getTranslationLanguages();
     foreach ($translations as $langcode => $language) {
       $entity->translation[$langcode]['outdated'] = $langcode != $updated_langcode;
@@ -110,7 +110,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
    * Implements ContentTranslationControllerInterface::getSourceLanguage().
    */
   public function getSourceLangcode(array $form_state) {
-    return isset($form_state['content_translation']['source']) ? $form_state['content_translation']['source']->langcode : FALSE;
+    return isset($form_state['content_translation']['source']) ? $form_state['content_translation']['source']->id : FALSE;
   }
 
   /**
@@ -119,7 +119,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   public function entityFormAlter(array &$form, array &$form_state, EntityInterface $entity) {
     $form_controller = content_translation_form_controller($form_state);
     $form_langcode = $form_controller->getFormLangcode($form_state);
-    $entity_langcode = $entity->language()->langcode;
+    $entity_langcode = $entity->language()->id;
     $source_langcode = $this->getSourceLangcode($form_state);
 
     $new_translation = !empty($source_langcode);
@@ -137,7 +137,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
     if (isset($languages[$form_langcode]) && ($has_translations || $new_translation)) {
       $title = $this->entityFormTitle($entity);
       // When editing the original values display just the entity label.
-      if ($form_langcode != $entity->language()->langcode) {
+      if ($form_langcode != $entity->language()->id) {
         $t_args = array('%language' => $languages[$form_langcode]->name, '%title' => $entity->label());
         $title = empty($source_langcode) ? $title . ' [' . t('%language translation', $t_args) . ']' : t('Create %language translation of %title', $t_args);
       }
@@ -166,8 +166,8 @@ class ContentTranslationController implements ContentTranslationControllerInterf
         ),
       );
       foreach (language_list(Language::STATE_CONFIGURABLE) as $language) {
-        if (isset($translations[$language->langcode])) {
-          $form['source_langcode']['source']['#options'][$language->langcode] = $language->name;
+        if (isset($translations[$language->id])) {
+          $form['source_langcode']['source']['#options'][$language->id] = $language->name;
         }
       }
     }
@@ -179,8 +179,8 @@ class ContentTranslationController implements ContentTranslationControllerInterf
     if ($language_widget && $has_translations) {
       $form['langcode']['#options'] = array();
       foreach (language_list(Language::STATE_CONFIGURABLE) as $language) {
-        if (empty($translations[$language->langcode]) || $language->langcode == $entity_langcode) {
-          $form['langcode']['#options'][$language->langcode] = $language->name;
+        if (empty($translations[$language->id]) || $language->id == $entity_langcode) {
+          $form['langcode']['#options'][$language->id] = $language->name;
         }
       }
     }

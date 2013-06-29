@@ -70,7 +70,7 @@ class NegotiationUrlForm extends SystemConfigFormBase {
     $prefixes = language_negotiation_url_prefixes();
     $domains = language_negotiation_url_domains();
     foreach ($languages as $langcode => $language) {
-      $t_args = array('%language' => $language->name, '%langcode' => $language->langcode);
+      $t_args = array('%language' => $language->name, '%langcode' => $language->id);
       $form['prefix'][$langcode] = array(
         '#type' => 'textfield',
         '#title' => $language->default ? t('%language (%langcode) path prefix (Default language)', $t_args) : t('%language (%langcode) path prefix', $t_args),
@@ -80,7 +80,7 @@ class NegotiationUrlForm extends SystemConfigFormBase {
       );
       $form['domain'][$langcode] = array(
         '#type' => 'textfield',
-        '#title' => t('%language (%langcode) domain', array('%language' => $language->name, '%langcode' => $language->langcode)),
+        '#title' => t('%language (%langcode) domain', array('%language' => $language->name, '%langcode' => $language->id)),
         '#maxlength' => 128,
         '#default_value' => isset($domains[$langcode]) ? $domains[$langcode] : '',
       );

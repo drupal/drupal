@@ -349,8 +349,9 @@ class TermTest extends TaxonomyTestBase {
     $this->drupalGet('taxonomy/term/' . $term->id() . '/feed');
 
     // Check that the term edit page does not try to interpret additional path
-    // components as arguments for taxonomy_term_form().
+    // components as arguments for entity_get_form().
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit/' . $this->randomName());
+    $this->assertResponse(200, 'The taxonomy term edit menu item ensured appropriate arguments were passed to its page callback.');
 
     // Delete the term.
     $this->drupalPost('taxonomy/term/' . $term->id() . '/edit', array(), t('Delete'));

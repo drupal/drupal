@@ -210,7 +210,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       'extraPlugins' => implode(',', array_keys($external_plugins)),
       // @todo: Remove image and link plugins from CKEditor build.
       'removePlugins' => 'image,link',
-      'language' => $language_interface->langcode,
+      'language' => $language_interface->id,
       // Configure CKEditor to not load styles.js. The StylesCombo plugin will
       // set stylesSet according to the user's settings, if the "Styles" button
       // is enabled. We cannot get rid of this until CKEditor will stop loading

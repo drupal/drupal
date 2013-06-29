@@ -112,7 +112,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
       ->method('set')
       ->with($cid . ':en', $this->expectedDefinitions);
 
-    $language = new Language(array('langcode' => 'en'));
+    $language = new Language(array('id' => 'en'));
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManager');
     $language_manager->expects($this->once())
       ->method('getLanguage')
@@ -143,7 +143,7 @@ class DefaultPluginManagerTest extends UnitTestCase {
       ->expects($this->never())
       ->method('set');
 
-    $language = new Language(array('langcode' => 'en'));
+    $language = new Language(array('id' => 'en'));
     $language_manager = $this->getMock('Drupal\Core\Language\LanguageManager');
     $language_manager->expects($this->once())
       ->method('getLanguage')

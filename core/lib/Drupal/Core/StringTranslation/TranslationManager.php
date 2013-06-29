@@ -50,7 +50,7 @@ class TranslationManager implements TranslatorInterface {
   public function __construct() {
     // @todo Inject language_manager or config system after language_default
     //   variable is converted to CMI.
-    $this->defaultLangcode = language_default()->langcode;
+    $this->defaultLangcode = language_default()->id;
   }
 
   /**

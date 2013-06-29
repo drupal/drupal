@@ -36,13 +36,13 @@ class LanguageSelectElementTest extends WebTestBase {
   function testLanguageSelectElementOptions() {
     // Add some languages.
     $language = new Language(array(
-      'langcode' => 'aaa',
+      'id' => 'aaa',
       'name' => $this->randomName(),
     ));
     language_save($language);
 
     $language = new Language(array(
-      'langcode' => 'bbb',
+      'id' => 'bbb',
       'name' => $this->randomName(),
     ));
     language_save($language);

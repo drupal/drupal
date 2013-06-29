@@ -89,6 +89,15 @@ function filter_theme() {
     'filter_html_image_secure_image' => array(
       'variables' => array('image' => NULL),
     ),
+    'filter_caption' => array(
+      'variables' => array(
+        'node' => NULL,
+        'tag' => NULL,
+        'caption' => NULL,
+        'align' => NULL,
+      ),
+      'template' => 'filter-caption',
+    )
   );
 }
 
@@ -263,7 +272,7 @@ function filter_formats($account = NULL) {
 
   // All available formats are cached for performance.
   if (!isset($formats['all'])) {
-    if ($cache = cache()->get("filter_formats:{$language_interface->langcode}")) {
+    if ($cache = cache()->get("filter_formats:{$language_interface->id}")) {
       $formats['all'] = $cache->data;
     }
     else {
@@ -276,7 +285,7 @@ function filter_formats($account = NULL) {
       }
       uasort($formats['all'], 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
 
-      cache()->set("filter_formats:{$language_interface->langcode}", $formats['all'], CacheBackendInterface::CACHE_PERMANENT, array('filter_formats' => TRUE));
+      cache()->set("filter_formats:{$language_interface->id}", $formats['all'], CacheBackendInterface::CACHE_PERMANENT, array('filter_formats' => TRUE));
     }
   }
 
@@ -1577,6 +1586,13 @@ function theme_filter_html_image_secure_image(&$variables) {
  */
 
 /**
+ * Implements hook_page_build().
+ */
+function filter_page_build(&$page) {
+  $page['#attached']['library'][] = array('filter', 'caption');
+}
+
+/**
  * Implements hook_library_info().
  */
 function filter_library_info() {
@@ -1623,6 +1639,13 @@ function filter_library_info() {
       array('system', 'jquery'),
       array('system', 'drupal'),
       array('system', 'jquery.once'),
+    ),
+  );
+  $libraries['caption'] = array(
+    'title' => 'Captions for images and alignments',
+    'version' => VERSION,
+    'css' => array(
+      $path . '/css/filter.caption.css',
     ),
   );
 

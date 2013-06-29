@@ -81,7 +81,7 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
       // Search prefix within enabled languages.
       $prefixes = $this->config->get('language.negotiation')->get('url.prefixes');
       foreach ($this->languages as $language) {
-        if (isset($prefixes[$language->langcode]) && $prefixes[$language->langcode] == $prefix) {
+        if (isset($prefixes[$language->id]) && $prefixes[$language->id] == $prefix) {
           // Rebuild $path with the language removed.
           return implode('/', $args);
         }
@@ -110,7 +110,7 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
       $options['language'] = $language_url;
     }
     // We allow only enabled languages here.
-    elseif (is_object($options['language']) && !isset($languages[$options['language']->langcode])) {
+    elseif (is_object($options['language']) && !isset($languages[$options['language']->id])) {
       return $path;
     }
     $url_source = $this->config->get('language.negotiation')->get('url.source');
@@ -118,13 +118,13 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
     //   constant.
     if ($url_source == 'path_prefix') {
       $prefixes = $this->config->get('language.negotiation')->get('url.prefixes');
-      if (is_object($options['language']) && !empty($prefixes[$options['language']->langcode])) {
-        return empty($path) ? $prefixes[$options['language']->langcode] : $prefixes[$options['language']->langcode] . '/' . $path;
+      if (is_object($options['language']) && !empty($prefixes[$options['language']->id])) {
+        return empty($path) ? $prefixes[$options['language']->id] : $prefixes[$options['language']->id] . '/' . $path;
       }
     }
     elseif ($url_source == 'domain') {
       $domains = $this->config->get('language.negotiation')->get('url.domains');
-      if (is_object($options['language']) && !empty($domains[$options['language']->langcode])) {
+      if (is_object($options['language']) && !empty($domains[$options['language']->id])) {
 
         // Save the original base URL. If it contains a port, we need to
         // retain it below.
@@ -135,7 +135,7 @@ class PathProcessorLanguage implements InboundPathProcessorInterface, OutboundPa
 
         // Ask for an absolute URL with our modified base URL.
         $options['absolute'] = TRUE;
-        $options['base_url'] = $url_scheme . '://' . $domains[$options['language']->langcode];
+        $options['base_url'] = $url_scheme . '://' . $domains[$options['language']->id];
 
         // In case either the original base URL or the HTTP host contains a
         // port, retain it.

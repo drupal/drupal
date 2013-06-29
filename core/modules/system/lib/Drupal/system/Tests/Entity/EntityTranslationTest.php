@@ -31,7 +31,6 @@ class EntityTranslationTest extends EntityUnitTestBase {
   function setUp() {
     parent::setUp();
     $this->installSchema('system', 'variable');
-    $this->installSchema('language', 'language');
     $this->installSchema('entity_test', array(
       'entity_test_mul',
       'entity_test_mul_property_data',
@@ -41,6 +40,7 @@ class EntityTranslationTest extends EntityUnitTestBase {
       'entity_test_mulrev_property_data',
       'entity_test_mulrev_property_revision',
     ));
+    $this->installConfig(array('language'));
 
     // Create the test field.
     entity_test_install();
@@ -79,10 +79,10 @@ class EntityTranslationTest extends EntityUnitTestBase {
     $this->langcodes = array();
     for ($i = 0; $i < 3; ++$i) {
       $language = new Language(array(
-        'langcode' => 'l' . $i,
+        'id' => 'l' . $i,
         'name' => $this->randomString(),
       ));
-      $this->langcodes[$i] = $language->langcode;
+      $this->langcodes[$i] = $language->id;
       language_save($language);
     }
   }
@@ -108,7 +108,7 @@ class EntityTranslationTest extends EntityUnitTestBase {
       'name' => 'test',
       'user_id' => $GLOBALS['user']->uid,
     ));
-    $this->assertEqual($entity->language()->langcode, Language::LANGCODE_NOT_SPECIFIED, format_string('%entity_type: Entity language not specified.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entity->language()->id, Language::LANGCODE_NOT_SPECIFIED, format_string('%entity_type: Entity language not specified.', array('%entity_type' => $entity_type)));
     $this->assertFalse($entity->getTranslationLanguages(FALSE), format_string('%entity_type: No translations are available', array('%entity_type' => $entity_type)));
 
     // Set the value in default language.
@@ -227,7 +227,7 @@ class EntityTranslationTest extends EntityUnitTestBase {
     $entity = entity_create($entity_type, array('name' => $name, 'user_id' => $uid));
     $entity->save();
     $entity = entity_load($entity_type, $entity->id());
-    $this->assertEqual($entity->language()->langcode, Language::LANGCODE_NOT_SPECIFIED, format_string('%entity_type: Entity created as language neutral.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entity->language()->id, Language::LANGCODE_NOT_SPECIFIED, format_string('%entity_type: Entity created as language neutral.', array('%entity_type' => $entity_type)));
     $this->assertEqual($name, $entity->getTranslation(Language::LANGCODE_DEFAULT)->get('name')->value, format_string('%entity_type: The entity name has been correctly stored as language neutral.', array('%entity_type' => $entity_type)));
     $this->assertEqual($uid, $entity->getTranslation(Language::LANGCODE_DEFAULT)->get('user_id')->target_id, format_string('%entity_type: The entity author has been correctly stored as language neutral.', array('%entity_type' => $entity_type)));
     // As fields, translatable properties should ignore the given langcode and
@@ -242,7 +242,7 @@ class EntityTranslationTest extends EntityUnitTestBase {
     $entity = entity_create($entity_type, array('name' => $name, 'user_id' => $uid, 'langcode' => $langcode));
     $entity->save();
     $entity = entity_load($entity_type, $entity->id());
-    $this->assertEqual($entity->language()->langcode, $langcode, format_string('%entity_type: Entity created as language specific.', array('%entity_type' => $entity_type)));
+    $this->assertEqual($entity->language()->id, $langcode, format_string('%entity_type: Entity created as language specific.', array('%entity_type' => $entity_type)));
     $this->assertEqual($name, $entity->getTranslation($langcode)->get('name')->value, format_string('%entity_type: The entity name has been correctly stored as a language-aware property.', array('%entity_type' => $entity_type)));
     $this->assertEqual($uid, $entity->getTranslation($langcode)->get('user_id')->target_id, format_string('%entity_type: The entity author has been correctly stored as a language-aware property.', array('%entity_type' => $entity_type)));
     // Translatable properties on a translatable entity should use default

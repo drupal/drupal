@@ -8,7 +8,7 @@
 namespace Drupal\field\Plugin\Type\FieldType;
 
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\Core\Entity\Field\Type\Field;
+use Drupal\Core\Entity\Field\Field;
 use Drupal\field\Field as FieldAPI;
 
 /**
