@@ -62,20 +62,4 @@ class NodeEntityFieldQueryAlterTest extends NodeTestBase {
     $this->noAccessUser = $this->drupalCreateUser(array('access content'));
   }
 
-  /**
-   * Tests that node access permissions are followed.
-   */
-  function testNodeQueryAlterWithUI() {
-    // Verify that a user with access permission can see at least one node.
-    $this->drupalLogin($this->accessUser);
-    $this->drupalGet('node_access_entity_test_page');
-    $this->assertText('Yes, 4 nodes', "4 nodes were found for access user");
-    $this->assertNoText('Exception', "No database exception");
-
-    // Verify that a user with no access permission cannot see nodes.
-    $this->drupalLogin($this->noAccessUser);
-    $this->drupalGet('node_access_entity_test_page');
-    $this->assertText('No nodes', "No nodes were found for no access user");
-    $this->assertNoText('Exception', "No database exception");
-  }
 }
