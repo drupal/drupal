@@ -15,8 +15,7 @@ function comment_uninstall() {
   variable_del('comment_block_count');
   // We cannot use comment_get_comment_fields because comment.module is
   // disabled and it's fields inactive.
-  $comment_fields = field_read_fields(array('type' => 'comment'), array('include_inactive' => TRUE));
-  foreach ($comment_fields as $field_name => $field) {
+  foreach (_update_comment_get_comment_fields() as $field_name => $field) {
     entity_invoke_bundle_hook('delete', 'comment', $field_name);
   }
 
@@ -28,7 +27,7 @@ function comment_uninstall() {
  * Implements hook_enable().
  */
 function comment_enable() {
-  $comment_fields = comment_get_comment_fields();
+  $comment_fields = _update_comment_get_comment_fields();
   $entity_info = Drupal::service('plugin.manager.entity')->getDefinitions();
   foreach ($comment_fields as $field_name => $info) {
     foreach ($info['bundles'] as $entity_type => $bundles) {
@@ -75,6 +74,35 @@ function comment_enable() {
   // Set default value of comment.maintain_entity_statistics.
   Drupal::state()->set('comment.maintain_entity_statistics', TRUE);
 }
+
+/**
+ * Returns comment fields.
+ *
+ * This function similar to comment_get_comment_fields() that cannot be used in
+ * maintenance mode because comment.module is disabled and it's fields inactive.
+ *
+ * @return
+ *   An array of comment fields keyed by field ID.
+ */
+function _update_comment_get_comment_fields() {
+  $fields = entity_load_multiple_by_properties('field_entity', array(
+    'type' => 'comment',
+    'include_inactive' => TRUE,
+    'include_deleted' => FALSE,
+  ));
+  foreach ($fields as &$field) {
+    $instances = entity_load_multiple_by_properties('field_instance', array(
+      'field_uuid' => $field->uuid,
+      'include_inactive' => TRUE,
+      'include_deleted' => FALSE,
+    ));
+    foreach ($instances as $instance) {
+      $field->bundles[$instance->entity_type] = $instance->bundle;
+    }
+  }
+  return $fields;
+}
+
 
 /**
  * Implements hook_modules_enabled().

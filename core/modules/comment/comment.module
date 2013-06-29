@@ -182,7 +182,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
         }
         // Provide a link to new comment form.
         if ($commenting_status == COMMENT_OPEN) {
-          $comment_form_location = $instance->settings['form_location'];
+          $comment_form_location = $instance['settings']['form_location'];
           if (user_access('post comments')) {
             $links['comment-add'] = array(
               'title' => t('Add new comment'),
@@ -213,7 +213,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
         // But we don't want this link if we're building the entity for search
         // indexing or constructing a search result excerpt.
         if ($commenting_status == COMMENT_OPEN) {
-          $comment_form_location = $instance->settings['form_location'];
+          $comment_form_location = $instance['settings']['form_location'];
           if (user_access('post comments')) {
             // Show the "post comment" link if the form is on another page, or
             // if there are existing comments that the link will skip past.
@@ -623,7 +623,7 @@ function comment_get_recent($number = 10) {
  *   "page=X" if the page number is greater than zero; empty string otherwise.
  */
 function comment_new_page_count($num_comments, $new_replies, EntityInterface $entity, $field_name = 'comment') {
-  $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
+  $instance = Drupal::service('field.info')->getInstance($entity->entityType(), $entity->bundle(), $field_name);
   $mode = $instance['settings']['default_mode'];
   $comments_per_page = $instance['settings']['per_page'];
   $pagenum = NULL;
@@ -1184,7 +1184,7 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
 
   if ($index_comments) {
     foreach (comment_get_comment_fields('node') as $field_name => $info) {
-      $instance = field_info_instance('node', $field_name, $node->type);
+      $instance = Drupal::service('field.info')->getInstance('node', $node->type, $field_name);
       $mode = $instance['settings']['default_mode'];
       $comments_per_page = $instance['settings']['per_page'];
       if (($items = field_get_items($node, $field_name)) &&
@@ -1857,7 +1857,7 @@ function comment_library_info() {
  * @see field_info_field_map().
  */
 function comment_get_comment_fields($entity_type = NULL) {
-  return array_filter(field_info_field_map(), function ($value) use($entity_type) {
+  return array_filter(Drupal::service('field.info')->getFieldMap(), function ($value) use($entity_type) {
     if ($value['type']  == 'comment') {
       if (isset($entity_type)) {
         return isset($value['bundles'][$entity_type]);
