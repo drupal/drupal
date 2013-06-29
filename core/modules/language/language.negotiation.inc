@@ -500,7 +500,9 @@ function language_url_rewrite_session(&$path, &$options) {
   // user language preference even with cookies disabled.
   if ($query_rewrite) {
     if (is_string($options['query'])) {
-      $options['query'] = drupal_get_query_array($options['query']);
+      $query = array();
+      parse_str($options['query'], $query);
+      $options['query'] = $query;
     }
     if (!isset($options['query'][$query_param])) {
       $options['query'][$query_param] = $query_value;

@@ -227,7 +227,8 @@ class MenuLinkFormController extends EntityFormController implements EntityContr
     if (!url_is_external($menu_link->link_path)) {
       $parsed_link = parse_url($menu_link->link_path);
       if (isset($parsed_link['query'])) {
-        $menu_link->options['query'] = drupal_get_query_array($parsed_link['query']);
+        $menu_link->options['query'] = array();
+        parse_str($parsed_link['query'], $menu_link->options['query']);
       }
       else {
         // Use unset() rather than setting to empty string
