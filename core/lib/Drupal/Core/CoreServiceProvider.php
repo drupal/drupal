@@ -21,6 +21,7 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterParamConvertersPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterStringTranslatorsPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterBreadcrumbBuilderPass;
+use Drupal\Core\DependencyInjection\Compiler\RegisterAuthenticationPass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Definition;
@@ -71,6 +72,8 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     // Add the compiler pass that lets service providers modify existing
     // service definitions.
     $container->addCompilerPass(new ModifyServiceDefinitionsPass());
+    // Add the compiler pass that will process tagged authentication services.
+    $container->addCompilerPass(new RegisterAuthenticationPass());
   }
 
   /**

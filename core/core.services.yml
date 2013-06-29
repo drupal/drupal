@@ -296,6 +296,11 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@settings']
+  route_enhancer.authentication:
+    class: Drupal\Core\Routing\Enhancer\AuthenticationEnhancer
+    tags:
+      - { name: route_enhancer, priority: 1000 }
+    arguments: ['@authentication']
   route_enhancer.content_controller:
     class: Drupal\Core\Routing\Enhancer\ContentControllerEnhancer
     arguments: ['@content_negotiation']
@@ -538,3 +543,19 @@ services:
     class: Zend\Feed\Writer\Extension\Threading\Renderer\Entry
   feed.writer.wellformedwebrendererentry:
     class: Zend\Feed\Writer\Extension\WellFormedWeb\Renderer\Entry
+  authentication:
+    class: Drupal\Core\Authentication\AuthenticationManager
+  authentication.cookie:
+    class: Drupal\Core\Authentication\Provider\Cookie
+    tags:
+      - { name: authentication_provider, priority: 0 }
+  authentication.http_basic:
+    class: Drupal\Core\Authentication\Provider\HttpBasic
+    arguments: ['@config.factory']
+    tags:
+      - { name: authentication_provider, priority: 100 }
+  authentication_subscriber:
+    class: Drupal\Core\EventSubscriber\AuthenticationSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@authentication']

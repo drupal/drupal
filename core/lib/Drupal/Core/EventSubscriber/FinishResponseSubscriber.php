@@ -91,8 +91,6 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
     // @todo Revisit whether or not this is still appropriate now that the
     //   Response object does its own cache control processing and we intend to
     //   use partial page caching more extensively.
-    // Commit the user session, if needed.
-    drupal_session_commit();
 
     // Attach globally-declared headers to the response object so that Symfony
     // can send them for us correctly.

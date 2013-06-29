@@ -34,9 +34,7 @@ class RoleAccessCheck implements AccessCheckInterface {
     // Requirements just allow strings, so this might be a comma separated list.
     $rid_string = $route->getRequirement('_role');
 
-    // @todo Replace the role check with a correctly injected and session-using
-    //   alternative.
-    $account = $GLOBALS['user'];
+    $account = $request->attributes->get('account');
 
     $explode_and = array_filter(array_map('trim', explode('+', $rid_string)));
     if (count($explode_and) > 1) {

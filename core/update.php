@@ -427,7 +427,9 @@ require_once __DIR__ . '/includes/schema.inc';
 update_prepare_d8_bootstrap();
 
 // Determine if the current user has access to run update.php.
-drupal_bootstrap(DRUPAL_BOOTSTRAP_SESSION);
+drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
+require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/session.inc');
+drupal_session_initialize();
 
 // A request object from the HTTPFoundation to tell us about the request.
 // @todo These two lines were copied from index.php which has its own todo about

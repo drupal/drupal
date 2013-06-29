@@ -23,12 +23,25 @@ class LegacyAccessSubscriber implements EventSubscriberInterface {
    * @todo This is a total hack to keep our current access system working. It
    *   should be replaced with something robust and injected at some point.
    *
-   * @param Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
    *   The Event to process.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    */
   public function onKernelRequestAccessCheck(GetResponseEvent $event) {
 
-    $router_item = $event->getRequest()->attributes->get('drupal_menu_item');
+    $request_attributes = $event->getRequest()->attributes;
+
+    $router_item = $request_attributes->get('drupal_menu_item');
+
+    // For legacy routes we do not allow any user not authenticated by cookie
+    // provider.
+    $provider = $request_attributes->get('_authentication_provider');
+    if ($request_attributes->get('_legacy') && $provider && $provider != 'cookie') {
+      $GLOBALS['user'] = drupal_anonymous_user();
+      $request_attributes->set('account', $GLOBALS['user']);
+      throw new AccessDeniedHttpException();
+    }
 
     if (isset($router_item['access']) && !$router_item['access']) {
       throw new AccessDeniedHttpException();

@@ -890,6 +890,7 @@ abstract class TestBase {
     $this->originalUser = isset($user) ? clone $user : NULL;
 
     // Ensure that the current session is not changed by the new environment.
+    require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/session.inc');
     drupal_save_session(FALSE);
     // Run all tests as a anonymous user by default, web tests will replace that
     // during the test set up.

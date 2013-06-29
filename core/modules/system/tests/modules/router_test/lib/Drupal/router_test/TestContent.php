@@ -19,4 +19,15 @@ class TestContent {
     return 'abcde';
   }
 
+  /**
+   * Provides example content for route specific authentication.
+   *
+   * @returns string
+   *   The user name of the current logged in user.
+   */
+  public function test11() {
+    $account  = \Drupal::request()->attributes->get('account');
+    return isset($account->name) ? $account->name : '';
+  }
+
 }

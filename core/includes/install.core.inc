@@ -1752,6 +1752,8 @@ function install_load_profile(&$install_state) {
  */
 function install_bootstrap_full() {
   drupal_bootstrap(DRUPAL_BOOTSTRAP_FULL);
+  require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/session.inc');
+  drupal_session_initialize();
 }
 
 /**

@@ -158,19 +158,14 @@ const DRUPAL_BOOTSTRAP_DATABASE = 3;
 const DRUPAL_BOOTSTRAP_VARIABLES = 4;
 
 /**
- * Sixth bootstrap phase: initialize session handling.
- */
-const DRUPAL_BOOTSTRAP_SESSION = 5;
-
-/**
  * Eighth bootstrap phase: load code for subsystems and modules.
  */
-const DRUPAL_BOOTSTRAP_CODE = 6;
+const DRUPAL_BOOTSTRAP_CODE = 5;
 
 /**
  * Final bootstrap phase: initialize language, path, theme, and modules.
  */
-const DRUPAL_BOOTSTRAP_FULL = 7;
+const DRUPAL_BOOTSTRAP_FULL = 6;
 
 /**
  * Role ID for anonymous users; should match what's in the "role" table.
@@ -1770,7 +1765,6 @@ function drupal_anonymous_user() {
  *   - DRUPAL_BOOTSTRAP_PAGE_CACHE: Tries to serve a cached page.
  *   - DRUPAL_BOOTSTRAP_DATABASE: Initializes the database layer.
  *   - DRUPAL_BOOTSTRAP_VARIABLES: Initializes the variable system.
- *   - DRUPAL_BOOTSTRAP_SESSION: Initializes session handling.
  *   - DRUPAL_BOOTSTRAP_CODE: Loads code for subsystems and modules.
  *   - DRUPAL_BOOTSTRAP_FULL: Fully loads Drupal. Validates and fixes input
  *     data.
@@ -1789,7 +1783,6 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
     DRUPAL_BOOTSTRAP_PAGE_CACHE,
     DRUPAL_BOOTSTRAP_DATABASE,
     DRUPAL_BOOTSTRAP_VARIABLES,
-    DRUPAL_BOOTSTRAP_SESSION,
     DRUPAL_BOOTSTRAP_CODE,
     DRUPAL_BOOTSTRAP_FULL,
   );
@@ -1837,11 +1830,6 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
 
         case DRUPAL_BOOTSTRAP_VARIABLES:
           _drupal_bootstrap_variables();
-          break;
-
-        case DRUPAL_BOOTSTRAP_SESSION:
-          require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/session.inc');
-          drupal_session_initialize();
           break;
 
         case DRUPAL_BOOTSTRAP_CODE:
@@ -1910,7 +1898,7 @@ function drupal_get_user_timezone() {
   global $user;
   $config = config('system.timezone');
 
-  if ($config->get('user.configurable') && $user->uid && $user->timezone) {
+  if ($user && $config->get('user.configurable') && $user->uid && $user->timezone) {
     return $user->timezone;
   }
   else {
