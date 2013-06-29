@@ -319,6 +319,7 @@ class CKEditorTest extends DrupalUnitTestBase {
       'customConfig' => '',
       'pasteFromWordPromptCleanup' => TRUE,
       'resize_dir' => 'vertical',
+      'justifyClasses' => array('align-left', 'align-center', 'align-right', 'align-justify'),
     );
   }
 
@@ -348,6 +349,7 @@ class CKEditorTest extends DrupalUnitTestBase {
   protected function getDefaultContentsCssConfig() {
     return array(
       file_create_url('core/modules/ckeditor/css/ckeditor-iframe.css'),
+      file_create_url('core/modules/system/css/system.module.css'),
     );
   }
 

@@ -32,7 +32,10 @@
   margin-bottom: 1em;
 }
 .ckeditor-toolbar-dividers {
-  float: right;
+  float: right; /* LTR */
+}
+[dir=rtl] .ckeditor-toolbar-dividers {
+  float: left;
 }
 .ckeditor-toolbar-disabled ul.ckeditor-buttons {
   border: 0;
