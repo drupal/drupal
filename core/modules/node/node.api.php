@@ -613,7 +613,7 @@ function hook_node_access($node, $op, $account, $langcode) {
  *
  * @ingroup node_api_hooks
  */
-function hook_node_prepare(\Drupal\Core\Entity\EntityInterface $node) {
+function hook_node_prepare_form(\Drupal\node\NodeInterface $node, $form_display, $operation, array &$form_state) {
   if (!isset($node->my_rating)) {
     $node->my_rating = Drupal::config("my_rating_{$node->bundle()}")->get('enabled');
   }
