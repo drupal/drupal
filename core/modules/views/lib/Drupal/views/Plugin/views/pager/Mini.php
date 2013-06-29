@@ -96,7 +96,7 @@ class Mini extends SqlBase {
    * Overrides \Drupal\views\Plugin\views\pager\PagerPluginBase::render().
    */
   function render($input) {
-    // The 1, 3 index are correct, see theme_pager().
+    // The 1, 3 indexes are correct, see template_preprocess_pager().
     $tags = array(
       1 => $this->options['tags']['previous'],
       3 => $this->options['tags']['next'],

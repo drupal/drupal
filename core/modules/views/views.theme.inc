@@ -1116,40 +1116,69 @@ function theme_views_form_views_form($variables) {
   return drupal_render_children($form);
 }
 
+/**
+ * Theme function for the Mini pager.
+ */
 function theme_views_mini_pager($vars) {
   global $pager_page_array, $pager_total;
 
-  $tags = $vars['tags'];
+  $tags = &$vars['tags'];
   $element = $vars['element'];
   $parameters = $vars['parameters'];
 
+  // Fill in default link labels.
+  $tags += array(
+    1 => t('‹‹'),
+    3 => t('››'),
+  );
+
   // Current is the page we are currently paged to.
   $pager_current = $pager_page_array[$element] + 1;
-  // End of marker calculations.
+  $current_path = current_path();
 
   $li_previous = array();
   if ($pager_total[$element] > 1 && $pager_page_array[$element] > 0) {
     $li_previous = array(
-      '#theme' => 'pager_link__previous',
-      '#text' => (isset($tags[1]) ? $tags[1] : t('‹‹')),
-      '#attributes' => array('title' => t('Go to previous page')),
-      '#page_new' => pager_load_array($pager_page_array[$element] - 1, $element, $pager_page_array),
-      '#element' => $element,
-      '#interval' => 1,
-      '#parameters' => $parameters,
+      '#type' => 'link',
+      '#title' => $tags[1],
+      '#href' => $current_path,
+      '#options' => array(
+        'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] - 1),
+        'attributes' => array(
+          'title' => t('Go to previous page'),
+          'rel' => 'prev',
+        ),
+        // Below is ignored by default, supplied to support hook_link_alter
+        // implementations.
+        'pager_context' => array(
+          'link_type' => 'previous',
+          'element' => $element,
+          'interval' => -1,
+        ),
+      ),
     );
   }
 
   $li_next = array();
   if ($pager_page_array[$element] < ($pager_total[$element] - 1)) {
     $li_next = array(
-      '#theme' => 'pager_link__next',
-      '#text' => (isset($tags[3]) ? $tags[3] : t('››')),
-      '#attributes' => array('title' => t('Go to next page')),
-      '#page_new' => pager_load_array($pager_page_array[$element] + 1, $element, $pager_page_array),
-      '#element' => $element,
-      '#interval' => 1,
-      '#parameters' => $parameters,
+      '#type' => 'link',
+      '#title' => $tags[3],
+      '#href' => $current_path,
+      '#options' => array(
+        'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] + 1),
+        'attributes' => array(
+          'title' => t('Go to next page'),
+          'rel' => 'next',
+        ),
+        // Below is ignored by default, supplied to support hook_link_alter
+        // implementations.
+        'pager_context' => array(
+          'link_type' => 'previous',
+          'element' => $element,
+          'interval' => 1,
+        ),
+      ),
     );
   }
 
@@ -1167,7 +1196,7 @@ function theme_views_mini_pager($vars) {
   ) + $li_next;
 
   $item_list = array(
-    '#theme' => 'item_list',
+    '#theme' => 'item_list__pager',
     '#items' => $items,
     '#title' => NULL,
     '#list_type' => 'ul',

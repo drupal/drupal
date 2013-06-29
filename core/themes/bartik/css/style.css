@@ -109,7 +109,7 @@ pre {
 
 body,
 #site-slogan,
-.ui-widget,
+#page .ui-widget,
 .comment-form label,
 .node-form label,
 .node-form .description {

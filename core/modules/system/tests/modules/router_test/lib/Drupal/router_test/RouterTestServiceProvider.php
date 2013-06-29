@@ -2,23 +2,23 @@
 
 /**
  * @file
- * Definition of \Drupal\router_test\RouterTestBundle.
+ * Definition of \Drupal\router_test\RouterTestServiceProvider.
  */
 
 namespace Drupal\router_test;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 
 /**
  * Registers a dynamic route provider.
  */
-class RouterTestBundle extends Bundle {
+class RouterTestServiceProvider implements ServiceProviderInterface {
 
   /**
-   * Overrides Symfony\Component\HttpKernel\Bundle\Bundle::build().
+   * {@inheritdoc}
    */
-  public function build(ContainerBuilder $container) {
+  public function register(ContainerBuilder $container) {
     $container->register('router_test.subscriber', 'Drupal\router_test\RouteTestSubscriber')->addTag('event_subscriber');
     $container->register('access_check.router_test', 'Drupal\router_test\Access\TestAccessCheck')
       ->addTag('access_check');

@@ -186,7 +186,7 @@ function update_helpful_links() {
  * while updates are running.
  */
 function update_flush_all_caches() {
-  unset($GLOBALS['conf']['container_bundles']['UpdateBundle']);
+  unset($GLOBALS['conf']['container_service_providers']['UpdateServiceProvider']);
   Drupal::service('kernel')->updateModules(Drupal::moduleHandler()->getModuleList());
 
   // No updates to run, so caches won't get flushed later.  Clear them now.

@@ -38,7 +38,7 @@ class IgnoreSlaveSubscriberTest extends UnitTestBase {
     Database::addConnectionInfo('default', 'slave', $connection_info['default']);
 
     db_ignore_slave();
-    $kernel = new DrupalKernel('testing', FALSE, drupal_classloader(), FALSE);
+    $kernel = new DrupalKernel('testing', drupal_classloader(), FALSE);
     $event = new GetResponseEvent($kernel, Request::create('http://example.com'), HttpKernelInterface::MASTER_REQUEST);
     $subscriber = new SlaveDatabaseIgnoreSubscriber();
     $subscriber->checkSlaveServer($event);

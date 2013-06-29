@@ -8,27 +8,19 @@
 namespace Drupal\layout\Plugin\Derivative;
 
 use DirectoryIterator;
-use Drupal\Component\Plugin\Derivative\DerivativeInterface;
+use Drupal\Component\Plugin\Derivative\DerivativeBase;
 use Drupal\Core\Config\FileStorage;
 
 /**
  * Layout plugin derivative definition.
+ *
+ * Derivatives are an associative array keyed by 'provider__layoutname' where
+ * provider is the module or theme name and layoutname is the .yml filename,
+ * such as 'bartik__page' or 'layout__one-col'. The values of the array are
+ * associative arrays themselves with metadata about the layout such as
+ * 'template', 'css', 'admin css' and so on.
  */
-class Layout implements DerivativeInterface {
-
-  /**
-   * List of derivatives.
-   *
-   * Associative array keyed by 'provider__layoutname' where provider is the
-   * module or theme name and layoutname is the .yml filename, such as
-   * 'bartik__page' or 'layout__one-col'. The values of the array are
-   * associative arrays themselves with metadata about the layout such as
-   * 'template', 'css', 'admin css' and so on.
-   *
-   * @var array
-   */
-  protected $derivatives = array();
-
+class Layout extends DerivativeBase {
   /**
    * Layout derivative type.
    *
@@ -41,18 +33,7 @@ class Layout implements DerivativeInterface {
   protected $type = 'static';
 
   /**
-   * Implements DerivativeInterface::getDerivativeDefinition().
-   */
-  public function getDerivativeDefinition($derivative_id, array $base_plugin_definition) {
-    if (!empty($this->derivatives) && !empty($this->derivatives[$derivative_id])) {
-      return $this->derivatives[$derivative_id];
-    }
-    $this->getDerivativeDefinitions($base_plugin_definition);
-    return $this->derivatives[$derivative_id];
-  }
-
-  /**
-   * Implements DerivativeInterface::getDerivativeDefinitions().
+   * {@inheritdoc}
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     $available_layout_providers = array();
@@ -85,7 +66,7 @@ class Layout implements DerivativeInterface {
         $this->iterateDirectories($dir, $provider);
       }
     }
-    return $this->derivatives;
+    return parent::getDerivativeDefinitions($base_plugin_definition);
   }
 
   /**

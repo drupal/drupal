@@ -7,33 +7,14 @@
 
 namespace Drupal\entity_reference\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeInterface;
+use Drupal\Component\Plugin\Derivative\DerivativeBase;
 
 /**
  * Base class for selection plugins provided by Entity Reference.
  */
-class SelectionBase implements DerivativeInterface {
-
+class SelectionBase extends DerivativeBase {
   /**
-   * Holds the list of plugin derivatives.
-   *
-   * @var array
-   */
-  protected $derivatives = array();
-
-  /**
-   * Implements DerivativeInterface::getDerivativeDefinition().
-   */
-  public function getDerivativeDefinition($derivative_id, array $base_plugin_definition) {
-    if (!empty($this->derivatives) && !empty($this->derivatives[$derivative_id])) {
-      return $this->derivatives[$derivative_id];
-    }
-    $this->getDerivativeDefinitions($base_plugin_definition);
-    return $this->derivatives[$derivative_id];
-  }
-
-  /**
-   * Implements DerivativeInterface::getDerivativeDefinitions().
+   * {@inheritdoc}
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     $supported_entities = array(
@@ -49,6 +30,6 @@ class SelectionBase implements DerivativeInterface {
         $this->derivatives[$entity_type]['label'] = t('@entity_type selection', array('@entity_type' => $info['label']));
       }
     }
-    return $this->derivatives;
+    return parent::getDerivativeDefinitions($base_plugin_definition);
   }
 }

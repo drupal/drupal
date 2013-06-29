@@ -19,8 +19,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * The container is built by the kernel and passed in to this class which stores
  * it statically. The container always contains the services from
- * \Drupal\Core\CoreBundle, the bundles of enabled modules and any other bundles
- * defined in $GLOBALS['conf']['container_bundles'].
+ * \Drupal\Core\CoreServiceProvider, the service providers of enabled modules and any other
+ * service providers defined in $GLOBALS['conf']['container_service_providers'].
  *
  * This class exists only to support legacy code that cannot be dependency
  * injected. If your code needs it, consider refactoring it to be object

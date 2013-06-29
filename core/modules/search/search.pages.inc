@@ -97,10 +97,7 @@ function template_preprocess_search_results(&$variables) {
       '#module' => $variables['module'],
     );
   }
-  $variables['pager'] = array(
-    '#theme' => 'pager',
-    '#tags' => NULL,
-  );
+  $variables['pager'] = array('#theme' => 'pager');
   // @todo Revisit where this help text is added, see also
   //   http://drupal.org/node/1918856.
   $variables['help'] = search_help('search#noresults', drupal_help_arg());

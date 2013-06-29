@@ -1,9 +1,0 @@
-services:
-  bundle_test_class:
-    class: Drupal\bundle_test\TestClass
-    tags:
-      - { name: event_subscriber }
-      - { name: needs_destruction }
-    arguments: ['@state']
-  file.usage:
-    class: Drupal\bundle_test\TestFileUsage

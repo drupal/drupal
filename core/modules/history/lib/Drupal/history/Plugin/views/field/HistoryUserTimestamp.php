@@ -92,7 +92,7 @@ class HistoryUserTimestamp extends Node {
       }
       $build = array(
         '#theme' => 'mark',
-        '#mark_type' => $mark,
+        '#status' => $mark,
       );
       return $this->render_link(drupal_render($build), $values);
     }

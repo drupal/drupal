@@ -90,7 +90,7 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     // Build a minimal, partially mocked environment for unit tests.
     $this->containerBuild(drupal_container());
     // Make sure it survives kernel rebuilds.
-    $GLOBALS['conf']['container_bundles'][] = 'Drupal\simpletest\TestBundle';
+    $GLOBALS['conf']['container_service_providers']['TestServiceProvider'] = 'Drupal\simpletest\TestServiceProvider';
 
     \Drupal::state()->set('system.module.files', $this->moduleFiles);
     \Drupal::state()->set('system.theme.files', $this->themeFiles);
@@ -98,7 +98,7 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
 
     // Bootstrap the kernel.
     // No need to dump it; this test runs in-memory.
-    $this->kernel = new DrupalKernel('unit_testing', TRUE, drupal_classloader(), FALSE);
+    $this->kernel = new DrupalKernel('unit_testing', drupal_classloader(), FALSE);
     $this->kernel->boot();
 
     // Collect and set a fixed module list.

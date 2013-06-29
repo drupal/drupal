@@ -7,11 +7,14 @@
 
 namespace Drupal\ckeditor\Plugin\Editor;
 
+use Drupal\ckeditor\CKEditorPluginManager;
 use Drupal\Core\Language\Language;
 use Drupal\editor\Plugin\EditorBase;
 use Drupal\editor\Annotation\Editor;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\editor\Plugin\Core\Entity\Editor as EditorEntity;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a CKEditor-based text editor for Drupal.
@@ -22,10 +25,41 @@ use Drupal\editor\Plugin\Core\Entity\Editor as EditorEntity;
  *   supports_inline_editing = TRUE
  * )
  */
-class CKEditor extends EditorBase {
+class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Implements \Drupal\editor\Plugin\EditPluginInterface::getDefaultSettings().
+   * The CKEditor plugin manager.
+   *
+   * @var \Drupal\ckeditor\CKEditorPluginManager
+   */
+  protected $ckeditorPluginManager;
+
+  /**
+   * Constructs a Drupal\Component\Plugin\PluginBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\ckeditor\CKEditorPluginManager $ckeditor_plugin_manager
+   *   The CKEditor plugin manager.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, CKEditorPluginManager $ckeditor_plugin_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->ckeditorPluginManager = $ckeditor_plugin_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('plugin.manager.ckeditor.plugin'));
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function getDefaultSettings() {
     return array(
@@ -33,9 +67,9 @@ class CKEditor extends EditorBase {
         'buttons' => array(
           array(
             'Bold', 'Italic',
-            '|', 'Link', 'Unlink',
+            '|', 'DrupalLink', 'DrupalUnlink',
             '|', 'BulletedList', 'NumberedList',
-            '|', 'Blockquote', 'Image',
+            '|', 'Blockquote', 'DrupalImage',
             '|', 'Source',
           ),
         ),
@@ -45,15 +79,14 @@ class CKEditor extends EditorBase {
   }
 
   /**
-   * Implements \Drupal\editor\Plugin\EditPluginInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state, EditorEntity $editor) {
     $module_path = drupal_get_path('module', 'ckeditor');
-    $manager = drupal_container()->get('plugin.manager.ckeditor.plugin');
     $ckeditor_settings_toolbar = array(
       '#theme' => 'ckeditor_settings_toolbar',
       '#editor' => $editor,
-      '#plugins' => $manager->getButtonsPlugins(),
+      '#plugins' => $this->ckeditorPluginManager->getButtonsPlugins(),
     );
     $form['toolbar'] = array(
       '#type' => 'container',
@@ -81,7 +114,7 @@ class CKEditor extends EditorBase {
     $form['plugin_settings'] = array(
       '#type' => 'vertical_tabs',
     );
-    $manager->injectPluginSettingsForm($form, $form_state, $editor);
+    $this->ckeditorPluginManager->injectPluginSettingsForm($form, $form_state, $editor);
     if (count(element_children($form['plugins'])) === 0) {
       unset($form['plugins']);
       unset($form['plugin_settings']);
@@ -93,16 +126,16 @@ class CKEditor extends EditorBase {
     // necessary for certain filters' (e.g. the html_filter filter) settings to
     // be updated accordingly.
     // Get a list of all external plugins and their corresponding files.
-    $plugins = array_keys($manager->getDefinitions());
+    $plugins = array_keys($this->ckeditorPluginManager->getDefinitions());
     $all_external_plugins = array();
     foreach ($plugins as $plugin_id) {
-      $plugin = $manager->createInstance($plugin_id);
+      $plugin = $this->ckeditorPluginManager->createInstance($plugin_id);
       if (!$plugin->isInternal()) {
         $all_external_plugins[$plugin_id] = $plugin->getFile();
       }
     }
     // Get a list of all buttons that are provided by all plugins.
-    $all_buttons = array_reduce($manager->getButtonsPlugins(), function($result, $item) {
+    $all_buttons = array_reduce($this->ckeditorPluginManager->getButtonsPlugins(), function($result, $item) {
       return array_merge($result, array_keys($item));
     }, array());
     // Build a fake Editor object, which we'll use to generate JavaScript
@@ -138,7 +171,7 @@ class CKEditor extends EditorBase {
   }
 
   /**
-   * Implements \Drupal\editor\Plugin\EditPluginInterface::settingsFormSubmit().
+   * {@inheritdoc}
    */
   public function settingsFormSubmit(array $form, array &$form_state) {
     // Modify the toolbar settings by reference. The values in
@@ -155,27 +188,28 @@ class CKEditor extends EditorBase {
   }
 
   /**
-   * Implements \Drupal\editor\Plugin\EditPluginInterface::getJSSettings().
+   * {@inheritdoc}
    */
   public function getJSSettings(EditorEntity $editor) {
     $language_interface = language(Language::TYPE_INTERFACE);
 
     $settings = array();
-    $manager = drupal_container()->get('plugin.manager.ckeditor.plugin');
 
     // Get the settings for all enabled plugins, even the internal ones.
-    $enabled_plugins = array_keys($manager->getEnabledPlugins($editor, TRUE));
+    $enabled_plugins = array_keys($this->ckeditorPluginManager->getEnabledPlugins($editor, TRUE));
     foreach ($enabled_plugins as $plugin_id) {
-      $plugin = $manager->createInstance($plugin_id);
+      $plugin = $this->ckeditorPluginManager->createInstance($plugin_id);
       $settings += $plugin->getConfig($editor);
     }
 
     // Next, set the most fundamental CKEditor settings.
-    $external_plugins = $manager->getEnabledPlugins($editor);
+    $external_plugins = $this->ckeditorPluginManager->getEnabledPlugins($editor);
     $settings += array(
       'toolbar' => $this->buildToolbarJSSetting($editor),
       'contentsCss' => $this->buildContentsCssJSSetting($editor),
       'extraPlugins' => implode(',', array_keys($external_plugins)),
+      // @todo: Remove image and link plugins from CKEditor build.
+      'removePlugins' => 'image,link',
       'language' => $language_interface->langcode,
       // Configure CKEditor to not load styles.js. The StylesCombo plugin will
       // set stylesSet according to the user's settings, if the "Styles" button
@@ -196,12 +230,24 @@ class CKEditor extends EditorBase {
   }
 
   /**
-   * Implements \Drupal\editor\Plugin\EditPluginInterface::getLibraries().
+   * {@inheritdoc}
    */
   public function getLibraries(EditorEntity $editor) {
-    return array(
+    $libraries = array(
       array('ckeditor', 'drupal.ckeditor'),
     );
+
+    // Get the required libraries for any enabled plugins.
+    $enabled_plugins = array_keys($this->ckeditorPluginManager->getEnabledPlugins($editor));
+    foreach ($enabled_plugins as $plugin_id) {
+      $plugin = $this->ckeditorPluginManager->createInstance($plugin_id);
+      $additional_libraries = array_udiff($plugin->getLibraries($editor), $libraries, function($a, $b) {
+        return $a[0] === $b[0] && $a[1] === $b[1] ? 0 : 1;
+      });
+      $libraries = array_merge($libraries, $additional_libraries);
+    }
+
+    return $libraries;
   }
 
   /**

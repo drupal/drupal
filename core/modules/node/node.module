@@ -1571,7 +1571,7 @@ function theme_node_recent_content($variables) {
   $output .= l($node->label(), 'node/' . $node->id());
   $mark = array(
     '#theme' => 'mark',
-    '#mark_type' => node_mark($node->id(), $node->getChangedTime()),
+    '#status' => node_mark($node->id(), $node->getChangedTime()),
   );
   $output .= drupal_render($mark);
   $output .= '</div><div class="node-author">';

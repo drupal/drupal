@@ -2223,7 +2223,7 @@ function template_preprocess_tablesort_indicator(&$variables) {
  *     MARK_UPDATED, MARK_READ.
  */
 function theme_mark($variables) {
-  $type = $variables['mark_type'];
+  $type = $variables['status'];
   global $user;
   if ($user->uid) {
     if ($type == MARK_NEW) {
@@ -3113,7 +3113,7 @@ function drupal_common_theme() {
       'template' => 'tablesort-indicator',
     ),
     'mark' => array(
-      'variables' => array('mark_type' => MARK_NEW),
+      'variables' => array('status' => MARK_NEW),
     ),
     'item_list' => array(
       'variables' => array('items' => array(), 'title' => '', 'list_type' => 'ul', 'attributes' => array()),
@@ -3154,21 +3154,7 @@ function drupal_common_theme() {
     // From pager.inc.
     'pager' => array(
       'variables' => array('tags' => array(), 'element' => 0, 'parameters' => array(), 'quantity' => 9),
-    ),
-    'pager_first' => array(
-      'variables' => array('text' => NULL, 'element' => 0, 'parameters' => array()),
-    ),
-    'pager_previous' => array(
-      'variables' => array('text' => NULL, 'element' => 0, 'interval' => 1, 'parameters' => array()),
-    ),
-    'pager_next' => array(
-      'variables' => array('text' => NULL, 'element' => 0, 'interval' => 1, 'parameters' => array()),
-    ),
-    'pager_last' => array(
-      'variables' => array('text' => NULL, 'element' => 0, 'parameters' => array()),
-    ),
-    'pager_link' => array(
-      'variables' => array('text' => NULL, 'page_new' => NULL, 'element' => NULL, 'parameters' => array(), 'attributes' => array()),
+      'template' => 'pager',
     ),
     // From menu.inc.
     'menu_link' => array(

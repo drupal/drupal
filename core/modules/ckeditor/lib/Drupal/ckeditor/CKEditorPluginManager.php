@@ -65,6 +65,7 @@ class CKEditorPluginManager extends PluginManagerBase {
     $plugins = array_keys($this->getDefinitions());
     $toolbar_buttons = array_unique(NestedArray::mergeDeepArray($editor->settings['toolbar']['buttons']));
     $enabled_plugins = array();
+    $additional_plugins = array();
 
     foreach ($plugins as $plugin_id) {
       $plugin = $this->createInstance($plugin_id);
@@ -74,17 +75,27 @@ class CKEditorPluginManager extends PluginManagerBase {
       }
 
       $enabled = FALSE;
+      // Enable this plugin if it provides a button that has been enabled.
       if ($plugin instanceof CKEditorPluginButtonsInterface) {
         $plugin_buttons = array_keys($plugin->getButtons());
         $enabled = (count(array_intersect($toolbar_buttons, $plugin_buttons)) > 0);
       }
+      // Otherwise enable this plugin if it declares itself as enabled.
       if (!$enabled && $plugin instanceof CKEditorPluginContextualInterface) {
         $enabled = $plugin->isEnabled($editor);
       }
 
       if ($enabled) {
         $enabled_plugins[$plugin_id] = ($plugin->isInternal()) ? NULL : $plugin->getFile();
+        // Check if this plugin has dependencies that also need to be enabled.
+        $additional_plugins = array_merge($additional_plugins, array_diff($plugin->getDependencies($editor), $additional_plugins));
       }
+    }
+
+    // Add the list of dependent plugins.
+    foreach ($additional_plugins as $plugin_id) {
+      $plugin = $this->createInstance($plugin_id);
+      $enabled_plugins[$plugin_id] = ($plugin->isInternal()) ? NULL : $plugin->getFile();
     }
 
     // Always return plugins in the same order.

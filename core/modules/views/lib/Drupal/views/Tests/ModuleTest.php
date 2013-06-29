@@ -11,7 +11,6 @@ namespace Drupal\views\Tests;
  * Tests basic functions from the Views module.
  */
 use Drupal\views\Plugin\views\filter\Standard;
-use Drupal\views\Views;
 
 class ModuleTest extends ViewUnitTestBase {
 
@@ -51,7 +50,7 @@ class ModuleTest extends ViewUnitTestBase {
         'table' => $this->randomName(),
         'field' => $this->randomName(),
       );
-      $handler = Views::handlerManager($type)->getHandler($item);
+      $handler = $this->container->get('plugin.manager.views.' . $type)->getHandler($item);
       $this->assertEqual('Drupal\views\Plugin\views\\' . $type . '\Broken', get_class($handler), t('Make sure that a broken handler of type: @type are created', array('@type' => $type)));
     }
 
@@ -66,7 +65,7 @@ class ModuleTest extends ViewUnitTestBase {
         );
         foreach ($data as $id => $field_data) {
           if (!in_array($id, array('title', 'help'))) {
-            $handler = Views::handlerManager($id)->getHandler($item);
+            $handler = $this->container->get('plugin.manager.views.' . $id)->getHandler($item);
             $this->assertInstanceHandler($handler, $table, $field, $id);
           }
         }
@@ -78,7 +77,7 @@ class ModuleTest extends ViewUnitTestBase {
       'table' => 'views_test_data',
       'field' => 'job',
     );
-    $handler = Views::handlerManager('filter')->getHandler($item, 'standard');
+    $handler = $this->container->get('plugin.manager.views.filter')->getHandler($item, 'standard');
     $this->assertTrue($handler instanceof Standard);
 
     // @todo Reinstate these tests when the debug() in views_get_handler() is
@@ -91,7 +90,7 @@ class ModuleTest extends ViewUnitTestBase {
       'table' => 'views_test_data',
       'field' => 'field_invalid',
     );
-    Views::handlerManager('field')->getHandler($item);
+    $this->container->get('plugin.manager.views.field')->getHandler($item);
     $this->assertTrue(strpos($this->lastErrorMessage, format_string("Missing handler: @table @field @type", array('@table' => 'views_test_data', '@field' => 'field_invalid', '@type' => 'field'))) !== FALSE, 'An invalid field name throws a debug message.');
     unset($this->lastErrorMessage);
 
@@ -99,7 +98,7 @@ class ModuleTest extends ViewUnitTestBase {
       'table' => 'table_invalid',
       'field' => 'id',
     );
-    Views::handlerManager('filter')->getHandler($item);
+    $this->container->get('plugin.manager.views.filter')->getHandler($item);
     $this->assertEqual(strpos($this->lastErrorMessage, format_string("Missing handler: @table @field @type", array('@table' => 'table_invalid', '@field' => 'id', '@type' => 'filter'))) !== FALSE, 'An invalid table name throws a debug message.');
     unset($this->lastErrorMessage);
 
@@ -108,7 +107,7 @@ class ModuleTest extends ViewUnitTestBase {
       'field' => 'id',
       'optional' => FALSE,
     );
-    Views::handlerManager('filter')->getHandler($item);
+    $this->container->get('plugin.manager.views.filter')->getHandler($item);
     $this->assertEqual(strpos($this->lastErrorMessage, format_string("Missing handler: @table @field @type", array('@table' => 'table_invalid', '@field' => 'id', '@type' => 'filter'))) !== FALSE, 'An invalid table name throws a debug message.');
     unset($this->lastErrorMessage);
 
@@ -117,7 +116,7 @@ class ModuleTest extends ViewUnitTestBase {
       'field' => 'id',
       'optional' => TRUE,
     );
-    Views::handlerManager('filter')->getHandler($item);
+    $this->container->get('plugin.manager.views.filter')->getHandler($item);
     $this->assertFalse($this->lastErrorMessage, "An optional handler does not throw a debug message.");
     unset($this->lastErrorMessage);
 
@@ -238,7 +237,7 @@ class ModuleTest extends ViewUnitTestBase {
   public function testViewsFetchPluginNames() {
     // All style plugins should be returned, as we have not specified a type.
     $plugins = views_fetch_plugin_names('style');
-    $definitions = Views::pluginManager('style')->getDefinitions();
+    $definitions = $this->container->get('plugin.manager.views.style')->getDefinitions();
     $expected = array();
     foreach ($definitions as $id =>$definition) {
       $expected[$id] = $definition['title'];
@@ -282,7 +281,7 @@ class ModuleTest extends ViewUnitTestBase {
    * Ensure that a certain handler is a instance of a certain table/field.
    */
   function assertInstanceHandler($handler, $table, $field, $id) {
-    $table_data = Views::viewsData()->get($table);
+    $table_data = $this->container->get('views.views_data')->get($table);
     $field_data = $table_data[$field][$id];
 
     $this->assertEqual($field_data['id'], $handler->getPluginId());

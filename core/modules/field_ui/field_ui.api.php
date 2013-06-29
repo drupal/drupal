@@ -28,8 +28,9 @@
  * @see \Drupal\field_ui\DisplayOverView.
  */
 function hook_field_formatter_settings_form_alter(&$element, &$form_state, $context) {
-  // Add a 'mysetting' checkbox to the settings form for 'foo_field' fields.
-  if ($context['field']['type'] == 'foo_field') {
+  // Add a 'mysetting' checkbox to the settings form for 'foo_formatter'
+  // field formatters.
+  if ($context['formatter']->getPluginId() == 'foo_formatter') {
     $element['mysetting'] = array(
       '#type' => 'checkbox',
       '#title' => t('My setting'),
@@ -81,9 +82,9 @@ function hook_field_widget_settings_form_alter(&$element, &$form_state, $context
  * @see \Drupal\field_ui\DisplayOverView.
  */
 function hook_field_formatter_settings_summary_alter(&$summary, $context) {
-  // Append a message to the summary when an instance of foo_field has
+  // Append a message to the summary when an instance of foo_formatter has
   // mysetting set to TRUE for the current view mode.
-  if ($context['field']['type'] == 'foo_field') {
+  if ($context['formatter']->getPluginId() == 'foo_formatter') {
     if ($context['formatter']->getSetting('mysetting')) {
       $summary[] = t('My setting enabled.');
     }

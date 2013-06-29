@@ -3468,7 +3468,7 @@ function hook_updater_info_alter(&$updaters) {
  * Alter the default country list.
  *
  * @param $countries
- *   The associative array of countries keyed by ISO 3166-1 country code.
+ *   The associative array of countries keyed by two-letter country code.
  *
  * @see \Drupal\Core\Locale\CountryManager::getList().
  */

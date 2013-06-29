@@ -1,0 +1,7 @@
+name: 'Service Provider test'
+type: module
+description: 'Support module for service provider testing.'
+package: Testing
+version: VERSION
+core: 8.x
+hidden: true

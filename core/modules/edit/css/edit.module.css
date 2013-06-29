@@ -94,7 +94,7 @@
 
 /* Highlighted (hovered) editable. */
 .edit-editable.edit-highlighted {
-  z-index: 305;
+  z-index: 99;
   min-width: 200px;
 }
 .edit-field.edit-editable.edit-highlighted,
@@ -221,7 +221,7 @@
   border: 0;
   margin: 0;
   vertical-align: baseline;
-  z-index: 310;
+  z-index: 100;
 }
 .edit-toolbar-container {
   -webkit-user-select: none;

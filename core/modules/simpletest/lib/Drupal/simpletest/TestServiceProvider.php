@@ -2,10 +2,10 @@
 
 namespace Drupal\simpletest;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 
-class TestBundle extends Bundle {
+class TestServiceProvider implements ServiceProviderInterface {
 
   /**
    * @var \Drupal\simpletest\TestBase;
@@ -13,12 +13,11 @@ class TestBundle extends Bundle {
   public static $currentTest;
 
   /**
-   * Implements \Symfony\Component\HttpKernel\Bundle\BundleInterface::build().
+   * {@inheritdoc}
    */
-  function build(ContainerBuilder $container) {
+  function register(ContainerBuilder $container) {
     if (static::$currentTest && method_exists(static::$currentTest, 'containerBuild')) {
       static::$currentTest->containerBuild($container);
     }
   }
-
 }

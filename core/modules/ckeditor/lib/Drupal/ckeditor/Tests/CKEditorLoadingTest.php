@@ -97,9 +97,10 @@ class CKEditorLoadingTest extends WebTestBase {
     $this->drupalLogin($this->normal_user);
     $this->drupalGet('node/add/article');
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
-    $ckeditor_plugin = drupal_container()->get('plugin.manager.editor')->createInstance('ckeditor');
+    $ckeditor_plugin = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
     $editor = entity_load('editor', 'filtered_html');
     $expected = array('formats' => array('filtered_html' => array(
+      'format' => 'filtered_html',
       'editor' => 'ckeditor',
       'editorSettings' => $ckeditor_plugin->getJSSettings($editor),
     )));
@@ -119,13 +120,13 @@ class CKEditorLoadingTest extends WebTestBase {
     // configuration also results in modified CKEditor configuration, so we
     // don't test that here.
     module_enable(array('ckeditor_test'));
-    drupal_container()->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
+    $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
     $editor->settings['toolbar']['buttons'][0][] = 'Llama';
-    $editor->settings['plugins']['internal']['link_shortcut'] = 'CTRL+K';
     $editor->save();
     $this->drupalGet('node/add/article');
     list($settings, $editor_settings_present, $editor_js_present, $body, $format_selector) = $this->getThingsToCheck();
     $expected = array('formats' => array('filtered_html' => array(
+      'format' => 'filtered_html',
       'editor' => 'ckeditor',
       'editorSettings' => $ckeditor_plugin->getJSSettings($editor),
     )));
