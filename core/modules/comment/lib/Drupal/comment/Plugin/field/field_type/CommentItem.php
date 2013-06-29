@@ -146,8 +146,9 @@ class CommentItem extends ConfigFieldItemBase {
    */
   public function applyDefaultValue($notify = TRUE) {
     // Retrieve the configured default value for the instance.
-    $defaults = $this->getInstance()->default_value;
-    $this->setValue(reset($defaults), $notify);
+    //$defaults = $this->getInstance()->default_value;
+    //$this->setValue(reset($defaults), $notify);
+    $this->setValue(array('status' => COMMENT_OPEN), $notify);
     return $this;
   }
 
