@@ -52,7 +52,6 @@ class CommentUpgradePathTest extends UpgradePathTestBase {
         'anonymous' => 0,
         'subject' => 1,
         'preview' => 1,
-        'user_register_form' => false,
       ),
       'blog' => array (
         'default_mode' => 1,
@@ -61,7 +60,6 @@ class CommentUpgradePathTest extends UpgradePathTestBase {
         'anonymous' => 0,
         'subject' => 1,
         'preview' => 1,
-        'user_register_form' => false,
       ),
       'book' => array (
         'default_mode' => 1,
@@ -70,7 +68,6 @@ class CommentUpgradePathTest extends UpgradePathTestBase {
         'anonymous' => 0,
         'subject' => 1,
         'preview' => 1,
-        'user_register_form' => false,
       ),
       'forum' => array (
         'default_mode' => 1,
@@ -79,7 +76,6 @@ class CommentUpgradePathTest extends UpgradePathTestBase {
         'anonymous' => 0,
         'subject' => 1,
         'preview' => 1,
-        'user_register_form' => false,
       ),
       'page' => array (
         'default_mode' => 1,
@@ -88,7 +84,16 @@ class CommentUpgradePathTest extends UpgradePathTestBase {
         'anonymous' => 0,
         'subject' => 1,
         'preview' => 1,
-        'user_register_form' => false,
+      ),
+      // Poll module exists in Drupal 7 and hence will be present during an
+      // upgrade.
+      'poll' => array (
+        'default_mode' => 1,
+        'per_page' => 50,
+        'form_location' => 1,
+        'anonymous' => 0,
+        'subject' => 1,
+        'preview' => 1,
       ),
     );
     // Check one instance exists for each node type.
