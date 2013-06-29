@@ -1689,6 +1689,8 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  * @return
  *   An array of queued cascading stylesheets.
  *
+ * @deprecated as of Drupal 8.0. Use the #attached key in render arrays instead.
+ *
  * @see drupal_get_css()
  */
 function drupal_add_css($data = NULL, $options = NULL) {
@@ -2806,6 +2808,8 @@ function drupal_html_id($id) {
  *   The current array of JavaScript files, settings, and in-line code,
  *   including Drupal defaults, anything previously added with calls to
  *   drupal_add_js(), and this function call's additions.
+ *
+ * @deprecated as of Drupal 8.0. Use the #attached key in render arrays instead.
  *
  * @see drupal_get_js()
  */
