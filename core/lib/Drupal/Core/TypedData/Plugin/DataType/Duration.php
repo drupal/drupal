@@ -2,14 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\Type\Duration.
+ * Contains \Drupal\Core\TypedData\Plugin\DataType\Duration.
  */
 
-namespace Drupal\Core\TypedData\Type;
+namespace Drupal\Core\TypedData\Plugin\DataType;
 
+use Drupal\Core\TypedData\Annotation\DataType;
+use Drupal\Core\Annotation\Translation;
 use Drupal\Core\TypedData\TypedData;
 use DateInterval;
-use InvalidArgumentException;
 
 /**
  * The duration data type.
@@ -18,6 +19,12 @@ use InvalidArgumentException;
  * setting the value an instance of the DateInterval class, a ISO8601 string as
  * supported by DateInterval::__construct, or an integer in seconds may be
  * passed.
+ *
+ * @DataType(
+ *   id = "duration",
+ *   label = @Translation("Duration"),
+ *   primitive_type = 6
+ * )
  */
 class Duration extends TypedData {
 

@@ -2,11 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Field\Type\EntityReferenceItem.
+ * Contains \Drupal\Core\Entity\Plugin\DataType\EntityReferenceItem.
  */
 
-namespace Drupal\Core\Entity\Field\Type;
+namespace Drupal\Core\Entity\Plugin\DataType;
 
+use Drupal\Core\TypedData\Annotation\DataType;
+use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldItemBase;
 use Drupal\Core\TypedData\TypedDataInterface;
 
@@ -15,6 +17,13 @@ use Drupal\Core\TypedData\TypedDataInterface;
  *
  * Required settings (below the definition's 'settings' key) are:
  *  - target_type: The entity type to reference.
+ *
+ * @DataType(
+ *   id = "entity_reference_field",
+ *   label = @Translation("Entity reference field item"),
+ *   description = @Translation("An entity field containing an entity reference."),
+ *   list_class = "\Drupal\Core\Entity\Field\Field"
+ * )
  */
 class EntityReferenceItem extends FieldItemBase {
 

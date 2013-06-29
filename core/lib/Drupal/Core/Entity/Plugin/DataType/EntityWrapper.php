@@ -2,11 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Field\Type\EntityWrapper.
+ * Contains \Drupal\Core\Entity\Plugin\DataType\EntityWrapper.
  */
 
-namespace Drupal\Core\Entity\Field\Type;
+namespace Drupal\Core\Entity\Plugin\DataType;
 
+use Drupal\Core\TypedData\Annotation\DataType;
+use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\TypedData;
@@ -34,6 +36,12 @@ use InvalidArgumentException;
  * Supported settings (below the definition's 'settings' key) are:
  *  - id source: If used as computed property, the ID property used to load
  *    the entity object.
+ *
+ * @DataType(
+ *   id = "entity",
+ *   label = @Translation("Entity"),
+ *   description = @Translation("All kind of entities, e.g. nodes, comments or users.")
+ * )
  */
 class EntityWrapper extends TypedData implements IteratorAggregate, ComplexDataInterface {
 

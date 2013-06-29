@@ -2,16 +2,30 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Field\Type\LanguageItem.
+ * Contains \Drupal\Core\Entity\Plugin\DataType\LanguageItem.
  */
 
-namespace Drupal\Core\Entity\Field\Type;
+namespace Drupal\Core\Entity\Plugin\DataType;
 
+use Drupal\Core\TypedData\Annotation\DataType;
+use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldItemBase;
 use Drupal\Core\Language\Language;
 
 /**
  * Defines the 'language_field' entity field item.
+ *
+ * @DataType(
+ *   id = "language_field",
+ *   label = @Translation("Language field item"),
+ *   description = @Translation("An entity field referencing a language."),
+ *   list_class = "\Drupal\Core\Entity\Field\Field",
+ *   constraints = {
+ *     "ComplexData" = {
+ *       "value" = {"Length" = {"max" = 12}}
+ *     }
+ *   }
+ * )
  */
 class LanguageItem extends FieldItemBase {
 

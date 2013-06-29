@@ -369,7 +369,7 @@ class EntityNG extends Entity {
   /**
    * Implements \Drupal\Core\TypedData\TranslatableInterface::getTranslation().
    *
-   * @return \Drupal\Core\Entity\Field\Type\EntityTranslation
+   * @return \Drupal\Core\Entity\Plugin\DataType\EntityTranslation
    */
   public function getTranslation($langcode, $strict = TRUE) {
     // If the default language is Language::LANGCODE_NOT_SPECIFIED, the entity is not

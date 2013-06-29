@@ -2,14 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\Type\Map.
+ * Contains \Drupal\Core\TypedData\Plugin\DataType\Map.
  */
 
-namespace Drupal\Core\TypedData\Type;
+namespace Drupal\Core\TypedData\Plugin\DataType;
 
+use Drupal\Core\TypedData\Annotation\DataType;
+use Drupal\Core\Annotation\Translation;
 use Drupal\Core\TypedData\TypedData;
 use Drupal\Core\TypedData\ComplexDataInterface;
-use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
  * The "map" data type.
@@ -20,6 +21,11 @@ use Drupal\Core\TypedData\TypedDataInterface;
  *
  * By default there is no metadata for contained properties. Extending classes
  * may want to override Map::getPropertyDefinitions() to define it.
+ *
+ * @DataType(
+ *   id = "map",
+ *   label = @Translation("Map")
+ * )
  */
 class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface {
 

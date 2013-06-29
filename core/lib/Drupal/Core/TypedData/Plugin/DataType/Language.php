@@ -2,11 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\Type\Language.
+ * Contains \Drupal\Core\TypedData\Plugin\DataType\Language.
  */
 
-namespace Drupal\Core\TypedData\Type;
+namespace Drupal\Core\TypedData\Plugin\DataType;
 
+use Drupal\Core\TypedData\Annotation\DataType;
+use Drupal\Core\Annotation\Translation;
 use InvalidArgumentException;
 use Drupal\Core\Language\Language as LanguageObject;
 use Drupal\Core\TypedData\TypedData;
@@ -24,6 +26,12 @@ use Drupal\Core\TypedData\TypedData;
  * Supported settings (below the definition's 'settings' key) are:
  *  - langcode source: If used as computed property, the langcode property used
  *    to load the language object.
+ *
+ * @DataType(
+ *   id = "language",
+ *   label = @Translation("Language"),
+ *   description = @Translation("A language object.")
+ * )
  */
 class Language extends TypedData {
 

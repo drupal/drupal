@@ -8,7 +8,7 @@
 namespace Drupal\Core\Plugin\Context;
 
 use Drupal\Component\Plugin\Context\Context as ComponentContext;
-use Drupal\Core\Entity\Field\Type\EntityWrapper;
+use Drupal\Core\Entity\Plugin\DataType\EntityWrapper;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\ListInterface;
 use Drupal\Core\TypedData\TypedDataInterface;

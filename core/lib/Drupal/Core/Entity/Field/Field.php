@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Field\Type\Field.
+ * Contains \Drupal\Core\Entity\Field\Field.
  */
 
-namespace Drupal\Core\Entity\Field\Type;
+namespace Drupal\Core\Entity\Field;
 
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\Core\Session\AccountInterface;

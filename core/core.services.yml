@@ -198,6 +198,7 @@ services:
     arguments: [slave]
   typed_data:
     class: Drupal\Core\TypedData\TypedDataManager
+    arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
     calls:
       - [setValidationConstraintManager, ['@validation.constraint']]
   validation.constraint:

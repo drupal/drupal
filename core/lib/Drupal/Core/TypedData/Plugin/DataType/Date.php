@@ -2,14 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\Core\TypedData\Type\Date.
+ * Contains \Drupal\Core\TypedData\Plugin\DataType\Date.
  */
 
-namespace Drupal\Core\TypedData\Type;
+namespace Drupal\Core\TypedData\Plugin\DataType;
 
+use Drupal\Core\TypedData\Annotation\DataType;
+use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\TypedData\TypedData;
-use InvalidArgumentException;
 
 /**
  * The date data type.
@@ -18,6 +19,12 @@ use InvalidArgumentException;
  * setting the value any value supported by the __construct() of the
  * DrupalDateTime class will work, including a DateTime object, a timestamp, a
  * string date, or an array of date parts.
+ *
+ * @DataType(
+ *   id = "date",
+ *   label = @Translation("Date"),
+ *   primitive_type = 5
+ * )
  */
 class Date extends TypedData {
 

@@ -263,19 +263,6 @@ function path_form_taxonomy_term_form_alter(&$form, $form_state) {
 }
 
 /**
- * Implements hook_data_type_info().
- */
-function path_data_type_info() {
-  $info['path_field'] = array(
-    'label' => t('Path field item'),
-    'description' => t('An entity field containing a path alias and related data.'),
-    'class' => '\Drupal\path\Type\PathItem',
-    'list class' => '\Drupal\Core\Entity\Field\Type\Field',
-  );
-  return $info;
-}
-
-/**
  * Implements hook_entity_field_info().
  */
 function path_entity_field_info($entity_type) {

@@ -7,13 +7,13 @@
 
 namespace Drupal\Core\Config;
 
-use Drupal\Core\Config\Schema\SchemaDiscovery;
-use Drupal\Core\TypedData\TypedDataManager;
+use Drupal\Component\Plugin\PluginManagerBase;
+use Drupal\Component\Utility\NestedArray;
 
 /**
  * Manages config type plugins.
  */
-class TypedConfigManager extends TypedDataManager {
+class TypedConfigManager extends PluginManagerBase {
 
   /**
    * A storage controller instance for reading configuration data.
@@ -21,6 +21,20 @@ class TypedConfigManager extends TypedDataManager {
    * @var \Drupal\Core\Config\StorageInterface
    */
   protected $configStorage;
+
+  /**
+   * A storage controller instance for reading configuration schema data.
+   *
+   * @var \Drupal\Core\Config\StorageInterface
+   */
+  protected $schemaStorage;
+
+  /**
+   * The array of plugin definitions, keyed by plugin id.
+   *
+   * @var array
+   */
+  protected $definitions = array();
 
   /**
    * Creates a new typed configuration manager.
@@ -32,8 +46,8 @@ class TypedConfigManager extends TypedDataManager {
    */
   public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage) {
     $this->configStorage = $configStorage;
-    $this->discovery = new SchemaDiscovery($schemaStorage);
-    $this->factory = new TypedConfigElementFactory($this->discovery);
+    $this->schemaStorage = $schemaStorage;
+    $this->loadAllSchema();
   }
 
   /**
@@ -78,7 +92,116 @@ class TypedConfigManager extends TypedDataManager {
       $definition['type'] = $this->replaceName($definition['type'], $replace);
     }
     // Create typed config object.
-    return parent::create($definition, $value, $name, $parent);
+    $wrapper = $this->createInstance($definition['type'], $definition, $name, $parent);
+    if (isset($value)) {
+      $wrapper->setValue($value, FALSE);
+    }
+    return $wrapper;
+  }
+
+  /**
+   * Overrides Drupal\Core\TypedData\TypedDataFactory::createInstance().
+   */
+  public function createInstance($plugin_id, array $configuration, $name = NULL, $parent = NULL) {
+    $type_definition = $this->getDefinition($plugin_id);
+    $configuration += $type_definition;
+    if (!isset($type_definition)) {
+      throw new InvalidArgumentException(format_string('Invalid data type %plugin_id has been given.', array('%plugin_id' => $plugin_id)));
+    }
+
+    // Allow per-data definition overrides of the used classes, i.e. take over
+    // classes specified in the data definition.
+    $key = empty($configuration['list']) ? 'class' : 'list class';
+    if (isset($configuration[$key])) {
+      $class = $configuration[$key];
+    }
+    elseif (isset($type_definition[$key])) {
+      $class = $type_definition[$key];
+    }
+
+    if (!isset($class)) {
+      throw new PluginException(sprintf('The plugin (%s) did not specify an instance class.', $plugin_id));
+    }
+    return new $class($configuration, $name, $parent);
+  }
+
+  /**
+   * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinition().
+   */
+  public function getDefinition($base_plugin_id) {
+    if (isset($this->definitions[$base_plugin_id])) {
+      $type = $base_plugin_id;
+    }
+    elseif (strpos($base_plugin_id, '.') && $name = $this->getFallbackName($base_plugin_id)) {
+      // Found a generic name, replacing the last element by '*'.
+      $type = $name;
+    }
+    else {
+      // If we don't have definition, return the 'default' element.
+      // This should map to 'undefined' type by default, unless overridden.
+      $type = 'default';
+    }
+    $definition = $this->definitions[$type];
+    // Check whether this type is an extension of another one and compile it.
+    if (isset($definition['type'])) {
+      $merge = $this->getDefinition($definition['type']);
+      $definition = NestedArray::mergeDeep($merge, $definition);
+      // Unset type so we try the merge only once per type.
+      unset($definition['type']);
+      $this->definitions[$type] = $definition;
+    }
+    return $definition;
+  }
+
+  /**
+   * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinitions().
+   */
+  public function getDefinitions() {
+    return $this->definitions;
+  }
+
+  /**
+   * Load schema for module / theme.
+   */
+  protected function loadAllSchema() {
+    foreach ($this->schemaStorage->listAll() as $name) {
+      if ($schema = $this->schemaStorage->read($name)) {
+        foreach ($schema as $type => $definition) {
+          $this->definitions[$type] = $definition;
+        }
+      }
+    }
+  }
+
+  /**
+   * Gets fallback metadata name.
+   *
+   * @param string $name
+   *   Configuration name or key.
+   *
+   * @return null|string
+   *   Same name with the last part(s) replaced by the filesystem marker.
+   *   for example, breakpoint.breakpoint.module.toolbar.narrow check for
+   *   definition in below order:
+   *     breakpoint.breakpoint.module.toolbar.*
+   *     breakpoint.breakpoint.module.*.*
+   *     breakpoint.breakpoint.*.*.*
+   *     breakpoint.*.*.*.*
+   *   Returns null, if no matching element.
+   */
+  protected function getFallbackName($name) {
+    // Check for definition of $name with filesystem marker.
+    $replaced = preg_replace('/(\.[^\.]+)([\.\*]*)$/', '.*\2', $name);
+    if ($replaced != $name ) {
+      if (isset($this->definitions[$replaced])) {
+        return $replaced;
+      }
+      else {
+        // No definition for this level(for example, breakpoint.breakpoint.*),
+        // check for next level (which is, breakpoint.*.*).
+        return self::getFallbackName($replaced);
+      }
+    }
   }
 
   /**

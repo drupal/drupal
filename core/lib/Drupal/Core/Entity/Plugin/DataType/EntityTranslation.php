@@ -2,17 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Type\EntityTranslation.
+ * Contains \Drupal\Core\Entity\Plugin\DataType\EntityTranslation.
  */
 
-namespace Drupal\Core\Entity\Field\Type;
+namespace Drupal\Core\Entity\Plugin\DataType;
 
+use Drupal\Core\TypedData\Annotation\DataType;
+use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\AccessibleInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Core\TypedData\TypedData;
 use ArrayIterator;
-use Drupal\Core\TypedData\TypedDataInterface;
 use IteratorAggregate;
 use InvalidArgumentException;
 
@@ -21,6 +22,12 @@ use InvalidArgumentException;
  *
  * Via this object translated entity fields may be read and updated in the same
  * way as untranslatable entity fields on the entity object.
+ *
+ * @DataType(
+ *   id = "entity_translation",
+ *   label = @Translation("Entity translation"),
+ *   description = @Translation("A translation of an entity.")
+ * )
  */
 class EntityTranslation extends TypedData implements IteratorAggregate, AccessibleInterface, ComplexDataInterface {
 
