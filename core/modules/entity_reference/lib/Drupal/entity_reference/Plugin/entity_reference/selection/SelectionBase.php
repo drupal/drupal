@@ -258,11 +258,12 @@ class SelectionBase implements SelectionInterface {
    */
   public function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
     $target_type = $this->fieldDefinition->getFieldSetting('target_type');
+    $handler_settings = $this->fieldDefinition->getFieldSetting('handler_settings');
     $entity_info = entity_get_info($target_type);
 
     $query = \Drupal::entityQuery($target_type);
-    if (!empty($this->instance['settings']['handler_settings']['target_bundles'])) {
-      $query->condition($entity_info['entity_keys']['bundle'], $this->instance['settings']['handler_settings']['target_bundles'], 'IN');
+    if (!empty($handler_settings['target_bundles'])) {
+      $query->condition($entity_info['entity_keys']['bundle'], $handler_settings['target_bundles'], 'IN');
     }
 
     if (isset($match) && isset($entity_info['entity_keys']['label'])) {

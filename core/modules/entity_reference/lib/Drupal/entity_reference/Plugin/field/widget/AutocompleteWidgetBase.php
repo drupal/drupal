@@ -155,7 +155,7 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
     $target_bundles = $this->getSelectionHandlerSetting('target_bundles');
 
     // Get the bundle.
-    if (!empty($target_bundles) && count($target_bundles) == 1) {
+    if (!empty($target_bundles)) {
       $bundle = reset($target_bundles);
     }
     else {

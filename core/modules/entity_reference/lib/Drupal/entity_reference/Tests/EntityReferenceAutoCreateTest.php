@@ -64,6 +64,9 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
       ),
     ))->save();
 
+    entity_get_display('node', $referencing->type, 'default')
+      ->setComponent('test_field')
+      ->save();
     entity_get_form_display('node', $referencing->type, 'default')
       ->setComponent('test_field', array(
         'type' => 'entity_reference_autocomplete',
@@ -101,6 +104,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
     $result = $query->execute();
     $this->assertTrue($result, 'Referenced node was created.');
     $referenced_nid = key($result);
+    $referenced_node = node_load($referenced_nid);
 
     // Assert the referenced node is associated with referencing node.
     $result = \Drupal::entityQuery('node')
@@ -110,5 +114,10 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
     $referencing_nid = key($result);
     $referencing_node = node_load($referencing_nid);
     $this->assertEqual($referenced_nid, $referencing_node->test_field[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'], 'Newly created node is referenced from the referencing node.');
+
+    // Now try to view the node and check that the referenced node is shown.
+    $this->drupalGet('node/' . $referencing_node->id());
+    $this->assertText($referencing_node->label(), 'Referencing node label found.');
+    $this->assertText($referenced_node->label(), 'Referenced node label found.');
   }
 }
