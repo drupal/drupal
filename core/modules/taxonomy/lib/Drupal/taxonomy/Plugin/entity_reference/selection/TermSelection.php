@@ -51,11 +51,11 @@ class TermSelection extends SelectionBase {
 
 
   /**
-   * Overrides SelectionBase::getReferencableEntities().
+   * Overrides SelectionBase::getReferenceableEntities().
    */
-  public function getReferencableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
+  public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
     if ($match || $limit) {
-      return parent::getReferencableEntities($match , $match_operator, $limit);
+      return parent::getReferenceableEntities($match , $match_operator, $limit);
     }
 
     $options = array();

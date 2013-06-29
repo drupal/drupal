@@ -33,15 +33,15 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
   }
 
-  protected function assertReferencable(FieldDefinitionInterface $field_definition, $tests, $handler_name) {
+  protected function assertReferenceable(FieldDefinitionInterface $field_definition, $tests, $handler_name) {
     $handler = entity_reference_get_selection_handler($field_definition);
 
     foreach ($tests as $test) {
       foreach ($test['arguments'] as $arguments) {
-        $result = call_user_func_array(array($handler, 'getReferencableEntities'), $arguments);
+        $result = call_user_func_array(array($handler, 'getReferenceableEntities'), $arguments);
         $this->assertEqual($result, $test['result'], format_string('Valid result set returned by @handler.', array('@handler' => $handler_name)));
 
-        $result = call_user_func_array(array($handler, 'countReferencableEntities'), $arguments);
+        $result = call_user_func_array(array($handler, 'countReferenceableEntities'), $arguments);
         if (!empty($test['result'])) {
           $bundle = key($test['result']);
           $count = count($test['result'][$bundle]);
@@ -119,7 +119,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
     // Test as a non-admin.
     $normal_user = $this->drupalCreateUser(array('access content'));
     $GLOBALS['user'] = $normal_user;
-    $referencable_tests = array(
+    $referenceable_tests = array(
       array(
         'arguments' => array(
           array(NULL, 'CONTAINS'),
@@ -166,12 +166,12 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         'result' => array(),
       ),
     );
-    $this->assertReferencable($instance, $referencable_tests, 'Node handler');
+    $this->assertReferenceable($instance, $referenceable_tests, 'Node handler');
 
     // Test as an admin.
     $admin_user = $this->drupalCreateUser(array('access content', 'bypass node access'));
     $GLOBALS['user'] = $admin_user;
-    $referencable_tests = array(
+    $referenceable_tests = array(
       array(
         'arguments' => array(
           array(NULL, 'CONTAINS'),
@@ -195,7 +195,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
       ),
     );
-    $this->assertReferencable($instance, $referencable_tests, 'Node handler (admin)');
+    $this->assertReferenceable($instance, $referenceable_tests, 'Node handler (admin)');
   }
 
   /**
@@ -265,7 +265,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
 
     // Test as a non-admin.
     $GLOBALS['user'] = $users['non_admin'];
-    $referencable_tests = array(
+    $referenceable_tests = array(
       array(
         'arguments' => array(
           array(NULL, 'CONTAINS'),
@@ -301,10 +301,10 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         'result' => array(),
       ),
     );
-    $this->assertReferencable($instance, $referencable_tests, 'User handler');
+    $this->assertReferenceable($instance, $referenceable_tests, 'User handler');
 
     $GLOBALS['user'] = $users['admin'];
-    $referencable_tests = array(
+    $referenceable_tests = array(
       array(
         'arguments' => array(
           array(NULL, 'CONTAINS'),
@@ -340,7 +340,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
       ),
     );
-    $this->assertReferencable($instance, $referencable_tests, 'User handler (admin)');
+    $this->assertReferenceable($instance, $referenceable_tests, 'User handler (admin)');
   }
 
   /**
@@ -436,7 +436,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
     // Test as a non-admin.
     $normal_user = $this->drupalCreateUser(array('access content', 'access comments'));
     $GLOBALS['user'] = $normal_user;
-    $referencable_tests = array(
+    $referenceable_tests = array(
       array(
         'arguments' => array(
           array(NULL, 'CONTAINS'),
@@ -470,12 +470,12 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         'result' => array(),
       ),
     );
-    $this->assertReferencable($instance, $referencable_tests, 'Comment handler');
+    $this->assertReferenceable($instance, $referenceable_tests, 'Comment handler');
 
     // Test as a comment admin.
     $admin_user = $this->drupalCreateUser(array('access content', 'access comments', 'administer comments'));
     $GLOBALS['user'] = $admin_user;
-    $referencable_tests = array(
+    $referenceable_tests = array(
       array(
         'arguments' => array(
           array(NULL, 'CONTAINS'),
@@ -488,12 +488,12 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
       ),
     );
-    $this->assertReferencable($instance, $referencable_tests, 'Comment handler (comment admin)');
+    $this->assertReferenceable($instance, $referenceable_tests, 'Comment handler (comment admin)');
 
     // Test as a node and comment admin.
     $admin_user = $this->drupalCreateUser(array('access content', 'access comments', 'administer comments', 'bypass node access'));
     $GLOBALS['user'] = $admin_user;
-    $referencable_tests = array(
+    $referenceable_tests = array(
       array(
         'arguments' => array(
           array(NULL, 'CONTAINS'),
@@ -507,6 +507,6 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
       ),
     );
-    $this->assertReferencable($instance, $referencable_tests, 'Comment handler (comment + node admin)');
+    $this->assertReferenceable($instance, $referenceable_tests, 'Comment handler (comment + node admin)');
   }
 }

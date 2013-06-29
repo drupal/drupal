@@ -155,9 +155,9 @@ class ViewsSelection implements SelectionInterface {
   }
 
   /**
-   * Implements \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface::getReferencableEntities().
+   * Implements \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface::getReferenceableEntities().
    */
-  public function getReferencableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
+  public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
     $handler_settings = $this->fieldDefinition->getFieldSetting('handler_settings');
     $display_name = $handler_settings['view']['display_name'];
     $arguments = $handler_settings['view']['arguments'];
@@ -178,17 +178,17 @@ class ViewsSelection implements SelectionInterface {
   }
 
   /**
-   * Implements \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface::countReferencableEntities().
+   * Implements \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface::countReferenceableEntities().
    */
-  public function countReferencableEntities($match = NULL, $match_operator = 'CONTAINS') {
-    $this->getReferencableEntities($match, $match_operator);
+  public function countReferenceableEntities($match = NULL, $match_operator = 'CONTAINS') {
+    $this->getReferenceableEntities($match, $match_operator);
     return $this->view->pager->getTotalItems();
   }
 
   /**
-   * Implements \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface::validateReferencableEntities().
+   * Implements \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface::validateReferenceableEntities().
    */
-  public function validateReferencableEntities(array $ids) {
+  public function validateReferenceableEntities(array $ids) {
     $handler_settings = $this->fieldDefinition->getFieldSetting('handler_settings');
     $display_name = $handler_settings['view']['display_name'];
     $arguments = $handler_settings['view']['arguments'];

@@ -20,21 +20,21 @@ use Drupal\Core\Database\Query\SelectInterface;
 interface SelectionInterface {
 
   /**
-   * Returns a list of referencable entities.
+   * Returns a list of referenceable entities.
    *
    * @return array
-   *   An array of referencable entities. Keys are entity IDs and
+   *   An array of referenceable entities. Keys are entity IDs and
    *   values are (safe HTML) labels to be displayed to the user.
    */
-  public function getReferencableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0);
+  public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0);
 
   /**
-   * Counts entities that are referencable by a given field.
+   * Counts entities that are referenceable by a given field.
    *
    * @return int
-   *   The number of referencable entities.
+   *   The number of referenceable entities.
    */
-  public function countReferencableEntities($match = NULL, $match_operator = 'CONTAINS');
+  public function countReferenceableEntities($match = NULL, $match_operator = 'CONTAINS');
 
   /**
    * Validates that entities can be referenced by this field.
@@ -42,7 +42,7 @@ interface SelectionInterface {
    * @return array
    *   An array of valid entity IDs.
    */
-  public function validateReferencableEntities(array $ids);
+  public function validateReferenceableEntities(array $ids);
 
   /**
    * Validates input from an autocomplete widget that has no ID.

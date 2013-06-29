@@ -155,9 +155,9 @@ class SelectionBase implements SelectionInterface {
   }
 
   /**
-   * Implements SelectionInterface::getReferencableEntities().
+   * Implements SelectionInterface::getReferenceableEntities().
    */
-  public function getReferencableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
+  public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
     $target_type = $this->fieldDefinition->getFieldSetting('target_type');
 
     $query = $this->buildEntityQuery($match, $match_operator);
@@ -182,9 +182,9 @@ class SelectionBase implements SelectionInterface {
   }
 
   /**
-   * Implements SelectionInterface::countReferencableEntities().
+   * Implements SelectionInterface::countReferenceableEntities().
    */
-  public function countReferencableEntities($match = NULL, $match_operator = 'CONTAINS') {
+  public function countReferenceableEntities($match = NULL, $match_operator = 'CONTAINS') {
     $query = $this->buildEntityQuery($match, $match_operator);
     return $query
       ->count()
@@ -192,9 +192,9 @@ class SelectionBase implements SelectionInterface {
   }
 
   /**
-   * Implements SelectionInterface::validateReferencableEntities().
+   * Implements SelectionInterface::validateReferenceableEntities().
    */
-  public function validateReferencableEntities(array $ids) {
+  public function validateReferenceableEntities(array $ids) {
     $result = array();
     if ($ids) {
       $target_type = $this->fieldDefinition->getFieldSetting('target_type');
@@ -212,7 +212,7 @@ class SelectionBase implements SelectionInterface {
    * Implements SelectionInterface::validateAutocompleteInput().
    */
   public function validateAutocompleteInput($input, &$element, &$form_state, $form, $strict = TRUE) {
-    $entities = $this->getReferencableEntities($input, '=', 6);
+    $entities = $this->getReferenceableEntities($input, '=', 6);
     $params = array(
       '%value' => $input,
       '@value' => $input,
@@ -244,7 +244,7 @@ class SelectionBase implements SelectionInterface {
   }
 
   /**
-   * Builds an EntityQuery to get referencable entities.
+   * Builds an EntityQuery to get referenceable entities.
    *
    * @param string|null $match
    *   (Optional) Text to match the label against. Defaults to NULL.
