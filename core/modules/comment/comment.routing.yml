@@ -12,3 +12,10 @@ comment_approve:
     entity_type: 'comment'
   requirements:
     _entity_access: 'comment.approve'
+
+comment_permalink:
+  pattern: '/comment/{comment}'
+  defaults:
+    _controller: '\Drupal\comment\Controller\CommentController::commentPermalink'
+  requirements:
+    _entity_access: 'comment.view'

@@ -204,10 +204,7 @@ function comment_menu() {
   );
   $items['comment/%comment'] = array(
     'title' => 'Comment permalink',
-    'page callback' => 'comment_permalink',
-    'page arguments' => array(1),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'view'),
+    'route_name' => 'comment_permalink',
   );
   $items['comment/%comment/view'] = array(
     'title' => 'View comment',
@@ -386,39 +383,6 @@ function comment_permission() {
       'title' => t('Edit own comments'),
     ),
   );
-}
-
-/**
- * Redirects comment links to the correct page depending on comment settings.
- *
- * Since comments are paged there is no way to guarantee which page a comment
- * appears on. Comment paging and threading settings may be changed at any time.
- * With threaded comments, an individual comment may move between pages as
- * comments can be added either before or after it in the overall discussion.
- * Therefore we use a central routing function for comment links, which
- * calculates the page number based on current comment settings and returns
- * the full comment view with the pager set dynamically.
- *
- * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
- *   A comment entity.
- *
- * @return
- *   The comment listing set to the page on which the comment appears.
- */
-function comment_permalink(Comment $comment) {
-  if ($node = $comment->nid->entity) {
-    // Find the current display page for this comment.
-    $page = comment_get_display_page($comment->id(), $node->type);
-
-    // @todo: Cleaner sub request handling.
-    $request = Drupal::request();
-    $subrequest = Request::create('/node/' . $node->nid, 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
-    $subrequest->query->set('page', $page);
-    // @todo: Convert the pager to use the request object.
-    $request->query->set('page', $page);
-    return Drupal::service('http_kernel')->handle($subrequest, HttpKernelInterface::SUB_REQUEST);
-  }
-  throw new NotFoundHttpException();
 }
 
 /**
