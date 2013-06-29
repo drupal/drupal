@@ -2425,13 +2425,13 @@ function _install_configure_form($form, &$form_state, &$install_state) {
     '#weight' => 0,
   );
 
-  $form['server_settings'] = array(
+  $form['regional_settings'] = array(
     '#type' => 'details',
-    '#title' => t('Server settings'),
+    '#title' => t('Regional settings'),
   );
 
   $countries = Drupal::service('country_manager')->getList();
-  $form['server_settings']['site_default_country'] = array(
+  $form['regional_settings']['site_default_country'] = array(
     '#type' => 'select',
     '#title' => t('Default country'),
     '#empty_value' => '',
@@ -2441,7 +2441,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
     '#weight' => 0,
   );
 
-  $form['server_settings']['date_default_timezone'] = array(
+  $form['regional_settings']['date_default_timezone'] = array(
     '#type' => 'select',
     '#title' => t('Default time zone'),
     '#default_value' => date_default_timezone_get(),
