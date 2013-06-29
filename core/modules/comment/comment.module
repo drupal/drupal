@@ -16,11 +16,11 @@ use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityNG;
-use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Drupal\Core\Language\Language;
+use Drupal\field\FieldInstanceInterface;
 
 /**
  * Comment is awaiting approval.
@@ -1980,24 +1980,26 @@ function comment_add_default_comment_field($entity_type, $bundle, $field_name = 
 }
 
 /**
- * Implements hook_field_create_instance().
+ * Implements hook_ENTITY_TYPE_create() for 'field_instance'.
  */
-function comment_field_create_instance($instance) {
-  $field = field_info_field($instance['field_name']);
-  if ($field['type'] == 'comment') {
-    _comment_body_field_create($instance['entity_type'], $instance['bundle'], $instance['field_name']);
+function comment_field_instance_create(FieldInstanceInterface $instance) {
+  if ($instance->getFieldType() == 'comment') {
+    if (empty($instance->default_value)) {
+      // Set comments enabled by default when field created via UI.
+      $instance->default_value = array(array('status' => COMMENT_OPEN));
+    }
+    _comment_body_field_create($instance->entity_type, $instance->bundle, $instance->getFieldName());
     cache()->delete('comment_entity_info');
   }
 }
 
 /**
- * Implements hook_field_delete_instance().
+ * Implements hook_ENTITY_TYPE_delete() for 'field_instance'.
  */
-function comment_field_delete_instance($instance) {
-  $field = field_info_field($instance['field_name']);
-  if ($field['type'] == 'comment') {
+function comment_field_instance_delete(FieldInstanceInterface $instance) {
+  if ($instance->getFieldType() == 'comment') {
     // Delete all fields and displays attached to the bundle.
-    entity_invoke_bundle_hook('delete', 'comment', $instance['field_name']);
+    entity_invoke_bundle_hook('delete', 'comment', $instance->getFieldName());
     cache()->delete('comment_entity_info');
   }
 }
