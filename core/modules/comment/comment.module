@@ -195,8 +195,13 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
             }
           }
           else {
+            $comment_post_forbidden = array(
+              '#theme' => 'comment_post_forbidden',
+              '#entity' => $entity,
+              '#field_name' => $field_name,
+            );
             $links['comment-forbidden'] = array(
-              'title' => theme('comment_post_forbidden', array('entity' => $entity, 'field_name' => $field_name)),
+              'title' => drupal_render($comment_post_forbidden),
               'html' => TRUE,
             );
           }
@@ -225,8 +230,13 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
             }
           }
           else {
+            $comment_post_forbidden = array(
+              '#theme' => 'comment_post_forbidden',
+              '#entity' => $entity,
+              '#field_name' => $field_name,
+            );
             $links['comment-forbidden'] = array(
-              'title' => theme('comment_post_forbidden', array('entity' => $entity, 'field_name' => $field_name)),
+              'title' => drupal_render($comment_post_forbidden),
               'html' => TRUE,
             );
           }
@@ -1659,7 +1669,7 @@ function template_preprocess_comment(&$variables) {
 function theme_comment_post_forbidden($variables) {
   $entity = $variables['entity'];
   $field_name = $variables['field_name'];
-  $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
+  $instance = Drupal::service('field.info')->getInstance($entity->entityType(), $entity->bundle(), $field_name);
   global $user;
 
   // Since this is expensive to compute, we cache it so that a page with many
@@ -1685,7 +1695,7 @@ function theme_comment_post_forbidden($variables) {
         $destination = array('destination' => $uri['path'] . "#comment-form");
       }
 
-      if (config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
+      if (Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
         // Users can register themselves.
         return t('<a href="@login">Log in</a> or <a href="@register">register</a> to post comments', array('@login' => url('user/login', array('query' => $destination)), '@register' => url('user/register', array('query' => $destination))));
       }
