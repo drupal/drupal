@@ -526,7 +526,7 @@ function locale_system_update(array $components) {
   // Skip running the translation imports if in the installer,
   // because it would break out of the installer flow. We have
   // built-in support for translation imports in the installer.
-  if (!drupal_installation_attempted() && locale_translatable_language_list()) {
+  if (!drupal_installation_attempted() && locale_translatable_language_list() && config('locale.settings')->get('translation.import_enabled')) {
     module_load_include('compare.inc', 'locale');
 
     // Update the list of translatable projects and start the import batch.
@@ -780,23 +780,25 @@ function locale_form_language_admin_add_form_alter(&$form, &$form_state) {
  * Set a batch for a newly-added language.
  */
 function locale_form_language_admin_add_form_alter_submit($form, $form_state) {
-  if (empty($form_state['values']['predefined_langcode']) || $form_state['values']['predefined_langcode'] == 'custom') {
-    $langcode = $form_state['values']['langcode'];
-  }
-  else {
-    $langcode = $form_state['values']['predefined_langcode'];
-  }
+  if (config('locale.settings')->get('translation.import_enabled')) {
+    if (empty($form_state['values']['predefined_langcode']) || $form_state['values']['predefined_langcode'] == 'custom') {
+      $langcode = $form_state['values']['langcode'];
+    }
+    else {
+      $langcode = $form_state['values']['predefined_langcode'];
+    }
 
-  // Download and import translations for the newly added language.
-  module_load_include('fetch.inc', 'locale');
-  $options = _locale_translation_default_update_options();
-  $batch = locale_translation_batch_update_build(array(), array($langcode), $options);
-  batch_set($batch);
-
-  // Create or update all configuration translations for this language.
-  Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
-  if ($batch = locale_config_batch_update_components($options, array($langcode))) {
+    // Download and import translations for the newly added language.
+    module_load_include('fetch.inc', 'locale');
+    $options = _locale_translation_default_update_options();
+    $batch = locale_translation_batch_update_build(array(), array($langcode), $options);
     batch_set($batch);
+
+    // Create or update all configuration translations for this language.
+    Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+    if ($batch = locale_config_batch_update_components($options, array($langcode))) {
+      batch_set($batch);
+    }
   }
 }
 
