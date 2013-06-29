@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Definition of Drupal\views_ui\ViewListController.
+ * Contains \Drupal\views_ui\ViewListController.
  */
 
 namespace Drupal\views_ui;
 
+use Drupal\Component\Utility\String;
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Config\Entity\ConfigEntityListController;
@@ -61,7 +62,7 @@ class ViewListController extends ConfigEntityListController implements EntityCon
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityListController::load();
+   * {@inheritdoc}
    */
   public function load() {
     $entities = array(
@@ -80,7 +81,7 @@ class ViewListController extends ConfigEntityListController implements EntityCon
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityListController::buildRow();
+   * {@inheritdoc}
    */
   public function buildRow(EntityInterface $view) {
     return array(
@@ -94,18 +95,18 @@ class ViewListController extends ConfigEntityListController implements EntityCon
         ),
         'description' => $view->get('description'),
         'tag' => $view->get('tag'),
-        'path' => implode(', ', $view->getPaths()),
+        'path' => implode(', ', $this->getDisplayPaths($view)),
         'operations' => array(
           'data' => $this->buildOperations($view),
         ),
       ),
-      'title' => t('Machine name: ') . $view->id(),
+      'title' => t('Machine name: @name', array('@name' => $view->id())),
       'class' => array($view->status() ? 'views-ui-list-enabled' : 'views-ui-list-disabled'),
     );
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityListController::buildHeader();
+   * {@inheritdoc}
    */
   public function buildHeader() {
     return array(
@@ -157,7 +158,7 @@ class ViewListController extends ConfigEntityListController implements EntityCon
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityListController::buildOperations();
+   * {@inheritdoc}
    */
   public function buildOperations(EntityInterface $entity) {
     $build = parent::buildOperations($entity);
@@ -173,7 +174,7 @@ class ViewListController extends ConfigEntityListController implements EntityCon
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityListController::render();
+   * {@inheritdoc}
    */
   public function render() {
     $entities = $this->load();
@@ -223,6 +224,33 @@ class ViewListController extends ConfigEntityListController implements EntityCon
 
     ksort($displays);
     return array_keys($displays);
+  }
+
+  /**
+   * Gets a list of paths assigned to the view.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $view
+   *   The view entity.
+   *
+   * @return array
+   *   An array of paths for this view.
+   */
+  protected function getDisplayPaths(EntityInterface $view) {
+    $all_paths = array();
+    $executable = $view->get('executable');
+    $executable->initDisplay();
+    foreach ($executable->displayHandlers as $display) {
+      if ($display->hasPath()) {
+        $path = $display->getPath();
+        if ($view->status() && strpos($path, '%') === FALSE) {
+          $all_paths[] = l('/' . $path, $path);
+        }
+        else {
+          $all_paths[] = String::checkPlain('/' . $path);
+        }
+      }
+    }
+    return array_unique($all_paths);
   }
 
 }

@@ -8,9 +8,10 @@
 namespace Drupal\views_ui\Tests {
 
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\Core\Entity\View;
-use Drupal\views_ui\ViewListController;
+use Drupal\views\ViewExecutableFactory;
 
 class ViewListControllerTest extends UnitTestCase {
 
@@ -35,6 +36,7 @@ class ViewListControllerTest extends UnitTestCase {
     $display_manager = $this->getMockBuilder('\Drupal\views\Plugin\ViewsPluginManager')
       ->disableOriginalConstructor()
       ->getMock();
+
     $display_manager->expects($this->any())
       ->method('getDefinition')
       ->will($this->returnValueMap(array(
@@ -69,6 +71,38 @@ class ViewListControllerTest extends UnitTestCase {
           )
         ),
       )));
+
+
+    $default_display = $this->getMock('Drupal\views\Plugin\views\display\DefaultDisplay',
+      array('initDisplay'),
+      array(array(), 'default', $display_manager->getDefinition('default'))
+    );
+    $page_display = $this->getMock('Drupal\views\Plugin\views\display\Page',
+      array('initDisplay', 'getPath'),
+      array(array(), 'default', $display_manager->getDefinition('page'))
+    );
+    $page_display->expects($this->any())
+      ->method('getPath')
+      ->will($this->returnValue('test_page'));
+
+    $embed_display = $this->getMock('Drupal\views\Plugin\views\display\Embed', array('initDisplay'),
+      array(array(), 'default', $display_manager->getDefinition('embed'))
+    );
+
+    $display_manager->expects($this->any())
+      ->method('createInstance')
+      ->will($this->returnValueMap(array(
+        array('default', array(), $default_display),
+        array('page', array(), $page_display),
+        array('embed', array(), $embed_display),
+      )));
+
+    $container = new ContainerBuilder();
+    $executable_factory = new ViewExecutableFactory();
+    $container->set('views.executable', $executable_factory);
+    $container->set('plugin.manager.views.display', $display_manager);
+    \Drupal::setContainer($container);
+
     $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandler')
       ->disableOriginalConstructor()
       ->getMock();
@@ -81,6 +115,7 @@ class ViewListControllerTest extends UnitTestCase {
       ->will($this->returnValue(array()));
 
     $values = array();
+    $values['status'] = FALSE;
     $values['display']['default']['id'] = 'default';
     $values['display']['default']['display_title'] = 'Display';
     $values['display']['default']['display_plugin'] = 'default';
@@ -88,6 +123,7 @@ class ViewListControllerTest extends UnitTestCase {
     $values['display']['page_1']['id'] = 'page_1';
     $values['display']['page_1']['display_title'] = 'Page 1';
     $values['display']['page_1']['display_plugin'] = 'page';
+    $values['display']['page_1']['display_options']['path'] = 'test_page';
 
     $values['display']['embed']['id'] = 'embed';
     $values['display']['embed']['display_title'] = 'Embedded';
@@ -98,7 +134,9 @@ class ViewListControllerTest extends UnitTestCase {
     $row = $view_list_controller->buildRow($view);
 
     $this->assertEquals(array('Embed admin label', 'Page admin label'), $row['data']['view_name']['data']['#displays'], 'Wrong displays got added to view list');
+    $this->assertEquals($row['data']['path'], '/test_page', 'The path of the page display is not added.');
   }
+
 }
 
 }

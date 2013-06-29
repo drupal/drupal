@@ -221,14 +221,6 @@ class ViewStorageTest extends ViewUnitTestBase {
     );
     $view = $this->controller->create($config);
 
-    // Paths with a "%" shouldn't not be linked
-    $expected_paths = array();
-    $expected_paths[] = l('/test', 'test');
-    $expected_paths[] = l('/test.xml', 'test.xml');
-    $expected_paths[] = '/test/%/extra';
-
-    $this->assertEqual($view->getPaths(), $expected_paths, 'Make sure the paths in the ui are generated as expected.');
-
     // Tests Drupal\views\Plugin\Core\Entity\View::addDisplay()
     $view = $this->controller->create(array());
     $random_title = $this->randomName();

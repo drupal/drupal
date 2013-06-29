@@ -17,7 +17,7 @@ class DefaultViewsTest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view_status');
+  public static $testViews = array('test_view_status', 'test_page_display_menu', 'test_page_display_arguments');
 
   public static function getInfo() {
     return array(
@@ -155,6 +155,22 @@ class DefaultViewsTest extends UITestBase {
     $arguments[':status'] = 'views-list-section enabled';
     $elements = $this->xpath($xpath, $arguments);
     $this->assertIdentical(count($elements), 1, 'After enabling a view, it is found in the enabled views table.');
+  }
+
+  /**
+   * Tests that page displays show the correct path.
+   */
+  public function testPathDestination() {
+    $this->drupalGet('admin/structure/views');
+
+    // Check that links to views on default tabs are rendered correctly.
+    $this->assertLinkByHref('test_page_display_menu');
+    $this->assertNoLinkByHref('test_page_display_menu/default');
+    $this->assertLinkByHref('test_page_display_menu/local');
+
+    // Check that a dynamic path is shown as text.
+    $this->assertRaw('test_route_with_suffix/%/suffix');
+    $this->assertNoLinkByHref(url('test_route_with_suffix/%/suffix'));
   }
 
   /**

@@ -291,34 +291,6 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   }
 
   /**
-   * Gets a list of paths assigned to the view.
-   *
-   * @return array
-   *   An array of paths for this view.
-   */
-  public function getPaths() {
-    $all_paths = array();
-    if (empty($this->display)) {
-      $all_paths[] = t('Edit this view to add a display.');
-    }
-    else {
-      foreach ($this->display as $display) {
-        if (!empty($display['display_options']['path'])) {
-          $path = $display['display_options']['path'];
-          if ($this->status() && strpos($path, '%') === FALSE) {
-            $all_paths[] = l('/' . $path, $path);
-          }
-          else {
-            $all_paths[] = check_plain('/' . $path);
-          }
-        }
-      }
-    }
-
-    return array_unique($all_paths);
-  }
-
-  /**
    * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::getExportProperties();
    */
   public function getExportProperties() {
