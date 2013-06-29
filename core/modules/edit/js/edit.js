@@ -22,8 +22,7 @@
 
 var options = $.extend({
   strings: {
-    quickEdit: Drupal.t('Quick edit'),
-    stopQuickEdit: Drupal.t('Stop quick edit')
+    quickEdit: Drupal.t('Quick edit')
   }
 }, drupalSettings.edit);
 
@@ -31,6 +30,7 @@ var options = $.extend({
  * Tracks fields without metadata. Contains objects with the following keys:
  *   - DOM el
  *   - String fieldID
+ *   - String entityID
  */
 var fieldsMetadataQueue = [];
 
@@ -57,6 +57,10 @@ Drupal.behaviors.edit = {
     $('body').once('edit-init', initEdit);
 
     // Process each field element: queue to be used or to fetch metadata.
+    // When a field is being rerendered after editing, it will be processed
+    // immediately. New fields will be unable to be processed immediately, but
+    // will instead be queued to have their metadata fetched, which occurs below
+    // in fetchMissingMetaData().
     $(context).find('[data-edit-id]').once('edit').each(function (index, fieldElement) {
       processField(fieldElement);
     });
@@ -167,10 +171,15 @@ function initEdit (bodyElement) {
 function processField (fieldElement) {
   var metadata = Drupal.edit.metadata;
   var fieldID = fieldElement.getAttribute('data-edit-id');
+  var entityID = extractEntityID(fieldID);
 
-  // Early-return if metadata for this field is mising.
+  // Early-return if metadata for this field is missing.
   if (!metadata.has(fieldID)) {
-    fieldsMetadataQueue.push({ el: fieldElement, fieldID: fieldID });
+    fieldsMetadataQueue.push({
+      el: fieldElement,
+      fieldID: fieldID,
+      entityID: entityID
+    });
     return;
   }
   // Early-return if the user is not allowed to in-place edit this field.
@@ -180,7 +189,6 @@ function processField (fieldElement) {
 
   // If an EntityModel for this field already exists (and hence also a "Quick
   // edit" contextual link), then initialize it immediately.
-  var entityID = extractEntityID(fieldID);
   if (Drupal.edit.collections.entities.where({ id: entityID }).length > 0) {
     initializeField(fieldElement, fieldID);
   }
@@ -203,7 +211,6 @@ function initializeField (fieldElement, fieldID) {
   var entityId = extractEntityID(fieldID);
   var entity = Drupal.edit.collections.entities.where({ id: entityId })[0];
 
-  // @todo Refactor CSS to get rid of this.
   $(fieldElement).addClass('edit-field');
 
   // The FieldModel stores the state of an in-place editable entity field.
@@ -232,12 +239,18 @@ function fetchMissingMetadata (callback) {
   if (fieldsMetadataQueue.length) {
     var fieldIDs = _.pluck(fieldsMetadataQueue, 'fieldID');
     var fieldElementsWithoutMetadata = _.pluck(fieldsMetadataQueue, 'el');
+    var entityIDs = _.uniq(_.pluck(fieldsMetadataQueue, 'entityID'), true);
+    // Ensure we only request entityIDs for which we don't have metadata yet.
+    entityIDs = _.difference(entityIDs, _.keys(Drupal.edit.metadata.data));
     fieldsMetadataQueue = [];
 
     $.ajax({
       url: Drupal.url('edit/metadata'),
       type: 'POST',
-      data: { 'fields[]' : fieldIDs },
+      data: {
+        'fields[]': fieldIDs,
+        'entities[]': entityIDs
+      },
       dataType: 'json',
       success: function(results) {
         // Store the metadata.
@@ -277,11 +290,12 @@ function loadMissingEditors (callback) {
   }
 
   // @todo Simplify this once https://drupal.org/node/1533366 lands.
+  // @see https://drupal.org/node/2029999.
   var id = 'edit-load-editors';
   // Create a temporary element to be able to use Drupal.ajax.
-  var $el = $('<div id="' + id + '" class="hidden"></div>').appendTo('body');
+  var $el = $('<div id="' + id + '" class="element-hidden"></div>').appendTo('body');
   // Create a Drupal.ajax instance to load the form.
-  Drupal.ajax[id] = new Drupal.ajax(id, $el, {
+  var loadEditorsAjax = new Drupal.ajax(id, $el, {
     url: Drupal.url('edit/attachments'),
     event: 'edit-internal.edit',
     submit: { 'editors[]': missingEditors },
@@ -291,9 +305,11 @@ function loadMissingEditors (callback) {
   // Implement a scoped insert AJAX command: calls the callback after all AJAX
   // command functions have been executed (hence the deferred calling).
   var realInsert = Drupal.AjaxCommands.prototype.insert;
-  Drupal.ajax[id].commands.insert = function (ajax, response, status) {
-    _.defer(function() { callback(); });
+  loadEditorsAjax.commands.insert = function (ajax, response, status) {
+    _.defer(callback);
     realInsert(ajax, response, status);
+    $el.off('edit-internal.edit');
+    $el.remove();
   };
   // Trigger the AJAX request, which will should return AJAX commands to insert
   // any missing attachments.
@@ -344,14 +360,21 @@ function initializeEntityContextualLink (contextualLink) {
     return false;
   }
   // The entity for the given contextual link contains at least one field that
-  // the current user may edit in-place; instantiate EntityModel and
+  // the current user may edit in-place; instantiate EntityModel, EntityView and
   // ContextualLinkView.
   else if (hasFieldWithPermission(fieldIDs)) {
     var entityModel = new Drupal.edit.EntityModel({
       el: contextualLink.region,
-      id: contextualLink.entityID
+      id: contextualLink.entityID,
+      label: Drupal.edit.metadata.get(contextualLink.entityID, 'label')
     });
     Drupal.edit.collections.entities.add(entityModel);
+    // Create an EntityView associated with the root DOM node of the entity.
+    var entityView = new Drupal.edit.EntityView({
+      el: contextualLink.region,
+      model: entityModel
+    });
+    entityModel.set('entityView', entityView);
 
     // Initialize all queued fields within this entity (creates FieldModels).
     _.each(fields, function (field) {
@@ -401,14 +424,15 @@ function deleteContainedModelsAndQueues($context) {
   $context.find('[data-edit-entity]').addBack('[data-edit-entity]').each(function (index, entityElement) {
     // Delete entity model.
     // @todo change to findWhere() as soon as we have Backbone 1.0 in Drupal
-    // core.
+    // core. @see https://drupal.org/node/1800022
     var entityModels = Drupal.edit.collections.entities.where({el: entityElement});
     if (entityModels.length) {
-      // @todo Make this cleaner; let EntityModel.destroy() do this?
       var contextualLinkView = entityModels[0].get('contextualLinkView');
       contextualLinkView.undelegateEvents();
       contextualLinkView.remove();
-
+      // Remove the EntityView.
+      entityModels[0].get('entityView').remove();
+      // Destroy the EntityModel; this will also destroy its FieldModels.
       entityModels[0].destroy();
     }
 

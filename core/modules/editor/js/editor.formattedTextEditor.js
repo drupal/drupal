@@ -163,7 +163,7 @@ Drupal.edit.editors.editor = Drupal.edit.EditorView.extend({
     var fieldID = this.fieldModel.id;
 
     // Create a Drupal.ajax instance to load the form.
-    Drupal.ajax[fieldID] = new Drupal.ajax(fieldID, this.$el, {
+    var textLoaderAjax = new Drupal.ajax(fieldID, this.$el, {
       url: Drupal.edit.util.buildUrl(fieldID, drupalSettings.editor.getUntransformedTextURL),
       event: 'editor-internal.editor',
       submit: { nocssjs : true },
@@ -172,11 +172,8 @@ Drupal.edit.editors.editor = Drupal.edit.EditorView.extend({
 
     // Implement a scoped editorGetUntransformedText AJAX command: calls the
     // callback.
-    Drupal.ajax[fieldID].commands.editorGetUntransformedText = function (ajax, response, status) {
+    textLoaderAjax.commands.editorGetUntransformedText = function (ajax, response, status) {
       callback(response.data);
-      // Delete the Drupal.ajax instance that called this very function.
-      delete Drupal.ajax[fieldID];
-      this.$el.off('editor-internal.editor');
     };
 
     // This will ensure our scoped editorGetUntransformedText AJAX command

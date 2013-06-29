@@ -11,9 +11,22 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
 
 /**
- * Interface for generating in-place editing metadata for an entity field.
+ * Interface for generating in-place editing metadata.
  */
 interface MetadataGeneratorInterface {
+
+  /**
+   * Generates in-place editing metadata for an entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity being edited.
+   * @param string $langcode
+   *   The name of the language for which the field is being edited.
+   * @return array
+   *   An array containing metadata with the following keys:
+   *   - label: the user-visible label for the entity in the given language.
+   */
+  public function generateEntity(EntityInterface $entity, $langcode);
 
   /**
    * Generates in-place editing metadata for an entity field.
@@ -34,6 +47,6 @@ interface MetadataGeneratorInterface {
    *   - aria: the ARIA label.
    *   - custom: (optional) any additional metadata that the editor provides.
    */
-  public function generate(EntityInterface $entity, FieldInstance $instance, $langcode, $view_mode);
+  public function generateField(EntityInterface $entity, FieldInstance $instance, $langcode, $view_mode);
 
 }

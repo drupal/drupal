@@ -31,6 +31,12 @@ Drupal.edit.FieldModel = Backbone.Model.extend({
     // In-place editing state of this field. Defaults to the initial state.
     // Possible values: @see Drupal.edit.FieldModel.states.
     state: 'inactive',
+    // The field is currently in the 'changed' state or one of the following
+    // states in which the field is still changed.
+    isChanged: false,
+    // Is tracked by the EntityModel, is mirrored here solely for decorative
+    // purposes: so that EditorDecorationView.renderChanged() can react to it.
+    inTempStore: false,
     // The full HTML representation of this field (with the element that has
     // the data-edit-id as the outer element). Used to propagate changes from
     // this field instance to other instances of the same field.
@@ -83,7 +89,7 @@ Drupal.edit.FieldModel = Backbone.Model.extend({
         return '"' + next + '" is an invalid state';
       }
       // Check if the acceptStateChange callback accepts it.
-      if (!this.get('acceptStateChange')(current, next, options)) {
+      if (!this.get('acceptStateChange')(current, next, options, this)) {
         return 'state change not accepted';
       }
     }
@@ -106,8 +112,71 @@ Drupal.edit.FieldModel = Backbone.Model.extend({
    * editing.
    */
   states: [
-    'inactive', 'candidate', 'highlighted',
-    'activating', 'active', 'changed', 'saving', 'saved', 'invalid'
+    // The field associated with this FieldModel is linked to an EntityModel;
+    // the user can choose to start in-place editing that entity (and
+    // consequently this field). No in-place editor (EditorView) is associated
+    // with this field, because this field is not being in-place edited.
+    // This is both the initial (not yet in-place editing) and the end state (
+    // finished in-place editing).
+    'inactive',
+    // The user is in-place editing this entity, and this field is a candidate
+    // for in-place editing. In-place editor should not
+    // - Trigger: user.
+    // - Guarantees: entity is ready, in-place editor (EditorView) is associated
+    //   with the field.
+    // - Expected behavior: visual indicators around the field indicate it is
+    //   available for in-place editing, no in-place editor presented yet.
+    'candidate',
+    // User is highlighting this field.
+    // - Trigger: user.
+    // - Guarantees: see 'candidate'.
+    // - Expected behavior: visual indicators to convey highlighting, in-place
+    //   editing toolbar shows field's label.
+    'highlighted',
+    // User has activated the in-place editing of this field; in-place editor is
+    // activating.
+    // - Trigger: user.
+    // - Guarantees: see 'candidate'.
+    // - Expected behavior: loading indicator, in-place editor is loading remote
+    //   data (e.g. retrieve form from back-end). Upon retrieval of remote data,
+    //   the in-place editor transitions the field's state to 'active'.
+    'activating',
+    // In-place editor has finished loading remote data; ready for use.
+    // - Trigger: in-place editor.
+    // - Guarantees: see 'candidate'.
+    // - Expected behavior: in-place editor for the field is ready for use.
+    'active',
+    // User has modified values in the in-place editor.
+    // - Trigger: user.
+    // - Guarantees: see 'candidate', plus in-place editor is ready for use.
+    // - Expected behavior: visual indicator of change.
+    'changed',
+    // User is saving changed field data in in-place editor to TempStore. The
+    // save mechanism of the in-place editor is called.
+    // - Trigger: user.
+    // - Guarantees: see 'candidate' and 'active'.
+    // - Expected behavior: saving indicator, in-place editor is saving field
+    //   data into TempStore. Upon succesful saving (without validation errors),
+    //   the in-place editor transitions the field's state to 'saved', but to
+    //   'invalid' upon failed saving (with validation errors).
+    'saving',
+    // In-place editor has successfully saved the changed field.
+    // - Trigger: in-place editor.
+    // - Guarantees: see 'candidate' and 'active'.
+    // - Expected behavior: transition back to 'candidate' state because the
+    //   deed is done. Then: 1) transition to 'inactive' to allow the field to
+    //   be rerendered, 2) destroy the FieldModel (which also destroys attached
+    //   views like the EditorView), 3) replace the existing field HTML with the
+    //   existing HTML and 4) attach behaviors again so that the field becomes
+    //   available again for in-place editing.
+    'saved',
+    // In-place editor has failed to saved the changed field: there were
+    // validation errors.
+    // - Trigger: in-place editor.
+    // - Guarantees: see 'candidate' and 'active'.
+    // - Expected behavior: remain in 'invalid' state, let the user make more
+    //   changes so that he can save it again, without validation errors.
+    'invalid'
   ],
 
   /**

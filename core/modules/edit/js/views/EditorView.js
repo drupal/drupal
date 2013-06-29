@@ -43,6 +43,7 @@ Drupal.edit.EditorView = Backbone.View.extend({
     // The el property is the field, which should not be removed. Remove the
     // pointer to it, then call Backbone.View.prototype.remove().
     this.setElement();
+    this.fieldModel.off(null, null, this);
     Backbone.View.prototype.remove.call(this);
   },
 
@@ -171,9 +172,10 @@ Drupal.edit.EditorView = Backbone.View.extend({
   save: function () {
     var fieldModel = this.fieldModel;
     var editorModel = this.model;
+    var backstageId = 'edit_backstage-' + this.fieldModel.id.replace(/[\/\_\s]/g, '-');
 
     function fillAndSubmitForm (value) {
-      var $form = $('#edit_backstage form');
+      var $form = $('#' + backstageId).find('form');
       // Fill in the value in any <input> that isn't hidden or a submit
       // button.
       $form.find(':input[type!="hidden"][type!="submit"]:not(select)')
@@ -186,32 +188,41 @@ Drupal.edit.EditorView = Backbone.View.extend({
     var formOptions = {
       fieldID: this.fieldModel.id,
       $el: this.$el,
-      nocssjs: true
+      nocssjs: true,
+      // Reset an existing entry for this entity in the TempStore (if any) when
+      // saving the field. Logically speaking, this should happen in a separate
+      // request because this is an entity-level operation, not a field-level
+      // operation. But that would require an additional request, that might not
+      // even be necessary: it is only when a user saves a first changed field
+      // for an entity that this needs to happen: precisely now!
+      reset: !this.fieldModel.get('entity').get('inTempStore')
     };
+
+    var self = this;
     Drupal.edit.util.form.load(formOptions, function (form, ajax) {
       // Create a backstage area for storing forms that are hidden from view
       // (hence "backstage" — since the editing doesn't happen in the form, it
       // happens "directly" in the content, the form is only used for saving).
-      $(Drupal.theme('editBackstage', { id: 'edit_backstage' })).appendTo('body');
-      // Direct forms are stuffed into #edit_backstage, apparently.
-      $('#edit_backstage').append(form);
+      var $backstage = $(Drupal.theme('editBackstage', { id: backstageId })).appendTo('body');
+      // Direct forms are stuffed into the backstage container for this field.
+      var $form = $(form).appendTo($backstage);
       // Disable the browser's HTML5 validation; we only care about server-
       // side validation. (Not disabling this will actually cause problems
       // because browsers don't like to set HTML5 validation errors on hidden
       // forms.)
-      $('#edit_backstage form').prop('novalidate', true);
-      var $submit = $('#edit_backstage form .edit-form-submit');
-      var base = Drupal.edit.util.form.ajaxifySaving(formOptions, $submit);
+      $form.prop('novalidate', true);
+      var $submit = $form.find('.edit-form-submit');
+      self.formSaveAjax = Drupal.edit.util.form.ajaxifySaving(formOptions, $submit);
 
       function removeHiddenForm () {
-        Drupal.edit.util.form.unajaxifySaving($submit);
-        $('#edit_backstage').remove();
+        Drupal.edit.util.form.unajaxifySaving(self.formSaveAjax);
+        delete self.formSaveAjax;
+        $backstage.remove();
       }
 
       // Successfully saved.
-      Drupal.ajax[base].commands.editFieldFormSaved = function (ajax, response, status) {
+      self.formSaveAjax.commands.editFieldFormSaved = function (ajax, response, status) {
         removeHiddenForm();
-
         // First, transition the state to 'saved'.
         fieldModel.set('state', 'saved');
         // Then, set the 'html' attribute on the field model. This will cause
@@ -220,9 +231,8 @@ Drupal.edit.EditorView = Backbone.View.extend({
       };
 
       // Unsuccessfully saved; validation errors.
-      Drupal.ajax[base].commands.editFieldFormValidationErrors = function (ajax, response, status) {
+      self.formSaveAjax.commands.editFieldFormValidationErrors = function (ajax, response, status) {
         removeHiddenForm();
-
         editorModel.set('validationErrors', response.data);
         fieldModel.set('state', 'invalid');
       };
@@ -232,7 +242,7 @@ Drupal.edit.EditorView = Backbone.View.extend({
       // Form API then marks which form items have errors. This is useful for
       // the form-based in-place editor, but pointless for any other: the form
       // itself won't be visible at all anyway! So, we just ignore it.
-      Drupal.ajax[base].commands.editFieldForm = function () {};
+      self.formSaveAjax.commands.editFieldForm = function () {};
 
       fillAndSubmitForm(editorModel.get('currentValue'));
     });
@@ -246,7 +256,7 @@ Drupal.edit.EditorView = Backbone.View.extend({
   showValidationErrors: function () {
     var $errors = $('<div class="edit-validation-errors"></div>')
       .append(this.model.get('validationErrors'));
-    $(this.fieldModel.get('el'))
+    this.getEditedElement()
       .addClass('edit-validation-error')
       .after($errors);
   },
@@ -260,7 +270,7 @@ Drupal.edit.EditorView = Backbone.View.extend({
    * invalid value was discarded.
    */
   removeValidationErrors: function () {
-    $(this.fieldModel.get('el'))
+    this.getEditedElement()
       .removeClass('edit-validation-error')
       .next('.edit-validation-errors')
       .remove();

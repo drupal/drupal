@@ -161,7 +161,7 @@ class EditIntegrationTest extends EditTestBase {
 
     // Verify metadata.
     $instance = field_info_instance($entity->entityType(), $this->field_name, $entity->bundle());
-    $metadata = $this->metadataGenerator->generate($entity, $instance, Language::LANGCODE_NOT_SPECIFIED, 'default');
+    $metadata = $this->metadataGenerator->generateField($entity, $instance, Language::LANGCODE_NOT_SPECIFIED, 'default');
     $expected = array(
       'access' => TRUE,
       'label' => 'Long text field',
