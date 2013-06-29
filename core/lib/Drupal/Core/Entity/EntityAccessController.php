@@ -25,7 +25,7 @@ class EntityAccessController implements EntityAccessControllerInterface {
   /**
    * {@inheritdoc}
    */
-  public function access(EntityInterface $entity, $operation, $langcode = Language::LANGUAGE_DEFAULT, AccountInterface $account = NULL) {
+  public function access(EntityInterface $entity, $operation, $langcode = Language::LANGCODE_DEFAULT, AccountInterface $account = NULL) {
     if (!$account) {
       $account = $GLOBALS['user'];
     }
