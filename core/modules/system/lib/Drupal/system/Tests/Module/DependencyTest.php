@@ -175,37 +175,26 @@ class DependencyTest extends ModuleTestBase {
     $this->drupalPost(NULL, array(), t('Continue'));
     $this->assertModules(array('forum'), TRUE);
 
-    // Disable forum, should now be installed but disabled.
+    // Disable forum and comment. Both should now be installed but disabled.
     $edit = array('modules[Core][forum][enable]' => FALSE);
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertModules(array('forum'), FALSE);
+    $edit = array('modules[Core][comment][enable]' => FALSE);
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->assertModules(array('comment'), FALSE);
 
-    // Check that the comment module cannot be disabled.
-    $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[Core][comment][enable]"]');
-    $this->assert(count($checkbox) == 1, 'Checkbox for disabling the comment module is disabled.');
+    // Check that the taxonomy module cannot be uninstalled.
+    $this->drupalGet('admin/modules/uninstall');
+    $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="uninstall[comment]"]');
+    $this->assert(count($checkbox) == 1, 'Checkbox for uninstalling the comment module is disabled.');
 
-    // Uninstall the forum module, and check that taxonomy and comment now can
-    // also be uninstalled.
+    // Uninstall the forum module, and check that taxonomy now can also be
+    // uninstalled.
     $edit = array('uninstall[forum]' => 'forum');
     $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPost(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
-    // Disable comment, should now be installed but disabled.
-    $edit = array('modules[Core][comment][enable]' => FALSE);
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('comment'), FALSE);
-    // Now uninstall it.
     $edit = array('uninstall[comment]' => 'comment');
-    $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
-    $this->drupalPost(NULL, NULL, t('Uninstall'));
-    $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
-
-    // Disable taxonomy, should now be installed but disabled.
-    $edit = array('modules[Core][taxonomy][enable]' => FALSE);
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('taxonomy'), FALSE);
-    // Now uninstall it.
-    $edit = array('uninstall[taxonomy]' => 'comment');
     $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPost(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
