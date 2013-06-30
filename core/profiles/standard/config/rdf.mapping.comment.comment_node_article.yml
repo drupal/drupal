@@ -1,6 +1,6 @@
 id: comment.comment_node_article
 targetEntityType: comment
-bundle: comment_node_article
+bundle: comment
 types:
   - 'sioc:Post'
   - 'sioct:Comment'
