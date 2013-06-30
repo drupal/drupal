@@ -446,6 +446,16 @@ function comment_menu_alter(&$items) {
 }
 
 /**
+ * Returns a menu title which includes the number of unapproved comments.
+ */
+function comment_count_unpublished() {
+  $count = db_query('SELECT COUNT(cid) FROM {comment} WHERE status = :status', array(
+    ':status' => COMMENT_NOT_PUBLISHED,
+  ))->fetchField();
+  return t('Unapproved comments (@count)', array('@count' => $count));
+}
+
+/**
  * Access callback for testing user has access to view the subject of comments.
  *
  * Checks the user has view access to the entity which the comment reply is
@@ -481,29 +491,17 @@ function comment_reply_access(EntityInterface $entity) {
   return !in_array(COMMENT_ACCESS_DENY, $access, TRUE);
 }
 
-/**
- * Returns a menu title which includes the number of unapproved comments.
- *
- * @return string
- */
-function comment_count_unpublished() {
-  $count = db_query('SELECT COUNT(cid) FROM {comment} WHERE status = :status', array(
-    ':status' => COMMENT_NOT_PUBLISHED,
-  ))->fetchField();
-  return t('Unapproved comments (@count)', array('@count' => $count));
-}
-
  /**
  * Creates a comment_body field instance.
  *
  * @param string $entity_type
  *   Entity type to which the comment field is attached.
- * @param string $bundle
+ * @param string $bundle_name
  *   Bundle of entity type to which comment field is attached
  * @param string $field_name
  *   Name of the comment field attached to the entity type and bundle.
  */
-function _comment_body_field_create($entity_type, $bundle, $field_name) {
+function _comment_body_field_create($entity_type, $bundle_name, $field_name) {
   // Create the field if needed.
   if (!field_read_field('comment_body', array('include_inactive' => TRUE))) {
     $field = entity_create('field_entity', array(
@@ -515,7 +513,7 @@ function _comment_body_field_create($entity_type, $bundle, $field_name) {
   }
   // Create the instance if needed, field name defaults to 'comment'.
   if (!field_read_instance('comment', 'comment_body', $field_name, array('include_inactive' => TRUE))) {
-    entity_invoke_bundle_hook('create', 'comment', $bundle);
+    entity_invoke_bundle_hook('create', 'comment', $bundle_name);
     // Attaches the body field by default.
     $instance = entity_create('field_instance', array(
       'field_name' => 'comment_body',
@@ -1003,7 +1001,7 @@ function comment_view_multiple($comments, $view_mode = 'full', $langcode = NULL)
 function comment_form_field_ui_field_instance_edit_form_alter(&$form, $form_state) {
   if ($form['#field']['type'] == 'comment') {
     // Collect translation settings.
-    if (module_exists('content_translation')) {
+    if (Drupal::moduleHandler()->moduleExists('content_translation')) {
       array_unshift($form['#submit'], 'comment_translation_configuration_element_submit');
     }
 
@@ -1921,7 +1919,7 @@ function comment_mark(CommentInterface $comment) {
  */
 function comment_add_default_comment_field($entity_type, $bundle, $field_name = 'comment', $default_value = COMMENT_OPEN) {
   // Make sure field doesn't already exist.
-  if (!field_info_field($field_name)) {
+  if (!Drupal::service('field.info')->getField($field_name)) {
     // Add a default comment field for existing node comments.
     $field = entity_create('field_entity', array(
       'field_name' => $field_name,
@@ -1932,7 +1930,7 @@ function comment_add_default_comment_field($entity_type, $bundle, $field_name = 
     $field->save();
   }
   // Make sure the instance doesn't already exist.
-  if (!field_info_instance($entity_type, $field_name, $bundle)) {
+  if (!Drupal::service('field.info')->getInstance($entity_type, $bundle, $field_name)) {
     $instance = entity_create('field_instance', array(
       'label' => 'Comment settings',
       'description' => '',
