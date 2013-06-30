@@ -88,7 +88,7 @@ function comment_token_info() {
   // Provide for backwards compatability as no upgrade path available.
   $comment['node'] = array(
     'name' => t("Node"),
-    'description' => t("The Node the comment was posted to."),
+    'description' => t("The node the comment was posted to."),
     'type' => 'node',
   );
   $comment['author'] = array(
