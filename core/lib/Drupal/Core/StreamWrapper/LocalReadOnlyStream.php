@@ -28,19 +28,20 @@ abstract class LocalReadOnlyStream extends LocalStream {
    * @param string $uri
    *   A string containing the URI to the file to open.
    * @param int $mode
-   *   The file mode (only "r" is supported for the read-only stream wrapper.)
+   *   The file mode, only strict readonly modes are supported.
    * @param int $options
    *   A bit mask of STREAM_USE_PATH and STREAM_REPORT_ERRORS.
    * @param string $opened_path
    *   A string containing the path actually opened.
    *
    * @return bool
-   *   Returns TRUE if $mode == "r" and the file was opened successfully.
+   *   TRUE if $mode denotes a readonly mode and the file was opened
+   *   successfully, FALSE otherwise.
    *
    * @see http://php.net/manual/streamwrapper.stream-open.php
    */
   public function stream_open($uri, $mode, $options, &$opened_path) {
-    if ($mode != "r") {
+    if (!in_array($mode, array('r', 'rb', 'rt'))) {
       if ($options & STREAM_REPORT_ERRORS) {
         trigger_error('stream_open() write modes not supported for read-only stream wrappers', E_USER_WARNING);
       }
@@ -114,6 +115,8 @@ abstract class LocalReadOnlyStream extends LocalStream {
    * Support for fflush().
    *
    * Nothing will be output to the file, as this is a read-only stream wrapper.
+   * However as stream_flush is called during stream_close we should not trigger
+   * an error.
    *
    * @return bool
    *   FALSE, as no data will be stored.
@@ -121,7 +124,6 @@ abstract class LocalReadOnlyStream extends LocalStream {
    * @see http://php.net/manual/streamwrapper.stream-flush.php
    */
   public function stream_flush() {
-    trigger_error('stream_flush() not supported for read-only stream wrappers', E_USER_WARNING);
     return FALSE;
   }
 

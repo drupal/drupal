@@ -53,9 +53,17 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
     $uri = $this->scheme . '://' . $filename;
     $instance = file_stream_wrapper_get_instance_by_scheme($this->scheme);
 
-    // Attempt to open a file in write mode
-    $handle = @fopen($uri, 'w+');
-    $this->assertFalse($handle, 'Unable to open a file for writing with the read-only stream wrapper.');
+    // Attempt to open a file in read/write mode
+    $handle = @fopen($uri, 'r+');
+    $this->assertFalse($handle, 'Unable to open a file for reading and writing with the read-only stream wrapper.');
+    // Attempt to open a file in binary read mode
+    $handle = fopen($uri, 'rb');
+    $this->assertTrue($handle, 'Able to open a file for reading in binary mode with the read-only stream wrapper.');
+    $this->assertTrue(fclose($handle), 'Able to close file opened in binary mode using the read_only stream wrapper.');
+    // Attempt to open a file in text read mode
+    $handle = fopen($uri, 'rt');
+    $this->assertTrue($handle, 'Able to open a file for reading in text mode with the read-only stream wrapper.');
+    $this->assertTrue(fclose($handle), 'Able to close file opened in text mode using the read_only stream wrapper.');
     // Attempt to open a file in read mode
     $handle = fopen($uri, 'r');
     $this->assertTrue($handle, 'Able to open a file for reading with the read-only stream wrapper.');
@@ -72,7 +80,7 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
     // Attempt to flush output to the file
     $this->assertFalse(@fflush($handle), 'Unable to flush output to file using the read-only stream wrapper.');
     // Attempt to close the stream.  (Suppress errors, as fclose triggers fflush.)
-    $this->assertTrue(@fclose($handle), 'Able to close file using the read_only stream wrapper.');
+    $this->assertTrue(fclose($handle), 'Able to close file using the read_only stream wrapper.');
     // Test the rename() function
     $this->assertFalse(@rename($uri, $this->scheme . '://newname.txt'), 'Unable to rename files using the read-only stream wrapper.');
     // Test the unlink() function
