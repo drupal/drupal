@@ -30,7 +30,7 @@ class DateTimeItem extends LegacyConfigFieldItem {
 
     if (!isset(self::$propertyDefinitions)) {
       self::$propertyDefinitions['value'] = array(
-        'type' => 'date',
+        'type' => 'datetime_iso8601',
         'label' => t('Date value'),
       );
     }
