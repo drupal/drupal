@@ -91,4 +91,14 @@ class Metadata implements PropertyMetadataInterface {
   public function getPropertyValue($container) {
     return $this->typedData->getValue();
   }
+
+  /**
+   * Returns the typed data object.
+   *
+   * @return \Drupal\Core\TypedData\TypedDataInterface
+   *   The typed data object.
+   */
+  public function getTypedData() {
+    return $this->typedData;
+  }
 }

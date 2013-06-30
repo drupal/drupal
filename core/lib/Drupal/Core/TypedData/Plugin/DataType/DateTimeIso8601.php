@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\Core\TypedData\Plugin\DataType\DateTimeIso8601.
+ */
+
+namespace Drupal\Core\TypedData\Plugin\DataType;
+
+use Drupal\Core\TypedData\Annotation\DataType;
+use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\TypedData\Type\DateTimeInterface;
+
+/**
+ * A data type for ISO 8601 date strings.
+ *
+ * The plain value of this data type is a date string in ISO 8601 format.
+ *
+ * @DataType(
+ *   id = "datetime_iso8601",
+ *   label = @Translation("Date")
+ * )
+ */
+class DateTimeIso8601 extends String implements DateTimeInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDateTime() {
+    if ($this->value) {
+      return new DrupalDateTime($this->value);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setDateTime(DrupalDateTime $dateTime) {
+    $this->value = $dateTime->format('c');
+  }
+}
+

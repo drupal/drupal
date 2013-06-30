@@ -9,7 +9,8 @@ namespace Drupal\Core\TypedData\Plugin\DataType;
 
 use Drupal\Core\TypedData\Annotation\DataType;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\TypedData\TypedData;
+use Drupal\Core\TypedData\PrimitiveBase;
+use Drupal\Core\TypedData\Type\IntegerInterface;
 
 /**
  * The integer data type.
@@ -19,16 +20,9 @@ use Drupal\Core\TypedData\TypedData;
  *
  * @DataType(
  *   id = "integer",
- *   label = @Translation("Integer"),
- *   primitive_type = 3
+ *   label = @Translation("Integer")
  * )
  */
-class Integer extends TypedData {
+class Integer extends PrimitiveBase implements IntegerInterface {
 
-  /**
-   * The data value.
-   *
-   * @var integer
-   */
-  protected $value;
 }

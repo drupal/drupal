@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\TypedData\Plugin\DataType;
 
+use Drupal\Core\TypedData\PrimitiveBase;
+use Drupal\Core\TypedData\Type\BinaryInterface;
 use Drupal\Core\TypedData\Annotation\DataType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\TypedData\TypedData;
@@ -20,11 +22,10 @@ use Drupal\Core\TypedData\TypedData;
  *
  * @DataType(
  *   id = "binary",
- *   label = @Translation("Binary"),
- *   primitive_type = 8
+ *   label = @Translation("Binary")
  * )
  */
-class Binary extends TypedData {
+class Binary extends PrimitiveBase implements BinaryInterface {
 
   /**
    * The file resource URI.

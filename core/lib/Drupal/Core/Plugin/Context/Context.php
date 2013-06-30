@@ -85,17 +85,10 @@ class Context extends ComponentContext {
    * Overrides \Drupal\Component\Plugin\Context\Context::getConstraints().
    */
   public function validate() {
-    $validator = Validation::createValidatorBuilder()
-      ->setTranslator(new DrupalTranslator())
-      ->getValidator();
-
-    // @todo We won't need to special case "entity" here once #1868004 lands.
-    if (!empty($this->contextDefinition['type']) && $this->contextDefinition['type'] == 'entity') {
-      $value = $this->getTypedContext();
+    // If the context is typed data, defer to its validation.
+    if (!empty($this->contextDefinition['type'])) {
+      return $this->getTypedContext()->validate();
     }
-    else {
-      $value = $this->getContextValue();
-    }
-    return $validator->validateValue($value, $this->getConstraints());
+    return parent::validate();
   }
 }
