@@ -159,4 +159,5 @@ class CommentItem extends ConfigFieldItemBase {
     // We always want the values saved so we can rely on them.
     return FALSE;
   }
+
 }
