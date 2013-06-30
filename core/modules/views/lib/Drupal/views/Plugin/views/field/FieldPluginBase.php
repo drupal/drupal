@@ -1365,7 +1365,8 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
 
     if (isset($url['query'])) {
       $path = strtr($path, array('?' . $url['query'] => ''));
-      $query = drupal_get_query_array($url['query']);
+      $query = array();
+      parse_str($url['query'], $query);
       // Remove query parameters that were assigned a query string replacement
       // token for which there is no value available.
       foreach ($query as $param => $val) {
@@ -1421,7 +1422,9 @@ If you would like to have the characters \'[\' and \']\' use the html entity cod
       // convert back to an array form for l().
       $options['query'] = drupal_http_build_query($alter['query']);
       $options['query'] = strtr($options['query'], $tokens);
-      $options['query'] = drupal_get_query_array($options['query']);
+      $query = array();
+      parse_str($options['query'], $query);
+      $options['query'] = $query;
     }
     if (isset($alter['alias'])) {
       // Alias is a boolean field, so no token.

@@ -1,0 +1,285 @@
+/**
+ * @file edit.theme.css
+ */
+
+/**
+ * Hide comments on entities
+ */
+.edit-entity-active .comment-wrapper {
+  display: none ;
+}
+/**
+ * Editable.
+ */
+.edit-field.edit-editable,
+.edit-field .edit-editable {
+  box-shadow: 0 0 0 2px #4d9de9;
+}
+
+/**
+ * Highlighted (hovered) editable.
+ */
+.edit-field.edit-highlighted,
+.edit-form.edit-highlighted,
+.edit-field .edit-highlighted {
+  box-shadow: 0 0 0 2px #0199ff, 0 1px 0 3px rgba(153, 153, 153, .5);
+}
+.edit-field.edit-changed,
+.edit-form.edit-changed,
+.edit-field .edit-changed {
+  box-shadow: 0 0 0px 2px orange, 0px 1px 0px 3px rgba(153, 153, 153, .5);
+}
+.edit-editing.edit-validation-error,
+.edit-form.edit-validation-error {
+  box-shadow: 0 0 1px 2px red, 0 0 3px 5px rgba(153, 153, 153, .5);
+}
+.edit-form .form-item .error {
+  border: 1px solid #eea0a0;
+}
+
+/**
+ * Default form styling overrides.
+ */
+.edit-form form {
+  padding: 0.5em;
+}
+.edit-form .form-item {
+  margin: 0;
+}
+.edit-form .form-wrapper {
+  margin: .5em;
+}
+
+/**
+ * Animations.
+ */
+.edit-animate-invisible {
+  opacity: 0;
+}
+.edit-animate-default {
+  -webkit-transition: all .4s ease;
+  transition: all .4s ease;
+}
+.edit-animate-slow {
+  -webkit-transition: all .6s ease;
+  transition: all .6s ease;
+}
+.edit-animate-delay-veryfast {
+  -webkit-transition-delay: .05s;
+  transition-delay: .05s;
+}
+.edit-animate-delay-fast {
+  -webkit-transition-delay: .2s;
+  transition-delay: .2s;
+}
+.edit-animate-disable-width {
+  -webkit-transition: width 0s;
+  transition: width 0s;
+}
+.edit-animate-only-visibility {
+  -webkit-transition: opacity .2s ease;
+  transition: opacity .2s ease;
+}
+
+/**
+ * Edit mode: modal.
+ */
+#edit_modal {
+  background-color: white;
+  border: 1px solid #0199ff;
+  box-shadow: 3px 3px 5px #333;
+  font-family: 'Droid sans', 'Lucida Grande', sans-serif;
+}
+#edit_modal .main {
+  font-size: 130%;
+  margin: 25px;
+  padding-left: 40px; /* LTR */
+  background: transparent url('../images/attention.png') no-repeat;
+}
+[dir="rtl"] #edit_modal .main {
+  padding-left: 0;
+  padding-right: 40px;
+}
+#edit_modal .actions {
+  border-top: 1px solid #ddd;
+  padding: 0.25em 0.2em;
+  text-align: right; /* LTR */
+  background: #f5f5f5;
+}
+[dir="rtl"] #edit_modal .actions {
+  text-align: left;
+}
+
+/**
+ * Edit mode: type=direct.
+ */
+.edit-validation-errors .messages.error {
+  box-shadow: 0 0 1px 1px red, 0 0 3px 3px rgba(153, 153, 153, .5);
+  background-color: white;
+}
+
+/**
+ * Edit mode: type=form.
+ */
+.edit-form {
+  box-shadow: 0 0 30px 4px #4f4f4f;
+  background-color: white;
+}
+
+/**
+ * Toolbars.
+ */
+.edit-toolbar-container {
+  font-family: 'Source Sans Pro','Lucida Grande', sans-serif;
+  font-size: 1.1em;
+  padding-bottom: 7px;
+  padding-top: 7px;
+  -webkit-transition: all 1s;
+  transition: all 1s;
+}
+.edit-toolbar-container > .edit-toolbar-content {
+  background-color: #45545E;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: white;
+  padding: 0.1667em;
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  z-index: 2;
+}
+.edit-toolbar-container > .edit-toolbar-pointer {
+  background-color: #45545E;
+  bottom: 2px;
+  box-shadow: 0px 0px 0 4px rgba(150, 150, 150, 0.5);
+  display: block;
+  height: 16px;
+  left: 18px; /* LTR */
+  position: absolute;
+  -moz-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  width: 16px;
+  z-index: 1;
+}
+[dir="rtl"] .edit-toolbar-container > .edit-toolbar-pointer {
+  left: auto;
+  right: 18px;
+}
+.edit-toolbar-container.edit-toolbar-pointer-top > .edit-toolbar-pointer {
+  bottom: auto;
+  top: 2px;
+}
+.edit-toolbar-container > .edit-toolbar-lining {
+  bottom: 7px;
+  box-shadow: 0px 1px 0px 3px rgba(150, 150, 150, 0.5);
+  display: block;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 7px;
+  z-index: 0;
+}
+
+.edit-toolbar-label {
+  overflow: hidden;
+  padding: 0.333em 0.5em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* The toolbar; these are not necessarily visible. */
+.edit-toolbar {
+  font-family: 'Droid sans', 'Lucida Grande', sans-serif;
+}
+.edit-toolbar-entity {
+  padding: 0.1667em 0.2em;
+}
+
+ /**
+  * Info toolgroup.
+  */
+.edit-toolbar-fullwidth {
+  width: 100%;
+}
+.edit-toolgroup.wysiwyg-floated {
+  float: right; /* LTR */
+}
+[dir="rtl"] .edit-toolgroup.wysiwyg-floated {
+  float: left;
+}
+.edit-toolgroup.wysiwyg-main {
+  clear: both;
+  width: 100%;
+  padding-left: 0; /* LTR */
+}
+[dir="rtl"] .edit-toolgroup.wysiwyg-main {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/**
+ * Buttons.
+ */
+.edit-button {
+  background-color: #e4e4e4;
+  border: 1px solid #d2d2d2;
+  color: #5a5a5a;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0;
+  opacity: 1;
+  padding: 0.4545em;
+  -webkit-transition: all .1s ease;
+  transition: all .1s ease;
+}
+.edit-button[aria-hidden="true"] {
+  visibility: hidden;
+  opacity: 0;
+}
+.edit-button + .edit-button {
+  margin-left: 0.2em; /* LTR */
+}
+[dir="rtl"] .edit-button + .edit-button {
+  margin-left: auto;
+  margin-right: 0.25em;
+}
+/* Button with icons. */
+.edit-button:hover,
+.edit-button:active {
+  background-color: #c8c8c8;
+  border: 1px solid #a0a0a0;
+  color: #2e2e2e;
+}
+.edit-toolbar-container .edit-button.action-cancel {
+  background-color: transparent;
+  border: 1px solid transparent;
+}
+.edit-toolbar-container .edit-button.action-cancel:hover {
+  background-color: transparent;
+  border: 1px solid #686868;
+}
+.edit-button.action-save {
+  color: white;
+  background-color: #50a0e9;
+  background-image: -moz-linear-gradient(-90deg, #50a0e9, #4481dc);
+  background-image: -o-linear-gradient(-90deg, #50a0e9, #4481dc);
+  background-image: -webkit-linear-gradient(-90deg, #50a0e9, #4481dc);
+  background-image: linear-gradient(180deg, #50a0e9, #4481dc);
+  border: 1px solid transparent;
+}
+.edit-button.action-save:hover,
+.edit-button.action-save:active {
+  border: 1px solid #a0a0a0;
+  color: white;
+}
+.edit-button.action-saving,
+.edit-button.action-saving:hover,
+.edit-button.action-saving:active {
+  background-color: #e4e4e4;
+  background-image: none;
+  border-color: #d2d2d2;
+  color: #5a5a5a;
+}

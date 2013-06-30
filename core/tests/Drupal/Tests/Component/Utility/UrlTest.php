@@ -2,30 +2,63 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Core\Common\UrlValidatorTest.
+ * Contains \Drupal\Tests\Component\Utility\UrlTest.
  */
 
-namespace Drupal\Tests\Core\Common;
+namespace Drupal\Tests\Component\Utility;
 
+
+use Drupal\Component\Utility\Url;
 use Drupal\Component\Utility\String;
-use Drupal\Component\Utility\UrlValidator;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests URL validation by valid_url().
+ * Tests the http query methods.
+ *
+ * @see \Drupal\Component\Utility\Url
  */
-class UrlValidatorTest extends UnitTestCase {
+class UrlTest extends UnitTestCase {
 
   public static function getInfo() {
     return array(
-      'name' => 'URL validation',
-      'description' => 'Tests URL validation by valid_url()',
-      'group' => 'Common',
+      'name' => t('Url Tests'),
+      'description' => t('Tests the Url utility class.'),
+      'group' => t('Path API'),
     );
   }
 
   /**
-   * Data provider for absolute URLs.
+   * Provides test data for testBuildQuery().
+   *
+   * @return array
+   */
+  public function providerTestBuildQuery() {
+    return array(
+      array(array('a' => ' &#//+%20@۞'), 'a=%20%26%23//%2B%2520%40%DB%9E', 'Value was properly encoded.'),
+      array(array(' &#//+%20@۞' => 'a'), '%20%26%23%2F%2F%2B%2520%40%DB%9E=a', 'Key was properly encoded.'),
+      array(array('a' => '1', 'b' => '2', 'c' => '3'), 'a=1&b=2&c=3', 'Multiple values were properly concatenated.'),
+      array(array('a' => array('b' => '2', 'c' => '3'), 'd' => 'foo'), 'a[b]=2&a[c]=3&d=foo', 'Nested array was properly encoded.'),
+    );
+  }
+
+  /**
+   * Tests Url::buildQuery().
+   *
+   * @param array $query
+   *   The array of query parameters.
+   * @param string $expected
+   *   The expected query string.
+   * @param string $message
+   *   The assertion message.
+   *
+   * @dataProvider providerTestBuildQuery
+   */
+  public function testBuildQuery($query, $expected, $message) {
+    $this->assertEquals(Url::buildQuery($query), $expected, $message);
+  }
+
+  /**
+   * Data provider for testValidAbsolute().
    */
   public function providerTestValidAbsoluteData() {
     $urls = array(
@@ -64,12 +97,12 @@ class UrlValidatorTest extends UnitTestCase {
    */
   public function testValidAbsolute($url, $scheme) {
     $test_url = $scheme . '://' . $url;
-    $valid_url = UrlValidator::isValid($test_url, TRUE);
+    $valid_url = Url::isValid($test_url, TRUE);
     $this->assertTrue($valid_url, String::format('@url is a valid URL.', array('@url' => $test_url)));
   }
 
   /**
-   * Provides invalid absolute URLs.
+   * Provides data for testInvalidAbsolute().
    */
   public function providerTestInvalidAbsolute() {
     $data = array(
@@ -92,12 +125,12 @@ class UrlValidatorTest extends UnitTestCase {
    */
   public function testInvalidAbsolute($url, $scheme) {
     $test_url = $scheme . '://' . $url;
-    $valid_url = UrlValidator::isValid($test_url, TRUE);
+    $valid_url = Url::isValid($test_url, TRUE);
     $this->assertFalse($valid_url, String::format('@url is NOT a valid URL.', array('@url' => $test_url)));
   }
 
   /**
-   * Provides valid relative URLs
+   * Provides data for testValidRelative().
    */
   public function providerTestValidRelativeData() {
     $data = array(
@@ -123,12 +156,12 @@ class UrlValidatorTest extends UnitTestCase {
    */
   public function testValidRelative($url, $prefix) {
     $test_url = $prefix . $url;
-    $valid_url = Urlvalidator::isValid($test_url);
+    $valid_url = Url::isValid($test_url);
     $this->assertTrue($valid_url, String::format('@url is a valid URL.', array('@url' => $test_url)));
   }
 
   /**
-   * Provides invalid relative URLs.
+   * Provides data for testInvalidRelative().
    */
   public function providerTestInvalidRelativeData() {
     $data = array(
@@ -151,7 +184,7 @@ class UrlValidatorTest extends UnitTestCase {
    */
   public function testInvalidRelative($url, $prefix) {
     $test_url = $prefix . $url;
-    $valid_url = UrlValidator::isValid($test_url);
+    $valid_url = Url::isValid($test_url);
     $this->assertFalse($valid_url, String::format('@url is NOT a valid URL.', array('@url' => $test_url)));
   }
 
@@ -194,6 +227,5 @@ class UrlValidatorTest extends UnitTestCase {
     }
     return $data;
   }
-
 
 }

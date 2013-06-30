@@ -71,7 +71,7 @@ class SelectionTest extends WebTestBase {
 
     // Get values from selection handler.
     $handler = entity_reference_get_selection_handler($instance);
-    $result = $handler->getReferencableEntities();
+    $result = $handler->getReferenceableEntities();
 
     $success = FALSE;
     foreach ($result as $node_type => $values) {

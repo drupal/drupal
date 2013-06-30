@@ -25,23 +25,23 @@ class SelectionBroken implements SelectionInterface {
   }
 
   /**
-   * Implements SelectionInterface::getReferencableEntities().
+   * Implements SelectionInterface::getReferenceableEntities().
    */
-  public function getReferencableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
+  public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
     return array();
   }
 
   /**
-   * Implements SelectionInterface::countReferencableEntities().
+   * Implements SelectionInterface::countReferenceableEntities().
    */
-  public function countReferencableEntities($match = NULL, $match_operator = 'CONTAINS') {
+  public function countReferenceableEntities($match = NULL, $match_operator = 'CONTAINS') {
     return 0;
   }
 
   /**
-   * Implements SelectionInterface::validateReferencableEntities().
+   * Implements SelectionInterface::validateReferenceableEntities().
    */
-  public function validateReferencableEntities(array $ids) {
+  public function validateReferenceableEntities(array $ids) {
     return array();
   }
 

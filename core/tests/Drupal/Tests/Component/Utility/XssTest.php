@@ -8,7 +8,7 @@
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\String;
-use Drupal\Component\Utility\UrlValidator;
+use Drupal\Component\Utility\Url;
 use Drupal\Component\Utility\Xss;
 use Drupal\Tests\UnitTestCase;
 
@@ -53,7 +53,7 @@ class XssTest extends UnitTestCase {
       'webcal',
       'rtsp',
     );
-    UrlValidator::setAllowedProtocols($allowed_protocols);
+    Url::setAllowedProtocols($allowed_protocols);
   }
 
   /**

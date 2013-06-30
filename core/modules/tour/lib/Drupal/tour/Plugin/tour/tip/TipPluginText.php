@@ -7,6 +7,7 @@
 
 namespace Drupal\tour\Plugin\tour\tip;
 
+use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Utility\Token;
 use Drupal\tour\Annotation\Tip;
@@ -16,7 +17,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Displays some text as a tip.
  *
- * @Tip("text")
+ * @Tip(
+ *   id = "text",
+ *   title = @Translation("Text")
+ * )
  */
 class TipPluginText extends TipPluginBase implements ContainerFactoryPluginInterface {
 
@@ -120,4 +124,5 @@ class TipPluginText extends TipPluginBase implements ContainerFactoryPluginInter
     $output .= '<p class="tour-tip-body" id="tour-tip-' . $this->getAriaId() . '-contents">' . filter_xss_admin($this->token->replace($this->getBody())) . '</p>';
     return array('#markup' => $output);
   }
+
 }

@@ -1,0 +1,65 @@
+/**
+ * @file edit.icons.css
+ */
+
+.edit .icon {
+  min-height: 1em;
+  min-width: 2.5em;
+  position: relative;
+}
+.edit .icon.icon-only {
+  text-indent: -9999px;
+}
+.edit .icon.icon-end {
+  padding-right: 2.5em; /* LTR */
+}
+[dir="rtl"] .edit .icon.icon-end {
+  padding-left: 2.5em;
+  padding-right: 0;
+}
+.edit .icon:before {
+  background-attachment: scroll;
+  background-color: transparent;
+  background-position: center center;
+  background-repeat: no-repeat;
+  content: '';
+  display: block;
+  height: 100%;
+  left: 0; /* LTR */
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+[dir="rtl"] .edit .icon:before {
+  left: auto;
+  right: 0;
+}
+.edit .icon-end:before {
+  left: auto; /* LTR */
+  right: 0.5em; /* LTR */
+  width: 18px;
+}
+[dir="rtl"] .edit .icon-end:before {
+  left: 0.5em;
+  right: auto;
+}
+.edit button.icon {
+  font-size: 1em;
+}
+
+/**
+ * Images.
+ */
+.edit .icon-close:before {
+  background-image: url("../images/icon-close.png");
+  background-position: center top;
+  height: 12px;
+  top: 10px;
+}
+.edit .icon-close:hover:before {
+  background-image: url("../images/icon-close.png");
+  background-position: center bottom;
+}
+.edit .icon-throbber:before {
+  background-image: url("../images/icon-throbber.gif");
+}

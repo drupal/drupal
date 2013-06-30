@@ -115,7 +115,7 @@ function entity_reference_field_validate(EntityInterface $entity = NULL, $field,
   }
 
   if ($ids) {
-    $valid_ids = entity_reference_get_selection_handler($instance, $entity)->validateReferencableEntities(array_keys($ids));
+    $valid_ids = entity_reference_get_selection_handler($instance, $entity)->validateReferenceableEntities(array_keys($ids));
 
     $invalid_entities = array_diff_key($ids, array_flip($valid_ids));
     if ($invalid_entities) {
@@ -353,7 +353,7 @@ function entity_reference_settings_ajax_submit($form, &$form_state) {
  * Implements hook_options_list().
  */
 function entity_reference_options_list(FieldDefinitionInterface $field_definition, EntityInterface $entity) {
-  if (!$options = entity_reference_get_selection_handler($field_definition, $entity)->getReferencableEntities()) {
+  if (!$options = entity_reference_get_selection_handler($field_definition, $entity)->getReferenceableEntities()) {
     return array();
   }
 

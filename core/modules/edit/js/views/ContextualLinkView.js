@@ -17,7 +17,7 @@ Drupal.edit.ContextualLinkView = Backbone.View.extend({
     return {
       'click a': function (event) {
         event.preventDefault();
-        this.model.set('isActive', !this.model.get('isActive'));
+        this.model.set('state', 'launching');
       },
       'touchEnd a': touchEndToClick
     };
@@ -33,36 +33,22 @@ Drupal.edit.ContextualLinkView = Backbone.View.extend({
    *   - strings: the strings for the "Quick edit" link
    */
   initialize: function (options) {
+    // Insert the text of the quick edit toggle.
+    this.$el.find('a').text(this.options.strings.quickEdit);
     // Initial render.
     this.render();
-
     // Re-render whenever this entity's isActive attribute changes.
     this.model.on('change:isActive', this.render, this);
-
-    // Hide the contextual links whenever an in-place editor is active.
-    this.options.appModel.on('change:activeEditor', this.toggleContextualLinksVisibility, this);
   },
 
   /**
    * {@inheritdoc}
    */
-  render: function () {
-    var strings = this.options.strings;
-    var text = !this.model.get('isActive') ? strings.quickEdit : strings.stopQuickEdit;
-    this.$el.find('a').text(text);
-    return this;
-  },
+  render: function (entityModel, isActive) {
+    // Hides the contextual links if an in-place editor is active.
+    this.$el.closest('.contextual').toggle(!isActive);
 
-  /**
-   * Hides the contextual links if an in-place editor is active.
-   *
-   * @param Drupal.edit.AppModel appModel
-   *   The application state model.
-   * @param null|Drupal.edit.FieldModel activeEditor
-   *   The model of the field that is currently being edited, or, if none, null.
-   */
-  toggleContextualLinksVisibility: function (appModel, activeEditor) {
-    this.$el.parents('.contextual').toggle(activeEditor === null);
+    return this;
   }
 
 });

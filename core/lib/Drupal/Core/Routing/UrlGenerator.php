@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Cmf\Component\Routing\ProviderBasedGenerator;
 
 use Drupal\Component\Utility\Settings;
-use Drupal\Component\Utility\UrlValidator;
+use Drupal\Component\Utility\Url;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 
@@ -83,7 +83,7 @@ class UrlGenerator extends ProviderBasedGenerator implements PathBasedGeneratorI
     $this->pathProcessor = $path_processor;
     $this->mixedModeSessions = $settings->get('mixed_mode_sessions', FALSE);
     $allowed_protocols = $config->get('system.filter')->get('protocols') ?: array('http', 'https');
-    UrlValidator::setAllowedProtocols($allowed_protocols);
+    Url::setAllowedProtocols($allowed_protocols);
   }
 
   /**
@@ -112,7 +112,7 @@ class UrlGenerator extends ProviderBasedGenerator implements PathBasedGeneratorI
     if ($name instanceof SymfonyRoute) {
       $route = $name;
     }
-    elseif (null === $route = $this->provider->getRouteByName($name, $parameters)) {
+    elseif (NULL === $route = $this->provider->getRouteByName($name, $parameters)) {
       throw new RouteNotFoundException(sprintf('Route "%s" does not exist.', $name));
     }
 
@@ -239,7 +239,7 @@ class UrlGenerator extends ProviderBasedGenerator implements PathBasedGeneratorI
       // that would require another function call, and performance inside url() is
       // critical.
       $colonpos = strpos($path, ':');
-      $options['external'] = ($colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && UrlValidator::stripDangerousProtocols($path) == $path);
+      $options['external'] = ($colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && Url::stripDangerousProtocols($path) == $path);
     }
 
     if (isset($options['fragment']) && $options['fragment'] !== '') {
@@ -257,7 +257,7 @@ class UrlGenerator extends ProviderBasedGenerator implements PathBasedGeneratorI
       }
       // Append the query.
       if ($options['query']) {
-        $path .= (strpos($path, '?') !== FALSE ? '&' : '?') . $this->httpBuildQuery($options['query']);
+        $path .= (strpos($path, '?') !== FALSE ? '&' : '?') . Url::buildQuery($options['query']);
       }
       if (isset($options['https']) && $this->mixedModeSessions) {
         if ($options['https'] === TRUE) {
@@ -300,7 +300,7 @@ class UrlGenerator extends ProviderBasedGenerator implements PathBasedGeneratorI
     $prefix = empty($path) ? rtrim($options['prefix'], '/') : $options['prefix'];
 
     $path = str_replace('%2F', '/', rawurlencode($prefix . $path));
-    $query = $options['query'] ? ('?' . $this->httpBuildQuery($options['query'])) : '';
+    $query = $options['query'] ? ('?' . Url::buildQuery($options['query'])) : '';
     return $base . $options['script'] . $path . $query . $options['fragment'];
   }
 
@@ -323,47 +323,6 @@ class UrlGenerator extends ProviderBasedGenerator implements PathBasedGeneratorI
    */
   public function setScriptPath($path) {
     $this->scriptPath = $path;
-  }
-
-  /**
-   * Parses an array into a valid, rawurlencoded query string.
-   *
-   * This differs from http_build_query() as we need to rawurlencode() (instead of
-   * urlencode()) all query parameters.
-   *
-   * @param $query
-   *   The query parameter array to be processed, e.g. $_GET.
-   * @param $parent
-   *   Internal use only. Used to build the $query array key for nested items.
-   *
-   * @return
-   *   A rawurlencoded string which can be used as or appended to the URL query
-   *   string.
-   *
-   * @see drupal_get_query_parameters()
-   * @ingroup php_wrappers
-   */
-  public function httpBuildQuery(array $query, $parent = '') {
-    $params = array();
-
-    foreach ($query as $key => $value) {
-      $key = ($parent ? $parent . '[' . rawurlencode($key) . ']' : rawurlencode($key));
-
-      // Recurse into children.
-      if (is_array($value)) {
-        $params[] = $this->httpBuildQuery($value, $key);
-      }
-      // If a query parameter value is NULL, only append its key.
-      elseif (!isset($value)) {
-        $params[] = $key;
-      }
-      else {
-        // For better readability of paths in query strings, we decode slashes.
-        $params[] = $key . '=' . str_replace('%2F', '/', rawurlencode($value));
-      }
-    }
-
-    return implode('&', $params);
   }
 
   /**

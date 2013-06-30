@@ -76,7 +76,16 @@ class FilterAdminTest extends WebTestBase {
 
     // Edit text format.
     $this->drupalGet('admin/config/content/formats');
-    $this->assertLinkByHref('admin/config/content/formats/manage/' . $format_id);
+    // Cannot use the assertNoLinkByHref method as it does partial url matching
+    // and 'admin/config/content/formats/manage/' . $format_id . '/disable'
+    // exists.
+    // @todo: See https://drupal.org/node/2031223 for the above
+    $edit_link = $this->xpath('//a[@href=:href]', array(
+      ':href' => url('admin/config/content/formats/manage/' . $format_id)
+    ));
+    $this->assertTrue($edit_link, format_string('Link href %href found.',
+      array('%href' => 'admin/config/content/formats/manage/' . $format_id)
+    ));
     $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
     $this->drupalPost(NULL, array(), t('Save configuration'));
 

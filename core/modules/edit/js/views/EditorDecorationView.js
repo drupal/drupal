@@ -7,7 +7,6 @@
 "use strict";
 
 Drupal.edit.EditorDecorationView = Backbone.View.extend({
-  toolbarId: null,
 
   _widthAttributeIsEmpty: null,
 
@@ -25,15 +24,12 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
    * @param Object options
    *   An object with the following keys:
    *   - Drupal.edit.EditorView editorView: the editor object view.
-   *   - String toolbarId: the ID attribute of the toolbar as rendered in the
-   *     DOM.
    */
   initialize: function (options) {
     this.editorView = options.editorView;
 
-    this.toolbarId = options.toolbarId;
-
     this.model.on('change:state', this.stateChange, this);
+    this.model.on('change:isChanged change:inTempStore', this.renderChanged, this);
   },
 
   /**
@@ -65,9 +61,11 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
         if (from !== 'inactive') {
           this.stopHighlight();
           if (from !== 'highlighted') {
+            this.model.set('isChanged', false);
             this.stopEdit();
           }
         }
+        this._unpad();
         break;
       case 'highlighted':
         this.startHighlight();
@@ -81,9 +79,12 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
         if (from !== 'activating') {
           this.prepareEdit();
         }
-        this.startEdit();
+        if (this.editorView.getEditUISettings().padding) {
+          this._pad();
+        }
         break;
       case 'changed':
+        this.model.set('isChanged', true);
         break;
       case 'saving':
         break;
@@ -95,16 +96,23 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
   },
 
   /**
+   * Adds a class to the edited element that indicates whether the field has
+   * been changed by the user (i.e. locally) or the field has already been
+   * changed and stored before by the user (i.e. remotely, stored in TempStore).
+   */
+  renderChanged: function () {
+    this.$el.toggleClass('edit-changed', this.model.get('isChanged') || this.model.get('inTempStore'));
+  },
+
+  /**
    * Starts hover; transitions to 'highlight' state.
    *
    * @param jQuery event
    */
   onMouseEnter: function (event) {
     var that = this;
-    this._ignoreHoveringVia(event, '#' + this.toolbarId, function () {
-      that.model.set('state', 'highlighted');
-      event.stopPropagation();
-    });
+    that.model.set('state', 'highlighted');
+    event.stopPropagation();
   },
 
   /**
@@ -114,10 +122,8 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
    */
   onMouseLeave: function (event) {
     var that = this;
-    this._ignoreHoveringVia(event, '#' + this.toolbarId, function () {
-      that.model.set('state', 'candidate', { reason: 'mouseleave' });
-      event.stopPropagation();
-    });
+    that.model.set('state', 'candidate', { reason: 'mouseleave' });
+    event.stopPropagation();
   },
 
   /**
@@ -135,7 +141,7 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
    * Adds classes used to indicate an elements editable state.
    */
   decorate: function () {
-    this.$el.addClass('edit-animate-fast edit-candidate edit-editable');
+    this.$el.addClass('edit-candidate edit-editable');
   },
 
   /**
@@ -152,9 +158,7 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
     // Animations.
     var that = this;
     // Use a timeout to grab the next available animation frame.
-    setTimeout(function () {
-      that.$el.addClass('edit-highlighted');
-    }, 0);
+    that.$el.addClass('edit-highlighted');
   },
 
   /**
@@ -169,18 +173,6 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
    */
   prepareEdit: function () {
     this.$el.addClass('edit-editing');
-
-    // While editing, do not show any other editors.
-    $('.edit-candidate').not('.edit-editing').removeClass('edit-editable');
-  },
-
-  /**
-   * Updates the display of the editable element once editing has begun.
-   */
-  startEdit: function () {
-    if (this.editorView.getEditUISettings().padding) {
-      this._pad();
-    }
   },
 
   /**
@@ -194,16 +186,16 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
 
     // Make the other editors show up again.
     $('.edit-candidate').addClass('edit-editable');
-
-    if (this.editorView.getEditUISettings().padding) {
-      this._unpad();
-    }
   },
 
   /**
    * Adds padding around the editable element in order to make it pop visually.
    */
   _pad: function () {
+    // Early return if the element has already been padded.
+    if (this.$el.data('edit-padded')) {
+      return;
+    }
     var self = this;
 
     // Add 5px padding for readability. This means we'll freeze the current
@@ -235,7 +227,8 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
         'padding-right' : posProp['padding-right']  + 5 + 'px',
         'padding-bottom': posProp['padding-bottom'] + 5 + 'px',
         'margin-bottom':  posProp['margin-bottom'] - 10 + 'px'
-      });
+      })
+      .data('edit-padded', true);
     }, 0);
   },
 
@@ -243,6 +236,10 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
    * Removes the padding around the element being edited when editing ceases.
    */
   _unpad: function () {
+    // Early return if the element has not been padded.
+    if (!this.$el.data('edit-padded')) {
+      return;
+    }
     var self = this;
 
     // 1) Set the empty width again.
@@ -273,6 +270,11 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
         'margin-bottom': posProp['margin-bottom'] + 10 + 'px'
       });
     }, 0);
+    // Remove the marker that indicates that this field has padding. This is
+    // done outside the timed out function above so that we don't get numerous
+    // queued functions that will remove padding before the data marker has
+    // been removed.
+    this.$el.removeData('edit-padded');
   },
 
   /**
@@ -332,26 +334,6 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
       pos = '0px';
     }
     return pos;
-  },
-
-  /**
-   * Ignores hovering to/from the given closest element.
-   *
-   * When a hover occurs to/from another element, invoke the callback.
-   *
-   * @param jQuery event
-   * @param jQuery closest
-   *   A jQuery-wrapped DOM element or compatibale jQuery input. The element
-   *   whose mouseenter and mouseleave events should be ignored.
-   * @param Function callback
-   */
-  _ignoreHoveringVia: function (event, closest, callback) {
-    if ($(event.relatedTarget).closest(closest).length > 0) {
-      event.stopPropagation();
-    }
-    else {
-      callback();
-    }
   }
 });
 

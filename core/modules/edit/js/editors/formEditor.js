@@ -11,6 +11,9 @@ Drupal.edit.editors.form = Drupal.edit.EditorView.extend({
   // Tracks the form container DOM element that is used while in-place editing.
   $formContainer: null,
 
+  // Holds the Drupal.ajax object
+  formSaveAjax: null,
+
   /**
    * {@inheritdoc}
    */
@@ -24,14 +27,14 @@ Drupal.edit.editors.form = Drupal.edit.EditorView.extend({
         if (from !== 'inactive') {
           this.removeForm();
         }
-        if (from === 'invalid') {
-          // No need to call removeValidationErrors() for this in-place editor!
-        }
         break;
       case 'highlighted':
         break;
       case 'activating':
-        this.loadForm();
+        // If coming from an invalid state, then the form is already loaded.
+        if (from !== 'invalid') {
+          this.loadForm();
+        }
         break;
       case 'active':
         break;
@@ -82,7 +85,14 @@ Drupal.edit.editors.form = Drupal.edit.EditorView.extend({
     var formOptions = {
       fieldID: fieldModel.id,
       $el: this.$el,
-      nocssjs: false
+      nocssjs: false,
+      // Reset an existing entry for this entity in the TempStore (if any) when
+      // loading the field. Logically speaking, this should happen in a separate
+      // request because this is an entity-level operation, not a field-level
+      // operation. But that would require an additional request, that might not
+      // even be necessary: it is only when a user loads a first changed field
+      // for an entity that this needs to happen: precisely now!
+      reset: !fieldModel.get('entity').get('inTempStore')
     };
     Drupal.edit.util.form.load(formOptions, function (form, ajax) {
       Drupal.AjaxCommands.prototype.insert(ajax, {
@@ -90,11 +100,20 @@ Drupal.edit.editors.form = Drupal.edit.EditorView.extend({
         selector: '#' + id + ' .placeholder'
       });
 
-      var $submit = $formContainer.find('.edit-form-submit');
-      Drupal.edit.util.form.ajaxifySaving(formOptions, $submit);
       $formContainer
-        .on('formUpdated.edit', ':input', function () {
-          fieldModel.set('state', 'changed');
+        .on('formUpdated.edit', ':input', function (event) {
+          var state = fieldModel.get('state');
+          // If the form is in an invalid state, it will persist on the page.
+          // Set the field to activating so that the user can correct the
+          // invalid value.
+          if (state === 'invalid') {
+            fieldModel.set('state', 'activating');
+          }
+          // Otherwise assume that the fieldModel is in a candidate state and
+          // set it to changed on formUpdate.
+          else {
+            fieldModel.set('state', 'changed');
+          }
         })
         .on('keypress.edit', 'input', function (event) {
           if (event.keyCode === 13) {
@@ -115,7 +134,7 @@ Drupal.edit.editors.form = Drupal.edit.EditorView.extend({
       return;
     }
 
-    Drupal.edit.util.form.unajaxifySaving(this.$formContainer.find('.edit-form-submit'));
+    delete this.formSaveAjax;
     // Allow form widgets to detach properly.
     Drupal.detachBehaviors(this.$formContainer, null, 'unload');
     this.$formContainer
@@ -131,43 +150,44 @@ Drupal.edit.editors.form = Drupal.edit.EditorView.extend({
   save: function () {
     var $formContainer = this.$formContainer;
     var $submit = $formContainer.find('.edit-form-submit');
-    var base = $submit.attr('id');
     var editorModel = this.model;
     var fieldModel = this.fieldModel;
 
-    // Successfully saved.
-    Drupal.ajax[base].commands.editFieldFormSaved = function (ajax, response, status) {
-      Drupal.edit.util.form.unajaxifySaving($(ajax.element));
+    function cleanUpAjax () {
+      Drupal.edit.util.form.unajaxifySaving(formSaveAjax);
+      formSaveAjax = null;
+    }
 
+    // Create an AJAX object for the form associated with the field.
+    var formSaveAjax = Drupal.edit.util.form.ajaxifySaving({
+      nocssjs: false
+    }, $submit);
+
+    // Successfully saved.
+    formSaveAjax.commands.editFieldFormSaved = function (ajax, response, status) {
+      cleanUpAjax();
       // First, transition the state to 'saved'.
       fieldModel.set('state', 'saved');
       // Then, set the 'html' attribute on the field model. This will cause the
       // field to be rerendered.
       fieldModel.set('html', response.data);
-     };
+    };
 
     // Unsuccessfully saved; validation errors.
-    Drupal.ajax[base].commands.editFieldFormValidationErrors = function (ajax, response, status) {
+    formSaveAjax.commands.editFieldFormValidationErrors = function (ajax, response, status) {
       editorModel.set('validationErrors', response.data);
       fieldModel.set('state', 'invalid');
     };
 
-    // The edit_field_form AJAX command is only called upon loading the form for
-    // the first time, and when there are validation errors in the form; Form
-    // API then marks which form items have errors. Therefor, we have to replace
-    // the existing form, unbind the existing Drupal.ajax instance and create a
-    // new Drupal.ajax instance.
-    Drupal.ajax[base].commands.editFieldForm = function (ajax, response, status) {
-      Drupal.edit.util.form.unajaxifySaving($(ajax.element));
-
+    // The edit_field_form AJAX command is called upon attempting to save
+    // the form; Form API will mark which form items have errors, if any. This
+    // command is invoked only if validation errors exist and then it runs
+    // before editFieldFormValidationErrors().
+    formSaveAjax.commands.editFieldForm = function (ajax, response, status) {
       Drupal.AjaxCommands.prototype.insert(ajax, {
         data: response.data,
         selector: '#' + $formContainer.attr('id') + ' form'
       });
-
-      // Create a Drupal.ajax instance for the re-rendered ("new") form.
-      var $newSubmit = $formContainer.find('.edit-form-submit');
-      Drupal.edit.util.form.ajaxifySaving({ nocssjs: false }, $newSubmit);
     };
 
     // Click the form's submit button; the scoped AJAX commands above will

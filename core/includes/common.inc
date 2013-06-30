@@ -4,7 +4,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Json;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
-use Drupal\Component\Utility\UrlValidator;
+use Drupal\Component\Utility\Url;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
@@ -440,56 +440,14 @@ function drupal_get_feeds($delimiter = "\n") {
  *
  * @return
  *   An array containing query parameters, which can be used for url().
+ *
+ * @deprecated as of Drupal 8.0. Use Url::filterQueryParameters() instead.
  */
 function drupal_get_query_parameters(array $query = NULL, array $exclude = array(), $parent = '') {
-  // Set defaults, if none given.
   if (!isset($query)) {
-    $query = $_GET;
+    $query = Drupal::request()->query->all();
   }
-  // If $exclude is empty, there is nothing to filter.
-  if (empty($exclude)) {
-    return $query;
-  }
-  elseif (!$parent) {
-    $exclude = array_flip($exclude);
-  }
-
-  $params = array();
-  foreach ($query as $key => $value) {
-    $string_key = ($parent ? $parent . '[' . $key . ']' : $key);
-    if (isset($exclude[$string_key])) {
-      continue;
-    }
-
-    if (is_array($value)) {
-      $params[$key] = drupal_get_query_parameters($value, $exclude, $string_key);
-    }
-    else {
-      $params[$key] = $value;
-    }
-  }
-
-  return $params;
-}
-
-/**
- * Splits a URL-encoded query string into an array.
- *
- * @param $query
- *   The query string to split.
- *
- * @return
- *   An array of URL decoded couples $param_name => $value.
- */
-function drupal_get_query_array($query) {
-  $result = array();
-  if (!empty($query)) {
-    foreach (explode('&', $query) as $param) {
-      $param = explode('=', $param);
-      $result[$param[0]] = isset($param[1]) ? rawurldecode($param[1]) : '';
-    }
-  }
-  return $result;
+  return Url::filterQueryParameters($query, $exclude, $parent);
 }
 
 /**
@@ -497,12 +455,13 @@ function drupal_get_query_array($query) {
  *
  * @see \Drupal\Core\Routing\PathBasedGeneratorInterface::httpBuildQuery()
  * @see drupal_get_query_parameters()
- * @deprecated as of Drupal 8.0. Use
- *   Drupal::urlGenerator()->httpBuildQuery() instead.
+ * @deprecated as of Drupal 8.0. Use Url::buildQuery() instead.
  * @ingroup php_wrappers
+ *
+ * @deprecated as of Drupal 8.0. Use Url::buildQuery() instead.
  */
 function drupal_http_build_query(array $query, $parent = '') {
-  return Drupal::urlGenerator()->httpBuildQuery($query, $parent);
+  return Url::buildQuery($query, $parent);
 }
 
 /**
@@ -527,12 +486,13 @@ function drupal_get_destination() {
     return $destination;
   }
 
-  if (isset($_GET['destination'])) {
-    $destination = array('destination' => $_GET['destination']);
+  $query = Drupal::request()->query;
+  if ($query->has('destination')) {
+    $destination = array('destination' => $query->get('destination'));
   }
   else {
     $path = current_path();
-    $query = Drupal::urlGenerator()->httpBuildQuery(drupal_get_query_parameters());
+    $query = Url::buildQuery(Url::filterQueryParameters($query->all()));
     if ($query != '') {
       $path .= '?' . $query;
     }
@@ -573,46 +533,11 @@ function drupal_get_destination() {
  *
  * @see url()
  * @ingroup php_wrappers
+ *
+ * @deprecated as of Drupal 8.0. Use Url::parse() instead.
  */
 function drupal_parse_url($url) {
-  $options = array(
-    'path' => NULL,
-    'query' => array(),
-    'fragment' => '',
-  );
-
-  // External URLs: not using parse_url() here, so we do not have to rebuild
-  // the scheme, host, and path without having any use for it.
-  if (strpos($url, '://') !== FALSE) {
-    // Split off everything before the query string into 'path'.
-    $parts = explode('?', $url);
-    $options['path'] = $parts[0];
-    // If there is a query string, transform it into keyed query parameters.
-    if (isset($parts[1])) {
-      $query_parts = explode('#', $parts[1]);
-      parse_str($query_parts[0], $options['query']);
-      // Take over the fragment, if there is any.
-      if (isset($query_parts[1])) {
-        $options['fragment'] = $query_parts[1];
-      }
-    }
-  }
-  // Internal URLs.
-  else {
-    // parse_url() does not support relative URLs, so make it absolute. E.g. the
-    // relative URL "foo/bar:1" isn't properly parsed.
-    $parts = parse_url('http://example.com/' . $url);
-    // Strip the leading slash that was just added.
-    $options['path'] = substr($parts['path'], 1);
-    if (isset($parts['query'])) {
-      parse_str($parts['query'], $options['query']);
-    }
-    if (isset($parts['fragment'])) {
-      $options['fragment'] = $parts['fragment'];
-    }
-  }
-
-  return $options;
+  return Url::parse($url);
 }
 
 /**
@@ -625,9 +550,11 @@ function drupal_parse_url($url) {
  *
  * @param $path
  *   The Drupal path to encode.
+ *
+ * @deprecated as of Drupal 8.0. Use Url::encodePath() instead.
  */
 function drupal_encode_path($path) {
-  return str_replace('%2F', '/', rawurlencode($path));
+  return Url::encodePath($path);
 }
 
 /**
@@ -638,20 +565,11 @@ function drupal_encode_path($path) {
  *
  * @return
  *   TRUE if the URL has the same domain and base path.
+ *
+ * @deprecated as of Drupal 8.0. Use Url::externalIsLocal() instead.
  */
 function _external_url_is_local($url) {
-  $url_parts = parse_url($url);
-  $base_host = parse_url($GLOBALS['base_url'], PHP_URL_HOST);
-
-  if (!isset($url_parts['path'])) {
-    return ($url_parts['host'] == $base_host);
-  }
-  else {
-    // When comparing base paths, we need a trailing slash to make sure a
-    // partial URL match isn't occuring. Since base_path() always returns with
-    // a trailing slash, we don't need to add the trailing slash here.
-    return ($url_parts['host'] == $base_host && stripos($url_parts['path'], base_path()) === 0);
-  }
+  return Url::externalIsLocal($url, base_path());
 }
 
 /**
@@ -705,12 +623,12 @@ function valid_email_address($mail) {
  * @return
  *   TRUE if the URL is in a valid format.
  *
- * @see \Drupal\Component\Utility\UrlValidator::isValid()
+ * @see \Drupal\Component\Utility\Url::isValid()
  *
- * @deprecated as of Drupal 8.0. Use UrlValidator::isValid() instead.
+ * @deprecated as of Drupal 8.0. Use Url::isValid() instead.
  */
 function valid_url($url, $absolute = FALSE) {
-  return UrlValidator::isValid($url, $absolute);
+  return Url::isValid($url, $absolute);
 }
 
 /**
@@ -795,7 +713,7 @@ function valid_number_step($value, $step, $offset = 0.0) {
  * @see \Drupal\Component\Utility\Url::stripDangerousProtocols()
  */
 function drupal_strip_dangerous_protocols($uri) {
-  return UrlValidator::stripDangerousProtocols($uri);
+  return Url::stripDangerousProtocols($uri);
 }
 
 /**
@@ -817,7 +735,7 @@ function drupal_strip_dangerous_protocols($uri) {
  * @see \Drupal\Component\Utility\String::checkPlain()
  */
 function check_url($uri) {
-  return String::checkPlain(UrlValidator::stripDangerousProtocols($uri));
+  return String::checkPlain(Url::stripDangerousProtocols($uri));
 }
 
 /**
@@ -885,7 +803,7 @@ function filter_xss($string, $allowed_tags = array('a', 'em', 'strong', 'cite', 
  * @see \Drupal\Component\Utility\Url::filterBadProtocol()
  */
 function filter_xss_bad_protocol($string) {
-  return UrlValidator::filterBadProtocol($string);
+  return Url::filterBadProtocol($string);
 }
 
 /**
@@ -1313,11 +1231,7 @@ function url($path = NULL, array $options = array()) {
  *   Boolean TRUE or FALSE, where TRUE indicates an external path.
  */
 function url_is_external($path) {
-  $colonpos = strpos($path, ':');
-  // Avoid calling drupal_strip_dangerous_protocols() if there is any
-  // slash (/), hash (#) or question_mark (?) before the colon (:)
-  // occurrence - if any - as this would clearly mean it is not a URL.
-  return $colonpos !== FALSE && !preg_match('![/?#]!', substr($path, 0, $colonpos)) && drupal_strip_dangerous_protocols($path) == $path;
+  return Url::isExternal($path);
 }
 
 /**
@@ -4019,7 +3933,7 @@ function _drupal_bootstrap_code() {
     // of allowed protocols for these cases.
     $allowed_protocols = array('http', 'https');
   }
-  UrlValidator::setAllowedProtocols($allowed_protocols);
+  Url::setAllowedProtocols($allowed_protocols);
 }
 
 /**

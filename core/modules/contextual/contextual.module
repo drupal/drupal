@@ -347,7 +347,8 @@ function _contextual_id_to_links($id) {
   foreach ($contexts as $context) {
     list($module, $parent_path, $path_args, $metadata_raw) = explode(':', $context);
     $path_args = explode('/', $path_args);
-    $metadata = drupal_get_query_array($metadata_raw);
+    $metadata = array();
+    parse_str($metadata_raw, $metadata);
     $contextual_links[$module] = array($parent_path, $path_args, $metadata);
   }
   return $contextual_links;
