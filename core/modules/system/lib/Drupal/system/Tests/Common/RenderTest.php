@@ -72,12 +72,129 @@ class RenderTest extends WebTestBase {
         ),
         'expected' => '',
       ),
+
+      // Test handling of #markup as a fallback for #theme hooks.
+      // Simple #markup with no theme.
       array(
-        'name' => 'basic renderable array',
+        'name' => 'basic #markup based renderable array',
         'value' => array('#markup' => 'foo'),
         'expected' => 'foo',
       ),
+      // Theme suggestion is not implemented, #markup should be rendered.
+      array(
+        'name' => '#markup fallback for #theme suggestion not implemented',
+        'value' => array(
+          '#theme' => array('suggestionnotimplemented'),
+          '#markup' => 'foo',
+        ),
+        'expected' => 'foo',
+      ),
+      // Theme suggestion is not implemented, child #markup should be rendered.
+      array(
+        'name' => '#markup fallback for child elements, #theme suggestion not implemented',
+        'value' => array(
+          '#theme' => array('suggestionnotimplemented'),
+          'child' => array(
+            '#markup' => 'foo',
+          ),
+        ),
+        'expected' => 'foo',
+      ),
+      // Theme suggestion is implemented but returns empty string, #markup
+      // should not be rendered.
+      array(
+        'name' => 'Avoid #markup if #theme is implemented but returns an empty string',
+        'value' => array(
+          '#theme' => array('common_test_empty'),
+          '#markup' => 'foo',
+        ),
+        'expected' => '',
+      ),
+      // Theme suggestion is implemented but returns empty string, children
+      // should not be rendered.
+      array(
+        'name' => 'Avoid rendering child elements if #theme is implemented but returns an empty string',
+        'value' => array(
+          '#theme' => array('common_test_empty'),
+          'child' => array(
+            '#markup' => 'foo',
+          ),
+        ),
+        'expected' => '',
+      ),
+
+      // Test handling of #children and child renderable elements.
+      // #theme is not set, #children is not set and the array has children.
+      array(
+        'name' => '#theme is not set, #children is not set and array has children',
+        'value' => array(
+          'child' => array('#markup' => 'bar'),
+        ),
+        'expected' => 'bar',
+      ),
+      // #theme is not set, #children is set but empty and the array has
+      // children.
+      array(
+        'name' => '#theme is not set, #children is an empty string and array has children',
+        'value' => array(
+          '#children' => '',
+          'child' => array('#markup' => 'bar'),
+        ),
+        'expected' => 'bar',
+      ),
+      // #theme is not set, #children is not empty and will be assumed to be the
+      // rendered child elements even though the #markup for 'child' differs.
+      array(
+        'name' => '#theme is not set, #children is set and array has children',
+        'value' => array(
+          '#children' => 'foo',
+          'child' => array('#markup' => 'bar'),
+        ),
+        'expected' => 'foo',
+      ),
+      // #theme is implemented so the values of both #children and 'child' will
+      // be ignored - it is the responsibility of the theme hook to render these
+      // if appropriate.
+      array(
+        'name' => '#theme is implemented, #children is set and array has children',
+        'value' => array(
+          '#theme' => 'common_test_foo',
+          '#children' => 'baz',
+          'child' => array('#markup' => 'boo'),
+        ),
+        'expected' => 'foobar',
+      ),
+      // #theme is implemented but #render_children is TRUE. As in the case
+      // where #theme is not set, empty #children means child elements are
+      // rendered recursively.
+      array(
+        'name' => '#theme is implemented, #render_children is TRUE, #children is empty and array has children',
+        'value' => array(
+          '#theme' => 'common_test_foo',
+          '#children' => '',
+          '#render_children' => TRUE,
+          'child' => array(
+            '#markup' => 'boo',
+          ),
+        ),
+        'expected' => 'boo',
+      ),
+      // #theme is implemented but #render_children is TRUE. As in the case
+      // where #theme is not set, #children will take precedence over 'child'.
+      array(
+        'name' => '#theme is implemented, #render_children is TRUE, #children is set and array has children',
+        'value' => array(
+          '#theme' => 'common_test_foo',
+          '#children' => 'baz',
+          '#render_children' => TRUE,
+          'child' => array(
+            '#markup' => 'boo',
+          ),
+        ),
+        'expected' => 'baz',
+      ),
     );
+
     foreach($types as $type) {
       $this->assertIdentical(drupal_render($type['value']), $type['expected'], '"' . $type['name'] . '" input rendered correctly by drupal_render().');
     }
