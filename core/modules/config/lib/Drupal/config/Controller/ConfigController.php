@@ -77,26 +77,29 @@ class ConfigController implements ControllerInterface {
    *   Table showing a two-way diff between the active and staged configuration.
    */
   public function diff($config_file) {
-    // Add the CSS for the inline diff.
-    $output['#attached']['css'][] = drupal_get_path('module', 'system') . '/css/system.diff.css';
+    // @todo Remove use of drupal_set_title() when
+    //   http://drupal.org/node/1871596 is in.
+    drupal_set_title(t('View changes of @config_file', array('@config_file' => $config_file)), PASS_THROUGH);
 
     $diff = config_diff($this->targetStorage, $this->sourceStorage, $config_file);
     $formatter = new \DrupalDiffFormatter();
     $formatter->show_header = FALSE;
 
-    $variables = array(
-      'header' => array(
+    $build = array();
+
+    // Add the CSS for the inline diff.
+    $build['#attached']['css'][] = drupal_get_path('module', 'system') . '/css/system.diff.css';
+
+    $build['diff'] = array(
+      '#theme' => 'table',
+      '#header' => array(
         array('data' => t('Old'), 'colspan' => '2'),
         array('data' => t('New'), 'colspan' => '2'),
       ),
-      'rows' => $formatter->format($diff),
+      '#rows' => $formatter->format($diff),
     );
 
-    $output['diff'] = array(
-      '#markup' => theme('table', $variables),
-    );
-
-    $output['back'] = array(
+    $build['back'] = array(
       '#type' => 'link',
       '#attributes' => array(
         'class' => array(
@@ -107,10 +110,6 @@ class ConfigController implements ControllerInterface {
       '#href' => 'admin/config/development/sync',
     );
 
-    // @todo Remove use of drupal_set_title() when
-    //   http://drupal.org/node/1871596 is in.
-    drupal_set_title(t('View changes of @config_file', array('@config_file' => $config_file)), PASS_THROUGH);
-
-    return $output;
+    return $build;
   }
 }
