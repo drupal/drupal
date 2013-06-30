@@ -75,7 +75,7 @@ class RouteSubscriber implements EventSubscriberInterface {
           // If there is no format requirement or if it matches the
           // configuration also add the route.
           $format_requirement = $route->getRequirement('_format');
-          if (!$format_requirement || isset($enabled_methods[$method][$format_requirement])) {
+          if (!$format_requirement || empty($enabled_methods[$method]['supported_formats']) || in_array($format_requirement, $enabled_methods[$method]['supported_formats'])) {
             $collection->add("rest.$name", $route);
           }
         }

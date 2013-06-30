@@ -230,12 +230,13 @@ Entity Reference module
 
 Field module
 - Yves Chedemois 'yched' http://drupal.org/user/39567
-- Barry Jaspan 'bjaspan' http://drupal.org/user/46413
 - Kristof De Jaeger 'swentel' http://drupal.org/user/107403
+- Andrei Mateescu 'amateescu' http://drupal.org/user/729614
 
 Field UI module
 - Yves Chedemois 'yched' http://drupal.org/user/39567
 - Kristof De Jaeger 'swentel' http://drupal.org/user/107403
+- Andrei Mateescu 'amateescu' http://drupal.org/user/729614
 
 File module
 - Aaron Winborn 'aaron' http://drupal.org/user/33420

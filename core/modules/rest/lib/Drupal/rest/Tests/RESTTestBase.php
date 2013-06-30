@@ -195,7 +195,7 @@ abstract class RESTTestBase extends WebTestBase {
     $settings = array();
     if ($resource_type) {
       if ($format) {
-        $settings[$resource_type][$method][$format] = 'TRUE';
+        $settings[$resource_type][$method]['supported_formats'][] = $format;
       }
       else {
         $settings[$resource_type][$method] = array();

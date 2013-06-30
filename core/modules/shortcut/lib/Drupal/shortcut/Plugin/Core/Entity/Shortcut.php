@@ -27,6 +27,7 @@ use Drupal\shortcut\ShortcutInterface;
  *     "form" = {
  *       "default" = "Drupal\shortcut\ShortcutFormController",
  *       "edit" = "Drupal\shortcut\ShortcutFormController",
+ *       "customize" = "Drupal\shortcut\Form\SetCustomize",
  *       "delete" = "Drupal\shortcut\Form\ShortcutDeleteForm"
  *     }
  *   },
