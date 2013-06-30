@@ -47,9 +47,8 @@ function entity_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
  * Implements hook_entity_bundle_delete().
  */
 function entity_entity_bundle_delete($entity_type, $bundle) {
-  $entity_info = entity_get_info('entity_display');
-
   // Remove entity displays of the deleted bundle.
+  $entity_info = entity_get_info('entity_display');
   $ids = config_get_storage_names_with_prefix('entity.display.' . $entity_type . '.' . $bundle);
   foreach ($ids as &$id) {
     $id = ConfigStorageController::getIDFromConfigName($id, $entity_info['config_prefix']);
@@ -57,6 +56,7 @@ function entity_entity_bundle_delete($entity_type, $bundle) {
   entity_delete_multiple('entity_display', $ids);
 
   // Remove entity form displays of the deleted bundle.
+  $entity_info = entity_get_info('entity_form_display');
   $ids = config_get_storage_names_with_prefix('entity.form_display.' . $entity_type . '.' . $bundle);
   foreach ($ids as &$id) {
     $id = ConfigStorageController::getIDFromConfigName($id, $entity_info['config_prefix']);
