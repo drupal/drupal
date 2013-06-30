@@ -32,3 +32,10 @@ shortcut_link_add_inline:
     _controller: 'Drupal\shortcut\Controller\ShortcutController::addShortcutLinkInline'
   requirements:
     _entity_access: 'shortcut.update'
+
+shortcut_set_customize:
+  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut}'
+  defaults:
+    _entity_form: 'shortcut.customize'
+  requirements:
+    _entity_access: 'shortcut.update'

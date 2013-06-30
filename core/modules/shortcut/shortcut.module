@@ -98,13 +98,9 @@ function shortcut_menu() {
   );
   $items['admin/config/user-interface/shortcut/manage/%shortcut_set'] = array(
     'title' => 'Edit shortcuts',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('shortcut_set_customize', 5),
+    'route_name' => 'shortcut_set_customize',
     'title callback' => 'entity_page_label',
     'title arguments' => array(5),
-    'access callback' => 'shortcut_set_edit_access',
-    'access arguments' => array(5),
-    'file' => 'shortcut.admin.inc',
   );
   $items['admin/config/user-interface/shortcut/manage/%shortcut_set/links'] = array(
     'title' => 'List links',
@@ -162,18 +158,6 @@ function shortcut_admin_paths() {
     'user/*/shortcuts' => TRUE,
   );
   return $paths;
-}
-
-/**
- * Implements hook_theme().
- */
-function shortcut_theme() {
-  return array(
-    'shortcut_set_customize' => array(
-      'render element' => 'form',
-      'file' => 'shortcut.admin.inc',
-    ),
-  );
 }
 
 /**
