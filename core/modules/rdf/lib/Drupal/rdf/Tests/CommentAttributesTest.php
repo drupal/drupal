@@ -38,10 +38,6 @@ class CommentAttributesTest extends CommentTestBase {
       'post comments' => TRUE,
       'skip comment approval' => TRUE,
     ));
-
-    // Create comment field on article.
-    comment_add_default_comment_field('node', 'article');
-
     // Allows anonymous to leave their contact information.
     $this->setCommentAnonymous(COMMENT_ANONYMOUS_MAY_CONTACT);
     $this->setCommentPreview(DRUPAL_OPTIONAL);
@@ -49,10 +45,6 @@ class CommentAttributesTest extends CommentTestBase {
     $this->setCommentSubject(TRUE);
     $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, 'Comment paging changed.');
 
-    // Creates the nodes on which the test comments will be posted.
-    $this->drupalLogin($this->web_user);
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1));
-    $this->drupalLogout();
     // Prepares commonly used URIs.
     $this->base_uri = url('<front>', array('absolute' => TRUE));
     $this->node_uri = url('node/' . $this->node->nid, array('absolute' => TRUE));
