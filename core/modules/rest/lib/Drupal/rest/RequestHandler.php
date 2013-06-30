@@ -51,8 +51,8 @@ class RequestHandler extends ContainerAware {
       // format. If the serializer cannot handle it an exception will be thrown
       // that bubbles up to the client.
       $config = $this->container->get('config.factory')->get('rest.settings')->get('resources');
-      $enabled_formats = $config[$plugin][$request->getMethod()];
-      if (empty($enabled_formats) || isset($enabled_formats[$format])) {
+      $method_settings = $config[$plugin][$request->getMethod()];
+      if (empty($method_settings['supported_formats']) || in_array($format, $method_settings['supported_formats'])) {
         $definition = $resource->getPluginDefinition();
         $class = $definition['serialization_class'];
         try {
