@@ -19,15 +19,12 @@ class EntityTestFormController extends EntityFormControllerNG {
    */
   public function form(array $form, array &$form_state) {
     $form = parent::form($form, $form_state);
-
     $entity = $this->entity;
-    $langcode = $this->getFormLangcode($form_state);
-    $translation = $entity->getTranslation($langcode);
 
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => t('Name'),
-      '#default_value' => $translation->name->value,
+      '#default_value' => $entity->name->value,
       '#size' => 60,
       '#maxlength' => 128,
       '#required' => TRUE,
@@ -37,7 +34,7 @@ class EntityTestFormController extends EntityFormControllerNG {
     $form['user_id'] = array(
       '#type' => 'textfield',
       '#title' => 'UID',
-      '#default_value' => $translation->user_id->target_id,
+      '#default_value' => $entity->user_id->target_id,
       '#size' => 60,
       '#maxlength' => 128,
       '#required' => TRUE,
@@ -47,7 +44,7 @@ class EntityTestFormController extends EntityFormControllerNG {
     $form['langcode'] = array(
       '#title' => t('Language'),
       '#type' => 'language_select',
-      '#default_value' => $entity->language()->id,
+      '#default_value' => $entity->getUntranslated()->language()->id,
       '#languages' => Language::STATE_ALL,
     );
 

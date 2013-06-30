@@ -18,10 +18,7 @@ class ContentTranslationControllerNG extends ContentTranslationController {
    * Overrides \Drupal\content_translation\ContentTranslationControllerInterface::removeTranslation().
    */
   public function removeTranslation(EntityInterface $entity, $langcode) {
-    $translation = $entity->getTranslation($langcode);
-    foreach ($translation->getPropertyDefinitions() as $property_name => $langcode) {
-      $translation->$property_name = array();
-    }
+    $entity->removeTranslation($langcode);
   }
 
 }

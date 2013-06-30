@@ -14,7 +14,6 @@ use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\EntityStorageException;
-use Drupal\Core\TypedData\ComplexDataInterface;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Database\Connection;
 
@@ -289,6 +288,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
 
       $data = $query->execute();
       $field_definition = \Drupal::entityManager()->getFieldDefinitions($this->entityType);
+      $translations = array();
       if ($this->revisionTable) {
         $data_fields = array_flip(array_diff(drupal_schema_fields_sql($this->entityInfo['revision_table']), drupal_schema_fields_sql($this->entityInfo['base_table'])));
       }
@@ -302,6 +302,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         // Field values in default language are stored with
         // Language::LANGCODE_DEFAULT as key.
         $langcode = empty($values['default_langcode']) ? $values['langcode'] : Language::LANGCODE_DEFAULT;
+        $translations[$id][$langcode] = TRUE;
 
         foreach ($field_definition as $name => $definition) {
           // Set only translatable properties, unless we are dealing with a
@@ -317,7 +318,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       foreach ($entities as $id => $values) {
         $bundle = $this->bundleKey ? $values[$this->bundleKey][Language::LANGCODE_DEFAULT] : FALSE;
         // Turn the record into an entity class.
-        $entities[$id] = new $this->entityClass($values, $this->entityType, $bundle);
+        $entities[$id] = new $this->entityClass($values, $this->entityType, $bundle, array_keys($translations[$id]));
       }
     }
   }
@@ -367,6 +368,9 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         $entity->postSave($this, TRUE);
         $this->invokeFieldMethod('update', $entity);
         $this->invokeHook('update', $entity);
+        if ($this->dataTable) {
+          $this->invokeTranslationHooks($entity);
+        }
       }
       else {
         $return = drupal_write_record($this->entityInfo['base_table'], $record);
@@ -412,7 +416,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    */
   protected function saveRevision(EntityInterface $entity) {
     $return = $entity->id();
-    $default_langcode = $entity->language()->id;
+    $default_langcode = $entity->getUntranslated()->language()->id;
 
     if (!$entity->isNewRevision()) {
       // Delete to handle removed values.
@@ -422,9 +426,9 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         ->execute();
     }
 
-    $languages = $this->dataTable ? $entity->getTranslationLanguages(TRUE) : array($default_langcode => $entity->language());
+    $languages = $this->dataTable ? $entity->getTranslationLanguages() : array($default_langcode => $entity->language());
     foreach ($languages as $langcode => $language) {
-      $translation = $entity->getTranslation($langcode, FALSE);
+      $translation = $entity->getTranslation($langcode);
       $record = $this->mapToRevisionStorageRecord($translation);
       $record->langcode = $langcode;
       $record->default_langcode = $langcode == $default_langcode;
@@ -511,7 +515,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    * @return \stdClass
    *   The record to store.
    */
-  protected function mapToRevisionStorageRecord(ComplexDataInterface $entity) {
+  protected function mapToRevisionStorageRecord(EntityInterface $entity) {
     $record = new \stdClass();
     $definitions = $entity->getPropertyDefinitions();
     foreach (drupal_schema_fields_sql($this->entityInfo['revision_table']) as $name) {
@@ -534,10 +538,10 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
    *   The record to store.
    */
   protected function mapToDataStorageRecord(EntityInterface $entity, $langcode) {
-    $default_langcode = $entity->language()->id;
+    $default_langcode = $entity->getUntranslated()->language()->id;
     // Don't use strict mode, this way there's no need to do checks here, as
     // non-translatable properties are replicated for each language.
-    $translation = $entity->getTranslation($langcode, FALSE);
+    $translation = $entity->getTranslation($langcode);
     $definitions = $translation->getPropertyDefinitions();
     $schema = drupal_get_schema($this->entityInfo['data_table']);
 

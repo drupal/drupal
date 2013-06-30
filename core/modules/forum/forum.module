@@ -497,7 +497,7 @@ function forum_field_storage_pre_insert(EntityInterface $entity, &$skip_fields) 
   if ($entity->entityType() == 'node' && $entity->status && _forum_node_check_node_type($entity)) {
     $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
     foreach ($entity->getTranslationLanguages() as $langcode => $language) {
-      $translation = $entity->getTranslation($langcode, FALSE);
+      $translation = $entity->getTranslation($langcode);
       $query->values(array(
         'nid' => $entity->id(),
         'title' => $translation->title->value,

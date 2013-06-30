@@ -48,14 +48,14 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
     // If we have no information about what to sync to, if we are creating a new
     // entity, if we have no translations for the current entity and we are not
     // creating one, then there is nothing to synchronize.
-    if (empty($sync_langcode) || $entity->isNew() || (count($translations) < 2 && !$original_langcode)) {
+    if (empty($sync_langcode) || $entity->isNew() || count($translations) < 2) {
       return;
     }
 
     // If the entity language is being changed there is nothing to synchronize.
     $entity_type = $entity->entityType();
     $entity_unchanged = isset($entity->original) ? $entity->original : $this->entityManager->getStorageController($entity_type)->loadUnchanged($entity->id());
-    if ($entity->language()->id != $entity_unchanged->language()->id) {
+    if ($entity->getUntranslated()->language()->id != $entity_unchanged->getUntranslated()->language()->id) {
       return;
     }
 

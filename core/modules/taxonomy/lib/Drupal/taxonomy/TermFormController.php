@@ -47,7 +47,7 @@ class TermFormController extends EntityFormControllerNG {
       '#type' => 'language_select',
       '#title' => t('Language'),
       '#languages' => Language::STATE_ALL,
-      '#default_value' => $term->langcode->value,
+      '#default_value' => $term->getUntranslated()->language()->id,
       '#access' => !is_null($language_configuration['language_show']) && $language_configuration['language_show'],
     );
 

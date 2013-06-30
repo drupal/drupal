@@ -40,8 +40,8 @@ class NodeAccessController extends EntityAccessController {
     $uid = isset($node->uid) ? $node->uid : NULL;
     // If it is a proper EntityNG object, use the proper methods.
     if ($node instanceof EntityNG) {
-      $status = $node->getTranslation($langcode, FALSE)->status->value;
-      $uid = $node->getTranslation($langcode, FALSE)->uid->value;
+      $status = $node->getTranslation($langcode)->status->value;
+      $uid = $node->getTranslation($langcode)->uid->value;
     }
 
     // Check if authors can view their own unpublished nodes.

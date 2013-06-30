@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Defines an abstract test base for entity unit tests.
@@ -21,8 +22,26 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
    */
   public static $modules = array('entity', 'user', 'system', 'field', 'text', 'field_sql_storage', 'entity_test');
 
+  /**
+   * The entity manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
+   * The state service.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $state;
+
   public function setUp() {
     parent::setUp();
+
+    $this->entityManager = $this->container->get('plugin.manager.entity');
+    $this->state = $this->container->get('state');
+
     $this->installSchema('user', 'users');
     $this->installSchema('system', 'sequences');
     $this->installSchema('entity_test', 'entity_test');
@@ -60,6 +79,36 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
     $account->enforceIsNew();
     $account->save();
     return $account;
+  }
+
+  /**
+   * Reloads the given entity from the storage and returns it.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to be reloaded.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The reloaded entity.
+   */
+  protected function reloadEntity(EntityInterface $entity) {
+    $ids = array($entity->id());
+    $controller = $this->entityManager->getStorageController($entity->entityType());
+    $controller->resetCache($ids);
+    $entities = $controller->load($ids);
+    return reset($entities);
+  }
+
+  /**
+   * Returns the entity_test hook invocation info.
+   *
+   * @return array
+   *   An associative array of arbitrary hook data keyed by hook name.
+   */
+  protected function getHooksInfo() {
+    $key = 'entity_test.hooks';
+    $hooks = $this->state->get($key);
+    $this->state->set($key, array());
+    return $hooks;
   }
 
 }

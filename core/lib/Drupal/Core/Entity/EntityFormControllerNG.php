@@ -61,11 +61,10 @@ class EntityFormControllerNG extends EntityFormController {
     // edited by this form. Values of fields handled by field API are copied
     // by field_attach_extract_form_values() below.
     $values_excluding_fields = $info['fieldable'] ? array_diff_key($form_state['values'], field_info_instances($entity_type, $entity->bundle())) : $form_state['values'];
-    $translation = $entity->getTranslation($this->getFormLangcode($form_state), FALSE);
-    $definitions = $translation->getPropertyDefinitions();
+    $definitions = $entity->getPropertyDefinitions();
     foreach ($values_excluding_fields as $key => $value) {
       if (isset($definitions[$key])) {
-        $translation->$key = $value;
+        $entity->$key = $value;
       }
     }
 
