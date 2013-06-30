@@ -6,9 +6,10 @@
  */
 
 use Drupal\Core\Cache;
+use Drupal\Core\Utility\ProjectInfo;
 
 /**
- * Load the common translation API.
+ * Load common APIs.
  */
 // @todo Combine functions differently in files to avoid unnecessary includes.
 // Follow-up issue http://drupal.org/node/1834298
@@ -126,11 +127,6 @@ function locale_translation_build_projects() {
  *   Array of project data including .info.yml file data.
  */
 function locale_translation_project_list() {
-  // This function depends on Update module. We degrade gracefully.
-  if (!Drupal::moduleHandler()->moduleExists('update')) {
-    return array();
-  }
-
   $projects = &drupal_static(__FUNCTION__, array());
   if (empty($projects)) {
     module_load_include('compare.inc', 'update');
@@ -143,11 +139,12 @@ function locale_translation_project_list() {
     );
     $module_data = _locale_translation_prepare_project_list(system_rebuild_module_data(), 'module');
     $theme_data = _locale_translation_prepare_project_list(system_rebuild_theme_data(), 'theme');
-    update_process_info_list($projects, $module_data, 'module', TRUE, $additional_whitelist);
-    update_process_info_list($projects, $theme_data, 'theme', TRUE, $additional_whitelist);
+    $project_info = new ProjectInfo();
+    $project_info->processInfoList($projects, $module_data, 'module', TRUE, $additional_whitelist);
+    $project_info->processInfoList($projects, $theme_data, 'theme', TRUE, $additional_whitelist);
     if ($config->get('translation.check_disabled_modules')) {
-      update_process_info_list($projects, $module_data, 'module', FALSE, $additional_whitelist);
-      update_process_info_list($projects, $theme_data, 'theme', FALSE, $additional_whitelist);
+      $project_info->processInfoList($projects, $module_data, 'module', FALSE, $additional_whitelist);
+      $project_info->processInfoList($projects, $theme_data, 'theme', FALSE, $additional_whitelist);
     }
 
     // Allow other modules to alter projects before fetching and comparing.
@@ -159,9 +156,10 @@ function locale_translation_project_list() {
 /**
  * Prepare module and theme data.
  *
- * Modify .info.yml file data before it is processed by update_process_info_list().
- * In order for update_process_info_list() to recognize a project, it requires
- * the 'project' parameter in the .info.yml file data.
+ * Modify .info.yml file data before it is processed by
+ * \Drupal\Core\Utility\ProjectInfo->processInfoList(). In order for
+ * \Drupal\Core\Utility\ProjectInfo->processInfoList() to recognize a project,
+ * it requires the 'project' parameter in the .info.yml file data.
  *
  * Custom modules or themes can bring their own gettext translation file. To
  * enable import of this file the module or theme defines "interface translation
@@ -179,8 +177,9 @@ function locale_translation_project_list() {
 function _locale_translation_prepare_project_list($data, $type) {
   foreach ($data as $name => $file) {
     // Include interface translation projects. To allow
-    // update_process_info_list() to identify this as a project the 'project'
-    // property is filled with the 'interface translation project' value.
+    // \Drupal\Core\Utility\ProjectInfo->processInfoList() to identify this as
+    // a project the 'project' property is filled with the
+    // 'interface translation project' value.
     if (isset($file->info['interface translation project'])) {
       $data[$name]->info['project'] = $file->info['interface translation project'];
     }

@@ -7,6 +7,8 @@
 
 namespace Drupal\update\Tests;
 
+use Drupal\Core\Utility\ProjectInfo;
+
 /**
  * Tests behavior related to handling updates to contributed modules and themes.
  */
@@ -287,7 +289,8 @@ class UpdateContribTest extends UpdateTestBase {
     config('update_test.settings')->set('system_info', $system_info)->save();
     $projects = update_get_projects();
     $theme_data = system_rebuild_theme_data();
-    update_process_info_list($projects, $theme_data, 'theme', TRUE);
+    $project_info = new ProjectInfo();
+    $project_info->processInfoList($projects, $theme_data, 'theme', TRUE);
 
     $this->assertTrue(!empty($projects['update_test_basetheme']), 'Valid base theme (update_test_basetheme) was found.');
   }
