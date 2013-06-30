@@ -301,7 +301,7 @@ function comment_views_data() {
   );
 
   $data['comment']['entity_id'] = array(
-    'title' => t('Entity id'),
+    'title' => t('Entity ID'),
     'help' => t('The Entity ID to which the comment is a reply to.'),
     'field' => array(
       'id' => 'standard',
