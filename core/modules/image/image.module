@@ -900,15 +900,25 @@ function theme_image_style($variables) {
 
   image_style_transform_dimensions($variables['style_name'], $dimensions);
 
-  $variables['width'] = $dimensions['width'];
-  $variables['height'] = $dimensions['height'];
-
   // Add in the image style name as an HTML class.
   $variables['attributes']['class'][] = 'image-style-' . drupal_html_class($variables['style_name']);
 
-  // Determine the URL for the styled image.
-  $variables['uri'] = image_style_url($variables['style_name'], $variables['uri']);
-  return theme('image', $variables);
+  $image = array(
+    '#theme' => 'image',
+    '#width' => $dimensions['width'],
+    '#height' => $dimensions['height'],
+    '#attributes' => $variables['attributes'],
+    '#uri' => image_style_url($variables['style_name'], $variables['uri']),
+  );
+
+  if (isset($variables['alt'])) {
+    $image['#alt'] = $variables['alt'];
+  }
+  if (isset($variables['title'])) {
+    $image['#title'] = $variables['title'];
+  }
+
+  return drupal_render($image);
 }
 
 /**
