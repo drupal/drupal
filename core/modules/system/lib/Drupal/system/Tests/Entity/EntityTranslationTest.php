@@ -455,7 +455,7 @@ class EntityTranslationTest extends EntityUnitTestBase {
     // Check that per-language defaults are properly populated.
     $entity = $this->reloadEntity($entity);
     $instance_id = implode('.', array($entity->entityType(), $entity->bundle(), $this->field_name));
-    $instances = $this->entityManager->getStorageController('field_instance')->load(array($instance_id));
+    $instances = $this->entityManager->getStorageController('field_instance')->loadMultiple(array($instance_id));
     $instance = reset($instances);
     $instance['default_value_function'] = 'entity_test_field_default_value';
     $instance->save();
