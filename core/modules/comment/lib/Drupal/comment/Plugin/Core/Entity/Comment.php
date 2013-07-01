@@ -56,7 +56,7 @@ class Comment extends EntityNG implements CommentInterface {
   /**
    * The comment ID.
    *
-   * @todo Rename to 'id'.
+   * @todo Rename to 'id'. https://drupal.org/node/2031935
    *
    * @var \Drupal\Core\Entity\Field\FieldInterface
    */
