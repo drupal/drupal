@@ -154,6 +154,11 @@ class CommentController implements ControllerInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $node
    *   The node which the comment is a reply to.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+   *
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   Redirects user to new url.
    */
   public function redirectNode(EntityInterface $node) {
     $fields = array_filter($this->fieldInfo->getFieldMap(), function ($value) use ($node) {
