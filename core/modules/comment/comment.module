@@ -1369,7 +1369,7 @@ function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestam
  * @param integer $cid
  *   The comment ID.
  * @param array $instance
- *   Field instance as returned from field_info_instance.
+ *   Field instance as returned from field_info_instance().
  *
  * @return
  *   The display ordinal for the comment.
