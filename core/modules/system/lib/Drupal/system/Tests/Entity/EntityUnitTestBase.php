@@ -94,7 +94,7 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
     $ids = array($entity->id());
     $controller = $this->entityManager->getStorageController($entity->entityType());
     $controller->resetCache($ids);
-    $entities = $controller->load($ids);
+    $entities = $controller->loadMultiple($ids);
     return reset($entities);
   }
 
