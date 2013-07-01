@@ -1304,9 +1304,9 @@ function comment_load($cid, $reset = FALSE) {
  * Gets the number of new comments for the current user and the specified node.
  *
  * @param integer $entity_id
- *   Entity ID to count comments for.
+ *   Entity ID of the entity to which the comments are attached.
  * @param string $entity_type
- *   The entity type to count comments for.
+ *   Entity type of the entity to which the comments are attached.
  * @param string $field_name
  *   (optional) The field_name to count comments for. Defaults to NULL.
  * @param $timestamp
