@@ -106,7 +106,7 @@ function forum_enable() {
       ->save();
   }
   // Add the comment field.
-  if (!entity_load('field_entity', array(
+  if (!entity_load_multiple_by_properties('field_entity', array(
     'field_name' => 'comment_node_forum',
     'include_inactive' => TRUE,
     'include_deleted' => FALSE,
