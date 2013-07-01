@@ -39,12 +39,8 @@ use Drupal\Core\Language\Language;
  *   - comment_form: The comment form as a renderable array.
  */
 function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
-  // Set the breadcrumb trail.
+  // Store the entity uri.
   $uri = $entity->uri();
-  drupal_set_breadcrumb(array(
-    l(t('Home'), NULL),
-    l($entity->label(), $uri['path'], $uri['options']))
-  );
   $op = Drupal::request()->request->get('op');
   $build = array();
 

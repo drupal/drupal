@@ -259,6 +259,10 @@ class CommentUserTest extends WebTestBase {
     $comment1 = $this->postComment($this->web_user, $this->randomName(), $this->randomName());
     $this->assertTrue($this->commentExists($comment1), 'Comment on web user exists.');
 
+    // Assert the breadcrumb is valid.
+    $this->drupalGet('comment/reply/user/' . $this->web_user->id() . '/comment');
+    $this->assertLink($this->web_user->label());
+
     // Unpublish comment.
     $this->performCommentOperation($comment1, 'unpublish');
 

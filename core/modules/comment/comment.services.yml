@@ -4,3 +4,9 @@ services:
     arguments: ['@module_handler']
     tags:
      - { name: event_subscriber }
+
+  comment.breadcrumb:
+    class: Drupal\comment\CommentBreadcrumbBuilder
+    arguments: ['@plugin.manager.entity']
+    tags:
+      - { name: breadcrumb_builder, priority: 1002 }
