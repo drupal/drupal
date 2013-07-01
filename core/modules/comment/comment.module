@@ -1503,7 +1503,7 @@ function comment_preprocess_block(&$variables) {
  * authors.
  *
  * @param \Drupal\comment\CommentInterface $comment
- *   The comment to provide author.
+ *   The comment to which the author replied.
  *
  * @return \Drupal\user\Plugin\Core\Entity\User
  *   A user account, for use with theme_username() or the user_picture template.
