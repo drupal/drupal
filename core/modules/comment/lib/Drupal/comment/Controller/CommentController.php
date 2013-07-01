@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Drupal\field\FieldInfo;
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Controller for the comment entity.
@@ -150,24 +150,25 @@ class CommentController implements ControllerInterface {
   }
 
   /**
-   * Redirects legacy node links to new path.
+   * Redirects legacy node links to the new path.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $node
-   *   The node which the comment is a reply to.
+   * @param \Drupal\node\NodeInterface $node
+   *   The node object identified by the legacy URL.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse
    *   Redirects user to new url.
    */
-  public function redirectNode(EntityInterface $node) {
+  public function redirectNode(NodeInterface $node) {
     $fields = array_filter($this->fieldInfo->getFieldMap(), function ($value) use ($node) {
       if ($value['type'] == 'comment' && isset($value['bundles']['node']) &&
           in_array($node->bundle(), $value['bundles']['node'])) {
         return TRUE;
       }
     });
-    // First field will do.
+    // Legacy nodes only had a single comment field, so use the first comment
+    // field on the entity.
     if (!empty($fields) && ($field_names = array_keys($fields)) && ($field_name = reset($field_names))) {
       return new RedirectResponse(url('comment/reply/node/' . $node->id() . '/' . $field_name, array('absolute' => TRUE)));
     }
