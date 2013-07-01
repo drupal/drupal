@@ -71,7 +71,8 @@ function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
           if ($comment->entity_id->value != $entity->id() ||
               $comment->field_name->value != $field_name ||
               $comment->entity_type->value != $entity->entityType()) {
-            // Attempting to reply to a comment not belonging to the current entity.
+            // Attempting to reply to a comment not belonging to the current
+            // entity.
             drupal_set_message(t('The comment you are replying to does not exist.'), 'error');
             $uri['options']['absolute'] = TRUE;
             return new RedirectResponse(url($uri['path'], $uri['options']));
@@ -94,7 +95,8 @@ function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
     // This is the case where the comment is in response to a entity. Display
     // the entity.
     elseif ($entity->access('view')) {
-      // We make sure the field value isn't set so we don't end up with a redirect loop.
+      // We make sure the field value isn't set so we don't end up with a
+      // redirect loop.
       $bc_entity = $entity->getBCEntity();
       $original_value = $bc_entity->{$field_name};
       $bc_entity->{$field_name} = array(
