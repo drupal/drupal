@@ -302,10 +302,10 @@ function rdf_preprocess_node(&$variables) {
           $comment_count_attributes['datatype'] = $comment_count_mapping['datatype'];
         }
         // According to RDFa parsing rule number 4, a new subject URI is created
-        // from the href attribute if no rel/rev attribute is present. To get the
-        // original node URL from the about attribute of the parent container we
-        // set an empty rel attribute which triggers rule number 5. See
-        // http://www.w3.org/TR/rdfa-syntax/#sec_5.5.
+        // from the href attribute if no rel/rev attribute is present. To get
+        // the original node URL from the about attribute of the parent
+        // container we set an empty rel attribute which triggers rule number 5.
+        // See http://www.w3.org/TR/rdfa-syntax/#sec_5.5.
         $comment_count_attributes['rel'] = '';
         $variables['content']['links']['comment__' . $field_name]['#links']['comment-comments']['attributes'] += $comment_count_attributes;
       }
