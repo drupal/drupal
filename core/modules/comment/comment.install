@@ -589,6 +589,9 @@ function comment_update_8005(&$sandbox) {
  * preserved to allow migrate contrib modules.
  */
 function comment_update_8006(&$sandbox) {
+  // Entity module update functions are needed to update components of node
+  // entity display and form display for new comment fields.
+  module_load_install('entity');
   // Loop over defined node_types.
   $node_types = array_keys(_update_7000_node_get_types());
   foreach ($node_types as $node_type) {
@@ -653,8 +656,6 @@ function comment_update_8006(&$sandbox) {
     );
 
     // Assign display settings for the 'default' and 'full' view modes.
-    module_load_install('entity');
-
     $display = _update_8000_entity_get_display('node', $node_type, 'default');
     $display->set('content.' . $field['id'], $display_options_default)
       ->save();
