@@ -77,7 +77,7 @@ class DefaultViewRecentComments extends ViewTestBase {
     $this->node = $this->drupalCreateNode($node_data);
 
     // Force a flush of the in-memory storage.
-    \Drupal::service('views.views_data')->clear();
+    $this->container->get('views.views_data')->clear();
 
     // Create some comments and attach them to the created node.
     for ($i = 0; $i < $this->masterDisplayResults; $i++) {
