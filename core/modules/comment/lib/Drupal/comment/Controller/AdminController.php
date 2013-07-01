@@ -175,27 +175,35 @@ class AdminController implements ControllerInterface {
       '#theme' => 'item_list',
       '#items' => array(),
     );
-    // @todo remove when entity_get_bundles() is a method on the entity manager.
+    // @todo Remove when entity_get_bundles() is a method on the entity manager.
     $entity_bundles = entity_get_bundles();
     $entity_types = $this->entityManager->getDefinitions();
     // Add a link to manage entity fields if the Field UI module is enabled.
     $field_ui_enabled = $this->moduleHandler->moduleExists('field_ui');
 
     $field_info = $this->fieldInfo->getField($field_name);
+    // Loop over all of the entity types to which this comment field is
+    // attached.
     foreach ($field_info['bundles'] as $entity_type => $field_bundles) {
       $bundles = array();
+      // Loop over all of the bundles of this entity type to which this comment
+      // field is attached.
       foreach ($field_bundles as $bundle) {
         if (isset($entity_bundles[$entity_type][$bundle])) {
-          // Add the current instance.
+          // Add the current instance to the list of bundles.
           if ($field_ui_enabled && ($path = $this->entityManager->getAdminPath($entity_type, $bundle))) {
+            // Add a link to configure the fields on the given bundle and entity
+            // type combination.
             $bundles[] = l($entity_bundles[$entity_type][$bundle]['label'], $path . '/fields');
           }
           else {
+            // Field UI is disabled so fallback to a list of bundle labels
+            // instead of links to configure fields.
             $bundles[] = $entity_bundles[$entity_type][$bundle]['label'];
           }
         }
       }
-      // Format used entity bundles.
+      // Format used entity bundles for this comment field.
       $build['usage']['#items'][] = t('@entity_type: !bundles', array(
         '@entity_type' => $entity_types[$entity_type]['label'],
         '!bundles' => implode(', ', $bundles),
