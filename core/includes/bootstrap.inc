@@ -158,7 +158,7 @@ const DRUPAL_BOOTSTRAP_DATABASE = 3;
 const DRUPAL_BOOTSTRAP_VARIABLES = 4;
 
 /**
- * Eighth bootstrap phase: load code for subsystems and modules.
+ * Sixth bootstrap phase: load code for subsystems and modules.
  */
 const DRUPAL_BOOTSTRAP_CODE = 5;
 
