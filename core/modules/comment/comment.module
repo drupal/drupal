@@ -121,138 +121,6 @@ function comment_help($path, $arg) {
 }
 
 /**
- * Implements hook_entity_view().
- *
- * @todo Make node links as comment_links formatter
- *   http://drupal.org/node/1901110
- */
-function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode) {
-  if ($entity->entityType() != 'node') {
-    // Comment links are only added to node entity type for backwards
-    // compatability. Should you require comment links for other entity types
-    // you can do-so by implementing a new field formatter.
-    // @todo Make this configurable from the formatter see
-    //   http://drupal.org/node/1901110
-    return;
-  }
-  $fields = comment_get_comment_fields('node');
-  foreach ($fields as $field_name => $detail) {
-    $links = array();
-    $commenting_status = _comment_get_default_status(field_get_items($entity, $field_name));
-    if ($commenting_status) {
-      $instance = Drupal::service('field.info')->getInstance('node', $entity->bundle(), $field_name);
-      // Entity have commenting open or close.
-      $uri = $entity->uri();
-      if ($view_mode == 'rss') {
-        // Add a comments RSS element which is a URL to the comments of this node.
-        if (!empty($uri['options'])) {
-          $uri['options']['fragment'] = 'comments';
-          $uri['options']['absolute'] = TRUE;
-        }
-        $entity->rss_elements[] = array(
-          'key' => 'comments',
-          'value' => url($uri['path'], $uri['options'])
-        );
-      }
-      elseif ($view_mode == 'teaser') {
-        // Teaser view: display the number of comments that have been posted,
-        // or a link to add new comments if the user has permission, the node
-        // is open to new comments, and there currently are none.
-        if (user_access('access comments')) {
-          if (!empty($entity->comment_statistics[$field_name]->comment_count)) {
-            $links['comment-comments'] = array(
-              'title' => format_plural($entity->comment_statistics[$field_name]->comment_count, '1 comment', '@count comments'),
-              'href' => $uri['path'],
-              'attributes' => array('title' => t('Jump to the first comment of this posting.')),
-              'fragment' => 'comments',
-              'html' => TRUE,
-            );
-            // Show a link to the first new comment.
-            if ($new = comment_num_new($entity->id(), $entity->entityType(), $field_name)) {
-              $links['comment-new-comments'] = array(
-                'title' => format_plural($new, '1 new comment', '@count new comments'),
-                'href' => $uri['path'],
-                'query' => comment_new_page_count($entity->comment_statistics[$field_name]->comment_count, $new, $entity, $field_name),
-                'attributes' => array('title' => t('Jump to the first new comment of this posting.')),
-                'fragment' => 'new',
-                'html' => TRUE,
-              );
-            }
-          }
-        }
-        // Provide a link to new comment form.
-        if ($commenting_status == COMMENT_OPEN) {
-          $comment_form_location = $instance['settings']['form_location'];
-          if (user_access('post comments')) {
-            $links['comment-add'] = array(
-              'title' => t('Add new comment'),
-              'href' => $uri['path'],
-              'attributes' => array('title' => t('Add a new comment to this page.')),
-              'fragment' => 'comment-form',
-            );
-            if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE) {
-              $links['comment-add']['href'] = 'comment/reply/'. $entity->entityType() . '/' . $entity->id() .'/' . $field_name;
-            }
-          }
-          else {
-            $comment_post_forbidden = array(
-              '#theme' => 'comment_post_forbidden',
-              '#entity' => $entity,
-              '#field_name' => $field_name,
-            );
-            $links['comment-forbidden'] = array(
-              'title' => drupal_render($comment_post_forbidden),
-              'html' => TRUE,
-            );
-          }
-        }
-      }
-      elseif ($view_mode != 'search_index' && $view_mode != 'search_result') {
-        // Entity in other view modes: add a "post comment" link if the user is
-        // allowed to post comments and if this entity is allowing new comments.
-        // But we don't want this link if we're building the entity for search
-        // indexing or constructing a search result excerpt.
-        if ($commenting_status == COMMENT_OPEN) {
-          $comment_form_location = $instance['settings']['form_location'];
-          if (user_access('post comments')) {
-            // Show the "post comment" link if the form is on another page, or
-            // if there are existing comments that the link will skip past.
-            if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE || (!empty($entity->comment_statistics[$field_name]->comment_count) && user_access('access comments'))) {
-              $links['comment-add'] = array(
-                'title' => t('Add new comment'),
-                'attributes' => array('title' => t('Share your thoughts and opinions related to this item.')),
-                'href' => $uri['path'],
-                'fragment' => 'comment-form',
-              );
-              if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE) {
-                $links['comment-add']['href'] = 'comment/reply/'. $entity->entityType() . '/' . $entity->id() .'/' . $field_name;
-              }
-            }
-          }
-          else {
-            $comment_post_forbidden = array(
-              '#theme' => 'comment_post_forbidden',
-              '#entity' => $entity,
-              '#field_name' => $field_name,
-            );
-            $links['comment-forbidden'] = array(
-              'title' => drupal_render($comment_post_forbidden),
-              'html' => TRUE,
-            );
-          }
-        }
-      }
-    }
-
-    $entity->content['links']['comment__' . $field_name] = array(
-      '#theme' => 'links__entity__comment__' . $field_name,
-      '#links' => $links,
-      '#attributes' => array('class' => array('links', 'inline')),
-    );
-  }
-}
-
-/**
  * Implements hook_entity_bundle_info().
  */
 function comment_entity_bundle_info() {
@@ -704,6 +572,138 @@ function theme_comment_block($variables) {
   }
   else {
     return t('No comments available.');
+  }
+}
+
+/**
+ * Implements hook_entity_view().
+ *
+ * @todo Make node links as comment_links formatter
+ *   http://drupal.org/node/1901110
+ */
+function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode) {
+  if ($entity->entityType() != 'node') {
+    // Comment links are only added to node entity type for backwards
+    // compatability. Should you require comment links for other entity types
+    // you can do-so by implementing a new field formatter.
+    // @todo Make this configurable from the formatter see
+    //   http://drupal.org/node/1901110
+    return;
+  }
+  $fields = comment_get_comment_fields('node');
+  foreach ($fields as $field_name => $detail) {
+    $links = array();
+    $commenting_status = _comment_get_default_status(field_get_items($entity, $field_name));
+    if ($commenting_status) {
+      $instance = Drupal::service('field.info')->getInstance('node', $entity->bundle(), $field_name);
+      // Entity have commenting open or close.
+      $uri = $entity->uri();
+      if ($view_mode == 'rss') {
+        // Add a comments RSS element which is a URL to the comments of this node.
+        if (!empty($uri['options'])) {
+          $uri['options']['fragment'] = 'comments';
+          $uri['options']['absolute'] = TRUE;
+        }
+        $entity->rss_elements[] = array(
+          'key' => 'comments',
+          'value' => url($uri['path'], $uri['options'])
+        );
+      }
+      elseif ($view_mode == 'teaser') {
+        // Teaser view: display the number of comments that have been posted,
+        // or a link to add new comments if the user has permission, the node
+        // is open to new comments, and there currently are none.
+        if (user_access('access comments')) {
+          if (!empty($entity->comment_statistics[$field_name]->comment_count)) {
+            $links['comment-comments'] = array(
+              'title' => format_plural($entity->comment_statistics[$field_name]->comment_count, '1 comment', '@count comments'),
+              'href' => $uri['path'],
+              'attributes' => array('title' => t('Jump to the first comment of this posting.')),
+              'fragment' => 'comments',
+              'html' => TRUE,
+            );
+            // Show a link to the first new comment.
+            if ($new = comment_num_new($entity->id(), $entity->entityType(), $field_name)) {
+              $links['comment-new-comments'] = array(
+                'title' => format_plural($new, '1 new comment', '@count new comments'),
+                'href' => $uri['path'],
+                'query' => comment_new_page_count($entity->comment_statistics[$field_name]->comment_count, $new, $entity, $field_name),
+                'attributes' => array('title' => t('Jump to the first new comment of this posting.')),
+                'fragment' => 'new',
+                'html' => TRUE,
+              );
+            }
+          }
+        }
+        // Provide a link to new comment form.
+        if ($commenting_status == COMMENT_OPEN) {
+          $comment_form_location = $instance['settings']['form_location'];
+          if (user_access('post comments')) {
+            $links['comment-add'] = array(
+              'title' => t('Add new comment'),
+              'href' => $uri['path'],
+              'attributes' => array('title' => t('Add a new comment to this page.')),
+              'fragment' => 'comment-form',
+            );
+            if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE) {
+              $links['comment-add']['href'] = 'comment/reply/'. $entity->entityType() . '/' . $entity->id() .'/' . $field_name;
+            }
+          }
+          else {
+            $comment_post_forbidden = array(
+              '#theme' => 'comment_post_forbidden',
+              '#entity' => $entity,
+              '#field_name' => $field_name,
+            );
+            $links['comment-forbidden'] = array(
+              'title' => drupal_render($comment_post_forbidden),
+              'html' => TRUE,
+            );
+          }
+        }
+      }
+      elseif ($view_mode != 'search_index' && $view_mode != 'search_result') {
+        // Entity in other view modes: add a "post comment" link if the user is
+        // allowed to post comments and if this entity is allowing new comments.
+        // But we don't want this link if we're building the entity for search
+        // indexing or constructing a search result excerpt.
+        if ($commenting_status == COMMENT_OPEN) {
+          $comment_form_location = $instance['settings']['form_location'];
+          if (user_access('post comments')) {
+            // Show the "post comment" link if the form is on another page, or
+            // if there are existing comments that the link will skip past.
+            if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE || (!empty($entity->comment_statistics[$field_name]->comment_count) && user_access('access comments'))) {
+              $links['comment-add'] = array(
+                'title' => t('Add new comment'),
+                'attributes' => array('title' => t('Share your thoughts and opinions related to this item.')),
+                'href' => $uri['path'],
+                'fragment' => 'comment-form',
+              );
+              if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE) {
+                $links['comment-add']['href'] = 'comment/reply/'. $entity->entityType() . '/' . $entity->id() .'/' . $field_name;
+              }
+            }
+          }
+          else {
+            $comment_post_forbidden = array(
+              '#theme' => 'comment_post_forbidden',
+              '#entity' => $entity,
+              '#field_name' => $field_name,
+            );
+            $links['comment-forbidden'] = array(
+              'title' => drupal_render($comment_post_forbidden),
+              'html' => TRUE,
+            );
+          }
+        }
+      }
+    }
+
+    $entity->content['links']['comment__' . $field_name] = array(
+      '#theme' => 'links__entity__comment__' . $field_name,
+      '#links' => $links,
+      '#attributes' => array('class' => array('links', 'inline')),
+    );
   }
 }
 
