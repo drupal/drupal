@@ -85,10 +85,11 @@ function comment_token_info() {
     'description' => t("The entity the comment was posted to."),
     'type' => 'entity',
   );
-  // Provide for backwards compatability as no upgrade path available.
+  // Support legacy comment node tokens, since tokes are embedded in user data
+  // and can't be upgraded directly.
   $comment['node'] = array(
     'name' => t("Node"),
-    'description' => t("The node the comment was posted to."),
+    'description' => t("The node the comment was posted to (deprecated)."),
     'type' => 'node',
   );
   $comment['author'] = array(
@@ -205,6 +206,9 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'node':
+          // Support legacy comment node tokens, since tokes are embedded in
+          // user data and can't be upgraded directly.
+          // @todo Remove in Drupal 9, see https://drupal.org/node/2031901.
           if ($comment->entity_type->value == 'node') {
             $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
             $title = $entity->label();
