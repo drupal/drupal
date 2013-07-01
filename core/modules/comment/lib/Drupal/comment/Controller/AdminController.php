@@ -82,8 +82,9 @@ class AdminController implements ControllerInterface {
       ),
     );
 
-    $field_ui = $this->moduleHandler->moduleExists('field_ui');
-    if ($field_ui) {
+    // Add a column for field UI operations if the Field UI module is enabled.
+    $field_ui_enabled = $this->moduleHandler->moduleExists('field_ui');
+    if ($field_ui_enabled) {
       $header['operations'] = t('Operations');
     }
 
@@ -113,7 +114,7 @@ class AdminController implements ControllerInterface {
         foreach ($field_bundles as $bundle) {
           if (isset($entity_bundles[$entity_type][$bundle])) {
             // Add the current instance.
-            if ($field_ui && ($path = $this->entityManager->getAdminPath($entity_type, $bundle))) {
+            if ($field_ui_enabled && ($path = $this->entityManager->getAdminPath($entity_type, $bundle))) {
               $bundles[] = l($entity_bundles[$entity_type][$bundle]['label'], $path . '/fields');
             }
             else {
@@ -128,7 +129,7 @@ class AdminController implements ControllerInterface {
         ));
       }
 
-      if ($field_ui) {
+      if ($field_ui_enabled) {
         // @todo Check proper permissions for operations.
         $links['fields'] = array(
           'title' => t('manage fields'),
@@ -177,7 +178,8 @@ class AdminController implements ControllerInterface {
     // @todo remove when entity_get_bundles() is a method on the entity manager.
     $entity_bundles = entity_get_bundles();
     $entity_types = $this->entityManager->getDefinitions();
-    $field_ui = $this->moduleHandler->moduleExists('field_ui');
+    // Add a link to manage entity fields if the Field UI module is enabled.
+    $field_ui_enabled = $this->moduleHandler->moduleExists('field_ui');
 
     $field_info = $this->fieldInfo->getField($field_name);
     foreach ($field_info['bundles'] as $entity_type => $field_bundles) {
@@ -185,7 +187,7 @@ class AdminController implements ControllerInterface {
       foreach ($field_bundles as $bundle) {
         if (isset($entity_bundles[$entity_type][$bundle])) {
           // Add the current instance.
-          if ($field_ui && ($path = $this->entityManager->getAdminPath($entity_type, $bundle))) {
+          if ($field_ui_enabled && ($path = $this->entityManager->getAdminPath($entity_type, $bundle))) {
             $bundles[] = l($entity_bundles[$entity_type][$bundle]['label'], $path . '/fields');
           }
           else {
