@@ -97,7 +97,7 @@ const COMMENT_ACCESS_DENY = 'deny';
  * Comments changed after this time may be marked new, updated, or read,
  * depending on their state for the current user. Defaults to 30 days ago.
  *
- * @todo remove when http://drupal.org/node/1029708 lands.
+ * @todo Remove when http://drupal.org/node/1029708 lands.
  */
 define('COMMENT_NEW_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
 
@@ -1332,7 +1332,7 @@ function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestam
         }
         else {
           // Default to 30 days ago.
-          // @todo remove once http://drupal.org/node/1029708 lands.
+          // @todo Remove once http://drupal.org/node/1029708 lands.
           $timestamp = COMMENT_NEW_LIMIT;
         }
       }
