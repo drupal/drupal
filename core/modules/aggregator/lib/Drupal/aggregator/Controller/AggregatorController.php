@@ -283,7 +283,7 @@ class AggregatorController implements ControllerInterface {
    */
   public function sources() {
 
-    $feeds = $this->entityManager->getStorageController('aggregator_feed')->load();
+    $feeds = $this->entityManager->getStorageController('aggregator_feed')->loadMultiple();
 
     $build = array(
       '#type' => 'container',

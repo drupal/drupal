@@ -114,9 +114,9 @@ class ConfigStorageController extends EntityStorageControllerBase {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityStorageControllerInterface::load().
+   * {@inheritdoc}
    */
-  public function load(array $ids = NULL) {
+  public function loadMultiple(array $ids = NULL) {
     $entities = array();
 
     // Create a new variable which is either a prepared version of the $ids
@@ -153,6 +153,14 @@ class ConfigStorageController extends EntityStorageControllerBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function load($id) {
+    $entities = $this->loadMultiple(array($id));
+    return isset($entities[$id]) ? $entities[$id] : NULL;
+  }
+
+  /**
    * Implements Drupal\Core\Entity\EntityStorageControllerInterface::loadRevision().
    */
   public function loadRevision($revision_id) {
@@ -170,7 +178,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
    * Implements Drupal\Core\Entity\EntityStorageControllerInterface::loadByProperties().
    */
   public function loadByProperties(array $values = array()) {
-    $entities = $this->load();
+    $entities = $this->loadMultiple();
     foreach ($values as $key => $value) {
       $entities = array_filter($entities, function($entity) use ($key, $value) {
         return $value === $entity->get($key);
@@ -386,8 +394,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
 
     if (!$is_new && !isset($entity->original)) {
       $this->resetCache(array($id));
-      $result = $this->load(array($id));
-      $entity->original = reset($result);
+      $entity->original = $this->load($id);
     }
 
     if ($id !== $entity->id()) {
@@ -492,8 +499,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
    */
   public function importUpdate($name, Config $new_config, Config $old_config) {
     $id = static::getIDFromConfigName($name, $this->entityInfo['config_prefix']);
-    $entities = $this->load(array($id));
-    $entity = $entities[$id];
+    $entity = $this->load($id);
     $entity->original = clone $entity;
 
     foreach ($old_config->get() as $property => $value) {
@@ -523,8 +529,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
    */
   public function importDelete($name, Config $new_config, Config $old_config) {
     $id = static::getIDFromConfigName($name, $this->entityInfo['config_prefix']);
-    $entities = $this->load(array($id));
-    $entity = $entities[$id];
+    $entity = $this->load($id);
     $entity->delete();
     return TRUE;
   }

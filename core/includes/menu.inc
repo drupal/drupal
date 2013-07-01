@@ -559,7 +559,7 @@ function _menu_load_objects(&$item, &$map) {
           $return = $function($value);
         }
         // If callback returned an error or there is no callback, trigger 404.
-        if ($return === FALSE) {
+        if (empty($return)) {
           $item['access'] = FALSE;
           $map = FALSE;
           return FALSE;

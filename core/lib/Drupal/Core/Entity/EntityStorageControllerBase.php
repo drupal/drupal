@@ -89,8 +89,7 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
    */
   public function loadUnchanged($id) {
     $this->resetCache(array($id));
-    $result = $this->load(array($id));
-    return reset($result);
+    return $this->load($id);
   }
 
   /**

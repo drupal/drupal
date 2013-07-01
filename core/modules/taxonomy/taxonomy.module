@@ -833,8 +833,8 @@ function taxonomy_vocabulary_sort(array &$vocabularies = array()) {
  * @param int $vid
  *   The vocabulary's ID.
  *
- * @return Drupal\taxonomy\Plugin\Core\Entity\Vocabulary|false
- *   The taxonomy vocabulary entity, if exists, FALSE otherwise. Results are
+ * @return \Drupal\taxonomy\Plugin\Core\Entity\Vocabulary|null
+ *   The taxonomy vocabulary entity, if exists, NULL otherwise. Results are
  *   statically cached.
  */
 function taxonomy_vocabulary_load($vid) {
@@ -847,13 +847,13 @@ function taxonomy_vocabulary_load($vid) {
  * @param $tid
  *   A term's ID
  *
- * @return Drupal\taxonomy\Plugin\Core\Entity\Term|false
- *   A taxonomy term entity, or FALSE if the term was not found. Results are
+ * @return \Drupal\taxonomy\Plugin\Core\Entity\Term|null
+ *   A taxonomy term entity, or NULL if the term was not found. Results are
  *   statically cached.
  */
 function taxonomy_term_load($tid) {
   if (!is_numeric($tid)) {
-    return FALSE;
+    return NULL;
   }
   return entity_load('taxonomy_term', $tid);
 }

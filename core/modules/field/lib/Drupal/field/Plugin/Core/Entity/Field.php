@@ -335,7 +335,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
     }
 
     // Ensure the field name is unique (we do not care about deleted fields).
-    if ($prior_field = current($storage_controller->load(array($this->id)))) {
+    if ($prior_field = $storage_controller->load($this->id)) {
       $message = $prior_field->active ?
         'Attempt to create field name %id which already exists and is active.' :
         'Attempt to create field name %id which already exists, although it is inactive.';
@@ -455,7 +455,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
           $instance_ids[] = "$entity_type.$bundle.$this->id";
         }
       }
-      foreach ($instance_controller->load($instance_ids) as $instance) {
+      foreach ($instance_controller->loadMultiple($instance_ids) as $instance) {
         // By default, FieldInstance::delete() will automatically try to delete
         // a field definition when it is deleting the last instance of the
         // field. Since the whole field is being deleted here, pass FALSE as

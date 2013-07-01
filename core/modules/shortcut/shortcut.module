@@ -253,7 +253,7 @@ function shortcut_menu_link_delete($menu_link) {
  *   - 'id': The internal name of the shortcut set.
  *   - 'label': The title of the shortcut set.
  *   - 'links': An array of links associated with this shortcut set.
- *   If the shortcut set does not exist, the function returns FALSE.
+ *   If the shortcut set does not exist, the function returns NULL.
  */
 function shortcut_set_load($id) {
   return entity_load('shortcut', $id);

@@ -202,7 +202,7 @@ class OpmlFeedAdd implements ControllerInterface, FormInterface {
         ->execute();
       $result = $this->entityManager
         ->getStorageController('aggregator_feed')
-        ->load($ids);
+        ->loadMultiple($ids);
       foreach ($result as $old) {
         if (strcasecmp($old->label(), $feed['title']) == 0) {
           drupal_set_message(t('A feed named %title already exists.', array('%title' => $old->label())), 'warning');

@@ -16,10 +16,10 @@ use Drupal\Core\Entity\EntityInterface;
 class ViewStorageController extends ConfigStorageController {
 
   /**
-   * Overrides Drupal\config\ConfigStorageController::load();
+   * {@inheritdoc}
    */
-  public function load(array $ids = NULL) {
-    $entities = parent::load($ids);
+  public function loadMultiple(array $ids = NULL) {
+    $entities = parent::loadMultiple($ids);
 
     // Only return views for enabled modules.
     return array_filter($entities, function ($entity) {
@@ -31,7 +31,7 @@ class ViewStorageController extends ConfigStorageController {
   }
 
   /**
-   * Overrides Drupal\config\ConfigStorageController::attachLoad();
+   * {@inheritdoc}
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
     foreach ($queried_entities as $id => $entity) {

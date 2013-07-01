@@ -31,8 +31,8 @@ function menu_link_uri(MenuLink $menu_link) {
  * @param bool $reset
  *   (optional) Whether to reset the menu_link_load_multiple() cache.
  *
- * @return \Drupal\menu_link\Plugin\Core\Entity\MenuLink|false
- *   A menu link entity, or FALSE if there is no entity with the given ID.
+ * @return \Drupal\menu_link\Plugin\Core\Entity\MenuLink|null
+ *   A menu link entity, or NULL if there is no entity with the given ID.
  */
 function menu_link_load($mlid = NULL, $reset = FALSE) {
   return entity_load('menu_link', $mlid, $reset);
@@ -98,10 +98,10 @@ function menu_link_delete_multiple(array $mlids, $force = FALSE, $prevent_repare
     $entity_query->condition($group);
 
     $result = $entity_query->execute();
-    $entities = $controller->load($result);
+    $entities = $controller->loadMultiple($result);
   }
   else {
-    $entities = $controller->load($mlids);
+    $entities = $controller->loadMultiple($mlids);
   }
   $controller->setPreventReparenting($prevent_reparenting);
   $controller->delete($entities);

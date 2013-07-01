@@ -121,8 +121,8 @@ function custom_block_theme($existing, $type, $theme, $path) {
  * @param int $id
  *   The ID of the custom block type to load.
  *
- * @return Drupal\custom_block\Plugin\Core\Entity\CustomBlockType|false
- *   A CustomBlockType object or FALSE if the requested $id does not exist.
+ * @return \Drupal\custom_block\Plugin\Core\Entity\CustomBlockType|null
+ *   A CustomBlockType object or NULL if the requested $id does not exist.
  */
 function custom_block_type_load($id) {
   return entity_load('custom_block_type', $id);
@@ -134,8 +134,8 @@ function custom_block_type_load($id) {
  * @param int $id
  *   The id of the custom block.
  *
- * @return Drupal\custom_block\Plugin\Core\Entity\CustomBlock|false
- *   A CustomBlock object or FALSE if the requested $id does not exist.
+ * @return \Drupal\custom_block\Plugin\Core\Entity\CustomBlock|null
+ *   A CustomBlock object or NULL if the requested $id does not exist.
  */
 function custom_block_load($id) {
   return entity_load('custom_block', $id);

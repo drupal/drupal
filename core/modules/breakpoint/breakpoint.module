@@ -294,8 +294,8 @@ function breakpoint_get_module_media_queries($module) {
  * @param string $id
  *   The id of the breakpoint group to load.
  *
- * @return Drupal\breakpoint\Plugin\Core\Entity\BreakpointGroup|false
- *   The breakpoint group, or FALSE if there is no entity with the given id.
+ * @return \Drupal\breakpoint\Plugin\Core\Entity\BreakpointGroup|null
+ *   The breakpoint group, or NULL if there is no entity with the given id.
  *
  * @todo Remove this in a follow-up issue.
  * @see http://drupal.org/node/1798214
@@ -310,8 +310,8 @@ function breakpoint_group_load($id) {
  * @param int $id
  *   The id of the breakpoint to load.
  *
- * @return Drupal\breakpoint\Plugin\Core\Entity\Breakpoint
- *   The entity object, or FALSE if there is no entity with the given id.
+ * @return \Drupal\breakpoint\Plugin\Core\Entity\Breakpoint|null
+ *   The entity object, or NULL if there is no entity with the given id.
  *
  * @todo Remove this in a follow-up issue.
  * @see http://drupal.org/node/1798214

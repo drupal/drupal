@@ -128,7 +128,7 @@ class ViewsBlock extends BlockBase {
      $block_ids = array_map(function ($block_id) {
        $parts = explode('.', $block_id);
        return end($parts);
-     }, array_keys($manager->load()));
+     }, array_keys($manager->loadMultiple()));
 
      // Iterate through potential IDs until we get a new one. E.g.
      // 'views_block__MYVIEW_PAGE_1_2'

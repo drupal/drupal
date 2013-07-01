@@ -376,7 +376,7 @@ function node_type_get_description(NodeTypeInterface $node_type) {
  *   The machine name of a node type to load.
  *
  * @return \Drupal\node\NodeTypeInterface
- *   A node type object or FALSE if $name does not exist.
+ *   A node type object or NULL if $name does not exist.
  */
 function node_type_load($name) {
   return entity_load('node_type', $name);
@@ -584,12 +584,12 @@ function node_load_multiple(array $nids = NULL, $reset = FALSE) {
  *   (optional) Whether to reset the node_load_multiple() cache. Defaults to
  *   FALSE.
  *
- * @return Drupal\node\Node|false
- *   A fully-populated node entity, or FALSE if the node is not found.
+ * @return \Drupal\node\Node|null
+ *   A fully-populated node entity or NULL if the node is not found.
  */
 function node_load($nid = NULL, $reset = FALSE) {
   $entity = entity_load('node', $nid, $reset);
-  return $entity ? $entity->getBCEntity() : FALSE;
+  return $entity ? $entity->getBCEntity() : NULL;
 }
 
 /**
@@ -598,8 +598,8 @@ function node_load($nid = NULL, $reset = FALSE) {
  * @param int $nid
  *   The node revision id.
  *
- * @return Drupal\node\Node|false
- *   A fully-populated node entity, or FALSE if the node is not found.
+ * @return \Drupal\node\Node|null
+ *   A fully-populated node entity or NULL if the node is not found.
  */
 function node_revision_load($vid = NULL) {
   return entity_revision_load('node', $vid);

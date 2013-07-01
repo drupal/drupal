@@ -114,8 +114,8 @@ abstract class ActionFormControllerBase extends EntityFormController implements 
    *   TRUE if the action exists, FALSE otherwise.
    */
   public function exists($id) {
-    $actions = $this->storageController->load(array($id));
-    return isset($actions[$id]);
+    $action = $this->storageController->load($id);
+    return !empty($action);
   }
 
   /**

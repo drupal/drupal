@@ -192,17 +192,19 @@ function entity_get_view_modes($entity_type = NULL) {
  *   Whether to reset the internal cache for the requested entity type.
  *
  * @return Drupal\Core\Entity\EntityInterface
- *   The entity object, or FALSE if there is no entity with the given id.
+ *   The entity object, or NULL if there is no entity with the given id.
  *
  * @see \Drupal\Core\Entity\EntityManager
- * @see entity_load_multiple()
- * @see Drupal\Core\Entity\EntityStorageControllerInterface
- * @see Drupal\Core\Entity\DatabaseStorageController
- * @see Drupal\Core\Entity\Query\QueryInterface
+ * @see \Drupal\Core\Entity\EntityStorageControllerInterface
+ * @see \Drupal\Core\Entity\DatabaseStorageController
+ * @see \Drupal\Core\Entity\Query\QueryInterface
  */
 function entity_load($entity_type, $id, $reset = FALSE) {
-  $entities = entity_load_multiple($entity_type, array($id), $reset);
-  return isset($entities[$id]) ? $entities[$id] : FALSE;
+  $controller = Drupal::entityManager()->getStorageController($entity_type);
+  if ($reset) {
+    $controller->resetCache(array($id));
+  }
+  return $controller->load($id);
 }
 
 /**
@@ -218,8 +220,8 @@ function entity_load($entity_type, $id, $reset = FALSE) {
  *   id.
  *
  * @see \Drupal\Core\Entity\EntityManager
- * @see Drupal\Core\Entity\EntityStorageControllerInterface
- * @see Drupal\Core\Entity\DatabaseStorageController
+ * @see \Drupal\Core\Entity\EntityStorageControllerInterface
+ * @see \Drupal\Core\Entity\DatabaseStorageController
  */
 function entity_revision_load($entity_type, $revision_id) {
   return Drupal::entityManager()
@@ -305,16 +307,16 @@ function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
  *   An array of entity objects indexed by their ids.
  *
  * @see \Drupal\Core\Entity\EntityManager
- * @see Drupal\Core\Entity\EntityStorageControllerInterface
- * @see Drupal\Core\Entity\DatabaseStorageController
- * @see Drupal\Core\Entity\Query\QueryInterface
+ * @see \Drupal\Core\Entity\EntityStorageControllerInterface
+ * @see \Drupal\Core\Entity\DatabaseStorageController
+ * @see \Drupal\Core\Entity\Query\QueryInterface
  */
 function entity_load_multiple($entity_type, array $ids = NULL, $reset = FALSE) {
   $controller = Drupal::entityManager()->getStorageController($entity_type);
   if ($reset) {
-    $controller->resetCache();
+    $controller->resetCache($ids);
   }
-  return $controller->load($ids);
+  return $controller->loadMultiple($ids);
 }
 
 /**
@@ -367,7 +369,7 @@ function entity_load_unchanged($entity_type, $id) {
  */
 function entity_delete_multiple($entity_type, array $ids) {
   $controller = Drupal::entityManager()->getStorageController($entity_type);
-  $entities = $controller->load($ids);
+  $entities = $controller->loadMultiple($ids);
   $controller->delete($entities);
 }
 

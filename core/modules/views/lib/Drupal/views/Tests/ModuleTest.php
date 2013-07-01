@@ -153,15 +153,14 @@ class ModuleTest extends ViewUnitTestBase {
     $controller = $this->container->get('plugin.manager.entity')->getStorageController('view');
 
     // Test views_view_is_enabled/disabled.
-    $load = $controller->load(array('archive'));
-    $archive = reset($load);
+    $archive = $controller->load('archive');
     $this->assertTrue(views_view_is_disabled($archive), 'views_view_is_disabled works as expected.');
     // Enable the view and check this.
     $archive->enable();
     $this->assertTrue(views_view_is_enabled($archive), ' views_view_is_enabled works as expected.');
 
     // We can store this now, as we have enabled/disabled above.
-    $all_views = $controller->load();
+    $all_views = $controller->loadMultiple();
 
     // Test views_get_all_views().
     $this->assertIdentical(array_keys($all_views), array_keys(views_get_all_views()), 'views_get_all_views works as expected.');

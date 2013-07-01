@@ -39,7 +39,7 @@ abstract class BulkFormBase extends FieldPluginBase {
   public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManager $manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->actions = $manager->getStorageController('action')->load();
+    $this->actions = $manager->getStorageController('action')->loadMultiple();
   }
 
   /**

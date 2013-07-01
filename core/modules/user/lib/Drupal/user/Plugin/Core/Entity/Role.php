@@ -123,7 +123,7 @@ class Role extends ConfigEntityBase implements RoleInterface {
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
-    if (!isset($this->weight) && ($roles = $storage_controller->load())) {
+    if (!isset($this->weight) && ($roles = $storage_controller->loadMultiple())) {
       // Set a role weight to make this new role last.
       $max = array_reduce($roles, function($max, $role) {
         return $max > $role->weight ? $max : $role->weight;

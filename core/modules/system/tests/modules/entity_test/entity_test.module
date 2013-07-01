@@ -287,7 +287,7 @@ function entity_test_edit(EntityInterface $entity) {
  *   A boolean indicating that the internal cache should be reset.
  *
  * @return \Drupal\entity_test\Plugin\Core\Entity\EntityTest
- *   The loaded entity object, or FALSE if the entity cannot be loaded.
+ *   The loaded entity object, or NULL if the entity cannot be loaded.
  */
 function entity_test_load($id, $reset = FALSE) {
   return entity_load('entity_test', $id, $reset);
@@ -302,7 +302,7 @@ function entity_test_load($id, $reset = FALSE) {
  *   A boolean indicating that the internal cache should be reset.
  *
  * @return \Drupal\entity_test\Plugin\Core\Entity\EntityTestRev
- *   The loaded entity object, or FALSE if the entity cannot be loaded.
+ *   The loaded entity object, or NULL if the entity cannot be loaded.
  */
 function entity_test_rev_load($id, $reset = FALSE) {
   return entity_load('entity_test_rev', $id, $reset);
@@ -332,7 +332,7 @@ function entity_test_mul_load($id, $reset = FALSE) {
  *   A boolean indicating that the internal cache should be reset.
  *
  * @return \Drupal\entity_test\Plugin\Core\Entity\EntityTestMulRev
- *   The loaded entity object, or FALSE if the entity cannot be loaded.
+ *   The loaded entity object, or NULL if the entity cannot be loaded.
  */
 function entity_test_mulrev_load($id, $reset = FALSE) {
   return entity_load('entity_test_mulrev', $id, $reset);

@@ -97,7 +97,7 @@ class Permissions extends PrerenderList {
     }
 
     if ($rids) {
-      $roles = $this->roleStorageController->load(array_keys($rids));
+      $roles = $this->roleStorageController->loadMultiple(array_keys($rids));
       foreach ($rids as $rid => $role_uids) {
         foreach ($roles[$rid]->getPermissions() as $permission) {
           foreach ($role_uids as $uid) {

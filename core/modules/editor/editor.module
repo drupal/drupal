@@ -290,7 +290,7 @@ function editor_form_filter_admin_format_validate($form, &$form_state) {
   // 'Configure' button won't be clicked automatically. So, when the user has
   // selected a text editor and has then clicked 'Save configuration', we should
   // point out that the user must still configure the text editor.
-  if ($form_state['values']['editor']['editor'] !== '' && $form_state['editor'] === FALSE) {
+  if ($form_state['values']['editor']['editor'] !== '' && empty($form_state['editor'])) {
     form_set_error('editor][editor', t('You must configure the selected text editor.'));
   }
 }
@@ -307,7 +307,7 @@ function editor_form_filter_admin_format_submit($form, &$form_state) {
   }
 
   // Create a new editor or update the existing editor.
-  if ($form_state['editor'] !== FALSE) {
+  if (!empty($form_state['editor'])) {
     // Ensure the text format is set: when creating a new text format, this
     // would equal the empty string.
     $form_state['editor']->format = $format_id;
@@ -319,8 +319,8 @@ function editor_form_filter_admin_format_submit($form, &$form_state) {
 /**
  * Loads an individual configured text editor based on text format ID.
  *
- * @return \Drupal\editor\Plugin\Core\Entity\Editor|FALSE
- *   A text editor object, or FALSE.
+ * @return \Drupal\editor\Plugin\Core\Entity\Editor|null
+ *   A text editor object, or NULL.
  */
 function editor_load($format_id) {
   // Load all the editors at once here, assuming that either no editors or more
@@ -328,7 +328,7 @@ function editor_load($format_id) {
   // formats for administrators). Loading a small number of editors all at once
   // is more efficient than loading multiple editors individually.
   $editors = entity_load_multiple('editor');
-  return isset($editors[$format_id]) ? $editors[$format_id] : FALSE;
+  return isset($editors[$format_id]) ? $editors[$format_id] : NULL;
 }
 
 /**

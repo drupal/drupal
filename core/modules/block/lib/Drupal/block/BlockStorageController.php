@@ -18,8 +18,8 @@ class BlockStorageController extends ConfigStorageController {
   /**
    * {@inheritdoc}
    */
-  public function load(array $ids = NULL) {
-    $entities = parent::load($ids);
+  public function loadMultiple(array $ids = NULL) {
+    $entities = parent::loadMultiple($ids);
     // Only blocks with a valid plugin should be loaded.
     return array_filter($entities, function ($entity) {
       return $entity->getPlugin();

@@ -529,12 +529,12 @@ function menu_test_menu_local_tasks_alter(&$data, $router_item, $root_path) {
  *   A parameter passed in via the URL.
  *
  * @return false
- *   Always return FALSE.
+ *   Always return NULL.
  *
  * @see menu_test_menu();
  */
 function menu_test_argument_load($arg1) {
-  return FALSE;
+  return NULL;
 }
 
 /**
@@ -544,12 +544,12 @@ function menu_test_argument_load($arg1) {
  *   A parameter passed in via the URL.
  *
  * @return false
- *   Always return FALSE.
+ *   Always return NULL.
  *
  * @see menu_test_menu();
  */
 function menu_test_other_argument_load($arg1) {
-  return FALSE;
+  return NULL;
 }
 
 /**

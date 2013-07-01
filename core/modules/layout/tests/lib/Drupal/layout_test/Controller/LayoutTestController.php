@@ -52,8 +52,7 @@ class LayoutTestController implements ControllerInterface{
     $theme = 'layout_test_theme';
     theme_enable(array($theme));
 
-    $displays = $this->entityStorageController->load(array('test_twocol'));
-    $display = reset($displays);
+    $display = $this->entityStorageController->load('test_twocol');
     $layout = $display->getLayoutInstance();
 
     // @todo This tests that the layout can render its regions, but does not test
