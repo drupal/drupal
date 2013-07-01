@@ -98,9 +98,9 @@ abstract class CommentTestBase extends WebTestBase {
     $edit = array();
     $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
 
-    $instance = field_info_instance('node', 'comment', 'article');
-    $preview_mode = $instance['settings']['preview'];
-    $subject_mode = $instance['settings']['subject'];
+    $instance = $this->container->get('field.info')->getInstance('node', 'article', 'comment');
+    $preview_mode = $instance->settings['preview'];
+    $subject_mode = $instance->settings['subject'];
 
     // Must get the page before we test for fields.
     if ($node !== NULL) {
@@ -270,8 +270,8 @@ abstract class CommentTestBase extends WebTestBase {
    *   Status message to display.
    */
   function setCommentSettings($name, $value, $message) {
-    $instance = field_info_instance('node', 'comment', 'article');
-    $instance['settings'][$name] = $value;
+    $instance = $this->container->get('field.info')->getInstance('node', 'article', 'comment');
+    $instance->settings[$name] = $value;
     $instance->save();
     // Display status message.
     $this->pass($message);
