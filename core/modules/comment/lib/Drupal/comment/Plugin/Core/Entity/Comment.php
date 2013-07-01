@@ -70,7 +70,7 @@ class Comment extends EntityNG implements CommentInterface {
   public $uuid;
 
   /**
-   * The parent comment ID if this is a reply to a comment.
+   * The parent comment ID if this is a reply to another comment.
    *
    * @todo: Rename to 'parent_id'. https://drupal.org/node/2031931
    *
@@ -79,14 +79,14 @@ class Comment extends EntityNG implements CommentInterface {
   public $pid;
 
   /**
-   * The entity ID to which this comment is attached.
+   * The entity ID for the entity to which this comment is attached.
    *
    * @var \Drupal\Core\Entity\Field\FieldInterface
    */
   public $entity_id;
 
   /**
-   * The entity type to which this comment is attached.
+   * The entity type of the entity to which this comment is attached.
    *
    * @var \Drupal\Core\Entity\Field\FieldInterface
    */
