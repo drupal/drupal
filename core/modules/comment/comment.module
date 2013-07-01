@@ -1471,8 +1471,17 @@ function comment_preview(CommentInterface $comment) {
     }
   }
   else {
-    // We temporarily disable rendering of this field to prevent infinite
-    // loop.
+    // The comment field output includes rendering the parent entity of the
+    // thread to which the comment is a reply. The rendered entity output
+    // includes the comment reply form, which contains the comment preview and
+    // therefore the rendered parent entity. This results in an infinite loop of
+    // parent entity output rendering the comment form and the comment form
+    // rendering the parent entity. To prevent this infinite loop we temporarily
+    // set the value of the comment field on the rendered entity to hidden
+    // before calling entity_view(). That way when the output of the commented
+    // entity is rendered, it excludes the comment field output. As objects are
+    // always addressed by reference we ensure changes are not lost by setting
+    // the value back to its original state after the call to entity_view().
     $original_value = $entity->{$comment->field_name->value};
     $entity->{$comment->field_name->value} = array(
       Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN)),
