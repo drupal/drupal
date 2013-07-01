@@ -106,9 +106,11 @@ function forum_enable() {
       ->save();
   }
   // Add the comment field.
-  if (!field_read_field('comment_node_forum', array('include_inactive' => TRUE))) {
-    // Make sure the comment module is loaded.
-    drupal_load('module', 'comment');
+  if (!entity_load('field_entity', array(
+    'field_name' => 'comment_node_forum',
+    'include_inactive' => TRUE,
+    'include_deleted' => FALSE,
+  ))) {
     comment_add_default_comment_field('node', 'forum', 'comment_node_forum', COMMENT_OPEN);
   }
 }
