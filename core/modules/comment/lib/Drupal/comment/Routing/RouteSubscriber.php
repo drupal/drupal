@@ -19,7 +19,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 class RouteSubscriber implements EventSubscriberInterface {
 
   /**
-   * The module handler service
+   * The module handler service.
    *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
@@ -29,7 +29,7 @@ class RouteSubscriber implements EventSubscriberInterface {
    * Constructs a RouteSubscriber object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The entity type manager.
+   *   The module handler service.
    */
   public function __construct(ModuleHandlerInterface $module_handler) {
     $this->moduleHandler = $module_handler;
