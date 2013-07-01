@@ -252,12 +252,12 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('post comments', 'skip comment approval'));
 
     // Create a new field.
+    comment_add_default_comment_field('node', 'article');
     $edit = array(
       'fields[_add_new_field][label]' => $label = $this->randomName(),
       'fields[_add_new_field][field_name]' => $name = strtolower($this->randomName()),
       'fields[_add_new_field][type]' => 'file',
     );
-    comment_add_default_comment_field('node', 'article');
     $this->drupalPost('admin/structure/comments/manage/comment/fields', $edit, t('Save'));
     $edit = array('field[settings][uri_scheme]' => 'private');
     $this->drupalPost(NULL, $edit, t('Save field settings'));
