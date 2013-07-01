@@ -101,7 +101,7 @@ class RowPluginTest extends NodeTestBase {
     );
 
     $comment = entity_create('comment', $settings);
-    $status = $comment->save();
+    $comment->save();
     return $comment;
   }
 
