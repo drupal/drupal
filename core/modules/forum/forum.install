@@ -124,9 +124,7 @@ function forum_uninstall() {
     $field->delete();
   }
 
-  // Delete comment field, load comment in case it has been disabled.
-  drupal_load('module', 'comment');
-  // Remove the forum comment field and all comments from the field.
+  // Remove the comment field from forum entity and its all associated comments.
   if ($field = entity_load('field_entity', 'comment_node_forum')) {
     $field->delete();
   }
