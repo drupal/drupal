@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Drupal\Core\Language\Language;
 use Drupal\field\FieldInstanceInterface;
+use Drupal\field\FieldInterface;
 
 /**
  * Comment is awaiting approval.
@@ -1981,7 +1982,18 @@ function comment_field_instance_create(FieldInstanceInterface $instance) {
       $instance->default_value = array(array('status' => COMMENT_OPEN));
     }
     _comment_body_field_create($instance->entity_type, $instance->bundle, $instance->getFieldName());
-    cache()->delete('comment_entity_info');
+    Drupal::cache()->delete('comment_entity_info');
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for 'field_entity'.
+ */
+function comment_field_entity_delete(FieldInterface $field) {
+  if ($field->getFieldType() == 'comment') {
+    // Delete all fields and displays attached to the comment bundle.
+    entity_invoke_bundle_hook('delete', 'comment', $field->getFieldName());
+    Drupal::cache()->delete('comment_entity_info');
   }
 }
 
@@ -1990,9 +2002,13 @@ function comment_field_instance_create(FieldInstanceInterface $instance) {
  */
 function comment_field_instance_delete(FieldInstanceInterface $instance) {
   if ($instance->getFieldType() == 'comment') {
-    // Delete all fields and displays attached to the bundle.
-    entity_invoke_bundle_hook('delete', 'comment', $instance->getFieldName());
-    cache()->delete('comment_entity_info');
+    // Delete all comments that used by the entity bundle.
+    $comments = entity_load_multiple_by_properties('comment', array(
+      'entity_type' => $instance->entity_type,
+      'field_name' => $instance->getFieldName(),
+    ));
+    entity_delete_multiple('comment', array_keys($comments));
+    Drupal::cache()->delete('comment_entity_info');
   }
 }
 
