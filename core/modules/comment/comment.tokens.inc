@@ -15,8 +15,7 @@ function comment_token_info() {
     'needs-data' => 'comment',
   );
 
-  // Comment-related tokens for nodes
-  // @todo make this work per field.
+  // @todo Make this work per field. See http://drupal.org/node/2031903
   $entity['comment-count'] = array(
     'name' => t("Comment count"),
     'description' => t("The number of comments posted on an entity."),
