@@ -54,9 +54,7 @@ class HandlerAllTest extends HandlerTestBase {
    * Tests most of the handlers.
    */
   public function testHandlers() {
-    comment_add_default_comment_field('node', 'page');
-    // Force a flush of the in-memory storage.
-    $this->container->get('views.views_data')->clear();
+    comment_add_default_comment_field('node', 'article');
 
     $object_types = array_keys(ViewExecutable::viewsHandlerTypes());
     foreach ($this->container->get('views.views_data')->get() as $base_table => $info) {
