@@ -37,13 +37,13 @@ class CommentFieldsTest extends CommentTestBase {
     comment_add_default_comment_field('node', 'test_node_type');
 
     // Check that the 'comment_body' field is present on the comment bundle.
-    $instance = field_info_instance('comment', 'comment_body', 'comment');
+    $instance = $this->container->get('field.info')->getInstance('comment', 'comment', 'comment_body');
     $this->assertTrue(!empty($instance), 'The comment_body field is added when a comment bundle is created');
 
     $instance->delete();
 
     // Check that the 'comment_body' field is deleted.
-    $field = field_info_field('comment_body');
+    $field = $this->container->get('field.info')->getField('comment_body');
     $this->assertTrue(empty($field), 'The comment_body field was deleted');
 
     // Create a new content type.
@@ -53,9 +53,9 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Check that the 'comment_body' field exists and has an instance on the
     // new comment bundle.
-    $field = field_info_field('comment_body');
+    $field = $this->container->get('field.info')->getField('comment_body');
     $this->assertTrue($field, 'The comment_body field exists');
-    $instances = field_info_instances('comment');
+    $instances = $this->container->get('field.info')->getInstances('comment');
     $this->assertTrue(isset($instances['comment']['comment_body']), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
   }
 
