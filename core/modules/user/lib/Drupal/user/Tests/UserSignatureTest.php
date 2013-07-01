@@ -38,7 +38,7 @@ class UserSignatureTest extends WebTestBase {
 
     // Create Basic page node type.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
-    // Add a comment field.
+    // Add a comment field with commenting enabled by default.
     comment_add_default_comment_field('node', 'page');
 
     // Prefetch and create text formats.
@@ -84,7 +84,6 @@ class UserSignatureTest extends WebTestBase {
    * upon display.
    */
   function testUserSignature() {
-    // Create a new node.
     $node = $this->drupalCreateNode();
 
     // Verify that user signature field is not displayed on registration form.
