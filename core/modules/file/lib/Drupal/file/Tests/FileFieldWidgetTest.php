@@ -267,10 +267,12 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     field_info_cache_clear();
 
     // Create node.
-    $node = $this->drupalCreateNode(array(
-      'type' => 'article',
+    $text_file = $this->getTestFile('text');
+    $edit = array(
       'title' => $this->randomName(),
-    ));
+    );
+    $this->drupalPost('node/add/article', $edit, t('Save and publish'));
+    $node = $this->drupalGetNodeByTitle($edit['title']);
 
     // Add a comment with a file.
     $text_file = $this->getTestFile('text');
