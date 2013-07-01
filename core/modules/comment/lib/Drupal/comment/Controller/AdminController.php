@@ -48,7 +48,7 @@ class AdminController implements ControllerInterface {
   }
 
   /**
-   * Constructs a CustomBlock object.
+   * Constructs an AdminController object.
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   Entity manager service.
@@ -64,7 +64,12 @@ class AdminController implements ControllerInterface {
   }
 
   /**
-   * Returns markup for the overview of comment bundles.
+   * Returns an overview of comment fields in use on the site.
+   *
+   * @return array
+   *   A renderable array containing a list of comment fields, the entity
+   *   type and bundle combinations on which they are in use and various
+   *   operation links for configuring each field.
    */
   public function overviewBundles() {
     // @todo Remove when http://drupal.org/node/1981644 is in.
@@ -154,13 +159,14 @@ class AdminController implements ControllerInterface {
   }
 
   /**
-   * Returns markup help text of comment bundle.
+   * Returns an overview of the entity types a comment field is attached to.
    *
    * @param string $field_name
-   *   The comment field to attach fields.
+   *   The comment field for which the overview is to be displayed.
    *
    * @return array
-   *   Renderable array.
+   *   A renderable array containing the list of entity types and bundle
+   *   combinations on which the comment field is in use.
    */
   public function bundleInfo($field_name) {
     // @todo Decide on better UX http://drupal.org/node/1901110
