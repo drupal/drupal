@@ -10,7 +10,6 @@ namespace Drupal\content_translation\Tests;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Language\Language;
-use Drupal\Core\TypedData\ComplexDataInterface;
 
 /**
  * Tests the Content Translation UI.
@@ -261,13 +260,13 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
   protected function getTranslation(EntityInterface $entity, $langcode) {
     // @todo remove once EntityBCDecorator is gone.
     $entity = $entity->getNGEntity();
-    return $entity instanceof EntityNG ? $entity->getTranslation($langcode, FALSE) : $entity;
+    return $entity instanceof EntityNG ? $entity->getTranslation($langcode) : $entity;
   }
 
   /**
    * Returns the value for the specified property in the given language.
    *
-   * @param \Drupal\Core\TypedData\TranslatableInterface $translation
+   * @param \Drupal\Core\Entity\EntityInterface $translation
    *   The translation object the property value should be retrieved from.
    * @param string $property
    *   The property name.
@@ -277,7 +276,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
    * @return
    *   The property value.
    */
-  protected function getValue(ComplexDataInterface $translation, $property, $langcode) {
+  protected function getValue(EntityInterface $translation, $property, $langcode) {
     $key = $property == 'user_id' ? 'target_id' : 'value';
     // @todo remove EntityBCDecorator condition once EntityBCDecorator is gone.
     if (($translation instanceof EntityInterface) && !($translation instanceof EntityNG) && !($translation instanceof EntityBCDecorator)) {

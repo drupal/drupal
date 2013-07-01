@@ -241,6 +241,35 @@ function hook_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
 }
 
 /**
+ * Acts after storing a new entity translation.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $translation
+ *   The entity object of the translation just stored.
+ */
+function hook_entity_translation_insert(\Drupal\Core\Entity\EntityInterface $translation) {
+  $variables = array(
+    '@language' => $translation->language()->name,
+    '@label' => $translation->getUntranslated()->label(),
+  );
+  watchdog('example', 'The @language translation of @label has just been stored.', $variables);
+}
+
+/**
+ * Acts after deleting an entity translation from the storage.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The original entity object.
+ */
+function hook_entity_translation_delete(\Drupal\Core\Entity\EntityInterface $translation) {
+  $languages = language_list();
+  $variables = array(
+    '@language' => $languages[$langcode]->name,
+    '@label' => $entity->label(),
+  );
+  watchdog('example', 'The @language translation of @label has just been deleted.', $variables);
+}
+
+/**
  * Act before entity deletion.
  *
  * This hook runs after the entity type-specific predelete hook.

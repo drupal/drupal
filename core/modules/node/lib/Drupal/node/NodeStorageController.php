@@ -75,7 +75,7 @@ class NodeStorageController extends DatabaseStorageControllerNG {
    * Overrides Drupal\Core\Entity\DatabaseStorageController::invokeHook().
    */
   protected function invokeHook($hook, EntityInterface $node) {
-    $node = $node->getBCEntity();
+    $node = $node->getUntranslated()->getBCEntity();
 
     // Inline parent::invokeHook() to pass on BC-entities to node-specific
     // hooks.

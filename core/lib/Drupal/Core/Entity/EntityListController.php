@@ -87,7 +87,7 @@ class EntityListController implements EntityListControllerInterface, EntityContr
    * Implements \Drupal\Core\Entity\EntityListControllerInterface::load().
    */
   public function load() {
-    return $this->storage->load();
+    return $this->storage->loadMultiple();
   }
 
   /**

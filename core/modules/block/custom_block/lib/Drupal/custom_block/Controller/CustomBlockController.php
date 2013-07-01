@@ -77,7 +77,7 @@ class CustomBlockController implements ControllerInterface {
    *   returns the custom block add page for that custom block type.
    */
   public function add(Request $request) {
-    $types = $this->customBlockTypeStorage->load();
+    $types = $this->customBlockTypeStorage->loadMultiple();
     if ($types && count($types) == 1) {
       $type = reset($types);
       return $this->addForm($type, $request);

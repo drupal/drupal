@@ -279,7 +279,7 @@ function _content_translation_menu_strip_loaders($path) {
  */
 function content_translation_translate_access(EntityInterface $entity) {
   $entity_type = $entity->entityType();
-  return empty($entity->language()->locked) && language_multilingual() && $entity->isTranslatable() &&
+  return empty($entity->getUntranslated()->language()->locked) && language_multilingual() && $entity->isTranslatable() &&
     (user_access('create content translations') || user_access('update content translations') || user_access('delete content translations'));
 }
 
@@ -332,7 +332,7 @@ function content_translation_edit_access(EntityInterface $entity, Language $lang
   $language = !empty($language) ? $language : language(Language::TYPE_CONTENT);
   $translations = $entity->getTranslationLanguages();
   $languages = language_list();
-  return isset($languages[$language->id]) && $language->id != $entity->language()->id && isset($translations[$language->id]) && content_translation_access($entity, 'update');
+  return isset($languages[$language->id]) && $language->id != $entity->getUntranslated()->language()->id && isset($translations[$language->id]) && content_translation_access($entity, 'update');
 }
 
 /**
@@ -348,7 +348,7 @@ function content_translation_delete_access(EntityInterface $entity, Language $la
   $language = !empty($language) ? $language : language(Language::TYPE_CONTENT);
   $translations = $entity->getTranslationLanguages();
   $languages = language_list();
-  return isset($languages[$language->id]) && $language->id != $entity->language()->id && isset($translations[$language->id]) && content_translation_access($entity, 'delete');
+  return isset($languages[$language->id]) && $language->id != $entity->getUntranslated()->language()->id && isset($translations[$language->id]) && content_translation_access($entity, 'delete');
 }
 
 /**
@@ -645,7 +645,7 @@ function content_translation_field_language_alter(&$display_language, $context) 
     $instances = field_info_instances($entity_type, $entity->bundle());
     // Avoid altering the real entity.
     $entity = clone($entity);
-    $entity_langcode = $entity->language()->id;
+    $entity_langcode = $entity->getUntranslated()->language()->id;
 
     foreach ($entity->translation as $langcode => $translation) {
       if ($langcode == $context['langcode'] || !content_translation_view_access($entity, $langcode)) {
@@ -705,7 +705,11 @@ function content_translation_load_translation_metadata(array $entities, $entity_
     // @todo Declare these as entity (translation?) properties.
     foreach ($record as $field_name => $value) {
       if (!in_array($field_name, $exclude)) {
-        $entity->translation[$record->langcode][$field_name] = $value;
+        $langcode = $record->langcode;
+        $entity->translation[$langcode][$field_name] = $value;
+        if (!$entity->hasTranslation($langcode)) {
+          $entity->initTranslation($langcode);
+        }
       }
     }
   }
@@ -865,10 +869,11 @@ function content_translation_field_info_alter(&$info) {
  * Implements hook_entity_presave().
  */
 function content_translation_entity_presave(EntityInterface $entity) {
-  $entity_info = $entity->entityInfo();
-  if ($entity->isTranslatable() && !empty($entity_info['fieldable'])) {
+  if ($entity->isTranslatable()) {
+    // @todo Avoid using request attributes once translation metadata become
+    //   regular fields.
     $attributes = Drupal::request()->attributes;
-    Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $attributes->get('working_langcode'), $attributes->get('source_langcode'));
+    Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->id, $attributes->get('source_langcode'));
   }
 }
 

@@ -921,8 +921,9 @@ class ViewUI implements ViewStorageInterface {
   /**
    * Implements \Drupal\Core\TypedData\TranslatableInterface::getTranslation().
    */
-  public function getTranslation($langcode, $strict = TRUE) {
-    return $this->storage->getTranslation($langcode, $strict);
+  public function getTranslation($langcode) {
+    // @todo Revisit this once config entities are converted to NG.
+    return $this;
   }
 
   /**
@@ -1042,6 +1043,41 @@ class ViewUI implements ViewStorageInterface {
    */
   public function isTranslatable() {
     return $this->storage->isTranslatable();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUntranslated() {
+    return $this->storage->getUntranslated();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasTranslation($langcode) {
+    return $this->storage->hasTranslation($langcode);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addTranslation($langcode, array $values = array()) {
+    return $this->storage->addTranslation($langcode, $values);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function removeTranslation($langcode) {
+    $this->storage->removeTranslation($langcode);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function initTranslation($langcode) {
+    $this->storage->initTranslation($langcode);
   }
 
   /**

@@ -108,8 +108,7 @@ class HandlerTest extends UITestBase {
 
       // Save the view and have a look whether the handler was added as expected.
       $this->drupalPost(NULL, array(), t('Save'));
-      $views = $this->container->get('plugin.manager.entity')->getStorageController('view')->load(array('test_view_empty'));
-      $view = reset($views);
+      $view = $this->container->get('plugin.manager.entity')->getStorageController('view')->load('test_view_empty');
       $display = $view->getDisplay('default');
       $this->assertTrue(isset($display['display_options'][$type_info['plural']][$id]), 'Ensure the field was added to the view itself.');
 
@@ -118,8 +117,7 @@ class HandlerTest extends UITestBase {
       $this->assertNoLinkByHref($edit_handler_url, 0, 'The handler edit link does not appears in the UI after removing.');
 
       $this->drupalPost(NULL, array(), t('Save'));
-      $views = $this->container->get('plugin.manager.entity')->getStorageController('view')->load(array('test_view_empty'));
-      $view = reset($views);
+      $view = $this->container->get('plugin.manager.entity')->getStorageController('view')->load('test_view_empty');
       $display = $view->getDisplay('default');
       $this->assertFalse(isset($display['display_options'][$type_info['plural']][$id]), 'Ensure the field was removed from the view itself.');
     }
@@ -140,8 +138,7 @@ class HandlerTest extends UITestBase {
     $this->drupalPost(NULL, array(), t('Apply'));
 
     $this->drupalPost(NULL, array(), t('Save'));
-    $views = $this->container->get('plugin.manager.entity')->getStorageController('view')->load(array('test_view_empty'));
-    $view = reset($views);
+    $view = $this->container->get('plugin.manager.entity')->getStorageController('view')->load('test_view_empty');
     $display = $view->getDisplay('default');
     $this->assertTrue(isset($display['display_options'][$type_info['plural']][$id]), 'Ensure the field was added to the view itself.');
   }

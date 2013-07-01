@@ -65,8 +65,7 @@ class EntityReferenceAutocomplete {
     $entity = NULL;
 
     if ($entity_id !== 'NULL') {
-      $entities = $this->entityManager->getStorageController($entity_type)->load(array($entity_id));
-      $entity = reset($entities);
+      $entity = $this->entityManager->getStorageController($entity_type)->load($entity_id);
       if (!$entity || !$entity->access('view')) {
         throw new AccessDeniedHttpException();
       }

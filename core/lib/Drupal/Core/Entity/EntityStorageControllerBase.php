@@ -89,8 +89,7 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
    */
   public function loadUnchanged($id) {
     $this->resetCache(array($id));
-    $result = $this->load(array($id));
-    return reset($result);
+    return $this->load($id);
   }
 
   /**
@@ -230,6 +229,28 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
             }
           }
         }
+      }
+    }
+  }
+
+  /**
+   * Checks translation statuses and invoke the related hooks if needed.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity being saved.
+   */
+  protected function invokeTranslationHooks(EntityInterface $entity) {
+    $translations = $entity->getTranslationLanguages(FALSE);
+    $original_translations = $entity->original->getTranslationLanguages(FALSE);
+    $all_translations = array_keys($translations + $original_translations);
+
+    // Notify modules of translation insertion/deletion.
+    foreach ($all_translations as $langcode) {
+      if (isset($translations[$langcode]) && !isset($original_translations[$langcode])) {
+        $this->invokeHook('translation_insert', $entity->getTranslation($langcode));
+      }
+      elseif (!isset($translations[$langcode]) && isset($original_translations[$langcode])) {
+        $this->invokeHook('translation_delete', $entity->getTranslation($langcode));
       }
     }
   }

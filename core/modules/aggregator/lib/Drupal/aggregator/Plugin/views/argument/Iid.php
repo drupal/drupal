@@ -59,7 +59,7 @@ class Iid extends Numeric {
   function titleQuery() {
     $titles = array();
 
-    $items = $this->entityManager->getStorageController('aggregator_item')->load($this->value);
+    $items = $this->entityManager->getStorageController('aggregator_item')->loadMultiple($this->value);
     foreach ($items as $feed) {
       $titles[] = String::checkPlain($feed->label());
     }

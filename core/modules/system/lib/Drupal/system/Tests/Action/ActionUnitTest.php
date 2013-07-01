@@ -72,12 +72,12 @@ class ActionUnitTest extends DrupalUnitTestBase {
     $name = $this->randomName();
     $user_storage = $this->container->get('plugin.manager.entity')->getStorageController('user');
     $account = $user_storage->create(array('name' => $name, 'bundle' => 'user'));
-    $loaded_accounts = $user_storage->load();
+    $loaded_accounts = $user_storage->loadMultiple();
     $this->assertEqual(count($loaded_accounts), 0);
 
     // Execute the 'save entity' action.
     $action->execute($account);
-    $loaded_accounts = $user_storage->load();
+    $loaded_accounts = $user_storage->loadMultiple();
     $this->assertEqual(count($loaded_accounts), 1);
     $account = reset($loaded_accounts);
     $this->assertEqual($name, $account->label());

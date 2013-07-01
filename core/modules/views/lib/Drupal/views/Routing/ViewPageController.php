@@ -63,8 +63,7 @@ class ViewPageController implements ControllerInterface {
     $view_id = $request->attributes->get('view_id');
     $display_id = $request->attributes->get('display_id');
 
-    $entities = $this->storageController->load(array($view_id));
-    $entity = reset($entities);
+    $entity = $this->storageController->load($view_id);
     if (empty($entity)) {
       throw new NotFoundHttpException(format_string('Page controller for view %id requested, but view was not found.', array('%id' => $view_id)));
     }

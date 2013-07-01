@@ -364,7 +364,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
     $this->id = $this->id();
 
     // Ensure the field instance is unique within the bundle.
-    if ($prior_instance = current($instance_controller->load(array($this->id)))) {
+    if ($prior_instance = $instance_controller->load($this->id)) {
       throw new FieldException(format_string('Attempt to create an instance of field @field_id on bundle @bundle that already has an instance of that field.', array('@field_id' => $this->field->id, '@bundle' => $this->bundle)));
     }
 

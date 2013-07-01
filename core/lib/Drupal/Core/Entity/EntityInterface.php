@@ -323,4 +323,15 @@ interface EntityInterface extends ComplexDataInterface, AccessibleInterface, Tra
    */
   public function isTranslatable();
 
+  /**
+   * Marks the translation identified by the given language code as existing.
+   *
+   * @todo Remove this as soon as translation metadata have been converted to
+   *    regular fields.
+   *
+   * @param string $langcode
+   *   The language code identifying the translation to be initialized.
+   */
+  public function initTranslation($langcode);
+
 }

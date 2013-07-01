@@ -289,14 +289,14 @@ function user_load_multiple(array $uids = NULL, $reset = FALSE) {
  *   (default) to load from the internal cache, if set.
  *
  * @return object
- *   A fully-loaded user object upon successful user load, or FALSE if the user
+ *   A fully-loaded user object upon successful user load, or NULL if the user
  *   cannot be loaded.
  *
  * @see user_load_multiple()
  */
 function user_load($uid, $reset = FALSE) {
   $user = entity_load('user', $uid, $reset);
-  return $user ? $user->getBCEntity() : FALSE;
+  return $user ? $user->getBCEntity() : NULL;
 }
 
 /**
@@ -1081,7 +1081,7 @@ function user_uid_only_optional_to_arg($arg) {
  *   An optional user ID of the user to load. If not provided, the current
  *   user's ID will be used.
  * @return
- *   A fully-loaded $user object upon successful user load, FALSE if user
+ *   A fully-loaded $user object upon successful user load, NULL if user
  *   cannot be loaded.
  *
  * @see user_load()
@@ -1696,7 +1696,7 @@ function user_roles($membersonly = FALSE, $permission = NULL) {
  *   A string representing the role ID.
  *
  * @return
- *   A fully-loaded role object if a role with the given ID exists, or FALSE
+ *   A fully-loaded role object if a role with the given ID exists, or NULL
  *   otherwise.
  */
 function user_role_load($rid) {

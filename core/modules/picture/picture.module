@@ -104,8 +104,8 @@ function picture_library_info() {
  * @param int $id
  *   The id of the picture mapping to load.
  *
- * @return Drupal\picture\Picture
- *   The entity object, or FALSE if there is no entity with the given id.
+ * @return \Drupal\picture\Picture
+ *   The entity object, or NULL if there is no entity with the given id.
  *
  * @todo Needed for menu_callback
  *

@@ -82,7 +82,7 @@ class ViewsUIController implements ControllerInterface {
    *   The Views fields report page.
    */
   public function reportFields() {
-    $views = $this->entityManager->getStorageController('view')->load();
+    $views = $this->entityManager->getStorageController('view')->loadMultiple();
 
     // Fetch all fieldapi fields which are used in views
     // Therefore search in all views, displays and handler-types.
@@ -199,7 +199,7 @@ class ViewsUIController implements ControllerInterface {
     $matches = array();
     $string = $request->query->get('q');
     // Get matches from default views.
-    $views = $this->entityManager->getStorageController('view')->load();
+    $views = $this->entityManager->getStorageController('view')->loadMultiple();
     foreach ($views as $view) {
       $tag = $view->get('tag');
       if ($tag && strpos($tag, $string) === 0) {

@@ -79,7 +79,7 @@ class BookManager {
       $query->addMetaData('base_table', 'book');
       $book_links = $query->execute();
 
-      $nodes = $this->entityManager->getStorageController('node')->load($nids);
+      $nodes = $this->entityManager->getStorageController('node')->loadMultiple($nids);
 
       foreach ($book_links as $link) {
         $nid = $link['nid'];

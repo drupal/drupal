@@ -111,9 +111,9 @@ class DatabaseStorageController extends EntityStorageControllerBase {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::load().
+   * {@inheritdoc}
    */
-  public function load(array $ids = NULL) {
+  public function loadMultiple(array $ids = NULL) {
     $entities = array();
 
     // Create a new variable which is either a prepared version of the $ids
@@ -178,6 +178,14 @@ class DatabaseStorageController extends EntityStorageControllerBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function load($id) {
+    $entities = $this->loadMultiple(array($id));
+    return isset($entities[$id]) ? $entities[$id] : NULL;
+  }
+
+  /**
    * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::loadRevision().
    */
   public function loadRevision($revision_id) {
@@ -227,7 +235,7 @@ class DatabaseStorageController extends EntityStorageControllerBase {
     $entity_query = \Drupal::entityQuery($this->entityType);
     $this->buildPropertyQuery($entity_query, $values);
     $result = $entity_query->execute();
-    return $result ? $this->load($result) : array();
+    return $result ? $this->loadMultiple($result) : array();
   }
 
   /**

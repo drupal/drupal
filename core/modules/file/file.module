@@ -119,14 +119,13 @@ function file_load_multiple(array $fids = NULL, $reset = FALSE) {
  *   Whether to reset the internal file_load_multiple() cache.
  *
  * @return \Drupal\file\FileInterface
- *   A file entity or FALSE if the file was not found.
+ *   A file entity or NULL if the file was not found.
  *
  * @see hook_file_load()
  * @see file_load_multiple()
  */
 function file_load($fid, $reset = FALSE) {
-  $files = file_load_multiple(array($fid), $reset);
-  return reset($files);
+  return entity_load('file', $fid, $reset);
 }
 
 /**

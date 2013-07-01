@@ -103,7 +103,7 @@ function _node_mass_update_helper(NodeInterface $node, array $updates, $langcode
   $node->original = clone $node;
   foreach ($langcodes as $langcode) {
     foreach ($updates as $name => $value) {
-      $node->getTranslation($langcode, FALSE)->$name = $value;
+      $node->getTranslation($langcode)->$name = $value;
     }
   }
   $node->save();

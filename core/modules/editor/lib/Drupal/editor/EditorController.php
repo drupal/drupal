@@ -42,7 +42,7 @@ class EditorController extends ContainerAware {
     $response = new AjaxResponse();
 
     // Direct text editing is only supported for single-valued fields.
-    $field = $entity->getTranslation($langcode, FALSE)->$field_name;
+    $field = $entity->getTranslation($langcode)->$field_name;
     $editable_text = check_markup($field->value, $field->format, $langcode, FALSE, array(FILTER_TYPE_TRANSFORM_REVERSIBLE, FILTER_TYPE_TRANSFORM_IRREVERSIBLE));
     $response->addCommand(new GetUntransformedTextCommand($editable_text));
 

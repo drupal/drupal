@@ -87,7 +87,6 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
 
     // Populate the required contextual values.
     $attributes = $this->container->get('request')->attributes;
-    $attributes->set('working_langcode', $langcode);
     $attributes->set('source_langcode', $default_langcode);
 
     // Populate the test entity with some random initial values.
@@ -134,6 +133,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
     // items will be one less than the original values to check that only the
     // translated ones will be preserved. In fact we want the same fids and
     // items order for both languages.
+    $translation = $entity->getTranslation($langcode);
     for ($delta = 0; $delta < $this->cardinality - 1; $delta++) {
       // Simulate a field reordering: items are shifted of one position ahead.
       // The modulo operator ensures we start from the beginning after reaching
@@ -148,15 +148,16 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
         'alt' => $langcode . '_' . $fid . '_' . $this->randomName(),
         'title' => $langcode . '_' . $fid . '_' . $this->randomName(),
       );
-      $entity->getTranslation($langcode)->{$this->fieldName}->offsetGet($delta)->setValue($item);
+      $translation->{$this->fieldName}->offsetGet($delta)->setValue($item);
 
       // Again store the generated values keying them by fid for easier lookup.
       $values[$langcode][$fid] = $item;
     }
 
     // Perform synchronization: the translation language is used as source,
-    // while the default langauge is used as target.
-    $entity = $this->saveEntity($entity);
+    // while the default language is used as target.
+    $entity = $this->saveEntity($translation);
+    $translation = $entity->getTranslation($langcode);
 
     // Check that one value has been dropped from the original values.
     $assert = count($entity->{$this->fieldName}) == 2;
@@ -167,7 +168,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
     $fids = array();
     foreach ($entity->{$this->fieldName} as $delta => $item) {
       $value = $values[$default_langcode][$item->target_id];
-      $source_item = $entity->getTranslation($langcode)->{$this->fieldName}->offsetGet($delta);
+      $source_item = $translation->{$this->fieldName}->offsetGet($delta);
       $assert = $item->target_id == $source_item->target_id && $item->alt == $value['alt'] && $item->title == $value['title'];
       $this->assertTrue($assert, format_string('Field item @fid has been successfully synchronized.', array('@fid' => $item->target_id)));
       $fids[$item->target_id] = TRUE;
@@ -183,10 +184,11 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       'alt' => $langcode . '_' . $removed_fid . '_' . $this->randomName(),
       'title' => $langcode . '_' . $removed_fid . '_' . $this->randomName(),
     );
-    $entity->getTranslation($langcode)->{$this->fieldName}->setValue(array_values($values[$langcode]));
+    $translation->{$this->fieldName}->setValue(array_values($values[$langcode]));
     // When updating an entity we do not have a source language defined.
     $attributes->remove('source_langcode');
-    $entity = $this->saveEntity($entity);
+    $entity = $this->saveEntity($translation);
+    $translation = $entity->getTranslation($langcode);
 
     // Check that the value has been added to the default language.
     $assert = count($entity->{$this->fieldName}->getValue()) == 3;
@@ -198,7 +200,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       // values instead of the target one.
       $fid_langcode = $item->target_id != $removed_fid ? $default_langcode : $langcode;
       $value = $values[$fid_langcode][$item->target_id];
-      $source_item = $entity->getTranslation($langcode)->{$this->fieldName}->offsetGet($delta);
+      $source_item = $translation->{$this->fieldName}->offsetGet($delta);
       $assert = $item->target_id == $source_item->target_id && $item->alt == $value['alt'] && $item->title == $value['title'];
       $this->assertTrue($assert, format_string('Field item @fid has been successfully synchronized.', array('@fid' => $item->target_id)));
     }

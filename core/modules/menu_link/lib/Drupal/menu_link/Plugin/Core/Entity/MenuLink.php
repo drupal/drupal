@@ -571,8 +571,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
         $parent = $parent_candidates[$mlid];
       }
       else {
-        $parent = $storage_controller->load(array($mlid));
-        $parent = reset($parent);
+        $parent = $storage_controller->load($mlid);
       }
       if ($parent) {
         return $parent;

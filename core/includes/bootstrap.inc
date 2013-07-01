@@ -158,7 +158,7 @@ const DRUPAL_BOOTSTRAP_DATABASE = 3;
 const DRUPAL_BOOTSTRAP_VARIABLES = 4;
 
 /**
- * Eighth bootstrap phase: load code for subsystems and modules.
+ * Sixth bootstrap phase: load code for subsystems and modules.
  */
 const DRUPAL_BOOTSTRAP_CODE = 5;
 
@@ -2550,12 +2550,12 @@ function language_default_locked_languages($weight = 0) {
  * @param string $langcode
  *   The language code.
  *
- * @return Drupal\core\Language\Language | FALSE
- *   A fully-populated language object or FALSE.
+ * @return \Drupal\core\Language\Language|null
+ *   A fully-populated language object or NULL.
  */
 function language_load($langcode) {
   $languages = language_list(Language::STATE_ALL);
-  return isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
+  return isset($languages[$langcode]) ? $languages[$langcode] : NULL;
 }
 
 /**

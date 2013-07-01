@@ -235,9 +235,7 @@ function field_system_info_alter(&$info, $file, $type) {
 function field_entity_create(EntityInterface $entity) {
   $info = $entity->entityInfo();
   if (!empty($info['fieldable'])) {
-    foreach ($entity->getTranslationLanguages() as $langcode => $language) {
-      field_populate_default_values($entity, $langcode);
-    }
+    field_populate_default_values($entity, $entity->language()->id);
   }
 }
 

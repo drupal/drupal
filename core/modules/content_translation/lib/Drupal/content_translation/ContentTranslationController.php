@@ -119,7 +119,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   public function entityFormAlter(array &$form, array &$form_state, EntityInterface $entity) {
     $form_controller = content_translation_form_controller($form_state);
     $form_langcode = $form_controller->getFormLangcode($form_state);
-    $entity_langcode = $entity->language()->id;
+    $entity_langcode = $entity->getUntranslated()->language()->id;
     $source_langcode = $this->getSourceLangcode($form_state);
 
     $new_translation = !empty($source_langcode);
@@ -137,7 +137,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
     if (isset($languages[$form_langcode]) && ($has_translations || $new_translation)) {
       $title = $this->entityFormTitle($entity);
       // When editing the original values display just the entity label.
-      if ($form_langcode != $entity->language()->id) {
+      if ($form_langcode != $entity_langcode) {
         $t_args = array('%language' => $languages[$form_langcode]->name, '%title' => $entity->label());
         $title = empty($source_langcode) ? $title . ' [' . t('%language translation', $t_args) . ']' : t('Create %language translation of %title', $t_args);
       }
@@ -426,10 +426,9 @@ class ContentTranslationController implements ContentTranslationControllerInterf
     }
 
     // Set contextual information that can be reused during the storage phase.
-    // @todo Remove this once we have an EntityLanguageDecorator to deal with
-    //   the active language.
+    // @todo Remove this once translation metadata are converted to regular
+    //   fields.
     $attributes = \Drupal::request()->attributes;
-    $attributes->set('working_langcode', $form_langcode);
     $attributes->set('source_langcode', $source_langcode);
   }
 

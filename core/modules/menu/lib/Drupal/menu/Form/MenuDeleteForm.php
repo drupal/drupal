@@ -109,7 +109,7 @@ class MenuDeleteForm extends EntityConfirmFormBase implements EntityControllerIn
     // Reset all the menu links defined by the system via hook_menu().
     // @todo Convert this to an EFQ once we figure out 'ORDER BY m.number_parts'.
     $result = $this->connection->query("SELECT mlid FROM {menu_links} ml INNER JOIN {menu_router} m ON ml.router_path = m.path WHERE ml.menu_name = :menu AND ml.module = 'system' ORDER BY m.number_parts ASC", array(':menu' => $this->entity->id()), array('fetch' => \PDO::FETCH_ASSOC))->fetchCol();
-    $menu_links = $this->storageController->load($result);
+    $menu_links = $this->storageController->loadMultiple($result);
     foreach ($menu_links as $link) {
       $link->reset();
     }

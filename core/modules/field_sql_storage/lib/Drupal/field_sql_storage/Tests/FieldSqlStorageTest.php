@@ -321,7 +321,6 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
 
     // Update: Field translation is missing but field is not empty. Translation
     // data should survive.
-    $entity->getTranslation($unavailable_langcode)->{$this->field_name} = mt_rand(1, 127);
     unset($entity->{$this->field_name});
     field_attach_update($entity);
     $count = db_select($this->table)

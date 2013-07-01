@@ -240,7 +240,7 @@ function menu_enable() {
  * @param $menu_name
  *   The unique name of a custom menu to load.
  * @return
- *   Array defining the custom menu, or FALSE if the menu doesn't exist.
+ *   Array defining the custom menu, or NULL if the menu doesn't exist.
  */
 function menu_load($menu_name) {
   return entity_load('menu', $menu_name);

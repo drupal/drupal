@@ -262,7 +262,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
       ->condition('m.page_callback', 'system_admin_menu_block_page', '<>');
     $ids = $query->execute()->fetchCol(1);
 
-    return $this->load($ids);
+    return $this->loadMultiple($ids);
   }
 
   /**
@@ -393,8 +393,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
       $result = $query->execute();
       // Only valid if we get a unique result.
       if (count($result) == 1) {
-        $parent = $this->load($result);
-        $parent = reset($parent);
+        $parent = $this->load(reset($result));
       }
     } while ($parent === FALSE && $parent_path);
 

@@ -178,7 +178,7 @@ function filter_local_actions() {
  * @return
  *   A fully-populated text format object, if the requested format exists and
  *   is enabled. If the format does not exist, or exists in the database but
- *   has been marked as disabled, FALSE is returned.
+ *   has been marked as disabled, NULL is returned.
  *
  * @see filter_format_exists()
  *
@@ -186,7 +186,7 @@ function filter_local_actions() {
  */
 function filter_format_load($format_id) {
   $formats = filter_formats();
-  return isset($formats[$format_id]) ? $formats[$format_id] : FALSE;
+  return isset($formats[$format_id]) ? $formats[$format_id] : NULL;
 }
 
 /**

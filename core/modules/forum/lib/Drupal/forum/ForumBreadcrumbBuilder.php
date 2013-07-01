@@ -81,8 +81,7 @@ class ForumBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * Builds the breadcrumb for a forum post page.
    */
   protected function forumPostBreadcrumb($node) {
-    $vocabularies = $this->entityManager->getStorageController('taxonomy_vocabulary')->load(array($this->config->get('vocabulary')));
-    $vocabulary = reset($vocabularies);
+    $vocabulary = $this->entityManager->getStorageController('taxonomy_vocabulary')->load($this->config->get('vocabulary'));
 
     $breadcrumb[] = l(t('Home'), NULL);
     $breadcrumb[] = l($vocabulary->label(), 'forum');
@@ -99,8 +98,7 @@ class ForumBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * Builds the breadcrumb for a forum term page.
    */
   protected function forumTermBreadcrumb($term) {
-    $vocabularies = $this->entityManager->getStorageController('taxonomy_vocabulary')->load(array($this->config->get('vocabulary')));
-    $vocabulary = current($vocabularies);
+    $vocabulary = $this->entityManager->getStorageController('taxonomy_vocabulary')->load($this->config->get('vocabulary'));
 
     $breadcrumb[] = l(t('Home'), NULL);
     if ($term->tid) {

@@ -38,7 +38,18 @@ interface EntityStorageControllerInterface {
    * @return
    *   An array of entity objects indexed by their ids.
    */
-  public function load(array $ids = NULL);
+  public function loadMultiple(array $ids = NULL);
+
+  /**
+   * Loads one entity.
+   *
+   * @param mixed $id
+   *   The ID of the entity to load.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   An entity object.
+   */
+  public function load($id);
 
   /**
    * Loads an unchanged entity from the database.

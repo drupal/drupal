@@ -19,7 +19,7 @@ function content_translation_overview(EntityInterface $entity) {
   $controller = content_translation_controller($entity->entityType());
   $entity_manager = Drupal::entityManager();
   $languages = language_list();
-  $original = $entity->language()->id;
+  $original = $entity->getUntranslated()->language()->id;
   $translations = $entity->getTranslationLanguages();
   $field_ui = module_exists('field_ui') && user_access('administer ' . $entity->entityType() . ' fields');
 
@@ -238,19 +238,13 @@ function content_translation_edit_page(EntityInterface $entity, Language $langua
  */
 function content_translation_prepare_translation(EntityInterface $entity, Language $source, Language $target) {
   // @todo Unify field and property handling.
-  $instances = field_info_instances($entity->entityType(), $entity->bundle());
   $entity = $entity->getNGEntity();
   if ($entity instanceof EntityNG) {
     $source_translation = $entity->getTranslation($source->id);
-    $target_translation = $entity->getTranslation($target->id);
-    foreach ($target_translation->getPropertyDefinitions() as $property_name => $definition) {
-      // @todo The "key" part should not be needed. Remove it as soon as things
-      // do not break.
-      $key = key($entity->{$property_name}[0]->getProperties());
-      $target_translation->$property_name->{$key} = $source_translation->$property_name->{$key};
-    }
+    $entity->addTranslation($target->id, $source_translation->getPropertyValues());
   }
   else {
+    $instances = field_info_instances($entity->entityType(), $entity->bundle());
     foreach ($instances as $field_name => $instance) {
       $field = field_info_field($field_name);
       if (!empty($field['translatable'])) {

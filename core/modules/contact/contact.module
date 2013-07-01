@@ -232,8 +232,8 @@ function contact_field_extra_fields() {
  * @param $id
  *   The ID of the contact category to load.
  *
- * @return Drupal\contact\Plugin\Core\Entity\Category|false
- *   A Category object or FALSE if the requested $id does not exist.
+ * @return \Drupal\contact\Plugin\Core\Entity\Category|null
+ *   A Category object or NULL if the requested $id does not exist.
  */
 function contact_category_load($id) {
   return entity_load('contact_category', $id);

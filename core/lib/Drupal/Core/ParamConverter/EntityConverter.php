@@ -92,10 +92,7 @@ class EntityConverter implements ParamConverterInterface {
         $value = $variables[$name];
 
         $storageController = $this->entityManager->getStorageController($type);
-        $entities = $storageController->load(array($value));
-
-        // Make sure $entities is null, if upcasting fails.
-        $entity = $entities ? reset($entities) : NULL;
+        $entity = $storageController->load($value);
         $variables[$name] = $entity;
 
         // Mark this variable as converted.

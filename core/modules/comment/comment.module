@@ -1166,7 +1166,7 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
     // edit could change the security situation so it is not safe to index the
     // comments.
     $index_comments = TRUE;
-    $roles = Drupal::entityManager()->getStorageController('user_role')->load();
+    $roles = Drupal::entityManager()->getStorageController('user_role')->loadMultiple();
     $authenticated_can_access = $roles[DRUPAL_AUTHENTICATED_RID]->hasPermission('access comments');
     foreach ($roles as $rid => $role) {
       if ($role->hasPermission('search content') && !$role->hasPermission('access comments')) {

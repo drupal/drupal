@@ -194,7 +194,7 @@ class FilterFormatListController extends ConfigEntityListController implements F
   public function submitForm(array &$form, array &$form_state) {
     $values = $form_state['values']['formats'];
 
-    $entities = $this->storage->load(array_keys($values));
+    $entities = $this->storage->loadMultiple(array_keys($values));
     foreach ($values as $id => $value) {
       if (isset($entities[$id]) && $value['weight'] != $entities[$id]->get('weight')) {
         // Update changed weight.
