@@ -53,7 +53,7 @@ interface CommentStorageControllerInterface extends EntityStorageControllerInter
    * Updates the comment statistics for a given node.
    *
    * The {comment_entity_statistics} table has the following fields:
-   * - last_comment_timestamp: The timestamp of the last comment for this entity,
+   * - last_comment_timestamp: The timestamp of the last comment for the entity,
    *   or the entity created timestamp if no comments exist for the entity.
    * - last_comment_name: The name of the anonymous poster for the last comment.
    * - last_comment_uid: The user ID of the poster for the last comment for
