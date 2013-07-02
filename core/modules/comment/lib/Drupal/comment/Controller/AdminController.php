@@ -88,7 +88,7 @@ class AdminController implements ControllerInterface {
       $header['operations'] = t('Operations');
     }
 
-    // @todo remove when entity_get_bundles() is a method on the entity manager.
+    // @todo Remove when entity_get_bundles() is a method on the entity manager.
     $entity_bundles = entity_get_bundles();
     $entity_types = $this->entityManager->getDefinitions();
     $rows = array();
