@@ -54,7 +54,7 @@ class AdminController implements ControllerInterface {
    * Constructs an AdminController object.
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
-   *   The ntity manager service.
+   *   The entity manager service.
    * @param \Drupal\Core\Extension\ModuleHandler $module_handler
    *   The module handler service.
    * @param \Drupal\field\FieldInfo $field_info
