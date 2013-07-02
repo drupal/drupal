@@ -172,6 +172,10 @@ function hook_preprocess_HOOK(&$variables) {
  *   The variables array (modify in place).
  * @param $hook
  *   The name of the theme hook.
+ *
+ * @deprecated as of Drupal 8.0, the process layer will be removed. Use
+ *   preprocess instead and pass render arrays or objects with __toString()
+ *   methods to templates and theme functions.
  */
 function hook_process(&$variables, $hook) {
   // Wraps variables in RDF wrappers.
@@ -198,6 +202,10 @@ function hook_process(&$variables, $hook) {
  *
  * @param $variables
  *   The variables array (modify in place).
+ *
+ * @deprecated as of Drupal 8.0, the process layer will be removed. Use
+ *   preprocess instead and pass render arrays or objects with __toString()
+ *   methods to templates and theme functions.
  */
 function hook_process_HOOK(&$variables) {
   // @todo There are no use-cases in Drupal core for this hook. Find one from a
