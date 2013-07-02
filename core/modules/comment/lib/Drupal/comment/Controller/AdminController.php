@@ -133,12 +133,12 @@ class AdminController implements ControllerInterface {
       if ($field_ui_enabled) {
         // @todo Check proper permissions for operations.
         $links['fields'] = array(
-          'title' => t('manage fields'),
+          'title' => t('Manage fields'),
           'href' => 'admin/structure/comments/manage/' . $field_name . '/fields',
           'weight' => 5,
         );
         $links['display'] = array(
-          'title' => t('manage display'),
+          'title' => t('Manage display'),
           'href' => 'admin/structure/comments/manage/' . $field_name . '/display',
           'weight' => 10,
         );
