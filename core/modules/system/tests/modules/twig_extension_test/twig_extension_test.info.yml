@@ -1,0 +1,7 @@
+name: 'Twig Extension Test'
+type: module
+description: 'Support module for testing Twig extensions.'
+package: Testing
+version: VERSION
+core: 8.x
+hidden: true

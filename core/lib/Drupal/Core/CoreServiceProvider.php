@@ -22,6 +22,7 @@ use Drupal\Core\DependencyInjection\Compiler\RegisterServicesForDestructionPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterStringTranslatorsPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterBreadcrumbBuilderPass;
 use Drupal\Core\DependencyInjection\Compiler\RegisterAuthenticationPass;
+use Drupal\Core\DependencyInjection\Compiler\RegisterTwigExtensionsPass;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Definition;
@@ -74,6 +75,8 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     $container->addCompilerPass(new ModifyServiceDefinitionsPass());
     // Add the compiler pass that will process tagged authentication services.
     $container->addCompilerPass(new RegisterAuthenticationPass());
+    // Register Twig extensions.
+    $container->addCompilerPass(new RegisterTwigExtensionsPass());
   }
 
   /**
