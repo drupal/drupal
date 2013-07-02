@@ -106,11 +106,7 @@ function forum_enable() {
       ->save();
   }
   // Add the comment field to the forum node type.
-  if (!entity_load_multiple_by_properties('field_entity', array(
-    'field_name' => 'comment_node_forum',
-    'include_inactive' => TRUE,
-    'include_deleted' => FALSE,
-  ))) {
+  if (!Drupal::service('field.info')->getInstance('node', 'forum', 'comment_node_forum')) {
     comment_add_default_comment_field('node', 'forum', 'comment_node_forum', COMMENT_OPEN);
   }
 }
