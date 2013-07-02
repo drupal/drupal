@@ -105,7 +105,7 @@ function forum_enable() {
       ))
       ->save();
   }
-  // Add the comment field.
+  // Add the comment field to forum node type.
   if (!entity_load_multiple_by_properties('field_entity', array(
     'field_name' => 'comment_node_forum',
     'include_inactive' => TRUE,
@@ -126,18 +126,9 @@ function forum_uninstall() {
     $field->delete();
   }
 
-  // Remove the comment field from forum entity and its all associated comments.
-  if ($field = entity_load('field_entity', 'comment_node_forum')) {
-    $field->delete();
-  }
-
-  // Purge field data now to allow taxonomy and comment modules to be
-  // uninstalled if these were the only fields remaining. We need to call
-  // field_purge_batch at least twice as the instances won't be removed until
-  // all data is gone, both cannot be removed in the same call.
-  foreach (array('data', 'instances', 'fields') as $step) {
-    field_purge_batch(10);
-  }
+  // Purge field data now to allow taxonomy module to be uninstalled
+  // if this is the only field remaining.
+  field_purge_batch(10);
   // Allow to delete a forum's node type.
   $locked = Drupal::state()->get('node.type.locked');
   unset($locked['forum']);
