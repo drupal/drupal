@@ -105,7 +105,7 @@ function forum_enable() {
       ))
       ->save();
   }
-  // Add the comment field to forum node type.
+  // Add the comment field to the forum node type.
   if (!entity_load_multiple_by_properties('field_entity', array(
     'field_name' => 'comment_node_forum',
     'include_inactive' => TRUE,
