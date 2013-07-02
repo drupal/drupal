@@ -39,7 +39,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $this->drupalCreateContentType(array('type' => 'page'));
     comment_add_default_comment_field('node', 'article', 'comment_node_article');
 
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content translation'));
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content translation', 'administer content types'));
     $this->drupalLogin($admin_user);
   }
 
@@ -97,6 +97,11 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $language_configuration = language_get_default_configuration('comment', 'comment_node_article');
     $this->assertEqual($language_configuration['langcode'], 'current_interface', 'The default language for article comments is set to the current interface language.');
     $this->assertTrue($language_configuration['language_show'], 'The language selector for article comments is shown.');
+
+    // Verify language widget appears on node type form.
+    $this->drupalGet('admin/structure/types/manage/article');
+    $this->assertField('content_translation');
+    $this->assertFieldChecked('edit-content-translation');
   }
 
   /**

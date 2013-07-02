@@ -24,7 +24,7 @@
   clear: left; /* LTR */
   float: left; /* LTR */
 }
-[dir=rtl] .ckeditor-toolbar-active > ul {
+[dir="rtl"] .ckeditor-toolbar-active > ul {
   clear: right;
   float: right;
 }
@@ -34,7 +34,7 @@
 .ckeditor-toolbar-dividers {
   float: right; /* LTR */
 }
-[dir=rtl] .ckeditor-toolbar-dividers {
+[dir="rtl"] .ckeditor-toolbar-dividers {
   float: left;
 }
 .ckeditor-toolbar-disabled ul.ckeditor-buttons {
@@ -68,7 +68,7 @@ ul.ckeditor-buttons li {
   margin: 0;
   float: left; /* LTR */
 }
-[dir=rtl] ul.ckeditor-buttons li {
+[dir="rtl"] ul.ckeditor-buttons li {
   float: right;
 }
 ul.ckeditor-buttons li a {
@@ -104,7 +104,7 @@ ul.ckeditor-buttons li:first-child a {
   border-top-left-radius: 2px; /* LTR */
   border-bottom-left-radius: 2px; /* LTR */
 }
-[dir=rtl] ul.ckeditor-buttons li:first-child a {
+[dir="rtl"] ul.ckeditor-buttons li:first-child a {
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
 }
@@ -112,7 +112,7 @@ ul.ckeditor-buttons li:last-child a {
   border-top-right-radius: 2px; /* LTR */
   border-bottom-right-radius: 2px; /* LTR */
 }
-[dir=rtl] ul.ckeditor-buttons li:last-child a {
+[dir="rtl"] ul.ckeditor-buttons li:last-child a {
   border-top-left-radius: 2px;
   border-bottom-left-radius: 2px;
 }
@@ -126,7 +126,7 @@ ul.ckeditor-multiple-buttons {
   list-style: none;
   float: left; /* LTR */
 }
-[dir=rtl] ul.ckeditor-multiple-buttons {
+[dir="rtl"] ul.ckeditor-multiple-buttons {
   float: right;
 }
 ul.ckeditor-multiple-buttons li {
@@ -135,7 +135,7 @@ ul.ckeditor-multiple-buttons li {
   margin: 0;
   padding: 0;
 }
-[dir=rtl] ul.ckeditor-multiple-buttons li {
+[dir="rtl"] ul.ckeditor-multiple-buttons li {
   float: right;
 }
 ul.ckeditor-multiple-buttons li a {
@@ -200,7 +200,7 @@ ul.ckeditor-multiple-buttons li.ckeditor-button-separator a {
   width: 40px;
   text-align: right; /* LTR */
 }
-[dir=rtl] .ckeditor-row-controls {
+[dir="rtl"] .ckeditor-row-controls {
   float: left;
   text-align: left;
 }

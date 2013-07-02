@@ -34,13 +34,13 @@
   background-position: 100% 2px; /* LTR */
   background-repeat: no-repeat;
 }
-.js[dir=rtl] input.form-autocomplete {
+.js[dir="rtl"] input.form-autocomplete {
   background-position: 0% 2px;
 }
 .js input.throbbing {
   background-position: 100% -18px; /* LTR */
 }
-.js[dir=rtl] input.throbbing {
+.js[dir="rtl"] input.throbbing {
   background-position: 0% -18px;
 }
 
@@ -97,7 +97,7 @@ body.drag {
   overflow: hidden;
   text-decoration: none;
 }
-[dir=rtl] .draggable a.tabledrag-handle {
+[dir="rtl"] .draggable a.tabledrag-handle {
   float: right;
   margin-right: -1em;
   margin-left: 0;
@@ -112,7 +112,7 @@ a.tabledrag-handle .handle {
   padding: 0.42em 0.5em; /* LTR */
   width: 13px;
 }
-[dir=rtl] a.tabledrag-handle .handle {
+[dir="rtl"] a.tabledrag-handle .handle {
   margin: -0.4em 0.5em;
   padding: 0.42em 0.5em;
 }
@@ -145,7 +145,7 @@ div.indentation {
   padding: 0.42em 0 0.42em 0.6em; /* LTR */
   width: 20px;
 }
-[dir=rtl] div.indentation {
+[dir="rtl"] div.indentation {
   float: right;
   margin: -0.4em -0.4em -0.4em 0.2em;
   padding: 0.42em 0.6em 0.42em 0;
@@ -156,8 +156,8 @@ div.tree-child {
 div.tree-child-last {
   background: url(../../../misc/tree-bottom.png) no-repeat 11px center; /* LTR */
 }
-[dir=rtl] div.tree-child,
-[dir=rtl] div.tree-child-last {
+[dir="rtl"] div.tree-child,
+[dir="rtl"] div.tree-child-last {
   background-position: -65px center;
 }
 div.tree-child-horizontal {
@@ -166,7 +166,7 @@ div.tree-child-horizontal {
 .tabledrag-toggle-weight-wrapper {
   text-align: right; /* LTR */
 }
-[dir=rtl] .tabledrag-toggle-weight-wrapper {
+[dir="rtl"] .tabledrag-toggle-weight-wrapper {
   text-align: left;
 }
 
@@ -199,10 +199,10 @@ table.sticky-header {
 .progress .percentage {
   float: right; /* LTR */
 }
-[dir=rtl] .progress .percentage {
+[dir="rtl"] .progress .percentage {
   float: left;
 }
-[dir=rtl] .progress-disabled {
+[dir="rtl"] .progress-disabled {
   float: right;
 }
 /* Throbber */
@@ -210,7 +210,7 @@ table.sticky-header {
   display: inline-block;
   padding: 1px 5px 2px 5px;
 }
-[dir=rtl] .ajax-progress {
+[dir="rtl"] .ajax-progress {
   float: right;
 }
 .ajax-progress-throbber .throbber {

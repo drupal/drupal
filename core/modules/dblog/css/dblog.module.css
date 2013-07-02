@@ -8,8 +8,8 @@
   margin: .1em .9em .1em .1em; /* LTR */
   max-width: 30%;
 }
-[dir=rtl] .dblog-filter-form .form-item-type,
-[dir=rtl] .dblog-filter-form .form-item-severity {
+[dir="rtl"] .dblog-filter-form .form-item-type,
+[dir="rtl"] .dblog-filter-form .form-item-severity {
   margin: .1em .1em .1em .9em;
 }
 .dblog-filter-form .form-actions {

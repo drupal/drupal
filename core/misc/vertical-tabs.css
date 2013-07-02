@@ -3,7 +3,7 @@
   margin: 1em 0 1em 15em; /* LTR */
   border: 1px solid #ccc;
 }
-[dir=rtl] .vertical-tabs {
+[dir="rtl"] .vertical-tabs {
    margin-left: 0;
    margin-right: 15em;
 }
@@ -15,7 +15,7 @@
   border-top: 1px solid #ccc;
   list-style: none;
 }
-[dir=rtl] .vertical-tabs-list {
+[dir="rtl"] .vertical-tabs-list {
   float: right;
   margin-left: 0;
   margin-right: -15em;
@@ -53,7 +53,7 @@
   border-right-width: 0; /* LTR */
   background-color: #fff;
 }
-[dir=rtl] .vertical-tab-button.selected {
+[dir="rtl"] .vertical-tab-button.selected {
   border-left-width: 0;
   border-right-width: 1px;
 }

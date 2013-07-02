@@ -23,7 +23,7 @@
 .toolbar .vertical .handle + a {
   margin-right: 3em; /* LTR */
 }
-[dir=rtl] .toolbar .vertical .handle + a {
+[dir="rtl"] .toolbar .vertical .handle + a {
   margin-left: 3em;
   margin-right: 0;
 }
@@ -90,7 +90,7 @@
   width: 3em;
   z-index: 1;
 }
-[dir=rtl] .toolbar .icon.handle {
+[dir="rtl"] .toolbar .icon.handle {
   left: 0;
   right: auto;
 }
@@ -98,7 +98,7 @@
   background-image: url("../images/icon-open.png");
   left: 0; /* LTR */
 }
-[dir=rtl] .toolbar .icon.handle:before {
+[dir="rtl"] .toolbar .icon.handle:before {
   left: auto;
   right: 0;
 }

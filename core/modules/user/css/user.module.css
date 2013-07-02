@@ -4,7 +4,7 @@
 #permissions td.permission {
   padding-left: 1.5em; /* LTR */
 }
-[dir=rtl] #permissions td.permission {
+[dir="rtl"] #permissions td.permission {
   padding-left: 0;
   padding-right: 1.5em;
 }
@@ -24,7 +24,7 @@
   width: 17em;
   float: right;  /* LTR */
 }
-[dir=rtl] .password-strength {
+[dir="rtl"] .password-strength {
   float: left;
 }
 .password-strength-title {
@@ -34,7 +34,7 @@
   float: right; /* LTR */
   font-weight: bold;
 }
-[dir=rtl] .password-strength-text {
+[dir="rtl"] .password-strength-text {
   float: left;
 }
 .password-indicator {
@@ -57,7 +57,7 @@ div.password-confirm {
   visibility: hidden;
   width: 17em;
 }
-[dir=rtl] div.password-confirm {
+[dir="rtl"] div.password-confirm {
   float: left;
 }
 div.form-item div.password-suggestions {
@@ -75,8 +75,8 @@ div.password-suggestions ul {
   margin: 0;
   width: 36.3em;
 }
-[dir=rtl] .confirm-parent,
-[dir=rtl] .password-parent {
+[dir="rtl"] .confirm-parent,
+[dir="rtl"] .password-parent {
   clear: right;
 }
 

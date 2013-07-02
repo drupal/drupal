@@ -7,8 +7,8 @@
 .field-label-inline .field-items {
   float:left; /*LTR*/
 }
-[dir=rtl] .field-label-inline .field-label,
-[dir=rtl] .field-label-inline .field-items {
+[dir="rtl"] .field-label-inline .field-label,
+[dir="rtl"] .field-label-inline .field-items {
   float: right;
 }
 
@@ -23,13 +23,13 @@ form .field-multiple-table .field-multiple-drag {
   width: 30px;
   padding-right: 0; /*LTR*/
 }
-[dir=rtl] form .field-multiple-table .field-multiple-drag {
+[dir="rtl"] form .field-multiple-table .field-multiple-drag {
   padding-left: 0;
 }
 form .field-multiple-table .field-multiple-drag .tabledrag-handle {
   padding-right: .5em; /*LTR*/
 }
-[dir=rtl] form .field-multiple-table .field-multiple-drag .tabledrag-handle {
+[dir="rtl"] form .field-multiple-table .field-multiple-drag .tabledrag-handle {
   padding-left: .5em;
 }
 form .field-add-more-submit {

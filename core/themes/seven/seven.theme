@@ -144,6 +144,8 @@ function seven_tablesort_indicator($variables) {
 function seven_preprocess_install_page(&$variables) {
   drupal_add_js(drupal_get_path('theme', 'seven') . '/js/mobile.install.js');
   drupal_add_css(drupal_get_path('theme', 'seven') . '/install-page.css', array('group' => CSS_AGGREGATE_THEME));
+  $variables['styles'] = drupal_get_css();
+  $variables['scripts'] = drupal_get_js();
 }
 
 /**

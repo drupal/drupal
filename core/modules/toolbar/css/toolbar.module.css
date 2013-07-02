@@ -25,7 +25,7 @@ html.js .toolbar {
   top: 0;
   width: 100%;
 }
-html.js[dir=rtl] .toolbar {
+html.js[dir="rtl"] .toolbar {
    left: auto;
    right: 0;
  }
@@ -52,8 +52,8 @@ html.js[dir=rtl] .toolbar {
 .js .toolbar .horizontal .tab  {
   float: left; /* LTR */
 }
-.js[dir=rtl] .toolbar .bar .tab,
-.js[dir=rtl] .toolbar .horizontal .tab {
+.js[dir="rtl"] .toolbar .bar .tab,
+.js[dir="rtl"] .toolbar .horizontal .tab {
   float: right;
 }
 .js .toolbar a {
@@ -70,7 +70,7 @@ html.js[dir=rtl] .toolbar {
   z-index: 1250;
   width: 100%;
 }
-.js[dir=rtl] .toolbar .bar {
+.js[dir="rtl"] .toolbar .bar {
   left: auto;
   right: 0;
 }
@@ -79,8 +79,8 @@ html.js[dir=rtl] .toolbar {
   .js .toolbar .tray li {
     float: none; /* LTR */
   }
-  .js[dir=rtl] .toolbar .bar .tab,
-  .js[dir=rtl] .toolbar .tray li {
+  .js[dir="rtl"] .toolbar .bar .tab,
+  .js[dir="rtl"] .toolbar .tray li {
     float: none;
   }
 }
@@ -89,8 +89,8 @@ html.js[dir=rtl] .toolbar {
   .js .toolbar .horizontal li {
     float: left; /* LTR */
   }
-  .js[dir=rtl] .toolbar .bar .tab,
-  .js[dir=rtl] .toolbar .horizontal li {
+  .js[dir="rtl"] .toolbar .bar .tab,
+  .js[dir="rtl"] .toolbar .horizontal li {
     float: right;
   }
 }
@@ -127,7 +127,7 @@ html.js[dir=rtl] .toolbar {
   left: -100%; /* LTR */
   position: absolute;
 }
-[dir=rtl] .toolbar .vertical {
+[dir="rtl"] .toolbar .vertical {
   left: auto;
   right: -100%;
 }
@@ -137,7 +137,7 @@ html.js[dir=rtl] .toolbar {
   /* Set one higher than the contextual links gear. */
   z-index: 1000;
 }
-[dir=rtl] .toolbar .horizontal {
+[dir="rtl"] .toolbar .horizontal {
   left: auto;
   right: 0;
 }
@@ -153,8 +153,8 @@ html.js[dir=rtl] .toolbar {
   position: absolute;
   width: 100%;
 }
-[dir=rtl] .toolbar .vertical > .lining,
-[dir=rtl] .toolbar .vertical > .lining:before {
+[dir="rtl"] .toolbar .vertical > .lining,
+[dir="rtl"] .toolbar .vertical > .lining:before {
   left: auto;
   right: -100%;
 }
@@ -185,8 +185,8 @@ html.js[dir=rtl] .toolbar {
   left: 0; /* LTR */
   top: 0;
 }
-[dir=rtl] .toolbar .vertical.active,
-[dir=rtl] .toolbar .vertical.active > .lining {
+[dir="rtl"] .toolbar .vertical.active,
+[dir="rtl"] .toolbar .vertical.active > .lining {
   left: auto;
   right: 0;
 }
@@ -220,7 +220,7 @@ html.js[dir=rtl] .toolbar {
     display: block;
     left: -1px; /* LTR */
   }
-  [dir=rtl] .toolbar .vertical.active > .lining:before {
+  [dir="rtl"] .toolbar .vertical.active > .lining:before {
     left: auto;
     right: -1px;
   }
@@ -238,7 +238,7 @@ html.js[dir=rtl] .toolbar {
     margin-left: 240px; /* LTR */
     margin-left: 15rem; /* LTR */
   }
-  [dir=rtl] body.toolbar-tray-open.toolbar-vertical {
+  [dir="rtl"] body.toolbar-tray-open.toolbar-vertical {
     margin-left: 0;
     margin-right: 240px;
     margin-right: 15rem;
@@ -269,7 +269,7 @@ html.js[dir=rtl] .toolbar {
   right: 0; /* LTR */
   top: 0;
 }
-[dir=rtl] .toolbar .horizontal .toggle-orientation {
+[dir="rtl"] .toolbar .horizontal .toggle-orientation {
   left: 0;
   right: auto;
 }
@@ -277,6 +277,6 @@ html.js[dir=rtl] .toolbar {
   float: right; /* LTR */
   width: 100%;
 }
-[dir=rtl] .toolbar .vertical .toggle-orientation {
+[dir="rtl"] .toolbar .vertical .toggle-orientation {
   float: left;
 }

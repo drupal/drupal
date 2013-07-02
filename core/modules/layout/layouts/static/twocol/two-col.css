@@ -4,7 +4,7 @@
     float: left; /* LTR */
     width: 50%;
   }
-  [dir=rtl] .layout-two-col .layout-region {
+  [dir="rtl"] .layout-two-col .layout-region {
     float: right;
   }
 }

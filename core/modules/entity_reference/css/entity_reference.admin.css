@@ -2,6 +2,6 @@
 .entity_reference-settings {
   margin-left: 1.5em; /* LTR */
 }
-[dir=rtl] .entity_reference-settings {
+[dir="rtl"] .entity_reference-settings {
   margin-right: 1.5em;
 }

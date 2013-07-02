@@ -24,7 +24,7 @@
   text-align: left; /* LTR */
   width: 45%;
 }
-[dir=rtl] .book-pager .previous {
+[dir="rtl"] .book-pager .previous {
   float: right;
   text-align: right;
 }
@@ -37,7 +37,7 @@
   text-align: right; /* LTR */
   width: 45%;
 }
-[dir=rtl] .book-pager .next {
+[dir="rtl"] .book-pager .next {
   float: left;
   text-align: left;
 }

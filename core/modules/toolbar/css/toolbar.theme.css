@@ -31,7 +31,7 @@
   box-shadow: -1px 0 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
   color: #dddddd;
 }
-[dir=rtl] .toolbar .bar {
+[dir="rtl"] .toolbar .bar {
   box-shadow: 1px 0 3px 1px rgba(0, 0, 0, 0.3333);
 }
 .toolbar .bar a {
@@ -59,7 +59,7 @@
 .toolbar .horizontal > .lining {
   padding-right: 5em; /* LTR */
 }
-[dir=rtl] .toolbar .horizontal > .lining {
+[dir="rtl"] .toolbar .horizontal > .lining {
   padding-right: 0;
   padding-left: 5em;
 }
@@ -68,22 +68,22 @@
   background-color: #ffffff;
   border-right: 1px solid #aaaaaa; /* LTR */
 }
-[dir=rtl] .toolbar .vertical > .lining,
-[dir=rtl] .toolbar .vertical > .lining:before {
+[dir="rtl"] .toolbar .vertical > .lining,
+[dir="rtl"] .toolbar .vertical > .lining:before {
   border-left: 1px solid #aaaaaa;
   border-right: 0 none;
 }
 .toolbar .vertical > .lining:before {
   box-shadow: -1px 0 5px 2px rgba(0, 0, 0, 0.3333); /* LTR */
 }
-[dir=rtl] .toolbar .vertical > .lining:before {
+[dir="rtl"] .toolbar .vertical > .lining:before {
   box-shadow: 1px 0 5px 2px rgba(0, 0, 0, 0.3333);
 }
 .toolbar .horizontal {
   border-bottom: 1px solid #aaaaaa;
   box-shadow: -2px 1px 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
 }
-[dir=rtl] .toolbar .horizontal {
+[dir="rtl"] .toolbar .horizontal {
   box-shadow: 2px 1px 3px 1px rgba(0, 0, 0, 0.3333);
 }
 .toolbar .horizontal .tray {
@@ -103,14 +103,14 @@
 .toolbar .horizontal .menu li + li {
   border-left: 1px solid #dddddd; /* LTR */
 }
-[dir=rtl] .toolbar .horizontal .menu li + li {
+[dir="rtl"] .toolbar .horizontal .menu li + li {
   border-left: 0 none ;
   border-right: 1px solid #dddddd;
 }
 .toolbar .horizontal .menu li:last-child {
   border-right: 1px solid #dddddd; /* LTR */
 }
-[dir=rtl] .toolbar .horizontal .menu li:last-child {
+[dir="rtl"] .toolbar .horizontal .menu li:last-child {
   border-left: 1px solid #dddddd;
 }
 .toolbar .vertical .menu li + li {
@@ -132,14 +132,14 @@
 .toolbar .vertical .menu .menu .menu {
   margin-left: 1.3333em; /* LTR */
 }
-[dir=rtl] .toolbar .vertical .menu .menu .menu {
+[dir="rtl"] .toolbar .vertical .menu .menu .menu {
   margin-left: 0;
   margin-right: 1.3333em;
 }
 .toolbar .vertical .menu .menu .menu .menu {
   margin-left: 0.25em; /* LTR */
 }
-[dir=rtl] .toolbar .vertical .menu .menu .menu .menu {
+[dir="rtl"] .toolbar .vertical .menu .menu .menu .menu {
   margin-left: 0;
   margin-right: 0.25em;
 }
@@ -149,7 +149,7 @@
 .toolbar .vertical .menu .menu .menu a {
   padding-left: 0.6667em; /* LTR */
 }
-[dir=rtl] .toolbar .vertical .menu .menu .menu a {
+[dir="rtl"] .toolbar .vertical .menu .menu .menu a {
   padding-left: 0;
   padding-right: 0.5em;
 }
@@ -164,7 +164,7 @@
 .toolbar .horizontal .toggle-orientation {
   border-left: 1px solid #c9c9c9; /* LTR */
 }
-[dir=rtl] .toolbar .horizontal .toggle-orientation {
+[dir="rtl"] .toolbar .horizontal .toggle-orientation {
   border-left: 0 none;
   border-right: 1px solid #c9c9c9;
 }
@@ -172,7 +172,7 @@
   float: right; /* LTR */
   padding: 0.1667em;
 }
-[dir=rtl] .toolbar .toggle-orientation > .lining {
+[dir="rtl"] .toolbar .toggle-orientation > .lining {
   float: left;
 }
 .toolbar .toggle-orientation button {
@@ -186,14 +186,14 @@
 .toolbar .toggle-orientation button:before {
   left: 0; /* LTR */
 }
-[dir=rtl] .toolbar .toggle-orientation button:before {
+[dir="rtl"] .toolbar .toggle-orientation button:before {
   left: auto;
   right: 0;
 }
 .toolbar .toggle-orientation [value="vertical"]:before {
   background-image: url('../images/icon-toggle-vertical.png'); /* LTR */
 }
-[dir=rtl] .toolbar .toggle-orientation [value="vertical"]:before {
+[dir="rtl"] .toolbar .toggle-orientation [value="vertical"]:before {
   background-image: url('../images/icon-toggle-vertical-rtl.png');
 }
 .toolbar .toggle-orientation [value="horizontal"]:before {

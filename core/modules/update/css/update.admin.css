@@ -9,7 +9,7 @@
   padding-left: .25em; /* LTR */
   height: 22px;
 }
-[dir=rtl] .update .project {
+[dir="rtl"] .update .project {
   padding-right: .25em;
 }
 
@@ -19,7 +19,7 @@
   font-size: 110%;
   height: 20px;
 }
-[dir=rtl] .update .version-status {
+[dir="rtl"] .update .version-status {
   float: left;
   padding-left: 10px;
 }
@@ -27,7 +27,7 @@
 .update .version-status .icon {
   padding-left: .5em; /* LTR */
 }
-[dir=rtl] .update .version-status .icon {
+[dir="rtl"] .update .version-status .icon {
   padding-right: .5em;
 }
 
@@ -103,14 +103,14 @@ table.update,
   padding-left: 1em; /* LTR */
   width: 14em;
 }
-[dir=rtl] .update table.version .version-title {
+[dir="rtl"] .update table.version .version-title {
   padding-left: 1em;
 }
 
 .update table.version .version-details {
   padding-right: .5em; /* LTR */
 }
-[dir=rtl] .update table.version .version-details {
+[dir="rtl"] .update table.version .version-details {
   padding-left: .5em;
   direction: ltr;
 }
@@ -119,7 +119,7 @@ table.update,
   text-align: right; /* LTR */
   padding-right: 1em; /* LTR */
 }
-[dir=rtl] .update table.version .version-links {
+[dir="rtl"] .update table.version .version-links {
   text-align: left;
   padding-left: 1em;
 }
@@ -140,7 +140,7 @@ table.update,
 .update .check-manually {
   padding-left: 1em; /* LTR */
 }
-[dir=rtl] .update .check-manually {
+[dir="rtl"] .update .check-manually {
   padding-right: 1em;
 }
 
