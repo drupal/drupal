@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\comment\Controller\AdminController
+ * Contains \Drupal\comment\Controller\AdminController.
  */
 
 namespace Drupal\comment\Controller;
@@ -13,6 +13,9 @@ use Drupal\Core\Extension\ModuleHandler;
 use Drupal\field\FieldInfo;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Returns responses for comment module administrative routes.
+ */
 class AdminController implements ControllerInterface {
 
   /**
