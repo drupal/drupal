@@ -10,3 +10,7 @@ services:
     arguments: ['@plugin.manager.entity']
     tags:
       - { name: breadcrumb_builder, priority: 1002 }
+
+  comment.manager:
+    class: Drupal\comment\CommentManager
+    arguments: ['@field.info', '@plugin.manager.entity']

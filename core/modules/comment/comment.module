@@ -1849,30 +1849,43 @@ function comment_library_info() {
 }
 
 /**
- * Utility function to return an array of comment fields.
- *
- * @param string $entity_type
- *   (optional) Specify a entity type if you want to just return fields which
- *   are attached on a certain entity type. Defaults to NULL.
- *
- * @return array
- *   An array of comment field map definitions, keyed by field name. Each value
- *   is an array with two entries:
- *   - type: The field type.
- *   - bundles: The bundles in which the field appears, as an array with entity
- *     types as keys and the array of bundle names as values.
- *
- * @see field_info_field_map().
+ * Implements hook_ENTITY_TYPE_create() for 'field_instance'.
  */
-function comment_get_comment_fields($entity_type = NULL) {
-  return array_filter(Drupal::service('field.info')->getFieldMap(), function ($value) use($entity_type) {
-    if ($value['type']  == 'comment') {
-      if (isset($entity_type)) {
-        return isset($value['bundles'][$entity_type]);
-      }
-      return TRUE;
+function comment_field_instance_create(FieldInstanceInterface $instance) {
+  if ($instance->getFieldType() == 'comment') {
+    if (empty($instance->default_value)) {
+      // Set comments enabled by default when field created via UI.
+      $instance->default_value = array(array('status' => COMMENT_OPEN));
     }
-  });
+    _comment_body_field_create($instance->entity_type, $instance->bundle, $instance->getFieldName());
+    Drupal::cache()->delete('comment_entity_info');
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for 'field_entity'.
+ */
+function comment_field_entity_delete(FieldInterface $field) {
+  if ($field->getFieldType() == 'comment') {
+    // Delete all fields and displays attached to the comment bundle.
+    entity_invoke_bundle_hook('delete', 'comment', $field->getFieldName());
+    Drupal::cache()->delete('comment_entity_info');
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for 'field_instance'.
+ */
+function comment_field_instance_delete(FieldInstanceInterface $instance) {
+  if ($instance->getFieldType() == 'comment') {
+    // Delete all comments that used by the entity bundle.
+    $comments = entity_load_multiple_by_properties('comment', array(
+      'entity_type' => $instance->entity_type,
+      'field_name' => $instance->getFieldName(),
+    ));
+    entity_delete_multiple('comment', array_keys($comments));
+    Drupal::cache()->delete('comment_entity_info');
+  }
 }
 
 /**
@@ -1912,6 +1925,26 @@ function comment_mark(CommentInterface $comment) {
 }
 
 /**
+ * Utility function to return an array of comment fields.
+ *
+ * @param string $entity_type
+ *   (optional) Specify a entity type if you want to just return fields which
+ *   are attached on a certain entity type. Defaults to NULL.
+ *
+ * @return array
+ *   An array of comment field map definitions, keyed by field name. Each value
+ *   is an array with two entries:
+ *   - type: The field type.
+ *   - bundles: The bundles in which the field appears, as an array with entity
+ *     types as keys and the array of bundle names as values.
+ *
+ * @see field_info_field_map().
+ */
+function comment_get_comment_fields($entity_type = NULL) {
+  return Drupal::service('comment.manager')->getFields($entity_type);
+}
+
+/**
  * Utility method to add the default comment field to an entity.
  *
  * Attaches a comment field named 'comment' to the given entity type and bundle.
@@ -1928,88 +1961,7 @@ function comment_mark(CommentInterface $comment) {
  *   COMMENT_CLOSED. Defaults to COMMENT_OPEN.
  */
 function comment_add_default_comment_field($entity_type, $bundle, $field_name = 'comment', $default_value = COMMENT_OPEN) {
-  // Make sure field doesn't already exist.
-  if (!Drupal::service('field.info')->getField($field_name)) {
-    // Add a default comment field for existing node comments.
-    $field = entity_create('field_entity', array(
-      'field_name' => $field_name,
-      'type' => 'comment',
-      'translatable' => '0',
-    ));
-    // Create the field.
-    $field->save();
-  }
-  // Make sure the instance doesn't already exist.
-  if (!Drupal::service('field.info')->getInstance($entity_type, $bundle, $field_name)) {
-    $instance = entity_create('field_instance', array(
-      'label' => 'Comment settings',
-      'description' => '',
-      'field_name' => $field_name,
-      'entity_type' => $entity_type,
-      'bundle' => $bundle,
-      'required' => 1,
-      'default_value' => array(array('status' => $default_value)),
-    ));
-    $instance->save();
-
-    // Assign widget settings for the 'default' form mode.
-    entity_get_form_display($entity_type, $bundle, 'default')
-      ->setComponent($field_name, array(
-        'type' => 'comment_default',
-        'weight' => 20,
-      ))
-      ->save();
-
-    // Set default to display comment list.
-    entity_get_display($entity_type, $bundle, 'default')
-      ->setComponent($field_name, array(
-        'label' => 'hidden',
-        'type' => 'comment_default',
-        'weight' => 20,
-      ))
-      ->save();
-  }
-  _comment_body_field_create($entity_type, $bundle, $field_name);
-}
-
-/**
- * Implements hook_ENTITY_TYPE_create() for 'field_instance'.
- */
-function comment_field_instance_create(FieldInstanceInterface $instance) {
-  if ($instance->getFieldType() == 'comment') {
-    if (empty($instance->default_value)) {
-      // Set comments enabled by default when field created via UI.
-      $instance->default_value = array(array('status' => COMMENT_OPEN));
-    }
-    _comment_body_field_create($instance->entity_type, $instance->bundle, $instance->getFieldName());
-    Drupal::cache()->delete('comment_entity_info');
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_delete() for 'field_entity'.
- */
-function comment_field_entity_delete(FieldInterface $field) {
-  if ($field->getFieldType() == 'comment') {
-    // Delete all fields and displays attached to the comment bundle.
-    entity_invoke_bundle_hook('delete', 'comment', $field->getFieldName());
-    Drupal::cache()->delete('comment_entity_info');
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_delete() for 'field_instance'.
- */
-function comment_field_instance_delete(FieldInstanceInterface $instance) {
-  if ($instance->getFieldType() == 'comment') {
-    // Delete all comments that used by the entity bundle.
-    $comments = entity_load_multiple_by_properties('comment', array(
-      'entity_type' => $instance->entity_type,
-      'field_name' => $instance->getFieldName(),
-    ));
-    entity_delete_multiple('comment', array_keys($comments));
-    Drupal::cache()->delete('comment_entity_info');
-  }
+  return Drupal::service('comment.manager')->addDefaultField($entity_type, $bundle, $field_name, $default_value);
 }
 
 /**
