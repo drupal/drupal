@@ -99,7 +99,7 @@ class CommentManager {
     }
     // Make sure the instance doesn't already exist.
     if (!$this->fieldInfo->getInstance($entity_type, $bundle, $field_name)) {
-      $instance = $this->entityManager->getStorageController('field_entity')->create('field_instance', array(
+      $instance = $this->entityManager->getStorageController('field_instance')->create(array(
         'label' => 'Comment settings',
         'description' => '',
         'field_name' => $field_name,
