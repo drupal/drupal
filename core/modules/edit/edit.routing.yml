@@ -19,3 +19,12 @@ edit_field_form:
   requirements:
     _permission: 'access in-place editing'
     _access_edit_entity_field: 'TRUE'
+
+
+edit_entity_save:
+  pattern: '/edit/entity/{entity_type}/{entity}'
+  defaults:
+    _controller: '\Drupal\edit\EditController::entitySave'
+  requirements:
+    _permission: 'access in-place editing'
+    _access_edit_entity: 'TRUE'

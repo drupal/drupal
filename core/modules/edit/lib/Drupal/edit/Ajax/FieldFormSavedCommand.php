@@ -10,8 +10,8 @@ namespace Drupal\edit\Ajax;
 use Drupal\Core\Ajax\CommandInterface;
 
 /**
- * AJAX command to indicate a field form was saved without validation errors and
- * pass the rerendered field to Edit's JavaScript app.
+ * AJAX command to indicate a field was saved into TempStore without validation
+ * errors and pass the rerendered field to Edit's JavaScript app.
  */
 class FieldFormSavedCommand extends BaseCommand {
 

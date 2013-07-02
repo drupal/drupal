@@ -7,6 +7,7 @@
 
 namespace Drupal\edit;
 
+use Drupal;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,12 +17,31 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\edit\Ajax\FieldFormCommand;
 use Drupal\edit\Ajax\FieldFormSavedCommand;
 use Drupal\edit\Ajax\FieldFormValidationErrorsCommand;
+use Drupal\edit\Ajax\EntitySavedCommand;
 use Drupal\edit\Ajax\MetadataCommand;
+use Drupal\user\TempStoreFactory;
 
 /**
  * Returns responses for Edit module routes.
  */
 class EditController extends ContainerAware {
+
+  /**
+   * Stores the tempstore factory.
+   *
+   * @var \Drupal\user\TempStoreFactory
+   */
+  protected $tempStoreFactory;
+
+  /**
+   * Constructs a new EditController.
+   *
+   * @param \Drupal\user\TempStoreFactory $temp_store_factory
+   *   The factory for the temp store object.
+   */
+  public function __construct(TempStoreFactory $temp_store_factory = NULL) {
+    $this->tempStoreFactory = $temp_store_factory ?: Drupal::service('user.tempstore');
+  }
 
   /**
    * Returns the metadata for a set of fields.
@@ -118,17 +138,27 @@ class EditController extends ContainerAware {
   public function fieldForm(EntityInterface $entity, $field_name, $langcode, $view_mode_id, Request $request) {
     $response = new AjaxResponse();
 
+    // Replace entity with tempstore copy if available and not resetting, init
+    // tempstore copy otherwise.
+    $tempstore_entity = $this->tempStoreFactory->get('edit')->get($entity->uuid());
+    if ($tempstore_entity && !(isset($_POST['reset']) && $_POST['reset'] === 'true')) {
+      $entity = $tempstore_entity;
+    }
+    else {
+      $this->tempStoreFactory->get('edit')->set($entity->uuid(), $entity);
+    }
+
     $form_state = array(
       'langcode' => $langcode,
       'no_redirect' => TRUE,
-      'build_info' => array('args' => array($entity, $field_name)),
+      'build_info' => array('args' => array($entity, $field_name, $this->tempStoreFactory)),
     );
     $form = drupal_build_form('edit_field_form', $form_state);
 
     if (!empty($form_state['executed'])) {
-      // The form submission took care of saving the updated entity. Return the
-      // updated view of the field.
-      $entity = entity_load($form_state['entity']->entityType(), $form_state['entity']->id(), TRUE);
+      // The form submission saved the entity in tempstore. Return the
+      // updated view of the field from the tempstore copy.
+      $entity = $this->tempStoreFactory->get('edit')->get($entity->uuid());
       // @todo Remove when http://drupal.org/node/1346214 is complete.
       $entity = $entity->getBCEntity();
       $output = field_view_field($entity, $field_name, $view_mode_id, $langcode);
@@ -153,6 +183,32 @@ class EditController extends ContainerAware {
       drupal_static_reset('drupal_add_js');
     }
 
+    return $response;
+  }
+
+  /**
+   * Saves an entity into the database, from TempStore.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity being edited.
+   */
+  public function entitySave(EntityInterface $entity) {
+    // Take the entity from tempstore and save in entity storage. fieldForm()
+    // ensures that the tempstore copy exists ahead.
+    $tempstore = $this->tempStoreFactory->get('edit');
+    $tempstore->get($entity->uuid())->save();
+    $tempstore->delete($entity->uuid());
+
+    // Return information about the entity that allows a front end application
+    // to identify it.
+    $output = array(
+      'entity_type' => $entity->entityType(),
+      'entity_id' => $entity->id()
+    );
+
+    // Respond to client that the entity was saved properly.
+    $response = new AjaxResponse();
+    $response->addCommand(new EntitySavedCommand($output));
     return $response;
   }
 

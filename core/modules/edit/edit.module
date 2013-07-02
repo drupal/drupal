@@ -15,6 +15,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\edit\Form\EditFieldForm;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
+use Drupal\user\TempStoreFactory;
 
 /**
  * Implements hook_menu().
@@ -178,7 +179,7 @@ function edit_entity_view_alter(&$build, EntityInterface $entity, EntityDisplay 
  *
  * @ingroup forms
  */
-function edit_field_form(array $form, array &$form_state, EntityInterface $entity, $field_name) {
+function edit_field_form(array $form, array &$form_state, EntityInterface $entity, $field_name, TempStoreFactory $temp_store_factory) {
   $form_handler = new EditFieldForm();
-  return $form_handler->build($form, $form_state, $entity, $field_name);
+  return $form_handler->build($form, $form_state, $entity, $field_name, $temp_store_factory);
 }

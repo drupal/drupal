@@ -6,6 +6,10 @@ services:
     class: Drupal\edit\Access\EditEntityFieldAccessCheck
     tags:
       - { name: access_check }
+  access_check.edit.entity:
+    class: Drupal\edit\Access\EditEntityAccessCheck
+    tags:
+      - { name: access_check }
   edit.editor.selector:
     class: Drupal\edit\EditorSelector
     arguments: ['@plugin.manager.edit.editor']
