@@ -1024,7 +1024,7 @@ function comment_form_node_type_form_alter(&$form, $form_state) {
     if (module_exists('content_translation')) {
       $comment_form = $form;
       $comment_form_state['content_translation']['key'] = 'language_configuration';
-      $form['comment'] += translation_entity_enable_widget('comment', 'comment_node_' . $node_type->id(), $comment_form, $comment_form_state);
+      $form['comment'] += content_translation_enable_widget('comment', 'comment_node_' . $node_type->id(), $comment_form, $comment_form_state);
       array_unshift($form['#submit'], 'comment_translation_configuration_element_submit');
     }
   }
