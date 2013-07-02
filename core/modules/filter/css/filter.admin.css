@@ -27,7 +27,7 @@
 .filter-help {
   float: right; /* LTR */
 }
-[dir=rtl] .filter-help {
+[dir="rtl"] .filter-help {
   float: left;
 }
 .filter-help p {
@@ -37,7 +37,7 @@
   background: transparent url(../../../misc/help.png) right center no-repeat; /* LTR */
   padding: 0 20px 0 0; /* LTR */
 }
-[dir=rtl] .filter-help a {
+[dir="rtl"] .filter-help a {
   background-position: left center;
   padding: 0 0 0 20px;
 }
@@ -59,6 +59,6 @@
 .tips {
   padding-left: 0; /* LTR */
 }
-[dir=rtl] .tips {
+[dir="rtl"] .tips {
   padding-right: 0;
 }

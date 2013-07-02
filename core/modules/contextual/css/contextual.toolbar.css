@@ -16,7 +16,7 @@
 .js .toolbar .bar .contextual-toolbar-tab.tab {
   float: right; /* LTR */
 }
-.js[dir=rtl] .toolbar .bar .contextual-toolbar-tab.tab {
+.js[dir="rtl"] .toolbar .bar .contextual-toolbar-tab.tab {
   float: left;
 }
 .js .toolbar .bar .contextual-toolbar-tab button {
@@ -27,7 +27,7 @@
   text-indent: -9999px;
   line-height: 1em;
 }
-.js[dir=rtl] .toolbar .bar .contextual-toolbar-tab button {
+.js[dir="rtl"] .toolbar .bar .contextual-toolbar-tab button {
   padding-right: 1.3333em;
 }
 .js .toolbar .bar .contextual-toolbar-tab button.active {

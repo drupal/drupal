@@ -14,9 +14,9 @@
    */
   width: 15em;
 }
-[dir=rtl] .locale-translate-filter-form .form-item-langcode,
-[dir=rtl] .locale-translate-filter-form .form-item-translation,
-[dir=rtl] .locale-translate-filter-form .form-item-customized {
+[dir="rtl"] .locale-translate-filter-form .form-item-langcode,
+[dir="rtl"] .locale-translate-filter-form .form-item-translation,
+[dir="rtl"] .locale-translate-filter-form .form-item-customized {
   float: right;
   margin-left: 1em;
   margin-right: 0;
@@ -28,7 +28,7 @@
   float: left; /* LTR */
   padding: 3.8ex 0 0 0; /* LTR */
 }
-[dir=rtl] .locale-translate-filter-form .form-actions {
+[dir="rtl"] .locale-translate-filter-form .form-actions {
   float: right;
   padding: 3.5ex 0 0 0;
 }

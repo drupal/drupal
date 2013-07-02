@@ -21,14 +21,14 @@
 .dropbutton-multiple .dropbutton {
   border-right: 1px solid #e8e8e8; /* LTR */
 }
-[dir=rtl] .dropbutton-multiple .dropbutton {
+[dir="rtl"] .dropbutton-multiple .dropbutton {
   border-left: 1px solid #e8e8e8;
   border-right: 0 none;
 }
 .dropbutton-multiple .dropbutton .dropbutton-action > * {
   margin-right: 0.25em; /* LTR */
 }
-[dir=rtl] .dropbutton-multiple .dropbutton .dropbutton-action > * {
+[dir="rtl"] .dropbutton-multiple .dropbutton .dropbutton-action > * {
   margin-left: 0.25em;
   margin-right: 0;
 }

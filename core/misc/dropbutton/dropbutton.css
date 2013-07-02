@@ -66,7 +66,7 @@
 .js .dropbutton-multiple .dropbutton-widget {
   padding-right: 2em; /* LTR */
 }
-.js[dir=rtl] .dropbutton-multiple .dropbutton-widget {
+.js[dir="rtl"] .dropbutton-multiple .dropbutton-widget {
   padding-left: 2em;
   padding-right: 0;
 }
@@ -93,7 +93,7 @@
   white-space: nowrap;
   width: 2em;
 }
-[dir=rtl] .dropbutton-toggle {
+[dir="rtl"] .dropbutton-toggle {
   left: 0;
   right: auto;
 }
@@ -123,7 +123,7 @@
   width: 0;
   overflow: hidden;
 }
-[dir=rtl] .dropbutton-arrow {
+[dir="rtl"] .dropbutton-arrow {
   left: 0.6667em;
   right: auto;
 }

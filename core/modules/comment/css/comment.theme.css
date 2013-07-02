@@ -10,7 +10,7 @@
 .indented {
   margin-left: 25px; /* LTR */
 }
-[dir=rtl] .indented {
+[dir="rtl"] .indented {
   margin-left: 0;
   margin-right: 25px;
 }

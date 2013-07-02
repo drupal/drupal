@@ -26,7 +26,7 @@
 .toolbar .horizontal .edit-shortcuts {
   float: left; /* LTR */
 }
-[dir=rtl] .toolbar .horizontal .edit-shortcuts {
+[dir="rtl"] .toolbar .horizontal .edit-shortcuts {
   border-left: 0 none;
   border-right: 1px solid #d9d9d9;
   float: right;
@@ -47,23 +47,23 @@
   text-indent: 12px;
   width: 12px;
 }
-[dir=rtl] .add-or-remove-shortcuts .icon {
+[dir="rtl"] .add-or-remove-shortcuts .icon {
   margin-left: 0;
   margin-right: 8px;
 }
-[dir=rtl] .add-or-remove-shortcuts .text {
+[dir="rtl"] .add-or-remove-shortcuts .text {
   padding: 0 10px 0 6px;
 }
-[dir=rtl] .add-or-remove-shortcuts a:focus .text,
-[dir=rtl] .add-or-remove-shortcuts a:hover .text {
+[dir="rtl"] .add-or-remove-shortcuts a:focus .text,
+[dir="rtl"] .add-or-remove-shortcuts a:hover .text {
   border-radius: 5px 0 0 5px;
 }
 .add-shortcut a:focus .icon,
 .add-shortcut a:hover .icon {
   background-position: 0 -12px; /* LTR */
 }
-[dir=rtl] .add-shortcut a:focus .icon,
-[dir=rtl] .add-shortcut a:hover .icon {
+[dir="rtl"] .add-shortcut a:focus .icon,
+[dir="rtl"] .add-shortcut a:hover .icon {
   background-position: 0 -24px;
 }
 .remove-shortcut .icon {
@@ -74,7 +74,7 @@
 .remove-shortcut a:hover .icon {
   background-position: -12px -12px; /* LTR */
 }
-[dir=rtl] .remove-shortcut a:focus .icon,
-[dir=rtl] .remove-shortcut a:hover .icon {
+[dir="rtl"] .remove-shortcut a:focus .icon,
+[dir="rtl"] .remove-shortcut a:hover .icon {
   background-position: -12px -24px;
 }
