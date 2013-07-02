@@ -19,21 +19,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class AdminController implements ControllerInterface {
 
   /**
-   * Entity Manager service.
+   * The entity manager service.
    *
    * @var \Drupal\Core\Entity\EntityManager
    */
   protected $entityManager;
 
   /**
-   * Module handler service.
+   * The module handler service.
    *
    * @var \Drupal\Core\Extension\ModuleHandler
    */
   protected $moduleHandler;
 
   /**
-   * Field info service.
+   * The field info service.
    *
    * @var \Drupal\field\FieldInfo
    */
@@ -54,11 +54,11 @@ class AdminController implements ControllerInterface {
    * Constructs an AdminController object.
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
-   *   Entity manager service.
+   *   The ntity manager service.
    * @param \Drupal\Core\Extension\ModuleHandler $module_handler
-   *   Module Handler service.
+   *   The module handler service.
    * @param \Drupal\field\FieldInfo $field_info
-   *   Field Info service.
+   *   The field info service.
    */
   public function __construct(EntityManager $entity_manager, ModuleHandler $module_handler, FieldInfo $field_info) {
     $this->entityManager = $entity_manager;
