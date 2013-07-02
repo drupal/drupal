@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\edit\Access\EditEntityFieldAccessCheck.
+ * Contains \Drupal\edit\Access\EditEntityAccessCheck.
  */
 
 namespace Drupal\edit\Access;
@@ -14,20 +14,20 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Access check for editing entity fields.
+ * Access check for editing entities.
  */
-class EditEntityFieldAccessCheck implements AccessCheckInterface, EditEntityFieldAccessCheckInterface {
+class EditEntityAccessCheck implements AccessCheckInterface, EditEntityAccessCheckInterface {
 
   /**
-   * Implements AccessCheckInterface::applies().
+   * {@inheritdoc}
    */
   public function applies(Route $route) {
     // @see edit.routing.yml
-    return array_key_exists('_access_edit_entity_field', $route->getRequirements());
+    return array_key_exists('_access_edit_entity', $route->getRequirements());
   }
 
   /**
-   * Implements AccessCheckInterface::access().
+   * {@inheritdoc}
    */
   public function access(Route $route, Request $request) {
     // @todo Request argument validation and object loading should happen
@@ -35,14 +35,14 @@ class EditEntityFieldAccessCheck implements AccessCheckInterface, EditEntityFiel
     //   http://drupal.org/node/1798214.
     $this->validateAndUpcastRequestAttributes($request);
 
-    return $this->accessEditEntityField($request->attributes->get('entity'), $request->attributes->get('field_name'));
+    return $this->accessEditEntity($request->attributes->get('entity'));
   }
 
   /**
-   * Implements EntityFieldAccessCheckInterface::accessEditEntityField().
+   * {@inheritdoc}
    */
-  public function accessEditEntityField(EntityInterface $entity, $field_name) {
-    return $entity->access('update') && ($field = field_info_field($field_name)) && field_access('edit', $field, $entity->entityType(), $entity);
+  public function accessEditEntity(EntityInterface $entity) {
+    return $entity->access('update');
   }
 
   /**
@@ -61,16 +61,6 @@ class EditEntityFieldAccessCheck implements AccessCheckInterface, EditEntityFiel
         throw new NotFoundHttpException();
       }
       $request->attributes->set('entity', $entity);
-    }
-
-    // Validate the field name and language.
-    $field_name = $request->attributes->get('field_name');
-    if (!$field_name || !field_info_instance($entity->entityType(), $field_name, $entity->bundle())) {
-      throw new NotFoundHttpException();
-    }
-    $langcode = $request->attributes->get('langcode');
-    if (!$langcode || (field_valid_language($langcode) !== $langcode)) {
-      throw new NotFoundHttpException();
     }
   }
 

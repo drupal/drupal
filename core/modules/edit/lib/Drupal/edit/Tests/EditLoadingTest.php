@@ -145,9 +145,52 @@ class EditLoadingTest extends WebTestBase {
     $response = $this->retrieveFieldForm('node/1/body/und/full');
     $this->assertResponse(200);
     $ajax_commands = drupal_json_decode($response);
-    $this->assertIdentical(1, count($ajax_commands), 'The field form HTTP request results in three AJAX commands.');
+    $this->assertIdentical(1, count($ajax_commands), 'The field form HTTP request results in one AJAX command.');
     $this->assertIdentical('editFieldForm', $ajax_commands[0]['command'], 'The first AJAX command is an editFieldForm command.');
     $this->assertIdentical('<form ', Unicode::substr($ajax_commands[0]['data'], 0, 6), 'The editFieldForm command contains a form.');
+
+    // Prepare form values for submission. drupalPostAJAX() is not suitable
+    // for handling pages with JSON responses, so we need our own solution
+    // here.
+    $form_tokens_found = preg_match('/\sname="form_token" value="([^"]+)"/', $ajax_commands[0]['data'], $token_match) && preg_match('/\sname="form_build_id" value="([^"]+)"/', $ajax_commands[0]['data'], $build_id_match);
+    $this->assertTrue($form_tokens_found, 'Form tokens found in output.');
+
+    if ($form_tokens_found) {
+      $edit = array();
+      $edit['form_id'] = 'edit_field_form';
+      $edit['form_token'] = $token_match[1];
+      $edit['form_build_id'] = $build_id_match[1];
+      $edit['body[und][0][summary]'] = '';
+      $edit['body[und][0][value]'] = '<p>Fine thanks.</p>';
+      $edit['body[und][0][format]'] = 'filtered_html';
+      $edit['op'] = t('Save');
+
+      // Submit field form and check response. This should store the
+      // updated entity in TempStore on the server.
+      $response = $this->submitFieldForm('node/1/body/und/full', $edit);
+      $this->assertResponse(200);
+      $ajax_commands = drupal_json_decode($response);
+      $this->assertIdentical(1, count($ajax_commands), 'The field form HTTP request results in one AJAX command.');
+      $this->assertIdentical('editFieldFormSaved', $ajax_commands[0]['command'], 'The first AJAX command is an editFieldFormSaved command.');
+      $this->assertTrue(strpos($ajax_commands[0]['data'], 'Fine thanks.'), 'Form value saved and printed back.');
+
+      // Ensure the text on the original node did not change yet.
+      $this->drupalGet('node/1');
+      $this->assertText('How are you?');
+
+      // Save the entity by moving the TempStore values to entity storage.
+      $response = $this->saveEntity('node/1');
+      $this->assertResponse(200);
+      $ajax_commands = drupal_json_decode($response);
+      $this->assertIdentical(1, count($ajax_commands), 'The entity submission HTTP request results in one AJAX command.');
+      $this->assertIdentical('editEntitySaved', $ajax_commands[0]['command'], 'The first AJAX command is an editEntitySaved command.');
+      $this->assertIdentical($ajax_commands[0]['data']['entity_type'], 'node', 'Saved entity is of type node.');
+      $this->assertIdentical($ajax_commands[0]['data']['entity_id'], '1', 'Entity id is 1.');
+
+      // Ensure the text on the original node did change.
+      $this->drupalGet('node/1');
+      $this->assertText('Fine thanks.');
+    }
   }
 
   /**
@@ -226,6 +269,39 @@ class EditLoadingTest extends WebTestBase {
   }
 
   /**
+   * Submit field form data to the server.
+   *
+   * @param string $field_id
+   *   An Edit field ID.
+   * @param array $post
+   *   An array of post data to send.
+   *
+   * @return string
+   *   The response body.
+   */
+  protected function submitFieldForm($field_id, $post) {
+    // Serialize POST values.
+    foreach ($post as $key => $value) {
+      // Encode according to application/x-www-form-urlencoded
+      // Both names and values needs to be urlencoded, according to
+      // http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.1
+      $post[$key] = urlencode($key) . '=' . urlencode($value);
+    }
+    $post = implode('&', $post);
+
+    // Perform HTTP request.
+    return $this->curlExec(array(
+      CURLOPT_URL => url('edit/form/' . $field_id, array('absolute' => TRUE)),
+      CURLOPT_POST => TRUE,
+      CURLOPT_POSTFIELDS => $post . $this->getAjaxPageStatePostData(),
+      CURLOPT_HTTPHEADER => array(
+        'Accept: application/json',
+        'Content-Type: application/x-www-form-urlencoded',
+      ),
+    ));
+  }
+
+  /**
    * Retrieve field form from the server. May also result in additional
    * JavaScript settings and CSS/JS being loaded.
    *
@@ -246,6 +322,31 @@ class EditLoadingTest extends WebTestBase {
       CURLOPT_POSTFIELDS => $post . $this->getAjaxPageStatePostData(),
       CURLOPT_HTTPHEADER => array(
         'Accept: application/vnd.drupal-ajax',
+        'Content-Type: application/x-www-form-urlencoded',
+      ),
+    ));
+  }
+
+  /**
+   * Save entity edits on the server.
+   *
+   * @param string $entity_type_id
+   *   The edit type and ID URI portion.
+   *
+   * @return string
+   *   The response body.
+   */
+  protected function saveEntity($entity_type_id) {
+    // Build & serialize POST value.
+    $post = urlencode('nocssjs') . '=' . urlencode('true');
+
+    // Perform HTTP request.
+    return $this->curlExec(array(
+      CURLOPT_URL => url('edit/entity/' . $entity_type_id, array('absolute' => TRUE)),
+      CURLOPT_POST => TRUE,
+      CURLOPT_POSTFIELDS => $post . $this->getAjaxPageStatePostData(),
+      CURLOPT_HTTPHEADER => array(
+        'Accept: application/json',
         'Content-Type: application/x-www-form-urlencoded',
       ),
     ));
