@@ -351,6 +351,16 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   /**
    * {@inheritdoc}
    */
+  public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    $tempstore = \Drupal::service('user.tempstore')->get('views');
+    foreach ($entities as $entity) {
+      $tempstore->delete($entity->id());
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function mergeDefaultDisplaysOptions() {
     $displays = array();
     foreach ($this->get('display') as $key => $options) {

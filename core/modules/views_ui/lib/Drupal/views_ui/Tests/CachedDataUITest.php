@@ -67,6 +67,12 @@ class CachedDataUITest extends UITestBase {
     // Test we can save the view.
     $this->drupalPost('admin/structure/views/view/test_view/edit', array(), t('Save'));
     $this->assertRaw(t('The view %view has been saved.', array('%view' => 'Test view')));
+
+    // Test that a deleted view has no tempstore data.
+    $this->drupalPost('admin/structure/views/nojs/display/test_view/default/title', array(), t('Apply'));
+    $this->drupalPost('admin/structure/views/view/test_view/delete', array(), t('Delete'));
+    // No view tempstore data should be returned for this view after deletion.
+    $this->assertEqual($temp_store->getMetadata('test_view'), NULL, 'View tempstore data has been removed after deletion.');
   }
 
 }
