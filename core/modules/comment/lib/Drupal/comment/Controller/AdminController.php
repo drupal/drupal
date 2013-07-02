@@ -93,6 +93,7 @@ class AdminController implements ControllerInterface {
     $entity_types = $this->entityManager->getDefinitions();
     $rows = array();
 
+    // Fetch a list of all comment fields.
     $fields = array_filter($this->fieldInfo->getFieldMap(), function ($value) {
       if ($value['type'] == 'comment') {
         return TRUE;
