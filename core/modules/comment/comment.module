@@ -891,8 +891,6 @@ function comment_prepare_thread(&$comments) {
  *
  * @param \Drupal\comment\CommentInterface $comment
  *   The comment object.
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity the comment is attached to.
  * @param $view_mode
  *   (optional) View mode, e.g. 'full', 'teaser'... Defaults to 'full'.
  * @param $langcode
