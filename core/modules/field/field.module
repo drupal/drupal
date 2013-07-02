@@ -199,7 +199,7 @@ function field_cron() {
  */
 function field_system_info_alter(&$info, $file, $type) {
   // It is not safe to call field_read_fields() during maintenance mode.
-  if ($type == 'module' && module_hook($file->name, 'field_info') && !defined('MAINTENANCE_MODE')) {
+  if ($type == 'module' && !defined('MAINTENANCE_MODE')) {
     $fields = field_read_fields(array('module' => $file->name), array('include_deleted' => TRUE));
     if ($fields) {
       $info['required'] = TRUE;
@@ -419,18 +419,11 @@ function field_sync_field_status() {
   $changed = array();
   $modules = $module_handler->getModuleList();
   foreach ($modules as $module => $module_info) {
-    // Collect field types and storage backends exposed by the module.
-    $field_types = (array) $module_handler->invoke($module, 'field_info');
+    // Collect storage backends exposed by the module.
     $storage_types = (array) $module_handler->invoke($module, 'field_storage_info');
 
-    if ($field_types || $storage_types) {
+    if ($storage_types) {
       foreach ($fields as $uuid => &$field) {
-        // Associate field types.
-        if (isset($field_types[$field['type']]) && ($field['module'] !== $module || !$field['active'])) {
-          $field['module'] = $module;
-          $field['active'] = TRUE;
-          $changed[$uuid] = $field;
-        }
         // Associate storage backends.
         if (isset($storage_types[$field['storage']['type']]) && ($field['storage']['module'] !== $module || !$field['storage']['active'])) {
           $field['storage']['module'] = $module;
@@ -441,12 +434,20 @@ function field_sync_field_status() {
     }
   }
 
+  $field_types = Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
   // Set fields with missing field type or storage modules to inactive.
   foreach ($fields as $uuid => &$field) {
+    // Associate field types.
+    if (isset($field_types[$field['type']]) && ($field['module'] != $field_types[$field['type']]['module'] || !$field['active'])) {
+      $field['module'] = $field_types[$field['type']]['module'];
+      $field['active'] = TRUE;
+      $changed[$uuid] = $field;
+    }
     if (!isset($modules[$field['module']]) && $field['active']) {
       $field['active'] = FALSE;
       $changed[$uuid] = $field;
     }
+    // Disassociate storage backends.
     if (!isset($modules[$field['storage']['module']]) && $field['storage']['active']) {
       $field['storage']['active'] = FALSE;
       $changed[$uuid] = $field;
