@@ -283,7 +283,11 @@ function rdf_preprocess_node(&$variables) {
   $created_mapping = $mapping->getPreparedFieldMapping('created');
   if (!empty($created_mapping) && $variables['submitted']) {
     $date_attributes = rdf_rdfa_attributes($created_mapping, $variables['node']->created);
-    $variables['submitted'] .= theme('rdf_metadata', array('metadata' => array($date_attributes)));
+    $rdf_metadata = array(
+      '#theme' => 'rdf_metadata',
+      '#metadata' => array($date_attributes),
+    );
+    $variables['submitted'] .= drupal_render($rdf_metadata);
   }
 
   // Adds RDFa markup annotating the number of comments a node has.
@@ -479,6 +483,9 @@ function rdf_preprocess_comment(&$variables) {
   $author_mapping = $mapping->getPreparedFieldMapping('uid');
   if (!empty($author_mapping)) {
     $author_attributes = array('rel' => $author_mapping['properties']);
+    // Wraps the author variable and the submitted variable which are both
+    // available in comment.html.twig.
+    $variables['author'] = '<span ' . new Attribute($author_attributes) . '>' . $variables['author'] . '</span>';
     $variables['submitted'] = '<span ' . new Attribute($author_attributes) . '>' . $variables['submitted'] . '</span>';
   }
   // Adds RDFa markup for the date of the comment.
@@ -487,7 +494,16 @@ function rdf_preprocess_comment(&$variables) {
     // The comment date is precomputed as part of the rdf_data so that it can be
     // cached as part of the entity.
     $date_attributes = $comment->rdf_data['date'];
-    $variables['submitted'] .= theme('rdf_metadata', array('metadata' => array($date_attributes)));
+
+    $rdf_metadata = array(
+      '#theme' => 'rdf_metadata',
+      '#metadata' => array($date_attributes),
+    );
+    $created_metadata_markup = drupal_render($rdf_metadata);
+    // Appends the markup to the created variable and the submitted variable
+    // which are both available in comment.html.twig.
+    $variables['created'] .= $created_metadata_markup;
+    $variables['submitted'] .= $created_metadata_markup;
   }
   $title_mapping = $mapping->getPreparedFieldMapping('title');
   if (!empty($title_mapping)) {
@@ -524,7 +540,11 @@ function rdf_preprocess_comment(&$variables) {
     if (!isset($variables['content']['comment_body']['#prefix'])) {
       $variables['content']['comment_body']['#prefix'] = '';
     }
-    $variables['content']['comment_body']['#prefix'] = theme('rdf_metadata', array('metadata' => $variables['rdf_metadata_attributes'])) . $variables['content']['comment_body']['#prefix'];
+    $rdf_metadata = array(
+      '#theme' => 'rdf_metadata',
+      '#metadata' => $variables['rdf_metadata_attributes'],
+    );
+    $variables['content']['comment_body']['#prefix'] = drupal_render($rdf_metadata) . $variables['content']['comment_body']['#prefix'];
   }
 }
 
