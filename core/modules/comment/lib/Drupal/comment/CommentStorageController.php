@@ -104,7 +104,8 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
           'last_comment_timestamp' => isset($entity->created->value) ? $entity->created->value : REQUEST_TIME,
           'last_comment_name' => '',
           // @todo Refactor when http://drupal.org/node/585838 lands.
-          // Get uid from entity or default to logged in user if none exists.
+          // Get the user ID from the entity if it's set, or default to the
+          // currently logged in user.
           'last_comment_uid' => isset($entity->uid->target_id) ? $entity->uid->target_id : $user->uid,
         ))
         ->condition('entity_id', $comment->entity_id->value)
