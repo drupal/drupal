@@ -47,7 +47,7 @@ function php_permission() {
  * overwrite any variables in the calling code, unlike a regular eval() call.
  *
  * This function is also used as an implementation of
- * hook_filter_FILTER_process().
+ * callback_filter_process().
  *
  * @param $code
  *   The code to evaluate.
@@ -88,7 +88,7 @@ function php_eval($code) {
 }
 
 /**
- * Implements hook_filter_FILTER_tips().
+ * Implements callback_filter_tips().
  *
  * @see php_filter_info()
  */
