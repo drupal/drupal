@@ -15,6 +15,11 @@ use Drupal\Core\Language\Language;
 const LANGUAGE_NEGOTIATION_SELECTED = 'language-selected';
 
 /**
+ * The language is determined using the current interface language.
+ */
+const LANGUAGE_NEGOTIATION_INTERFACE = 'language-interface';
+
+/**
  * @defgroup language_negotiation Language Negotiation API functionality
  * @{
  * Functions to customize the language types and the negotiation process.
@@ -51,6 +56,10 @@ const LANGUAGE_NEGOTIATION_SELECTED = 'language-selected';
  *   unset($language_types[Language::TYPE_CONTENT]['fixed']);
  * }
  * @endcode
+ *
+ * The locked configuration property prevents one language type from being
+ * switched from customized to not customized, and vice versa.
+ * @see language_types_set()
  *
  * Every language type can have a different set of language negotiation methods
  * assigned to it. Different language types often share the same language
@@ -167,35 +176,12 @@ function language_types_info() {
  * whose language negotiation methods are module-defined and not altered through
  * the user interface.
  *
- * @param $stored
- *   (optional) By default, retrieves values from the 'language_types' variable
- *   to avoid unnecessary hook invocations. If set to FALSE, retrieves values
- *   from the actual language type definitions. This allows reaction to
- *   alterations performed on the definitions by modules installed after the
- *   'language_types' variable is set.
- *
  * @return
  *   An array of language type names.
  */
-function language_types_get_configurable($stored = TRUE) {
-  $configurable = &drupal_static(__FUNCTION__);
-
-  if ($stored && !isset($configurable)) {
-    $types = variable_get('language_types', language_types_get_default());
-    $configurable = array_keys(array_filter($types));
-  }
-
-  if (!$stored) {
-    $result = array();
-    foreach (language_types_info() as $type => $info) {
-      if (!isset($info['fixed'])) {
-        $result[] = $type;
-      }
-    }
-    return $result;
-  }
-
-  return $configurable;
+function language_types_get_configurable() {
+  $configurable = Drupal::config('system.language.types')->get('configurable');
+  return $configurable ? $configurable : array();
 }
 
 /**
@@ -205,48 +191,70 @@ function language_types_get_configurable($stored = TRUE) {
  *   An array of language types.
  */
 function language_types_disable($types) {
-  $enabled_types = variable_get('language_types', language_types_get_default());
-
-  foreach ($types as $type) {
-    unset($enabled_types[$type]);
-  }
-
-  variable_set('language_types', $enabled_types);
+  $configurable = language_types_get_configurable();
+  config('system.language.types')->set('configurable', array_diff($configurable, $types))->save();
 }
 
 /**
  * Updates the language type configuration.
+ *
+ * @param array $configurable_language_types
+ *   An array of configurable language types.
  */
-function language_types_set() {
+function language_types_set(array $configurable_language_types) {
   // Ensure that we are getting the defined language negotiation information. An
   // invocation of module_enable() or module_disable() could outdate the cached
   // information.
   drupal_static_reset('language_types_info');
   drupal_static_reset('language_negotiation_info');
 
-  // Determine which language types are configurable and which not by checking
-  // whether the 'fixed' key is defined. Non-configurable (fixed) language types
-  // have their language negotiation settings stored there.
   $language_types = array();
   $negotiation_info = language_negotiation_info();
-  foreach (language_types_info() as $type => $info) {
-    if (isset($info['fixed'])) {
-      $language_types[$type] = FALSE;
-      $method_weights = array();
-      foreach ($info['fixed'] as $weight => $method_id) {
-        if (isset($negotiation_info[$method_id])) {
-          $method_weights[$method_id] = $weight;
-        }
+  $language_types_info = language_types_info();
+
+  foreach ($language_types_info as $type => $info) {
+    $configurable = in_array($type, $configurable_language_types);
+
+    // Check whether the language type is unlocked. Only the status of unlocked
+    // language types can be toggled between configurable and non-configurable.
+    // The default language negotiation settings, if available, are stored in
+    // $info['fixed'].
+    if (empty($info['locked'])) {
+      // If we have a non-locked non-configurable language type without default
+      // language negotiation settings, we use the values negotiated for the
+      // interface language which should always be available.
+      if (!$configurable && !empty($info['fixed'])) {
+        $method_weights = array(LANGUAGE_NEGOTIATION_INTERFACE);
+        $method_weights = array_flip($method_weights);
+        language_negotiation_set($type, $method_weights);
       }
-      language_negotiation_set($type, $method_weights);
     }
     else {
-      $language_types[$type] = TRUE;
+      // Locked language types with default settings are always considered
+      // non-configurable. In turn if default settings are missing, the language
+      // type is always considered configurable.
+      $configurable = empty($info['fixed']);
+
+      // If the language is non-configurable we need to store its language
+      // negotiation settings.
+      if (!$configurable) {
+        $method_weights = array();
+        foreach ($info['fixed'] as $weight => $method_id) {
+          if (isset($negotiation_info[$method_id])) {
+            $method_weights[$method_id] = $weight;
+          }
+        }
+        language_negotiation_set($type, $method_weights);
+      }
     }
+
+    $language_types[$type] = $configurable;
   }
 
-  // Save enabled language types.
-  variable_set('language_types', $language_types);
+  // Store the language type configuration.
+  $config = config('system.language.types');
+  $config->set('configurable', array_keys(array_filter($language_types)))->save();
+  $config->set('all', array_keys($language_types))->save();
 
   // Ensure that subsequent calls of language_types_get_configurable() return
   // the updated language type information.
@@ -367,7 +375,7 @@ function language_negotiation_set($type, $method_weights) {
 
   $negotiation = array();
   $negotiation_info = language_negotiation_info();
-  $default_types = language_types_get_configurable(FALSE);
+  $default_types = language_types_get_configurable();
 
   // Order the language negotiation method list by weight.
   asort($method_weights);

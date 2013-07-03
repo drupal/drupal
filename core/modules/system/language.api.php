@@ -44,10 +44,16 @@ function hook_language_switch_links_alter(array &$links, $type, $path) {
  *   may contain the following elements:
  *   - name: The human-readable language type identifier.
  *   - description: A description of the language type.
+ *   - locked: A boolean indicating if the user can choose wether to configure
+ *     the language type or not using the UI.
  *   - fixed: A fixed array of language negotiation method identifiers to use to
- *     initialize this language. Defining this key makes the language type
- *     non-configurable, so it will always use the specified methods in the
- *     given priority order. Omit to make the language type configurable.
+ *     initialize this language. If locked is set to TRUE and fixed is set, it
+ *     will always use the specified methods in the given priority order. If not
+ *     present and locked is TRUE then LANGUAGE_NEGOTIATION_INTERFACE will be
+ *     used.
+ *
+ *  @todo Rename the 'fixed' key to something more meaningful, for instance
+ *     'negotiation settings'.
  *
  * @see hook_language_types_info_alter()
  * @ingroup language_negotiation
@@ -57,8 +63,10 @@ function hook_language_types_info() {
     'custom_language_type' => array(
       'name' => t('Custom language'),
       'description' => t('A custom language type.'),
+      'locked' => FALSE,
     ),
     'fixed_custom_language_type' => array(
+      'locked' => TRUE,
       'fixed' => array('custom_language_negotiation_method'),
     ),
   );

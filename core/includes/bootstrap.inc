@@ -2409,8 +2409,10 @@ function language($type) {
  *   name and its value is its configurability (TRUE/FALSE).
  */
 function language_types_get_all() {
-  return array_keys(variable_get('language_types', language_types_get_default()));
+  $types = \Drupal::config('system.language.types')->get('all');
+  return $types ? $types : array_keys(language_types_get_default());
 }
+
 /**
  * Returns a list of the built-in language types.
  *

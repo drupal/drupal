@@ -448,15 +448,20 @@ function update_prepare_d8_bootstrap() {
  * Fixes stored include paths to match the "/core" migration.
  */
 function update_prepare_stored_includes() {
+  // Retrieve the currently stored language types. Default to the hardcoded D7
+  // values.
+  $default_language_types = array('language' => TRUE, 'language_content' => FALSE, 'language_url' => FALSE);
+  $language_types = array_keys(update_variable_get('language_types', $default_language_types));
+
   // Update language negotiation settings.
-  foreach (language_types_get_all() as $language_type) {
-    $negotiation = variable_get("language_negotiation_$language_type", array());
+  foreach ($language_types as $language_type) {
+    $negotiation = update_variable_get("language_negotiation_$language_type", array());
     foreach ($negotiation as &$method) {
       if (isset($method['file']) && $method['file'] == 'includes/locale.inc') {
         $method['file'] = 'core/modules/language/language.negotiation.inc';
       }
     }
-    variable_set("language_negotiation_$language_type", $negotiation);
+    update_variable_set("language_negotiation_$language_type", $negotiation);
   }
 }
 

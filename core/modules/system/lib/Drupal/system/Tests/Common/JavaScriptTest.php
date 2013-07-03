@@ -543,7 +543,7 @@ class JavaScriptTest extends WebTestBase {
     $this->assertTrue(isset($libraries['jquery.farbtastic']), 'Retrieved all module libraries.');
     // Retrieve all libraries for a module not implementing hook_library_info().
     // Note: This test installs language module.
-    $libraries = drupal_get_library('language');
+    $libraries = drupal_get_library('dblog');
     $this->assertEqual($libraries, array(), 'Retrieving libraries from a module not implementing hook_library_info() returns an emtpy array.');
 
     // Retrieve a specific library by module and name.

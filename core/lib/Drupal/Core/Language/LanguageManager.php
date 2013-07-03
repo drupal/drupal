@@ -146,7 +146,7 @@ class LanguageManager {
    *   An array of all language types.
    */
   protected function getLanguageTypes() {
-    return array_keys(variable_get('language_types', language_types_get_default()));
+    return language_types_get_all();
   }
 
   /**

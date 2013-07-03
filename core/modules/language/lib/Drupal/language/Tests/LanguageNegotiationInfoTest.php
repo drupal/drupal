@@ -56,8 +56,8 @@ class LanguageNegotiationInfoTest extends WebTestBase {
     \Drupal::state()->set('language_test.content_language_type', TRUE);
     $this->languageNegotiationUpdate();
     $type = Language::TYPE_CONTENT;
-    $language_types = variable_get('language_types', language_types_get_default());
-    $this->assertTrue($language_types[$type], 'Content language type is configurable.');
+    $language_types = language_types_get_configurable();
+    $this->assertTrue(in_array($type, $language_types), 'Content language type is configurable.');
 
     // Enable some core and custom language negotiation methods. The test
     // language type is supposed to be configurable.
@@ -69,6 +69,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
       $form_field => TRUE,
       $type . '[enabled][' . $test_method_id . ']' => TRUE,
       $test_type . '[enabled][' . $test_method_id . ']' => TRUE,
+      $test_type . '[configurable]' => TRUE,
     );
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
 
@@ -98,7 +99,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
     foreach (language_types_get_all() as $type) {
       $langcode = $last[$type];
       $value = $type == Language::TYPE_CONTENT || strpos($type, 'test') !== FALSE ? 'it' : 'en';
-      $this->assertEqual($langcode, $value, format_string('The negotiated language for %type is %language', array('%type' => $type, '%language' => $langcode)));
+      $this->assertEqual($langcode, $value, format_string('The negotiated language for %type is %language', array('%type' => $type, '%language' => $value)));
     }
 
     // Disable language_test and check that everything is set back to the
@@ -158,8 +159,9 @@ class LanguageNegotiationInfoTest extends WebTestBase {
    */
   protected function checkFixedLanguageTypes() {
     drupal_static_reset('language_types_info');
+    $configurable = language_types_get_configurable();
     foreach (language_types_info() as $type => $info) {
-      if (isset($info['fixed'])) {
+      if (!in_array($type, $configurable) && isset($info['fixed'])) {
         $negotiation = variable_get("language_negotiation_$type", array());
         $equal = count($info['fixed']) == count($negotiation);
         while ($equal && list($id) = each($negotiation)) {
