@@ -39,15 +39,20 @@ class ConfigImportForm implements FormInterface {
   public function submitForm(array &$form, array &$form_state) {
     if ($path = $form_state['values']['import_tarball']) {
       \Drupal::service('config.storage.staging')->deleteAll();
-      $archiver = new ArchiveTar($path, 'gz');
-      $files = array();
-      foreach ($archiver->listContent() as $file) {
-        $files[] = $file['filename'];
+      try {
+        $archiver = new ArchiveTar($path, 'gz');
+        $files = array();
+        foreach ($archiver->listContent() as $file) {
+          $files[] = $file['filename'];
+        }
+        $archiver->extractList($files, config_get_config_directory(CONFIG_STAGING_DIRECTORY));
+        drupal_set_message('Your configuration files were successfully uploaded, ready for import.');
+        $form_state['redirect'] = 'admin/config/development/sync';
       }
-      $archiver->extractList($files, config_get_config_directory(CONFIG_STAGING_DIRECTORY));
+      catch (\Exception $e) {
+        form_set_error('import_tarball', t('Could not extract the contents of the tar file. The error message is <em>@message</em>', array('@message' => $e->getMessage())));
+      }
       drupal_unlink($path);
-      drupal_set_message('Your configuration files were successfully uploaded, ready for import.');
-      $form_state['redirect'] = 'admin/config/development/sync';
     }
   }
 }
