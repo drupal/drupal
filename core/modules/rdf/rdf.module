@@ -92,6 +92,7 @@ function rdf_rdf_namespaces() {
     'foaf'     => 'http://xmlns.com/foaf/0.1/',
     'og'       => 'http://ogp.me/ns#',
     'rdfs'     => 'http://www.w3.org/2000/01/rdf-schema#',
+    'schema'   => 'http://schema.org/',
     'sioc'     => 'http://rdfs.org/sioc/ns#',
     'sioct'    => 'http://rdfs.org/sioc/types#',
     'skos'     => 'http://www.w3.org/2004/02/skos/core#',
@@ -174,7 +175,7 @@ function rdf_rdfa_attributes($mapping, $data = NULL) {
         // Convert $data to a specific format as per the callback function.
         if (isset($data) && !empty($mapping['datatype_callback'])) {
           $callback = $mapping['datatype_callback'];
-          $attributes['content'] = $callback($data);
+          $attributes['content'] = call_user_func($callback, $data);
         }
         if (isset($mapping['datatype'])) {
           $attributes['datatype'] = $mapping['datatype'];
@@ -295,11 +296,7 @@ function rdf_preprocess_node(&$variables) {
   if (isset($variables['node']->comment_count) && !empty($comment_count_mapping['properties'])) {
     // Annotates the 'x comments' link in teaser view.
     if (isset($variables['content']['links']['comment']['#links']['comment-comments'])) {
-      $comment_count_attributes['property'] = $comment_count_mapping['properties'];
-      $comment_count_attributes['content'] = $variables['node']->comment_count;
-      if (isset($comment_count_mapping['datatype'])) {
-        $comment_count_attributes['datatype'] = $comment_count_mapping['datatype'];
-      }
+      $comment_count_attributes = rdf_rdfa_attributes($comment_count_mapping, $variables['node']->comment_count);
       // According to RDFa parsing rule number 4, a new subject URI is created
       // from the href attribute if no rel/rev attribute is present. To get the
       // original node URL from the about attribute of the parent container we
@@ -375,15 +372,6 @@ function rdf_preprocess_user(&$variables) {
   // If we are on the user account page, add the relationship between the
   // sioc:UserAccount and the foaf:Person who holds the account.
   if (current_path() == $uri['path']) {
-    $account_holder_meta = array(
-      '#tag' => 'meta',
-      '#attributes' => array(
-        'about' => url($uri['path'], array_merge($uri['options'], array('fragment' => 'me'))),
-        'typeof' => array('foaf:Person'),
-        'rel' => array('foaf:account'),
-        'resource' => url($uri['path'], $uri['options']),
-      ),
-    );
     // Adds the markup for username as language neutral literal, see
     // rdf_preprocess_username().
     $name_mapping = $mapping->getPreparedFieldMapping('name');
@@ -399,7 +387,6 @@ function rdf_preprocess_user(&$variables) {
       );
       drupal_add_html_head($username_meta, 'rdf_user_username');
     }
-    drupal_add_html_head($account_holder_meta, 'rdf_user_account_holder');
   }
 }
 
@@ -505,7 +492,7 @@ function rdf_preprocess_comment(&$variables) {
     $variables['created'] .= $created_metadata_markup;
     $variables['submitted'] .= $created_metadata_markup;
   }
-  $title_mapping = $mapping->getPreparedFieldMapping('title');
+  $title_mapping = $mapping->getPreparedFieldMapping('subject');
   if (!empty($title_mapping)) {
     // Adds RDFa markup to the subject of the comment. Because the RDFa markup
     // is added to an <h3> tag which might contain HTML code, we specify an
@@ -517,6 +504,8 @@ function rdf_preprocess_comment(&$variables) {
 
   // Annotates the parent relationship between the current comment and the node
   // it belongs to. If available, the parent comment is also annotated.
+  // @todo When comments are turned into fields, this should be changed.
+  // Currently there is no mapping relating a comment to its node.
   $pid_mapping = $mapping->getPreparedFieldMapping('pid');
   if (!empty($pid_mapping)) {
     // Adds the relation to the parent node.

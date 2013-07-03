@@ -4,3 +4,10 @@ bundle: forums
 types:
   - 'sioc:Container'
   - 'sioc:Forum'
+fieldMappings:
+  name:
+    properties:
+      - 'schema:name'
+  description:
+    properties:
+      - 'schema:description'

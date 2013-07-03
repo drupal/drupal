@@ -2,39 +2,27 @@ id: node.page
 targetEntityType: node
 bundle: page
 types:
-  - 'foaf:Document'
-  - 'sioc:Item'
+  - 'schema:WebPage'
 fieldMappings:
   title:
     properties:
-      - 'dc:title'
+      - 'schema:name'
   created:
     properties:
-      - 'dc:date'
-      - 'dc:created'
-    datatype: 'xsd:dateTime'
+      - 'schema:dateCreated'
     datatype_callback: 'date_iso8601'
   changed:
     properties:
-      - 'dc:modified'
-    datatype: 'xsd:dateTime'
+      - 'schema:dateModified'
     datatype_callback: 'date_iso8601'
   body:
     properties:
-      - 'content:encoded'
+      - 'schema:text'
   uid:
     properties:
-      - 'sioc:has_creator'
+      - 'schema:author'
     mapping_type: 'rel'
-  name:
-    properties:
-      - 'foaf:name'
   comment_count:
     properties:
-      - 'sioc:num_replies'
-    datatype: 'xsd:integer'
-  last_activity:
-    properties:
-      - 'sioc:last_activity_date'
-    datatype: 'xsd:dateTime'
-    datatype_callback: 'date_iso8601'
+      - 'schema:interactionCount'
+    datatype_callback: 'Drupal\rdf\SchemaOrgDataConverter::interactionCount'

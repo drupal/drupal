@@ -54,6 +54,7 @@ class CommentAttributesTest extends CommentTestBase {
     $comment_count_mapping = array(
       'properties' => array('sioc:num_replies'),
       'datatype' => 'xsd:integer',
+      'datatype_callback' => 'Drupal\rdf\CommonDataConverter::rawValue',
     );
     $article_mapping->setFieldMapping('comment_count', $comment_count_mapping)->save();
 
@@ -69,7 +70,7 @@ class CommentAttributesTest extends CommentTestBase {
     $mapping = rdf_get_mapping('comment', 'comment_node_article');
     $mapping->setBundleMapping(array('types' => array('sioc:Post', 'sioct:Comment')))->save();
     $field_mappings = array(
-      'title' => array(
+      'subject' => array(
         'properties' => array('dc:title'),
       ),
       'created' => array(
@@ -251,7 +252,7 @@ class CommentAttributesTest extends CommentTestBase {
       'value' => $comment->subject->value,
       'lang' => 'en',
     );
-    $this->assertTrue($graph->hasProperty($comment_uri, 'http://purl.org/dc/terms/title', $expected_value), 'Comment title found in RDF output (dc:title).');
+    $this->assertTrue($graph->hasProperty($comment_uri, 'http://purl.org/dc/terms/title', $expected_value), 'Comment subject found in RDF output (dc:title).');
 
     // Comment date.
     $expected_value = array(

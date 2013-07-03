@@ -2,9 +2,11 @@ id: taxonomy_term.tags
 targetEntityType: taxonomy_term
 bundle: tags
 types:
-  - 'skos:Concept'
+  - 'schema:Thing'
 fieldMappings:
   name:
     properties:
-      - 'rdfs:label'
-      - 'skos:prefLabel'
+      - 'schema:name'
+  description:
+    properties:
+      - 'schema:description'

@@ -2,10 +2,27 @@ id: node.forum
 targetEntityType: node
 bundle: forum
 types:
-  - 'sioc:Post'
-  - 'sioct:BoardPost'
+  - 'schema:Discussion'
 fieldMappings:
-  taxonomy_forums:
+  title:
     properties:
-      - 'sioc:has_container'
+      - 'schema:name'
+  created:
+    properties:
+      - 'schema:dateCreated'
+    datatype_callback: 'date_iso8601'
+  changed:
+    properties:
+      - 'schema:dateModified'
+    datatype_callback: 'date_iso8601'
+  body:
+    properties:
+      - 'schema:text'
+  uid:
+    properties:
+      - 'schema:author'
     mapping_type: 'rel'
+  comment_count:
+    properties:
+      - 'schema:interactionCount'
+    datatype_callback: 'Drupal\rdf\SchemaOrgDataConverter::interactionCount'
