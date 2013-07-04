@@ -7,8 +7,6 @@ views.view.*:
     status:
       type: boolean
       label: 'Status'
-    api_version:
-      label: 'API version'
     module:
       label: 'Module'
     name:
