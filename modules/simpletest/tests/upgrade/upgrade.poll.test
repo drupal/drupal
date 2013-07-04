@@ -32,7 +32,7 @@ class PollUpgradePathTestCase extends UpgradePathTestCase {
    * Test a successful upgrade.
    */
   public function testPollUpgrade() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Check modules page for poll
     $this->drupalGet('admin/modules');
@@ -44,14 +44,14 @@ class PollUpgradePathTestCase extends UpgradePathTestCase {
       $nbchoices = ($i % 4) + 2;
 
       for ($c = 0; $c < $nbchoices; $c++) {
-        $this->assertText("Choice $c for poll $i", t('Choice text is displayed correctly on poll view'));
+        $this->assertText("Choice $c for poll $i", 'Choice text is displayed correctly on poll view');
       }
 
       // Now check that the votes are correct
       $this->clickLink(t('Results'));
 
       for ($c = 0; $c < $nbchoices; $c++) {
-        $this->assertText("Choice $c for poll $i", t('Choice text is displayed correctly on result view'));
+        $this->assertText("Choice $c for poll $i", 'Choice text is displayed correctly on result view');
       }
 
       $nbvotes = floor (($i % 4) + 5);
@@ -59,7 +59,7 @@ class PollUpgradePathTestCase extends UpgradePathTestCase {
       for ($c = 0; $c < $nbchoices; $c++) {
         $votes = floor($nbvotes / $nbchoices);
         if (($nbvotes % $nbchoices) > $c) $votes++;
-        $this->assertTrue(preg_match("/$votes vote/", $elements[$c]), t('The number of votes is displayed correctly: expected ' . $votes . ', got ' . $elements[$c]));
+        $this->assertTrue(preg_match("/$votes vote/", $elements[$c]), 'The number of votes is displayed correctly: expected ' . $votes . ', got ' . $elements[$c]);
       }
     }
   }

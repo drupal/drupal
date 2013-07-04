@@ -29,7 +29,7 @@ class UserUpdatePathTestCase extends UpdatePathTestCase {
    * Tests that the update is successful.
    */
   public function testFilledUpgrade() {
-    $this->assertTrue($this->performUpgrade(), t('The update was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The update was completed successfully.');
     $this->assertTrue(db_index_exists('users', 'picture'), 'The {users}.picture column has an index.');
   }
 }

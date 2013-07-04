@@ -524,7 +524,7 @@ class AJAXElementValidation extends AJAXTestCase {
     // Post with 'drivertext' as the triggering element.
     $post_result = $this->drupalPostAJAX('ajax_validation_test', $edit, 'drivertext');
     // Look for a validation failure in the resultant JSON.
-    $this->assertNoText(t('Error message'), t("No error message in resultant JSON"));
-    $this->assertText('ajax_forms_test_validation_form_callback invoked', t('The correct callback was invoked'));
+    $this->assertNoText(t('Error message'), "No error message in resultant JSON");
+    $this->assertText('ajax_forms_test_validation_form_callback invoked', 'The correct callback was invoked');
   }
 }

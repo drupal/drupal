@@ -44,6 +44,8 @@ function filter_test_filter_info() {
 }
 
 /**
+ * Implements callback_filter_process().
+ *
  * Process handler for filter_test_replace filter.
  *
  * Replaces all text with filter and text format information.

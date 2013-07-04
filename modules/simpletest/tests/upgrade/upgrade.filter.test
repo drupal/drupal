@@ -28,20 +28,20 @@ class FilterFormatUpgradePathTestCase extends UpgradePathTestCase {
    * Test a successful upgrade.
    */
   function testFilterFormatUpgrade() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     $format = filter_format_load('1');
-    $this->assertTrue($format->format == '1', t('Filter format found.'));
+    $this->assertTrue($format->format == '1', 'Filter format found.');
     $format->format = 'test_filter';
     $format->name = 'Test filter';
     filter_format_save($format);
     $format = filter_format_load('test_filter');
-    $this->assertTrue($format->format == 'test_filter', t('Saved a filter format with machine name.'));
+    $this->assertTrue($format->format == 'test_filter', 'Saved a filter format with machine name.');
 
     $account = user_load(4);
     user_save($account, array('signature_format' => 'test_filter'));
     $account = user_load(4);
-    $this->assertTrue($account->signature_format == 'test_filter', t('Signature format changed successfully to a filter format with machine name.'));
+    $this->assertTrue($account->signature_format == 'test_filter', 'Signature format changed successfully to a filter format with machine name.');
 
     $delta = db_insert('block_custom')
       ->fields(array(
@@ -50,6 +50,6 @@ class FilterFormatUpgradePathTestCase extends UpgradePathTestCase {
         'format' => 'test_filter',
       ))
       ->execute();
-    $this->assertTrue($delta > 0, t('Created a custom block using a filter format with machine name.'));
+    $this->assertTrue($delta > 0, 'Created a custom block using a filter format with machine name.');
   }
 }

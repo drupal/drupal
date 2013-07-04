@@ -32,6 +32,6 @@ class TriggerUpdatePathTestCase extends UpdatePathTestCase {
    * Tests that the upgrade is successful.
    */
   public function testFilledUpgrade() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
   }
 }

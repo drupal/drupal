@@ -41,7 +41,7 @@ class DrupalMatchPathTestCase extends DrupalWebTestCase {
     foreach ($tests as $patterns => $cases) {
       foreach ($cases as $path => $expected_result) {
         $actual_result = drupal_match_path($path, $patterns);
-        $this->assertIdentical($actual_result, $expected_result, t('Tried matching the path <code>@path</code> to the pattern <pre>@patterns</pre> - expected @expected, got @actual.', array('@path' => $path, '@patterns' => $patterns, '@expected' => var_export($expected_result, TRUE), '@actual' => var_export($actual_result, TRUE))));
+        $this->assertIdentical($actual_result, $expected_result, format_string('Tried matching the path <code>@path</code> to the pattern <pre>@patterns</pre> - expected @expected, got @actual.', array('@path' => $path, '@patterns' => $patterns, '@expected' => var_export($expected_result, TRUE), '@actual' => var_export($actual_result, TRUE))));
       }
     }
   }
@@ -196,8 +196,8 @@ class UrlAlterFunctionalTest extends DrupalWebTestCase {
    */
   function testCurrentUrlRequestedPath() {
     $this->drupalGet('url-alter-test/bar');
-    $this->assertRaw('request_path=url-alter-test/bar', t('request_path() returns the requested path.'));
-    $this->assertRaw('current_path=url-alter-test/foo', t('current_path() returns the internal path.'));
+    $this->assertRaw('request_path=url-alter-test/bar', 'request_path() returns the requested path.');
+    $this->assertRaw('current_path=url-alter-test/foo', 'current_path() returns the internal path.');
   }
 
   /**
@@ -223,7 +223,7 @@ class UrlAlterFunctionalTest extends DrupalWebTestCase {
     $result = url($original);
     $base_path = base_path() . (variable_get('clean_url', '0') ? '' : '?q=');
     $result = substr($result, strlen($base_path));
-    $this->assertIdentical($result, $final, t('Altered outbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
+    $this->assertIdentical($result, $final, format_string('Altered outbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
   }
 
   /**
@@ -240,7 +240,7 @@ class UrlAlterFunctionalTest extends DrupalWebTestCase {
   protected function assertUrlInboundAlter($original, $final) {
     // Test inbound altering.
     $result = drupal_get_normal_path($original);
-    $this->assertIdentical($result, $final, t('Altered inbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
+    $this->assertIdentical($result, $final, format_string('Altered inbound URL %original, expected %final, and got %result.', array('%original' => $original, '%final' => $final, '%result' => $result)));
   }
 }
 
@@ -271,8 +271,8 @@ class PathLookupTest extends DrupalWebTestCase {
       'alias' => 'foo',
     );
     path_save($path);
-    $this->assertEqual(drupal_lookup_path('alias', $path['source']), $path['alias'], t('Basic alias lookup works.'));
-    $this->assertEqual(drupal_lookup_path('source', $path['alias']), $path['source'], t('Basic source lookup works.'));
+    $this->assertEqual(drupal_lookup_path('alias', $path['source']), $path['alias'], 'Basic alias lookup works.');
+    $this->assertEqual(drupal_lookup_path('source', $path['alias']), $path['source'], 'Basic source lookup works.');
 
     // Create a language specific alias for the default language (English).
     $path = array(
@@ -281,8 +281,8 @@ class PathLookupTest extends DrupalWebTestCase {
       'language' => 'en',
     );
     path_save($path);
-    $this->assertEqual(drupal_lookup_path('alias', $path['source']), $path['alias'], t('English alias overrides language-neutral alias.'));
-    $this->assertEqual(drupal_lookup_path('source', $path['alias']), $path['source'], t('English source overrides language-neutral source.'));
+    $this->assertEqual(drupal_lookup_path('alias', $path['source']), $path['alias'], 'English alias overrides language-neutral alias.');
+    $this->assertEqual(drupal_lookup_path('source', $path['alias']), $path['source'], 'English source overrides language-neutral source.');
 
     // Create a language-neutral alias for the same path, again.
     $path = array(
@@ -290,7 +290,7 @@ class PathLookupTest extends DrupalWebTestCase {
       'alias' => 'bar',
     );
     path_save($path);
-    $this->assertEqual(drupal_lookup_path('alias', $path['source']), "users/$name", t('English alias still returned after entering a language-neutral alias.'));
+    $this->assertEqual(drupal_lookup_path('alias', $path['source']), "users/$name", 'English alias still returned after entering a language-neutral alias.');
 
     // Create a language-specific (xx-lolspeak) alias for the same path.
     $path = array(
@@ -299,9 +299,9 @@ class PathLookupTest extends DrupalWebTestCase {
       'language' => 'xx-lolspeak',
     );
     path_save($path);
-    $this->assertEqual(drupal_lookup_path('alias', $path['source']), "users/$name", t('English alias still returned after entering a LOLspeak alias.'));
+    $this->assertEqual(drupal_lookup_path('alias', $path['source']), "users/$name", 'English alias still returned after entering a LOLspeak alias.');
     // The LOLspeak alias should be returned if we really want LOLspeak.
-    $this->assertEqual(drupal_lookup_path('alias', $path['source'], 'xx-lolspeak'), 'LOL', t('LOLspeak alias returned if we specify xx-lolspeak to drupal_lookup_path().'));
+    $this->assertEqual(drupal_lookup_path('alias', $path['source'], 'xx-lolspeak'), 'LOL', 'LOLspeak alias returned if we specify xx-lolspeak to drupal_lookup_path().');
 
     // Create a new alias for this path in English, which should override the
     // previous alias for "user/$uid".
@@ -311,8 +311,8 @@ class PathLookupTest extends DrupalWebTestCase {
       'language' => 'en',
     );
     path_save($path);
-    $this->assertEqual(drupal_lookup_path('alias', $path['source']), $path['alias'], t('Recently created English alias returned.'));
-    $this->assertEqual(drupal_lookup_path('source', $path['alias']), $path['source'], t('Recently created English source returned.'));
+    $this->assertEqual(drupal_lookup_path('alias', $path['source']), $path['alias'], 'Recently created English alias returned.');
+    $this->assertEqual(drupal_lookup_path('source', $path['alias']), $path['source'], 'Recently created English source returned.');
 
     // Remove the English aliases, which should cause a fallback to the most
     // recently created language-neutral alias, 'bar'.
@@ -320,7 +320,7 @@ class PathLookupTest extends DrupalWebTestCase {
       ->condition('language', 'en')
       ->execute();
     drupal_clear_path_cache();
-    $this->assertEqual(drupal_lookup_path('alias', $path['source']), 'bar', t('Path lookup falls back to recently created language-neutral alias.'));
+    $this->assertEqual(drupal_lookup_path('alias', $path['source']), 'bar', 'Path lookup falls back to recently created language-neutral alias.');
 
     // Test the situation where the alias and language are the same, but
     // the source differs. The newer alias record should be returned.
@@ -330,7 +330,7 @@ class PathLookupTest extends DrupalWebTestCase {
       'alias' => 'bar',
     );
     path_save($path);
-    $this->assertEqual(drupal_lookup_path('source', $path['alias']), $path['source'], t('Newer alias record is returned when comparing two LANGUAGE_NONE paths with the same alias.'));
+    $this->assertEqual(drupal_lookup_path('source', $path['alias']), $path['source'], 'Newer alias record is returned when comparing two LANGUAGE_NONE paths with the same alias.');
   }
 }
 
@@ -375,7 +375,7 @@ class PathSaveTest extends DrupalWebTestCase {
     // Test to see if the original alias is available to modules during
     // hook_path_update().
     $results = variable_get('path_test_results', array());
-    $this->assertIdentical($results['hook_path_update']['original']['alias'], $path_original['alias'], t('Old path alias available to modules during hook_path_update.'));
-    $this->assertIdentical($results['hook_path_update']['original']['source'], $path_original['source'], t('Old path alias available to modules during hook_path_update.'));
+    $this->assertIdentical($results['hook_path_update']['original']['alias'], $path_original['alias'], 'Old path alias available to modules during hook_path_update.');
+    $this->assertIdentical($results['hook_path_update']['original']['source'], $path_original['source'], 'Old path alias available to modules during hook_path_update.');
   }
 }

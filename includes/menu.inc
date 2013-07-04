@@ -309,7 +309,7 @@ define('MENU_PREFERRED_LINK', '1cf698d64d1aa4b83907cf6ed55db3a7f8e92c91');
  * actually exists. This list of 'masks' is built in menu_rebuild().
  *
  * @param $parts
- *   An array of path parts, for the above example
+ *   An array of path parts; for the above example, 
  *   array('node', '12345', 'edit').
  *
  * @return
@@ -430,7 +430,7 @@ function menu_set_item($path, $router_item) {
  * Gets a router item.
  *
  * @param $path
- *   The path, for example node/5. The function will find the corresponding
+ *   The path; for example, 'node/5'. The function will find the corresponding
  *   node/% item and return that.
  * @param $router_item
  *   Internal use only.
@@ -542,7 +542,7 @@ function menu_execute_active_handler($path = NULL, $deliver = TRUE) {
  * @param $item
  *   A menu router or menu link item
  * @param $map
- *   An array of path arguments (ex: array('node', '5'))
+ *   An array of path arguments; for example, array('node', '5').
  *
  * @return
  *   Returns TRUE for success, FALSE if an object cannot be loaded.
@@ -612,7 +612,7 @@ function _menu_load_objects(&$item, &$map) {
  * @param $item
  *   A menu router or menu link item
  * @param $map
- *   An array of path arguments (ex: array('node', '5'))
+ *   An array of path arguments; for example, array('node', '5').
  *
  * @return
  *   $item['access'] becomes TRUE if the item is accessible, FALSE otherwise.
@@ -738,7 +738,7 @@ function _menu_item_localize(&$item, $map, $link_translate = FALSE) {
  * @param $router_item
  *   A menu router item
  * @param $map
- *   An array of path arguments (ex: array('node', '5'))
+ *   An array of path arguments; for example, array('node', '5').
  * @param $to_arg
  *   Execute $item['to_arg_functions'] or not. Use only if you want to render a
  *   path from the menu table, for example tabs.
@@ -801,9 +801,9 @@ function _menu_translate(&$router_item, $map, $to_arg = FALSE) {
  * Translates the path elements in the map using any to_arg helper function.
  *
  * @param $map
- *   An array of path arguments (ex: array('node', '5'))
+ *   An array of path arguments; for example, array('node', '5').
  * @param $to_arg_functions
- *   An array of helper function (ex: array(2 => 'menu_tail_to_arg'))
+ *   An array of helper functions; for example, array(2 => 'menu_tail_to_arg').
  *
  * @see hook_menu()
  */
@@ -2139,7 +2139,7 @@ function menu_local_tasks($level = 0) {
  *   example 'node' or 'admin/structure/block/manage'.
  * @param $args
  *   A list of dynamic path arguments to append to $parent_path to form the
- *   fully-qualified menu router path, for example array(123) for a certain
+ *   fully-qualified menu router path; for example, array(123) for a certain
  *   node or array('system', 'navigation') for a certain block.
  *
  * @return
@@ -2430,7 +2430,7 @@ function menu_set_active_trail($new_trail = NULL) {
  * Looks up the preferred menu link for a given system path.
  *
  * @param $path
- *   The path, for example 'node/5'. The function will find the corresponding
+ *   The path; for example, 'node/5'. The function will find the corresponding
  *   menu link ('node/5' if it exists, or fallback to 'node/%').
  * @param $selected_menu
  *   The name of a menu used to restrict the search for a preferred menu link.

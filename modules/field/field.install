@@ -128,7 +128,7 @@ function field_schema() {
         'not null' => TRUE,
         'default' => ''
       ),
-      'entity_type'       => array(
+      'entity_type' => array(
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,

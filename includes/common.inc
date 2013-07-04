@@ -5035,19 +5035,6 @@ function drupal_json_output($var = NULL) {
 }
 
 /**
- * Gets a salt useful for hardening against SQL injection.
- *
- * @return
- *   A salt based on information in settings.php, not in the database.
- */
-function drupal_get_hash_salt() {
-  global $drupal_hash_salt, $databases;
-  // If the $drupal_hash_salt variable is empty, a hash of the serialized
-  // database credentials is used as a fallback salt.
-  return empty($drupal_hash_salt) ? hash('sha256', serialize($databases)) : $drupal_hash_salt;
-}
-
-/**
  * Ensures the private key variable used to generate tokens is set.
  *
  * @return
@@ -5069,8 +5056,10 @@ function drupal_get_private_key() {
  *
  * @return string
  *   A 43-character URL-safe token for validation, based on the user session ID,
- *   the global $drupal_hash_salt variable from settings.php, and the
+ *   the hash salt provided from drupal_get_hash_salt(), and the
  *   'drupal_private_key' configuration variable.
+ *
+ * @see drupal_get_hash_salt()
  */
 function drupal_get_token($value = '') {
   return drupal_hmac_base64($value, session_id() . drupal_get_private_key() . drupal_get_hash_salt());
@@ -6478,6 +6467,44 @@ function element_set_attributes(array &$element, array $map) {
       $element['#attributes'][$attribute] = $element[$property];
     }
   }
+}
+
+/**
+ * Recursively computes the difference of arrays with additional index check.
+ *
+ * This is a version of array_diff_assoc() that supports multidimensional
+ * arrays.
+ *
+ * @param array $array1
+ *   The array to compare from.
+ * @param array $array2
+ *   The array to compare to.
+ *
+ * @return array
+ *   Returns an array containing all the values from array1 that are not present
+ *   in array2.
+ */
+function drupal_array_diff_assoc_recursive($array1, $array2) {
+  $difference = array();
+
+  foreach ($array1 as $key => $value) {
+    if (is_array($value)) {
+      if (!array_key_exists($key, $array2) || !is_array($array2[$key])) {
+        $difference[$key] = $value;
+      }
+      else {
+        $new_diff = drupal_array_diff_assoc_recursive($value, $array2[$key]);
+        if (!empty($new_diff)) {
+          $difference[$key] = $new_diff;
+        }
+      }
+    }
+    elseif (!array_key_exists($key, $array2) || $array2[$key] !== $value) {
+      $difference[$key] = $value;
+    }
+  }
+
+  return $difference;
 }
 
 /**

@@ -35,7 +35,7 @@ class UpdateDependencyOrderingTestCase extends DrupalWebTestCase {
       'update_test_1_update_7002',
     );
     $actual_updates = array_keys(update_resolve_dependencies($starting_updates));
-    $this->assertEqual($expected_updates, $actual_updates, t('Updates within a single module run in the correct order.'));
+    $this->assertEqual($expected_updates, $actual_updates, 'Updates within a single module run in the correct order.');
   }
 
   /**
@@ -49,9 +49,9 @@ class UpdateDependencyOrderingTestCase extends DrupalWebTestCase {
     $update_order = array_keys(update_resolve_dependencies($starting_updates));
     // Make sure that each dependency is satisfied.
     $first_dependency_satisfied = array_search('update_test_2_update_7000', $update_order) < array_search('update_test_3_update_7000', $update_order);
-    $this->assertTrue($first_dependency_satisfied, t('The dependency of the second module on the first module is respected by the update function order.'));
+    $this->assertTrue($first_dependency_satisfied, 'The dependency of the second module on the first module is respected by the update function order.');
     $second_dependency_satisfied = array_search('update_test_3_update_7000', $update_order) < array_search('update_test_2_update_7001', $update_order);
-    $this->assertTrue($second_dependency_satisfied, t('The dependency of the first module on the second module is respected by the update function order.'));
+    $this->assertTrue($second_dependency_satisfied, 'The dependency of the first module on the second module is respected by the update function order.');
   }
 }
 
@@ -79,9 +79,9 @@ class UpdateDependencyMissingTestCase extends DrupalWebTestCase {
       'update_test_2' => 7000,
     );
     $update_graph = update_resolve_dependencies($starting_updates);
-    $this->assertTrue($update_graph['update_test_2_update_7000']['allowed'], t("The module's first update function is allowed to run, since it does not have any missing dependencies."));
-    $this->assertFalse($update_graph['update_test_2_update_7001']['allowed'], t("The module's second update function is not allowed to run, since it has a direct dependency on a missing update."));
-    $this->assertFalse($update_graph['update_test_2_update_7002']['allowed'], t("The module's third update function is not allowed to run, since it has an indirect dependency on a missing update."));
+    $this->assertTrue($update_graph['update_test_2_update_7000']['allowed'], "The module's first update function is allowed to run, since it does not have any missing dependencies.");
+    $this->assertFalse($update_graph['update_test_2_update_7001']['allowed'], "The module's second update function is not allowed to run, since it has a direct dependency on a missing update.");
+    $this->assertFalse($update_graph['update_test_2_update_7002']['allowed'], "The module's third update function is not allowed to run, since it has an indirect dependency on a missing update.");
   }
 }
 
@@ -107,9 +107,9 @@ class UpdateDependencyHookInvocationTestCase extends DrupalWebTestCase {
    */
   function testHookUpdateDependencies() {
     $update_dependencies = update_retrieve_dependencies();
-    $this->assertTrue($update_dependencies['system'][7000]['update_test_1'] == 7000, t('An update function that has a dependency on two separate modules has the first dependency recorded correctly.'));
-    $this->assertTrue($update_dependencies['system'][7000]['update_test_2'] == 7001, t('An update function that has a dependency on two separate modules has the second dependency recorded correctly.'));
-    $this->assertTrue($update_dependencies['system'][7001]['update_test_1'] == 7002, t('An update function that depends on more than one update from the same module only has the dependency on the higher-numbered update function recorded.'));
+    $this->assertTrue($update_dependencies['system'][7000]['update_test_1'] == 7000, 'An update function that has a dependency on two separate modules has the first dependency recorded correctly.');
+    $this->assertTrue($update_dependencies['system'][7000]['update_test_2'] == 7001, 'An update function that has a dependency on two separate modules has the second dependency recorded correctly.');
+    $this->assertTrue($update_dependencies['system'][7001]['update_test_1'] == 7002, 'An update function that depends on more than one update from the same module only has the dependency on the higher-numbered update function recorded.');
   }
 }
 

@@ -59,14 +59,14 @@ class TrackerTest extends DrupalWebTestCase {
     ));
 
     $this->drupalGet('tracker');
-    $this->assertNoText($unpublished->title, t('Unpublished node do not show up in the tracker listing.'));
-    $this->assertText($published->title, t('Published node show up in the tracker listing.'));
-    $this->assertLink(t('My recent content'), 0, t('User tab shows up on the global tracker page.'));
+    $this->assertNoText($unpublished->title, 'Unpublished node do not show up in the tracker listing.');
+    $this->assertText($published->title, 'Published node show up in the tracker listing.');
+    $this->assertLink(t('My recent content'), 0, 'User tab shows up on the global tracker page.');
 
     // Delete a node and ensure it no longer appears on the tracker.
     node_delete($published->nid);
     $this->drupalGet('tracker');
-    $this->assertNoText($published->title, t('Deleted node do not show up in the tracker listing.'));
+    $this->assertNoText($published->title, 'Deleted node do not show up in the tracker listing.');
   }
 
   /**
@@ -102,10 +102,10 @@ class TrackerTest extends DrupalWebTestCase {
     $this->drupalPost('comment/reply/' . $other_published_my_comment->nid, $comment, t('Save'));
 
     $this->drupalGet('user/' . $this->user->uid . '/track');
-    $this->assertNoText($unpublished->title, t("Unpublished nodes do not show up in the users's tracker listing."));
-    $this->assertText($my_published->title, t("Published nodes show up in the user's tracker listing."));
-    $this->assertNoText($other_published_no_comment->title, t("Other user's nodes do not show up in the user's tracker listing."));
-    $this->assertText($other_published_my_comment->title, t("Nodes that the user has commented on appear in the user's tracker listing."));
+    $this->assertNoText($unpublished->title, "Unpublished nodes do not show up in the users's tracker listing.");
+    $this->assertText($my_published->title, "Published nodes show up in the user's tracker listing.");
+    $this->assertNoText($other_published_no_comment->title, "Other user's nodes do not show up in the user's tracker listing.");
+    $this->assertText($other_published_my_comment->title, "Nodes that the user has commented on appear in the user's tracker listing.");
 
     // Verify that unpublished comments are removed from the tracker.
     $admin_user = $this->drupalCreateUser(array('administer comments', 'access user profiles'));
@@ -128,19 +128,19 @@ class TrackerTest extends DrupalWebTestCase {
     $node = $this->drupalCreateNode($edit);
     $title = $edit['title'];
     $this->drupalGet('tracker');
-    $this->assertPattern('/' . $title . '.*new/', t('New nodes are flagged as such in the tracker listing.'));
+    $this->assertPattern('/' . $title . '.*new/', 'New nodes are flagged as such in the tracker listing.');
 
     $this->drupalGet('node/' . $node->nid);
     $this->drupalGet('tracker');
-    $this->assertNoPattern('/' . $title . '.*new/', t('Visited nodes are not flagged as new.'));
+    $this->assertNoPattern('/' . $title . '.*new/', 'Visited nodes are not flagged as new.');
 
     $this->drupalLogin($this->other_user);
     $this->drupalGet('tracker');
-    $this->assertPattern('/' . $title . '.*new/', t('For another user, new nodes are flagged as such in the tracker listing.'));
+    $this->assertPattern('/' . $title . '.*new/', 'For another user, new nodes are flagged as such in the tracker listing.');
 
     $this->drupalGet('node/' . $node->nid);
     $this->drupalGet('tracker');
-    $this->assertNoPattern('/' . $title . '.*new/', t('For another user, visited nodes are not flagged as new.'));
+    $this->assertNoPattern('/' . $title . '.*new/', 'For another user, visited nodes are not flagged as new.');
   }
 
   /**
@@ -164,7 +164,7 @@ class TrackerTest extends DrupalWebTestCase {
 
     $this->drupalLogin($this->other_user);
     $this->drupalGet('tracker');
-    $this->assertText('1 new', t('New comments are counted on the tracker listing pages.'));
+    $this->assertText('1 new', 'New comments are counted on the tracker listing pages.');
     $this->drupalGet('node/' . $node->nid);
 
     // Add another comment as other_user.
@@ -179,7 +179,7 @@ class TrackerTest extends DrupalWebTestCase {
 
     $this->drupalLogin($this->user);
     $this->drupalGet('tracker');
-    $this->assertText('1 new', t('New comments are counted on the tracker listing pages.'));
+    $this->assertText('1 new', 'New comments are counted on the tracker listing pages.');
   }
 
   /**
@@ -224,19 +224,19 @@ class TrackerTest extends DrupalWebTestCase {
 
     // Assert that all node titles are displayed.
     foreach ($nodes as $i => $node) {
-      $this->assertText($node->title, t('Node @i is displayed on the tracker listing pages.', array('@i' => $i)));
+      $this->assertText($node->title, format_string('Node @i is displayed on the tracker listing pages.', array('@i' => $i)));
     }
-    $this->assertText('1 new', t('New comment is counted on the tracker listing pages.'));
-    $this->assertText('updated', t('Node is listed as updated'));
+    $this->assertText('1 new', 'New comment is counted on the tracker listing pages.');
+    $this->assertText('updated', 'Node is listed as updated');
 
     // Fetch the site-wide tracker.
     $this->drupalGet('tracker');
 
     // Assert that all node titles are displayed.
     foreach ($nodes as $i => $node) {
-      $this->assertText($node->title, t('Node @i is displayed on the tracker listing pages.', array('@i' => $i)));
+      $this->assertText($node->title, format_string('Node @i is displayed on the tracker listing pages.', array('@i' => $i)));
     }
-    $this->assertText('1 new', t('New comment is counted on the tracker listing pages.'));
+    $this->assertText('1 new', 'New comment is counted on the tracker listing pages.');
   }
 
   /**
@@ -253,7 +253,7 @@ class TrackerTest extends DrupalWebTestCase {
 
     // Assert that the node is displayed.
     $this->drupalGet('tracker');
-    $this->assertText($node->title, t('Node is displayed on the tracker listing pages.'));
+    $this->assertText($node->title, 'Node is displayed on the tracker listing pages.');
 
     // Unpublish the node and ensure that it's no longer displayed.
     $edit = array(
@@ -263,6 +263,6 @@ class TrackerTest extends DrupalWebTestCase {
     $this->drupalPost('admin/content', $edit, t('Update'));
 
     $this->drupalGet('tracker');
-    $this->assertText(t('No content available.'), t('Node is displayed on the tracker listing pages.'));
+    $this->assertText(t('No content available.'), 'Node is displayed on the tracker listing pages.');
   }
 }

@@ -2514,7 +2514,7 @@ function hook_field_delete_field($field) {
  *
  * @param $instance
  *   The instance as it is post-update.
- * @param $prior_$instance
+ * @param $prior_instance
  *   The instance as it was pre-update.
  */
 function hook_field_update_instance($instance, $prior_instance) {

@@ -27,7 +27,7 @@ class ForumUpgradePathTestCase extends UpgradePathTestCase {
    * Test a successful upgrade (no negotiation).
    */
   public function testForumUpgrade() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Work around http://drupal.org/node/931512
     $this->drupalPost('admin/structure/types/manage/forum/fields', array(), t('Save'));
@@ -47,11 +47,11 @@ class ForumUpgradePathTestCase extends UpgradePathTestCase {
     );
     $this->drupalPost("node/add/forum/$tid", $edit, t('Save'));
     $type = t('Forum topic');
-    $this->assertRaw(t('@type %title has been created.', array('@type' => $type, '%title' => $title)), t('Forum topic was created'));
+    $this->assertRaw(t('@type %title has been created.', array('@type' => $type, '%title' => $title)), 'Forum topic was created');
 
     // Retrieve node object, ensure that the topic was created and in the proper forum.
     $node = $this->drupalGetNodeByTitle($title);
-    $this->assertTrue($node != NULL, t('Node @title was loaded', array('@title' => $title)));
+    $this->assertTrue($node != NULL, format_string('Node @title was loaded', array('@title' => $title)));
     $this->assertEqual($node->taxonomy_forums[LANGUAGE_NONE][0]['tid'], $tid, 'Saved forum topic was in the expected forum');
 
     $this->drupalGet("forum/$tid");
@@ -59,6 +59,6 @@ class ForumUpgradePathTestCase extends UpgradePathTestCase {
     $this->drupalLogout();
 
     $this->drupalGet("node/add/forum/$tid");
-    $this->assertResponse(200, t('User can access forum creation page.'));
+    $this->assertResponse(200, 'User can access forum creation page.');
   }
 }

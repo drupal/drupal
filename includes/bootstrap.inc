@@ -218,12 +218,16 @@ define('LANGUAGE_RTL', 1);
 define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 
 /**
- * Flag for drupal_set_title(); text is not sanitized, so run check_plain().
+ * Flag used to indicate that text is not sanitized, so run check_plain().
+ *
+ * @see drupal_set_title()
  */
 define('CHECK_PLAIN', 0);
 
 /**
- * Flag for drupal_set_title(); text has already been sanitized.
+ * Flag used to indicate that text has already been sanitized.
+ *
+ * @see drupal_set_title()
  */
 define('PASS_THROUGH', -1);
 
@@ -1405,6 +1409,7 @@ function drupal_unpack($obj, $field = 'data') {
  * more information, including recommendations on how to break up or not
  * break up strings for translation.
  *
+ * @section sec_translating_vars Translating Variables
  * You should never use t() to translate variables, such as calling
  * @code t($text); @endcode, unless the text that the variable holds has been
  * passed through t() elsewhere (e.g., $text is one of several translated
@@ -1424,6 +1429,7 @@ function drupal_unpack($obj, $field = 'data') {
  * Translators can then rearrange the string as necessary for the language
  * (e.g., in Spanish, it might be "blog de @name").
  *
+ * @section sec_alt_funcs_install Use During Installation Phase
  * During the Drupal installation phase, some resources used by t() wil not be
  * available to code that needs localization. See st() and get_t() for
  * alternatives.
@@ -2233,6 +2239,19 @@ function drupal_get_user_timezone() {
 }
 
 /**
+ * Gets a salt useful for hardening against SQL injection.
+ *
+ * @return
+ *   A salt based on information in settings.php, not in the database.
+ */
+function drupal_get_hash_salt() {
+  global $drupal_hash_salt, $databases;
+  // If the $drupal_hash_salt variable is empty, a hash of the serialized
+  // database credentials is used as a fallback salt.
+  return empty($drupal_hash_salt) ? hash('sha256', serialize($databases)) : $drupal_hash_salt;
+}
+
+/**
  * Provides custom PHP error handling.
  *
  * @param $error_level
@@ -2452,7 +2471,6 @@ function drupal_get_bootstrap_phase() {
  *   HMAC and timestamp.
  */
 function drupal_valid_test_ua() {
-  global $drupal_hash_salt;
   // No reason to reset this.
   static $test_prefix;
 
@@ -2466,7 +2484,7 @@ function drupal_valid_test_ua() {
     // We use the salt from settings.php to make the HMAC key, since
     // the database is not yet initialized and we can't access any Drupal variables.
     // The file properties add more entropy not easily accessible to others.
-    $key = $drupal_hash_salt . filectime(__FILE__) . fileinode(__FILE__);
+    $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
     $time_diff = REQUEST_TIME - $time;
     // Since we are making a local request a 5 second time window is allowed,
     // and the HMAC must match.
@@ -2484,14 +2502,13 @@ function drupal_valid_test_ua() {
  * Generates a user agent string with a HMAC and timestamp for simpletest.
  */
 function drupal_generate_test_ua($prefix) {
-  global $drupal_hash_salt;
   static $key;
 
   if (!isset($key)) {
     // We use the salt from settings.php to make the HMAC key, since
     // the database is not yet initialized and we can't access any Drupal variables.
     // The file properties add more entropy not easily accessible to others.
-    $key = $drupal_hash_salt . filectime(__FILE__) . fileinode(__FILE__);
+    $key = drupal_get_hash_salt() . filectime(__FILE__) . fileinode(__FILE__);
   }
   // Generate a moderately secure HMAC based on the database credentials.
   $salt = uniqid('', TRUE);

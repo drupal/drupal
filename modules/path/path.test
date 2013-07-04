@@ -42,12 +42,12 @@ class PathTestCase extends DrupalWebTestCase {
     // created.
     cache_clear_all('*', 'cache_path', TRUE);
     $this->drupalGet($edit['source']);
-    $this->assertTrue(cache_get($edit['source'], 'cache_path'), t('Cache entry was created.'));
+    $this->assertTrue(cache_get($edit['source'], 'cache_path'), 'Cache entry was created.');
 
     // Visit the alias for the node and confirm a cache entry is created.
     cache_clear_all('*', 'cache_path', TRUE);
     $this->drupalGet($edit['alias']);
-    $this->assertTrue(cache_get($edit['source'], 'cache_path'), t('Cache entry was created.'));
+    $this->assertTrue(cache_get($edit['source'], 'cache_path'), 'Cache entry was created.');
   }
 
   /**
@@ -334,7 +334,7 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     drupal_static_reset('locale_url_outbound_alter');
     $languages = language_list();
     $url = url('node/' . $french_node->nid, array('language' => $languages[$french_node->language]));
-    $this->assertTrue(strpos($url, $edit['path[alias]']), t('URL contains the path alias.'));
+    $this->assertTrue(strpos($url, $edit['path[alias]']), 'URL contains the path alias.');
 
     // Confirm that the alias works even when changing language negotiation
     // options. Enable User language detection and selection over URL one.
@@ -378,23 +378,23 @@ class PathLanguageTestCase extends DrupalWebTestCase {
     // situation only aliases in the default language and language neutral ones
     // should keep working.
     $this->drupalGet($french_alias);
-    $this->assertResponse(404, t('Alias for French translation is unavailable when URL language negotiation is disabled.'));
+    $this->assertResponse(404, 'Alias for French translation is unavailable when URL language negotiation is disabled.');
 
     // drupal_lookup_path() has an internal static cache. Check to see that
     // it has the appropriate contents at this point.
     drupal_lookup_path('wipe');
     $french_node_path = drupal_lookup_path('source', $french_alias, $french_node->language);
-    $this->assertEqual($french_node_path, 'node/' . $french_node->nid, t('Normal path works.'));
+    $this->assertEqual($french_node_path, 'node/' . $french_node->nid, 'Normal path works.');
     // Second call should return the same path.
     $french_node_path = drupal_lookup_path('source', $french_alias, $french_node->language);
-    $this->assertEqual($french_node_path, 'node/' . $french_node->nid, t('Normal path is the same.'));
+    $this->assertEqual($french_node_path, 'node/' . $french_node->nid, 'Normal path is the same.');
 
     // Confirm that the alias works.
     $french_node_alias = drupal_lookup_path('alias', 'node/' . $french_node->nid, $french_node->language);
-    $this->assertEqual($french_node_alias, $french_alias, t('Alias works.'));
+    $this->assertEqual($french_node_alias, $french_alias, 'Alias works.');
     // Second call should return the same alias.
     $french_node_alias = drupal_lookup_path('alias', 'node/' . $french_node->nid, $french_node->language);
-    $this->assertEqual($french_node_alias, $french_alias, t('Alias is the same.'));
+    $this->assertEqual($french_node_alias, $french_alias, 'Alias is the same.');
   }
 }
 
@@ -508,8 +508,8 @@ class PathMonolingualTestCase extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/language', $edit, t('Save configuration'));
 
     // Verify that French is the only language.
-    $this->assertFalse(drupal_multilingual(), t('Site is mono-lingual'));
-    $this->assertEqual(language_default('language'), 'fr', t('French is the default language'));
+    $this->assertFalse(drupal_multilingual(), 'Site is mono-lingual');
+    $this->assertEqual(language_default('language'), 'fr', 'French is the default language');
 
     // Set language detection to URL.
     $edit = array('language[enabled][locale-url]' => TRUE);

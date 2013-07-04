@@ -30,15 +30,11 @@
  *
  * @return
  *   Array with optional keys:
- *   - 'title': Title for the tab on the search page for this module. Defaults
+ *   - title: Title for the tab on the search page for this module. Defaults
  *     to the module name if not given.
- *   - 'path': Path component after 'search/' for searching with this module.
+ *   - path: Path component after 'search/' for searching with this module.
  *     Defaults to the module name if not given.
- *   - 'conditions_callback': Name of a callback function that is invoked by
- *     search_view() to get an array of additional search conditions to pass to
- *     search_data(). For example, a search module may get additional keywords,
- *     filters, or modifiers for the search from the query string. Sample
- *     callback function: sample_search_conditions_callback().
+ *   - conditions_callback: An implementation of callback_search_conditions().
  *
  * @ingroup search
  */
@@ -46,33 +42,8 @@ function hook_search_info() {
   return array(
     'title' => 'Content',
     'path' => 'node',
-    'conditions_callback' => 'sample_search_conditions_callback',
+    'conditions_callback' => 'callback_search_conditions',
   );
-}
-
-/**
- * An example conditions callback function for search.
- *
- * This example pulls additional search keywords out of the $_REQUEST variable,
- * (i.e. from the query string of the request). The conditions may also be
- * generated internally - for example based on a module's settings.
- *
- * @see hook_search_info()
- * @ingroup search
- */
-function sample_search_conditions_callback($keys) {
-  $conditions = array();
-
-  if (!empty($_REQUEST['keys'])) {
-    $conditions['keys'] = $_REQUEST['keys'];
-  }
-  if (!empty($_REQUEST['sample_search_keys'])) {
-    $conditions['sample_search_keys'] = $_REQUEST['sample_search_keys'];
-  }
-  if ($force_keys = variable_get('sample_search_force_keywords', '')) {
-    $conditions['sample_search_force_keywords'] = $force_keys;
-  }
-  return $conditions;
 }
 
 /**
@@ -252,22 +223,23 @@ function hook_search_execute($keys = NULL, $conditions = NULL) {
 /**
  * Override the rendering of search results.
  *
- * A module that implements hook_search_info() to define a type of search
- * may implement this hook in order to override the default theming of
- * its search results, which is otherwise themed using theme('search_results').
+ * A module that implements hook_search_info() to define a type of search may
+ * implement this hook in order to override the default theming of its search
+ * results, which is otherwise themed using theme('search_results').
  *
  * Note that by default, theme('search_results') and theme('search_result')
  * work together to create an ordered list (OL). So your hook_search_page()
  * implementation should probably do this as well.
  *
- * @see search-result.tpl.php, search-results.tpl.php
- *
  * @param $results
  *   An array of search results.
  *
  * @return
- *   A renderable array, which will render the formatted search results with
- *   a pager included.
+ *   A renderable array, which will render the formatted search results with a
+ *   pager included.
+ *
+ * @see search-result.tpl.php
+ * @see search-results.tpl.php
  */
 function hook_search_page($results) {
   $output['prefix']['#markup'] = '<ol class="search-results">';
@@ -364,3 +336,41 @@ function hook_update_index() {
 /**
  * @} End of "addtogroup hooks".
  */
+
+/**
+ * Provide search query conditions.
+ *
+ * Callback for hook_search_info().
+ *
+ * This callback is invoked by search_view() to get an array of additional
+ * search conditions to pass to search_data(). For example, a search module
+ * may get additional keywords, filters, or modifiers for the search from
+ * the query string.
+ *
+ * This example pulls additional search keywords out of the $_REQUEST variable,
+ * (i.e. from the query string of the request). The conditions may also be
+ * generated internally - for example based on a module's settings.
+ *
+ * @param $keys
+ *   The search keywords string.
+ *
+ * @return
+ *   An array of additional conditions, such as filters.
+ *
+ * @ingroup callbacks
+ * @ingroup search
+ */
+function callback_search_conditions($keys) {
+  $conditions = array();
+
+  if (!empty($_REQUEST['keys'])) {
+    $conditions['keys'] = $_REQUEST['keys'];
+  }
+  if (!empty($_REQUEST['sample_search_keys'])) {
+    $conditions['sample_search_keys'] = $_REQUEST['sample_search_keys'];
+  }
+  if ($force_keys = config('sample_search.settings')->get('force_keywords')) {
+    $conditions['sample_search_force_keywords'] = $force_keys;
+  }
+  return $conditions;
+}

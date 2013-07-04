@@ -1083,6 +1083,9 @@ function user_account_form(&$form, &$form_state) {
         '#access' => !empty($protected_values),
         '#description' => $current_pass_description,
         '#weight' => -5,
+        // Do not let web browsers remember this password, since we are trying
+        // to confirm that the person submitting the form actually knows the
+        // current one.
         '#attributes' => array('autocomplete' => 'off'),
       );
       $form['#validate'][] = 'user_validate_current_pass';
@@ -2239,6 +2242,11 @@ function user_authenticate($name, $password) {
  *
  * The function records a watchdog message about the new session, saves the
  * login timestamp, calls hook_user_login(), and generates a new session.
+ *
+ * @param array $edit
+ *   The array of form values submitted by the user.
+ *
+ * @see hook_user_login()
  */
 function user_login_finalize(&$edit = array()) {
   global $user;

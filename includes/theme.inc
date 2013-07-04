@@ -874,6 +874,7 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  * @link themeable theme function or template @endlink, by checking the theme
  * registry.
  *
+ * @section sec_theme_hooks Theme Hooks
  * Most commonly, the first argument to this function is the name of the theme
  * hook. For instance, to theme a taxonomy term, the theme hook name is
  * 'taxonomy_term'. Modules register theme hooks within a hook_theme()
@@ -885,6 +886,7 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  * underscores changed to hyphens, so for the 'taxonomy_term' theme hook, the
  * default template is 'taxonomy-term.tpl.php'.
  *
+ * @subsection sub_overriding_theme_hooks Overriding Theme Hooks
  * Themes may also register new theme hooks within a hook_theme()
  * implementation, but it is more common for themes to override default
  * implementations provided by modules than to register entirely new theme
@@ -897,6 +899,7 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  * rendering engine, it overrides the default implementation of the 'page' theme
  * hook by containing a 'page.tpl.php' file within its folder structure).
  *
+ * @subsection sub_preprocess_templates Preprocessing for Template Files
  * If the implementation is a template file, several functions are called
  * before the template file is invoked, to modify the $variables array. These
  * fall into the "preprocessing" phase and the "processing" phase, and are
@@ -945,12 +948,14 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  * - THEME_process_HOOK(&$variables):  Allows the theme to process the
  *   variables specific to the theme hook.
  *
+ * @subsection sub_preprocess_theme_funcs Preprocessing for Theme Functions
  * If the implementation is a function, only the theme-hook-specific preprocess
  * and process functions (the ones ending in _HOOK) are called from the
  * list above. This is because theme hooks with function implementations
  * need to be fast, and calling the non-theme-hook-specific preprocess and
  * process functions for them would incur a noticeable performance penalty.
  *
+ * @subsection sub_alternate_suggestions Suggesting Alternate Hooks
  * There are two special variables that these preprocess and process functions
  * can set: 'theme_hook_suggestion' and 'theme_hook_suggestions'. These will be
  * merged together to form a list of 'suggested' alternate theme hooks to use,
@@ -1814,7 +1819,9 @@ function theme_breadcrumb($variables) {
  *     - "data": The localized title of the table column.
  *     - "field": The database field represented in the table column (required
  *       if user is to be able to sort on this column).
- *     - "sort": A default sort order for this column ("asc" or "desc").
+ *     - "sort": A default sort order for this column ("asc" or "desc"). Only
+ *       one column should be given a default sort order because table sorting
+ *       only applies to one column at a time.
  *     - Any HTML attributes, such as "colspan", to apply to the column header
  *       cell.
  *   - rows: An array of table rows. Every row is an array of cells, or an
