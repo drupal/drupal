@@ -436,6 +436,10 @@ function install_begin_request(&$install_state) {
 
     $container->register('url_generator', 'Drupal\Core\Routing\NullGenerator');
 
+    // Register the CSS and JavaScript asset collection renderers.
+    $container->register('asset.css.collection_renderer', 'Drupal\Core\Asset\CssCollectionRenderer');
+    $container->register('asset.js.collection_renderer', 'Drupal\Core\Asset\JsCollectionRenderer');
+
     Drupal::setContainer($container);
   }
 

@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Component\Utility\Crypt;
 
 /**
  * Tests the JavaScript system.
@@ -345,8 +346,8 @@ class JavaScriptTest extends WebTestBase {
     $js_items = drupal_add_js();
     $javascript = drupal_get_js();
     $expected = implode("\n", array(
-      '<script src="' . file_create_url(drupal_build_js_cache(array('core/misc/collapse.js' => $js_items['core/misc/collapse.js'], 'core/misc/batch.js' => $js_items['core/misc/batch.js']))) . '"></script>',
-      '<script src="' . file_create_url(drupal_build_js_cache(array('core/misc/ajax.js' => $js_items['core/misc/ajax.js'], 'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js']))) . '"></script>',
+      '<script src="' . $this->calculateAggregateFilename(array('core/misc/collapse.js' => $js_items['core/misc/collapse.js'], 'core/misc/batch.js' => $js_items['core/misc/batch.js'])) . '"></script>',
+      '<script src="' . $this->calculateAggregateFilename(array('core/misc/ajax.js' => $js_items['core/misc/ajax.js'], 'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js'])) . '"></script>',
     ));
     $this->assertTrue(strpos($javascript, $expected) !== FALSE, 'JavaScript is aggregated in the expected groups and order.');
   }
@@ -365,10 +366,14 @@ class JavaScriptTest extends WebTestBase {
     drupal_add_js('core/misc/autocomplete.js');
 
     $js_items = drupal_add_js();
-    drupal_build_js_cache(array(
-      'core/misc/ajax.js' => $js_items['core/misc/ajax.js'],
-      'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js']
-    ));
+    $scripts_html = array(
+      '#type' => 'scripts',
+      '#items' => array(
+        'core/misc/ajax.js' => $js_items['core/misc/ajax.js'],
+        'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js']
+      )
+    );
+    drupal_render($scripts_html);
 
     // Store the expected key for the first item in the cache.
     $cache = array_keys(\Drupal::state()->get('system.js_cache_files') ?: array());
@@ -384,10 +389,14 @@ class JavaScriptTest extends WebTestBase {
 
     // Rebuild the cache.
     $js_items = drupal_add_js();
-    drupal_build_js_cache(array(
-      'core/misc/ajax.js' => $js_items['core/misc/ajax.js'],
-      'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js']
-    ));
+    $scripts_html = array(
+      '#type' => 'scripts',
+      '#items' => array(
+        'core/misc/ajax.js' => $js_items['core/misc/ajax.js'],
+        'core/misc/autocomplete.js' => $js_items['core/misc/autocomplete.js']
+      )
+    );
+    drupal_render($scripts_html);
 
     // Compare the expected key for the first file to the current one.
     $cache = array_keys(\Drupal::state()->get('system.js_cache_files') ?: array());
@@ -562,4 +571,24 @@ class JavaScriptTest extends WebTestBase {
     $query_string = variable_get('css_js_query_string', '0');
     $this->assertRaw(drupal_get_path('module', 'node') . '/node.js?' . $query_string, 'Query string was appended correctly to js.');
   }
+
+  /**
+   * Calculates the aggregated file URI of a group of JavaScript assets.
+   *
+   * @param array $js_assets
+   *   A group of JavaScript assets.
+   * @return string
+   *   A file URI.
+   *
+   * @see testAggregation()
+   * @see testAggregationOrder()
+   */
+  protected function calculateAggregateFilename($js_assets) {
+    $data = '';
+    foreach ($js_assets as $js_asset) {
+      $data .= file_get_contents($js_asset['data']) . ";\n";
+    }
+    return file_create_url('public://js/js_' . Crypt::hashBase64($data) . '.js');
+  }
+
 }

@@ -559,3 +559,25 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@authentication']
+  asset.css.collection_renderer:
+    class: Drupal\Core\Asset\CssCollectionRenderer
+  asset.css.collection_optimizer:
+    class: Drupal\Core\Asset\CssCollectionOptimizer
+    arguments: [ '@asset.css.collection_grouper', '@asset.css.optimizer', '@asset.css.dumper', '@state' ]
+  asset.css.optimizer:
+    class: Drupal\Core\Asset\CssOptimizer
+  asset.css.collection_grouper:
+    class: Drupal\Core\Asset\CssCollectionGrouper
+  asset.css.dumper:
+    class: Drupal\Core\Asset\AssetDumper
+  asset.js.collection_renderer:
+    class: Drupal\Core\Asset\JsCollectionRenderer
+  asset.js.collection_optimizer:
+    class: Drupal\Core\Asset\JsCollectionOptimizer
+    arguments: [ '@asset.js.collection_grouper', '@asset.js.optimizer', '@asset.js.dumper', '@state' ]
+  asset.js.optimizer:
+    class: Drupal\Core\Asset\JsOptimizer
+  asset.js.collection_grouper:
+    class: Drupal\Core\Asset\JsCollectionGrouper
+  asset.js.dumper:
+    class: Drupal\Core\Asset\AssetDumper

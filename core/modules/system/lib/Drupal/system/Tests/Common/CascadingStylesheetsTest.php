@@ -79,7 +79,7 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
     $this->assertTrue(strpos($styles, $css) > 0, 'Rendered CSS includes the added stylesheet.');
     // Verify that newlines are properly added inside style tags.
     $query_string = variable_get('css_js_query_string', '0');
-    $css_processed = "<style media=\"all\">\n@import url(\"" . check_plain(file_create_url($css)) . "?" . $query_string ."\");\n</style>";
+    $css_processed = '<link rel="stylesheet" href="' . check_plain(file_create_url($css)) . "?" . $query_string . '" media="all" />';
     $this->assertEqual(trim($styles), $css_processed, 'Rendered CSS includes newlines inside style tags for JavaScript use.');
   }
 
@@ -99,8 +99,12 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
    * Tests rendering inline stylesheets with preprocessing on.
    */
   function testRenderInlinePreprocess() {
+    // Turn on CSS aggregation to allow for preprocessing.
+    $config = $this->container->get('config.factory')->get('system.performance');
+    $config->set('css.preprocess', 1);
+
     $css = 'body { padding: 0px; }';
-    $css_preprocessed = '<style media="all">' . "\n/* <![CDATA[ */\n" . drupal_load_stylesheet_content($css, TRUE) . "\n/* ]]> */\n" . '</style>';
+    $css_preprocessed = '<style media="all">' . "\n/* <![CDATA[ */\n" . "body{padding:0px;}\n" . "\n/* ]]> */\n" . '</style>';
     drupal_add_css($css, array('type' => 'inline'));
     $styles = drupal_get_css();
     $this->assertEqual(trim($styles), $css_preprocessed, 'Rendering preprocessed inline CSS adds it to the page.');
