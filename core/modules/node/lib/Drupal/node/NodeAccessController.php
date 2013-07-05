@@ -7,16 +7,58 @@
 
 namespace Drupal\node;
 
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityAccessController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\user\Plugin\Core\Entity\User;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the access controller for the node entity type.
  */
-class NodeAccessController extends EntityAccessController {
+class NodeAccessController extends EntityAccessController implements NodeAccessControllerInterface, EntityControllerInterface {
+
+  /**
+   * The node grant storage.
+   *
+   * @var \Drupal\node\NodeGrantStorageControllerInterface
+   */
+  protected $grantStorage;
+
+   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * Constructs a NodeAccessController object.
+   *
+   * @param \Drupal\node\NodeGrantDatabaseStorageInterface $grant_storage
+   *   The node grant storage.
+   */
+  public function __construct(NodeGrantDatabaseStorageInterface $grant_storage, ModuleHandlerInterface $module_handler) {
+     $this->grantStorage = $grant_storage;
+     $this->moduleHandler = $module_handler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+    return new static(
+      $container->get('node.grant_storage'),
+      $container->get('module_handler')
+    );
+  }
+
 
   /**
    * {@inheritdoc}
@@ -54,7 +96,7 @@ class NodeAccessController extends EntityAccessController {
 
     // If no module specified either allow or deny, we fall back to the
     // node_access table.
-    if (($grants = $this->accessGrants($node, $operation, $langcode, $account)) !== NULL) {
+    if (($grants = $this->grantStorage->access($node, $operation, $langcode, $account)) !== NULL) {
       return $grants;
     }
 
@@ -66,64 +108,53 @@ class NodeAccessController extends EntityAccessController {
   }
 
   /**
-   * Determines access to nodes based on node grants.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $node
-   *   The entity for which to check 'create' access.
-   * @param string $operation
-   *   The entity operation. Usually one of 'view', 'edit', 'create' or
-   *   'delete'.
-   * @param string $langcode
-   *   The language code for which to check access.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   The user for which to check access.
-   *
-   * @return bool|null
-   *   TRUE if access was granted, FALSE if access was denied or NULL if no
-   *   module implements hook_node_grants(), the node does not (yet) have an id
-   *   or none of the implementing modules explicitly granted or denied access.
+   * {@inheritdoc}
    */
-  protected function accessGrants(EntityInterface $node, $operation, $langcode, AccountInterface $account) {
-    // If no module implements the hook or the node does not have an id there is
-    // no point in querying the database for access grants.
-    if (!module_implements('node_grants') || !$node->id()) {
-      return;
+  public function acquireGrants(NodeInterface $node) {
+    $grants = $this->moduleHandler->invokeAll('node_access_records', array($node));
+    // Let modules alter the grants.
+    $this->moduleHandler->alter('node_access_records', $grants, $node);
+    // If no grants are set and the node is published, then use the default grant.
+    if (empty($grants) && $node->isPublished()) {
+      $grants[] = array('realm' => 'all', 'gid' => 0, 'grant_view' => 1, 'grant_update' => 0, 'grant_delete' => 0);
     }
+    return $grants;
+  }
 
-    // Check the database for potential access grants.
-    $query = db_select('node_access');
-    $query->addExpression('1');
-    // Only interested for granting in the current operation.
-    $query->condition('grant_' . $operation, 1, '>=');
-    // Check for grants for this node and the correct langcode.
-    $nids = db_and()
-      ->condition('nid', $node->id())
-      ->condition('langcode', $langcode);
-    // If the node is published, also take the default grant into account. The
-    // default is saved with a node ID of 0.
-    $status = $node instanceof EntityNG ? $node->status : $node->get('status', $langcode)->value;
-    if ($status) {
-      $nids = db_or()
-        ->condition($nids)
-        ->condition('nid', 0);
-    }
-    $query->condition($nids);
-    $query->range(0, 1);
+  /**
+   * {@inheritdoc}
+   */
+  public function writeGrants(NodeInterface $node, $delete = TRUE) {
+    $grants = $this->acquireGrants($node);
+    $this->grantStorage->write($node, $grants, NULL, $delete);
+  }
 
-    $grants = db_or();
-    foreach (node_access_grants($operation, $account instanceof User ? $account->getBCEntity() : $account) as $realm => $gids) {
-      foreach ($gids as $gid) {
-        $grants->condition(db_and()
-          ->condition('gid', $gid)
-          ->condition('realm', $realm));
-      }
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public function writeDefaultGrant() {
+    $this->grantStorage->writeDefault();
+  }
 
-    if (count($grants) > 0) {
-      $query->condition($grants);
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteGrants() {
+    $this->grantStorage->delete();
+  }
 
-    return $query->execute()->fetchField();
+  /**
+   * {@inheritdoc}
+   */
+  public function countGrants() {
+    return $this->grantStorage->count();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function checkAllGrants(AccountInterface $account) {
+    return $this->grantStorage->checkAll($account);
   }
 
 }

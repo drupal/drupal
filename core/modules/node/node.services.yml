@@ -1,0 +1,4 @@
+services:
+  node.grant_storage:
+    class: Drupal\node\NodeGrantDatabaseStorage
+    arguments: ['@database', '@module_handler']

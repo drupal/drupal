@@ -115,7 +115,7 @@ class Node extends EntityNG implements NodeInterface {
     // default revision. There's no need to delete existing records if the node
     // is new.
     if ($this->isDefaultRevision()) {
-      node_access_acquire_grants($this->getBCEntity(), $update);
+      \Drupal::entityManager()->getAccessController('node')->writeGrants($this->getBCEntity(), $update);
     }
   }
 

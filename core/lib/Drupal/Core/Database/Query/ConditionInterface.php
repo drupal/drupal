@@ -156,4 +156,32 @@ interface ConditionInterface {
    *   TRUE if the condition has been previously compiled.
    */
   public function compiled();
+
+  /**
+   * Creates an object holding a group of conditions.
+   *
+   * See andConditionGroup() and orConditionGroup() for more.
+   *
+   * @param $conjunction
+   *   - AND (default): this is the equivalent of andConditionGroup().
+   *   - OR: this is the equivalent of andConditionGroup().
+   *
+   * @return \Drupal\Core\Database\Query\ConditionInterface
+   *   An object holding a group of conditions.
+   */
+  public function conditionGroupFactory($conjunction = 'AND');
+
+  /**
+   * Creates a new group of conditions ANDed together.
+   *
+   * @return \Drupal\Core\Database\Query\ConditionInterface
+   */
+  public function andConditionGroup();
+
+  /**
+   * Creates a new group of conditions ORed together.
+   *
+   * @return \Drupal\Core\Database\Query\ConditionInterface
+   */
+  public function orConditionGroup();
 }

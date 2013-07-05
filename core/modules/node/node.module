@@ -9,6 +9,7 @@
  */
 
 use Drupal\Core\Language\Language;
+use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -21,7 +22,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\file\Plugin\Core\Entity\File;
-use Drupal\node\NodeInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -2185,7 +2185,7 @@ function node_access($op, $node, $account = NULL, $langcode = NULL) {
     $account = user_load($account->uid);
   }
 
-  return entity_access_controller('node')->access($node, $op, $langcode, $account);
+  return Drupal::entityManager()->getAccessController('node')->access($node, $op, $langcode, $account);
 }
 
 /**
@@ -2357,27 +2357,7 @@ function node_access_view_all_nodes($account = NULL) {
     $access[$account->uid] = TRUE;
   }
   else {
-    $query = db_select('node_access');
-    $query->addExpression('COUNT(*)');
-    $query
-      ->condition('nid', 0)
-      ->condition('grant_view', 1, '>=');
-
-    $grants = db_or();
-    foreach (node_access_grants('view', $account) as $realm => $gids) {
-      foreach ($gids as $gid) {
-        $grants->condition(db_and()
-          ->condition('gid', $gid)
-          ->condition('realm', $realm)
-        );
-      }
-    }
-    if (count($grants) > 0 ) {
-      $query->condition($grants);
-    }
-    $access[$account->uid] = $query
-      ->execute()
-      ->fetchField();
+    $access[$account->uid] = Drupal::entityManager()->getAccessController('node')->checkAllGrants($account);
   }
 
   return $access[$account->uid];
@@ -2447,159 +2427,8 @@ function node_query_node_access_alter(AlterableInterface $query) {
     }
   }
 
-  // Find all instances of the base table being joined -- could appear
-  // more than once in the query, and could be aliased. Join each one to
-  // the node_access table.
-  $grants = node_access_grants($op, $account);
-  $base_table_found = FALSE;
-  foreach ($tables as $nalias => $tableinfo) {
-    $table = $tableinfo['table'];
-    if (!($table instanceof SelectInterface) && $table == $base_table) {
-      $base_table_found = TRUE;
-      // Set the subquery.
-      $subquery = db_select('node_access', 'na')
-       ->fields('na', array('nid'));
-
-      $grant_conditions = db_or();
-      // If any grant exists for the specified user, then user has access to the
-      // node for the specified operation.
-      foreach ($grants as $realm => $gids) {
-        foreach ($gids as $gid) {
-          $grant_conditions->condition(db_and()
-            ->condition('na.gid', $gid)
-            ->condition('na.realm', $realm)
-          );
-        }
-      }
-
-      // Attach conditions to the subquery for nodes.
-      if (count($grant_conditions->conditions())) {
-        $subquery->condition($grant_conditions);
-      }
-      $subquery->condition('na.grant_' . $op, 1, '>=');
-
-      // Add langcode-based filtering if this is a multilingual site.
-      if (language_multilingual()) {
-        // If no specific langcode to check for is given, use the grant entry
-        // which is set as a fallback.
-        // If a specific langcode is given, use the grant entry for it.
-        if ($langcode === FALSE) {
-          $subquery->condition('na.fallback', 1, '=');
-        }
-        else {
-          $subquery->condition('na.langcode', $langcode, '=');
-        }
-      }
-
-      $field = 'nid';
-      // Now handle entities.
-      $subquery->where("$nalias.$field = na.nid");
-
-      $query->exists($subquery);
-    }
-  }
-
-  // If we reached this point and did not find the defined base table, throw
-  // an exception.
-  if (!$base_table_found) {
-    throw new Exception(t('Query tagged for node access but the defined base_table @base_table was not found', array('@base_table' => $base_table)));
-  }
-}
-
-/**
- * Gets the list of node access grants and writes them to the database.
- *
- * This function is called when a node is saved, and can also be called by
- * modules if something other than a node save causes node access permissions to
- * change. It collects all node access grants for the node from
- * hook_node_access_records() implementations, allows these grants to be altered
- * via hook_node_access_records_alter() implementations, and saves the collected
- * and altered grants to the database.
- *
- * @param \Drupal\node\NodeInterface $node
- *   The $node to acquire grants for.
- * @param $delete
- *   (optional) Whether to delete existing node access records before inserting
- *   new ones. Defaults to TRUE.
- */
-function node_access_acquire_grants(NodeInterface $node, $delete = TRUE) {
-  $grants = module_invoke_all('node_access_records', $node);
-  // Let modules alter the grants.
-  drupal_alter('node_access_records', $grants, $node);
-  // If no grants are set and the node is published, then use the default grant.
-  if (empty($grants) && $node->isPublished()) {
-    $grants[] = array('realm' => 'all', 'gid' => 0, 'grant_view' => 1, 'grant_update' => 0, 'grant_delete' => 0);
-  }
-  _node_access_write_grants($node, $grants, NULL, $delete);
-}
-
-/**
- * Writes a list of grants to the database, deleting any previously saved ones.
- *
- * If a realm is provided, it will only delete grants from that realm, but it
- * will always delete a grant from the 'all' realm. Modules that utilize
- * node_access() can use this function when doing mass updates due to widespread
- * permission changes.
- *
- * Note: Don't call this function directly from a contributed module. Call
- * node_access_acquire_grants() instead.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The node whose grants are being written.
- * @param $grants
- *   A list of grants to write. See hook_node_access_records() for the
- *   expected structure of the grants array.
- * @param $realm
- *   (optional) If provided, read/write grants for that realm only. Defaults to
- *   NULL.
- * @param $delete
- *   (optional) If false, does not delete records. This is only for optimization
- *   purposes, and assumes the caller has already performed a mass delete of
- *   some form. Defaults to TRUE.
- *
- * @see node_access_acquire_grants()
- */
-function _node_access_write_grants(EntityInterface $node, $grants, $realm = NULL, $delete = TRUE) {
-  if ($delete) {
-    $query = db_delete('node_access')->condition('nid', $node->id());
-    if ($realm) {
-      $query->condition('realm', array($realm, 'all'), 'IN');
-    }
-    $query->execute();
-  }
-  // Only perform work when node_access modules are active.
-  if (!empty($grants) && count(module_implements('node_grants'))) {
-    $query = db_insert('node_access')->fields(array('nid', 'langcode', 'fallback', 'realm', 'gid', 'grant_view', 'grant_update', 'grant_delete'));
-    // If we have defined a granted langcode, use it. But if not, add a grant
-    // for every language this node is translated to.
-    foreach ($grants as $grant) {
-      if ($realm && $realm != $grant['realm']) {
-        continue;
-      }
-      if (isset($grant['langcode'])) {
-        $grant_languages = array($grant['langcode'] => language_load($grant['langcode']));
-      }
-      else {
-        $grant_languages = $node->getTranslationLanguages(TRUE);
-      }
-      foreach ($grant_languages as $grant_langcode => $grant_language) {
-        // Only write grants; denies are implicit.
-        if ($grant['grant_view'] || $grant['grant_update'] || $grant['grant_delete']) {
-          $grant['nid'] = $node->id();
-          $grant['langcode'] = $grant_langcode;
-          // The record with the original langcode is used as the fallback.
-          if ($grant['langcode'] == $node->langcode) {
-            $grant['fallback'] = 1;
-          }
-          else {
-            $grant['fallback'] = 0;
-          }
-          $query->values($grant);
-        }
-      }
-    }
-    $query->execute();
-  }
+  // Update the query for the given storage method.
+  Drupal::service('node.grant_storage')->alterQuery($query, $tables, $op, $account, $base_table);
 }
 
 /**
@@ -2657,7 +2486,8 @@ function node_access_needs_rebuild($rebuild = NULL) {
  * @see node_access_needs_rebuild()
  */
 function node_access_rebuild($batch_mode = FALSE) {
-  db_delete('node_access')->execute();
+  $access_controller = Drupal::entityManager()->getAccessController('node');
+  $access_controller->deleteGrants();
   // Only recalculate if the site is using a node_access module.
   if (count(module_implements('node_grants'))) {
     if ($batch_mode) {
@@ -2675,29 +2505,22 @@ function node_access_rebuild($batch_mode = FALSE) {
       drupal_set_time_limit(240);
 
       // Rebuild newest nodes first so that recent content becomes available quickly.
-      $nids = db_query("SELECT nid FROM {node} ORDER BY nid DESC")->fetchCol();
+      $entity_query = Drupal::entityQuery('node');
+      $entity_query->sort('nid', 'DESC');
+      $nids = $entity_query->execute();
       foreach ($nids as $nid) {
         $node = node_load($nid, TRUE);
-        // To preserve database integrity, only acquire grants if the node
+        // To preserve database integrity, only write grants if the node
         // loads successfully.
         if (!empty($node)) {
-          node_access_acquire_grants($node);
+          $access_controller->writeGrants($node);
         }
       }
     }
   }
   else {
     // Not using any node_access modules. Add the default grant.
-    db_insert('node_access')
-      ->fields(array(
-        'nid' => 0,
-        'realm' => 'all',
-        'gid' => 0,
-        'grant_view' => 1,
-        'grant_update' => 0,
-        'grant_delete' => 0,
-      ))
-      ->execute();
+    $access_controller->writeDefaultGrant();
   }
 
   if (!isset($batch)) {
@@ -2722,18 +2545,22 @@ function _node_access_rebuild_batch_operation(&$context) {
     // Initiate multistep processing.
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['current_node'] = 0;
-    $context['sandbox']['max'] = db_query('SELECT COUNT(DISTINCT nid) FROM {node}')->fetchField();
+    $context['sandbox']['max'] = Drupal::entityQuery('node')->count()->execute();
   }
 
   // Process the next 20 nodes.
   $limit = 20;
-  $nids = db_query_range("SELECT nid FROM {node} WHERE nid > :nid ORDER BY nid ASC", 0, $limit, array(':nid' => $context['sandbox']['current_node']))->fetchCol();
+  $nids = Drupal::entityQuery('node')
+    ->condition('nid', $context['sandbox']['current_node'], '>')
+    ->sort('nid', 'DESC')
+    ->range(0, $limit)
+    ->execute();
   $nodes = node_load_multiple($nids, TRUE);
   foreach ($nodes as $nid => $node) {
-    // To preserve database integrity, only acquire grants if the node
+    // To preserve database integrity, only write grants if the node
     // loads successfully.
     if (!empty($node)) {
-      node_access_acquire_grants($node);
+      Drupal::entityManager()->getAccessController('node')->writeGrants($node);
     }
     $context['sandbox']['progress']++;
     $context['sandbox']['current_node'] = $nid;
@@ -2779,7 +2606,7 @@ function node_requirements($phase) {
     // Only show rebuild button if there are either 0, or 2 or more, rows
     // in the {node_access} table, or if there are modules that
     // implement hook_node_grants().
-    $grant_count = db_query('SELECT COUNT(*) FROM {node_access}')->fetchField();
+    $grant_count = Drupal::entityManager()->getAccessController('node')->countGrants();
     if ($grant_count != 1 || count(module_implements('node_grants')) > 0) {
       $value = format_plural($grant_count, 'One permission in use', '@count permissions in use', array('@count' => $grant_count));
     }

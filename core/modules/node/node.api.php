@@ -253,7 +253,7 @@ function hook_node_grants($account, $op) {
  * @return
  *   An array of grants as defined above.
  *
- * @see _node_access_write_grants()
+ * @see node_access_write_grants()
  * @see hook_node_access_records_alter()
  * @ingroup node_access
  */
