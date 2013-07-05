@@ -20,7 +20,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'content_translation', 'comment');
+  public static $modules = array('language', 'content_translation', 'comment', 'field_ui');
 
   public static function getInfo() {
     return array(
@@ -39,7 +39,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $this->drupalCreateContentType(array('type' => 'page'));
     comment_add_default_comment_field('node', 'article', 'comment_node_article');
 
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content translation', 'administer content types'));
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content translation', 'administer content types', 'administer comment fields'));
     $this->drupalLogin($admin_user);
   }
 
@@ -99,9 +99,9 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $this->assertTrue($language_configuration['language_show'], 'The language selector for article comments is shown.');
 
     // Verify language widget appears on node type form.
-    $this->drupalGet('admin/structure/types/manage/article');
-    $this->assertField('content_translation');
-    $this->assertFieldChecked('edit-content-translation');
+    $this->drupalGet('admin/structure/comments/manage/comment_node_article/fields/comment.comment_node_article.comment_body/field');
+    $this->assertField('field[translatable]');
+    $this->assertFieldChecked('edit-field-translatable');
   }
 
   /**
