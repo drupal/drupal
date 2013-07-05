@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\comment\CommentManager.
+ * Contains \Drupal\comment\CommentManager.
  */
 
 namespace Drupal\comment;

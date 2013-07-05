@@ -358,7 +358,7 @@ function comment_views_data() {
     if ($type == 'comment' || empty($entity_info['fieldable']) || !isset($entity_info['base_table'])) {
       continue;
     }
-    if ($fields = comment_get_comment_fields($type)) {
+    if ($fields = Drupal::service('comment.manager')->getFields($type)) {
       $data['comment'][$type] = array(
         'relationship' => array(
           'title' => $entity_info['label'],
@@ -438,7 +438,7 @@ function comment_views_data() {
       continue;
     }
     // @todo As you can't have multiple joins this join doesn't use the field_name yet.
-    if (comment_get_comment_fields($type)) {
+    if (Drupal::service('comment.manager')->getFields($type)) {
       // Explain how this table joins to others.
       $data['comment_entity_statistics']['table']['join'][$entity_info['base_table']] = array(
         'type' => 'INNER',
@@ -606,7 +606,7 @@ function comment_views_data_alter(&$data) {
     if (!isset($entity_info['base_table'])) {
       continue;
     }
-    $fields = comment_get_comment_fields($entity_type);
+    $fields = Drupal::service('comment.manager')->getFields($entity_type);
     $base_table = $entity_info['base_table'];
     $args = array('@entity_type' => $entity_type);
 

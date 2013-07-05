@@ -13,7 +13,7 @@ use Drupal\Core\Language\Language;
 function comment_uninstall() {
   // Remove variables.
   variable_del('comment_block_count');
-  // We cannot use comment_get_comment_fields because comment.module is
+  // We cannot use CommentManager::getFields() because comment.module is
   // disabled and it's fields inactive.
   foreach (_update_comment_get_comment_fields() as $field_name => $field) {
     entity_invoke_bundle_hook('delete', 'comment', $field_name);
@@ -78,7 +78,7 @@ function comment_enable() {
 /**
  * Returns comment fields.
  *
- * This function similar to comment_get_comment_fields() that cannot be used in
+ * This function similar to CommentManager::getFields() that cannot be used in
  * maintenance mode because comment.module is disabled and it's fields inactive.
  *
  * @return

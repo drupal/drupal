@@ -126,7 +126,7 @@ function comment_help($path, $arg) {
  */
 function comment_entity_bundle_info() {
   $bundles = array();
-  foreach (comment_get_comment_fields() as $field_name => $field_info) {
+  foreach (Drupal::service('comment.manager')->getFields() as $field_name => $field_info) {
     $bundles['comment'][$field_name] = array(
       'label' => $field_name,
     );
@@ -167,7 +167,7 @@ function comment_uri(Comment $comment) {
  */
 function comment_field_extra_fields() {
   $return = array();
-  foreach (comment_get_comment_fields() as $field_name => $field_info) {
+  foreach (Drupal::service('comment.manager')->getFields() as $field_name => $field_info) {
     $return['comment'][$field_name] = array(
       'form' => array(
         'author' => array(
@@ -591,7 +591,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
     //   http://drupal.org/node/1901110
     return;
   }
-  $fields = comment_get_comment_fields('node');
+  $fields = Drupal::service('comment.manager')->getFields('node');
   foreach ($fields as $field_name => $detail) {
     $links = array();
     $commenting_status = _comment_get_default_status(field_get_items($entity, $field_name));
@@ -1063,7 +1063,7 @@ function comment_translation_configuration_element_submit($form, &$form_state) {
  * Implements hook_entity_load().
  */
 function comment_entity_load($entities, $entity_type) {
-  $fields = comment_get_comment_fields($entity_type);
+  $fields = Drupal::service('comment.manager')->getFields($entity_type);
   if (!$fields) {
     // Do not query database when entity has not comment fields.
     return;
@@ -1099,7 +1099,7 @@ function comment_entity_insert(EntityInterface $entity) {
   global $user;
   // Allow bulk updates and inserts to temporarily disable the
   // maintenance of the {comment_entity_statistics} table.
-  $fields = comment_get_comment_fields($entity->entityType());
+  $fields = Drupal::service('comment.manager')->getFields($entity->entityType());
   if ($fields && Drupal::state()->get('comment.maintain_entity_statistics')) {
     $query = db_insert('comment_entity_statistics')
      ->fields(array(
@@ -1180,7 +1180,7 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
   $return = '';
 
   if ($index_comments) {
-    foreach (comment_get_comment_fields('node') as $field_name => $info) {
+    foreach (Drupal::service('comment.manager')->getFields('node') as $field_name => $info) {
       $instance = Drupal::service('field.info')->getInstance('node', $node->type, $field_name);
       $mode = $instance['settings']['default_mode'];
       $comments_per_page = $instance['settings']['per_page'];
@@ -1211,7 +1211,7 @@ function comment_update_index() {
  * results.
  */
 function comment_node_search_result(EntityInterface $node) {
-  $comment_fields = comment_get_comment_fields('node');
+  $comment_fields = Drupal::service('comment.manager')->getFields('node');
   $comments = 0;
   $open = FALSE;
   foreach ($comment_fields as $field_name => $info) {
@@ -1920,26 +1920,6 @@ function comment_mark(CommentInterface $comment) {
     return MARK_UPDATED;
   }
   return MARK_READ;
-}
-
-/**
- * Utility function to return an array of comment fields.
- *
- * @param string $entity_type
- *   (optional) Specify a entity type if you want to just return fields which
- *   are attached on a certain entity type. Defaults to NULL.
- *
- * @return array
- *   An array of comment field map definitions, keyed by field name. Each value
- *   is an array with two entries:
- *   - type: The field type.
- *   - bundles: The bundles in which the field appears, as an array with entity
- *     types as keys and the array of bundle names as values.
- *
- * @see field_info_field_map().
- */
-function comment_get_comment_fields($entity_type = NULL) {
-  return Drupal::service('comment.manager')->getFields($entity_type);
 }
 
 /**
