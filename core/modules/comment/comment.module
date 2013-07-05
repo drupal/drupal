@@ -372,46 +372,6 @@ function comment_reply_access(EntityInterface $entity) {
  */
 function _comment_body_field_create($entity_type, $bundle_name, $field_name) {
   Drupal::service('comment.manager')->addBodyField($field_name);
-  return;
-  // Create the field if needed.
-  if (!field_read_field('comment_body', array('include_inactive' => TRUE))) {
-    $field = entity_create('field_entity', array(
-      'field_name' => 'comment_body',
-      'type' => 'text_long',
-      'entity_types' => array('comment'),
-    ));
-    $field->save();
-  }
-  // Create the instance if needed, field name defaults to 'comment'.
-  if (!field_read_instance('comment', 'comment_body', $field_name, array('include_inactive' => TRUE))) {
-    entity_invoke_bundle_hook('create', 'comment', $bundle_name);
-    // Attaches the body field by default.
-    $instance = entity_create('field_instance', array(
-      'field_name' => 'comment_body',
-      'label' => 'Comment',
-      'entity_type' => 'comment',
-      'bundle' => $field_name,
-      'settings' => array('text_processing' => 1),
-      'required' => TRUE,
-    ));
-    $instance->save();
-
-    // Assign widget settings for the 'default' form mode.
-    entity_get_form_display('comment', $field_name, 'default')
-      ->setComponent('comment_body', array(
-        'type' => 'text_textarea',
-      ))
-      ->save();
-
-    // Assign display settings for the 'default' view mode.
-    entity_get_display('comment', $field_name, 'default')
-      ->setComponent('comment_body', array(
-        'label' => 'hidden',
-        'type' => 'text_default',
-        'weight' => 0,
-      ))
-      ->save();
-  }
 }
 
 /**

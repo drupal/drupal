@@ -127,7 +127,56 @@ class CommentManager {
         ))
         ->save();
     }
-    _comment_body_field_create($entity_type, $bundle, $field_name);
+    $this->addBodyField($field_name);
+  }
+
+  /**
+   * Creates a comment_body field instance.
+   *
+   * @param string $field_name
+   *   Name of the comment field, a bundle to add comment_body field.
+   */
+  public function addBodyField($field_name) {
+    // Create the field if needed.
+    $field = $this->entityManager->getStorageController('field_entity')->load('comment_body');
+    if (!$field) {
+      $field = $this->entityManager->getStorageController('field_entity')->create(array(
+        'field_name' => 'comment_body',
+        'type' => 'text_long',
+        'entity_types' => array('comment'),
+      ));
+      $field->save();
+    }
+    // Create the instance if needed, field name defaults to 'comment'.
+    $field_instance = $this->entityManager->getStorageController('field_instance')->load("comment.$field_name.comment_body");
+    if (!$field_instance) {
+      // Attaches the body field by default.
+      $field_instance = $this->entityManager->getStorageController('field_instance')->create(array(
+        'field_name' => 'comment_body',
+        'label' => 'Comment',
+        'entity_type' => 'comment',
+        'bundle' => $field_name,
+        'settings' => array('text_processing' => 1),
+        'required' => TRUE,
+      ));
+      $field_instance->save();
+
+      // Assign widget settings for the 'default' form mode.
+      entity_get_form_display('comment', $field_name, 'default')
+        ->setComponent('comment_body', array(
+          'type' => 'text_textarea',
+        ))
+        ->save();
+
+      // Assign display settings for the 'default' view mode.
+      entity_get_display('comment', $field_name, 'default')
+        ->setComponent('comment_body', array(
+          'label' => 'hidden',
+          'type' => 'text_default',
+          'weight' => 0,
+        ))
+        ->save();
+    }
   }
 
 }
