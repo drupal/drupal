@@ -26,7 +26,7 @@ class ModuleApiTest extends WebTestBase {
 
   /**
    * The basic functionality of retrieving enabled modules.
-   *
+   */
   function testModuleList() {
     // Build a list of modules, sorted alphabetically.
     $profile_info = install_profile_info('standard', 'en');
@@ -65,7 +65,7 @@ class ModuleApiTest extends WebTestBase {
     $new_module_list = array_combine(array_keys($fixed_list), array_keys($fixed_list));
     $this->assertModuleList($new_module_list, t('When using a fixed list'));
 
-  }*/
+  }
 
   /**
    * Assert that the extension handler returns the expected values.
@@ -82,7 +82,7 @@ class ModuleApiTest extends WebTestBase {
 
   /**
    * Test module_implements() caching.
-   *
+   */
   function testModuleImplements() {
     // Clear the cache.
     cache('bootstrap')->delete('module_implements');
@@ -114,40 +114,40 @@ class ModuleApiTest extends WebTestBase {
     module_load_include('inc', 'module_test', 'module_test.file');
     $modules = $module_handler->getImplementations('test_hook');
     $this->assertTrue(in_array('module_test', $modules), 'Hook found.');
-  }*/
+  }
 
   /**
    * Test that module_invoke() can load a hook defined in hook_hook_info().
-   *
+   */
   function testModuleInvoke() {
     module_enable(array('module_test'), FALSE);
     $this->resetAll();
     $this->drupalGet('module-test/hook-dynamic-loading-invoke');
     $this->assertText('success!', 'module_invoke() dynamically loads a hook defined in hook_hook_info().');
-  }*/
+  }
 
   /**
    * Test that module_invoke_all() can load a hook defined in hook_hook_info().
-   *
+   */
   function testModuleInvokeAll() {
     module_enable(array('module_test'), FALSE);
     $this->resetAll();
     $this->drupalGet('module-test/hook-dynamic-loading-invoke-all');
     $this->assertText('success!', 'module_invoke_all() dynamically loads a hook defined in hook_hook_info().');
-  }*/
+  }
 
   /**
    * Test that a menu item load function can invoke hooks defined in hook_hook_info().
    *
    * We test this separately from testModuleInvokeAll(), because menu item load
    * functions execute early in the request handling.
-   *
+   */
   function testModuleInvokeAllDuringLoadFunction() {
     module_enable(array('module_test'), FALSE);
     $this->resetAll();
     $this->drupalGet('module-test/hook-dynamic-loading-invoke-all-during-load/module_test');
     $this->assertText('success!', 'Menu item load function invokes a hook defined in hook_hook_info().');
-  }*/
+  }
 
   /**
    * Test dependency resolution.
@@ -262,7 +262,7 @@ class ModuleApiTest extends WebTestBase {
 
   /**
    * Tests whether the correct module metadata is returned.
-   *
+   */
   function testModuleMetaData() {
     // Generate the list of available modules.
     $modules = system_rebuild_module_data();
@@ -272,11 +272,11 @@ class ModuleApiTest extends WebTestBase {
     $test_mtime = !empty($modules['system']->info['mtime']) ? $modules['system']->info['mtime'] : 0;
     // Ensure the mtime field contains a number that is greater than zero.
     $this->assertTrue(is_numeric($test_mtime) && ($test_mtime > 0), 'The system.info.yml file modification time field contains a timestamp.');
-  }*/
+  }
 
   /**
    * Tests whether the correct theme metadata is returned.
-   *
+   */
   function testThemeMetaData() {
     // Generate the list of available themes.
     $themes = system_rebuild_theme_data();
@@ -286,5 +286,5 @@ class ModuleApiTest extends WebTestBase {
     $test_mtime = !empty($themes['bartik']->info['mtime']) ? $themes['bartik']->info['mtime'] : 0;
     // Ensure the mtime field contains a number that is greater than zero.
     $this->assertTrue(is_numeric($test_mtime) && ($test_mtime > 0), 'The bartik.info.yml file modification time field contains a timestamp.');
-  }*/
+  }
 }
