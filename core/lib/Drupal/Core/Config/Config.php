@@ -108,6 +108,25 @@ class Config {
   }
 
   /**
+   * Initializes a configuration object with pre-loaded data.
+   *
+   * @param array $data
+   *   Array of loaded data for this configuration object.
+   *
+   * @return Drupal\Core\Config\Config
+   *   The configuration object.
+   */
+  public function initWithData(array $data) {
+    $this->isLoaded = TRUE;
+    $this->overrides = array();
+    $this->isNew = FALSE;
+    $this->notify('init');
+    $this->replaceData($data);
+    $this->notify('load');
+    return $this;
+  }
+
+  /**
    * Returns the name of this configuration object.
    *
    * @return string

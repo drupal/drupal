@@ -934,6 +934,8 @@ abstract class WebTestBase extends TestBase {
     global $conf;
     cache('bootstrap')->delete('variables');
     $conf = variable_initialize();
+    // Clear the tag cache.
+    drupal_static_reset('Drupal\Core\Cache\CacheBackendInterface::tagCache');
     drupal_container()->get('config.factory')->reset();
   }
 

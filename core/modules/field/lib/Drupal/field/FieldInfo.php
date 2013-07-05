@@ -178,14 +178,14 @@ class FieldInfo {
     $map = array();
 
     // Get active fields.
-    foreach (config_get_storage_names_with_prefix('field.field') as $config_id) {
+    foreach (config_get_storage_names_with_prefix('field.field.') as $config_id) {
       $field_config = $this->config->get($config_id)->get();
       if ($field_config['active'] && $field_config['storage']['active']) {
         $fields[$field_config['uuid']] = $field_config;
       }
     }
     // Get field instances.
-    foreach (config_get_storage_names_with_prefix('field.instance') as $config_id) {
+    foreach (config_get_storage_names_with_prefix('field.instance.') as $config_id) {
       $instance_config = $this->config->get($config_id)->get();
       $field_uuid = $instance_config['field_uuid'];
       // Filter out instances of inactive fields, and instances on unknown

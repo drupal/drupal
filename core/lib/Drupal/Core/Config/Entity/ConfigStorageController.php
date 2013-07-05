@@ -254,27 +254,24 @@ class ConfigStorageController extends EntityStorageControllerBase {
     $config_class = $this->entityInfo['class'];
     $prefix = $this->getConfigPrefix();
 
-    // Load all of the configuration entities.
+    // Get the names of the configuration entities we are going to load.
     if ($ids === NULL) {
       $names = $this->configStorage->listAll($prefix);
-      $result = array();
-      foreach ($names as $name) {
-        $config = $this->configFactory->get($name);
-        $result[$config->get($this->idKey)] = new $config_class($config->get(), $this->entityType);
-      }
-      return $result;
     }
     else {
-      $result = array();
+      $names = array();
       foreach ($ids as $id) {
         // Add the prefix to the ID to serve as the configuration object name.
-        $config = $this->configFactory->get($prefix . $id);
-        if (!$config->isNew()) {
-          $result[$id] = new $config_class($config->get(), $this->entityType);
-        }
+        $names[] = $prefix . $id;
       }
-      return $result;
     }
+
+    // Load all of the configuration entities.
+    $result = array();
+    foreach ($this->configFactory->loadMultiple($names) as $config) {
+      $result[$config->get($this->idKey)] = new $config_class($config->get(), $this->entityType);
+    }
+    return $result;
   }
 
   /**

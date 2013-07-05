@@ -39,6 +39,18 @@ interface StorageInterface {
   public function read($name);
 
   /**
+   * Reads configuration data from the storage.
+   *
+   * @param array $name
+   *   List of names of the configuration objects to load.
+   *
+   * @return array
+   *   A list of the configuration data stored for the configuration object name
+   *   that could be loaded for the passed list of names.
+   */
+  public function readMultiple(array $names);
+
+  /**
    * Writes configuration data to the storage.
    *
    * @param string $name

@@ -38,6 +38,13 @@ class NullStorage implements StorageInterface {
   }
 
   /**
+   * Implements Drupal\Core\Config\StorageInterface::readMultiple().
+   */
+  public function readMultiple(array $names) {
+    return array();
+  }
+
+  /**
    * Implements Drupal\Core\Config\StorageInterface::write().
    */
   public function write($name, array $data) {

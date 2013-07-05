@@ -90,6 +90,19 @@ class FileStorage implements StorageInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function readMultiple(array $names) {
+    $list = array();
+    foreach ($names as $name) {
+      if ($data = $this->read($name)) {
+        $list[$name] = $data;
+      }
+    }
+    return $list;
+  }
+
+  /**
    * Implements Drupal\Core\Config\StorageInterface::write().
    *
    * @throws Symfony\Component\Yaml\Exception\DumpException

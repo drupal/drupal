@@ -10,6 +10,7 @@ namespace Drupal\user\Tests\Views\Argument;
 use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
+use Drupal\user\Plugin\Core\Entity\Role;
 use Drupal\user\Plugin\views\argument\RolesRid;
 
 /**
@@ -47,28 +48,24 @@ class RolesRidTest extends UnitTestCase {
    * @see \Drupal\user\Plugin\views\argument\RolesRid::title_query()
    */
   public function testTitleQuery() {
-    $config = array(
-      'user.role.test_rid_1' => array(
-        'id' => 'test_rid_1',
-        'label' => 'test rid 1'
-      ),
-      'user.role.test_rid_2' => array(
-        'id' => 'test_rid_2',
-        'label' => 'test <strong>rid 2</strong>',
-      ),
-    );
-    $config_factory = $this->getConfigFactoryStub($config);
-    $config_storage = $this->getConfigStorageStub($config);
+    $role1 = new Role(array(
+      'id' => 'test_rid_1',
+      'label' => 'test rid 1'
+    ), 'user_role');
+    $role2 = new Role(array(
+      'id' => 'test_rid_2',
+      'label' => 'test <strong>rid 2</strong>',
+    ), 'user_role');
 
-    $entity_query_factory = $this->getMockBuilder('Drupal\Core\Entity\Query\QueryFactory')
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    // Creates a stub role storage controller and replace the attachLoad()
-    // method with an empty version, because attachLoad() calls
-    // module_implements().
-    $role_storage_controller = $this->getMock('Drupal\user\RoleStorageController', array('attachLoad'), array('user_role', static::$entityInfo, $config_factory, $config_storage, $entity_query_factory));
-
+    // Creates a stub entity storage controller;
+    $role_storage_controller = $this->getMockForAbstractClass('Drupal\Core\Entity\EntityStorageControllerInterface');
+    $role_storage_controller->expects($this->any())
+      ->method('loadMultiple')
+      ->will($this->returnValueMap(array(
+        array(array(), array()),
+        array(array('test_rid_1'), array('test_rid_1' => $role1)),
+        array(array('test_rid_1', 'test_rid_2'), array('test_rid_1' => $role1, 'test_rid_2' => $role2)),
+      )));
 
     $entity_manager = $this->getMockBuilder('Drupal\Core\Entity\EntityManager')
       ->disableOriginalConstructor()
@@ -92,7 +89,7 @@ class RolesRidTest extends UnitTestCase {
     $container->set('plugin.manager.entity', $entity_manager);
     \Drupal::setContainer($container);
 
-    $roles_rid_argument = new RolesRid($config, 'users_roles_rid', array(), $entity_manager);
+    $roles_rid_argument = new RolesRid(array(), 'users_roles_rid', array(), $entity_manager);
 
     $roles_rid_argument->value = array();
     $titles = $roles_rid_argument->title_query();

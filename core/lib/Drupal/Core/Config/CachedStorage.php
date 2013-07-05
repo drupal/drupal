@@ -16,7 +16,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
  * the cache and delegates the read to the storage on a cache miss. It also
  * handles cache invalidation.
  */
-class CachedStorage implements StorageInterface {
+class CachedStorage implements StorageInterface, StorageCacheInterface {
 
   /**
    * The configuration storage to be cached.
@@ -31,6 +31,13 @@ class CachedStorage implements StorageInterface {
    * @var Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cache;
+
+  /**
+   * List of listAll() prefixes with their results.
+   *
+   * @var array
+   */
+  protected $findByPrefixCache = array();
 
   /**
    * Constructs a new CachedStorage controller.
@@ -80,6 +87,32 @@ class CachedStorage implements StorageInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function readMultiple(array $names) {
+    $list = array();
+    // The names array is passed by reference and will only contain the names of
+    // config object not found after the method call.
+    // @see Drupal\Core\Cache\CacheBackendInterface::getMultiple()
+    $cached_list = $this->cache->getMultiple($names);
+
+    if (!empty($names)) {
+      $list = $this->storage->readMultiple($names);
+      // Cache configuration objects that were loaded from the storage.
+      foreach ($list as $name => $data) {
+        $this->cache->set($name, $data, CacheBackendInterface::CACHE_PERMANENT);
+      }
+    }
+
+    // Add the configuration objects from the cache to the list.
+    foreach ($cached_list as $name => $cache) {
+      $list[$name] = $cache->data;
+    }
+
+    return $list;
+  }
+
+  /**
    * Implements Drupal\Core\Config\StorageInterface::write().
    */
   public function write($name, array $data) {
@@ -87,6 +120,8 @@ class CachedStorage implements StorageInterface {
       // While not all written data is read back, setting the cache instead of
       // just deleting it avoids cache rebuild stampedes.
       $this->cache->set($name, $data, CacheBackendInterface::CACHE_PERMANENT);
+      $this->cache->deleteTags(array($this::FIND_BY_PREFIX_CACHE_TAG => TRUE));
+      $this->findByPrefixCache = array();
       return TRUE;
     }
     return FALSE;
@@ -100,6 +135,8 @@ class CachedStorage implements StorageInterface {
     // rebuilding the cache before the storage is gone.
     if ($this->storage->delete($name)) {
       $this->cache->delete($name);
+      $this->cache->deleteTags(array($this::FIND_BY_PREFIX_CACHE_TAG => TRUE));
+      $this->findByPrefixCache = array();
       return TRUE;
     }
     return FALSE;
@@ -114,6 +151,8 @@ class CachedStorage implements StorageInterface {
     if ($this->storage->rename($name, $new_name)) {
       $this->cache->delete($name);
       $this->cache->delete($new_name);
+      $this->cache->deleteTags(array($this::FIND_BY_PREFIX_CACHE_TAG => TRUE));
+      $this->findByPrefixCache = array();
       return TRUE;
     }
     return FALSE;
@@ -134,12 +173,50 @@ class CachedStorage implements StorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Config\StorageInterface::listAll().
-   *
-   * Not supported by CacheBackendInterface.
+   * {@inheritdoc}
    */
   public function listAll($prefix = '') {
-    return $this->storage->listAll($prefix);
+    // Do not cache when a prefix is not provided.
+    if ($prefix) {
+      return $this->findByPrefix($prefix);
+    }
+    return $this->storage->listAll();
+  }
+
+  /**
+   * Finds configuration object names starting with a given prefix.
+   *
+   * Given the following configuration objects:
+   * - node.type.article
+   * - node.type.page
+   *
+   * Passing the prefix 'node.type.' will return an array containing the above
+   * names.
+   *
+   * @param string $prefix
+   *   The prefix to search for
+   *
+   * @return array
+   *   An array containing matching configuration object names.
+   */
+  protected function findByPrefix($prefix) {
+    if (!isset($this->findByPrefixCache[$prefix])) {
+      // The : character is not allowed in config file names, so this can not
+      // conflict.
+      if ($cache = $this->cache->get('find:' . $prefix)) {
+        $this->findByPrefixCache[$prefix] = $cache->data;
+      }
+      else {
+        $this->findByPrefixCache[$prefix] = $this->storage->listAll($prefix);
+        $this->cache->set(
+          'find:' . $prefix,
+          $this->findByPrefixCache[$prefix],
+          CacheBackendInterface::CACHE_PERMANENT,
+          array($this::FIND_BY_PREFIX_CACHE_TAG => TRUE)
+        );
+      }
+    }
+    return $this->findByPrefixCache[$prefix];
   }
 
   /**
@@ -154,5 +231,12 @@ class CachedStorage implements StorageInterface {
       return TRUE;
     }
     return FALSE;
+  }
+
+  /**
+   * Clears the static list cache.
+   */
+  public function resetListCache() {
+    $this->findByPrefixCache = array();
   }
 }
