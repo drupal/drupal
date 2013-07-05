@@ -147,6 +147,3 @@ DirectoryIndex index.php index.html index.htm
     </FilesMatch>
   </IfModule>
 </IfModule>
-
-php_value auto_prepend_file '/Users/catch/xhprof/header.php'
-php_value auto_append_file '/Users/catch/xhprof/footer.php'
