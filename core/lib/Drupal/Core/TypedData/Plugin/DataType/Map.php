@@ -84,10 +84,6 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
     if (isset($values) && !is_array($values)) {
       throw new \InvalidArgumentException("Invalid values given. Values must be represented as an associative array.");
     }
-    // Notify the parent of any changes to be made.
-    if ($notify && isset($this->parent)) {
-      $this->parent->onChange($this->name);
-    }
     $this->values = $values;
 
     // Update any existing property objects.
@@ -97,6 +93,10 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
         $value = $values[$name];
       }
       $property->setValue($value, FALSE);
+    }
+    // Notify the parent of any changes.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
     }
   }
 
@@ -131,16 +131,16 @@ class Map extends TypedData implements \IteratorAggregate, ComplexDataInterface 
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::set().
    */
   public function set($property_name, $value, $notify = TRUE) {
-    // Notify the parent of any changes to be made.
-    if ($notify && isset($this->parent)) {
-      $this->parent->onChange($this->name);
-    }
     if ($this->getPropertyDefinition($property_name)) {
-      $this->get($property_name)->setValue($value);
+      $this->get($property_name)->setValue($value, $notify);
     }
     else {
       // Just set the plain value, which allows adding a new entry to the map.
       $this->values[$property_name] = $value;
+      // Directly notify ourselves.
+      if ($notify) {
+        $this->onChange($property_name, $value);
+      }
     }
   }
 

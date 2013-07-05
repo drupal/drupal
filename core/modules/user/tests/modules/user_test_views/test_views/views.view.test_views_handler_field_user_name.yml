@@ -31,6 +31,7 @@ display:
           overwrite_anonymous: '0'
           table: users
           plugin_id: user_name
+          provider: user
       pager:
         type: full
       query:

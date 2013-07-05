@@ -30,6 +30,7 @@ display:
           link_to_node: '1'
           table: node_field_data
           plugin_id: node
+          provider: node
       filters:
         status:
           expose:
@@ -40,6 +41,7 @@ display:
           table: node_field_data
           value: '1'
           plugin_id: boolean
+          provider: views
       pager:
         options:
           items_per_page: '10'
@@ -59,6 +61,7 @@ display:
           order: DESC
           table: node_field_data
           plugin_id: date
+          provider: views
       style:
         type: default
       title: test_feed_display

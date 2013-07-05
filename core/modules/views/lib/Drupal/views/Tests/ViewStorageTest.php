@@ -286,6 +286,7 @@ class ViewStorageTest extends ViewUnitTestBase {
       'table' => 'views_test_data',
       'field' => 'id',
       'plugin_id' => 'numeric',
+      'provider' => 'views',
     );
     $this->assertEqual($item1, $expected_item);
 
@@ -301,6 +302,7 @@ class ViewStorageTest extends ViewUnitTestBase {
       'table' => 'views_test_data',
       'field' => 'name',
       'plugin_id' => 'standard',
+      'provider' => 'views',
     ) + $options;
     $this->assertEqual($item2, $expected_item);
 

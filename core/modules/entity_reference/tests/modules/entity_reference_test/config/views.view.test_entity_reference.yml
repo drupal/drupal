@@ -46,6 +46,7 @@ display:
           hide_empty: '0'
           empty_zero: '0'
           link_to_node: '1'
+          provider: node
       filters:
         status:
           value: '1'
@@ -55,12 +56,14 @@ display:
           expose:
             operator: '0'
           group: '1'
+          provider: views
       sorts:
         created:
           id: created
           table: node_field_data
           field: created
           order: DESC
+          provider: views
   entity_reference_1:
     display_plugin: entity_reference
     id: entity_reference_1

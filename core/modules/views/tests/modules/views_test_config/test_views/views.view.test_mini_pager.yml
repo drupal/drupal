@@ -27,8 +27,8 @@ display:
           id: '0'
           total_pages: ''
           tags:
-            previous: ‹‹ test
-            next: ›› test
+            previous: '‹‹ test'
+            next: '›› test'
           expose:
             items_per_page: '0'
             items_per_page_label: 'Items per page'
@@ -64,6 +64,7 @@ display:
           empty_zero: '0'
           link_to_node: '1'
           plugin_id: node
+          provider: views
       filters: {  }
       sorts:
         nid:
@@ -72,6 +73,7 @@ display:
           field: nid
           plugin_id: standard
           order: ASC
+          provider: views
       title: test_mini_pager
       filter_groups:
         operator: AND

@@ -9,6 +9,10 @@ namespace Drupal\field\Plugin\Type\Widget;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Discovery\ProcessDecorator;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
@@ -16,7 +20,7 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 /**
  * Plugin type manager for field widgets.
  */
-class WidgetPluginManager extends PluginManagerBase {
+class WidgetPluginManager extends DefaultPluginManager {
 
   /**
    * An array of widget options for each field type.
@@ -40,15 +44,21 @@ class WidgetPluginManager extends PluginManagerBase {
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations,
+   *   keyed by the corresponding namespace to look for plugin implementations.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   Cache backend instance to use.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager.
    */
-  public function __construct(\Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery('field/widget', $namespaces);
-    $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
-    $this->discovery = new AlterDecorator($this->discovery, 'field_widget_info');
-    $this->discovery = new CacheDecorator($this->discovery, 'field_widget_types',  'field');
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LanguageManager $language_manager) {
+    parent::__construct('field/widget', $namespaces);
 
-    $this->factory = new WidgetFactory($this->discovery);
+    $this->setCacheBackend($cache_backend, $language_manager, 'field_widget_types');
+    $this->alterInfo($module_handler, 'field_widget_info');
+
+    $this->factory = new WidgetFactory($this);
   }
 
   /**

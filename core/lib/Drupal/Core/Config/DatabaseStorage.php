@@ -86,6 +86,26 @@ class DatabaseStorage implements StorageInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function readMultiple(array $names) {
+    // There are situations, like in the installer, where we may attempt a
+    // read without actually having the database available. In this case,
+    // catch the exception and just return an empty array so the caller can
+    // handle it if need be.
+    $list = array();
+    try {
+      $list = $this->connection->query('SELECT name, data FROM {' . $this->connection->escapeTable($this->table) . '} WHERE name IN (:names)', array(':names' => $names), $this->options)->fetchAllKeyed();
+      foreach ($list as &$data) {
+        $data = $this->decode($data);
+      }
+    }
+    catch (Exception $e) {
+    }
+    return $list;
+  }
+
+  /**
    * Implements Drupal\Core\Config\StorageInterface::write().
    *
    * @throws PDOException

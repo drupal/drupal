@@ -17,6 +17,7 @@ display:
           table: node
           field: nid
           plugin_id: node
+          provider: node
       filter_groups:
         groups:
           1: AND
@@ -33,6 +34,7 @@ display:
           value:
             - '1'
           plugin_id: node_uid_revision
+          provider: node
       sorts: {  }
       pager:
         type: full

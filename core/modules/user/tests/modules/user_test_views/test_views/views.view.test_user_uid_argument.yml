@@ -11,17 +11,19 @@ display:
           table: users
           field: uid
           plugin_id: user
+          provider: user
       arguments:
         uid:
           id: uid
           table: users
           field: uid
           title_enable: true
-          title: %1
+          title: '%1'
           plugin_id: user_uid
+          provider: user
     display_plugin: default
     display_title: Master
     id: default
     position: '0'
-label:
+label: null
 id: test_user_uid_argument

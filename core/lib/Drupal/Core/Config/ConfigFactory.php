@@ -85,6 +85,45 @@ class ConfigFactory {
   }
 
   /**
+   * Returns a list of configuration objects for a given names and context.
+   *
+   * This will pre-load all requested configuration objects does not create
+   * new configuration objects.
+   *
+   * @param array $names
+   *   List of names of configuration objects.
+   *
+   * @return array
+   *   List of successfully loaded configuration objects, keyed by name.
+   */
+  public function loadMultiple(array $names) {
+    $context = $this->getContext();
+
+    $list = array();
+    foreach ($names as $key => $name) {
+      $cache_key = $this->getCacheKey($name, $context);
+      // @todo: Deleted configuration stays in $this->cache, only return
+      //   config entities that are not new.
+      if (isset($this->cache[$cache_key]) && !$this->cache[$cache_key]->isNew()) {
+        $list[$name] = $this->cache[$cache_key];
+        unset($names[$key]);
+      }
+    }
+
+    // Pre-load remaining configuration files.
+    if (!empty($names)) {
+      $storage_data = $this->storage->readMultiple($names);
+      foreach ($storage_data as $name => $data) {
+        $cache_key = $this->getCacheKey($name, $context);
+        $this->cache[$cache_key] = new Config($name, $this->storage, $context);
+        $this->cache[$cache_key]->initWithData($data);
+        $list[$name] = $this->cache[$cache_key];
+      }
+    }
+    return $list;
+  }
+
+  /**
    * Resets and re-initializes configuration objects. Internal use only.
    *
    * @param string $name
@@ -103,6 +142,11 @@ class ConfigFactory {
     }
     else {
       $this->cache = array();
+    }
+
+    // Clear the static list cache if supported by the storage.
+    if ($this->storage instanceof StorageCacheInterface) {
+      $this->storage->resetListCache();
     }
     return $this;
   }

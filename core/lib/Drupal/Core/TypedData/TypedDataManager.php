@@ -219,18 +219,16 @@ class TypedDataManager extends DefaultPluginManager {
    * @todo: Add type-hinting to $object once entities implement the
    *   TypedDataInterface.
    */
-  public function getPropertyInstance($object, $property_name, $value = NULL) {
-    if ($root = $object->getRoot()) {
-      $key = $root->getType() . ':' . $object->getPropertyPath() . '.';
-      // If we are creating list items, we always use 0 in the key as all list
-      // items look the same.
-      $key .= is_numeric($property_name) ? 0 : $property_name;
+  public function getPropertyInstance(TypedDataInterface $object, $property_name, $value = NULL) {
+    $definition = $object->getRoot()->getDefinition();
+    $key = $definition['type'];
+    if (isset($definition['settings'])) {
+      $key .= ':' . implode(',', $definition['settings']);
     }
-    else {
-      // Missing context, thus we cannot determine a unique key for prototyping.
-      // Fall back to create a new prototype on each call.
-      $key = FALSE;
-    }
+    $key .= ':' . $object->getPropertyPath() . '.';
+    // If we are creating list items, we always use 0 in the key as all list
+    // items look the same.
+    $key .= is_numeric($property_name) ? 0 : $property_name;
 
     // Make sure we have a prototype. Then, clone the prototype and set object
     // specific values, i.e. the value and the context.

@@ -65,6 +65,8 @@ services:
   config.storage:
     class: Drupal\Core\Config\CachedStorage
     arguments: ['@config.cachedstorage.storage', '@cache.config']
+    tags:
+      - { name: persist }
   config.context.factory:
     class: Drupal\Core\Config\Context\ConfigContextFactory
     arguments: ['@event_dispatcher']

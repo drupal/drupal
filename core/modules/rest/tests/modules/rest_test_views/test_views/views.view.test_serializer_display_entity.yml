@@ -32,6 +32,7 @@ display:
           field: id
           order: DESC
           plugin_id: date
+          provider: views
       title: 'Test serialize'
       arguments: {  }
   rest_export_1:

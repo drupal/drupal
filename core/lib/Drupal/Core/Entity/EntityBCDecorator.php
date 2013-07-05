@@ -184,6 +184,7 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
     // out of sync. That way, the next field object instantiated by EntityNG
     // will hold the updated value.
     unset($this->decorated->fields[$name]);
+    $this->decorated->onChange($name);
   }
 
   /**

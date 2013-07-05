@@ -26,6 +26,7 @@ display:
           table: views
           tokenize: '0'
           plugin_id: text
+          provider: views
         node_listing_empty:
           admin_label: ''
           empty: '1'
@@ -36,6 +37,7 @@ display:
           relationship: none
           table: node
           plugin_id: node_listing_empty
+          provider: node
         title:
           id: title
           table: views
@@ -47,6 +49,7 @@ display:
           empty: '1'
           title: 'Welcome to [site:name]'
           plugin_id: title
+          provider: views
       exposed_form:
         type: basic
         options:
@@ -94,6 +97,7 @@ display:
           table: node_field_data
           value: '1'
           plugin_id: boolean
+          provider: views
         status:
           expose:
             operator: '0'
@@ -103,6 +107,7 @@ display:
           table: node_field_data
           value: '1'
           plugin_id: boolean
+          provider: views
       pager:
         type: full
         options:
@@ -152,6 +157,7 @@ display:
           relationship: none
           table: node_field_data
           plugin_id: boolean
+          provider: views
         created:
           field: created
           id: created
@@ -165,6 +171,7 @@ display:
           expose:
             label: ''
           granularity: second
+          provider: views
       style:
         type: default
         options:

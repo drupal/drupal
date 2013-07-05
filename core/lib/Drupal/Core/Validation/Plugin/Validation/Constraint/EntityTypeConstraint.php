@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "EntityType",
  *   label = @Translation("Entity type", context = "Validation"),
- *   type = "entity"
+ *   type = { "entity", "entity_reference" }
  * )
  */
 class EntityTypeConstraint extends Constraint {

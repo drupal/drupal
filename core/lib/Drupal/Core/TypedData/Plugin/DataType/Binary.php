@@ -59,10 +59,6 @@ class Binary extends PrimitiveBase implements BinaryInterface {
    * Supports a PHP file resource or a (absolute) stream resource URI as value.
    */
   public function setValue($value, $notify = TRUE) {
-    // Notify the parent of any changes to be made.
-    if ($notify && isset($this->parent)) {
-      $this->parent->onChange($this->name);
-    }
     if (!isset($value)) {
       $this->handle = NULL;
       $this->uri = NULL;
@@ -75,6 +71,10 @@ class Binary extends PrimitiveBase implements BinaryInterface {
     }
     else {
       $this->handle = $value;
+    }
+    // Notify the parent of any changes.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
     }
   }
 

@@ -419,8 +419,10 @@ class MenuTest extends MenuWebTestBase {
   public function testMenuBundles() {
     $this->drupalLogin($this->big_user);
     $menu = $this->addCustomMenu();
+    // Clear the entity info cache to ensure the static caches are rebuilt.
+    entity_info_cache_clear();
     $bundles = entity_get_bundles('menu_link');
-    $this->assertTrue($bundles[$menu->id()]);
+    $this->assertTrue(isset($bundles[$menu->id()]));
     $menus = menu_list_system_menus();
     $menus[$menu->id()] = $menu->label();
     ksort($menus);

@@ -17,6 +17,7 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
+          provider: views_test_data
       pager:
         options:
           offset: '0'
@@ -30,6 +31,7 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
+          provider: views_test_data
       empty:
         title:
           field: title
@@ -37,6 +39,7 @@ display:
           table: views
           plugin_id: title
           title: test_title_empty
+          provider: views
     display_plugin: default
     display_title: Master
     id: default
@@ -53,8 +56,9 @@ display:
           table: views
           plugin_id: title
           title: test_title_header
+          provider: views
     display_plugin: page
-    display_title: Page 1
+    display_title: 'Page 1'
     id: page_1
     position: '1'
 label: ''

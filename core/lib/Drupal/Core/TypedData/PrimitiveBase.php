@@ -30,10 +30,10 @@ abstract class PrimitiveBase extends TypedData implements PrimitiveInterface {
    * {@inheritdoc}
    */
   public function setValue($value, $notify = TRUE) {
-    // Notify the parent of any changes to be made.
+    $this->value = $value;
+    // Notify the parent of any changes.
     if ($notify && isset($this->parent)) {
       $this->parent->onChange($this->name);
     }
-    $this->value = $value;
   }
 }

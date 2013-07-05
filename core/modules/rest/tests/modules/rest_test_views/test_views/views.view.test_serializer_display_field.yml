@@ -32,6 +32,7 @@ display:
           field: name
           label: ''
           plugin_id: string
+          provider: views_test_data
         nothing:
           id: nothing
           table: views
@@ -45,11 +46,13 @@ display:
             alter_text: '1'
             text: TEST
           plugin_id: custom
+          provider: views
         created:
           id: created
           table: views_test_data
           field: created
           plugin_id: date
+          provider: views_test_data
       sorts:
         created:
           id: created
@@ -57,6 +60,7 @@ display:
           field: created
           order: DESC
           plugin_id: date
+          provider: views_test_data
       title: 'Test serialize'
       arguments: {  }
   rest_export_1:

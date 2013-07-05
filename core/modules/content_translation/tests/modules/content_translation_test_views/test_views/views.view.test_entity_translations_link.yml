@@ -44,6 +44,7 @@ display:
           link_to_user: '1'
           format_username: '1'
           plugin_id: user_name
+          provider: user
         translation_link:
           id: translation_link
           table: users
@@ -71,6 +72,7 @@ display:
           group: '1'
           exposed: '0'
           plugin_id: numeric
+          provider: views
       sorts:
         created:
           id: created
@@ -78,6 +80,7 @@ display:
           field: created
           order: DESC
           plugin_id: date
+          provider: views
       title: People
       empty:
         area:
@@ -88,6 +91,7 @@ display:
           content: 'No people available.'
           format: plain_text
           plugin_id: text
+          provider: views
   page_1:
     display_plugin: page
     id: page_1

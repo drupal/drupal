@@ -37,10 +37,14 @@ class DurationIso8601 extends String implements DurationInterface {
   /**
    * {@inheritdoc}
    */
-  public function setDuration(\DateInterval $duration) {
+  public function setDuration(\DateInterval $duration, $notify = TRUE) {
     // Generate an ISO 8601 formatted string as supported by
     // DateInterval::__construct() and setValue().
     $this->value = $duration->format('%rP%yY%mM%dDT%hH%mM%sS');
+    // Notify the parent of any changes.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
   }
 
 }

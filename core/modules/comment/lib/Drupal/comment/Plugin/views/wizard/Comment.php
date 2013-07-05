@@ -54,13 +54,15 @@ class Comment extends WizardPluginBase {
     'status' => array(
       'value' => TRUE,
       'table' => 'comment',
-      'field' => 'status'
+      'field' => 'status',
+      'provider' => 'user'
     ),
     'status_node' => array(
       'value' => TRUE,
       'table' => 'node_field_data',
       'field' => 'status',
-      'relationship' => 'node'
+      'relationship' => 'node',
+      'provider' => 'user',
     )
   );
 
@@ -155,6 +157,7 @@ class Comment extends WizardPluginBase {
     $display_options['fields']['subject']['id'] = 'subject';
     $display_options['fields']['subject']['table'] = 'comment';
     $display_options['fields']['subject']['field'] = 'subject';
+    $display_options['fields']['subject']['provider'] = 'comment';
     $display_options['fields']['subject']['label'] = '';
     $display_options['fields']['subject']['alter']['alter_text'] = 0;
     $display_options['fields']['subject']['alter']['make_link'] = 0;

@@ -15,6 +15,7 @@ display:
           table: views_test_data
           field: name
           plugin_id: string
+          provider: views_test_data
       style:
         type: html_list
     display_plugin: default

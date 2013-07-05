@@ -13,6 +13,7 @@ display:
           table: node
           field: nid
           plugin_id: numeric
+          provider: node
     display_plugin: default
     display_title: Master
     id: default

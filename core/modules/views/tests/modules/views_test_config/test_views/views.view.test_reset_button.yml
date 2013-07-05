@@ -25,6 +25,7 @@ display:
           id: type
           table: node_field_data
           plugin_id: node_type
+          provider: views
       pager:
         type: full
       query:

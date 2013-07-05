@@ -17,18 +17,21 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
+          provider: views_test_data
         id:
           field: id
           id: id
           relationship: none
           table: views_test_data
           plugin_id: numeric
+          provider: views_test_data
         name:
           field: name
           id: name
           relationship: none
           table: views_test_data
           plugin_id: string
+          provider: views_test_data
       pager:
         options:
           offset: '0'
@@ -42,6 +45,7 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
+          provider: views_test_data
       style:
         type: table
         options:
@@ -51,7 +55,7 @@ display:
           row_class_special: '1'
           override: '1'
           sticky: '0'
-          summary: ''
+          summary: summary-text
           columns:
             age: age
             id: id
@@ -78,10 +82,9 @@ display:
               separator: ''
               empty_column: '0'
               responsive: ''
-          default: 'id'
+          default: id
           empty_table: '1'
           caption: caption-text
-          summary: summary-text
           description: description-text
       row:
         type: fields
@@ -98,13 +101,14 @@ display:
           content: 'custom text'
           tokenize: '0'
           plugin_id: text_custom
+          provider: views
     display_plugin: default
     display_title: Master
     id: default
     position: '0'
   page_1:
     display_options:
-      path: 'test-table'
+      path: test-table
     display_plugin: page
     display_title: 'Page display'
     id: page_1

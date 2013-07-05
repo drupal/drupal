@@ -54,7 +54,8 @@ class Users extends WizardPluginBase {
     'status' => array(
       'value' => TRUE,
       'table' => 'users',
-      'field' => 'status'
+      'field' => 'status',
+      'provider' => 'user'
     )
   );
 
@@ -75,6 +76,7 @@ class Users extends WizardPluginBase {
     $display_options['fields']['name']['id'] = 'name';
     $display_options['fields']['name']['table'] = 'users';
     $display_options['fields']['name']['field'] = 'name';
+    $display_options['fields']['name']['provider'] = 'user';
     $display_options['fields']['name']['label'] = '';
     $display_options['fields']['name']['alter']['alter_text'] = 0;
     $display_options['fields']['name']['alter']['make_link'] = 0;

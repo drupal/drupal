@@ -15,6 +15,7 @@ display:
           table: node
           field: nid
           relationship: none
+          provider: node
         type:
           id: type
           table: node_field_data
@@ -63,6 +64,7 @@ display:
           hide_empty: '0'
           empty_zero: '0'
           hide_alter_empty: '1'
+          provider: node
       defaults:
         fields: '0'
         filters: '0'
@@ -76,6 +78,7 @@ display:
             all: all
             test_bundle: test_bundle
             test_bundle_2: test_bundle_2
+          provider: views
 label: ''
 id: test_entity_type_filter
 tag: ''

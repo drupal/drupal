@@ -403,7 +403,7 @@ function field_sync_field_status() {
 
   // Get both deleted and non-deleted field definitions.
   $fields = array();
-  foreach (config_get_storage_names_with_prefix('field.field') as $name) {
+  foreach (config_get_storage_names_with_prefix('field.field.') as $name) {
     $field = Drupal::config($name)->get();
     $fields[$field['uuid']] = $field;
   }

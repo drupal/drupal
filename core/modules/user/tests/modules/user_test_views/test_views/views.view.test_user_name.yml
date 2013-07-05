@@ -22,6 +22,7 @@ display:
           id: uid
           table: users
           field: uid
+          provider: user
       filters:
         uid:
           id: uid
@@ -36,6 +37,7 @@ display:
             remember_roles:
               authenticated: authenticated
               anonymous: 0
+          provider: user
     display_plugin: default
     display_title: Master
     id: default

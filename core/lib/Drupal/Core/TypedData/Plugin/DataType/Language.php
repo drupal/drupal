@@ -11,6 +11,7 @@ use Drupal\Core\TypedData\Annotation\DataType;
 use Drupal\Core\Annotation\Translation;
 use InvalidArgumentException;
 use Drupal\Core\Language\Language as LanguageObject;
+use Drupal\Core\TypedData\IdentifiableInterface;
 use Drupal\Core\TypedData\TypedData;
 
 /**
@@ -20,39 +21,36 @@ use Drupal\Core\TypedData\TypedData;
  * \Drupal\Core\Language\Language. For setting the value the language object or
  * the language code as string may be passed.
  *
- * Optionally, this class may be used as computed property, see the supported
- * settings below. E.g., it is used as 'language' property of language items.
- *
- * Supported settings (below the definition's 'settings' key) are:
- *  - langcode source: If used as computed property, the langcode property used
- *    to load the language object.
- *
  * @DataType(
  *   id = "language",
  *   label = @Translation("Language"),
  *   description = @Translation("A language object.")
  * )
  */
-class Language extends TypedData {
+class Language extends TypedData implements IdentifiableInterface {
 
   /**
-   * The language code of the language if no 'langcode source' is used.
+   * The id of the language.
    *
    * @var string
    */
-  protected $langcode;
+  protected $id;
+
+  /**
+   * @var \Drupal\Core\Language
+   */
+  protected $language;
 
   /**
    * Overrides TypedData::getValue().
+   *
+   * @return \Drupal\Core\Language\Language|null
    */
   public function getValue() {
-    if (!empty($this->definition['settings']['langcode source'])) {
-      $this->id = $this->parent->__get($this->definition['settings']['langcode source']);
+    if (!isset($this->language) && $this->id) {
+      $this->language = language_load($this->id);
     }
-   if ($this->id) {
-      $language = language_load($this->id);
-      return $language ?: new LanguageObject(array('id' => $this->id));
-    }
+    return $this->language;
   }
 
   /**
@@ -63,21 +61,19 @@ class Language extends TypedData {
   public function setValue($value, $notify = TRUE) {
     // Support passing language objects.
     if (is_object($value)) {
-      $value = $value->id;
+      $this->id = $value->id;
+      $this->language = $value;
     }
     elseif (isset($value) && !is_scalar($value)) {
       throw new InvalidArgumentException('Value is no valid langcode or language object.');
     }
-    // Update the 'langcode source' property, if given.
-    if (!empty($this->definition['settings']['langcode source'])) {
-      $this->parent->__set($this->definition['settings']['langcode source'], $value, $notify);
-    }
     else {
-      // Notify the parent of any changes to be made.
-      if ($notify && isset($this->parent)) {
-        $this->parent->onChange($this->name);
-      }
       $this->id = $value;
+      $this->language = NULL;
+    }
+    // Notify the parent of any changes.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
     }
   }
 
@@ -88,4 +84,17 @@ class Language extends TypedData {
     $language = $this->getValue();
     return $language ? $language->name : '';
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function id() {
+    if (isset($this->id)) {
+      return $this->id;
+    }
+    elseif (isset($this->language)) {
+      return $this->language->id;
+    }
+  }
+
 }

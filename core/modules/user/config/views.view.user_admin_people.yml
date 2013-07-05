@@ -187,6 +187,7 @@ display:
           empty_zero: '0'
           hide_alter_empty: '1'
           plugin_id: user_bulk_form
+          provider: user
         name:
           id: name
           table: users
@@ -240,6 +241,7 @@ display:
           anonymous_text: ''
           format_username: '1'
           plugin_id: user_name
+          provider: user
         status:
           id: status
           table: users
@@ -293,6 +295,7 @@ display:
           type_custom_false: ''
           not: '0'
           plugin_id: boolean
+          provider: views
         rid:
           id: rid
           table: users_roles
@@ -344,6 +347,7 @@ display:
           type: ul
           separator: ', '
           plugin_id: user_roles
+          provider: user
         created:
           id: created
           table: users
@@ -396,6 +400,7 @@ display:
           custom_date_format: ''
           timezone: ''
           plugin_id: date
+          provider: views
         access:
           id: access
           table: users
@@ -448,6 +453,7 @@ display:
           custom_date_format: ''
           timezone: ''
           plugin_id: date
+          provider: views
         edit_node:
           id: edit_node
           table: users
@@ -498,6 +504,7 @@ display:
           hide_alter_empty: '1'
           text: Edit
           plugin_id: user_link_edit
+          provider: user
         translation_link:
           id: translation_link
           table: users
@@ -740,6 +747,7 @@ display:
             group_items: {  }
           reduce_duplicates: '0'
           plugin_id: user_roles
+          provider: user
         permission:
           id: permission
           table: users_roles
@@ -780,6 +788,7 @@ display:
             group_items: {  }
           reduce_duplicates: '0'
           plugin_id: user_permissions
+          provider: user
         status:
           id: status
           table: users
@@ -818,6 +827,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: boolean
+          provider: views
         uid_raw:
           id: uid_raw
           table: users
@@ -857,6 +867,7 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: numeric
+          provider: views
       sorts:
         created:
           id: created
@@ -871,6 +882,7 @@ display:
             label: ''
           granularity: second
           plugin_id: date
+          provider: views
       title: People
       empty:
         area_text_custom:
@@ -884,6 +896,7 @@ display:
           tokenize: '0'
           content: 'No people available.'
           plugin_id: text_custom
+          provider: views
       use_more: '0'
       use_more_always: '0'
       use_more_text: more

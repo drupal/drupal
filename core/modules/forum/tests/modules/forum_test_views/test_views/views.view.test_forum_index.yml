@@ -29,6 +29,7 @@ display:
           table: forum_index
           field: nid
           id: nid
+          provider: views
         sticky:
           id: sticky
           table: forum_index
@@ -82,6 +83,7 @@ display:
           type_custom_false: ''
           not: '0'
           plugin_id: boolean
+          provider: views
         comment_count:
           id: comment_count
           table: forum_index
@@ -140,6 +142,7 @@ display:
           prefix: ''
           suffix: ''
           plugin_id: numeric
+          provider: views
       filters: {  }
       sorts: {  }
 label: test_forum_index

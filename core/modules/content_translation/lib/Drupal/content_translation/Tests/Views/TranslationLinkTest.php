@@ -46,6 +46,11 @@ class TranslationLinkTest extends ContentTranslationTestBase {
 
     parent::setUp();
 
+    // Assign user 1  a language code so that the entity can be translated.
+    $user = user_load(1);
+    $user->langcode = 'en';
+    $user->save();
+
     ViewTestData::importTestViews(get_class($this), array('content_translation_test_views'));
   }
 

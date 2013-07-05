@@ -31,6 +31,7 @@ display:
           id: name
           table: views_test_data
           field: name
+          provider: views_test_data
       title: test_view_block2
   block_1:
     display_plugin: block

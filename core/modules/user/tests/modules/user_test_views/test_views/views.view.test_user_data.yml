@@ -45,6 +45,7 @@ display:
           link_to_user: '1'
           overwrite_anonymous: '0'
           plugin_id: string
+          provider: views
         data:
           id: data
           table: users
@@ -93,8 +94,8 @@ display:
           hide_empty: '0'
           empty_zero: '0'
           hide_alter_empty: '1'
-          module: views_test_config
-          name: test_value_name
+          data_module: views_test_config
+          data_name: test_value_name
           plugin_id: user_data
       filters:
         uid:
@@ -107,6 +108,7 @@ display:
             operator: '0'
           group: '1'
           plugin_id: numeric
+          provider: user
       sorts:
         created:
           id: created
@@ -114,6 +116,7 @@ display:
           field: created
           order: DESC
           plugin_id: date
+          provider: views
 label: test_user_data
 module: views
 id: test_user_data
