@@ -28,20 +28,23 @@ class FileItem extends ConfigEntityReferenceItemBase {
    */
   public function getPropertyDefinitions() {
     $this->definition['settings']['target_type'] = 'file';
+    // Definitions vary by entity type and bundle, so key them accordingly.
+    $key = $this->definition['settings']['target_type'] . ':';
+    $key .= isset($this->definition['settings']['target_bundle']) ? $this->definition['settings']['target_bundle'] : '';
 
-    if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions = parent::getPropertyDefinitions();
+    if (!isset(static::$propertyDefinitions[$key])) {
+      static::$propertyDefinitions[$key] = parent::getPropertyDefinitions();
 
-      static::$propertyDefinitions['display'] = array(
+      static::$propertyDefinitions[$key]['display'] = array(
         'type' => 'boolean',
         'label' => t('Flag to control whether this file should be displayed when viewing content.'),
       );
-      static::$propertyDefinitions['description'] = array(
+      static::$propertyDefinitions[$key]['description'] = array(
         'type' => 'string',
         'label' => t('A description of the file.'),
       );
     }
-    return static::$propertyDefinitions;
+    return static::$propertyDefinitions[$key];
   }
 
 }

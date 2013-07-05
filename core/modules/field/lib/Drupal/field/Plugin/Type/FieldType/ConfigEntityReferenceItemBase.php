@@ -57,14 +57,15 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
    * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
-    // Definitions vary by entity type, so key them by entity type.
-    $target_type = $this->definition['settings']['target_type'];
+    // Definitions vary by entity type and bundle, so key them accordingly.
+    $key = $this->definition['settings']['target_type'] . ':';
+    $key .= isset($this->definition['settings']['target_bundle']) ? $this->definition['settings']['target_bundle'] : '';
 
-    if (!isset(self::$propertyDefinitions[$target_type])) {
+    if (!isset(static::$propertyDefinitions[$key])) {
       // Call the parent to define the target_id and entity properties.
       parent::getPropertyDefinitions();
 
-      static::$propertyDefinitions[$target_type]['revision_id'] = array(
+      static::$propertyDefinitions[$key]['revision_id'] = array(
         // @todo: Lookup the entity type's ID data type and use it here.
         'type' => 'integer',
         'label' => t('Revision ID'),
@@ -72,18 +73,18 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
           'Range' => array('min' => 0),
         ),
       );
-      static::$propertyDefinitions[$target_type]['label'] = array(
+      static::$propertyDefinitions[$key]['label'] = array(
         'type' => 'string',
         'label' => t('Label (auto-create)'),
         'computed' => TRUE,
       );
-      static::$propertyDefinitions[$target_type]['access'] = array(
+      static::$propertyDefinitions[$key]['access'] = array(
         'type' => 'boolean',
         'label' => t('Access'),
         'computed' => TRUE,
       );
     }
-    return static::$propertyDefinitions[$target_type];
+    return static::$propertyDefinitions[$key];
   }
 
   /**

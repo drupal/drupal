@@ -28,28 +28,31 @@ class ImageItem extends ConfigEntityReferenceItemBase {
    */
   public function getPropertyDefinitions() {
     $this->definition['settings']['target_type'] = 'file';
+    // Definitions vary by entity type and bundle, so key them accordingly.
+    $key = $this->definition['settings']['target_type'] . ':';
+    $key .= isset($this->definition['settings']['target_bundle']) ? $this->definition['settings']['target_bundle'] : '';
 
-    if (!isset(static::$propertyDefinitions)) {
-      static::$propertyDefinitions = parent::getPropertyDefinitions();
+    if (!isset(static::$propertyDefinitions[$key])) {
+      static::$propertyDefinitions[$key] = parent::getPropertyDefinitions();
 
-      static::$propertyDefinitions['alt'] = array(
+      static::$propertyDefinitions[$key]['alt'] = array(
         'type' => 'string',
         'label' => t("Alternative image text, for the image's 'alt' attribute."),
       );
-      static::$propertyDefinitions['title'] = array(
+      static::$propertyDefinitions[$key]['title'] = array(
         'type' => 'string',
         'label' => t("Image title text, for the image's 'title' attribute."),
       );
-      static::$propertyDefinitions['width'] = array(
+      static::$propertyDefinitions[$key]['width'] = array(
         'type' => 'integer',
         'label' => t('The width of the image in pixels.'),
       );
-      static::$propertyDefinitions['height'] = array(
+      static::$propertyDefinitions[$key]['height'] = array(
         'type' => 'integer',
         'label' => t('The height of the image in pixels.'),
       );
     }
-    return static::$propertyDefinitions;
+    return static::$propertyDefinitions[$key];
   }
 
 }

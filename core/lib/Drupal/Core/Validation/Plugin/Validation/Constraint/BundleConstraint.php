@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Translation;
  * @Plugin(
  *   id = "Bundle",
  *   label = @Translation("Bundle", context = "Validation"),
- *   type = "entity"
+ *   type = { "entity", "entity_reference" }
  * )
  */
 class BundleConstraint extends Constraint {

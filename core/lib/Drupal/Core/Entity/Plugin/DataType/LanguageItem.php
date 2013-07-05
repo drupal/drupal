@@ -42,19 +42,18 @@ class LanguageItem extends FieldItemBase {
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
-
     if (!isset(static::$propertyDefinitions)) {
       static::$propertyDefinitions['value'] = array(
         'type' => 'string',
         'label' => t('Language code'),
       );
       static::$propertyDefinitions['language'] = array(
-        'type' => 'language',
+        'type' => 'language_reference',
         'label' => t('Language object'),
+        'description' => t('The referenced language'),
         // The language object is retrieved via the language code.
         'computed' => TRUE,
         'read-only' => FALSE,
-        'settings' => array('langcode source' => 'value'),
       );
     }
     return static::$propertyDefinitions;
@@ -71,6 +70,10 @@ class LanguageItem extends FieldItemBase {
       // the language property can take care of updating the language code
       // property.
       $this->properties['language']->setValue($values, $notify);
+      // If notify was FALSE, ensure the value property gets synched.
+      if (!$notify) {
+        $this->set('value', $this->properties['language']->getTargetIdentifier(), FALSE);
+      }
     }
     else {
       // Make sure that the 'language' property gets set as 'value'.
@@ -88,5 +91,19 @@ class LanguageItem extends FieldItemBase {
     // Default to LANGCODE_NOT_SPECIFIED.
     $this->setValue(array('value' => Language::LANGCODE_NOT_SPECIFIED), $notify);
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onChange($property_name) {
+    // Make sure that the value and the language property stay in sync.
+    if ($property_name == 'value') {
+      $this->properties['language']->setValue($this->value, FALSE);
+    }
+    elseif ($property_name == 'language') {
+      $this->set('value', $this->properties['language']->getTargetIdentifier(), FALSE);
+    }
+    parent::onChange($property_name);
   }
 }

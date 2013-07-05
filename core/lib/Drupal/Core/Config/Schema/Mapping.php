@@ -53,15 +53,11 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
    * Implements Drupal\Core\TypedData\ComplexDataInterface::set().
    */
   public function set($property_name, $value, $notify = TRUE) {
-    // Notify the parent of any changes to be made.
-    if ($notify && isset($this->parent)) {
-      $this->parent->onChange($this->name);
-    }
     // Set the data into the configuration array but behave according to the
     // interface specification when we've got a null value.
     if (isset($value)) {
       $this->value[$property_name] = $value;
-      return $this->get($property_name);
+      $property = $this->get($property_name);
     }
     else {
       // In these objects, when clearing the value, the property is gone.
@@ -69,8 +65,12 @@ class Mapping extends ArrayElement implements ComplexDataInterface {
       $property = $this->get($property_name);
       unset($this->value[$property_name]);
       $property->setValue($value);
-      return $property;
     }
+    // Notify the parent of any changes.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
+    return $property;
   }
 
   /**

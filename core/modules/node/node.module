@@ -2164,7 +2164,7 @@ function node_access($op, $node, $account = NULL, $langcode = NULL) {
 
   // If no language code was provided, default to the node's langcode.
   if (empty($langcode)) {
-    $langcode = $node->langcode;
+    $langcode = $node->language()->id;
     // If the Language module is enabled, try to use the language from content
     // negotiation.
     if (module_exists('language')) {

@@ -42,10 +42,6 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
    *   An array of values of the field items, or NULL to unset the field.
    */
   public function setValue($values, $notify = TRUE) {
-    // Notify the parent of any changes to be made.
-    if ($notify && isset($this->parent)) {
-      $this->parent->onChange($this->name);
-    }
     if (!isset($values) || $values === array()) {
       $this->list = $values;
     }
@@ -71,6 +67,10 @@ class ItemList extends TypedData implements \IteratorAggregate, ListInterface {
           $this->list[$delta]->setValue($value);
         }
       }
+    }
+    // Notify the parent of any changes.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
     }
   }
 

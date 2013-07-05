@@ -77,10 +77,6 @@ class Field extends ItemList implements FieldInterface {
    * Overrides \Drupal\Core\TypedData\ItemList::setValue().
    */
   public function setValue($values, $notify = TRUE) {
-    // Notify the parent of any changes to be made.
-    if ($notify && isset($this->parent)) {
-      $this->parent->onChange($this->name);
-    }
     if (!isset($values) || $values === array()) {
       $this->list = $values;
     }
@@ -107,6 +103,10 @@ class Field extends ItemList implements FieldInterface {
           $this->list[$delta]->setValue($value, FALSE);
         }
       }
+    }
+    // Notify the parent of any changes.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
     }
   }
 

@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\TypedData\AccessibleInterface;
 use Drupal\Core\TypedData\ComplexDataInterface;
+use Drupal\Core\TypedData\IdentifiableInterface;
 use Drupal\Core\TypedData\TranslatableInterface;
 
 /**
@@ -27,16 +28,7 @@ use Drupal\Core\TypedData\TranslatableInterface;
  * @see \Drupal\Core\TypedData\TypedDataManager
  * @see \Drupal\Core\Field\FieldInterface
  */
-interface EntityInterface extends ComplexDataInterface, AccessibleInterface, TranslatableInterface {
-
-  /**
-   * Returns the entity identifier (the entity's machine name or numeric ID).
-   *
-   * @return
-   *   The identifier of the entity, or NULL if the entity does not yet have
-   *   an identifier.
-   */
-  public function id();
+interface EntityInterface extends IdentifiableInterface, ComplexDataInterface, AccessibleInterface, TranslatableInterface {
 
   /**
    * Returns the entity UUID (Universally Unique Identifier).

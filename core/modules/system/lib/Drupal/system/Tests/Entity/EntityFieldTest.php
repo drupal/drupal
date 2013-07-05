@@ -339,7 +339,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
   public function testIntrospection() {
     // All entity variations have to have the same results.
     foreach (entity_test_entity_types() as $entity_type) {
-      $this->assertIntrospection($entity_type);
+      $this->checkIntrospection($entity_type);
     }
   }
 
@@ -349,17 +349,11 @@ class EntityFieldTest extends EntityUnitTestBase  {
    * @param string $entity_type
    *   The entity type to run the tests with.
    */
-  protected function assertIntrospection($entity_type) {
-    // Test getting metadata upfront, i.e. without having an entity object.
-    $definition = array(
-      'type' => 'entity',
-      'constraints' => array(
-        'EntityType' => $entity_type,
-      ),
-      'label' => 'Test entity',
-    );
-    $wrapped_entity = $this->container->get('typed_data')->create($definition);
-    $definitions = $wrapped_entity->getPropertyDefinitions($definition);
+  protected function checkIntrospection($entity_type) {
+    // Test getting metadata upfront.
+    // @todo: Make this work without having to create entity objects.
+    $entity = entity_create($entity_type, array());
+    $definitions = $entity->getPropertyDefinitions();
     $this->assertEqual($definitions['name']['type'], 'string_field', $entity_type .': Name field found.');
     $this->assertEqual($definitions['user_id']['type'], 'entity_reference_field', $entity_type .': User field found.');
     $this->assertEqual($definitions['field_test_text']['type'], 'field_item:text', $entity_type .': Test-text-field field found.');
@@ -378,7 +372,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
 
     $userref_properties = $entity->user_id->getPropertyDefinitions();
     $this->assertEqual($userref_properties['target_id']['type'], 'integer', $entity_type .': Entity id property of the user found.');
-    $this->assertEqual($userref_properties['entity']['type'], 'entity', $entity_type .': Entity reference property of the user found.');
+    $this->assertEqual($userref_properties['entity']['type'], 'entity_reference', $entity_type .': Entity reference property of the user found.');
 
     $textfield_properties = $entity->field_test_text->getPropertyDefinitions();
     $this->assertEqual($textfield_properties['value']['type'], 'string', $entity_type .': String value property of the test-text field found.');
@@ -470,21 +464,12 @@ class EntityFieldTest extends EntityUnitTestBase  {
    */
   protected function assertDataStructureInterfaces($entity_type) {
     $entity = $this->createTestEntity($entity_type);
-    $entity->save();
-    $entity_definition = array(
-      'type' => 'entity',
-      'constraints' => array(
-        'EntityType' => $entity_type,
-      ),
-      'label' => 'Test entity',
-    );
-    $wrapped_entity = $this->container->get('typed_data')->create($entity_definition, $entity);
 
     // Test using the whole tree of typed data by navigating through the tree of
     // contained properties and getting all contained strings, limited by a
     // certain depth.
     $strings = array();
-    $this->getContainedStrings($wrapped_entity, 0, $strings);
+    $this->getContainedStrings($entity, 0, $strings);
 
     // @todo: Once the user entity has defined properties this should contain
     // the user name and other user entity strings as well.
@@ -527,22 +512,39 @@ class EntityFieldTest extends EntityUnitTestBase  {
   }
 
   /**
+   * Makes sure data types are correctly derived for all entity types.
+   */
+  public function testDataTypes() {
+    $types = \Drupal::typedData()->getDefinitions();
+    foreach (entity_test_entity_types() as $entity_type) {
+      $this->assertTrue($types['entity:' . $entity_type]['class'], 'Entity data type registed.');
+    }
+    // Check bundle types are provided as well.
+    entity_test_create_bundle('bundle');
+    $types = \Drupal::typedData()->getDefinitions();
+    $this->assertTrue($types['entity:entity_test:bundle']['class'], 'Entity bundle data type registed.');
+  }
+
+  /**
    * Tests validation constraints provided by the Entity API.
    */
   public function testEntityConstraintValidation() {
     $entity = $this->createTestEntity('entity_test');
     $entity->save();
-    $entity_definition = array(
-      'type' => 'entity',
-      'constraints' => array(
-        'EntityType' => 'entity_test',
+    // Create a reference field item and let it reference the entity.
+    $definition = array(
+      'type' => 'entity_reference_field',
+      'settings' => array(
+        'target_type' => 'entity_test',
       ),
       'label' => 'Test entity',
     );
-    $wrapped_entity = $this->container->get('typed_data')->create($entity_definition, $entity);
+    $reference_field_item = \Drupal::TypedData()->create($definition);
+    $reference = $reference_field_item->get('entity');
+    $reference->setValue($entity);
 
     // Test validation the typed data object.
-    $violations = $wrapped_entity->validate();
+    $violations = $reference->validate();
     $this->assertEqual($violations->count(), 0);
 
     // Test validating an entity of the wrong type.
@@ -552,30 +554,31 @@ class EntityFieldTest extends EntityUnitTestBase  {
       'type' => 'page',
       'uid' => $user->id(),
     ));
-    // @todo: EntityWrapper can only handle entities with an id.
-    $node->save();
-    $wrapped_entity->setValue($node);
-    $violations = $wrapped_entity->validate();
+    $reference->setValue($node);
+    $violations = $reference->validate();
     $this->assertEqual($violations->count(), 1);
 
     // Test bundle validation.
-    $entity_definition = array(
-      'type' => 'entity',
-      'constraints' => array(
-        'EntityType' => 'node',
-        'Bundle' => 'article',
+    $definition = array(
+      'type' => 'entity_reference_field',
+      'settings' => array(
+        'target_type' => 'node',
+        'target_bundle' => 'article',
       ),
-      'label' => 'Test node',
     );
-    $wrapped_entity = $this->container->get('typed_data')->create($entity_definition, $node);
-
-    $violations = $wrapped_entity->validate();
+    $reference_field_item = \Drupal::TypedData()->create($definition);
+    $reference = $reference_field_item->get('entity');
+    $reference->setValue($node);
+    $violations = $reference->validate();
     $this->assertEqual($violations->count(), 1);
 
-    $node->type = 'article';
+    $node = entity_create('node', array(
+      'type' => 'article',
+      'uid' => $user->id(),
+    ));
     $node->save();
-    $wrapped_entity->setValue($node);
-    $violations = $wrapped_entity->validate();
+    $reference->setValue($node);
+    $violations = $reference->validate();
     $this->assertEqual($violations->count(), 0);
   }
 

@@ -36,8 +36,12 @@ class DateTimeIso8601 extends String implements DateTimeInterface {
   /**
    * {@inheritdoc}
    */
-  public function setDateTime(DrupalDateTime $dateTime) {
+  public function setDateTime(DrupalDateTime $dateTime, $notify = TRUE) {
     $this->value = $dateTime->format('c');
+    // Notify the parent of any changes.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
   }
 }
 

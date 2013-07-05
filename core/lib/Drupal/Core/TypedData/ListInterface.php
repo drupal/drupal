@@ -41,7 +41,7 @@ interface ListInterface extends TypedDataInterface, ArrayAccess, Countable, Trav
   /**
    * React to changes to a child item.
    *
-   * Note that this is invoked before any changes are applied.
+   * Note that this is invoked after any changes have been applied.
    *
    * @param $delta
    *   The delta of the item which is changed.

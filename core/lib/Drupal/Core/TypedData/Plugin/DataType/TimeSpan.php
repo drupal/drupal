@@ -43,7 +43,7 @@ class TimeSpan extends Integer implements DurationInterface {
   /**
    * {@inheritdoc}
    */
-  public function setDuration(\DateInterval $duration) {
+  public function setDuration(\DateInterval $duration, $notify = TRUE) {
     // Note that this applies the assumption of 12 month's a 30 days and
     // each year having 365 days. There is no accurate conversion for time spans
     // exceeding a day.
@@ -53,6 +53,11 @@ class TimeSpan extends Integer implements DurationInterface {
       ($duration->h * 60 * 60) +
       ($duration->i * 60) +
        $duration->s;
+
+    // Notify the parent of any changes.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
   }
 
 }

@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Plugin\DataType\FieldDataTypeDerivative.
+ * Contains \Drupal\Core\Entity\Plugin\DataType\Deriver\FieldItemDeriver.
  */
 
-namespace Drupal\Core\Entity\Plugin\DataType;
+namespace Drupal\Core\Entity\Plugin\DataType\Deriver;
 
 use Drupal\Component\Plugin\Derivative\DerivativeInterface;
 
 /**
  * Provides data type plugins for each existing field type plugin.
  */
-class FieldDataTypeDerivative implements DerivativeInterface {
+class FieldItemDeriver implements DerivativeInterface {
 
   /**
    * List of derivative definitions.

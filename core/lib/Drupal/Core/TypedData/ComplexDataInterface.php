@@ -128,7 +128,7 @@ interface ComplexDataInterface extends Traversable, TypedDataInterface  {
   /**
    * React to changes to a child property.
    *
-   * Note that this is invoked before any changes are applied.
+   * Note that this is invoked after any changes have been applied.
    *
    * @param $property_name
    *   The name of the property which is changed.

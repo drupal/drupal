@@ -11,7 +11,6 @@ use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\user\UserInterface;
 use IteratorAggregate;
 use Drupal\Core\Session\AccountInterface;
 
@@ -425,62 +424,66 @@ class Entity implements IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::getType().
+   * {@inheritdoc}
    */
   public function getType() {
-    // @todo: Incorporate the entity type here by making entities proper
-    // typed data. See http://drupal.org/node/1868004.
-    return 'entity';
+    // @todo: This does not make much sense, so remove once TypedDataInterface
+    // is removed. See https://drupal.org/node/2002138.
+    if ($this->bundle() != $this->entityType()) {
+      return 'entity:' . $this->entityType() . ':' . $this->bundle();
+    }
+    return 'entity:' . $this->entityType();
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::getDefinition().
+   * {@inheritdoc}
    */
   public function getDefinition() {
+    // @todo: This does not make much sense, so remove once TypedDataInterface
+    // is removed. See https://drupal.org/node/2002138.
     return array(
       'type' => $this->getType()
     );
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::getValue().
+   * {@inheritdoc}
    */
   public function getValue() {
-    // @todo: Implement by making entities proper typed data. See
-    // http://drupal.org/node/1868004.
+    // @todo: This does not make much sense, so remove once TypedDataInterface
+    // is removed. See https://drupal.org/node/2002138.
+    return $this->getPropertyValues();
   }
 
   /**
    * Implements \Drupal\Core\TypedData\TypedDataInterface::setValue().
    */
   public function setValue($value, $notify = TRUE) {
-    // @todo: Implement by making entities proper typed data. See
-    // http://drupal.org/node/1868004.
+    // @todo: This does not make much sense, so remove once TypedDataInterface
+    // is removed. See https://drupal.org/node/2002138.
+    $this->setPropertyValues($value);
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::getString().
+   * {@inheritdoc}
    */
   public function getString() {
-    // @todo: Implement by making entities proper typed data. See
-    // http://drupal.org/node/1868004.
+    return $this->label();
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::getConstraints().
+   * {@inheritdoc}
    */
   public function getConstraints() {
-    // @todo: Implement by making entities proper typed data. See
-    // http://drupal.org/node/1868004.
     return array();
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::validate().
+   * {@inheritdoc}
    */
   public function validate() {
-    // @todo: Implement by making entities proper typed data. See
-    // http://drupal.org/node/1868004.
+    // @todo: Add the typed data manager as proper dependency.
+    return \Drupal::typedData()->getValidator()->validate($this);
   }
 
   /**

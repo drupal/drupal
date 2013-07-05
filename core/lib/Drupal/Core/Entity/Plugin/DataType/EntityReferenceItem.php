@@ -13,10 +13,13 @@ use Drupal\Core\Entity\Field\FieldItemBase;
 use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
- * Defines the 'entity_reference' entity field item.
+ * Defines the 'entity_reference_item' entity field item.
  *
- * Required settings (below the definition's 'settings' key) are:
- *  - target_type: The entity type to reference.
+ * Supported settings (below the definition's 'settings' key) are:
+ * - target_type: The entity type to reference. Required.
+ * - target_bundle: (optional): If set, restricts the entity bundles which may
+ *   may be referenced. May be set to an single bundle, or to an array of
+ *   allowed bundles.
  *
  * @DataType(
  *   id = "entity_reference_field",
@@ -40,11 +43,12 @@ class EntityReferenceItem extends FieldItemBase {
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
-    // Definitions vary by entity type, so key them by entity type.
-    $target_type = $this->definition['settings']['target_type'];
+    // Definitions vary by entity type and bundle, so key them accordingly.
+    $key = $this->definition['settings']['target_type'] . ':';
+    $key .= isset($this->definition['settings']['target_bundle']) ? $this->definition['settings']['target_bundle'] : '';
 
-    if (!isset(self::$propertyDefinitions[$target_type])) {
-      static::$propertyDefinitions[$target_type]['target_id'] = array(
+    if (!isset(static::$propertyDefinitions[$key])) {
+      static::$propertyDefinitions[$key]['target_id'] = array(
         // @todo: Lookup the entity type's ID data type and use it here.
         'type' => 'integer',
         'label' => t('Entity ID'),
@@ -52,20 +56,22 @@ class EntityReferenceItem extends FieldItemBase {
           'Range' => array('min' => 0),
         ),
       );
-      static::$propertyDefinitions[$target_type]['entity'] = array(
-        'type' => 'entity',
+      static::$propertyDefinitions[$key]['entity'] = array(
+        'type' => 'entity_reference',
         'constraints' => array(
-          'EntityType' => $target_type,
+          'EntityType' => $this->definition['settings']['target_type'],
         ),
         'label' => t('Entity'),
         'description' => t('The referenced entity'),
         // The entity object is computed out of the entity ID.
         'computed' => TRUE,
         'read-only' => FALSE,
-        'settings' => array('id source' => 'target_id'),
       );
+      if (isset($this->definition['settings']['target_bundle'])) {
+        static::$propertyDefinitions[$key]['entity']['constraints']['Bundle'] = $this->definition['settings']['target_bundle'];
+      }
     }
-    return static::$propertyDefinitions[$target_type];
+    return static::$propertyDefinitions[$key];
   }
 
   /**
@@ -96,12 +102,14 @@ class EntityReferenceItem extends FieldItemBase {
    * Overrides \Drupal\Core\Entity\Field\FieldItemBase::get().
    */
   public function setValue($values, $notify = TRUE) {
-    // Treat the values as value of the entity property, if no array is
-    // given as this handles entity IDs and objects.
     if (isset($values) && !is_array($values)) {
-      // Directly update the property instead of invoking the parent, so that
-      // the entity property can take care of updating the ID property.
+      // Directly update the property instead of invoking the parent, so it can
+      // handle objects and IDs.
       $this->properties['entity']->setValue($values, $notify);
+      // If notify was FALSE, ensure the target_id property gets synched.
+      if (!$notify) {
+        $this->set('target_id', $this->properties['entity']->getTargetIdentifier(), FALSE);
+      }
     }
     else {
       // Make sure that the 'entity' property gets set as 'target_id'.
@@ -110,5 +118,19 @@ class EntityReferenceItem extends FieldItemBase {
       }
       parent::setValue($values, $notify);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onChange($property_name) {
+    // Make sure that the target ID and the target property stay in sync.
+    if ($property_name == 'target_id') {
+      $this->properties['entity']->setValue($this->target_id, FALSE);
+    }
+    elseif ($property_name == 'entity') {
+      $this->set('target_id', $this->properties['entity']->getTargetIdentifier(), FALSE);
+    }
+    parent::onChange($property_name);
   }
 }

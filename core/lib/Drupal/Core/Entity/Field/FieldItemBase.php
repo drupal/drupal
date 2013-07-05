@@ -49,10 +49,6 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
       $keys = array_keys($this->getPropertyDefinitions());
       $values = array($keys[0] => $values);
     }
-    // Notify the parent of any changes to be made.
-    if ($notify && isset($this->parent)) {
-      $this->parent->onChange($this->name);
-    }
     $this->values = $values;
     // Update any existing property objects.
     foreach ($this->properties as $name => $property) {
@@ -62,6 +58,10 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
       }
       $property->setValue($value, FALSE);
       unset($this->values[$name]);
+    }
+    // Notify the parent of any changes.
+    if ($notify && isset($this->parent)) {
+      $this->parent->onChange($this->name);
     }
   }
 
@@ -83,10 +83,6 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
    * {@inheritdoc}
    */
   public function set($property_name, $value, $notify = TRUE) {
-    // Notify the parent of any changes to be made.
-    if ($notify && isset($this->parent)) {
-      $this->parent->onChange($this->name);
-    }
     // For defined properties there is either a property object or a plain
     // value that needs to be updated.
     if (isset($this->properties[$property_name])) {
@@ -96,6 +92,10 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
     // Allow setting plain values for not-defined properties also.
     else {
       $this->values[$property_name] = $value;
+    }
+    // Directly notify ourselves.
+    if ($notify) {
+      $this->onChange($property_name);
     }
   }
 
@@ -135,7 +135,9 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
     }
     // Remove the plain value, such that any further __get() calls go via the
     // updated property object.
-    unset($this->values[$property_name]);
+    if (isset($this->properties[$property_name])) {
+      unset($this->values[$property_name]);
+    }
   }
 
   /**

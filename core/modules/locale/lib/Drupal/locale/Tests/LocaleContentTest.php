@@ -97,6 +97,7 @@ class LocaleContentTest extends WebTestBase {
     $this->drupalPost("admin/structure/types/manage/{$type2->type}", $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => $type2->name)));
     $this->drupalLogout();
+    drupal_static_reset('language_list');
 
     // Verify language selection is not present on the node add form.
     $this->drupalLogin($web_user);
@@ -153,6 +154,7 @@ class LocaleContentTest extends WebTestBase {
     $edit = array();
     $edit['predefined_langcode'] = 'ar';
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    drupal_static_reset('language_list');
 
     // Install Spanish language.
     $edit = array();

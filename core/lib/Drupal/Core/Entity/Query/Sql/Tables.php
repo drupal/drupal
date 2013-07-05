@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\field\Plugin\Core\Entity\Field;
 
@@ -140,13 +141,12 @@ class Tables {
             $propertyDefinitions = $entity->{$field['field_name']}->getPropertyDefinitions();
 
             // If the column is not yet known, ie. the
-            // $node->field_image->entity case then use the id source as the
-            // column.
-            if (!$column && isset($propertyDefinitions[$relationship_specifier]['settings']['id source'])) {
-              // If this is a valid relationship, use the id source.
-              // Otherwise, the code executing the relationship will throw an
-              // exception anyways so no need to do it here.
-              $column = $propertyDefinitions[$relationship_specifier]['settings']['id source'];
+            // $node->field_image->entity case then use first property as
+            // column, i.e. target_id or fid.
+            // Otherwise, the code executing the relationship will throw an
+            // exception anyways so no need to do it here.
+            if (!$column && isset($propertyDefinitions[$relationship_specifier]) && $entity->{$field['field_name']}->get('entity') instanceof EntityReference) {
+              $column = current(array_keys($propertyDefinitions));
             }
             // Prepare the next index prefix.
             $next_index_prefix = "$relationship_specifier.$column";
@@ -193,7 +193,7 @@ class Tables {
           $next_index_prefix = $relationship_specifier;
         }
         // Check for a valid relationship.
-        if (isset($propertyDefinitions[$relationship_specifier]['constraints']['EntityType']) && isset($propertyDefinitions[$relationship_specifier]['settings']['id source'])) {
+        if (isset($propertyDefinitions[$relationship_specifier]) && $entity->{$specifier}->get('entity') instanceof EntityReference) {
           // If it is, use the entity type.
           $entity_type = $propertyDefinitions[$relationship_specifier]['constraints']['EntityType'];
           $entity_info = entity_get_info($entity_type);
