@@ -175,25 +175,30 @@ class DependencyTest extends ModuleTestBase {
     $this->drupalPost(NULL, array(), t('Continue'));
     $this->assertModules(array('forum'), TRUE);
 
-    // Disable forum and comment. Both should now be installed but disabled.
+    // Disable forum module. It should now be installed but disabled.
     $edit = array('modules[Core][forum][enable]' => FALSE);
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
     $this->assertModules(array('forum'), FALSE);
-    $edit = array('modules[Core][comment][enable]' => FALSE);
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('comment'), FALSE);
 
-    // Check that the taxonomy module cannot be uninstalled.
-    $this->drupalGet('admin/modules/uninstall');
-    $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="uninstall[comment]"]');
-    $this->assert(count($checkbox) == 1, 'Checkbox for uninstalling the comment module is disabled.');
+    // Check that the comment module cannot be uninstalled.
+    $this->drupalGet('admin/modules');
+    $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[Core][comment][enable]"]');
+    $this->assert(count($checkbox) == 1, 'Checkbox for disabling the comment module is disabled.');
 
-    // Uninstall the forum module, and check that taxonomy now can also be
-    // uninstalled.
+    // Uninstall the forum module.
     $edit = array('uninstall[forum]' => 'forum');
     $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPost(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
+    // Delete comment field to allow disabling of the comment module.
+    entity_load('field_entity', 'comment_node_forum')->delete();
+    // Purge comment field storage data.
+    field_purge_batch(10);
+    // Disable the comment module.
+    $edit = array('modules[Core][comment][enable]' => FALSE);
+    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->assertModules(array('comment'), FALSE);
+    // Uninstall comment module.
     $edit = array('uninstall[comment]' => 'comment');
     $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPost(NULL, NULL, t('Uninstall'));

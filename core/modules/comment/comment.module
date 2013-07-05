@@ -371,6 +371,8 @@ function comment_reply_access(EntityInterface $entity) {
  *   Name of the comment field attached to the entity type and bundle.
  */
 function _comment_body_field_create($entity_type, $bundle_name, $field_name) {
+  Drupal::service('comment.manager')->addBodyField($field_name);
+  return;
   // Create the field if needed.
   if (!field_read_field('comment_body', array('include_inactive' => TRUE))) {
     $field = entity_create('field_entity', array(
@@ -1855,7 +1857,7 @@ function comment_field_instance_create(FieldInstanceInterface $instance) {
       // Set comments enabled by default when field created via UI.
       $instance->default_value = array(array('status' => COMMENT_OPEN));
     }
-    _comment_body_field_create($instance->entity_type, $instance->bundle, $instance->getFieldName());
+    Drupal::service('comment.manager')->addBodyField($instance->getFieldName());
     Drupal::cache()->delete('comment_entity_info');
   }
 }
@@ -1876,12 +1878,14 @@ function comment_field_entity_delete(FieldInterface $field) {
  */
 function comment_field_instance_delete(FieldInstanceInterface $instance) {
   if ($instance->getFieldType() == 'comment') {
+    debug($instance);
+    debug($instance->entityType());
     // Delete all comments that used by the entity bundle.
-    $comments = entity_load_multiple_by_properties('comment', array(
-      'entity_type' => $instance->entity_type,
-      'field_name' => $instance->getFieldName(),
-    ));
-    entity_delete_multiple('comment', array_keys($comments));
+    $comments = db_query("SELECT cid FROM {comment} WHERE entity_type = :entity_type AND field_name = :field_name", array(
+      ':entity_type' => $instance->entityType(),
+      ':field_name' => $instance->getFieldName(),
+    ))->fetchCol();
+    entity_delete_multiple('comment', $comments);
     Drupal::cache()->delete('comment_entity_info');
   }
 }
