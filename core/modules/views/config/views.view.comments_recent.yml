@@ -51,6 +51,7 @@ display:
           group_type: group
           admin_label: Content
           required: '0'
+          provider: views
       fields:
         subject:
           id: subject
@@ -103,6 +104,7 @@ display:
           empty_zero: '0'
           hide_alter_empty: '1'
           link_to_node: '0'
+          provider: comment
         timestamp:
           id: timestamp
           table: comment
@@ -155,6 +157,7 @@ display:
           hide_alter_empty: '1'
           custom_date_format: ''
           timezone: ''
+          provider: views
       sorts:
         changed:
           id: changed
@@ -169,6 +172,7 @@ display:
           expose:
             label: ''
           granularity: second
+          provider: views
       filters:
         status_extra:
           id: status_extra
@@ -177,6 +181,7 @@ display:
           relationship: nid
           group: '0'
           plugin_id: node_status
+          provider: node
       style:
         type: html_list
         options:
@@ -265,6 +270,7 @@ display:
           hide_empty: '0'
           empty_zero: '0'
           hide_alter_empty: '1'
+          provider: node
         timestamp:
           id: timestamp
           table: comment
@@ -317,6 +323,7 @@ display:
           hide_alter_empty: '1'
           custom_date_format: ''
           timezone: ''
+          provider: views
         subject:
           id: subject
           table: comment
@@ -368,6 +375,7 @@ display:
           empty_zero: '0'
           hide_alter_empty: '1'
           link_to_node: '0'
+          provider: comment
         comment:
           id: comment
           table: field_data_comment_body
@@ -430,6 +438,7 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: '0'
+          provider: field
       path: comments/recent
       style:
         type: html_list

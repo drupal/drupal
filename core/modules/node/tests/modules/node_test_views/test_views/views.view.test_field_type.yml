@@ -10,6 +10,7 @@ display:
           field: type
           id: type
           table: node_field_data
+          provider: node
     display_plugin: default
     display_title: Master
     id: default

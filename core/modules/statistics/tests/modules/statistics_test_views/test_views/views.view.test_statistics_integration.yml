@@ -45,6 +45,7 @@ display:
           hide_empty: '0'
           empty_zero: '0'
           link_to_node: '1'
+          provider: node
         timestamp:
           id: timestamp
           table: node_counter
@@ -96,6 +97,7 @@ display:
           date_format: html_year
           custom_date_format: ''
           timezone: ''
+          provider: views
         totalcount:
           id: totalcount
           table: node_counter
@@ -153,6 +155,7 @@ display:
           format_plural_plural: '@count'
           prefix: ''
           suffix: ''
+          provider: views
         daycount:
           id: daycount
           table: node_counter
@@ -210,6 +213,7 @@ display:
           format_plural_plural: '@count'
           prefix: ''
           suffix: ''
+          provider: views
       filters:
         status:
           value: '1'
@@ -219,12 +223,14 @@ display:
           expose:
             operator: '0'
           group: '1'
+          provider: views
       sorts:
         created:
           id: created
           table: node_field_data
           field: created
           order: DESC
+          provider: views
   page_1:
     display_plugin: page
     id: page_1

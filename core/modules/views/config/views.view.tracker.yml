@@ -63,6 +63,7 @@ display:
           group_type: group
           admin_label: author
           required: '0'
+          provider: views
       fields:
         type:
           id: type
@@ -115,6 +116,7 @@ display:
           hide_alter_empty: '1'
           link_to_node: '0'
           machine_name: '0'
+          provider: node
         title:
           id: title
           table: node_field_data
@@ -165,6 +167,7 @@ display:
           empty_zero: '0'
           hide_alter_empty: '1'
           link_to_node: '1'
+          provider: node
         name:
           id: name
           table: users
@@ -218,6 +221,7 @@ display:
           overwrite_anonymous: '0'
           anonymous_text: ''
           format_username: '1'
+          provider: user
         comment_count:
           id: comment_count
           table: node_comment_statistics
@@ -276,6 +280,7 @@ display:
           format_plural_plural: '@count'
           prefix: ''
           suffix: ''
+          provider: views
         last_comment_timestamp:
           id: last_comment_timestamp
           table: node_comment_statistics
@@ -328,6 +333,7 @@ display:
           date_format: small
           custom_date_format: ''
           timezone: ''
+          provider: comment
         timestamp:
           id: timestamp
           table: history
@@ -379,6 +385,7 @@ display:
           hide_empty: '0'
           empty_zero: '0'
           hide_alter_empty: '1'
+          provider: history
         new_comments:
           id: new_comments
           table: node
@@ -438,6 +445,7 @@ display:
           format_plural_singular: '1'
           format_plural_plural: '@count'
           prefix: ''
+          provider: comment
       sorts:
         last_comment_timestamp:
           id: last_comment_timestamp
@@ -452,6 +460,7 @@ display:
           expose:
             label: ''
           granularity: second
+          provider: views
       arguments:
         uid_touch:
           id: uid_touch
@@ -479,6 +488,7 @@ display:
             type: none
             fail: 'not found'
           validate_options: {  }
+          provider: comment
       filters:
         status:
           id: status
@@ -489,6 +499,7 @@ display:
           expose:
             operator: '0'
           plugin_id: boolean
+          provider: views
       style:
         type: table
         options:

@@ -53,6 +53,7 @@ class TaxonomyTerm extends WizardPluginBase {
     $display_options['fields']['name']['id'] = 'name';
     $display_options['fields']['name']['table'] = 'taxonomy_term_data';
     $display_options['fields']['name']['field'] = 'name';
+    $display_options['fields']['name']['provider'] = 'taxonomy';
     $display_options['fields']['name']['label'] = '';
     $display_options['fields']['name']['alter']['alter_text'] = 0;
     $display_options['fields']['name']['alter']['make_link'] = 0;

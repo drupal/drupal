@@ -77,6 +77,7 @@ display:
           empty_zero: '0'
           hide_alter_empty: '1'
           link_to_node: '0'
+          provider: node
         title:
           id: title
           table: node_field_data
@@ -95,6 +96,7 @@ display:
           hide_empty: '0'
           empty_zero: '0'
           link_to_node: '1'
+          provider: node
         nothing:
           id: nothing
           table: views
@@ -144,6 +146,7 @@ display:
           hide_empty: '0'
           empty_zero: '0'
           hide_alter_empty: '0'
+          provider: views
         dropbutton:
           id: dropbutton
           table: views
@@ -198,6 +201,7 @@ display:
             nothing: nothing
             nid: '0'
           destination: '1'
+          provider: views
       filters:
         status:
           value: '1'
@@ -208,6 +212,7 @@ display:
           expose:
             operator: '0'
           group: '1'
+          provider: views
       sorts:
         created:
           id: created
@@ -215,6 +220,7 @@ display:
           field: created
           order: DESC
           plugin_id: date
+          provider: views
       title: test_dropbutton
   page_1:
     display_plugin: page

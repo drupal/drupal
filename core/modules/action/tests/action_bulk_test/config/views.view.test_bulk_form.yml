@@ -72,6 +72,7 @@ display:
           empty_zero: '0'
           link_to_node: '1'
           plugin_id: node
+          provider: node
         action_bulk_form:
           id: action_bulk_form
           table: action
@@ -121,6 +122,7 @@ display:
           empty_zero: '0'
           hide_alter_empty: '1'
           plugin_id: action_bulk_form
+          provider: action
       filters:
         status:
           value: '1'
@@ -131,6 +133,7 @@ display:
             operator: '0'
           group: '1'
           plugin_id: boolean
+          provider: views
       sorts:
         created:
           id: created
@@ -138,6 +141,7 @@ display:
           field: created
           order: DESC
           plugin_id: date
+          provider: views
       title: form
   page_1:
     display_plugin: page

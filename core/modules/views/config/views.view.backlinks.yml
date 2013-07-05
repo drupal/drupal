@@ -65,6 +65,7 @@ display:
           group_type: group
           admin_label: ''
           tokenize: '0'
+          provider: views
       fields:
         title:
           id: title
@@ -116,6 +117,7 @@ display:
           hide_empty: '0'
           empty_zero: '0'
           hide_alter_empty: '1'
+          provider: node
       arguments:
         nid:
           id: nid
@@ -130,6 +132,8 @@ display:
           specify_validation: '1'
           validate:
             type: node
+          plugin_id: node_nid
+          provider: node
       filters:
         status:
           id: status
@@ -140,6 +144,7 @@ display:
           expose:
             operator: '0'
           plugin_id: boolean
+          provider: views
       style:
         type: html_list
         options:
@@ -207,6 +212,8 @@ display:
           specify_validation: '1'
           validate:
             type: node
+          plugin_type: node_nid
+          provider: node
       style:
         type: html_list
       row:

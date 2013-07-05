@@ -25,6 +25,7 @@ display:
           table: views_test_data
           field: id
           plugin_id: numeric
+          provider: views_test_data
     display_plugin: default
     display_title: Master
     id: default
@@ -45,7 +46,7 @@ display:
     display_plugin: feed
     id: feed_1
     display_title: Feed
-    position: ''
+    position: '3'
     display_options:
       pager:
         type: some
@@ -63,6 +64,5 @@ display:
             guid_field: id
             guid_field_is_permalink: '0'
       path: test_attachment_ui_feed
-    position: '3'
 id: test_attachment_ui
 tag: ''

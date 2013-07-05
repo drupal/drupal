@@ -30,6 +30,7 @@ display:
           table: comment
           field: nid
           required: '1'
+          provider: views
       fields:
         subject:
           id: subject
@@ -49,6 +50,7 @@ display:
           hide_empty: '0'
           empty_zero: '0'
           link_to_comment: '1'
+          provider: comment
       filters: {  }
       sorts: {  }
   feed_1:

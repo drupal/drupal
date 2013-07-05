@@ -51,7 +51,7 @@ class UserDataTest extends UserTestBase {
     $output = $view->field['data']->render($view->result[0]);
     $this->assertEqual($output, $random_value, 'A valid user data got rendered.');
 
-    $view->field['data']->options['name'] = $this->randomName();
+    $view->field['data']->options['data_name'] = $this->randomName();
     $output = $view->field['data']->render($view->result[0]);
     $this->assertFalse($output, 'An invalid configuration does not return anything');
 

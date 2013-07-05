@@ -18,6 +18,7 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: numeric
+          provider: views_test_data
       sorts:
         id:
           field: id
@@ -26,6 +27,7 @@ display:
           relationship: none
           table: views_test_data
           plugin_id: standard
+          provider: views_test_data
     display_plugin: default
     display_title: Master
     id: default
@@ -51,4 +53,4 @@ display:
         options: {  }
 label: 'Storage Test View'
 id: test_view_storage
-tag: 'test'
+tag: test

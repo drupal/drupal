@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\Discovery;
 
-use Drupal\Component\Plugin\Discovery\AnnotatedClassDiscovery;
+use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 
 /**
  * Defines a discovery mechanism to find Views handlers in PSR-0 namespaces.
@@ -48,7 +48,10 @@ class ViewsHandlerDiscovery extends AnnotatedClassDiscovery {
     foreach ($root_namespaces as $namespace => $dir) {
       $plugin_namespaces["$namespace\\Plugin\\views\\{$type}"] = array($dir);
     }
-    parent::__construct($plugin_namespaces, $annotation_namespaces, 'Drupal\Component\Annotation\PluginID');
+
+    $this->pluginNamespaces = $plugin_namespaces;
+    $this->annotationNamespaces = $annotation_namespaces;
+    $this->pluginDefinitionAnnotationName = 'Drupal\Component\Annotation\PluginID';
   }
 
   /**

@@ -28,6 +28,7 @@ display:
           id: id
           table: entity_test
           plugin_id: numeric
+          provider: views
         name:
           alter:
             alter_text: '0'
@@ -43,6 +44,7 @@ display:
           id: name
           table: entity_test
           plugin_id: standard
+          provider: views
       group_by: '1'
       pager:
         type: some

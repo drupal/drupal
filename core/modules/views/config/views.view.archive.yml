@@ -67,6 +67,7 @@ display:
           expose:
             label: ''
           granularity: second
+          provider: views
       arguments:
         created_year_month:
           id: created_year_month
@@ -86,6 +87,7 @@ display:
             items_per_page: '30'
           specify_validation: '1'
           plugin_id: date_year_month
+          provider: views
       filters:
         status:
           id: status
@@ -96,6 +98,7 @@ display:
           expose:
             operator: '0'
           plugin_id: boolean
+          provider: views
       style:
         type: default
         options:
@@ -153,6 +156,7 @@ display:
             items_per_page: '30'
           specify_validation: '1'
           plugin_id: date_year_month
+          provider: views
 label: Archive
 module: node
 id: archive

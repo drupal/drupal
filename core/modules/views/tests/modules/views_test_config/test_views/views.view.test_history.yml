@@ -43,6 +43,7 @@ display:
           hide_empty: '0'
           empty_zero: '0'
           link_to_node: '1'
+          provider: node
         timestamp:
           id: timestamp
           table: history
@@ -94,6 +95,7 @@ display:
           hide_alter_empty: '1'
           link_to_node: '0'
           comments: '0'
+          provider: history
       filters:
         status:
           value: '1'
@@ -104,6 +106,7 @@ display:
           expose:
             operator: '0'
           group: '1'
+          provider: views
       sorts:
         created:
           id: created
@@ -111,6 +114,7 @@ display:
           field: created
           plugin_id: date
           order: DESC
+          provider: views
   page_1:
     display_plugin: page
     id: page_1
@@ -164,6 +168,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          provider: views
         timestamp:
           id: timestamp
           table: history
@@ -199,6 +204,7 @@ display:
             default_group: All
             default_group_multiple: {  }
             group_items: {  }
+          provider: history
       defaults:
         filters: '0'
         filter_groups: '0'
