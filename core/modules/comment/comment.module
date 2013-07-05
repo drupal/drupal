@@ -1878,8 +1878,6 @@ function comment_field_entity_delete(FieldInterface $field) {
  */
 function comment_field_instance_delete(FieldInstanceInterface $instance) {
   if ($instance->getFieldType() == 'comment') {
-    debug($instance);
-    debug($instance->entityType());
     // Delete all comments that used by the entity bundle.
     $comments = db_query("SELECT cid FROM {comment} WHERE entity_type = :entity_type AND field_name = :field_name", array(
       ':entity_type' => $instance->entityType(),
