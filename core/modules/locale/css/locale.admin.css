@@ -36,7 +36,7 @@
   width: 50%;
   table-layout: fixed;
 }
-.locale-translate-edit-form .form-item {
+.locale-translate-edit-form tr .form-item {
   white-space: normal;
 }
 .locale-translate-edit-form td {
