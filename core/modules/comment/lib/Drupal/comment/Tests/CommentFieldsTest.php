@@ -67,6 +67,11 @@ class CommentFieldsTest extends CommentTestBase {
     $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
     $this->drupalLogin($this->admin_user);
 
+    // Drop default comment field added in CommentTestBase::setup().
+    entity_load('field_entity', 'comment')->delete();
+    $this->cronRun();
+    $this->cronRun();
+
     // Disable the comment module.
     $edit = array();
     $edit['modules[Core][comment][enable]'] = FALSE;
