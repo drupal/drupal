@@ -591,6 +591,26 @@ function language_delete($langcode) {
 }
 
 /**
+ * Implements hook_library_info().
+ */
+function language_library_info() {
+  $libraries['language.admin'] = array(
+    'title' => 'Language detection admin',
+    'version' => VERSION,
+    'js' => array(
+      drupal_get_path('module', 'language') . '/language.admin.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'jquery.once'),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
  * Implements hook_language_types_info().
  *
  * Defines the three core language types:
@@ -611,14 +631,17 @@ function language_language_types_info() {
     Language::TYPE_INTERFACE => array(
       'name' => t('User interface text'),
       'description' => t('Order of language detection methods for user interface text. If a translation of user interface text is available in the detected language, it will be displayed.'),
+      'locked' => TRUE,
     ),
     Language::TYPE_CONTENT => array(
       'name' => t('Content'),
       'description' => t('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
       'fixed' => array(LANGUAGE_NEGOTIATION_INTERFACE),
+      'locked' => TRUE,
     ),
     Language::TYPE_URL => array(
       'fixed' => array(LANGUAGE_NEGOTIATION_URL, LANGUAGE_NEGOTIATION_URL_FALLBACK),
+      'locked' => TRUE,
     ),
   );
 }
@@ -717,8 +740,9 @@ function language_negotiation_include() {
  * Implements hook_modules_enabled().
  */
 function language_modules_enabled($modules) {
-  language_negotiation_include();
-  language_types_set();
+  include_once DRUPAL_ROOT . '/core/includes/language.inc';
+  // Load configurability options from configuration.
+  language_types_set(array());
   language_negotiation_purge();
 }
 

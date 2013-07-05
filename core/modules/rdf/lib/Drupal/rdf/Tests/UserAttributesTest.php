@@ -76,19 +76,6 @@ class UserAttributesTest extends WebTestBase {
       'value' => $user2->name,
     );
     $this->assertTrue($graph->hasProperty($account_uri, 'http://xmlns.com/foaf/0.1/name', $expected_value), 'User name found in RDF output (foaf:name).');
-    // Person type.
-    $expected_value = array(
-      'type' => 'uri',
-      'value' => 'http://xmlns.com/foaf/0.1/Person',
-    );
-    $this->assertTrue($graph->hasProperty($person_uri, 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', $expected_value), 'Person type found in RDF output (foaf:Person).');
-    // Person relation to account.
-    $expected_value = array(
-      'type' => 'uri',
-      'value' => $account_uri,
-    );
-    $this->assertTrue($graph->hasProperty($person_uri, 'http://xmlns.com/foaf/0.1/account', $expected_value), 'Person relation to account found in RDF output (foaf:account).');
-
 
     // User 2 creates a node.
     $this->drupalLogin($user2);

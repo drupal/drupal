@@ -20,11 +20,6 @@ const LANGUAGE_NEGOTIATION_URL = 'language-url';
 const LANGUAGE_NEGOTIATION_BROWSER = 'language-browser';
 
 /**
- * The language is determined using the current interface language.
- */
-const LANGUAGE_NEGOTIATION_INTERFACE = 'language-interface';
-
-/**
  * If no URL language, language is determined using an already detected one.
  */
 const LANGUAGE_NEGOTIATION_URL_FALLBACK = 'language-url-fallback';

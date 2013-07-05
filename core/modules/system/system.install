@@ -2241,6 +2241,19 @@ function system_update_8058() {
 }
 
 /**
+ * Move variable language_types to config.
+ *
+ * @ingroup config_upgrade
+ */
+function system_update_8059() {
+  update_variables_to_config('system.language.types', array(
+    'language_interface' => 'configurable.language_interface',
+    'language_content' => 'configurable.language_content',
+    'language_url' => 'configurable.language_content',
+  ));
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

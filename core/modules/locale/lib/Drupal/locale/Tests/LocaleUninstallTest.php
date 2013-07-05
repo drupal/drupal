@@ -96,7 +96,7 @@ class LocaleUninstallTest extends WebTestBase {
 
     // Change language negotiation options.
     drupal_load('module', 'locale');
-    variable_set('language_types', language_types_get_default() + array('language_custom' => TRUE));
+    \Drupal::config('system.language.types')->set('configurable', language_types_get_default() + array('language_custom' => TRUE))->save();
     variable_set('language_negotiation_' . Language::TYPE_INTERFACE, language_language_negotiation_info());
     variable_set('language_negotiation_' . Language::TYPE_CONTENT, language_language_negotiation_info());
     variable_set('language_negotiation_' . Language::TYPE_URL, language_language_negotiation_info());

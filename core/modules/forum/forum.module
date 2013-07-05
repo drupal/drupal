@@ -45,7 +45,19 @@ function forum_help($path, $arg) {
       return $output;
     case 'admin/structure/forum':
       $output = '<p>' . t('Forums contain forum topics. Use containers to group related forums.') . '</p>';
-      $output .= theme('more_help_link', array('url' => 'admin/help/forum'));
+      $more_help_link = array(
+        '#type' => 'link',
+        '#href' => 'admin/help/forum',
+        '#title' => t('More help'),
+      );
+      $container = array(
+        '#theme' => 'container',
+        '#children' => drupal_render($more_help_link),
+        '#attributes' => array(
+          'class' => array('more-help-link'),
+        ),
+      );
+      $output = drupal_render($container);
       return $output;
     case 'admin/structure/forum/add/container':
       return '<p>' . t('Use containers to group related forums.') . '</p>';

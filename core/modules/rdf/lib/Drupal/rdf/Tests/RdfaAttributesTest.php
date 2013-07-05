@@ -84,6 +84,28 @@ class RdfaAttributesTest extends DrupalUnitTestBase {
     $this->_testAttributes($expected_attributes, $mapping, $date);
   }
 
+
+  /**
+   * Test attribute creation for mappings which use data converters.
+   */
+  function testDatatypeCallbackWithConverter() {
+    $properties = array('schema:interactionCount');
+
+    $data = "23";
+    $content = "UserComment:23";
+
+    $mapping = array(
+      'properties' => $properties,
+      'datatype_callback' => 'Drupal\rdf\SchemaOrgDataConverter::interactionCount',
+    );
+    $expected_attributes = array(
+      'property' => $properties,
+      'content' => $content,
+    );
+
+    $this->_testAttributes($expected_attributes, $mapping, $data);
+  }
+
   /**
    * Test attribute creation for mappings which use 'rel'.
    */

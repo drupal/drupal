@@ -77,5 +77,8 @@ class TaxonomyAttributesTest extends TaxonomyTestBase {
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($term_uri, 'http://www.w3.org/2004/02/skos/core#prefLabel', $expected_value), 'Term label found in RDF output (skos:prefLabel).');
+
+    // @todo Add test for term description once it is a field:
+    // https://drupal.org/node/569434
   }
 }

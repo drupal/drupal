@@ -1,0 +1,6 @@
+all:
+  - language_interface
+  - language_content
+  - language_url
+configurable:
+  - language_interface

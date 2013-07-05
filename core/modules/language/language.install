@@ -17,7 +17,8 @@ use Drupal\Core\Language\Language;
 function language_install() {
   // Enable URL language detection for each configurable language type.
   require_once DRUPAL_ROOT . '/core/includes/language.inc';
-  foreach (language_types_get_configurable(FALSE) as $type) {
+  foreach (language_types_get_configurable() as $type) {
+    module_load_include('inc', 'language', 'language.negotiation');
     language_negotiation_set($type, array(LANGUAGE_NEGOTIATION_URL => 0));
   }
 }

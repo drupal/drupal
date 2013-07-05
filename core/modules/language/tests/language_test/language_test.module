@@ -32,6 +32,7 @@ function language_test_language_types_info() {
       ),
       'fixed_test_language_type' => array(
         'fixed' => array('test_language_negotiation_method'),
+        'locked' => TRUE,
       ),
     );
   }
@@ -42,7 +43,15 @@ function language_test_language_types_info() {
  */
 function language_test_language_types_info_alter(array &$language_types) {
   if (Drupal::state()->get('language_test.content_language_type')) {
+    $language_types[Language::TYPE_CONTENT]['locked'] = FALSE;
     unset($language_types[Language::TYPE_CONTENT]['fixed']);
+    // By default languages are not configurable. Make Language::TYPE_CONTENT
+    // configurable.
+    $configurable = config('system.language.types')->get('configurable');
+    if (!in_array(Language::TYPE_CONTENT, $configurable)) {
+      $configurable[] = Language::TYPE_CONTENT;
+      config('system.language.types')->set('configurable', $configurable)->save();
+    }
   }
 }
 
@@ -87,6 +96,7 @@ function language_test_language_negotiation_info_alter(array &$negotiation_info)
  */
 function language_test_store_language_negotiation() {
   $last = array();
+  print_r(language_types_get_all());
   foreach (language_types_get_all() as $type) {
     $last[$type] = language($type)->id;
   }
