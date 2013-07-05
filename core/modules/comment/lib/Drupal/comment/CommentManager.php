@@ -143,7 +143,6 @@ class CommentManager {
       $field = $this->entityManager->getStorageController('field_entity')->create(array(
         'field_name' => 'comment_body',
         'type' => 'text_long',
-        'entity_types' => array('comment'),
       ));
       $field->save();
     }
