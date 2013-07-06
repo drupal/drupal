@@ -501,53 +501,6 @@ function node_type_update_nodes($old_id, $new_id) {
 }
 
 /**
- * Implements hook_rdf_mapping().
- */
-function node_rdf_mapping() {
-  return array(
-    array(
-      'type' => 'node',
-      'bundle' => RDF_DEFAULT_BUNDLE,
-      'mapping' => array(
-        'rdftype' => array('sioc:Item', 'foaf:Document'),
-        'title' => array(
-          'predicates' => array('dc:title'),
-        ),
-        'created' => array(
-          'predicates' => array('dc:date', 'dc:created'),
-          'datatype' => 'xsd:dateTime',
-          'callback' => 'date_iso8601',
-        ),
-        'changed' => array(
-          'predicates' => array('dc:modified'),
-          'datatype' => 'xsd:dateTime',
-          'callback' => 'date_iso8601',
-        ),
-        'body' => array(
-          'predicates' => array('content:encoded'),
-        ),
-        'uid' => array(
-          'predicates' => array('sioc:has_creator'),
-          'type' => 'rel',
-        ),
-        'name' => array(
-          'predicates' => array('foaf:name'),
-        ),
-        'comment_count' => array(
-          'predicates' => array('sioc:num_replies'),
-          'datatype' => 'xsd:integer',
-        ),
-        'last_activity' => array(
-          'predicates' => array('sioc:last_activity_date'),
-          'datatype' => 'xsd:dateTime',
-          'callback' => 'date_iso8601',
-        ),
-      ),
-    ),
-  );
-}
-
-/**
  * Loads node entities from the database.
  *
  * This function should be used whenever you need to load more than one node
