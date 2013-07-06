@@ -200,7 +200,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
       'description' => t("The comment 'new' marker for the current user (0 read, 1 new, 2 updated)."),
       'type' => 'integer_field',
       'computed' => TRUE,
-      'class' => '\Drupal\comment\FieldNewItem',
+      'class' => '\Drupal\comment\CommentNewItem',
     );
     return $properties;
   }

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\comment\FieldNewValue.
+ * Contains \Drupal\comment\CommentNewValue.
  */
 
 namespace Drupal\comment;
@@ -16,7 +16,7 @@ use InvalidArgumentException;
  *
  * @todo: Declare the list of allowed values once supported.
  */
-class FieldNewValue extends TypedData {
+class CommentNewValue extends TypedData {
 
   /**
    * Implements \Drupal\Core\TypedData\TypedDataInterface::getValue().

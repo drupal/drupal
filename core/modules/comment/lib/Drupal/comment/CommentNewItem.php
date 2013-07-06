@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\comment\FieldNewItem.
+ * Contains \Drupal\comment\CommentNewItem.
  */
 
 namespace Drupal\comment;
@@ -12,7 +12,7 @@ use Drupal\Core\Entity\Plugin\DataType\IntegerItem;
 /**
  * The field item for the 'new' field.
  */
-class FieldNewItem extends IntegerItem {
+class CommentNewItem extends IntegerItem {
 
   /**
    * Definitions of the contained properties.
@@ -32,7 +32,7 @@ class FieldNewItem extends IntegerItem {
       static::$propertyDefinitions['value'] = array(
         'type' => 'integer',
         'label' => t('Integer value'),
-        'class' => '\Drupal\comment\FieldNewValue',
+        'class' => '\Drupal\comment\CommentNewValue',
         'computed' => TRUE,
       );
     }
