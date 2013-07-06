@@ -32,6 +32,8 @@ class DefaultParser implements ParserInterface {
    * {@inheritdoc}
    */
   public function parse(Feed $feed) {
+    // Set our bridge extension manager to Zend Feed.
+    Reader::setExtensionManager(\Drupal::service('feed.bridge.reader'));
     try {
       $channel = Reader::importString($feed->source_string);
     }

@@ -19,8 +19,6 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Routing\GeneratorNotInitializedException;
 use Drupal\Core\SystemListingInfo;
 use Drupal\Core\Template\Attribute;
-use Zend\Feed\Writer\Writer;
-use Zend\Feed\Reader\Reader;
 
 /**
  * @file
@@ -3095,10 +3093,6 @@ function _drupal_bootstrap_code() {
 
   // Load all enabled modules
   Drupal::moduleHandler()->loadAll();
-
-  // Set our bridge extension manager to Zend Feed.
-  Reader::setExtensionManager(Drupal::service('feed.bridge.reader'));
-  Writer::setExtensionManager(Drupal::service('feed.bridge.writer'));
 
   // Make sure all stream wrappers are registered.
   file_get_stream_wrappers();
