@@ -366,9 +366,6 @@ function install_begin_request(&$install_state) {
     // Add the file translation service to the container.
     $container->set('string_translator.file_translation', install_file_translation_service());
     $container->get('string_translation')->addTranslator($container->get('string_translator.file_translation'));
-    // Set the request in the kernel to the new created Request above
-    // so it is available to the rest of the installation process.
-    $container->set('request', $request);
   }
   else {
     // @todo Move into a proper Drupal\Core\DependencyInjection\InstallContainerBuilder.
@@ -440,8 +437,12 @@ function install_begin_request(&$install_state) {
     $container->register('asset.css.collection_renderer', 'Drupal\Core\Asset\CssCollectionRenderer');
     $container->register('asset.js.collection_renderer', 'Drupal\Core\Asset\JsCollectionRenderer');
 
-    Drupal::setContainer($container);
   }
+  // Set the request in the kernel to the new created Request above
+  // so it is available to the rest of the installation process.
+  $container->set('request', $request);
+
+  Drupal::setContainer($container);
 
   // Set up $language, so t() caller functions will still work.
   drupal_language_initialize();
