@@ -1131,7 +1131,7 @@ function theme($hook, $variables = array()) {
     // new variable to track that.
     if (!isset($variables['directory'])) {
       $default_template_variables = array();
-      template_preprocess($default_template_variables, $hook);
+      template_preprocess($default_template_variables, $hook, $info);
       $variables += $default_template_variables;
     }
     if (!isset($default_attributes)) {
