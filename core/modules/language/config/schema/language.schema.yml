@@ -45,3 +45,32 @@ language.mappings:
   sequence:
     - type: string
       label: 'Language'
+
+language.entity.*:
+  type: mapping
+  label: 'Language'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    uuid:
+      type: string
+      label: 'UUID'
+    label:
+      type: label
+      label: 'Language name'
+    direction:
+      type: boolean
+      label: 'Direction'
+    weight:
+      type: integer
+      label: 'Weight'
+    locked:
+      type: boolean
+      label: 'Locked'
+    status:
+      type: boolean
+      label: 'Status'
+    langcode:
+      type: string
+      label: 'Language code'

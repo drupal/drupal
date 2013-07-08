@@ -91,6 +91,13 @@ class MiniPagerTest extends PluginTestBase {
     $this->assertText('‹‹');
     $this->assertText($this->nodes[19]->label());
 
+    $this->drupalGet('test_mini_pager_all');
+    $this->assertNoText('‹‹ test', 'The previous link does not appear on the page.');
+    $this->assertText('Page 1', 'The current page info shows the only page.');
+    $this->assertNoText('test ››', 'The next link does not appear on the page.');
+    $result = $this->xpath('//div[contains(@class, "views-row")]');
+    $this->assertEqual(count($result), count($this->nodes), 'All rows appear on the page.');
+
     // Remove all items beside 1, so there should be no links shown.
     for ($i = 0; $i < 19; $i++) {
       $this->nodes[$i]->delete();
@@ -105,7 +112,7 @@ class MiniPagerTest extends PluginTestBase {
     $view = views_get_view('test_mini_pager');
     $this->executeView($view);
     $this->assertIdentical($view->get_total_rows, NULL, 'The query was not forced to calculate the total number of results.');
-    $this->assertIdentical($view->total_rows, NULL, 'The query did not return the total number of rows.');
+    $this->assertIdentical($view->total_rows, 1, 'The pager calculated the total number of rows.');
   }
 
 }

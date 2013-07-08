@@ -1,0 +1,6 @@
+function_template_override:
+  pattern: '/theme-test/function-template-overridden'
+  defaults:
+    _content: '\Drupal\theme_test\ThemeTestController::functionTemplateOverridden'
+  requirements:
+    _permission: 'access content'

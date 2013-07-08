@@ -9,7 +9,7 @@ namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\Context\ContextInterface;
-use Drupal\Core\KeyValueStore\KeyValueFactory;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\system\SystemConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -36,9 +36,9 @@ class CronForm extends SystemConfigFormBase {
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state
    *   The state key value store.
    */
-  public function __construct(ConfigFactory $config_factory, ContextInterface $context, KeyValueFactory $key_value_factory) {
+  public function __construct(ConfigFactory $config_factory, ContextInterface $context, KeyValueStoreInterface $state) {
     parent::__construct($config_factory, $context);
-    $this->state = $key_value_factory->get('state');
+    $this->state = $state;
   }
 
   /**
@@ -48,7 +48,7 @@ class CronForm extends SystemConfigFormBase {
     return new static(
       $container->get('config.factory'),
       $container->get('config.context.free'),
-      $container->get('keyvalue')
+      $container->get('state')
     );
   }
 

@@ -162,6 +162,14 @@ class ThemeTest extends WebTestBase {
   }
 
   /**
+   * Ensures a theme template can override a theme function.
+   */
+  function testFunctionOverride() {
+    $this->drupalGet('theme-test/function-template-overridden');
+    $this->assertText('Success: Template overrides theme function.', 'Theme function overridden by test_theme template.');
+  }
+
+  /**
    * Test the list_themes() function.
    */
   function testListThemes() {

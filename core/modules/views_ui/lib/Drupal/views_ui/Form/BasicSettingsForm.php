@@ -56,7 +56,7 @@ class BasicSettingsForm extends SystemConfigFormBase {
     $form['basic']['ui_show_display_embed'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show the embed display in the ui.'),
-      '#description' => t('Allow advanced user to use the embed view display. The plugin itself works if it\'s not visible in the ui'),
+      '#description' => t("Allow advanced user to use the embed view display. The plugin itself works if it's not visible in the ui"),
       '#default_value' => $config->get('ui.show.display_embed'),
     );
 

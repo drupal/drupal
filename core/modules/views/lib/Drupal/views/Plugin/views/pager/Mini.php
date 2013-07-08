@@ -57,7 +57,7 @@ class Mini extends SqlBase {
 
     // Don't query for the next page if we have a pager that has a limited
     // amount of pages.
-    if (empty($this->options['total_pages']) || ($this->getCurrentPage() < $this->options['total_pages'])) {
+    if ($this->getItemsPerPage() > 0 && (empty($this->options['total_pages']) || ($this->getCurrentPage() < $this->options['total_pages']))) {
       // Increase the items in the query in order to be able to find out whether
       // there is another page.
       $limit = $this->view->query->getLimit();
@@ -79,7 +79,7 @@ class Mini extends SqlBase {
   public function postExecute(&$result) {
     // In query() one more item might have been retrieved than necessary. If so,
     // the next link needs to be displayed and the item removed.
-    if (count($result) > $this->getItemsPerPage()) {
+    if ($this->getItemsPerPage() > 0 && count($result) > $this->getItemsPerPage()) {
       array_pop($result);
       // Make sure the pager shows the next link by setting the total items to
       // the biggest possible number but prevent failing calculations like
@@ -89,7 +89,7 @@ class Mini extends SqlBase {
     else {
       $total = $this->getCurrentPage() * $this->getItemsPerPage() + count($result);
     }
-    pager_default_initialize($total, $this->getItemsPerPage(), $this->options['id']);
+    $this->total_items = $total;
   }
 
   /**
