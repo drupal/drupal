@@ -150,6 +150,6 @@ class VocabularyTest extends TaxonomyTestBase {
     $this->drupalPost(NULL, NULL, t('Delete'));
     $this->assertRaw(t('Deleted vocabulary %name.', array('%name' => $vocabulary->name)), 'Vocabulary deleted.');
     $this->container->get('plugin.manager.entity')->getStorageController('taxonomy_vocabulary')->resetCache();
-    $this->assertFalse(taxonomy_vocabulary_load($vid), t('Vocabulary not found.'));
+    $this->assertFalse(taxonomy_vocabulary_load($vid), 'Vocabulary not found.');
   }
 }

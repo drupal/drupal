@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\System;
 
+use Drupal\Component\Utility\String;
 use Drupal\simpletest\WebTestBase;
 
 class DefaultMobileMetaTagsTest extends WebTestBase {
@@ -34,7 +35,7 @@ class DefaultMobileMetaTagsTest extends WebTestBase {
   public function testDefaultMetaTagsExist() {
     $this->drupalGet('');
     foreach ($this->default_metatags as $name => $metatag) {
-      $this->assertRaw($metatag, format_string('Default Mobile meta tag "@name" displayed properly.', array('@name' => $name)), t('System'));
+      $this->assertRaw($metatag, String::format('Default Mobile meta tag "@name" displayed properly.', array('@name' => $name)), 'System');
     }
   }
 
@@ -45,7 +46,7 @@ class DefaultMobileMetaTagsTest extends WebTestBase {
     module_enable(array('system_module_test'));
     $this->drupalGet('');
     foreach ($this->default_metatags as $name => $metatag) {
-      $this->assertNoRaw($metatag, format_string('Default Mobile meta tag "@name" removed properly.', array('@name' => $name)), t('System'));
+      $this->assertNoRaw($metatag, String::format('Default Mobile meta tag "@name" removed properly.', array('@name' => $name)), 'System');
     }
   }
 }

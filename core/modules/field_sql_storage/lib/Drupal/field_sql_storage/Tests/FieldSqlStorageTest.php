@@ -523,8 +523,8 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
 
     // Retrieve the field definition and check that the foreign key is in place.
     $field = field_info_field($field_name);
-    $this->assertEqual($schema['foreign keys'][$foreign_key_name]['table'], $foreign_key_name, t('Foreign key table name modified after update'));
-    $this->assertEqual($schema['foreign keys'][$foreign_key_name]['columns'][$foreign_key_name], 'id', t('Foreign key column name modified after update'));
+    $this->assertEqual($schema['foreign keys'][$foreign_key_name]['table'], $foreign_key_name, 'Foreign key table name modified after update');
+    $this->assertEqual($schema['foreign keys'][$foreign_key_name]['columns'][$foreign_key_name], 'id', 'Foreign key column name modified after update');
 
     // Verify the SQL schema.
     $schemas = _field_sql_storage_schema($field);

@@ -118,7 +118,7 @@ class UpdateTest extends DatabaseTestBase {
     $this->assertIdentical($num_rows, 4, 'Updated 4 records.');
 
     $saved_name = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => pow(26, 2)))->fetchField();
-    $this->assertIdentical($saved_name, 'Paul', t('Successfully updated values using an algebraic expression.'));
+    $this->assertIdentical($saved_name, 'Paul', 'Successfully updated values using an algebraic expression.');
   }
 
   /**
@@ -146,9 +146,9 @@ class UpdateTest extends DatabaseTestBase {
       ->fields(array('id' => 42, 'name' => 'John'))
       ->condition('id', 1)
       ->execute();
-    $this->assertIdentical($num_updated, 1, t('Updated 1 record.'));
+    $this->assertIdentical($num_updated, 1, 'Updated 1 record.');
 
     $saved_name= db_query('SELECT name FROM {test} WHERE id = :id', array(':id' => 42))->fetchField();
-    $this->assertIdentical($saved_name, 'John', t('Updated primary key successfully.'));
+    $this->assertIdentical($saved_name, 'John', 'Updated primary key successfully.');
   }
 }

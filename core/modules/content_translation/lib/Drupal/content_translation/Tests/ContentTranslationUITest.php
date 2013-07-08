@@ -50,7 +50,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     $values[$default_langcode] = $this->getNewEntityValues($default_langcode);
     $this->entityId = $this->createEntity($values[$default_langcode], $default_langcode);
     $entity = entity_load($this->entityType, $this->entityId, TRUE);
-    $this->assertTrue($entity, t('Entity found in the database.'));
+    $this->assertTrue($entity, 'Entity found in the database.');
 
     $translation = $this->getTranslation($entity, $default_langcode);
     foreach ($values[$default_langcode] as $property => $value) {

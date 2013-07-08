@@ -9,6 +9,7 @@ namespace Drupal\simpletest;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\String;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\ConnectionNotDefinedException;
@@ -482,7 +483,7 @@ abstract class WebTestBase extends TestBase {
     $account = entity_create('user', $edit);
     $account->save();
 
-    $this->assertTrue(!empty($account->uid), t('User created with name %name and pass %pass', array('%name' => $edit['name'], '%pass' => $edit['pass'])), t('User login'));
+    $this->assertTrue(!empty($account->uid), String::format('User created with name %name and pass %pass', array('%name' => $edit['name'], '%pass' => $edit['pass'])), 'User login');
     if (empty($account->uid)) {
       return FALSE;
     }
@@ -665,9 +666,9 @@ abstract class WebTestBase extends TestBase {
     // idea being if you were properly logged out you should be seeing a login
     // screen.
     $this->drupalGet('user/logout', array('query' => array('destination' => 'user')));
-    $this->assertResponse(200, t('User was logged out.'));
-    $pass = $this->assertField('name', t('Username field found.'), t('Logout'));
-    $pass = $pass && $this->assertField('pass', t('Password field found.'), t('Logout'));
+    $this->assertResponse(200, 'User was logged out.');
+    $pass = $this->assertField('name', 'Username field found.', 'Logout');
+    $pass = $pass && $this->assertField('pass', 'Password field found.', 'Logout');
 
     if ($pass) {
       // @see WebTestBase::drupalUserIsLoggedIn()
@@ -1102,8 +1103,8 @@ abstract class WebTestBase extends TestBase {
       '@status' => $status,
       '!length' => format_size(strlen($this->drupalGetContent()))
     );
-    $message = t('!method @url returned @status (!length).', $message_vars);
-    $this->assertTrue($this->drupalGetContent() !== FALSE, $message, t('Browser'));
+    $message = String::format('!method @url returned @status (!length).', $message_vars);
+    $this->assertTrue($this->drupalGetContent() !== FALSE, $message, 'Browser');
     return $this->drupalGetContent();
   }
 
@@ -2056,7 +2057,7 @@ abstract class WebTestBase extends TestBase {
       $url_target = $this->getAbsoluteUrl($urls[$index]['href']);
     }
 
-    $this->assertTrue(isset($urls[$index]), t('Clicked link %label (@url_target) from @url_before', array('%label' => $label, '@url_target' => $url_target, '@url_before' => $url_before)), t('Browser'));
+    $this->assertTrue(isset($urls[$index]), String::format('Clicked link %label (@url_target) from @url_before', array('%label' => $label, '@url_target' => $url_target, '@url_before' => $url_before)), 'Browser');
 
     if (isset($url_target)) {
       return $this->drupalGet($url_target);
