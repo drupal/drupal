@@ -172,14 +172,6 @@ function shortcut_set_switch_submit($form, &$form_state) {
 }
 
 /**
- * Page callback: provides the shortcut set creation form.
- */
-function shortcut_set_add() {
-  $entity = entity_create('shortcut', array());
-  return Drupal::entityManager()->getForm($entity);
-}
-
-/**
  * Form callback: builds the form for adding a new shortcut link.
  *
  * @param $form

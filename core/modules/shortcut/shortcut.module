@@ -91,10 +91,8 @@ function shortcut_menu() {
   );
   $items['admin/config/user-interface/shortcut/add-set'] = array(
     'title' => 'Add shortcut set',
-    'page callback' => 'shortcut_set_add',
-    'access arguments' => array('administer shortcuts'),
-    'type' => MENU_LOCAL_ACTION,
-    'file' => 'shortcut.admin.inc',
+    'route_name' => 'shortcut_set_add',
+    'type' => MENU_SIBLING_LOCAL_TASK,
   );
   $items['admin/config/user-interface/shortcut/manage/%shortcut_set'] = array(
     'title' => 'Edit shortcuts',
@@ -575,4 +573,19 @@ function shortcut_library_info() {
   );
 
   return $libraries;
+}
+
+/**
+ * Implements hook_local_actions.
+ */
+function shortcut_local_actions() {
+  return array(
+    array(
+      'route_name' => 'shortcut_set_add',
+      'title' => t('Add shortcut set'),
+      'appears_on' => array(
+        'shortcut_set_admin',
+      ),
+    ),
+  );
 }
