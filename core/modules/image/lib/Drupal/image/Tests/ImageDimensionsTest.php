@@ -44,7 +44,7 @@ class ImageDimensionsTest extends WebTestBase {
     $style = entity_create('image_style', array('name' => 'test', 'label' => 'Test'));
     $style->save();
     $generated_uri = 'public://styles/test/public/'. drupal_basename($original_uri);
-    $url = image_style_url('test', $original_uri);
+    $url = $style->buildUrl($original_uri);
 
     $variables = array(
       'style_name' => 'test',

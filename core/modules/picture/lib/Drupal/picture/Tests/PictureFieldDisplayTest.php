@@ -182,7 +182,8 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
     $display->setComponent($field_name, $display_options)
       ->save();
 
-    $this->drupalGet(image_style_url('large', $image_uri));
+    $large_style = entity_load('image_style', 'large');
+    $this->drupalGet($large_style->buildUrl($image_uri));
     $image_info['uri'] = $image_uri;
     $image_info['width'] = 480;
     $image_info['height'] = 240;
@@ -194,7 +195,7 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
     if ($scheme == 'private') {
       // Log out and try to access the file.
       $this->drupalLogout();
-      $this->drupalGet(image_style_url('large', $image_uri));
+      $this->drupalGet($large_style->buildUrl($image_uri));
       $this->assertResponse('403', 'Access denied to image style thumbnail as anonymous user.');
     }
   }

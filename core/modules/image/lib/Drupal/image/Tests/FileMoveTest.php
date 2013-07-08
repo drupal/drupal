@@ -39,8 +39,9 @@ class FileMoveTest extends ToolkitTestBase {
     // Create derivative image.
     $styles = entity_load_multiple('image_style');
     $style = image_style_load(key($styles));
-    $derivative_uri = image_style_path($style->id(), $file->getFileUri());
-    image_style_create_derivative($style, $file->getFileUri(), $derivative_uri);
+    $original_uri = $file->getFileUri();
+    $derivative_uri = $style->buildUri($original_uri);
+    $style->createDerivative($original_uri, $derivative_uri);
 
     // Check if derivative image exists.
     $this->assertTrue(file_exists($derivative_uri), 'Make sure derivative image is generated successfully.');

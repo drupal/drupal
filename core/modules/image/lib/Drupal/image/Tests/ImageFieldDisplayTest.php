@@ -112,7 +112,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Ensure the derivative image is generated so we do not have to deal with
     // image style callback paths.
-    $this->drupalGet(image_style_url('thumbnail', $image_uri));
+    $this->drupalGet(entity_load('image_style', 'thumbnail')->buildUrl($image_uri));
     $image_info['uri'] = $image_uri;
     $image_info['width'] = 100;
     $image_info['height'] = 50;
@@ -124,7 +124,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     if ($scheme == 'private') {
       // Log out and try to access the file.
       $this->drupalLogout();
-      $this->drupalGet(image_style_url('thumbnail', $image_uri));
+      $this->drupalGet(entity_load('image_style', 'thumbnail')->buildUrl($image_uri));
       $this->assertResponse('403', 'Access denied to image style thumbnail as anonymous user.');
     }
   }

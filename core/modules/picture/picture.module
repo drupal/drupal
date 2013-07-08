@@ -225,7 +225,7 @@ function theme_picture($variables) {
 
   // Fallback image, output as source with media query.
   $sources[] = array(
-    'src' => image_style_url($variables['style_name'], $variables['uri']),
+    'src' => entity_load('image_style', $variables['style_name'])->buildUrl($variables['uri']),
     'dimensions' => picture_get_image_dimensions($variables),
   );
 
@@ -244,7 +244,7 @@ function theme_picture($variables) {
       // Only one image, use src.
       if (count($new_sources) == 1) {
         $sources[] = array(
-          'src' => image_style_url($new_sources[0]['style_name'], $new_sources[0]['uri']),
+          'src' => entity_load('image_style', $new_sources[0]['style_name'])->buildUrl($new_sources[0]['uri']),
           'dimensions' => picture_get_image_dimensions($new_sources[0]),
           'media' => $breakpoint->mediaQuery,
         );
@@ -253,7 +253,7 @@ function theme_picture($variables) {
         // Multiple images, use srcset.
         $srcset = array();
         foreach ($new_sources as $new_source) {
-          $srcset[] = image_style_url($new_source['style_name'], $new_source['uri']) . ' ' . $new_source['#multiplier'];
+          $srcset[] = entity_load('image_style', $new_source['style_name'])->buildUrl($new_source['uri']) . ' ' . $new_source['#multiplier'];
         }
         $sources[] = array(
           'srcset' => implode(', ', $srcset),
@@ -338,7 +338,7 @@ function picture_get_image_dimensions($variables) {
     'height' => $variables['height'],
   );
 
-  image_style_transform_dimensions($variables['style_name'], $dimensions);
+  entity_load('image_style', $variables['style_name'])->transformDimensions($dimensions);
 
   return $dimensions;
 }

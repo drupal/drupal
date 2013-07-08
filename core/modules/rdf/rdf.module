@@ -344,7 +344,7 @@ function rdf_preprocess_field(&$variables) {
       // this field has a URI.
       if (isset($item['entity']->uri)) {
         if (!empty($element[$delta]['#image_style'])) {
-          $variables['item_attributes'][$delta]['resource'] = image_style_url($element[$delta]['#image_style'], $item['entity']->getFileUri());
+          $variables['item_attributes'][$delta]['resource'] = entity_load('image_style', $element[$delta]['#image_style'])->buildUrl($item['entity']->getFileUri());
         }
         else {
           $variables['item_attributes'][$delta]['resource'] = file_create_url($item['entity']->getFileUri());
