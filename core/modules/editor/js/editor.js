@@ -106,7 +106,14 @@ Drupal.editorAttach = function (field, format) {
       field.removeAttribute('required');
     }
 
+    // Attach the text editor.
     Drupal.editors[format.editor].attach(field, format);
+
+    // Ensures form.js' 'formUpdated' event is triggered even for changes that
+    // happen within the text editor.
+    Drupal.editors[format.editor].onChange(field, function () {
+      $(field).trigger('formUpdated');
+    });
   }
 };
 
