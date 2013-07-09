@@ -1,7 +1,7 @@
 services:
   plugin.manager.entity_reference.selection:
     class: Drupal\entity_reference\Plugin\Type\SelectionPluginManager
-    arguments: ['@container.namespaces']
+    arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
   entity_reference.autocomplete:
     class: Drupal\entity_reference\EntityReferenceAutocomplete
     arguments: ['@plugin.manager.entity']

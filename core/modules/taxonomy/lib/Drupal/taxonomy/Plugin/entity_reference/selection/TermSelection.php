@@ -7,17 +7,16 @@
 
 namespace Drupal\taxonomy\Plugin\entity_reference\selection;
 
-use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\entity_reference\Annotation\EntityReferenceSelection;
 use Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase;
 
 /**
  * Provides specific access control for the taxonomy_term entity type.
  *
- * @Plugin(
+ * @EntityReferenceSelection(
  *   id = "taxonomy_term_default",
- *   module = "taxonomy",
  *   label = @Translation("Taxonomy Term selection"),
  *   entity_types = {"taxonomy_term"},
  *   group = "default",
@@ -27,14 +26,14 @@ use Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase;
 class TermSelection extends SelectionBase {
 
   /**
-   * Overrides SelectionBase::entityQueryAlter().
+   * {@inheritdoc}
    */
   public function entityQueryAlter(SelectInterface $query) {
     // @todo: How to set access, as vocabulary is now config?
   }
 
   /**
-   * Overrides SelectionBase::settingsForm().
+   * {@inheritdoc}
    */
   public static function settingsForm(&$field, &$instance) {
     $form = parent::settingsForm($field, $instance);
@@ -49,9 +48,8 @@ class TermSelection extends SelectionBase {
 
   }
 
-
   /**
-   * Overrides SelectionBase::getReferenceableEntities().
+   * {@inheritdoc}
    */
   public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
     if ($match || $limit) {

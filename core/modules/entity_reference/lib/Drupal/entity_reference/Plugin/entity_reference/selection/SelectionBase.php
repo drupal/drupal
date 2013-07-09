@@ -7,21 +7,20 @@
 
 namespace Drupal\entity_reference\Plugin\entity_reference\selection;
 
-use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\entity_reference\Annotation\EntityReferenceSelection;
 use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
 
 /**
  * Plugin implementation of the 'selection' entity_reference.
  *
- * @Plugin(
+ * @EntityReferenceSelection(
  *   id = "default",
- *   module = "entity_reference",
  *   label = @Translation("Default"),
  *   group = "default",
  *   weight = 0,
@@ -53,7 +52,7 @@ class SelectionBase implements SelectionInterface {
   }
 
   /**
-   * Implements SelectionInterface::settingsForm().
+   * {@inheritdoc}
    */
   public static function settingsForm(&$field, &$instance) {
     $entity_info = entity_get_info($field['settings']['target_type']);
@@ -155,7 +154,7 @@ class SelectionBase implements SelectionInterface {
   }
 
   /**
-   * Implements SelectionInterface::getReferenceableEntities().
+   * {@inheritdoc}
    */
   public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
     $target_type = $this->fieldDefinition->getFieldSetting('target_type');
@@ -182,7 +181,7 @@ class SelectionBase implements SelectionInterface {
   }
 
   /**
-   * Implements SelectionInterface::countReferenceableEntities().
+   * {@inheritdoc}
    */
   public function countReferenceableEntities($match = NULL, $match_operator = 'CONTAINS') {
     $query = $this->buildEntityQuery($match, $match_operator);
@@ -192,7 +191,7 @@ class SelectionBase implements SelectionInterface {
   }
 
   /**
-   * Implements SelectionInterface::validateReferenceableEntities().
+   * {@inheritdoc}
    */
   public function validateReferenceableEntities(array $ids) {
     $result = array();
@@ -209,7 +208,7 @@ class SelectionBase implements SelectionInterface {
   }
 
   /**
-   * Implements SelectionInterface::validateAutocompleteInput().
+   * {@inheritdoc}
    */
   public function validateAutocompleteInput($input, &$element, &$form_state, $form, $strict = TRUE) {
     $entities = $this->getReferenceableEntities($input, '=', 6);
@@ -292,7 +291,7 @@ class SelectionBase implements SelectionInterface {
   }
 
   /**
-   * Implements SelectionInterface::entityQueryAlter().
+   * {@inheritdoc}
    */
   public function entityQueryAlter(SelectInterface $query) { }
 
