@@ -51,7 +51,7 @@ class SortTest extends ViewUnitTestBase {
     $this->executeView($view);
 
     // Verify the result.
-    $this->assertEqual(count($this->dataSet()), count($view->result), t('The number of returned rows match.'));
+    $this->assertEqual(count($this->dataSet()), count($view->result), 'The number of returned rows match.');
     $this->assertIdenticalResultset($view, $this->orderResultSet($this->dataSet(), 'age'), array(
       'views_test_data_name' => 'name',
       'views_test_data_age' => 'age',
@@ -75,7 +75,7 @@ class SortTest extends ViewUnitTestBase {
     $this->executeView($view);
 
     // Verify the result.
-    $this->assertEqual(count($this->dataSet()), count($view->result), t('The number of returned rows match.'));
+    $this->assertEqual(count($this->dataSet()), count($view->result), 'The number of returned rows match.');
     $this->assertIdenticalResultset($view, $this->orderResultSet($this->dataSet(), 'age', TRUE), array(
       'views_test_data_name' => 'name',
       'views_test_data_age' => 'age',
@@ -104,7 +104,7 @@ class SortTest extends ViewUnitTestBase {
     $this->executeView($view);
 
     // Verify the result.
-    $this->assertEqual(count($this->dataSet()), count($view->result), t('The number of returned rows match.'));
+    $this->assertEqual(count($this->dataSet()), count($view->result), 'The number of returned rows match.');
     $this->assertIdenticalResultset($view, $this->orderResultSet($this->dataSet(), 'name'), array(
       'views_test_data_name' => 'name',
       'views_test_data_age' => 'age',
@@ -128,7 +128,7 @@ class SortTest extends ViewUnitTestBase {
     $this->executeView($view);
 
     // Verify the result.
-    $this->assertEqual(count($this->dataSet()), count($view->result), t('The number of returned rows match.'));
+    $this->assertEqual(count($this->dataSet()), count($view->result), 'The number of returned rows match.');
     $this->assertIdenticalResultset($view, $this->orderResultSet($this->dataSet(), 'name', TRUE), array(
       'views_test_data_name' => 'name',
       'views_test_data_age' => 'age',

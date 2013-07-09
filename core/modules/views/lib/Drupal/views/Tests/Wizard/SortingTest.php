@@ -53,7 +53,7 @@ class SortingTest extends WizardTestBase {
     $pos1 = strpos($content, $node1->label());
     $pos2 = strpos($content, $node2->label());
     $pos3 = strpos($content, $node3->label());
-    $this->assertTrue($pos1 < $pos2 && $pos2 < $pos3, t('The nodes appear in the expected order in a view that sorts by oldest first.'));
+    $this->assertTrue($pos1 < $pos2 && $pos2 < $pos3, 'The nodes appear in the expected order in a view that sorts by oldest first.');
 
     // Create a view that sorts newest first.
     $view2 = array();
@@ -78,7 +78,7 @@ class SortingTest extends WizardTestBase {
     $pos3 = strpos($content, $node3->label());
     $pos2 = strpos($content, $node2->label());
     $pos1 = strpos($content, $node1->label());
-    $this->assertTrue($pos3 < $pos2 && $pos2 < $pos1, t('The nodes appear in the expected order in a view that sorts by newest first.'));
+    $this->assertTrue($pos3 < $pos2 && $pos2 < $pos1, 'The nodes appear in the expected order in a view that sorts by newest first.');
   }
 
 }

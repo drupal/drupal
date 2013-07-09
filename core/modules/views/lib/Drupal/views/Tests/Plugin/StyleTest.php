@@ -196,7 +196,7 @@ class StyleTest extends ViewTestBase {
     // The newer api passes the value of the grouping as well.
     $sets_new_rendered = $view->style_plugin->renderGrouping($view->result, $view->style_plugin->options['grouping'], TRUE);
 
-    $this->assertEqual($sets_new_rendered, $expected, t('The style plugins should proper group the results with grouping by the rendered output.'));
+    $this->assertEqual($sets_new_rendered, $expected, 'The style plugins should proper group the results with grouping by the rendered output.');
 
     // Don't test stripped case, because the actual value is not stripped.
     if (!$stripped) {
@@ -214,7 +214,7 @@ class StyleTest extends ViewTestBase {
       unset($expected['Job: Drummer']);
       unset($expected['Drummer']['rows']['Age: 28']);
 
-      $this->assertEqual($sets_new_value, $expected, t('The style plugins should proper group the results with grouping by the value.'));
+      $this->assertEqual($sets_new_value, $expected, 'The style plugins should proper group the results with grouping by the value.');
     }
   }
 

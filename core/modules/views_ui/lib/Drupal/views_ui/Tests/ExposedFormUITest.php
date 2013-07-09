@@ -84,7 +84,7 @@ class ExposedFormUITest extends UITestBase {
     // Now check the sort criteria.
     $this->drupalGet('admin/structure/views/nojs/config-item/test_exposed_admin_ui/default/sort/created');
     $this->helperButtonHasLabel('edit-options-expose-button-button', t('Expose sort'));
-    $this->assertNoFieldById('edit-options-expose-label', '', t('Make sure no label field is shown'));
+    $this->assertNoFieldById('edit-options-expose-label', '', 'Make sure no label field is shown');
 
     // Click the Grouped Filters button.
     $this->drupalGet('admin/structure/views/nojs/config-item/test_exposed_admin_ui/default/filter/type');
@@ -140,7 +140,7 @@ class ExposedFormUITest extends UITestBase {
     $edit["options[group_info][group_items][3][value][article]"] = TRUE;
     $edit["options[group_info][group_items][3][value][page]"] = TRUE;
     $this->drupalPost(NULL, $edit, t('Apply'));
-    $this->assertRaw(t('The title is required if value for this item is defined.'), t('Group items should have a title'));
+    $this->assertRaw(t('The title is required if value for this item is defined.'), 'Group items should have a title');
 
     // Un-expose the filter.
     $this->drupalGet('admin/structure/views/nojs/config-item/test_exposed_admin_ui/default/filter/type');
@@ -157,6 +157,6 @@ class ExposedFormUITest extends UITestBase {
     $this->drupalPost('admin/structure/views/nojs/config-item/test_exposed_admin_ui/default/sort/created', $edit, t('Expose sort'));
     // Check the label of the expose button.
     $this->helperButtonHasLabel('edit-options-expose-button-button', t('Hide sort'));
-    $this->assertFieldById('edit-options-expose-label', '', t('Make sure a label field is shown'));
+    $this->assertFieldById('edit-options-expose-label', '', 'Make sure a label field is shown');
   }
 }
