@@ -7,10 +7,13 @@
 
 namespace Drupal\serialization\Tests;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 
-class SerializationTest extends WebTestBase {
+/**
+ * Tests generic registration of module provided normalizers and encoders.
+ */
+class SerializationTest extends DrupalUnitTestBase {
 
   /**
    * Modules to enable.
@@ -56,6 +59,7 @@ class SerializationTest extends WebTestBase {
       $this->fail('The serializer was expected to throw an exception for an unsupported format, but did not.');
     }
     catch (UnexpectedValueException $e) {
+      $this->pass('The serializer threw an exception for an unsupported format.');
     }
   }
 }
