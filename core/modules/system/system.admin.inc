@@ -5,15 +5,12 @@
  * Admin page callbacks for the system module.
  */
 
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\ReplaceCommand;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Drupal\system\DateFormatInterface;
+use Drupal\system\Form\ModulesInstallConfirmForm;
+use Drupal\system\Form\ModulesUninstallConfirmForm;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\system\Form\ModulesInstallConfirmForm;
-use Drupal\system\Form\ModulesUninstallConfirmForm;
 
 /**
  * Menu callback; Provide the administration overview page.
@@ -1321,69 +1318,6 @@ function theme_system_themes_page($variables) {
 }
 
 /**
- * Displays the date format strings overview page.
- */
-function system_date_time_formats() {
-  $header = array(
-    array('data' => t('Machine name'), 'field' => 'machine_name'),
-    array('data' => t('Name'), 'field' => 'name'),
-    array('data' => t('Pattern'), 'field' => 'pattern'),
-    array('data' => t('Operations'))
-  );
-  $rows = array();
-
-  $formats = system_get_date_formats();
-
-  if (!empty($formats)) {
-    foreach ($formats as $date_format_id => $format_info) {
-      // Do not display date formats that are locked.
-      if (empty($format_info['locked'])) {
-        $row = array();
-        $row[] = array('data' => $date_format_id);
-        $row[] = array('data' => $format_info['name']);
-        $row[] = array('data' => format_date(REQUEST_TIME, $date_format_id));
-
-        // Prepare Operational links.
-        $links = array();
-        $links['edit'] = array(
-          'title' => t('Edit'),
-          'href' => 'admin/config/regional/date-time/formats/' . $date_format_id . '/edit',
-        );
-        $links['delete'] = array(
-          'title' => t('Delete'),
-          'href' => 'admin/config/regional/date-time/formats/' . $date_format_id . '/delete',
-        );
-        $row['operations'] = array('data' => array(
-          '#type' => 'operations',
-          '#links' => $links,
-        ));
-
-        $rows[] = $row;
-      }
-    }
-  }
-
-  $build['date_formats_table'] = array(
-    '#theme' => 'table',
-    '#header' => $header,
-    '#rows' => $rows,
-    '#empty' => t('No custom date formats available. <a href="@link">Add date format</a>.', array('@link' => url('admin/config/regional/date-time/formats/add'))),
-  );
-
-  return $build;
-}
-
-/**
- * Checks if the chosen machine_name exists or not.
- */
-function system_date_format_exists($candidate_machine_name) {
-  if ($formats = system_get_date_formats()) {
-    return array_key_exists($candidate_machine_name, $formats);
-  }
-  return FALSE;
-}
-
-/**
  * Page callback: Displays edit date format links for each language.
  *
  * @see locale_menu()
@@ -1440,25 +1374,23 @@ function system_date_format_localize_form($form, &$form_state, $langcode) {
   );
 
   // Get list of available formats.
-  $formats = system_get_date_formats();
+  $date_service = Drupal::service('date');
+  $formats = Drupal::entityManager()
+    ->getStorageController('date_format')
+    ->loadMultiple();
   $choices = array();
   foreach ($formats as $date_format_id => $format_info) {
     // Ignore values that are localized.
-    if (empty($format_info['locales'])) {
-      $choices[$date_format_id] = format_date(REQUEST_TIME, $date_format_id);
-    }
-    else {
-      unset($formats[$date_format_id]);
+    if (!$format_info->hasLocales()) {
+      $choices[$date_format_id] = $date_service->format(REQUEST_TIME, $date_format_id);
     }
   }
 
   // Get configured formats for each language.
-  $locale_formats = system_date_format_locale($langcode);
-  if (!empty($locale_formats)) {
-    $formats += $locale_formats;
-    foreach ($locale_formats as $date_format_id => $format_info) {
-      $choices[$date_format_id] = format_date(REQUEST_TIME, $date_format_id);
-    }
+  $config_prefix = 'locale.config.' . $langcode . '.system.date_format.';
+  foreach (config_get_storage_names_with_prefix($config_prefix) as $config_id) {
+    $date_format_id = substr($config_id, strlen($config_prefix));
+    $choices[$date_format_id] = $date_service->format(REQUEST_TIME, $date_format_id);
   }
 
   // Display a form field for each format type.
@@ -1466,7 +1398,7 @@ function system_date_format_localize_form($form, &$form_state, $langcode) {
     // Show date format select list.
     $form['date_formats']['date_format_' . $date_format_id] = array(
       '#type' => 'select',
-      '#title' => check_plain($format_info['name']),
+      '#title' => check_plain($format_info->label()),
       '#attributes' => array('class' => array('date-format')),
       '#default_value' => isset($choices[$date_format_id]) ? $date_format_id : 'custom',
       '#options' => $choices,
@@ -1483,32 +1415,16 @@ function system_date_format_localize_form($form, &$form_state, $langcode) {
 }
 
 /**
- * Ajax callback; Returns the date for a given format string.
- */
-function system_date_time_lookup($form, &$form_state) {
-  $format = '';
-  if (!empty($form_state['values']['date_format_pattern'])) {
-    $format = t('Displayed as %date_format', array('%date_format' => format_date(REQUEST_TIME, 'custom', $form_state['values']['date_format_pattern'])));
-  }
-  // Return a command instead of a string, since the Ajax framework
-  // automatically prepends an additional empty DIV element for a string, which
-  // breaks the layout.
-  $response = new AjaxResponse();
-  $response->addCommand(new ReplaceCommand('#edit-date-format-suffix', '<small id="edit-date-format-suffix">' . $format . '</small>'));
-  return $response;
-}
-
-/**
  * Form submission handler for system_date_format_localize_form().
  */
 function system_date_format_localize_form_submit($form, &$form_state) {
   $langcode = $form_state['values']['langcode'];
 
-  $formats = system_get_date_formats();
+  $formats = entity_load_multiple('date_format');
   foreach ($formats as $date_format_id => $format_info) {
     if (isset($form_state['values']['date_format_' . $date_format_id])) {
       $format = $form_state['values']['date_format_' . $date_format_id];
-      system_date_format_localize_form_save($langcode, $date_format_id, $formats[$format]['pattern']);
+      system_date_format_localize_form_save($langcode, $date_format_id, $formats[$format]);
     }
   }
   drupal_set_message(t('Configuration saved.'));
@@ -1549,16 +1465,17 @@ function theme_system_date_format_localize_form($variables) {
 /**
  * Save locale specific date formats to the database.
  *
- * @param $langcode
+ * @param string $langcode
  *   Language code, can be 2 characters, e.g. 'en' or 5 characters, e.g.
  *   'en-CA'.
- * @param $date_format_id
+ * @param string $date_format_id
  *   Date format id, e.g. 'short', 'medium'.
- * @param $format
- *   The date format string.
+ * @param \Drupal\system\DateFormatInterface $format
+ *   The date format entity.
  */
-function system_date_format_localize_form_save($langcode, $date_format_id, $format) {
-  config('locale.config.' . $langcode . '.system.date')
-    ->set('formats.' . $date_format_id . '.pattern', $format)
+function system_date_format_localize_form_save($langcode, $date_format_id, DateFormatInterface $format) {
+  $format->addLocale($langcode)->save();
+  config('locale.config.' . $langcode . '.system.date_format.' . $date_format_id)
+    ->set('pattern', $format->get('pattern'))
     ->save();
 }

@@ -7,59 +7,47 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Datetime\Date;
+use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Builds a form to delete a date format.
  */
-class DateFormatDeleteForm extends ConfirmFormBase implements ControllerInterface {
+class DateFormatDeleteForm extends EntityConfirmFormBase implements EntityControllerInterface {
 
   /**
-   * The date format data to be deleted.
+   * The date service.
    *
-   * @var array
+   * @var \Drupal\Core\Datetime\Date
    */
-  protected $format;
+  protected $dateService;
 
   /**
-   * The ID of the date format to be deleted.
+   * Constructs an DateFormatDeleteForm object.
    *
-   * @var string
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
+   * @param \Drupal\Core\Datetime\Date $date_service
+   *   The date service.
    */
-  protected $formatID;
+  public function __construct(ModuleHandlerInterface $module_handler, Date $date_service) {
+    parent::__construct($module_handler);
 
-  /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactory
-   */
-  protected $configFactory;
-
-  /**
-   * Constructs a DateFormatDeleteForm object.
-   */
-  public function __construct(ConfigFactory $config_factory) {
-    $this->configFactory = $config_factory;
+    $this->dateService = $date_service;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
-      $container->get('config.factory')
+      $container->get('module_handler'),
+      $container->get('date')
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFormID() {
-    return 'system_date_delete_format_form';
   }
 
   /**
@@ -67,8 +55,8 @@ class DateFormatDeleteForm extends ConfirmFormBase implements ControllerInterfac
    */
   public function getQuestion() {
     return t('Are you sure you want to remove the format %name : %format?', array(
-      '%name' => $this->format['name'],
-      '%format' => format_date(REQUEST_TIME, $this->formatID))
+      '%name' => $this->entity->label(),
+      '%format' => $this->dateService->format(REQUEST_TIME, $this->entity->id()))
     );
   }
 
@@ -83,31 +71,17 @@ class DateFormatDeleteForm extends ConfirmFormBase implements ControllerInterfac
    * {@inheritdoc}
    */
   public function getCancelPath() {
-    return 'admin/config/regional/date-time/formats';
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @param string $format_id
-   *   The date format ID.
-   */
-  public function buildForm(array $form, array &$form_state, $format_id = NULL, Request $request = NULL) {
-    // We don't get the format ID in the returned format array.
-    $this->formatID = $format_id;
-    $this->format = $this->configFactory->get('system.date')->get("formats.$format_id");
-
-    return parent::buildForm($form, $form_state, $request);
+    return 'admin/config/regional/date-time';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
-    system_date_format_delete($this->formatID);
-    drupal_set_message(t('Removed date format %format.', array('%format' => $this->format['name'])));
+  public function submit(array $form, array &$form_state) {
+    $this->entity->delete();
+    drupal_set_message(t('Removed date format %format.', array('%format' => $this->entity->label())));
 
-    $form_state['redirect'] = 'admin/config/regional/date-time/formats';
+    $form_state['redirect'] = 'admin/config/regional/date-time';
   }
 
 }

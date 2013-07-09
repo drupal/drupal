@@ -948,22 +948,14 @@ function locale_update_8015() {
  * Converts localized date formats.
  */
 function locale_update_8016() {
-  $configs = array();
-
   // Fetch all date types from {date_format_type}.
   $result = db_query('SELECT * FROM {date_format_locale}');
   foreach ($result as $format) {
     $language = $format->language;
     // Create config objects for the language if not yet done.
-    if (!isset($configs[$language])) {
-      $configs[$language] = config('locale.config.' . $language . '.system.date');
-    }
-    $configs[$language]->set('formats.' . $format->type . '.pattern.php', $format->format);
-  }
-
-  // Save all instantiated config objects.
-  foreach ($configs as $config) {
-    $config->save();
+    config("locale.config.$language.system.date_format." . $format->type)
+      ->set('pattern.php', $format->format)
+      ->save();
   }
 }
 

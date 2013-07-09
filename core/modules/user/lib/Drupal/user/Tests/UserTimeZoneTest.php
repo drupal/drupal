@@ -30,8 +30,8 @@ class UserTimeZoneTest extends WebTestBase {
       ->set('user.configurable', 1)
       ->set('default', 'America/Los_Angeles')
       ->save();
-    config('system.date')
-      ->set('formats.medium.pattern.php', 'Y-m-d H:i T')
+    entity_load('date_format', 'medium')
+      ->setPattern('Y-m-d H:i T')
       ->save();
 
     // Create a user account and login.

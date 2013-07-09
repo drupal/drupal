@@ -1,0 +1,10 @@
+id: html_month
+uuid: f85dd1b6-0edb-4024-a800-bb8c87805b2b
+label: 'HTML Month'
+status: '1'
+langcode: en
+locked: '1'
+locales: {  }
+pattern:
+  php: Y-m
+  intl: Y-MM

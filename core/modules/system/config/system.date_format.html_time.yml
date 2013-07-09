@@ -1,0 +1,10 @@
+id: html_time
+uuid: f8e87532-396e-4353-b02c-4493d2031bc6
+label: 'HTML Time'
+status: '1'
+langcode: en
+locked: '1'
+locales: {  }
+pattern:
+  php: 'H:i:s'
+  intl: 'H:mm:ss'

@@ -74,20 +74,6 @@ system_site_maintenance_mode:
   requirements:
     _permission: 'administer site configuration'
 
-date_format_add:
-  pattern: '/admin/config/regional/date-time/formats/add'
-  defaults:
-    _form: '\Drupal\system\Form\DateFormatAddForm'
-  requirements:
-    _permission: 'administer site configuration'
-
-date_format_edit:
-  pattern: '/admin/config/regional/date-time/formats/{date_format_id}/edit'
-  defaults:
-    _form: '\Drupal\system\Form\DateFormatEditForm'
-  requirements:
-    _permission: 'administer site configuration'
-
 system_run_cron:
   pattern: '/admin/reports/status/run-cron'
   defaults:
@@ -95,12 +81,33 @@ system_run_cron:
   requirements:
     _permission: 'administer site configuration'
 
-date_format_delete:
-  pattern: 'admin/config/regional/date-time/formats/{format_id}/delete'
+date_format_list:
+  pattern: '/admin/config/regional/date-time'
   defaults:
-    _form: '\Drupal\system\Form\DateFormatDeleteForm'
+    _entity_list: 'date_format'
   requirements:
     _permission: 'administer site configuration'
+
+date_format_add:
+  pattern: '/admin/config/regional/date-time/formats/add'
+  defaults:
+    _entity_form: 'date_format.add'
+  requirements:
+    _permission: 'administer site configuration'
+
+date_format_edit:
+  pattern: '/admin/config/regional/date-time/formats/manage/{date_format}'
+  defaults:
+    _entity_form: 'date_format.edit'
+  requirements:
+    _entity_access: 'date_format.update'
+
+date_format_delete:
+  pattern: 'admin/config/regional/date-time/formats/manage/{date_format}/delete'
+  defaults:
+    _entity_form: 'date_format.delete'
+  requirements:
+    _entity_access: 'date_format.delete'
 
 date_format_localize_reset:
   pattern: 'admin/config/regional/date-time/locale/{langcode}/reset'

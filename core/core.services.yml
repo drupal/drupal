@@ -490,7 +490,7 @@ services:
     arguments: ['@module_handler']
   date:
     class: Drupal\Core\Datetime\Date
-    arguments: ['@config.factory', '@language_manager']
+    arguments: ['@plugin.manager.entity', '@language_manager']
   feed.bridge.reader:
     class: Drupal\Component\Bridge\ZfExtensionManagerSfContainer
     calls:

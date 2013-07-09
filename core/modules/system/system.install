@@ -4,7 +4,9 @@
  * @file
  * Install, update and uninstall functions for the system module.
  */
+
 use Drupal\Component\Utility\Crypt;
+use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\Language;
@@ -1880,33 +1882,51 @@ function system_update_8044() {
 
 /**
  * Convert existing date formats to the new config system.
+ *
+ * @ingroup config_upgrade
  */
 function system_update_8045() {
-  // Get the date config object.
-  $config = config('system.date');
-
+  $uuid = new Uuid();
   // Fetch all date types from {date_format_type}.
   $date_formats = db_query('SELECT * FROM {date_format_type}')->fetchAllAssoc('type', PDO::FETCH_ASSOC);
   if (!empty($date_formats)) {
     foreach ($date_formats as $type => $format) {
       // Set name and locked properties.
-      $config->set("formats.{$type}.name", $format['title']);
-      $config->set("formats.{$type}.locked", $format['locked']);
+      $config = config("system.date_format.$type")
+        ->set('id', $type)
+        ->set('label', $format['title'])
+        ->set('locked', $format['locked'])
+        ->set('status', 1)
+        ->set('uuid', $uuid->generate());
 
       // Get the default date format for this type.
       $variable_name = 'date_format_' . $type;
       $default_format = update_variable_get($variable_name, NULL);
       if ($default_format) {
         // In Drupal 7 we only used PHP date types.
-        $config->set("formats.{$type}.pattern.php", $default_format);
+        $config->set('pattern.php', $default_format);
 
         // Delete the migrated variables.
         update_variable_del($variable_name);
       }
+      // Save the date configuration object.
+      $config->save();
     }
+  }
 
-    // Save the date configuration object.
-    $config->save();
+  // Install the new HTML date formats.
+  $new_formats = array(
+    'system.date_format.fallback',
+    'system.date_format.html_date',
+    'system.date_format.html_datetime',
+    'system.date_format.html_month',
+    'system.date_format.html_time',
+    'system.date_format.html_week',
+    'system.date_format.html_year',
+    'system.date_format.html_yearless_date',
+  );
+  foreach ($new_formats as $new_format) {
+    update_7_to_8_install_default_config('module', $new_format);
   }
 }
 

@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Contains \Drupal\Component\Datetime\Date.
+ * Contains \Drupal\Core\Datetime\Date.
  */
 
 namespace Drupal\Core\Datetime;
 
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 
@@ -26,11 +26,11 @@ class Date {
   protected $timezones;
 
   /**
-   * The config factory.
+   * The date format storage.
    *
-   * @var \Drupal\Core\Config\ConfigFactory
+   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
    */
-  protected $configFactory;
+  protected $dateFormatStorage;
 
   /**
    * Language manager for retrieving the default langcode when none is specified.
@@ -40,15 +40,15 @@ class Date {
   protected $languageManager;
 
   /**
-   * Constructs a DateFormats object.
+   * Constructs a Date object.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
-   *   The config factory.
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
    */
-  public function __construct(ConfigFactory $config_factory, LanguageManager $language_manager) {
-    $this->configFactory = $config_factory;
+  public function __construct(EntityManager $entity_manager, LanguageManager $language_manager) {
+    $this->dateFormatStorage = $entity_manager->getStorageController('date_format');
     $this->languageManager = $language_manager;
   }
 
@@ -103,14 +103,13 @@ class Date {
     $key = $date->canUseIntl() ? DrupalDateTime::INTL : DrupalDateTime::PHP;
 
     // If we have a non-custom date format use the provided date format pattern.
-    $config = $this->configFactory->get('system.date');
-    if ($type != 'custom') {
-      $format = $config->get('formats.' . $type . '.pattern.' . $key);
+    if ($date_format = $this->dateFormatStorage->load($type)) {
+      $format = $date_format->getPattern($key);
     }
 
     // Fall back to medium if a format was not found.
     if (empty($format)) {
-      $format = $config->get('formats.medium.pattern.' . $key);
+      $format = $this->dateFormatStorage->load('fallback')->getPattern($key);
     }
 
     // Call $date->format().

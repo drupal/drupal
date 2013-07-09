@@ -32,16 +32,27 @@ const DATETIME_DATE_STORAGE_FORMAT = 'Y-m-d';
 function datetime_element_info() {
   $format_type = datetime_default_format_type();
 
+  $date_format = '';
+  $time_format = '';
+  // Date formats cannot be loaded during install or update.
+  if (!defined('MAINTENANCE_MODE')) {
+    if ($date_format_entity = entity_load('date_format', 'html_date')) {
+      $date_format = $date_format_entity->getPattern($format_type);
+    }
+    if ($time_format_entity = entity_load('date_format', 'html_time')) {
+      $time_format = $time_format_entity->getPattern($format_type);
+    }
+  }
   $types['datetime'] = array(
     '#input' => TRUE,
     '#element_validate' => array('datetime_datetime_validate'),
     '#process' => array('datetime_datetime_form_process'),
     '#theme' => 'datetime_form',
     '#theme_wrappers' => array('datetime_wrapper'),
-    '#date_date_format' => config('system.date')->get('formats.html_date.pattern.' . $format_type),
+    '#date_date_format' => $date_format,
     '#date_date_element' => 'date',
     '#date_date_callbacks' => array(),
-    '#date_time_format' => config('system.date')->get('formats.html_time.pattern.' . $format_type),
+    '#date_time_format' => $time_format,
     '#date_time_element' => 'time',
     '#date_time_callbacks' => array(),
     '#date_year_range' => '1900:2050',
@@ -429,7 +440,7 @@ function theme_datetime_wrapper($variables) {
  *     list of the possible formats and HTML5 standards for the HTML5
  *     requirements. Defaults to the right HTML5 format for the chosen element
  *     if a HTML5 element is used, otherwise defaults to
- *     config('system.date')->get('formats.html_date.pattern.php').
+ *     entity_load('date_format', 'html_date')->getPattern().
  *   - #date_date_element: The date element. Options are:
  *     - datetime: Use the HTML5 datetime element type.
  *     - datetime-local: Use the HTML5 datetime-local element type.
@@ -449,7 +460,7 @@ function theme_datetime_wrapper($variables) {
  *     a list of the possible formats and HTML5 standards for the HTML5
  *     requirements. Defaults to the right HTML5 format for the chosen element
  *     if a HTML5 element is used, otherwise defaults to
- *     config('system.date')->get('formats.html_time.pattern.php').
+ *     entity_load('date_format', 'html_time')->getPattern().
  *   - #date_time_callbacks: An array of optional callbacks for the time
  *     element. Can be used to add a jQuery timepicker or an 'All day' checkbox.
  *   - #date_year_range: A description of the range of years to allow, like
@@ -710,11 +721,11 @@ function datetime_html5_format($part, $element) {
     case 'date':
       switch ($element['#date_date_element']) {
         case 'date':
-          return config('system.date')->get('formats.html_date.pattern.' . $format_type);
+          return entity_load('date_format', 'html_date')->getPattern($format_type);
 
         case 'datetime':
         case 'datetime-local':
-          return config('system.date')->get('formats.html_datetime.pattern.' . $format_type);
+          return entity_load('date_format', 'html_datetime')->getPattern($format_type);
 
         default:
           return $element['#date_date_format'];
@@ -724,7 +735,7 @@ function datetime_html5_format($part, $element) {
     case 'time':
       switch ($element['#date_time_element']) {
         case 'time':
-          return config('system.date')->get('formats.html_time.pattern.' . $format_type);
+          return entity_load('date_format', 'html_time')->getPattern($format_type);
 
         default:
           return $element['#date_time_format'];
@@ -1140,9 +1151,9 @@ function datetime_form_node_form_alter(&$form, &$form_state, $form_id) {
 
   // Alter the 'Authored on' date to use datetime.
   $form['author']['date']['#type'] = 'datetime';
-  $config = Drupal::config('system.date');
-  $format = $config->get('formats.html_date.pattern.' . $format_type) . ' ' . $config->get('formats.html_time.pattern.' . $format_type);
-  $form['author']['date']['#description'] = t('Format: %format. Leave blank to use the time of form submission.', array('%format' => datetime_format_example($format)));
+  $date_format = entity_load('date_format', 'html_date')->getPattern($format_type);
+  $time_format = entity_load('date_format', 'html_time')->getPattern($format_type);
+  $form['author']['date']['#description'] = t('Format: %format. Leave blank to use the time of form submission.', array('%format' => datetime_format_example($date_format . ' ' . $time_format)));
   unset($form['author']['date']['#maxlength']);
 }
 
