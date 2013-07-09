@@ -2772,6 +2772,13 @@ function template_preprocess_page(&$variables) {
   if ($suggestions = theme_get_suggestions(arg(), 'page')) {
     $variables['theme_hook_suggestions'] = $suggestions;
   }
+
+  // Prepare render array for messages. drupal_get_messages() is called later,
+  // when this variable is rendered in a theme function or template file.
+  $variables['messages'] = array(
+    '#theme' => 'status_messages',
+    '#access' => $variables['show_messages'],
+  );
 }
 
 /**
@@ -2797,11 +2804,6 @@ function template_process_page(&$variables) {
     $variables['title'] = drupal_get_title();
   }
 
-  // Generate messages last in order to capture as many as possible for the
-  // current page.
-  if (!isset($variables['messages'])) {
-    $variables['messages'] = $variables['show_messages'] ? array('#theme' => 'status_messages') : '';
-  }
 }
 
 /**

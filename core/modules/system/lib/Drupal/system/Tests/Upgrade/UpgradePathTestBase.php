@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DrupalKernel;
+use Drupal\Core\Session\UserSession;
 use Drupal\simpletest\WebTestBase;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
@@ -148,15 +149,12 @@ abstract class UpgradePathTestBase extends WebTestBase {
     // Ensure that the session is not written to the new environment and replace
     // the global $user session with uid 1 from the new test site.
     drupal_save_session(FALSE);
-    // Login as uid 1.
-    $user = db_query('SELECT * FROM {users} WHERE uid = :uid', array(':uid' => 1))->fetchObject();
-    // Load roles for the user object.
-    $roles = array(DRUPAL_AUTHENTICATED_RID => DRUPAL_AUTHENTICATED_RID);
-    $result = db_query('SELECT rid, uid FROM {users_roles} WHERE uid = :uid', array(':uid' => 1));
-    foreach ($result as $record) {
-      $roles[$record->rid] = $record->rid;
-    }
-    $user->roles = $roles;
+    // Load values for uid 1.
+    $values = db_query('SELECT * FROM {users} WHERE uid = :uid', array(':uid' => 1))->fetchAssoc();
+    // Load rolest.
+    $values['roles'] = array_merge(array(DRUPAL_AUTHENTICATED_RID), db_query('SELECT rid FROM {users_roles} WHERE uid = :uid', array(':uid' => 1))->fetchCol());
+    // Create a new user session object.
+    $user = new UserSession($values);
 
     // Generate and set a D8-compatible session cookie.
     $this->prepareD8Session();

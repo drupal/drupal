@@ -66,6 +66,27 @@ class UserSession implements AccountInterface {
   public $timestamp;
 
   /**
+   * The name of this account.
+   *
+   * @var string
+   */
+  public $name;
+
+  /**
+   * The preferred language code of the account.
+   *
+   * @var string
+   */
+  protected $preferred_langcode;
+
+  /**
+   * The preferred administrative language code of the account.
+   *
+   * @var string
+   */
+  protected $preferred_admin_langcode;
+
+  /**
    * Constructs a new user session.
    *
    * @param array $values
@@ -110,6 +131,55 @@ class UserSession implements AccountInterface {
    */
   public function getSessionId() {
     return $this->sid;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isAuthenticated() {
+    return $this->uid > 0;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isAnonymous() {
+    return $this->uid == 0;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function getPreferredLangcode($default = NULL) {
+    $language_list = language_list();
+    if (!empty($this->preferred_langcode) && isset($language_list[$this->preferred_langcode])) {
+      return $language_list[$this->preferred_langcode]->id;
+    }
+    else {
+      return $default ? $default : language_default()->id;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function getPreferredAdminLangcode($default = NULL) {
+    $language_list = language_list();
+    if (!empty($this->preferred_admin_langcode) && isset($language_list[$this->preferred_admin_langcode])) {
+      return $language_list[$this->preferred_admin_langcode]->id;
+    }
+    else {
+      return $default ? $default : language_default()->id;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUsername() {
+    $name = $this->name ?: \Drupal::config('user.settings')->get('anonymous');
+    \Drupal::moduleHandler()->alter('user_format_name', $name, $this);
+    return $name;
   }
 
 }

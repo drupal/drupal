@@ -29,7 +29,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
     $path = $request->attributes->get('system_path');
     if ($site_status == MENU_SITE_OFFLINE) {
       // If the site is offline, log out unprivileged users.
-      if (user_is_logged_in() && !user_access('access site in maintenance mode')) {
+      if ($GLOBALS['user']->isAuthenticated() && !user_access('access site in maintenance mode')) {
         user_logout();
         // Redirect to homepage.
         $event->setResponse(new RedirectResponse(url('<front>', array('absolute' => TRUE))));
@@ -56,7 +56,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
         }
       }
     }
-    if (user_is_logged_in()) {
+    if ($GLOBALS['user']->isAuthenticated()) {
       if ($path == 'user/login') {
         // If user is logged in, redirect to 'user' instead of giving 403.
         $event->setResponse(new RedirectResponse(url('user', array('absolute' => TRUE))));
@@ -64,7 +64,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
       }
       if ($path == 'user/register') {
         // Authenticated user should be redirected to user edit page.
-        $event->setResponse(new RedirectResponse(url('user/' . $GLOBALS['user']->uid . '/edit', array('absolute' => TRUE))));
+        $event->setResponse(new RedirectResponse(url('user/' . $GLOBALS['user']->id() . '/edit', array('absolute' => TRUE))));
         return;
       }
     }

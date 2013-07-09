@@ -124,7 +124,6 @@ class DbLogController implements ControllerInterface {
     $query = $this->database->select('watchdog', 'w')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
       ->extend('Drupal\Core\Database\Query\TableSortExtender');
-    $query->leftJoin('users', 'u', 'w.uid = u.uid');
     $query->fields('w', array(
       'wid',
       'uid',
@@ -134,8 +133,7 @@ class DbLogController implements ControllerInterface {
       'message',
       'variables',
       'link',
-      ));
-    $query->addField('u', 'name');
+    ));
 
     if (!empty($filter['where'])) {
       $query->where($filter['where'], $filter['args']);
@@ -164,7 +162,7 @@ class DbLogController implements ControllerInterface {
       }
       $username = array(
         '#theme' => 'username',
-        '#account' => $dblog,
+        '#account' => user_load($dblog->uid),
       );
       $rows[] = array(
         'data' => array(

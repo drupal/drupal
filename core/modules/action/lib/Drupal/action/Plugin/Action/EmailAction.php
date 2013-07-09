@@ -86,7 +86,7 @@ class EmailAction extends ConfigurableActionBase {
     $recipient_accounts = $this->storageController->loadByProperties(array('mail' => $recipient));
     $recipient_account = reset($recipient_accounts);
     if ($recipient_account) {
-      $langcode = user_preferred_langcode($recipient_account);
+      $langcode = $recipient_account->getPreferredLangcode();
     }
     else {
       $langcode = language_default()->id;

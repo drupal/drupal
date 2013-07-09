@@ -253,7 +253,7 @@ function node_revision_overview($node) {
     if ($revision->current_vid > 0) {
       $username = array(
         '#theme' => 'username',
-        '#account' => $revision,
+        '#account' => user_load($revision->uid),
       );
       $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->revision_timestamp, 'short'), "node/$node->nid"), '!username' => drupal_render($username)))
                                . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
@@ -263,7 +263,7 @@ function node_revision_overview($node) {
     else {
       $username = array(
         '#theme' => 'username',
-        '#account' => $revision,
+        '#account' => user_load($revision->uid),
       );
       $row[] = t('!date by !username', array('!date' => l(format_date($revision->revision_timestamp, 'short'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => drupal_render($username)))
                . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : '');

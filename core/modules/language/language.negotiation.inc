@@ -191,8 +191,12 @@ function language_from_user($languages) {
   // User preference (only for authenticated users).
   global $user;
 
-  if ($user->uid && !empty($user->preferred_langcode) && isset($languages[$user->preferred_langcode])) {
-    return $user->preferred_langcode;
+  if ($user->id()) {
+    $langcode = $user->getPreferredLangcode();
+    $default_langcode = language_default()->id;
+    if (!empty($langcode) && $langcode != $default_langcode && isset($languages[$langcode])) {
+      return $langcode;
+    }
   }
 
   // No language preference from the user.
@@ -216,9 +220,13 @@ function language_from_user_admin(array $languages, Request $request = NULL) {
   // User preference (only for authenticated users).
   global $user;
 
-  $request_path = $request ? urldecode(trim($request->getPathInfo(), '/')) : _current_path();
-  if ($user->uid && !empty($user->preferred_admin_langcode) && isset($languages[$user->preferred_admin_langcode]) && path_is_admin($request_path)) {
-    return $user->preferred_admin_langcode;
+  if ($user->id()) {
+    $request_path = $request ? urldecode(trim($request->getPathInfo(), '/')) : _current_path();
+    $langcode = $user->getPreferredAdminLangcode();
+    $default_langcode = language_default()->id;
+    if (!empty($langcode) && $langcode != $default_langcode && isset($languages[$langcode]) && path_is_admin($request_path)) {
+      return $langcode;
+    }
   }
 
   // No language preference from the user or not on an admin path.
@@ -241,7 +249,7 @@ function language_from_session($languages) {
   // an authenticated user.
   if (isset($_GET[$param]) && isset($languages[$langcode = $_GET[$param]])) {
     global $user;
-    if ($user->uid) {
+    if ($user->id()) {
       $_SESSION[$param] = $langcode;
     }
     return $langcode;
@@ -479,7 +487,7 @@ function language_url_rewrite_session(&$path, &$options) {
   // request processing.
   if (!isset($query_rewrite)) {
     global $user;
-    if (!$user->uid) {
+    if (!$user->id()) {
       $languages = language_list();
       $query_param = check_plain(config('language.negotiation')->get('session.parameter'));
       $query_value = isset($_GET[$query_param]) ? check_plain($_GET[$query_param]) : NULL;

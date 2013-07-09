@@ -463,8 +463,9 @@ function language_get_default_langcode($entity_type, $bundle) {
 
     case 'authors_default':
       global $user;
-      if (!empty($user->preferred_langcode)) {
-        $default_value = $user->preferred_langcode;
+      $language_code = $user->getPreferredLangcode();
+      if (!empty($language_code)) {
+        $default_value = $language_code;
       }
       else {
         $default_value = $language_interface->id;

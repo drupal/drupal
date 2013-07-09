@@ -50,7 +50,7 @@ class CSRFAccessCheck implements AccessCheckInterface {
     // 2. the user was successfully authenticated and
     // 3. the request comes with a session cookie.
     if (!in_array($method, array('GET', 'HEAD', 'OPTIONS', 'TRACE'))
-      && user_is_logged_in()
+      && $GLOBALS['user']->isAuthenticated()
       && $cookie
     ) {
       $csrf_token = $request->headers->get('X-CSRF-Token');
