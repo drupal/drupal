@@ -35,12 +35,6 @@ function overlay_menu() {
     'access arguments' => array('access overlay'),
     'type' => MENU_CALLBACK,
   );
-  $items['overlay/dismiss-message'] = array(
-    'title' => '',
-    'page callback' => 'overlay_user_dismiss_message',
-    'access callback' => 'overlay_user_dismiss_message_access',
-    'type' => MENU_CALLBACK,
-  );
   return $items;
 }
 
@@ -217,56 +211,6 @@ function overlay_page_alter(&$page) {
   elseif ($mode == 'parent' && ($message = overlay_disable_message())) {
     $page['page_top']['disable_overlay'] = $message;
   }
-}
-
-/**
- * Access callback: Determines access to dismiss the accessibility message.
- *
- * @return
- *   TRUE if the user has permission to dismiss the accessibility message or if
- *   the user is anonymous. FALSE if otherwise.
- *
- * @see overlay_user_dismiss_message()
- * @see overlay_menu()
- */
-function overlay_user_dismiss_message_access() {
-  global $user;
-  if (!user_access('access overlay')) {
-    return FALSE;
-  }
-  // It's unlikely, but possible that "access overlay" permission is granted to
-  // the anonymous role. In this case, we do not display the message to disable
-  // the overlay, so there is nothing to dismiss.
-  if (empty($user->uid)) {
-    return FALSE;
-  }
-  return TRUE;
-}
-
-/**
- * Page callback: Dismisses the overlay accessibility message for this user.
- *
- * @return
- *   A render array for a page containing a list of content.
- *
- * @see overlay_user_dismiss_message_access()
- * @see overlay_menu()
- */
-function overlay_user_dismiss_message() {
-  global $user;
-
-  // @todo CSRF tokens are validated in page callbacks rather than access
-  //   callbacks, because access callbacks are also invoked during menu link
-  //   generation. Add token support to routing: http://drupal.org/node/755584.
-  $token = Drupal::request()->query->get('token');
-  if (!isset($token) || !drupal_valid_token($token, 'overlay')) {
-    throw new AccessDeniedHttpException();
-  }
-
-  Drupal::service('user.data')->set('overlay', $user->uid, 'message_dismissed', 1);
-  drupal_set_message(t('The message has been dismissed. You can change your overlay settings at any time by visiting your profile page.'));
-  // Destination is normally given. Go to the user profile as a fallback.
-  return new RedirectResponse(url('user/' . $user->uid . '/edit', array('absolute' => TRUE)));
 }
 
 /**
