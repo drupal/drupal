@@ -1715,9 +1715,7 @@ function hook_template_preprocess_default_variables_alter(&$variables) {
  */
 function hook_custom_theme() {
   // Allow the user to request a particular theme via a query parameter.
-  if (isset($_GET['theme'])) {
-    return $_GET['theme'];
-  }
+  return Drupal::request()->query->get('theme');
 }
 
 /**

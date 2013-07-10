@@ -257,8 +257,10 @@ function system_themes_admin_form_submit($form, &$form_state) {
  * Menu callback; Set the default theme.
  */
 function system_theme_default() {
-  if (isset($_REQUEST['theme']) && isset($_REQUEST['token']) && drupal_valid_token($_REQUEST['token'], 'system-theme-operation-link')) {
-    $theme = $_REQUEST['theme'];
+  $request = Drupal::request();
+  $theme = $request->get('theme');
+  $token = $request->get('token');
+  if (!empty($theme) && !empty($token) && drupal_valid_token($token, 'system-theme-operation-link')) {
     // Get current list of themes.
     $themes = list_themes();
 
