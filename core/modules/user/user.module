@@ -1125,28 +1125,6 @@ function user_page_title(UserInterface $account = NULL) {
 }
 
 /**
- * Set up a series for validators which check for blocked users,
- * then authenticate against local database, then return an error if
- * authentication fails. Distributed authentication modules are welcome
- * to use hook_form_alter() to change this series in order to
- * authenticate against their user database instead of the local users
- * table. If a distributed authentication module is successful, it
- * should set $form_state['uid'] to a user ID.
- *
- * We use three validators instead of one since external authentication
- * modules usually only need to alter the second validator.
- *
- * @see user_login_name_validate()
- * @see user_login_authenticate_validate()
- * @see user_login_final_validate()
- * @return array
- *   A simple list of validate functions.
- */
-function user_login_default_validators() {
-  return array('user_login_name_validate', 'user_login_authenticate_validate', 'user_login_final_validate');
-}
-
-/**
  * Try to validate the user's login credentials locally.
  *
  * @param $name
