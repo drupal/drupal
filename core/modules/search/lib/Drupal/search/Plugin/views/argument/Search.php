@@ -65,7 +65,7 @@ class Search extends ArgumentPluginBase {
         'left_table' => $search_index,
         'left_field' => 'word',
       );
-      $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $definition);
+      $join = \Drupal::service()->get('plugin.manager.views.join')->createInstance('standard', $definition);
       $search_total = $this->query->addRelationship('search_total', $join, $search_index);
 
       $this->search_score = $this->query->addField('', "SUM($search_index.score * $search_total.count)", 'score', array('aggregate' => TRUE));

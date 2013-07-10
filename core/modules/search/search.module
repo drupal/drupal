@@ -625,7 +625,7 @@ function search_index($sid, $module, $text, $langcode) {
         if ($tagname == 'a') {
           // Check if link points to a node on this site
           if (preg_match($node_regexp, $value, $match)) {
-            $path = drupal_container()->get('path.alias_manager')->getSystemPath($match[1]);
+            $path = Drupal::service('path.alias_manager')->getSystemPath($match[1]);
             if (preg_match('!(?:node|book)/(?:view/)?([0-9]+)!i', $path, $match)) {
               $linknid = $match[1];
               if ($linknid > 0) {
