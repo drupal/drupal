@@ -42,10 +42,13 @@ class TranslatableForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    $action = $this->fieldInfo['translatable'] ? 'disable' : 'enable';
-    return t('Are you sure you want to %action translation for the %name field?',
-      array('%action' => $action, '%name' => $this->fieldName)
-    );
+    if ($field['translatable']) {
+      $question = t('Are you sure you want to disable translation for the %name field?', array('%name' => $this->fieldName));
+    }
+    else {
+      $question = t('Are you sure you want to enable translation for the %name field?', array('%name' => $this->fieldName));
+    }
+    return $question;
   }
 
   /**
