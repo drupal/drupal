@@ -4,55 +4,6 @@
  */
 
 /**
- * HTML elements.
- */
-fieldset {
-  border: 1px solid #ccc;
-  margin: 1em 0;
-  padding: 0.5em;
-}
-form {
-  margin: 0;
-  padding: 0;
-}
-button {
-  font-size: 1em;
-}
-hr {
-  border: 1px solid gray;
-  height: 1px;
-}
-img {
-  border: 0;
-}
-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-th {
-  padding-right: 1em; /* LTR */
-  text-align: left; /* LTR */
-}
-[dir="rtl"] th {
-  text-align: right;
-  padding-left: 1em;
-  padding-right: 0;
-}
-thead > tr {
-  border-bottom: 1px solid #000;
-}
-tr {
-  border-bottom: 1px solid #ccc;
-  padding: 0.1em 0.6em;
-}
-caption {
-  text-align: left; /* LTR */
-}
-[dir="rtl"] caption {
-  text-align: right;
-}
-
-/**
  * Publishing status.
  */
 .unpublished {
@@ -106,10 +57,6 @@ tr.even .form-item {
 }
 .form-item .description {
   font-size: 0.85em;
-}
-label {
-  display: block;
-  font-weight: bold;
 }
 label.option {
   display: inline;
@@ -223,6 +170,7 @@ button.link {
   cursor: pointer;
   margin: 0;
   padding: 0;
+  font-size: 1em;
 }
 
 label button.link {

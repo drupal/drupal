@@ -1533,10 +1533,22 @@ function system_library_info() {
     'css' => array(
       'core/assets/vendor/normalize-css/normalize.css' => array(
         'every_page' => TRUE,
-        'weight' => -10,
+        'weight' => CSS_BASE - 20,
       ),
     ),
   );
+
+  // Drupal's base CSS.
+  $libraries['drupal.base'] = array(
+    'title' => 'Drupal base CSS',
+    'version' => VERSION,
+    'css' => array(
+      'core/misc/drupal.base.css' => array(
+        'every_page' => TRUE,
+        'weight' => CSS_BASE - 10,
+       ),
+     ),
+   );
 
   // jQuery UI.
   $libraries['jquery.ui.core'] = array(
@@ -2355,6 +2367,8 @@ function system_filetransfer_info() {
  * Implements hook_page_build().
  */
 function system_page_build(&$page) {
+  // Note: ensure the same CSS is loaded in _drupal_maintenance_theme().
+  $page['#attached']['library'][] = array('system', 'drupal.base');
   $path = drupal_get_path('module', 'system');
   // Adjust the weights to load these early.
   $page['#attached']['css'][$path . '/css/system.module.css'] = array('weight' => CSS_COMPONENT - 10, 'every_page' => TRUE);

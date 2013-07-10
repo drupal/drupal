@@ -1,0 +1,89 @@
+/**
+ * @file
+ * Provides a base styling for HTML elements in Drupal.
+ */
+
+/**
+ * Block-level HTML5 display definition.
+ *
+ * Provides display values for browsers that don't recognize the new elements
+ * and therefore display them inline by default.
+ */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+main,
+nav,
+section,
+summary {
+  display: block;
+}
+
+/**
+ * Form elements.
+ */
+form {
+  margin: 0;
+  padding: 0;
+}
+fieldset {
+  border: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0.5em;
+}
+label {
+  display: block;
+  font-weight: bold;
+}
+input {
+  /* Keep form elements from overflowing their containers. */
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/**
+ * Table elements.
+ */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+caption {
+  text-align: left; /* LTR */
+}
+[dir="rtl"] caption {
+  text-align: right;
+}
+th {
+  padding-right: 1em; /* LTR */
+  text-align: left; /* LTR */
+}
+[dir="rtl"] th {
+  text-align: right;
+  padding-left: 1em;
+  padding-right: 0;
+}
+thead > tr {
+  border-bottom: 1px solid #000;
+}
+tr {
+  border-bottom: 1px solid #ccc;
+  padding: 0.1em 0.6em;
+}
+
+/**
+ * Miscellaneous elements.
+ */
+hr {
+  border: 1px solid gray;
+  height: 1px;
+}
+img {
+  border: 0;
+}
