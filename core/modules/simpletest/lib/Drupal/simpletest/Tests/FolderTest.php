@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\simpletest\Tests\FolderTest.
+ * Definition of \Drupal\simpletest\Tests\FolderTest.
  */
 
 namespace Drupal\simpletest\Tests;

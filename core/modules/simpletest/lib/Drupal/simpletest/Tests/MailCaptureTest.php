@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\simpletest\Tests\MailCaptureTest.
+ * Definition of \Drupal\simpletest\Tests\MailCaptureTest.
  */
 
 namespace Drupal\simpletest\Tests;
@@ -77,8 +77,9 @@ class MailCaptureTest extends WebTestBase {
     $captured_emails = $this->drupalGetMails(array('id' => 'drupal_mail_test', 'subject' => $subject, 'from' => 'this_was_not_used@example.com'));
     $this->assertEqual(count($captured_emails), 0, 'No e-mails are returned when querying with an unused from address.', 'E-mail');
 
-    // Send the last e-mail again, so we can confirm that the drupalGetMails-filter
-    // correctly returns all e-mails with a given property/value.
+    // Send the last e-mail again, so we can confirm that the
+    // drupalGetMails-filter correctly returns all e-mails with a given
+    // property/value.
     drupal_mail_system('drupal_mail_test', $index)->mail($message);
     $captured_emails = $this->drupalGetMails(array('id' => 'drupal_mail_test_4'));
     $this->assertEqual(count($captured_emails), 2, 'All e-mails with the same id are returned when filtering by id.', 'E-mail');

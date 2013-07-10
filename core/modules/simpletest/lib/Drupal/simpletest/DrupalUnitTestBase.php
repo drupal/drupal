@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\simpletest\DrupalUnitTestBase.
+ * Contains \Drupal\simpletest\DrupalUnitTestBase.
  */
 
 namespace Drupal\simpletest;

@@ -35,10 +35,10 @@ abstract class UnitTestBase extends TestBase {
   /**
    * Sets up unit test environment.
    *
-   * Unlike Drupal\simpletest\WebTestBase::setUp(), UnitTestBase::setUp() does not
-   * install modules because tests are performed without accessing the database.
-   * Any required files must be explicitly included by the child class setUp()
-   * method.
+   * Unlike \Drupal\simpletest\WebTestBase::setUp(), UnitTestBase::setUp() does
+   * not install modules because tests are performed without accessing the
+   * database. Any required files must be explicitly included by the child class
+   * setUp() method.
    */
   protected function setUp() {
     global $conf;
@@ -60,7 +60,7 @@ abstract class UnitTestBase extends TestBase {
 
     // Change the database prefix.
     // All static variables need to be reset before the database prefix is
-    // changed, since Drupal\Core\Utility\CacheArray implementations attempt to
+    // changed, since \Drupal\Core\Utility\CacheArray implementations attempt to
     // write back to persistent caches when they are destructed.
     $this->changeDatabasePrefix();
     if (!$this->setupDatabasePrefix) {

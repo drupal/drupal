@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\simpletest\Tests\BrokenSetUpTest.
+ * Definition of \Drupal\simpletest\Tests\BrokenSetUpTest.
  */
 
 namespace Drupal\simpletest\Tests;
@@ -13,11 +13,11 @@ use Drupal\simpletest\WebTestBase;
  * Tests a test case that does not run parent::setUp() in its setUp() method.
  *
  * If a test case does not call parent::setUp(), running
- * Drupal\simpletest\WebTestBase::tearDown() would destroy the main site's
+ * \Drupal\simpletest\WebTestBase::tearDown() would destroy the main site's
  * database tables. Therefore, we ensure that tests which are not set up
  * properly are skipped.
  *
- * @see Drupal\simpletest\WebTestBase
+ * @see \Drupal\simpletest\WebTestBase
  */
 class BrokenSetUpTest extends WebTestBase {
 

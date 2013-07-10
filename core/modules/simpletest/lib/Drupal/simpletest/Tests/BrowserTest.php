@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\simpletest\Tests\BrowserTest.
+ * Definition of \Drupal\simpletest\Tests\BrowserTest.
  */
 
 namespace Drupal\simpletest\Tests;
@@ -22,7 +22,7 @@ class BrowserTest extends WebTestBase {
   }
 
   /**
-   * Test Drupal\simpletest\WebTestBase::getAbsoluteUrl().
+   * Test \Drupal\simpletest\WebTestBase::getAbsoluteUrl().
    */
   function testGetAbsoluteUrl() {
     $url = 'user/login';

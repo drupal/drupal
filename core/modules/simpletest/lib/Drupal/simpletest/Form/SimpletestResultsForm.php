@@ -95,7 +95,8 @@ class SimpletestResultsForm implements FormInterface, ControllerInterface {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state, $test_id = NULL) {
-    // Make sure there are test results to display and a re-run is not being performed.
+    // Make sure there are test results to display and a re-run is not being
+    // performed.
     $results = array();
 
     if (is_numeric($test_id) && !$results = $this->getResults($test_id)) {

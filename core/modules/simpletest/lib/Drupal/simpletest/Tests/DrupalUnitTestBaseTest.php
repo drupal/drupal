@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\simpletest\Tests\DrupalUnitTestBaseTest.
+ * Contains \Drupal\simpletest\Tests\DrupalUnitTestBaseTest.
  */
 
 namespace Drupal\simpletest\Tests;
@@ -104,7 +104,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests installing modules via enableModules() with DepedencyInjection services.
+   * Tests installing modules with DependencyInjection services.
    */
   function testEnableModulesInstallContainer() {
     // Install Node module.
@@ -195,7 +195,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Tests that the module list is retained after enabling/installing/disabling modules.
+   * Tests that the module list is retained after enabling/installing/disabling.
    */
   function testEnableModulesFixedList() {
     // entity_test is loaded via $modules; its entity type should exist.
