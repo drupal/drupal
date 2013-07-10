@@ -1280,7 +1280,19 @@ function theme_system_themes_page($variables) {
     foreach ($theme_groups[$state] as $theme) {
 
       // Theme the screenshot.
-      $screenshot = $theme->screenshot ? theme('image', $theme->screenshot) : '<div class="no-screenshot"><div class="no-screenshot__text">' . t('no screenshot') . '</div></div>';
+      if ($theme->screenshot) {
+        $image = array(
+          '#theme' => 'image',
+          '#uri' => $theme->screenshot['uri'],
+          '#alt' => $theme->screenshot['alt'],
+          '#title' => $theme->screenshot['title'],
+          '#attributes' => $theme->screenshot['attributes'],
+        );
+        $screenshot = drupal_render($image);
+      }
+      else {
+        $screenshot = '<div class="no-screenshot"><div class="no-screenshot__text">' . t('no screenshot') . '</div></div>';
+      }
 
       // Localize the theme description.
       $description = t($theme->info['description']);
@@ -1308,7 +1320,14 @@ function theme_system_themes_page($variables) {
         $output .= '<div class="incompatible">' . t('This theme requires the theme engine @theme_engine to operate correctly.', array('@theme_engine' => $theme->info['engine'])) . '</div>';
       }
       else {
-        $output .= theme('links', array('links' => $theme->operations, 'attributes' => array('class' => array('operations', 'clearfix'))));
+        $links = array(
+          '#theme' => 'links',
+          '#links' => $theme->operations,
+          '#attributes' => array(
+            'class' => array('operations', 'clearfix'),
+          ),
+        );
+        $output .= drupal_render($links);
       }
       $output .= '</div></div>';
     }
