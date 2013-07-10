@@ -17,6 +17,8 @@ use Drupal\views\Plugin\views\style\DefaultStyle;
 use Drupal\views\Plugin\views\style\Grid;
 use Drupal\views\Plugin\views\row\Fields;
 use Drupal\views\Plugin\views\query\Sql;
+use Drupal\views\Plugin\views\pager\PagerPluginBase;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
 
 /**
  * Tests the ViewExecutable class.
@@ -141,6 +143,29 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $this->assertTrue($view->query instanceof Sql, 'Make sure a reference to the query is set');
     $this->assertEqual(spl_object_hash($view->query->view), $view_hash);
     $this->assertEqual(spl_object_hash($view->query->displayHandler), $display_hash);
+
+    $view->destroy();
+
+    // Test the plugin  get methods.
+    $display_plugin = $view->getDisplay();
+    $this->assertTrue($display_plugin instanceof DefaultDisplay, 'An instance of DefaultDisplay was returned.');
+    $this->assertTrue($view->display_handler instanceof DefaultDisplay, 'The display_handler property has been set.');
+    $this->assertIdentical($display_plugin, $view->getDisplay(), 'The same display plugin instance was returned.');
+
+    $style_plugin = $view->getStyle();
+    $this->assertTrue($style_plugin instanceof DefaultStyle, 'An instance of DefaultStyle was returned.');
+    $this->assertTrue($view->style_plugin instanceof DefaultStyle, 'The style_plugin property has been set.');
+    $this->assertIdentical($style_plugin, $view->getStyle(), 'The same style plugin instance was returned.');
+
+    $pager_plugin = $view->getPager();
+    $this->assertTrue($pager_plugin instanceof PagerPluginBase, 'An instance of PagerPluginBase was returned.');
+    $this->assertTrue($view->pager instanceof PagerPluginBase, 'The pager property has been set.');
+    $this->assertIdentical($pager_plugin, $view->getPager(), 'The same pager plugin instance was returned.');
+
+    $query_plugin = $view->getQuery();
+    $this->assertTrue($query_plugin instanceof QueryPluginBase, 'An instance of QueryPluginBase was returned.');
+    $this->assertTrue($view->query instanceof QueryPluginBase, 'The query property has been set.');
+    $this->assertIdentical($query_plugin, $view->getQuery(), 'The same query plugin instance was returned.');
   }
 
   /**

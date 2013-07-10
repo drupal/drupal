@@ -8,9 +8,10 @@
 namespace Drupal\views;
 
 use Drupal;
-use Symfony\Component\HttpFoundation\Response;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewStorageInterface;
 use Drupal\Component\Utility\Tags;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @defgroup views_objects Objects that represent a View or part of a view
@@ -636,6 +637,19 @@ class ViewExecutable {
   }
 
   /**
+   * Gets the current display plugin.
+   *
+   * @return \Drupal\views\Plugin\views\display\DisplayPluginBase
+   */
+  public function getDisplay() {
+    if (!isset($this->display_handler)) {
+      $this->initDisplay();
+    }
+
+    return $this->display_handler;
+  }
+
+  /**
    * Sets the current display.
    *
    * @param string $display_id
@@ -688,6 +702,19 @@ class ViewExecutable {
   }
 
   /**
+   * Gets the current style plugin.
+   *
+   * @return \Drupal\views\Plugin\views\style\StylePluginBase
+   */
+  public function getStyle() {
+    if (!isset($this->style_plugin)) {
+      $this->initStyle();
+    }
+
+    return $this->style_plugin;
+  }
+
+  /**
    * Find and initialize the style plugin.
    *
    * Note that arguments may have changed which style plugin we use, so
@@ -718,6 +745,19 @@ class ViewExecutable {
       }
       $this->inited = TRUE;
     }
+  }
+
+  /**
+   * Get the current pager plugin.
+   *
+   * @return \Drupal\views\Plugin\views\pager\PagerPluginBase
+   */
+  public function getPager() {
+    if (!isset($this->pager)) {
+      $this->initPager();
+    }
+
+    return $this->pager;
   }
 
   /**
@@ -932,6 +972,19 @@ class ViewExecutable {
     $this->build_info['substitutions'] = $substitutions;
 
     return $status;
+  }
+
+  /**
+   * Gets the current query plugin.
+   *
+   * @return \Drupal\views\Plugin\views\query\QueryPluginBase
+   */
+  public function getQuery() {
+    if (!isset($this->query)) {
+      $this->initQuery();
+    }
+
+    return $this->query;
   }
 
   /**
