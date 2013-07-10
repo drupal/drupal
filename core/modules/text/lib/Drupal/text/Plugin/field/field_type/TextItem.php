@@ -63,6 +63,27 @@ class TextItem extends TextItemBase {
   /**
    * {@inheritdoc}
    */
+  public function getConstraints() {
+    $constraint_manager = \Drupal::typedData()->getValidationConstraintManager();
+    $constraints = parent::getConstraints();
+
+    if ($max_length = $this->getFieldDefinition()->getFieldSetting('max_length')) {
+      $constraints[] = $constraint_manager->create('ComplexData', array(
+        'value' => array(
+          'Length' => array(
+            'max' => $max_length,
+            'maxMessage' => t('%name: the text may not be longer than @max characters.', array('%name' => $this->getFieldDefinition()->getFieldLabel(), '@max' => $max_length)),
+          )
+        ),
+      ));
+    }
+
+    return $constraints;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function settingsForm(array $form, array &$form_state) {
     $element = array();
     $field = $this->getInstance()->getField();

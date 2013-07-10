@@ -47,18 +47,25 @@ class ConfigField extends Field implements ConfigFieldInterface {
   /**
    * {@inheritdoc}
    */
+  public function getFieldDefinition() {
+    return $this->getInstance();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getConstraints() {
     $constraints = array();
     // Check that the number of values doesn't exceed the field cardinality. For
     // form submitted values, this can only happen with 'multiple value'
     // widgets.
-    $cardinality = $this->getInstance()->getField()->cardinality;
+    $cardinality = $this->getFieldDefinition()->getFieldCardinality();
     if ($cardinality != FIELD_CARDINALITY_UNLIMITED) {
       $constraints[] = \Drupal::typedData()
         ->getValidationConstraintManager()
         ->create('Count', array(
           'max' => $cardinality,
-          'maxMessage' => t('%name: this field cannot hold more than @count values.', array('%name' => $this->getInstance()->label, '@count' => $cardinality)),
+          'maxMessage' => t('%name: this field cannot hold more than @count values.', array('%name' => $this->getFieldDefinition()->getFieldLabel(), '@count' => $cardinality)),
         ));
     }
 

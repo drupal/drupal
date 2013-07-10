@@ -51,6 +51,14 @@ class Field extends ItemList implements FieldInterface {
   /**
    * {@inheritdoc}
    */
+  public function getFieldDefinition() {
+    // @todo https://drupal.org/node/1988612
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function filterEmptyValues() {
     if (isset($this->list)) {
       $this->list = array_values(array_filter($this->list, function($item) {

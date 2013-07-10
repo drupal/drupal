@@ -70,38 +70,17 @@ abstract class TextItemBase extends ConfigFieldItemBase implements PrepareCacheI
   /**
    * {@inheritdoc}
    */
-  public function getConstraints() {
-    $constraint_manager = \Drupal::typedData()->getValidationConstraintManager();
-    $constraints = parent::getConstraints();
-
-    if (!empty($this->getInstance()->getField()->settings['max_length'])) {
-      $max_length = $this->getInstance()->getField()->settings['max_length'];
-      $constraints[] = $constraint_manager->create('ComplexData', array(
-        'value' => array(
-          'Length' => array(
-            'max' => $max_length,
-            'maxMessage' => t('%name: the text may not be longer than @max characters.', array('%name' => $this->getInstance()->label, '@max' => $max_length)),
-          )
-        ),
-      ));
-    }
-
-    return $constraints;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function prepareCache() {
     // Where possible, generate the sanitized version of each field early so
     // that it is cached in the field cache. This avoids the need to look up the
     // field in the filter cache separately.
-    if (!$this->getInstance()->settings['text_processing'] || filter_format_allowcache($this->get('format')->getValue())) {
+    $text_processing = $this->getFieldDefinition()->getFieldSetting('text_processing');
+    if (!$text_processing || filter_format_allowcache($this->get('format')->getValue())) {
       $itemBC = $this->getValue();
       $langcode = $this->getParent()->getParent()->language()->id;
-      $this->set('safe_value', text_sanitize($this->getInstance()->settings['text_processing'], $langcode, $itemBC, 'value'));
+      $this->set('safe_value', text_sanitize($text_processing, $langcode, $itemBC, 'value'));
       if ($this->getType() == 'field_item:text_with_summary') {
-        $this->set('safe_summary', text_sanitize($this->getInstance()->settings['text_processing'], $langcode, $itemBC, 'summary'));
+        $this->set('safe_summary', text_sanitize($text_processing, $langcode, $itemBC, 'summary'));
       }
     }
   }

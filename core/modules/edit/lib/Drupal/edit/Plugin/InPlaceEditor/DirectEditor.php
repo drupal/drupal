@@ -9,7 +9,7 @@ namespace Drupal\edit\Plugin\InPlaceEditor;
 
 use Drupal\edit\EditorBase;
 use Drupal\edit\Annotation\InPlaceEditor;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 
 /**
  * Defines the direct editor.
@@ -21,20 +21,18 @@ use Drupal\field\Plugin\Core\Entity\FieldInstance;
 class DirectEditor extends EditorBase {
 
   /**
-   * Implements \Drupal\edit\EditPluginInterface::isCompatible().
+   * {@inheritdoc}
    *
    * @todo The processed text logic is too coupled to text fields. Figure out
    *   how to generalize to other textual field types.
    */
-  function isCompatible(FieldInstance $instance, array $items) {
-    $field = field_info_field($instance['field_name']);
-
+  function isCompatible(FieldDefinitionInterface $field_definition, array $items) {
     // This editor is incompatible with multivalued fields.
-    if ($field['cardinality'] != 1) {
+    if ($field_definition->getFieldCardinality() != 1) {
       return FALSE;
     }
     // This editor is incompatible with processed ("rich") text fields.
-    elseif (!empty($instance['settings']['text_processing'])) {
+    elseif ($field_definition->getFieldSetting('text_processing')) {
       return FALSE;
     }
     else {
