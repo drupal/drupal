@@ -20,9 +20,8 @@ class BlockAccessController extends EntityAccessController {
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
-    // Currently, only view access is implemented.
     if ($operation != 'view') {
-      return FALSE;
+      return user_access('administer blocks', $account);
     }
 
     // Deny access to disabled blocks.

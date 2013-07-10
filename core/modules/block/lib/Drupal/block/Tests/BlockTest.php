@@ -161,7 +161,7 @@ class BlockTest extends BlockTestBase {
     $edit = array(
       'settings[label_display]' => FALSE,
     );
-    $this->drupalPost('admin/structure/block/manage/' . $default_theme . '.' . $machine_name . '/configure', $edit, t('Save block'));
+    $this->drupalPost('admin/structure/block/manage/' . $default_theme . '.' . $machine_name, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->drupalGet('user');

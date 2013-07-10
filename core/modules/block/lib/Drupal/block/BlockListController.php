@@ -242,7 +242,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
           );
           $links['configure'] = array(
             'title' => t('configure'),
-            'href' => 'admin/structure/block/manage/' . $entity_id . '/configure',
+            'href' => 'admin/structure/block/manage/' . $entity_id,
           );
           $links['delete'] = array(
             'title' => t('delete'),
