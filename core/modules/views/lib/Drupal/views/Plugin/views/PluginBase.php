@@ -7,11 +7,13 @@
 
 namespace Drupal\views\Plugin\views;
 
-use Drupal\Core\Plugin\ContainerFactoryPluginBase;
+use Drupal\Component\Plugin\PluginBase as ComponentPluginBase;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class PluginBase extends ContainerFactoryPluginBase {
+abstract class PluginBase extends ComponentPluginBase implements ContainerFactoryPluginInterface {
 
   /**
    * Options for this plugin will be held here.
@@ -60,6 +62,13 @@ abstract class PluginBase extends ContainerFactoryPluginBase {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->definition = $plugin_definition + $configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static($configuration, $plugin_id, $plugin_definition);
   }
 
   /**

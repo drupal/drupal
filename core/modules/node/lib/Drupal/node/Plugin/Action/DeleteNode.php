@@ -10,6 +10,7 @@ namespace Drupal\node\Plugin\Action;
 use Drupal\Core\Annotation\Action;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Action\ActionBase;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   confirm_form_path = "admin/content/node/delete"
  * )
  */
-class DeleteNode extends ActionBase {
+class DeleteNode extends ActionBase implements ContainerFactoryPluginInterface {
 
   /**
    * The tempstore object.

@@ -10,6 +10,7 @@ namespace Drupal\action\Plugin\Action;
 use Drupal\Core\Annotation\Action;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\PathBasedGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -25,7 +26,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  *   type = "system"
  * )
  */
-class GotoAction extends ConfigurableActionBase {
+class GotoAction extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
   /**
    * The event dispatcher service.

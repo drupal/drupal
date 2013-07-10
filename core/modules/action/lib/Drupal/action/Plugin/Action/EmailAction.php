@@ -11,6 +11,7 @@ use Drupal\Core\Annotation\Action;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Utility\Token;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   type = "system"
  * )
  */
-class EmailAction extends ConfigurableActionBase {
+class EmailAction extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
   /**
    * The token service.
