@@ -43,10 +43,6 @@ const BLOCK_VISIBILITY_LISTED = 1;
  */
 const BLOCK_VISIBILITY_PHP = 2;
 
-/**
- * Indicates the block label (title) should be displayed to end users.
- */
-const BLOCK_LABEL_VISIBLE = 'visible';
 
 /**
  * Implements hook_help().

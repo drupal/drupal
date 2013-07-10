@@ -14,6 +14,7 @@ use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\block\BlockStorageController;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\block\Plugin\Core\Entity\Block;
+use Drupal\block\BlockInterface;
 
 /**
  * Tests the storage of blocks.
@@ -103,7 +104,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
         'cache' => '1',
         'label' => '',
         'module' => 'block_test',
-        'label_display' => BLOCK_LABEL_VISIBLE,
+        'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
       ),
       'visibility' => '',
     );

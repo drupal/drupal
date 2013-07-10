@@ -8,6 +8,7 @@
 namespace Drupal\block;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\block\BlockInterface;
 
 /**
  * Defines a base block implementation that most blocks plugins will extend.
@@ -27,7 +28,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
     $this->configuration += $this->settings() + array(
       'label' => '',
       'module' => $plugin_definition['module'],
-      'label_display' => BLOCK_LABEL_VISIBLE,
+      'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
       'cache' => DRUPAL_NO_CACHE,
     );
   }
@@ -127,8 +128,8 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
     $form['label_display'] = array(
       '#type' => 'checkbox',
       '#title' => t('Display title'),
-      '#default_value' => $this->configuration['label_display'] == BLOCK_LABEL_VISIBLE,
-      '#return_value' => BLOCK_LABEL_VISIBLE,
+      '#default_value' => $this->configuration['label_display'] == BlockInterface::BLOCK_LABEL_VISIBLE,
+      '#return_value' => BlockInterface::BLOCK_LABEL_VISIBLE,
     );
 
     // Add plugin-specific settings for this block type.
