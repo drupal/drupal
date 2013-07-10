@@ -1900,7 +1900,13 @@ abstract class WebTestBase extends TestBase {
         // Return the string.
         $value = count($parts) > 1 ? 'concat(' . implode(', \'"\', ', $parts) . ')' : $parts[0];
       }
-      $xpath = preg_replace('/' . preg_quote($placeholder) . '\b/', $value, $xpath);
+
+      // Use preg_replace_callback() instead of preg_replace() to prevent the
+      // regular expression engine from trying to substitute backreferences.
+      $replacement = function ($matches) use ($value) {
+        return $value;
+      };
+      $xpath = preg_replace_callback('/' . preg_quote($placeholder) . '\b/', $replacement, $xpath);
     }
     return $xpath;
   }
