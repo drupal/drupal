@@ -93,38 +93,45 @@ small .admin-link:after {
 #system-modules td {
   vertical-align: top;
 }
-#system-modules .expand .inner {
-  background: transparent url(../../../misc/menu-collapsed.png) left .6em no-repeat;
-  margin-left: -12px;
-  padding-left: 12px;
-}
-#system-modules .expanded .expand .inner {
-  background: transparent url(../../../misc/menu-expanded.png) left .6em no-repeat;
-}
 #system-modules label {
   color: #1d1d1d;
   font-size: 1.15em;
 }
-#system-modules .description {
-  cursor: pointer;
-}
-#system-modules .description .inner {
+#system-modules details {
   color: #5c5c5b;
-  height: 20px;
   line-height: 20px;
   overflow: hidden; /* truncates descriptions if too long */
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-#system-modules .expanded .description .inner {
+#system-modules details[open] {
   height: auto;
   overflow: visible;
   white-space: normal;
 }
-#system-modules .expanded .description .text {
+#system-modules details[open] summary .text {
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
   hyphens: auto;
+  text-transform: none;
+}
+#system-modules td details a {
+  color: #5C5C5B;
+  border: 0px;
+}
+#system-modules td details {
+  border: 0px;
+  margin: 0px;
+  height: 20px;
+}
+#system-modules td details summary {
+  padding: 0px;
+  text-transform: none;
+  font-weight: normal;
+  cursor: default;
+}
+#system-modules td {
+  padding-left: 0px;
 }
 
 @media screen and (max-width: 40em) {

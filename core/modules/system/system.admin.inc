@@ -508,6 +508,7 @@ function system_modules($form, $form_state = array()) {
         array('data' => t('Name'), 'class' => array('name')),
         array('data' => t('Description'), 'class' => array('description', RESPONSIVE_PRIORITY_LOW)),
       ),
+      '#attributes' => array('class' => array('package-listing')),
       // Ensure that the "Core" package comes first.
       '#weight' => $package == 'Core' ? -10 : NULL,
     );
@@ -1161,7 +1162,7 @@ function theme_system_modules_details($variables) {
     $row[] = array('class' => array('module'), 'data' => $col2);
 
     // Add the description, along with any modules it requires.
-    $description = '<span class="details"><span class="text table-filter-text-source">' . drupal_render($module['description']) . '</span></span>';
+    $description = '';
     if ($version || $requires || $required_by) {
       $description .= ' <div class="requirements">';
       if ($version) {
@@ -1184,7 +1185,14 @@ function theme_system_modules_details($variables) {
       $description .= $links;
       $description .= '</div>';
     }
-    $col4 = '<div class="inner" tabindex="0" role="button"><span class="module-description-prefix visually-hidden">Show description</span> ' . $description . '</div>';
+    $details = array(
+      '#type' => 'details',
+      '#title' => '<span class="text"> ' . drupal_render($module['description']) . '</span>',
+      '#attributes' => array('id' => $module['enable']['#id'] . '-description'),
+      '#description' => $description,
+      '#collapsed' => TRUE,
+    );
+    $col4 = drupal_render($details);
     $row[] = array('class' => array('description', 'expand'), 'data' => $col4);
 
     $rows[] = $row;
