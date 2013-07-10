@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\language\Tests\LanguageCustomConfigurationTest.
+ * Contains \Drupal\language\Tests\LanguageCustomConfigurationTest.
  */
 
 namespace Drupal\language\Tests;
@@ -47,7 +47,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
     // Test validation on missing values.
     $this->assertText(t('!name field is required.', array('!name' => t('Language code'))));
-    $this->assertText(t('!name field is required.', array('!name' => t('Language name'))));
+    $this->assertText(t('!name field is required.', array('!name' => t('Language name in English'))));
     $empty_language = new Language();
     $this->assertFieldChecked('edit-direction-' . $empty_language->direction, 'Consistent usage of language direction.');
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language/add', array('absolute' => TRUE)), 'Correct page redirection.');
@@ -61,7 +61,7 @@ class LanguageCustomLanguageConfigurationTest extends WebTestBase {
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
     $this->assertRaw(t('%field may only contain characters a-z, underscores, or hyphens.', array('%field' => t('Language code'))));
-    $this->assertRaw(t('%field cannot contain any markup.', array('%field' => t('Language name'))));
+    $this->assertRaw(t('%field cannot contain any markup.', array('%field' => t('Language name in English'))));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language/add', array('absolute' => TRUE)), 'Correct page redirection.');
 
     // Test validation of existing language values.
