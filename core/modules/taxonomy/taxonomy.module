@@ -329,28 +329,11 @@ function taxonomy_menu() {
 
   $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary/add'] = array(
     'title' => 'Add term',
-    'page callback' => 'taxonomy_term_add',
-    'page arguments' => array(4),
-    'access callback' => 'taxonomy_term_create_access',
-    'access arguments' => array(4),
+    'route_name' => 'taxonomy_term_add',
     'type' => MENU_LOCAL_ACTION,
-    'file' => 'taxonomy.admin.inc',
   );
 
   return $items;
-}
-
-/**
- * Access callback for creating a new taxonomy term.
- *
- * @param \Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
- *   The vocabulary entity that represents the term bundle.
- *
- * @return bool
- *   TRUE if access is allowed, FALSE if not.
- */
-function taxonomy_term_create_access(Vocabulary $vocabulary) {
-  return entity_page_create_access('taxonomy_term', $vocabulary->id());
 }
 
 /**

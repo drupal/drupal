@@ -4,3 +4,10 @@ taxonomy_vocabulary_list:
     _entity_list: 'taxonomy_vocabulary'
   requirements:
     _permission: 'administer taxonomy'
+
+taxonomy_term_add:
+  pattern: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/add'
+  defaults:
+    _content: '\Drupal\taxonomy\Controller\TaxonomyController::addForm'
+  requirements:
+    _access_taxonomy_term_create: 'taxonomy_term'
