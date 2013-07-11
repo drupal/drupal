@@ -104,6 +104,10 @@ class UpdateTest extends RESTTestBase {
     $entity->field_test_text->value = $this->randomString();
     $entity->save();
 
+    // Try to send no data at all, which does not make sense on PATCH requests.
+    $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', NULL, $this->defaultMimeType);
+    $this->assertResponse(400);
+
     // Try to update a non-existing entity with ID 9999.
     $this->httpRequest('entity/' . $entity_type . '/9999', 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(404);
