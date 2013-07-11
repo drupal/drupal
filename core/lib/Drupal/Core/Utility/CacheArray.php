@@ -62,6 +62,8 @@ use Drupal\Core\Cache\CacheBackendInterface;
  * procedural code. Extending classes may wish to alter this behavior, for
  * example by overriding offsetSet() and adding an automatic call to persist().
  *
+ * @deprecated as of Drupal 8.0. Use \Drupal\Core\Cache\CacheCollector instead.
+ *
  * @see SchemaCache
  */
 abstract class CacheArray implements ArrayAccess {

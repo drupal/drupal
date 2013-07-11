@@ -10,6 +10,7 @@ namespace Drupal\user\Plugin\Action;
 use Drupal\Core\Annotation\Action;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Action\ActionBase;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   confirm_form_path = "admin/people/cancel"
  * )
  */
-class CancelUser extends ActionBase {
+class CancelUser extends ActionBase implements ContainerFactoryPluginInterface {
 
   /**
    * The tempstore factory.

@@ -31,6 +31,13 @@ use Drupal\Core\Datetime\DrupalDateTime;
 class DateTimeDefaultWidget extends WidgetBase {
 
   /**
+   * The date format storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   */
+  protected $dateStorage;
+
+  /**
    * {@inheritdoc}
    */
   public function __construct($plugin_id, array $plugin_definition, FieldDefinitionInterface $field_definition, array $settings) {
@@ -41,6 +48,9 @@ class DateTimeDefaultWidget extends WidgetBase {
       $field_definition->default_value_function = $this->defaultValueFunction();
     }
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings);
+
+    // @todo Inject this once https://drupal.org/node/2035317 is in.
+    $this->dateStorage = \Drupal::entityManager()->getStorageController('date_format');
   }
 
   /**
@@ -74,7 +84,7 @@ class DateTimeDefaultWidget extends WidgetBase {
       case 'date':
         $date_type = 'date';
         $time_type = 'none';
-        $date_format = config('system.date')->get('formats.html_date.pattern.' . $format_type);
+        $date_format = $this->dateStorage->load('html_date')->getPattern($format_type);
         $time_format = '';
         $element_format = $date_format;
         $storage_format = DATETIME_DATE_STORAGE_FORMAT;
@@ -83,8 +93,8 @@ class DateTimeDefaultWidget extends WidgetBase {
       default:
         $date_type = 'date';
         $time_type = 'time';
-        $date_format = config('system.date')->get('formats.html_date.pattern.' . $format_type);
-        $time_format = config('system.date')->get('formats.html_time.pattern.' . $format_type);
+        $date_format = $this->dateStorage->load('html_date')->getPattern($format_type);
+        $time_format = $this->dateStorage->load('html_time')->getPattern($format_type);
         $element_format = $date_format . ' ' . $time_format;
         $storage_format = DATETIME_DATETIME_STORAGE_FORMAT;
         break;

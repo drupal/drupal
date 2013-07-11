@@ -7,7 +7,7 @@
 
 namespace Drupal\image\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\image\ImageStyleInterface;
 
 /**
  * Tests creation, deletion, and editing of image styles and effects.
@@ -25,7 +25,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   /**
    * Given an image style, generate an image.
    */
-  function createSampleImage($style) {
+  function createSampleImage(ImageStyleInterface $style) {
     static $file_path;
 
     // First, we need to make sure we have an image in our testing
@@ -36,13 +36,13 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       $file_path = file_unmanaged_copy($file->uri);
     }
 
-    return image_style_url($style->id(), $file_path) ? $file_path : FALSE;
+    return $style->buildUrl($file_path) ? $file_path : FALSE;
   }
 
   /**
    * Count the number of images currently create for a style.
    */
-  function getImageCount($style) {
+  function getImageCount(ImageStyleInterface $style) {
     return count(file_scan_directory('public://styles/' . $style->id(), '/.*/'));
   }
 
@@ -271,9 +271,13 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
     $node = node_load($nid);
 
+    // Get node field original image URI.
+    $fid = $node->get($field_name)->target_id;
+    $original_uri = file_load($fid)->getFileUri();
+
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url($style_name, file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri()), format_string('Image displayed using style @style.', array('@style' => $style_name)));
+    $this->assertRaw($style->buildUrl($original_uri), format_string('Image displayed using style @style.', array('@style' => $style_name)));
 
     // Rename the style and make sure the image field is updated.
     $new_style_name = strtolower($this->randomName(10));
@@ -285,7 +289,10 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->drupalPost($style_path . $style_name, $edit, t('Update style'));
     $this->assertText(t('Changes to the style have been saved.'), format_string('Style %name was renamed to %new_name.', array('%name' => $style_name, '%new_name' => $new_style_name)));
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url($new_style_name, file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri()), 'Image displayed using style replacement style.');
+
+    // Reload the image style using the new name.
+    $style = entity_load('image_style', $new_style_name);
+    $this->assertRaw($style->buildUrl($original_uri), 'Image displayed using style replacement style.');
 
     // Delete the style and choose a replacement style.
     $edit = array(
@@ -295,8 +302,9 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $message = t('Style %name was deleted.', array('%name' => $new_style_label));
     $this->assertRaw($message);
 
+    $replacement_style = entity_load('image_style', 'thumbnail');
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url('thumbnail', file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri()), 'Image displayed using style replacement style.');
+    $this->assertRaw($replacement_style->buildUrl($original_uri), 'Image displayed using style replacement style.');
   }
 
   /**
@@ -360,9 +368,13 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
     $node = node_load($nid);
 
+    // Get node field original image URI.
+    $fid = $node->get($field_name)->target_id;
+    $original_uri = file_load($fid)->getFileUri();
+
     // Test that image is displayed using newly created style.
     $this->drupalGet('node/' . $nid);
-    $this->assertRaw(image_style_url($style_name, file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri()), format_string('Image displayed using style @style.', array('@style' => $style_name)));
+    $this->assertRaw($style->buildUrl($original_uri), format_string('Image displayed using style @style.', array('@style' => $style_name)));
 
     // Copy config to staging, and delete the image style.
     $staging = $this->container->get('config.storage.staging');
@@ -374,4 +386,5 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertFalse(entity_load('image_style', $style_name), 'Style deleted after config import.');
     $this->assertEqual($this->getImageCount($style), 0, 'Image style was flushed after being deleted by config import.');
   }
+
 }

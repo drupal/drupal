@@ -85,7 +85,7 @@ class StandardProfileTest extends WebTestBase {
     // Set URIs.
     // Image.
     $image_file = file_load($this->article->get('field_image')->offsetGet(0)->get('target_id')->getValue());
-    $this->imageUri = image_style_url('large', $image_file->getFileUri());
+    $this->imageUri = entity_load('image_style', 'large')->buildUrl($image_file->getFileUri());
     // Term.
     $term_uri_info = $this->term->uri();
     $this->termUri = url($term_uri_info['path'], array('absolute' => TRUE));
@@ -164,7 +164,7 @@ class StandardProfileTest extends WebTestBase {
     // @todo Once the image points to the original instead of the processed
     // image, move this to testArticleProperties().
     $image_file = file_load($this->article->get('field_image')->offsetGet(0)->get('target_id')->getValue());
-    $image_uri = image_style_url('medium', $image_file->getFileUri());
+    $image_uri = entity_load('image_style', 'medium')->buildUrl($image_file->getFileUri());
     $expected_value = array(
       'type' => 'uri',
       'value' => $image_uri,

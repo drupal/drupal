@@ -7,19 +7,18 @@
 
 namespace Drupal\views\Plugin\entity_reference\selection;
 
-use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\entity_reference\Annotation\EntityReferenceSelection;
 use Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface;
 
 /**
  * Plugin implementation of the 'selection' entity_reference.
  *
- * @Plugin(
+ * @EntityReferenceSelection(
  *   id = "views",
- *   module = "views",
  *   label = @Translation("Views: Filter by an entity reference view"),
  *   group = "views",
  *   weight = 0
@@ -57,7 +56,7 @@ class ViewsSelection implements SelectionInterface {
   }
 
   /**
-   * Implements \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface::settingsForm().
+   * {@inheritdoc}
    */
   public static function settingsForm(&$field, &$instance) {
     $view_settings = empty($instance['settings']['handler_settings']['view']) ? array() : $instance['settings']['handler_settings']['view'];
@@ -155,7 +154,7 @@ class ViewsSelection implements SelectionInterface {
   }
 
   /**
-   * Implements \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface::getReferenceableEntities().
+   * {@inheritdoc}
    */
   public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
     $handler_settings = $this->fieldDefinition->getFieldSetting('handler_settings');
@@ -178,7 +177,7 @@ class ViewsSelection implements SelectionInterface {
   }
 
   /**
-   * Implements \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface::countReferenceableEntities().
+   * {@inheritdoc}
    */
   public function countReferenceableEntities($match = NULL, $match_operator = 'CONTAINS') {
     $this->getReferenceableEntities($match, $match_operator);
@@ -186,7 +185,7 @@ class ViewsSelection implements SelectionInterface {
   }
 
   /**
-   * Implements \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface::validateReferenceableEntities().
+   * {@inheritdoc}
    */
   public function validateReferenceableEntities(array $ids) {
     $handler_settings = $this->fieldDefinition->getFieldSetting('handler_settings');
@@ -202,14 +201,14 @@ class ViewsSelection implements SelectionInterface {
   }
 
   /**
-   * Implements \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface::validateAutocompleteInput().
+   * {@inheritdoc}
    */
   public function validateAutocompleteInput($input, &$element, &$form_state, $form, $strict = TRUE) {
     return NULL;
   }
 
   /**
-   * Implements \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface::entityQueryAlter().
+   * {@inheritdoc}
    */
   public function entityQueryAlter(SelectInterface $query) {}
 
@@ -241,4 +240,5 @@ class ViewsSelection implements SelectionInterface {
     $value = array('view_name' => $view, 'display_name' => $display, 'arguments' => $arguments);
     form_set_value($element, $value, $form_state);
   }
+
 }

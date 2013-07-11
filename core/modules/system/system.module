@@ -845,10 +845,8 @@ function system_menu() {
   $items['admin/config/regional/date-time'] = array(
     'title' => 'Date and time formats',
     'description' => 'Configure display format strings for date and time.',
-    'page callback' => 'system_date_time_formats',
-    'access arguments' => array('administer site configuration'),
+    'route_name' => 'date_format_list',
     'weight' => -9,
-    'file' => 'system.admin.inc',
   );
   $items['admin/config/regional/date-time/formats/add'] = array(
     'title' => 'Add format',
@@ -857,15 +855,12 @@ function system_menu() {
     'route_name' => 'date_format_add',
     'weight' => -10,
   );
-  $items['admin/config/regional/date-time/formats/%/edit'] = array(
+  $items['admin/config/regional/date-time/formats/manage/%'] = array(
     'title' => 'Edit date format',
     'description' => 'Allow users to edit a configured date format.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_configure_date_formats_form', 5),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'date_format_edit',
   );
-  $items['admin/config/regional/date-time/formats/%/delete'] = array(
+  $items['admin/config/regional/date-time/formats/manage/%/delete'] = array(
     'title' => 'Delete date format',
     'description' => 'Allow users to delete a configured date format.',
     'route_name' => 'date_format_delete',
@@ -1538,10 +1533,22 @@ function system_library_info() {
     'css' => array(
       'core/assets/vendor/normalize-css/normalize.css' => array(
         'every_page' => TRUE,
-        'weight' => -10,
+        'weight' => CSS_BASE - 20,
       ),
     ),
   );
+
+  // Drupal's base CSS.
+  $libraries['drupal.base'] = array(
+    'title' => 'Drupal base CSS',
+    'version' => VERSION,
+    'css' => array(
+      'core/misc/drupal.base.css' => array(
+        'every_page' => TRUE,
+        'weight' => CSS_BASE - 10,
+       ),
+     ),
+   );
 
   // jQuery UI.
   $libraries['jquery.ui.core'] = array(
@@ -2360,6 +2367,8 @@ function system_filetransfer_info() {
  * Implements hook_page_build().
  */
 function system_page_build(&$page) {
+  // Note: ensure the same CSS is loaded in _drupal_maintenance_theme().
+  $page['#attached']['library'][] = array('system', 'drupal.base');
   $path = drupal_get_path('module', 'system');
   // Adjust the weights to load these early.
   $page['#attached']['css'][$path . '/css/system.module.css'] = array('weight' => CSS_COMPONENT - 10, 'every_page' => TRUE);
@@ -2367,26 +2376,6 @@ function system_page_build(&$page) {
   if (path_is_admin(current_path())) {
     $page['#attached']['css'][$path . '/css/system.admin.css'] = array('weight' => CSS_COMPONENT - 10);
   }
-}
-
-/**
- * Select locale date format details from database.
- *
- * @param $languages
- *   An array of language codes.
- *
- * @return
- *   An array of date formats.
- */
-function system_get_localized_date_format($languages) {
-  // Get list of different format types.
-  foreach ($languages as $language) {
-    $date_formats = config('locale.config.' . $language . '.system.date')->get('formats');
-    if (!empty($date_formats)) {
-      return $date_formats;
-    }
-  }
-  return array();
 }
 
 /**
@@ -3423,114 +3412,6 @@ function system_run_automated_cron() {
     $cron_last = Drupal::state()->get('system.cron_last') ?: NULL;
     if (!isset($cron_last) || (REQUEST_TIME - $cron_last > $threshold)) {
       drupal_cron_run();
-    }
-  }
-}
-
-/**
- * Gets the list of defined date formats and attributes.
- *
- * @return array
- *   An associative array of date formats. The top-level keys are the
- *   machine-readable names of the date formats. The values are associative
- *   arrays with the following keys:
- *   - name: The string human readable name of the date format.
- *   - pattern: An associative array of patterns that will modify the format
- *     of the date, keyed with 'php' for normal PHP date pattern and 'intl'
- *     for the alternate pattern used by the IntlDateFormatter.
- */
-function system_get_date_formats() {
-  return config('system.date')->get('formats');
-}
-
-/**
- * Gets the appropriate date format string for a date type and locale.
- *
- * @param $langcode
- *   (optional) String language code for the current locale. This can be a 2 character
- *   language code like 'en' and 'fr' or a 5 character language code like
- *   'en-gb' and 'en-us'.
- * @param $date_format_id
- *   (optional) String machine name for the date format.
- *
- * @return
- *   If $date_format_id and $langcode are specified, returns the corresponding
- *   date format string. If only $langcode is specified, returns an array of
- *   all date format strings for that locale, keyed by the date type. If
- *   neither is specified returns FALSE.
- */
-function system_date_format_locale($langcode = NULL, $date_format_id = NULL) {
-  $formats = &drupal_static(__FUNCTION__);
-
-  if (!isset($formats[$langcode])) {
-    $formats[$langcode] = config('locale.config.' . $langcode . '.system.date')->get('formats');
-  }
-
-  if ($date_format_id && $langcode && !empty($formats[$langcode][$date_format_id])) {
-    return $formats[$langcode][$date_format_id];
-  }
-  elseif ($langcode && !empty($formats[$langcode])) {
-    return $formats[$langcode];
-  }
-
-  return FALSE;
-}
-
-/**
- * Saves a date format to the database.
- *
- * @param string $date_format_id
- *   If set, replace the existing date format having this ID with the
- *   information specified in $format_info.
- * @param array $format_info
- *   A date format array containing the following keys:
- *   - name: The string name of the date type this format is associated with.
- *   - pattern: An associative array keyed by 'php' and 'intl' with the PHP
- *     and/or IntlDateFormatter date format strings for each.
- *   - locked: A boolean indicating whether or not this format should be
- *     configurable from the user interface.
- *
- * @see http://php.net/date
- */
-function system_date_format_save($date_format_id, $format_info) {
-  config('system.date')
-    ->set('formats.' . $date_format_id, $format_info)
-    ->save();
-
-  $languages = language_list();
-
-  $locale_format = array(
-    'name' => $format_info['name'],
-    'pattern' => $format_info['pattern'],
-  );
-
-  // Check if the suggested language codes are configured.
-  if (!empty($format_info['locales'])) {
-    foreach ($format_info['locales'] as $langcode) {
-      if (isset($languages[$langcode])) {
-        config('locale.config.' . $langcode . '.system.date')
-          ->set('formats.' . $date_format_id, $locale_format)
-          ->save();
-      }
-    }
-  }
-}
-
-/**
- * Deletes a date format from the database.
- *
- * @param $date_format_id
- *   The date format ID.
- */
-function system_date_format_delete($date_format_id) {
-  $format_id = 'formats.' . $date_format_id;
-  config('system.date')->clear($format_id)->save();
-
-  // Clean up the localized entry if required.
-  foreach (language_list() as $langcode => $data) {
-    $config = config('locale.config.' . $langcode . '.system.date');
-    if ($config->get($format_id)) {
-      $config->clear($format_id)->save();
     }
   }
 }

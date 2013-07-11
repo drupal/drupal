@@ -8,6 +8,7 @@
 namespace Drupal\block\Tests;
 
 use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\block\BlockInterface;
 
 /**
  * Test BlockInterface methods to ensure no external dependencies exist.
@@ -46,7 +47,7 @@ class BlockInterfaceTest extends DrupalUnitTestBase {
       'label' => 'Custom Display Message',
       'display_message' => 'no message set',
       'module' => 'block_test',
-      'label_display' => BLOCK_LABEL_VISIBLE,
+      'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
       'cache' => DRUPAL_NO_CACHE,
     );
     // Initial configuration of the block at construction time.

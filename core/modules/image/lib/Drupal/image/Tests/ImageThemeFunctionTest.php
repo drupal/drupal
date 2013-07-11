@@ -41,7 +41,7 @@ class ImageThemeFunctionTest extends WebTestBase {
     // Create a style.
     $style = entity_create('image_style', array('name' => 'test', 'label' => 'Test'));
     $style->save();
-    $url = image_style_url('test', $original_uri);
+    $url = $style->buildUrl($original_uri);
 
     // Test using theme_image_formatter() without an image title, alt text, or
     // link options.
@@ -84,7 +84,7 @@ class ImageThemeFunctionTest extends WebTestBase {
     // Create a style.
     $style = entity_create('image_style', array('name' => 'image_test', 'label' => 'Test'));
     $style->save();
-    $url = image_style_url('image_test', $original_uri);
+    $url = $style->buildUrl($original_uri);
 
     $path = $this->randomName();
     $element = array(

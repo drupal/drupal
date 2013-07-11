@@ -133,8 +133,6 @@ function _toolbar_initialize_page_cache() {
     $response = new Response();
     $request = \Drupal::request();
     $response->headers->set('X-Drupal-Cache', 'HIT');
-    // Restore the metadata cached with the page.
-    $_GET['q'] = $cache->data['path'];
     date_default_timezone_set(drupal_get_user_timezone());
 
     drupal_serve_page_from_cache($cache, $response, $request);

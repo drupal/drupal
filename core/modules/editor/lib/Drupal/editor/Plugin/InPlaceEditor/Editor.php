@@ -11,7 +11,7 @@ use Drupal\Component\Plugin\PluginBase;
 use Drupal\edit\Annotation\InPlaceEditor;
 use Drupal\Core\Annotation\Translation;
 use Drupal\edit\EditPluginInterface;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 
 /**
  * Defines the formatted text editor.
@@ -24,19 +24,17 @@ use Drupal\field\Plugin\Core\Entity\FieldInstance;
 class Editor extends PluginBase implements EditPluginInterface {
 
   /**
-   * Implements \Drupal\edit\Plugin\EditPluginInterface::isCompatible().
+   * {@inheritdoc}
    */
-  function isCompatible(FieldInstance $instance, array $items) {
-    $field = field_info_field($instance['field_name']);
-
+  function isCompatible(FieldDefinitionInterface $field_definition, array $items) {
     // This editor is incompatible with multivalued fields.
-    if ($field['cardinality'] != 1) {
+    if ($field_definition->getFieldCardinality() != 1) {
       return FALSE;
     }
     // This editor is compatible with processed ("rich") text fields; but only
     // if there is a currently active text format, that text format has an
     // associated editor and that editor supports inline editing.
-    elseif (!empty($instance['settings']['text_processing'])) {
+    elseif ($field_definition->getFieldSetting('text_processing')) {
       $format_id = $items[0]['format'];
       if (isset($format_id) && $editor = editor_load($format_id)) {
         $definition = \Drupal::service('plugin.manager.editor')->getDefinition($editor->editor);
@@ -50,9 +48,9 @@ class Editor extends PluginBase implements EditPluginInterface {
   }
 
   /**
-   * Implements \Drupal\edit\Plugin\EditPluginInterface::getMetadata().
+   * {@inheritdoc}
    */
-  function getMetadata(FieldInstance $instance, array $items) {
+  function getMetadata(FieldDefinitionInterface $field_definition, array $items) {
     $format_id = $items[0]['format'];
     $metadata['format'] = $format_id;
     $metadata['formatHasTransformations'] = $this->textFormatHasTransformationFilters($format_id);

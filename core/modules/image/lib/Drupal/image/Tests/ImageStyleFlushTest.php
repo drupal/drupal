@@ -34,8 +34,8 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
     // Make sure we have an image in our wrapper testing file directory.
     $source_uri = file_unmanaged_copy($file->uri, $wrapper . '://');
     // Build the derivative image.
-    $derivative_uri = image_style_path($style->id(), $source_uri);
-    $derivative = image_style_create_derivative($style, $source_uri, $derivative_uri);
+    $derivative_uri = $style->buildUri($source_uri);
+    $derivative = $style->createDerivative($source_uri, $derivative_uri);
 
     return $derivative ? $derivative_uri : FALSE;
   }

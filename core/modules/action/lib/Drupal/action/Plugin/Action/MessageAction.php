@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Annotation\Action;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Action\ConfigurableActionBase;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Utility\Token;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   type = "system"
  * )
  */
-class MessageAction extends ConfigurableActionBase {
+class MessageAction extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
   /**
    * @var \Drupal\Core\Utility\Token

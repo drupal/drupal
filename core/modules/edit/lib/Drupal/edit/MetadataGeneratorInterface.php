@@ -8,7 +8,7 @@
 namespace Drupal\edit;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 
 /**
  * Interface for generating in-place editing metadata.
@@ -33,8 +33,8 @@ interface MetadataGeneratorInterface {
    *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity being edited.
-   * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
-   *   The field instance of the field being edited.
+   * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+   *   The field definition of the field being edited.
    * @param string $langcode
    *   The name of the language for which the field is being edited.
    * @param string $view_mode
@@ -47,6 +47,6 @@ interface MetadataGeneratorInterface {
    *   - aria: the ARIA label.
    *   - custom: (optional) any additional metadata that the editor provides.
    */
-  public function generateField(EntityInterface $entity, FieldInstance $instance, $langcode, $view_mode);
+  public function generateField(EntityInterface $entity, FieldDefinitionInterface $field_definition, $langcode, $view_mode);
 
 }

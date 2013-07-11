@@ -4,3 +4,8 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@content_negotiation', '@user.data', '@url_generator']
+
+  access_check.overlay.dismiss_message:
+    class: Drupal\overlay\Access\DismissMessageAccessCheck
+    tags:
+      - { name: access_check }

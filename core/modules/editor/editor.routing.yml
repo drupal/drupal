@@ -1,5 +1,5 @@
 editor_field_untransformed_text:
-  pattern: '/editor/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode}'
+  pattern: '/editor/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
   defaults:
     _controller: '\Drupal\editor\EditorController::getUntransformedText'
   requirements:

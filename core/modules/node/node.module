@@ -693,7 +693,7 @@ function template_preprocess_node(&$variables) {
   //   http://drupal.org/node/1941286.
   $username = array(
     '#theme' => 'username',
-    '#account' => $node,
+    '#account' => user_load($node->uid),
     '#link_options' => array('attributes' => array('rel' => 'author')),
   );
   $variables['name'] = drupal_render($username);
@@ -951,7 +951,7 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
     $uri = $node->uri();
     $username = array(
       '#theme' => 'username',
-      '#account' => $node,
+      '#account' => user_load($node->uid),
     );
     $results[] = array(
       'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE, 'language' => $language))),

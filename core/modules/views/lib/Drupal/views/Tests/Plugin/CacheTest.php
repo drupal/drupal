@@ -56,7 +56,7 @@ class CacheTest extends PluginTestBase {
 
     $this->executeView($view);
     // Verify the result.
-    $this->assertEqual(5, count($view->result), t('The number of returned rows match.'));
+    $this->assertEqual(5, count($view->result), 'The number of returned rows match.');
 
     // Add another man to the beatles.
     $record = array(
@@ -79,7 +79,7 @@ class CacheTest extends PluginTestBase {
 
     $this->executeView($view);
     // Verify the result.
-    $this->assertEqual(5, count($view->result), t('The number of returned rows match.'));
+    $this->assertEqual(5, count($view->result), 'The number of returned rows match.');
   }
 
   /**
@@ -98,7 +98,7 @@ class CacheTest extends PluginTestBase {
 
     $this->executeView($view);
     // Verify the result.
-    $this->assertEqual(5, count($view->result), t('The number of returned rows match.'));
+    $this->assertEqual(5, count($view->result), 'The number of returned rows match.');
 
     // Add another man to the beatles.
     $record = array(
@@ -119,7 +119,7 @@ class CacheTest extends PluginTestBase {
 
     $this->executeView($view);
     // Verify the result.
-    $this->assertEqual(6, count($view->result), t('The number of returned rows match.'));
+    $this->assertEqual(6, count($view->result), 'The number of returned rows match.');
   }
 
   /**

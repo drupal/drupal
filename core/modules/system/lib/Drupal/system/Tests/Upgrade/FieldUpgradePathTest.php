@@ -118,7 +118,7 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
    * Tests migration of field and instance definitions to config.
    */
   function testFieldUpgradeToConfig() {
-    $this->assertTrue($this->performUpgrade(), t('The upgrade was completed successfully.'));
+    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Check that the configuration for the 'body' field is correct.
     $config = \Drupal::config('field.field.body')->get();

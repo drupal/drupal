@@ -9,7 +9,7 @@ namespace Drupal\edit;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\edit\EditPluginInterface;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 
 /**
  * Defines a base editor implementation.
@@ -17,9 +17,9 @@ use Drupal\field\Plugin\Core\Entity\FieldInstance;
 abstract class EditorBase extends PluginBase implements EditPluginInterface {
 
   /**
-   * Implements \Drupal\edit\EditPluginInterface::getMetadata().
+   * {@inheritdoc}
    */
-  function getMetadata(FieldInstance $instance, array $items) {
+  function getMetadata(FieldDefinitionInterface $field_definition, array $items) {
     return array();
   }
 

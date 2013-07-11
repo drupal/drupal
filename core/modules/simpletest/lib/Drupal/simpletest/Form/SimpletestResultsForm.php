@@ -48,31 +48,39 @@ class SimpletestResultsForm implements FormInterface, ControllerInterface {
   public function __construct(Connection $database) {
     $this->database = $database;
     // Initialize image mapping property.
+    $image_pass = array(
+      '#theme' => 'image',
+      '#uri' => 'core/misc/watchdog-ok.png',
+      '#width' => 18,
+      '#height' => 18,
+      '#alt' => t('Pass'),
+    );
+    $image_fail = array(
+      '#theme' => 'image',
+      '#uri' => 'core/misc/watchdog-error.png',
+      '#width' => 18,
+      '#height' => 18,
+      '#alt' => t('Fail'),
+    );
+    $image_exception = array(
+      '#theme' => 'image',
+      '#uri' => 'core/misc/watchdog-warning.png',
+      '#width' => 18,
+      '#height' => 18,
+      '#alt' => t('Exception'),
+    );
+    $image_debug = array(
+      '#theme' => 'image',
+      '#uri' => 'core/misc/watchdog-warning.png',
+      '#width' => 18,
+      '#height' => 18,
+      '#alt' => t('Debug'),
+    );
     $this->statusImageMap = array(
-      'pass' => theme('image', array(
-        'uri' => 'core/misc/watchdog-ok.png',
-        'width' => 18,
-        'height' => 18,
-        'alt' => t('Pass')
-      )),
-      'fail' => theme('image', array(
-        'uri' => 'core/misc/watchdog-error.png',
-        'width' => 18,
-        'height' => 18,
-        'alt' => t('Fail')
-      )),
-      'exception' => theme('image', array(
-        'uri' => 'core/misc/watchdog-warning.png',
-        'width' => 18,
-        'height' => 18,
-        'alt' => t('Exception')
-      )),
-      'debug' => theme('image', array(
-        'uri' => 'core/misc/watchdog-warning.png',
-        'width' => 18,
-        'height' => 18,
-        'alt' => t('Debug')
-      )),
+      'pass' => drupal_render($image_pass),
+      'fail' => drupal_render($image_fail),
+      'exception' => drupal_render($image_exception),
+      'debug' => drupal_render($image_debug),
     );
   }
 
@@ -87,7 +95,8 @@ class SimpletestResultsForm implements FormInterface, ControllerInterface {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state, $test_id = NULL) {
-    // Make sure there are test results to display and a re-run is not being performed.
+    // Make sure there are test results to display and a re-run is not being
+    // performed.
     $results = array();
 
     if (is_numeric($test_id) && !$results = $this->getResults($test_id)) {

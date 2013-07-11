@@ -139,7 +139,7 @@ function entity_reference_field_settings_form($field, $instance) {
     // @todo As the database schema can currently only store numeric IDs of
     // referenced entities and configuration entities have string IDs, prevent
     // configuration entities from being referenced.
-    if (!in_array('\Drupal\Core\Config\Entity\ConfigEntityInterface', class_implements($entity_info['class']))) {
+    if (!is_subclass_of($entity_info['class'], '\Drupal\Core\Config\Entity\ConfigEntityInterface')) {
       $entity_type_options[$entity_type] = $entity_info['label'];
     }
   }
@@ -206,8 +206,8 @@ function entity_reference_field_instance_settings_form($field, $instance, $form_
   $handlers = Drupal::service('plugin.manager.entity_reference.selection')->getDefinitions();
   $handlers_options = array();
   foreach ($handlers as $plugin_id => $plugin) {
-    // We only display base plugins (e.g. 'base', 'views', ..) and not entity
-    // type specific plugins (e.g. 'base_node', 'base_user', ...).
+    // We only display base plugins (e.g. 'default', 'views', ..) and not entity
+    // type specific plugins (e.g. 'default_node', 'default_user', ...).
     if (in_array($plugin_id, $handler_groups)) {
       $handlers_options[$plugin_id] = check_plain($plugin['label']);
     }

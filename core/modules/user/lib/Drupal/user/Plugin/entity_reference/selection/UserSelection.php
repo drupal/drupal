@@ -7,18 +7,17 @@
 
 namespace Drupal\user\Plugin\entity_reference\selection;
 
-use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\entity_reference\Annotation\EntityReferenceSelection;
 use Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase;
 
 /**
  * Provides specific access control for the user entity type.
  *
- * @Plugin(
+ * @EntityReferenceSelection(
  *   id = "user_default",
- *   module = "user",
  *   label = @Translation("User selection"),
  *   entity_types = {"user"},
  *   group = "default",
@@ -28,7 +27,7 @@ use Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase;
 class UserSelection extends SelectionBase {
 
   /**
-   * Overrides SelectionBase::settingsForm().
+   * {@inheritdoc}
    */
   public static function settingsForm(&$field, &$instance) {
     // Merge in default values.
@@ -78,7 +77,7 @@ class UserSelection extends SelectionBase {
   }
 
   /**
-   * Overrides SelectionBase::buildEntityQuery().
+   * {@inheritdoc}
    */
   public function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
     $query = parent::buildEntityQuery($match, $match_operator);
@@ -97,7 +96,7 @@ class UserSelection extends SelectionBase {
   }
 
   /**
-   * Overrides SelectionBase::entityQueryAlter().
+   * {@inheritdoc}
    */
   public function entityQueryAlter(SelectInterface $query) {
     if (user_access('administer users')) {

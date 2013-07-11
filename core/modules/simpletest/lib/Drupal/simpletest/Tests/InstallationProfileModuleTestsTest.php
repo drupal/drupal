@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\simpletest\Tests\InstallationProfileModuleTestsTest.
+ * Definition of \Drupal\simpletest\Tests\InstallationProfileModuleTestsTest.
  */
 
 namespace Drupal\simpletest\Tests;
@@ -31,7 +31,7 @@ class InstallationProfileModuleTestsTest extends WebTestBase {
    * - but still install the drupal_system_listing_compatible_test.module
    *   contained in the Testing profile.
    *
-   * @see Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest
+   * @see \Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest
    */
   protected $profile = 'testing';
 

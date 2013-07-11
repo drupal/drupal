@@ -43,10 +43,6 @@ const BLOCK_VISIBILITY_LISTED = 1;
  */
 const BLOCK_VISIBILITY_PHP = 2;
 
-/**
- * Indicates the block label (title) should be displayed to end users.
- */
-const BLOCK_LABEL_VISIBLE = 'visible';
 
 /**
  * Implements hook_help().
@@ -121,10 +117,7 @@ function block_menu() {
   );
   $items['admin/structure/block/manage/%block'] = array(
     'title' => 'Configure block',
-    'page callback' => 'block_admin_edit',
-    'page arguments' => array(4),
-    'access arguments' => array('administer blocks'),
-    'file' => 'block.admin.inc',
+    'route_name' => 'block_admin_edit',
   );
   $items['admin/structure/block/manage/%block/configure'] = array(
     'title' => 'Configure block',

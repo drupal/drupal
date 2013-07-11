@@ -7,13 +7,13 @@
 
 namespace Drupal\Core\Action;
 
+use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Action\ActionInterface;
-use Drupal\Core\Plugin\ContainerFactoryPluginBase;
 
 /**
  * Provides a base implementation for an Action plugin.
  */
-abstract class ActionBase extends ContainerFactoryPluginBase implements ActionInterface {
+abstract class ActionBase extends PluginBase implements ActionInterface {
 
   /**
    * {@inheritdoc}

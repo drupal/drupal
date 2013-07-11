@@ -99,7 +99,7 @@ function dblog_event($id) {
     }
     $username = array(
       '#theme' => 'username',
-      '#account' => $dblog,
+      '#account' => user_load($dblog->uid),
     );
     $rows = array(
       array(

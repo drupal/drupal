@@ -391,17 +391,6 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
 }
 
 /**
- * Returns a rendered edit form to create a new term associated to the given vocabulary.
- */
-function taxonomy_term_add($vocabulary) {
-  $term = entity_create('taxonomy_term', array('vid' => $vocabulary->id()));
-  if (module_exists('language')) {
-    $term->langcode = language_get_default_langcode('taxonomy_term', $vocabulary->id());
-  }
-  return Drupal::entityManager()->getForm($term);
-}
-
-/**
  * Form builder for the term delete form.
  *
  * @ingroup forms

@@ -11,6 +11,7 @@ use Drupal\Core\Annotation\Action;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Utility\Token;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   type = "system"
  * )
  */
-class EmailAction extends ConfigurableActionBase {
+class EmailAction extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
   /**
    * The token service.
@@ -86,7 +87,7 @@ class EmailAction extends ConfigurableActionBase {
     $recipient_accounts = $this->storageController->loadByProperties(array('mail' => $recipient));
     $recipient_account = reset($recipient_accounts);
     if ($recipient_account) {
-      $langcode = user_preferred_langcode($recipient_account);
+      $langcode = $recipient_account->getPreferredLangcode();
     }
     else {
       $langcode = language_default()->id;

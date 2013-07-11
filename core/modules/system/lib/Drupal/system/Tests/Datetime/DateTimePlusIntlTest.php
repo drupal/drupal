@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Datetime;
 
 use Drupal\Component\Datetime\DateTimePlus;
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -75,11 +76,13 @@ class DateTimePlusIntlTest extends DrupalUnitTestBase {
     $this->assertTrue($intl_date->canUseIntl(), 'DateTimePlus object can use intl when provided with country and langcode settings.');
     $this->assertFalse($php_date->canUseIntl(), 'DateTimePlus object will fallback to use PHP when not provided with country setting.');
 
-    $default_formats = config('system.date')->get('formats');
+    $default_formats = $this->container->get('plugin.manager.entity')
+      ->getStorageController('date_format')
+      ->loadMultiple();
 
     foreach ($default_formats as $format) {
-      $php_format = $php_date->format($format['pattern']['php'], $php_settings);
-      $intl_format = $intl_date->format($format['pattern']['intl'], $intl_settings);
+      $php_format = $php_date->format($format->getPattern(DrupalDateTime::PHP), $php_settings);
+      $intl_format = $intl_date->format($format->getPattern(DrupalDateTime::INTL), $intl_settings);
       $this->assertIdentical($intl_format, $php_format);
     }
   }

@@ -74,8 +74,8 @@ function hook_image_effect_info_alter(&$effects) {
  * be cleared using this hook. This hook is called whenever a style is updated,
  * deleted, or any effect associated with the style is update or deleted.
  *
- * @param Drupal\image\Plugin\Core\Entity\ImageStyle $style
- *   The image style array that is being flushed.
+ * @param \Drupal\image\ImageStyleInterface $style
+ *   The image style object that is being flushed.
  */
 function hook_image_style_flush($style) {
   // Empty cached data that contains information about the style.

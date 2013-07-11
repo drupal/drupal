@@ -24,6 +24,14 @@ use Drupal\Core\TypedData\ComplexDataInterface;
 interface FieldItemInterface extends ComplexDataInterface {
 
   /**
+   * Gets the field definition.
+   *
+   * @return \Drupal\Core\Entity\Field\FieldDefinitionInterface
+   *   The field definition.
+   */
+  public function getFieldDefinition();
+
+  /**
    * Magic method: Gets a property value.
    *
    * @param $property_name

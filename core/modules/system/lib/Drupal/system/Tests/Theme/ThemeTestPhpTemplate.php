@@ -42,7 +42,7 @@ class ThemeTestPhpTemplate extends WebTestBase {
       ->set('default', 'test_theme_phptemplate')
       ->save();
     $this->drupalGet('theme-test/template-test');
-    $this->assertText('Success: Template overridden with PHPTemplate theme.', t('Template overridden by PHPTemplate file.'));
+    $this->assertText('Success: Template overridden with PHPTemplate theme.', 'Template overridden by PHPTemplate file.');
   }
 
 }

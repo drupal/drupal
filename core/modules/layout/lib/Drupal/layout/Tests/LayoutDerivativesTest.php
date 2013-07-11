@@ -33,7 +33,7 @@ class LayoutDerivativesTest extends WebTestBase {
    * Tests for module/theme layout derivatives.
    */
   function testDerivatives() {
-    $manager = drupal_container()->get('plugin.manager.layout');
+    $manager = $this->container->get('plugin.manager.layout');
 
     $definitions = $manager->getDefinitions();
     $this->assertTrue(is_array($definitions), 'Definitions found.');

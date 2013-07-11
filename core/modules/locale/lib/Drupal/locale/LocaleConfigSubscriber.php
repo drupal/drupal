@@ -70,7 +70,7 @@ class LocaleConfigSubscriber implements EventSubscriberInterface {
       $context->set('locale.language', $language);
     }
     elseif ($account = $context->get('user.account')) {
-      $context->set('locale.language', language_load(user_preferred_langcode($account)));
+      $context->set('locale.language', language_load($account->getPreferredLangcode()));
     }
     elseif ($language = $this->languageManager->getLanguage(Language::TYPE_INTERFACE)) {
       $context->set('locale.language', $language);

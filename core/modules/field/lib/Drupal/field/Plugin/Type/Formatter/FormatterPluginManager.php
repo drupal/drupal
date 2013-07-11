@@ -58,6 +58,15 @@ class FormatterPluginManager extends DefaultPluginManager {
   public function createInstance($plugin_id, array $configuration) {
     $plugin_definition = $this->discovery->getDefinition($plugin_id);
     $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
+
+    // @todo This is copied from \Drupal\Core\Plugin\Factory\ContainerFactory.
+    //   Find a way to restore sanity to
+    //   \Drupal\field\Plugin\Type\Formatter\FormatterBase::__construct().
+    // If the plugin provides a factory method, pass the container to it.
+    if (is_subclass_of($plugin_class, 'Drupal\Core\Plugin\ContainerFactoryPluginInterface')) {
+      return $plugin_class::create(\Drupal::getContainer(), $configuration, $plugin_id, $plugin_definition);
+    }
+
     return new $plugin_class($plugin_id, $plugin_definition, $configuration['field_definition'], $configuration['settings'], $configuration['label'], $configuration['view_mode']);
   }
 

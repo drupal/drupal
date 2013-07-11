@@ -75,6 +75,9 @@ body.install-page {
     float: left;
     width: 35%;
   }
+  [dir="rtl"] body.install-page #sidebar-first {
+    float: right;
+  }
 }
 body.install-page #site-name {
   font-size: 2em;

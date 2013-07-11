@@ -32,13 +32,13 @@ class EditorController extends ContainerAware {
    * @param string $langcode
    *   The name of the language for which the processed text field is being
    *   rererendered.
-   * @param string $view_mode
+   * @param string $view_mode_id
    *   The view mode the processed text field should be rerendered in.
    *
    * @return \Drupal\Core\Ajax\AjaxResponse
    *   The Ajax response.
    */
-  public function getUntransformedText(EntityInterface $entity, $field_name, $langcode, $view_mode) {
+  public function getUntransformedText(EntityInterface $entity, $field_name, $langcode, $view_mode_id) {
     $response = new AjaxResponse();
 
     // Direct text editing is only supported for single-valued fields.

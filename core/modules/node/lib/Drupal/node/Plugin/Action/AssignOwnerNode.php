@@ -11,6 +11,7 @@ use Drupal\Core\Annotation\Action;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -22,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   type = "node"
  * )
  */
-class AssignOwnerNode extends ConfigurableActionBase {
+class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactoryPluginInterface {
 
   /**
    * The database connection.

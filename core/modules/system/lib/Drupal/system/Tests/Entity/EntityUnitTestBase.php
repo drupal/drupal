@@ -91,11 +91,9 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
    *   The reloaded entity.
    */
   protected function reloadEntity(EntityInterface $entity) {
-    $ids = array($entity->id());
     $controller = $this->entityManager->getStorageController($entity->entityType());
-    $controller->resetCache($ids);
-    $entities = $controller->loadMultiple($ids);
-    return reset($entities);
+    $controller->resetCache(array($entity->id()));
+    return $controller->load($entity->id());
   }
 
   /**

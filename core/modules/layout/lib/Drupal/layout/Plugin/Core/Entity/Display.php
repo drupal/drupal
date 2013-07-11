@@ -179,7 +179,7 @@ class Display extends DisplayBase implements BoundDisplayInterface {
         throw new \Exception(sprintf('Display "%id" had no layout plugin attached.', array('%id' => $this->id())), E_RECOVERABLE_ERROR);
       }
 
-      $this->layoutInstance = layout_manager()->createInstance($this->layout, $this->layoutSettings);
+      $this->layoutInstance = \Drupal::service('plugin.manager.layout')->createInstance($this->layout, $this->layoutSettings);
       // @todo add handling for remapping if the layout could not be found
     }
 

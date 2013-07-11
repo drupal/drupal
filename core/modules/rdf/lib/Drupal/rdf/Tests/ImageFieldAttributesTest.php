@@ -101,7 +101,7 @@ class ImageFieldAttributesTest extends ImageFieldTestBase {
 
     // Construct the node and image URIs for testing.
     $node_uri = url('node/' . $this->node->id(), array('absolute' => TRUE));
-    $image_uri = image_style_url('medium', $this->file->getFileUri());
+    $image_uri = entity_load('image_style', 'medium')->buildUrl($this->file->getFileUri());
 
     // Test relations from node to image.
     $expected_value = array(

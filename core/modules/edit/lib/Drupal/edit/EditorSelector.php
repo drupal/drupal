@@ -9,7 +9,7 @@ namespace Drupal\edit;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 
 /**
  * Selects an in-place editor (an Editor plugin) for a field.
@@ -43,7 +43,7 @@ class EditorSelector implements EditorSelectorInterface {
   /**
    * {@inheritdoc}
    */
-  public function getEditor($formatter_type, FieldInstance $instance, array $items) {
+  public function getEditor($formatter_type, FieldDefinitionInterface $field_definition, array $items) {
     // Build a static cache of the editors that have registered themselves as
     // alternatives to a certain editor.
     if (!isset($this->alternatives)) {
@@ -80,7 +80,7 @@ class EditorSelector implements EditorSelectorInterface {
     // Make a choice.
     foreach ($editor_choices as $editor_id) {
       $editor = $this->editorManager->createInstance($editor_id);
-      if ($editor->isCompatible($instance, $items)) {
+      if ($editor->isCompatible($field_definition, $items)) {
         return $editor_id;
       }
     }

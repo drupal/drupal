@@ -65,12 +65,12 @@ class DateUpgradePathTest extends UpgradePathTestBase {
       'locked' => '0',
     );
 
+    $actual_formats = entity_load_multiple('date_format', array_keys($expected_formats));
     foreach ($expected_formats as $type => $format) {
-      $format_info = config('system.date')->get('formats.' . $type);
-
-      $this->assertEqual($format_info['name'], $format['name'], format_string('Config value for @type name is the same', array('@type' => $type)));
-      $this->assertEqual($format_info['locked'], $format['locked'], format_string('Config value for @type locked is the same', array('@type' => $type)));
-      $this->assertEqual($format_info['pattern']['php'], $format['pattern']['php'], format_string('Config value for @type PHP date pattern is the same', array('@type' => $type)));
+      $format_info = $actual_formats[$type];
+      $this->assertEqual($format_info->label(), $format['name'], format_string('Config value for @type name is the same', array('@type' => $type)));
+      $this->assertEqual($format_info->get('locked'), $format['locked'], format_string('Config value for @type locked is the same', array('@type' => $type)));
+      $this->assertEqual($format_info->getPattern(), $format['pattern']['php'], format_string('Config value for @type PHP date pattern is the same', array('@type' => $type)));
 
       // Make sure that the variable was deleted.
       $this->assertNull(update_variable_get('date_format_' . $type), format_string('Date format variable for @type was deleted.', array('@type' => $type)));
@@ -91,10 +91,10 @@ class DateUpgradePathTest extends UpgradePathTestBase {
       ),
     );
 
-    $config = config('locale.config.de.system.date');
     foreach ($expected_de_formats as $locale_format) {
-      $format = $config->get('formats.' . $locale_format['type'] . '.pattern.php');
+      $format = config('locale.config.de.system.date_format.' . $locale_format['type'])->get('pattern.php');
       $this->assertEqual($locale_format['format'], $format);
     }
   }
+
 }

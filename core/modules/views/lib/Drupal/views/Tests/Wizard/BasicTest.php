@@ -135,7 +135,7 @@ class BasicTest extends WizardTestBase {
     $this->assertNoText($node2->label());
 
     // Make sure the listing page doesn't show disabled default views.
-    $this->assertNoText('tracker', t('Default tracker view does not show on the listing page.'));
+    $this->assertNoText('tracker', 'Default tracker view does not show on the listing page.');
   }
 
   /**

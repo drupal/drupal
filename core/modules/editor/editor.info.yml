@@ -1,6 +1,6 @@
 name: 'Text Editor'
 type: module
-description: 'Allows to associate text formats with text editor libraries such as WYSIWYGs or toolbars.'
+description: 'Provides a means to associate text formats with text editor libraries such as WYSIWYGs or toolbars.'
 package: Core
 version: VERSION
 core: 8.x

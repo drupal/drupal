@@ -230,16 +230,6 @@ tr .ajax-progress-throbber .throbber {
 }
 
 /**
- *  Keep form elements from overflowing their containers.
- */
-input {
-  max-width: 100%;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-/**
  * Inline items.
  */
 .container-inline div,
@@ -352,26 +342,4 @@ input {
 }
 .align-justify {
   text-align: justify;
-}
-
-/**
- * Block-level HTML5 display definition.
- *
- * Provides display values for browsers that don't recognize the new elements
- * and therefore display them inline by default.
- */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-main,
-menu,
-nav,
-section,
-summary {
-  display: block;
 }

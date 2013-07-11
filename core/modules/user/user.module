@@ -159,7 +159,7 @@ function user_uri($user) {
  * @see user_format_name()
  */
 function user_label($entity_type, $entity) {
-  return user_format_name($entity->getBCEntity());
+  return $entity->getUsername();
 }
 
 /**
@@ -462,11 +462,8 @@ function user_access($string, AccountInterface $account = NULL) {
     $account = Drupal::request()->attributes->get('account') ?: $user;
   }
 
-  // Make sure we are working with the BC decorator.
-  $account = $account instanceof User ? $account->getBCEntity() : $account;
-
   // User #1 has all privileges:
-  if ($account->uid == 1) {
+  if ($account->id() == 1) {
     return TRUE;
   }
 
@@ -478,14 +475,14 @@ function user_access($string, AccountInterface $account = NULL) {
     $drupal_static_fast['perm'] = &drupal_static(__FUNCTION__);
   }
   $perm = &$drupal_static_fast['perm'];
-  if (!isset($perm[$account->uid])) {
-    $perm[$account->uid] = array();
+  if (!isset($perm[$account->id()])) {
+    $perm[$account->id()] = array();
     foreach (user_role_permissions($account->getRoles()) as $role_permissions) {
-      $perm[$account->uid] += array_fill_keys($role_permissions, TRUE);
+      $perm[$account->id()] += array_fill_keys($role_permissions, TRUE);
     }
   }
 
-  return isset($perm[$account->uid][$string]);
+  return isset($perm[$account->id()][$string]);
 }
 
 /**
@@ -586,10 +583,10 @@ function user_search_execute($keys = NULL, $conditions = NULL) {
   foreach ($accounts as $account) {
     $result = array(
       'title' => user_format_name($account),
-      'link' => url('user/' . $account->uid, array('absolute' => TRUE)),
+      'link' => url('user/' . $account->id(), array('absolute' => TRUE)),
     );
     if (user_access('administer users')) {
-      $result['title'] .= ' (' . $account->mail . ')';
+      $result['title'] .= ' (' . $account->getEmail() . ')';
     }
     $results[] = $result;
   }
@@ -666,25 +663,18 @@ function user_preprocess_block(&$variables) {
 /**
  * Format a username.
  *
- * By default, the passed-in object's 'name' property is used if it exists, or
- * else, the site-defined value for the 'anonymous' variable. However, a module
- * may override this by implementing
- * hook_user_format_name_alter(&$name, $account).
- *
- * @see hook_user_format_name_alter()
- *
- * @param $account
+ * @param \Drupal\Core\Session\Interface $account
  *   The account object for the user whose name is to be formatted.
  *
  * @return
  *   An unsanitized string with the username to display. The code receiving
  *   this result must ensure that check_plain() is called on it before it is
  *   printed to the page.
+ *
+ * @deprecated Use \Drupal\Core\Session\Interface::getUsername() instead.
  */
-function user_format_name($account) {
-  $name = !empty($account->name) ? $account->name : config('user.settings')->get('anonymous');
-  drupal_alter('user_format_name', $name, $account);
-  return $name;
+function user_format_name(AccountInterface $account) {
+  return $account->getUsername();
 }
 
 /**
@@ -707,7 +697,7 @@ function user_template_preprocess_default_variables_alter(&$variables) {
   unset($variables['user']->pass, $variables['user']->sid, $variables['user']->ssid);
 
   $variables['is_admin'] = user_access('access administration pages');
-  $variables['logged_in'] = ($user->uid > 0);
+  $variables['logged_in'] = $user->isAuthenticated();
 }
 
 /**
@@ -720,20 +710,14 @@ function user_template_preprocess_default_variables_alter(&$variables) {
  * @see template_process_username()
  */
 function template_preprocess_username(&$variables) {
-  $account = $variables['account'];
-  if ($account instanceof User) {
-    $account = $account->getBCEntity();
-  }
+  $account = $variables['account'] ?: drupal_anonymous_user();
 
   $variables['extra'] = '';
-  if (empty($account->uid)) {
-   $variables['uid'] = 0;
-   if (theme_get_setting('features.comment_user_verification')) {
-     $variables['extra'] = ' (' . t('not verified') . ')';
-   }
-  }
-  else {
-    $variables['uid'] = (int) $account->uid;
+  $variables['uid'] = $account->id();
+  if (empty($variables['uid'])) {
+    if (theme_get_setting('features.comment_user_verification')) {
+      $variables['extra'] = ' (' . t('not verified') . ')';
+    }
   }
 
   // Set the name to a formatted name that is safe for printing and
@@ -741,7 +725,7 @@ function template_preprocess_username(&$variables) {
   // unsanitized version, in case other preprocess functions want to implement
   // their own shortening logic or add markup. If they do so, they must ensure
   // that $variables['name'] is safe for printing.
-  $name = $variables['name_raw'] = user_format_name($account);
+  $name = $variables['name_raw'] = $account->getUsername();
   if (drupal_strlen($name) > 20) {
     $name = drupal_substr($name, 0, 15) . '...';
   }
@@ -810,7 +794,7 @@ function theme_username($variables) {
  */
 function user_is_anonymous() {
   // Menu administrators can see items for anonymous when administering.
-  return !$GLOBALS['user']->uid || !empty($GLOBALS['menu_admin']);
+  return $GLOBALS['user']->isAnonymous() || !empty($GLOBALS['menu_admin']);
 }
 
 /**
@@ -818,9 +802,11 @@ function user_is_anonymous() {
  *
  * @return bool
  *   TRUE if the user is logged in, FALSE if the user is anonymous.
+ *
+ * @deprecated Use \Drupal\Core\Session\UserSession::isAuthenticated().
  */
 function user_is_logged_in() {
-  return (bool) $GLOBALS['user']->uid;
+  return $GLOBALS['user']->isAuthenticated();
 }
 
 /**
@@ -1043,7 +1029,7 @@ function user_menu_breadcrumb_alter(&$active_trail, $item) {
 function user_menu_link_load($menu_links) {
   // Hide the "User account" link for anonymous users.
   foreach ($menu_links as $link) {
-    if ($link['link_path'] == 'user' && $link['module'] == 'system' && !$GLOBALS['user']->uid) {
+    if ($link['link_path'] == 'user' && $link['module'] == 'system' && !$GLOBALS['user']->id()) {
       $link['hidden'] = 1;
     }
   }
@@ -1089,7 +1075,7 @@ function user_uid_only_optional_to_arg($arg) {
  */
 function user_uid_optional_load($uid = NULL) {
   if (!isset($uid)) {
-    $uid = $GLOBALS['user']->uid;
+    $uid = $GLOBALS['user']->id();
   }
   return user_load($uid);
 }
@@ -1103,7 +1089,7 @@ function user_uid_optional_to_arg($arg) {
   // Give back the current user uid when called from eg. tracker, aka.
   // with an empty arg. Also use the current user uid when called from
   // the menu with a % for the current account link.
-  return empty($arg) || $arg == '%' ? $GLOBALS['user']->uid : $arg;
+  return empty($arg) || $arg == '%' ? $GLOBALS['user']->id() : $arg;
 }
 
 /**
@@ -1113,7 +1099,7 @@ function user_uid_optional_to_arg($arg) {
  * authenticated users are expected to see "My account".
  */
 function user_menu_title() {
-  if (!user_is_logged_in()) {
+  if ($GLOBALS['user']->isAnonymous()) {
     switch (current_path()) {
       case 'user' :
       case 'user/login' :
@@ -1134,30 +1120,8 @@ function user_menu_title() {
 /**
  * Menu item title callback - use the user name.
  */
-function user_page_title($account) {
-  return is_object($account) ? user_format_name($account) : '';
-}
-
-/**
- * Set up a series for validators which check for blocked users,
- * then authenticate against local database, then return an error if
- * authentication fails. Distributed authentication modules are welcome
- * to use hook_form_alter() to change this series in order to
- * authenticate against their user database instead of the local users
- * table. If a distributed authentication module is successful, it
- * should set $form_state['uid'] to a user ID.
- *
- * We use three validators instead of one since external authentication
- * modules usually only need to alter the second validator.
- *
- * @see user_login_name_validate()
- * @see user_login_authenticate_validate()
- * @see user_login_final_validate()
- * @return array
- *   A simple list of validate functions.
- */
-function user_login_default_validators() {
-  return array('user_login_name_validate', 'user_login_authenticate_validate', 'user_login_final_validate');
+function user_page_title(UserInterface $account = NULL) {
+  return $account ? $account->getUsername() : '';
 }
 
 /**
@@ -1178,11 +1142,11 @@ function user_authenticate($name, $password) {
       $password_hasher = drupal_container()->get('password');
       if ($password_hasher->check($password, $account)) {
         // Successful authentication.
-        $uid = $account->uid;
+        $uid = $account->id();
 
         // Update user to new password scheme if needed.
         if ($password_hasher->userNeedsNewHash($account)) {
-          $account->pass = $password;
+          $account->setPassword($password);
           $account->save();
         }
       }
@@ -1200,21 +1164,21 @@ function user_authenticate($name, $password) {
  *
  * The global $user object is replaced with the passed in account.
  *
- * @param \Drupal\Core\Session\AccountInterface $account
+ * @param \Drupal\user\UserInterface $account
  *   The account to log in.
  *
  * @see hook_user_login()
  */
-function user_login_finalize(AccountInterface $account) {
+function user_login_finalize(UserInterface $account) {
   global $user;
   $user = $account;
-  watchdog('user', 'Session opened for %name.', array('%name' => $user->name));
+  watchdog('user', 'Session opened for %name.', array('%name' => $user->getUsername()));
   // Update the user table timestamp noting user has logged in.
   // This is also used to invalidate one-time login links.
-  $user->login = REQUEST_TIME;
+  $account->setLastLoginTime(REQUEST_TIME);
   db_update('users')
-    ->fields(array('login' => $user->login))
-    ->condition('uid', $user->uid)
+    ->fields(array('login' => $user->getLastLoginTime()))
+    ->condition('uid', $user->id())
     ->execute();
 
   // Regenerate the session ID to prevent against session fixation attacks.
@@ -1262,9 +1226,9 @@ function user_user_logout($account) {
  */
 function user_pass_reset_url($account, $options = array()) {
   $timestamp = REQUEST_TIME;
-  $langcode = isset($options['langcode']) ? $options['langcode'] : user_preferred_langcode($account);
+  $langcode = isset($options['langcode']) ? $options['langcode'] : $account->getPreferredLangcode();
   $url_options = array('absolute' => TRUE, 'language' => language_load($langcode));
-  return url("user/reset/$account->uid/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login), $url_options);
+  return url("user/reset/" . $account->id() . "/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime()), $url_options);
 }
 
 /**
@@ -1290,9 +1254,9 @@ function user_pass_reset_url($account, $options = array()) {
  */
 function user_cancel_url($account, $options = array()) {
   $timestamp = REQUEST_TIME;
-  $langcode = isset($options['langcode']) ? $options['langcode'] : user_preferred_langcode($account);
+  $langcode = isset($options['langcode']) ? $options['langcode'] : $account->getPreferredLangcode();
   $url_options = array('absolute' => TRUE, 'language' => language_load($langcode));
-  return url("user/$account->uid/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login), $url_options);
+  return url("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->login), $url_options);
 }
 
 /**
@@ -1371,7 +1335,7 @@ function user_cancel($edit, $uid, $method) {
   );
 
   // After cancelling account, ensure that user is logged out.
-  if ($account->uid == $user->uid) {
+  if ($account->id() == $user->id()) {
     // Batch API stores data in the session, so use the finished operation to
     // manipulate the current user's session id.
     $batch['finished'] = '_user_cancel_session_regenerate';
@@ -1414,7 +1378,7 @@ function _user_cancel($edit, $account, $method) {
       if (!empty($edit['user_cancel_notify'])) {
         _user_mail_notify('status_canceled', $account);
       }
-      user_delete($account->uid);
+      $account->delete();
       drupal_set_message(t('%name has been deleted.', array('%name' => $account->name)));
       watchdog('user', 'Deleted user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
       break;
@@ -1424,7 +1388,7 @@ function _user_cancel($edit, $account, $method) {
   // their session though, as we might have information in it, and we can't
   // regenerate it because batch API uses the session ID, we will regenerate it
   // in _user_cancel_session_regenerate().
-  if ($account->uid == $user->uid) {
+  if ($account->id() == $user->id()) {
     $user = drupal_anonymous_user();
   }
 
@@ -1808,7 +1772,7 @@ function user_role_revoke_permissions($rid, array $permissions = array()) {
 
 function user_multiple_cancel_confirm($form, &$form_state) {
   // Retrieve the accounts to be canceled from the temp store.
-  $accounts = Drupal::service('user.tempstore')->get('user_user_operations_cancel')->get($GLOBALS['user']->uid);
+  $accounts = Drupal::service('user.tempstore')->get('user_user_operations_cancel')->get($GLOBALS['user']->id());
   $form['accounts'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
   foreach ($accounts as $account) {
     $uid = $account->id();
@@ -1876,7 +1840,7 @@ function user_multiple_cancel_confirm_submit($form, &$form_state) {
   global $user;
 
   // Clear out the accounts from the temp store.
-  Drupal::service('user.tempstore')->get('user_user_operations_cancel')->delete($user->uid);
+  Drupal::service('user.tempstore')->get('user_user_operations_cancel')->delete($user->id());
   if ($form_state['values']['confirm']) {
     foreach ($form_state['values']['accounts'] as $uid => $value) {
       // Prevent programmatic form submissions from cancelling user 1.
@@ -1884,12 +1848,12 @@ function user_multiple_cancel_confirm_submit($form, &$form_state) {
         continue;
       }
       // Prevent user administrators from deleting themselves without confirmation.
-      if ($uid == $user->uid) {
+      if ($uid == $user->id()) {
         $admin_form_state = $form_state;
         unset($admin_form_state['values']['user_cancel_confirm']);
         // The $user global is not a complete user entity, so load the full
         // entity.
-        $admin_form_state['values']['_account'] = user_load($user->uid);
+        $admin_form_state['values']['_account'] = user_load($user->id());
         user_cancel_confirm_form_submit(array(), $admin_form_state);
       }
       else {
@@ -1921,40 +1885,6 @@ function theme_user_signature($variables) {
   }
 
   return $output;
-}
-
-/**
- * Get the language object preferred by the user. This user preference can
- * be set on the user account editing page, and is only available if there
- * are more than one languages enabled on the site. If the user did not
- * choose a preferred language, or is the anonymous user, the $default
- * value, or if it is not set, the site default language will be returned.
- *
- * @param $account
- *   User account to look up language for.
- * @param $type
- *   Optional string to define which preferred langcode should be used.
- *   Default to 'preferred_langcode' property.
- *   If set 'preferred_$type_langcode' is used.
- * @param $default
- *   Optional default language code to return if the account
- *   has no valid language.
- */
-function user_preferred_langcode($account, $type = NULL, $default = NULL) {
-  $language_list = language_list();
-  $account = $account->getBCEntity();
-  if (isset($type)) {
-    $preferred_langcode = $account->{'preferred_' . $type . '_langcode'};
-  }
-  else {
-    $preferred_langcode = $account->preferred_langcode;
-  }
-  if (!empty($preferred_langcode) && isset($language_list[$preferred_langcode])) {
-    return $language_list[$preferred_langcode]->id;
-  }
-  else {
-    return $default ? $default : language_default()->id;
-  }
 }
 
 /**
@@ -1993,7 +1923,7 @@ function _user_mail_notify($op, $account, $langcode = NULL) {
   $notify = config('user.settings')->get('notify.' . $op);
   if ($notify || ($op != 'status_canceled' && $op != 'status_blocked')) {
     $params['account'] = $account;
-    $langcode = $langcode ? $langcode : user_preferred_langcode($account);
+    $langcode = $langcode ? $langcode : $account->getPreferredLangcode();
     // Get the custom site notification email to use as the from email address
     // if it has been set.
     $site_mail = config('system.site')->get('mail_notification');
@@ -2157,7 +2087,7 @@ function user_toolbar() {
   global $user;
 
   // Add logout & user account links or login link.
-  if ($user->uid) {
+  if ($user->isAuthenticated()) {
     $links = array(
       'account' => array(
         'title' => t('View profile'),
@@ -2169,7 +2099,7 @@ function user_toolbar() {
       ),
       'account_edit' => array(
         'title' => t('Edit profile'),
-        'href' => 'user/' . $user->uid . '/edit',
+        'href' => 'user/' . $user->id() . '/edit',
         'html' => TRUE,
         'attributes' => array(
           'title' => t('Edit user account'),
@@ -2194,7 +2124,7 @@ function user_toolbar() {
     '#type' => 'toolbar_item',
     'tab' => array(
       '#type' => 'link',
-      '#title' => user_format_name($user),
+      '#title' => $user->getUsername(),
       '#href' => 'user',
       '#options' => array(
         'attributes' => array(

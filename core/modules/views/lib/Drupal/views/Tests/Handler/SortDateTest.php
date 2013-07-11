@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Handler;
 
+use Drupal\Component\Utility\String;
 use Drupal\views\Tests\ViewUnitTestBase;
 
 /**
@@ -199,10 +200,10 @@ class SortDateTest extends ViewUnitTestBase {
         $this->executeView($view);
 
         // Verify the result.
-        $this->assertEqual(count($this->dataSet()), count($view->result), t('The number of returned rows match.'));
+        $this->assertEqual(count($this->dataSet()), count($view->result), 'The number of returned rows match.');
         $this->assertIdenticalResultset($view, $this->expectedResultSet($granularity, $reverse), array(
           'views_test_data_name' => 'name',
-        ), t('Result is returned correctly when ordering by granularity @granularity, @reverse.', array('@granularity' => $granularity, '@reverse' => $reverse ? t('reverse') : t('forward'))));
+        ), String::format('Result is returned correctly when ordering by granularity @granularity, @reverse.', array('@granularity' => $granularity, '@reverse' => $reverse ? 'reverse' : 'forward')));
         $view->destroy();
         unset($view);
       }

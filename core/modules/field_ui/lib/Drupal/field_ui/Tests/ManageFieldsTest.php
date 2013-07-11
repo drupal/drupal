@@ -330,7 +330,7 @@ class ManageFieldsTest extends FieldUiTestBase {
       ->save();
 
     $this->drupalGet($admin_path);
-    $this->assertNoFieldById($element_id, '', t('No default value was possible for widget that disables default value.'));
+    $this->assertNoFieldById($element_id, '', 'No default value was possible for widget that disables default value.');
   }
 
   /**

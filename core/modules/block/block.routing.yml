@@ -5,6 +5,13 @@ block_admin_block_delete:
   requirements:
     _permission: 'administer blocks'
 
+block_admin_edit:
+  pattern: '/admin/structure/block/manage/{block}'
+  defaults:
+    _entity_form: 'block.default'
+  requirements:
+    _entity_access: 'block.update'
+
 block_admin_display:
   pattern: '/admin/structure/block'
   defaults:

@@ -2024,12 +2024,7 @@ function _drupal_bootstrap_kernel() {
 function _drupal_bootstrap_page_cache() {
   global $user;
 
-  // Allow specifying special cache handlers in settings.php, like
-  // using memcached or files for storing cache information.
   require_once __DIR__ . '/cache.inc';
-  foreach (variable_get('cache_backends', array()) as $include) {
-    require_once DRUPAL_ROOT . '/' . $include;
-  }
   // Check for a cache mode force from settings.php.
   if (settings()->get('page_cache_without_database')) {
     $cache_enabled = TRUE;

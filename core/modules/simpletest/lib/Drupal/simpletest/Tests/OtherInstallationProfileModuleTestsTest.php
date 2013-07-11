@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\simpletest\Tests\OtherInstallationProfileModuleTestsTest.
+ * Definition of \Drupal\simpletest\Tests\OtherInstallationProfileModuleTestsTest.
  */
 
 namespace Drupal\simpletest\Tests;
@@ -30,7 +30,7 @@ class OtherInstallationProfileModuleTestsTest extends WebTestBase {
    * which should not be found.
    *
    * @see SimpleTestInstallationProfileModuleTestsTestCase
-   * @see Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest
+   * @see \Drupal\drupal_system_listing_compatible_test\Tests\SystemListingCompatibleTest
    */
   protected $profile = 'minimal';
 

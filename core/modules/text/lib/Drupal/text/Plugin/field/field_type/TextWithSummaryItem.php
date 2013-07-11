@@ -106,28 +106,6 @@ class TextWithSummaryItem extends TextItemBase {
   /**
    * {@inheritdoc}
    */
-  public function getConstraints() {
-    $constraint_manager = \Drupal::typedData()->getValidationConstraintManager();
-    $constraints = parent::getConstraints();
-
-    if (!empty($this->getInstance()->getField()->settings['max_length'])) {
-      $max_length = $this->getInstance()->getField()->settings['max_length'];
-      $constraints[] = $constraint_manager->create('ComplexData', array(
-        'summary' => array(
-          'Length' => array(
-            'max' => $max_length,
-            'maxMessage' => t('%name: the summary may not be longer than @max characters.', array('%name' => $this->getInstance()->label, '@max' => $max_length)),
-          )
-        ),
-      ));
-    }
-
-    return $constraints;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function instanceSettingsForm(array $form, array &$form_state) {
     $element = array();
 

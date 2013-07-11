@@ -1,0 +1,6 @@
+services:
+  access_check.taxonomy_term.create:
+    class: Drupal\taxonomy\Access\TaxonomyTermCreateAccess
+    arguments: ['@plugin.manager.entity']
+    tags:
+      - { name: access_check }

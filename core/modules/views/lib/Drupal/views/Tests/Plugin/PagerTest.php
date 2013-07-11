@@ -260,7 +260,7 @@ class PagerTest extends PluginTestBase {
     $view->pager = NULL;
     $output = $view->render();
     $output = drupal_render($output);
-    $this->assertEqual(preg_match('/<ul class="pager">/', $output), 0, t('The pager is not rendered.'));
+    $this->assertEqual(preg_match('/<ul class="pager">/', $output), 0, 'The pager is not rendered.');
   }
 
   /**

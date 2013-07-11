@@ -60,19 +60,19 @@ class DateFormatsLanguageTest extends WebTestBase {
 
     // Add new date format for French.
     $edit = array(
-      'date_format_id' => 'example_style_fr',
-      'date_format_name' => 'Example Style',
+      'id' => 'example_style_fr',
+      'label' => 'Example Style',
       'date_format_pattern' => 'd.m.Y - H:i',
-      'date_langcode[]' => array('fr'),
+      'locales[]' => array('fr'),
     );
     $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
 
     // Add new date format for English.
     $edit = array(
-      'date_format_id' => 'example_style_en',
-      'date_format_name' => 'Example Style',
+      'id' => 'example_style_en',
+      'label' => 'Example Style',
       'date_format_pattern' => 'j M Y - g:ia',
-      'date_langcode[]' => array('en'),
+      'locales[]' => array('en'),
     );
     $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
 

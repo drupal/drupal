@@ -187,7 +187,7 @@ function _language_admin_common_controls(&$form, $language = NULL) {
   }
   $form['name'] = array(
     '#type' => 'textfield',
-    '#title' => t('Language name'),
+    '#title' => t('Language name in English'),
     '#maxlength' => 64,
     '#default_value' => @$language->name,
     '#required' => TRUE,

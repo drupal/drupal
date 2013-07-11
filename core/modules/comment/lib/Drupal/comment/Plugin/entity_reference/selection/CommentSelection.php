@@ -7,17 +7,16 @@
 
 namespace Drupal\comment\Plugin\entity_reference\selection;
 
-use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\entity_reference\Annotation\EntityReferenceSelection;
 use Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase;
 
 /**
  * Provides specific access control for the comment entity type.
  *
- * @Plugin(
+ * @EntityReferenceSelection(
  *   id = "comment_default",
- *   module = "comment",
  *   label = @Translation("Comment selection"),
  *   entity_types = {"comment"},
  *   group = "default",
@@ -27,7 +26,7 @@ use Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase;
 class CommentSelection extends SelectionBase {
 
   /**
-   * Overrides SelectionBase::buildEntityQuery().
+   * {@inheritdoc}
    */
   public function buildEntityQuery($match = NULL, $match_operator = 'CONTAINS') {
     $query = parent::buildEntityQuery($match, $match_operator);
@@ -42,7 +41,7 @@ class CommentSelection extends SelectionBase {
   }
 
   /**
-   * Overrides SelectionBase::entityQueryAlter().
+   * {@inheritdoc}
    */
   public function entityQueryAlter(SelectInterface $query) {
     $tables = $query->getTables();

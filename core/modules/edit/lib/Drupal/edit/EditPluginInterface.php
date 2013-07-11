@@ -8,7 +8,7 @@
 namespace Drupal\edit;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 
 /**
  * Defines an interface for in-place editors (Create.js PropertyEditor widgets).
@@ -21,15 +21,15 @@ interface EditPluginInterface extends PluginInspectionInterface {
   /**
    * Checks whether this editor is compatible with a given field instance.
    *
-   * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
-   *   The field instance of the field being edited.
+   * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+   *   The field definition of the field being edited.
    * @param array $items
    *   The field's item values.
    *
    * @return bool
    *   TRUE if it is compatible, FALSE otherwise.
    */
-  public function isCompatible(FieldInstance $instance, array $items);
+  public function isCompatible(FieldDefinitionInterface $field_definition, array $items);
 
   /**
    * Generates metadata that is needed specifically for this editor.
@@ -37,8 +37,8 @@ interface EditPluginInterface extends PluginInspectionInterface {
    * Will only be called by \Drupal\edit\MetadataGeneratorInterface::generate()
    * when the passed in field instance & item values will use this editor.
    *
-   * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
-   *   The field instance of the field being edited.
+   * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+   *   The field definition of the field being edited.
    * @param array $items
    *   The field's item values.
    *
@@ -46,7 +46,7 @@ interface EditPluginInterface extends PluginInspectionInterface {
    *   A keyed array with metadata. Each key should be prefixed with the plugin
    *   ID of the editor.
    */
-  public function getMetadata(FieldInstance $instance, array $items);
+  public function getMetadata(FieldDefinitionInterface $field_definition, array $items);
 
   /**
    * Returns the attachments for this editor.

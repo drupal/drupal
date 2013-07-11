@@ -60,14 +60,14 @@ class UserPasswordResetTest extends WebTestBase {
     $this->drupalPost(NULL, $edit, t('E-mail new password'));
 
     $this->assertText(t('Sorry, @name is not recognized as a username or an e-mail address.', array('@name' => $edit['name'])), 'Validation error message shown when trying to request password for invalid account.');
-    $this->assertEqual(count($this->drupalGetMails(array('id' => 'user_password_reset'))), 0, t('No e-mail was sent when requesting a password for an invalid account.'));
+    $this->assertEqual(count($this->drupalGetMails(array('id' => 'user_password_reset'))), 0, 'No e-mail was sent when requesting a password for an invalid account.');
 
     // Reset the password by username via the password reset page.
     $edit['name'] = $this->account->name;
     $this->drupalPost(NULL, $edit, t('E-mail new password'));
 
      // Verify that the user was sent an e-mail.
-    $this->assertMail('to', $this->account->mail, t('Password e-mail sent to user.'));
+    $this->assertMail('to', $this->account->mail, 'Password e-mail sent to user.');
     $subject = t('Replacement login information for @username at @site', array('@username' => $this->account->name, '@site' => config('system.site')->get('name')));
     $this->assertMail('subject', $subject, 'Password reset e-mail subject is correct.');
 

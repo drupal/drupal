@@ -36,7 +36,7 @@ function layout_menu() {
  *   otherwise.
  */
 function layout_user_access($key) {
-  return (user_access('administer layouts') && layout_manager()->getDefinition($key));
+  return (user_access('administer layouts') && Drupal::service('plugin.manager.layout')->getDefinition($key));
 }
 
 /**
@@ -52,23 +52,13 @@ function layout_permission() {
 }
 
 /**
- * Get the layout plugin manager instance.
- *
- * @return Drupal\layout\Plugin\Type\LayoutManager
- *   The layout plugin manager instance.
- */
-function layout_manager() {
-  return drupal_container()->get('plugin.manager.layout');
-}
-
-/**
  * Implements hook_theme().
  *
  * Expose all layouts as theme items, so themes can override layout markup.
  */
 function layout_theme($existing, $type, $theme, $path) {
   $items = array();
-  foreach (layout_manager()->getDefinitions() as $name => $layout) {
+  foreach (Drupal::service('plugin.manager.layout')->getDefinitions() as $name => $layout) {
     $items[$layout['theme']] = array(
       'variables' => array('content' => NULL),
       'path' => $layout['path'],

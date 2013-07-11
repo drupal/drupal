@@ -145,13 +145,6 @@ function aggregator_menu() {
     'title' => 'Categories',
     'route_name' => 'aggregator_categories',
   );
-  $items['aggregator/rss'] = array(
-    'title' => 'RSS feed',
-    'page callback' => 'aggregator_page_rss',
-    'access arguments' => array('access news feeds'),
-    'type' => MENU_CALLBACK,
-    'file' => 'aggregator.pages.inc',
-  );
   $items['aggregator/opml'] = array(
     'title' => 'OPML feed',
     'page callback' => 'aggregator_page_opml',

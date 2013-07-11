@@ -608,7 +608,7 @@ function theme_image_style_effects($variables) {
  *
  * @param $variables
  *   An associative array containing:
- *   - style: The image style array being previewed.
+ *   - style: \Drupal\image\ImageStyleInterface image style being previewed.
  *
  * @ingroup themeable
  */
@@ -634,9 +634,9 @@ function theme_image_style_preview($variables) {
   $original_attributes['style'] = 'width: ' . $original_width . 'px; height: ' . $original_height . 'px;';
 
   // Set up preview file information.
-  $preview_file = image_style_path($style->id(), $original_path);
+  $preview_file = $style->buildUri($original_path);
   if (!file_exists($preview_file)) {
-    image_style_create_derivative($style, $original_path, $preview_file);
+    $style->createDerivative($original_path, $preview_file);
   }
   $preview_image = image_get_info($preview_file);
   if ($preview_image['width'] > $preview_image['height']) {

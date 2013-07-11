@@ -355,7 +355,7 @@ function _update_cron_notify() {
       $default_langcode = language_default()->id;
       foreach ($notify_list as $target) {
         if ($target_user = user_load_by_mail($target)) {
-          $target_langcode = user_preferred_langcode($target_user);
+          $target_langcode = $target_user->getPreferredLangcode();
         }
         else {
           $target_langcode = $default_langcode;

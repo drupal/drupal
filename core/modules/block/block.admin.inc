@@ -21,32 +21,3 @@ function block_admin_demo($theme = NULL) {
   );
 }
 
-/**
- * Page callback: Build the block instance edit form.
- *
- * @param \Drupal\block\Plugin\Core\Entity\Block $entity
- *   The block instance.
- *
- * @return array
- *   The block instance edit form.
- */
-function block_admin_edit(Block $entity) {
-  // Get the theme for the page title.
-  $admin_theme = config('system.theme')->get('admin');
-  $themes = list_themes();
-  $theme_key = $entity->get('theme');
-  $theme = $themes[$theme_key];
-  // Use meaningful titles for the main site and administrative themes.
-  $theme_title = $theme->info['name'];
-  if ($theme_key == config('system.theme')->get('default')) {
-    $theme_title = t('!theme (default theme)', array('!theme' => $theme_title));
-  }
-  elseif ($admin_theme && $theme_key == $admin_theme) {
-    $theme_title = t('!theme (administration theme)', array('!theme' => $theme_title));
-  }
-
-  // Get the block label for the page title.
-  drupal_set_title(t("Configure %label block in %theme", array('%label' => $entity->label(), '%theme' => $theme_title)), PASS_THROUGH);
-
-  return Drupal::entityManager()->getForm($entity);
-}

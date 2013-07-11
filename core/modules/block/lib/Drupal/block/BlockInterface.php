@@ -15,6 +15,11 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface BlockInterface extends ConfigEntityInterface {
 
   /**
+   * Indicates the block label (title) should be displayed to end users.
+   */
+  const BLOCK_LABEL_VISIBLE = 'visible';
+
+  /**
    * Returns the plugin instance.
    *
    * @return \Drupal\block\BlockPluginInterface

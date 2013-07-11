@@ -59,7 +59,7 @@ class AccessTest extends PluginTestBase {
     $view = views_get_view('test_access_none');
     $view->setDisplay();
 
-    $this->assertTrue($view->display_handler->access($this->admin_user), t('Admin-Account should be able to access the view everytime'));
+    $this->assertTrue($view->display_handler->access($this->admin_user), 'Admin-Account should be able to access the view everytime');
     $this->assertTrue($view->display_handler->access($this->web_user));
     $this->assertTrue($view->display_handler->access($this->normal_user));
   }

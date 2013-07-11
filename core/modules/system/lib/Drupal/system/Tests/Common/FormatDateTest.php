@@ -40,11 +40,12 @@ class FormatDateTest extends WebTestBase {
     config('system.timezone')
       ->set('user.configurable', 1)
       ->save();
-    config('system.date')
-      ->set('formats.long.pattern.php', 'l, j. F Y - G:i')
-      ->set('formats.medium.pattern.php', 'j. F Y - G:i')
-      ->set('formats.short.pattern.php', 'Y M j - g:ia')
-      ->save();
+    $formats = $this->container->get('plugin.manager.entity')
+      ->getStorageController('date_format')
+      ->loadMultiple(array('long', 'medium', 'short'));
+    $formats['long']->setPattern('l, j. F Y - G:i')->save();
+    $formats['medium']->setPattern('j. F Y - G:i')->save();
+    $formats['short']->setPattern('Y M j - g:ia')->save();
 
     variable_set('locale_custom_strings_' . self::LANGCODE, array(
       '' => array('Sunday' => 'domingo'),
@@ -64,25 +65,25 @@ class FormatDateTest extends WebTestBase {
 
     // Add new date format.
     $edit = array(
-      'date_format_id' => 'example_style',
-      'date_format_name' => 'Example Style',
+      'id' => 'example_style',
+      'label' => 'Example Style',
       'date_format_pattern' => 'j M y',
     );
     $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
 
     // Add a second date format with a different case than the first.
     $edit = array(
-      'date_format_id' => 'example_style_uppercase',
-      'date_format_name' => 'Example Style Uppercase',
+      'id' => 'example_style_uppercase',
+      'label' => 'Example Style Uppercase',
       'date_format_pattern' => 'j M Y',
     );
     $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
-    $this->assertText(t('Custom date format updated.'));
+    $this->assertText(t('Custom date format added.'));
 
     $timestamp = strtotime('2007-03-10T00:00:00+00:00');
     $this->assertIdentical(format_date($timestamp, 'example_style', '', 'America/Los_Angeles'), '9 Mar 07', 'Test format_date() using an admin-defined date type.');
     $this->assertIdentical(format_date($timestamp, 'example_style_uppercase', '', 'America/Los_Angeles'), '9 Mar 2007', 'Test format_date() using an admin-defined date type with different case.');
-    $this->assertIdentical(format_date($timestamp, 'undefined_style'), format_date($timestamp, 'medium'), 'Test format_date() defaulting to medium when $type not found.');
+    $this->assertIdentical(format_date($timestamp, 'undefined_style'), format_date($timestamp, 'fallback'), 'Test format_date() defaulting to `fallback` when $type not found.');
   }
 
   /**

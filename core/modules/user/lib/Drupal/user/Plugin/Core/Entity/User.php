@@ -52,162 +52,10 @@ use Drupal\Core\Language\Language;
 class User extends EntityNG implements UserInterface {
 
   /**
-   * The user ID.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $uid;
-
-  /**
-   * The user UUID.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $uuid;
-
-  /**
-   * The unique user name.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $name;
-
-  /**
-   * The user's password (hashed).
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $pass;
-
-  /**
-   * The user's email address.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $mail;
-
-  /**
-   * The user's default theme.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $theme;
-
-  /**
-   * The user's signature.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $signature;
-
-  /**
-   * The user's signature format.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $signature_format;
-
-  /**
-   * The timestamp when the user was created.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $created;
-
-  /**
-   * The timestamp when the user last accessed the site. A value of 0 means the
-   * user has never accessed the site.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $access;
-
-  /**
-   * The timestamp when the user last logged in. A value of 0 means the user has
-   * never logged in.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $login;
-
-  /**
-   * Whether the user is active (1) or blocked (0).
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $status;
-
-  /**
-   * The user's timezone.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $timezone;
-
-  /**
-   * The user's langcode.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $langcode;
-
-  /**
-   * The user's preferred langcode for receiving emails and viewing the site.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $preferred_langcode;
-
-  /**
-   * The user's preferred langcode for viewing administration pages.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $preferred_admin_langcode;
-
-  /**
-   * The email address used for initial account creation.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $init;
-
-  /**
-   * The user's roles.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $roles;
-
-  /**
    * {@inheritdoc}
    */
   public function id() {
     return $this->get('uid')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function init() {
-    parent::init();
-    unset($this->access);
-    unset($this->created);
-    unset($this->init);
-    unset($this->login);
-    unset($this->mail);
-    unset($this->name);
-    unset($this->pass);
-    unset($this->preferred_admin_langcode);
-    unset($this->preferred_langcode);
-    unset($this->roles);
-    unset($this->signature);
-    unset($this->signature_format);
-    unset($this->status);
-    unset($this->theme);
-    unset($this->timezone);
-    unset($this->uid);
-    unset($this->uuid);
   }
 
   /**
@@ -300,6 +148,7 @@ class User extends EntityNG implements UserInterface {
     $storage_controller->deleteUserRoles($uids);
   }
 
+
   /**
    * {@inheritdoc}
    */
@@ -336,7 +185,6 @@ class User extends EntityNG implements UserInterface {
   public function getSessionData() {
     return array();
   }
-
   /**
    * {@inheritdoc}
    */
@@ -365,6 +213,184 @@ class User extends EntityNG implements UserInterface {
    */
   public function removeRole($rid) {
     $this->set('roles', array_diff($this->getRoles(), array($rid)));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPassword() {
+    return $this->get('pass')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setPassword($password) {
+    $this->get('pass')->value = $password;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEmail() {
+    return $this->get('mail')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setEmail($mail) {
+    $this->get('mail')->value = $mail;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefaultTheme() {
+    return $this->get('theme')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSignature() {
+    return $this->get('signature')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSignatureFormat() {
+    return $this->get('signature_format')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCreatedTime() {
+    return $this->get('created')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLastAccessedTime() {
+    return $this->get('access')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLastAccessTime($timestamp) {
+    $this->get('access')->value = $timestamp;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLastLoginTime() {
+    return $this->get('login')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLastLoginTime($timestamp) {
+    $this->get('login')->value = $timestamp;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isActive() {
+    return $this->get('status')->value == 1;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isBlocked() {
+    return $this->get('status')->value == 0;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function activate() {
+    $this->get('status')->value = 1;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function block() {
+    $this->get('status')->value = 0;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTimeZone() {
+    return $this->get('timezone')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function getPreferredLangcode($default = NULL) {
+    $language_list = language_list();
+    $preferred_langcode = $this->get('preferred_langcode')->value;
+    if (!empty($preferred_langcode) && isset($language_list[$preferred_langcode])) {
+      return $language_list[$preferred_langcode]->id;
+    }
+    else {
+      return $default ? $default : language_default()->id;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function getPreferredAdminLangcode($default = NULL) {
+    $language_list = language_list();
+    $preferred_langcode = $this->get('preferred_admin_langcode')->value;
+    if (!empty($preferred_langcode) && isset($language_list[$preferred_langcode])) {
+      return $language_list[$preferred_langcode]->id;
+    }
+    else {
+      return $default ? $default : language_default()->id;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getInitialEmail() {
+    return $this->get('init')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isAuthenticated() {
+    return $this->id() > 0;
+  }
+  /**
+   * {@inheritdoc}
+   */
+  public function isAnonymous() {
+    return $this->id() == 0;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUsername() {
+    $name = $this->get('name')->value ?: \Drupal::config('user.settings')->get('anonymous');
+    \Drupal::moduleHandler()->alter('user_format_name', $name, $this);
+    return $name;
   }
 
 }

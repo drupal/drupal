@@ -19,6 +19,13 @@ shortcut_set_admin:
   requirements:
     _permission: 'administer shortcuts'
 
+shortcut_set_add:
+  pattern: '/admin/config/user-interface/shortcut/add-set'
+  defaults:
+    _entity_form: 'shortcut.add'
+  requirements:
+    _entity_create_access: 'shortcut'
+
 shortcut_set_edit:
   pattern: '/admin/config/user-interface/shortcut/manage/{shortcut}/edit'
   defaults:

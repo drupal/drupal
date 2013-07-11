@@ -17,11 +17,11 @@
  * @see layout_menu()
  */
 function layout_page_view($key) {
-  $layout = layout_manager()->getDefinition($key);
+  $layout = Drupal::service('plugin.manager.layout')->getDefinition($key);
   drupal_set_title(t('View template %name', array('%name' => $layout['title'])), PASS_THROUGH);
 
   // Render the layout in an admin context with region demonstrations.
-  $instance = layout_manager()->createInstance($key, array());
+  $instance = Drupal::service('plugin.manager.layout')->createInstance($key, array());
   $regions = $instance->getRegions();
   foreach ($regions as $region => $info) {
     $regions[$region] = '<div class="layout-region-demonstration">' . check_plain($info['label']) . '</div>';

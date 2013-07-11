@@ -67,7 +67,7 @@ class TermLanguageTest extends TaxonomyTestBase {
 
     // Check if on the edit page the language is correct.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
-    $this->assertOptionSelected('edit-langcode', $edit['langcode'], t('The term language was correctly selected.'));
+    $this->assertOptionSelected('edit-langcode', $edit['langcode'], 'The term language was correctly selected.');
 
     // Change the language of the term.
     $edit['langcode'] = 'bb';
@@ -75,7 +75,7 @@ class TermLanguageTest extends TaxonomyTestBase {
 
     // Check again that on the edit page the language is correct.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
-    $this->assertOptionSelected('edit-langcode', $edit['langcode'], t('The term language was correctly selected.'));
+    $this->assertOptionSelected('edit-langcode', $edit['langcode'], 'The term language was correctly selected.');
   }
 
   function testDefaultTermLanguage() {

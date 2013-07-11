@@ -8,6 +8,9 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Datetime\Date as DateService;
 
 /**
  * A handler to provide proper displays for dates.
@@ -17,6 +20,54 @@ use Drupal\Component\Annotation\PluginID;
  * @PluginID("date")
  */
 class Date extends FieldPluginBase {
+
+  /**
+   * The date service.
+   *
+   * @var \Drupal\Core\Datetime\Date
+   */
+  protected $dateService;
+
+  /**
+   * The date format storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   */
+  protected $dateFormatStorage;
+
+  /**
+   * Constructs a new Date object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin ID for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Datetime\Date $date_service
+   *   The date service.
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $date_format_storage
+   *   The date format storage.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, DateService $date_service, EntityStorageControllerInterface $date_format_storage) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->dateService = $date_service;
+    $this->dateFormatStorage = $date_format_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('date'),
+      $container->get('plugin.manager.entity')->getStorageController('date_format')
+    );
+  }
 
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -31,9 +82,8 @@ class Date extends FieldPluginBase {
   public function buildOptionsForm(&$form, &$form_state) {
 
     $date_formats = array();
-    $date_types = system_get_date_formats();
-    foreach ($date_types as $machine_name => $value) {
-      $date_formats[$machine_name] = t('@name format: @date', array('@name' => $value['name'], '@date' => format_date(REQUEST_TIME, $machine_name)));
+    foreach ($this->dateFormatStorage->loadMultiple() as $machine_name => $value) {
+      $date_formats[$machine_name] = t('@name format: @date', array('@name' => $value->label(), '@date' => $this->dateService->format(REQUEST_TIME, $machine_name)));
     }
 
     $form['date_format'] = array(

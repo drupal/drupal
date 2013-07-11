@@ -1,0 +1,10 @@
+id: html_datetime
+uuid: bfd7db46-607f-477f-9047-713c312dbb02
+label: 'HTML Datetime'
+status: '1'
+langcode: en
+locked: '1'
+locales: {  }
+pattern:
+  php: 'Y-m-d\TH:i:sO'
+  intl: 'yyyy-MM-dd''T''kk:mm:ssZZ'

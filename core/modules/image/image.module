@@ -9,13 +9,9 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
 use Drupal\field\Plugin\Core\Entity\Field;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
-use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\image\ImageStyleInterface;
 use Drupal\image\Plugin\Core\Entity\ImageStyle;
 use Drupal\field\FieldInterface;
 use Drupal\field\FieldInstanceInterface;
@@ -357,10 +353,7 @@ function image_file_predelete(File $file) {
 function image_path_flush($path) {
   $styles = entity_load_multiple('image_style');
   foreach ($styles as $style) {
-    $image_path = image_style_path($style->id(), $path);
-    if (file_exists($image_path)) {
-      file_unmanaged_delete($image_path);
-    }
+    $style->flush($path);
   }
 }
 
@@ -403,304 +396,23 @@ function image_style_options($include_empty = TRUE) {
  *
  * After generating an image, transfer it to the requesting agent.
  *
- * @param $style
- *   The image style
+ * @param \Drupal\image\ImageStyleInterface $style
+ *   The image style.
+ * @param string $scheme
+ *   The scheme name of the original image file stream wrapper ('public',
+ *   'private', 'temporary', etc.).
+ *
+ * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
+ *   The image to be delivered.
+ *
+ * @todo Remove this wrapper in https://drupal.org/node/1987712.
  */
-function image_style_deliver($style, $scheme) {
+function image_style_deliver(ImageStyleInterface $style, $scheme) {
   $args = func_get_args();
-  array_shift($args);
-  array_shift($args);
+  // Remove $style and $scheme from the arguments.
+  unset($args[0], $args[1]);
   $target = implode('/', $args);
-
-  // Check that the style is defined, the scheme is valid, and the image
-  // derivative token is valid. (Sites which require image derivatives to be
-  // generated without a token can set the
-  // 'image.settings:allow_insecure_derivatives' configuration to TRUE to bypass
-  // the latter check, but this will increase the site's vulnerability to
-  // denial-of-service attacks.)
-  $valid = !empty($style) && file_stream_wrapper_valid_scheme($scheme);
-  if (!config('image.settings')->get('allow_insecure_derivatives')) {
-    $image_derivative_token = Drupal::request()->query->get(IMAGE_DERIVATIVE_TOKEN);
-    $valid = $valid && isset($image_derivative_token) && $image_derivative_token === image_style_path_token($style->name, $scheme . '://' . $target);
-  }
-  if (!$valid) {
-    throw new AccessDeniedHttpException();
-  }
-
-  $image_uri = $scheme . '://' . $target;
-  $derivative_uri = image_style_path($style->id(), $image_uri);
-
-  // If using the private scheme, let other modules provide headers and
-  // control access to the file.
-  if ($scheme == 'private') {
-    if (file_exists($derivative_uri)) {
-      file_download($scheme, file_uri_target($derivative_uri));
-    }
-    else {
-      $headers = module_invoke_all('file_download', $image_uri);
-      if (in_array(-1, $headers) || empty($headers)) {
-        throw new AccessDeniedHttpException();
-      }
-      if (count($headers)) {
-        foreach ($headers as $name => $value) {
-          drupal_add_http_header($name, $value);
-        }
-      }
-    }
-  }
-
-  // Don't try to generate file if source is missing.
-  if (!file_exists($image_uri)) {
-    watchdog('image', 'Source image at %source_image_path not found while trying to generate derivative image at %derivative_path.',  array('%source_image_path' => $image_uri, '%derivative_path' => $derivative_uri));
-    return new Response(t('Error generating image, missing source file.'), 404);
-  }
-
-  // Don't start generating the image if the derivative already exists or if
-  // generation is in progress in another thread.
-  $lock_name = 'image_style_deliver:' . $style->id() . ':' . Crypt::hashBase64($image_uri);
-  if (!file_exists($derivative_uri)) {
-    $lock_acquired = lock()->acquire($lock_name);
-    if (!$lock_acquired) {
-      // Tell client to retry again in 3 seconds. Currently no browsers are known
-      // to support Retry-After.
-      throw new ServiceUnavailableHttpException(3, t('Image generation in progress. Try again shortly.'));
-    }
-  }
-
-  // Try to generate the image, unless another thread just did it while we were
-  // acquiring the lock.
-  $success = file_exists($derivative_uri) || image_style_create_derivative($style, $image_uri, $derivative_uri);
-
-  if (!empty($lock_acquired)) {
-    lock()->release($lock_name);
-  }
-
-  if ($success) {
-    $image = image_load($derivative_uri);
-    $uri = $image->source;
-    $headers = array(
-      'Content-Type' => $image->info['mime_type'],
-      'Content-Length' => $image->info['file_size'],
-    );
-    return new BinaryFileResponse($uri, 200, $headers);
-  }
-  else {
-    watchdog('image', 'Unable to generate the derived image located at %path.', array('%path' => $derivative_uri));
-    return new Response(t('Error generating image.'), 500);
-  }
-}
-
-/**
- * Creates a new image derivative based on an image style.
- *
- * Generates an image derivative by creating the destination folder (if it does
- * not already exist), applying all image effects defined in $style->effects,
- * and saving a cached version of the resulting image.
- *
- * @param $style
- *   An image style array.
- * @param $source
- *   Path of the source file.
- * @param $destination
- *   Path or URI of the destination file.
- *
- * @return
- *   TRUE if an image derivative was generated, or FALSE if the image derivative
- *   could not be generated.
- *
- * @see image_style_load()
- */
-function image_style_create_derivative($style, $source, $destination) {
-  // Get the folder for the final location of this style.
-  $directory = drupal_dirname($destination);
-
-  // Build the destination folder tree if it doesn't already exist.
-  if (!file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS)) {
-    watchdog('image', 'Failed to create style directory: %directory', array('%directory' => $directory), WATCHDOG_ERROR);
-    return FALSE;
-  }
-
-  if (!$image = image_load($source)) {
-    return FALSE;
-  }
-
-  if (!empty($style->effects)) {
-    foreach ($style->effects as $effect) {
-      image_effect_apply($image, $effect);
-    }
-  }
-
-  if (!image_save($image, $destination)) {
-    if (file_exists($destination)) {
-      watchdog('image', 'Cached image file %destination already exists. There may be an issue with your rewrite configuration.', array('%destination' => $destination), WATCHDOG_ERROR);
-    }
-    return FALSE;
-  }
-
-  return TRUE;
-}
-
-/**
- * Determines the dimensions of the styled image.
- *
- * Applies all of an image style's effects to $dimensions.
- *
- * @param $style_name
- *   The name of the style to be applied.
- * @param $dimensions
- *   Dimensions to be modified - an array with components width and height, in
- *   pixels.
- */
-function image_style_transform_dimensions($style_name, array &$dimensions) {
-  module_load_include('inc', 'image', 'image.effects');
-  $style = entity_load('image_style', $style_name);
-
-  if (!empty($style->effects)) {
-    foreach ($style->effects as $effect) {
-      if (isset($effect['dimensions passthrough'])) {
-        continue;
-      }
-
-      if (isset($effect['dimensions callback'])) {
-        $effect['dimensions callback']($dimensions, $effect['data']);
-      }
-      else {
-        $dimensions['width'] = $dimensions['height'] = NULL;
-      }
-    }
-  }
-}
-
-/**
- * Flushes cached media for a style.
- *
- * @param $style
- *   An image style array.
- */
-function image_style_flush($style) {
-  // Delete the style directory in each registered wrapper.
-  $wrappers = file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE);
-  foreach ($wrappers as $wrapper => $wrapper_data) {
-    file_unmanaged_delete_recursive($wrapper . '://styles/' . $style->id());
-  }
-
-  // Let other modules update as necessary on flush.
-  module_invoke_all('image_style_flush', $style);
-
-  // Clear field caches so that formatters may be added for this style.
-  field_info_cache_clear();
-  drupal_theme_rebuild();
-
-  // Clear page caches when flushing.
-  if (module_exists('block')) {
-    cache('block')->deleteAll();
-  }
-  cache('page')->deleteAll();
-}
-
-/**
- * Returns the URL for an image derivative given a style and image path.
- *
- * @param $style_name
- *   The name of the style to be used with this image.
- * @param $path
- *   The path to the image.
- * @param $clean_urls
- *   (optional) Whether clean URLs are in use.
- * @return
- *   The absolute URL where a style image can be downloaded, suitable for use
- *   in an <img> tag. Requesting the URL will cause the image to be created.
- * @see image_style_deliver()
- */
-function image_style_url($style_name, $path, $clean_urls = NULL) {
-  $uri = image_style_path($style_name, $path);
-  // The token query is added even if the
-  // 'image.settings:allow_insecure_derivatives' configuration is TRUE, so that
-  // the emitted links remain valid if it is changed back to the default FALSE.
-  // However, sites which need to prevent the token query from being emitted at
-  // all can additionally set the 'image.settings:suppress_itok_output'
-  // configuration to TRUE to achieve that (if both are set, the security token
-  // will neither be emitted in the image derivative URL nor checked for in
-  // image_style_deliver()).
-  $token_query = array();
-  if (!config('image.settings')->get('suppress_itok_output')) {
-    $token_query = array(IMAGE_DERIVATIVE_TOKEN => image_style_path_token($style_name, file_stream_wrapper_uri_normalize($path)));
-  }
-
-  if ($clean_urls === NULL) {
-    // Assume clean URLs unless the request tells us otherwise.
-    $clean_urls = TRUE;
-    try {
-      $request = Drupal::request();
-      $clean_urls = $request->attributes->get('clean_urls');
-    }
-    catch (ServiceNotFoundException $e) {
-    }
-  }
-
-  // If not using clean URLs, the image derivative callback is only available
-  // with the script path. If the file does not exist, use url() to ensure
-  // that it is included. Once the file exists it's fine to fall back to the
-  // actual file path, this avoids bootstrapping PHP once the files are built.
-  if ($clean_urls === FALSE && file_uri_scheme($uri) == 'public' && !file_exists($uri)) {
-    $directory_path = file_stream_wrapper_get_instance_by_uri($uri)->getDirectoryPath();
-    return url($directory_path . '/' . file_uri_target($uri), array('absolute' => TRUE, 'query' => $token_query));
-  }
-
-  $file_url = file_create_url($uri);
-  // Append the query string with the token, if necessary.
-  if ($token_query) {
-    $file_url .= (strpos($file_url, '?') !== FALSE ? '&' : '?') . drupal_http_build_query($token_query);
-  }
-
-  return $file_url;
-}
-
-/**
- * Generates a token to protect an image style derivative.
- *
- * This prevents unauthorized generation of an image style derivative,
- * which can be costly both in CPU time and disk space.
- *
- * @param string $style_name
- *   The name of the image style.
- * @param string $uri
- *   The URI of the image for this style, for example as returned by
- *   image_style_path().
- *
- * @return string
- *   An eight-character token which can be used to protect image style
- *   derivatives against denial-of-service attacks.
- */
-function image_style_path_token($style_name, $uri) {
-  // Return the first eight characters.
-  return substr(Crypt::hmacBase64($style_name . ':' . $uri, drupal_get_private_key() . drupal_get_hash_salt()), 0, 8);
-}
-
-/**
- * Returns the URI of an image when using a style.
- *
- * The path returned by this function may not exist. The default generation
- * method only creates images when they are requested by a user's browser.
- *
- * @param $style_name
- *   The name of the style to be used with this image.
- * @param $uri
- *   The URI or path to the image.
- * @return
- *   The URI to an image style image.
- * @see image_style_url()
- */
-function image_style_path($style_name, $uri) {
-  $scheme = file_uri_scheme($uri);
-  if ($scheme) {
-    $path = file_uri_target($uri);
-  }
-  else {
-    $path = $uri;
-    $scheme = file_default_scheme();
-  }
-  return $scheme . '://styles/' . $style_name . '/' . $scheme . '/' . $path;
+  return $style->deliver($scheme, $target);
 }
 
 /**
@@ -835,10 +547,6 @@ function image_effect_save($style, &$effect) {
   }
   $style->effects[$effect['ieid']] = $effect;
   $style->save();
-
-  // Flush all derivatives that exist for this style, so they are regenerated
-  // with the new or updated effect.
-  image_style_flush($style);
 }
 
 /**
@@ -852,7 +560,6 @@ function image_effect_save($style, &$effect) {
 function image_effect_delete($style, $effect) {
   unset($style->effects[$effect['ieid']]);
   $style->save();
-  image_style_flush($style);
 }
 
 /**
@@ -892,13 +599,17 @@ function image_effect_apply($image, $effect) {
  * @ingroup themeable
  */
 function theme_image_style($variables) {
+  // @todo Image style loading will be moved outside theme in
+  //   https://drupal.org/node/2029649
+  $style = entity_load('image_style', $variables['style_name']);
+
   // Determine the dimensions of the styled image.
   $dimensions = array(
     'width' => $variables['width'],
     'height' => $variables['height'],
   );
 
-  image_style_transform_dimensions($variables['style_name'], $dimensions);
+  $style->transformDimensions($dimensions);
 
   // Add in the image style name as an HTML class.
   $variables['attributes']['class'][] = 'image-style-' . drupal_html_class($variables['style_name']);
@@ -908,7 +619,7 @@ function theme_image_style($variables) {
     '#width' => $dimensions['width'],
     '#height' => $dimensions['height'],
     '#attributes' => $variables['attributes'],
-    '#uri' => image_style_url($variables['style_name'], $variables['uri']),
+    '#uri' => $style->buildUrl($variables['uri']),
   );
 
   if (isset($variables['alt'])) {

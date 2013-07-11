@@ -145,7 +145,7 @@ class Search extends FilterPluginBase {
         'left_table' => $search_index,
         'left_field' => 'word',
       );
-      $join = drupal_container()->get('plugin.manager.views.join')->createInstance('standard', $definition);
+      $join = \Drupal::service()->get('plugin.manager.views.join')->createInstance('standard', $definition);
 
       $search_total = $this->query->addRelationship('search_total', $join, $search_index);
 
