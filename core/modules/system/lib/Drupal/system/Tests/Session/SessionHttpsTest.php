@@ -209,7 +209,7 @@ class SessionHttpsTest extends WebTestBase {
     $this->drupalPost(NULL, $edit, t('Log in'));
 
     // Test that the user is also authenticated on the insecure site.
-    $this->drupalGet("user/{$user->uid}/edit");
+    $this->drupalGet("user/" . $user->id() . "/edit");
     $this->assertResponse(200);
   }
 

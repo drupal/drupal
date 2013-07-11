@@ -1550,7 +1550,7 @@ function watchdog($type, $message, array $variables = NULL, $severity = WATCHDOG
     $in_error_state = TRUE;
 
     // The user object may not exist in all conditions, so 0 is substituted if needed.
-    $user_uid = isset($user->uid) ? $user->uid : 0;
+    $user_uid = isset($user) ? $user->id() : 0;
 
     // Prepare the fields to be logged
     $log_entry = array(
@@ -1898,7 +1898,7 @@ function drupal_get_user_timezone() {
   global $user;
   $config = config('system.timezone');
 
-  if ($user && $config->get('user.configurable') && $user->uid && $user->timezone) {
+  if ($user && $config->get('user.configurable') && $user->id() && $user->timezone) {
     return $user->timezone;
   }
   else {

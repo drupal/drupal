@@ -92,22 +92,22 @@ class ContactPersonalTest extends WebTestBase {
   function testPersonalContactAccess() {
     // Test allowed access to admin user's contact form.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('user/' . $this->admin_user->uid . '/contact');
+    $this->drupalGet('user/' . $this->admin_user->id() . '/contact');
     $this->assertResponse(200);
 
     // Test denied access to admin user's own contact form.
     $this->drupalLogout();
     $this->drupalLogin($this->admin_user);
-    $this->drupalGet('user/' . $this->admin_user->uid . '/contact');
+    $this->drupalGet('user/' . $this->admin_user->id() . '/contact');
     $this->assertResponse(403);
 
     // Test allowed access to user with contact form enabled.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->drupalGet('user/' . $this->contact_user->id() . '/contact');
     $this->assertResponse(200);
 
     // Test denied access to the user's own contact form.
-    $this->drupalGet('user/' . $this->web_user->uid . '/contact');
+    $this->drupalGet('user/' . $this->web_user->id() . '/contact');
     $this->assertResponse(403);
 
     // Test always denied access to the anonymous user contact form.
@@ -117,18 +117,18 @@ class ContactPersonalTest extends WebTestBase {
     // Test that anonymous users can access the contact form.
     $this->drupalLogout();
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access user contact forms'));
-    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->drupalGet('user/' . $this->contact_user->id() . '/contact');
     $this->assertResponse(200);
 
     // Test that anonymous users can access admin user's contact form.
-    $this->drupalGet('user/' . $this->admin_user->uid . '/contact');
+    $this->drupalGet('user/' . $this->admin_user->id() . '/contact');
     $this->assertResponse(200);
 
     // Revoke the personal contact permission for the anonymous user.
     user_role_revoke_permissions(DRUPAL_ANONYMOUS_RID, array('access user contact forms'));
-    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->drupalGet('user/' . $this->contact_user->id() . '/contact');
     $this->assertResponse(403);
-    $this->drupalGet('user/' . $this->admin_user->uid . '/contact');
+    $this->drupalGet('user/' . $this->admin_user->id() . '/contact');
     $this->assertResponse(403);
 
     // Disable the personal contact form.
@@ -144,12 +144,12 @@ class ContactPersonalTest extends WebTestBase {
 
     // Test denied access to a user with contact form disabled.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->drupalGet('user/' . $this->contact_user->id() . '/contact');
     $this->assertResponse(403);
 
     // Test allowed access for admin user to a user with contact form disabled.
     $this->drupalLogin($this->admin_user);
-    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->drupalGet('user/' . $this->contact_user->id() . '/contact');
     $this->assertResponse(200);
 
     // Re-create our contacted user as a blocked user.
@@ -158,12 +158,12 @@ class ContactPersonalTest extends WebTestBase {
     $this->contact_user->save();
 
     // Test that blocked users can still be contacted by admin.
-    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->drupalGet('user/' . $this->contact_user->id() . '/contact');
     $this->assertResponse(200);
 
     // Test that blocked users cannot be contacted by non-admins.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('user/' . $this->contact_user->uid . '/contact');
+    $this->drupalGet('user/' . $this->contact_user->id() . '/contact');
     $this->assertResponse(403);
   }
 
@@ -188,7 +188,7 @@ class ContactPersonalTest extends WebTestBase {
     }
 
     // Submit contact form one over limit.
-    $this->drupalGet('user/' . $this->contact_user->uid. '/contact');
+    $this->drupalGet('user/' . $this->contact_user->id(). '/contact');
     $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => $flood_limit, '@interval' => format_interval(config('contact.settings')->get('flood.interval')))), 'Normal user denied access to flooded contact form.');
 
     // Test that the admin user can still access the contact form even though
@@ -211,7 +211,7 @@ class ContactPersonalTest extends WebTestBase {
       'subject' => $this->randomName(16),
       'message' => $this->randomName(64),
     );
-    $this->drupalPost('user/' . $account->uid . '/contact', $message, t('Send message'));
+    $this->drupalPost('user/' . $account->id() . '/contact', $message, t('Send message'));
     return $message;
   }
 }

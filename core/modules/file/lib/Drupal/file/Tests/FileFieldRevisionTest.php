@@ -99,7 +99,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $user->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'] = $node_file_r3->id();
     $user->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['display'] = 1;
     $user->save();
-    $this->drupalGet('user/' . $user->uid . '/edit');
+    $this->drupalGet('user/' . $user->id() . '/edit');
 
     // Delete the third revision and check that the file is not deleted yet.
     $this->drupalPost('node/' . $nid . '/revisions/' . $node_vid_r3 . '/delete', array(), t('Delete'));
@@ -108,7 +108,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $this->assertFileIsPermanent($node_file_r3, 'Second file entry is still permanent after deleting third revision, since it is being used by the user.');
 
     // Delete the user and check that the file is also deleted.
-    user_delete($user->uid);
+    $user->delete();
     // TODO: This seems like a bug in File API. Clearing the stat cache should
     // not be necessary here. The file really is deleted, but stream wrappers
     // doesn't seem to think so unless we clear the PHP file stat() cache.

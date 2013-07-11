@@ -1252,7 +1252,7 @@ function comment_node_search_result(EntityInterface $node) {
 function comment_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_block_unpublish':
-      $comments = entity_load_multiple_by_properties('comment', array('uid' => $account->uid));
+      $comments = entity_load_multiple_by_properties('comment', array('uid' => $account->id()));
       foreach ($comments as $comment) {
         $comment->status->value = 0;
         $comment->save();
@@ -1260,7 +1260,7 @@ function comment_user_cancel($edit, $account, $method) {
       break;
 
     case 'user_cancel_reassign':
-      $comments = entity_load_multiple_by_properties('comment', array('uid' => $account->uid));
+      $comments = entity_load_multiple_by_properties('comment', array('uid' => $account->id()));
       foreach ($comments as $comment) {
         $comment->uid->target_id = 0;
         $comment->save();
@@ -1273,7 +1273,7 @@ function comment_user_cancel($edit, $account, $method) {
  * Implements hook_user_predelete().
  */
 function comment_user_predelete($account) {
-  $cids = db_query('SELECT c.cid FROM {comment} c WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
+  $cids = db_query('SELECT c.cid FROM {comment} c WHERE uid = :uid', array(':uid' => $account->id()))->fetchCol();
   entity_delete_multiple('comment', $cids);
 }
 
@@ -1325,7 +1325,7 @@ function comment_load($cid, $reset = FALSE) {
 function comment_num_new($nid, $timestamp = 0) {
   global $user;
 
-  if ($user->uid && module_exists('history')) {
+  if ($user->isAuthenticated() && module_exists('history')) {
     // Retrieve the timestamp at which the current user last viewed this node.
     if (!$timestamp) {
       $timestamp = history_read($nid);
@@ -1423,12 +1423,12 @@ function comment_preview(Comment $comment) {
     if (!empty($comment->name->value)) {
       $account = user_load_by_name($comment->name->value);
     }
-    elseif ($user->uid && empty($comment->is_anonymous)) {
+    elseif ($user->isAuthenticated() && empty($comment->is_anonymous)) {
       $account = $user;
     }
 
-    if (!empty($account->uid)) {
-      $comment->uid->target_id = $account->uid;
+    if ($account->id()) {
+      $comment->uid->target_id = $account->id();
       $comment->name->value = check_plain($account->name);
     }
     elseif (empty($comment->name->value)) {
@@ -1613,7 +1613,7 @@ function template_preprocess_comment(&$variables) {
     if ($comment->uid->target_id == $variables['node']->uid) {
       $variables['attributes']['class'][] = 'by-node-author';
     }
-    if ($comment->uid->target_id == $variables['user']->uid) {
+    if ($comment->uid->target_id == $variables['user']->id()) {
       $variables['attributes']['class'][] = 'by-viewer';
     }
   }
@@ -1640,7 +1640,7 @@ function theme_comment_post_forbidden($variables) {
   // comments only has to query the database once for all the links.
   $authenticated_post_comments = &drupal_static(__FUNCTION__, NULL);
 
-  if (!$user->uid) {
+  if ($user->isAnonymous()) {
     if (!isset($authenticated_post_comments)) {
       // We only output a link if we are certain that users will get permission
       // to post comments by logging in.

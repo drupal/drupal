@@ -64,7 +64,7 @@ class EntityRevisionsTest extends WebTestBase {
     // Create initial entity.
     $entity = entity_create($entity_type, array(
       'name' => 'foo',
-      'user_id' => $this->web_user->uid,
+      'user_id' => $this->web_user->id(),
     ));
     $entity->field_test_text->value = 'bar';
     $entity->save();

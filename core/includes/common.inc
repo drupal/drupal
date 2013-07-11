@@ -3069,7 +3069,7 @@ function drupal_get_token($value = '') {
  */
 function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
   global $user;
-  return (($skip_anonymous && $user->uid == 0) || ($token == drupal_get_token($value)));
+  return (($skip_anonymous && $user->id() == 0) || ($token == drupal_get_token($value)));
 }
 
 /**
@@ -4163,7 +4163,7 @@ function drupal_render_cid_parts($granularity = NULL) {
       $cid_parts[] = 'r.' . implode(',', $user->roles);
     }
     elseif ($granularity & DRUPAL_CACHE_PER_USER) {
-      $cid_parts[] = "u.$user->uid";
+      $cid_parts[] = 'u.' . $user->id();
     }
 
     if ($granularity & DRUPAL_CACHE_PER_PAGE) {

@@ -154,7 +154,7 @@ function translation_user_can_translate_node($node, $account = NULL) {
   if (empty($account)) {
     $account = $GLOBALS['user'];
   }
-  return node_access('view', $node, $account) && (user_access('translate all content', $account) || ($node->uid == $account->uid && user_access('translate own content', $account)));
+  return node_access('view', $node, $account) && (user_access('translate all content', $account) || ($node->uid == $account->id() && user_access('translate own content', $account)));
 }
 
 /**

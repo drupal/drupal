@@ -136,7 +136,7 @@ class DbLogTest extends WebTestBase {
       'severity'    => $severity,
       'link'        => NULL,
       'user'        => $this->big_user,
-      'uid'         => isset($this->big_user->uid) ? $this->big_user->uid : 0,
+      'uid'         => $this->big_user->id(),
       'request_uri' => $base_root . request_uri(),
       'referer'     => $_SERVER['HTTP_REFERER'],
       'ip'          => '127.0.0.1',
@@ -238,7 +238,7 @@ class DbLogTest extends WebTestBase {
     // Logout user.
     $this->drupalLogout();
     // Fetch the row IDs in watchdog that relate to the user.
-    $result = db_query('SELECT wid FROM {watchdog} WHERE uid = :uid', array(':uid' => $user->uid));
+    $result = db_query('SELECT wid FROM {watchdog} WHERE uid = :uid', array(':uid' => $user->id()));
     foreach ($result as $row) {
       $ids[] = $row->wid;
     }
@@ -249,7 +249,7 @@ class DbLogTest extends WebTestBase {
     $this->drupalLogin($this->big_user);
     // Delete the user created at the start of this test.
     // We need to POST here to invoke batch_process() in the internal browser.
-    $this->drupalPost('user/' . $user->uid . '/cancel', array('user_cancel_method' => 'user_cancel_reassign'), t('Cancel account'));
+    $this->drupalPost('user/' . $user->id() . '/cancel', array('user_cancel_method' => 'user_cancel_reassign'), t('Cancel account'));
 
     // View the database log report.
     $this->drupalGet('admin/reports/dblog');
@@ -423,7 +423,7 @@ class DbLogTest extends WebTestBase {
       'severity'    => WATCHDOG_NOTICE,
       'link'        => NULL,
       'user'        => $this->big_user,
-      'uid'         => isset($this->big_user->uid) ? $this->big_user->uid : 0,
+      'uid'         => $this->big_user->id(),
       'request_uri' => $base_root . request_uri(),
       'referer'     => $_SERVER['HTTP_REFERER'],
       'ip'          => '127.0.0.1',

@@ -47,7 +47,7 @@ class NodeAccessTest extends NodeTestBase {
 
     // User cannot 'view own unpublished content'.
     $web_user3 = $this->drupalCreateUser(array('access content'));
-    $node3 = $this->drupalCreateNode(array('status' => 0, 'uid' => $web_user3->uid));
+    $node3 = $this->drupalCreateNode(array('status' => 0, 'uid' => $web_user3->id()));
     $this->assertNodeAccess(array('view' => FALSE), $node3, $web_user3);
 
     // User cannot create content without permission.
@@ -56,7 +56,7 @@ class NodeAccessTest extends NodeTestBase {
     // User can 'view own unpublished content', but another user cannot.
     $web_user4 = $this->drupalCreateUser(array('access content', 'view own unpublished content'));
     $web_user5 = $this->drupalCreateUser(array('access content', 'view own unpublished content'));
-    $node4 = $this->drupalCreateNode(array('status' => 0, 'uid' => $web_user4->uid));
+    $node4 = $this->drupalCreateNode(array('status' => 0, 'uid' => $web_user4->id()));
     $this->assertNodeAccess(array('view' => TRUE, 'update' => FALSE), $node4, $web_user4);
     $this->assertNodeAccess(array('view' => FALSE), $node4, $web_user5);
 

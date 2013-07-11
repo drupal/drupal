@@ -24,7 +24,7 @@ abstract class AccountFormController extends EntityFormController {
     $config = config('user.settings');
 
     $language_interface = language(Language::TYPE_INTERFACE);
-    $register = empty($account->uid);
+    $register = $account->isAnonymous();
     $admin = user_access('administer users');
 
     // Account information.
@@ -43,7 +43,7 @@ abstract class AccountFormController extends EntityFormController {
       '#attributes' => array('class' => array('username'), 'autocorrect' => 'off', 'autocomplete' => 'off', 'autocapitalize' => 'off',
       'spellcheck' => 'false'),
       '#default_value' => (!$register ? $account->name : ''),
-      '#access' => ($register || ($user->uid == $account->uid && user_access('change own username')) || $admin),
+      '#access' => ($register || ($user->id() == $account->id() && user_access('change own username')) || $admin),
       '#weight' => -10,
     );
 
@@ -70,7 +70,7 @@ abstract class AccountFormController extends EntityFormController {
 
       // To skip the current password field, the user must have logged in via a
       // one-time link and have the token in the URL.
-      $pass_reset = isset($_SESSION['pass_reset_' . $account->uid]) && isset($_GET['pass-reset-token']) && ($_GET['pass-reset-token'] == $_SESSION['pass_reset_' . $account->uid]);
+      $pass_reset = isset($_SESSION['pass_reset_' . $account->id()]) && isset($_GET['pass-reset-token']) && ($_GET['pass-reset-token'] == $_SESSION['pass_reset_' . $account->id()]);
       $protected_values = array();
       $current_pass_description = '';
 
@@ -84,7 +84,7 @@ abstract class AccountFormController extends EntityFormController {
       }
 
       // The user must enter their current password to change to a new one.
-      if ($user->uid == $account->uid) {
+      if ($user->id() == $account->id()) {
         $form['account']['current_pass_required_values'] = array(
           '#type' => 'value',
           '#value' => $protected_values,
@@ -259,7 +259,7 @@ abstract class AccountFormController extends EntityFormController {
       else {
         $name_taken = (bool) db_select('users')
         ->fields('users', array('uid'))
-        ->condition('uid', (int) $account->uid, '<>')
+        ->condition('uid', (int) $account->id(), '<>')
         ->condition('name', db_like($form_state['values']['name']), 'LIKE')
         ->range(0, 1)
         ->execute()
@@ -276,7 +276,7 @@ abstract class AccountFormController extends EntityFormController {
     if (!empty($mail)) {
       $mail_taken = (bool) db_select('users')
       ->fields('users', array('uid'))
-      ->condition('uid', (int) $account->uid, '<>')
+      ->condition('uid', (int) $account->id(), '<>')
       ->condition('mail', db_like($mail), 'LIKE')
       ->range(0, 1)
       ->execute()
@@ -284,7 +284,7 @@ abstract class AccountFormController extends EntityFormController {
 
       if ($mail_taken) {
         // Format error message dependent on whether the user is logged in or not.
-        if ($GLOBALS['user']->uid) {
+        if ($GLOBALS['user']->isAuthenticated()) {
           form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => $mail)));
         }
         else {

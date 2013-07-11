@@ -112,7 +112,7 @@ class User extends ArgumentValidatorPluginBase {
     // However, is_integer() will always fail, since $argument is a string.
     if (is_numeric($argument) && $argument == (int)$argument) {
       if ($type == 'uid' || $type == 'either') {
-        if ($argument == $GLOBALS['user']->uid) {
+        if ($argument == $GLOBALS['user']->id()) {
           // If you assign an object to a variable in PHP, the variable
           // automatically acts as a reference, not a copy, so we use
           // clone to ensure that we don't actually mess with the
@@ -159,7 +159,7 @@ class User extends ArgumentValidatorPluginBase {
       }
     }
 
-    $this->argument->argument = $account->uid;
+    $this->argument->argument = $account->id();
     $this->argument->validated_title = check_plain(user_format_name($account));
     return TRUE;
   }

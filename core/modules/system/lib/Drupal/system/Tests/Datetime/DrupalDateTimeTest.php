@@ -83,13 +83,13 @@ class DrupalDateTimeTest extends WebTestBase {
 
     // Set up the user with a different timezone than the site.
     $edit = array('mail' => $test_user->mail, 'timezone' => 'Asia/Manila');
-    $this->drupalPost('user/' . $test_user->uid . '/edit', $edit, t('Save'));
+    $this->drupalPost('user/' . $test_user->id() . '/edit', $edit, t('Save'));
 
     // Disable session saving as we are about to modify the global $user.
     drupal_save_session(FALSE);
     // Save the original user and then replace it with the test user.
     $real_user = $user;
-    $user = user_load($test_user->uid, TRUE);
+    $user = user_load($test_user->id(), TRUE);
 
     // Simulate a Drupal bootstrap with the logged-in user.
     date_default_timezone_set(drupal_get_user_timezone());

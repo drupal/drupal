@@ -56,16 +56,16 @@ class UserTokenReplaceTest extends WebTestBase {
     $this->drupalLogout();
     $this->drupalLogin($user2);
 
-    $account = user_load($user1->uid);
-    $global_account = user_load($GLOBALS['user']->uid);
+    $account = user_load($user1->id());
+    $global_account = user_load($GLOBALS['user']->id());
 
     // Generate and test sanitized tokens.
     $tests = array();
-    $tests['[user:uid]'] = $account->uid;
+    $tests['[user:uid]'] = $account->id();
     $tests['[user:name]'] = check_plain(user_format_name($account));
     $tests['[user:mail]'] = check_plain($account->mail);
-    $tests['[user:url]'] = url("user/$account->uid", $url_options);
-    $tests['[user:edit-url]'] = url("user/$account->uid/edit", $url_options);
+    $tests['[user:url]'] = url("user/" . $account->id(), $url_options);
+    $tests['[user:edit-url]'] = url("user/" . $account->id() . "/edit", $url_options);
     $tests['[user:last-login]'] = format_date($account->login, 'medium', '', NULL, $language_interface->id);
     $tests['[user:last-login:short]'] = format_date($account->login, 'short', '', NULL, $language_interface->id);
     $tests['[user:created]'] = format_date($account->created, 'medium', '', NULL, $language_interface->id);

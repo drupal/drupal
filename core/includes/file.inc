@@ -1123,7 +1123,7 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
     }
     // Begin building file entity.
     $values = array(
-      'uid' => $user->uid,
+      'uid' => $user->id(),
       'status' => 0,
       'filename' => trim(drupal_basename($name, '.')),
       'uri' => $uploaded_files['files']['tmp_name'][$form_field_name][$i],

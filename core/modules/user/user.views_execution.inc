@@ -14,5 +14,5 @@ use Drupal\views\ViewExecutable;
  */
 function user_views_query_substitutions(ViewExecutable $view) {
   global $user;
-  return array('***CURRENT_USER***' => intval($user->uid));
+  return array('***CURRENT_USER***' => $user->id());
 }

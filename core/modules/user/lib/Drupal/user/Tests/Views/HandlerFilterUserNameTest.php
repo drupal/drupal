@@ -172,7 +172,7 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     $this->assertNoRaw('Unable to find user');
     // The actual result should contain all of the user ids.
     foreach ($this->accounts as $account) {
-      $this->assertRaw($account->uid);
+      $this->assertRaw($account->id());
     }
   }
 

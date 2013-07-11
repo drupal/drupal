@@ -87,7 +87,7 @@ class UserPasswordForm implements FormInterface, ControllerInterface {
       ),
     );
     // Allow logged in users to request this also.
-    if ($user->uid > 0) {
+    if ($user->isAuthenticated()) {
       $form['name']['#type'] = 'value';
       $form['name']['#value'] = $user->mail;
       $form['mail'] = array(
@@ -117,7 +117,7 @@ class UserPasswordForm implements FormInterface, ControllerInterface {
       $users = $this->userStorageController->loadByProperties(array('name' => $name, 'status' => '1'));
     }
     $account = reset($users);
-    if (isset($account->uid)) {
+    if ($account && $account->id()) {
       form_set_value(array('#parents' => array('account')), $account, $form_state);
     }
     else {

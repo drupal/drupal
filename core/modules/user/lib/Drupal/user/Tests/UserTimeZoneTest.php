@@ -60,7 +60,7 @@ class UserTimeZoneTest extends WebTestBase {
     $edit = array();
     $edit['mail'] = $web_user->mail;
     $edit['timezone'] = 'America/Santiago';
-    $this->drupalPost("user/$web_user->uid/edit", $edit, t('Save'));
+    $this->drupalPost("user/" . $web_user->id() . "/edit", $edit, t('Save'));
     $this->assertText(t('The changes have been saved.'), 'Time zone changed to Santiago time.');
 
     // Confirm date format and time zone.

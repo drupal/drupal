@@ -64,7 +64,7 @@ class NodeCreationTest extends NodeTestBase {
   function testFailedPageCreation() {
     // Create a node.
     $edit = array(
-      'uid'      => $this->loggedInUser->uid,
+      'uid'      => $this->loggedInUser->id(),
       'name'     => $this->loggedInUser->name,
       'type'     => 'page',
       'langcode' => Language::LANGCODE_NOT_SPECIFIED,

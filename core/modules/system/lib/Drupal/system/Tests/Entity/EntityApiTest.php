@@ -56,9 +56,9 @@ class EntityApiTest extends EntityUnitTestBase {
    */
   protected function assertCRUD($entity_type, UserInterface $user1) {
     // Create some test entities.
-    $entity = entity_create($entity_type, array('name' => 'test', 'user_id' => $user1->uid));
+    $entity = entity_create($entity_type, array('name' => 'test', 'user_id' => $user1->id()));
     $entity->save();
-    $entity = entity_create($entity_type, array('name' => 'test2', 'user_id' => $user1->uid));
+    $entity = entity_create($entity_type, array('name' => 'test2', 'user_id' => $user1->id()));
     $entity->save();
     $entity = entity_create($entity_type, array('name' => 'test', 'user_id' => NULL));
     $entity->save();

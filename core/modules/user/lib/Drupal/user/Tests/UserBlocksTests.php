@@ -73,7 +73,7 @@ class UserBlocksTests extends WebTestBase {
     $this->drupalLogout();
     $this->drupalPost('http://example.com/', $edit, t('Log in'), array('external' => FALSE));
     // Check that we remain on the site after login.
-    $this->assertEqual(url('user/' . $user->uid, array('absolute' => TRUE)), $this->getUrl(), 'Redirected to user profile page after login from the frontpage');
+    $this->assertEqual(url('user/' . $user->id(), array('absolute' => TRUE)), $this->getUrl(), 'Redirected to user profile page after login from the frontpage');
   }
 
   /**
@@ -89,14 +89,14 @@ class UserBlocksTests extends WebTestBase {
     $user3 = $this->drupalCreateUser(array());
 
     // Update access of two users to be within the active timespan.
-    $this->updateAccess($user1->uid);
-    $this->updateAccess($user2->uid, REQUEST_TIME + 1);
+    $this->updateAccess($user1->id());
+    $this->updateAccess($user2->id(), REQUEST_TIME + 1);
 
     // Insert an inactive user who should not be seen in the block, and ensure
     // that the admin user used in setUp() does not appear.
     $inactive_time = REQUEST_TIME - $config['seconds_online'] - 1;
-    $this->updateAccess($user3->uid, $inactive_time);
-    $this->updateAccess($this->adminUser->uid, $inactive_time);
+    $this->updateAccess($user3->id(), $inactive_time);
+    $this->updateAccess($this->adminUser->id(), $inactive_time);
 
     // Test block output.
     $content = entity_view($block, 'block');

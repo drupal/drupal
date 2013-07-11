@@ -2160,7 +2160,7 @@ function hook_file_url_alter(&$uri) {
   global $user;
 
   // User 1 will always see the local file in this example.
-  if ($user->uid == 1) {
+  if ($user->id() == 1) {
     return;
   }
 
@@ -2631,11 +2631,11 @@ function hook_update_N(&$sandbox) {
     $user->name .= '!';
     db_update('users')
       ->fields(array('name' => $user->name))
-      ->condition('uid', $user->uid)
+      ->condition('uid', $user->id())
       ->execute();
 
     $sandbox['progress']++;
-    $sandbox['current_uid'] = $user->uid;
+    $sandbox['current_uid'] = $user->id();
   }
 
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
@@ -3059,7 +3059,7 @@ function hook_url_outbound_alter(&$path, &$options, $original_path) {
   // Instead of pointing to user/[uid]/edit, point to user/me/edit.
   if (preg_match('|^user/([0-9]*)/edit(/.*)?|', $path, $matches)) {
     global $user;
-    if ($user->uid == $matches[1]) {
+    if ($user->id() == $matches[1]) {
       $path = 'user/me/edit' . $matches[2];
     }
   }

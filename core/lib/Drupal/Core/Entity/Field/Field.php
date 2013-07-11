@@ -172,8 +172,8 @@ class Field extends ItemList implements FieldInterface {
    */
   public function access($operation = 'view', AccountInterface $account = NULL) {
     global $user;
-    if (!isset($account) && $user->uid) {
-      $account = user_load($user->uid);
+    if (!isset($account)) {
+      $account = $user;
     }
     // Get the default access restriction that lives within this field.
     $access = $this->defaultAccess($operation, $account);

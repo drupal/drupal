@@ -51,7 +51,7 @@ class CommentStatisticsTest extends CommentTestBase {
     $node = node_load($this->node->nid);
     $this->assertEqual($node->last_comment_timestamp, $this->node->created, 'The initial value of node last_comment_timestamp is the node created date.');
     $this->assertEqual($node->last_comment_name, NULL, 'The initial value of node last_comment_name is NULL.');
-    $this->assertEqual($node->last_comment_uid, $this->web_user->uid, 'The initial value of node last_comment_uid is the node uid.');
+    $this->assertEqual($node->last_comment_uid, $this->web_user->id(), 'The initial value of node last_comment_uid is the node uid.');
     $this->assertEqual($node->comment_count, 0, 'The initial value of node comment_count is zero.');
 
     // Post comment #1 as web_user2.
@@ -63,7 +63,7 @@ class CommentStatisticsTest extends CommentTestBase {
     // The node needs to be reloaded with a node_load_multiple cache reset.
     $node = node_load($this->node->nid, TRUE);
     $this->assertEqual($node->last_comment_name, NULL, 'The value of node last_comment_name is NULL.');
-    $this->assertEqual($node->last_comment_uid, $this->web_user2->uid, 'The value of node last_comment_uid is the comment #1 uid.');
+    $this->assertEqual($node->last_comment_uid, $this->web_user2->id(), 'The value of node last_comment_uid is the comment #1 uid.');
     $this->assertEqual($node->comment_count, 1, 'The value of node comment_count is 1.');
 
     // Prepare for anonymous comment submission (comment approval enabled).
@@ -86,7 +86,7 @@ class CommentStatisticsTest extends CommentTestBase {
     // The node needs to be reloaded with a node_load_multiple cache reset.
     $node = node_load($this->node->nid, TRUE);
     $this->assertEqual($node->last_comment_name, NULL, 'The value of node last_comment_name is still NULL.');
-    $this->assertEqual($node->last_comment_uid, $this->web_user2->uid, 'The value of node last_comment_uid is still the comment #1 uid.');
+    $this->assertEqual($node->last_comment_uid, $this->web_user2->id(), 'The value of node last_comment_uid is still the comment #1 uid.');
     $this->assertEqual($node->comment_count, 1, 'The value of node comment_count is still 1.');
 
     // Prepare for anonymous comment submission (no approval required).

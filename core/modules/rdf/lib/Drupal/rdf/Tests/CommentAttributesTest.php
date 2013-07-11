@@ -109,8 +109,8 @@ class CommentAttributesTest extends CommentTestBase {
    */
   public function testNumberOfCommentsRdfaMarkup() {
     // Posts 2 comments on behalf of registered user.
-    $this->saveComment($this->node->nid, $this->web_user->uid);
-    $this->saveComment($this->node->nid, $this->web_user->uid);
+    $this->saveComment($this->node->nid, $this->web_user->id());
+    $this->saveComment($this->node->nid, $this->web_user->id());
 
     // Tests number of comments in teaser view.
     $this->drupalLogin($this->web_user);
@@ -144,7 +144,7 @@ class CommentAttributesTest extends CommentTestBase {
    */
   public function testCommentRdfaMarkup() {
     // Posts comment #1 on behalf of registered user.
-    $comment1 = $this->saveComment($this->node->nid, $this->web_user->uid);
+    $comment1 = $this->saveComment($this->node->nid, $this->web_user->id());
 
     // Tests comment #1 with access to the user profile.
     $this->drupalLogin($this->web_user);
@@ -187,12 +187,12 @@ class CommentAttributesTest extends CommentTestBase {
   public function testCommentReplyOfRdfaMarkup() {
     // Posts comment #1 on behalf of registered user.
     $this->drupalLogin($this->web_user);
-    $comment_1 = $this->saveComment($this->node->nid, $this->web_user->uid);
+    $comment_1 = $this->saveComment($this->node->nid, $this->web_user->id());
 
     $comment_1_uri = url('comment/' . $comment_1->id(), array('absolute' => TRUE));
 
     // Posts a reply to the first comment.
-    $comment_2 = $this->saveComment($this->node->nid, $this->web_user->uid, NULL, $comment_1->id());
+    $comment_2 = $this->saveComment($this->node->nid, $this->web_user->id(), NULL, $comment_1->id());
     $comment_2_uri = url('comment/' . $comment_2->id(), array('absolute' => TRUE));
 
     $parser = new \EasyRdf_Parser_Rdfa();

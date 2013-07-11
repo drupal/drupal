@@ -96,8 +96,8 @@ class NodeAdminTest extends NodeTestBase {
 
     $nodes['published_page'] = $this->drupalCreateNode(array('type' => 'page'));
     $nodes['published_article'] = $this->drupalCreateNode(array('type' => 'article'));
-    $nodes['unpublished_page_1'] = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->base_user_1->uid, 'status' => 0));
-    $nodes['unpublished_page_2'] = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->base_user_2->uid, 'status' => 0));
+    $nodes['unpublished_page_1'] = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->base_user_1->id(), 'status' => 0));
+    $nodes['unpublished_page_2'] = $this->drupalCreateNode(array('type' => 'page', 'uid' => $this->base_user_2->id(), 'status' => 0));
 
     // Verify view, edit, and delete links for any content.
     $this->drupalGet('admin/content');

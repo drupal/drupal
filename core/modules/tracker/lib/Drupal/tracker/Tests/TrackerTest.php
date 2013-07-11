@@ -91,22 +91,22 @@ class TrackerTest extends WebTestBase {
 
     $unpublished = $this->drupalCreateNode(array(
       'title' => $this->randomName(8),
-      'uid' => $this->user->uid,
+      'uid' => $this->user->id(),
       'status' => 0,
     ));
     $my_published = $this->drupalCreateNode(array(
       'title' => $this->randomName(8),
-      'uid' => $this->user->uid,
+      'uid' => $this->user->id(),
       'status' => 1,
     ));
     $other_published_no_comment = $this->drupalCreateNode(array(
       'title' => $this->randomName(8),
-      'uid' => $this->other_user->uid,
+      'uid' => $this->other_user->id(),
       'status' => 1,
     ));
     $other_published_my_comment = $this->drupalCreateNode(array(
       'title' => $this->randomName(8),
-      'uid' => $this->other_user->uid,
+      'uid' => $this->other_user->id(),
       'status' => 1,
     ));
     $comment = array(
@@ -115,7 +115,7 @@ class TrackerTest extends WebTestBase {
     );
     $this->drupalPost('comment/reply/' . $other_published_my_comment->nid, $comment, t('Save'));
 
-    $this->drupalGet('user/' . $this->user->uid . '/track');
+    $this->drupalGet('user/' . $this->user->id() . '/track');
     $this->assertNoText($unpublished->label(), "Unpublished nodes do not show up in the users's tracker listing.");
     $this->assertText($my_published->label(), "Published nodes show up in the user's tracker listing.");
     $this->assertNoText($other_published_no_comment->label(), "Other user's nodes do not show up in the user's tracker listing.");
@@ -125,7 +125,7 @@ class TrackerTest extends WebTestBase {
     $admin_user = $this->drupalCreateUser(array('post comments', 'administer comments', 'access user profiles'));
     $this->drupalLogin($admin_user);
     $this->drupalPost('comment/1/edit', array('status' => COMMENT_NOT_PUBLISHED), t('Save'));
-    $this->drupalGet('user/' . $this->user->uid . '/track');
+    $this->drupalGet('user/' . $this->user->id() . '/track');
     $this->assertNoText($other_published_my_comment->label(), 'Unpublished comments are not counted on the tracker listing.');
   }
 
@@ -234,7 +234,7 @@ class TrackerTest extends WebTestBase {
     $this->drupalLogin($this->user);
 
     // Fetch the user's tracker.
-    $this->drupalGet('tracker/' . $this->user->uid);
+    $this->drupalGet('tracker/' . $this->user->id());
 
     // Assert that all node titles are displayed.
     foreach ($nodes as $i => $node) {

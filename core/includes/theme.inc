@@ -2229,7 +2229,7 @@ function template_preprocess_tablesort_indicator(&$variables) {
 function theme_mark($variables) {
   $type = $variables['status'];
   global $user;
-  if ($user->uid) {
+  if ($user->isAuthenticated()) {
     if ($type == MARK_NEW) {
       return ' <span class="marker">' . t('new') . '</span>';
     }

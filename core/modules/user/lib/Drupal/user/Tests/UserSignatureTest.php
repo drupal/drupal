@@ -95,7 +95,7 @@ class UserSignatureTest extends WebTestBase {
     $edit = array(
       'signature[value]' => $signature_text,
     );
-    $this->drupalPost('user/' . $this->web_user->uid . '/edit', $edit, t('Save'));
+    $this->drupalPost('user/' . $this->web_user->id() . '/edit', $edit, t('Save'));
 
     // Verify that values were stored.
     $this->assertFieldByName('signature[value]', $edit['signature[value]'], 'Submitted signature text found.');

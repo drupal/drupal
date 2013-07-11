@@ -301,7 +301,7 @@ class Comment extends EntityNG implements CommentInterface {
       }
       // We test the value with '===' because we need to modify anonymous
       // users as well.
-      if ($this->uid->target_id === $user->uid && $user->uid) {
+      if ($this->uid->target_id === $user->id() && $user->isAuthenticated()) {
         $this->name->value = $user->name;
       }
       // Add the values which aren't passed into the function.

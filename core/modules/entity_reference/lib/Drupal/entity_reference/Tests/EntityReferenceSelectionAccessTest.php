@@ -272,8 +272,8 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
         'result' => array(
           'user' => array(
-            $users['admin']->uid => $user_labels['admin'],
-            $users['non_admin']->uid => $user_labels['non_admin'],
+            $users['admin']->id() => $user_labels['admin'],
+            $users['non_admin']->id() => $user_labels['non_admin'],
           ),
         ),
       ),
@@ -284,7 +284,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
         'result' => array(
           'user' => array(
-            $users['non_admin']->uid => $user_labels['non_admin'],
+            $users['non_admin']->id() => $user_labels['non_admin'],
           ),
         ),
       ),
@@ -311,10 +311,10 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
         'result' => array(
           'user' => array(
-            $users['anonymous']->uid => $user_labels['anonymous'],
-            $users['admin']->uid => $user_labels['admin'],
-            $users['non_admin']->uid => $user_labels['non_admin'],
-            $users['blocked']->uid => $user_labels['blocked'],
+            $users['anonymous']->id() => $user_labels['anonymous'],
+            $users['admin']->id() => $user_labels['admin'],
+            $users['non_admin']->id() => $user_labels['non_admin'],
+            $users['blocked']->id() => $user_labels['blocked'],
           ),
         ),
       ),
@@ -324,7 +324,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
         'result' => array(
           'user' => array(
-            $users['blocked']->uid => $user_labels['blocked'],
+            $users['blocked']->id() => $user_labels['blocked'],
           ),
         ),
       ),
@@ -335,7 +335,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
         'result' => array(
           'user' => array(
-            $users['anonymous']->uid => $user_labels['anonymous'],
+            $users['anonymous']->id() => $user_labels['anonymous'],
           ),
         ),
       ),

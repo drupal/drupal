@@ -68,7 +68,7 @@ class CommentLanguageTest extends WebTestBase {
     // Change user language preference, this way interface language is always
     // French no matter what path prefix the URLs have.
     $edit = array('preferred_langcode' => 'fr');
-    $this->drupalPost("user/{$admin_user->uid}/edit", $edit, t('Save'));
+    $this->drupalPost("user/" . $admin_user->id() . "/edit", $edit, t('Save'));
 
     // Make comment body translatable.
     $field = field_info_field('comment_body');

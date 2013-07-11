@@ -53,6 +53,6 @@ class UserEntityCallbacksTest extends WebTestBase {
    */
   function testUriCallback() {
     $uri = $this->account->uri();
-    $this->assertEqual('user/' . $this->account->uid, $uri['path'], 'Correct user URI.');
+    $this->assertEqual('user/' . $this->account->id(), $uri['path'], 'Correct user URI.');
   }
 }

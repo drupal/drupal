@@ -45,7 +45,7 @@ class ShortcutStorageController extends ConfigStorageController implements Short
    */
   public function assignUser($shortcut_set, $account) {
     db_merge('shortcut_set_users')
-      ->key(array('uid' => $account->uid))
+      ->key(array('uid' => $account->id()))
       ->fields(array('set_name' => $shortcut_set->id()))
       ->execute();
     drupal_static_reset('shortcut_current_displayed_set');
@@ -56,7 +56,7 @@ class ShortcutStorageController extends ConfigStorageController implements Short
    */
   public function unassignUser($account) {
     $deleted = db_delete('shortcut_set_users')
-      ->condition('uid', $account->uid)
+      ->condition('uid', $account->id())
       ->execute();
     return (bool) $deleted;
   }
@@ -67,7 +67,7 @@ class ShortcutStorageController extends ConfigStorageController implements Short
   public function getAssignedToUser($account) {
     $query = db_select('shortcut_set_users', 'ssu');
     $query->fields('ssu', array('set_name'));
-    $query->condition('ssu.uid', $account->uid);
+    $query->condition('ssu.uid', $account->id());
     return $query->execute()->fetchField();
   }
 

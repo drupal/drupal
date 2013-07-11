@@ -96,7 +96,7 @@ class DeleteMultiple extends ConfirmFormBase implements ControllerInterface {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $this->nodes = $this->tempStoreFactory->get('node_multiple_delete_confirm')->get($GLOBALS['user']->uid);
+    $this->nodes = $this->tempStoreFactory->get('node_multiple_delete_confirm')->get($GLOBALS['user']->id());
     if (empty($this->nodes)) {
       return new RedirectResponse(url($this->getCancelPath(), array('absolute' => TRUE)));
     }
@@ -116,7 +116,7 @@ class DeleteMultiple extends ConfirmFormBase implements ControllerInterface {
   public function submitForm(array &$form, array &$form_state) {
     if ($form_state['values']['confirm'] && !empty($this->nodes)) {
       $this->storageController->delete($this->nodes);
-      $this->tempStoreFactory->get('node_multiple_delete_confirm')->delete($GLOBALS['user']->uid);
+      $this->tempStoreFactory->get('node_multiple_delete_confirm')->delete($GLOBALS['user']->id());
       $count = count($this->nodes);
       watchdog('content', 'Deleted @count posts.', array('@count' => $count));
       drupal_set_message(format_plural($count, 'Deleted 1 post.', 'Deleted @count posts.'));

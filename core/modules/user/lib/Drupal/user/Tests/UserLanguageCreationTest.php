@@ -94,7 +94,7 @@ class UserLanguageCreationTest extends WebTestBase {
 
     // Test if the admin can use the language selector and if the
     // correct language is was saved.
-    $user_edit = $langcode . '/user/' . $user->uid . '/edit';
+    $user_edit = $langcode . '/user/' . $user->id() . '/edit';
 
     $this->drupalLogin($admin_user);
     $this->drupalGet($user_edit);

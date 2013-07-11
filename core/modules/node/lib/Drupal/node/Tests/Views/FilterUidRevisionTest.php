@@ -55,7 +55,7 @@ class FilterUidRevisionTest extends NodeTestBase {
 
     $view = views_get_view('test_filter_node_uid_revision');
     $view->initHandlers();
-    $view->filter['uid_revision']->value = array($author->uid);
+    $view->filter['uid_revision']->value = array($author->id());
 
     $this->executeView($view);
     $this->assertIdenticalResultset($view, $expected_result, array('nid' => 'nid'), 'Make sure that the view only returns nodes which match either the node or the revision author.');

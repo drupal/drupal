@@ -93,7 +93,7 @@ class NodeNewComments extends Numeric {
 
   public function preRender(&$values) {
     global $user;
-    if (!$user->uid || empty($values)) {
+    if ($user->isAnonymous() || empty($values)) {
       return;
     }
 
@@ -114,7 +114,7 @@ class NodeNewComments extends Numeric {
         LEFT JOIN {history} h ON h.nid = n.nid AND h.uid = :h_uid WHERE n.nid IN (:nids)
         AND c.changed > GREATEST(COALESCE(h.timestamp, :timestamp), :timestamp) AND c.status = :status GROUP BY n.nid', array(
           ':status' => COMMENT_PUBLISHED,
-          ':h_uid' => $user->uid,
+          ':h_uid' => $user->id(),
           ':nids' => $nids,
           ':timestamp' => HISTORY_READ_LIMIT,
         ));

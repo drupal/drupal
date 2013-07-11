@@ -87,7 +87,7 @@ function node_add($node_type) {
   $type = $node_type->type;
   $langcode = module_invoke('language', 'get_default_langcode', 'node', $type);
   $node = entity_create('node', array(
-    'uid' => $user->uid,
+    'uid' => $user->id(),
     'name' => (isset($user->name) ? $user->name : ''),
     'type' => $type,
     'langcode' => $langcode ? $langcode : language_default()->id,
@@ -114,7 +114,7 @@ function node_preview(EntityInterface $node) {
       // The use of isset() is mandatory in the context of user IDs, because
       // user ID 0 denotes the anonymous user.
       if ($user = user_load_by_name($node->name)) {
-        $node->uid = $user->uid;
+        $node->uid = $user->id();
       }
       else {
         $node->uid = 0; // anonymous user

@@ -31,7 +31,7 @@ class HistoryUserTimestamp extends Node {
     parent::init($view, $display, $options);
 
     global $user;
-    if ($user->uid) {
+    if ($user->isAuthenticated()) {
       $this->additional_fields['created'] = array('table' => 'node_field_data', 'field' => 'created');
       $this->additional_fields['changed'] = array('table' => 'node_field_data', 'field' => 'changed');
       if (module_exists('comment') && !empty($this->options['comments'])) {
@@ -63,7 +63,7 @@ class HistoryUserTimestamp extends Node {
   public function query() {
     // Only add ourselves to the query if logged in.
     global $user;
-    if (!$user->uid) {
+    if ($user->isAnonymous()) {
       return;
     }
     parent::query();
@@ -75,7 +75,7 @@ class HistoryUserTimestamp extends Node {
     // we already have that info.
     $mark = MARK_READ;
     global $user;
-    if ($user->uid) {
+    if ($user->isAuthenticated()) {
       $last_read = $this->getValue($values);
       $changed = $this->getValue($values, 'changed');
 

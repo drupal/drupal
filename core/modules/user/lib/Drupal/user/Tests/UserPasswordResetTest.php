@@ -37,7 +37,7 @@ class UserPasswordResetTest extends WebTestBase {
     // Activate user by logging in.
     $this->drupalLogin($account);
 
-    $this->account = user_load($account->uid);
+    $this->account = user_load($account->id());
     $this->drupalLogout();
 
     // Set the last login time that is used to generate the one-time link so
@@ -45,7 +45,7 @@ class UserPasswordResetTest extends WebTestBase {
     $account->login = REQUEST_TIME - mt_rand(10, 100000);
     db_update('users')
       ->fields(array('login' => $account->login))
-      ->condition('uid', $account->uid)
+      ->condition('uid', $account->id())
       ->execute();
   }
 
@@ -99,7 +99,7 @@ class UserPasswordResetTest extends WebTestBase {
     // Create a password reset link as if the request time was 60 seconds older than the allowed limit.
     $timeout = config('user.settings')->get('password_reset_timeout');
     $bogus_timestamp = REQUEST_TIME - $timeout - 60;
-    $_uid = $this->account->uid;
+    $_uid = $this->account->id();
     $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account->pass, $bogus_timestamp, $this->account->login));
     $this->assertText(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'), 'Expired password reset request rejected.');
   }

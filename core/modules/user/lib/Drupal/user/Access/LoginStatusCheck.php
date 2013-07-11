@@ -27,7 +27,7 @@ class LoginStatusCheck implements AccessCheckInterface {
    * {@inheritdoc}
    */
   public function access(Route $route, Request $request) {
-    return (bool) $GLOBALS['user']->uid;
+    return (bool) $GLOBALS['user']->id();
   }
 
 }

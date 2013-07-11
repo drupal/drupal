@@ -36,7 +36,7 @@ class UrlAlterFunctionalTest extends WebTestBase {
     $account = $this->drupalCreateUser(array('administer url aliases'));
     $this->drupalLogin($account);
 
-    $uid = $account->uid;
+    $uid = $account->id();
     $name = $account->name;
 
     // Test a single altered path.

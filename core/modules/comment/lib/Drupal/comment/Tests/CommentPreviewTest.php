@@ -52,7 +52,7 @@ class CommentPreviewTest extends CommentTestBase {
     $edit['signature[value]'] = '<a href="http://example.com/">' . $test_signature. '</a>';
     $image = current($this->drupalGetTestFiles('image'));
     $edit['files[user_picture_und_0]'] = drupal_realpath($image->uri);
-    $this->drupalPost('user/' . $this->web_user->uid . '/edit', $edit, t('Save'));
+    $this->drupalPost('user/' . $this->web_user->id() . '/edit', $edit, t('Save'));
 
     // As the web user, fill in the comment form and preview the comment.
     $edit = array();

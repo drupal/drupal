@@ -107,7 +107,7 @@ class EntityTranslationTest extends EntityUnitTestBase {
   protected function assertEntityLanguageMethods($entity_type) {
     $entity = entity_create($entity_type, array(
       'name' => 'test',
-      'user_id' => $GLOBALS['user']->uid,
+      'user_id' => $GLOBALS['user']->id(),
     ));
     $this->assertEqual($entity->language()->id, Language::LANGCODE_NOT_SPECIFIED, format_string('%entity_type: Entity language not specified.', array('%entity_type' => $entity_type)));
     $this->assertFalse($entity->getTranslationLanguages(FALSE), format_string('%entity_type: No translations are available', array('%entity_type' => $entity_type)));

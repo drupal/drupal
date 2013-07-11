@@ -34,7 +34,7 @@ function history_read($nid) {
   $history = &drupal_static(__FUNCTION__, array());
 
   if (!isset($history[$nid])) {
-    $history[$nid] = db_query("SELECT timestamp FROM {history} WHERE uid = :uid AND nid = :nid", array(':uid' => $user->uid, ':nid' => $nid))->fetchObject();
+    $history[$nid] = db_query("SELECT timestamp FROM {history} WHERE uid = :uid AND nid = :nid", array(':uid' => $user->id(), ':nid' => $nid))->fetchObject();
   }
 
   return (isset($history[$nid]->timestamp) ? $history[$nid]->timestamp : 0);
@@ -56,10 +56,10 @@ function history_write($nid, $account = NULL) {
     $account = $user;
   }
 
-  if ($account->uid) {
+  if ($account->isAuthenticated()) {
     db_merge('history')
       ->key(array(
-        'uid' => $account->uid,
+        'uid' => $account->id(),
         'nid' => $nid,
       ))
       ->fields(array('timestamp' => REQUEST_TIME))
@@ -92,7 +92,7 @@ function history_user_cancel($edit, $account, $method) {
   switch ($method) {
     case 'user_cancel_reassign':
       db_delete('history')
-        ->condition('uid', $account->uid)
+        ->condition('uid', $account->id())
         ->execute();
       break;
   }
@@ -103,6 +103,6 @@ function history_user_cancel($edit, $account, $method) {
  */
 function history_user_delete($account) {
   db_delete('history')
-    ->condition('uid', $account->uid)
+    ->condition('uid', $account->id())
     ->execute();
 }

@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Form;
 
+use Drupal\Core\Session\UserSession;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
@@ -45,7 +46,7 @@ class FormCacheTest extends DrupalUnitTestBase {
    * Tests the form cache with a logged-in user.
    */
   function testCacheToken() {
-    $GLOBALS['user']->uid = 1;
+    $GLOBALS['user'] = new UserSession(array('uid' => 1));
     form_set_cache($this->form_build_id, $this->form, $this->form_state);
 
     $cached_form_state = form_state_defaults();
@@ -74,7 +75,7 @@ class FormCacheTest extends DrupalUnitTestBase {
    * Tests the form cache without a logged-in user.
    */
   function testNoCacheToken() {
-    $GLOBALS['user']->uid = 0;
+    $GLOBALS['user'] = new UserSession(array('uid' => 0));
 
     $this->form_state['example'] = $this->randomName();
     form_set_cache($this->form_build_id, $this->form, $this->form_state);

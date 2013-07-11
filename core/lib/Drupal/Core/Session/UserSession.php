@@ -19,7 +19,7 @@ class UserSession implements AccountInterface {
    *
    * @var int
    */
-  public $uid;
+  protected $uid;
 
   /**
    * Session hostname.

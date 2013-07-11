@@ -36,11 +36,11 @@ class RelationshipRepresentativeNode extends UserTestBase {
     $map = array('node_users_nid' => 'nid', 'uid' => 'uid');
     $expected_result = array(
       array(
-        'uid' => $this->users[1]->uid,
+        'uid' => $this->users[1]->id(),
         'nid' => $this->nodes[1]->nid,
       ),
       array(
-        'uid' => $this->users[0]->uid,
+        'uid' => $this->users[0]->id(),
         'nid' => $this->nodes[0]->nid,
       ),
     );

@@ -65,7 +65,7 @@ class UserPictureTest extends WebTestBase {
 
     // Delete the picture.
     $edit = array();
-    $this->drupalPost('user/' . $this->web_user->uid . '/edit', $edit, t('Remove'));
+    $this->drupalPost('user/' . $this->web_user->id() . '/edit', $edit, t('Remove'));
     $this->drupalPost(NULL, array(), t('Save'));
 
     // Call system_cron() to clean up the file. Make sure the timestamp
@@ -131,10 +131,10 @@ class UserPictureTest extends WebTestBase {
    */
   function saveUserPicture($image) {
     $edit = array('files[user_picture_und_0]' => drupal_realpath($image->uri));
-    $this->drupalPost('user/' . $this->web_user->uid . '/edit', $edit, t('Save'));
+    $this->drupalPost('user/' . $this->web_user->id() . '/edit', $edit, t('Save'));
 
     // Load actual user data from database.
-    $account = user_load($this->web_user->uid, TRUE);
+    $account = user_load($this->web_user->id(), TRUE);
     return file_load($account->user_picture[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'], TRUE);
   }
 }

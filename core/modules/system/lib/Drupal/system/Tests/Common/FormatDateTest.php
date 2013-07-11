@@ -121,13 +121,13 @@ class FormatDateTest extends WebTestBase {
     $test_user = $this->drupalCreateUser();
     $this->drupalLogin($test_user);
     $edit = array('preferred_langcode' => self::LANGCODE, 'mail' => $test_user->mail, 'timezone' => 'America/Los_Angeles');
-    $this->drupalPost('user/' . $test_user->uid . '/edit', $edit, t('Save'));
+    $this->drupalPost('user/' . $test_user->id() . '/edit', $edit, t('Save'));
 
     // Disable session saving as we are about to modify the global $user.
     drupal_save_session(FALSE);
     // Save the original user and language and then replace it with the test user and language.
     $real_user = $user;
-    $user = user_load($test_user->uid, TRUE);
+    $user = user_load($test_user->id(), TRUE);
     $real_language = $language_interface->id;
     $language_interface->id = $user->preferred_langcode;
     // Simulate a Drupal bootstrap with the logged-in user.

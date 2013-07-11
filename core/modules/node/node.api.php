@@ -187,7 +187,7 @@ function hook_node_grants($account, $op) {
   if (user_access('access private content', $account)) {
     $grants['example'] = array(1);
   }
-  $grants['example_owner'] = array($account->uid);
+  $grants['example_owner'] = array($account->id());
   return $grants;
 }
 
@@ -577,13 +577,13 @@ function hook_node_access($node, $op, $account, $langcode) {
     }
 
     if ($op == 'update') {
-      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->uid == $node->uid))) {
+      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->id() == $node->uid))) {
         return NODE_ACCESS_ALLOW;
       }
     }
 
     if ($op == 'delete') {
-      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->uid == $node->uid))) {
+      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->id() == $node->uid))) {
         return NODE_ACCESS_ALLOW;
       }
     }

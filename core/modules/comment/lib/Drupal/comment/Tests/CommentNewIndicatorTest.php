@@ -51,7 +51,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
       'nid' => $this->node->nid,
       'node_type' => $this->node->type,
       'pid' => 0,
-      'uid' => $this->loggedInUser->uid,
+      'uid' => $this->loggedInUser->id(),
       'status' => COMMENT_PUBLISHED,
       'subject' => $this->randomName(),
       'hostname' => '127.0.0.1',

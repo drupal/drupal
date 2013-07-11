@@ -26,7 +26,7 @@ class CurrentUser extends ArgumentDefaultPluginBase {
 
   public function getArgument() {
     global $user;
-    return $user->uid;
+    return $user->id();
   }
 
 }

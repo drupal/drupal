@@ -47,7 +47,7 @@ class NodeFormController extends EntityFormController {
         }
       }
       global $user;
-      $node->uid = $user->uid;
+      $node->uid = $user->id();
       $node->created = REQUEST_TIME;
     }
     else {

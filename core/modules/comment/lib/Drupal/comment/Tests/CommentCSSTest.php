@@ -38,8 +38,8 @@ class CommentCSSTest extends CommentTestBase {
   function testCommentClasses() {
     // Create all permutations for comments, users, and nodes.
     $parameters = array(
-      'node_uid' => array(0, $this->web_user->uid),
-      'comment_uid' => array(0, $this->web_user->uid, $this->admin_user->uid),
+      'node_uid' => array(0, $this->web_user->id()),
+      'comment_uid' => array(0, $this->web_user->id(), $this->admin_user->id()),
       'comment_status' => array(COMMENT_PUBLISHED, COMMENT_NOT_PUBLISHED),
       'user' => array('anonymous', 'authenticated', 'admin'),
     );
@@ -72,12 +72,12 @@ class CommentCSSTest extends CommentTestBase {
 
         case 'authenticated':
           $this->drupalLogin($this->web_user);
-          $case['user_uid'] = $this->web_user->uid;
+          $case['user_uid'] = $this->web_user->id();
           break;
 
         case 'admin':
           $this->drupalLogin($this->admin_user);
-          $case['user_uid'] = $this->admin_user->uid;
+          $case['user_uid'] = $this->admin_user->id();
           break;
       }
       // Request the node with the comment.

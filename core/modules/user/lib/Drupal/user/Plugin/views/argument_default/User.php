@@ -41,14 +41,14 @@ class User extends ArgumentDefaultPluginBase {
     foreach (range(1, 3) as $i) {
       $user = menu_get_object('user', $i);
       if (!empty($user)) {
-        return $user->uid;
+        return $user->id();
       }
     }
 
     foreach (range(1, 3) as $i) {
       $user = menu_get_object('user_uid_optional', $i);
       if (!empty($user)) {
-        return $user->uid;
+        return $user->id();
       }
     }
 

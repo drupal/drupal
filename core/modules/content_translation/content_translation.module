@@ -730,7 +730,7 @@ function content_translation_entity_insert(EntityInterface $entity) {
 
     $translation += array(
       'source' => '',
-      'uid' => $GLOBALS['user']->uid,
+      'uid' => $GLOBALS['user']->id(),
       'outdated' => FALSE,
       'status' => TRUE,
       'created' => REQUEST_TIME,

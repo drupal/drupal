@@ -171,7 +171,7 @@ function tracker_cron() {
  */
 function _tracker_myrecent_access($account) {
   // This path is only allowed for authenticated users looking at their own content.
-  return $account->uid && ($GLOBALS['user']->uid == $account->uid) && user_access('access content');
+  return $account->id() && ($GLOBALS['user']->id() == $account->id()) && user_access('access content');
 }
 
 /**

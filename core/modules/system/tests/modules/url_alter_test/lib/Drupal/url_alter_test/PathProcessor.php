@@ -22,7 +22,7 @@ class PathProcessor implements InboundPathProcessorInterface {
     if (preg_match('!^user/([^/]+)(/.*)?!', $path, $matches)) {
       if ($account = user_load_by_name($matches[1])) {
         $matches += array(2 => '');
-        $path = 'user/' . $account->uid . $matches[2];
+        $path = 'user/' . $account->id() . $matches[2];
       }
     }
 

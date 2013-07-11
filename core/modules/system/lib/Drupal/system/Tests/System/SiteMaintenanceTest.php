@@ -112,8 +112,8 @@ class SiteMaintenanceTest extends WebTestBase {
     );
     $this->drupalPost('user/password', $edit, t('E-mail new password'));
     $mails = $this->drupalGetMails();
-    $start = strpos($mails[0]['body'], 'user/reset/'. $this->user->uid);
-    $path = substr($mails[0]['body'], $start, 66 + strlen($this->user->uid));
+    $start = strpos($mails[0]['body'], 'user/reset/'. $this->user->id());
+    $path = substr($mails[0]['body'], $start, 66 + strlen($this->user->id()));
 
     // Log in with temporary login link.
     $this->drupalPost($path, array(), t('Log in'));

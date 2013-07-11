@@ -109,7 +109,7 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
       $entity = entity_create('entity_test', array());
       $entity->name->value = $this->randomName();
       $index = $i ? 1 : 0;
-      $entity->user_id->target_id = $this->accounts[$index]->uid;
+      $entity->user_id->target_id = $this->accounts[$index]->id();
       $entity->{$this->fieldName}->target_id = $this->terms[$index]->id();
       $entity->save();
       $this->entities[] = $entity;

@@ -546,7 +546,7 @@ function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
 function form_get_cache($form_build_id, &$form_state) {
   if ($form = Drupal::keyValueExpirable('form')->get($form_build_id)) {
     global $user;
-    if ((isset($form['#cache_token']) && drupal_valid_token($form['#cache_token'])) || (!isset($form['#cache_token']) && !$user->uid)) {
+    if ((isset($form['#cache_token']) && drupal_valid_token($form['#cache_token'])) || (!isset($form['#cache_token']) && $user->isAnonymous())) {
       if ($stored_form_state = Drupal::keyValueExpirable('form_state')->get($form_build_id)) {
         // Re-populate $form_state for subsequent rebuilds.
         $form_state = $stored_form_state + $form_state;
@@ -578,7 +578,7 @@ function form_set_cache($form_build_id, $form, $form_state) {
 
   // Cache form structure.
   if (isset($form)) {
-    if ($GLOBALS['user']->uid) {
+    if ($GLOBALS['user']->isAuthenticated()) {
       $form['#cache_token'] = drupal_get_token();
     }
     Drupal::keyValueExpirable('form')->setWithExpire($form_build_id, $form, $expire);
@@ -1069,7 +1069,7 @@ function drupal_prepare_form($form_id, &$form, &$form_state) {
   // tokens are session-bound and forms displayed to anonymous users are very
   // likely cached, we cannot assign a token for them.
   // During installation, there is no $user yet.
-  if (!empty($user->uid) && !$form_state['programmed']) {
+  if ($user && $user->isAuthenticated() && !$form_state['programmed']) {
     // Form constructors may explicitly set #token to FALSE when cross site
     // request forgery is irrelevant to the form, such as search forms.
     if (isset($form['#token']) && $form['#token'] === FALSE) {
@@ -4888,7 +4888,7 @@ function _drupal_form_send_response(Response $response) {
  * $batch = array(
  *   'title' => t('Exporting'),
  *   'operations' => array(
- *     array('my_function_1', array($account->uid, 'story')),
+ *     array('my_function_1', array($account->id(), 'story')),
  *     array('my_function_2', array()),
  *   ),
  *   'finished' => 'my_finished_callback',

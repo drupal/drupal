@@ -83,7 +83,7 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
         // Basic user account information.
         case 'uid':
           // In the case of hook user_presave uid is not set yet.
-          $replacements[$original] = !empty($account->uid) ? $account->uid : t('not yet assigned');
+          $replacements[$original] = $account->id() ?: t('not yet assigned');
           break;
 
         case 'name':
@@ -96,11 +96,11 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'url':
-          $replacements[$original] = !empty($account->uid) ? url("user/$account->uid", $url_options) : t('not yet assigned');
+          $replacements[$original] = $account->id() ? url("user/" . $account->id(), $url_options) : t('not yet assigned');
           break;
 
         case 'edit-url':
-          $replacements[$original] = !empty($account->uid) ? url("user/$account->uid/edit", $url_options) : t('not yet assigned');
+          $replacements[$original] = $account->id() ? url("user/" . $account->id() . "/edit", $url_options) : t('not yet assigned');
           break;
 
         // These tokens are default variations on the chained tokens handled below.
@@ -125,7 +125,7 @@ function user_tokens($type, $tokens, array $data = array(), array $options = arr
   }
 
   if ($type == 'current-user') {
-    $account = user_load($GLOBALS['user']->uid);
+    $account = user_load($GLOBALS['user']->id());
     $replacements += $token_service->generate('user', $tokens, array('user' => $account), $options);
   }
 

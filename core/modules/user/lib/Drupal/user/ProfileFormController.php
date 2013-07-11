@@ -22,7 +22,7 @@ class ProfileFormController extends AccountFormController {
     $element['delete']['#type'] = 'submit';
     $element['delete']['#value'] = t('Cancel account');
     $element['delete']['#submit'] = array('user_edit_cancel_submit');
-    $element['delete']['#access'] = $account->uid > 1 && (($account->uid == $GLOBALS['user']->uid && user_access('cancel account')) || user_access('administer users'));
+    $element['delete']['#access'] = $account->id() > 1 && (($account->id() == $GLOBALS['user']->id() && user_access('cancel account')) || user_access('administer users'));
 
     return $element;
   }

@@ -281,7 +281,7 @@ function node_mark($nid, $timestamp) {
   global $user;
   $cache = &drupal_static(__FUNCTION__, array());
 
-  if (!$user->uid || !module_exists('history')) {
+  if ($user->isAnonymous() || !module_exists('history')) {
     return MARK_READ;
   }
   if (!isset($cache[$nid])) {
@@ -1015,7 +1015,7 @@ function node_user_cancel($edit, $account, $method) {
       $nodes = db_select('node_field_data', 'n')
         ->distinct()
         ->fields('n', array('nid'))
-        ->condition('uid', $account->uid)
+        ->condition('uid', $account->id())
         ->execute()
         ->fetchCol();
       node_mass_update($nodes, array('status' => 0), NULL, TRUE);
@@ -1027,14 +1027,14 @@ function node_user_cancel($edit, $account, $method) {
       $nodes = db_select('node_field_data', 'n')
         ->distinct()
         ->fields('n', array('nid'))
-        ->condition('uid', $account->uid)
+        ->condition('uid', $account->id())
         ->execute()
         ->fetchCol();
       node_mass_update($nodes, array('uid' => 0), NULL, TRUE);
       // Anonymize old revisions.
       db_update('node_field_revision')
         ->fields(array('uid' => 0))
-        ->condition('uid', $account->uid)
+        ->condition('uid', $account->id())
         ->execute();
       break;
   }
@@ -1049,12 +1049,12 @@ function node_user_predelete($account) {
   $nodes = db_select('node_field_data', 'n')
     ->distinct()
     ->fields('n', array('nid'))
-    ->condition('uid', $account->uid)
+    ->condition('uid', $account->id())
     ->execute()
     ->fetchCol();
   entity_delete_multiple('node', $nodes);
   // Delete old revisions.
-  $revisions = db_query('SELECT DISTINCT vid FROM {node_field_revision} WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
+  $revisions = db_query('SELECT DISTINCT vid FROM {node_field_revision} WHERE uid = :uid', array(':uid' => $account->id()))->fetchCol();
   foreach ($revisions as $revision) {
     node_revision_delete($revision);
   }
@@ -1425,7 +1425,7 @@ function node_get_recent($number = 10) {
     // If the user is able to view their own unpublished nodes, allow them
     // to see these in addition to published nodes. Check that they actually
     // have some unpublished nodes to view before adding the condition.
-    if (user_access('view own unpublished content') && $own_unpublished = db_query('SELECT DISTINCT nid FROM {node_field_data} WHERE uid = :uid AND status = :status', array(':uid' => $GLOBALS['user']->uid, ':status' => NODE_NOT_PUBLISHED))->fetchCol()) {
+    if (user_access('view own unpublished content') && $own_unpublished = db_query('SELECT DISTINCT nid FROM {node_field_data} WHERE uid = :uid AND status = :status', array(':uid' => $GLOBALS['user']->id(), ':status' => NODE_NOT_PUBLISHED))->fetchCol()) {
       $query->condition(db_or()
         ->condition('n.status', NODE_PUBLISHED)
         ->condition('n.nid', $own_unpublished, 'IN')
@@ -2135,7 +2135,7 @@ function node_access($op, $node, $account = NULL, $langcode = NULL) {
   // Make sure that if an account is passed, that it is a fully loaded user
   // object.
   if ($account && !($account instanceof UserInterface)) {
-    $account = user_load($account->uid);
+    $account = user_load($account->id());
   }
 
   return Drupal::entityManager()->getAccessController('node')->access($node, $op, $langcode, $account);
@@ -2154,13 +2154,13 @@ function node_node_access($node, $op, $account) {
     }
 
     if ($op == 'update') {
-      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->uid == $node->getAuthorId()))) {
+      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->id() == $node->getAuthorId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }
 
     if ($op == 'delete') {
-      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->uid == $node->getAuthorId()))) {
+      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->id() == $node->getAuthorId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }
@@ -2299,21 +2299,21 @@ function node_access_view_all_nodes($account = NULL) {
     $account = $user;
   }
 
-  // Statically cache results in an array keyed by $account->uid.
+  // Statically cache results in an array keyed by $account->id().
   $access = &drupal_static(__FUNCTION__);
-  if (isset($access[$account->uid])) {
-    return $access[$account->uid];
+  if (isset($access[$account->id()])) {
+    return $access[$account->id()];
   }
 
   // If no modules implement the node access system, access is always TRUE.
   if (!module_implements('node_grants')) {
-    $access[$account->uid] = TRUE;
+    $access[$account->id()] = TRUE;
   }
   else {
-    $access[$account->uid] = Drupal::entityManager()->getAccessController('node')->checkAllGrants($account);
+    $access[$account->id()] = Drupal::entityManager()->getAccessController('node')->checkAllGrants($account);
   }
 
-  return $access[$account->uid];
+  return $access[$account->id()];
 }
 
 

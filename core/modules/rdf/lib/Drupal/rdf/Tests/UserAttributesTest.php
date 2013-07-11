@@ -53,15 +53,15 @@ class UserAttributesTest extends WebTestBase {
     $user2 = $this->drupalCreateUser();
     $this->drupalLogin($user1);
 
-    $account_uri = url('user/' . $user2->uid, array('absolute' => TRUE));
-    $person_uri = url('user/' . $user2->uid, array('fragment' => 'me', 'absolute' => TRUE));
+    $account_uri = url('user/' . $user2->id(), array('absolute' => TRUE));
+    $person_uri = url('user/' . $user2->id(), array('fragment' => 'me', 'absolute' => TRUE));
 
     // Parses the user profile page where the default bundle mapping for user
     // should be used.
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
     $base_uri = url('<front>', array('absolute' => TRUE));
-    $parser->parse($graph, $this->drupalGet('user/' . $user2->uid), 'rdfa', $base_uri);
+    $parser->parse($graph, $this->drupalGet('user/' . $user2->id()), 'rdfa', $base_uri);
 
     // Inspects RDF graph output.
     // User type.

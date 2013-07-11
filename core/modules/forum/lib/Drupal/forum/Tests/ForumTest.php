@@ -190,7 +190,7 @@ class ForumTest extends WebTestBase {
     $this->assertEqual($topics, '6', 'Number of topics found.');
 
     // Verify the number of unread topics.
-    $unread_topics = _forum_topics_unread($this->forum['tid'], $this->edit_any_topics_user->uid);
+    $unread_topics = _forum_topics_unread($this->forum['tid'], $this->edit_any_topics_user->id());
     $unread_topics = format_plural($unread_topics, '1 new post', '@count new posts');
     $xpath = $this->buildXPathQuery('//tr[@id=:forum]//td[@class="topics"]//a', $forum_arg);
     $this->assertFieldByXPath($xpath, $unread_topics, 'Number of unread topics found.');

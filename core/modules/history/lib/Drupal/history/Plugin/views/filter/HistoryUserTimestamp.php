@@ -54,8 +54,8 @@ class HistoryUserTimestamp extends FilterPluginBase {
 
   public function query() {
     global $user;
-    // This can only work if we're logged in.
-    if (!$user || !$user->uid) {
+    // This can only work if we're authenticated in.
+    if (!$user->isAuthenticated()) {
       return;
     }
 

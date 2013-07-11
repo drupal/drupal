@@ -114,7 +114,7 @@ class PageEditTest extends NodeTestBase {
 
     // Check that the node was authored by the currently logged in user.
     $node = $this->drupalGetNodeByTitle($edit['title']);
-    $this->assertIdentical($node->uid, $this->admin_user->uid, 'Node authored by admin user.');
+    $this->assertIdentical($node->uid, $this->admin_user->id(), 'Node authored by admin user.');
 
     // Try to change the 'authored by' field to an invalid user name.
     $edit = array(
@@ -135,7 +135,7 @@ class PageEditTest extends NodeTestBase {
     $edit['name'] = $this->web_user->name;
     $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save and keep published'));
     $node = node_load($node->nid, TRUE);
-    $this->assertIdentical($node->uid, $this->web_user->uid, 'Node authored by normal user.');
+    $this->assertIdentical($node->uid, $this->web_user->id(), 'Node authored by normal user.');
 
     // Check that normal users cannot change the authored by information.
     $this->drupalLogin($this->web_user);

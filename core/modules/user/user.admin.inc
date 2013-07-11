@@ -41,7 +41,7 @@ function user_admin_account() {
   foreach ($result as $account) {
     $account = user_load($account->uid);
     $users_roles = array();
-    $roles_result = db_query('SELECT rid FROM {users_roles} WHERE uid = :uid', array(':uid' => $account->uid));
+    $roles_result = db_query('SELECT rid FROM {users_roles} WHERE uid = :uid', array(':uid' => $account->id()));
     foreach ($roles_result as $user_role) {
       $users_roles[] = $roles[$user_role->rid];
     }
@@ -54,7 +54,7 @@ function user_admin_account() {
       '#theme' => 'item_list',
       '#items' => $users_roles,
     );
-    $options[$account->uid] = array(
+    $options[$account->id()] = array(
       'username' => drupal_render($username),
       'status' => $status[$account->status],
       'roles' => drupal_render($item_list),
@@ -64,22 +64,22 @@ function user_admin_account() {
     $links = array();
     $links['edit'] = array(
       'title' => t('Edit'),
-      'href' => 'user/' . $account->uid . '/edit',
+      'href' => 'user/' . $account->id() . '/edit',
       'query' => $destination,
     );
     if (module_invoke('content_translation', 'translate_access', $account)) {
       $links['translate'] = array(
         'title' => t('Translate'),
-        'href' => 'user/' . $account->uid . '/translations',
+        'href' => 'user/' . $account->id() . '/translations',
         'query' => $destination,
       );
     }
-    $options[$account->uid]['operations']['data'] = array(
+    $options[$account->id()]['operations']['data'] = array(
       '#type' => 'operations',
       '#links' => $links,
     );
 
-    $options[$account->uid]['title']['data']['#title'] = check_plain($account->name);
+    $options[$account->id()]['title']['data']['#title'] = check_plain($account->name);
 
   }
 
