@@ -43,8 +43,8 @@ class CommentRenderController extends EntityRenderController {
     foreach ($entities as $entity) {
       $comment_entity_ids[$entity->entity_type->value][] = $entity->entity_id->value;
     }
-    // Load entities in bulk, this is more performant than using
-    // $comment->entity_id->value as we can load them in bulk per-type.
+    // Load entities in bulk. This is more performant than using
+    // $comment->entity_id->value as we can load them in bulk per type.
     foreach ($comment_entity_ids as $entity_type => $entity_ids) {
       $comment_entities[$entity_type] = entity_load_multiple($entity_type, $entity_ids);
     }
