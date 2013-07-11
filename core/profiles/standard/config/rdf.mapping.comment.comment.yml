@@ -1,6 +1,6 @@
-id: comment.comment_node_page
+id: comment.comment
 targetEntityType: comment
-bundle: comment_node_page
+bundle: comment
 types:
   - 'schema:Comment'
 fieldMappings:
