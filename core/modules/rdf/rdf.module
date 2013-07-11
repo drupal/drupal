@@ -301,7 +301,7 @@ function rdf_preprocess_node(&$variables) {
       $count += $statistics->comment_count;
       // Annotates the 'x comments' link in teaser view.
       if (isset($variables['content']['links']['comment__' . $field_name]['#links']['comment-comments'])) {
-        $comment_count_attributes = rdf_rdfa_attributes($comment_count_mapping, $variables['node']->comment_statistics);
+        $comment_count_attributes = rdf_rdfa_attributes($comment_count_mapping, $statistics->comment_count);
         // According to RDFa parsing rule number 4, a new subject URI is created
         // from the href attribute if no rel/rev attribute is present. To get
         // the original node URL from the about attribute of the parent
