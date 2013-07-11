@@ -44,3 +44,52 @@ menu_test_local_action4:
     _content: '\Drupal\menu_test\TestControllers::test2'
   requirements:
     _access: 'TRUE'
+
+menu_local_task_test_tasks:
+  pattern: '/menu-local-task-test/tasks'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+
+menu_local_task_test_tasks_tasks:
+  pattern: '/menu-local-task-test/tasks/tasks'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+
+menu_local_task_test_tasks_view:
+  pattern: '/menu-local-task-test/tasks/view'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+
+menu_local_task_test_tasks_edit:
+  pattern: '/menu-local-task-test/tasks/edit'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+
+menu_local_task_test_tasks_settings:
+  pattern: '/menu-local-task-test/tasks/settings'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+
+menu_local_task_test_tasks_settings_sub1:
+  pattern: '/menu-local-task-test/tasks/settings/sub1'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+
+menu_local_task_test_tasks_settings_sub2:
+  pattern: '/menu-local-task-test/tasks/settings/sub2'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'

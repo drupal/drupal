@@ -926,6 +926,20 @@ function hook_menu_local_actions_alter(&$local_actions) {
 }
 
 /**
+ * Alter local tasks plugins.
+ *
+ * @param array $local_tasks
+ *   The array of local tasks plugin definitions, keyed by plugin ID.
+ *
+ * @see \Drupal\Core\Menu\LocalTaskInterface
+ * @see \Drupal\Core\Menu\LocalTaskManager
+ */
+function hook_local_task_alter(&$local_tasks) {
+  // Remove a specified local task plugin.
+  unset($local_tasks['example_plugin_id']);
+}
+
+/**
  * Alter links in the active trail before it is rendered as the breadcrumb.
  *
  * This hook is invoked by menu_get_active_breadcrumb() and allows alteration

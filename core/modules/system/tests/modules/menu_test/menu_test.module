@@ -441,6 +441,11 @@ function menu_test_menu() {
     'type' => MENU_LOCAL_ACTION,
   );
 
+  $items['menu-local-task-test/tasks'] = array(
+    'title' => 'Local tasks',
+    'route_name' => 'menu_local_task_test_tasks',
+  );
+
   return $items;
 }
 

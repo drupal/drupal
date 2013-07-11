@@ -25,29 +25,23 @@ function views_ui_menu() {
     'route_name' => 'views_ui.list',
   );
 
-  $items['admin/structure/views/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-
   $items['admin/structure/views/add'] = array(
     'route_name' => 'views_ui.add',
     'type' => MENU_SIBLING_LOCAL_TASK,
   );
 
+  // @todo - remove all items of type MENU_VISIBLE_IN_BREADCRUMB
+  // when there is a route-aware breadcrumb builder.
   $items['admin/structure/views/settings'] = array(
     'title' => 'Settings',
     'route_name' => 'views_ui.settings.basic',
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
-  $items['admin/structure/views/settings/basic'] = array(
-    'title' => 'Basic',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
+
   $items['admin/structure/views/settings/advanced'] = array(
     'title' => 'Advanced',
     'route_name' => 'views_ui.settings.advanced',
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
 
   // The primary Edit View page. Secondary tabs for each Display are added in

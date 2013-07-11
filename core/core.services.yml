@@ -172,6 +172,9 @@ services:
   plugin.manager.menu.local_action:
     class: Drupal\Core\Menu\LocalActionManager
     arguments: ['@container.namespaces', '@controller_resolver', '@request', '@module_handler']
+  plugin.manager.menu.local_task:
+    class: Drupal\Core\Menu\LocalTaskManager
+    arguments: ['@container.namespaces', '@controller_resolver', '@request', '@router.route_provider', '@module_handler']
   request:
     class: Symfony\Component\HttpFoundation\Request
     # @TODO the synthetic setting must be uncommented whenever drupal_session_initialize()
