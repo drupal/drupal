@@ -77,7 +77,7 @@ class StandardProfileTest extends WebTestBase {
     $this->drupalCreateNode(array('type' => 'article', 'promote' => NODE_PROMOTED,));
 
     // Create article comment.
-    $this->articleComment = $this->saveComment($this->article->id(), $this->webUser->id(), NULL, 0, 'comment_node_article');
+    $this->articleComment = $this->saveComment($this->article->id(), $this->webUser->id(), NULL, 0);
 
     // Create page.
     $this->page = $this->drupalCreateNode(array('type' => 'page'));
@@ -442,18 +442,17 @@ class StandardProfileTest extends WebTestBase {
    *   array of values to set contact info.
    * @param int $pid
    *   Comment id of the parent comment in a thread.
-   * @param string $bundle
-   *   The bundle of the comment.
    *
    * @return \Drupal\comment\Plugin\Core\Entity\Comment
    *   The saved comment.
    */
-  function saveComment($nid, $uid, $contact = NULL, $pid = 0, $bundle = '') {
+  function saveComment($nid, $uid, $contact = NULL, $pid = 0) {
     $values = array(
-      'nid' => $nid,
+      'entity_id' => $nid,
+      'entity_type' => 'node',
+      'field_name' => 'comment',
       'uid' => $uid,
       'pid' => $pid,
-      'node_type' => $bundle,
       'subject' => $this->randomName(),
       'comment_body' => $this->randomName(),
       'status' => 1,
