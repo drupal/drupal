@@ -984,24 +984,18 @@ function template_preprocess_field(&$variables, $hook) {
     'field__' . $element['#bundle'],
     'field__' . $element['#field_name'] . '__' . $element['#bundle'],
   );
-}
 
-/**
- * Theme process function for theme_field() and field.html.twig.
- *
- * @see theme_field()
- * @see field.html.twig
- */
-function template_process_field(&$variables, $hook) {
   static $default_attributes;
-  // The default theme implementation is a function, so template_process() does
-  // not automatically run, so we need to flatten the classes and attributes
-  // here. For best performance, only instantiate Drupal\Core\Template\Attribute
-  // when needed, and note that template_preprocess_field() does not initialize
-  // the *_attributes variables.
   if (!isset($default_attributes)) {
     $default_attributes = new Attribute;
   }
+  // The default theme implementation for fields is a function.
+  // template_preprocess() (which initializes the attributes, title_attributes,
+  // and content_attributes arrays) does not run for theme function
+  // implementations. Additionally, Attribute objects for the three variables
+  // below only get instantiated for template file implementations, and we need
+  // Attribute objects for printing in both theme functions and template files.
+  // For best performance, we only instantiate Attribute objects when needed.
   $variables['attributes'] = isset($variables['attributes']) ? new Attribute($variables['attributes']) : clone $default_attributes;
   $variables['title_attributes'] = isset($variables['title_attributes']) ? new Attribute($variables['title_attributes']) : clone($default_attributes);
   $variables['content_attributes'] = isset($variables['content_attributes']) ? new Attribute($variables['content_attributes']) : clone($default_attributes);
@@ -1070,7 +1064,6 @@ function template_process_field(&$variables, $hook) {
  *   - attributes: A string containing the attributes for the wrapping div.
  *
  * @see template_preprocess_field()
- * @see template_process_field()
  * @see field.html.twig
  *
  * @ingroup themeable

@@ -350,6 +350,12 @@ function rdf_preprocess_field(&$variables) {
           $variables['item_attributes'][$delta]['resource'] = file_create_url($item['entity']->getFileUri());
         }
       }
+      // Convert the item_attributes for this field item back into an Attribute
+      // object for printing. This is necessary because at this time this
+      // preprocess function overwrites $variables['item_attributes'][$delta],
+      // which is initialized as an Attribute object in
+      // template_preprocess_field().
+      $variables['item_attributes'][$delta] = new Attribute($variables['item_attributes'][$delta]);
     }
   }
 }
