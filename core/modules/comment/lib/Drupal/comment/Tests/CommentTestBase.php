@@ -98,7 +98,12 @@ abstract class CommentTestBase extends WebTestBase {
     $edit = array();
     $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
 
-    $instance = $this->container->get('field.info')->getInstance('node', 'article', 'comment');
+    if ($node !== NULL) {
+      $instance = $this->container->get('field.info')->getInstance('node', $node->bundle(), 'comment');
+    }
+    else {
+      $instance = $this->container->get('field.info')->getInstance('node', 'article', 'comment');
+    }
     $preview_mode = $instance->settings['preview'];
     $subject_mode = $instance->settings['subject'];
 
