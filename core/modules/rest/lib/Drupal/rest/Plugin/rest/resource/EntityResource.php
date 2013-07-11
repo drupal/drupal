@@ -71,7 +71,11 @@ class EntityResource extends ResourceBase {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
-  public function post($id, EntityInterface $entity) {
+  public function post($id, EntityInterface $entity = NULL) {
+    if ($entity == NULL) {
+      throw new BadRequestHttpException(t('No entity content received.'));
+    }
+
     if (!$entity->access('create')) {
       throw new AccessDeniedHttpException();
     }
@@ -117,7 +121,11 @@ class EntityResource extends ResourceBase {
    *
    * @throws \Symfony\Component\HttpKernel\Exception\HttpException
    */
-  public function patch($id, EntityInterface $entity) {
+  public function patch($id, EntityInterface $entity = NULL) {
+    if ($entity == NULL) {
+      throw new BadRequestHttpException(t('No entity content received.'));
+    }
+
     if (empty($id)) {
       throw new NotFoundHttpException();
     }

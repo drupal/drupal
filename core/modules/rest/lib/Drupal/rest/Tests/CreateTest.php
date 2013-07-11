@@ -88,6 +88,10 @@ class CreateTest extends RESTTestBase {
     $this->httpRequest('entity/' . $entity_type, 'POST', 'kaboom!', $this->defaultMimeType);
     $this->assertResponse(400);
 
+    // Try to send no data at all, which does not make sense on POST requests.
+    $this->httpRequest('entity/' . $entity_type, 'POST', NULL, $this->defaultMimeType);
+    $this->assertResponse(400);
+
     // Try to create an entity without the CSRF token.
     $this->curlExec(array(
       CURLOPT_HTTPGET => FALSE,
