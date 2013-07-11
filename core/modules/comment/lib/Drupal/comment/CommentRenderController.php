@@ -37,7 +37,7 @@ class CommentRenderController extends EntityRenderController {
 
     parent::buildContent($entities, $displays, $view_mode, $langcode);
 
-    // Load all entities of all comments at once.
+    // Load all the entities that have comments attached.
     $comment_entity_ids = array();
     $comment_entities = array();
     foreach ($entities as $entity) {
