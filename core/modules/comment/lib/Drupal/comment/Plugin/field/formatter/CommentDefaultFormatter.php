@@ -60,7 +60,8 @@ class CommentDefaultFormatter extends FormatterBase {
         }
       }
 
-      // Append comment form if needed.
+      // Append comment form if the comments are open and the form
+      // is set to display below the entity.
       if ($commenting_status == COMMENT_OPEN && $comment_settings['form_location'] == COMMENT_FORM_BELOW) {
         // Only show the add comment form if the user has permission and the
         // view mode is not search_result or search_index.
