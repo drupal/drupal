@@ -452,21 +452,6 @@ function menu_test_local_action_dynamic_title($arg) {
 }
 
 /**
- * Implements hook_local_actions().
- */
-function menu_test_local_actions() {
-  return array(
-    array(
-      'route_name' => 'menu_test_local_action3',
-      'title' => t('My routing action'),
-      'appears_on' => array(
-        'menu_test_local_action1',
-      ),
-    ),
-  );
-}
-
-/**
  * Implements hook_menu_local_tasks().
  *
  * If the menu_test.settings configuration 'tasks.add' has been set, adds

@@ -2273,20 +2273,19 @@ function menu_secondary_local_tasks() {
 function menu_get_local_actions() {
   $links = menu_local_tasks();
   $router_item = menu_get_item();
-  // @todo Consider storing the results of hook_local_actions() in a static.
-  foreach (Drupal::moduleHandler()->invokeAll('local_actions') as $route_info) {
-    if (in_array($router_item['route_name'], $route_info['appears_on'])) {
-      $route_path = _menu_router_translate_route($route_info['route_name']);
-      $action_router_item = menu_get_item($route_path);
-      $links['actions'][$route_path] = array(
-        '#theme' => 'menu_local_action',
-        '#link' => array(
-          'title' => $route_info['title'],
-          'href' => $route_path,
-        ),
-        '#access' => $action_router_item['access'],
-      );
-    }
+  $manager = Drupal::service('plugin.manager.menu.local_action');
+  $local_actions = $manager->getActionsForRoute($router_item['route_name']);
+  foreach ($local_actions as $plugin) {
+    $route_path = $manager->getPath($plugin);
+    $action_router_item = menu_get_item($route_path);
+    $links['actions'][$route_path] = array(
+      '#theme' => 'menu_local_action',
+      '#link' => array(
+        'title' => $manager->getTitle($plugin),
+        'href' => $route_path,
+      ),
+      '#access' => $action_router_item['access'],
+    );
   }
   return $links['actions'];
 }

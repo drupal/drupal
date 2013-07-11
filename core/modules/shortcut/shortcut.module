@@ -574,18 +574,3 @@ function shortcut_library_info() {
 
   return $libraries;
 }
-
-/**
- * Implements hook_local_actions.
- */
-function shortcut_local_actions() {
-  return array(
-    array(
-      'route_name' => 'shortcut_set_add',
-      'title' => t('Add shortcut set'),
-      'appears_on' => array(
-        'shortcut_set_admin',
-      ),
-    ),
-  );
-}

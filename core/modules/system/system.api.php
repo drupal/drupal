@@ -821,31 +821,6 @@ function hook_menu() {
 }
 
 /**
- * Define route-based local actions.
- *
- * Instead of using MENU_LOCAL_ACTION in hook_menu(), implement
- * hook_local_actions().
- *
- * @return array
- *   An associative array containing the following keys:
- *   - route_name: The machine name of the local action route.
- *   - title: The title of the local action.
- *   - appears_on: An array of route names for this action to be display on.
- */
-function hook_local_actions() {
-  return array(
-    array(
-      'route_name' => 'mymodule.route.action',
-      'title' => t('Perform local action'),
-      'appears_on' => array(
-        'mymodule.other_route',
-        'mymodule.other_other_route',
-      ),
-    ),
-  );
-}
-
-/**
  * Alter the data being saved to the {menu_router} table after hook_menu is invoked.
  *
  * This hook is invoked by menu_router_build(). The menu definitions are passed
@@ -936,6 +911,18 @@ function hook_menu_local_tasks(&$data, $router_item, $root_path) {
  * @see hook_menu_local_tasks()
  */
 function hook_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+}
+
+/**
+ * Alter local actions plugins.
+ *
+ * @param array $local_actions
+ *   The array of local action plugin definitions, keyed by plugin ID.
+ *
+ * @see \Drupal\Core\Menu\LocalActionInterface
+ * @see \Drupal\Core\Menu\LocalActionManager
+ */
+function hook_menu_local_actions_alter(&$local_actions) {
 }
 
 /**

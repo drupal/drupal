@@ -115,21 +115,6 @@ function views_ui_entity_info(&$entity_info) {
 }
 
 /**
- * Implements hook_local_actions().
- */
-function views_ui_local_actions() {
-  return array(
-    array(
-      'route_name' => 'views_ui.add',
-      'title' => t('Add new view'),
-      'appears_on' => array(
-        'views_ui.list',
-      ),
-    ),
-  );
-}
-
-/**
  * Implements hook_theme().
  */
 function views_ui_theme() {

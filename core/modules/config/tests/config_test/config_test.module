@@ -58,21 +58,6 @@ function config_test_menu() {
 }
 
 /**
- * Implements hook_local_actions()
- */
-function config_test_local_actions() {
-  return array(
-    array(
-      'route_name' => 'config_test_entity_add',
-      'title' => t('Add test configuration'),
-      'appears_on' => array(
-        'config_test_list_page',
-      ),
-    ),
-  );
-}
-
-/**
  * Loads a ConfigTest object.
  *
  * @param string $id
