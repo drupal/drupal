@@ -13,12 +13,12 @@ use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Plugin implementation of the default comment formatter.
+ * Provides a default comment formatter.
  *
  * @FieldFormatter(
  *   id = "comment_default",
  *   module = "comment",
- *   label = @Translation("Comment List"),
+ *   label = @Translation("Comment list"),
  *   field_types = {
  *     "comment"
  *   }

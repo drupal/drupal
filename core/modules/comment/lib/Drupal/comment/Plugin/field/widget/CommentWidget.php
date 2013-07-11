@@ -12,7 +12,7 @@ use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
 /**
- * Plugin implementation of the default comment widget.
+ * Provides a default comment widget.
  *
  * @Plugin(
  *   id = "comment_default",
@@ -64,7 +64,8 @@ class CommentWidget extends WidgetBase {
     if (isset($form['advanced'])) {
       $element += array(
         '#type' => 'details',
-        // Collapse details when value is the same as default for instance.
+        // Collapse the advanced settings when they are the same 
+        // as the defaults for the instance.
         '#collapsed' => (_comment_get_default_status($items) == _comment_get_default_status($field->default_value)),
         '#group' => 'advanced',
         '#attributes' => array(
