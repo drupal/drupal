@@ -99,7 +99,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
         ->fields(array(
           'cid' => 0,
           'comment_count' => 0,
-          // Use the created date of the entity if it's set, 
+          // Use the created date of the entity if it's set,
           // or default to REQUEST_TIME.
           'last_comment_timestamp' => isset($entity->created->value) ? $entity->created->value : REQUEST_TIME,
           'last_comment_name' => '',

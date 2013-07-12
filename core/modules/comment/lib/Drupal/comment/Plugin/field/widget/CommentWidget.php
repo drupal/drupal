@@ -64,7 +64,7 @@ class CommentWidget extends WidgetBase {
     if (isset($form['advanced'])) {
       $element += array(
         '#type' => 'details',
-        // Collapse the advanced settings when they are the same 
+        // Collapse the advanced settings when they are the same
         // as the defaults for the instance.
         '#collapsed' => (_comment_get_default_status($items) == _comment_get_default_status($field->default_value)),
         '#group' => 'advanced',
