@@ -79,8 +79,8 @@ class LanguageListTest extends WebTestBase {
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), 'Correct page redirection.');
     $this->assertText(t('The default language cannot be deleted.'), 'Failed to delete the default language.');
 
-    // Ensure 'edit' link works.
-    $this->clickLink(t('edit'));
+    // Ensure 'Edit' link works.
+    $this->clickLink(t('Edit'));
     $this->assertTitle(t('Edit language | Drupal'), 'Page title is "Edit language".');
     // Edit a language.
     $name = $this->randomName(16);
@@ -98,8 +98,8 @@ class LanguageListTest extends WebTestBase {
     $this->drupalPost($path, $edit, t('Save configuration'));
     // Ensure 'delete' link works.
     $this->drupalGet('admin/config/regional/language');
-    $this->clickLink(t('delete'));
-    $this->assertText(t('Are you sure you want to delete the language'), '"delete" link is correct.');
+    $this->clickLink(t('Delete'));
+    $this->assertText(t('Are you sure you want to delete the language'), '"Delete" link is correct.');
     // Delete a language.
     $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
     // First test the 'cancel' link.
