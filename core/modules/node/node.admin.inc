@@ -9,29 +9,6 @@ use Drupal\Core\Language\Language;
 use Drupal\node\NodeInterface;
 
 /**
- * Page callback: Form constructor for the permission rebuild confirmation form.
- *
- * @return array
- *   An array as expected by drupal_render().
- *
- * @see node_configure_rebuild_confirm_submit()
- * @see node_menu()
- * @ingroup forms
- */
-function node_configure_rebuild_confirm() {
-  return confirm_form(array(), t('Are you sure you want to rebuild the permissions on site content?'),
-                  'admin/reports/status', t('This action rebuilds all permissions on site content, and may be a lengthy process. This action cannot be undone.'), t('Rebuild permissions'), t('Cancel'));
-}
-
-/**
- * Form submission handler for node_configure_rebuild_confirm().
- */
-function node_configure_rebuild_confirm_submit($form, &$form_state) {
-  node_access_rebuild(TRUE);
-  $form_state['redirect'] = 'admin/reports/status';
-}
-
-/**
  * Updates all nodes in the passed-in array with the passed-in field values.
  *
  * IMPORTANT NOTE: This function is intended to work when called from a form

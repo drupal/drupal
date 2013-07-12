@@ -1116,64 +1116,7 @@ function theme_node_search_admin($variables) {
  * @see node_menu()
  */
 function _node_revision_access(EntityInterface $node, $op = 'view', $account = NULL, $langcode = NULL) {
-  $access = &drupal_static(__FUNCTION__, array());
-
-  $map = array(
-    'view' => 'view all revisions',
-    'update' => 'revert all revisions',
-    'delete' => 'delete all revisions',
-  );
-  $bundle = $node->bundle();
-  $type_map = array(
-    'view' => "view $bundle revisions",
-    'update' => "revert $bundle revisions",
-    'delete' => "delete $bundle revisions",
-  );
-
-  if (!$node || !isset($map[$op]) || !isset($type_map[$op])) {
-    // If there was no node to check against, or the $op was not one of the
-    // supported ones, we return access denied.
-    return FALSE;
-  }
-
-  if (!isset($account)) {
-    $account = $GLOBALS['user'];
-  }
-
-  // If no language code was provided, default to the node revision's langcode.
-  if (empty($langcode)) {
-    $langcode = $node->language()->id;
-  }
-
-  // Statically cache access by revision ID, language code, user account ID,
-  // and operation.
-  $cid = $node->getRevisionId() . ':' . $langcode . ':' . $account->id() . ':' . $op;
-
-  if (!isset($access[$cid])) {
-    // Perform basic permission checks first.
-    if (!user_access($map[$op], $account) && !user_access($type_map[$op], $account) && !user_access('administer nodes', $account)) {
-      return $access[$cid] = FALSE;
-    }
-
-    // There should be at least two revisions. If the vid of the given node
-    // and the vid of the default revision differ, then we already have two
-    // different revisions so there is no need for a separate database check.
-    // Also, if you try to revert to or delete the default revision, that's
-    // not good.
-    if ($node->isDefaultRevision() && (db_query('SELECT COUNT(*) FROM {node_field_revision} WHERE nid = :nid AND default_langcode = 1', array(':nid' => $node->id()))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
-      $access[$cid] = FALSE;
-    }
-    elseif (user_access('administer nodes', $account)) {
-      $access[$cid] = TRUE;
-    }
-    else {
-      // First check the access to the default revision and finally, if the
-      // node passed in is not the default revision then access to that, too.
-      $access[$cid] = node_access($op, node_load($node->id()), $account, $langcode) && ($node->isDefaultRevision() || node_access($op, $node, $account, $langcode));
-    }
-  }
-
-  return $access[$cid];
+  return Drupal::service('access_check.node.revision')->checkAccess($node, $op, $account, $langcode);
 }
 
 /**
@@ -1215,17 +1158,6 @@ function node_menu() {
   $items['admin/content/node'] = array(
     'title' => 'Content',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-
-  $items['admin/reports/status/rebuild'] = array(
-    'title' => 'Rebuild permissions',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('node_configure_rebuild_confirm'),
-    // Any user than can potentially trigger a node_access_needs_rebuild(TRUE)
-    // has to be allowed access to the 'node access rebuild' confirm form.
-    'access arguments' => array('access administration pages'),
-    'type' => MENU_CALLBACK,
-    'file' => 'node.admin.inc',
   );
 
   $items['admin/structure/types'] = array(
@@ -1295,14 +1227,10 @@ function node_menu() {
   );
   $items['node/%node/delete'] = array(
     'title' => 'Delete',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('node_delete_confirm', 1),
-    'access callback' => 'node_access',
-    'access arguments' => array('delete', 1),
+    'route_name' => 'node_delete_confirm',
     'weight' => 10,
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
-    'file' => 'node.pages.inc',
   );
   $items['node/%node/revisions'] = array(
     'title' => 'Revisions',
@@ -1323,19 +1251,11 @@ function node_menu() {
   );
   $items['node/%node/revisions/%node_revision/revert'] = array(
     'title' => 'Revert to earlier revision',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('node_revision_revert_confirm', 3),
-    'access callback' => '_node_revision_access',
-    'access arguments' => array(3, 'update'),
-    'file' => 'node.pages.inc',
+    'route_name' => 'node_revision_revert_confirm',
   );
   $items['node/%node/revisions/%node_revision/delete'] = array(
     'title' => 'Delete earlier revision',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('node_revision_delete_confirm', 3),
-    'access callback' => '_node_revision_access',
-    'access arguments' => array(3, 'delete'),
-    'file' => 'node.pages.inc',
+    'route_name' => 'node_revision_delete_confirm',
   );
   return $items;
 }
