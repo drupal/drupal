@@ -246,7 +246,7 @@ class RouteProvider implements RouteProviderInterface {
 
     $ancestors = $this->getCandidateOutlines($parts);
 
-    $routes = $this->connection->query("SELECT name, route FROM {" . $this->connection->escapeTable($this->tableName) . "} WHERE pattern_outline IN (:patterns) ORDER BY fit", array(
+    $routes = $this->connection->query("SELECT name, route FROM {" . $this->connection->escapeTable($this->tableName) . "} WHERE pattern_outline IN (:patterns) ORDER BY fit DESC", array(
       ':patterns' => $ancestors,
     ))
       ->fetchAllKeyed();
