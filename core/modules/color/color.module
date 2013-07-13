@@ -89,13 +89,13 @@ function color_css_alter(&$css) {
  *
  * Replace the logo with the colored version if available.
  */
-function color_preprocess_page(&$vars) {
+function color_preprocess_page(&$variables) {
   global $theme_key;
 
   // Override logo.
   $logo = config('color.' . $theme_key)->get('logo');
-  if ($logo && $vars['logo'] && preg_match('!' . $theme_key . '/logo.png$!', $vars['logo'])) {
-    $vars['logo'] = file_create_url($logo);
+  if ($logo && $variables['logo'] && preg_match('!' . $theme_key . '/logo.png$!', $variables['logo'])) {
+    $variables['logo'] = file_create_url($logo);
   }
 }
 

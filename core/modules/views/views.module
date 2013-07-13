@@ -236,26 +236,26 @@ function views_plugin_list() {
  * we haven't got a chance to load that file before Drupal builds the
  * node portion of the theme registry.
  */
-function views_preprocess_node(&$vars) {
+function views_preprocess_node(&$variables) {
   Drupal::moduleHandler()->loadInclude('node', 'views.inc');
   // The 'view' attribute of the node is added in views_preprocess_node()
-  if (!empty($vars['node']->view) && $vars['node']->view->storage->id()) {
-    $vars['view'] = $vars['node']->view;
-    $vars['theme_hook_suggestions'][] = 'node__view__' . $vars['node']->view->storage->id();
-    if (!empty($vars['node']->view->current_display)) {
-      $vars['theme_hook_suggestions'][] = 'node__view__' . $vars['node']->view->storage->id() . '__' . $vars['node']->view->current_display;
+  if (!empty($variables['node']->view) && $variables['node']->view->storage->id()) {
+    $variables['view'] = $variables['node']->view;
+    $variables['theme_hook_suggestions'][] = 'node__view__' . $variables['node']->view->storage->id();
+    if (!empty($variables['node']->view->current_display)) {
+      $variables['theme_hook_suggestions'][] = 'node__view__' . $variables['node']->view->storage->id() . '__' . $variables['node']->view->current_display;
 
       // If a node is being rendered in a view, and the view does not have a path,
       // prevent drupal from accidentally setting the $page variable:
-      if ($vars['page'] && $vars['view_mode'] == 'full' && !$vars['view']->display_handler->hasPath()) {
-        $vars['page'] = FALSE;
+      if ($variables['page'] && $variables['view_mode'] == 'full' && !$variables['view']->display_handler->hasPath()) {
+        $variables['page'] = FALSE;
       }
     }
   }
 
   // Allow to alter comments and links based on the settings in the row plugin.
-  if (!empty($vars['view']->rowPlugin) && $vars['view']->rowPlugin->getPluginId() == 'entity:node') {
-    node_row_node_view_preprocess_node($vars);
+  if (!empty($variables['view']->rowPlugin) && $variables['view']->rowPlugin->getPluginId() == 'entity:node') {
+    node_row_node_view_preprocess_node($variables);
   }
 }
 
@@ -263,13 +263,13 @@ function views_preprocess_node(&$vars) {
  * A theme preprocess function to automatically allow view-based node
  * templates if called from a view.
  */
-function views_preprocess_comment(&$vars) {
+function views_preprocess_comment(&$variables) {
   // The 'view' attribute of the node is added in template_preprocess_views_view_row_comment()
-  if (!empty($vars['comment']->view) && $vars['comment']->view->storage->id()) {
-    $vars['view'] = &$vars['comment']->view;
-    $vars['theme_hook_suggestions'][] = 'comment__view__' . $vars['comment']->view->storage->id();
-    if (!empty($vars['node']->view->current_display)) {
-      $vars['theme_hook_suggestions'][] = 'comment__view__' . $vars['comment']->view->storage->id() . '__' . $vars['comment']->view->current_display;
+  if (!empty($variables['comment']->view) && $variables['comment']->view->storage->id()) {
+    $variables['view'] = &$variables['comment']->view;
+    $variables['theme_hook_suggestions'][] = 'comment__view__' . $variables['comment']->view->storage->id();
+    if (!empty($variables['node']->view->current_display)) {
+      $variables['theme_hook_suggestions'][] = 'comment__view__' . $variables['comment']->view->storage->id() . '__' . $variables['comment']->view->current_display;
     }
   }
 }
