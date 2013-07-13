@@ -89,7 +89,7 @@ class UserAdminTest extends WebTestBase {
     $this->assertEqual($account->status, 0, 'User C blocked');
 
     // Test filtering on admin page for blocked users
-    $this->drupalGet('admin/people', array('query' => array('status' => 0)));
+    $this->drupalGet('admin/people', array('query' => array('status' => 2)));
     $this->assertNoText($user_a->name, 'User A not on filtered by status on admin users page');
     $this->assertNoText($user_b->name, 'User B not on filtered by status on admin users page');
     $this->assertText($user_c->name, 'User C on filtered by status on admin users page');

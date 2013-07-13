@@ -250,7 +250,7 @@ function user_views_data() {
   );
 
   $data['users']['status'] = array(
-    'title' => t('Active status'),
+    'title' => t('Status'),
     'help' => t('Whether a user is active or blocked.'),
     'field' => array(
       'id' => 'boolean',
