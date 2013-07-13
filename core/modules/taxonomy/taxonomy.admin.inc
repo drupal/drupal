@@ -159,8 +159,15 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
   );
   foreach ($current_page as $key => $term) {
     $form['terms'][$key]['#term'] = $term;
+    $indentation = array();
+    if (isset($term->depth) && $term->depth > 0) {
+      $indentation = array(
+        '#theme' => 'indentation',
+        '#size' => $term->depth,
+      );
+    }
     $form['terms'][$key]['term'] = array(
-      '#prefix' => isset($term->depth->value) && $term->depth->value > 0 ? theme('indentation', array('size' => $term->depth->value)) : '',
+      '#prefix' => !empty($indentation) ? drupal_render($indentation) : '',
       '#type' => 'link',
       '#title' => $term->label(),
       '#href' => "taxonomy/term/" . $term->id(),
