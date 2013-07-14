@@ -155,6 +155,11 @@ function _theme_test_suggestion() {
 function theme_test_preprocess_html(&$variables) {
   $variables['html_attributes']['theme_test_html_attribute'] = 'theme test html attribute value';
   $variables['attributes']['theme_test_body_attribute'] = 'theme test body attribute value';
+
+  // Check that the page variable is not flattened yet.
+  if (is_array($variables['page'])) {
+    $variables['attributes']['theme_test_page_variable'] = 'Page variable is an array.';
+  }
 }
 
 /**

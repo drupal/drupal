@@ -5,6 +5,8 @@
  * Functions to support theming in the Seven theme.
  */
 
+use Drupal\Core\Template\RenderWrapper;
+
 /**
  * Implements hook_preprocess_HOOK() for maintenance-page.html.twig.
  */
@@ -144,6 +146,8 @@ function seven_tablesort_indicator($variables) {
 function seven_preprocess_install_page(&$variables) {
   drupal_add_js(drupal_get_path('theme', 'seven') . '/js/mobile.install.js');
   drupal_add_css(drupal_get_path('theme', 'seven') . '/install-page.css', array('group' => CSS_AGGREGATE_THEME));
+  $variables['styles'] = new RenderWrapper('drupal_get_css');
+  $variables['scripts'] = new RenderWrapper('drupal_get_js');
 }
 
 /**

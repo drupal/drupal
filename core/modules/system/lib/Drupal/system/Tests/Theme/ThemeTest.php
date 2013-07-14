@@ -265,4 +265,18 @@ class ThemeTest extends WebTestBase {
     $templates = drupal_find_theme_templates($cache, '.html.twig', drupal_get_path('theme', 'test_theme'));
     $this->assertEqual($templates['node__1']['template'], 'node--1', 'Template node--1.html.twig was found in test_theme.');
   }
+
+  /**
+   * Tests that the page variable is not prematurely flattened.
+   *
+   * Some modules check the page array in template_preprocess_html(), so we
+   * ensure that it has not been rendered prematurely.
+   */
+  function testPreprocessHtml() {
+    $this->drupalGet('');
+    $attributes = $this->xpath('/html/body[@theme_test_page_variable="Page variable is an array."]');
+    $this->assertTrue(count($attributes) == 1, 'In template_preprocess_html(), the page variable is still an array (not rendered yet).');
+  }
+
+
 }
