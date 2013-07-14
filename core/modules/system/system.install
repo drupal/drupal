@@ -2184,9 +2184,6 @@ function system_update_8056() {
       'search_result' => 'Search result',
       'print' => 'Print',
     ),
-    'file' => array(
-      'full' => 'File default',
-    ),
     'comment' => array(
       'full' => 'Full comment',
     ),
@@ -2196,9 +2193,6 @@ function system_update_8056() {
     ),
     'taxonomy_term' => array(
       'full' => 'Taxonomy term page',
-    ),
-    'taxonomy_vocabulary' => array(
-      'full' => 'Taxonomy vocabulary',
     ),
   );
 
