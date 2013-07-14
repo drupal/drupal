@@ -55,7 +55,6 @@ class HistoryUserTimestamp extends Node {
         '#type' => 'checkbox',
         '#title' => t('Check for new comments as well'),
         '#default_value' => !empty($this->options['comments']),
-        '#fieldset' => 'more',
       );
     }
   }

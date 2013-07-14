@@ -393,7 +393,6 @@ class Field extends FieldPluginBase {
         '#options' => drupal_map_assoc($column_names),
         '#default_value' => $this->options['click_sort_column'],
         '#description' => t('Used by Style: Table to determine the actual column to click sort the field on. The default is usually fine.'),
-        '#fieldset' => 'more',
       );
     }
 

@@ -550,7 +550,6 @@ abstract class FilterPluginBase extends HandlerBase {
             ':input[name="options[expose][use_operator]"]' => array('checked' => TRUE),
           ),
         ),
-        '#fieldset' => 'more',
       );
     }
     else {
@@ -595,7 +594,6 @@ abstract class FilterPluginBase extends HandlerBase {
       '#title' => t('Filter identifier'),
       '#size' => 40,
       '#description' => t('This will appear in the URL after the ? to identify this filter. Cannot be blank.'),
-      '#fieldset' => 'more',
     );
   }
 
@@ -854,7 +852,6 @@ abstract class FilterPluginBase extends HandlerBase {
       '#title' => t('Filter identifier'),
       '#size' => 40,
       '#description' => t('This will appear in the URL after the ? to identify this filter. Cannot be blank.'),
-      '#fieldset' => 'more',
     );
     $form['group_info']['label'] = array(
       '#type' => 'textfield',
@@ -909,7 +906,6 @@ abstract class FilterPluginBase extends HandlerBase {
       '#title' => t('Filter identifier'),
       '#size' => 40,
       '#description' => t('This will appear in the URL after the ? to identify this filter. Cannot be blank.'),
-      '#fieldset' => 'more',
     );
     $form['group_info']['label'] = array(
       '#type' => 'textfield',
