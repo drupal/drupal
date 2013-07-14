@@ -63,9 +63,7 @@ class ConfigItemExtra extends ViewsFormBase {
       ),
     );
     $executable = $view->get('executable');
-    if (!$executable->setDisplay($display_id)) {
-      views_ajax_error(t('invalid display id @display', array('@display' => $display_id)));
-    }
+    $executable->setDisplay($display_id);
     $item = $executable->getItem($display_id, $type, $id);
 
     if ($item) {

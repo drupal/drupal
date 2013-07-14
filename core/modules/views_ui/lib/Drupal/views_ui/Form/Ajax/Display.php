@@ -64,9 +64,7 @@ class Display extends ViewsFormBase {
     $section = $form_state['section'];
 
     $executable = $view->get('executable');
-    if (!$executable->setDisplay($display_id)) {
-      views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
-    }
+    $executable->setDisplay($display_id);
     $display = &$executable->display[$display_id];
 
     // Get form from the handler.
