@@ -1012,13 +1012,6 @@ function system_menu() {
           $items[$plugin['path'] . '/' . $plugin_id . '/%']['file path'] = $plugin['file_path'];
         }
       }
-      $items['system/autocomplete/' . $plugin_id] = array(
-        'page callback' => 'system_plugin_autocomplete',
-        'page arguments' => array($plugin_id),
-        'access callback' => 'system_plugin_ui_access',
-        'access arguments' => array($plugin_id),
-        'type' => MENU_CALLBACK,
-      );
     }
   }
 
@@ -1037,37 +1030,6 @@ function system_plugin_ui_form($form, &$form_state, $plugin, $facet = NULL) {
   $form['#validate'][] = array($plugin_ui, 'formValidate');
   $form['#submit'][] = array($plugin_ui, 'formSubmit');
   return $form;
-}
-
-/**
- * Page callback: Autocompletes any plugin system tied to a plugin UI plugin.
- *
- * The passed plugin_id indicates the specific plugin_ui plugin that is in use
- * here. The documentation within the annotation of that plugin will contain a
- * manager for the plugins that need to be autocompleted allowing this function
- * to autocomplete plugins for any plugin type.
- *
- * @param $plugin_id
- *   The plugin id for the calling plugin.
- *
- * @return object JsonResponse
- */
-function system_plugin_autocomplete($plugin_id) {
-  $string_typed = drupal_container()->get('request')->query->get('q');
-  $string_typed = drupal_explode_tags($string_typed);
-  $string = drupal_strtolower(array_pop($string_typed));
-  $matches = array();
-  if ($string) {
-    $plugin_ui = Drupal::service('plugin.manager.system.plugin_ui')->getDefinition($plugin_id);
-    $manager = Drupal::service($plugin_ui['manager']);
-    $titles = array();
-    foreach($manager->getDefinitions() as $plugin_id => $plugin) {
-      $titles[$plugin_id] = $plugin[$plugin_ui['title_attribute']];
-    }
-    $matches = preg_grep("/\b". $string . "/i", $titles);
-  }
-
-  return new JsonResponse($matches);
 }
 
 /**
