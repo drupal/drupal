@@ -7,20 +7,20 @@
 
 namespace Drupal\filter\Access;
 
-use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Access\StaticAccessCheckInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Checks access for text formats.
  */
-class FilterAccessCheck implements AccessCheckInterface {
+class FilterAccessCheck implements StaticAccessCheckInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function applies(Route $route) {
-    return array_key_exists('_filter_access', $route->getRequirements());
+  public function appliesTo() {
+    return array('_filter_access');
   }
 
   /**

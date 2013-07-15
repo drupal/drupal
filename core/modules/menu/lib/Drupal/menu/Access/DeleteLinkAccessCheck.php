@@ -7,20 +7,20 @@
 
 namespace Drupal\menu\Access;
 
-use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Access\StaticAccessCheckInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Access check for menu link delete routes.
  */
-class DeleteLinkAccessCheck implements AccessCheckInterface {
+class DeleteLinkAccessCheck implements StaticAccessCheckInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function applies(Route $route) {
-    return array_key_exists('_access_menu_delete_link', $route->getRequirements());
+  public function appliesTo() {
+    return array('_access_menu_delete_link');
   }
 
   /**

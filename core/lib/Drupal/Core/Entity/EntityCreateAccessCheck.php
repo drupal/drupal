@@ -7,14 +7,14 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Access\StaticAccessCheckInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
  * Defines an access checker for entity creation.
  */
-class EntityCreateAccessCheck implements AccessCheckInterface {
+class EntityCreateAccessCheck implements StaticAccessCheckInterface {
 
   /**
    * The entity manager.
@@ -43,8 +43,8 @@ class EntityCreateAccessCheck implements AccessCheckInterface {
   /**
    * {@inheritdoc}
    */
-  public function applies(Route $route) {
-    return array_key_exists($this->requirementsKey, $route->getRequirements());
+  public function appliesTo() {
+    return array($this->requirementsKey);
   }
 
   /**

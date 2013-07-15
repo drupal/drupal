@@ -7,20 +7,20 @@
 
 namespace Drupal\field_ui\Access;
 
-use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Access\StaticAccessCheckInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Allows access to routes to be controlled by an '_access' boolean parameter.
  */
-class FormModeAccessCheck implements AccessCheckInterface {
+class FormModeAccessCheck implements StaticAccessCheckInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function applies(Route $route) {
-    return array_key_exists('_field_ui_form_mode_access', $route->getRequirements());
+  public function appliesTo() {
+    return array('_field_ui_form_mode_access');
   }
 
   /**

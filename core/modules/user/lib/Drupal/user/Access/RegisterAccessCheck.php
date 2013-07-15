@@ -7,20 +7,20 @@
 
 namespace Drupal\user\Access;
 
-use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Access\StaticAccessCheckInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Access check for user registration routes.
  */
-class RegisterAccessCheck implements AccessCheckInterface {
+class RegisterAccessCheck implements StaticAccessCheckInterface {
 
   /**
-   * Implements AccessCheckInterface::applies().
+   * {@inheritdoc}
    */
-  public function applies(Route $route) {
-    return array_key_exists('_access_user_register', $route->getRequirements());
+  public function appliesTo() {
+    return array('_access_user_register');
   }
 
   /**

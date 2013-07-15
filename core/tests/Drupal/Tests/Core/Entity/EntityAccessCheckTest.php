@@ -28,28 +28,11 @@ class EntityAccessCheckTest extends UnitTestCase {
   }
 
   /**
-   * Tests the method for checking if the access check applies to a route.
+   * Tests the appliesTo method for the access checker.
    */
-  public function testApplies() {
-    $applies_check = new EntityAccessCheck();
-
-    $route = $this->getMockBuilder('Symfony\Component\Routing\Route')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $route->expects($this->any())
-      ->method('getRequirements')
-      ->will($this->returnValue(array('_entity_access' => '')));
-    $res = $applies_check->applies($route);
-    $this->assertEquals(TRUE, $res);
-
-    $route = $this->getMockBuilder('Symfony\Component\Routing\Route')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $route->expects($this->any())
-      ->method('getRequirements')
-      ->will($this->returnValue(array()));
-    $res = $applies_check->applies($route);
-    $this->assertEquals(FALSE, $res);
+  public function testAppliesTo() {
+    $entity_access = new EntityAccessCheck();
+    $this->assertEquals($entity_access->appliesTo(), array('_entity_access'), 'Access checker returned the expected appliesTo() array.');
   }
 
   /**

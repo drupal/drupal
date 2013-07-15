@@ -45,17 +45,10 @@ class DefaultAccessCheckTest extends UnitTestCase {
 
 
   /**
-   * Test the applies method.
+   * Tests the appliesTo method.
    */
-  public function testApplies() {
-    $route = new Route('/test-route');
-    $this->assertFalse($this->accessChecker->applies($route), 'Access checker applied even no _access was defined as requirement.');
-
-    $route->addRequirements(array('_access' => 'FALSE'));
-    $this->assertTrue($this->accessChecker->applies($route), 'Access checker applied even a _access was defined as requirement.');
-
-    $route->addRequirements(array('_access' => 'TRUE'));
-    $this->assertTrue($this->accessChecker->applies($route), 'Access checker applied even a _access was defined as requirement.');
+  public function testAppliesTo() {
+    $this->assertEquals($this->accessChecker->appliesTo(), array('_access'), 'Access checker returned the expected appliesTo() array.');
   }
 
   /**
