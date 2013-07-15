@@ -3550,7 +3550,7 @@ function drupal_pre_render_link($element) {
  * For example, adding this code to node.html.twig will result in the comment
  * links being rendered as a single list:
  * @code
- * print render($content['links']['comment']);
+ * {{ content.links.comment }}
  * @endcode
  *
  * (where $node->content has been transformed into $content before handing
@@ -3560,7 +3560,7 @@ function drupal_pre_render_link($element) {
  * allows the following code to be used to render all remaining links into a
  * single list, regardless of their group:
  * @code
- * print render($content['links']);
+ * {{ content.links }}
  * @endcode
  *
  * In the above example, this will result in the statistics and translation
