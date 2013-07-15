@@ -25,7 +25,7 @@ use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
  *     "entity_reference"
  *   },
  *   settings = {
- *     "view_mode" = "",
+ *     "view_mode" = "default",
  *     "link" = FALSE
  *   }
  * )
@@ -37,7 +37,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
    */
   public function settingsForm(array $form, array &$form_state) {
     $view_modes = entity_get_view_modes($this->getFieldSetting('target_type'));
-    $options = array();
+    $options = array('default' => t('Default'));
     foreach ($view_modes as $view_mode => $view_mode_settings) {
       $options[$view_mode] = $view_mode_settings['label'];
     }
@@ -67,6 +67,9 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
 
     $view_modes = entity_get_view_modes($this->getFieldSetting('target_type'));
     $view_mode = $this->getSetting('view_mode');
+    if ($view_mode == 'default') {
+      $view_mode = t('Default');
+    }
     $summary[] = t('Rendered as @mode', array('@mode' => isset($view_modes[$view_mode]['label']) ? $view_modes[$view_mode]['label'] : $view_mode));
     $summary[] = $this->getSetting('links') ? t('Display links') : t('Do not display links');
 
