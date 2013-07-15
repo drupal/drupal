@@ -59,7 +59,7 @@ class Serialized extends FieldPluginBase {
     }
   }
 
-  function render($values) {
+  public function render($values) {
     $value = $values->{$this->field_alias};
 
     if ($this->options['format'] == 'unserialized') {

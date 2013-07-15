@@ -41,7 +41,7 @@ class Custom extends FieldPluginBase {
     $form['#pre_render'][] = array($this, 'preRenderCustomForm');
   }
 
-  function render($values) {
+  public function render($values) {
     // Return the text, so the code never thinks the value is empty.
     return $this->options['alter']['text'];
   }

@@ -45,7 +45,7 @@ class Link extends FieldPluginBase {
     $this->addAdditionalFields();
   }
 
-  function render($values) {
+  public function render($values) {
     if ($entity = $this->getEntity($values)) {
       return $this->render_link($entity, $values);
     }

@@ -52,7 +52,7 @@ class FieldTest extends FieldPluginBase {
   /**
    * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::render().
    */
-  function render($values) {
+  public function render($values) {
     return $this->sanitizeValue($this->getTestValue());
   }
 

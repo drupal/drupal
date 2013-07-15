@@ -53,7 +53,7 @@ class LinkEdit extends FieldPluginBase {
     $this->addAdditionalFields();
   }
 
-  function render($values) {
+  public function render($values) {
     // Check there is an actual value, as on a relationship there may not be.
     if ($tid = $this->getValue($values, 'tid')) {
       // Mock a term object for taxonomy_term_access(). Use machine name and

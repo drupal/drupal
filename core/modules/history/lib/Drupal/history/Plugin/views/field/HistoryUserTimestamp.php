@@ -68,7 +68,7 @@ class HistoryUserTimestamp extends Node {
     parent::query();
   }
 
-  function render($values) {
+  public function render($values) {
     // Let's default to 'read' state.
     // This code shadows node_mark, but it reads from the db directly and
     // we already have that info.

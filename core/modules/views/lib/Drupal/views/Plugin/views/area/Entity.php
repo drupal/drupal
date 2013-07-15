@@ -91,7 +91,7 @@ class Entity extends TokenizeAreaPluginBase {
   /**
    * Overrides \Drupal\views\Plugin\views\area\AreaPluginBase::render().
    */
-  function render($empty = FALSE) {
+  public function render($empty = FALSE) {
     if (!$empty || !empty($this->options['empty'])) {
       $entity_id = $this->tokenizeValue($this->options['entity_id']);
       if ($entity = entity_load($this->entityType, $entity_id)) {

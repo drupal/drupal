@@ -52,7 +52,7 @@ class Text extends TokenizeAreaPluginBase {
   /**
    * Implements \Drupal\views\Plugin\views\area\AreaPluginBase::render().
    */
-  function render($empty = FALSE) {
+  public function render($empty = FALSE) {
     $format = isset($this->options['format']) ? $this->options['format'] : filter_default_format();
     if (!$empty || !empty($this->options['empty'])) {
       return array(

@@ -66,7 +66,7 @@ class MachineName extends FieldPluginBase {
     $this->getValueOptions();
   }
 
-  function render($values) {
+  public function render($values) {
     $value = $values->{$this->field_alias};
     if (!empty($this->options['machine_name']) || !isset($this->value_options[$value])) {
       $result = check_plain($value);

@@ -129,7 +129,7 @@ class Date extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
   }
 
-  function render($values) {
+  public function render($values) {
     $value = $this->getValue($values);
     $format = $this->options['date_format'];
     if (in_array($format, array('custom', 'raw time ago', 'time ago', 'raw time hence', 'time hence', 'raw time span', 'time span', 'raw time span', 'inverse time span', 'time span'))) {

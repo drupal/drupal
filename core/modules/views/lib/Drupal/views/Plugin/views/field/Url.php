@@ -38,7 +38,7 @@ class Url extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
   }
 
-  function render($values) {
+  public function render($values) {
     $value = $this->getValue($values);
     if (!empty($this->options['display_as_link'])) {
       return l($this->sanitizeValue($value), $value, array('html' => TRUE));

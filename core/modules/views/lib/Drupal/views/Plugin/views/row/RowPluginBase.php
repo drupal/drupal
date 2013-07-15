@@ -147,7 +147,7 @@ abstract class RowPluginBase extends PluginBase {
    * @return string
    *   The rendered output of a single row, used by the style plugin.
    */
-  function render($row) {
+  public function render($row) {
     return array(
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,

@@ -89,7 +89,7 @@ class Rss extends RowPluginBase {
     }
   }
 
-  function render($row) {
+  public function render($row) {
     // For the most part, this code is taken from node_feed() in node.module
     global $base_url;
 

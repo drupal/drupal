@@ -226,7 +226,7 @@ abstract class PagerPluginBase extends PluginBase {
    *   Any extra GET parameters that should be retained, such as exposed
    *   input.
    */
-  function render($input) { }
+  public function render($input) { }
 
   /**
    * Determine if there are more records available.
