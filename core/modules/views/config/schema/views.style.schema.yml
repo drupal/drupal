@@ -110,3 +110,22 @@ views.style.default_summary:
     items_per_page:
       type: integer
       label: 'Items to display'
+
+views.style.rss:
+  type: mapping
+  label: 'RSS Feed'
+  mapping:
+    description:
+      type: label
+      label: 'RSS description'
+
+views.style.unformatted_summary:
+  type: mapping
+  label: 'Unformatted'
+  mapping:
+    inline:
+      type: boolean
+      label: 'Display items inline'
+    separator:
+      type: string
+      label: 'Separator'
