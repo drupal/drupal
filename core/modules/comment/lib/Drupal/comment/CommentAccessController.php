@@ -27,10 +27,6 @@ class CommentAccessController extends EntityAccessController {
         return user_access('access comments', $account);
         break;
 
-      case 'create':
-        return user_access('post comments', $account);
-        break;
-
       case 'update':
         return ($account->id() && $account->id() == $entity->uid->value && $entity->status->value == COMMENT_PUBLISHED && user_access('edit own comments', $account)) || user_access('administer comments', $account);
         break;
@@ -43,6 +39,13 @@ class CommentAccessController extends EntityAccessController {
         return user_access('administer comments', $account);
         break;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    return user_access('post comments', $account);
   }
 
 }

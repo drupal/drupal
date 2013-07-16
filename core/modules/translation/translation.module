@@ -121,14 +121,14 @@ function translation_permission() {
 }
 
 /**
- * Implements hook_node_access().
+ * Implements hook_node_create_access().
  */
-function translation_node_access($node, $op, $account, $langcode) {
+function translation_node_create_access($account) {
   $query = Drupal::request()->query;
   $translation = $query->get('translation');
   $target = $query->get('target');
   $request_has_translation_arg = !empty($translation) && !empty($target) && is_numeric($translation);
-  if ($op == 'create' && $request_has_translation_arg) {
+  if ($request_has_translation_arg) {
     $source_node = node_load($translation);
     if (empty($source_node) || !translation_user_can_translate_node($source_node, $account)){
       return NODE_ACCESS_DENY;

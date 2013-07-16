@@ -9,6 +9,7 @@ namespace Drupal\taxonomy\Access;
 
 use Drupal\Core\Entity\EntityCreateAccessCheck;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Route;
 
 /**
  * Provides an access check for taxonomy term creation.
@@ -23,12 +24,12 @@ class TaxonomyTermCreateAccess extends EntityCreateAccessCheck {
   /**
    * {@inheritdoc}
    */
-  protected function prepareEntityValues(array $definition, Request $request, $bundle = NULL) {
-    $values = array();
+  public function access(Route $route, Request $request) {
+    $entity_type = $route->getRequirement($this->requirementsKey);
     if ($vocabulary = $request->attributes->get('taxonomy_vocabulary')) {
-      $values = parent::prepareEntityValues($definition, $request, $vocabulary->id());
+      return $this->entityManager->getAccessController($entity_type)->createAccess($vocabulary->id());
     }
-    return $values;
+    return parent::access($route, $request);
   }
 
 }

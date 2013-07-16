@@ -2028,11 +2028,19 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  * @see node_menu()
  */
 function node_access($op, $node, $account = NULL, $langcode = NULL) {
-  if (!$node instanceof EntityInterface) {
-    $node = entity_create('node', array('type' => $node));
-  }
-  elseif ($node instanceof NodeTypeInterface) {
-    $node = entity_create('node', array('type' => $node->id()));
+  $access_controller = Drupal::entityManager()->getAccessController('node');
+
+  if ($op == 'create') {
+    if (!$node instanceof EntityInterface) {
+      $bundle = $node;
+    }
+    elseif ($node instanceof NodeTypeInterface) {
+      $bundle = $node->id();
+    }
+    else {
+      $bundle = $node->bundle();
+    }
+    return $access_controller->createAccess($bundle, $account, array('langcode' => $langcode));
   }
 
   // If no language code was provided, default to the node's langcode.
@@ -2051,14 +2059,7 @@ function node_access($op, $node, $account = NULL, $langcode = NULL) {
       }
     }
   }
-
-  // Make sure that if an account is passed, that it is a fully loaded user
-  // object.
-  if ($account && !($account instanceof UserInterface)) {
-    $account = user_load($account->id());
-  }
-
-  return Drupal::entityManager()->getAccessController('node')->access($node, $op, $langcode, $account);
+  return $access_controller->access($node, $op, $langcode, $account);
 }
 
 /**

@@ -27,9 +27,16 @@ class EntityTestAccessController extends EntityAccessController {
       }
       return user_access('view test entity', $account);
     }
-    elseif (in_array($operation, array('create', 'update', 'delete'))) {
+    elseif (in_array($operation, array('update', 'delete'))) {
       return user_access('administer entity_test content', $account);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    return user_access('administer entity_test content', $account);
   }
 
 }

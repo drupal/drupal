@@ -36,4 +36,11 @@ class FilterFormatAccessController extends EntityAccessController {
     return !empty($permission) && user_access($permission, $account);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    return user_access('administer filters', $account);
+  }
+
 }

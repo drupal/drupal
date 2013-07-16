@@ -52,35 +52,7 @@ class EntityCreateAccessCheck implements StaticAccessCheckInterface {
    */
   public function access(Route $route, Request $request) {
     list($entity_type, $bundle) = explode(':', $route->getRequirement($this->requirementsKey) . ':');
-
-    $definition = $this->entityManager->getDefinition($entity_type);
-
-    $values = $this->prepareEntityValues($definition, $request, $bundle);
-    $entity = $this->entityManager->getStorageController($entity_type)
-      ->create($values);
-
-    return $this->entityManager->getAccessController($entity_type)->access($entity, 'create');
-  }
-
-  /**
-   * Prepare the values passed into the storage controller.
-   *
-   * @param array $definition
-   *   The entity type definition.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The request object.
-   * @param string $bundle
-   *   (optional) The bundle to check access for.
-   *
-   * @return array
-   *   An array of values to be used when creating the entity.
-   */
-  protected function prepareEntityValues(array $definition, Request $request, $bundle = NULL) {
-    $values = array();
-    if ($bundle && isset($definition['entity_keys']['bundle'])) {
-      $values[$definition['entity_keys']['bundle']] = $bundle;
-    }
-    return $values;
+    return $this->entityManager->getAccessController($entity_type)->createAccess($bundle);
   }
 
 }

@@ -24,4 +24,11 @@ class ViewAccessController extends EntityAccessController {
     return $operation == 'view' || user_access('administer views', $account);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    return user_access('administer views', $account);
+  }
+
 }

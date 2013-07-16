@@ -27,10 +27,6 @@ class TermAccessController extends EntityAccessController {
         return user_access('access content', $account);
         break;
 
-      case 'create':
-        return user_access('administer taxonomy', $account);
-        break;
-
       case 'update':
         return user_access("edit terms in {$entity->bundle()}", $account) || user_access('administer taxonomy', $account);
         break;
@@ -39,6 +35,13 @@ class TermAccessController extends EntityAccessController {
         return user_access("delete terms in {$entity->bundle()}", $account) || user_access('administer taxonomy', $account);
         break;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    return user_access('administer taxonomy', $account);
   }
 
 }

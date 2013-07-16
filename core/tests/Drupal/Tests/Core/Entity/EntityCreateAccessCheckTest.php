@@ -82,27 +82,12 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $entity_manager->expects($this->any())
-      ->method('getDefinition')
-      ->with($this->equalTo('entity_test'))
-      ->will($this->returnValue(array('entity_keys' => array('bundle' => 'type'))));
-
-    $storage_controller = $this->getMock('Drupal\Core\Entity\EntityStorageControllerInterface');
-    $values = $entity_bundle ? array('type' => $entity_bundle) : array();
-    $storage_controller->expects($this->any())
-      ->method('create')
-      ->with($this->equalTo($values))
-      ->will($this->returnValue($entity));
-
     $access_controller = $this->getMock('Drupal\Core\Entity\EntityAccessControllerInterface');
     $access_controller->expects($this->once())
-      ->method('access')
-      ->with($entity, 'create')
+      ->method('createAccess')
+      ->with($entity_bundle)
       ->will($this->returnValue($access));
 
-    $entity_manager->expects($this->any())
-      ->method('getStorageController')
-      ->will($this->returnValue($storage_controller));
     $entity_manager->expects($this->any())
       ->method('getAccessController')
       ->will($this->returnValue($access_controller));
