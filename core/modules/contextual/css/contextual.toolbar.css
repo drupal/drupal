@@ -13,13 +13,13 @@
 }
 
 /* Tab appearance. */
-.js .toolbar .bar .contextual-toolbar-tab.tab {
+.toolbar .bar .contextual-toolbar-tab.tab {
   float: right; /* LTR */
 }
-.js[dir="rtl"] .toolbar .bar .contextual-toolbar-tab.tab {
+[dir="rtl"] .toolbar .bar .contextual-toolbar-tab.tab {
   float: left;
 }
-.js .toolbar .bar .contextual-toolbar-tab button {
+.toolbar .bar .contextual-toolbar-tab button {
   padding-bottom: 1em;
   padding-top: 1em;
   /* Hide tab text. */
@@ -27,10 +27,10 @@
   text-indent: -9999px;
   line-height: 1em;
 }
-.js[dir="rtl"] .toolbar .bar .contextual-toolbar-tab button {
+[dir="rtl"] .toolbar .bar .contextual-toolbar-tab button {
   padding-right: 1.3333em;
 }
-.js .toolbar .bar .contextual-toolbar-tab button.active {
+.toolbar .bar .contextual-toolbar-tab button.active {
   background-image:-moz-linear-gradient(rgb(78,159,234) 0%,rgb(69,132,221) 100%);
   background-image:-webkit-gradient(linear,color-stop(0, rgb(78,159,234)),color-stop(1, rgb(69,132,221)));
   background-image: -webkit-linear-gradient(top,  rgb(78,159,234) 0%, rgb(69,132,221) 100%);
@@ -38,6 +38,6 @@
 }
 
 /* @todo get rid of this declaration by making toolbar.module's CSS less specific */
-.js .toolbar .bar .contextual-toolbar-tab.tab.hidden {
+.toolbar .bar .contextual-toolbar-tab.tab.hidden {
   display: none;
 }

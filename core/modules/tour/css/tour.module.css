@@ -4,23 +4,23 @@
  */
 
 /* Tab appearance. */
-.js .toolbar .bar .tour-toolbar-tab.tab {
+.toolbar .bar .tour-toolbar-tab.tab {
   float: right; /* LTR */
 }
-.js[dir="rtl"] .toolbar .bar .tour-toolbar-tab.tab {
+[dir="rtl"] .toolbar .bar .tour-toolbar-tab.tab {
   float: left;
 }
-.js .toolbar .tour-toolbar-tab button {
+.toolbar .tour-toolbar-tab button {
   padding-bottom: 1em;
   padding-top: 1em;
   color: #fff;
   font-weight: bold;
 }
-.js .toolbar .tour-toolbar-tab button.active {
+.toolbar .tour-toolbar-tab button.active {
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
   background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
 }
-.js .tour-toolbar-tab button:focus {
+.tour-toolbar-tab button:focus {
   outline: thin dotted;
 }
 
@@ -41,6 +41,6 @@
 }
 
 /* @todo Remove once http://drupal.org/node/1916690 is resolved. */
-.js .toolbar .tour-toolbar-tab.tab.hidden {
+.toolbar .tour-toolbar-tab.tab.hidden {
   display: none;
 }

@@ -91,7 +91,6 @@ function toolbar_element_info() {
       '#attributes' => array(
         'id' => 'toolbar-bar',
         'class' => array('bar', 'clearfix',),
-        'data-offset-top' => array(),
       ),
     ),
   );
