@@ -161,7 +161,7 @@ function system_theme() {
       'file' => 'system.admin.inc',
     ),
     'status_report' => array(
-      'render element' => 'requirements',
+      'variables' => array('requirements' => NULL),
       'file' => 'system.admin.inc',
     ),
     'admin_page' => array(
