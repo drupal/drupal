@@ -3989,7 +3989,8 @@ function show(&$element) {
  * @see drupal_render_cache_set()
  */
 function drupal_render_cache_get($elements) {
-  if (!in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD')) || !$cid = drupal_render_cid_create($elements)) {
+  $request = Drupal::request();
+  if (!$request->isMethodSafe() || !$cid = drupal_render_cid_create($elements)) {
     return FALSE;
   }
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
@@ -4021,7 +4022,8 @@ function drupal_render_cache_get($elements) {
  */
 function drupal_render_cache_set(&$markup, $elements) {
   // Create the cache ID for the element.
-  if (!in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD')) || !$cid = drupal_render_cid_create($elements)) {
+  $request = Drupal::request();
+  if (!$request->isMethodSafe() || !$cid = drupal_render_cid_create($elements)) {
     return FALSE;
   }
 

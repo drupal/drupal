@@ -235,12 +235,14 @@ function ajax_render($commands = array()) {
   // during this request to be loaded by the page. We only want to send back
   // files that the page hasn't already loaded, so we implement simple diffing
   // logic using array_diff_key().
+  $request = Drupal::request();
   foreach (array('css', 'js') as $type) {
     // It is highly suspicious if $_POST['ajax_page_state'][$type] is empty,
     // since the base page ought to have at least one JS file and one CSS file
     // loaded. It probably indicates an error, and rather than making the page
     // reload all of the files, instead we return no new files.
-    if (empty($_POST['ajax_page_state'][$type])) {
+    $state = $request->request->get('ajax_page_state[' . $type . ']', FALSE, TRUE);
+    if ($state) {
       $items[$type] = array();
     }
     else {
@@ -259,7 +261,7 @@ function ajax_render($commands = array()) {
         }
       }
       // Ensure that the page doesn't reload what it already has.
-      $items[$type] = array_diff_key($items[$type], $_POST['ajax_page_state'][$type]);
+      $items[$type] = array_diff_key($items[$type], $state);
     }
   }
 
@@ -317,7 +319,8 @@ function ajax_render($commands = array()) {
 function ajax_get_form() {
   $form_state = form_state_defaults();
 
-  $form_build_id = $_POST['form_build_id'];
+  $request = Drupal::request();
+  $form_build_id = $request->request->get('form_build_id');
 
   // Get the form from the cache.
   $form = form_get_cache($form_build_id, $form_state);
@@ -342,7 +345,7 @@ function ajax_get_form() {
 
   // The form needs to be processed; prepare for that by setting a few internal
   // variables.
-  $form_state['input'] = $_POST;
+  $form_state['input'] = $request->request->all();
   $form_id = $form['#form_id'];
 
   return array($form, $form_state, $form_id, $form_build_id);
@@ -404,10 +407,10 @@ function ajax_form_callback() {
  * @see file_menu()
  */
 function ajax_base_page_theme() {
-  if (!empty($_POST['ajax_page_state']['theme']) && !empty($_POST['ajax_page_state']['theme_token'])) {
-    $theme = $_POST['ajax_page_state']['theme'];
-    $token = $_POST['ajax_page_state']['theme_token'];
-
+  $request = Drupal::request();
+  $theme = $request->request->get('ajax_page_state[theme]', NULL, TRUE);
+  $token = $request->request->get('ajax_page_state[theme_token]', NULL, TRUE);
+  if (!empty($theme) && !empty($token)) {
     // Prevent a request forgery from giving a person access to a theme they
     // shouldn't be otherwise allowed to see. However, since everyone is allowed
     // to see the default theme, token validation isn't required for that, and
