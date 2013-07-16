@@ -967,8 +967,7 @@ function system_schema() {
       ),
     ),
     'indexes' => array(
-      'fit' => array('fit'),
-      'pattern_outline' => array('pattern_outline'),
+      'pattern_outline_fit' => array('pattern_outline', 'fit'),
       'route_set' => array('route_set'),
     ),
     'primary key' => array('name'),
@@ -1624,8 +1623,7 @@ function system_update_8022() {
       ),
     ),
     'indexes' => array(
-      'fit' => array('fit'),
-      'pattern_outline' => array('pattern_outline'),
+      'pattern_outline_fit' => array('pattern_outline', 'fit'),
       'route_set' => array('route_set'),
     ),
     'primary key' => array('name'),
