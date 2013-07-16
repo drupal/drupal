@@ -222,8 +222,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     }
   }
 
-  $request = Drupal::request();
-  if ($request->isXmlHttpRequest()) {
+  if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
     if ($fatal) {
       if (error_displayable($error)) {
         // When called from JavaScript, simply output the error message.

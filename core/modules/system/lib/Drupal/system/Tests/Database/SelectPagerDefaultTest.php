@@ -6,7 +6,6 @@
  */
 
 namespace Drupal\system\Tests\Database;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the pager query select extender.
@@ -136,12 +135,7 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
    * Confirms that every pager gets a valid, non-overlaping element ID.
    */
   function testElementNumbers() {
-
-    $request = Request::createFromGlobals();
-    $request->query->replace(array(
-      'page' => '3, 2, 1, 0',
-    ));
-    \Drupal::getContainer()->set('request', $request);
+    $_GET['page'] = '3, 2, 1, 0';
 
     $name = db_select('test', 't')
       ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
@@ -174,5 +168,6 @@ class SelectPagerDefaultTest extends DatabaseWebTestBase {
       ->fetchField();
     $this->assertEqual($name, 'John', 'Pager query #3 with a generated element ID returned the correct results.');
 
+    unset($_GET['page']);
   }
 }
