@@ -746,56 +746,102 @@ function template_preprocess_views_view_table(&$variables) {
  *   - rows: An array of row items. Each row is an array of content.
  */
 function template_preprocess_views_view_grid(&$variables) {
-  $view = $variables['view'];
-  $options = $view->style_plugin->options;
-  $handler = $view->style_plugin;
-  $default_row_class = isset($options['default_row_class']) ? $options['default_row_class'] : TRUE;
-  $row_class_special = isset($options['row_class_special']) ? $options['row_class_special'] : TRUE;
+  $options = $variables['options'] = $variables['view']->style_plugin->options;
+  $horizontal = ($options['alignment'] === 'horizontal');
 
-  $columns = $options['columns'];
-  $variables['attributes']['class'][] = 'views-view-grid cols-' . $columns;
+  $variables['attributes']['class'] = array(
+    'views-view-grid',
+    $options['alignment'],
+    'cols-' . $options['columns'],
+    'clearfix',
+  );
 
-  $rows = array();
-  $row_indexes = array();
+  $col = 0;
+  $row = 0;
+  $items = array();
+  $remainders = count($variables['rows']) % $options['columns'];
+  $num_rows = floor(count($variables['rows']) / $options['columns']);
 
-  if ($options['alignment'] == 'horizontal') {
-    $row = array();
-    $col_count = 0;
-    $row_count = 0;
-    $count = 0;
-    foreach ($variables['rows'] as $row_index => $item) {
-      $count++;
-      $row[] = $item;
-      $row_indexes[$row_count][$col_count] = $row_index;
-      $col_count++;
-      if ($count % $columns == 0) {
-        $rows[] = $row;
-        $row = array();
-        $col_count = 0;
-        $row_count++;
-      }
+  // Iterate over each rendered views result row.
+  foreach ($variables['rows'] as $item) {
+
+    // Add the item.
+    if ($horizontal) {
+      $items[$row]['content'][$col]['content'] = $item;
     }
-    if ($row) {
-      // Fill up the last line only if it's configured, but this is default.
-      if (!empty($handler->options['fill_single_line']) && count($rows)) {
-        for ($i = 0; $i < ($columns - $col_count); $i++) {
-          $row[] = '';
+    else {
+      $items[$col]['content'][$row]['content'] = $item;
+    }
+
+    // Create attributes for rows.
+    if (!$horizontal || ($horizontal && empty($items[$row]['attributes']))) {
+      $row_attributes = array('class' => array());
+      // Add default views row classes.
+      if ($options['row_class_default']) {
+        $row_attributes['class'][] = 'views-row';
+        $row_attributes['class'][] = 'row-' . ($row + 1);
+        if ($horizontal) {
+          $row_attributes['class'][] = 'clearfix';
         }
       }
-      $rows[] = $row;
+      // Add custom row classes.
+      $row_class = array_filter(explode(' ', $options['row_class_custom']));
+      if (!empty($row_class)) {
+        $row_attributes['class'] = array_merge($row_attributes['class'], $row_class);
+      }
+      // Add row attributes to the item.
+      if ($horizontal) {
+        $items[$row]['attributes'] = new Attribute($row_attributes);
+      }
+      else {
+        $items[$col]['content'][$row]['attributes'] = new Attribute($row_attributes);
+      }
     }
-  }
-  else {
-    $num_rows = floor(count($variables['rows']) / $columns);
-    // The remainders are the 'odd' columns that are slightly longer.
-    $remainders = count($variables['rows']) % $columns;
-    $row = 0;
-    $col = 0;
-    foreach ($variables['rows'] as $count => $item) {
-      $rows[$row][$col] = $item;
-      $row_indexes[$row][$col] = $count;
-      $row++;
 
+    // Create attributes for columns.
+    if ($horizontal || (!$horizontal && empty($items[$col]['attributes']))) {
+      $col_attributes = array('class' => array());
+      // Add default views column classes.
+      if ($options['col_class_default']) {
+        $col_attributes['class'][] = 'views-col';
+        $col_attributes['class'][] = 'col-' . ($col + 1);
+        if (!$horizontal) {
+          $col_attributes['class'][] = 'clearfix';
+        }
+      }
+      // Add custom column classes.
+      $col_class = array_filter(explode(' ', $options['col_class_custom']));
+      if (!empty($col_class)) {
+        $col_attributes['class'] = array_merge($col_attributes['class'], $col_class);
+      }
+      // Add automatic width for columns.
+      if ($options['automatic_width']) {
+        $col_attributes['style'] = 'width: ' . (100 / $options['columns']) . '%;';
+      }
+      // Add column attributes to the item.
+      if ($horizontal) {
+        $items[$row]['content'][$col]['attributes'] = new Attribute($col_attributes);
+      }
+      else {
+        $items[$col]['attributes'] = new Attribute($col_attributes);
+      }
+    }
+
+    // Increase, decrease or reset appropriate integers.
+    if ($horizontal) {
+      if ($col == 0 && $col != ($options['columns'] - 1)) {
+        $col++;
+      }
+      elseif ($col >= ($options['columns'] - 1)) {
+        $col = 0;
+        $row++;
+      }
+      else {
+        $col++;
+      }
+    }
+    else {
+      $row++;
       if (!$remainders && $row == $num_rows) {
         $row = 0;
         $col++;
@@ -806,53 +852,10 @@ function template_preprocess_views_view_grid(&$variables) {
         $remainders--;
       }
     }
-    for ($i = 0; $i < count($rows[0]); $i++) {
-      // This should be a string so this is ok.
-      if (!isset($rows[count($rows) - 1][$i])) {
-        $rows[count($rows) - 1][$i] = '';
-      }
-    }
   }
 
-  // Apply the row classes.
-  foreach ($rows as $row_number => $row) {
-    $row_classes = array();
-    if ($default_row_class) {
-      $row_classes['class'][] = 'row-' . ($row_number + 1);
-    }
-    if ($row_class_special) {
-      if ($row_number == 0) {
-        $row_classes['class'][] = 'row-first';
-      }
-      if (count($rows) == ($row_number + 1)) {
-        $row_classes['class'][] = 'row-last';
-      }
-    }
-    $row_classes = new Attribute($row_classes);
-
-    foreach ($rows[$row_number] as $column_number => $item) {
-      $variables['column_classes'][$row_number][$column_number] = array();
-      if ($default_row_class) {
-        $variables['column_classes'][$row_number][$column_number]['class'][] = 'col-' . ($column_number + 1);
-      }
-      if ($row_class_special) {
-        if ($column_number == 0) {
-          $variables['column_classes'][$row_number][$column_number]['class'][] = 'col-first';
-        }
-        elseif (count($rows[$row_number]) == ($column_number + 1)) {
-          $variables['column_classes'][$row_number][$column_number]['class'][] = 'col-last';
-        }
-      }
-      if (isset($row_indexes[$row_number][$column_number]) && $column_class = $view->style_plugin->getRowClass($row_indexes[$row_number][$column_number])) {
-        $variables['column_classes'][$row_number][$column_number]['class'][] = $column_class;
-      }
-      $variables['column_classes'][$row_number][$column_number] = new Attribute($variables['column_classes'][$row_number][$column_number]);
-    }
-  }
-  $variables['rows'] = $rows;
-  if (!empty($handler->options['summary'])) {
-    $variables['attributes']['summary'] = $handler->options['summary'];
-  }
+  // Add items to the variables array.
+  $variables['items'] = $items;
 }
 
 /**

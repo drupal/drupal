@@ -29,15 +29,24 @@ views.style.grid:
     columns:
       type:  integer
       label: 'Number of columns'
+    automatic_width:
+      type: boolean
+      label: 'Automatic width'
     alignment:
       type: string
       label: 'Alignment'
-    fill_single_line:
-      type: boolean
-      label: 'Fill up single line'
-    summary:
+    row_class_custom:
       type: string
-      label: 'Table summary'
+      label: 'Custom row classes'
+    row_class_default:
+      type: boolean
+      label: 'Default views row classes'
+    col_class_custom:
+      type: string
+      label: 'Custom column classes'
+    col_class_default:
+      type: boolean
+      label: 'Default views column classes'
 
 views.style.table:
   type: views_style

@@ -1,0 +1,71 @@
+base_table: views_test_data
+core: '8'
+description: ''
+status: '1'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: '0'
+        pager: '0'
+        pager_options: '0'
+        sorts: '0'
+      fields:
+        age:
+          field: age
+          id: age
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+        name:
+          field: name
+          id: name
+          relationship: none
+          table: views_test_data
+          plugin_id: string
+      pager:
+        options:
+          offset: '0'
+        type: none
+      pager_options: {  }
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      style:
+        type: grid
+        options:
+          grouping: {  }
+          columns: '4'
+          automatic_width: '1'
+          alignment: horizontal
+          col_class_default: '1'
+          col_class_custom: ''
+          row_class_default: '1'
+          row_class_custom: ''
+      row:
+        type: fields
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  page_1:
+    display_options:
+      path: test-grid
+    display_plugin: page
+    display_title: 'Page display'
+    id: page_1
+    position: '1'
+label: ''
+id: test_grid
+tag: ''

@@ -4,13 +4,18 @@
  * Default theme implementation for views to display rows in a grid.
  *
  * Available variables:
- * - attributes: HTML attributes for the table element.
+ * - attributes: HTML attributes for the wrapping element.
  * - title: The title of this group of rows.
- * - rows: A list of rows. Each row contains a list of columns.
- * - row_classes: HTML classes for each row including the row number and first
- *   or last.
- * - column_classes: HTML classes for each column including the row number and
- *   first or last.
+ * - view: The view object.
+ * - rows: The rendered view results.
+ * - options: The view plugin style options.
+ * - items: A list of grid items. Each item contains a list of rows or columns.
+ *   The order in what comes first (row or column) depends on which alignment
+ *   type is chosen (horizontal or vertical).
+ *   - attributes: HTML attributes for each row or column.
+ *   - content: A list of columns or rows. Each row or column contains:
+ *     - attributes: HTML attributes for each row or column.
+ *     - content: The row or column contents.
  *
  * @see template_preprocess_views_view_grid()
  *
@@ -20,16 +25,26 @@
 {% if title %}
   <h3>{{ title }}</h3>
 {% endif %}
-<table{{ attributes }}>
-  <tbody>
-    {% for row_number, columns in rows %}
-      <tr{{ row_classes[row_number] }}>
-        {% for column_number, item in columns %}
-          <td{{ column_classes[row_number][column_number] }}>
-            {{ item }}
-          </td>
-        {% endfor %}
-      </tr>
+<div{{ attributes }}>
+{% if options.alignment == 'horizontal' %}
+  {% for row in items %}
+  <div{{ row.attributes }}>
+    {% for column in row.content %}
+    <div{{ column.attributes }}>
+      {{ column.content }}
+    </div>
     {% endfor %}
-  </tbody>
-</table>
+  </div>
+  {% endfor %}
+{% else %}
+  {% for column in items %}
+  <div{{ column.attributes }}>
+    {% for row in column.content %}
+      <div{{ row.attributes }}>
+        {{ row.content }}
+      </div>
+    {% endfor %}
+    </div>
+  {% endfor %}
+{% endif %}
+</div>
