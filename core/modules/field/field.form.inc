@@ -35,7 +35,7 @@ function theme_field_multiple_value_form($variables) {
         'colspan' => 2,
         'class' => array('field-label'),
       ),
-      t('Order'),
+      t('Order', array(), array('context' => 'Sort order')),
     );
     $rows = array();
 
