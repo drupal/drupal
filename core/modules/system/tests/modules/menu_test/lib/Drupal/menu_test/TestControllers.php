@@ -15,6 +15,13 @@ use Drupal\Core\Entity\EntityInterface;
 class TestControllers {
 
   /**
+   * Returns page to be used as a login path.
+   */
+  public function testLogin() {
+    return 'This is TestControllers::testLogin.';
+  }
+
+  /**
    * Prints out test data.
    */
   public function test1() {

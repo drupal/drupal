@@ -190,7 +190,7 @@ class MenuRouterTest extends WebTestBase {
     $this->drupalGet('test-page');
     $this->assertText($offline_message);
     $this->drupalGet('menu_login_callback');
-    $this->assertText('This is menu_login_callback().', 'Maintenance mode can be bypassed using an event subscriber.');
+    $this->assertText('This is TestControllers::testLogin.', 'Maintenance mode can be bypassed using an event subscriber.');
 
     config('system.maintenance')->set('enabled', 0)->save();
   }

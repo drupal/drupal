@@ -311,13 +311,6 @@ function menu_test_menu() {
     'access arguments' => array('access content'),
   );
 
-  // Test the access key with a function callback.
-  $items['menu_login_callback'] = array(
-    'title' => 'Used as a login path',
-    'page callback' => 'menu_login_callback',
-    'access callback' => TRUE,
-  );
-
   // Test the access key.
   $items['menu-title-test/case1'] = array(
    'title' => 'Example title - Case 1',
@@ -724,18 +717,6 @@ function menu_test_static_variable($value = NULL) {
     $variable = $value;
   }
   return $variable;
-}
-
-/**
- * Page callback: Provides a login path.
- *
- * @return string
- *   A text string that can be used for comparison.
- *
- * @see menu_test_menu().
- */
-function menu_login_callback() {
-  return 'This is menu_login_callback().';
 }
 
 /**

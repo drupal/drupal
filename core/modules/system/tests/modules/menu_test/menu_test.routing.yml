@@ -1,3 +1,9 @@
+menu_login_callback:
+  pattern: '/menu_login_callback'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::testLogin'
+  requirements:
+    _access: 'TRUE'
 menu_router_test1:
   pattern: '/foo/{bar}'
   defaults:
