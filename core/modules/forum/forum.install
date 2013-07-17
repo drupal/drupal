@@ -122,6 +122,13 @@ function forum_uninstall() {
     $field->delete();
   }
 
+  // Load the dependent Comment module, in case it has been disabled.
+  drupal_load('module', 'comment');
+
+  if ($field = field_info_field('comment_node_forum')) {
+    $field->delete();
+  }
+
   // Purge field data now to allow taxonomy module to be uninstalled
   // if this is the only field remaining.
   field_purge_batch(10);
