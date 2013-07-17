@@ -81,7 +81,7 @@ class MainContentFallbackTest extends WebTestBase {
 
     // Request a user* page and see if it is displayed.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('user/' . $this->web_user->uid . '/edit');
+    $this->drupalGet('user/' . $this->web_user->id() . '/edit');
     $this->assertField('mail', 'User interface still available.');
 
     // Enable the block module again.

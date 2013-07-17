@@ -32,8 +32,8 @@ class RegisterFormController extends AccountFormController {
     );
 
     // If we aren't admin but already logged on, go to the user page instead.
-    if (!$admin && $user->uid) {
-      return new RedirectResponse(url('user/' . $user->uid, array('absolute' => TRUE)));
+    if (!$admin && $user->isAuthenticated()) {
+      return new RedirectResponse(url('user/' . $user->id(), array('absolute' => TRUE)));
     }
 
     $form['#attached']['library'][] = array('system', 'jquery.cookie');
@@ -99,9 +99,9 @@ class RegisterFormController extends AccountFormController {
     $account->save();
 
     $form_state['user'] = $account;
-    $form_state['values']['uid'] = $account->uid;
+    $form_state['values']['uid'] = $account->id();
 
-    watchdog('user', 'New user: %name %email.', array('%name' => $form_state['values']['name'], '%email' => '<' . $form_state['values']['mail'] . '>'), WATCHDOG_NOTICE, l(t('edit'), 'user/' . $account->uid . '/edit'));
+    watchdog('user', 'New user: %name %email.', array('%name' => $form_state['values']['name'], '%email' => '<' . $form_state['values']['mail'] . '>'), WATCHDOG_NOTICE, l(t('edit'), 'user/' . $account->id() . '/edit'));
 
     // Add plain text password into user account to generate mail tokens.
     $account->password = $pass;

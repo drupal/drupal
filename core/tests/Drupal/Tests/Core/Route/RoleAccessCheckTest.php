@@ -9,9 +9,9 @@ namespace Drupal\Tests\Core\Route;
 
 use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Session\UserSession;
 use Drupal\Tests\UnitTestCase;
 use Drupal\user\Access\RoleAccessCheck;
-use Drupal\user\Plugin\Core\Entity\User;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -108,25 +108,25 @@ class RoleAccessCheckTest extends UnitTestCase {
     // Setup one user with the first role, one with the second, one with both
     // and one final without any of these two roles.
 
-    $account_1 = (object) array(
+    $account_1 = new UserSession(array(
       'uid' => 1,
       'roles' => array($rid_1),
-    );
+    ));
 
-    $account_2 = (object) array(
+    $account_2 = new UserSession(array(
       'uid' => 2,
       'roles' => array($rid_2),
-    );
+    ));
 
-    $account_12 = (object) array(
+    $account_12 = new UserSession(array(
       'uid' => 3,
       'roles' => array($rid_1, $rid_2),
-    );
+    ));
 
-    $account_none = (object) array(
+    $account_none = new UserSession(array(
       'uid' => 1,
       'roles' => array(),
-    );
+    ));
 
     // Setup expected values; specify which paths can be accessed by which user.
     return array(
@@ -169,7 +169,7 @@ class RoleAccessCheckTest extends UnitTestCase {
     foreach ($deny_accounts as $account) {
       $subrequest = Request::create($path, 'GET');
       $subrequest->attributes->set('account', $account);
-      $message = sprintf('Access denied for user %s with the roles %s on path: %s', $account->uid, implode(', ', $account->roles), $path);
+      $message = sprintf('Access denied for user %s with the roles %s on path: %s', $account->id(), implode(', ', $account->roles), $path);
       $has_access = $role_access_check->access($collection->get($path), $subrequest);
       $this->assertSame(AccessCheckInterface::DENY, $has_access , $message);
     }

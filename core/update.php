@@ -354,7 +354,7 @@ function update_access_allowed() {
     return user_access('administer software updates');
   }
   catch (\Exception $e) {
-    return ($user->uid == 1);
+    return ($user->id() == 1);
   }
 }
 

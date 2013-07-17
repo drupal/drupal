@@ -68,7 +68,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertText(t('No content available.'), 'Block with "No content available." found.');
 
     // Add some test nodes.
-    $default_settings = array('uid' => $this->webUser->uid, 'type' => 'article');
+    $default_settings = array('uid' => $this->webUser->id(), 'type' => 'article');
     $node1 = $this->drupalCreateNode($default_settings);
     $node2 = $this->drupalCreateNode($default_settings);
     $node3 = $this->drupalCreateNode($default_settings);
@@ -136,7 +136,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->assertTrue(isset($visibility['node_type']['types']['article']), 'Visibility settings were saved to configuration');
 
     // Create a page node.
-    $node5 = $this->drupalCreateNode(array('uid' => $this->adminUser->uid, 'type' => 'page'));
+    $node5 = $this->drupalCreateNode(array('uid' => $this->adminUser->id(), 'type' => 'page'));
 
     // Verify visibility rules.
     $this->drupalGet('');

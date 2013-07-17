@@ -55,7 +55,7 @@ function shortcut_set_switch($form, &$form_state, $account = NULL) {
 
     $form['set'] = array(
       '#type' => 'radios',
-      '#title' => $user->uid == $account->uid ? t('Choose a set of shortcuts to use') : t('Choose a set of shortcuts for this user'),
+      '#title' => $user->id() == $account->id() ? t('Choose a set of shortcuts to use') : t('Choose a set of shortcuts for this user'),
       '#options' => $options,
       '#default_value' => $current_set->id(),
     );
@@ -85,7 +85,7 @@ function shortcut_set_switch($form, &$form_state, $account = NULL) {
       '#required' => FALSE,
     );
 
-    if ($user->uid != $account->uid) {
+    if ($user->id() != $account->id()) {
       $default_set = shortcut_default_set($account);
       $form['new']['#description'] = t('The new set is created by copying items from the %default set.', array('%default' => $default_set->label()));
     }
@@ -147,7 +147,7 @@ function shortcut_set_switch_submit($form, &$form_state) {
       '%set_name' => $set->label(),
       '@switch-url' => url(current_path()),
     );
-    if ($account->uid == $user->uid) {
+    if ($account->id() == $user->id()) {
       // Only administrators can create new shortcut sets, so we know they have
       // access to switch back.
       drupal_set_message(t('You are now using the new %set_name shortcut set. You can edit it from this page or <a href="@switch-url">switch back to a different one.</a>', $replacements));
@@ -164,7 +164,7 @@ function shortcut_set_switch_submit($form, &$form_state) {
       '%user' => $account->name,
       '%set_name' => $set->label(),
     );
-    drupal_set_message($account->uid == $user->uid ? t('You are now using the %set_name shortcut set.', $replacements) : t('%user is now using the %set_name shortcut set.', $replacements));
+    drupal_set_message($account->id() == $user->id() ? t('You are now using the %set_name shortcut set.', $replacements) : t('%user is now using the %set_name shortcut set.', $replacements));
   }
 
   // Assign the shortcut set to the provided user account.

@@ -51,7 +51,7 @@ class Type extends Node {
     return $this->sanitizeValue($data);
   }
 
-  function render($values) {
+  public function render($values) {
     $value = $this->getValue($values);
     return $this->render_link($this->render_name($value, $values), $values);
   }

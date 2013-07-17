@@ -12,6 +12,27 @@ node_page_edit:
   requirements:
     _entity_access: 'node.update'
 
+node_delete_confirm:
+  pattern: '/node/{node}/delete'
+  defaults:
+    _entity_form: 'node.delete'
+  requirements:
+    _entity_access: 'node.delete'
+
+node_revision_revert_confirm:
+  pattern: '/node/{node}/revisions/{node_revision}/revert'
+  defaults:
+    _form: '\Drupal\node\Form\NodeRevisionRevertForm'
+  requirements:
+    _access_node_revision: 'update'
+
+node_revision_delete_confirm:
+  pattern: '/node/{node}/revisions/{node_revision}/delete'
+  defaults:
+    _form: '\Drupal\node\Form\NodeRevisionDeleteForm'
+  requirements:
+    _access_node_revision: 'delete'
+
 node_overview_types:
   pattern: '/admin/structure/types'
   defaults:
@@ -47,3 +68,10 @@ node_type_delete_confirm:
     _entity_form: 'node_type.delete'
   requirements:
     _entity_access: 'node_type.delete'
+
+node_configure_rebuild_confirm:
+  pattern: '/admin/reports/status/rebuild'
+  defaults:
+    _form: 'Drupal\node\Form\RebuildPermissionsForm'
+  requirements:
+    _permission: 'access administration pages'

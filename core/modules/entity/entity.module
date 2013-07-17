@@ -11,6 +11,102 @@
 use Drupal\Core\Config\Entity\ConfigStorageController;
 
 /**
+ * Implements hook_permission().
+ */
+function entity_permission() {
+  return array(
+    'administer display modes' => array(
+      'title' => t('Add, edit, and delete custom display modes.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function entity_menu() {
+  $items = array();
+
+  $items['admin/structure/display-modes'] = array(
+    'title' => 'Display modes',
+    'description' => 'Configure what displays are available for your content and forms.',
+    'page callback' => 'system_admin_menu_block_page',
+    'access arguments' => array('administer display modes'),
+    'file' => 'system.admin.inc',
+    'file path' => drupal_get_path('module', 'system'),
+  );
+
+  // View modes.
+  $items['admin/structure/display-modes/view'] = array(
+    'title' => 'View modes',
+    'description' => 'Manage custom view modes.',
+    'route_name' => 'entity_view_mode.list',
+  );
+  $items['admin/structure/display-modes/view/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/structure/display-modes/view/add'] = array(
+    'title' => 'Add view mode',
+    'route_name' => 'entity_view_mode.add',
+    'type' => MENU_SIBLING_LOCAL_TASK,
+  );
+  $items['admin/structure/display-modes/view/add/%'] = array(
+    'route_name' => 'entity_view_mode.add_type',
+  );
+  $items['admin/structure/display-modes/view/manage/%'] = array(
+    'title' => 'Edit view mode',
+    'route_name' => 'entity_view_mode.edit',
+  );
+  $items['admin/structure/display-modes/view/manage/%/delete'] = array(
+    'route_name' => 'entity_view_mode.delete',
+  );
+
+  // Form modes.
+  $items['admin/structure/display-modes/form'] = array(
+    'title' => 'Form modes',
+    'description' => 'Manage custom form modes.',
+    'route_name' => 'entity_form_mode.list',
+  );
+  $items['admin/structure/display-modes/form/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/structure/display-modes/form/add'] = array(
+    'title' => 'Add form mode',
+    'route_name' => 'entity_form_mode.add',
+    'type' => MENU_SIBLING_LOCAL_TASK,
+  );
+  $items['admin/structure/display-modes/form/add/%'] = array(
+    'route_name' => 'entity_form_mode.add_type',
+  );
+  $items['admin/structure/display-modes/form/manage/%'] = array(
+    'title' => 'Edit form mode',
+    'route_name' => 'entity_form_mode.edit',
+  );
+  $items['admin/structure/display-modes/form/manage/%/delete'] = array(
+    'route_name' => 'entity_form_mode.delete',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_local_actions().
+ */
+function entity_local_actions() {
+  return array(
+    array(
+      'route_name' => 'entity_view_mode.add',
+      'title' => t('Add view mode'),
+      'appears_on' => array(
+        'entity_view_mode.list',
+      ),
+    ),
+  );
+}
+
+/**
  * Implements hook_entity_bundle_rename().
  */
 function entity_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {

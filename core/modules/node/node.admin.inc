@@ -9,29 +9,6 @@ use Drupal\Core\Language\Language;
 use Drupal\node\NodeInterface;
 
 /**
- * Page callback: Form constructor for the permission rebuild confirmation form.
- *
- * @return array
- *   An array as expected by drupal_render().
- *
- * @see node_configure_rebuild_confirm_submit()
- * @see node_menu()
- * @ingroup forms
- */
-function node_configure_rebuild_confirm() {
-  return confirm_form(array(), t('Are you sure you want to rebuild the permissions on site content?'),
-                  'admin/reports/status', t('This action rebuilds all permissions on site content, and may be a lengthy process. This action cannot be undone.'), t('Rebuild permissions'), t('Cancel'));
-}
-
-/**
- * Form submission handler for node_configure_rebuild_confirm().
- */
-function node_configure_rebuild_confirm_submit($form, &$form_state) {
-  node_access_rebuild(TRUE);
-  $form_state['redirect'] = 'admin/reports/status';
-}
-
-/**
  * Updates all nodes in the passed-in array with the passed-in field values.
  *
  * IMPORTANT NOTE: This function is intended to work when called from a form
@@ -229,7 +206,7 @@ function node_admin_nodes() {
     // If the user is able to view their own unpublished nodes, allow them
     // to see these in addition to published nodes. Check that they actually
     // have some unpublished nodes to view before adding the condition.
-    if (user_access('view own unpublished content') && $own_unpublished = db_query('SELECT DISTINCT nid FROM {node_field_data} WHERE uid = :uid AND status = :status', array(':uid' => $GLOBALS['user']->uid, ':status' => 0))->fetchCol()) {
+    if (user_access('view own unpublished content') && $own_unpublished = db_query('SELECT DISTINCT nid FROM {node_field_data} WHERE uid = :uid AND status = :status', array(':uid' => $GLOBALS['user']->id(), ':status' => 0))->fetchCol()) {
       $query->condition(db_or()
         ->condition('n.status', 1)
         ->condition('n.nid', $own_unpublished, 'IN')

@@ -43,7 +43,7 @@ abstract class UserTestBase extends ViewTestBase {
 
     $this->users[] = $this->drupalCreateUser();
     $this->users[] = user_load(1);
-    $this->nodes[] = $this->drupalCreateNode(array('uid' => $this->users[0]->uid));
+    $this->nodes[] = $this->drupalCreateNode(array('uid' => $this->users[0]->id()));
     $this->nodes[] = $this->drupalCreateNode(array('uid' => 1));
   }
 

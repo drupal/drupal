@@ -96,7 +96,7 @@ class StandardProfileTest extends WebTestBase {
     $page_uri_info = $this->page->uri();
     $this->pageUri = url($page_uri_info['path'], array('absolute' => TRUE));
     // Author.
-    $this->authorUri = url('user/' . $this->adminUser->uid, array('absolute' => TRUE));
+    $this->authorUri = url('user/' . $this->adminUser->id(), array('absolute' => TRUE));
     // Comment.
     $article_comment_uri_info = $this->articleComment->uri();
     $this->articleCommentUri = url($article_comment_uri_info['path'], array('absolute' => TRUE));

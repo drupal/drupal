@@ -36,7 +36,7 @@ class Language extends Node {
     );
   }
 
-  function render($values) {
+  public function render($values) {
     // @todo: Drupal Core dropped native language until config translation is
     // ready, see http://drupal.org/node/1616594.
     $value = $this->getValue($values);

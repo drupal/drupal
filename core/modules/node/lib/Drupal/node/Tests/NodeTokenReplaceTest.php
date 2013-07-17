@@ -36,7 +36,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $account = $this->drupalCreateUser();
     $settings = array(
       'type' => 'article',
-      'uid' => $account->uid,
+      'uid' => $account->id(),
       'title' => '<blink>Blinking Text</blink>',
       'body' => array(array('value' => $this->randomName(32), 'summary' => $this->randomName(16))),
     );

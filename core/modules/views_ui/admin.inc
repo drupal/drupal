@@ -275,6 +275,15 @@ function views_ui_pre_render_add_fieldset_markup($form) {
     }
   }
 
+  // Hide the fieldsets if there is nothing in there.
+  if (isset($form['fieldsets']['#value'])) {
+    foreach ($form['fieldsets']['#value'] as $fieldset) {
+      if (!element_children($form[$fieldset])) {
+        $form[$fieldset]['#access'] = FALSE;
+      }
+    }
+  }
+
   return $form;
 }
 

@@ -57,7 +57,7 @@ class UserLanguageTest extends WebTestBase {
 
     // Login as normal user and edit account settings.
     $this->drupalLogin($web_user);
-    $path = 'user/' . $web_user->uid . '/edit';
+    $path = 'user/' . $web_user->id() . '/edit';
     $this->drupalGet($path);
     // Ensure language settings widget is available.
     $this->assertText(t('Language'), 'Language selector available.');

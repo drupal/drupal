@@ -120,7 +120,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     foreach ($this->langcodes as $index => $langcode) {
       $user = $this->drupalCreateUser();
       $values[$langcode] = array(
-        'uid' => $user->uid,
+        'uid' => $user->id(),
         'created' => REQUEST_TIME - mt_rand(0, 1000),
       );
       $edit = array(

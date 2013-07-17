@@ -89,13 +89,13 @@ function color_css_alter(&$css) {
  *
  * Replace the logo with the colored version if available.
  */
-function color_preprocess_page(&$vars) {
+function color_preprocess_page(&$variables) {
   global $theme_key;
 
   // Override logo.
   $logo = config('color.' . $theme_key)->get('logo');
-  if ($logo && $vars['logo'] && preg_match('!' . $theme_key . '/logo.png$!', $vars['logo'])) {
-    $vars['logo'] = file_create_url($logo);
+  if ($logo && $variables['logo'] && preg_match('!' . $theme_key . '/logo.png$!', $variables['logo'])) {
+    $variables['logo'] = file_create_url($logo);
   }
 }
 
@@ -236,17 +236,17 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
  *   - form: A render element representing the form.
  */
 function template_preprocess_color_scheme_form(&$variables) {
-  $form = $variables['form'];
+  $form = &$variables['form'];
 
   $theme = $form['theme']['#value'];
   $info = $form['info']['#value'];
   $path = drupal_get_path('theme', $theme) . '/';
-  drupal_add_css($path . $info['preview_css']);
 
-  // @todo Transform to add library.
+  $preview_css_path = $path . $info['preview_css'];
   $preview_js_path = isset($info['preview_js']) ? $path . $info['preview_js'] : drupal_get_path('module', 'color') . '/' . 'preview.js';
+  $form['scheme']['#attached']['css'][$preview_css_path] = array();
   // Add the JS at a weight below color.js.
-  drupal_add_js($preview_js_path, array('weight' => -1));
+  $form['scheme']['#attached']['js'][$preview_js_path] = array('weight' => -1);
 
   // Attempt to load preview HTML if the theme provides it.
   $preview_html_path = DRUPAL_ROOT . '/' . (isset($info['preview_html']) ? drupal_get_path('theme', $theme) . '/' . $info['preview_html'] : drupal_get_path('module', 'color') . '/preview.html');

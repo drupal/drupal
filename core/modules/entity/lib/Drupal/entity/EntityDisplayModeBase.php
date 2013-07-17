@@ -12,7 +12,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 /**
  * Base class for config entity types that hold settings for form and view modes.
  */
-abstract class EntityDisplayModeBase extends ConfigEntityBase {
+abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityDisplayModeInterface {
 
   /**
    * The ID of the form or view mode.
@@ -38,8 +38,8 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase {
   /**
    * The entity type this form or view mode is used for.
    *
-   * This is not to be confused with EntityViewMode::entityType which is
-   * inherited from Entity::entityType.
+   * This is not to be confused with EntityDisplayModeBase::$entityType which is
+   * inherited from Entity::$entityType.
    *
    * @var string
    */
@@ -55,6 +55,24 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase {
    *
    * @var bool
    */
-  public $status = FALSE;
+  public $status = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function sort($a, $b) {
+    // Sort by the type of entity the view mode is used for.
+    $a_type = $a->getTargetType();
+    $b_type = $b->getTargetType();
+    $type_order = strnatcasecmp($a_type, $b_type);
+    return $type_order != 0 ? $type_order : parent::sort($a, $b);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTargetType() {
+    return $this->targetEntityType;
+  }
 
 }

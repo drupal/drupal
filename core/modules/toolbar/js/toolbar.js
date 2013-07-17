@@ -31,6 +31,7 @@ var $messages;
  * Holds the mediaQueryList object.
  */
 var mql = {
+  narrow: null,
   standard: null,
   wide: null
 };
@@ -45,6 +46,11 @@ var mql = {
  */
 Drupal.behaviors.toolbar = {
   attach: function(context) {
+    // Verify that the sser agent understands media queries. Complex admin
+    // toolbar layouts require media query support.
+    if (!window.matchMedia('only screen').matches) {
+      return;
+    };
     var options = $.extend(this.options, drupalSettings.toolbar);
     var $toolbarOnce = $(context).find('#toolbar-administration').once('toolbar');
     if ($toolbarOnce.length) {
@@ -71,12 +77,17 @@ Drupal.behaviors.toolbar = {
         // Add the tray orientation toggles.
         .find('.lining')
         .append(Drupal.theme('toolbarOrientationToggle'));
-      // Store media queries.
+      // Store media queries and attach a handler.
+      mql.narrow = window.matchMedia(options.breakpoints['module.toolbar.narrow']);
+      mql.narrow.addListener(Drupal.toolbar.narrowMediaQueryChangeHandler);
       mql.standard = window.matchMedia(options.breakpoints['module.toolbar.standard']);
-      // Set up switching between the vertical and horizontal presentation
-      // of the toolbar trays based on a breakpoint.
+      mql.standard.addListener(Drupal.toolbar.standardMediaQueryChangeHandler);
       mql.wide = window.matchMedia(options.breakpoints['module.toolbar.wide']);
-      mql.wide.addListener(Drupal.toolbar.mediaQueryChangeHandler);
+      mql.wide.addListener(Drupal.toolbar.wideMediaQueryChangeHandler);
+      // Fire each MediaQuery change handler so they process once.
+      Drupal.toolbar.narrowMediaQueryChangeHandler.call(this, mql.narrow);
+      Drupal.toolbar.standardMediaQueryChangeHandler.call(this, mql.standard);
+      Drupal.toolbar.wideMediaQueryChangeHandler.call(this, mql.wide);
       // Set the orientation of the tray.
       // If the tray is set to vertical in localStorage, persist the vertical
       // presentation. If the tray is not locked to vertical, let the media
@@ -106,6 +117,7 @@ Drupal.behaviors.toolbar = {
   // Default options.
   options: {
     breakpoints: {
+      'module.toolbar.narrow': '',
       'module.toolbar.standard': '',
       'module.toolbar.wide': ''
     }
@@ -176,18 +188,23 @@ Drupal.toolbar.toggleTray = function (event) {
  *   viewport offset distances calculated by Drupal.displace().
  */
 Drupal.toolbar.adjustPlacement = function (event, offsets) {
-  // Set the top of the all the trays to the height of the bar.
-  var barHeight = $toolbar.find('.bar').outerHeight();
-  var bhpx =  barHeight + 'px';
-  var tray;
-  for (var i = 0, il = $trays.length; i < il; i++) {
-    tray = $trays[i];
-    if (!tray.style.top.length || (tray.style.top !== bhpx)) {
-      tray.style.top = bhpx;
-    }
+  if (!mql.narrow.matches) {
+    var $body = $('body');
+    var $trays = $toolbar.find('.tray');
+    // Alter the padding on the top of the body element.
+    $body.css('padding-top', 0);
+    $trays.css('padding-top', 0);
+    // Remove any orientation classes. Make vertical the default for trays.
+    $body.removeClass('toolbar-vertical toolbar-horizontal');
+    $trays.removeClass('horizontal').addClass('vertical');
   }
-  // Alter the padding on the top of the body element.
-  $('body').css('padding-top', offsets.top);
+  else {
+    // Alter the padding on the top of the body element.
+    $('body').css('padding-top', offsets.top);
+    // The navbar container is invisible. Its placement is used to determine the
+    // container for the trays.
+    $toolbar.find('.tray').css('padding-top', $toolbar.find('.bar').outerHeight());
+  }
 };
 
 /**
@@ -199,20 +216,53 @@ Drupal.toolbar.adjustPlacement = function (event, offsets) {
 Drupal.toolbar.setTrayWidth = function () {
   var dir = document.documentElement.dir;
   var edge = (dir === 'rtl') ? 'right' : 'left';
-  // Remove the left offset from the trays.
+  // Remove the side offset from the trays.
   $toolbar.find('.tray').removeAttr('data-offset-' + edge + ' data-offset-top');
-  // If an active vertical tray exists, mark it as an offset element.
-  $toolbar.find('.tray.vertical.active').attr('data-offset-' + edge, '');
-  // If an active horizontal tray exists, mark it as an offset element.
-  $toolbar.find('.tray.horizontal.active').attr('data-offset-top', '');
+  // If the page is wider than the narrow media query, apply offset attributes.
+  if (mql.narrow.matches) {
+    // If an active vertical tray exists, mark it as an offset element.
+    $toolbar.find('.tray.vertical.active').attr('data-offset-' + edge, '');
+    // If an active horizontal tray exists, mark it as an offset element.
+    $toolbar.find('.tray.horizontal.active').attr('data-offset-top', '');
+  }
   // Trigger a recalculation of viewport displacing elements.
   Drupal.displace();
 };
 
 /**
- * Respond to configured media query applicability changes.
+ * Respond to configured narrow media query changes.
  */
-Drupal.toolbar.mediaQueryChangeHandler = function (mql) {
+Drupal.toolbar.narrowMediaQueryChangeHandler = function (mql) {
+  var $bar = $toolbar.find('.bar');
+  if (mql.matches) {
+    $bar.attr('data-offset-top', '');
+  }
+  else {
+    $bar.removeAttr('data-offset-top');
+  }
+  // Toggle between a basic vertical view and a more sophisticated horizontal
+  // and vertical display of the toolbar bar and trays.
+  $toolbar.toggleClass('toolbar-oriented', mql.matches);
+  if (mql.matches) {
+    changeOrientation('vertical');
+  }
+  // Update the page and toolbar dimension indicators.
+  updatePeripherals();
+};
+
+/**
+ * Respond to configured standard media query changes.
+ */
+Drupal.toolbar.standardMediaQueryChangeHandler = function (mql) {
+  $('body').toggleClass('toolbar-paneled', mql.matches);
+  // Update the page and toolbar dimension indicators.
+  updatePeripherals();
+};
+
+/**
+ * Respond to configured wide media query changes.
+ */
+Drupal.toolbar.wideMediaQueryChangeHandler = function (mql) {
   var orientation = (mql.matches) ? 'horizontal' : 'vertical';
   changeOrientation(orientation);
   // Update the page and toolbar dimension indicators.

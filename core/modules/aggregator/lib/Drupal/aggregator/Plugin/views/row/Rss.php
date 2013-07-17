@@ -71,7 +71,7 @@ class Rss extends RowPluginBase {
   /**
    * {@inheritdoc}
    */
-  function render($row) {
+  public function render($row) {
     $entity = $row->_entity;
 
     $item = new \stdClass();

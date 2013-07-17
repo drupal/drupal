@@ -42,7 +42,7 @@ class SearchRow extends RowPluginBase {
   /**
    * Override the behavior of the render() function.
    */
-  function render($row) {
+  public function render($row) {
     return array(
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,

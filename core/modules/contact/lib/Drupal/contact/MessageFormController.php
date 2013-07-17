@@ -44,7 +44,7 @@ class MessageFormController extends EntityFormControllerNG {
       '#title' => t('Your e-mail address'),
       '#required' => TRUE,
     );
-    if (!$user->uid) {
+    if ($user->isAnonymous()) {
       $form['#attached']['library'][] = array('system', 'jquery.cookie');
       $form['#attributes']['class'][] = 'user-info-from-cookie';
     }
@@ -93,7 +93,7 @@ class MessageFormController extends EntityFormControllerNG {
       '#title' => t('Send yourself a copy.'),
       // Do not allow anonymous users to send themselves a copy, because it can
       // be abused to spam people.
-      '#access' => !empty($user->uid),
+      '#access' => $user->isAuthenticated(),
     );
     return $form;
   }
@@ -136,8 +136,8 @@ class MessageFormController extends EntityFormControllerNG {
     $language_interface = language(Language::TYPE_INTERFACE);
     $message = $this->entity;
 
-    $sender = clone user_load($user->uid);
-    if (!$user->uid) {
+    $sender = clone user_load($user->id());
+    if ($user->isAnonymous()) {
       // At this point, $sender contains drupal_anonymous_user(), so we need to
       // take over the submitted form values.
       $sender->name = $message->getSenderName();

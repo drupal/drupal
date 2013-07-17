@@ -22,7 +22,9 @@ use Drupal\language\LanguageInterface;
  *   label = @Translation("Language"),
  *   module = "language",
  *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *     "list" = "Drupal\language\LanguageListController",
+ *     "access" = "Drupal\language\LanguageAccessController"
  *   },
  *   config_prefix = "language.entity",
  *   entity_keys = {

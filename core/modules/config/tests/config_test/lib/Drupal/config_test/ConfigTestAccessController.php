@@ -24,4 +24,11 @@ class ConfigTestAccessController extends EntityAccessController {
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    return TRUE;
+  }
+
 }

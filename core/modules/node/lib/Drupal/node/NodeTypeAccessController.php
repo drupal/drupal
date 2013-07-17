@@ -28,4 +28,11 @@ class NodeTypeAccessController extends EntityAccessController {
     return user_access('administer content types', $account);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    return user_access('administer content types', $account);
+  }
+
 }

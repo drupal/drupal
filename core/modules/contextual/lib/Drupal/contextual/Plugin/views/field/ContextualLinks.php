@@ -68,7 +68,7 @@ class ContextualLinks extends FieldPluginBase {
    * @see contextual_preprocess()
    * @see contextual_contextual_links_view_alter()
    */
-  function render($values) {
+  public function render($values) {
     $links = array();
     foreach ($this->options['fields'] as $field) {
       $rendered_field = $this->view->style_plugin->getField($this->view->row_index, $field);

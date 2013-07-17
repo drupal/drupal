@@ -58,7 +58,7 @@ class Php extends FilterBase {
       $output .= '<li>' . t('<p>To display the name of a registered user, use this instead:</p>
   <pre>
   global $user;
-  if ($user->uid) {
+  if ($user->isAuthenticated()) {
     print t(\'Welcome @name! Thank you for visiting.\', array(\'@name\' => user_format_name($user)));
   }
   else {

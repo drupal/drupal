@@ -40,7 +40,7 @@ class CommentRow extends EntityRow {
   /**
    * {@inheritdoc}
    */
-  function render($row) {
+  public function render($row) {
     $entity_id = $row->{$this->field_alias};
     $build = $this->build[$entity_id];
     if (!$this->options['links']) {

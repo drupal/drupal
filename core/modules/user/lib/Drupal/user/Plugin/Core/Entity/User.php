@@ -108,7 +108,7 @@ class User extends EntityNG implements UserInterface {
       // user and recreate the current one.
       if ($this->pass->value != $this->original->pass->value) {
         drupal_session_destroy_uid($this->id());
-        if ($this->id() == $GLOBALS['user']->uid) {
+        if ($this->id() == $GLOBALS['user']->id()) {
           drupal_session_regenerate();
         }
       }

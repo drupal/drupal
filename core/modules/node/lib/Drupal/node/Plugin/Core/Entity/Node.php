@@ -28,6 +28,7 @@ use Drupal\node\NodeBCDecorator;
  *     "access" = "Drupal\node\NodeAccessController",
  *     "form" = {
  *       "default" = "Drupal\node\NodeFormController",
+ *       "delete" = "Drupal\node\Form\NodeDeleteForm",
  *       "edit" = "Drupal\node\NodeFormController"
  *     },
  *     "translation" = "Drupal\node\NodeTranslationController"

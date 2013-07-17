@@ -865,21 +865,11 @@ function entity_page_access(EntityInterface $entity, $operation = 'view') {
  *   The entity type.
  * @param string $bundle
  *   (optional) The bundle of the entity. Required if the entity supports
- *   bundles, defaults to the entity type otherwise.
+ *   bundles, defaults to NULL otherwise.
  *
  * @return bool
  *   TRUE if the access is granted. FALSE if access is denied.
  */
 function entity_page_create_access($entity_type, $bundle = NULL) {
-  $definition = Drupal::entityManager()->getDefinition($entity_type);
-
-  // Pass in the entity bundle if given and required.
-  $values = array();
-  if ($bundle && isset($definition['entity_keys']['bundle'])) {
-    $values[$definition['entity_keys']['bundle']] = $bundle;
-  }
-  $entity = Drupal::entityManager()
-    ->getStorageController($entity_type)
-    ->create($values);
-  return $entity->access('create');
+  return Drupal::entityManager()->getAccessController($entity_type)->createAccess($bundle);
 }

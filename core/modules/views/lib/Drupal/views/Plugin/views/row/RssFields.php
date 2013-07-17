@@ -126,7 +126,7 @@ class RssFields extends RowPluginBase {
     return $errors;
   }
 
-  function render($row) {
+  public function render($row) {
     static $row_index;
     if (!isset($row_index)) {
       $row_index = 0;

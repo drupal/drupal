@@ -190,7 +190,7 @@ class MenuRouterTest extends WebTestBase {
     $this->drupalGet('test-page');
     $this->assertText($offline_message);
     $this->drupalGet('menu_login_callback');
-    $this->assertText('This is menu_login_callback().', 'Maintenance mode can be bypassed using an event subscriber.');
+    $this->assertText('This is TestControllers::testLogin.', 'Maintenance mode can be bypassed using an event subscriber.');
 
     config('system.maintenance')->set('enabled', 0)->save();
   }
@@ -205,11 +205,11 @@ class MenuRouterTest extends WebTestBase {
 
     $this->drupalGet('user/login');
     // Check that we got to 'user'.
-    $this->assertTrue($this->url == url('user/' . $this->loggedInUser->uid, array('absolute' => TRUE)), "Logged-in user redirected to user on accessing user/login");
+    $this->assertTrue($this->url == url('user/' . $this->loggedInUser->id(), array('absolute' => TRUE)), "Logged-in user redirected to user on accessing user/login");
 
     // user/register should redirect to user/UID/edit.
     $this->drupalGet('user/register');
-    $this->assertTrue($this->url == url('user/' . $this->loggedInUser->uid . '/edit', array('absolute' => TRUE)), "Logged-in user redirected to user/UID/edit on accessing user/register");
+    $this->assertTrue($this->url == url('user/' . $this->loggedInUser->id() . '/edit', array('absolute' => TRUE)), "Logged-in user redirected to user/UID/edit on accessing user/register");
   }
 
   /**

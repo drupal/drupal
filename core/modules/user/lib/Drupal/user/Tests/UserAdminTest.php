@@ -46,7 +46,7 @@ class UserAdminTest extends WebTestBase {
     $this->assertText($admin_user->name, 'Found Admin user on admin users page');
 
     // Test for existence of edit link in table.
-    $link = l(t('Edit'), "user/$user_a->uid/edit", array('query' => array('destination' => 'admin/people')));
+    $link = l(t('Edit'), "user/" . $user_a->id() . "/edit", array('query' => array('destination' => 'admin/people')));
     $this->assertRaw($link, 'Found user A edit link on admin users page');
 
     // Filter the users by name/e-mail.
@@ -79,17 +79,17 @@ class UserAdminTest extends WebTestBase {
     $this->assertText($user_c->name, 'User C on filtered by role on admin users page');
 
     // Test blocking of a user.
-    $account = user_load($user_c->uid);
+    $account = user_load($user_c->id());
     $this->assertEqual($account->status, 1, 'User C not blocked');
     $edit = array();
     $edit['action'] = 'user_block_user_action';
     $edit['user_bulk_form[1]'] = TRUE;
     $this->drupalPost('admin/people', $edit, t('Apply'));
-    $account = user_load($user_c->uid, TRUE);
+    $account = user_load($user_c->id(), TRUE);
     $this->assertEqual($account->status, 0, 'User C blocked');
 
     // Test filtering on admin page for blocked users
-    $this->drupalGet('admin/people', array('query' => array('status' => 0)));
+    $this->drupalGet('admin/people', array('query' => array('status' => 2)));
     $this->assertNoText($user_a->name, 'User A not on filtered by status on admin users page');
     $this->assertNoText($user_b->name, 'User B not on filtered by status on admin users page');
     $this->assertText($user_c->name, 'User C on filtered by status on admin users page');
@@ -99,18 +99,18 @@ class UserAdminTest extends WebTestBase {
     $editunblock['action'] = 'user_unblock_user_action';
     $editunblock['user_bulk_form[1]'] = TRUE;
     $this->drupalPost('admin/people', $editunblock, t('Apply'));
-    $account = user_load($user_c->uid, TRUE);
+    $account = user_load($user_c->id(), TRUE);
     $this->assertEqual($account->status, 1, 'User C unblocked');
     $this->assertMail("to", $account->mail, "Activation mail sent to user C");
 
     // Test blocking and unblocking another user from /user/[uid]/edit form and sending of activation mail
     $user_d = $this->drupalCreateUser(array());
-    $account1 = user_load($user_d->uid, TRUE);
-    $this->drupalPost('user/' . $account1->uid . '/edit', array('status' => 0), t('Save'));
-    $account1 = user_load($user_d->uid, TRUE);
+    $account1 = user_load($user_d->id(), TRUE);
+    $this->drupalPost('user/' . $account1->id() . '/edit', array('status' => 0), t('Save'));
+    $account1 = user_load($user_d->id(), TRUE);
     $this->assertEqual($account1->status, 0, 'User D blocked');
-    $this->drupalPost('user/' . $account1->uid . '/edit', array('status' => TRUE), t('Save'));
-    $account1 = user_load($user_d->uid, TRUE);
+    $this->drupalPost('user/' . $account1->id() . '/edit', array('status' => TRUE), t('Save'));
+    $account1 = user_load($user_d->id(), TRUE);
     $this->assertEqual($account1->status, 1, 'User D unblocked');
     $this->assertMail("to", $account1->mail, "Activation mail sent to user D");
   }

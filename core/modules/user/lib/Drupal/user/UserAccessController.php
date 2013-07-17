@@ -25,10 +25,6 @@ class UserAccessController extends EntityAccessController {
         return $this->viewAccess($entity, $langcode, $account);
         break;
 
-      case 'create':
-        return user_access('administer users', $account);
-        break;
-
       case 'update':
         // Users can always edit their own account. Users with the 'administer
         // users' permission can edit any account except the anonymous account.
@@ -42,6 +38,13 @@ class UserAccessController extends EntityAccessController {
         return ((($account->id() == $entity->id()) && user_access('cancel account', $account)) || user_access('administer users', $account)) && $entity->id() > 0;
         break;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    return user_access('administer users', $account);
   }
 
   /**

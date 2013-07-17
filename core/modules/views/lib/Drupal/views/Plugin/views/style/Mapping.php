@@ -131,7 +131,7 @@ abstract class Mapping extends StylePluginBase {
    *
    * Provides the mapping definition as an available variable.
    */
-  function render() {
+  public function render() {
     return array(
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,

@@ -32,7 +32,7 @@ class Uri extends File {
     parent::buildOptionsForm($form, $form_state);
   }
 
-  function render($values) {
+  public function render($values) {
     $data = $values->{$this->field_alias};
     if (!empty($this->options['file_download_path']) && $data !== NULL && $data !== '') {
       $data = file_create_url($data);

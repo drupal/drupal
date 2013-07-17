@@ -155,21 +155,6 @@ function filter_menu() {
 }
 
 /**
- * Implements hook_local_actions().
- */
-function filter_local_actions() {
-  return array(
-    array(
-      'route_name' => 'filter_format_add',
-      'title' => t('Add text format'),
-      'appears_on' => array(
-        'filter_admin_overview',
-      ),
-    ),
-  );
-}
-
-/**
  * Loads a text format object from the database.
  *
  * @param $format_id
@@ -290,16 +275,16 @@ function filter_formats($account = NULL) {
   }
 
   // Build a list of user-specific formats.
-  if (isset($account) && !isset($formats['user'][$account->uid])) {
-    $formats['user'][$account->uid] = array();
+  if (isset($account) && !isset($formats['user'][$account->id()])) {
+    $formats['user'][$account->id()] = array();
     foreach ($formats['all'] as $format) {
       if (filter_access($format, $account)) {
-        $formats['user'][$account->uid][$format->format] = $format;
+        $formats['user'][$account->id()][$format->format] = $format;
       }
     }
   }
 
-  return isset($account) ? $formats['user'][$account->uid] : $formats['all'];
+  return isset($account) ? $formats['user'][$account->id()] : $formats['all'];
 }
 
 /**

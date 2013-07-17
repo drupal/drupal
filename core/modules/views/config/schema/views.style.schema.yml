@@ -29,15 +29,24 @@ views.style.grid:
     columns:
       type:  integer
       label: 'Number of columns'
+    automatic_width:
+      type: boolean
+      label: 'Automatic width'
     alignment:
       type: string
       label: 'Alignment'
-    fill_single_line:
-      type: boolean
-      label: 'Fill up single line'
-    summary:
+    row_class_custom:
       type: string
-      label: 'Table summary'
+      label: 'Custom row classes'
+    row_class_default:
+      type: boolean
+      label: 'Default views row classes'
+    col_class_custom:
+      type: string
+      label: 'Custom column classes'
+    col_class_default:
+      type: boolean
+      label: 'Default views column classes'
 
 views.style.table:
   type: views_style
@@ -110,3 +119,22 @@ views.style.default_summary:
     items_per_page:
       type: integer
       label: 'Items to display'
+
+views.style.rss:
+  type: mapping
+  label: 'RSS Feed'
+  mapping:
+    description:
+      type: label
+      label: 'RSS description'
+
+views.style.unformatted_summary:
+  type: mapping
+  label: 'Unformatted'
+  mapping:
+    inline:
+      type: boolean
+      label: 'Display items inline'
+    separator:
+      type: string
+      label: 'Separator'

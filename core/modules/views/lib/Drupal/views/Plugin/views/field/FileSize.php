@@ -38,7 +38,7 @@ class FileSize extends FieldPluginBase {
     );
   }
 
-  function render($values) {
+  public function render($values) {
     $value = $this->getValue($values);
     if ($value) {
       switch ($this->options['file_size_display']) {

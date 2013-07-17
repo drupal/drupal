@@ -5,34 +5,36 @@
  * Functions to support theming in the Seven theme.
  */
 
+use Drupal\Core\Template\RenderWrapper;
+
 /**
  * Implements hook_preprocess_HOOK() for maintenance-page.html.twig.
  */
-function seven_preprocess_maintenance_page(&$vars) {
+function seven_preprocess_maintenance_page(&$variables) {
   // While markup for normal pages is split into page.tpl.php and html.tpl.php,
   // the markup for the maintenance page is all in the single
   // maintenance-page.html.twig template. So, to have what's done in
   // seven_preprocess_html() also happen on the maintenance page, it has to be
   // called here.
-  seven_preprocess_html($vars);
+  seven_preprocess_html($variables);
 }
 
 /**
  * Implements hook_preprocess_HOOK() for html.tpl.php.
  */
-function seven_preprocess_html(&$vars) {
+function seven_preprocess_html(&$variables) {
   drupal_add_library('system', 'normalize');
 }
 
 /**
  * Implements hook_preprocess_HOOK() for page.tpl.php.
  */
-function seven_preprocess_page(&$vars) {
-  $vars['primary_local_tasks'] = $vars['tabs'];
-  unset($vars['primary_local_tasks']['#secondary']);
-  $vars['secondary_local_tasks'] = array(
+function seven_preprocess_page(&$variables) {
+  $variables['primary_local_tasks'] = $variables['tabs'];
+  unset($variables['primary_local_tasks']['#secondary']);
+  $variables['secondary_local_tasks'] = array(
     '#theme' => 'menu_local_tasks',
-    '#secondary' => isset($vars['tabs']['#secondary']) ? $vars['tabs']['#secondary'] : '',
+    '#secondary' => isset($variables['tabs']['#secondary']) ? $variables['tabs']['#secondary'] : '',
   );
 }
 
@@ -144,6 +146,8 @@ function seven_tablesort_indicator($variables) {
 function seven_preprocess_install_page(&$variables) {
   drupal_add_js(drupal_get_path('theme', 'seven') . '/js/mobile.install.js');
   drupal_add_css(drupal_get_path('theme', 'seven') . '/install-page.css', array('group' => CSS_AGGREGATE_THEME));
+  $variables['styles'] = new RenderWrapper('drupal_get_css');
+  $variables['scripts'] = new RenderWrapper('drupal_get_js');
 }
 
 /**

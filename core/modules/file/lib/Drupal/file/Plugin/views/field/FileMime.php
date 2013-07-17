@@ -33,7 +33,7 @@ class FileMime extends File {
     parent::buildOptionsForm($form, $form_state);
   }
 
-  function render($values) {
+  public function render($values) {
     $data = $values->{$this->field_alias};
     if (!empty($this->options['filemime_image']) && $data !== NULL && $data !== '') {
       $fake_file = (object) array('filemime' => $data);

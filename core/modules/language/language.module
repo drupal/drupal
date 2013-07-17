@@ -70,10 +70,7 @@ function language_menu() {
   $items['admin/config/regional/language'] = array(
     'title' => 'Languages',
     'description' => 'Configure languages for content and the user interface.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('language_admin_overview_form'),
-    'access arguments' => array('administer languages'),
-    'file' => 'language.admin.inc',
+    'route_name' => 'language_admin_overview',
     'weight' => -10,
   );
   $items['admin/config/regional/language/list'] = array(
@@ -160,6 +157,8 @@ function language_menu() {
 
 /**
  * Editing or deleting locked languages should not be possible.
+ *
+ * @deprecated Use \Drupal\language\LanguageAccessController instead.
  */
 function language_access_language_edit_or_delete($language) {
   return !$language->locked && user_access('administer languages');

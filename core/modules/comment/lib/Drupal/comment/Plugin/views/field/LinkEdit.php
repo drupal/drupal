@@ -33,7 +33,6 @@ class LinkEdit extends Link {
       '#title' => t('Use destination'),
       '#description' => t('Add destination to the link'),
       '#default_value' => $this->options['destination'],
-      '#fieldset' => 'more',
     );
   }
 

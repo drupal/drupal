@@ -104,7 +104,7 @@ class DefaultViewsTest extends ViewTestBase {
       search_index($node->nid, 'node', $node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'], Language::LANGCODE_NOT_SPECIFIED);
 
       $comment = array(
-        'uid' => $user->uid,
+        'uid' => $user->id(),
         'entity_id' => $node->nid,
         'entity_type' => 'node',
         'field_name' => 'comment'

@@ -41,7 +41,7 @@ class Extension extends FieldPluginBase {
     );
   }
 
-  function render($values) {
+  public function render($values) {
     $value = $this->getValue($values);
     if (!$this->options['extension_detect_tar']) {
       if (preg_match('/\.([^\.]+)$/', $value, $match)) {

@@ -80,7 +80,7 @@ class Score extends Numeric {
     }
   }
 
-  function render($values) {
+  public function render($values) {
     // Only render if we exist.
     if (isset($this->tableAlias)) {
       return parent::render($values);

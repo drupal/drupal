@@ -136,7 +136,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     comment_add_default_comment_field('node', 'article', 'comment', COMMENT_OPEN);
 
     $node = entity_create('node', array(
-      'uid' => $account->uid,
+      'uid' => $account->id(),
       'type' => 'article',
       'title' => 'Test node',
       'status' => 1,
@@ -156,7 +156,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
       'entity_id' => $nid,
       'entity_type' => 'node',
       'field_name' => 'comment',
-      'uid' => $account->uid,
+      'uid' => $account->id(),
       'subject' => 'Test comment',
       'created' => REQUEST_TIME,
       'changed' => REQUEST_TIME,
@@ -491,7 +491,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    user_load($account->uid);
+    user_load($account->id());
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_entity_load called for type user',
@@ -510,7 +510,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    user_delete($account->uid);
+    user_delete($account->id());
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_user_predelete called',

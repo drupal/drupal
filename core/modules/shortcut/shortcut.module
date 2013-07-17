@@ -32,7 +32,7 @@ function shortcut_help($path, $arg) {
     case 'admin/config/user-interface/shortcut':
     case 'admin/config/user-interface/shortcut/%':
       if (user_access('switch shortcut sets')) {
-        $output = '<p>' . t('Define which shortcut set you are using on the <a href="@shortcut-link">Shortcuts tab</a> of your account page.', array('@shortcut-link' => url("user/{$user->uid}/shortcuts"))) . '</p>';
+        $output = '<p>' . t('Define which shortcut set you are using on the <a href="@shortcut-link">Shortcuts tab</a> of your account page.', array('@shortcut-link' => url("user/{$user->id()}/shortcuts"))) . '</p>';
         return $output;
       }
   }
@@ -206,7 +206,7 @@ function shortcut_set_switch_access($account = NULL) {
     return FALSE;
   }
 
-  if (!isset($account) || $user->uid == $account->uid) {
+  if (!isset($account) || $user->id() == $account->id()) {
     // Users with the 'switch shortcut sets' permission can switch their own
     // shortcuts sets.
     return TRUE;
@@ -327,8 +327,8 @@ function shortcut_current_displayed_set($account = NULL) {
     $account = $user;
   }
   // Try to return a shortcut set from the static cache.
-  if (isset($shortcut_sets[$account->uid])) {
-    return $shortcut_sets[$account->uid];
+  if (isset($shortcut_sets[$account->id()])) {
+    return $shortcut_sets[$account->id()];
   }
   // If none was found, try to find a shortcut set that is explicitly assigned
   // to this user.
@@ -343,7 +343,7 @@ function shortcut_current_displayed_set($account = NULL) {
     $shortcut_set = shortcut_default_set($account);
   }
 
-  $shortcut_sets[$account->uid] = $shortcut_set;
+  $shortcut_sets[$account->id()] = $shortcut_set;
   return $shortcut_set;
 }
 
@@ -573,19 +573,4 @@ function shortcut_library_info() {
   );
 
   return $libraries;
-}
-
-/**
- * Implements hook_local_actions.
- */
-function shortcut_local_actions() {
-  return array(
-    array(
-      'route_name' => 'shortcut_set_add',
-      'title' => t('Add shortcut set'),
-      'appears_on' => array(
-        'shortcut_set_admin',
-      ),
-    ),
-  );
 }

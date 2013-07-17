@@ -100,7 +100,7 @@ class Boolean extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
   }
 
-  function render($values) {
+  public function render($values) {
     $value = $this->getValue($values);
     if (!empty($this->options['not'])) {
       $value = !$value;

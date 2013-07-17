@@ -115,7 +115,7 @@ class PathLanguageTest extends PathTestBase {
 
     // Change user language preference.
     $edit = array('preferred_langcode' => 'fr');
-    $this->drupalPost("user/{$this->web_user->uid}/edit", $edit, t('Save'));
+    $this->drupalPost("user/" . $this->web_user->id() . "/edit", $edit, t('Save'));
 
     // Check that the English alias works. In this situation French is the
     // current UI and content language, while URL language is English (since we

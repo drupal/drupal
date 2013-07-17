@@ -622,18 +622,14 @@ function node_views_data() {
 /**
  * Implements hook_preprocess_node().
  */
-function node_row_node_view_preprocess_node(&$vars) {
-  $node = $vars['node'];
-  $options = $vars['view']->rowPlugin->options;
-
-  // Prevent the comment form from showing up if this is not a page display.
-  if ($vars['view_mode'] == 'full' && !$vars['view']->display_handler->hasPath()) {
-    $node->comment = FALSE;
-  }
+function node_row_node_view_preprocess_node(&$variables) {
+  $node = $variables['node'];
+  $options = $variables['view']->rowPlugin->options;
 
   if (!$options['links']) {
-    unset($vars['content']['links']);
+    unset($variables['content']['links']);
   }
+
 }
 
 /**

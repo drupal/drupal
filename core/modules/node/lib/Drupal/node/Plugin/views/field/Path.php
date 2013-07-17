@@ -53,7 +53,7 @@ class Path extends FieldPluginBase {
     $this->addAdditionalFields();
   }
 
-  function render($values) {
+  public function render($values) {
     $nid = $this->getValue($values, 'nid');
     return url("node/$nid", array('absolute' => $this->options['absolute']));
   }

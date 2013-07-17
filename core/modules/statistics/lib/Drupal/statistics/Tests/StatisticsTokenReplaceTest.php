@@ -30,7 +30,7 @@ class StatisticsTokenReplaceTest extends StatisticsTestBase {
     // Create user and node.
     $user = $this->drupalCreateUser(array('create page content'));
     $this->drupalLogin($user);
-    $node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $user->uid));
+    $node = $this->drupalCreateNode(array('type' => 'page', 'uid' => $user->id()));
 
     // Hit the node.
     $this->drupalGet('node/' . $node->nid);

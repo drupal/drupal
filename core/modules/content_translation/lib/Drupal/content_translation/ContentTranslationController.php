@@ -410,7 +410,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
 
     // @todo Use the entity setter when all entities support multilingual
     // properties.
-    $translation['uid'] = !empty($values['name']) && ($account = user_load_by_name($values['name'])) ? $account->uid : 0;
+    $translation['uid'] = !empty($values['name']) && ($account = user_load_by_name($values['name'])) ? $account->id() : 0;
     $translation['status'] = !empty($values['status']);
     $translation['created'] = !empty($values['created']) ? strtotime($values['created']) : REQUEST_TIME;
     $translation['changed'] = REQUEST_TIME;

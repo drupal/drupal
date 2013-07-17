@@ -65,7 +65,7 @@ function hook_user_load($users) {
  */
 function hook_user_predelete($account) {
   db_delete('mytable')
-    ->condition('uid', $account->uid)
+    ->condition('uid', $account->id())
     ->execute();
 }
 
@@ -121,7 +121,7 @@ function hook_user_cancel($edit, $account, $method) {
       module_load_include('inc', 'node', 'node.admin');
       $nodes = db_select('node_field_data', 'n')
         ->fields('n', array('nid'))
-        ->condition('uid', $account->uid)
+        ->condition('uid', $account->id())
         ->execute()
         ->fetchCol();
       node_mass_update($nodes, array('status' => 0), NULL, TRUE);
@@ -132,14 +132,14 @@ function hook_user_cancel($edit, $account, $method) {
       module_load_include('inc', 'node', 'node.admin');
       $nodes = db_select('node_field_data', 'n')
         ->fields('n', array('nid'))
-        ->condition('uid', $account->uid)
+        ->condition('uid', $account->id())
         ->execute()
         ->fetchCol();
       node_mass_update($nodes, array('uid' => 0), NULL, TRUE);
       // Anonymize old revisions.
       db_update('node_field_revision')
         ->fields(array('uid' => 0))
-        ->condition('uid', $account->uid)
+        ->condition('uid', $account->id())
         ->execute();
       break;
   }
@@ -200,8 +200,8 @@ function hook_user_cancel_methods_alter(&$methods) {
  */
 function hook_user_format_name_alter(&$name, $account) {
   // Display the user's uid instead of name.
-  if (isset($account->uid)) {
-    $name = t('User !uid', array('!uid' => $account->uid));
+  if ($account->id()) {
+    $name = t('User !uid', array('!uid' => $account->id()));
   }
 }
 
@@ -244,7 +244,7 @@ function hook_user_presave($account) {
 function hook_user_insert($account) {
   db_insert('user_changes')
     ->fields(array(
-      'uid' => $account->uid,
+      'uid' => $account->id(),
       'created' => time(),
     ))
     ->execute();
@@ -271,7 +271,7 @@ function hook_user_insert($account) {
 function hook_user_update($account) {
   db_insert('user_changes')
     ->fields(array(
-      'uid' => $account->uid,
+      'uid' => $account->id(),
       'changed' => time(),
     ))
     ->execute();
@@ -287,7 +287,7 @@ function hook_user_login($account) {
   $config = config('system.timezone');
   // If the user has a NULL time zone, notify them to set a time zone.
   if (!$account->timezone && $config->get('user.configurable') && $config->get('user.warn')) {
-    drupal_set_message(t('Configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => url("user/$account->uid/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
+    drupal_set_message(t('Configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => url("user/" . $account->id() . "/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
   }
 }
 
@@ -300,7 +300,7 @@ function hook_user_login($account) {
 function hook_user_logout($account) {
   db_insert('logouts')
     ->fields(array(
-      'uid' => $account->uid,
+      'uid' => $account->id(),
       'time' => time(),
     ))
     ->execute();

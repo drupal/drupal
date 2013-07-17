@@ -269,11 +269,11 @@ abstract class WebTestBase extends TestBase {
     // logged in user if available, or else the user running the test.
     if (!isset($settings['uid'])) {
       if ($this->loggedInUser) {
-        $settings['uid'] = $this->loggedInUser->uid;
+        $settings['uid'] = $this->loggedInUser->id();
       }
       else {
         global $user;
-        $settings['uid'] = $user->uid;
+        $settings['uid'] = $user->id();
       }
     }
 
@@ -487,8 +487,8 @@ abstract class WebTestBase extends TestBase {
     $account = entity_create('user', $edit);
     $account->save();
 
-    $this->assertTrue(!empty($account->uid), String::format('User created with name %name and pass %pass', array('%name' => $edit['name'], '%pass' => $edit['pass'])), 'User login');
-    if (empty($account->uid)) {
+    $this->assertTrue($account->id(), String::format('User created with name %name and pass %pass', array('%name' => $edit['name'], '%pass' => $edit['pass'])), 'User login');
+    if (!$account->id()) {
       return FALSE;
     }
 
@@ -610,7 +610,7 @@ abstract class WebTestBase extends TestBase {
    *   $this->drupalLogin($account);
    *   // Load real user object.
    *   $pass_raw = $account->pass_raw;
-   *   $account = user_load($account->uid);
+   *   $account = user_load($account->id());
    *   $account->pass_raw = $pass_raw;
    * @endcode
    *

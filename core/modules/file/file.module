@@ -400,7 +400,7 @@ function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
   }
 
   // Save a query by only calling spaceUsed() when a limit is provided.
-  if ($user_limit && (Drupal::entityManager()->getStorageController('file')->spaceUsed($user->uid) + $file->getSize()) > $user_limit) {
+  if ($user_limit && (Drupal::entityManager()->getStorageController('file')->spaceUsed($user->id()) + $file->getSize()) > $user_limit) {
     $errors[] = t('The file is %filesize which would exceed your disk quota of %quota.', array('%filesize' => format_size($file->getSize()), '%quota' => format_size($user_limit)));
   }
 
@@ -525,7 +525,7 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
     // Create a file entity.
     $file = entity_create('file', array(
       'uri' => $uri,
-      'uid' => $user->uid,
+      'uid' => $user->id(),
       'status' => FILE_STATUS_PERMANENT,
     ));
     // If we are replacing an existing file re-use its database record.
@@ -635,7 +635,7 @@ function file_file_download($uri, $field_type = 'file') {
   // temporary files where the host entity has not yet been saved (for example,
   // an image preview on a node/add form) in which case, allow download by the
   // file's owner.
-  if (empty($references) && ($file->isPermanent() || $file->getOwner()->id() != $user->uid)) {
+  if (empty($references) && ($file->isPermanent() || $file->getOwner()->id() != $user->id())) {
     return;
   }
 

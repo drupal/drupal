@@ -62,7 +62,7 @@ class CancelUser extends ActionBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   public function executeMultiple(array $entities) {
-    $this->tempStoreFactory->get('user_user_operations_cancel')->set($GLOBALS['user']->uid, $entities);
+    $this->tempStoreFactory->get('user_user_operations_cancel')->set($GLOBALS['user']->id(), $entities);
   }
 
   /**

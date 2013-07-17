@@ -61,9 +61,7 @@ class AddItem extends ViewsFormBase {
     );
 
     $executable = $view->get('executable');
-    if (!$executable->setDisplay($display_id)) {
-      views_ajax_error(t('Invalid display id @display', array('@display' => $display_id)));
-    }
+    $executable->setDisplay($display_id);
     $display = &$executable->displayHandlers->get($display_id);
 
     $types = ViewExecutable::viewsHandlerTypes();

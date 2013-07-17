@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains Drupal\Core\Access\AccessManager.
@@ -34,6 +35,20 @@ class AccessManager extends ContainerAware {
   protected $checks;
 
   /**
+   * An array to map static requirement keys to service IDs.
+   *
+   * @var array
+   */
+  protected $staticRequirementMap;
+
+  /**
+   * An array to map dynamic requirement keys to service IDs.
+   *
+   * @var array
+   */
+  protected $dynamicRequirementMap;
+
+  /**
    * Registers a new AccessCheck by service ID.
    *
    * @param string $service_id
@@ -50,9 +65,9 @@ class AccessManager extends ContainerAware {
    *   A collection of routes to apply checks to.
    */
   public function setChecks(RouteCollection $routes) {
+    $this->loadAccessRequirementMap();
     foreach ($routes as $route) {
-      $checks = $this->applies($route);
-      if (!empty($checks)) {
+      if ($checks = $this->applies($route)) {
         $route->setOption('_access_checks', $checks);
       }
     }
@@ -71,13 +86,21 @@ class AccessManager extends ContainerAware {
   protected function applies(Route $route) {
     $checks = array();
 
-    foreach ($this->checkIds as $service_id) {
-      if (empty($this->checks[$service_id])) {
-        $this->loadCheck($service_id);
+    // Iterate through map requirements from appliesTo() on access checkers.
+    // Only iterate through all checkIds if this is not used.
+    foreach ($route->getRequirements() as $key => $value) {
+      if (isset($this->staticRequirementMap[$key])) {
+        foreach ($this->staticRequirementMap[$key] as $service_id) {
+          $checks[] = $service_id;
+        }
       }
-
-      if ($this->checks[$service_id]->applies($route)) {
-        $checks[] = $service_id;
+      // This means appliesTo() method was empty. Iterate through all checkers.
+      else {
+        foreach ($this->dynamicRequirementMap as $service_id) {
+          if ($this->checks[$service_id]->applies($route)) {
+            $checks[] = $service_id;
+          }
+        }
       }
     }
 
@@ -135,7 +158,7 @@ class AccessManager extends ContainerAware {
       }
 
       $service_access = $this->checks[$service_id]->access($route, $request);
-      if ($service_access === AccessCheckInterface::ALLOW) {
+      if ($service_access === AccessInterface::ALLOW) {
         $access = TRUE;
       }
       else {
@@ -171,10 +194,10 @@ class AccessManager extends ContainerAware {
       }
 
       $service_access = $this->checks[$service_id]->access($route, $request);
-      if ($service_access === AccessCheckinterface::ALLOW) {
+      if ($service_access === AccessInterface::ALLOW) {
         $access = TRUE;
       }
-      if ($service_access === AccessCheckInterface::KILL) {
+      if ($service_access === AccessInterface::KILL) {
         return FALSE;
       }
     }
@@ -194,6 +217,36 @@ class AccessManager extends ContainerAware {
     }
 
     $this->checks[$service_id] = $this->container->get($service_id);
+  }
+
+  /**
+   * Compiles a mapping of requirement keys to access checker service IDs.
+   */
+  public function loadAccessRequirementMap() {
+    if (isset($this->staticRequirementMap, $this->dynamicRequirementMap)) {
+      return;
+    }
+
+    // Set them here, so we can use the isset() check above.
+    $this->staticRequirementMap = array();
+    $this->dynamicRequirementMap = array();
+
+    foreach ($this->checkIds as $service_id) {
+      if (empty($this->checks[$service_id])) {
+        $this->loadCheck($service_id);
+      }
+
+      // Empty arrays will not register anything.
+      if (is_subclass_of($this->checks[$service_id], 'Drupal\Core\Access\StaticAccessCheckInterface')) {
+        foreach ((array) $this->checks[$service_id]->appliesTo() as $key) {
+          $this->staticRequirementMap[$key][] = $service_id;
+        }
+      }
+      // Add the service ID to a the regular that will be iterated over.
+      else {
+        $this->dynamicRequirementMap[] = $service_id;
+      }
+    }
   }
 
 }

@@ -32,8 +32,8 @@ class UserController extends ContainerAware {
    */
   public function userPage(Request $request) {
     global $user;
-    if ($user->uid) {
-      $response = new RedirectResponse(url('user/' . $user->uid, array('absolute' => TRUE)));
+    if ($user->id()) {
+      $response = new RedirectResponse(url('user/' . $user->id(), array('absolute' => TRUE)));
     }
     else {
       $response = drupal_get_form(UserLoginForm::create($this->container), $request);

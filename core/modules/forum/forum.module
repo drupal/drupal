@@ -200,7 +200,7 @@ function forum_menu_local_tasks(&$data, $router_item, $root_path) {
       }
       if (empty($links)) {
         // Authenticated user does not have access to create new topics.
-        if ($user->uid) {
+        if ($user->isAuthenticated()) {
           $links['disallowed'] = array(
             '#theme' => 'menu_local_action',
             '#link' => array(
@@ -919,7 +919,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $topics = array();
   $first_new_found = FALSE;
   foreach ($result as $topic) {
-    if ($user->uid) {
+    if ($user->isAuthenticated()) {
       // A forum is new if the topic is new, or if there are new comments since
       // the user's last visit.
       if ($topic->forum_tid != $tid) {
@@ -1067,8 +1067,8 @@ function template_preprocess_forum_list(&$variables) {
     $variables['forums'][$id]->old_topics = $forum->num_topics;
     $variables['forums'][$id]->icon_class = 'default';
     $variables['forums'][$id]->icon_title = t('No new posts');
-    if ($user->uid) {
-      $variables['forums'][$id]->new_topics = _forum_topics_unread($forum->id(), $user->uid);
+    if ($user->isAuthenticated()) {
+      $variables['forums'][$id]->new_topics = _forum_topics_unread($forum->id(), $user->id());
       if ($variables['forums'][$id]->new_topics) {
         $variables['forums'][$id]->new_text = format_plural($variables['forums'][$id]->new_topics, '1 new post<span class="visually-hidden"> in forum %title</span>', '@count new posts<span class="visually-hidden"> in forum %title</span>', array('%title' => $variables['forums'][$id]->label()));
         $variables['forums'][$id]->new_url = url('forum/' . $forum->id(), array('fragment' => 'new'));
@@ -1237,7 +1237,7 @@ function _forum_user_last_visit($nid) {
   $history = &drupal_static(__FUNCTION__, array());
 
   if (empty($history)) {
-    $result = db_query('SELECT nid, timestamp FROM {history} WHERE uid = :uid', array(':uid' => $user->uid));
+    $result = db_query('SELECT nid, timestamp FROM {history} WHERE uid = :uid', array(':uid' => $user->id()));
     foreach ($result as $t) {
       $history[$t->nid] = $t->timestamp > HISTORY_READ_LIMIT ? $t->timestamp : HISTORY_READ_LIMIT;
     }

@@ -128,6 +128,23 @@ system.filter:
         - type: string
           label: 'Protocol'
 
+system.language.types:
+  type: mapping
+  label: 'Language types'
+  mapping:
+    all:
+      type: sequence
+      label: 'All language types'
+      sequence:
+        - type: string
+          label: 'Language type'
+    configurable:
+      type: sequence
+      label: 'Configurable language types'
+      sequence:
+        - type: string
+          label: 'Language type'
+
 system.logging:
   type: mapping
   label: 'Logging settings'

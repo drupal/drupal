@@ -17,13 +17,13 @@ use Drupal\Core\Entity\EntityInterface;
 function node_access_test_node_grants($account, $op) {
   $grants = array();
   // First grant a grant to the author for own content.
-  $grants['node_access_test_author'] = array($account->uid);
+  $grants['node_access_test_author'] = array($account->id());
   if ($op == 'view' && user_access('node test view', $account)) {
     $grants['node_access_test'] = array(8888, 8889);
   }
 
   $no_access_uid = Drupal::state()->get('node_access_test.no_access_uid') ?: 0;
-  if ($op == 'view' && $account->uid == $no_access_uid) {
+  if ($op == 'view' && $account->id() == $no_access_uid) {
     $grants['node_access_all'] = array(0);
   }
   return $grants;

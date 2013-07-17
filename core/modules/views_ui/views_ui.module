@@ -25,29 +25,23 @@ function views_ui_menu() {
     'route_name' => 'views_ui.list',
   );
 
-  $items['admin/structure/views/list'] = array(
-    'title' => 'List',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-
   $items['admin/structure/views/add'] = array(
     'route_name' => 'views_ui.add',
     'type' => MENU_SIBLING_LOCAL_TASK,
   );
 
+  // @todo - remove all items of type MENU_VISIBLE_IN_BREADCRUMB
+  // when there is a route-aware breadcrumb builder.
   $items['admin/structure/views/settings'] = array(
     'title' => 'Settings',
     'route_name' => 'views_ui.settings.basic',
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
-  $items['admin/structure/views/settings/basic'] = array(
-    'title' => 'Basic',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
+
   $items['admin/structure/views/settings/advanced'] = array(
     'title' => 'Advanced',
     'route_name' => 'views_ui.settings.advanced',
-    'type' => MENU_LOCAL_TASK,
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
 
   // The primary Edit View page. Secondary tabs for each Display are added in
@@ -110,21 +104,6 @@ function views_ui_entity_info(&$entity_info) {
       'clone' => 'Drupal\views_ui\ViewCloneFormController',
       'delete' => 'Drupal\views_ui\ViewDeleteFormController',
       'break_lock' => 'Drupal\views_ui\Form\BreakLockForm',
-    ),
-  );
-}
-
-/**
- * Implements hook_local_actions().
- */
-function views_ui_local_actions() {
-  return array(
-    array(
-      'route_name' => 'views_ui.add',
-      'title' => t('Add new view'),
-      'appears_on' => array(
-        'views_ui.list',
-      ),
     ),
   );
 }
@@ -233,21 +212,21 @@ function views_ui_library_info() {
 /**
  * Implements hook_preprocess_HOOK() for views-view.html.twig.
  */
-function views_ui_preprocess_views_view(&$vars) {
-  $view = $vars['view'];
+function views_ui_preprocess_views_view(&$variables) {
+  $view = $variables['view'];
   if (!empty($view->live_preview) && Drupal::moduleHandler()->moduleExists('contextual')) {
     $view->setShowAdminLinks(FALSE);
     foreach (array('title', 'header', 'exposed', 'rows', 'pager', 'more', 'footer', 'empty', 'attachment_after', 'attachment_before') as $section) {
-      if (!empty($vars[$section])) {
-        $vars[$section] = array(
+      if (!empty($variables[$section])) {
+        $variables[$section] = array(
           '#theme' => 'views_ui_view_preview_section',
           '#view' => $view,
           '#section' => $section,
-          '#content' => $vars[$section],
+          '#content' => $variables[$section],
           '#theme_wrappers' => array('views_ui_container'),
           '#attributes' => array('class' => 'contextual-region'),
         );
-        $vars[$section] = $vars[$section];
+        $variables[$section] = $variables[$section];
       }
     }
   }

@@ -77,7 +77,7 @@ abstract class CommentTestBase extends WebTestBase {
     comment_add_default_comment_field('node', 'article');
 
     // Create a test node authored by the web user.
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->uid));
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->id()));
   }
 
   /**

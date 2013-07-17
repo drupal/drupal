@@ -87,7 +87,7 @@ class Rss extends RowPluginBase {
     return $options;
   }
 
-  function render($row) {
+  public function render($row) {
     global $base_url;
 
     $cid = $row->{$this->field_alias};

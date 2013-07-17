@@ -640,7 +640,7 @@ function user_update_8011() {
         'uri' => $destination,
       ))
       ->fields(array(
-        'uid' => $user->uid,
+        'uid' => $user->id(),
         'status' => FILE_STATUS_PERMANENT,
         'filename' => drupal_basename($destination),
         'uuid' => $uuid->generate(),
@@ -800,7 +800,7 @@ function user_update_8012(&$sandbox) {
 
       // Update file usage from user to file module.
       // @see file_field_insert()
-      // Old: file_usage_add($picture, 'user', 'user', $entity->uid);
+      // Old: file_usage_add($picture, 'user', 'user', $entity->id();
       // New: file_usage_add(file_load($item['fid']), 'file', $entity_type, $id);
       db_update('file_usage')
         ->condition('fid', $fid)

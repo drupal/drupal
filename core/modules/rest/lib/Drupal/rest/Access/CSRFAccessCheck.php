@@ -21,6 +21,7 @@ class CSRFAccessCheck implements AccessCheckInterface {
    */
   public function applies(Route $route) {
     $requirements = $route->getRequirements();
+
     if (array_key_exists('_access_rest_csrf', $requirements)) {
       if (isset($requirements['_method'])) {
         // There could be more than one method requirement separated with '|'.
@@ -36,7 +37,6 @@ class CSRFAccessCheck implements AccessCheckInterface {
       // safe side.
       return TRUE;
     }
-    return FALSE;
   }
 
   /**

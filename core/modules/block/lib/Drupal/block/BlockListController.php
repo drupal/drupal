@@ -9,6 +9,7 @@ namespace Drupal\block;
 
 use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\block\Plugin\Core\Entity\Block;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormInterface;
 
 /**
@@ -148,6 +149,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
         'admin_label' => $definition['admin_label'],
         'entity_id' => $entity_id,
         'weight' => $entity->get('weight'),
+        'entity' => $entity,
       );
     }
 
@@ -240,18 +242,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
               'class' => array('block-weight', 'block-weight-' . $region),
             ),
           );
-          $links['configure'] = array(
-            'title' => t('configure'),
-            'href' => 'admin/structure/block/manage/' . $entity_id,
-          );
-          $links['delete'] = array(
-            'title' => t('delete'),
-            'href' => 'admin/structure/block/manage/' . $entity_id . '/delete',
-          );
-          $form['blocks'][$entity_id]['operations'] = array(
-            '#type' => 'operations',
-            '#links' => $links,
-          );
+          $form['blocks'][$entity_id]['operations'] = $this->buildOperations($info['entity']);
         }
       }
     }
@@ -271,6 +262,26 @@ class BlockListController extends ConfigEntityListController implements FormInte
       '#button_type' => 'primary',
     );
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOperations(EntityInterface $entity) {
+    $uri = $entity->uri();
+    $operations = array();
+    $operations['configure'] = array(
+      'title' => t('configure'),
+      'href' => $uri['path'],
+      'options' => $uri['options'],
+    );
+    $operations['delete'] = array(
+      'title' => t('delete'),
+      'href' => $uri['path'] . '/delete',
+      'options' => $uri['options'],
+    );
+
+    return $operations;
   }
 
   /**

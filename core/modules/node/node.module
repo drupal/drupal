@@ -281,7 +281,7 @@ function node_mark($nid, $timestamp) {
   global $user;
   $cache = &drupal_static(__FUNCTION__, array());
 
-  if (!$user->uid || !module_exists('history')) {
+  if ($user->isAnonymous() || !module_exists('history')) {
     return MARK_READ;
   }
   if (!isset($cache[$nid])) {
@@ -1015,7 +1015,7 @@ function node_user_cancel($edit, $account, $method) {
       $nodes = db_select('node_field_data', 'n')
         ->distinct()
         ->fields('n', array('nid'))
-        ->condition('uid', $account->uid)
+        ->condition('uid', $account->id())
         ->execute()
         ->fetchCol();
       node_mass_update($nodes, array('status' => 0), NULL, TRUE);
@@ -1027,14 +1027,14 @@ function node_user_cancel($edit, $account, $method) {
       $nodes = db_select('node_field_data', 'n')
         ->distinct()
         ->fields('n', array('nid'))
-        ->condition('uid', $account->uid)
+        ->condition('uid', $account->id())
         ->execute()
         ->fetchCol();
       node_mass_update($nodes, array('uid' => 0), NULL, TRUE);
       // Anonymize old revisions.
       db_update('node_field_revision')
         ->fields(array('uid' => 0))
-        ->condition('uid', $account->uid)
+        ->condition('uid', $account->id())
         ->execute();
       break;
   }
@@ -1049,12 +1049,12 @@ function node_user_predelete($account) {
   $nodes = db_select('node_field_data', 'n')
     ->distinct()
     ->fields('n', array('nid'))
-    ->condition('uid', $account->uid)
+    ->condition('uid', $account->id())
     ->execute()
     ->fetchCol();
   entity_delete_multiple('node', $nodes);
   // Delete old revisions.
-  $revisions = db_query('SELECT DISTINCT vid FROM {node_field_revision} WHERE uid = :uid', array(':uid' => $account->uid))->fetchCol();
+  $revisions = db_query('SELECT DISTINCT vid FROM {node_field_revision} WHERE uid = :uid', array(':uid' => $account->id()))->fetchCol();
   foreach ($revisions as $revision) {
     node_revision_delete($revision);
   }
@@ -1116,64 +1116,7 @@ function theme_node_search_admin($variables) {
  * @see node_menu()
  */
 function _node_revision_access(EntityInterface $node, $op = 'view', $account = NULL, $langcode = NULL) {
-  $access = &drupal_static(__FUNCTION__, array());
-
-  $map = array(
-    'view' => 'view all revisions',
-    'update' => 'revert all revisions',
-    'delete' => 'delete all revisions',
-  );
-  $bundle = $node->bundle();
-  $type_map = array(
-    'view' => "view $bundle revisions",
-    'update' => "revert $bundle revisions",
-    'delete' => "delete $bundle revisions",
-  );
-
-  if (!$node || !isset($map[$op]) || !isset($type_map[$op])) {
-    // If there was no node to check against, or the $op was not one of the
-    // supported ones, we return access denied.
-    return FALSE;
-  }
-
-  if (!isset($account)) {
-    $account = $GLOBALS['user'];
-  }
-
-  // If no language code was provided, default to the node revision's langcode.
-  if (empty($langcode)) {
-    $langcode = $node->language()->id;
-  }
-
-  // Statically cache access by revision ID, language code, user account ID,
-  // and operation.
-  $cid = $node->getRevisionId() . ':' . $langcode . ':' . $account->id() . ':' . $op;
-
-  if (!isset($access[$cid])) {
-    // Perform basic permission checks first.
-    if (!user_access($map[$op], $account) && !user_access($type_map[$op], $account) && !user_access('administer nodes', $account)) {
-      return $access[$cid] = FALSE;
-    }
-
-    // There should be at least two revisions. If the vid of the given node
-    // and the vid of the default revision differ, then we already have two
-    // different revisions so there is no need for a separate database check.
-    // Also, if you try to revert to or delete the default revision, that's
-    // not good.
-    if ($node->isDefaultRevision() && (db_query('SELECT COUNT(*) FROM {node_field_revision} WHERE nid = :nid AND default_langcode = 1', array(':nid' => $node->id()))->fetchField() == 1 || $op == 'update' || $op == 'delete')) {
-      $access[$cid] = FALSE;
-    }
-    elseif (user_access('administer nodes', $account)) {
-      $access[$cid] = TRUE;
-    }
-    else {
-      // First check the access to the default revision and finally, if the
-      // node passed in is not the default revision then access to that, too.
-      $access[$cid] = node_access($op, node_load($node->id()), $account, $langcode) && ($node->isDefaultRevision() || node_access($op, $node, $account, $langcode));
-    }
-  }
-
-  return $access[$cid];
+  return Drupal::service('access_check.node.revision')->checkAccess($node, $op, $account, $langcode);
 }
 
 /**
@@ -1215,17 +1158,6 @@ function node_menu() {
   $items['admin/content/node'] = array(
     'title' => 'Content',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-
-  $items['admin/reports/status/rebuild'] = array(
-    'title' => 'Rebuild permissions',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('node_configure_rebuild_confirm'),
-    // Any user than can potentially trigger a node_access_needs_rebuild(TRUE)
-    // has to be allowed access to the 'node access rebuild' confirm form.
-    'access arguments' => array('access administration pages'),
-    'type' => MENU_CALLBACK,
-    'file' => 'node.admin.inc',
   );
 
   $items['admin/structure/types'] = array(
@@ -1295,14 +1227,10 @@ function node_menu() {
   );
   $items['node/%node/delete'] = array(
     'title' => 'Delete',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('node_delete_confirm', 1),
-    'access callback' => 'node_access',
-    'access arguments' => array('delete', 1),
+    'route_name' => 'node_delete_confirm',
     'weight' => 10,
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
-    'file' => 'node.pages.inc',
   );
   $items['node/%node/revisions'] = array(
     'title' => 'Revisions',
@@ -1323,19 +1251,11 @@ function node_menu() {
   );
   $items['node/%node/revisions/%node_revision/revert'] = array(
     'title' => 'Revert to earlier revision',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('node_revision_revert_confirm', 3),
-    'access callback' => '_node_revision_access',
-    'access arguments' => array(3, 'update'),
-    'file' => 'node.pages.inc',
+    'route_name' => 'node_revision_revert_confirm',
   );
   $items['node/%node/revisions/%node_revision/delete'] = array(
     'title' => 'Delete earlier revision',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('node_revision_delete_confirm', 3),
-    'access callback' => '_node_revision_access',
-    'access arguments' => array(3, 'delete'),
-    'file' => 'node.pages.inc',
+    'route_name' => 'node_revision_delete_confirm',
   );
   return $items;
 }
@@ -1425,7 +1345,7 @@ function node_get_recent($number = 10) {
     // If the user is able to view their own unpublished nodes, allow them
     // to see these in addition to published nodes. Check that they actually
     // have some unpublished nodes to view before adding the condition.
-    if (user_access('view own unpublished content') && $own_unpublished = db_query('SELECT DISTINCT nid FROM {node_field_data} WHERE uid = :uid AND status = :status', array(':uid' => $GLOBALS['user']->uid, ':status' => NODE_NOT_PUBLISHED))->fetchCol()) {
+    if (user_access('view own unpublished content') && $own_unpublished = db_query('SELECT DISTINCT nid FROM {node_field_data} WHERE uid = :uid AND status = :status', array(':uid' => $GLOBALS['user']->id(), ':status' => NODE_NOT_PUBLISHED))->fetchCol()) {
       $query->condition(db_or()
         ->condition('n.status', NODE_PUBLISHED)
         ->condition('n.nid', $own_unpublished, 'IN')
@@ -2108,11 +2028,19 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  * @see node_menu()
  */
 function node_access($op, $node, $account = NULL, $langcode = NULL) {
-  if (!$node instanceof EntityInterface) {
-    $node = entity_create('node', array('type' => $node));
-  }
-  elseif ($node instanceof NodeTypeInterface) {
-    $node = entity_create('node', array('type' => $node->id()));
+  $access_controller = Drupal::entityManager()->getAccessController('node');
+
+  if ($op == 'create') {
+    if (!$node instanceof EntityInterface) {
+      $bundle = $node;
+    }
+    elseif ($node instanceof NodeTypeInterface) {
+      $bundle = $node->id();
+    }
+    else {
+      $bundle = $node->bundle();
+    }
+    return $access_controller->createAccess($bundle, $account, array('langcode' => $langcode));
   }
 
   // If no language code was provided, default to the node's langcode.
@@ -2131,14 +2059,7 @@ function node_access($op, $node, $account = NULL, $langcode = NULL) {
       }
     }
   }
-
-  // Make sure that if an account is passed, that it is a fully loaded user
-  // object.
-  if ($account && !($account instanceof UserInterface)) {
-    $account = user_load($account->uid);
-  }
-
-  return Drupal::entityManager()->getAccessController('node')->access($node, $op, $langcode, $account);
+  return $access_controller->access($node, $op, $langcode, $account);
 }
 
 /**
@@ -2154,13 +2075,13 @@ function node_node_access($node, $op, $account) {
     }
 
     if ($op == 'update') {
-      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->uid == $node->getAuthorId()))) {
+      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->id() == $node->getAuthorId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }
 
     if ($op == 'delete') {
-      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->uid == $node->getAuthorId()))) {
+      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->id() == $node->getAuthorId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }
@@ -2299,21 +2220,21 @@ function node_access_view_all_nodes($account = NULL) {
     $account = $user;
   }
 
-  // Statically cache results in an array keyed by $account->uid.
+  // Statically cache results in an array keyed by $account->id().
   $access = &drupal_static(__FUNCTION__);
-  if (isset($access[$account->uid])) {
-    return $access[$account->uid];
+  if (isset($access[$account->id()])) {
+    return $access[$account->id()];
   }
 
   // If no modules implement the node access system, access is always TRUE.
   if (!module_implements('node_grants')) {
-    $access[$account->uid] = TRUE;
+    $access[$account->id()] = TRUE;
   }
   else {
-    $access[$account->uid] = Drupal::entityManager()->getAccessController('node')->checkAllGrants($account);
+    $access[$account->id()] = Drupal::entityManager()->getAccessController('node')->checkAllGrants($account);
   }
 
-  return $access[$account->uid];
+  return $access[$account->id()];
 }
 
 

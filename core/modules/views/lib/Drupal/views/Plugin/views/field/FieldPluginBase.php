@@ -1097,7 +1097,7 @@ abstract class FieldPluginBase extends HandlerBase {
    * @param $values
    *   The values retrieved from the database.
    */
-  function render($values) {
+  public function render($values) {
     $value = $this->getValue($values);
     return $this->sanitizeValue($value);
   }

@@ -80,7 +80,7 @@ class Full extends SqlBase {
   /**
    * Overrides \Drupal\views\Plugin\views\pager\PagerPluginBase::render().
    */
-  function render($input) {
+  public function render($input) {
     $pager_theme = $this->view->buildThemeFunctions('pager');
     // The 0, 1, 3, 4 indexes are correct. See the template_preprocess_pager()
     // documentation.

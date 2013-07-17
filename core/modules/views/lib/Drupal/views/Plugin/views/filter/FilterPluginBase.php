@@ -550,7 +550,6 @@ abstract class FilterPluginBase extends HandlerBase {
             ':input[name="options[expose][use_operator]"]' => array('checked' => TRUE),
           ),
         ),
-        '#fieldset' => 'more',
       );
     }
     else {
@@ -595,7 +594,6 @@ abstract class FilterPluginBase extends HandlerBase {
       '#title' => t('Filter identifier'),
       '#size' => 40,
       '#description' => t('This will appear in the URL after the ? to identify this filter. Cannot be blank.'),
-      '#fieldset' => 'more',
     );
   }
 
@@ -854,7 +852,6 @@ abstract class FilterPluginBase extends HandlerBase {
       '#title' => t('Filter identifier'),
       '#size' => 40,
       '#description' => t('This will appear in the URL after the ? to identify this filter. Cannot be blank.'),
-      '#fieldset' => 'more',
     );
     $form['group_info']['label'] = array(
       '#type' => 'textfield',
@@ -909,7 +906,6 @@ abstract class FilterPluginBase extends HandlerBase {
       '#title' => t('Filter identifier'),
       '#size' => 40,
       '#description' => t('This will appear in the URL after the ? to identify this filter. Cannot be blank.'),
-      '#fieldset' => 'more',
     );
     $form['group_info']['label'] = array(
       '#type' => 'textfield',
@@ -1233,7 +1229,7 @@ abstract class FilterPluginBase extends HandlerBase {
         $input[$this->options['expose']['operator']] = $this->options['group_info']['group_items'][$selected_group]['operator'];
 
         // Value can be optional, For example for 'empty' and 'not empty' filters.
-        if (!empty($this->options['group_info']['group_items'][$selected_group]['value'])) {
+        if (isset($this->options['group_info']['group_items'][$selected_group]['value']) && $this->options['group_info']['group_items'][$selected_group]['value'] != '') {
           $input[$this->options['expose']['identifier']] = $this->options['group_info']['group_items'][$selected_group]['value'];
         }
         $this->options['expose']['use_operator'] = TRUE;

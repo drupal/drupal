@@ -49,7 +49,7 @@ class AccessDeniedTest extends WebTestBase {
     // Use a custom 403 page.
     $this->drupalLogin($this->admin_user);
     $edit = array(
-      'site_403' => 'user/' . $this->admin_user->uid,
+      'site_403' => 'user/' . $this->admin_user->id(),
     );
     $this->drupalPost('admin/config/system/site-information', $edit, t('Save configuration'));
 

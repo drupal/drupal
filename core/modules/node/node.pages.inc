@@ -87,7 +87,7 @@ function node_add($node_type) {
   $type = $node_type->type;
   $langcode = module_invoke('language', 'get_default_langcode', 'node', $type);
   $node = entity_create('node', array(
-    'uid' => $user->uid,
+    'uid' => $user->id(),
     'name' => (isset($user->name) ? $user->name : ''),
     'type' => $type,
     'langcode' => $langcode ? $langcode : language_default()->id,
@@ -114,7 +114,7 @@ function node_preview(EntityInterface $node) {
       // The use of isset() is mandatory in the context of user IDs, because
       // user ID 0 denotes the anonymous user.
       if ($user = user_load_by_name($node->name)) {
-        $node->uid = $user->uid;
+        $node->uid = $user->id();
       }
       else {
         $node->uid = 0; // anonymous user
@@ -178,44 +178,6 @@ function theme_node_preview($variables) {
   }
 
   return $output;
-}
-
-/**
- * Page callback: Form constructor for node deletion confirmation form.
- *
- * @param object $node
- *   A node object.
- *
- * @return array
- *   A form array.
- *
- * @see node_delete_confirm_submit()
- * @see node_menu()
- */
-function node_delete_confirm($form, &$form_state, $node) {
-  // Always provide entity id in the same form key as in the entity edit form.
-  $form['nid'] = array('#type' => 'value', '#value' => $node->nid);
-  return confirm_form($form,
-    t('Are you sure you want to delete %title?', array('%title' => $node->label())),
-    'node/' . $node->nid,
-    t('This action cannot be undone.'),
-    t('Delete'),
-    t('Cancel')
-  );
-}
-
-/**
- * Form submission handler for node_delete_confirm().
- */
-function node_delete_confirm_submit($form, &$form_state) {
-  if ($form_state['values']['confirm']) {
-    $node = node_load($form_state['values']['nid']);
-    $node->delete();
-    watchdog('content', '@type: deleted %title.', array('@type' => $node->type, '%title' => $node->label()));
-    drupal_set_message(t('@type %title has been deleted.', array('@type' => node_get_type_label($node), '%title' => $node->label())));
-  }
-
-  $form_state['redirect'] = '<front>';
 }
 
 /**
@@ -299,81 +261,4 @@ function node_revision_overview($node) {
   );
 
   return $build;
-}
-
-/**
- * Page callback: Form constructor for the reversion confirmation form.
- *
- * This form prevents against CSRF attacks.
- *
- * @param int $node_revision
- *   The node revision ID.
- *
- * @return array
- *   An array as expected by drupal_render().
- *
- * @see node_menu()
- * @see node_revision_revert_confirm_submit()
- * @ingroup forms
- */
-function node_revision_revert_confirm($form, $form_state, $node_revision) {
-  $form['#node_revision'] = $node_revision;
-  return confirm_form($form, t('Are you sure you want to revert to the revision from %revision-date?', array('%revision-date' => format_date($node_revision->revision_timestamp))), 'node/' . $node_revision->nid . '/revisions', '', t('Revert'), t('Cancel'));
-}
-
-/**
- * Form submission handler for node_revision_revert_confirm().
- */
-function node_revision_revert_confirm_submit($form, &$form_state) {
-  $node_revision = $form['#node_revision'];
-  $node_revision->setNewRevision();
-  // Make this the new default revision for the node.
-  $node_revision->isDefaultRevision(TRUE);
-
-  // The revision timestamp will be updated when the revision is saved. Keep the
-  // original one for the confirmation message.
-  $original_revision_timestamp = $node_revision->revision_timestamp;
-
-  $node_revision->log = t('Copy of the revision from %date.', array('%date' => format_date($original_revision_timestamp)));
-
-  $node_revision->save();
-
-  watchdog('content', '@type: reverted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->label(), '%revision' => $node_revision->vid));
-  drupal_set_message(t('@type %title has been reverted back to the revision from %revision-date.', array('@type' => node_get_type_label($node_revision), '%title' => $node_revision->label(), '%revision-date' => format_date($original_revision_timestamp))));
-  $form_state['redirect'] = 'node/' . $node_revision->nid . '/revisions';
-}
-
-/**
- * Page callback: Form constructor for the revision deletion confirmation form.
- *
- * This form prevents against CSRF attacks.
- *
- * @param $node_revision
- *   The node revision ID.
- *
- * @return
- *   An array as expected by drupal_render().
- *
- * @see node_menu()
- * @see node_revision_delete_confirm_submit()
- * @ingroup forms
- */
-function node_revision_delete_confirm($form, $form_state, $node_revision) {
-  $form['#node_revision'] = $node_revision;
-  return confirm_form($form, t('Are you sure you want to delete the revision from %revision-date?', array('%revision-date' => format_date($node_revision->revision_timestamp))), 'node/' . $node_revision->nid . '/revisions', t('This action cannot be undone.'), t('Delete'), t('Cancel'));
-}
-
-/**
- * Form submission handler for node_revision_delete_confirm().
- */
-function node_revision_delete_confirm_submit($form, &$form_state) {
-  $node_revision = $form['#node_revision'];
-  node_revision_delete($node_revision->vid);
-
-  watchdog('content', '@type: deleted %title revision %revision.', array('@type' => $node_revision->type, '%title' => $node_revision->label(), '%revision' => $node_revision->vid));
-  drupal_set_message(t('Revision from %revision-date of @type %title has been deleted.', array('%revision-date' => format_date($node_revision->revision_timestamp), '@type' => node_get_type_label($node_revision), '%title' => $node_revision->label())));
-  $form_state['redirect'] = 'node/' . $node_revision->nid;
-  if (db_query('SELECT COUNT(DISTINCT vid) FROM {node_field_revision} WHERE nid = :nid', array(':nid' => $node_revision->nid))->fetchField() > 1) {
-    $form_state['redirect'] .= '/revisions';
-  }
 }

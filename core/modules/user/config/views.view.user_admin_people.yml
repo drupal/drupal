@@ -802,7 +802,7 @@ display:
           exposed: '1'
           expose:
             operator_id: ''
-            label: Active
+            label: ''
             description: ''
             use_operator: '0'
             operator: status_op
@@ -814,18 +814,26 @@ display:
               authenticated: authenticated
               anonymous: '0'
               administrator: '0'
-          is_grouped: '0'
+          is_grouped: '1'
           group_info:
-            label: ''
+            label: 'Status'
             description: ''
-            identifier: ''
+            identifier: status
             optional: '1'
             widget: select
             multiple: '0'
             remember: '0'
             default_group: All
             default_group_multiple: {  }
-            group_items: {  }
+            group_items:
+              1:
+                title: Active
+                operator: '='
+                value: '1'
+              2:
+                title: Blocked
+                operator: '='
+                value: '0'
           plugin_id: boolean
           provider: views
         uid_raw:

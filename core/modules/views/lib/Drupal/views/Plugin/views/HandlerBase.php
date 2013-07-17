@@ -280,21 +280,34 @@ abstract class HandlerBase extends PluginBase {
     // be moved to their fieldset during preRender.
     $form['#pre_render'][] = 'views_ui_pre_render_add_fieldset_markup';
 
+    parent::buildOptionsForm($form, $form_state);
+
+    $form['fieldsets'] = array(
+      '#type' => 'value',
+      '#value' => array('more', 'admin_label'),
+    );
+
     $form['admin_label'] = array(
+      '#type' => 'details',
+      '#title' => t('Administrative title'),
+      '#collapsed' => TRUE,
+      '#weight' => 150,
+    );
+    $form['admin_label']['admin_label'] = array(
       '#type' => 'textfield',
       '#title' => t('Administrative title'),
       '#description' => t('This title will be displayed on the views edit page instead of the default one. This might be useful if you have the same item twice.'),
       '#default_value' => $this->options['admin_label'],
-      '#fieldset' => 'more',
+      '#parents' => array('options', 'admin_label'),
     );
 
     // This form is long and messy enough that the "Administrative title" option
-    // belongs in "more options" details at the bottom of the form.
+    // belongs in "Administrative title" fieldset at the bottom of the form.
     $form['more'] = array(
       '#type' => 'details',
       '#title' => t('More'),
       '#collapsed' => TRUE,
-      '#weight' => 150,
+      '#weight' => 200,
     );
     // Allow to alter the default values brought into the form.
     // @todo Do we really want to keep this hook.

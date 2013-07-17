@@ -56,7 +56,7 @@ class View extends AreaPluginBase {
   /**
    * Implements \Drupal\views\Plugin\views\area\AreaPluginBase::render().
    */
-  function render($empty = FALSE) {
+  public function render($empty = FALSE) {
     if (!empty($this->options['view_to_insert'])) {
       list($view_name, $display_id) = explode(':', $this->options['view_to_insert']);
 

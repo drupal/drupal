@@ -7,20 +7,20 @@
 
 namespace Drupal\shortcut\Access;
 
-use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Access\StaticAccessCheckInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides an access check for shortcut link delete routes.
  */
-class LinkDeleteAccessCheck implements AccessCheckInterface {
+class LinkDeleteAccessCheck implements StaticAccessCheckInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function applies(Route $route) {
-    return array_key_exists('_access_shortcut_link_delete', $route->getRequirements());
+  public function appliesTo() {
+    return array('_access_shortcut_link_delete');
   }
 
   /**

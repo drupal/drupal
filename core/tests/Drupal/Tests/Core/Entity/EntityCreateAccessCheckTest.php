@@ -44,34 +44,16 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
   }
 
   /**
-   * Tests the method for checking if the access check applies to a route.
+   * Tests the appliesTo method for the access checker.
    */
-  public function testApplies() {
+  public function testAppliesTo() {
     $entity_manager = $this->getMockBuilder('Drupal\Core\Entity\EntityManager')
       ->disableOriginalConstructor()
       ->getMock();
 
-    $applies_check = new EntityCreateAccessCheck($entity_manager);
-
-    $route = $this->getMockBuilder('Symfony\Component\Routing\Route')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $route->expects($this->any())
-      ->method('getRequirements')
-      ->will($this->returnValue(array('_entity_create_access' => '')));
-    $res = $applies_check->applies($route);
-    $this->assertEquals(TRUE, $res);
-
-    $route = $this->getMockBuilder('Symfony\Component\Routing\Route')
-      ->disableOriginalConstructor()
-      ->getMock();
-    $route->expects($this->any())
-      ->method('getRequirements')
-      ->will($this->returnValue(array()));
-    $res = $applies_check->applies($route);
-    $this->assertEquals(FALSE, $res);
+    $entity_access = new EntityCreateAccessCheck($entity_manager);
+    $this->assertEquals($entity_access->appliesTo(), array('_entity_create_access'), 'Access checker returned the expected appliesTo() array.');
   }
-
   /**
    * Provides test data for testAccess.
    *
@@ -100,27 +82,12 @@ class EntityCreateAccessCheckTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $entity_manager->expects($this->any())
-      ->method('getDefinition')
-      ->with($this->equalTo('entity_test'))
-      ->will($this->returnValue(array('entity_keys' => array('bundle' => 'type'))));
-
-    $storage_controller = $this->getMock('Drupal\Core\Entity\EntityStorageControllerInterface');
-    $values = $entity_bundle ? array('type' => $entity_bundle) : array();
-    $storage_controller->expects($this->any())
-      ->method('create')
-      ->with($this->equalTo($values))
-      ->will($this->returnValue($entity));
-
     $access_controller = $this->getMock('Drupal\Core\Entity\EntityAccessControllerInterface');
     $access_controller->expects($this->once())
-      ->method('access')
-      ->with($entity, 'create')
+      ->method('createAccess')
+      ->with($entity_bundle)
       ->will($this->returnValue($access));
 
-    $entity_manager->expects($this->any())
-      ->method('getStorageController')
-      ->will($this->returnValue($storage_controller));
     $entity_manager->expects($this->any())
       ->method('getAccessController')
       ->will($this->returnValue($access_controller));

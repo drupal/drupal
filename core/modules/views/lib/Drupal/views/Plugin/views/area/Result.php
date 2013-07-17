@@ -58,7 +58,7 @@ class Result extends AreaPluginBase {
   /**
    * Implements \Drupal\views\Plugin\views\area\AreaPluginBase::render().
    */
-  function render($empty = FALSE) {
+  public function render($empty = FALSE) {
     // Must have options and does not work on summaries.
     if (!isset($this->options['content']) || $this->view->plugin_name == 'default_summary') {
       return array();

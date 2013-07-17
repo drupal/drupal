@@ -78,6 +78,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
     $reader = new AnnotationReader();
     // Prevent @endlink from being parsed as an annotation.
     $reader->addGlobalIgnoredName('endlink');
+    $reader->addGlobalIgnoredName('file');
 
     // Register the namespaces of classes that can be used for annotations.
     AnnotationRegistry::registerAutoloadNamespaces($this->getAnnotationNamespaces());

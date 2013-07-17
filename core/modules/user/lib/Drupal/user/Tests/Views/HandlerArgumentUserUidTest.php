@@ -40,7 +40,7 @@ class HandlerArgumentUserUidTest extends UserTestBase {
 
     // Tests a valid user.
     $account = $this->drupalCreateUser();
-    $this->executeView($view, array($account->uid));
+    $this->executeView($view, array($account->id()));
     $this->assertEqual($view->getTitle(), $account->label());
     $view->destroy();
   }

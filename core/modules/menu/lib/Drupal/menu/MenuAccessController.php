@@ -31,9 +31,16 @@ class MenuAccessController extends EntityAccessController {
       }
     }
 
-    if (in_array($operation, array('create', 'update', 'delete'))) {
+    if (in_array($operation, array('update', 'delete'))) {
       return user_access('administer menu', $account);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    return user_access('administer menu', $account);
   }
 
 }

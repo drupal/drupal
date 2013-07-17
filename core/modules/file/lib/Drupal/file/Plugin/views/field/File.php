@@ -65,7 +65,7 @@ class File extends FieldPluginBase {
     return $data;
   }
 
-  function render($values) {
+  public function render($values) {
     $value = $this->getValue($values);
     return $this->render_link($this->sanitizeValue($value), $values);
   }

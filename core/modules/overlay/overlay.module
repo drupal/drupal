@@ -230,11 +230,11 @@ function overlay_disable_message() {
   global $user;
 
   $build = array();
-  if (empty($user->uid) || !user_access('access overlay')) {
+  if ($user->isAnonymous() || !user_access('access overlay')) {
     return $build;
   }
 
-  $user_data = Drupal::service('user.data')->get('overlay', $user->uid);
+  $user_data = Drupal::service('user.data')->get('overlay', $user->id());
   if (empty($user_data['message_dismissed']) && (!isset($user_data['enabled']) || $user_data['enabled'])) {
     $build = array(
       '#theme' => 'overlay_disable_message',
@@ -243,7 +243,7 @@ function overlay_disable_message() {
       'profile_link' => array(
         '#type' => 'link',
         '#title' => t('If you have problems accessing administrative pages on this site, disable the overlay on your profile page.'),
-        '#href' => 'user/' . $user->uid . '/edit',
+        '#href' => 'user/' . $user->id() . '/edit',
         '#options' => array(
           'query' => drupal_get_destination(),
           'fragment' => 'edit-overlay-control',

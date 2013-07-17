@@ -155,7 +155,7 @@ class Name extends InOperator {
     if ($this->value) {
       $result = entity_load_multiple_by_properties('user', array('uid' => $this->value));
       foreach ($result as $account) {
-        if ($account->uid) {
+        if ($account->id()) {
           $this->value_options[$account->id()] = $account->label();
         }
         else {

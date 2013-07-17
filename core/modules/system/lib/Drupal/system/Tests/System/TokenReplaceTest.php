@@ -30,7 +30,7 @@ class TokenReplaceTest extends WebTestBase {
 
     // Create the initial objects.
     $account = $this->drupalCreateUser();
-    $node = $this->drupalCreateNode(array('uid' => $account->uid));
+    $node = $this->drupalCreateNode(array('uid' => $account->id()));
     $node->title = '<blink>Blinking Text</blink>';
     global $user;
     $language_interface = language(Language::TYPE_INTERFACE);

@@ -36,7 +36,7 @@ class CommentThreadingTest extends CommentTestBase {
 
     // Create a node.
     $this->drupalLogin($this->web_user);
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->uid));
+    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->id()));
 
     // Post comment #1.
     $this->drupalLogin($this->web_user);

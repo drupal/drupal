@@ -48,7 +48,7 @@ class EntityLink extends FieldPluginBase {
   /**
    * Implements \Drupal\views\Plugin\views\field\FieldPluginBase::pre_render().
    */
-  function pre_render(&$values) {
+  public function preRender(&$values) {
     // Render all nodes, so you can grep the comment links.
     $entities = array();
     foreach ($values as $row) {
@@ -63,7 +63,7 @@ class EntityLink extends FieldPluginBase {
   /**
    * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::render().
    */
-  function render($values) {
+  public function render($values) {
     $entity = $this->getEntity($values);
 
     // Only render the links, if they are defined.

@@ -169,7 +169,7 @@ class NodeQueryAlterTest extends NodeTestBase {
     // $account instead of the global $user, we will log in as
     // noAccessUser2.
     $this->drupalLogin($this->noAccessUser2);
-    \Drupal::state()->set('node_access_test.no_access_uid', $this->noAccessUser->uid);
+    \Drupal::state()->set('node_access_test.no_access_uid', $this->noAccessUser->id());
     drupal_static_reset('node_access_view_all_nodes');
     try {
       $query = db_select('node', 'mytab')

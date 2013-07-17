@@ -107,7 +107,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
       // identifier.
       $field_values = array(
         'uri' => $this->files[$index]->uri,
-        'uid' => $GLOBALS['user']->uid,
+        'uid' => $GLOBALS['user']->id(),
         'status' => FILE_STATUS_PERMANENT,
       );
       $file = entity_create('file', $field_values);

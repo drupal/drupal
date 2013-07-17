@@ -31,4 +31,11 @@ class RoleAccessController extends EntityAccessController {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    return user_access('administer permissions', $account);
+  }
+
 }

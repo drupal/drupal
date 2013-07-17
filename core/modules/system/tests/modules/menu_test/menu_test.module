@@ -311,13 +311,6 @@ function menu_test_menu() {
     'access arguments' => array('access content'),
   );
 
-  // Test the access key with a function callback.
-  $items['menu_login_callback'] = array(
-    'title' => 'Used as a login path',
-    'page callback' => 'menu_login_callback',
-    'access callback' => TRUE,
-  );
-
   // Test the access key.
   $items['menu-title-test/case1'] = array(
    'title' => 'Example title - Case 1',
@@ -441,6 +434,11 @@ function menu_test_menu() {
     'type' => MENU_LOCAL_ACTION,
   );
 
+  $items['menu-local-task-test/tasks'] = array(
+    'title' => 'Local tasks',
+    'route_name' => 'menu_local_task_test_tasks',
+  );
+
   return $items;
 }
 
@@ -449,21 +447,6 @@ function menu_test_menu() {
  */
 function menu_test_local_action_dynamic_title($arg) {
   return t('My @arg action', array('@arg' => $arg));
-}
-
-/**
- * Implements hook_local_actions().
- */
-function menu_test_local_actions() {
-  return array(
-    array(
-      'route_name' => 'menu_test_local_action3',
-      'title' => t('My routing action'),
-      'appears_on' => array(
-        'menu_test_local_action1',
-      ),
-    ),
-  );
 }
 
 /**
@@ -734,18 +717,6 @@ function menu_test_static_variable($value = NULL) {
     $variable = $value;
   }
   return $variable;
-}
-
-/**
- * Page callback: Provides a login path.
- *
- * @return string
- *   A text string that can be used for comparison.
- *
- * @see menu_test_menu().
- */
-function menu_login_callback() {
-  return 'This is menu_login_callback().';
 }
 
 /**

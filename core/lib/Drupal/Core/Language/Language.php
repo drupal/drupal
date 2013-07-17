@@ -141,9 +141,9 @@ class Language {
    * @todo Remove this function once $GLOBALS['language'] is gone.
    */
   public function extend($obj) {
-    $vars = get_object_vars($obj);
-    foreach ($vars as $var => $value) {
-      $this->$var = $value;
+    $variables = get_object_vars($obj);
+    foreach ($variables as $variable => $value) {
+      $this->$variable = $value;
     }
   }
 

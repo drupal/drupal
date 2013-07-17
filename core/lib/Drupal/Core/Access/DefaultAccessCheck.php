@@ -13,13 +13,13 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Allows access to routes to be controlled by an '_access' boolean parameter.
  */
-class DefaultAccessCheck implements AccessCheckInterface {
+class DefaultAccessCheck implements StaticAccessCheckInterface {
 
   /**
-   * Implements AccessCheckInterface::applies().
+   * {@inheritdoc}
    */
-  public function applies(Route $route) {
-    return array_key_exists('_access', $route->getRequirements());
+  public function appliesTo() {
+    return array('_access');
   }
 
   /**

@@ -7,20 +7,20 @@
 
 namespace Drupal\block\Access;
 
-use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Access\StaticAccessCheckInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Checks access for displaying block page.
  */
-class BlockThemeAccessCheck implements AccessCheckInterface {
+class BlockThemeAccessCheck implements StaticAccessCheckInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function applies(Route $route) {
-    return array_key_exists('_block_themes_access', $route->getRequirements());
+  public function appliesTo() {
+    return array('_block_themes_access');
   }
 
   /**

@@ -46,13 +46,13 @@ class UpcastingTest extends WebTestBase {
     $foo = 'bar';
 
     // paramconverter_test/test_user_node_foo/{user}/{node}/{foo}
-    $this->drupalGet("paramconverter_test/test_user_node_foo/{$user->uid}/{$node->nid}/$foo");
+    $this->drupalGet("paramconverter_test/test_user_node_foo/"  . $user->id() . "/{$node->nid}/$foo");
     $this->assertRaw("user: {$user->label()}, node: {$node->label()}, foo: $foo", 'user and node upcast by entity name');
 
     // paramconverter_test/test_node_user_user/{node}/{foo}/{user}
     // converters:
     //   foo: 'user'
-    $this->drupalGet("paramconverter_test/test_node_user_user/{$node->nid}/{$user->uid}/{$user->uid}");
+    $this->drupalGet("paramconverter_test/test_node_user_user/{$node->nid}/" . $user->id() . "/" . $user->id());
     $this->assertRaw("user: {$user->label()}, node: {$node->label()}, foo: {$user->label()}", 'foo converted to user as well');
 
     // paramconverter_test/test_node_node_foo/{user}/{node}/{foo}

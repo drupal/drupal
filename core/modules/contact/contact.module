@@ -126,12 +126,12 @@ function _contact_personal_tab_access($account) {
   global $user;
 
   // Anonymous users cannot have contact forms.
-  if (!$account->uid) {
+  if ($account->isAnonymous()) {
     return FALSE;
   }
 
   // Users may not contact themselves.
-  if ($user->uid == $account->uid) {
+  if ($user->id() == $account->id()) {
     return FALSE;
   }
 
@@ -269,7 +269,7 @@ function contact_mail($key, &$message, $params) {
     '!form-url' => url(current_path(), array('absolute' => TRUE, 'language' => $language)),
     '!sender-name' => user_format_name($sender),
   );
-  if (!empty($sender->uid)) {
+  if ($sender->isAuthenticated()) {
     $sender_uri = $sender->uri();
     $variables['!sender-url'] = url($sender_uri['path'], array('absolute' => TRUE, 'language' => $language) + $sender_uri['options']);
   }
@@ -297,7 +297,7 @@ function contact_mail($key, &$message, $params) {
     case 'user_copy':
       $variables += array(
         '!recipient-name' => user_format_name($params['recipient']),
-        '!recipient-edit-url' => url('user/' . $params['recipient']->uid . '/edit', array('absolute' => TRUE, 'language' => $language)),
+        '!recipient-edit-url' => url('user/' . $params['recipient']->id() . '/edit', array('absolute' => TRUE, 'language' => $language)),
       );
       $message['subject'] .= t('[!site-name] !subject', $variables, $options);
       $message['body'][] = t('Hello !recipient-name,', $variables, $options);

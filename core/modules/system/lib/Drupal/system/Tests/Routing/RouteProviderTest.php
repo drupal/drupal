@@ -260,8 +260,10 @@ class RouteProviderTest extends UnitTestBase {
 
     try {
       $routes = $provider->getRouteCollectionForRequest($request);
+      $routes_array = $routes->all();
 
       $this->assertEqual(count($routes), 2, 'The correct number of routes was found.');
+      $this->assertEqual(array('narf', 'poink'), array_keys($routes_array), 'Ensure the fitness was taken into account.');
       $this->assertNotNull($routes->get('narf'), 'The first matching route was found.');
       $this->assertNotNull($routes->get('poink'), 'The second matching route was found.');
       $this->assertNull($routes->get('eep'), 'Noin-matching route was not found.');

@@ -470,7 +470,7 @@ function language_negotiation_method_invoke($method_id, $method = NULL, $request
     }
     // If the language negotiation method has no cache preference or this is
     // satisfied we can execute the callback.
-    $cache = !isset($method['cache']) || $user->uid || $method['cache'] == variable_get('cache', 0);
+    $cache = !isset($method['cache']) || $user->isAuthenticated() || $method['cache'] == variable_get('cache', 0);
     $callback = isset($method['callbacks']['negotiation']) ? $method['callbacks']['negotiation'] : FALSE;
     $langcode = $cache && function_exists($callback) ? $callback($languages, $request) : FALSE;
     $results[$method_id] = isset($languages[$langcode]) ? $languages[$langcode] : FALSE;

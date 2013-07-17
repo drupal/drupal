@@ -7,6 +7,16 @@
 
 use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
 
+function menu_link_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#menu_link':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Menu Link module allows users to create menu links. It is required by the Menu module, which provides an interface for managing menus. See the <a href="@menu-help">Menu module help page</a> for more information.', array('@menu-help' => url('admin/help/menu'))) . '</p>';
+      return $output;
+  }
+}
+
 /**
  * Entity URI callback.
  *

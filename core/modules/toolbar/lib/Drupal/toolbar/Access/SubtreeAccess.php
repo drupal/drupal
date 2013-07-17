@@ -7,20 +7,20 @@
 
 namespace Drupal\toolbar\Access;
 
-use Drupal\Core\Access\AccessCheckInterface;
+use Drupal\Core\Access\StaticAccessCheckInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 
 /**
  * Defines a special access checker for the toolbar subtree route.
  */
-class SubtreeAccess implements AccessCheckInterface {
+class SubtreeAccess implements StaticAccessCheckInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function applies(Route $route) {
-    return array_key_exists('_access_toolbar_subtree', $route->getRequirements());
+  public function appliesTo() {
+    return array('_access_toolbar_subtree');
   }
 
   /**

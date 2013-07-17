@@ -61,7 +61,7 @@ class TempStoreFactory {
     // Use the currently authenticated user ID or the active user ID unless
     // the owner is overridden.
     if (!isset($owner)) {
-      $owner = $GLOBALS['user']->uid ?: session_id();
+      $owner = $GLOBALS['user']->id() ?: session_id();
     }
 
     // Store the data for this collection in the database.

@@ -1,0 +1,69 @@
+entity_view_mode.list:
+  pattern: '/admin/structure/display-modes/view'
+  defaults:
+    _entity_list: 'view_mode'
+  requirements:
+    _permission: 'administer display modes'
+
+entity_view_mode.add:
+  pattern: '/admin/structure/display-modes/view/add'
+  defaults:
+    _content: '\Drupal\entity\Controller\EntityDisplayModeController::viewModeTypeSelection'
+  requirements:
+    _permission: 'administer display modes'
+
+entity_view_mode.add_type:
+  pattern: '/admin/structure/display-modes/view/add/{entity_type}'
+  defaults:
+    _entity_form: 'view_mode.add'
+  requirements:
+    _permission: 'administer display modes'
+
+entity_view_mode.edit:
+  pattern: '/admin/structure/display-modes/view/manage/{view_mode}'
+  defaults:
+    _entity_form: 'view_mode.edit'
+  requirements:
+    _entity_access: 'view_mode.update'
+
+entity_view_mode.delete:
+  pattern: '/admin/structure/display-modes/view/manage/{view_mode}/delete'
+  defaults:
+    _entity_form: 'view_mode.delete'
+  requirements:
+    _entity_access: 'view_mode.delete'
+
+entity_form_mode.list:
+  pattern: '/admin/structure/display-modes/form'
+  defaults:
+    _entity_list: 'form_mode'
+  requirements:
+    _permission: 'administer display modes'
+
+entity_form_mode.add:
+  pattern: '/admin/structure/display-modes/form/add'
+  defaults:
+    _content: '\Drupal\entity\Controller\EntityDisplayModeController::formModeTypeSelection'
+  requirements:
+    _permission: 'administer display modes'
+
+entity_form_mode.add_type:
+  pattern: '/admin/structure/display-modes/form/add/{entity_type}'
+  defaults:
+    _entity_form: 'form_mode.add'
+  requirements:
+    _permission: 'administer display modes'
+
+entity_form_mode.edit:
+  pattern: '/admin/structure/display-modes/form/manage/{form_mode}'
+  defaults:
+    _entity_form: 'form_mode.edit'
+  requirements:
+    _entity_access: 'form_mode.update'
+
+entity_form_mode.delete:
+  pattern: '/admin/structure/display-modes/form/manage/{form_mode}/delete'
+  defaults:
+    _entity_form: 'form_mode.delete'
+  requirements:
+    _entity_access: 'form_mode.delete'
