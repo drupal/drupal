@@ -137,7 +137,7 @@ class TaxonomyIndexTid extends ManyToOne {
 
         if ($tree) {
           foreach ($tree as $term) {
-            $choice = new stdClass();
+            $choice = new \stdClass();
             $choice->option = array($term->tid => str_repeat('-', $term->depth) . $term->name);
             $options[] = $choice;
           }
