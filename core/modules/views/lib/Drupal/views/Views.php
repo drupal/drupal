@@ -75,4 +75,20 @@ class Views {
     return Drupal::service('plugin.manager.views.' . $type);
   }
 
+  /**
+   * Loads a view from configuration and returns its executable object.
+   *
+   * @param string $id
+   *   The view ID to load.
+   *
+   * @return \Drupal\views\ViewExecutable
+   *   A view executable instance, from the loaded entity.
+   */
+  public static function getView($id) {
+    $view = Drupal::service('plugin.manager.entity')->getStorageController('view')->load($id);
+    if ($view) {
+      return static::executableFactory()->get($view);
+    }
+  }
+
 }

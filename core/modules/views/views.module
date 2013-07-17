@@ -1105,12 +1105,12 @@ function views_disable_view(View $view) {
  *
  * @return Drupal\views\ViewExecutable
  *   A reference to the $view object.
+ *
+ * @deprecated as of Drupal 8.0. Use \Drupal\views\Views::getView().
+ *
  */
 function views_get_view($name) {
-  $view = entity_load('view', $name);
-  if ($view) {
-    return $view->get('executable');
-  }
+  return Views::getView($name);
 }
 
 /**
