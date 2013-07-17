@@ -106,7 +106,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
           // @todo Refactor when http://drupal.org/node/585838 lands.
           // Get the user ID from the entity if it's set, or default to the
           // currently logged in user.
-          'last_comment_uid' => isset($entity->uid->target_id) ? $entity->uid->target_id : $user->uid,
+          'last_comment_uid' => isset($entity->uid->target_id) ? $entity->uid->target_id : $user->id(),
         ))
         ->condition('entity_id', $comment->entity_id->value)
         ->condition('entity_type', $comment->entity_type->value)

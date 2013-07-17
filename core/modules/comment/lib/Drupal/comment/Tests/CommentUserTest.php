@@ -337,7 +337,7 @@ class CommentUserTest extends WebTestBase {
     $this->assertFieldByName('subject', '', 'Subject field found.');
     $this->assertFieldByName("comment_body[$langcode][0][value]", '', 'Comment field found.');
 
-    $this->drupalGet('comment/reply/user/' . $this->web_user->uid . '/comment/' . $comment1->id());
+    $this->drupalGet('comment/reply/user/' . $this->web_user->id() . '/comment/' . $comment1->id());
     $this->assertText('You are not authorized to view comments');
     $this->assertNoText($comment1->subject->value, 'Comment not displayed.');
   }

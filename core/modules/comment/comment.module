@@ -1085,7 +1085,7 @@ function comment_entity_insert(EntityInterface $entity) {
         'last_comment_timestamp' => isset($entity->changed) ? $entity->changed : REQUEST_TIME,
         'last_comment_name' => NULL,
         // Default to current user when entity does not have a uid property.
-        'last_comment_uid' => isset($entity->uid) ? $entity->uid : $user->uid,
+        'last_comment_uid' => isset($entity->uid) ? $entity->uid : $user->id(),
         'comment_count' => 0,
       ));
     }
@@ -1862,7 +1862,7 @@ function comment_mark(CommentInterface $comment) {
   $cache = &drupal_static(__FUNCTION__, array());
   $cid = $comment->entity_id->value . '__' . $comment->entity_type->value;
 
-  if (!$user->uid) {
+  if (!$user->isAuthenticated()) {
     return MARK_READ;
   }
   if (!isset($cache[$cid])) {
