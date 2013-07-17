@@ -379,8 +379,13 @@ class StandardProfileTest extends WebTestBase {
    *   The EasyRDF graph object.
    */
   function _testNodeCommentProperties($graph) {
-    // @todo Test relationship between comment and node once it is a field:
-    // https://drupal.org/node/731724
+    // Relationship between node and comment.
+    $expected_value = array(
+      'type' => 'uri',
+      'value' => $this->articleCommentUri,
+    );
+    $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/comment', $expected_value), 'Relationship between node and comment found (schema:comment).');
+
     // Comment type.
     $this->assertEqual($graph->type($this->articleCommentUri), 'schema:Comment', 'Comment type was found (schema:Comment).');
 
