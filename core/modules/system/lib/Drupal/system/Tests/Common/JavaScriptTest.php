@@ -7,20 +7,20 @@
 
 namespace Drupal\system\Tests\Common;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Component\Utility\Crypt;
 
 /**
  * Tests the JavaScript system.
  */
-class JavaScriptTest extends WebTestBase {
+class JavaScriptTest extends DrupalUnitTestBase {
 
   /**
    * Enable Language and SimpleTest in the test environment.
    *
    * @var array
    */
-  public static $modules = array('language', 'simpletest', 'common_test', 'path');
+  public static $modules = array('language', 'simpletest', 'common_test', 'system');
 
   /**
    * Stores configured value for JavaScript preprocessing.
@@ -80,7 +80,7 @@ class JavaScriptTest extends WebTestBase {
     drupal_add_library('system', 'drupalSettings');
     $javascript = drupal_add_js();
     $last_settings = reset($javascript['settings']['data']);
-    $this->assertTrue($last_settings['currentPath'], 'The current path JavaScript setting is set correctly.');
+    $this->assertTrue(array_key_exists('currentPath', $last_settings), 'The current path JavaScript setting is set correctly.');
 
     $javascript = drupal_add_js(array('drupal' => 'rocks', 'dries' => 280342800), 'setting');
     $last_settings = end($javascript['settings']['data']);
@@ -196,14 +196,6 @@ class JavaScriptTest extends WebTestBase {
     $settings_two['moduleName']['thingiesOnPage']['id1'] = array();
     $this->assertIdentical($settings_one, $parsed_settings['commonTestRealWorldIdentical'], 'drupal_add_js handled real world test case 1 correctly.');
     $this->assertEqual($settings_two, $parsed_settings['commonTestRealWorldAlmostIdentical'], 'drupal_add_js handled real world test case 2 correctly.');
-
-    // Check in a rendered page.
-    $this->drupalGet('common-test/query-string');
-    $this->assertPattern('@<script>.+drupalSettings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings');
-    $path = array('source' => 'common-test/query-string', 'alias' => 'common-test/currentpath-check');
-    drupal_container()->get('path.crud')->save($path['source'], $path['alias']);
-    $this->drupalGet('common-test/currentpath-check');
-    $this->assertPattern('@<script>.+drupalSettings.+"currentPath":"common-test\\\/query-string"@s', 'currentPath is in the JS settings for an aliased path');
   }
 
   /**
@@ -567,9 +559,12 @@ class JavaScriptTest extends WebTestBase {
    * Tests JavaScript files that have querystrings attached get added right.
    */
   function testAddJsFileWithQueryString() {
-    $this->drupalGet('common-test/query-string');
+    $js = drupal_get_path('module', 'node') . '/node.js';
+    drupal_add_js($js);
+
     $query_string = variable_get('css_js_query_string', '0');
-    $this->assertRaw(drupal_get_path('module', 'node') . '/node.js?' . $query_string, 'Query string was appended correctly to js.');
+    $scripts = drupal_get_js();
+    $this->assertTrue(strpos($scripts, $js . '?' . $query_string), 'Query string was appended correctly to JS.');
   }
 
   /**
