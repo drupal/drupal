@@ -7,3 +7,68 @@ node.settings:
     items_per_page:
       type: integer
       label: 'Number of posts on front page'
+
+node.type.*:
+  type: mapping
+  label: 'Content type'
+  mapping:
+    type:
+      type: string
+      label: 'Machine-readable name'
+    uuid:
+      type: string
+      label: 'UUID'
+    name:
+      type: label
+      label: 'Name'
+    description:
+      type: text
+      label: 'Description'
+    help:
+      type: text
+      label: 'Explanation or submission guidelines'
+    has_title:
+      type: boolean
+      label: 'Has title'
+    title_label:
+      type: label
+      label: 'Title field label'
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        node:
+          type: node.settings.node
+    status:
+      type: boolean
+      label: 'Enabled status of the configuration entity'
+    langcode:
+      type: string
+      label: 'Language'
+
+node.settings.node:
+  type: mapping
+  label: 'Content type settings'
+  mapping:
+    preview:
+      type: integer
+      label: 'Preview before submitting'
+    options:
+      type: mapping
+      label: 'Publishing options'
+      mapping:
+        status:
+          type: string
+          label: 'Published'
+        promote:
+          type: string
+          label: 'Promoted to front page'
+        sticky:
+          type: string
+          label: 'Sticky at top of lists'
+        revision:
+          type: string
+          label: 'Create new revision'
+    submitted:
+      type: boolean
+      label: 'Display setting for author and date Submitted by post information'
