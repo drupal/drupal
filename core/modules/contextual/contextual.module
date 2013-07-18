@@ -34,7 +34,7 @@ function contextual_toolbar() {
       '#tag' => 'button',
       '#value' => t('Edit'),
       '#attributes' => array(
-        'class' => array('icon', 'icon-edit'),
+        'class' => array('toolbar-icon', 'toolbar-icon-edit'),
         'role' => 'button',
         'aria-pressed' => 'false',
       ),

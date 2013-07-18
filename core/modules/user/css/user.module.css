@@ -110,10 +110,10 @@ div.password-suggestions ul {
 /**
  * Toolbar icon.
  */
-.icon-user:before {
+.toolbar-icon-user:before {
   background-image: url(../images/icon-user.png);
 }
-.icon-user:active:before,
-.icon-user.active:before {
+.toolbar-icon-user:active:before,
+.toolbar-icon-user.active:before {
   background-image: url(../images/icon-user-active.png);
 }

@@ -2129,7 +2129,7 @@ function user_toolbar() {
       '#options' => array(
         'attributes' => array(
           'title' => t('My account'),
-          'class' => array('icon', 'icon-user'),
+          'class' => array('toolbar-icon', 'toolbar-icon-user'),
         ),
       ),
     ),

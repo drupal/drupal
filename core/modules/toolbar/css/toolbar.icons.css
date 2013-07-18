@@ -1,15 +1,15 @@
 /**
  * @file toolbar.icons.css
  */
-.toolbar .icon {
+.toolbar .toolbar-icon {
   padding-left: 2.75em; /* LTR */
   position: relative;
 }
-[dir="rtl"] .toolbar .icon {
+[dir="rtl"] .toolbar .toolbar-icon {
   padding-left: 1.3333em;
   padding-right: 2.75em;
 }
-.toolbar .icon:before {
+.toolbar .toolbar-icon:before {
   background-attachment: scroll;
   background-color: transparent;
   background-position: center center;
@@ -22,36 +22,36 @@
   top: 0;
   width: 20px;
 }
-[dir="rtl"] .toolbar .icon:before {
+[dir="rtl"] .toolbar .toolbar-icon:before {
   left: auto;
   right: 0.6667em;
 }
-.toolbar button.icon {
+.toolbar button.toolbar-icon {
   background-color: transparent;
   border: 0;
   font-size: 1em;
 }
-.toolbar .menu ul .icon {
+.toolbar .menu ul .toolbar-icon {
   padding-left: 1.3333em; /* LTR */
 }
-[dir="rtl"] .toolbar .menu ul .icon {
+[dir="rtl"] .toolbar .menu ul .toolbar-icon {
   padding-left: 0;
   padding-right: 1.3333em;
 }
-.toolbar .menu ul a.icon:before {
+.toolbar .menu ul a.toolbar-icon:before {
   display: none;
 }
-.toolbar .vertical .menu ul {
+.toolbar .toolbar-tray-vertical .menu ul {
   margin-left: 1.5em; /* LTR */
 }
-[dir="rtl"] .toolbar .vertical .menu ul {
+[dir="rtl"] .toolbar .toolbar-tray-vertical .menu ul {
   margin-left: 0;
   margin-right: 1.5em;
 }
-.toolbar .vertical .menu ul ul {
+.toolbar .toolbar-tray-vertical .menu ul ul {
   margin-left: 0.75em; /* LTR */
 }
-[dir="rtl"] .toolbar .vertical .menu ul ul {
+[dir="rtl"] .toolbar .toolbar-tray-vertical .menu ul ul {
   margin-left: 0;
   margin-right: 0.75em;
 }
@@ -59,83 +59,83 @@
 /**
  * Top level icons
  */
-.icon-home:before {
+.toolbar-icon-home:before {
   background-image: url("../images/icon-home.png");
 }
-.icon-home:active:before,
-.icon-home.active:before {
+.toolbar-icon-home:active:before,
+.toolbar-icon-home.active:before {
   background-image: url("../images/icon-home-active.png");
 }
-.icon-menu:before {
+.toolbar-icon-menu:before {
   background-image: url("../images/icon-menu.png");
 }
-.icon-menu:active:before,
-.icon-menu.active:before {
+.toolbar-icon-menu:active:before,
+.toolbar-icon-menu.active:before {
   background-image: url("../images/icon-menu-active.png");
 }
 
 /**
  * Main menu icons.
  */
-.icon-content:before {
+.toolbar-icon-content:before {
   background-image: url("../images/icon-content.png");
 }
-.icon-content:active:before,
-.icon-content.active:before {
+.toolbar-icon-content:active:before,
+.toolbar-icon-content.active:before {
   background-image: url("../images/icon-content-active.png");
 }
-.icon-structure:before {
+.toolbar-icon-structure:before {
   background-image: url("../images/icon-structure.png");
 }
-.icon-structure:active:before,
-.icon-structure.active:before {
+.toolbar-icon-structure:active:before,
+.toolbar-icon-structure.active:before {
   background-image: url("../images/icon-structure-active.png");
 }
-.icon-appearance:before {
+.toolbar-icon-appearance:before {
   background-image: url("../images/icon-appearance.png");
 }
-.icon-appearance:active:before,
-.icon-appearance.active:before {
+.toolbar-icon-appearance:active:before,
+.toolbar-icon-appearance.active:before {
   background-image: url("../images/icon-appearance-active.png");
 }
-.icon-people:before {
+.toolbar-icon-people:before {
   background-image: url("../images/icon-people.png");
 }
-.icon-people:active:before,
-.icon-people.active:before {
+.toolbar-icon-people:active:before,
+.toolbar-icon-people.active:before {
   background-image: url("../images/icon-people-active.png");
 }
-.icon-extend:before {
+.toolbar-icon-extend:before {
   background-image: url("../images/icon-extend.png");
 }
-.icon-extend:active:before,
-.icon-extend.active:before {
+.toolbar-icon-extend:active:before,
+.toolbar-icon-extend.active:before {
   background-image: url("../images/icon-extend-active.png");
 }
-.icon-configuration:before {
+.toolbar-icon-configuration:before {
   background-image: url("../images/icon-configuration.png");
 }
-.icon-configuration:active:before,
-.icon-configuration.active:before {
+.toolbar-icon-configuration:active:before,
+.toolbar-icon-configuration.active:before {
   background-image: url("../images/icon-configuration-active.png");
 }
-.icon-reports:before {
+.toolbar-icon-reports:before {
   background-image: url("../images/icon-reports.png");
 }
-.icon-reports:active:before,
-.icon-reports.active:before {
+.toolbar-icon-reports:active:before,
+.toolbar-icon-reports.active:before {
   background-image: url("../images/icon-reports-active.png");
 }
-.icon-help:before {
+.toolbar-icon-help:before {
   background-image: url("../images/icon-help.png");
 }
-.icon-help:active:before,
-.icon-help.active:before {
+.toolbar-icon-help:active:before,
+.toolbar-icon-help.active:before {
   background-image: url("../images/icon-help-active.png");
 }
 
 @media only screen and (min-width: 16.5em) {
-  .toolbar .bar .icon {
+  .toolbar .toolbar-bar .toolbar-icon {
     margin-left: 0;
     margin-right: 0;
     padding-left: 0;
@@ -143,11 +143,11 @@
     text-indent: -9999px;
     width: 4em;
   }
-  .toolbar .bar .icon:before {
+  .toolbar .toolbar-bar .toolbar-icon:before {
     left: 0; /* LTR */
     width: 100%;
   }
-  [dir="rtl"] .toolbar .bar .icon:before {
+  [dir="rtl"] .toolbar .toolbar-bar .toolbar-icon:before {
     background-size: auto auto;
     left: auto;
     right: 0;
@@ -155,23 +155,23 @@
 }
 
 @media only screen and (min-width: 36em) {
-  .toolbar .bar .icon {
+  .toolbar .toolbar-bar .toolbar-icon {
     background-position: left center; /* LTR */
     padding-left: 2.75em; /* LTR */
     padding-right: 1.3333em; /* LTR */
     text-indent: 0;
     width: auto;
   }
-  [dir="rtl"] .toolbar .bar .icon {
+  [dir="rtl"] .toolbar .toolbar-bar .toolbar-icon {
     background-position: right center;
     padding-left: 1.3333em;
     padding-right: 2.75em;
   }
-  .toolbar .bar .icon:before {
+  .toolbar .toolbar-bar .toolbar-icon:before {
     left: 0.6667em; /* LTR */
     width: 20px;
   }
-  [dir="rtl"] .toolbar .bar .icon:before {
+  [dir="rtl"] .toolbar .toolbar-bar .toolbar-icon:before {
     left: 0;
     right: 0.6667em;
   }

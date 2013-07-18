@@ -16,9 +16,9 @@
  * The toolbar is a container for adminstrative and site-global interactive
  * components.
  *
- * The toolbar provides a common styling for items denoted by the .tab class.
- * The theme wrapper toolbar_tab_wrapper is provided to wrap a toolbar item
- * with the appropriate markup to apply the styling.
+ * The toolbar provides a common styling for items denoted by the
+ * .toolbar-tab class. The theme wrapper toolbar_tab_wrapper is provided to wrap
+ * a toolbar item with the appropriate markup to apply the styling.
  *
  * The toolbar provides a construct called a 'tray'. The tray is a container
  * for content. The tray may be associated with a toggle in the adminstration
@@ -77,7 +77,7 @@ function hook_toolbar() {
       '#options' => array(
         'attributes' => array(
           'title' => t('Home page'),
-          'class' => array('icon', 'icon-home'),
+          'class' => array('toolbar-icon', 'toolbar-icon-home'),
         ),
       ),
     ),

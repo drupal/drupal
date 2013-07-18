@@ -46,7 +46,7 @@ var activeItem = drupalSettings.basePath + drupalSettings.currentPath;
      *   simply toggling its presence.
      */
     function toggleList ($item, switcher) {
-      var $toggle = $item.find('> .box > .handle');
+      var $toggle = $item.find('> .toolbar-box > .toolbar-handle');
       switcher = (typeof switcher !== 'undefined') ? switcher : !$item.hasClass('open');
       // Toggle the item open state.
       $item.toggleClass('open', switcher);
@@ -63,27 +63,27 @@ var activeItem = drupalSettings.basePath + drupalSettings.currentPath;
      *
      * Items with sub-elements have a list toggle attached to them. Menu item
      * links and the corresponding list toggle are wrapped with in a div
-     * classed with .box. The .box div provides a positioning context for the
-     * item list toggle.
+     * classed with .toolbar-box. The .toolbar-box div provides a positioning
+     * context for the item list toggle.
      *
      * @param {jQuery} $menu
      *   The root of the menu to be initialized.
      */
     function initItems ($menu) {
       var options = {
-        'class': 'icon handle',
+        'class': 'toolbar-icon toolbar-handle',
         'action': ui.handleOpen,
         'text': ''
       };
       // Initialize items and their links.
-      $menu.find('li > a').wrap('<div class="box">');
+      $menu.find('li > a').wrap('<div class="toolbar-box">');
         // Add a handle to each list item if it has a menu.
       $menu.find('li').each(function (index, element) {
           var $item = $(element);
           if ($item.find('> ul.menu').length) {
-            var $box = $item.find('> .box');
+            var $box = $item.children('.toolbar-box');
             options.text = Drupal.t('@label', {'@label': $box.find('a').text()});
-            $item.find('> .box')
+            $item.children('.toolbar-box')
               .append(Drupal.theme('toolbarMenuItemToggle', options));
           }
         });
@@ -130,7 +130,7 @@ var activeItem = drupalSettings.basePath + drupalSettings.currentPath;
     }
     // Bind event handlers.
     $(document)
-      .on('click.toolbar', '.handle', toggleClickHandler);
+      .on('click.toolbar', '.toolbar-handle', toggleClickHandler);
     // Return the jQuery object.
     return this.each(function (selector) {
       var $menu = $(this).once('toolbar-menu');

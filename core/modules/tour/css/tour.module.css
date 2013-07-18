@@ -4,10 +4,10 @@
  */
 
 /* Tab appearance. */
-.toolbar .bar .tour-toolbar-tab.tab {
+.toolbar .toolbar-bar .tour-toolbar-tab.toolbar-tab {
   float: right; /* LTR */
 }
-[dir="rtl"] .toolbar .bar .tour-toolbar-tab.tab {
+[dir="rtl"] .toolbar .toolbar-bar .tour-toolbar-tab.toolbar-tab {
   float: left;
 }
 .toolbar .tour-toolbar-tab button {
@@ -41,6 +41,6 @@
 }
 
 /* @todo Remove once http://drupal.org/node/1916690 is resolved. */
-.toolbar .tour-toolbar-tab.tab.hidden {
+.toolbar .tour-toolbar-tab.toolbar-tab.hidden {
   display: none;
 }
