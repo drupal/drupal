@@ -2803,6 +2803,15 @@ function template_preprocess_page(&$variables) {
     '#theme' => 'status_messages',
     '#access' => $variables['show_messages'],
   );
+
+  // Set the breadcrumb last, so as to increase the chance of being able to
+  // re-use the cache of an already retrieved menu containing the active link
+  // for the current page.
+  // @see menu_tree_page_data()
+  $variables['breadcrumb'] = array(
+    '#theme' => 'breadcrumb',
+    '#breadcrumb' => \Drupal::service('breadcrumb')->build(\Drupal::request()->attributes->all()),
+  );
 }
 
 /**
@@ -2814,16 +2823,6 @@ function template_preprocess_page(&$variables) {
  * @see template_preprocess_page()
  */
 function template_process_page(&$variables) {
-  if (!isset($variables['breadcrumb'])) {
-    // Build the breadcrumb last, so as to increase the chance of being able to
-    // re-use the cache of an already rendered menu containing the active link
-    // for the current page.
-    // @see menu_tree_page_data()
-    $variables['breadcrumb'] = array(
-      '#theme' => 'breadcrumb',
-      '#breadcrumb' => \Drupal::service('breadcrumb')->build(\Drupal::service('request')->attributes->all()),
-    );
-  }
   if (!isset($variables['title'])) {
     $variables['title'] = drupal_get_title();
   }
