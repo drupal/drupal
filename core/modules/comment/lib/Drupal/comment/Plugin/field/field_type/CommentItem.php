@@ -68,6 +68,10 @@ class CommentItem extends ConfigFieldItemBase implements PrepareCacheInterface {
           'not null' => TRUE,
           'default' => 0,
         ),
+        // Required when upgrading and comment module is disabled.
+        // @todo Remove in D9.
+        'indexes' => array(),
+        'foreign keys' => array(),
       ),
     );
   }
