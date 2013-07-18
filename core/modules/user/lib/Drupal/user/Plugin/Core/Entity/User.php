@@ -218,6 +218,26 @@ class User extends EntityNG implements UserInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasPermission($permission) {
+    // User #1 has all privileges.
+    if ((int) $this->id() === 1) {
+      return TRUE;
+    }
+
+    $roles = \Drupal::entityManager()->getStorageController('user_role')->loadMultiple($this->getRoles());
+
+    foreach ($roles as $role) {
+      if ($role->hasPermission($permission)) {
+        return TRUE;
+      }
+    }
+
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getPassword() {
     return $this->get('pass')->value;
   }
