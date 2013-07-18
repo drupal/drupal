@@ -176,11 +176,11 @@ abstract class CacheCollector implements CacheCollectorInterface, DestructableIn
    * Flags an offset value to be written to the persistent cache.
    *
    * @param string $key
-   *   The key that was request.
+   *   The key that was requested.
    * @param bool $persist
    *   (optional) Whether the offset should be persisted or not, defaults to
    *   TRUE. When called with $persist = FALSE the offset will be unflagged so
-   *   that it will not written at the end of the request.
+   *   that it will not be written at the end of the request.
    */
   protected function persist($key, $persist = TRUE) {
     $this->keysToPersist[$key] = $persist;
