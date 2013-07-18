@@ -90,12 +90,45 @@ system.date:
         default:
           type: string
           label: 'Default country'
-    formats:
+    langcode:
+      type: string
+      label: 'Default language'
+
+system.date_format.*:
+  type: mapping
+  label: 'Date format'
+  mapping:
+    id:
+      type: string
+      label: 'Date format identifier'
+    uuid:
+      type: string
+      label: 'UUID'
+    label:
+      type: label
+      label: 'Date format label'
+    status:
+      type: boolean
+      label: 'Enabled'
+    locked:
+      type: boolean
+      label: 'Locked'
+    locales:
       type: sequence
-      label: 'Date formats'
+      label: 'Languages'
       sequence:
-        - type: date_format
-          label: 'Date format'
+        - type: string
+          label: 'Language'
+    pattern:
+      type: mapping
+      label: 'Format string'
+      mapping:
+        php:
+          type: string
+          label: 'PHP date format'
+        intl:
+          type: string
+          label: 'Intl date format'
     langcode:
       type: string
       label: 'Default language'

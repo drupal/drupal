@@ -78,25 +78,3 @@ filter:
     status:
       type: boolean
       label: 'Enabled'
-
-# Date format with name and pattern.
-date_format:
-  type: mapping
-  label: 'Date Format'
-  mapping:
-    name:
-      type: label
-      label: 'Name'
-    pattern:
-      type: mapping
-      label: 'Format string'
-      mapping:
-        php:
-          type: label
-          label: 'PHP date format'
-        intl:
-          type: label
-          label: 'International'
-    locked:
-      type: boolean
-      label: 'Locked'

@@ -171,7 +171,7 @@ abstract class DateFormatFormBase extends EntityFormController implements Entity
 
     if (!empty($options)) {
       $form['locales'] = array(
-        '#title' => t('Select localizations'),
+        '#title' => t('Languages'),
         '#type' => 'select',
         '#options' => $options,
         '#multiple' => TRUE,
