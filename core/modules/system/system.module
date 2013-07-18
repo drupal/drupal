@@ -736,17 +736,14 @@ function system_menu() {
   );
   $items['admin/modules/uninstall'] = array(
     'title' => 'Uninstall',
-    'page arguments' => array('system_modules_uninstall'),
-    'access arguments' => array('administer modules'),
+    'route_name' => 'system_modules_uninstall',
     'type' => MENU_LOCAL_TASK,
-    'file' => 'system.admin.inc',
     'weight' => 20,
   );
   $items['admin/modules/uninstall/confirm'] = array(
     'title' => 'Uninstall',
-    'access arguments' => array('administer modules'),
+    'route_name' => 'system_modules_uninstall_confirm',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
-    'file' => 'system.admin.inc',
   );
 
   // Configuration.
