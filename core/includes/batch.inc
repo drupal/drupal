@@ -86,9 +86,9 @@ function _batch_page() {
  */
 function _batch_do() {
   // Perform actual processing.
-  list($percentage, $message) = _batch_process();
+  list($percentage, $message, $label) = _batch_process();
 
-  return new JsonResponse(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message));
+  return new JsonResponse(array('status' => TRUE, 'percentage' => $percentage, 'message' => $message, 'label' => $label));
 }
 
 /**
@@ -108,6 +108,7 @@ function _batch_progress_page() {
     // This is the first page so we return some output immediately.
     $percentage       = 0;
     $message          = $current_set['init_message'];
+    $label            = '';
     $batch['running'] = TRUE;
   }
   else {
@@ -128,7 +129,7 @@ function _batch_progress_page() {
     print $fallback;
 
     // Perform actual processing.
-    list($percentage, $message) = _batch_process($batch);
+    list($percentage, $message, $label) = _batch_process($batch);
     if ($percentage == 100) {
       $new_op = 'finished';
     }
@@ -166,7 +167,7 @@ function _batch_progress_page() {
   drupal_add_js($js_setting, 'setting');
   drupal_add_library('system', 'drupal.batch');
 
-  return theme('progress_bar', array('percent' => $percentage, 'message' => $message));
+  return theme('progress_bar', array('percent' => $percentage, 'message' => $message, 'label' => $label));
 }
 
 /**
@@ -208,7 +209,7 @@ function _batch_process() {
       include_once DRUPAL_ROOT . '/' . $current_set['file'];
     }
 
-    $task_message = '';
+    $task_message = $label = '';
     // Assume a single pass operation and set the completion level to 1 by
     // default.
     $finished = 1;
@@ -296,14 +297,11 @@ function _batch_process() {
       '@estimate'   => ($current > 0) ? format_interval(($elapsed * ($total - $current) / $current) / 1000) : '-',
     );
     $message = strtr($progress_message, $values);
-    if (!empty($message)) {
-      $message .= '<br />';
-    }
     if (!empty($task_message)) {
-      $message .= $task_message;
+      $label = $task_message;
     }
 
-    return array($percentage, $message);
+    return array($percentage, $message, $label);
   }
   else {
     // If we are not in progressive mode, the entire batch has been processed.
