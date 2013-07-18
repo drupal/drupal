@@ -1,13 +1,3 @@
-.views-exposed-form .views-exposed-widget {
-  display: inline-block;
-}
-
-.views-exposed-form .form-item,
-.views-exposed-form .form-submit {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
 /* table style column align */
 .views-align-left {
   text-align: left;

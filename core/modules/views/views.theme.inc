@@ -1038,52 +1038,17 @@ function template_preprocess_views_view_row_rss(&$variables) {
 function template_preprocess_views_exposed_form(&$variables) {
   $form = &$variables['form'];
 
-  // Put all single checkboxes together in the last spot.
-  $checkboxes = array();
-
   if (!empty($form['q'])) {
     $variables['q'] = $form['q'];
   }
 
-  $variables['widgets'] = array();
+  // Include basic theming for exposed forms.
+  $form['#attached']['library'][] = array('views', 'views.exposed-form');
+
   foreach ($form['#info'] as $id => $info) {
-    // Set aside checkboxes.
-    if (isset($form[$info['value']]['#type']) && $form[$info['value']]['#type'] == 'checkbox') {
-      $checkboxes[] = $form[$info['value']];
-      continue;
-    }
-    $widget = new stdClass();
-    // set up defaults so that there's always something there.
-    $widget->label = $widget->operator = $widget->widget = $widget->description = '';
-
-    $widget->id = isset($form[$info['value']]['#id']) ? $form[$info['value']]['#id'] : '';
-
     if (!empty($info['label'])) {
-      $widget->label = check_plain($info['label']);
+      $form[$info['value']]['#title'] = $info['label'];
     }
-    if (!empty($info['operator']) && isset($form[$info['operator']])) {
-      $widget->operator = $form[$info['operator']];
-    }
-
-    $widget->widget = $form[$info['value']];
-
-    if (!empty($info['description'])) {
-      $widget->description = check_plain($info['description']);
-    }
-
-    $variables['widgets'][$id] = $widget;
-    // Unset the widget, so that it doesn't get rendered twice.
-    unset($form[$info['value']]);
-  }
-
-  // Wrap up all the checkboxes we set aside into a widget.
-  if (!empty($checkboxes)) {
-    $widget = new stdClass();
-    // set up defaults so that there's always something there.
-    $widget->label = $widget->operator = $widget->widget = NULL;
-    $widget->id = 'checkboxes';
-    $widget->widget = $checkboxes;
-    $variables['widgets']['checkboxes'] = $widget;
   }
 }
 
