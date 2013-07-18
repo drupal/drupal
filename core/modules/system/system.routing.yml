@@ -165,6 +165,20 @@ system_theme_settings_global:
   requirements:
     _permission: 'administer themes'
 
+system_modules_uninstall:
+  pattern: 'admin/modules/uninstall'
+  defaults:
+    _form: 'Drupal\system\Form\ModulesUninstallForm'
+  requirements:
+    _permission: 'administer modules'
+
+system_modules_uninstall_confirm:
+  pattern: 'admin/modules/uninstall/confirm'
+  defaults:
+    _form: 'Drupal\system\Form\ModulesUninstallConfirmForm'
+  requirements:
+    _permission: 'administer modules'
+
 system_timezone:
   pattern: '/system/timezone'
   defaults:

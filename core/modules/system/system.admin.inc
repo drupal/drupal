@@ -7,10 +7,10 @@
 
 use Drupal\system\DateFormatInterface;
 use Drupal\system\Form\ModulesInstallConfirmForm;
-use Drupal\system\Form\ModulesUninstallConfirmForm;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Drupal\Core\Datetime\DrupalDateTime;
 
 /**
  * Menu callback; Provide the administration overview page.
@@ -764,113 +764,6 @@ function system_modules_submit($form, &$form_state) {
 }
 
 /**
- * Uninstall functions
- */
-
-/**
- * Form constructor for the uninstalling disabled modules form.
- *
- * @see system_menu()
- * @see system_modules_uninstall_validate()
- * @see system_modules_uninstall_submit()
- *
- * @ingroup forms
- */
-function system_modules_uninstall($form, $form_state = NULL) {
-  // Make sure the install API is available.
-  include_once DRUPAL_ROOT . '/core/includes/install.inc';
-
-  // Display the confirm form if any modules have been submitted.
-  if (!empty($form_state['storage']['uninstall']) && $modules = array_filter($form_state['storage']['uninstall'])) {
-    // Contents of confirm form is injected here because already in form
-    // building function.
-    $confirm_form = new ModulesUninstallConfirmForm();
-    return $confirm_form->buildForm($form, $form_state, $modules, Drupal::request());
-  }
-
-  // Get a list of disabled, installed modules.
-  $all_modules = system_rebuild_module_data();
-  $disabled_modules = array();
-  foreach ($all_modules as $name => $module) {
-    if (empty($module->status) && drupal_get_installed_schema_version($name) > SCHEMA_UNINSTALLED) {
-      $disabled_modules[$name] = $module;
-    }
-  }
-
-  // Only build the rest of the form if there are any modules available to
-  // uninstall.
-  if (!empty($disabled_modules)) {
-    $profile = drupal_get_profile();
-    uasort($disabled_modules, 'system_sort_modules_by_info_name');
-    $form['uninstall'] = array('#tree' => TRUE);
-    foreach ($disabled_modules as $module) {
-      $module_name = $module->info['name'] ? $module->info['name'] : $module->name;
-      $form['modules'][$module->name]['#module_name'] = $module_name;
-      $form['modules'][$module->name]['name']['#markup'] = $module_name;
-      $form['modules'][$module->name]['description']['#markup'] = t($module->info['description']);
-      $form['uninstall'][$module->name] = array(
-        '#type' => 'checkbox',
-        '#title' => t('Uninstall @module module', array('@module' => $module_name)),
-        '#title_display' => 'invisible',
-      );
-      // All modules which depend on this one must be uninstalled first, before
-      // we can allow this module to be uninstalled. (The installation profile
-      // is excluded from this list.)
-      foreach (array_keys($module->required_by) as $dependent) {
-        if ($dependent != $profile && drupal_get_installed_schema_version($dependent) != SCHEMA_UNINSTALLED) {
-          $dependent_name = isset($all_modules[$dependent]->info['name']) ? $all_modules[$dependent]->info['name'] : $dependent;
-          $form['modules'][$module->name]['#required_by'][] = $dependent_name;
-          $form['uninstall'][$module->name]['#disabled'] = TRUE;
-        }
-      }
-    }
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Uninstall'),
-    );
-    $form['#action'] = url('admin/modules/uninstall/confirm');
-  }
-  else {
-    $form['modules'] = array();
-  }
-
-  return $form;
-}
-
-/**
- * Validates the submitted uninstall form.
- */
-function system_modules_uninstall_validate($form, &$form_state) {
-  // Form submitted, but no modules selected.
-  if (!count(array_filter($form_state['values']['uninstall']))) {
-    drupal_set_message(t('No modules selected.'), 'error');
-    return new RedirectResponse(url('admin/modules/uninstall', array('absolute' => TRUE)));
-  }
-}
-
-/**
- * Processes the submitted uninstall form.
- */
-function system_modules_uninstall_submit($form, &$form_state) {
-  // Make sure the install API is available.
-  include_once DRUPAL_ROOT . '/core/includes/install.inc';
-
-  if (!empty($form['#confirmed'])) {
-    // Call the uninstall routine for each selected module.
-    $modules = array_keys($form_state['values']['uninstall']);
-    module_uninstall($modules);
-    drupal_set_message(t('The selected modules have been uninstalled.'));
-
-    $form_state['redirect'] = 'admin/modules/uninstall';
-  }
-  else {
-    $form_state['storage'] = $form_state['values'];
-    $form_state['rebuild'] = TRUE;
-  }
-}
-
-/**
  * Default page callback for batches.
  */
 function system_batch_page() {
@@ -1240,11 +1133,11 @@ function theme_system_modules_uninstall($variables) {
   // Display table.
   $rows = array();
   foreach (element_children($form['modules']) as $module) {
-    if (!empty($form['modules'][$module]['#required_by'])) {
-      $disabled_message = format_plural(count($form['modules'][$module]['#required_by']),
+    if (!empty($form['modules'][$module]['#dependents'])) {
+      $disabled_message = format_plural(count($form['modules'][$module]['#dependents']),
         'To uninstall @module, the following module must be uninstalled first: @required_modules',
         'To uninstall @module, the following modules must be uninstalled first: @required_modules',
-        array('@module' => $form['modules'][$module]['#module_name'], '@required_modules' => implode(', ', $form['modules'][$module]['#required_by'])));
+        array('@module' => $form['modules'][$module]['#module_name'], '@required_modules' => implode(', ', $form['modules'][$module]['#dependents'])));
       $disabled_message = '<div class="admin-requirements">' . $disabled_message . '</div>';
     }
     else {
