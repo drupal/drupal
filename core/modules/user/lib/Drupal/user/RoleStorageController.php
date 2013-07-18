@@ -17,15 +17,6 @@ class RoleStorageController extends ConfigStorageController implements RoleStora
   /**
    * {@inheritdoc}
    */
-  public function resetCache(array $ids = NULL) {
-    parent::resetCache($ids);
-    // Clear the user access cache.
-    drupal_static_reset('user_access');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function deleteRoleReferences(array $rids) {
     // Remove the role from all users.
     db_delete('users_roles')

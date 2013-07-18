@@ -32,6 +32,17 @@ interface AccountInterface {
   public function getRoles();
 
   /**
+   * Checks whether a user has a certain permission.
+   *
+   * @param string $permission
+   *   The permission string to check.
+   *
+   * @return bool
+   *   TRUE if the user has the permission, FALSE otherwise.
+   */
+  public function hasPermission($permission);
+
+  /**
    * Returns the session ID.
    *
    * @return string|NULL

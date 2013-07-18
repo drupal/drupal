@@ -44,6 +44,13 @@ class UserBCDecorator extends EntityBCDecorator implements UserInterface {
   /**
    * {@inheritdoc}
    */
+  public function hasPermission($permission) {
+    return $this->decorated->hasPermission($permission);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getSecureSessionId() {
     return $this->decorated->getSecureSessionId();
   }
