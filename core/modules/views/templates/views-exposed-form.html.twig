@@ -4,21 +4,7 @@
  * Default theme implementation of a views exposed form.
  *
  * Available variables:
- * - widgets: A list of exposed form widgets. Each widget contains:
- *   - label: The sanitized label of the widget.
- *   - id: The ID of the widget, if available.
- *   - operator: The select element for the operator widget.
- *   - description: The sanitized description of the widget.
- *   - widget: The widget itself.
- *   - index: the widget's row index.
  * - form: A render element representing the form.
- *   - sort_by: An optional select element to sort the view by fields.
- *   - sort_order: An optional select element with ascending or
- *     descending order options.
- *   - items_per_page: An optional select element for the available items per
- *     page.
- *   - offset: An optional textfield to define the offset of the view.
- *   - reset_button: An optional button to reset the exposed filter applied.
  *
  * @see template_preprocess_views_exposed_form()
  *
@@ -32,55 +18,6 @@
   #}
 {{ q }}
 {% endif %}
-<div class="views-exposed-form">
-  <div class="views-exposed-widgets clearfix">
-    {% for index, widget in widgets %}
-      <div id="{{ widget.id }}-wrapper" class="views-exposed-widget views-widget-{{ index }}">
-          {% if widget.label %}
-          <label for="{{ widget.id }}">
-            {{ widget.label }}
-          </label>
-        {% endif %}
-        {% if widget.operator %}
-          <div class="views-operator">
-            {{ widget.operator }}
-          </div>
-        {% endif %}
-        <div class="views-widget">
-          {{ widget.widget }}
-        </div>
-        {% if widget.description %}
-          <div class="description">
-            {{ widget.description }}
-          </div>
-        {% endif %}
-      </div>
-    {% endfor %}
-    {% if form.sort_by %}
-      <div class="views-exposed-widget views-widget-sort-by">
-        {{ form.sort_by }}
-      </div>
-      <div class="views-exposed-widget views-widget-sort-order">
-        {{ form.sort_order }}
-      </div>
-    {% endif %}
-    {% if form.items_per_page %}
-      <div class="views-exposed-widget views-widget-per-page">
-        {{ form.items_per_page }}
-      </div>
-    {% endif %}
-    {% if form.offset %}
-      <div class="views-exposed-widget views-widget-offset">
-        {{ form.offset }}
-      </div>
-    {% endif %}
-    <div class="views-exposed-widget views-submit-button">
-      {{ form }}
-    </div>
-    {% if form.reset_button %}
-      <div class="views-exposed-widget views-reset-button">
-        {{ form.reset_button }}
-      </div>
-    {% endif %}
-  </div>
+<div class="views-exposed-form clearfix">
+  {{ form }}
 </div>

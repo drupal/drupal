@@ -830,6 +830,13 @@ function views_library_info() {
       array('system', 'drupal'),
     ),
   );
+  $libraries['views.exposed-form'] = array(
+    'title' => 'Views exposed form',
+    'version' => VERSION,
+    'css' => array(
+      "$path/css/views.exposed_form.css",
+    ),
+  );
 
   return $libraries;
 }
@@ -1351,7 +1358,8 @@ function views_exposed_form($form, &$form_state) {
     }
   }
 
-  $form['submit'] = array(
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
     // Prevent from showing up in $_GET.
     '#name' => '',
     '#type' => 'submit',
