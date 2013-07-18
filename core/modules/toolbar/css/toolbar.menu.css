@@ -6,29 +6,29 @@
   margin: 0;
   padding: 0;
 }
-.toolbar .box {
+.toolbar .toolbar-box {
   display: block;
   line-height: 1em; /* this prevents the value "normal" from being returned as the line-height */
   position: relative;
   width: auto;
 }
-.toolbar .horizontal .menu .handle,
-.toolbar .horizontal .menu ul,
-.toolbar .vertical .menu ul {
+.toolbar .toolbar-tray-horizontal .menu .toolbar-handle,
+.toolbar .toolbar-tray-horizontal .menu ul,
+.toolbar .toolbar-tray-vertical .menu ul {
   display: none;
 }
-.toolbar .vertical li.open > ul {
+.toolbar .toolbar-tray-vertical li.open > ul {
   display: block; /* Show the sub-menus */
 }
-.toolbar .vertical .handle + a {
+.toolbar .toolbar-tray-vertical .toolbar-handle + a {
   margin-right: 3em; /* LTR */
 }
-[dir="rtl"] .toolbar .vertical .handle + a {
+[dir="rtl"] .toolbar .toolbar-tray-vertical .toolbar-handle + a {
   margin-left: 3em;
   margin-right: 0;
 }
-.toolbar .tray .active-trail > .box a,
-.toolbar .tray a.active {
+.toolbar .toolbar-tray .active-trail > .toolbar-box a,
+.toolbar .toolbar-tray a.active {
   color: #000;
   font-weight: bold;
 }
@@ -75,10 +75,10 @@
 /**
  * Handle.
  */
-.toolbar .handle:hover {
+.toolbar .toolbar-handle:hover {
   cursor: pointer;
 }
-.toolbar .icon.handle {
+.toolbar .toolbar-icon.toolbar-handle {
   bottom: 0;
   display: block;
   height: 100%;
@@ -90,24 +90,24 @@
   width: 3em;
   z-index: 1;
 }
-[dir="rtl"] .toolbar .icon.handle {
+[dir="rtl"] .toolbar .toolbar-icon.toolbar-handle {
   left: 0;
   right: auto;
 }
-.toolbar .icon.handle:before {
+.toolbar .toolbar-icon.toolbar-handle:before {
   background-image: url("../images/icon-open.png");
   left: 0; /* LTR */
 }
-[dir="rtl"] .toolbar .icon.handle:before {
+[dir="rtl"] .toolbar .toolbar-icon.toolbar-handle:before {
   left: auto;
   right: 0;
 }
-.toolbar .icon.handle.open:before {
+.toolbar .toolbar-icon.toolbar-handle.open:before {
   background-image: url("../images/icon-collapse.png");
 }
-.toolbar .menu .menu .icon.handle:before {
+.toolbar .menu .menu .toolbar-icon.toolbar-handle:before {
   background-image: url("../images/icon-child-open.png");
 }
-.toolbar .menu .menu .icon.handle.open:before {
+.toolbar .menu .menu .toolbar-icon.toolbar-handle.open:before {
   background-image: url("../images/icon-child-collapse.png");
 }

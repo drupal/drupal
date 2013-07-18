@@ -26,26 +26,26 @@
 /**
  * Toolbar bar.
  */
-.toolbar .bar {
+.toolbar .toolbar-bar {
   background-color: #0f0f0f;
   box-shadow: -1px 0 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
   color: #dddddd;
 }
-[dir="rtl"] .toolbar .bar {
+[dir="rtl"] .toolbar .toolbar-bar {
   box-shadow: 1px 0 3px 1px rgba(0, 0, 0, 0.3333);
 }
-.toolbar .bar a {
+.toolbar .toolbar-bar a {
   color: #ffffff;
 }
-.toolbar .bar .tab > a {
+.toolbar .toolbar-bar .toolbar-tab > a {
   font-weight: bold;
 }
-.toolbar .bar .tab > a:hover {
+.toolbar .toolbar-bar .toolbar-tab > a:hover {
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
   background-image: linear-gradient(rgba(255, 255, 255, 0.125) 20%, transparent 200%);
   text-decoration: none;
 }
-.toolbar .bar .tab > a.active {
+.toolbar .toolbar-bar .toolbar-tab > a.active {
   background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
   background-image: linear-gradient(rgba(255, 255, 255, 0.25) 20%, transparent 200%);
 }
@@ -53,97 +53,97 @@
 /**
  * Toolbar tray.
  */
-.toolbar .tray {
+.toolbar .toolbar-tray {
   background-color: #ffffff;
 }
-.toolbar .horizontal > .lining {
+.toolbar .toolbar-tray-horizontal > .toolbar-lining {
   padding-right: 5em; /* LTR */
 }
-[dir="rtl"] .toolbar .horizontal > .lining {
+[dir="rtl"] .toolbar .toolbar-tray-horizontal > .toolbar-lining {
   padding-right: 0;
   padding-left: 5em;
 }
-.toolbar .vertical > .lining:before {
+.toolbar .toolbar-tray-vertical > .toolbar-lining:before {
   background-color: #ffffff;
   border-right: 1px solid #aaaaaa; /* LTR */
   box-shadow: -1px 0 5px 2px rgba(0, 0, 0, 0.3333); /* LTR */
 }
-[dir="rtl"] .toolbar .vertical > .lining:before {
+[dir="rtl"] .toolbar .toolbar-tray-vertical > .toolbar-lining:before {
   border-left: 1px solid #aaaaaa;
   border-right: 0 none;
   box-shadow: 1px 0 5px 2px rgba(0, 0, 0, 0.3333);
 }
-.toolbar .horizontal {
+.toolbar .toolbar-tray-horizontal {
   border-bottom: 1px solid #aaaaaa;
   box-shadow: -2px 1px 3px 1px rgba(0, 0, 0, 0.3333); /* LTR */
 }
-[dir="rtl"] .toolbar .horizontal {
+[dir="rtl"] .toolbar .toolbar-tray-horizontal {
   box-shadow: 2px 1px 3px 1px rgba(0, 0, 0, 0.3333);
 }
-.toolbar .horizontal .tray {
+.toolbar .toolbar-tray-horizontal .toolbar-tray {
   background-color: #f5f5f5;
 }
-.toolbar .tray a {
+.toolbar .toolbar-tray a {
   color: #707070;
 }
-.toolbar .tray a:hover,
-.toolbar .tray a:active,
-.toolbar .tray a.active {
+.toolbar .toolbar-tray a:hover,
+.toolbar .toolbar-tray a:active,
+.toolbar .toolbar-tray a.active {
   color: #000;
 }
-.toolbar .horizontal .menu {
+.toolbar .toolbar-tray-horizontal .menu {
   background-color: #ffffff;
 }
-.toolbar .horizontal .menu li + li {
+.toolbar .toolbar-tray-horizontal .menu li + li {
   border-left: 1px solid #dddddd; /* LTR */
 }
-[dir="rtl"] .toolbar .horizontal .menu li + li {
+[dir="rtl"] .toolbar .toolbar-tray-horizontal .menu li + li {
   border-left: 0 none ;
   border-right: 1px solid #dddddd;
 }
-.toolbar .horizontal .menu li:last-child {
+.toolbar .toolbar-tray-horizontal .menu li:last-child {
   border-right: 1px solid #dddddd; /* LTR */
 }
-[dir="rtl"] .toolbar .horizontal .menu li:last-child {
+[dir="rtl"] .toolbar .toolbar-tray-horizontal .menu li:last-child {
   border-left: 1px solid #dddddd;
 }
-.toolbar .vertical .menu li + li {
+.toolbar .toolbar-tray-vertical .menu li + li {
   border-top: 1px solid #dddddd;
 }
-.toolbar .vertical .menu li:last-child {
+.toolbar .toolbar-tray-vertical .menu li:last-child {
   border-bottom: 1px solid #dddddd;
 }
-.toolbar .vertical .menu .menu li {
+.toolbar .toolbar-tray-vertical .menu .menu li {
   border: 0 none;
 }
-.toolbar .vertical .menu ul ul {
+.toolbar .toolbar-tray-vertical .menu ul ul {
   border-bottom: 1px solid #dddddd;
   border-top: 1px solid #dddddd;
 }
-.toolbar .vertical .menu li:last-child > ul {
+.toolbar .toolbar-tray-vertical .menu li:last-child > ul {
   border-bottom: 0;
 }
-.toolbar .vertical .menu .menu .menu {
+.toolbar .toolbar-tray-vertical .menu .menu .menu {
   margin-left: 1.3333em; /* LTR */
 }
-[dir="rtl"] .toolbar .vertical .menu .menu .menu {
+[dir="rtl"] .toolbar .toolbar-tray-vertical .menu .menu .menu {
   margin-left: 0;
   margin-right: 1.3333em;
 }
-.toolbar .vertical .menu .menu .menu .menu {
+.toolbar .toolbar-tray-vertical .menu .menu .menu .menu {
   margin-left: 0.25em; /* LTR */
 }
-[dir="rtl"] .toolbar .vertical .menu .menu .menu .menu {
+[dir="rtl"] .toolbar .toolbar-tray-vertical .menu .menu .menu .menu {
   margin-left: 0;
   margin-right: 0.25em;
 }
 .toolbar .menu .menu a {
   color: #434343;
 }
-.toolbar .vertical .menu .menu .menu a {
+.toolbar .toolbar-tray-vertical .menu .menu .menu a {
   padding-left: 0.6667em; /* LTR */
 }
-[dir="rtl"] .toolbar .vertical .menu .menu .menu a {
+[dir="rtl"] .toolbar .toolbar-tray-vertical .menu .menu .menu a {
   padding-left: 0;
   padding-right: 0.5em;
 }
@@ -151,25 +151,25 @@
 /**
  * Orientation toggle.
  */
-.toolbar .toggle-orientation {
+.toolbar .toolbar-toggle-orientation {
   background-color: #f5f5f5;
   padding: 0.6667em;
 }
-.toolbar .horizontal .toggle-orientation {
+.toolbar .toolbar-tray-horizontal .toolbar-toggle-orientation {
   border-left: 1px solid #c9c9c9; /* LTR */
 }
-[dir="rtl"] .toolbar .horizontal .toggle-orientation {
+[dir="rtl"] .toolbar .toolbar-tray-horizontal .toolbar-toggle-orientation {
   border-left: 0 none;
   border-right: 1px solid #c9c9c9;
 }
-.toolbar .toggle-orientation > .lining {
+.toolbar .toolbar-toggle-orientation > .toolbar-lining {
   float: right; /* LTR */
   padding: 0.1667em;
 }
-[dir="rtl"] .toolbar .toggle-orientation > .lining {
+[dir="rtl"] .toolbar .toolbar-toggle-orientation > .toolbar-lining {
   float: left;
 }
-.toolbar .toggle-orientation button {
+.toolbar .toolbar-toggle-orientation button {
   cursor: pointer;
   display: inline-block;
   height: 16px;
@@ -177,19 +177,19 @@
   text-indent: -999em;
   width: 20px;
 }
-.toolbar .toggle-orientation button:before {
+.toolbar .toolbar-toggle-orientation button:before {
   left: 0; /* LTR */
 }
-[dir="rtl"] .toolbar .toggle-orientation button:before {
+[dir="rtl"] .toolbar .toolbar-toggle-orientation button:before {
   left: auto;
   right: 0;
 }
-.toolbar .toggle-orientation [value="vertical"]:before {
+.toolbar .toolbar-toggle-orientation [value="vertical"]:before {
   background-image: url('../images/icon-toggle-vertical.png'); /* LTR */
 }
-[dir="rtl"] .toolbar .toggle-orientation [value="vertical"]:before {
+[dir="rtl"] .toolbar .toolbar-toggle-orientation [value="vertical"]:before {
   background-image: url('../images/icon-toggle-vertical-rtl.png');
 }
-.toolbar .toggle-orientation [value="horizontal"]:before {
+.toolbar .toolbar-toggle-orientation [value="horizontal"]:before {
   background-image: url('../images/icon-toggle-horizontal.png');
 }

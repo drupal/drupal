@@ -6,34 +6,25 @@
 /**
  * Toolbar.
  */
-.icon-shortcut:before {
+.toolbar-icon-shortcut:before {
   background-image: url(../images/shortcut.png);
 }
-.icon-shortcut:active:before,
-.icon-shortcut.active:before {
+.toolbar-icon-shortcut:active:before,
+.toolbar-icon-shortcut.active:before {
   background-image: url(../images/shortcut-active.png);
-}
-.toolbar .tray.horizontal.shortcuts .menu {
-  float: left;
 }
 .edit-shortcuts {
   display: block;
 }
-.toolbar .vertical .edit-shortcuts {
+.toolbar .toolbar-tray-vertical .edit-shortcuts {
   text-align: right;
   padding: 1em;
 }
-.toolbar .horizontal .edit-shortcuts {
+.toolbar .toolbar-tray-horizontal .edit-shortcuts {
   float: left; /* LTR */
 }
-[dir="rtl"] .toolbar .horizontal .edit-shortcuts {
-  border-left: 0 none;
-  border-right: 1px solid #d9d9d9;
+[dir="rtl"] .toolbar .toolbar-tray-horizontal .edit-shortcuts {
   float: right;
-  margin-left: 0;
-  margin-right: 0.3333em;
-  padding-left: 0.3333em;
-  padding-right: 0.6667em;
 }
 
 /**

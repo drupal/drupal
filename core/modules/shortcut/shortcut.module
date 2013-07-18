@@ -534,7 +534,7 @@ function shortcut_toolbar() {
         '#options' => array(
           'attributes' => array(
             'title' => t('Shortcuts'),
-            'class' => array('icon', 'icon-shortcut'),
+            'class' => array('toolbar-icon', 'toolbar-icon-shortcut'),
           ),
         ),
       ),

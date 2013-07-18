@@ -90,7 +90,7 @@ function toolbar_element_info() {
       '#heading' => t('Toolbar items'),
       '#attributes' => array(
         'id' => 'toolbar-bar',
-        'class' => array('bar', 'clearfix',),
+        'class' => array('toolbar-bar', 'clearfix',),
       ),
     ),
   );
@@ -283,7 +283,7 @@ function toolbar_pre_render_item($element) {
       $element['tray']['#wrapper_attributes'] = array();
     }
     $element['tray']['#wrapper_attributes'] += $attributes;
-    $element['tray']['#wrapper_attributes']['class'][] = 'tray';
+    $element['tray']['#wrapper_attributes']['class'][] = 'toolbar-tray';
 
     if (!isset($element['tray']['#theme_wrappers'])) {
       $element['tray']['#theme_wrappers'] = array();
@@ -307,7 +307,7 @@ function template_preprocess_toolbar_tab_wrapper(&$variables) {
   if (!isset($variables['element']['#wrapper_attributes'])) {
     $variables['element']['#wrapper_attributes'] = array();
   }
-  $variables['element']['#wrapper_attributes']['class'][] = 'tab';
+  $variables['element']['#wrapper_attributes']['class'][] = 'toolbar-tab';
 }
 
 /**
@@ -360,7 +360,7 @@ function theme_toolbar_tab_wrapper(&$variables) {
 function theme_toolbar_tray_wrapper(&$variables) {
   if (!empty($variables['element']['#children'])) {
     $element = $variables['element'];
-    return '<div' . new Attribute($element['#wrapper_attributes']) . '><div class="lining clearfix">' . $element['#children'] . '</div></div>';
+    return '<div' . new Attribute($element['#wrapper_attributes']) . '><div class="toolbar-lining clearfix">' . $element['#children'] . '</div></div>';
   }
 }
 
@@ -411,7 +411,7 @@ function toolbar_toolbar() {
       '#options' => array(
         'attributes' => array(
           'title' => t('Home page'),
-          'class' => array('icon', 'icon-home'),
+          'class' => array('toolbar-icon', 'toolbar-icon-home'),
         ),
       ),
     ),
@@ -453,7 +453,7 @@ function toolbar_toolbar() {
       '#options' => array(
         'attributes' => array(
           'title' => t('Admin menu'),
-          'class' => array('icon', 'icon-menu'),
+          'class' => array('toolbar-icon', 'toolbar-icon-menu'),
         ),
       ),
     ),
@@ -509,8 +509,8 @@ function toolbar_menu_navigation_links(&$tree) {
     $tree[$key]['link']['localized_options']['attributes'] = array(
       'id' => 'toolbar-link-' . str_replace(array('/', '<', '>'), array('-', '', ''), $item['link']['link_path']),
       'class' => array(
-        'icon',
-        'icon-' . strtolower(str_replace(' ', '-', $item['link']['link_title'])),
+        'toolbar-icon',
+        'toolbar-icon-' . strtolower(str_replace(' ', '-', $item['link']['link_title'])),
       ),
       'title' => check_plain($item['link']['description']),
     );

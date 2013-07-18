@@ -26,7 +26,7 @@ function initContextualToolbar (context) {
   var model = contextualToolbar.model = new contextualToolbar.Model();
 
   var viewOptions = $.extend({
-    el: $('.toolbar .bar .contextual-toolbar-tab'),
+    el: $('.toolbar .toolbar-bar .contextual-toolbar-tab'),
     model: model
   }, options);
   new contextualToolbar.VisualView(viewOptions);

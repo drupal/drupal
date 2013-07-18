@@ -83,7 +83,7 @@ function tour_toolbar() {
       '#tag' => 'button',
       '#value' => t('Tour'),
       '#attributes' => array(
-        'class' => array('icon', 'icon-help'),
+        'class' => array('toolbar-icon', 'toolbar-icon-help'),
         'role' => 'button',
         'aria-pressed' => 'false',
       ),
