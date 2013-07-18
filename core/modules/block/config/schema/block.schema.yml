@@ -10,12 +10,6 @@ block.block.*.*:
     uuid:
       type: string
       label: 'UUID'
-    label:
-      type: label
-      label: 'Title'
-    label_display:
-      type: string
-      label: 'Display title'
     region:
       type: string
       label: 'Region'
@@ -72,9 +66,12 @@ block.block.*.*:
       type: mapping
       label: 'Block settings'
       mapping:
-        admin_label:
+        label:
           type: label
           label: 'Description'
+        label_display:
+          type: string
+          label: 'Display title'
         cache:
           type: integer
           label: 'Cache'
