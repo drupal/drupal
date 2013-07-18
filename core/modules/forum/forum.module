@@ -132,21 +132,13 @@ function forum_menu() {
   );
   $items['admin/structure/forum/add/container'] = array(
     'title' => 'Add container',
-    'page callback' => 'forum_form_main',
-    'page arguments' => array('container'),
-    'access arguments' => array('administer forums'),
-    'type' => MENU_LOCAL_ACTION,
-    'parent' => 'admin/structure/forum',
-    'file' => 'forum.admin.inc',
+    'tab_parent' => 'admin/structure/forum',
+    'route_name' => 'forum_add_container',
   );
   $items['admin/structure/forum/add/forum'] = array(
+    'tab_parent' => 'admin/structure/forum',
     'title' => 'Add forum',
-    'page callback' => 'forum_form_main',
-    'page arguments' => array('forum'),
-    'access arguments' => array('administer forums'),
-    'type' => MENU_LOCAL_ACTION,
-    'parent' => 'admin/structure/forum',
-    'file' => 'forum.admin.inc',
+    'route_name' => 'forum_add_forum',
   );
   $items['admin/structure/forum/settings'] = array(
     'title' => 'Settings',
@@ -157,17 +149,11 @@ function forum_menu() {
   );
   $items['admin/structure/forum/edit/container/%taxonomy_term'] = array(
     'title' => 'Edit container',
-    'page callback' => 'forum_form_main',
-    'page arguments' => array('container', 5),
-    'access arguments' => array('administer forums'),
-    'file' => 'forum.admin.inc',
+    'route_name' => 'forum_edit_container',
   );
   $items['admin/structure/forum/edit/forum/%taxonomy_term'] = array(
     'title' => 'Edit forum',
-    'page callback' => 'forum_form_main',
-    'page arguments' => array('forum', 5),
-    'access arguments' => array('administer forums'),
-    'file' => 'forum.admin.inc',
+    'route_name' => 'forum_edit_forum',
   );
   return $items;
 }
@@ -238,6 +224,15 @@ function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
 }
 
 /**
+ * Implements hook_entity_info().
+ */
+function forum_entity_info(&$info) {
+  // Register forum specific form controllers.
+  $info['taxonomy_term']['controllers']['form']['forum'] = 'Drupal\forum\Form\ForumFormController';
+  $info['taxonomy_term']['controllers']['form']['container'] = 'Drupal\forum\Form\ContainerFormController';
+}
+
+/**
  * Implements hook_entity_bundle_info_alter().
  */
 function forum_entity_bundle_info_alter(&$bundles) {
@@ -250,7 +245,7 @@ function forum_entity_bundle_info_alter(&$bundles) {
 }
 
 /**
- * Entity URI callback used in forum_entity_info_alter().
+ * Entity URI callback used in forum_entity_bundle_info_alter().
  */
 function forum_uri($forum) {
   return array(
@@ -1309,4 +1304,20 @@ function _forum_update_forum_index($nid) {
       ->condition('nid', $nid)
       ->execute();
   }
+}
+
+/**
+ * Returns HTML for a forum form.
+ *
+ * By default this does not alter the appearance of a form at all, but is
+ * provided as a convenience for themers.
+ *
+ * @param $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
+ *
+ * @ingroup themeable
+ */
+function theme_forum_form(array $variables) {
+  return drupal_render_children($variables['form']);
 }

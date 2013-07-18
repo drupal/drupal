@@ -388,7 +388,7 @@ class ForumTest extends WebTestBase {
 
     $edit = array(
       'name' => $name,
-      'description' => $description,
+      'description[value]' => $description,
       'parent[0]' => $parent,
       'weight' => '0',
     );

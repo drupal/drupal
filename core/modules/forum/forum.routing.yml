@@ -10,3 +10,27 @@ forum_settings:
     _form: '\Drupal\forum\ForumSettingsForm'
   requirements:
     _permission: 'administer forums'
+forum_add_container:
+  pattern: 'admin/structure/forum/add/container'
+  defaults:
+    _content: 'Drupal\forum\Controller\ForumController::addContainer'
+  requirements:
+    _permission: 'administer forums'
+forum_add_forum:
+  pattern: 'admin/structure/forum/add/forum'
+  defaults:
+    _content: 'Drupal\forum\Controller\ForumController::addForum'
+  requirements:
+    _permission: 'administer forums'
+forum_edit_container:
+  pattern: 'admin/structure/forum/edit/container/{taxonomy_term}'
+  defaults:
+    _entity_form: 'taxonomy_term.container'
+  requirements:
+    _permission: 'administer forums'
+forum_edit_forum:
+  pattern: 'admin/structure/forum/edit/forum/{taxonomy_term}'
+  defaults:
+    _entity_form: 'taxonomy_term.forum'
+  requirements:
+    _permission: 'administer forums'
