@@ -190,10 +190,7 @@ class DependencyTest extends ModuleTestBase {
     $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPost(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
-    // Delete comment field to allow disabling of the comment module.
-    entity_load('field_entity', 'comment_node_forum')->delete();
-    // Purge comment field storage data.
-    field_purge_batch(10);
+
     // Disable the comment module.
     $edit = array('modules[Core][comment][enable]' => FALSE);
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));

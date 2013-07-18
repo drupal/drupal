@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Language\Language;
+use Drupal\comment\Plugin\field\field_type\CommentItem;
 
 /**
  * Implements hook_uninstall().
@@ -585,6 +586,15 @@ function comment_update_8006(&$sandbox) {
       $field['id'] = $field_name . '_' . $index;
       // Increment index.
       $index++;
+    }
+    // Comment module may be disabled so we will need to inject the schema to
+    // avoid attempting to create a Field of an unknown type.
+    if (!Drupal::moduleHandler()->moduleExists('comment')) {
+      // We can't use the autoloader because the comment namespace isn't
+      // registered.
+      // @todo Remove once https://drupal.org/node/1199946 is in.
+      require_once __DIR__ . '/lib/Drupal/comment/Plugin/field/field_type/CommentItem.php';
+      $field['schema'] = CommentItem::schema();
     }
     _update_8003_field_create_field($field);
 

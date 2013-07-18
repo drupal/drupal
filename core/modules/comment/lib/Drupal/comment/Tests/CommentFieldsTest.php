@@ -69,8 +69,16 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Drop default comment field added in CommentTestBase::setup().
     entity_load('field_entity', 'comment')->delete();
-    $this->cronRun();
-    $this->cronRun();
+    if ($field = field_info_field('comment_node_forum')) {
+      $field->delete();
+    }
+
+    // Purge field data now to allow comment module to be disabled once the
+    // field has been deleted.
+    field_purge_batch(10);
+    // Call again as field_purge_batch() won't remove both the instances and
+    // field in a single pass.
+    field_purge_batch(10);
 
     // Disable the comment module.
     $edit = array();
