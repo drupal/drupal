@@ -96,11 +96,6 @@ function _drupal_maintenance_theme() {
   // system.maintenance.css. When the database is inactive, it's not called so
   // we add them here.
   drupal_add_library('system', 'drupal.base');
-  $path = drupal_get_path('module', 'system');
-  drupal_add_css($path . '/css/system.module.css');
-  drupal_add_css($path . '/css/system.theme.css');
-  drupal_add_css($path . '/css/system.admin.css');
-  drupal_add_css($path . '/css/system.maintenance.css');
 }
 
 /**
