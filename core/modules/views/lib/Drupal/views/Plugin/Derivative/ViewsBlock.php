@@ -7,14 +7,16 @@
 
 namespace Drupal\views\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides block plugin definitions for all Views block displays.
  *
  * @see \Drupal\views\Plugin\block\block\ViewsBlock
  */
-class ViewsBlock implements DerivativeInterface {
+class ViewsBlock implements ContainerDerivativeInterface {
 
   /**
    * List of derivative definitions.
@@ -22,6 +24,43 @@ class ViewsBlock implements DerivativeInterface {
    * @var array
    */
   protected $derivatives = array();
+
+  /**
+   * The base plugin ID.
+   *
+   * @var string
+   */
+  protected $base_plugin_id;
+
+  /**
+   * The view storage controller.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   */
+  protected $viewStorageController;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, $base_plugin_id) {
+    return new static(
+      $base_plugin_id,
+      $container->get('plugin.manager.entity')->getStorageController('view')
+    );
+  }
+
+  /**
+   * Constructs a ViewsBlock object.
+   *
+   * @param string $base_plugin_id
+   *   The base plugin ID.
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $view_storage_controller
+   *   The entity storage controller to load views.
+   */
+  public function __construct($base_plugin_id, EntityStorageControllerInterface $view_storage_controller) {
+    $this->basePluginId = $base_plugin_id;
+    $this->viewStorageController = $view_storage_controller;
+  }
 
   /**
    * Implements \Drupal\Component\Plugin\Derivative\DerivativeInterface::getDerivativeDefinition().
@@ -39,7 +78,7 @@ class ViewsBlock implements DerivativeInterface {
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     // Check all Views for block displays.
-    foreach (views_get_all_views() as $view) {
+    foreach ($this->viewStorageController->loadMultiple() as $view) {
       // Do not return results for disabled views.
       if (!$view->status()) {
         continue;
