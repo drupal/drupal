@@ -61,7 +61,7 @@ class DependencyTest extends ModuleTestBase {
     // Verify that the module is forced to be disabled when submitting
     // the module page.
     $this->drupalPost('admin/modules', array(), t('Save configuration'));
-    $this->assertText(t('The @module module is missing, so the following module will be disabled: @depends.', array('@module' => '_missing_dependency', '@depends' => 'system_dependencies_test')), 'The module missing dependencies will be disabled.');
+    $this->assertText(t('The @module module is missing, so the following module will be disabled: @depends.', array('@module' => '_missing_dependency', '@depends' => 'System dependency test')), 'The module missing dependencies will be disabled.');
 
     // Confirm.
     $this->drupalPost(NULL, NULL, t('Continue'));
