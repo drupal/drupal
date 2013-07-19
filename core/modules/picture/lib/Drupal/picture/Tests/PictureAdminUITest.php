@@ -102,7 +102,7 @@ class PictureAdminUITest extends WebTestBase {
     $this->assertText('mapping_one');
 
     // Edit the group.
-    $this->drupalGet('admin/config/media/picturemapping/mapping_one/edit');
+    $this->drupalGet('admin/config/media/picturemapping/mapping_one');
     $this->assertFieldByName('label', 'Mapping One');
     $this->assertFieldByName('breakpointGroup', 'atestset');
 
@@ -122,8 +122,8 @@ class PictureAdminUITest extends WebTestBase {
       'mappings[custom.user.medium][1x]' => 'medium',
       'mappings[custom.user.large][1x]' => 'large',
     );
-    $this->drupalPost('admin/config/media/picturemapping/mapping_one/edit', $edit, t('Save'));
-    $this->drupalGet('admin/config/media/picturemapping/mapping_one/edit');
+    $this->drupalPost('admin/config/media/picturemapping/mapping_one', $edit, t('Save'));
+    $this->drupalGet('admin/config/media/picturemapping/mapping_one');
     $this->assertFieldByName('mappings[custom.user.small][1x]', 'thumbnail');
     $this->assertFieldByName('mappings[custom.user.small][2x]', '');
     $this->assertFieldByName('mappings[custom.user.medium][1x]', 'medium');
