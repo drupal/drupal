@@ -39,8 +39,8 @@ class UriItem extends FieldItemBase {
 
     if (!isset(self::$propertyDefinitions)) {
       self::$propertyDefinitions['value'] = array(
-        'type' => 'string',
-        'label' => t('Text value'),
+        'type' => 'uri',
+        'label' => t('URI value'),
       );
     }
     return self::$propertyDefinitions;
