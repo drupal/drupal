@@ -13,7 +13,7 @@ picture_mapping_page_add:
     _permission: 'administer pictures'
 
 picture_mapping_page_edit:
-  pattern: '/admin/config/media/picturemapping/{picture_mapping}/edit'
+  pattern: '/admin/config/media/picturemapping/{picture_mapping}'
   defaults:
     _entity_form: 'picture_mapping.edit'
   requirements:

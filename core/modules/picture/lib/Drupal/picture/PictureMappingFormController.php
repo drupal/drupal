@@ -144,7 +144,7 @@ class PictureMappingFormController extends EntityFormController {
     // another breakpoint group.
     if (!$picture_mapping->hasMappings()) {
       $uri = $picture_mapping->uri();
-      $form_state['redirect'] = $uri['path'] . '/edit';
+      $form_state['redirect'] = $uri['path'];
     }
     else {
       $form_state['redirect'] = 'admin/config/media/picturemapping';

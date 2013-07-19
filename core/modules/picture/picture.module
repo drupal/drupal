@@ -64,7 +64,7 @@ function picture_menu() {
     'route_name' => 'picture_mapping_page_add',
     'type' => MENU_LOCAL_ACTION,
   );
-  $items['admin/config/media/picturemapping/%picture_mapping/edit'] = array(
+  $items['admin/config/media/picturemapping/%picture_mapping'] = array(
     'title' => 'Edit picture mapping',
     'route_name' => 'picture_mapping_page_edit',
   );
