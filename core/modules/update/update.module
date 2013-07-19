@@ -444,7 +444,7 @@ function update_get_available($refresh = FALSE) {
  */
 function update_create_fetch_task($project) {
   module_load_include('inc', 'update', 'update.fetch');
-  return _update_create_fetch_task($project);
+  _update_create_fetch_task($project);
 }
 
 /**
@@ -454,7 +454,7 @@ function update_create_fetch_task($project) {
  */
 function update_refresh() {
   module_load_include('inc', 'update', 'update.fetch');
-  return _update_refresh();
+  _update_refresh();
 }
 
 /**
@@ -464,7 +464,7 @@ function update_refresh() {
  */
 function update_fetch_data() {
   module_load_include('inc', 'update', 'update.fetch');
-  return _update_fetch_data();
+  _update_fetch_data();
 }
 
 /**
