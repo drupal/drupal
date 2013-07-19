@@ -35,7 +35,7 @@ class FilterAutoP extends FilterBase {
    */
   public function tips($long = FALSE) {
     if ($long) {
-      return t('Lines and paragraphs are automatically recognized. The &lt;br /&gt; line break, &lt;p&gt; paragraph and &lt;/p&gt; close paragraph tags are inserted automatically. If paragraphs are not recognized simply add a couple blank lines.');
+      return t('Lines and paragraphs are automatically recognized. The &lt;br /&gt; line break, &lt;p&gt; paragraph and &lt;/p&gt; close paragraph tags are inserted automatically. If paragraphs are not recognized simply add a couple of blank lines.');
     }
     else {
       return t('Lines and paragraphs break automatically.');
