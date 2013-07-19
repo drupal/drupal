@@ -2961,6 +2961,21 @@ function template_preprocess_maintenance_page(&$variables) {
       $head_title['slogan'] = strip_tags(filter_xss_admin($site_slogan));
     }
   }
+  $path = drupal_get_path('module', 'system');
+
+  // These are usually added from system_page_build() except maintenance.css.
+  // When the database is inactive it's not called so we add it here.
+  $default_css = array(
+    '#attached' => array(
+      'css' => array(
+        $path . '/css/system.module.css',
+        $path . '/css/system.theme.css',
+        $path . '/css/system.admin.css',
+        $path . '/css/system.maintenance.css',
+      ),
+    ),
+  );
+  drupal_render($default_css);
 
   $variables['head_title_array']  = $head_title;
   $variables['head_title']        = implode(' | ', $head_title);
