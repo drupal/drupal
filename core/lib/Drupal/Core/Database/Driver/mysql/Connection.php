@@ -114,6 +114,19 @@ class Connection extends DatabaseConnection {
     return $pdo;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function serialize() {
+    // Cleanup the connection, much like __destruct() does it as well.
+    if ($this->needsCleanup) {
+      $this->nextIdDelete();
+    }
+    $this->needsCleanup = FALSE;
+
+    return parent::serialize();
+  }
+
   public function __destruct() {
     if ($this->needsCleanup) {
       $this->nextIdDelete();

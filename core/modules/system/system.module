@@ -719,10 +719,7 @@ function system_menu() {
   $items['admin/modules'] = array(
     'title' => 'Extend',
     'description' => 'Add and enable modules to extend site functionality.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('system_modules'),
-    'access arguments' => array('administer modules'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_modules_list',
     'weight' => -2,
   );
   $items['admin/modules/list'] = array(
@@ -731,7 +728,7 @@ function system_menu() {
   );
   $items['admin/modules/list/confirm'] = array(
     'title' => 'List',
-    'access arguments' => array('administer modules'),
+    'route_name' => 'system_modules_list_confirm',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
   $items['admin/modules/uninstall'] = array(

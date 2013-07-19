@@ -116,6 +116,20 @@ date_format_localize_reset:
   requirements:
     _permission: 'administer site configuration'
 
+system_modules_list:
+  pattern: 'admin/modules'
+  defaults:
+    _form: 'Drupal\system\Form\ModulesListForm'
+  requirements:
+    _permission: 'administer modules'
+
+system_modules_list_confirm:
+  pattern: 'admin/modules/list/confirm'
+  defaults:
+    _form: 'Drupal\system\Form\ModulesListConfirmForm'
+  requirements:
+    _permission: 'administer modules'
+
 system_theme_disable:
   pattern: '/admin/appearance/disable'
   defaults:
