@@ -1,0 +1,6 @@
+views_ajax:
+  pattern: '/views/ajax'
+  defaults:
+    _controller: '\Drupal\views\Controller\ViewAjaxController::ajaxView'
+  requirements:
+    _access: 'TRUE'

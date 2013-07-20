@@ -297,13 +297,9 @@ function views_menu() {
   $items = array();
   $items['views/ajax'] = array(
     'title' => 'Views',
-    'page callback' => 'views_ajax',
     'theme callback' => 'ajax_base_page_theme',
-    'delivery callback' => 'ajax_deliver',
-    'access callback' => TRUE,
-    'description' => 'Ajax callback for view loading.',
+    'route_name' => 'views_ajax',
     'type' => MENU_CALLBACK,
-    'file' => 'includes/ajax.inc',
   );
   // Define another taxonomy autocomplete because the default one of drupal
   // does not support a vid a argument anymore
