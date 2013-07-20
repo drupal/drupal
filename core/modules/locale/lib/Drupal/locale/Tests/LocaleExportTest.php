@@ -113,8 +113,8 @@ class LocaleExportTest extends WebTestBase {
     $this->assertRaw('# French translation of Drupal', t('Exported French translation file with only untranslated strings.'));
     // Ensure no customized translations exist in the file.
     $this->assertNoRaw('msgstr "janvier"', t('French custom translation not present in exported file.'));
-    // Ensure the untranslated strings exist in the file.
-    $this->assertRaw('msgid "February"', t('Untranslated string present in exported file.'));
+    // Ensure the untranslated strings exist in the file, and with right quotes.
+    $this->assertRaw($this->getUntranslatedString(), t('Empty string present in exported file.'));
   }
 
   /**
@@ -165,6 +165,19 @@ msgstr ""
 
 msgid "January"
 msgstr "janvier"
+EOF;
+  }
+
+  /**
+   * Returns a .po file fragment with an untranslated string.
+   *
+   * @return string
+   *   A .po file fragment with an untranslated string.
+   */
+  function getUntranslatedString() {
+    return <<< EOF
+msgid "February"
+msgstr ""
 EOF;
   }
 
