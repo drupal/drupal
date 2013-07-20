@@ -2997,7 +2997,7 @@ function _menu_clear_page_cache() {
     $cache_cleared = 1;
   }
   elseif ($cache_cleared == 1) {
-    drupal_register_shutdown_function('cache_invalidate_tags', array('content', TRUE));
+    drupal_register_shutdown_function('cache_invalidate_tags', array('content' => TRUE));
     // Keep track of which menus have expanded items.
     drupal_register_shutdown_function('_menu_set_expanded_menus');
     $cache_cleared = 2;
