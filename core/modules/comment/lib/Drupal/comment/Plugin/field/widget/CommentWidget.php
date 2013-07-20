@@ -7,16 +7,15 @@
 
 namespace Drupal\comment\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
 /**
  * Provides a default comment widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "comment_default",
- *   module = "comment",
  *   label = @Translation("Comment"),
  *   field_types = {
  *     "comment"
