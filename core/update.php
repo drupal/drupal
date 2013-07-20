@@ -456,6 +456,12 @@ $request = Request::createFromGlobals();
 drupal_container()
   ->set('request', $request);
 
+// Ensure that URLs generated for the home and admin pages don't have 'update.php'
+// in them.
+$generator = Drupal::urlGenerator();
+$generator->setBasePath(str_replace('/core', '', $request->getBasePath()) . '/');
+$generator->setScriptPath('');
+
 // There can be conflicting 'op' parameters because both update and batch use
 // this parameter name. We need the 'op' coming from a POST request to trump
 // that coming from a GET request.

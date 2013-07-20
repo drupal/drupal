@@ -146,6 +146,7 @@ class UpdateScriptTest extends WebTestBase {
     $this->drupalPost($this->update_url, array(), t('Continue'), array('external' => TRUE));
     $this->assertText(t('No pending updates.'));
     $this->assertNoLink('Administration pages');
+    $this->assertNoLinkByHref('update.php', 0);
     $this->clickLink('Front page');
     $this->assertResponse(200);
 
@@ -154,6 +155,8 @@ class UpdateScriptTest extends WebTestBase {
     $this->drupalLogin($admin_user);
     $this->drupalPost($this->update_url, array(), t('Continue'), array('external' => TRUE));
     $this->assertText(t('No pending updates.'));
+    $this->assertLink('Administration pages');
+    $this->assertNoLinkByHref('update.php', 1);
     $this->clickLink('Administration pages');
     $this->assertResponse(200);
   }
@@ -170,6 +173,7 @@ class UpdateScriptTest extends WebTestBase {
     $this->assertText('Updates were attempted.');
     $this->assertLink('site');
     $this->assertNoLink('Administration pages');
+    $this->assertNoLinkByHref('update.php', 0);
     $this->assertNoLink('logged');
     $this->clickLink('Front page');
     $this->assertResponse(200);
@@ -183,6 +187,8 @@ class UpdateScriptTest extends WebTestBase {
     $this->drupalPost(NULL, array(), t('Apply pending updates'));
     $this->assertText('Updates were attempted.');
     $this->assertLink('logged');
+    $this->assertLink('Administration pages');
+    $this->assertNoLinkByHref('update.php', 1);
     $this->clickLink('Administration pages');
     $this->assertResponse(200);
   }
