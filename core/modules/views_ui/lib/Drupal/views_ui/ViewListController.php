@@ -237,7 +237,7 @@ class ViewListController extends ConfigEntityListController implements EntityCon
    */
   protected function getDisplayPaths(EntityInterface $view) {
     $all_paths = array();
-    $executable = $view->get('executable');
+    $executable = $view->getExecutable();
     $executable->initDisplay();
     foreach ($executable->displayHandlers as $display) {
       if ($display->hasPath()) {

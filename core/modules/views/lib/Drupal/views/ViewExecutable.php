@@ -1740,7 +1740,7 @@ class ViewExecutable {
    * data, ID, and UUID.
    */
   public function createDuplicate() {
-    return $this->storage->createDuplicate()->get('executable');
+    return $this->storage->createDuplicate()->getExecutable();
   }
 
   /**

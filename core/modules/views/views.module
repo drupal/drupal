@@ -936,7 +936,7 @@ function views_get_applicable_views($type) {
   $result = array();
   foreach (Drupal::entityManager()->getStorageController('view')->loadMultiple($entity_ids) as $view) {
     // Check each display to see if it meets the criteria and is enabled.
-    $executable = $view->get('executable');
+    $executable = $view->getExecutable();
     $executable->initDisplay();
     foreach ($executable->displayHandlers as $id => $handler) {
       if (!empty($handler->definition[$type]) && $handler->isEnabled()) {

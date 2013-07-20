@@ -847,7 +847,7 @@ abstract class HandlerBase extends PluginBase {
       $this->defaultExposeOptions();
     }
 
-    $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+    $form_state['view']->getExecutable()->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
     $form_state['view']->addFormToStack($form_state['form_key'], $form_state['display_id'], $form_state['type'], $form_state['id'], TRUE, TRUE);
 
@@ -875,7 +875,7 @@ abstract class HandlerBase extends PluginBase {
     }
 
     $override = NULL;
-    $executable = $form_state['view']->get('executable');
+    $executable = $form_state['view']->getExecutable();
     if ($executable->display_handler->useGroupBy() && !empty($item['group_type'])) {
       if (empty($executable->query)) {
         $executable->initQuery();
@@ -900,7 +900,7 @@ abstract class HandlerBase extends PluginBase {
     $handler->unpackOptions($handler->options, $options, NULL, FALSE);
 
     // Store the item back on the view.
-    $executable = $form_state['view']->get('executable');
+    $executable = $form_state['view']->getExecutable();
     $executable->temporary_options[$type][$form_state['id']] = $handler->options;
 
     // @todo Decide if \Drupal\views_ui\Form\Ajax\ViewsFormBase::getForm() is

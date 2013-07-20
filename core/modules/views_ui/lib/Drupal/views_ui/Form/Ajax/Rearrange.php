@@ -53,7 +53,7 @@ class Rearrange extends ViewsFormBase {
     $type = $form_state['type'];
 
     $types = ViewExecutable::viewsHandlerTypes();
-    $executable = $view->get('executable');
+    $executable = $view->getExecutable();
     $executable->setDisplay($display_id);
     $display = &$executable->displayHandlers->get($display_id);
     $form['#title'] = t('Rearrange @type', array('@type' => $types[$type]['ltitle']));
@@ -134,7 +134,7 @@ class Rearrange extends ViewsFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     $types = ViewExecutable::viewsHandlerTypes();
-    $display = &$form_state['view']->get('executable')->displayHandlers->get($form_state['display_id']);
+    $display = &$form_state['view']->getExecutable()->displayHandlers->get($form_state['display_id']);
 
     $old_fields = $display->getOption($types[$form_state['type']]['plural']);
     $new_fields = $order = array();

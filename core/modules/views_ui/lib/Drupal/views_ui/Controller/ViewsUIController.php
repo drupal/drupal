@@ -89,7 +89,7 @@ class ViewsUIController implements ControllerInterface {
     $fields = array();
     $handler_types = ViewExecutable::viewsHandlerTypes();
     foreach ($views as $view) {
-      $executable = $view->get('executable');
+      $executable = $view->getExecutable();
       $executable->initDisplay();
       foreach ($executable->displayHandlers as $display_id => $display) {
         if ($executable->setDisplay($display_id)) {

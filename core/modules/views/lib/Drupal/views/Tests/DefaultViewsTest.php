@@ -117,7 +117,7 @@ class DefaultViewsTest extends ViewTestBase {
     $views = $controller->loadMultiple();
 
     foreach ($views as $name => $view_storage) {
-      $view = $view_storage->get('executable');
+      $view = $view_storage->getExecutable();
       $view->initDisplay();
       foreach ($view->storage->get('display') as $display_id => $display) {
         $view->setDisplay($display_id);

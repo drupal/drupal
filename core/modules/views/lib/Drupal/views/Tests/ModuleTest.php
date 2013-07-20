@@ -201,7 +201,7 @@ class ModuleTest extends ViewUnitTestBase {
     // Test $exclude_view parameter.
     $this->assertFalse(array_key_exists('archive', views_get_views_as_options(TRUE, 'all', 'archive')), 'View excluded from options based on name');
     $this->assertFalse(array_key_exists('archive:default', views_get_views_as_options(FALSE, 'all', 'archive:default')), 'View display excluded from options based on name');
-    $this->assertFalse(array_key_exists('archive', views_get_views_as_options(TRUE, 'all', $archive->get('executable'))), 'View excluded from options based on object');
+    $this->assertFalse(array_key_exists('archive', views_get_views_as_options(TRUE, 'all', $archive->getExecutable())), 'View excluded from options based on object');
 
     // Test the $opt_group parameter.
     $expected_opt_groups = array();

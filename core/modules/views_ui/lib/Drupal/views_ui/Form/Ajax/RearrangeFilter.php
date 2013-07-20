@@ -38,7 +38,7 @@ class RearrangeFilter extends ViewsFormBase {
     $type = 'filter';
 
     $types = ViewExecutable::viewsHandlerTypes();
-    $executable = $view->get('executable');
+    $executable = $view->getExecutable();
     if (!$executable->setDisplay($display_id)) {
       views_ajax_render(t('Invalid display id @display', array('@display' => $display_id)));
     }
@@ -212,7 +212,7 @@ class RearrangeFilter extends ViewsFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     $types = ViewExecutable::viewsHandlerTypes();
-    $display = &$form_state['view']->get('executable')->displayHandlers->get($form_state['display_id']);
+    $display = &$form_state['view']->getExecutable()->displayHandlers->get($form_state['display_id']);
     $remember_groups = array();
 
     if (!empty($form_state['view']->form_cache)) {

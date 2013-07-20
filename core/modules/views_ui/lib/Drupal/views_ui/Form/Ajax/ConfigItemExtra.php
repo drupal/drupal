@@ -62,7 +62,7 @@ class ConfigItemExtra extends ViewsFormBase {
         '#attributes' => array('class' => array('scroll')),
       ),
     );
-    $executable = $view->get('executable');
+    $executable = $view->getExecutable();
     $executable->setDisplay($display_id);
     $item = $executable->getItem($display_id, $type, $id);
 
@@ -110,7 +110,7 @@ class ConfigItemExtra extends ViewsFormBase {
     }
 
     // Store the item back on the view
-    $form_state['view']->get('executable')->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
+    $form_state['view']->getExecutable()->setItem($form_state['display_id'], $form_state['type'], $form_state['id'], $item);
 
     // Write to cache
     $form_state['view']->cacheSet();

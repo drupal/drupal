@@ -40,7 +40,7 @@ class Analyze extends ViewsFormBase {
     $form['#section'] = 'analyze';
 
     $analyzer = Views::analyzer();
-    $messages = $analyzer->getMessages($view->get('executable'));
+    $messages = $analyzer->getMessages($view->getExecutable());
 
     $form['analysis'] = array(
       '#prefix' => '<div class="form-item">',

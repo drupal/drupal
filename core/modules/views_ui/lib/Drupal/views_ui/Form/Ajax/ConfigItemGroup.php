@@ -63,7 +63,7 @@ class ConfigItemGroup extends ViewsFormBase {
         '#attributes' => array('class' => array('scroll')),
       ),
     );
-    $executable = $view->get('executable');
+    $executable = $view->getExecutable();
     if (!$executable->setDisplay($display_id)) {
       views_ajax_render(t('Invalid display id @display', array('@display' => $display_id)));
     }
@@ -101,7 +101,7 @@ class ConfigItemGroup extends ViewsFormBase {
     $id = $form_state['id'];
 
     $handler = Views::handlerManager($type)->getHandler($item);
-    $executable = $form_state['view']->get('executable');
+    $executable = $form_state['view']->getExecutable();
     $handler->init($executable, $executable->display_handler, $item);
 
     $handler->submitGroupByForm($form, $form_state);

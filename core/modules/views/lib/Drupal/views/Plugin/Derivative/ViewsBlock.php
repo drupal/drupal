@@ -83,7 +83,7 @@ class ViewsBlock implements ContainerDerivativeInterface {
       if (!$view->status()) {
         continue;
       }
-      $executable = $view->get('executable');
+      $executable = $view->getExecutable();
       $executable->initDisplay();
       foreach ($executable->displayHandlers as $display) {
         // Add a block plugin definition for each block display.

@@ -63,7 +63,7 @@ class ConfigItem extends ViewsFormBase {
         '#attributes' => array('class' => array('scroll')),
       ),
     );
-    $executable = $view->get('executable');
+    $executable = $view->getExecutable();
     $save_ui_cache = FALSE;
     $executable->setDisplay($display_id);
     $item = $executable->getItem($display_id, $type, $id);
@@ -210,7 +210,7 @@ class ConfigItem extends ViewsFormBase {
     }
 
     $override = NULL;
-    $executable = $form_state['view']->get('executable');
+    $executable = $form_state['view']->getExecutable();
     if ($executable->display_handler->useGroupBy() && !empty($item['group_type'])) {
       if (empty($executable->query)) {
         $executable->initQuery();
@@ -252,7 +252,7 @@ class ConfigItem extends ViewsFormBase {
   public function remove(&$form, &$form_state) {
     // Store the item back on the view
     list($was_defaulted, $is_defaulted) = $form_state['view']->getOverrideValues($form, $form_state);
-    $executable = $form_state['view']->get('executable');
+    $executable = $form_state['view']->getExecutable();
     // If the display selection was changed toggle the override value.
     if ($was_defaulted != $is_defaulted) {
       $display = &$executable->displayHandlers->get($form_state['display_id']);
