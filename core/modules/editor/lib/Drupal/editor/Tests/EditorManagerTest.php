@@ -66,7 +66,7 @@ class EditorManagerTest extends DrupalUnitTestBase {
    * Tests the configurable text editor manager.
    */
   function testManager() {
-    $this->editorManager = new EditorManager($this->container->get('container.namespaces'));
+    $this->editorManager = $this->container->get('plugin.manager.editor');
 
     // Case 1: no text editor available:
     // - listOptions() should return an empty list of options
