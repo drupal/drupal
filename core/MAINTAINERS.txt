@@ -199,6 +199,9 @@ Book module
 Breakpoint module
 - Peter Droogmans 'attiks' http://drupal.org/user/105002
 
+CKEditor module
+- Wim Leers 'Wim Leers' http://drupal.org/user/99777
+
 Color module
 - ?
 
@@ -223,6 +226,9 @@ Database Logging module
 Edit module
 - Wim Leers 'Wim Leers' http://drupal.org/user/99777
 - Théodore Biadala 'nod_' http://drupal.org/user/598310
+
+Editor module
+- Wim Leers 'Wim Leers' http://drupal.org/user/99777
 
 Entity Reference module
 - Amitai Burstein 'Amitaibu' http://drupal.org/user/57511

@@ -130,12 +130,33 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
   }
   asort($modules);
 
+  $form['system_compact_link'] = array(
+    '#theme' => 'system_compact_link',
+  );
+
+  $form['permissions'] = array(
+    '#type' => 'table',
+    '#header' => array(t('Permission')),
+    '#id' => 'permissions',
+  );
+  foreach ($role_names as $rid => $name) {
+    $form['permissions']['#header'][] = array(
+      'data' => $name,
+      'class' => array('checkbox'),
+    );
+  }
+
   foreach ($modules as $module => $display_name) {
     if ($permissions = module_invoke($module, 'permission')) {
-      $form['permission'][] = array(
+      // Module name.
+      $form['permissions'][$module] = array(array(
+        '#wrapper_attributes' => array(
+          'colspan' => count($role_names) + 1,
+          'class' => array('module'),
+          'id' => 'module-' . $module,
+        ),
         '#markup' => $module_info[$module]['name'],
-        '#id' => $module,
-      );
+      ));
       foreach ($permissions as $perm => $perm_item) {
         // Fill in default values for the permission.
         $perm_item += array(
@@ -149,30 +170,30 @@ function user_admin_permissions($form, $form_state, $rid = NULL) {
           '#permission_item' => $perm_item,
           '#hide' => $hide_descriptions,
         );
-        $form['permission'][$perm] = array(
+        $form['permissions'][$perm]['description'] = array(
+          '#wrapper_attributes' => array(
+            'class' => array('permission'),
+          ),
           '#type' => 'item',
           '#markup' => $perm_item['title'],
           '#description' => drupal_render($user_permission_description),
         );
+        $options[$perm] = '';
         foreach ($role_names as $rid => $name) {
-          // Builds arrays for checked boxes for each role
-          if (in_array($perm, $role_permissions[$rid])) {
-            $status[$rid][] = $perm;
-          }
+          $form['permissions'][$perm][$rid] = array(
+            '#title' => $name . ': ' . $perm_item['title'],
+            '#title_display' => 'invisible',
+            '#wrapper_attributes' => array(
+              'class' => array('checkbox'),
+            ),
+            '#type' => 'checkbox',
+            '#default_value' => in_array($perm,$role_permissions[$rid]) ? 1 : 0,
+            '#attributes' => array('class' => array('rid-' . $rid)),
+            '#parents' => array($rid, $perm),
+          );
         }
       }
     }
-  }
-
-  // Have to build checkboxes here after checkbox arrays are built
-  foreach ($role_names as $rid => $name) {
-    $form['checkboxes'][$rid] = array(
-      '#type' => 'checkboxes',
-      '#options' => $options,
-      '#default_value' => isset($status[$rid]) ? $status[$rid] : array(),
-      '#attributes' => array('class' => array('rid-' . $rid)),
-    );
-    $form['role_names'][$rid] = array('#markup' => check_plain($name), '#tree' => TRUE);
   }
 
   $form['actions'] = array('#type' => 'actions');
@@ -197,61 +218,6 @@ function user_admin_permissions_submit($form, &$form_state) {
 
   // Clear the cached pages and blocks.
   cache_invalidate_tags(array('content' => TRUE));
-}
-
-/**
- * Returns HTML for the administer permissions page.
- *
- * @param $variables
- *   An associative array containing:
- *   - form: A render element representing the form.
- *
- * @ingroup themeable
- */
-function theme_user_admin_permissions($variables) {
-  $form = $variables['form'];
-
-  $roles = user_role_names();
-  foreach (element_children($form['permission']) as $key) {
-    $row = array();
-    // Module name
-    if (is_numeric($key)) {
-      $row[] = array('data' => drupal_render($form['permission'][$key]), 'class' => array('module'), 'id' => 'module-' . $form['permission'][$key]['#id'], 'colspan' => count($form['role_names']['#value']) + 1);
-    }
-    else {
-      // Permission row.
-      $row[] = array(
-        'data' => drupal_render($form['permission'][$key]),
-        'class' => array('permission'),
-      );
-      foreach (element_children($form['checkboxes']) as $rid) {
-        $form['checkboxes'][$rid][$key]['#title'] = $roles[$rid] . ': ' . $form['permission'][$key]['#markup'];
-        $form['checkboxes'][$rid][$key]['#title_display'] = 'invisible';
-        $row[] = array('data' => drupal_render($form['checkboxes'][$rid][$key]), 'class' => array('checkbox'));
-      }
-    }
-    $rows[] = $row;
-  }
-  $header[] = (t('Permission'));
-  foreach (element_children($form['role_names']) as $rid) {
-    $header[] = array('data' => drupal_render($form['role_names'][$rid]), 'class' => array('checkbox'));
-  }
-  $system_compact_link = array(
-    '#theme' => 'system_compact_link',
-  );
-  $table = array(
-    '#theme' => 'table',
-    '#header' => $header,
-    '#rows' => $rows,
-    '#attributes' => array(
-      'id' => 'permissions',
-    ),
-    '#sticky' => TRUE,
-  );
-  $output = drupal_render($system_compact_link);
-  $output .= drupal_render($table);
-  $output .= drupal_render_children($form);
-  return $output;
 }
 
 /**

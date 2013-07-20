@@ -1,1 +1,16 @@
-resources: { }
+# Enable all methods on nodes.
+resources:
+  entity:node:
+    GET: { }
+    POST: { }
+    PATCH: { }
+    DELETE: { }
+
+# To enable only specific formats for an operation, list the supported_formats.
+# For example, the following config makes JSON the only format available for
+# node GET requests.
+#   resources:
+#     entity:node:
+#       GET:
+#         supported_formats:
+#           - json

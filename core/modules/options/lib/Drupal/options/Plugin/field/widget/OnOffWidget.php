@@ -7,15 +7,14 @@
 
 namespace Drupal\options\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Plugin implementation of the 'options_onoff' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "options_onoff",
- *   module = "options",
  *   label = @Translation("Single on/off checkbox"),
  *   field_types = {
  *     "list_boolean"

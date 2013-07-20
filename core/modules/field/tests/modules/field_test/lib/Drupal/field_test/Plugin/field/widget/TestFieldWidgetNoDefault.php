@@ -7,16 +7,15 @@
 
 namespace Drupal\field_test\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
 /**
  * Plugin implementation of the 'test_field_widget_no_default' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "test_field_widget_no_default",
- *   module = "field_test",
  *   label = @Translation("Test widget - no default"),
  *   field_types = {
  *      "test_field"

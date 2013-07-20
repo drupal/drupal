@@ -7,7 +7,7 @@
 
 namespace Drupal\number\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -15,9 +15,8 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 /**
  * Plugin implementation of the 'number' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "number",
- *   module = "number",
  *   label = @Translation("Text field"),
  *   field_types = {
  *     "number_integer",

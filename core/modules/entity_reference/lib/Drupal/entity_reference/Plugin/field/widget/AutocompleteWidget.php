@@ -7,7 +7,7 @@
 
 namespace Drupal\entity_reference\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\entity_reference\Plugin\field\widget\AutocompleteWidgetBase;
 
@@ -19,9 +19,8 @@ use Drupal\entity_reference\Plugin\field\widget\AutocompleteWidgetBase;
  * the two widgets, and the Field API doesn't update default settings when
  * the widget changes.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "entity_reference_autocomplete",
- *   module = "entity_reference",
  *   label = @Translation("Autocomplete"),
  *   description = @Translation("An autocomplete text field."),
  *   field_types = {

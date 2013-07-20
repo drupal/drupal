@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\Core\DependencyInjection\Compiler\RegisterNestedMatchersPass.
+ * Contains Drupal\Core\DependencyInjection\Compiler\RegisterRouteFiltersPass.
  */
 
 namespace Drupal\Core\DependencyInjection\Compiler;
@@ -12,12 +12,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
 /**
- * Adds services tagged 'nested_matcher' to the tagged_matcher service.
+ * Adds services tagged 'router.matcher' to the matcher service.
  */
 class RegisterRouteFiltersPass implements CompilerPassInterface {
 
   /**
-   * Adds services tagged 'nested_matcher' to the tagged_matcher service.
+   * Adds services tagged 'router.matcher' to the matcher service.
    *
    * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
    *   The container to process.
@@ -26,9 +26,9 @@ class RegisterRouteFiltersPass implements CompilerPassInterface {
     if (!$container->hasDefinition('router.matcher')) {
       return;
     }
-    $nested = $container->getDefinition('router.matcher');
+    $matcher = $container->getDefinition('router.matcher');
     foreach ($container->findTaggedServiceIds('route_filter') as $id => $attributes) {
-      $nested->addMethodCall('addRouteFilter', array(new Reference($id)));
+      $matcher->addMethodCall('addRouteFilter', array(new Reference($id)));
     }
   }
 }

@@ -7,7 +7,7 @@
 
 namespace Drupal\field_test\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -15,9 +15,8 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
 /**
  * Plugin implementation of the 'test_field_widget' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "test_field_widget",
- *   module = "field_test",
  *   label = @Translation("Test widget"),
  *   field_types = {
  *      "test_field",

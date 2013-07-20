@@ -7,16 +7,15 @@
 
 namespace Drupal\text\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
 /**
  * Plugin implementation of the 'text_textfield' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "text_textfield",
- *   module = "text",
  *   label = @Translation("Text field"),
  *   field_types = {
  *     "text"

@@ -137,6 +137,7 @@ function views_ui_theme() {
     'views_ui_view_info' => array(
       'variables' => array('view' => NULL, 'displays' => NULL),
       'file' => 'views_ui.theme.inc',
+      'template' => 'views-ui-view-info',
     ),
 
     // Group of filters.

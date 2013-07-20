@@ -2721,7 +2721,6 @@ function template_preprocess_html(&$variables) {
  * template_preprocess_maintenance_page() to keep all of them consistent.
  *
  * @see drupal_render_page()
- * @see template_process_page()
  */
 function template_preprocess_page(&$variables) {
   $language_interface = language(Language::TYPE_INTERFACE);
@@ -2757,6 +2756,7 @@ function template_preprocess_page(&$variables) {
   $variables['site_name']         = (theme_get_setting('features.name') ? check_plain($site_config->get('name')) : '');
   $variables['site_slogan']       = (theme_get_setting('features.slogan') ? filter_xss_admin($site_config->get('slogan')) : '');
   $variables['tabs']              = menu_local_tabs();
+  $variables['title']             = new RenderWrapper('drupal_get_title');
 
   // Pass the main menu and secondary menu to the template as render arrays.
   if (!empty($variables['main_menu'])) {
@@ -2812,21 +2812,6 @@ function template_preprocess_page(&$variables) {
     '#theme' => 'breadcrumb',
     '#breadcrumb' => \Drupal::service('breadcrumb')->build(\Drupal::request()->attributes->all()),
   );
-}
-
-/**
- * Processes variables for page.html.twig.
- *
- * Perform final addition of variables before passing them into the template.
- * To customize these variables, simply set them in an earlier step.
- *
- * @see template_preprocess_page()
- */
-function template_process_page(&$variables) {
-  if (!isset($variables['title'])) {
-    $variables['title'] = drupal_get_title();
-  }
-
 }
 
 /**

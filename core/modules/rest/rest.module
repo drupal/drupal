@@ -28,46 +28,11 @@ function rest_permission() {
  */
 function rest_help($path, $arg) {
   switch ($path) {
-    // Main module help for the REST module
+    // Main module help for the REST module.
     case 'admin/help#rest':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The REST module provides a framework for exposing Drupal\'s data structures as RESTful web services. It can be used to read and write resources remotely, such as entity types like nodes or users. For more information, see the online handbook entry for the <a href="@rest">RESTful web services module</a>.', array('@rest' => 'http://drupal.org/documentation/modules/rest')) . '</p>';
-      $output .= '<h3>' . t('Configuration') . '</h3>';
-      $output .= '<dl>';
-      $output .= '<dt>' . t('Enabling serialization modules') . '</dt>';
-      $output .= '<dd>' . t('REST module depends on the serialization module, which provides JSON and XML representations by default. To get other serializations, you can enable modules such as the HAL module.') . '</dd>';
-      $output .= '</dl>';
-      $output .= '<dl>';
-      $output .= '<dt>' . t('Exposing resources') . '</dt>';
-      if (module_exists('config')) {
-        $output .= '<dd>' . t('Copy the following example settings to <em>rest.settings.yml</em> in the staging configuration directory, edit as needed and <a href="!url">import the new configuration</a>.', array(
-          '!url' => url('admin/config/development/sync'),
-        )) . '</dd>';
-      }
-      else {
-        $output .= '<dd>' . t('Copy the following example settings to <em>rest.settings.yml</em> in the staging configuration directory, edit as needed and import the new configuration.') . '</dd>';
-      }
-      $output .= "<dd><pre># Example configuration for enabling REST resources.
-resources:
-  # Enable the node resource.
-  'entity:node':
-    # Enable reading nodes in all formats known.
-    GET: { }
-</pre></dd>";
-      $output .= '</dl>';
-      $output .= '<dl>';
-      $output .= '<dt>' . t('Granting permissions') . '</dt>';
-      $output .= '<dd>' . t('The <a href="@permission-rest">permissions page</a> allows you to determine what user roles may access a web service operation.', array('@permission-rest' => url('admin/people/permissions', array('fragment' => 'module-rest')))) . '</dd>';
-      $output .= '</dl>';
-      $output .= '<h3>' . t('Example uses') . '</h3>';
-      $output .= '<dl>';
-      $output .= '<dt>' . t('An HTTP GET request can be used to get a node') . '</dt>';
-      $output .= '<dd><code>curl -H "Accept: application/hal+json" --include --request GET --cookie ' . session_name() . '=' . session_id() . ' ' . url('entity/node/5', array('absolute' => TRUE)) . '</code></dd>';
-      $output .= '<dt>' . t('An HTTP DELETE request can be used to delete a node') . '</dt>';
-      $output .= '<dd><code>curl --include --request DELETE --cookie ' . session_name() . '=' . session_id() . ' ' . url('entity/node/5', array('absolute' => TRUE)) . '</code></dd>';
-      $output .= '</dl>';
-      $output .= '<p>' . t('Note: Session information of the current user is shown here, make sure that you have the <a href="@permissions">permission to use the web API</a> to get and delete nodes.', array('@permissions' => url('admin/people/permissions', array('fragment' => 'module-rest')))) . '</p>';
       return $output;
   }
 }

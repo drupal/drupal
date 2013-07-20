@@ -7,16 +7,15 @@
 
 namespace Drupal\link\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
 /**
  * Plugin implementation of the 'link' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "link_default",
- *   module = "link",
  *   label = @Translation("Link"),
  *   field_types = {
  *     "link"

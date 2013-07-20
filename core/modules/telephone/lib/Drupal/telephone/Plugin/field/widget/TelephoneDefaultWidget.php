@@ -7,16 +7,15 @@
 
 namespace Drupal\telephone\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
 /**
  * Plugin implementation of the 'telephone_default' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "telephone_default",
- *   module = "telephone",
  *   label = @Translation("Telephone number"),
  *   field_types = {
  *     "telephone"

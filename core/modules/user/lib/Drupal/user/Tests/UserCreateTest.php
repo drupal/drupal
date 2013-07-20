@@ -14,6 +14,13 @@ use Drupal\simpletest\WebTestBase;
  */
 class UserCreateTest extends WebTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('image');
+
   public static function getInfo() {
     return array(
       'name' => 'User create',
@@ -29,6 +36,42 @@ class UserCreateTest extends WebTestBase {
   protected function testUserAdd() {
     $user = $this->drupalCreateUser(array('administer users'));
     $this->drupalLogin($user);
+
+    // Create a field and an instance.
+    $field_name = 'test_field';
+    $field = array(
+      'field_name' => $field_name,
+      'module' => 'image',
+      'type' => 'image',
+      'cardinality' => 1,
+      'locked' => FALSE,
+      'indexes' => array('target_id' => array('target_id')),
+      'settings' => array(
+        'uri_scheme' => 'public',
+        'default_image' => FALSE,
+      ),
+    );
+    entity_create('field_entity', $field)->save();
+
+    $instance = array(
+      'field_name' => $field_name,
+      'entity_type' => 'user',
+      'label' => 'Picture',
+      'bundle' => 'user',
+      'description' => t('Your virtual face or picture.'),
+      'required' => FALSE,
+      'settings' => array(
+        'file_extensions' => 'png gif jpg jpeg',
+        'file_directory' => 'pictures',
+        'max_filesize' => '30 KB',
+        'alt_field' => 0,
+        'title_field' => 0,
+        'max_resolution' => '85x85',
+        'min_resolution' => '',
+        'default_image' => 0,
+      ),
+    );
+    entity_create('field_instance', $instance)->save();
 
     // Test user creation page for valid fields.
     $this->drupalGet('admin/people/create');

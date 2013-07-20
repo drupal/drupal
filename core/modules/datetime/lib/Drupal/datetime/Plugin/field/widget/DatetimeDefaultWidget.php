@@ -6,7 +6,7 @@
 
 namespace Drupal\datetime\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
@@ -19,9 +19,8 @@ use Drupal\Core\Datetime\DrupalDateTime;
 /**
  * Plugin implementation of the 'datetime_default' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "datetime_default",
- *   module = "datetime",
  *   label = @Translation("Date and time"),
  *   field_types = {
  *     "datetime"

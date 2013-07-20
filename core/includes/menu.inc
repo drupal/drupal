@@ -1281,7 +1281,7 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
     // If we are asked for the active trail only, and $menu_name has not been
     // built and cached for this page yet, then this likely means that it
     // won't be built anymore, as this function is invoked from
-    // template_process_page(). So in order to not build a giant menu tree
+    // template_preprocess_page(). So in order to not build a giant menu tree
     // that needs to be checked for access on all levels, we simply check
     // whether we have the menu already in cache, or otherwise, build a minimum
     // tree containing the breadcrumb/active trail only.
@@ -2997,7 +2997,7 @@ function _menu_clear_page_cache() {
     $cache_cleared = 1;
   }
   elseif ($cache_cleared == 1) {
-    drupal_register_shutdown_function('cache_invalidate_tags', array('content', TRUE));
+    drupal_register_shutdown_function('cache_invalidate_tags', array('content' => TRUE));
     // Keep track of which menus have expanded items.
     drupal_register_shutdown_function('_menu_set_expanded_menus');
     $cache_cleared = 2;

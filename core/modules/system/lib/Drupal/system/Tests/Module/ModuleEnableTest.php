@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Module\ModuleEnable.
+ * Contains \Drupal\system\Tests\Module\ModuleEnableTest.
  */
 
 namespace Drupal\system\Tests\Module;
@@ -13,7 +13,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests enabling modules.
  */
-class ModuleEnable extends WebTestBase {
+class ModuleEnableTest extends WebTestBase {
 
   public static function getInfo() {
     return array(
@@ -31,7 +31,7 @@ class ModuleEnable extends WebTestBase {
    * be an array.
    */
   function testEnableUserTwice() {
-    module_enable(array('user'), FALSE);
+    $this->container->get('module_handler')->enable(array('user'), FALSE);
     $this->assertIdentical(config('system.module')->get('enabled.user'), '0');
   }
 

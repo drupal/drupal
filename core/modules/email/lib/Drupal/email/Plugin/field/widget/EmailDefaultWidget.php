@@ -7,16 +7,15 @@
 
 namespace Drupal\email\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
 /**
  * Plugin implementation of the 'email_default' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "email_default",
- *   module = "email",
  *   label = @Translation("E-mail"),
  *   field_types = {
  *     "email"

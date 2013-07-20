@@ -7,16 +7,15 @@
 
 namespace Drupal\taxonomy\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
 /**
  * Plugin implementation of the 'taxonomy_autocomplete' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "taxonomy_autocomplete",
- *   module = "taxonomy",
  *   label = @Translation("Autocomplete term widget (tagging)"),
  *   field_types = {
  *     "taxonomy_term_reference"

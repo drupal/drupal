@@ -89,21 +89,17 @@ function template_preprocess_views_ui_display_tab_bucket(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for theme_views_ui_view_info().
+ * Prepares variables for Views UI View info templates.
+ *
+ * Default template: views-ui-view-info.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - view: The View object.
  */
 function template_preprocess_views_ui_view_info(&$variables) {
   $variables['title'] = $variables['view']->label();
   $variables['displays'] = empty($variables['displays']) ? t('None') : format_plural(count($variables['displays']), 'Display', 'Displays') . ': ' . '<em>' . implode(', ', $variables['displays']) . '</em>';
-}
-
-/**
- * Returns basic administrative information about a view.
- */
-function theme_views_ui_view_info($variables) {
-  $output = '';
-  $output .= '<h3 class="views-ui-view-title">' . $variables['title'] . "</h3>\n";
-  $output .= '<div class="views-ui-view-displays">' . $variables['displays'] . "</div>\n";
-  return $output;
 }
 
 /**

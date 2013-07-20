@@ -7,15 +7,14 @@
 
 namespace Drupal\options\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Plugin implementation of the 'options_buttons' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "options_buttons",
- *   module = "options",
  *   label = @Translation("Check boxes/radio buttons"),
  *   field_types = {
  *     "list_integer",
