@@ -1,11 +1,13 @@
 <?php
+
 /**
  * @file
- * Contains \Drupal\rdf\Tests\StandardProfileTest
+ * Contains \Drupal\rdf\Tests\StandardProfileTest.
  */
 
 namespace Drupal\rdf\Tests;
 
+use Drupal\node\NodeInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -13,7 +15,89 @@ use Drupal\simpletest\WebTestBase;
  */
 class StandardProfileTest extends WebTestBase {
 
+  /**
+   * The profile used during tests.
+   *
+   * This purposefully uses the standard profile.
+   *
+   * @var string
+   */
   public $profile = 'standard';
+
+  /**
+   * @var string
+   */
+  protected $base_uri;
+
+  /**
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
+  /**
+   * @var \Drupal\user\UserInterface
+   */
+  protected $webUser;
+
+  /**
+   * @var \Drupal\taxonomy\TermInterface
+   */
+  protected $term;
+
+  /**
+   * @var \Drupal\file\FileInterface
+   */
+  protected $image;
+
+  /**
+   * @var \Drupal\node\NodeInterface
+   */
+  protected $article;
+
+  /**
+   * @var \Drupal\comment\CommentInterface
+   */
+  protected $articleComment;
+
+  /**
+   * @var \Drupal\node\NodeInterface
+   */
+  protected $page;
+
+  /**
+   * @var string
+   */
+  protected $imageUri;
+
+  /**
+   * @var string
+   */
+  protected $termUri;
+
+  /**
+   * @var string
+   */
+  protected $articleUri;
+
+  /**
+   * @var string
+   */
+  protected $pageUri;
+
+  /**
+   * @var string
+   */
+  protected $authorUri;
+
+  /**
+   * @var string
+   */
+  protected $articleCommentUri;
+
+  /**
+   * @var string
+   */
+  protected $commenterUri;
 
   public static function getInfo() {
     return array(
@@ -108,24 +192,24 @@ class StandardProfileTest extends WebTestBase {
   }
 
   /**
-   * Test that data is exposed correctly when using standard profile.
+   * Tests that data is exposed correctly when using standard profile.
    *
    * Because tests using standard profile take a very long time to run, and
    * because there is no manipulation of config or data within the test, simply
    * run all the tests from within this function.
    */
   public function testRdfaOutput() {
-    $this->_testFrontPageRDFa();
-    $this->_testArticleRDFa();
-    $this->_testPageRDFa();
-    $this->_testUserRDFa();
-    $this->_testTermRDFa();
+    $this->doFrontPageRdfaTests();
+    $this->doArticleRdfaTests();
+    $this->doPageRdfaTests();
+    $this->doUserRdfaTests();
+    $this->doTermRdfaTests();
   }
 
   /**
-   * Test that data is exposed in the front page teasers.
+   * Tests that data is exposed in the front page teasers.
    */
-  protected function _testFrontPageRDFa() {
+  protected function doFrontPageRdfaTests() {
     // Feed the HTML into the parser.
     $path = 'node';
     $graph = $this->getRdfGraph($path);
@@ -143,13 +227,13 @@ class StandardProfileTest extends WebTestBase {
 
     // Test the properties that are common between pages and articles and are
     // displayed in full and teaser mode.
-    $this->_testCommonNodeProperties($graph, $this->article, "Teaser");
+    $this->assertRdfaCommonNodeProperties($graph, $this->article, "Teaser");
     // Test properties that are displayed in both teaser and full mode.
-    $this->_testArticleProperties($graph, "Teaser");
+    $this->assertRdfaArticleProperties($graph, "Teaser");
 
     // Title.
     // @todo Once the title data is output consistently between full and teaser
-    // view modes, move this to _testCommonNodeProperties().
+    //   view modes, move this to _testCommonNodeProperties().
     $title = $this->article->get('title')->offsetGet(0)->get('value')->getValue();
     $expected_value = array(
       'type' => 'literal',
@@ -162,7 +246,7 @@ class StandardProfileTest extends WebTestBase {
     $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/name', $expected_value), "Teaser title was found (schema:name).");
 
     // @todo Once the image points to the original instead of the processed
-    // image, move this to testArticleProperties().
+    //   image, move this to testArticleProperties().
     $image_file = file_load($this->article->get('field_image')->offsetGet(0)->get('target_id')->getValue());
     $image_uri = entity_load('image_style', 'medium')->buildUrl($image_file->getFileUri());
     $expected_value = array(
@@ -173,13 +257,13 @@ class StandardProfileTest extends WebTestBase {
   }
 
   /**
-   * Test that article data is exposed using RDFa.
+   * Tests that article data is exposed using RDFa.
    *
    * Two fields are not tested for output here. Changed date is not displayed
    * on the page, so there is no test for output in node view. Comment count is
    * displayed in teaser view, so it is tested in the front article tests.
    */
-  protected function _testArticleRDFa() {
+  protected function doArticleRdfaTests() {
     // Feed the HTML into the parser.
     $uri_info = $this->article->uri();
     $path = $uri_info['path'];
@@ -189,15 +273,15 @@ class StandardProfileTest extends WebTestBase {
     $this->assertEqual($graph->type($this->articleUri), 'schema:Article', 'Article type was found (schema:Article).');
 
     // Test the properties that are common between pages and articles.
-    $this->_testCommonNodeProperties($graph, $this->article, "Article");
+    $this->assertRdfaCommonNodeProperties($graph, $this->article, "Article");
     // Test properties that are displayed in both teaser and full mode.
-    $this->_testArticleProperties($graph, "Article");
+    $this->assertRdfaArticleProperties($graph, "Article");
     // Test the comment properties displayed on articles.
-    $this->_testNodeCommentProperties($graph);
+    $this->assertRdfaNodeCommentProperties($graph);
 
     // Title.
     // @todo Once the title data is output consistently between full and teaser
-    // view modes, move this to _testCommonNodeProperties().
+    //   view modes, move this to _testCommonNodeProperties().
     $expected_value = array(
       'type' => 'literal',
       'value' => $this->article->get('title')->offsetGet(0)->get('value')->getValue(),
@@ -206,7 +290,7 @@ class StandardProfileTest extends WebTestBase {
     $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/name', $expected_value), "Article title was found (schema:name).");
 
     // @todo Once the image points to the original instead of the processed
-    // image, move this to testArticleProperties().
+    //   image, move this to testArticleProperties().
     $expected_value = array(
       'type' => 'uri',
       'value' => $this->imageUri,
@@ -215,13 +299,13 @@ class StandardProfileTest extends WebTestBase {
   }
 
   /**
-   * Test that page data is exposed using RDFa.
+   * Tests that page data is exposed using RDFa.
    *
    * Two fields are not tested for output here. Changed date is not displayed
    * on the page, so there is no test for output in node view. Comment count is
    * displayed in teaser view, so it is tested in the front page tests.
    */
-  protected function _testPageRDFa() {
+  protected function doPageRdfaTests() {
     // The standard profile hides the created date on pages. Revert display to
     // true for testing.
     variable_set('node_submitted_page', TRUE);
@@ -235,11 +319,11 @@ class StandardProfileTest extends WebTestBase {
     $this->assertEqual($graph->type($this->pageUri), 'schema:WebPage', 'Page type was found (schema:WebPage).');
 
     // Test the properties that are common between pages and articles.
-    $this->_testCommonNodeProperties($graph, $this->page, "Page");
+    $this->assertRdfaCommonNodeProperties($graph, $this->page, "Page");
 
     // Title.
     // @todo Once the title data is output consistently between full and teaser
-    // view modes, move this to _testCommonNodeProperties().
+    //   view modes, move this to _testCommonNodeProperties().
     $expected_value = array(
       'type' => 'literal',
       'value' => $this->page->get('title')->offsetGet(0)->get('value')->getValue(),
@@ -249,9 +333,9 @@ class StandardProfileTest extends WebTestBase {
   }
 
   /**
-   * Test that user data is exposed on user page.
+   * Tests that user data is exposed on user page.
    */
-  function _testUserRDFa() {
+  protected function doUserRdfaTests() {
     $this->drupalLogin($this->root_user);
 
     // Feed the HTML into the parser.
@@ -265,7 +349,7 @@ class StandardProfileTest extends WebTestBase {
     // User name.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $this->adminUser->name,
+      'value' => $this->adminUser->label(),
     );
     $this->assertTrue($graph->hasProperty($this->authorUri, 'http://schema.org/name', $expected_value), "User name was found (schema:name) on user page.");
 
@@ -273,9 +357,9 @@ class StandardProfileTest extends WebTestBase {
   }
 
   /**
-   * Test that term data is exposed on term page.
+   * Tests that term data is exposed on term page.
    */
-  function _testTermRDFa() {
+  protected function doTermRdfaTests() {
     // Feed the HTML into the parser.
     $uri_info = $this->term->uri();
     $path = $uri_info['path'];
@@ -293,20 +377,20 @@ class StandardProfileTest extends WebTestBase {
     $this->assertTrue($graph->hasProperty($this->termUri, 'http://schema.org/name', $expected_value), "Term name was found (schema:name) on term page.");
 
     // @todo Add test for term description once it is a field:
-    // https://drupal.org/node/569434
+    //   https://drupal.org/node/569434
   }
 
   /**
-   * Test output for properties held in common between articles and pages.
+   * Tests output for properties held in common between articles and pages.
    *
    * @param \EasyRdf_Graph $graph
    *   The EasyRDF graph object.
-   * @param \Drupal\node\Plugin\Core\Entity\Node $node
+   * @param \Drupal\node\NodeInterface $node
    *   The node being displayed.
    * @param string $message_prefix
    *   The word to use in the test assertion message.
    */
-  function _testCommonNodeProperties($graph, $node, $message_prefix) {
+  protected function assertRdfaCommonNodeProperties($graph, NodeInterface $node, $message_prefix) {
     $uri_info = $node->uri();
     $uri = url($uri_info['path'], array('absolute' => TRUE));
 
@@ -339,20 +423,20 @@ class StandardProfileTest extends WebTestBase {
     // Author name.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $this->adminUser->name,
+      'value' => $this->adminUser->label(),
     );
     $this->assertTrue($graph->hasProperty($this->authorUri, 'http://schema.org/name', $expected_value), "$message_prefix author name was found (schema:name).");
   }
 
   /**
-   * Test output for article properties displayed in both view modes.
+   * Tests output for article properties displayed in both view modes.
    *
    * @param \EasyRdf_Graph $graph
    *   The EasyRDF graph object.
    * @param string $message_prefix
    *   The word to use in the test assertion message.
    */
-  function _testArticleProperties($graph, $message_prefix) {
+  protected function assertRdfaArticleProperties($graph, $message_prefix) {
     // Tags.
     $expected_value = array(
       'type' => 'uri',
@@ -373,14 +457,14 @@ class StandardProfileTest extends WebTestBase {
   }
 
   /**
-   * Test output for comment properties on nodes in full page view mode.
+   * Tests output for comment properties on nodes in full page view mode.
    *
    * @param \EasyRdf_Graph $graph
    *   The EasyRDF graph object.
    */
-  function _testNodeCommentProperties($graph) {
+  protected function assertRdfaNodeCommentProperties($graph) {
     // @todo Test relationship between comment and node once it is a field:
-    // https://drupal.org/node/731724
+    //   https://drupal.org/node/731724
     // Comment type.
     $this->assertEqual($graph->type($this->articleCommentUri), 'schema:Comment', 'Comment type was found (schema:Comment).');
 
@@ -448,7 +532,7 @@ class StandardProfileTest extends WebTestBase {
    * @return \Drupal\comment\Plugin\Core\Entity\Comment
    *   The saved comment.
    */
-  function saveComment($nid, $uid, $contact = NULL, $pid = 0, $bundle = '') {
+  protected function saveComment($nid, $uid, $contact = NULL, $pid = 0, $bundle = '') {
     $values = array(
       'nid' => $nid,
       'uid' => $uid,
@@ -476,7 +560,7 @@ class StandardProfileTest extends WebTestBase {
    * @return \EasyRdf_Graph
    *   The RDF graph object.
    */
-  function getRdfGraph($path) {
+  protected function getRdfGraph($path) {
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
     $parser->parse($graph, $this->drupalGet($path), 'rdfa', $this->base_uri);
