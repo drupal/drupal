@@ -137,7 +137,7 @@ function book_node_view_link(EntityInterface $node, $view_mode) {
       if (user_access('access printer-friendly version')) {
         $links['book_printer'] = array(
           'title' => t('Printer-friendly version'),
-          'href' => 'book/export/html/' . $node->nid,
+          'href' => 'book/export/html/' . $node->id(),
           'attributes' => array('title' => t('Show a printer-friendly version of this book page and its sub-pages.'))
         );
       }
@@ -265,7 +265,7 @@ function _book_outline_remove_access(EntityInterface $node) {
  *   The node to remove from the outline.
  */
 function _book_node_is_removable(EntityInterface $node) {
-  return (!empty($node->book['bid']) && (($node->book['bid'] != $node->nid) || !$node->book['has_children']));
+  return (!empty($node->book['bid']) && (($node->book['bid'] != $node->id()) || !$node->book['has_children']));
 }
 
 /**
@@ -307,7 +307,7 @@ function book_form_node_form_alter(&$form, &$form_state, $form_id) {
   $node = $form_state['controller']->getEntity();
   $access = user_access('administer book outlines');
   if (!$access) {
-    if (user_access('add content to books') && ((!empty($node->book['mlid']) && !empty($node->nid)) || book_type_is_allowed($node->type))) {
+    if (user_access('add content to books') && ((!empty($node->book['mlid']) && !$node->isNew()) || book_type_is_allowed($node->type))) {
       // Already in the book hierarchy, or this node type is allowed.
       $access = TRUE;
     }
@@ -447,11 +447,11 @@ function _book_add_form_elements(&$form, &$form_state, EntityInterface $node) {
     '#description' => t('Pages at a given level are ordered first by weight and then by title.'),
   );
   $options = array();
-  $nid = isset($node->nid) ? $node->nid : 'new';
+  $nid = !$node->isNew() ? $node->id() : 'new';
 
-  if (isset($node->nid) && ($nid == $node->book['original_bid']) && ($node->book['parent_depth_limit'] == 0)) {
+  if ($node->id() && ($nid == $node->book['original_bid']) && ($node->book['parent_depth_limit'] == 0)) {
     // This is the top level node in a maximum depth book and thus cannot be moved.
-    $options[$node->nid] = $node->label();
+    $options[$node->id()] = $node->label();
   }
   else {
     foreach (book_get_books() as $book) {
@@ -519,13 +519,13 @@ function _book_update_outline(EntityInterface $node) {
   }
   $new = empty($node->book['mlid']);
 
-  $node->book['link_path'] = 'node/' . $node->nid;
+  $node->book['link_path'] = 'node/' . $node->id();
   $node->book['link_title'] = $node->label();
   $node->book['parent_mismatch'] = FALSE; // The normal case.
 
-  if ($node->book['bid'] == $node->nid) {
+  if ($node->book['bid'] == $node->id()) {
     $node->book['plid'] = 0;
-    $node->book['menu_name'] = book_menu_name($node->nid);
+    $node->book['menu_name'] = book_menu_name($node->id());
   }
   else {
     // Check in case the parent is not is this book; the book takes precedence.
@@ -548,7 +548,7 @@ function _book_update_outline(EntityInterface $node) {
       // Insert new.
       db_insert('book')
         ->fields(array(
-          'nid' => $node->nid,
+          'nid' => $node->id(),
           'mlid' => $node->book['mlid'],
           'bid' => $node->book['bid'],
         ))
@@ -558,7 +558,7 @@ function _book_update_outline(EntityInterface $node) {
     }
     else {
       if ($node->book['bid'] != db_query("SELECT bid FROM {book} WHERE nid = :nid", array(
-          ':nid' => $node->nid,
+          ':nid' => $node->id(),
         ))->fetchField()) {
         // Update the bid for this page and all children.
         book_update_bid($node->book);
@@ -816,7 +816,7 @@ function book_node_presave(EntityInterface $node) {
     $node->setNewRevision();
   }
   // Make sure a new node gets a new menu link.
-  if (empty($node->nid)) {
+  if ($node->isNew()) {
     $node->book['mlid'] = NULL;
   }
 }
@@ -828,9 +828,9 @@ function book_node_insert(EntityInterface $node) {
   if (!empty($node->book['bid'])) {
     if ($node->book['bid'] == 'new') {
       // New nodes that are their own book.
-      $node->book['bid'] = $node->nid;
+      $node->book['bid'] = $node->id();
     }
-    $node->book['nid'] = $node->nid;
+    $node->book['nid'] = $node->id();
     $node->book['menu_name'] = book_menu_name($node->book['bid']);
     _book_update_outline($node);
   }
@@ -843,9 +843,9 @@ function book_node_update(EntityInterface $node) {
   if (!empty($node->book['bid'])) {
     if ($node->book['bid'] == 'new') {
       // New nodes that are their own book.
-      $node->book['bid'] = $node->nid;
+      $node->book['bid'] = $node->id();
     }
-    $node->book['nid'] = $node->nid;
+    $node->book['nid'] = $node->id();
     $node->book['menu_name'] = book_menu_name($node->book['bid']);
     _book_update_outline($node);
   }
@@ -856,14 +856,14 @@ function book_node_update(EntityInterface $node) {
  */
 function book_node_predelete(EntityInterface $node) {
   if (!empty($node->book['bid'])) {
-    if ($node->nid == $node->book['bid']) {
+    if ($node->id() == $node->book['bid']) {
       // Handle deletion of a top-level post.
       $result = db_query("SELECT b.nid FROM {menu_links} ml INNER JOIN {book} b on b.mlid = ml.mlid WHERE ml.plid = :plid", array(
         ':plid' => $node->book['mlid']
       ));
       foreach ($result as $child) {
-        $child_node = node_load($child->nid);
-        $child_node->book['bid'] = $child_node->nid;
+        $child_node = node_load($child->id());
+        $child_node->book['bid'] = $child_node->id();
         _book_update_outline($child_node);
       }
     }
@@ -884,7 +884,7 @@ function book_node_prepare_form(NodeInterface $node, $form_display, $operation, 
     $node->book = array();
 
     $query = \Drupal::request()->query;
-    if (empty($node->nid) && !is_null($query->get('parent')) && is_numeric($query->get('parent'))) {
+    if ($node->isNew() && !is_null($query->get('parent')) && is_numeric($query->get('parent'))) {
       // Handle "Add child page" links:
       $parent = book_link_load($query->get('parent'));
 
@@ -895,7 +895,7 @@ function book_node_prepare_form(NodeInterface $node, $form_display, $operation, 
       }
     }
     // Set defaults.
-    $node->book += _book_link_defaults(!empty($node->nid) ? $node->nid : 'new');
+    $node->book += _book_link_defaults(!$node->isNew() ? $node->id() : 'new');
   }
   else {
     if (isset($node->book['bid']) && !isset($node->book['original_bid'])) {

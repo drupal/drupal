@@ -111,13 +111,13 @@ class CommentLanguageTest extends WebTestBase {
           'subject' => $this->randomName(),
           "comment_body[$langcode][0][value]" => $comment_values[$node_langcode][$langcode],
         );
-        $this->drupalPost("{$prefix}node/{$node->nid}", $edit, t('Preview'));
+        $this->drupalPost($prefix . 'node/' . $node->id(), $edit, t('Preview'));
         $this->drupalPost(NULL, $edit, t('Save'));
 
         // Check that comment language matches the current content language.
         $cid = db_select('comment', 'c')
           ->fields('c', array('cid'))
-          ->condition('nid', $node->nid)
+          ->condition('nid', $node->id())
           ->orderBy('cid', 'DESC')
           ->range(0, 1)
           ->execute()

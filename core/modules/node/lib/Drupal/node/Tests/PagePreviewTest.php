@@ -138,11 +138,11 @@ class PagePreviewTest extends NodeTestBase {
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
 
     // Check the term was displayed on the saved node.
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertText($edit[$term_key], 'Term displayed.');
 
     // Check the term appears again on the edit form.
-    $this->drupalGet('node/' . $node->nid . '/edit');
+    $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertFieldByName($term_key, $edit[$term_key], 'Term field displayed.');
 
     // Check with two new terms on the edit form, additionally to the existing
@@ -151,7 +151,7 @@ class PagePreviewTest extends NodeTestBase {
     $newterm1 = $this->randomName(8);
     $newterm2 = $this->randomName(8);
     $edit[$term_key] = $this->term->label() . ', ' . $newterm1 . ', ' . $newterm2;
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Preview'));
+    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Preview'));
     $this->assertRaw('>' . $newterm1 . '<', 'First new term displayed.');
     $this->assertRaw('>' . $newterm2 . '<', 'Second new term displayed.');
     // The first term should be displayed as link, the others not.
@@ -166,7 +166,7 @@ class PagePreviewTest extends NodeTestBase {
     $edit = array();
     $newterm3 = $this->randomName(8);
     $edit[$term_key] = $newterm1 . ', ' . $newterm3 . ', ' . $newterm2;
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Preview'));
+    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Preview'));
     $this->assertRaw('>' . $newterm1 . '<', 'First existing term displayed.');
     $this->assertRaw('>' . $newterm2 . '<', 'Second existing term displayed.');
     $this->assertRaw('>' . $newterm3 . '<', 'Third new term displayed.');

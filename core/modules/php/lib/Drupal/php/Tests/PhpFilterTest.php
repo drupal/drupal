@@ -34,14 +34,14 @@ class PhpFilterTest extends PhpTestBase {
     $node = $this->createNodeWithCode();
 
     // Make sure that the PHP code shows up as text.
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertText('php print');
 
     // Change filter to PHP filter and see that PHP code is evaluated.
     $edit = array();
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit["body[$langcode][0][format]"] = $this->php_code_format->format;
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node->label())), 'PHP code filter turned on.');
 
     // Make sure that the PHP code shows up as text.

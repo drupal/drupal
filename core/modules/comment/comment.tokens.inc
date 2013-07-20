@@ -231,7 +231,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'comment-count-new':
-          $replacements[$original] = comment_num_new($node->nid);
+          $replacements[$original] = comment_num_new($node->id());
           break;
       }
     }

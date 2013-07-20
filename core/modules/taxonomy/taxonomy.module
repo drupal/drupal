@@ -1162,7 +1162,7 @@ function taxonomy_build_node_index($node) {
       $query = db_insert('taxonomy_index')->fields(array('nid', 'tid', 'sticky', 'created'));
       foreach ($tid_all as $tid) {
         $query->values(array(
-          'nid' => $node->nid,
+          'nid' => $node->id(),
           'tid' => $tid,
           'sticky' => $sticky,
           'created' => $node->created,
@@ -1198,7 +1198,7 @@ function taxonomy_node_predelete(EntityInterface $node) {
  */
 function taxonomy_delete_node_index(EntityInterface $node) {
   if (config('taxonomy.settings')->get('maintain_index_table')) {
-    db_delete('taxonomy_index')->condition('nid', $node->nid)->execute();
+    db_delete('taxonomy_index')->condition('nid', $node->id())->execute();
   }
 }
 

@@ -37,12 +37,12 @@ class NodeTitleXSSTest extends NodeTestBase {
     $settings = array('title' => $title);
     $node = $this->drupalCreateNode($settings);
 
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     // assertTitle() decodes HTML-entities inside the <title> element.
     $this->assertTitle($edit["title"] . ' | Drupal', 'Title is diplayed when viewing a node.');
     $this->assertNoRaw($xss, 'Harmful tags are escaped when viewing a node.');
 
-    $this->drupalGet('node/' . $node->nid . '/edit');
+    $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertNoRaw($xss, 'Harmful tags are escaped when editing a node.');
   }
 }

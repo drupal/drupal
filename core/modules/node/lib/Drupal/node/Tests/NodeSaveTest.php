@@ -155,7 +155,7 @@ class NodeSaveTest extends NodeTestBase {
     $this->assertEqual($node->label(), 'updated_presave_update', 'Changes have been determined.');
 
     // Test the static node load cache to be cleared.
-    $node = node_load($node->nid);
+    $node = node_load($node->id());
     $this->assertEqual($node->label(), 'updated_presave', 'Static cache has been cleared.');
   }
 
@@ -172,6 +172,6 @@ class NodeSaveTest extends NodeTestBase {
     // node_test_node_insert() tiggers a save on insert if the title equals
     // 'new'.
     $node = $this->drupalCreateNode(array('title' => 'new'));
-    $this->assertEqual($node->title, 'Node ' . $node->nid, 'Node saved on node insert.');
+    $this->assertEqual($node->title, 'Node ' . $node->id(), 'Node saved on node insert.');
   }
 }

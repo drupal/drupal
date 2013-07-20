@@ -58,7 +58,7 @@ class CommentPreviewTest extends CommentTestBase {
     $edit = array();
     $edit['subject'] = $this->randomName(8);
     $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
-    $this->drupalPost('node/' . $this->node->nid, $edit, t('Preview'));
+    $this->drupalPost('node/' . $this->node->id(), $edit, t('Preview'));
 
     // Check that the preview is displaying the title and body.
     $this->assertTitle(t('Preview comment | Drupal'), 'Page title is "Preview comment".');

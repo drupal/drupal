@@ -32,10 +32,10 @@ class RelationshipNodeTermDataTest extends TaxonomyTestBase {
     $this->executeView($view, array($this->term1->id(), $this->term2->id()));
     $resultset = array(
       array(
-        'nid' => $this->nodes[0]->nid,
+        'nid' => $this->nodes[0]->id(),
       ),
       array(
-        'nid' => $this->nodes[1]->nid,
+        'nid' => $this->nodes[1]->id(),
       ),
     );
     $this->column_map = array('nid' => 'nid');

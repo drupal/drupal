@@ -87,7 +87,7 @@ class UserAttributesTest extends WebTestBase {
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
     $base_uri = url('<front>', array('absolute' => TRUE));
-    $parser->parse($graph, $this->drupalGet('node/' . $node->nid), 'rdfa', $base_uri);
+    $parser->parse($graph, $this->drupalGet('node/' . $node->id()), 'rdfa', $base_uri);
 
     // Ensures the default bundle mapping for user is used on the Authored By
     // information on the node.

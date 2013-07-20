@@ -49,11 +49,11 @@ class UserTimeZoneTest extends WebTestBase {
     $node3 = $this->drupalCreateNode(array('created' => strtotime($date3), 'type' => 'article'));
 
     // Confirm date format and time zone.
-    $this->drupalGet("node/$node1->nid");
+    $this->drupalGet('node/' . $node1->id());
     $this->assertText('2007-03-09 21:00 PST', 'Date should be PST.');
-    $this->drupalGet("node/$node2->nid");
+    $this->drupalGet('node/' . $node2->id());
     $this->assertText('2007-03-11 01:00 PST', 'Date should be PST.');
-    $this->drupalGet("node/$node3->nid");
+    $this->drupalGet('node/' . $node3->id());
     $this->assertText('2007-03-20 21:00 PDT', 'Date should be PDT.');
 
     // Change user time zone to Santiago time.
@@ -64,11 +64,11 @@ class UserTimeZoneTest extends WebTestBase {
     $this->assertText(t('The changes have been saved.'), 'Time zone changed to Santiago time.');
 
     // Confirm date format and time zone.
-    $this->drupalGet("node/$node1->nid");
+    $this->drupalGet('node/' . $node1->id());
     $this->assertText('2007-03-10 02:00 CLST', 'Date should be Chile summer time; five hours ahead of PST.');
-    $this->drupalGet("node/$node2->nid");
+    $this->drupalGet('node/' . $node2->id());
     $this->assertText('2007-03-11 05:00 CLT', 'Date should be Chile time; four hours ahead of PST');
-    $this->drupalGet("node/$node3->nid");
+    $this->drupalGet('node/' . $node3->id());
     $this->assertText('2007-03-21 00:00 CLT', 'Date should be Chile time; three hours ahead of PDT.');
   }
 }

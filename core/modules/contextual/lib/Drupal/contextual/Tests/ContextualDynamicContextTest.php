@@ -60,9 +60,9 @@ class ContextualDynamicContextTest extends WebTestBase {
     // Now, on the front page, all article nodes should have contextual links
     // placeholders, as should the view that contains them.
     $ids = array(
-      'node:node:' . $node1->nid . ':',
-      'node:node:' . $node2->nid . ':',
-      'node:node:' . $node3->nid . ':',
+      'node:node:' . $node1->id() . ':',
+      'node:node:' . $node2->id() . ':',
+      'node:node:' . $node3->id() . ':',
       'views_ui:admin/structure/views/view:frontpage:location=page&name=frontpage&display_id=page_1',
     );
 

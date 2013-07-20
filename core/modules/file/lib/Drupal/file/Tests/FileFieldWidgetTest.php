@@ -301,7 +301,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Unpublishes node.
     $this->drupalLogin($this->admin_user);
-    $this->drupalPost('node/' . $node->nid . '/edit', array(), t('Save and unpublish'));
+    $this->drupalPost('node/' . $node->id() . '/edit', array(), t('Save and unpublish'));
 
     // Ensures normal user can no longer download the file.
     $this->drupalLogin($user);
@@ -321,7 +321,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     foreach (array('nojs', 'js') as $type) {
       // Create node and prepare files for upload.
       $node = $this->drupalCreateNode(array('type' => 'article'));
-      $nid = $node->nid;
+      $nid = $node->id();
       $this->drupalGet("node/$nid/edit");
       $test_file_text = $this->getTestFile('text');
       $test_file_image = $this->getTestFile('image');

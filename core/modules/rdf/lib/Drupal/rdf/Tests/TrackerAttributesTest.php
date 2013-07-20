@@ -118,7 +118,7 @@ class TrackerAttributesTest extends WebTestBase {
    * The node just created.
    */
   function _testBasicTrackerRdfaMarkup(EntityInterface $node) {
-    $node_uri = url('node/' . $node->nid, array('absolute' => TRUE));
+    $node_uri = url('node/' . $node->id(), array('absolute' => TRUE));
     $user_uri = url('user/' . $node->uid, array('absolute' => TRUE));
 
     $user = ($node->uid == 0) ? 'Anonymous user' : 'Registered user';
@@ -170,7 +170,7 @@ class TrackerAttributesTest extends WebTestBase {
       'subject' => $this->randomName(),
       'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomName(),
     );
-    $this->drupalPost('comment/reply/' . $node->nid, $comment, t('Save'));
+    $this->drupalPost('comment/reply/' . $node->id(), $comment, t('Save'));
 
     // Parses tracker page where the nodes are displayed in a table.
     $parser = new \EasyRdf_Parser_Rdfa();
@@ -187,7 +187,7 @@ class TrackerAttributesTest extends WebTestBase {
     // Last updated due to new comment.
     // last_activity_date needs to be queried from the database directly because
     // it cannot be accessed via node_load().
-    $expected_last_activity_date = db_query('SELECT t.changed FROM {tracker_node} t WHERE t.nid = (:nid)', array(':nid' => $node->nid))->fetchField();
+    $expected_last_activity_date = db_query('SELECT t.changed FROM {tracker_node} t WHERE t.nid = (:nid)', array(':nid' => $node->id()))->fetchField();
     $expected_value = array(
       'type' => 'literal',
       'value' => date('c', $expected_last_activity_date),

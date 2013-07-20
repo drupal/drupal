@@ -242,7 +242,7 @@ class FilterAdminTest extends WebTestBase {
     $node = $this->drupalGetNodeByTitle($edit["title"]);
     $this->assertTrue($node, 'Node found in database.');
 
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertRaw($body . $extra_text, 'Filter removed invalid tag.');
 
     // Use plain text and see if it escapes all tags, whether allowed or not.
@@ -253,8 +253,8 @@ class FilterAdminTest extends WebTestBase {
       ->save();
     $edit = array();
     $edit["body[$langcode][0][format]"] = $plain;
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalGet('node/' . $node->id());
     $this->assertText(check_plain($text), 'The "Plain text" text format escapes all HTML tags.');
     config('filter.settings')
       ->set('always_show_fallback_choice', FALSE)

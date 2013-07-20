@@ -221,7 +221,7 @@ class FilterFormatAccessTest extends WebTestBase {
 
     // Try to edit with a less privileged user.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->clickLink(t('Edit'));
 
     // Verify that body field is read-only and contains replacement value.
@@ -245,7 +245,7 @@ class FilterFormatAccessTest extends WebTestBase {
     // administrator is never forced to switch the text format to something
     // else.)
     $this->drupalLogin($this->filter_admin_user);
-    $this->drupalGet('node/' . $node->nid . '/edit');
+    $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertFieldByXPath("//textarea[@name='$body_value_key' and @disabled='disabled']", t('This field has been disabled because you do not have sufficient permissions to edit it.'), 'Text format access denied message found.');
 
     // Disable the text format used above.
@@ -256,13 +256,13 @@ class FilterFormatAccessTest extends WebTestBase {
     // is still disabled, since the less privileged user should not be able to
     // edit content that does not have an assigned format.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('node/' . $node->nid . '/edit');
+    $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertFieldByXPath("//textarea[@name='$body_value_key' and @disabled='disabled']", t('This field has been disabled because you do not have sufficient permissions to edit it.'), 'Text format access denied message found.');
 
     // Log back in as the filter administrator and verify that the body field
     // can be edited.
     $this->drupalLogin($this->filter_admin_user);
-    $this->drupalGet('node/' . $node->nid . '/edit');
+    $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertNoFieldByXPath("//textarea[@name='$body_value_key' and @disabled='disabled']", NULL, 'Text format access denied message not found.');
     $this->assertFieldByXPath("//select[@name='$body_format_key']", NULL, 'Text format selector found.');
 
@@ -271,16 +271,16 @@ class FilterFormatAccessTest extends WebTestBase {
     $old_title = $new_edit['title'];
     $new_title = $this->randomName(8);
     $edit = array('title' => $new_title);
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->assertText(t('!name field is required.', array('!name' => t('Text format'))), 'Error message is displayed.');
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertText($old_title, 'Old title found.');
     $this->assertNoText($new_title, 'New title not found.');
 
     // Now select a new text format and make sure the node can be saved.
     $edit[$body_format_key] = filter_fallback_format();
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
-    $this->assertUrl('node/' . $node->nid);
+    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->assertUrl('node/' . $node->id());
     $this->assertText($new_title, 'New title found.');
     $this->assertNoText($old_title, 'Old title not found.');
 
@@ -288,8 +288,8 @@ class FilterFormatAccessTest extends WebTestBase {
     // other formats on the site (leaving only the fallback format).
     $this->drupalLogin($this->admin_user);
     $edit = array($body_format_key => $this->allowed_format->format);
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
-    $this->assertUrl('node/' . $node->nid);
+    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->assertUrl('node/' . $node->id());
     foreach (filter_formats() as $format) {
       if ($format->format != filter_fallback_format()) {
         $format->disable()->save();
@@ -305,14 +305,14 @@ class FilterFormatAccessTest extends WebTestBase {
     $old_title = $new_title;
     $new_title = $this->randomName(8);
     $edit = array('title' => $new_title);
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->assertText(t('!name field is required.', array('!name' => t('Text format'))), 'Error message is displayed.');
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertText($old_title, 'Old title found.');
     $this->assertNoText($new_title, 'New title not found.');
     $edit[$body_format_key] = filter_fallback_format();
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
-    $this->assertUrl('node/' . $node->nid);
+    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->assertUrl('node/' . $node->id());
     $this->assertText($new_title, 'New title found.');
     $this->assertNoText($old_title, 'Old title not found.');
   }

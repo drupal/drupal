@@ -28,7 +28,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
 
     // Create an alias for the node so we can test aliases.
     $path = array(
-      'source' => 'node/' . $this->node->nid,
+      'source' => 'node/' . $this->node->id(),
       'alias' => $this->randomName(8),
     );
     $this->container->get('path.crud')->save($path['source'], $path['alias']);
@@ -38,7 +38,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
       array('path' => ''),
       array('path' => 'admin'),
       array('path' => 'admin/config/system/site-information'),
-      array('path' => "node/{$this->node->nid}/edit"),
+      array('path' => 'node/' . $this->node->id() . '/edit'),
       array('path' => $path['alias']),
     );
 

@@ -76,7 +76,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
       $node_bundle = $this->nodeBundle;
     }
     $node = $this->drupalCreateNode(array('type' => $node_bundle));
-    $values['nid'] = $node->nid;
+    $values['nid'] = $node->id();
     $values['uid'] = $node->uid;
     return parent::createEntity($values, $langcode);
   }

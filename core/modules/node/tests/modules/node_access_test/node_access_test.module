@@ -107,7 +107,7 @@ function node_access_test_node_load($nodes, $types) {
  */
 
 function node_access_test_node_predelete(EntityInterface $node) {
-  db_delete('node_access_test')->condition('nid', $node->nid)->execute();
+  db_delete('node_access_test')->condition('nid', $node->id())->execute();
 }
 
 /**
@@ -130,7 +130,7 @@ function node_access_test_node_update(EntityInterface $node) {
 function _node_access_test_node_write(EntityInterface $node) {
   if (isset($node->private)) {
     db_merge('node_access_test')
-      ->key(array('nid' => $node->nid))
+      ->key(array('nid' => $node->id()))
       ->fields(array('private' => (int) $node->private))
       ->execute();
   }

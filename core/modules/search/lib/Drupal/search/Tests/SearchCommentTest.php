@@ -80,7 +80,7 @@ class SearchCommentTest extends SearchTestBase {
     $edit_comment['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
     $full_html_format_id = 'full_html';
     $edit_comment['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][format]'] = $full_html_format_id;
-    $this->drupalPost('comment/reply/' . $node->nid, $edit_comment, t('Save'));
+    $this->drupalPost('comment/reply/' . $node->id(), $edit_comment, t('Save'));
 
     // Invoke search index update.
     $this->drupalLogout();
@@ -91,7 +91,7 @@ class SearchCommentTest extends SearchTestBase {
       'search_block_form' => "'" . $edit_comment['subject'] . "'",
     );
     $this->drupalPost('', $edit, t('Search'));
-    $node2 = node_load($node->nid, TRUE);
+    $node2 = node_load($node->id(), TRUE);
     $this->assertText($node2->label(), 'Node found in search results.');
     $this->assertText($edit_comment['subject'], 'Comment subject found in search results.');
 
@@ -137,7 +137,7 @@ class SearchCommentTest extends SearchTestBase {
     $edit_comment = array();
     $edit_comment['subject'] = $this->comment_subject;
     $edit_comment['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
-    $this->drupalPost('comment/reply/' . $this->node->nid, $edit_comment, t('Save'));
+    $this->drupalPost('comment/reply/' . $this->node->id(), $edit_comment, t('Save'));
 
     $this->drupalLogout();
     $this->setRolePermissions(DRUPAL_ANONYMOUS_RID);
@@ -193,7 +193,7 @@ class SearchCommentTest extends SearchTestBase {
    */
   function assertCommentAccess($assume_access, $message) {
     // Invoke search index update.
-    search_touch_node($this->node->nid);
+    search_touch_node($this->node->id());
     $this->cronRun();
 
     // Search for the comment subject.
@@ -230,7 +230,7 @@ class SearchCommentTest extends SearchTestBase {
     $node = $this->drupalCreateNode($settings);
     // Verify that if you view the node on its own page, 'add new comment'
     // is there.
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertText(t('Add new comment'), 'Add new comment appears on node page');
 
     // Run cron to index this page.

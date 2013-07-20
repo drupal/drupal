@@ -80,7 +80,7 @@ class PageTitleFilteringTest extends WebTestBase {
 
     $node = $this->drupalGetNodeByTitle($edit["title"]);
     $this->assertNotNull($node, 'Node created and found in database');
-    $this->drupalGet("node/" . $node->nid);
+    $this->drupalGet("node/" . $node->id());
     $this->assertText(check_plain($edit["title"]), 'Check to make sure tags in the node title are converted.');
   }
   /**

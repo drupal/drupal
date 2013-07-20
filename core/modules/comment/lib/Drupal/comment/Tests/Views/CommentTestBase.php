@@ -45,7 +45,7 @@ abstract class CommentTestBase extends ViewTestBase {
 
     $comment = array(
       'uid' => $this->loggedInUser->id(),
-      'nid' => $this->node_user_commented->nid,
+      'nid' => $this->node_user_commented->id(),
       'cid' => '',
       'pid' => '',
       'node_type' => '',

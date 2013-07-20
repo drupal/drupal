@@ -346,13 +346,13 @@ class CommentFormController extends EntityFormControllerNG {
         $query['page'] = $page;
       }
       // Redirect to the newly posted comment.
-      $redirect = array('node/' . $node->nid, array('query' => $query, 'fragment' => 'comment-' . $comment->id()));
+      $redirect = array('node/' . $node->id(), array('query' => $query, 'fragment' => 'comment-' . $comment->id()));
     }
     else {
       watchdog('content', 'Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject->value), WATCHDOG_WARNING);
       drupal_set_message(t('Comment: unauthorized comment submitted or comment submitted to a closed post %subject.', array('%subject' => $comment->subject->value)), 'error');
       // Redirect the user to the node they are commenting on.
-      $redirect = 'node/' . $node->nid;
+      $redirect = 'node/' . $node->id();
     }
     $form_state['redirect'] = $redirect;
     // Clear the block and page caches so that anonymous users see the comment

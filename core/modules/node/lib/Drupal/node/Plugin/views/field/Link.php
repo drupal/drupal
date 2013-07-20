@@ -54,7 +54,7 @@ class Link extends FieldPluginBase {
   function render_link($node, $values) {
     if (node_access('view', $node)) {
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = "node/$node->nid";
+      $this->options['alter']['path'] = 'node/' . $node->id();
       $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
       return $text;
     }

@@ -123,7 +123,7 @@ class CommentController implements ControllerInterface {
       // Find the current display page for this comment.
       $page = comment_get_display_page($comment->id(), $node->type);
       // @todo: Cleaner sub request handling.
-      $redirect_request = Request::create('/node/' . $node->nid, 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
+      $redirect_request = Request::create('/node/' . $node->id(), 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
       $redirect_request->query->set('page', $page);
       // @todo: Convert the pager to use the request object.
       $request->query->set('page', $page);

@@ -217,7 +217,7 @@ function node_revision_overview($node) {
         '#theme' => 'username',
         '#account' => user_load($revision->uid),
       );
-      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->revision_timestamp, 'short'), "node/$node->nid"), '!username' => drupal_render($username)))
+      $row[] = array('data' => t('!date by !username', array('!date' => l(format_date($revision->revision_timestamp, 'short'), 'node/' . $node->id()), '!username' => drupal_render($username)))
                                . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : ''),
                      'class' => array('revision-current'));
       $row[] = array('data' => drupal_placeholder(t('current revision')), 'class' => array('revision-current'));

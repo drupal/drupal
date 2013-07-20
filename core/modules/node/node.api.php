@@ -403,7 +403,7 @@ function hook_node_grants_alter(&$grants, $account, $op) {
  */
 function hook_node_predelete(\Drupal\Core\Entity\EntityInterface $node) {
   db_delete('mytable')
-    ->condition('nid', $node->nid)
+    ->condition('nid', $node->id())
     ->execute();
 }
 
@@ -465,7 +465,7 @@ function hook_node_revision_delete(\Drupal\Core\Entity\EntityInterface $node) {
 function hook_node_insert(\Drupal\Core\Entity\EntityInterface $node) {
   db_insert('mytable')
     ->fields(array(
-      'nid' => $node->nid,
+      'nid' => $node->id(),
       'extra' => $node->extra,
     ))
     ->execute();
@@ -639,7 +639,7 @@ function hook_node_prepare_form(\Drupal\node\NodeInterface $node, $form_display,
  * @ingroup node_api_hooks
  */
 function hook_node_search_result(\Drupal\Core\Entity\EntityInterface $node, $langcode) {
-  $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->nid))->fetchField();
+  $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->id()))->fetchField();
   return array('comment' => format_plural($comments, '1 comment', '@count comments'));
 }
 
@@ -655,7 +655,7 @@ function hook_node_search_result(\Drupal\Core\Entity\EntityInterface $node, $lan
  * @ingroup node_api_hooks
  */
 function hook_node_presave(\Drupal\Core\Entity\EntityInterface $node) {
-  if ($node->nid && $node->moderate) {
+  if ($node->id() && $node->moderate) {
     // Reset votes when node is updated:
     $node->score = 0;
     $node->users = '';
@@ -686,7 +686,7 @@ function hook_node_presave(\Drupal\Core\Entity\EntityInterface $node) {
 function hook_node_update(\Drupal\Core\Entity\EntityInterface $node) {
   db_update('mytable')
     ->fields(array('extra' => $node->extra))
-    ->condition('nid', $node->nid)
+    ->condition('nid', $node->id())
     ->execute();
 }
 
@@ -708,7 +708,7 @@ function hook_node_update(\Drupal\Core\Entity\EntityInterface $node) {
  */
 function hook_node_update_index(\Drupal\Core\Entity\EntityInterface $node, $langcode) {
   $text = '';
-  $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(':nid' => $node->nid, ':status' => COMMENT_PUBLISHED));
+  $comments = db_query('SELECT subject, comment, format FROM {comment} WHERE nid = :nid AND status = :status', array(':nid' => $node->id(), ':status' => COMMENT_PUBLISHED));
   foreach ($comments as $comment) {
     $text .= '<h2>' . check_plain($comment->subject->value) . '</h2>' . $comment->comment_body->processed;
   }

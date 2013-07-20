@@ -47,7 +47,7 @@ class NodeAccessPagerTest extends WebTestBase {
     // Create 60 comments.
     for ($i = 0; $i < 60; $i++) {
       $comment = entity_create('comment', array(
-        'nid' => $node->nid,
+        'nid' => $node->id(),
         'node_type' => 'node_type_' . $node->bundle(),
         'subject' => $this->randomName(),
         'comment_body' => array(
@@ -61,7 +61,7 @@ class NodeAccessPagerTest extends WebTestBase {
 
     // View the node page. With the default 50 comments per page there should
     // be two pages (0, 1) but no third (2) page.
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertText($node->label());
     $this->assertText(t('Comments'));
     $this->assertRaw('page=1');

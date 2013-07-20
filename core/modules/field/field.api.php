@@ -420,7 +420,7 @@ function hook_field_attach_preprocess_alter(&$variables, $context) {
 function hook_field_attach_purge(\Drupal\Core\Entity\EntityInterface $entity, $field, $instance) {
   // find the corresponding data in mymodule and purge it
   if ($entity->entityType() == 'node' && $field->field_name == 'my_field_name') {
-    mymodule_remove_mydata($entity->nid);
+    mymodule_remove_mydata($entity->id());
   }
 }
 
@@ -1122,7 +1122,7 @@ function hook_field_storage_pre_insert(\Drupal\Core\Entity\EntityInterface $enti
     foreach ($entity->taxonomy_forums as $language) {
       foreach ($language as $delta) {
         $query->values(array(
-          'nid' => $entity->nid,
+          'nid' => $entity->id(),
           'title' => $entity->title,
           'tid' => $delta['value'],
           'sticky' => $entity->sticky,
@@ -1158,9 +1158,9 @@ function hook_field_storage_pre_update(\Drupal\Core\Entity\EntityInterface $enti
     // We don't maintain data for old revisions, so clear all previous values
     // from the table. Since this hook runs once per field, per entity, make
     // sure we only wipe values once.
-    if (!isset($first_call[$entity->nid])) {
-      $first_call[$entity->nid] = FALSE;
-      db_delete('forum_index')->condition('nid', $entity->nid)->execute();
+    if (!isset($first_call[$entity->id()])) {
+      $first_call[$entity->id()] = FALSE;
+      db_delete('forum_index')->condition('nid', $entity->id())->execute();
     }
     // Only save data to the table if the node is published.
     if ($entity->status) {
@@ -1168,7 +1168,7 @@ function hook_field_storage_pre_update(\Drupal\Core\Entity\EntityInterface $enti
       foreach ($entity->taxonomy_forums as $language) {
         foreach ($language as $delta) {
           $query->values(array(
-            'nid' => $entity->nid,
+            'nid' => $entity->id(),
             'title' => $entity->title,
             'tid' => $delta['value'],
             'sticky' => $entity->sticky,
@@ -1181,7 +1181,7 @@ function hook_field_storage_pre_update(\Drupal\Core\Entity\EntityInterface $enti
       $query->execute();
       // The logic for determining last_comment_count is fairly complex, so
       // call _forum_update_forum_index() too.
-      _forum_update_forum_index($entity->nid);
+      _forum_update_forum_index($entity->id());
     }
   }
 }

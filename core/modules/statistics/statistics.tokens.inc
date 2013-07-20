@@ -42,21 +42,21 @@ function statistics_tokens($type, $tokens, array $data = array(), array $options
 
     foreach ($tokens as $name => $original) {
       if ($name == 'total-count') {
-        $statistics = statistics_get($node->nid);
+        $statistics = statistics_get($node->id());
         $replacements[$original] = $statistics['totalcount'];
       }
       elseif ($name == 'day-count') {
-        $statistics = statistics_get($node->nid);
+        $statistics = statistics_get($node->id());
         $replacements[$original] = $statistics['daycount'];
       }
       elseif ($name == 'last-view') {
-        $statistics = statistics_get($node->nid);
+        $statistics = statistics_get($node->id());
         $replacements[$original] = format_date($statistics['timestamp']);
       }
     }
 
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'last-view')) {
-      $statistics = statistics_get($node->nid);
+      $statistics = statistics_get($node->id());
       $replacements += $token_service->generate('date', $created_tokens, array('date' => $statistics['timestamp']), $options);
     }
   }

@@ -459,7 +459,7 @@ function menu_node_save(EntityInterface $node) {
     }
     elseif (trim($link['link_title'])) {
       $link['link_title'] = trim($link['link_title']);
-      $link['link_path'] = "node/$node->nid";
+      $link['link_path'] = 'node/' . $node->id();
       if (trim($link['description'])) {
         $link['options']['attributes']['title'] = trim($link['description']);
       }
@@ -481,7 +481,7 @@ function menu_node_save(EntityInterface $node) {
 function menu_node_predelete(EntityInterface $node) {
   // Delete all menu module links that point to this node.
   $query = Drupal::entityQuery('menu_link')
-    ->condition('link_path', 'node/' . $node->nid)
+    ->condition('link_path', 'node/' . $node->id())
     ->condition('module', 'menu');
   $result = $query->execute();
 
@@ -498,13 +498,13 @@ function menu_node_prepare_form(NodeInterface $node, $form_display, $operation, 
     // Prepare the node for the edit form so that $node->menu always exists.
     $menu_name = strtok(variable_get('menu_parent_' . $node->type, 'main:0'), ':');
     $menu_link = FALSE;
-    if (isset($node->nid)) {
+    if ($node->id()) {
       $mlid = FALSE;
       // Give priority to the default menu
       $type_menus = variable_get('menu_options_' . $node->type, array('main' => 'main'));
       if (in_array($menu_name, $type_menus)) {
         $query = Drupal::entityQuery('menu_link')
-          ->condition('link_path', 'node/' . $node->nid)
+          ->condition('link_path', 'node/' . $node->id())
           ->condition('menu_name', $menu_name)
           ->condition('module', 'menu')
           ->sort('mlid', 'ASC')
@@ -516,7 +516,7 @@ function menu_node_prepare_form(NodeInterface $node, $form_display, $operation, 
       // Check all allowed menus if a link does not exist in the default menu.
       if (!$mlid && !empty($type_menus)) {
         $query = Drupal::entityQuery('menu_link')
-          ->condition('link_path', 'node/' . $node->nid)
+          ->condition('link_path', 'node/' . $node->id())
           ->condition('menu_name', array_values($type_menus), 'IN')
           ->condition('module', 'menu')
           ->sort('mlid', 'ASC')

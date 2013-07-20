@@ -118,7 +118,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Check that the term is displayed when the node is viewed.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertText($term1->label(), 'Term is displayed when viewing the node.');
 
     $this->clickLink(t('Edit'));
@@ -128,13 +128,13 @@ class TermTest extends TaxonomyTestBase {
 
     // Edit the node with a different term.
     $edit[$this->instance['field_name'] . '[' . $langcode . '][]'] = $term2->id();
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
 
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertText($term2->label(), 'Term is displayed when viewing the node.');
 
     // Preview the node.
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Preview'));
+    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Preview'));
     $this->assertNoUniqueText($term2->label(), 'Term is displayed when previewing the node.');
     $this->drupalPost(NULL, NULL, t('Preview'));
     $this->assertNoUniqueText($term2->label(), 'Term is displayed when previewing the node again.');
@@ -208,7 +208,7 @@ class TermTest extends TaxonomyTestBase {
 
     // Get the node.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
 
     foreach ($term_names as $term_name) {
       $this->assertText($term_name, format_string('The term %name appears on the node page after two terms, %deleted1 and %deleted2, were deleted', array('%name' => $term_name, '%deleted1' => $term_objects['term1']->label(), '%deleted2' => $term_objects['term2']->label())));

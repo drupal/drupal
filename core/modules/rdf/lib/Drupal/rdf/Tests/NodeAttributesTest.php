@@ -53,13 +53,13 @@ class NodeAttributesTest extends NodeTestBase {
   function testNodeAttributes() {
     $node = $this->drupalCreateNode(array('type' => 'article'));
 
-    $node_uri = url('node/' . $node->nid, array('absolute' => TRUE));
+    $node_uri = url('node/' . $node->id(), array('absolute' => TRUE));
     $base_uri = url('<front>', array('absolute' => TRUE));
 
     // Parses front page where the node is displayed in its teaser form.
     $parser = new \EasyRdf_Parser_Rdfa();
     $graph = new \EasyRdf_Graph();
-    $parser->parse($graph, $this->drupalGet('node/' . $node->nid), 'rdfa', $base_uri);
+    $parser->parse($graph, $this->drupalGet('node/' . $node->id()), 'rdfa', $base_uri);
 
     // Inspects RDF graph output.
     // Node type.

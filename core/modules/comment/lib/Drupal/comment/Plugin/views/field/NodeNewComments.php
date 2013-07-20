@@ -120,7 +120,7 @@ class NodeNewComments extends Numeric {
         ));
 
       foreach ($result as $node) {
-        foreach ($ids[$node->nid] as $id) {
+        foreach ($ids[$node->id()] as $id) {
           $values[$id]->{$this->field_alias} = $node->num_comments;
         }
       }
@@ -134,7 +134,7 @@ class NodeNewComments extends Numeric {
         'type' => $this->getValue($values, 'type'),
       ));
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = 'node/' . $node->nid;
+      $this->options['alter']['path'] = 'node/' . $node->id();
       $this->options['alter']['query'] = comment_new_page_count($this->getValue($values, 'comment_count'), $this->getValue($values), $node);
       $this->options['alter']['fragment'] = 'new';
     }

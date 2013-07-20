@@ -47,7 +47,7 @@ class CommentApprovalTest extends CommentTestBase {
     // Get unapproved comment id.
     $this->drupalLogin($this->admin_user);
     $anonymous_comment4 = $this->getUnapprovedComment($subject);
-    $anonymous_comment4 = entity_create('comment', array('cid' => $anonymous_comment4, 'node_type' => '', 'subject' => $subject, 'comment_body' => $body, 'nid' => $this->node->nid));
+    $anonymous_comment4 = entity_create('comment', array('cid' => $anonymous_comment4, 'node_type' => '', 'subject' => $subject, 'comment_body' => $body, 'nid' => $this->node->id()));
     $this->drupalLogout();
 
     $this->assertFalse($this->commentExists($anonymous_comment4), 'Anonymous comment was not published.');
@@ -57,7 +57,7 @@ class CommentApprovalTest extends CommentTestBase {
     $this->performCommentOperation($anonymous_comment4, 'publish', TRUE);
     $this->drupalLogout();
 
-    $this->drupalGet('node/' . $this->node->nid);
+    $this->drupalGet('node/' . $this->node->id());
     $this->assertTrue($this->commentExists($anonymous_comment4), 'Anonymous comment visible.');
 
     // Post 2 anonymous comments without contact info.
@@ -111,7 +111,7 @@ class CommentApprovalTest extends CommentTestBase {
     // Get unapproved comment id.
     $this->drupalLogin($this->admin_user);
     $anonymous_comment4 = $this->getUnapprovedComment($subject);
-    $anonymous_comment4 = entity_create('comment', array('cid' => $anonymous_comment4, 'node_type' => '', 'subject' => $subject, 'comment_body' => $body, 'nid' => $this->node->nid));
+    $anonymous_comment4 = entity_create('comment', array('cid' => $anonymous_comment4, 'node_type' => '', 'subject' => $subject, 'comment_body' => $body, 'nid' => $this->node->id()));
     $this->drupalLogout();
 
     $this->assertFalse($this->commentExists($anonymous_comment4), 'Anonymous comment was not published.');
@@ -122,11 +122,11 @@ class CommentApprovalTest extends CommentTestBase {
     $this->assertResponse(403, 'Forged comment approval was denied.');
     $this->drupalGet('comment/1/approve', array('query' => array('token' => 'forged')));
     $this->assertResponse(403, 'Forged comment approval was denied.');
-    $this->drupalGet('node/' . $this->node->nid);
+    $this->drupalGet('node/' . $this->node->id());
     $this->clickLink(t('approve'));
     $this->drupalLogout();
 
-    $this->drupalGet('node/' . $this->node->nid);
+    $this->drupalGet('node/' . $this->node->id());
     $this->assertTrue($this->commentExists($anonymous_comment4), 'Anonymous comment visible.');
   }
 }

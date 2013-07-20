@@ -1861,7 +1861,7 @@ function hook_mail($key, &$message, $params) {
     $node = $params['node'];
     $variables += array(
       '%uid' => $node->uid,
-      '%node_url' => url('node/' . $node->nid, array('absolute' => TRUE)),
+      '%node_url' => url('node/' . $node->id(), array('absolute' => TRUE)),
       '%node_type' => node_get_type_label($node),
       '%title' => $node->title,
       '%teaser' => $node->teaser,
@@ -3145,7 +3145,7 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'edit-url':
-          $replacements[$original] = url('node/' . $node->nid . '/edit', $url_options);
+          $replacements[$original] = url('node/' . $node->id() . '/edit', $url_options);
           break;
 
         // Default values for the chained tokens handled below.

@@ -35,13 +35,13 @@ function node_test_node_view(EntityInterface $node, EntityDisplay $display, $vie
     // Add RSS elements and namespaces when building the RSS feed.
     $node->rss_elements[] = array(
       'key' => 'testElement',
-      'value' => t('Value of testElement RSS element for node !nid.', array('!nid' => $node->nid)),
+      'value' => t('Value of testElement RSS element for node !nid.', array('!nid' => $node->id())),
     );
     $node->rss_namespaces['xmlns:drupaltest'] = 'http://example.com/test-namespace';
 
     // Add content that should be displayed only in the RSS feed.
     $node->content['extra_feed_content'] = array(
-      '#markup' => '<p>' . t('Extra data that should appear only in the RSS feed for node !nid.', array('!nid' => $node->nid)) . '</p>',
+      '#markup' => '<p>' . t('Extra data that should appear only in the RSS feed for node !nid.', array('!nid' => $node->id())) . '</p>',
       '#weight' => 10,
     );
   }
@@ -49,7 +49,7 @@ function node_test_node_view(EntityInterface $node, EntityDisplay $display, $vie
   if ($view_mode != 'rss') {
     // Add content that should NOT be displayed in the RSS feed.
     $node->content['extra_non_feed_content'] = array(
-      '#markup' => '<p>' . t('Extra data that should appear everywhere except the RSS feed for node !nid.', array('!nid' => $node->nid)) . '</p>',
+      '#markup' => '<p>' . t('Extra data that should appear everywhere except the RSS feed for node !nid.', array('!nid' => $node->id())) . '</p>',
     );
   }
 }
@@ -176,7 +176,7 @@ function node_test_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\Entity
 function node_test_node_insert(EntityInterface $node) {
   // Set the node title to the node ID and save.
   if ($node->title == 'new') {
-    $node->title = 'Node '. $node->nid;
+    $node->title = 'Node '. $node->id();
     $node->save();
   }
 }

@@ -123,7 +123,7 @@ class LocaleContentTest extends WebTestBase {
     );
     $node = $this->drupalCreateNode($edit);
     // Edit the content and ensure correct language is selected.
-    $path = 'node/' . $node->nid . '/edit';
+    $path = 'node/' . $node->id() . '/edit';
     $this->drupalGet($path);
     $this->assertRaw('<option value="' . $langcode . '" selected="selected">' .  $name . '</option>', t('Correct language selected.'));
     // Ensure we can change the node language.
@@ -186,26 +186,26 @@ class LocaleContentTest extends WebTestBase {
 
 
     // Check if English node does not have lang tag.
-    $this->drupalGet('node/' . $nodes['en']->nid);
-    $pattern = '|id="node-' . $nodes['en']->nid . '"[^<>]*lang="en"|';
+    $this->drupalGet('node/' . $nodes['en']->id());
+    $pattern = '|id="node-' . $nodes['en']->id() . '"[^<>]*lang="en"|';
     $this->assertNoPattern($pattern, 'The lang tag has not been assigned to the English node.');
 
     // Check if English node does not have dir tag.
-    $pattern = '|id="node-' . $nodes['en']->nid . '"[^<>]*dir="ltr"|';
+    $pattern = '|id="node-' . $nodes['en']->id() . '"[^<>]*dir="ltr"|';
     $this->assertNoPattern($pattern, 'The dir tag has not been assigned to the English node.');
 
     // Check if Arabic node has lang="ar" & dir="rtl" tags.
-    $this->drupalGet('node/' . $nodes['ar']->nid);
-    $pattern = '|id="node-' . $nodes['ar']->nid . '"[^<>]*lang="ar" dir="rtl"|';
+    $this->drupalGet('node/' . $nodes['ar']->id());
+    $pattern = '|id="node-' . $nodes['ar']->id() . '"[^<>]*lang="ar" dir="rtl"|';
     $this->assertPattern($pattern, 'The lang and dir tags have been assigned correctly to the Arabic node.');
 
     // Check if Spanish node has lang="es" tag.
-    $this->drupalGet('node/' . $nodes['es']->nid);
-    $pattern = '|id="node-' . $nodes['es']->nid . '"[^<>]*lang="es"|';
+    $this->drupalGet('node/' . $nodes['es']->id());
+    $pattern = '|id="node-' . $nodes['es']->id() . '"[^<>]*lang="es"|';
     $this->assertPattern($pattern, 'The lang tag has been assigned correctly to the Spanish node.');
 
     // Check if Spanish node does not have dir="ltr" tag.
-    $pattern = '|id="node-' . $nodes['es']->nid . '"[^<>]*lang="es" dir="ltr"|';
+    $pattern = '|id="node-' . $nodes['es']->id() . '"[^<>]*lang="es" dir="ltr"|';
     $this->assertNoPattern($pattern, 'The dir tag has not been assigned to the Spanish node.');
   }
 
@@ -232,8 +232,8 @@ class LocaleContentTest extends WebTestBase {
 
     // Verify filtering by language.
     $this->drupalGet('admin/content', array('query' => array('langcode' => 'zh-hant')));
-    $this->assertLinkByHref('node/' . $node_zh_hant->nid . '/edit');
-    $this->assertNoLinkByHref('node/' . $node_en->nid . '/edit');
+    $this->assertLinkByHref('node/' . $node_zh_hant->id() . '/edit');
+    $this->assertNoLinkByHref('node/' . $node_en->id() . '/edit');
   }
 
 }

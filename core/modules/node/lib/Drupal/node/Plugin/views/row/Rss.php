@@ -125,7 +125,7 @@ class Rss extends RowPluginBase {
       ),
       array(
         'key' => 'guid',
-        'value' => $node->nid . ' at ' . $base_url,
+        'value' => $node->id() . ' at ' . $base_url,
         'attributes' => array('isPermaLink' => 'false'),
       ),
     );
@@ -167,7 +167,7 @@ class Rss extends RowPluginBase {
     $item->title = $node->label();
     $item->link = $node->link;
     $item->elements = $node->rss_elements;
-    $item->nid = $node->nid;
+    $item->nid = $node->id();
     $theme_function = array(
       '#theme' => $this->themeFunctions(),
       '#view' => $this->view,

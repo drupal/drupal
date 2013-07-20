@@ -4929,7 +4929,7 @@ function _drupal_form_send_response(Response $response) {
  *
  *   $nodes = entity_load_multiple_by_properties('node', array('uid' => $uid, 'type' => $type));
  *   $node = reset($nodes);
- *   $context['results'][] = $node->nid . ' : ' . check_plain($node->label());
+ *   $context['results'][] = $node->id() . ' : ' . check_plain($node->label());
  *   $context['message'] = check_plain($node->label());
  * }
  *
