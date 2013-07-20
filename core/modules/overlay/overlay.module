@@ -462,7 +462,10 @@ function overlay_get_mode() {
  */
 function overlay_set_mode($mode = NULL) {
   global $base_path;
-  $overlay_mode = &drupal_static(__FUNCTION__);
+  // We're not using drupal_static() here since the static cache is reset in
+  // drupal_flush_all_caches(); this could lead to the loss of the overlay when
+  // submitting the admin/modules form, for instance.
+  static $overlay_mode;
 
   // Make sure external resources are not included more than once. Also return
   // the current mode, if no mode was specified.
