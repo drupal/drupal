@@ -30,6 +30,20 @@ interface PathBasedGeneratorInterface {
   public function generateFromPath($path = NULL, $options = array());
 
   /**
+   * Gets the internal path of a route.
+   *
+   * @param string $name
+   *  The route name.
+   * @param array $parameters
+   *  An array of parameters as passed to
+   *  \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate().
+   *
+   * @return string
+   *  The internal Drupal path corresponding to the route.
+   */
+  public function getPathFromRoute($name, $parameters = array());
+
+  /**
    * Sets the $request property.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
