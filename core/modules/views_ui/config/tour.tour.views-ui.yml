@@ -3,7 +3,7 @@ module: views_ui
 label: Views ui
 langcode: en
 paths:
-  - admin/structure/views/view/*/edit
+  - admin/structure/views/view/*
 tips:
   views-ui-active-display:
     id: views-ui-active-display
