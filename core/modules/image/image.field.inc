@@ -426,22 +426,32 @@ function theme_image_widget($variables) {
  */
 function theme_image_formatter($variables) {
   $item = $variables['item'];
+  $image = array();
 
   // Do not output an empty 'title' attribute.
-  if (isset($item['title']) && drupal_strlen($item['title']) == 0) {
-    unset($item['title']);
+  if (isset($item['title']) && drupal_strlen($item['title']) != 0) {
+    $image['#title'] = $item['title'];
   }
 
   if (isset($item['entity']) && empty($item['uri'])) {
-    $item['uri'] = $item['entity']->getFileUri();
+    $image['#uri'] = $item['entity']->getFileUri();
+  }
+  else {
+    $image['#uri'] = $item['uri'];
+  }
+
+  foreach (array('width', 'height', 'alt', 'attributes') as $key) {
+    if (isset($item[$key])) {
+      $image["#$key"] = $item[$key];
+    }
   }
 
   if ($variables['image_style']) {
-    $item['style_name'] = $variables['image_style'];
-    $output = theme('image_style', $item);
+    $image['#theme'] = 'image_style';
+    $image['#style_name'] = $variables['image_style'];
   }
   else {
-    $output = theme('image', $item);
+    $image['#theme'] = 'image';
   }
 
   // The link path and link options are both optional, but for the options to be
@@ -451,7 +461,10 @@ function theme_image_formatter($variables) {
     $options = isset($variables['path']['options']) ? $variables['path']['options'] : array();
     // When displaying an image inside a link, the html option must be TRUE.
     $options['html'] = TRUE;
-    $output = l($output, $path, $options);
+    $output = l($image, $path, $options);
+  }
+  else {
+    $output = drupal_render($image);
   }
 
   return $output;
