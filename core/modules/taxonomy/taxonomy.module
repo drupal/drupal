@@ -5,6 +5,7 @@
  * Enables the organization of content into categories.
  */
 
+use Drupal\taxonomy\VocabularyInterface;
 use Drupal\node\Plugin\Core\Entity\Node;
 use Drupal\taxonomy\Plugin\Core\Entity\Term;
 use Drupal\taxonomy\Plugin\Core\Entity\Vocabulary;
@@ -275,14 +276,10 @@ function taxonomy_menu() {
   );
   $items['taxonomy/term/%taxonomy_term/delete'] = array(
     'title' => 'Delete',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('taxonomy_term_confirm_delete', 2),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(2, 'delete'),
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
     'weight' => 20,
-    'file' => 'taxonomy.admin.inc',
+    'route_name' => 'taxonomy_term_delete',
   );
   $items['taxonomy/term/%taxonomy_term/feed'] = array(
     'title' => 'Taxonomy term',
@@ -326,6 +323,13 @@ function taxonomy_menu() {
     'type' => MENU_LOCAL_TASK,
     'file' => 'taxonomy.admin.inc',
   );
+  $items['admin/structure/taxonomy/%taxonomy_vocabulary/delete'] = array(
+    'title' => 'Delete',
+    'type' => MENU_LOCAL_TASK,
+    'context' => MENU_CONTEXT_INLINE,
+    'weight' => 20,
+    'route_name' => 'taxonomy_vocabulary_delete',
+  );
 
   $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary/add'] = array(
     'title' => 'Add term',
@@ -360,7 +364,7 @@ function taxonomy_admin_paths() {
  * term has multiple parents then the vocabulary will be given a hierarchy of
  * TAXONOMY_HIERARCHY_MULTIPLE.
  *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
+ * @param \Drupal\taxonomy\VocabularyInterface $vocabulary
  *   A taxonomy vocabulary entity.
  * @param $changed_term
  *   An array of the term structure that was updated.
@@ -368,7 +372,7 @@ function taxonomy_admin_paths() {
  * @return
  *   An integer that represents the level of the vocabulary's hierarchy.
  */
-function taxonomy_check_vocabulary_hierarchy(Vocabulary $vocabulary, $changed_term) {
+function taxonomy_check_vocabulary_hierarchy(VocabularyInterface $vocabulary, $changed_term) {
   $tree = taxonomy_get_tree($vocabulary->id());
   $hierarchy = TAXONOMY_HIERARCHY_DISABLED;
   foreach ($tree as $term) {

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Plugin\Core\Entity\VocabularyInterface.
+ * Contains \Drupal\taxonomy\VocabularyInterface.
  */
 
 namespace Drupal\taxonomy;

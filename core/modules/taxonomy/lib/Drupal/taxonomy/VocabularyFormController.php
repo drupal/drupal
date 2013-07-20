@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\taxonomy\VocabularyFormController.
+ * Contains \Drupal\taxonomy\VocabularyFormController.
  */
 
 namespace Drupal\taxonomy;
@@ -16,15 +16,11 @@ use Drupal\Core\Language\Language;
 class VocabularyFormController extends EntityFormController {
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::form().
+   * {@inheritdoc}
    */
   public function form(array $form, array &$form_state) {
     $vocabulary = $this->entity;
 
-    // Check whether we need a deletion confirmation form.
-    if (isset($form_state['confirm_delete']) && isset($form_state['values']['vid'])) {
-      return taxonomy_vocabulary_confirm_delete($form, $form_state, $form_state['values']['vid']);
-    }
     $form['name'] = array(
       '#type' => 'textfield',
       '#title' => t('Name'),
@@ -88,7 +84,6 @@ class VocabularyFormController extends EntityFormController {
     // If we are displaying the delete confirmation skip the regular actions.
     if (empty($form_state['confirm_delete'])) {
       $actions = parent::actions($form, $form_state);
-      array_unshift($actions['delete']['#submit'], array($this, 'submit'));
       // Add the language configuration submit handler. This is needed because
       // the submit button has custom submit handlers.
       if (module_exists('language')) {
@@ -125,24 +120,7 @@ class VocabularyFormController extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::submit().
-   */
-  public function submit(array $form, array &$form_state) {
-    // @todo We should not be calling taxonomy_vocabulary_confirm_delete() from
-    // within the form builder.
-    if ($form_state['triggering_element']['#value'] == t('Delete')) {
-      // Rebuild the form to confirm vocabulary deletion.
-      $form_state['rebuild'] = TRUE;
-      $form_state['confirm_delete'] = TRUE;
-      return NULL;
-    }
-    else {
-      return parent::submit($form, $form_state);
-    }
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\EntityFormController::save().
+   * {@inheritdoc}
    */
   public function save(array $form, array &$form_state) {
     $vocabulary = $this->entity;
@@ -167,4 +145,13 @@ class VocabularyFormController extends EntityFormController {
     $form_state['values']['vid'] = $vocabulary->id();
     $form_state['vid'] = $vocabulary->id();
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function delete(array $form, array &$form_state) {
+    $vocabulary = $this->getEntity($form_state);
+    $form_state['redirect'] = array('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/delete');
+  }
+
 }
