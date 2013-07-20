@@ -7,15 +7,14 @@
 
 namespace Drupal\options\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Plugin implementation of the 'options_select' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "options_select",
- *   module = "options",
  *   label = @Translation("Select list"),
  *   field_types = {
  *     "list_integer",

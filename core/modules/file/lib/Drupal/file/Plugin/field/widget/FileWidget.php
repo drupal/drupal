@@ -7,7 +7,7 @@
 
 namespace Drupal\file\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Drupal\Core\Entity\EntityInterface;
@@ -15,9 +15,8 @@ use Drupal\Core\Entity\EntityInterface;
 /**
  * Plugin implementation of the 'file_generic' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "file_generic",
- *   module = "file",
  *   label = @Translation("File"),
  *   field_types = {
  *     "file"

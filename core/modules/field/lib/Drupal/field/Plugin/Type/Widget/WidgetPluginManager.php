@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Plugin\Type\Widget;
 
+use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -30,16 +31,6 @@ class WidgetPluginManager extends DefaultPluginManager {
   protected $widgetOptions;
 
   /**
-   * Overrides Drupal\Component\Plugin\PluginManagerBase:$defaults.
-   */
-  protected $defaults = array(
-    'field_types' => array(),
-    'settings' => array(),
-    'multiple_values' => FALSE,
-    'default_value' => TRUE,
-  );
-
-  /**
    * Constructs a WidgetPluginManager object.
    *
    * @param \Traversable $namespaces
@@ -53,7 +44,9 @@ class WidgetPluginManager extends DefaultPluginManager {
    *   The language manager.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LanguageManager $language_manager) {
-    parent::__construct('field/widget', $namespaces);
+    $annotation_namespaces = array('Drupal\field\Annotation' => $namespaces['Drupal\field']);
+
+    parent::__construct('field/widget', $namespaces, $annotation_namespaces, 'Drupal\field\Annotation\FieldWidget');
 
     $this->setCacheBackend($cache_backend, $language_manager, 'field_widget_types');
     $this->alterInfo($module_handler, 'field_widget_info');
@@ -109,6 +102,22 @@ class WidgetPluginManager extends DefaultPluginManager {
     );
     return $this->createInstance($plugin_id, $configuration);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createInstance($plugin_id, array $configuration = array()) {
+    $plugin_definition = $this->discovery->getDefinition($plugin_id);
+    $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
+
+    // If the plugin provides a factory method, pass the container to it.
+    if (is_subclass_of($plugin_class, 'Drupal\Core\Plugin\ContainerFactoryPluginInterface')) {
+      return $plugin_class::create(\Drupal::getContainer(), $configuration, $plugin_id, $plugin_definition);
+    }
+
+    return new $plugin_class($plugin_id, $plugin_definition, $configuration['field_definition'], $configuration['settings']);
+  }
+
 
   /**
    * Merges default values for widget configuration.

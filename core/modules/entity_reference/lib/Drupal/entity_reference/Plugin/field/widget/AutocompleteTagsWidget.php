@@ -7,16 +7,15 @@
 
 namespace Drupal\entity_reference\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\entity_reference\Plugin\field\widget\AutocompleteWidgetBase;
 
 /**
  * Plugin implementation of the 'entity_reference autocomplete-tags' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "entity_reference_autocomplete_tags",
- *   module = "entity_reference",
  *   label = @Translation("Autocomplete (Tags style)"),
  *   description = @Translation("An autocomplete text field."),
  *   field_types = {

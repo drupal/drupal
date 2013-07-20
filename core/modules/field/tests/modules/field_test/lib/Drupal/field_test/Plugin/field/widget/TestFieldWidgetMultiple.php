@@ -7,7 +7,8 @@
 
 namespace Drupal\field_test\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -19,9 +20,8 @@ use Symfony\Component\Validator\ConstraintViolationInterface;
  *
  * @see field_test_field_widget_info_alter()
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "test_field_widget_multiple",
- *   module = "field_test",
  *   label = @Translation("Test widget - multiple"),
  *   settings = {
  *     "test_widget_setting_multiple" = "dummy test string"

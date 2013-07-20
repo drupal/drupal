@@ -7,7 +7,7 @@
 
 namespace Drupal\image\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Drupal\file\Plugin\field\widget\FileWidget;
@@ -16,9 +16,8 @@ use Drupal\Core\Entity\EntityInterface;
 /**
  * Plugin implementation of the 'image_image' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "image_image",
- *   module = "image",
  *   label = @Translation("Image"),
  *   field_types = {
  *     "image"

@@ -7,16 +7,15 @@
 
 namespace Drupal\text\Plugin\field\widget;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Plugin implementation of the 'text_textarea_with_summary' widget.
  *
- * @Plugin(
+ * @FieldWidget(
  *   id = "text_textarea_with_summary",
- *   module = "text",
  *   label = @Translation("Text area with a summary"),
  *   field_types = {
  *     "text_with_summary"
