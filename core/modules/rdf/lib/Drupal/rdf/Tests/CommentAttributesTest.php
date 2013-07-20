@@ -54,7 +54,7 @@ class CommentAttributesTest extends CommentTestBase {
     $comment_count_mapping = array(
       'properties' => array('sioc:num_replies'),
       'datatype' => 'xsd:integer',
-      'datatype_callback' => 'Drupal\rdf\CommonDataConverter::rawValue',
+      'datatype_callback' => array('callable' => 'Drupal\rdf\CommonDataConverter::rawValue'),
     );
     $article_mapping->setFieldMapping('comment_count', $comment_count_mapping)->save();
 
@@ -76,12 +76,12 @@ class CommentAttributesTest extends CommentTestBase {
       'created' => array(
         'properties' => array('dc:date', 'dc:created'),
         'datatype' => 'xsd:dateTime',
-        'datatype_callback' => 'date_iso8601',
+        'datatype_callback' => array('callable' => 'date_iso8601'),
       ),
       'changed' => array(
         'properties' => array('dc:modified'),
         'datatype' => 'xsd:dateTime',
-        'datatype_callback' => 'date_iso8601',
+        'datatype_callback' => array('callable' => 'date_iso8601'),
       ),
       'comment_body' => array(
         'properties' => array('content:encoded'),

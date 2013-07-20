@@ -73,7 +73,7 @@ class RdfaAttributesTest extends DrupalUnitTestBase {
     $mapping = array(
       'datatype' => $datatype,
       'properties' => $properties,
-      'datatype_callback' => 'date_iso8601',
+      'datatype_callback' => array('callable' => 'date_iso8601'),
     );
     $expected_attributes = array(
       'datatype' => $datatype,
@@ -92,11 +92,14 @@ class RdfaAttributesTest extends DrupalUnitTestBase {
     $properties = array('schema:interactionCount');
 
     $data = "23";
-    $content = "UserComment:23";
+    $content = "UserComments:23";
 
     $mapping = array(
       'properties' => $properties,
-      'datatype_callback' => 'Drupal\rdf\SchemaOrgDataConverter::interactionCount',
+      'datatype_callback' => array(
+        'callable' => 'Drupal\rdf\SchemaOrgDataConverter::interactionCount',
+        'arguments' => array('interaction_type' => 'UserComments'),
+      ),
     );
     $expected_attributes = array(
       'property' => $properties,

@@ -47,12 +47,12 @@ class TrackerAttributesTest extends WebTestBase {
       'created' => array(
         'properties' => array('dc:date', 'dc:created'),
         'datatype' => 'xsd:dateTime',
-        'datatype_callback' => 'date_iso8601',
+        'datatype_callback' => array('callable' => 'date_iso8601'),
       ),
       'changed' => array(
         'properties' => array('dc:modified'),
         'datatype' => 'xsd:dateTime',
-        'datatype_callback' => 'date_iso8601',
+        'datatype_callback' => array('callable' => 'date_iso8601'),
       ),
       'body' => array(
         'properties' => array('content:encoded'),
@@ -71,7 +71,7 @@ class TrackerAttributesTest extends WebTestBase {
       'last_activity' => array(
         'properties' => array('sioc:last_activity_date'),
         'datatype' => 'xsd:dateTime',
-        'datatype_callback' => 'date_iso8601',
+        'datatype_callback' => array('callable' => 'date_iso8601'),
       ),
     );
     // Iterate over field mappings and save.

@@ -42,7 +42,7 @@ class NodeAttributesTest extends NodeTestBase {
       ->setFieldMapping('created', array(
         'properties' => array('dc:date', 'dc:created'),
         'datatype' => 'xsd:dateTime',
-        'datatype_callback' => 'date_iso8601',
+        'datatype_callback' => array('callable' => 'date_iso8601'),
       ))
       ->save();
   }

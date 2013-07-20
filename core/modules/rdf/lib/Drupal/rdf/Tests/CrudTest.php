@@ -81,7 +81,7 @@ class CrudTest extends DrupalUnitTestBase {
     $mapping = array(
       'properties' => array('dc:created'),
       'datatype' => 'xsd:dateTime',
-      'datatype_callback' => 'date_iso8601',
+      'datatype_callback' => array('callable' => 'date_iso8601'),
     );
     rdf_get_mapping($this->entity_type, $this->bundle)
       ->setFieldMapping($field_name, $mapping)
@@ -94,7 +94,7 @@ class CrudTest extends DrupalUnitTestBase {
     $mapping = array(
       'properties' => array('dc:date'),
       'datatype' => 'foo:bar',
-      'datatype_callback' => 'date_iso8601',
+      'datatype_callback' => array('callable' => 'date_iso8601'),
     );
     rdf_get_mapping($this->entity_type, $this->bundle)
       ->setFieldMapping($field_name, $mapping)

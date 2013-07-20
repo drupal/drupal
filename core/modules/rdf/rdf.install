@@ -49,7 +49,7 @@ function rdf_update_8000() {
         }
         !empty($value['predicates']) ? $field_mappings[$key]['properties'] = $value['predicates'] : NULL;
         !empty($value['datatype']) ? $field_mappings[$key]['datatype'] = $value['datatype'] : NULL;
-        !empty($value['callback']) ? $field_mappings[$key]['datatype_callback'] = $value['callback'] : NULL;
+        !empty($value['callback']) ? $field_mappings[$key]['datatype_callback']['callable'] = $value['callback'] : NULL;
       }
     }
     $config->set('fieldMappings', $field_mappings);
