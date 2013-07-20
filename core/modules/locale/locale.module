@@ -215,13 +215,6 @@ function locale_menu() {
     'access arguments' => array('translate interface'),
     'file' => 'locale.pages.inc',
   );
-  $items['admin/reports/translations/check'] = array(
-    'title' => 'Manual translation update check',
-    'page callback' => 'locale_translation_manual_status',
-    'access arguments' => array('translate interface'),
-    'type' => MENU_CALLBACK,
-    'file' => 'locale.pages.inc',
-  );
 
   return $items;
 }
