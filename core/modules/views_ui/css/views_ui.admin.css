@@ -196,12 +196,6 @@
 
 /* @group Attachment collapsible details */
 
-.views-display-columns details {
-  border: none;
-  margin: 0;
-  padding: 0;
-}
-
 .views-display-columns .details-wrapper {
   padding: 0;
 }

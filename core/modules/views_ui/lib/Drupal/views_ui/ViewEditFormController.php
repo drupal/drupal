@@ -499,7 +499,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       '#type' => 'details',
       '#title' => t('Advanced'),
       '#collapsed' => TRUE,
-      '#theme_wrappers' => array('details', 'container'),
+      '#theme_wrappers' => array('details'),
       '#attributes' => array(
         'class' => array(
           'views-display-column',
