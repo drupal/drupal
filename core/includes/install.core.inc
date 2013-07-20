@@ -386,7 +386,9 @@ function install_begin_request(&$install_state) {
       ->addArgument(new Reference('config.context'));
 
     // Register the 'language_manager' service.
-    $container->register('language_manager', 'Drupal\Core\Language\LanguageManager');
+    $container
+      ->register('language_manager', 'Drupal\Core\Language\LanguageManager')
+      ->addArgument(NULL);
 
     // Register the translation services.
     install_register_translation_service($container);

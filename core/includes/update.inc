@@ -511,7 +511,7 @@ function update_prepare_d8_language() {
     db_drop_field('languages', 'enabled');
 
     // Update language count.
-    variable_set('language_count', db_query('SELECT COUNT(language) FROM {languages}')->fetchField());
+    Drupal::state()->set('language_count', db_query('SELECT COUNT(language) FROM {languages}')->fetchField());
 
     // Rename the languages table to language.
     db_rename_table('languages', 'language');

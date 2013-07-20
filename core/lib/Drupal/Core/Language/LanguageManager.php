@@ -8,6 +8,7 @@
 namespace Drupal\Core\Language;
 
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 
 /**
  * Class responsible for initializing each language type.
@@ -20,6 +21,13 @@ class LanguageManager {
    * @var \Symfony\Component\HttpFoundation\Request
    */
   protected $request;
+
+  /**
+   * The Key/Value Store to use for state.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $state = NULL;
 
   /**
    * An array of language objects keyed by language type.
@@ -44,6 +52,16 @@ class LanguageManager {
    * @var bool
    */
   protected $initializing = FALSE;
+
+  /**
+   * Constructs an LanguageManager object.
+   *
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state
+   *   The state keyvalue store.
+   */
+  public function __construct(KeyValueStoreInterface $state = NULL) {
+    $this->state = $state;
+  }
 
   /**
    * Initializes each language type to a language object.
@@ -136,7 +154,11 @@ class LanguageManager {
    *   TRUE if more than one language is enabled, FALSE otherwise.
    */
   public function isMultilingual() {
-    return variable_get('language_count', 1) > 1;
+    if (!isset($this->state)) {
+      // No state service in install time.
+      return FALSE;
+    }
+    return ($this->state->get('language_count') ?: 1) > 1;
   }
 
   /**
@@ -152,7 +174,7 @@ class LanguageManager {
   /**
    * Returns a language object representing the site's default language.
    *
-   * @return Drupal\Core\Language\Language
+   * @return \Drupal\Core\Language\Language
    *   A language object.
    */
   protected function getLanguageDefault() {

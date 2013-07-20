@@ -116,10 +116,11 @@ class LanguageListTest extends WebTestBase {
     // Verify that language is no longer found.
     $this->drupalGet('admin/config/regional/language/delete/' . $langcode);
     $this->assertResponse(404, 'Language no longer found.');
-    // Make sure the "language_count" variable has been updated correctly.
+    // Make sure the "language_count" state has been updated correctly.
     drupal_static_reset('language_list');
     $languages = language_list();
-    $this->assertEqual(variable_get('language_count', 1), count($languages), 'Language count is correct.');
+    $language_count =  $this->container->get('state')->get('language_count') ?: 1;
+    $this->assertEqual($language_count, count($languages), 'Language count is correct.');
     // Delete French.
     $this->drupalPost('admin/config/regional/language/delete/fr', array(), t('Delete'));
     // Get the count of languages.
@@ -132,8 +133,9 @@ class LanguageListTest extends WebTestBase {
     // Verify that language is no longer found.
     $this->drupalGet('admin/config/regional/language/delete/fr');
     $this->assertResponse(404, 'Language no longer found.');
-    // Make sure the "language_count" variable has not changed.
-    $this->assertEqual(variable_get('language_count', 1), count($languages), 'Language count is correct.');
+    // Make sure the "language_count" state has not changed.
+    $language_count = $this->container->get('state')->get('language_count') ?: 1;
+    $this->assertEqual($language_count, count($languages), 'Language count is correct.');
 
     // Ensure we can delete the English language. Right now English is the only
     // language so we must add a new language and make it the default before
