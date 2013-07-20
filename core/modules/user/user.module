@@ -100,10 +100,6 @@ function user_theme() {
       'file' => 'user.pages.inc',
       'template' => 'user',
     ),
-    'user_admin_permissions' => array(
-      'render element' => 'form',
-      'file' => 'user.admin.inc',
-    ),
     'user_permission_description' => array(
       'variables' => array('permission_item' => NULL, 'hide' => NULL),
       'file' => 'user.admin.inc',
