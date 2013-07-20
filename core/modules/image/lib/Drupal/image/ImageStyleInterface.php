@@ -15,30 +15,6 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface ImageStyleInterface extends ConfigEntityInterface {
 
   /**
-   * Delivers an image derivative.
-   *
-   * Transfers a generated image derivative to the requesting agent. Modules may
-   * implement this method to set different serve different image derivatives
-   * from different stream wrappers or to customize different permissions on
-   * each image style.
-   *
-   * @param string $scheme
-   *   The scheme name of the original image file stream wrapper ('public',
-   *   'private', 'temporary', etc.).
-   * @param string $target
-   *   The target part of the uri.
-   *
-   * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
-   *   The image to be delivered.
-   *
-   * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-   *   \Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException
-   *
-   * @todo Move to controller after https://drupal.org/node/1987712.
-   */
-  public function deliver($scheme, $target);
-
-  /**
    * Returns the URI of this image when using this style.
    *
    * The path returned by this function may not exist. The default generation

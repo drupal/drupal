@@ -1578,7 +1578,7 @@ function file_get_file_references(File $file, $field = NULL, $age = FIELD_LOAD_R
       // for every revision or the entity does not support revisions then
       // every usage is already a match.
       $match_entity_type = $age == FIELD_LOAD_REVISION || !isset($entity_info['entity_keys']['revision']);
-      $entities = entity_load_multiple($entity_type, $entity_ids);
+      $entities = entity_load_multiple($entity_type, array_keys($entity_ids));
       foreach ($entities as $entity) {
         $bundle = $entity->bundle();
         // We need to find file fields for this entity type and bundle.

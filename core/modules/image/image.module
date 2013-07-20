@@ -95,28 +95,6 @@ function image_style_entity_uri(ImageStyle $style) {
 function image_menu() {
   $items = array();
 
-  // Generate image derivatives of publicly available files.
-  // If clean URLs are disabled, image derivatives will always be served
-  // through the menu system.
-  // If clean URLs are enabled and the image derivative already exists,
-  // PHP will be bypassed.
-  $directory_path = file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath();
-  $items[$directory_path . '/styles/%image_style'] = array(
-    'title' => 'Generate image style',
-    'page callback' => 'image_style_deliver',
-    'page arguments' => array(count(explode('/', $directory_path)) + 1),
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-  // Generate and deliver image derivatives of private files.
-  // These image derivatives are always delivered through the menu system.
-  $items['system/files/styles/%image_style'] = array(
-    'title' => 'Generate image style',
-    'page callback' => 'image_style_deliver',
-    'page arguments' => array(3),
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
   $items['admin/config/media/image-styles'] = array(
     'title' => 'Image styles',
     'description' => 'Configure styles that can be used for resizing or adjusting images on display.',
@@ -389,30 +367,6 @@ function image_style_options($include_empty = TRUE) {
     $options[''] = t('No defined styles');
   }
   return $options;
-}
-
-/**
- * Page callback: Generates a derivative, given a style and image path.
- *
- * After generating an image, transfer it to the requesting agent.
- *
- * @param \Drupal\image\ImageStyleInterface $style
- *   The image style.
- * @param string $scheme
- *   The scheme name of the original image file stream wrapper ('public',
- *   'private', 'temporary', etc.).
- *
- * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
- *   The image to be delivered.
- *
- * @todo Remove this wrapper in https://drupal.org/node/1987712.
- */
-function image_style_deliver(ImageStyleInterface $style, $scheme) {
-  $args = func_get_args();
-  // Remove $style and $scheme from the arguments.
-  unset($args[0], $args[1]);
-  $target = implode('/', $args);
-  return $style->deliver($scheme, $target);
 }
 
 /**

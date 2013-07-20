@@ -10,9 +10,10 @@ namespace Drupal\config\Controller;
 use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Component\Archiver\ArchiveTar;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\OpenModalDialogCommand;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\system\FileDownloadController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Returns responses for config module routes.
@@ -22,22 +23,33 @@ class ConfigController implements ControllerInterface {
   /**
    * The target storage.
    *
-   * @var \Drupal\Core\Config\StorageInterface;
+   * @var \Drupal\Core\Config\StorageInterface
    */
   protected $targetStorage;
 
   /**
    * The source storage.
    *
-   * @var \Drupal\Core\Config\StorageInterface;
+   * @var \Drupal\Core\Config\StorageInterface
    */
   protected $sourceStorage;
+
+  /**
+   * The file download controller.
+   *
+   * @var \Drupal\Core\Controller\ControllerInterface
+   */
+  protected $fileDownloadController;
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('config.storage'), $container->get('config.storage.staging'));
+    return new static(
+      $container->get('config.storage'),
+      $container->get('config.storage.staging'),
+      FileDownloadController::create($container)
+    );
   }
 
   /**
@@ -47,10 +59,13 @@ class ConfigController implements ControllerInterface {
    *   The target storage.
    * @param \Drupal\Core\Config\StorageInterface $source_storage
    *   The source storage
+   * @param \Drupal\Core\Controller\ControllerInterface $file_download_controller
+   *   The file download controller.
    */
-  public function __construct(StorageInterface $target_storage, StorageInterface $source_storage) {
+  public function __construct(StorageInterface $target_storage, StorageInterface $source_storage, ControllerInterface $file_download_controller) {
     $this->targetStorage = $target_storage;
     $this->sourceStorage = $source_storage;
+    $this->fileDownloadController = $file_download_controller;
   }
 
   /**
@@ -64,7 +79,9 @@ class ConfigController implements ControllerInterface {
       $config_files[] = $config_dir . '/' . $config_name . '.yml';
     }
     $archiver->createModify($config_files, '', config_get_config_directory());
-    return file_download('temporary', 'config.tar.gz');
+
+    $request = new Request(array('file' => 'config.tar.gz'));
+    return $this->fileDownloadController->download($request, 'temporary');
   }
 
   /**
