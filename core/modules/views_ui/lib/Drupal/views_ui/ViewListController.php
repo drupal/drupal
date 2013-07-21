@@ -151,6 +151,7 @@ class ViewListController extends ConfigEntityListController implements EntityCon
     foreach (array('enable', 'disable') as $op) {
       if (isset($operations[$op])) {
         $operations[$op]['ajax'] = TRUE;
+        $operations[$op]['query']['token'] = drupal_get_token($op);
       }
     }
 
