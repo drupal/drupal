@@ -1462,16 +1462,21 @@ function update_variables_to_config($config_name, array $variable_map) {
  *   The extension type; e.g., 'module' or 'theme'.
  * @param string $config_name
  *   The configuration object name to retrieve.
+ * @param string $name
+ *   (optional) The owner of the config. Defaults to NULL, in which case the
+ *   name will be derived from the $config_name.
  *
  * @return boolean
  *   True on success, false if config file does not exist.
  */
-function update_7_to_8_install_default_config($type, $config_name) {
+function update_install_default_config($type, $config_name, $name = NULL) {
   // Build the new configuration object.
   $config = Drupal::config($config_name);
 
   // Extract the extension namespace/owner from the configuration object name.
-  $name = strtok($config_name, '.');
+  if (!$name) {
+    $name = strtok($config_name, '.');
+  }
 
   // Load and set default configuration values.
   $file = new FileStorage(drupal_get_path($type, $name) . '/config');
