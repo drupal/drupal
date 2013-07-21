@@ -20,30 +20,28 @@
 namespace Doctrine\Common;
 
 /**
- * Class to store and retrieve the version of Doctrine
+ * Class to store and retrieve the version of Doctrine.
  *
- * @license http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link    www.doctrine-project.org
- * @since   2.0
- * @version $Revision$
- * @author  Benjamin Eberlei <kontakt@beberlei.de>
- * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
- * @author  Jonathan Wage <jonwage@gmail.com>
- * @author  Roman Borschel <roman@code-factory.org>
+ * @link   www.doctrine-project.org
+ * @since  2.0
+ * @author Benjamin Eberlei <kontakt@beberlei.de>
+ * @author Guilherme Blanco <guilhermeblanco@hotmail.com>
+ * @author Jonathan Wage <jonwage@gmail.com>
+ * @author Roman Borschel <roman@code-factory.org>
  */
 class Version
 {
     /**
-     * Current Doctrine Version
+     * Current Doctrine Version.
      */
-    const VERSION = '2.3.0';
+    const VERSION = '2.4.1';
 
     /**
      * Compares a Doctrine version with the current one.
      *
      * @param string $version Doctrine version to compare.
-     * @return int Returns -1 if older, 0 if it is the same, 1 if version
-     *             passed as argument is newer.
+     *
+     * @return int -1 if older, 0 if it is the same, 1 if version passed as argument is newer.
      */
     public static function compare($version)
     {
