@@ -17,7 +17,7 @@ class PreviewTest extends UITestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_preview');
+  public static $testViews = array('test_preview', 'test_pager_full', 'test_mini_pager');
 
   public static function getInfo() {
     return array(
@@ -80,17 +80,102 @@ class PreviewTest extends UITestBase {
   }
 
   /**
-   * Tests the actual preview response.
+   * Tests pagers in the preview form.
    */
-  public function testPreviewController() {
-    $result = $this->drupalGetAJAX('admin/structure/views/view/test_preview/preview/default');
+  public function testPreviewWithPagersUI() {
 
+    // Create 11 nodes and make sure that everyone is returned.
+    for ($i = 0; $i < 11; $i++) {
+      $this->drupalCreateNode();
+    }
+
+    // Test Full Pager.
+    $this->getPreviewAJAX('test_pager_full', 'default', 5);
+
+    // Test that the pager is present and rendered.
+    $elements = $this->xpath('//ul[@class = "pager"]/li');
+    $this->assertTrue(!empty($elements), 'Full pager found.');
+
+    // Verify elements and links to pages.
+    // We expect to find 5 elements: current page == 1, links to pages 2 and
+    // and 3, links to 'next >' and 'last >>' pages.
+    $this->assertClass($elements[0], 'pager-current', 'Element for current page has .pager-current class.');
+    $this->assertFalse(isset($elements[0]->a), 'Element for current page has no link.');
+
+    $this->assertClass($elements[1], 'pager-item', "Element for page 2 has .pager-item class.");
+    $this->assertTrue($elements[1]->a, "Link to page 2 found.");
+
+    $this->assertClass($elements[2], 'pager-item', "Element for page 3 has .pager-item class.");
+    $this->assertTrue($elements[2]->a, "Link to page 3 found.");
+
+    $this->assertClass($elements[3], 'pager-next', "Element for next page has .pager-next class.");
+    $this->assertTrue($elements[3]->a, "Link to next page found.");
+
+    $this->assertClass($elements[4], 'pager-last', "Element for last page has .pager-last class.");
+    $this->assertTrue($elements[4]->a, "Link to last page found.");
+
+    // Test Mini Pager.
+    $this->getPreviewAJAX('test_mini_pager', 'default', 3);
+
+    // Test that the pager is present and rendered.
+    $elements = $this->xpath('//ul[@class = "pager"]/li');
+    $this->assertTrue(!empty($elements), 'Mini pager found.');
+
+    // Verify elements and links to pages.
+    // We expect to find 3 elements: previous and current pages, with no link,
+    // and next page with a link.
+    $this->assertClass($elements[0], 'pager-previous', 'Element for previous page has .pager-previous class.');
+    $this->assertFalse(isset($elements[0]->a), 'Element for previous page has no link.');
+
+    $this->assertClass($elements[1], 'pager-current', 'Element for current page has .pager-current class.');
+    $this->assertFalse(isset($elements[1]->a), 'Element for current page has no link.');
+
+    $this->assertClass($elements[2], 'pager-next', "Element for next page has .pager-next class.");
+    $this->assertTrue($elements[2]->a, "Link to next page found.");
+  }
+
+  /**
+   * Get the preview form and force an AJAX preview update.
+   *
+   * @param string $view_name
+   *   The view to test.
+   * @param string $panel_id
+   *   The view panel to test.
+   * @param int $row_count
+   *   The expected number of rows in the preview.
+   */
+  protected function getPreviewAJAX($view_name, $panel_id, $row_count) {
+    $this->drupalGet('admin/structure/views/view/' . $view_name . '/preview/' . $panel_id);
+    $result = $this->drupalPostAJAX(NULL, array(), array('op' => t('Update preview')));
+
+    // Has AJAX callback replied with an insert command? If so, we can
+    // assume that the page content was updated with AJAX returned data.
     $result_commands = array();
-    // Build a list of the result commands keyed by the js command.
     foreach ($result as $command) {
       $result_commands[$command['command']] = $command;
     }
-    $this->assertTrue(isset($result_commands['insert']));
+    $this->assertTrue(isset($result_commands['insert']), 'AJAX insert command received.');
+
+    // Test if preview contains the expected number of rows.
+    $elements = $this->xpath('//div[@class = "view-content"]/div[contains(@class, views-row)]');
+    $this->assertEqual(count($elements), $row_count, 'Expected items found on page.');
+  }
+
+  /**
+   * Asserts that an element has a given class.
+   *
+   * @param \SimpleXMLElement $element
+   *   The element to test.
+   * @param string $class
+   *   The class to assert.
+   * @param string $message
+   *   (optional) A verbose message to output.
+   */
+  protected function assertClass(\SimpleXMLElement $element, $class, $message = NULL) {
+    if (!isset($message)) {
+      $message = "Class .$class found.";
+    }
+    $this->assertTrue(strpos($element['class'], $class) !== FALSE, $message);
   }
 
 }

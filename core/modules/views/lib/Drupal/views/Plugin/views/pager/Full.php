@@ -78,10 +78,9 @@ class Full extends SqlBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\pager\PagerPluginBase::render().
+   * {@inheritdoc}
    */
   public function render($input) {
-    $pager_theme = $this->view->buildThemeFunctions('pager');
     // The 0, 1, 3, 4 indexes are correct. See the template_preprocess_pager()
     // documentation.
     $tags = array(
@@ -90,13 +89,13 @@ class Full extends SqlBase {
       3 => $this->options['tags']['next'],
       4 => $this->options['tags']['last'],
     );
-    $output = theme($pager_theme, array(
-      'tags' => $tags,
-      'element' => $this->options['id'],
-      'parameters' => $input,
-      'quantity' => $this->options['quantity'],
-    ));
-    return $output;
+    return array(
+      '#theme' => $this->view->buildThemeFunctions('pager'),
+      '#tags' => $tags,
+      '#element' => $this->options['id'],
+      '#parameters' => $input,
+      '#quantity' => $this->options['quantity'],
+    );
   }
 
 
