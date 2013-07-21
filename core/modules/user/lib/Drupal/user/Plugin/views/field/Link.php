@@ -9,6 +9,7 @@ namespace Drupal\user\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Annotation\PluginID;
@@ -73,7 +74,7 @@ class Link extends FieldPluginBase {
    * @return string
    *   The acutal rendered text (without the link) of this field.
    */
-  public function render_link(EntityInterface $entity, \stdClass $values) {
+  public function render_link(EntityInterface $entity, ResultRow $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('View');
 
     $this->options['alter']['make_link'] = TRUE;

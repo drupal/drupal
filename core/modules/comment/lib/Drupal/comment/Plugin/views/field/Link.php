@@ -9,6 +9,7 @@ namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Base field handler to present a link.
@@ -47,7 +48,7 @@ class Link extends FieldPluginBase {
     return $this->render_link($comment, $values);
   }
 
-  function render_link($data, $values) {
+  function render_link($data, ResultRow $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
     $comment = $data;
     $nid = $comment->nid;

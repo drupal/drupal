@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
@@ -48,7 +49,7 @@ class Username extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
   }
 
-  function render_link($data, $values) {
+  function render_link($data, ResultRow $values) {
     if (!empty($this->options['link_to_user'])) {
       $account = entity_create('user', array());
       $account->uid = $this->getValue($values, 'uid');

@@ -9,6 +9,7 @@ namespace Drupal\node\Plugin\views\field;
 
 use Drupal\node\Plugin\views\field\Link;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Annotation\PluginID;
 
@@ -34,7 +35,7 @@ class RevisionLink extends Link {
     return user_access('view revisions') || user_access('administer nodes');
   }
 
-  function render_link($data, $values) {
+  function render_link($data, ResultRow $values) {
     list($node, $vid) = $this->get_revision_entity($values, 'view');
     if (!isset($vid)) {
       return;

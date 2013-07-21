@@ -9,6 +9,7 @@ namespace Drupal\node\Plugin\views\field;
 
 use Drupal\node\Plugin\views\field\RevisionLink;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to present link to delete a node revision.
@@ -23,7 +24,7 @@ class RevisionLinkDelete extends RevisionLink {
     return user_access('delete revisions') || user_access('administer nodes');
   }
 
-  function render_link($data, $values) {
+  function render_link($data, ResultRow $values) {
     list($node, $vid) = $this->get_revision_entity($values, 'delete');
     if (!isset($vid)) {
       return;

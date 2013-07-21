@@ -1424,11 +1424,9 @@ class Sql extends QueryPluginBase {
         }
 
         $result = $query->execute();
+        $result->setFetchMode(\PDO::FETCH_CLASS, 'Drupal\views\ResultRow');
 
-        $view->result = array();
-        foreach ($result as $item) {
-          $view->result[] = $item;
-        }
+        $view->result = iterator_to_array($result);
 
         $view->pager->postExecute($view->result);
         $view->pager->updatePageInfo();
@@ -1519,12 +1517,6 @@ class Sql extends QueryPluginBase {
       return;
     }
 
-     // Initialize the entity placeholders in $results.
-    foreach ($results as $index => $result) {
-      $results[$index]->_entity = FALSE;
-      $results[$index]->_relationship_entities = array();
-    }
-
     // Assemble a list of entities to load.
     $ids_by_table = array();
     foreach ($entity_tables as $table_alias => $table) {
@@ -1562,7 +1554,12 @@ class Sql extends QueryPluginBase {
       }
 
       foreach ($ids as $index => $id) {
-        $entity = isset($entities[$id]) ? $entities[$id] : FALSE;
+        if (isset($entities[$id])) {
+          $entity = $entities[$id];
+        }
+        else {
+          $entity = NULL;
+        }
 
         if ($relationship_id == 'none') {
           $results[$index]->_entity = $entity;

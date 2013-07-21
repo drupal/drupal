@@ -11,6 +11,7 @@ use Drupal\Component\Annotation\PluginID;
 use Drupal\Core\Database\Connection;
 use Drupal\views\Plugin\views\field\Numeric;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -127,7 +128,7 @@ class NodeNewComments extends Numeric {
     }
   }
 
-  function render_link($data, $values) {
+  function render_link($data, ResultRow $values) {
     if (!empty($this->options['link_to_comment']) && $data !== NULL && $data !== '') {
       $node = entity_create('node', array(
         'nid' => $this->getValue($values, 'nid'),
