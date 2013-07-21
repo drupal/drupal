@@ -192,11 +192,22 @@ class LocalTaskManager extends DefaultPluginManager {
   public function getTasksBuild($route_name) {
     $tree = $this->getLocalTasksForRoute($route_name);
     $build = array();
+
+    // Collect all route names.
+    $route_names = array();
+    foreach ($tree as $instances) {
+      foreach ($instances as $child) {
+        $route_names[] = $child->getRouteName();
+      }
+    }
+    // Fetches all routes involved in the tree.
+    $routes = $route_names ? $this->routeProvider->getRoutesByNames($route_names) : array();
+
     foreach ($tree as $level => $instances) {
       foreach ($instances as $child) {
         $path = $this->getPath($child);
         // Find out whether the user has access to the task.
-        $route = $this->routeProvider->getRouteByName($child->getRouteName());
+        $route = $routes[$child->getRouteName()];
         $map = array();
         // @todo - replace this call when we have a real service for it.
         $access = menu_item_route_access($route, $path, $map);
