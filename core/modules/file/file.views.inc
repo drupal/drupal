@@ -439,6 +439,15 @@ function file_views_data() {
       'id' => 'standard',
     ),
   );
+  $data['file_usage']['entity_label'] = array(
+    'title' => t('Entity label'),
+    'help' => t('The label of the entity that is related to the file.'),
+    'real field' => 'id',
+    'field' => array(
+      'id' => 'entity_label',
+      'entity type field' => 'type',
+    ),
+  );
 
   return $data;
 }
@@ -506,17 +515,4 @@ function file_field_views_data_views_data_alter(&$data, $field) {
       ),
     );
   }
-}
-
-function _views_file_status($choice = NULL) {
-  $status = array(
-    0 => t('Temporary'),
-    FILE_STATUS_PERMANENT => t('Permanent'),
-  );
-
-  if (isset($choice)) {
-    return isset($status[$choice]) ? $status[$choice] : t('Unknown');
-  }
-
-  return $status;
 }

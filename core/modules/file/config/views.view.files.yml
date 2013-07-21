@@ -1,0 +1,579 @@
+base_field: fid
+base_table: file_managed
+core: 8.x
+description: 'Find and manage files.'
+status: '1'
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: '1'
+    display_options:
+      access:
+        type: perm
+        options:
+          perm: 'access files overview'
+      cache:
+        type: none
+        options: {  }
+      query:
+        type: views_query
+        options:
+          disable_sql_rewrite: '0'
+          distinct: '0'
+          slave: '0'
+          query_comment: ''
+          query_tags: {  }
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Filter
+          reset_button: '0'
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
+          expose_sort_order: '1'
+          sort_asc_label: Asc
+          sort_desc_label: Desc
+      pager:
+        type: full
+        options:
+          items_per_page: '50'
+      style:
+        type: table
+        options:
+          grouping: {  }
+          row_class: ''
+          default_row_class: '1'
+          row_class_special: '1'
+          override: '1'
+          sticky: '0'
+          summary: ''
+          columns:
+            filename: filename
+            filemime: filemime
+            filesize: filesize
+            status: status
+            timestamp: timestamp
+            count: count
+          info:
+            filename:
+              sortable: '1'
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: ''
+            filemime:
+              sortable: '1'
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: priority-medium
+            filesize:
+              sortable: '1'
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: priority-low
+            status:
+              sortable: '0'
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: priority-low
+            timestamp:
+              sortable: '1'
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: ''
+            count:
+              sortable: '0'
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: priority-medium
+          default: timestamp
+          empty_table: '1'
+      row:
+        type: fields
+      fields:
+        fid:
+          id: fid
+          table: file_managed
+          field: fid
+          alter:
+            alter_text: '0'
+            make_link: '0'
+            absolute: '0'
+            trim: '0'
+            word_boundary: '0'
+            ellipsis: '0'
+            strip_tags: '0'
+            html: '0'
+          hide_empty: '0'
+          empty_zero: '0'
+          link_to_file: '0'
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Fid
+          exclude: '1'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_alter_empty: '1'
+        filename:
+          id: filename
+          table: file_managed
+          field: filename
+          alter:
+            alter_text: '0'
+            make_link: '0'
+            absolute: '0'
+            trim: '0'
+            word_boundary: '0'
+            ellipsis: '0'
+            strip_tags: '0'
+            html: '0'
+          hide_empty: '0'
+          empty_zero: '0'
+          link_to_file: '1'
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Name
+          exclude: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_alter_empty: '1'
+        filemime:
+          id: filemime
+          table: file_managed
+          field: filemime
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Mime type'
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          link_to_file: '0'
+          filemime_image: '0'
+          plugin_id: file_filemime
+        filesize:
+          id: filesize
+          table: file_managed
+          field: filesize
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Size
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          file_size_display: formatted
+          plugin_id: file_size
+        status:
+          id: status
+          table: file_managed
+          field: status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Status
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          plugin_id: file_status
+        timestamp:
+          id: timestamp
+          table: file_managed
+          field: timestamp
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Upload date'
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          date_format: medium
+          custom_date_format: ''
+          timezone: ''
+          plugin_id: date
+        count:
+          id: count
+          table: file_usage
+          field: count
+          relationship: none
+          group_type: sum
+          admin_label: ''
+          label: 'Used in'
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '1'
+            path: 'admin/content/files/usage/[fid]'
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          set_precision: '0'
+          precision: '0'
+          decimal: .
+          separator: ','
+          format_plural: '1'
+          format_plural_singular: '1 place'
+          format_plural_plural: '@count places'
+          prefix: ''
+          suffix: ''
+          plugin_id: numeric
+      filters:
+        filename:
+          id: filename
+          table: file_managed
+          field: filename
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: word
+          value: ''
+          group: '1'
+          exposed: '1'
+          expose:
+            operator_id: filemime_op
+            label: 'Filename'
+            description: ''
+            use_operator: '0'
+            operator: filename_op
+            identifier: filename
+            required: '0'
+            remember: '0'
+            multiple: '0'
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+          is_grouped: '0'
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: '1'
+            widget: select
+            multiple: '0'
+            remember: '0'
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+        filemime:
+          id: filemime
+          table: file_managed
+          field: filemime
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: word
+          value: ''
+          group: '1'
+          exposed: '1'
+          expose:
+            operator_id: filemime_op
+            label: 'Mime type'
+            description: ''
+            use_operator: '0'
+            operator: filemime_op
+            identifier: filemime
+            required: '0'
+            remember: '0'
+            multiple: '0'
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+          is_grouped: '0'
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: '1'
+            widget: select
+            multiple: '0'
+            remember: '0'
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: string
+        status:
+          id: status
+          table: file_managed
+          field: status
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: in
+          value: {  }
+          group: '1'
+          exposed: '1'
+          expose:
+            operator_id: status_op
+            label: Status
+            description: ''
+            use_operator: '0'
+            operator: status_op
+            identifier: status
+            required: '0'
+            remember: '0'
+            multiple: '0'
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            reduce: '0'
+          is_grouped: '0'
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: '1'
+            widget: select
+            multiple: '0'
+            remember: '0'
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          plugin_id: file_status
+      sorts: {  }
+      title: Files
+      header: {  }
+      footer: {  }
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          empty: '1'
+          content: 'No files available.'
+          plugin_id: text_custom
+      relationships: {  }
+      arguments: {  }
+      group_by: '1'
+  page_1:
+    display_plugin: page
+    id: page_1
+    display_title: Page
+    position: '1'
+    display_options:
+      path: admin/content/files
+      menu:
+        type: tab
+        title: Files
+        description: ''
+        name: admin
+        weight: '0'
+        context: '0'
+label: Files
+module: file
+id: files
+tag: default
+uuid: 4b47e09e-16e0-494b-b447-7166191dbb6e
+langcode: en
