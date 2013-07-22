@@ -712,7 +712,7 @@ function node_update_8013() {
 }
 
 /**
- * Empty update. See http://drupal.org/node/1836392.
+ * Empty update. See https://drupal.org/node/2006484.
  */
 function node_update_8014() {
 }
