@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains of \Drupal\file\Tests\FileListingTest.
+ * Contains \Drupal\file\Tests\FileListingTest.
  */
 
 namespace Drupal\file\Tests;
