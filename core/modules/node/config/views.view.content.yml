@@ -37,7 +37,9 @@ display:
           row_class_special: '1'
           override: '1'
           sticky: '1'
+          caption: ''
           summary: ''
+          description: ''
           columns:
             node_bulk_form: node_bulk_form
             title: title
@@ -49,44 +51,82 @@ display:
             delete_node: delete_node
             translation_link: translation_link
             dropbutton: dropbutton
+            timestamp: title
           info:
             node_bulk_form:
-              sortable: '0'
-              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
               responsive: ''
             title:
               sortable: '1'
               default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: ''
             type:
               sortable: '1'
               default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: ''
             name:
               sortable: '0'
               default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
               responsive: priority-low
             status:
               sortable: '1'
               default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
               responsive: ''
             changed:
               sortable: '1'
               default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: '0'
               responsive: priority-low
             edit_node:
               sortable: '0'
               default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
               responsive: ''
             delete_node:
               sortable: '0'
               default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
               responsive: ''
             translation_link:
               sortable: '0'
               default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
               responsive: ''
             dropbutton:
               sortable: '0'
               default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
+              responsive: ''
+            timestamp:
+              sortable: '0'
+              default_sort_order: asc
+              align: ''
+              separator: ''
+              empty_column: '0'
               responsive: ''
           default: changed
           empty_table: '1'
@@ -251,6 +291,58 @@ display:
           destination: '1'
           plugin_id: dropbutton
           provider: views
+        timestamp:
+          id: timestamp
+          table: history
+          field: timestamp
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Has new content'
+          exclude: '0'
+          alter:
+            alter_text: '0'
+            text: ''
+            make_link: '0'
+            path: ''
+            absolute: '0'
+            external: '0'
+            replace_spaces: '0'
+            path_case: none
+            trim_whitespace: '0'
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: '0'
+            max_length: ''
+            word_boundary: '1'
+            ellipsis: '1'
+            more_link: '0'
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: '0'
+            trim: '0'
+            preserve_tags: ''
+            html: '0'
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: '1'
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: '1'
+          empty: ''
+          hide_empty: '0'
+          empty_zero: '0'
+          hide_alter_empty: '1'
+          link_to_node: '0'
+          comments: '0'
+          plugin_id: history_user_timestamp
+          provider: history
       filters:
         status_extra:
           id: status_extra
@@ -395,4 +487,5 @@ label: Content
 module: node
 id: content
 tag: default
+uuid: 914eaf17-0b90-4fcd-a312-18b51e9dac77
 langcode: en
