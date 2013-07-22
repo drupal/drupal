@@ -30,22 +30,6 @@ function template_preprocess_custom_block_add_list(&$variables) {
 }
 
 /**
- * Page callback: Presents the custom block edit form.
- *
- * @param Drupal\custom_block\Plugin\Core\Entity\CustomBlock $block
- *   The custom block to edit.
- *
- * @return array
- *   A form array as expected by drupal_render().
- *
- * @see custom_block_menu()
- */
-function custom_block_edit(CustomBlock $block) {
-  drupal_set_title(t('Edit custom block %label', array('%label' => $block->label())), PASS_THROUGH);
-  return Drupal::entityManager()->getForm($block);
-}
-
-/**
  * Page callback: Form constructor for the custom block deletion form.
  *
  * @param Drupal\custom_block\Plugin\Core\Entity\CustomBlock $block

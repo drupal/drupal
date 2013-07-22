@@ -41,6 +41,11 @@ class CustomBlockFormController extends EntityFormControllerNG {
    */
   public function form(array $form, array &$form_state) {
     $block = $this->entity;
+
+    if ($this->operation == 'edit') {
+      // @todo Remove this once https://drupal.org/node/1981644 is in.
+      drupal_set_title(t('Edit custom block %label', array('%label' => $block->label())), PASS_THROUGH);
+    }
     // Override the default CSS class name, since the user-defined custom block
     // type name in 'TYPE-block-form' potentially clashes with third-party class
     // names.

@@ -25,6 +25,8 @@ use Drupal\custom_block\CustomBlockTypeInterface;
  *     "access" = "Drupal\custom_block\CustomBlockTypeAccessController",
  *     "form" = {
  *       "default" = "Drupal\custom_block\CustomBlockTypeFormController",
+ *       "add" = "Drupal\custom_block\CustomBlockTypeFormController",
+ *       "edit" = "Drupal\custom_block\CustomBlockTypeFormController",
  *       "delete" = "Drupal\custom_block\Form\CustomBlockTypeDeleteForm"
  *     },
  *     "list" = "Drupal\custom_block\CustomBlockTypeListController"

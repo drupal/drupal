@@ -26,6 +26,8 @@ use Drupal\custom_block\CustomBlockInterface;
  *     "access" = "Drupal\custom_block\CustomBlockAccessController",
  *     "render" = "Drupal\custom_block\CustomBlockRenderController",
  *     "form" = {
+ *       "add" = "Drupal\custom_block\CustomBlockFormController",
+ *       "edit" = "Drupal\custom_block\CustomBlockFormController",
  *       "default" = "Drupal\custom_block\CustomBlockFormController"
  *     },
  *     "translation" = "Drupal\custom_block\CustomBlockTranslationController"
@@ -34,6 +36,7 @@ use Drupal\custom_block\CustomBlockInterface;
  *   revision_table = "custom_block_revision",
  *   route_base_path = "admin/structure/custom-blocks/manage/{bundle}",
  *   menu_base_path = "block/%custom_block",
+ *   menu_edit_path = "block/%custom_block",
  *   fieldable = TRUE,
  *   translatable = TRUE,
  *   entity_keys = {
