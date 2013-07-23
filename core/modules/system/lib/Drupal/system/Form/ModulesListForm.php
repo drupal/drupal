@@ -142,7 +142,7 @@ class ModulesListForm implements FormInterface, ControllerInterface {
         '#title' => $this->translationManager->translate($package),
         '#theme' => 'system_modules_details',
         '#header' => array(
-          array('data' => '<span class="element-invisible">' . $this->translationManager->translate('Enabled') . '</span>', 'class' => array('checkbox')),
+          array('data' => '<span class="visually-hidden">' . $this->translationManager->translate('Enabled') . '</span>', 'class' => array('checkbox')),
           array('data' => $this->translationManager->translate('Name'), 'class' => array('name')),
           array('data' => $this->translationManager->translate('Description'), 'class' => array('description', RESPONSIVE_PRIORITY_LOW)),
         ),
