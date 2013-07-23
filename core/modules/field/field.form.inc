@@ -25,9 +25,10 @@ function theme_field_multiple_value_form($variables) {
   $output = '';
 
   if ($element['#cardinality'] > 1 || $element['#cardinality'] == FIELD_CARDINALITY_UNLIMITED) {
+    $form_required_marker = array('#theme' => 'form_required_marker');
+    $required = !empty($element['#required']) ? drupal_render($form_required_marker) : '';
     $table_id = drupal_html_id($element['#field_name'] . '_values');
     $order_class = $element['#field_name'] . '-delta-order';
-    $required = !empty($element['#required']) ? theme('form_required_marker', $variables) : '';
 
     $header = array(
       array(
@@ -67,8 +68,17 @@ function theme_field_multiple_value_form($variables) {
       );
     }
 
+    $table = array(
+      '#theme' => 'table',
+      '#header' => $header,
+      '#rows' => $rows,
+      '#attributes' => array(
+        'id' => $table_id,
+        'class' => array('field-multiple-table'),
+      ),
+    );
     $output = '<div class="form-item">';
-    $output .= theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => $table_id, 'class' => array('field-multiple-table'))));
+    $output .= drupal_render($table);
     $output .= $element['#description'] ? '<div class="description">' . $element['#description'] . '</div>' : '';
     $output .= '<div class="clearfix">' . drupal_render($add_more_button) . '</div>';
     $output .= '</div>';

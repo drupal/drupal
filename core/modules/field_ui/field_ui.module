@@ -355,19 +355,19 @@ function field_ui_view_mode_delete(EntityViewModeInterface $view_mode) {
  */
 function theme_field_ui_table($variables) {
   $elements = $variables['elements'];
-  $table = array();
+  $table = array('#theme' => 'table');
 
   // Add table headers and attributes.
-  foreach (array('header', 'attributes') as $key) {
-    if (isset($elements["#$key"])) {
-      $table[$key] = $elements["#$key"];
+  foreach (array('#header', '#attributes') as $key) {
+    if (isset($elements[$key])) {
+      $table[$key] = $elements[$key];
     }
   }
 
   // Determine the colspan to use for region rows, by checking the number of
   // columns in the headers.
   $columns_count = 0;
-  foreach ($table['header'] as $header) {
+  foreach ($table['#header'] as $header) {
     $columns_count += (is_array($header) && isset($header['colspan']) ? $header['colspan'] : 1);
   }
 
@@ -377,7 +377,7 @@ function theme_field_ui_table($variables) {
 
     // Add region rows.
     if (isset($region['title']) && empty($region['invisible'])) {
-      $table['rows'][] = array(
+      $table['#rows'][] = array(
         'class' => array('region-title', 'region-' . $region_name_class . '-title'),
         'no_striping' => TRUE,
         'data' => array(
@@ -387,7 +387,7 @@ function theme_field_ui_table($variables) {
     }
     if (isset($region['message'])) {
       $class = (empty($region['rows_order']) ? 'region-empty' : 'region-populated');
-      $table['rows'][] = array(
+      $table['#rows'][] = array(
         'class' => array('region-message', 'region-' . $region_name_class . '-message', $class),
         'no_striping' => TRUE,
         'data' => array(
@@ -417,10 +417,10 @@ function theme_field_ui_table($variables) {
           $row['data'][] = $cell;
         }
       }
-      $table['rows'][] = $row;
+      $table['#rows'][] = $row;
     }
   }
 
-  return theme('table', $table);
+  return drupal_render($table);
 }
 
