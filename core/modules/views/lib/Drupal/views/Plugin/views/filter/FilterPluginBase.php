@@ -733,10 +733,7 @@ abstract class FilterPluginBase extends HandlerBase {
    */
   public function groupForm(&$form, &$form_state) {
     if (!empty($this->options['group_info']['optional']) && !$this->multipleExposedInput()) {
-
-      $old_any = $this->options['group_info']['widget'] == 'select' ? '<Any>' : '&lt;Any&gt;';
-      $any_label = config('views.settings')->get('ui.exposed_filter_any_label') == 'old_any' ? $old_any : t('- Any -');
-      $groups = array('All' => $any_label);
+      $groups = array('All' => t('- Any -'));
     }
     foreach ($this->options['group_info']['group_items'] as $id => $group) {
       if (!empty($group['title'])) {
@@ -936,7 +933,7 @@ abstract class FilterPluginBase extends HandlerBase {
       '#default_value' => $this->options['group_info']['remember'],
     );
 
-    $groups = array('All' => '- Any -'); // The string '- Any -' will not be rendered see @theme_views_ui_build_group_filter_form
+    $groups = array('All' => t('- Any -')); // The string '- Any -' will not be rendered see @theme_views_ui_build_group_filter_form
 
     // Provide 3 options to start when we are in a new group.
     if (count($this->options['group_info']['group_items']) == 0) {
@@ -1130,8 +1127,7 @@ abstract class FilterPluginBase extends HandlerBase {
     }
 
     if ($type == 'value' && empty($this->always_required) && empty($this->options['expose']['required']) && $form['#type'] == 'select' && empty($form['#multiple'])) {
-      $any_label = config('views.settings')->get('ui.exposed_filter_any_label') == 'old_any' ? t('<Any>') : t('- Any -');
-      $form['#options'] = array('All' => $any_label) + $form['#options'];
+      $form['#options'] = array('All' => t('- Any -')) + $form['#options'];
       $form['#default_value'] = 'All';
     }
 

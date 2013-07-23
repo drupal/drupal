@@ -16,7 +16,6 @@ ui:
   custom_theme: _default
   always_live_preview: '1'
   always_live_preview_button: '1'
-  exposed_filter_any_label: new_any
 field_rewrite_elements:
   div: DIV
   span: SPAN
