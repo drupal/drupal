@@ -59,7 +59,7 @@ class CommentItem extends ConfigFieldItemBase implements PrepareCacheInterface {
   /**
    * {@inheritdoc}
    */
-  public static function schema(Field $field = NULL) {
+  public static function schema(Field $field) {
     return array(
       'columns' => array(
         'status' => array(

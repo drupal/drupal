@@ -7,6 +7,7 @@
 
 use Drupal\Core\Language\Language;
 use Drupal\comment\Plugin\field\field_type\CommentItem;
+use Drupal\field\Plugin\Core\Entity\Field;
 
 /**
  * Implements hook_uninstall().
@@ -594,7 +595,8 @@ function comment_update_8006(&$sandbox) {
       // registered.
       // @todo Remove once https://drupal.org/node/1199946 is in.
       require_once __DIR__ . '/lib/Drupal/comment/Plugin/field/field_type/CommentItem.php';
-      $field['schema'] = CommentItem::schema();
+      $field_object = new Field($field);
+      $field['schema'] = CommentItem::schema($field_object);
     }
     _update_8003_field_create_field($field);
 
