@@ -91,4 +91,17 @@ class Language extends ConfigEntityBase implements LanguageInterface {
     $this->langcode = 'en';
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function uri() {
+    return array(
+      'path' => 'admin/config/regional/language/edit/' . $this->id(),
+      'options' => array(
+        'entity_type' => $this->entityType,
+        'entity' => $this,
+      ),
+    );
+  }
+
 }
