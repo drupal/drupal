@@ -133,8 +133,8 @@ function seven_tablesort_indicator($variables) {
     '#theme' => 'image',
     '#uri' => $image_uri,
     '#alt' => $text,
-    '#width' => 13,
-    '#height' => 13,
+    '#width' => 9,
+    '#height' => 5,
     '#title' => $text,
   );
   return drupal_render($image);
