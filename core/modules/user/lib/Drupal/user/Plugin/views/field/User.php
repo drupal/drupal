@@ -10,6 +10,7 @@ namespace Drupal\user\Plugin\views\field;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -51,7 +52,7 @@ class User extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
   }
 
-  function render_link($data, $values) {
+  function render_link($data, ResultRow $values) {
     if (!empty($this->options['link_to_user']) && user_access('access user profiles') && ($entity = $this->getEntity($values)) && $data !== NULL && $data !== '') {
       $this->options['alter']['make_link'] = TRUE;
       $uri = $entity->uri();

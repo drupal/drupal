@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\taxonomy\Plugin\Core\Entity\TermInterface.
+ * Contains \Drupal\taxonomy\TermInterface.
  */
 
 namespace Drupal\taxonomy;

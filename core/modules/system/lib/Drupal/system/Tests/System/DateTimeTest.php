@@ -58,18 +58,18 @@ class DateTimeTest extends WebTestBase {
     $node2 = $this->drupalCreateNode(array('created' => strtotime($date2), 'type' => 'article'));
 
     // Confirm date format and time zone.
-    $this->drupalGet("node/$node1->nid");
+    $this->drupalGet('node/' . $node1->id());
     $this->assertText('2007-01-31 21:00:00 -1000', 'Date should be identical, with GMT offset of -10 hours.');
-    $this->drupalGet("node/$node2->nid");
+    $this->drupalGet('node/' . $node2->id());
     $this->assertText('2007-07-31 21:00:00 -1000', 'Date should be identical, with GMT offset of -10 hours.');
 
     // Set time zone to Los Angeles time.
     $config->set('default', 'America/Los_Angeles')->save();
 
     // Confirm date format and time zone.
-    $this->drupalGet("node/$node1->nid");
+    $this->drupalGet('node/' . $node1->id());
     $this->assertText('2007-01-31 23:00:00 -0800', 'Date should be two hours ahead, with GMT offset of -8 hours.');
-    $this->drupalGet("node/$node2->nid");
+    $this->drupalGet('node/' . $node2->id());
     $this->assertText('2007-08-01 00:00:00 -0700', 'Date should be three hours ahead, with GMT offset of -7 hours.');
   }
 

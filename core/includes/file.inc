@@ -7,9 +7,6 @@
 
 use Drupal\Core\StreamWrapper\LocalStream;
 use Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Stream wrapper bit flags that are the basis for composite types.
@@ -1330,42 +1327,6 @@ function file_unmanaged_save_data($data, $destination = NULL, $replace = FILE_EX
   // Move the file to its final destination.
   return file_unmanaged_move($temp_name, $destination, $replace);
 }
-
-/**
- * Page callback: Handles private file transfers.
- *
- * Call modules that implement hook_file_download() to find out if a file is
- * accessible and what headers it should be transferred with. If one or more
- * modules returned headers the download will start with the returned headers.
- * If a module returns -1 an AccessDeniedHttpException will be thrown.
- * If the file exists but no modules responded an AccessDeniedHttpException will
- * be thrown.If the file does not exist a NotFoundHttpException will be thrown.
- *
- * @see hook_file_download()
- * @see system_menu()
- */
-function file_download() {
-  // Merge remaining path arguments into relative file path.
-  $args = func_get_args();
-  $scheme = array_shift($args);
-  $target = implode('/', $args);
-  $uri = $scheme . '://' . $target;
-  if (file_stream_wrapper_valid_scheme($scheme) && file_exists($uri)) {
-    // Let other modules provide headers and controls access to the file.
-    $headers = module_invoke_all('file_download', $uri);
-    foreach ($headers as $result) {
-      if ($result == -1) {
-        throw new AccessDeniedHttpException();
-      }
-    }
-    if (count($headers)) {
-      return new BinaryFileResponse($uri, 200, $headers);
-    }
-    throw new AccessDeniedHttpException();
-  }
-  throw new NotFoundHttpException();
-}
-
 
 /**
  * Finds all files that match a given mask in a given directory.

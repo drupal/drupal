@@ -51,7 +51,7 @@ class EntityBCDecoratorTest extends EntityUnitTestBase  {
     ));
     $node->save();
     $comment = entity_create('comment', array(
-      'entity_id' => $node->nid,
+      'entity_id' => $node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
       'subject' => 'old-value',

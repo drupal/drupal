@@ -174,7 +174,7 @@ function seven_form_node_form_alter(&$form, &$form_state) {
       '#type' => 'item',
       '#wrapper_attributes' => array('class' => array('published')),
       '#markup' => !empty($node->status) ? t('Published') : t('Not published'),
-      '#access' => !empty($node->nid),
+      '#access' => !$node->isNew(),
     ),
     'changed' => array(
       '#type' => 'item',

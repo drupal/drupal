@@ -132,7 +132,7 @@ class Node extends ArgumentValidatorPluginBase {
           }
 
           $titles[] = check_plain($node->label());
-          unset($test[$node->nid]);
+          unset($test[$node->id()]);
         }
 
         $this->argument->validated_title = implode($nids->operator == 'or' ? ' + ' : ', ', $titles);

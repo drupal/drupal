@@ -169,7 +169,7 @@ class BreadcrumbTest extends MenuTestBase {
 
     // Verify node breadcrumbs (without menu link).
     $node1 = $this->drupalCreateNode();
-    $nid1 = $node1->nid;
+    $nid1 = $node1->id();
     $trail = $home;
     $this->assertBreadcrumb("node/$nid1", $trail);
     // Also verify that the node does not appear elsewhere (e.g., menu trees).
@@ -213,7 +213,7 @@ class BreadcrumbTest extends MenuTestBase {
           'plid' => 0,
         )),
       ));
-      $nid2 = $node2->nid;
+      $nid2 = $node2->id();
 
       $trail = $home;
       $tree = array(
@@ -241,7 +241,7 @@ class BreadcrumbTest extends MenuTestBase {
           'plid' => $node2->menu['mlid'],
         )),
       ));
-      $nid3 = $node3->nid;
+      $nid3 = $node3->id();
 
       $this->assertBreadcrumb("node/$nid3", $trail, $node3->title, $tree, FALSE);
       // The node itself should not be contained in the breadcrumb on the
@@ -279,22 +279,22 @@ class BreadcrumbTest extends MenuTestBase {
     $edit = array(
       'menu[parent]' => $link['menu_name'] . ':' . $link['mlid'],
     );
-    $this->drupalPost("node/{$parent->nid}/edit", $edit, t('Save and keep published'));
+    $this->drupalPost('node/' . $parent->id() . '/edit', $edit, t('Save and keep published'));
     $expected = array(
       "node" => $link['link_title'],
     );
     $trail = $home + $expected;
     $tree = $expected + array(
-      "node/{$parent->nid}" => $parent->menu['link_title'],
+      'node/' . $parent->id() => $parent->menu['link_title'],
     );
     $this->assertBreadcrumb(NULL, $trail, $parent->title, $tree);
     $trail += array(
-      "node/{$parent->nid}" => $parent->menu['link_title'],
+      'node/' . $parent->id() => $parent->menu['link_title'],
     );
     $tree += array(
-      "node/{$child->nid}" => $child->menu['link_title'],
+      'node/' . $parent->id() => $child->menu['link_title'],
     );
-    $this->assertBreadcrumb("node/{$child->nid}", $trail, $child->title, $tree);
+    $this->assertBreadcrumb('node/' . $child->id(), $trail, $child->title, $tree);
 
     // Add a taxonomy term/tag to last node, and add a link for that term to the
     // Tools menu.
@@ -305,7 +305,7 @@ class BreadcrumbTest extends MenuTestBase {
     $edit = array(
       "field_tags[$langcode]" => implode(',', array_keys($tags)),
     );
-    $this->drupalPost("node/{$parent->nid}/edit", $edit, t('Save and keep published'));
+    $this->drupalPost('node/' . $parent->id() . '/edit', $edit, t('Save and keep published'));
 
     // Put both terms into a hierarchy Drupal » Breadcrumbs. Required for both
     // the menu links and the terms itself, since taxonomy_term_page() resets

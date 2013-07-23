@@ -694,7 +694,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   protected function addDisplays(View $view, $display_options, $form, $form_state) {
     // Initialize and store the view executable to get the display plugin
     // instances.
-    $executable = $view->get('executable');
+    $executable = $view->getExecutable();
 
     // Display: Master
     $default_display = $view->newDisplay('default', 'Master', 'default');
@@ -1158,7 +1158,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    */
   public function validateView(array $form, array &$form_state) {
     $view = $this->instantiateView($form, $form_state);
-    $errors = $view->get('executable')->validate();
+    $errors = $view->getExecutable()->validate();
 
     if (empty($errors)) {
       $this->setValidatedView($form, $form_state, $view);

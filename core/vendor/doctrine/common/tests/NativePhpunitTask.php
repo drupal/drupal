@@ -16,7 +16,7 @@ require_once 'PHPUnit/Autoload.php';
 /**
  * A more flexible and powerful PHPUnit Task than the native Phing one.
  *
- * Plus forward compability for PHPUnit 3.5 and later is ensured by using the PHPUnit Test Runner instead of implementing one.
+ * Plus forward compatibility for PHPUnit 3.5 and later is ensured by using the PHPUnit Test Runner instead of implementing one.
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
  */
@@ -124,7 +124,7 @@ class NativePhpunitTask extends Task
                 "failures (".$result->skippedCount()." skipped, ".$result->notImplementedCount()." not implemented)");
 
             // Hudson for example doesn't like the backslash in class names
-            if (file_exists($this->coverageClover)) {
+            if (is_file($this->coverageClover)) {
                 $this->log("Generated Clover Coverage XML to: ".$this->coverageClover);
                 $content = file_get_contents($this->coverageClover);
                 $content = str_replace("\\", ".", $content);

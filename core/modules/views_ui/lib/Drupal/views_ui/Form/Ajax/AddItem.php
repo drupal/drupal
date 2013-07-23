@@ -60,7 +60,7 @@ class AddItem extends ViewsFormBase {
       ),
     );
 
-    $executable = $view->get('executable');
+    $executable = $view->getExecutable();
     $executable->setDisplay($display_id);
     $display = &$executable->displayHandlers->get($display_id);
 

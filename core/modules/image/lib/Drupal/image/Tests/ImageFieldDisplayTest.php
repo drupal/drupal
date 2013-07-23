@@ -218,7 +218,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Create a new node, with no images and verify that no images are
     // displayed.
     $node = $this->drupalCreateNode(array('type' => 'article'));
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     // Verify that no image is displayed on the page by checking for the class
     // that would be used on the image field.
     $this->assertNoPattern('<div class="(.*?)field-name-' . strtr($field_name, '_', '-') . '(.*?)">', 'No image displayed when no image is attached and no default image specified.');
@@ -235,7 +235,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $image = file_load($field['settings']['default_image']);
     $this->assertTrue($image->isPermanent(), 'The default image status is permanent.');
     $default_output = theme('image', array('uri' => $image->getFileUri()));
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertRaw($default_output, 'Default image displayed when no user supplied image is present.');
 
     // Create a node with an image attached and ensure that the default image
@@ -281,7 +281,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // image is displayed.
     $node = $this->drupalCreateNode(array('type' => 'article'));
     $default_output = theme('image', array('uri' => $image->getFileUri()));
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertRaw($default_output, 'Default private image displayed when no user supplied image is present.');
   }
 }

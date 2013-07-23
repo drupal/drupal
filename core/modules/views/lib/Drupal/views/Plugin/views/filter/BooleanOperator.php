@@ -156,13 +156,9 @@ class BooleanOperator extends FilterPluginBase {
       if (!empty($form_state['exposed']) && !isset($form_state['input'][$identifier])) {
         $form_state['input'][$identifier] = $this->value;
       }
-      // If we're configuring an exposed filter, add an <Any> option.
+      // If we're configuring an exposed filter, add an - Any - option.
       if (empty($form_state['exposed']) || empty($this->options['expose']['required'])) {
-        $any_label = config('views.settings')->get('ui.exposed_filter_any_label') == 'old_any' ? '<Any>' : t('- Any -');
-        if ($form['value']['#type'] != 'select') {
-          $any_label = check_plain($any_label);
-        }
-        $form['value']['#options'] = array('All' => $any_label) + $form['value']['#options'];
+        $form['value']['#options'] = array('All' => t('- Any -')) + $form['value']['#options'];
       }
     }
   }

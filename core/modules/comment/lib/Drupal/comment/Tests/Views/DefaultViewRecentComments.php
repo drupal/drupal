@@ -84,7 +84,7 @@ class DefaultViewRecentComments extends ViewTestBase {
       $comment = entity_create('comment', array(
         'field_name' => 'comment',
         'entity_type' => 'node',
-        'entity_id' => $this->node->nid,
+        'entity_id' => $this->node->id(),
       ));
       $comment->uid->target_id = 0;
       // Stagger the comments so the timestamp sorting works.

@@ -11,6 +11,7 @@ use Drupal\Component\Annotation\PluginID;
 use Drupal\Core\Database\Connection;
 use Drupal\views\Plugin\views\field\Numeric;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -119,21 +120,21 @@ class NodeNewComments extends Numeric {
         ':timestamp' => HISTORY_READ_LIMIT,
       ));
       foreach ($result as $node) {
-        foreach ($ids[$node->nid] as $id) {
+        foreach ($ids[$node->id()] as $id) {
           $values[$id]->{$this->field_alias} = $node->num_comments;
         }
       }
     }
   }
 
-  function render_link($data, $values) {
+  function render_link($data, ResultRow $values) {
     if (!empty($this->options['link_to_comment']) && $data !== NULL && $data !== '') {
       $node = entity_create('node', array(
         'nid' => $this->getValue($values, 'nid'),
         'type' => $this->getValue($values, 'type'),
       ));
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = 'node/' . $node->nid;
+      $this->options['alter']['path'] = 'node/' . $node->id();
       $this->options['alter']['query'] = comment_new_page_count($this->getValue($values, 'comment_count'), $this->getValue($values), $node);
       $this->options['alter']['fragment'] = 'new';
     }

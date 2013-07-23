@@ -322,7 +322,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $edit = array(
       $this->field_name . '[und]' => '1',
     );
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
 
     // Check the node page and see if the values are correct.
     $file_formatters = array('list_default', 'list_key');
@@ -331,7 +331,7 @@ class OptionsFieldUITest extends FieldTestBase {
         "fields[$this->field_name][type]" => $formatter,
       );
       $this->drupalPost('admin/structure/types/manage/' . $this->type_name . '/display', $edit, t('Save'));
-      $this->drupalGet('node/' . $node->nid);
+      $this->drupalGet('node/' . $node->id());
 
       if ($formatter == 'list_default') {
         $output = $on;

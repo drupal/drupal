@@ -9,6 +9,7 @@ namespace Drupal\node\Plugin\views\field;
 
 use Drupal\node\Plugin\views\field\Link;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to present a link to delete a node.
@@ -22,14 +23,14 @@ class LinkDelete extends Link {
   /**
    * Renders the link.
    */
-  function render_link($node, $values) {
+  function render_link($node, ResultRow $values) {
     // Ensure user has access to delete this node.
     if (!node_access('delete', $node)) {
       return;
     }
 
     $this->options['alter']['make_link'] = TRUE;
-    $this->options['alter']['path'] = "node/$node->nid/delete";
+    $this->options['alter']['path'] = 'node/' . $node->id() . '/delete';
     $this->options['alter']['query'] = drupal_get_destination();
 
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');

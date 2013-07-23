@@ -43,11 +43,11 @@ function translation_node_overview(EntityInterface $node) {
       // Existing translation in the translation set: display status.
       // We load the full node to check whether the user can edit it.
       $translation_node = node_load($translations[$langcode]->nid);
-      $path = 'node/' . $translation_node->nid;
+      $path = 'node/' . $translation_node->id();
       $links = language_negotiation_get_switch_links($type, $path);
       $title = empty($links->links[$langcode]['href']) ? l($translation_node->label(), $path) : l($translation_node->label(), $links->links[$langcode]['href'], $links->links[$langcode]);
       if (node_access('update', $translation_node)) {
-        $path = 'node/' . $translation_node->nid . '/edit';
+        $path = 'node/' . $translation_node->id() . '/edit';
         $links = language_negotiation_get_switch_links($type, $path);
         if (!empty($links->links[$langcode]['href'])) {
           $options['edit'] = array(
@@ -57,7 +57,7 @@ function translation_node_overview(EntityInterface $node) {
       }
       $status = $translation_node->status ? t('Published') : t('Not published');
       $status .= $translation_node->translate ? ' - <span class="marker">' . t('outdated') . '</span>' : '';
-      if ($translation_node->nid == $tnid) {
+      if ($translation_node->id() == $tnid) {
         $language_name = t('<strong>@language_name</strong> (source)', array('@language_name' => $language_name));
       }
     }
@@ -67,7 +67,7 @@ function translation_node_overview(EntityInterface $node) {
       if (node_access('create', $node)) {
         $path = 'node/add/' . $node->type;
         $links = language_negotiation_get_switch_links($type, $path);
-        $query = array('query' => array('translation' => $node->nid, 'target' => $langcode));
+        $query = array('query' => array('translation' => $node->id(), 'target' => $langcode));
         if (!empty($links->links[$langcode]['href'])) {
           $options['add'] = array(
             'title' => t('Add translation'),

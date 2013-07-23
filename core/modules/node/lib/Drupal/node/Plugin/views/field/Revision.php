@@ -7,6 +7,7 @@
 
 namespace Drupal\node\Plugin\views\field;
 
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\node\Plugin\views\field\Node;
@@ -59,7 +60,7 @@ class Revision extends Node {
    *
    * Data should be made XSS safe prior to calling this function.
    */
-  function render_link($data, $values) {
+  function render_link($data, ResultRow $values) {
     if (!empty($this->options['link_to_node_revision']) && $data !== NULL && $data !== '') {
       $this->options['alter']['make_link'] = TRUE;
       $nid = $this->getValue($values, 'nid');

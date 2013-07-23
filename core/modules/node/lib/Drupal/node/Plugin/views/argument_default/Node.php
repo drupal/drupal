@@ -28,7 +28,7 @@ class Node extends ArgumentDefaultPluginBase {
     foreach (range(1, 3) as $i) {
       $node = menu_get_object('node', $i);
       if (!empty($node)) {
-        return $node->nid;
+        return $node->id();
       }
     }
 

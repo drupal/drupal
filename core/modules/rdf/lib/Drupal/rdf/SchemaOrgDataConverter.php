@@ -6,7 +6,6 @@
 
 namespace Drupal\rdf;
 
-
 class SchemaOrgDataConverter {
 
   /**
@@ -16,14 +15,19 @@ class SchemaOrgDataConverter {
    *
    * @param int $count
    *   The interaction count.
+   * @param array $arguments
+   *   An array of arguments defined in the mapping.
+   *   Expected keys are:
+   *     - interaction_type: The string to use for the type of interaction
+   *       (e.g. UserComments).
    *
    * @return string
    *   The formatted string.
    *
    * @see http://schema.org/UserInteraction
-   * @todo Support other interaction types, see https://drupal.org/node/2020001
    */
-  static function interactionCount($count) {
-    return "UserComment:$count";
+  static function interactionCount($count, $arguments) {
+    $interaction_type = $arguments['interaction_type'];
+    return "$interaction_type:$count";
   }
 }

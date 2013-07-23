@@ -151,6 +151,7 @@ class ViewListController extends ConfigEntityListController implements EntityCon
     foreach (array('enable', 'disable') as $op) {
       if (isset($operations[$op])) {
         $operations[$op]['ajax'] = TRUE;
+        $operations[$op]['query']['token'] = drupal_get_token($op);
       }
     }
 
@@ -237,7 +238,7 @@ class ViewListController extends ConfigEntityListController implements EntityCon
    */
   protected function getDisplayPaths(EntityInterface $view) {
     $all_paths = array();
-    $executable = $view->get('executable');
+    $executable = $view->getExecutable();
     $executable->initDisplay();
     foreach ($executable->displayHandlers as $display) {
       if ($display->hasPath()) {

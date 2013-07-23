@@ -51,8 +51,8 @@ class NodeLoadMultipleTest extends NodeTestBase {
 
     // Load nodes with only a condition. Nodes 3 and 4 will be loaded.
     $nodes = entity_load_multiple_by_properties('node', array('promote' => 0));
-    $this->assertEqual($node3->label(), $nodes[$node3->nid]->label(), 'Node was loaded.');
-    $this->assertEqual($node4->label(), $nodes[$node4->nid]->label(), 'Node was loaded.');
+    $this->assertEqual($node3->label(), $nodes[$node3->id()]->label(), 'Node was loaded.');
+    $this->assertEqual($node4->label(), $nodes[$node4->id()]->label(), 'Node was loaded.');
     $count = count($nodes);
     $this->assertTrue($count == 2, format_string('@count nodes loaded.', array('@count' => $count)));
 
@@ -60,9 +60,9 @@ class NodeLoadMultipleTest extends NodeTestBase {
     $nodes = node_load_multiple(array(1, 2, 4));
     $count = count($nodes);
     $this->assertTrue(count($nodes) == 3, format_string('@count nodes loaded', array('@count' => $count)));
-    $this->assertTrue(isset($nodes[$node1->nid]), 'Node is correctly keyed in the array');
-    $this->assertTrue(isset($nodes[$node2->nid]), 'Node is correctly keyed in the array');
-    $this->assertTrue(isset($nodes[$node4->nid]), 'Node is correctly keyed in the array');
+    $this->assertTrue(isset($nodes[$node1->id()]), 'Node is correctly keyed in the array');
+    $this->assertTrue(isset($nodes[$node2->id()]), 'Node is correctly keyed in the array');
+    $this->assertTrue(isset($nodes[$node4->id()]), 'Node is correctly keyed in the array');
     foreach ($nodes as $node) {
       $this->assertTrue(is_object($node), 'Node is an object');
     }

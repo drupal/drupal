@@ -37,21 +37,15 @@ function custom_block_menu() {
     'route_name' => 'custom_block_type_list',
   );
   $items['admin/structure/custom-blocks/add'] = array(
-    'title' => 'Add custom block type',
-    'page callback' => 'custom_block_type_add',
-    'access arguments' => array('administer blocks'),
-    'type' => MENU_LOCAL_ACTION,
+    'route_name' => 'custom_block_type_add',
+    'type' => MENU_SIBLING_LOCAL_TASK,
     'weight' => 1,
-    'file' => 'custom_block.admin.inc',
   );
   $items['admin/structure/custom-blocks/manage/%custom_block_type'] = array(
     'title' => 'Edit custom block type',
     'title callback' => 'entity_page_label',
     'title arguments' => array(4),
-    'page callback' => 'custom_block_type_edit',
-    'page arguments' => array(4),
-    'access arguments' => array('administer blocks'),
-    'file' => 'custom_block.admin.inc',
+    'route_name' => 'custom_block_type_edit',
   );
   $items['admin/structure/custom-blocks/manage/%custom_block_type/edit'] = array(
     'title' => 'Edit',
@@ -76,11 +70,7 @@ function custom_block_menu() {
   // There has to be a base-item in order for contextual links to work.
   $items['block/%custom_block'] = array(
     'title' => 'Edit',
-    'page callback' => 'custom_block_edit',
-    'page arguments' => array(1),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'update'),
-    'file' => 'custom_block.pages.inc',
+    'route_name' => 'custom_block_edit',
   );
   $items['block/%custom_block/edit'] = array(
     'title' => 'Edit',
@@ -100,6 +90,21 @@ function custom_block_menu() {
     'file' => 'custom_block.pages.inc',
   );
   return $items;
+}
+
+/**
+ * Implements hook_local_actions().
+ */
+function custom_block_local_actions() {
+  return array(
+    array(
+      'route_name' => 'custom_block_type_add',
+      'title' => t('Add custom block type'),
+      'appears_on' => array(
+        'custom_block_type_list',
+      ),
+    ),
+  );
 }
 
 /**
@@ -231,7 +236,7 @@ function custom_block_form_block_plugin_ui_alter(&$form, $form_state) {
     $custom_block = entity_load_by_uuid('custom_block', $derivative);
     $row['1']['data']['#links']['edit'] = array(
       'title' => t('Edit'),
-      'href' => 'block/' . $custom_block->id() . '/edit'
+      'href' => 'block/' . $custom_block->id(),
     );
   }
 }

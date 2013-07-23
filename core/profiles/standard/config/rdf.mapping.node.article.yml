@@ -10,11 +10,13 @@ fieldMappings:
   created:
     properties:
       - 'schema:dateCreated'
-    datatype_callback: 'date_iso8601'
+    datatype_callback:
+      callable: 'date_iso8601'
   changed:
     properties:
       - 'schema:dateModified'
-    datatype_callback: 'date_iso8601'
+    datatype_callback:
+      callable: 'date_iso8601'
   body:
     properties:
       - 'schema:text'
@@ -29,7 +31,10 @@ fieldMappings:
   comment_count:
     properties:
       - 'schema:interactionCount'
-    datatype_callback: 'Drupal\rdf\SchemaOrgDataConverter::interactionCount'
+    datatype_callback:
+      callable: 'Drupal\rdf\SchemaOrgDataConverter::interactionCount'
+      arguments:
+        interaction_type: 'UserComments'
   field_image:
     properties:
       - 'schema:image'

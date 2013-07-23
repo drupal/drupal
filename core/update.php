@@ -225,7 +225,11 @@ function update_results_page() {
     $output .= "<p><strong>Reminder: don't forget to set the <code>\$settings['update_free_access']</code> value in your <code>settings.php</code> file back to <code>FALSE</code>.</strong></p>";
   }
 
-  $output .= theme('links', array('links' => update_helpful_links()));
+  $links = array(
+    '#theme' => 'links',
+    '#links' => update_helpful_links(),
+  );
+  $output .= drupal_render($links);
 
   // Output a list of queries executed.
   if (!empty($_SESSION['update_results'])) {
@@ -371,7 +375,13 @@ function update_task_list($active = NULL) {
     'finished' => 'Review log',
   );
 
-  drupal_add_region_content('sidebar_first', theme('task_list', array('items' => $tasks, 'active' => $active)));
+  $task_list = array(
+    '#theme' => 'task_list',
+    '#items' => $tasks,
+    '#active' => $active,
+  );
+
+  drupal_add_region_content('sidebar_first', drupal_render($task_list));
 }
 
 /**
@@ -404,10 +414,18 @@ function update_check_requirements($skip_warnings = FALSE) {
   if ($severity == REQUIREMENT_ERROR || ($severity == REQUIREMENT_WARNING && !$skip_warnings)) {
     update_task_list('requirements');
     drupal_set_title('Requirements problem');
-    $status_report = theme('status_report', array('requirements' => $requirements));
+    $status = array(
+      '#theme' => 'status_report',
+      '#requirements' => $requirements,
+    );
+    $status_report = drupal_render($status);
     $status_report .= 'Check the messages and <a href="' . check_url(drupal_requirements_url($severity)) . '">try again</a>.';
     drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-    print theme('maintenance_page', array('content' => $status_report));
+    $maintenance_page = array(
+      '#theme' => 'maintenance_page',
+      '#content' => $status_report,
+    );
+    print drupal_render($maintenance_page);
     exit();
   }
 }
@@ -437,6 +455,12 @@ drupal_session_initialize();
 $request = Request::createFromGlobals();
 drupal_container()
   ->set('request', $request);
+
+// Ensure that URLs generated for the home and admin pages don't have 'update.php'
+// in them.
+$generator = Drupal::urlGenerator();
+$generator->setBasePath(str_replace('/core', '', $request->getBasePath()) . '/');
+$generator->setScriptPath('');
 
 // There can be conflicting 'op' parameters because both update and batch use
 // this parameter name. We need the 'op' coming from a POST request to trump
@@ -546,6 +570,11 @@ if (isset($output) && $output) {
   }
   else {
     drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
-    print theme('maintenance_page', array('content' => $output, 'show_messages' => !$progress_page));
+    $maintenance_page = array(
+      '#theme' => 'maintenance_page',
+      '#content' => $output,
+      '#show_messages' => !$progress_page,
+    );
+    print drupal_render($maintenance_page);
   }
 }

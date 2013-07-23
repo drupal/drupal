@@ -1578,7 +1578,7 @@ function file_get_file_references(File $file, $field = NULL, $age = FIELD_LOAD_R
       // for every revision or the entity does not support revisions then
       // every usage is already a match.
       $match_entity_type = $age == FIELD_LOAD_REVISION || !isset($entity_info['entity_keys']['revision']);
-      $entities = entity_load_multiple($entity_type, $entity_ids);
+      $entities = entity_load_multiple($entity_type, array_keys($entity_ids));
       foreach ($entities as $entity) {
         $bundle = $entity->bundle();
         // We need to find file fields for this entity type and bundle.
@@ -1659,4 +1659,41 @@ function file_library_info() {
   );
 
   return $libraries;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function file_permission() {
+  $perms = array(
+    'access files overview' => array(
+      'title' => t('Access the Files overview page'),
+      'description' => user_access('access files overview')
+        ? t('Get an overview of <a href="@url">all files</a>.', array('@url' => url('admin/content/files')))
+        : t('Get an overview of all files.'),
+    ),
+  );
+
+  return $perms;
+}
+
+/**
+ * Formats human-readable version of file status.
+ *
+ * @param int $choice
+ *   integer Status code.
+ * @return string
+ *   string Text-represented file status.
+ */
+function _views_file_status($choice = NULL) {
+  $status = array(
+    0 => t('Temporary'),
+    FILE_STATUS_PERMANENT => t('Permanent'),
+  );
+
+  if (isset($choice)) {
+    return isset($status[$choice]) ? $status[$choice] : t('Unknown');
+  }
+
+  return $status;
 }

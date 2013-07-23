@@ -163,7 +163,7 @@ class GroupwiseMax extends RelationshipPluginBase {
   protected function getTemporaryView() {
     $view = entity_create('view', array('base_table' => $this->definition['base']));
     $view->addDisplay('default');
-    return $view->get('executable');
+    return $view->getExecutable();
   }
 
   /**

@@ -235,7 +235,7 @@ class UserStorageController extends DatabaseStorageControllerNG implements UserS
       'type' => 'string_field',
     );
     $properties['timezone'] = array(
-      'label' => t('Timeone'),
+      'label' => t('Timezone'),
       'description' => t('The timezone of this user'),
       'type' => 'string_field',
     );

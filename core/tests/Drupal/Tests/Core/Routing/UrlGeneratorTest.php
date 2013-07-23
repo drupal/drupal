@@ -30,6 +30,11 @@ use Drupal\Core\Routing\UrlGenerator;
  */
 class UrlGeneratorTest extends UnitTestCase {
 
+  /**
+   * The url generator to test.
+   *
+   * @var \Drupal\Core\Routing\UrlGenerator
+   */
   protected $generator;
 
   protected $aliasManager;
@@ -47,24 +52,50 @@ class UrlGeneratorTest extends UnitTestCase {
     $routes = new RouteCollection();
     $first_route = new Route('/test/one');
     $second_route = new Route('/test/two/{narf}');
+    $third_route = new Route('/test/two/');
+    $fourth_route = new Route('/test/four', array(), array('_scheme' => 'https'));
     $routes->add('test_1', $first_route);
     $routes->add('test_2', $second_route);
+    $routes->add('test_3', $third_route);
+    $routes->add('test_4', $fourth_route);
 
     // Create a route provider stub.
     $provider = $this->getMockBuilder('Drupal\Core\Routing\RouteProvider')
       ->disableOriginalConstructor()
       ->getMock();
-    $route_name_return_map = array(
-      array('test_1', array(), $first_route),
-      array('test_2', array('narf' => '5'), $second_route),
+    // We need to set up return value maps for both the getRouteByName() and the
+    // getRoutesByNames() method calls on the route provider. The parameters
+    // passed in will be slightly different but based on the same information.
+    $route_name_return_map = $routes_names_return_map = array();
+    $return_map_values = array(
+      array(
+        'route_name' => 'test_1',
+        'parameters' => array(),
+        'return' => $first_route,
+      ),
+      array(
+        'route_name' => 'test_2',
+        'parameters' => array('narf' => '5'),
+        'return' => $second_route,
+      ),
+      array(
+        'route_name' => 'test_3',
+        'parameters' => array(),
+        'return' => $third_route,
+      ),
+      array(
+        'route_name' => 'test_4',
+        'parameters' => array(),
+        'return' => $fourth_route,
+      ),
     );
+    foreach ($return_map_values as $values) {
+      $route_name_return_map[] = array($values['route_name'], $values['parameters'], $values['return']);
+      $routes_names_return_map[] = array(array($values['route_name']), $values['parameters'], $values['return']);
+    }
     $provider->expects($this->any())
       ->method('getRouteByName')
       ->will($this->returnValueMap($route_name_return_map));
-    $routes_names_return_map = array(
-      array(array('test_1'), array(), array($first_route)),
-      array(array('test_2'), array('narf' => '5'), array($second_route)),
-    );
     $provider->expects($this->any())
       ->method('getRoutesByNames')
       ->will($this->returnValueMap($routes_names_return_map));
@@ -73,14 +104,10 @@ class UrlGeneratorTest extends UnitTestCase {
     $alias_manager = $this->getMockBuilder('Drupal\Core\Path\AliasManager')
       ->disableOriginalConstructor()
       ->getMock();
-    $alias_map = array(
-      array('test/one', NULL, 'hello/world'),
-      array('test/two/5', NULL, 'goodbye/cruel/world'),
-      array('node/123', NULL, 'node/123'),
-    );
+
     $alias_manager->expects($this->any())
       ->method('getPathAlias')
-      ->will($this->returnValueMap($alias_map));
+      ->will($this->returnCallback(array($this, 'aliasManagerCallback')));
 
     $this->aliasManager = $alias_manager;
 
@@ -100,11 +127,47 @@ class UrlGeneratorTest extends UnitTestCase {
   }
 
   /**
+   * Return value callback for the getPathAlias() method on the mock alias manager.
+   *
+   * Ensures that by default the call to getPathAlias() will return the first argument
+   * that was passed in. We special-case the paths for which we wish it to return an
+   * actual alias.
+   *
+   * @return string
+   */
+  public function aliasManagerCallback() {
+    $args = func_get_args();
+    switch($args[0]) {
+      case 'test/one':
+        return 'hello/world';
+      case 'test/two/5':
+        return 'goodbye/cruel/world';
+      case '<front>':
+        return '';
+      default:
+        return $args[0];
+    }
+  }
+
+  /**
    * Confirms that generated routes will have aliased paths.
    */
   public function testAliasGeneration() {
     $url = $this->generator->generate('test_1');
     $this->assertEquals('/hello/world', $url);
+
+    $path = $this->generator->getPathFromRoute('test_1');
+    $this->assertEquals('test/one', $path);
+  }
+
+  /**
+   * Tests URL generation in a subdirectory.
+   */
+  public function testGetPathFromRouteWithSubdirectory() {
+    $this->generator->setBasePath('/test-base-path');
+
+    $path = $this->generator->getPathFromRoute('test_1');
+    $this->assertEquals('test/one', $path);
   }
 
   /**
@@ -113,6 +176,17 @@ class UrlGeneratorTest extends UnitTestCase {
   public function testAliasGenerationWithParameters() {
     $url = $this->generator->generate('test_2', array('narf' => '5'));
     $this->assertEquals('/goodbye/cruel/world', $url, 'Correct URL generated including alias and parameters.');
+
+    $path = $this->generator->getPathFromRoute('test_2', array('narf' => '5'));
+    $this->assertEquals('test/two/5', $path);
+  }
+
+  /**
+   * Tests URL generation from route with trailing start and end slashes.
+   */
+  public function testGetPathFromRouteTrailing() {
+    $path = $this->generator->getPathFromRoute('test_3');
+    $this->assertEquals($path, 'test/two');
   }
 
   /**
@@ -121,6 +195,14 @@ class UrlGeneratorTest extends UnitTestCase {
   public function testAbsoluteURLGeneration() {
     $url = $this->generator->generate('test_1', array(), TRUE);
     $this->assertEquals('http://localhost/hello/world', $url);
+  }
+
+  /**
+   * Test that the 'scheme' route requirement is respected during url generation.
+   */
+  public function testUrlGenerationWithHttpsRequirement() {
+    $url = $this->generator->generate('test_4', array(), TRUE);
+    $this->assertEquals('https://localhost/test/four', $url);
   }
 
   /**
@@ -136,7 +218,6 @@ class UrlGeneratorTest extends UnitTestCase {
       foreach (array(FALSE, TRUE) as $absolute) {
         // Get the expected start of the path string.
         $base = ($absolute ? $base_url . '/' : $base_path . '/') . $script_path;
-        $absolute_string = $absolute ? 'absolute' : NULL;
         $url = $base . 'node/123';
         $result = $this->generator->generateFromPath('node/123', array('absolute' => $absolute));
         $this->assertEquals($url, $result, "$url == $result");

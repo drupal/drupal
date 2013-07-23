@@ -220,7 +220,7 @@ class StandardProfileTest extends WebTestBase {
     // Test interaction count.
     $expected_value = array(
       'type' => 'literal',
-      'value' => 'UserComment:1',
+      'value' => 'UserComments:1',
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/interactionCount', $expected_value), "Teaser comment count was found (schema:interactionCount).");

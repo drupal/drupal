@@ -7,33 +7,36 @@
 
 namespace Drupal\ckeditor;
 
-use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Plugin\Discovery\AlterDecorator;
-use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
-use Drupal\Core\Plugin\Discovery\CacheDecorator;
+use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageManager;
 use Drupal\editor\Plugin\Core\Entity\Editor;
 
 /**
  * CKEditor Plugin manager.
  */
-class CKEditorPluginManager extends PluginManagerBase {
+class CKEditorPluginManager extends DefaultPluginManager {
 
   /**
-   * Overrides \Drupal\Component\Plugin\PluginManagerBase::__construct().
+   * Constructs a CKEditorPluginManager object.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations,
+   *   keyed by the corresponding namespace to look for plugin implementations.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   Cache backend instance to use.
+   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler to invoke the alter hook with.
    */
-  public function __construct(\Traversable $namespaces) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
     $annotation_namespaces = array('Drupal\ckeditor\Annotation' => $namespaces['Drupal\ckeditor']);
-    $this->discovery = new AnnotatedClassDiscovery('CKEditorPlugin', $namespaces, $annotation_namespaces, 'Drupal\ckeditor\Annotation\CKEditorPlugin');
-    $this->discovery = new AlterDecorator($this->discovery, 'ckeditor_plugin_info');
-    $this->discovery = new CacheDecorator($this->discovery, 'ckeditor_plugin');
-    $this->factory = new DefaultFactory($this->discovery);
+    parent::__construct('CKEditorPlugin', $namespaces, $annotation_namespaces, 'Drupal\ckeditor\Annotation\CKEditorPlugin');
+    $this->alterInfo($module_handler, 'ckeditor_plugin_info');
+    $this->setCacheBackend($cache_backend, $language_manager, 'ckeditor_plugin');
   }
 
   /**

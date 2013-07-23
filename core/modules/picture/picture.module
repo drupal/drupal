@@ -124,7 +124,7 @@ function picture_theme() {
     'picture' => array(
       'variables' => array(
         'style_name' => NULL,
-        'path' => NULL,
+        'uri' => NULL,
         'width' => NULL,
         'height' => NULL,
         'alt' => '',
@@ -145,7 +145,7 @@ function picture_theme() {
       'variables' => array(
         'src' => NULL,
         'srcset' => NULL,
-        'dimension' => NULL,
+        'dimensions' => NULL,
         'media' => NULL,
       ),
     ),

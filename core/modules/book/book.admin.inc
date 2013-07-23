@@ -86,7 +86,7 @@ function book_admin_edit_submit($form, &$form_state) {
         $node->log = t('Title changed from %original to %current.', array('%original' => $node->title, '%current' => $values['title']));
 
         $node->save();
-        watchdog('content', 'book: updated %title.', array('%title' => $node->label()), WATCHDOG_NOTICE, l(t('view'), 'node/' . $node->nid));
+        watchdog('content', 'book: updated %title.', array('%title' => $node->label()), WATCHDOG_NOTICE, l(t('view'), 'node/' . $node->id()));
       }
     }
   }

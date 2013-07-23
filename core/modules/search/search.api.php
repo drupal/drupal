@@ -343,7 +343,7 @@ function hook_update_index() {
   $result = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, n.nid ASC", 0, $limit);
 
   foreach ($result as $node) {
-    $node = node_load($node->nid);
+    $node = node_load($node->id());
 
     // Save the changed time of the most recent indexed node, for the search
     // results half-life calculation.
@@ -362,7 +362,7 @@ function hook_update_index() {
     }
 
     // Update index
-    search_index($node->nid, 'node', $text);
+    search_index($node->id(), 'node', $text);
   }
 }
 

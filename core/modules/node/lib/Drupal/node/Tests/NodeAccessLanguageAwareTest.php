@@ -200,9 +200,9 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
     // - Node with only the Catalan translation marked as private.
     // - No language node marked as public.
     $this->assertEqual(count($nids), 3, 'db_select() returns 3 nodes when no langcode is specified.');
-    $this->assertTrue(array_key_exists($this->nodes['both_public']->nid, $nids), 'The node with both translations public is returned.');
-    $this->assertTrue(array_key_exists($this->nodes['ca_private']->nid, $nids), 'The node with only the Catalan translation private is returned.');
-    $this->assertTrue(array_key_exists($this->nodes['no_language_public']->nid, $nids), 'The node with no language is returned.');
+    $this->assertTrue(array_key_exists($this->nodes['both_public']->id(), $nids), 'The node with both translations public is returned.');
+    $this->assertTrue(array_key_exists($this->nodes['ca_private']->id(), $nids), 'The node with only the Catalan translation private is returned.');
+    $this->assertTrue(array_key_exists($this->nodes['no_language_public']->id(), $nids), 'The node with no language is returned.');
 
     // Query with Hungarian (hu) specified.
     $select = db_select('node', 'n')
@@ -215,8 +215,8 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
     // Two nodes should be returned: the node with both translations public, and
     // the node with only the Catalan translation marked as private.
     $this->assertEqual(count($nids), 2, 'db_select() returns 2 nodes when the hu langcode is specified.');
-    $this->assertTrue(array_key_exists($this->nodes['both_public']->nid, $nids), 'The node with both translations public is returned.');
-    $this->assertTrue(array_key_exists($this->nodes['ca_private']->nid, $nids), 'The node with only the Catalan translation private is returned.');
+    $this->assertTrue(array_key_exists($this->nodes['both_public']->id(), $nids), 'The node with both translations public is returned.');
+    $this->assertTrue(array_key_exists($this->nodes['ca_private']->id(), $nids), 'The node with only the Catalan translation private is returned.');
 
     // Query with Catalan (ca) specified.
     $select = db_select('node', 'n')
@@ -229,8 +229,8 @@ class NodeAccessLanguageAwareTest extends NodeTestBase {
     // Two nodes should be returned: the node with both translations public, and
     // the node with only the Hungarian translation marked as private.
     $this->assertEqual(count($nids), 2, 'db_select() returns 2 nodes when the hu langcode is specified.');
-    $this->assertTrue(array_key_exists($this->nodes['both_public']->nid, $nids), 'The node with both translations public is returned.');
-    $this->assertTrue(array_key_exists($this->nodes['hu_private']->nid, $nids), 'The node with only the Hungarian translation private is returned.');
+    $this->assertTrue(array_key_exists($this->nodes['both_public']->id(), $nids), 'The node with both translations public is returned.');
+    $this->assertTrue(array_key_exists($this->nodes['hu_private']->id(), $nids), 'The node with only the Hungarian translation private is returned.');
 
     // Query with German (de) specified.
     $select = db_select('node', 'n')

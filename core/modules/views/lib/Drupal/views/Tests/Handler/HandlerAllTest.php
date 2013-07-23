@@ -63,7 +63,7 @@ class HandlerAllTest extends HandlerTestBase {
       }
 
       $view = entity_create('view', array('base_table' => $base_table));
-      $view = $view->get('executable');
+      $view = $view->getExecutable();
 
       // @todo The groupwise relationship is currently broken.
       $exclude[] = 'taxonomy_term_data:tid_representative';

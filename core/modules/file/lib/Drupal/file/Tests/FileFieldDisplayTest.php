@@ -49,7 +49,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
         "fields[$field_name][type]" => $formatter,
       );
       $this->drupalPost("admin/structure/types/manage/$type_name/display", $edit, t('Save'));
-      $this->drupalGet('node/' . $node->nid);
+      $this->drupalGet('node/' . $node->id());
       $this->assertNoText($field_name, format_string('Field label is hidden when no file attached for formatter %formatter', array('%formatter' => $formatter)));
     }
 

@@ -8,6 +8,7 @@
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to present a link to delete a comment.
@@ -23,7 +24,7 @@ class LinkDelete extends Link {
     return user_access('administer comments');
   }
 
-  function render_link($data, $values) {
+  function render_link($data, ResultRow $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
     $comment = $this->get_entity($values);
 

@@ -469,30 +469,6 @@ function locale_translate_edit_form_submit($form, &$form_state) {
 }
 
 /**
- * Page callback: Checks for translation updates and displays the translations status.
- *
- * Manually checks the translation status without the use of cron.
- *
- * @see locale_menu()
- */
-function locale_translation_manual_status() {
-  module_load_include('compare.inc', 'locale');
-
-  // Check translation status of all translatable project in all languages.
-  // First we clear the cached list of projects. Although not strictly
-  // nescessary, this is helpfull in case the project list is out of sync.
-  locale_translation_flush_projects();
-  locale_translation_check_projects();
-
-  // Execute a batch if required. A batch is only used when remote files
-  // are checked.
-  if (batch_get()) {
-    return batch_process('admin/reports/translations');
-  }
-  return new RedirectResponse(url('admin/reports/translations', array('absolute' => TRUE)));
-}
-
-/**
  * Page callback: Display the current translation status.
  *
  * @see locale_menu()

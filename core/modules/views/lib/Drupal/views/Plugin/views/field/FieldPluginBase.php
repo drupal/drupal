@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\field;
 
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -361,13 +362,13 @@ abstract class FieldPluginBase extends HandlerBase {
   /**
    * Gets the entity matching the current row and relationship.
    *
-   * @param \stdClass $values
+   * @param \Drupal\views\ResultRow $values
    *   An object containing all retrieved values.
    *
    * @return \Drupal\Core\Entity\EntityInterface
    *   Returns the entity matching the values.
    */
-  public function getEntity(\stdClass $values) {
+  public function getEntity(ResultRow $values) {
     $relationship_id = $this->options['relationship'];
     if ($relationship_id == 'none') {
       return $values->_entity;

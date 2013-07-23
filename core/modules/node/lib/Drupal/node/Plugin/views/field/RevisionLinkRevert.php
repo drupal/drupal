@@ -9,6 +9,7 @@ namespace Drupal\node\Plugin\views\field;
 
 use Drupal\node\Plugin\views\field\RevisionLink;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to present a link to revert a node to a revision.
@@ -23,7 +24,7 @@ class RevisionLinkRevert extends RevisionLink {
     return user_access('revert revisions') || user_access('administer nodes');
   }
 
-  function render_link($data, $values) {
+  function render_link($data, ResultRow $values) {
     list($node, $vid) = $this->get_revision_entity($values, 'update');
     if (!isset($vid)) {
       return;
@@ -35,7 +36,7 @@ class RevisionLinkRevert extends RevisionLink {
     }
 
     $this->options['alter']['make_link'] = TRUE;
-    $this->options['alter']['path'] = 'node/' . $node->nid . "/revisions/$vid/revert";
+    $this->options['alter']['path'] = 'node/' . $node->id() . "/revisions/$vid/revert";
     $this->options['alter']['query'] = drupal_get_destination();
 
     return !empty($this->options['text']) ? $this->options['text'] : t('Revert');

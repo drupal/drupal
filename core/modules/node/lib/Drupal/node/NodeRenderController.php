@@ -82,8 +82,8 @@ class NodeRenderController extends EntityRenderController {
    */
   protected function alterBuild(array &$build, EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode = NULL) {
     parent::alterBuild($build, $entity, $display, $view_mode, $langcode);
-    if (!empty($entity->nid)) {
-      $build['#contextual_links']['node'] = array('node', array($entity->nid));
+    if ($entity->id()) {
+      $build['#contextual_links']['node'] = array('node', array($entity->id()));
     }
   }
 

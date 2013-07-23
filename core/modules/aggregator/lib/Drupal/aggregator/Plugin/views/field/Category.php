@@ -9,6 +9,7 @@ namespace Drupal\aggregator\Plugin\views\field;
 
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Annotation\PluginID;
 
@@ -64,7 +65,7 @@ class Category extends FieldPluginBase {
    * @return data
    *   Returns string for the link text.
    */
-  protected function render_link($data, $values) {
+  protected function render_link($data, ResultRow $values) {
     $cid = $this->getValue($values, 'cid');
     if (!empty($this->options['link_to_category']) && !empty($cid) && $data !== NULL && $data !== '') {
       $this->options['alter']['make_link'] = TRUE;

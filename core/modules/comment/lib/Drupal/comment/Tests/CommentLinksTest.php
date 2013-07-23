@@ -141,7 +141,7 @@ class CommentLinksTest extends CommentTestBase {
         // $this->postComment() relies on actual user permissions.
         $comment = entity_create('comment', array(
           'cid' => NULL,
-          'entity_id' => $this->node->nid,
+          'entity_id' => $this->node->id(),
           'entity_type' => 'node',
           'field_name' => 'comment',
           'pid' => 0,
@@ -157,7 +157,7 @@ class CommentLinksTest extends CommentTestBase {
 
         // comment_num_new() relies on history_read(), so ensure that no one has
         // seen the node of this comment.
-        db_delete('history')->condition('nid', $this->node->nid)->execute();
+        db_delete('history')->condition('nid', $this->node->id())->execute();
       }
       else {
         $cids = db_query("SELECT cid FROM {comment}")->fetchCol();
@@ -223,7 +223,7 @@ class CommentLinksTest extends CommentTestBase {
   function assertCommentLinks(array $info) {
     $info = $this->setEnvironment($info);
 
-    $nid = $this->node->nid;
+    $nid = $this->node->id();
 
     foreach (array('node', "node/$nid") as $path) {
       $this->drupalGet($path);

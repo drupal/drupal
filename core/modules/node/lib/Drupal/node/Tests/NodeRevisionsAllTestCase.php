@@ -66,7 +66,7 @@ class NodeRevisionsAllTestCase extends NodeTestBase {
       $node->setNewRevision();
       $node->save();
 
-      $node = node_load($node->nid, TRUE); // Make sure we get revision information.
+      $node = node_load($node->id(), TRUE); // Make sure we get revision information.
       $nodes[] = clone $node;
     }
 
@@ -118,7 +118,7 @@ class NodeRevisionsAllTestCase extends NodeTestBase {
         '%revision-date' => format_date($nodes[1]->revision_timestamp)
       )),
       'Revision reverted.');
-    $reverted_node = node_load($node->nid, TRUE);
+    $reverted_node = node_load($node->id(), TRUE);
     $this->assertTrue(($nodes[1]->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'] == $reverted_node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value']), 'Node reverted correctly.');
 
     // Confirm that this is not the current version.
@@ -135,7 +135,7 @@ class NodeRevisionsAllTestCase extends NodeTestBase {
       )),
       'Revision deleted.');
     $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid and vid = :vid',
-      array(':nid' => $node->nid, ':vid' => $nodes[1]->vid))->fetchField() == 0,
+      array(':nid' => $node->id(), ':vid' => $nodes[1]->vid))->fetchField() == 0,
       'Revision not found.');
 
     // Set the revision timestamp to an older date to make sure that the

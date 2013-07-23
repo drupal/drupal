@@ -118,7 +118,7 @@ function _node_mass_update_batch_process(array $nodes, array $updates, $load, ar
     $node = _node_mass_update_helper($node, $updates);
 
     // Store result for post-processing in the finished callback.
-    $context['results'][] = l($node->label(), 'node/' . $node->nid);
+    $context['results'][] = l($node->label(), 'node/' . $node->id());
 
     // Update our progress information.
     $context['sandbox']['progress']++;
@@ -239,30 +239,30 @@ function node_admin_nodes() {
     $l_options = $node->langcode != Language::LANGCODE_NOT_SPECIFIED && isset($languages[$node->langcode]) ? array('language' => $languages[$node->langcode]) : array();
     $mark = array(
       '#theme' => 'mark',
-      '#status' => node_mark($node->nid, $node->changed),
+      '#status' => node_mark($node->id(), $node->changed),
     );
-    $form['nodes'][$node->nid]['title'] = array(
+    $form['nodes'][$node->id()]['title'] = array(
       '#type' => 'link',
       '#title' => $node->label(),
-      '#href' => 'node/' . $node->nid,
+      '#href' => 'node/' . $node->id(),
       '#options' => $l_options,
       '#suffix' => ' ' . drupal_render($mark),
     );
-    $form['nodes'][$node->nid]['type'] = array(
+    $form['nodes'][$node->id()]['type'] = array(
       '#markup' => check_plain(node_get_type_label($node)),
     );
-    $form['nodes'][$node->nid]['author'] = array(
+    $form['nodes'][$node->id()]['author'] = array(
       '#theme' => 'username',
       '#account' => user_load($node->uid),
     );
-    $form['nodes'][$node->nid]['status'] = array(
+    $form['nodes'][$node->id()]['status'] = array(
       '#markup' => $node->status ? t('published') : t('not published'),
     );
-    $form['nodes'][$node->nid]['changed'] = array(
+    $form['nodes'][$node->id()]['changed'] = array(
       '#markup' => format_date($node->changed, 'short'),
     );
     if ($multilingual) {
-      $form['nodes'][$node->nid]['language_name'] = array(
+      $form['nodes'][$node->id()]['language_name'] = array(
         '#markup' => language_name($node->langcode),
       );
     }
@@ -272,28 +272,28 @@ function node_admin_nodes() {
     if (node_access('update', $node)) {
       $operations['edit'] = array(
         'title' => t('Edit'),
-        'href' => 'node/' . $node->nid . '/edit',
+        'href' => 'node/' . $node->id() . '/edit',
         'query' => $destination,
       );
     }
     if (node_access('delete', $node)) {
       $operations['delete'] = array(
         'title' => t('Delete'),
-        'href' => 'node/' . $node->nid . '/delete',
+        'href' => 'node/' . $node->id() . '/delete',
         'query' => $destination,
       );
     }
     if ($node->isTranslatable()) {
       $operations['translate'] = array(
         'title' => t('Translate'),
-        'href' => 'node/' . $node->nid . '/translations',
+        'href' => 'node/' . $node->id() . '/translations',
         'query' => $destination,
       );
     }
-    $form['nodes'][$node->nid]['operations'] = array();
+    $form['nodes'][$node->id()]['operations'] = array();
     if (count($operations) > 1) {
       // Render an unordered list of operations links.
-      $form['nodes'][$node->nid]['operations'] = array(
+      $form['nodes'][$node->id()]['operations'] = array(
         '#type' => 'operations',
         '#subtype' => 'node',
         '#links' => $operations,
@@ -302,7 +302,7 @@ function node_admin_nodes() {
     elseif (!empty($operations)) {
       // Render the first and only operation as a link.
       $link = reset($operations);
-      $form['nodes'][$node->nid]['operations'] = array(
+      $form['nodes'][$node->id()]['operations'] = array(
         '#type' => 'link',
         '#title' => $link['title'],
         '#href' => $link['href'],

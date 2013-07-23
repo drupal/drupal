@@ -131,9 +131,9 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
     $this->assertTrue($node, 'Node found in database.');
 
     // Check if node body is showed.
-    $this->drupalGet("node/$node->nid");
+    $this->drupalGet('node/' . $node->id());
     $body = $this->xpath('//article[@id=:id]//div[@class=:class]/descendant::p', array(
-      ':id' => 'node-' . $node->nid,
+      ':id' => 'node-' . $node->id(),
       ':class' => 'content',
     ));
     $this->assertEqual(current($body), $node->body['en'][0]['value'], 'Node body found.');

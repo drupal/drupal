@@ -98,7 +98,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
 
     foreach ($permutations as $case) {
       // Skip this test if there are no revisions for the node.
-      if (!($revision->isDefaultRevision() && (db_query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid', array(':nid' => $revision->nid))->fetchField() == 1 || $case['op'] == 'update' || $case['op'] == 'delete'))) {
+      if (!($revision->isDefaultRevision() && (db_query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid', array(':nid' => $revision->id()))->fetchField() == 1 || $case['op'] == 'update' || $case['op'] == 'delete'))) {
         if (!empty($case['account']->is_admin) || user_access($this->map[$case['op']], $case['account'])) {
           $this->assertTrue(_node_revision_access($revision, $case['op'], $case['account']), "{$this->map[$case['op']]} granted.");
         }
@@ -144,7 +144,7 @@ class NodeRevisionPermissionsTest extends NodeTestBase {
     $permutations = $this->generatePermutations($parameters);
     foreach ($permutations as $case) {
       // Skip this test if there are no revisions for the node.
-      if (!($revision->isDefaultRevision() && (db_query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid', array(':nid' => $revision->nid))->fetchField() == 1 || $case['op'] == 'update' || $case['op'] == 'delete'))) {
+      if (!($revision->isDefaultRevision() && (db_query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid', array(':nid' => $revision->id()))->fetchField() == 1 || $case['op'] == 'update' || $case['op'] == 'delete'))) {
         if (!empty($case['account']->is_admin) || user_access($this->type_map[$case['op']], $case['account'])) {
           $this->assertTrue(_node_revision_access($revision, $case['op'], $case['account']), "{$this->type_map[$case['op']]} granted.");
         }

@@ -99,8 +99,8 @@ function path_menu() {
 function path_form_node_form_alter(&$form, $form_state) {
   $node = $form_state['controller']->getEntity();
   $path = array();
-  if (!empty($node->nid)) {
-    $conditions = array('source' => 'node/' . $node->nid);
+  if (!$node->isNew()) {
+    $conditions = array('source' => 'node/' . $node->id());
     if ($node->langcode != Language::LANGCODE_NOT_SPECIFIED) {
       $conditions['langcode'] = $node->langcode;
     }
@@ -111,7 +111,7 @@ function path_form_node_form_alter(&$form, $form_state) {
   }
   $path += array(
     'pid' => NULL,
-    'source' => isset($node->nid) ? 'node/' . $node->nid : NULL,
+    'source' => $node->id() ? 'node/' . $node->id() : NULL,
     'alias' => '',
     'langcode' => isset($node->langcode) ? $node->langcode : Language::LANGCODE_NOT_SPECIFIED,
   );
@@ -190,7 +190,7 @@ function path_node_insert(EntityInterface $node) {
     // Only save a non-empty alias.
     if (!empty($alias)) {
       // Ensure fields for programmatic executions.
-      $source = 'node/' . $node->nid;
+      $source = 'node/' . $node->id();
       $langcode = isset($node->langcode) ? $node->langcode : Language::LANGCODE_NOT_SPECIFIED;
       Drupal::service('path.crud')->save($source, $alias, $langcode);
     }
@@ -211,7 +211,7 @@ function path_node_update(EntityInterface $node) {
     // Only save a non-empty alias.
     if (!empty($path['alias'])) {
       // Ensure fields for programmatic executions.
-      $source = 'node/' . $node->nid;
+      $source = 'node/' . $node->id();
       $langcode = isset($node->langcode) ? $node->langcode : Language::LANGCODE_NOT_SPECIFIED;
       Drupal::service('path.crud')->save($source, $alias, $langcode, $path['pid']);
     }
@@ -223,7 +223,7 @@ function path_node_update(EntityInterface $node) {
  */
 function path_node_predelete(EntityInterface $node) {
   // Delete all aliases associated with this node.
-  Drupal::service('path.crud')->delete(array('source' => 'node/' . $node->nid));
+  Drupal::service('path.crud')->delete(array('source' => 'node/' . $node->id()));
 }
 
 /**

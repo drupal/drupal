@@ -65,7 +65,7 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     $edit_comment['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = $this->randomName();
 
     // Post comment to the test node with comment
-    $this->drupalPost('comment/reply/node/' . $this->searchable_nodes['1 comment']->nid . '/comment', $edit_comment, t('Save'));
+    $this->drupalPost('comment/reply/node/' . $this->searchable_nodes['1 comment']->id() . '/comment', $edit_comment, t('Save'));
 
     // First update the index. This does the initial processing.
     node_update_index();

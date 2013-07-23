@@ -297,13 +297,9 @@ function views_menu() {
   $items = array();
   $items['views/ajax'] = array(
     'title' => 'Views',
-    'page callback' => 'views_ajax',
     'theme callback' => 'ajax_base_page_theme',
-    'delivery callback' => 'ajax_deliver',
-    'access callback' => TRUE,
-    'description' => 'Ajax callback for view loading.',
+    'route_name' => 'views_ajax',
     'type' => MENU_CALLBACK,
-    'file' => 'includes/ajax.inc',
   );
   // Define another taxonomy autocomplete because the default one of drupal
   // does not support a vid a argument anymore
@@ -936,7 +932,7 @@ function views_get_applicable_views($type) {
   $result = array();
   foreach (Drupal::entityManager()->getStorageController('view')->loadMultiple($entity_ids) as $view) {
     // Check each display to see if it meets the criteria and is enabled.
-    $executable = $view->get('executable');
+    $executable = $view->getExecutable();
     $executable->initDisplay();
     foreach ($executable->displayHandlers as $id => $handler) {
       if (!empty($handler->definition[$type]) && $handler->isEnabled()) {

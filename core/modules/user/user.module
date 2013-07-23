@@ -442,12 +442,11 @@ function _user_role_permissions_update($roles) {
  * @param \Drupal\Core\Session\AccountInterface $account
  *   (optional) The account to check, if not given use currently logged in user.
  *
- * @return
+ * @return bool
  *   Boolean TRUE if the current user has the requested permission.
  *
- * All permission checks in Drupal should go through this function. This
- * way, we guarantee consistent behavior, and ensure that the superuser
- * can perform all actions.
+ * @deprecated as of Drupal 8.0. Use
+ *   \Drupal\Core\Session\AccountInterface::hasPermission()
  */
 function user_access($string, AccountInterface $account = NULL) {
   global $user;

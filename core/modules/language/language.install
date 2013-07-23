@@ -29,7 +29,7 @@ function language_install() {
 function language_uninstall() {
   // Clear variables.
   variable_del('language_default');
-  variable_del('language_count');
+  Drupal::state()->delete('language_count');
 
   // Clear variables.
   variable_del('language_types');
@@ -51,7 +51,7 @@ function language_uninstall() {
  */
 function language_enable() {
   // Update the language count, if the module was disabled before, the
-  // language_count variable was forced to 1.
+  // language_count state was forced to 1.
   language_update_count();
 }
 
@@ -59,10 +59,10 @@ function language_enable() {
  * Implements hook_disable().
  */
 function language_disable() {
-  // Force the language_count variable to be 1, so that the when checking if the
+  // Force the language_count state to be 1, so that the when checking if the
   // site is multilingual (for example in language_multilingual()), the result
   // will be FALSE, because the language module is disabled.
-  variable_set('language_count', 1);
+  Drupal::state()->set('language_count', 1);
 }
 
 /**

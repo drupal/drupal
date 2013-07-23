@@ -29,4 +29,13 @@ class TwigThemeTestController implements ControllerInterface {
     return theme('twig_theme_test_php_variables');
   }
 
+  /**
+   * Menu callback for testing translation blocks in a Twig template.
+   */
+  public function transBlockRender() {
+    return array(
+      '#theme' => 'twig_theme_test_trans',
+    );
+  }
+
 }

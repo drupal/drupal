@@ -155,6 +155,10 @@ class DefaultViewsTest extends UITestBase {
     $arguments[':status'] = 'views-list-section enabled';
     $elements = $this->xpath($xpath, $arguments);
     $this->assertIdentical(count($elements), 1, 'After enabling a view, it is found in the enabled views table.');
+
+    // Attempt to disable the view by path directly, with no token.
+    $this->drupalGet('admin/structure/views/view/test_view_status/disable');
+    $this->assertResponse(403);
   }
 
   /**

@@ -8,6 +8,7 @@
 namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
 /**
@@ -39,7 +40,7 @@ class Mail extends User {
     );
   }
 
-  function render_link($data, $values) {
+  function render_link($data, ResultRow $values) {
     parent::render_link($data, $values);
 
     if ($this->options['link_to_user'] == 'mailto') {

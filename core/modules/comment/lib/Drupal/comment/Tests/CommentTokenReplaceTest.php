@@ -42,7 +42,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $parent_comment = $this->postComment($node, $this->randomName(), $this->randomName(), TRUE);
 
     // Post a reply to the comment.
-    $this->drupalGet('comment/reply/node/' . $node->nid . '/comment/' . $parent_comment->id());
+    $this->drupalGet('comment/reply/node/' . $node->id() . '/comment/' . $parent_comment->id());
     $child_comment = $this->postComment(NULL, $this->randomName(), $this->randomName());
     $comment = comment_load($child_comment->id());
     $comment->homepage->value = 'http://example.org/';
@@ -96,7 +96,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     }
 
     // Load node so comment_count gets computed.
-    $node = node_load($node->nid);
+    $node = node_load($node->id());
 
     // Generate comment tokens for the node (it has 2 comments, both new).
     $tests = array();

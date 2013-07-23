@@ -74,7 +74,7 @@ class FilterSecurityTest extends WebTestBase {
     $node = $this->drupalCreateNode(array('promote' => 1));
     $body_raw = $node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'];
     $format_id = $node->body[Language::LANGCODE_NOT_SPECIFIED][0]['format'];
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertText($body_raw, 'Node body found.');
 
     // Enable the filter_test_replace filter.
@@ -84,7 +84,7 @@ class FilterSecurityTest extends WebTestBase {
     $this->drupalPost('admin/config/content/formats/manage/' . $format_id, $edit, t('Save configuration'));
 
     // Verify that filter_test_replace filter replaced the content.
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertNoText($body_raw, 'Node body not found.');
     $this->assertText('Filter: Testing filter', 'Testing filter output found.');
 
@@ -92,7 +92,7 @@ class FilterSecurityTest extends WebTestBase {
     $this->drupalPost('admin/config/content/formats/manage/' . $format_id . '/disable', array(), t('Disable'));
 
     // Verify that the content is empty, because the text format does not exist.
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertNoText($body_raw, 'Node body not found.');
   }
 

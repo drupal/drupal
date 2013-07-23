@@ -43,12 +43,12 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $node = $this->drupalCreateNode($settings);
 
     // Load node so that the body and summary fields are structured properly.
-    $node = node_load($node->nid);
+    $node = node_load($node->id());
     $instance = field_info_instance('node', 'body', $node->type);
 
     // Generate and test sanitized tokens.
     $tests = array();
-    $tests['[node:nid]'] = $node->nid;
+    $tests['[node:nid]'] = $node->id();
     $tests['[node:vid]'] = $node->vid;
     $tests['[node:tnid]'] = $node->tnid;
     $tests['[node:type]'] = 'article';
@@ -57,8 +57,8 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $tests['[node:body]'] = text_sanitize($instance['settings']['text_processing'], $node->langcode, $node->body[$node->langcode][0], 'value');
     $tests['[node:summary]'] = text_sanitize($instance['settings']['text_processing'], $node->langcode, $node->body[$node->langcode][0], 'summary');
     $tests['[node:langcode]'] = check_plain($node->langcode);
-    $tests['[node:url]'] = url('node/' . $node->nid, $url_options);
-    $tests['[node:edit-url]'] = url('node/' . $node->nid . '/edit', $url_options);
+    $tests['[node:url]'] = url('node/' . $node->id(), $url_options);
+    $tests['[node:edit-url]'] = url('node/' . $node->id() . '/edit', $url_options);
     $tests['[node:author]'] = check_plain(user_format_name($account));
     $tests['[node:author:uid]'] = $node->uid;
     $tests['[node:author:name]'] = check_plain(user_format_name($account));
@@ -91,7 +91,7 @@ class NodeTokenReplaceTest extends NodeTestBase {
 
     // Load node (without summary) so that the body and summary fields are
     // structured properly.
-    $node = node_load($node->nid);
+    $node = node_load($node->id());
     $instance = field_info_instance('node', 'body', $node->type);
 
     // Generate and test sanitized token - use full body as expected value.

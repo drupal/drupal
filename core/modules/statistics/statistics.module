@@ -48,9 +48,9 @@ function statistics_permission() {
  * Implements hook_node_view().
  */
 function statistics_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
-  if (!empty($node->nid) && $view_mode == 'full' && node_is_page($node) && empty($node->in_preview)) {
+  if (!$node->isNew() && $view_mode == 'full' && node_is_page($node) && empty($node->in_preview)) {
     $node->content['#attached']['library'][] = array('statistics', 'drupal.statistics');
-    $settings = array('data' => array('nid' => $node->nid), 'url' => url(drupal_get_path('module', 'statistics') . '/statistics.php'));
+    $settings = array('data' => array('nid' => $node->id()), 'url' => url(drupal_get_path('module', 'statistics') . '/statistics.php'));
     $node->content['#attached']['js'][] = array(
       'data' => array('statistics' => $settings),
       'type' => 'setting',
@@ -59,7 +59,7 @@ function statistics_node_view(EntityInterface $node, EntityDisplay $display, $vi
 
   if ($view_mode != 'rss') {
     if (user_access('view post access counter')) {
-      $statistics = statistics_get($node->nid);
+      $statistics = statistics_get($node->id());
       if ($statistics) {
         $links['statistics_counter']['title'] = format_plural($statistics['totalcount'], '1 view', '@count views');
         $node->content['links']['statistics'] = array(
@@ -203,7 +203,7 @@ function _statistics_format_item($title, $path) {
 function statistics_node_predelete(EntityInterface $node) {
   // clean up statistics table when node is deleted
   db_delete('node_counter')
-    ->condition('nid', $node->nid)
+    ->condition('nid', $node->id())
     ->execute();
 }
 

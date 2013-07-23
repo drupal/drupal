@@ -113,39 +113,39 @@ class TermIndexTest extends TaxonomyTestBase {
     // Check that the term is indexed, and only once.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
-      ':nid' => $node->nid,
+      ':nid' => $node->id(),
       ':tid' => $term_1->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 1 is indexed once.');
 
     // Update the article to change one term.
     $edit["{$this->field_name_1}[$langcode][]"] = $term_2->id();
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that both terms are indexed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
-      ':nid' => $node->nid,
+      ':nid' => $node->id(),
       ':tid' => $term_1->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 1 is indexed.');
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
-      ':nid' => $node->nid,
+      ':nid' => $node->id(),
       ':tid' => $term_2->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 2 is indexed.');
 
     // Update the article to change another term.
     $edit["{$this->field_name_2}[$langcode][]"] = $term_2->id();
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that only one term is indexed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
-      ':nid' => $node->nid,
+      ':nid' => $node->id(),
       ':tid' => $term_1->id(),
     ))->fetchField();
     $this->assertEqual(0, $index_count, 'Term 1 is not indexed.');
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
-      ':nid' => $node->nid,
+      ':nid' => $node->id(),
       ':tid' => $term_2->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 2 is indexed once.');
@@ -159,12 +159,12 @@ class TermIndexTest extends TaxonomyTestBase {
 
     // Check that the index was not changed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
-      ':nid' => $node->nid,
+      ':nid' => $node->id(),
       ':tid' => $term_1->id(),
     ))->fetchField();
     $this->assertEqual(0, $index_count, 'Term 1 is not indexed.');
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
-      ':nid' => $node->nid,
+      ':nid' => $node->id(),
       ':tid' => $term_2->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 2 is indexed once.');
@@ -175,12 +175,12 @@ class TermIndexTest extends TaxonomyTestBase {
 
     // Check that both terms are indexed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
-      ':nid' => $node->nid,
+      ':nid' => $node->id(),
       ':tid' => $term_1->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 1 is indexed.');
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
-      ':nid' => $node->nid,
+      ':nid' => $node->id(),
       ':tid' => $term_2->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 2 is indexed.');
@@ -191,12 +191,12 @@ class TermIndexTest extends TaxonomyTestBase {
 
     // Check that only one term is indexed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
-      ':nid' => $node->nid,
+      ':nid' => $node->id(),
       ':tid' => $term_1->id(),
     ))->fetchField();
     $this->assertEqual(1, $index_count, 'Term 1 is indexed once.');
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
-      ':nid' => $node->nid,
+      ':nid' => $node->id(),
       ':tid' => $term_2->id(),
     ))->fetchField();
     $this->assertEqual(0, $index_count, 'Term 2 is not indexed.');

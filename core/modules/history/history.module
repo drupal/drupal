@@ -81,7 +81,7 @@ function history_cron() {
  */
 function history_node_delete(EntityInterface $node) {
   db_delete('history')
-    ->condition('nid', $node->nid)
+    ->condition('nid', $node->id())
     ->execute();
 }
 

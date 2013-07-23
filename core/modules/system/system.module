@@ -609,13 +609,6 @@ function system_element_info() {
  * Implements hook_menu().
  */
 function system_menu() {
-  $items['system/files'] = array(
-    'title' => 'File download',
-    'page callback' => 'file_download',
-    'page arguments' => array('private'),
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
   $items['system/temporary'] = array(
     'title' => 'Temporary files',
     'page callback' => 'file_download',

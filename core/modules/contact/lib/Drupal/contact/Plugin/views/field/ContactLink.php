@@ -10,6 +10,7 @@ namespace Drupal\contact\Plugin\views\field;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Annotation\PluginID;
 use Drupal\user\Plugin\views\field\Link;
+use Drupal\views\ResultRow;
 
 /**
  * Defines a field that links to the user contact page, if access is permitted.
@@ -42,7 +43,7 @@ class ContactLink extends Link {
   /**
    * {@inheritdoc}
    */
-  public function render_link(EntityInterface $entity, \stdClass $values) {
+  public function render_link(EntityInterface $entity, ResultRow $values) {
 
     if (empty($entity)) {
       return;

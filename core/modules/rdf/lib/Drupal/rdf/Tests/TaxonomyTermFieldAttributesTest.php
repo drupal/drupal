@@ -106,7 +106,7 @@ class TaxonomyTermFieldAttributesTest extends TaxonomyTestBase {
     $parser->parse($graph, $html, 'rdfa', $base_uri);
 
     // Node relations to taxonomy terms.
-    $node_uri = url('node/' . $node->nid, array('absolute' => TRUE));
+    $node_uri = url('node/' . $node->id(), array('absolute' => TRUE));
     $expected_value = array(
       'type' => 'uri',
       'value' => $taxonomy_term_1_uri,

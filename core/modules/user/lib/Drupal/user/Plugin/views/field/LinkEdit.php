@@ -9,6 +9,7 @@ namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to present a link to user edit.
@@ -22,7 +23,7 @@ class LinkEdit extends Link {
   /**
    * Overrides \Drupal\user\Plugin\views\field\Link::render_link().
    */
-  public function render_link(EntityInterface $entity, \stdClass $values) {
+  public function render_link(EntityInterface $entity, ResultRow $values) {
     if ($entity && $entity->access('update')) {
       $this->options['alter']['make_link'] = TRUE;
 

@@ -141,9 +141,13 @@ function rdf_get_namespaces() {
  *   'datatype_callback' and 'type' keys. For example:
  *   @code
  *     array(
- *       'properties' => array('dc:created'),
- *       'datatype' => 'xsd:dateTime',
- *       'datatype_callback' => 'date_iso8601',
+ *       'properties' => array('schema:interactionCount'),
+ *       'datatype' => 'xsd:integer',
+ *       'datatype_callback' => array(
+ *         'callable' => 'Drupal\rdf\SchemaOrgDataConverter::interactionCount',
+ *         'arguments' => array(
+ *           'interaction_type' => 'UserComments'
+ *         ),
  *       ),
  *     );
  *   @endcode
@@ -174,8 +178,9 @@ function rdf_rdfa_attributes($mapping, $data = NULL) {
         $attributes['property'] = $mapping['properties'];
         // Convert $data to a specific format as per the callback function.
         if (isset($data) && !empty($mapping['datatype_callback'])) {
-          $callback = $mapping['datatype_callback'];
-          $attributes['content'] = call_user_func($callback, $data);
+          $callback = $mapping['datatype_callback']['callable'];
+          $arguments = isset($mapping['datatype_callback']['arguments']) ? $mapping['datatype_callback']['arguments'] : NULL;
+          $attributes['content'] = call_user_func($callback, $data, $arguments);
         }
         if (isset($mapping['datatype'])) {
           $attributes['datatype'] = $mapping['datatype'];

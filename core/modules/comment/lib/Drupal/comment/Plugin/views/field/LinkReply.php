@@ -8,6 +8,7 @@
 namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to present a link to reply to a comment.
@@ -23,7 +24,7 @@ class LinkReply extends Link {
     return user_access('post comments');
   }
 
-  function render_link($data, $values) {
+  function render_link($data, ResultRow $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('reply');
     $comment = $this->getEntity($values);
 

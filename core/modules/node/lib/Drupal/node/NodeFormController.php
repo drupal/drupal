@@ -39,7 +39,7 @@ class NodeFormController extends EntityFormController {
     );
 
     // If this is a new node, fill in the default values.
-    if (!isset($node->nid) || isset($node->is_new)) {
+    if ($node->isNew()) {
       foreach (array('status', 'promote', 'sticky') as $key) {
         // Multistep node forms might have filled in something already.
         if (!isset($node->$key)) {
@@ -327,7 +327,7 @@ class NodeFormController extends EntityFormController {
   public function validate(array $form, array &$form_state) {
     $node = $this->buildEntity($form, $form_state);
 
-    if (isset($node->nid) && (node_last_changed($node->nid, $this->getFormLangcode($form_state)) > $node->changed)) {
+    if ($node->id() && (node_last_changed($node->id(), $this->getFormLangcode($form_state)) > $node->changed)) {
       form_set_error('changed', t('The content on this page has either been modified by another user, or you have already submitted modifications using this form. As a result, your changes cannot be saved.'));
     }
 
@@ -434,9 +434,9 @@ class NodeFormController extends EntityFormController {
    */
   public function save(array $form, array &$form_state) {
     $node = $this->entity;
-    $insert = empty($node->nid);
+    $insert = $node->isNew();
     $node->save();
-    $node_link = l(t('view'), 'node/' . $node->nid);
+    $node_link = l(t('view'), 'node/' . $node->id());
     $watchdog_args = array('@type' => $node->type, '%title' => $node->label());
     $t_args = array('@type' => node_get_type_label($node), '%title' => $node->label());
 
@@ -449,10 +449,10 @@ class NodeFormController extends EntityFormController {
       drupal_set_message(t('@type %title has been updated.', $t_args));
     }
 
-    if ($node->nid) {
-      $form_state['values']['nid'] = $node->nid;
-      $form_state['nid'] = $node->nid;
-      $form_state['redirect'] = node_access('view', $node) ? 'node/' . $node->nid : '<front>';
+    if ($node->id()) {
+      $form_state['values']['nid'] = $node->id();
+      $form_state['nid'] = $node->id();
+      $form_state['redirect'] = node_access('view', $node) ? 'node/' . $node->id() : '<front>';
     }
     else {
       // In the unlikely case something went wrong on save, the node will be
@@ -476,7 +476,7 @@ class NodeFormController extends EntityFormController {
       $query->remove('destination');
     }
     $node = $this->entity;
-    $form_state['redirect'] = array('node/' . $node->nid . '/delete', array('query' => $destination));
+    $form_state['redirect'] = array('node/' . $node->id() . '/delete', array('query' => $destination));
   }
 
 }

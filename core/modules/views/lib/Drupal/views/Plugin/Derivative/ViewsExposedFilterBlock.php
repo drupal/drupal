@@ -44,7 +44,7 @@ class ViewsExposedFilterBlock implements DerivativeInterface {
       if (!$view->status()) {
         continue;
       }
-      $executable = $view->get('executable');
+      $executable = $view->getExecutable();
       $executable->initDisplay();
       foreach ($executable->displayHandlers as $display) {
         if (isset($display) && $display->getOption('exposed_block')) {

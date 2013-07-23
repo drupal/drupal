@@ -213,13 +213,13 @@ class ForumTest extends WebTestBase {
     $node = $this->createForumTopic($this->forum, FALSE);
     $edit = array();
     $edit['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = $this->randomName();
-    $this->drupalPost("node/$node->nid", $edit, t('Save'));
+    $this->drupalPost('node/' . $node->id(), $edit, t('Save'));
     $this->assertResponse(200);
 
     // Test editing a forum topic that has a comment.
     $this->drupalLogin($this->edit_any_topics_user);
     $this->drupalGet('forum/' . $this->forum['tid']);
-    $this->drupalPost("node/$node->nid/edit", array(), t('Save'));
+    $this->drupalPost('node/' . $node->id() . '/edit', array(), t('Save'));
     $this->assertResponse(200);
 
     // Test the root forum page title change.
@@ -479,7 +479,7 @@ class ForumTest extends WebTestBase {
     $edit = array();
     $edit['subject'] = $this->randomName();
     $edit['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = $this->randomName();
-    $this->drupalPost("node/$node->nid", $edit, t('Save'));
+    $this->drupalPost('node/' . $node->id(), $edit, t('Save'));
     $this->assertResponse(200);
 
     // Login as the first user.
@@ -532,7 +532,7 @@ class ForumTest extends WebTestBase {
     $this->assertEqual($node->taxonomy_forums[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'], $tid, 'Saved forum topic was in the expected forum');
 
     // View forum topic.
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertRaw($title, 'Subject was found');
     $this->assertRaw($body, 'Body was found');
 
@@ -570,7 +570,7 @@ class ForumTest extends WebTestBase {
     $this->verifyForumView($this->root_forum);
 
     // View forum node.
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertResponse(200);
     $this->assertTitle($node->label() . ' | Drupal', 'Forum node was displayed');
     $breadcrumb = array(
@@ -582,7 +582,7 @@ class ForumTest extends WebTestBase {
     $this->assertRaw(theme('breadcrumb', array('breadcrumb' => $breadcrumb)), 'Breadcrumbs were displayed');
 
     // View forum edit node.
-    $this->drupalGet('node/' . $node->nid . '/edit');
+    $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertResponse($response);
     if ($response == 200) {
       $this->assertTitle('Edit Forum topic ' . $node->label() . ' | Drupal', 'Forum edit node was displayed');
@@ -592,23 +592,23 @@ class ForumTest extends WebTestBase {
       // Edit forum node (including moving it to another forum).
       $edit = array();
       $langcode = Language::LANGCODE_NOT_SPECIFIED;
-      $edit["title"] = 'node/' . $node->nid;
+      $edit["title"] = 'node/' . $node->id();
       $edit["body[$langcode][0][value]"] = $this->randomName(256);
       // Assume the topic is initially associated with $forum.
       $edit["taxonomy_forums[$langcode]"] = $this->root_forum['tid'];
       $edit['shadow'] = TRUE;
-      $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+      $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
       $this->assertRaw(t('Forum topic %title has been updated.', array('%title' => $edit["title"])), 'Forum node was edited');
 
       // Verify topic was moved to a different forum.
       $forum_tid = db_query("SELECT tid FROM {forum} WHERE nid = :nid AND vid = :vid", array(
-        ':nid' => $node->nid,
+        ':nid' => $node->id(),
         ':vid' => $node->vid,
       ))->fetchField();
       $this->assertTrue($forum_tid == $this->root_forum['tid'], 'The forum topic is linked to a different forum');
 
       // Delete forum node.
-      $this->drupalPost('node/' . $node->nid . '/delete', array(), t('Delete'));
+      $this->drupalPost('node/' . $node->id() . '/delete', array(), t('Delete'));
       $this->assertResponse($response);
       $this->assertRaw(t('Forum topic %title has been deleted.', array('%title' => $edit['title'])), 'Forum node was deleted');
     }
@@ -649,7 +649,7 @@ class ForumTest extends WebTestBase {
     $this->nids = array();
     for ($i = 0; $i < 5; $i++) {
       $node = $this->createForumTopic($this->forum, FALSE);
-      $this->nids[] = $node->nid;
+      $this->nids[] = $node->id();
     }
   }
 }

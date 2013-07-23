@@ -70,7 +70,7 @@ class FilterDateTest extends HandlerTestBase {
     $view->filter['created']->value['value'] = '+1 hour';
     $view->executeDisplay('default');
     $expected_result = array(
-      array('nid' => $this->nodes[3]->nid),
+      array('nid' => $this->nodes[3]->id()),
     );
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
     $view->destroy();
@@ -83,7 +83,7 @@ class FilterDateTest extends HandlerTestBase {
     $view->filter['created']->value['min'] = '+1 hour';
     $view->executeDisplay('default');
     $expected_result = array(
-      array('nid' => $this->nodes[3]->nid),
+      array('nid' => $this->nodes[3]->id()),
     );
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
   }
@@ -101,7 +101,7 @@ class FilterDateTest extends HandlerTestBase {
     $view->filter['created']->value['max'] = format_date(250000, 'custom', 'Y-m-d H:s');
     $view->executeDisplay('default');
     $expected_result = array(
-      array('nid' => $this->nodes[1]->nid),
+      array('nid' => $this->nodes[1]->id()),
     );
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
     $view->destroy();
@@ -112,8 +112,8 @@ class FilterDateTest extends HandlerTestBase {
     $view->filter['created']->value['max'] = format_date(250000, 'custom', 'Y-m-d H:s');
     $view->executeDisplay('default');
     $expected_result = array(
-      array('nid' => $this->nodes[0]->nid),
-      array('nid' => $this->nodes[1]->nid),
+      array('nid' => $this->nodes[0]->id()),
+      array('nid' => $this->nodes[1]->id()),
     );
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
     $view->destroy();
@@ -125,9 +125,9 @@ class FilterDateTest extends HandlerTestBase {
     $view->filter['created']->value['max'] = format_date(250000, 'custom', 'Y-m-d H:s');
     $view->executeDisplay('default');
     $expected_result = array(
-      array('nid' => $this->nodes[0]->nid),
-      array('nid' => $this->nodes[2]->nid),
-      array('nid' => $this->nodes[3]->nid),
+      array('nid' => $this->nodes[0]->id()),
+      array('nid' => $this->nodes[2]->id()),
+      array('nid' => $this->nodes[3]->id()),
     );
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
     $view->destroy();
@@ -138,9 +138,9 @@ class FilterDateTest extends HandlerTestBase {
     $view->filter['created']->value['max'] = format_date(150000, 'custom', 'Y-m-d H:s');
     $view->executeDisplay('default');
     $expected_result = array(
-      array('nid' => $this->nodes[1]->nid),
-      array('nid' => $this->nodes[2]->nid),
-      array('nid' => $this->nodes[3]->nid),
+      array('nid' => $this->nodes[1]->id()),
+      array('nid' => $this->nodes[2]->id()),
+      array('nid' => $this->nodes[3]->id()),
     );
     $this->assertIdenticalResultset($view, $expected_result, $this->map);
   }

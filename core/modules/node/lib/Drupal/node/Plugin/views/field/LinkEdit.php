@@ -9,6 +9,7 @@ namespace Drupal\node\Plugin\views\field;
 
 use Drupal\node\Plugin\views\field\Link;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to present a link node edit.
@@ -22,7 +23,7 @@ class LinkEdit extends Link {
   /**
    * Renders the link.
    */
-  function render_link($node, $values) {
+  function render_link($node, ResultRow $values) {
     // Ensure user has access to edit this node.
     if (!node_access('update', $node)) {
       return;

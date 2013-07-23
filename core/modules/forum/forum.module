@@ -321,7 +321,7 @@ function forum_node_presave(EntityInterface $node) {
       $node->forum_tid = $node->taxonomy_forums[$langcode][0]['target_id'];
       // Only do a shadow copy check if this is not a new node.
       if (!$node->isNew()) {
-        $old_tid = db_query_range("SELECT f.tid FROM {forum} f INNER JOIN {node} n ON f.vid = n.vid WHERE n.nid = :nid ORDER BY f.vid DESC", 0, 1, array(':nid' => $node->nid))->fetchField();
+        $old_tid = db_query_range("SELECT f.tid FROM {forum} f INNER JOIN {node} n ON f.vid = n.vid WHERE n.nid = :nid ORDER BY f.vid DESC", 0, 1, array(':nid' => $node->id()))->fetchField();
         if ($old_tid && isset($node->forum_tid) && ($node->forum_tid != $old_tid) && !empty($node->shadow)) {
           // A shadow copy needs to be created. Retain new term and add old term.
           $node->taxonomy_forums[$langcode][] = array('target_id' => $old_tid);
@@ -338,7 +338,7 @@ function forum_node_update(EntityInterface $node) {
   if (_forum_node_check_node_type($node)) {
     // If this is not a new revision and does exist, update the forum record,
     // otherwise insert a new one.
-    if ($node->getRevisionId() == $node->original->getRevisionId() && db_query('SELECT tid FROM {forum} WHERE nid=:nid', array(':nid' => $node->nid))->fetchField()) {
+    if ($node->getRevisionId() == $node->original->getRevisionId() && db_query('SELECT tid FROM {forum} WHERE nid=:nid', array(':nid' => $node->id()))->fetchField()) {
       if (!empty($node->forum_tid)) {
         db_update('forum')
           ->fields(array('tid' => $node->forum_tid))
@@ -348,7 +348,7 @@ function forum_node_update(EntityInterface $node) {
       // The node is removed from the forum.
       else {
         db_delete('forum')
-          ->condition('nid', $node->nid)
+          ->condition('nid', $node->id())
           ->execute();
       }
     }
@@ -358,7 +358,7 @@ function forum_node_update(EntityInterface $node) {
           ->fields(array(
             'tid' => $node->forum_tid,
             'vid' => $node->vid,
-            'nid' => $node->nid,
+            'nid' => $node->id(),
           ))
           ->execute();
       }
@@ -367,12 +367,12 @@ function forum_node_update(EntityInterface $node) {
     // revision.
     if (!empty($node->shadow)) {
       db_delete('forum')
-        ->condition('nid', $node->nid)
+        ->condition('nid', $node->id())
         ->condition('vid', $node->vid)
         ->execute();
       db_insert('forum')
         ->fields(array(
-          'nid' => $node->nid,
+          'nid' => $node->id(),
           'vid' => $node->vid,
           'tid' => $node->forum_tid,
         ))
@@ -391,7 +391,7 @@ function forum_node_insert(EntityInterface $node) {
         ->fields(array(
           'tid' => $node->forum_tid,
           'vid' => $node->vid,
-          'nid' => $node->nid,
+          'nid' => $node->id(),
         ))
         ->execute();
     }
@@ -404,10 +404,10 @@ function forum_node_insert(EntityInterface $node) {
 function forum_node_predelete(EntityInterface $node) {
   if (_forum_node_check_node_type($node)) {
     db_delete('forum')
-      ->condition('nid', $node->nid)
+      ->condition('nid', $node->id())
       ->execute();
     db_delete('forum_index')
-      ->condition('nid', $node->nid)
+      ->condition('nid', $node->id())
       ->execute();
   }
 }
@@ -542,7 +542,7 @@ function forum_field_storage_pre_update(EntityInterface $entity, &$skip_fields) 
       // sure we only wipe values once.
       if (!isset($first_call[$entity->nid])) {
         $first_call[$entity->nid] = FALSE;
-        db_delete('forum_index')->condition('nid', $entity->nid)->execute();
+        db_delete('forum_index')->condition('nid', $entity->id())->execute();
       }
       $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
       foreach ($entity->taxonomy_forums as $language) {
@@ -561,12 +561,12 @@ function forum_field_storage_pre_update(EntityInterface $entity, &$skip_fields) 
       $query->execute();
       // The logic for determining last_comment_count is fairly complex, so
       // call _forum_update_forum_index() too.
-      _forum_update_forum_index($entity->nid);
+      _forum_update_forum_index($entity->id());
     }
 
     // When a forum node is unpublished, remove it from the forum_index table.
     else {
-      db_delete('forum_index')->condition('nid', $entity->nid)->execute();
+      db_delete('forum_index')->condition('nid', $entity->id())->execute();
     }
 
   }
@@ -921,8 +921,8 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
         $topic->new = 0;
       }
       else {
-        $history = _forum_user_last_visit($topic->nid);
-        $topic->new_replies = comment_num_new('node', $topic->nid, 'comment_node_forum', $history);
+        $history = _forum_user_last_visit($topic->id());
+        $topic->new_replies = comment_num_new('node', $topic->id(), 'comment_node_forum', $history);
         $topic->new = $topic->new_replies || ($topic->last_comment_timestamp > $history);
       }
     }
@@ -946,7 +946,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
       $last_reply->uid = $topic->last_comment_uid;
       $topic->last_reply = $last_reply;
     }
-    $topics[$topic->nid] = $topic;
+    $topics[$topic->id()] = $topic;
   }
 
   return $topics;
@@ -1131,7 +1131,7 @@ function template_preprocess_forum_topic_list(&$variables) {
       }
       else {
         $variables['topics'][$id]->moved = FALSE;
-        $variables['topics'][$id]->title = l($topic->title, "node/$topic->nid");
+        $variables['topics'][$id]->title = l($topic->title, 'node/' . $topic->id());
         $variables['topics'][$id]->message = '';
       }
       $variables['topics'][$id]->created = theme('forum_submitted', array('topic' => $topic));
@@ -1141,7 +1141,7 @@ function template_preprocess_forum_topic_list(&$variables) {
       $variables['topics'][$id]->new_url = '';
       if ($topic->new_replies) {
         $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new post<span class="visually-hidden"> in topic %title</span>', '@count new posts<span class="visually-hidden"> in topic %title</span>', array('%title' => $variables['topics'][$id]->title));
-        $variables['topics'][$id]->new_url = url("node/$topic->nid", array('query' => comment_new_page_count($topic->comment_count, $topic->new_replies, $topic, 'comment_node_forum'), 'fragment' => 'new'));
+        $variables['topics'][$id]->new_url = url('node/' . $topic->id(), array('query' => comment_new_page_count($topic->comment_count, $topic->new_replies, $topic, 'comment_node_forum'), 'fragment' => 'new'));
       }
 
     }

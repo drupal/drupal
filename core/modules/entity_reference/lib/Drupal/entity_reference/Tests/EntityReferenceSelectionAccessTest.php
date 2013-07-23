@@ -126,8 +126,8 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
         'result' => array(
           'article' => array(
-            $nodes['published1']->nid => $node_labels['published1'],
-            $nodes['published2']->nid => $node_labels['published2'],
+            $nodes['published1']->id() => $node_labels['published1'],
+            $nodes['published2']->id() => $node_labels['published2'],
           ),
         ),
       ),
@@ -138,7 +138,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
         'result' => array(
           'article' => array(
-            $nodes['published1']->nid => $node_labels['published1'],
+            $nodes['published1']->id() => $node_labels['published1'],
           ),
         ),
       ),
@@ -149,7 +149,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
         'result' => array(
           'article' => array(
-            $nodes['published2']->nid => $node_labels['published2'],
+            $nodes['published2']->id() => $node_labels['published2'],
           ),
         ),
       ),
@@ -178,9 +178,9 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
         'result' => array(
           'article' => array(
-            $nodes['published1']->nid => $node_labels['published1'],
-            $nodes['published2']->nid => $node_labels['published2'],
-            $nodes['unpublished']->nid => $node_labels['unpublished'],
+            $nodes['published1']->id() => $node_labels['published1'],
+            $nodes['published2']->id() => $node_labels['published2'],
+            $nodes['unpublished']->id() => $node_labels['unpublished'],
           ),
         ),
       ),
@@ -190,7 +190,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         ),
         'result' => array(
           'article' => array(
-            $nodes['unpublished']->nid => $node_labels['unpublished'],
+            $nodes['unpublished']->id() => $node_labels['unpublished'],
           ),
         ),
       ),
@@ -399,7 +399,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
 
     $comment_values = array(
       'published_published' => array(
-        'entity_id' => $nodes['published']->nid,
+        'entity_id' => $nodes['published']->id(),
         'entity_type' => 'node',
         'field_name' => 'comment',
         'uid' => 1,
@@ -410,7 +410,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         'language' => Language::LANGCODE_NOT_SPECIFIED,
       ),
       'published_unpublished' => array(
-        'entity_id' => $nodes['published']->nid,
+        'entity_id' => $nodes['published']->id(),
         'entity_type' => 'node',
         'field_name' => 'comment',
         'uid' => 1,
@@ -421,7 +421,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         'language' => Language::LANGCODE_NOT_SPECIFIED,
       ),
       'unpublished_published' => array(
-        'entity_id' => $nodes['unpublished']->nid,
+        'entity_id' => $nodes['unpublished']->id(),
         'entity_type' => 'node',
         'field_name' => 'comment',
         'uid' => 1,

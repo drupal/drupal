@@ -165,6 +165,14 @@ system_admin_index:
   requirements:
     _permission: 'access administration pages'
 
+system_files:
+  pattern: '/system/files/{scheme}'
+  defaults:
+    _controller: 'Drupal\system\FileDownloadController::download'
+    scheme: private
+  requirements:
+    _access: 'TRUE'
+
 system_theme_settings:
   pattern: '/admin/appearance/settings'
   defaults:

@@ -67,8 +67,8 @@ class ForumIndexTest extends WebTestBase {
     $this->assertText($title, 'Published forum topic appears on index.');
 
     // Unpublish the node.
-    $this->drupalPost("node/{$node->nid}/edit", array(), t('Save and unpublish'));
-    $this->drupalGet("node/{$node->nid}");
+    $this->drupalPost('node/' . $node->id() . '/edit', array(), t('Save and unpublish'));
+    $this->drupalGet('node/' . $node->id());
     $this->assertText(t('Access denied'), 'Unpublished node is no longer accessible.');
 
     // Verify that the node no longer appears on the index.

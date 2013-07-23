@@ -405,7 +405,7 @@ function hook_node_grants_alter(&$grants, $account, $op) {
  */
 function hook_node_predelete(\Drupal\Core\Entity\EntityInterface $node) {
   db_delete('mytable')
-    ->condition('nid', $node->nid)
+    ->condition('nid', $node->id())
     ->execute();
 }
 
@@ -467,7 +467,7 @@ function hook_node_revision_delete(\Drupal\Core\Entity\EntityInterface $node) {
 function hook_node_insert(\Drupal\Core\Entity\EntityInterface $node) {
   db_insert('mytable')
     ->fields(array(
-      'nid' => $node->nid,
+      'nid' => $node->id(),
       'extra' => $node->extra,
     ))
     ->execute();
@@ -658,7 +658,7 @@ function hook_node_search_result(\Drupal\Core\Entity\EntityInterface $node, $lan
  * @ingroup node_api_hooks
  */
 function hook_node_presave(\Drupal\Core\Entity\EntityInterface $node) {
-  if ($node->nid && $node->moderate) {
+  if ($node->id() && $node->moderate) {
     // Reset votes when node is updated:
     $node->score = 0;
     $node->users = '';
@@ -689,7 +689,7 @@ function hook_node_presave(\Drupal\Core\Entity\EntityInterface $node) {
 function hook_node_update(\Drupal\Core\Entity\EntityInterface $node) {
   db_update('mytable')
     ->fields(array('extra' => $node->extra))
-    ->condition('nid', $node->nid)
+    ->condition('nid', $node->id())
     ->execute();
 }
 

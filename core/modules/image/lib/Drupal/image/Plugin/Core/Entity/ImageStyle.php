@@ -15,10 +15,6 @@ use Drupal\image\ImageStyleInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Url;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 /**
  * Defines an image style configuration entity.
@@ -158,84 +154,6 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
           }
         }
       }
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function deliver($scheme, $target) {
-    $original_uri = $scheme . '://' . $target;
-
-    // Check that the scheme is valid, and the image derivative token is valid.
-    // (Sites which require image derivatives to be generated without a token
-    // can set the 'image.settings:allow_insecure_derivatives' configuration to
-    // TRUE to bypass the latter check, but this will increase the site's
-    // vulnerability to denial-of-service attacks.)
-    $valid = file_stream_wrapper_valid_scheme($scheme);
-    if (!\Drupal::config('image.settings')->get('allow_insecure_derivatives')) {
-      $image_derivative_token = \Drupal::request()->query->get(IMAGE_DERIVATIVE_TOKEN);
-      $valid &= isset($image_derivative_token) && $image_derivative_token === $this->getPathToken($original_uri);
-    }
-    if (!$valid) {
-      throw new AccessDeniedHttpException();
-    }
-
-    $derivative_uri = $this->buildUri($original_uri);
-    $headers = array();
-
-    // If using the private scheme, let other modules provide headers and
-    // control access to the file.
-    if ($scheme == 'private') {
-      if (file_exists($derivative_uri)) {
-        file_download($scheme, file_uri_target($derivative_uri));
-      }
-      else {
-        $headers = \Drupal::moduleHandler()->invokeAll('file_download', array($original_uri));
-        if (in_array(-1, $headers) || empty($headers)) {
-          throw new AccessDeniedHttpException();
-        }
-      }
-    }
-
-    // Don't try to generate file if source is missing.
-    if (!file_exists($original_uri)) {
-      watchdog('image', 'Source image at %source_image_path not found while trying to generate derivative image at %derivative_path.',  array('%source_image_path' => $original_uri, '%derivative_path' => $derivative_uri));
-      return new Response(t('Error generating image, missing source file.'), 404);
-    }
-
-    // Don't start generating the image if the derivative already exists or if
-    // generation is in progress in another thread.
-    $lock_name = 'image_style_deliver:' . $this->id() . ':' . Crypt::hashBase64($original_uri);
-    if (!file_exists($derivative_uri)) {
-      $lock_acquired = \Drupal::lock()->acquire($lock_name);
-      if (!$lock_acquired) {
-        // Tell client to retry again in 3 seconds. Currently no browsers are
-        // known to support Retry-After.
-        throw new ServiceUnavailableHttpException(3, t('Image generation in progress. Try again shortly.'));
-      }
-    }
-
-    // Try to generate the image, unless another thread just did it while we
-    // were acquiring the lock.
-    $success = file_exists($derivative_uri) || $this->createDerivative($original_uri, $derivative_uri);
-
-    if (!empty($lock_acquired)) {
-      \Drupal::lock()->release($lock_name);
-    }
-
-    if ($success) {
-      $image = image_load($derivative_uri);
-      $uri = $image->source;
-      $headers += array(
-        'Content-Type' => $image->info['mime_type'],
-        'Content-Length' => $image->info['file_size'],
-      );
-      return new BinaryFileResponse($uri, 200, $headers);
-    }
-    else {
-      watchdog('image', 'Unable to generate the derived image located at %path.', array('%path' => $derivative_uri));
-      return new Response(t('Error generating image.'), 500);
     }
   }
 
@@ -397,14 +315,13 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
    * which can be costly both in CPU time and disk space.
    *
    * @param string $uri
-   *   The URI of the image for this style, for example as returned by
-   *   \Drupal\image\ImageStyleInterface::buildUri().
+   *   The URI of the original image of this style.
    *
    * @return string
    *   An eight-character token which can be used to protect image style
    *   derivatives against denial-of-service attacks.
    */
-  protected function getPathToken($uri) {
+  public function getPathToken($uri) {
     // Return the first eight characters.
     return substr(Crypt::hmacBase64($this->id() . ':' . $uri, drupal_get_private_key() . drupal_get_hash_salt()), 0, 8);
   }

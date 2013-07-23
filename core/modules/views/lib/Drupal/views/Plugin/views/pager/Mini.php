@@ -93,7 +93,7 @@ class Mini extends SqlBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\pager\PagerPluginBase::render().
+   * {@inheritdoc}
    */
   public function render($input) {
     // The 1, 3 indexes are correct, see template_preprocess_pager().
@@ -101,12 +101,12 @@ class Mini extends SqlBase {
       1 => $this->options['tags']['previous'],
       3 => $this->options['tags']['next'],
     );
-    $output = theme($this->themeFunctions(), array(
-      'parameters' => $input,
-      'element' => $this->options['id'],
-      'tags' => $tags,
-    ));
-    return $output;
+    return array(
+      '#theme' => $this->themeFunctions(),
+      '#tags' => $tags,
+      '#element' => $this->options['id'],
+      '#parameters' => $input,
+    );
   }
 
 }

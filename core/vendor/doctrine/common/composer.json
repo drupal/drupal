@@ -13,14 +13,19 @@
         {"name": "Johannes Schmitt", "email": "schmittjoh@gmail.com"}
     ],
     "require": {
-        "php": ">=5.3.2"
+        "php": ">=5.3.2",
+        "doctrine/inflector": "1.*",
+        "doctrine/cache": "1.*",
+        "doctrine/collections": "1.*",
+        "doctrine/lexer": "1.*",
+        "doctrine/annotations": "1.*"
     },
     "autoload": {
-        "psr-0": { "Doctrine\\Common": "lib/" }
+        "psr-0": { "Doctrine\\Common\\": "lib/" }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.3.x-dev"
+            "dev-master": "2.4.x-dev"
         }
     }
 }

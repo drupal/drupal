@@ -202,8 +202,8 @@ class NodeAccessLanguageTest extends NodeTestBase {
     // The public node and no language node should be returned. Because no
     // langcode is given it will use the fallback node.
     $this->assertEqual(count($nids), 2, 'db_select() returns 2 node');
-    $this->assertTrue(array_key_exists($node_public->nid, $nids), 'Returned node ID is public node.');
-    $this->assertTrue(array_key_exists($node_no_language->nid, $nids), 'Returned node ID is no language node.');
+    $this->assertTrue(array_key_exists($node_public->id(), $nids), 'Returned node ID is public node.');
+    $this->assertTrue(array_key_exists($node_no_language->id(), $nids), 'Returned node ID is no language node.');
 
     // Query the nodes table as the web user with the node access tag and
     // langcode de.

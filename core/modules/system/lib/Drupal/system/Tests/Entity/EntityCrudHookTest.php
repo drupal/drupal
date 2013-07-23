@@ -147,7 +147,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
       'changed' => REQUEST_TIME,
     ));
     $node->save();
-    $nid = $node->nid;
+    $nid = $node->id();
     $_SESSION['entity_crud_hook_test'] = array();
 
     $comment = entity_create('comment', array(
@@ -306,7 +306,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
     ));
 
     $_SESSION['entity_crud_hook_test'] = array();
-    $node = node_load($node->nid);
+    $node = node_load($node->id());
 
     $this->assertHookMessageOrder(array(
       'entity_crud_hook_test_entity_load called for type node',

@@ -109,7 +109,7 @@ class EntityFilteringThemeTest extends WebTestBase {
 
     // Create a test comment on the test node.
     $this->comment = entity_create('comment', array(
-      'entity_id' => $this->node->nid,
+      'entity_id' => $this->node->id(),
       'entity_type' => 'node',
       'field_name' => 'comment',
       'status' => COMMENT_PUBLISHED,
@@ -127,7 +127,7 @@ class EntityFilteringThemeTest extends WebTestBase {
     $paths = array(
       'user',
       'node',
-      'node/' . $this->node->nid,
+      'node/' . $this->node->id(),
       'taxonomy/term/' . $this->term->id(),
     );
 

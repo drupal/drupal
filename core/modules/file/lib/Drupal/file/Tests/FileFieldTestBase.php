@@ -150,7 +150,7 @@ abstract class FileFieldTestBase extends WebTestBase {
       // Add a new node.
       $extras['type'] = $nid_or_type;
       $node = $this->drupalCreateNode($extras);
-      $nid = $node->nid;
+      $nid = $node->id();
       // Save at least one revision to better simulate a real site.
       $node->setNewRevision();
       $node->save();

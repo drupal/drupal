@@ -78,7 +78,7 @@ class SearchRankingTest extends SearchTestBase {
     $edit = array();
     $edit['subject'] = 'my comment title';
     $edit['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = 'some random comment';
-    $this->drupalGet('comment/reply/node/' . $nodes['comments'][1]->nid . '/comment');
+    $this->drupalGet('comment/reply/node/' . $nodes['comments'][1]->id() . '/comment');
     $this->drupalPost(NULL, $edit, t('Preview'));
     $this->drupalPost(NULL, $edit, t('Save'));
 
@@ -89,7 +89,7 @@ class SearchRankingTest extends SearchTestBase {
     // Manually calling statistics.php, simulating ajax behavior.
     $client = \Drupal::httpClient();
     $client->setConfig(array('curl.options' => array(CURLOPT_TIMEOUT => 10)));
-    $nid = $nodes['views'][1]->nid;
+    $nid = $nodes['views'][1]->id();
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
     for ($i = 0; $i < 5; $i ++) {
@@ -105,7 +105,7 @@ class SearchRankingTest extends SearchTestBase {
 
       // Do the search and assert the results.
       $set = node_search_execute('rocks');
-      $this->assertEqual($set[0]['node']->nid, $nodes[$node_rank][1]->nid, 'Search ranking "' . $node_rank . '" order.');
+      $this->assertEqual($set[0]['node']->id(), $nodes[$node_rank][1]->id(), 'Search ranking "' . $node_rank . '" order.');
     }
   }
 
@@ -165,9 +165,9 @@ class SearchRankingTest extends SearchTestBase {
     foreach ($sorted_tags as $tag_rank => $tag) {
       // Assert the results.
       if ($tag == 'notag') {
-        $this->assertEqual($set[$tag_rank]['node']->nid, $nodes[$tag]->nid, 'Search tag ranking for plain text order.');
+        $this->assertEqual($set[$tag_rank]['node']->id(), $nodes[$tag]->id(), 'Search tag ranking for plain text order.');
       } else {
-        $this->assertEqual($set[$tag_rank]['node']->nid, $nodes[$tag]->nid, 'Search tag ranking for "&lt;' . $sorted_tags[$tag_rank] . '&gt;" order.');
+        $this->assertEqual($set[$tag_rank]['node']->id(), $nodes[$tag]->id(), 'Search tag ranking for "&lt;' . $sorted_tags[$tag_rank] . '&gt;" order.');
       }
     }
 
@@ -190,7 +190,7 @@ class SearchRankingTest extends SearchTestBase {
       $set = array_slice($set, -2, 1);
 
       // Assert the results.
-      $this->assertEqual($set[0]['node']->nid, $node->nid, 'Search tag ranking for "&lt;' . $tag . '&gt;" order.');
+      $this->assertEqual($set[0]['node']->id(), $node->id(), 'Search tag ranking for "&lt;' . $tag . '&gt;" order.');
 
       // Delete node so it doesn't show up in subsequent search results.
       $node->delete();
@@ -233,6 +233,6 @@ class SearchRankingTest extends SearchTestBase {
 
     // Do the search and assert the results.
     $set = node_search_execute('rocks');
-    $this->assertEqual($set[0]['node']->nid, $node->nid, 'Search double ranking order.');
+    $this->assertEqual($set[0]['node']->id(), $node->id(), 'Search double ranking order.');
   }
 }

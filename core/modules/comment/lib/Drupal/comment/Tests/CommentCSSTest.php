@@ -51,7 +51,7 @@ class CommentCSSTest extends CommentTestBase {
 
       // Add a comment.
       $comment = entity_create('comment', array(
-        'entity_id' => $node->nid,
+        'entity_id' => $node->id(),
         'entity_type' => 'node',
         'field_name' => 'comment',
         'uid' => $case['comment_uid'],
@@ -82,7 +82,7 @@ class CommentCSSTest extends CommentTestBase {
           break;
       }
       // Request the node with the comment.
-      $this->drupalGet('node/' . $node->nid);
+      $this->drupalGet('node/' . $node->id());
 
       // Verify classes if the comment is visible for the current user.
       if ($case['comment_status'] == COMMENT_PUBLISHED || $case['user'] == 'admin') {
@@ -130,7 +130,7 @@ class CommentCSSTest extends CommentTestBase {
           $this->assertTrue(count($comments) == 1, 'new class found.');
 
           // Request the node again. The new class should disappear.
-          $this->drupalGet('node/' . $node->nid);
+          $this->drupalGet('node/' . $node->id());
           $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "new")]');
           $this->assertFalse(count($comments), 'new class not found.');
         }

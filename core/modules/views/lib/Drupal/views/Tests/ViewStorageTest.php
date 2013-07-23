@@ -175,7 +175,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     // Ensure the right display_plugin is created/instantiated.
     $this->assertEqual($display[$new_id]['display_plugin'], 'page', 'New page display "test" uses the right display plugin.');
 
-    $executable = $view->get('executable');
+    $executable = $view->getExecutable();
     $executable->initDisplay();
     $this->assertTrue($executable->displayHandlers->get($new_id) instanceof Page, 'New page display "test" uses the right display plugin.');
 
@@ -259,7 +259,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     $display = $view->newDisplay('feed');
     $this->assertEqual($display, 'feed_1');
 
-    $executable = $view->get('executable');
+    $executable = $view->getExecutable();
     $executable->initDisplay();
 
     $this->assertTrue($executable->displayHandlers->get('page_1') instanceof Page);
@@ -272,7 +272,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     // Tests item related methods().
     $view = $this->controller->create(array('base_table' => 'views_test_data'));
     $view->addDisplay('default');
-    $view = $view->get('executable');
+    $view = $view->getExecutable();
 
     $display_id = 'default';
     $expected_items = array();

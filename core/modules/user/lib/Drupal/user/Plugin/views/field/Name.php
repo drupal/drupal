@@ -10,6 +10,7 @@ namespace Drupal\user\Plugin\views\field;
 use Drupal\user\Plugin\views\field\User;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -74,7 +75,7 @@ class Name extends User {
     );
   }
 
-  function render_link($data, $values) {
+  function render_link($data, ResultRow $values) {
     $account = entity_create('user', array());
     $account->uid = $this->getValue($values, 'uid');
     $account->name = $this->getValue($values);

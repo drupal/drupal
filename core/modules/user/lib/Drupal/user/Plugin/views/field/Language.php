@@ -8,6 +8,7 @@
 namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Views field handler for user language.
@@ -18,7 +19,7 @@ use Drupal\Component\Annotation\PluginID;
  */
 class Language extends User {
 
-  function render_link($data, $values) {
+  function render_link($data, ResultRow $values) {
     $uid = $this->getValue($values, 'uid');
     if (!empty($this->options['link_to_user'])) {
       $uid = $this->getValue($values, 'uid');

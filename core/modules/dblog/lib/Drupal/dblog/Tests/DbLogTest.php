@@ -320,13 +320,13 @@ class DbLogTest extends WebTestBase {
     $this->assertTrue($node != NULL, format_string('Node @title was loaded', array('@title' => $title)));
     // Edit the node.
     $edit = $this->getContentUpdate($type);
-    $this->drupalPost('node/' . $node->nid . '/edit', $edit, t('Save'));
+    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->assertResponse(200);
     // Delete the node.
-    $this->drupalPost('node/' . $node->nid . '/delete', array(), t('Delete'));
+    $this->drupalPost('node/' . $node->id() . '/delete', array(), t('Delete'));
     $this->assertResponse(200);
     // View the node (to generate page not found event).
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertResponse(404);
     // View the database log report (to generate access denied event).
     $this->drupalGet('admin/reports/dblog');
@@ -356,7 +356,7 @@ class DbLogTest extends WebTestBase {
     $this->drupalGet('admin/reports/page-not-found');
     $this->assertResponse(200);
     // Verify that the 'page not found' event was recorded.
-    $this->assertText(t('node/@nid', array('@nid' => $node->nid)), 'DBLog event was recorded: [page not found]');
+    $this->assertText(t('node/@nid', array('@nid' => $node->id())), 'DBLog event was recorded: [page not found]');
   }
 
   /**

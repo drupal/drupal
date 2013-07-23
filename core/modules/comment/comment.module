@@ -1185,7 +1185,7 @@ function comment_node_search_result(EntityInterface $node) {
         $open = TRUE;
       }
       $comments += db_query("SELECT comment_count FROM {comment_entity_statistics} WHERE entity_id = :nid AND entity_type = 'node' AND field_name = :field_name", array(
-        'nid' => $node->nid,
+        'nid' => $node->id(),
         'field_name' => $field_name)
       )->fetchField();
     }

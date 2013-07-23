@@ -109,7 +109,7 @@ abstract class CommentTestBase extends WebTestBase {
 
     // Must get the page before we test for fields.
     if ($node !== NULL) {
-      $this->drupalGet('comment/reply/node/' . $node->nid . '/comment');
+      $this->drupalGet('comment/reply/node/' . $node->id() . '/comment');
     }
 
     if ($subject_mode == TRUE) {

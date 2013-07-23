@@ -99,16 +99,16 @@ class DateFormatsLanguageTest extends WebTestBase {
     $node = $this->drupalCreateNode(array('type' => 'article'));
 
     // Configure format for the node posted date changes with the language.
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $english_date = format_date($node->created, 'custom', 'j M Y');
     $this->assertText($english_date, 'English date format appears');
-    $this->drupalGet('fr/node/' . $node->nid);
+    $this->drupalGet('fr/node/' . $node->id());
     $french_date = format_date($node->created, 'custom', 'd.m.Y');
     $this->assertText($french_date, 'French date format appears');
 
     // Make sure we can reset dates back to default.
     $this->drupalPost('admin/config/regional/date-time/locale/en/reset', array(), t('Reset'));
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertNoText($english_date, 'English date format does not appear');
   }
 }

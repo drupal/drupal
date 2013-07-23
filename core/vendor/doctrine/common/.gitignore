@@ -2,3 +2,6 @@ build/
 logs/
 reports/
 dist/
+tests/Doctrine/Tests/Common/Proxy/generated/
+vendor/
+.idea

@@ -40,5 +40,5 @@ function field_ui_update_8001() {
  * @ingroup config_upgrade
  */
 function field_ui_update_8002() {
-  update_7_to_8_install_default_config('module', 'field_ui.settings');
+  update_install_default_config('module', 'field_ui.settings');
 }

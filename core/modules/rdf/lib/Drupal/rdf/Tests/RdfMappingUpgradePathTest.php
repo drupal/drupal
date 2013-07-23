@@ -69,7 +69,7 @@ class RdfMappingUpgradePathTest extends UpgradePathTestBase {
     $expected_mapping = array(
       'properties' => array('dc:date', 'dc:created'),
       'datatype' => 'xsd:dateTime',
-      'datatype_callback' => 'date_iso8601',
+      'datatype_callback' => array('callable' => 'date_iso8601'),
     );
     $this->assertEqual($mapping, $expected_mapping, 'Unaltered field mapping with datatype and datatype callback upgraded correctly.');
 

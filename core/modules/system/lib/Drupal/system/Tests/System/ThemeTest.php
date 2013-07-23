@@ -183,13 +183,13 @@ class ThemeTest extends WebTestBase {
     $this->drupalGet('admin/config');
     $this->assertRaw('core/themes/seven', 'Administration theme used on an administration page.');
 
-    $this->drupalGet('node/' . $this->node->nid);
+    $this->drupalGet('node/' . $this->node->id());
     $this->assertRaw('core/themes/stark', 'Site default theme used on node page.');
 
     $this->drupalGet('node/add');
     $this->assertRaw('core/themes/seven', 'Administration theme used on the add content page.');
 
-    $this->drupalGet('node/' . $this->node->nid . '/edit');
+    $this->drupalGet('node/' . $this->node->id() . '/edit');
     $this->assertRaw('core/themes/seven', 'Administration theme used on the edit content page.');
 
     // Disable the admin theme on the node admin pages.

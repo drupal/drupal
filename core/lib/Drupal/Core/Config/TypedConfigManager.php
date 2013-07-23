@@ -7,8 +7,10 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\String;
 
 /**
  * Manages config type plugins.
@@ -34,7 +36,7 @@ class TypedConfigManager extends PluginManagerBase {
    *
    * @var array
    */
-  protected $definitions = array();
+  protected $definitions;
 
   /**
    * Creates a new typed configuration manager.
@@ -47,7 +49,6 @@ class TypedConfigManager extends PluginManagerBase {
   public function __construct(StorageInterface $configStorage, StorageInterface $schemaStorage) {
     $this->configStorage = $configStorage;
     $this->schemaStorage = $schemaStorage;
-    $this->loadAllSchema();
   }
 
   /**
@@ -104,11 +105,11 @@ class TypedConfigManager extends PluginManagerBase {
    */
   public function createInstance($plugin_id, array $configuration, $name = NULL, $parent = NULL) {
     $type_definition = $this->getDefinition($plugin_id);
-    $configuration += $type_definition;
     if (!isset($type_definition)) {
-      throw new InvalidArgumentException(format_string('Invalid data type %plugin_id has been given.', array('%plugin_id' => $plugin_id)));
+      throw new \InvalidArgumentException(String::format('Invalid data type %plugin_id has been given.', array('%plugin_id' => $plugin_id)));
     }
 
+    $configuration += $type_definition;
     // Allow per-data definition overrides of the used classes, i.e. take over
     // classes specified in the data definition.
     $key = empty($configuration['list']) ? 'class' : 'list class';
@@ -129,7 +130,8 @@ class TypedConfigManager extends PluginManagerBase {
    * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinition().
    */
   public function getDefinition($base_plugin_id) {
-    if (isset($this->definitions[$base_plugin_id])) {
+    $definitions = $this->getDefinitions();
+    if (isset($definitions[$base_plugin_id])) {
       $type = $base_plugin_id;
     }
     elseif (strpos($base_plugin_id, '.') && $name = $this->getFallbackName($base_plugin_id)) {
@@ -141,7 +143,7 @@ class TypedConfigManager extends PluginManagerBase {
       // This should map to 'undefined' type by default, unless overridden.
       $type = 'default';
     }
-    $definition = $this->definitions[$type];
+    $definition = $definitions[$type];
     // Check whether this type is an extension of another one and compile it.
     if (isset($definition['type'])) {
       $merge = $this->getDefinition($definition['type']);
@@ -157,20 +159,17 @@ class TypedConfigManager extends PluginManagerBase {
    * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinitions().
    */
   public function getDefinitions() {
-    return $this->definitions;
-  }
-
-  /**
-   * Load schema for module / theme.
-   */
-  protected function loadAllSchema() {
-    foreach ($this->schemaStorage->listAll() as $name) {
-      if ($schema = $this->schemaStorage->read($name)) {
-        foreach ($schema as $type => $definition) {
-          $this->definitions[$type] = $definition;
+    if (!isset($this->definitions)) {
+      $this->definitions = array();
+      foreach ($this->schemaStorage->listAll() as $name) {
+        if ($schema = $this->schemaStorage->read($name)) {
+          foreach ($schema as $type => $definition) {
+            $this->definitions[$type] = $definition;
+          }
         }
       }
     }
+    return $this->definitions;
   }
 
   /**
@@ -199,7 +198,7 @@ class TypedConfigManager extends PluginManagerBase {
       else {
         // No definition for this level(for example, breakpoint.breakpoint.*),
         // check for next level (which is, breakpoint.*.*).
-        return self::getFallbackName($replaced);
+        return $this->getFallbackName($replaced);
       }
     }
   }
@@ -218,11 +217,12 @@ class TypedConfigManager extends PluginManagerBase {
    * @return string
    *   Configuration name with variables replaced.
    */
-  protected static function replaceName($name, $data) {
+  protected function replaceName($name, $data) {
     if (preg_match_all("/\[(.*)\]/U", $name, $matches)) {
       // Build our list of '[value]' => replacement.
+      $replace = array();
       foreach (array_combine($matches[0], $matches[1]) as $key => $value) {
-        $replace[$key] = self::replaceVariable($value, $data);
+        $replace[$key] = $this->replaceVariable($value, $data);
       }
       return strtr($name, $replace);
     }
@@ -254,7 +254,7 @@ class TypedConfigManager extends PluginManagerBase {
    * @return string
    *   The replaced value if a replacement found or the original value if not.
    */
-  protected static function replaceVariable($value, $data) {
+  protected function replaceVariable($value, $data) {
     $parts = explode('.', $value);
     // Process each value part, one at a time.
     while ($name = array_shift($parts)) {

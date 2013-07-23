@@ -6,7 +6,7 @@ custom_block_type_list:
     _permission: 'administer blocks'
 
 custom_block_add_page:
-  pattern: block/add
+  pattern: '/block/add'
   defaults:
     _content: 'Drupal\custom_block\Controller\CustomBlockController::add'
   requirements:
@@ -24,4 +24,26 @@ custom_block_type_delete:
   defaults:
     _entity_form: 'custom_block_type.delete'
   requirements:
+    _entity_access: 'custom_block_type.delete'
+
+custom_block_edit:
+  pattern: '/block/{custom_block}'
+  defaults:
+    _entity_form: 'custom_block.edit'
+  requirements:
+    _entity_access: 'custom_block.update'
+    custom_block: \d+
+
+custom_block_type_add:
+  pattern: '/admin/structure/custom-blocks/add'
+  defaults:
+    _entity_form: 'custom_block_type.add'
+  requirements:
     _permission: 'administer blocks'
+
+custom_block_type_edit:
+  pattern: '/admin/structure/custom-blocks/manage/{custom_block_type}'
+  defaults:
+    _entity_form: 'custom_block_type.edit'
+  requirements:
+    _entity_access: 'custom_block_type.update'

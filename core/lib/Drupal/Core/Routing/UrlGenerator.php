@@ -105,17 +105,31 @@ class UrlGenerator extends ProviderBasedGenerator implements PathBasedGeneratorI
   }
 
   /**
-   * Implements Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate().
+   * {@inheritdoc}
    */
-  public function generate($name, $parameters = array(), $absolute = FALSE) {
+  public function getPathFromRoute($name, $parameters = array()) {
+    $route = $this->getRoute($name, $parameters);
+    $path = $this->getInternalPathFromRoute($route, $parameters);
+    // Router-based paths may have a querystring on them but Drupal paths may
+    // not have one, so remove any ? and anything after it. For generate() this
+    // is handled in processPath().
+    $path = preg_replace('/\?.*/', '', $path);
+    return trim($path, '/');
+  }
 
-    if ($name instanceof SymfonyRoute) {
-      $route = $name;
-    }
-    elseif (NULL === $route = $this->provider->getRouteByName($name, $parameters)) {
-      throw new RouteNotFoundException(sprintf('Route "%s" does not exist.', $name));
-    }
-
+  /**
+   * Gets the path of a route.
+   *
+   * @param \Symfony\Component\Routing\Route $route
+   *  The route object.
+   * @param array $parameters
+   *  An array of parameters as passed to
+   *  \Symfony\Component\Routing\Generator\UrlGeneratorInterface::generate().
+   *
+   * @return string
+   *  The url path corresponding to the route, without the base path.
+   */
+  protected function getInternalPathFromRoute(SymfonyRoute $route, $parameters = array()) {
     // The Route has a cache of its own and is not recompiled as long as it does
     // not get modified.
     $compiledRoute = $route->compile();
@@ -125,10 +139,9 @@ class UrlGenerator extends ProviderBasedGenerator implements PathBasedGeneratorI
     // We need to bypass the doGenerate() method's handling of absolute URLs as
     // we handle that ourselves after processing the path.
     if (isset($route_requirements['_scheme'])) {
-      $scheme_req = $route_requirements['_scheme'];
       unset($route_requirements['_scheme']);
     }
-    $path = $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route_requirements, $compiledRoute->getTokens(), $parameters, $name, FALSE, $hostTokens);
+    $path = $this->doGenerate($compiledRoute->getVariables(), $route->getDefaults(), $route_requirements, $compiledRoute->getTokens(), $parameters, $route->getPath(), FALSE, $hostTokens);
 
     // The URL returned from doGenerate() will include the base path if there is
     // one (i.e., if running in a subdirectory) so we need to strip that off
@@ -137,8 +150,18 @@ class UrlGenerator extends ProviderBasedGenerator implements PathBasedGeneratorI
     if (!empty($base_url) && strpos($path, $base_url) === 0) {
       $path = substr($path, strlen($base_url));
     }
+    return $path;
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function generate($name, $parameters = array(), $absolute = FALSE) {
+    $route = $this->getRoute($name, $parameters);
+    $path = $this->getInternalPathFromRoute($route, $parameters);
     $path = $this->processPath($path);
+
+    $base_url = $this->context->getBaseUrl();
     if (!$absolute || !$host = $this->context->getHost()) {
       return $base_url . $path;
     }
@@ -146,6 +169,7 @@ class UrlGenerator extends ProviderBasedGenerator implements PathBasedGeneratorI
     // Prepare an absolute URL by getting the correct scheme, host and port from
     // the request context.
     $scheme = $this->context->getScheme();
+    $scheme_req = $route->getRequirement('_scheme');
     if (isset($scheme_req) && ($req = strtolower($scheme_req)) && $scheme !== $req) {
       $scheme = $req;
     }
@@ -354,6 +378,33 @@ class UrlGenerator extends ProviderBasedGenerator implements PathBasedGeneratorI
    */
   protected function initialized() {
     return isset($this->basePath) && isset($this->baseUrl) && isset($this->scriptPath);
+  }
+
+  /**
+   * Find the route using the provided route name (and parameters).
+   *
+   * @param string $name
+   *   The route name to fetch
+   * @param array $parameters
+   *   The parameters as they are passed to the UrlGeneratorInterface::generate
+   *   call.
+   *
+   * @return \Symfony\Component\Routing\Route
+   *   The found route.
+   *
+   * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
+   *   Thrown if there is no route with that name in this repository.
+   *
+   * @see \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected function getRoute($name, $parameters) {
+    if ($name instanceof SymfonyRoute) {
+      $route = $name;
+    }
+    elseif (NULL === $route = $this->provider->getRouteByName($name, $parameters)) {
+      throw new RouteNotFoundException(sprintf('Route "%s" does not exist.', $name));
+    }
+    return $route;
   }
 
 }

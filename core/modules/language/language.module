@@ -522,14 +522,14 @@ function language_save($language) {
     variable_set('language_default', (array) $language);
   }
 
+  // Kill the static cache in language_list().
+  drupal_static_reset('language_list');
+
   // Update language count based on unlocked language count.
   language_update_count();
 
   // Update weight of locked system languages.
   language_update_locked_weights();
-
-  // Kill the static cache in language_list().
-  drupal_static_reset('language_list');
 
   language_negotiation_include();
 
@@ -541,7 +541,7 @@ function language_save($language) {
 }
 
 /**
- * Updates the language_count variable.
+ * Updates the language_count state.
  *
  * This is used to check if a site is multilingual or not.
  *
@@ -554,7 +554,7 @@ function language_update_count() {
       $count++;
     }
   }
-  variable_set('language_count', $count);
+  Drupal::state()->set('language_count', $count);
 }
 
 /**
@@ -576,12 +576,12 @@ function language_delete($langcode) {
     // Remove the language.
     entity_delete_multiple('language_entity', array($language->id));
 
+    drupal_static_reset('language_list');
+
     language_update_count();
 
     // Update weight of locked system languages.
     language_update_locked_weights();
-
-    drupal_static_reset('language_list');
 
     $t_args = array('%language' => $language->name, '%langcode' => $language->id);
     watchdog('language', 'The %language (%langcode) language has been removed.', $t_args);

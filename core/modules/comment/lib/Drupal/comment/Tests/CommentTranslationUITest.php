@@ -96,7 +96,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
         array('status' => COMMENT_OPEN)
       ),
     ));
-    $values['entity_id'] = $node->nid;
+    $values['entity_id'] = $node->id();
     $values['entity_type'] = 'node';
     $values['field_name'] = $bundle_name;
     $values['uid'] = $node->uid;

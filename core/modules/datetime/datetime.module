@@ -63,7 +63,7 @@ function datetime_element_info() {
     '#input' => TRUE,
     '#element_validate' => array('datetime_datelist_validate'),
     '#process' => array('datetime_datelist_form_process'),
-    '#theme' => 'datelist_form',
+    '#theme' => 'datetime_form',
     '#theme_wrappers' => array('datetime_wrapper'),
     '#date_part_order' => array('year', 'month', 'day', 'hour', 'minute'),
     '#date_year_range' => '1900:2050',
@@ -80,12 +80,11 @@ function datetime_element_info() {
 function datetime_theme() {
   return array(
     'datetime_form' => array(
-      'render element' => 'element',
-    ),
-    'datelist_form' => array(
+      'template' => 'datetime-form',
       'render element' => 'element',
     ),
     'datetime_wrapper' => array(
+      'template' => 'datetime-wrapper',
       'render element' => 'element',
     ),
   );
@@ -316,10 +315,12 @@ function datetime_date_default_time($date) {
 }
 
 /**
- * Returns HTML for a HTML5-compatible #datetime form element.
+ * Prepares variables for datetime form element templates.
  *
- * Wrapper around the date element type which creates a date and a time
- * component for a date.
+ * The datetime form element serves as a wrapper around the date element type,
+ * which creates a date and a time component for a date.
+ *
+ * Default template: datetime-form.html.twig.
  *
  * @param array $variables
  *   An associative array containing:
@@ -327,85 +328,58 @@ function datetime_date_default_time($date) {
  *     Properties used: #title, #value, #options, #description, #required,
  *     #attributes.
  *
- * @ingroup themeable
  * @see form_process_datetime()
  */
-function theme_datetime_form($variables) {
-
+function template_preprocess_datetime_form(&$variables) {
   $element = $variables['element'];
 
-  $attributes = array();
+  $variables['attributes'] = array();
   if (isset($element['#id'])) {
-    $attributes['id'] = $element['#id'];
+    $variables['attributes']['id'] = $element['#id'];
   }
   if (!empty($element['#attributes']['class'])) {
-    $attributes['class'] = (array) $element['#attributes']['class'];
+    $variables['attributes']['class'] = (array) $element['#attributes']['class'];
   }
-  $attributes['class'][] = 'container-inline';
+  $variables['attributes']['class'][] = 'container-inline';
 
-  return '<div' . new Attribute($attributes) . '>' . drupal_render_children($element) . '</div>';
+  $variables['content'] = $element;
 }
 
 /**
- * Returns HTML for a date selection form element.
+ * Prepares variables for datetime form wrapper templates.
+ *
+ * Default template: datetime-wrapper.html.twig.
  *
  * @param array $variables
  *   An associative array containing:
  *   - element: An associative array containing the properties of the element.
- *     Properties used: #title, #value, #options, #description, #required,
- *     #attributes.
- *
- * @ingroup themeable
+ *     Properties used: #title, #children, #required, #attributes.
  */
-function theme_datelist_form($variables) {
-
+function template_preprocess_datetime_wrapper(&$variables) {
   $element = $variables['element'];
-
-  $attributes = array();
-  if (isset($element['#id'])) {
-    $attributes['id'] = $element['#id'];
-  }
-  if (!empty($element['#attributes']['class'])) {
-    $attributes['class'] = (array) $element['#attributes']['class'];
-  }
-  $attributes['class'][] = 'container-inline';
-
-  return '<div' . new Attribute($attributes) . '>' . drupal_render_children($element) . '</div>';
-}
-
-/**
- * Returns HTML for a datetime form element.
- *
- * @ingroup themeable
- */
-function theme_datetime_wrapper($variables) {
-  $element = $variables['element'];
-  $output = '';
 
   // If the element is required, a required marker is appended to the label.
-  $required = '';
+  $variables['required'] = NULL;
   if(!empty($element['#required'])) {
-    $form_required_marker = array(
+    $variables['required'] = array(
       '#theme' => 'form_required_marker',
       '#element' => $element,
     );
-    $required = drupal_render($form_required_marker);
   }
 
   if (!empty($element['#title'])) {
-    $output .= '<h4 class="label">' . t('!title!required', array('!title' => $element['#title'], '!required' => $required)) . '</h4>';
+    $variables['title'] = $element['#title'];
   }
-  $output .= $element['#children'];
 
   if (!empty($element['#description'])) {
-    $output .= '<div class="description">' . $element['#description'] . '</div>';
+    $variables['description'] = $element['#description'];
   }
 
-  return $output;
+  $variables['content'] = $element['#children'];
 }
 
 /**
- * Expands a #datetime element type into date and/or time elements.
+ * Expands a datetime element type into date and/or time elements.
  *
  * All form elements are designed to have sane defaults so any or all can be
  * omitted. Both the date and time components are configurable so they can be

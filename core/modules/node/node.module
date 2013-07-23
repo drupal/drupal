@@ -1762,7 +1762,7 @@ function _node_index_node(EntityInterface $node) {
     }
 
     // Update index.
-    search_index($node->nid, 'node', $text, $language->id);
+    search_index($node->id(), 'node', $text, $language->id);
   }
 }
 

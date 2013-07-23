@@ -29,7 +29,7 @@ class RoleStorageController extends ConfigStorageController implements RoleStora
    */
   protected function attachLoad(&$queried_entities, $revision_id = FALSE) {
     // Sort the queried roles by their weight.
-    uasort($queried_entities, 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
+    uasort($queried_entities, array($this->entityInfo['class'], 'sort'));
 
     parent::attachLoad($queried_entities, $revision_id);
   }

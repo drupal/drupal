@@ -9,6 +9,7 @@ namespace Drupal\node\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to present a link to the node.
@@ -51,10 +52,10 @@ class Link extends FieldPluginBase {
     }
   }
 
-  function render_link($node, $values) {
+  function render_link($node, ResultRow $values) {
     if (node_access('view', $node)) {
       $this->options['alter']['make_link'] = TRUE;
-      $this->options['alter']['path'] = "node/$node->nid";
+      $this->options['alter']['path'] = 'node/' . $node->id();
       $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
       return $text;
     }

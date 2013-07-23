@@ -102,7 +102,7 @@ class UserPictureTest extends WebTestBase {
     $this->container->get('config.factory')->get('system.theme.global')->set('features.node_user_picture', TRUE)->save();
 
     // Verify that the image is displayed on the user account page.
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertRaw(file_uri_target($file->getFileUri()), 'User picture found on node page.');
 
     // Enable user pictures on comments, instead of nodes.
@@ -114,7 +114,7 @@ class UserPictureTest extends WebTestBase {
     $edit = array(
       'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomString(),
     );
-    $this->drupalPost('comment/reply/node/' . $node->nid . '/comment', $edit, t('Save'));
+    $this->drupalPost('comment/reply/node/' . $node->id() . '/comment', $edit, t('Save'));
     $this->assertRaw(file_uri_target($file->getFileUri()), 'User picture found on comment.');
 
     // Disable user pictures on comments and nodes.
@@ -123,7 +123,7 @@ class UserPictureTest extends WebTestBase {
       ->set('features.comment_user_picture', FALSE)
       ->save();
 
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertNoRaw(file_uri_target($file->getFileUri()), 'User picture not found on node and comment.');
   }
 

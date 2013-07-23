@@ -63,7 +63,7 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
     $test_file = $this->getTestFile('text');
 
     // Create a new node with the uploaded file.
-    $nid = $this->uploadNodeFile($test_file, $field_name, $node->nid);
+    $nid = $this->uploadNodeFile($test_file, $field_name, $node->id());
 
     // Get the uploaded file from the node.
     $node = node_load($nid, TRUE);

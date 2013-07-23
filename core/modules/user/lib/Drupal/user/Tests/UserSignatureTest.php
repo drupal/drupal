@@ -106,7 +106,7 @@ class UserSignatureTest extends WebTestBase {
     $edit = array();
     $edit['subject'] = $this->randomName(8);
     $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
-    $this->drupalPost('comment/reply/node/' . $node->nid .'/comment', $edit, t('Preview'));
+    $this->drupalPost('comment/reply/node/' . $node->id() .'/comment', $edit, t('Preview'));
     $this->drupalPost(NULL, array(), t('Save'));
 
     // Get the comment ID. (This technique is the same one used in the Comment
@@ -121,7 +121,7 @@ class UserSignatureTest extends WebTestBase {
     $this->drupalPost('comment/' . $comment_id . '/edit', $edit, t('Save'));
 
     // Assert that the signature did not make it through unfiltered.
-    $this->drupalGet('node/' . $node->nid);
+    $this->drupalGet('node/' . $node->id());
     $this->assertNoRaw($signature_text, 'Unfiltered signature text not found.');
     $this->assertRaw(check_markup($signature_text, $this->filtered_html_format->format), 'Filtered signature text found.');
   }

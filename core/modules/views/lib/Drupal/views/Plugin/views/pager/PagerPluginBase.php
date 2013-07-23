@@ -217,10 +217,9 @@ abstract class PagerPluginBase extends PluginBase {
   public function preRender(&$result) { }
 
   /**
-   * Render the pager.
+   * Return the renderable array of the pager.
    *
-   * Called during the view render process, this will render the
-   * pager.
+   * Called during the view render process.
    *
    * @param $input
    *   Any extra GET parameters that should be retained, such as exposed

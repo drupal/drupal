@@ -7,7 +7,6 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Uuid\Uuid;
-use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\Language;
 
@@ -1924,7 +1923,7 @@ function system_update_8045() {
     'system.date_format.html_yearless_date',
   );
   foreach ($new_formats as $new_format) {
-    update_7_to_8_install_default_config('module', $new_format);
+    update_install_default_config('module', $new_format);
   }
 }
 
@@ -1932,28 +1931,13 @@ function system_update_8045() {
  * Install new default views.
  */
 function system_update_8046() {
-  $config_to_import = array(
-    'views.view.user_admin_people' => 'user',
-    'views.view.content' => 'node',
-  );
+  update_install_default_config('module', 'views.view.user_admin_people', 'user');
+  update_install_default_config('module', 'views.view.content', 'node');
+
   $front_page = config('system.site')->get('page.front') ?: 'node';
   if ($front_page == 'node') {
     // This imports the node frontpage view.
-    $config_to_import['views.view.frontpage'] = 'node';
-  }
-  foreach ($config_to_import as $config_name => $module) {
-    $module_config_path = drupal_get_path('module', $module) . '/config';
-    $module_filestorage = new FileStorage($module_config_path);
-    $config_storage = drupal_container()->get('config.storage');
-    // If this file already exists, something in the upgrade path went
-    // completely wrong and we want to know.
-    if ($config_storage->exists($config_name)) {
-      throw new ConfigException(format_string('Default configuration file @name of @module module unexpectedly exists already before the module was installed.', array(
-        '@module' => $module,
-        '@name' => $config_name,
-      )));
-    }
-    $config_storage->write($config_name, $module_filestorage->read($config_name));
+    update_install_default_config('module', 'views.view.frontpage', 'node');
   }
 }
 
@@ -2127,7 +2111,7 @@ function system_update_8054() {
  */
 function system_update_8055() {
   // Install the global theme settings from the system module.
-  update_7_to_8_install_default_config('module', 'system.theme.global');
+  update_install_default_config('module', 'system.theme.global');
   // Add the global settings to a map for variable to configuration conversion.
   $theme_settings_to_config_map = array('theme_settings' => 'system.theme.global');
 
@@ -2147,7 +2131,7 @@ function system_update_8055() {
     $variable = 'theme_' . $theme . '_settings';
     $config_name = $theme . '.settings';
     $theme_settings_to_config_map[$variable] = $config_name;
-    update_7_to_8_install_default_config('theme', $config_name);
+    update_install_default_config('theme', $config_name);
   }
 
   // Convert array of theme settings from Drupal 7's variable system to Drupal

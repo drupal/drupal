@@ -9,6 +9,7 @@ namespace Drupal\user\Plugin\views\field;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to present a link to user cancel.
@@ -22,7 +23,7 @@ class LinkCancel extends Link {
   /**
    * Overrides \Drupal\user\Plugin\views\field\Link::render_link().
    */
-  public function render_link(EntityInterface $entity, \stdClass $values) {
+  public function render_link(EntityInterface $entity, ResultRow $values) {
     if ($entity && $entity->access('delete')) {
       $this->options['alter']['make_link'] = TRUE;
 

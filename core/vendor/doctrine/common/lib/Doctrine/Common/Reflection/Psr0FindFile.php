@@ -29,14 +29,13 @@ class Psr0FindFile implements ClassFinderInterface
     /**
      * The PSR-0 prefixes.
      *
-     * @var string
+     * @var array
      */
     protected $prefixes;
 
     /**
-     * @param string $prefixes
-     *     An array of prefixes. Each key is a PHP namespace and each value is
-     *     a list of directories.
+     * @param array $prefixes An array of prefixes. Each key is a PHP namespace and each value is
+     *                        a list of directories.
      */
     public function __construct($prefixes)
     {
@@ -44,12 +43,7 @@ class Psr0FindFile implements ClassFinderInterface
     }
 
     /**
-     * Finds a class.
-     *
-     * @param string $class The name of the class.
-     *
-     * @return
-     *     The name of the class or NULL if not found.
+     * {@inheritDoc}
      */
     public function findFile($class)
     {
@@ -73,11 +67,13 @@ class Psr0FindFile implements ClassFinderInterface
         foreach ($this->prefixes as $prefix => $dirs) {
             if (0 === strpos($class, $prefix)) {
                 foreach ($dirs as $dir) {
-                    if (file_exists($dir . DIRECTORY_SEPARATOR . $classPath)) {
+                    if (is_file($dir . DIRECTORY_SEPARATOR . $classPath)) {
                         return $dir . DIRECTORY_SEPARATOR . $classPath;
                     }
                 }
             }
         }
+
+        return null;
     }
 }

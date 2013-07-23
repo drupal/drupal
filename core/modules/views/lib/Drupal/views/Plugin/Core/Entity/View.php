@@ -120,15 +120,18 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   protected $module = 'views';
 
   /**
-   * Overrides Drupal\Core\Entity\EntityInterface::get().
+   * Gets an executable instance for this view.
+   *
+   * @return \Drupal\views\ViewExecutable
+   *   A view executable instance.
    */
-  public function get($property_name, $langcode = NULL) {
+  public function getExecutable() {
     // Ensure that an executable View is available.
-    if ($property_name == 'executable' && !isset($this->{$property_name})) {
-      $this->set('executable', Views::executableFactory()->get($this));
+    if (!isset($this->executable)) {
+      $this->executable = Views::executableFactory()->get($this);
     }
 
-    return parent::get($property_name, $langcode);
+    return $this->executable;
   }
 
   /**
@@ -274,7 +277,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
     // We can't use get() here as it will create an ViewExecutable instance if
     // there is not already one.
     if (isset($this->executable)) {
-      $executable = $this->get('executable');
+      $executable = $this->getExecutable();
       $executable->initDisplay();
       $executable->displayHandlers->addInstanceID($id);
       return $executable->displayHandlers->get($id);
