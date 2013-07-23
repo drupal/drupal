@@ -126,14 +126,19 @@ function _image_update_get_style_with_effects(array $style) {
     ->condition('isid', $style['isid'])
     ->execute();
   foreach ($result as $effect) {
-    unset($effect['isid']);
     $effect['data'] = unserialize($effect['data']);
 
     // Generate a unique image effect ID for the effect.
     $uuid = new Uuid();
-    $effect['ieid'] = $uuid->generate();
+    $effect['uuid'] = $uuid->generate();
 
-    $effects[$effect['ieid']] = $effect;
+    // Use 'id' instead of 'name'.
+    $effect['id'] = $effect['name'];
+
+    // Clear out legacy keys.
+    unset($effect['isid'], $effect['ieid'], $effect['name']);
+
+    $effects[$effect['uuid']] = $effect;
   }
   return $effects;
 }

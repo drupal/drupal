@@ -104,10 +104,10 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected['mapping']['label']['type'] = 'label';
     $expected['mapping']['effects']['type'] = 'sequence';
     $expected['mapping']['effects']['sequence'][0]['type'] = 'mapping';
-    $expected['mapping']['effects']['sequence'][0]['mapping']['name']['type'] = 'string';
-    $expected['mapping']['effects']['sequence'][0]['mapping']['data']['type'] = 'image.effect.[%parent.name]';
+    $expected['mapping']['effects']['sequence'][0]['mapping']['id']['type'] = 'string';
+    $expected['mapping']['effects']['sequence'][0]['mapping']['data']['type'] = 'image.effect.[%parent.id]';
     $expected['mapping']['effects']['sequence'][0]['mapping']['weight']['type'] = 'integer';
-    $expected['mapping']['effects']['sequence'][0]['mapping']['ieid']['type'] = 'string';
+    $expected['mapping']['effects']['sequence'][0]['mapping']['uuid']['type'] = 'string';
     $expected['mapping']['langcode']['label'] = 'Default language';
     $expected['mapping']['langcode']['type'] = 'string';
 
@@ -189,9 +189,9 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
 
     // The function is_array() doesn't work with ArrayAccess, so we use count().
     $this->assertTrue(count($effects) == 1, 'Got an array with effects for image.style.large data');
-    $ieid = key($effects->getValue());
-    $effect = $effects[$ieid];
-    $this->assertTrue(count($effect['data']) && $effect['name']->getValue() == 'image_scale', 'Got data for the image scale effect from metadata.');
+    $uuid = key($effects->getValue());
+    $effect = $effects[$uuid];
+    $this->assertTrue(count($effect['data']) && $effect['id']->getValue() == 'image_scale', 'Got data for the image scale effect from metadata.');
     $this->assertEqual($effect['data']['width']->getType(), 'integer', 'Got the right type for the scale effect width.');
     $this->assertEqual($effect['data']['width']->getValue(), 480, 'Got the right value for the scale effect width.' );
 

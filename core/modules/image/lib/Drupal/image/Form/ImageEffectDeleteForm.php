@@ -8,7 +8,7 @@
 namespace Drupal\image\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\image\Plugin\Core\Entity\ImageStyle;
+use Drupal\image\ImageStyleInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -19,14 +19,14 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
   /**
    * The image style containing the image effect to be deleted.
    *
-   * @var \Drupal\image\Plugin\Core\Entity\ImageStyle
+   * @var \Drupal\image\ImageStyleInterface
    */
   protected $imageStyle;
 
   /**
    * The image effect to be deleted.
    *
-   * @var array;
+   * @var \Drupal\image\ImageEffectInterface
    */
   protected $imageEffect;
 
@@ -34,7 +34,7 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to delete the @effect effect from the %style style?', array('%style' => $this->imageStyle->label(), '@effect' => $this->imageEffect['label']));
+    return t('Are you sure you want to delete the @effect effect from the %style style?', array('%style' => $this->imageStyle->label(), '@effect' => $this->imageEffect->label()));
   }
 
   /**
@@ -61,9 +61,9 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $image_style = NULL, $image_effect = NULL, Request $request = NULL) {
+  public function buildForm(array $form, array &$form_state, ImageStyleInterface $image_style = NULL, $image_effect = NULL, Request $request = NULL) {
     $this->imageStyle = $image_style;
-    $this->imageEffect = image_effect_load($image_effect, $this->imageStyle->id());
+    $this->imageEffect = $this->imageStyle->getEffect($image_effect);
 
     return parent::buildForm($form, $form_state, $request);
   }
@@ -72,8 +72,8 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    image_effect_delete($this->imageStyle, $this->imageEffect);
-    drupal_set_message(t('The image effect %name has been deleted.', array('%name' => $this->imageEffect['label'])));
+    $this->imageStyle->deleteImageEffect($this->imageEffect);
+    drupal_set_message(t('The image effect %name has been deleted.', array('%name' => $this->imageEffect->label())));
     $form_state['redirect'] = 'admin/config/media/image-styles/manage/' . $this->imageStyle->id();
   }
 

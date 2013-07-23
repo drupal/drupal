@@ -19,3 +19,16 @@ image_style_private:
   requirements:
     _access: 'TRUE'
 
+image_effect_add_form:
+  pattern: '/admin/config/media/image-styles/manage/{image_style}/add/{image_effect}'
+  defaults:
+    _form: '\Drupal\image\Form\ImageEffectAddForm'
+  requirements:
+    _permission: 'administer image styles'
+
+image_effect_edit_form:
+  pattern: '/admin/config/media/image-styles/manage/{image_style}/effects/{image_effect}'
+  defaults:
+    _form: '\Drupal\image\Form\ImageEffectEditForm'
+  requirements:
+    _permission: 'administer image styles'

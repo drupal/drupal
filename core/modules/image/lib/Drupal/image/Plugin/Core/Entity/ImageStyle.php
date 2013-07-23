@@ -11,6 +11,8 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\image\ImageEffectBag;
+use Drupal\image\ImageEffectInterface;
 use Drupal\image\ImageStyleInterface;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Url;
@@ -27,7 +29,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *     "form" = {
  *       "delete" = "Drupal\image\Form\ImageStyleDeleteForm"
  *     },
- *     "storage" = "Drupal\image\ImageStyleStorageController"
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
  *   },
  *   uri_callback = "image_style_entity_uri",
  *   config_prefix = "image.style",
@@ -73,7 +75,14 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
    *
    * @var array
    */
-  public $effects;
+  protected $effects = array();
+
+  /**
+   * Holds the collection of image effects that are used by this image style.
+   *
+   * @var \Drupal\image\ImageEffectBag
+   */
+  protected $effectsBag;
 
   /**
    * Overrides Drupal\Core\Entity\Entity::id().
@@ -230,7 +239,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
       if (file_exists($derivative_uri)) {
         file_unmanaged_delete($derivative_uri);
       }
-      return;
+      return $this;
     }
 
     // Delete the style directory in each registered wrapper.
@@ -240,17 +249,19 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
     }
 
     // Let other modules update as necessary on flush.
-    \Drupal::moduleHandler()->invokeAll('image_style_flush', array($this));
+    $module_handler = \Drupal::moduleHandler();
+    $module_handler->invokeAll('image_style_flush', array($this));
 
     // Clear field caches so that formatters may be added for this style.
     field_info_cache_clear();
     drupal_theme_rebuild();
 
     // Clear page caches when flushing.
-    if (\Drupal::moduleHandler()->moduleExists('block')) {
-      cache('block')->deleteAll();
+    if ($module_handler->moduleExists('block')) {
+      \Drupal::cache('block')->deleteAll();
     }
-    cache('page')->deleteAll();
+    \Drupal::cache('page')->deleteAll();
+    return $this;
   }
 
   /**
@@ -270,10 +281,8 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
       return FALSE;
     }
 
-    if (!empty($this->effects)) {
-      foreach ($this->effects as $effect) {
-        image_effect_apply($image, $effect);
-      }
+    foreach ($this->getEffects() as $effect) {
+      $effect->applyEffect($image);
     }
 
     if (!image_save($image, $derivative_uri)) {
@@ -290,21 +299,8 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
    * {@inheritdoc}
    */
   public function transformDimensions(array &$dimensions) {
-    module_load_include('inc', 'image', 'image.effects');
-
-    if (!empty($this->effects)) {
-      foreach ($this->effects as $effect) {
-        if (isset($effect['dimensions passthrough'])) {
-          continue;
-        }
-
-        if (isset($effect['dimensions callback'])) {
-          $effect['dimensions callback']($dimensions, $effect['data']);
-        }
-        else {
-          $dimensions['width'] = $dimensions['height'] = NULL;
-        }
-      }
+    foreach ($this->getEffects() as $effect) {
+      $effect->transformDimensions($dimensions);
     }
   }
 
@@ -324,6 +320,50 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
   public function getPathToken($uri) {
     // Return the first eight characters.
     return substr(Crypt::hmacBase64($this->id() . ':' . $uri, drupal_get_private_key() . drupal_get_hash_salt()), 0, 8);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function deleteImageEffect(ImageEffectInterface $effect) {
+    $this->getEffects()->removeInstanceID($effect->getUuid());
+    $this->save();
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEffect($effect) {
+    return $this->getEffects()->get($effect);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEffects() {
+    if (!$this->effectsBag) {
+      $this->effectsBag = new ImageEffectBag(\Drupal::service('plugin.manager.image.effect'), $this->effects);
+    }
+    return $this->effectsBag;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function saveImageEffect(array $configuration) {
+    $effect_id = $this->getEffects()->setConfig($configuration);
+    $this->save();
+    return $effect_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExportProperties() {
+    $properties = parent::getExportProperties();
+    $properties['effects'] = $this->getEffects()->sort()->export();
+    return $properties;
   }
 
 }

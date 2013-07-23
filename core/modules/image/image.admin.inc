@@ -5,6 +5,9 @@
  * Administration pages for image settings.
  */
 
+use Drupal\Component\Utility\String;
+use Drupal\image\ConfigurableImageEffectInterface;
+use Drupal\image\ImageStyleInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -35,7 +38,7 @@ function image_style_list() {
  * @ingroup forms
  * @see image_style_form_submit()
  */
-function image_style_form($form, &$form_state, $style) {
+function image_style_form($form, &$form_state, ImageStyleInterface $style) {
   $title = t('Edit style %name', array('%name' => $style->label()));
   drupal_set_title($title, PASS_THROUGH);
 
@@ -69,54 +72,56 @@ function image_style_form($form, &$form_state, $style) {
   $form['effects'] = array(
     '#theme' => 'image_style_effects',
   );
-  if (!empty($style->effects)) {
-    foreach ($style->effects as $key => $effect) {
-      $form['effects'][$key]['#weight'] = isset($form_state['input']['effects']) ? $form_state['input']['effects'][$key]['weight'] : NULL;
-      $form['effects'][$key]['label'] = array(
-        '#markup' => check_plain($effect['label']),
-      );
-      $form['effects'][$key]['summary'] = array(
-        '#markup' => isset($effect['summary theme']) ? theme($effect['summary theme'], array('data' => $effect['data'])) : '',
-      );
-      $form['effects'][$key]['weight'] = array(
-        '#type' => 'weight',
-        '#title' => t('Weight for @title', array('@title' => $effect['label'])),
-        '#title_display' => 'invisible',
-        '#default_value' => $effect['weight'],
-      );
+  foreach ($style->getEffects()->sort() as $effect) {
+    $key = $effect->getUuid();
+    $form['effects'][$key]['#weight'] = isset($form_state['input']['effects']) ? $form_state['input']['effects'][$key]['weight'] : NULL;
+    $form['effects'][$key]['label'] = array(
+      '#markup' => String::checkPlain($effect->label()),
+    );
+    $form['effects'][$key]['summary'] = $effect->getSummary();
+    $form['effects'][$key]['weight'] = array(
+      '#type' => 'weight',
+      '#title' => t('Weight for @title', array('@title' => $effect->label())),
+      '#title_display' => 'invisible',
+      '#default_value' => $effect->getWeight(),
+    );
 
-      $links = array();
-      if (isset($effect['form callback'])) {
-        $links['edit'] = array(
-          'title' => t('edit'),
-          'href' => 'admin/config/media/image-styles/manage/' . $style->id() . '/effects/' . $key,
-        );
-      }
-      $links['delete'] = array(
-        'title' => t('delete'),
-        'href' => 'admin/config/media/image-styles/manage/' . $style->id() . '/effects/' . $key . '/delete',
-      );
-      $form['effects'][$key]['operations'] = array(
-        '#type' => 'operations',
-        '#links' => $links,
-      );
-      $form['effects'][$key]['configure'] = array(
-        '#type' => 'link',
-        '#title' => t('edit'),
-        '#href' => 'admin/config/media/image-styles/manage/' . $style->id() . '/effects/' . $key,
-        '#access' => isset($effect['form callback']),
-      );
-      $form['effects'][$key]['remove'] = array(
-        '#type' => 'link',
-        '#title' => t('delete'),
-        '#href' => 'admin/config/media/image-styles/manage/' . $style->id() . '/effects/' . $key . '/delete',
+    $links = array();
+    $is_configurable = $effect instanceof ConfigurableImageEffectInterface;
+    if ($is_configurable) {
+      $links['edit'] = array(
+        'title' => t('edit'),
+        'href' => 'admin/config/media/image-styles/manage/' . $style->id() . '/effects/' . $key,
       );
     }
+    $links['delete'] = array(
+      'title' => t('delete'),
+      'href' => 'admin/config/media/image-styles/manage/' . $style->id() . '/effects/' . $key . '/delete',
+    );
+    $form['effects'][$key]['operations'] = array(
+      '#type' => 'operations',
+      '#links' => $links,
+    );
+    $form['effects'][$key]['configure'] = array(
+      '#type' => 'link',
+      '#title' => t('edit'),
+      '#href' => 'admin/config/media/image-styles/manage/' . $style->id() . '/effects/' . $key,
+      '#access' => $is_configurable,
+    );
+    $form['effects'][$key]['remove'] = array(
+      '#type' => 'link',
+      '#title' => t('delete'),
+      '#href' => 'admin/config/media/image-styles/manage/' . $style->id() . '/effects/' . $key . '/delete',
+    );
   }
 
   // Build the new image effect addition form and add it to the effect list.
   $new_effect_options = array();
-  foreach (image_effect_definitions() as $effect => $definition) {
+  $effects = Drupal::service('plugin.manager.image.effect')->getDefinitions();
+  uasort($effects, function ($a, $b) {
+    return strcasecmp($a['id'], $b['id']);
+  });
+  foreach ($effects as $effect => $definition) {
     $new_effect_options[$effect] = $definition['label'];
   }
   $form['effects']['new'] = array(
@@ -168,21 +173,21 @@ function image_style_form_add_validate($form, &$form_state) {
 function image_style_form_add_submit($form, &$form_state) {
   $style = $form_state['image_style'];
   // Check if this field has any configuration options.
-  $effect = image_effect_definition_load($form_state['values']['new']);
+  $effect = Drupal::service('plugin.manager.image.effect')->getDefinition($form_state['values']['new']);
 
   // Load the configuration form for this option.
-  if (isset($effect['form callback'])) {
+  if (is_subclass_of($effect['class'], '\Drupal\image\ConfigurableImageEffectInterface')) {
     $path = 'admin/config/media/image-styles/manage/' . $style->id() . '/add/' . $form_state['values']['new'];
     $form_state['redirect'] = array($path, array('query' => array('weight' => $form_state['values']['weight'])));
   }
   // If there's no form, immediately add the image effect.
   else {
     $effect = array(
-      'name' => $effect['name'],
+      'id' => $effect['id'],
       'data' => array(),
       'weight' => $form_state['values']['weight'],
     );
-    image_effect_save($style, $effect);
+    $style->saveImageEffect($effect);
     drupal_set_message(t('The image effect was successfully applied.'));
   }
 }
@@ -195,15 +200,9 @@ function image_style_form_submit($form, &$form_state) {
 
   // Update image effect weights.
   if (!empty($form_state['values']['effects'])) {
-    foreach ($form_state['values']['effects'] as $ieid => $effect_data) {
-      if (isset($style->effects[$ieid])) {
-        $effect = array(
-          'name' => $style->effects[$ieid]['name'],
-          'data' => $style->effects[$ieid]['data'],
-          'weight' => $effect_data['weight'],
-          'ieid' => $ieid,
-        );
-        $style->effects[$ieid] = $effect;
+    foreach ($form_state['values']['effects'] as $uuid => $effect_data) {
+      if ($style->getEffects()->has($uuid)) {
+        $style->getEffect($uuid)->setWeight($effect_data['weight']);
       }
     }
   }
@@ -259,246 +258,6 @@ function image_style_add_form_submit($form, &$form_state) {
   $style->save();
   drupal_set_message(t('Style %name was created.', array('%name' => $style->label())));
   $form_state['redirect'] = 'admin/config/media/image-styles/manage/' . $style->id();
-}
-
-/**
- * Form builder; Form for adding and editing image effects.
- *
- * This form is used universally for editing all image effects. Each effect adds
- * its own custom section to the form by calling the 'form callback' specified
- * in hook_image_effect_info().
- *
- * @param $form_state
- *   An associative array containing the current state of the form.
- * @param $style
- *   An image style array.
- * @param $effect
- *   An image effect array.
- *
- * @ingroup forms
- * @see image_resize_form()
- * @see image_scale_form()
- * @see image_rotate_form()
- * @see image_crop_form()
- * @see image_effect_form_submit()
- */
-function image_effect_form($form, &$form_state, $style, $effect) {
-  // If there's no configuration for this image effect, return to
-  // the image style page.
-  if (!isset($effect['form callback'])) {
-    return new RedirectResponse(url('admin/config/media/image-styles/manage/' . $style->id(), array('absolute' => TRUE)));
-  }
-  $form_state['image_style'] = $style;
-  $form_state['image_effect'] = $effect;
-
-  if (!empty($effect['ieid'])) {
-    $title = t('Edit %label effect', array('%label' => $effect['label']));
-  }
-  else{
-    $title = t('Add %label effect', array('%label' => $effect['label']));
-  }
-  drupal_set_title($title, PASS_THROUGH);
-
-  $form['#attached']['css'][drupal_get_path('module', 'image') . '/css/image.admin.css'] = array();
-
-  $form['ieid'] = array(
-    '#type' => 'value',
-    '#value' => !empty($effect['ieid']) ? $effect['ieid'] : NULL,
-  );
-  $form['name'] = array(
-    '#type' => 'value',
-    '#value' => $effect['name'],
-  );
-
-  $form['data'] = call_user_func($effect['form callback'], $effect['data']);
-  $form['data']['#tree'] = TRUE;
-
-  // Check the URL for a weight, then the image effect, otherwise use default.
-  $weight = Drupal::request()->query->get('weight');
-  $form['weight'] = array(
-    '#type' => 'hidden',
-    '#value' => isset($weight) ? intval($weight) : (isset($effect['weight']) ? $effect['weight'] : count($style->effects)),
-  );
-
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => !empty($effect['ieid']) ? t('Update effect') : t('Add effect'),
-  );
-  $form['actions']['cancel'] = array(
-    '#type' => 'link',
-    '#title' => t('Cancel'),
-    '#href' => 'admin/config/media/image-styles/manage/' . $style->id(),
-  );
-
-  return $form;
-}
-
-/**
- * Submit handler for updating an image effect.
- */
-function image_effect_form_submit($form, &$form_state) {
-  form_state_values_clean($form_state);
-
-  $effect = $form_state['values'];
-  $style = $form_state['image_style'];
-  image_effect_save($style, $effect);
-
-  drupal_set_message(t('The image effect was successfully applied.'));
-  $form_state['redirect'] = 'admin/config/media/image-styles/manage/' . $style->id();
-}
-
-/**
- * Element validate handler to ensure a hexadecimal color value.
- */
-function image_effect_color_validate($element, &$form_state) {
-  if ($element['#value'] != '') {
-    $hex_value = preg_replace('/^#/', '', $element['#value']);
-    if (!preg_match('/^#[0-9A-F]{3}([0-9A-F]{3})?$/', $element['#value'])) {
-      form_error($element, t('!name must be a hexadecimal color value.', array('!name' => $element['#title'])));
-    }
-  }
-}
-
-/**
- * Element validate handler to ensure that either a height or a width is
- * specified.
- */
-function image_effect_scale_validate($element, &$form_state) {
-  if (empty($element['width']['#value']) && empty($element['height']['#value'])) {
-    form_error($element, t('Width and height can not both be blank.'));
-  }
-}
-
-/**
- * Form structure for the image resize form.
- *
- * Note that this is not a complete form, it only contains the portion of the
- * form for configuring the resize options. Therefore it does not not need to
- * include metadata about the effect, nor a submit button.
- *
- * @param $data
- *   The current configuration for this resize effect.
- */
-function image_resize_form($data) {
-  $form['width'] = array(
-    '#type' => 'number',
-    '#title' => t('Width'),
-    '#default_value' => isset($data['width']) ? $data['width'] : '',
-    '#field_suffix' => ' ' . t('pixels'),
-    '#required' => TRUE,
-    '#min' => 1,
-  );
-  $form['height'] = array(
-    '#type' => 'number',
-    '#title' => t('Height'),
-    '#default_value' => isset($data['height']) ? $data['height'] : '',
-    '#field_suffix' => ' ' . t('pixels'),
-    '#required' => TRUE,
-    '#min' => 1,
-  );
-  return $form;
-}
-
-/**
- * Form structure for the image scale form.
- *
- * Note that this is not a complete form, it only contains the portion of the
- * form for configuring the scale options. Therefore it does not not need to
- * include metadata about the effect, nor a submit button.
- *
- * @param $data
- *   The current configuration for this scale effect.
- */
-function image_scale_form($data) {
-  $form = image_resize_form($data);
-  $form['#element_validate'] = array('image_effect_scale_validate');
-  $form['width']['#required'] = FALSE;
-  $form['height']['#required'] = FALSE;
-  $form['upscale'] = array(
-    '#type' => 'checkbox',
-    '#default_value' => (isset($data['upscale'])) ? $data['upscale'] : 0,
-    '#title' => t('Allow Upscaling'),
-    '#description' => t('Let scale make images larger than their original size'),
-  );
-  return $form;
-}
-
-/**
- * Form structure for the image crop form.
- *
- * Note that this is not a complete form, it only contains the portion of the
- * form for configuring the crop options. Therefore it does not not need to
- * include metadata about the effect, nor a submit button.
- *
- * @param $data
- *   The current configuration for this crop effect.
- */
-function image_crop_form($data) {
-  $data += array(
-    'width' => '',
-    'height' => '',
-    'anchor' => 'center-center',
-  );
-
-  $form = image_resize_form($data);
-  $form['anchor'] = array(
-    '#type' => 'radios',
-    '#title' => t('Anchor'),
-    '#options' => array(
-      'left-top'      => t('Top') . ' ' . t('Left'),
-      'center-top'    => t('Top') . ' ' . t('Center'),
-      'right-top'     => t('Top') . ' ' . t('Right'),
-      'left-center'   => t('Center') . ' ' . t('Left'),
-      'center-center' => t('Center'),
-      'right-center'  => t('Center') . ' ' . t('Right'),
-      'left-bottom'   => t('Bottom') . ' ' . t('Left'),
-      'center-bottom' => t('Bottom') . ' ' . t('Center'),
-      'right-bottom'  => t('Bottom') . ' ' . t('Right'),
-    ),
-    '#theme' => 'image_anchor',
-    '#default_value' => $data['anchor'],
-    '#description' => t('The part of the image that will be retained during the crop.'),
-  );
-
-  return $form;
-}
-
-/**
- * Form structure for the image rotate form.
- *
- * Note that this is not a complete form, it only contains the portion of the
- * form for configuring the rotate options. Therefore it does not not need to
- * include metadata about the effect, nor a submit button.
- *
- * @param $data
- *   The current configuration for this rotate effect.
- */
-function image_rotate_form($data) {
-  $form['degrees'] = array(
-    '#type' => 'number',
-    '#default_value' => (isset($data['degrees'])) ? $data['degrees'] : 0,
-    '#title' => t('Rotation angle'),
-    '#description' => t('The number of degrees the image should be rotated. Positive numbers are clockwise, negative are counter-clockwise.'),
-    '#field_suffix' => '&deg;',
-    '#required' => TRUE,
-  );
-  $form['bgcolor'] = array(
-    '#type' => 'textfield',
-    '#default_value' => (isset($data['bgcolor'])) ? $data['bgcolor'] : '#FFFFFF',
-    '#title' => t('Background color'),
-    '#description' => t('The background color to use for exposed areas of the image. Use web-style hex colors (#FFFFFF for white, #000000 for black). Leave blank for transparency on image types that support it.'),
-    '#size' => 7,
-    '#maxlength' => 7,
-    '#element_validate' => array('image_effect_color_validate'),
-  );
-  $form['random'] = array(
-    '#type' => 'checkbox',
-    '#default_value' => (isset($data['random'])) ? $data['random'] : 0,
-    '#title' => t('Randomize'),
-    '#description' => t('Randomize the rotation angle for each image. The angle specified above is used as a maximum.'),
-  );
-  return $form;
 }
 
 /**
