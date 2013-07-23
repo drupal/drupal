@@ -38,7 +38,7 @@ class PluginBaseTest extends UnitTestCase {
   protected function setUp() {
     parent::setUp();
 
-    $this-> testHelperPlugin = new TestHelperPlugin(array(), 'default', array());
+    $this->testHelperPlugin = new TestHelperPlugin(array(), 'default', array());
   }
 
   /**
