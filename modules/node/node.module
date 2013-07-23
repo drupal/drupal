@@ -1587,6 +1587,9 @@ function node_permission() {
     ),
     'access content overview' => array(
       'title' => t('Access the content overview page'),
+      'description' => user_access('access content overview')
+        ? t('Get an overview of <a href="@url">all content</a>.', array('@url' => url('admin/content')))
+        : t('Get an overview of all content.'),
     ),
     'access content' => array(
       'title' => t('View published content'),
