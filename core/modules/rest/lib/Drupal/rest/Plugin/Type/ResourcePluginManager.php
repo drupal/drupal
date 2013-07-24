@@ -28,7 +28,7 @@ class ResourcePluginManager extends PluginManagerBase {
    */
   public function __construct(\Traversable $namespaces) {
     // Create resource plugin derivatives from declaratively defined resources.
-    $this->discovery = new AnnotatedClassDiscovery('rest/resource', $namespaces);
+    $this->discovery = new AnnotatedClassDiscovery('Plugin/rest/resource', $namespaces);
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
     $this->discovery = new AlterDecorator($this->discovery, 'rest_resource');
     $this->discovery = new CacheDecorator($this->discovery, 'rest');

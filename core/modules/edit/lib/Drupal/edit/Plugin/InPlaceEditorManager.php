@@ -30,7 +30,7 @@ class InPlaceEditorManager extends PluginManagerBase {
    */
   public function __construct(\Traversable $namespaces) {
     $annotation_namespaces = array('Drupal\edit\Annotation' => $namespaces['Drupal\edit']);
-    $this->discovery = new AnnotatedClassDiscovery('InPlaceEditor', $namespaces, $annotation_namespaces, 'Drupal\edit\Annotation\InPlaceEditor');
+    $this->discovery = new AnnotatedClassDiscovery('Plugin/InPlaceEditor', $namespaces, $annotation_namespaces, 'Drupal\edit\Annotation\InPlaceEditor');
     $this->discovery = new AlterDecorator($this->discovery, 'edit_editor');
     $this->discovery = new CacheDecorator($this->discovery, 'edit:editor');
     $this->factory = new DefaultFactory($this->discovery);

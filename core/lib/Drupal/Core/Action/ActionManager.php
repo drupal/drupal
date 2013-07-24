@@ -28,7 +28,7 @@ class ActionManager extends PluginManagerBase {
    *   keyed by the corresponding namespace to look for plugin implementations.
    */
   public function __construct(\Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery('Action', $namespaces, array(), 'Drupal\Core\Annotation\Action');
+    $this->discovery = new AnnotatedClassDiscovery('Plugin/Action', $namespaces, array(), 'Drupal\Core\Annotation\Action');
     $this->discovery = new AlterDecorator($this->discovery, 'action_info');
 
     $this->factory = new ContainerFactory($this);

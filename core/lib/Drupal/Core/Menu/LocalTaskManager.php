@@ -66,7 +66,7 @@ class LocalTaskManager extends DefaultPluginManager {
    *   The module handler.u
    */
   public function __construct(\Traversable $namespaces, ControllerResolverInterface $controller_resolver, Request $request, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Menu\LocalTask', $namespaces, array(), 'Drupal\Core\Annotation\Menu\LocalTask');
+    parent::__construct('Plugin/Menu/LocalTask', $namespaces, array(), 'Drupal\Core\Annotation\Menu\LocalTask');
     $this->controllerResolver = $controller_resolver;
     $this->request = $request;
     $this->routeProvider = $route_provider;

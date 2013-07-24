@@ -28,7 +28,7 @@ class ImageToolkitManager extends DefaultPluginManager {
    *   The language manager.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager) {
-    parent::__construct('ImageToolkit', $namespaces);
+    parent::__construct('Plugin/ImageToolkit', $namespaces);
     $this->setCacheBackend($cache_backend, $language_manager, 'image_toolkit');
   }
 

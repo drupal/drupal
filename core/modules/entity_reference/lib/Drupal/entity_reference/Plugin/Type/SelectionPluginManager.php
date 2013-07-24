@@ -25,11 +25,8 @@ class SelectionPluginManager extends DefaultPluginManager {
    * {@inheritdoc}
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
-    $this->subdir = 'entity_reference/selection';
-    $annotation_namespaces = array(
-      'Drupal\entity_reference\Annotation' => $namespaces['Drupal\entity_reference']
-    );
-    $this->discovery = new AnnotatedClassDiscovery($this->subdir, $namespaces, $annotation_namespaces, 'Drupal\entity_reference\Annotation\EntityReferenceSelection');
+    $annotation_namespaces = array('Drupal\entity_reference\Annotation' => $namespaces['Drupal\entity_reference']);
+    $this->discovery = new AnnotatedClassDiscovery('Plugin/entity_reference/selection', $namespaces, $annotation_namespaces, 'Drupal\entity_reference\Annotation\EntityReferenceSelection');
 
     // We're not using the parent constructor because we use a different factory
     // method and don't need the derivative discovery decorator.
