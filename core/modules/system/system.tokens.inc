@@ -4,8 +4,7 @@
  * @file
  * Builds placeholder replacement tokens system-wide data.
  *
- * This file handles tokens for the global 'site' token type, as well as
- * 'date' and 'file' tokens.
+ * This file handles tokens for the global 'site' and 'date' tokens.
  */
 
 /**
@@ -19,11 +18,6 @@ function system_token_info() {
   $types['date'] = array(
     'name' => t("Dates"),
     'description' => t("Tokens related to times and dates."),
-  );
-  $types['file'] = array(
-    'name' => t("Files"),
-    'description' => t("Tokens related to uploaded files."),
-    'needs-data' => 'file',
   );
 
   // Site-wide global tokens.
@@ -78,49 +72,11 @@ function system_token_info() {
     'description' => t("A date in UNIX timestamp format (%date)", array('%date' => REQUEST_TIME)),
   );
 
-
-  // File related tokens.
-  $file['fid'] = array(
-    'name' => t("File ID"),
-    'description' => t("The unique ID of the uploaded file."),
-  );
-  $file['name'] = array(
-    'name' => t("File name"),
-    'description' => t("The name of the file on disk."),
-  );
-  $file['path'] = array(
-    'name' => t("Path"),
-    'description' => t("The location of the file relative to Drupal root."),
-  );
-  $file['mime'] = array(
-    'name' => t("MIME type"),
-    'description' => t("The MIME type of the file."),
-  );
-  $file['size'] = array(
-    'name' => t("File size"),
-    'description' => t("The size of the file."),
-  );
-  $file['url'] = array(
-    'name' => t("URL"),
-    'description' => t("The web-accessible URL for the file."),
-  );
-  $file['timestamp'] = array(
-    'name' => t("Timestamp"),
-    'description' => t("The date the file was most recently changed."),
-    'type' => 'date',
-  );
-  $file['owner'] = array(
-    'name' => t("Owner"),
-    'description' => t("The user who originally uploaded the file."),
-    'type' => 'user',
-  );
-
   return array(
     'types' => $types,
     'tokens' => array(
       'site' => $site,
       'date' => $date,
-      'file' => $file,
     ),
   );
 }
@@ -211,58 +167,6 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
       foreach ($created_tokens as $name => $original) {
         $replacements[$original] = format_date($date, 'custom', $name, NULL, $langcode);
       }
-    }
-  }
-
-  elseif ($type == 'file' && !empty($data['file'])) {
-    $file = $data['file'];
-
-    foreach ($tokens as $name => $original) {
-      switch ($name) {
-        // Basic keys and values.
-        case 'fid':
-          $replacements[$original] = $file->id();
-          break;
-
-        // Essential file data
-        case 'name':
-          $replacements[$original] = $sanitize ? check_plain($file->getFilename()) : $file->getFilename();
-          break;
-
-        case 'path':
-          $replacements[$original] = $sanitize ? check_plain($file->getFileUri()) : $file->getFileUri();
-          break;
-
-        case 'mime':
-          $replacements[$original] = $sanitize ? check_plain($file->getMimeType()) : $file->getMimeType();
-          break;
-
-        case 'size':
-          $replacements[$original] = format_size($file->getSize());
-          break;
-
-        case 'url':
-          $replacements[$original] = $sanitize ? check_plain(file_create_url($file->getFileUri())) : file_create_url($file->getFileUri());
-          break;
-
-        // These tokens are default variations on the chained tokens handled below.
-        case 'timestamp':
-          $replacements[$original] = format_date($file->getChangedTime(), 'medium', '', NULL, $langcode);
-          break;
-
-        case 'owner':
-          $name = $file->getOwner()->label();
-          $replacements[$original] = $sanitize ? check_plain($name) : $name;
-          break;
-      }
-    }
-
-    if ($date_tokens = $token_service->findWithPrefix($tokens, 'timestamp')) {
-      $replacements += $token_service->generate('date', $date_tokens, array('date' => $file->getChangedTime()), $options);
-    }
-
-    if (($owner_tokens = $token_service->findWithPrefix($tokens, 'owner')) && $file->getOwner()) {
-      $replacements += $token_service->generate('user', $owner_tokens, array('user' => $file->getOwner()), $options);
     }
   }
 
