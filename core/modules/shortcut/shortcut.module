@@ -234,7 +234,7 @@ function shortcut_link_access($menu_link) {
 function shortcut_menu_link_delete($menu_link) {
   // If the deleted menu link was in a shortcut set, remove it.
   if (strpos($menu_link->menu_name, 'shortcut-') === 0) {
-    $shortcut = entity_load('shortcut', str_replace('shortcut-', '', $menu_link->menu_name));
+    $shortcut = entity_load('shortcut_set', str_replace('shortcut-', '', $menu_link->menu_name));
     unset($shortcut->links[$menu_link->uuid]);
     $shortcut->save();
   }
@@ -254,7 +254,7 @@ function shortcut_menu_link_delete($menu_link) {
  *   If the shortcut set does not exist, the function returns NULL.
  */
 function shortcut_set_load($id) {
-  return entity_load('shortcut', $id);
+  return entity_load('shortcut_set', $id);
 }
 
 /**
@@ -285,7 +285,7 @@ function shortcut_set_reset_link_weights(&$shortcut_set) {
  */
 function shortcut_set_assign_user($shortcut_set, $account) {
   Drupal::entityManager()
-    ->getStorageController('shortcut')
+    ->getStorageController('shortcut_set')
     ->assignUser($shortcut_set, $account);
 }
 
@@ -304,7 +304,7 @@ function shortcut_set_assign_user($shortcut_set, $account) {
  */
 function shortcut_set_unassign_user($account) {
   return (bool) Drupal::entityManager()
-    ->getStorageController('shortcut')
+    ->getStorageController('shortcut_set')
     ->unassignUser($account);
 }
 
@@ -333,7 +333,7 @@ function shortcut_current_displayed_set($account = NULL) {
   // If none was found, try to find a shortcut set that is explicitly assigned
   // to this user.
   $shortcut_set_name = Drupal::entityManager()
-    ->getStorageController('shortcut')
+    ->getStorageController('shortcut_set')
     ->getAssignedToUser($account);
   if ($shortcut_set_name) {
     $shortcut_set = shortcut_set_load($shortcut_set_name);
@@ -389,7 +389,7 @@ function shortcut_default_set($account = NULL) {
  *   TRUE if a shortcut set with that title exists; FALSE otherwise.
  */
 function shortcut_set_title_exists($title) {
-  $sets = entity_load_multiple('shortcut');
+  $sets = entity_load_multiple('shortcut_set');
   foreach ($sets as $id => $set) {
     if ($set->label == $title) {
       return TRUE;

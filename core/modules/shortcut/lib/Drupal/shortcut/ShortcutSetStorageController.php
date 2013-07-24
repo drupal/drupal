@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\shortcut\ShortcutStorageController.
+ * Contains \Drupal\shortcut\ShortcutSetStorageController.
  */
 
 namespace Drupal\shortcut;
 
 use Drupal\Core\Config\Entity\ConfigStorageController;
-use Drupal\shortcut\Plugin\Core\Entity\Shortcut;
+use Drupal\shortcut\ShortcutSetInterface;
 
 /**
  * Defines a storage controller for shortcut entities.
  */
-class ShortcutStorageController extends ConfigStorageController implements ShortcutStorageControllerInterface {
+class ShortcutSetStorageController extends ConfigStorageController implements ShortcutSetStorageControllerInterface {
 
   /**
    * Overrides \Drupal\config\ConfigStorageController::attachLoad().
@@ -32,7 +32,7 @@ class ShortcutStorageController extends ConfigStorageController implements Short
   /**
    * {@inheritdoc}
    */
-  public function deleteAssignedShortcutSets(Shortcut $entity) {
+  public function deleteAssignedShortcutSets(ShortcutSetInterface $entity) {
     // First, delete any user assignments for this set, so that each of these
     // users will go back to using whatever default set applies.
     db_delete('shortcut_set_users')
@@ -43,7 +43,7 @@ class ShortcutStorageController extends ConfigStorageController implements Short
   /**
    * {@inheritdoc}
    */
-  public function assignUser($shortcut_set, $account) {
+  public function assignUser(ShortcutSetInterface $shortcut_set, $account) {
     db_merge('shortcut_set_users')
       ->key(array('uid' => $account->id()))
       ->fields(array('set_name' => $shortcut_set->id()))
@@ -74,7 +74,7 @@ class ShortcutStorageController extends ConfigStorageController implements Short
   /**
    * {@inheritdoc}
    */
-  public function countAssignedUsers(Shortcut $shortcut) {
-    return db_query('SELECT COUNT(*) FROM {shortcut_set_users} WHERE set_name = :name', array(':name' => $shortcut->id()))->fetchField();
+  public function countAssignedUsers(ShortcutSetInterface $shortcut_set) {
+    return db_query('SELECT COUNT(*) FROM {shortcut_set_users} WHERE set_name = :name', array(':name' => $shortcut_set->id()))->fetchField();
   }
 }

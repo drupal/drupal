@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\shortcut\Form\ShortcutDeleteForm.
+ * Contains \Drupal\shortcut\Form\ShortcutSetDeleteForm.
  */
 
 namespace Drupal\shortcut\Form;
@@ -10,7 +10,7 @@ namespace Drupal\shortcut\Form;
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\shortcut\ShortcutStorageControllerInterface;
+use Drupal\shortcut\ShortcutSetStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Connection;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Builds the shortcut set deletion form.
  */
-class ShortcutDeleteForm extends EntityConfirmFormBase implements EntityControllerInterface {
+class ShortcutSetDeleteForm extends EntityConfirmFormBase implements EntityControllerInterface {
 
   /**
    * The database connection.
@@ -30,14 +30,14 @@ class ShortcutDeleteForm extends EntityConfirmFormBase implements EntityControll
   /**
    * The shortcut storage controller.
    *
-   * @var \Drupal\shortcut\ShortcutStorageControllerInterface
+   * @var \Drupal\shortcut\ShortcutSetStorageControllerInterface
    */
   protected $storageController;
 
   /**
-   * Constructs a ShortcutDeleteForm object.
+   * Constructs a ShortcutSetDeleteForm object.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, Connection $database, ShortcutStorageControllerInterface $storage_controller) {
+  public function __construct(ModuleHandlerInterface $module_handler, Connection $database, ShortcutSetStorageControllerInterface $storage_controller) {
     parent::__construct($module_handler);
     $this->database = $database;
     $this->storageController = $storage_controller;
@@ -50,7 +50,7 @@ class ShortcutDeleteForm extends EntityConfirmFormBase implements EntityControll
     return new static(
       $container->get('module_handler'),
       $container->get('database'),
-      $container->get('plugin.manager.entity')->getStorageController('shortcut')
+      $container->get('plugin.manager.entity')->getStorageController('shortcut_set')
     );
   }
 

@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Contains \Drupal\shortcut\ShortcutListController.
+ * @file
+ * Contains \Drupal\shortcut\ShortcutSetListController.
  */
 
 namespace Drupal\shortcut;
@@ -12,7 +13,7 @@ use Drupal\Core\Entity\EntityInterface;
 /**
  * Provides a listing of shortcut sets.
  */
-class ShortcutListController extends ConfigEntityListController {
+class ShortcutSetListController extends ConfigEntityListController {
 
   /**
    * Overrides \Drupal\Core\Entity\EntityListController::buildHeader().

@@ -2,28 +2,28 @@
 
 /**
  * @file
- * Contains \Drupal\shortcut\ShortcutStorageControllerInterface.
+ * Contains \Drupal\shortcut\ShortcutSetStorageControllerInterface.
  */
 
 namespace Drupal\shortcut;
 
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\shortcut\Plugin\Core\Entity\Shortcut;
+use Drupal\shortcut\ShortcutSetInterface;
 
 /**
  * Defines a common interface for shortcut entity controller classes.
  */
-interface ShortcutStorageControllerInterface extends EntityStorageControllerInterface {
+interface ShortcutSetStorageControllerInterface extends EntityStorageControllerInterface {
 
   /**
    * Assigns a user to a particular shortcut set.
    *
-   * @param \Drupal\shortcut\Plugin\Core\Entity\Shortcut $shortcut_set
+   * @param \Drupal\shortcut\ShortcutSetInterface $shortcut_set
    *   An object representing the shortcut set.
    * @param $account
    *   A user account that will be assigned to use the set.
    */
-  public function assignUser($shortcut_set, $account);
+  public function assignUser(ShortcutSetInterface $shortcut_set, $account);
 
   /**
    * Unassigns a user from any shortcut set they may have been assigned to.
@@ -43,10 +43,10 @@ interface ShortcutStorageControllerInterface extends EntityStorageControllerInte
   /**
    * Delete shortcut sets assigned to users.
    *
-   * @param \Drupal\shortcut\Plugin\Core\Entity\Shortcut $entity
+   * @param \Drupal\shortcut\ShortcutSetInterface $entity
    *   Delete the user assigned sets belonging to this shortcut.
    */
-  public function deleteAssignedShortcutSets(Shortcut $entity);
+  public function deleteAssignedShortcutSets(ShortcutSetInterface $entity);
 
   /**
    * Get the name of the set assigned to this user.
@@ -62,11 +62,11 @@ interface ShortcutStorageControllerInterface extends EntityStorageControllerInte
   /**
    * Get the number of users who have this set assigned to them.
    *
-   * @param \Drupal\shortcut\Plugin\Core\Entity\Shortcut $shortcut
+   * @param \Drupal\shortcut\ShortcutSetInterface $shortcut_set
    *   The shortcut to count the users assigned to.
    *
    * @return int
    *   The number of users who have this set assigned to them.
    */
-  public function countAssignedUsers(Shortcut $shortcut);
+  public function countAssignedUsers(ShortcutSetInterface $shortcut_set);
 }

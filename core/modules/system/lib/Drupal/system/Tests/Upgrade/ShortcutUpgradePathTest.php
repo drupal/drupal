@@ -22,6 +22,9 @@ class ShortcutUpgradePathTest extends UpgradePathTestBase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     $this->databaseDumpFiles = array(
       drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.bare.standard_all.database.php.gz',
@@ -39,14 +42,14 @@ class ShortcutUpgradePathTest extends UpgradePathTestBase {
     $this->assertFalse(db_table_exists('shortcut_set'), 'Table {shortcut_set} has been deleted.');
 
     // Ensure that the Drupal 7 default set has been created.
-    $set = entity_load('shortcut', 'default');
+    $set = entity_load('shortcut_set', 'default');
     $this->assertTrue($set->uuid(), 'Converted set has a UUID');
     $this->assertEqual($set->label(), 'Default');
 
     // Test that the custom set has been updated.
-    $set = entity_load('shortcut', 'shortcut-set-2');
+    $set = entity_load('shortcut_set', 'shortcut-set-2');
     $this->assertTrue($set->uuid(), 'Converted set has a UUID');
     $this->assertEqual($set->label(), 'Custom shortcut set');
   }
-}
 
+}

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\shortcut\Plugin\Core\Entity\Shortcut.
+ * Contains \Drupal\shortcut\Plugin\Core\Entity\ShortcutSet.
  */
 
 namespace Drupal\shortcut\Plugin\Core\Entity;
@@ -11,24 +11,24 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\shortcut\ShortcutInterface;
+use Drupal\shortcut\ShortcutSetInterface;
 
 /**
  * Defines the Shortcut configuration entity.
  *
  * @EntityType(
- *   id = "shortcut",
+ *   id = "shortcut_set",
  *   label = @Translation("Shortcut set"),
  *   module = "shortcut",
  *   controllers = {
- *     "storage" = "Drupal\shortcut\ShortcutStorageController",
- *     "access" = "Drupal\shortcut\ShortcutAccessController",
- *     "list" = "Drupal\shortcut\ShortcutListController",
+ *     "storage" = "Drupal\shortcut\ShortcutSetStorageController",
+ *     "access" = "Drupal\shortcut\ShortcutSetAccessController",
+ *     "list" = "Drupal\shortcut\ShortcutSetListController",
  *     "form" = {
- *       "default" = "Drupal\shortcut\ShortcutFormController",
- *       "edit" = "Drupal\shortcut\ShortcutFormController",
+ *       "default" = "Drupal\shortcut\ShortcutSetFormController",
+ *       "edit" = "Drupal\shortcut\ShortcutSetFormController",
  *       "customize" = "Drupal\shortcut\Form\SetCustomize",
- *       "delete" = "Drupal\shortcut\Form\ShortcutDeleteForm"
+ *       "delete" = "Drupal\shortcut\Form\ShortcutSetDeleteForm"
  *     }
  *   },
  *   config_prefix = "shortcut.set",
@@ -39,7 +39,7 @@ use Drupal\shortcut\ShortcutInterface;
  *   }
  * )
  */
-class Shortcut extends ConfigEntityBase implements ShortcutInterface {
+class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
 
   /**
    * The machine name for the configuration entity.

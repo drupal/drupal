@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\shortcut\ShortcutFormController.
+ * Contains \Drupal\shortcut\ShortcutSetFormController.
  */
 
 namespace Drupal\shortcut;
@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityFormController;
 /**
  * Form controller for the shortcut set entity edit forms.
  */
-class ShortcutFormController extends EntityFormController {
+class ShortcutSetFormController extends EntityFormController {
 
   /**
    * Overrides \Drupal\Core\Entity\EntityFormController::form().
