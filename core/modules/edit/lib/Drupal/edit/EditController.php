@@ -8,12 +8,17 @@
 namespace Drupal\edit;
 
 use Drupal;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityManager;
+use Drupal\field\FieldInfo;
+use Drupal\edit\MetadataGeneratorInterface;
+use Drupal\edit\EditorSelectorInterface;
 use Drupal\edit\Ajax\FieldFormCommand;
 use Drupal\edit\Ajax\FieldFormSavedCommand;
 use Drupal\edit\Ajax\FieldFormValidationErrorsCommand;
@@ -24,23 +29,76 @@ use Drupal\user\TempStoreFactory;
 /**
  * Returns responses for Edit module routes.
  */
-class EditController extends ContainerAware {
+class EditController implements ControllerInterface {
 
   /**
-   * Stores the tempstore factory.
+   * The TempStore factory.
    *
    * @var \Drupal\user\TempStoreFactory
    */
   protected $tempStoreFactory;
 
   /**
+   * The in-place editing metadata generator.
+   *
+   * @var \Drupal\edit\MetadataGeneratorInterface
+   */
+  protected $metadataGenerator;
+
+  /**
+   * The in-place editor selector.
+   *
+   * @var \Drupal\edit\EditorSelectorInterface
+   */
+  protected $editorSelector;
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
+   * The field info service.
+   *
+   * @var \Drupal\field\FieldInfo
+   */
+  protected $fieldInfo;
+
+  /**
    * Constructs a new EditController.
    *
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
-   *   The factory for the temp store object.
+   *   The TempStore factory.
+   * @param \Drupal\edit\MetadataGeneratorInterface $metadata_generator
+   *   The in-place editing metadata generator.
+   * @param Drupal\edit\EditorSelectorInterface $editor_selector
+   *   The in-place editor selector.
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager.
+   * @param \Drupal\field\FieldInfo $field_info
+   *   The field info service.
    */
-  public function __construct(TempStoreFactory $temp_store_factory = NULL) {
-    $this->tempStoreFactory = $temp_store_factory ?: Drupal::service('user.tempstore');
+  public function __construct(TempStoreFactory $temp_store_factory, MetadataGeneratorInterface $metadata_generator, EditorSelectorInterface $editor_selector, EntityManager $entity_manager, FieldInfo $field_info) {
+    $this->tempStoreFactory = $temp_store_factory;
+    $this->metadataGenerator = $metadata_generator;
+    $this->editorSelector = $editor_selector;
+    $this->entityManager = $entity_manager;
+    $this->fieldInfo = $field_info;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('user.tempstore'),
+      $container->get('edit.metadata.generator'),
+      $container->get('edit.editor.selector'),
+      $container->get('plugin.manager.entity'),
+      $container->get('field.info')
+    );
   }
 
   /**
@@ -60,23 +118,21 @@ class EditController extends ContainerAware {
     }
     $entities = $request->request->get('entities');
 
-    $metadataGenerator = $this->container->get('edit.metadata.generator');
-
     $metadata = array();
     foreach ($fields as $field) {
       list($entity_type, $entity_id, $field_name, $langcode, $view_mode) = explode('/', $field);
 
       // Load the entity.
-      if (!$entity_type || !entity_get_info($entity_type)) {
+      if (!$entity_type || !$this->entityManager->getDefinition($entity_type)) {
         throw new NotFoundHttpException();
       }
-      $entity = entity_load($entity_type, $entity_id);
+      $entity = $this->entityManager->getStorageController($entity_type)->load($entity_id);
       if (!$entity) {
         throw new NotFoundHttpException();
       }
 
       // Validate the field name and language.
-      if (!$field_name || !($instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle()))) {
+      if (!$field_name || !($instance = $this->fieldInfo->getInstance($entity->entityType(), $entity->bundle(), $field_name))) {
         throw new NotFoundHttpException();
       }
       if (!$langcode || (field_valid_language($langcode) !== $langcode)) {
@@ -86,10 +142,10 @@ class EditController extends ContainerAware {
       // If the entity information for this field is requested, include it.
       $entity_id = $entity->entityType() . '/' . $entity_id;
       if (is_array($entities) && in_array($entity_id, $entities) && !isset($metadata[$entity_id])) {
-        $metadata[$entity_id] = $metadataGenerator->generateEntity($entity, $langcode);
+        $metadata[$entity_id] = $this->metadataGenerator->generateEntity($entity, $langcode);
       }
 
-      $metadata[$field] = $metadataGenerator->generateField($entity, $instance, $langcode, $view_mode);
+      $metadata[$field] = $this->metadataGenerator->generateField($entity, $instance, $langcode, $view_mode);
     }
 
     return new JsonResponse($metadata);
@@ -111,8 +167,7 @@ class EditController extends ContainerAware {
       throw new NotFoundHttpException();
     }
 
-    $editorSelector = $this->container->get('edit.editor.selector');
-    $elements['#attached'] = $editorSelector->getEditorAttachments($editors);
+    $elements['#attached'] = $this->editorSelector->getEditorAttachments($editors);
     drupal_process_attached($elements);
 
     return $response;
@@ -141,7 +196,7 @@ class EditController extends ContainerAware {
     // Replace entity with tempstore copy if available and not resetting, init
     // tempstore copy otherwise.
     $tempstore_entity = $this->tempStoreFactory->get('edit')->get($entity->uuid());
-    if ($tempstore_entity && !(isset($_POST['reset']) && $_POST['reset'] === 'true')) {
+    if ($tempstore_entity && $request->request->get('reset') !== 'true') {
       $entity = $tempstore_entity;
     }
     else {
