@@ -120,6 +120,13 @@ function bartik_menu_tree($variables) {
 }
 
 /**
+ * Implements theme_menu_tree__shortcut_default() {
+ */
+function bartik_menu_tree__shortcut_default($variables) {
+  return '<ul class="menu">' . $variables['tree'] . '</ul>';
+}
+
+/**
  * Implements theme_field__field_type().
  */
 function bartik_field__taxonomy_term_reference($variables) {
