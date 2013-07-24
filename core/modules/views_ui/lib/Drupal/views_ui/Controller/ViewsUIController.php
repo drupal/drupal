@@ -11,8 +11,6 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\ViewsData;
-use Drupal\user\TempStore;
-use Drupal\user\TempStoreFactory;
 use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Entity\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -44,13 +42,6 @@ class ViewsUIController implements ControllerInterface {
   protected $viewsData;
 
   /**
-   * Stores the user tempstore.
-   *
-   * @var \Drupal\user\TempStore
-   */
-  protected $tempStore;
-
-  /**
    * The URL generator to use.
    *
    * @var \Symfony\Component\Routing\Generator\UrlGeneratorInterface
@@ -64,15 +55,12 @@ class ViewsUIController implements ControllerInterface {
    *   The Entity manager.
    * @param \Drupal\views\ViewsData views_data
    *   The Views data cache object.
-   * @param \Drupal\user\TempStoreFactory $temp_store_factory
-   *   The factory for the temp store object.
    * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface
    *   The URL generator.
    */
-  public function __construct(EntityManager $entity_manager, ViewsData $views_data, TempStoreFactory $temp_store_factory, UrlGeneratorInterface $url_generator) {
+  public function __construct(EntityManager $entity_manager, ViewsData $views_data, UrlGeneratorInterface $url_generator) {
     $this->entityManager = $entity_manager;
     $this->viewsData = $views_data;
-    $this->tempStore = $temp_store_factory->get('views');
     $this->urlGenerator = $url_generator;
   }
 
@@ -83,7 +71,6 @@ class ViewsUIController implements ControllerInterface {
     return new static(
       $container->get('plugin.manager.entity'),
       $container->get('views.views_data'),
-      $container->get('user.tempstore'),
       $container->get('url_generator')
     );
   }
