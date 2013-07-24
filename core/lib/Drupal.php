@@ -374,7 +374,7 @@ class Drupal {
   /**
    * Returns the string translation service.
    *
-   * @return \Drupal\Core\Translation\TranslationManager
+   * @return \Drupal\Core\StringTranslation\TranslationManager
    *   The string translation manager.
    */
   public static function translation() {
