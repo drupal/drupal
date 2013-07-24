@@ -1151,7 +1151,7 @@ function theme_views_mini_pager($variables) {
         // Below is ignored by default, supplied to support hook_link_alter
         // implementations.
         'pager_context' => array(
-          'link_type' => 'previous',
+          'link_type' => 'next',
           'element' => $element,
           'interval' => 1,
         ),
