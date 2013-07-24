@@ -74,7 +74,7 @@ class FeedStorageController extends DatabaseStorageControllerNG implements FeedS
     );
     $fields['description'] = array(
       'label' => t('Description'),
-      'description' => t("The parent website's description that comes from the <description> element in the feed."),
+      'description' => t("The parent website's description that comes from the !description element in the feed.", array('!description' => '<description>')),
       'type' => 'string_field',
     );
     $fields['image'] = array(
