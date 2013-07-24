@@ -8,6 +8,7 @@
 namespace Drupal\field\Plugin\Type\Widget;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\Plugin\PluginSettingsInterface;
 
 /**
@@ -31,7 +32,7 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    *   The entity for which the widget is being built.
    * @param string $langcode
    *   The language associated with the field.
-   * @param array $items
+   * @param FieldInterface $items
    *   An array of the field values. When creating a new entity this may be NULL
    *   or an empty array to use default values.
    * @param array $form
@@ -45,7 +46,7 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    * @return array
    *   The form element array created for this field.
    */
-  public function form(EntityInterface $entity, $langcode, array $items, array &$form, array &$form_state, $get_delta = NULL);
+  public function form(EntityInterface $entity, $langcode, FieldInterface $items, array &$form, array &$form_state, $get_delta = NULL);
 
   /**
    * Extracts field values from submitted form values.
@@ -54,7 +55,7 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    *   The entity for which the widget is being submitted.
    * @param string $langcode
    *   The language associated to $items.
-   * @param array $items
+   * @param FieldInterface $items
    *   The field values. This parameter is altered by reference to receive the
    *   incoming form values.
    * @param array $form
@@ -63,7 +64,7 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    * @param array $form_state
    *   The form state.
    */
-  public function extractFormValues(EntityInterface $entity, $langcode, array &$items, array $form, array &$form_state);
+  public function extractFormValues(EntityInterface $entity, $langcode, FieldInterface $items, array $form, array &$form_state);
 
   /**
    * Reports field-level validation errors against actual form elements.
@@ -72,7 +73,7 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    *   The entity for which the widget is being submitted.
    * @param string $langcode
    *   The language associated to $items.
-   * @param array $items
+   * @param FieldInterface $items
    *   The field values.
    * @param array $form
    *   The form structure where field elements are attached to. This might be a
@@ -80,6 +81,6 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    * @param array $form_state
    *   The form state.
    */
-  public function flagErrors(EntityInterface $entity, $langcode, array $items, array $form, array &$form_state);
+  public function flagErrors(EntityInterface $entity, $langcode, FieldInterface $items, array $form, array &$form_state);
 
 }

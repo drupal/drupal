@@ -10,6 +10,7 @@ namespace Drupal\entity_reference\Plugin\field\formatter;
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
 
 /**
@@ -30,12 +31,12 @@ class EntityReferenceIdFormatter extends EntityReferenceFormatterBase {
   /**
    * Overrides \Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase::viewElements().
    */
-  public function viewElements(EntityInterface $entity, $langcode, array $items) {
+  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      if (!empty($item['entity']) && !empty($item['target_id'])) {
-        $elements[$delta] = array('#markup' => check_plain($item['target_id']));
+      if (!empty($item->entity) && !empty($item->target_id)) {
+        $elements[$delta] = array('#markup' => check_plain($item->target_id));
       }
     }
 

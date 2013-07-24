@@ -77,7 +77,7 @@ class EntityFormControllerNG extends EntityFormController {
 
     // Invoke field API for copying field values.
     if ($info['fieldable']) {
-      field_attach_extract_form_values($entity, $form, $form_state);
+      field_attach_extract_form_values($entity, $form, $form_state, array('langcode' => $this->getFormLangcode($form_state)));
     }
     return $entity;
   }

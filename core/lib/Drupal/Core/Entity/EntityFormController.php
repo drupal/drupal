@@ -430,9 +430,9 @@ class EntityFormController implements EntityFormControllerInterface {
    * Updates the form language to reflect any change to the entity language.
    *
    * @param array $form_state
-   *   A keyed array containing the current state of the form.
+   *   A reference to a keyed array containing the current state of the form.
    */
-  protected function updateFormLangcode(array $form_state) {
+  protected function updateFormLangcode(array &$form_state) {
     // Update the form language as it might have changed.
     if (isset($form_state['values']['langcode']) && $this->isDefaultFormLangcode($form_state)) {
       $form_state['langcode'] = $form_state['values']['langcode'];
@@ -487,7 +487,7 @@ class EntityFormController implements EntityFormControllerInterface {
     $form_state['controller'] = $this;
     // @todo Move entity_form_submit_build_entity() here.
     // @todo Exploit the Field API to process the submitted entity field.
-    entity_form_submit_build_entity($entity->entityType(), $entity, $form, $form_state);
+    entity_form_submit_build_entity($entity->entityType(), $entity, $form, $form_state, array('langcode' => $this->getFormLangcode($form_state)));
     return $entity;
   }
 

@@ -8,6 +8,7 @@
 namespace Drupal\options\Plugin\field\widget;
 
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
 /**
@@ -45,14 +46,14 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     // Prepare some properties for the child methods to build the actual form
     // element.
     $this->entity = $element['#entity'];
     $this->required = $element['#required'];
     $cardinality = $this->fieldDefinition->getFieldCardinality();
     $this->multiple = ($cardinality == FIELD_CARDINALITY_UNLIMITED) || ($cardinality > 1);
-    $this->has_value = isset($items[0][$this->column]);
+    $this->has_value = isset($items[0]->{$this->column});
 
     // Add our custom validator.
     $element['#element_validate'][] = array(get_class($this), 'validateElement');
@@ -155,19 +156,19 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * Determines selected options from the incoming field values.
    *
-   * @param array $items
+   * @param FieldInterface $items
    *   The field values.
    *
    * @return array
    *   The array of corresponding selected options.
    */
-  protected function getSelectedOptions(array $items) {
+  protected function getSelectedOptions(FieldInterface $items) {
     // We need to check against a flat list of options.
     $flat_options = $this->flattenOptions($this->getOptions());
 
     $selected_options = array();
     foreach ($items as $item) {
-      $value = $item[$this->column];
+      $value = $item->{$this->column};
       // Keep the value if it actually is in the list of options (needs to be
       // checked against the flat list).
       if (isset($flat_options[$value])) {

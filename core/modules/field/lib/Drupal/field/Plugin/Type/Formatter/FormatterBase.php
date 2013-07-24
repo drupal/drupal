@@ -9,6 +9,7 @@ namespace Drupal\field\Plugin\Type\Formatter;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\field\Plugin\PluginSettingsBase;
 
@@ -73,7 +74,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
   /**
    * {@inheritdoc}
    */
-  public function view(EntityInterface $entity, $langcode, array $items) {
+  public function view(EntityInterface $entity, $langcode, FieldInterface $items) {
     $addition = array();
 
     $elements = $this->viewElements($entity, $langcode, $items);
@@ -93,7 +94,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
         '#entity_type' => $entity_type,
         '#bundle' => $entity->bundle(),
         '#object' => $entity,
-        '#items' => $items,
+        '#items' => $items->getValue(TRUE),
         '#formatter' => $this->getPluginId(),
       );
 
@@ -120,7 +121,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
   /**
    * {@inheritdoc}
    */
-  public function prepareView(array $entities, $langcode, array &$items) { }
+  public function prepareView(array $entities, $langcode, array $items) { }
 
   /**
    * Returns whether the currently logged in user has access to the field.

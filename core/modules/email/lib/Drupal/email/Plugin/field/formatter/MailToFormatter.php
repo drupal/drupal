@@ -11,6 +11,7 @@ use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
  * Plugin implementation of the 'email_mailto' formatter.
@@ -29,14 +30,14 @@ class MailToFormatter extends FormatterBase {
   /**
    * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
    */
-  public function viewElements(EntityInterface $entity, $langcode, array $items) {
+  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
     $elements = array();
 
     foreach ($items as $delta => $item) {
       $elements[$delta] = array(
         '#type' => 'link',
-        '#title' => $item['value'],
-        '#href' => 'mailto:' . $item['value'],
+        '#title' => $item->value,
+        '#href' => 'mailto:' . $item->value,
       );
     }
 

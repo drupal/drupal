@@ -10,6 +10,7 @@ namespace Drupal\taxonomy\Plugin\field\formatter;
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
 
 /**
@@ -32,15 +33,15 @@ class EntityReferenceTaxonomyTermRssFormatter extends EntityReferenceFormatterBa
   /**
    * Overrides Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase::viewElements().
    */
-  public function viewElements(EntityInterface $entity, $langcode, array $items) {
+  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
     $elements = array();
 
     foreach ($items as $delta => $item) {
       $entity->rss_elements[] = array(
         'key' => 'category',
-        'value' => $item['entity']->label(),
+        'value' => $item->entity->label(),
         'attributes' => array(
-          'domain' => $item['target_id'] ? url('taxonomy/term/' . $item['target_id'], array('absolute' => TRUE)) : '',
+          'domain' => $item->target_id ? url('taxonomy/term/' . $item->target_id, array('absolute' => TRUE)) : '',
         ),
       );
     }

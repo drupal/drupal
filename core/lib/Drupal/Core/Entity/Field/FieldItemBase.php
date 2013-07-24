@@ -130,6 +130,7 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
    */
   public function __unset($name) {
     $this->set($name, NULL);
+    unset($this->values[$name]);
   }
 
   /**

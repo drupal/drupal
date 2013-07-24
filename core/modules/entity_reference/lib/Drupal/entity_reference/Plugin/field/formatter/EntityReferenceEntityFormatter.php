@@ -10,6 +10,7 @@ namespace Drupal\entity_reference\Plugin\field\formatter;
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\entity_reference\RecursiveRenderingException;
 use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
 
@@ -79,7 +80,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, array $items) {
+  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
     // Remove un-accessible items.
     parent::viewElements($entity, $langcode, $items);
 
@@ -95,17 +96,17 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
       static $depth = 0;
       $depth++;
       if ($depth > 20) {
-        throw new RecursiveRenderingException(format_string('Recursive rendering detected when rendering entity @entity_type(@entity_id). Aborting rendering.', array('@entity_type' => $entity_type, '@entity_id' => $item['target_id'])));
+        throw new RecursiveRenderingException(format_string('Recursive rendering detected when rendering entity @entity_type(@entity_id). Aborting rendering.', array('@entity_type' => $entity_type, '@entity_id' => $item->target_id)));
       }
 
-      if (!empty($item['target_id'])) {
-        $entity = clone $item['entity'];
+      if (!empty($item->target_id)) {
+        $entity = clone $item->entity;
         unset($entity->content);
         $elements[$delta] = entity_view($entity, $view_mode, $langcode);
 
-        if (empty($links) && isset($result[$delta][$target_type][$item['target_id']]['links'])) {
+        if (empty($links) && isset($result[$delta][$target_type][$item->target_id]['links'])) {
           // Hide the element links.
-          $elements[$delta][$target_type][$item['target_id']]['links']['#access'] = FALSE;
+          $elements[$delta][$target_type][$item->target_id]['links']['#access'] = FALSE;
         }
       }
       else {

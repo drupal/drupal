@@ -9,6 +9,7 @@ namespace Drupal\link\Plugin\field\widget;
 
 use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
 /**
@@ -31,12 +32,12 @@ class LinkWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $element['url'] = array(
       '#type' => 'url',
       '#title' => t('URL'),
       '#placeholder' => $this->getSetting('placeholder_url'),
-      '#default_value' => isset($items[$delta]['url']) ? $items[$delta]['url'] : NULL,
+      '#default_value' => isset($items[$delta]->url) ? $items[$delta]->url : NULL,
       '#maxlength' => 2048,
       '#required' => $element['#required'],
     );
@@ -44,7 +45,7 @@ class LinkWidget extends WidgetBase {
       '#type' => 'textfield',
       '#title' => t('Link text'),
       '#placeholder' => $this->getSetting('placeholder_title'),
-      '#default_value' => isset($items[$delta]['title']) ? $items[$delta]['title'] : NULL,
+      '#default_value' => isset($items[$delta]->title) ? $items[$delta]->title : NULL,
       '#maxlength' => 255,
       '#access' => $this->getFieldSetting('title') != DRUPAL_DISABLED,
     );
@@ -61,7 +62,7 @@ class LinkWidget extends WidgetBase {
     $element['attributes'] = array(
       '#type' => 'value',
       '#tree' => TRUE,
-      '#value' => !empty($items[$delta]['attributes']) ? $items[$delta]['attributes'] : array(),
+      '#value' => !empty($items[$delta]->attributes) ? $items[$delta]->attributes : array(),
       '#attributes' => array('class' => array('link-field-widget-attributes')),
     );
 

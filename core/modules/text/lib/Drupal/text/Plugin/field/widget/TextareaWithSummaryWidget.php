@@ -10,6 +10,7 @@ namespace Drupal\text\Plugin\field\widget;
 use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Symfony\Component\Validator\ConstraintViolationInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
  * Plugin implementation of the 'text_textarea_with_summary' widget.
@@ -58,13 +59,13 @@ class TextareaWithSummaryWidget extends TextareaWidget {
   /**
    * {@inheritdoc}
    */
-  function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $element = parent::formElement($items, $delta, $element, $langcode, $form, $form_state);
 
-    $display_summary = !empty($items[$delta]['summary']) || $this->getFieldSetting('display_summary');
+    $display_summary = $items[$delta]->summary || $this->getFieldSetting('display_summary');
     $element['summary'] = array(
       '#type' => $display_summary ? 'textarea' : 'value',
-      '#default_value' => isset($items[$delta]['summary']) ? $items[$delta]['summary'] : NULL,
+      '#default_value' => $items[$delta]->summary,
       '#title' => t('Summary'),
       '#rows' => $this->getSetting('summary_rows'),
       '#description' => t('Leave blank to use trimmed value of full text as the summary.'),

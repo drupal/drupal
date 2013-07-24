@@ -803,24 +803,11 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
   if ($formatter) {
     $display_langcode = field_language($entity, $field_name, $langcode);
 
-    // Get the items.
-    if ($entity->getNGEntity() instanceof EntityNG) {
-      $items = $entity->getTranslation($display_langcode)->get($field_name);
-      $definition = $entity->getPropertyDefinition($field_name);
-    }
-    else {
-      $definitions = \Drupal::entityManager()->getFieldDefinitions($entity_type, $bundle);
-      $definition = $definitions[$field_name];
-      $itemsBC = isset($entity->{$field_name}[$display_langcode]) ? $entity->{$field_name}[$display_langcode] : array();
-      $items = \Drupal::typedData()->create($definitions[$field_name], $itemsBC, $field_name, $entity);
-    }
-
     // Invoke the formatter's prepareView() and view() methods.
+    $items = $entity->getNGEntity()->getTranslation($display_langcode)->get($field_name);
     $id = $entity->id();
-    $itemsBC_multi = array($id => $items->getValue());
-    $formatter->prepareView(array($id => $entity), $display_langcode, $itemsBC_multi);
-    $itemsBC = $itemsBC_multi[$id];
-    $result = $formatter->view($entity, $display_langcode, $itemsBC);
+    $formatter->prepareView(array($id => $entity), $display_langcode, array($id => $items));
+    $result = $formatter->view($entity, $display_langcode, $items);
 
     // Invoke hook_field_attach_view_alter() to let other modules alter the
     // renderable array, as in a full field_attach_view() execution.
