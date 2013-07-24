@@ -167,8 +167,7 @@ class AddItem extends ViewsFormBase {
     // Add a div to show the selected items
     $form['selected'] = array(
       '#type' => 'item',
-      '#markup' => '<div class="views-selected-options"></div>',
-      '#title' => t('Selected') . ':',
+      '#markup' => '<span class="views-ui-view-title">' . t('Selected:') . '</span> ' . '<div class="views-selected-options"></div>',
       '#theme_wrappers' => array('form_element', 'views_ui_container'),
       '#attributes' => array('class' => array('container-inline', 'views-add-form-selected')),
     );
