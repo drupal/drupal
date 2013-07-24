@@ -38,6 +38,6 @@ class LocaleLibraryInfoAlterTest extends WebTestBase {
   public function testLibraryInfoAlter() {
     drupal_add_library('system', 'jquery.ui.datepicker');
     $scripts = drupal_get_js();
-    $this->assertTrue(strpos($scripts, 'locale.datepicker.js'), t('locale.datepicker.js added to scripts.'));
+    $this->assertTrue(strpos($scripts, 'locale.datepicker.js'), 'locale.datepicker.js added to scripts.');
   }
 }

@@ -155,9 +155,9 @@ class LocalePluralFormatTest extends WebTestBase {
       'langcode' => 'fr',
     ), t('Export'));
     // Ensure we have a translation file.
-    $this->assertRaw('# French translation of Drupal', t('Exported French translation file.'));
+    $this->assertRaw('# French translation of Drupal', 'Exported French translation file.');
     // Ensure our imported translations exist in the file.
-    $this->assertRaw("msgid \"Monday\"\nmsgstr \"lundi\"", t('French translations present in exported file.'));
+    $this->assertRaw("msgid \"Monday\"\nmsgstr \"lundi\"", 'French translations present in exported file.');
     // Check for plural export specifically.
     $this->assertRaw("msgid \"1 hour\"\nmsgid_plural \"@count hours\"\nmsgstr[0] \"@count heure\"\nmsgstr[1] \"@count heures\"", 'Plural translations exported properly.');
 
@@ -166,11 +166,11 @@ class LocalePluralFormatTest extends WebTestBase {
       'langcode' => 'hr',
     ), t('Export'));
     // Ensure we have a translation file.
-    $this->assertRaw('# Croatian translation of Drupal', t('Exported Croatian translation file.'));
+    $this->assertRaw('# Croatian translation of Drupal', 'Exported Croatian translation file.');
     // Ensure our imported translations exist in the file.
-    $this->assertRaw("msgid \"Monday\"\nmsgstr \"Ponedjeljak\"", t('Croatian translations present in exported file.'));
+    $this->assertRaw("msgid \"Monday\"\nmsgstr \"Ponedjeljak\"", 'Croatian translations present in exported file.');
     // Check for plural export specifically.
-    $this->assertRaw("msgid \"1 hour\"\nmsgid_plural \"@count hours\"\nmsgstr[0] \"@count sat\"\nmsgstr[1] \"@count sata\"\nmsgstr[2] \"@count sati\"", t('Plural translations exported properly.'));
+    $this->assertRaw("msgid \"1 hour\"\nmsgid_plural \"@count hours\"\nmsgstr[0] \"@count sat\"\nmsgstr[1] \"@count sata\"\nmsgstr[2] \"@count sati\"", 'Plural translations exported properly.');
 
     // Check if the source appears on the translation page.
     $this->drupalGet('admin/config/regional/translate');
@@ -256,15 +256,15 @@ class LocalePluralFormatTest extends WebTestBase {
     ), t('Export'));
     // Check for plural export specifically.
     $this->assertRaw("msgid \"1 hour\"\nmsgid_plural \"@count hours\"\nmsgstr[0] \"@count heure edited\"\nmsgstr[1] \"@count heures\"", 'Edited French plural translations for hours exported properly.');
-    $this->assertRaw("msgid \"1 day\"\nmsgid_plural \"@count days\"\nmsgstr[0] \"1 jour\"\nmsgstr[1] \"@count jours\"", t('Added French plural translations for days exported properly.'));
+    $this->assertRaw("msgid \"1 day\"\nmsgid_plural \"@count days\"\nmsgstr[0] \"1 jour\"\nmsgstr[1] \"@count jours\"", 'Added French plural translations for days exported properly.');
 
     // Get the Croatian translations.
     $this->drupalPost('admin/config/regional/translate/export', array(
       'langcode' => 'hr',
     ), t('Export'));
     // Check for plural export specifically.
-    $this->assertRaw("msgid \"1 hour\"\nmsgid_plural \"@count hours\"\nmsgstr[0] \"@count sat\"\nmsgstr[1] \"@count sata edited\"\nmsgstr[2] \"@count sati\"", t('Edited Croatian plural translations exported properly.'));
-    $this->assertRaw("msgid \"1 day\"\nmsgid_plural \"@count days\"\nmsgstr[0] \"@count dan\"\nmsgstr[1] \"@count dana\"\nmsgstr[2] \"@count dana\"", t('Added Croatian plural translations exported properly.'));
+    $this->assertRaw("msgid \"1 hour\"\nmsgid_plural \"@count hours\"\nmsgstr[0] \"@count sat\"\nmsgstr[1] \"@count sata edited\"\nmsgstr[2] \"@count sati\"", 'Edited Croatian plural translations exported properly.');
+    $this->assertRaw("msgid \"1 day\"\nmsgid_plural \"@count days\"\nmsgstr[0] \"@count dan\"\nmsgstr[1] \"@count dana\"\nmsgstr[2] \"@count dana\"", 'Added Croatian plural translations exported properly.');
   }
 
   /**

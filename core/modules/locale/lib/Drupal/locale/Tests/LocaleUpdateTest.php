@@ -443,8 +443,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
 
     // Ensure the translation file is automatically imported when the language
     // was added.
-    $this->assertText(t('One translation file imported.'), t('Language file automatically imported.'));
-    $this->assertText(t('One translation string was skipped because of disallowed or malformed HTML'), t('Language file automatically imported.'));
+    $this->assertText(t('One translation file imported.'), 'Language file automatically imported.');
+    $this->assertText(t('One translation string was skipped because of disallowed or malformed HTML'), 'Language file automatically imported.');
 
     // Ensure the strings were successfully imported.
     $search = array(
@@ -453,7 +453,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'translation' => 'translated',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertNoText(t('No strings available.'), t('String successfully imported.'));
+    $this->assertNoText(t('No strings available.'), 'String successfully imported.');
 
     // Ensure the multiline string was imported.
     $search = array(
@@ -462,7 +462,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'translation' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertText('Multiline translation string to make sure that import works with it.', t('String successfully imported.'));
+    $this->assertText('Multiline translation string to make sure that import works with it.', 'String successfully imported.');
 
     // Ensure 'Allowed HTML source string' was imported but the translation for
     // 'Another allowed HTML source string' was not because it contains invalid
@@ -473,8 +473,8 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'translation' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertText('Allowed HTML source string', t('String successfully imported.'));
-    $this->assertNoText('Another allowed HTML source string', t('String with disallowed translation not imported.'));
+    $this->assertText('Allowed HTML source string', 'String successfully imported.');
+    $this->assertNoText('Another allowed HTML source string', 'String with disallowed translation not imported.');
   }
 
 }

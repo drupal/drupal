@@ -8,6 +8,7 @@
 namespace Drupal\locale\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Component\Utility\String;
 
 /**
  * Tests for update translations.
@@ -81,7 +82,7 @@ class LocaleUpdateBase extends WebTestBase {
     $edit = array('predefined_langcode' => $langcode);
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
     drupal_static_reset('language_list');
-    $this->assertTrue(language_load($langcode), t('Language %langcode added.', array('%langcode' => $langcode)));
+    $this->assertTrue(language_load($langcode), String::format('Language %langcode added.', array('%langcode' => $langcode)));
   }
 
   /**
