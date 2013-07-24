@@ -858,10 +858,7 @@ function user_menu() {
   $items['admin/people/permissions'] = array(
     'title' => 'Permissions',
     'description' => 'Determine access to features by selecting permissions for roles.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_admin_permissions'),
-    'access arguments' => array('administer permissions'),
-    'file' => 'user.admin.inc',
+    'route_name' => 'user_admin_permissions',
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/people/roles'] = array(
