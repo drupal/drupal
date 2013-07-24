@@ -53,6 +53,9 @@ Cron system
 - Károly Négyesi 'chx' http://drupal.org/user/9446
 - Derek Wright 'dww' http://drupal.org/user/46549
 
+CSS
+- John Albin Wilkins 'JohnAlbin' http://drupal.org/user/32095
+
 Database system
 - Larry Garfield 'Crell' http://drupal.org/user/26398
 
