@@ -42,8 +42,8 @@ class HandlerFieldRoleTest extends UserTestBase {
 
     // Add roles to user 1.
     $user = entity_load('user', 1);
-    $user->roles[1]->value = $rolename_a;
-    $user->roles[2]->value = $rolename_b;
+    $user->addRole($rolename_a);
+    $user->addRole($rolename_b);
     $user->save();
 
     $view = views_get_view('test_views_handler_field_role');

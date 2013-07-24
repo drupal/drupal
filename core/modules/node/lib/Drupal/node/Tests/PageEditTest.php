@@ -132,7 +132,7 @@ class PageEditTest extends NodeTestBase {
 
     // Change the authored by field to another user's name (that is not
     // logged in).
-    $edit['name'] = $this->web_user->name;
+    $edit['name'] = $this->web_user->getUsername();
     $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
     $node = node_load($node->nid, TRUE);
     $this->assertIdentical($node->uid, $this->web_user->id(), 'Node authored by normal user.');

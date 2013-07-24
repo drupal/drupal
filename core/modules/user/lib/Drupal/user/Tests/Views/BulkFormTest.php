@@ -70,7 +70,7 @@ class BulkFormTest extends UserTestBase {
     $this->assertFalse($account->hasRole($role), 'The user no longer has the custom role.');
 
     // Block a user using the bulk form.
-    $this->assertTrue($account->status->value, 'The user is not blocked.');
+    $this->assertTrue($account->isActive(), 'The user is not blocked.');
     $this->assertRaw($account->label(), 'The user is found in the table.');
     $edit = array(
       'user_bulk_form[1]' => TRUE,
@@ -79,7 +79,7 @@ class BulkFormTest extends UserTestBase {
     $this->drupalPost(NULL, $edit, t('Apply'));
     // Re-load the user and check their status.
     $account = entity_load('user', $account->id(), TRUE);
-    $this->assertFalse($account->status->value, 'The user is blocked.');
+    $this->assertTrue($account->isBlocked(), 'The user is blocked.');
     $this->assertNoRaw($account->label(), 'The user is not found in the table.');
 
     // Remove the user status filter from the view.
@@ -98,7 +98,7 @@ class BulkFormTest extends UserTestBase {
     );
     $this->drupalPost(NULL, $edit, t('Apply'));
     $anonymous_account = user_load(0);
-    $this->assertFalse($anonymous_account->status, 0, 'Ensure the anonymous user got blocked.');
+    $this->assertTrue($anonymous_account->isBlocked(), 'Ensure the anonymous user got blocked.');
   }
 
 }

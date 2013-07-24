@@ -53,7 +53,7 @@ class SessionHttpsTest extends WebTestBase {
     $this->drupalGet('user');
     $form = $this->xpath('//form[@id="user-login-form"]');
     $form[0]['action'] = $this->httpsUrl('user');
-    $edit = array('name' => $user->name, 'pass' => $user->pass_raw);
+    $edit = array('name' => $user->getUsername(), 'pass' => $user->pass_raw);
     $this->drupalPost(NULL, $edit, t('Log in'));
 
     // Test a second concurrent session.
@@ -96,7 +96,7 @@ class SessionHttpsTest extends WebTestBase {
     $this->drupalGet('user');
     $form = $this->xpath('//form[@id="user-login-form"]');
     $form[0]['action'] = $this->httpUrl('user');
-    $edit = array('name' => $user->name, 'pass' => $user->pass_raw);
+    $edit = array('name' => $user->getUsername(), 'pass' => $user->pass_raw);
     $this->drupalPost(NULL, $edit, t('Log in'));
     $this->drupalGet($this->httpUrl('admin/config'));
     $this->assertResponse(200);
@@ -152,7 +152,7 @@ class SessionHttpsTest extends WebTestBase {
     $form[0]['action'] = $this->httpsUrl('user');
 
     $edit = array(
-      'name' => $user->name,
+      'name' => $user->getUsername(),
       'pass' => $user->pass_raw,
     );
     $this->drupalPost(NULL, $edit, t('Log in'));

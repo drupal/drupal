@@ -49,11 +49,11 @@ class UserCancelTest extends WebTestBase {
     $this->assertNoRaw(t('Cancel account'), 'No cancel account button displayed.');
 
     // Attempt bogus account cancellation request confirmation.
-    $timestamp = $account->login;
-    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
+    $timestamp = $account->getLastLoginTime();
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime()));
     $this->assertResponse(403, 'Bogus cancelling request rejected.');
     $account = user_load($account->id());
-    $this->assertTrue($account->status == 1, 'User account was not canceled.');
+    $this->assertTrue($account->isActive(), 'User account was not canceled.');
 
     // Confirm user's content has not been altered.
     $test_node = node_load($node->id(), TRUE);
@@ -96,7 +96,7 @@ class UserCancelTest extends WebTestBase {
 
     // Verify that uid 1's account was not cancelled.
     $user1 = user_load(1, TRUE);
-    $this->assertEqual($user1->status, 1, 'User #1 still exists and is not blocked.');
+    $this->assertTrue($user1->isActive(), 'User #1 still exists and is not blocked.');
   }
 
   /**
@@ -124,17 +124,17 @@ class UserCancelTest extends WebTestBase {
 
     // Attempt bogus account cancellation request confirmation.
     $bogus_timestamp = $timestamp + 60;
-    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account->pass, $bogus_timestamp, $account->login));
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account->getPassword(), $bogus_timestamp, $account->getLastLoginTime()));
     $this->assertText(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'), 'Bogus cancelling request rejected.');
     $account = user_load($account->id());
-    $this->assertTrue($account->status == 1, 'User account was not canceled.');
+    $this->assertTrue($account->isActive(), 'User account was not canceled.');
 
     // Attempt expired account cancellation request confirmation.
     $bogus_timestamp = $timestamp - 86400 - 60;
-    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account->pass, $bogus_timestamp, $account->login));
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$bogus_timestamp/" . user_pass_rehash($account->getPassword(), $bogus_timestamp, $account->getLastLoginTime()));
     $this->assertText(t('You have tried to use an account cancellation link that has expired. Please request a new one using the form below.'), 'Expired cancel account request rejected.');
     $account = user_load($account->id(), TRUE);
-    $this->assertTrue($account->status, 'User account was not canceled.');
+    $this->assertTrue($account->isActive(), 'User account was not canceled.');
 
     // Confirm user's content has not been altered.
     $test_node = node_load($node->id(), TRUE);
@@ -168,12 +168,12 @@ class UserCancelTest extends WebTestBase {
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
-    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime()));
     $account = user_load($account->id(), TRUE);
-    $this->assertTrue($account->status == 0, 'User has been blocked.');
+    $this->assertTrue($account->isBlocked(), 'User has been blocked.');
 
     // Confirm that the confirmation message made it through to the end user.
-    $this->assertRaw(t('%name has been disabled.', array('%name' => $account->name)), "Confirmation message displayed to user.");
+    $this->assertRaw(t('%name has been disabled.', array('%name' => $account->getUsername())), "Confirmation message displayed to user.");
   }
 
   /**
@@ -206,9 +206,9 @@ class UserCancelTest extends WebTestBase {
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
-    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime()));
     $account = user_load($account->id(), TRUE);
-    $this->assertTrue($account->status == 0, 'User has been blocked.');
+    $this->assertTrue($account->isBlocked(), 'User has been blocked.');
 
     // Confirm user's content has been unpublished.
     $test_node = node_load($node->id(), TRUE);
@@ -217,7 +217,7 @@ class UserCancelTest extends WebTestBase {
     $this->assertTrue($test_node->status == 0, 'Node revision of the user has been unpublished.');
 
     // Confirm that the confirmation message made it through to the end user.
-    $this->assertRaw(t('%name has been disabled.', array('%name' => $account->name)), "Confirmation message displayed to user.");
+    $this->assertRaw(t('%name has been disabled.', array('%name' => $account->getUsername())), "Confirmation message displayed to user.");
   }
 
   /**
@@ -256,7 +256,7 @@ class UserCancelTest extends WebTestBase {
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
-    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime()));
     $this->assertFalse(user_load($account->id(), TRUE), 'User is not found in the database.');
 
     // Confirm that user's content has been attributed to anonymous user.
@@ -268,7 +268,7 @@ class UserCancelTest extends WebTestBase {
     $this->assertTrue(($test_node->uid != 0 && $test_node->status == 1), "Current revision of the user's node was not attributed to anonymous user.");
 
     // Confirm that the confirmation message made it through to the end user.
-    $this->assertRaw(t('%name has been deleted.', array('%name' => $account->name)), "Confirmation message displayed to user.");
+    $this->assertRaw(t('%name has been deleted.', array('%name' => $account->getUsername())), "Confirmation message displayed to user.");
   }
 
   /**
@@ -322,7 +322,7 @@ class UserCancelTest extends WebTestBase {
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
-    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->pass, $timestamp, $account->login));
+    $this->drupalGet("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime()));
     $this->assertFalse(user_load($account->id(), TRUE), 'User is not found in the database.');
 
     // Confirm that user's content has been deleted.
@@ -332,7 +332,7 @@ class UserCancelTest extends WebTestBase {
     $this->assertFalse(comment_load($comment->id(), TRUE), 'Comment of the user has been deleted.');
 
     // Confirm that the confirmation message made it through to the end user.
-    $this->assertRaw(t('%name has been deleted.', array('%name' => $account->name)), "Confirmation message displayed to user.");
+    $this->assertRaw(t('%name has been deleted.', array('%name' => $account->getUsername())), "Confirmation message displayed to user.");
   }
 
   /**
@@ -351,12 +351,12 @@ class UserCancelTest extends WebTestBase {
     // Delete regular user.
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->drupalPost(NULL, NULL, t('Cancel account'));
-    $this->assertRaw(t('Are you sure you want to cancel the account %name?', array('%name' => $account->name)), 'Confirmation form to cancel account displayed.');
+    $this->assertRaw(t('Are you sure you want to cancel the account %name?', array('%name' => $account->getUsername())), 'Confirmation form to cancel account displayed.');
     $this->assertText(t('Select the method to cancel the account above.'), 'Allows to select account cancellation method.');
 
     // Confirm deletion.
     $this->drupalPost(NULL, NULL, t('Cancel account'));
-    $this->assertRaw(t('%name has been deleted.', array('%name' => $account->name)), 'User deleted.');
+    $this->assertRaw(t('%name has been deleted.', array('%name' => $account->getUsername())), 'User deleted.');
     $this->assertFalse(user_load($account->id()), 'User is not found in the database.');
   }
 
@@ -379,12 +379,12 @@ class UserCancelTest extends WebTestBase {
     // Delete regular user without e-mail address.
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->drupalPost(NULL, NULL, t('Cancel account'));
-    $this->assertRaw(t('Are you sure you want to cancel the account %name?', array('%name' => $account->name)), 'Confirmation form to cancel account displayed.');
+    $this->assertRaw(t('Are you sure you want to cancel the account %name?', array('%name' => $account->getUsername())), 'Confirmation form to cancel account displayed.');
     $this->assertText(t('Select the method to cancel the account above.'), 'Allows to select account cancellation method.');
 
     // Confirm deletion.
     $this->drupalPost(NULL, NULL, t('Cancel account'));
-    $this->assertRaw(t('%name has been deleted.', array('%name' => $account->name)), 'User deleted.');
+    $this->assertRaw(t('%name has been deleted.', array('%name' => $account->getUsername())), 'User deleted.');
     $this->assertFalse(user_load($account->id()), 'User is not found in the database.');
   }
 
@@ -424,7 +424,7 @@ class UserCancelTest extends WebTestBase {
     $this->drupalPost(NULL, NULL, t('Cancel accounts'));
     $status = TRUE;
     foreach ($users as $account) {
-      $status = $status && (strpos($this->content, t('%name has been deleted.', array('%name' => $account->name))) !== FALSE);
+      $status = $status && (strpos($this->content, t('%name has been deleted.', array('%name' => $account->getUsername()))) !== FALSE);
       $status = $status && !user_load($account->id(), TRUE);
     }
     $this->assertTrue($status, 'Users deleted and not found in the database.');
@@ -432,10 +432,10 @@ class UserCancelTest extends WebTestBase {
     // Ensure that admin account was not cancelled.
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
     $admin_user = user_load($admin_user->id());
-    $this->assertTrue($admin_user->status == 1, 'Administrative user is found in the database and enabled.');
+    $this->assertTrue($admin_user->isActive(), 'Administrative user is found in the database and enabled.');
 
     // Verify that uid 1's account was not cancelled.
     $user1 = user_load(1, TRUE);
-    $this->assertEqual($user1->status, 1, 'User #1 still exists and is not blocked.');
+    $this->assertTrue($user1->isActive(), 'User #1 still exists and is not blocked.');
   }
 }

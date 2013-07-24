@@ -89,10 +89,10 @@ class UserPasswordForm implements FormInterface, ControllerInterface {
     // Allow logged in users to request this also.
     if ($user->isAuthenticated()) {
       $form['name']['#type'] = 'value';
-      $form['name']['#value'] = $user->mail;
+      $form['name']['#value'] = $user->getEmail();
       $form['mail'] = array(
         '#prefix' => '<p>',
-        '#markup' =>  t('Password reset instructions will be mailed to %email. You must log out to use the password reset link in the e-mail.', array('%email' => $user->mail)),
+        '#markup' =>  t('Password reset instructions will be mailed to %email. You must log out to use the password reset link in the e-mail.', array('%email' => $user->getEmail())),
         '#suffix' => '</p>',
       );
     }
@@ -135,7 +135,7 @@ class UserPasswordForm implements FormInterface, ControllerInterface {
     // Mail one time login URL and instructions using current language.
     $mail = _user_mail_notify('password_reset', $account->getBCEntity(), $langcode);
     if (!empty($mail)) {
-      watchdog('user', 'Password reset instructions mailed to %name at %email.', array('%name' => $account->name, '%email' => $account->mail));
+      watchdog('user', 'Password reset instructions mailed to %name at %email.', array('%name' => $account->getUsername(), '%email' => $account->getEmail()));
       drupal_set_message(t('Further instructions have been sent to your e-mail address.'));
     }
 

@@ -145,8 +145,8 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
       'user' => array(
         'path' => 'user',
         'title' => 'User',
-        'keys' => $this->search_user->name,
-        'text' => $this->search_user->mail,
+        'keys' => $this->search_user->getUsername(),
+        'text' => $this->search_user->getEmail(),
       ),
       'search_extra_type' => array(
         'path' => 'dummy_path',

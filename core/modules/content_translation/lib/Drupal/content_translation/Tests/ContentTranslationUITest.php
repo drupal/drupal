@@ -169,7 +169,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
         'created' => REQUEST_TIME - mt_rand(0, 1000),
       );
       $edit = array(
-        'content_translation[name]' => $user->name,
+        'content_translation[name]' => $user->getUsername(),
         'content_translation[created]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d H:i:s O'),
       );
       $prefix = $index > 0 ? $langcode . '/' : '';

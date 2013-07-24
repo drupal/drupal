@@ -62,6 +62,17 @@ interface UserInterface extends EntityInterface, AccountInterface {
   public function hasPermission($permission);
 
   /**
+   * Sets the username of this account.
+   *
+   * @param string $username
+   *   The new user name.
+   *
+   * @return \Drupal\user\UserInterface
+   *   The called user entity.
+   */
+  public function setUsername($username);
+
+  /**
    * Returns the hashed password.
    *
    * @return string
@@ -74,22 +85,20 @@ interface UserInterface extends EntityInterface, AccountInterface {
    *
    * @param string $password
    *   The new unhashed password.
+   *
+   * @return \Drupal\user\UserInterface
+   *   The called user entity.
    */
   public function setPassword($password);
-
-  /**
-   * Returns the e-mail address of the user.
-   *
-   * @return string
-   *   The e-mail address.
-   */
-  public function getEmail();
 
   /**
    * Sets the e-mail address of the user.
    *
    * @param string $mail
    *   The new e-mail address of the user.
+   *
+   * @return \Drupal\user\UserInterface
+   *   The called user entity.
    */
   public function setEmail($mail);
 
@@ -128,20 +137,13 @@ interface UserInterface extends EntityInterface, AccountInterface {
   public function getCreatedTime();
 
   /**
-   * The timestamp when the user last accessed the site.
-   *
-   * A value of 0 means the user has never accessed the site.
-   *
-   * @return int
-   *   Timestamp of the last access.
-   */
-  public function getLastAccessedTime();
-
-  /**
    * Sets the UNIX timestamp when the user last accessed the site..
    *
    * @param int $timestamp
    *   Timestamp of the last access.
+   *
+   * @return \Drupal\user\UserInterface
+   *   The called user entity.
    */
   public function setLastAccessTime($timestamp);
 
@@ -158,6 +160,9 @@ interface UserInterface extends EntityInterface, AccountInterface {
    *
    * @param int $timestamp
    *   Timestamp of the last login time.
+   *
+   * @return \Drupal\user\UserInterface
+   *   The called user entity.
    */
   public function setLastLoginTime($timestamp);
 
@@ -192,14 +197,6 @@ interface UserInterface extends EntityInterface, AccountInterface {
    *   The called user entity.
    */
   public function block();
-
-  /**
-   * Returns the timezone of the user.
-   *
-   * @return string
-   *   Name of the timezone.
-   */
-  public function getTimeZone();
 
   /**
    * Returns the e-mail that was used when the user was registered.

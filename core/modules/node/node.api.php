@@ -379,7 +379,7 @@ function hook_node_grants_alter(&$grants, $account, $op) {
 
   if ($op != 'view' && !empty($restricted)) {
     // Now check the roles for this account against the restrictions.
-    foreach ($account->roles as $rid) {
+    foreach ($account->getRoles() as $rid) {
       if (in_array($rid, $restricted)) {
         $grants = array();
       }

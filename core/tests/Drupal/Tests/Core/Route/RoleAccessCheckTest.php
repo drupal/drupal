@@ -161,7 +161,7 @@ class RoleAccessCheckTest extends UnitTestCase {
     foreach ($grant_accounts as $account) {
       $subrequest = Request::create($path, 'GET');
       $subrequest->attributes->set('account', $account);
-      $message = sprintf('Access granted for user with the roles %s on path: %s', implode(', ', $account->roles), $path);
+      $message = sprintf('Access granted for user with the roles %s on path: %s', implode(', ', $account->getRoles()), $path);
       $this->assertSame(AccessCheckInterface::ALLOW, $role_access_check->access($collection->get($path), $subrequest), $message);
     }
 
@@ -169,7 +169,7 @@ class RoleAccessCheckTest extends UnitTestCase {
     foreach ($deny_accounts as $account) {
       $subrequest = Request::create($path, 'GET');
       $subrequest->attributes->set('account', $account);
-      $message = sprintf('Access denied for user %s with the roles %s on path: %s', $account->id(), implode(', ', $account->roles), $path);
+      $message = sprintf('Access denied for user %s with the roles %s on path: %s', $account->id(), implode(', ', $account->getRoles()), $path);
       $has_access = $role_access_check->access($collection->get($path), $subrequest);
       $this->assertSame(AccessCheckInterface::DENY, $has_access , $message);
     }

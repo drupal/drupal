@@ -39,7 +39,7 @@ class UserAdminListingTest extends WebTestBase {
     }
     // Create a blocked user.
     $account = $this->drupalCreateUser()->getNGEntity();
-    $account->status = 0;
+    $account->block();
     $account->save();
     $accounts[$account->label()] = $account;
 

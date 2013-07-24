@@ -4181,7 +4181,7 @@ function drupal_render_cid_parts($granularity = NULL) {
     // resource drag for sites with many users, so when a module is being
     // equivocal, we favor the less expensive 'PER_ROLE' pattern.
     if ($granularity & DRUPAL_CACHE_PER_ROLE) {
-      $cid_parts[] = 'r.' . implode(',', $user->roles);
+      $cid_parts[] = 'r.' . implode(',', $user->getRoles());
     }
     elseif ($granularity & DRUPAL_CACHE_PER_USER) {
       $cid_parts[] = 'u.' . $user->id();

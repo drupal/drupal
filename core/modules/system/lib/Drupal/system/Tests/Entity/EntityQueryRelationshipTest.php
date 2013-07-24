@@ -124,12 +124,12 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
     // This returns the 0th entity as that's only one pointing to the 0th
     // account.
     $this->queryResults = $this->factory->get('entity_test')
-      ->condition("user_id.entity.name", $this->accounts[0]->name)
+      ->condition("user_id.entity.name", $this->accounts[0]->getUsername())
       ->execute();
     $this->assertResults(array(0));
     // This returns the 1st and 2nd entity as those point to the 1st account.
     $this->queryResults = $this->factory->get('entity_test')
-      ->condition("user_id.entity.name", $this->accounts[0]->name, '<>')
+      ->condition("user_id.entity.name", $this->accounts[0]->getUsername(), '<>')
       ->execute();
     $this->assertResults(array(1, 2));
     // This returns all three entities because all of them point to an

@@ -90,7 +90,7 @@ class RegisterFormController extends AccountFormController {
    */
   public function save(array $form, array &$form_state) {
     $account = $this->entity;
-    $pass = $account->pass;
+    $pass = $account->getPassword();
     $admin = $form_state['values']['administer_users'];
     $notify = !empty($form_state['values']['notify']);
 
@@ -109,25 +109,25 @@ class RegisterFormController extends AccountFormController {
     // New administrative account without notification.
     $uri = $account->uri();
     if ($admin && !$notify) {
-      drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
+      drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->getUsername())));
     }
     // No e-mail verification required; log in user immediately.
-    elseif (!$admin && !config('user.settings')->get('verify_mail') && $account->status) {
+    elseif (!$admin && !config('user.settings')->get('verify_mail') && $account->isActive()) {
       _user_mail_notify('register_no_approval_required', $account);
       user_login_finalize($account);
       drupal_set_message(t('Registration successful. You are now logged in.'));
       $form_state['redirect'] = '';
     }
     // No administrator approval required.
-    elseif ($account->status || $notify) {
-      if (empty($account->mail) && $notify) {
-        drupal_set_message(t('The new user <a href="@url">%name</a> was created without an email address, so no welcome message was sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
+    elseif ($account->isActive() || $notify) {
+      if (!$account->getEmail() && $notify) {
+        drupal_set_message(t('The new user <a href="@url">%name</a> was created without an email address, so no welcome message was sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->getUsername())));
       }
       else {
         $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
         if (_user_mail_notify($op, $account)) {
           if ($notify) {
-            drupal_set_message(t('A welcome message with further instructions has been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->name)));
+            drupal_set_message(t('A welcome message with further instructions has been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->getUsername())));
           }
           else {
             drupal_set_message(t('A welcome message with further instructions has been sent to your e-mail address.'));

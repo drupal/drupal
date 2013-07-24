@@ -1429,7 +1429,7 @@ function comment_preview(Comment $comment) {
 
     if ($account->id()) {
       $comment->uid->target_id = $account->id();
-      $comment->name->value = check_plain($account->name);
+      $comment->name->value = check_plain($account->getUsername());
     }
     elseif (empty($comment->name->value)) {
       $comment->name->value = config('user.settings')->get('anonymous');
@@ -1530,8 +1530,8 @@ function template_preprocess_comment(&$variables) {
     $variables['user_picture'] = array();
   }
 
-  if (config('user.settings')->get('signatures') && !empty($account->signature)) {
-    $variables['signature'] = check_markup($account->signature, $account->signature_format, '', TRUE) ;
+  if (config('user.settings')->get('signatures') && $account->getSignature()) {
+    $variables['signature'] = check_markup($account->getSignature(), $account->getSignatureFormat(), '', TRUE) ;
   }
   else {
     $variables['signature'] = '';

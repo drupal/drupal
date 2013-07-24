@@ -35,7 +35,6 @@ function user_admin_account() {
   $result = $query->execute();
 
   $destination = drupal_get_destination();
-  $status = array(t('blocked'), t('active'));
   $roles = array_map('check_plain', user_role_names(TRUE));
   $accounts = array();
   foreach ($result as $account) {
@@ -56,10 +55,10 @@ function user_admin_account() {
     );
     $options[$account->id()] = array(
       'username' => drupal_render($username),
-      'status' => $status[$account->status],
+      'status' => $account->isActive() ? t('active') : t('blocked'),
       'roles' => drupal_render($item_list),
-      'member_for' => format_interval(REQUEST_TIME - $account->created),
-      'access' => $account->access ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $account->access))) : t('never'),
+      'member_for' => format_interval(REQUEST_TIME - $account->getCreatedTime()),
+      'access' => $account->getLastAccessedTime() ? t('@time ago', array('@time' => format_interval(REQUEST_TIME - $account->getLastAccessedTime()))) : t('never'),
     );
     $links = array();
     $links['edit'] = array(
@@ -79,7 +78,7 @@ function user_admin_account() {
       '#links' => $links,
     );
 
-    $options[$account->id()]['title']['data']['#title'] = check_plain($account->name);
+    $options[$account->id()]['title']['data']['#title'] = check_plain($account->getUsername());
 
   }
 

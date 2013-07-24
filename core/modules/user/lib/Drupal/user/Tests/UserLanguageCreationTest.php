@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Tests;
 
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -39,12 +40,8 @@ class UserLanguageCreationTest extends WebTestBase {
 
     // Add predefined language.
     $langcode = 'fr';
-    $edit = array(
-      'predefined_langcode' => 'fr',
-    );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-    $this->assertText('French', 'Language added successfully.');
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), 'Correct page redirection.');
+    $language = new Language(array('id' => $langcode));
+    language_save($language);
 
     // Set language negotiation.
     $edit = array(
@@ -71,8 +68,8 @@ class UserLanguageCreationTest extends WebTestBase {
     $this->drupalPost($langcode . '/admin/people/create', $edit, t('Create new account'));
 
     $user = user_load_by_name($username);
-    $this->assertEqual($user->preferred_langcode, $langcode, 'New user has correct preferred language set.');
-    $this->assertEqual($user->langcode, $langcode, 'New user has correct profile language set.');
+    $this->assertEqual($user->getPreferredLangcode(), $langcode, 'New user has correct preferred language set.');
+    $this->assertEqual($user->language()->id, $langcode, 'New user has correct profile language set.');
 
     // Register a new user and check if the language selector is hidden.
     $this->drupalLogout();
@@ -89,8 +86,8 @@ class UserLanguageCreationTest extends WebTestBase {
     $this->drupalPost($langcode . '/user/register', $edit, t('Create new account'));
 
     $user = user_load_by_name($username);
-    $this->assertEqual($user->preferred_langcode, $langcode, 'New user has correct preferred language set.');
-    $this->assertEqual($user->langcode, $langcode, 'New user has correct profile language set.');
+    $this->assertEqual($user->getPreferredLangcode(), $langcode, 'New user has correct preferred language set.');
+    $this->assertEqual($user->language()->id, $langcode, 'New user has correct profile language set.');
 
     // Test if the admin can use the language selector and if the
     // correct language is was saved.

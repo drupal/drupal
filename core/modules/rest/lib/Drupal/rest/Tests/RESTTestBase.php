@@ -7,6 +7,7 @@
 
 namespace Drupal\rest\Tests;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -237,7 +238,7 @@ abstract class RESTTestBase extends WebTestBase {
   /**
    * Overrides WebTestBase::drupalLogin().
    */
-  protected function drupalLogin($user) {
+  protected function drupalLogin(AccountInterface $user) {
     if (isset($this->curlHandle)) {
       // cURL quirk: when setting CURLOPT_CUSTOMREQUEST to anything other than
       // POST in httpRequest() it has to be restored to POST here. Otherwise the

@@ -302,7 +302,7 @@ class Comment extends EntityNG implements CommentInterface {
       // We test the value with '===' because we need to modify anonymous
       // users as well.
       if ($this->uid->target_id === $user->id() && $user->isAuthenticated()) {
-        $this->name->value = $user->name;
+        $this->name->value = $user->getUsername();
       }
       // Add the values which aren't passed into the function.
       $this->thread->value = $thread;

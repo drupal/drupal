@@ -114,7 +114,7 @@ class User extends EntityNG implements UserInterface {
       }
 
       // Update user roles if changed.
-      if ($this->roles->getValue() != $this->original->roles->getValue()) {
+      if ($this->getRoles() != $this->original->getRoles()) {
         $storage_controller->deleteUserRoles(array($this->id()));
         $storage_controller->saveRoles($this);
       }
@@ -133,7 +133,7 @@ class User extends EntityNG implements UserInterface {
     }
     else {
       // Save user roles.
-      if (count($this->roles) > 1) {
+      if (count($this->getRoles()) > 1) {
         $storage_controller->saveRoles($this);
       }
     }
@@ -247,6 +247,7 @@ class User extends EntityNG implements UserInterface {
    */
   public function setPassword($password) {
     $this->get('pass')->value = $password;
+    return $this;
   }
 
   /**
@@ -261,6 +262,7 @@ class User extends EntityNG implements UserInterface {
    */
   public function setEmail($mail) {
     $this->get('mail')->value = $mail;
+    return $this;
   }
 
   /**
@@ -303,6 +305,7 @@ class User extends EntityNG implements UserInterface {
    */
   public function setLastAccessTime($timestamp) {
     $this->get('access')->value = $timestamp;
+    return $this;
   }
 
   /**
@@ -317,6 +320,7 @@ class User extends EntityNG implements UserInterface {
    */
   public function setLastLoginTime($timestamp) {
     $this->get('login')->value = $timestamp;
+    return $this;
   }
 
   /**
@@ -411,6 +415,14 @@ class User extends EntityNG implements UserInterface {
     $name = $this->get('name')->value ?: \Drupal::config('user.settings')->get('anonymous');
     \Drupal::moduleHandler()->alter('user_format_name', $name, $this);
     return $name;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUsername($username) {
+    $this->set('name', $username);
+    return $this;
   }
 
 }

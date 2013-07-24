@@ -121,11 +121,11 @@ class UserStorageController extends DatabaseStorageControllerNG implements UserS
    */
   public function saveRoles(EntityInterface $user) {
     $query = $this->database->insert('users_roles')->fields(array('uid', 'rid'));
-    foreach ($user->roles as $role) {
-      if (!in_array($role->value, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
+    foreach ($user->getRoles() as $rid) {
+      if (!in_array($rid, array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID))) {
         $query->values(array(
           'uid' => $user->id(),
-          'rid' => $role->value,
+          'rid' => $rid,
         ));
       }
     }

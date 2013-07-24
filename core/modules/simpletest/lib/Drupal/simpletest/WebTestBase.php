@@ -14,6 +14,8 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\UserSession;
 use PDO;
 use stdClass;
 use DOMDocument;
@@ -614,18 +616,18 @@ abstract class WebTestBase extends TestBase {
    *   $account->pass_raw = $pass_raw;
    * @endcode
    *
-   * @param \Drupal\user\UserInterface $account
+   * @param \Drupal\Core\Session\AccountInterface $account
    *   User object representing the user to log in.
    *
    * @see drupalCreateUser()
    */
-  protected function drupalLogin($account) {
+  protected function drupalLogin(AccountInterface $account) {
     if ($this->loggedInUser) {
       $this->drupalLogout();
     }
 
     $edit = array(
-      'name' => $account->name,
+      'name' => $account->getUsername(),
       'pass' => $account->pass_raw
     );
     $this->drupalPost('user', $edit, t('Log in'));
@@ -634,7 +636,7 @@ abstract class WebTestBase extends TestBase {
     if (isset($this->session_id)) {
       $account->session_id = $this->session_id;
     }
-    $pass = $this->assert($this->drupalUserIsLoggedIn($account), format_string('User %name successfully logged in.', array('%name' => $account->name)), 'User login');
+    $pass = $this->assert($this->drupalUserIsLoggedIn($account), format_string('User %name successfully logged in.', array('%name' => $account->getUsername())), 'User login');
     if ($pass) {
       $this->loggedInUser = $account;
     }
@@ -742,12 +744,12 @@ abstract class WebTestBase extends TestBase {
     $conf['simpletest_parent_profile'] = $this->originalProfile;
 
     // Define information about the user 1 account.
-    $this->root_user = (object) array(
+    $this->root_user = new UserSession(array(
       'uid' => 1,
       'name' => 'admin',
       'mail' => 'admin@example.com',
       'pass_raw' => $this->randomName(),
-    );
+    ));
 
     // Reset the static batch to remove Simpletest's batch operations.
     $batch = &batch_get();
@@ -850,7 +852,7 @@ abstract class WebTestBase extends TestBase {
           'site_mail' => 'simpletest@example.com',
           'account' => array(
             'name' => $this->root_user->name,
-            'mail' => $this->root_user->mail,
+            'mail' => $this->root_user->getEmail(),
             'pass' => array(
               'pass1' => $this->root_user->pass_raw,
               'pass2' => $this->root_user->pass_raw,

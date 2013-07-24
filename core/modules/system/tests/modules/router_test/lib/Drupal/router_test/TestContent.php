@@ -27,7 +27,7 @@ class TestContent {
    */
   public function test11() {
     $account  = \Drupal::request()->attributes->get('account');
-    return isset($account->name) ? $account->name : '';
+    return $account->getUsername();
   }
 
 }

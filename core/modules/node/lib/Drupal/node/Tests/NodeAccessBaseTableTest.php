@@ -72,7 +72,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
       $this->drupalLogin($this->webUser);
       foreach (array(0 => 'Public', 1 => 'Private') as $is_private => $type) {
         $edit = array(
-          'title' => t('@private_public Article created by @user', array('@private_public' => $type, '@user' => $this->webUser->name)),
+          'title' => t('@private_public Article created by @user', array('@private_public' => $type, '@user' => $this->webUser->getUsername())),
         );
         if ($is_private) {
           $edit['private'] = TRUE;

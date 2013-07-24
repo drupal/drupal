@@ -392,7 +392,7 @@ function rdf_preprocess_user(&$variables) {
         '#attributes' => array(
           'about' => url($uri['path'], $uri['options']),
           'property' => $name_mapping['properties'],
-          'content' => $account->name,
+          'content' => $account->getUsername(),
           'lang' => '',
         ),
       );

@@ -46,7 +46,7 @@ class SearchPageTextTest extends SearchTestBase {
     $this->assertText(t('Search'));
     $this->assertTitle($title, 'Search page title is correct');
 
-    $edit['keys'] = $this->searching_user->name;
+    $edit['keys'] = $this->searching_user->getUsername();
     $this->drupalPost('search/user', $edit, t('Search'));
     $this->assertText(t('Search'));
     $this->assertTitle($title, 'Search page title is correct');

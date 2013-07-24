@@ -42,7 +42,7 @@ abstract class AccountFormController extends EntityFormController {
       '#required' => TRUE,
       '#attributes' => array('class' => array('username'), 'autocorrect' => 'off', 'autocomplete' => 'off', 'autocapitalize' => 'off',
       'spellcheck' => 'false'),
-      '#default_value' => (!$register ? $account->name : ''),
+      '#default_value' => (!$register ? $account->getUsername() : ''),
       '#access' => ($register || ($user->id() == $account->id() && user_access('change own username')) || $admin),
       '#weight' => -10,
     );
@@ -54,8 +54,8 @@ abstract class AccountFormController extends EntityFormController {
       '#type' => 'email',
       '#title' => t('E-mail address'),
       '#description' => t('A valid e-mail address. All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'),
-      '#required' => !(empty($account->mail) && user_access('administer users')),
-      '#default_value' => (!$register ? $account->mail : ''),
+      '#required' => !(!$account->getEmail() && user_access('administer users')),
+      '#default_value' => (!$register ? $account->getEmail() : ''),
       '#attributes' => array('autocomplete' => 'off'),
     );
 
@@ -117,10 +117,10 @@ abstract class AccountFormController extends EntityFormController {
     }
 
     if ($admin) {
-      $status = isset($account->status) ? $account->status : 1;
+      $status = $account->isActive();
     }
     else {
-      $status = $register ? $config->get('register') == USER_REGISTER_VISITORS : $account->status;
+      $status = $register ? $config->get('register') == USER_REGISTER_VISITORS : $account->isActive();
     }
 
     $form['account']['status'] = array(
@@ -148,7 +148,7 @@ abstract class AccountFormController extends EntityFormController {
     $form['account']['roles'] = array(
       '#type' => 'checkboxes',
       '#title' => t('Roles'),
-      '#default_value' => (!$register ? $account->roles : array()),
+      '#default_value' => (!$register ? $account->getRoles() : array()),
       '#options' => $roles,
       '#access' => $roles && user_access('administer permissions'),
       DRUPAL_AUTHENTICATED_RID => $checkbox_authenticated,
@@ -171,9 +171,9 @@ abstract class AccountFormController extends EntityFormController {
     $form['signature_settings']['signature'] = array(
       '#type' => 'text_format',
       '#title' => t('Signature'),
-      '#default_value' => isset($account->signature) ? $account->signature : '',
+      '#default_value' => $account->getSignature(),
       '#description' => t('Your signature will be publicly displayed at the end of your comments.'),
-      '#format' => isset($account->signature_format) ? $account->signature_format : NULL,
+      '#format' => $account->getSignatureFormat(),
     );
 
     $user_preferred_langcode = $register ? $language_interface->id : $account->getPreferredLangcode();

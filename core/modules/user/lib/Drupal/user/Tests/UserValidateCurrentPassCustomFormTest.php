@@ -55,7 +55,7 @@ class UserValidateCurrentPassCustomFormTest extends WebTestBase {
 
     // Submit the custom form with the admin user using the access user's password.
     $edit = array();
-    $edit['user_form_test_field'] = $this->accessUser->name;
+    $edit['user_form_test_field'] = $this->accessUser->getUsername();
     $edit['current_pass'] = $this->accessUser->pass_raw;
     $this->drupalPost('user_form_test_current_password/' . $this->accessUser->id(), $edit, t('Test'));
     $this->assertText(t('The password has been validated and the form submitted successfully.'));

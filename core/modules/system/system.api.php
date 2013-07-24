@@ -2642,9 +2642,9 @@ function hook_update_N(&$sandbox) {
     ->execute();
 
   foreach ($users as $user) {
-    $user->name .= '!';
+    $user->setUsername($user->getUsername() . '!');
     db_update('users')
-      ->fields(array('name' => $user->name))
+      ->fields(array('name' => $user->getUsername()))
       ->condition('uid', $user->id())
       ->execute();
 

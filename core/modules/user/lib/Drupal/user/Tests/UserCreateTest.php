@@ -115,7 +115,7 @@ class UserCreateTest extends WebTestBase {
       $this->drupalGet('admin/people');
       $this->assertText($edit['name'], 'User found in list of users');
       $user = user_load_by_name($name);
-      $this->assertEqual($user->status == 1, 'User is not blocked');
+      $this->assertEqual($user->isActive(), 'User is not blocked');
     }
   }
 }

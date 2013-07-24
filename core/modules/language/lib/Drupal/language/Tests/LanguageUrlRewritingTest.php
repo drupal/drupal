@@ -62,7 +62,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
     $request = $this->prepareRequestForGenerator();
     // Check that URL rewriting is not applied to subrequests.
     $this->drupalGet('language_test/subrequest');
-    $this->assertText($this->web_user->name, 'Page correctly retrieved');
+    $this->assertText($this->web_user->getUsername(), 'Page correctly retrieved');
   }
 
   /**

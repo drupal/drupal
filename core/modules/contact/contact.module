@@ -6,6 +6,7 @@
  */
 
 use Drupal\contact\Plugin\Core\Entity\Category;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_help().
@@ -122,7 +123,7 @@ function contact_menu() {
  *
  * @see contact_menu()
  */
-function _contact_personal_tab_access($account) {
+function _contact_personal_tab_access(UserInterface $account) {
   global $user;
 
   // Anonymous users cannot have contact forms.
@@ -141,7 +142,7 @@ function _contact_personal_tab_access($account) {
   }
 
   // If requested user has been blocked, do not allow users to contact them.
-  if (empty($account->status)) {
+  if ($account->isBlocked()) {
     return FALSE;
   }
 
@@ -274,7 +275,7 @@ function contact_mail($key, &$message, $params) {
     $variables['!sender-url'] = url($sender_uri['path'], array('absolute' => TRUE, 'language' => $language) + $sender_uri['options']);
   }
   else {
-    $variables['!sender-url'] = $params['sender']->mail;
+    $variables['!sender-url'] = $params['sender']->getEmail();
   }
 
   $options = array('langcode' => $language->id);

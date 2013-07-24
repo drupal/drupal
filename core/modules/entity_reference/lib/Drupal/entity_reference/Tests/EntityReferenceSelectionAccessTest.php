@@ -260,7 +260,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         $account = $values;
       }
       $users[$key] = $account;
-      $user_labels[$key] = check_plain($account->name);
+      $user_labels[$key] = check_plain($account->getUsername());
     }
 
     // Test as a non-admin.

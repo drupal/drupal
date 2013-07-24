@@ -127,7 +127,8 @@ class SearchCommentTest extends SearchTestBase {
   function testSearchResultsCommentAccess() {
     $comment_body = 'Test comment body';
     $this->comment_subject = 'Test comment subject';
-    $this->admin_role = $this->admin_user->roles[0];
+    $roles = $this->admin_user->getRoles();
+    $this->admin_role = $roles[0];
 
     // Create a node.
     variable_set('comment_preview_article', DRUPAL_OPTIONAL);

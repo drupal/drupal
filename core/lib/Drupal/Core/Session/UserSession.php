@@ -19,23 +19,16 @@ class UserSession implements AccountInterface {
    *
    * @var int
    */
-  protected $uid;
-
-  /**
-   * Session hostname.
-   *
-   * @todo: This does not seem to be used, remove?
-   *
-   * @var string
-   */
-  public $hostname;
+  protected $uid = 0;
 
   /**
    * List of the roles this user has.
    *
+   * Defaults to the anonymous role.
+   *
    * @var array
    */
-  public $roles;
+  protected $roles = array('anonymous');
 
   /**
    * Session ID.
@@ -63,7 +56,7 @@ class UserSession implements AccountInterface {
    *
    * @var string.
    */
-  public $timestamp;
+  protected $timestamp;
 
   /**
    * The name of this account.
@@ -85,6 +78,20 @@ class UserSession implements AccountInterface {
    * @var string
    */
   protected $preferred_admin_langcode;
+
+  /**
+   * The e-mail address of this account.
+   *
+   * @var string
+   */
+  protected $mail;
+
+  /**
+   * The timezone of this account.
+   *
+   * @var string
+   */
+  protected $timezone;
 
   /**
    * Constructs a new user session.
@@ -200,6 +207,27 @@ class UserSession implements AccountInterface {
     $name = $this->name ?: \Drupal::config('user.settings')->get('anonymous');
     \Drupal::moduleHandler()->alter('user_format_name', $name, $this);
     return $name;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEmail() {
+    return $this->mail;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTimeZone() {
+    return $this->timezone;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLastAccessedTime() {
+    return $this->timestamp;
   }
 
 }

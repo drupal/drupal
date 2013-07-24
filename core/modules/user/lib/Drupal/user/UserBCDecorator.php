@@ -101,7 +101,7 @@ class UserBCDecorator extends EntityBCDecorator implements UserInterface {
    * {@inheritdoc}
    */
   public function setPassword($password) {
-    $this->decorated->setPassword($password);
+    return $this->decorated->setPassword($password);
   }
 
   /**
@@ -115,7 +115,7 @@ class UserBCDecorator extends EntityBCDecorator implements UserInterface {
    * {@inheritdoc}
    */
   public function setEmail($mail) {
-    $this->decorated->setEmail($mail);
+    return $this->decorated->setEmail($mail);
   }
 
   /**
@@ -129,7 +129,7 @@ class UserBCDecorator extends EntityBCDecorator implements UserInterface {
    * {@inheritdoc}
    */
   public function getSignature() {
-    return $this->decorated->getDefaultTheme();
+    return $this->decorated->getSignature();
   }
 
   /**
@@ -157,7 +157,7 @@ class UserBCDecorator extends EntityBCDecorator implements UserInterface {
    * {@inheritdoc}
    */
   public function setLastAccessTime($timestamp) {
-    $this->decorated->setLastAccessTime($timestamp);
+    return $this->decorated->setLastAccessTime($timestamp);
   }
 
   /**
@@ -171,14 +171,14 @@ class UserBCDecorator extends EntityBCDecorator implements UserInterface {
    * {@inheritdoc}
    */
   public function setLastLoginTime($timestamp) {
-    $this->decorated->setLastLoginTime($timestamp);
+    return $this->decorated->setLastLoginTime($timestamp);
   }
 
   /**
    * {@inheritdoc}
    */
   public function isActive() {
-    $this->decorated->isActive();
+    return $this->decorated->isActive();
   }
 
   /**
@@ -251,5 +251,11 @@ class UserBCDecorator extends EntityBCDecorator implements UserInterface {
     return $this->decorated->getUsername();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function setUsername($username) {
+    return $this->decorated->setUsername($username);
+  }
 
 }

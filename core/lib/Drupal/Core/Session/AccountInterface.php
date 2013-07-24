@@ -125,4 +125,30 @@ interface AccountInterface {
    */
   public function getUsername();
 
+  /**
+   * Returns the e-mail address of this account.
+   *
+   * @return string
+   *   The e-mail address.
+   */
+  public function getEmail();
+
+  /**
+   * Returns the timezone of this account.
+   *
+   * @return string
+   *   Name of the timezone.
+   */
+  public function getTimeZone();
+
+  /**
+   * The timestamp when the account last accessed the site.
+   *
+   * A value of 0 means the user has never accessed the site.
+   *
+   * @return int
+   *   Timestamp of the last access.
+   */
+  public function getLastAccessedTime();
+
 }

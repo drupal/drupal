@@ -82,7 +82,7 @@ class SimpleTestTest extends WebTestBase {
       // Test the maximum redirection option.
       $this->drupalLogout();
       $edit = array(
-        'name' => $user->name,
+        'name' => $user->getUsername(),
         'pass' => $user->pass_raw
       );
       $this->maximumRedirects = 1;

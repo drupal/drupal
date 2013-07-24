@@ -56,7 +56,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:cid]'] = $comment->id();
     $tests['[comment:hostname]'] = check_plain($comment->hostname->value);
     $tests['[comment:name]'] = filter_xss($comment->name->value);
-    $tests['[comment:mail]'] = check_plain($this->admin_user->mail);
+    $tests['[comment:mail]'] = check_plain($this->admin_user->getEmail());
     $tests['[comment:homepage]'] = check_url($comment->homepage->value);
     $tests['[comment:title]'] = filter_xss($comment->subject->value);
     $tests['[comment:body]'] = $comment->comment_body->processed;
@@ -69,7 +69,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:node:nid]'] = $comment->nid->target_id;
     $tests['[comment:node:title]'] = check_plain($node->title);
     $tests['[comment:author:uid]'] = $comment->uid->target_id;
-    $tests['[comment:author:name]'] = check_plain($this->admin_user->name);
+    $tests['[comment:author:name]'] = check_plain($this->admin_user->getUsername());
 
     // Test to make sure that we generated something for each token.
     $this->assertFalse(in_array(0, array_map('strlen', $tests)), 'No empty tokens generated.');
@@ -82,13 +82,13 @@ class CommentTokenReplaceTest extends CommentTestBase {
     // Generate and test unsanitized tokens.
     $tests['[comment:hostname]'] = $comment->hostname->value;
     $tests['[comment:name]'] = $comment->name->value;
-    $tests['[comment:mail]'] = $this->admin_user->mail;
+    $tests['[comment:mail]'] = $this->admin_user->getEmail();
     $tests['[comment:homepage]'] = $comment->homepage->value;
     $tests['[comment:title]'] = $comment->subject->value;
     $tests['[comment:body]'] = $comment->comment_body->value;
     $tests['[comment:parent:title]'] = $parent_comment->subject->value;
     $tests['[comment:node:title]'] = $node->title;
-    $tests['[comment:author:name]'] = $this->admin_user->name;
+    $tests['[comment:author:name]'] = $this->admin_user->getUsername();
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, array('comment' => $comment), array('langcode' => $language_interface->id, 'sanitize' => FALSE));

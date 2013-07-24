@@ -147,7 +147,7 @@ function _session_test_set_not_started() {
  * Implements hook_user_login().
  */
 function session_test_user_login($account) {
-  if ($account->name == 'session_test_user') {
+  if ($account->getUsername() == 'session_test_user') {
     // Exit so we can verify that the session was regenerated
     // before hook_user_login() was called.
     exit;

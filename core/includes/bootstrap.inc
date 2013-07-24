@@ -1898,8 +1898,8 @@ function drupal_get_user_timezone() {
   global $user;
   $config = config('system.timezone');
 
-  if ($user && $config->get('user.configurable') && $user->id() && $user->timezone) {
-    return $user->timezone;
+  if ($user && $config->get('user.configurable') && $user->isAuthenticated() && $user->getTimezone()) {
+    return $user->getTimezone();
   }
   else {
     // Ignore PHP strict notice if time zone has not yet been set in the php.ini
