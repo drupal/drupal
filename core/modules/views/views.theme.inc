@@ -511,6 +511,7 @@ function template_preprocess_views_view_table(&$variables) {
   // Store rows so that they may be used by further preprocess functions.
   $result = $variables['result'] = $variables['rows'];
   $variables['rows'] = array();
+  // @todo Remove field_classes to field_attributes.
   $variables['field_classes'] = array();
   $variables['header'] = array();
 
@@ -575,6 +576,7 @@ function template_preprocess_views_view_table(&$variables) {
       }
 
       // Set up the header label class.
+      // @todo Rename to header_attributes.
       $variables['header_classes'][$field] = array();
       if ($fields[$field]->options['element_default_classes']) {
         $variables['header_classes'][$field]['class'][] = 'views-field';
@@ -600,6 +602,8 @@ function template_preprocess_views_view_table(&$variables) {
         if ($element_label_type) {
           $variables['header'][$field] = '<' . $element_label_type . '>' . $variables['header'][$field] . '</' . $element_label_type . '>';
         }
+        // Improves accessibility of complex tables.
+        $vars['header_classes'][$field]['id'] = drupal_html_id('view-' . $field . '-table-column');
       }
     }
 
@@ -624,6 +628,11 @@ function template_preprocess_views_view_table(&$variables) {
       // Add responsive header classes.
       if (!empty($options['info'][$field]['responsive'])) {
         $variables['field_classes'][$field][$num]['class'][] = $options['info'][$field]['responsive'];
+      }
+
+      // Improves accessibility of complex tables.
+      if (isset($vars['header_classes'][$field]['id'])) {
+        $vars['field_classes'][$field][$num]['headers'] = array($vars['header_classes'][$field]['id']);
       }
 
       if (!empty($fields[$field]) && empty($fields[$field]->options['exclude'])) {
