@@ -274,7 +274,7 @@ Menu module
 Menu Link module
 - Andrei Mateescu 'amateescu' http://drupal.org/user/729614
 - Károly Négyesi 'chx' http://drupal.org/user/9446
-- @todo Anyone else from the menu system?
+- Peter Wolanin 'pwolanin' http://drupal.org/user/49851
 
 Node module
 - Moshe Weitzman 'moshe weitzman' http://drupal.org/user/23
