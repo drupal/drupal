@@ -317,6 +317,7 @@ tr .ajax-progress-throbber .throbber {
   overflow: hidden;
   height: 1px;
   width: 1px;
+  word-wrap: normal;
 }
 
 /**
