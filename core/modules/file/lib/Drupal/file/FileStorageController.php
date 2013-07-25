@@ -52,7 +52,7 @@ class FileStorageController extends DatabaseStorageControllerNG implements FileS
     $properties['uuid'] = array(
       'label' => t('UUID'),
       'description' => t('The file UUID.'),
-      'type' => 'string_field',
+      'type' => 'uuid_field',
       'read-only' => TRUE,
     );
     $properties['langcode'] = array(
