@@ -23,9 +23,6 @@ field.text.instance_settings:
     text_processing:
       type: string
       label: 'Text processing'
-    user_register_form:
-      type: boolean
-      label: 'Display on user registration form.'
 
 field.text.value:
   type: sequence
@@ -54,9 +51,6 @@ field.text_long.instance_settings:
     text_processing:
       type: string
       label: 'Text processing'
-    user_register_form:
-      type: boolean
-      label: 'Display on user registration form.'
 
 field.text_long.value:
   type: sequence
@@ -88,9 +82,6 @@ field.text_with_summary.instance_settings:
     display_summary:
       type: boolean
       label: 'Summary input'
-    user_register_form:
-      type: boolean
-      label: 'Display on user registration form.'
 
 field.text_with_summary.value:
   type: sequence

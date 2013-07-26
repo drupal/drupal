@@ -18,6 +18,5 @@ settings:
   alt_field_required: 0
   title_field_required: 0
   default_image: 0
-  user_register_form: false
 status: 1
 langcode: und
