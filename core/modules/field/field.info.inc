@@ -544,7 +544,7 @@ function field_info_instance_settings($type) {
  *
  * @deprecated as of Drupal 8.0. Use the 'settings' property in the definition
  *   array returned by
- *   Drupal::service('plugin.manager.field.formatter')->getDefinition()
+ *   Drupal::service('plugin.manager.field.widget')->getDefinition()
  */
 function field_info_widget_settings($type) {
   $info = field_info_widget_types($type);
@@ -564,7 +564,7 @@ function field_info_widget_settings($type) {
  *
  * @deprecated as of Drupal 8.0. Use the 'settings' property in the definition
  *   array returned by
- *   Drupal::service('plugin.manager.field.widget')->getDefinition()
+ *   Drupal::service('plugin.manager.field.formatter')->getDefinition()
  */
 function field_info_formatter_settings($type) {
   $info = field_info_formatter_types($type);
