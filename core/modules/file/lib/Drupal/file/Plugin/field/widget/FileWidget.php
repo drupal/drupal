@@ -164,7 +164,12 @@ class FileWidget extends WidgetBase {
       // field. These are added here so that they may be referenced easily
       // through a hook_form_alter().
       $elements['#file_upload_title'] = t('Add a new file');
-      $elements['#file_upload_description'] = theme('file_upload_help', array('description' => '', 'upload_validators' => $elements[0]['#upload_validators'], 'cardinality' => $cardinality));
+      $elements['#file_upload_description'] = array(
+        '#theme' => 'file_upload_help',
+        '#description' => '',
+        '#upload_validators' => $elements[0]['#upload_validators'],
+        '#cardinality' => $cardinality,
+      );
     }
 
     return $elements;
@@ -225,7 +230,13 @@ class FileWidget extends WidgetBase {
 
     $default_fids = $element['#extended'] ? $element['#default_value']['fids'] : $element['#default_value'];
     if (empty($default_fids)) {
-      $element['#description'] = theme('file_upload_help', array('description' => $element['#description'], 'upload_validators' => $element['#upload_validators'], 'cardinality' => $cardinality));
+      $file_upload_help = array(
+        '#theme' => 'file_upload_help',
+        '#description' => $element['#description'],
+        '#upload_validators' => $element['#upload_validators'],
+        '#cardinality' => $cardinality,
+      );
+      $element['#description'] = drupal_render($file_upload_help);
       $element['#multiple'] = $cardinality != 1 ? TRUE : FALSE;
       if ($cardinality != 1 && $cardinality != -1) {
         $element['#element_validate'] = array('file_field_widget_multiple_count_validate');

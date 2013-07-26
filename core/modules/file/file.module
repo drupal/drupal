@@ -978,7 +978,8 @@ function file_ajax_upload() {
     // Invalid request.
     drupal_set_message(t('An unrecoverable error occurred. The uploaded file likely exceeded the maximum file size (@size) that this server supports.', array('@size' => format_size(file_upload_max_size()))), 'error');
     $response = new AjaxResponse();
-    return $response->addCommand(new ReplaceCommand(NULL, theme('status_messages')));
+    $status_messages = array('#theme' => 'status_messages');
+    return $response->addCommand(new ReplaceCommand(NULL, drupal_render($status_messages)));
   }
 
   list($form, $form_state) = ajax_get_form();
@@ -987,7 +988,8 @@ function file_ajax_upload() {
     // Invalid form_build_id.
     drupal_set_message(t('An unrecoverable error occurred. Use of this form has expired. Try reloading the page and submitting again.'), 'error');
     $response = new AjaxResponse();
-    return $response->addCommand(new ReplaceCommand(NULL, theme('status_messages')));
+    $status_messages = array('#theme' => 'status_messages');
+    return $response->addCommand(new ReplaceCommand(NULL, drupal_render($status_messages)));
   }
 
   // Get the current element and count the number of files.
@@ -1014,7 +1016,8 @@ function file_ajax_upload() {
     $form['#suffix'] .= '<span class="ajax-new-content"></span>';
   }
 
-  $form['#prefix'] .= theme('status_messages');
+  $status_messages = array('#theme' => 'status_messages');
+  $form['#prefix'] .= drupal_render($status_messages);
   $output = drupal_render($form);
   $js = drupal_add_js();
   $settings = drupal_merge_js_settings($js['settings']['data']);
@@ -1321,17 +1324,18 @@ function file_managed_file_process($element, &$form_state, $form) {
 
   if (!empty($fids) && $element['#files']) {
     foreach ($element['#files'] as $delta => $file) {
+      $file_link = array(
+        '#theme' => 'file_link',
+        '#file' => $file,
+      );
       if ($element['#multiple']) {
         $element['file_' . $delta]['selected'] = array(
           '#type' => 'checkbox',
-          '#title' => theme('file_link', array('file' => $file)) . ' ',
+          '#title' => drupal_render($file_link),
         );
       }
       else {
-        $element['file_' . $delta]['filename'] = array(
-          '#markup' => theme('file_link', array('file' => $file)) . ' ',
-          '#weight' => -10,
-        );
+        $element['file_' . $delta]['filename'] = $file_link += array('#weight' => -10);
       }
     }
   }
@@ -1655,11 +1659,6 @@ function file_managed_file_pre_render($element) {
  */
 function theme_file_link($variables) {
   $file = $variables['file'];
-  $icon_directory = $variables['icon_directory'];
-
-  $url = file_create_url($file->getFileUri());
-  // theme_file_icon() requires a file entity, make sure it gets one.
-  $icon = theme('file_icon', array('file' => $file, 'icon_directory' => $icon_directory));
 
   // Set options as per anchor format described at
   // http://microformats.org/wiki/file-format-examples
@@ -1678,7 +1677,13 @@ function theme_file_link($variables) {
     $options['attributes']['title'] = check_plain($file->getFilename());
   }
 
-  return '<span class="file">' . $icon . ' ' . l($link_text, $url, $options) . '</span>';
+  $file_icon = array(
+    '#theme' => 'file_icon',
+    '#file' => $file,
+    '#icon_directory' => $variables['icon_directory'],
+  );
+
+  return '<span class="file">' . drupal_render($file_icon) . ' ' . l($link_text, file_create_url($file->getFileUri()), $options) . '</span>';
 }
 
 /**
