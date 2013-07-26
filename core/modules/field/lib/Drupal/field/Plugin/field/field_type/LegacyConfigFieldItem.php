@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Plugin\field\field_type;
 
+use Drupal\Core\Entity\Field\PrepareCacheInterface;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase;
 use Drupal\field\Plugin\Core\Entity\Field;
 
@@ -23,7 +24,7 @@ use Drupal\field\Plugin\Core\Entity\Field;
  * @todo Remove once all core field types have been converted (see
  * http://drupal.org/node/2014671).
  */
-abstract class LegacyConfigFieldItem extends ConfigFieldItemBase {
+abstract class LegacyConfigFieldItem extends ConfigFieldItemBase implements PrepareCacheInterface {
 
   /**
    * {@inheritdoc}

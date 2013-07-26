@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityNG;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\entity\Plugin\Core\Entity\EntityFormDisplay;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Entity\Field\PrepareCacheInterface;
 
 /**
  * @defgroup field_storage Field Storage API
@@ -678,7 +679,9 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
           $definition = _field_generate_entity_field_definition($field, $options['instance']);
           $items = \Drupal::typedData()->create($definition, $values, $field_name, $entity);
           foreach ($items as $item) {
-            $item->prepareCache();
+            if ($item instanceof PrepareCacheInterface) {
+              $item->prepareCache();
+            }
           }
           $entity->{$field_name}[$langcode] = $items->getValue();
         }
