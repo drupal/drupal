@@ -101,6 +101,18 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $this->drupalGet('admin/structure/types/manage/article');
     $this->assertField('content_translation');
     $this->assertFieldChecked('edit-content-translation');
+
+    // Verify that translation may be enabled for the article content type.
+    $edit = array(
+      'language_configuration[content_translation]' => TRUE,
+    );
+    // Make sure the checkbox is available and not checked by default.
+    $this->drupalGet('admin/structure/types/manage/article');
+    $this->assertField('language_configuration[content_translation]');
+    $this->assertNoFieldChecked('edit-language-configuration-content-translation');
+    $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
+    $this->drupalGet('admin/structure/types/manage/article');
+    $this->assertFieldChecked('edit-language-configuration-content-translation');
   }
 
   /**
