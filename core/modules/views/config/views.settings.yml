@@ -26,5 +26,23 @@ field_rewrite_elements:
   h5: H5
   h6: H6
   p: P
+  header: HEADER
+  footer: FOOTER
+  article: ARTICLE
+  section: SECTION
+  aside: ASIDE
+  details: DETAILS
+  blockquote: BLOCKQUOTE
+  figure: FIGURE
+  address: ADDRESS
+  code: CODE
+  pre: PRE
+  var: VAR
+  samp: SAMP
+  kbd: KBD
   strong: STRONG
   em: EM
+  del: DEL
+  ins: INS
+  q: Q
+  s: S
