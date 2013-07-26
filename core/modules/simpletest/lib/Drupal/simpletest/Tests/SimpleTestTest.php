@@ -249,6 +249,7 @@ class SimpleTestTest extends WebTestBase {
    * @param string $status Assertion status.
    * @param string $file File where the assertion originated.
    * @param string $functuion Function where the assertion originated.
+   *
    * @return Assertion result.
    */
   function assertAssertion($message, $type, $status, $file, $function) {
@@ -315,6 +316,7 @@ class SimpleTestTest extends WebTestBase {
    *
    * @param $element
    *   Element to extract text from.
+   *
    * @return
    *   Extracted text.
    */

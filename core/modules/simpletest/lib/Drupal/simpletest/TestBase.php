@@ -159,9 +159,9 @@ abstract class TestBase {
   /**
    * Whether to die in case any test assertion fails.
    *
-   * @see run-tests.sh
-   *
    * @var boolean
+   *
+   * @see run-tests.sh
    */
   public $dieOnFail = FALSE;
 
@@ -316,6 +316,7 @@ abstract class TestBase {
    *
    * @param $message_id
    *   Message ID of the assertion to delete.
+   *
    * @return
    *   TRUE if the assertion was deleted, FALSE otherwise.
    *
@@ -384,6 +385,7 @@ abstract class TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -407,6 +409,7 @@ abstract class TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -428,6 +431,7 @@ abstract class TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -449,6 +453,7 @@ abstract class TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -472,6 +477,7 @@ abstract class TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -495,6 +501,7 @@ abstract class TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -518,6 +525,7 @@ abstract class TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -541,6 +549,7 @@ abstract class TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -594,6 +603,7 @@ abstract class TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE.
    */
@@ -613,6 +623,7 @@ abstract class TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   FALSE.
    */
@@ -634,6 +645,7 @@ abstract class TestBase {
    *   this default.
    * @param $caller
    *   The caller of the error.
+   *
    * @return
    *   FALSE.
    */
@@ -976,13 +988,13 @@ abstract class TestBase {
    * the test process still contains an old kernel and service container with an
    * old module list.
    *
+   * @see TestBase::prepareEnvironment()
+   * @see TestBase::tearDown()
+   *
    * @todo Fix http://drupal.org/node/1708692 so that module enable/disable
    *   changes are immediately reflected in drupal_container(). Until then,
    *   tests can invoke this workaround when requiring services from newly
    *   enabled modules to be immediately available in the same request.
-   *
-   * @see TestBase::prepareEnvironment()
-   * @see TestBase::tearDown()
    */
   protected function rebuildContainer() {
     $this->kernel = new DrupalKernel('testing', drupal_classloader(), FALSE);
@@ -1087,6 +1099,7 @@ abstract class TestBase {
    * Handle errors during test runs.
    *
    * Because this is registered in set_error_handler(), it has to be public.
+   *
    * @see set_error_handler
    */
   public function errorHandler($severity, $message, $file = NULL, $line = NULL) {
