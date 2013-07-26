@@ -154,8 +154,12 @@ class EntityManager extends PluginManagerBase {
   public function getControllerClass($entity_type, $controller_type, $nested = NULL) {
     $definition = $this->getDefinition($entity_type);
     $definition = $definition['controllers'];
+    if (!$definition) {
+      throw new \InvalidArgumentException(sprintf('The entity type (%s) does not exist.', $entity_type));
+    }
+
     if (empty($definition[$controller_type])) {
-      throw new \InvalidArgumentException(sprintf('The entity (%s) did not specify a %s.', $entity_type, $controller_type));
+      throw new \InvalidArgumentException(sprintf('The entity type (%s) did not specify a %s controller.', $entity_type, $controller_type));
     }
 
     $class = $definition[$controller_type];
@@ -163,14 +167,14 @@ class EntityManager extends PluginManagerBase {
     // Some class definitions can be nested.
     if (isset($nested)) {
       if (empty($class[$nested])) {
-        throw new \InvalidArgumentException(sprintf("Missing '%s: %s' for entity '%s'", $controller_type, $nested, $entity_type));
+        throw new \InvalidArgumentException(sprintf("The entity type (%s) did not specify a %s controller: %s.", $entity_type, $controller_type, $nested));
       }
 
       $class = $class[$nested];
     }
 
     if (!class_exists($class)) {
-      throw new \InvalidArgumentException(sprintf('Entity (%s) %s "%s" does not exist.', $entity_type, $controller_type, $class));
+      throw new \InvalidArgumentException(sprintf('The entity type (%s) %s controller "%s" does not exist.', $entity_type, $controller_type, $class));
     }
 
     return $class;
