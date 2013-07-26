@@ -104,4 +104,28 @@ class Grid extends StylePluginBase {
     }
   }
 
+  /**
+   * Return the token-replaced row or column classes for the specified result.
+   *
+   * @param int $result_index
+   *   The delta of the result item to get custom classes for.
+   * @param string $type
+   *   The type of custom grid class to return, either "row" or "col".
+   *
+   * @return string
+   *   A space-delimited string of classes.
+   */
+  public function getCustomClass($result_index, $type) {
+    $class = $this->options[$type . '_class_custom'];
+    if ($this->usesFields() && $this->view->field) {
+      $class = strip_tags($this->tokenizeValue($class, $result_index));
+    }
+
+    $classes = explode(' ', $class);
+    foreach ($classes as &$class) {
+      $class = drupal_clean_css_identifier($class);
+    }
+    return implode(' ', $classes);
+  }
+
 }

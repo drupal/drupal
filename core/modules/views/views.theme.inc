@@ -772,7 +772,7 @@ function template_preprocess_views_view_grid(&$variables) {
   $num_rows = floor(count($variables['rows']) / $options['columns']);
 
   // Iterate over each rendered views result row.
-  foreach ($variables['rows'] as $item) {
+  foreach ($variables['rows'] as $result_index => $item) {
 
     // Add the item.
     if ($horizontal) {
@@ -794,7 +794,7 @@ function template_preprocess_views_view_grid(&$variables) {
         }
       }
       // Add custom row classes.
-      $row_class = array_filter(explode(' ', $options['row_class_custom']));
+      $row_class = array_filter(explode(' ', $variables['view']->style_plugin->getCustomClass($result_index, 'row')));
       if (!empty($row_class)) {
         $row_attributes['class'] = array_merge($row_attributes['class'], $row_class);
       }
@@ -819,7 +819,7 @@ function template_preprocess_views_view_grid(&$variables) {
         }
       }
       // Add custom column classes.
-      $col_class = array_filter(explode(' ', $options['col_class_custom']));
+      $col_class = array_filter(explode(' ', $variables['view']->style_plugin->getCustomClass($result_index, 'col')));
       if (!empty($col_class)) {
         $col_attributes['class'] = array_merge($col_attributes['class'], $col_class);
       }
