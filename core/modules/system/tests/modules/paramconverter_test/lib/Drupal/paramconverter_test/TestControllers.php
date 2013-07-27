@@ -8,20 +8,21 @@
 namespace Drupal\paramconverter_test;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller routine for testing the paramconverter.
  */
 class TestControllers {
 
-  public function testUserNodeFoo($user, $node, $foo) {
-    $retval = "user: " . (is_object($user) ? $user->label() : $user);
-    $retval .= ", node: " . (is_object($node) ? $node->label() : $node);
-    $retval .= ", foo: " . (is_object($foo) ? $foo->label() : $foo);
-    return $retval;
+  public function testUserNodeFoo(EntityInterface $user, NodeInterface $node, Request $request) {
+    $foo = $request->attributes->get('foo');
+    $foo = is_object($foo) ? $foo->label() : $foo;
+    return "user: {$user->label()}, node: {$node->label()}, foo: $foo";
   }
 
-  public function testNodeSetParent(EntityInterface $node, EntityInterface $parent) {
-    return "Setting '{$parent->title}' as parent of '{$node->title}'.";
+  public function testNodeSetParent(NodeInterface $node, NodeInterface $parent) {
+    return "Setting '{$parent->label()}' as parent of '{$node->label()}'.";
   }
 }

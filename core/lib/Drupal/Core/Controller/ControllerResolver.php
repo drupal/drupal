@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver as BaseControllerResolver;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -96,6 +97,29 @@ class ControllerResolver extends BaseControllerResolver {
     }
 
     return array($controller, $method);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function doGetArguments(Request $request, $controller, array $parameters) {
+    $arguments = parent::doGetArguments($request, $controller, $parameters);
+
+    // The parameter converter overrides the raw request attributes with the
+    // upcasted objects. However, it keeps a backup copy of the original, raw
+    // values in a special request attribute ('_raw_variables'). If a controller
+    // argument has a type hint, we pass it the upcasted object, otherwise we
+    // pass it the original, raw value.
+    if ($request->attributes->has('_raw_variables') && $raw = $request->attributes->get('_raw_variables')->all()) {
+      foreach ($parameters as $parameter) {
+        // Use the raw value if a parameter has no typehint.
+        if (!$parameter->getClass() && isset($raw[$parameter->name])) {
+          $position = $parameter->getPosition();
+          $arguments[$position] = $raw[$parameter->name];
+        }
+      }
+    }
+    return $arguments;
   }
 
 }

@@ -10,6 +10,7 @@ namespace Drupal\Core\ParamConverter;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\HttpFoundation\Request;
@@ -151,7 +152,11 @@ class ParamConverterManager extends ContainerAware implements RouteEnhancerInter
    *   The modified defaults.
    */
   public function enhance(array $defaults, Request $request) {
+    // Store a backup of the raw $defaults values corresponding to
+    // variables in the route path pattern.
     $route = $defaults[RouteObjectInterface::ROUTE_OBJECT];
+    $variables = array_flip($route->compile()->getVariables());
+    $defaults['_raw_variables'] = new ParameterBag(array_intersect_key($defaults, $variables));
 
     // Skip this enhancer if there are no parameter definitions.
     if (!$parameters = $route->getOption('parameters')) {
