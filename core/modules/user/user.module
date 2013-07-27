@@ -454,7 +454,7 @@ function user_access($string, AccountInterface $account = NULL) {
   if (!isset($account)) {
     // In the installer request session is not set, so we have to fall back
     // to the global $user. In all other cases the session key is preferred.
-    $account = Drupal::request()->attributes->get('account') ?: $user;
+    $account = Drupal::request()->attributes->get('_account') ?: $user;
   }
 
   return $account->hasPermission($string);

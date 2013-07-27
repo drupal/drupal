@@ -39,7 +39,7 @@ class LegacyAccessSubscriber implements EventSubscriberInterface {
     $provider = $request_attributes->get('_authentication_provider');
     if ($request_attributes->get('_legacy') && $provider && $provider != 'cookie') {
       $GLOBALS['user'] = drupal_anonymous_user();
-      $request_attributes->set('account', $GLOBALS['user']);
+      $request_attributes->set('_account', $GLOBALS['user']);
       throw new AccessDeniedHttpException();
     }
 

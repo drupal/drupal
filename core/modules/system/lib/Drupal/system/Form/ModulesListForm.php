@@ -425,7 +425,7 @@ class ModulesListForm implements FormInterface, ControllerInterface {
     // dependencies that are not enabled yet, redirect to the confirmation form.
     if (!empty($modules['dependencies']) || !empty($modules['missing'])) {
       // Write the list of changed module states into a key value store.
-      $account = $this->request->attributes->get('account')->id();
+      $account = $this->request->attributes->get('_account')->id();
       $this->keyValueExpirable->setWithExpire($account, $modules, 60);
 
       // Redirect to the confirmation form.

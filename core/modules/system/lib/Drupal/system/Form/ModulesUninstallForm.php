@@ -165,7 +165,7 @@ class ModulesUninstallForm implements FormInterface, ControllerInterface {
     // Save all the values in an expirable key value store.
     $modules = $form_state['values']['uninstall'];
     $uninstall = array_keys(array_filter($modules));
-    $account = $this->request->attributes->get('account')->id();
+    $account = $this->request->attributes->get('_account')->id();
     $this->keyValueExpirable->setWithExpire($account, $uninstall, 60);
 
     // Redirect to the confirm form.

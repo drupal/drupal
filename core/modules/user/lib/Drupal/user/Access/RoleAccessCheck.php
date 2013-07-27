@@ -34,7 +34,7 @@ class RoleAccessCheck implements StaticAccessCheckInterface {
     // Requirements just allow strings, so this might be a comma separated list.
     $rid_string = $route->getRequirement('_role');
 
-    $account = $request->attributes->get('account');
+    $account = $request->attributes->get('_account');
 
     $explode_and = array_filter(array_map('trim', explode('+', $rid_string)));
     if (count($explode_and) > 1) {
