@@ -681,8 +681,6 @@ function user_template_preprocess_default_variables_alter(&$variables) {
  * Modules that make any changes to variables like 'name' or 'extra' must ensure
  * that the final string is safe to include directly in the output by using
  * check_plain() or filter_xss().
- *
- * @see template_process_username()
  */
 function template_preprocess_username(&$variables) {
   $account = $variables['account'] ?: drupal_anonymous_user();
@@ -743,7 +741,6 @@ function template_preprocess_username(&$variables) {
  *     Drupal\Core\Template\Attribute class if not linking to the user's page.
  *
  * @see template_preprocess_username()
- * @see template_process_username()
  */
 function theme_username($variables) {
   if (isset($variables['link_path'])) {
