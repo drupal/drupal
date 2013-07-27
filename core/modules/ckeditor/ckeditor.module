@@ -73,7 +73,7 @@ function ckeditor_library_info() {
   );
   $libraries['ckeditor'] = array(
     'title' => 'Loads the main CKEditor library.',
-    'version' => '4.1',
+    'version' => '4.2',
     'js' => array(
       'core/assets/vendor/ckeditor/ckeditor.js' => array(
         'preprocess' => FALSE,
