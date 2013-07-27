@@ -67,12 +67,14 @@ class LinkSeparateFormatter extends LinkFormatter {
         $link_title = truncate_utf8($link_title, $settings['trim_length'], FALSE, TRUE);
         $url_title = truncate_utf8($item->url, $settings['trim_length'], FALSE, TRUE);
       }
+
+      $link = $this->buildLink($item);
       $element[$delta] = array(
         '#theme' => 'link_formatter_link_separate',
         '#title' => $link_title,
         '#url_title' => $url_title,
-        '#href' => $item->path,
-        '#options' => $item->options,
+        '#href' => $link['path'],
+        '#options' => $link['options'],
       );
     }
     return $element;
