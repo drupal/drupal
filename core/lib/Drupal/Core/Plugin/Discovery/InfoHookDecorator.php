@@ -54,7 +54,7 @@ class InfoHookDecorator implements DiscoveryInterface {
    */
   public function getDefinitions() {
     $definitions = $this->decorated->getDefinitions();
-    foreach (module_implements($this->hook) as $module) {
+    foreach (\Drupal::moduleHandler()->getImplementations($this->hook) as $module) {
       $function = $module . '_' . $this->hook;
       $function($definitions);
     }

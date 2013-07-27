@@ -40,7 +40,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertTrue(function_exists('entity_test_permission'), "$module.module was loaded.");
     // Verify that there is a fixed module list.
     $this->assertIdentical(array_keys(\Drupal::moduleHandler()->getModuleList()), array($module));
-    $this->assertIdentical(module_implements('permission'), array($module));
+    $this->assertIdentical(\Drupal::moduleHandler()->getImplementations('permission'), array($module));
 
     // Verify that no modules have been installed.
     $this->assertFalse(db_table_exists($table), "'$table' database table not found.");
@@ -56,8 +56,8 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertFalse(module_exists($module), "$module module not found.");
     $list = array_keys(\Drupal::moduleHandler()->getModuleList());
     $this->assertFalse(in_array($module, $list), "$module module not found in the extension handler's module list.");
-    $list = module_implements('permission');
-    $this->assertFalse(in_array($module, $list), "{$module}_permission() in module_implements() not found.");
+    $list = \Drupal::moduleHandler()->getImplementations('permission');
+    $this->assertFalse(in_array($module, $list), "{$module}_permission() in Drupal::moduleHandler()->getImplementations() not found.");
 
     // Enable the module.
     $this->enableModules(array($module));
@@ -66,8 +66,8 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertTrue(module_exists($module), "$module module found.");
     $list = array_keys(\Drupal::moduleHandler()->getModuleList());
     $this->assertTrue(in_array($module, $list), "$module module found in the extension handler's module list.");
-    $list = module_implements('permission');
-    $this->assertTrue(in_array($module, $list), "{$module}_permission() in module_implements() found.");
+    $list = \Drupal::moduleHandler()->getImplementations('permission');
+    $this->assertTrue(in_array($module, $list), "{$module}_permission() in Drupal::moduleHandler()->getImplementations() found.");
   }
 
   /**
@@ -81,8 +81,8 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertFalse(module_exists($module), "$module module not found.");
     $list = array_keys(\Drupal::moduleHandler()->getModuleList());
     $this->assertFalse(in_array($module, $list), "$module module not found in the extension handler's module list.");
-    $list = module_implements('permission');
-    $this->assertFalse(in_array($module, $list), "{$module}_permission() in module_implements() not found.");
+    $list = \Drupal::moduleHandler()->getImplementations('permission');
+    $this->assertFalse(in_array($module, $list), "{$module}_permission() in Drupal::moduleHandler()->getImplementations() not found.");
 
     $this->assertFalse(db_table_exists($table), "'$table' database table not found.");
     $schema = drupal_get_schema($table);
@@ -95,8 +95,8 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertTrue(module_exists($module), "$module module found.");
     $list = array_keys(\Drupal::moduleHandler()->getModuleList());
     $this->assertTrue(in_array($module, $list), "$module module found in the extension handler's module list.");
-    $list = module_implements('permission');
-    $this->assertTrue(in_array($module, $list), "{$module}_permission() in module_implements() found.");
+    $list = \Drupal::moduleHandler()->getImplementations('permission');
+    $this->assertTrue(in_array($module, $list), "{$module}_permission() in Drupal::moduleHandler()->getImplementations() found.");
 
     $this->assertTrue(db_table_exists($table), "'$table' database table found.");
     $schema = drupal_get_schema($table);

@@ -349,7 +349,7 @@ class NodeFormController extends EntityFormController {
     // Invoke hook_node_validate() for validation needed by modules.
     // Can't use module_invoke_all(), because $form_state must
     // be receivable by reference.
-    foreach (module_implements('node_validate') as $module) {
+    foreach (\Drupal::moduleHandler()->getImplementations('node_validate') as $module) {
       $function = $module . '_node_validate';
       $function($node, $form, $form_state);
     }
@@ -376,7 +376,7 @@ class NodeFormController extends EntityFormController {
     }
 
     node_submit($node);
-    foreach (module_implements('node_submit') as $module) {
+    foreach (\Drupal::moduleHandler()->getImplementations('node_submit') as $module) {
       $function = $module . '_node_submit';
       $function($node, $form, $form_state);
     }

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * A file to test module_implements() loading includes.
+ * A file to test Drupal::moduleHandler()->getImplementations() loading includes.
  */
 
 /**

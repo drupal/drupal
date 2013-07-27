@@ -73,7 +73,7 @@ class CommentSelection extends SelectionBase {
     // Passing the query to node_query_node_access_alter() is sadly
     // insufficient for nodes.
     // @see SelectionEntityTypeNode::entityQueryAlter()
-    if (!user_access('bypass node access') && !count(module_implements('node_grants'))) {
+    if (!user_access('bypass node access') && !count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {
       $query->condition($node_alias . '.status', 1);
     }
   }

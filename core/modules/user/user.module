@@ -1644,7 +1644,7 @@ function user_role_load($rid) {
  */
 function user_permission_get_modules() {
   $permissions = array();
-  foreach (module_implements('permission') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('permission') as $module) {
     $perms = module_invoke($module, 'permission');
     foreach ($perms as $key => $value) {
       $permissions[$key] = $module;

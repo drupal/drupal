@@ -145,7 +145,7 @@ function field_help($path, $arg) {
       // order by displayed module name (module names are not translated).
       $items = array();
       $info = system_get_info('module');
-      $modules = array_merge(module_implements('field_info'), module_implements('field_widget_info'));
+      $modules = array_merge(Drupal::moduleHandler()->getImplementations('field_info'), Drupal::moduleHandler()->getImplementations('field_widget_info'));
       $modules = array_unique($modules);
       sort($modules);
       foreach ($modules as $module) {
@@ -873,7 +873,7 @@ function field_access($op, FieldInterface $field, $entity_type, $entity = NULL, 
     $account = $user;
   }
 
-  foreach (module_implements('field_access') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('field_access') as $module) {
     $function = $module . '_field_access';
     $access = $function($op, $field, $entity_type, $entity, $account);
     if ($access === FALSE) {

@@ -2227,7 +2227,7 @@ function node_access_view_all_nodes($account = NULL) {
   }
 
   // If no modules implement the node access system, access is always TRUE.
-  if (!module_implements('node_grants')) {
+  if (!Drupal::moduleHandler()->getImplementations('node_grants')) {
     $access[$account->id()] = TRUE;
   }
   else {
@@ -2274,7 +2274,7 @@ function node_query_node_access_alter(AlterableInterface $query) {
   if (user_access('bypass node access', $account)) {
     return;
   }
-  if (!count(module_implements('node_grants'))) {
+  if (!count(Drupal::moduleHandler()->getImplementations('node_grants'))) {
     return;
   }
   if ($op == 'view' && node_access_view_all_nodes($account)) {
@@ -2363,7 +2363,7 @@ function node_access_rebuild($batch_mode = FALSE) {
   $access_controller = Drupal::entityManager()->getAccessController('node');
   $access_controller->deleteGrants();
   // Only recalculate if the site is using a node_access module.
-  if (count(module_implements('node_grants'))) {
+  if (count(Drupal::moduleHandler()->getImplementations('node_grants'))) {
     if ($batch_mode) {
       $batch = array(
         'title' => t('Rebuilding content access permissions'),
@@ -2481,7 +2481,7 @@ function node_requirements($phase) {
     // in the {node_access} table, or if there are modules that
     // implement hook_node_grants().
     $grant_count = Drupal::entityManager()->getAccessController('node')->countGrants();
-    if ($grant_count != 1 || count(module_implements('node_grants')) > 0) {
+    if ($grant_count != 1 || count(Drupal::moduleHandler()->getImplementations('node_grants')) > 0) {
       $value = format_plural($grant_count, 'One permission in use', '@count permissions in use', array('@count' => $grant_count));
     }
     else {
@@ -2504,7 +2504,7 @@ function node_requirements($phase) {
 function node_modules_enabled($modules) {
   // Check if any of the newly enabled modules require the node_access table to
   // be rebuilt.
-  if (!node_access_needs_rebuild() && array_intersect($modules, module_implements('node_grants'))) {
+  if (!node_access_needs_rebuild() && array_intersect($modules, Drupal::moduleHandler()->getImplementations('node_grants'))) {
     node_access_needs_rebuild(TRUE);
   }
 }
@@ -2528,7 +2528,7 @@ function node_modules_disabled($modules) {
 
   // If there remains no more node_access module, rebuilding will be
   // straightforward, we can do it right now.
-  if (node_access_needs_rebuild() && count(module_implements('node_grants')) == 0) {
+  if (node_access_needs_rebuild() && count(Drupal::moduleHandler()->getImplementations('node_grants')) == 0) {
     node_access_rebuild();
   }
 }

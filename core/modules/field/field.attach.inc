@@ -519,7 +519,7 @@ function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langc
 
   // Let other modules make changes to the form.
   // Avoid module_invoke_all() to let parameters be taken by reference.
-  foreach (module_implements('field_attach_form') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('field_attach_form') as $module) {
     $function = $module . '_field_attach_form';
     $function($entity, $form, $form_state, $langcode);
   }
@@ -621,7 +621,7 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
     // Invoke hook_field_storage_pre_load(): let any module load field
     // data before the storage engine, accumulating along the way.
     $skip_fields = array();
-    foreach (module_implements('field_storage_pre_load') as $module) {
+    foreach (Drupal::moduleHandler()->getImplementations('field_storage_pre_load') as $module) {
       $function = $module . '_field_storage_pre_load';
       $function($entity_type, $queried_entities, $age, $skip_fields, $hook_options);
     }
@@ -824,7 +824,7 @@ function field_attach_extract_form_values(EntityInterface $entity, $form, &$form
 
   // Let other modules act on submitting the entity.
   // Avoid module_invoke_all() to let $form_state be taken by reference.
-  foreach (module_implements('field_attach_extract_form_values') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('field_attach_extract_form_values') as $module) {
     $function = $module . 'field_attach_extract_form_values';
     $function($entity, $form, $form_state);
   }
@@ -853,7 +853,7 @@ function field_attach_insert(EntityInterface $entity) {
   // Let any module insert field data before the storage engine, accumulating
   // saved fields along the way.
   $skip_fields = array();
-  foreach (module_implements('field_storage_pre_insert') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('field_storage_pre_insert') as $module) {
     $function = $module . '_field_storage_pre_insert';
     $function($entity, $skip_fields);
   }
@@ -894,7 +894,7 @@ function field_attach_update(EntityInterface $entity) {
   // Let any module update field data before the storage engine, accumulating
   // saved fields along the way.
   $skip_fields = array();
-  foreach (module_implements('field_storage_pre_update') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('field_storage_pre_update') as $module) {
     $function = $module . '_field_storage_pre_update';
     $function($entity, $skip_fields);
   }

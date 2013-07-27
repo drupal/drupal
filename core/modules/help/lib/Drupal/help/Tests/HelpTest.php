@@ -108,7 +108,7 @@ class HelpTest extends WebTestBase {
   protected function getModuleList() {
     $modules = array();
     $module_data = system_rebuild_module_data();
-    foreach (module_implements('help') as $module) {
+    foreach (\Drupal::moduleHandler()->getImplementations('help') as $module) {
       $modules[$module] = $module_data[$module]->info['name'];
     }
     return $modules;

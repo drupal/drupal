@@ -3247,7 +3247,7 @@ function drupal_cron_run() {
     }
 
     // Iterate through the modules calling their cron handlers (if any):
-    foreach (module_implements('cron') as $module) {
+    foreach (Drupal::moduleHandler()->getImplementations('cron') as $module) {
       // Do not let an exception thrown by one module disturb another.
       try {
         module_invoke($module, 'cron');
@@ -3637,7 +3637,7 @@ function drupal_render_page($page) {
   }
 
   // Modules can add elements to $page as needed in hook_page_build().
-  foreach (module_implements('page_build') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('page_build') as $module) {
     $function = $module . '_page_build';
     $function($page);
   }

@@ -323,7 +323,7 @@ function field_purge_data(EntityInterface $entity, $field, $instance) {
   module_invoke($field['storage']['module'], 'field_storage_purge', $entity, $field, $instance);
 
   // Let other modules act on purging the data.
-  foreach (module_implements('field_attach_purge') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('field_attach_purge') as $module) {
     $function = $module . '_field_attach_purge';
     $function($entity, $field, $instance);
   }

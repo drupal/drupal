@@ -238,7 +238,7 @@ function search_get_info($all = FALSE) {
   $search_hooks = &drupal_static(__FUNCTION__);
 
   if (!isset($search_hooks)) {
-    foreach (module_implements('search_info') as $module) {
+    foreach (Drupal::moduleHandler()->getImplementations('search_info') as $module) {
       $search_hooks[$module] = call_user_func($module . '_search_info');
       // Use module name as the default value.
       $search_hooks[$module] += array('title' => $module, 'path' => $module);
@@ -537,7 +537,7 @@ function _search_index_truncate(&$text) {
  * Invokes hook_search_preprocess() in modules.
  */
 function search_invoke_preprocess(&$text, $langcode = NULL) {
-  foreach (module_implements('search_preprocess') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('search_preprocess') as $module) {
     $text = module_invoke($module, 'search_preprocess', $text, $langcode);
   }
 }

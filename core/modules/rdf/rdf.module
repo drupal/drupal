@@ -110,7 +110,7 @@ function rdf_get_namespaces() {
   $namespaces = array();
   // In order to resolve duplicate namespaces by using the earliest defined
   // namespace, do not use module_invoke_all().
-  foreach (module_implements('rdf_namespaces') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('rdf_namespaces') as $module) {
     $function = $module . '_rdf_namespaces';
     if (function_exists($function)) {
       $namespaces = NestedArray::mergeDeep($function(), $namespaces);

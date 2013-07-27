@@ -609,7 +609,7 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
     $cache = $cached->data;
   }
   else {
-    foreach (module_implements('theme') as $module) {
+    foreach (Drupal::moduleHandler()->getImplementations('theme') as $module) {
       _theme_process_registry($cache, $module, 'module', $module, drupal_get_path('module', $module));
     }
     // Only cache this registry if all modules are loaded.

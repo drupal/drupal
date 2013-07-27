@@ -2717,7 +2717,7 @@ function system_rebuild_module_data() {
 function _system_update_bootstrap_status() {
   $bootstrap_modules = array();
   foreach (bootstrap_hooks() as $hook) {
-    foreach (module_implements($hook) as $module) {
+    foreach (Drupal::moduleHandler()->getImplementations($hook) as $module) {
       $bootstrap_modules[$module] = drupal_get_filename('module', $module);
     }
   }

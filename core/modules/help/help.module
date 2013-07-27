@@ -16,7 +16,7 @@ function help_menu() {
     'weight' => 9,
   );
 
-  $modules = module_implements('help');
+  $modules = Drupal::moduleHandler()->getImplementations('help');
   ksort($modules);
   foreach ($modules as $module) {
     $items['admin/help/' . $module] = array(

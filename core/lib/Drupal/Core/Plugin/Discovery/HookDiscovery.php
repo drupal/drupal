@@ -45,7 +45,7 @@ class HookDiscovery implements DiscoveryInterface {
    */
   public function getDefinitions() {
     $definitions = array();
-    foreach (module_implements($this->hook) as $module) {
+    foreach (\Drupal::moduleHandler()->getImplementations($this->hook) as $module) {
       $function = $module . '_' . $this->hook;
       foreach ($function() as $plugin_id => $definition) {
         $definition['module'] = $module;

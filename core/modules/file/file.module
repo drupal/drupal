@@ -660,7 +660,7 @@ function file_file_download($uri, $field_type = 'file') {
         // Invoke hook and collect grants/denies for download access.
         // Default to FALSE and let entities overrule this ruling.
         $grants = array('system' => FALSE);
-        foreach (module_implements('file_download_access') as $module) {
+        foreach (Drupal::moduleHandler()->getImplementations('file_download_access') as $module) {
           $grants = array_merge($grants, array($module => module_invoke($module, 'file_download_access', $field, $entity, $file)));
         }
         // Allow other modules to alter the returned grants/denies.

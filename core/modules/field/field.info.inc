@@ -83,7 +83,7 @@ function _field_info_collate_types() {
       );
 
       // Populate storage types.
-      foreach (module_implements('field_storage_info') as $module) {
+      foreach (Drupal::moduleHandler()->getImplementations('field_storage_info') as $module) {
         $storage_types = (array) module_invoke($module, 'field_storage_info');
         foreach ($storage_types as $name => $storage_info) {
           // Provide defaults.

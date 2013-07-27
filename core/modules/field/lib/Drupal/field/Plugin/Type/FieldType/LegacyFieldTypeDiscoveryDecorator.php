@@ -56,7 +56,8 @@ class LegacyFieldTypeDiscoveryDecorator implements DiscoveryInterface {
   public function getDefinitions() {
     $definitions = $this->decorated->getDefinitions();
 
-    // We cannot use HookDiscovery, since it uses module_implements(), which
+    // We cannot use HookDiscovery, since it uses
+    // Drupal::moduleHandler()->getImplementations(), which
     // throws exceptions during upgrades.
     foreach (array_keys($this->moduleHandler->getModuleList()) as $module) {
       $function = $module . '_field_info';
