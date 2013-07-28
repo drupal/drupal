@@ -1279,7 +1279,7 @@ abstract class DisplayPluginBase extends PluginBase {
       $link_display = empty($displays[$display_id]) ? t('None') : check_plain($displays[$display_id]['display_title']);
       $link_display = $this->getOption('link_display') == 'custom_url' ? t('Custom URL') : $link_display;
       $options['link_display'] = array(
-        'category' => 'other',
+        'category' => 'pager',
         'title' => t('Link display'),
         'value' => $link_display,
         'desc' => t('Specify which display or custom url this display will link to.'),
