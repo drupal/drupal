@@ -16,7 +16,6 @@ use Drupal\field\Plugin\Core\Entity\Field;
  *
  * @FieldType(
  *   id = "text_long",
- *   module = "text",
  *   label = @Translation("Long text"),
  *   description = @Translation("This field stores long text in the database."),
  *   instance_settings = {

@@ -17,7 +17,6 @@ use Drupal\Core\Entity\Field\FieldInterface;
  *
  * @FieldFormatter(
  *   id = "file_table",
- *   module = "file",
  *   label = @Translation("Table of files"),
  *   field_types = {
  *     "file"

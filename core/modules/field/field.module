@@ -442,8 +442,8 @@ function field_sync_field_status() {
   // Set fields with missing field type or storage modules to inactive.
   foreach ($fields as $uuid => &$field) {
     // Associate field types.
-    if (isset($field_types[$field['type']]) && ($field['module'] != $field_types[$field['type']]['module'] || !$field['active'])) {
-      $field['module'] = $field_types[$field['type']]['module'];
+    if (isset($field_types[$field['type']]) && ($field['module'] != $field_types[$field['type']]['provider'] || !$field['active'])) {
+      $field['module'] = $field_types[$field['type']]['provider'];
       $field['active'] = TRUE;
       $changed[$uuid] = $field;
     }

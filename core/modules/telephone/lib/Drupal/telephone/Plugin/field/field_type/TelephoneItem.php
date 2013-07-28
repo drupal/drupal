@@ -17,7 +17,6 @@ use Drupal\field\Plugin\Core\Entity\Field;
  *
  * @FieldType(
  *   id = "telephone",
- *   module = "telephone",
  *   label = @Translation("Telephone number"),
  *   description = @Translation("This field stores a telephone number in the database."),
  *   default_widget = "telephone_default",

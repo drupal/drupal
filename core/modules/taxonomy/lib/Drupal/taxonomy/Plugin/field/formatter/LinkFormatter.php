@@ -19,7 +19,6 @@ use Drupal\taxonomy\Plugin\field\formatter\TaxonomyFormatterBase;
  *
  * @FieldFormatter(
  *   id = "taxonomy_term_reference_link",
- *   module = "taxonomy",
  *   label = @Translation("Link"),
  *   field_types = {
  *     "taxonomy_term_reference"

@@ -18,7 +18,6 @@ use Drupal\Core\Entity\Field\FieldInterface;
  *
  * @FieldFormatter(
  *   id = "number_unformatted",
- *   module = "number",
  *   label = @Translation("Unformatted"),
  *   field_types = {
  *     "number_integer",

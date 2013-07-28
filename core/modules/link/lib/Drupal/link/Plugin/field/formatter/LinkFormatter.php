@@ -20,7 +20,6 @@ use Drupal\field\Plugin\Type\Formatter\FormatterBase;
  *
  * @FieldFormatter(
  *   id = "link",
- *   module = "link",
  *   label = @Translation("Link"),
  *   field_types = {
  *     "link"

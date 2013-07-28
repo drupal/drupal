@@ -18,7 +18,6 @@ use Drupal\Core\Entity\Field\FieldInterface;
  *
  * @FieldFormatter(
  *   id = "field_test_multiple",
- *   module = "field_test",
  *   label = @Translation("Multiple"),
  *   description = @Translation("Multiple formatter"),
  *   field_types = {

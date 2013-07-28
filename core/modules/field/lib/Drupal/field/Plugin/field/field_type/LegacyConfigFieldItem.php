@@ -31,7 +31,7 @@ abstract class LegacyConfigFieldItem extends ConfigFieldItemBase implements Prep
    */
   public static function schema(Field $field) {
     $definition = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field->type);
-    $module = $definition['module'];
+    $module = $definition['provider'];
     module_load_install($module);
     $callback = "{$module}_field_schema";
     if (function_exists($callback)) {
@@ -118,7 +118,7 @@ abstract class LegacyConfigFieldItem extends ConfigFieldItemBase implements Prep
    */
   protected function getLegacyCallback($hook) {
     $definition = $this->getPluginDefinition();
-    $module = $definition['module'];
+    $module = $definition['provider'];
     $callback = "{$module}_field_{$hook}";
     if (function_exists($callback)) {
       return $callback;

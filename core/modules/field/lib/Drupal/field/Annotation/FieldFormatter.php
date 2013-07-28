@@ -52,13 +52,6 @@ class FieldFormatter extends Plugin {
   public $description;
 
   /**
-   * The name of the module providing the formatter.
-   *
-   * @var string
-   */
-  public $module;
-
-  /**
    * The name of the field formatter class.
    *
    * This is not provided manually, it will be added by the discovery mechanism.

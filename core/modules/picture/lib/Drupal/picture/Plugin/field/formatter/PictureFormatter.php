@@ -18,7 +18,6 @@ use Drupal\image\Plugin\field\formatter\ImageFormatterBase;
  *
  * @FieldFormatter(
  *   id = "picture",
- *   module = "picture",
  *   label = @Translation("Picture"),
  *   field_types = {
  *     "image",

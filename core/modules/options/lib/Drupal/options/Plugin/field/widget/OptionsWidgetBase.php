@@ -116,7 +116,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
 
       // Get the list of options from the field type module, and sanitize them.
       $field_type_info = field_info_field_types($this->fieldDefinition->getFieldType());
-      $module = $field_type_info['module'];
+      $module = $field_type_info['provider'];
       $options = (array) $module_handler->invoke($module, 'options_list', array($this->fieldDefinition, $this->entity));
 
       // Add an empty option if the widget needs one.

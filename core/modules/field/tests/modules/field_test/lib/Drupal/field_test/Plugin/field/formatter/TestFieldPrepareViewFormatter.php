@@ -18,7 +18,6 @@ use Drupal\Core\Entity\Field\FieldInterface;
  *
  * @FieldFormatter(
  *   id = "field_test_with_prepare_view",
- *   module = "field_test",
  *   label = @Translation("With prepare step"),
  *   description = @Translation("Tests prepareView() method"),
  *   field_types = {

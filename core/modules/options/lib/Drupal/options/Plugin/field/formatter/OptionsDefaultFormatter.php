@@ -18,7 +18,6 @@ use Drupal\Core\Entity\Field\FieldInterface;
  *
  * @FieldFormatter(
  *   id = "list_default",
- *   module = "options",
  *   label = @Translation("Default"),
  *   field_types = {
  *     "list_integer",

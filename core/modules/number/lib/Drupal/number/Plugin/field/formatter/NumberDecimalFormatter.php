@@ -23,7 +23,6 @@ use Drupal\Core\Entity\Field\FieldInterface;
  *
  * @FieldFormatter(
  *   id = "number_decimal",
- *   module = "number",
  *   label = @Translation("Default"),
  *   field_types = {
  *     "number_decimal",

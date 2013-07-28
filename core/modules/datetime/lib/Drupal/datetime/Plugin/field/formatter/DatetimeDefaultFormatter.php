@@ -24,7 +24,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @FieldFormatter(
  *   id = "datetime_default",
- *   module = "datetime",
  *   label = @Translation("Default"),
  *   field_types = {
  *     "datetime"

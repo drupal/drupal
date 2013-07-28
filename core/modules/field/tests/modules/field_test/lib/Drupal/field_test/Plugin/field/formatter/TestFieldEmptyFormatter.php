@@ -18,7 +18,6 @@ use Drupal\field\Plugin\Type\Formatter\FormatterBase;
  *
  * @FieldFormatter(
  *   id = "field_empty_test",
- *   module = "field_test",
  *   label = @Translation("Field empty test"),
  *   field_types = {
  *     "test_field",

@@ -16,14 +16,12 @@ use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
-use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 
 /**
  * Plugin implementation of the 'link_separate' formatter.
  *
  * @FieldFormatter(
  *   id = "link_separate",
- *   module = "link",
  *   label = @Translation("Separate link text and URL"),
  *   field_types = {
  *     "link"

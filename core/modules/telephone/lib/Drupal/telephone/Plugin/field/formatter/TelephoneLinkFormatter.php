@@ -18,7 +18,6 @@ use Drupal\Core\Entity\Field\FieldInterface;
  *
  * @FieldFormatter(
  *   id = "telephone_link",
- *   module = "telephone",
  *   label = @Translation("Telephone link"),
  *   field_types = {
  *     "telephone"

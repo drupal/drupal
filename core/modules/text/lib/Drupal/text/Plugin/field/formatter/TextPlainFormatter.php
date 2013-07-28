@@ -18,7 +18,6 @@ use Drupal\Core\Entity\Field\FieldInterface;
  *
  * @FieldFormatter(
  *   id = "text_plain",
- *   module = "text",
  *   label = @Translation("Plain text"),
  *   field_types = {
  *     "text",

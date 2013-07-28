@@ -17,7 +17,6 @@ use Drupal\Core\Entity\Field\FieldInterface;
  *
  * @FieldFormatter(
  *   id = "file_url_plain",
- *   module = "file",
  *   label = @Translation("URL to file"),
  *   field_types = {
  *     "file"

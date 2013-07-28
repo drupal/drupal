@@ -11,7 +11,6 @@ use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
-use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\taxonomy\Plugin\field\formatter\TaxonomyFormatterBase;
 
 /**
@@ -19,7 +18,6 @@ use Drupal\taxonomy\Plugin\field\formatter\TaxonomyFormatterBase;
  *
  * @FieldFormatter(
  *   id = "taxonomy_term_reference_rss_category",
- *   module = "taxonomy",
  *   label = @Translation("RSS category"),
  *   field_types = {
  *     "taxonomy_term_reference"

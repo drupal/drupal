@@ -29,7 +29,7 @@ class FieldInfoTest extends FieldUnitTestBase {
       foreach ($field_type as $key => $val) {
         $this->assertEqual($info[$t_key][$key], $val, format_string('Field type %t_key key %key is %value', array('%t_key' => $t_key, '%key' => $key, '%value' => print_r($val, TRUE))));
       }
-      $this->assertEqual($info[$t_key]['module'], 'field_test',  'Field type field_test module appears.');
+      $this->assertEqual($info[$t_key]['provider'], 'field_test',  'Field type field_test module appears.');
     }
 
     $storage_info = field_test_field_storage_info();

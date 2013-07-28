@@ -20,7 +20,6 @@ use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
  *
  * @FieldFormatter(
  *   id = "entity_reference_rss_category",
- *   module = "taxonomy",
  *   label = @Translation("RSS category"),
  *   description = @Translation("Display reference to taxonomy term in RSS."),
  *   field_types = {

@@ -18,7 +18,6 @@ use Drupal\Core\Entity\Field\FieldInterface;
  *
  * @FieldFormatter(
  *   id = "email_mailto",
- *   module = "email",
  *   label = @Translation("Email"),
  *   field_types = {
  *     "email"

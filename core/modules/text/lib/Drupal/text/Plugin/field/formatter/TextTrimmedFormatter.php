@@ -23,7 +23,6 @@ use Drupal\Core\Entity\Field\FieldInterface;
  *
  * @FieldFormatter(
  *   id = "text_trimmed",
- *   module = "text",
  *   label = @Translation("Trimmed"),
  *   field_types = {
  *     "text",

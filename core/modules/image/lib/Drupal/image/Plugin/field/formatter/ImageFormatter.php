@@ -17,7 +17,6 @@ use Drupal\Core\Entity\Field\FieldInterface;
  *
  * @FieldFormatter(
  *   id = "image",
- *   module = "image",
  *   label = @Translation("Image"),
  *   field_types = {
  *     "image"

@@ -18,7 +18,6 @@ use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
  *
  * @FieldFormatter(
  *   id = "entity_reference_entity_id",
- *   module = "entity_reference",
  *   label = @Translation("Entity ID"),
  *   description = @Translation("Display the ID of the referenced entities."),
  *   field_types = {

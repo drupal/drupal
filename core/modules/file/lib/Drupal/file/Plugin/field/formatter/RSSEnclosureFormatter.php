@@ -17,7 +17,6 @@ use Drupal\Core\Entity\Field\FieldInterface;
  *
  * @FieldFormatter(
  *   id = "file_rss_enclosure",
- *   module = "file",
  *   label = @Translation("RSS enclosure"),
  *   field_types = {
  *     "file"

@@ -19,7 +19,6 @@ use Drupal\Core\Datetime\DrupalDateTime;
  *
  * @FieldFormatter(
  *   id = "datetime_plain",
- *   module = "datetime",
  *   label = @Translation("Plain"),
  *   field_types = {
  *     "datetime"

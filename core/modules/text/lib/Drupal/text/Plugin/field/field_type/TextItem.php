@@ -16,7 +16,6 @@ use Drupal\field\Plugin\Core\Entity\Field;
  *
  * @FieldType(
  *   id = "text",
- *   module = "text",
  *   label = @Translation("Text"),
  *   description = @Translation("This field stores varchar text in the database."),
  *   settings = {

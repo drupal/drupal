@@ -19,7 +19,6 @@ use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
  *
  * @FieldFormatter(
  *   id = "entity_reference_entity_view",
- *   module = "entity_reference",
  *   label = @Translation("Rendered entity"),
  *   description = @Translation("Display the referenced entities rendered by entity_view()."),
  *   field_types = {

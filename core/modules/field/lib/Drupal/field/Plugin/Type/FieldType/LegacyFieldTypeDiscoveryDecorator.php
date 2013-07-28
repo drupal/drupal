@@ -64,7 +64,7 @@ class LegacyFieldTypeDiscoveryDecorator implements DiscoveryInterface {
       if (function_exists($function)) {
         foreach ($function() as $plugin_id => $definition) {
           $definition['id'] = $plugin_id;
-          $definition['module'] = $module;
+          $definition['provider'] = $module;
           $definition['list_class'] = '\Drupal\field\Plugin\field\field_type\LegacyConfigField';
           $definitions[$plugin_id] = $definition;
         }
