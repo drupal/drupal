@@ -56,7 +56,7 @@ class FormatterPluginManager extends DefaultPluginManager {
    * {@inheritdoc}
    */
   public function createInstance($plugin_id, array $configuration) {
-    $plugin_definition = $this->discovery->getDefinition($plugin_id);
+    $plugin_definition = $this->getDefinition($plugin_id);
     $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
 
     // @todo This is copied from \Drupal\Core\Plugin\Factory\ContainerFactory.

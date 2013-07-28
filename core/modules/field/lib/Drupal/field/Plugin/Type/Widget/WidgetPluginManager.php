@@ -107,7 +107,7 @@ class WidgetPluginManager extends DefaultPluginManager {
    * {@inheritdoc}
    */
   public function createInstance($plugin_id, array $configuration = array()) {
-    $plugin_definition = $this->discovery->getDefinition($plugin_id);
+    $plugin_definition = $this->getDefinition($plugin_id);
     $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
 
     // If the plugin provides a factory method, pass the container to it.

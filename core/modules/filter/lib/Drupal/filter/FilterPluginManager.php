@@ -42,7 +42,7 @@ class FilterPluginManager extends PluginManagerBase {
    * {@inheritdoc}
    */
   public function createInstance($plugin_id, array $configuration = array(), FilterBag $filter_bag = NULL) {
-    $plugin_definition = $this->discovery->getDefinition($plugin_id);
+    $plugin_definition = $this->getDefinition($plugin_id);
     $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
     return new $plugin_class($configuration, $plugin_id, $plugin_definition, $filter_bag);
   }
