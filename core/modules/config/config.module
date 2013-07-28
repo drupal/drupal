@@ -64,10 +64,7 @@ function config_menu() {
   $items['admin/config/development/sync'] = array(
     'title' => 'Synchronize configuration',
     'description' => 'Synchronize configuration changes.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('config_admin_import_form'),
-    'access arguments' => array('synchronize configuration'),
-    'file' => 'config.admin.inc',
+    'route_name' => 'config_sync',
   );
   $items['admin/config/development/export'] = array(
     'title' => 'Configuration export',
@@ -81,7 +78,7 @@ function config_menu() {
   );
   $items['admin/config/development/sync/diff/%'] = array(
     'title' => 'Configuration file diff',
-    'description' => 'Diff between active and staged configuraiton.',
+    'description' => 'Diff between active and staged configuration.',
     'route_name' => 'config_diff',
   );
   $items['admin/config/development/sync/import'] = array(

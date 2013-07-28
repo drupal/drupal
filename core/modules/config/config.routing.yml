@@ -22,3 +22,9 @@ config_import:
     _form: '\Drupal\config\Form\ConfigImportForm'
   requirements:
     _permission: 'import configuration'
+config_sync:
+  pattern: '/admin/config/development/sync'
+  defaults:
+    _form: '\Drupal\config\Form\ConfigSync'
+  requirements:
+    _permission: 'synchronize configuration'
