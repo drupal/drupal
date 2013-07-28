@@ -7,15 +7,65 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Language\Language;
 use Drupal\field\FieldInstanceInterface;
+use Drupal\field\Plugin\Type\Widget\WidgetPluginManager;
+use Drupal\field_ui\FieldUI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for the field instance settings form.
  */
-class FieldInstanceEditForm extends FieldInstanceFormBase {
+class FieldInstanceEditForm implements FormInterface, ControllerInterface {
+
+  /**
+   * The field instance being edited.
+   *
+   * @var \Drupal\field\FieldInstanceInterface
+   */
+  protected $instance;
+
+  /**
+   * The field widget plugin manager.
+   *
+   * @var \Drupal\field\Plugin\Type\Widget\WidgetPluginManager
+   */
+  protected $widgetManager;
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
+   * Constructs a new field instance form.
+   *
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager.
+   * @param \Drupal\field\Plugin\Type\Widget\WidgetPluginManager $widget_manager
+   *   The field widget plugin manager.
+   */
+  public function __construct(EntityManager $entity_manager, WidgetPluginManager $widget_manager) {
+    $this->entityManager = $entity_manager;
+    $this->widgetManager = $widget_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.entity'),
+      $container->get('plugin.manager.field.widget')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -28,7 +78,7 @@ class FieldInstanceEditForm extends FieldInstanceFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state, FieldInstanceInterface $field_instance = NULL) {
-    parent::buildForm($form, $form_state, $field_instance);
+    $this->instance = $form_state['instance'] = $field_instance;
 
     $bundle = $this->instance['bundle'];
     $entity_type = $this->instance['entity_type'];
@@ -265,6 +315,20 @@ class FieldInstanceEditForm extends FieldInstanceFormBase {
       $item = \Drupal::typedData()->create($definitions[$field_name], array(), $field_name, $entity)->offsetGet(0);
     }
     return $item;
+  }
+
+  /**
+   * Returns the next redirect path in a multipage sequence.
+   *
+   * @return string|array
+   *   Either the next path, or an array of redirect paths.
+   */
+  protected function getNextDestination() {
+    $next_destination = FieldUI::getNextDestination();
+    if (empty($next_destination)) {
+      $next_destination = $this->entityManager->getAdminPath($this->instance->entity_type, $this->instance->bundle) . '/fields';
+    }
+    return $next_destination;
   }
 
 }
