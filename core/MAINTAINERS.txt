@@ -210,6 +210,7 @@ Color module
 
 Comment module
 - Dick Olsson 'dixon_' http://drupal.org/user/239911
+- Lee Rowlands 'larowlan' http://drupal.org/user/395439
 
 Configuration module
 - ?
