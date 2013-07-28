@@ -80,8 +80,6 @@ function toolbar_element_info() {
       // The id cannot be simply "toolbar" or it will clash with the simpletest
       // tests listing which produces a checkbox with attribute id="toolbar"
       'id' => 'toolbar-administration',
-      // The 'overlay-displace-top' class pushes the overlay down, so it appears
-      // below the toolbar.
       'class' => array('toolbar',),
       'role' => 'navigation',
     ),
@@ -251,22 +249,24 @@ function theme_toolbar(&$variables) {
  *   A renderable array.
  */
 function toolbar_pre_render_item($element) {
+  // Assign each item a unique ID.
+  $id = drupal_html_id('toolbar-item');
+
+  // Provide attributes for a toolbar item.
+  $attributes = array(
+    'id' => $id,
+  );
 
   // If tray content is present, markup the tray and its associated trigger.
   if (!empty($element['tray'])) {
-
-    // Trays are associated with their trigger by a unique ID.
-    $id = drupal_html_id('toolbar-tray');
-    $element['tab']['#tray_id'] = $id;
-
-    // Provide attributes for a tray trigger.
-    $attributes = array(
-      'id' => 'toolbar-tab-' . $id,
-      'data-toolbar-tray' => $id,
+    // Provide attributes necessary for trays.
+    $attributes += array(
+      'data-toolbar-tray' => $id . '-tray',
       'aria-owns' => $id,
       'role' => 'button',
       'aria-pressed' => 'false',
     );
+
     // Merge in module-provided attributes.
     $element['tab'] += array('#attributes' => array());
     $element['tab']['#attributes'] += $attributes;
@@ -274,9 +274,9 @@ function toolbar_pre_render_item($element) {
 
     // Provide attributes for the tray theme wrapper.
     $attributes = array(
-      'id' => $id,
-      'data-toolbar-tray' => $id,
-      'aria-owned-by' => 'toolbar-tab-' . $id,
+      'id' => $id . '-tray',
+      'data-toolbar-tray' => $id . '-tray',
+      'aria-owned-by' => $id,
     );
     // Merge in module-provided attributes.
     if (!isset($element['tray']['#wrapper_attributes'])) {
@@ -290,11 +290,8 @@ function toolbar_pre_render_item($element) {
     }
     // Add the standard theme_wrapper for trays.
     array_unshift($element['tray']['#theme_wrappers'], 'toolbar_tray_wrapper');
-    // If a #heading is provided for the tray, provided a #theme_wrapper
-    // function to append it.
-    if (!empty($element['tray']['#heading'])) {
-      array_unshift($element['tray']['#theme_wrappers'], 'toolbar_tray_heading_wrapper');
-    }
+    // Add the theme wrapper for the tray heading.
+    array_unshift($element['tray']['#theme_wrappers'], 'toolbar_tray_heading_wrapper');
   }
 
   return $element;
@@ -373,9 +370,13 @@ function theme_toolbar_tray_wrapper(&$variables) {
  *     the tray. Properties used: #children and #heading.
  */
 function theme_toolbar_tray_heading_wrapper(&$variables) {
-  if (!empty($variables['element']['#children'])) {
-    $element = $variables['element'];
-    return '<h3 class="visually-hidden">' . $element['#heading'] . '</h3>' . $element['#children'];
+  $element = $variables['element'];
+  if (!empty($element['#children'])) {
+    $heading = '';
+    if (!empty($element['#heading'])) {
+      $heading = '<h3 class="toolbar-tray-name visually-hidden">' . $element['#heading'] . '</h3>';
+    }
+    return $heading . $element['#children'];
   }
 }
 
@@ -597,9 +598,9 @@ function toolbar_library_info() {
       array('system', 'jquery'),
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
+      array('system', 'backbone'),
       array('system', 'matchmedia'),
       array('system', 'jquery.once'),
-      array('system', 'drupal.debounce'),
       array('system', 'drupal.displace'),
       array('toolbar', 'toolbar.menu'),
     ),

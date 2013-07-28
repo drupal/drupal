@@ -23,7 +23,7 @@ class ToolbarController {
     _toolbar_initialize_page_cache();
     $subtrees = toolbar_get_rendered_subtrees();
     $response = new JsonResponse($subtrees);
-    $response->setCallback('Drupal.toolbar.setSubtrees');
+    $response->setCallback('Drupal.toolbar.setSubtrees.resolve');
     return $response;
   }
 

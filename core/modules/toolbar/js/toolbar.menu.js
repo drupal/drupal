@@ -2,19 +2,19 @@
  * Builds a nested accordion widget.
  *
  * Invoke on an HTML list element with the jQuery plugin pattern.
- * - For example, $('.menu').toolbarMenu();
+ * - For example, $('.menu').drupalToolbarMenu();
  */
 
-(function ($, Drupal) {
+(function ($, Drupal, drupalSettings) {
 
 "use strict";
 
 /**
  * Store the open menu tray.
  */
-var activeItem = drupalSettings.basePath + drupalSettings.currentPath;
+var activeItem = drupalSettings.basePath + Drupal.encodePath(drupalSettings.currentPath);
 
-  $.fn.toolbarMenu = function () {
+  $.fn.drupalToolbarMenu = function () {
 
     var ui = {
       'handleOpen': Drupal.t('Extend'),
@@ -46,7 +46,7 @@ var activeItem = drupalSettings.basePath + drupalSettings.currentPath;
      *   simply toggling its presence.
      */
     function toggleList ($item, switcher) {
-      var $toggle = $item.find('> .toolbar-box > .toolbar-handle');
+      var $toggle = $item.children('.toolbar-box').children('.toolbar-handle');
       switcher = (typeof switcher !== 'undefined') ? switcher : !$item.hasClass('open');
       // Toggle the item open state.
       $item.toggleClass('open', switcher);
@@ -80,7 +80,7 @@ var activeItem = drupalSettings.basePath + drupalSettings.currentPath;
         // Add a handle to each list item if it has a menu.
       $menu.find('li').each(function (index, element) {
           var $item = $(element);
-          if ($item.find('> ul.menu').length) {
+          if ($item.children('ul.menu').length) {
             var $box = $item.children('.toolbar-box');
             options.text = Drupal.t('@label', {'@label': $box.find('a').text()});
             $item.children('.toolbar-box')
@@ -102,8 +102,8 @@ var activeItem = drupalSettings.basePath + drupalSettings.currentPath;
      */
     function markListLevels ($lists, level) {
       level = (!level) ? 1 : level;
-      var $lis = $lists.find('> li').addClass('level-' + level);
-      $lists = $lis.find('> ul');
+      var $lis = $lists.children('li').addClass('level-' + level);
+      $lists = $lis.children('ul');
       if ($lists.length) {
         markListLevels($lists, level + 1);
       }
@@ -154,4 +154,4 @@ var activeItem = drupalSettings.basePath + drupalSettings.currentPath;
     return '<button class="' + options['class'] + '"><span class="action">' + options.action + '</span><span class="label">' + options.text + '</span></button>';
   };
 
-}(jQuery, Drupal));
+}(jQuery, Drupal, drupalSettings));

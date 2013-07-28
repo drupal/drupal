@@ -55,7 +55,7 @@
  * is active. The toolbar container, that contains the bar and the trays, is
  * position absolutely so that it scrolls with the page. Otherwise, on smaller
  * screens, the components of the admin toolbar are positioned statically. */
-body.toolbar-paneled .toolbar-oriented,
+body.toolbar-fixed .toolbar-oriented,
 .toolbar-oriented .toolbar-bar,
 .toolbar-oriented .toolbar-tray {
   left: 0;
@@ -69,13 +69,13 @@ body.toolbar-paneled .toolbar-oriented,
 }
 /* Position the admin toolbar fixed when the configured standard breakpoint is
  * active. */
-body.toolbar-paneled .toolbar-oriented .toolbar-bar {
+body.toolbar-fixed .toolbar-oriented .toolbar-bar {
   position: fixed;
 }
 /* When the configured narrow breakpoint is active, the toolbar is sized to wrap
  * around the trays in order to provide a context for scrolling tray content
  * that is taller than the viewport. */
-body.toolbar-tray-open.toolbar-paneled.toolbar-vertical .toolbar-oriented {
+body.toolbar-tray-open.toolbar-fixed.toolbar-vertical .toolbar-oriented {
   bottom: 0;
   width: 240px;
   width: 15rem;
@@ -175,13 +175,13 @@ body.toolbar-tray-open.toolbar-paneled.toolbar-vertical .toolbar-oriented {
 /* When the configured standard breakpoint is active and the tray is in a
  * horizontal position, the tray is fixed to the top of the viewport and does
  * not scroll with the page contents. */
-body.toolbar-paneled .toolbar .toolbar-tray-horizontal {
+body.toolbar-fixed .toolbar .toolbar-tray-horizontal {
   position: fixed;
 }
 /* When the configured standard breakpoint is active and the tray is in a
  * vertical position, the tray does not scroll with the page. The contents of
  * the tray scroll within the confines of the viewport. */
-body.toolbar-paneled .toolbar .toolbar-tray-vertical {
+body.toolbar-fixed .toolbar .toolbar-tray-vertical {
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
@@ -200,11 +200,11 @@ body.toolbar-paneled .toolbar .toolbar-tray-vertical {
 }
 /* When the configured standard breakpoint is active, the tray appears to push
  * the page content away from the edge of the viewport. */
-body.toolbar-vertical.toolbar-paneled {
+body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
   margin-left: 240px; /* LTR */
   margin-left: 15rem; /* LTR */
 }
-[dir="rtl"] body.toolbar-vertical.toolbar-paneled {
+[dir="rtl"] body.toolbar-tray-open.toolbar-vertical.toolbar-fixed {
   margin-left: auto;
   margin-left: auto;
   margin-right: 240px;
