@@ -127,6 +127,25 @@ class DisplayBlockTest extends ViewTestBase {
       // expected machine name.
       $this->assertTrue(!empty($block), 'The expected block was loaded.');
     }
+
+    // Tests the override capability of items per page.
+    $this->drupalGet('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme);
+    $edit = array();
+    $edit['settings[override][items_per_page]'] = 10;
+
+    $this->drupalPost('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme, $edit, t('Save block'));
+
+    $block = $storage->load('stark.views_block__test_view_block_block_1_4');
+    $config = $block->getPlugin()->getConfig();
+    $this->assertEqual(10, $config['items_per_page'], "'Items per page' is properly saved.");
+
+    $edit['settings[override][items_per_page]'] = 5;
+    $this->drupalPost('admin/structure/block/manage/stark.views_block__test_view_block_block_1_4', $edit, t('Save block'));
+
+    $block = $storage->load('stark.views_block__test_view_block_block_1_4');
+
+    $config = $block->getPlugin()->getConfig();
+    $this->assertEqual(5, $config['items_per_page'], "'Items per page' is properly saved.");
   }
 
   /**

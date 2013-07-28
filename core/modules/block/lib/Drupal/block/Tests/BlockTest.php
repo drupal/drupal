@@ -23,7 +23,7 @@ class BlockTest extends BlockTestBase {
   }
 
   /**
-   * Test block visibility.
+   * Tests block visibility.
    */
   function testBlockVisibility() {
     $block_name = 'system_powered_by_block';

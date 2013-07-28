@@ -10,6 +10,7 @@ namespace Drupal\block\Plugin\views\display;
 
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Drupal\views\Plugin\Block\ViewsBlock;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 
 /**
@@ -27,6 +28,9 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
  *   contextual_links_locations = {"block"},
  *   admin = @Translation("Block")
  * )
+ *
+ * @see \Drupal\views\Plugin\block\block\ViewsBlock
+ * @see \Drupal\views\Plugin\Derivative\ViewsBlock
  */
 class Block extends DisplayPluginBase {
 
@@ -43,7 +47,30 @@ class Block extends DisplayPluginBase {
     $options['block_description'] = array('default' => '', 'translatable' => TRUE);
     $options['block_caching'] = array('default' => DRUPAL_NO_CACHE);
 
+    $options['allow'] = array(
+      'contains' => array(
+        'items_per_page' => array('default' => 'items_per_page'),
+      ),
+    );
+
     return $options;
+  }
+
+  /**
+   * Returns plugin-specific settings for the block.
+   *
+   * @param array $settings
+   *   The settings of the block.
+   *
+   * @return array
+   *   An array of block-specific settings to override the defaults provided in
+   *   \Drupal\views\Plugin\Block\ViewsBlock::settings().
+   *
+   * @see \Drupal\views\Plugin\Block\ViewsBlock::settings().
+   */
+  public function blockSettings(array $settings) {
+    $settings['items_per_page'] = 'none';
+    return $settings;
   }
 
   /**
@@ -85,6 +112,14 @@ class Block extends DisplayPluginBase {
       'category' => 'block',
       'title' => t('Block name'),
       'value' => views_ui_truncate($block_description, 24),
+    );
+
+    $filtered_allow = array_filter($this->getOption('allow'));
+
+    $options['allow'] = array(
+      'category' => 'block',
+      'title' => t('Allow settings'),
+      'value' => empty($filtered_allow) ? t('None') : t('Items per page'),
     );
 
     $types = $this->blockCachingModes();
@@ -155,6 +190,21 @@ class Block extends DisplayPluginBase {
             '#markup' => '<div class="messages messages--warning">' . t('Exposed filters in block displays require "Use AJAX" to be set to work correctly.') . '</div>',
           );
         }
+        break;
+      case 'allow':
+        $form['#title'] .= t('Allow settings in the block configuration');
+
+        $options = array(
+          'items_per_page' => t('Items per page'),
+        );
+
+        $allow = array_filter($this->getOption('allow'));
+        $form['allow'] = array(
+          '#type' => 'checkboxes',
+          '#default_value' => $allow,
+          '#options' => $options,
+        );
+        break;
     }
   }
 
@@ -166,11 +216,103 @@ class Block extends DisplayPluginBase {
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state['section']) {
       case 'block_description':
-        $this->setOption('block_description', $form_state['values']['block_description']);
-        break;
       case 'block_caching':
-        $this->setOption('block_caching', $form_state['values']['block_caching']);
+      case 'allow':
+        $this->setOption($form_state['section'], $form_state['values'][$form_state['section']]);
         break;
+    }
+  }
+
+  /**
+   * Adds the configuration form elements specific to this views block plugin.
+   *
+   * This method allows block instances to override the views items_per_page.
+   *
+   * @param \Drupal\views\Plugin\Block\ViewsBlock $block
+   *   The ViewsBlock plugin.
+   * @param array $form
+   *   The form definition array for the block configuration form.
+   * @param array $form_state
+   *   An array containing the current state of the configuration form.
+   *
+   * @return array $form
+   *   The renderable form array representing the entire configuration form.
+   *
+   * @see \Drupal\views\Plugin\Block\ViewsBlock::blockForm()
+   */
+  public function blockForm(ViewsBlock $block, array &$form, array &$form_state) {
+    $allow_settings = array_filter($this->getOption('allow'));
+
+    $block_configuration = $block->getConfig();
+
+    foreach ($allow_settings as $type => $enabled) {
+      if (empty($enabled)) {
+        continue;
+      }
+      switch ($type) {
+        case 'items_per_page':
+          $form['override']['items_per_page'] = array(
+            '#type' => 'select',
+            '#title' => t('Items per page'),
+            '#options' => array(
+              'none' => t('Use default settings'),
+              5 => 5,
+              10 => 10,
+              20 => 20,
+              40 => 40,
+            ),
+            '#default_value' => $block_configuration['items_per_page'],
+          );
+          break;
+      }
+    }
+
+    return $form;
+  }
+
+  /**
+   * Handles form validation for the views block configuration form.
+   *
+   * @param \Drupal\views\Plugin\Block\ViewsBlock $block
+   *   The ViewsBlock plugin.
+   * @param array $form
+   *   The form definition array for the block configuration form.
+   * @param array $form_state
+   *   An array containing the current state of the configuration form.
+   *
+   * @see \Drupal\views\Plugin\Block\ViewsBlock::blockValidate()
+   */
+  public function blockValidate(ViewsBlock $block, array $form, array &$form_state) {
+  }
+
+  /**
+   * Handles form submission for the views block configuration form.
+   *
+   * @param \Drupal\views\Plugin\Block\ViewsBlock $block
+   *   The ViewsBlock plugin.
+   * @param array $form
+   *   The form definition array for the full block configuration form.
+   * @param array $form_state
+   *   An array containing the current state of the configuration form.
+   *
+   * * @see \Drupal\views\Plugin\Block\ViewsBlock::blockSubmit()
+   */
+  public function blockSubmit(ViewsBlock $block, $form, &$form_state) {
+    if (isset($form_state['values']['override']['items_per_page'])) {
+      $block->setConfig('items_per_page', $form_state['values']['override']['items_per_page']);
+    }
+  }
+
+  /**
+   * Allows to change the display settings right before executing the block.
+   *
+   * @param \Drupal\views\Plugin\Block\ViewsBlock $block
+   *   The block plugin for views displays.
+   */
+  public function preBlockBuild(ViewsBlock $block) {
+    $config = $block->getConfig();
+    if ($config['items_per_page'] !== 'none') {
+      $this->view->setItemsPerPage($config['items_per_page']);
     }
   }
 

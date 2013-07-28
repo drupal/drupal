@@ -32,7 +32,7 @@ abstract class DisplayPluginBase extends PluginBase {
   /**
    * The top object of a view.
    *
-   * @var Drupal\views\ViewExecutable
+   * @var \Drupal\views\ViewExecutable
    */
   var $view = NULL;
 
