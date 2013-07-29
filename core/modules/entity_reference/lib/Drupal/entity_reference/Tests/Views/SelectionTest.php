@@ -70,7 +70,7 @@ class SelectionTest extends WebTestBase {
     $instance->save();
 
     // Get values from selection handler.
-    $handler = entity_reference_get_selection_handler($instance);
+    $handler = $this->container->get('plugin.manager.entity_reference.selection')->getSelectionHandler($instance);
     $result = $handler->getReferenceableEntities();
 
     $success = FALSE;

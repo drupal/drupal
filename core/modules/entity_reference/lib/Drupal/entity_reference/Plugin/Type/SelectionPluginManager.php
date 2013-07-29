@@ -10,6 +10,8 @@ namespace Drupal\entity_reference\Plugin\Type;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\Factory\ReflectionFactory;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
@@ -88,4 +90,24 @@ class SelectionPluginManager extends DefaultPluginManager {
 
     return $plugins;
   }
+
+  /**
+   * Gets the selection handler for a given entity_reference field.
+   *
+   * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+   *   The field definition for the operation.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity for the operation.
+   *
+   * @return \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface
+   *   The selection plugin.
+   */
+  public function getSelectionHandler(FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
+    $options = array(
+      'field_definition' => $field_definition,
+      'entity' => $entity,
+    );
+    return $this->getInstance($options);
+  }
+
 }

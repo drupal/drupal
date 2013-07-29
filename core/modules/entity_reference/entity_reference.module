@@ -77,19 +77,6 @@ function entity_reference_field_widget_info_alter(&$info) {
 }
 
 /**
- * Gets the selection handler for a given entity_reference field.
- *
- * @return \Drupal\entity_reference\Plugin\Type\Selection\SelectionInterface
- */
-function entity_reference_get_selection_handler(FieldDefinitionInterface $field_definition, EntityInterface $entity = NULL) {
-  $options = array(
-    'field_definition' => $field_definition,
-    'entity' => $entity,
-  );
-  return Drupal::service('plugin.manager.entity_reference.selection')->getInstance($options);
-}
-
-/**
  * Implements hook_field_presave().
  *
  * Create an entity on the fly.
@@ -115,7 +102,7 @@ function entity_reference_field_validate(EntityInterface $entity = NULL, $field,
   }
 
   if ($ids) {
-    $valid_ids = entity_reference_get_selection_handler($instance, $entity)->validateReferenceableEntities(array_keys($ids));
+    $valid_ids = Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($instance, $entity)->validateReferenceableEntities(array_keys($ids));
 
     $invalid_entities = array_diff_key($ids, array_flip($valid_ids));
     if ($invalid_entities) {
@@ -256,7 +243,7 @@ function entity_reference_field_instance_settings_form($field, $instance, $form_
     '#attributes' => array('class' => array('entity_reference-settings')),
   );
 
-  $handler = entity_reference_get_selection_handler($instance);
+  $handler = Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($instance);
   $form['handler']['handler_settings'] += $handler->settingsForm($field, $instance);
 
   return $form;
@@ -353,7 +340,7 @@ function entity_reference_settings_ajax_submit($form, &$form_state) {
  * Implements hook_options_list().
  */
 function entity_reference_options_list(FieldDefinitionInterface $field_definition, EntityInterface $entity) {
-  if (!$options = entity_reference_get_selection_handler($field_definition, $entity)->getReferenceableEntities()) {
+  if (!$options = Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($field_definition, $entity)->getReferenceableEntities()) {
     return array();
   }
 
