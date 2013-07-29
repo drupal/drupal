@@ -16,7 +16,6 @@ use Drupal\field\Plugin\Core\Entity\Field;
  *
  * @FieldType(
  *   id = "number_float",
- *   module = "number",
  *   label = @Translation("Float"),
  *   description = @Translation("This field stores a number in the database in a floating point format."),
  *   instance_settings = {

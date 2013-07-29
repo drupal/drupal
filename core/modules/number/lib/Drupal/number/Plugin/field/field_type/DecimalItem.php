@@ -17,7 +17,6 @@ use Drupal\Component\Utility\MapArray;
  *
  * @FieldType(
  *   id = "number_decimal",
- *   module = "number",
  *   label = @Translation("Decimal"),
  *   description = @Translation("This field stores a number in the database in a fixed decimal format."),
  *   settings = {

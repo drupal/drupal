@@ -16,7 +16,6 @@ use Drupal\field\Plugin\Core\Entity\Field;
  *
  * @FieldType(
  *   id = "number_integer",
- *   module = "number",
  *   label = @Translation("Integer"),
  *   description = @Translation("This field stores a number in the database as an integer."),
  *   instance_settings = {
