@@ -900,4 +900,14 @@ class ModuleHandler implements ModuleHandlerInterface {
     return TRUE;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getModuleDirectories() {
+    $dirs = array();
+    foreach ($this->getModuleList() as $module => $filename) {
+      $dirs[$module] = DRUPAL_ROOT . '/' . dirname($filename);
+    }
+    return $dirs;
+  }
 }

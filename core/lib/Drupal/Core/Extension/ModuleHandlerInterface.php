@@ -335,4 +335,12 @@ interface ModuleHandlerInterface {
    */
   public function uninstall($module_list = array(), $uninstall_dependents = TRUE);
 
+  /**
+   * Returns an array of directories for all enabled modules. Useful for
+   * tasks such as finding a file that exists in all module directories.
+   *
+   * @return array
+   */
+  public function getModuleDirectories();
+
 }
