@@ -120,7 +120,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Assert the field appears in the "re-use existing field" section for
     // different entity types; e.g. if a field was added in a node entity, it
     // should also appear in the 'taxonomy term' entity.
-    $vocabulary = taxonomy_vocabulary_load('tags');
+    $vocabulary = entity_load('taxonomy_vocabulary', 'tags');
     $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/fields');
     $this->assertTrue($this->xpath('//select[@name="fields[_add_existing_field][field_name]"]//option[@value="' . $this->field_name . '"]'), 'Existing field was found in taxonomy term fields.');
   }

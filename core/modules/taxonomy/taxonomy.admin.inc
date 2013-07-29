@@ -404,7 +404,7 @@ function taxonomy_overview_terms_submit($form, &$form_state) {
  * @see taxonomy_vocabulary_confirm_reset_alphabetical_submit()
  */
 function taxonomy_vocabulary_confirm_reset_alphabetical($form, &$form_state, $vid) {
-  $vocabulary = taxonomy_vocabulary_load($vid);
+  $vocabulary = entity_load('taxonomy_vocabulary', $vid);
 
   $form['type'] = array('#type' => 'value', '#value' => 'vocabulary');
   $form['vid'] = array('#type' => 'value', '#value' => $vid);

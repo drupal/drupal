@@ -1846,7 +1846,7 @@ function hook_mail($key, &$message, $params) {
   );
   if ($context['hook'] == 'taxonomy') {
     $entity = $params['entity'];
-    $vocabulary = taxonomy_vocabulary_load($entity->id());
+    $vocabulary = entity_load('taxonomy_vocabulary', $entity->id());
     $variables += array(
       '%term_name' => $entity->name,
       '%term_description' => $entity->description,

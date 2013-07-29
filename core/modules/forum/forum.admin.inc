@@ -21,7 +21,7 @@ function forum_overview($form, &$form_state) {
   $config = config('forum.settings');
 
   $vid = $config->get('vocabulary');
-  $vocabulary = taxonomy_vocabulary_load($vid);
+  $vocabulary = entity_load('taxonomy_vocabulary', $vid);
   $form = taxonomy_overview_terms($form, $form_state, $vocabulary);
 
   foreach (element_children($form['terms']) as $key) {

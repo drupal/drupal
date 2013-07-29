@@ -37,7 +37,7 @@ abstract class TaxonomyFormatterBase extends FormatterBase {
       }
     }
     if ($tids) {
-      $terms = taxonomy_term_load_multiple($tids);
+      $terms = entity_load_multiple('taxonomy_term', $tids);
 
       // Iterate through the fieldable entities again to attach the loaded term
       // data.

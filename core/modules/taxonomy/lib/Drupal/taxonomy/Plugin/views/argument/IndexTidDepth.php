@@ -147,7 +147,7 @@ class IndexTidDepth extends ArgumentPluginBase {
   }
 
   function title() {
-    $term = taxonomy_term_load($this->argument);
+    $term = entity_load('taxonomy_term', $this->argument);
     if (!empty($term)) {
       return check_plain($term->label());
     }

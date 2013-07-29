@@ -288,7 +288,7 @@ function forum_node_validate(EntityInterface $node, $form) {
           unset($node->taxonomy_forums[$langcode][$delta]);
           continue;
         }
-        $term = taxonomy_term_load($item['target_id']);
+        $term = entity_load('taxonomy_term', $item['target_id']);
         if (!$term) {
           form_set_error('taxonomy_forums', t('Select a forum.'));
           continue;
@@ -678,7 +678,7 @@ function forum_forum_load($tid = NULL) {
 
   // Load and validate the parent term.
   if ($tid) {
-    $forum_term = taxonomy_term_load($tid);
+    $forum_term = entity_load('taxonomy_term', $tid);
     if (!$forum_term || ($forum_term->bundle() != $vid)) {
       return $cache[$tid] = FALSE;
     }

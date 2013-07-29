@@ -40,7 +40,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
    */
   function testTaxonomyVocabularyDeleteWithTerms() {
     // Delete any existing vocabularies.
-    foreach (taxonomy_vocabulary_load_multiple() as $vocabulary) {
+    foreach (entity_load_multiple('taxonomy_vocabulary') as $vocabulary) {
       $vocabulary->delete();
     }
 
@@ -73,7 +73,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
    * Ensure that the vocabulary static reset works correctly.
    */
   function testTaxonomyVocabularyLoadStaticReset() {
-    $original_vocabulary = taxonomy_vocabulary_load($this->vocabulary->id());
+    $original_vocabulary = entity_load('taxonomy_vocabulary', $this->vocabulary->id());
     $this->assertTrue(is_object($original_vocabulary), 'Vocabulary loaded successfully.');
     $this->assertEqual($this->vocabulary->name, $original_vocabulary->name, 'Vocabulary loaded successfully.');
 
@@ -84,13 +84,13 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     $vocabulary->save();
 
     // Load the vocabulary.
-    $new_vocabulary = taxonomy_vocabulary_load($original_vocabulary->id());
+    $new_vocabulary = entity_load('taxonomy_vocabulary', $original_vocabulary->id());
     $this->assertEqual($new_vocabulary->name, $vocabulary->name);
     $this->assertEqual($new_vocabulary->name, $vocabulary->name);
 
     // Delete the vocabulary.
     $this->vocabulary->delete();
-    $vocabularies = taxonomy_vocabulary_load_multiple();
+    $vocabularies = entity_load_multiple('taxonomy_vocabulary');
     $this->assertTrue(!isset($vocabularies[$this->vocabulary->id()]), 'The vocabulary was deleted.');
   }
 
@@ -100,7 +100,7 @@ class VocabularyUnitTest extends TaxonomyTestBase {
   function testTaxonomyVocabularyLoadMultiple() {
 
     // Delete any existing vocabularies.
-    foreach (taxonomy_vocabulary_load_multiple() as $vocabulary) {
+    foreach (entity_load_multiple('taxonomy_vocabulary') as $vocabulary) {
       $vocabulary->delete();
     }
 
@@ -120,17 +120,17 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     $names = taxonomy_vocabulary_get_names();
     $this->assertEqual($names[$vocabulary1->id()], $vocabulary1->id(), 'Vocabulary 1 name found.');
 
-    // Fetch all of the vocabularies using taxonomy_vocabulary_load_multiple().
+    // Fetch all of the vocabularies using entity_load_multiple().
     // Confirm that the vocabularies are ordered by weight.
-    $vocabularies = taxonomy_vocabulary_load_multiple();
+    $vocabularies = entity_load_multiple('taxonomy_vocabulary');
     taxonomy_vocabulary_sort($vocabularies);
     $this->assertEqual(array_shift($vocabularies)->id(), $vocabulary1->id(), 'Vocabulary was found in the vocabularies array.');
     $this->assertEqual(array_shift($vocabularies)->id(), $vocabulary2->id(), 'Vocabulary was found in the vocabularies array.');
     $this->assertEqual(array_shift($vocabularies)->id(), $vocabulary3->id(), 'Vocabulary was found in the vocabularies array.');
 
-    // Fetch the vocabularies with taxonomy_vocabulary_load_multiple(), specifying IDs.
+    // Fetch the vocabularies with entity_load_multiple(), specifying IDs.
     // Ensure they are returned in the same order as the original array.
-    $vocabularies = taxonomy_vocabulary_load_multiple(array($vocabulary3->id(), $vocabulary2->id(), $vocabulary1->id()));
+    $vocabularies = entity_load_multiple('taxonomy_vocabulary', array($vocabulary3->id(), $vocabulary2->id(), $vocabulary1->id()));
     $this->assertEqual(array_shift($vocabularies)->id(), $vocabulary3->id(), 'Vocabulary loaded successfully by ID.');
     $this->assertEqual(array_shift($vocabularies)->id(), $vocabulary2->id(), 'Vocabulary loaded successfully by ID.');
     $this->assertEqual(array_shift($vocabularies)->id(), $vocabulary1->id(), 'Vocabulary loaded successfully by ID.');
