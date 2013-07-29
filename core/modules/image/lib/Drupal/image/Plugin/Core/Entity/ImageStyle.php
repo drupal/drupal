@@ -27,9 +27,13 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *   module = "image",
  *   controllers = {
  *     "form" = {
+ *       "add" = "Drupal\image\Form\ImageStyleAddForm",
+ *       "edit" = "Drupal\image\Form\ImageStyleEditForm",
  *       "delete" = "Drupal\image\Form\ImageStyleDeleteForm"
  *     },
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *     "list" = "Drupal\image\ImageStyleListController",
+ *     "access" = "Drupal\image\ImageStyleAccessController"
  *   },
  *   uri_callback = "image_style_entity_uri",
  *   config_prefix = "image.style",

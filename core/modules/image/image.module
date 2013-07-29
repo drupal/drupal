@@ -96,42 +96,26 @@ function image_menu() {
   $items['admin/config/media/image-styles'] = array(
     'title' => 'Image styles',
     'description' => 'Configure styles that can be used for resizing or adjusting images on display.',
-    'page callback' => 'image_style_list',
-    'access arguments' => array('administer image styles'),
-    'file' => 'image.admin.inc',
+    'route_name' => 'image_style_list',
   );
   $items['admin/config/media/image-styles/list'] = array(
     'title' => 'List',
     'description' => 'List the current image styles on the site.',
-    'page callback' => 'image_style_list',
-    'access arguments' => array('administer image styles'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'file' => 'image.admin.inc',
   );
   $items['admin/config/media/image-styles/add'] = array(
-    'title' => 'Add style',
-    'description' => 'Add a new image style.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('image_style_add_form'),
-    'access arguments' => array('administer image styles'),
-    'type' => MENU_LOCAL_ACTION,
-    'weight' => 2,
-    'file' => 'image.admin.inc',
+    'route_name' => 'image_style_add',
+    'type' => MENU_SIBLING_LOCAL_TASK,
+    'weight' => 1,
   );
   $items['admin/config/media/image-styles/manage/%image_style'] = array(
     'title' => 'Edit style',
-    'title callback' => 'entity_page_label',
-    'title arguments' => array(5),
     'description' => 'Configure an image style.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('image_style_form', 5),
-    'access arguments' => array('administer image styles'),
-    'file' => 'image.admin.inc',
+    'route_name' => 'image_style_edit',
   );
   $items['admin/config/media/image-styles/manage/%image_style/edit'] = array(
     'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['admin/config/media/image-styles/manage/%image_style/delete'] = array(
     'title' => 'Delete',
@@ -178,10 +162,6 @@ function image_theme() {
     ),
 
     // Theme functions in image.admin.inc.
-    'image_style_list' => array(
-      'variables' => array('styles' => NULL),
-      'file' => 'image.admin.inc',
-    ),
     'image_style_effects' => array(
       'render element' => 'form',
       'file' => 'image.admin.inc',

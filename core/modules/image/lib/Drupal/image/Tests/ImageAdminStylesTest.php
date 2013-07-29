@@ -390,4 +390,16 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertEqual($this->getImageCount($style), 0, 'Image style was flushed after being deleted by config import.');
   }
 
+  /**
+   * Tests access for the image style listing.
+   */
+  public function testImageStyleAccess() {
+    $style = entity_create('image_style', array('name' => 'style_foo', 'label' => $this->randomString()));
+    $style->save();
+
+    $this->drupalGet('admin/config/media/image-styles');
+    $this->clickLink(t('Edit'));
+    $this->assertRaw(t('Select a new effect'));
+  }
+
 }

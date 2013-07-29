@@ -1,3 +1,17 @@
+image_style_add:
+  pattern: '/admin/config/media/image-styles/add'
+  defaults:
+    _entity_form: image_style.add
+  requirements:
+    _permission: 'administer image styles'
+
+image_style_edit:
+  pattern: '/admin/config/media/image-styles/manage/{image_style}'
+  defaults:
+    _entity_form: image_style.edit
+  requirements:
+    _permission: 'administer image styles'
+
 image_style_delete:
   pattern: 'admin/config/media/image-styles/manage/{image_style}/delete'
   defaults:
@@ -9,6 +23,13 @@ image_effect_delete:
   pattern: 'admin/config/media/image-styles/manage/{image_style}/effects/{image_effect}/delete'
   defaults:
     _form: '\Drupal\image\Form\ImageEffectDeleteForm'
+  requirements:
+    _permission: 'administer image styles'
+
+image_style_list:
+  pattern: '/admin/config/media/image-styles'
+  defaults:
+    _entity_list: 'image_style'
   requirements:
     _permission: 'administer image styles'
 
