@@ -258,12 +258,7 @@ function user_field_extra_fields() {
  * @see \Drupal\Core\Entity\Query\QueryInterface
  */
 function user_load_multiple(array $uids = NULL, $reset = FALSE) {
-  $entities = entity_load_multiple('user', $uids, $reset);
-  // Return BC-entities.
-  foreach ($entities as $id => $entity) {
-    $entities[$id] = $entity->getBCEntity();
-  }
-  return $entities;
+  return entity_load_multiple('user', $uids, $reset);
 }
 
 /**
@@ -291,8 +286,7 @@ function user_load_multiple(array $uids = NULL, $reset = FALSE) {
  * @see user_load_multiple()
  */
 function user_load($uid, $reset = FALSE) {
-  $user = entity_load('user', $uid, $reset);
-  return $user ? $user->getBCEntity() : NULL;
+  return entity_load('user', $uid, $reset);
 }
 
 /**
@@ -308,7 +302,7 @@ function user_load($uid, $reset = FALSE) {
  */
 function user_load_by_mail($mail) {
   $users = entity_load_multiple_by_properties('user', array('mail' => $mail));
-  return $users ? reset($users)->getBCEntity() : FALSE;
+  return $users ? reset($users) : FALSE;
 }
 
 /**
@@ -324,7 +318,7 @@ function user_load_by_mail($mail) {
  */
 function user_load_by_name($name) {
   $users = entity_load_multiple_by_properties('user', array('name' => $name));
-  return $users ? reset($users)->getBCEntity() : FALSE;
+  return $users ? reset($users) : FALSE;
 }
 
 /**
@@ -604,7 +598,8 @@ function user_validate_current_pass(&$form, &$form_state) {
     // This validation only works for required textfields (like mail) or
     // form values like password_confirm that have their own validation
     // that prevent them from being empty if they are changed.
-    if ((strlen(trim($form_state['values'][$key])) > 0) && ($form_state['values'][$key] != $account->$key)) {
+    $current_value = $account->getPropertyDefinition($key) ? $account->get($key)->value : $account->$key;
+    if ((strlen(trim($form_state['values'][$key])) > 0) && ($form_state['values'][$key] != $current_value)) {
       $current_pass_failed = empty($form_state['values']['current_pass']) || !drupal_container()->get('password')->check($form_state['values']['current_pass'], $account);
       if ($current_pass_failed) {
         form_set_error('current_pass', t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => $name)));

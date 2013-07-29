@@ -7,16 +7,16 @@
 
 namespace Drupal\user;
 
-use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityFormControllerNG;
 use Drupal\Core\Language\Language;
 
 /**
  * Form controller for the user account forms.
  */
-abstract class AccountFormController extends EntityFormController {
+abstract class AccountFormController extends EntityFormControllerNG {
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::form().
+   * {@inheritdoc}
    */
   public function form(array $form, array &$form_state) {
     $account = $this->entity;
@@ -235,9 +235,9 @@ abstract class AccountFormController extends EntityFormController {
     //   set on the field, which throws an exception as the list requires
     //   numeric keys. Allow to override this per field. As this function is
     //   called twice, we have to prevent it from getting the array keys twice.
-    if (empty($this->roles_filtered)) {
+
+    if (is_string(key($form_state['values']['roles']))) {
       $form_state['values']['roles'] = array_keys(array_filter($form_state['values']['roles']));
-      $this->roles_filtered = TRUE;
     }
     return parent::buildEntity($form, $form_state);
   }

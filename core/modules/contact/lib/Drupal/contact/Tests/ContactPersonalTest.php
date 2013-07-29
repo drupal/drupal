@@ -165,6 +165,15 @@ class ContactPersonalTest extends WebTestBase {
     $this->drupalLogin($this->web_user);
     $this->drupalGet('user/' . $this->contact_user->id() . '/contact');
     $this->assertResponse(403);
+
+    // Test enabling and disabling the contact page through the user profile
+    // form.
+    $this->drupalGet('user/' . $this->web_user->id() . '/edit');
+    $this->assertNoFieldChecked('edit-contact--2');
+    $this->assertFalse(\Drupal::service('user.data')->get('contact', $this->web_user->id(), 'enabled'), 'Personal contact form disabled');
+    $this->drupalPost(NULL, array('contact' => TRUE), t('Save'));
+    $this->assertFieldChecked('edit-contact--2');
+    $this->assertTrue(\Drupal::service('user.data')->get('contact', $this->web_user->id(), 'enabled'), 'Personal contact form enabled');
   }
 
   /**

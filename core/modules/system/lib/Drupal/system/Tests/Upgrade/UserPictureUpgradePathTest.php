@@ -69,7 +69,7 @@ class UserPictureUpgradePathTest extends UpgradePathTestBase {
 
     // Check the user picture and file usage record.
     $user = user_load(1);
-    $file = file_load($user->user_picture[Language::LANGCODE_NOT_SPECIFIED][0]['target_id']);
+    $file = $user->user_picture->entity;
     $this->assertEqual('public://user_pictures_dir/faked_image.png', $file->getFileUri());
     $usage = file_usage()->listUsage($file);
     $this->assertEqual(1, $usage['file']['user'][1]);

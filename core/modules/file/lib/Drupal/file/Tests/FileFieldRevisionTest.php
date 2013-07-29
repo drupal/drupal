@@ -96,8 +96,8 @@ class FileFieldRevisionTest extends FileFieldTestBase {
 
     // Attach the second file to a user.
     $user = $this->drupalCreateUser();
-    $user->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'] = $node_file_r3->id();
-    $user->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['display'] = 1;
+    $user->$field_name->target_id = $node_file_r3->id();
+    $user->$field_name->display = 1;
     $user->save();
     $this->drupalGet('user/' . $user->id() . '/edit');
 

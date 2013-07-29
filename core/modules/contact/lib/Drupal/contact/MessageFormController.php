@@ -165,7 +165,7 @@ class MessageFormController extends EntityFormControllerNG {
       // Send to the user in the user's preferred language.
       $to = $recipient->getEmail();
       $recipient_langcode = $recipient->getPreferredLangcode();
-      $params['recipient'] = $recipient->getBCEntity();
+      $params['recipient'] = $recipient;
     }
     else {
       throw new \RuntimeException(t('Unable to determine message recipient.'));

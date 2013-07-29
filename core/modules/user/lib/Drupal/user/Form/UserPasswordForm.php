@@ -133,7 +133,7 @@ class UserPasswordForm implements FormInterface, ControllerInterface {
 
     $account = $form_state['values']['account'];
     // Mail one time login URL and instructions using current language.
-    $mail = _user_mail_notify('password_reset', $account->getBCEntity(), $langcode);
+    $mail = _user_mail_notify('password_reset', $account, $langcode);
     if (!empty($mail)) {
       watchdog('user', 'Password reset instructions mailed to %name at %email.', array('%name' => $account->getUsername(), '%email' => $account->getEmail()));
       drupal_set_message(t('Further instructions have been sent to your e-mail address.'));

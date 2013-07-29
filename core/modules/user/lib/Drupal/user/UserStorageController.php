@@ -96,22 +96,10 @@ class UserStorageController extends DatabaseStorageControllerNG implements UserS
   /**
    * {@inheritdoc}
    */
-  public function create(array $values) {
-    return parent::create($values)->getBCEntity();
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::save().
-   */
   public function save(EntityInterface $entity) {
     if (!$entity->id()) {
       $entity->uid->value = $this->database->nextId($this->database->query('SELECT MAX(uid) FROM {users}')->fetchField());
       $entity->enforceIsNew();
-    }
-    // There are some cases that pre-set ->original for performance. Make sure
-    // original is not a BC decorator.
-    if ($entity->original instanceof EntityBCDecorator) {
-      $entity->original = $entity->original->getNGEntity();
     }
     parent::save($entity);
   }
@@ -162,13 +150,13 @@ class UserStorageController extends DatabaseStorageControllerNG implements UserS
       $function = 'field_attach_delete_revision';
     }
     if (!empty($this->entityInfo['fieldable']) && function_exists($function)) {
-      $function($entity->getBCEntity());
+      $function($entity);
     }
 
     // Invoke the hook.
-    \Drupal::moduleHandler()->invokeAll($this->entityType . '_' . $hook, array($entity->getBCEntity()));
+    \Drupal::moduleHandler()->invokeAll($this->entityType . '_' . $hook, array($entity));
     // Invoke the respective entity-level hook.
-    \Drupal::moduleHandler()->invokeAll('entity_' . $hook, array($entity->getBCEntity(), $this->entityType));
+    \Drupal::moduleHandler()->invokeAll('entity_' . $hook, array($entity, $this->entityType));
   }
 
   /**
