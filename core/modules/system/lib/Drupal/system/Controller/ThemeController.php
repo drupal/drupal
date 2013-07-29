@@ -106,7 +106,7 @@ class ThemeController implements ControllerInterface {
 
     if (isset($theme) && isset($token) && drupal_valid_token($token, 'system-theme-operation-link')) {
       // Get current list of themes.
-      $themes = list_themes();
+      $themes = list_themes(TRUE);
 
       // Check if the specified theme is one recognized by the system.
       if (!empty($themes[$theme])) {
