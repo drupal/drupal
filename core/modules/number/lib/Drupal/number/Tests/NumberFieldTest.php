@@ -54,7 +54,7 @@ class NumberFieldTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content', 'administer content types', 'administer node fields','administer node display'));
+    $this->web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content', 'administer content types', 'administer node fields', 'administer node display', 'bypass node access'));
     $this->drupalLogin($this->web_user);
   }
 
@@ -170,16 +170,41 @@ class NumberFieldTest extends WebTestBase {
     );
     $this->drupalPost(NULL, $edit, t('Save'));
 
-    // Set the formatter to "number_integer" and to "unformatted", and just
+    // Add prefix and suffix for the newly-created field.
+    $prefix = $this->randomName();
+    $suffix = $this->randomName();
+    $edit = array(
+      'instance[settings][prefix]' => $prefix,
+      'instance[settings][suffix]' => $suffix,
+    );
+    $this->drupalPost("admin/structure/types/manage/$type/fields/node.$type.field_$field_name", $edit, t('Save settings'));
+
+    // Set the formatter to "unformatted" and to "number_integer", and just
     // check that the settings summary does not generate warnings.
     $this->drupalGet("admin/structure/types/manage/$type/display");
-    $edit = array(
-      "fields[field_$field_name][type]" => 'number_integer',
-    );
-    $this->drupalPost(NULL, $edit, t('Save'));
     $edit = array(
       "fields[field_$field_name][type]" => 'number_unformatted',
     );
     $this->drupalPost(NULL, $edit, t('Save'));
+    $edit = array(
+      "fields[field_$field_name][type]" => 'number_integer',
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+
+    // Configure the formatter to display the prefix and suffix.
+    $this->drupalPostAJAX(NULL, array(), "field_${field_name}_settings_edit");
+    $edit = array("fields[field_${field_name}][settings_edit_form][settings][prefix_suffix]" => TRUE);
+    $this->drupalPostAJAX(NULL, $edit, "field_${field_name}_plugin_settings_update");
+    $this->drupalPost(NULL, array(), t('Save'));
+
+    // Create new content and check that prefix and suffix are shown.
+    $rand_number = rand();
+    $edit = array(
+      'title' => $this->randomName(),
+      'field_' .$field_name . '[und][0][value]' => $rand_number,
+    );
+    $this->drupalPost("node/add/$type", $edit, t('Save'));
+
+    $this->assertRaw("$prefix$rand_number$suffix", 'Prefix and suffix added');
   }
 }
