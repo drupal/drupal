@@ -155,6 +155,13 @@ class NodeStorageController extends DatabaseStorageControllerNG {
       'label' => t('Title'),
       'description' => t('The title of this node, always treated as non-markup plain text.'),
       'type' => 'string_field',
+      'required' => TRUE,
+      'settings' => array(
+        'default_value' => '',
+      ),
+      'property_constraints' => array(
+        'value' => array('Length' => array('max' => 255)),
+      ),
     );
     $properties['uid'] = array(
       'label' => t('User ID'),
@@ -176,6 +183,9 @@ class NodeStorageController extends DatabaseStorageControllerNG {
       'label' => t('Changed'),
       'description' => t('The time that the node was last edited.'),
       'type' => 'integer_field',
+      'property_constraints' => array(
+        'value' => array('NodeChanged' => array()),
+      ),
     );
     $properties['comment'] = array(
       'label' => t('Comment'),
