@@ -1475,8 +1475,19 @@ function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
     $uri = str_replace('/', DIRECTORY_SEPARATOR, $uri);
     // Determine the components of the path.
     $components = explode(DIRECTORY_SEPARATOR, $uri);
+    // If the filepath is absolute the first component will be empty as there
+    // will be nothing before the first slash.
+    if ($components[0] == '') {
+      $recursive_path = DIRECTORY_SEPARATOR;
+      // Get rid of the empty first component.
+      array_shift($components);
+    }
+    else {
+      $recursive_path = '';
+    }
+    // Don't handle the top-level directory in this loop.
     array_pop($components);
-    $recursive_path = '';
+    // Create each component if necessary.
     foreach ($components as $component) {
       $recursive_path .= $component;
 
