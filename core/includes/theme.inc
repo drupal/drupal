@@ -793,10 +793,16 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
 /**
  * Generates themed output.
  *
- * All requests for themed output must go through this function. It examines
- * the request and routes it to the appropriate
+ * All requests for themed output must go through this function (however,
+ * calling the theme() function directly is strongly discouraged - see next
+ * paragraph). It examines the request and routes it to the appropriate
  * @link themeable theme function or template @endlink, by checking the theme
  * registry.
+ *
+ * Avoid calling this function directly. It is preferable to replace direct
+ * calls to the theme() function with calls to drupal_render() by passing a
+ * render array with a #theme key to drupal_render(), which in turn calls
+ * theme().
  *
  * @section sec_theme_hooks Theme Hooks
  * Most commonly, the first argument to this function is the name of the theme
@@ -897,6 +903,7 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  *   An HTML string representing the themed output or FALSE if the passed $hook
  *   is not implemented.
  *
+ * @see drupal_render()
  * @see themeable
  * @see hook_theme()
  * @see template_preprocess()
