@@ -6,7 +6,8 @@
  * Available variables:
  * - title: The title of this group of rows. May be empty.
  * - rows: A list of the view's row items.
- * - row_classes: A list of row class attributes keyed by the row's ID.
+ *   - attributes: The row's HTML attributes.
+ *   - content: The row's content.
  *
  * @see template_preprocess_views_view_unformatted()
  *
@@ -16,8 +17,8 @@
 {% if title %}
   <h3>{{ title }}</h3>
 {% endif %}
-{% for id, row in rows %}
-  <div{{ row_classes[id] }}>
-    {{ row }}
+{% for row in rows %}
+  <div{{ row.attributes }}>
+    {{ row.content }}
   </div>
 {% endfor %}

@@ -384,7 +384,6 @@ function template_preprocess_views_view_field(&$variables) {
 function template_preprocess_views_view_summary(&$variables) {
   $view = $variables['view'];
   $argument = $view->argument[$view->build_info['summary_level']];
-  $variables['row_classes'] = array();
 
   $url_options = array();
 
@@ -408,6 +407,7 @@ function template_preprocess_views_view_summary(&$variables) {
   $argument->processSummaryArguments($row_args);
 
   foreach ($variables['rows'] as $id => $row) {
+    $variables['rows'][$id]->attributes = array();
     $variables['rows'][$id]->link = $argument->summaryName($row);
     $args = $view->args;
     $args[$argument->position] = $row_args[$id];
@@ -418,11 +418,10 @@ function template_preprocess_views_view_summary(&$variables) {
     }
     $variables['rows'][$id]->url = url($view->getUrl($args, $base_path), $url_options);
     $variables['rows'][$id]->count = intval($row->{$argument->count_alias});
-    $variables['row_classes'][$id] = array();
     if (isset($active_urls[$variables['rows'][$id]->url])) {
-      $variables['row_classes'][$id]['class'][] = 'active';
+      $variables['rows'][$id]->attributes['class'][] = 'active';
     }
-    $variables['row_classes'][$id] = new Attribute($variables['row_classes'][$id]);
+    $variables['rows'][$id]->attributes = new Attribute($variables['rows'][$id]->attributes);
   }
 }
 
@@ -442,7 +441,6 @@ function template_preprocess_views_view_summary(&$variables) {
 function template_preprocess_views_view_summary_unformatted(&$variables) {
   $view = $variables['view'];
   $argument = $view->argument[$view->build_info['summary_level']];
-  $variables['row_classes'] = array();
 
   $url_options = array();
 
@@ -472,6 +470,7 @@ function template_preprocess_views_view_summary_unformatted(&$variables) {
     if ($count++) {
       $variables['rows'][$id]->separator = filter_xss_admin($variables['options']['separator']);
     }
+    $variables['rows'][$id]->attributes = array();
     $variables['rows'][$id]->link = $argument->summaryName($row);
     $args = $view->args;
     $args[$argument->position] = $row_args[$id];
@@ -482,11 +481,10 @@ function template_preprocess_views_view_summary_unformatted(&$variables) {
     }
     $variables['rows'][$id]->url = url($view->getUrl($args, $base_path), $url_options);
     $variables['rows'][$id]->count = intval($row->{$argument->count_alias});
-    $variables['row_classes'][$id] = array();
     if (isset($active_urls[$variables['rows'][$id]->url])) {
-      $variables['row_classes'][$id]['class'][] = 'active';
+      $variables['rows'][$id]->attributes['class'][] = 'active';
     }
-    $variables['row_classes'][$id] = new Attribute($variables['row_classes'][$id]);
+    $variables['rows'][$id]->attributes = new Attribute($variables['rows'][$id]->attributes);
   }
 }
 
@@ -511,8 +509,6 @@ function template_preprocess_views_view_table(&$variables) {
   // Store rows so that they may be used by further preprocess functions.
   $result = $variables['result'] = $variables['rows'];
   $variables['rows'] = array();
-  // @todo Remove field_classes to field_attributes.
-  $variables['field_classes'] = array();
   $variables['header'] = array();
 
   $options = $view->style_plugin->options;
@@ -535,6 +531,8 @@ function template_preprocess_views_view_table(&$variables) {
     $query += $view->exposed_raw_input;
   }
 
+  // A boolean to store whether the table's header has any labels.
+  $has_header_labels = FALSE;
   foreach ($columns as $field => $column) {
     // Create a second variable so we can easily find what fields we have and
     // what the CSS classes should be.
@@ -543,11 +541,11 @@ function template_preprocess_views_view_table(&$variables) {
       $variables['fields'][$field] .= ' active';
     }
 
-    // render the header labels
+    // Render the header labels.
     if ($field == $column && empty($fields[$field]->options['exclude'])) {
       $label = check_plain(!empty($fields[$field]) ? $fields[$field]->label() : '');
       if (empty($options['info'][$field]['sortable']) || !$fields[$field]->clickSortable()) {
-        $variables['header'][$field] = $label;
+        $variables['header'][$field]['content'] = $label;
       }
       else {
         $initial = !empty($options['info'][$field]['default_sort_order']) ? $options['info'][$field]['default_sort_order'] : 'asc';
@@ -572,39 +570,43 @@ function template_preprocess_views_view_table(&$variables) {
           'attributes' => array('title' => $title),
           'query' => $query,
         );
-        $variables['header'][$field] = l($label, current_path(), $link_options);
+        $variables['header'][$field]['content'] = l($label, current_path(), $link_options);
       }
 
       // Set up the header label class.
-      // @todo Rename to header_attributes.
-      $variables['header_classes'][$field] = array();
+      $variables['header'][$field]['attributes'] = array();
       if ($fields[$field]->options['element_default_classes']) {
-        $variables['header_classes'][$field]['class'][] = 'views-field';
-        $variables['header_classes'][$field]['class'][] = 'views-field-' . $variables['fields'][$field];
+        $variables['header'][$field]['attributes']['class'][] = 'views-field';
+        $variables['header'][$field]['attributes']['class'][] = 'views-field-' . $variables['fields'][$field];
       }
-      $variables['header_classes'][$field] = new Attribute($variables['header_classes'][$field]);
       $class = $fields[$field]->elementLabelClasses(0);
       if ($class) {
-        $variables['header_classes'][$field]['class'][] = $class;
+        $variables['header'][$field]['attributes']['class'][] = $class;
       }
       // Add responsive header classes.
       if (!empty($options['info'][$field]['responsive'])) {
-        $variables['header_classes'][$field]['class'][] = $options['info'][$field]['responsive'];
+        $variables['header'][$field]['attributes']['class'][] = $options['info'][$field]['responsive'];
         $responsive = TRUE;
       }
       // Add a CSS align class to each field if one was set.
       if (!empty($options['info'][$field]['align'])) {
-        $variables['header_classes'][$field]['class'][] = drupal_clean_css_identifier($options['info'][$field]['align']);
+        $variables['header'][$field]['attributes']['class'][] = drupal_clean_css_identifier($options['info'][$field]['align']);
       }
       // Add a header label wrapper if one was selected.
-      if ($variables['header'][$field]) {
+      if ($variables['header'][$field]['content']) {
         $element_label_type = $fields[$field]->elementLabelType(TRUE, TRUE);
         if ($element_label_type) {
-          $variables['header'][$field] = '<' . $element_label_type . '>' . $variables['header'][$field] . '</' . $element_label_type . '>';
+          $variables['header'][$field]['content'] = '<' . $element_label_type . '>' . $variables['header'][$field]['content'] . '</' . $element_label_type . '>';
         }
         // Improves accessibility of complex tables.
-        $vars['header_classes'][$field]['id'] = drupal_html_id('view-' . $field . '-table-column');
+        $variables['header'][$field]['attributes']['id'] = drupal_html_id('view-' . $field . '-table-column');
       }
+      // Check if header label is not empty.
+      if (!empty($variables['header'][$field]['content'])) {
+        $has_header_labels = TRUE;
+      }
+
+      $variables['header'][$field]['attributes'] = new Attribute($variables['header'][$field]['attributes']);
     }
 
     // Add a CSS align class to each field if one was set.
@@ -615,24 +617,23 @@ function template_preprocess_views_view_table(&$variables) {
     // Render each field into its appropriate column.
     foreach ($result as $num => $row) {
       // Add field classes.
-      $variables['field_classes'][$field][$num] = array();
+      $variables['rows'][$num]['columns'][$column]['attributes'] = array();
       if ($fields[$field]->options['element_default_classes']) {
-        $variables['field_classes'][$field][$num]['class'][] = 'views-field';
-        $variables['field_classes'][$field][$num]['class'][] = 'views-field-' . $variables['fields'][$field];
+        $variables['rows'][$num]['columns'][$column]['attributes']['class'][] = 'views-field';
+        $variables['rows'][$num]['columns'][$column]['attributes']['class'][] = 'views-field-' . $variables['fields'][$field];
       }
-      $variables['field_classes'][$field][$num] = new Attribute($variables['field_classes'][$field][$num]);
 
       if ($classes = $fields[$field]->elementClasses($num)) {
-        $variables['field_classes'][$field][$num]['class'][] = $classes;
+        $variables['rows'][$num]['columns'][$column]['attributes']['class'][] = $classes;
       }
       // Add responsive header classes.
       if (!empty($options['info'][$field]['responsive'])) {
-        $variables['field_classes'][$field][$num]['class'][] = $options['info'][$field]['responsive'];
+        $variables['rows'][$num]['columns'][$column]['attributes']['class'][] = $options['info'][$field]['responsive'];
       }
 
       // Improves accessibility of complex tables.
-      if (isset($vars['header_classes'][$field]['id'])) {
-        $vars['field_classes'][$field][$num]['headers'] = array($vars['header_classes'][$field]['id']);
+      if (isset($variables['header'][$field]['attributes']['id'])) {
+        $variables['rows'][$num]['columns'][$column]['attributes']['headers'] = array($variables['header'][$field]['attributes']['id']);
       }
 
       if (!empty($fields[$field]) && empty($fields[$field]->options['exclude'])) {
@@ -642,22 +643,21 @@ function template_preprocess_views_view_table(&$variables) {
           $field_output = '<' . $element_type . '>' . $field_output . '</' . $element_type . '>';
         }
 
-        // Don't bother with separators and stuff if the field does not show up.
-        if (empty($field_output) && !empty($variables['rows'][$num][$column])) {
-          continue;
-        }
-
-        // Place the field into the column, along with an optional separator.
-        if (!empty($variables['rows'][$num][$column])) {
-          if (!empty($options['info'][$column]['separator'])) {
-            $variables['rows'][$num][$column] .= filter_xss_admin($options['info'][$column]['separator']);
+        // Only bother with separators and stuff if the field shows up.
+        if (!empty($field_output) && empty($variables['rows'][$num]['columns'][$column]['content'])) {
+          // Place the field into the column, along with an optional separator.
+          if (!empty($variables['rows'][$num][$column]['content'])) {
+            if (!empty($options['info'][$column]['separator'])) {
+              $variables['rows'][$num]['columns'][$column]['content'] .= filter_xss_admin($options['info'][$column]['separator']);
+            }
           }
+          else {
+            $variables['rows'][$num]['columns'][$column]['content'] = '';
+          }
+          $variables['rows'][$num]['columns'][$column]['content'] .= $field_output;
         }
-        else {
-          $variables['rows'][$num][$column] = '';
-        }
-        $variables['rows'][$num][$column] .= $field_output;
       }
+      $variables['rows'][$num]['columns'][$column]['attributes'] = new Attribute($variables['rows'][$num]['columns'][$column]['attributes']);
     }
 
     // Remove columns if the option is hide empty column is checked and the
@@ -677,37 +677,36 @@ function template_preprocess_views_view_table(&$variables) {
   }
 
   // Hide table header if all labels are empty.
-  if (!array_filter($variables['header'])) {
+  if (!$has_header_labels) {
     $variables['header'] = array();
   }
 
   $count = 0;
-  $variables['row_classes'] = array();
   foreach ($variables['rows'] as $num => $row) {
-    $variables['row_classes'][$num] = array();
+    $variables['rows'][$num]['attributes'] = array();
     if ($row_class_special) {
-      $variables['row_classes'][$num]['class'][] = ($count++ % 2 == 0) ? 'odd' : 'even';
+      $variables['rows'][$num]['attributes']['class'][] = ($count++ % 2 == 0) ? 'odd' : 'even';
       if ($num === 0) {
-        $variables['row_classes'][$num]['class'][] = 'views-row-first';
+        $variables['rows'][$num]['attributes']['class'][] = 'views-row-first';
       }
       elseif ($num === (count($variables['rows']) - 1)) {
-        $variables['row_classes'][$num]['class'][] = 'views-row-last';
+        $variables['rows'][$num]['attributes']['class'][] = 'views-row-last';
       }
     }
     if ($row_class = $handler->getRowClass($num)) {
-      $variables['row_classes'][$num]['class'][] = $row_class;
+      $variables['rows'][$num]['attributes']['class'][] = $row_class;
     }
-    $variables['row_classes'][$num] = new Attribute($variables['row_classes'][$num]);
+    $variables['rows'][$num]['attributes'] = new Attribute($variables['rows'][$num]['attributes']);
   }
 
   $variables['attributes']['class'][] = 'views-table';
   $variables['attributes']['class'][] = 'views-view-table';
   if (empty($variables['rows']) && !empty($options['empty_table'])) {
     $build = $view->display_handler->renderArea('empty');
-    $variables['rows'][0][0] = drupal_render($build);
-    $variables['row_classes'][0] = new Attribute(array('class' => 'odd'));
+    $variables['rows'][0]['columns'][0]['content'] = drupal_render($build);
+    $variables['rows'][0]['attributes'] = new Attribute(array('class' => 'odd'));
     // Calculate the amounts of rows with output.
-    $variables['field_classes'][0][0] = new Attribute(array(
+    $variables['rows'][0]['columns'][0]['attributes'] = new Attribute(array(
       'colspan' => count($variables['header']),
       'class' => 'views-empty',
     ));
@@ -883,34 +882,33 @@ function template_preprocess_views_view_unformatted(&$variables) {
   $style = $view->style_plugin;
   $options = $style->options;
 
-  $variables['row_classes'] = array();
-  $variables['classes'] = array();
   $default_row_class = isset($options['default_row_class']) ? $options['default_row_class'] : FALSE;
   $row_class_special = isset($options['row_class_special']) ? $options['row_class_special'] : FALSE;
   // Set up striping values.
   $count = 0;
   $max = count($rows);
   foreach ($rows as $id => $row) {
-    $variables['row_classes'][$id] = array();
+    $variables['rows'][$id] = array();
+    $variables['rows'][$id]['content'] = $row;
+    $variables['rows'][$id]['attributes'] = array();
     $count++;
     if ($default_row_class) {
-      $variables['row_classes'][$id]['class'][] = 'views-row';
-      $variables['row_classes'][$id]['class'][] = 'views-row-' . $count;
+      $variables['rows'][$id]['attributes']['class'][] = 'views-row';
+      $variables['rows'][$id]['attributes']['class'][] = 'views-row-' . $count;
     }
     if ($row_class_special) {
-      $variables['row_classes'][$id]['class'][] = 'views-row-' . ($count % 2 ? 'odd' : 'even');
+      $variables['rows'][$id]['attributes']['class'][] = 'views-row-' . ($count % 2 ? 'odd' : 'even');
       if ($count == 1) {
-        $variables['row_classes'][$id]['class'][] = 'views-row-first';
+        $variables['rows'][$id]['attributes']['class'][] = 'views-row-first';
       }
       if ($count == $max) {
-        $variables['row_classes'][$id]['class'][] = 'views-row-last';
+        $variables['rows'][$id]['attributes']['class'][] = 'views-row-last';
       }
     }
-
     if ($row_class = $view->style_plugin->getRowClass($id)) {
-      $variables['row_classes'][$id]['class'][] = $row_class;
+      $variables['rows'][$id]['attributes']['class'][] = $row_class;
     }
-    $variables['row_classes'][$id] = new Attribute($variables['row_classes'][$id]);
+    $variables['rows'][$id]['attributes'] = new Attribute($variables['rows'][$id]['attributes']);
   }
 }
 
@@ -936,7 +934,7 @@ function template_preprocess_views_view_list(&$variables) {
 
   // Initialize a new attribute class for $wrapper_class.
   if ($wrapper_class) {
-    $variables['wrapper_attributes'] = new Attribute(array('class' => $wrapper_class));
+    $variables['attributes']['class'] = $wrapper_class;
   }
 
   // Initialize a new attribute class for $class.
