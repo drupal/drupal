@@ -36,6 +36,7 @@ function tour_library_info() {
       array('system', 'jquery'),
       array('system', 'drupal'),
       array('system', 'backbone'),
+      array('system', 'jquery.bbq'),
       array('tour', 'jquery.joyride'),
       array('tour', 'tour-styling'),
     ),
