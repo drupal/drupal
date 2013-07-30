@@ -238,7 +238,8 @@ function views_plugin_list() {
  */
 function views_preprocess_node(&$variables) {
   Drupal::moduleHandler()->loadInclude('node', 'views.inc');
-  // The 'view' attribute of the node is added in views_preprocess_node()
+  // The 'view' attribute of the node is added in
+  // \Drupal\views\Plugin\views\row\EntityRow::preRender().
   if (!empty($variables['node']->view) && $variables['node']->view->storage->id()) {
     $variables['view'] = $variables['node']->view;
     $variables['theme_hook_suggestions'][] = 'node__view__' . $variables['node']->view->storage->id();
@@ -264,7 +265,8 @@ function views_preprocess_node(&$variables) {
  * templates if called from a view.
  */
 function views_preprocess_comment(&$variables) {
-  // The 'view' attribute of the node is added in template_preprocess_views_view_row_comment()
+  // The view data is added to the comment in
+  // \Drupal\views\Plugin\views\row\EntityRow::preRender().
   if (!empty($variables['comment']->view) && $variables['comment']->view->storage->id()) {
     $variables['view'] = &$variables['comment']->view;
     $variables['theme_hook_suggestions'][] = 'comment__view__' . $variables['comment']->view->storage->id();
