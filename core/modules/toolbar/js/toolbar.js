@@ -15,8 +15,6 @@ var options = $.extend({
     'module.toolbar.wide': ''
   },
   strings: {
-    opened: Drupal.t('opened'),
-    closed: Drupal.t('closed'),
     horizontal: Drupal.t('Horizontal orientation'),
     vertical: Drupal.t('Vertical orientation')
   }
@@ -273,11 +271,15 @@ Drupal.toolbar = {
      */
     onActiveTrayChange: function (model, tray) {
       var relevantTray = (tray === null) ? model.previous('activeTray') : tray;
-      var state = (tray === null) ? this.strings.closed : this.strings.opened;
-      Drupal.announce(Drupal.t('"@tray" tray @state.', {
-        '@tray': relevantTray.querySelector('.toolbar-tray-name').textContent,
-        '@state': state
-      }));
+      var trayName = relevantTray.querySelector('.toolbar-tray-name').textContent;
+      var text;
+      if (tray === null) {
+        text = Drupal.t('Tray "@tray" closed.', { '@tray': trayName });
+      }
+      else {
+        text = Drupal.t('Tray "@tray" opened.', { '@tray': trayName });
+      }
+      Drupal.announce(text);
     }
   }),
 
