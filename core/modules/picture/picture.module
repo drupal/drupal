@@ -166,31 +166,43 @@ function picture_theme() {
  */
 function theme_picture_formatter($variables) {
   if (!isset($variables['breakpoints']) || empty($variables['breakpoints'])) {
-    return theme('image_formatter', $variables);
+    $image_formatter = array(
+      '#theme' => 'image_formatter',
+      '#item' => $variables['item'],
+      '#image_style' => $variables['image_style'],
+      '#path' => $variables['path'],
+    );
+    return drupal_render($image_formatter);
   }
 
-  $item = $variables['item'];
-
-  // Do not output an empty 'title' attribute.
-  if (isset($item['title']) && drupal_strlen($item['title']) == 0) {
-    unset($item['title']);
+  $picture = array(
+    '#theme' => 'picture',
+    '#width' => $variables['item']['width'],
+    '#height' => $variables['item']['height'],
+    '#style_name' => $variables['image_style'],
+    '#breakpoints' => $variables['breakpoints'],
+  );
+  if (isset($variables['item']['uri'])) {
+    $picture['#uri'] = $variables['item']['uri'];
   }
-
-  $item['style_name'] = $variables['image_style'];
-  $item['breakpoints'] = $variables['breakpoints'];
-
-  if (!isset($item['uri']) && isset($item['entity'])) {
-    $item['uri'] = $item['entity']->getFileUri();
+  elseif (isset($variables['item']['entity'])) {
+    $picture['#uri'] = $variables['item']['entity']->getFileUri();
+    $picture['#entity'] = $variables['item']['entity'];
   }
-  $output = theme('picture', $item);
-
+  if (isset($variables['item']['alt'])) {
+    $picture['#alt'] = $variables['item']['alt'];
+  }
+  if (isset($variables['item']['title']) && drupal_strlen($variables['item']['title']) != 0) {
+    $picture['#title'] = $variables['item']['title'];
+  }
   if (isset($variables['path']['path'])) {
     $path = $variables['path']['path'];
     $options = isset($variables['path']['options']) ? $variables['path']['options'] : array();
     $options['html'] = TRUE;
-    $output = l($output, $path, $options);
+    return l($picture, $path, $options);
   }
-  return $output;
+
+  return drupal_render($picture);
 }
 
 /**
@@ -275,11 +287,33 @@ function theme_picture($variables) {
 
     // Add source tags to the output.
     foreach ($sources as $source) {
-      $output[] = theme('picture_source', $source);
+      $picture_source = array(
+        '#theme' => 'picture_source',
+        '#src' => $source['src'],
+        '#dimensions' => $source['dimensions'],
+      );
+      if (isset($source['media'])) {
+        $picture_source['#media'] = $source['media'];
+      }
+      if (isset($source['srcset'])) {
+        $picture_source['#srcset'] = $source['srcset'];
+      }
+      $output[] = drupal_render($picture_source);
     }
 
     // Output the fallback image.
-    $output[] = '<noscript>' . theme('image_style', $variables) . '</noscript>';
+    $image_style = array(
+      '#theme' => 'image_style',
+      '#style_name' => $variables['style_name'],
+      '#width' => $variables['width'],
+      '#height' => $variables['height'],
+    );
+    foreach (array('uri', 'alt', 'title', 'attributes') as $key) {
+      if (isset($variables[$key])) {
+        $image_style["#$key"] = $variables[$key];
+      }
+    }
+    $output[] = '  <noscript>' . drupal_render($image_style) . '</noscript>';
     $output[] = '</picture>';
     return implode("\n", $output);
   }
