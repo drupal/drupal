@@ -1047,37 +1047,37 @@ ul.links {
 #footer .block {
   clear: both;
 }
-#footer ul,
-#footer li {
+#footer ul.menu ,
+#footer ul.menu li {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-#footer li a {
+#footer ul.menu li a {
   float: left; /* LTR */
   padding: 0 12px;
   display: block;
   border-right: 1px solid #555; /* LTR */
   border-color: rgba(255, 255, 255, 0.15);
 }
-[dir="rtl"] #footer li a {
+[dir="rtl"] #footer ul.menu li a {
   float: right;
   border-left: 1px solid #555;
   border-color: rgba(255, 255, 255, 0.15);
   border-right: none;
 }
-#footer li.first a {
+#footer ul.menu li.first a {
   padding-left: 0; /* LTR */
 }
-[dir="rtl"] #footer li.first a {
+[dir="rtl"] #footer ul.menu li.first a {
   padding-right: 0;
   padding-left: 12px;
 }
-#footer li.last a {
+#footer ul.menu li.last a {
   padding-right: 0; /* LTR */
   border-right: none; /* LTR */
 }
-[dir="rtl"] #footer li.last a {
+[dir="rtl"] #footer ul.menu li.last a {
   padding-left: 0;
   padding-right: 12px;
   border-left: none;
