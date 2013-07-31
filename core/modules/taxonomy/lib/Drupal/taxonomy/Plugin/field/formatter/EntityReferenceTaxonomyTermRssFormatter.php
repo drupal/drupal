@@ -10,6 +10,7 @@ namespace Drupal\taxonomy\Plugin\field\formatter;
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
 
 /**
@@ -19,7 +20,6 @@ use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
  *
  * @FieldFormatter(
  *   id = "entity_reference_rss_category",
- *   module = "taxonomy",
  *   label = @Translation("RSS category"),
  *   description = @Translation("Display reference to taxonomy term in RSS."),
  *   field_types = {
@@ -32,15 +32,15 @@ class EntityReferenceTaxonomyTermRssFormatter extends EntityReferenceFormatterBa
   /**
    * Overrides Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase::viewElements().
    */
-  public function viewElements(EntityInterface $entity, $langcode, array $items) {
+  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
     $elements = array();
 
     foreach ($items as $delta => $item) {
       $entity->rss_elements[] = array(
         'key' => 'category',
-        'value' => $item['entity']->label(),
+        'value' => $item->entity->label(),
         'attributes' => array(
-          'domain' => $item['target_id'] ? url('taxonomy/term/' . $item['target_id'], array('absolute' => TRUE)) : '',
+          'domain' => $item->target_id ? url('taxonomy/term/' . $item->target_id, array('absolute' => TRUE)) : '',
         ),
       );
     }

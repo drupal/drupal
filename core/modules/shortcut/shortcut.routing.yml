@@ -6,43 +6,43 @@ shortcut_link_delete:
     _access_shortcut_link_delete: 'TRUE'
 
 shortcut_set_delete:
-  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut}/delete'
+  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/delete'
   defaults:
-    _entity_form: 'shortcut.delete'
+    _entity_form: 'shortcut_set.delete'
   requirements:
-    _entity_access: 'shortcut.delete'
+    _entity_access: 'shortcut_set.delete'
 
 shortcut_set_admin:
   pattern: '/admin/config/user-interface/shortcut'
   defaults:
-    _entity_list: 'shortcut'
+    _entity_list: 'shortcut_set'
   requirements:
     _permission: 'administer shortcuts'
 
 shortcut_set_add:
   pattern: '/admin/config/user-interface/shortcut/add-set'
   defaults:
-    _entity_form: 'shortcut.add'
+    _entity_form: 'shortcut_set.add'
   requirements:
-    _entity_create_access: 'shortcut'
+    _entity_create_access: 'shortcut_set'
 
 shortcut_set_edit:
-  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut}/edit'
+  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/edit'
   defaults:
-    _entity_form: 'shortcut.edit'
+    _entity_form: 'shortcut_set.edit'
   requirements:
-    _entity_access: 'shortcut.update'
+    _entity_access: 'shortcut_set.update'
 
 shortcut_link_add_inline:
-  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut}/add-link-inline'
+  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/add-link-inline'
   defaults:
-    _controller: 'Drupal\shortcut\Controller\ShortcutController::addShortcutLinkInline'
+    _controller: 'Drupal\shortcut\Controller\ShortcutSetController::addShortcutLinkInline'
   requirements:
-    _entity_access: 'shortcut.update'
+    _entity_access: 'shortcut_set.update'
 
 shortcut_set_customize:
-  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut}'
+  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut_set}'
   defaults:
-    _entity_form: 'shortcut.customize'
+    _entity_form: 'shortcut_set.customize'
   requirements:
-    _entity_access: 'shortcut.update'
+    _entity_access: 'shortcut_set.update'

@@ -52,6 +52,9 @@ class FormatDateTest extends WebTestBase {
       'Long month name' => array('March' => 'marzo'),
     ));
 
+    $language = new Language(array('id' => static::LANGCODE));
+    language_save($language);
+
     $this->refreshVariables();
   }
 
@@ -120,7 +123,7 @@ class FormatDateTest extends WebTestBase {
     // Create a test user to carry out the tests.
     $test_user = $this->drupalCreateUser();
     $this->drupalLogin($test_user);
-    $edit = array('preferred_langcode' => self::LANGCODE, 'mail' => $test_user->mail, 'timezone' => 'America/Los_Angeles');
+    $edit = array('preferred_langcode' => self::LANGCODE, 'mail' => $test_user->getEmail(), 'timezone' => 'America/Los_Angeles');
     $this->drupalPost('user/' . $test_user->id() . '/edit', $edit, t('Save'));
 
     // Disable session saving as we are about to modify the global $user.
@@ -129,7 +132,7 @@ class FormatDateTest extends WebTestBase {
     $real_user = $user;
     $user = user_load($test_user->id(), TRUE);
     $real_language = $language_interface->id;
-    $language_interface->id = $user->preferred_langcode;
+    $language_interface->id = $user->getPreferredLangcode();
     // Simulate a Drupal bootstrap with the logged-in user.
     date_default_timezone_set(drupal_get_user_timezone());
 

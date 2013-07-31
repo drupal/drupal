@@ -8,7 +8,7 @@
 namespace Drupal\field\Plugin\Type\Formatter;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\Plugin\PluginSettingsInterface;
 
 /**
@@ -69,7 +69,7 @@ interface FormatterInterface extends PluginSettingsInterface {
    * @param array $items
    *   Array of field values for the entities, keyed by entity ID.
    */
-  public function prepareView(array $entities, $langcode, array &$items);
+  public function prepareView(array $entities, $langcode, array $items);
 
   /**
    * Builds a renderable array for one field on one entity instance.
@@ -78,13 +78,13 @@ interface FormatterInterface extends PluginSettingsInterface {
    *   The entity being displayed.
    * @param string $langcode
    *   The language associated with $items.
-   * @param array $items
-   *   Array of field values already loaded for the entities, keyed by entity id.
+   * @param Drupal\Core\Entity\Field\FieldInterface $items
+   *   The field value for the entity for the language.
    *
    * @return array
    *   A renderable array for a themed field with its label and all its values.
    */
-  public function view(EntityInterface $entity, $langcode, array $items);
+  public function view(EntityInterface $entity, $langcode, FieldInterface $items);
 
   /**
    * Builds a renderable array for a field value.
@@ -100,6 +100,6 @@ interface FormatterInterface extends PluginSettingsInterface {
    *   A renderable array for $items, as an array of child elements keyed by
    *   numeric indexes starting from 0.
    */
-  public function viewElements(EntityInterface $entity, $langcode, array $items);
+  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items);
 
 }

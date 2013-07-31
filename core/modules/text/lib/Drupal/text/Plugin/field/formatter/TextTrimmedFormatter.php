@@ -11,6 +11,7 @@ use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
  * Plugin implementation of the 'text_trimmed'' formatter.
@@ -22,7 +23,6 @@ use Drupal\Core\Entity\EntityInterface;
  *
  * @FieldFormatter(
  *   id = "text_trimmed",
- *   module = "text",
  *   label = @Translation("Trimmed"),
  *   field_types = {
  *     "text",
@@ -65,17 +65,17 @@ class TextTrimmedFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, array $items) {
+  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
     $elements = array();
 
     $text_processing = $this->getFieldSetting('text_processing');
     foreach ($items as $delta => $item) {
-      if ($this->getPluginId() == 'text_summary_or_trimmed' && !empty($item['summary'])) {
-        $output = text_sanitize($text_processing, $langcode, $item, 'summary');
+      if ($this->getPluginId() == 'text_summary_or_trimmed' && !empty($item->summary)) {
+        $output = text_sanitize($text_processing, $langcode, $item->getValue(TRUE), 'summary');
       }
       else {
-        $output = text_sanitize($text_processing, $langcode, $item, 'value');
-        $output = text_summary($output, $text_processing ? $item['format'] : NULL, $this->getSetting('trim_length'));
+        $output = text_sanitize($text_processing, $langcode, $item->getValue(TRUE), 'value');
+        $output = text_summary($output, $text_processing ? $item->format : NULL, $this->getSetting('trim_length'));
       }
       $elements[$delta] = array('#markup' => $output);
     }

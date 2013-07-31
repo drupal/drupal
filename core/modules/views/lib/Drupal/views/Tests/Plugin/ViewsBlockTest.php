@@ -59,7 +59,7 @@ class ViewsBlockTest extends ViewUnitTestBase {
       'module' => 'views',
     );
     $plugin_id = 'views_block:test_view_block-block_1';
-    $views_block = new ViewsBlock(array(), $plugin_id, $plugin_definition);
+    $views_block = ViewsBlock::create($this->container, array(), $plugin_id, $plugin_definition);
 
     $storage_controller = $this->container->get('plugin.manager.entity')->getStorageController('block');
 

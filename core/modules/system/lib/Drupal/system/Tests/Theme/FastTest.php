@@ -39,8 +39,8 @@ class FastTest extends WebTestBase {
    */
   function testUserAutocomplete() {
     $this->drupalLogin($this->account);
-    $this->drupalGet('user/autocomplete', array('query' => array('q' => $this->account->name)));
-    $this->assertRaw($this->account->name);
+    $this->drupalGet('user/autocomplete', array('query' => array('q' => $this->account->getUsername())));
+    $this->assertRaw($this->account->getUsername());
     $this->assertNoText('registry initialized', 'The registry was not initialized');
   }
 }

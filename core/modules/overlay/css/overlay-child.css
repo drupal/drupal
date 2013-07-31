@@ -19,6 +19,8 @@ html[dir="rtl"] {
 }
 
 #overlay {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   display: block;
   margin: 0 auto;

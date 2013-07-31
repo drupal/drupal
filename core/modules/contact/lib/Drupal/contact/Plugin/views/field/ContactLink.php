@@ -54,7 +54,7 @@ class ContactLink extends Link {
     $uid = $entity->id();
 
     $path = "user/$uid/contact";
-    if (!_contact_personal_tab_access($entity->getBCEntity())) {
+    if (!_contact_personal_tab_access($entity)) {
       return;
     }
 

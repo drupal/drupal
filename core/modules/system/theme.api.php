@@ -158,64 +158,6 @@ function hook_preprocess_HOOK(&$variables) {
 }
 
 /**
- * Process theme variables for templates.
- *
- * This hook allows modules to process theme variables for theme templates. It
- * is called for all theme hooks implemented as templates, but not for theme
- * hooks implemented as functions. hook_process_HOOK() can be used to process
- * variables for a specific theme hook, whether implemented as a template or
- * function.
- *
- * For more detailed information, see theme().
- *
- * @param $variables
- *   The variables array (modify in place).
- * @param $hook
- *   The name of the theme hook.
- *
- * @deprecated as of Drupal 8.0, the process layer will be removed. Use
- *   preprocess instead and pass render arrays or objects with __toString()
- *   methods to templates and theme functions.
- */
-function hook_process(&$variables, $hook) {
-  // Wraps variables in RDF wrappers.
-  if (!empty($variables['rdf_template_variable_attributes'])) {
-    foreach ($variables['rdf_template_variable_attributes'] as $variable_name => $attributes) {
-      $context = array(
-        'hook' => $hook,
-        'variable_name' => $variable_name,
-        'variables' => $variables,
-      );
-      $variables[$variable_name] = theme('rdf_template_variable_wrapper', array('content' => $variables[$variable_name], 'attributes' => $attributes, 'context' => $context));
-    }
-  }
-}
-
-/**
- * Process theme variables for a specific theme hook.
- *
- * This hook allows modules to process theme variables for a specific theme
- * hook. It should only be used if a module needs to override or add to the
- * theme processing for a theme hook it didn't define.
- *
- * For more detailed information, see theme().
- *
- * @param $variables
- *   The variables array (modify in place).
- *
- * @deprecated as of Drupal 8.0, the process layer will be removed. Use
- *   preprocess instead and pass render arrays or objects with __toString()
- *   methods to templates and theme functions.
- */
-function hook_process_HOOK(&$variables) {
-  // @todo There are no use-cases in Drupal core for this hook. Find one from a
-  //   contributed module, or come up with a good example. Coming up with a good
-  //   example might be tough, since the intent is for nearly everything to be
-  //   achievable via preprocess functions, and for process functions to only be
-  //   used when requiring the later execution time.
-}
-
-/**
  * Respond to themes being enabled.
  *
  * @param array $theme_list

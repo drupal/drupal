@@ -2,11 +2,11 @@ name: large
 label: 'Large (480x480)'
 effects:
   ddd73aa7-4bd6-4c85-b600-bdf2b1628d1d:
-    name: image_scale
+    id: image_scale
     data:
       width: '480'
       height: '480'
       upscale: '1'
     weight: '0'
-    ieid: ddd73aa7-4bd6-4c85-b600-bdf2b1628d1d
+    uuid: ddd73aa7-4bd6-4c85-b600-bdf2b1628d1d
 langcode: en

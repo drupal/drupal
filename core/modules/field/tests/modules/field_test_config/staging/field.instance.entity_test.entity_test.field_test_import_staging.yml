@@ -11,5 +11,4 @@ default_value: {  }
 default_value_function: ''
 settings:
   text_processing: '0'
-  user_register_form: '0'
 field_type: text

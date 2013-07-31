@@ -44,7 +44,7 @@ class UserPasswordResetTest extends WebTestBase {
     // that it is definitely over a second ago.
     $account->login = REQUEST_TIME - mt_rand(10, 100000);
     db_update('users')
-      ->fields(array('login' => $account->login))
+      ->fields(array('login' => $account->getLastLoginTime()))
       ->condition('uid', $account->id())
       ->execute();
   }
@@ -63,25 +63,25 @@ class UserPasswordResetTest extends WebTestBase {
     $this->assertEqual(count($this->drupalGetMails(array('id' => 'user_password_reset'))), 0, 'No e-mail was sent when requesting a password for an invalid account.');
 
     // Reset the password by username via the password reset page.
-    $edit['name'] = $this->account->name;
+    $edit['name'] = $this->account->getUsername();
     $this->drupalPost(NULL, $edit, t('E-mail new password'));
 
      // Verify that the user was sent an e-mail.
-    $this->assertMail('to', $this->account->mail, 'Password e-mail sent to user.');
-    $subject = t('Replacement login information for @username at @site', array('@username' => $this->account->name, '@site' => config('system.site')->get('name')));
+    $this->assertMail('to', $this->account->getEmail(), 'Password e-mail sent to user.');
+    $subject = t('Replacement login information for @username at @site', array('@username' => $this->account->getUsername(), '@site' => config('system.site')->get('name')));
     $this->assertMail('subject', $subject, 'Password reset e-mail subject is correct.');
 
     $resetURL = $this->getResetURL();
     $this->drupalGet($resetURL);
 
     // Check the one-time login page.
-    $this->assertText($this->account->name, 'One-time login page contains the correct username.');
+    $this->assertText($this->account->getUsername(), 'One-time login page contains the correct username.');
     $this->assertText(t('This login can be used only once.'), 'Found warning about one-time login.');
 
     // Check successful login.
     $this->drupalPost(NULL, NULL, t('Log in'));
     $this->assertLink(t('Log out'));
-    $this->assertTitle(t('@name | @site', array('@name' => $this->account->name, '@site' => config('system.site')->get('name'))), 'Logged in using password reset link.');
+    $this->assertTitle(t('@name | @site', array('@name' => $this->account->getUsername(), '@site' => config('system.site')->get('name'))), 'Logged in using password reset link.');
 
     // Log out, and try to log in again using the same one-time link.
     $this->drupalLogout();
@@ -92,7 +92,7 @@ class UserPasswordResetTest extends WebTestBase {
     $this->drupalGet('user/password');
     // Count email messages before to compare with after.
     $before = count($this->drupalGetMails(array('id' => 'user_password_reset')));
-    $edit['name'] = $this->account->mail;
+    $edit['name'] = $this->account->getEmail();
     $this->drupalPost(NULL, $edit, t('E-mail new password'));
     $this->assertTrue( count($this->drupalGetMails(array('id' => 'user_password_reset'))) === $before + 1, 'E-mail sent when requesting password reset using e-mail address.');
 
@@ -100,7 +100,7 @@ class UserPasswordResetTest extends WebTestBase {
     $timeout = config('user.settings')->get('password_reset_timeout');
     $bogus_timestamp = REQUEST_TIME - $timeout - 60;
     $_uid = $this->account->id();
-    $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account->pass, $bogus_timestamp, $this->account->login));
+    $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account->getPassword(), $bogus_timestamp, $this->account->getLastLoginTime()));
     $this->assertText(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'), 'Expired password reset request rejected.');
   }
 

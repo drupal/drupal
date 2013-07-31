@@ -63,13 +63,13 @@ class UserTokenReplaceTest extends WebTestBase {
     $tests = array();
     $tests['[user:uid]'] = $account->id();
     $tests['[user:name]'] = check_plain(user_format_name($account));
-    $tests['[user:mail]'] = check_plain($account->mail);
+    $tests['[user:mail]'] = check_plain($account->getEmail());
     $tests['[user:url]'] = url("user/" . $account->id(), $url_options);
     $tests['[user:edit-url]'] = url("user/" . $account->id() . "/edit", $url_options);
-    $tests['[user:last-login]'] = format_date($account->login, 'medium', '', NULL, $language_interface->id);
-    $tests['[user:last-login:short]'] = format_date($account->login, 'short', '', NULL, $language_interface->id);
-    $tests['[user:created]'] = format_date($account->created, 'medium', '', NULL, $language_interface->id);
-    $tests['[user:created:short]'] = format_date($account->created, 'short', '', NULL, $language_interface->id);
+    $tests['[user:last-login]'] = format_date($account->getLastLoginTime(), 'medium', '', NULL, $language_interface->id);
+    $tests['[user:last-login:short]'] = format_date($account->getLastLoginTime(), 'short', '', NULL, $language_interface->id);
+    $tests['[user:created]'] = format_date($account->getCreatedTime(), 'medium', '', NULL, $language_interface->id);
+    $tests['[user:created:short]'] = format_date($account->getCreatedTime(), 'short', '', NULL, $language_interface->id);
     $tests['[current-user:name]'] = check_plain(user_format_name($global_account));
 
     // Test to make sure that we generated something for each token.
@@ -82,7 +82,7 @@ class UserTokenReplaceTest extends WebTestBase {
 
     // Generate and test unsanitized tokens.
     $tests['[user:name]'] = user_format_name($account);
-    $tests['[user:mail]'] = $account->mail;
+    $tests['[user:mail]'] = $account->getEmail();
     $tests['[current-user:name]'] = user_format_name($global_account);
 
     foreach ($tests as $input => $expected) {
@@ -105,7 +105,7 @@ class UserTokenReplaceTest extends WebTestBase {
     // Generate tokens with the user's preferred language.
     $account->preferred_langcode = 'de';
     $account->save();
-    $link = url('user', array('language' => language_load($account->preferred_langcode), 'absolute' => TRUE));
+    $link = url('user', array('language' => language_load($account->getPreferredLangcode()), 'absolute' => TRUE));
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, array('user' => $account), array('callback' => 'user_mail_tokens', 'sanitize' => FALSE, 'clear' => TRUE));
       $this->assertTrue(strpos($output, $link) === 0, "Generated URL is in the user's preferred language.");

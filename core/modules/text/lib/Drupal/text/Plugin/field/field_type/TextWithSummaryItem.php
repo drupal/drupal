@@ -16,7 +16,6 @@ use Drupal\field\Plugin\Core\Entity\Field;
  *
  * @FieldType(
  *   id = "text_with_summary",
- *   module = "text",
  *   label = @Translation("Long text and summary"),
  *   description = @Translation("This field stores long text in the database along with optional summary text."),
  *   instance_settings = {

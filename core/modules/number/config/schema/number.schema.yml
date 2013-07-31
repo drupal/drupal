@@ -1,0 +1,110 @@
+# Schema for configuration files of the number module.
+
+field.number_integer.settings:
+  type: sequence
+  label: 'Integer settings'
+  sequence:
+    - type: string
+      label: 'setting'
+
+field.number_integer.instance_settings:
+  type: mapping
+  label: 'Integer'
+  mapping:
+    min:
+      type: integer
+      label: 'Minimum'
+    max:
+      type: integer
+      label: 'Maximum'
+    prefix:
+      type: string
+      label: 'Prefix'
+    suffix:
+      type: string
+      label: 'Suffix'
+
+field.number_integer.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default value'
+      mapping:
+        value:
+          type: integer
+          label: 'Value'
+
+field.number_decimal.settings:
+  type: mapping
+  label: 'Decimal settings'
+  mapping:
+    precision:
+      type: integer
+      label: 'Precision'
+    scale:
+      type: integer
+      label: 'Scale'
+
+field.number_decimal.instance_settings:
+  type: mapping
+  label: 'Decimal'
+  mapping:
+    min:
+      type: integer
+      label: 'Minimum'
+    max:
+      type: integer
+      label: 'Maximum'
+    prefix:
+      type: string
+      label: 'Prefix'
+    suffix:
+      type: string
+      label: 'Suffix'
+
+field.number_decimal.value:
+   type: sequence
+   label: 'Default value'
+   sequence:
+     - type: mapping
+       label: 'Default value'
+       mapping:
+         value:
+           type: integer
+           label: 'Value'
+
+field.number_float.settings:
+  type: sequence
+  label: 'Float settings'
+  sequence:
+    - type: string
+      label: 'setting'
+
+field.number_float.instance_settings:
+  type: mapping
+  label: 'Float'
+  mapping:
+    min:
+      type: integer
+      label: 'Minimum'
+    max:
+      type: integer
+      label: 'Maximum'
+    prefix:
+      type: string
+      label: 'Prefix'
+    suffix:
+      type: string
+      label: 'Suffix'
+
+field.number_float.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default value'
+      mapping:
+        value:
+          type: integer
+          label: 'Value'

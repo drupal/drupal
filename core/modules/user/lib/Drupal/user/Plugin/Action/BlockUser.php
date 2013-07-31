@@ -27,11 +27,11 @@ class BlockUser extends ActionBase {
    */
   public function execute($account = NULL) {
     // Skip blocking user if they are already blocked.
-    if ($account !== FALSE && $account->status->value == 1) {
+    if ($account !== FALSE && $account->isActive()) {
       // For efficiency manually save the original account before applying any
       // changes.
       $account->original = clone $account;
-      $account->status = 0;
+      $account->block();
       $account->save();
     }
   }

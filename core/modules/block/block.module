@@ -290,7 +290,7 @@ function _block_get_renderable_region($list = array()) {
   // chances of having unwanted output get in the cache and later be served
   // to other users. We therefore exclude user 1 from block caching.
   $not_cacheable = $GLOBALS['user']->id() == 1 ||
-    count(module_implements('node_grants')) ||
+    count(Drupal::moduleHandler()->getImplementations('node_grants')) ||
     !\Drupal::request()->isMethodSafe();
 
   foreach ($list as $key => $block) {

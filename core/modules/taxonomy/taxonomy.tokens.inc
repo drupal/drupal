@@ -125,7 +125,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
           break;
 
         case 'vocabulary':
-          $vocabulary = taxonomy_vocabulary_load($term->bundle());
+          $vocabulary = entity_load('taxonomy_vocabulary', $term->bundle());
           $replacements[$original] = check_plain($vocabulary->name);
           break;
 
@@ -139,7 +139,7 @@ function taxonomy_tokens($type, $tokens, array $data = array(), array $options =
     }
 
     if ($vocabulary_tokens = $token_service->findWithPrefix($tokens, 'vocabulary')) {
-      $vocabulary = taxonomy_vocabulary_load($term->bundle());
+      $vocabulary = entity_load('taxonomy_vocabulary', $term->bundle());
       $replacements += $token_service->generate('vocabulary', $vocabulary_tokens, array('vocabulary' => $vocabulary), $options);
     }
 

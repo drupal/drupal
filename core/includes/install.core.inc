@@ -2537,8 +2537,8 @@ function install_configure_form_submit($form, &$form_state) {
   // We precreated user 1 with placeholder values. Let's save the real values.
   $account = user_load(1);
   $account->init = $account->mail = $form_state['values']['account']['mail'];
-  $account->roles = !empty($account->roles) ? $account->roles : array();
-  $account->status = 1;
+  $account->roles = $account->getRoles();
+  $account->activate();
   $account->timezone = $form_state['values']['date_default_timezone'];
   $account->pass = $form_state['values']['account']['pass'];
   $account->name = $form_state['values']['account']['name'];

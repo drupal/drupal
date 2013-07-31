@@ -31,7 +31,7 @@ function hook_taxonomy_vocabulary_create(\Drupal\taxonomy\Plugin\Core\Entity\Voc
  * Act on taxonomy vocabularies when loaded.
  *
  * Modules implementing this hook can act on the vocabulary objects before they
- * are returned by taxonomy_vocabulary_load_multiple().
+ * are returned by entity_load_multiple().
  *
  * @param array $vocabularies
  *   An array of taxonomy vocabulary entities.
@@ -142,7 +142,7 @@ function hook_taxonomy_term_create(\Drupal\taxonomy\Plugin\Core\Entity\Term $ter
  * Act on taxonomy terms when loaded.
  *
  * Modules implementing this hook can act on the term objects returned by
- * taxonomy_term_load_multiple().
+ * entity_load_multiple().
  *
  * For performance reasons, information to be added to term objects should be
  * loaded in a single query for all terms where possible.

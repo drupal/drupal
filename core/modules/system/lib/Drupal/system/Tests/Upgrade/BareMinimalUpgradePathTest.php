@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\Upgrade;
 
+use Drupal\Core\Session\UserSession;
+
 /**
  * Performs major version release upgrade tests on a bare database.
  *
@@ -45,20 +47,17 @@ class BareMinimalUpgradePathTest extends UpgradePathTestBase {
 
     // Verify that we are still logged in.
     $this->finishUpgradeSession();
-    $this->drupalLogin((object) array(
+    $user = new UserSession(array(
       'uid' => 1,
       'name' => 'admin',
       'pass_raw' => 'drupal',
     ));
+    $this->drupalLogin($user);
 
     // The previous login should've triggered a password rehash, so login one
     // more time to make sure the new hash is readable.
     $this->drupalLogout();
-    $this->drupalLogin((object) array(
-      'uid' => 1,
-      'name' => 'admin',
-      'pass_raw' => 'drupal',
-    ));
+    $this->drupalLogin($user);
 
     // Test that the site name is correctly displayed.
     $this->assertText('drupal', 'The site name is correctly displayed.');

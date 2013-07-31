@@ -54,7 +54,7 @@ class UserBlocksTests extends WebTestBase {
 
     // Log in using the block.
     $edit = array();
-    $edit['name'] = $user->name;
+    $edit['name'] = $user->getUsername();
     $edit['pass'] = $user->pass_raw;
     $this->drupalPost('admin/people/permissions', $edit, t('Log in'));
     $this->assertNoText(t('User login'), 'Logged in.');
@@ -102,10 +102,10 @@ class UserBlocksTests extends WebTestBase {
     $content = entity_view($block, 'block');
     $this->drupalSetContent(render($content));
     $this->assertRaw(t('2 users'), 'Correct number of online users (2 users).');
-    $this->assertText($user1->name, 'Active user 1 found in online list.');
-    $this->assertText($user2->name, 'Active user 2 found in online list.');
-    $this->assertNoText($user3->name, 'Inactive user not found in online list.');
-    $this->assertTrue(strpos($this->drupalGetContent(), $user1->name) > strpos($this->drupalGetContent(), $user2->name), 'Online users are ordered correctly.');
+    $this->assertText($user1->getUsername(), 'Active user 1 found in online list.');
+    $this->assertText($user2->getUsername(), 'Active user 2 found in online list.');
+    $this->assertNoText($user3->getUsername(), 'Inactive user not found in online list.');
+    $this->assertTrue(strpos($this->drupalGetContent(), $user1->getUsername()) > strpos($this->drupalGetContent(), $user2->getUsername()), 'Online users are ordered correctly.');
   }
 
   /**

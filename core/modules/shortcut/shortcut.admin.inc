@@ -33,7 +33,7 @@ function shortcut_set_switch($form, &$form_state, $account = NULL) {
   }
 
   // Prepare the list of shortcut sets.
-  $sets = entity_load_multiple('shortcut');
+  $sets = entity_load_multiple('shortcut_set');
   $current_set = shortcut_current_displayed_set($account);
 
   $options = array();
@@ -136,14 +136,14 @@ function shortcut_set_switch_submit($form, &$form_state) {
   if ($form_state['values']['set'] == 'new') {
     // Save a new shortcut set with links copied from the user's default set.
     $default_set = shortcut_default_set($account);
-    $set = entity_create('shortcut', array(
+    $set = entity_create('shortcut_set', array(
       'id' => $form_state['values']['id'],
       'label' => $form_state['values']['label'],
       'links' => $default_set->links,
     ));
     $set->save();
     $replacements = array(
-      '%user' => $account->name,
+      '%user' => $account->getUsername(),
       '%set_name' => $set->label(),
       '@switch-url' => url(current_path()),
     );
@@ -161,7 +161,7 @@ function shortcut_set_switch_submit($form, &$form_state) {
     // Switch to a different shortcut set.
     $set = shortcut_set_load($form_state['values']['set']);
     $replacements = array(
-      '%user' => $account->name,
+      '%user' => $account->getUsername(),
       '%set_name' => $set->label(),
     );
     drupal_set_message($account->id() == $user->id() ? t('You are now using the %set_name shortcut set.', $replacements) : t('%user is now using the %set_name shortcut set.', $replacements));

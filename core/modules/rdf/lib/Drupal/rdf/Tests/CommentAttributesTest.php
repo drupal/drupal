@@ -299,7 +299,7 @@ class CommentAttributesTest extends CommentTestBase {
     }
 
     // Author name.
-    $name = empty($account["name"]) ? $this->web_user->name : $account["name"] . " (not verified)";
+    $name = empty($account["name"]) ? $this->web_user->getUsername() : $account["name"] . " (not verified)";
     $expected_value = array(
       'type' => 'literal',
       'value' => $name,

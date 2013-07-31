@@ -85,7 +85,7 @@ abstract class ShortcutTestBase extends WebTestBase {
    * Creates a generic shortcut set.
    */
   function generateShortcutSet($label = '', $id = NULL, $default_links = TRUE) {
-    $set = entity_create('shortcut', array(
+    $set = entity_create('shortcut_set', array(
       'id' => isset($id) ? $id : strtolower($this->randomName()),
       'label' => empty($label) ? $this->randomString() : $label,
     ));

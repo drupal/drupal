@@ -112,12 +112,12 @@ CKEDITOR.plugins.add('drupallink', {
     // Add buttons for link and unlink.
     if (editor.ui.addButton) {
       editor.ui.addButton('DrupalLink', {
-        label: editor.lang.link.toolbar,
+        label: Drupal.t('Link'),
         command: 'drupallink',
         icon: this.path.replace(/plugin\.js.*/, 'link.png')
       });
       editor.ui.addButton('DrupalUnlink', {
-        label: editor.lang.link.unlink,
+        label: Drupal.t('Unlink'),
         command: 'drupalunlink',
         icon: this.path.replace(/plugin\.js.*/, 'unlink.png')
       });
@@ -138,14 +138,14 @@ CKEDITOR.plugins.add('drupallink', {
     if (editor.addMenuItems) {
       editor.addMenuItems({
         link: {
-          label: editor.lang.link.menu,
+          label: Drupal.t('Edit Link'),
           command: 'drupallink',
           group: 'link',
           order: 1
         },
 
         unlink: {
-          label: editor.lang.link.unlink,
+          label: Drupal.t('Unlink'),
           command: 'drupalunlink',
           group: 'link',
           order: 5

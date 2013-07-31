@@ -1746,7 +1746,7 @@ function menu_get_active_help() {
 
   $arg = drupal_help_arg(arg(NULL));
 
-  foreach (module_implements('help') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('help') as $module) {
     $function = $module . '_help';
     // Lookup help for this path.
     if ($help = $function($router_path, $arg)) {
@@ -2753,7 +2753,7 @@ function menu_router_build($save = FALSE) {
   // We need to manually call each module so that we can know which module
   // a given item came from.
   $callbacks = array();
-  foreach (module_implements('menu') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('menu') as $module) {
     $router_items = call_user_func($module . '_menu');
     if (isset($router_items) && is_array($router_items)) {
       foreach (array_keys($router_items) as $path) {

@@ -1364,9 +1364,9 @@ function hook_mail_alter(&$message) {
 /**
  * Alter the registry of modules implementing a hook.
  *
- * This hook is invoked during module_implements(). A module may implement this
- * hook in order to reorder the implementing modules, which are otherwise
- * ordered by the module's system weight.
+ * This hook is invoked during Drupal::moduleHandler()->getImplementations().
+ * A module may implement this hook in order to reorder the implementing
+ * modules, which are otherwise ordered by the module's system weight.
  *
  * Note that hooks invoked using drupal_alter() can have multiple variations
  * (such as hook_form_alter() and hook_form_FORM_ID_alter()). drupal_alter()
@@ -1386,7 +1386,8 @@ function hook_mail_alter(&$message) {
  */
 function hook_module_implements_alter(&$implementations, $hook) {
   if ($hook == 'rdf_mapping') {
-    // Move my_module_rdf_mapping() to the end of the list. module_implements()
+    // Move my_module_rdf_mapping() to the end of the list.
+    // Drupal::moduleHandler()->getImplementations()
     // iterates through $implementations with a foreach loop which PHP iterates
     // in the order that the items were added, so to move an item to the end of
     // the array, we remove it and then add it.
@@ -1845,7 +1846,7 @@ function hook_mail($key, &$message, $params) {
   );
   if ($context['hook'] == 'taxonomy') {
     $entity = $params['entity'];
-    $vocabulary = taxonomy_vocabulary_load($entity->id());
+    $vocabulary = entity_load('taxonomy_vocabulary', $entity->id());
     $variables += array(
       '%term_name' => $entity->name,
       '%term_description' => $entity->description,
@@ -2642,9 +2643,9 @@ function hook_update_N(&$sandbox) {
     ->execute();
 
   foreach ($users as $user) {
-    $user->name .= '!';
+    $user->setUsername($user->getUsername() . '!');
     db_update('users')
-      ->fields(array('name' => $user->name))
+      ->fields(array('name' => $user->getUsername()))
       ->condition('uid', $user->id())
       ->execute();
 

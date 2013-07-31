@@ -124,7 +124,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
         'created' => REQUEST_TIME - mt_rand(0, 1000),
       );
       $edit = array(
-        'name' => $user->name,
+        'name' => $user->getUsername(),
         'date[date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
         'date[time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
       );

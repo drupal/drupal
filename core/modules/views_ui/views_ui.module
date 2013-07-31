@@ -162,7 +162,8 @@ function views_ui_theme() {
     // Generic container wrapper, to use instead of theme_container when an id
     // is not desired.
     'views_ui_container' => array(
-      'render element' => 'element',
+      'variables' => array('children' => NULL, 'attributes' => array()),
+      'template' => 'views-ui-container',
       'file' => 'views_ui.theme.inc',
     ),
   );

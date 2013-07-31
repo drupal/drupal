@@ -96,7 +96,6 @@ class OverrideDisplaysTest extends UITestBase {
     $view['block[title]'] = $this->randomName(16);
     $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
 
-
     // Add a node that will appear in the view, so that the block will actually
     // be displayed.
     $this->drupalCreateNode();
@@ -116,8 +115,18 @@ class OverrideDisplaysTest extends UITestBase {
     $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . config('system.theme')->get('default') . '/add');
     $this->assertText('View: ' . $view['label']);
 
-    // Place the block.
-    $this->drupalPlaceBlock("views_block:{$view['id']}-block_1");
+    // Put the block into the first sidebar region, and make sure it will not
+    // display on the view's page display (since we will be searching for the
+    // presence/absence of the view's title in both the page and the block).
+    $this->drupalPlaceBlock("views_block:{$view['id']}-block_1", array(
+      'visibility' => array(
+        'path' => array(
+          'visibility' => BLOCK_VISIBILITY_NOTLISTED,
+          'pages' => $view['page[path]'],
+        ),
+      ),
+    ));
+
     $this->drupalGet('');
     $this->assertText($view['block[title]']);
     $this->assertNoText($view['page[title]']);
@@ -132,15 +141,16 @@ class OverrideDisplaysTest extends UITestBase {
     $this->assertResponse(200);
     $this->assertText($new_default_title);
     $this->assertNoText($view['page[title]']);
+    $this->assertNoText($view['block[title]']);
     $this->drupalGet($view['page[feed_properties][path]']);
     $this->assertResponse(200);
     $this->assertText($new_default_title);
     $this->assertNoText($view['page[title]']);
     $this->assertNoText($view['block[title]']);
     $this->drupalGet('');
-    $this->assertText($view['block[title]']);
     $this->assertNoText($new_default_title);
     $this->assertNoText($view['page[title]']);
+    $this->assertText($view['block[title]']);
 
     // Edit the block and change the title. This should automatically change
     // the block title only, and leave the defaults alone.

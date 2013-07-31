@@ -37,13 +37,13 @@ class HttpBasicTest extends WebTestBase {
   public function testHttpBasic() {
     $account = $this->drupalCreateUser();
 
-    $this->basicAuthGet('router_test/test11', $account->name, $account->pass_raw);
-    $this->assertText($account->name, 'Account name is displayed.');
+    $this->basicAuthGet('router_test/test11', $account->getUsername(), $account->pass_raw);
+    $this->assertText($account->getUsername(), 'Account name is displayed.');
     $this->assertResponse('200', 'HTTP response is OK');
     $this->curlClose();
 
-    $this->basicAuthGet('router_test/test11', $account->name, $this->randomName());
-    $this->assertNoText($account->name, 'Bad basic auth credentials do not authenticate the user.');
+    $this->basicAuthGet('router_test/test11', $account->getUsername(), $this->randomName());
+    $this->assertNoText($account->getUsername(), 'Bad basic auth credentials do not authenticate the user.');
     $this->assertResponse('403', 'Access is not granted.');
     $this->curlClose();
 
@@ -55,7 +55,7 @@ class HttpBasicTest extends WebTestBase {
 
     $account = $this->drupalCreateUser(array('access administration pages'));
 
-    $this->basicAuthGet('admin', $account->name, $account->pass_raw);
+    $this->basicAuthGet('admin', $account->getUsername(), $account->pass_raw);
     $this->assertNoLink('Log out', 0, 'User is not logged in');
     $this->assertResponse('403', 'No basic authentication for routes not explicitly defining authentication providers.');
     $this->curlClose();

@@ -55,7 +55,7 @@ class CoreServiceProvider implements ServiceProviderInterface  {
     // Add a compiler pass for registering event subscribers.
     $container->addCompilerPass(new RegisterKernelListenersPass(), PassConfig::TYPE_AFTER_REMOVING);
     $container->addCompilerPass(new RegisterAccessChecksPass());
-    // Add a compiler pass for upcasting of entity route parameters.
+    // Add a compiler pass for upcasting route parameters.
     $container->addCompilerPass(new RegisterParamConvertersPass());
     $container->addCompilerPass(new RegisterRouteEnhancersPass());
     // Add a compiler pass for registering services needing destruction.

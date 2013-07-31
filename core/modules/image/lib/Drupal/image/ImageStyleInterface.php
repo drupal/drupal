@@ -8,6 +8,7 @@
 namespace Drupal\image;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\image\ImageEffectInterface;
 
 /**
  * Provides an interface defining an image style entity.
@@ -51,6 +52,9 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    * @param string $path
    *   (optional) The original image path or URI. If it's supplied, only this
    *   image derivative will be flushed.
+   *
+   * @return self
+   *   This image style.
    */
   public function flush($path = NULL);
 
@@ -84,5 +88,46 @@ interface ImageStyleInterface extends ConfigEntityInterface {
    *   resulting width and height, in pixels.
    */
   public function transformDimensions(array &$dimensions);
+
+  /**
+   * Returns a specific image effect.
+   *
+   * @param string $effect
+   *   The image effect ID.
+   *
+   * @return \Drupal\image\ImageEffectInterface
+   *   The image effect object.
+   */
+  public function getEffect($effect);
+
+  /**
+   * Returns the image effects for this style.
+   *
+   * @return \Drupal\image\ImageEffectBag|\Drupal\image\ImageEffectInterface[]
+   *   The image effect plugin bag.
+   */
+  public function getEffects();
+
+  /**
+   * Saves an image effect for this style.
+   *
+   * @param array $configuration
+   *   An array of image effect configuration.
+   *
+   * @return string
+   *   The image effect ID.
+   */
+  public function saveImageEffect(array $configuration);
+
+  /**
+   * Deletes an image effect from this style.
+   *
+   * @param \Drupal\image\ImageEffectInterface $effect
+   *   The image effect object.
+   *
+   * @return self
+   *   This image style.
+   */
+  public function deleteImageEffect(ImageEffectInterface $effect);
 
 }

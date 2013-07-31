@@ -32,7 +32,7 @@ class UserEditTest extends WebTestBase {
     $this->drupalLogin($user1);
 
     // Test that error message appears when attempting to use a non-unique user name.
-    $edit['name'] = $user2->name;
+    $edit['name'] = $user2->getUsername();
     $this->drupalPost("user/" . $user1->id() . "/edit", $edit, t('Save'));
     $this->assertRaw(t('The name %name is already taken.', array('%name' => $edit['name'])));
 

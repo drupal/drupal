@@ -71,7 +71,7 @@ function taxonomy_help($path, $arg) {
       $output = '<p>' . t('Taxonomy is for categorizing content. Terms are grouped into vocabularies. For example, a vocabulary called "Fruit" would contain the terms "Apple" and "Banana".') . '</p>';
       return $output;
     case 'admin/structure/taxonomy/manage/%':
-      $vocabulary = taxonomy_vocabulary_load($arg[4]);
+      $vocabulary = entity_load('taxonomy_vocabulary', $arg[4]);
       switch ($vocabulary->hierarchy) {
         case TAXONOMY_HIERARCHY_DISABLED:
           return '<p>' . t('You can reorganize the terms in %capital_name using their drag-and-drop handles, and group terms under a parent term by sliding them under and to the right of the parent.', array('%capital_name' => drupal_ucfirst($vocabulary->name), '%name' => $vocabulary->name)) . '</p>';
@@ -92,7 +92,7 @@ function taxonomy_permission() {
       'title' => t('Administer vocabularies and terms'),
     ),
   );
-  foreach (taxonomy_vocabulary_load_multiple() as $vocabulary) {
+  foreach (entity_load_multiple('taxonomy_vocabulary') as $vocabulary) {
     $permissions += array(
       'edit terms in ' . $vocabulary->id() => array(
         'title' => t('Edit terms in %vocabulary', array('%vocabulary' => $vocabulary->name)),
@@ -420,7 +420,7 @@ function taxonomy_term_view(Term $term, $view_mode = 'full', $langcode = NULL) {
  * Constructs a drupal_render() style array from an array of loaded terms.
  *
  * @param array $terms
- *   An array of taxonomy terms as returned by taxonomy_term_load_multiple().
+ *   An array of taxonomy terms as returned by entity_load_multiple('taxonomy_term').
  * @param string $view_mode
  *   View mode, e.g. 'full', 'teaser'...
  * @param string $langcode
@@ -551,7 +551,7 @@ function taxonomy_term_load_parents($tid) {
     $query->orderBy('t.weight');
     $query->orderBy('t.name');
     $tids = $query->execute()->fetchCol();
-    $parents[$tid] = taxonomy_term_load_multiple($tids);
+    $parents[$tid] = entity_load_multiple('taxonomy_term', $tids);
   }
 
   return isset($parents[$tid]) ? $parents[$tid] : array();
@@ -568,7 +568,7 @@ function taxonomy_term_load_parents_all($tid) {
   }
 
   $parents = array();
-  if ($term = taxonomy_term_load($tid)) {
+  if ($term = entity_load('taxonomy_term', $tid)) {
     $parents[] = $term;
     $n = 0;
     while ($parent = taxonomy_term_load_parents($parents[$n]->id())) {
@@ -609,7 +609,7 @@ function taxonomy_term_load_children($tid, $vid = NULL) {
     $query->orderBy('t.weight');
     $query->orderBy('t.name');
     $tids = $query->execute()->fetchCol();
-    $children[$tid] = taxonomy_term_load_multiple($tids);
+    $children[$tid] = entity_load_multiple('taxonomy_term', $tids);
   }
 
   return isset($children[$tid]) ? $children[$tid] : array();
@@ -670,7 +670,7 @@ function taxonomy_get_tree($vid, $parent = 0, $max_depth = NULL, $load_entities 
   // Load full entities, if necessary. The entity controller statically
   // caches the results.
   if ($load_entities) {
-    $term_entities = taxonomy_term_load_multiple(array_keys($terms[$vid]));
+    $term_entities = entity_load_multiple('taxonomy_term', array_keys($terms[$vid]));
   }
 
   $max_depth = (!isset($max_depth)) ? count($children[$vid]) : $max_depth;
@@ -772,6 +772,8 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
  * @see entity_load_multiple()
  * @see Drupal\Core\Entity\Query\EntityQueryInterface
  *
+ * @deprecated use entity_load_multiple('taxonomy_term', $tids) instead.
+ *
  * @param array $tids
  *   (optional) An array of entity IDs. If omitted, all entities are loaded.
  *
@@ -791,6 +793,8 @@ function taxonomy_term_load_multiple(array $tids = NULL) {
  * require database access if loaded again during the same page request.
  *
  * @see entity_load_multiple()
+ *
+ * @deprecated use entity_load_multiple('taxonomy_vocabulary', $vids) instead.
  *
  * @param array $vids
  *   (optional) An array of entity IDs. If omitted, all entities are loaded.
@@ -817,6 +821,8 @@ function taxonomy_vocabulary_sort(array &$vocabularies = array()) {
 /**
  * Return the taxonomy vocabulary entity matching a vocabulary ID.
  *
+ * @deprecated use entity_load('taxonomy_vocabulary', $vid) instead.
+ *
  * @param int $vid
  *   The vocabulary's ID.
  *
@@ -830,6 +836,8 @@ function taxonomy_vocabulary_load($vid) {
 
 /**
  * Return the taxonomy term entity matching a term ID.
+ *
+ * @deprecated use entity_load('taxonomy_term', $tid) instead.
  *
  * @param $tid
  *   A term's ID
@@ -931,14 +939,14 @@ function taxonomy_options_list(FieldDefinitionInterface $field_definition, Entit
  */
 function taxonomy_field_validate(EntityInterface $entity = NULL, $field, $instance, $langcode, $items, &$errors) {
   // Build an array of existing term IDs so they can be loaded with
-  // taxonomy_term_load_multiple();
+  // entity_load_multiple('taxonomy_term');
   foreach ($items as $delta => $item) {
     if (!empty($item['target_id']) && $item['target_id'] != 'autocreate') {
       $tids[] = $item['target_id'];
     }
   }
   if (!empty($tids)) {
-    $terms = taxonomy_term_load_multiple($tids);
+    $terms = entity_load_multiple('taxonomy_term', $tids);
 
     // Check each existing item to ensure it can be found in the
     // allowed values for this field.
@@ -998,7 +1006,7 @@ function taxonomy_field_is_empty($item, $field_type) {
 function taxonomy_allowed_values(FieldDefinitionInterface $field_definition, EntityInterface $entity) {
   $options = array();
   foreach ($field_definition->getFieldSetting('allowed_values') as $tree) {
-    if ($vocabulary = taxonomy_vocabulary_load($tree['vocabulary'])) {
+    if ($vocabulary = entity_load('taxonomy_vocabulary', $tree['vocabulary'])) {
       if ($terms = taxonomy_get_tree($vocabulary->id(), $tree['parent'], NULL, TRUE)) {
         foreach ($terms as $term) {
           $options[$term->id()] = str_repeat('-', $term->depth) . $term->label();
@@ -1040,7 +1048,7 @@ function taxonomy_autocomplete_validate($element, &$form_state) {
  */
 function taxonomy_field_settings_form($field, $instance) {
   // Get proper values for 'allowed_values_function', which is a core setting.
-  $vocabularies = taxonomy_vocabulary_load_multiple();
+  $vocabularies = entity_load_multiple('taxonomy_vocabulary');
   $options = array();
   foreach ($vocabularies as $vocabulary) {
     $options[$vocabulary->id()] = $vocabulary->name;

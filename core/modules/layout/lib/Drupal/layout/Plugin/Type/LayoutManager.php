@@ -31,7 +31,7 @@ class LayoutManager extends PluginManagerBase {
    */
   public function __construct(\Traversable $namespaces) {
     // Create layout plugin derivatives from declaratively defined layouts.
-    $this->discovery = new AnnotatedClassDiscovery('Layout', $namespaces);
+    $this->discovery = new AnnotatedClassDiscovery('Plugin/Layout', $namespaces);
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
     $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
 

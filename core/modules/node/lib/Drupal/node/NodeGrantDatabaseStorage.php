@@ -81,7 +81,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
     $query->range(0, 1);
 
     $grants = $query->orConditionGroup();
-    foreach (node_access_grants($operation, $account instanceof User ? $account->getBCEntity() : $account) as $realm => $gids) {
+    foreach (node_access_grants($operation, $account) as $realm => $gids) {
       foreach ($gids as $gid) {
         $grants->condition(db_and()
             ->condition('gid', $gid)

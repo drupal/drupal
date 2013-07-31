@@ -31,16 +31,9 @@ Drupal.editors.ckeditor = {
   onChange: function (element, callback) {
     var editor = CKEDITOR.dom.element.get(element).getEditor();
     if (editor) {
-      var changed = function () {
-        window.setTimeout(function () {
-          callback(editor.getData());
-        }, 0);
-      };
-      // @todo Make this more elegant once http://dev.ckeditor.com/ticket/9794
-      // is fixed.
-      editor.on('key', changed);
-      editor.on('paste', changed);
-      editor.on('afterCommandExec', changed);
+      editor.on('change', function () {
+        callback(editor.getData());
+      });
     }
     return !!editor;
   },

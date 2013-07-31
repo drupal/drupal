@@ -10,6 +10,7 @@ namespace Drupal\entity_reference\Plugin\field\formatter;
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 
 /**
@@ -24,18 +25,18 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
    * values, as other may want to act on those values, even if they can
    * not be accessed.
    */
-  public function prepareView(array $entities, $langcode, array &$items) {
+  public function prepareView(array $entities, $langcode, array $items) {
     $target_ids = array();
     $revision_ids = array();
 
     // Collect every possible entity attached to any of the entities.
     foreach ($entities as $id => $entity) {
       foreach ($items[$id] as $delta => $item) {
-        if (!empty($item['revision_id'])) {
-          $revision_ids[] = $item['revision_id'];
+        if (!empty($item->revision_id)) {
+          $revision_ids[] = $item->revision_id;
         }
-        elseif (!empty($item['target_id'])) {
-          $target_ids[] = $item['target_id'];
+        elseif (!empty($item->target_id)) {
+          $target_ids[] = $item->target_id;
         }
       }
     }
@@ -63,8 +64,8 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
       $rekey = FALSE;
       foreach ($items[$id] as $delta => $item) {
         // If we have a revision ID, the key uses it as well.
-        $identifier = !empty($item['revision_id']) ? $item['target_id'] . ':' . $item['revision_id'] : $item['target_id'];
-        if ($item['target_id'] !== 0) {
+        $identifier = !empty($item->revision_id) ? $item->target_id . ':' . $item->revision_id : $item->target_id;
+        if ($item->target_id !== 0) {
           if (!isset($target_entities[$identifier])) {
             // The entity no longer exists, so remove the key.
             $rekey = TRUE;
@@ -73,7 +74,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
           }
 
           $entity = $target_entities[$identifier];
-          $items[$id][$delta]['entity'] = $entity;
+          $item->entity = $entity;
 
           if (!$entity->access('view')) {
             continue;
@@ -84,7 +85,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
         }
 
         // Mark item as accessible.
-        $items[$id][$delta]['access'] = TRUE;
+        $item->access = TRUE;
       }
 
       if ($rekey) {
@@ -99,10 +100,10 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
    *
    * @see \Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase::viewElements().
    */
-  public function viewElements(EntityInterface $entity, $langcode, array $items) {
+  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
     // Remove un-accessible items.
     foreach ($items as $delta => $item) {
-      if (empty($item['access'])) {
+      if (empty($item->access)) {
         unset($items[$delta]);
       }
     }

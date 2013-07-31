@@ -34,7 +34,7 @@ class CKEditorPluginManager extends DefaultPluginManager {
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
     $annotation_namespaces = array('Drupal\ckeditor\Annotation' => $namespaces['Drupal\ckeditor']);
-    parent::__construct('CKEditorPlugin', $namespaces, $annotation_namespaces, 'Drupal\ckeditor\Annotation\CKEditorPlugin');
+    parent::__construct('Plugin/CKEditorPlugin', $namespaces, $annotation_namespaces, 'Drupal\ckeditor\Annotation\CKEditorPlugin');
     $this->alterInfo($module_handler, 'ckeditor_plugin_info');
     $this->setCacheBackend($cache_backend, $language_manager, 'ckeditor_plugin');
   }

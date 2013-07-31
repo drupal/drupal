@@ -83,7 +83,7 @@ function _field_info_collate_types() {
       );
 
       // Populate storage types.
-      foreach (module_implements('field_storage_info') as $module) {
+      foreach (Drupal::moduleHandler()->getImplementations('field_storage_info') as $module) {
         $storage_types = (array) module_invoke($module, 'field_storage_info');
         foreach ($storage_types as $name => $storage_info) {
           // Provide defaults.
@@ -173,6 +173,11 @@ function field_info_field_map() {
  * @return
  *   Either a field type definition, or an array of all existing field types,
  *   keyed by field type name.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   Drupal::service('plugin.manager.entity.field.field_type')->getDefinition()
+ *   or
+ *   Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions()
  */
 function field_info_field_types($field_type = NULL) {
   if ($field_type) {
@@ -193,6 +198,11 @@ function field_info_field_types($field_type = NULL) {
  * @return array
  *   Either a single widget type description, as provided by class annotations,
  *   or an array of all existing widget types, keyed by widget type name.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   Drupal::service('plugin.manager.field.widget')->getDefinition()
+ *   or
+ *   Drupal::service('plugin.manager.field.widget')->getDefinitions()
  */
 function field_info_widget_types($widget_type = NULL) {
   if ($widget_type) {
@@ -214,6 +224,11 @@ function field_info_widget_types($widget_type = NULL) {
  *   Either a single formatter type description, as provided by class
  *   annotations, or an array of all existing formatter types, keyed by
  *   formatter type name.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   Drupal::service('plugin.manager.field.formatter')->getDefinition()
+ *   or
+ *   Drupal::service('plugin.manager.field.formatter')->getDefinitions()
  */
 function field_info_formatter_types($formatter_type = NULL) {
   if ($formatter_type) {
@@ -487,6 +502,10 @@ function field_info_extra_fields($entity_type, $bundle, $context) {
  * @return
  *   The field type's default settings, or an empty array if type or settings
  *   are not defined.
+ *
+ * @deprecated as of Drupal 8.0. Use the 'settings' property in the definition
+ *   array returned by
+ *   Drupal::service('plugin.manager.entity.field.field_type')->getDefinition()
  */
 function field_info_field_settings($type) {
   $info = field_info_field_types($type);
@@ -502,6 +521,10 @@ function field_info_field_settings($type) {
  * @return
  *   The field type's default instance settings, or an empty array if type or
  *   settings are not defined.
+ *
+ * @deprecated as of Drupal 8.0. Use the 'instance_settings' property in the
+ *   definition array returned by
+ *   Drupal::service('plugin.manager.entity.field.field_type')->getDefinition()
  */
 function field_info_instance_settings($type) {
   $info = field_info_field_types($type);
@@ -518,6 +541,10 @@ function field_info_instance_settings($type) {
  *   The widget type's default settings, as provided by
  *   hook_field_widget_info(), or an empty array if type or settings are
  *   undefined.
+ *
+ * @deprecated as of Drupal 8.0. Use the 'settings' property in the definition
+ *   array returned by
+ *   Drupal::service('plugin.manager.field.widget')->getDefinition()
  */
 function field_info_widget_settings($type) {
   $info = field_info_widget_types($type);
@@ -534,6 +561,10 @@ function field_info_widget_settings($type) {
  *   The formatter type's default settings, as provided by
  *   hook_field_formatter_info(), or an empty array if type or settings are
  *   undefined.
+ *
+ * @deprecated as of Drupal 8.0. Use the 'settings' property in the definition
+ *   array returned by
+ *   Drupal::service('plugin.manager.field.formatter')->getDefinition()
  */
 function field_info_formatter_settings($type) {
   $info = field_info_formatter_types($type);

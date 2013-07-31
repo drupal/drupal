@@ -10,13 +10,13 @@ namespace Drupal\image\Plugin\field\formatter;
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
  * Plugin implementation of the 'image' formatter.
  *
  * @FieldFormatter(
  *   id = "image",
- *   module = "image",
  *   label = @Translation("Image"),
  *   field_types = {
  *     "image"
@@ -92,7 +92,7 @@ class ImageFormatter extends ImageFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, array $items) {
+  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
     $elements = array();
 
     $image_link_setting = $this->getSetting('image_link');
@@ -106,9 +106,9 @@ class ImageFormatter extends ImageFormatterBase {
 
     $image_style_setting = $this->getSetting('image_style');
     foreach ($items as $delta => $item) {
-      if ($item['entity']) {
+      if ($item->entity) {
         if (isset($link_file)) {
-          $image_uri = $item['entity']->getFileUri();
+          $image_uri = $item->entity->getFileUri();
           $uri = array(
             'path' => file_create_url($image_uri),
             'options' => array(),
@@ -116,7 +116,7 @@ class ImageFormatter extends ImageFormatterBase {
         }
         $elements[$delta] = array(
           '#theme' => 'image_formatter',
-          '#item' => $item,
+          '#item' => $item->getValue(TRUE),
           '#image_style' => $image_style_setting,
           '#path' => isset($uri) ? $uri : '',
         );

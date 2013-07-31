@@ -39,7 +39,7 @@ class UserAdminListingTest extends WebTestBase {
     }
     // Create a blocked user.
     $account = $this->drupalCreateUser()->getNGEntity();
-    $account->status = 0;
+    $account->block();
     $account->save();
     $accounts[$account->label()] = $account;
 
@@ -66,7 +66,7 @@ class UserAdminListingTest extends WebTestBase {
 
     $accounts['admin'] = entity_load('user', 1);
 
-    $this->drupalLogin($admin_user->getBCEntity());
+    $this->drupalLogin($admin_user);
 
     $this->drupalGet('admin/people');
     $this->assertResponse(200, 'The admin user has access to the user admin listing.');

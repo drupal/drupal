@@ -20,7 +20,7 @@ class TermFormController extends EntityFormControllerNG {
    */
   public function form(array $form, array &$form_state) {
     $term = $this->entity;
-    $vocabulary = taxonomy_vocabulary_load($term->bundle());
+    $vocabulary = entity_load('taxonomy_vocabulary', $term->bundle());
 
     $parent = array_keys(taxonomy_term_load_parents($term->id()));
     $form_state['taxonomy']['parent'] = $parent;

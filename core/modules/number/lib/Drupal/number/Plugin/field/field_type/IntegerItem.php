@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Contains \Drupal\number\Plugin\field\field_type\IntegerItem.
+ */
+
+namespace Drupal\number\Plugin\field\field_type;
+
+use Drupal\Core\Entity\Annotation\FieldType;
+use Drupal\Core\Annotation\Translation;
+use Drupal\field\Plugin\Core\Entity\Field;
+
+/**
+ * Plugin implementation of the 'number_integer' field type.
+ *
+ * @FieldType(
+ *   id = "number_integer",
+ *   label = @Translation("Integer"),
+ *   description = @Translation("This field stores a number in the database as an integer."),
+ *   instance_settings = {
+ *     "min" = "",
+ *     "max" = "",
+ *     "prefix" = "",
+ *     "suffix" = ""
+ *   },
+ *   default_widget = "number",
+ *   default_formatter = "number_integer"
+ * )
+ */
+class IntegerItem extends NumberItemBase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPropertyDefinitions() {
+    if (!isset(static::$propertyDefinitions)) {
+      static::$propertyDefinitions['value'] = array(
+        'type' => 'integer',
+        'label' => t('Integer value'),
+      );
+    }
+    return static::$propertyDefinitions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function schema(Field $field) {
+    return array(
+      'columns' => array(
+        'value' => array(
+          'type' => 'int',
+          'not null' => FALSE,
+        ),
+      ),
+    );
+  }
+
+}

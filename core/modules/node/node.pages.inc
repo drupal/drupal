@@ -88,7 +88,7 @@ function node_add($node_type) {
   $langcode = module_invoke('language', 'get_default_langcode', 'node', $type);
   $node = entity_create('node', array(
     'uid' => $user->id(),
-    'name' => (isset($user->name) ? $user->name : ''),
+    'name' => $user->getUsername(),
     'type' => $type,
     'langcode' => $langcode ? $langcode : language_default()->id,
   ))->getBCEntity();
@@ -122,7 +122,7 @@ function node_preview(EntityInterface $node) {
     }
     elseif ($node->uid) {
       $user = user_load($node->uid);
-      $node->name = $user->name;
+      $node->name = $user->getUsername();
     }
 
     $node->changed = REQUEST_TIME;

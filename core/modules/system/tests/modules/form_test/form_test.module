@@ -2263,7 +2263,7 @@ function form_test_two_instances() {
   global $user;
   $node1 = entity_create('node', array(
     'uid' => $user->id(),
-    'name' => (isset($user->name) ? $user->name : ''),
+    'name' => $user->getUsername(),
     'type' => 'page',
     'langcode' => Language::LANGCODE_NOT_SPECIFIED,
   ));

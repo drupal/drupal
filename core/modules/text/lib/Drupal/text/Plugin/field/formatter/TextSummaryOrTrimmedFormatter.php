@@ -15,7 +15,6 @@ use Drupal\Core\Annotation\Translation;
  *
  * @FieldFormatter(
  *   id = "text_summary_or_trimmed",
- *   module = "text",
  *   label = @Translation("Summary or trimmed"),
  *   field_types = {
  *     "text_with_summary"

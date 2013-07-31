@@ -70,7 +70,7 @@ class CommentAnonymousTest extends CommentTestBase {
     // Ensure anonymous users cannot post in the name of registered users.
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array(
-      'name' => $this->admin_user->name,
+      'name' => $this->admin_user->getUsername(),
       'mail' => $this->randomName() . '@example.com',
       'subject' => $this->randomName(),
       "comment_body[$langcode][0][value]" => $this->randomName(),

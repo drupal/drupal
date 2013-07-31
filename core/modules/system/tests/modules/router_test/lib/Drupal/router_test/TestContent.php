@@ -26,8 +26,8 @@ class TestContent {
    *   The user name of the current logged in user.
    */
   public function test11() {
-    $account  = \Drupal::request()->attributes->get('account');
-    return isset($account->name) ? $account->name : '';
+    $account  = \Drupal::request()->attributes->get('_account');
+    return $account->getUsername();
   }
 
 }

@@ -10,7 +10,6 @@ default_value: {  }
 default_value_function: ''
 settings:
   text_processing: '0'
-  user_register_form: false
 widget:
   weight: '-2'
   type: text_textfield

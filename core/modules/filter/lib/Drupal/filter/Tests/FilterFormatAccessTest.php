@@ -177,7 +177,8 @@ class FilterFormatAccessTest extends WebTestBase {
    */
   function testFormatRoles() {
     // Get the role ID assigned to the regular user.
-    $rid = $this->web_user->roles[0];
+    $roles = $this->web_user->getRoles();
+    $rid = $roles[0];
 
     // Check that this role appears in the list of roles that have access to an
     // allowed text format, but does not appear in the list of roles that have

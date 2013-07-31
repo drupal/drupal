@@ -36,8 +36,11 @@ class FileMime extends File {
   public function render($values) {
     $data = $values->{$this->field_alias};
     if (!empty($this->options['filemime_image']) && $data !== NULL && $data !== '') {
-      $fake_file = (object) array('filemime' => $data);
-      $data = theme('file_icon', array('file' => $fake_file));
+      $file_icon = array(
+        '#theme' => 'file_icon',
+        '#file' => $values->_entity,
+      );
+      $data = drupal_render($file_icon);
     }
 
     return $this->render_link($data, $values);

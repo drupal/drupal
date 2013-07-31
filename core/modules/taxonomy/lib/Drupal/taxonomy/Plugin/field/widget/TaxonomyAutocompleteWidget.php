@@ -9,6 +9,7 @@ namespace Drupal\taxonomy\Plugin\field\widget;
 
 use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
 /**
@@ -64,10 +65,10 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $tags = array();
     foreach ($items as $item) {
-      $tags[$item['target_id']] = isset($item['taxonomy_term']) ? $item['taxonomy_term'] : taxonomy_term_load($item['target_id']);
+      $tags[$item->target_id] = isset($item->taxonomy_term) ? $item->taxonomy_term : entity_load('taxonomy_term', $item->target_id);
     }
     $element += array(
       '#type' => 'textfield',

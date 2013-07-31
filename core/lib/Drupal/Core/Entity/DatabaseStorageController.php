@@ -346,7 +346,7 @@ class DatabaseStorageController extends EntityStorageControllerBase {
     }
 
     // Call hook_entity_load().
-    foreach (module_implements('entity_load') as $module) {
+    foreach (\Drupal::moduleHandler()->getImplementations('entity_load') as $module) {
       $function = $module . '_entity_load';
       $function($queried_entities, $this->entityType);
     }
@@ -354,7 +354,7 @@ class DatabaseStorageController extends EntityStorageControllerBase {
     // always the queried entities, followed by additional arguments set in
     // $this->hookLoadArguments.
     $args = array_merge(array($queried_entities), $this->hookLoadArguments);
-    foreach (module_implements($this->entityType . '_load') as $module) {
+    foreach (\Drupal::moduleHandler()->getImplementations($this->entityType . '_load') as $module) {
       call_user_func_array($module . '_' . $this->entityType . '_load', $args);
     }
   }

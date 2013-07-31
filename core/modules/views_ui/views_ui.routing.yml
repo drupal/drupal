@@ -72,8 +72,9 @@ views_ui.autocomplete:
 views_ui.edit:
   pattern: '/admin/structure/views/view/{view}'
   options:
-    tempstore:
-      view: 'views'
+    parameters:
+      view:
+        tempstore: TRUE
   defaults:
     _controller: '\Drupal\views_ui\Controller\ViewsUIController::edit'
   requirements:
@@ -82,8 +83,9 @@ views_ui.edit:
 views_ui.edit.display:
   pattern: '/admin/structure/views/view/{view}/edit/{display_id}'
   options:
-    tempstore:
-      view: 'views'
+    parameters:
+      view:
+        tempstore: TRUE
   defaults:
     _controller: '\Drupal\views_ui\Controller\ViewsUIController::edit'
     display_id: NULL
@@ -93,8 +95,9 @@ views_ui.edit.display:
 views_ui.preview:
   pattern: '/admin/structure/views/view/{view}/preview/{display_id}'
   options:
-    tempstore:
-      view: 'views'
+    parameters:
+      view:
+        tempstore: TRUE
   defaults:
     _entity_form: 'view.preview'
     display_id: NULL
@@ -111,8 +114,9 @@ views_ui.breakLock:
 views_ui.form.addItem:
   pattern: '/admin/structure/views/{js}/add-item/{view}/{display_id}/{type}'
   options:
-    tempstore:
-      view: 'views'
+    parameters:
+      view:
+        tempstore: TRUE
   defaults:
     _controller: '\Drupal\views_ui\Form\Ajax\AddItem::getForm'
   requirements:
@@ -122,8 +126,9 @@ views_ui.form.addItem:
 views_ui.form.editDetails:
   pattern: '/admin/structure/views/{js}/edit-details/{view}/{display_id}'
   options:
-    tempstore:
-      view: 'views'
+    parameters:
+      view:
+        tempstore: TRUE
   defaults:
     _controller: '\Drupal\views_ui\Form\Ajax\EditDetails::getForm'
   requirements:
@@ -133,8 +138,9 @@ views_ui.form.editDetails:
 views_ui.form.reorderDisplays:
   pattern: '/admin/structure/views/{js}/reorder-displays/{view}/{display_id}'
   options:
-    tempstore:
-      view: 'views'
+    parameters:
+      view:
+        tempstore: TRUE
   defaults:
     _controller: '\Drupal\views_ui\Form\Ajax\ReorderDisplays::getForm'
   requirements:
@@ -144,8 +150,9 @@ views_ui.form.reorderDisplays:
 views_ui.form.analyze:
   pattern: '/admin/structure/views/{js}/analyze/{view}/{display_id}'
   options:
-    tempstore:
-      view: 'views'
+    parameters:
+      view:
+        tempstore: TRUE
   defaults:
     _controller: '\Drupal\views_ui\Form\Ajax\Analyze::getForm'
   requirements:
@@ -155,8 +162,9 @@ views_ui.form.analyze:
 views_ui.form.rearrange:
   pattern: '/admin/structure/views/{js}/rearrange/{view}/{display_id}/{type}'
   options:
-    tempstore:
-      view: 'views'
+    parameters:
+      view:
+        tempstore: TRUE
   defaults:
     _controller: '\Drupal\views_ui\Form\Ajax\Rearrange::getForm'
   requirements:
@@ -166,8 +174,9 @@ views_ui.form.rearrange:
 views_ui.form.rearrangeFilter:
   pattern: '/admin/structure/views/{js}/rearrange-filter/{view}/{display_id}'
   options:
-    tempstore:
-      view: 'views'
+    parameters:
+      view:
+        tempstore: TRUE
   defaults:
     _controller: '\Drupal\views_ui\Form\Ajax\RearrangeFilter::getForm'
   requirements:
@@ -177,8 +186,9 @@ views_ui.form.rearrangeFilter:
 views_ui.form.display:
   pattern: '/admin/structure/views/{js}/display/{view}/{display_id}/{type}'
   options:
-    tempstore:
-      view: 'views'
+    parameters:
+      view:
+        tempstore: TRUE
   defaults:
     _controller: '\Drupal\views_ui\Form\Ajax\Display::getForm'
   requirements:
@@ -188,8 +198,9 @@ views_ui.form.display:
 views_ui.form.configItem:
   pattern: '/admin/structure/views/{js}/config-item/{view}/{display_id}/{type}/{id}'
   options:
-    tempstore:
-      view: 'views'
+    parameters:
+      view:
+        tempstore: TRUE
   defaults:
     _controller: '\Drupal\views_ui\Form\Ajax\ConfigItem::getForm'
   requirements:
@@ -199,8 +210,9 @@ views_ui.form.configItem:
 views_ui.form.configItemExtra:
   pattern: '/admin/structure/views/{js}/config-item-extra/{view}/{display_id}/{type}/{id}'
   options:
-    tempstore:
-      view: 'views'
+    parameters:
+      view:
+        tempstore: TRUE
   defaults:
     _controller: '\Drupal\views_ui\Form\Ajax\ConfigItemExtra::getForm'
   requirements:
@@ -210,8 +222,9 @@ views_ui.form.configItemExtra:
 views_ui.form.configItemGroup:
   pattern: '/admin/structure/views/{js}/config-item-group/{view}/{display_id}/{type}/{id}'
   options:
-    tempstore:
-      view: 'views'
+    parameters:
+      view:
+        tempstore: TRUE
   defaults:
     _controller: '\Drupal\views_ui\Form\Ajax\ConfigItemGroup::getForm'
     form_state: NULL

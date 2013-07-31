@@ -88,4 +88,23 @@ class LoadTest extends FileManagedTestBase {
     $this->assertTrue($by_fid_file->file_test['loaded'], 'file_test_file_load() was able to modify the file during load.');
     $this->assertEqual($by_fid_file->getFileUri(), $file->getFileUri(), 'Loading by fid got the correct filepath.', 'File');
   }
+
+  /**
+   * Loads a single file and ensure that the correct values are returned.
+   */
+  public function testUuidValues() {
+    // Create a new file entity from scratch so we know the values.
+    $file = $this->createFile('druplicon.txt', NULL, 'public');
+    $file->save();
+    file_test_reset();
+
+    $by_uuid_file = entity_load_by_uuid('file', $file->uuid());
+    $this->assertFileHookCalled('load');
+    $this->assertTrue(is_object($by_uuid_file), 'entity_load_by_uuid() returned a file object.');
+    if (is_object($by_uuid_file)) {
+      $this->assertEqual($by_uuid_file->id(), $file->id(), 'Loading by UUID got the same fid.', 'File');
+      $this->assertTrue($by_uuid_file->file_test['loaded'], 'file_test_file_load() was able to modify the file during load.');
+    }
+  }
+
 }

@@ -17,14 +17,14 @@ abstract class FileFormatterBase extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function prepareView(array $entities, $langcode, array &$items) {
+  public function prepareView(array $entities, $langcode, array $items) {
     // Remove files specified to not be displayed.
     $fids = array();
     foreach ($entities as $id => $entity) {
       foreach ($items[$id] as $delta => $item) {
-        if ($this->isDisplayed($item) && !empty($item['target_id'])) {
+        if ($this->isDisplayed($item) && !empty($item->target_id)) {
           // Load the files from the files table.
-          $fids[] = $item['target_id'];
+          $fids[] = $item->target_id;
         }
       }
     }
@@ -35,8 +35,8 @@ abstract class FileFormatterBase extends FormatterBase {
       foreach ($entities as $id => $entity) {
         foreach ($items[$id] as $delta => $item) {
           // If the file does not exist, mark the entire item as empty.
-          if (!empty($item['target_id'])) {
-            $items[$id][$delta]['entity'] = isset($files[$item['target_id']]) ? $files[$item['target_id']] : NULL;
+          if (!empty($item->target_id)) {
+            $item->entity = isset($files[$item->target_id]) ? $files[$item->target_id] : NULL;
           }
         }
       }
@@ -57,7 +57,7 @@ abstract class FileFormatterBase extends FormatterBase {
   protected function isDisplayed($item) {
     $settings = $this->getFieldSettings();
     if (!empty($settings['display_field'])) {
-      return (bool) $item['display'];
+      return (bool) $item->display;
     }
     return TRUE;
   }

@@ -100,11 +100,11 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
     // Remove the 'image_scale' effect and updates the style, which in turn
     // forces an image style flush.
     $style_path = 'admin/config/media/image-styles/manage/' . $style->id();
-    $ieids = array();
-    foreach ($style->effects as $ieid => $effect) {
-      $ieids[$effect['name']] = $ieid;
+    $uuids = array();
+    foreach ($style->getEffects() as $uuid => $effect) {
+      $uuids[$effect->getPluginId()] = $uuid;
     }
-    $this->drupalPost($style_path . '/effects/' . $ieids['image_scale'] . '/delete', array(), t('Delete'));
+    $this->drupalPost($style_path . '/effects/' . $uuids['image_scale'] . '/delete', array(), t('Delete'));
     $this->assertResponse(200);
     $this->drupalPost($style_path, array(), t('Update style'));
     $this->assertResponse(200);

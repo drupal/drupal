@@ -258,7 +258,7 @@ class ThemeTest extends WebTestBase {
     $cache = array();
 
     // Prime the theme cache.
-    foreach (module_implements('theme') as $module) {
+    foreach (\Drupal::moduleHandler()->getImplementations('theme') as $module) {
       _theme_process_registry($cache, $module, 'module', $module, drupal_get_path('module', $module));
     }
 

@@ -53,6 +53,9 @@ Cron system
 - Károly Négyesi 'chx' http://drupal.org/user/9446
 - Derek Wright 'dww' http://drupal.org/user/46549
 
+CSS
+- John Albin Wilkins 'JohnAlbin' http://drupal.org/user/32095
+
 Database system
 - Larry Garfield 'Crell' http://drupal.org/user/26398
 
@@ -207,6 +210,7 @@ Color module
 
 Comment module
 - Dick Olsson 'dixon_' http://drupal.org/user/239911
+- Lee Rowlands 'larowlan' http://drupal.org/user/395439
 
 Configuration module
 - ?
@@ -271,7 +275,7 @@ Menu module
 Menu Link module
 - Andrei Mateescu 'amateescu' http://drupal.org/user/729614
 - Károly Négyesi 'chx' http://drupal.org/user/9446
-- @todo Anyone else from the menu system?
+- Peter Wolanin 'pwolanin' http://drupal.org/user/49851
 
 Node module
 - Moshe Weitzman 'moshe weitzman' http://drupal.org/user/23

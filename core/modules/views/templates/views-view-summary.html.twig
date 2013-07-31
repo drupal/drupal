@@ -9,8 +9,7 @@
  *   - url: The summary link URL.
  *   - link: The summary link text.
  *   - count: The number of items under this grouping.
- * - row_classes: HTML classes to apply to each row, indexed by row ID.
- *   This matches the index in rows.
+ *   - attributes: HTML attributes to apply to each row.
  * - options: Flags indicating how the summary should be displayed.
  *   This contains:
  *   - count: A flag indicating whether the count should be displayed.
@@ -22,8 +21,8 @@
 #}
 <div class="item-list">
   <ul class="views-summary">
-  {% for id, row in rows %}
-    <li><a href="{{ row.url }}"{{ row_classes[id] }}>{{ row.link }}</a>
+  {% for row in rows %}
+    <li><a href="{{ row.url }}"{{ row.attributes }}>{{ row.link }}</a>
       {% if options.count %}
         ({{ row.count }})
       {% endif %}

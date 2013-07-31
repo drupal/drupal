@@ -44,9 +44,9 @@ class TokenReplaceTest extends WebTestBase {
     $source .= '[bogus:token]';        // Non-existent token
 
     $target  = check_plain($node->title);
-    $target .= check_plain($account->name);
+    $target .= check_plain($account->getUsername());
     $target .= format_interval(REQUEST_TIME - $node->created, 2, $language_interface->id);
-    $target .= check_plain($user->name);
+    $target .= check_plain($user->getUsername());
     $target .= format_date(REQUEST_TIME, 'short', '', NULL, $language_interface->id);
 
     // Test that the clear parameter cleans out non-existent tokens.

@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Routing;
 
+use Drupal\Component\Discovery\YamlDiscovery;
 use Symfony\Component\Routing\Matcher\Dumper\MatcherDumperInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Yaml\Parser;
@@ -81,25 +82,22 @@ class RouteBuilder {
       return;
     }
 
-    $parser = new Parser();
+    $yaml_discovery = new YamlDiscovery('routing', $this->moduleHandler->getModuleDirectories());
 
-    // We need to manually call each module so that we can know which module
-    // a given item came from.
-    foreach ($this->moduleHandler->getModuleList() as $module => $filename) {
+    foreach ($yaml_discovery->findAll() as $module => $routes) {
       $collection = new RouteCollection();
-      $routing_file = DRUPAL_ROOT . '/' . dirname($filename) . '/' . $module . '.routing.yml';
-      if (file_exists($routing_file)) {
-        $routes = $parser->parse(file_get_contents($routing_file));
-        if (!empty($routes)) {
-          foreach ($routes as $name => $route_info) {
-            $defaults = isset($route_info['defaults']) ? $route_info['defaults'] : array();
-            $requirements = isset($route_info['requirements']) ? $route_info['requirements'] : array();
-            $options = isset($route_info['options']) ? $route_info['options'] : array();
-            $route = new Route($route_info['pattern'], $defaults, $requirements, $options);
-            $collection->add($name, $route);
-          }
-        }
+
+      foreach ($routes as $name => $route_info) {
+        $route_info += array(
+          'defaults' => array(),
+          'requirements' => array(),
+          'options' => array(),
+        );
+
+        $route = new Route($route_info['pattern'], $route_info['defaults'], $route_info['requirements'], $route_info['options']);
+        $collection->add($name, $route);
       }
+
       $this->dispatcher->dispatch(RoutingEvents::ALTER, new RouteBuildEvent($collection, $module));
       $this->dumper->addRoutes($collection);
       $this->dumper->dump(array('route_set' => $module));

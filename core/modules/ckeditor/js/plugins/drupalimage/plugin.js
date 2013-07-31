@@ -80,7 +80,7 @@ CKEDITOR.plugins.add('drupalimage', {
     // Register the toolbar button.
     if (editor.ui.addButton) {
       editor.ui.addButton('DrupalImage', {
-        label: editor.lang.common.image,
+        label: Drupal.t('Image'),
         command: 'drupalimage',
         icon: this.path.replace(/plugin\.js.*/, 'image.png')
       });
@@ -98,7 +98,7 @@ CKEDITOR.plugins.add('drupalimage', {
     if (editor.addMenuItems) {
       editor.addMenuItems({
         image: {
-          label: editor.lang.image.menu,
+          label: Drupal.t('Image Properties'),
           command : 'drupalimage',
           group: 'image'
         }

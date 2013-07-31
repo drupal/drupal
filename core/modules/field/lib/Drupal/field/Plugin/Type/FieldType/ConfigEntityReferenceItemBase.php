@@ -95,7 +95,7 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
    */
   public static function schema(Field $field) {
     $definition = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field->type);
-    $module = $definition['module'];
+    $module = $definition['provider'];
     module_load_install($module);
     $callback = "{$module}_field_schema";
     if (function_exists($callback)) {
@@ -161,7 +161,7 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
    */
   protected function getLegacyCallback($hook) {
     $definition = $this->getPluginDefinition();
-    $module = $definition['module'];
+    $module = $definition['provider'];
     $callback = "{$module}_field_{$hook}";
     if (function_exists($callback)) {
       return $callback;

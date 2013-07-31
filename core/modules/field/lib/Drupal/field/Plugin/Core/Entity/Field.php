@@ -356,7 +356,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
     if (!$field_type) {
       throw new FieldException(format_string('Attempt to create a field of unknown type %type.', array('%type' => $this->type)));
     }
-    $this->module = $field_type['module'];
+    $this->module = $field_type['provider'];
     $this->active = TRUE;
 
     // Make sure all settings are present, so that a complete field

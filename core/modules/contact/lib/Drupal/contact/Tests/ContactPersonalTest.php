@@ -72,17 +72,17 @@ class ContactPersonalTest extends WebTestBase {
     $mails = $this->drupalGetMails();
     $this->assertEqual(1, count($mails));
     $mail = $mails[0];
-    $this->assertEqual($mail['to'], $this->contact_user->mail);
-    $this->assertEqual($mail['from'], $this->web_user->mail);
+    $this->assertEqual($mail['to'], $this->contact_user->getEmail());
+    $this->assertEqual($mail['from'], $this->web_user->getEmail());
     $this->assertEqual($mail['key'], 'user_mail');
     $variables = array(
       '!site-name' => config('system.site')->get('name'),
       '!subject' => $message['subject'],
-      '!recipient-name' => $this->contact_user->name,
+      '!recipient-name' => $this->contact_user->getUsername(),
     );
     $this->assertEqual($mail['subject'], t('[!site-name] !subject', $variables), 'Subject is in sent message.');
     $this->assertTrue(strpos($mail['body'], t('Hello !recipient-name,', $variables)) !== FALSE, 'Recipient name is in sent message.');
-    $this->assertTrue(strpos($mail['body'], $this->web_user->name) !== FALSE, 'Sender name is in sent message.');
+    $this->assertTrue(strpos($mail['body'], $this->web_user->getUsername()) !== FALSE, 'Sender name is in sent message.');
     $this->assertTrue(strpos($mail['body'], $message['message']) !== FALSE, 'Message body is in sent message.');
   }
 
@@ -154,7 +154,7 @@ class ContactPersonalTest extends WebTestBase {
 
     // Re-create our contacted user as a blocked user.
     $this->contact_user = $this->drupalCreateUser();
-    $this->contact_user->status = 0;
+    $this->contact_user->block();
     $this->contact_user->save();
 
     // Test that blocked users can still be contacted by admin.
@@ -165,6 +165,15 @@ class ContactPersonalTest extends WebTestBase {
     $this->drupalLogin($this->web_user);
     $this->drupalGet('user/' . $this->contact_user->id() . '/contact');
     $this->assertResponse(403);
+
+    // Test enabling and disabling the contact page through the user profile
+    // form.
+    $this->drupalGet('user/' . $this->web_user->id() . '/edit');
+    $this->assertNoFieldChecked('edit-contact--2');
+    $this->assertFalse(\Drupal::service('user.data')->get('contact', $this->web_user->id(), 'enabled'), 'Personal contact form disabled');
+    $this->drupalPost(NULL, array('contact' => TRUE), t('Save'));
+    $this->assertFieldChecked('edit-contact--2');
+    $this->assertTrue(\Drupal::service('user.data')->get('contact', $this->web_user->id(), 'enabled'), 'Personal contact form enabled');
   }
 
   /**

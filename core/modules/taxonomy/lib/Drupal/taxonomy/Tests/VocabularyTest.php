@@ -85,7 +85,7 @@ class VocabularyTest extends TaxonomyTestBase {
       $this->createVocabulary();
     }
     // Get all vocabularies and change their weights.
-    $vocabularies = taxonomy_vocabulary_load_multiple();
+    $vocabularies = entity_load_multiple('taxonomy_vocabulary');
     $edit = array();
     foreach ($vocabularies as $key => $vocabulary) {
       $weight = -$vocabulary->weight;
@@ -97,7 +97,7 @@ class VocabularyTest extends TaxonomyTestBase {
 
     // Load the vocabularies from the database.
     $this->container->get('plugin.manager.entity')->getStorageController('taxonomy_vocabulary')->resetCache();
-    $new_vocabularies = taxonomy_vocabulary_load_multiple();
+    $new_vocabularies = entity_load_multiple('taxonomy_vocabulary');
     taxonomy_vocabulary_sort($new_vocabularies);
 
     // Check that the weights are saved in the database correctly.
@@ -111,12 +111,12 @@ class VocabularyTest extends TaxonomyTestBase {
    */
   function testTaxonomyAdminNoVocabularies() {
     // Delete all vocabularies.
-    $vocabularies = taxonomy_vocabulary_load_multiple();
+    $vocabularies = entity_load_multiple('taxonomy_vocabulary');
     foreach ($vocabularies as $key => $vocabulary) {
       $vocabulary->delete();
     }
     // Confirm that no vocabularies are found in the database.
-    $this->assertFalse(taxonomy_vocabulary_load_multiple(), 'No vocabularies found.');
+    $this->assertFalse(entity_load_multiple('taxonomy_vocabulary'), 'No vocabularies found.');
     $this->drupalGet('admin/structure/taxonomy');
     // Check the default message for no vocabularies.
     $this->assertText(t('No vocabularies available.'));
@@ -137,7 +137,7 @@ class VocabularyTest extends TaxonomyTestBase {
 
     // Check the created vocabulary.
     $this->container->get('plugin.manager.entity')->getStorageController('taxonomy_vocabulary')->resetCache();
-    $vocabulary = taxonomy_vocabulary_load($vid);
+    $vocabulary = entity_load('taxonomy_vocabulary', $vid);
     $this->assertTrue($vocabulary, 'Vocabulary found.');
 
     // Delete the vocabulary.
@@ -150,6 +150,6 @@ class VocabularyTest extends TaxonomyTestBase {
     $this->drupalPost(NULL, NULL, t('Delete'));
     $this->assertRaw(t('Deleted vocabulary %name.', array('%name' => $vocabulary->name)), 'Vocabulary deleted.');
     $this->container->get('plugin.manager.entity')->getStorageController('taxonomy_vocabulary')->resetCache();
-    $this->assertFalse(taxonomy_vocabulary_load($vid), 'Vocabulary not found.');
+    $this->assertFalse(entity_load('taxonomy_vocabulary', $vid), 'Vocabulary not found.');
   }
 }

@@ -35,17 +35,18 @@ class UserAutocompleteTest extends WebTestBase {
   function testUserAutocomplete() {
     // Check access from unprivileged user, should be denied.
     $this->drupalLogin($this->unprivileged_user);
-    $this->drupalGet('user/autocomplete', array('query' => array('q' => $this->unprivileged_user->name[0])));
+    $username = $this->unprivileged_user->getUsername();
+    $this->drupalGet('user/autocomplete', array('query' => array('q' => $username[0])));
     $this->assertResponse(403, 'Autocompletion access denied to user without permission.');
 
     // Check access from privileged user.
     $this->drupalLogout();
     $this->drupalLogin($this->privileged_user);
-    $this->drupalGet('user/autocomplete', array('query' => array('q' => $this->unprivileged_user->name[0])));
+    $this->drupalGet('user/autocomplete', array('query' => array('q' => $username[0])));
     $this->assertResponse(200, 'Autocompletion access allowed.');
 
     // Using first letter of the user's name, make sure the user's full name is in the results.
-    $this->assertRaw($this->unprivileged_user->name, 'User name found in autocompletion results.');
+    $this->assertRaw($this->unprivileged_user->getUsername(), 'User name found in autocompletion results.');
 
     $anonymous_name = $this->randomString() . '<script>alert();</script>';
     config('user.settings')->set('anonymous', $anonymous_name)->save();

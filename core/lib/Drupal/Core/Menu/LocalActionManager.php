@@ -59,7 +59,7 @@ class LocalActionManager extends DefaultPluginManager {
    *   The module handler.
    */
   public function __construct(\Traversable $namespaces, ControllerResolverInterface $controller_resolver, Request $request, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Menu\LocalAction', $namespaces, array(), 'Drupal\Core\Annotation\Menu\LocalAction');
+    parent::__construct('Plugin/Menu/LocalAction', $namespaces, array(), 'Drupal\Core\Annotation\Menu\LocalAction');
 
     $this->controllerResolver = $controller_resolver;
     $this->request = $request;

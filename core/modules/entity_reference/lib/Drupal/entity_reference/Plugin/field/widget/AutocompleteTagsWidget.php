@@ -38,7 +38,7 @@ class AutocompleteTagsWidget extends AutocompleteWidgetBase {
   public function elementValidate($element, &$form_state, $form) {
     $value = array();
     // If a value was entered into the autocomplete.
-    $handler = entity_reference_get_selection_handler($this->fieldDefinition);
+    $handler = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($this->fieldDefinition);
     $bundles = entity_get_bundles($this->getFieldSetting('target_type'));
     $auto_create = $this->getSelectionHandlerSetting('auto_create');
 

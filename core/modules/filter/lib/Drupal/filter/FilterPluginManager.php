@@ -31,7 +31,7 @@ class FilterPluginManager extends PluginManagerBase {
    */
   public function __construct(\Traversable $namespaces) {
     $annotation_namespaces = array('Drupal\filter\Annotation' => $namespaces['Drupal\filter']);
-    $this->discovery = new AnnotatedClassDiscovery('Filter', $namespaces, $annotation_namespaces, 'Drupal\filter\Annotation\Filter');
+    $this->discovery = new AnnotatedClassDiscovery('Plugin/Filter', $namespaces, $annotation_namespaces, 'Drupal\filter\Annotation\Filter');
     $this->discovery = new AlterDecorator($this->discovery, 'filter_info');
     $cache_key = 'filter_plugins:' . language(Language::TYPE_INTERFACE)->id;
     $cache_tags = array('filter_formats' => TRUE);
@@ -42,7 +42,7 @@ class FilterPluginManager extends PluginManagerBase {
    * {@inheritdoc}
    */
   public function createInstance($plugin_id, array $configuration = array(), FilterBag $filter_bag = NULL) {
-    $plugin_definition = $this->discovery->getDefinition($plugin_id);
+    $plugin_definition = $this->getDefinition($plugin_id);
     $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
     return new $plugin_class($configuration, $plugin_id, $plugin_definition, $filter_bag);
   }

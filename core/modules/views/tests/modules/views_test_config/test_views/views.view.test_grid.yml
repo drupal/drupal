@@ -50,9 +50,9 @@ display:
           automatic_width: '1'
           alignment: horizontal
           col_class_default: '1'
-          col_class_custom: ''
+          col_class_custom: 'name-[name]'
           row_class_default: '1'
-          row_class_custom: ''
+          row_class_custom: 'age-[age]'
       row:
         type: fields
     display_plugin: default

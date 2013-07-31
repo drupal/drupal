@@ -65,9 +65,9 @@ class LocaleExportTest extends WebTestBase {
     ), t('Export'));
 
     // Ensure we have a translation file.
-    $this->assertRaw('# French translation of Drupal', t('Exported French translation file.'));
+    $this->assertRaw('# French translation of Drupal', 'Exported French translation file.');
     // Ensure our imported translations exist in the file.
-    $this->assertRaw('msgstr "lundi"', t('French translations present in exported file.'));
+    $this->assertRaw('msgstr "lundi"', 'French translations present in exported file.');
 
     // Import some more French translations which will be marked as customized.
     $name = tempnam('temporary://', "po2_") . '.po';
@@ -95,11 +95,11 @@ class LocaleExportTest extends WebTestBase {
     ), t('Export'));
 
     // Ensure we have a translation file.
-    $this->assertRaw('# French translation of Drupal', t('Exported French translation file with only customized strings.'));
+    $this->assertRaw('# French translation of Drupal', 'Exported French translation file with only customized strings.');
     // Ensure the customized translations exist in the file.
-    $this->assertRaw('msgstr "janvier"', t('French custom translation present in exported file.'));
+    $this->assertRaw('msgstr "janvier"', 'French custom translation present in exported file.');
     // Ensure no untranslated strings exist in the file.
-    $this->assertNoRaw('msgid "February"', t('Untranslated string not present in exported file.'));
+    $this->assertNoRaw('msgid "February"', 'Untranslated string not present in exported file.');
 
     // Export only untranslated French translations.
     $this->drupalPost('admin/config/regional/translate/export', array(
@@ -110,11 +110,11 @@ class LocaleExportTest extends WebTestBase {
     ), t('Export'));
 
     // Ensure we have a translation file.
-    $this->assertRaw('# French translation of Drupal', t('Exported French translation file with only untranslated strings.'));
+    $this->assertRaw('# French translation of Drupal', 'Exported French translation file with only untranslated strings.');
     // Ensure no customized translations exist in the file.
-    $this->assertNoRaw('msgstr "janvier"', t('French custom translation not present in exported file.'));
+    $this->assertNoRaw('msgstr "janvier"', 'French custom translation not present in exported file.');
     // Ensure the untranslated strings exist in the file, and with right quotes.
-    $this->assertRaw($this->getUntranslatedString(), t('Empty string present in exported file.'));
+    $this->assertRaw($this->getUntranslatedString(), 'Empty string present in exported file.');
   }
 
   /**
@@ -128,7 +128,7 @@ class LocaleExportTest extends WebTestBase {
     // Get the translation template file.
     $this->drupalPost('admin/config/regional/translate/export', array(), t('Export'));
     // Ensure we have a translation file.
-    $this->assertRaw('# LANGUAGE translation of PROJECT', t('Exported translation template file.'));
+    $this->assertRaw('# LANGUAGE translation of PROJECT', 'Exported translation template file.');
   }
 
   /**

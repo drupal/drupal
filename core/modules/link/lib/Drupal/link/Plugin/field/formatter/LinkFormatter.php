@@ -9,7 +9,10 @@ namespace Drupal\link\Plugin\field\formatter;
 
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Component\Utility\Url;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 
 /**
@@ -17,7 +20,6 @@ use Drupal\field\Plugin\Type\Formatter\FormatterBase;
  *
  * @FieldFormatter(
  *   id = "link",
- *   module = "link",
  *   label = @Translation("Link"),
  *   field_types = {
  *     "link"
@@ -115,49 +117,19 @@ class LinkFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function prepareView(array $entities, $langcode, array &$items) {
-    $settings = $this->getSettings();
-
-    foreach ($entities as $id => $entity) {
-      foreach ($items[$id] as $delta => &$item) {
-
-        // Split out the link into the parts required for url(): path and options.
-        $parsed = drupal_parse_url($item['url']);
-        $item['path'] = $parsed['path'];
-        $item['options'] = array(
-          'query' => $parsed['query'],
-          'fragment' => $parsed['fragment'],
-          'attributes' => &$item['attributes'],
-        );
-
-        // Add optional 'rel' attribute to link options.
-        if (!empty($settings['rel'])) {
-          $item['options']['attributes']['rel'] = $settings['rel'];
-        }
-        // Add optional 'target' attribute to link options.
-        if (!empty($settings['target'])) {
-          $item['options']['attributes']['target'] = $settings['target'];
-        }
-      }
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function viewElements(EntityInterface $entity, $langcode, array $items) {
+  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
     $element = array();
     $settings = $this->getSettings();
 
     foreach ($items as $delta => $item) {
       // By default use the full URL as the link text.
-      $link_title = $item['url'];
+      $link_title = $item->url;
 
       // If the title field value is available, use it for the link text.
-      if (empty($settings['url_only']) && !empty($item['title'])) {
+      if (empty($settings['url_only']) && !empty($item->title)) {
         // Unsanitizied token replacement here because $options['html'] is FALSE
         // by default in l().
-        $link_title = \Drupal::token()->replace($item['title'], array($entity->entityType() => $entity), array('sanitize' => FALSE, 'clear' => TRUE));
+        $link_title = \Drupal::token()->replace($item->title, array($entity->entityType() => $entity), array('sanitize' => FALSE, 'clear' => TRUE));
       }
 
       // Trim the link text to the desired length.
@@ -171,16 +143,55 @@ class LinkFormatter extends FormatterBase {
         );
       }
       else {
+        $link = $this->buildLink($item);
         $element[$delta] = array(
           '#type' => 'link',
           '#title' => $link_title,
-          '#href' => $item['path'],
-          '#options' => $item['options'],
+          '#href' => $link['path'],
+          '#options' => $link['options'],
         );
       }
     }
 
     return $element;
   }
+
+  /**
+   * Builds the link information for a link field item.
+   *
+   * @param \Drupal\Core\Entity\Field\FieldItemInterface $item
+   *   The link field item being rendered.
+   *
+   * @return array
+   *   An array with the following key/value pairs:
+   *   - 'path': a string suitable for the $path parameter in l().
+   *   - 'options': an array suitable for the $options parameter in l().
+   */
+  protected function buildLink(FieldItemInterface $item) {
+    $settings = $this->getSettings();
+
+    // Split out the link into the parts required for url(): path and options.
+    $parsed_url = Url::parse($item->url);
+    $result = array(
+      'path' => $parsed_url['path'],
+      'options' => array(
+        'query' => $parsed_url['query'],
+        'fragment' => $parsed_url['fragment'],
+        'attributes' => $item->attributes,
+      ),
+    );
+
+    // Add optional 'rel' attribute to link options.
+    if (!empty($settings['rel'])) {
+      $result['options']['attributes']['rel'] = $settings['rel'];
+    }
+    // Add optional 'target' attribute to link options.
+    if (!empty($settings['target'])) {
+      $result['options']['attributes']['target'] = $settings['target'];
+    }
+
+    return $result;
+  }
+
 }
 

@@ -46,7 +46,7 @@ class UserRegistrationTest extends WebTestBase {
     $this->assertText(t('A welcome message with further instructions has been sent to your e-mail address.'), 'User registered successfully.');
     $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
-    $this->assertTrue($new_user->status->value, 'New account is active after registration.');
+    $this->assertTrue($new_user->isActive(), 'New account is active after registration.');
 
     // Allow registration by site visitors, but require administrator approval.
     $config->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
@@ -57,7 +57,7 @@ class UserRegistrationTest extends WebTestBase {
     $this->container->get('plugin.manager.entity')->getStorageController('user')->resetCache();
     $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
-    $this->assertFalse($new_user->status->value, 'New account is blocked until approved by an administrator.');
+    $this->assertFalse($new_user->isActive(), 'New account is blocked until approved by an administrator.');
   }
 
   function testRegistrationWithoutEmailVerification() {
@@ -136,17 +136,17 @@ class UserRegistrationTest extends WebTestBase {
 
     $edit = array();
     $edit['name'] = $this->randomName();
-    $edit['mail'] = $duplicate_user->mail;
+    $edit['mail'] = $duplicate_user->getEmail();
 
     // Attempt to create a new account using an existing e-mail address.
     $this->drupalPost('user/register', $edit, t('Create new account'));
-    $this->assertText(t('The e-mail address @email is already registered.', array('@email' => $duplicate_user->mail)), 'Supplying an exact duplicate email address displays an error message');
+    $this->assertText(t('The e-mail address @email is already registered.', array('@email' => $duplicate_user->getEmail())), 'Supplying an exact duplicate email address displays an error message');
 
     // Attempt to bypass duplicate email registration validation by adding spaces.
-    $edit['mail'] = '   ' . $duplicate_user->mail . '   ';
+    $edit['mail'] = '   ' . $duplicate_user->getEmail() . '   ';
 
     $this->drupalPost('user/register', $edit, t('Create new account'));
-    $this->assertText(t('The e-mail address @email is already registered.', array('@email' => $duplicate_user->mail)), 'Supplying a duplicate email address with added whitespace displays an error message');
+    $this->assertText(t('The e-mail address @email is already registered.', array('@email' => $duplicate_user->getEmail())), 'Supplying a duplicate email address with added whitespace displays an error message');
   }
 
   function testRegistrationDefaultValues() {
@@ -178,13 +178,13 @@ class UserRegistrationTest extends WebTestBase {
     // Check user fields.
     $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
-    $this->assertEqual($new_user->name->value, $name, 'Username matches.');
-    $this->assertEqual($new_user->mail->value, $mail, 'E-mail address matches.');
+    $this->assertEqual($new_user->getUsername(), $name, 'Username matches.');
+    $this->assertEqual($new_user->getEmail(), $mail, 'E-mail address matches.');
     $this->assertEqual($new_user->theme->value, '', 'Correct theme field.');
-    $this->assertEqual($new_user->signature->value, '', 'Correct signature field.');
-    $this->assertTrue(($new_user->created->value > REQUEST_TIME - 20 ), 'Correct creation time.');
-    $this->assertEqual($new_user->status->value, $config_user_settings->get('register') == USER_REGISTER_VISITORS ? 1 : 0, 'Correct status field.');
-    $this->assertEqual($new_user->timezone->value, $config_system_timezone->get('default'), 'Correct time zone field.');
+    $this->assertEqual($new_user->getSignature(), '', 'Correct signature field.');
+    $this->assertTrue(($new_user->getCreatedTime() > REQUEST_TIME - 20 ), 'Correct creation time.');
+    $this->assertEqual($new_user->isActive(), $config_user_settings->get('register') == USER_REGISTER_VISITORS ? 1 : 0, 'Correct status field.');
+    $this->assertEqual($new_user->getTimezone(), $config_system_timezone->get('default'), 'Correct time zone field.');
     $this->assertEqual($new_user->langcode->value, language_default()->id, 'Correct language field.');
     $this->assertEqual($new_user->preferred_langcode->value, language_default()->id, 'Correct preferred language field.');
     $this->assertEqual($new_user->init->value, $mail, 'Correct init field.');

@@ -121,7 +121,7 @@ class File extends EntityNG implements FileInterface {
    * {@inheritdoc}
    */
   public function getOwner() {
-    return $this->get('uid')->entity->getBCEntity();
+    return $this->get('uid')->entity;
   }
 
   /**

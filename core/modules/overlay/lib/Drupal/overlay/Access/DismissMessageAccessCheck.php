@@ -27,7 +27,7 @@ class DismissMessageAccessCheck implements AccessCheckInterface {
    * {@inheritdoc}
    */
   public function access(Route $route, Request $request) {
-    $account = $request->attributes->get('account');
+    $account = $request->attributes->get('_account');
     if (!user_access('access overlay', $account)) {
       return static::DENY;
     }

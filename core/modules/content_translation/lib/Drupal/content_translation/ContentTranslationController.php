@@ -269,7 +269,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
         );
       }
 
-      $name = $new_translation ? $GLOBALS['user']->name : user_load($entity->translation[$form_langcode]['uid'])->name;
+      $name = $new_translation ? $GLOBALS['user']->getUsername() : user_load($entity->translation[$form_langcode]['uid'])->getUsername();
       $form['content_translation']['name'] = array(
         '#type' => 'textfield',
         '#title' => t('Authored by'),

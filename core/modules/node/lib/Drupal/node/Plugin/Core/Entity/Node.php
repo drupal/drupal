@@ -224,9 +224,9 @@ class Node extends EntityNG implements NodeInterface {
     $entity = $this->get('uid')->entity;
     // If no user is given, default to the anonymous user.
     if (!$entity) {
-      return user_load(0)->getBCentity();
+      return user_load(0);
     }
-    return $entity->getBCEntity();
+    return $entity;
   }
 
   /**

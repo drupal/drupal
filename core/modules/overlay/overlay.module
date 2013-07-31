@@ -109,15 +109,17 @@ function overlay_form_user_form_alter(&$form, &$form_state) {
       '#description' => t('Show administrative pages on top of the page you started from.'),
       '#default_value' => isset($account_data) ? $account_data : 1,
     );
+    $form['actions']['submit']['#submit'][] = 'overlay_user_profile_form_submit';
   }
 }
 
 /**
- * Implements hook_user_update().
+ * Submit callback for the user profile form to save the overlay page setting.
  */
-function overlay_user_update($account) {
-  if (isset($account->overlay)) {
-    Drupal::service('user.data')->set('overlay', $account->id(), 'enabled', (int) $account->overlay);
+function overlay_user_profile_form_submit($form, &$form_state) {
+  $account = $form_state['controller']->getEntity();
+  if ($account->id() && isset($form_state['values']['overlay'])) {
+    Drupal::service('user.data')->set('overlay', $account->id(), 'enabled', (int) $form_state['values']['overlay']);
   }
 }
 

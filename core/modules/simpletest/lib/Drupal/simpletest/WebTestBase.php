@@ -14,6 +14,8 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\UserSession;
 use PDO;
 use stdClass;
 use DOMDocument;
@@ -388,6 +390,7 @@ abstract class WebTestBase extends TestBase {
    *   'php', 'sql', 'text'.
    * @param $size
    *   File size in bytes to match. Please check the tests/files folder.
+   *
    * @return
    *   List of files that match filter.
    */
@@ -572,6 +575,7 @@ abstract class WebTestBase extends TestBase {
    *   Permissions to check.
    * @param $reset
    *   Reset cached available permissions.
+   *
    * @return
    *   TRUE or FALSE depending on whether the permissions are valid.
    */
@@ -614,18 +618,18 @@ abstract class WebTestBase extends TestBase {
    *   $account->pass_raw = $pass_raw;
    * @endcode
    *
-   * @param \Drupal\user\UserInterface $account
+   * @param \Drupal\Core\Session\AccountInterface $account
    *   User object representing the user to log in.
    *
    * @see drupalCreateUser()
    */
-  protected function drupalLogin($account) {
+  protected function drupalLogin(AccountInterface $account) {
     if ($this->loggedInUser) {
       $this->drupalLogout();
     }
 
     $edit = array(
-      'name' => $account->name,
+      'name' => $account->getUsername(),
       'pass' => $account->pass_raw
     );
     $this->drupalPost('user', $edit, t('Log in'));
@@ -634,7 +638,7 @@ abstract class WebTestBase extends TestBase {
     if (isset($this->session_id)) {
       $account->session_id = $this->session_id;
     }
-    $pass = $this->assert($this->drupalUserIsLoggedIn($account), format_string('User %name successfully logged in.', array('%name' => $account->name)), 'User login');
+    $pass = $this->assert($this->drupalUserIsLoggedIn($account), format_string('User %name successfully logged in.', array('%name' => $account->getUsername())), 'User login');
     if ($pass) {
       $this->loggedInUser = $account;
     }
@@ -742,12 +746,12 @@ abstract class WebTestBase extends TestBase {
     $conf['simpletest_parent_profile'] = $this->originalProfile;
 
     // Define information about the user 1 account.
-    $this->root_user = (object) array(
+    $this->root_user = new UserSession(array(
       'uid' => 1,
       'name' => 'admin',
       'mail' => 'admin@example.com',
       'pass_raw' => $this->randomName(),
-    );
+    ));
 
     // Reset the static batch to remove Simpletest's batch operations.
     $batch = &batch_get();
@@ -850,7 +854,7 @@ abstract class WebTestBase extends TestBase {
           'site_mail' => 'simpletest@example.com',
           'account' => array(
             'name' => $this->root_user->name,
-            'mail' => $this->root_user->mail,
+            'mail' => $this->root_user->getEmail(),
             'pass' => array(
               'pass1' => $this->root_user->pass_raw,
               'pass2' => $this->root_user->pass_raw,
@@ -1123,12 +1127,12 @@ abstract class WebTestBase extends TestBase {
   /**
    * Reads headers and registers errors received from the tested site.
    *
-   * @see _drupal_log_error().
-   *
    * @param $curlHandler
    *   The cURL handler.
    * @param $header
    *   An header.
+   *
+   * @see _drupal_log_error().
    */
   protected function curlHeaderCallback($curlHandler, $header) {
     // Header fields can be extended over multiple lines by preceding each
@@ -1217,6 +1221,7 @@ abstract class WebTestBase extends TestBase {
    * @param $headers
    *   An array containing additional HTTP request headers, each formatted as
    *   "name: value".
+   *
    * @return
    *   The retrieved HTML string, also available as $this->drupalGetContent()
    */
@@ -1686,6 +1691,7 @@ abstract class WebTestBase extends TestBase {
    * @param $headers
    *   An array containing additional HTTP request headers, each formatted as
    *   "name: value".
+   *
    * @return
    *   The retrieved headers, also available as $this->drupalGetContent()
    */
@@ -1719,6 +1725,7 @@ abstract class WebTestBase extends TestBase {
    *   Form submit button value.
    * @param $form
    *   Array of form elements.
+   *
    * @return
    *   Submit value matches a valid submit input in the form.
    */
@@ -1879,6 +1886,7 @@ abstract class WebTestBase extends TestBase {
    *   An array of arguments with keys in the form ':name' matching the
    *   placeholders in the query. The values may be either strings or numeric
    *   values.
+   *
    * @return
    *   An XPath query with arguments replaced.
    */
@@ -1918,6 +1926,7 @@ abstract class WebTestBase extends TestBase {
    *
    * @param $xpath
    *   The xpath string to use in the search.
+   *
    * @return
    *   The return value of the xpath search. For details on the xpath string
    *   format and return values see the SimpleXML documentation,
@@ -1942,6 +1951,7 @@ abstract class WebTestBase extends TestBase {
    *
    * @param $element
    *   The element for which to get the options.
+   *
    * @return
    *   Option elements in select.
    */
@@ -1979,6 +1989,7 @@ abstract class WebTestBase extends TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -2004,6 +2015,7 @@ abstract class WebTestBase extends TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
@@ -2074,6 +2086,7 @@ abstract class WebTestBase extends TestBase {
    *   Text between the anchor tags.
    * @param $index
    *   Link position counting from zero.
+   *
    * @return
    *   Page on success, or FALSE on failure.
    */
@@ -2098,6 +2111,7 @@ abstract class WebTestBase extends TestBase {
    *
    * @param $path
    *   A path from the internal browser content.
+   *
    * @return
    *   The $path with $base_url prepended, if necessary.
    */
@@ -2144,6 +2158,7 @@ abstract class WebTestBase extends TestBase {
    * @param $all_requests
    *   Boolean value specifying whether to return headers from all requests
    *   instead of just the last request. Defaults to FALSE.
+   *
    * @return
    *   A name/value array if headers from only the last request are requested.
    *   If headers from all requests are requested, an array of name/value
@@ -2198,6 +2213,7 @@ abstract class WebTestBase extends TestBase {
    * @param $all_requests
    *   Boolean value specifying whether to check all requests if the header is
    *   not found in the last request. Defaults to FALSE.
+   *
    * @return
    *   The HTTP header value or FALSE if not found.
    */
@@ -2243,6 +2259,7 @@ abstract class WebTestBase extends TestBase {
    * @param $filter
    *   An array containing key/value pairs used to filter the e-mails that are
    *   returned.
+   *
    * @return
    *   An array containing e-mail messages captured during the current test.
    */
@@ -2338,6 +2355,7 @@ abstract class WebTestBase extends TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2364,6 +2382,7 @@ abstract class WebTestBase extends TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2392,6 +2411,7 @@ abstract class WebTestBase extends TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2417,6 +2437,7 @@ abstract class WebTestBase extends TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2442,6 +2463,7 @@ abstract class WebTestBase extends TestBase {
    *   this default.
    * @param $not_exists
    *   TRUE if this text should not exist, FALSE if it should.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2473,6 +2495,7 @@ abstract class WebTestBase extends TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2498,6 +2521,7 @@ abstract class WebTestBase extends TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2524,6 +2548,7 @@ abstract class WebTestBase extends TestBase {
    * @param $be_unique
    *   TRUE if this text should be found only once, FALSE if it should be found
    *   more than once.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2557,6 +2582,7 @@ abstract class WebTestBase extends TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2581,6 +2607,7 @@ abstract class WebTestBase extends TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2605,6 +2632,7 @@ abstract class WebTestBase extends TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2633,6 +2661,7 @@ abstract class WebTestBase extends TestBase {
    *   in test output. Use 'Debug' to indicate this is debugging output. Do not
    *   translate this string. Defaults to 'Other'; most tests do not override
    *   this default.
+   *
    * @return
    *   TRUE on pass, FALSE on fail.
    */
@@ -2748,6 +2777,7 @@ abstract class WebTestBase extends TestBase {
    *
    * @param $element
    *   SimpleXMLElement select element.
+   *
    * @return
    *   The selected value or FALSE.
    */
@@ -3333,7 +3363,6 @@ abstract class WebTestBase extends TestBase {
    *
    * @param bool $clean_urls
    *   Whether to mock the request using clean urls.
-   *
    * @param $override_server_vars
    *   An array of server variables to override.
    *

@@ -27,11 +27,11 @@ function forum_enable() {
   $config = config('forum.settings');
   // If the module was disabled only, the current config may contain a valid
   // vocabulary ID already.
-  $vocabulary = taxonomy_vocabulary_load($config->get('vocabulary'));
+  $vocabulary = entity_load('taxonomy_vocabulary', $config->get('vocabulary'));
   if (!$vocabulary) {
     // If the module was installed and uninstalled previously, the vocabulary
     // with machine name 'forums' might still exist.
-    $vocabulary = taxonomy_vocabulary_load('forums');
+    $vocabulary = entity_load('taxonomy_vocabulary', 'forums');
     if (!$vocabulary) {
       // Otherwise, installing from scratch; create the vocabulary.
       $vocabulary = entity_create('taxonomy_vocabulary', array(

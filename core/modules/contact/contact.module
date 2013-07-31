@@ -6,6 +6,7 @@
  */
 
 use Drupal\contact\Plugin\Core\Entity\Category;
+use Drupal\user\UserInterface;
 
 /**
  * Implements hook_help().
@@ -122,7 +123,7 @@ function contact_menu() {
  *
  * @see contact_menu()
  */
-function _contact_personal_tab_access($account) {
+function _contact_personal_tab_access(UserInterface $account) {
   global $user;
 
   // Anonymous users cannot have contact forms.
@@ -141,7 +142,7 @@ function _contact_personal_tab_access($account) {
   }
 
   // If requested user has been blocked, do not allow users to contact them.
-  if (empty($account->status)) {
+  if ($account->isBlocked()) {
     return FALSE;
   }
 
@@ -274,7 +275,7 @@ function contact_mail($key, &$message, $params) {
     $variables['!sender-url'] = url($sender_uri['path'], array('absolute' => TRUE, 'language' => $language) + $sender_uri['options']);
   }
   else {
-    $variables['!sender-url'] = $params['sender']->mail;
+    $variables['!sender-url'] = $params['sender']->getEmail();
   }
 
   $options = array('langcode' => $language->id);
@@ -330,14 +331,16 @@ function contact_form_user_form_alter(&$form, &$form_state) {
     '#default_value' => isset($account_data) ? $account_data : config('contact.settings')->get('user_default_enabled'),
     '#description' => t('Allow other users to contact you via a personal contact form which keeps your e-mail address hidden. Note that some privileged users such as site administrators are still able to contact you even if you choose to disable this feature.'),
   );
+  $form['actions']['submit']['#submit'][] = 'contact_user_profile_form_submit';
 }
 
 /**
- * Implements hook_user_update().
+ * Submit callback for the user profile form to save the contact page setting.
  */
-function contact_user_update($account) {
-  if (isset($account->contact)) {
-    Drupal::service('user.data')->set('contact', $account->id(), 'enabled', (int) $account->contact);
+function contact_user_profile_form_submit($form, &$form_state) {
+  $account = $form_state['controller']->getEntity();
+  if ($account->id() && isset($form_state['values']['contact'])) {
+    Drupal::service('user.data')->set('contact', $account->id(), 'enabled', (int) $form_state['values']['contact']);
   }
 }
 

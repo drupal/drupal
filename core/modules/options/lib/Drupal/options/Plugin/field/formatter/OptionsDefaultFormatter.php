@@ -11,13 +11,13 @@ use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
  * Plugin implementation of the 'list_default' formatter.
  *
  * @FieldFormatter(
  *   id = "list_default",
- *   module = "options",
  *   label = @Translation("Default"),
  *   field_types = {
  *     "list_integer",
@@ -32,18 +32,18 @@ class OptionsDefaultFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, array $items) {
+  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
     $elements = array();
 
     $allowed_values = options_allowed_values($this->fieldDefinition, $entity);
 
     foreach ($items as $delta => $item) {
-      if (isset($allowed_values[$item['value']])) {
-        $output = field_filter_xss($allowed_values[$item['value']]);
+      if (isset($allowed_values[$item->value])) {
+        $output = field_filter_xss($allowed_values[$item->value]);
       }
       else {
         // If no match was found in allowed values, fall back to the key.
-        $output = field_filter_xss($item['value']);
+        $output = field_filter_xss($item->value);
       }
       $elements[$delta] = array('#markup' => $output);
     }

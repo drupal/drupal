@@ -180,7 +180,11 @@ abstract class OverviewBase implements FormInterface, ControllerInterface {
           if ($depth = count($parents[$name])) {
             $children = element_children($row);
             $cell = current($children);
-            $row[$cell]['#prefix'] = theme('indentation', array('size' => $depth)) . (isset($row[$cell]['#prefix']) ? $row[$cell]['#prefix'] : '');
+            $indentation = array(
+              '#theme' => 'indentation',
+              '#size' => $depth,
+            );
+            $row[$cell]['#prefix'] = drupal_render($indentation) . (isset($row[$cell]['#prefix']) ? $row[$cell]['#prefix'] : '');
           }
 
           // Add row id and associate JS settings.

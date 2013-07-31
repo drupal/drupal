@@ -9,6 +9,7 @@ namespace Drupal\telephone\Plugin\field\widget;
 
 use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
 /**
@@ -61,10 +62,10 @@ class TelephoneDefaultWidget extends WidgetBase {
   /**
    * Implements \Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
    */
-  public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $element['value'] = $element + array(
       '#type' => 'tel',
-      '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : NULL,
+      '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,
       '#placeholder' => $this->getSetting('placeholder'),
     );
     return $element;

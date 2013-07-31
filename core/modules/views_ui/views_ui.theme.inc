@@ -8,14 +8,6 @@
 use Drupal\Core\Template\Attribute;
 
 /**
- * Generic <div> container function.
- */
-function theme_views_ui_container($variables) {
-  $element = $variables['element'];
-  return '<div' . new Attribute($element['#attributes']) . '>' . $element['#children'] . '</div>';
-}
-
-/**
  * Prepares variables for Views UI display tab setting templates.
  *
  * Default template: views-ui-display-tab-setting.html.twig.

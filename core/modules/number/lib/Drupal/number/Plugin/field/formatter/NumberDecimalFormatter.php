@@ -12,6 +12,7 @@ use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\number\Plugin\field\formatter\DefaultNumberFormatter;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
  * Plugin implementation of the 'number_decimal' formatter.
@@ -22,7 +23,6 @@ use Drupal\Core\Entity\EntityInterface;
  *
  * @FieldFormatter(
  *   id = "number_decimal",
- *   module = "number",
  *   label = @Translation("Default"),
  *   field_types = {
  *     "number_decimal",

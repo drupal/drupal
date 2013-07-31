@@ -28,7 +28,7 @@ class OverlayController {
    *
    */
   public function overlayMessage(Request $request) {
-    $account = $request->attributes->get('account');
+    $account = $request->attributes->get('_account');
 
     // @todo Integrate CSRF link token directly into routing system: http://drupal.org/node/1798296.
     $token = $request->attributes->get('token');

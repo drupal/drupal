@@ -68,7 +68,7 @@ class Permission extends AccessPluginBase {
     $module_info = system_get_info('module');
 
     // Get list of permissions
-    foreach (module_implements('permission') as $module) {
+    foreach (\Drupal::moduleHandler()->getImplementations('permission') as $module) {
       $permissions = module_invoke($module, 'permission');
       foreach ($permissions as $name => $perm) {
         $perms[$module_info[$module]['name']][$name] = strip_tags($perm['title']);

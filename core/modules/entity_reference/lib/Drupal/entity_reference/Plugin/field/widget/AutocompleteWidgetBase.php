@@ -9,6 +9,7 @@ namespace Drupal\entity_reference\Plugin\field\widget;
 
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
@@ -69,7 +70,7 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(array $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     global $user;
     $entity = $element['#entity'];
 
@@ -115,13 +116,17 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
   /**
    * Gets the entity labels.
    */
-  protected function getLabels(array $items) {
+  protected function getLabels(FieldInterface $items) {
+    if ($items->isEmpty()) {
+      return array();
+    }
+
     $entity_ids = array();
     $entity_labels = array();
 
     // Build an array of entity IDs.
     foreach ($items as $item) {
-      $entity_ids[] = $item['target_id'];
+      $entity_ids[] = $item->target_id;
     }
 
     // Load those entities and loop through them to extract their labels.

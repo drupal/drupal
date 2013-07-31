@@ -145,7 +145,7 @@ function field_help($path, $arg) {
       // order by displayed module name (module names are not translated).
       $items = array();
       $info = system_get_info('module');
-      $modules = array_merge(module_implements('field_info'), module_implements('field_widget_info'));
+      $modules = array_merge(Drupal::moduleHandler()->getImplementations('field_info'), Drupal::moduleHandler()->getImplementations('field_widget_info'));
       $modules = array_unique($modules);
       sort($modules);
       foreach ($modules as $module) {
@@ -157,7 +157,11 @@ function field_help($path, $arg) {
           $items['items'][] = $display;
         }
       }
-      $output .= theme('item_list', $items) . '</dd>';
+      $item_list = array(
+        '#theme' => 'item_list',
+        '#items' => $items['items'],
+      );
+      $output .= drupal_render($item_list) . '</dd>';
       $output .= '<dt>' . t('Managing field data storage') . '</dt>';
       $output .= '<dd>' . t('Developers of field modules can either use the default <a href="@sql-store">Field SQL Storage module</a> to store data for their fields, or a contributed or custom module developed using the <a href="@storage-api">field storage API</a>.', array('@storage-api' => 'http://api.drupal.org/api/group/field_storage/8', '@sql-store' => url('admin/help/field_sql_storage'))) . '</dd>';
       $output .= '</dl>';
@@ -438,8 +442,8 @@ function field_sync_field_status() {
   // Set fields with missing field type or storage modules to inactive.
   foreach ($fields as $uuid => &$field) {
     // Associate field types.
-    if (isset($field_types[$field['type']]) && ($field['module'] != $field_types[$field['type']]['module'] || !$field['active'])) {
-      $field['module'] = $field_types[$field['type']]['module'];
+    if (isset($field_types[$field['type']]) && ($field['module'] != $field_types[$field['type']]['provider'] || !$field['active'])) {
+      $field['module'] = $field_types[$field['type']]['provider'];
       $field['active'] = TRUE;
       $changed[$uuid] = $field;
     }
@@ -799,24 +803,11 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
   if ($formatter) {
     $display_langcode = field_language($entity, $field_name, $langcode);
 
-    // Get the items.
-    if ($entity->getNGEntity() instanceof EntityNG) {
-      $items = $entity->getTranslation($display_langcode)->get($field_name);
-      $definition = $entity->getPropertyDefinition($field_name);
-    }
-    else {
-      $definitions = \Drupal::entityManager()->getFieldDefinitions($entity_type, $bundle);
-      $definition = $definitions[$field_name];
-      $itemsBC = isset($entity->{$field_name}[$display_langcode]) ? $entity->{$field_name}[$display_langcode] : array();
-      $items = \Drupal::typedData()->create($definitions[$field_name], $itemsBC, $field_name, $entity);
-    }
-
     // Invoke the formatter's prepareView() and view() methods.
+    $items = $entity->getNGEntity()->getTranslation($display_langcode)->get($field_name);
     $id = $entity->id();
-    $itemsBC_multi = array($id => $items->getValue());
-    $formatter->prepareView(array($id => $entity), $display_langcode, $itemsBC_multi);
-    $itemsBC = $itemsBC_multi[$id];
-    $result = $formatter->view($entity, $display_langcode, $itemsBC);
+    $formatter->prepareView(array($id => $entity), $display_langcode, array($id => $items));
+    $result = $formatter->view($entity, $display_langcode, $items);
 
     // Invoke hook_field_attach_view_alter() to let other modules alter the
     // renderable array, as in a full field_attach_view() execution.
@@ -882,7 +873,7 @@ function field_access($op, FieldInterface $field, $entity_type, $entity = NULL, 
     $account = $user;
   }
 
-  foreach (module_implements('field_access') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('field_access') as $module) {
     $function = $module . '_field_access';
     $access = $function($op, $field, $entity_type, $entity, $account);
     if ($access === FALSE) {

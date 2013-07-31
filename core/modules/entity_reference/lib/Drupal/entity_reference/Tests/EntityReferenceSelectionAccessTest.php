@@ -34,7 +34,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
   }
 
   protected function assertReferenceable(FieldDefinitionInterface $field_definition, $tests, $handler_name) {
-    $handler = entity_reference_get_selection_handler($field_definition);
+    $handler = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($field_definition);
 
     foreach ($tests as $test) {
       foreach ($test['arguments'] as $arguments) {
@@ -260,7 +260,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         $account = $values;
       }
       $users[$key] = $account;
-      $user_labels[$key] = check_plain($account->name);
+      $user_labels[$key] = check_plain($account->getUsername());
     }
 
     // Test as a non-admin.

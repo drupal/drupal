@@ -9,6 +9,15 @@
 
 /**
  * Attaches the tour's toolbar tab behavior.
+ *
+ * It uses the query string for:
+ * - tour: When ?tour=1 is present, the tour will start automatically
+ *         after the page has loaded.
+ * - tips: Pass ?tips=class in the url to filter the available tips to
+ *         the subset which match the given class.
+ *
+ * Example:
+ *   http://example.com/foo?tour=1&tips=bar
  */
 Drupal.behaviors.tour = {
   attach: function (context) {
@@ -53,6 +62,13 @@ Drupal.behaviors.tour = {
         })
         // Initialization: check whether a tour is available on the current page.
         .set('tour', $(context).find('ol#tour'));
+
+      // Start the tour imediately if toggled via query string.
+      var query = $.deparam.querystring();
+      if (query.tour) {
+        model.set('isActive', true);
+      }
+
     });
   }
 };
@@ -114,10 +130,12 @@ Drupal.tour.views.ToggleTourView = Backbone.View.extend({
       var $tour = this._getTour();
       this._removeIrrelevantTourItems($tour, this._getDocument());
       var that = this;
-      $tour.joyride({
-        postRideCallback: function () { that.model.set('isActive', false); }
-      });
-      this.model.set({ isActive: true, activeTour: $tour });
+      if ($tour.find('li').length) {
+        $tour.joyride({
+          postRideCallback: function () { that.model.set('isActive', false); }
+        });
+        this.model.set({ isActive: true, activeTour: $tour });
+      }
     }
     else {
       this.model.get('activeTour').joyride('destroy');
@@ -159,7 +177,14 @@ Drupal.tour.views.ToggleTourView = Backbone.View.extend({
   },
 
   /**
-   * Removes tour items for elements that don't exist.
+   * Removes tour items for elements that don't have matching page elements or
+   * are explicitly filtered out via the 'tips' query string.
+   *
+   * Example:
+   *   http://example.com/foo?tips=bar
+   *
+   *   The above will filter out tips that do not have a matching page element or
+   *   don't have the "bar" class.
    *
    * @param jQuery $tour
    *   A jQuery element pointing to a <ol> containing tour items.
@@ -171,14 +196,23 @@ Drupal.tour.views.ToggleTourView = Backbone.View.extend({
    */
   _removeIrrelevantTourItems: function ($tour, $document) {
     var removals = false;
+    var query = $.deparam.querystring();
     $tour
       .find('li')
       .each(function () {
         var $this = $(this);
         var itemId = $this.attr('data-id');
         var itemClass = $this.attr('data-class');
+        // If the query parameter 'tips' is set, remove all tips that don't
+        // have the matching class.
+        if (query.tips && !$(this).hasClass(query.tips)) {
+          removals = true;
+          $this.remove();
+          return;
+        }
+        // Remove tip from the DOM if there is no corresponding page element.
         if ((!itemId && !itemClass) ||
-           (itemId && $document.find('#' + itemId).length) ||
+            (itemId && $document.find('#' + itemId).length) ||
            (itemClass && $document.find('.' + itemClass).length)){
           return;
         }
@@ -189,6 +223,10 @@ Drupal.tour.views.ToggleTourView = Backbone.View.extend({
     // If there were removals, we'll have to do some clean-up.
     if (removals) {
       var total = $tour.find('li').length;
+      if (!total) {
+        this.model.set({ tour: [] });
+      }
+
       $tour
         .find('li')
         // Rebuild the progress data.

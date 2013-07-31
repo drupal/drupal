@@ -1579,7 +1579,7 @@ function watchdog($type, $message, array $variables = NULL, $severity = WATCHDOG
     }
 
     // Call the logging hooks to log/process the message
-    foreach (module_implements('watchdog') as $module) {
+    foreach (Drupal::moduleHandler()->getImplementations('watchdog') as $module) {
       $function = $module . '_watchdog';
       $function($log_entry);
     }
@@ -1898,8 +1898,8 @@ function drupal_get_user_timezone() {
   global $user;
   $config = config('system.timezone');
 
-  if ($user && $config->get('user.configurable') && $user->id() && $user->timezone) {
-    return $user->timezone;
+  if ($user && $config->get('user.configurable') && $user->isAuthenticated() && $user->getTimezone()) {
+    return $user->getTimezone();
   }
   else {
     // Ignore PHP strict notice if time zone has not yet been set in the php.ini

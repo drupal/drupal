@@ -11,13 +11,13 @@ use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
  * Plugin implementation of the 'text_default' formatter.
  *
  * @FieldFormatter(
  *   id = "text_default",
- *   module = "text",
  *   label = @Translation("Default"),
  *   field_types = {
  *     "text",
@@ -32,13 +32,16 @@ use Drupal\Core\Entity\EntityInterface;
 class TextDefaultFormatter extends FormatterBase {
 
   /**
-   * Implements Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
+   * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, array $items) {
+  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      $output = text_sanitize($this->getFieldSetting('text_processing'), $langcode, $item, 'value');
+      // @todo Convert text_sanitize() to work on an NG $item. See
+      // https://drupal.org/node/2026339.
+      $itemBC = $item->getValue(TRUE);
+      $output = text_sanitize($this->getFieldSetting('text_processing'), $langcode, $itemBC, 'value');
       $elements[$delta] = array('#markup' => $output);
     }
 

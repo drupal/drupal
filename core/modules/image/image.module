@@ -6,10 +6,8 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Language\Language;
 use Drupal\field\Plugin\Core\Entity\Field;
 use Drupal\field\Plugin\Core\Entity\FieldInstance;
-use Drupal\Component\Uuid\Uuid;
 use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\image\ImageStyleInterface;
 use Drupal\image\Plugin\Core\Entity\ImageStyle;
@@ -72,11 +70,11 @@ function image_help($path, $arg) {
     case 'admin/config/media/image-styles':
       return '<p>' . t('Image styles commonly provide thumbnail sizes by scaling and cropping images, but can also add various effects before an image is displayed. When an image is displayed with a style, a new file is created and the original image is left unchanged.') . '</p>';
     case 'admin/config/media/image-styles/manage/%/add/%':
-      $effect = image_effect_definition_load($arg[7]);
-      return isset($effect['help']) ? ('<p>' . $effect['help'] . '</p>') : NULL;
+      $effect = Drupal::service('plugin.manager.image.effect')->getDefinition($arg[7]);
+      return isset($effect['description']) ? ('<p>' . $effect['description'] . '</p>') : NULL;
     case 'admin/config/media/image-styles/manage/%/effects/%':
-      $effect = ($arg[5] == 'add') ? image_effect_definition_load($arg[6]) : image_effect_load($arg[6], $arg[4]);
-      return isset($effect['help']) ? ('<p>' . $effect['help'] . '</p>') : NULL;
+      $effect = entity_load('image_style', $arg[5])->getEffect($arg[7])->getPluginDefinition();
+      return isset($effect['description']) ? ('<p>' . $effect['description'] . '</p>') : NULL;
   }
 }
 
@@ -98,42 +96,26 @@ function image_menu() {
   $items['admin/config/media/image-styles'] = array(
     'title' => 'Image styles',
     'description' => 'Configure styles that can be used for resizing or adjusting images on display.',
-    'page callback' => 'image_style_list',
-    'access arguments' => array('administer image styles'),
-    'file' => 'image.admin.inc',
+    'route_name' => 'image_style_list',
   );
   $items['admin/config/media/image-styles/list'] = array(
     'title' => 'List',
     'description' => 'List the current image styles on the site.',
-    'page callback' => 'image_style_list',
-    'access arguments' => array('administer image styles'),
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'file' => 'image.admin.inc',
   );
   $items['admin/config/media/image-styles/add'] = array(
-    'title' => 'Add style',
-    'description' => 'Add a new image style.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('image_style_add_form'),
-    'access arguments' => array('administer image styles'),
-    'type' => MENU_LOCAL_ACTION,
-    'weight' => 2,
-    'file' => 'image.admin.inc',
+    'route_name' => 'image_style_add',
+    'type' => MENU_SIBLING_LOCAL_TASK,
+    'weight' => 1,
   );
   $items['admin/config/media/image-styles/manage/%image_style'] = array(
     'title' => 'Edit style',
-    'title callback' => 'entity_page_label',
-    'title arguments' => array(5),
     'description' => 'Configure an image style.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('image_style_form', 5),
-    'access arguments' => array('administer image styles'),
-    'file' => 'image.admin.inc',
+    'route_name' => 'image_style_edit',
   );
   $items['admin/config/media/image-styles/manage/%image_style/edit'] = array(
     'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -10,
   );
   $items['admin/config/media/image-styles/manage/%image_style/delete'] = array(
     'title' => 'Delete',
@@ -142,28 +124,20 @@ function image_menu() {
     'weight' => 10,
     'route_name' => 'image_style_delete',
   );
-  $items['admin/config/media/image-styles/manage/%image_style/effects/%image_effect'] = array(
+  $items['admin/config/media/image-styles/manage/%/effects/%'] = array(
     'title' => 'Edit image effect',
     'description' => 'Edit an existing effect within a style.',
-    'load arguments' => array(5, (string) IMAGE_STORAGE_EDITABLE),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('image_effect_form', 5, 7),
-    'access arguments' => array('administer image styles'),
-    'file' => 'image.admin.inc',
+    'route_name' => 'image_effect_edit_form',
   );
-  $items['admin/config/media/image-styles/manage/%image_style/effects/%image_effect/delete'] = array(
+  $items['admin/config/media/image-styles/manage/%image_style/effects/%/delete'] = array(
     'title' => 'Delete image effect',
     'description' => 'Delete an existing effect from a style.',
     'route_name' => 'image_effect_delete',
   );
-  $items['admin/config/media/image-styles/manage/%image_style/add/%image_effect_definition'] = array(
+  $items['admin/config/media/image-styles/manage/%/add/%'] = array(
     'title' => 'Add image effect',
     'description' => 'Add a new effect to a style.',
-    'load arguments' => array(5),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('image_effect_form', 5, 7),
-    'access arguments' => array('administer image styles'),
-    'file' => 'image.admin.inc',
+    'route_name' => 'image_effect_add_form',
   );
 
   return $items;
@@ -188,37 +162,43 @@ function image_theme() {
     ),
 
     // Theme functions in image.admin.inc.
-    'image_style_list' => array(
-      'variables' => array('styles' => NULL),
-    ),
     'image_style_effects' => array(
       'render element' => 'form',
+      'file' => 'image.admin.inc',
     ),
     'image_style_preview' => array(
       'variables' => array('style' => NULL),
+      'file' => 'image.admin.inc',
     ),
     'image_anchor' => array(
       'render element' => 'element',
+      'file' => 'image.admin.inc',
     ),
     'image_resize_summary' => array(
       'variables' => array('data' => NULL),
+      'file' => 'image.admin.inc',
     ),
     'image_scale_summary' => array(
       'variables' => array('data' => NULL),
+      'file' => 'image.admin.inc',
     ),
     'image_crop_summary' => array(
       'variables' => array('data' => NULL),
+      'file' => 'image.admin.inc',
     ),
     'image_rotate_summary' => array(
       'variables' => array('data' => NULL),
+      'file' => 'image.admin.inc',
     ),
 
     // Theme functions in image.field.inc.
     'image_widget' => array(
       'render element' => 'element',
+      'file' => 'image.field.inc',
     ),
     'image_formatter' => array(
       'variables' => array('item' => NULL, 'path' => NULL, 'image_style' => NULL),
+      'file' => 'image.field.inc',
     ),
   );
 }
@@ -370,169 +350,6 @@ function image_style_options($include_empty = TRUE) {
 }
 
 /**
- * Returns a set of image effects.
- *
- * These image effects are exposed by modules implementing
- * hook_image_effect_info().
- *
- * @return
- *   An array of image effects to be used when transforming images.
- * @see hook_image_effect_info()
- * @see image_effect_definition_load()
- */
-function image_effect_definitions() {
-  $language_interface = language(Language::TYPE_INTERFACE);
-
-  // hook_image_effect_info() includes translated strings, so each language is
-  // cached separately.
-  $langcode = $language_interface->id;
-
-  $effects = &drupal_static(__FUNCTION__);
-
-  if (!isset($effects)) {
-    if ($cache = cache()->get("image_effects:$langcode")) {
-      $effects = $cache->data;
-    }
-    else {
-      $effects = array();
-      include_once __DIR__ . '/image.effects.inc';
-      foreach (module_implements('image_effect_info') as $module) {
-        foreach (module_invoke($module, 'image_effect_info') as $name => $effect) {
-          // Ensure the current toolkit supports the effect.
-          $effect['module'] = $module;
-          $effect['name'] = $name;
-          $effect['data'] = isset($effect['data']) ? $effect['data'] : array();
-          $effects[$name] = $effect;
-        }
-      }
-      uasort($effects, '_image_effect_definitions_sort');
-      drupal_alter('image_effect_info', $effects);
-      cache()->set("image_effects:$langcode", $effects);
-    }
-  }
-
-  return $effects;
-}
-
-/**
- * Loads the definition for an image effect.
- *
- * The effect definition is a set of core properties for an image effect, not
- * containing any user-settings. The definition defines various functions to
- * call when configuring or executing an image effect. This loader is mostly for
- * internal use within image.module. Use image_effect_load() or
- * entity_load() to get image effects that contain configuration.
- *
- * @param $effect
- *   The name of the effect definition to load.
- * @return
- *   An array containing the image effect definition with the following keys:
- *   - "effect": The unique name for the effect being performed. Usually prefixed
- *     with the name of the module providing the effect.
- *   - "module": The module providing the effect.
- *   - "help": A description of the effect.
- *   - "function": The name of the function that will execute the effect.
- *   - "form": (optional) The name of a function to configure the effect.
- *   - "summary": (optional) The name of a theme function that will display a
- *     one-line summary of the effect. Does not include the "theme_" prefix.
- */
-function image_effect_definition_load($effect) {
-  $definitions = image_effect_definitions();
-  return isset($definitions[$effect]) ? $definitions[$effect] : NULL;
-}
-
-/**
- * Loads a single image effect.
- *
- * @param $ieid
- *   The image effect ID.
- * @param $style_name
- *   The image style name.
- *
- * @return
- *   An image effect array, consisting of the following keys:
- *   - "ieid": The unique image effect ID.
- *   - "weight": The weight of this image effect within the image style.
- *   - "name": The name of the effect definition that powers this image effect.
- *   - "data": An array of configuration options for this image effect.
- *   Besides these keys, the entirety of the image definition is merged into
- *   the image effect array. Returns NULL if the specified effect cannot be
- *   found.
- * @see image_effect_definition_load()
- */
-function image_effect_load($ieid, $style_name) {
-  if (($style = entity_load('image_style', $style_name)) && isset($style->effects[$ieid])) {
-    $effect = $style->effects[$ieid];
-    $definition = image_effect_definition_load($effect['name']);
-    $effect = array_merge($definition, $effect);
-    // @todo The effect's key name within the style is unknown. It *should* be
-    //   identical to the ieid, but that is in no way guaranteed. And of course,
-    //   the ieid key *within* the effect is senseless duplication in the first
-    //   place. This problem can be eliminated in many places, but especially
-    //   for loaded menu arguments like %image_effect, the actual router
-    //   callbacks don't have access to 'ieid' anymore (unless resorting to
-    //   dirty %index and %map tricks).
-    $effect['ieid'] = $ieid;
-    return $effect;
-  }
-  return NULL;
-}
-
-/**
- * Saves an image effect.
- *
- * @param ImageStyle $style
- *   The image style this effect belongs to.
- * @param array $effect
- *   An image effect array. Passed by reference.
- *
- * @return array
- *   The saved image effect array. The 'ieid' key will be set for the effect.
- */
-function image_effect_save($style, &$effect) {
-  // Remove all values that are not properties of an image effect.
-  // @todo Convert image effects into plugins.
-  $effect = array_intersect_key($effect, array_flip(array('ieid', 'module', 'name', 'data', 'weight')));
-
-  // Generate a unique image effect ID for a new effect.
-  if (empty($effect['ieid'])) {
-    $uuid = new Uuid();
-    $effect['ieid'] = $uuid->generate();
-  }
-  $style->effects[$effect['ieid']] = $effect;
-  $style->save();
-}
-
-/**
- * Deletes an image effect.
- *
- * @param ImageStyle $style
- *   The image style this effect belongs to.
- * @param $effect
- *   An image effect array.
- */
-function image_effect_delete($style, $effect) {
-  unset($style->effects[$effect['ieid']]);
-  $style->save();
-}
-
-/**
- * Applies an image effect to the image object.
- *
- * @param $image
- *   An image object returned by image_load().
- * @param $effect
- *   An image effect array.
- * @return
- *   TRUE on success. FALSE if unable to perform the image effect on the image.
- */
-function image_effect_apply($image, $effect) {
-  module_load_include('inc', 'image', 'image.effects');
-  $function = $effect['effect callback'];
-  return $function($image, $effect['data']);
-}
-
-/**
  * Returns HTML for an image using a specific image style.
  *
  * @param $variables
@@ -607,15 +424,6 @@ function image_filter_keyword($value, $current_pixels, $new_pixels) {
       return $current_pixels / 2 - $new_pixels / 2;
   }
   return $value;
-}
-
-/**
- * Internal function for sorting image effect definitions through uasort().
- *
- * @see image_effect_definitions()
- */
-function _image_effect_definitions_sort($a, $b) {
-  return strcasecmp($a['name'], $b['name']);
 }
 
 /**

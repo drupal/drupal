@@ -68,7 +68,7 @@ class CommentFormController extends EntityFormControllerNG {
     }
     else {
       if ($user->isAuthenticated()) {
-        $author = $user->name;
+        $author = $user->getUsername();
       }
       else {
         $author = ($comment->name->value ? $comment->name->value : '');

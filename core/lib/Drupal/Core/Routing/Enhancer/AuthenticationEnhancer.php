@@ -51,7 +51,7 @@ class AuthenticationEnhancer implements RouteEnhancerInterface {
       // If the request was authenticated with a non-permitted provider,
       // force the user back to anonymous.
       if (!in_array($auth_provider_triggered, $auth_providers)) {
-        $request->attributes->set('account', drupal_anonymous_user());
+        $request->attributes->set('_account', drupal_anonymous_user());
       }
     }
     return $defaults;

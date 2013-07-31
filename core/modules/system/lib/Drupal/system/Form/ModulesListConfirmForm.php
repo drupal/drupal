@@ -122,7 +122,7 @@ class ModulesListConfirmForm extends ConfirmFormBase implements ControllerInterf
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state, Request $request = NULL) {
-    $account = $request->attributes->get('account')->id();
+    $account = $request->attributes->get('_account')->id();
     $this->modules = $this->keyValueExpirable->get($account);
 
     // Redirect to the modules list page if the key value store is empty.
@@ -163,7 +163,7 @@ class ModulesListConfirmForm extends ConfirmFormBase implements ControllerInterf
    */
   public function submitForm(array &$form, array &$form_state) {
     // Remove the key value store entry.
-    $account = $this->request->attributes->get('account')->id();
+    $account = $this->request->attributes->get('_account')->id();
     $this->keyValueExpirable->delete($account);
 
     // Gets list of modules prior to install process.

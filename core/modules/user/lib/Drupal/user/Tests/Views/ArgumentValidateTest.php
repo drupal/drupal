@@ -41,7 +41,7 @@ class ArgumentValidateTest extends UserTestBase {
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;
     // Fail for a string variable since type is 'uid'
-    $this->assertFalse($view->argument['null']->validateArgument($account->name));
+    $this->assertFalse($view->argument['null']->validateArgument($account->getUsername()));
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;
     // Fail for a valid numeric, but for a user that doesn't exist
@@ -52,7 +52,7 @@ class ArgumentValidateTest extends UserTestBase {
     $account = $this->account;
     // test 'name' case
     $view = $this->view_argument_validate_user('name');
-    $this->assertTrue($view->argument['null']->validateArgument($account->name));
+    $this->assertTrue($view->argument['null']->validateArgument($account->getUsername()));
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;
     // Fail for a uid variable since type is 'name'
@@ -67,7 +67,7 @@ class ArgumentValidateTest extends UserTestBase {
     $account = $this->account;
     // test 'either' case
     $view = $this->view_argument_validate_user('either');
-    $this->assertTrue($view->argument['null']->validateArgument($account->name));
+    $this->assertTrue($view->argument['null']->validateArgument($account->getUsername()));
     // Reset safed argument validation.
     $view->argument['null']->argument_validated = NULL;
     // Fail for a uid variable since type is 'name'

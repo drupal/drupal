@@ -27,8 +27,8 @@ class UnblockUser extends ActionBase {
    */
   public function execute($account = NULL) {
     // Skip unblocking user if they are already unblocked.
-    if ($account !== FALSE && $account->status->value == 0) {
-      $account->status = 1;
+    if ($account !== FALSE && $account->isBlocked()) {
+      $account->activate();
       $account->save();
     }
   }

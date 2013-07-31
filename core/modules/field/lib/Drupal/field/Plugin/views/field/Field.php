@@ -624,12 +624,13 @@ class Field extends FieldPluginBase {
         return implode(filter_xss_admin($this->options['separator']), $items);
       }
       else {
-        return theme('item_list',
-          array(
-            'items' => $items,
-            'title' => NULL,
-            'list_type' => $this->options['multi_type'],
-          ));
+        $item_list = array(
+          '#theme' => 'item_list',
+          '#items' => $items,
+          '#title' => NULL,
+          '#list_type' => $this->options['multi_type'],
+        );
+        return drupal_render($item_list);
       }
     }
   }

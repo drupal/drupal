@@ -25,6 +25,7 @@ function toolbar_test_toolbar() {
       ),
     ),
     'tray' => array(
+      '#heading' => t('Test tray'),
       '#wrapper_attributes' => array(
         'id' => 'toolbar-tray-testing',
       ),
@@ -35,7 +36,6 @@ function toolbar_test_toolbar() {
           l(t('link 2'), '<front>', array('attributes' => array('title' => 'Test link 2 title'))),
           l(t('link 3'), '<front>', array('attributes' => array('title' => 'Test link 3 title'))),
         ),
-        '#prefix' => '<h2 class="visually-hidden">' . t('Test tray') . '</h2>',
         '#attributes' => array(
           'class' => array('menu'),
         ),

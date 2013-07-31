@@ -23,26 +23,14 @@ class RegisterParamConvertersPass implements CompilerPassInterface {
    *   The container to process.
    */
   public function process(ContainerBuilder $container) {
-
     if (!$container->hasDefinition('paramconverter_manager')) {
       return;
     }
 
     $manager = $container->getDefinition('paramconverter_manager');
-
-    $services = array();
     foreach ($container->findTaggedServiceIds('paramconverter') as $id => $attributes) {
       $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
-
-      $services[$priority][] = new Reference($id);
-    }
-
-    krsort($services);
-
-    foreach ($services as $priority) {
-      foreach ($priority as $service) {
-        $manager->addMethodCall('addConverter', array($service));
-      }
+      $manager->addMethodCall('addConverter', array($id, $priority));
     }
   }
 }

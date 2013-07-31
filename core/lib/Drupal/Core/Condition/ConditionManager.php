@@ -39,7 +39,7 @@ class ConditionManager extends DefaultPluginManager implements ExecutableManager
     $annotation_namespaces = array(
       'Drupal\Core\Condition\Annotation' => DRUPAL_ROOT . '/core/lib',
     );
-    parent::__construct('Condition', $namespaces, $annotation_namespaces, 'Drupal\Core\Condition\Annotation\Condition');
+    parent::__construct('Plugin/Condition', $namespaces, $annotation_namespaces, 'Drupal\Core\Condition\Annotation\Condition');
   }
 
   /**

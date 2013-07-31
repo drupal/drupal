@@ -12,6 +12,9 @@ use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\views\ViewExecutableFactory;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a generic Views block.
@@ -23,7 +26,7 @@ use Drupal\Component\Utility\Xss;
  *   derivative = "Drupal\views\Plugin\Derivative\ViewsBlock"
  * )
  */
-class ViewsBlock extends BlockBase {
+class ViewsBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * The View executable object.
@@ -40,15 +43,47 @@ class ViewsBlock extends BlockBase {
   protected $displayID;
 
   /**
-   * Overrides \Drupal\Component\Plugin\PluginBase::__construct().
+   * Indicates whether the display was successfully set.
+   *
+   * @var bool
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  protected $displaySet;
 
+  /**
+   * Constructs a Drupal\Component\Plugin\PluginBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\views\ViewExecutableFactory $executable_factory
+   *   The view executable factory.
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
+   *   The views storage controller.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ViewExecutableFactory $executable_factory, EntityStorageControllerInterface $storage_controller) {
+    $this->pluginId = $plugin_id;
     list($plugin, $delta) = explode(':', $this->getPluginId());
     list($name, $this->displayID) = explode('-', $delta, 2);
     // Load the view.
-    $this->view = views_get_view($name);
+    $view = $storage_controller->load($name);
+    $this->view = $executable_factory->get($view);
+    $this->displaySet = $this->view->setDisplay($this->displayID);
+
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration, $plugin_id, $plugin_definition,
+      $container->get('views.executable'),
+      $container->get('plugin.manager.entity')->getStorageController('view')
+    );
   }
 
   /**
@@ -67,6 +102,7 @@ class ViewsBlock extends BlockBase {
     // Set the default label to '' so the views internal title is used.
     $form['label']['#default_value'] = '';
     $form['label']['#access'] = FALSE;
+
     return $form;
   }
 
@@ -74,6 +110,8 @@ class ViewsBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
+    $this->view->display_handler->preBlockBuild($this);
+
     if ($output = $this->view->executeDisplay($this->displayID)) {
       // Set the label to the title configured in the view.
       $this->configuration['label'] = Xss::filterAdmin($this->view->getTitle());
@@ -84,6 +122,46 @@ class ViewsBlock extends BlockBase {
     }
 
     return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settings() {
+    $settings = array();
+
+    if ($this->displaySet) {
+      return $this->view->display_handler->blockSettings($settings);
+    }
+
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockForm($form, &$form_state) {
+    if ($this->displaySet) {
+      return $this->view->display_handler->blockForm($this, $form, $form_state);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockValidate($form, &$form_state) {
+    if ($this->displaySet) {
+      $this->view->display_handler->blockValidate($this, $form, $form_state);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function blockSubmit($form, &$form_state) {
+    if ($this->displaySet) {
+      $this->view->display_handler->blockSubmit($this, $form, $form_state);
+    }
   }
 
   /**
@@ -121,7 +199,6 @@ class ViewsBlock extends BlockBase {
    *   The new block instance ID.
    */
    public function generateBlockInstanceID(EntityStorageControllerInterface $manager) {
-     $this->view->setDisplay($this->displayID);
      $original_id = 'views_block__' . $this->view->storage->id() . '_' . $this->view->current_display;
 
      // Get an array of block IDs without the theme prefix.

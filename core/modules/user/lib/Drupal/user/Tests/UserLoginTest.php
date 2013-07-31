@@ -116,7 +116,7 @@ class UserLoginTest extends WebTestBase {
     $this->drupalLogout();
     // Load the stored user. The password hash should reflect $default_count_log2.
     $account = user_load($account->id());
-    $this->assertIdentical($password_hasher->getCountLog2($account->pass), $default_count_log2);
+    $this->assertIdentical($password_hasher->getCountLog2($account->getPassword()), $default_count_log2);
 
     // Change the required number of iterations by loading a test-module
     // containing the necessary container builder code and then verify that the
@@ -128,7 +128,7 @@ class UserLoginTest extends WebTestBase {
     $this->drupalLogin($account);
     // Load the stored user, which should have a different password hash now.
     $account = user_load($account->id(), TRUE);
-    $this->assertIdentical($password_hasher->getCountLog2($account->pass), $overridden_count_log2);
+    $this->assertIdentical($password_hasher->getCountLog2($account->getPassword()), $overridden_count_log2);
   }
 
   /**
@@ -142,7 +142,7 @@ class UserLoginTest extends WebTestBase {
    */
   function assertFailedLogin($account, $flood_trigger = NULL) {
     $edit = array(
-      'name' => $account->name,
+      'name' => $account->getUsername(),
       'pass' => $account->pass_raw,
     );
     $this->drupalPost('user', $edit, t('Log in'));

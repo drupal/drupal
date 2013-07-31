@@ -142,7 +142,7 @@ class ModulesListForm implements FormInterface, ControllerInterface {
         '#title' => $this->translationManager->translate($package),
         '#theme' => 'system_modules_details',
         '#header' => array(
-          array('data' => '<span class="element-invisible">' . $this->translationManager->translate('Enabled') . '</span>', 'class' => array('checkbox')),
+          array('data' => '<span class="visually-hidden">' . $this->translationManager->translate('Enabled') . '</span>', 'class' => array('checkbox')),
           array('data' => $this->translationManager->translate('Name'), 'class' => array('name')),
           array('data' => $this->translationManager->translate('Description'), 'class' => array('description', RESPONSIVE_PRIORITY_LOW)),
         ),
@@ -425,7 +425,7 @@ class ModulesListForm implements FormInterface, ControllerInterface {
     // dependencies that are not enabled yet, redirect to the confirmation form.
     if (!empty($modules['dependencies']) || !empty($modules['missing'])) {
       // Write the list of changed module states into a key value store.
-      $account = $this->request->attributes->get('account')->id();
+      $account = $this->request->attributes->get('_account')->id();
       $this->keyValueExpirable->setWithExpire($account, $modules, 60);
 
       // Redirect to the confirmation form.

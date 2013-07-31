@@ -11,13 +11,13 @@ use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
  * Plugin implementation of the 'telephone_link' formatter.
  *
  * @FieldFormatter(
  *   id = "telephone_link",
- *   module = "telephone",
  *   label = @Translation("Telephone link"),
  *   field_types = {
  *     "telephone"
@@ -62,18 +62,18 @@ class TelephoneLinkFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function prepareView(array $entities, $langcode, array &$items) {
+  public function prepareView(array $entities, $langcode, array $items) {
     $settings = $this->getSettings();
 
     foreach ($entities as $id => $entity) {
-      foreach ($items[$id] as &$item) {
+      foreach ($items[$id] as $item) {
         // If available, set custom link text.
         if (!empty($settings['title'])) {
-          $item['title'] = $settings['title'];
+          $item->title = $settings['title'];
         }
         // Otherwise, use telephone number itself as title.
         else {
-          $item['title'] = $item['value'];
+          $item->title = $item->value;
         }
       }
     }
@@ -82,17 +82,17 @@ class TelephoneLinkFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, array $items) {
+  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
     $element = array();
 
     foreach ($items as $delta => $item) {
       // Prepend 'tel:' to the telephone number.
-      $href = 'tel:' . rawurlencode(preg_replace('/\s+/', '', $item['value']));
+      $href = 'tel:' . rawurlencode(preg_replace('/\s+/', '', $item->value));
 
       // Render each element as link.
       $element[$delta] = array(
         '#type' => 'link',
-        '#title' => $item['title'],
+        '#title' => $item->title,
         '#href' => $href,
         '#options' => array('external' => TRUE),
       );

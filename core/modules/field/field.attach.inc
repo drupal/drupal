@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityNG;
 use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
 use Drupal\entity\Plugin\Core\Entity\EntityFormDisplay;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Entity\Field\PrepareCacheInterface;
 
 /**
  * @defgroup field_storage Field Storage API
@@ -177,7 +178,8 @@ function field_invoke_method($method, $target_function, EntityInterface $entity,
       $langcodes = _field_language_suggestion($available_langcodes, $options['langcode'], $field_name);
 
       foreach ($langcodes as $langcode) {
-        $items = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
+        $items = $entity->getTranslation($langcode)->get($field_name);
+        $items->filterEmptyValues();
 
         $result = $target->$method($entity, $langcode, $items, $a, $b);
 
@@ -190,12 +192,6 @@ function field_invoke_method($method, $target_function, EntityInterface $entity,
           else {
             $return[] = $result;
           }
-        }
-
-        // Populate $items back in the field values, but avoid replacing missing
-        // fields with an empty array (those are not equivalent on update).
-        if ($items !== array() || isset($entity->{$field_name}[$langcode])) {
-          $entity->{$field_name}[$langcode] = $items;
         }
       }
     }
@@ -288,7 +284,9 @@ function field_invoke_method_multiple($method, $target_function, array $entities
         foreach ($langcodes as $langcode) {
           // Group the entities and items corresponding to the current field.
           $grouped_entities[$instance_id][$langcode][$id] = $entities[$id];
-          $grouped_items[$instance_id][$langcode][$id] = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
+          $items = $entity->getTranslation($langcode)->get($field_name);
+          $items->filterEmptyValues();
+          $grouped_items[$instance_id][$langcode][$id] = $items;
         }
       }
     }
@@ -301,7 +299,7 @@ function field_invoke_method_multiple($method, $target_function, array $entities
     $field_name = $instance['field_name'];
 
     // Iterate over all the field translations.
-    foreach ($grouped_items[$instance_id] as $langcode => &$items) {
+    foreach ($grouped_items[$instance_id] as $langcode => $items) {
       $entities = $grouped_entities[$instance_id][$langcode];
       $results = $grouped_targets[$instance_id]->$method($entities, $langcode, $items, $a, $b);
 
@@ -316,16 +314,6 @@ function field_invoke_method_multiple($method, $target_function, array $entities
           else {
             $return[$id][] = $result;
           }
-        }
-      }
-    }
-
-    // Populate field values back in the entities, but avoid replacing missing
-    // fields with an empty array (those are not equivalent on update).
-    foreach ($grouped_entities[$instance_id] as $langcode => $entities) {
-      foreach ($entities as $id => $entity) {
-        if ($grouped_items[$instance_id][$langcode][$id] !== array() || isset($entity->{$field_name}[$langcode])) {
-          $entity->{$field_name}[$langcode] = $grouped_items[$instance_id][$langcode][$id];
         }
       }
     }
@@ -531,7 +519,7 @@ function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langc
 
   // Let other modules make changes to the form.
   // Avoid module_invoke_all() to let parameters be taken by reference.
-  foreach (module_implements('field_attach_form') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('field_attach_form') as $module) {
     $function = $module . '_field_attach_form';
     $function($entity, $form, $form_state, $langcode);
   }
@@ -633,7 +621,7 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
     // Invoke hook_field_storage_pre_load(): let any module load field
     // data before the storage engine, accumulating along the way.
     $skip_fields = array();
-    foreach (module_implements('field_storage_pre_load') as $module) {
+    foreach (Drupal::moduleHandler()->getImplementations('field_storage_pre_load') as $module) {
       $function = $module . '_field_storage_pre_load';
       $function($entity_type, $queried_entities, $age, $skip_fields, $hook_options);
     }
@@ -691,7 +679,9 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
           $definition = _field_generate_entity_field_definition($field, $options['instance']);
           $items = \Drupal::typedData()->create($definition, $values, $field_name, $entity);
           foreach ($items as $item) {
-            $item->prepareCache();
+            if ($item instanceof PrepareCacheInterface) {
+              $item->prepareCache();
+            }
           }
           $entity->{$field_name}[$langcode] = $items->getValue();
         }
@@ -834,7 +824,7 @@ function field_attach_extract_form_values(EntityInterface $entity, $form, &$form
 
   // Let other modules act on submitting the entity.
   // Avoid module_invoke_all() to let $form_state be taken by reference.
-  foreach (module_implements('field_attach_extract_form_values') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('field_attach_extract_form_values') as $module) {
     $function = $module . 'field_attach_extract_form_values';
     $function($entity, $form, $form_state);
   }
@@ -863,7 +853,7 @@ function field_attach_insert(EntityInterface $entity) {
   // Let any module insert field data before the storage engine, accumulating
   // saved fields along the way.
   $skip_fields = array();
-  foreach (module_implements('field_storage_pre_insert') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('field_storage_pre_insert') as $module) {
     $function = $module . '_field_storage_pre_insert';
     $function($entity, $skip_fields);
   }
@@ -904,7 +894,7 @@ function field_attach_update(EntityInterface $entity) {
   // Let any module update field data before the storage engine, accumulating
   // saved fields along the way.
   $skip_fields = array();
-  foreach (module_implements('field_storage_pre_update') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('field_storage_pre_update') as $module) {
     $function = $module . '_field_storage_pre_update';
     $function($entity, $skip_fields);
   }

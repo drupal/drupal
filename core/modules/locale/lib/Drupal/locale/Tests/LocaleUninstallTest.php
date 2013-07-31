@@ -9,6 +9,7 @@ namespace Drupal\locale\Tests;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
+use Drupal\Component\Utility\String;
 
 /**
  * Locale uninstall with English UI functional test.
@@ -68,7 +69,7 @@ class LocaleUninstallTest extends WebTestBase {
     global $user;
     $user = drupal_anonymous_user();
 
-    $this->assertEqual(language(Language::TYPE_INTERFACE)->id, $this->langcode, t('Current language: %lang', array('%lang' => language(Language::TYPE_INTERFACE)->id)));
+    $this->assertEqual(language(Language::TYPE_INTERFACE)->id, $this->langcode, String::format('Current language: %lang', array('%lang' => language(Language::TYPE_INTERFACE)->id)));
 
     // Enable multilingual workflow option for articles.
     language_save_default_configuration('node', 'article', array('langcode' => 'site_default', 'language_show' => TRUE));
@@ -89,7 +90,7 @@ class LocaleUninstallTest extends WebTestBase {
     $config = config('locale.settings');
     $locale_javascripts = $this->container->get('state')->get('locale.translation.javascript') ?: array();
     $js_file = 'public://' . $config->get('javascript.directory') . '/fr_' . $locale_javascripts['fr'] . '.js';
-    $this->assertTrue($result = file_exists($js_file), t('JavaScript file created: %file', array('%file' => $result ? $js_file : t('none'))));
+    $this->assertTrue($result = file_exists($js_file), String::format('JavaScript file created: %file', array('%file' => $result ? $js_file : 'none')));
 
     // Disable string caching.
     $config->set('cache_strings', 0)->save();
@@ -115,31 +116,31 @@ class LocaleUninstallTest extends WebTestBase {
     // Visit the front page.
     $this->drupalGet('');
     // Check the init language logic.
-    $this->assertEqual(language(Language::TYPE_INTERFACE)->id, 'en', t('Language after uninstall: %lang', array('%lang' => language(Language::TYPE_INTERFACE)->id)));
+    $this->assertEqual(language(Language::TYPE_INTERFACE)->id, 'en', String::format('Language after uninstall: %lang', array('%lang' => language(Language::TYPE_INTERFACE)->id)));
 
     // Check JavaScript files deletion.
-    $this->assertTrue($result = !file_exists($js_file), t('JavaScript file deleted: %file', array('%file' => $result ? $js_file : t('found'))));
+    $this->assertTrue($result = !file_exists($js_file), String::format('JavaScript file deleted: %file', array('%file' => $result ? $js_file : 'found')));
 
     // Check language count.
     $language_count = $this->container->get('state')->get('language_count') ?: 1;
-    $this->assertEqual($language_count, 1, t('Language count: %count', array('%count' => $language_count)));
+    $this->assertEqual($language_count, 1, String::format('Language count: %count', array('%count' => $language_count)));
 
     // Check language negotiation.
     require_once DRUPAL_ROOT . '/core/includes/language.inc';
-    $this->assertTrue(count(language_types_get_all()) == count(language_types_get_default()), t('Language types reset'));
+    $this->assertTrue(count(language_types_get_all()) == count(language_types_get_default()), 'Language types reset');
     $language_negotiation = language_negotiation_method_get_first(Language::TYPE_INTERFACE) == LANGUAGE_NEGOTIATION_SELECTED;
-    $this->assertTrue($language_negotiation, t('Interface language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
+    $this->assertTrue($language_negotiation, String::format('Interface language negotiation: %setting', array('%setting' => $language_negotiation ? 'none' : 'set')));
     $language_negotiation = language_negotiation_method_get_first(Language::TYPE_CONTENT) == LANGUAGE_NEGOTIATION_SELECTED;
-    $this->assertTrue($language_negotiation, t('Content language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
+    $this->assertTrue($language_negotiation, String::format('Content language negotiation: %setting', array('%setting' => $language_negotiation ? 'none' : 'set')));
     $language_negotiation = language_negotiation_method_get_first(Language::TYPE_URL) == LANGUAGE_NEGOTIATION_SELECTED;
-    $this->assertTrue($language_negotiation, t('URL language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
+    $this->assertTrue($language_negotiation, String::format('URL language negotiation: %setting', array('%setting' => $language_negotiation ? 'none' : 'set')));
 
     // Check language negotiation method settings.
-    $this->assertFalse(config('language.negotiation')->get('url.source'), t('URL language negotiation method indicator settings cleared.'));
-    $this->assertFalse(config('language.negotiation')->get('session.parameter'), t('Visit language negotiation method settings cleared.'));
+    $this->assertFalse(config('language.negotiation')->get('url.source'), 'URL language negotiation method indicator settings cleared.');
+    $this->assertFalse(config('language.negotiation')->get('session.parameter'), 'Visit language negotiation method settings cleared.');
 
     // Check JavaScript parsed.
     $javascript_parsed_count = count($this->container->get('state')->get('system.javascript_parsed') ?: array());
-    $this->assertEqual($javascript_parsed_count, 0, t('JavaScript parsed count: %count', array('%count' => $javascript_parsed_count)));
+    $this->assertEqual($javascript_parsed_count, 0, String::format('JavaScript parsed count: %count', array('%count' => $javascript_parsed_count)));
   }
 }

@@ -127,7 +127,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase implements ControllerI
     $this->request = $request;
 
     // Retrieve the list of modules from the key value store.
-    $account = $request->attributes->get('account')->id();
+    $account = $request->attributes->get('_account')->id();
     $this->modules = $this->keyValueExpirable->get($account);
 
     // Prevent this page from showing when the module list is empty.
@@ -152,7 +152,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase implements ControllerI
    */
   public function submitForm(array &$form, array &$form_state) {
     // Clear the key value store entry.
-    $account = $this->request->attributes->get('account')->id();
+    $account = $this->request->attributes->get('_account')->id();
     $this->keyValueExpirable->delete($account);
 
     // Uninstall the modules.

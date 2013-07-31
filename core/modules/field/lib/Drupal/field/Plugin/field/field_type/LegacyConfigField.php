@@ -102,7 +102,7 @@ class LegacyConfigField extends ConfigField {
    */
   protected function legacyCallback($hook, $args = array()) {
     $definition = $this->getPluginDefinition();
-    $module = $definition['module'];
+    $module = $definition['provider'];
     $callback = "{$module}_field_{$hook}";
     if (function_exists($callback)) {
       $entity = $this->getParent();

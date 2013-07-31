@@ -38,7 +38,7 @@ class ImageUpgradePathTest extends UpgradePathTestBase {
       'name' => 'test-custom',
       'effects' => array(
         'image_rotate' => array(
-          'name' => 'image_rotate',
+          'id' => 'image_rotate',
           'data' => array(
             'degrees' => '90',
             'bgcolor' => '#FFFFFF',
@@ -47,7 +47,7 @@ class ImageUpgradePathTest extends UpgradePathTestBase {
           'weight' => '1',
         ),
         'image_desaturate' => array(
-          'name' => 'image_desaturate',
+          'id' => 'image_desaturate',
           'data' => array(),
           'weight' => '2',
         ),
@@ -57,7 +57,7 @@ class ImageUpgradePathTest extends UpgradePathTestBase {
       'name' => 'thumbnail',
       'effects' => array (
         'image_scale' => array(
-          'name' => 'image_scale',
+          'id' => 'image_scale',
           'data' => array (
             'width' => '177',
             'height' => '177',
@@ -73,11 +73,11 @@ class ImageUpgradePathTest extends UpgradePathTestBase {
       // during by the image style upgrade functions.
       foreach ($config->get('effects') as $uuid => $effect) {
         // Copy placeholder data.
-        $style['effects'][$uuid] = $style['effects'][$effect['name']];
-        // Set the missing ieid key as this is unknown because it is a UUID.
-        $style['effects'][$uuid]['ieid'] = $uuid;
+        $style['effects'][$uuid] = $style['effects'][$effect['id']];
+        // Set the missing uuid key as this is unknown because it is a UUID.
+        $style['effects'][$uuid]['uuid'] = $uuid;
         // Remove the placeholder data.
-        unset($style['effects'][$effect['name']]);
+        unset($style['effects'][$effect['id']]);
       }
       $this->assertEqual($this->sortByKey($style), $config->get(), format_string('@first is equal to @second.', array(
         '@first' => var_export($this->sortByKey($style), TRUE),

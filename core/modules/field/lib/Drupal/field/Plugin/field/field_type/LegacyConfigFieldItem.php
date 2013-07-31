@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Plugin\field\field_type;
 
+use Drupal\Core\Entity\Field\PrepareCacheInterface;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase;
 use Drupal\field\Plugin\Core\Entity\Field;
 
@@ -23,14 +24,14 @@ use Drupal\field\Plugin\Core\Entity\Field;
  * @todo Remove once all core field types have been converted (see
  * http://drupal.org/node/2014671).
  */
-abstract class LegacyConfigFieldItem extends ConfigFieldItemBase {
+abstract class LegacyConfigFieldItem extends ConfigFieldItemBase implements PrepareCacheInterface {
 
   /**
    * {@inheritdoc}
    */
   public static function schema(Field $field) {
     $definition = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field->type);
-    $module = $definition['module'];
+    $module = $definition['provider'];
     module_load_install($module);
     $callback = "{$module}_field_schema";
     if (function_exists($callback)) {
@@ -117,7 +118,7 @@ abstract class LegacyConfigFieldItem extends ConfigFieldItemBase {
    */
   protected function getLegacyCallback($hook) {
     $definition = $this->getPluginDefinition();
-    $module = $definition['module'];
+    $module = $definition['provider'];
     $callback = "{$module}_field_{$hook}";
     if (function_exists($callback)) {
       return $callback;

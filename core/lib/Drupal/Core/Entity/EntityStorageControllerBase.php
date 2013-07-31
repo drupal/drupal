@@ -190,7 +190,7 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
             // of making LegacyConfigFieldItem implement PrepareCacheInterface.
             // @todo Remove once all core field types have been converted (see
             // http://drupal.org/node/2014671).
-            || (is_subclass_of($type_definition['class'], '\Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem') && function_exists($type_definition['module'] . '_field_load'))) {
+            || (is_subclass_of($type_definition['class'], '\Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem') && function_exists($type_definition['provider'] . '_field_load'))) {
 
             // Call the prepareCache() method directly on each item
             // individually.
@@ -211,7 +211,7 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
             if (is_subclass_of($type_definition['class'], '\Drupal\Core\Entity\Field\PrepareCacheInterface')
               // @todo Remove once all core field types have been converted
               // (see http://drupal.org/node/2014671).
-              || (is_subclass_of($type_definition['class'], '\Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem') && function_exists($type_definition['module'] . '_field_load'))) {
+              || (is_subclass_of($type_definition['class'], '\Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem') && function_exists($type_definition['provider'] . '_field_load'))) {
 
               // Create the items object.
               $items = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();

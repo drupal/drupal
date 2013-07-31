@@ -7,21 +7,19 @@
  * - attributes: Remaining HTML attributes for the element.
  *   - class: HTML classes that can be used to style contextually through CSS.
  * - title : The title of this group of rows.
- * - header: Header labels.
- * - header_classes: HTML classes to apply to each header cell, indexed by
+ * - header: The table header columns.
+ *   - attributes: Remaining HTML attributes for the element.
+ *   - content: HTML classes to apply to each header cell, indexed by
  *   the header's key.
  * - caption_needed: Is the caption tag needed.
  * - caption: The caption for this table.
  * - accessibility_description: Extended description for the table details.
  * - accessibility_summary: Summary for the table details.
- * - rows: Table row items. Rows are keyed by row number, fields within rows
- *   are keyed by field ID.
- *   - field: Table data field ID.
- *   - content: Table data content.
- * - row_classes: HTML classes to apply to each row, indexed by row number.
- *   This matches the index in rows.
- * - field_classes: HTML classes to apply to each row, indexed by row number.
- *   This matches the index in columns and rows.
+ * - rows: Table row items. Rows are keyed by row number.
+ *   - attributes: HTML classes to apply to each row.
+ *   - columns: Row column items. Columns are keyed by column number.
+ *     - attributes: HTML classes to apply to each column.
+ *     - content: The column content.
  *
  * @see template_preprocess_views_view_table()
  *
@@ -51,20 +49,20 @@
   {% if header %}
     <thead>
       <tr>
-        {% for key, field in header %}
-          <th{{ header_classes[key] }} scope="col">
-            {{ field }}
+        {% for column in header %}
+          <th{{ column.attributes }} scope="col">
+            {{ column.content }}
           </th>
         {% endfor %}
       </tr>
     </thead>
   {% endif %}
   <tbody>
-    {% for row_count, row in rows %}
-      <tr{{ row_classes[row_count] }}>
-        {% for field, content in row %}
-          <td{{ field_classes[field][row_count] }}>
-            {{ content }}
+    {% for row in rows %}
+      <tr{{ row.attributes }}>
+        {% for column in row.columns %}
+          <td{{ column.attributes }}>
+            {{ column.content }}
           </td>
         {% endfor %}
       </tr>

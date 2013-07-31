@@ -32,7 +32,7 @@
  */
 function hook_shortcut_default_set($account) {
   // Use a special set of default shortcuts for administrators only.
-  if (in_array(config('user.settings')->get('admin_role'), $account->roles)) {
+  if (in_array(config('user.settings')->get('admin_role'), $account->getRoles())) {
     return 'admin-shortcuts';
   }
 }

@@ -124,12 +124,13 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
 
     // Test that the default formatter is being used.
     $image_uri = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri();
-    $image_info = array(
-      'uri' => $image_uri,
-      'width' => 40,
-      'height' => 20,
+    $image = array(
+      '#theme' => 'image',
+      '#uri' => $image_uri,
+      '#width' => 40,
+      '#height' => 20,
     );
-    $default_output = theme('image', $image_info);
+    $default_output = drupal_render($image);
     $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
 
     // Use the picture formatter linked to file formatter.
@@ -142,7 +143,13 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
     $display->setComponent($field_name, $display_options)
       ->save();
 
-    $default_output = l(theme('image', $image_info), file_create_url($image_uri), array('html' => TRUE));
+    $image = array(
+      '#theme' => 'image',
+      '#uri' => $image_uri,
+      '#width' => 40,
+      '#height' => 20,
+    );
+    $default_output = l($image, file_create_url($image_uri), array('html' => TRUE));
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, 'Image linked to file formatter displaying correctly on full node view.');
     // Verify that the image can be downloaded.
@@ -184,11 +191,14 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
 
     $large_style = entity_load('image_style', 'large');
     $this->drupalGet($large_style->buildUrl($image_uri));
-    $image_info['uri'] = $image_uri;
-    $image_info['width'] = 480;
-    $image_info['height'] = 240;
-    $image_info['style_name'] = 'large';
-    $default_output = '<noscript>' . theme('image_style', $image_info) . '</noscript>';
+    $image_style = array(
+      '#theme' => 'image_style',
+      '#uri' => $image_uri,
+      '#width' => 480,
+      '#height' => 240,
+      '#style_name' => 'large',
+    );
+    $default_output = '<noscript>' . drupal_render($image_style) . '</noscript>';
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, 'Image style thumbnail formatter displaying correctly on full node view.');
 

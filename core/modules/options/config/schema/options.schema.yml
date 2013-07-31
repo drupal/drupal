@@ -17,10 +17,9 @@ field.list_integer.settings:
 field.list_integer.instance_settings:
   type: mapping
   label: 'List (integer)'
-  mapping:
-    user_register_form:
-      type: boolean
-      label: 'Display on user registration form.'
+  sequence:
+    - type: string
+      label: 'setting'
 
 field.list_integer.value:
   type: sequence
@@ -50,10 +49,9 @@ field.list_float.settings:
 field.list_float.instance_settings:
   type: mapping
   label: 'List (float)'
-  mapping:
-    user_register_form:
-      type: boolean
-      label: 'Display on user registration form.'
+  sequence:
+    - type: string
+      label: 'setting'
 
 field.list_float.value:
   type: sequence
@@ -83,10 +81,9 @@ field.list_text.settings:
 field.list_text.instance_settings:
   type: mapping
   label: 'List (float)'
-  mapping:
-    user_register_form:
-      type: boolean
-      label: 'Display on user registration form.'
+  sequence:
+    - type: string
+      label: 'setting'
 
 field.list_text.value:
   type: sequence
@@ -116,10 +113,9 @@ field.list_boolean.settings:
 field.list_boolean.instance_settings:
   type: mapping
   label: 'List (boolean)'
-  mapping:
-    user_register_form:
-      type: boolean
-      label: 'Display on user registration form.'
+  sequence:
+    - type: string
+      label: 'setting'
 
 field.list_boolean.value:
   type: sequence

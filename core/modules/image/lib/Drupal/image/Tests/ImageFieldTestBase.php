@@ -20,10 +20,6 @@ use Drupal\simpletest\WebTestBase;
  * image.module:
  *   image_style_options()
  *   \Drupal\image\ImageStyleInterface::flush()
- *   image_effect_definition_load()
- *   image_effect_load()
- *   image_effect_save()
- *   image_effect_delete()
  *   image_filter_keyword()
  */
 

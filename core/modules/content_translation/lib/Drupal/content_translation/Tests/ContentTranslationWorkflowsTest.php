@@ -118,7 +118,7 @@ class ContentTranslationWorkflowsTest extends ContentTranslationTestBase {
   protected function assertWorkflows(UserInterface $user, $expected_status) {
     $default_langcode = $this->langcodes[0];
     $languages = language_list();
-    $args = array('@user_label' => $user->name);
+    $args = array('@user_label' => $user->getUsername());
     $this->drupalLogin($user);
 
     // Check whether the user is allowed to access the entity form in edit mode.

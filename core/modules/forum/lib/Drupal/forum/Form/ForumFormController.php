@@ -57,7 +57,7 @@ class ForumFormController extends TermFormController implements EntityController
   protected $storageController;
 
   /**
-   * Constructs a new MenuLinkFormController object.
+   * Constructs a new ForumFormController object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.

@@ -1,6 +1,71 @@
 CKEditor 4 Changelog
 ====================
 
+## CKEditor 4.2
+
+**Important Notes:**
+
+* Dropped compatibility support for Internet Explorer 7 and Firefox 3.6.
+
+* Both the Basic and the Standard distribution packages will not contain the new [indentblock](http://ckeditor.com/addon/indentblock) plugin. Because of this the [Advanced Content Filter](http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter) might remove block indentations from existing contents. If you want to prevent this, either [add an appropriate ACF rule to your filter](http://docs.ckeditor.com/#!/guide/dev_allowed_content_rules) or create a custom build based on the Basic/Standard package and add the indentblock plugin in [CKBuilder](http://ckeditor.com/builder).
+
+Fixed issues:
+
+* [#10027](http://dev.ckeditor.com/ticket/10027): Separated list and block indentation into two plugins: [indentlist](http://ckeditor.com/addon/indentlist) and [indentblock](http://ckeditor.com/addon/indentblock).
+* [#8244](http://dev.ckeditor.com/ticket/8244): Use *(Shift+)Tab* to indent and outdent lists.
+* [#10599](http://dev.ckeditor.com/ticket/10599): [Indent](http://ckeditor.com/addon/indent) plugin is no longer required by the [list](http://ckeditor.com/addon/list) plugin.
+* [#10281](http://dev.ckeditor.com/ticket/10281): The [jQuery Adapter](http://docs.ckeditor.com/#!/guide/dev_jquery) is now available. Several jQuery-related issues fixed: [#8261](http://dev.ckeditor.com/ticket/8261), [#9077](http://dev.ckeditor.com/ticket/9077), [#8710](http://dev.ckeditor.com/ticket/8710), [#8530](http://dev.ckeditor.com/ticket/8530), [#9019](http://dev.ckeditor.com/ticket/9019), [#6181](http://dev.ckeditor.com/ticket/6181), [#7876](http://dev.ckeditor.com/ticket/7876), [#6906](http://dev.ckeditor.com/ticket/6906).
+* [#10042](http://dev.ckeditor.com/ticket/10042): Introduced [config.title](http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-title) setting to change the human-readable title of the editor.
+* [#10370](http://dev.ckeditor.com/ticket/10370): Inconsistency in data events between framed and inline editors.
+* [#9794](http://dev.ckeditor.com/ticket/9794): Added [onChange](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-event-change) event.
+* [#9923](http://dev.ckeditor.com/ticket/9923): HiDPI support in the editor UI. HiDPI icons for [Moono skin](http://ckeditor.com/addon/moono) added.
+* [#8031](http://dev.ckeditor.com/ticket/8031): Handle `required` attributes on `<textarea>` elements &mdash; introduced [editor#required](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-event-required) event.
+* [#10280](http://dev.ckeditor.com/ticket/10280): Ability to replace `<textarea>` elements with the inline editor.
+* [#10438](http://dev.ckeditor.com/ticket/10438): [FF, IE] No selection is done on an editable element on executing [setData](http://docs.ckeditor.com/#!/api/CKEDITOR.editor-method-setData).
+
+## CKEditor 4.1.3
+
+* Added new translation: Indonesian.
+* [#10644](http://dev.ckeditor.com/ticket/10644): Fixed critical bug when pasting plain text in Blink based browsers.
+* [#5189](http://dev.ckeditor.com/ticket/5189): Find/Replace dialog window: rename "Cancel" button to "Close".
+* [#10562](http://dev.ckeditor.com/ticket/10562): [Housekeeping] Unified CSS gradient filter formats in the Moono skin.
+* [#10537](http://dev.ckeditor.com/ticket/10537): ACF should register a default rule for [config.shiftEnterMode](http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-shiftEnterMode).
+* [#10610](http://dev.ckeditor.com/ticket/10610): [CKEDITOR.dialog.addIframe](http://docs.ckeditor.com/#!/api/CKEDITOR.dialog-static-method-addIframe) incorrectly sets the iframe size in dialog windows.
+
+## CKEditor 4.1.2
+
+* Added new translation: Sinhala.
+* [#10339](http://dev.ckeditor.com/ticket/10339): Fixed: Error thrown when inserted data totally stripped out after filtering and processing.
+* [#10298](http://dev.ckeditor.com/ticket/10298): Fixed: Data processor breaks attributes containing protected parts.
+* [#10367](http://dev.ckeditor.com/ticket/10367): Fixed: `editable#insertText` loses characters when `RegExp` replace controls are being inserted.
+* [#10165](http://dev.ckeditor.com/ticket/10165): [IE] Access denied error when `document.domain` has been altered.
+* [#9761](http://dev.ckeditor.com/ticket/9761): Update *Backspace* key state in `keystrokeHandler#blockedKeystrokes` when calling `editor.setReadOnly()`.
+* [#6504](http://dev.ckeditor.com/ticket/6504): Fixed: Race condition while loading several `config.customConfig` files.
+* [#10146](http://dev.ckeditor.com/ticket/10146): [Firefox] Empty lines are being removed while `config#enterMode` is `CKEDITOR.ENTER_BR`.
+* [#10360](http://dev.ckeditor.com/ticket/10360): Fixed: ARIA `role="application"` should not be used for dialogs.
+* [#10361](http://dev.ckeditor.com/ticket/10361): Fixed: ARIA `role="application"` should not be used for floating panels.
+* [#10510](http://dev.ckeditor.com/ticket/10510): Introduced unique voice labels to differentiate between different editor instances.
+* [#9945](http://dev.ckeditor.com/ticket/9945): [iOS] Scrolling not possible on iPad.
+* [#10389](http://dev.ckeditor.com/ticket/10389): Fixed: Invalid HTML in the "Text and Table" template.
+
+## CKEditor 4.1.1
+
+* Added new translation: Albanian.
+* [#10172](http://dev.ckeditor.com/ticket/10172): Pressing *Delete*/*Backspace* in an empty table cell moves the cursor to the next/previous cell.
+* [#10219](http://dev.ckeditor.com/ticket/10219): Error thrown when destroying an editor instance in parallel with a mouseup event.
+* [#10265](http://dev.ckeditor.com/ticket/10265): Wrong loop type in the Filebrowser plugin.
+* [#10249](http://dev.ckeditor.com/ticket/10249): Wrong undo/redo states at start.
+* [#10268](http://dev.ckeditor.com/ticket/10268): "Show Blocks" does not recover after switching to source view.
+* [#9995](http://dev.ckeditor.com/ticket/9995): HTML code in `textarea` should not be modified by the `htmlDataProcessor`.
+* [#10320](http://dev.ckeditor.com/ticket/10320): Justify plugin should add elements to the ACF based on current Enter mode.
+* [#10260](http://dev.ckeditor.com/ticket/10260): Fixed: Advanced Content Filter blocks `tabSpaces`. Unified `data-cke-*` attributes filtering.
+* [#10315](http://dev.ckeditor.com/ticket/10315): [Webkit] Undo manager should not record snapshots after a filling character was added/removed.
+* [#10291](http://dev.ckeditor.com/ticket/10291): [Webkit] Space after a filling character should be secured.
+* [#10330](http://dev.ckeditor.com/ticket/10330): [Webkit] The filling character is not removed on `keydown` in specific cases.
+* [#10285](http://dev.ckeditor.com/ticket/10285): Fixed: Styled text pasted from MS Word causes an infinite loop.
+* [#10131](http://dev.ckeditor.com/ticket/10131): Fixed: `undoManager#update` does not refresh the command state.
+* [#10337](http://dev.ckeditor.com/ticket/10337): Fixed: Unable to remove `<s>` using `removeformat`.
+
 ## CKEditor 4.1
 
 * [#10192](http://dev.ckeditor.com/ticket/10192): Closing lists with Enter key does not work with Advanced Content Filter in several cases.

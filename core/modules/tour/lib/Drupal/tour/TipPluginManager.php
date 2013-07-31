@@ -32,7 +32,7 @@ class TipPluginManager extends DefaultPluginManager {
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
     $annotation_namespaces = array('Drupal\tour\Annotation' => $namespaces['Drupal\tour']);
-    parent::__construct('tour/tip', $namespaces, $annotation_namespaces, 'Drupal\tour\Annotation\Tip');
+    parent::__construct('Plugin/tour/tip', $namespaces, $annotation_namespaces, 'Drupal\tour\Annotation\Tip');
 
     $this->alterInfo($module_handler, 'tour_tips_info');
     $this->setCacheBackend($cache_backend, $language_manager, 'tour');

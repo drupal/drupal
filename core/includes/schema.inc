@@ -81,7 +81,7 @@ function drupal_get_complete_schema($rebuild = FALSE) {
 
       require_once __DIR__ . '/common.inc';
       // Invoke hook_schema for all modules.
-      foreach (module_implements('schema') as $module) {
+      foreach (Drupal::moduleHandler()->getImplementations('schema') as $module) {
         // Cast the result of hook_schema() to an array, as a NULL return value
         // would cause array_merge() to set the $schema variable to NULL as well.
         // That would break modules which use $schema further down the line.

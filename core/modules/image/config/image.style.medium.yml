@@ -2,11 +2,11 @@ name: medium
 label: 'Medium (220x220)'
 effects:
   bddf0d06-42f9-4c75-a700-a33cafa25ea0:
-    name: image_scale
+    id: image_scale
     data:
       width: '220'
       height: '220'
       upscale: '1'
     weight: '0'
-    ieid: bddf0d06-42f9-4c75-a700-a33cafa25ea0
+    uuid: bddf0d06-42f9-4c75-a700-a33cafa25ea0
 langcode: en

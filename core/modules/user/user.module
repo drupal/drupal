@@ -258,12 +258,7 @@ function user_field_extra_fields() {
  * @see \Drupal\Core\Entity\Query\QueryInterface
  */
 function user_load_multiple(array $uids = NULL, $reset = FALSE) {
-  $entities = entity_load_multiple('user', $uids, $reset);
-  // Return BC-entities.
-  foreach ($entities as $id => $entity) {
-    $entities[$id] = $entity->getBCEntity();
-  }
-  return $entities;
+  return entity_load_multiple('user', $uids, $reset);
 }
 
 /**
@@ -291,8 +286,7 @@ function user_load_multiple(array $uids = NULL, $reset = FALSE) {
  * @see user_load_multiple()
  */
 function user_load($uid, $reset = FALSE) {
-  $user = entity_load('user', $uid, $reset);
-  return $user ? $user->getBCEntity() : NULL;
+  return entity_load('user', $uid, $reset);
 }
 
 /**
@@ -308,7 +302,7 @@ function user_load($uid, $reset = FALSE) {
  */
 function user_load_by_mail($mail) {
   $users = entity_load_multiple_by_properties('user', array('mail' => $mail));
-  return $users ? reset($users)->getBCEntity() : FALSE;
+  return $users ? reset($users) : FALSE;
 }
 
 /**
@@ -324,7 +318,7 @@ function user_load_by_mail($mail) {
  */
 function user_load_by_name($name) {
   $users = entity_load_multiple_by_properties('user', array('name' => $name));
-  return $users ? reset($users)->getBCEntity() : FALSE;
+  return $users ? reset($users) : FALSE;
 }
 
 /**
@@ -454,7 +448,7 @@ function user_access($string, AccountInterface $account = NULL) {
   if (!isset($account)) {
     // In the installer request session is not set, so we have to fall back
     // to the global $user. In all other cases the session key is preferred.
-    $account = Drupal::request()->attributes->get('account') ?: $user;
+    $account = Drupal::request()->attributes->get('_account') ?: $user;
   }
 
   return $account->hasPermission($string);
@@ -577,7 +571,7 @@ function user_user_view(UserInterface $account, EntityDisplay $display) {
     $account->content['member_for'] = array(
       '#type' => 'item',
       '#title' => t('Member for'),
-      '#markup' => format_interval(REQUEST_TIME - $account->created),
+      '#markup' => format_interval(REQUEST_TIME - $account->getCreatedTime()),
     );
   }
 }
@@ -604,7 +598,8 @@ function user_validate_current_pass(&$form, &$form_state) {
     // This validation only works for required textfields (like mail) or
     // form values like password_confirm that have their own validation
     // that prevent them from being empty if they are changed.
-    if ((strlen(trim($form_state['values'][$key])) > 0) && ($form_state['values'][$key] != $account->$key)) {
+    $current_value = $account->getPropertyDefinition($key) ? $account->get($key)->value : $account->$key;
+    if ((strlen(trim($form_state['values'][$key])) > 0) && ($form_state['values'][$key] != $current_value)) {
       $current_pass_failed = empty($form_state['values']['current_pass']) || !drupal_container()->get('password')->check($form_state['values']['current_pass'], $account);
       if ($current_pass_failed) {
         form_set_error('current_pass', t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => $name)));
@@ -681,8 +676,6 @@ function user_template_preprocess_default_variables_alter(&$variables) {
  * Modules that make any changes to variables like 'name' or 'extra' must ensure
  * that the final string is safe to include directly in the output by using
  * check_plain() or filter_xss().
- *
- * @see template_process_username()
  */
 function template_preprocess_username(&$variables) {
   $account = $variables['account'] ?: drupal_anonymous_user();
@@ -743,7 +736,6 @@ function template_preprocess_username(&$variables) {
  *     Drupal\Core\Template\Attribute class if not linking to the user's page.
  *
  * @see template_preprocess_username()
- * @see template_process_username()
  */
 function theme_username($variables) {
   if (isset($variables['link_path'])) {
@@ -858,10 +850,7 @@ function user_menu() {
   $items['admin/people/permissions'] = array(
     'title' => 'Permissions',
     'description' => 'Determine access to features by selecting permissions for roles.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_admin_permissions'),
-    'access arguments' => array('administer permissions'),
-    'file' => 'user.admin.inc',
+    'route_name' => 'user_admin_permissions',
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/people/roles'] = array(
@@ -1231,7 +1220,7 @@ function user_cancel_url($account, $options = array()) {
   $timestamp = REQUEST_TIME;
   $langcode = isset($options['langcode']) ? $options['langcode'] : $account->getPreferredLangcode();
   $url_options = array('absolute' => TRUE, 'language' => language_load($langcode));
-  return url("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->login), $url_options);
+  return url("user/" . $account->id() . "/cancel/confirm/$timestamp/" . user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime()), $url_options);
 }
 
 /**
@@ -1341,10 +1330,10 @@ function _user_cancel($edit, $account, $method) {
       if (!empty($edit['user_cancel_notify'])) {
         _user_mail_notify('status_blocked', $account);
       }
-      $account->status = 0;
+      $account->block();
       $account->save();
-      drupal_set_message(t('%name has been disabled.', array('%name' => $account->name)));
-      watchdog('user', 'Blocked user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
+      drupal_set_message(t('%name has been disabled.', array('%name' => $account->getUsername())));
+      watchdog('user', 'Blocked user: %name %email.', array('%name' => $account->getUsername(), '%email' => '<' . $account->getEmail() . '>'), WATCHDOG_NOTICE);
       break;
 
     case 'user_cancel_reassign':
@@ -1354,8 +1343,8 @@ function _user_cancel($edit, $account, $method) {
         _user_mail_notify('status_canceled', $account);
       }
       $account->delete();
-      drupal_set_message(t('%name has been deleted.', array('%name' => $account->name)));
-      watchdog('user', 'Deleted user: %name %email.', array('%name' => $account->name, '%email' => '<' . $account->mail . '>'), WATCHDOG_NOTICE);
+      drupal_set_message(t('%name has been deleted.', array('%name' => $account->getUsername())));
+      watchdog('user', 'Deleted user: %name %email.', array('%name' => $account->getUsername(), '%email' => '<' . $account->getEmail() . '>'), WATCHDOG_NOTICE);
       break;
   }
 
@@ -1650,7 +1639,7 @@ function user_role_load($rid) {
  */
 function user_permission_get_modules() {
   $permissions = array();
-  foreach (module_implements('permission') as $module) {
+  foreach (Drupal::moduleHandler()->getImplementations('permission') as $module) {
     $perms = module_invoke($module, 'permission');
     foreach ($perms as $key => $value) {
       $permissions[$key] = $module;
@@ -1755,7 +1744,7 @@ function user_multiple_cancel_confirm($form, &$form_state) {
       '#type' => 'hidden',
       '#value' => $uid,
       '#prefix' => '<li>',
-      '#suffix' => check_plain($account->name->value) . "</li>\n",
+      '#suffix' => check_plain($account->getUsername()) . "</li>\n",
     );
   }
 
@@ -1906,7 +1895,7 @@ function _user_mail_notify($op, $account, $langcode = NULL) {
     if (empty($site_mail)) {
       $site_mail = ini_get('sendmail_from');
     }
-    $mail = drupal_mail('user', $op, $account->mail, $langcode, $params, $site_mail);
+    $mail = drupal_mail('user', $op, $account->getEmail(), $langcode, $params, $site_mail);
     if ($op == 'register_pending_approval') {
       // If a user registered requiring admin approval, notify the admin, too.
       // We use the site default language for this.
@@ -1950,7 +1939,7 @@ function user_form_process_password_confirm($element) {
       'fair' => t('Fair'),
       'good' => t('Good'),
       'strong' => t('Strong'),
-      'username' => (isset($user->name) ? $user->name : ''),
+      'username' => $user->getUsername(),
     );
   }
 
@@ -2162,7 +2151,7 @@ function user_library_info() {
 function user_logout() {
   global $user;
 
-  watchdog('user', 'Session closed for %name.', array('%name' => $user->name));
+  watchdog('user', 'Session closed for %name.', array('%name' => $user->getUsername()));
 
   Drupal::moduleHandler()->invokeAll('user_logout', array($user));
 

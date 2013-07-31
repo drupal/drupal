@@ -10,6 +10,7 @@ namespace Drupal\entity_reference\Plugin\field\formatter;
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
 
 /**
@@ -17,7 +18,6 @@ use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
  *
  * @FieldFormatter(
  *   id = "entity_reference_label",
- *   module = "entity_reference",
  *   label = @Translation("Label"),
  *   description = @Translation("Display the label of the referenced entities."),
  *   field_types = {
@@ -55,14 +55,14 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, array $items) {
+  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
     // Remove un-accessible items.
     parent::viewElements($entity, $langcode, $items);
 
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      if ($entity = $item['entity']) {
+      if ($entity = $item->entity) {
         $label = $entity->label();
         // If the link is to be displayed and the entity has a uri,
         // display a link.

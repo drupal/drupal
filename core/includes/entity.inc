@@ -555,7 +555,7 @@ function entity_get_form(EntityInterface $entity, $operation = 'default', array 
  * so the builder function for such forms needs to implement the required
  * functionality instead of calling this function.
  */
-function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_state) {
+function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_state, array $options = array()) {
   $info = entity_get_info($entity_type);
 
   // Copy top-level form values that are not for fields to entity properties,
@@ -576,7 +576,7 @@ function entity_form_submit_build_entity($entity_type, $entity, $form, &$form_st
 
   // Copy field values to the entity.
   if ($info['fieldable']) {
-    field_attach_extract_form_values($entity, $form, $form_state);
+    field_attach_extract_form_values($entity, $form, $form_state, $options);
   }
 }
 

@@ -146,8 +146,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
 
         case 'mail':
           if ($comment->uid->target_id != 0) {
-            $account = user_load($comment->uid->target_id);
-            $mail = $account->mail;
+            $mail = $comment->uid->entity->getEmail();
           }
           else {
             $mail = $comment->mail->value;
@@ -244,7 +243,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
     }
 
     if (($author_tokens = $token_service->findwithPrefix($tokens, 'author')) && $account = $comment->uid->entity) {
-      $replacements += $token_service->generate('user', $author_tokens, array('user' => $account->getBCEntity()), $options);
+      $replacements += $token_service->generate('user', $author_tokens, array('user' => $account), $options);
     }
   }
   elseif ($type == 'entity' & !empty($data['entity'])) {

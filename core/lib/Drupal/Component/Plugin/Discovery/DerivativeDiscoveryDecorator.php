@@ -34,7 +34,6 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
    * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinition().
    */
   public function getDefinition($plugin_id) {
-
     list($base_plugin_id, $derivative_id) = $this->decodePluginId($plugin_id);
 
     $plugin_definition = $this->decorated->getDefinition($base_plugin_id);

@@ -293,12 +293,24 @@ services:
       - { name: route_filter }
   paramconverter_manager:
     class: Drupal\Core\ParamConverter\ParamConverterManager
+    calls:
+      - [setContainer, ['@service_container']]
     tags:
       - { name: route_enhancer }
+  paramconverter_subscriber:
+    class: Drupal\Core\EventSubscriber\ParamConverterSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@paramconverter_manager']
   paramconverter.entity:
     class: Drupal\Core\ParamConverter\EntityConverter
     tags:
       - { name: paramconverter }
+    arguments: ['@plugin.manager.entity']
+  route_subscriber.entity:
+    class: Drupal\Core\EventSubscriber\EntityRouteAlterSubscriber
+    tags:
+      - { name: event_subscriber }
     arguments: ['@plugin.manager.entity']
   reverse_proxy_subscriber:
     class: Drupal\Core\EventSubscriber\ReverseProxySubscriber

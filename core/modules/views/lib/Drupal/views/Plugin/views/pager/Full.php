@@ -19,7 +19,9 @@ use Drupal\Core\Annotation\Translation;
  *   id = "full",
  *   title = @Translation("Paged output, full pager"),
  *   short_title = @Translation("Full"),
- *   help = @Translation("Paged output, full Drupal style")
+ *   help = @Translation("Paged output, full Drupal style"),
+ *   theme = "pager",
+ *   register_theme = FALSE
  * )
  */
 class Full extends SqlBase {
@@ -90,7 +92,7 @@ class Full extends SqlBase {
       4 => $this->options['tags']['last'],
     );
     return array(
-      '#theme' => $this->view->buildThemeFunctions('pager'),
+      '#theme' => $this->themeFunctions(),
       '#tags' => $tags,
       '#element' => $this->options['id'],
       '#parameters' => $input,

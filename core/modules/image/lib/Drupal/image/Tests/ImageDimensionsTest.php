@@ -59,7 +59,7 @@ class ImageDimensionsTest extends WebTestBase {
 
     // Scale an image that is wider than it is high.
     $effect = array(
-      'name' => 'image_scale',
+      'id' => 'image_scale',
       'data' => array(
         'width' => 120,
         'height' => 90,
@@ -68,7 +68,7 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 0,
     );
 
-    image_effect_save($style, $effect);
+    $style->saveImageEffect($effect);
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" width="120" height="60" alt="" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -81,7 +81,7 @@ class ImageDimensionsTest extends WebTestBase {
 
     // Rotate 90 degrees anticlockwise.
     $effect = array(
-      'name' => 'image_rotate',
+      'id' => 'image_rotate',
       'data' => array(
         'degrees' => -90,
         'random' => FALSE,
@@ -89,7 +89,7 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 1,
     );
 
-    image_effect_save($style, $effect);
+    $style->saveImageEffect($effect);
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" width="60" height="120" alt="" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -102,7 +102,7 @@ class ImageDimensionsTest extends WebTestBase {
 
     // Scale an image that is higher than it is wide (rotated by previous effect).
     $effect = array(
-      'name' => 'image_scale',
+      'id' => 'image_scale',
       'data' => array(
         'width' => 120,
         'height' => 90,
@@ -111,7 +111,7 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 2,
     );
 
-    image_effect_save($style, $effect);
+    $style->saveImageEffect($effect);
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" width="45" height="90" alt="" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -124,7 +124,7 @@ class ImageDimensionsTest extends WebTestBase {
 
     // Test upscale disabled.
     $effect = array(
-      'name' => 'image_scale',
+      'id' => 'image_scale',
       'data' => array(
         'width' => 400,
         'height' => 200,
@@ -133,7 +133,7 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 3,
     );
 
-    image_effect_save($style, $effect);
+    $style->saveImageEffect($effect);
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" width="45" height="90" alt="" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -146,12 +146,12 @@ class ImageDimensionsTest extends WebTestBase {
 
     // Add a desaturate effect.
     $effect = array(
-      'name' => 'image_desaturate',
+      'id' => 'image_desaturate',
       'data' => array(),
       'weight' => 4,
     );
 
-    image_effect_save($style, $effect);
+    $style->saveImageEffect($effect);
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" width="45" height="90" alt="" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -164,7 +164,7 @@ class ImageDimensionsTest extends WebTestBase {
 
     // Add a random rotate effect.
     $effect = array(
-      'name' => 'image_rotate',
+      'id' => 'image_rotate',
       'data' => array(
         'degrees' => 180,
         'random' => TRUE,
@@ -172,7 +172,7 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 5,
     );
 
-    image_effect_save($style, $effect);
+    $style->saveImageEffect($effect);
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" alt="" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -183,7 +183,7 @@ class ImageDimensionsTest extends WebTestBase {
 
     // Add a crop effect.
     $effect = array(
-      'name' => 'image_crop',
+      'id' => 'image_crop',
       'data' => array(
         'width' => 30,
         'height' => 30,
@@ -192,7 +192,7 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 6,
     );
 
-    image_effect_save($style, $effect);
+    $style->saveImageEffect($effect);
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" width="30" height="30" alt="" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -205,7 +205,7 @@ class ImageDimensionsTest extends WebTestBase {
 
     // Rotate to a non-multiple of 90 degrees.
     $effect = array(
-      'name' => 'image_rotate',
+      'id' => 'image_rotate',
       'data' => array(
         'degrees' => 57,
         'random' => FALSE,
@@ -213,7 +213,7 @@ class ImageDimensionsTest extends WebTestBase {
       'weight' => 7,
     );
 
-    image_effect_save($style, $effect);
+    $effect_id = $style->saveImageEffect($effect);
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" alt="" />');
     $this->assertFalse(file_exists($generated_uri), 'Generated file does not exist.');
@@ -221,17 +221,18 @@ class ImageDimensionsTest extends WebTestBase {
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
 
-    image_effect_delete($style, $effect);
+    $effect_plugin = $style->getEffect($effect_id);
+    $style->deleteImageEffect($effect_plugin);
 
     // Ensure that an effect with no dimensions callback unsets the dimensions.
     // This ensures compatibility with 7.0 contrib modules.
     $effect = array(
-      'name' => 'image_module_test_null',
+      'id' => 'image_module_test_null',
       'data' => array(),
       'weight' => 8,
     );
 
-    image_effect_save($style, $effect);
+    $style->saveImageEffect($effect);
     $img_tag = theme_image_style($variables);
     $this->assertEqual($img_tag, '<img class="image-style-test" src="' . $url . '" alt="" />');
   }

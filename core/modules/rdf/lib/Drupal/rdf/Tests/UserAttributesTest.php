@@ -73,7 +73,7 @@ class UserAttributesTest extends WebTestBase {
     // User name.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $user2->name,
+      'value' => $user2->getUsername(),
     );
     $this->assertTrue($graph->hasProperty($account_uri, 'http://xmlns.com/foaf/0.1/name', $expected_value), 'User name found in RDF output (foaf:name).');
 
@@ -100,7 +100,7 @@ class UserAttributesTest extends WebTestBase {
     // User name.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $user2->name,
+      'value' => $user2->getUsername(),
     );
     $this->assertTrue($graph->hasProperty($account_uri, 'http://xmlns.com/foaf/0.1/name', $expected_value), 'User name found in RDF output (foaf:name).');
   }

@@ -132,7 +132,7 @@ class UserLoginForm implements FormInterface, ControllerInterface {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $account = $this->storageController->load($form_state['uid'])->getBCEntity();
+    $account = $this->storageController->load($form_state['uid']);
     $form_state['redirect'] = 'user/' . $account->id();
 
     user_login_finalize($account);

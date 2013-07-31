@@ -29,7 +29,7 @@ class PluginUIManager extends PluginManagerBase {
    *   keyed by the corresponding namespace to look for plugin implementations,
    */
   public function __construct(\Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery('PluginUI', $namespaces);
+    $this->discovery = new AnnotatedClassDiscovery('Plugin/PluginUI', $namespaces);
     $this->discovery = new DerivativeDiscoveryDecorator($this->discovery);
     $this->discovery = new AlterDecorator($this->discovery, 'plugin_ui');
     $this->discovery = new CacheDecorator($this->discovery, 'plugin_ui');
