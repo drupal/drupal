@@ -167,7 +167,10 @@ class NodeStorageController extends DatabaseStorageControllerNG {
       'label' => t('User ID'),
       'description' => t('The user ID of the node author.'),
       'type' => 'entity_reference_field',
-      'settings' => array('target_type' => 'user'),
+      'settings' => array(
+        'target_type' => 'user',
+        'default_value' => 0,
+      ),
     );
     $properties['status'] = array(
       'label' => t('Publishing status'),

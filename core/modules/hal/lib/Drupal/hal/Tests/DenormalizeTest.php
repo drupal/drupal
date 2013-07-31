@@ -180,4 +180,33 @@ class DenormalizeTest extends NormalizerTestBase {
     $this->assertEqual($expected_value_default, $denormalized->get('field_test_translatable_text')->getValue(), 'Values in the default language are properly handled for a translatable field.');
     $this->assertEqual($expected_value_de, $denormalized->getTranslation('de')->get('field_test_translatable_text')->getValue(), 'Values in a translation language are properly handled for a translatable field.');
   }
+
+  /**
+   * Verifies that only specified properties get populated in the PATCH context.
+   */
+  public function testPatchDenormailzation() {
+    $data = array(
+      '_links' => array(
+        'type' => array(
+          'href' => url('rest/type/entity_test/entity_test', array('absolute' => TRUE)),
+        ),
+      ),
+      'field_test_text' => array(
+        array(
+          'value' => $this->randomName(),
+          'format' => 'full_html',
+        ),
+      ),
+    );
+    $denormalized = $this->serializer->denormalize($data, $this->entityClass, $this->format, array('request_method' => 'patch'));
+    // Check that the one field got populated as expected.
+    $this->assertEqual($data['field_test_text'], $denormalized->get('field_test_text')->getValue());
+    // Unset that field so that now all fields are NULL.
+    $denormalized->set('field_test_text', NULL);
+    // Assert that all fields are NULL and not set to default values. Example:
+    // the UUID field is NULL and not initialized as usual.
+    foreach ($denormalized as $field_name => $field) {
+      $this->assertFalse(isset($denormalized->$field_name), "$field_name is not set.");
+    }
+  }
 }

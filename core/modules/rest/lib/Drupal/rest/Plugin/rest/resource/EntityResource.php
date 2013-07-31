@@ -142,24 +142,21 @@ class EntityResource extends ResourceBase {
     if (!$original_entity->access('update')) {
       throw new AccessDeniedHttpException();
     }
-    $info = $original_entity->entityInfo();
-    // Make sure that the entity ID is the one provided in the URL.
-    $entity->{$info['entity_keys']['id']} = $id;
 
     // Overwrite the received properties.
     foreach ($entity as $field_name => $field) {
       if (isset($entity->{$field_name})) {
         if (empty($entity->{$field_name})) {
-          if (!$original_entity->{$field_name}->access('delete')) {
+          if (!$original_entity->get($field_name)->access('delete')) {
             throw new AccessDeniedHttpException(t('Access denied on deleting field @field.', array('@field' => $field_name)));
           }
         }
         else {
-          if (!$original_entity->{$field_name}->access('update')) {
+          if (!$original_entity->get($field_name)->access('update')) {
             throw new AccessDeniedHttpException(t('Access denied on updating field @field.', array('@field' => $field_name)));
           }
         }
-        $original_entity->{$field_name} = $field;
+        $original_entity->set($field_name, $field->getValue());
       }
     }
     try {

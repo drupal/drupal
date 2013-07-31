@@ -65,8 +65,18 @@ class UpdateTest extends RESTTestBase {
     $entity = entity_load($entity_type, $entity->id(), TRUE);
     $this->assertEqual($entity->field_test_text->value, $patch_entity->field_test_text->value, 'Field was successfully updated.');
 
-    // Try to empty a field.
+    // Make sure that the field does not get deleted if it is not present in the
+    // PATCH request.
     $normalized = $serializer->normalize($patch_entity, $this->defaultFormat);
+    unset($normalized['field_test_text']);
+    $serialized = $serializer->encode($normalized, $this->defaultFormat);
+    $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->assertResponse(204);
+
+    $entity = entity_load($entity_type, $entity->id(), TRUE);
+    $this->assertNotNull($entity->field_test_text->value. 'Test field has not been deleted.');
+
+    // Try to empty a field.
     $normalized['field_test_text'] = array();
     $serialized = $serializer->encode($normalized, $this->defaultFormat);
 
