@@ -39,7 +39,7 @@ class RawTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $request = new Request(array(), array(), array('system_path' => 'test/example'));
+    $request = new Request(array(), array(), array('_system_path' => 'test/example'));
     $alias_manager = $this->getMock('Drupal\Core\Path\AliasManagerInterface');
     $alias_manager->expects($this->never())
       ->method('getPathAlias');

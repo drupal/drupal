@@ -3169,7 +3169,7 @@ function drupal_page_set_cache(Response $response, Request $request) {
     $cache = (object) array(
       'cid' => $base_root . $request->getRequestUri(),
       'data' => array(
-        'path' => $request->attributes->get('system_path'),
+        'path' => $request->attributes->get('_system_path'),
         'body' => $response->getContent(),
         'title' => drupal_get_title(),
         'headers' => array(),

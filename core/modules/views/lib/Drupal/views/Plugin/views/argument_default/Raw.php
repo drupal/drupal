@@ -101,7 +101,7 @@ class Raw extends ArgumentDefaultPluginBase {
   }
 
   public function getArgument() {
-    $path = $this->request->attributes->get('system_path');
+    $path = $this->request->attributes->get('_system_path');
     if ($this->options['use_alias']) {
       $path = $this->aliasManager->getPathAlias($path);
     }

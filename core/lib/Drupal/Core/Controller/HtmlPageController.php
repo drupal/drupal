@@ -55,7 +55,7 @@ class HtmlPageController {
 
     // We need to clean off the derived information and such so that the
     // subrequest can be processed properly without leaking data through.
-    $attributes->remove('system_path');
+    $attributes->remove('_system_path');
     $attributes->remove('_content');
 
     $response = $this->httpKernel->forward($controller, $attributes->all(), $request->query->all());

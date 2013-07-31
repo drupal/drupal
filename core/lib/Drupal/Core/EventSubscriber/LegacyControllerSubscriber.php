@@ -37,7 +37,7 @@ class LegacyControllerSubscriber implements EventSubscriberInterface {
    */
   public function onKernelControllerLegacy(FilterControllerEvent $event) {
     $request = $event->getRequest();
-    $router_item = $request->attributes->get('drupal_menu_item');
+    $router_item = $request->attributes->get('_drupal_menu_item');
     $controller = $event->getController();
 
     // This BC logic applies only to functions. Otherwise, skip it.

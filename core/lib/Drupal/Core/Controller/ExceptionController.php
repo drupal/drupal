@@ -81,7 +81,7 @@ class ExceptionController extends ContainerAware {
    *   The request object that triggered this exception.
    */
   public function on403Html(FlattenException $exception, Request $request) {
-    $system_path = $request->attributes->get('system_path');
+    $system_path = $request->attributes->get('_system_path');
     watchdog('access denied', $system_path, NULL, WATCHDOG_WARNING);
 
     $path = $this->container->get('path.alias_manager')->getSystemPath(config('system.site')->get('page.403'));
@@ -136,7 +136,7 @@ class ExceptionController extends ContainerAware {
    *   The request object that triggered this exception.
    */
   public function on404Html(FlattenException $exception, Request $request) {
-    watchdog('page not found', check_plain($request->attributes->get('system_path')), NULL, WATCHDOG_WARNING);
+    watchdog('page not found', check_plain($request->attributes->get('_system_path')), NULL, WATCHDOG_WARNING);
 
     // Check for and return a fast 404 page if configured.
     $config = config('system.performance');
@@ -151,7 +151,7 @@ class ExceptionController extends ContainerAware {
       }
     }
 
-    $system_path = $request->attributes->get('system_path');
+    $system_path = $request->attributes->get('_system_path');
 
     // Keep old path for reference, and to allow forms to redirect to it.
     if (!isset($_GET['destination'])) {

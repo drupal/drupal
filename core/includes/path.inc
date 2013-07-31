@@ -83,7 +83,7 @@ function current_path() {
   // fallback code below, once the path alias logic has been figured out in
   // http://drupal.org/node/1269742.
   if (drupal_container()->isScopeActive('request')) {
-    $path = drupal_container()->get('request')->attributes->get('system_path');
+    $path = drupal_container()->get('request')->attributes->get('_system_path');
     if ($path !== NULL) {
       return $path;
     }

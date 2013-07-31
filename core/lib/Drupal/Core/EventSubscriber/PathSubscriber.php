@@ -50,7 +50,7 @@ class PathSubscriber extends PathListenerBase implements EventSubscriberInterfac
     $request = $event->getRequest();
     $path = trim($request->getPathInfo(), '/');
     $path = $this->pathProcessor->processInbound($path, $request);
-    $request->attributes->set('system_path', $path);
+    $request->attributes->set('_system_path', $path);
     // Also set an attribute that indicates whether we are using clean URLs.
     $clean_urls = TRUE;
     $base_url = $request->getBaseUrl();

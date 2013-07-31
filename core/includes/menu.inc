@@ -966,7 +966,7 @@ function _menu_link_translate(&$item, $translate = FALSE) {
  */
 function menu_item_route_access(Route $route, $href, &$map) {
   $request = Request::create('/' . $href);
-  $request->attributes->set('system_path', $href);
+  $request->attributes->set('_system_path', $href);
   // Attempt to match this path to provide a fully built request to the
   // access checker.
   try {
@@ -2629,7 +2629,7 @@ function menu_get_active_breadcrumb() {
 
     // Don't show a link to the current page in the breadcrumb trail.
     $end = end($active_trail);
-    if (Drupal::request()->attributes->get('system_path') == $end['href']) {
+    if (Drupal::request()->attributes->get('_system_path') == $end['href']) {
       array_pop($active_trail);
     }
 

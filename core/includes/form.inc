@@ -1344,7 +1344,7 @@ function drupal_redirect_form($form_state) {
         }
       }
     }
-    $url = url(Drupal::request()->attributes->get('system_path'), array(
+    $url = url(Drupal::request()->attributes->get('_system_path'), array(
       'query' => Drupal::request()->query->all(),
       'absolute' => TRUE,
     ));

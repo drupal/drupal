@@ -41,7 +41,7 @@ class AjaxController extends ContainerAware {
 
     // We need to clean up the derived information and such so that the
     // subrequest can be processed properly without leaking data through.
-    $attributes->remove('system_path');
+    $attributes->remove('_system_path');
     $attributes->remove('_content');
     $attributes->remove('_legacy');
 

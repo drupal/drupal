@@ -338,7 +338,7 @@ class RouteProviderTest extends UnitTestBase {
   }
 
   /**
-   * Confirms that system_path attribute overrides request path.
+   * Confirms that _system_path attribute overrides request path.
    */
   function testSystemPathMatch() {
     $connection = Database::getConnection();
@@ -351,7 +351,7 @@ class RouteProviderTest extends UnitTestBase {
     $dumper->dump();
 
     $request = Request::create('/path/one', 'GET');
-    $request->attributes->set('system_path', 'path/two');
+    $request->attributes->set('_system_path', 'path/two');
 
     $routes_by_pattern = $provider->getRoutesByPattern('/path/two');
     $routes = $provider->getRouteCollectionForRequest($request);
