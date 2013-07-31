@@ -51,5 +51,15 @@ class FormValuesTest extends AjaxTestBase {
       $expected = new DataCommand('#ajax_checkbox_value', 'form_state_value_select', (int) $item);
       $this->assertCommand($commands, $expected->render(), 'Verification of AJAX form values from a checkbox issued with a correct value.');
     }
+
+    // Verify that AJAX elements with invalid callbacks return error code 500.
+    foreach (array('null', 'empty', 'nonexistent') as $key) {
+      $element_name = 'select_' . $key . '_callback';
+      $edit = array(
+        $element_name => 'red',
+      );
+      $commands = $this->drupalPostAJAX('ajax_forms_test_get_form', $edit, $element_name);
+      $this->assertResponse(500);
+    }
   }
 }

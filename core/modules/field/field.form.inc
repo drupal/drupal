@@ -129,8 +129,8 @@ function field_form_element_after_build($element, &$form_state) {
  * This handler is run regardless of whether JS is enabled or not. It makes
  * changes to the form state. If the button was clicked with JS disabled, then
  * the page is reloaded with the complete rebuilt form. If the button was
- * clicked with JS enabled, then ajax_form_callback() calls field_add_more_js()
- * to return just the changed part of the form.
+ * clicked with JS enabled, then Drupal\system\FormAjaxController::content()
+ * calls field_add_more_js() to return just the changed part of the form.
  */
 function field_add_more_submit($form, &$form_state) {
   $button = $form_state['triggering_element'];

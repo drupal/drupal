@@ -72,6 +72,22 @@ function ajax_forms_test_simple_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => t('submit'),
   );
+
+  // This is for testing invalid callbacks that should return a 500 error in
+  // \Drupal\system\FormAjaxController::content().
+  $invalid_callbacks = array(
+    'null' => NULL,
+    'empty' => '',
+    'nonexistent' => 'some_function_that_does_not_exist',
+  );
+  foreach ($invalid_callbacks as $key => $value) {
+    $form['select_' . $key . '_callback'] = array(
+      '#type' => 'select',
+      '#options' => array('red' => 'red'),
+      '#ajax' => array('callback' => $value),
+    );
+  }
+
   return $form;
 }
 

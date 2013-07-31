@@ -23,9 +23,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  * forms, it can be used with the #ajax property.
  * The #ajax property can be used to bind events to the Ajax framework. By
  * default, #ajax uses 'system/ajax' as its path for submission and thus calls
- * ajax_form_callback() and a defined #ajax['callback'] function.
- * However, you may optionally specify a different path to request or a
- * different callback function to invoke, which can return updated HTML or can
+ * \Drupal\system\FormAjaxController::content() and a defined #ajax['callback']
+ * function. However, you may optionally specify a different path to request or
+ * a different callback function to invoke, which can return updated HTML or can
  * also return a richer set of
  * @link ajax_commands Ajax framework commands @endlink.
  *
@@ -38,17 +38,18 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  *     that element.
  *   - The browser submits an HTTP POST request to the 'system/ajax' Drupal
  *     path.
- *   - The menu page callback for 'system/ajax', ajax_form_callback(), calls
- *     drupal_process_form() to process the form submission and rebuild the
- *     form if necessary. The form is processed in much the same way as if it
- *     were submitted without Ajax, with the same #process functions and
- *     validation and submission handlers called in either case, making it easy
- *     to create Ajax-enabled forms that degrade gracefully when JavaScript is
- *     disabled.
- *   - After form processing is complete, ajax_form_callback() calls the
- *     function named by #ajax['callback'], which returns the form element that
- *     has been updated and needs to be returned to the browser, or
- *     alternatively, an array of custom Ajax commands.
+ *   - The controller for the route '/system/ajax',
+ *     \Drupal\system\FormAjaxController::content(), calls drupal_process_form()
+ *     to process the form submission and rebuild the form if necessary. The
+ *     form is processed in much the same way as if it were submitted without
+ *     Ajax, with the same #process functions and validation and submission
+ *     handlers called in either case, making it easy to create Ajax-enabled
+ *     forms that degrade gracefully when JavaScript is disabled.
+ *   - After form processing is complete,
+ *     \Drupal\system\FormAjaxController::content() calls the function named by
+ *     #ajax['callback'], which returns the form element that has been updated
+ *     and needs to be returned to the browser, or alternatively, an array of
+ *     custom Ajax commands.
  *   - The array is serialized using ajax_render() and sent to the browser.
  *   - The browser unserializes the returned JSON string into an array of
  *     command objects and executes each command, resulting in the old page
@@ -125,10 +126,10 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  * - #ajax['path']: The menu path to use for the request. This is often omitted
  *   and the default is used. This path should map
  *   to a menu page callback that returns data using ajax_render(). Defaults to
- *   'system/ajax', which invokes ajax_form_callback(), eventually calling
- *   the function named in #ajax['callback']. If you use a custom
- *   path, you must set up the menu entry and handle the entire callback in your
- *   own code.
+ *   'system/ajax', which invokes \Drupal\system\FormAjaxController::content(),
+ *   eventually calling the function named in #ajax['callback']. If you use a
+ *   custom path, you must set up the menu entry and handle the entire callback
+ *   in your own code.
  * - #ajax['wrapper']: The CSS ID of the area to be replaced by the content
  *   returned by the #ajax['callback'] function. The content returned from
  *   the callback will replace the entire element named by #ajax['wrapper'].
@@ -299,88 +300,6 @@ function ajax_render($commands = array()) {
   drupal_alter('ajax_render', $commands);
 
   return drupal_json_encode($commands);
-}
-
-/**
- * Gets a form submitted via #ajax during an Ajax callback.
- *
- * This will load a form from the form cache used during Ajax operations. It
- * pulls the form info from $_POST.
- *
- * @return
- *   An array containing the $form and $form_state. Use the list() function
- *   to break these apart:
- *   @code
- *     list($form, $form_state, $form_id, $form_build_id) = ajax_get_form();
- *   @endcode
- */
-function ajax_get_form() {
-  $form_state = form_state_defaults();
-
-  $form_build_id = $_POST['form_build_id'];
-
-  // Get the form from the cache.
-  $form = form_get_cache($form_build_id, $form_state);
-  if (!$form) {
-    // If $form cannot be loaded from the cache, the form_build_id in $_POST
-    // must be invalid, which means that someone performed a POST request onto
-    // system/ajax without actually viewing the concerned form in the browser.
-    // This is likely a hacking attempt as it never happens under normal
-    // circumstances, so we just do nothing.
-    watchdog('ajax', 'Invalid form POST data.', array(), WATCHDOG_WARNING);
-    throw new BadRequestHttpException();
-  }
-
-  // Since some of the submit handlers are run, redirects need to be disabled.
-  $form_state['no_redirect'] = TRUE;
-
-  // When a form is rebuilt after Ajax processing, its #build_id and #action
-  // should not change.
-  // @see drupal_rebuild_form()
-  $form_state['rebuild_info']['copy']['#build_id'] = TRUE;
-  $form_state['rebuild_info']['copy']['#action'] = TRUE;
-
-  // The form needs to be processed; prepare for that by setting a few internal
-  // variables.
-  $form_state['input'] = $_POST;
-  $form_id = $form['#form_id'];
-
-  return array($form, $form_state, $form_id, $form_build_id);
-}
-
-/**
- * Page callback: Handles Ajax requests for the #ajax Form API property.
- *
- * This rebuilds the form from cache and invokes the defined #ajax['callback']
- * to return an Ajax command structure for JavaScript. In case no 'callback' has
- * been defined, nothing will happen.
- *
- * The Form API #ajax property can be set both for buttons and other input
- * elements.
- *
- * This function is also the canonical example of how to implement
- * #ajax['path']. If processing is required that cannot be accomplished with
- * a callback, re-implement this function and set #ajax['path'] to the
- * enhanced function.
- *
- * @see system_menu()
- */
-function ajax_form_callback() {
-  list($form, $form_state) = ajax_get_form();
-  drupal_process_form($form['#form_id'], $form, $form_state);
-
-  // We need to return the part of the form (or some other content) that needs
-  // to be re-rendered so the browser can update the page with changed content.
-  // Since this is the generic menu callback used by many Ajax elements, it is
-  // up to the #ajax['callback'] function of the element (may or may not be a
-  // button) that triggered the Ajax request to determine what needs to be
-  // rendered.
-  if (!empty($form_state['triggering_element'])) {
-    $callback = $form_state['triggering_element']['#ajax']['callback'];
-  }
-  if (!empty($callback) && is_callable($callback)) {
-    return call_user_func_array($callback, array(&$form, &$form_state));
-  }
 }
 
 /**

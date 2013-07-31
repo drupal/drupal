@@ -428,12 +428,19 @@ function file_field_widget_process($element, &$form_state, $form) {
   // file, the entire group of file fields is updated together.
   if ($element['#cardinality'] != 1) {
     $parents = array_slice($element['#array_parents'], 0, -1);
-    $new_path = 'file/ajax/' . implode('/', $parents) . '/' . $form['form_build_id']['#value'];
+    $new_path = 'file/ajax';
+    $new_options = array(
+      'query' => array(
+        'element_parents' => implode('/', $parents),
+        'form_build_id' => $form['form_build_id']['#value'],
+      ),
+    );
     $field_element = NestedArray::getValue($form, $parents);
     $new_wrapper = $field_element['#id'] . '-ajax-wrapper';
     foreach (element_children($element) as $key) {
       if (isset($element[$key]['#ajax'])) {
         $element[$key]['#ajax']['path'] = $new_path;
+        $element[$key]['#ajax']['options'] = $new_options;
         $element[$key]['#ajax']['wrapper'] = $new_wrapper;
       }
     }
