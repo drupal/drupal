@@ -5,8 +5,6 @@
  * Defines simple link field types.
  */
 
-use Drupal\Core\Entity\EntityInterface;
-
 /**
  * Implements hook_help().
  */
@@ -17,58 +15,6 @@ function link_help($path, $arg) {
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('The Link module defines a simple link field type for the Field module. Links are external URLs, can have an optional link text for each link, and they can be formatted when displayed. See the <a href="@field-help">Field module help page</a> for more information about fields.', array('@field-help' => url('admin/help/field'))) . '</p>';
       return $output;
-  }
-}
-
-/**
- * Implements hook_field_info().
- */
-function link_field_info() {
-  $types['link'] = array(
-    'label' => t('Link'),
-    'description' => t('Stores a URL string, optional varchar link text, and optional blob of attributes to assemble a link.'),
-    'instance_settings' => array(
-      'title' => DRUPAL_OPTIONAL,
-    ),
-    'default_widget' => 'link_default',
-    'default_formatter' => 'link',
-    'class' => '\Drupal\link\Type\LinkItem',
-  );
-  return $types;
-}
-
-/**
- * Implements hook_field_instance_settings_form().
- */
-function link_field_instance_settings_form($field, $instance) {
-  $form['title'] = array(
-    '#type' => 'radios',
-    '#title' => t('Allow link text'),
-    '#default_value' => isset($instance['settings']['title']) ? $instance['settings']['title'] : DRUPAL_OPTIONAL,
-    '#options' => array(
-      DRUPAL_DISABLED => t('Disabled'),
-      DRUPAL_OPTIONAL => t('Optional'),
-      DRUPAL_REQUIRED => t('Required'),
-    ),
-  );
-  return $form;
-}
-
-/**
- * Implements hook_field_is_empty().
- */
-function link_field_is_empty($item, $field_type) {
-  return !isset($item['url']) || $item['url'] === '';
-}
-
-/**
- * Implements hook_field_presave().
- */
-function link_field_presave(EntityInterface $entity, $field, $instance, $langcode, &$items) {
-  foreach ($items as $delta => &$item) {
-    // Trim any spaces around the URL and link text.
-    $item['url'] = trim($item['url']);
-    $item['title'] = trim($item['title']);
   }
 }
 
