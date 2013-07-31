@@ -40,16 +40,85 @@ class BulkFormTest extends NodeTestBase {
     $elements = $this->xpath('//select[@id="edit-action"]//option');
     $this->assertIdentical(count($elements), 8, 'All node operations are found.');
 
-    // Block a node using the bulk form.
-    $this->assertTrue($node->status);
+    // Unpublish a node using the bulk form.
+    $this->assertTrue($node->isPublished(), 'Node is initially published');
     $edit = array(
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_unpublish_action',
     );
     $this->drupalPost(NULL, $edit, t('Apply'));
-    // Re-load the node and check their status.
-    $node = entity_load('node', $node->id());
-    $this->assertFalse($node->status);
+    // Re-load the node and check the status.
+    $node = entity_load('node', $node->id(), TRUE);
+    $this->assertFalse($node->isPublished(), 'Node has been unpublished');
+
+    // Publish action.
+    $edit = array(
+      'node_bulk_form[0]' => TRUE,
+      'action' => 'node_publish_action',
+    );
+    $this->drupalPost(NULL, $edit, t('Apply'));
+    // Re-load the node and check the status.
+    $node = entity_load('node', $node->id(), TRUE);
+    $this->assertTrue($node->isPublished(), 'Node has been published');
+
+    // Make sticky action.
+    $node->setPublished(FALSE);
+    $node->save();
+    $this->assertFalse($node->isSticky(), 'Node is not sticky');
+    $edit = array(
+      'node_bulk_form[0]' => TRUE,
+      'action' => 'node_make_sticky_action',
+    );
+    $this->drupalPost(NULL, $edit, t('Apply'));
+    // Re-load the node and check the status and sticky flag.
+    $node = entity_load('node', $node->id(), TRUE);
+    $this->assertTrue($node->isPublished(), 'Node has been published');
+    $this->assertTrue($node->isSticky(), 'Node has been made sticky');
+
+    // Make unsticky action.
+    $edit = array(
+      'node_bulk_form[0]' => TRUE,
+      'action' => 'node_make_unsticky_action',
+    );
+    $this->drupalPost(NULL, $edit, t('Apply'));
+    // Re-load the node and check the sticky flag.
+    $node = entity_load('node', $node->id(), TRUE);
+    $this->assertFalse($node->isSticky(), 'Node is not sticky anymore');
+
+    // Promote to front page.
+    $node->setPublished(FALSE);
+    $node->save();
+    $this->assertFalse($node->isPromoted(), 'Node is not promoted to the front page');
+    $edit = array(
+      'node_bulk_form[0]' => TRUE,
+      'action' => 'node_promote_action',
+    );
+    $this->drupalPost(NULL, $edit, t('Apply'));
+    // Re-load the node and check the status and promoted flag.
+    $node = entity_load('node', $node->id(), TRUE);
+    $this->assertTrue($node->isPublished(), 'Node has been published');
+    $this->assertTrue($node->isPromoted(), 'Node has been promoted to the front page');
+
+    // Demote from front page.
+    $edit = array(
+      'node_bulk_form[0]' => TRUE,
+      'action' => 'node_unpromote_action',
+    );
+    $this->drupalPost(NULL, $edit, t('Apply'));
+    // Re-load the node and check the promoted flag.
+    $node = entity_load('node', $node->id(), TRUE);
+    $this->assertFalse($node->isPromoted(), 'Node has been demoted');
+
+    // Delete node.
+    $edit = array(
+      'node_bulk_form[0]' => TRUE,
+      'action' => 'node_delete_action',
+    );
+    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->drupalPost(NULL, array(), t('Delete'));
+    // Re-load the node and check if it has been deleted.
+    $node = entity_load('node', $node->id(), TRUE);
+    $this->assertNull($node, 'Node has been deleted');
   }
 
 }
