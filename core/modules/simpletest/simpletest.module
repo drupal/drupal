@@ -726,6 +726,13 @@ function simpletest_phpunit_get_available_tests() {
   $test_suite = $configuration->getTestSuiteConfiguration(NULL);
   $test_classes = array();
   foreach ($test_suite AS $test) {
+    // PHPUnit returns a warning message if something is wrong with a test,
+    // throw an exception to avoid an error when trying to call getInfo() on
+    // this.
+    if ($test instanceof PHPUnit_Framework_Warning) {
+      throw new RuntimeException($test->getMessage());
+    }
+
     $name = get_class($test);
     if (!array_key_exists($name, $test_classes)) {
       $test_classes[$name] =  $test->getInfo();
