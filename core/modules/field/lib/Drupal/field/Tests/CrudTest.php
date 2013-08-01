@@ -154,6 +154,24 @@ class CrudTest extends FieldUnitTestBase {
   }
 
   /**
+   * Tests that an explicit schema can be provided on creation of a field.
+   *
+   * This behavior is needed to allow field creation within updates, since
+   * plugin classes (and thus the field type schema) cannot be accessed.
+   */
+  function testCreateFieldWithExplicitSchema() {
+    $field_definition = array(
+      'field_name' => 'field_2',
+      'type' => 'test_field',
+      'schema' => array(
+        'dummy' => 'foobar'
+      ),
+    );
+    $field = entity_create('field_entity', $field_definition);
+    $this->assertEqual($field->getSchema(), $field_definition['schema']);
+  }
+
+  /**
    * Test failure to create a field.
    */
   function testCreateFieldFail() {

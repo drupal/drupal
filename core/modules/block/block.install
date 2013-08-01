@@ -252,6 +252,34 @@ function block_update_8008() {
       'entity_types' => array('custom_block'),
       'module' => 'text',
       'cardinality' => 1,
+      'schema' => array(
+        'columns' => array(
+          'value' => array(
+            'type' => 'text',
+            'size' => 'big',
+            'not null' => FALSE,
+          ),
+          'summary' => array(
+            'type' => 'text',
+            'size' => 'big',
+            'not null' => FALSE,
+          ),
+          'format' => array(
+            'type' => 'varchar',
+            'length' => 255,
+            'not null' => FALSE,
+          ),
+        ),
+        'indexes' => array(
+          'format' => array('format'),
+        ),
+        'foreign keys' => array(
+          'format' => array(
+            'table' => 'filter_format',
+            'columns' => array('format' => 'format'),
+          ),
+        ),
+      ),
     );
     _update_8003_field_create_field($body_field);
 
