@@ -481,14 +481,14 @@ function overlay_set_mode($mode = NULL) {
       drupal_add_library('overlay', 'drupal.overlay.parent');
 
       // Allow modules to act upon overlay events.
-      module_invoke_all('overlay_parent_initialize');
+      Drupal::moduleHandler()->invokeAll('overlay_parent_initialize');
       break;
 
     case 'child':
       drupal_add_library('overlay', 'drupal.overlay.child');
 
       // Allow modules to act upon overlay events.
-      module_invoke_all('overlay_child_initialize');
+      Drupal::moduleHandler()->invokeAll('overlay_child_initialize');
       break;
   }
   return $overlay_mode;

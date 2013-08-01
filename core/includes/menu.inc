@@ -1776,7 +1776,7 @@ function menu_get_custom_theme($initialize = FALSE) {
     // First allow modules to dynamically set a custom theme for the current
     // page. Since we can only have one, the last module to return a valid
     // theme takes precedence.
-    $custom_themes = array_filter(module_invoke_all('custom_theme'), 'drupal_theme_access');
+    $custom_themes = array_filter(Drupal::moduleHandler()->invokeAll('custom_theme'), 'drupal_theme_access');
     if (!empty($custom_themes)) {
       $custom_theme = array_pop($custom_themes);
     }

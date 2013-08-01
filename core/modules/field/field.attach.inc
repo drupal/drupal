@@ -518,7 +518,8 @@ function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langc
   $form['#bundle'] = $entity->bundle();
 
   // Let other modules make changes to the form.
-  // Avoid module_invoke_all() to let parameters be taken by reference.
+  // Avoid \Drupal::moduleHandler()->invokeAll()
+  // to let parameters be taken by reference.
   foreach (Drupal::moduleHandler()->getImplementations('field_attach_form') as $module) {
     $function = $module . '_field_attach_form';
     $function($entity, $form, $form_state, $langcode);
@@ -690,7 +691,7 @@ function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $
 
     // Invoke hook_field_attach_load(): let other modules act on loading the
     // entity.
-    module_invoke_all('field_attach_load', $entity_type, $queried_entities, $age, $options);
+    Drupal::moduleHandler()->invokeAll('field_attach_load', $entity_type, $queried_entities, $age, $options);
 
     // Build cache data.
     if ($cache_write) {
@@ -823,7 +824,8 @@ function field_attach_extract_form_values(EntityInterface $entity, $form, &$form
   field_invoke_method('extractFormValues', _field_invoke_widget_target($form_display), $entity, $form, $form_state, $options);
 
   // Let other modules act on submitting the entity.
-  // Avoid module_invoke_all() to let $form_state be taken by reference.
+  // Avoid \Drupal::moduleHandler()->invokeAll()
+  // to let $form_state be taken by reference.
   foreach (Drupal::moduleHandler()->getImplementations('field_attach_extract_form_values') as $module) {
     $function = $module . 'field_attach_extract_form_values';
     $function($entity, $form, $form_state);

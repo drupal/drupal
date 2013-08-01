@@ -497,7 +497,7 @@ function language_save($language) {
   $language->is_new = $language_entity->isNew();
 
   // Let other modules modify $language before saved.
-  module_invoke_all('language_presave', $language);
+  Drupal::moduleHandler()->invokeAll('language_presave', array($language));
 
   // Assign language properties to language entity.
   $language_entity->label = isset($language->name) ? $language->name : '';
@@ -509,11 +509,11 @@ function language_save($language) {
   $language_entity->save();
   $t_args = array('%language' => $language->name, '%langcode' => $language->id);
   if ($language->is_new) {
-    module_invoke_all('language_insert', $language);
+    Drupal::moduleHandler()->invokeAll('language_insert', array($language));
     watchdog('language', 'The %language (%langcode) language has been created.', $t_args);
   }
   else {
-    module_invoke_all('language_update', $language);
+    Drupal::moduleHandler()->invokeAll('language_update', array($language));
     watchdog('language', 'The %language (%langcode) language has been updated.', $t_args);
   }
 
@@ -571,7 +571,7 @@ function language_delete($langcode) {
   if (isset($languages[$langcode]) && !$languages[$langcode]->locked) {
     $language = $languages[$langcode];
 
-    module_invoke_all('language_delete', $language);
+    Drupal::moduleHandler()->invokeAll('language_delete', array($language));
 
     // Remove the language.
     entity_delete_multiple('language_entity', array($language->id));

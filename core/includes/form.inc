@@ -820,7 +820,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
     // So, we call the hook if $forms isn't yet populated, OR if it doesn't
     // yet have an entry for the requested form_id.
     if (!isset($forms) || !isset($forms[$form_id])) {
-      $forms = module_invoke_all('forms', $form_id, $args);
+      $forms = Drupal::moduleHandler()->invokeAll('forms', array($form_id, $args));
     }
     $form_definition = $forms[$form_id];
     if (isset($form_definition['callback arguments'])) {

@@ -2731,7 +2731,7 @@ function _system_rebuild_theme_data() {
   // Find themes
   $themes = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info.yml$/', 'themes');
   // Allow modules to add further themes.
-  if ($module_themes = module_invoke_all('system_theme_info')) {
+  if ($module_themes = Drupal::moduleHandler()->invokeAll('system_theme_info')) {
     foreach ($module_themes as $name => $uri) {
       // @see file_scan_directory()
       $themes[$name] = (object) array(
@@ -3182,7 +3182,7 @@ function system_cron() {
   // Cleanup the flood.
   Drupal::service('flood')->garbageCollection();
 
-  module_invoke_all('cache_flush');
+  Drupal::moduleHandler()->invokeAll('cache_flush');
   foreach (Cache::getBins() as $cache_backend) {
     $cache_backend->garbageCollection();
   }

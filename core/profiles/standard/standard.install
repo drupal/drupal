@@ -40,7 +40,7 @@ function standard_install() {
   user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content', 'access comments', 'post comments', 'skip comment approval'));
 
   // Enable all permissions for the administrator role.
-  user_role_grant_permissions('administrator', array_keys(module_invoke_all('permission')));
+  user_role_grant_permissions('administrator', array_keys(Drupal::moduleHandler()->invokeAll('permission')));
   // Set this as the administrator role.
   $user_settings->set('admin_role', 'administrator')->save();
 

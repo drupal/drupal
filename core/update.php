@@ -405,7 +405,7 @@ function update_extra_requirements($requirements = NULL) {
  */
 function update_check_requirements($skip_warnings = FALSE) {
   // Check requirements of all loaded modules.
-  $requirements = module_invoke_all('requirements', 'update');
+  $requirements = Drupal::moduleHandler()->invokeAll('requirements', array('update'));
   $requirements += update_extra_requirements();
   $severity = drupal_requirements_severity($requirements);
 

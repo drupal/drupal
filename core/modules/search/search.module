@@ -305,7 +305,7 @@ function _search_menu_access($name) {
  */
 function search_reindex($sid = NULL, $module = NULL, $reindex = FALSE, $langcode = NULL) {
   if ($module == NULL && $sid == NULL) {
-    module_invoke_all('search_reset');
+    Drupal::moduleHandler()->invokeAll('search_reset');
   }
   else {
     $query = db_delete('search_dataset')
