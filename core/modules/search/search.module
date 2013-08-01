@@ -305,7 +305,7 @@ function _search_menu_access($name) {
  */
 function search_reindex($sid = NULL, $module = NULL, $reindex = FALSE, $langcode = NULL) {
   if ($module == NULL && $sid == NULL) {
-    module_invoke_all('search_reset');
+    Drupal::moduleHandler()->invokeAll('search_reset');
   }
   else {
     $query = db_delete('search_dataset')
@@ -1072,18 +1072,16 @@ function search_box_form_submit($form, &$form_state) {
  *   supplied or if the given search module is not active.
  */
 function search_data($keys, $module, $conditions = NULL) {
-  if (module_hook($module, 'search_execute')) {
-    $results = module_invoke($module, 'search_execute', $keys, $conditions);
-    if (module_hook($module, 'search_page')) {
-      return module_invoke($module, 'search_page', $results);
-    }
-    else {
-      return array(
-        '#theme' => 'search_results',
-        '#results' => $results,
-        '#module' => $module,
-      );
-    }
+  $results = module_invoke($module, 'search_execute', $keys, $conditions);
+  if (Drupal::moduleHandler()->implementsHook($module, 'search_page')) {
+    return module_invoke($module, 'search_page', $results);
+  }
+  else {
+    return array(
+      '#theme' => 'search_results',
+      '#results' => $results,
+      '#module' => $module,
+    );
   }
 }
 

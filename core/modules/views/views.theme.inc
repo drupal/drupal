@@ -1157,6 +1157,13 @@ function theme_views_mini_pager($variables) {
     );
   }
 
+  // Don't show the pager if there is neither a next page nor a previous page
+  // link, which means that we are on the first page and there is no next page
+  // available/wanted.
+  if (empty($li_next) && empty($li_previous)) {
+    return '';
+  }
+
   $items[] = array(
     '#wrapper_attributes' => array('class' => array('pager-previous')),
   ) + $li_previous;

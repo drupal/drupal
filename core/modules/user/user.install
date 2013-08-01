@@ -665,6 +665,47 @@ function user_update_8011() {
       'uri_scheme' => 'public',
       'default_image' => FALSE,
     ),
+    'schema' => array(
+      'columns' => array(
+        'target_id' => array(
+          'description' => 'The ID of the target entity.',
+          'type' => 'int',
+          'not null' => TRUE,
+          'unsigned' => TRUE,
+        ),
+        'alt' => array(
+          'description' => "Alternative image text, for the image's 'alt' attribute.",
+          'type' => 'varchar',
+          'length' => 512,
+          'not null' => FALSE,
+        ),
+        'title' => array(
+          'description' => "Image title text, for the image's 'title' attribute.",
+          'type' => 'varchar',
+          'length' => 1024,
+          'not null' => FALSE,
+        ),
+        'width' => array(
+          'description' => 'The width of the image in pixels.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+        ),
+        'height' => array(
+          'description' => 'The height of the image in pixels.',
+          'type' => 'int',
+          'unsigned' => TRUE,
+        ),
+      ),
+      'indexes' => array(
+        'target_id' => array('target_id'),
+      ),
+      'foreign keys' => array(
+        'target_id' => array(
+          'table' => 'file_managed',
+          'columns' => array('target_id' => 'fid'),
+        ),
+      ),
+    ),
   );
   _update_8003_field_create_field($field);
 

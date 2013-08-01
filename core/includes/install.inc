@@ -993,22 +993,20 @@ function drupal_requirements_severity(&$requirements) {
  */
 function drupal_check_module($module) {
   module_load_install($module);
-  if (module_hook($module, 'requirements')) {
-    // Check requirements
-    $requirements = module_invoke($module, 'requirements', 'install');
-    if (is_array($requirements) && drupal_requirements_severity($requirements) == REQUIREMENT_ERROR) {
-      // Print any error messages
-      foreach ($requirements as $requirement) {
-        if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
-          $message = $requirement['description'];
-          if (isset($requirement['value']) && $requirement['value']) {
-            $message .= ' (' . t('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) . ')';
-          }
-          drupal_set_message($message, 'error');
+  // Check requirements
+  $requirements = module_invoke($module, 'requirements', 'install');
+  if (is_array($requirements) && drupal_requirements_severity($requirements) == REQUIREMENT_ERROR) {
+    // Print any error messages
+    foreach ($requirements as $requirement) {
+      if (isset($requirement['severity']) && $requirement['severity'] == REQUIREMENT_ERROR) {
+        $message = $requirement['description'];
+        if (isset($requirement['value']) && $requirement['value']) {
+          $message .= ' (' . t('Currently using !item !version', array('!item' => $requirement['title'], '!version' => $requirement['value'])) . ')';
         }
+        drupal_set_message($message, 'error');
       }
-      return FALSE;
     }
+    return FALSE;
   }
   return TRUE;
 }

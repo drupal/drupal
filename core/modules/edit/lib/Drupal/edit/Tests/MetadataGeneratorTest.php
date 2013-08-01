@@ -59,7 +59,7 @@ class MetadataGeneratorTest extends EditTestBase {
 
     $this->editorManager = $this->container->get('plugin.manager.edit.editor');
     $this->accessChecker = new MockEditEntityFieldAccessCheck();
-    $this->editorSelector = new EditorSelector($this->editorManager);
+    $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
     $this->metadataGenerator = new MetadataGenerator($this->accessChecker, $this->editorSelector, $this->editorManager);
   }
 

@@ -63,7 +63,6 @@ class RegionalForm extends SystemConfigFormBase {
    */
   public function buildForm(array $form, array &$form_state) {
     $countries = $this->countryManager->getList();
-    $system_timezone = $this->configFactory->get('system.timezone');
     $system_date = $this->configFactory->get('system.date');
 
     // Date settings:
@@ -98,11 +97,11 @@ class RegionalForm extends SystemConfigFormBase {
     $form['timezone']['date_default_timezone'] = array(
       '#type' => 'select',
       '#title' => t('Default time zone'),
-      '#default_value' => $system_timezone->get('default') ?: date_default_timezone_get(),
+      '#default_value' => $system_date->get('timezone.default') ?: date_default_timezone_get(),
       '#options' => $zones,
     );
 
-    $configurable_timezones = $system_timezone->get('user.configurable');
+    $configurable_timezones = $system_date->get('timezone.user.configurable');;
     $form['timezone']['configurable_timezones'] = array(
       '#type' => 'checkbox',
       '#title' => t('Users may set their own time zone.'),
@@ -122,14 +121,14 @@ class RegionalForm extends SystemConfigFormBase {
     $form['timezone']['configurable_timezones_wrapper']['empty_timezone_message'] = array(
       '#type' => 'checkbox',
       '#title' => t('Remind users at login if their time zone is not set.'),
-      '#default_value' => $system_timezone->get('user.warn'),
+      '#default_value' => $system_date->get('timezone.user.warn'),
       '#description' => t('Only applied if users may set their own time zone.')
     );
 
     $form['timezone']['configurable_timezones_wrapper']['user_default_timezone'] = array(
       '#type' => 'radios',
       '#title' => t('Time zone for new users'),
-      '#default_value' => $system_timezone->get('user.default'),
+      '#default_value' => $system_date->get('timezone.user.default'),
       '#options' => array(
         DRUPAL_USER_TIMEZONE_DEFAULT => t('Default time zone.'),
         DRUPAL_USER_TIMEZONE_EMPTY   => t('Empty time zone.'),
@@ -148,12 +147,10 @@ class RegionalForm extends SystemConfigFormBase {
     $this->configFactory->get('system.date')
       ->set('country.default', $form_state['values']['site_default_country'])
       ->set('first_day', $form_state['values']['date_first_day'])
-      ->save();
-    $this->configFactory->get('system.timezone')
-      ->set('default', $form_state['values']['date_default_timezone'])
-      ->set('user.configurable', $form_state['values']['configurable_timezones'])
-      ->set('user.warn', $form_state['values']['empty_timezone_message'])
-      ->set('user.default', $form_state['values']['user_default_timezone'])
+      ->set('timezone.default', $form_state['values']['date_default_timezone'])
+      ->set('timezone.user.configurable', $form_state['values']['configurable_timezones'])
+      ->set('timezone.user.warn', $form_state['values']['empty_timezone_message'])
+      ->set('timezone.user.default', $form_state['values']['user_default_timezone'])
       ->save();
 
     parent::submitForm($form, $form_state);

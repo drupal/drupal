@@ -3169,7 +3169,7 @@ function drupal_page_set_cache(Response $response, Request $request) {
     $cache = (object) array(
       'cid' => $base_root . $request->getRequestUri(),
       'data' => array(
-        'path' => $request->attributes->get('system_path'),
+        'path' => $request->attributes->get('_system_path'),
         'body' => $response->getContent(),
         'title' => drupal_get_title(),
         'headers' => array(),
@@ -3229,7 +3229,7 @@ function drupal_cron_run() {
 
   $return = FALSE;
   // Grab the defined cron queues.
-  $queues = module_invoke_all('queue_info');
+  $queues = Drupal::moduleHandler()->invokeAll('queue_info');
   drupal_alter('queue_info', $queues);
 
   // Try to acquire cron lock.
@@ -4275,7 +4275,7 @@ function element_info($type) {
   $cache = &$drupal_static_fast['cache'];
 
   if (!isset($cache)) {
-    $cache = module_invoke_all('element_info');
+    $cache = Drupal::moduleHandler()->invokeAll('element_info');
     foreach ($cache as $element_type => $info) {
       $cache[$element_type]['#type'] = $element_type;
     }
@@ -4828,7 +4828,7 @@ function archiver_get_archiver($file) {
 function drupal_get_updaters() {
   $updaters = &drupal_static(__FUNCTION__);
   if (!isset($updaters)) {
-    $updaters = module_invoke_all('updater_info');
+    $updaters = Drupal::moduleHandler()->invokeAll('updater_info');
     drupal_alter('updater_info', $updaters);
     uasort($updaters, 'drupal_sort_weight');
   }
@@ -4848,7 +4848,7 @@ function drupal_get_updaters() {
 function drupal_get_filetransfer_info() {
   $info = &drupal_static(__FUNCTION__);
   if (!isset($info)) {
-    $info = module_invoke_all('filetransfer_info');
+    $info = Drupal::moduleHandler()->invokeAll('filetransfer_info');
     drupal_alter('filetransfer_info', $info);
     uasort($info, 'drupal_sort_weight');
   }

@@ -102,7 +102,7 @@ class ViewAjaxController implements ControllerInterface {
       if ($view && $view->access($display_id)) {
         // Fix the current path for paging.
         if (!empty($path)) {
-          $request->attributes->set('system_path', $path);
+          $request->attributes->set('_system_path', $path);
         }
 
         // Add all $_POST data, because AJAX is always a post and many things,

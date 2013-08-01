@@ -759,7 +759,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     // Verify that we have an keyvalue service before using it. This is required
     // because this function is called during installation.
     // @todo Inject database connection into KeyValueStore\DatabaseStorage.
-    if (($container = drupal_container()) && $container->has('keyvalue') && function_exists('db_query')) {
+    if (($container = Drupal::getContainer()) && $container->has('keyvalue') && function_exists('db_query')) {
       if ($type == 'module') {
         if (empty($files[$type])) {
           $files[$type] = Drupal::moduleHandler()->getModuleList();
@@ -1896,15 +1896,15 @@ function drupal_handle_request($test_only = FALSE) {
  */
 function drupal_get_user_timezone() {
   global $user;
-  $config = config('system.timezone');
+  $config = config('system.date');
 
-  if ($user && $config->get('user.configurable') && $user->isAuthenticated() && $user->getTimezone()) {
+  if ($user && $config->get('timezone.user.configurable') && $user->isAuthenticated() && $user->getTimezone()) {
     return $user->getTimezone();
   }
   else {
     // Ignore PHP strict notice if time zone has not yet been set in the php.ini
     // configuration.
-    $config_data_default_timezone = $config->get('default');
+    $config_data_default_timezone = $config->get('timezone.default');
     return !empty($config_data_default_timezone) ? $config_data_default_timezone : @date_default_timezone_get();
   }
 }
@@ -2010,9 +2010,9 @@ function _drupal_bootstrap_configuration() {
  * Initialize the kernel / service container.
  */
 function _drupal_bootstrap_kernel() {
-  // Normally, index.php puts a container in drupal_container() by creating a
+  // Normally, index.php puts a container in the Drupal class by creating a
   // kernel. If there is no container yet, create one.
-  if (!drupal_container()) {
+  if (!Drupal::getContainer()) {
     $kernel = new DrupalKernel('prod', drupal_classloader());
     $kernel->boot();
   }

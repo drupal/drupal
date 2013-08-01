@@ -56,7 +56,7 @@ class RequestHandler extends ContainerAware {
         $definition = $resource->getPluginDefinition();
         $class = $definition['serialization_class'];
         try {
-          $unserialized = $serializer->deserialize($received, $class, $format);
+          $unserialized = $serializer->deserialize($received, $class, $format, array('request_method' => $method));
         }
         catch (UnexpectedValueException $e) {
           $error['error'] = $e->getMessage();

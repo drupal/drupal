@@ -32,7 +32,7 @@ class LegacyAccessSubscriber implements EventSubscriberInterface {
 
     $request_attributes = $event->getRequest()->attributes;
 
-    $router_item = $request_attributes->get('drupal_menu_item');
+    $router_item = $request_attributes->get('_drupal_menu_item');
 
     // For legacy routes we do not allow any user not authenticated by cookie
     // provider.

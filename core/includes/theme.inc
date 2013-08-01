@@ -1489,7 +1489,7 @@ function theme_enable($theme_list) {
   drupal_theme_rebuild();
 
   // Invoke hook_themes_enabled() after the themes have been enabled.
-  module_invoke_all('themes_enabled', $theme_list);
+  Drupal::moduleHandler()->invokeAll('themes_enabled', array($theme_list));
 }
 
 /**
@@ -1525,7 +1525,7 @@ function theme_disable($theme_list) {
   drupal_theme_rebuild();
 
   // Invoke hook_themes_disabled after the themes have been disabled.
-  module_invoke_all('themes_disabled', $theme_list);
+  Drupal::moduleHandler()->invokeAll('themes_disabled', array($theme_list));
 }
 
 /**
@@ -2624,13 +2624,6 @@ function template_preprocess_html(&$variables) {
       '#attributes' => array(
         'name' => 'viewport',
         'content' => 'width=device-width',
-      ),
-    ),
-    'cleartype' => array(
-      '#tag' => 'meta',
-      '#attributes' => array(
-        'http-equiv' => 'cleartype',
-        'content' => 'on',
       ),
     ),
   );

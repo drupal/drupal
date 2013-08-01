@@ -963,10 +963,13 @@ function _menu_link_translate(&$item, $translate = FALSE) {
  * @return bool
  *   TRUE if the user has access or FALSE if the user should be presented
  *   with access denied.
+ *
+ * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException
+ *   If the system path in $href does not match the $route.
  */
 function menu_item_route_access(Route $route, $href, &$map) {
   $request = Request::create('/' . $href);
-  $request->attributes->set('system_path', $href);
+  $request->attributes->set('_system_path', $href);
   // Attempt to match this path to provide a fully built request to the
   // access checker.
   try {
@@ -1776,7 +1779,7 @@ function menu_get_custom_theme($initialize = FALSE) {
     // First allow modules to dynamically set a custom theme for the current
     // page. Since we can only have one, the last module to return a valid
     // theme takes precedence.
-    $custom_themes = array_filter(module_invoke_all('custom_theme'), 'drupal_theme_access');
+    $custom_themes = array_filter(Drupal::moduleHandler()->invokeAll('custom_theme'), 'drupal_theme_access');
     if (!empty($custom_themes)) {
       $custom_theme = array_pop($custom_themes);
     }
@@ -2629,7 +2632,7 @@ function menu_get_active_breadcrumb() {
 
     // Don't show a link to the current page in the breadcrumb trail.
     $end = end($active_trail);
-    if (Drupal::request()->attributes->get('system_path') == $end['href']) {
+    if (Drupal::request()->attributes->get('_system_path') == $end['href']) {
       array_pop($active_trail);
     }
 

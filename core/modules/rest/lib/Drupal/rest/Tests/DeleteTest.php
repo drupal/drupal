@@ -34,9 +34,9 @@ class DeleteTest extends RESTTestBase {
    */
   public function testDelete() {
     // Define the entity types we want to test.
-    // @todo expand this test to at least nodes and users once their access
+    // @todo expand this test to at least users once their access
     // controllers are implemented.
-    $entity_types = array('entity_test');
+    $entity_types = array('entity_test', 'node');
     foreach ($entity_types as $entity_type) {
       $this->enableService('entity:' . $entity_type, 'DELETE');
       // Create a user account that has the required permissions to delete

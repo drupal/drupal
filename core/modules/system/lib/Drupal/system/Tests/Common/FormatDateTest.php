@@ -37,8 +37,9 @@ class FormatDateTest extends WebTestBase {
 
   function setUp() {
     parent::setUp('language');
-    config('system.timezone')
-      ->set('user.configurable', 1)
+
+    config('system.date')
+      ->set('timezone.user.configurable', 1)
       ->save();
     $formats = $this->container->get('plugin.manager.entity')
       ->getStorageController('date_format')

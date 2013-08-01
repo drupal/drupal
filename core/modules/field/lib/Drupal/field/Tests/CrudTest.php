@@ -60,7 +60,7 @@ class CrudTest extends FieldUnitTestBase {
     $this->assertEqual($field_config['cardinality'], 1, 'Cardinality defaults to 1.');
 
     // Ensure that default settings are present.
-    $field_type = field_info_field_types($field_definition['type']);
+    $field_type = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field_definition['type']);
     $this->assertEqual($field_config['settings'], $field_type['settings'], 'Default field settings have been written.');
 
     // Ensure that default storage was set.
@@ -151,6 +151,24 @@ class CrudTest extends FieldUnitTestBase {
     catch (FieldException $e) {
       $this->pass(t('Cannot create a field bearing the name of an entity key.'));
     }
+  }
+
+  /**
+   * Tests that an explicit schema can be provided on creation of a field.
+   *
+   * This behavior is needed to allow field creation within updates, since
+   * plugin classes (and thus the field type schema) cannot be accessed.
+   */
+  function testCreateFieldWithExplicitSchema() {
+    $field_definition = array(
+      'field_name' => 'field_2',
+      'type' => 'test_field',
+      'schema' => array(
+        'dummy' => 'foobar'
+      ),
+    );
+    $field = entity_create('field_entity', $field_definition);
+    $this->assertEqual($field->getSchema(), $field_definition['schema']);
   }
 
   /**

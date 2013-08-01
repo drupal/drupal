@@ -115,7 +115,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
       $module_handler = \Drupal::moduleHandler();
 
       // Get the list of options from the field type module, and sanitize them.
-      $field_type_info = field_info_field_types($this->fieldDefinition->getFieldType());
+      $field_type_info = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($this->fieldDefinition->getFieldType());
       $module = $field_type_info['provider'];
       $options = (array) $module_handler->invoke($module, 'options_list', array($this->fieldDefinition, $this->entity));
 

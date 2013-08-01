@@ -189,7 +189,7 @@ function file_get_stream_wrappers($filter = STREAM_WRAPPERS_ALL) {
   $wrappers_storage = &drupal_static(__FUNCTION__);
 
   if (!isset($wrappers_storage)) {
-    $wrappers = module_invoke_all('stream_wrappers');
+    $wrappers = Drupal::moduleHandler()->invokeAll('stream_wrappers');
     foreach ($wrappers as $scheme => $info) {
       // Add defaults.
       $wrappers[$scheme] += array('type' => STREAM_WRAPPERS_NORMAL);

@@ -23,7 +23,7 @@ class ThemeTestSubscriber implements EventSubscriberInterface {
    */
   public function onRequest(GetResponseEvent $event) {
     $request = $event->getRequest();
-    $current_path = $request->attributes->get('system_path');
+    $current_path = $request->attributes->get('_system_path');
     if ($current_path == 'theme-test/request-listener') {
       // First, force the theme registry to be rebuilt on this page request.
       // This allows us to test a full initialization of the theme system in

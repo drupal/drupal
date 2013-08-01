@@ -53,7 +53,7 @@ class DialogController {
     $attributes = clone $request->attributes;
     // We need to clean up the derived information and such so that the
     // subrequest can be processed properly without leaking data through.
-    $attributes->remove('system_path');
+    $attributes->remove('_system_path');
     $attributes->set('dialog', TRUE);
 
     // Remove the accept header so the subrequest does not end up back in this

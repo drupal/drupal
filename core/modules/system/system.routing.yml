@@ -1,3 +1,9 @@
+system.ajax:
+  pattern: '/system/ajax'
+  defaults:
+    _controller: '\Drupal\system\Controller\FormAjaxController::content'
+  requirements:
+    _access: 'TRUE'
 system.cron:
   pattern: '/cron/{key}'
   defaults:

@@ -130,7 +130,7 @@ function _field_info_collate_types_reset() {
 function field_behaviors_widget($op, $instance) {
   $info = array();
   if ($component = entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')->getComponent($instance['field_name'])) {
-    $info = field_info_widget_types($component['type']);
+    $info = \Drupal::service('plugin.manager.field.widget')->getDefinition($component['type']);
   }
   return isset($info[$op]) ? $info[$op] : FIELD_BEHAVIOR_DEFAULT;
 }
@@ -503,13 +503,11 @@ function field_info_extra_fields($entity_type, $bundle, $context) {
  *   The field type's default settings, or an empty array if type or settings
  *   are not defined.
  *
- * @deprecated as of Drupal 8.0. Use the 'settings' property in the definition
- *   array returned by
- *   Drupal::service('plugin.manager.entity.field.field_type')->getDefinition()
+ * @deprecated as of Drupal 8.0. Use
+ *   Drupal::service('plugin.manager.entity.field.field_type')->getDefaultSettings()
  */
 function field_info_field_settings($type) {
-  $info = field_info_field_types($type);
-  return isset($info['settings']) ? $info['settings'] : array();
+  return \Drupal::service('plugin.manager.entity.field.field_type')->getDefaultSettings($type);
 }
 
 /**
@@ -522,13 +520,11 @@ function field_info_field_settings($type) {
  *   The field type's default instance settings, or an empty array if type or
  *   settings are not defined.
  *
- * @deprecated as of Drupal 8.0. Use the 'instance_settings' property in the
- *   definition array returned by
- *   Drupal::service('plugin.manager.entity.field.field_type')->getDefinition()
+ * @deprecated as of Drupal 8.0. Use
+ *   Drupal::service('plugin.manager.entity.field.field_type')->getDefaultInstanceSettings()
  */
 function field_info_instance_settings($type) {
-  $info = field_info_field_types($type);
-  return isset($info['instance_settings']) ? $info['instance_settings'] : array();
+  return \Drupal::service('plugin.manager.entity.field.field_type')->getDefaultInstanceSettings($type);
 }
 
 /**
@@ -542,13 +538,11 @@ function field_info_instance_settings($type) {
  *   hook_field_widget_info(), or an empty array if type or settings are
  *   undefined.
  *
- * @deprecated as of Drupal 8.0. Use the 'settings' property in the definition
- *   array returned by
- *   Drupal::service('plugin.manager.field.widget')->getDefinition()
+ * @deprecated as of Drupal 8.0. Use
+ *   Drupal::service('plugin.manager.field.widget')->getDefaultSettings()
  */
 function field_info_widget_settings($type) {
-  $info = field_info_widget_types($type);
-  return isset($info['settings']) ? $info['settings'] : array();
+  return \Drupal::service('plugin.manager.field.widget')->getDefaultSettings($type);
 }
 
 /**
@@ -562,13 +556,11 @@ function field_info_widget_settings($type) {
  *   hook_field_formatter_info(), or an empty array if type or settings are
  *   undefined.
  *
- * @deprecated as of Drupal 8.0. Use the 'settings' property in the definition
- *   array returned by
- *   Drupal::service('plugin.manager.field.formatter')->getDefinition()
+ * @deprecated as of Drupal 8.0. Use
+ *   Drupal::service('plugin.manager.field.formatter')->getDefaultSettings()
  */
 function field_info_formatter_settings($type) {
-  $info = field_info_formatter_types($type);
-  return isset($info['settings']) ? $info['settings'] : array();
+  return \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings($type);
 }
 
 /**

@@ -35,9 +35,9 @@ class ReadTest extends RESTTestBase {
    */
   public function testRead() {
     // @todo once EntityNG is implemented for other entity types expand this at
-    // least to nodes and users.
+    // least to users.
     // Define the entity types we want to test.
-    $entity_types = array('entity_test');
+    $entity_types = array('entity_test', 'node');
     foreach ($entity_types as $entity_type) {
       $this->enableService('entity:' . $entity_type, 'GET');
       // Create a user account that has the required permissions to read
@@ -70,15 +70,17 @@ class ReadTest extends RESTTestBase {
       $this->assertEqual($decoded['error'], 'Entity with ID 9999 not found', 'Response message is correct.');
 
       // Make sure that field level access works and that the according field is
-      // not available in the response.
+      // not available in the response. Only applies to entity_test.
       // @see entity_test_entity_field_access()
-      $entity->field_test_text->value = 'no access value';
-      $entity->save();
-      $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'GET', NULL, $this->defaultMimeType);
-      $this->assertResponse(200);
-      $this->assertHeader('content-type', $this->defaultMimeType);
-      $data = drupal_json_decode($response);
-      $this->assertFalse(isset($data['field_test_text']), 'Field access protexted field is not visible in the response.');
+      if ($entity_type == 'entity_test') {
+        $entity->field_test_text->value = 'no access value';
+        $entity->save();
+        $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'GET', NULL, $this->defaultMimeType);
+        $this->assertResponse(200);
+        $this->assertHeader('content-type', $this->defaultMimeType);
+        $data = drupal_json_decode($response);
+        $this->assertFalse(isset($data['field_test_text']), 'Field access protected field is not visible in the response.');
+      }
 
       // Try to read an entity without proper permissions.
       $this->drupalLogout();

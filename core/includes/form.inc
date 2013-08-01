@@ -471,8 +471,9 @@ function form_state_defaults() {
  * workflow, to be returned for rendering.
  *
  * Ajax form submissions are almost always multi-step workflows, so that is one
- * common use-case during which form rebuilding occurs. See ajax_form_callback()
- * for more information about creating Ajax-enabled forms.
+ * common use-case during which form rebuilding occurs. See
+ * Drupal\system\FormAjaxController::content() for more information about
+ * creating Ajax-enabled forms.
  *
  * @param $form_id
  *   The unique string identifying the desired form. If a function
@@ -496,7 +497,7 @@ function form_state_defaults() {
  *   The newly built form.
  *
  * @see drupal_process_form()
- * @see ajax_form_callback()
+ * @see \Drupal\system\FormAjaxController::content()
  */
 function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
   $form = drupal_retrieve_form($form_id, $form_state);
@@ -819,7 +820,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
     // So, we call the hook if $forms isn't yet populated, OR if it doesn't
     // yet have an entry for the requested form_id.
     if (!isset($forms) || !isset($forms[$form_id])) {
-      $forms = module_invoke_all('forms', $form_id, $args);
+      $forms = Drupal::moduleHandler()->invokeAll('forms', array($form_id, $args));
     }
     $form_definition = $forms[$form_id];
     if (isset($form_definition['callback arguments'])) {
@@ -1292,9 +1293,10 @@ function drupal_validate_form($form_id, &$form, &$form_state) {
  * - If $form_state['rebuild'] is TRUE, the form is being rebuilt, and no
  *   redirection is done.
  * - If $form_state['no_redirect'] is TRUE, redirection is disabled. This is
- *   set, for instance, by ajax_get_form() to prevent redirection in Ajax
- *   callbacks. $form_state['no_redirect'] should never be set or altered by
- *   form builder functions or form validation/submit handlers.
+ *   set, for instance, by \Drupal\system\FormAjaxController::getForm() to
+ *   prevent redirection in Ajax callbacks. $form_state['no_redirect'] should
+ *   never be set or altered by form builder functions or form validation/submit
+ *   handlers.
  * - If $form_state['redirect'] is set to FALSE, redirection is disabled.
  * - If none of the above conditions has prevented redirection, then the
  *   redirect is accomplished by returning a RedirectResponse, passing in the
@@ -1344,7 +1346,7 @@ function drupal_redirect_form($form_state) {
         }
       }
     }
-    $url = url(Drupal::request()->attributes->get('system_path'), array(
+    $url = url(Drupal::request()->attributes->get('_system_path'), array(
       'query' => Drupal::request()->query->all(),
       'absolute' => TRUE,
     ));

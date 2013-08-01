@@ -26,7 +26,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   public function onKernelRequestMaintenance(GetResponseEvent $event) {
     $request = $event->getRequest();
     $site_status = $request->attributes->get('_maintenance');
-    $path = $request->attributes->get('system_path');
+    $path = $request->attributes->get('_system_path');
     if ($site_status == MENU_SITE_OFFLINE) {
       // If the site is offline, log out unprivileged users.
       if ($GLOBALS['user']->isAuthenticated() && !user_access('access site in maintenance mode')) {

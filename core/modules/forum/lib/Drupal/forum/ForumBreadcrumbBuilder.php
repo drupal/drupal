@@ -50,8 +50,8 @@ class ForumBreadcrumbBuilder implements BreadcrumbBuilderInterface {
 
     // @todo This only works for legacy routes. Once node/% and forum/% are
     //   converted to the new router this code will need to be updated.
-    if (isset($attributes['drupal_menu_item'])) {
-      $item = $attributes['drupal_menu_item'];
+    if (isset($attributes['_drupal_menu_item'])) {
+      $item = $attributes['_drupal_menu_item'];
       switch ($item['path']) {
 
         case 'node/%':

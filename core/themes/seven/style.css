@@ -584,11 +584,16 @@ th.select-all {
 table.system-status-report tr {
   border-top: 1px solid #ccc;
   border-left: 1px solid #bebfb9;
+  border-right: 1px solid #bebfb9;
   border-bottom: inherit;
 }
 table.system-status-report tr:first-child {
   border-top: 1px solid #bebfb9;
 }
+table.system-status-report tr:last-child {
+  border-bottom: 1px solid #bebfb9;
+}
+
 table.system-status-report tr.ok {
   color: #255b1e;
   background-color: #e5ffe2;

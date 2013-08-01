@@ -57,7 +57,7 @@ function image_field_info() {
  * Implements hook_field_settings_form().
  */
 function image_field_settings_form($field, $instance) {
-  $defaults = field_info_field_settings($field['type']);
+  $defaults = \Drupal::service('plugin.manager.entity.field.field_type')->getDefaultSettings($field['type']);
   $settings = array_merge($defaults, $field['settings']);
 
   $scheme_options = array();

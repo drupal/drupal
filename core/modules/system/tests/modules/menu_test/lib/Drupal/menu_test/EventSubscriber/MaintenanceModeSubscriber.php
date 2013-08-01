@@ -25,7 +25,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
   public function onKernelRequestMaintenance(GetResponseEvent $event) {
     $request = $event->getRequest();
     // Allow access to menu_login_callback even if in maintenance mode.
-    if ($request->attributes->get('_maintenance') == MENU_SITE_OFFLINE && $request->attributes->get('system_path') == 'menu_login_callback') {
+    if ($request->attributes->get('_maintenance') == MENU_SITE_OFFLINE && $request->attributes->get('_system_path') == 'menu_login_callback') {
       $request->attributes->set('_maintenance', MENU_SITE_ONLINE);
     }
   }

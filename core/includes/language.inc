@@ -161,7 +161,7 @@ function language_types_info() {
   $language_types = &drupal_static(__FUNCTION__);
 
   if (!isset($language_types)) {
-    $language_types = module_invoke_all('language_types_info');
+    $language_types = Drupal::moduleHandler()->invokeAll('language_types_info');
     // Let other modules alter the list of language types.
     drupal_alter('language_types_info', $language_types);
   }
@@ -413,7 +413,7 @@ function language_negotiation_info() {
 
   if (!isset($negotiation_info)) {
     // Collect all the module-defined language negotiation methods.
-    $negotiation_info = module_invoke_all('language_negotiation_info');
+    $negotiation_info = Drupal::moduleHandler()->invokeAll('language_negotiation_info');
     $languages = language_list();
     $selected_language = $languages[language_from_selected($languages)];
     $description = 'Language based on a selected language. ';

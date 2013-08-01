@@ -150,7 +150,7 @@ function field_help($path, $arg) {
       sort($modules);
       foreach ($modules as $module) {
         $display = $info[$module]['name'];
-        if (module_hook($module, 'help')) {
+        if (Drupal::moduleHandler()->implementsHook($module, 'help')) {
           $items['items'][] = l($display, 'admin/help/' . $module);
         }
         else {
@@ -328,7 +328,7 @@ function _field_generate_entity_field_definition(FieldInterface $field, FieldIns
  */
 function field_field_widget_info_alter(&$info) {
   // Add the Hidden widget to all field types.
-  $info['hidden']['field_types'] = array_keys(field_info_field_types());
+  $info['hidden']['field_types'] = array_keys(\Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions());
 }
 
 /**
@@ -840,6 +840,9 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
  *
  * @return
  *   An array with available field items keyed by delta.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   $entity->getTranslation($langcode)->{$field_name}
  */
 function field_get_items(EntityInterface $entity, $field_name, $langcode = NULL) {
   $entity = $entity->getBCEntity();

@@ -110,7 +110,7 @@ function module_test_hook_dynamic_loading_invoke() {
  * return 'success!'.
  */
 function module_test_hook_dynamic_loading_invoke_all() {
-  $result = module_invoke_all('test_hook');
+  $result = Drupal::moduleHandler()->invokeAll('test_hook');
   return $result['module_test'];
 }
 
@@ -130,7 +130,7 @@ function module_test_hook_dynamic_loading_invoke_all_during_load($param) {
  * @see module_test_menu().
  */
 function module_test_load($param) {
-  $result = module_invoke_all('test_hook');
+  $result = Drupal::moduleHandler()->invokeAll('test_hook');
   return $result[$param];
 }
 

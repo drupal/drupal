@@ -15,7 +15,12 @@ use Drupal\field\Plugin\Core\Entity\Field;
  * they get executed after field_update_8003().
  *
  * @param array $field_config
- *   An array of field properties.
+ *   An array of field properties. Required properties are:
+ *   - 'id': The field id (machine name).
+ *   - 'type': The field type.
+ *   - 'module': The name of the module providing the field type.
+ *   - 'schema': The field schema, in the same format as
+ *     Drupal\field\Plugin\Type\FieldType\ConfigFieldInterface::schema().
  *
  * @ingroup update_api
  */

@@ -100,10 +100,10 @@ class LegacyUrlMatcher implements RequestMatcherInterface, RequestContextAwareIn
    * @api
    */
   public function matchRequest(Request $request) {
-    if ($router_item = $this->matchDrupalItem($request->attributes->get('system_path'))) {
+    if ($router_item = $this->matchDrupalItem($request->attributes->get('_system_path'))) {
       $ret = $this->convertDrupalItem($router_item);
       // Stash the router item in the attributes while we're transitioning.
-      $ret['drupal_menu_item'] = $router_item;
+      $ret['_drupal_menu_item'] = $router_item;
 
       // Most legacy controllers (aka page callbacks) are in a separate file,
       // so we have to include that.

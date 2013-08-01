@@ -146,6 +146,7 @@ class ModulesListForm implements FormInterface, ControllerInterface {
           array('data' => $this->translationManager->translate('Name'), 'class' => array('name')),
           array('data' => $this->translationManager->translate('Description'), 'class' => array('description', RESPONSIVE_PRIORITY_LOW)),
         ),
+        '#attributes' => array('class' => array('package-listing')),
         // Ensure that the "Core" package comes first.
         '#weight' => $package == 'Core' ? -10 : NULL,
       );

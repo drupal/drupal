@@ -5,7 +5,7 @@
  * Builds placeholder replacement tokens for node-related data.
  */
 
-
+use Drupal\Core\Language\Language;
 
 /**
  * Implements hook_token_info().
@@ -98,7 +98,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
     $langcode = $options['langcode'];
   }
   else {
-    $langcode = NULL;
+    $langcode = Language::LANGCODE_DEFAULT;
   }
   $sanitize = !empty($options['sanitize']);
 
@@ -137,17 +137,18 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
         case 'body':
         case 'summary':
-          if ($items = field_get_items($node, 'body', $langcode)) {
+          if (($items = $node->getTranslation($langcode)->get('body')) && !$items->isEmpty()) {
+            $item = $items[0];
             $instance = field_info_instance('node', 'body', $node->type);
             $field_langcode = field_language($node, 'body', $langcode);
 
             // If the summary was requested and is not empty, use it.
-            if ($name == 'summary' && !empty($items[0]['summary'])) {
-              $output = $sanitize ? text_sanitize($instance['settings']['text_processing'], $field_langcode, $items[0], 'summary') : $items[0]['summary'];
+            if ($name == 'summary' && !empty($item->summary)) {
+              $output = $sanitize ? text_sanitize($instance['settings']['text_processing'], $field_langcode, $item->getValue(), 'summary') : $item->summary;
             }
             // Attempt to provide a suitable version of the 'body' field.
             else {
-              $output = $sanitize ? text_sanitize($instance['settings']['text_processing'], $field_langcode, $items[0], 'value') : $items[0]['value'];
+              $output = $sanitize ? text_sanitize($instance['settings']['text_processing'], $field_langcode, $item->getValue(), 'value') : $item->value;
               // A summary was requested.
               if ($name == 'summary') {
                 // Generate an optionally trimmed summary of the body field.
@@ -159,11 +160,11 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
                   $length = $display_options['settings']['trim_length'];
                 }
                 else {
-                  $settings = field_info_formatter_settings('text_summary_or_trimmed');
+                  $settings = \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings('text_summary_or_trimmed');
                   $length = $settings['trim_length'];
                 }
 
-                $output = text_summary($output, $instance['settings']['text_processing'] ? $items[0]['format'] : NULL, $length);
+                $output = text_summary($output, $instance['settings']['text_processing'] ? $item->format : NULL, $length);
               }
             }
             $replacements[$original] = $output;

@@ -121,7 +121,7 @@ class DisplayApiTest extends FieldUnitTestBase {
     // No display settings: check that default display settings are used.
     $output = field_view_field($this->entity, $this->field_name);
     $this->content = drupal_render($output);
-    $settings = field_info_formatter_settings('field_test_default');
+    $settings = \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings('field_test_default');
     $setting = $settings['test_formatter_setting'];
     $this->assertText($this->label, 'Label was displayed.');
     foreach ($this->values as $delta => $value) {
@@ -193,7 +193,7 @@ class DisplayApiTest extends FieldUnitTestBase {
    */
   function testFieldViewValue() {
     // No display settings: check that default display settings are used.
-    $settings = field_info_formatter_settings('field_test_default');
+    $settings = \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings('field_test_default');
     $setting = $settings['test_formatter_setting'];
     foreach ($this->values as $delta => $value) {
       $item = $this->entity->{$this->field_name}[$delta]->getValue();

@@ -159,7 +159,7 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
   );
   batch_set($batch);
 
-  module_invoke_all('test_group_started');
+  Drupal::moduleHandler()->invokeAll('test_group_started');
 
   return $test_id;
 }
@@ -305,7 +305,7 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
   $size = count($test_list);
   $info = $test->getInfo();
 
-  module_invoke_all('test_finished', $test->results);
+  Drupal::moduleHandler()->invokeAll('test_finished', array($test->results));
 
   // Gather results and compose the report.
   $test_results[$test_class] = $test->results;
@@ -352,7 +352,7 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
     drupal_set_message(t('The test run did not successfully finish.'), 'error');
     drupal_set_message(t('Use the <em>Clean environment</em> button to clean-up temporary files and tables.'), 'warning');
   }
-  module_invoke_all('test_group_finished');
+  Drupal::moduleHandler()->invokeAll('test_group_finished');
 }
 
 /**

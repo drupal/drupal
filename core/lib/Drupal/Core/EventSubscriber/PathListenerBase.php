@@ -15,11 +15,11 @@ use Symfony\Component\HttpFoundation\Request;
 abstract class PathListenerBase {
 
   public function extractPath(Request $request) {
-    $path = $request->attributes->get('system_path');
+    $path = $request->attributes->get('_system_path');
     return isset($path) ? $path : trim($request->getPathInfo(), '/');
   }
 
   public function setPath(Request $request, $path) {
-    $request->attributes->set('system_path', $path);
+    $request->attributes->set('_system_path', $path);
   }
 }

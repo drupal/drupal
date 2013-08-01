@@ -1,0 +1,78 @@
+<?php
+
+/**
+ * @file
+ * Definition of Drupal\rest\test\NodeTest.
+ */
+
+namespace Drupal\rest\Tests;
+
+use Drupal\rest\Tests\RESTTestBase;
+
+/**
+ * Tests resource read operations on test entities, nodes and users.
+ */
+class NodeTest extends RESTTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('hal', 'rest');
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Node resource',
+      'description' => 'Test special cases for node entities.',
+      'group' => 'REST',
+    );
+  }
+
+  /**
+   * Enables node specific REST API configuration and authentication.
+   *
+   * @param string $method
+   *   The HTTP method to be tested.
+   * @param string $operation
+   *   The operation, one of 'view', 'create', 'update' or 'delete'.
+   */
+  protected function enableNodeConfiguration($method, $operation) {
+    $this->enableService('entity:node', $method);
+    $permissions = $this->entityPermissions('node', $operation);
+    $permissions[] = 'restful ' . strtolower($method) . ' entity:node';
+    $account = $this->drupalCreateUser($permissions);
+    $this->drupalLogin($account);
+  }
+
+  /**
+   * Performs various tests on nodes and their REST API.
+   */
+  public function testNodes() {
+    // Tests that the node resource works with comment module enabled.
+    $this->container->get('module_handler')->enable(array('comment'));
+    $this->enableNodeConfiguration('GET', 'view');
+
+    $node = $this->entityCreate('node');
+    $node->save();
+    $this->httpRequest('entity/node/' . $node->id(), 'GET', NULL, $this->defaultMimeType);
+    $this->assertResponse(200);
+
+    // Check that a simple PATCH update to the node title works as expected.
+    $this->enableNodeConfiguration('PATCH', 'update');
+
+    // Create a PATCH request body that only updates the title field.
+    $new_title = $this->randomString();
+    $serialized = '{"_links":{"type":{"href":"'
+      . url('rest/type/node/resttest', array('absolute' => TRUE))
+      . '"}},"title":[{"value":"' . $new_title . '"}]}';
+    $this->httpRequest('entity/node/' . $node->id(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->assertResponse(204);
+
+    // Reload the node from the DB and check if the title was correctly updated.
+    $updated_node = entity_load('node', $node->id(), TRUE);
+    $this->assertEqual($updated_node->get('title')->get('value')->getValue(), $new_title);
+    // Make sure that the UUID of the node has not changed.
+    $this->assertEqual($node->get('uuid')->getValue(), $updated_node->get('uuid')->getValue(), 'UUID was not changed.');
+  }
+}

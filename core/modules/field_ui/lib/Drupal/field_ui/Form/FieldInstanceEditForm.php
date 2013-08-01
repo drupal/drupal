@@ -11,6 +11,7 @@ use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\Field\FieldTypePluginManager;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Language\Language;
 use Drupal\field\FieldInstanceInterface;
@@ -45,16 +46,26 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
   protected $entityManager;
 
   /**
+   *  The field type manager.
+   *
+   * @var \Drupal\Core\Entity\Field\FieldTypePluginManager
+   */
+  protected $fieldTypeManager;
+
+  /**
    * Constructs a new field instance form.
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The entity manager.
    * @param \Drupal\field\Plugin\Type\Widget\WidgetPluginManager $widget_manager
    *   The field widget plugin manager.
+   * @param \Drupal\Core\Entity\Field\FieldTypePluginManager $field_type_manager
+   *   The field type manager.
    */
-  public function __construct(EntityManager $entity_manager, WidgetPluginManager $widget_manager) {
+  public function __construct(EntityManager $entity_manager, WidgetPluginManager $widget_manager, FieldTypePluginManager $field_type_manager) {
     $this->entityManager = $entity_manager;
     $this->widgetManager = $widget_manager;
+    $this->fieldTypeManager = $field_type_manager;
   }
 
   /**
@@ -63,7 +74,8 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.entity'),
-      $container->get('plugin.manager.field.widget')
+      $container->get('plugin.manager.field.widget'),
+      $container->get('plugin.manager.entity.field.field_type')
     );
   }
 
@@ -272,7 +284,7 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
     // @todo Clean this up since we don't have $this->instance['widget'] anymore.
     //   see https://drupal.org/node/2028759
     if ($this->instance['widget']['type'] == 'hidden') {
-      $field_type = field_info_field_types($field['type']);
+      $field_type = $this->fieldTypeManager->getDefinition($field['type']);
       $default_widget = $this->widgetManager->getDefinition($field_type['default_widget']);
 
       $this->instance['widget'] = array(

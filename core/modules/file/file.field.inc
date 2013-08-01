@@ -38,7 +38,7 @@ function file_field_info() {
  * Implements hook_field_settings_form().
  */
 function file_field_settings_form($field, $instance) {
-  $defaults = field_info_field_settings($field['type']);
+  $defaults = \Drupal::service('plugin.manager.entity.field.field_type')->getDefaultSettings($field['type']);
   $settings = array_merge($defaults, $field['settings']);
 
   $form['#attached']['library'][] = array('file', 'drupal.file');
@@ -428,12 +428,19 @@ function file_field_widget_process($element, &$form_state, $form) {
   // file, the entire group of file fields is updated together.
   if ($element['#cardinality'] != 1) {
     $parents = array_slice($element['#array_parents'], 0, -1);
-    $new_path = 'file/ajax/' . implode('/', $parents) . '/' . $form['form_build_id']['#value'];
+    $new_path = 'file/ajax';
+    $new_options = array(
+      'query' => array(
+        'element_parents' => implode('/', $parents),
+        'form_build_id' => $form['form_build_id']['#value'],
+      ),
+    );
     $field_element = NestedArray::getValue($form, $parents);
     $new_wrapper = $field_element['#id'] . '-ajax-wrapper';
     foreach (element_children($element) as $key) {
       if (isset($element[$key]['#ajax'])) {
         $element[$key]['#ajax']['path'] = $new_path;
+        $element[$key]['#ajax']['options'] = $new_options;
         $element[$key]['#ajax']['wrapper'] = $new_wrapper;
       }
     }

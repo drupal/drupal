@@ -93,6 +93,26 @@ system.date:
     langcode:
       type: string
       label: 'Default language'
+    timezone:
+      type: mapping
+      label: 'Time zone settings'
+      mapping:
+        default:
+          type: string
+          label: 'Default time zone'
+      user:
+          type: mapping
+          label: 'User'
+          mapping:
+            configurable:
+              type: boolean
+              label: 'Users may set their own time zone'
+            default:
+              type: integer
+              label: 'Time zone for new users'
+            warn:
+              type: boolean
+              label: 'Remind users at login if their time zone is not set'
 
 system.date_format.*:
   type: mapping
@@ -287,27 +307,6 @@ system.theme:
       sequence:
         - type: string
           label: 'Theme'
-
-system.timezone:
-  type: mapping
-  label: 'Time zone settings'
-  mapping:
-    default:
-      type: string
-      label: 'Default time zone'
-    user:
-      type: mapping
-      label: 'User'
-      mapping:
-        configurable:
-          type: boolean
-          label: 'Users may set their own time zone'
-        default:
-          type: integer
-          label: 'Time zone for new users'
-        warn:
-          type: boolean
-          label: 'Remind users at login if their time zone is not set'
 
 menu.menu.*:
   type: mapping

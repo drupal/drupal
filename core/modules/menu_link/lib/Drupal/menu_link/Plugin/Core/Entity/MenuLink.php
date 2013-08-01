@@ -510,7 +510,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
   public static function findRouteName($link_path) {
     // Look up the route_name used for the given path.
     $request = Request::create('/' . $link_path);
-    $request->attributes->set('system_path', $link_path);
+    $request->attributes->set('_system_path', $link_path);
     try {
       // Use router.dynamic instead of router, because router will call the
       // legacy router which will call hook_menu() and you will get back to

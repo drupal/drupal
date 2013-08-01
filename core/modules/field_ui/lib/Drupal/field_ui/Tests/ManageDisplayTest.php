@@ -47,7 +47,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     $display = entity_get_display('node', $this->type, 'default');
     $display_options = $display->getComponent('field_test');
     $format = $display_options['type'];
-    $default_settings = field_info_formatter_settings($format);
+    $default_settings = \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings($format);
     $setting_name = key($default_settings);
     $setting_value = $display_options['settings'][$setting_name];
 
@@ -61,7 +61,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     $edit = array('fields[field_test][type]' => 'field_test_multiple', 'refresh_rows' => 'field_test');
     $this->drupalPostAJAX(NULL, $edit, array('op' => t('Refresh')));
     $format = 'field_test_multiple';
-    $default_settings = field_info_formatter_settings($format);
+    $default_settings = \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings($format);
     $setting_name = key($default_settings);
     $setting_value = $default_settings[$setting_name];
     $this->assertFieldByName('fields[field_test][type]', $format, 'The expected formatter is selected.');
@@ -113,7 +113,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     $display = entity_get_form_display('node', $this->type, 'default');
     $display_options = $display->getComponent('field_test');
     $widget_type = $display_options['type'];
-    $default_settings = field_info_widget_settings($widget_type);
+    $default_settings = \Drupal::service('plugin.manager.field.widget')->getDefaultSettings($widget_type);
     $setting_name = key($default_settings);
     $setting_value = $display_options['settings'][$setting_name];
 
@@ -127,7 +127,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     $edit = array('fields[field_test][type]' => 'test_field_widget_multiple', 'refresh_rows' => 'field_test');
     $this->drupalPostAJAX(NULL, $edit, array('op' => t('Refresh')));
     $widget_type = 'test_field_widget_multiple';
-    $default_settings = field_info_widget_settings($widget_type);
+    $default_settings = \Drupal::service('plugin.manager.field.widget')->getDefaultSettings($widget_type);
     $setting_name = key($default_settings);
     $setting_value = $default_settings[$setting_name];
     $this->assertFieldByName('fields[field_test][type]', $widget_type, 'The expected widget is selected.');
@@ -181,7 +181,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     $node = $this->drupalCreateNode($settings);
 
     // Gather expected output values with the various formatters.
-    $formatters = field_info_formatter_types();
+    $formatters = \Drupal::service('plugin.manager.field.formatter')->getDefinitions();
     $output = array(
       'field_test_default' => $formatters['field_test_default']['settings']['test_formatter_setting'] . '|' . $value,
       'field_test_with_prepare_view' => $formatters['field_test_with_prepare_view']['settings']['test_formatter_setting_additional'] . '|' . $value. '|' . ($value + 1),

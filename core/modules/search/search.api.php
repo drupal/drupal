@@ -116,7 +116,7 @@ function hook_search_admin() {
   // Note: reversed to reflect that higher number = higher ranking.
   $options = drupal_map_assoc(range(0, 10));
   $ranks = config('node.settings')->get('search_rank');
-  foreach (module_invoke_all('ranking') as $var => $values) {
+  foreach (Drupal::moduleHandler()->invokeAll('ranking') as $var => $values) {
     $form['content_ranking']['factors'][$var] = array(
       '#title' => $values['title'],
       '#type' => 'select',
@@ -213,7 +213,7 @@ function hook_search_execute($keys = NULL, $conditions = NULL) {
     // Fetch comments for snippet.
     $node->rendered .= ' ' . module_invoke('comment', 'node_update_index', $node, $item->langcode);
 
-    $extra = module_invoke_all('node_search_result', $node, $item->langcode);
+    $extra = Drupal::moduleHandler()->invokeAll('node_search_result', array($node, $item->langcode));
 
     $language = language_load($item->langcode);
     $uri = $node->uri();
@@ -356,7 +356,7 @@ function hook_update_index() {
     $text = '<h1>' . check_plain($node->label()) . '</h1>' . $node->rendered;
 
     // Fetch extra data normally not visible
-    $extra = module_invoke_all('node_update_index', $node);
+    $extra = Drupal::moduleHandler()->invokeAll('node_update_index', array($node));
     foreach ($extra as $t) {
       $text .= $t;
     }
