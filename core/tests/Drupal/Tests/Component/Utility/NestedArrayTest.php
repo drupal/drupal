@@ -158,6 +158,6 @@ class NestedArrayTest extends UnitTestCase {
     );
     $this->assertSame(NestedArray::mergeDeepArray(array($link_options_1, $link_options_2)), $expected, 'NestedArray::mergeDeepArray() returned a properly merged array.');
     // Test wrapper function, NestedArray::mergeDeep().
-    $this->assertSame(NestedArray::mergeDeep($link_options_1, $link_options_2), $expected, 'NestedArray::mergeDeepArray() returned a properly merged array.');
+    $this->assertSame(NestedArray::mergeDeep($link_options_1, $link_options_2), $expected, 'NestedArray::mergeDeep() returned a properly merged array.');
   }
 }
