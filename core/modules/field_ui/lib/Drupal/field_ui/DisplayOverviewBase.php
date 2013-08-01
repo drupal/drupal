@@ -45,7 +45,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
     parent::__construct($entity_manager);
 
     $this->pluginManager = $plugin_manager;
-    $this->fieldTypes = field_info_field_types();
+    $this->fieldTypes = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
   }
 
   /**

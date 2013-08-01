@@ -160,7 +160,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
                   $length = $display_options['settings']['trim_length'];
                 }
                 else {
-                  $settings = field_info_formatter_settings('text_summary_or_trimmed');
+                  $settings = \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings('text_summary_or_trimmed');
                   $length = $settings['trim_length'];
                 }
 

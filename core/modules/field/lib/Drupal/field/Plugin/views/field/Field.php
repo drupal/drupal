@@ -299,7 +299,7 @@ class Field extends FieldPluginBase {
 
     // defineOptions runs before init/construct, so no $this->field_info
     $field = field_info_field($this->definition['field_name']);
-    $field_type = field_info_field_types($field['type']);
+    $field_type = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field['type']);
     $column_names = array_keys($field['columns']);
     $default_column = '';
     // Try to determine a sensible default.
@@ -424,7 +424,7 @@ class Field extends FieldPluginBase {
     // Get the currently selected formatter.
     $format = $this->options['type'];
 
-    $settings = $this->options['settings'] + field_info_formatter_settings($format);
+    $settings = $this->options['settings'] + \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings($format);
 
     $options = array(
       'field_definition' => $field,

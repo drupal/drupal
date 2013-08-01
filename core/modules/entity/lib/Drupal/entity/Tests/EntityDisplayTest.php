@@ -155,21 +155,21 @@ class EntityDisplayTest extends DrupalUnitTestBase {
 
     // Check that providing no options results in default values being used.
     $display->setComponent($field_name);
-    $field_type_info = field_info_field_types($field->type);
+    $field_type_info = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field->type);
     $default_formatter = $field_type_info['default_formatter'];
-    $default_settings = field_info_formatter_settings($default_formatter);
+    $formatter_settings =  \Drupal::service('plugin.manager.field.formatter')->getDefinition($default_formatter);
     $expected = array(
       'weight' => 0,
       'label' => 'above',
       'type' => $default_formatter,
-      'settings' => $default_settings,
+      'settings' => $formatter_settings['settings'],
     );
     $this->assertEqual($display->getComponent($field_name), $expected);
 
     // Check that the getFormatter() method returns the correct formatter plugin.
     $formatter = $display->getRenderer($field_name);
     $this->assertEqual($formatter->getPluginId(), $default_formatter);
-    $this->assertEqual($formatter->getSettings(), $default_settings);
+    $this->assertEqual($formatter->getSettings(), $formatter_settings['settings']);
 
     // Check that the formatter is statically persisted, by assigning an
     // arbitrary property and reading it back.

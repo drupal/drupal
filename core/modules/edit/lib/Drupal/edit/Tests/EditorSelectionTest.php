@@ -41,7 +41,7 @@ class EditorSelectionTest extends EditTestBase {
     parent::setUp();
 
     $this->editorManager = $this->container->get('plugin.manager.edit.editor');
-    $this->editorSelector = new EditorSelector($this->editorManager);
+    $this->editorSelector = new EditorSelector($this->editorManager, $this->container->get('plugin.manager.field.formatter'));
   }
 
   /**

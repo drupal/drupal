@@ -9,6 +9,7 @@ namespace Drupal\field;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Entity\Field\FieldTypePluginManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
@@ -43,6 +44,13 @@ class FieldInfo {
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
+
+  /**
+   * The field type manager to define field.
+   *
+   * @var \Drupal\Core\Entity\Field\FieldTypePluginManager
+   */
+  protected $fieldTypeManager;
 
   /**
    * The config factory.
@@ -123,11 +131,14 @@ class FieldInfo {
    *   The configuration factory object to use.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler class to use for invoking hooks.
+   * @param \Drupal\Core\Entity\Field\FieldTypePluginManager $field_type_manager
+   *   The 'field type' plugin manager.
    */
-  public function __construct(CacheBackendInterface $cache_backend, ConfigFactory $config, ModuleHandlerInterface $module_handler) {
+  public function __construct(CacheBackendInterface $cache_backend, ConfigFactory $config, ModuleHandlerInterface $module_handler, FieldTypePluginManager $field_type_manager) {
     $this->cacheBackend = $cache_backend;
     $this->moduleHandler = $module_handler;
     $this->config = $config;
+    $this->fieldTypeManager = $field_type_manager;
   }
 
   /**
@@ -553,7 +564,7 @@ class FieldInfo {
    */
   public function prepareField($field) {
     // Make sure all expected field settings are present.
-    $field['settings'] += field_info_field_settings($field['type']);
+    $field['settings'] += $this->fieldTypeManager->getDefaultSettings($field['type']);
     $field['storage']['settings'] += field_info_storage_settings($field['storage']['type']);
 
     return $field;
@@ -572,7 +583,7 @@ class FieldInfo {
    */
   public function prepareInstance($instance, $field_type) {
     // Make sure all expected instance settings are present.
-    $instance['settings'] += field_info_instance_settings($field_type);
+    $instance['settings'] += $this->fieldTypeManager->getDefaultInstanceSettings($field_type);
 
     // Set a default value for the instance.
     if (field_behaviors_widget('default value', $instance) == FIELD_BEHAVIOR_DEFAULT && !isset($instance['default_value'])) {

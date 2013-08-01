@@ -54,4 +54,34 @@ class FieldTypePluginManager extends DefaultPluginManager {
     $this->discovery = new LegacyFieldTypeDiscoveryDecorator($this->discovery, $module_handler);
   }
 
+  /**
+   * Returns the default field-level settings for a field type.
+   *
+   * @param string $type
+   *   A field type name.
+   *
+   * @return array
+   *   The type's default settings, as provided by the plugin
+   *   definition, or an empty array if type or settings are undefined.
+   */
+  public function getDefaultSettings($type) {
+    $info = $this->getDefinition($type);
+    return isset($info['settings']) ? $info['settings'] : array();
+  }
+
+  /**
+   * Returns the default instance-level settings for a field type.
+   *
+   * @param string $type
+   *   A field type name.
+   *
+   * @return array
+   *   The instance's default settings, as provided by the plugin
+   *   definition, or an empty array if type or settings are undefined.
+   */
+  public function getDefaultInstanceSettings($type) {
+    $info = $this->getDefinition($type);
+    return isset($info['instance_settings']) ? $info['instance_settings'] : array();
+  }
+
 }

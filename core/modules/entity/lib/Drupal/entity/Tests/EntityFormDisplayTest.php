@@ -77,20 +77,20 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
 
     // Check that providing no options results in default values being used.
     $form_display->setComponent($field_name);
-    $field_type_info = field_info_field_types($field->type);
+    $field_type_info = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field->type);
     $default_widget = $field_type_info['default_widget'];
-    $default_settings = field_info_widget_settings($default_widget);
+    $widget_settings = \Drupal::service('plugin.manager.field.widget')->getDefinition($default_widget);
     $expected = array(
       'weight' => 0,
       'type' => $default_widget,
-      'settings' => $default_settings,
+      'settings' => $widget_settings['settings'],
     );
     $this->assertEqual($form_display->getComponent($field_name), $expected);
 
     // Check that the getWidget() method returns the correct widget plugin.
     $widget = $form_display->getRenderer($field_name);
     $this->assertEqual($widget->getPluginId(), $default_widget);
-    $this->assertEqual($widget->getSettings(), $default_settings);
+    $this->assertEqual($widget->getSettings(), $widget_settings['settings']);
 
     // Check that the widget is statically persisted, by assigning an
     // arbitrary property and reading it back.

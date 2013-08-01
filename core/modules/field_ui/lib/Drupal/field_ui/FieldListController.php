@@ -10,6 +10,7 @@ namespace Drupal\field_ui;
 use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\Field\FieldTypePluginManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\field\FieldInfo;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -48,6 +49,13 @@ class FieldListController extends ConfigEntityListController {
   protected $bundles;
 
   /**
+   * The field type manager.
+   *
+   * @var \Drupal\Core\Entity\Field\FieldTypePluginManager
+   */
+  protected $fieldTypeManager;
+
+  /**
    * Constructs a new EntityListController object.
    *
    * @param string $entity_type
@@ -60,14 +68,17 @@ class FieldListController extends ConfigEntityListController {
    *   The module handler to invoke hooks on.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
+   * @param \Drupal\Core\Entity\Field\FieldTypePluginManager $field_type_manager
+   *   The 'field type' plugin manager.
    */
-  public function __construct($entity_type, array $entity_info, EntityManager $entity_manager, ModuleHandlerInterface $module_handler, FieldInfo $field_info) {
+  public function __construct($entity_type, array $entity_info, EntityManager $entity_manager, ModuleHandlerInterface $module_handler, FieldInfo $field_info, FieldTypePluginManager $field_type_manager) {
     parent::__construct($entity_type, $entity_info, $entity_manager->getStorageController($entity_type), $module_handler);
 
-    $this->fieldTypes = field_info_field_types();
     $this->fieldInfo = $field_info->getFieldMap();
     $this->entityManager = $entity_manager;
     $this->bundles = entity_get_bundles();
+    $this->fieldTypeManager = $field_type_manager;
+    $this->fieldTypes = $this->fieldTypeManager->getDefinitions();
   }
 
   /**
@@ -79,7 +90,8 @@ class FieldListController extends ConfigEntityListController {
       $entity_info,
       $container->get('plugin.manager.entity'),
       $container->get('module_handler'),
-      $container->get('field.info')
+      $container->get('field.info'),
+      $container->get('plugin.manager.entity.field.field_type')
     );
   }
 

@@ -90,7 +90,7 @@ function field_views_field_label($field_name) {
  * Default views data implementation for a field.
  */
 function field_views_field_default_views_data($field) {
-  $field_types = field_info_field_types();
+  $field_types = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
 
   // Check the field module is available.
   if (!isset($field_types[$field['type']])) {

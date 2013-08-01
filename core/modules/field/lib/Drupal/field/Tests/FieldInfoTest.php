@@ -24,7 +24,7 @@ class FieldInfoTest extends FieldUnitTestBase {
     // Test that field_test module's fields, widgets, and formatters show up.
 
     $field_test_info = field_test_field_info();
-    $info = field_info_field_types();
+    $info = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
     foreach ($field_test_info as $t_key => $field_type) {
       foreach ($field_type as $key => $val) {
         $this->assertEqual($info[$t_key][$key], $val, format_string('Field type %t_key key %key is %value', array('%t_key' => $t_key, '%key' => $key, '%value' => print_r($val, TRUE))));
@@ -139,7 +139,7 @@ class FieldInfoTest extends FieldUnitTestBase {
     $field = field_info_field($field_definition['field_name']);
 
     // Check that all expected settings are in place.
-    $field_type = field_info_field_types($field_definition['type']);
+    $field_type = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field_definition['type']);
     $this->assertEqual($field['settings'], $field_type['settings'], 'All expected default field settings are present.');
   }
 
@@ -172,7 +172,7 @@ class FieldInfoTest extends FieldUnitTestBase {
     $instance = field_info_instance($instance_definition['entity_type'], $instance_definition['field_name'], $instance_definition['bundle']);
 
     // Check that all expected instance settings are in place.
-    $field_type = field_info_field_types($field_definition['type']);
+    $field_type = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field_definition['type']);
     $this->assertEqual($instance['settings'], $field_type['instance_settings'] , 'All expected instance settings are present.');
   }
 
@@ -279,18 +279,9 @@ class FieldInfoTest extends FieldUnitTestBase {
   function testSettingsInfo() {
     $info = field_test_field_info();
     foreach ($info as $type => $data) {
-      $this->assertIdentical(field_info_field_settings($type), $data['settings'], format_string("field_info_field_settings returns %type's field settings", array('%type' => $type)));
-      $this->assertIdentical(field_info_instance_settings($type), $data['instance_settings'], format_string("field_info_field_settings returns %type's field instance settings", array('%type' => $type)));
-    }
-
-    foreach (array('test_field_widget', 'test_field_widget_multiple') as $type) {
-      $info = field_info_widget_types($type);
-      $this->assertIdentical(field_info_widget_settings($type), $info['settings'], format_string("field_info_widget_settings returns %type's widget settings", array('%type' => $type)));
-    }
-
-    foreach (array('field_test_default', 'field_test_multiple', 'field_test_with_prepare_view') as $type) {
-      $info = field_info_formatter_types($type);
-      $this->assertIdentical(field_info_formatter_settings($type), $info['settings'], format_string("field_info_formatter_settings returns %type's formatter settings", array('%type' => $type)));
+      $field_type_manager = \Drupal::service('plugin.manager.entity.field.field_type');
+      $this->assertIdentical($field_type_manager->getDefaultSettings($type), $data['settings'], format_string("field settings service returns %type's field settings", array('%type' => $type)));
+      $this->assertIdentical($field_type_manager->getDefaultInstanceSettings($type), $data['instance_settings'], format_string("field instance settings service returns %type's field instance settings", array('%type' => $type)));
     }
   }
 
@@ -323,7 +314,7 @@ class FieldInfoTest extends FieldUnitTestBase {
    * Test that the widget definition functions work.
    */
   function testWidgetDefinition() {
-    $widget_definition = field_info_widget_types('test_field_widget_multiple');
+    $widget_definition = \Drupal::service('plugin.manager.field.widget')->getDefinition('test_field_widget_multiple');
 
     // Test if hook_field_widget_info_alter is beïng called.
     $this->assertTrue(in_array('test_field', $widget_definition['field_types']), "The 'test_field_widget_multiple' widget is enabled for the 'test_field' field type in field_test_field_widget_info_alter().");

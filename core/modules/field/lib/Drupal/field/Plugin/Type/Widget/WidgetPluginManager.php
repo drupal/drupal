@@ -11,6 +11,7 @@ use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Plugin\Discovery\ProcessDecorator;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Entity\Field\FieldTypePluginManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
@@ -22,6 +23,13 @@ use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
  * Plugin type manager for field widgets.
  */
 class WidgetPluginManager extends DefaultPluginManager {
+
+  /**
+   * The field type manager to define field.
+   *
+   * @var \Drupal\Core\Entity\Field\FieldTypePluginManager
+   */
+  protected $fieldTypeManager;
 
   /**
    * An array of widget options for each field type.
@@ -42,8 +50,10 @@ class WidgetPluginManager extends DefaultPluginManager {
    *   The module handler.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Entity\Field\FieldTypePluginManager $field_type_manager
+   *   The 'field type' plugin manager.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LanguageManager $language_manager) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler, LanguageManager $language_manager, FieldTypePluginManager $field_type_manager) {
     $annotation_namespaces = array('Drupal\field\Annotation' => $namespaces['Drupal\field']);
 
     parent::__construct('Plugin/field/widget', $namespaces, $annotation_namespaces, 'Drupal\field\Annotation\FieldWidget');
@@ -52,6 +62,7 @@ class WidgetPluginManager extends DefaultPluginManager {
     $this->alterInfo($module_handler, 'field_widget_info');
 
     $this->factory = new WidgetFactory($this);
+    $this->fieldTypeManager = $field_type_manager;
   }
 
   /**
@@ -93,7 +104,7 @@ class WidgetPluginManager extends DefaultPluginManager {
     $definition = $this->getDefinition($configuration['type']);
     if (!isset($definition['class']) || !in_array($field_type, $definition['field_types'])) {
       // Grab the default widget for the field type.
-      $field_type_definition = field_info_field_types($field_type);
+      $field_type_definition = $this->fieldTypeManager->getDefinition($field_type);
       $plugin_id = $field_type_definition['default_widget'];
     }
 
@@ -137,11 +148,11 @@ class WidgetPluginManager extends DefaultPluginManager {
     );
     // If no widget is specified, use the default widget.
     if (!isset($configuration['type'])) {
-      $field_type = field_info_field_types($field_type);
+      $field_type = $this->fieldTypeManager->getDefinition($field_type);
       $configuration['type'] = $field_type['default_widget'];
     }
     // Fill in default settings values for the widget.
-    $configuration['settings'] += field_info_widget_settings($configuration['type']);
+    $configuration['settings'] += $this->getDefaultSettings($configuration['type']);
 
     return $configuration;
   }
@@ -160,7 +171,7 @@ class WidgetPluginManager extends DefaultPluginManager {
   public function getOptions($field_type = NULL) {
     if (!isset($this->widgetOptions)) {
       $options = array();
-      $field_types = field_info_field_types();
+      $field_types = $this->fieldTypeManager->getDefinitions();
       $widget_types = $this->getDefinitions();
       uasort($widget_types, 'drupal_sort_weight');
       foreach ($widget_types as $name => $widget_type) {
