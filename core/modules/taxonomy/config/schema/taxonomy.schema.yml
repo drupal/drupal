@@ -39,3 +39,43 @@ taxonomy.vocabulary.*:
     langcode:
       type: string
       label: 'Default language'
+
+field.taxonomy_term_reference.settings:
+  type: mapping
+  label: 'Taxonomy term reference settings'
+  mapping:
+    options_list_callback:
+      type: string
+      label: 'Options list callback'
+    allowed_values:
+      type: sequence
+      label: 'Allowed values'
+      sequence:
+        - type: mapping
+          label: 'Allowed values'
+          mapping:
+            vocabulary:
+              type: string
+              label: 'Vocabulary'
+            parent:
+              type: string
+              value: 'Parent'
+
+field.taxonomy_term_reference.instance_settings:
+  type: sequence
+  label: 'Taxonomy term reference settings'
+  sequence:
+    - type: string
+      label: 'Setting'
+
+field.taxonomy_term_reference.value:
+  type: sequence
+  label: 'Default values'
+  sequence:
+    - type: mapping
+      label: 'Default value'
+      mapping:
+        target_id:
+          type: integer
+          label: 'Term ID'
+
