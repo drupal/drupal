@@ -105,7 +105,7 @@ class Block extends ConfigEntityBase implements BlockInterface {
   public function __construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
 
-    $this->pluginBag = new BlockPluginBag(\Drupal::service('plugin.manager.block'), array($this->plugin), $this);
+    $this->pluginBag = new BlockPluginBag(\Drupal::service('plugin.manager.block'), array($this->plugin), $this->get('settings'), $this->id());
   }
 
   /**
@@ -169,7 +169,7 @@ class Block extends ConfigEntityBase implements BlockInterface {
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
-    $this->set('settings', $this->getPlugin()->getConfig());
+    $this->set('settings', $this->getPlugin()->getConfiguration());
   }
 
 }

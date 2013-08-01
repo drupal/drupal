@@ -2,28 +2,15 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Action\ConfigurableActionInterface.
+ * Contains \Drupal\Core\Plugin\PluginFormInterface.
  */
 
-namespace Drupal\Core\Action;
-
-use Drupal\Core\Action\ActionInterface;
+namespace Drupal\Core\Plugin;
 
 /**
- * Provides an interface for an Action plugin.
- *
- * @see \Drupal\Core\Annotation\Operation
- * @see \Drupal\Core\Action\OperationManager
+ * Provides an interface for a plugin that contains a form.
  */
-interface ConfigurableActionInterface extends ActionInterface {
-
-  /**
-   * Returns this plugin's configuration.
-   *
-   * @return array
-   *   An array of this action plugin's configuration.
-   */
-  public function getConfiguration();
+interface PluginFormInterface {
 
   /**
    * Form constructor.
@@ -36,7 +23,7 @@ interface ConfigurableActionInterface extends ActionInterface {
    * @return array
    *   The form structure.
    */
-  public function form(array $form, array &$form_state);
+  public function buildConfigurationForm(array $form, array &$form_state);
 
   /**
    * Form validation handler.
@@ -46,16 +33,21 @@ interface ConfigurableActionInterface extends ActionInterface {
    * @param array $form_state
    *   An associative array containing the current state of the form.
    */
-  public function validate(array &$form, array &$form_state);
+  public function validateConfigurationForm(array &$form, array &$form_state);
 
   /**
    * Form submission handler.
+   *
+   * To properly store submitted form values store them in $this->configuration.
+   * @code
+   *   $this->configuration['some_value'] = $form_state['values']['some_value'];
+   * @endcode
    *
    * @param array $form
    *   An associative array containing the structure of the form.
    * @param array $form_state
    *   An associative array containing the current state of the form.
    */
-  public function submit(array &$form, array &$form_state);
+  public function submitConfigurationForm(array &$form, array &$form_state);
 
 }

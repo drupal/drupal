@@ -96,8 +96,8 @@ class ViewsBlock extends BlockBase implements ContainerFactoryPluginInterface {
   /**
    * Overrides \Drupal\block\BlockBase::form().
    */
-  public function form($form, &$form_state) {
-    $form = parent::form($form, $form_state);
+  public function buildConfigurationForm(array $form, array &$form_state) {
+    $form = parent::buildConfigurationForm($form, $form_state);
 
     // Set the default label to '' so the views internal title is used.
     $form['label']['#default_value'] = '';

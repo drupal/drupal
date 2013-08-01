@@ -8,12 +8,12 @@
 namespace Drupal\filter;
 
 use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
+use Drupal\Core\Plugin\Factory\ContainerFactory;
 
 /**
  * Manages text processing filters.
@@ -36,15 +36,8 @@ class FilterPluginManager extends PluginManagerBase {
     $cache_key = 'filter_plugins:' . language(Language::TYPE_INTERFACE)->id;
     $cache_tags = array('filter_formats' => TRUE);
     $this->discovery = new CacheDecorator($this->discovery, $cache_key, 'cache', CacheBackendInterface::CACHE_PERMANENT, $cache_tags);
-  }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function createInstance($plugin_id, array $configuration = array(), FilterBag $filter_bag = NULL) {
-    $plugin_definition = $this->getDefinition($plugin_id);
-    $plugin_class = DefaultFactory::getPluginClass($plugin_id, $plugin_definition);
-    return new $plugin_class($configuration, $plugin_id, $plugin_definition, $filter_bag);
+    $this->factory = new ContainerFactory($this);
   }
 
 }

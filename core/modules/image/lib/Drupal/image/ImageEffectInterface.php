@@ -8,11 +8,12 @@
 namespace Drupal\image;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Component\Plugin\ConfigurablePluginInterface;
 
 /**
  * Defines the interface for image effects.
  */
-interface ImageEffectInterface extends PluginInspectionInterface {
+interface ImageEffectInterface extends PluginInspectionInterface, ConfigurablePluginInterface {
 
   /**
    * Applies an image effect to the image object.
@@ -76,27 +77,5 @@ interface ImageEffectInterface extends PluginInspectionInterface {
    *   This image effect.
    */
   public function setWeight($weight);
-
-  /**
-   * Exports the complete configuration of this image effect instance.
-   *
-   * @return array
-   */
-  public function export();
-
-  /**
-   * Sets the configuration for this image effect.
-   *
-   * @param array $configuration
-   *   An associative array containing:
-   *   - uuid: (optional) The image effect ID.
-   *   - weight: (optional) The weight of the image effect.
-   *   - data: (optional) An array of configuration specific to this image
-   *     effect type.
-   *
-   * @return self
-   *   This image effect.
-   */
-  public function setPluginConfiguration(array $configuration);
 
 }

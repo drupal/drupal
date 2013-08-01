@@ -5,6 +5,7 @@ weight: '11'
 cache: '0'
 filters:
   php_code:
+    id: php_code
     module: php
     status: '1'
     weight: '0'

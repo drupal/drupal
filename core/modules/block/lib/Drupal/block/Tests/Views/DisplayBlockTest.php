@@ -136,7 +136,7 @@ class DisplayBlockTest extends ViewTestBase {
     $this->drupalPost('admin/structure/block/add/views_block:test_view_block-block_1/' . $default_theme, $edit, t('Save block'));
 
     $block = $storage->load('stark.views_block__test_view_block_block_1_4');
-    $config = $block->getPlugin()->getConfig();
+    $config = $block->getPlugin()->getConfiguration();
     $this->assertEqual(10, $config['items_per_page'], "'Items per page' is properly saved.");
 
     $edit['settings[override][items_per_page]'] = 5;
@@ -144,7 +144,7 @@ class DisplayBlockTest extends ViewTestBase {
 
     $block = $storage->load('stark.views_block__test_view_block_block_1_4');
 
-    $config = $block->getPlugin()->getConfig();
+    $config = $block->getPlugin()->getConfiguration();
     $this->assertEqual(5, $config['items_per_page'], "'Items per page' is properly saved.");
   }
 

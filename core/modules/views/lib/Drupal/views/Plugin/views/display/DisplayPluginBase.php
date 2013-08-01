@@ -99,6 +99,21 @@ abstract class DisplayPluginBase extends PluginBase {
    */
   protected $usesAreas = TRUE;
 
+  /**
+   * Constructs a new DisplayPluginBase object.
+   *
+   * Because DisplayPluginBase::initDisplay() takes the display configuration by
+   * reference and handles it differently than usual plugin configuration, pass
+   * an empty array of configuration to the parent. This prevents our
+   * configuration from being duplicated.
+   *
+   * @todo Replace DisplayPluginBase::$display with
+   *   DisplayPluginBase::$configuration to standardize with other plugins.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+    parent::__construct(array(), $plugin_id, $plugin_definition);
+  }
+
   public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL) {
     $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = $view;

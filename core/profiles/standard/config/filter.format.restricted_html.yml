@@ -7,6 +7,7 @@ roles:
 cache: '1'
 filters:
   filter_html:
+    id: filter_html
     module: filter
     status: '1'
     weight: '-10'
@@ -15,17 +16,20 @@ filters:
       filter_html_help: '1'
       filter_html_nofollow: '0'
   filter_autop:
+    id: filter_autop
     module: filter
     status: '1'
     weight: '0'
     settings: {  }
   filter_url:
+    id: filter_url
     module: filter
     status: '1'
     weight: '0'
     settings:
       filter_url_length: '72'
   filter_htmlcorrector:
+    id: filter_htmlcorrector
     module: filter
     status: '1'
     weight: '10'

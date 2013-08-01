@@ -80,7 +80,7 @@ class BlockTest extends UnitTestCase {
       ->method('setItemsPerPage');
 
     $this->blockPlugin->expects($this->once())
-      ->method('getConfig')
+      ->method('getConfiguration')
       ->will($this->returnValue(array('items_per_page' => 'none')));
 
     $this->blockDisplay->preBlockBuild($this->blockPlugin);
@@ -95,7 +95,7 @@ class BlockTest extends UnitTestCase {
       ->with(5);
 
     $this->blockPlugin->expects($this->once())
-      ->method('getConfig')
+      ->method('getConfiguration')
       ->will($this->returnValue(array('items_per_page' => 5)));
 
     $this->blockDisplay->preBlockBuild($this->blockPlugin);

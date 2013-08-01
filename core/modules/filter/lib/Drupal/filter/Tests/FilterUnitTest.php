@@ -8,9 +8,7 @@
 namespace Drupal\filter\Tests;
 
 use Drupal\simpletest\DrupalUnitTestBase;
-use stdClass;
 use Drupal\filter\FilterBag;
-use Drupal\filter\Plugin\Filter\FilterCaption;
 
 /**
  * Unit tests for core filters.
@@ -23,6 +21,11 @@ class FilterUnitTest extends DrupalUnitTestBase {
    * @var array
    */
   public static $modules = array('filter');
+
+  /**
+   * @var \Drupal\filter\Plugin\FilterInterface[]
+   */
+  protected $filters;
 
   public static function getInfo() {
     return array(
@@ -238,7 +241,7 @@ class FilterUnitTest extends DrupalUnitTestBase {
   function testHtmlFilter() {
     // Get FilterHtml object.
     $filter = $this->filters['filter_html'];
-    $filter->setPluginConfiguration(array(
+    $filter->setConfiguration(array(
       'settings' => array(
         'allowed_html' => '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd>',
         'filter_html_help' => 1,
@@ -285,7 +288,7 @@ class FilterUnitTest extends DrupalUnitTestBase {
   function testNoFollowFilter() {
     // Get FilterHtml object.
     $filter = $this->filters['filter_html'];
-    $filter->setPluginConfiguration(array(
+    $filter->setConfiguration(array(
       'settings' => array(
         'allowed_html' => '<a>',
         'filter_html_help' => 1,
@@ -337,7 +340,7 @@ class FilterUnitTest extends DrupalUnitTestBase {
   function testUrlFilter() {
     // Get FilterUrl object.
     $filter = $this->filters['filter_url'];
-    $filter->setPluginConfiguration(array(
+    $filter->setConfiguration(array(
       'settings' => array(
         'filter_url_length' => 496,
       )
@@ -629,7 +632,7 @@ www.example.com with a newline in comments -->
     $this->assertFilteredString($filter, $tests);
 
     // URL trimming.
-    $filter->setPluginConfiguration(array(
+    $filter->setConfiguration(array(
       'settings' => array(
         'filter_url_length' => 20,
       )
@@ -711,7 +714,7 @@ www.example.com with a newline in comments -->
   function testUrlFilterContent() {
     // Get FilterUrl object.
     $filter = $this->filters['filter_url'];
-    $filter->setPluginConfiguration(array(
+    $filter->setConfiguration(array(
       'settings' => array(
         'filter_url_length' => 496,
       )

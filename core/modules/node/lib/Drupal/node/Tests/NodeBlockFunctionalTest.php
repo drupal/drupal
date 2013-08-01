@@ -106,7 +106,7 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Set the number of recent nodes to show to 10.
-    $block->getPlugin()->setConfig('block_count', 10);
+    $block->getPlugin()->setConfigurationValue('block_count', 10);
     $block->save();
 
     // Post an additional node.

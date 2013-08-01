@@ -25,7 +25,7 @@ class BlockFormController extends EntityFormController {
       '#type' => 'value',
       '#value' => $entity->id(),
     );
-    $form['settings'] = $entity->getPlugin()->form(array(), $form_state);
+    $form['settings'] = $entity->getPlugin()->buildConfigurationForm(array(), $form_state);
 
     $form['machine_name'] = array(
       '#type' => 'machine_name',
@@ -208,7 +208,7 @@ class BlockFormController extends EntityFormController {
       'values' => &$form_state['values']['settings']
     );
     // Call the plugin validate handler.
-    $entity->getPlugin()->validate($form, $settings);
+    $entity->getPlugin()->validateConfigurationForm($form, $settings);
   }
 
   /**
@@ -224,7 +224,7 @@ class BlockFormController extends EntityFormController {
       'values' => &$form_state['values']['settings']
     );
     // Call the plugin submit handler.
-    $entity->getPlugin()->submit($form, $settings);
+    $entity->getPlugin()->submitConfigurationForm($form, $settings);
 
     // Save the settings of the plugin.
     $entity->save();

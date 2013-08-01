@@ -8,14 +8,13 @@
 namespace Drupal\views;
 
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Component\Plugin\PluginBag;
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Component\Utility\MapArray;
+use Drupal\Component\Plugin\DefaultPluginBag;
 
 /**
  * A class which wraps the displays of a view so you can lazy-initialize them.
  */
-class DisplayBag extends PluginBag {
+class DisplayBag extends DefaultPluginBag {
 
   /**
    * Stores a reference to the view which has this displays attached.
@@ -25,11 +24,9 @@ class DisplayBag extends PluginBag {
   protected $view;
 
   /**
-   * The manager used to instantiate the plugins.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   * {@inheritdoc}
    */
-  protected $manager;
+  protected $pluginKey = 'display_plugin';
 
   /**
    * Constructs a DisplayBag object.
@@ -40,14 +37,10 @@ class DisplayBag extends PluginBag {
    *   The manager to be used for instantiating plugins.
    */
   public function __construct(ViewExecutable $view, PluginManagerInterface $manager) {
+    parent::__construct($manager, $view->storage->get('display'));
+
     $this->view = $view;
-    $this->manager = $manager;
-
     $this->initializePlugin('default');
-
-    // Store all display IDs to access them easy and fast.
-    $display = $this->view->storage->get('display');
-    $this->instanceIDs = MapArray::copyValuesToKeys(array_keys($display));
   }
 
   /**
@@ -55,6 +48,15 @@ class DisplayBag extends PluginBag {
    */
   public function __destruct() {
     $this->clear();
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @return \Drupal\views\Plugin\views\display\DisplayPluginBase
+   */
+  public function &get($instance_id) {
+    return parent::get($instance_id);
   }
 
   /**
@@ -69,19 +71,15 @@ class DisplayBag extends PluginBag {
   }
 
   /**
-   * Overrides \Drupal\Component\Plugin\PluginBag::initializePlugin().
+   * {@inheritdoc}
    */
   protected function initializePlugin($display_id) {
-    // If the display was initialized before, just return.
-    if (isset($this->pluginInstances[$display_id])) {
-      return;
-    }
-
     // Retrieve and initialize the new display handler with data.
     $display = &$this->view->storage->getDisplay($display_id);
 
     try {
-      $this->pluginInstances[$display_id] = $this->manager->createInstance($display['display_plugin']);
+      $this->configurations[$display_id] = $display;
+      parent::initializePlugin($display_id);
     }
     // Catch any plugin exceptions that are thrown. So we can fail nicely if a
     // display plugin isn't found.

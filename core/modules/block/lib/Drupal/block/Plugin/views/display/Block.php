@@ -243,7 +243,7 @@ class Block extends DisplayPluginBase {
   public function blockForm(ViewsBlock $block, array &$form, array &$form_state) {
     $allow_settings = array_filter($this->getOption('allow'));
 
-    $block_configuration = $block->getConfig();
+    $block_configuration = $block->getConfiguration();
 
     foreach ($allow_settings as $type => $enabled) {
       if (empty($enabled)) {
@@ -299,7 +299,7 @@ class Block extends DisplayPluginBase {
    */
   public function blockSubmit(ViewsBlock $block, $form, &$form_state) {
     if (isset($form_state['values']['override']['items_per_page'])) {
-      $block->setConfig('items_per_page', $form_state['values']['override']['items_per_page']);
+      $block->setConfigurationValue('items_per_page', $form_state['values']['override']['items_per_page']);
     }
   }
 
@@ -310,7 +310,7 @@ class Block extends DisplayPluginBase {
    *   The block plugin for views displays.
    */
   public function preBlockBuild(ViewsBlock $block) {
-    $config = $block->getConfig();
+    $config = $block->getConfiguration();
     if ($config['items_per_page'] !== 'none') {
       $this->view->setItemsPerPage($config['items_per_page']);
     }

@@ -10,8 +10,8 @@ namespace Drupal\action;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Action\ConfigurableActionInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Plugin\PluginFormInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -97,8 +97,8 @@ abstract class ActionFormControllerBase extends EntityFormController implements 
       '#value' => $this->entity->getType(),
     );
 
-    if ($this->plugin instanceof ConfigurableActionInterface) {
-      $form += $this->plugin->form($form, $form_state);
+    if ($this->plugin instanceof PluginFormInterface) {
+      $form += $this->plugin->buildConfigurationForm($form, $form_state);
     }
 
     return parent::form($form, $form_state);
@@ -133,8 +133,8 @@ abstract class ActionFormControllerBase extends EntityFormController implements 
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
 
-    if ($this->plugin instanceof ConfigurableActionInterface) {
-      $this->plugin->validate($form, $form_state);
+    if ($this->plugin instanceof PluginFormInterface) {
+      $this->plugin->validateConfigurationForm($form, $form_state);
     }
   }
 
@@ -144,8 +144,8 @@ abstract class ActionFormControllerBase extends EntityFormController implements 
   public function submit(array $form, array &$form_state) {
     parent::submit($form, $form_state);
 
-    if ($this->plugin instanceof ConfigurableActionInterface) {
-      $this->plugin->submit($form, $form_state);
+    if ($this->plugin instanceof PluginFormInterface) {
+      $this->plugin->submitConfigurationForm($form, $form_state);
     }
     return $this->entity;
   }

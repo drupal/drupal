@@ -57,7 +57,7 @@ class ActionAdminManageForm implements FormInterface, ControllerInterface {
   public function buildForm(array $form, array &$form_state) {
     $actions = array();
     foreach ($this->manager->getDefinitions() as $id => $definition) {
-      if (is_subclass_of($definition['class'], '\Drupal\Core\Action\ConfigurableActionInterface')) {
+      if (is_subclass_of($definition['class'], '\Drupal\Core\Plugin\PluginFormInterface')) {
         $key = Crypt::hashBase64($id);
         $actions[$key] = $definition['label'] . '...';
       }

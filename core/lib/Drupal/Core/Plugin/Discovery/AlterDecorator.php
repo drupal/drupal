@@ -23,7 +23,7 @@ class AlterDecorator implements DiscoveryInterface {
   /**
    * The Discovery object being decorated.
    *
-   * @var Drupal\Component\Plugin\Discovery\DiscoveryInterface
+   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface
    */
   protected $decorated;
 
@@ -32,7 +32,7 @@ class AlterDecorator implements DiscoveryInterface {
    *
    * It uses the DiscoveryInterface object it should decorate.
    *
-   * @param Drupal\Component\Plugin\Discovery\DiscoveryInterface $decorated
+   * @param \Drupal\Component\Plugin\Discovery\DiscoveryInterface $decorated
    *   The object implementing DiscoveryInterface that is being decorated.
    * @param string $hook
    *   The name of the alter hook that will be used by this discovery instance.
@@ -56,7 +56,7 @@ class AlterDecorator implements DiscoveryInterface {
    */
   public function getDefinitions() {
     $definitions = $this->decorated->getDefinitions();
-    drupal_alter($this->hook, $definitions);
+    \Drupal::moduleHandler()->alter($this->hook, $definitions);
     return $definitions;
   }
 

@@ -26,7 +26,7 @@ abstract class ChangeUserRoleBase extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, array &$form_state) {
     $roles = user_role_names(TRUE);
     unset($roles[DRUPAL_AUTHENTICATED_RID]);
     $form['rid'] = array(
@@ -42,7 +42,7 @@ abstract class ChangeUserRoleBase extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, array &$form_state) {
     $this->configuration['rid'] = $form_state['values']['rid'];
   }
 
