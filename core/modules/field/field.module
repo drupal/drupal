@@ -840,6 +840,9 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
  *
  * @return
  *   An array with available field items keyed by delta.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   $entity->getTranslation($langcode)->{$field_name}
  */
 function field_get_items(EntityInterface $entity, $field_name, $langcode = NULL) {
   $entity = $entity->getBCEntity();
