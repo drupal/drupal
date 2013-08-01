@@ -218,7 +218,7 @@ function user_field_extra_fields() {
     'description' => t('User module form element.'),
     'weight' => 0,
   );
-  if (config('system.timezone')->get('user.configurable')) {
+  if (config('system.date')->get('timezone.user.configurable')) {
     $fields['user']['user']['form']['timezone'] = array(
       'label' => t('Timezone'),
       'description' => t('System module form element.'),

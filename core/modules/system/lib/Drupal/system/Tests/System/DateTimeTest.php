@@ -43,9 +43,9 @@ class DateTimeTest extends WebTestBase {
    */
   function testTimeZoneHandling() {
     // Setup date/time settings for Honolulu time.
-    $config = config('system.timezone')
-      ->set('default', 'Pacific/Honolulu')
-      ->set('user.configurable', 0)
+    $config = config('system.date')
+      ->set('timezone.default', 'Pacific/Honolulu')
+      ->set('timezone.user.configurable', 0)
       ->save();
     entity_load('date_format', 'medium')
       ->setPattern('Y-m-d H:i:s O')
@@ -64,7 +64,7 @@ class DateTimeTest extends WebTestBase {
     $this->assertText('2007-07-31 21:00:00 -1000', 'Date should be identical, with GMT offset of -10 hours.');
 
     // Set time zone to Los Angeles time.
-    $config->set('default', 'America/Los_Angeles')->save();
+    $config->set('timezone.default', 'America/Los_Angeles')->save();
 
     // Confirm date format and time zone.
     $this->drupalGet('node/' . $node1->id());

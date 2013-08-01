@@ -1896,15 +1896,15 @@ function drupal_handle_request($test_only = FALSE) {
  */
 function drupal_get_user_timezone() {
   global $user;
-  $config = config('system.timezone');
+  $config = config('system.date');
 
-  if ($user && $config->get('user.configurable') && $user->isAuthenticated() && $user->getTimezone()) {
+  if ($user && $config->get('timezone.user.configurable') && $user->isAuthenticated() && $user->getTimezone()) {
     return $user->getTimezone();
   }
   else {
     // Ignore PHP strict notice if time zone has not yet been set in the php.ini
     // configuration.
-    $config_data_default_timezone = $config->get('default');
+    $config_data_default_timezone = $config->get('timezone.default');
     return !empty($config_data_default_timezone) ? $config_data_default_timezone : @date_default_timezone_get();
   }
 }
