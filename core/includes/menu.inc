@@ -963,6 +963,9 @@ function _menu_link_translate(&$item, $translate = FALSE) {
  * @return bool
  *   TRUE if the user has access or FALSE if the user should be presented
  *   with access denied.
+ *
+ * @throws \Symfony\Component\Routing\Exception\ResourceNotFoundException
+ *   If the system path in $href does not match the $route.
  */
 function menu_item_route_access(Route $route, $href, &$map) {
   $request = Request::create('/' . $href);

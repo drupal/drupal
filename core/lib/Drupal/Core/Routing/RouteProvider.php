@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Routing;
 
+use Drupal\Component\Utility\String;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
@@ -99,7 +100,7 @@ class RouteProvider implements RouteProviderInterface {
     $collection = $this->getRoutesByPath($path);
 
     if (!count($collection)) {
-      throw new ResourceNotFoundException();
+      throw new ResourceNotFoundException(String::format("The route for '@path' could not be found", array('@path' => $path)));
     }
 
     return $collection;
