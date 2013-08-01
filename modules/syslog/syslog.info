@@ -4,3 +4,4 @@ package = Core
 version = VERSION
 core = 7.x
 files[] = syslog.test
+configure = admin/config/development/logging
