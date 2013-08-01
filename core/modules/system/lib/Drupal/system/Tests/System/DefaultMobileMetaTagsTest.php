@@ -25,7 +25,6 @@ class DefaultMobileMetaTagsTest extends WebTestBase {
       'MobileOptimized' => '<meta name="MobileOptimized" content="width" />',
       'HandheldFriendly' => '<meta name="HandheldFriendly" content="true" />',
       'viewport' => '<meta name="viewport" content="width=device-width" />',
-      'cleartype' => '<meta http-equiv="cleartype" content="on" />'
     );
   }
 

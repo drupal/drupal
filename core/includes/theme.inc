@@ -2626,13 +2626,6 @@ function template_preprocess_html(&$variables) {
         'content' => 'width=device-width',
       ),
     ),
-    'cleartype' => array(
-      '#tag' => 'meta',
-      '#attributes' => array(
-        'http-equiv' => 'cleartype',
-        'content' => 'on',
-      ),
-    ),
   );
   foreach ($elements as $name => $element) {
     drupal_add_html_head($element, $name);
