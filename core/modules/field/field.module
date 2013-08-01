@@ -150,7 +150,7 @@ function field_help($path, $arg) {
       sort($modules);
       foreach ($modules as $module) {
         $display = $info[$module]['name'];
-        if (module_hook($module, 'help')) {
+        if (Drupal::moduleHandler()->implementsHook($module, 'help')) {
           $items['items'][] = l($display, 'admin/help/' . $module);
         }
         else {

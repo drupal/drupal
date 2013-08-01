@@ -1062,18 +1062,16 @@ function search_box_form_submit($form, &$form_state) {
  *   supplied or if the given search module is not active.
  */
 function search_data($keys, $module, $conditions = NULL) {
-  if (module_hook($module, 'search_execute')) {
-    $results = module_invoke($module, 'search_execute', $keys, $conditions);
-    if (module_hook($module, 'search_page')) {
-      return module_invoke($module, 'search_page', $results);
-    }
-    else {
-      return array(
-        '#theme' => 'search_results',
-        '#results' => $results,
-        '#module' => $module,
-      );
-    }
+  $results = module_invoke($module, 'search_execute', $keys, $conditions);
+  if (Drupal::moduleHandler()->implementsHook($module, 'search_page')) {
+    return module_invoke($module, 'search_page', $results);
+  }
+  else {
+    return array(
+      '#theme' => 'search_results',
+      '#results' => $results,
+      '#module' => $module,
+    );
   }
 }
 

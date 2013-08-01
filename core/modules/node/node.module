@@ -2521,7 +2521,7 @@ function node_modules_disabled($modules) {
     // check whether a hook implementation function exists and do not invoke it.
     // Node access also needs to be rebuilt if language module is disabled to
     // remove any language-specific grants.
-    if (!node_access_needs_rebuild() && (module_hook($module, 'node_grants') || $module == 'language')) {
+    if (!node_access_needs_rebuild() && (Drupal::moduleHandler()->implementsHook($module, 'node_grants') || $module == 'language')) {
       node_access_needs_rebuild(TRUE);
     }
   }
