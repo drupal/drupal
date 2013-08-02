@@ -1,0 +1,24 @@
+entity_test_render:
+  pattern: '/entity-test-render/{entity_test_render}'
+  defaults:
+    _entity_view: 'entity_test_render.full'
+  requirements:
+    _access: 'TRUE'
+
+entity_test_render_options:
+  pattern: '/entity-test-render-converter/{foo}'
+  options:
+    parameters:
+      foo:
+        type: 'entity:entity_test_render'
+  defaults:
+    _entity_view: 'entity_test_render.full'
+  requirements:
+    _access: 'TRUE'
+
+entity_test_render_no_view_mode:
+  pattern: '/entity-test-render-no-view-mode/{entity_test_render}'
+  defaults:
+    _entity_view: 'entity_test_render'
+  requirements:
+    _access: 'TRUE'
