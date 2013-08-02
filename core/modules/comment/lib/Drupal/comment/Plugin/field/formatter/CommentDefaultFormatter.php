@@ -9,6 +9,7 @@ namespace Drupal\comment\Plugin\field\formatter;
 
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
 
@@ -29,7 +30,7 @@ class CommentDefaultFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, array $items) {
+  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
     $elements = array();
 
     $field = $this->fieldDefinition;
