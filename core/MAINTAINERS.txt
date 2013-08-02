@@ -305,7 +305,8 @@ REST module
 - Larry Garfield 'Crell' http://drupal.org/user/26398
 
 Search module
-- Doug Green 'douggreen' http://drupal.org/user/29191
+- Jennifer Hodgdon 'jhodgdon' https://drupal.org/user/155601
+- Peter Wolanin 'pwolanin' https://drupal.org/user/49851
 
 Shortcut module
 - David Rothstein 'David_Rothstein' http://drupal.org/user/124982
