@@ -9,7 +9,6 @@ namespace Drupal\comment\Plugin\field\field_type;
 
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Annotation\FieldType;
-use Drupal\Core\Entity\Field\PrepareCacheInterface;
 use Drupal\field\Plugin\Core\Entity\Field;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase;
 
@@ -33,7 +32,7 @@ use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase;
  *   default_formatter = "comment_default"
  * )
  */
-class CommentItem extends ConfigFieldItemBase implements PrepareCacheInterface {
+class CommentItem extends ConfigFieldItemBase {
 
   /**
    * Definitions of the contained properties.
@@ -164,10 +163,5 @@ class CommentItem extends ConfigFieldItemBase implements PrepareCacheInterface {
     // We always want the values saved so we can rely on them.
     return FALSE;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function prepareCache() {}
 
 }
