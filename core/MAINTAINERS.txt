@@ -227,6 +227,9 @@ Custom block module
 Database Logging module
 - Khalid Baheyeldin 'kbahey' http://drupal.org/user/4063
 
+E-mail module
+- Nils Destoop 'zuuperman' https://drupal.org/user/361625
+
 Edit module
 - Wim Leers 'Wim Leers' http://drupal.org/user/99777
 - Théodore Biadala 'nod_' http://drupal.org/user/598310
@@ -269,6 +272,9 @@ Help module
 Image module
 - Nathan Haug 'quicksketch' http://drupal.org/user/35821
 
+Link module
+- ?
+
 Locale module
 - Gábor Hojtsy 'Gábor Hojtsy' http://drupal.org/user/4166
 
@@ -284,10 +290,19 @@ Node module
 - Moshe Weitzman 'moshe weitzman' http://drupal.org/user/23
 - David Strauss 'David Strauss' http://drupal.org/user/93254
 
+Number module
+- Kristof De Jaeger 'swentel' http://drupal.org/user/107403
+
+Options module
+- Yves Chedemois 'yched' http://drupal.org/user/39567
+
 Overlay module
 - ?
 
 Path module
+- Dave Reid 'davereid' http://drupal.org/user/53892
+
+Phone module
 - Dave Reid 'davereid' http://drupal.org/user/53892
 
 PHP module
@@ -328,6 +343,9 @@ Taxonomy module
 - Jess Myrbo 'xjm' http://drupal.org/user/65776
 - Nathaniel Catchpole 'catch' http://drupal.org/user/35733
 - Benjamin Doherty 'bangpound' http://drupal.org/user/100456
+
+Text module
+- ?
 
 Toolbar module
 - ?
