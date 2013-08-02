@@ -114,7 +114,6 @@ class BreadcrumbTest extends MenuTestBase {
       'admin/structure/menu' => t('Menus'),
     );
     $this->assertBreadcrumb('admin/structure/menu/manage/tools', $trail);
-    $this->assertBreadcrumb('admin/structure/menu/manage/tools/edit', $trail);
 
     $mlid_node_add = db_query('SELECT mlid FROM {menu_links} WHERE link_path = :href AND module = :module', array(
       ':href' => 'node/add',
