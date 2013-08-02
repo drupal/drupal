@@ -7,6 +7,10 @@
 
 namespace Drupal\block;
 
+use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Core\Plugin\PluginFormInterface;
+
 /**
  * Defines the required interface for all block plugins.
  *
@@ -14,10 +18,8 @@ namespace Drupal\block;
  *   architecture and the relationships between the various objects, including
  *   brif references to the important components that are not coupled to the
  *   interface.
- *
- * @see \Drupal\block\BlockBase
  */
-interface BlockPluginInterface {
+interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormInterface, PluginInspectionInterface {
 
   /**
    * Returns the default settings for this block plugin.
@@ -45,54 +47,6 @@ interface BlockPluginInterface {
   public function access();
 
   /**
-   * Constructs the block configuration form.
-   *
-   * This method allows base implementations to add a generic configuration
-   * form for extending block plugins.
-   *
-   * @param array $form
-   *   The form definition array for the block configuration form.
-   * @param array $form_state
-   *   An array containing the current state of the configuration form.
-   *
-   * @return array $form
-   *   The renderable form array representing the entire configuration form.
-   *
-   * @see \Drupal\block\BlockFormController::form()
-   * @see \Drupal\block\BlockInterace::validate()
-   * @see \Drupal\block\BlockInterace::submit()
-   */
-  public function form($form, &$form_state);
-
-  /**
-   * Handles form validation for the block configuration form.
-   *
-   * @param array $form
-   *   The form definition array for the block configuration form.
-   * @param array $form_state
-   *   An array containing the current state of the configuration form.
-   *
-   * @see \Drupal\block\BlockFormController::validate()
-   * @see \Drupal\block\BlockInterace::form()
-   * @see \Drupal\block\BlockInterace::submit()
-   */
-  public function validate($form, &$form_state);
-
-  /**
-   * Handles form submissions for the block configuration form.
-   *
-   * @param array $form
-   *   The form definition array for the block configuration form.
-   * @param array $form_state
-   *   An array containing the current state of the configuration form.
-   *
-   * @see \Drupal\block\BlockFormController::submit()
-   * @see \Drupal\block\BlockInterace::form()
-   * @see \Drupal\block\BlockInterace::validate()
-   */
-  public function submit($form, &$form_state);
-
-  /**
    * Builds and returns the renderable array for this block plugin.
    *
    * @return array
@@ -101,5 +55,71 @@ interface BlockPluginInterface {
    * @see \Drupal\block\BlockRenderController
    */
   public function build();
+
+  /**
+   * Sets a particular value in the block settings.
+   *
+   * @param string $key
+   *   The key of PluginBase::$configuration to set.
+   * @param mixed $value
+   *   The value to set for the provided key.
+   *
+   * @todo This doesn't belong here. Move this into a new base class in
+   *   http://drupal.org/node/1764380.
+   * @todo This does not set a value in config(), so the name is confusing.
+   *
+   * @see \Drupal\Component\Plugin\PluginBase::$configuration
+   */
+  public function setConfigurationValue($key, $value);
+
+  /**
+   * Returns the configuration form elements specific to this block plugin.
+   *
+   * Blocks that need to add form elements to the normal block configuration
+   * form should implement this method.
+   *
+   * @param array $form
+   *   The form definition array for the block configuration form.
+   * @param array $form_state
+   *   An array containing the current state of the configuration form.
+   *
+   * @return array $form
+   *   The renderable form array representing the entire configuration form.
+   */
+  public function blockForm($form, &$form_state);
+
+  /**
+   * Adds block type-specific validation for the block form.
+   *
+   * Note that this method takes the form structure and form state arrays for
+   * the full block configuration form as arguments, not just the elements
+   * defined in BlockPluginInterface::blockForm().
+   *
+   * @param array $form
+   *   The form definition array for the full block configuration form.
+   * @param array $form_state
+   *   An array containing the current state of the configuration form.
+   *
+   * @see \Drupal\block\BlockPluginInterface::blockForm()
+   * @see \Drupal\block\BlockPluginInterface::blockSubmit()
+   */
+  public function blockValidate($form, &$form_state);
+
+  /**
+   * Adds block type-specific submission handling for the block form.
+   *
+   * Note that this method takes the form structure and form state arrays for
+   * the full block configuration form as arguments, not just the elements
+   * defined in BlockPluginInterface::blockForm().
+   *
+   * @param array $form
+   *   The form definition array for the full block configuration form.
+   * @param array $form_state
+   *   An array containing the current state of the configuration form.
+   *
+   * @see \Drupal\block\BlockPluginInterface::blockForm()
+   * @see \Drupal\block\BlockPluginInterface::blockValidate()
+   */
+  public function blockSubmit($form, &$form_state);
 
 }

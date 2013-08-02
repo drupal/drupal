@@ -8,8 +8,6 @@
 namespace Drupal\filter\Plugin;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
-use Drupal\filter\FilterBag;
 
 /**
  * Provides a base class for Filter plugins.
@@ -70,21 +68,19 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, FilterBag $bag) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->module = $this->pluginDefinition['module'];
     $this->cache = $this->pluginDefinition['cache'];
 
-    $this->setPluginConfiguration($configuration);
-
-    $this->bag = $bag;
+    $this->setConfiguration($configuration);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function setPluginConfiguration(array $configuration) {
+  public function setConfiguration(array $configuration) {
     if (isset($configuration['status'])) {
       $this->status = (bool) $configuration['status'];
     }
@@ -100,8 +96,9 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
   /**
    * {@inheritdoc}
    */
-  public function export() {
+  public function getConfiguration() {
     return array(
+      'id' => $this->getPluginId(),
       'module' => $this->pluginDefinition['module'],
       'status' => $this->status,
       'weight' => $this->weight,

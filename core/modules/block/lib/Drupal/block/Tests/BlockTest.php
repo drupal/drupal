@@ -225,7 +225,7 @@ class BlockTest extends BlockTestBase {
     $this->assertEqual($settings['cache'], DRUPAL_CACHE_PER_ROLE, 'Test block cache mode defaults to DRUPAL_CACHE_PER_ROLE.');
 
     // Disable caching for this block.
-    $block->getPlugin()->setConfig('cache', DRUPAL_NO_CACHE);
+    $block->getPlugin()->setConfigurationValue('cache', DRUPAL_NO_CACHE);
     $block->save();
     // Flushing all caches should call _block_rehash().
     $this->resetAll();

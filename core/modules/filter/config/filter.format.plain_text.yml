@@ -13,12 +13,14 @@ cache: '1'
 filters:
   # Escape all HTML.
   filter_html_escape:
+    id: filter_html_escape
     module: filter
     status: '1'
     weight: '-10'
     settings: {  }
   # Convert URLs into links.
   filter_url:
+    id: filter_url
     module: filter
     status: '1'
     weight: '0'
@@ -26,6 +28,7 @@ filters:
       filter_url_length: '72'
   # Convert linebreaks into paragraphs.
   filter_autop:
+    id: filter_autop
     module: filter
     status: '1'
     weight: '0'

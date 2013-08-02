@@ -50,50 +50,28 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
   }
 
   /**
-   * Returns the configuration data for the block plugin.
-   *
-   * @return array
-   *   The plugin configuration array from PluginBase::$configuration.
-   *
-   * @todo This doesn't belong here. Move this into a new base class in
-   *   http://drupal.org/node/1764380.
-   * @todo This does not return a config object, so the name is confusing.
-   *
-   * @see \Drupal\Component\Plugin\PluginBase::$configuration
+   * {@inheritdoc}
    */
-  public function getConfig() {
+  public function getConfiguration() {
     return $this->configuration;
   }
 
   /**
-   * Sets a particular value in the block settings.
-   *
-   * @param string $key
-   *   The key of PluginBase::$configuration to set.
-   * @param mixed $value
-   *   The value to set for the provided key.
-   *
-   * @todo This doesn't belong here. Move this into a new base class in
-   *   http://drupal.org/node/1764380.
-   * @todo This does not set a value in config(), so the name is confusing.
-   *
-   * @see \Drupal\Component\Plugin\PluginBase::$configuration
+   * {@inheritdoc}
    */
-  public function setConfig($key, $value) {
+  public function setConfiguration(array $configuration) {
+    $this->configuration = $configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConfigurationValue($key, $value) {
     $this->configuration[$key] = $value;
   }
 
   /**
-   * Indicates whether block-specific criteria allow access to the block.
-   *
-   * Blocks with access restrictions that should always be applied,
-   * regardless of user-configured settings, should implement this method
-   * with that access control logic.
-   *
-   * @return bool
-   *   FALSE to deny access to the block, or TRUE to allow access.
-   *
-   * @see hook_block_access()
+   * {@inheritdoc}
    */
   public function access() {
     // By default, the block is visible unless user-configured rules indicate
@@ -102,7 +80,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
   }
 
   /**
-   * Implements \Drupal\block\BlockPluginInterface::form().
+   * {@inheritdoc}
    *
    * Creates a generic configuration form for all block types. Individual
    * block plugins can add elements to this form by overriding
@@ -111,7 +89,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
    *
    * @see \Drupal\block\BlockBase::blockForm()
    */
-  public function form($form, &$form_state) {
+  public function buildConfigurationForm(array $form, array &$form_state) {
     $definition = $this->getPluginDefinition();
     $form['module'] = array(
       '#type' => 'value',
@@ -138,27 +116,14 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
   }
 
   /**
-   * Returns the configuration form elements specific to this block plugin.
-   *
-   * Blocks that need to add form elements to the normal block configuration
-   * form should implement this method.
-   *
-   * @param array $form
-   *   The form definition array for the block configuration form.
-   * @param array $form_state
-   *   An array containing the current state of the configuration form.
-   *
-   * @return array $form
-   *   The renderable form array representing the entire configuration form.
-   *
-   * @see \Drupal\block\BlockBase::form()
+   * {@inheritdoc}
    */
   public function blockForm($form, &$form_state) {
     return array();
   }
 
   /**
-   * Implements \Drupal\block\BlockPluginInterface::validate().
+   * {@inheritdoc}
    *
    * Most block plugins should not override this method. To add validation
    * for a specific block type, override BlockBase::blockValdiate().
@@ -167,30 +132,17 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
    *
    * @see \Drupal\block\BlockBase::blockValidate()
    */
-  public function validate($form, &$form_state) {
+  public function validateConfigurationForm(array &$form, array &$form_state) {
     $this->blockValidate($form, $form_state);
   }
 
   /**
-   * Adds block type-specific validation for the block form.
-   *
-   * Note that this method takes the form structure and form state arrays for
-   * the full block configuration form as arguments, not just the elements
-   * defined in BlockBase::blockForm().
-   *
-   * @param array $form
-   *   The form definition array for the full block configuration form.
-   * @param array $form_state
-   *   An array containing the current state of the configuration form.
-   *
-   * @see \Drupal\block\BlockBase::blockForm()
-   * @see \Drupal\block\BlockBase::blockSubmit()
-   * @see \Drupal\block\BlockBase::validate()
+   * {@inheritdoc}
    */
   public function blockValidate($form, &$form_state) {}
 
   /**
-   * Implements \Drupal\block\BlockPluginInterface::submit().
+   * {@inheritdoc}
    *
    * Most block plugins should not override this method. To add submission
    * handling for a specific block type, override BlockBase::blockSubmit().
@@ -199,7 +151,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
    *
    * @see \Drupal\block\BlockBase::blockSubmit()
    */
-  public function submit($form, &$form_state) {
+  public function submitConfigurationForm(array &$form, array &$form_state) {
     if (!form_get_errors()) {
       $this->configuration['label'] = $form_state['values']['label'];
       $this->configuration['label_display'] = $form_state['values']['label_display'];
@@ -209,20 +161,8 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
   }
 
   /**
-   * Adds block type-specific submission handling for the block form.
-   *
-   * Note that this method takes the form structure and form state arrays for
-   * the full block configuration form as arguments, not just the elements
-   * defined in BlockBase::blockForm().
-   *
-   * @param array $form
-   *   The form definition array for the full block configuration form.
-   * @param array $form_state
-   *   An array containing the current state of the configuration form.
-   *
-   * @see \Drupal\block\BlockBase::blockForm()
-   * @see \Drupal\block\BlockBase::blockValidate()
-   * @see \Drupal\block\BlockBase::submit()
+   * {@inheritdoc}
    */
   public function blockSubmit($form, &$form_state) {}
+
 }

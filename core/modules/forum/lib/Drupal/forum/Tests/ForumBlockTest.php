@@ -72,7 +72,7 @@ class ForumBlockTest extends WebTestBase {
     }
 
     // Configure the new forum topics block to only show 2 topics.
-    $block->getPlugin()->setConfig('block_count', 2);
+    $block->getPlugin()->setConfigurationValue('block_count', 2);
     $block->save();
 
     $this->drupalGet('');
@@ -135,7 +135,7 @@ class ForumBlockTest extends WebTestBase {
     }
 
     // Configure the active forum block to only show 2 topics.
-    $block->getPlugin()->setConfig('block_count', 2);
+    $block->getPlugin()->setConfigurationValue('block_count', 2);
     $block->save();
 
     $this->drupalGet('');

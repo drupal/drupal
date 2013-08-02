@@ -89,12 +89,27 @@ class ViewListControllerTest extends UnitTestCase {
       array(array(), 'default', $display_manager->getDefinition('embed'))
     );
 
+    $values = array();
+    $values['status'] = FALSE;
+    $values['display']['default']['id'] = 'default';
+    $values['display']['default']['display_title'] = 'Display';
+    $values['display']['default']['display_plugin'] = 'default';
+
+    $values['display']['page_1']['id'] = 'page_1';
+    $values['display']['page_1']['display_title'] = 'Page 1';
+    $values['display']['page_1']['display_plugin'] = 'page';
+    $values['display']['page_1']['display_options']['path'] = 'test_page';
+
+    $values['display']['embed']['id'] = 'embed';
+    $values['display']['embed']['display_title'] = 'Embedded';
+    $values['display']['embed']['display_plugin'] = 'embed';
+
     $display_manager->expects($this->any())
       ->method('createInstance')
       ->will($this->returnValueMap(array(
-        array('default', array(), $default_display),
-        array('page', array(), $page_display),
-        array('embed', array(), $embed_display),
+        array('default', $values['display']['default'], $default_display),
+        array('page', $values['display']['page_1'], $page_display),
+        array('embed', $values['display']['embed'], $embed_display),
       )));
 
     $container = new ContainerBuilder();
@@ -113,21 +128,6 @@ class ViewListControllerTest extends UnitTestCase {
     $view_list_controller->expects($this->any())
       ->method('buildOperations')
       ->will($this->returnValue(array()));
-
-    $values = array();
-    $values['status'] = FALSE;
-    $values['display']['default']['id'] = 'default';
-    $values['display']['default']['display_title'] = 'Display';
-    $values['display']['default']['display_plugin'] = 'default';
-
-    $values['display']['page_1']['id'] = 'page_1';
-    $values['display']['page_1']['display_title'] = 'Page 1';
-    $values['display']['page_1']['display_plugin'] = 'page';
-    $values['display']['page_1']['display_options']['path'] = 'test_page';
-
-    $values['display']['embed']['id'] = 'embed';
-    $values['display']['embed']['display_title'] = 'Embedded';
-    $values['display']['embed']['display_plugin'] = 'embed';
 
     $view = new View($values, 'view');
 

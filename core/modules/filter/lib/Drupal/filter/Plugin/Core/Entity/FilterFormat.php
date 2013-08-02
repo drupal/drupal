@@ -155,7 +155,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
   public function setFilterConfig($instance_id, array $configuration) {
     $this->filters[$instance_id] = $configuration;
     if (isset($this->filterBag)) {
-      $this->filterBag->setConfig($instance_id, $configuration);
+      $this->filterBag->setConfiguration($instance_id, $configuration);
     }
     return $this;
   }
@@ -166,7 +166,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
   public function getExportProperties() {
     $properties = parent::getExportProperties();
     // Sort and export the configuration of all filters.
-    $properties['filters'] = $this->filters()->sort()->export();
+    $properties['filters'] = $this->filters()->sort()->getConfiguration();
 
     return $properties;
   }
@@ -212,7 +212,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
     // Determine whether the format can be cached.
     // @todo This is a derived/computed definition, not configuration.
     $this->cache = TRUE;
-    foreach ($this->filters() as $filter) {
+    foreach ($this->filters()->getAll() as $filter) {
       if ($filter->status && !$filter->cache) {
         $this->cache = FALSE;
       }

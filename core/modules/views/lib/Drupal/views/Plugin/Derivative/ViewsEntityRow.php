@@ -7,8 +7,10 @@
 
 namespace Drupal\views\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeInterface;
-use Drupal\views\Views;
+use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Core\Entity\EntityManager;
+use Drupal\views\ViewsData;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides views row plugin definitions for all non-special entity types.
@@ -17,7 +19,7 @@ use Drupal\views\Views;
  *
  * @see \Drupal\views\Plugin\views\row\EntityRow
  */
-class ViewsEntityRow implements DerivativeInterface {
+class ViewsEntityRow implements ContainerDerivativeInterface {
 
   /**
    * Stores all entity row plugin information.
@@ -25,6 +27,54 @@ class ViewsEntityRow implements DerivativeInterface {
    * @var array
    */
   protected $derivatives = array();
+
+  /**
+   * The base plugin ID that the derivative is for.
+   *
+   * @var string
+   */
+  protected $basePluginId;
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
+   * The views data service.
+   *
+   * @var \Drupal\views\ViewsData
+   */
+  protected $viewsData;
+
+  /**
+   * Constructs a ViewsBlock object.
+   *
+   * @param string $base_plugin_id
+   *   The base plugin ID.
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager.
+   * @param \Drupal\views\ViewsData $views_data
+   *   The views data service.
+   */
+  public function __construct($base_plugin_id, EntityManager $entity_manager, ViewsData $views_data) {
+    $this->basePluginId = $base_plugin_id;
+    $this->entityManager = $entity_manager;
+    $this->viewsData = $views_data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, $base_plugin_id) {
+    return new static(
+      $base_plugin_id,
+      $container->get('plugin.manager.entity'),
+      $container->get('views.views_data')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -41,12 +91,9 @@ class ViewsEntityRow implements DerivativeInterface {
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
-    $entity_types = \Drupal::entityManager()->getDefinitions();
-
-    $views_data = Views::viewsData();
-    foreach ($entity_types as $entity_type => $entity_info) {
+    foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
       // Just add support for entity types which have a views integration.
-      if (isset($entity_info['base_table']) && $views_data->get($entity_info['base_table']) && \Drupal::entityManager()->hasController($entity_type, 'render')) {
+      if (isset($entity_info['base_table']) && $this->viewsData->get($entity_info['base_table']) && $this->entityManager->hasController($entity_type, 'render')) {
         $this->derivatives[$entity_type] = array(
           'id' => 'entity:' . $entity_type,
           'module' => 'views',

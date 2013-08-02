@@ -52,12 +52,12 @@ class BlockInterfaceTest extends DrupalUnitTestBase {
     );
     // Initial configuration of the block at construction time.
     $display_block = $manager->createInstance('test_block_instantiation', $configuration);
-    $this->assertIdentical($display_block->getConfig(), $expected_configuration, 'The block was configured correctly.');
+    $this->assertIdentical($display_block->getConfiguration(), $expected_configuration, 'The block was configured correctly.');
 
     // Updating an element of the configuration.
-    $display_block->setConfig('display_message', 'My custom display message.');
+    $display_block->setConfigurationValue('display_message', 'My custom display message.');
     $expected_configuration['display_message'] = 'My custom display message.';
-    $this->assertIdentical($display_block->getConfig(), $expected_configuration, 'The block configuration was updated correctly.');
+    $this->assertIdentical($display_block->getConfiguration(), $expected_configuration, 'The block configuration was updated correctly.');
 
     $expected_form = array(
       'module' => array(
@@ -85,7 +85,7 @@ class BlockInterfaceTest extends DrupalUnitTestBase {
     );
     $form_state = array();
     // Ensure there are no form elements that do not belong to the plugin.
-    $this->assertIdentical($display_block->form(array(), $form_state), $expected_form, 'Only the expected form elements were present.');
+    $this->assertIdentical($display_block->buildConfigurationForm(array(), $form_state), $expected_form, 'Only the expected form elements were present.');
 
     $expected_build = array(
       '#children' => 'My custom display message.',

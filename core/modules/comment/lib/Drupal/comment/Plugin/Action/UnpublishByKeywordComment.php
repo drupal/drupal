@@ -49,7 +49,7 @@ class UnpublishByKeywordComment extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function buildConfigurationForm(array $form, array &$form_state) {
     $form['keywords'] = array(
       '#title' => t('Keywords'),
       '#type' => 'textarea',
@@ -62,7 +62,7 @@ class UnpublishByKeywordComment extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array &$form, array &$form_state) {
+  public function submitConfigurationForm(array &$form, array &$form_state) {
     $this->configuration['keywords'] = drupal_explode_tags($form_state['values']['keywords']);
   }
 

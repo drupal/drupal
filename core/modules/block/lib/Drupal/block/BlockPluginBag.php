@@ -7,38 +7,39 @@
 
 namespace Drupal\block;
 
-use Drupal\block\Plugin\Core\Entity\Block;
-use Drupal\Component\Plugin\PluginBag;
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Component\Plugin\PluginManagerInterface;
+use Drupal\Component\Utility\String;
+use Drupal\Component\Plugin\DefaultSinglePluginBag;
 
 /**
  * Provides a collection of block plugins.
  */
-class BlockPluginBag extends PluginBag {
+class BlockPluginBag extends DefaultSinglePluginBag {
 
   /**
-   * The manager used to instantiate the plugins.
+   * The block ID this plugin bag belongs to.
    *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   * @var string
    */
-  protected $manager;
+  protected $blockId;
 
   /**
-   * Constructs a BlockPluginBag object.
-   *
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $manager
-   *   The manager to be used for instantiating plugins.
-   * @param array $instance_ids
-   *   The ids of the plugin instances with which we are dealing.
-   * @param \Drupal\block\Plugin\Core\Entity\Block $entity
-   *   The Block entity that holds our configuration.
+   * {@inheritdoc}
    */
-  public function __construct(PluginManagerInterface $manager, array $instance_ids, Block $entity) {
-    $this->manager = $manager;
-    $this->entity = $entity;
+  public function __construct(PluginManagerInterface $manager, array $instance_ids, array $configuration, $block_id) {
+    parent::__construct($manager, $instance_ids, $configuration);
 
-    $this->instanceIDs = drupal_map_assoc($instance_ids);
+    $this->blockId = $block_id;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @return \Drupal\block\BlockPluginInterface
+   */
+  public function &get($instance_id) {
+    return parent::get($instance_id);
   }
 
   /**
@@ -46,18 +47,14 @@ class BlockPluginBag extends PluginBag {
    */
   protected function initializePlugin($instance_id) {
     if (!$instance_id) {
-      throw new PluginException(format_string("The block '@block' did not specify a plugin.", array('@block' => $this->entity->id())));
-    }
-    if (isset($this->pluginInstances[$instance_id])) {
-      return;
+      throw new PluginException(String::format("The block '@block' did not specify a plugin.", array('@block' => $this->blockId)));
     }
 
-    $settings = $this->entity->get('settings');
     try {
-      $this->pluginInstances[$instance_id] = $this->manager->createInstance($instance_id, $settings);
+      parent::initializePlugin($instance_id);
     }
     catch (PluginException $e) {
-      $module = $settings['module'];
+      $module = $this->configuration['module'];
       // Ignore blocks belonging to disabled modules, but re-throw valid
       // exceptions when the module is enabled and the plugin is misconfigured.
       if (!$module || \Drupal::moduleHandler()->moduleExists($module)) {

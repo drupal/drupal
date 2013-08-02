@@ -78,7 +78,7 @@ class CommentBlockTest extends CommentTestBase {
     $this->assertTrue(strpos($this->drupalGetContent(), $comment3->comment_body->value) < strpos($this->drupalGetContent(), $comment2->subject->value), 'Comments were ordered correctly in block.');
 
     // Set the number of recent comments to show to 10.
-    $block->getPlugin()->setConfig('block_count', 10);
+    $block->getPlugin()->setConfigurationValue('block_count', 10);
     $block->save();
 
     // Post an additional comment.

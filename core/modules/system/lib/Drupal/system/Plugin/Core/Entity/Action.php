@@ -13,7 +13,7 @@ use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\system\ActionConfigEntityInterface;
 use Drupal\Core\Action\ActionBag;
-use Drupal\Core\Action\ConfigurableActionInterface;
+use Drupal\Component\Plugin\ConfigurablePluginInterface;
 
 /**
  * Defines the configured action entity.
@@ -127,7 +127,7 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface {
    * {@inheritdoc}
    */
   public function isConfigurable() {
-    return $this->getPlugin() instanceof ConfigurableActionInterface;
+    return $this->getPlugin() instanceof ConfigurablePluginInterface;
   }
 
   /**
@@ -184,7 +184,7 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface {
   public function preSave(EntityStorageControllerInterface $storage_controller) {
     $plugin = $this->getPlugin();
     // If this plugin has any configuration, ensure that it is set.
-    if ($plugin instanceof ConfigurableActionInterface) {
+    if ($plugin instanceof ConfigurablePluginInterface) {
       $this->set('configuration', $plugin->getConfiguration());
     }
   }
