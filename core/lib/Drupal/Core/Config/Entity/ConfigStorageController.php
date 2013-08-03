@@ -402,6 +402,11 @@ class ConfigStorageController extends EntityStorageControllerBase {
       $this->configFactory->rename($prefix . $id, $prefix . $entity->id());
     }
 
+    // Build an ID if none is set.
+    if (!isset($entity->{$this->idKey})) {
+      $entity->{$this->idKey} = $entity->id();
+    }
+
     $entity->preSave($this);
     $this->invokeHook('presave', $entity);
 
