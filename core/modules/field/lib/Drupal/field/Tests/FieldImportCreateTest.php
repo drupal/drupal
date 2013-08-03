@@ -55,9 +55,7 @@ class FieldImportCreateTest extends FieldUnitTestBase {
     // A field with multiple instances.
     $field_2 = entity_load('field_entity', $field_id_2);
     $this->assertTrue($field_2, 'The second field was created.');
-    $instance_2a = entity_load('field_instance', $instance_id_2a);
     $this->assertTrue($instance->bundle, 'test_bundle', 'The second field instance was created on bundle test_bundle.');
-    $instance_2b = entity_load('field_instance', $instance_id_2b);
     $this->assertTrue($instance->bundle, 'test_bundle_2', 'The second field instance was created on bundle test_bundle_2.');
 
     // Tests field info contains the right data.
