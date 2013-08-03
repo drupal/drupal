@@ -206,7 +206,7 @@ CKEditor module
 - Wim Leers 'Wim Leers' http://drupal.org/user/99777
 
 Color module
-- ?
+- Mark Carver 'Mark Carver' https://drupal.org/user/501638
 
 Comment module
 - Dick Olsson 'dixon_' http://drupal.org/user/239911
