@@ -74,7 +74,7 @@ abstract class TextItemBase extends ConfigFieldItemBase implements PrepareCacheI
     // Where possible, generate the sanitized version of each field early so
     // that it is cached in the field cache. This avoids the need to look up the
     // field in the filter cache separately.
-    $text_processing = $this->getFieldDefinition()->getFieldSetting('text_processing');
+    $text_processing = $this->getFieldSetting('text_processing');
     if (!$text_processing || filter_format_allowcache($this->get('format')->getValue())) {
       $itemBC = $this->getValue();
       $langcode = $this->getParent()->getParent()->language()->id;

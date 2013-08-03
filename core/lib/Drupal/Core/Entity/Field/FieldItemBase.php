@@ -44,6 +44,29 @@ abstract class FieldItemBase extends Map implements FieldItemInterface {
   }
 
   /**
+   * Returns the array of field settings.
+   *
+   * @return array
+   *   The array of settings.
+   */
+  protected function getFieldSettings() {
+    return $this->getFieldDefinition()->getFieldSettings();
+  }
+
+  /**
+   * Returns the value of a field setting.
+   *
+   * @param string $setting_name
+   *   The setting name.
+   *
+   * @return mixed
+   *   The setting value.
+   */
+  protected function getFieldSetting($setting_name) {
+    return $this->getFieldDefinition()->getFieldSetting($setting_name);
+  }
+
+  /**
    * Overrides \Drupal\Core\TypedData\TypedData::setValue().
    *
    * @param array|null $values
