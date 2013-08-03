@@ -54,7 +54,6 @@ class UserAttributesTest extends WebTestBase {
     $this->drupalLogin($user1);
 
     $account_uri = url('user/' . $user2->id(), array('absolute' => TRUE));
-    $person_uri = url('user/' . $user2->id(), array('fragment' => 'me', 'absolute' => TRUE));
 
     // Parses the user profile page where the default bundle mapping for user
     // should be used.
