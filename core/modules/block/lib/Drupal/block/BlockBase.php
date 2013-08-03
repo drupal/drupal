@@ -9,6 +9,8 @@ namespace Drupal\block;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\block\BlockInterface;
+use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Language\Language;
 
 /**
  * Defines a base block implementation that most blocks plugins will extend.
@@ -164,5 +166,29 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
    * {@inheritdoc}
    */
   public function blockSubmit($form, &$form_state) {}
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMachineNameSuggestion() {
+    $definition = $this->getPluginDefinition();
+    $admin_label = $definition['admin_label'];
+
+    // @todo This is basically the same as what is done in
+    //   \Drupal\system\MachineNameController::transliterate(), so it might make
+    //   sense to provide a common service for the two.
+    $transliteration_service = \Drupal::service('transliteration');
+    $transliterated = $transliteration_service->transliterate($admin_label, Language::LANGCODE_DEFAULT, '_');
+
+    $replace_pattern = '[^a-z0-9_.]+';
+
+    $transliterated = Unicode::strtolower($transliterated);
+
+    if (isset($replace_pattern)) {
+      $transliterated = preg_replace('@' . $replace_pattern . '@', '', $transliterated);
+    }
+
+    return $transliterated;
+  }
 
 }

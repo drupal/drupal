@@ -92,5 +92,9 @@ class BlockInterfaceTest extends DrupalUnitTestBase {
     );
     // Ensure the build array is proper.
     $this->assertIdentical($display_block->build(), $expected_build, 'The plugin returned the appropriate build array.');
+
+    // Ensure the machine name suggestion is correct. In truth, this is actually
+    // testing BlockBase's implementation, not the interface itself.
+    $this->assertIdentical($display_block->getMachineNameSuggestion(), 'displaymessage', 'The plugin returned the expected machine name suggestion.');
   }
 }

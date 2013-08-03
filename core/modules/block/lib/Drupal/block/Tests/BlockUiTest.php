@@ -19,7 +19,7 @@ class BlockUiTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block');
+  public static $modules = array('block', 'block_test');
 
   protected $regions;
 
@@ -113,4 +113,24 @@ class BlockUiTest extends WebTestBase {
     $blocks = drupal_json_decode($this->drupalGet('system/autocomplete/block_plugin_ui:stark', array('query' => array('q' => $block))));
     $this->assertEqual($blocks['system_menu_block:menu-admin'], $block, t('Can search for block with name !block.', array('!block' => $block)));
   }
+
+  /**
+   * Tests that the BlockFormController populates machine name correctly.
+   */
+  public function testMachineNameSuggestion() {
+    $url = 'admin/structure/block/add/test_block_instantiation/stark';
+    $this->drupalGet($url);
+    $this->assertFieldByName('machine_name', 'displaymessage', 'Block form uses raw machine name suggestion when no instance already exists.');
+    $this->drupalPost($url, array(), 'Save block');
+
+    // Now, check to make sure the form starts by autoincrementing correctly.
+    $this->drupalGet($url);
+    $this->assertFieldByName('machine_name', 'displaymessage_2', 'Block form appends _2 to plugin-suggested machine name when an instance already exists.');
+    $this->drupalPost($url, array(), 'Save block');
+
+    // And verify that it continues working beyond just the first two.
+    $this->drupalGet($url);
+    $this->assertFieldByName('machine_name', 'displaymessage_3', 'Block form appends _3 to plugin-suggested machine name when two instances already exist.');
+  }
+
 }

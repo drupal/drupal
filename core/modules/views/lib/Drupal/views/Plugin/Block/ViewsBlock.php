@@ -218,4 +218,13 @@ class ViewsBlock extends BlockBase implements ContainerFactoryPluginInterface {
      return $id;
    }
 
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getMachineNameSuggestion() {
+    $this->view->setDisplay($this->displayID);
+    return 'views_block__' . $this->view->storage->id() . '_' . $this->view->current_display;
+  }
+
 }
