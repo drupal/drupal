@@ -121,17 +121,6 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   /**
    * {@inheritdoc}
    */
-  public function save() {
-    // Build an ID if none is set.
-    if (empty($this->id)) {
-      $this->id = $this->id();
-    }
-    return parent::save();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getExportProperties() {
     $names = array(
       'id',
