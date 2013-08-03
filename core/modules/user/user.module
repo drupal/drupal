@@ -49,8 +49,6 @@ const USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL = 'visitors_admin_approval'
  * Implement hook_help().
  */
 function user_help($path, $arg) {
-  global $user;
-
   switch ($path) {
     case 'admin/help#user':
       $output = '';
@@ -522,7 +520,6 @@ function user_search_access() {
  * Implements hook_search_execute().
  */
 function user_search_execute($keys = NULL, $conditions = NULL) {
-  $find = array();
   // Replace wildcards with MySQL/PostgreSQL wildcards.
   $keys = preg_replace('!\*+!', '%', $keys);
   $query = db_select('users')
