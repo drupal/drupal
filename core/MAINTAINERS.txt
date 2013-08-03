@@ -323,6 +323,10 @@ Search module
 - Jennifer Hodgdon 'jhodgdon' https://drupal.org/user/155601
 - Peter Wolanin 'pwolanin' https://drupal.org/user/49851
 
+Serialization module
+- Lin Clark 'linclark' http://drupal.org/user/396253
+- Damian Lee 'damiankloip' http://drupal.org/user/1037976
+
 Shortcut module
 - David Rothstein 'David_Rothstein' http://drupal.org/user/124982
 
