@@ -172,4 +172,24 @@ class Block extends ConfigEntityBase implements BlockInterface {
     $this->set('settings', $this->getPlugin()->getConfiguration());
   }
 
+  /**
+   * Sorts active blocks by weight; sorts inactive blocks by name.
+   */
+  public static function sort($a, $b) {
+    // Separate enabled from disabled.
+    $status = $b->get('status') - $a->get('status');
+    if ($status) {
+      return $status;
+    }
+    // Sort by weight, unless disabled.
+    if ($a->get('region') != BLOCK_REGION_NONE) {
+      $weight = $a->get('weight') - $b->get('weight');
+      if ($weight) {
+        return $weight;
+      }
+    }
+    // Sort by label.
+    return strcmp($a->label(), $b->label());
+  }
+
 }
