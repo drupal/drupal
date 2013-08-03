@@ -121,4 +121,30 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     return $config_storage;
   }
 
+  /**
+   * Mocks a block with a block plugin.
+   *
+   * @param string $machine_name
+   *   The machine name of the block plugin.
+   *
+   * @return \Drupal\block\BlockInterface|\PHPUnit_Framework_MockObject_MockObject
+   *   The mocked block.
+   */
+  protected function getBlockMockWithMachineName($machine_name) {
+    $plugin = $this->getMockBuilder('Drupal\block\BlockBase')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $plugin->expects($this->any())
+      ->method('getMachineNameSuggestion')
+      ->will($this->returnValue($machine_name));
+
+    $block = $this->getMockBuilder('Drupal\block\Plugin\Core\Entity\Block')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $block->expects($this->any())
+      ->method('getPlugin')
+      ->will($this->returnValue($plugin));
+    return $block;
+  }
+
 }

@@ -122,4 +122,16 @@ interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormIn
    */
   public function blockSubmit($form, &$form_state);
 
+  /**
+   * Suggests a machine name to identify an instance of this block.
+   *
+   * The block plugin need not verify that the machine name is at all unique. It
+   * is only responsible for providing a baseline suggestion; calling code is
+   * responsible for ensuring whatever uniqueness is required for the use case.
+   *
+   * @return string
+   *   The suggested machine name.
+   */
+  public function getMachineNameSuggestion();
+
 }

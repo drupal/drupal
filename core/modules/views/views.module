@@ -1663,25 +1663,3 @@ function views_cache_get($cid, $use_language = FALSE) {
   return cache('views_info')->get($cid);
 }
 
-/**
- * Implements hook_form_FORM_ID_alter for block_form().
- *
- * Views overrides block configuration form elements during
- * \Drupal\views\Plugin\Block\ViewsBlock::form() but machine_name assignment is
- * added later by \Drupal\block\BlockFormController::form() so we provide an
- * override for the block machine_name here.
- */
-function views_form_block_form_alter(&$form, &$form_state) {
-  // Ensure the block-form being altered is a Views block configuration form.
-  if (($form['settings']['module']['#value'] == 'views') && empty($form['machine_name']['#default_value'])) {
-    // Unset the machine_name provided by BlockFormController.
-    unset($form['machine_name']['#machine_name']['source']);
-    // Load the Views plugin object using form_state array and create a
-    // block machine_name based on the View ID and View Display ID.
-    $block_plugin = $form_state['controller']->getEntity()->getPlugin();
-    // Override the Views block's machine_name by providing a default_value.
-    $form['machine_name']['#default_value'] = $block_plugin->generateBlockInstanceID(Drupal::entityManager()->getStorageController('block'));
-    // Prevent users from changing the auto-generated block machine_name.
-    $form['machine_name']['#access'] = FALSE;
-  }
-}
