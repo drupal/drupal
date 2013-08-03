@@ -251,7 +251,7 @@ class LocaleConfigManager extends TypedConfigManager {
           // If the string has a translation for this context to this language,
           // save it in the configuration location so it can be looked up faster
           // next time.
-          $string = $this->localeStorage->createString((array) $translation)
+          $this->localeStorage->createString((array) $translation)
             ->addLocation('configuration', $name)
             ->save();
         }
