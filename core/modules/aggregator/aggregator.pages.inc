@@ -88,13 +88,13 @@ function aggregator_page_category_form($form, $form_state, $category) {
 /**
  * Loads and optionally filters feed items.
  *
- * @param $type
+ * @param string $type
  *   The type of filter for the items. Possible values are:
  *   - sum: No filtering.
  *   - source: Filter the feed items, limiting the result to items from a
  *     single source.
  *   - category: Filter the feed items by category.
- * @param $data
+ * @param mixed $data
  *   Feed or category data used for filtering. The type and value of $data
  *   depends on $type:
  *   - source: $data is an object with $data->fid identifying the feed used to
@@ -102,43 +102,29 @@ function aggregator_page_category_form($form, $form_state, $category) {
  *   - category: $data is an array with $data['cid'] being the category id to
  *     filter on.
  *   The $data parameter is not used when $type is 'sum'.
+ * @param int $limit
+ *   (optional) The number of records to return. Defaults to 20.
  *
- * @return
+ * @deprecated Use \Drupal\aggregator\ItemStorageController::loadAll() for
+ *   loading all feed items, \Drupal\aggregator\ItemStorageController::loadByFeed()
+ *   for loading feed items filtered by the source feed, and \Drupal\aggregator\ItemStorageController::loadByCategory()
+ *   for loading feed items filtered by the feed category.
+ *
+ * @return \Drupal\aggregator\ItemInterface[]
  *   An array of the feed items.
  */
 function aggregator_load_feed_items($type, $data = NULL, $limit = 20) {
-  $items = array();
+  $storage_controller = Drupal::entityManager()->getStorageController('aggregator_item');
   switch ($type) {
     case 'sum':
-      $query = db_select('aggregator_item', 'i');
-      $query->join('aggregator_feed', 'f', 'i.fid = f.fid');
-      $query->fields('i', array('iid'));
-      break;
+      return $storage_controller->loadAll($limit);
+
     case 'source':
-      $query = db_select('aggregator_item', 'i');
-      $query
-        ->fields('i', array('iid'))
-        ->condition('i.fid', $data->id());
-      break;
+      return $storage_controller->loadByFeed($data->id(), $limit);
+
     case 'category':
-      $query = db_select('aggregator_category_item', 'c');
-      $query->leftJoin('aggregator_item', 'i', 'c.iid = i.iid');
-      $query->leftJoin('aggregator_feed', 'f', 'i.fid = f.fid');
-      $query
-        ->fields('i', array('iid'))
-        ->condition('cid', $data->cid);
-      break;
+      return $storage_controller->loadByCategory($data->cid, $limit);
   }
-
-  $result = $query
-    ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
-    ->limit($limit)
-    ->orderBy('i.timestamp', 'DESC')
-    ->orderBy('i.iid', 'DESC')
-    ->execute();
-
-  $items = entity_load_multiple('aggregator_item', $result->fetchCol());
-  return $items;
 }
 
 /**

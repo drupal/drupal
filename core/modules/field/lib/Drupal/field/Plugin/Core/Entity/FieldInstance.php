@@ -352,7 +352,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    *   In case of failures at the configuration storage level.
    */
   protected function saveNew() {
-    $module_handler = \Drupal::moduleHandler();
     $instance_controller = \Drupal::entityManager()->getStorageController($this->entityType);
 
     // Check that the field can be attached to this entity type.
@@ -394,7 +393,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    *   In case of failures at the configuration storage level.
    */
   protected function saveUpdated() {
-    $module_handler = \Drupal::moduleHandler();
     $instance_controller = \Drupal::entityManager()->getStorageController($this->entityType);
 
     $original = $instance_controller->loadUnchanged($this->getOriginalID());

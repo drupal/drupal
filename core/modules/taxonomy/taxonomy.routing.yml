@@ -25,3 +25,10 @@ taxonomy_vocabulary_delete:
     _entity_form: 'taxonomy_vocabulary.delete'
   requirements:
     _entity_access: 'taxonomy_vocabulary.delete'
+
+taxonomy_vocabulary_reset:
+  pattern: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/reset'
+  defaults:
+    _entity_form: 'taxonomy_vocabulary.reset'
+  requirements:
+    _permission: 'administer taxonomy'

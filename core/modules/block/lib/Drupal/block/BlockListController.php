@@ -46,7 +46,8 @@ class BlockListController extends ConfigEntityListController implements FormInte
     // Load only blocks for this theme, and sort them.
     // @todo Move the functionality of _block_rehash() out of the listing page.
     $entities = _block_rehash($this->theme);
-    uasort($entities, 'static::sort');
+
+    uasort($entities, array($this->entityInfo['class'], 'sort'));
     return $entities;
   }
 
@@ -58,39 +59,6 @@ class BlockListController extends ConfigEntityListController implements FormInte
     $this->theme = $theme ?: $GLOBALS['theme_key'];
 
     return drupal_get_form($this);
-  }
-
-  /**
-   * Sorts active blocks by region then weight; sorts inactive blocks by name.
-   */
-  protected function sort(Block $a, Block $b) {
-    static $regions;
-    // We need the region list to correctly order by region.
-    if (!isset($regions)) {
-      $regions = array_flip(array_keys($this->regions));
-      $regions[BLOCK_REGION_NONE] = count($regions);
-    }
-
-    // Separate enabled from disabled.
-    $status = $b->get('status') - $a->get('status');
-    if ($status) {
-      return $status;
-    }
-    // Sort by region (in the order defined by theme .info.yml file).
-    $aregion = $a->get('region');
-    $bregion = $b->get('region');
-    if ((!empty($aregion) && !empty($bregion)) && ($place = ($regions[$aregion] - $regions[$bregion]))) {
-      return $place;
-    }
-    // Sort by weight, unless disabled.
-    if ($a->get('region') != BLOCK_REGION_NONE) {
-      $weight = $a->get('weight') - $b->get('weight');
-      if ($weight) {
-        return $weight;
-      }
-    }
-    // Sort by label.
-    return strcmp($a->label(), $b->label());
   }
 
   /**

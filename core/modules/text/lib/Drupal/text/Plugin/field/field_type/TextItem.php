@@ -66,7 +66,7 @@ class TextItem extends TextItemBase {
     $constraint_manager = \Drupal::typedData()->getValidationConstraintManager();
     $constraints = parent::getConstraints();
 
-    if ($max_length = $this->getFieldDefinition()->getFieldSetting('max_length')) {
+    if ($max_length = $this->getFieldSetting('max_length')) {
       $constraints[] = $constraint_manager->create('ComplexData', array(
         'value' => array(
           'Length' => array(
@@ -85,18 +85,17 @@ class TextItem extends TextItemBase {
    */
   public function settingsForm(array $form, array &$form_state) {
     $element = array();
-    $field = $this->getInstance()->getField();
 
     $element['max_length'] = array(
       '#type' => 'number',
       '#title' => t('Maximum length'),
-      '#default_value' => $field->settings['max_length'],
+      '#default_value' => $this->getFieldSetting('max_length'),
       '#required' => TRUE,
       '#description' => t('The maximum length of the field in characters.'),
       '#min' => 1,
       // @todo: If $has_data, add a validate handler that only allows
       // max_length to increase.
-      '#disabled' => $field->hasData(),
+      '#disabled' => $this->getInstance()->getField()->hasData(),
     );
 
     return $element;
@@ -111,7 +110,7 @@ class TextItem extends TextItemBase {
     $element['text_processing'] = array(
       '#type' => 'radios',
       '#title' => t('Text processing'),
-      '#default_value' => $this->getInstance()->settings['text_processing'],
+      '#default_value' => $this->getFieldSetting('text_processing'),
       '#options' => array(
         t('Plain text'),
         t('Filtered text (user selects text format)'),

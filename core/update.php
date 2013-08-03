@@ -107,7 +107,7 @@ function update_script_selection_form($form, &$form_state) {
   }
 
   // Find and label any incompatible updates.
-  foreach (update_resolve_dependencies($starting_updates) as $function => $data) {
+  foreach (update_resolve_dependencies($starting_updates) as $data) {
     if (!$data['allowed']) {
       $incompatible_updates_exist = TRUE;
       $incompatible_count++;

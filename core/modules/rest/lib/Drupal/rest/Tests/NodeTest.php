@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\rest\test\NodeTest.
+ * Contains \Drupal\rest\Tests\NodeTest.
  */
 
 namespace Drupal\rest\Tests;
@@ -63,9 +63,19 @@ class NodeTest extends RESTTestBase {
 
     // Create a PATCH request body that only updates the title field.
     $new_title = $this->randomString();
-    $serialized = '{"_links":{"type":{"href":"'
-      . url('rest/type/node/resttest', array('absolute' => TRUE))
-      . '"}},"title":[{"value":"' . $new_title . '"}]}';
+    $data = array(
+      '_links' => array(
+        'type' => array(
+          'href' => url('rest/type/node/resttest', array('absolute' => TRUE)),
+        ),
+      ),
+      'title' => array(
+        array(
+          'value' => $new_title,
+        ),
+      ),
+    );
+    $serialized = $this->container->get('serializer')->serialize($data, $this->defaultFormat);
     $this->httpRequest('entity/node/' . $node->id(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(204);
 

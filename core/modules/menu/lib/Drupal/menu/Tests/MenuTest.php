@@ -188,7 +188,7 @@ class MenuTest extends MenuWebTestBase {
     $this->assertFalse($result, 'All menu links associated to the custom menu were deleted.');
 
     // Make sure there's no delete button on system menus.
-    $this->drupalGet('admin/structure/menu/manage/main/edit');
+    $this->drupalGet('admin/structure/menu/manage/main');
     $this->assertNoRaw('edit-delete', 'The delete button was not found');
 
     // Try to delete the main menu.
@@ -375,7 +375,7 @@ class MenuTest extends MenuWebTestBase {
     $edit = array(
       'label' => $this->randomName(16),
     );
-    $this->drupalPost('admin/structure/menu/manage/main/edit', $edit, t('Save'));
+    $this->drupalPost('admin/structure/menu/manage/main', $edit, t('Save'));
 
     // Make sure menu shows up with new name in block addition.
     $default_theme = variable_get('theme_default', 'stark');

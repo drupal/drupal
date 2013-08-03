@@ -106,6 +106,15 @@ class CreateTest extends RESTTestBase {
       $this->assertResponse(403);
       $this->assertFalse(entity_load_multiple($entity_type, NULL, TRUE), 'No entity has been created in the database.');
 
+      // Try to send invalid data to trigger the entity validation constraints.
+      // Send a UUID that is too long.
+      $entity->set('uuid', $this->randomName(129));
+      $invalid_serialized = $serializer->serialize($entity, $this->defaultFormat);
+      $response = $this->httpRequest('entity/' . $entity_type, 'POST', $invalid_serialized, $this->defaultMimeType);
+      $this->assertResponse(422);
+      $error = drupal_json_decode($response);
+      $this->assertEqual($error['error'], "Unprocessable Entity: validation failed.\nuuid.0.value: This value is too long. It should have <em class=\"placeholder\">128</em> characters or less.\n");
+
       // Try to create an entity without proper permissions.
       $this->drupalLogout();
       $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, $this->defaultMimeType);

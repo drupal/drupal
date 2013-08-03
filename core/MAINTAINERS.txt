@@ -2,6 +2,7 @@ Drupal core is built and maintained by the Drupal project community. Everyone is
 encouraged to submit issues and changes (patches) to improve Drupal, and to
 contribute in other ways -- see http://drupal.org/contribute to find out how.
 
+
 Branch maintainers
 ------------------
 
@@ -12,6 +13,7 @@ whole. The branch maintainers for Drupal 8 are:
 - Nathaniel Catchpole 'catch' http://drupal.org/user/35733
 - Angela Byron 'webchick' http://drupal.org/user/24967
 - Alex Pott 'alexpott' http://drupal.org/user/157725
+
 
 Component maintainers
 ---------------------
@@ -158,9 +160,6 @@ Transliteration system
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
 - Jennifer Hodgdon 'jhodgdon' http://drupal.org/user/155601
 
-XML-RPC system
-- Frederic G. Marand 'fgm' http://drupal.org/user/27985
-
 
 Topic coordinators
 ------------------
@@ -186,6 +185,7 @@ Node Access
 - Moshe Weitzman 'moshe weitzman' http://drupal.org/user/23
 - Ken Rickard 'agentrickard' http://drupal.org/user/20975
 - Jess Myrbo 'xjm' http://drupal.org/user/65776
+
 
 Module maintainers
 ------------------
@@ -226,6 +226,9 @@ Custom block module
 
 Database Logging module
 - Khalid Baheyeldin 'kbahey' http://drupal.org/user/4063
+
+E-mail module
+- Nils Destoop 'zuuperman' https://drupal.org/user/361625
 
 Edit module
 - Wim Leers 'Wim Leers' http://drupal.org/user/99777
@@ -269,6 +272,9 @@ Help module
 Image module
 - Nathan Haug 'quicksketch' http://drupal.org/user/35821
 
+Link module
+- ?
+
 Locale module
 - Gábor Hojtsy 'Gábor Hojtsy' http://drupal.org/user/4166
 
@@ -284,10 +290,19 @@ Node module
 - Moshe Weitzman 'moshe weitzman' http://drupal.org/user/23
 - David Strauss 'David Strauss' http://drupal.org/user/93254
 
+Number module
+- Kristof De Jaeger 'swentel' http://drupal.org/user/107403
+
+Options module
+- Yves Chedemois 'yched' http://drupal.org/user/39567
+
 Overlay module
 - ?
 
 Path module
+- Dave Reid 'davereid' http://drupal.org/user/53892
+
+Phone module
 - Dave Reid 'davereid' http://drupal.org/user/53892
 
 PHP module
@@ -305,7 +320,12 @@ REST module
 - Larry Garfield 'Crell' http://drupal.org/user/26398
 
 Search module
-- Doug Green 'douggreen' http://drupal.org/user/29191
+- Jennifer Hodgdon 'jhodgdon' https://drupal.org/user/155601
+- Peter Wolanin 'pwolanin' https://drupal.org/user/49851
+
+Serialization module
+- Lin Clark 'linclark' http://drupal.org/user/396253
+- Damian Lee 'damiankloip' http://drupal.org/user/1037976
 
 Shortcut module
 - David Rothstein 'David_Rothstein' http://drupal.org/user/124982
@@ -327,6 +347,9 @@ Taxonomy module
 - Jess Myrbo 'xjm' http://drupal.org/user/65776
 - Nathaniel Catchpole 'catch' http://drupal.org/user/35733
 - Benjamin Doherty 'bangpound' http://drupal.org/user/100456
+
+Text module
+- ?
 
 Toolbar module
 - ?
@@ -357,6 +380,9 @@ Views UI module
 - Daniel Wehner 'dawehner' http://drupal.org/user/99340
 - Tim Plunkett 'tim.plunkett' http://drupal.org/user/241634
 - Damian Lee 'damiankloip' http://drupal.org/user/1037976
+
+XML-RPC module
+- Frederic G. Marand 'fgm' http://drupal.org/user/27985
 
 
 Theme maintainers

@@ -26,6 +26,7 @@ use Drupal\taxonomy\VocabularyInterface;
  *     "list" = "Drupal\taxonomy\VocabularyListController",
  *     "form" = {
  *       "default" = "Drupal\taxonomy\VocabularyFormController",
+ *       "reset" = "Drupal\taxonomy\Form\VocabularyResetForm",
  *       "delete" = "Drupal\taxonomy\Form\VocabularyDeleteForm"
  *     }
  *   },
