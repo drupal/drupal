@@ -28,22 +28,19 @@ function user_admin_account() {
     ->extend('Drupal\Core\Database\Query\PagerSelectExtender')
     ->extend('Drupal\Core\Database\Query\TableSortExtender');
   $query
-    ->fields('u', array('uid', 'name', 'status', 'created', 'access'))
+    ->fields('u', array('uid'))
     ->limit(50)
     ->orderByHeader($header)
     ->setCountQuery($count_query);
-  $result = $query->execute();
+  $uids = $query->execute()
+    ->fetchCol('uid');
 
   $destination = drupal_get_destination();
-  $roles = array_map('check_plain', user_role_names(TRUE));
-  $accounts = array();
-  foreach ($result as $account) {
-    $account = user_load($account->uid);
-    $users_roles = array();
-    $roles_result = db_query('SELECT rid FROM {users_roles} WHERE uid = :uid', array(':uid' => $account->id()));
-    foreach ($roles_result as $user_role) {
-      $users_roles[] = $roles[$user_role->rid];
-    }
+  $accounts = user_load_multiple($uids);
+
+  foreach ($accounts as $account) {
+    $users_roles = $account->getRoles();
+    unset($users_roles[0]);
     asort($users_roles);
     $username = array(
       '#theme' => 'username',
@@ -77,8 +74,6 @@ function user_admin_account() {
       '#type' => 'operations',
       '#links' => $links,
     );
-
-    $options[$account->id()]['title']['data']['#title'] = check_plain($account->getUsername());
 
   }
 
