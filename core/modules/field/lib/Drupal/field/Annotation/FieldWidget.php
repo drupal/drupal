@@ -14,7 +14,7 @@ use Drupal\Component\Annotation\Plugin;
  *
  * Widgets handle how fields are displayed in edit forms.
  *
- * Additional annotation keys for formatters can be defined in
+ * Additional annotation keys for widgets can be defined in
  * hook_field_widget_info_alter().
  *
  * @Annotation
