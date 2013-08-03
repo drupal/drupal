@@ -95,6 +95,9 @@ class EntityResource extends ResourceBase {
         throw new AccessDeniedHttpException(t('Access denied on creating field @field.', array('@field' => $field_name)));
       }
     }
+
+    // Validate the received data before saving.
+    $this->validate($entity);
     try {
       $entity->save();
       watchdog('rest', 'Created entity %type with ID %id.', array('%type' => $entity->entityType(), '%id' => $entity->id()));
@@ -159,6 +162,9 @@ class EntityResource extends ResourceBase {
         $original_entity->set($field_name, $field->getValue());
       }
     }
+
+    // Validate the received data before saving.
+    $this->validate($original_entity);
     try {
       $original_entity->save();
       watchdog('rest', 'Updated entity %type with ID %id.', array('%type' => $entity->entityType(), '%id' => $entity->id()));
@@ -201,5 +207,29 @@ class EntityResource extends ResourceBase {
       }
     }
     throw new NotFoundHttpException(t('Entity with ID @id not found', array('@id' => $id)));
+  }
+
+  /**
+   * Verifies that the whole entity does not violate any validation constraints.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\HttpException
+   *   If validation errors are found.
+   */
+  protected function validate(EntityInterface $entity) {
+    $violations = $entity->validate();
+    if (count($violations) > 0) {
+      $message = "Unprocessable Entity: validation failed.\n";
+      foreach ($violations as $violation) {
+        $message .= $violation->getPropertyPath() . ': ' . $violation->getMessage() . "\n";
+      }
+      // Instead of returning a generic 400 response we use the more specific
+      // 422 Unprocessable Entity code from RFC 4918. That way clients can
+      // distinguish between general syntax errors in bad serializations (code
+      // 400) and semantic errors in well-formed requests (code 422).
+      throw new HttpException(422, $message);
+    }
   }
 }

@@ -124,6 +124,15 @@ class UpdateTest extends RESTTestBase {
     $loaded_entity = entity_load($entity_type, 9999, TRUE);
     $this->assertFalse($loaded_entity, 'Entity 9999 was not created.');
 
+    // Try to send invalid data to trigger the entity validation constraints.
+    // Send a UUID that is too long.
+    $entity->set('uuid', $this->randomName(129));
+    $invalid_serialized = $serializer->serialize($entity, $this->defaultFormat);
+    $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', $invalid_serialized, $this->defaultMimeType);
+    $this->assertResponse(422);
+    $error = drupal_json_decode($response);
+    $this->assertEqual($error['error'], "Unprocessable Entity: validation failed.\nuuid.0.value: This value is too long. It should have <em class=\"placeholder\">128</em> characters or less.\n");
+
     // Try to update an entity without proper permissions.
     $this->drupalLogout();
     $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', $serialized, $this->defaultMimeType);
