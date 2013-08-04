@@ -70,12 +70,14 @@ class FilterCaption extends FilterBase {
 
         // Given the updated node, caption and alignment: re-render it with a
         // caption.
-        $altered_html = theme('filter_caption', array(
-          'node'   => $node->C14N(),
-          'tag' => $node->tagName,
-          'caption' => $caption,
-          'align'   => $align,
-        ));
+        $filter_caption = array(
+          '#theme' => 'filter_caption',
+          '#node' => $node->C14N(),
+          '#tag' => $node->tagName,
+          '#caption' => $caption,
+          '#align' => $align,
+        );
+        $altered_html = drupal_render($filter_caption);
 
         // Load the altered HTML into a new DOMDocument and retrieve the element.
         $updated_node = filter_dom_load($altered_html)->getElementsByTagName('body')
