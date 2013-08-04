@@ -1762,6 +1762,7 @@ function drupal_anonymous_user() {
  *   particular phase, all earlier phases are run automatically. Possible
  *   values:
  *   - DRUPAL_BOOTSTRAP_CONFIGURATION: Initializes configuration.
+ *   - DRUPAL_BOOTSTRAP_KERNEL: Initalizes a kernel.
  *   - DRUPAL_BOOTSTRAP_PAGE_CACHE: Tries to serve a cached page.
  *   - DRUPAL_BOOTSTRAP_DATABASE: Initializes the database layer.
  *   - DRUPAL_BOOTSTRAP_VARIABLES: Initializes the variable system.
