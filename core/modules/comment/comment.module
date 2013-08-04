@@ -1076,16 +1076,35 @@ function comment_entity_insert(EntityInterface $entity) {
     ));
     foreach ($fields as $field_name => $detail) {
       // There is at least one comment field, the query needs to be executed.
+      // @todo Tidy when all entities are NG.
+     // Default to current user when entity does not have a uid property.
+      $last_comment_uid = $user->id();
+      if (!empty($entity->uid)) {
+        if (is_object($entity->uid)) {
+          $last_comment_uid = $entity->uid->value;
+        }
+        else {
+          $last_comment_uid = $entity->uid;
+        }
+      }
+      // Default to REQUEST_TIME when entity does not have a changed property.
+      $last_comment_timestamp = REQUEST_TIME;
+      if (!empty($entity->changed)) {
+        if (is_object($entity->changed)) {
+          $last_comment_uid = $entity->changed->value;
+        }
+        else {
+          $last_comment_uid = $entity->changed;
+        }
+      }
       $query->values(array(
         'entity_id' => $entity->id(),
         'entity_type' => $entity->entityType(),
         'field_name' => $field_name,
         'cid' => 0,
-        // Default to REQUEST_TIME when entity does not have a changed property.
-        'last_comment_timestamp' => isset($entity->changed) ? $entity->changed : REQUEST_TIME,
+        'last_comment_timestamp' => $last_comment_timestamp,
         'last_comment_name' => NULL,
-        // Default to current user when entity does not have a uid property.
-        'last_comment_uid' => isset($entity->uid) ? $entity->uid : $user->id(),
+        'last_comment_uid' => $last_comment_uid,
         'comment_count' => 0,
       ));
     }

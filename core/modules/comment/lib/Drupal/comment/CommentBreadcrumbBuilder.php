@@ -39,8 +39,8 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     // @todo This only works for legacy routes. Once
     // comment/reply/%/%comment_entity_reply/% is converted to the new router
     // this code will need to be updated.
-    if (isset($attributes['drupal_menu_item'])) {
-      $item = $attributes['drupal_menu_item'];
+    if (isset($attributes['_drupal_menu_item'])) {
+      $item = $attributes['_drupal_menu_item'];
       if ($item['path'] == 'comment/reply/%/%/%') {
         $entity = $item['map'][3];
         // Load the object in case of missing wildcard loaders.
