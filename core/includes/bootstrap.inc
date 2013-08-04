@@ -2226,7 +2226,7 @@ function drupal_alter($type, &$data, &$context1 = NULL, &$context2 = NULL) {
  * Determines whether a given module exists.
  *
  * @deprecated as of Drupal 8.0. Use
- *   Drupal::moduleHandler()->moduleExists($hook).
+ *   Drupal::moduleHandler()->moduleExists($module).
  *
  * @see \Drupal\Core\Extension\ModuleHandler::moduleExists()
  */
