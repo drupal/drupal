@@ -43,19 +43,26 @@ class ImageThemeFunctionTest extends WebTestBase {
     $style->save();
     $url = $style->buildUrl($original_uri);
 
-    // Test using theme_image_formatter() without an image title, alt text, or
-    // link options.
+    // Test using theme_image_formatter() with a NULL value for the alt option.
     $path = $this->randomName();
     $element = array(
       '#theme' => 'image_formatter',
       '#image_style' => 'test',
       '#item' => array(
         'uri' => $original_uri,
+        'alt' => NULL,
       ),
       '#path' => array(
         'path' => $path,
       ),
     );
+    $rendered_element = render($element);
+    $expected_result = '<a href="' . base_path() . $path . '"><img class="image-style-test" src="' . $url . '" /></a>';
+    $this->assertEqual($expected_result, $rendered_element, 'theme_image_formatter() correctly renders with a NULL value for the alt option.');
+
+    // Test using theme_image_formatter() without an image title, alt text, or
+    // link options.
+    unset($element['#item']['alt']);
     $rendered_element = render($element);
     $expected_result = '<a href="' . base_path() . $path . '"><img class="image-style-test" src="' . $url . '" alt="" /></a>';
     $this->assertEqual($expected_result, $rendered_element, 'theme_image_formatter() correctly renders without title, alt, or path options.');
@@ -95,6 +102,12 @@ class ImageThemeFunctionTest extends WebTestBase {
     $rendered_element = render($element);
     $expected_result = '<img class="image-style-image-test" src="' . $url . '" alt="" />';
     $this->assertEqual($expected_result, $rendered_element, 'theme_image_style() renders an image correctly.');
+
+    // Test using theme_image_style() with a NULL value for the alt option.
+    $element['#alt'] = NULL;
+    $rendered_element = render($element);
+    $expected_result = '<img class="image-style-image-test" src="' . $url . '" />';
+    $this->assertEqual($expected_result, $rendered_element, 'theme_image_style() renders an image correctly with a NULL value for the alt option.');
   }
 
 }

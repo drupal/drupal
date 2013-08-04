@@ -978,7 +978,7 @@ function theme($hook, $variables = array()) {
     $variables = array();
     if (isset($info['variables'])) {
       foreach (array_keys($info['variables']) as $name) {
-        if (isset($element["#$name"])) {
+        if (isset($element["#$name"]) || array_key_exists("#$name", $element)) {
           $variables[$name] = $element["#$name"];
         }
       }
