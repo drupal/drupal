@@ -220,8 +220,3 @@ system_plugin_autocomplete:
     _controller: 'Drupal\system\Controller\SystemController::autocomplete'
   requirements:
     _access_system_plugin_ui: 'TRUE'
-
-front:
-  pattern: '/'
-  requirements:
-    _access: 'TRUE'
