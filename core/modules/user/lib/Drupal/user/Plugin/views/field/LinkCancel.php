@@ -21,9 +21,9 @@ use Drupal\views\ResultRow;
 class LinkCancel extends Link {
 
   /**
-   * Overrides \Drupal\user\Plugin\views\field\Link::render_link().
+   * {@inheritdoc}
    */
-  public function render_link(EntityInterface $entity, ResultRow $values) {
+  protected function renderLink(EntityInterface $entity, ResultRow $values) {
     if ($entity && $entity->access('delete')) {
       $this->options['alter']['make_link'] = TRUE;
 

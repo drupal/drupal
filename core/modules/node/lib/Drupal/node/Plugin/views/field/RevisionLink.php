@@ -35,7 +35,7 @@ class RevisionLink extends Link {
     return user_access('view revisions') || user_access('administer nodes');
   }
 
-  function render_link($data, ResultRow $values) {
+  protected function renderLink($data, ResultRow $values) {
     list($node, $vid) = $this->get_revision_entity($values, 'view');
     if (!isset($vid)) {
       return;

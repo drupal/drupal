@@ -19,7 +19,7 @@ use Drupal\views\ResultRow;
  */
 class Language extends User {
 
-  function render_link($data, ResultRow $values) {
+  protected function renderLink($data, ResultRow $values) {
     $uid = $this->getValue($values, 'uid');
     if (!empty($this->options['link_to_user'])) {
       $uid = $this->getValue($values, 'uid');
@@ -41,7 +41,7 @@ class Language extends User {
 
   public function render($values) {
     $value = $this->getValue($values);
-    return $this->render_link($this->sanitizeValue($value), $values);
+    return $this->renderLink($this->sanitizeValue($value), $values);
   }
 
 }

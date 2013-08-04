@@ -24,7 +24,7 @@ class LinkReply extends Link {
     return user_access('post comments');
   }
 
-  function render_link($data, ResultRow $values) {
+  protected function renderLink($data, ResultRow $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('reply');
     $nid =  $this->getValue($values, 'nid');
     $cid =  $this->getValue($values, 'cid');

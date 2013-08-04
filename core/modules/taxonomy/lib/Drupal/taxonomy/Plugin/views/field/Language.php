@@ -24,7 +24,7 @@ class Language extends Taxonomy {
     $language = language_load($value);
     $value = $language ? $language->name : '';
 
-    return $this->render_link($this->sanitizeValue($value), $values);
+    return $this->renderLink($this->sanitizeValue($value), $values);
   }
 
 }

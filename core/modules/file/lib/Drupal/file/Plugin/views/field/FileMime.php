@@ -43,7 +43,7 @@ class FileMime extends File {
       $data = drupal_render($file_icon);
     }
 
-    return $this->render_link($data, $values);
+    return $this->renderLink($data, $values);
   }
 
 }

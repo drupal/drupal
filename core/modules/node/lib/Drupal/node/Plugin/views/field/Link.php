@@ -34,7 +34,7 @@ class Link extends FieldPluginBase {
     );
     parent::buildOptionsForm($form, $form_state);
 
-    // The path is set by render_link function so don't allow to set it.
+    // The path is set by renderLink function so don't allow to set it.
     $form['alter']['path'] = array('#access' => FALSE);
     $form['alter']['external'] = array('#access' => FALSE);
   }
@@ -48,11 +48,11 @@ class Link extends FieldPluginBase {
 
   public function render($values) {
     if ($entity = $this->getEntity($values)) {
-      return $this->render_link($entity, $values);
+      return $this->renderLink($entity, $values);
     }
   }
 
-  function render_link($node, ResultRow $values) {
+  protected function renderLink($node, ResultRow $values) {
     if (node_access('view', $node)) {
       $this->options['alter']['make_link'] = TRUE;
       $this->options['alter']['path'] = 'node/' . $node->id();
