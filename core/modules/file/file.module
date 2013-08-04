@@ -913,7 +913,11 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
     if (!empty($errors)) {
       $message = t('The specified file %name could not be uploaded.', array('%name' => $file->getFilename()));
       if (count($errors) > 1) {
-        $message .= theme('item_list', array('items' => $errors));
+        $item_list = array(
+          '#theme' => 'item_list',
+          '#items' => $errors,
+        );
+        $message .= drupal_render($item_list);
       }
       else {
         $message .= ' ' . array_pop($errors);
