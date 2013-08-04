@@ -24,7 +24,7 @@ class RevisionLinkDelete extends RevisionLink {
     return user_access('delete revisions') || user_access('administer nodes');
   }
 
-  function render_link($data, ResultRow $values) {
+  protected function renderLink($data, ResultRow $values) {
     list($node, $vid) = $this->get_revision_entity($values, 'delete');
     if (!isset($vid)) {
       return;

@@ -75,7 +75,7 @@ class Name extends User {
     );
   }
 
-  function render_link($data, ResultRow $values) {
+  protected function renderLink($data, ResultRow $values) {
     $account = entity_create('user', array());
     $account->uid = $this->getValue($values, 'uid');
     $account->name = $this->getValue($values);

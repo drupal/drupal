@@ -57,7 +57,7 @@ class File extends FieldPluginBase {
    *
    * Data should be made XSS safe prior to calling this function.
    */
-  function render_link($data, ResultRow $values) {
+  protected function renderLink($data, ResultRow $values) {
     if (!empty($this->options['link_to_file']) && $data !== NULL && $data !== '') {
       $this->options['alter']['make_link'] = TRUE;
       $this->options['alter']['path'] = file_create_url($this->getValue($values, 'uri'));
@@ -68,7 +68,7 @@ class File extends FieldPluginBase {
 
   public function render($values) {
     $value = $this->getValue($values);
-    return $this->render_link($this->sanitizeValue($value), $values);
+    return $this->renderLink($this->sanitizeValue($value), $values);
   }
 
 }

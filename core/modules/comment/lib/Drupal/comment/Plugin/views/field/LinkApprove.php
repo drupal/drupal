@@ -24,7 +24,7 @@ class LinkApprove extends Link {
     return user_access('administer comments');
   }
 
-  function render_link($data, ResultRow $values) {
+  protected function renderLink($data, ResultRow $values) {
     $status = $this->getValue($values, 'status');
 
     // Don't show an approve link on published nodes.

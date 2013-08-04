@@ -127,7 +127,7 @@ class NodeNewComments extends Numeric {
     }
   }
 
-  function render_link($data, ResultRow $values) {
+  protected function renderLink($data, ResultRow $values) {
     if (!empty($this->options['link_to_comment']) && $data !== NULL && $data !== '') {
       $node = entity_create('node', array(
         'nid' => $this->getValue($values, 'nid'),
@@ -145,7 +145,7 @@ class NodeNewComments extends Numeric {
   public function render($values) {
     $value = $this->getValue($values);
     if (!empty($value)) {
-      return $this->render_link(parent::render($values), $values);
+      return $this->renderLink(parent::render($values), $values);
     }
     else {
       $this->options['alter']['make_link'] = FALSE;

@@ -37,8 +37,8 @@ class LinkEdit extends Link {
     );
   }
 
-  function render_link($data, ResultRow $values) {
-    parent::render_link($data, $values);
+  protected function renderLink($data, ResultRow $values) {
+    parent::renderLink($data, $values);
     // Ensure user has access to edit this comment.
     $comment = $this->getValue($values);
     if (!$comment->access('update')) {

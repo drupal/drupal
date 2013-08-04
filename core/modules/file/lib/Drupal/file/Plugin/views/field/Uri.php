@@ -37,7 +37,7 @@ class Uri extends File {
     if (!empty($this->options['file_download_path']) && $data !== NULL && $data !== '') {
       $data = file_create_url($data);
     }
-    return $this->render_link($data, $values);
+    return $this->renderLink($data, $values);
   }
 
 }

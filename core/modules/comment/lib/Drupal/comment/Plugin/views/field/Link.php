@@ -45,10 +45,10 @@ class Link extends FieldPluginBase {
 
   public function render($values) {
     $comment = $this->getEntity($values);
-    return $this->render_link($comment, $values);
+    return $this->renderLink($comment, $values);
   }
 
-  function render_link($data, ResultRow $values) {
+  protected function renderLink($data, ResultRow $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
     $comment = $data;
     $cid = $comment->id();

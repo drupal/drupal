@@ -24,7 +24,7 @@ class LinkDelete extends Link {
     return user_access('administer comments');
   }
 
-  function render_link($data, ResultRow $values) {
+  protected function renderLink($data, ResultRow $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
     $comment = $this->get_entity($values);
 

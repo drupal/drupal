@@ -42,7 +42,7 @@ class Language extends Node {
     $value = $this->getValue($values);
     $language = language_load($value);
     $value = $language ? $language->name : '';
-    return $this->render_link($value, $values);
+    return $this->renderLink($value, $values);
   }
 
 }

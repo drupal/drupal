@@ -43,7 +43,7 @@ class ContactLink extends Link {
   /**
    * {@inheritdoc}
    */
-  public function render_link(EntityInterface $entity, ResultRow $values) {
+  protected function renderLink(EntityInterface $entity, ResultRow $values) {
 
     if (empty($entity)) {
       return;

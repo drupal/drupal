@@ -61,7 +61,7 @@ class Link extends FieldPluginBase {
    * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::render().
    */
   public function render($values) {
-    return $this->render_link($this->getEntity($values), $values);
+    return $this->renderLink($this->getEntity($values), $values);
   }
 
   /**
@@ -74,7 +74,7 @@ class Link extends FieldPluginBase {
    * @return string
    *   The acutal rendered text (without the link) of this field.
    */
-  public function render_link(EntityInterface $entity, ResultRow $values) {
+  protected function renderLink(EntityInterface $entity, ResultRow $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('View');
 
     $this->options['alter']['make_link'] = TRUE;
