@@ -99,3 +99,11 @@ menu_local_task_test_tasks_settings_sub2:
     _content: '\Drupal\menu_test\TestControllers::test1'
   requirements:
     _access: 'TRUE'
+
+menu_test_optional_placeholder:
+  pattern: '/menu-test/optional/{placeholder}'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::testDefaults'
+    placeholder: NULL
+  requirements:
+    _access: 'TRUE'

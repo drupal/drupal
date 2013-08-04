@@ -7,6 +7,7 @@
 
 namespace Drupal\menu_test;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -33,6 +34,24 @@ class TestControllers {
    */
   public function test2() {
     return 'test2';
+  }
+
+  /**
+   * Prints out test data.
+   *
+   * @param string|null $placeholder
+   *   A placeholder for the return string.
+   *
+   * @return string
+   *   The string for this route.
+   */
+  public function testDefaults($placeholder = NULL) {
+    if ($placeholder) {
+      return String::format("Sometimes there is a placeholder: '@placeholder'.", array('@placeholder' => $placeholder));
+    }
+    else {
+      return String::format('Sometimes there is no placeholder.');
+    }
   }
 
 }

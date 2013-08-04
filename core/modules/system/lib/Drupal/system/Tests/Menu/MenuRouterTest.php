@@ -614,4 +614,18 @@ class MenuRouterTest extends WebTestBase {
       $this->assertIdentical(unserialize($router_item['load_functions']), $load_functions, format_string('Expected load functions for router %router_path' , array('%router_path' => $router_path)));
     }
   }
+
+  /**
+   * Test menu links that have optional placeholders.
+   */
+  public function testMenuOptionalPlaceholders() {
+    $this->drupalGet('menu-test/optional');
+    $this->assertResponse(200);
+    $this->assertText('Sometimes there is no placeholder.');
+
+    $this->drupalGet('menu-test/optional/foobar');
+    $this->assertResponse(200);
+    $this->assertText("Sometimes there is a placeholder: 'foobar'.");
+  }
+
 }

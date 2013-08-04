@@ -438,6 +438,11 @@ function menu_test_menu() {
     'title' => 'Local tasks',
     'route_name' => 'menu_local_task_test_tasks',
   );
+  $items['menu-test/optional'] = array(
+    'title' => 'Test optional placeholder',
+    'route_name' => 'menu_test_optional_placeholder',
+    'type' => MENU_LOCAL_TASK,
+  );
 
   return $items;
 }
