@@ -1091,10 +1091,10 @@ function comment_entity_insert(EntityInterface $entity) {
       $last_comment_timestamp = REQUEST_TIME;
       if (!empty($entity->changed)) {
         if (is_object($entity->changed)) {
-          $last_comment_uid = $entity->changed->value;
+          $last_comment_timestamp = $entity->changed->value;
         }
         else {
-          $last_comment_uid = $entity->changed;
+          $last_comment_timestamp = $entity->changed;
         }
       }
       $query->values(array(
