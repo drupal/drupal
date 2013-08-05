@@ -1067,7 +1067,7 @@ function template_preprocess_search_block_form(&$variables) {
   $hidden = array();
   // Provide variables named after form keys so themers can print each element independently.
   foreach (element_children($variables['form']) as $key) {
-    $type = $variables['form'][$key]['#type'];
+    $type = isset($variables['form'][$key]['#type']) ? $variables['form'][$key]['#type'] : '';
     if ($type == 'hidden' || $type == 'token') {
       $hidden[] = drupal_render($variables['form'][$key]);
     }
