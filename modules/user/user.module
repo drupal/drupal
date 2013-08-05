@@ -3701,7 +3701,7 @@ function user_block_user_action(&$entity, $context = array()) {
 function user_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
   $instance = $form['#instance'];
 
-  if ($instance['entity_type'] == 'user') {
+  if ($instance['entity_type'] == 'user' && !$form['#field']['locked']) {
     $form['instance']['settings']['user_register_form'] = array(
       '#type' => 'checkbox',
       '#title' => t('Display on user registration form.'),
