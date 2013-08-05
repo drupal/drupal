@@ -1,6 +1,8 @@
 
 Drupal 7.23, xxxx-xx-xx (development version)
 -----------------------
+- Fixed drupal_render() to always return an empty string when there is no
+  output, rather than sometimes returning NULL (minor API change).
 - Added protection to cache_clear_all() to ensure that non-cache tables cannot
   be truncated (API addition: a new isValidBin() method has been added to the
   default database cache implementation).

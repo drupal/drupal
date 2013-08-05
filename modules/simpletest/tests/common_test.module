@@ -101,6 +101,14 @@ function common_test_destination() {
 }
 
 /**
+ * Applies #printed to an element to help test #pre_render.
+ */
+function common_test_drupal_render_printing_pre_render($elements) {
+  $elements['#printed'] = TRUE;
+  return $elements;
+}
+
+/**
  * Implements hook_TYPE_alter().
  */
 function common_test_drupal_alter_alter(&$data, &$arg2 = NULL, &$arg3 = NULL) {

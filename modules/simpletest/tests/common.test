@@ -1565,6 +1565,60 @@ class DrupalRenderTestCase extends DrupalWebTestCase {
   }
 
   /**
+   * Tests the output drupal_render() for some elementary input values.
+   */
+  function testDrupalRenderBasics() {
+    $types = array(
+      array(
+        'name' => 'null',
+        'value' => NULL,
+        'expected' => '',
+      ),
+      array(
+        'name' => 'no value',
+        'expected' => '',
+      ),
+      array(
+        'name' => 'empty string',
+        'value' => '',
+        'expected' => '',
+      ),
+      array(
+        'name' => 'no access',
+        'value' => array(
+          '#markup' => 'foo',
+          '#access' => FALSE,
+        ),
+        'expected' => '',
+      ),
+      array(
+        'name' => 'previously printed',
+        'value' => array(
+          '#markup' => 'foo',
+          '#printed' => TRUE,
+        ),
+        'expected' => '',
+      ),
+      array(
+        'name' => 'printed in prerender',
+        'value' => array(
+          '#markup' => 'foo',
+          '#pre_render' => array('common_test_drupal_render_printing_pre_render'),
+        ),
+        'expected' => '',
+      ),
+      array(
+        'name' => 'basic renderable array',
+        'value' => array('#markup' => 'foo'),
+        'expected' => 'foo',
+      ),
+    );
+    foreach($types as $type) {
+      $this->assertIdentical(drupal_render($type['value']), $type['expected'], '"' . $type['name'] . '" input rendered correctly by drupal_render().');
+    }
+  }
+
+  /**
    * Test sorting by weight.
    */
   function testDrupalRenderSorting() {
