@@ -501,7 +501,16 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
     else {
       if ($wildcard) {
         if ($cid == '*') {
-          db_truncate($this->bin)->execute();
+          // Check if $this->bin is a cache table before truncating. Other
+          // cache_clear_all() operations throw a PDO error in this situation,
+          // so we don't need to verify them first. This ensures that non-cache
+          // tables cannot be truncated accidentally.
+          if ($this->isValidBin()) {
+            db_truncate($this->bin)->execute();
+          }
+          else {
+            throw new Exception(t('Invalid or missing cache bin specified: %bin', array('%bin' => $this->bin)));
+          }
         }
         else {
           db_delete($this->bin)
@@ -537,5 +546,26 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
       ->execute()
       ->fetchField();
     return empty($result);
+  }
+
+  /**
+   * Checks if $this->bin represents a valid cache table.
+   *
+   * This check is required to ensure that non-cache tables are not truncated
+   * accidentally when calling cache_clear_all().
+   *
+   * @return boolean
+   */
+  function isValidBin() {
+    if ($this->bin == 'cache' || substr($this->bin, 0, 6) == 'cache_') {
+      // Skip schema check for bins with standard table names.
+      return TRUE;
+    }
+    // These fields are required for any cache table.
+    $fields = array('cid', 'data', 'expire', 'created', 'serialized');
+    // Load the table schema.
+    $schema = drupal_get_schema($this->bin);
+    // Confirm that all fields are present.
+    return isset($schema['fields']) && !array_diff($fields, array_keys($schema['fields']));
   }
 }
