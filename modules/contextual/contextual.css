@@ -77,7 +77,7 @@ div.contextual-links-wrapper ul.contextual-links {
   -webkit-border-top-left-radius: 4px; /* LTR */
   border-radius: 4px 0 4px 4px; /* LTR */
 }
-.contextual-links-region:hover a.contextual-links-trigger,
+a.contextual-links-trigger-active,
 div.contextual-links-active a.contextual-links-trigger,
 div.contextual-links-active ul.contextual-links {
   display: block;
