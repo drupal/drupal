@@ -9,6 +9,7 @@ namespace Drupal\field_ui;
 
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\Field\FieldTypePluginManager;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\field_ui\OverviewBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\field\Plugin\Core\Entity\Field;
@@ -26,16 +27,26 @@ class FieldOverview extends OverviewBase {
   protected $fieldTypeManager;
 
   /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * Constructs a new FieldOverview.
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Entity\Field\FieldTypePluginManager $field_type_manager
    *   The field type manager
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler to invoke hooks on.
    */
-  public function __construct(EntityManager $entity_manager, FieldTypePluginManager $field_type_manager) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityManager $entity_manager, FieldTypePluginManager $field_type_manager, ModuleHandlerInterface $module_handler) {
+    parent::__construct($entity_manager);
     $this->fieldTypeManager = $field_type_manager;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -44,7 +55,8 @@ class FieldOverview extends OverviewBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.entity'),
-      $container->get('plugin.manager.entity.field.field_type')
+      $container->get('plugin.manager.entity.field.field_type'),
+      $container->get('module_handler')
     );
   }
 
@@ -142,6 +154,8 @@ class FieldOverview extends OverviewBase {
         'href' => "$admin_field_path/delete",
         'attributes' => array('title' => t('Delete instance.')),
       );
+      // Allow altering the operations on this entity listing.
+      $this->moduleHandler->alter('entity_operation', $links, $instance);
       $table[$name]['operations']['data'] = array(
         '#type' => 'operations',
         '#links' => $links,
