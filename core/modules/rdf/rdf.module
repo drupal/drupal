@@ -254,28 +254,17 @@ function rdf_preprocess_node(&$variables) {
   $variables['attributes']['about'] = empty($variables['node_url']) ? NULL: $variables['node_url'];
   $variables['attributes']['typeof'] = empty($bundle_mapping['types']) ? NULL : $bundle_mapping['types'];
 
-  // Adds RDFa markup to the title of the node. Because the RDFa markup is
-  // added to the <h2> tag which might contain HTML code, we specify an empty
-  // datatype to ensure the value of the title read by the RDFa parsers is a
-  // literal.
+  // Adds RDFa markup for the node title as metadata because wrapping the title
+  // with markup is not reliable and the title output is different depdending on
+  // the view mode (e.g. full vs. teaser).
   $title_mapping = $mapping->getPreparedFieldMapping('title');
-  $variables['title_attributes']['property'] = empty($title_mapping['properties']) ? NULL : $title_mapping['properties'];
-  $variables['title_attributes']['datatype'] = '';
-
-  // In full node mode, the title is not displayed by node.html.twig so it is
-  // added in the <head> tag of the HTML page.
-  if ($variables['page']) {
-    $element = array(
-      '#tag' => 'meta',
-      '#attributes' => array(
-        'content' => $variables['label'],
-        'about' => $variables['node_url'],
-      ),
+  if ($title_mapping) {
+    $title_attributes['property'] = empty($title_mapping['properties']) ? NULL : $title_mapping['properties'];
+    $title_attributes['content'] = $variables['label'];
+    $variables['title_suffix']['rdf_meta_title'] = array(
+      '#theme' => 'rdf_metadata',
+      '#metadata' => array($title_attributes),
     );
-    if (!empty($title_mapping['properties'])) {
-      $element['#attributes']['property'] = $title_mapping['properties'];
-    }
-    drupal_add_html_head($element, 'rdf_node_title');
   }
 
   // Adds RDFa markup for the relation between the node and its author.
