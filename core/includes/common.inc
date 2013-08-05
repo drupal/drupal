@@ -2,6 +2,7 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Json;
+use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
 use Drupal\Component\Utility\Url;
@@ -4273,14 +4274,16 @@ function drupal_render_cid_create($elements) {
  *   that optionally include a '#weight' key.
  * @param $b
  *   Second item for comparison.
+ *
+ * @return int
+ *   The comparison result for uasort().
+ *
+ * @see \Drupal\Component\Utility\SortArray::sortByWeightProperty()
+ *
+ * @deprecated as of Drupal 8.0. Use SortArray::sortByWeightProperty() instead.
  */
 function element_sort($a, $b) {
-  $a_weight = (is_array($a) && isset($a['#weight'])) ? $a['#weight'] : 0;
-  $b_weight = (is_array($b) && isset($b['#weight'])) ? $b['#weight'] : 0;
-  if ($a_weight == $b_weight) {
-    return 0;
-  }
-  return ($a_weight < $b_weight) ? -1 : 1;
+  return SortArray::sortByWeightProperty($a, $b);
 }
 
 /**
@@ -4295,11 +4298,16 @@ function element_sort($a, $b) {
  *   that optionally include a '#title' key.
  * @param $b
  *   Second item for comparison.
+ *
+ * @return int
+ *   The comparison result for uasort().
+ *
+ * @see \Drupal\Component\Utility\SortArray::sortByTitleProperty()
+ *
+ * @deprecated as of Drupal 8.0. Use SortArray::sortByTitleProperty() instead.
  */
 function element_sort_by_title($a, $b) {
-  $a_title = (is_array($a) && isset($a['#title'])) ? $a['#title'] : '';
-  $b_title = (is_array($b) && isset($b['#title'])) ? $b['#title'] : '';
-  return strnatcasecmp($a_title, $b_title);
+  return SortArray::sortByTitleProperty($a, $b);
 }
 
 /**
@@ -4357,14 +4365,16 @@ function element_info_property($type, $property_name, $default = NULL) {
  *   element, a default value of 0 will be used.
  * @param $b
  *   Second item for comparison.
+ *
+ * @return int
+ *   The comparison result for uasort().
+ *
+ * @see \Drupal\Component\Utility\SortArray::sortByWeightElement()
+ *
+ * @deprecated as of Drupal 8.0. Use SortArray::sortByWeightElement() instead.
  */
 function drupal_sort_weight($a, $b) {
-  $a_weight = (is_array($a) && isset($a['weight'])) ? $a['weight'] : 0;
-  $b_weight = (is_array($b) && isset($b['weight'])) ? $b['weight'] : 0;
-  if ($a_weight == $b_weight) {
-    return 0;
-  }
-  return ($a_weight < $b_weight) ? -1 : 1;
+  return SortArray::sortByWeightElement((array) $a, (array) $b);
 }
 
 /**
@@ -4377,15 +4387,16 @@ function drupal_sort_weight($a, $b) {
  *   that optionally include a 'title' key.
  * @param $b
  *   Second item for comparison.
+ *
+ * @return int
+ *   The comparison result for uasort().
+ *
+ * @see \Drupal\Component\Utility\SortArray::sortByTitleElement()
+ *
+ * @deprecated as of Drupal 8.0. Use SortArray::sortByTitleElement() instead.
  */
 function drupal_sort_title($a, $b) {
-  if (!isset($b['title'])) {
-    return -1;
-  }
-  if (!isset($a['title'])) {
-    return 1;
-  }
-  return strcasecmp($a['title'], $b['title']);
+  return SortArray::sortByTitleElement($a, $b);
 }
 
 /**
