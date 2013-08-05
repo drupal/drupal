@@ -188,7 +188,7 @@ function _field_sql_storage_schema($field) {
   foreach ($field['foreign keys'] as $specifier => $specification) {
     $real_name = _field_sql_storage_indexname($field['field_name'], $specifier);
     $current['foreign keys'][$real_name]['table'] = $specification['table'];
-    foreach ($specification['columns'] as $column => $referenced) {
+    foreach ($specification['columns'] as $column_name => $referenced) {
       $sql_storage_column = _field_sql_storage_columnname($field['field_name'], $column_name);
       $current['foreign keys'][$real_name]['columns'][$sql_storage_column] = $referenced;
     }

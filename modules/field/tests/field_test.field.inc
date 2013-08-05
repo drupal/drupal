@@ -28,7 +28,9 @@ function field_test_field_info() {
     'shape' => array(
       'label' => t('Shape'),
       'description' => t('Another dummy field type.'),
-      'settings' => array(),
+      'settings' => array(
+        'foreign_key_name' => 'shape',
+      ),
       'instance_settings' => array(),
       'default_widget' => 'test_field_widget',
       'default_formatter' => 'field_test_default',

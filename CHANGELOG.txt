@@ -1,6 +1,7 @@
 
 Drupal 7.23, xxxx-xx-xx (development version)
 -----------------------
+- Fixed broken support for foreign keys in the field API.
 - Fixed "No active batch" error when a user cancels their own account.
 - Added a description to the "access content overview" permission on the
   permissions page (string change).

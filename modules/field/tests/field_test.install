@@ -132,6 +132,18 @@ function field_test_field_schema($field) {
     );
   }
   else {
+    $foreign_keys = array();
+    // The 'foreign keys' key is not always used in tests.
+    if (!empty($field['settings']['foreign_key_name'])) {
+      $foreign_keys['foreign keys'] = array(
+      // This is a dummy foreign key definition, references a table that
+      // doesn't exist, but that's not a problem.
+      $field['settings']['foreign_key_name'] => array(
+        'table' => $field['settings']['foreign_key_name'],
+        'columns' => array($field['settings']['foreign_key_name'] => 'id'),
+        ),
+      );
+    }
     return array(
       'columns' => array(
         'shape' => array(
@@ -145,6 +157,6 @@ function field_test_field_schema($field) {
           'not null' => FALSE,
         ),
       ),
-    );
+    ) + $foreign_keys;
   }
 }
