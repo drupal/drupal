@@ -3888,14 +3888,14 @@ function drupal_html_id($id) {
       // requested id. $_POST['ajax_html_ids'] contains the ids as they were
       // returned by this function, potentially with the appended counter, so
       // we parse that to reconstruct the $seen_ids array.
-      if (is_array($_POST['ajax_html_ids'])) {
+      if (isset($_POST['ajax_html_ids'][0]) && strpos($_POST['ajax_html_ids'][0], ',') === FALSE) {
         $ajax_html_ids = $_POST['ajax_html_ids'];
       }
       else {
-        // jquery.form.js may send the server a comma-separated string instead
-        // of an array (see http://drupal.org/node/1575060), so we need to
-        // convert it to an array in that case.
-        $ajax_html_ids = explode(',', $_POST['ajax_html_ids']);
+        // jquery.form.js may send the server a comma-separated string as the
+        // first element of an array (see http://drupal.org/node/1575060), so
+        // we need to convert it to an array in that case.
+        $ajax_html_ids = explode(',', $_POST['ajax_html_ids'][0]);
       }
       foreach ($ajax_html_ids as $seen_id) {
         // We rely on '--' being used solely for separating a base id from the
