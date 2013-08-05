@@ -170,7 +170,8 @@ class TaxonomyVocabularyFunctionalTest extends TaxonomyWebTestCase {
 
     // Check the created vocabulary.
     $vocabularies = taxonomy_get_vocabularies();
-    $vid = $vocabularies[count($vocabularies) - 1]->vid;
+    $vocabularies_keys = array_keys($vocabularies);
+    $vid = $vocabularies[end($vocabularies_keys)]->vid;
     entity_get_controller('taxonomy_vocabulary')->resetCache();
     $vocabulary = taxonomy_vocabulary_load($vid);
     $this->assertTrue($vocabulary, 'Vocabulary found in database.');
