@@ -1,6 +1,8 @@
 
 Drupal 7.23, xxxx-xx-xx (development version)
 -----------------------
+- Made the database system replace truncate queries with delete queries when
+  inside a transaction, to fix issues with PostgreSQL and other databases.
 - Fixed a bug which caused nested contextual links to display improperly.
 - Fixed a bug which prevented cached image derivatives from being flushed for
   private files and other non-default file schemes.
