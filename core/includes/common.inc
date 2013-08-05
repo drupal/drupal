@@ -2834,7 +2834,9 @@ function drupal_get_library($module, $name = NULL) {
           if (is_scalar($options)) {
             // The JavaScript or CSS file has been specified in shorthand
             // format, without an array of options. In this case $options is the
-            // filename.
+            // filename. Convert the shorthand version and remove the old array
+            // key.
+            unset($module_libraries[$key]['js'][$file]);
             $file = $options;
             $options = array();
           }
