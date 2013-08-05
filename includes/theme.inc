@@ -1987,25 +1987,24 @@ function theme_table($variables) {
     $flip = array('even' => 'odd', 'odd' => 'even');
     $class = 'even';
     foreach ($rows as $number => $row) {
-      $attributes = array();
-
       // Check if we're dealing with a simple or complex row
       if (isset($row['data'])) {
-        foreach ($row as $key => $value) {
-          if ($key == 'data') {
-            $cells = $value;
-          }
-          else {
-            $attributes[$key] = $value;
-          }
-        }
+        $cells = $row['data'];
+        $no_striping = isset($row['no_striping']) ? $row['no_striping'] : FALSE;
+
+        // Set the attributes array and exclude 'data' and 'no_striping'.
+        $attributes = $row;
+        unset($attributes['data']);
+        unset($attributes['no_striping']);
       }
       else {
         $cells = $row;
+        $attributes = array();
+        $no_striping = FALSE;
       }
       if (count($cells)) {
         // Add odd/even class
-        if (empty($row['no_striping'])) {
+        if (!$no_striping) {
           $class = $flip[$class];
           $attributes['class'][] = $class;
         }

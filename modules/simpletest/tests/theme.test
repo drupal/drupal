@@ -215,6 +215,20 @@ class ThemeTableTestCase extends DrupalWebTestCase {
     $this->assertRaw('<thead><tr><th>Header 1</th>', 'Table header was printed.');
   }
 
+  /**
+   * Tests that the 'no_striping' option works correctly.
+   */
+  function testThemeTableWithNoStriping() {
+    $rows = array(
+      array(
+        'data' => array(1),
+        'no_striping' => TRUE,
+      ),
+    );
+    $this->content = theme('table', array('rows' => $rows));
+    $this->assertNoRaw('class="odd"', 'Odd/even classes were not added because $no_striping = TRUE.');
+    $this->assertNoRaw('no_striping', 'No invalid no_striping HTML attribute was printed.');
+  }
 }
 
 /**
