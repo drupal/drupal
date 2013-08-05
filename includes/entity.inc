@@ -14,14 +14,6 @@
 interface DrupalEntityControllerInterface {
 
   /**
-   * Constructor.
-   *
-   * @param $entityType
-   *   The entity type for which the instance is created.
-   */
-  public function __construct($entityType);
-
-  /**
    * Resets the internal, static entity cache.
    *
    * @param $ids
@@ -119,6 +111,9 @@ class DrupalDefaultEntityController implements DrupalEntityControllerInterface {
 
   /**
    * Constructor: sets basic variables.
+   *
+   * @param $entityType
+   *   The entity type for which the instance is created.
    */
   public function __construct($entityType) {
     $this->entityType = $entityType;
@@ -634,7 +629,7 @@ class EntityFieldQuery {
 
   /**
    * Adds a condition on field values.
-   * 
+   *
    * Note that entities with empty field values will be excluded from the
    * EntityFieldQuery results when using this method.
    *

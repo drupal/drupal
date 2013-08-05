@@ -217,13 +217,6 @@ function cache_is_empty($bin) {
  * @see DrupalDatabaseCache
  */
 interface DrupalCacheInterface {
-  /**
-   * Constructs a new cache interface.
-   *
-   * @param $bin
-   *   The cache bin for which the object is created.
-   */
-  function __construct($bin);
 
   /**
    * Returns data from the persistent cache.
@@ -311,7 +304,10 @@ class DrupalDatabaseCache implements DrupalCacheInterface {
   protected $bin;
 
   /**
-   * Constructs a new DrupalDatabaseCache object.
+   * Constructs a DrupalDatabaseCache object.
+   *
+   * @param $bin
+   *   The cache bin for which the object is created.
    */
   function __construct($bin) {
     $this->bin = $bin;
