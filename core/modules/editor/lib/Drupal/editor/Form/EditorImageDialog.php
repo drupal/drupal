@@ -122,8 +122,9 @@ class EditorImageDialog implements FormInterface {
 
     if (form_get_errors()) {
       unset($form['#prefix'], $form['#suffix']);
+      $status_messages = array('#theme' => 'status_messages');
       $output = drupal_render($form);
-      $output = '<div>' . theme('status_messages') . $output . '</div>';
+      $output = '<div>' . drupal_render($status_messages) . $output . '</div>';
       $response->addCommand(new HtmlCommand('#editor-image-dialog-form', $output));
     }
     else {
