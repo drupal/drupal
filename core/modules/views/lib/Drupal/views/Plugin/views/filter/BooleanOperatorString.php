@@ -37,7 +37,7 @@ class BooleanOperatorString extends BooleanOperator {
     else {
       $where .= "<> ''";
     }
-    $this->query->addWhere($this->options['group'], $where);
+    $this->query->addWhereExpression($this->options['group'], $where);
   }
 
 }
