@@ -423,7 +423,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
     $this->assertTrue($fields[0] == $languages[$langcode_browser_fallback]->name, 'The browser language is the URL active language');
 
     // Check that URLs are rewritten using the given browser language.
-    $fields = $this->xpath('//p[@id="site-name"]/strong/a[@rel="home" and @href=:url]', $args);
+    $fields = $this->xpath('//strong[@class="site-name"]/a[@rel="home" and @href=:url]', $args);
     $this->assertTrue($fields[0] == 'Drupal', 'URLs are rewritten using the browser language.');
   }
 

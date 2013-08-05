@@ -40,6 +40,7 @@ function bartik_preprocess_page(&$variables) {
   }
   if (!empty($variables['secondary_menu'])) {
     $variables['secondary_menu']['#attributes']['id'] = 'secondary-menu-links';
+    $variables['secondary_menu']['#attributes']['class'] = array('links', 'inline', 'clearfix');
   }
 
   $site_config = config('system.site');

@@ -166,11 +166,11 @@ class ConfigEntityListTest extends WebTestBase {
     $this->assertTitle('Test configuration | Drupal');
 
     // Test for the table.
-    $element = $this->xpath('//div[@id="content"]//table');
+    $element = $this->xpath('//div[@class="l-content"]//table');
     $this->assertTrue($element, 'Configuration entity list table found.');
 
     // Test the table header.
-    $elements = $this->xpath('//div[@id="content"]//table/thead/tr/th');
+    $elements = $this->xpath('//div[@class="l-content"]//table/thead/tr/th');
     $this->assertEqual(count($elements), 3, 'Correct number of table header cells found.');
 
     // Test the contents of each th cell.
@@ -180,7 +180,7 @@ class ConfigEntityListTest extends WebTestBase {
     }
 
     // Check the number of table row cells.
-    $elements = $this->xpath('//div[@id="content"]//table/tbody/tr[@class="odd"]/td');
+    $elements = $this->xpath('//div[@class="l-content"]//table/tbody/tr[@class="odd"]/td');
     $this->assertEqual(count($elements), 3, 'Correct number of table row cells found.');
 
     // Check the contents of each row cell. The first cell contains the label,

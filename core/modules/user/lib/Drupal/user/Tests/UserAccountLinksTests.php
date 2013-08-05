@@ -42,15 +42,15 @@ class UserAccountLinksTests extends WebTestBase {
 
     // For a logged-in user, expect the secondary menu to have links for "My
     // account" and "Log out".
-    $link = $this->xpath('//ul[@id=:menu_id]/li/a[contains(@href, :href) and text()=:text]', array(
-      ':menu_id' => 'secondary-menu',
+    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', array(
+      ':menu_class' => 'links',
       ':href' => 'user',
       ':text' => 'My account',
     ));
     $this->assertEqual(count($link), 1, 'My account link is in secondary menu.');
 
-    $link = $this->xpath('//ul[@id=:menu_id]/li/a[contains(@href, :href) and text()=:text]', array(
-      ':menu_id' => 'secondary-menu',
+    $link = $this->xpath('//ul[@class=:menu_class]/li/a[contains(@href, :href) and text()=:text]', array(
+      ':menu_class' => 'links',
       ':href' => 'user/logout',
       ':text' => 'Log out',
     ));

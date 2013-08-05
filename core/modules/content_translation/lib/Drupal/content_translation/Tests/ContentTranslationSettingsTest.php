@@ -63,7 +63,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
       'settings[comment][comment_node_article][translatable]' => TRUE,
     );
     $this->assertSettings('comment', 'comment_node_article', FALSE, $edit);
-    $xpath_err = '//div[@id="messages"]//div[contains(@class, "error")]';
+    $xpath_err = '//div[contains(@class, "error")]';
     $this->assertTrue($this->xpath($xpath_err), 'Enabling translation only for entity bundles generates a form error.');
 
     // Test that the translation settings are not stored if a non-configurable

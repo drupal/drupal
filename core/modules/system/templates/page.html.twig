@@ -63,39 +63,36 @@
  * @ingroup themeable
  */
 #}
-<div id="page">
+<div class="l-container">
 
-  <header id="header" role="banner" class="clearfix">
-
+  <header role="banner">
     {% if logo %}
-      <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home" id="logo">
+      <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">
         <img src="{{ logo }}" alt="{{ 'Home'|t }}"/>
       </a>
     {% endif %}
 
     {% if site_name or site_slogan %}
-      <div id="name-and-slogan">
-        {% if site_name %}
-          {% if title %}
-            <p id="site-name"><strong>
-              <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a>
-            </strong></p>
-          {# Use h1 when the content title is empty #}
-          {% else %}
-            <h1 id="site-name">
-              <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a>
-            </h1>
-          {% endif %}
+      <div class="name-and-slogan">
+
+        {# Use h1 when the content title is empty #}
+        {% if title %}
+          <strong class="site-name">
+            <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a>
+          </strong>
+        {% else %}
+          <h1 class="site-name">
+            <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a>
+          </h1>
         {% endif %}
 
         {% if site_slogan %}
-          <p id="site-slogan">{{ site_slogan }}</p>
+          <div class="site-slogan">{{ site_slogan }}</div>
         {% endif %}
-      </div><!-- /#name-and-slogan -->
-    {% endif %}
+      </div>{# ./name-and-slogan #}
+   {% endif %}
 
     {{ page.header }}
-
   </header>
 
   {% if main_menu or secondary_menu %}
@@ -107,41 +104,51 @@
 
   {{ breadcrumb }}
 
-  {% if messages %}
-    <div id="messages">{{ messages }}</div>
-  {% endif %}
+  {{ messages }}
 
-  <div id="main" role="main" class="clearfix">
-    <a id="main-content"></a>
+  {{ page.help }}
 
-    <div id="content" class="column">
-      {% if page.highlighted %}<div id="highlighted">{{ page.highlighted }}</div>{% endif %}
+  <main role="main">
+    <a id="main-content"></a>{# link is in html.html.twig #}
+
+    <div class="l-content">
+      {{ page.highlighted }}
+
       {{ title_prefix }}
-      {% if title %}<h1 class="title" id="page-title">{{ title }}</h1>{% endif %}
+      {% if title %}
+        <h1>{{ title }}</h1>
+      {% endif %}
       {{ title_suffix }}
-      {% if tabs %}<div class="tabs">{{ tabs }}</div>{% endif %}
-      {{ page.help }}
-      {% if action_links %}<ul class="action-links">{{ action_links }}</ul>{% endif %}
+
+      {{ tabs }}
+
+      {% if action_links %}
+        <nav class="action-links">{{ action_links }}</nav>
+      {% endif %}
+
       {{ page.content }}
+
       {{ feed_icons }}
-    </div><!-- /#content -->
+    </div>{# /.l-content #}
 
     {% if page.sidebar_first %}
-      <div id="sidebar-first" class="column sidebar">
+      <aside class="l-sidebar-first" role="complementary">
         {{ page.sidebar_first }}
-      </div><!-- /#sidebar-first -->
+      </aside>
     {% endif %}
 
     {% if page.sidebar_second %}
-      <div id="sidebar-second" class="column sidebar">
+      <aside class="l-sidebar-second" role="complementary">
         {{ page.sidebar_second }}
-      </div><!-- /#sidebar-second -->
+      </aside>
     {% endif %}
 
-  </div><!-- /#main -->
+  </main>
 
-  <footer id="footer" role="contentinfo">
-    {{ page.footer }}
-  </footer>
+  {% if page.footer %}
+    <footer role="contentinfo">
+      {{ page.footer }}
+    </footer>
+  {% endif %}
 
-</div><!-- /#page -->
+</div>{# /.l-container #}

@@ -2717,10 +2717,6 @@ function template_preprocess_page(&$variables) {
     $variables['main_menu'] = array(
       '#theme' =>'links__system_main_menu',
       '#links' => $variables['main_menu'],
-      '#attributes' => array(
-        'id' => 'main-menu',
-        'class' => array('links', 'inline', 'clearfix'),
-      ),
       '#heading' => array(
         'text' => t('Main menu'),
         'class' => array('visually-hidden'),
@@ -2731,10 +2727,6 @@ function template_preprocess_page(&$variables) {
     $variables['secondary_menu'] = array(
       '#theme' =>'links__system_secondary_menu',
       '#links' => $variables['secondary_menu'],
-      '#attributes' => array(
-        'id' => 'secondary-menu',
-        'class' => array('links', 'inline', 'clearfix'),
-      ),
       '#heading' => array(
         'text' => t('Secondary menu'),
         'class' => array('visually-hidden'),

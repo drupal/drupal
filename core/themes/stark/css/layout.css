@@ -9,129 +9,133 @@
  * This layout method works reasonably well, but shouldn't be used on a
  * production site because it can break. For example, if an over-large image
  * (one that is wider than 20% of the viewport) is in the left sidebar, the
- * image will overlap with the #content to the right.
+ * image will overlap with the .l-content to the right.
  */
-
-#content,
-#sidebar-first,
-#sidebar-second {
-  display: inline;
-  position: relative;
-}
-
 img {
   height: auto;
   max-width: 100%;
 }
+main:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.l-content,
+.l-sidebar-first,
+.l-sidebar-second {
+  display: inline;
+  position: relative;
+}
 
 @media all and (min-width: 480px) and (max-width: 959px) {
-  #content {
+  .l-content {
     width: 100%;
   }
-  body.sidebar-first #content,
-  body.two-sidebars #content {
+  .sidebar-first .l-content,
+  .two-sidebars .l-content {
     width: 67%;
     float: right; /* LTR */
   }
-  [dir="rtl"] body.sidebar-first #content,
-  [dir="rtl"] body.two-sidebars #content {
+  [dir="rtl"] .sidebar-first .l-content,
+  [dir="rtl"] .two-sidebars .l-content {
     float: left;
   }
-  body.sidebar-second #content {
+  .sidebar-second .l-content {
     width: 67%;
     float: left; /* LTR */
   }
-  [dir="rtl"] body.sidebar-second #content {
+  [dir="rtl"] .sidebar-second .l-content {
     float: right;
   }
 
-  #sidebar-first {
+  .l-sidebar-first {
     width: 33%;
     float: left; /* LTR */
   }
-  [dir="rtl"] #sidebar-first {
+  [dir="rtl"] .l-sidebar-first {
     float: right;
   }
 
-  #sidebar-second {
+  .l-sidebar-second {
     width: 33%;
     float: right; /* LTR */
   }
-  [dir="rtl"] #sidebar-second {
+  [dir="rtl"] .l-sidebar-second {
     float: left;
   }
-  body.two-sidebars #sidebar-second {
+  .two-sidebars .l-sidebar-second {
     clear: both;
     width: 100%;
   }
-  [dir="rtl"] body.two-sidebars #sidebar-second {
+  [dir="rtl"] .two-sidebars .l-sidebar-second {
     float: right;
     clear: right;
   }
 
-  body.two-sidebars #sidebar-second .block {
+  .two-sidebars .l-sidebar-second .block {
     float: left; /* LTR */
     width: 33%;
   }
-  [dir="rtl"] body.two-sidebars #sidebar-second .block {
+  [dir="rtl"] .two-sidebars .l-sidebar-second .block {
     float: right;
   }
-  body.two-sidebars #sidebar-second .block:nth-child(3n+1) {
+  .two-sidebars .l-sidebar-second .block:nth-child(3n+1) {
     clear: both;
   }
 }
 
 @media all and (min-width: 960px) {
-  #content {
+  .l-content {
     width: 100%;
     float: left; /* LTR */
   }
-  [dir="rtl"] #content {
+  [dir="rtl"] .l-content {
     float: right;
   }
-  body.sidebar-first #content {
+  .sidebar-first .l-content {
     width: 80%;
     left: 20%; /* LTR */
   }
-  [dir="rtl"] body.sidebar-first #content {
+  [dir="rtl"] .sidebar-first .l-content {
     left: 0;
     right: 20%;
   }
-  body.sidebar-second #content {
+  .sidebar-second .l-content {
     width: 80%;
   }
-  body.two-sidebars #content {
+  .two-sidebars .l-content {
     width: 60%;
     left: 20%; /* LTR */
   }
-  [dir="rtl"] body.two-sidebars #content {
+  [dir="rtl"] .two-sidebars .l-content {
     left: 0;
     right: 20%;
   }
 
-  #sidebar-first {
+  .l-sidebar-first {
     width: 20%;
     float: left; /* LTR */
     left: -80%; /* LTR */
   }
-  [dir="rtl"] #sidebar-first {
+  [dir="rtl"] .l-sidebar-first {
     float: right;
     left: 0;
     right: -80%;
   }
-  body.two-sidebars #sidebar-first {
+  .two-sidebars .l-sidebar-first {
     left: -60%; /* LTR */
   }
-  [dir="rtl"] body.two-sidebars #sidebar-first {
+  [dir="rtl"] .two-sidebars .l-sidebar-first {
     left: 0;
     right: -60%;
   }
 
-  #sidebar-second {
+  .l-sidebar-second {
     float: right; /* LTR */
     width: 20%;
   }
-  [dir="rtl"] #sidebar-second {
+  [dir="rtl"] .l-sidebar-second {
     float: left;
   }
 }
