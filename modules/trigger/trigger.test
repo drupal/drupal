@@ -114,10 +114,10 @@ class TriggerContentTestCase extends TriggerWebTestCase {
     // Assign an action to the node save/update trigger.
     $test_user = $this->drupalCreateUser(array('administer actions', 'administer nodes', 'create page content', 'access administration pages', 'access content overview'));
     $this->drupalLogin($test_user);
+    $nodes = array();
 
     for ($index = 0; $index < 3; $index++) {
-      $edit = array('title' => $this->randomName());
-      $this->drupalPost('node/add/page', $edit, t('Save'));
+      $nodes[] = $this->drupalCreateNode(array('type' => 'page'));
     }
 
     $action_id = 'trigger_test_generic_any_action';
@@ -127,8 +127,8 @@ class TriggerContentTestCase extends TriggerWebTestCase {
 
     $edit = array(
       'operation' => 'unpublish',
-      'nodes[1]' => TRUE,
-      'nodes[2]' => TRUE,
+      'nodes[' . $nodes[0]->nid . ']' => TRUE,
+      'nodes[' . $nodes[1]->nid . ']' => TRUE,
     );
     $this->drupalPost('admin/content', $edit, t('Update'));
     $count = variable_get('trigger_test_generic_any_action', 0);
