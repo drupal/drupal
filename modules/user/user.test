@@ -501,6 +501,24 @@ class UserPasswordResetTestCase extends DrupalWebTestCase {
     $this->drupalGet("user/reset/$account->uid/$bogus_timestamp/" . user_pass_rehash($account->pass, $bogus_timestamp, $account->login));
     $this->assertText(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'), 'Expired password reset request rejected.');
   }
+
+  /**
+   * Prefill the text box on incorrect login via link to password reset page.
+   */
+  function testUserPasswordTextboxFilled() {
+    $this->drupalGet('user/login');
+    $edit = array(
+      'name' => $this->randomName(),
+      'pass' => $this->randomName(),
+    );
+    $this->drupalPost('user', $edit, t('Log in'));
+    $this->assertRaw(t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>',
+      array('@password' => url('user/password', array('query' => array('name' => $edit['name']))))));
+    unset($edit['pass']);
+    $this->drupalGet('user/password', array('query' => array('name' => $edit['name'])));
+    $this->assertFieldByName('name', $edit['name'], 'User name found.');
+  }
+
 }
 
 /**
