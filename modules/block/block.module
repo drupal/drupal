@@ -840,15 +840,42 @@ function _block_render_blocks($region_blocks) {
   // preserve the submission of forms in blocks, by fetching from cache only
   // if the request method is 'GET' (or 'HEAD').
   $cacheable = !count(module_implements('node_grants')) && ($_SERVER['REQUEST_METHOD'] == 'GET' || $_SERVER['REQUEST_METHOD'] == 'HEAD');
+
+  // Proceed to loop over all blocks in order to compute their respective cache
+  // identifiers; this allows us to do one single cache_get_multiple() call
+  // instead of doing one cache_get() call per block.
+  $cached_blocks = array();
+  $cids = array();
+
+  if ($cacheable) {
+    foreach ($region_blocks as $key => $block) {
+      if (!isset($block->content)) {
+        if (($cid = _block_get_cache_id($block))) {
+          $cids[$key] = $cid;
+        }
+      }
+    }
+
+    if ($cids) {
+      // We cannot pass $cids in directly because cache_get_multiple() will
+      // modify it, and we need to use it later on in this function.
+      $cid_values = array_values($cids);
+      $cached_blocks = cache_get_multiple($cid_values, 'cache_block');
+    }
+  }
+
   foreach ($region_blocks as $key => $block) {
     // Render the block content if it has not been created already.
     if (!isset($block->content)) {
       // Erase the block from the static array - we'll put it back if it has
       // content.
       unset($region_blocks[$key]);
-      // Try fetching the block from cache.
-      if ($cacheable && ($cid = _block_get_cache_id($block)) && ($cache = cache_get($cid, 'cache_block'))) {
-        $array = $cache->data;
+
+      $cid = empty($cids[$key]) ? NULL : $cids[$key];
+
+      // Try fetching the block from the previously loaded cache entries.
+      if (isset($cached_blocks[$cid])) {
+        $array = $cached_blocks[$cid]->data;
       }
       else {
         $array = module_invoke($block->module, 'block_view', $block->delta);
