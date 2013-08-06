@@ -1,6 +1,9 @@
 
 Drupal 7.23, xxxx-xx-xx (development version)
 -----------------------
+- The default ordering of CSS files has changed for sites using right-to-left
+  languages, to consistently place the right-to-left override file immediately
+  after the CSS it is overriding (API change: https://drupal.org/node/2058463).
 - Added a drupal_check_memory_limit() API function to allow the memory limit to
   be checked consistently (API addition).
 - Changed the default web.config file for IIS servers to allow favicon.ico

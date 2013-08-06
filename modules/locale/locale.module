@@ -972,7 +972,7 @@ function locale_css_alter(&$css) {
           // Replicate the same item, but with the RTL path and a little larger
           // weight so that it appears directly after the original CSS file.
           $item['data'] = $rtl_path;
-          $item['weight'] += 0.01;
+          $item['weight'] += 0.0001;
           $css[$rtl_path] = $item;
         }
       }
