@@ -98,15 +98,11 @@ class LocalePluralFormatTest extends WebTestBase {
         1 => 0,
         0 => 1,
         5 => 1,
-        123 => 1,
-        235 => 1,
       ),
       'fr' => array(
         1 => 0,
         0 => 0,
         5 => 1,
-        123 => 1,
-        235 => 1,
       ),
       'hr' => array(
         1 => 0,
@@ -114,8 +110,6 @@ class LocalePluralFormatTest extends WebTestBase {
         0 => 2,
         2 => 1,
         8 => 2,
-        123 => 1,
-        235 => 2,
       ),
       'hu' => array(
         1 => -1,
