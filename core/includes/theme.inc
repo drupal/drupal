@@ -2336,27 +2336,6 @@ function theme_more_link($variables) {
 }
 
 /**
- * Returns HTML for a progress bar.
- *
- * Note that the core Batch API uses this only for non-JavaScript batch jobs.
- *
- * @param $variables
- *   An associative array containing:
- *   - percent: The percentage of the progress.
- *   - message: A string containing information to be displayed.
- */
-function theme_progress_bar($variables) {
-  $output = '<div id="progress" class="progress">';
-  $output .= '<div class="progress__label">' . $variables['label'] . '</div>';
-  $output .= '<div class="progress__track"><div class="progress__bar" style="width: ' . $variables['percent'] . '%"></div></div>';
-  $output .= '<div class="progress__percentage">' . $variables['percent'] . '%</div>';
-  $output .= '<div class="progress__description">' . $variables['message'] . '</div>';
-  $output .= '</div>';
-
-  return $output;
-}
-
-/**
  * Returns HTML for an indentation div; used for drag and drop tables.
  *
  * @param $variables
@@ -3074,7 +3053,8 @@ function drupal_common_theme() {
       'variables' => array('url' => NULL, 'title' => NULL)
     ),
     'progress_bar' => array(
-      'variables' => array('percent' => NULL, 'message' => NULL),
+      'variables' => array('label' => NULL, 'percent' => NULL, 'message' => NULL),
+      'template' => 'progress-bar',
     ),
     'indentation' => array(
       'variables' => array('size' => 1),
