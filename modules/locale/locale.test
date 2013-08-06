@@ -205,7 +205,7 @@ class LocaleLibraryInfoAlterTest extends DrupalWebTestCase {
   public function testLibraryInfoAlter() {
     drupal_add_library('system', 'ui.datepicker');
     $scripts = drupal_get_js();
-    $this->assertTrue(strpos($scripts, 'locale.datepicker.js'), t('locale.datepicker.js added to scripts.'));
+    $this->assertTrue(strpos($scripts, 'locale.datepicker.js'), 'locale.datepicker.js added to scripts.');
   }
 }
 
@@ -289,13 +289,13 @@ class LocaleJavascriptTranslationTest extends DrupalWebTestCase {
       $args = array('%source' => $str, '%context' => $context);
 
       // Make sure that the string was found in the file.
-      $this->assertTrue(isset($source_strings[$str]), t("Found source string: %source", $args));
+      $this->assertTrue(isset($source_strings[$str]), format_string('Found source string: %source', $args));
 
       // Make sure that the proper context was matched.
-      $this->assertTrue(isset($source_strings[$str]) && $source_strings[$str] === $context, strlen($context) > 0 ? t("Context for %source is %context", $args) : t("Context for %source is blank", $args));
+      $this->assertTrue(isset($source_strings[$str]) && $source_strings[$str] === $context, strlen($context) > 0 ? format_string('Context for %source is %context', $args) : format_string('Context for %source is blank', $args));
     }
 
-    $this->assertEqual(count($source_strings), count($test_strings), t("Found correct number of source strings."));
+    $this->assertEqual(count($source_strings), count($test_strings), 'Found correct number of source strings.');
   }
 }
 /**
@@ -352,12 +352,12 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     t($name, array(), array('langcode' => $langcode));
     // Reset locale cache.
     locale_reset();
-    $this->assertText($langcode, t('Language code found.'));
-    $this->assertText($name, t('Name found.'));
-    $this->assertText($native, t('Native found.'));
+    $this->assertText($langcode, 'Language code found.');
+    $this->assertText($name, 'Name found.');
+    $this->assertText($native, 'Native found.');
     // No t() here, we do not want to add this string to the database and it's
     // surely not translated yet.
-    $this->assertText($native, t('Test language added.'));
+    $this->assertText($native, 'Test language added.');
     $this->drupalLogout();
 
     // Search for the name and translate it.
@@ -372,8 +372,8 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     // assertText() seems to remove the input field where $name always could be
     // found, so this is not a false assert. See how assertNoText succeeds
     // later.
-    $this->assertText($name, t('Search found the name.'));
-    $this->assertRaw($language_indicator, t('Name is untranslated.'));
+    $this->assertText($name, 'Search found the name.');
+    $this->assertRaw($language_indicator, 'Name is untranslated.');
     // Assume this is the only result, given the random name.
     $this->clickLink(t('edit'));
     // We save the lid from the path.
@@ -381,24 +381,24 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     preg_match('!admin/config/regional/translate/edit/(\d+)!', $this->getUrl(), $matches);
     $lid = $matches[1];
     // No t() here, it's surely not translated yet.
-    $this->assertText($name, t('name found on edit screen.'));
+    $this->assertText($name, 'name found on edit screen.');
     $edit = array(
       "translations[$langcode]" => $translation,
     );
-    $this->drupalPost(NULL, $edit, t('Save translations'));
-    $this->assertText(t('The string has been saved.'), t('The string has been saved.'));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/translate/translate', array('absolute' => TRUE)), t('Correct page redirection.'));
-    $this->assertTrue($name != $translation && t($name, array(), array('langcode' => $langcode)) == $translation, t('t() works.'));
+    $this->drupalPost(NULL, $edit, 'Save translations');
+    $this->assertText(t('The string has been saved.'), 'The string has been saved.');
+    $this->assertEqual($this->getUrl(), url('admin/config/regional/translate/translate', array('absolute' => TRUE)), 'Correct page redirection.');
+    $this->assertTrue($name != $translation && t($name, array(), array('langcode' => $langcode)) == $translation, 't() works.');
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     // The indicator should not be here.
-    $this->assertNoRaw($language_indicator, t('String is translated.'));
+    $this->assertNoRaw($language_indicator, 'String is translated.');
 
     // Try to edit a non-existent string and ensure we're redirected correctly.
     // Assuming we don't have 999,999 strings already.
     $random_lid = 999999;
     $this->drupalGet('admin/config/regional/translate/edit/' . $random_lid);
-    $this->assertText(t('String not found'), t('String not found.'));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/translate/translate', array('absolute' => TRUE)), t('Correct page redirection.'));
+    $this->assertText(t('String not found'), 'String not found.');
+    $this->assertEqual($this->getUrl(), url('admin/config/regional/translate/translate', array('absolute' => TRUE)), 'Correct page redirection.');
     $this->drupalLogout();
 
     // Delete the language.
@@ -407,11 +407,11 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     // This a confirm form, we do not need any fields changed.
     $this->drupalPost($path, array(), t('Delete'));
     // We need raw here because %locale will add HTML.
-    $this->assertRaw(t('The language %locale has been removed.', array('%locale' => $name)), t('The test language has been removed.'));
+    $this->assertRaw(t('The language %locale has been removed.', array('%locale' => $name)), 'The test language has been removed.');
     // Reload to remove $name.
     $this->drupalGet($path);
     // Verify that language is no longer found.
-    $this->assertResponse(404, t('Language no longer found.'));
+    $this->assertResponse(404, 'Language no longer found.');
     $this->drupalLogout();
 
     // Delete the string.
@@ -425,20 +425,20 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     // Assume this is the only result, given the random name.
     $this->clickLink(t('delete'));
-    $this->assertText(t('Are you sure you want to delete the string'), t('"delete" link is correct.'));
+    $this->assertText(t('Are you sure you want to delete the string'), '"delete" link is correct.');
     // Delete the string.
     $path = 'admin/config/regional/translate/delete/' . $lid;
     $this->drupalGet($path);
     // First test the 'cancel' link.
     $this->clickLink(t('Cancel'));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/translate/translate', array('absolute' => TRUE)), t('Correct page redirection.'));
-    $this->assertRaw($name, t('The string was not deleted.'));
+    $this->assertEqual($this->getUrl(), url('admin/config/regional/translate/translate', array('absolute' => TRUE)), 'Correct page redirection.');
+    $this->assertRaw($name, 'The string was not deleted.');
     // Delete the name string.
     $this->drupalPost('admin/config/regional/translate/delete/' . $lid, array(), t('Delete'));
-    $this->assertText(t('The string has been removed.'), t('The string has been removed message.'));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/translate/translate', array('absolute' => TRUE)), t('Correct page redirection.'));
+    $this->assertText(t('The string has been removed.'), 'The string has been removed message.');
+    $this->assertEqual($this->getUrl(), url('admin/config/regional/translate/translate', array('absolute' => TRUE)), 'Correct page redirection.');
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertNoText($name, t('Search now can not find the name.'));
+    $this->assertNoText($name, 'Search now can not find the name.');
   }
 
   /*
@@ -494,14 +494,14 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       ->execute()
       ->fetchObject();
     $js_file = 'public://' . variable_get('locale_js_directory', 'languages') . '/' . $langcode . '_' . $file->javascript . '.js';
-    $this->assertTrue($result = file_exists($js_file), t('JavaScript file created: %file', array('%file' => $result ? $js_file : t('not found'))));
+    $this->assertTrue($result = file_exists($js_file), format_string('JavaScript file created: %file', array('%file' => $result ? $js_file : 'not found')));
 
     // Test JavaScript translation rebuilding.
     file_unmanaged_delete($js_file);
-    $this->assertTrue($result = !file_exists($js_file), t('JavaScript file deleted: %file', array('%file' => $result ? $js_file : t('found'))));
+    $this->assertTrue($result = !file_exists($js_file), format_string('JavaScript file deleted: %file', array('%file' => $result ? $js_file : 'found')));
     cache_clear_all();
     _locale_rebuild_js($langcode);
-    $this->assertTrue($result = file_exists($js_file), t('JavaScript file rebuilt: %file', array('%file' => $result ? $js_file : t('not found'))));
+    $this->assertTrue($result = file_exists($js_file), format_string('JavaScript file rebuilt: %file', array('%file' => $result ? $js_file : 'not found')));
   }
 
   /**
@@ -554,7 +554,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     // Find the edit path.
     $content = $this->drupalGetContent();
-    $this->assertTrue(preg_match('@(admin/config/regional/translate/edit/[0-9]+)@', $content, $matches), t('Found the edit path.'));
+    $this->assertTrue(preg_match('@(admin/config/regional/translate/edit/[0-9]+)@', $content, $matches), 'Found the edit path.');
     $path = $matches[0];
     foreach ($bad_translations as $key => $translation) {
       $edit = array(
@@ -563,8 +563,8 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       $this->drupalPost($path, $edit, t('Save translations'));
       // Check for a form error on the textarea.
       $form_class = $this->xpath('//form[@id="locale-translate-edit-form"]//textarea/@class');
-      $this->assertNotIdentical(FALSE, strpos($form_class[0], 'error'), t('The string was rejected as unsafe.'));
-      $this->assertNoText(t('The string has been saved.'), t('The string was not saved.'));
+      $this->assertNotIdentical(FALSE, strpos($form_class[0], 'error'), 'The string was rejected as unsafe.');
+      $this->assertNoText(t('The string has been saved.'), 'The string was not saved.');
     }
   }
 
@@ -621,7 +621,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     // assertText() seems to remove the input field where $name always could be
     // found, so this is not a false assert. See how assertNoText succeeds
     // later.
-    $this->assertText($name, t('Search found the string.'));
+    $this->assertText($name, 'Search found the string.');
 
     // Ensure untranslated string doesn't appear if searching on 'only
     // translated strings'.
@@ -632,7 +632,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertText(t('No strings available.'), t("Search didn't find the string."));
+    $this->assertText(t('No strings available.'), "Search didn't find the string.");
 
     // Ensure untranslated string appears if searching on 'only untranslated
     // strings' in "all" (hasn't been translated to any language).
@@ -643,7 +643,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertNoText(t('No strings available.'), t('Search found the string.'));
+    $this->assertNoText(t('No strings available.'), 'Search found the string.');
 
     // Ensure untranslated string appears if searching on 'only untranslated
     // strings' in the custom language (hasn't been translated to that specific language).
@@ -654,7 +654,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertNoText(t('No strings available.'), t('Search found the string.'));
+    $this->assertNoText(t('No strings available.'), 'Search found the string.');
 
     // Add translation.
     // Assume this is the only result, given the random name.
@@ -677,7 +677,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertNoText(t('No strings available.'), t('Search found the translation.'));
+    $this->assertNoText(t('No strings available.'), 'Search found the translation.');
 
     // Ensure translated source string doesn't appear if searching on 'only
     // untranslated strings'.
@@ -688,7 +688,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertText(t('No strings available.'), t("Search didn't find the source string."));
+    $this->assertText(t('No strings available.'), "Search didn't find the source string.");
 
     // Ensure translated string doesn't appear if searching on 'only
     // untranslated strings'.
@@ -699,7 +699,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertText(t('No strings available.'), t("Search didn't find the translation."));
+    $this->assertText(t('No strings available.'), "Search didn't find the translation.");
 
     // Ensure translated string does appear if searching on the custom language.
     $search = array(
@@ -709,7 +709,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertNoText(t('No strings available.'), t('Search found the translation.'));
+    $this->assertNoText(t('No strings available.'), 'Search found the translation.');
 
     // Ensure translated string doesn't appear if searching on English.
     $search = array(
@@ -719,7 +719,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertText(t('No strings available.'), t("Search didn't find the translation."));
+    $this->assertText(t('No strings available.'), "Search didn't find the translation.");
 
     // Search for a string that isn't in the system.
     $unavailable_string = $this->randomName(16);
@@ -730,7 +730,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
       'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertText(t('No strings available.'), t("Search didn't find the invalid string."));
+    $this->assertText(t('No strings available.'), "Search didn't find the invalid string.");
   }
 }
 
@@ -898,16 +898,16 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     ));
 
     // The import should automatically create the corresponding language.
-    $this->assertRaw(t('The language %language has been created.', array('%language' => 'French')), t('The language has been automatically created.'));
+    $this->assertRaw(t('The language %language has been created.', array('%language' => 'French')), 'The language has been automatically created.');
 
     // The import should have created 7 strings.
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 9, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
+    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 9, '%update' => 0, '%delete' => 0)), 'The translation file was successfully imported.');
 
     // This import should have saved plural forms to have 2 variants.
-    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 2, t('Plural number initialized.'));
+    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 2, 'Plural number initialized.');
 
     // Ensure we were redirected correctly.
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/translate', array('absolute' => TRUE)), t('Correct page redirection.'));
+    $this->assertEqual($this->getUrl(), url('admin/config/regional/translate', array('absolute' => TRUE)), 'Correct page redirection.');
 
 
     // Try importing a .po file with invalid tags in the default text group.
@@ -916,9 +916,9 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     ));
 
     // The import should have created 1 string and rejected 2.
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
+    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), 'The translation file was successfully imported.');
     $skip_message = format_plural(2, 'One translation string was skipped because it contains disallowed HTML.', '@count translation strings were skipped because they contain disallowed HTML.');
-    $this->assertRaw($skip_message, t('Unsafe strings were skipped.'));
+    $this->assertRaw($skip_message, 'Unsafe strings were skipped.');
 
 
     // Try importing a .po file with invalid tags in a non default text group.
@@ -928,7 +928,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     ));
 
     // The import should have created 3 strings.
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 3, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
+    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 3, '%update' => 0, '%delete' => 0)), 'The translation file was successfully imported.');
 
 
     // Try importing a .po file which doesn't exist.
@@ -938,8 +938,8 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
       'files[file]' => $name,
       'group' => 'custom',
     ), t('Import'));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/translate/import', array('absolute' => TRUE)), t('Correct page redirection.'));
-    $this->assertText(t('File to import not found.'), t('File to import not found message.'));
+    $this->assertEqual($this->getUrl(), url('admin/config/regional/translate/import', array('absolute' => TRUE)), 'Correct page redirection.');
+    $this->assertText(t('File to import not found.'), 'File to import not found message.');
 
 
     // Try importing a .po file with overriding strings, and ensure existing
@@ -950,7 +950,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     ));
 
     // The import should have created 1 string.
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
+    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), 'The translation file was successfully imported.');
     // Ensure string wasn't overwritten.
     $search = array(
       'string' => 'Montag',
@@ -959,10 +959,10 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
       'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertText(t('No strings available.'), t('String not overwritten by imported string.'));
+    $this->assertText(t('No strings available.'), 'String not overwritten by imported string.');
 
     // This import should not have changed number of plural forms.
-    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 2, t('Plural numbers untouched.'));
+    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 2, 'Plural numbers untouched.');
 
     $this->importPoFile($this->getPoFileWithBrokenPlural(), array(
       'langcode' => 'fr',
@@ -971,7 +971,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
 
     // Attempt to import broken .po file as well to prove that this
     // will not overwrite the proper plural formula imported above.
-    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 2, t('Broken plurals: plural numbers untouched.'));
+    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 2, 'Broken plurals: plural numbers untouched.');
 
     $this->importPoFile($this->getPoFileWithMissingPlural(), array(
       'langcode' => 'fr',
@@ -980,7 +980,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
 
     // Attempt to import .po file which has no plurals and prove that this
     // will not overwrite the proper plural formula imported above.
-    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 2, t('No plurals: plural numbers untouched.'));
+    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 2, 'No plurals: plural numbers untouched.');
 
 
     // Try importing a .po file with overriding strings, and ensure existing
@@ -991,7 +991,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     ));
 
     // The import should have updated 2 strings.
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 0, '%update' => 2, '%delete' => 0)), t('The translation file was successfully imported.'));
+    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 0, '%update' => 2, '%delete' => 0)), 'The translation file was successfully imported.');
     // Ensure string was overwritten.
     $search = array(
       'string' => 'Montag',
@@ -1000,9 +1000,9 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
       'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertNoText(t('No strings available.'), t('String overwritten by imported string.'));
+    $this->assertNoText(t('No strings available.'), 'String overwritten by imported string.');
     // This import should have changed number of plural forms.
-    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 3, t('Plural numbers changed.'));
+    $this->assert(db_query("SELECT plurals FROM {languages} WHERE language = 'fr'")->fetchField() == 3, 'Plural numbers changed.');
   }
 
   /**
@@ -1031,7 +1031,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
 
     // Ensure the translation file was automatically imported when language was
     // added.
-    $this->assertText(t('One translation file imported for the enabled modules.'), t('Language file automatically imported.'));
+    $this->assertText(t('One translation file imported for the enabled modules.'), 'Language file automatically imported.');
 
     // Ensure strings were successfully imported.
     $search = array(
@@ -1041,7 +1041,7 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
       'group' => 'all',
     );
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
-    $this->assertNoText(t('No strings available.'), t('String successfully imported.'));
+    $this->assertNoText(t('No strings available.'), 'String successfully imported.');
   }
 
   /**
@@ -1053,8 +1053,8 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
       'langcode' => 'hr',
     ));
 
-    $this->assertIdentical(t('May', array(), array('langcode' => 'hr', 'context' => 'Long month name')), 'Svibanj', t('Long month name context is working.'));
-    $this->assertIdentical(t('May', array(), array('langcode' => 'hr')), 'Svi.', t('Default context is working.'));
+    $this->assertIdentical(t('May', array(), array('langcode' => 'hr', 'context' => 'Long month name')), 'Svibanj', 'Long month name context is working.');
+    $this->assertIdentical(t('May', array(), array('langcode' => 'hr')), 'Svi.', 'Default context is working.');
   }
 
   /**
@@ -1068,15 +1068,15 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
       'langcode' => $langcode,
     ));
 
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), t('The translation file was successfully imported.'));
-    $this->assertIdentical(t('Operations', array(), array('langcode' => $langcode)), 'Műveletek', t('String imported and translated.'));
+    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 1, '%update' => 0, '%delete' => 0)), 'The translation file was successfully imported.');
+    $this->assertIdentical(t('Operations', array(), array('langcode' => $langcode)), 'Műveletek', 'String imported and translated.');
 
     // Try importing a .po file.
     $this->importPoFile($this->getPoFileWithEmptyMsgstr(), array(
       'langcode' => $langcode,
       'mode' => 0,
     ));
-    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 0, '%update' => 0, '%delete' => 1)), t('The translation file was successfully imported.'));
+    $this->assertRaw(t('The translation was successfully imported. There are %number newly created translated strings, %update strings were updated and %delete strings were removed.', array('%number' => 0, '%update' => 0, '%delete' => 1)), 'The translation file was successfully imported.');
     // This is the language indicator on the translation search screen for
     // untranslated strings. Copied straight from locale.inc.
     $language_indicator = "<em class=\"locale-untranslated\">$langcode</em> ";
@@ -1090,8 +1090,8 @@ class LocaleImportFunctionalTest extends DrupalWebTestCase {
     $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
     // assertText() seems to remove the input field where $str always could be
     // found, so this is not a false assert.
-    $this->assertText($str, t('Search found the string.'));
-    $this->assertRaw($language_indicator, t('String is untranslated again.'));
+    $this->assertText($str, 'Search found the string.');
+    $this->assertRaw($language_indicator, 'String is untranslated again.');
   }
 
   /**
@@ -1344,9 +1344,9 @@ class LocaleExportFunctionalTest extends DrupalWebTestCase {
     ), t('Export'));
 
     // Ensure we have a translation file.
-    $this->assertRaw('# French translation of Drupal', t('Exported French translation file.'));
+    $this->assertRaw('# French translation of Drupal', 'Exported French translation file.');
     // Ensure our imported translations exist in the file.
-    $this->assertRaw('msgstr "lundi"', t('French translations present in exported file.'));
+    $this->assertRaw('msgstr "lundi"', 'French translations present in exported file.');
   }
 
   /**
@@ -1359,7 +1359,7 @@ class LocaleExportFunctionalTest extends DrupalWebTestCase {
     // doesn't work.
     $this->drupalPost('admin/config/regional/translate/export', array(), t('Export'));
     // Ensure we have a translation file.
-    $this->assertRaw('# LANGUAGE translation of PROJECT', t('Exported translation template file.'));
+    $this->assertRaw('# LANGUAGE translation of PROJECT', 'Exported translation template file.');
   }
 
   /**
@@ -1407,7 +1407,7 @@ class LocaleInstallTest extends DrupalWebTestCase {
   function testFunctionSignatures() {
     $reflector_t = new ReflectionFunction('t');
     $reflector_st = new ReflectionFunction('st');
-    $this->assertEqual($reflector_t->getParameters(), $reflector_st->getParameters(), t('Function signatures of t() and st() are equal.'));
+    $this->assertEqual($reflector_t->getParameters(), $reflector_st->getParameters(), 'Function signatures of t() and st() are equal.');
   }
 }
 
@@ -1446,7 +1446,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     // Check the UI language.
     drupal_language_initialize();
     global $language;
-    $this->assertEqual($language->language, $this->language, t('Current language: %lang', array('%lang' => $language->language)));
+    $this->assertEqual($language->language, $this->language, format_string('Current language: %lang', array('%lang' => $language->language)));
 
     // Enable multilingual workflow option for articles.
     variable_set('language_content_type_article', 1);
@@ -1467,7 +1467,7 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
     _locale_rebuild_js('fr');
     $file = db_query('SELECT javascript FROM {languages} WHERE language = :language', array(':language' => 'fr'))->fetchObject();
     $js_file = 'public://' . variable_get('locale_js_directory', 'languages') . '/fr_' . $file->javascript . '.js';
-    $this->assertTrue($result = file_exists($js_file), t('JavaScript file created: %file', array('%file' => $result ? $js_file : t('none'))));
+    $this->assertTrue($result = file_exists($js_file), format_string('JavaScript file created: %file', array('%file' => $result ? $js_file : 'none')));
 
     // Disable string caching.
     variable_set('locale_cache_strings', 0);
@@ -1492,44 +1492,44 @@ class LocaleUninstallFunctionalTest extends DrupalWebTestCase {
 
     // Check the init language logic.
     drupal_language_initialize();
-    $this->assertEqual($language->language, 'en', t('Language after uninstall: %lang', array('%lang' => $language->language)));
+    $this->assertEqual($language->language, 'en', format_string('Language after uninstall: %lang', array('%lang' => $language->language)));
 
     // Check JavaScript files deletion.
-    $this->assertTrue($result = !file_exists($js_file), t('JavaScript file deleted: %file', array('%file' => $result ? $js_file : t('found'))));
+    $this->assertTrue($result = !file_exists($js_file), format_string('JavaScript file deleted: %file', array('%file' => $result ? $js_file : 'found')));
 
     // Check language count.
     $language_count = variable_get('language_count', 1);
-    $this->assertEqual($language_count, 1, t('Language count: %count', array('%count' => $language_count)));
+    $this->assertEqual($language_count, 1, format_string('Language count: %count', array('%count' => $language_count)));
 
     // Check language negotiation.
     require_once DRUPAL_ROOT . '/includes/language.inc';
-    $this->assertTrue(count(language_types()) == count(drupal_language_types()), t('Language types reset'));
+    $this->assertTrue(count(language_types()) == count(drupal_language_types()), 'Language types reset');
     $language_negotiation = language_negotiation_get(LANGUAGE_TYPE_INTERFACE) == LANGUAGE_NEGOTIATION_DEFAULT;
-    $this->assertTrue($language_negotiation, t('Interface language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
+    $this->assertTrue($language_negotiation, format_string('Interface language negotiation: %setting', array('%setting' => $language_negotiation ? 'none' : 'set')));
     $language_negotiation = language_negotiation_get(LANGUAGE_TYPE_CONTENT) == LANGUAGE_NEGOTIATION_DEFAULT;
-    $this->assertTrue($language_negotiation, t('Content language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
+    $this->assertTrue($language_negotiation, format_string('Content language negotiation: %setting', array('%setting' => $language_negotiation ? 'none' : 'set')));
     $language_negotiation = language_negotiation_get(LANGUAGE_TYPE_URL) == LANGUAGE_NEGOTIATION_DEFAULT;
-    $this->assertTrue($language_negotiation, t('URL language negotiation: %setting', array('%setting' => t($language_negotiation ? 'none' : 'set'))));
+    $this->assertTrue($language_negotiation, format_string('URL language negotiation: %setting', array('%setting' => $language_negotiation ? 'none' : 'set')));
 
     // Check language providers settings.
-    $this->assertFalse(variable_get('locale_language_negotiation_url_part', FALSE), t('URL language provider indicator settings cleared.'));
-    $this->assertFalse(variable_get('locale_language_negotiation_session_param', FALSE), t('Visit language provider settings cleared.'));
+    $this->assertFalse(variable_get('locale_language_negotiation_url_part', FALSE), 'URL language provider indicator settings cleared.');
+    $this->assertFalse(variable_get('locale_language_negotiation_session_param', FALSE), 'Visit language provider settings cleared.');
 
     // Check JavaScript parsed.
     $javascript_parsed_count = count(variable_get('javascript_parsed', array()));
-    $this->assertEqual($javascript_parsed_count, 0, t('JavaScript parsed count: %count', array('%count' => $javascript_parsed_count)));
+    $this->assertEqual($javascript_parsed_count, 0, format_string('JavaScript parsed count: %count', array('%count' => $javascript_parsed_count)));
 
     // Check multilingual workflow option for articles.
     $multilingual = variable_get('language_content_type_article', 0);
-    $this->assertEqual($multilingual, 0, t('Multilingual workflow option: %status', array('%status' => t($multilingual ? 'enabled': 'disabled'))));
+    $this->assertEqual($multilingual, 0, format_string('Multilingual workflow option: %status', array('%status' => $multilingual ? 'enabled': 'disabled')));
 
     // Check JavaScript translations directory.
     $locale_js_directory = variable_get('locale_js_directory', 'languages');
-    $this->assertEqual($locale_js_directory, 'languages', t('JavaScript translations directory: %dir', array('%dir' => $locale_js_directory)));
+    $this->assertEqual($locale_js_directory, 'languages', format_string('JavaScript translations directory: %dir', array('%dir' => $locale_js_directory)));
 
     // Check string caching.
     $locale_cache_strings = variable_get('locale_cache_strings', 1);
-    $this->assertEqual($locale_cache_strings, 1, t('String caching: %status', array('%status' => t($locale_cache_strings ? 'enabled': 'disabled'))));
+    $this->assertEqual($locale_cache_strings, 1, format_string('String caching: %status', array('%status' => $locale_cache_strings ? 'enabled': 'disabled')));
   }
 }
 
@@ -1829,21 +1829,21 @@ class LocaleUserLanguageFunctionalTest extends DrupalWebTestCase {
     $path = 'user/' . $web_user->uid . '/edit';
     $this->drupalGet($path);
     // Ensure language settings fieldset is available.
-    $this->assertText(t('Language settings'), t('Language settings available.'));
+    $this->assertText(t('Language settings'), 'Language settings available.');
     // Ensure custom language is present.
-    $this->assertText($name, t('Language present on form.'));
+    $this->assertText($name, 'Language present on form.');
     // Ensure disabled language isn't present.
-    $this->assertNoText($name_disabled, t('Disabled language not present on form.'));
+    $this->assertNoText($name_disabled, 'Disabled language not present on form.');
     // Switch to our custom language.
     $edit = array(
       'language' => $langcode,
     );
     $this->drupalPost($path, $edit, t('Save'));
     // Ensure form was submitted successfully.
-    $this->assertText(t('The changes have been saved.'), t('Changes were saved.'));
+    $this->assertText(t('The changes have been saved.'), 'Changes were saved.');
     // Check if language was changed.
     $elements = $this->xpath('//input[@id=:id]', array(':id' => 'edit-language-' . $langcode));
-    $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), t('Default language successfully updated.'));
+    $this->assertTrue(isset($elements[0]) && !empty($elements[0]['checked']), 'Default language successfully updated.');
 
     $this->drupalLogout();
   }
@@ -1881,20 +1881,20 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
       'langcode' => 'fr',
     );
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
-    $this->assertText($langcode, t('Language added successfully.'));
-    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), t('Correct page redirection.'));
+    $this->assertText($langcode, 'Language added successfully.');
+    $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), 'Correct page redirection.');
 
     // Set language negotiation.
     $edit = array(
       'language[enabled][locale-url]' => TRUE,
     );
     $this->drupalPost('admin/config/regional/language/configure', $edit, t('Save settings'));
-    $this->assertText(t('Language negotiation configuration saved.'), t('Set language negotiation.'));
+    $this->assertText(t('Language negotiation configuration saved.'), 'Set language negotiation.');
 
     // Check if the language selector is available on admin/people/create and
     // set to the currently active language.
     $this->drupalGet($langcode . '/admin/people/create');
-    $this->assertFieldChecked("edit-language-$langcode", t('Global language set in the language selector.'));
+    $this->assertFieldChecked("edit-language-$langcode", 'Global language set in the language selector.');
 
     // Create a user with the admin/people/create form and check if the correct
     // language is set.
@@ -1909,13 +1909,13 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
     $this->drupalPost($langcode . '/admin/people/create', $edit, t('Create new account'));
 
     $user = user_load_by_name($username);
-    $this->assertEqual($user->language, $langcode, t('New user has correct language set.'));
+    $this->assertEqual($user->language, $langcode, 'New user has correct language set.');
 
     // Register a new user and check if the language selector is hidden.
     $this->drupalLogout();
 
     $this->drupalGet($langcode . '/user/register');
-    $this->assertNoFieldByName('language[fr]', t('Language selector is not accessible.'));
+    $this->assertNoFieldByName('language[fr]', 'Language selector is not accessible.');
 
     $username = $this->randomName(10);
     $edit = array(
@@ -1926,7 +1926,7 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
     $this->drupalPost($langcode . '/user/register', $edit, t('Create new account'));
 
     $user = user_load_by_name($username);
-    $this->assertEqual($user->language, $langcode, t('New user has correct language set.'));
+    $this->assertEqual($user->language, $langcode, 'New user has correct language set.');
 
     // Test if the admin can use the language selector and if the
     // correct language is was saved.
@@ -1934,7 +1934,7 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
 
     $this->drupalLogin($admin_user);
     $this->drupalGet($user_edit);
-    $this->assertFieldChecked("edit-language-$langcode", t('Language selector is accessible and correct language is selected.'));
+    $this->assertFieldChecked("edit-language-$langcode", 'Language selector is accessible and correct language is selected.');
 
     // Set pass_raw so we can login the new user.
     $user->pass_raw = $this->randomName(10);
@@ -1947,7 +1947,7 @@ class LocaleUserCreationTest extends DrupalWebTestCase {
 
     $this->drupalLogin($user);
     $this->drupalGet($user_edit);
-    $this->assertFieldChecked("edit-language-$langcode", t('Language selector is accessible and correct language is selected.'));
+    $this->assertFieldChecked("edit-language-$langcode", 'Language selector is accessible and correct language is selected.');
   }
 }
 
@@ -1999,7 +1999,7 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     // not enabled yet.
     $this->drupalPost('admin/config/regional/language/configure', array(), t('Save settings'));
     $this->drupalGet($prefix);
-    $this->assertResponse(404, t('The "xx" front page is not available yet.'));
+    $this->assertResponse(404, 'The "xx" front page is not available yet.');
 
     // Enable URL language detection and selection.
     $edit = array('language[enabled][locale-url]' => 1);
@@ -2029,11 +2029,11 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
 
     // Confirm English language path alias works.
     $this->drupalGet($english_path);
-    $this->assertText($node->title, t('English alias works.'));
+    $this->assertText($node->title, 'English alias works.');
 
     // Confirm custom language path alias works.
     $this->drupalGet($prefix . '/' . $custom_language_path);
-    $this->assertText($node->title, t('Custom language alias works.'));
+    $this->assertText($node->title, 'Custom language alias works.');
 
     // Create a custom path.
     $custom_path = $this->randomName(8);
@@ -2046,10 +2046,10 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     );
     path_save($edit);
     $lookup_path = drupal_lookup_path('alias', 'node/' . $node->nid, 'en');
-    $this->assertEqual($english_path, $lookup_path, t('English language alias has priority.'));
+    $this->assertEqual($english_path, $lookup_path, 'English language alias has priority.');
     // Same check for language 'xx'.
     $lookup_path = drupal_lookup_path('alias', 'node/' . $node->nid, $prefix);
-    $this->assertEqual($custom_language_path, $lookup_path, t('Custom language alias has priority.'));
+    $this->assertEqual($custom_language_path, $lookup_path, 'Custom language alias has priority.');
     path_delete($edit);
 
     // Create language nodes to check priority of aliases.
@@ -2076,17 +2076,17 @@ class LocalePathFunctionalTest extends DrupalWebTestCase {
     $this->drupalGet('<front>');
     $custom_path_url = base_path() . (variable_get('clean_url', 0) ? $custom_path : '?q=' . $custom_path);
     $elements = $this->xpath('//a[@href=:href and .=:title]', array(':href' => $custom_path_url, ':title' => $first_node->title));
-    $this->assertTrue(!empty($elements), t('First node links to the path alias.'));
+    $this->assertTrue(!empty($elements), 'First node links to the path alias.');
     $elements = $this->xpath('//a[@href=:href and .=:title]', array(':href' => $custom_path_url, ':title' => $second_node->title));
-    $this->assertTrue(!empty($elements), t('Second node links to the path alias.'));
+    $this->assertTrue(!empty($elements), 'Second node links to the path alias.');
 
     // Confirm that the custom path leads to the first node.
     $this->drupalGet($custom_path);
-    $this->assertText($first_node->title, t('Custom alias returns first node.'));
+    $this->assertText($first_node->title, 'Custom alias returns first node.');
 
     // Confirm that the custom path with prefix leads to the second node.
     $this->drupalGet($prefix . '/' . $custom_path);
-    $this->assertText($second_node->title, t('Custom alias with prefix returns second node.'));
+    $this->assertText($second_node->title, 'Custom alias with prefix returns second node.');
   }
 }
 
@@ -2191,28 +2191,28 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
 
     // Set "Basic page" content type to use multilingual support.
     $this->drupalGet('admin/structure/types/manage/page');
-    $this->assertText(t('Multilingual support'), t('Multilingual support fieldset present on content type configuration form.'));
+    $this->assertText(t('Multilingual support'), 'Multilingual support fieldset present on content type configuration form.');
     $edit = array(
       'language_content_type' => 1,
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
     $this->drupalLogout();
 
     // Verify language selection is not present on add article form.
     $this->drupalLogin($web_user);
     $this->drupalGet('node/add/article');
     // Verify language select list is not present.
-    $this->assertNoFieldByName('language', NULL, t('Language select not present on add article form.'));
+    $this->assertNoFieldByName('language', NULL, 'Language select not present on add article form.');
 
     // Verify language selection appears on add "Basic page" form.
     $this->drupalGet('node/add/page');
     // Verify language select list is present.
-    $this->assertFieldByName('language', NULL, t('Language select present on add Basic page form.'));
+    $this->assertFieldByName('language', NULL, 'Language select present on add Basic page form.');
     // Ensure enabled language appears.
-    $this->assertText($name, t('Enabled language present.'));
+    $this->assertText($name, 'Enabled language present.');
     // Ensure disabled language doesn't appear.
-    $this->assertNoText($name_disabled, t('Disabled language not present.'));
+    $this->assertNoText($name_disabled, 'Disabled language not present.');
 
     // Create "Basic page" content.
     $node_title = $this->randomName();
@@ -2227,13 +2227,13 @@ class LocaleContentFunctionalTest extends DrupalWebTestCase {
     // Edit the content and ensure correct language is selected.
     $path = 'node/' . $node->nid . '/edit';
     $this->drupalGet($path);
-    $this->assertRaw('<option value="' . $langcode . '" selected="selected">' .  $name . '</option>', t('Correct language selected.'));
+    $this->assertRaw('<option value="' . $langcode . '" selected="selected">' .  $name . '</option>', 'Correct language selected.');
     // Ensure we can change the node language.
     $edit = array(
       'language' => 'en',
     );
     $this->drupalPost($path, $edit, t('Save'));
-    $this->assertRaw(t('%title has been updated.', array('%title' => $node_title)), t('Basic page content updated.'));
+    $this->assertRaw(t('%title has been updated.', array('%title' => $node_title)), 'Basic page content updated.');
 
     $this->drupalLogout();
   }
@@ -2662,7 +2662,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
       'language_content_type' => 1,
     );
     $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), t('Basic page content type has been updated.'));
+    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
 
     // Make node body translatable.
     $field = field_info_field('body');
@@ -2690,10 +2690,10 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
-    $this->assertTrue($node, t('Node found in database.'));
+    $this->assertTrue($node, 'Node found in database.');
 
     $assert = isset($node->body['en']) && !isset($node->body[LANGUAGE_NONE]) && $node->body['en'][0]['value'] == $body_value;
-    $this->assertTrue($assert, t('Field language correctly set.'));
+    $this->assertTrue($assert, 'Field language correctly set.');
 
     // Change node language.
     $this->drupalGet("node/$node->nid/edit");
@@ -2703,20 +2703,20 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
     );
     $this->drupalPost(NULL, $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
-    $this->assertTrue($node, t('Node found in database.'));
+    $this->assertTrue($node, 'Node found in database.');
 
     $assert = isset($node->body['it']) && !isset($node->body['en']) && $node->body['it'][0]['value'] == $body_value;
-    $this->assertTrue($assert, t('Field language correctly changed.'));
+    $this->assertTrue($assert, 'Field language correctly changed.');
 
     // Enable content language URL detection.
     language_negotiation_set(LANGUAGE_TYPE_CONTENT, array(LOCALE_LANGUAGE_NEGOTIATION_URL => 0));
 
     // Test multilingual field language fallback logic.
     $this->drupalGet("it/node/$node->nid");
-    $this->assertRaw($body_value, t('Body correctly displayed using Italian as requested language'));
+    $this->assertRaw($body_value, 'Body correctly displayed using Italian as requested language');
 
     $this->drupalGet("node/$node->nid");
-    $this->assertRaw($body_value, t('Body correctly displayed using English as requested language'));
+    $this->assertRaw($body_value, 'Body correctly displayed using English as requested language');
   }
 
   /*
@@ -2739,7 +2739,7 @@ class LocaleMultilingualFieldsFunctionalTest extends DrupalWebTestCase {
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
-    $this->assertTrue($node, t('Node found in database.'));
+    $this->assertTrue($node, 'Node found in database.');
 
     // Check if node body is showed.
     $this->drupalGet("node/$node->nid");
@@ -2856,7 +2856,7 @@ class LocaleCommentLanguageFunctionalTest extends DrupalWebTestCase {
         $comment = comment_load($cid);
         $comment_langcode = entity_language('comment', $comment);
         $args = array('%node_language' => $node_langcode, '%comment_language' => $comment_langcode, '%langcode' => $langcode);
-        $this->assertEqual($comment_langcode, $langcode, t('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
+        $this->assertEqual($comment_langcode, $langcode, format_string('The comment posted with content language %langcode and belonging to the node with language %node_language has language %comment_language', $args));
         $this->assertEqual($comment->comment_body[$langcode][0]['value'], $comment_values[$node_langcode][$langcode], 'Comment body correctly stored.');
       }
     }
