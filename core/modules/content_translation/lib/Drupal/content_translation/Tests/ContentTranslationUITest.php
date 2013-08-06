@@ -190,7 +190,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
       'content_translation[created]' => '19/11/1978',
     );
     $this->drupalPost($path, $edit, $this->getFormSubmitAction($entity));
-    $this->assertTrue($this->xpath('//div[@id="messages"]//div[contains(@class, "error")]//ul'), 'Invalid values generate a list of form errors.');
+    $this->assertTrue($this->xpath('//div[contains(@class, "error")]//ul'), 'Invalid values generate a list of form errors.');
     $this->assertEqual($entity->translation[$langcode]['uid'] == $values[$langcode]['uid'], 'Translation author correctly kept.');
     $this->assertEqual($entity->translation[$langcode]['created'] == $values[$langcode]['created'], 'Translation date correctly kept.');
   }

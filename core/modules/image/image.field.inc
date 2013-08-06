@@ -441,7 +441,7 @@ function theme_image_formatter($variables) {
   }
 
   foreach (array('width', 'height', 'alt', 'attributes') as $key) {
-    if (isset($item[$key])) {
+    if (isset($item[$key]) || array_key_exists($key, $item)) {
       $image["#$key"] = $item[$key];
     }
   }

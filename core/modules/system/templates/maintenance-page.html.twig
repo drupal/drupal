@@ -12,80 +12,69 @@
  * @ingroup themeable
  */
 #}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="{{ language.langcode }}" lang="{{ language.langcode }}" dir="{{ language.dir }}">
-<head>
-  <title>{{ head_title }}</title>
+<!DOCTYPE html>
+<html>
   {{ head }}
+  <title>{{ head_title }}</title>
   {{ styles }}
   {{ scripts }}
 </head>
 <body class="{{ attributes.class }}">
-  <div id="page">
-    <div id="header">
-      <div id="logo-title">
-        {% if logo %}
-          <a href="{{ base_path }}" title="{{ 'Home'|t }}" rel="home" id="logo">
-            <img src="{{ logo }}" alt="{{ 'Home'|t }}" />
-          </a>
+
+<div class="l-container">
+
+  <header role="banner">
+    {% if logo %}
+      <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">
+        <img src="{{ logo }}" alt="{{ 'Home'|t }}"/>
+      </a>
+    {% endif %}
+
+    {% if site_name or site_slogan %}
+      <div class="name-and-slogan">
+        {% if site_name %}
+         <h1 class="site-name">
+           <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a>
+         </h1>
         {% endif %}
 
-        <div id="name-and-slogan">
-          {% if site_name %}
-            <h1 id="site-name">
-              <a href="{{ base_path }}" title="{{ 'Home'|t }}" rel="home"><span>{{ site_name }}</span></a>
-            </h1>
-          {% endif %}
-          {% if site_slogan %}
-            <div id="site-slogan">{{ site_slogan }}</div>
-          {% endif %}
-        </div> <!-- /name-and-slogan -->
-      </div> <!-- /logo-title -->
+        {% if site_slogan %}
+          <div class="site-slogan">{{ site_slogan }}</div>
+        {% endif %}
+      </div>{# /.name-and-slogan #}
+    {% endif %}
 
-      {% if header %}
-        <div id="header-region">
-          {{ header }}
-        </div>
-      {% endif %}
+  </header>
 
-    </div> <!-- /header -->
+  <main role="main">
+    {% if title %}
+      <h1>{{ title }}</h1>
+    {% endif %}
 
-    <div id="container" class="clearfix">
+    {{ messages }}
 
-      {% if sidebar_first %}
-        <div id="sidebar-first" class="column sidebar">
-          {{ sidebar_first }}
-        </div> <!-- /sidebar-first -->
-      {% endif %}
+    {{ content }}
+  </main>
 
-      <div id="main" class="column"><div id="main-squeeze">
+  {% if page.sidebar_first %}
+    <aside class="l-sidebar-first" role="complementary">
+      {{ page.sidebar_first }}
+    </aside>{# /.l-sidebar-first #}
+  {% endif %}
 
-        <div id="content">
-          {% if title %}<h1 class="title" id="page-title">{{ title }}</h1>{% endif %}
-          {% if messages %}{{ messages }}{% endif %}
-          <div id="content-content" class="clearfix">
-            {{ content }}
-          </div> <!-- /content-content -->
-        </div> <!-- /content -->
+  {% if page.sidebar_second %}
+    <aside class="l-sidebar-second" role="complementary">
+      {{ page.sidebar_second }}
+    </aside>{# /.l-sidebar-second #}
+  {% endif %}
 
-      </div></div> <!-- /main-squeeze /main -->
+  {% if page.footer %}
+    <footer role="contentinfo">
+      {{ page.footer }}
+    </footer>
+  {% endif %}
 
-      {% if sidebar_second %}
-        <div id="sidebar-second" class="column sidebar">
-          {{ sidebar_second }}
-        </div> <!-- /sidebar-second -->
-      {% endif %}
-
-    </div> <!-- /container -->
-
-    <div id="footer-wrapper">
-      <div id="footer">
-        {% if footer %}{{ footer }}{% endif %}
-      </div> <!-- /footer -->
-    </div> <!-- /footer-wrapper -->
-
-  </div> <!-- /page -->
+</div>{# /.l-container #}
 
 </body>
 </html>

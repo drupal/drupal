@@ -13,7 +13,6 @@ use Drupal\Component\Utility\Settings;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\ConfigException;
 use Drupal\Core\DrupalKernel;
-use Drupal\Component\Gettext\PoHeader;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Component\Utility\NestedArray;
 use Symfony\Component\HttpFoundation\Request;
@@ -481,14 +480,9 @@ function update_prepare_d8_language() {
     $prefixes = array();
     $domains = array();
     foreach ($languages as $language) {
-      $header = new PoHeader($language->language);
-      $language->formula = str_replace('$n', 'n', $language->formula);
-      $plural_forms = 'nplurals=' . $language->plurals . '; plural=' . $language->formula . ';';
-      $parsed = $header->parsePluralForms($plural_forms);
-      list($nplurals, $formula) = $parsed;
       $plurals[$language->language] = array(
-        'plurals' => $nplurals,
-        'formula' => $formula,
+        'plurals' => $language->plurals,
+        'formula' => $language->formula,
       );
       $javascript[$language->language] = $language->javascript;
       $prefixes[$language->language] = $language->prefix;

@@ -616,27 +616,38 @@ function template_preprocess_views_view_table(&$variables) {
 
     // Render each field into its appropriate column.
     foreach ($result as $num => $row) {
+
+      // Skip building the attributes and content if the field is to be excluded
+      // from the display.
+      if (!empty($fields[$field]->options['exclude'])) {
+        continue;
+      }
+
+      // Reference to the column in the loop to make the code easier to read.
+      $column_reference =& $variables['rows'][$num]['columns'][$column];
+
       // Add field classes.
-      $variables['rows'][$num]['columns'][$column]['attributes'] = array();
+      $column_reference['attributes'] = array();
       if ($fields[$field]->options['element_default_classes']) {
-        $variables['rows'][$num]['columns'][$column]['attributes']['class'][] = 'views-field';
-        $variables['rows'][$num]['columns'][$column]['attributes']['class'][] = 'views-field-' . $variables['fields'][$field];
+        $column_reference['attributes']['class'][] = 'views-field';
+        $column_reference['attributes']['class'][] = 'views-field-' . $variables['fields'][$field];
       }
 
       if ($classes = $fields[$field]->elementClasses($num)) {
-        $variables['rows'][$num]['columns'][$column]['attributes']['class'][] = $classes;
+        $column_reference['attributes']['class'][] = $classes;
       }
+
       // Add responsive header classes.
       if (!empty($options['info'][$field]['responsive'])) {
-        $variables['rows'][$num]['columns'][$column]['attributes']['class'][] = $options['info'][$field]['responsive'];
+        $column_reference['attributes']['class'][] = $options['info'][$field]['responsive'];
       }
 
       // Improves accessibility of complex tables.
       if (isset($variables['header'][$field]['attributes']['id'])) {
-        $variables['rows'][$num]['columns'][$column]['attributes']['headers'] = array($variables['header'][$field]['attributes']['id']);
+        $column_reference['attributes']['headers'] = array($variables['header'][$field]['attributes']['id']);
       }
 
-      if (!empty($fields[$field]) && empty($fields[$field]->options['exclude'])) {
+      if (!empty($fields[$field])) {
         $field_output = $handler->getField($num, $field);
         $element_type = $fields[$field]->elementType(TRUE, TRUE);
         if ($element_type) {
@@ -644,20 +655,20 @@ function template_preprocess_views_view_table(&$variables) {
         }
 
         // Only bother with separators and stuff if the field shows up.
-        if (!empty($field_output) && empty($variables['rows'][$num]['columns'][$column]['content'])) {
+        if (!empty($field_output) && empty($column_reference['content'])) {
           // Place the field into the column, along with an optional separator.
-          if (!empty($variables['rows'][$num][$column]['content'])) {
+          if (!empty($column_reference['content'])) {
             if (!empty($options['info'][$column]['separator'])) {
-              $variables['rows'][$num]['columns'][$column]['content'] .= filter_xss_admin($options['info'][$column]['separator']);
+              $column_reference['content'] .= filter_xss_admin($options['info'][$column]['separator']);
             }
           }
           else {
-            $variables['rows'][$num]['columns'][$column]['content'] = '';
+            $column_reference['content'] = '';
           }
-          $variables['rows'][$num]['columns'][$column]['content'] .= $field_output;
+          $column_reference['content'] .= $field_output;
         }
       }
-      $variables['rows'][$num]['columns'][$column]['attributes'] = new Attribute($variables['rows'][$num]['columns'][$column]['attributes']);
+      $column_reference['attributes'] = new Attribute($column_reference['attributes']);
     }
 
     // Remove columns if the option is hide empty column is checked and the

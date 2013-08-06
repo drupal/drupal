@@ -24,6 +24,7 @@ abstract class DatabaseTestBase extends DrupalUnitTestBase {
     $this->installSchema('database_test', array(
       'test',
       'test_people',
+      'test_people_copy',
       'test_one_blob',
       'test_two_blobs',
       'test_task',

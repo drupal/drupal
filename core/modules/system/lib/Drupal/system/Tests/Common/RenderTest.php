@@ -73,6 +73,68 @@ class RenderTest extends WebTestBase {
         'expected' => '',
       ),
 
+      // Test that #theme and #theme_wrappers can co-exist on an element.
+      array(
+        'name' => '#theme and #theme_wrappers basic',
+        'value' => array(
+          '#theme' => 'common_test_foo',
+          '#foo' => 'foo',
+          '#bar' => 'bar',
+          '#theme_wrappers' => array('container'),
+          '#attributes' => array('class' => 'baz'),
+        ),
+        'expected' => '<div class="baz">foobar</div>',
+      ),
+      // Test that #theme_wrappers can disambiguate element attributes shared
+      // with rendering methods that build #children by using the alternate
+      // #theme_wrappers attribute override syntax.
+      array(
+        'name' => '#theme and #theme_wrappers attribute disambiguation',
+        'value' => array(
+          '#type' => 'link',
+          '#theme_wrappers' => array(
+            'container' => array(
+              '#attributes' => array('class' => 'baz'),
+            ),
+          ),
+          '#attributes' => array('id' => 'foo'),
+          '#href' => 'http://drupal.org',
+          '#title' => 'bar',
+        ),
+        'expected' => '<div class="baz"><a href="http://drupal.org" id="foo">bar</a></div>',
+      ),
+      // Test that #theme_wrappers can disambiguate element attributes when the
+      // "base" attribute is not set for #theme.
+      array(
+        'name' => '#theme_wrappers attribute disambiguation with undefined #theme attribute',
+        'value' => array(
+          '#type' => 'link',
+          '#href' => 'http://drupal.org',
+          '#title' => 'foo',
+          '#theme_wrappers' => array(
+            'container' => array(
+              '#attributes' => array('class' => 'baz'),
+            ),
+          ),
+        ),
+        'expected' => '<div class="baz"><a href="http://drupal.org">foo</a></div>',
+      ),
+      // Two 'container' #theme_wrappers, one using the "base" attributes and
+      // one using an override.
+      array(
+        'name' => 'Two #theme_wrappers container hooks with different attributes',
+        'value' => array(
+          '#attributes' => array('class' => 'foo'),
+          '#theme_wrappers' => array(
+            'container' => array(
+              '#attributes' => array('class' => 'bar'),
+            ),
+            'container',
+          ),
+        ),
+        'expected' => '<div class="foo"><div class="bar"></div></div>',
+      ),
+
       // Test handling of #markup as a fallback for #theme hooks.
       // Simple #markup with no theme.
       array(

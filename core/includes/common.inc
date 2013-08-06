@@ -2,6 +2,7 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Json;
+use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
 use Drupal\Component\Utility\Url;
@@ -2834,7 +2835,9 @@ function drupal_get_library($module, $name = NULL) {
           if (is_scalar($options)) {
             // The JavaScript or CSS file has been specified in shorthand
             // format, without an array of options. In this case $options is the
-            // filename.
+            // filename. Convert the shorthand version and remove the old array
+            // key.
+            unset($module_libraries[$key]['js'][$file]);
             $file = $options;
             $options = array();
           }
@@ -3728,7 +3731,31 @@ function drupal_render_page($page) {
  *   - If this element has an array of #theme_wrappers defined and
  *     #render_children is not set, #children is then re-rendered by passing the
  *     element in its current state to theme() successively for each item in
- *     #theme_wrappers.
+ *     #theme_wrappers. Since #theme and #theme_wrappers hooks often define
+ *     variables with the same names it is possible to explicitly override each
+ *     attribute passed to each #theme_wrappers hook by setting the hook name as
+ *     the key and an array of overrides as the value in #theme_wrappers array.
+ *     For example, if we have a render element as follows:
+ *     @code
+ *     array(
+ *       '#theme' => 'image',
+ *       '#attributes' => array('class' => 'foo'),
+ *       '#theme_wrappers' => array('container'),
+ *     );
+ *     @endcode
+ *     and we need to pass the class 'bar' as an attribute for 'container', we
+ *     can rewrite our element thus:
+ *     @code
+ *     array(
+ *       '#theme' => 'image',
+ *       '#attributes' => array('class' => 'foo'),
+ *       '#theme_wrappers' => array(
+ *         'container' => array(
+ *           '#attributes' => array('class' => 'bar'),
+ *         ),
+ *       ),
+ *     );
+ *     @endcode
  *   - If this element has an array of #post_render functions defined, they are
  *     called sequentially to modify the rendered #children. Unlike #pre_render
  *     functions, #post_render functions are passed both the rendered #children
@@ -3857,8 +3884,24 @@ function drupal_render(&$elements) {
   // If the internal #render_children property is set, do not call the
   // #theme_wrappers function(s) to prevent infinite recursion.
   if (isset($elements['#theme_wrappers']) && !isset($elements['#render_children'])) {
-    foreach ($elements['#theme_wrappers'] as $theme_wrapper) {
-      $elements['#children'] = theme($theme_wrapper, $elements);
+    foreach ($elements['#theme_wrappers'] as $key => $value) {
+      // If the value of a #theme_wrappers item is an array then the theme hook
+      // is found in the key of the item and the value contains attribute
+      // overrides. Attribute overrides replace key/value pairs in $elements for
+      // only this theme() call. This allows #theme hooks and #theme_wrappers
+      // hooks to share variable names without conflict or ambiguity.
+      $wrapper_elements = $elements;
+      if (is_array($value)) {
+        $wrapper_hook = $key;
+        foreach ($value as $attribute => $override) {
+          $wrapper_elements[$attribute] = $override;
+        }
+      }
+      else {
+        $wrapper_hook = $value;
+      }
+
+      $elements['#children'] = theme($wrapper_hook, $wrapper_elements);
     }
   }
 
@@ -4231,14 +4274,16 @@ function drupal_render_cid_create($elements) {
  *   that optionally include a '#weight' key.
  * @param $b
  *   Second item for comparison.
+ *
+ * @return int
+ *   The comparison result for uasort().
+ *
+ * @see \Drupal\Component\Utility\SortArray::sortByWeightProperty()
+ *
+ * @deprecated as of Drupal 8.0. Use SortArray::sortByWeightProperty() instead.
  */
 function element_sort($a, $b) {
-  $a_weight = (is_array($a) && isset($a['#weight'])) ? $a['#weight'] : 0;
-  $b_weight = (is_array($b) && isset($b['#weight'])) ? $b['#weight'] : 0;
-  if ($a_weight == $b_weight) {
-    return 0;
-  }
-  return ($a_weight < $b_weight) ? -1 : 1;
+  return SortArray::sortByWeightProperty($a, $b);
 }
 
 /**
@@ -4253,11 +4298,16 @@ function element_sort($a, $b) {
  *   that optionally include a '#title' key.
  * @param $b
  *   Second item for comparison.
+ *
+ * @return int
+ *   The comparison result for uasort().
+ *
+ * @see \Drupal\Component\Utility\SortArray::sortByTitleProperty()
+ *
+ * @deprecated as of Drupal 8.0. Use SortArray::sortByTitleProperty() instead.
  */
 function element_sort_by_title($a, $b) {
-  $a_title = (is_array($a) && isset($a['#title'])) ? $a['#title'] : '';
-  $b_title = (is_array($b) && isset($b['#title'])) ? $b['#title'] : '';
-  return strnatcasecmp($a_title, $b_title);
+  return SortArray::sortByTitleProperty($a, $b);
 }
 
 /**
@@ -4315,14 +4365,16 @@ function element_info_property($type, $property_name, $default = NULL) {
  *   element, a default value of 0 will be used.
  * @param $b
  *   Second item for comparison.
+ *
+ * @return int
+ *   The comparison result for uasort().
+ *
+ * @see \Drupal\Component\Utility\SortArray::sortByWeightElement()
+ *
+ * @deprecated as of Drupal 8.0. Use SortArray::sortByWeightElement() instead.
  */
 function drupal_sort_weight($a, $b) {
-  $a_weight = (is_array($a) && isset($a['weight'])) ? $a['weight'] : 0;
-  $b_weight = (is_array($b) && isset($b['weight'])) ? $b['weight'] : 0;
-  if ($a_weight == $b_weight) {
-    return 0;
-  }
-  return ($a_weight < $b_weight) ? -1 : 1;
+  return SortArray::sortByWeightElement((array) $a, (array) $b);
 }
 
 /**
@@ -4335,15 +4387,16 @@ function drupal_sort_weight($a, $b) {
  *   that optionally include a 'title' key.
  * @param $b
  *   Second item for comparison.
+ *
+ * @return int
+ *   The comparison result for uasort().
+ *
+ * @see \Drupal\Component\Utility\SortArray::sortByTitleElement()
+ *
+ * @deprecated as of Drupal 8.0. Use SortArray::sortByTitleElement() instead.
  */
 function drupal_sort_title($a, $b) {
-  if (!isset($b['title'])) {
-    return -1;
-  }
-  if (!isset($a['title'])) {
-    return 1;
-  }
-  return strcasecmp($a['title'], $b['title']);
+  return SortArray::sortByTitleElement($a, $b);
 }
 
 /**

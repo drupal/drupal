@@ -978,7 +978,7 @@ function theme($hook, $variables = array()) {
     $variables = array();
     if (isset($info['variables'])) {
       foreach (array_keys($info['variables']) as $name) {
-        if (isset($element["#$name"])) {
+        if (isset($element["#$name"]) || array_key_exists("#$name", $element)) {
           $variables[$name] = $element["#$name"];
         }
       }
@@ -2336,27 +2336,6 @@ function theme_more_link($variables) {
 }
 
 /**
- * Returns HTML for a progress bar.
- *
- * Note that the core Batch API uses this only for non-JavaScript batch jobs.
- *
- * @param $variables
- *   An associative array containing:
- *   - percent: The percentage of the progress.
- *   - message: A string containing information to be displayed.
- */
-function theme_progress_bar($variables) {
-  $output = '<div id="progress" class="progress">';
-  $output .= '<div class="progress__label">' . $variables['label'] . '</div>';
-  $output .= '<div class="progress__track"><div class="progress__bar" style="width: ' . $variables['percent'] . '%"></div></div>';
-  $output .= '<div class="progress__percentage">' . $variables['percent'] . '%</div>';
-  $output .= '<div class="progress__description">' . $variables['message'] . '</div>';
-  $output .= '</div>';
-
-  return $output;
-}
-
-/**
  * Returns HTML for an indentation div; used for drag and drop tables.
  *
  * @param $variables
@@ -2717,10 +2696,6 @@ function template_preprocess_page(&$variables) {
     $variables['main_menu'] = array(
       '#theme' =>'links__system_main_menu',
       '#links' => $variables['main_menu'],
-      '#attributes' => array(
-        'id' => 'main-menu',
-        'class' => array('links', 'inline', 'clearfix'),
-      ),
       '#heading' => array(
         'text' => t('Main menu'),
         'class' => array('visually-hidden'),
@@ -2731,10 +2706,6 @@ function template_preprocess_page(&$variables) {
     $variables['secondary_menu'] = array(
       '#theme' =>'links__system_secondary_menu',
       '#links' => $variables['secondary_menu'],
-      '#attributes' => array(
-        'id' => 'secondary-menu',
-        'class' => array('links', 'inline', 'clearfix'),
-      ),
       '#heading' => array(
         'text' => t('Secondary menu'),
         'class' => array('visually-hidden'),
@@ -3082,7 +3053,8 @@ function drupal_common_theme() {
       'variables' => array('url' => NULL, 'title' => NULL)
     ),
     'progress_bar' => array(
-      'variables' => array('percent' => NULL, 'message' => NULL),
+      'variables' => array('label' => NULL, 'percent' => NULL, 'message' => NULL),
+      'template' => 'progress-bar',
     ),
     'indentation' => array(
       'variables' => array('size' => 1),

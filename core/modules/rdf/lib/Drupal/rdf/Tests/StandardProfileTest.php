@@ -231,20 +231,6 @@ class StandardProfileTest extends WebTestBase {
     // Test properties that are displayed in both teaser and full mode.
     $this->assertRdfaArticleProperties($graph, "Teaser");
 
-    // Title.
-    // @todo Once the title data is output consistently between full and teaser
-    //   view modes, move this to _testCommonNodeProperties().
-    $title = $this->article->get('title')->offsetGet(0)->get('value')->getValue();
-    $expected_value = array(
-      'type' => 'literal',
-      // The teaser title parses with additional whitespace.
-      'value' => "
-        $title
-      ",
-      'lang' => 'en',
-    );
-    $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/name', $expected_value), "Teaser title was found (schema:name).");
-
     // @todo Once the image points to the original instead of the processed
     //   image, move this to testArticleProperties().
     $image_file = file_load($this->article->get('field_image')->offsetGet(0)->get('target_id')->getValue());
@@ -279,16 +265,6 @@ class StandardProfileTest extends WebTestBase {
     // Test the comment properties displayed on articles.
     $this->assertRdfaNodeCommentProperties($graph);
 
-    // Title.
-    // @todo Once the title data is output consistently between full and teaser
-    //   view modes, move this to _testCommonNodeProperties().
-    $expected_value = array(
-      'type' => 'literal',
-      'value' => $this->article->get('title')->offsetGet(0)->get('value')->getValue(),
-      'lang' => 'en',
-    );
-    $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/name', $expected_value), "Article title was found (schema:name).");
-
     // @todo Once the image points to the original instead of the processed
     //   image, move this to testArticleProperties().
     $expected_value = array(
@@ -320,16 +296,6 @@ class StandardProfileTest extends WebTestBase {
 
     // Test the properties that are common between pages and articles.
     $this->assertRdfaCommonNodeProperties($graph, $this->page, "Page");
-
-    // Title.
-    // @todo Once the title data is output consistently between full and teaser
-    //   view modes, move this to _testCommonNodeProperties().
-    $expected_value = array(
-      'type' => 'literal',
-      'value' => $this->page->get('title')->offsetGet(0)->get('value')->getValue(),
-      'lang' => 'en',
-    );
-    $this->assertTrue($graph->hasProperty($this->pageUri, 'http://schema.org/name', $expected_value), "Page title was found (schema:name).");
   }
 
   /**
@@ -393,6 +359,14 @@ class StandardProfileTest extends WebTestBase {
   protected function assertRdfaCommonNodeProperties($graph, NodeInterface $node, $message_prefix) {
     $uri_info = $node->uri();
     $uri = url($uri_info['path'], array('absolute' => TRUE));
+
+    // Title.
+    $expected_value = array(
+      'type' => 'literal',
+      'value' => $node->get('title')->offsetGet(0)->get('value')->getValue(),
+      'lang' => 'en',
+    );
+    $this->assertTrue($graph->hasProperty($uri, 'http://schema.org/name', $expected_value), "$message_prefix title was found (schema:name).");
 
     // Created date.
     $expected_value = array(

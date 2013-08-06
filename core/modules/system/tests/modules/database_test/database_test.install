@@ -87,6 +87,37 @@ function database_test_schema() {
     ),
   );
 
+  $schema['test_people_copy'] = array(
+    'description' => 'A duplicate version of the test_people table, used for additional tests.',
+    'fields' => array(
+      'name' => array(
+        'description' => "A person's name",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'age' => array(
+        'description' => "The person's age",
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'job' => array(
+        'description' => "The person's job",
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('job'),
+    'indexes' => array(
+      'ages' => array('age'),
+    ),
+  );
+
   $schema['test_one_blob'] = array(
     'description' => 'A simple table including a BLOB field for testing BLOB behavior.',
     'fields' => array(

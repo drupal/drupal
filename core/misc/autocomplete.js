@@ -221,15 +221,15 @@ Drupal.jsAC.prototype.found = function (matches) {
   }
 
   // Prepare matches.
-  var ul = $('<ul></ul>');
   var ac = this;
+  var ul = $('<ul></ul>')
+    .on('mousedown', 'li', function (e) { ac.select(this); })
+    .on('mouseover', 'li', function (e) { ac.highlight(this); })
+    .on('mouseout', 'li', function (e) { ac.unhighlight(this); });
   for (var key in matches) {
     if (matches.hasOwnProperty(key)) {
       $('<li></li>')
         .html($('<div></div>').html(matches[key]))
-        .mousedown(function () { ac.select(this); })
-        .mouseover(function () { ac.highlight(this); })
-        .mouseout(function () { ac.unhighlight(this); })
         .data('autocompleteValue', key)
         .appendTo(ul);
     }

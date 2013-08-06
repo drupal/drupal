@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests;
 
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\views\ViewExecutable;
 use Drupal\block\Plugin\Core\Entity\Block;
@@ -228,7 +229,11 @@ abstract class ViewTestBase extends WebTestBase {
     $view->setDisplay();
     $view->preExecute($args);
     $view->execute();
-    $this->verbose('<pre>Executed view: ' . ((string) $view->build_info['query']) . '</pre>');
+    $verbose_message = '<pre>Executed view: ' . ((string) $view->build_info['query']). '</pre>';
+    if ($view->build_info['query'] instanceof SelectInterface) {
+      $verbose_message .= '<pre>Arguments: ' . print_r($view->build_info['query']->getArguments(), TRUE) . '</pre>';
+    }
+    $this->verbose($verbose_message);
   }
 
   /**

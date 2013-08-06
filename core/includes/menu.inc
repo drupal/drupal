@@ -2803,11 +2803,11 @@ function menu_router_build($save = FALSE) {
  *   The translated path pattern from the route.
  */
 function _menu_router_translate_route($route_name) {
-  $route = Drupal::service('router.route_provider')->getRouteByName($route_name);
-  $path = trim($route->getPattern(), '/');
-
-  // Translate placeholders, e.g. {foo} -> %.
-  return preg_replace('/{' . DRUPAL_PHP_FUNCTION_PATTERN . '}/', '%', $path);
+  $outline = Drupal::service('router.route_provider')
+    ->getRouteByName($route_name)
+    ->compile()
+    ->getPatternOutline();
+  return trim($outline, '/');
 }
 
 /**

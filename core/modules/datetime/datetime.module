@@ -91,74 +91,6 @@ function datetime_theme() {
 }
 
 /**
- * Implements hook_field_is_empty().
- */
-function datetime_field_is_empty($item, $field_type) {
-  if (empty($item['value'])) {
-    return TRUE;
-  }
-  return FALSE;
-}
-
-/**
- * Implements hook_field_info().
- */
-function datetime_field_info() {
-  return array(
-    'datetime' => array(
-      'label' => 'Date',
-      'description' => t('Create and store date values.'),
-      'settings' => array(
-        'datetime_type' => 'datetime',
-      ),
-      'instance_settings' => array(
-        'default_value' => 'now',
-      ),
-      'default_widget' => 'datetime_default',
-      'default_formatter' => 'datetime_default',
-      'class' => '\Drupal\datetime\Type\DateTimeItem',
-    ),
-  );
-}
-
-/**
- * Implements hook_field_settings_form().
- */
-function datetime_field_settings_form($field, $instance) {
-  $settings = $field['settings'];
-
-  $form['datetime_type'] = array(
-    '#type' => 'select',
-    '#title' => t('Date type'),
-    '#description' => t('Choose the type of date to create.'),
-    '#default_value' => $settings['datetime_type'],
-    '#options' => array(
-      'datetime' => t('Date and time'),
-      'date' => t('Date only'),
-    ),
-  );
-  return $form;
-}
-
-/**
- * Implements hook_field_instance_settings_form().
- */
-function datetime_field_instance_settings_form($field, $instance) {
-  $settings = $instance['settings'];
-
-  $form['default_value'] = array(
-    '#type' => 'select',
-    '#title' => t('Default date'),
-    '#description' => t('Set a default value for this date.'),
-    '#default_value' => $settings['default_value'],
-    '#options' => array('blank' => t('No default value'), 'now' => t('The current date')),
-    '#weight' => 1,
-  );
-
-  return $form;
-}
-
-/**
  * Validation callback for the datetime widget element.
  *
  * The date has already been validated by the datetime form type validator and
@@ -228,30 +160,6 @@ function datetime_datelist_widget_validate(&$element, &$form_state) {
           $date->setTimezone(new \DateTimezone(DATETIME_STORAGE_TIMEZONE));
           $value = $date->format($element['value']['#date_storage_format']);
           form_set_value($element['value'], $value, $form_state);
-        }
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_field_load().
- *
- * The function generates a Date object for each field early so that it is
- * cached in the field cache. This avoids the need to generate the object later.
- * The date will be retrieved in UTC, the local timezone adjustment must be made
- * in real time, based on the preferences of the site and user.
- */
-function datetime_field_load($entity_type, $entities, $field, $instances, $langcode, &$items) {
-  foreach ($entities as $id => $entity) {
-    foreach ($items[$id] as $delta => $item) {
-      $items[$id][$delta]['date'] = NULL;
-      $value = isset($item['value']) ? $item['value'] : NULL;
-      if (!empty($value)) {
-        $storage_format = $field['settings']['datetime_type'] == 'date' ? DATETIME_DATE_STORAGE_FORMAT: DATETIME_DATETIME_STORAGE_FORMAT;
-        $date = new DrupalDateTime($value, DATETIME_STORAGE_TIMEZONE, $storage_format);
-        if ($date instanceOf DrupalDateTime && !$date->hasErrors()) {
-          $items[$id][$delta]['date'] = $date;
         }
       }
     }
