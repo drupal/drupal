@@ -682,6 +682,14 @@ function taxonomy_update_7005(&$sandbox) {
     $query->orderBy('tn.vid');
     $query->orderBy('td.weight');
     $query->orderBy('tn.tid');
+
+    // Work around a bug in the PostgreSQL driver that would result in fatal
+    // errors when this subquery is used in the insert query below. See
+    // https://drupal.org/node/2057693.
+    $fields = &$query->getFields();
+    unset($fields['td.weight']);
+    unset($fields['tn.tid']);
+
     db_insert('taxonomy_update_7005')
       ->from($query)
       ->execute();
