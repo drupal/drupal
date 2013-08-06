@@ -1,6 +1,8 @@
 
 Drupal 7.23, xxxx-xx-xx (development version)
 -----------------------
+- Fixed inconsistent support for the 'tel' protocol in Drupal's URL filtering
+  functions.
 - Performance improvement: Allowed all hooks to be included in the
   module_implements() cache, even those that are only invoked on HTTP POST
   requests.
