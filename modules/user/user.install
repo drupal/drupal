@@ -535,7 +535,7 @@ function user_update_7002(&$sandbox) {
     if ($sandbox['user_from'] == $sandbox['user_count']) {
       if ($sandbox['user_not_migrated'] > 0) {
         variable_set('empty_timezone_message', 1);
-        drupal_set_message('Some user time zones have been emptied and need to be set to the correct values. Use the new ' . l('time zone options', 'admin/config/regional/settings') . ' to choose whether to remind users at login to set the correct time zone.', 'warning');
+        drupal_set_message(format_string('Some user time zones have been emptied and need to be set to the correct values. Use the new <a href="@config-url">time zone options</a> to choose whether to remind users at login to set the correct time zone.', array('@config-url' => url('admin/config/regional/settings'))), 'warning');
       }
       return t('Migrated user time zones');
     }

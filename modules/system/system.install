@@ -1983,7 +1983,7 @@ function system_update_7013() {
     $timezone = 'UTC';
   }
   variable_set('date_default_timezone', $timezone);
-  drupal_set_message('The default time zone has been set to <em>' . check_plain($timezone) . '</em>. Check the ' . l('date and time configuration page', 'admin/config/regional/settings') . ' to configure it correctly.', 'warning');
+  drupal_set_message(format_string('The default time zone has been set to %timezone. Check the <a href="@config-url">date and time configuration page</a> to configure it correctly.', array('%timezone' => $timezone, '@config-url' => url('admin/config/regional/settings'))), 'warning');
   // Remove temporary override.
   variable_del('date_temporary_timezone');
 }
