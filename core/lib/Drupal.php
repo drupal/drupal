@@ -251,7 +251,7 @@ class Drupal {
   /**
    * Returns a key/value storage collection.
    *
-   * @param $collection
+   * @param string $collection
    *   Name of the key/value collection to return.
    *
    * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
@@ -305,10 +305,10 @@ class Drupal {
   /**
    * Returns the entity query aggregate object for this entity type.
    *
-   * @param $entity_type
+   * @param string $entity_type
    *   The entity type, e.g. node, for which the query object should be
    *   returned.
-   * @param $conjunction
+   * @param string $conjunction
    *   AND if all conditions in the query need to apply, OR if any of them is
    *   enough. Optional, defaults to AND.
    *
@@ -331,7 +331,7 @@ class Drupal {
   /**
    * Returns the module handler.
    *
-   * @return \Drupal\Core\Extension\ModuleHandler
+   * @return \Drupal\Core\Extension\ModuleHandlerInterface
    */
   public static function moduleHandler() {
     return static::$container->get('module_handler');
@@ -364,7 +364,7 @@ class Drupal {
   /**
    * Returns the url generator service.
    *
-   * @return \Drupal\Core\Routing\UrlGenerator
+   * @return \Drupal\Core\Routing\PathBasedGeneratorInterface
    *   The url generator service.
    */
   public static function urlGenerator() {
