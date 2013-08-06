@@ -127,6 +127,15 @@ class StyleTableUnitTest extends PluginUnitTestBase {
 
     $view->destroy();
 
+    // Excluded field to make sure its wrapping td doesn't show.
+    $this->prepareView($view);
+    $style_plugin = $view->style_plugin;
+    $view->field['name']->options['exclude'] = TRUE;
+    $output = $view->preview();
+    $output = drupal_render($output);
+    $this->assertFalse(strpos($output, 'views-field-name') !== FALSE, "Excluded field's wrapper was not rendered.");
+    $view->destroy();
+
     // Render a non empty result, and ensure that the empty area handler is not
     // rendered.
     $this->executeView($view);
