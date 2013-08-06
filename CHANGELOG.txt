@@ -3,7 +3,7 @@ Drupal 7.23, xxxx-xx-xx (development version)
 -----------------------
 - Fixed a fatal error on PostgreSQL databases when updating the Taxonomy module
   from Drupal 6 to Drupal 7.
-- The default ordering of CSS files has changed for sites using right-to-left
+- Fixed the default ordering of CSS files for sites using right-to-left
   languages, to consistently place the right-to-left override file immediately
   after the CSS it is overriding (API change: https://drupal.org/node/2058463).
 - Added a drupal_check_memory_limit() API function to allow the memory limit to
