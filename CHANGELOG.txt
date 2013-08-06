@@ -43,6 +43,9 @@ Drupal 7.23, xxxx-xx-xx (development version)
   no hash salt in settings.php.
 - Fixed a regression in Drupal 7.22 that caused internal server errors for
   sites running on very old Apache 1.x web servers.
+- Numerous small bug fixes.
+- Numerous API documentation improvements.
+- Additional automated test coverage.
 
 Drupal 7.22, 2013-04-03
 -----------------------
