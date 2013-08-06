@@ -1,6 +1,9 @@
 
 Drupal 7.23, xxxx-xx-xx (development version)
 -----------------------
+- Performance improvement: Allowed all hooks to be included in the
+  module_implements() cache, even those that are only invoked on HTTP POST
+  requests.
 - Made the database system replace truncate queries with delete queries when
   inside a transaction, to fix issues with PostgreSQL and other databases.
 - Fixed a bug which caused nested contextual links to display improperly.
