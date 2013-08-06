@@ -1,6 +1,8 @@
 
 Drupal 7.23, xxxx-xx-xx (development version)
 -----------------------
+- Added a drupal_check_memory_limit() API function to allow the memory limit to
+  be checked consistently (API addition).
 - Changed the default web.config file for IIS servers to allow favicon.ico
   files which are present in the filesystem to be accessed.
 - Fixed inconsistent support for the 'tel' protocol in Drupal's URL filtering
