@@ -1,6 +1,8 @@
 
 Drupal 7.23, xxxx-xx-xx (development version)
 -----------------------
+- Changed the default web.config file for IIS servers to allow favicon.ico
+  files which are present in the filesystem to be accessed.
 - Fixed inconsistent support for the 'tel' protocol in Drupal's URL filtering
   functions.
 - Performance improvement: Allowed all hooks to be included in the
