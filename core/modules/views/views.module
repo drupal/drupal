@@ -485,8 +485,6 @@ function views_preprocess_html(&$variables) {
     if ($key !== FALSE) {
       unset($variables['attributes']['class'][$key]);
       $variables['attributes']['data-views-page-contextual-id'] = $variables['title_suffix']['contextual_links']['#id'];
-      // Add the JavaScript, with a group and weight such that it will run
-      // before modules/contextual/contextual.js.
       drupal_add_library('views', 'views.contextual-links');
     }
   }
@@ -821,6 +819,7 @@ function views_library_info() {
     'title' => 'Views Contextual links',
     'version' => VERSION,
     'js' => array(
+      // Set to -10 to move it before the contextual links javascript file.
       "$path/js/views-contextual.js" => array('group' => JS_LIBRARY, 'weight' => -10),
     ),
     'dependencies' => array(
