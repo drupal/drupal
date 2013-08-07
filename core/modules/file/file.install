@@ -340,3 +340,19 @@ function file_update_8003() {
     }
   }
 }
+
+/*
+ * Convert the 'filesize' column in {file_managed} to a bigint.
+ */
+function file_update_8004() {
+  $spec = array(
+    'description' => 'The size of the file in bytes.',
+    'type' => 'int',
+    'size' => 'big',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+  );
+  db_change_field('file_managed', 'filesize', 'filesize', $spec);
+}
+
