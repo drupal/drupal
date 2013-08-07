@@ -188,7 +188,7 @@ function _breakpoint_import_breakpoint_groups($source, $source_type) {
  */
 function _breakpoint_delete_breakpoints($list, $source_type) {
   $ids = config_get_storage_names_with_prefix('breakpoint.breakpoint_group.' . $source_type . '.');
-  $entity_info = entity_get_info('breakpoint_group');
+  $entity_info = Drupal::service('plugin.manager.entity')->getDefinition('breakpoint_group');
 
   // Remove the breakpoint.breakpoint part of the breakpoint identifier.
   foreach ($ids as &$id) {
@@ -202,8 +202,8 @@ function _breakpoint_delete_breakpoints($list, $source_type) {
       $breakpoint_group->delete();
 
       // Get all breakpoints defined by this theme/module.
-      $breakpoint_ids = drupal_container()->get('config.storage')->listAll('breakpoint.breakpoint.' . $source_type . '.' . $breakpoint_group->id() . '.');
-      $entity_info = entity_get_info('breakpoint');
+      $breakpoint_ids = Drupal::service('config.storage')->listAll('breakpoint.breakpoint.' . $source_type . '.' . $breakpoint_group->id() . '.');
+      $entity_info = Drupal::service('plugin.manager.entity')->getDefinition('breakpoint');
 
       // Remove the breakpoint.breakpoint part of the breakpoint identifier.
       foreach ($breakpoint_ids as &$breakpoint_id) {
@@ -277,7 +277,7 @@ function breakpoint_get_theme_media_queries($theme_key) {
  *   An array of breakpoints in the form $breakpoint['name'] = 'media query'.
  */
 function breakpoint_get_module_media_queries($module) {
-  if (!module_exists($module)) {
+  if (!Drupal::moduleHandler()->moduleExists($module)) {
     throw new \Exception('Illegal module name passed.');
   }
 
