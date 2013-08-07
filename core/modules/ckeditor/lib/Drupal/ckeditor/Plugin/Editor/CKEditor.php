@@ -86,7 +86,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     $ckeditor_settings_toolbar = array(
       '#theme' => 'ckeditor_settings_toolbar',
       '#editor' => $editor,
-      '#plugins' => $this->ckeditorPluginManager->getButtonsPlugins(),
+      '#plugins' => $this->ckeditorPluginManager->getButtons(),
     );
     $form['toolbar'] = array(
       '#type' => 'container',
@@ -135,7 +135,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       }
     }
     // Get a list of all buttons that are provided by all plugins.
-    $all_buttons = array_reduce($this->ckeditorPluginManager->getButtonsPlugins(), function($result, $item) {
+    $all_buttons = array_reduce($this->ckeditorPluginManager->getButtons(), function($result, $item) {
       return array_merge($result, array_keys($item));
     }, array());
     // Build a fake Editor object, which we'll use to generate JavaScript
@@ -196,18 +196,18 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     $settings = array();
 
     // Get the settings for all enabled plugins, even the internal ones.
-    $enabled_plugins = array_keys($this->ckeditorPluginManager->getEnabledPlugins($editor, TRUE));
+    $enabled_plugins = array_keys($this->ckeditorPluginManager->getEnabledPluginFiles($editor, TRUE));
     foreach ($enabled_plugins as $plugin_id) {
       $plugin = $this->ckeditorPluginManager->createInstance($plugin_id);
       $settings += $plugin->getConfig($editor);
     }
 
     // Next, set the most fundamental CKEditor settings.
-    $external_plugins = $this->ckeditorPluginManager->getEnabledPlugins($editor);
+    $external_plugin_files = $this->ckeditorPluginManager->getEnabledPluginFiles($editor);
     $settings += array(
       'toolbar' => $this->buildToolbarJSSetting($editor),
       'contentsCss' => $this->buildContentsCssJSSetting($editor),
-      'extraPlugins' => implode(',', array_keys($external_plugins)),
+      'extraPlugins' => implode(',', array_keys($external_plugin_files)),
       // @todo: Remove image and link plugins from CKEditor build.
       'removePlugins' => 'image,link',
       'language' => $language_interface->id,
@@ -221,7 +221,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
 
     // Finally, set Drupal-specific CKEditor settings.
     $settings += array(
-      'drupalExternalPlugins' => array_map('file_create_url', $external_plugins),
+      'drupalExternalPlugins' => array_map('file_create_url', $external_plugin_files),
     );
 
     ksort($settings);
@@ -238,7 +238,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
     );
 
     // Get the required libraries for any enabled plugins.
-    $enabled_plugins = array_keys($this->ckeditorPluginManager->getEnabledPlugins($editor));
+    $enabled_plugins = array_keys($this->ckeditorPluginManager->getEnabledPluginFiles($editor));
     foreach ($enabled_plugins as $plugin_id) {
       $plugin = $this->ckeditorPluginManager->createInstance($plugin_id);
       $additional_libraries = array_udiff($plugin->getLibraries($editor), $libraries, function($a, $b) {

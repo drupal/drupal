@@ -74,8 +74,8 @@ class CKEditorPluginManagerTest extends DrupalUnitTestBase {
       'drupalimage' => 'core/modules/ckeditor/js/plugins/drupalimage/plugin.js',
       'drupallink' => 'core/modules/ckeditor/js/plugins/drupallink/plugin.js',
     );
-    $this->assertIdentical($enabled_plugins, $this->manager->getEnabledPlugins($editor), 'Only built-in plugins are enabled.');
-    $this->assertIdentical(array('internal' => NULL) + $enabled_plugins, $this->manager->getEnabledPlugins($editor, TRUE), 'Only the "internal" plugin is enabled.');
+    $this->assertIdentical($enabled_plugins, $this->manager->getEnabledPluginFiles($editor), 'Only built-in plugins are enabled.');
+    $this->assertIdentical(array('internal' => NULL) + $enabled_plugins, $this->manager->getEnabledPluginFiles($editor, TRUE), 'Only the "internal" plugin is enabled.');
 
     // Enable the CKEditor Test module, which has the Llama plugin (plus three
     // variations of it, to cover all possible ways a plugin can be enabled) and
@@ -87,8 +87,8 @@ class CKEditorPluginManagerTest extends DrupalUnitTestBase {
     $plugin_ids = array_keys($this->manager->getDefinitions());
     sort($plugin_ids);
     $this->assertIdentical(array('drupalimage', 'drupallink', 'internal', 'llama', 'llama_button', 'llama_contextual', 'llama_contextual_and_button', 'stylescombo'), $plugin_ids, 'Additional CKEditor plugins found.');
-    $this->assertIdentical($enabled_plugins, $this->manager->getEnabledPlugins($editor), 'Only the internal plugins are enabled.');
-    $this->assertIdentical(array('internal' => NULL) + $enabled_plugins, $this->manager->getEnabledPlugins($editor, TRUE), 'Only the "internal" plugin is enabled.');
+    $this->assertIdentical($enabled_plugins, $this->manager->getEnabledPluginFiles($editor), 'Only the internal plugins are enabled.');
+    $this->assertIdentical(array('internal' => NULL) + $enabled_plugins, $this->manager->getEnabledPluginFiles($editor, TRUE), 'Only the "internal" plugin is enabled.');
 
     // Case 3: enable each of the newly available plugins, if possible:
     // a. Llama: cannot be enabled, since it does not implement
@@ -111,19 +111,19 @@ class CKEditorPluginManagerTest extends DrupalUnitTestBase {
     $file['c'] = 'core/modules/ckeditor/tests/modules/js/llama_contextual.js';
     $file['cb'] = 'core/modules/ckeditor/tests/modules/js/llama_contextual_and_button.js';
     $expected = $enabled_plugins + array('llama_button' => $file['b'], 'llama_contextual_and_button' => $file['cb']);
-    $this->assertIdentical($expected, $this->manager->getEnabledPlugins($editor), 'The LlamaButton and LlamaContextualAndButton plugins are enabled.');
-    $this->assertIdentical(array('internal' => NULL) + $expected, $this->manager->getEnabledPlugins($editor, TRUE), 'The LlamaButton and LlamaContextualAndButton plugins are enabled.');
+    $this->assertIdentical($expected, $this->manager->getEnabledPluginFiles($editor), 'The LlamaButton and LlamaContextualAndButton plugins are enabled.');
+    $this->assertIdentical(array('internal' => NULL) + $expected, $this->manager->getEnabledPluginFiles($editor, TRUE), 'The LlamaButton and LlamaContextualAndButton plugins are enabled.');
     $editor->settings['toolbar']['buttons'][0] = $original_toolbar;
     $editor->settings['toolbar']['buttons'][0][] = 'Strike';
     $editor->save();
     $expected = $enabled_plugins + array('llama_contextual' => $file['c'], 'llama_contextual_and_button' => $file['cb']);
-    $this->assertIdentical($expected, $this->manager->getEnabledPlugins($editor), 'The  LLamaContextual and LlamaContextualAndButton plugins are enabled.');
-    $this->assertIdentical(array('internal' => NULL) + $expected, $this->manager->getEnabledPlugins($editor, TRUE), 'The LlamaContextual and LlamaContextualAndButton plugins are enabled.');
+    $this->assertIdentical($expected, $this->manager->getEnabledPluginFiles($editor), 'The  LLamaContextual and LlamaContextualAndButton plugins are enabled.');
+    $this->assertIdentical(array('internal' => NULL) + $expected, $this->manager->getEnabledPluginFiles($editor, TRUE), 'The LlamaContextual and LlamaContextualAndButton plugins are enabled.');
     $editor->settings['toolbar']['buttons'][0][] = 'Llama';
     $editor->save();
     $expected = $enabled_plugins + array('llama_button' => $file['b'], 'llama_contextual' => $file['c'], 'llama_contextual_and_button' => $file['cb']);
-    $this->assertIdentical($expected, $this->manager->getEnabledPlugins($editor), 'The LlamaButton, LlamaContextual and LlamaContextualAndButton plugins are enabled.');
-    $this->assertIdentical(array('internal' => NULL) + $expected, $this->manager->getEnabledPlugins($editor, TRUE), 'The LLamaButton, LlamaContextual and LlamaContextualAndButton plugins are enabled.');
+    $this->assertIdentical($expected, $this->manager->getEnabledPluginFiles($editor), 'The LlamaButton, LlamaContextual and LlamaContextualAndButton plugins are enabled.');
+    $this->assertIdentical(array('internal' => NULL) + $expected, $this->manager->getEnabledPluginFiles($editor, TRUE), 'The LLamaButton, LlamaContextual and LlamaContextualAndButton plugins are enabled.');
   }
 
 }
