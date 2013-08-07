@@ -385,7 +385,7 @@ class LocaleTranslationFunctionalTest extends DrupalWebTestCase {
     $edit = array(
       "translations[$langcode]" => $translation,
     );
-    $this->drupalPost(NULL, $edit, 'Save translations');
+    $this->drupalPost(NULL, $edit, t('Save translations'));
     $this->assertText(t('The string has been saved.'), 'The string has been saved.');
     $this->assertEqual($this->getUrl(), url('admin/config/regional/translate/translate', array('absolute' => TRUE)), 'Correct page redirection.');
     $this->assertTrue($name != $translation && t($name, array(), array('langcode' => $langcode)) == $translation, 't() works.');
