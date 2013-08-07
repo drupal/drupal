@@ -9,7 +9,7 @@ namespace Drupal\field\Plugin\field\field_type;
 
 use Drupal\Core\Entity\Field\PrepareCacheInterface;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\FieldInterface;
 
 /**
  * Plugin implementation for legacy field types.
@@ -29,7 +29,7 @@ abstract class LegacyConfigFieldItem extends ConfigFieldItemBase implements Prep
   /**
    * {@inheritdoc}
    */
-  public static function schema(Field $field) {
+  public static function schema(FieldInterface $field) {
     $definition = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field->type);
     $module = $definition['provider'];
     module_load_install($module);

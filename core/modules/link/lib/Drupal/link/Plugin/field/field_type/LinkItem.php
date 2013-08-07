@@ -10,7 +10,7 @@ namespace Drupal\link\Plugin\field\field_type;
 use Drupal\Core\Entity\Annotation\FieldType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\FieldInterface;
 
 /**
  * Plugin implementation of the 'link' field type.
@@ -59,7 +59,7 @@ class LinkItem extends ConfigFieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function schema(Field $field) {
+  public static function schema(FieldInterface $field) {
     return array(
       'columns' => array(
         'url' => array(

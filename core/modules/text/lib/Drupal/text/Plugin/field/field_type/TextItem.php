@@ -9,7 +9,7 @@ namespace Drupal\text\Plugin\field\field_type;
 
 use Drupal\Core\Entity\Annotation\FieldType;
 use Drupal\Core\Annotation\Translation;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\FieldInterface;
 
 /**
  * Plugin implementation of the 'text' field type.
@@ -33,7 +33,7 @@ class TextItem extends TextItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function schema(Field $field) {
+  public static function schema(FieldInterface $field) {
     return array(
       'columns' => array(
         'value' => array(

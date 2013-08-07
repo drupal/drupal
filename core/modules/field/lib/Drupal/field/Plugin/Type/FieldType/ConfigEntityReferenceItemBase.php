@@ -9,7 +9,7 @@ namespace Drupal\field\Plugin\Type\FieldType;
 
 use Drupal\Core\Entity\Plugin\DataType\EntityReferenceItem;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemInterface;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\FieldInterface;
 
 /**
  * A common base class for configurable entity reference fields.
@@ -93,7 +93,7 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
    * Copied from \Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem,
    * since we cannot extend it.
    */
-  public static function schema(Field $field) {
+  public static function schema(FieldInterface $field) {
     $definition = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field->type);
     $module = $definition['provider'];
     module_load_install($module);

@@ -11,7 +11,7 @@ use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\Annotation\FieldType;
 use Drupal\Core\Entity\Field\PrepareCacheInterface;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\FieldInterface;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase;
 
 /**
@@ -57,7 +57,7 @@ class DateTimeItem extends ConfigFieldItemBase implements PrepareCacheInterface 
   /**
    * {@inheritdoc}
    */
-  public static function schema(Field $field) {
+  public static function schema(FieldInterface $field) {
     return array(
       'columns' => array(
         'value' => array(

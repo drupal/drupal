@@ -10,7 +10,7 @@ namespace Drupal\email\Plugin\field\field_type;
 use Drupal\Core\Entity\Annotation\FieldType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Plugin\DataType\EmailItem;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\FieldInterface;
 
 /**
  * Plugin implementation of the 'email' field type.
@@ -40,7 +40,7 @@ class ConfigurableEmailItem extends EmailItem {
   /**
    * {@inheritdoc}
    */
-  public static function schema(Field $field) {
+  public static function schema(FieldInterface $field) {
     return array(
       'columns' => array(
         'value' => array(

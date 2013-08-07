@@ -8,7 +8,7 @@
 namespace Drupal\field\Plugin\Type\FieldType;
 
 use Drupal\Core\Entity\Field\FieldItemInterface;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\FieldInterface;
 
 /**
  * Interface definition for 'configurable field type' plugins.
@@ -18,7 +18,7 @@ interface ConfigFieldItemInterface extends FieldItemInterface {
   /**
    * Returns the field instance definition.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   * @var \Drupal\field\FieldInstanceInterface
    */
   public function getInstance();
 
@@ -29,7 +29,7 @@ interface ConfigFieldItemInterface extends FieldItemInterface {
    * creation of the field. No field instances exist by then, and it is not
    * possible to instantiate a FieldItemInterface object yet.
    *
-   * @param \Drupal\field\Plugin\Core\Entity\Field $field
+   * @param \Drupal\field\FieldInterface $field
    *   The field definition.
    *
    * @return array
@@ -54,7 +54,7 @@ interface ConfigFieldItemInterface extends FieldItemInterface {
    *     specify another field as related, only existing SQL tables,
    *     such as {taxonomy_term_data}.
    */
-  public static function schema(Field $field);
+  public static function schema(FieldInterface $field);
 
   /**
    * Returns a form for the field-level settings.
