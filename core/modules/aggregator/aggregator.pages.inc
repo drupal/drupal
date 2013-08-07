@@ -157,7 +157,7 @@ function _aggregator_page_list($items, $op, $feed_source = '') {
     $build['feed_source'] = is_array($feed_source) ? $feed_source : array('#markup' => $feed_source);
     if ($items) {
       $build['items'] = entity_view_multiple($items, 'default');
-      $build['pager']['#markup'] = theme('pager');
+      $build['pager'] = array('#theme' => 'pager');
     }
   }
 
