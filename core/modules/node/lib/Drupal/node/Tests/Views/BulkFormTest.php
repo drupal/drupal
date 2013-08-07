@@ -25,7 +25,7 @@ class BulkFormTest extends NodeTestBase {
     return array(
       'name' => 'Node: Bulk form',
       'description' => 'Tests a node bulk form.',
-      'group' => 'Views Modules',
+      'group' => 'Views module integration',
     );
   }
 

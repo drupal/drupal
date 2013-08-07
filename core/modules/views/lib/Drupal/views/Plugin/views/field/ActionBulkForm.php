@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\action\Plugin\views\field\BulkForm.
+ * Contains \Drupal\views\Plugin\views\field\BulkForm.
  */
 
-namespace Drupal\action\Plugin\views\field;
+namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
 use Drupal\system\Plugin\views\field\BulkFormBase;
@@ -15,7 +15,7 @@ use Drupal\system\Plugin\views\field\BulkFormBase;
  *
  * @PluginID("action_bulk_form")
  */
-class BulkForm extends BulkFormBase {
+class ActionBulkForm extends BulkFormBase {
 
   /**
    * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::defineOptions().
