@@ -201,6 +201,7 @@ function views_ui_library_info() {
       array('system', 'jquery'),
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
+      array('system', 'drupal.debounce'),
       array('system', 'jquery.once'),
       array('system', 'jquery.form'),
       array('system', 'drupal.ajax'),
