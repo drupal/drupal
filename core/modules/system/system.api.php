@@ -3602,3 +3602,35 @@ function hook_filetransfer_info_alter(&$filetransfer_info) {
 /**
  * @} End of "defgroup update_api".
  */
+
+/**
+ * @defgroup annotation Annotations
+ * @{
+ * Annotations for class discovery and metadata description.
+ *
+ * The Drupal plugin system has a set of reusable components that developers
+ * can use, override, and extend in their modules. Most of the plugins use
+ * annotations, which let classes register themselves as plugins and describe
+ * their metadata. (Annotations can also be used for other purposes, though
+ * at the moment, Drupal only uses them for the plugin system.)
+ *
+ * To annotate a class as a plugin, add code similar to the following to the
+ * end of the documentation block immediately preceding the class declaration:
+ * @code
+ * * @EntityType(
+ * *   id = "comment",
+ * *   label = @Translation("Comment"),
+ * *   ...
+ * *   base_table = "comment"
+ * * )
+ * @endcode
+ *
+ * The available annotation classes are listed in this topic, and can be
+ * identified when you are looking at the Drupal source code by having
+ * "@ Annotation" in their documentation blocks (without the space after @). To
+ * find examples of annotation for a particular annotation class, such as
+ * EntityType, look for class files that contain a PHP "use" declaration of the
+ * annotation class, or files that have an @ annotation section using the
+ * annotation class.
+ * @}
+ */
