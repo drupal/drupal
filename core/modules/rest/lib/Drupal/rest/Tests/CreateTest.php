@@ -33,7 +33,7 @@ class CreateTest extends RESTTestBase {
    * Tests several valid and invalid create requests on all entity types.
    */
   public function testCreate() {
-    $serializer = drupal_container()->get('serializer');
+    $serializer = $this->container->get('serializer');
     $entity_types = array('entity_test', 'node');
     foreach ($entity_types as $entity_type) {
 

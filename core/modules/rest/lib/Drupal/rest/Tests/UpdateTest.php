@@ -33,7 +33,7 @@ class UpdateTest extends RESTTestBase {
    * Tests several valid and invalid partial update requests on test entities.
    */
   public function testPatchUpdate() {
-    $serializer = drupal_container()->get('serializer');
+    $serializer = $this->container->get('serializer');
     // @todo once EntityNG is implemented for other entity types test all other
     // entity types here as well.
     $entity_type = 'entity_test';

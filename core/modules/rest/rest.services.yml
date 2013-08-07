@@ -1,7 +1,14 @@
 services:
   plugin.manager.rest:
     class: Drupal\rest\Plugin\Type\ResourcePluginManager
-    arguments: ['@container.namespaces']
+    arguments: ['@container.namespaces', '@cache.rest', '@language_manager', '@module_handler']
+  cache.rest:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory_method: get
+    factory_service: cache_factory
+    arguments: [rest]
   rest.route_subscriber:
     class: Drupal\rest\EventSubscriber\RouteSubscriber
     tags:

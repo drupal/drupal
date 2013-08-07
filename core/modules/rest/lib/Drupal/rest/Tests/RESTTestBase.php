@@ -209,7 +209,7 @@ abstract class RESTTestBase extends WebTestBase {
     $config->save();
 
     // Rebuild routing cache, so that the REST API paths are available.
-    drupal_container()->get('router.builder')->rebuild();
+    $this->container->get('router.builder')->rebuild();
     // Reset the Simpletest permission cache, so that the new resource
     // permissions get picked up.
     drupal_static_reset('checkPermissions');
