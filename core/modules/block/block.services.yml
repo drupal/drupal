@@ -13,7 +13,6 @@ services:
     class: Drupal\block\Routing\RouteSubscriber
     tags:
       - { name: event_subscriber}
-    arguments: ['@plugin.manager.system.plugin_ui']
   block.theme_access_check:
     class: Drupal\block\Access\BlockThemeAccessCheck
     tags:

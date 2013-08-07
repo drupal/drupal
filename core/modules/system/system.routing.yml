@@ -213,10 +213,3 @@ system_timezone:
     _controller: '\Drupal\system\Controller\TimezoneController::getTimezone'
   requirements:
     _access: 'TRUE'
-
-system_plugin_autocomplete:
-  pattern: '/system/autocomplete/{plugin_id}'
-  defaults:
-    _controller: 'Drupal\system\Controller\SystemController::autocomplete'
-  requirements:
-    _access_system_plugin_ui: 'TRUE'

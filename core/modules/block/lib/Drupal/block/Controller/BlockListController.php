@@ -18,17 +18,15 @@ class BlockListController extends EntityListController {
   /**
    * Shows the block administration page.
    *
-   * @param string $entity_type
-   *   Entity type of list page.
    * @param string|null $theme
    *   Theme key of block list.
    *
    * @return array
    *   A render array as expected by drupal_render().
    */
-  public function listing($entity_type, $theme = NULL) {
-    $default_theme = $theme ?: $this->config('system.theme')->get('default');
-    return $this->entityManager()->getListController($entity_type)->render($default_theme);
+  public function listing($theme = NULL) {
+    $theme = $theme ?: $this->config('system.theme')->get('default');
+    return $this->entityManager()->getListController('block')->render($theme);
   }
 
 }

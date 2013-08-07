@@ -75,7 +75,7 @@ class ItemsPerPageTest extends WizardTestBase {
     $this->assertTrue($pos5 < $pos4 && $pos4 < $pos3 && $pos3 < $pos2, 'The nodes appear in the expected order in the page display.');
 
     // Confirm that the block is listed in the block administration UI.
-    $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . config('system.theme')->get('default') . '/add');
+    $this->drupalGet('admin/structure/block/list/' . config('system.theme')->get('default') . '/add');
     $this->assertText('View: ' . $view['label']);
 
     // Place the block, visit a page that displays the block, and check that the

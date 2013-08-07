@@ -122,7 +122,7 @@ class BasicTest extends WizardTestBase {
     $this->assertLinkByHref(url($view3['page[path]']));
 
     // Confirm that the block is available in the block administration UI.
-    $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . config('system.theme')->get('default') . '/add');
+    $this->drupalGet('admin/structure/block/list/' . config('system.theme')->get('default') . '/add');
     $this->assertText('View: ' . $view3['label']);
 
     // Place the block.

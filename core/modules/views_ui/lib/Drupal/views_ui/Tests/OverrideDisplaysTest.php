@@ -54,7 +54,7 @@ class OverrideDisplaysTest extends UITestBase {
     $this->assertText($original_title);
 
     // Confirm that the view block is available in the block administration UI.
-    $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . config('system.theme')->get('default') . '/add');
+    $this->drupalGet('admin/structure/block/list/' . config('system.theme')->get('default') . '/add');
     $this->assertText('View: ' . $view['label']);
 
     // Place the block.
@@ -112,7 +112,7 @@ class OverrideDisplaysTest extends UITestBase {
     $this->assertNoText($view['block[title]']);
 
     // Confirm that the block is available in the block administration UI.
-    $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . config('system.theme')->get('default') . '/add');
+    $this->drupalGet('admin/structure/block/list/' . config('system.theme')->get('default') . '/add');
     $this->assertText('View: ' . $view['label']);
 
     // Put the block into the first sidebar region, and make sure it will not

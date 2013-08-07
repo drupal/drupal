@@ -274,7 +274,7 @@ class BlockTest extends BlockTestBase {
     }
 
     // Ensure that the disabled module's block plugin is no longer available.
-    $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . config('system.theme')->get('default') . '/add');
+    $this->drupalGet('admin/structure/block/list/' . config('system.theme')->get('default') . '/add');
     $this->assertNoText(t('Test block caching'));
 
     // Confirm that the block is no longer displayed on the front page.

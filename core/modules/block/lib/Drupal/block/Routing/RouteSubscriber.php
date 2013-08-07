@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains \Drupal\block\Routing\RouteSubscriber.
@@ -11,30 +12,11 @@ use Drupal\Core\Routing\RoutingEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Component\Plugin\PluginManagerInterface;
 
 /**
  * Listens to the dynamic route events.
  */
 class RouteSubscriber implements EventSubscriberInterface {
-
-  /**
-   * The injection plugin manager that should be passed into the route.
-   *
-   * @var \Drupal\Component\Plugin\PluginManagerInterface
-   */
-  protected $pluginManager;
-
-
-  /**
-   * Constructs a RouteSubscriber object.
-   *
-   * @param \Drupal\Component\Plugin\PluginManagerInterface $plugin_manager
-   *   The service container this object should use.
-   */
-  public function __construct(PluginManagerInterface $plugin_manager) {
-    $this->pluginManager = $plugin_manager;
-  }
 
   /**
    * Implements EventSubscriberInterface::getSubscribedEvents().
@@ -55,18 +37,32 @@ class RouteSubscriber implements EventSubscriberInterface {
    */
   public function routes(RouteBuildEvent $event) {
     $collection = $event->getRouteCollection();
-    foreach ($this->pluginManager->getDefinitions() as $plugin_id => $plugin) {
-      list($plugin_base, $key) = explode(':', $plugin_id);
-      if ($plugin_base == 'block_plugin_ui') {
-        $route = new Route('admin/structure/block/list/' . $plugin_id, array(
+    foreach (list_themes(TRUE) as $key => $theme) {
+      // The block entity listing page.
+      $route = new Route(
+        "admin/structure/block/list/$key",
+        array(
           '_controller' => '\Drupal\block\Controller\BlockListController::listing',
-          'entity_type' => 'block',
           'theme' => $key,
-        ), array(
+        ),
+        array(
           '_block_themes_access' => 'TRUE',
-        ));
-        $collection->add('block_admin_display.' . $plugin_id, $route);
-      }
+        )
+      );
+      $collection->add("block_admin_display.$key", $route);
+
+      // The block plugin listing page.
+      $route = new Route(
+        "admin/structure/block/list/$key/add/{category}",
+        array(
+          '_form' => '\Drupal\block\Form\PlaceBlocksForm',
+          'category' => NULL,
+          'theme' => $key,
+        ),
+        array('_block_themes_access' => 'TRUE')
+      );
+      $collection->add("block_plugin_ui.$key", $route);
     }
   }
+
 }

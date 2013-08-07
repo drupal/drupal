@@ -161,7 +161,7 @@ class MenuTest extends MenuWebTestBase {
     // Enable the custom menu block.
     $menu_name = 'menu-' . $menu_name; // Drupal prepends the name with 'menu-'.
     // Confirm that the custom menu block is available.
-    $this->drupalGet('admin/structure/block/list/block_plugin_ui:' . config('system.theme')->get('default') . '/add');
+    $this->drupalGet('admin/structure/block/list/' . config('system.theme')->get('default') . '/add');
     $this->assertText($label);
 
     // Enable the block.
@@ -379,7 +379,7 @@ class MenuTest extends MenuWebTestBase {
 
     // Make sure menu shows up with new name in block addition.
     $default_theme = variable_get('theme_default', 'stark');
-    $this->drupalget('admin/structure/block/list/block_plugin_ui:' . $default_theme . '/add');
+    $this->drupalget('admin/structure/block/list/' . $default_theme . '/add');
     $this->assertText($edit['label']);
   }
 
