@@ -108,6 +108,8 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $queue = \Drupal::queue('locale_translation', TRUE);
     $this->assertEqual($queue->numberOfItems(), 3, 'Queue holds tasks for one project.');
 
+    // Ensure last checked is updated to a greater time than the initial value.
+    sleep(1);
     // Test: Execute cron and check if tasks are executed correctly.
     // Run cron to process the tasks in the queue.
     $this->drupalGet('admin/reports/status/run-cron');
