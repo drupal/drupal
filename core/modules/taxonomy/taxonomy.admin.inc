@@ -39,11 +39,11 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
   $parent_fields = FALSE;
 
   $page            = isset($_GET['page']) ? $_GET['page'] : 0;
-  $page_increment  = config('taxonomy.settings')->get('terms_per_page_admin');  // Number of terms per page.
-  $page_entries    = 0;   // Elements shown on this page.
-  $before_entries  = 0;   // Elements at the root level before this page.
-  $after_entries   = 0;   // Elements at the root level after this page.
-  $root_entries    = 0;   // Elements at the root level on this page.
+  $page_increment  = config('taxonomy.settings')->get('terms_per_page_admin');
+  $page_entries    = 0;
+  $before_entries  = 0;
+  $after_entries   = 0;
+  $root_entries    = 0;
 
   // Terms from previous and next pages are shown if the term tree would have
   // been cut in the middle. Keep track of how many extra terms we show on each
@@ -83,7 +83,8 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
         $back_step++;
         if ($pterm->depth == 0) {
           prev($tree);
-          continue 2; // Jump back to the start of the root level parent.
+          // Jump back to the start of the root level parent.
+          continue 2;
        }
       }
     }
@@ -125,8 +126,10 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
   // If this form was already submitted once, it's probably hit a validation
   // error. Ensure the form is rebuilt in the same order as the user submitted.
   if (!empty($form_state['input'])) {
-    $order = array_flip(array_keys($form_state['input']['terms'])); // Get the $_POST order.
-    $current_page = array_merge($order, $current_page); // Update our form with the new order.
+    // Get the $_POST order.
+    $order = array_flip(array_keys($form_state['input']['terms']));
+    // Update our form with the new order.
+    $current_page = array_merge($order, $current_page);
     foreach ($current_page as $key => $term) {
       // Verify this is a term for the current page and set at the current
       // depth.
