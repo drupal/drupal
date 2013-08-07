@@ -573,13 +573,17 @@ class ForumTest extends WebTestBase {
     $this->drupalGet('node/' . $node->id());
     $this->assertResponse(200);
     $this->assertTitle($node->label() . ' | Drupal', 'Forum node was displayed');
-    $breadcrumb = array(
+    $breadcrumb_build = array(
       l(t('Home'), NULL),
       l(t('Forums'), 'forum'),
       l($this->forumContainer['name'], 'forum/' . $this->forumContainer['tid']),
       l($this->forum['name'], 'forum/' . $this->forum['tid']),
     );
-    $this->assertRaw(theme('breadcrumb', array('breadcrumb' => $breadcrumb)), 'Breadcrumbs were displayed');
+    $breadcrumb = array(
+      '#theme' => 'breadcrumb',
+      '#breadcrumb' => $breadcrumb_build,
+    );
+    $this->assertRaw(drupal_render($breadcrumb), 'Breadcrumbs were displayed');
 
     // View forum edit node.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -628,15 +632,19 @@ class ForumTest extends WebTestBase {
     $this->assertResponse(200);
     $this->assertTitle($forum['name'] . ' | Drupal');
 
-    $breadcrumb = array(
+    $breadcrumb_build = array(
       l(t('Home'), NULL),
       l(t('Forums'), 'forum'),
     );
     if (isset($parent)) {
-      $breadcrumb[] = l($parent['name'], 'forum/' . $parent['tid']);
+      $breadcrumb_build[] = l($parent['name'], 'forum/' . $parent['tid']);
     }
 
-    $this->assertRaw(theme('breadcrumb', array('breadcrumb' => $breadcrumb)));
+    $breadcrumb = array(
+      '#theme' => 'breadcrumb',
+      '#breadcrumb' => $breadcrumb_build,
+    );
+    $this->assertRaw(drupal_render($breadcrumb), 'Breadcrumbs were displayed');
   }
 
   /**
