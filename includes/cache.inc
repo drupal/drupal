@@ -137,18 +137,20 @@ function cache_set($cid, $data, $bin = 'cache', $expire = CACHE_PERMANENT) {
 /**
  * Expires data from the cache.
  *
- * If called without arguments, expirable entries will be cleared from the
- * cache_page and cache_block bins.
+ * If called with the arguments $cid and $bin set to NULL or omitted, then
+ * expirable entries will be cleared from the cache_page and cache_block bins,
+ * and the $wildcard argument is ignored.
  *
  * @param $cid
- *   If set, the cache ID to delete. Otherwise, all cache entries that can
- *   expire are deleted.
+ *   If set, the cache ID or an array of cache IDs. Otherwise, all cache entries
+ *   that can expire are deleted. The $wildcard argument will be ignored if set
+ *   to NULL.
  * @param $bin
  *   If set, the cache bin to delete from. Mandatory argument if $cid is set.
  * @param $wildcard
- *   If TRUE, cache IDs starting with $cid are deleted in addition to the
- *   exact cache ID specified by $cid. If $wildcard is TRUE and $cid is '*',
- *   the entire cache bin is emptied.
+ *   If TRUE, the $cid argument must contain a string value and cache IDs
+ *   starting with $cid are deleted in addition to the exact cache ID specified
+ *   by $cid. If $wildcard is TRUE and $cid is '*', the entire cache is emptied.
  */
 function cache_clear_all($cid = NULL, $bin = NULL, $wildcard = FALSE) {
   if (!isset($cid) && !isset($bin)) {
@@ -273,12 +275,14 @@ interface DrupalCacheInterface {
    * cache_page and cache_block bins.
    *
    * @param $cid
-   *   If set, the cache ID to delete. Otherwise, all cache entries that can
-   *   expire are deleted.
+   *   If set, the cache ID or an array of cache IDs. Otherwise, all cache
+   *   entries that can expire are deleted. The $wildcard argument will be
+   *   ignored if set to NULL.
    * @param $wildcard
-   *   If set to TRUE, the $cid is treated as a substring
-   *   to match rather than a complete ID. The match is a right hand
-   *   match. If '*' is given as $cid, the bin $bin will be emptied.
+   *   If TRUE, the $cid argument must contain a string value and cache IDs
+   *   starting with $cid are deleted in addition to the exact cache ID
+   *   specified by $cid. If $wildcard is TRUE and $cid is '*', the entire
+   *   cache is emptied.
    */
   function clear($cid = NULL, $wildcard = FALSE);
 
