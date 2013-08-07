@@ -1745,20 +1745,6 @@ function theme_links($variables) {
 }
 
 /**
- * Returns HTML for wrapping a dropbutton menu.
- *
- * @param array $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties and children of
- *     the dropbutton menu. Properties used: #children.
- */
-function theme_dropbutton_wrapper($variables) {
-  if (!empty($variables['element']['#children'])) {
-    return '<div class="dropbutton-wrapper"><div class="dropbutton-widget">' . $variables['element']['#children'] . '</div></div>';
-  }
-}
-
-/**
  * Returns HTML for an image.
  *
  * @param $variables
@@ -3012,7 +2998,8 @@ function drupal_common_theme() {
       'variables' => array('links' => array(), 'attributes' => array('class' => array('links')), 'heading' => array()),
     ),
     'dropbutton_wrapper' => array(
-      'render element' => 'element',
+      'variables' => array('children' => NULL),
+      'template' => 'dropbutton-wrapper',
     ),
     'image' => array(
       // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft
