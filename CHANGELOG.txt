@@ -1,4 +1,7 @@
 
+Drupal 7.24, xxxx-xx-xx (development version)
+-----------------------
+
 Drupal 7.23, 2013-08-07
 -----------------------
 - Fixed a fatal error on PostgreSQL databases when updating the Taxonomy module
