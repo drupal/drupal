@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *   derivative = "Drupal\views\Plugin\Derivative\ViewsExposedFilterBlock"
  * )
  */
-class ViewsExposedFilterBlock extends ViewsBlock {
+class ViewsExposedFilterBlock extends ViewsBlockBase {
 
   /**
    * {@inheritdoc}
@@ -31,7 +31,6 @@ class ViewsExposedFilterBlock extends ViewsBlock {
     // contextual links.
     $this->addContextualLinks($output, 'exposed_filter');
 
-    $this->view->destroy();
     return $output;
   }
 
