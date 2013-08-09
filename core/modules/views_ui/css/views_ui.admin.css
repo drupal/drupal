@@ -23,37 +23,6 @@
 
 /* @end */
 
-/* @group Inline lists */
-
-.horizontal > * {
-  clear: none;
-  float: left; /* LTR */
-}
-[dir="rtl"] .horizontal > * {
-  float: right;
-}
-
-.horizontal.right {
-  float: right;
-}
-[dir="rtl"] .horizontal.right {
-  float: left;
-}
-
-.horizontal label {
-  position: absolute;
-}
-
-.horizontal .form-item > [class] {
-  margin-top: 25px;
-}
-
-.horizontal .form-item > [class] + [class] {
-  margin-top: 0;
-}
-
-/* @end */
-
 /* @group Columns */
 
 .views-left-25 {
