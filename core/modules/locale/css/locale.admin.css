@@ -43,7 +43,7 @@
   vertical-align: top
 }
 
-.locale-translate-edit-form .changed {
+.locale-translate-edit-form tr.changed {
   background: #ffb;
 }
 
