@@ -2610,7 +2610,7 @@ function template_preprocess_html(&$variables) {
   }
   $variables['page_bottom'] = array();
   if (isset($variables['page']['page_bottom'])) {
-    $variables['page_bottom'] = drupal_render($variables['page']['page_bottom']);
+    $variables['page_bottom'][]['#markup'] = drupal_render($variables['page']['page_bottom']);
   }
 
   // Add footer scripts as '#markup' so they can be rendered with other

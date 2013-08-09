@@ -276,6 +276,7 @@ class ThemeTest extends WebTestBase {
     $this->drupalGet('');
     $attributes = $this->xpath('/html/body[@theme_test_page_variable="Page variable is an array."]');
     $this->assertTrue(count($attributes) == 1, 'In template_preprocess_html(), the page variable is still an array (not rendered yet).');
+    $this->assertText('theme test page bottom markup', 'Modules are able to set the page bottom region.');
   }
 
 
