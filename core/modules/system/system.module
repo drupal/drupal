@@ -1975,19 +1975,6 @@ function system_library_info() {
       array('system', 'jquery.once'),
     ),
   );
-  $libraries['drupal.system.cron'] = array(
-    'title' => 'System cron',
-    'version' => VERSION,
-    'js' => array(
-      drupal_get_path('module', 'system') . '/system.cron.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupalSettings'),
-      array('system', 'jquery.once'),
-    ),
-  );
   $libraries['drupal.system.modules'] = array(
     'title' => 'System modules',
     'version' => VERSION,
