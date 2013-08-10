@@ -47,8 +47,7 @@ class CKEditorAdminTest extends WebTestBase {
   }
 
   function testAdmin() {
-    $manager = drupal_container()->get('plugin.manager.editor');
-    $ckeditor = $manager->createInstance('ckeditor');
+    $ckeditor = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
 
     $this->drupalLogin($this->admin_user);
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
@@ -147,7 +146,7 @@ class CKEditorAdminTest extends WebTestBase {
     // Now enable the ckeditor_test module, which provides one configurable
     // CKEditor plugin — this should not affect the Editor config entity.
     module_enable(array('ckeditor_test'));
-    drupal_container()->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
+    $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
     $this->drupalGet('admin/config/content/formats/manage/filtered_html');
     $ultra_llama_mode_checkbox = $this->xpath('//input[@type="checkbox" and @name="editor[settings][plugins][llama_contextual_and_button][ultra_llama_mode]" and not(@checked)]');
     $this->assertTrue(count($ultra_llama_mode_checkbox) === 1, 'The "Ultra llama mode" checkbox exists and is not checked.');

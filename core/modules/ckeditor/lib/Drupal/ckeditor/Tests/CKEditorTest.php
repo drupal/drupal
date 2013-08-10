@@ -74,8 +74,7 @@ class CKEditorTest extends DrupalUnitTestBase {
     $editor->save();
 
     // Create "CKEditor" text editor plugin instance.
-    $this->manager = $this->container->get('plugin.manager.editor');
-    $this->ckeditor = $this->manager->createInstance('ckeditor');
+    $this->ckeditor = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
   }
 
   /**
@@ -108,8 +107,8 @@ class CKEditorTest extends DrupalUnitTestBase {
     // Customize the configuration: add button, have two contextually enabled
     // buttons, and configure a CKEditor plugin setting.
     $this->enableModules(array('ckeditor_test'));
-    $this->manager->clearCachedDefinitions();
-    $this->ckeditor = $this->manager->createInstance('ckeditor');
+    $this->container->get('plugin.manager.editor')->clearCachedDefinitions();
+    $this->ckeditor = $this->container->get('plugin.manager.editor')->createInstance('ckeditor');
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
     $editor->settings['toolbar']['buttons'][0][] = 'Strike';
     $editor->settings['toolbar']['buttons'][1][] = 'Format';
@@ -218,7 +217,7 @@ class CKEditorTest extends DrupalUnitTestBase {
 
     // Enable the editor_test module, customize further.
     $this->enableModules(array('ckeditor_test'));
-    drupal_container()->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
+    $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
     $editor->settings['toolbar']['buttons'][0][] = 'Llama';
     $editor->save();
     $expected[count($expected)-2]['items'][] = 'Llama';
@@ -248,8 +247,7 @@ class CKEditorTest extends DrupalUnitTestBase {
    */
   function testInternalGetConfig() {
     $editor = entity_load('editor', 'filtered_html');
-    $manager = drupal_container()->get('plugin.manager.ckeditor.plugin');
-    $internal_plugin = $manager->createInstance('internal');
+    $internal_plugin = $this->container->get('plugin.manager.ckeditor.plugin')->createInstance('internal');
 
     // Default toolbar.
     $expected = $this->getDefaultInternalConfig();
@@ -267,8 +265,7 @@ class CKEditorTest extends DrupalUnitTestBase {
    */
   function testStylesComboGetConfig() {
     $editor = entity_load('editor', 'filtered_html');
-    $manager = drupal_container()->get('plugin.manager.ckeditor.plugin');
-    $stylescombo_plugin = $manager->createInstance('stylescombo');
+    $stylescombo_plugin = $this->container->get('plugin.manager.ckeditor.plugin')->createInstance('stylescombo');
 
     // Styles dropdown/button enabled: new setting should be present.
     $editor->settings['toolbar']['buttons'][0][] = 'Styles';
