@@ -64,6 +64,16 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
     $blocks = entity_load_multiple_by_properties('custom_block', array('info' => $edit['info']));
     $block = reset($blocks);
     $this->assertTrue($block, 'Custom Block found in database.');
+
+    // Check that attempting to create another block with the same value for
+    // 'info' returns an error.
+    $this->drupalPost('block/add/basic', $edit, t('Save'));
+
+    // Check that the Basic block has been created.
+    $this->assertRaw(format_string('A block with description %name already exists.', array(
+      '%name' => $edit["info"]
+    )));
+    $this->assertResponse(200);
   }
 
   /**
