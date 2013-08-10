@@ -130,6 +130,11 @@ function block_menu() {
     'context' => MENU_CONTEXT_NONE,
     'route_name' => 'block_admin_block_delete',
   );
+  $items['admin/structure/block/add/%/%'] = array(
+    'title' => 'Place block',
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
+    'route_name' => 'block_admin_add',
+  );
   // Block administration is tied to the theme and plugin definition so
   // that the plugin can appropriately attach to this URL structure.
   // @todo D8: Use dynamic % arguments instead of static, hard-coded theme names
