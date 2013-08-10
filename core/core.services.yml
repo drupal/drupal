@@ -343,6 +343,10 @@ services:
     arguments: ['@content_negotiation']
     tags:
       - { name: route_enhancer, priority: 10 }
+  route_special_attributes_subscriber:
+    class: Drupal\Core\EventSubscriber\SpecialAttributesRouteSubscriber
+    tags:
+      - { name: event_subscriber }
   controller.page:
     class: Drupal\Core\Controller\HtmlPageController
     arguments: ['@http_kernel']
