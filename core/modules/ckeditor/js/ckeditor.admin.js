@@ -151,7 +151,7 @@ Drupal.behaviors.ckeditorAdmin = {
         redrawToolbarGradient();
       }
       // Post the update to the aria-live message element.
-      $messages.text(Drupal.t('row removed. @count row@plural remaining.', {'@count': ($rows.length - 1), '@plural': ((($rows.length - 1) === 1 ) ? '' : 's')}));
+      $messages.text(Drupal.formatPlural($rows.length - 1, 'row removed. 1 row remaining.', 'row removed. @count rows remaining.'));
       event.preventDefault();
     }
 
