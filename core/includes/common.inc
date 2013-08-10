@@ -3192,7 +3192,7 @@ function drupal_page_set_cache(Response $response, Request $request) {
 
      // Use the actual timestamp from an Expires header, if available.
     if ($date = $response->getExpires()) {
-      $date = new DrupalDateTime($date);
+      $date = DrupalDateTime::createFromDateTime($date);
       $cache->expire = $date->getTimestamp();
     }
 

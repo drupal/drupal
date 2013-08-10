@@ -507,11 +507,16 @@ function form_type_datetime_value($element, $input = FALSE) {
       $time_input .= ':00';
     }
 
-    $date = new DrupalDateTime(trim($date_input . ' ' . $time_input), $timezone, trim($date_format . ' ' . $time_format));
+    try {
+      $date = DrupalDateTime::createFromFormat(trim($date_format . ' ' . $time_format), trim($date_input . ' ' . $time_input), $timezone);
+    }
+    catch (\Exception $e) {
+      $date = NULL;
+    }
     $input = array(
       'date'   => $date_input,
       'time'   => $time_input,
-      'object' => $date instanceOf DrupalDateTime && !$date->hasErrors() ? $date : NULL,
+      'object' => $date,
     );
   }
   else {
@@ -836,7 +841,7 @@ function form_type_datelist_value($element, $input = FALSE, &$form_state = array
       unset($input['ampm']);
     }
     $timezone = !empty($element['#date_timezone']) ? $element['#date_timezone'] : NULL;
-    $date = new DrupalDateTime($input, $timezone);
+    $date = DrupalDateTime::createFromArray($input, $timezone);
     if ($date instanceOf DrupalDateTime && !$date->hasErrors()) {
       date_increment_round($date, $increment);
     }
@@ -1044,5 +1049,5 @@ function datetime_form_node_form_alter(&$form, &$form_state, $form_id) {
  */
 function datetime_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
   // Prepare the 'Authored on' date to use datetime.
-  $node->date = new DrupalDateTime($node->created);
+  $node->date = DrupalDateTime::createFromTimestamp($node->created);
 }

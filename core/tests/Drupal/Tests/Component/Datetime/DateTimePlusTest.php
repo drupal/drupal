@@ -51,10 +51,32 @@ class DateTimePlusTest extends UnitTestCase {
   }
 
   /**
-   * Test creating dates from timestamps, and manipulating timezones.
+   * Test creating dates from string and array input.
    *
    * @param mixed $input
-   *   Input argument for DateTimePlus().
+   *   Input argument for DateTimePlus.
+   * @param string $timezone
+   *   Timezone argument for DateTimePlus.
+   * @param string $expected
+   *   Expected output from DateTimePlus::format().
+   *
+   * @dataProvider providerTestDateArrays
+   */
+  public function testDateArrays($input, $timezone, $expected) {
+    $date = DateTimePlus::createFromArray($input, $timezone);
+    $value = $date->format('c');
+
+    if (is_array($input)) {
+      $input = var_export($input, TRUE);
+    }
+    $this->assertEquals($expected, $value, sprintf("Test new DateTimePlus(%s, %s): should be %s, found %s.", $input, $timezone, $expected, $value));
+  }
+
+  /**
+   * Test creating dates from timestamps, and manipulating timezones.
+   *
+   * @param int $input
+   *   Input argument for DateTimePlus::createFromTimestamp().
    * @param array $initial
    *   An array containing:
    *   - 'timezone_initial' - Timezone argument for DateTimePlus.
@@ -76,12 +98,46 @@ class DateTimePlusTest extends UnitTestCase {
    *   - 'expected_transform_offset' - Expected output from
    *      DateTimePlus::getOffset(), after timezone transform.
    *
+   * @dataProvider providerTestTimestamp
+   */
+  public function testTimestamp($input, array $initial, array $transform) {
+    // Initialize a new date object.
+    $date = DateTimePlus::createFromTimestamp($input, $initial['timezone']);
+    $this->assertDateTimestamp($date, $input, $initial, $transform);
+  }
+
+  /**
+   * Test creating dates from datetime strings.
+   *
+   * @param string $input
+   *   Input argument for DateTimePlus().
+   * @param array $initial
+   *   @see testTimestamp()
+   * @param array $transform
+   *   @see testTimestamp()
+   *
    * @dataProvider providerTestDateTimestamp
    */
   public function testDateTimestamp($input, array $initial, array $transform) {
     // Initialize a new date object.
     $date = new DateTimePlus($input, $initial['timezone']);
+    $this->assertDateTimestamp($date, $input, $initial, $transform);
+  }
 
+  /**
+   * Assertion helper for testTimestamp and testDateTimestamp since they need
+   * different dataProviders.
+   *
+   * @param DateTimePlus $date
+   *   DateTimePlus to test.
+   * @input mixed $input
+   *   The original input passed to the test method.
+   * @param array $initial
+   *   @see testTimestamp()
+   * @param array $transform
+   *   @see testTimestamp()
+   */
+  public function assertDateTimestamp($date, $input, $initial, $transform) {
     // Check format.
     $value = $date->format($initial['format']);
     $this->assertEquals($initial['expected_date'], $value, sprintf("Test new DateTimePlus(%s, %s): should be %s, found %s.", $input, $initial['timezone'], $initial['expected_date'], $value));
@@ -108,7 +164,6 @@ class DateTimePlusTest extends UnitTestCase {
     // Check transformed offset.
     $value = $date->getOffset();
     $this->assertEquals($transform['expected_offset'], $value, sprintf("The current offset should be %s, found %s.", $transform['expected_offset'], $value));
-
   }
 
   /**
@@ -126,7 +181,7 @@ class DateTimePlusTest extends UnitTestCase {
    * @dataProvider providerTestDateFormat
    */
   public function testDateFormat($input, $timezone, $format, $format_date, $expected) {
-    $date = new DateTimePlus($input, $timezone, $format);
+    $date = DateTimePlus::createFromFormat($format, $input, $timezone);
     $value = $date->format($format_date);
     $this->assertEquals($expected, $value, sprintf("Test new DateTimePlus(%s, %s, %s): should be %s, found %s.", $input, $timezone, $format, $expected, $value));
   }
@@ -144,14 +199,14 @@ class DateTimePlusTest extends UnitTestCase {
    *   Message to print if no errors are thrown by the invalid dates.
    *
    * @dataProvider providerTestInvalidDates
+   * @expectedException \Exception
    */
   public function testInvalidDates($input, $timezone, $format, $message) {
-    $date = new DateTimePlus($input, $timezone, $format);
-    $this->assertNotEquals(count($date->getErrors()), 0, $message);
+    $date = DateTimePlus::createFromFormat($format, $input, $timezone);
   }
 
   /**
-   * Test that DrupalDateTime can detect the right timezone to use.
+   * Tests that DrupalDateTime can detect the right timezone to use.
    * When specified or not.
    *
    * @param mixed $input
@@ -172,7 +227,23 @@ class DateTimePlusTest extends UnitTestCase {
   }
 
   /**
-   * Provide data for date tests.
+   * Test that DrupalDateTime can detect the right timezone to use when
+   * constructed from a datetime object.
+   */
+  public function testDateTimezoneWithDateTimeObject() {
+    // Create a date object with another date object.
+    $input = new DateTimePlus('now', 'Pacific/Midway');
+    $timezone = NULL;
+    $expected_timezone = 'Pacific/Midway';
+    $message = 'DateTimePlus uses the specified timezone if provided.';
+
+    $date = DateTimePlus::createFromDateTime($input, $timezone);
+    $timezone = $date->getTimezone()->getName();
+    $this->assertEquals($timezone, $expected_timezone, $message);
+  }
+
+  /**
+   * Provides data for date tests.
    *
    * @return array
    *   An array of arrays, each containing the input parameters for
@@ -195,7 +266,20 @@ class DateTimePlusTest extends UnitTestCase {
       array('2009-03-07 10:30', 'Australia/Canberra', '2009-03-07T10:30:00+11:00'),
       // Same during daylight savings time.
       array('2009-06-07 10:30', 'Australia/Canberra', '2009-06-07T10:30:00+10:00'),
+    );
+  }
 
+  /**
+   * Provides data for date tests.
+   *
+   * @return array
+   *   An array of arrays, each containing the input parameters for
+   *   DateTimePlusTest::testDates().
+   *
+   * @see DateTimePlusTest::testDates().
+   */
+  public function providerTestDateArrays() {
+    return array(
       // Array input.
       // Create date object from date array, date only.
       array(array('year' => 2010, 'month' => 2, 'day' => 28), 'America/Chicago', '2010-02-28T00:00:00-06:00'),
@@ -209,7 +293,7 @@ class DateTimePlusTest extends UnitTestCase {
   }
 
   /**
-   * Provide data for testDateFormats.
+   * Provides data for testDateFormats.
    *
    * @return array
    *   An array of arrays, each containing:
@@ -235,7 +319,7 @@ class DateTimePlusTest extends UnitTestCase {
   }
 
   /**
-   * Provide data for testInvalidDates.
+   * Provides data for testInvalidDates.
    *
    * @return array
    *   An array of arrays, each containing:
@@ -259,6 +343,24 @@ class DateTimePlusTest extends UnitTestCase {
       array('0000-75-00T15:30:00', NULL, 'Y-m-d\TH:i:s', "0000-75-00T15:30:00 contains an invalid month and did not produce errors."),
       // Test for invalid year.
       array('11-08-01T15:30:00', NULL, 'Y-m-d\TH:i:s', "11-08-01T15:30:00 contains an invalid year and did not produce errors."),
+
+    );
+  }
+
+  /**
+   * Provides data for testInvalidDates.
+   *
+   * @return array
+   *   An array of arrays, each containing:
+   *   - 'input' - Input for DateTimePlus.
+   *   - 'timezone' - Timezone for DateTimePlus.
+   *   - 'format' - Format for DateTimePlus.
+   *   - 'message' - Message to display on failure.
+   *
+   * @see testInvalidDateArrays
+   */
+  public function providerTestInvalidDateArrays() {
+    return array(
       // Test for invalid year from date array. 10000 as a year will
       // create an exception error in the PHP DateTime object.
       array(array('year' => 10000, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0), 'America/Chicago', NULL, "array('year' => 10000, 'month' => 7, 'day' => 8, 'hour' => 8, 'minute' => 0, 'second' => 0) contains an invalid year and did not produce errors."),
@@ -272,7 +374,7 @@ class DateTimePlusTest extends UnitTestCase {
   }
 
   /**
-   * Provide data for testDateTimezone.
+   * Provides data for testDateTimezone.
    *
    * @return array
    *   An array of arrays, each containing:
@@ -304,15 +406,15 @@ class DateTimePlusTest extends UnitTestCase {
   }
 
   /**
-   * Provide data for testDateTimestamp.
+   * Provides data for testTimestamp.
    *
    * @return array
    *   An array of arrays, each containing the arguments required for
-   *   self::testDateTimestamp().
+   *   self::testTimestamp().
    *
-   * @see testDateTimestamp()
+   * @see testTimestamp()
    */
-  public function providerTestDateTimestamp() {
+  public function providerTestTimestamp() {
     return array(
       // Create date object from a unix timestamp and display it in
       // local time.
@@ -352,6 +454,20 @@ class DateTimePlusTest extends UnitTestCase {
           'expected_offset' => 0,
         ),
       ),
+    );
+  }
+
+  /**
+   * Provides data for testDateTimestamp.
+   *
+   * @return array
+   *   An array of arrays, each containing the arguments required for
+   *   self::testDateTimestamp().
+   *
+   * @see testDateTimestamp()
+   */
+  public function providerTestDateTimestamp() {
+    return array(
       // Create date object from datetime string in UTC, and convert
       // it to a local date.
       array(

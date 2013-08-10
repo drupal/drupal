@@ -39,6 +39,9 @@ class Date {
    */
   protected $languageManager;
 
+  protected $country = NULL;
+  protected $dateFormats = array();
+
   /**
    * Constructs a Date object.
    *
@@ -97,19 +100,23 @@ class Date {
     }
 
     // Create a DrupalDateTime object from the timestamp and timezone.
-    $date = new DrupalDateTime($timestamp, $this->timezones[$timezone]);
+    $create_settings = array(
+      'langcode' => $langcode,
+      'country' => $this->country(),
+    );
+    $date = DrupalDateTime::createFromTimestamp($timestamp, $this->timezones[$timezone], $create_settings);
 
     // Find the appropriate format type.
     $key = $date->canUseIntl() ? DrupalDateTime::INTL : DrupalDateTime::PHP;
 
     // If we have a non-custom date format use the provided date format pattern.
-    if ($date_format = $this->dateFormatStorage->load($type)) {
+    if ($date_format = $this->dateFormat($type)) {
       $format = $date_format->getPattern($key);
     }
 
     // Fall back to medium if a format was not found.
     if (empty($format)) {
-      $format = $this->dateFormatStorage->load('fallback')->getPattern($key);
+      $format = $this->dateFormat('fallback')->getPattern($key);
     }
 
     // Call $date->format().
@@ -118,6 +125,26 @@ class Date {
       'format_string_type' => $key,
     );
     return Xss::filter($date->format($format, $settings));
+  }
+
+  protected function dateFormat($format) {
+    if (!isset($this->dateFormats[$format])) {
+      $this->dateFormats[$format] = $this->dateFormatStorage->load($format);
+    }
+    return $this->dateFormats[$format];
+  }
+
+  /**
+   * Returns the default country from config.
+   *
+   * @return string
+   *   The config setting for country.default.
+   */
+  protected function country() {
+    if ($this->country === NULL) {
+      $this->country = config('system.date')->get('country.default');
+    }
+    return $this->country;
   }
 
 }

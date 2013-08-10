@@ -122,9 +122,14 @@ class DateTimeItem extends ConfigFieldItemBase implements PrepareCacheInterface 
     $value = $this->get('value')->getValue();
     if (!empty($value)) {
       $storage_format = $this->getFieldSetting('datetime_type') == 'date' ? DATETIME_DATE_STORAGE_FORMAT : DATETIME_DATETIME_STORAGE_FORMAT;
-      $date = new DrupalDateTime($value, DATETIME_STORAGE_TIMEZONE, $storage_format);
-      if ($date instanceOf DrupalDateTime && !$date->hasErrors()) {
-        $this->set('date', $date);
+      try {
+        $date = DrupalDateTime::createFromFormat($storage_format, $value, DATETIME_STORAGE_TIMEZONE);
+        if ($date instanceOf DrupalDateTime && !$date->hasErrors()) {
+          $this->set('date', $date);
+        }
+      }
+      catch (\Exception $e) {
+        // @todo Handle this.
       }
     }
   }

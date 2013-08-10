@@ -62,7 +62,7 @@ class CommentFormController extends EntityFormControllerNG {
     if ($is_admin) {
       $author = $comment->name->value;
       $status = (isset($comment->status->value) ? $comment->status->value : COMMENT_NOT_PUBLISHED);
-      $date = (!empty($comment->date) ? $comment->date : new DrupalDateTime($comment->created->value));
+      $date = (!empty($comment->date) ? $comment->date : DrupalDateTime::createFromTimestamp($comment->created->value));
     }
     else {
       if ($user->isAuthenticated()) {

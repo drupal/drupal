@@ -174,7 +174,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     // Check implementation of DateTimeInterface.
     $typed_data = $this->createTypedData(array('type' => 'timestamp'), REQUEST_TIME);
     $this->assertTrue($typed_data->getDateTime() instanceof DrupalDateTime);
-    $typed_data->setDateTime(new DrupalDateTime(REQUEST_TIME + 1));
+    $typed_data->setDateTime(DrupalDateTime::createFromTimestamp(REQUEST_TIME + 1));
     $this->assertEqual($typed_data->getValue(), REQUEST_TIME + 1);
     $typed_data->setValue(NULL);
     $this->assertNull($typed_data->getDateTime());

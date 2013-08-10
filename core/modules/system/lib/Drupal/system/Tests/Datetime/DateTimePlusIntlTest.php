@@ -70,8 +70,8 @@ class DateTimePlusIntlTest extends DrupalUnitTestBase {
       'langcode' => 'en',
     );
 
-    $intl_date = new DateTimePlus($input, $timezone, NULL, $intl_settings);
-    $php_date = new DateTimePlus($input, $timezone, NULL, $php_settings);
+    $intl_date = new DateTimePlus($input, $timezone, $intl_settings);
+    $php_date = new DateTimePlus($input, $timezone, $php_settings);
 
     $this->assertTrue($intl_date->canUseIntl(), 'DateTimePlus object can use intl when provided with country and langcode settings.');
     $this->assertFalse($php_date->canUseIntl(), 'DateTimePlus object will fallback to use PHP when not provided with country setting.');
