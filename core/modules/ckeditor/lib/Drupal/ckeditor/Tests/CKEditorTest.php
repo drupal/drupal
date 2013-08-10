@@ -93,7 +93,6 @@ class CKEditorTest extends DrupalUnitTestBase {
       'toolbar' => $this->getDefaultToolbarConfig(),
       'contentsCss' => $this->getDefaultContentsCssConfig(),
       'extraPlugins' => 'drupalimage,drupallink',
-      'removePlugins' => 'image,link',
       'language' => 'en',
       'stylesSet' => FALSE,
       'drupalExternalPlugins' => array(
@@ -118,7 +117,6 @@ class CKEditorTest extends DrupalUnitTestBase {
     $expected_config['toolbar'][] = '/';
     $expected_config['format_tags'] = 'p;h4;h5;h6';
     $expected_config['extraPlugins'] .= ',llama_contextual,llama_contextual_and_button';
-    $expected_config['removePlugins'] = 'image,link';
     $expected_config['drupalExternalPlugins']['llama_contextual'] = file_create_url('core/modules/ckeditor/tests/modules/js/llama_contextual.js');
     $expected_config['drupalExternalPlugins']['llama_contextual_and_button'] = file_create_url('core/modules/ckeditor/tests/modules/js/llama_contextual_and_button.js');
     $expected_config['contentsCss'][] = file_create_url('core/modules/ckeditor/tests/modules/ckeditor_test.css');
