@@ -1171,7 +1171,8 @@ function views_form($form, &$form_state, ViewExecutable $view, $output) {
 function views_form_views_form($form, &$form_state, ViewExecutable $view, $output) {
   $form['#prefix'] = '<div class="views-form">';
   $form['#suffix'] = '</div>';
-  $form['#theme'] = 'views_form_views_form';
+  $form['#theme'] = 'form';
+  $form['#pre_render'][] = 'views_pre_render_views_form_views_form';
   $form['#validate'][] = 'views_form_views_form_validate';
   $form['#submit'][] = 'views_form_views_form_submit';
 
@@ -1299,6 +1300,44 @@ function views_form_views_form_submit($form, &$form_state) {
       }
     }
   }
+}
+
+/**
+ * Replaces views substitution placeholders.
+ *
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #substitutions, #children.
+ * @return array
+ *   The $element with prepared variables ready for #theme 'form'
+ *   in views_form_views_form.
+ */
+function views_pre_render_views_form_views_form($element) {
+  // Placeholders and their substitutions (usually rendered form elements).
+  $search = array();
+  $replace = array();
+
+  // Add in substitutions provided by the form.
+  foreach ($element['#substitutions']['#value'] as $substitution) {
+    $field_name = $substitution['field_name'];
+    $row_id = $substitution['row_id'];
+
+    $search[] = $substitution['placeholder'];
+    $replace[] = isset($element[$field_name][$row_id]) ? drupal_render($element[$field_name][$row_id]) : '';
+  }
+  // Add in substitutions from hook_views_form_substitutions().
+  $substitutions = Drupal::moduleHandler()->invokeAll('views_form_substitutions');
+  foreach ($substitutions as $placeholder => $substitution) {
+    $search[] = $placeholder;
+    $replace[] = $substitution;
+  }
+
+  // Apply substitutions to the rendered output.
+  $element['output']['#markup'] = str_replace($search, $replace, $element['output']['#markup']);
+
+  // Render and add remaining form fields.
+  $element['#children'] = drupal_render_children($element);
+  return $element;
 }
 
 /**

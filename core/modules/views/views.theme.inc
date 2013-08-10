@@ -1071,38 +1071,6 @@ function template_preprocess_views_exposed_form(&$variables) {
 }
 
 /**
- * Theme function for a View with form elements: replace the placeholders.
- */
-function theme_views_form_views_form($variables) {
-  $form = $variables['form'];
-
-  // Placeholders and their substitutions (usually rendered form elements).
-  $search = array();
-  $replace = array();
-
-  // Add in substitutions provided by the form.
-  foreach ($form['#substitutions']['#value'] as $substitution) {
-    $field_name = $substitution['field_name'];
-    $row_id = $substitution['row_id'];
-
-    $search[] = $substitution['placeholder'];
-    $replace[] = isset($form[$field_name][$row_id]) ? drupal_render($form[$field_name][$row_id]) : '';
-  }
-  // Add in substitutions from hook_views_form_substitutions().
-  $substitutions = Drupal::moduleHandler()->invokeAll('views_form_substitutions');
-  foreach ($substitutions as $placeholder => $substitution) {
-    $search[] = $placeholder;
-    $replace[] = $substitution;
-  }
-
-  // Apply substitutions to the rendered output.
-  $form['output']['#markup'] = str_replace($search, $replace, $form['output']['#markup']);
-
-  // Render and add remaining form fields.
-  return drupal_render_children($form);
-}
-
-/**
  * Theme function for the Mini pager.
  */
 function theme_views_mini_pager($variables) {
