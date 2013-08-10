@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Database\Driver\pgsql;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\SchemaObjectExistsException;
@@ -346,6 +347,16 @@ class Schema extends DatabaseSchema {
     // Ensure the new table name does not include schema syntax.
     $prefixInfo = $this->getPrefixInfo($new_name);
     $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO ' . $prefixInfo['table']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function copyTable($source, $destination) {
+    // @TODO The server is likely going to rename indexes and constraints
+    //   during the copy process, and it will not match our
+    //   table_name + constraint name convention anymore.
+    throw new \Exception('Not implemented, see https://drupal.org/node/2061879');
   }
 
   public function dropTable($table) {
