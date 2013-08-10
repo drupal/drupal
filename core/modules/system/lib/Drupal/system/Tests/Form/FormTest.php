@@ -248,6 +248,9 @@ class FormTest extends WebTestBase {
     // Check the page for the error class on the textfield.
     $this->assertFieldByXPath('//input[contains(@class, "error")]', FALSE, 'Error input form element class found.');
 
+    // Check the page for the aria-invalid attribute on the textfield.
+    $this->assertFieldByXPath('//input[contains(@aria-invalid, "true")]', FALSE, 'Aria invalid attribute found.');
+
     // Submit again with required fields set and verify that there are no
     // error messages.
     $edit = array(

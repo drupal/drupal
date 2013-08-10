@@ -4842,6 +4842,7 @@ function _form_set_attributes(&$element, $class = array()) {
   }
   if (isset($element['#parents']) && form_get_error($element) !== NULL && !empty($element['#validated'])) {
     $element['#attributes']['class'][] = 'error';
+    $element['#attributes']['aria-invalid'] = 'true';
   }
 }
 
