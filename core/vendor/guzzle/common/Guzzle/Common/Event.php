@@ -7,16 +7,12 @@ use Symfony\Component\EventDispatcher\Event as SymfonyEvent;
 /**
  * Default event for Guzzle notifications
  */
-class Event extends SymfonyEvent implements \ArrayAccess, \IteratorAggregate
+class Event extends SymfonyEvent implements ToArrayInterface, \ArrayAccess, \IteratorAggregate
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     private $context;
 
     /**
-     * Constructor
-     *
      * @param array $context Contextual information
      */
     public function __construct(array $context = array())
@@ -24,43 +20,33 @@ class Event extends SymfonyEvent implements \ArrayAccess, \IteratorAggregate
         $this->context = $context;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getIterator()
     {
         return new \ArrayIterator($this->context);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetGet($offset)
     {
-        return array_key_exists($offset, $this->context) ? $this->context[$offset] : null;
+        return isset($this->context[$offset]) ? $this->context[$offset] : null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetSet($offset, $value)
     {
         $this->context[$offset] = $value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetExists($offset)
     {
-        return array_key_exists($offset, $this->context);
+        return isset($this->context[$offset]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function offsetUnset($offset)
     {
         unset($this->context[$offset]);
+    }
+
+    public function toArray()
+    {
+        return $this->context;
     }
 }

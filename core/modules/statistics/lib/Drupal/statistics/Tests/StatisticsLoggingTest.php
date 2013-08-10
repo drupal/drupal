@@ -85,11 +85,10 @@ class StatisticsLoggingTest extends WebTestBase {
     $this->drupalGet($path);
     // Manually calling statistics.php, simulating ajax behavior.
     $nid = $this->node->id();
-    $post = http_build_query(array('nid' => $nid));
-    $headers = array('Content-Type' => 'application/x-www-form-urlencoded');
+    $post = array('nid' => $nid);
     global $base_url;
     $stats_path = $base_url . '/' . drupal_get_path('module', 'statistics'). '/statistics.php';
-    $this->client->post($stats_path, $headers, $post)->send();
+    $this->client->post($stats_path, array(), $post)->send();
     $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Testing an uncached page.');
     $node_counter = statistics_get($this->node->id());
     $this->assertIdentical($node_counter['totalcount'], '1');
@@ -97,7 +96,7 @@ class StatisticsLoggingTest extends WebTestBase {
     // Verify logging of a cached page.
     $this->drupalGet($path);
     // Manually calling statistics.php, simulating ajax behavior.
-    $this->client->post($stats_path, $headers, $post)->send();
+    $this->client->post($stats_path, array(), $post)->send();
     $this->assertIdentical($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Testing a cached page.');
     $node_counter = statistics_get($this->node->id());
     $this->assertIdentical($node_counter['totalcount'], '2');
@@ -106,7 +105,7 @@ class StatisticsLoggingTest extends WebTestBase {
     $this->drupalLogin($this->auth_user);
     $this->drupalGet($path);
     // Manually calling statistics.php, simulating ajax behavior.
-    $this->client->post($stats_path, $headers, $post)->send();
+    $this->client->post($stats_path, array(), $post)->send();
     $node_counter = statistics_get($this->node->id());
     $this->assertIdentical($node_counter['totalcount'], '3');
 

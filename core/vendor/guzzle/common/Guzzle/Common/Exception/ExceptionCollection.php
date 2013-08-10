@@ -7,9 +7,7 @@ namespace Guzzle\Common\Exception;
  */
 class ExceptionCollection extends \Exception implements GuzzleException, \IteratorAggregate, \Countable
 {
-    /**
-     * @var array Array of Exceptions
-     */
+    /** @var array Array of Exceptions */
     protected $exceptions = array();
 
     /**
@@ -21,7 +19,10 @@ class ExceptionCollection extends \Exception implements GuzzleException, \Iterat
      */
     public function setExceptions(array $exceptions)
     {
-        $this->exceptions = $exceptions;
+        $this->exceptions = array();
+        foreach ($exceptions as $exception) {
+            $this->add($exception);
+        }
 
         return $this;
     }
@@ -35,17 +36,19 @@ class ExceptionCollection extends \Exception implements GuzzleException, \Iterat
      */
     public function add($e)
     {
+        if ($this->message) {
+            $this->message .= "\n";
+        }
+
         if ($e instanceof self) {
-            foreach ($e as $exception) {
-                $this->exceptions[] = $exception;
+            $this->message .= '(' . get_class($e) . ")";
+            foreach (explode("\n", $e->getMessage()) as $message) {
+                $this->message .= "\n    {$message}";
             }
         } elseif ($e instanceof \Exception) {
             $this->exceptions[] = $e;
+            $this->message .= '(' . get_class($e) . ') ' . $e->getMessage();
         }
-
-        $this->message = implode("\n", array_map(function($e) {
-            return $e->getMessage();
-        }, $this->exceptions));
 
         return $this;
     }

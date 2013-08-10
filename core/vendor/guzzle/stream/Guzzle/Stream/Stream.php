@@ -16,40 +16,33 @@ class Stream implements StreamInterface
     const IS_WRITABLE = 'is_writable';
     const SEEKABLE = 'seekable';
 
-    /**
-     * @var resource Stream resource
-     */
+    /** @var resource Stream resource */
     protected $stream;
 
-    /**
-     * @var int Size of the stream contents in bytes
-     */
+    /** @var int Size of the stream contents in bytes */
     protected $size;
 
-    /**
-     * @var array Stream cached data
-     */
+    /** @var array Stream cached data */
     protected $cache = array();
 
-    /**
-     * @var array Hash table of readable and writeable stream types for fast lookups
-     */
+    /** @var array Custom stream data */
+    protected $customData = array();
+
+    /** @var array Hash table of readable and writeable stream types for fast lookups */
     protected static $readWriteHash = array(
         'read' => array(
             'r' => true, 'w+' => true, 'r+' => true, 'x+' => true, 'c+' => true,
             'rb' => true, 'w+b' => true, 'r+b' => true, 'x+b' => true, 'c+b' => true,
-            'rt' => true, 'w+t' => true, 'r+t' => true, 'x+t' => true, 'c+t' => true
+            'rt' => true, 'w+t' => true, 'r+t' => true, 'x+t' => true, 'c+t' => true, 'a+' => true
         ),
         'write' => array(
             'w' => true, 'w+' => true, 'rw' => true, 'r+' => true, 'x+' => true, 'c+' => true,
-            'w+b' => true, 'r+b' => true, 'x+b' => true, 'c+b' => true,
-            'w+t' => true, 'r+t' => true, 'x+t' => true, 'c+t' => true
+            'wb' => true, 'w+b' => true, 'r+b' => true, 'x+b' => true, 'c+b' => true,
+            'w+t' => true, 'r+t' => true, 'x+t' => true, 'c+t' => true, 'a' => true, 'a+' => true
         )
     );
 
     /**
-     * Construct a new Stream
-     *
      * @param resource $stream Stream resource to wrap
      * @param int      $size   Size of the stream in bytes. Only pass if the size cannot be obtained from the stream.
      *
@@ -65,14 +58,9 @@ class Stream implements StreamInterface
      */
     public function __destruct()
     {
-        if (is_resource($this->stream)) {
-            fclose($this->stream);
-        }
+        $this->close();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString()
     {
         if (!$this->isReadable() || (!$this->isSeekable() && $this->isConsumed())) {
@@ -84,6 +72,15 @@ class Stream implements StreamInterface
         $this->seek($originalPos);
 
         return $body;
+    }
+
+    public function close()
+    {
+        if (is_resource($this->stream)) {
+            fclose($this->stream);
+        }
+        $this->cache[self::IS_READABLE] = false;
+        $this->cache[self::IS_WRITABLE] = false;
     }
 
     /**
@@ -103,7 +100,7 @@ class Stream implements StreamInterface
         }
 
         $ctx = hash_init($algo);
-        while ($data = $stream->read(1024)) {
+        while ($data = $stream->read(8192)) {
             hash_update($ctx, $data);
         }
 
@@ -113,9 +110,6 @@ class Stream implements StreamInterface
         return $out;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getMetaData($key = null)
     {
         $meta = stream_get_meta_data($this->stream);
@@ -123,17 +117,11 @@ class Stream implements StreamInterface
         return !$key ? $meta : (array_key_exists($key, $meta) ? $meta[$key] : null);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStream()
     {
         return $this->stream;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setStream($stream, $size = null)
     {
         if (!is_resource($stream)) {
@@ -147,106 +135,91 @@ class Stream implements StreamInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function detachStream()
+    {
+        $this->stream = null;
+
+        return $this;
+    }
+
     public function getWrapper()
     {
         return $this->cache[self::WRAPPER_TYPE];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getWrapperData()
     {
         return $this->getMetaData('wrapper_data') ?: array();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStreamType()
     {
         return $this->cache[self::STREAM_TYPE];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getUri()
     {
         return $this->cache['uri'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSize()
     {
         if ($this->size !== null) {
             return $this->size;
         }
 
-        // If the stream is a file based stream and local, then check the filesize
-        if ($this->isLocal() && $this->getWrapper() == 'plainfile' && $this->getUri() && file_exists($this->getUri())) {
-            return filesize($this->getUri());
-        }
-
-        // Only get the size based on the content if the the stream is readable and seekable
-        if (!$this->cache[self::IS_READABLE] || !$this->cache[self::SEEKABLE]) {
-            return false;
-        } else {
+        // If the stream is a file based stream and local, then use fstat
+        clearstatcache(true, $this->cache['uri']);
+        $stats = fstat($this->stream);
+        if (isset($stats['size'])) {
+            $this->size = $stats['size'];
+            return $this->size;
+        } elseif ($this->cache[self::IS_READABLE] && $this->cache[self::SEEKABLE]) {
+            // Only get the size based on the content if the the stream is readable and seekable
             $pos = $this->ftell();
             $this->size = strlen((string) $this);
             $this->seek($pos);
             return $this->size;
         }
+
+        return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isReadable()
     {
         return $this->cache[self::IS_READABLE];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function isRepeatable()
+    {
+        return $this->cache[self::IS_READABLE] && $this->cache[self::SEEKABLE];
+    }
+
     public function isWritable()
     {
         return $this->cache[self::IS_WRITABLE];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isConsumed()
     {
         return feof($this->stream);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function feof()
+    {
+        return $this->isConsumed();
+    }
+
     public function isLocal()
     {
         return $this->cache[self::IS_LOCAL];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isSeekable()
     {
         return $this->cache[self::SEEKABLE];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setSize($size)
     {
         $this->size = $size;
@@ -254,51 +227,57 @@ class Stream implements StreamInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function seek($offset, $whence = SEEK_SET)
     {
         return $this->cache[self::SEEKABLE] ? fseek($this->stream, $offset, $whence) === 0 : false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read($length)
     {
         return $this->cache[self::IS_READABLE] ? fread($this->stream, $length) : false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function write($string)
     {
         if (!$this->cache[self::IS_WRITABLE]) {
             return 0;
         }
 
-        $bytes = fwrite($this->stream, $string);
-        $this->size += $bytes;
+        // We can't know the size after writing anything
+        $this->size = null;
 
-        return $bytes;
+        return fwrite($this->stream, $string);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function ftell()
     {
         return ftell($this->stream);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rewind()
     {
         return $this->seek(0);
+    }
+
+    public function readLine($maxLength = null)
+    {
+        if (!$this->cache[self::IS_READABLE]) {
+            return false;
+        } else {
+            return $maxLength ? fgets($this->getStream(), $maxLength) : fgets($this->getStream());
+        }
+    }
+
+    public function setCustomData($key, $value)
+    {
+        $this->customData[$key] = $value;
+
+        return $this;
+    }
+
+    public function getCustomData($key)
+    {
+        return isset($this->customData[$key]) ? $this->customData[$key] : null;
     }
 
     /**
@@ -307,8 +286,6 @@ class Stream implements StreamInterface
     protected function rebuildCache()
     {
         $this->cache = stream_get_meta_data($this->stream);
-        $this->cache[self::STREAM_TYPE] = strtolower($this->cache[self::STREAM_TYPE]);
-        $this->cache[self::WRAPPER_TYPE] = strtolower($this->cache[self::WRAPPER_TYPE]);
         $this->cache[self::IS_LOCAL] = stream_is_local($this->stream);
         $this->cache[self::IS_READABLE] = isset(self::$readWriteHash['read'][$this->cache['mode']]);
         $this->cache[self::IS_WRITABLE] = isset(self::$readWriteHash['write'][$this->cache['mode']]);

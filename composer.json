@@ -15,7 +15,7 @@
     "symfony/yaml": "2.3.*",
     "twig/twig": "1.12.*",
     "doctrine/common": "2.4.*@beta",
-    "guzzle/http": "3.1.*",
+    "guzzle/http": "3.7.*",
     "kriswallsmith/assetic": "1.1.*@alpha",
     "symfony-cmf/routing": "1.1.*@alpha",
     "easyrdf/easyrdf": "0.8.*@beta",

@@ -236,11 +236,9 @@ function locale_translation_http_check($uri) {
       ->send();
     $result = array();
 
-    // In case of a permanent redirected response, return the final location.
-    if ($previous = $response->getPreviousResponse()) {
-      if ($previous->getStatusCode() == 301) {
-        $result['location'] = $previous->getLocation();
-      }
+    // Return the effective URL if it differs from the requested.
+    if ($response->getEffectiveUrl() != $uri) {
+      $result['location'] = $response->getEffectiveUrl();
     }
 
     $result['last_modified'] = $response->getLastModified() ? strtotime($response->getLastModified()) : 0;
