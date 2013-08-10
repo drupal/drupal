@@ -169,7 +169,23 @@ class CssOptimizerUnitTest extends UnitTestCase {
           'browsers' => array('IE' => TRUE, '!IE' => TRUE),
         ),
         '#home body { position: fixed; }',
-      )
+      ),
+      // File in subfolder. Tests:
+      // - CSS import path is properly interpreted. (https://drupal.org/node/1198904)
+      5 => array(
+        array(
+          'group' => -100,
+          'every_page' => TRUE,
+          'type' => 'file',
+          'weight' => 0.013,
+          'media' => 'all',
+          'preprocess' => TRUE,
+          'data' => $path . 'css_subfolder/css_input_with_import.css',
+          'browsers' => array('IE' => TRUE, '!IE' => TRUE),
+          'basename' => 'css_input_with_import.css',
+        ),
+        str_replace('url(../images/icon.png)', 'url(' . file_create_url($path . 'images/icon.png') . ')', file_get_contents($path . 'css_subfolder/css_input_with_import.css.optimized.css')),
+      ),
     );
   }
 
