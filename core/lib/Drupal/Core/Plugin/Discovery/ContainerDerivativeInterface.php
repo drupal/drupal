@@ -7,12 +7,13 @@
 
 namespace Drupal\Core\Plugin\Discovery;
 
+use Drupal\Component\Plugin\Derivative\DerivativeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Derivative fetcher interface to pass the container to static create method.
  */
-interface ContainerDerivativeInterface {
+interface ContainerDerivativeInterface extends DerivativeInterface {
 
   /**
    * Creates an instance of the derivative fetcher.
