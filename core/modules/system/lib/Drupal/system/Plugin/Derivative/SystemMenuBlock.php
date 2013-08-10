@@ -25,7 +25,6 @@ class SystemMenuBlock extends DerivativeBase {
       // menu would otherwise clash with the 'main' page content block.
       $menu_key = 'menu-' . $menu;
       $this->derivatives[$menu_key] = $base_plugin_definition;
-      $this->derivatives[$menu_key]['delta'] = $menu_key;
       // It is possible that users changed the menu label. Fall back on the
       // built-in menu label if the entity was not found.
       $entity = entity_load('menu', $menu);
