@@ -10,6 +10,7 @@ namespace Drupal\image_test\Plugin\ImageToolkit;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Image\ImageInterface;
 use Drupal\system\Plugin\ImageToolkitInterface;
 
 /**
@@ -23,7 +24,7 @@ use Drupal\system\Plugin\ImageToolkitInterface;
 class TestToolkit extends PluginBase implements ImageToolkitInterface {
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm() {
     $this->logCall('settings', array());
@@ -31,30 +32,45 @@ class TestToolkit extends PluginBase implements ImageToolkitInterface {
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::settingsFormSubmit().
+   * {@inheritdoc}
    */
   public function settingsFormSubmit($form, &$form_state) {}
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::getInfo().
+   * {@inheritdoc}
    */
-  public function getInfo($image) {
+  public function getInfo(ImageInterface $image) {
     $this->logCall('get_info', array($image));
-    return array();
+
+    $details = FALSE;
+    $data = getimagesize($image->getSource());
+
+    if (isset($data) && is_array($data)) {
+      $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
+      $extension = isset($extensions[$data[2]]) ?  $extensions[$data[2]] : '';
+      $details = array(
+        'width'     => $data[0],
+        'height'    => $data[1],
+        'extension' => $extension,
+        'mime_type' => $data['mime'],
+      );
+    }
+
+    return $details;
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::load().
+   * {@inheritdoc}
    */
-  public function load($image) {
+  public function load(ImageInterface $image) {
     $this->logCall('load', array($image));
     return $image;
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::save().
+   * {@inheritdoc}
    */
-  public function save($image, $destination) {
+  public function save(ImageInterface $image, $destination) {
     $this->logCall('save', array($image, $destination));
     // Return false so that image_save() doesn't try to chmod the destination
     // file that we didn't bother to create.
@@ -62,33 +78,33 @@ class TestToolkit extends PluginBase implements ImageToolkitInterface {
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::crop().
+   * {@inheritdoc}
    */
-  public function crop($image, $x, $y, $width, $height) {
+  public function crop(ImageInterface $image, $x, $y, $width, $height) {
     $this->logCall('crop', array($image, $x, $y, $width, $height));
     return TRUE;
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::resize().
+   * {@inheritdoc}
    */
-  public function resize($image, $width, $height) {
+  public function resize(ImageInterface $image, $width, $height) {
     $this->logCall('resize', array($image, $width, $height));
     return TRUE;
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::rotate().
+   * {@inheritdoc}
    */
-  public function rotate($image, $degrees, $background = NULL) {
+  public function rotate(ImageInterface $image, $degrees, $background = NULL) {
     $this->logCall('rotate', array($image, $degrees, $background));
     return TRUE;
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::desaturate().
+   * {@inheritdoc}
    */
-  public function desaturate($image) {
+  public function desaturate(ImageInterface $image) {
     $this->logCall('desaturate', array($image));
     return TRUE;
   }
@@ -112,7 +128,7 @@ class TestToolkit extends PluginBase implements ImageToolkitInterface {
   }
 
   /**
-   * Implements Drupal\system\Plugin\ImageToolkitInterface::isAvailable().
+   * {@inheritdoc}
    */
   public static function isAvailable() {
     return TRUE;

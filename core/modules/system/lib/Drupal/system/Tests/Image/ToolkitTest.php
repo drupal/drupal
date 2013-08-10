@@ -10,7 +10,7 @@ namespace Drupal\system\Tests\Image;
 use Drupal\system\Plugin\ImageToolkitManager;
 
 /**
- * Test that the functions in image.inc correctly pass data to the toolkit.
+ * Tests that the methods in Image correctly pass data to the toolkit.
  */
 class ToolkitTest extends ToolkitTestBase {
   public static function getInfo() {
@@ -34,12 +34,12 @@ class ToolkitTest extends ToolkitTestBase {
   }
 
   /**
-   * Test the image_load() function.
+   * Tests Image's methods.
    */
   function testLoad() {
-    $image = image_load($this->file, $this->toolkit);
+    $image = $this->getImage();
     $this->assertTrue(is_object($image), 'Returned an object.');
-    $this->assertEqual($this->toolkit, $image->toolkit, 'Image had toolkit set.');
+    $this->assertEqual($this->toolkit->getPluginId(), $image->getToolkitId(), 'Image had toolkit set.');
     $this->assertToolkitOperationsCalled(array('load', 'get_info'));
   }
 
@@ -47,7 +47,7 @@ class ToolkitTest extends ToolkitTestBase {
    * Test the image_save() function.
    */
   function testSave() {
-    $this->assertFalse(image_save($this->image), 'Function returned the expected value.');
+    $this->assertFalse($this->image->save(), 'Function returned the expected value.');
     $this->assertToolkitOperationsCalled(array('save'));
   }
 
@@ -55,7 +55,7 @@ class ToolkitTest extends ToolkitTestBase {
    * Test the image_resize() function.
    */
   function testResize() {
-    $this->assertTrue(image_resize($this->image, 1, 2), 'Function returned the expected value.');
+    $this->assertTrue($this->image->resize(1, 2), 'Function returned the expected value.');
     $this->assertToolkitOperationsCalled(array('resize'));
 
     // Check the parameters.
@@ -69,7 +69,7 @@ class ToolkitTest extends ToolkitTestBase {
    */
   function testScale() {
 // TODO: need to test upscaling
-    $this->assertTrue(image_scale($this->image, 10, 10), 'Function returned the expected value.');
+    $this->assertTrue($this->image->scale(10, 10), 'Function returned the expected value.');
     $this->assertToolkitOperationsCalled(array('resize'));
 
     // Check the parameters.
@@ -82,7 +82,7 @@ class ToolkitTest extends ToolkitTestBase {
    * Test the image_scale_and_crop() function.
    */
   function testScaleAndCrop() {
-    $this->assertTrue(image_scale_and_crop($this->image, 5, 10), 'Function returned the expected value.');
+    $this->assertTrue($this->image->scaleAndCrop(5, 10), 'Function returned the expected value.');
     $this->assertToolkitOperationsCalled(array('resize', 'crop'));
 
     // Check the parameters.
@@ -98,7 +98,7 @@ class ToolkitTest extends ToolkitTestBase {
    * Test the image_rotate() function.
    */
   function testRotate() {
-    $this->assertTrue(image_rotate($this->image, 90, 1), 'Function returned the expected value.');
+    $this->assertTrue($this->image->rotate(90, 1), 'Function returned the expected value.');
     $this->assertToolkitOperationsCalled(array('rotate'));
 
     // Check the parameters.
@@ -111,7 +111,7 @@ class ToolkitTest extends ToolkitTestBase {
    * Test the image_crop() function.
    */
   function testCrop() {
-    $this->assertTrue(image_crop($this->image, 1, 2, 3, 4), 'Function returned the expected value.');
+    $this->assertTrue($this->image->crop(1, 2, 3, 4), 'Function returned the expected value.');
     $this->assertToolkitOperationsCalled(array('crop'));
 
     // Check the parameters.
@@ -126,7 +126,7 @@ class ToolkitTest extends ToolkitTestBase {
    * Test the image_desaturate() function.
    */
   function testDesaturate() {
-    $this->assertTrue(image_desaturate($this->image), 'Function returned the expected value.');
+    $this->assertTrue($this->image->desaturate(), 'Function returned the expected value.');
     $this->assertToolkitOperationsCalled(array('desaturate'));
 
     // Check the parameters.

@@ -8,6 +8,7 @@
 namespace Drupal\image_module_test\Plugin\ImageEffect;
 
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Image\ImageInterface;
 use Drupal\image\Annotation\ImageEffect;
 use Drupal\image\ImageEffectBase;
 
@@ -24,7 +25,7 @@ class NullTestImageEffect extends ImageEffectBase {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect($image) {
+  public function applyEffect(ImageInterface $image) {
     return TRUE;
   }
 

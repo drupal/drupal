@@ -9,7 +9,6 @@ use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Drupal\file\FileUsage\DatabaseFileUsageBackend;
 use Drupal\file\FileUsage\FileUsageInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
@@ -406,7 +405,7 @@ function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
 }
 
 /**
- * Checks that the file is recognized by image_get_info() as an image.
+ * Checks that the file is recognized by Image::getInfo() as an image.
  *
  * @param Drupal\file\File $file
  *   A file entity.
@@ -419,8 +418,8 @@ function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
 function file_validate_is_image(File $file) {
   $errors = array();
 
-  $info = image_get_info($file->getFileUri());
-  if (!$info || empty($info['extension'])) {
+  $image = Drupal::service('image.factory')->get($file->getFileUri());
+  if (!$image->getExtension()) {
     $errors[] = t('Only JPEG, PNG and GIF images are allowed.');
   }
 
@@ -454,16 +453,19 @@ function file_validate_image_resolution(File $file, $maximum_dimensions = 0, $mi
   $errors = array();
 
   // Check first that the file is an image.
-  if ($info = image_get_info($file->getFileUri())) {
+  $image_factory = Drupal::service('image.factory');
+  $image = $image_factory->get($file->getFileUri());
+  if ($image->getExtension()) {
     if ($maximum_dimensions) {
       // Check that it is smaller than the given dimensions.
       list($width, $height) = explode('x', $maximum_dimensions);
-      if ($info['width'] > $width || $info['height'] > $height) {
+      if ($image->getWidth() > $width || $image->getHeight() > $height) {
         // Try to resize the image to fit the dimensions.
-        if ($image = image_load($file->getFileUri())) {
-          image_scale($image, $width, $height);
-          image_save($image);
-          $file->filesize = $image->info['file_size'];
+        $image = $image_factory->get($file->getFileUri());
+        if ($image->getResource()) {
+          $image->scale($width, $height);
+          $image->save();
+          $file->filesize = $image->getFileSize();
           drupal_set_message(t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', array('%dimensions' => $maximum_dimensions)));
         }
         else {
@@ -475,7 +477,7 @@ function file_validate_image_resolution(File $file, $maximum_dimensions = 0, $mi
     if ($minimum_dimensions) {
       // Check that it is larger than the given dimensions.
       list($width, $height) = explode('x', $minimum_dimensions);
-      if ($info['width'] < $width || $info['height'] < $height) {
+      if ($image->getWidth() < $width || $image->getHeight() < $height) {
         $errors[] = t('The image is too small; the minimum dimensions are %dimensions pixels.', array('%dimensions' => $minimum_dimensions));
       }
     }

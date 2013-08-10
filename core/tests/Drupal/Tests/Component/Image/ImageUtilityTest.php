@@ -2,24 +2,25 @@
 
 /**
  * @file
- * Contains \Drupal\Tests\Component\Image\ImageTest.
+ * Contains \Drupal\Tests\Component\Image\ImageUtilityTest.
  */
 
 namespace Drupal\Tests\Component\Image;
 
-use Drupal\Component\Image\Image;
+use Drupal\Component\Utility\Image;
 use Drupal\Tests\UnitTestCase;
 
 /**
- * Tests the Image component.
+ * Tests the Image utility component.
  *
- * @see \Drupal\Component\Image\Image
+ * @see \Drupal\Component\Utility\Image
  */
-class ImageTest extends UnitTestCase {
+class ImageUtilityTest extends UnitTestCase {
+
   public static function getInfo() {
     return array(
       'name' => 'Tests for the Image component',
-      'description' => 'Tests all control flow branches in Drupal\Component\Image\Image.',
+      'description' => 'Tests all control flow branches in \Drupal\Component\Utility\Image.',
       'group' => 'Image',
     );
   }
@@ -58,7 +59,7 @@ class ImageTest extends UnitTestCase {
    */
   public function providerTestScaleDimensions() {
     // Define input / output datasets to test different branch conditions.
-    $test = array();
+    $tests = array();
 
     // Test branch conditions:
     // - No height.
@@ -168,4 +169,5 @@ class ImageTest extends UnitTestCase {
 
     return $tests;
   }
+
 }

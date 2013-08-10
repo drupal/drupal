@@ -7,8 +7,8 @@
 
 namespace Drupal\system\Tests\Image;
 
+use Drupal\Core\Image\ImageInterface;
 use Drupal\simpletest\DrupalUnitTestBase;
-use Drupal\system\Plugin\ImageToolkitManager;
 
 /**
  * Test the core GD image manipulation functions.
@@ -79,15 +79,15 @@ class ToolkitGdTest extends DrupalUnitTestBase {
   /**
    * Function for finding a pixel's RGBa values.
    */
-  function getPixelColor($image, $x, $y) {
-    $color_index = imagecolorat($image->resource, $x, $y);
+  function getPixelColor(ImageInterface $image, $x, $y) {
+    $color_index = imagecolorat($image->getResource(), $x, $y);
 
-    $transparent_index = imagecolortransparent($image->resource);
+    $transparent_index = imagecolortransparent($image->getResource());
     if ($color_index == $transparent_index) {
       return array(0, 0, 0, 127);
     }
 
-    return array_values(imagecolorsforindex($image->resource, $color_index));
+    return array_values(imagecolorsforindex($image->getResource(), $color_index));
   }
 
   /**
@@ -152,7 +152,7 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         'corners' => array_fill(0, 4, $this->white),
       ),
       'scale_and_crop' => array(
-        'function' => 'scale_and_crop',
+        'function' => 'scaleAndCrop',
         'arguments' => array(10, 8),
         'width' => 10,
         'height' => 8,
@@ -215,21 +215,22 @@ class ToolkitGdTest extends DrupalUnitTestBase {
       );
     }
 
-    $manager = new ImageToolkitManager($this->container->get('container.namespaces'), $this->container->get('cache.cache'), $this->container->get('language_manager'));
+    $toolkit = $this->container->get('image.toolkit.manager')->createInstance('gd');
+    $image_factory = $this->container->get('image.factory')->setToolkit($toolkit);
     foreach ($files as $file) {
       foreach ($operations as $op => $values) {
         // Load up a fresh image.
-        $image = image_load(drupal_get_path('module', 'simpletest') . '/files/' . $file, $manager->createInstance('gd'));
+        $image = $image_factory->get(drupal_get_path('module', 'simpletest') . '/files/' . $file);
         if (!$image) {
           $this->fail(t('Could not load image %file.', array('%file' => $file)));
           continue 2;
         }
 
         // All images should be converted to truecolor when loaded.
-        $image_truecolor = imageistruecolor($image->resource);
+        $image_truecolor = imageistruecolor($image->getResource());
         $this->assertTrue($image_truecolor, format_string('Image %file after load is a truecolor image.', array('%file' => $file)));
 
-        if ($image->info['extension'] == 'gif') {
+        if ($image->getExtension() == 'gif') {
           if ($op == 'desaturate') {
             // Transparent GIFs and the imagefilter function don't work together.
             $values['corners'][3][3] = 0;
@@ -237,11 +238,7 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         }
 
         // Perform our operation.
-        $function = 'image_' . $values['function'];
-        $arguments = array();
-        $arguments[] = &$image;
-        $arguments = array_merge($arguments, $values['arguments']);
-        call_user_func_array($function, $arguments);
+        call_user_func_array(array($image, $values['function']), $values['arguments']);
 
         // To keep from flooding the test with assert values, make a general
         // value for whether each group of values fail.
@@ -250,24 +247,24 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         $correct_colors = TRUE;
 
         // Check the real dimensions of the image first.
-        if (imagesy($image->resource) != $values['height'] || imagesx($image->resource) != $values['width']) {
+        if (imagesy($image->getResource()) != $values['height'] || imagesx($image->getResource()) != $values['width']) {
           $correct_dimensions_real = FALSE;
         }
 
         // Check that the image object has an accurate record of the dimensions.
-        if ($image->info['width'] != $values['width'] || $image->info['height'] != $values['height']) {
+        if ($image->getWidth() != $values['width'] || $image->getHeight() != $values['height']) {
           $correct_dimensions_object = FALSE;
         }
 
         $directory = $this->public_files_directory .'/imagetest';
         file_prepare_directory($directory, FILE_CREATE_DIRECTORY);
-        image_save($image, $directory . '/' . $op . '.' . $image->info['extension']);
+        $image->save($directory . '/' . $op . '.' . $image->getExtension());
 
         $this->assertTrue($correct_dimensions_real, format_string('Image %file after %action action has proper dimensions.', array('%file' => $file, '%action' => $op)));
         $this->assertTrue($correct_dimensions_object, format_string('Image %file object after %action action is reporting the proper height and width values.', array('%file' => $file, '%action' => $op)));
 
         // JPEG colors will always be messed up due to compression.
-        if ($image->info['extension'] != 'jpg') {
+        if ($image->getExtension() != 'jpg') {
           // Now check each of the corners to ensure color correctness.
           foreach ($values['corners'] as $key => $corner) {
             // Get the location of the corner.

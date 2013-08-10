@@ -35,6 +35,7 @@ class ImageDimensionsTest extends WebTestBase {
    * Test styled image dimensions cumulatively.
    */
   function testImageDimensions() {
+    $image_factory = $this->container->get('image.factory');
     // Create a working copy of the file.
     $files = $this->drupalGetTestFiles('image');
     $file = reset($files);
@@ -53,9 +54,9 @@ class ImageDimensionsTest extends WebTestBase {
       'height' => 20,
     );
     // Verify that the original image matches the hard-coded values.
-    $image_info = image_get_info($original_uri);
-    $this->assertEqual($image_info['width'], $variables['width']);
-    $this->assertEqual($image_info['height'], $variables['height']);
+    $image_file = $image_factory->get($original_uri);
+    $this->assertEqual($image_file->getWidth(), $variables['width']);
+    $this->assertEqual($image_file->getHeight(), $variables['height']);
 
     // Scale an image that is wider than it is high.
     $effect = array(
@@ -75,9 +76,9 @@ class ImageDimensionsTest extends WebTestBase {
     $this->drupalGet($url);
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
-    $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 120);
-    $this->assertEqual($image_info['height'], 60);
+    $image_file = $image_factory->get($generated_uri);
+    $this->assertEqual($image_file->getWidth(), 120);
+    $this->assertEqual($image_file->getHeight(), 60);
 
     // Rotate 90 degrees anticlockwise.
     $effect = array(
@@ -96,9 +97,9 @@ class ImageDimensionsTest extends WebTestBase {
     $this->drupalGet($url);
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
-    $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 60);
-    $this->assertEqual($image_info['height'], 120);
+    $image_file = $image_factory->get($generated_uri);
+    $this->assertEqual($image_file->getWidth(), 60);
+    $this->assertEqual($image_file->getHeight(), 120);
 
     // Scale an image that is higher than it is wide (rotated by previous effect).
     $effect = array(
@@ -118,9 +119,9 @@ class ImageDimensionsTest extends WebTestBase {
     $this->drupalGet($url);
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
-    $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 45);
-    $this->assertEqual($image_info['height'], 90);
+    $image_file = $image_factory->get($generated_uri);
+    $this->assertEqual($image_file->getWidth(), 45);
+    $this->assertEqual($image_file->getHeight(), 90);
 
     // Test upscale disabled.
     $effect = array(
@@ -140,9 +141,9 @@ class ImageDimensionsTest extends WebTestBase {
     $this->drupalGet($url);
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
-    $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 45);
-    $this->assertEqual($image_info['height'], 90);
+    $image_file = $image_factory->get($generated_uri);
+    $this->assertEqual($image_file->getWidth(), 45);
+    $this->assertEqual($image_file->getHeight(), 90);
 
     // Add a desaturate effect.
     $effect = array(
@@ -158,9 +159,9 @@ class ImageDimensionsTest extends WebTestBase {
     $this->drupalGet($url);
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
-    $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 45);
-    $this->assertEqual($image_info['height'], 90);
+    $image_file = $image_factory->get($generated_uri);
+    $this->assertEqual($image_file->getWidth(), 45);
+    $this->assertEqual($image_file->getHeight(), 90);
 
     // Add a random rotate effect.
     $effect = array(
@@ -199,9 +200,9 @@ class ImageDimensionsTest extends WebTestBase {
     $this->drupalGet($url);
     $this->assertResponse(200, 'Image was generated at the URL.');
     $this->assertTrue(file_exists($generated_uri), 'Generated file does exist after we accessed it.');
-    $image_info = image_get_info($generated_uri);
-    $this->assertEqual($image_info['width'], 30);
-    $this->assertEqual($image_info['height'], 30);
+    $image_file = $image_factory->get($generated_uri);
+    $this->assertEqual($image_file->getWidth(), 30);
+    $this->assertEqual($image_file->getHeight(), 30);
 
     // Rotate to a non-multiple of 90 degrees.
     $effect = array(

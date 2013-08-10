@@ -281,7 +281,8 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
       return FALSE;
     }
 
-    if (!$image = image_load($original_uri)) {
+    $image = \Drupal::service('image.factory')->get($original_uri);
+    if (!$image->getResource()) {
       return FALSE;
     }
 
@@ -289,7 +290,7 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
       $effect->applyEffect($image);
     }
 
-    if (!image_save($image, $derivative_uri)) {
+    if (!$image->save($derivative_uri)) {
       if (file_exists($derivative_uri)) {
         watchdog('image', 'Cached image file %destination already exists. There may be an issue with your rewrite configuration.', array('%destination' => $derivative_uri), WATCHDOG_ERROR);
       }

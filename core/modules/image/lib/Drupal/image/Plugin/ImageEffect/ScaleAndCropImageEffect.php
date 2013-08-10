@@ -8,6 +8,7 @@
 namespace Drupal\image\Plugin\ImageEffect;
 
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Image\ImageInterface;
 use Drupal\image\Annotation\ImageEffect;
 
 /**
@@ -24,9 +25,9 @@ class ScaleAndCropImageEffect extends ResizeImageEffect {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect($image) {
-    if (!image_scale_and_crop($image, $this->configuration['width'], $this->configuration['height'])) {
-      watchdog('image', 'Image scale and crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit->getPluginId(), '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
+  public function applyEffect(ImageInterface $image) {
+    if (!$image->scaleAndCrop($this->configuration['width'], $this->configuration['height'])) {
+      watchdog('image', 'Image scale and crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()), WATCHDOG_ERROR);
       return FALSE;
     }
     return TRUE;

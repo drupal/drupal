@@ -36,12 +36,13 @@ class ImageFieldValidateTest extends ImageFieldTestBase {
     // big, so cycle through test image files until we have what we need.
     $image_that_is_too_big = FALSE;
     $image_that_is_too_small = FALSE;
+    $image_factory = $this->container->get('image.factory');
     foreach ($this->drupalGetTestFiles('image') as $image) {
-      $info = image_get_info($image->uri);
-      if ($info['width'] > $max_resolution) {
+      $image_file = $image_factory->get($image->uri);
+      if ($image_file->getWidth() > $max_resolution) {
         $image_that_is_too_big = $image;
       }
-      if ($info['width'] < $min_resolution) {
+      if ($image_file->getWidth() < $min_resolution) {
         $image_that_is_too_small = $image;
       }
       if ($image_that_is_too_small && $image_that_is_too_big) {

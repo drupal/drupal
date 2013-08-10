@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Component\Image\Image.
+ * Contains \Drupal\Component\Utility\Image.
  */
 
-namespace Drupal\Component\Image;
+namespace Drupal\Component\Utility;
 
 /**
  * Provides helpers to operate on images.

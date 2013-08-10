@@ -2150,8 +2150,8 @@ function hook_file_download($uri) {
       return -1;
     }
     else {
-      $info = image_get_info($uri);
-      return array('Content-Type' => $info['mime_type']);
+      $image = Drupal::service('image.factory')->get($uri);
+      return array('Content-Type' => $image->getMimeType());
     }
   }
 }

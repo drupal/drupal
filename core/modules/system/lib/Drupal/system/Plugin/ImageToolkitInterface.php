@@ -7,13 +7,43 @@
 
 namespace Drupal\system\Plugin;
 
+use Drupal\Component\Plugin\PluginInspectionInterface;
+use Drupal\Core\Image\ImageInterface;
+
+/**
+ * @defgroup image Image toolkits
+ * @{
+ * Functions for image file manipulations.
+ *
+ * Drupal's image toolkits provide an abstraction layer for common image file
+ * manipulations like scaling, cropping, and rotating. The abstraction frees
+ * module authors from the need to support multiple image libraries, and it
+ * allows site administrators to choose the library that's best for them.
+ *
+ * PHP includes the GD library by default so a GD toolkit is installed with
+ * Drupal. Other toolkits like ImageMagick are available from contrib modules.
+ * GD works well for small images, but using it with larger files may cause PHP
+ * to run out of memory. In contrast the ImageMagick library does not suffer
+ * from this problem, but it requires the ISP to have installed additional
+ * software.
+ *
+ * Image toolkits are discovered using the Plugin system using
+ * \Drupal\system\Plugin\ImageToolkitManager. The toolkit must then be enabled
+ * using the admin/config/media/image-toolkit form.
+ *
+ * Only one toolkit may be selected at a time. If a module author wishes to call
+ * a specific toolkit they can check that it is installed by calling
+ * \Drupal\system\Plugin\ImageToolkitManager::getAvailableToolkits(), and then
+ * calling its functions directly.
+ */
+
 /**
  * Defines an interface for image toolkits.
  *
  * An image toolkit provides common image file manipulations like scaling,
  * cropping, and rotating.
  */
-interface ImageToolkitInterface {
+interface ImageToolkitInterface extends PluginInspectionInterface {
 
   /**
    * Retrieves toolkit's settings form.
@@ -32,7 +62,7 @@ interface ImageToolkitInterface {
   /**
    * Scales an image to the specified size.
    *
-   * @param object $image
+   * @param \Drupal\Core\Image\ImageInterface $image
    *   An image object. The $image->resource, $image->info['width'], and
    *   $image->info['height'] values will be modified by this call.
    * @param int $width
@@ -42,15 +72,13 @@ interface ImageToolkitInterface {
    *
    * @return bool
    *   TRUE or FALSE, based on success.
-   *
-   * @see image_resize()
    */
-  function resize($image, $width, $height);
+  function resize(ImageInterface $image, $width, $height);
 
   /**
    * Rotates an image the given number of degrees.
    *
-   * @param object $image
+   * @param \Drupal\Core\Image\ImageInterface $image
    *   An image object. The $image->resource, $image->info['width'], and
    *   $image->info['height'] values will be modified by this call.
    * @param int $degrees
@@ -64,15 +92,13 @@ interface ImageToolkitInterface {
    *
    * @return bool
    *   TRUE or FALSE, based on success.
-   *
-   * @see image_rotate()
    */
-  function rotate($image, $degrees, $background = NULL);
+  function rotate(ImageInterface $image, $degrees, $background = NULL);
 
   /**
    * Crops an image.
    *
-   * @param object $image
+   * @param \Drupal\Core\Image\ImageInterface $image
    *   An image object. The $image->resource, $image->info['width'], and
    *   $image->info['height'] values will be modified by this call.
    * @param int $x
@@ -89,56 +115,50 @@ interface ImageToolkitInterface {
    *
    * @see image_crop()
    */
-  function crop($image, $x, $y, $width, $height);
+  function crop(ImageInterface $image, $x, $y, $width, $height);
 
   /**
    * Converts an image resource to grayscale.
    *
    * Note that transparent GIFs loose transparency when desaturated.
    *
-   * @param object $image
+   * @param \Drupal\Core\Image\ImageInterface $image
    *   An image object. The $image->resource value will be modified by this
    *   call.
    *
    * @return bool
    *   TRUE or FALSE, based on success.
-   *
-   * @see image_desaturate()
    */
-  function desaturate($image);
+  function desaturate(ImageInterface $image);
 
   /**
    * Creates an image resource from a file.
    *
-   * @param object $image
+   * @param \Drupal\Core\Image\ImageInterface $image
    *   An image object. The $image->resource value will populated by this call.
    *
    * @return bool
    *   TRUE or FALSE, based on success.
-   *
-   * @see image_load()
    */
-  function load($image);
+  function load(ImageInterface $image);
 
   /**
    * Writes an image resource to a destination file.
    *
-   * @param object $image
+   * @param \Drupal\Core\Image\ImageInterface $image
    *   An image object.
    * @param string $destination
    *   A string file URI or path where the image should be saved.
    *
    * @return bool
    *   TRUE or FALSE, based on success.
-   *
-   * @see image_save()
    */
-  function save($image, $destination);
+  function save(ImageInterface $image, $destination);
 
   /**
    * Gets details about an image.
    *
-   * @param object $image
+   * @param \Drupal\Core\Image\ImageInterface $image
    *   An image object.
    *
    * @return array
@@ -149,9 +169,9 @@ interface ImageToolkitInterface {
    *   - "extension": Commonly used file extension for the image.
    *   - "mime_type": MIME type ('image/jpeg', 'image/gif', 'image/png').
    *
-   * @see image_get_info()
+   * @see \Drupal\Core\Image\ImageInterface::processInfo()
    */
-  function getInfo($image);
+  function getInfo(ImageInterface $image);
 
   /**
    * Verifies Image Toolkit is set up correctly.

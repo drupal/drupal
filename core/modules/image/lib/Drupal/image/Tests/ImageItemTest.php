@@ -30,6 +30,11 @@ class ImageItemTest extends FieldUnitTestBase {
    */
   protected $image;
 
+  /**
+   * @var \Drupal\Core\Image\ImageFactory
+   */
+  protected $imageFactory;
+
   public static function getInfo() {
     return array(
       'name' => 'Image field item API',
@@ -58,6 +63,7 @@ class ImageItemTest extends FieldUnitTestBase {
       'uri' => 'public://example.jpg',
     ));
     $this->image->save();
+    $this->imageFactory = $this->container->get('image.factory');
   }
 
   /**
@@ -78,9 +84,9 @@ class ImageItemTest extends FieldUnitTestBase {
     $this->assertEqual($entity->image_test->target_id, $this->image->id());
     $this->assertEqual($entity->image_test->alt, $alt);
     $this->assertEqual($entity->image_test->title, $title);
-    $info = image_get_info('public://example.jpg');
-    $this->assertEqual($entity->image_test->width, $info['width']);
-    $this->assertEqual($entity->image_test->height, $info['height']);
+    $image = $this->imageFactory->get('public://example.jpg');
+    $this->assertEqual($entity->image_test->width, $image->getWidth());
+    $this->assertEqual($entity->image_test->height, $image->getHeight());
     $this->assertEqual($entity->image_test->entity->id(), $this->image->id());
     $this->assertEqual($entity->image_test->entity->uuid(), $this->image->uuid());
 
@@ -98,9 +104,9 @@ class ImageItemTest extends FieldUnitTestBase {
     $entity->save();
     $this->assertEqual($entity->image_test->entity->id(), $image2->id());
     $this->assertEqual($entity->image_test->entity->getFileUri(), $image2->getFileUri());
-    $info = image_get_info('public://example-2.jpg');
-    $this->assertEqual($entity->image_test->width, $info['width']);
-    $this->assertEqual($entity->image_test->height, $info['height']);
+    $image = $this->imageFactory->get('public://example-2.jpg');
+    $this->assertEqual($entity->image_test->width, $image->getWidth());
+    $this->assertEqual($entity->image_test->height, $image->getHeight());
     $this->assertEqual($entity->image_test->alt, $new_alt);
 
     // Check that the image item can be set to the referenced file directly.

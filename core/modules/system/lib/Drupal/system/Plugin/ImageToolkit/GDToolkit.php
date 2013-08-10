@@ -10,6 +10,7 @@ namespace Drupal\system\Plugin\ImageToolkit;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Image\ImageInterface;
 use Drupal\system\Plugin\ImageToolkitInterface;
 
 /**
@@ -23,7 +24,7 @@ use Drupal\system\Plugin\ImageToolkitInterface;
 class GDToolkit extends PluginBase implements ImageToolkitInterface {
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::settingsForm().
+   * {@inheritdoc}
    */
   public function settingsForm() {
     $form['image_jpeg_quality'] = array(
@@ -39,7 +40,7 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::settingsFormSubmit().
+   * {@inheritdoc}
    */
   public function settingsFormSubmit($form, &$form_state) {
     config('system.image.gd')
@@ -48,35 +49,33 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::resize().
+   * {@inheritdoc}
    */
-  public function resize($image, $width, $height) {
+  public function resize(ImageInterface $image, $width, $height) {
     $res = $this->createTmp($image, $width, $height);
 
-    if (!imagecopyresampled($res, $image->resource, 0, 0, 0, 0, $width, $height, $image->info['width'], $image->info['height'])) {
+    if (!imagecopyresampled($res, $image->getResource(), 0, 0, 0, 0, $width, $height, $image->getWidth(), $image->getHeight())) {
       return FALSE;
     }
 
-    imagedestroy($image->resource);
+    imagedestroy($image->getResource());
     // Update image object.
-    $image->resource = $res;
-    $image->info['width'] = $width;
-    $image->info['height'] = $height;
+    $image
+      ->setResource($res)
+      ->setWidth($width)
+      ->setHeight($height);
     return TRUE;
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::rotate().
+   * {@inheritdoc}
    */
-  public function rotate($image, $degrees, $background = NULL) {
+  public function rotate(ImageInterface $image, $degrees, $background = NULL) {
     // PHP installations using non-bundled GD do not have imagerotate.
     if (!function_exists('imagerotate')) {
-      watchdog('image', 'The image %file could not be rotated because the imagerotate() function is not available in this PHP installation.', array('%file' => $image->source));
+      watchdog('image', 'The image %file could not be rotated because the imagerotate() function is not available in this PHP installation.', array('%file' => $image->getSource()));
       return FALSE;
     }
-
-    $width = $image->info['width'];
-    $height = $image->info['height'];
 
     // Convert the hexadecimal background value to a color index value.
     if (isset($background)) {
@@ -84,97 +83,100 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
       for ($i = 16; $i >= 0; $i -= 8) {
         $rgb[] = (($background >> $i) & 0xFF);
       }
-      $background = imagecolorallocatealpha($image->resource, $rgb[0], $rgb[1], $rgb[2], 0);
+      $background = imagecolorallocatealpha($image->getResource(), $rgb[0], $rgb[1], $rgb[2], 0);
     }
     // Set the background color as transparent if $background is NULL.
     else {
       // Get the current transparent color.
-      $background = imagecolortransparent($image->resource);
+      $background = imagecolortransparent($image->getResource());
 
       // If no transparent colors, use white.
       if ($background == 0) {
-        $background = imagecolorallocatealpha($image->resource, 255, 255, 255, 0);
+        $background = imagecolorallocatealpha($image->getResource(), 255, 255, 255, 0);
       }
     }
 
     // Images are assigned a new color palette when rotating, removing any
     // transparency flags. For GIF images, keep a record of the transparent color.
-    if ($image->info['extension'] == 'gif') {
-      $transparent_index = imagecolortransparent($image->resource);
+    if ($image->getExtension() == 'gif') {
+      $transparent_index = imagecolortransparent($image->getResource());
       if ($transparent_index != 0) {
-        $transparent_gif_color = imagecolorsforindex($image->resource, $transparent_index);
+        $transparent_gif_color = imagecolorsforindex($image->getResource(), $transparent_index);
       }
     }
 
-    $image->resource = imagerotate($image->resource, 360 - $degrees, $background);
+    $image->setResource(imagerotate($image->getResource(), 360 - $degrees, $background));
 
     // GIFs need to reassign the transparent color after performing the rotate.
     if (isset($transparent_gif_color)) {
-      $background = imagecolorexactalpha($image->resource, $transparent_gif_color['red'], $transparent_gif_color['green'], $transparent_gif_color['blue'], $transparent_gif_color['alpha']);
-      imagecolortransparent($image->resource, $background);
+      $background = imagecolorexactalpha($image->getResource(), $transparent_gif_color['red'], $transparent_gif_color['green'], $transparent_gif_color['blue'], $transparent_gif_color['alpha']);
+      imagecolortransparent($image->getResource(), $background);
     }
 
-    $image->info['width'] = imagesx($image->resource);
-    $image->info['height'] = imagesy($image->resource);
+    $image
+      ->setWidth(imagesx($image->getResource()))
+      ->setHeight(imagesy($image->getResource()));
     return TRUE;
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::crop().
+   * {@inheritdoc}
    */
-  public function crop($image, $x, $y, $width, $height) {
+  public function crop(ImageInterface $image, $x, $y, $width, $height) {
     $res = $this->createTmp($image, $width, $height);
 
-    if (!imagecopyresampled($res, $image->resource, 0, 0, $x, $y, $width, $height, $width, $height)) {
+    if (!imagecopyresampled($res, $image->getResource(), 0, 0, $x, $y, $width, $height, $width, $height)) {
       return FALSE;
     }
 
     // Destroy the original image and return the modified image.
-    imagedestroy($image->resource);
-    $image->resource = $res;
-    $image->info['width'] = $width;
-    $image->info['height'] = $height;
+    imagedestroy($image->getResource());
+    $image
+      ->setResource($res)
+      ->setWidth($width)
+      ->setHeight($height);
     return TRUE;
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::desaturate().
+   * {@inheritdoc}
    */
-  public function desaturate($image) {
+  public function desaturate(ImageInterface $image) {
     // PHP installations using non-bundled GD do not have imagefilter.
     if (!function_exists('imagefilter')) {
-      watchdog('image', 'The image %file could not be desaturated because the imagefilter() function is not available in this PHP installation.', array('%file' => $image->source));
+      watchdog('image', 'The image %file could not be desaturated because the imagefilter() function is not available in this PHP installation.', array('%file' => $image->getSource()));
       return FALSE;
     }
 
-    return imagefilter($image->resource, IMG_FILTER_GRAYSCALE);
+    return imagefilter($image->getResource(), IMG_FILTER_GRAYSCALE);
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::load().
+   * {@inheritdoc}
    */
-  public function load($image) {
-    $extension = str_replace('jpg', 'jpeg', $image->info['extension']);
+  public function load(ImageInterface $image) {
+    $extension = str_replace('jpg', 'jpeg', $image->getExtension());
     $function = 'imagecreatefrom' . $extension;
-    if (function_exists($function) && $image->resource = $function($image->source)) {
-      if (!imageistruecolor($image->resource)) {
+    if (function_exists($function) && $resource = $function($image->getSource())) {
+      $image->setResource($resource);
+      if (!imageistruecolor($resource)) {
         // Convert indexed images to true color, so that filters work
         // correctly and don't result in unnecessary dither.
-        $new_image = $this->createTmp($image, $image->info['width'], $image->info['height']);
-        imagecopy($new_image, $image->resource, 0, 0, 0, 0, $image->info['width'], $image->info['height']);
-        imagedestroy($image->resource);
-        $image->resource = $new_image;
+        $new_image = $this->createTmp($image, $image->getWidth(), $image->getHeight());
+        imagecopy($new_image, $resource, 0, 0, 0, 0, $image->getWidth(), $image->getHeight());
+        imagedestroy($resource);
+        $image->setResource($new_image);
       }
-      return (bool) $image->resource;
+      return (bool) $image->getResource();
     }
 
     return FALSE;
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::save().
+   * {@inheritdoc}
    */
-  public function save($image, $destination) {
+  public function save(ImageInterface $image, $destination) {
     $scheme = file_uri_scheme($destination);
     // Work around lack of stream wrapper support in imagejpeg() and imagepng().
     if ($scheme && file_stream_wrapper_valid_scheme($scheme)) {
@@ -188,21 +190,21 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
       $destination = drupal_realpath($destination);
     }
 
-    $extension = str_replace('jpg', 'jpeg', $image->info['extension']);
+    $extension = str_replace('jpg', 'jpeg', $image->getExtension());
     $function = 'image' . $extension;
     if (!function_exists($function)) {
       return FALSE;
     }
     if ($extension == 'jpeg') {
-      $success = $function($image->resource, $destination, config('system.image.gd')->get('jpeg_quality'));
+      $success = $function($image->getResource(), $destination, config('system.image.gd')->get('jpeg_quality'));
     }
     else {
       // Always save PNG images with full transparency.
       if ($extension == 'png') {
-        imagealphablending($image->resource, FALSE);
-        imagesavealpha($image->resource, TRUE);
+        imagealphablending($image->getResource(), FALSE);
+        imagesavealpha($image->getResource(), TRUE);
       }
-      $success = $function($image->resource, $destination);
+      $success = $function($image->getResource(), $destination);
     }
     // Move temporary local file to remote destination.
     if (isset($permanent_destination) && $success) {
@@ -212,11 +214,11 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::getInfo().
+   * {@inheritdoc}
    */
-  public function getInfo($image) {
+  public function getInfo(ImageInterface $image) {
     $details = FALSE;
-    $data = getimagesize($image->source);
+    $data = getimagesize($image->getSource());
 
     if (isset($data) && is_array($data)) {
       $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
@@ -235,7 +237,7 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
   /**
    * Creates a truecolor image preserving transparency from a provided image.
    *
-   * @param object $image
+   * @param \Drupal\Core\Image\ImageInterface $image
    *   An image object.
    * @param int $width
    *   The new width of the new image, in pixels.
@@ -245,16 +247,16 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
    * @return resource
    *   A GD image handle.
    */
-  public function createTmp($image, $width, $height) {
+  public function createTmp(ImageInterface $image, $width, $height) {
     $res = imagecreatetruecolor($width, $height);
 
-    if ($image->info['extension'] == 'gif') {
+    if ($image->getExtension() == 'gif') {
       // Grab transparent color index from image resource.
-      $transparent = imagecolortransparent($image->resource);
+      $transparent = imagecolortransparent($image->getResource());
 
       if ($transparent >= 0) {
         // The original must have a transparent color, allocate to the new image.
-        $transparent_color = imagecolorsforindex($image->resource, $transparent);
+        $transparent_color = imagecolorsforindex($image->getResource(), $transparent);
         $transparent = imagecolorallocate($res, $transparent_color['red'], $transparent_color['green'], $transparent_color['blue']);
 
         // Flood with our new transparent color.
@@ -262,7 +264,7 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
         imagecolortransparent($res, $transparent);
       }
     }
-    elseif ($image->info['extension'] == 'png') {
+    elseif ($image->getExtension() == 'png') {
       imagealphablending($res, FALSE);
       $transparency = imagecolorallocatealpha($res, 0, 0, 0, 127);
       imagefill($res, 0, 0, $transparency);
@@ -277,7 +279,7 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
   }
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::isAvailable().
+   * {@inheritdoc}
    */
   public static function isAvailable() {
     if ($check = get_extension_funcs('gd')) {

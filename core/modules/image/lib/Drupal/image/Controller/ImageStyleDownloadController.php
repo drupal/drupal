@@ -11,6 +11,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 use Drupal\image\ImageStyleInterface;
@@ -49,6 +50,13 @@ class ImageStyleDownloadController extends FileDownloadController implements Con
   protected $translator;
 
   /**
+   * The image factory.
+   *
+   * @var \Drupal\Core\Image\ImageFactory
+   */
+  protected $imageFactory;
+
+  /**
    * Constructs a ImageStyleDownloadController object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
@@ -59,12 +67,15 @@ class ImageStyleDownloadController extends FileDownloadController implements Con
    *   The lock backend.
    * @param \Drupal\Core\StringTranslation\Translator\TranslatorInterface $translator
    *   The translator service.
+   * @param \Drupal\Core\Image\ImageFactory $image_factory
+   *   The image factory.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactory $config_factory, LockBackendInterface $lock, TranslatorInterface $translator) {
+  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactory $config_factory, LockBackendInterface $lock, TranslatorInterface $translator, ImageFactory $image_factory) {
     parent::__construct($module_handler);
     $this->configFactory = $config_factory;
     $this->lock = $lock;
     $this->translator = $translator;
+    $this->imageFactory = $image_factory;
   }
 
   /**
@@ -75,7 +86,8 @@ class ImageStyleDownloadController extends FileDownloadController implements Con
       $container->get('module_handler'),
       $container->get('config.factory'),
       $container->get('lock'),
-      $container->get('string_translation')
+      $container->get('string_translation'),
+      $container->get('image.factory')
     );
   }
 
@@ -159,11 +171,11 @@ class ImageStyleDownloadController extends FileDownloadController implements Con
     }
 
     if ($success) {
-      $image = image_load($derivative_uri);
-      $uri = $image->source;
+      $image = $this->imageFactory->get($derivative_uri);
+      $uri = $image->getSource();
       $headers += array(
-        'Content-Type' => $image->info['mime_type'],
-        'Content-Length' => $image->info['file_size'],
+        'Content-Type' => $image->getMimeType(),
+        'Content-Length' => $image->getFileSize(),
       );
       return new BinaryFileResponse($uri, 200, $headers);
     }
