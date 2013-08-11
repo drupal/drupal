@@ -112,6 +112,8 @@ class CssOptimizerUnitTest extends UnitTestCase {
       // - A background image with relative paths, which must be rewritten.
       // - The rewritten background image path must also be passed through
       //   file_create_url(). (https://drupal.org/node/1961340)
+      // - Imported files that are external (protocol-relative URL or not)
+      //   should not be expanded. (https://drupal.org/node/2014851)
       1 => array(
         array(
           'group' => -100,
