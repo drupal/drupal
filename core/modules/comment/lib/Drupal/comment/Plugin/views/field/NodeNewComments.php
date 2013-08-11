@@ -143,7 +143,10 @@ class NodeNewComments extends Numeric {
     return $data;
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     if (!empty($value)) {
       return $this->renderLink(parent::render($values), $values);

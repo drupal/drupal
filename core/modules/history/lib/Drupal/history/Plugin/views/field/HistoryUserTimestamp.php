@@ -7,6 +7,7 @@
 
 namespace Drupal\history\Plugin\views\field;
 
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\node\Plugin\views\field\Node;
@@ -68,7 +69,10 @@ class HistoryUserTimestamp extends Node {
     parent::query();
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     // Let's default to 'read' state.
     // This code shadows node_mark, but it reads from the db directly and
     // we already have that info.

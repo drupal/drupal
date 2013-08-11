@@ -8,6 +8,7 @@
 namespace Drupal\file\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to add rendering MIME type images as an option on the filemime field.
@@ -33,7 +34,10 @@ class FileMime extends File {
     parent::buildOptionsForm($form, $form_state);
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $data = $values->{$this->field_alias};
     if (!empty($this->options['filemime_image']) && $data !== NULL && $data !== '') {
       $file_icon = array(

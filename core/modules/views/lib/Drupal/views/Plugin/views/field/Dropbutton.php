@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Provides a handler that renders links as dropbutton.
@@ -19,9 +20,9 @@ use Drupal\Component\Annotation\PluginID;
 class Dropbutton extends Links {
 
   /**
-   * Render the dropdown button.
+   * {@inheritdoc}
    */
-  public function render($values) {
+  public function render(ResultRow $values) {
     $links = $this->getLinks();
 
     if (!empty($links)) {

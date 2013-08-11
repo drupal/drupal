@@ -9,6 +9,7 @@ namespace Drupal\node\Plugin\views\field;
 
 use Drupal\node\Plugin\views\field\Node;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to translate a node type into its readable form.
@@ -51,7 +52,10 @@ class Type extends Node {
     return $this->sanitizeValue($data);
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     return $this->renderLink($this->render_name($value, $values), $values);
   }

@@ -9,6 +9,7 @@ namespace Drupal\contextual\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ResultRow;
 
 /**
  * Provides a handler that adds contextual links.
@@ -63,12 +64,14 @@ class ContextualLinks extends FieldPluginBase {
   }
 
   /**
-   * Render the contextual fields.
+   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::render().
+   *
+   * Renders the contextual fields.
    *
    * @see contextual_preprocess()
    * @see contextual_contextual_links_view_alter()
    */
-  public function render($values) {
+  public function render(ResultRow $values) {
     $links = array();
     foreach ($this->options['fields'] as $field) {
       $rendered_field = $this->view->style_plugin->getField($this->view->row_index, $field);

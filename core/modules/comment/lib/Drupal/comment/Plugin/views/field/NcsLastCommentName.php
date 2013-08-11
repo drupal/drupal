@@ -9,6 +9,7 @@ namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to present the name of the last comment poster.
@@ -56,7 +57,10 @@ class NcsLastCommentName extends FieldPluginBase {
     return $options;
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     if (!empty($this->options['link_to_user'])) {
       $account = entity_create('user', array());
       $account->name = $this->getValue($values);

@@ -9,6 +9,7 @@ namespace Drupal\user\Plugin\views\field;
 
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\user\UserDataInterface;
 use Drupal\Component\Annotation\PluginID;
@@ -75,9 +76,9 @@ class UserData extends FieldPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::render().
+   * {@inheritdoc}
    */
-  public function render($values) {
+  public function render(ResultRow $values) {
     $uid = $this->getValue($values);
     $data = $this->userData->get($this->options['data_module'], $uid, $this->options['data_name']);
 

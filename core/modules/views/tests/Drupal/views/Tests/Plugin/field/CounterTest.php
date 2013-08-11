@@ -11,6 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Tests\UnitTestCase;
 use Drupal\views\Plugin\Core\Entity\View;
 use Drupal\views\Plugin\views\field\Counter;
+use Drupal\views\ResultRow;
 use Drupal\views\Tests\ViewTestData;
 
 /**
@@ -47,7 +48,7 @@ class CounterTest extends UnitTestCase {
    *
    * @var array
    */
-  protected $testData;
+  protected $testData = array();
 
   /**
    * The handler definition of the counter field.
@@ -93,8 +94,9 @@ class CounterTest extends UnitTestCase {
     $this->view->display_handler = $this->display;
     $this->view->pager = $this->pager;
 
-
-    $this->testData = ViewTestData::dataSet();
+    foreach (ViewTestData::dataSet() as $set) {
+      $this->testData[] = new ResultRow($set);
+    }
 
     $this->definition = array('title' => 'counter field', 'plugin_type' => 'field');
   }

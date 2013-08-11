@@ -9,6 +9,7 @@ namespace Drupal\views_test_data\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ResultRow;
 
 /**
  * @PluginID("test_field")
@@ -50,9 +51,9 @@ class FieldTest extends FieldPluginBase {
   }
 
   /**
-   * Overrides Drupal\views\Plugin\views\field\FieldPluginBase::render().
+   * {@inheritdoc}
    */
-  public function render($values) {
+  public function render(ResultRow $values) {
     return $this->sanitizeValue($this->getTestValue());
   }
 

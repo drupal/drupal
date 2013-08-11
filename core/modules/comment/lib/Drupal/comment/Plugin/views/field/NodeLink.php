@@ -9,6 +9,7 @@ namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Handler for showing comment module's node link.
@@ -38,7 +39,10 @@ class NodeLink extends FieldPluginBase {
 
   public function query() {}
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $node = $this->getEntity($values);
     comment_node_view($node, $this->options['teaser'] ? 'teaser' : 'full');
 

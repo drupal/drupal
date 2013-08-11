@@ -58,9 +58,9 @@ class Link extends FieldPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::render().
+   * {@inheritdoc}
    */
-  public function render($values) {
+  public function render(ResultRow $values) {
     return $this->renderLink($this->getEntity($values), $values);
   }
 

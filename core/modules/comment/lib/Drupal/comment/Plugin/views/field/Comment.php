@@ -80,7 +80,10 @@ class Comment extends FieldPluginBase {
     return $data;
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     return $this->renderLink($this->sanitizeValue($value), $values);
   }

@@ -1087,18 +1087,18 @@ abstract class FieldPluginBase extends HandlerBase {
    * This gives the handlers some time to set up before any handler has
    * been rendered.
    *
-   * @param $values
-   *   An array of all objects returned from the query.
+   * @param \Drupal\views\ResultRow[] $values
+   *   An array of all ResultRow objects returned from the query.
    */
   public function preRender(&$values) { }
 
   /**
-   * Render the field.
+   * Renders the field.
    *
-   * @param $values
+   * @param \Drupal\views\ResultRow $values
    *   The values retrieved from the database.
    */
-  public function render($values) {
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     return $this->sanitizeValue($value);
   }
@@ -1108,8 +1108,11 @@ abstract class FieldPluginBase extends HandlerBase {
    *
    * This renders a field normally, then decides if render-as-link and
    * text-replacement rendering is necessary.
+   *
+   * @param \Drupal\views\ResultRow $values
+   *   The values retrieved from the database.
    */
-  public function advancedRender($values) {
+  public function advancedRender(ResultRow $values) {
     if ($this->allowAdvancedRender() && method_exists($this, 'render_item')) {
       $raw_items = $this->getItems($values);
       // If there are no items, set the original value to NULL.

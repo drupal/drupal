@@ -9,6 +9,7 @@ namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Display node comment status.
@@ -19,7 +20,10 @@ use Drupal\Component\Annotation\PluginID;
  */
 class NodeComment extends FieldPluginBase {
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     switch ($value) {
       case COMMENT_NODE_HIDDEN:

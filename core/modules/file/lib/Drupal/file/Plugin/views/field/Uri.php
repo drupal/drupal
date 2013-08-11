@@ -8,6 +8,7 @@
 namespace Drupal\file\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to add rendering file paths as file URLs instead of as internal file URIs.
@@ -32,7 +33,10 @@ class Uri extends File {
     parent::buildOptionsForm($form, $form_state);
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $data = $values->{$this->field_alias};
     if (!empty($this->options['file_download_path']) && $data !== NULL && $data !== '') {
       $data = file_create_url($data);

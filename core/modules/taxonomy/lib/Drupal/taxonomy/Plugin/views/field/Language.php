@@ -8,6 +8,7 @@
 namespace Drupal\taxonomy\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to show the language of a taxonomy term.
@@ -17,9 +18,9 @@ use Drupal\Component\Annotation\PluginID;
 class Language extends Taxonomy {
 
   /**
-   * Overrides Drupal\taxonomy\Plugin\views\field\Taxonomy::render().
+   * {@inheritdoc}
    */
-  public function render($values) {
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     $language = language_load($value);
     $value = $language ? $language->name : '';

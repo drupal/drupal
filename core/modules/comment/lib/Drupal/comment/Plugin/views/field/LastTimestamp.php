@@ -9,6 +9,7 @@ namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\Date;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Annotation\PluginID;
 
@@ -30,7 +31,10 @@ class LastTimestamp extends Date {
     $this->additional_fields['comment_count'] = 'comment_count';
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $comment_count = $this->getValue($values, 'comment_count');
     if (empty($this->options['empty_zero']) || $comment_count) {
       return parent::render($values);

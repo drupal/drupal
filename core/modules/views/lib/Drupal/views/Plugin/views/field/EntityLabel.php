@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Entity\EntityManager;
@@ -98,7 +99,7 @@ class EntityLabel extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function render($values) {
+  public function render(ResultRow $values) {
     $entity = $this->loadedReferencers[$this->getValue($values, $this->definition['entity type field'])][$this->getValue($values)];
 
     if (empty($entity)) {
