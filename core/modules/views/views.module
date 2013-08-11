@@ -91,7 +91,6 @@ function views_theme($existing, $type, $theme, $path) {
   // Our extra version of pager from pager.inc
   $hooks['views_mini_pager'] = $base + array(
     'variables' => array('tags' => array(), 'quantity' => 10, 'element' => 0, 'parameters' => array()),
-    'pattern' => 'views_mini_pager__',
   );
 
   $variables = array(
@@ -110,7 +109,6 @@ function views_theme($existing, $type, $theme, $path) {
 
   // Default view themes
   $hooks['views_view_field'] = $base + array(
-    'pattern' => 'views_view_field__',
     'variables' => array('view' => NULL, 'field' => NULL, 'row' => NULL),
   );
   $hooks['views_view_grouping'] = $base + array(
@@ -130,7 +128,6 @@ function views_theme($existing, $type, $theme, $path) {
       }
 
       $hooks[$def['theme']] = array(
-        'pattern' => $def['theme'] . '__',
         'variables' => $variables[$type],
       );
 
@@ -165,7 +162,6 @@ function views_theme($existing, $type, $theme, $path) {
 
   $hooks['views_exposed_form'] = $base + array(
     'template' => 'views-exposed-form',
-    'pattern' => 'views_exposed_form__',
     'render element' => 'form',
   );
 
