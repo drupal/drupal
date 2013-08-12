@@ -541,17 +541,17 @@ class ViewUI implements ViewStorageInterface {
       $this->executable->live_preview = TRUE;
       $this->views_ui_context = TRUE;
 
-      // AJAX happens via $_POST but everything expects exposed data to
+      // AJAX happens via HTTP POST but everything expects exposed data to
       // be in GET. Copy stuff but remove ajax-framework specific keys.
       // If we're clicking on links in a preview, though, we could actually
-      // still have some in $_GET, so we use $_REQUEST to ensure we get it all.
-      $exposed_input = \Drupal::request()->request->all();
+      // have some input in the query parameters, so we merge request() and
+      // query() to ensure we get it all.
+      $exposed_input = array_merge(\Drupal::request()->request->all(), \Drupal::request()->query->all());
       foreach (array('view_name', 'view_display_id', 'view_args', 'view_path', 'view_dom_id', 'pager_element', 'view_base_path', 'ajax_html_ids', 'ajax_page_state', 'form_id', 'form_build_id', 'form_token') as $key) {
         if (isset($exposed_input[$key])) {
           unset($exposed_input[$key]);
         }
       }
-
       $this->executable->setExposedInput($exposed_input);
 
       if (!$this->executable->setDisplay($display_id)) {

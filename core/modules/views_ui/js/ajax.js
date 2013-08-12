@@ -156,8 +156,8 @@
           return true;
         }
 
-        element_settings.wrapper = 'views-live-preview';
-        element_settings.method = 'html';
+        element_settings.wrapper = 'views-preview-wrapper';
+        element_settings.method = 'replaceWith';
         var base = $(this).attr('id');
         Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
       });
@@ -179,8 +179,8 @@
           return true;
         }
 
-        element_settings.wrapper = 'views-live-preview';
-        element_settings.method = 'html';
+        element_settings.wrapper = 'views-preview-wrapper';
+        element_settings.method = 'replaceWith';
         element_settings.event = 'click';
 
         var base = $(this).attr('id');
