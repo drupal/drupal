@@ -1253,7 +1253,7 @@ function system_library_info() {
   $libraries['jquery'] = array(
     'title' => 'jQuery',
     'website' => 'http://jquery.com',
-    'version' => '2.0',
+    'version' => '2.0.3',
     'js' => array(
       'core/assets/vendor/jquery/jquery.js' => array('group' => JS_LIBRARY, 'weight' => -20),
     ),
