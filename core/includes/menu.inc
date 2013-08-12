@@ -2840,15 +2840,13 @@ function menu_get_router() {
  * @todo This function should be removed/refactored.
  */
 function _menu_navigation_links_rebuild($menu) {
-  if (module_exists('menu_link')) {
-    $menu_link_controller = Drupal::entityManager()
-      ->getStorageController('menu_link');
+  if (!module_exists('menu_link')) {
+    // The Menu link module may not be available during install, so rebuild
+    // when possible.
+    return;
   }
-  else {
-    // The Menu link module is not available at install time, so we need to
-    // hardcode the default storage controller.
-    $menu_link_controller = new MenuLinkStorageController('menu_link', Drupal::service('database'), Drupal::service('router.route_provider'));
-  }
+  $menu_link_controller = Drupal::entityManager()
+    ->getStorageController('menu_link');
 
   // Add normal and suggested items as links.
   $router_items = array();
