@@ -47,7 +47,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
 - Universally Unique IDentifier (UUID):
     * Support for generating and validating UUIDs.
 - JavaScript changes:
-    * Updated to jQuery 2.0
+    * Updated to jQuery 2.0.3
     * Updated to jQuery UI 1.10.2
 - Tremendously improved language support all around.
     * Great language improvements for users:
