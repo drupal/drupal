@@ -42,25 +42,25 @@ class ProfileTestCase extends DrupalWebTestCase {
 
     $this->drupalPost('admin/config/people/profile/add/' . $type, $edit, t('Save field'));
     $fid = db_query("SELECT fid FROM {profile_field} WHERE title = :title", array(':title' => $title))->fetchField();
-    $this->assertTrue($fid, t('New Profile field has been entered in the database'));
+    $this->assertTrue($fid, 'New Profile field has been entered in the database');
 
     // Check that the new field is appearing on the user edit form.
     $this->drupalGet('user/' . $this->admin_user->uid . '/edit/' . $category);
 
     // Checking field.
     if ($type == 'date') {
-      $this->assertField($form_name . '[month]', t('Found month selection field'));
-      $this->assertField($form_name . '[day]', t('Found day selection field'));
-      $this->assertField($form_name . '[year]', t('Found day selection field'));
+      $this->assertField($form_name . '[month]', 'Found month selection field');
+      $this->assertField($form_name . '[day]', 'Found day selection field');
+      $this->assertField($form_name . '[year]', 'Found day selection field');
     }
     else {
-      $this->assertField($form_name , t('Found form named @name', array('@name' => $form_name)));
+      $this->assertField($form_name , format_string('Found form named @name', array('@name' => $form_name)));
     }
 
     // Checking name.
-    $this->assertText($title, t('Checking title for field %title', array('%title' => $title)));
+    $this->assertText($title, format_string('Checking title for field %title', array('%title' => $title)));
     // Checking explanation.
-    $this->assertText($edit['explanation'], t('Checking explanation for field %title', array('%title' => $title)));
+    $this->assertText($edit['explanation'], format_string('Checking explanation for field %title', array('%title' => $title)));
 
     return array(
       'fid' => $fid,
@@ -96,18 +96,18 @@ class ProfileTestCase extends DrupalWebTestCase {
 
     // Checking field.
     if ($type == 'date') {
-      $this->assertField($form_name . '[month]', t('Found month selection field'));
-      $this->assertField($form_name . '[day]', t('Found day selection field'));
-      $this->assertField($form_name . '[year]', t('Found day selection field'));
+      $this->assertField($form_name . '[month]', 'Found month selection field');
+      $this->assertField($form_name . '[day]', 'Found day selection field');
+      $this->assertField($form_name . '[year]', 'Found day selection field');
     }
     else {
-      $this->assertField($form_name , t('Found form named @name', array('@name' => $form_name)));
+      $this->assertField($form_name , format_string('Found form named @name', array('@name' => $form_name)));
     }
 
     // Checking name.
-    $this->assertText($title, t('Checking title for field %title', array('%title' => $title)));
+    $this->assertText($title, format_string('Checking title for field %title', array('%title' => $title)));
     // Checking explanation.
-    $this->assertText($edit['explanation'], t('Checking explanation for field %title', array('%title' => $title)));
+    $this->assertText($edit['explanation'], format_string('Checking explanation for field %title', array('%title' => $title)));
 
     return array(
       'fid' => $fid,
@@ -141,11 +141,11 @@ class ProfileTestCase extends DrupalWebTestCase {
 
     // Check profile page.
     $content = $this->drupalGet('user/' . $this->normal_user->uid);
-    $this->assertText($field['title'], t('Found profile field with title %title', array('%title' => $field['title'])));
+    $this->assertText($field['title'], format_string('Found profile field with title %title', array('%title' => $field['title'])));
 
     if ($field['type'] != 'checkbox') {
       // $value must be cast to a string in order to be found by assertText.
-      $this->assertText("$value", t('Found profile field with value %value', array('%value' => $value)));
+      $this->assertText("$value", format_string('Found profile field with value %value', array('%value' => $value)));
     }
 
     return $value;
@@ -160,7 +160,7 @@ class ProfileTestCase extends DrupalWebTestCase {
   function deleteProfileField($field) {
     $this->drupalPost('admin/config/people/profile/delete/' . $field['fid'], array(), t('Delete'));
     $this->drupalGet('admin/config/people/profile');
-    $this->assertNoText($field['title'], t('Checking deleted field %title', array('%title' => $field['title'])));
+    $this->assertNoText($field['title'], format_string('Checking deleted field %title', array('%title' => $field['title'])));
   }
 }
 
@@ -270,9 +270,9 @@ class ProfileTestDate extends ProfileTestCase {
 
     // Check profile page.
     $this->drupalGet('user/' . $this->normal_user->uid);
-    $this->assertText($field['title'], t('Found profile field with title %title', array('%title' => $field['title'])));
+    $this->assertText($field['title'], format_string('Found profile field with title %title', array('%title' => $field['title'])));
 
-    $this->assertText('01/09/1983', t('Found date profile field.'));
+    $this->assertText('01/09/1983', 'Found date profile field.');
 
     $edit = array(
       'name' => $field['form_name'],
@@ -305,10 +305,10 @@ class ProfileTestWeights extends ProfileTestCase {
     $this->setProfileField($field2, $this->randomName(8));
 
     $profile_edit = $this->drupalGet('user/' . $this->normal_user->uid . '/edit/' . $category);
-    $this->assertTrue(strpos($profile_edit, $field1['title']) > strpos($profile_edit, $field2['title']), t('Profile field weights are respected on the user edit form.'));
+    $this->assertTrue(strpos($profile_edit, $field1['title']) > strpos($profile_edit, $field2['title']), 'Profile field weights are respected on the user edit form.');
 
     $profile_page = $this->drupalGet('user/' . $this->normal_user->uid);
-    $this->assertTrue(strpos($profile_page, $field1['title']) > strpos($profile_page, $field2['title']), t('Profile field weights are respected on the user profile page.'));
+    $this->assertTrue(strpos($profile_page, $field1['title']) > strpos($profile_page, $field2['title']), 'Profile field weights are respected on the user profile page.');
   }
 }
 
@@ -344,15 +344,15 @@ class ProfileTestAutocomplete extends ProfileTestCase {
 
     // Check that autocompletion html is found on the user's profile edit page.
     $this->drupalGet('user/' . $this->admin_user->uid . '/edit/' . $category);
-    $this->assertRaw($autocomplete_html, t('Autocomplete found.'));
-    $this->assertRaw('misc/autocomplete.js', t('Autocomplete JavaScript found.'));
-    $this->assertRaw('class="form-text form-autocomplete"', t('Autocomplete form element class found.'));
+    $this->assertRaw($autocomplete_html, 'Autocomplete found.');
+    $this->assertRaw('misc/autocomplete.js', 'Autocomplete JavaScript found.');
+    $this->assertRaw('class="form-text form-autocomplete"', 'Autocomplete form element class found.');
 
     // Check the autocompletion path using the first letter of our user's profile
     // field value to make sure access is allowed and a valid result if found.
     $this->drupalGet('profile/autocomplete/' . $field['fid'] . '/' . $field['value'][0]);
-    $this->assertResponse(200, t('Autocomplete path allowed to user with permission.'));
-    $this->assertRaw($field['value'], t('Autocomplete value found.'));
+    $this->assertResponse(200, 'Autocomplete path allowed to user with permission.');
+    $this->assertRaw($field['value'], 'Autocomplete value found.');
 
     // Logout and login with a user without the 'access user profiles' permission.
     $this->drupalLogout();
@@ -360,11 +360,11 @@ class ProfileTestAutocomplete extends ProfileTestCase {
 
     // Check that autocompletion html is not found on the user's profile edit page.
     $this->drupalGet('user/' . $this->normal_user->uid . '/edit/' . $category);
-    $this->assertNoRaw($autocomplete_html, t('Autocomplete not found.'));
+    $this->assertNoRaw($autocomplete_html, 'Autocomplete not found.');
 
     // User should be denied access to the profile autocomplete path.
     $this->drupalGet('profile/autocomplete/' . $field['fid'] . '/' . $field['value'][0]);
-    $this->assertResponse(403, t('Autocomplete path denied to user without permission.'));
+    $this->assertResponse(403, 'Autocomplete path denied to user without permission.');
   }
 }
 
@@ -403,48 +403,48 @@ class ProfileBlockTestCase extends ProfileTestCase {
     $edit = array();
     $edit['blocks[profile_author-information][region]'] = 'footer';
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('The block settings have been updated.'), t('Block successfully move to footer region.'));
+    $this->assertText(t('The block settings have been updated.'), 'Block successfully move to footer region.');
 
     // Enable field 1.
     $this->drupalPost('admin/structure/block/manage/profile/author-information/configure', array(
       'profile_block_author_fields[' . $this->field1['form_name'] . ']' => TRUE,
     ), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
 
     // Visit the node and confirm that the field is displayed.
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertRaw($this->value1, t('Field 1 is displayed'));
-    $this->assertNoRaw($this->value2, t('Field 2 is not displayed'));
+    $this->assertRaw($this->value1, 'Field 1 is displayed');
+    $this->assertNoRaw($this->value2, 'Field 2 is not displayed');
 
     // Enable only field 2.
     $this->drupalPost('admin/structure/block/manage/profile/author-information/configure', array(
       'profile_block_author_fields[' . $this->field1['form_name'] . ']' => FALSE,
       'profile_block_author_fields[' . $this->field2['form_name'] . ']' => TRUE,
     ), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
 
     // Visit the node and confirm that the field is displayed.
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertNoRaw($this->value1, t('Field 1 is not displayed'));
-    $this->assertRaw($this->value2, t('Field 2 is displayed'));
+    $this->assertNoRaw($this->value1, 'Field 1 is not displayed');
+    $this->assertRaw($this->value2, 'Field 2 is displayed');
 
     // Enable both fields.
     $this->drupalPost('admin/structure/block/manage/profile/author-information/configure', array(
       'profile_block_author_fields[' . $this->field1['form_name'] . ']' => TRUE,
       'profile_block_author_fields[' . $this->field2['form_name'] . ']' => TRUE,
     ), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
 
     // Visit the node and confirm that the field is displayed.
     $this->drupalGet('node/' . $this->node->nid);
-    $this->assertRaw($this->value1, t('Field 1 is displayed'));
-    $this->assertRaw($this->value2, t('Field 2 is displayed'));
+    $this->assertRaw($this->value1, 'Field 1 is displayed');
+    $this->assertRaw($this->value2, 'Field 2 is displayed');
 
     // Enable the link to the user profile.
     $this->drupalPost('admin/structure/block/manage/profile/author-information/configure', array(
       'profile_block_author_fields[user_profile]' => TRUE,
     ), t('Save block'));
-    $this->assertText(t('The block configuration has been saved.'), t('Block configuration set.'));
+    $this->assertText(t('The block configuration has been saved.'), 'Block configuration set.');
 
     // Visit the node and confirm that the user profile link is displayed.
     $this->drupalGet('node/' . $this->node->nid);
