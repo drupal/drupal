@@ -111,8 +111,8 @@ class AjaxResponse extends JsonResponse {
       unset($items['js']['settings']);
     }
     $styles = drupal_get_css($items['css'], TRUE);
-    $scripts_footer = drupal_get_js('footer', $items['js'], TRUE);
-    $scripts_header = drupal_get_js('header', $items['js'], TRUE);
+    $scripts_footer = drupal_get_js('footer', $items['js'], TRUE, TRUE);
+    $scripts_header = drupal_get_js('header', $items['js'], TRUE, TRUE);
 
     // Prepend commands to add the resources, preserving their relative order.
     $resource_commands = array();

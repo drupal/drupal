@@ -2300,10 +2300,13 @@ function drupal_js_defaults($data = NULL) {
  * @param $javascript
  *   (optional) An array with all JavaScript code. Defaults to the default
  *   JavaScript array for the given scope.
- * @param $skip_alter
+ * @param bool $skip_alter
  *   (optional) If set to TRUE, this function skips calling drupal_alter() on
  *   $javascript, useful when the calling function passes a $javascript array
  *   that has already been altered.
+ * @param bool $is_ajax
+ *   (optional) If set to TRUE, this function is called from an Ajax request and
+ *   adds javascript settings to update ajaxPageState values.
  *
  * @return
  *   All JavaScript code segments and includes for the scope as HTML tags.
@@ -2312,7 +2315,7 @@ function drupal_js_defaults($data = NULL) {
  * @see locale_js_alter()
  * @see drupal_js_defaults()
  */
-function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALSE) {
+function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALSE, $is_ajax = FALSE) {
   if (!isset($javascript)) {
     $javascript = drupal_add_js();
   }
@@ -2338,12 +2341,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
     uasort($items, 'drupal_sort_css_js');
     // Don't add settings if there is no other JavaScript on the page, unless
     // this is an AJAX request.
-    // @todo Clean up container call.
-    $container = drupal_container();
-    if ($container->has('content_negotiation') && $container->isScopeActive('request')) {
-      $type = $container->get('content_negotiation')->getContentType($container->get('request'));
-    }
-    if (!empty($items['settings']) || (!empty($type) && $type == 'ajax')) {
+    if (!empty($items['settings']) || $is_ajax) {
       global $theme_key;
       // Provide the page with information about the theme that's used, so that
       // a later AJAX request can be rendered using the same theme.

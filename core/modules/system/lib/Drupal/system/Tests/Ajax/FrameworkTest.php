@@ -169,8 +169,7 @@ class FrameworkTest extends AjaxTestBase {
 
     // Verify the expected CSS file was added, both to drupalSettings, and as
     // the second AJAX command for inclusion into the HTML.
-    // @todo Uncomment this assertion after fixing http://drupal.org/node/1941288.
-    //$this->assertEqual($new_css, $original_css + array($expected_css_basename => 1), format_string('Page state now has the %css file.', array('%css' => $expected['css'])));
+    $this->assertEqual($new_css, $original_css + array($expected_css_basename => 1), format_string('Page state now has the %css file.', array('%css' => $expected['css'])));
     $this->assertCommand(array_slice($commands, 1, 1), array('data' => $expected_css_html), format_string('Page now has the %css file.', array('%css' => $expected['css'])));
 
     // Verify the expected JS file was added, both to drupalSettings, and as
@@ -179,8 +178,7 @@ class FrameworkTest extends AjaxTestBase {
     // unexpected JavaScript code, such as a jQuery.extend() that would
     // potentially clobber rather than properly merge settings, didn't
     // accidentally get added.
-    // @todo Uncomment this assertion after fixing http://drupal.org/node/1941288.
-    //$this->assertEqual($new_js, $original_js + array($expected['js'] => 1), format_string('Page state now has the %js file.', array('%js' => $expected['js'])));
+    $this->assertEqual($new_js, $original_js + array($expected['js'] => 1), format_string('Page state now has the %js file.', array('%js' => $expected['js'])));
     $this->assertCommand(array_slice($commands, 2, 1), array('data' => $expected_js_html), format_string('Page now has the %js file.', array('%js' => $expected['js'])));
   }
 
