@@ -49,15 +49,15 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
 
     // Ensure admin access.
     $this->drupalGet('admin/dashboard');
-    $this->assertResponse(200, t('Admin has access to the dashboard.'));
-    $this->assertRaw($custom_block['title'], t('Admin has access to a dashboard block.'));
+    $this->assertResponse(200, 'Admin has access to the dashboard.');
+    $this->assertRaw($custom_block['title'], 'Admin has access to a dashboard block.');
 
     // Ensure non-admin access is denied.
     $normal_user = $this->drupalCreateUser();
     $this->drupalLogin($normal_user);
     $this->drupalGet('admin/dashboard');
-    $this->assertResponse(403, t('Non-admin has no access to the dashboard.'));
-    $this->assertNoText($custom_block['title'], t('Non-admin has no access to a dashboard block.'));
+    $this->assertResponse(403, 'Non-admin has no access to the dashboard.');
+    $this->assertNoText($custom_block['title'], 'Non-admin has no access to a dashboard block.');
   }
 
   /**
@@ -70,7 +70,7 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/dashboard/configure');
     foreach ($dashboard_regions as $region => $description) {
       $elements = $this->xpath('//option[@value=:region]', array(':region' => $region));
-      $this->assertTrue(!empty($elements), t('%region is an available choice on the dashboard block configuration page.', array('%region' => $region)));
+      $this->assertTrue(!empty($elements), format_string('%region is an available choice on the dashboard block configuration page.', array('%region' => $region)));
     }
 
     // Ensure blocks cannot be placed in dashboard regions on the standard
@@ -78,7 +78,7 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
     $this->drupalGet('admin/structure/block');
     foreach ($dashboard_regions as $region => $description) {
       $elements = $this->xpath('//option[@value=:region]', array(':region' => $region));
-      $this->assertTrue(empty($elements), t('%region is not an available choice on the block configuration page.', array('%region' => $region)));
+      $this->assertTrue(empty($elements), format_string('%region is not an available choice on the block configuration page.', array('%region' => $region)));
     }
   }
 
@@ -94,24 +94,24 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
     $custom_block['regions[stark]'] = 'dashboard_main';
     $this->drupalPost('admin/structure/block/add', $custom_block, t('Save block'));
     $this->drupalGet('admin/dashboard');
-    $this->assertRaw($custom_block['title'], t('Block appears on the dashboard.'));
+    $this->assertRaw($custom_block['title'], 'Block appears on the dashboard.');
 
     $edit = array();
     $edit['modules[Core][dashboard][enable]'] = FALSE;
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
-    $this->assertNoRaw('assigned to the invalid region', t('Dashboard blocks gracefully disabled.'));
+    $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
+    $this->assertNoRaw('assigned to the invalid region', 'Dashboard blocks gracefully disabled.');
     module_list(TRUE);
-    $this->assertFalse(module_exists('dashboard'), t('Dashboard disabled.'));
+    $this->assertFalse(module_exists('dashboard'), 'Dashboard disabled.');
 
     $edit['modules[Core][dashboard][enable]'] = 'dashboard';
     $this->drupalPost('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), t('Modules status has been updated.'));
+    $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
     module_list(TRUE);
-    $this->assertTrue(module_exists('dashboard'), t('Dashboard enabled.'));
+    $this->assertTrue(module_exists('dashboard'), 'Dashboard enabled.');
 
     $this->drupalGet('admin/dashboard');
-    $this->assertRaw($custom_block['title'], t('Block still appears on the dashboard.'));
+    $this->assertRaw($custom_block['title'], 'Block still appears on the dashboard.');
   }
 
   /**
@@ -121,21 +121,21 @@ class DashboardBlocksTestCase extends DrupalWebTestCase {
     // Test "Recent comments", which should be available (defined as
     // "administrative") but not enabled.
     $this->drupalGet('admin/dashboard');
-    $this->assertNoText(t('Recent comments'), t('"Recent comments" not on dashboard.'));
+    $this->assertNoText(t('Recent comments'), '"Recent comments" not on dashboard.');
     $this->drupalGet('admin/dashboard/drawer');
-    $this->assertText(t('Recent comments'), t('Drawer of disabled blocks includes a block defined as "administrative".'));
-    $this->assertNoText(t('Syndicate'), t('Drawer of disabled blocks excludes a block not defined as "administrative".'));
+    $this->assertText(t('Recent comments'), 'Drawer of disabled blocks includes a block defined as "administrative".');
+    $this->assertNoText(t('Syndicate'), 'Drawer of disabled blocks excludes a block not defined as "administrative".');
     $this->drupalGet('admin/dashboard/configure');
     $elements = $this->xpath('//select[@id=:id]//option[@selected="selected"]', array(':id' => 'edit-blocks-comment-recent-region'));
-    $this->assertTrue($elements[0]['value'] == 'dashboard_inactive', t('A block defined as "administrative" defaults to dashboard_inactive.'));
+    $this->assertTrue($elements[0]['value'] == 'dashboard_inactive', 'A block defined as "administrative" defaults to dashboard_inactive.');
 
     // Now enable the block on the dashboard.
     $values = array();
     $values['blocks[comment_recent][region]'] = 'dashboard_main';
     $this->drupalPost('admin/dashboard/configure', $values, t('Save blocks'));
     $this->drupalGet('admin/dashboard');
-    $this->assertText(t('Recent comments'), t('"Recent comments" was placed on dashboard.'));
+    $this->assertText(t('Recent comments'), '"Recent comments" was placed on dashboard.');
     $this->drupalGet('admin/dashboard/drawer');
-    $this->assertNoText(t('Recent comments'), t('Drawer of disabled blocks excludes enabled blocks.'));
+    $this->assertNoText(t('Recent comments'), 'Drawer of disabled blocks excludes enabled blocks.');
   }
 }
