@@ -17,11 +17,11 @@ use Drupal\Core\Language\Language;
 class CommentPreviewTest extends CommentTestBase {
 
   /**
-   * Use the standard profile.
+   * Modules to enable.
    *
-   * @var string
+   * @var array
    */
-  protected $profile = 'standard';
+  public static $modules = array('image');
 
   public static function getInfo() {
     return array(
@@ -29,6 +29,32 @@ class CommentPreviewTest extends CommentTestBase {
       'description' => 'Test comment preview.',
       'group' => 'Comment',
     );
+  }
+
+  function setUp() {
+    parent::setUp();
+
+    // Create user picture field.
+    module_load_install('user');
+    user_install_picture_field();
+
+    // Add the basic_html filter format from the standard install profile.
+    $filter_format_storage_controller = $this->container->get('plugin.manager.entity')->getStorageController('filter_format');
+    $filter_format = $filter_format_storage_controller->create(array(
+      'format' => 'basic_html',
+      'name' => 'Basic HTML',
+      'status' => '1',
+      'roles' => array('authenticated'),
+    ), 'filter_format');
+
+    $filter_format->setFilterConfig('filter_html', array(
+      'module' => 'filter',
+      'status' => '1',
+      'settings' => array(
+        'allowed_html' => '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <h4> <h5> <h6> <p> <span> <img>',
+      ),
+    ));
+    $filter_format->save();
   }
 
   /**
