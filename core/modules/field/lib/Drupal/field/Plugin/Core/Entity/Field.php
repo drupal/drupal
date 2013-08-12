@@ -581,7 +581,7 @@ class Field extends ConfigEntityBase implements FieldInterface {
     //   the default field and instance settings, within $this.
     $field_type_info = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($this->type);
 
-    $settings = $field_type_info['instance_settings'] + $this->settings + $field_type_info['settings'];
+    $settings = $this->settings + $field_type_info['settings'] + $field_type_info['instance_settings'];
     return $settings;
   }
 
@@ -594,14 +594,14 @@ class Field extends ConfigEntityBase implements FieldInterface {
 
     // We assume here that consecutive array_key_exists() is more efficient than
     // calling getFieldSettings() when all we need is a single setting.
-    if (array_key_exists($setting_name, $field_type_info['instance_settings'])) {
-      return $field_type_info['instance_settings'][$setting_name];
-    }
-    elseif (array_key_exists($setting_name, $this->settings)) {
+    if (array_key_exists($setting_name, $this->settings)) {
       return $this->settings[$setting_name];
     }
-    else {
+    elseif (array_key_exists($setting_name, $field_type_info['settings'])) {
       return $field_type_info['settings'][$setting_name];
+    }
+    else {
+      return $field_type_info['instance_settings'][$setting_name];
     }
   }
 
