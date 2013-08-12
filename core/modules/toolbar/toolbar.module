@@ -125,10 +125,10 @@ function _toolbar_initialize_page_cache() {
 
   // If we have a cache, serve it.
   // @see _drupal_bootstrap_page_cache()
-  $cache = drupal_page_get_cache();
+  $request = \Drupal::request();
+  $cache = drupal_page_get_cache($request);
   if (is_object($cache)) {
     $response = new Response();
-    $request = \Drupal::request();
     $response->headers->set('X-Drupal-Cache', 'HIT');
     date_default_timezone_set(drupal_get_user_timezone());
 

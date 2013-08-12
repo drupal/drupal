@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Bootstrap;
 
+use Symfony\Component\Routing\RequestContext;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -38,6 +39,33 @@ class PageCacheTest extends WebTestBase {
       ->set('name', 'Drupal')
       ->set('page.front', 'test-page')
       ->save();
+  }
+
+  /**
+   * Tests support for different cache items with different Accept headers.
+   */
+  function testAcceptHeaderRequests() {
+    $config = config('system.performance');
+    $config->set('cache.page.use_internal', 1);
+    $config->set('cache.page.max_age', 300);
+    $config->save();
+
+    $url_generator = \Drupal::urlGenerator();
+    $url_generator->setContext(new RequestContext());
+    $accept_header_cache_uri = $url_generator->getPathFromRoute('system_test.page_cache_accept_header');
+    $json_accept_header = array('Accept: application/json');
+
+    $this->drupalGet($accept_header_cache_uri);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'HTML page was not yet cached.');
+    $this->drupalGet($accept_header_cache_uri);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'HTML page was cached.');
+    $this->assertRaw('<p>oh hai this is html.</p>', 'The correct HTML response was returned.');
+
+    $this->drupalGet($accept_header_cache_uri, array(), $json_accept_header);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'MISS', 'Json response was not yet cached.');
+    $this->drupalGet($accept_header_cache_uri, array(), $json_accept_header);
+    $this->assertEqual($this->drupalGetHeader('X-Drupal-Cache'), 'HIT', 'Json response was cached.');
+    $this->assertRaw('{"content":"oh hai this is json"}', 'The correct Json response was returned.');
   }
 
   /**

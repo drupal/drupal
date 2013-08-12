@@ -3165,11 +3165,9 @@ function _drupal_bootstrap_full($skip = FALSE) {
  * @see drupal_page_header()
  */
 function drupal_page_set_cache(Response $response, Request $request) {
-  global $base_root;
-
   if (drupal_page_is_cacheable()) {
     $cache = (object) array(
-      'cid' => $base_root . $request->getRequestUri(),
+      'cid' => drupal_page_cache_get_cid($request),
       'data' => array(
         'path' => $request->attributes->get('_system_path'),
         'body' => $response->getContent(),
