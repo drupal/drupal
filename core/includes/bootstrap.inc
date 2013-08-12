@@ -1007,22 +1007,6 @@ function drupal_page_is_cacheable($allow_caching = NULL) {
 }
 
 /**
- * Invokes a bootstrap hook in all bootstrap modules that implement it.
- *
- * @param $hook
- *   The name of the bootstrap hook to invoke.
- *
- * @see bootstrap_hooks()
- */
-function bootstrap_invoke_all($hook) {
-  $module_handler = Drupal::moduleHandler();
-  foreach ($module_handler->getBootstrapModules() as $module) {
-    $module_handler->load($module);
-    module_invoke($module, $hook);
-  }
-}
-
-/**
  * Includes a file with the provided type and name.
  *
  * This prevents including a theme, engine, module, etc., more than once.
@@ -1322,13 +1306,6 @@ function drupal_serve_page_from_cache(stdClass $cache, Response $response, Reque
   }
 
   $response->setContent($cache->data['body']);
-}
-
-/**
- * Defines the critical hooks that force modules to always be loaded.
- */
-function bootstrap_hooks() {
-  return array('watchdog');
 }
 
 /**
@@ -2120,9 +2097,6 @@ function _drupal_bootstrap_variables() {
 
   // Load variables from the database, but do not overwrite variables set in settings.php.
   $conf = variable_initialize(isset($conf) ? $conf : array());
-  // Load bootstrap modules.
-  require_once __DIR__ . '/module.inc';
-  Drupal::moduleHandler()->loadBootstrapModules();
 }
 
 /**

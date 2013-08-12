@@ -3084,6 +3084,7 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
  */
 function _drupal_bootstrap_code() {
   require_once __DIR__ . '/../../' . settings()->get('path_inc', 'core/includes/path.inc');
+  require_once __DIR__ . '/module.inc';
   require_once __DIR__ . '/theme.inc';
   require_once __DIR__ . '/pager.inc';
   require_once __DIR__ . '/../../' . settings()->get('menu_inc', 'core/includes/menu.inc');
@@ -4731,11 +4732,6 @@ function drupal_flush_all_caches() {
   // Ensure that all modules that are currently supposed to be enabled are
   // actually loaded.
   $module_handler->loadAll();
-
-  // Update the list of bootstrap modules.
-  // Allows developers to get new bootstrap hooks implementations registered
-  // without having to write a hook_update_N() function.
-  _system_update_bootstrap_status();
 
   // Rebuild the schema and cache a fully-built schema based on new module data.
   // This is necessary for any invocation of index.php, because setting cache

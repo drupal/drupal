@@ -2531,7 +2531,6 @@ function _system_rebuild_module_data() {
     'version' => NULL,
     'php' => DRUPAL_MINIMUM_PHP,
     'files' => array(),
-    'bootstrap' => 0,
   );
 
   // Read info files for each module.
@@ -2615,23 +2614,6 @@ function system_rebuild_module_data() {
     Drupal::state()->set('system.module.files', $files);
   }
   return $modules_cache;
-}
-
-/**
- * Refreshes the list of bootstrap modules.
- *
- * This is called internally by module_enable/disable() to flag modules that
- * implement hooks used during bootstrap, such as hook_watchdog(). These modules
- * are loaded earlier to invoke the hooks.
- */
-function _system_update_bootstrap_status() {
-  $bootstrap_modules = array();
-  foreach (bootstrap_hooks() as $hook) {
-    foreach (Drupal::moduleHandler()->getImplementations($hook) as $module) {
-      $bootstrap_modules[$module] = drupal_get_filename('module', $module);
-    }
-  }
-  Drupal::state()->set('system.module.bootstrap', $bootstrap_modules);
 }
 
 /**

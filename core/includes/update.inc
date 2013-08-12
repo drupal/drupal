@@ -143,6 +143,10 @@ function update_prepare_d8_bootstrap() {
   // Bootstrap the database.
   drupal_bootstrap(DRUPAL_BOOTSTRAP_DATABASE);
 
+  // module.inc is not yet loaded but there are calls to module_config_sort()
+  // below.
+  require_once __DIR__ . '/module.inc';
+
   // If the site has not updated to Drupal 8 yet, check to make sure that it is
   // running an up-to-date version of Drupal 7 before proceeding. Note this has
   // to happen AFTER the database bootstraps because of

@@ -29,13 +29,6 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected $loadedFiles;
 
   /**
-   * List of enabled bootstrap modules.
-   *
-   * @var array
-   */
-  protected $bootstrapModules;
-
-  /**
    * List of enabled modules.
    *
    * @var array
@@ -125,17 +118,6 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::loadBootstrapModules().
-   */
-  public function loadBootstrapModules() {
-    if (!$this->loaded) {
-      foreach ($this->getBootstrapModules() as $module) {
-        $this->load($module);
-      }
-    }
-  }
-
-  /**
    * Implements \Drupal\Core\Extension\ModuleHandlerInterface::isLoaded().
    */
   public function isLoaded() {
@@ -157,15 +139,6 @@ class ModuleHandler implements ModuleHandlerInterface {
     // Reset the implementations, so a new call triggers a reloading of the
     // available hooks.
     $this->resetImplementations();
-  }
-
-  /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::getBootstrapModules().
-   */
-  public function getBootstrapModules() {
-    // The basic module handler does not know anything about how to retrieve a
-    // list of bootstrap modules.
-    return array();
   }
 
   /**
@@ -649,10 +622,6 @@ class ModuleHandler implements ModuleHandlerInterface {
           $kernel->updateModules($module_filenames, $module_filenames);
         }
 
-        // Refresh the list of modules that implement bootstrap hooks.
-        // @see bootstrap_hooks()
-        _system_update_bootstrap_status();
-
         // Refresh the schema to include it.
         drupal_get_schema(NULL, TRUE);
         // Update the theme registry to include it.
@@ -796,7 +765,6 @@ class ModuleHandler implements ModuleHandlerInterface {
       // Invoke hook_modules_disabled before disabling modules,
       // so we can still call module hooks to get information.
       $this->invokeAll('modules_disabled', array($invoke_modules));
-      _system_update_bootstrap_status();
 
       // Update the kernel to exclude the disabled modules.
       $enabled = $this->getModuleList();
