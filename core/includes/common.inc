@@ -1315,6 +1315,12 @@ function l($text, $path, array $options = array()) {
     'language' => NULL,
   );
 
+  // Add a hreflang attribute if we know the language of this link's url and
+  // hreflang has not already been set.
+  if (!empty($variables['options']['language']) && !isset($variables['options']['attributes']['hreflang'])) {
+    $variables['options']['attributes']['hreflang'] = $variables['options']['language']->id;
+  }
+
   // Because l() is called very often we statically cache values that require an
   // extra function call.
   static $drupal_static_fast;
