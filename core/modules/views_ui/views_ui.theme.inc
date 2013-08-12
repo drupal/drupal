@@ -323,12 +323,16 @@ function theme_views_ui_rearrange_filter_form(&$variables) {
 }
 
 /**
- * Theme the form for the table style plugin
- */
-function theme_views_ui_style_plugin_table($variables) {
+ * Prepares variables for style plugin table templates.
+ *
+ * Default template: views-ui-style-plugin-table.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - form: A render element representing the form.
+*/
+function template_preprocess_views_ui_style_plugin_table(&$variables) {
   $form = $variables['form'];
-
-  $output = drupal_render($form['description_markup']);
 
   $header = array(
     t('Field'),
@@ -359,21 +363,22 @@ function theme_views_ui_style_plugin_table($variables) {
   $rows = array();
   foreach (element_children($form['columns']) as $id) {
     $row = array();
-    $row[] = drupal_render($form['info'][$id]['name']);
-    $row[] = drupal_render($form['columns'][$id]);
-    $row[] = drupal_render($form['info'][$id]['align']);
-    $row[] = drupal_render($form['info'][$id]['separator']);
+    $row[]['data'] = $form['info'][$id]['name'];
+    $row[]['data'] = $form['columns'][$id];
+    $row[]['data'] = $form['info'][$id]['align'];
+    $row[]['data'] = $form['info'][$id]['separator'];
+
     if (!empty($form['info'][$id]['sortable'])) {
       $row[] = array(
-        'data' => drupal_render($form['info'][$id]['sortable']),
+        'data' => $form['info'][$id]['sortable'],
         'align' => 'center',
       );
       $row[] = array(
-        'data' => drupal_render($form['info'][$id]['default_sort_order']),
+        'data' => $form['info'][$id]['default_sort_order'],
         'align' => 'center',
       );
       $row[] = array(
-        'data' => drupal_render($form['default'][$id]),
+        'data' => $form['default'][$id],
         'align' => 'center',
       );
     }
@@ -383,27 +388,32 @@ function theme_views_ui_style_plugin_table($variables) {
       $row[] = '';
     }
     $row[] = array(
-      'data' => drupal_render($form['info'][$id]['empty_column']),
+      'data' => $form['info'][$id]['empty_column'],
       'align' => 'center',
     );
     $row[] = array(
-      'data' => drupal_render($form['info'][$id]['responsive']),
+      'data' => $form['info'][$id]['responsive'],
       'align' => 'center',
     );
     $rows[] = $row;
   }
 
   // Add the special 'None' row.
-  $rows[] = array(t('None'), '', '', '', '', '', array('align' => 'center', 'data' => drupal_render($form['default'][-1])), '', '');
+  $rows[] = array(array('data' => t('None'), 'colspan' => 6), array('align' => 'center', 'data' => $form['default'][-1]), array('colspan' => 2));
 
-  $table = array(
-    '#theme' => 'table',
+  // Unset elements from the form array that are used to build the table so that
+  // they are not rendered twice.
+  unset($form['default']);
+  unset($form['info']);
+  unset($form['columns']);
+
+  $variables['table'] = array(
+    '#type' => 'table',
+    '#theme' => 'table__views_ui_style_plugin_table',
     '#header' => $header,
     '#rows' => $rows,
   );
-  $output .= drupal_render($table);
-  $output .= drupal_render_children($form);
-  return $output;
+  $variables['form'] = $form;
 }
 
 /**
