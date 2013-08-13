@@ -571,7 +571,7 @@ function template_preprocess_block(&$variables) {
  * Removes deleted role from blocks that use it.
  */
 function block_user_role_delete($role) {
-  foreach (entity_load_multiple('block') as $block_id => $block) {
+  foreach (entity_load_multiple('block') as $block) {
     $visibility = $block->get('visibility');
     if (isset($visibility['roles']['roles'][$role->id()])) {
       unset($visibility['roles']['roles'][$role->id()]);
@@ -585,7 +585,7 @@ function block_user_role_delete($role) {
  * Implements hook_menu_delete().
  */
 function block_menu_delete($menu) {
-  foreach (entity_load_multiple('block') as $block_id => $block) {
+  foreach (entity_load_multiple('block') as $block) {
     if ($block->get('plugin') == 'menu_menu_block:' . $menu->id()) {
       $block->delete();
     }
@@ -611,7 +611,7 @@ function block_admin_paths() {
  */
 function block_language_delete($language) {
   // Remove the block visibility settings for the deleted language.
-  foreach (entity_load_multiple('block') as $block_id => $block) {
+  foreach (entity_load_multiple('block') as $block) {
     $visibility = $block->get('visibility');
     if (isset($visibility['language']['langcodes'][$language->id])) {
       unset($visibility['language']['langcodes'][$language->id]);
