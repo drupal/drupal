@@ -36,7 +36,7 @@ class SystemListing {
    * instance, if you are looking for modules and call:
    * @code
    * $scanner = new SystemListing();
-   * $all_profiles = $profiles_scanner->scan('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.profile$/', 'profiles');
+   * $all_modules = $scanner->scan('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.module$/', 'modules');
    * @endcode
    * this function will search:
    * - the core modules directory; i.e., /core/modules
