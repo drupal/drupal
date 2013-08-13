@@ -34,18 +34,14 @@ class TwigTransTest extends WebTestBase {
   protected $admin_user;
 
   /**
-   * Custom language code.
+   * Custom languages.
    *
-   * @var string
+   * @var array
    */
-  protected $langcode = 'xx';
-
-  /**
-   * Custom language name.
-   *
-   * @var string
-   */
-  protected $name = 'Lolspeak';
+  protected $languages = array(
+    'xx' => 'Lolspeak',
+    'zz' => 'Lolspeak2',
+  );
 
   /**
    * Defines information about this test.
@@ -80,33 +76,18 @@ class TwigTransTest extends WebTestBase {
     ));
     $this->drupalLogin($this->admin_user);
 
-    // Add test language for translation testing.
-    $edit = array(
-      'predefined_langcode' => 'custom',
-      'langcode' => $this->langcode,
-      'name' => $this->name,
-      'direction' => '0',
-    );
+    // Install languages.
+    $this->installLanguages();
 
-    // Install the lolspeak language.
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
-    $this->assertRaw('"edit-languages-' . $this->langcode . '-weight"', 'Language code found.');
-
-    // Import a custom .po file for the lolspeak language.
-    $this->importPoFile($this->examplePoFile(), array(
-      'langcode' => $this->langcode,
-      'customized' => TRUE,
-    ));
-
-    // Assign lolspeak to be the default language.
-    $edit = array('site_default_language' => $this->langcode);
+    // Assign Lolspeak (xx) to be the default language.
+    $edit = array('site_default_language' => 'xx');
     $this->drupalPost('admin/config/regional/settings', $edit, t('Save configuration'));
 
     // Reset the static cache of the language list.
     drupal_static_reset('language_list');
 
     // Check that lolspeak is the default language for the site.
-    $this->assertEqual(language_default()->id, $this->langcode, $this->name . ' is the default language');
+    $this->assertEqual(language_default()->id, 'xx', 'Lolspeak is the default language');
   }
 
   /**
@@ -118,6 +99,11 @@ class TwigTransTest extends WebTestBase {
     $this->assertText(
       'OH HAI SUNZ',
       '{% trans "Hello sun." %} was successfully translated.'
+    );
+
+    $this->assertText(
+      'O HAI SUNZZZZZZZ',
+      '{% trans "Hello sun." with {"context": "Lolspeak"} %} was successfully translated.'
     );
 
     $this->assertText(
@@ -160,6 +146,26 @@ class TwigTransTest extends WebTestBase {
       '{{ complex.tokens }} were successfully translated with appropriate prefixes.'
     );
 
+    $this->assertText(
+      'I have context.',
+      '{% trans %} with a context only msgid was excluded from translation.'
+    );
+
+    $this->assertText(
+      'I HAZ KONTEX.',
+      '{% trans with {"context": "Lolspeak"} %} was successfully translated with context.'
+    );
+
+    $this->assertText(
+      'O HAI NU TXT.',
+      '{% trans with {"langcode": "zz"} %} was successfully translated in specified language.'
+    );
+
+    $this->assertText(
+      'O HAI NU TXTZZZZ.',
+      '{% trans with {"context": "Lolspeak", "langcode": "zz"} %} was successfully translated with context in specified language.'
+    );
+
     // Ensure debug output does not print.
     $this->checkForDebugMarkup(FALSE);
   }
@@ -192,12 +198,16 @@ class TwigTransTest extends WebTestBase {
   protected function checkForDebugMarkup($visible) {
     $tests = array(
       '{% trans "Hello sun." %}' => '<!-- TRANSLATION: "Hello sun." -->',
+      '{% trans "Hello sun." with {"context": "Lolspeak"} %}' => '<!-- TRANSLATION: "Hello sun.", CONTEXT: "Lolspeak" -->',
       '{{ "Hello moon."|trans }}' => '<!-- TRANSLATION: "Hello moon." -->',
       '{% trans %} with {% plural %}' => '<!-- TRANSLATION: "Hello star.", PLURAL: "Hello @count stars." -->',
       '{{ token }}' => '<!-- TRANSLATION: "Escaped: @string" -->',
       '{{ token|passthrough }}' => '<!-- TRANSLATION: "Pass-through: !string" -->',
       '{{ token|placeholder }}' => '<!-- TRANSLATION: "Placeholder: %string" -->',
       '{{ complex.tokens }}' => '<!-- TRANSLATION: "This @name has a length of: @count. It contains: %numbers and @bad_text. Lets pass the bad text through: !bad_text." -->',
+      '{% trans with {"context": "Lolspeak"} %}I have context.{% endtrans %}' => '<!-- TRANSLATION: "I have context.", CONTEXT: "Lolspeak" -->',
+      '{% trans with {"langcode": "zz"} %}Hello new text.{% endtrans %}' => '<!-- TRANSLATION: "Hello new text.", LANGCODE: "zz" -->',
+      '{% trans with {"context": "Lolspeak", "langcode": "zz"} %}Hello new text.{% endtrans %}' => '<!-- TRANSLATION: "Hello new text.", CONTEXT: "Lolspeak", LANGCODE: "zz" -->',
     );
     foreach ($tests as $test => $markup) {
       if ($visible) {
@@ -210,31 +220,51 @@ class TwigTransTest extends WebTestBase {
   }
 
   /**
-   * Helper function: import a standalone .po file in a given language.
-   *
-   * Borrowed from \Drupal\locale\Tests\LocaleImportFunctionalTest.
-   *
-   * @param string $contents
-   *   Contents of the .po file to import.
-   * @param array $options
-   *   Additional options to pass to the translation import form.
+   * Helper function: install languages.
    */
-  protected function importPoFile($contents, array $options = array()) {
-    $name = tempnam('temporary://', "po_") . '.po';
-    file_put_contents($name, $contents);
-    $options['files[file]'] = $name;
-    $this->drupalPost('admin/config/regional/translate/import', $options, t('Import'));
-    drupal_unlink($name);
+  protected function installLanguages() {
+    foreach ($this->languages as $langcode => $name) {
+      // Generate custom .po contents for the language.
+      $contents = $this->poFileContents($langcode);
+      if ($contents) {
+        // Add test language for translation testing.
+        $edit = array(
+          'predefined_langcode' => 'custom',
+          'langcode' => $langcode,
+          'name' => $name,
+          'direction' => '0',
+        );
+
+        // Install the language in Drupal.
+        $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
+        $this->assertRaw('"edit-languages-' . $langcode . '-weight"', 'Language code found.');
+
+        // Import the custom .po contents for the language.
+        $filename = tempnam('temporary://', "po_") . '.po';
+        file_put_contents($filename, $contents);
+        $options = array(
+          'files[file]' => $filename,
+          'langcode' => $langcode,
+          'customized' => TRUE,
+        );
+        $this->drupalPost('admin/config/regional/translate/import', $options, t('Import'));
+        drupal_unlink($filename);
+      }
+    }
   }
 
   /**
-   * An example .po file.
+   * Generate a custom .po file for a specific test language.
    *
-   * @return string
-   *   The .po contents used for this test.
+   * @param string $langcode
+   *   The langcode of the specified language.
+   *
+   * @return string|FALSE
+   *   The .po contents for the specified language or FALSE if none exists.
    */
-  protected function examplePoFile() {
-    return <<< EOF
+  protected function poFileContents($langcode) {
+    if ($langcode === 'xx') {
+      return <<< EOF
 msgid ""
 msgstr ""
 "Project-Id-Version: Drupal 8\\n"
@@ -245,6 +275,10 @@ msgstr ""
 
 msgid "Hello sun."
 msgstr "OH HAI SUNZ"
+
+msgctxt "Lolspeak"
+msgid "Hello sun."
+msgstr "O HAI SUNZZZZZZZ"
 
 msgid "Hello Earth."
 msgstr "O HERRO ERRRF."
@@ -268,7 +302,31 @@ msgstr "PLAYSHOLDR: %string"
 
 msgid "This @name has a length of: @count. It contains: %numbers and @bad_text. Lets pass the bad text through: !bad_text."
 msgstr "DIS @name HAZ LENGTH OV: @count. IT CONTAYNZ: %numbers AN @bad_text. LETS PAS TEH BAD TEXT THRU: !bad_text."
+
+msgctxt "Lolspeak"
+msgid "I have context."
+msgstr "I HAZ KONTEX."
 EOF;
+    }
+    else if ($langcode === 'zz') {
+      return <<< EOF
+msgid ""
+msgstr ""
+"Project-Id-Version: Drupal 8\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
+
+msgid "Hello new text."
+msgstr "O HAI NU TXT."
+
+msgctxt "Lolspeak"
+msgid "Hello new text."
+msgstr "O HAI NU TXTZZZZ."
+EOF;
+    }
+    return FALSE;
   }
 
 }

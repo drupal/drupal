@@ -3,6 +3,11 @@
   {% trans 'Hello sun.' %}
 </div>
 
+{# Test trans tag with string argument and context #}
+<div>
+  {% trans 'Hello sun.' with {'context': 'Lolspeak'} %}
+</div>
+
 {# Test trans filter. #}
 <div>
   {{ 'Hello Earth.'|trans }}
@@ -59,5 +64,33 @@
 <div>
   {% trans %}
     This {{ token.name }} has a length of: {{ count }}. It contains: {{ token.numbers|placeholder }} and {{ token.bad_text }}. Lets pass the bad text through: {{ token.bad_text|passthrough }}.
+  {% endtrans %}
+</div>
+
+{# Test trans tag but with a context only msgid. #}
+<div>
+  {% trans %}
+    I have context.
+  {% endtrans %}
+</div>
+
+{# Test trans tag with context. #}
+<div>
+  {% trans with {'context': 'Lolspeak'} %}
+    I have context.
+  {% endtrans %}
+</div>
+
+{# Test trans tag with a specified language. #}
+<div>
+  {% trans with {'langcode': 'zz'} %}
+    Hello new text.
+  {% endtrans %}
+</div>
+
+{# Test trans tag with context and a specified language. #}
+<div>
+  {% trans with {'context': 'Lolspeak', 'langcode': 'zz'} %}
+    Hello new text.
   {% endtrans %}
 </div>

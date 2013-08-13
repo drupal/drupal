@@ -14,6 +14,8 @@
 
 namespace Drupal\Core\Template;
 
+use Drupal\Component\Utility\Unicode;
+
 /**
  * A class that defines the Twig 'trans' tag for Drupal.
  */
@@ -22,11 +24,12 @@ class TwigNodeTrans extends \Twig_Node {
   /**
    * {@inheritdoc}
    */
-  public function __construct(\Twig_NodeInterface $body, \Twig_NodeInterface $plural = NULL, \Twig_Node_Expression $count = NULL, $lineno, $tag = NULL) {
+  public function __construct(\Twig_NodeInterface $body, \Twig_NodeInterface $plural = NULL, \Twig_Node_Expression $count = NULL, \Twig_Node_Expression $options = NULL, $lineno, $tag = NULL) {
     parent::__construct(array(
       'count' => $count,
       'body' => $body,
-      'plural' => $plural
+      'plural' => $plural,
+      'options' => $options,
     ), array(), $lineno, $tag);
   }
 
@@ -35,6 +38,8 @@ class TwigNodeTrans extends \Twig_Node {
    */
   public function compile(\Twig_Compiler $compiler) {
     $compiler->addDebugInfo($this);
+
+    $options = $this->getNode('options');
 
     list($singular, $tokens) = $this->compileString($this->getNode('body'));
     $plural = NULL;
@@ -60,13 +65,17 @@ class TwigNodeTrans extends \Twig_Node {
       $compiler->raw(', ')->subcompile($plural);
     }
 
-    // Write any tokens found as an associative array parameter.
-    if (!empty($tokens)) {
-      $compiler->raw(', array(');
-      foreach ($tokens as $token) {
-        $compiler->string($token->getAttribute('placeholder'))->raw(' => ')->subcompile($token)->raw(', ');
-      }
-      $compiler->raw(')');
+    // Write any tokens found as an associative array parameter, otherwise just
+    // leave as an empty array.
+    $compiler->raw(', array(');
+    foreach ($tokens as $token) {
+      $compiler->string($token->getAttribute('placeholder'))->raw(' => ')->subcompile($token)->raw(', ');
+    }
+    $compiler->raw(')');
+
+    // Write any options passed.
+    if (!empty($options)) {
+      $compiler->raw(', ')->subcompile($options);
     }
 
     // Write function closure.
@@ -78,6 +87,11 @@ class TwigNodeTrans extends \Twig_Node {
       $compiler->subcompile($singular);
       if (!empty($plural)) {
         $compiler->raw(', PLURAL: ')->subcompile($plural);
+      }
+      if (!empty($options)) {
+        foreach ($options->getKeyValuePairs() as $pair) {
+          $compiler->raw(', ' . Unicode::strtoupper($pair['key']->getAttribute('value')) . ': ')->subcompile($pair['value']);
+        }
       }
       $compiler->raw(" -->\n'");
     }
