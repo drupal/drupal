@@ -6,12 +6,7 @@
  */
 
 /**
- * Test and report Drupal installation requirements.
- *
- * @param $phase
- *   The current system installation phase.
- * @return
- *   An array of system requirements.
+ * Implements hook_requirements().
  */
 function system_requirements($phase) {
   global $base_url;
