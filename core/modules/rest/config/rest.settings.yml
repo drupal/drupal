@@ -14,3 +14,13 @@ resources:
 #       GET:
 #         supported_formats:
 #           - json
+#
+# To enable only specific authentication methods for an operation, list them
+# at supported_auth.
+# For example, the following config only allows Basic HTTP authenticated
+# requests for the POST method on the node entity.
+#   resources:
+#     entity:node:
+#       POST:
+#         supported_auth:
+#           - http_basic
