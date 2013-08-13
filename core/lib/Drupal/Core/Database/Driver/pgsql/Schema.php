@@ -102,9 +102,6 @@ class Schema extends DatabaseSchema {
     $schema = $prefixInfo['schema'];
     $table_name = $prefixInfo['table'];
 
-    $field_information = (object) array(
-        'checks' => array(),
-    );
     $checks = $this->connection->query("SELECT conname FROM pg_class cl INNER JOIN pg_constraint co ON co.conrelid = cl.oid INNER JOIN pg_attribute attr ON attr.attrelid = cl.oid AND attr.attnum = ANY (co.conkey) INNER JOIN pg_namespace ns ON cl.relnamespace = ns.oid WHERE co.contype = 'c' AND ns.nspname = :schema AND cl.relname = :table AND attr.attname = :column", array(
       ':schema' => $schema,
       ':table' => $table_name,
