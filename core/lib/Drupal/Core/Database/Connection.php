@@ -330,7 +330,7 @@ abstract class Connection implements \Serializable {
    *   The query string as SQL, with curly-braces surrounding the
    *   table names.
    *
-   * @return Drupal\Core\Database\StatementInterface
+   * @return \Drupal\Core\Database\StatementInterface
    *   A PDO prepared statement ready for its execute() method.
    */
   public function prepareQuery($query) {
@@ -402,7 +402,7 @@ abstract class Connection implements \Serializable {
   /**
    * Gets the current logging object for this connection.
    *
-   * @return DatabaseLog
+   * @return \Drupal\Core\Database\Log
    *   The current logging object for this connection. If there isn't one,
    *   NULL is returned.
    */
@@ -679,7 +679,7 @@ abstract class Connection implements \Serializable {
    * @param $options
    *   An array of options on the query.
    *
-   * @return Drupal\Core\Database\Query\Insert
+   * @return \Drupal\Core\Database\Query\Insert
    *   A new Insert query object.
    *
    * @see Drupal\Core\Database\Query\Insert
@@ -695,7 +695,7 @@ abstract class Connection implements \Serializable {
    * @param $options
    *   An array of options on the query.
    *
-   * @return Drupal\Core\Database\Query\Merge
+   * @return \Drupal\Core\Database\Query\Merge
    *   A new Merge query object.
    *
    * @see Drupal\Core\Database\Query\Merge
@@ -712,7 +712,7 @@ abstract class Connection implements \Serializable {
    * @param $options
    *   An array of options on the query.
    *
-   * @return Drupal\Core\Database\Query\Update
+   * @return \Drupal\Core\Database\Query\Update
    *   A new Update query object.
    *
    * @see Drupal\Core\Database\Query\Update
@@ -728,7 +728,7 @@ abstract class Connection implements \Serializable {
    * @param $options
    *   An array of options on the query.
    *
-   * @return Drupal\Core\Database\Query\Delete
+   * @return \Drupal\Core\Database\Query\Delete
    *   A new Delete query object.
    *
    * @see Drupal\Core\Database\Query\Delete
@@ -744,7 +744,7 @@ abstract class Connection implements \Serializable {
    * @param $options
    *   An array of options on the query.
    *
-   * @return Drupal\Core\Database\Query\Truncate
+   * @return \Drupal\Core\Database\Query\Truncate
    *   A new Truncate query object.
    *
    * @see Drupal\Core\Database\Query\Truncate
@@ -759,7 +759,7 @@ abstract class Connection implements \Serializable {
    *
    * This method will lazy-load the appropriate schema library file.
    *
-   * @return Drupal\Core\Database\Schema
+   * @return \Drupal\Core\Database\Schema
    *   The database Schema object for this connection.
    */
   public function schema() {
@@ -879,8 +879,8 @@ abstract class Connection implements \Serializable {
    * @param $name
    *   Optional name of the savepoint.
    *
-   * @return Drupal\Core\Database\Transaction
-   *   A DatabaseTransaction object.
+   * @return \Drupal\Core\Database\Transaction
+   *   A Transaction object.
    *
    * @see Drupal\Core\Database\Transaction
    */
@@ -1046,7 +1046,7 @@ abstract class Connection implements \Serializable {
    * @param $options
    *   An array of options on the query.
    *
-   * @return Drupal\Core\Database\StatementInterface
+   * @return \Drupal\Core\Database\StatementInterface
    *   A database query result resource, or NULL if the query was not executed
    *   correctly.
    */

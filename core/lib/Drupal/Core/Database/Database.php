@@ -90,7 +90,7 @@ abstract class Database {
    * @param $key
    *   The database connection key for which we want to log.
    *
-   * @return Drupal\Core\Database\Log
+   * @return \Drupal\Core\Database\Log
    *   The query log object. Note that the log object does support richer
    *   methods than the few exposed through the Database class, so in some
    *   cases it may be desirable to access it directly.
@@ -149,7 +149,7 @@ abstract class Database {
    * @param $key
    *   The database connection key. Defaults to NULL which means the active key.
    *
-   * @return Drupal\Core\Database\Connection
+   * @return \Drupal\Core\Database\Connection
    *   The corresponding connection object.
    */
   final public static function getConnection($target = 'default', $key = NULL) {

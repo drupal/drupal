@@ -287,8 +287,8 @@ abstract class Schema implements PlaceholderInterface {
    * @param $add_prefix
    *   Boolean to indicate whether the table name needs to be prefixed.
    *
-   * @return Drupal\Core\Database\Query\ConditionInterface
-   *   A Drupal\Core\Database\Query\Condition object.
+   * @return \Drupal\Core\Database\Query\Condition
+   *   A Condition object.
    */
   protected function buildTableNameCondition($table_name, $operator = '=', $add_prefix = TRUE) {
     $info = $this->connection->getConnectionOptions();

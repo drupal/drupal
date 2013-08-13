@@ -226,7 +226,7 @@ class StatementPrefetch implements Iterator, StatementInterface {
    *   The query.
    * @param array $args
    *   An array of arguments.
-   * @return PDOStatement
+   * @return \PDOStatement
    *   A PDOStatement object.
    */
   protected function getStatement($query, &$args = array()) {

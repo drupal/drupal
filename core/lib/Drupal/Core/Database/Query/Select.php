@@ -598,7 +598,7 @@ class Select extends Query implements SelectInterface {
   /**
    * Prepares a count query from the current query object.
    *
-   * @return Drupal\Core\Database\Query\Select
+   * @return \Drupal\Core\Database\Query\Select
    *   A new query object ready to have COUNT(*) performed on it.
    */
   protected function prepareCountQuery() {
