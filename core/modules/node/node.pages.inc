@@ -53,7 +53,6 @@ function node_add_page() {
  */
 function theme_node_add_list($variables) {
   $content = $variables['content'];
-  $output = '';
 
   if ($content) {
     $output = '<dl class="node-type-list">';
@@ -211,7 +210,6 @@ function node_revision_overview($node) {
   }
   foreach ($revisions as $revision) {
     $row = array();
-    $type = $node->type;
     if ($revision->current_vid > 0) {
       $username = array(
         '#theme' => 'username',
