@@ -62,7 +62,7 @@ function twig_render_template($template_file, $variables) {
       $current_template = basename($template_file);
       $suggestions = $variables['theme_hook_suggestions'];
       $suggestions[] = $variables['theme_hook_original'];
-      foreach ($suggestions as $key => &$suggestion) {
+      foreach ($suggestions as &$suggestion) {
         $template = strtr($suggestion, '_', '-') . $extension;
         $prefix = ($template == $current_template) ? 'x' : '*';
         $suggestion = $prefix . ' ' . $template;
