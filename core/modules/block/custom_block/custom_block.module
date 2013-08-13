@@ -248,7 +248,7 @@ function custom_block_admin_paths() {
   $paths = array(
     'block/add' => TRUE,
     'block/add/*' => TRUE,
-    'block/*/edit' => TRUE,
+    'block/*' => TRUE,
     'block/*/delete' => TRUE,
     'admin/structure/custom-blocks/*' => TRUE,
   );
