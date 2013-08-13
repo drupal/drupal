@@ -455,7 +455,6 @@ class StatementPrefetch implements Iterator, StatementInterface {
 
   public function fetchCol($index = 0) {
     if (isset($this->columnNames[$index])) {
-      $column = $this->columnNames[$index];
       $result = array();
       // Traverse the array as PHP would have done.
       while (isset($this->currentRow)) {
@@ -493,8 +492,6 @@ class StatementPrefetch implements Iterator, StatementInterface {
     // Traverse the array as PHP would have done.
     while (isset($this->currentRow)) {
       // Grab the row in its raw PDO::FETCH_ASSOC format.
-      $row = $this->currentRow;
-      // Grab the row in the format specified above.
       $result_row = $this->current();
       $result[$this->currentRow[$key]] = $result_row;
       $this->next();
