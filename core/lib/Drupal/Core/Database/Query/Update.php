@@ -222,7 +222,7 @@ class Update extends Query implements ConditionInterface {
     // Because we filter $fields the same way here and in __toString(), the
     // placeholders will all match up properly.
     $max_placeholder = 0;
-    foreach ($fields as $field => $value) {
+    foreach ($fields as $value) {
       $update_values[':db_update_placeholder_' . ($max_placeholder++)] = $value;
     }
 
