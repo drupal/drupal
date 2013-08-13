@@ -3171,6 +3171,10 @@ function _drupal_bootstrap_full($skip = FALSE) {
  */
 function drupal_page_set_cache(Response $response, Request $request) {
   if (drupal_page_is_cacheable()) {
+
+    // Check if the current page may be compressed.
+    $page_compressed = config('system.performance')->get('response.gzip') && extension_loaded('zlib');
+
     $cache = (object) array(
       'cid' => drupal_page_cache_get_cid($request),
       'data' => array(
@@ -3178,6 +3182,9 @@ function drupal_page_set_cache(Response $response, Request $request) {
         'body' => $response->getContent(),
         'title' => drupal_get_title(),
         'headers' => array(),
+        // We need to store whether page was compressed or not,
+        // because by the time it is read, the configuration might change.
+        'page_compressed' => $page_compressed,
       ),
       'tags' => array('content' => TRUE),
       'expire' => CacheBackendInterface::CACHE_PERMANENT,
@@ -3199,7 +3206,7 @@ function drupal_page_set_cache(Response $response, Request $request) {
     }
 
     if ($cache->data['body']) {
-      if (config('system.performance')->get('response.gzip') && extension_loaded('zlib')) {
+      if ($page_compressed) {
         $cache->data['body'] = gzencode($cache->data['body'], 9, FORCE_GZIP);
       }
       cache('page')->set($cache->cid, $cache->data, $cache->expire, $cache->tags);

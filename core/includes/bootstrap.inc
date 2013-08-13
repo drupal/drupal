@@ -1225,7 +1225,7 @@ function drupal_serve_page_from_cache(stdClass $cache, Response $response, Reque
   // First half: we must determine if we should be returning a 304.
 
   // Negotiate whether to use compression.
-  $page_compression = $config->get('response.gzip') && extension_loaded('zlib');
+  $page_compression = !empty($cache->data['page_compressed']) && extension_loaded('zlib');
   $return_compressed = $page_compression && $request->server->has('HTTP_ACCEPT_ENCODING') && strpos($request->server->get('HTTP_ACCEPT_ENCODING'), 'gzip') !== FALSE;
 
   // Get headers. Keys are lower-case.

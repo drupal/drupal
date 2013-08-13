@@ -202,5 +202,18 @@ class PageCacheTest extends WebTestBase {
     $this->assertFalse($this->drupalGetHeader('Content-Encoding'), 'A Content-Encoding header was not sent.');
     $this->assertTitle(t('Test page | @site-name', array('@site-name' => config('system.site')->get('name'))), 'Site title matches.');
     $this->assertRaw('</html>', 'Page was not compressed.');
+
+    // Disable compression mode.
+    $config->set('response.gzip', 0);
+    $config->save();
+
+    // Verify if cached page is still available for a client with compression support.
+    $this->drupalGet('', array(), array('Accept-Encoding: gzip,deflate'));
+    $this->drupalSetContent(gzinflate(substr($this->drupalGetContent(), 10, -8)));
+    $this->assertRaw('</html>', 'Page was delivered after compression mode is changed (compression support enabled).');
+
+    // Verify if cached page is still available for a client without compression support.
+    $this->drupalGet('');
+    $this->assertRaw('</html>', 'Page was delivered after compression mode is changed (compression support disabled).');
   }
 }
