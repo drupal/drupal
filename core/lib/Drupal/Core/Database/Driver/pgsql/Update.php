@@ -29,7 +29,6 @@ class Update extends QueryUpdate {
     // Expressions take priority over literal fields, so we process those first
     // and remove any literal fields that conflict.
     $fields = $this->fields;
-    $expression_fields = array();
     foreach ($this->expressionFields as $field => $data) {
       if (!empty($data['arguments'])) {
         foreach ($data['arguments'] as $placeholder => $argument) {
