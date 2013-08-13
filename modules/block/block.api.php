@@ -200,11 +200,13 @@ function hook_block_save($delta = '', $edit = array()) {
  *   within the module, defined in hook_block_info().
  *
  * @return
- *   An array containing the following elements:
+ *   Either an empty array so the block will not be shown or an array containing
+ *   the following elements:
  *   - subject: The default localized title of the block. If the block does not
  *     have a default title, this should be set to NULL.
  *   - content: The content of the block's body. This may be a renderable array
- *     (preferable) or a string containing rendered HTML content.
+ *     (preferable) or a string containing rendered HTML content. If the content
+ *     is empty the block will not be shown.
  *
  * For a detailed usage example, see block_example.module.
  *
