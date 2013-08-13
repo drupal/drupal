@@ -16,15 +16,10 @@ function help_menu() {
     'weight' => 9,
   );
 
-  $modules = Drupal::moduleHandler()->getImplementations('help');
-  ksort($modules);
-  foreach ($modules as $module) {
-    $items['admin/help/' . $module] = array(
-      'title' => $module,
-      'route_name' => 'help_page',
-      'type' => MENU_VISIBLE_IN_BREADCRUMB,
-    );
-  }
+  $items['admin/help/%'] = array(
+    'route_name' => 'help_page',
+    'type' => MENU_VISIBLE_IN_BREADCRUMB,
+  );
 
   return $items;
 }

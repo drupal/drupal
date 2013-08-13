@@ -9,6 +9,7 @@ namespace Drupal\help\Controller;
 use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Controller routines for help routes.
@@ -98,6 +99,8 @@ class HelpController implements ControllerInterface {
    *
    * @return array
    *   A render array as expected by drupal_render().
+   *
+   * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    */
   public function helpPage($name) {
     $build = array();
@@ -132,9 +135,11 @@ class HelpController implements ControllerInterface {
           '#links' => $links,
         );
       }
+      return $build;
     }
-
-    return $build;
+    else {
+      throw new NotFoundHttpException();
+    }
   }
 
 }
