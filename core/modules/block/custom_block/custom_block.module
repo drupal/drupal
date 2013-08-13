@@ -9,6 +9,25 @@ use Drupal\custom_block\Plugin\Core\Entity\CustomBlockType;
 use Drupal\custom_block\Plugin\Core\Entity\CustomBlock;
 
 /**
+ * Implements hook_help().
+ */
+function custom_block_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#custom_block':
+      return t('Allows the creation of custom blocks through the user interface.');
+
+    case 'admin/structure/custom-blocks':
+      $output = '<p>' . t('This page lists user-created blocks. These blocks are derived from block types. A block type can consist of different fields and display settings. From the block types tab you can manage these fields as well as create new block types.') . '</p>';
+      return $output;
+
+    case 'admin/structure/custom-blocks/types':
+      $output = '<p>' . t('This page lists block types. A block type can consist of different fields and display settings. From here you can manage these fields as well as create new block types.') . '</p>';
+      return $output;
+
+  }
+}
+
+/**
  * Implements hook_menu_local_tasks().
  */
 function custom_block_menu_local_tasks(&$data, $router_item, $root_path) {
@@ -25,6 +44,19 @@ function custom_block_menu_local_tasks(&$data, $router_item, $root_path) {
       );
     }
   }
+  if ($router_item['route_name'] == 'custom_block_list') {
+    // @todo Move to a LocalAction plugin when https://drupal.org/node/2045267
+    //   allows local actions to work with query strings.
+    $item = menu_get_item('block/add');
+    if ($item['access']) {
+      // Add a destination parameter.
+      $item['localized_options']['query']['destination'] = 'admin/structure/custom-blocks';
+      $data['actions']['block/add'] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+  }
 }
 
 /**
@@ -32,11 +64,20 @@ function custom_block_menu_local_tasks(&$data, $router_item, $root_path) {
  */
 function custom_block_menu() {
   $items['admin/structure/custom-blocks'] = array(
-    'title' => 'Custom block types',
-    'description' => 'Manage custom block types.',
-    'route_name' => 'custom_block_type_list',
+    'title' => 'Custom blocks',
+    'description' => 'Manage custom blocks.',
+    'route_name' => 'custom_block_list',
   );
-  $items['admin/structure/custom-blocks/add'] = array(
+  $items['admin/structure/custom-blocks/list'] = array(
+    'title' => 'Blocks',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/structure/custom-blocks/types'] = array(
+    'title' => 'Types',
+    'route_name' => 'custom_block_type_list',
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/structure/custom-blocks/types/add'] = array(
     'route_name' => 'custom_block_type_add',
     'type' => MENU_SIBLING_LOCAL_TASK,
     'weight' => 1,
@@ -90,21 +131,6 @@ function custom_block_menu() {
     'file' => 'custom_block.pages.inc',
   );
   return $items;
-}
-
-/**
- * Implements hook_local_actions().
- */
-function custom_block_local_actions() {
-  return array(
-    array(
-      'route_name' => 'custom_block_type_add',
-      'title' => t('Add custom block type'),
-      'appears_on' => array(
-        'custom_block_type_list',
-      ),
-    ),
-  );
 }
 
 /**

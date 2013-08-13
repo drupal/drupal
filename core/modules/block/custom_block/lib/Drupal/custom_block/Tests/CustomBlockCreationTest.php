@@ -157,7 +157,9 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
       'settings[label]' => $edit['info'],
       'region' => 'sidebar_first',
     );
-    $this->drupalPost(NULL, $instance, t('Save block'));
+    $block = entity_load('custom_block', 1);
+    $url = 'admin/structure/block/add/custom_block:' . $block->uuid() . '/' . \Drupal::config('system.theme')->get('default');
+    $this->drupalPost($url, $instance, t('Save block'));
 
     $block = custom_block_load(1);
 

@@ -24,6 +24,7 @@ use Drupal\custom_block\CustomBlockInterface;
  *   controllers = {
  *     "storage" = "Drupal\custom_block\CustomBlockStorageController",
  *     "access" = "Drupal\custom_block\CustomBlockAccessController",
+ *     "list" = "Drupal\custom_block\CustomBlockListController",
  *     "render" = "Drupal\custom_block\CustomBlockRenderController",
  *     "form" = {
  *       "add" = "Drupal\custom_block\CustomBlockFormController",

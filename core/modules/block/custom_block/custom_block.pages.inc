@@ -73,5 +73,5 @@ function custom_block_delete_form_submit($form, &$form_state) {
   drupal_set_message(t('Custom block %label has been deleted.', array('%label' => $block->label())));
   watchdog('custom_block', 'Custom block %label has been deleted.', array('%label' => $block->label()), WATCHDOG_NOTICE);
 
-  $form_state['redirect'] = 'admin/structure/block';
+  $form_state['redirect'] = 'admin/structure/custom-blocks';
 }

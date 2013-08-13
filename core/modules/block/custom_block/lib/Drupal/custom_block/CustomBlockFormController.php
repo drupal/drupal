@@ -191,7 +191,7 @@ class CustomBlockFormController extends EntityFormControllerNG {
         }
       }
       else {
-        $form_state['redirect'] = 'admin/structure/block';
+        $form_state['redirect'] = 'admin/structure/custom-blocks';
       }
     }
     else {

@@ -61,7 +61,7 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
       'id' => 'foo',
       'label' => 'title for foo',
     );
-    $this->drupalPost('admin/structure/custom-blocks/add', $edit, t('Save'));
+    $this->drupalPost('admin/structure/custom-blocks/types/add', $edit, t('Save'));
     $block_type = entity_load('custom_block_type', 'foo');
     $this->assertTrue($block_type, 'The new block type has been created.');
 
