@@ -86,7 +86,6 @@ class SystemListing {
       $key = 'uri';
     }
     $config = conf_path();
-    $files = array();
 
     // Search for the directory in core.
     $searchdir = array('core/' . $directory);
