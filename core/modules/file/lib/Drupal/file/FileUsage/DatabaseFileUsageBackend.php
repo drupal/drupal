@@ -46,7 +46,7 @@ class DatabaseFileUsageBackend extends FileUsageBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Implements Drupal\file\FileUsage\FileUsageInterface::add().
    */
   public function add(File $file, $module, $type, $id, $count = 1) {
     $this->connection->merge($this->tableName)
@@ -64,7 +64,7 @@ class DatabaseFileUsageBackend extends FileUsageBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Implements Drupal\file\FileUsage\FileUsageInterface::delete().
    */
   public function delete(File $file, $module, $type = NULL, $id = NULL, $count = 1) {
     // Delete rows that have a exact or less value to prevent empty rows.
@@ -99,7 +99,7 @@ class DatabaseFileUsageBackend extends FileUsageBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Implements Drupal\file\FileUsage\FileUsageInterface::listUsage().
    */
   public function listUsage(File $file) {
     $result = $this->connection->select($this->tableName, 'f')
@@ -113,14 +113,4 @@ class DatabaseFileUsageBackend extends FileUsageBase {
     }
     return $references;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function deleteByModule($module) {
-    $this->connection->delete($this->tableName)
-      ->condition('module', $module)
-      ->execute();
-  }
-
 }

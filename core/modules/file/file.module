@@ -39,15 +39,6 @@ function file_help($path, $arg) {
 }
 
 /**
- * Implements hook_modules_uninstalled().
- */
-function file_modules_uninstalled($modules) {
-  foreach ($modules as $module) {
-    file_usage()->deleteByModule($module);
-  }
-}
-
-/**
  * Implements hook_menu().
  */
 function file_menu() {
