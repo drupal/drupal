@@ -43,7 +43,6 @@ function seven_preprocess_page(&$variables) {
  */
 function seven_node_add_list($variables) {
   $content = $variables['content'];
-  $output = '';
   if ($content) {
     $output = '<ul class="admin-list">';
     foreach ($content as $type) {
