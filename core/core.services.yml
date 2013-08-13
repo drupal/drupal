@@ -369,6 +369,14 @@ services:
     class: Drupal\Core\EventSubscriber\LegacyAccessSubscriber
     tags:
       - { name: event_subscriber }
+  private_key:
+    class: Drupal\Core\PrivateKey
+    arguments: ['@state']
+  csrf_token:
+    class: Drupal\Core\Access\CsrfTokenGenerator
+    arguments: ['@private_key']
+    calls:
+      - [setRequest, ['@?request']]
   access_manager:
     class: Drupal\Core\Access\AccessManager
     calls:

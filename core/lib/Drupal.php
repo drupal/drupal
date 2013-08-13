@@ -391,4 +391,14 @@ class Drupal {
     return static::$container->get('language_manager');
   }
 
+  /**
+   * Returns the CSRF token manager service.
+   *
+   * @return \Drupal\Core\Access\CsrfTokenGenerator
+   *   The CSRF token manager.
+   */
+  public static function csrfToken() {
+    return static::$container->get('csrf_token');
+  }
+
 }

@@ -3032,21 +3032,21 @@ function drupal_json_decode($var) {
 /**
  * Ensures the private key variable used to generate tokens is set.
  *
- * @return
+ * @return string
  *   The private key.
+ *
+ * @see \Drupal\Core\Access\CsrfTokenManager
+ *
+ * @deprecated as of Drupal 8.0. Use the 'private_key' service instead.
  */
 function drupal_get_private_key() {
-  if (!($key = Drupal::state()->get('system.private_key'))) {
-    $key = Crypt::randomStringHashed(55);
-    Drupal::state()->set('system.private_key', $key);
-  }
-  return $key;
+  return \Drupal::service('private_key')->get();
 }
 
 /**
  * Generates a token based on $value, the user session, and the private key.
  *
- * @param $value
+ * @param string $value
  *   An additional value to base the token on.
  *
  * @return string
@@ -3055,28 +3055,34 @@ function drupal_get_private_key() {
  *   'drupal_private_key' configuration variable.
  *
  * @see drupal_get_hash_salt()
+ * @see \Drupal\Core\Access\CsrfTokenManager
+ *
+ * @deprecated as of Drupal 8.0. Use the csrf_token service instead.
  */
 function drupal_get_token($value = '') {
-  return Crypt::hmacBase64($value, session_id() . drupal_get_private_key() . drupal_get_hash_salt());
+  return \Drupal::csrfToken()->get($value);
 }
 
 /**
  * Validates a token based on $value, the user session, and the private key.
  *
- * @param $token
+ * @param string $token
  *   The token to be validated.
- * @param $value
+ * @param string $value
  *   An additional value to base the token on.
- * @param $skip_anonymous
+ * @param bool $skip_anonymous
  *   Set to true to skip token validation for anonymous users.
  *
- * @return
+ * @return bool
  *   True for a valid token, false for an invalid token. When $skip_anonymous
  *   is true, the return value will always be true for anonymous users.
+ *
+ * @see \Drupal\Core\Access\CsrfTokenManager
+ *
+ * @deprecated as of Drupal 8.0. Use the csrf_token service instead.
  */
 function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
-  global $user;
-  return (($skip_anonymous && $user->id() == 0) || ($token == drupal_get_token($value)));
+  return \Drupal::csrfToken()->validate($token, $value, $skip_anonymous);
 }
 
 /**
