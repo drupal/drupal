@@ -32,7 +32,7 @@ function hook_dashboard_regions() {
  *   An array containing all dashboard regions, in the format provided by
  *   hook_dashboard_regions().
  */
-function hook_dashboard_regions_alter($regions) {
+function hook_dashboard_regions_alter(&$regions) {
   // Remove the sidebar region defined by the core dashboard module.
   unset($regions['dashboard_sidebar']);
 }
