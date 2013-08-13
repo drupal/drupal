@@ -72,4 +72,13 @@ interface FileUsageInterface {
    *
    */
   public function listUsage(File $file);
+
+  /**
+   * Removes all records for a specific module; useful for uninstalling modules.
+   *
+   * @param string $module
+   *   The name of the module using files.
+   */
+  public function deleteByModule($module);
+
 }
