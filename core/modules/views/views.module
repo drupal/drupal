@@ -120,7 +120,7 @@ function views_theme($existing, $type, $theme, $path) {
 
   // Register theme functions for all style plugins
   foreach ($plugins as $type => $info) {
-    foreach ($info as $plugin => $def) {
+    foreach ($info as $def) {
       // Not all plugins have theme functions, and they can also explicitly
       // prevent a theme function from being registered automatically.
       if (!isset($def['theme']) || empty($def['register_theme'])) {
@@ -189,7 +189,7 @@ function views_plugin_list() {
   $plugin_data = views_get_plugin_definitions();
   $plugins = array();
   foreach (views_get_enabled_views() as $view) {
-    foreach ($view->get('display') as $display_id => $display) {
+    foreach ($view->get('display') as $display) {
       foreach ($plugin_data as $type => $info) {
         if ($type == 'display' && isset($display['display_plugin'])) {
           $name = $display['display_plugin'];
@@ -1257,7 +1257,7 @@ function views_form_views_form_validate($form, &$form_state) {
   $view = $form_state['build_info']['args'][0];
 
   // Call the validation method on every field handler that has it.
-  foreach ($view->field as $field_name => $field) {
+  foreach ($view->field as $field) {
     if (method_exists($field, 'views_form_validate')) {
       $field->views_form_validate($form, $form_state);
     }
@@ -1265,7 +1265,7 @@ function views_form_views_form_validate($form, &$form_state) {
 
   // Call the validate method on every area handler that has it.
   foreach (array('header', 'footer') as $area) {
-    foreach ($view->{$area} as $area_name => $area_handler) {
+    foreach ($view->{$area} as $area_handler) {
       if (method_exists($area_handler, 'views_form_validate')) {
         $area_handler->views_form_validate($form, $form_state);
       }
@@ -1282,7 +1282,7 @@ function views_form_views_form_submit($form, &$form_state) {
   $view = $form_state['build_info']['args'][0];
 
   // Call the submit method on every field handler that has it.
-  foreach ($view->field as $field_name => $field) {
+  foreach ($view->field as $field) {
     if (method_exists($field, 'views_form_submit')) {
       $field->views_form_submit($form, $form_state);
     }
@@ -1290,7 +1290,7 @@ function views_form_views_form_submit($form, &$form_state) {
 
   // Call the submit method on every area handler that has it.
   foreach (array('header', 'footer') as $area) {
-    foreach ($view->{$area} as $area_name => $area_handler) {
+    foreach ($view->{$area} as $area_handler) {
       if (method_exists($area_handler, 'views_form_submit')) {
         $area_handler->views_form_submit($form, $form_state);
       }
