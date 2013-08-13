@@ -109,12 +109,14 @@ use Drupal\Core\Database\Query\Condition;
  * object-oriented API for defining a query structurally. For example, rather
  * than:
  * @code
- * INSERT INTO {example} (id, uid, path, name) VALUES (1, 2, 'home', 'Home path');
+ * INSERT INTO {example} (id, uid, path, name) VALUES (1, 2, 'path', 'Name');
  * @endcode
  * one would instead write:
  * @code
- * $fields = array('nid' => 1, 'title' => 'my title', 'body' => 'my body');
- * db_insert('node')->fields($fields)->execute();
+ * $fields = array('id' => 1, 'uid' => 2, 'path' => 'path', 'name' => 'Name');
+ * db_insert('example')
+ *   ->fields($fields)
+ *   ->execute();
  * @endcode
  * This method allows databases that need special data type handling to do so,
  * while also allowing optimizations such as multi-insert queries. UPDATE and
