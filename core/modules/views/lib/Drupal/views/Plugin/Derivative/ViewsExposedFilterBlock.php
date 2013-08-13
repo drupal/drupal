@@ -7,14 +7,16 @@
 
 namespace Drupal\views\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeInterface;
+use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides block plugin definitions for all Views exposed filters.
  *
  * @see \Drupal\views\Plugin\block\block\ViewsExposedFilterBlock
  */
-class ViewsExposedFilterBlock implements DerivativeInterface {
+class ViewsExposedFilterBlock implements ContainerDerivativeInterface {
 
   /**
    * List of derivative definitions.
@@ -22,6 +24,43 @@ class ViewsExposedFilterBlock implements DerivativeInterface {
    * @var array
    */
   protected $derivatives = array();
+
+  /**
+   * The view storage controller.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   */
+  protected $viewStorageController;
+
+  /**
+   * The base plugin ID that the derivative is for.
+   *
+   * @var string
+   */
+  protected $basePluginId;
+
+  /**
+   * Constructs a ViewsExposedFilterBlock object.
+   *
+   * @param string $base_plugin_id
+   *   The base plugin ID.
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $view_storage_controller
+   *   The entity storage controller to load views.
+   */
+  public function __construct($base_plugin_id, EntityStorageControllerInterface $view_storage_controller) {
+    $this->basePluginId = $base_plugin_id;
+    $this->viewStorageController = $view_storage_controller;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, $base_plugin_id) {
+    return new static(
+      $base_plugin_id,
+      $container->get('plugin.manager.entity')->getStorageController('view')
+    );
+  }
 
   /**
    * Implements \Drupal\Component\Plugin\Derivative\DerivativeInterface::getDerivativeDefinition().
@@ -39,7 +78,7 @@ class ViewsExposedFilterBlock implements DerivativeInterface {
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     // Check all Views for displays with an exposed filter block.
-    foreach (views_get_all_views() as $view) {
+    foreach ($this->viewStorageController->loadMultiple() as $view) {
       // Do not return results for disabled views.
       if (!$view->status()) {
         continue;
