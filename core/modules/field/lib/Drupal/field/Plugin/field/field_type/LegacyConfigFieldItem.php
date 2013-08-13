@@ -55,11 +55,11 @@ abstract class LegacyConfigFieldItem extends ConfigFieldItemBase implements Prep
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, array &$form_state, $has_data) {
     if ($callback = $this->getLegacyCallback('settings_form')) {
       // hook_field_settings_form() used to receive the $instance (not actually
       // needed), and the value of field_has_data().
-      return $callback($this->getInstance()->getField(), $this->getInstance(), $this->getInstance()->getField()->hasData());
+      return $callback($this->getInstance()->getField(), $this->getInstance(), $has_data);
     }
     return array();
   }

@@ -67,10 +67,9 @@ class DecimalItem extends NumberItemBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, array &$form_state, $has_data) {
     $element = array();
     $settings = $this->getFieldSettings();
-    $has_data = $this->getInstance()->getField()->hasData();
 
     $element['precision'] = array(
       '#type' => 'select',

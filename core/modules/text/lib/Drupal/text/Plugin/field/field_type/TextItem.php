@@ -83,7 +83,7 @@ class TextItem extends TextItemBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, array &$form_state, $has_data) {
     $element = array();
 
     $element['max_length'] = array(
@@ -93,9 +93,7 @@ class TextItem extends TextItemBase {
       '#required' => TRUE,
       '#description' => t('The maximum length of the field in characters.'),
       '#min' => 1,
-      // @todo: If $has_data, add a validate handler that only allows
-      // max_length to increase.
-      '#disabled' => $this->getInstance()->getField()->hasData(),
+      '#disabled' => $has_data,
     );
 
     return $element;
