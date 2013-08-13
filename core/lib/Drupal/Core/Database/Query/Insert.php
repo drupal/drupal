@@ -55,7 +55,7 @@ class Insert extends Query {
   /**
    * A SelectQuery object to fetch the rows that should be inserted.
    *
-   * @var SelectQueryInterface
+   * @var \Drupal\Core\Database\Query\SelectInterface
    */
   protected $fromQuery;
 
@@ -266,8 +266,8 @@ class Insert extends Query {
    * @return
    *   TRUE if the validation was successful, FALSE if not.
    *
-   * @throws Drupal\Core\Database\Query\FieldsOverlapException
-   * @throws Drupal\Core\Database\Query\NoFieldsException
+   * @throws \Drupal\Core\Database\Query\FieldsOverlapException
+   * @throws \Drupal\Core\Database\Query\NoFieldsException
    */
   public function preExecute() {
     // Confirm that the user did not try to specify an identical

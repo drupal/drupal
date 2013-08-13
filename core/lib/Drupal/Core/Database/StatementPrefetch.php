@@ -46,7 +46,7 @@ class StatementPrefetch implements Iterator, StatementInterface {
   /**
    * Reference to the Drupal database connection object for this statement.
    *
-   * @var Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Database\Connection
    */
   protected $connection;
 

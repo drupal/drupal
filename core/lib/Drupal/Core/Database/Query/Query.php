@@ -21,7 +21,7 @@ abstract class Query implements PlaceholderInterface {
   /**
    * The connection object on which to run this query.
    *
-   * @var Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Database\Connection
    */
   protected $connection;
 

@@ -31,7 +31,7 @@ class Transaction {
   /**
    * The connection object for this transaction.
    *
-   * @var Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Database\Connection
    */
   protected $connection;
 

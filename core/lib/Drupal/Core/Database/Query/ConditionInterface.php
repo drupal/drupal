@@ -39,8 +39,8 @@ interface ConditionInterface {
    * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    *
-   * @see Drupal\Core\Database\Query\ConditionInterface::isNull()
-   * @see Drupal\Core\Database\Query\ConditionInterface::isNotNull()
+   * @see \Drupal\Core\Database\Query\ConditionInterface::isNull()
+   * @see \Drupal\Core\Database\Query\ConditionInterface::isNotNull()
    */
   public function condition($field, $value = NULL, $operator = NULL);
 

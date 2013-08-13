@@ -207,7 +207,7 @@ use Drupal\Core\Database\Query\Condition;
  * @return \Drupal\Core\Database\StatementInterface
  *   A prepared statement object, already executed.
  *
- * @see DatabaseConnection::defaultOptions()
+ * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
 function db_query($query, array $args = array(), array $options = array()) {
   if (empty($options['target'])) {
@@ -239,7 +239,7 @@ function db_query($query, array $args = array(), array $options = array()) {
  * @return \Drupal\Core\Database\StatementInterface
  *   A prepared statement object, already executed.
  *
- * @see DatabaseConnection::defaultOptions()
+ * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
 function db_query_range($query, $from, $count, array $args = array(), array $options = array()) {
   if (empty($options['target'])) {
@@ -269,7 +269,7 @@ function db_query_range($query, $from, $count, array $args = array(), array $opt
  * @return
  *   The name of the temporary table.
  *
- * @see DatabaseConnection::defaultOptions()
+ * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
 function db_query_temporary($query, array $args = array(), array $options = array()) {
   if (empty($options['target'])) {

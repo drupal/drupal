@@ -72,14 +72,14 @@ class Select extends Query implements SelectInterface {
   /**
    * The conditional object for the WHERE clause.
    *
-   * @var Drupal\Core\Database\Query\Condition
+   * @var \Drupal\Core\Database\Query\Condition
    */
   protected $where;
 
   /**
    * The conditional object for the HAVING clause.
    *
-   * @var Drupal\Core\Database\Query\Condition
+   * @var \Drupal\Core\Database\Query\Condition
    */
   protected $having;
 

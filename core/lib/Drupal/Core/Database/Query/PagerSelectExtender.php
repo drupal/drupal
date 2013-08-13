@@ -43,7 +43,7 @@ class PagerSelectExtender extends SelectExtender {
   /**
    * The count query that will be used for this pager.
    *
-   * @var SelectQueryInterface
+   * @var \Drupal\Core\Database\Query\SelectInterface
    */
   protected $customCountQuery = FALSE;
 

@@ -41,7 +41,7 @@ class Update extends Query implements ConditionInterface {
    *
    * Condition handling is handled via composition.
    *
-   * @var Drupal\Core\Database\Query\Condition
+   * @var \Drupal\Core\Database\Query\Condition
    */
   protected $condition;
 
