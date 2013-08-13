@@ -123,9 +123,10 @@ function template_preprocess_user(&$variables) {
  */
 function user_edit_cancel_submit($form, &$form_state) {
   $destination = array();
-  if (isset($_GET['destination'])) {
+  $query = Drupal::request()->query;
+  if ($query->has('destination')) {
     $destination = drupal_get_destination();
-    unset($_GET['destination']);
+    $query->remove('destination');
   }
   // Note: We redirect from user/uid/edit to user/uid/cancel to make the tabs disappear.
   $account = $form_state['controller']->getEntity();

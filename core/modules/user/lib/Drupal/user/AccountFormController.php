@@ -70,7 +70,8 @@ abstract class AccountFormController extends EntityFormControllerNG {
 
       // To skip the current password field, the user must have logged in via a
       // one-time link and have the token in the URL.
-      $pass_reset = isset($_SESSION['pass_reset_' . $account->id()]) && isset($_GET['pass-reset-token']) && ($_GET['pass-reset-token'] == $_SESSION['pass_reset_' . $account->id()]);
+      $pass_reset = isset($_SESSION['pass_reset_' . $account->id()]) && (\Drupal::request()->query->get('pass-reset-token') == $_SESSION['pass_reset_' . $account->id()]);
+
       $protected_values = array();
       $current_pass_description = '';
 
