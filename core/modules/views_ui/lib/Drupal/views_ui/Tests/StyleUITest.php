@@ -34,7 +34,6 @@ class StyleUITest extends UITestBase {
    */
   public function testStyleUI() {
     $view_name = 'test_view';
-    $view = views_get_view($view_name);
     $view_edit_url = "admin/structure/views/view/$view_name/edit";
 
     $style_plugin_url = "admin/structure/views/nojs/display/$view_name/default/style";
