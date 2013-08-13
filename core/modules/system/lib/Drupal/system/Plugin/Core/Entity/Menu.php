@@ -20,7 +20,8 @@ use Drupal\system\MenuInterface;
  *   label = @Translation("Menu"),
  *   module = "system",
  *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
+ *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
+ *     "access" = "Drupal\system\MenuAccessController"
  *   },
  *   config_prefix = "menu.menu",
  *   entity_keys = {

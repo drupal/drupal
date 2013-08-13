@@ -125,7 +125,6 @@ function menu_menu() {
  */
 function menu_entity_info(&$entity_info) {
   $entity_info['menu']['controllers']['list'] = 'Drupal\menu\MenuListController';
-  $entity_info['menu']['controllers']['access'] = 'Drupal\menu\MenuAccessController';
   $entity_info['menu']['uri_callback'] = 'menu_uri';
   $entity_info['menu']['controllers']['form'] = array(
     'add' => 'Drupal\menu\MenuFormController',

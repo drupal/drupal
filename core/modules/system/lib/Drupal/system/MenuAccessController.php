@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\menu\MenuAccessController.
+ * Contains \Drupal\system\MenuAccessController.
  */
 
-namespace Drupal\menu;
+namespace Drupal\system;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityAccessController;
@@ -25,6 +25,7 @@ class MenuAccessController extends EntityAccessController {
     }
     elseif ($operation == 'delete') {
       // System menus could not be deleted.
+      // @todo Refactor in https://drupal.org/node/1882552
       $system_menus = menu_list_system_menus();
       if (isset($system_menus[$entity->id()])) {
         return FALSE;
@@ -32,7 +33,7 @@ class MenuAccessController extends EntityAccessController {
     }
 
     if (in_array($operation, array('update', 'delete'))) {
-      return user_access('administer menu', $account);
+      return $account->hasPermission('administer menu');
     }
   }
 
@@ -40,7 +41,7 @@ class MenuAccessController extends EntityAccessController {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return user_access('administer menu', $account);
+    return $account->hasPermission('administer menu');
   }
 
 }

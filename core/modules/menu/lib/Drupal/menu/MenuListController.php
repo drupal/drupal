@@ -49,16 +49,16 @@ class MenuListController extends ConfigEntityListController {
 
     if (isset($operations['edit'])) {
       $operations['edit']['title'] = t('Edit menu');
+      $operations['add'] = array(
+        'title' => t('Add link'),
+        'href' => $uri['path'] . '/add',
+        'options' => $uri['options'],
+        'weight' => 20,
+      );
     }
     if (isset($operations['delete'])) {
       $operations['delete']['title'] = t('Delete menu');
     }
-    $operations['add'] = array(
-      'title' => t('Add link'),
-      'href' => $uri['path'] . '/add',
-      'options' => $uri['options'],
-      'weight' => 20,
-    );
     return $operations;
   }
 
