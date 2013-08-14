@@ -42,7 +42,6 @@ class RequestCloseSubscriber implements EventSubscriberInterface {
    *   The Event to process.
    */
   public function onTerminate(PostResponseEvent $event) {
-    $request_method = $event->getRequest()->getMethod();
     if ($this->moduleHandler instanceof CachedModuleHandlerInterface) {
       $this->moduleHandler->writeCache();
     }
