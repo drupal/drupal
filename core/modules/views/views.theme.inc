@@ -20,8 +20,6 @@ use Drupal\views\ViewExecutable;
  *   - view: The ViewExecutable object.
  */
 function template_preprocess_views_view(&$variables) {
-  global $base_path;
-
   $view = $variables['view'];
 
   $variables['rows'] = (!empty($view->result) || $view->style_plugin->evenEmpty()) ? $view->style_plugin->render($view->result) : array();
@@ -306,7 +304,7 @@ function theme_views_view_fields($variables) {
   $fields = $variables['fields'];
   $output = '';
 
-  foreach ($fields as $id => $field) {
+  foreach ($fields as $field) {
     if (!empty($field->separator)) {
       $output .= $field->separator;
     }
@@ -347,9 +345,6 @@ function template_preprocess_views_view_grouping(&$variables) {
  * this: @code { $row->{$field->field_alias} @endcode
  */
 function theme_views_view_field($variables) {
-  $view = $variables['view'];
-  $field = $variables['field'];
-  $row = $variables['row'];
   return $variables['output'];
 }
 
@@ -514,7 +509,6 @@ function template_preprocess_views_view_table(&$variables) {
   $options = $view->style_plugin->options;
   $handler = $view->style_plugin;
 
-  $default_row_class = isset($options['default_row_class']) ? $options['default_row_class'] : TRUE;
   $row_class_special = isset($options['row_class_special']) ? $options['row_class_special'] : TRUE;
 
   $fields = &$view->field;
@@ -675,11 +669,11 @@ function template_preprocess_views_view_table(&$variables) {
     // field is not empty.
     if (!empty($options['info'][$field]['empty_column'])) {
       $empty = TRUE;
-      foreach ($variables['rows'] as $num => $columns) {
+      foreach ($variables['rows'] as $columns) {
         $empty &= empty($columns[$column]);
       }
       if ($empty) {
-        foreach ($variables['rows'] as $num => &$column_items) {
+        foreach ($variables['rows'] as &$column_items) {
           unset($column_items[$column]);
           unset($variables['header'][$column]);
         }
@@ -966,8 +960,6 @@ function template_preprocess_views_view_list(&$variables) {
  *   - rows: The raw row data.
 */
 function template_preprocess_views_view_rss(&$variables) {
-  global $base_url;
-
   $view = $variables['view'];
   $items = $variables['rows'];
 
@@ -1063,7 +1055,7 @@ function template_preprocess_views_exposed_form(&$variables) {
   // Include basic theming for exposed forms.
   $form['#attached']['library'][] = array('views', 'views.exposed-form');
 
-  foreach ($form['#info'] as $id => $info) {
+  foreach ($form['#info'] as $info) {
     if (!empty($info['label'])) {
       $form[$info['value']]['#title'] = $info['label'];
     }
