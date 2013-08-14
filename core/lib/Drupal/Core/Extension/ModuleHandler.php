@@ -145,7 +145,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * Implements \Drupal\Core\Extension\ModuleHandlerInterface::buildModuleDependencies().
    */
   public function buildModuleDependencies(array $modules) {
-    foreach ($modules as $name => $module) {
+    foreach ($modules as $module) {
       $graph[$module->name]['edges'] = array();
       if (isset($module->info['dependencies']) && is_array($module->info['dependencies'])) {
         foreach ($module->info['dependencies'] as $dependency) {
