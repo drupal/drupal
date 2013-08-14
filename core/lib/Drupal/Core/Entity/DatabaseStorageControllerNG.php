@@ -189,7 +189,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       // Remove all fields from the base table that are also fields by the same
       // name in the revision table.
       $entity_field_keys = array_flip($entity_fields);
-      foreach ($entity_revision_fields as $key => $name) {
+      foreach ($entity_revision_fields as $name) {
         if (isset($entity_field_keys[$name])) {
           unset($entity_fields[$entity_field_keys[$name]]);
         }
@@ -279,7 +279,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         else {
           // Get the revision IDs.
           $revision_ids = array();
-          foreach ($entities as $id => $values) {
+          foreach ($entities as $values) {
             $revision_ids[] = $values[$this->revisionKey];
           }
           $query->condition($this->revisionKey, $revision_ids);
@@ -576,7 +576,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         $entities[$id] = $entity->getNGEntity();
       }
 
-      foreach ($entities as $id => $entity) {
+      foreach ($entities as $entity) {
         $this->invokeHook('predelete', $entity);
       }
       $ids = array_keys($entities);
@@ -601,7 +601,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       $this->resetCache($ids);
 
       $entity_class::postDelete($this, $entities);
-      foreach ($entities as $id => $entity) {
+      foreach ($entities as $entity) {
         $this->invokeFieldMethod('delete', $entity);
         $this->invokeHook('delete', $entity);
       }

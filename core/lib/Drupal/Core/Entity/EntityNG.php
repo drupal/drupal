@@ -615,7 +615,7 @@ class EntityNG extends Entity {
    */
   public function removeTranslation($langcode) {
     if (isset($this->translations[$langcode]) && $langcode != Language::LANGCODE_DEFAULT && $langcode != $this->getDefaultLanguage()->id) {
-      foreach ($this->getPropertyDefinitions() as $name => $definition) {
+      foreach ($this->getPropertyDefinitions() as $definition) {
         if (!empty($definition['translatable'])) {
           unset($this->values[$langcode]);
           unset($this->fields[$langcode]);
