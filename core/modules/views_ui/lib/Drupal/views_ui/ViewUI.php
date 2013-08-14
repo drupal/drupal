@@ -519,7 +519,7 @@ class ViewUI implements ViewStorageInterface {
     $old_q = current_path();
 
     // Determine where the query and performance statistics should be output.
-    $config = config('views.settings');
+    $config = \Drupal::config('views.settings');
     $show_query = $config->get('ui.show.sql_query.enabled');
     $show_info = $config->get('ui.show.preview_information');
     $show_location = $config->get('ui.show.sql_query.where');

@@ -224,7 +224,7 @@ function system_permission() {
     ),
     'view the administration theme' => array(
       'title' => t('View the administration theme'),
-      'description' => config('system.theme')->get('admin') ?: t('This is only used when the site is configured to use a separate administration theme on the <a href="@appearance-url">Appearance</a> page.', array('@appearance-url' => url('admin/appearance'))),
+      'description' => Drupal::config('system.theme')->get('admin') ?: t('This is only used when the site is configured to use a separate administration theme on the <a href="@appearance-url">Appearance</a> page.', array('@appearance-url' => url('admin/appearance'))),
     ),
     'access site reports' => array(
       'title' => t('View site reports'),
@@ -2011,7 +2011,7 @@ function system_stream_wrappers() {
   );
 
   // Only register the private file stream wrapper if a file path has been set.
-  if (config('system.file')->get('path.private')) {
+  if (Drupal::config('system.file')->get('path.private')) {
     $wrappers['private'] = array(
       'name' => t('Private files'),
       'class' => 'Drupal\Core\StreamWrapper\PrivateStream',
@@ -2246,7 +2246,7 @@ function system_custom_theme() {
     $request = drupal_container()->get('request');
     $path = $request->attributes->get('_system_path');
     if (user_access('view the administration theme') && path_is_admin($path)) {
-      return config('system.theme')->get('admin');
+      return Drupal::config('system.theme')->get('admin');
     }
   }
 }
@@ -2255,7 +2255,7 @@ function system_custom_theme() {
  * Implements hook_form_FORM_ID_alter().
  */
 function system_form_user_form_alter(&$form, &$form_state) {
-  if (config('system.date')->get('timezone.user.configurable')) {
+  if (Drupal::config('system.date')->get('timezone.user.configurable')) {
     system_user_timezone($form, $form_state);
   }
 }
@@ -2264,7 +2264,7 @@ function system_form_user_form_alter(&$form, &$form_state) {
  * Implements hook_form_FORM_ID_alter().
  */
 function system_form_user_register_form_alter(&$form, &$form_state) {
-  $config = config('system.date');
+  $config = Drupal::config('system.date');
   if ($config->get('timezone.user.configurable') && $config->get('timezone.user.default') == DRUPAL_USER_TIMEZONE_SELECT) {
     system_user_timezone($form, $form_state);
   }
@@ -2274,7 +2274,7 @@ function system_form_user_register_form_alter(&$form, &$form_state) {
  * Implements hook_user_presave().
  */
 function system_user_presave(UserInterface $account) {
-  $config = config('system.date');
+  $config = Drupal::config('system.date');
   if ($config->get('timezone.user.configurable') && !$account->getTimeZone() && !$config->get('timezone.user.default')) {
     $account->timezone = $config->get('timezone.default');
   }
@@ -2284,7 +2284,7 @@ function system_user_presave(UserInterface $account) {
  * Implements hook_user_login().
  */
 function system_user_login($account) {
-  $config = config('system.date');
+  $config = Drupal::config('system.date');
   // If the user has a NULL time zone, notify them to set a time zone.
   if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
     drupal_set_message(t('Configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => url("user/$account->id()/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
@@ -2306,7 +2306,7 @@ function system_user_timezone(&$form, &$form_state) {
   $form['timezone']['timezone'] = array(
     '#type' => 'select',
     '#title' => t('Time zone'),
-    '#default_value' => $account->getTimezone() ? $account->getTimezone() : config('system.date')->get('timezone.default'),
+    '#default_value' => $account->getTimezone() ? $account->getTimezone() : Drupal::config('system.date')->get('timezone.default'),
     '#options' => system_time_zones($account->id() != $user->id()),
     '#description' => t('Select the desired local time and time zone. Dates and times throughout this site will be displayed using this time zone.'),
   );
@@ -2596,8 +2596,8 @@ function system_rebuild_module_data() {
     $files = array();
     ksort($modules);
     // Add name, status, weight, and schema version.
-    $enabled_modules = (array) config('system.module')->get('enabled');
-    $disabled_modules = (array) config('system.module.disabled')->get();
+    $enabled_modules = (array) Drupal::config('system.module')->get('enabled');
+    $disabled_modules = (array) Drupal::config('system.module.disabled')->get();
     $all_modules = $enabled_modules + $disabled_modules;
     foreach ($modules as $module => $record) {
       $record->name = $module;
@@ -2750,7 +2750,7 @@ function system_rebuild_theme_data() {
   //   based on the current config. Remove this code when themes have a proper
   //   installation status.
   // @see http://drupal.org/node/1067408
-  $enabled_themes = (array) config('system.theme')->get('enabled');
+  $enabled_themes = (array) Drupal::config('system.theme')->get('enabled');
   $files = array();
   foreach ($themes as $name => $theme) {
     $theme->status = (int) isset($enabled_themes[$name]);
@@ -2977,7 +2977,7 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
 function system_admin_compact_mode() {
   // PHP converts dots into underscores in cookie names to avoid problems with
   // its parser, so we use a converted cookie name.
-  return isset($_COOKIE['Drupal_visitor_admin_compact_mode']) ? $_COOKIE['Drupal_visitor_admin_compact_mode'] : config('system.site')->get('admin_compact_mode');
+  return isset($_COOKIE['Drupal_visitor_admin_compact_mode']) ? $_COOKIE['Drupal_visitor_admin_compact_mode'] : Drupal::config('system.site')->get('admin_compact_mode');
 }
 
 /**
@@ -3250,7 +3250,7 @@ function system_run_automated_cron() {
   // If the site is not fully installed, suppress the automated cron run.
   // Otherwise it could be triggered prematurely by Ajax requests during
   // installation.
-  if (($threshold = config('system.cron')->get('threshold.autorun')) > 0 && variable_get('install_task') == 'done') {
+  if (($threshold = Drupal::config('system.cron')->get('threshold.autorun')) > 0 && variable_get('install_task') == 'done') {
     $cron_last = Drupal::state()->get('system.cron_last') ?: NULL;
     if (!isset($cron_last) || (REQUEST_TIME - $cron_last > $threshold)) {
       drupal_cron_run();

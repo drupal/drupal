@@ -86,7 +86,7 @@ class CommentFormController extends EntityFormControllerNG {
     );
     if ($is_admin) {
       $form['author']['name']['#title'] = t('Authored by');
-      $form['author']['name']['#description'] = t('Leave blank for %anonymous.', array('%anonymous' => config('user.settings')->get('anonymous')));
+      $form['author']['name']['#description'] = t('Leave blank for %anonymous.', array('%anonymous' => \Drupal::config('user.settings')->get('anonymous')));
       $form['author']['name']['#autocomplete_path'] = 'user/autocomplete';
     }
     elseif ($user->isAuthenticated()) {
@@ -274,7 +274,7 @@ class CommentFormController extends EntityFormControllerNG {
     // If the comment was posted by an anonymous user and no author name was
     // required, use "Anonymous" by default.
     if ($comment->is_anonymous && (!isset($comment->name->value) || $comment->name->value === '')) {
-      $comment->name->value = config('user.settings')->get('anonymous');
+      $comment->name->value = \Drupal::config('user.settings')->get('anonymous');
     }
 
     // Validate the comment's subject. If not specified, extract from comment

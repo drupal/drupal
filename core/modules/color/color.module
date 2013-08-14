@@ -64,7 +64,7 @@ function color_css_alter(&$css) {
   $themes = list_themes();
 
   // Override stylesheets.
-  $color_paths = config('color.' . $theme_key)->get('stylesheets');
+  $color_paths = Drupal::config('color.' . $theme_key)->get('stylesheets');
 
   if (!empty($color_paths) && !empty($themes[$theme_key]->stylesheets['all'])) {
 
@@ -93,7 +93,7 @@ function color_preprocess_page(&$variables) {
   global $theme_key;
 
   // Override logo.
-  $logo = config('color.' . $theme_key)->get('logo');
+  $logo = Drupal::config('color.' . $theme_key)->get('logo');
   if ($logo && $variables['logo'] && preg_match('!' . $theme_key . '/logo.png$!', $variables['logo'])) {
     $variables['logo'] = file_create_url($logo);
   }
@@ -132,7 +132,7 @@ function color_get_palette($theme, $default = FALSE) {
 
   // Load variable.
   // @todo Default color config should be moved to yaml in the theme.
-  return config('color.' . $theme)->get('palette') ?: $palette;
+  return Drupal::config('color.' . $theme)->get('palette') ?: $palette;
 }
 
 /**
@@ -160,7 +160,7 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
 
   // See if we're using a predefined scheme.
   // Note: we use the original theme when the default scheme is chosen.
-  $current_scheme = config('color.' . $theme)->get('palette');
+  $current_scheme = Drupal::config('color.' . $theme)->get('palette');
   foreach ($schemes as $key => $scheme) {
     if ($current_scheme == $scheme) {
       $scheme_name = $key;
@@ -281,7 +281,7 @@ function color_scheme_form_submit($form, &$form_state) {
   $theme = $form_state['values']['theme'];
   $info = $form_state['values']['info'];
 
-  $config = config('color.' . $theme);
+  $config = Drupal::config('color.' . $theme);
 
   // Resolve palette.
   $palette = $form_state['values']['palette'];
@@ -544,7 +544,7 @@ function _color_render_images($theme, &$info, &$paths, $palette) {
     if ($file == 'screenshot.png') {
       $slice = imagecreatetruecolor(150, 90);
       imagecopyresampled($slice, $target, 0, 0, $x, $y, 150, 90, $width, $height);
-      config('color.' . $theme)
+      Drupal::config('color.' . $theme)
         ->set('screenshot', $image)
         ->save();
     }

@@ -461,7 +461,7 @@ function menu_test_local_action_dynamic_title($arg) {
  * several local tasks to menu-test/tasks.
  */
 function menu_test_menu_local_tasks(&$data, $router_item, $root_path) {
-  if (!config('menu_test.settings')->get('tasks.add')) {
+  if (!Drupal::config('menu_test.settings')->get('tasks.add')) {
     return;
   }
   if (strpos($router_item['tab_root'], 'menu-test/tasks/') === 0) {
@@ -491,7 +491,7 @@ function menu_test_menu_local_tasks(&$data, $router_item, $root_path) {
  * several local tasks to menu-test/tasks.
  */
 function menu_test_menu_local_tasks_alter(&$data, $router_item, $root_path) {
-  if (!config('menu_test.settings')->get('tasks.alter')) {
+  if (!Drupal::config('menu_test.settings')->get('tasks.alter')) {
     return;
   }
   if (strpos($router_item['tab_root'], 'menu-test/tasks/') === 0) {
@@ -634,7 +634,7 @@ function menu_test_theme_page_callback($inherited = FALSE) {
 function menu_test_theme_callback($argument) {
   // Test using the variable administrative theme.
   if ($argument == 'use-admin-theme') {
-    return config('system.theme')->get('admin');
+    return Drupal::config('system.theme')->get('admin');
   }
   // Test using a theme that exists, but may or may not be enabled.
   elseif ($argument == 'use-stark-theme') {

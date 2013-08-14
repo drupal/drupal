@@ -127,14 +127,14 @@ class UserAdminTest extends WebTestBase {
     $this->drupalLogout();
 
     // Test custom user registration approval email address(es).
-    $config = config('user.settings');
+    $config = \Drupal::config('user.settings');
     // Allow users to register with admin approval.
     $config
       ->set('verify_mail', TRUE)
       ->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)
       ->save();
     // Set the site and notification email addresses.
-    $system = config('system.site');
+    $system = \Drupal::config('system.site');
     $server_address = $this->randomName() . '@example.com';
     $notify_address = $this->randomName() . '@example.com';
     $system

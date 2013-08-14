@@ -211,7 +211,7 @@ function statistics_node_predelete(EntityInterface $node) {
  * Implements hook_ranking().
  */
 function statistics_ranking() {
-  if (config('statistics.settings')->get('count_content_views')) {
+  if (Drupal::config('statistics.settings')->get('count_content_views')) {
     return array(
       'views' => array(
         'title' => t('Number of views'),
@@ -274,7 +274,7 @@ function statistics_library_info() {
  * to count content views.
  */
 function statistics_block_alter(&$definitions) {
-  $statistics_count_content_views = config('statistics.settings')->get('count_content_views');
+  $statistics_count_content_views = Drupal::config('statistics.settings')->get('count_content_views');
   if (empty($statistics_count_content_views)) {
     unset($definitions['statistics_popular_block']);
   }

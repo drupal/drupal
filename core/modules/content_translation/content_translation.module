@@ -413,7 +413,7 @@ function content_translation_get_config_key($entity_type, $bundle, $setting) {
  */
 function content_translation_get_config($entity_type, $bundle, $setting) {
   $key = content_translation_get_config_key($entity_type, $bundle, $setting);
-  return config('content_translation.settings')->get($key);
+  return Drupal::config('content_translation.settings')->get($key);
 }
 
 /**
@@ -430,7 +430,7 @@ function content_translation_get_config($entity_type, $bundle, $setting) {
  */
 function content_translation_set_config($entity_type, $bundle, $setting, $value) {
   $key = content_translation_get_config_key($entity_type, $bundle, $setting);
-  return config('content_translation.settings')->set($key, $value)->save();
+  return Drupal::config('content_translation.settings')->set($key, $value)->save();
 }
 
 /**

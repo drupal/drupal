@@ -100,7 +100,7 @@ class FinishResponseSubscriber implements EventSubscriberInterface {
       $response->headers->set($name, $value, FALSE);
     }
 
-    $max_age = config('system.performance')->get('cache.page.max_age');
+    $max_age = \Drupal::config('system.performance')->get('cache.page.max_age');
     if ($max_age > 0 && ($cache = drupal_page_set_cache($response, $request))) {
       drupal_serve_page_from_cache($cache, $response, $request);
     }

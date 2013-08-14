@@ -91,7 +91,7 @@ function search_extra_type_search_admin() {
       'bi' => t('Bistromathic'),
       'ii' => t('Infinite Improbability'),
     ),
-    '#default_value' => config('search_extra_type.settings')->get('boost'),
+    '#default_value' => Drupal::config('search_extra_type.settings')->get('boost'),
   );
 
   $form['#submit'][] = 'search_extra_type_admin_submit';
@@ -103,7 +103,7 @@ function search_extra_type_search_admin() {
  * Form API callback: Save admin settings
  */
 function search_extra_type_admin_submit($form, &$form_state) {
-  config('search_extra_type.settings')
+  Drupal::config('search_extra_type.settings')
     ->set('boost', $form_state['values']['extra_type_settings']['boost'])
     ->save();
 }

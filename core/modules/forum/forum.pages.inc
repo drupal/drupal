@@ -18,7 +18,7 @@
  * @see forum_menu()
  */
 function forum_page($forum_term = NULL) {
-  $config = config('forum.settings');
+  $config = Drupal::config('forum.settings');
   $vocabulary = entity_load('taxonomy_vocabulary', $config->get('vocabulary'));
 
   if (!isset($forum_term)) {

@@ -35,11 +35,11 @@ class PageTest extends WebTestBase {
   function testBatchProgressPageTheme() {
     // Make sure that the page which starts the batch (an administrative page)
     // is using a different theme than would normally be used by the batch API.
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', 'bartik')
       ->save();
     theme_enable(array('seven'));
-    config('system.theme')->set('admin', 'seven')->save();
+    \Drupal::config('system.theme')->set('admin', 'seven')->save();
     // Log in as an administrator who can see the administrative theme.
     $admin_user = $this->drupalCreateUser(array('view the administration theme'));
     $this->drupalLogin($admin_user);

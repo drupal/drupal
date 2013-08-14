@@ -24,7 +24,7 @@ function forum_enable() {
   // Create the forum vocabulary if it does not exist.
   // @todo Change Forum module so forum.settings can contain the vocabulary's
   //   machine name.
-  $config = config('forum.settings');
+  $config = Drupal::config('forum.settings');
   // If the module was disabled only, the current config may contain a valid
   // vocabulary ID already.
   $vocabulary = entity_load('taxonomy_vocabulary', $config->get('vocabulary'));

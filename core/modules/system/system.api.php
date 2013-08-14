@@ -1357,7 +1357,7 @@ function hook_mail_alter(&$message) {
       $message['send'] = FALSE;
       return;
     }
-    $message['body'][] = "--\nMail sent out from " . config('system.site')->get('name');
+    $message['body'][] = "--\nMail sent out from " . Drupal::config('system.site')->get('name');
   }
 }
 
@@ -1775,7 +1775,7 @@ function hook_watchdog(array $log_entry) {
   $to = 'someone@example.com';
   $params = array();
   $params['subject'] = t('[@site_name] @severity_desc: Alert from your web site', array(
-    '@site_name' => config('system.site')->get('name'),
+    '@site_name' => Drupal::config('system.site')->get('name'),
     '@severity_desc' => $severity_list[$log_entry['severity']],
   ));
 
@@ -1841,7 +1841,7 @@ function hook_mail($key, &$message, $params) {
   $account = $params['account'];
   $context = $params['context'];
   $variables = array(
-    '%site_name' => config('system.site')->get('name'),
+    '%site_name' => Drupal::config('system.site')->get('name'),
     '%username' => user_format_name($account),
   );
   if ($context['hook'] == 'taxonomy') {
@@ -3153,7 +3153,7 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
 
         // Default values for the chained tokens handled below.
         case 'author':
-          $name = ($node->uid == 0) ? config('user.settings')->get('anonymous') : $node->name;
+          $name = ($node->uid == 0) ? Drupal::config('user.settings')->get('anonymous') : $node->name;
           $replacements[$original] = $sanitize ? filter_xss($name) : $name;
           break;
 

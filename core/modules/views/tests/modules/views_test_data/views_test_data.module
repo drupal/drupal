@@ -29,7 +29,7 @@ function views_test_data_permission() {
  * @see Drupal\views\Tests\Handler\HandlerTest
  */
 function views_test_data_handler_test_access_callback() {
-  return config('views_test_data.tests')->get('handler_access_callback');
+  return Drupal::config('views_test_data.tests')->get('handler_access_callback');
 }
 
 /**
@@ -48,7 +48,7 @@ function views_test_data_handler_test_access_callback_argument($argument = FALSE
   // Check the argument to be sure that access arguments are passed into the
   // callback.
   if ($argument) {
-    return config('views_test_data.tests')->get('handler_access_callback_argument');
+    return Drupal::config('views_test_data.tests')->get('handler_access_callback_argument');
   }
   else {
     return FALSE;

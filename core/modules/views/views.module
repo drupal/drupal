@@ -890,7 +890,7 @@ function views_get_plugin_definitions() {
  * Get enabled display extenders.
  */
 function views_get_enabled_display_extenders() {
-  $enabled = array_filter((array) config('views.settings')->get('display_extenders'));
+  $enabled = array_filter((array) Drupal::config('views.settings')->get('display_extenders'));
 
   return drupal_map_assoc($enabled);
 }
@@ -1663,7 +1663,7 @@ function views_element_validate_tags($element, &$form_state) {
  *   If TRUE, the data will be cached specific to the currently active language.
  */
 function views_cache_set($cid, $data, $use_language = FALSE) {
-  if (config('views.settings')->get('skip_cache')) {
+  if (Drupal::config('views.settings')->get('skip_cache')) {
     return;
   }
   if ($use_language) {
@@ -1687,7 +1687,7 @@ function views_cache_set($cid, $data, $use_language = FALSE) {
  *   The cache or FALSE on failure.
  */
 function views_cache_get($cid, $use_language = FALSE) {
-  if (config('views.settings')->get('skip_cache')) {
+  if (Drupal::config('views.settings')->get('skip_cache')) {
     return FALSE;
   }
   if ($use_language) {

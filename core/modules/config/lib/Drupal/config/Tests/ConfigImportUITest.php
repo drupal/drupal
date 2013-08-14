@@ -80,10 +80,10 @@ class ConfigImportUITest extends WebTestBase {
     $this->assertText(t('There are no configuration changes.'));
 
     // Verify site name has changed.
-    $this->assertIdentical($new_site_name, config('system.site')->get('name'));
+    $this->assertIdentical($new_site_name, \Drupal::config('system.site')->get('name'));
 
     // Verify that new config entity exists.
-    $this->assertIdentical($original_dynamic_data, config($dynamic_name)->get());
+    $this->assertIdentical($original_dynamic_data, \Drupal::config($dynamic_name)->get());
 
     // Verify the cache got cleared.
     $this->assertTrue(isset($GLOBALS['hook_cache_flush']));
@@ -113,7 +113,7 @@ class ConfigImportUITest extends WebTestBase {
     $this->container->get('lock')->release($config_importer_lock);
 
     // Verify site name has not changed.
-    $this->assertNotEqual($new_site_name, config('system.site')->get('name'));
+    $this->assertNotEqual($new_site_name, \Drupal::config('system.site')->get('name'));
   }
 
   /**
@@ -163,7 +163,7 @@ class ConfigImportUITest extends WebTestBase {
   function prepareSiteNameUpdate($new_site_name) {
     $staging = $this->container->get('config.storage.staging');
     // Create updated configuration object.
-    $config_data = config('system.site')->get();
+    $config_data = \Drupal::config('system.site')->get();
     $config_data['name'] = $new_site_name;
     $staging->write('system.site', $config_data);
   }

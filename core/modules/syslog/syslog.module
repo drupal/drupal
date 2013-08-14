@@ -45,7 +45,7 @@ function syslog_help($path, $arg) {
  * Implements hook_form_FORM_ID_alter().
  */
 function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
-  $config = config('syslog.settings');
+  $config = Drupal::config('syslog.settings');
   $help = module_exists('help') ? ' ' . l(t('More information'), 'admin/help/syslog') . '.' : NULL;
   $form['syslog_identity'] = array(
     '#type'          => 'textfield',
@@ -78,7 +78,7 @@ function syslog_form_system_logging_settings_alter(&$form, &$form_state) {
  * @see syslog_form_system_logging_settings_alter()
  */
 function syslog_logging_settings_submit($form, &$form_state) {
-  config('syslog.settings')
+  Drupal::config('syslog.settings')
     ->set('identity', $form_state['values']['syslog_identity'])
     ->set('facility', $form_state['values']['syslog_facility'])
     ->set('format', $form_state['values']['syslog_format'])
@@ -111,7 +111,7 @@ function syslog_watchdog(array $log_entry) {
   global $base_url;
 
   $log_init = &drupal_static(__FUNCTION__, FALSE);
-  $config = config('syslog.settings');
+  $config = Drupal::config('syslog.settings');
 
   if (!$log_init) {
     $log_init = TRUE;

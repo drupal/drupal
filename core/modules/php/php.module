@@ -70,7 +70,7 @@ function php_eval($code) {
   // so code evaluated will not see the caller module as the current theme.
   // If theme info is not initialized get the path from default theme.
   if (!isset($theme_info)) {
-    $theme_path = drupal_get_path('theme', config('system.theme')->get('default'));
+    $theme_path = drupal_get_path('theme', Drupal::config('system.theme')->get('default'));
   }
   else {
     $theme_path = dirname($theme_info->filename);

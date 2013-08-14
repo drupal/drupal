@@ -84,10 +84,10 @@ class BareMinimalUpgradePathTest extends UpgradePathTestBase {
     $this->assertEqual(array_diff_key($required, $enabled), array());
 
     // Verify that image.module was correctly installed.
-    $this->assertEqual('thumbnail', config('image.style.thumbnail')->get('name'));
+    $this->assertEqual('thumbnail', \Drupal::config('image.style.thumbnail')->get('name'));
 
     // Make sure that the default mail configuration has been converted.
-    $this->assertEqual(array('default' => 'Drupal\Core\Mail\PhpMail'), config('system.mail')->get('interface'), 'Default mail configuration set.');
+    $this->assertEqual(array('default' => 'Drupal\Core\Mail\PhpMail'), \Drupal::config('system.mail')->get('interface'), 'Default mail configuration set.');
   }
 
   /**

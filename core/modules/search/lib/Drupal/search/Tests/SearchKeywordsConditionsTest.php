@@ -35,7 +35,7 @@ class SearchKeywordsConditionsTest extends SearchTestBase {
     // Login with sufficient privileges.
     $this->drupalLogin($this->searching_user);
     // Test with all search modules enabled.
-    config('search.settings')->set('active_modules', array('node' => 'node', 'user' => 'user', 'search_extra_type' => 'search_extra_type'))->save();
+    \Drupal::config('search.settings')->set('active_modules', array('node' => 'node', 'user' => 'user', 'search_extra_type' => 'search_extra_type'))->save();
     menu_router_rebuild();
   }
 

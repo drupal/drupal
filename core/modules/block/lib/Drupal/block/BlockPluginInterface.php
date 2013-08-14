@@ -66,7 +66,7 @@ interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormIn
    *
    * @todo This doesn't belong here. Move this into a new base class in
    *   http://drupal.org/node/1764380.
-   * @todo This does not set a value in config(), so the name is confusing.
+   * @todo This does not set a value in \Drupal::config(), so the name is confusing.
    *
    * @see \Drupal\Component\Plugin\PluginBase::$configuration
    */

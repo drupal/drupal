@@ -11,7 +11,7 @@
 function rest_permission() {
   $permissions = array();
   $manager = Drupal::service('plugin.manager.rest');
-  $resources = config('rest.settings')->get('resources');
+  $resources = Drupal::config('rest.settings')->get('resources');
   if ($resources && $enabled = array_intersect_key($manager->getDefinitions(), $resources)) {
     foreach ($enabled as $key => $resource) {
       $plugin = $manager->getInstance(array('id' => $key));

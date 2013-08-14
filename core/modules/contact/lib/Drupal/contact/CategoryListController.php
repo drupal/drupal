@@ -66,7 +66,7 @@ class CategoryListController extends ConfigEntityListController {
     }
     else {
       $row['recipients'] = check_plain(implode(', ', $entity->recipients));
-      $default_category = config('contact.settings')->get('default_category');
+      $default_category = \Drupal::config('contact.settings')->get('default_category');
       $row['selected'] = ($default_category == $entity->id() ? t('Yes') : t('No'));
     }
     $row['operations']['data'] = $this->buildOperations($entity);

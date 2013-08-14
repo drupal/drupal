@@ -366,7 +366,7 @@ abstract class WebTestBase extends TestBase {
       'plugin' => $plugin_id,
       'region' => 'sidebar_first',
       'machine_name' => strtolower($this->randomName(8)),
-      'theme' => config('system.theme')->get('default'),
+      'theme' => \Drupal::config('system.theme')->get('default'),
       'label' => $this->randomName(8),
       'visibility' => array(),
       'weight' => 0,
@@ -790,7 +790,7 @@ abstract class WebTestBase extends TestBase {
     // Set 'parent_profile' of simpletest to add the parent profile's
     // search path to the child site's search paths.
     // @see drupal_system_listing()
-    config('simpletest.settings')->set('parent_profile', $this->originalProfile)->save();
+    \Drupal::config('simpletest.settings')->set('parent_profile', $this->originalProfile)->save();
 
     // Collect modules to install.
     $class = get_class($this);
@@ -814,7 +814,7 @@ abstract class WebTestBase extends TestBase {
     // Now make sure that the file path configurations are saved. This is done
     // after we install the modules to override default values.
     foreach ($variable_groups as $config_base => $variables) {
-      $config = config($config_base);
+      $config = \Drupal::config($config_base);
       foreach ($variables as $name => $value) {
         $config->set($name, $value);
       }
@@ -823,7 +823,7 @@ abstract class WebTestBase extends TestBase {
     variable_set('file_public_path', $this->public_files_directory);
 
     // Use the test mail class instead of the default mail handler class.
-    config('system.mail')->set('interface.default', 'Drupal\Core\Mail\VariableLog')->save();
+    \Drupal::config('system.mail')->set('interface.default', 'Drupal\Core\Mail\VariableLog')->save();
 
     drupal_set_time_limit($this->timeLimit);
     // Temporary fix so that when running from run-tests.sh we don't get an

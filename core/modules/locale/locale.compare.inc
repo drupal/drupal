@@ -130,7 +130,7 @@ function locale_translation_project_list() {
   $projects = &drupal_static(__FUNCTION__, array());
   if (empty($projects)) {
     module_load_include('compare.inc', 'update');
-    $config = config('locale.settings');
+    $config = Drupal::config('locale.settings');
     $projects = array();
 
     $additional_whitelist = array(
@@ -195,9 +195,9 @@ function _locale_translation_prepare_project_list($data, $type) {
  *   - "server_pattern": URI containing po file pattern.
  */
 function locale_translation_default_translation_server() {
-  $pattern = config('locale.settings')->get('translation.default_server_pattern');
+  $pattern = Drupal::config('locale.settings')->get('translation.default_server_pattern');
   // An additional check is required here. During the upgrade process
-  // config()->get() returns NULL. We use the defined value as fallback.
+  // Drupal::config()->get() returns NULL. We use the defined value as fallback.
   $pattern  = $pattern ? $pattern : LOCALE_TRANSLATION_DEFAULT_SERVER_PATTERN;
 
   return array(

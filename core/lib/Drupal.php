@@ -207,12 +207,12 @@ class Drupal {
    * Retrieves a configuration object.
    *
    * This is the main entry point to the configuration API. Calling
-   * @code Drupal::config('book.admin') @endcode will return a configuration
+   * @code \Drupal::config('book.admin') @endcode will return a configuration
    * object in which the book module can store its administrative settings.
    *
    * @param string $name
    *   The name of the configuration object to retrieve. The name corresponds to
-   *   a configuration file. For @code config('book.admin') @endcode, the config
+   *   a configuration file. For @code \Drupal::config('book.admin') @endcode, the config
    *   object returned will contain the contents of book.admin configuration file.
    *
    * @return \Drupal\Core\Config\Config
@@ -267,7 +267,7 @@ class Drupal {
    * that does not need deploying and does not need human editing; for example,
    * the last time cron was run. Data which needs to be edited by humans and
    * needs to be the same across development, production, etc. environments
-   * (for example, the system maintenance message) should use config() instead.
+   * (for example, the system maintenance message) should use \Drupal::config() instead.
    *
    * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */

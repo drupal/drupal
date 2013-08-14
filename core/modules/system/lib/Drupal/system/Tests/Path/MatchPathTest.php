@@ -31,7 +31,7 @@ class MatchPathTest extends WebTestBase {
 
     // Set up a random site front page to test the '<front>' placeholder.
     $this->front = $this->randomName();
-    config('system.site')->set('page.front', $this->front)->save();
+    \Drupal::config('system.site')->set('page.front', $this->front)->save();
     // Refresh our static variables from the database.
     $this->refreshVariables();
   }

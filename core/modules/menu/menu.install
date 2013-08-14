@@ -80,7 +80,7 @@ function menu_update_8004() {
   $result = db_query('SELECT * FROM {menu_custom}');
   foreach ($result as $menu) {
     // Save the config object.
-    config('menu.menu.' . $menu->menu_name)
+    Drupal::config('menu.menu.' . $menu->menu_name)
       ->set('id', $menu->menu_name)
       ->set('uuid', $uuid->generate())
       ->set('label', $menu->title)

@@ -15,20 +15,20 @@ function standard_install() {
   // Enable Bartik theme and set it as default theme instead of Stark.
   // @see system_install()
   $default_theme = 'bartik';
-  config('system.theme')
+  Drupal::config('system.theme')
     ->set('default', $default_theme)
     ->save();
   theme_enable(array($default_theme));
   theme_disable(array('stark'));
 
   // Set front page to "node".
-  config('system.site')->set('page.front', 'node')->save();
+  Drupal::config('system.site')->set('page.front', 'node')->save();
 
   // Default "Basic page" to have comments disabled.
   variable_set('comment_page', COMMENT_NODE_HIDDEN);
 
   // Allow visitor account creation with administrative approval.
-  $user_settings = config('user.settings');
+  $user_settings = Drupal::config('user.settings');
   $user_settings->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
 
   // Create user picture field.
@@ -84,6 +84,6 @@ function standard_install() {
 
   // Enable the admin theme.
   theme_enable(array('seven'));
-  config('system.theme')->set('admin', 'seven')->save();
+  Drupal::config('system.theme')->set('admin', 'seven')->save();
   variable_set('node_admin_theme', '1');
 }

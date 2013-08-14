@@ -121,7 +121,7 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
     $modules = call_user_func_array('array_merge_recursive', $modules);
     $this->enableModules($modules, FALSE);
     // In order to use theme functions default theme config needs to exist.
-    config('system.theme')->set('default', 'stark');
+    \Drupal::config('system.theme')->set('default', 'stark');
   }
 
   protected function tearDown() {

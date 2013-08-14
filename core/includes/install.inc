@@ -633,7 +633,7 @@ function drupal_install_system() {
   // reset first in order to allow config_install_default_config() to invoke
   // config import callbacks.
   // @todo Installation profiles may override the system.module config object.
-  config('system.module')
+  Drupal::config('system.module')
     ->set('enabled.system', 0)
     ->save();
 

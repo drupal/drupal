@@ -39,7 +39,7 @@ function taxonomy_overview_terms($form, &$form_state, Vocabulary $vocabulary) {
   $parent_fields = FALSE;
 
   $page            = isset($_GET['page']) ? $_GET['page'] : 0;
-  $page_increment  = config('taxonomy.settings')->get('terms_per_page_admin');
+  $page_increment  = Drupal::config('taxonomy.settings')->get('terms_per_page_admin');
   $page_entries    = 0;
   $before_entries  = 0;
   $after_entries   = 0;

@@ -312,7 +312,7 @@ function taxonomy_update_8005() {
 
   $result = db_query('SELECT * FROM {taxonomy_vocabulary}');
   foreach ($result as $vocabulary) {
-    $config = config('taxonomy.vocabulary.' . $vocabulary->machine_name)
+    $config = Drupal::config('taxonomy.vocabulary.' . $vocabulary->machine_name)
       ->set('vid', $vocabulary->machine_name)
       ->set('name', $vocabulary->name)
       ->set('uuid', !empty($vocabulary->uuid) ? $vocabulary->uuid : $uuid->generate())
@@ -354,7 +354,7 @@ function taxonomy_update_8006() {
  */
 function taxonomy_update_8007() {
   foreach (config_get_storage_names_with_prefix('field.field.') as $config_name) {
-    $field_config = config($config_name);
+    $field_config = Drupal::config($config_name);
     // Only update taxonomy reference fields that use the default SQL storage.
     if ($field_config->get('type') == 'taxonomy_term_reference' && $field_config->get('storage.type') == 'field_sql_storage') {
       $field = new Field($field_config->get());

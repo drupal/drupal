@@ -36,7 +36,7 @@ class SearchMatchTest extends SearchTestBase {
    * Set up a small index of items to test against.
    */
   function _setup() {
-    config('search.settings')->set('index.minimum_word_size', 3)->save();
+    \Drupal::config('search.settings')->set('index.minimum_word_size', 3)->save();
 
     for ($i = 1; $i <= 7; ++$i) {
       search_index($i, SEARCH_TYPE, $this->getText($i), Language::LANGCODE_NOT_SPECIFIED);

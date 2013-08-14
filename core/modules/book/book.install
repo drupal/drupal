@@ -73,7 +73,7 @@ function book_update_8000() {
     // @see book_admin_settings_submit()
     sort($allowed_types);
 
-    config('book.settings')
+    Drupal::config('book.settings')
       ->set('allowed_types', $allowed_types)
       ->save();
   }

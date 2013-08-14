@@ -312,7 +312,7 @@ function file_uri_target($uri) {
  *   'public', 'private' or any other file scheme defined as the default.
  */
 function file_default_scheme() {
-  return config('system.file')->get('default_scheme');
+  return Drupal::config('system.file')->get('default_scheme');
 }
 
 /**
@@ -514,7 +514,7 @@ function file_prepare_directory(&$directory, $options = FILE_MODIFY_PERMISSIONS)
  */
 function file_ensure_htaccess() {
   file_save_htaccess('public://', FALSE);
-  $private_path = config('system.file')->get('path.private');
+  $private_path = Drupal::config('system.file')->get('path.private');
   if (!empty($private_path)) {
     file_save_htaccess('private://', TRUE);
   }
@@ -801,7 +801,7 @@ function file_munge_filename($filename, $extensions, $alerts = TRUE) {
   $original = $filename;
 
   // Allow potentially insecure uploads for very savvy users and admin
-  if (!config('system.file')->get('allow_insecure_uploads')) {
+  if (!Drupal::config('system.file')->get('allow_insecure_uploads')) {
     // Remove any null bytes. See http://php.net/manual/en/security.filesystem.nullbytes.php
     $filename = str_replace(chr(0), '', $filename);
 
@@ -1271,13 +1271,13 @@ function drupal_chmod($uri, $mode = NULL) {
     // that the octal permission numbers can be expressed as integers or strings
     // and will be converted correctly in both cases.
     if (is_dir($uri)) {
-      $mode = octdec(config('system.file')->get('chmod.directory'));
+      $mode = octdec(Drupal::config('system.file')->get('chmod.directory'));
       if (!$mode) {
         $mode = 0775;
       }
     }
     else {
-      $mode = octdec(config('system.file')->get('chmod.file'));
+      $mode = octdec(Drupal::config('system.file')->get('chmod.file'));
       if (!$mode) {
         $mode = 0664;
       }
@@ -1455,7 +1455,7 @@ function drupal_mkdir($uri, $mode = NULL, $recursive = FALSE, $context = NULL) {
     $mode = FALSE;
     // During early update there's no container.
     if (is_object(Drupal::getContainer())) {
-      $mode = octdec(config('system.file')->get('chmod.directory'));
+      $mode = octdec(Drupal::config('system.file')->get('chmod.directory'));
     }
     if (!$mode) {
       $mode = 0775;
@@ -1607,7 +1607,7 @@ function drupal_tempnam($directory, $prefix) {
  *   A string containing the path to the temporary directory.
  */
 function file_directory_temp() {
-  $config = config('system.file');
+  $config = Drupal::config('system.file');
   $temporary_directory = $config->get('path.temporary');
   if (empty($temporary_directory)) {
     $temporary_directory = file_directory_os_temp();

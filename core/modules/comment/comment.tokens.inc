@@ -133,7 +133,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'name':
-          $name = ($comment->uid->target_id == 0) ? config('user.settings')->get('anonymous') : $comment->name->value;
+          $name = ($comment->uid->target_id == 0) ? Drupal::config('user.settings')->get('anonymous') : $comment->name->value;
           $replacements[$original] = $sanitize ? filter_xss($name) : $name;
           break;
 

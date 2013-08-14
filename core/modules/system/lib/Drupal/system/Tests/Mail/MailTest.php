@@ -43,7 +43,7 @@ class MailTest extends WebTestBase implements MailInterface {
     parent::setUp();
 
     // Set MailTestCase (i.e. this class) as the SMTP library
-    config('system.mail')->set('interface.default', 'Drupal\system\Tests\Mail\MailTest')->save();
+    \Drupal::config('system.mail')->set('interface.default', 'Drupal\system\Tests\Mail\MailTest')->save();
   }
 
   /**

@@ -37,8 +37,8 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
 
     // Check that the configuration entries were created.
     $displays = array(
-      'default' => config('entity.display.node.article.default')->get(),
-      'teaser' => config('entity.display.node.article.teaser')->get(),
+      'default' => \Drupal::config('entity.display.node.article.default')->get(),
+      'teaser' => \Drupal::config('entity.display.node.article.teaser')->get(),
     );
     $this->assertTrue(!empty($displays['default']));
     $this->assertTrue(!empty($displays['teaser']));
@@ -88,7 +88,7 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Check that the configuration entries were created.
-    $form_display = config('entity.form_display.node.article.default')->get();
+    $form_display = \Drupal::config('entity.form_display.node.article.default')->get();
     $this->assertTrue(!empty($form_display));
 
     // Check that the 'body' field is configured as expected.
@@ -152,7 +152,7 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
     // Check that the configuration for the instance on article and page nodes
     // is correct.
     foreach (array('article', 'page') as $node_type) {
-      $config = config("field.instance.node.$node_type.body")->get();
+      $config = \Drupal::config("field.instance.node.$node_type.body")->get();
       // We cannot predict the value of the UUID, we just check it's present.
       $this->assertFalse(empty($config['uuid']));
       unset($config['uuid']);

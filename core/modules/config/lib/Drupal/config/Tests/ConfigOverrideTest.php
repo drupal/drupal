@@ -63,7 +63,7 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
 
     // Enter an override-free context to ensure the original data remains.
     config_context_enter('config.context.free');
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), $expected_original_data['foo']);
     $this->assertIdentical($config->get('baz'), $expected_original_data['baz']);
     $this->assertIdentical($config->get('404'), $expected_original_data['404']);
@@ -71,7 +71,7 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
 
     // Get the configuration object in an overriden context (the one set by
     // default).
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
 
     // Verify that it contains the overridden data from $conf.
     $this->assertIdentical($config->get('foo'), $conf['config_test.system']['foo']);
@@ -95,14 +95,14 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
     $config->save();
 
     // Reload it and verify that it still contains overridden data from $conf.
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), $conf['config_test.system']['foo']);
     $this->assertIdentical($config->get('baz'), $conf['config_test.system']['baz']);
     $this->assertIdentical($config->get('404'), $conf['config_test.system']['404']);
 
     // Enter an override-free context to ensure the original data remains saved.
     config_context_enter('config.context.free');
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), $expected_original_data['foo']);
     $this->assertIdentical($config->get('baz'), $expected_original_data['baz']);
     $this->assertIdentical($config->get('404'), $expected_original_data['404']);
@@ -127,7 +127,7 @@ class ConfigOverrideTest extends DrupalUnitTestBase {
     $this->assertIdentical($data['404'], $expected_new_data['404']);
 
     // Verifiy the overrides are still working.
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), $conf['config_test.system']['foo']);
     $this->assertIdentical($config->get('baz'), $conf['config_test.system']['baz']);
     $this->assertIdentical($config->get('404'), $conf['config_test.system']['404']);

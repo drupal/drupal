@@ -234,7 +234,7 @@ class DisplayTest extends PluginTestBase {
 
     // Change the page plugin id to an invalid one. Bypass the entity system
     // so no menu rebuild was executed (so the path is still available).
-    $config = config('views.view.test_display_invalid');
+    $config = \Drupal::config('views.view.test_display_invalid');
     $config->set('display.page_1.display_plugin', 'invalid');
     $config->save();
 
@@ -249,7 +249,7 @@ class DisplayTest extends PluginTestBase {
     $this->assertResponse(404);
 
     // Change the display plugin ID back to the correct ID.
-    $config = config('views.view.test_display_invalid');
+    $config = \Drupal::config('views.view.test_display_invalid');
     $config->set('display.page_1.display_plugin', 'page');
     $config->save();
 
@@ -261,7 +261,7 @@ class DisplayTest extends PluginTestBase {
     $this->assertBlockAppears($block);
 
     // Change the block plugin ID to an invalid one.
-    $config = config('views.view.test_display_invalid');
+    $config = \Drupal::config('views.view.test_display_invalid');
     $config->set('display.block_1.display_plugin', 'invalid');
     $config->save();
 

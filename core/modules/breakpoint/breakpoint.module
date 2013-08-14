@@ -156,7 +156,7 @@ function _breakpoint_import_media_queries($group_name, $label, $source_type, $me
  *   Either Breakpoint::SOURCE_TYPE_THEME or Breakpoint::SOURCE_TYPE_MODULE.
  */
 function _breakpoint_import_breakpoint_groups($source, $source_type) {
-  $breakpoint_groups = config($source . '.breakpoint_groups');
+  $breakpoint_groups = Drupal::config($source . '.breakpoint_groups');
   if ($breakpoint_groups) {
     foreach ($breakpoint_groups->get() as $group_name => $data) {
       // Breakpoints is mandatory, extra check since this is coming from config.
@@ -260,7 +260,7 @@ function breakpoint_get_theme_media_queries($theme_key) {
     throw new \Exception('Illegal theme_key passed.');
   }
 
-  $config = config($theme_key . '.breakpoints');
+  $config = Drupal::config($theme_key . '.breakpoints');
   if ($config) {
     return $config->get();
   }
@@ -281,7 +281,7 @@ function breakpoint_get_module_media_queries($module) {
     throw new \Exception('Illegal module name passed.');
   }
 
-  $config = config($module . '.breakpoints');
+  $config = Drupal::config($module . '.breakpoints');
   if ($config) {
     return $config->get();
   }

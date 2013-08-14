@@ -187,7 +187,7 @@ class CustomBlockFormController extends EntityFormControllerNG {
           $form_state['redirect'] = 'admin/structure/block/add/custom_block:' . $block->uuid->value . '/' . $theme;
         }
         else {
-          $form_state['redirect'] = 'admin/structure/block/add/custom_block:' . $block->uuid->value . '/' . config('system.theme')->get('default');
+          $form_state['redirect'] = 'admin/structure/block/add/custom_block:' . $block->uuid->value . '/' . \Drupal::config('system.theme')->get('default');
         }
       }
       else {

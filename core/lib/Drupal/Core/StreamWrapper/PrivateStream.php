@@ -19,7 +19,7 @@ class PrivateStream extends LocalStream {
    * Implements Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath()
    */
   public function getDirectoryPath() {
-    return config('system.file')->get('path.private');
+    return \Drupal::config('system.file')->get('path.private');
   }
 
   /**

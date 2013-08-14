@@ -1220,7 +1220,7 @@ function drupal_page_header() {
  * response is sent.
  */
 function drupal_serve_page_from_cache(stdClass $cache, Response $response, Request $request) {
-  $config = config('system.performance');
+  $config = Drupal::config('system.performance');
 
   // First half: we must determine if we should be returning a 304.
 
@@ -1878,7 +1878,7 @@ function drupal_handle_request($test_only = FALSE) {
  */
 function drupal_get_user_timezone() {
   global $user;
-  $config = config('system.date');
+  $config = Drupal::config('system.date');
 
   if ($user && $config->get('timezone.user.configurable') && $user->isAuthenticated() && $user->getTimezone()) {
     return $user->getTimezone();
@@ -1975,7 +1975,7 @@ function _drupal_bootstrap_configuration() {
   // Load the procedural configuration system helper functions.
   require_once __DIR__ . '/config.inc';
 
-  // Set the Drupal custom error handler. (requires config())
+  // Set the Drupal custom error handler. (requires Drupal::config())
   set_error_handler('_drupal_error_handler');
   set_exception_handler('_drupal_exception_handler');
 
@@ -2013,7 +2013,7 @@ function _drupal_bootstrap_page_cache() {
   }
   else {
     drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES, FALSE);
-    $config = config('system.performance');
+    $config = Drupal::config('system.performance');
     $cache_enabled = $config->get('cache.page.use_internal');
   }
 
@@ -2382,7 +2382,7 @@ function language($type) {
  *   name and its value is its configurability (TRUE/FALSE).
  */
 function language_types_get_all() {
-  $types = \Drupal::config('system.language.types')->get('all');
+  $types = Drupal::config('system.language.types')->get('all');
   return $types ? $types : array_keys(language_types_get_default());
 }
 
@@ -2442,7 +2442,7 @@ function language_list($flags = Language::STATE_CONFIGURABLE) {
       // save the same object without data loss.
       foreach ($language_entities as $langcode_config_name) {
         $langcode = substr($langcode_config_name, strlen('language.entity.'));
-        $info = config($langcode_config_name)->get();
+        $info = Drupal::config($langcode_config_name)->get();
         $languages[$langcode] = new Language(array(
           'default' => ($info['id'] == $default->id),
           'name' => $info['label'],

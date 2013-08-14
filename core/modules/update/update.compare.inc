@@ -66,7 +66,7 @@ function update_get_projects() {
       $project_info = new ProjectInfo();
       $project_info->processInfoList($projects, $module_data, 'module', TRUE);
       $project_info->processInfoList($projects, $theme_data, 'theme', TRUE);
-      if (config('update.settings')->get('check.disabled_extensions')) {
+      if (Drupal::config('update.settings')->get('check.disabled_extensions')) {
         $project_info->processInfoList($projects, $module_data, 'module', FALSE);
         $project_info->processInfoList($projects, $theme_data, 'theme', FALSE);
       }

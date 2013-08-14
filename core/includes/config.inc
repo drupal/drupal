@@ -52,7 +52,7 @@ function config_uninstall_default_config($type, $name) {
   $storage = drupal_container()->get('config.storage');
   $config_names = $storage->listAll($name . '.');
   foreach ($config_names as $config_name) {
-    config($config_name)->delete();
+    Drupal::config($config_name)->delete();
   }
 }
 
@@ -72,8 +72,7 @@ function config_get_storage_names_with_prefix($prefix = '') {
  * @code config('book.admin') @endcode will return a configuration object in
  * which the book module can store its administrative settings.
  *
- * @deprecated This function has been replaced by the \Drupal::config() method.
- * Use that instead.
+ * @deprecated as of Drupal 8.0. Use \Drupal::config() instead.
  *
  * @param string $name
  *   The name of the configuration object to retrieve. The name corresponds to
@@ -84,7 +83,7 @@ function config_get_storage_names_with_prefix($prefix = '') {
  *   A configuration object.
  */
 function config($name) {
-  return drupal_container()->get('config.factory')->get($name);
+  return Drupal::config($name);
 }
 
 /**
@@ -92,7 +91,7 @@ function config($name) {
  *
  * This allows configuration objects to be created using special configuration
  * contexts eg. global override free or locale using a user preferred language.
- * Calling this function affects all subsequent calls to config() until
+ * Calling this function affects all subsequent calls to Drupal::config() until
  * config_context_leave() is called.
  *
  * @see config_context_leave()

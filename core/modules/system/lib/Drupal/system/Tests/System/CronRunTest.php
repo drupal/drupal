@@ -59,7 +59,7 @@ class CronRunTest extends WebTestBase {
     $cron_last = time();
     $cron_safe_threshold = 100;
     \Drupal::state()->set('system.cron_last', $cron_last);
-    config('system.cron')
+    \Drupal::config('system.cron')
       ->set('threshold.autorun', $cron_safe_threshold)
       ->save();
     $this->drupalGet('');

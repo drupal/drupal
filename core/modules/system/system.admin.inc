@@ -94,9 +94,9 @@ function system_themes_page() {
   $themes = system_rebuild_theme_data();
   uasort($themes, 'system_sort_modules_by_info_name');
 
-  $theme_default = config('system.theme')->get('default');
+  $theme_default = Drupal::config('system.theme')->get('default');
   $theme_groups  = array();
-  $admin_theme = config('system.theme')->get('admin');
+  $admin_theme = Drupal::config('system.theme')->get('admin');
 
   foreach ($themes as &$theme) {
     if (!empty($theme->info['hidden'])) {
@@ -233,7 +233,7 @@ function system_themes_admin_form($form, &$form_state, $theme_options) {
     '#options' => array(0 => t('Default theme')) + $theme_options,
     '#title' => t('Administration theme'),
     '#description' => t('Choose "Default theme" to always use the same theme as the rest of the site.'),
-    '#default_value' => config('system.theme')->get('admin'),
+    '#default_value' => Drupal::config('system.theme')->get('admin'),
   );
   $form['admin_theme']['actions'] = array('#type' => 'actions');
   $form['admin_theme']['actions']['submit'] = array(
@@ -248,7 +248,7 @@ function system_themes_admin_form($form, &$form_state, $theme_options) {
  */
 function system_themes_admin_form_submit($form, &$form_state) {
   drupal_set_message(t('The configuration options have been saved.'));
-  config('system.theme')->set('admin', $form_state['values']['admin_theme'])->save();
+  Drupal::config('system.theme')->set('admin', $form_state['values']['admin_theme'])->save();
 }
 
 /**
@@ -269,7 +269,7 @@ function system_theme_default() {
        theme_enable(array($theme));
       }
       // Set the default theme.
-      config('system.theme')
+      Drupal::config('system.theme')
         ->set('default', $theme)
         ->save();
 
@@ -283,7 +283,7 @@ function system_theme_default() {
 
       // The status message depends on whether an admin theme is currently in use:
       // a value of 0 means the admin theme is set to be the default theme.
-      $admin_theme = config('system.theme')->get('admin');
+      $admin_theme = Drupal::config('system.theme')->get('admin');
       if ($admin_theme != 0 && $admin_theme != $theme) {
         drupal_set_message(t('Please note that the administration theme is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', array(
           '%admin_theme' => $themes[$admin_theme]->info['name'],
@@ -981,7 +981,7 @@ function theme_system_date_format_localize_form($variables) {
  */
 function system_date_format_localize_form_save($langcode, $date_format_id, DateFormatInterface $format) {
   $format->addLocale($langcode)->save();
-  config('locale.config.' . $langcode . '.system.date_format.' . $date_format_id)
+  Drupal::config('locale.config.' . $langcode . '.system.date_format.' . $date_format_id)
     ->set('pattern', $format->get('pattern'))
     ->save();
 }

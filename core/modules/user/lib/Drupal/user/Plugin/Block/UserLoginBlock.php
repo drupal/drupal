@@ -95,7 +95,7 @@ class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterfac
     $form['#action'] = url(current_path(), array('query' => drupal_get_destination(), 'external' => FALSE));
     // Build action links.
     $items = array();
-    if (config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
+    if (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
       $items['create_account'] = l(t('Create new account'), 'user/register', array(
         'attributes' => array(
           'title' => t('Create a new user account.'),

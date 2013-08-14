@@ -106,7 +106,7 @@ class LocaleLookup extends CacheCollector {
     // the exact list of strings used on a page. From a performance
     // perspective that is a really bad idea, so we have no user
     // interface for this. Be careful when turning this option off!
-    if (config('locale.settings')->get('cache_strings')) {
+    if (\Drupal::config('locale.settings')->get('cache_strings')) {
       $this->persist($offset);
     }
     return $value;

@@ -57,7 +57,7 @@ class DrupalDateTime extends DateTimePlus {
     }
 
     if (!isset($settings['country'])) {
-      $settings['country'] = config('system.date')->get('country.default');
+      $settings['country'] = \Drupal::config('system.date')->get('country.default');
     }
 
     // Instantiate the parent class.

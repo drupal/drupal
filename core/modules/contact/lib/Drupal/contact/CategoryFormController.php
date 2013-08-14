@@ -21,7 +21,7 @@ class CategoryFormController extends EntityFormController {
     $form = parent::form($form, $form_state);
 
     $category = $this->entity;
-    $default_category = config('contact.settings')->get('default_category');
+    $default_category = \Drupal::config('contact.settings')->get('default_category');
 
     $form['label'] = array(
       '#type' => 'textfield',
@@ -108,7 +108,7 @@ class CategoryFormController extends EntityFormController {
     }
 
     // Update the default category.
-    $contact_config = config('contact.settings');
+    $contact_config = \Drupal::config('contact.settings');
     if ($form_state['values']['selected']) {
       $contact_config
         ->set('default_category', $category->id())

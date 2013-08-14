@@ -211,7 +211,7 @@ class ThemeTest extends WebTestBase {
     $this->assertRaw('core/themes/stark', 'Site default theme used on the add content page.');
 
     // Reset to the default theme settings.
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', 'bartik')
       ->save();
     $edit = array(
@@ -235,7 +235,7 @@ class ThemeTest extends WebTestBase {
     theme_enable(array('bartik'));
     $this->drupalGet('admin/appearance');
     $this->clickLink(t('Set default'));
-    $this->assertEqual(config('system.theme')->get('default'), 'bartik');
+    $this->assertEqual(\Drupal::config('system.theme')->get('default'), 'bartik');
 
     drupal_flush_all_caches();
 

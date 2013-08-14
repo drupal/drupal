@@ -46,7 +46,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
 
     // Setup local and remote translations files.
     $this->setTranslationFiles();
-    config('locale.settings')->set('translation.default_filename', '%project-%version.%language._po')->save();
+    \Drupal::config('locale.settings')->set('translation.default_filename', '%project-%version.%language._po')->save();
 
     // Update translations using batch to ensure a clean test starting point.
     $this->drupalGet('admin/reports/translations/check');

@@ -37,7 +37,7 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
     $storage = $this->container->get('config.storage');
     $name = 'config_test.crud';
 
-    $config = config($name);
+    $config = \Drupal::config($name);
     $this->assertIdentical($config->isNew(), TRUE);
 
     // Create a new configuration object.
@@ -58,8 +58,8 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
     $actual_data = $storage->read($name);
     $this->assertIdentical($actual_data, array('value' => 'instance-update'));
 
-    // Verify a call to config() immediately returns the updated value.
-    $new_config = config($name);
+    // Verify a call to \Drupal::config() immediately returns the updated value.
+    $new_config = \Drupal::config($name);
     $this->assertIdentical($new_config->get(), $config->get());
     $this->assertIdentical($config->isNew(), FALSE);
 
@@ -74,8 +74,8 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
     $actual_data = $storage->read($name);
     $this->assertIdentical($actual_data, FALSE);
 
-    // Verify config() returns no data.
-    $new_config = config($name);
+    // Verify \Drupal::config() returns no data.
+    $new_config = \Drupal::config($name);
     $this->assertIdentical($new_config->get(), $config->get());
     $this->assertIdentical($config->isNew(), TRUE);
 
@@ -88,36 +88,36 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
     $actual_data = $storage->read($name);
     $this->assertIdentical($actual_data, array('value' => 're-created'));
 
-    // Verify a call to config() immediately returns the updated value.
-    $new_config = config($name);
+    // Verify a call to \Drupal::config() immediately returns the updated value.
+    $new_config = \Drupal::config($name);
     $this->assertIdentical($new_config->get(), $config->get());
     $this->assertIdentical($config->isNew(), FALSE);
 
     // Rename the configuration object.
     $new_name = 'config_test.crud_rename';
     $this->container->get('config.factory')->rename($name, $new_name);
-    $renamed_config = config($new_name);
+    $renamed_config = \Drupal::config($new_name);
     $this->assertIdentical($renamed_config->get(), $config->get());
     $this->assertIdentical($renamed_config->isNew(), FALSE);
 
     // Ensure that the old configuration object is removed from both the cache
     // and the configuration storage.
-    $config = config($name);
+    $config = \Drupal::config($name);
     $this->assertIdentical($config->get(), array());
     $this->assertIdentical($config->isNew(), TRUE);
 
     // Test renaming when config.factory does not have the object in its static
     // cache.
     $name = 'config_test.crud_rename';
-    $config = config($name);
+    $config = \Drupal::config($name);
     $new_name = 'config_test.crud_rename_no_cache';
     $this->container->get('config.factory')->clearStaticCache()->rename($name, $new_name);
-    $renamed_config = config($new_name);
+    $renamed_config = \Drupal::config($new_name);
     $this->assertIdentical($renamed_config->get(), $config->get());
     $this->assertIdentical($renamed_config->isNew(), FALSE);
 
     // Merge data into the configuration object.
-    $new_config = config($new_name);
+    $new_config = \Drupal::config($new_name);
     $expected_values = array(
       'value' => 'herp',
       '404' => 'derp',
@@ -136,7 +136,7 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
     $name = 'nonamespace';
     $message = 'Expected ConfigNameException was thrown for a name without a namespace.';
     try {
-      config($name)->save();
+      \Drupal::config($name)->save();
       $this->fail($message);
     }
     catch (ConfigNameException $e) {
@@ -147,7 +147,7 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
     $name = 'config_test.herman_melville.moby_dick_or_the_whale.harper_1851.now_small_fowls_flew_screaming_over_the_yet_yawning_gulf_a_sullen_white_surf_beat_against_its_steep_sides_then_all_collapsed_and_the_great_shroud_of_the_sea_rolled_on_as_it_rolled_five_thousand_years_ago';
     $message = 'Expected ConfigNameException was thrown for a name longer than Config::MAX_NAME_LENGTH.';
     try {
-      config($name)->save();
+      \Drupal::config($name)->save();
       $this->fail($message);
     }
     catch (ConfigNameException $e) {
@@ -159,7 +159,7 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
     foreach ($test_characters as $i => $c) {
       try {
         $name = 'namespace.object' . $c;
-        $config = config($name);
+        $config = \Drupal::config($name);
         $config->save();
       }
       catch (ConfigNameException $e) {
@@ -174,7 +174,7 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
     $name = 'namespace.object';
     $message = 'ConfigNameException was not thrown for a valid object name.';
     try {
-      $config = config($name);
+      $config = \Drupal::config($name);
       $config->save();
       $this->pass($message);
     }

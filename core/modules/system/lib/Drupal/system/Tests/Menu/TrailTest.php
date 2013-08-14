@@ -107,7 +107,7 @@ class TrailTest extends MenuTestBase {
    */
   function testCustom403And404Pages() {
     // Set the custom 403 and 404 pages we will use.
-    config('system.site')
+    \Drupal::config('system.site')
       ->set('page.403', 'menu-test/custom-403-page')
       ->set('page.404', 'menu-test/custom-404-page')
       ->save();

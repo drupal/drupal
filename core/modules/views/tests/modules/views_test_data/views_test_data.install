@@ -31,5 +31,5 @@ function views_test_data_install() {
     'em' => 'EM',
     'marquee' => 'MARQUEE'
   );
-  config('views.settings')->set('field_rewrite_elements', $values)->save();
+  Drupal::config('views.settings')->set('field_rewrite_elements', $values)->save();
 }

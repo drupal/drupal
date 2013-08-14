@@ -33,7 +33,7 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
       '#description' => t('Define the image quality for JPEG manipulations. Ranges from 0 to 100. Higher values mean better image quality but bigger files.'),
       '#min' => 0,
       '#max' => 100,
-      '#default_value' => config('system.image.gd')->get('jpeg_quality'),
+      '#default_value' => \Drupal::config('system.image.gd')->get('jpeg_quality'),
       '#field_suffix' => t('%'),
     );
     return $form;
@@ -43,7 +43,7 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
    * {@inheritdoc}
    */
   public function settingsFormSubmit($form, &$form_state) {
-    config('system.image.gd')
+    \Drupal::config('system.image.gd')
       ->set('jpeg_quality', $form_state['values']['gd']['image_jpeg_quality'])
       ->save();
   }
@@ -196,7 +196,7 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
       return FALSE;
     }
     if ($extension == 'jpeg') {
-      $success = $function($image->getResource(), $destination, config('system.image.gd')->get('jpeg_quality'));
+      $success = $function($image->getResource(), $destination, \Drupal::config('system.image.gd')->get('jpeg_quality'));
     }
     else {
       // Always save PNG images with full transparency.

@@ -204,7 +204,7 @@ function user_field_extra_fields() {
     'description' => t('User module account form elements.'),
     'weight' => -10,
   );
-  if (config('user.settings')->get('signatures')) {
+  if (Drupal::config('user.settings')->get('signatures')) {
     $fields['user']['user']['form']['signature_settings'] = array(
       'label' => t('Signature settings'),
       'description' => t('User module form element.'),
@@ -216,7 +216,7 @@ function user_field_extra_fields() {
     'description' => t('User module form element.'),
     'weight' => 0,
   );
-  if (config('system.date')->get('timezone.user.configurable')) {
+  if (Drupal::config('system.date')->get('timezone.user.configurable')) {
     $fields['user']['user']['form']['timezone'] = array(
       'label' => t('Timezone'),
       'description' => t('System module form element.'),
@@ -491,7 +491,7 @@ function user_permission() {
     ),
     'cancel account' => array(
       'title' => t('Cancel own user account'),
-      'description' => t('Note: content may be kept, unpublished, deleted or transferred to the %anonymous-name user depending on the configured <a href="@user-settings-url">user settings</a>.', array('%anonymous-name' => config('user.settings')->get('anonymous'), '@user-settings-url' => url('admin/config/people/accounts'))),
+      'description' => t('Note: content may be kept, unpublished, deleted or transferred to the %anonymous-name user depending on the configured <a href="@user-settings-url">user settings</a>.', array('%anonymous-name' => Drupal::config('user.settings')->get('anonymous'), '@user-settings-url' => url('admin/config/people/accounts'))),
     ),
     'select account cancellation method' => array(
       'title' => t('Select method for cancelling own account'),
@@ -780,7 +780,7 @@ function user_is_logged_in() {
  *   TRUE if the user is not already logged in and can register for an account.
  */
 function user_register_access() {
-  return user_is_anonymous() && (config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY);
+  return user_is_anonymous() && (Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY);
 }
 
 /**
@@ -1463,7 +1463,7 @@ function user_mail($key, &$message, $params) {
   // the locale module is enabled.
   $user_config_context = config_context_enter('Drupal\user\UserConfigContext');
   $user_config_context->setAccount($params['account']);
-  $mail_config = config('user.mail');
+  $mail_config = Drupal::config('user.mail');
 
    // We do not sanitize the token replacement, since the output of this
    // replacement is intended for an e-mail message, not a web browser.
@@ -1777,7 +1777,7 @@ function user_multiple_cancel_confirm($form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Notify user when account is canceled.'),
     '#default_value' => FALSE,
-    '#access' => config('user.settings')->get('notify.status_canceled'),
+    '#access' => Drupal::config('user.settings')->get('notify.status_canceled'),
     '#description' => t('When enabled, the user will receive an e-mail notification after the account has been cancelled.'),
   );
 
@@ -1877,17 +1877,17 @@ function theme_user_signature($variables) {
  */
 function _user_mail_notify($op, $account, $langcode = NULL) {
   // By default, we always notify except for canceled and blocked.
-  $notify = config('user.settings')->get('notify.' . $op);
+  $notify = Drupal::config('user.settings')->get('notify.' . $op);
   if ($notify || ($op != 'status_canceled' && $op != 'status_blocked')) {
     $params['account'] = $account;
     $langcode = $langcode ? $langcode : $account->getPreferredLangcode();
     // Get the custom site notification email to use as the from email address
     // if it has been set.
-    $site_mail = config('system.site')->get('mail_notification');
+    $site_mail = Drupal::config('system.site')->get('mail_notification');
     // If the custom site notification email has not been set, we use the site
     // default for this.
     if (empty($site_mail)) {
-      $site_mail = config('system.site')->get('mail');
+      $site_mail = Drupal::config('system.site')->get('mail');
     }
     if (empty($site_mail)) {
       $site_mail = ini_get('sendmail_from');
@@ -1919,7 +1919,7 @@ function user_form_process_password_confirm($element) {
     'showStrengthIndicator' => FALSE,
   );
 
-  if (config('user.settings')->get('password_strength')) {
+  if (Drupal::config('user.settings')->get('password_strength')) {
 
     global $user;
     $password_settings['showStrengthIndicator'] = TRUE;
@@ -1983,7 +1983,7 @@ function user_node_load($nodes, $types) {
  */
 function user_modules_installed($modules) {
   // Assign all available permissions to the administrator role.
-  $rid = config('user.settings')->get('admin_role');
+  $rid = Drupal::config('user.settings')->get('admin_role');
   if ($rid) {
     $permissions = array();
     foreach ($modules as $module) {

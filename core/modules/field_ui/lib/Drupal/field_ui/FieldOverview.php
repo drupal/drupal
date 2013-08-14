@@ -92,7 +92,7 @@ class FieldOverview extends OverviewBase {
     $field_types = $this->fieldTypeManager->getDefinitions();
 
     // Field prefix.
-    $field_prefix = config('field_ui.settings')->get('field_prefix');
+    $field_prefix = \Drupal::config('field_ui.settings')->get('field_prefix');
 
     $form += array(
       '#entity_type' => $this->entity_type,
@@ -327,7 +327,7 @@ class FieldOverview extends OverviewBase {
         $field_name = $field['field_name'];
 
         // Add the field prefix.
-        $field_name = config('field_ui.settings')->get('field_prefix') . $field_name;
+        $field_name = \Drupal::config('field_ui.settings')->get('field_prefix') . $field_name;
         form_set_value($form['fields']['_add_new_field']['field_name'], $field_name, $form_state);
       }
 

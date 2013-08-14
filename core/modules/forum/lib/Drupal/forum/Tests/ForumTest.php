@@ -240,7 +240,7 @@ class ForumTest extends WebTestBase {
    */
   function testAddOrphanTopic() {
     // Must remove forum topics to test creating orphan topics.
-    $vid = config('forum.settings')->get('vocabulary');
+    $vid = \Drupal::config('forum.settings')->get('vocabulary');
     $tids = \Drupal::entityQuery('taxonomy_term')
       ->condition('vid', $vid)
       ->execute();
@@ -340,7 +340,7 @@ class ForumTest extends WebTestBase {
    */
   function editForumVocabulary() {
     // Backup forum taxonomy.
-    $vid = config('forum.settings')->get('vocabulary');
+    $vid = \Drupal::config('forum.settings')->get('vocabulary');
     $original_vocabulary = entity_load('taxonomy_vocabulary', $vid);
 
     // Generate a random name and description.
@@ -406,7 +406,7 @@ class ForumTest extends WebTestBase {
     );
 
     // Verify forum.
-    $term = db_query("SELECT * FROM {taxonomy_term_data} t WHERE t.vid = :vid AND t.name = :name AND t.description = :desc", array(':vid' => config('forum.settings')->get('vocabulary'), ':name' => $name, ':desc' => $description))->fetchAssoc();
+    $term = db_query("SELECT * FROM {taxonomy_term_data} t WHERE t.vid = :vid AND t.name = :name AND t.description = :desc", array(':vid' => \Drupal::config('forum.settings')->get('vocabulary'), ':name' => $name, ':desc' => $description))->fetchAssoc();
     $this->assertTrue(!empty($term), 'The ' . $type . ' exists in the database');
 
     // Verify forum hierarchy.
@@ -437,7 +437,7 @@ class ForumTest extends WebTestBase {
 
     // Assert that the associated term has been removed from the
     // forum_containers variable.
-    $containers = config('forum.settings')->get('containers');
+    $containers = \Drupal::config('forum.settings')->get('containers');
     $this->assertFalse(in_array($tid, $containers), 'The forum_containers variable has been updated.');
   }
 

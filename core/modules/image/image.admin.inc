@@ -70,7 +70,7 @@ function theme_image_style_effects($variables) {
 function theme_image_style_preview($variables) {
   $style = $variables['style'];
 
-  $sample_image = config('image.settings')->get('preview_image');
+  $sample_image = Drupal::config('image.settings')->get('preview_image');
   $sample_width = 160;
   $sample_height = 160;
 

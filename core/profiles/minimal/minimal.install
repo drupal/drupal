@@ -16,7 +16,7 @@ function minimal_install() {
   Drupal::config('system.theme.global')->set('features.node_user_picture', FALSE)->save();
 
   // Allow visitor account creation, but with administrative approval.
-  config('user.settings')->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
+  Drupal::config('user.settings')->set('register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL)->save();
 
   // Enable default permissions for system roles.
   user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content'));

@@ -508,7 +508,7 @@ class RenderTest extends WebTestBase {
     );
     $message = t('%type: !message in %function (line ', $error);
 
-    config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_ALL)->save();
+    \Drupal::config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_ALL)->save();
     $this->drupalGet('common-test/drupal-render-invalid-keys');
     $this->assertResponse(200, 'Received expected HTTP status code.');
     $this->assertRaw($message, format_string('Found error message: !message.', array('!message' => $message)));

@@ -63,7 +63,7 @@ class ThemeTest extends WebTestBase {
   function testThemeSuggestions() {
     // Set the front page as something random otherwise the CLI
     // test runner fails.
-    config('system.site')->set('page.front', 'nobody-home')->save();
+    \Drupal::config('system.site')->set('page.front', 'nobody-home')->save();
     $args = array('node', '1', 'edit');
     $suggestions = theme_get_suggestions($args, 'page');
     $this->assertEqual($suggestions, array('page__node', 'page__node__%', 'page__node__1', 'page__node__edit'), 'Found expected node edit page suggestions');
@@ -107,7 +107,7 @@ class ThemeTest extends WebTestBase {
     $original_path = _current_path();
     // Set the current path to node because theme_get_suggestions() will query
     // it to see if we are on the front page.
-    config('system.site')->set('page.front', 'node')->save();
+    \Drupal::config('system.site')->set('page.front', 'node')->save();
     _current_path('node');
     $suggestions = theme_get_suggestions(array('node'), 'page');
     // Set it back to not annoy the batch runner.
@@ -133,7 +133,7 @@ class ThemeTest extends WebTestBase {
     // what is output to the HTML HEAD based on what is in a theme's .info.yml
     // file, so it doesn't matter what page we get, as long as it is themed with
     // the test theme. First we test with CSS aggregation disabled.
-    $config = config('system.performance');
+    $config = \Drupal::config('system.performance');
     $config->set('css.preprocess', 0);
     $config->save();
     $this->drupalGet('theme-test/suggestion');
@@ -154,7 +154,7 @@ class ThemeTest extends WebTestBase {
    * Ensures a themes template is overrideable based on the 'template' filename.
    */
   function testTemplateOverride() {
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', 'test_theme')
       ->save();
     $this->drupalGet('theme-test/template-test');

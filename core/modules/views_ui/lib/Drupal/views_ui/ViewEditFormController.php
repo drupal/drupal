@@ -95,7 +95,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     $form['#attached']['library'][] = array('system', 'drupal.states');
     $form['#attached']['library'][] = array('system', 'drupal.tabledrag');
 
-    if (!config('views.settings')->get('no_javascript')) {
+    if (!\Drupal::config('views.settings')->get('no_javascript')) {
       $form['#attached']['library'][] = array('views_ui', 'views_ui.admin');
     }
 
@@ -509,7 +509,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     );
 
     // Collapse the details by default.
-    if (config('views.settings')->get('ui.show.advanced_column')) {
+    if (\Drupal::config('views.settings')->get('ui.show.advanced_column')) {
       $build['columns']['third']['#collapsed'] = FALSE;
     }
 

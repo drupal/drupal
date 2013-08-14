@@ -99,7 +99,7 @@ function dblog_page_build(&$page) {
  */
 function dblog_cron() {
   // Cleanup the watchdog table.
-  $row_limit = config('dblog.settings')->get('row_limit');
+  $row_limit = Drupal::config('dblog.settings')->get('row_limit');
 
   // For row limit n, get the wid of the nth row in descending wid order.
   // Counting the most recent n rows avoids issues with wid number sequences,
@@ -169,7 +169,7 @@ function dblog_form_system_logging_settings_alter(&$form, $form_state) {
   $form['dblog_row_limit'] = array(
     '#type' => 'select',
     '#title' => t('Database log messages to keep'),
-    '#default_value' => config('dblog.settings')->get('row_limit'),
+    '#default_value' => Drupal::config('dblog.settings')->get('row_limit'),
     '#options' => array(0 => t('All')) + drupal_map_assoc(array(100, 1000, 10000, 100000, 1000000)),
     '#description' => t('The maximum number of messages to keep in the database log. Requires a <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status')))
   );
@@ -183,5 +183,5 @@ function dblog_form_system_logging_settings_alter(&$form, $form_state) {
  * @see dblog_form_system_logging_settings_alter()
  */
 function dblog_logging_settings_submit($form, &$form_state) {
-  config('dblog.settings')->set('row_limit', $form_state['values']['dblog_row_limit'])->save();
+  Drupal::config('dblog.settings')->set('row_limit', $form_state['values']['dblog_row_limit'])->save();
 }

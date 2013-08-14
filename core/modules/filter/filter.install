@@ -49,7 +49,7 @@ function filter_update_8001() {
     $format['filters'] = $filters;
 
     // Save the config object.
-    $config = config('filter.format.' . $id);
+    $config = Drupal::config('filter.format.' . $id);
     $config->setData($format);
     $config->save();
   }

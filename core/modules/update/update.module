@@ -281,7 +281,7 @@ function update_theme() {
  * Implements hook_cron().
  */
 function update_cron() {
-  $update_config = config('update.settings');
+  $update_config = Drupal::config('update.settings');
   $frequency = $update_config->get('check.interval_days');
   $interval = 60 * 60 * 24 * $frequency;
   $last_check = Drupal::state()->get('update.last_check') ?: 0;
@@ -489,7 +489,7 @@ function update_fetch_data() {
 function update_mail($key, &$message, $params) {
   $langcode = $message['langcode'];
   $language = language_load($langcode);
-  $message['subject'] .= t('New release(s) available for !site_name', array('!site_name' => config('system.site')->get('name')), array('langcode' => $langcode));
+  $message['subject'] .= t('New release(s) available for !site_name', array('!site_name' => Drupal::config('system.site')->get('name')), array('langcode' => $langcode));
   foreach ($params as $msg_type => $msg_reason) {
     $message['body'][] = _update_message_text($msg_type, $msg_reason, FALSE, $langcode);
   }
@@ -498,7 +498,7 @@ function update_mail($key, &$message, $params) {
     $message['body'][] = t('You can automatically install your missing updates using the Update manager:', array(), array('langcode' => $langcode)) . "\n" . url('admin/reports/updates/update', array('absolute' => TRUE, 'language' => $language));
   }
   $settings_url = url('admin/reports/updates/settings', array('absolute' => TRUE));
-  if (config('update.settings')->get('notification.threshold') == 'all') {
+  if (Drupal::config('update.settings')->get('notification.threshold') == 'all') {
     $message['body'][] = t('Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, !url.', array('!url' => $settings_url));
   }
   else {

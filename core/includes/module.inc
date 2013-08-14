@@ -24,7 +24,7 @@
  * @see list_themes()
  *
  * @todo There are too many layers/levels of caching involved for system_list()
- *   data. Consider to add a config($name, $cache = TRUE) argument to allow
+ *   data. Consider to add a Drupal::config($name, $cache = TRUE) argument to allow
  *   callers like system_list() to force-disable a possible configuration
  *   storage controller cache or some other way to circumvent it/take it over.
  */
@@ -39,7 +39,7 @@ function system_list($type) {
       'filepaths' => array(),
     );
     // Build a list of themes.
-    $enabled_themes = (array) config('system.theme')->get('enabled');
+    $enabled_themes = (array) Drupal::config('system.theme')->get('enabled');
     // @todo Themes include all themes, including disabled/uninstalled. This
     //   system.theme.data state will go away entirely as soon as themes have
     //   a proper installation status.
@@ -324,7 +324,7 @@ function drupal_required_modules() {
  */
 function module_set_weight($module, $weight) {
   // Update the module weight in the config file that contains it.
-  $module_config = config('system.module');
+  $module_config = Drupal::config('system.module');
   if ($module_config->get("enabled.$module") !== NULL) {
     $module_config
       ->set("enabled.$module", $weight)
@@ -345,7 +345,7 @@ function module_set_weight($module, $weight) {
     $module_handler->setModuleList($module_filenames);
     return;
   }
-  $disabled_config = config('system.module.disabled');
+  $disabled_config = Drupal::config('system.module.disabled');
   if ($disabled_config->get($module) !== NULL) {
     $disabled_config
       ->set($module, $weight)

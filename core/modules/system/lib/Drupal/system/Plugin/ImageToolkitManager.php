@@ -43,7 +43,7 @@ class ImageToolkitManager extends DefaultPluginManager {
    *   Object of the default toolkit, or FALSE on error.
    */
   public function getDefaultToolkit() {
-    $toolkit_id = config('system.image')->get('toolkit');
+    $toolkit_id = \Drupal::config('system.image')->get('toolkit');
     $toolkits = $this->getAvailableToolkits();
 
     if (!isset($toolkits[$toolkit_id]) || !class_exists($toolkits[$toolkit_id]['class'])) {

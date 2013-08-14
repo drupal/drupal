@@ -27,7 +27,7 @@ class Uid extends Numeric {
    */
   public function titleQuery() {
     if (!$this->argument) {
-      return array(config('user.settings')->get('anonymous'));
+      return array(\Drupal::config('user.settings')->get('anonymous'));
     }
 
     $titles = array();

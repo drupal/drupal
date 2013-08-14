@@ -73,7 +73,7 @@ class NodeAccessPagerTest extends WebTestBase {
    */
   public function testForumPager() {
     // Look up the forums vocabulary ID.
-    $vid = config('forum.settings')->get('vocabulary');
+    $vid = \Drupal::config('forum.settings')->get('vocabulary');
     $this->assertTrue($vid, 'Forum navigation vocabulary ID is set.');
 
     // Look up the general discussion term.

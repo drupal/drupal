@@ -119,7 +119,7 @@ define('MAIL_LINE_ENDINGS', isset($_SERVER['WINDIR']) || strpos($_SERVER['SERVER
  *   accepted at php-level, which still doesn't guarantee it to be delivered.)
  */
 function drupal_mail($module, $key, $to, $langcode, $params = array(), $from = NULL, $send = TRUE) {
-  $site_config = config('system.site');
+  $site_config = Drupal::config('system.site');
   $site_mail = $site_config->get('mail');
   if (empty($site_mail)) {
     $site_mail = ini_get('sendmail_from');
@@ -268,7 +268,7 @@ function drupal_mail_system($module, $key) {
 
   $id = $module . '_' . $key;
 
-  $configuration = config('system.mail')->get('interface');
+  $configuration = Drupal::config('system.mail')->get('interface');
 
   // Look for overrides for the default class, starting from the most specific
   // id, and falling back to the module name.

@@ -32,7 +32,7 @@ const REQUIRED_D7_SCHEMA_VERSION = '7069';
  */
 function update_fix_compatibility() {
   foreach (array('module', 'theme') as $type) {
-    $config = config("system.$type");
+    $config = Drupal::config("system.$type");
     $save = FALSE;
     foreach ($config->get('enabled') as $name => $weight) {
       if (update_check_incompatibility($name, $type)) {
@@ -334,10 +334,10 @@ function update_prepare_d8_bootstrap() {
         variable_set('language_default', (array) $language_default);
       }
 
-      $module_config = config('system.module');
-      $disabled_modules = config('system.module.disabled');
-      $theme_config = config('system.theme');
-      $disabled_themes = config('system.theme.disabled');
+      $module_config = Drupal::config('system.module');
+      $disabled_modules = Drupal::config('system.module.disabled');
+      $theme_config = Drupal::config('system.theme');
+      $disabled_themes = Drupal::config('system.theme.disabled');
       $schema_store = Drupal::keyValue('system.schema');
 
       // Load system.module, because update_prepare_d8_bootstrap() is called in
@@ -494,7 +494,7 @@ function update_prepare_d8_language() {
     }
     Drupal::state()->set('locale.translation.plurals', $plurals);
     Drupal::state()->set('locale.translation.javascript', $javascript);
-    config('language.negotiation')
+    Drupal::config('language.negotiation')
       ->set('url.prefixes', $prefixes)
       ->set('url.domains', $domains)
       ->save();
@@ -573,7 +573,7 @@ function update_prepare_d8_language() {
     $result = db_query('SELECT * FROM {language}');
     $uuid = new Uuid();
     foreach ($result as $language) {
-      config('language.entity.' . $language->langcode)
+      Drupal::config('language.entity.' . $language->langcode)
         ->set('id', $language->langcode)
         ->set('uuid', $uuid->generate())
         ->set('label', $language->name)
@@ -710,7 +710,7 @@ function update_fix_d8_requirements() {
     // views configurations.
     // Like any other module APIs and services, Views' services are not available
     // in update.php. Existing listings are migrated into configuration, using
-    // the limited standard tools of raw database queries and config().
+    // the limited standard tools of raw database queries and Drupal::config().
     module_enable(array('views'));
 
     update_variable_set('update_d8_requirements', TRUE);
@@ -858,7 +858,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
 function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $redirect_callback = NULL) {
   // During the update, bring the site offline so that schema changes do not
   // affect visiting users.
-  $maintenance_mode = config('system.maintenance')->get('enabled');
+  $maintenance_mode = Drupal::config('system.maintenance')->get('enabled');
   if (isset($maintenance_mode)) {
     $_SESSION['maintenance_mode'] = $maintenance_mode;
   }
@@ -867,7 +867,7 @@ function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $
     // @todo This is borderline state, not config. Or a global system
     //   "maintenance lock".
     if (db_table_exists('config')) {
-      config('system.maintenance')->set('enabled', TRUE)->save();
+      Drupal::config('system.maintenance')->set('enabled', TRUE)->save();
     }
   }
 
@@ -941,7 +941,7 @@ function update_finished($success, $results, $operations) {
   if (isset($_SESSION['maintenance_mode'])) {
     $GLOBALS['conf']['system.maintenance']['enabled'] = FALSE;
     // At this point, the configuration system should exist.
-    config('system.maintenance')->set('enabled', FALSE)->save();
+    Drupal::config('system.maintenance')->set('enabled', FALSE)->save();
     unset($_SESSION['maintenance_mode']);
   }
 }
@@ -1405,7 +1405,7 @@ function update_variables_to_config($config_name, array $variable_map) {
   // Build the new configuration object.
   // This potentially loads an existing configuration object, in case another
   // update function migrated configuration values into $config_name already.
-  $config = config($config_name);
+  $config = Drupal::config($config_name);
   $original_data = $config->get();
 
   // Extract the module namespace/owner from the configuration object name.
@@ -1435,7 +1435,7 @@ function update_variables_to_config($config_name, array $variable_map) {
     // This function migrates variables regardless of their value, including
     // NULL values. Any possibly required customizations need to be performed
     // manually, either via variable_set() before calling this function or via
-    // config() after calling this function.
+    // Drupal::config() after calling this function.
     if (isset($variables[$variable_name])) {
       $value = unserialize($variables[$variable_name]);
       $config->set($config_key, $value);
@@ -1636,7 +1636,7 @@ function update_language_list($flags = Language::STATE_CONFIGURABLE) {
       // save the same object without data loss.
       foreach ($language_entities as $langcode_config_name) {
         $langcode = substr($langcode_config_name, strlen('language.entity.'));
-        $info = config($langcode_config_name)->get();
+        $info = Drupal::config($langcode_config_name)->get();
         $languages[$langcode] = new Language(array(
           'default' => ($info['id'] == $default->id),
           'name' => $info['label'],

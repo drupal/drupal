@@ -84,7 +84,7 @@ function shortcut_update_8000() {
         ->condition('menu_name', 'shortcut-set-1')
         ->execute();
     }
-    config('shortcut.set.' . $set->set_name)
+    Drupal::config('shortcut.set.' . $set->set_name)
       ->set('id', $set->set_name)
       ->set('label', $set->title)
       ->set('uuid', $uuid->generate())

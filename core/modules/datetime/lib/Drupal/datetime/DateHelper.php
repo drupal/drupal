@@ -259,7 +259,7 @@ class DateHelper {
    *   An array of weekdays reordered to match the first day of the week.
    */
   public static function weekDaysOrdered($weekdays) {
-    $first_day = config('system.date')->get('first_day');
+    $first_day = \Drupal::config('system.date')->get('first_day');
     if ($first_day > 0) {
       for ($i = 1; $i <= $first_day; $i++) {
         $last = array_shift($weekdays);

@@ -73,7 +73,7 @@ class ViewPreviewFormController extends ViewFormControllerBase implements Entity
       '#type' => 'checkbox',
       '#id' => 'edit-displays-live-preview',
       '#title' => t('Auto preview'),
-      '#default_value' => config('views.settings')->get('ui.always_live_preview'),
+      '#default_value' => \Drupal::config('views.settings')->get('ui.always_live_preview'),
     );
 
     // Add the arguments textfield

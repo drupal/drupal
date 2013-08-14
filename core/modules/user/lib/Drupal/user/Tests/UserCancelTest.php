@@ -33,7 +33,7 @@ class UserCancelTest extends WebTestBase {
    * Attempt to cancel account without permission.
    */
   function testUserCancelWithoutPermission() {
-    config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
+    \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
 
     // Create a user.
     $account = $this->drupalCreateUser(array());
@@ -103,7 +103,7 @@ class UserCancelTest extends WebTestBase {
    * Attempt invalid account cancellations.
    */
   function testUserCancelInvalid() {
-    config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
+    \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
 
     // Create a user.
     $account = $this->drupalCreateUser(array('cancel account'));
@@ -145,7 +145,7 @@ class UserCancelTest extends WebTestBase {
    * Disable account and keep all content.
    */
   function testUserBlock() {
-    config('user.settings')->set('cancel_method', 'user_cancel_block')->save();
+    \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_block')->save();
 
     // Create a user.
     $web_user = $this->drupalCreateUser(array('cancel account'));
@@ -180,7 +180,7 @@ class UserCancelTest extends WebTestBase {
    * Disable account and unpublish all content.
    */
   function testUserBlockUnpublish() {
-    config('user.settings')->set('cancel_method', 'user_cancel_block_unpublish')->save();
+    \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_block_unpublish')->save();
 
     // Create a user.
     $account = $this->drupalCreateUser(array('cancel account'));
@@ -224,7 +224,7 @@ class UserCancelTest extends WebTestBase {
    * Delete account and anonymize all content.
    */
   function testUserAnonymize() {
-    config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
+    \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
 
     // Create a user.
     $account = $this->drupalCreateUser(array('cancel account'));
@@ -248,7 +248,7 @@ class UserCancelTest extends WebTestBase {
     $this->drupalGet('user/' . $account->id() . '/edit');
     $this->drupalPost(NULL, NULL, t('Cancel account'));
     $this->assertText(t('Are you sure you want to cancel your account?'), 'Confirmation form to cancel account displayed.');
-    $this->assertRaw(t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', array('%anonymous-name' => config('user.settings')->get('anonymous'))), 'Informs that all content will be attributed to anonymous account.');
+    $this->assertRaw(t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', array('%anonymous-name' => \Drupal::config('user.settings')->get('anonymous'))), 'Informs that all content will be attributed to anonymous account.');
 
     // Confirm account cancellation.
     $timestamp = time();
@@ -275,7 +275,7 @@ class UserCancelTest extends WebTestBase {
    * Delete account and remove all content.
    */
   function testUserDelete() {
-    config('user.settings')->set('cancel_method', 'user_cancel_delete')->save();
+    \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_delete')->save();
     module_enable(array('comment'));
     $this->resetAll();
 
@@ -339,7 +339,7 @@ class UserCancelTest extends WebTestBase {
    * Create an administrative user and delete another user.
    */
   function testUserCancelByAdmin() {
-    config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
+    \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
 
     // Create a regular user.
     $account = $this->drupalCreateUser(array());
@@ -364,7 +364,7 @@ class UserCancelTest extends WebTestBase {
    * Tests deletion of a user account without an e-mail address.
    */
   function testUserWithoutEmailCancelByAdmin() {
-    config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
+    \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
 
     // Create a regular user.
     $account = $this->drupalCreateUser(array());
@@ -393,9 +393,9 @@ class UserCancelTest extends WebTestBase {
    */
   function testMassUserCancelByAdmin() {
     module_enable(array('views'));
-    config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
+    \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
     // Enable account cancellation notification.
-    config('user.settings')->set('notify.status_canceled', TRUE)->save();
+    \Drupal::config('user.settings')->set('notify.status_canceled', TRUE)->save();
 
     // Create administrative user.
     $admin_user = $this->drupalCreateUser(array('administer users'));

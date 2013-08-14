@@ -130,7 +130,7 @@ class EntityFilteringThemeTest extends WebTestBase {
 
     // Check each path in all available themes.
     foreach ($this->themes as $theme) {
-      config('system.theme')
+      \Drupal::config('system.theme')
         ->set('default', $theme)
         ->save();
       foreach ($paths as $path) {

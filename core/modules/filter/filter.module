@@ -584,7 +584,7 @@ function filter_fallback_format() {
   // existing (and potentially unsafe) text format on the site automatically
   // available to all users. Returning NULL at least guarantees that this
   // cannot happen.
-  return config('filter.settings')->get('fallback_format');
+  return Drupal::config('filter.settings')->get('fallback_format');
 }
 
 /**
@@ -839,7 +839,7 @@ function filter_process_format($element) {
   // If multiple text formats are available, remove the fallback. The
   // "always_show_fallback_choice" is a hidden variable that has no UI. It
   // defaults to false.
-  if (!config('filter.settings')->get('always_show_fallback_choice')) {
+  if (!Drupal::config('filter.settings')->get('always_show_fallback_choice')) {
     $fallback_format = filter_fallback_format();
     if ($element['#format'] !== $fallback_format && count($formats) > 1) {
       unset($formats[$fallback_format]);
@@ -1209,7 +1209,7 @@ function _filter_url($text, $filter) {
   // we cannot cleanly differ between protocols here without hard-coding MAILTO,
   // so '//' is optional for all protocols.
   // @see filter_xss_bad_protocol()
-  $protocols = config('system.filter')->get('protocols');
+  $protocols = Drupal::config('system.filter')->get('protocols');
   $protocols = implode(':(?://)?|', $protocols) . ':(?://)?';
 
   $valid_url_path_characters = "[\p{L}\p{M}\p{N}!\*\';:=\+,\.\$\/%#\[\]\-_~@&]";

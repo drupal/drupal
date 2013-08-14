@@ -54,13 +54,13 @@ class StatisticsLoggingTest extends WebTestBase {
     $this->node = $this->drupalCreateNode(array('title' => $this->randomName(255), 'uid' => $this->auth_user->id()));
 
     // Enable page caching.
-    $config = config('system.performance');
+    $config = \Drupal::config('system.performance');
     $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 300);
     $config->save();
 
     // Enable access logging.
-    config('statistics.settings')
+    \Drupal::config('statistics.settings')
       ->set('count_content_views', 1)
       ->save();
 

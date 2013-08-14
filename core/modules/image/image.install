@@ -158,7 +158,7 @@ function image_update_8000() {
 
   // Convert each style into a configuration object.
   foreach ($styles as $name => $style) {
-    $config = config('image.style.' . $name);
+    $config = Drupal::config('image.style.' . $name);
     $config->set('name', $name);
     $config->set('effects', $style['effects']);
     $config->save();

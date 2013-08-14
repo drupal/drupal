@@ -78,7 +78,7 @@ class SearchRankingTest extends SearchTestBase {
     $this->drupalPost(NULL, $edit, t('Save'));
 
     // Enable counting of statistics.
-    config('statistics.settings')->set('count_content_views', 1)->save();
+    \Drupal::config('statistics.settings')->set('count_content_views', 1)->save();
 
     // Then View one of the nodes a bunch of times.
     // Manually calling statistics.php, simulating ajax behavior.

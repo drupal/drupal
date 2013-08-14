@@ -191,7 +191,7 @@ function field_cron() {
   field_sync_field_status();
 
   // Do a pass of purging on deleted Field API data, if any exists.
-  $limit = config('field.settings')->get('purge_batch_size');
+  $limit = Drupal::config('field.settings')->get('purge_batch_size');
   field_purge_batch($limit);
 }
 

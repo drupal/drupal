@@ -332,7 +332,7 @@ function ajax_base_page_theme() {
     // to see the default theme, token validation isn't required for that, and
     // bypassing it allows most use-cases to work even when accessed from the
     // page cache.
-    if ($theme === config('system.theme')->get('default') || drupal_valid_token($token, $theme)) {
+    if ($theme === Drupal::config('system.theme')->get('default') || drupal_valid_token($token, $theme)) {
       return $theme;
     }
   }
@@ -368,7 +368,7 @@ function ajax_prepare_response($page_callback_result) {
         break;
 
       case MENU_SITE_OFFLINE:
-        $commands[] = ajax_command_alert(filter_xss_admin(t(config('system.maintenance')->get('message'), array('@site' => config('system.site')->get('name')))));
+        $commands[] = ajax_command_alert(filter_xss_admin(t(Drupal::config('system.maintenance')->get('message'), array('@site' => Drupal::config('system.site')->get('name')))));
         break;
     }
   }

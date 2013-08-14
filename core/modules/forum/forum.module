@@ -237,7 +237,7 @@ function forum_entity_info(&$info) {
  */
 function forum_entity_bundle_info_alter(&$bundles) {
   // Take over URI construction for taxonomy terms that are forums.
-  if ($vid = config('forum.settings')->get('vocabulary')) {
+  if ($vid = Drupal::config('forum.settings')->get('vocabulary')) {
     if (isset($bundles['taxonomy_term'][$vid])) {
       $bundles['taxonomy_term'][$vid]['uri_callback'] = 'forum_uri';
     }
@@ -280,7 +280,7 @@ function forum_node_validate(EntityInterface $node, $form) {
     // vocabulary is selected, not a "container" term.
     if (!empty($node->taxonomy_forums[$langcode])) {
       // Extract the node's proper topic ID.
-      $containers = config('forum.settings')->get('containers');
+      $containers = Drupal::config('forum.settings')->get('containers');
       foreach ($node->taxonomy_forums[$langcode] as $delta => $item) {
         // If no term was selected (e.g. when no terms exist yet), remove the
         // item.
@@ -450,7 +450,7 @@ function forum_permission() {
  */
 function forum_taxonomy_term_delete(Term $term) {
   // For containers, remove the tid from the forum_containers variable.
-  $config = config('forum.settings');
+  $config = Drupal::config('forum.settings');
   $containers = $config->get('containers');
   $key = array_search($term->id(), $containers);
   if ($key !== FALSE) {
@@ -569,7 +569,7 @@ function forum_field_storage_pre_update(EntityInterface $entity, &$skip_fields) 
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function forum_form_taxonomy_vocabulary_form_alter(&$form, &$form_state, $form_id) {
-  $vid = config('forum.settings')->get('vocabulary');
+  $vid = Drupal::config('forum.settings')->get('vocabulary');
   $vocabulary = $form_state['controller']->getEntity();
   if ($vid == $vocabulary->id()) {
     $form['help_forum_vocab'] = array(
@@ -591,7 +591,7 @@ function forum_form_taxonomy_vocabulary_form_alter(&$form, &$form_state, $form_i
  * Implements hook_form_FORM_ID_alter() for taxonomy_term_form().
  */
 function forum_form_taxonomy_term_form_alter(&$form, &$form_state, $form_id) {
-  $vid = config('forum.settings')->get('vocabulary');
+  $vid = Drupal::config('forum.settings')->get('vocabulary');
   if (isset($form['vid']['#value']) && $form['vid']['#value'] == $vid) {
     // Hide multiple parents select from forum terms.
     $form['relations']['parent']['#access'] = FALSE;
@@ -673,7 +673,7 @@ function forum_forum_load($tid = NULL) {
     return $cache[$tid];
   }
 
-  $config = config('forum.settings');
+  $config = Drupal::config('forum.settings');
   $vid = $config->get('vocabulary');
 
   // Load and validate the parent term.
@@ -988,7 +988,7 @@ function template_preprocess_forums(&$variables) {
       $variables['forums'] = array();
     }
 
-    if ($variables['tid'] && array_search($variables['tid'], config('forum.settings')->get('containers')) === FALSE) {
+    if ($variables['tid'] && array_search($variables['tid'], Drupal::config('forum.settings')->get('containers')) === FALSE) {
       $variables['topics'] = array(
         '#theme' => 'forum_topic_list',
         '#tid' => $variables['tid'],
@@ -1173,7 +1173,7 @@ function template_preprocess_forum_topic_list(&$variables) {
  *   - first_new: Indicates whether this is the first topic with new posts.
  */
 function template_preprocess_forum_icon(&$variables) {
-  $variables['hot_threshold'] = config('forum.settings')->get('topics.hot_threshold');
+  $variables['hot_threshold'] = Drupal::config('forum.settings')->get('topics.hot_threshold');
 
   if ($variables['num_posts'] > $variables['hot_threshold']) {
     $icon_status_class = $variables['new_posts'] ? 'hot-new' : 'hot';

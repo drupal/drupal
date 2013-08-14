@@ -965,7 +965,7 @@ function template_preprocess_views_view_rss(&$variables) {
 
   $style = $view->style_plugin;
 
-  $config = config('system.site');
+  $config = Drupal::config('system.site');
 
   // The RSS 2.0 "spec" doesn't indicate HTML can be used in the description.
   // We strip all HTML tags, but need to prevent double encoding from properly

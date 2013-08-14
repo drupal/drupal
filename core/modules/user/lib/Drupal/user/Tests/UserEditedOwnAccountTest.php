@@ -25,7 +25,7 @@ class UserEditedOwnAccountTest extends WebTestBase {
   function testUserEditedOwnAccount() {
     // Change account setting 'Who can register accounts?' to Administrators
     // only.
-    config('user.settings')->set('register', USER_REGISTER_ADMINISTRATORS_ONLY)->save();
+    \Drupal::config('user.settings')->set('register', USER_REGISTER_ADMINISTRATORS_ONLY)->save();
 
     // Create a new user account and log in.
     $account = $this->drupalCreateUser(array('change own username'));

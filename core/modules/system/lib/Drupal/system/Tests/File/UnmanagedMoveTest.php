@@ -23,7 +23,7 @@ class UnmanagedMoveTest extends FileTestBase {
    * Move a normal file.
    */
   function testNormal() {
-    $config = config('system.file');
+    $config = \Drupal::config('system.file');
     // Create a file for testing
     $uri = $this->createUri();
 

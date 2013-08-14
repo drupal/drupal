@@ -555,8 +555,8 @@ class ModuleHandler implements ModuleHandlerInterface {
 
     $modules_installed = array();
     $modules_enabled = array();
-    $module_config = config('system.module');
-    $disabled_config = config('system.module.disabled');
+    $module_config = \Drupal::config('system.module');
+    $disabled_config = \Drupal::config('system.module.disabled');
     foreach ($module_list as $module) {
       // Only process modules that are not already enabled.
       // A module is only enabled if it is configured as enabled. Custom or
@@ -720,8 +720,8 @@ class ModuleHandler implements ModuleHandlerInterface {
 
     $invoke_modules = array();
 
-    $module_config = config('system.module');
-    $disabled_config = config('system.module.disabled');
+    $module_config = \Drupal::config('system.module');
+    $disabled_config = \Drupal::config('system.module.disabled');
     foreach ($module_list as $module) {
       // Only process modules that are enabled.
       // A module is only enabled if it is configured as enabled. Custom or
@@ -811,7 +811,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     }
 
     $schema_store = \Drupal::keyValue('system.schema');
-    $disabled_config = config('system.module.disabled');
+    $disabled_config = \Drupal::config('system.module.disabled');
     foreach ($module_list as $module) {
       // Uninstall the module.
       module_load_install($module);

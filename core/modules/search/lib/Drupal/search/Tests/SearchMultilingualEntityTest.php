@@ -93,7 +93,7 @@ class SearchMultilingualEntityTest extends SearchTestBase {
    */
   function testIndexingThrottle() {
     // Index only 4 items per cron run.
-    config('search.settings')->set('index.cron_limit', 4)->save();
+    \Drupal::config('search.settings')->set('index.cron_limit', 4)->save();
     // Update the index. This does the initial processing.
     node_update_index();
     // Run the shutdown function. Testing is a unique case where indexing

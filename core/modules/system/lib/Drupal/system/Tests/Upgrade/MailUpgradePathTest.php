@@ -35,7 +35,7 @@ class MailUpgradePathTest extends UpgradePathTestBase {
     $this->performUpgrade(TRUE);
 
     // Get the new mailer definitions.
-    $mail_system = config('system.mail')->get('interface');
+    $mail_system = \Drupal::config('system.mail')->get('interface');
 
     // Check that the default mailer has been changed to a PSR-0 definition.
     $this->assertEqual($mail_system['default'], 'Drupal\Core\Mail\PhpMail', 'Default mailer upgraded to Drupal 8 syntax.');

@@ -83,7 +83,7 @@ function hook_update_projects_alter(&$projects) {
  * @see update_calculate_project_data()
  */
 function hook_update_status_alter(&$projects) {
-  $settings = config('update_advanced.settings')->get('projects');
+  $settings = Drupal::config('update_advanced.settings')->get('projects');
   foreach ($projects as $project => $project_info) {
     if (isset($settings[$project]) && isset($settings[$project]['check']) &&
         ($settings[$project]['check'] == 'never' ||

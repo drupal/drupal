@@ -279,7 +279,7 @@ abstract class FieldPluginBase extends HandlerBase {
         '' => t(' - Use default -'),
         '0' => t('- None -')
       );
-      $elements += config('views.settings')->get('field_rewrite_elements');
+      $elements += \Drupal::config('views.settings')->get('field_rewrite_elements');
     }
 
     return $elements;

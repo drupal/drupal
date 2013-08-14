@@ -22,7 +22,7 @@ function drupal_is_front_page() {
   $is_front_page = &$drupal_static_fast['is_front_page'];
 
   if (!isset($is_front_page)) {
-    $is_front_page = (current_path() == config('system.site')->get('page.front'));
+    $is_front_page = (current_path() == Drupal::config('system.site')->get('page.front'));
   }
 
   return $is_front_page;
@@ -53,7 +53,7 @@ function drupal_match_path($path, $patterns) {
     $replacements = array(
       '|',
       '.*',
-      '\1' . preg_quote(config('system.site')->get('page.front'), '/') . '\2'
+      '\1' . preg_quote(Drupal::config('system.site')->get('page.front'), '/') . '\2'
     );
     $patterns_quoted = preg_quote($patterns, '/');
     $regexps[$patterns] = '/^(' . preg_replace($to_replace, $replacements, $patterns_quoted) . ')$/';

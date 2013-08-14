@@ -360,7 +360,7 @@ function aggregator_refresh(Feed $feed) {
   // Store feed URL to track changes.
   $feed_url = $feed->url->value;
 
-  $config = config('aggregator.settings');
+  $config = Drupal::config('aggregator.settings');
   // Fetch the feed.
   $fetcher_manager = Drupal::service('plugin.manager.aggregator.fetcher');
   try {
@@ -492,7 +492,7 @@ function theme_aggregator_block_item($variables) {
  *   The filtered content.
  */
 function aggregator_filter_xss($value) {
-  return filter_xss($value, preg_split('/\s+|<|>/', config('aggregator.settings')->get('items.allowed_html'), -1, PREG_SPLIT_NO_EMPTY));
+  return filter_xss($value, preg_split('/\s+|<|>/', Drupal::config('aggregator.settings')->get('items.allowed_html'), -1, PREG_SPLIT_NO_EMPTY));
 }
 
 /**

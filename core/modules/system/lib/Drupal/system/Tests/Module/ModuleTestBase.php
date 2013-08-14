@@ -118,7 +118,7 @@ abstract class ModuleTestBase extends WebTestBase {
     // list all default config once more, but filtered by $module.
     $names = $module_file_storage->listAll($module . '.');
     foreach ($names as $key => $name) {
-      if (config($name)->get()) {
+      if (\Drupal::config($name)->get()) {
         unset($names[$key]);
       }
     }

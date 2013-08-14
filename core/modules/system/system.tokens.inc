@@ -103,17 +103,17 @@ function system_tokens($type, $tokens, array $data = array(), array $options = a
     foreach ($tokens as $name => $original) {
       switch ($name) {
         case 'name':
-          $site_name = config('system.site')->get('name');
+          $site_name = Drupal::config('system.site')->get('name');
           $replacements[$original] = $sanitize ? check_plain($site_name) : $site_name;
           break;
 
         case 'slogan':
-          $slogan = config('system.site')->get('slogan');
+          $slogan = Drupal::config('system.site')->get('slogan');
           $replacements[$original] = $sanitize ? filter_xss_admin($slogan) : $slogan;
           break;
 
         case 'mail':
-          $replacements[$original] = config('system.site')->get('mail');
+          $replacements[$original] = Drupal::config('system.site')->get('mail');
           break;
 
         case 'url':

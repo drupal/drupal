@@ -46,7 +46,7 @@ class CommentLinksTest extends CommentTestBase {
   function testCommentLinks() {
     // Bartik theme alters comment links, so use a different theme.
     theme_enable(array('stark'));
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', 'stark')
       ->save();
 
@@ -175,7 +175,7 @@ class CommentLinksTest extends CommentTestBase {
     }
 
     // Change user settings.
-    config('user.settings')->set('register', $info['user_register'])->save();
+    \Drupal::config('user.settings')->set('register', $info['user_register'])->save();
 
     // Change user permissions.
     $rid = ($this->loggedInUser ? DRUPAL_AUTHENTICATED_RID : DRUPAL_ANONYMOUS_RID);

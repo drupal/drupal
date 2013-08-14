@@ -82,7 +82,7 @@ function tracker_cron() {
   $state = Drupal::state();
   $max_nid = $state->get('tracker.index_nid') ?: 0;
   if ($max_nid > 0) {
-    $batch_size = config('tracker.settings')->get('cron_index_limit');
+    $batch_size = Drupal::config('tracker.settings')->get('cron_index_limit');
     $last_nid = FALSE;
     // @todo This should be actually filtering on the desired language and just
     //   fall back to the default language.

@@ -25,7 +25,7 @@ use Drupal\Component\Uuid\Uuid;
  */
 function _update_8000_entity_get_display($entity_type, $bundle, $view_mode) {
   $id = $entity_type . '.' . $bundle . '.' . $view_mode;
-  $config = config("entity.display.$id");
+  $config = Drupal::config("entity.display.$id");
   if ($config->get()) {
     return $config;
   }
@@ -64,7 +64,7 @@ function _update_8000_entity_get_display($entity_type, $bundle, $view_mode) {
  */
 function _update_8000_entity_get_form_display($entity_type, $bundle, $form_mode) {
   $id = $entity_type . '.' . $bundle . '.' . $form_mode;
-  $config = config("entity.form_display.$id");
+  $config = Drupal::config("entity.form_display.$id");
   if ($config->get()) {
     return $config;
   }

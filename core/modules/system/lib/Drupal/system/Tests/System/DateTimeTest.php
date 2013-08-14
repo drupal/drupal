@@ -43,7 +43,7 @@ class DateTimeTest extends WebTestBase {
    */
   function testTimeZoneHandling() {
     // Setup date/time settings for Honolulu time.
-    $config = config('system.date')
+    $config = \Drupal::config('system.date')
       ->set('timezone.default', 'Pacific/Honolulu')
       ->set('timezone.user.configurable', 0)
       ->save();
@@ -135,7 +135,7 @@ class DateTimeTest extends WebTestBase {
     $format = $date_format->getPattern();
     $this->assertEqual('dmYHis', $format, 'Localized date format resides in general config too.');
 
-    $format = config('locale.config.en.system.date_format.test_short')->get('pattern.php');
+    $format = \Drupal::config('locale.config.en.system.date_format.test_short')->get('pattern.php');
     $this->assertEqual('dmYHis', $format, 'Localized date format resides in localized config.');
   }
 

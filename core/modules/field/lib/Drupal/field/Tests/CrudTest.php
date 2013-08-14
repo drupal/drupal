@@ -64,7 +64,7 @@ class CrudTest extends FieldUnitTestBase {
     $this->assertEqual($field_config['settings'], $field_type['settings'], 'Default field settings have been written.');
 
     // Ensure that default storage was set.
-    $this->assertEqual($field_config['storage']['type'], config('field.settings')->get('default_storage'), 'The field type is properly saved.');
+    $this->assertEqual($field_config['storage']['type'], \Drupal::config('field.settings')->get('default_storage'), 'The field type is properly saved.');
 
     // Guarantee that the name is unique.
     try {

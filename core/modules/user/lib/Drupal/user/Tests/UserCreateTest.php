@@ -80,7 +80,7 @@ class UserCreateTest extends WebTestBase {
     $this->assertFieldByXPath('//input[@type="radio" and @id="edit-status-1" and @checked="checked"]', NULL, 'Default setting for user status is active.');
 
     // Test that the password strength indicator displays.
-    $config = config('user.settings');
+    $config = \Drupal::config('user.settings');
 
     $config->set('password_strength', TRUE)->save();
     $this->drupalGet('admin/people/create');

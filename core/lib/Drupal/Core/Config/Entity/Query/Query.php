@@ -88,7 +88,7 @@ class Query extends QueryBase implements QueryInterface {
     $names = $this->configStorage->listAll($prefix);
     $configs = array();
     foreach ($names as $name) {
-      $configs[substr($name, $prefix_length)] = config($name)->get();
+      $configs[substr($name, $prefix_length)] = \Drupal::config($name)->get();
     }
 
     $result = $this->condition->compile($configs);

@@ -102,7 +102,7 @@ function text_sanitize($text_processing, $langcode, $item, $column) {
 function text_summary($text, $format = NULL, $size = NULL) {
 
   if (!isset($size)) {
-    $size = config('text.settings')->get('default_summary_length');
+    $size = Drupal::config('text.settings')->get('default_summary_length');
   }
 
   // Find where the delimiter is in the body

@@ -96,7 +96,7 @@ function design_test_menu_local_tasks_alter(&$data, $router_item, $root_path) {
     $actions = &$data['actions']['output'];
     // Determine the currently selected theme, if any.
     $selected_theme = drupal_container()->get('request')->query->get('theme');
-    $default_theme = config('system.theme')->get('default');
+    $default_theme = Drupal::config('system.theme')->get('default');
 
     // Expand all enabled themes into action links.
     $themes = list_themes();

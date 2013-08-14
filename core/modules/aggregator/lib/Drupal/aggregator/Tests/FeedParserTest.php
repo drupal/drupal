@@ -26,7 +26,7 @@ class FeedParserTest extends AggregatorTestBase {
     // Do not remove old aggregator items during these tests, since our sample
     // feeds have hardcoded dates in them (which may be expired when this test
     // is run).
-    config('aggregator.settings')->set('items.expire', AGGREGATOR_CLEAR_NEVER)->save();
+    \Drupal::config('aggregator.settings')->set('items.expire', AGGREGATOR_CLEAR_NEVER)->save();
     // Reset any reader cache between tests.
     Reader::reset();
     // Set our bridge extension manager to Zend Feed.

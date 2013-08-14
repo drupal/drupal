@@ -67,7 +67,7 @@ class StreamWrapperTest extends WebTestBase {
    * Test the URI and target functions.
    */
   function testUriFunctions() {
-    $config = config('system.file');
+    $config = \Drupal::config('system.file');
 
     $instance = file_stream_wrapper_get_instance_by_uri($this->scheme . '://foo');
     $this->assertEqual($this->classname, get_class($instance), 'Got correct class type for dummy URI.');

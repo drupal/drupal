@@ -61,7 +61,7 @@ class BlockHiddenRegionTest extends WebTestBase {
     // Enable "block_test_theme" and set it as the default theme.
     $theme = 'block_test_theme';
     theme_enable(array($theme));
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', $theme)
       ->save();
     \Drupal::service('router.builder')->rebuild();

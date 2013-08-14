@@ -189,7 +189,7 @@ class FrameworkTest extends AjaxTestBase {
     // The test theme overrides system.module.css without an implementation,
     // thereby removing it.
     theme_enable(array('test_theme'));
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', 'test_theme')
       ->save();
 

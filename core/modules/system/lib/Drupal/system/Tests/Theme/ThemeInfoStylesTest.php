@@ -34,7 +34,7 @@ class ThemeInfoStylesTest extends WebTestBase {
    */
   function testStylesheets() {
     theme_enable(array('test_basetheme', 'test_subtheme'));
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', 'test_subtheme')
       ->save();
 

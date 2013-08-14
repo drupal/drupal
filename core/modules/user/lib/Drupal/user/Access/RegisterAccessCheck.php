@@ -27,6 +27,6 @@ class RegisterAccessCheck implements StaticAccessCheckInterface {
    * Implements AccessCheckInterface::access().
    */
   public function access(Route $route, Request $request) {
-    return user_is_anonymous() && (config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY);
+    return user_is_anonymous() && (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY);
   }
 }

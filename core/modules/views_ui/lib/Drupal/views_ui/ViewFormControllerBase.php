@@ -157,7 +157,7 @@ abstract class ViewFormControllerBase extends EntityFormController {
    */
   public function isDefaultDisplayShown(ViewUI $view) {
     // Always show the default display for advanced users who prefer that mode.
-    $advanced_mode = config('views.settings')->get('ui.show.master_display');
+    $advanced_mode = \Drupal::config('views.settings')->get('ui.show.master_display');
     // For other users, show the default display only if there are no others, and
     // hide it if there's at least one "real" display.
     $additional_displays = (count($view->getExecutable()->displayHandlers) == 1);

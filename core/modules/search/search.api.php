@@ -115,7 +115,7 @@ function hook_search_admin() {
 
   // Note: reversed to reflect that higher number = higher ranking.
   $options = drupal_map_assoc(range(0, 10));
-  $ranks = config('node.settings')->get('search_rank');
+  $ranks = Drupal::config('node.settings')->get('search_rank');
   foreach (Drupal::moduleHandler()->invokeAll('ranking') as $var => $values) {
     $form['content_ranking']['factors'][$var] = array(
       '#title' => $values['title'],
@@ -329,7 +329,7 @@ function hook_search_preprocess($text, $langcode = NULL) {
  * When implementing this hook, your module should index content items that
  * were modified or added since the last run. PHP has a time limit
  * for cron, though, so it is advisable to limit how many items you index
- * per run using config('search.settings')->get('index.cron_limit') (see
+ * per run using Drupal::config('search.settings')->get('index.cron_limit') (see
  * example below). Also, since the cron run could time out and abort in the
  * middle of your run, you should update your module's internal bookkeeping on
  * when items have last been indexed as you go rather than waiting to the end
@@ -338,7 +338,7 @@ function hook_search_preprocess($text, $langcode = NULL) {
  * @ingroup search
  */
 function hook_update_index() {
-  $limit = (int) config('search.settings')->get('index.cron_limit');
+  $limit = (int) Drupal::config('search.settings')->get('index.cron_limit');
 
   $result = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, n.nid ASC", 0, $limit);
 
@@ -402,7 +402,7 @@ function callback_search_conditions($keys) {
   if (!empty($_REQUEST['sample_search_keys'])) {
     $conditions['sample_search_keys'] = $_REQUEST['sample_search_keys'];
   }
-  if ($force_keys = config('sample_search.settings')->get('force_keywords')) {
+  if ($force_keys = Drupal::config('sample_search.settings')->get('force_keywords')) {
     $conditions['sample_search_force_keywords'] = $force_keys;
   }
   return $conditions;

@@ -89,7 +89,7 @@ class InstallerTest extends WebTestBase {
     $this->rebuildContainer();
 
     foreach ($variable_groups as $config_base => $variables) {
-      $config = config($config_base);
+      $config = \Drupal::config($config_base);
       foreach ($variables as $name => $value) {
         $config->set($name, $value);
       }
@@ -97,7 +97,7 @@ class InstallerTest extends WebTestBase {
     }
 
     // Use the test mail class instead of the default mail handler class.
-    config('system.mail')->set('interface.default', 'Drupal\Core\Mail\VariableLog')->save();
+    \Drupal::config('system.mail')->set('interface.default', 'Drupal\Core\Mail\VariableLog')->save();
 
     drupal_set_time_limit($this->timeLimit);
     // When running from run-tests.sh we don't get an empty current path which

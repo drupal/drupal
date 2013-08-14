@@ -192,7 +192,7 @@ class DateFormat extends ConfigEntityBase implements DateFormatInterface {
       foreach ($entities as $entity) {
         $format_id = $entity->id();
         foreach ($languages as $langcode => $data) {
-          config("locale.config.$langcode.system.date_format.$format_id")->delete();
+          \Drupal::config("locale.config.$langcode.system.date_format.$format_id")->delete();
         }
       }
     }

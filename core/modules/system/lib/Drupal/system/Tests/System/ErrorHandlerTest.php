@@ -33,7 +33,7 @@ class ErrorHandlerTest extends WebTestBase {
    * Test the error handler.
    */
   function testErrorHandler() {
-    $config = config('system.logging');
+    $config = \Drupal::config('system.logging');
     $error_notice = array(
       '%type' => 'Notice',
       '!message' => 'Undefined variable: bananas',
@@ -54,7 +54,7 @@ class ErrorHandlerTest extends WebTestBase {
     );
 
     // Set error reporting to display verbose notices.
-    config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_VERBOSE)->save();
+    \Drupal::config('system.logging')->set('error_level', ERROR_REPORTING_DISPLAY_VERBOSE)->save();
     $this->drupalGet('error-test/generate-warnings');
     $this->assertResponse(200, 'Received expected HTTP status code.');
     $this->assertErrorMessage($error_notice);

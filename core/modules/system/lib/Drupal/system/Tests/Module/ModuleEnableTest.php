@@ -32,7 +32,7 @@ class ModuleEnableTest extends WebTestBase {
    */
   function testEnableUserTwice() {
     $this->container->get('module_handler')->enable(array('user'), FALSE);
-    $this->assertIdentical(config('system.module')->get('enabled.user'), '0');
+    $this->assertIdentical(\Drupal::config('system.module')->get('enabled.user'), '0');
   }
 
   /**

@@ -252,7 +252,7 @@ function search_get_info($all = FALSE) {
   }
 
   // Return only modules that are set to active in search settings.
-  return array_intersect_key($search_hooks, array_flip(config('search.settings')->get('active_modules')));
+  return array_intersect_key($search_hooks, array_flip(Drupal::config('search.settings')->get('active_modules')));
 }
 
 /**
@@ -263,7 +263,7 @@ function search_get_info($all = FALSE) {
  */
 function search_get_default_module_info() {
   $info = search_get_info();
-  $default = config('search.settings')->get('default_module');
+  $default = Drupal::config('search.settings')->get('default_module');
   if (isset($info[$default])) {
     return $info[$default];
   }
@@ -362,7 +362,7 @@ function search_cron() {
   // to date.
   drupal_register_shutdown_function('search_update_totals');
 
-  foreach (config('search.settings')->get('active_modules') as $module) {
+  foreach (Drupal::config('search.settings')->get('active_modules') as $module) {
     // Update word index
     module_invoke($module, 'update_index');
   }
@@ -423,7 +423,7 @@ function search_simplify($text, $langcode = NULL) {
   search_invoke_preprocess($text, $langcode);
 
   // Simple CJK handling
-  if (config('search.settings')->get('index.overlap_cjk')) {
+  if (Drupal::config('search.settings')->get('index.overlap_cjk')) {
     $text = preg_replace_callback('/[' . PREG_CLASS_CJK . ']+/u', 'search_expand_cjk', $text);
   }
 
@@ -477,7 +477,7 @@ function search_simplify($text, $langcode = NULL) {
  *   Tokenized text, starting and ending with a space character.
  */
 function search_expand_cjk($matches) {
-  $min = config('search.settings')->get('index.minimum_word_size');
+  $min = Drupal::config('search.settings')->get('index.minimum_word_size');
   $str = $matches[0];
   $length = drupal_strlen($str);
   // If the text is shorter than the minimum word size, don't tokenize it.
@@ -558,7 +558,7 @@ function search_invoke_preprocess(&$text, $langcode = NULL) {
  * @ingroup search
  */
 function search_index($sid, $module, $text, $langcode) {
-  $minimum_word_size = config('search.settings')->get('index.minimum_word_size');
+  $minimum_word_size = Drupal::config('search.settings')->get('index.minimum_word_size');
 
   // Link matching
   global $base_url;
@@ -567,7 +567,7 @@ function search_index($sid, $module, $text, $langcode) {
   // Multipliers for scores of words inside certain HTML tags. The weights are stored
   // in a variable so that modules can overwrite the default weights.
   // Note: 'a' must be included for link ranking to work.
-  $tags = config('search.settings')->get('index.tag_weights');
+  $tags = Drupal::config('search.settings')->get('index.tag_weights');
 
   // Strip off all ignored tags to speed up processing, but insert space before/after
   // them to keep word boundaries.

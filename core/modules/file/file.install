@@ -303,7 +303,7 @@ function file_update_8002() {
  */
 function file_update_8003() {
   foreach (config_get_storage_names_with_prefix('field.field.') as $config_name) {
-    $field_config = config($config_name);
+    $field_config = Drupal::config($config_name);
     // Only update file fields that use the default SQL storage.
     if (in_array($field_config->get('type'), array('file', 'image')) && $field_config->get('storage.type') == 'field_sql_storage') {
       $field = new Field($field_config->get());

@@ -1860,7 +1860,7 @@ function drupal_pre_render_styles($elements) {
   $css_assets = $elements['#items'];
 
   // Aggregate the CSS if necessary, but only during normal site operation.
-  if (!defined('MAINTENANCE_MODE') && config('system.performance')->get('css.preprocess')) {
+  if (!defined('MAINTENANCE_MODE') && Drupal::config('system.performance')->get('css.preprocess')) {
     $css_assets = \Drupal::service('asset.css.collection_optimizer')->optimize($css_assets);
   }
   return \Drupal::service('asset.css.collection_renderer')->render($css_assets);
@@ -1883,7 +1883,7 @@ function drupal_clear_css_cache() {
  */
 function drupal_delete_file_if_stale($uri) {
   // Default stale file threshold is 30 days.
-  if (REQUEST_TIME - filemtime($uri) > config('system.performance')->get('stale_file_threshold')) {
+  if (REQUEST_TIME - filemtime($uri) > Drupal::config('system.performance')->get('stale_file_threshold')) {
     file_unmanaged_delete($uri);
   }
 }
@@ -2487,7 +2487,7 @@ function drupal_pre_render_scripts($elements) {
 
   // Aggregate the JavaScript if necessary, but only during normal site
   // operation.
-  if (!defined('MAINTENANCE_MODE') && config('system.performance')->get('js.preprocess')) {
+  if (!defined('MAINTENANCE_MODE') && Drupal::config('system.performance')->get('js.preprocess')) {
     $js_assets = \Drupal::service('asset.js.collection_optimizer')->optimize($js_assets);
   }
   return \Drupal::service('asset.js.collection_renderer')->render($js_assets);
@@ -3119,7 +3119,7 @@ function _drupal_bootstrap_code() {
   }
 
   // Set the allowed protocols once we have the config available.
-  $allowed_protocols = \Drupal::config('system.filter')->get('protocols');
+  $allowed_protocols = Drupal::config('system.filter')->get('protocols');
   if (!isset($allowed_protocols)) {
     // filter_xss_admin() is called by the installer and update.php, in which
     // case the configuration may not exist (yet). Provide a minimal default set

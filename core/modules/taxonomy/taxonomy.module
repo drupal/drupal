@@ -113,7 +113,7 @@ function taxonomy_permission() {
 function taxonomy_entity_bundle_info() {
   $bundles = array();
   foreach (taxonomy_vocabulary_get_names() as $id) {
-    $config = config('taxonomy.vocabulary.' . $id);
+    $config = Drupal::config('taxonomy.vocabulary.' . $id);
     $bundles['taxonomy_term'][$id]['label'] = $config->get('name');
   }
   return $bundles;
@@ -181,7 +181,7 @@ function taxonomy_field_extra_fields() {
  *   An array of nids matching the query.
  */
 function taxonomy_select_nodes($tid, $pager = TRUE, $limit = FALSE, $order = array('t.sticky' => 'DESC', 't.created' => 'DESC')) {
-  if (!config('taxonomy.settings')->get('maintain_index_table')) {
+  if (!Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
     return array();
   }
   $query = db_select('taxonomy_index', 't');
@@ -1129,7 +1129,7 @@ function taxonomy_build_node_index($node) {
   // We maintain a denormalized table of term/node relationships, containing
   // only data for current, published nodes.
   $status = NULL;
-  if (config('taxonomy.settings')->get('maintain_index_table')) {
+  if (Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
     // If a node property is not set in the node object when $node->save() is
     // called, the old value from $node->original is used.
     if (!empty($node->original)) {
@@ -1209,7 +1209,7 @@ function taxonomy_node_predelete(EntityInterface $node) {
  *   The node entity.
  */
 function taxonomy_delete_node_index(EntityInterface $node) {
-  if (config('taxonomy.settings')->get('maintain_index_table')) {
+  if (Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
     db_delete('taxonomy_index')->condition('nid', $node->id())->execute();
   }
 }
@@ -1218,7 +1218,7 @@ function taxonomy_delete_node_index(EntityInterface $node) {
  * Implements hook_taxonomy_term_delete().
  */
 function taxonomy_taxonomy_term_delete(Term $term) {
-  if (config('taxonomy.settings')->get('maintain_index_table')) {
+  if (Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
     // Clean up the {taxonomy_index} table when terms are deleted.
     db_delete('taxonomy_index')->condition('tid', $term->id())->execute();
   }

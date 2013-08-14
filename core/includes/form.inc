@@ -4574,7 +4574,7 @@ function form_process_weight($element) {
   $element['#is_weight'] = TRUE;
 
   // If the number of options is small enough, use a select field.
-  $max_elements = config('system.site')->get('weight_select_max');
+  $max_elements = Drupal::config('system.site')->get('weight_select_max');
   if ($element['#delta'] <= $max_elements) {
     $element['#type'] = 'select';
     for ($n = (-1 * $element['#delta']); $n <= $element['#delta']; $n++) {

@@ -34,7 +34,7 @@ class UserSignatureTest extends WebTestBase {
     parent::setUp();
 
     // Enable user signatures.
-    config('user.settings')->set('signatures', 1)->save();
+    \Drupal::config('user.settings')->set('signatures', 1)->save();
 
     // Create Basic page node type.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
