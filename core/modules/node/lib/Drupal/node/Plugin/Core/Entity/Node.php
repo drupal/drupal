@@ -136,7 +136,7 @@ class Node extends EntityNG implements NodeInterface {
    */
   public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
     if (module_exists('search')) {
-      foreach ($entities as $id => $entity) {
+      foreach ($entities as $entity) {
         search_reindex($entity->nid->value, 'node');
       }
     }
