@@ -807,7 +807,7 @@ function node_permission() {
   );
 
   // Generate standard node permissions for all applicable node types.
-  foreach (node_permissions_get_configured_types() as $name => $type) {
+  foreach (node_permissions_get_configured_types() as $type) {
     $perms += node_list_permissions($type);
   }
 
@@ -2263,9 +2263,6 @@ function node_query_node_access_alter(AlterableInterface $query) {
   }
   if (!$op = $query->getMetaData('op')) {
     $op = 'view';
-  }
-  if (!$langcode = $query->getMetaData('langcode')) {
-    $langcode = FALSE;
   }
 
   // If $account can bypass node access, or there are no node access modules,
