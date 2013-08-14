@@ -63,8 +63,6 @@ class Schema extends DatabaseSchema {
    * from the condition criteria.
    */
   protected function buildTableNameCondition($table_name, $operator = '=', $add_prefix = TRUE) {
-    $info = $this->connection->getConnectionOptions();
-
     $table_info = $this->getPrefixInfo($table_name, $add_prefix);
 
     $condition = new Condition('AND');
