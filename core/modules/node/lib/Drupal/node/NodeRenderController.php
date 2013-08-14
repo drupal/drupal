@@ -30,7 +30,7 @@ class NodeRenderController extends EntityRenderController {
 
     parent::buildContent($entities, $displays, $view_mode, $langcode);
 
-    foreach ($entities as $key => $entity) {
+    foreach ($entities as $entity) {
       $bundle = $entity->bundle();
       $display = $displays[$bundle];
 
