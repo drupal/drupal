@@ -51,7 +51,6 @@ class ThemeRegistry extends CacheArray {
     $this->tags = $tags;
     $this->persistable = $modules_loaded && $_SERVER['REQUEST_METHOD'] == 'GET';
 
-    $data = array();
     if ($this->persistable && $cached = cache($this->bin)->get($this->cid)) {
       $data = $cached->data;
     }
