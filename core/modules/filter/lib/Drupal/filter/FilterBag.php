@@ -7,10 +7,8 @@
 
 namespace Drupal\filter;
 
-use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Plugin\DefaultPluginBag;
-use Drupal\Component\Utility\String;
 
 /**
  * A collection of filters.
@@ -48,6 +46,8 @@ class FilterBag extends DefaultPluginBag {
     // Retrieve all available filter plugin definitions.
     if (!$this->definitions) {
       $this->definitions = $this->manager->getDefinitions();
+      // Do not allow the null filter to be used directly, only as a fallback.
+      unset($this->definitions['filter_null']);
     }
 
     // Ensure that there is an instance of all available filters.
@@ -68,25 +68,17 @@ class FilterBag extends DefaultPluginBag {
   protected function initializePlugin($instance_id) {
     // Filters have a 1:1 relationship to text formats and can be added and
     // instantiated at any time.
-    $definition = $this->manager->getDefinition($instance_id);
-
-    if (isset($definition)) {
-      // $configuration is the whole filter plugin instance configuration, as
-      // contained in the text format configuration. The default configuration
-      // is the filter plugin definition.
-      // @todo Configuration should not be contained in definitions. Move into a
-      //   FilterBase::init() method.
-      $configuration = $definition;
-      // Merge the actual configuration into the default configuration.
-      if (isset($this->configurations[$instance_id])) {
-        $configuration = NestedArray::mergeDeep($configuration, $this->configurations[$instance_id]);
-      }
-      $this->configurations[$instance_id] = $configuration;
-      parent::initializePlugin($instance_id);
+    // @todo $configuration is the whole filter plugin instance configuration,
+    //   as contained in the text format configuration. The default
+    //   configuration is the filter plugin definition. Configuration should not
+    //   be contained in definitions. Move into a FilterBase::init() method.
+    $configuration = $this->manager->getDefinition($instance_id);
+    // Merge the actual configuration into the default configuration.
+    if (isset($this->configurations[$instance_id])) {
+      $configuration = NestedArray::mergeDeep($configuration, $this->configurations[$instance_id]);
     }
-    else {
-      throw new PluginException(String::format("Unknown filter plugin ID '@filter'.", array('@filter' => $instance_id)));
-    }
+    $this->configurations[$instance_id] = $configuration;
+    parent::initializePlugin($instance_id);
   }
 
   /**

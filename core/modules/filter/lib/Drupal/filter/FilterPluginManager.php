@@ -40,4 +40,13 @@ class FilterPluginManager extends PluginManagerBase {
     $this->factory = new ContainerFactory($this);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefinition($plugin_id) {
+    $plugins = $this->getDefinitions();
+    // If the requested filter is missing, use the null filter.
+    return isset($plugins[$plugin_id]) ? $plugins[$plugin_id] : $plugins['filter_null'];
+  }
+
 }

@@ -132,6 +132,14 @@ db_insert('filter')->fields(array(
   'status' => '1',
   'settings' => 'a:1:{s:17:"filter_url_length";s:2:"72";}',
 ))
+->values(array(
+  'format' => 'format_two',
+  'module' => 'missing_module',
+  'name' => 'missing_filter',
+  'weight' => '0',
+  'status' => '1',
+  'settings' => 'a:0:{}',
+))
 ->execute();
 
 // Define which roles can use the text formats.
