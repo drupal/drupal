@@ -142,7 +142,7 @@ class Date {
    */
   protected function country() {
     if ($this->country === NULL) {
-      $this->country = config('system.date')->get('country.default');
+      $this->country = \Drupal::config('system.date')->get('country.default');
     }
     return $this->country;
   }

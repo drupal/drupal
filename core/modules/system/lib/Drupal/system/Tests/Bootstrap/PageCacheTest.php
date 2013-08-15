@@ -45,7 +45,7 @@ class PageCacheTest extends WebTestBase {
    * Tests support for different cache items with different Accept headers.
    */
   function testAcceptHeaderRequests() {
-    $config = config('system.performance');
+    $config = \Drupal::config('system.performance');
     $config->set('cache.page.use_internal', 1);
     $config->set('cache.page.max_age', 300);
     $config->save();

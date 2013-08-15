@@ -3179,7 +3179,7 @@ function drupal_page_set_cache(Response $response, Request $request) {
   if (drupal_page_is_cacheable()) {
 
     // Check if the current page may be compressed.
-    $page_compressed = config('system.performance')->get('response.gzip') && extension_loaded('zlib');
+    $page_compressed = Drupal::config('system.performance')->get('response.gzip') && extension_loaded('zlib');
 
     $cache = (object) array(
       'cid' => drupal_page_cache_get_cid($request),
