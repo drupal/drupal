@@ -7,11 +7,17 @@
 
 namespace Drupal\Core\Access;
 
+use Drupal\Core\ParamConverter\ParamConverterManager;
+use Drupal\Core\Routing\RouteProviderInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
  * Attaches access check services to routes and runs them on request.
@@ -47,6 +53,63 @@ class AccessManager extends ContainerAware {
    * @var array
    */
   protected $dynamicRequirementMap;
+
+  /**
+   * The route provider.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected $routeProvider;
+
+  /**
+   * The url generator.
+   *
+   * @var \Symfony\Component\Routing\Generator\UrlGeneratorInterface
+   */
+  protected $urlGenerator;
+
+  /**
+   * The paramconverter manager.
+   *
+   * @var \Drupal\Core\ParamConverter\ParamConverterManager
+   */
+  protected $paramConverterManager;
+
+  /**
+   * A request object.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
+
+  /**
+   * Constructs a AccessManager instance.
+   *
+   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   *   The route provider.
+   * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface $url_generator
+   *   The url generator.
+   * @param \Drupal\Core\ParamConverter\ParamConverterManager $paramconverter_manager
+   *   The param converter manager.
+   */
+  public function __construct(RouteProviderInterface $route_provider, UrlGeneratorInterface $url_generator, ParamConverterManager $paramconverter_manager) {
+    $this->routeProvider = $route_provider;
+    $this->urlGenerator = $url_generator;
+    $this->paramConverterManager = $paramconverter_manager;
+  }
+
+  /**
+   * Sets the request object to use.
+   *
+   * This is used by the RouterListener to make additional request attributes
+   * available.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request object.
+   */
+  public function setRequest(Request $request) {
+    $this->request = $request;
+  }
 
   /**
    * Registers a new AccessCheck by service ID.
@@ -108,6 +171,43 @@ class AccessManager extends ContainerAware {
   }
 
   /**
+   * Checks a named route with parameters against applicable access check services.
+   *
+   * Determines whether the route is accessible or not.
+   *
+   * @param string $route_name
+   *   The route to check access to.
+   * @param array $parameters
+   *   Optional array of values to substitute into the route path patern.
+   * @param \Symfony\Component\HttpFoundation\Request $route_request
+   *   Optional incoming request object. If not provided, one will be built
+   *   using the route information and the current request from the container.
+   *
+   * @return bool
+   *   Returns TRUE if the user has access to the route, otherwise FALSE.
+   */
+  public function checkNamedRoute($route_name, array $parameters = array(), Request $route_request = NULL) {
+    try {
+      $route = $this->routeProvider->getRouteByName($route_name, $parameters);
+      if (empty($route_request)) {
+        // Create a request and copy the account from the current request.
+        $route_request = Request::create($this->urlGenerator->generate($route_name, $parameters));
+        $defaults = $parameters;
+        $defaults['_account'] = $this->request->attributes->get('_account');
+        $defaults[RouteObjectInterface::ROUTE_OBJECT] = $route;
+        $route_request->attributes->add($this->paramConverterManager->enhance($defaults, $route_request));
+      }
+      return $this->check($route, $route_request);
+    }
+    catch (RouteNotFoundException $e) {
+      return FALSE;
+    }
+    catch (NotFoundHttpException $e) {
+      return FALSE;
+    }
+  }
+
+  /**
    * Checks a route against applicable access check services.
    *
    * Determines whether the route is accessible or not.
@@ -118,7 +218,7 @@ class AccessManager extends ContainerAware {
    *   The incoming request object.
    *
    * @return bool
-   *  Returns TRUE if the user has access to the route, otherwise FALSE.
+   *   Returns TRUE if the user has access to the route, otherwise FALSE.
    *
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   If any access check denies access or none explicitly approve.

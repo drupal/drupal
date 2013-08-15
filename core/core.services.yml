@@ -379,8 +379,10 @@ services:
       - [setRequest, ['@?request']]
   access_manager:
     class: Drupal\Core\Access\AccessManager
+    arguments: ['@router.route_provider', '@url_generator', '@paramconverter_manager']
     calls:
       - [setContainer, ['@service_container']]
+      - [setRequest, ['@?request']]
   access_subscriber:
     class: Drupal\Core\EventSubscriber\AccessSubscriber
     tags:
