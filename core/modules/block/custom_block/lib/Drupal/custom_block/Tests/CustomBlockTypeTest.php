@@ -137,4 +137,58 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $this->assertText(t('This action cannot be undone.'), 'The custom block type deletion confirmation form is available.');
   }
 
+  /**
+   * Tests that redirects work as expected when multiple block types exist.
+   */
+  public function testsCustomBlockAddTypes() {
+    $this->drupalLogin($this->adminUser);
+    // Create two block types programmatically.
+    $type = $this->createCustomBlockType('foo');
+    $type = $this->createCustomBlockType('bar');
+
+    // Get the default theme.
+    $theme = $this->container->get('config.factory')->get('system.theme')->get('default');
+
+    // Get the custom block storage controller.
+    $storage_controller = $this->container
+      ->get('plugin.manager.entity')
+      ->getStorageController('custom_block');
+
+    // Test that adding a block from the 'place blocks' form sends you to the
+    // block configure form.
+    $this->drupalGet('admin/structure/block/list/' . $theme . '/add');
+    $this->clickLink(t('Add custom block'));
+    $this->clickLink('foo');
+    $edit = array('info' => $this->randomName(8));
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $blocks = $storage_controller->loadByProperties(array('info' => $edit['info']));
+    if (!empty($blocks)) {
+      $block = reset($blocks);
+      $destination = 'admin/structure/block/add/custom_block:' . $block->uuid() . '/' . $theme;
+      $this->assertUrl(url($destination, array('absolute' => TRUE)));
+    }
+    else {
+      $this->fail('Could not load created block.');
+    }
+
+    // Test that adding a block from the 'custom blocks list' doesn't send you
+    // to the block configure form.
+    $this->drupalGet('admin/structure/custom-blocks');
+    $this->clickLink(t('Add custom block'));
+    $this->clickLink('foo');
+    $edit = array('info' => $this->randomName(8));
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $blocks = $storage_controller->loadByProperties(array('info' => $edit['info']));
+    if (!empty($blocks)) {
+      $block = reset($blocks);
+      $destination = 'admin/structure/block/add/custom_block:' . $block->uuid() . '/' . $theme;
+      $this->assertUrl(url('admin/structure/custom-blocks', array(
+        'absolute' => TRUE
+      )));
+    }
+    else {
+      $this->fail('Could not load created block.');
+    }
+  }
+
 }
