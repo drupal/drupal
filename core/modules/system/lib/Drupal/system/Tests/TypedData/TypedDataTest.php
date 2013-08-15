@@ -47,21 +47,13 @@ class TypedDataTest extends DrupalUnitTestBase {
   }
 
   /**
-   * Creates a typed data object and executes some basic assertions.
+   * Creates a typed data object and ensures it implements TypedDataInterface.
    *
    * @see Drupal\Core\TypedData\TypedDataManager::create().
    */
   protected function createTypedData($definition, $value = NULL, $name = NULL) {
-    // Save the type that was passed in so we can compare with it later.
-    $type = $definition['type'];
-    // Construct the object.
     $data = $this->typedData->create($definition, $value, $name);
-    // Assert the definition of the wrapper.
     $this->assertTrue($data instanceof \Drupal\Core\TypedData\TypedDataInterface, 'Typed data object is an instance of the typed data interface.');
-    $definition = $data->getDefinition();
-    $this->assertTrue(!empty($definition['type']), format_string('!type data definition was returned.', array('!type' => $definition['type'])));
-    // Assert that the correct type was constructed.
-    $this->assertEqual($data->getType(), $type, format_string('!type object returned type.', array('!type' => $definition['type'])));
     return $data;
   }
 
@@ -71,6 +63,7 @@ class TypedDataTest extends DrupalUnitTestBase {
   public function testGetAndSet() {
     // Boolean type.
     $typed_data = $this->createTypedData(array('type' => 'boolean'), TRUE);
+    $this->assertTrue($typed_data instanceof \Drupal\Core\TypedData\Type\BooleanInterface, 'Typed data object is an instance of BooleanInterface.');
     $this->assertTrue($typed_data->getValue() === TRUE, 'Boolean value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(FALSE);
@@ -86,6 +79,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     // String type.
     $value = $this->randomString();
     $typed_data = $this->createTypedData(array('type' => 'string'), $value);
+    $this->assertTrue($typed_data instanceof \Drupal\Core\TypedData\Type\StringInterface, 'Typed data object is an instance of StringInterface.');
     $this->assertTrue($typed_data->getValue() === $value, 'String value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $new_value = $this->randomString();
@@ -103,6 +97,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     // Integer type.
     $value = rand();
     $typed_data = $this->createTypedData(array('type' => 'integer'), $value);
+    $this->assertTrue($typed_data instanceof \Drupal\Core\TypedData\Type\IntegerInterface, 'Typed data object is an instance of IntegerInterface.');
     $this->assertTrue($typed_data->getValue() === $value, 'Integer value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $new_value = rand();
@@ -119,6 +114,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     // Float type.
     $value = 123.45;
     $typed_data = $this->createTypedData(array('type' => 'float'), $value);
+    $this->assertTrue($typed_data instanceof \Drupal\Core\TypedData\Type\FloatInterface, 'Typed data object is an instance of FloatInterface.');
     $this->assertTrue($typed_data->getValue() === $value, 'Float value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $new_value = 678.90;
@@ -135,6 +131,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     // Date Time type.
     $value = '2014-01-01T20:00:00+00:00';
     $typed_data = $this->createTypedData(array('type' => 'datetime_iso8601'), $value);
+    $this->assertTrue($typed_data instanceof \Drupal\Core\TypedData\Type\DateTimeInterface, 'Typed data object is an instance of DateTimeInterface.');
     $this->assertTrue($typed_data->getValue() == $value, 'Date value was fetched.');
     $this->assertEqual($typed_data->getValue(), $typed_data->getDateTime()->format('c'), 'Value representation of a date is ISO 8601');
     $this->assertEqual($typed_data->validate()->count(), 0);
@@ -160,6 +157,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     // Timestamp type.
     $value = REQUEST_TIME;
     $typed_data = $this->createTypedData(array('type' => 'timestamp'), $value);
+    $this->assertTrue($typed_data instanceof \Drupal\Core\TypedData\Type\DateTimeInterface, 'Typed data object is an instance of DateTimeInterface.');
     $this->assertTrue($typed_data->getValue() == $value, 'Timestamp value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $new_value = REQUEST_TIME + 1;
@@ -182,6 +180,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     // DurationIso8601 type.
     $value = 'PT20S';
     $typed_data = $this->createTypedData(array('type' => 'duration_iso8601'), $value);
+    $this->assertTrue($typed_data instanceof \Drupal\Core\TypedData\Type\DurationInterface, 'Typed data object is an instance of DurationInterface.');
     $this->assertIdentical($typed_data->getValue(), $value, 'DurationIso8601 value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue('P40D');
@@ -205,6 +204,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     // Time span type.
     $value = 20;
     $typed_data = $this->createTypedData(array('type' => 'timespan'), $value);
+    $this->assertTrue($typed_data instanceof \Drupal\Core\TypedData\Type\DurationInterface, 'Typed data object is an instance of DurationInterface.');
     $this->assertIdentical($typed_data->getValue(), $value, 'Time span value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue(60 * 60 * 4);
@@ -227,6 +227,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     // URI type.
     $uri = 'http://example.com/foo/';
     $typed_data = $this->createTypedData(array('type' => 'uri'), $uri);
+    $this->assertTrue($typed_data instanceof \Drupal\Core\TypedData\Type\UriInterface, 'Typed data object is an instance of UriInterface.');
     $this->assertTrue($typed_data->getValue() === $uri, 'URI value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     $typed_data->setValue($uri . 'bar.txt');
@@ -253,6 +254,7 @@ class TypedDataTest extends DrupalUnitTestBase {
     // Email type.
     $value = $this->randomString();
     $typed_data = $this->createTypedData(array('type' => 'email'), $value);
+    $this->assertTrue($typed_data instanceof \Drupal\Core\TypedData\Type\StringInterface, 'Typed data object is an instance of StringInterface.');
     $this->assertIdentical($typed_data->getValue(), $value, 'E-mail value was fetched.');
     $new_value = 'test@example.com';
     $typed_data->setValue($new_value);
@@ -267,6 +269,7 @@ class TypedDataTest extends DrupalUnitTestBase {
 
     // Binary type.
     $typed_data = $this->createTypedData(array('type' => 'binary'), $files[0]->getFileUri());
+    $this->assertTrue($typed_data instanceof \Drupal\Core\TypedData\Type\BinaryInterface, 'Typed data object is an instance of BinaryInterface.');
     $this->assertTrue(is_resource($typed_data->getValue()), 'Binary value was fetched.');
     $this->assertEqual($typed_data->validate()->count(), 0);
     // Try setting by URI.
