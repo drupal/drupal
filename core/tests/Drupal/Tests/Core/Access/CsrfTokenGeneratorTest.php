@@ -69,8 +69,30 @@ class CsrfTokenGeneratorTest extends UnitTestCase {
     $this->assertTrue($this->generator->validate($token));
     $this->assertFalse($this->generator->validate($token, 'foo'));
 
+
     $token = $this->generator->get('bar');
     $this->assertTrue($this->generator->validate($token, 'bar'));
+
+    // Check the skip_anonymous option with both a anonymous user and a real
+    // user.
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $account->expects($this->once())
+      ->method('isAnonymous')
+      ->will($this->returnValue(TRUE));
+    $request = new Request();
+    $request->attributes->set('_account', $account);
+    $this->generator->setRequest($request);
+    $this->assertTrue($this->generator->validate($token, 'foo', TRUE));
+
+    $account = $this->getMock('Drupal\Core\Session\AccountInterface');
+    $account->expects($this->once())
+      ->method('isAnonymous')
+      ->will($this->returnValue(FALSE));
+    $request = new Request();
+    $request->attributes->set('_account', $account);
+    $this->generator->setRequest($request);
+
+    $this->assertFalse($this->generator->validate($token, 'foo', TRUE));
   }
 
 }
