@@ -537,6 +537,26 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   /**
    * {@inheritdoc}
    */
+  public function uri() {
+    $path = \Drupal::entityManager()->getAdminPath($this->entity_type, $this->bundle);
+
+    // Use parent URI as fallback, if path is empty.
+    if (empty($path)) {
+      return parent::uri();
+    }
+
+    return array(
+      'path' => $path . '/fields/' . $this->id(),
+      'options' => array(
+        'entity_type' => $this->entityType,
+        'entity' => $this,
+      ),
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getFieldLabel() {
     return $this->label();
   }
