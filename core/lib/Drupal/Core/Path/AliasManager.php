@@ -104,7 +104,6 @@ class AliasManager implements AliasManagerInterface {
     // requested URL, we might end up being unable to check if there is a path
     // alias matching the URL path.
     $path_language = $path_language ?: $this->languageManager->getLanguage(Language::TYPE_URL)->id;
-    $original_path = $path;
     // Lookup the path alias first.
     if (!empty($path) && $source = $this->lookupPathSource($path, $path_language)) {
       $path = $source;
@@ -261,8 +260,8 @@ class AliasManager implements AliasManagerInterface {
   protected function lookupPathSource($path, $langcode) {
     if ($this->whitelist && !isset($this->noSource[$langcode][$path])) {
       // Look for the value $path within the cached $map
-      $source = FALSE;
-      if (!isset($this->lookupMap[$langcode]) || !($source = array_search($path, $this->lookupMap[$langcode]))) {
+      $source = isset($this->lookupMap[$langcode]) ? array_search($path, $this->lookupMap[$langcode]) : FALSE;
+      if (!$source) {
         $args = array(
           ':alias' => $path,
           ':langcode' => $langcode,
