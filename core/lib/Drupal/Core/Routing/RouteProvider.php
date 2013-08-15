@@ -161,7 +161,6 @@ class RouteProvider implements RouteProviderInterface {
       $result = $this->connection->query('SELECT name, route FROM {' . $this->connection->escapeTable($this->tableName) . '} WHERE name IN (:names)', array(':names' => $routes_to_load));
       $routes = $result->fetchAllKeyed();
 
-      $return = array();
       foreach ($routes as $name => $route) {
         $this->routes[$name] = unserialize($route);
       }

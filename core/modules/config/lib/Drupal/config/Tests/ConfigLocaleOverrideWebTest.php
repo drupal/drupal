@@ -47,7 +47,7 @@ class ConfigLocaleOverrideWebTest extends WebTestBase {
     $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
 
     // Save an override for the XX language.
-    config('locale.config.xx.system.site')->set('name', 'XX site name')->save();
+    \Drupal::config('locale.config.xx.system.site')->set('name', 'XX site name')->save();
 
     $this->drupalLogout();
 

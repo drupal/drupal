@@ -50,7 +50,7 @@ class LocaleUninstallTest extends WebTestBase {
    */
   function testUninstallProcess() {
     $locale_module = array('locale', 'language');
-    $config = config('locale.settings');
+    $config = \Drupal::config('locale.settings');
     $language = new Language(array(
       'id' => 'fr',
       'name' => 'French',
@@ -87,7 +87,7 @@ class LocaleUninstallTest extends WebTestBase {
     $edit = array('strings[' . $string->lid . '][translations][0]' => 'french translation');
     $this->drupalPost('admin/config/regional/translate', $edit, t('Save translations'));
     _locale_rebuild_js('fr');
-    $config = config('locale.settings');
+    $config = \Drupal::config('locale.settings');
     $locale_javascripts = $this->container->get('state')->get('locale.translation.javascript') ?: array();
     $js_file = 'public://' . $config->get('javascript.directory') . '/fr_' . $locale_javascripts['fr'] . '.js';
     $this->assertTrue($result = file_exists($js_file), String::format('JavaScript file created: %file', array('%file' => $result ? $js_file : 'none')));
@@ -103,7 +103,7 @@ class LocaleUninstallTest extends WebTestBase {
     variable_set('language_negotiation_' . Language::TYPE_URL, language_language_negotiation_info());
 
     // Change language negotiation settings.
-    config('language.negotiation')
+    \Drupal::config('language.negotiation')
       ->set('url.source', LANGUAGE_NEGOTIATION_URL_PREFIX)
       ->set('session.parameter', TRUE)
       ->save();
@@ -136,8 +136,8 @@ class LocaleUninstallTest extends WebTestBase {
     $this->assertTrue($language_negotiation, String::format('URL language negotiation: %setting', array('%setting' => $language_negotiation ? 'none' : 'set')));
 
     // Check language negotiation method settings.
-    $this->assertFalse(config('language.negotiation')->get('url.source'), 'URL language negotiation method indicator settings cleared.');
-    $this->assertFalse(config('language.negotiation')->get('session.parameter'), 'Visit language negotiation method settings cleared.');
+    $this->assertFalse(\Drupal::config('language.negotiation')->get('url.source'), 'URL language negotiation method indicator settings cleared.');
+    $this->assertFalse(\Drupal::config('language.negotiation')->get('session.parameter'), 'Visit language negotiation method settings cleared.');
 
     // Check JavaScript parsed.
     $javascript_parsed_count = count($this->container->get('state')->get('system.javascript_parsed') ?: array());

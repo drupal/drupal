@@ -96,7 +96,7 @@ function drupal_theme_initialize() {
 
   // Only select the user selected theme if it is available in the
   // list of themes that can be accessed.
-  $theme = !empty($user->theme) && drupal_theme_access($user->theme) ? $user->theme : config('system.theme')->get('default');
+  $theme = !empty($user->theme) && drupal_theme_access($user->theme) ? $user->theme : Drupal::config('system.theme')->get('default');
 
   // Allow modules to override the theme. Validation has already been performed
   // inside menu_get_custom_theme(), so we do not need to check it again here.
@@ -1463,8 +1463,8 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
  */
 function theme_enable($theme_list) {
   drupal_clear_css_cache();
-  $theme_config = config('system.theme');
-  $disabled_themes = config('system.theme.disabled');
+  $theme_config = Drupal::config('system.theme');
+  $disabled_themes = Drupal::config('system.theme.disabled');
   foreach ($theme_list as $key) {
     // Throw an exception if the theme name is too long.
     if (strlen($key) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
@@ -1500,7 +1500,7 @@ function theme_enable($theme_list) {
  */
 function theme_disable($theme_list) {
   // Don't disable the default theme.
-  if ($pos = array_search(config('system.theme')->get('default'), $theme_list) !== FALSE) {
+  if ($pos = array_search(Drupal::config('system.theme')->get('default'), $theme_list) !== FALSE) {
     unset($theme_list[$pos]);
     if (empty($theme_list)) {
       return;
@@ -1509,8 +1509,8 @@ function theme_disable($theme_list) {
 
   drupal_clear_css_cache();
 
-  $theme_config = config('system.theme');
-  $disabled_themes = config('system.theme.disabled');
+  $theme_config = Drupal::config('system.theme');
+  $disabled_themes = Drupal::config('system.theme.disabled');
   foreach ($theme_list as $key) {
     // The value is not used; the weight is ignored for themes currently.
     $theme_config->clear("enabled.$key");
@@ -1742,20 +1742,6 @@ function theme_links($variables) {
   }
 
   return $output;
-}
-
-/**
- * Returns HTML for wrapping a dropbutton menu.
- *
- * @param array $variables
- *   An associative array containing:
- *   - element: An associative array containing the properties and children of
- *     the dropbutton menu. Properties used: #children.
- */
-function theme_dropbutton_wrapper($variables) {
-  if (!empty($variables['element']['#children'])) {
-    return '<div class="dropbutton-wrapper"><div class="dropbutton-widget">' . $variables['element']['#children'] . '</div></div>';
-  }
 }
 
 /**
@@ -2565,7 +2551,7 @@ function template_preprocess_html(&$variables) {
     drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => drupal_strip_dangerous_protocols($favicon), 'type' => $type));
   }
 
-  $site_config = config('system.site');
+  $site_config = Drupal::config('system.site');
   // Construct page title.
   if (drupal_get_title()) {
     $head_title = array(
@@ -2624,7 +2610,7 @@ function template_preprocess_html(&$variables) {
   }
   $variables['page_bottom'] = array();
   if (isset($variables['page']['page_bottom'])) {
-    $variables['page_bottom'] = drupal_render($variables['page']['page_bottom']);
+    $variables['page_bottom'][]['#markup'] = drupal_render($variables['page']['page_bottom']);
   }
 
   // Add footer scripts as '#markup' so they can be rendered with other
@@ -2657,7 +2643,7 @@ function template_preprocess_html(&$variables) {
  */
 function template_preprocess_page(&$variables) {
   $language_interface = language(Language::TYPE_INTERFACE);
-  $site_config = config('system.site');
+  $site_config = Drupal::config('system.site');
 
   // Move some variables to the top level for themer convenience and template cleanliness.
   $variables['show_messages'] = $variables['page']['#show_messages'];
@@ -2854,7 +2840,7 @@ function template_preprocess_maintenance_page(&$variables) {
     $variables['layout'] = ($variables['layout'] == 'first') ? 'both' : 'second';
   }
 
-  $site_config = config('system.site');
+  $site_config = Drupal::config('system.site');
   $site_name = $site_config->get('name');
   $site_slogan = $site_config->get('slogan');
 
@@ -3012,7 +2998,8 @@ function drupal_common_theme() {
       'variables' => array('links' => array(), 'attributes' => array('class' => array('links')), 'heading' => array()),
     ),
     'dropbutton_wrapper' => array(
-      'render element' => 'element',
+      'variables' => array('children' => NULL),
+      'template' => 'dropbutton-wrapper',
     ),
     'image' => array(
       // HTML 4 and XHTML 1.0 always require an alt attribute. The HTML 5 draft

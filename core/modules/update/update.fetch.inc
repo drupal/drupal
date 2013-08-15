@@ -110,7 +110,7 @@ function update_fetch_data_finished($success, $results) {
  */
 function _update_fetch_data() {
   $queue = Drupal::queue('update_fetch_tasks');
-  $end = time() + config('update.settings')->get('fetch.timeout');
+  $end = time() + Drupal::config('update.settings')->get('fetch.timeout');
   while (time() < $end && ($item = $queue->claimItem())) {
     _update_process_fetch_task($item->data);
     $queue->deleteItem($item);
@@ -131,7 +131,7 @@ function _update_fetch_data() {
  */
 function _update_process_fetch_task($project) {
   global $base_url;
-  $update_config = config('update.settings');
+  $update_config = Drupal::config('update.settings');
   $fail = &drupal_static(__FUNCTION__, array());
   // This can be in the middle of a long-running batch, so REQUEST_TIME won't
   // necessarily be valid.
@@ -319,7 +319,7 @@ function _update_get_fetch_url_base($project) {
     $url = $project['info']['project status url'];
   }
   else {
-    $url = config('update.settings')->get('fetch.url');
+    $url = Drupal::config('update.settings')->get('fetch.url');
     if (empty($url)) {
       $url = UPDATE_DEFAULT_URL;
     }
@@ -337,7 +337,7 @@ function _update_get_fetch_url_base($project) {
  * @see update_requirements()
  */
 function _update_cron_notify() {
-  $update_config = config('update.settings');
+  $update_config = Drupal::config('update.settings');
   module_load_install('update');
   $status = update_requirements('runtime');
   $params = array();

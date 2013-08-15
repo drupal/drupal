@@ -4,6 +4,7 @@ protocols:
   - ftp
   - news
   - nntp
+  - tel
   - telnet
   - mailto
   - irc

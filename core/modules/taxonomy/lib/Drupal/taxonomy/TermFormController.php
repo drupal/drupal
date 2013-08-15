@@ -62,7 +62,7 @@ class TermFormController extends EntityFormControllerNG {
     // numbers of items so we check for taxonomy.settings:override_selector
     // before loading the full vocabulary. Contrib modules can then intercept
     // before hook_form_alter to provide scalable alternatives.
-    if (!config('taxonomy.settings')->get('override_selector')) {
+    if (!\Drupal::config('taxonomy.settings')->get('override_selector')) {
       $parent = array_keys(taxonomy_term_load_parents($term->id()));
       $children = taxonomy_get_tree($vocabulary->id(), $term->id());
 

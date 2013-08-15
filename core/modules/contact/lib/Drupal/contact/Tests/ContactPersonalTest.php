@@ -57,7 +57,7 @@ class ContactPersonalTest extends WebTestBase {
     $this->admin_user = $this->drupalCreateUser(array('administer contact forms', 'administer users'));
 
     // Create some normal users with their contact forms enabled by default.
-    config('contact.settings')->set('user_default_enabled', 1)->save();
+    \Drupal::config('contact.settings')->set('user_default_enabled', 1)->save();
     $this->web_user = $this->drupalCreateUser(array('access user contact forms'));
     $this->contact_user = $this->drupalCreateUser();
   }
@@ -76,7 +76,7 @@ class ContactPersonalTest extends WebTestBase {
     $this->assertEqual($mail['from'], $this->web_user->getEmail());
     $this->assertEqual($mail['key'], 'user_mail');
     $variables = array(
-      '!site-name' => config('system.site')->get('name'),
+      '!site-name' => \Drupal::config('system.site')->get('name'),
       '!subject' => $message['subject'],
       '!recipient-name' => $this->contact_user->getUsername(),
     );
@@ -181,7 +181,7 @@ class ContactPersonalTest extends WebTestBase {
    */
   function testPersonalContactFlood() {
     $flood_limit = 3;
-    config('contact.settings')->set('flood.limit', $flood_limit)->save();
+    \Drupal::config('contact.settings')->set('flood.limit', $flood_limit)->save();
 
     // Clear flood table in preparation for flood test and allow other checks to complete.
     db_delete('flood')->execute();
@@ -198,7 +198,7 @@ class ContactPersonalTest extends WebTestBase {
 
     // Submit contact form one over limit.
     $this->drupalGet('user/' . $this->contact_user->id(). '/contact');
-    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => $flood_limit, '@interval' => format_interval(config('contact.settings')->get('flood.interval')))), 'Normal user denied access to flooded contact form.');
+    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => $flood_limit, '@interval' => format_interval(\Drupal::config('contact.settings')->get('flood.interval')))), 'Normal user denied access to flooded contact form.');
 
     // Test that the admin user can still access the contact form even though
     // the flood limit was reached.

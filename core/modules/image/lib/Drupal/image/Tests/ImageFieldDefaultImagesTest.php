@@ -30,7 +30,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
   /**
    * Tests CRUD for fields and fields instances with default images.
    */
-  function testDefaultImages() {
+  public function testDefaultImages() {
     // Create files to use as the default images.
     $files = $this->drupalGetTestFiles('image');
     $default_images = array();
@@ -52,7 +52,22 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
       'preview_image_style' => 'medium',
     );
     $instance = $this->createImageField($field_name, 'article', $field_settings, $instance_settings, $widget_settings);
-    $field = field_info_field($field_name);
+
+    // The instance default image id should be 2.
+    $this->assertEqual($instance->getFieldSetting('default_image'), $default_images['instance']->id());
+
+    // Also test \Drupal\field\Plugin\Core\Entity\FieldInstance::getFieldSetting().
+    $instance_field_settings = $instance->getFieldSettings();
+    $this->assertEqual($instance_field_settings['default_image'], $default_images['instance']->id());
+
+    $field = entity_load('field_entity', $field_name);
+
+    // The field default image id should be 1.
+    $this->assertEqual($field->getFieldSetting('default_image'), $default_images['field']->id());
+
+    // Also test \Drupal\field\Plugin\Core\Entity\Field::getFieldSettings().
+    $field_field_settings = $field->getFieldSettings();
+    $this->assertEqual($field_field_settings['default_image'], $default_images['field']->id());
 
     // Add another instance with another default image to the page content type.
     $instance2 = entity_create('field_instance', array(

@@ -150,6 +150,7 @@ function views_ui_theme() {
     'views_ui_style_plugin_table' => array(
       'render element' => 'form',
       'file' => 'views_ui.theme.inc',
+      'template' => 'views-ui-style-plugin-table',
     ),
 
     // When previewing a view.
@@ -201,6 +202,7 @@ function views_ui_library_info() {
       array('system', 'jquery'),
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
+      array('system', 'drupal.debounce'),
       array('system', 'jquery.once'),
       array('system', 'jquery.form'),
       array('system', 'drupal.ajax'),

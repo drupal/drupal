@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to show data of serialized fields.
@@ -59,7 +60,10 @@ class Serialized extends FieldPluginBase {
     }
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $value = $values->{$this->field_alias};
 
     if ($this->options['format'] == 'unserialized') {

@@ -216,7 +216,7 @@ class LocaleTranslationUiTest extends WebTestBase {
   function testJavaScriptTranslation() {
     $user = $this->drupalCreateUser(array('translate interface', 'administer languages', 'access administration pages'));
     $this->drupalLogin($user);
-    $config = config('locale.settings');
+    $config = \Drupal::config('locale.settings');
 
     $langcode = 'xx';
     // The English name for the language. This will be translated.

@@ -157,7 +157,7 @@ class Connection extends DatabaseConnection {
    * @param string $database
    *   The name of the database to create.
    *
-   * @throws DatabaseNotFoundException
+   * @throws \Drupal\Core\Database\DatabaseNotFoundException
    */
   public function createDatabase($database) {
     // Escape the database name.

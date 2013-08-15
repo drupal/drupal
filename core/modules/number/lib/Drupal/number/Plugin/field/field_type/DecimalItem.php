@@ -9,7 +9,7 @@ namespace Drupal\number\Plugin\field\field_type;
 
 use Drupal\Core\Entity\Annotation\FieldType;
 use Drupal\Core\Annotation\Translation;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\FieldInterface;
 use Drupal\Component\Utility\MapArray;
 
 /**
@@ -51,7 +51,7 @@ class DecimalItem extends NumberItemBase {
   /**
    * {@inheritdoc}
    */
-  public static function schema(Field $field) {
+  public static function schema(FieldInterface $field) {
     return array(
       'columns' => array(
         'value' => array(
@@ -67,10 +67,9 @@ class DecimalItem extends NumberItemBase {
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, array &$form_state, $has_data) {
     $element = array();
     $settings = $this->getFieldSettings();
-    $has_data = $this->getInstance()->getField()->hasData();
 
     $element['precision'] = array(
       '#type' => 'select',

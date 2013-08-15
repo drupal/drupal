@@ -96,7 +96,7 @@ class DisplayTest extends UITestBase {
    */
   public function testAddDisplay() {
     // Show the master display.
-    config('views.settings')->set('ui.show.master_display', TRUE)->save();
+    \Drupal::config('views.settings')->set('ui.show.master_display', TRUE)->save();
 
     $settings['page[create]'] = FALSE;
     $view = $this->randomView($settings);
@@ -234,7 +234,7 @@ class DisplayTest extends UITestBase {
    */
   public function testDisplayAreas() {
     // Show the advanced column.
-    config('views.settings')->set('ui.show.advanced_column', TRUE)->save();
+    \Drupal::config('views.settings')->set('ui.show.advanced_column', TRUE)->save();
 
     // Add a new data display to the view.
     $view = views_get_view('test_display');

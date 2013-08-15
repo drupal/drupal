@@ -29,13 +29,6 @@ class DrupalDateTime extends DateTimePlus {
    * @param mixed $timezone
    *   PHP DateTimeZone object, string or NULL allowed.
    *   Defaults to NULL.
-   * @param string $format
-   *   PHP date() type format for parsing the input. This is recommended
-   *   to use things like negative years, which php's parser fails on, or
-   *   any other specialized input with a known format. If provided the
-   *   date will be created using the createFromFormat() method.
-   *   Defaults to NULL.
-   *   @see http://us3.php.net/manual/en/datetime.createfromformat.php
    * @param array $settings
    *   - validate_format: (optional) Boolean choice to validate the
    *     created date using the input format. The format used in
@@ -57,14 +50,18 @@ class DrupalDateTime extends DateTimePlus {
    *   - debug: (optional) Boolean choice to leave debug values in the
    *     date object for debugging purposes. Defaults to FALSE.
    */
-  public function __construct($time = 'now', $timezone = NULL, $format = NULL, $settings = array()) {
-
+  public function __construct($time = 'now', $timezone = NULL, $settings = array()) {
     // We can set the langcode and country using Drupal values.
-    $settings['langcode'] = !empty($settings['langcode']) ? $settings['langcode'] : language(Language::TYPE_INTERFACE)->id;
-    $settings['country'] = !empty($settings['country']) ? $settings['country'] : config('system.date')->get('country.default');
+    if (!isset($settings['langcode'])) {
+      $settings['langcode'] = language(Language::TYPE_INTERFACE)->id;
+    }
+
+    if (!isset($settings['country'])) {
+      $settings['country'] = \Drupal::config('system.date')->get('country.default');
+    }
 
     // Instantiate the parent class.
-    parent::__construct($time, $timezone, $format, $settings);
+    parent::__construct($time, $timezone, $settings);
 
   }
 
@@ -79,7 +76,7 @@ class DrupalDateTime extends DateTimePlus {
     if (empty($timezone) && !empty($user_timezone)) {
       $timezone = $user_timezone;
     }
-    parent::prepareTimezone($timezone);
+    return parent::prepareTimezone($timezone);
   }
 
   /**

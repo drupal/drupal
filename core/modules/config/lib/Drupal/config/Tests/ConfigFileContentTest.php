@@ -52,7 +52,7 @@ class ConfigFileContentTest extends DrupalUnitTestBase {
     $false_key = 'false';
 
     // Attempt to read non-existing configuration.
-    $config = config($name);
+    $config = \Drupal::config($name);
 
     // Verify an configuration object is returned.
     $this->assertEqual($config->getName(), $name);
@@ -66,7 +66,7 @@ class ConfigFileContentTest extends DrupalUnitTestBase {
     $this->assertIdentical($data, FALSE);
 
     // Add a top level value
-    $config = config($name);
+    $config = \Drupal::config($name);
     $config->set($key, $value);
 
     // Add a nested value
@@ -96,7 +96,7 @@ class ConfigFileContentTest extends DrupalUnitTestBase {
     $this->assertTrue($data);
 
     // Read top level value
-    $config = config($name);
+    $config = \Drupal::config($name);
     $this->assertEqual($config->getName(), $name);
     $this->assertTrue($config, 'Config object created.');
     $this->assertEqual($config->get($key), 'bar', 'Top level configuration value found.');
@@ -134,7 +134,7 @@ class ConfigFileContentTest extends DrupalUnitTestBase {
     // Unset a nested value
     $config->clear($nested_key);
     $config->save();
-    $config = config($name);
+    $config = \Drupal::config($name);
 
     // Read unset top level value
     $this->assertNull($config->get($key), 'Top level value unset.');
@@ -143,13 +143,13 @@ class ConfigFileContentTest extends DrupalUnitTestBase {
     $this->assertNull($config->get($nested_key), 'Nested value unset.');
 
     // Create two new configuration files to test listing
-    $config = config('foo.baz');
+    $config = \Drupal::config('foo.baz');
     $config->set($key, $value);
     $config->save();
 
     // Test chained set()->save()
     $chained_name = 'biff.bang';
-    $config = config($chained_name);
+    $config = \Drupal::config($chained_name);
     $config->set($key, $value)->save();
 
     // Verify the database entry exists from a chained save.
@@ -177,7 +177,7 @@ class ConfigFileContentTest extends DrupalUnitTestBase {
     $this->assertEqual($files, array(), 'No files listed with the prefix \'bar\'.');
 
     // Delete the configuration.
-    $config = config($name);
+    $config = \Drupal::config($name);
     $config->delete();
 
     // Verify the database entry no longer exists.

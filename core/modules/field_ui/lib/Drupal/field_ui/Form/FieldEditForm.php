@@ -138,7 +138,7 @@ class FieldEditForm implements FormInterface, ControllerInterface {
     // FieldItem.
     $ids = (object) array('entity_type' => $this->instance['entity_type'], 'bundle' => $this->instance['bundle'], 'entity_id' => NULL);
     $entity = _field_create_entity_from_ids($ids);
-    $form['field']['settings'] += $this->getFieldItem($entity, $field['field_name'])->settingsForm($form, $form_state);
+    $form['field']['settings'] += $this->getFieldItem($entity, $field['field_name'])->settingsForm($form, $form_state, $field->hasData());
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save field settings'));

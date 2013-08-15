@@ -141,7 +141,7 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
    * @return array
    *   An array of authentication provider objects.
    */
-  protected function getSortedProviders() {
+  public function getSortedProviders() {
     if (!isset($this->sortedProviders)) {
       // Sort the builders according to priority.
       krsort($this->providerOrders);

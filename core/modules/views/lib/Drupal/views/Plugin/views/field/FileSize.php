@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Render a numeric value as a size.
@@ -38,7 +39,10 @@ class FileSize extends FieldPluginBase {
     );
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     if ($value) {
       switch ($this->options['file_size_display']) {

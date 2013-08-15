@@ -1357,7 +1357,7 @@ function hook_mail_alter(&$message) {
       $message['send'] = FALSE;
       return;
     }
-    $message['body'][] = "--\nMail sent out from " . config('system.site')->get('name');
+    $message['body'][] = "--\nMail sent out from " . Drupal::config('system.site')->get('name');
   }
 }
 
@@ -1775,7 +1775,7 @@ function hook_watchdog(array $log_entry) {
   $to = 'someone@example.com';
   $params = array();
   $params['subject'] = t('[@site_name] @severity_desc: Alert from your web site', array(
-    '@site_name' => config('system.site')->get('name'),
+    '@site_name' => Drupal::config('system.site')->get('name'),
     '@severity_desc' => $severity_list[$log_entry['severity']],
   ));
 
@@ -1841,7 +1841,7 @@ function hook_mail($key, &$message, $params) {
   $account = $params['account'];
   $context = $params['context'];
   $variables = array(
-    '%site_name' => config('system.site')->get('name'),
+    '%site_name' => Drupal::config('system.site')->get('name'),
     '%username' => user_format_name($account),
   );
   if ($context['hook'] == 'taxonomy') {
@@ -2150,8 +2150,8 @@ function hook_file_download($uri) {
       return -1;
     }
     else {
-      $info = image_get_info($uri);
-      return array('Content-Type' => $info['mime_type']);
+      $image = Drupal::service('image.factory')->get($uri);
+      return array('Content-Type' => $image->getMimeType());
     }
   }
 }
@@ -2318,37 +2318,39 @@ function hook_requirements($phase) {
 /**
  * Define the current version of the database schema.
  *
- * A Drupal schema definition is an array structure representing one or
- * more tables and their related keys and indexes. A schema is defined by
+ * A Drupal schema definition is an array structure representing one or more
+ * tables and their related keys and indexes. A schema is defined by
  * hook_schema() which must live in your module's .install file.
  *
- * This hook is called at install and uninstall time, and in the latter
- * case, it cannot rely on the .module file being loaded or hooks being known.
- * If the .module file is needed, it may be loaded with drupal_load().
+ * This hook is called at install and uninstall time, and in the latter case, it
+ * cannot rely on the .module file being loaded or hooks being known. If the
+ * .module file is needed, it may be loaded with drupal_load().
  *
- * The tables declared by this hook will be automatically created when
- * the module is first enabled, and removed when the module is uninstalled.
- * This happens before hook_install() is invoked, and after hook_uninstall()
- * is invoked, respectively.
+ * The tables declared by this hook will be automatically created when the
+ * module is first enabled, and removed when the module is uninstalled. This
+ * happens before hook_install() is invoked, and after hook_uninstall() is
+ * invoked, respectively.
  *
  * By declaring the tables used by your module via an implementation of
  * hook_schema(), these tables will be available on all supported database
  * engines. You don't have to deal with the different SQL dialects for table
  * creation and alteration of the supported database engines.
  *
- * See the Schema API Handbook at http://drupal.org/node/146843 for
- * details on schema definition structures.
+ * See the Schema API Handbook at http://drupal.org/node/146843 for details on
+ * schema definition structures.
  *
- * @return
+ * @return array
  *   A schema definition structure array. For each element of the
  *   array, the key is a table name and the value is a table structure
  *   definition.
+ *
+ * @see hook_schema_alter()
  *
  * @ingroup schemaapi
  */
 function hook_schema() {
   $schema['node'] = array(
-    // example (partial) specification for table "node"
+    // Example (partial) specification for table "node".
     'description' => 'The base table for nodes.',
     'fields' => array(
       'nid' => array(
@@ -3151,7 +3153,7 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
 
         // Default values for the chained tokens handled below.
         case 'author':
-          $name = ($node->uid == 0) ? config('user.settings')->get('anonymous') : $node->name;
+          $name = ($node->uid == 0) ? Drupal::config('user.settings')->get('anonymous') : $node->name;
           $replacements[$original] = $sanitize ? filter_xss($name) : $name;
           break;
 
@@ -3601,4 +3603,36 @@ function hook_filetransfer_info_alter(&$filetransfer_info) {
 
 /**
  * @} End of "defgroup update_api".
+ */
+
+/**
+ * @defgroup annotation Annotations
+ * @{
+ * Annotations for class discovery and metadata description.
+ *
+ * The Drupal plugin system has a set of reusable components that developers
+ * can use, override, and extend in their modules. Most of the plugins use
+ * annotations, which let classes register themselves as plugins and describe
+ * their metadata. (Annotations can also be used for other purposes, though
+ * at the moment, Drupal only uses them for the plugin system.)
+ *
+ * To annotate a class as a plugin, add code similar to the following to the
+ * end of the documentation block immediately preceding the class declaration:
+ * @code
+ * * @EntityType(
+ * *   id = "comment",
+ * *   label = @Translation("Comment"),
+ * *   ...
+ * *   base_table = "comment"
+ * * )
+ * @endcode
+ *
+ * The available annotation classes are listed in this topic, and can be
+ * identified when you are looking at the Drupal source code by having
+ * "@ Annotation" in their documentation blocks (without the space after @). To
+ * find examples of annotation for a particular annotation class, such as
+ * EntityType, look for class files that contain a PHP "use" declaration of the
+ * annotation class, or files that have an @ annotation section using the
+ * annotation class.
+ * @}
  */

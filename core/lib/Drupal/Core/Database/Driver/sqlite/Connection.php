@@ -81,7 +81,7 @@ class Connection extends DatabaseConnection {
 
     // Attach one database for each registered prefix.
     $prefixes = $this->prefixes;
-    foreach ($prefixes as $table => &$prefix) {
+    foreach ($prefixes as &$prefix) {
       // Empty prefix means query the main database -- no need to attach anything.
       if (!empty($prefix)) {
         // Only attach the database once.
@@ -180,7 +180,7 @@ class Connection extends DatabaseConnection {
    */
   public static function sqlFunctionGreatest() {
     $args = func_get_args();
-    foreach ($args as $k => $v) {
+    foreach ($args as $v) {
       if (!isset($v)) {
         unset($args);
       }
@@ -277,7 +277,7 @@ class Connection extends DatabaseConnection {
    * @param string $database
    *   The name of the database to create.
    *
-   * @throws DatabaseNotFoundException
+   * @throws \Drupal\Core\Database\DatabaseNotFoundException
    */
   public function createDatabase($database) {
     // Verify the database is writable.
@@ -297,7 +297,7 @@ class Connection extends DatabaseConnection {
   }
 
   public function nextId($existing_id = 0) {
-    $transaction = $this->startTransaction();
+    $this->startTransaction();
     // We can safely use literal queries here instead of the slower query
     // builder because if a given database breaks here then it can simply
     // override nextId. However, this is unlikely as we deal with short strings

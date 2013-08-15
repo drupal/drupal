@@ -56,7 +56,7 @@ class UserUid extends ArgumentPluginBase {
 
   function title() {
     if (!$this->argument) {
-      $title = config('user.settings')->get('anonymous');
+      $title = \Drupal::config('user.settings')->get('anonymous');
     }
     else {
       $title = $this->database->query('SELECT u.name FROM {users} u WHERE u.uid = :uid', array(':uid' => $this->argument))->fetchField();

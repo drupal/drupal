@@ -7,8 +7,9 @@
 
 namespace Drupal\image\Plugin\ImageEffect;
 
-use Drupal\Component\Image\Image;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Component\Utility\Image;
+use Drupal\Core\Image\ImageInterface;
 use Drupal\image\Annotation\ImageEffect;
 
 /**
@@ -25,7 +26,7 @@ class ScaleImageEffect extends ResizeImageEffect {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect($image) {
+  public function applyEffect(ImageInterface $image) {
     // Set sane default values.
     $this->configuration += array(
       'width' => NULL,
@@ -33,8 +34,8 @@ class ScaleImageEffect extends ResizeImageEffect {
       'upscale' => FALSE,
     );
 
-    if (!image_scale($image, $this->configuration['width'], $this->configuration['height'], $this->configuration['upscale'])) {
-      watchdog('image', 'Image scale failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit->getPluginId(), '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
+    if (!$image->scale($this->configuration['width'], $this->configuration['height'], $this->configuration['upscale'])) {
+      watchdog('image', 'Image scale failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()), WATCHDOG_ERROR);
       return FALSE;
     }
     return TRUE;

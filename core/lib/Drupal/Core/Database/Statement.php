@@ -28,7 +28,7 @@ class Statement extends PDOStatement implements StatementInterface {
    *
    * The name $dbh is inherited from PDOStatement.
    *
-   * @var DatabaseConnection
+   * @var \Drupal\Core\Database\Connection
    */
   public $dbh;
 

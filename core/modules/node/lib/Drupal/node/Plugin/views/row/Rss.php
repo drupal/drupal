@@ -100,7 +100,7 @@ class Rss extends RowPluginBase {
 
     $display_mode = $this->options['item_length'];
     if ($display_mode == 'default') {
-      $display_mode = config('system.rss')->get('items.view_mode');
+      $display_mode = \Drupal::config('system.rss')->get('items.view_mode');
     }
 
     // Load the specified node:

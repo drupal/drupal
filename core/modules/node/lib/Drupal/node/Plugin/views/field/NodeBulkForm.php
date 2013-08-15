@@ -7,8 +7,8 @@
 
 namespace Drupal\node\Plugin\views\field;
 
+use Drupal\views\Plugin\views\field\ActionBulkForm;
 use Drupal\Component\Annotation\PluginID;
-use Drupal\system\Plugin\views\field\BulkFormBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityManager;
 
@@ -17,7 +17,7 @@ use Drupal\Core\Entity\EntityManager;
  *
  * @PluginID("node_bulk_form")
  */
-class NodeBulkForm extends BulkFormBase {
+class NodeBulkForm extends ActionBulkForm {
 
   /**
    * Constructs a new NodeBulkForm object.

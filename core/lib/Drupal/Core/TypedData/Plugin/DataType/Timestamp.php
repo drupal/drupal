@@ -34,7 +34,7 @@ class Timestamp extends Integer implements DateTimeInterface {
    */
   public function getDateTime() {
     if ($this->value) {
-      return new DrupalDateTime($this->value);
+      return DrupalDateTime::createFromTimestamp($this->value);
     }
   }
 

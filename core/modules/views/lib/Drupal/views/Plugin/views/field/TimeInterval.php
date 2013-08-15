@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * A handler to provide proper displays for time intervals.
@@ -37,7 +38,10 @@ class TimeInterval extends FieldPluginBase {
     );
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $value = $values->{$this->field_alias};
     return format_interval($value, isset($this->options['granularity']) ? $this->options['granularity'] : 2);
   }

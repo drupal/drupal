@@ -92,7 +92,7 @@ class FormTest extends FieldTestBase {
     $this->drupalGet('entity_test/add');
 
     // Create token value expected for description.
-    $token_description = check_plain(config('system.site')->get('name')) . '_description';
+    $token_description = check_plain(\Drupal::config('system.site')->get('name')) . '_description';
     $this->assertText($token_description, 'Token replacement for description is displayed');
     $this->assertFieldByName("{$field_name}[$langcode][0][value]", '', 'Widget is displayed');
     $this->assertNoField("{$field_name}[$langcode][1][value]", 'No extraneous widget is displayed');

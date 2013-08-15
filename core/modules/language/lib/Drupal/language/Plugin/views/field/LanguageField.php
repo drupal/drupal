@@ -9,6 +9,7 @@ namespace Drupal\language\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Defines a field handler to translate a language into its readable form.
@@ -36,7 +37,10 @@ class LanguageField extends FieldPluginBase {
     );
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     // @todo: Drupal Core dropped native language until config translation is
     // ready, see http://drupal.org/node/1616594.
     $value = $this->getValue($values);

@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler whichs allows to show machine name content as human name.
@@ -66,7 +67,10 @@ class MachineName extends FieldPluginBase {
     $this->getValueOptions();
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $value = $values->{$this->field_alias};
     if (!empty($this->options['machine_name']) || !isset($this->value_options[$value])) {
       $result = check_plain($value);

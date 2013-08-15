@@ -191,7 +191,7 @@ function field_cron() {
   field_sync_field_status();
 
   // Do a pass of purging on deleted Field API data, if any exists.
-  $limit = config('field.settings')->get('purge_batch_size');
+  $limit = Drupal::config('field.settings')->get('purge_batch_size');
   field_purge_batch($limit);
 }
 
@@ -726,9 +726,9 @@ function field_view_value(EntityInterface $entity, $field_name, $item, $display 
  *
  * This function can be used by third-party modules that need to output an
  * isolated field.
- * - Do not use inside node (or other entities) templates, use
+ * - Do not use inside node (or any other entity) templates; use
  *   render($content[FIELD_NAME]) instead.
- * - Do not use to display all fields in an entity, use
+ * - Do not use to display all fields in an entity; use
  *   field_attach_prepare_view() and field_attach_view() instead.
  * - The field_view_value() function can be used to output a single formatted
  *   field value, without label or wrapping field markup.

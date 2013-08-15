@@ -1,5 +1,5 @@
 custom_block_type_list:
-  pattern: '/admin/structure/custom-blocks'
+  pattern: '/admin/structure/custom-blocks/types'
   defaults:
     _entity_list: 'custom_block_type'
   requirements:
@@ -35,7 +35,7 @@ custom_block_edit:
     custom_block: \d+
 
 custom_block_type_add:
-  pattern: '/admin/structure/custom-blocks/add'
+  pattern: '/admin/structure/custom-blocks/types/add'
   defaults:
     _entity_form: 'custom_block_type.add'
   requirements:
@@ -47,3 +47,10 @@ custom_block_type_edit:
     _entity_form: 'custom_block_type.edit'
   requirements:
     _entity_access: 'custom_block_type.update'
+
+custom_block_list:
+  pattern: '/admin/structure/custom-blocks'
+  defaults:
+    _entity_list: 'custom_block'
+  requirements:
+    _permission: 'administer blocks'

@@ -12,6 +12,7 @@ use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\filter\Plugin\Filter\FilterNull;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -115,6 +116,14 @@ abstract class FilterFormatFormControllerBase extends EntityFormController imple
     // Create filter plugin instances for all available filters, including both
     // enabled/configured ones as well as new and not yet unconfigured ones.
     $filters = $format->filters()->sort();
+    foreach ($filters as $filter_id => $filter) {
+      // When a filter is missing, it is replaced by the null filter. Remove it
+      // here, so that saving the form will remove the missing filter.
+      if ($filter instanceof FilterNull) {
+        drupal_set_message(t('The %filter filter is missing, and will be removed once this format is saved.', array('%filter' => $filter_id)), 'warning');
+        $filters->removeInstanceID($filter_id);
+      }
+    }
 
     // Filter status.
     $form['filters']['status'] = array(

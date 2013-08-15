@@ -20,7 +20,7 @@ class TranslationsStream extends LocalStream {
    * Implements Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath()
    */
   function getDirectoryPath() {
-    return config('locale.settings')->get('translation.path');
+    return \Drupal::config('locale.settings')->get('translation.path');
   }
 
   /**

@@ -107,7 +107,6 @@ class Condition extends ConditionBase {
    */
   protected function matchArray(array $condition, array $data, array $needs_matching, array $parents = array()) {
     $parent = array_shift($needs_matching);
-    $candidates = array();
     if ($parent === '*') {
       $candidates = array_keys($data);
     }

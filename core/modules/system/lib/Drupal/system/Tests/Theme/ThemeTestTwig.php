@@ -38,7 +38,7 @@ class ThemeTestTwig extends WebTestBase {
    * Tests that the Twig engine handles PHP data correctly.
    */
   function testTwigVariableDataTypes() {
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', 'test_theme')
       ->save();
     $this->drupalGet('twig-theme-test/php-variables');

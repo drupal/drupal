@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Database\Driver\pgsql;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\SchemaObjectExistsException;
@@ -101,9 +102,6 @@ class Schema extends DatabaseSchema {
     $schema = $prefixInfo['schema'];
     $table_name = $prefixInfo['table'];
 
-    $field_information = (object) array(
-        'checks' => array(),
-    );
     $checks = $this->connection->query("SELECT conname FROM pg_class cl INNER JOIN pg_constraint co ON co.conrelid = cl.oid INNER JOIN pg_attribute attr ON attr.attrelid = cl.oid AND attr.attnum = ANY (co.conkey) INNER JOIN pg_namespace ns ON cl.relnamespace = ns.oid WHERE co.contype = 'c' AND ns.nspname = :schema AND cl.relname = :table AND attr.attname = :column", array(
       ':schema' => $schema,
       ':table' => $table_name,
@@ -346,6 +344,16 @@ class Schema extends DatabaseSchema {
     // Ensure the new table name does not include schema syntax.
     $prefixInfo = $this->getPrefixInfo($new_name);
     $this->connection->query('ALTER TABLE {' . $table . '} RENAME TO ' . $prefixInfo['table']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function copyTable($source, $destination) {
+    // @TODO The server is likely going to rename indexes and constraints
+    //   during the copy process, and it will not match our
+    //   table_name + constraint name convention anymore.
+    throw new \Exception('Not implemented, see https://drupal.org/node/2061879');
   }
 
   public function dropTable($table) {

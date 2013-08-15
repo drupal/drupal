@@ -8,7 +8,7 @@
 namespace Drupal\field\Plugin\Type\FieldType;
 
 use Drupal\Core\Entity\Field\FieldItemInterface;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\FieldInterface;
 
 /**
  * Interface definition for 'configurable field type' plugins.
@@ -18,7 +18,7 @@ interface ConfigFieldItemInterface extends FieldItemInterface {
   /**
    * Returns the field instance definition.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   * @var \Drupal\field\FieldInstanceInterface
    */
   public function getInstance();
 
@@ -29,7 +29,7 @@ interface ConfigFieldItemInterface extends FieldItemInterface {
    * creation of the field. No field instances exist by then, and it is not
    * possible to instantiate a FieldItemInterface object yet.
    *
-   * @param \Drupal\field\Plugin\Core\Entity\Field $field
+   * @param \Drupal\field\FieldInterface $field
    *   The field definition.
    *
    * @return array
@@ -54,24 +54,31 @@ interface ConfigFieldItemInterface extends FieldItemInterface {
    *     specify another field as related, only existing SQL tables,
    *     such as {taxonomy_term_data}.
    */
-  public static function schema(Field $field);
+  public static function schema(FieldInterface $field);
 
   /**
    * Returns a form for the field-level settings.
    *
    * Invoked from \Drupal\field_ui\Form\FieldEditForm to allow administrators to
-   * configure field-level settings. If the field already has data, the form
-   * should only include the settings that are safe to change.
+   * configure field-level settings.
+   *
+   * Field storage might reject field definition changes that affect the field
+   * storage schema if the field already has data. When the $has_data parameter
+   * is TRUE, the form should not allow changing the settings that take part in
+   * the schema() method. It is recommended to set #access to FALSE on the
+   * corresponding elements.
    *
    * @param array $form
    *   The form where the settings form is being included in.
    * @param array $form_state
    *   The form state of the (entire) configuration form.
+   * @param bool $has_data
+   *   TRUE if the field already has data, FALSE if not.
    *
    * @return
    *   The form definition for the field settings.
    */
-  public function settingsForm(array $form, array &$form_state);
+  public function settingsForm(array $form, array &$form_state, $has_data);
 
   /**
    * Returns a form for the instance-level settings.

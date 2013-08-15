@@ -106,21 +106,85 @@ class DateTimePlus extends \DateTime {
   protected $errors = array();
 
   /**
-   * Constructs a date object set to a requested date and timezone.
+   * A boolean to store whether or not the intl php extension is available.
+   */
+  static $intlExtentionExists = NULL;
+
+  /**
+   * Creates a date object from an input date object.
    *
-   * @param mixed $time
-   *   A DateTime object, a date/time string, a unix timestamp,
-   *   or an array of date parts, like ('year' => 2014, 'month => 4).
-   *   Defaults to 'now'.
+   * @param \DateTime $datetime
+   *   A DateTime object.
+   * @param array $settings
+   *   @see __construct()
+   */
+  public static function createFromDateTime(\DateTime $datetime, $settings = array()) {
+    return new static($datetime->format(static::FORMAT), $datetime->getTimezone(), $settings);
+  }
+
+  /**
+   * Creates a date object from an array of date parts.
+   *
+   * Converts the input value into an ISO date, forcing a full ISO
+   * date even if some values are missing.
+   *
+   * @param array $date_parts
+   *   An array of date parts, like ('year' => 2014, 'month => 4).
    * @param mixed $timezone
-   *   PHP DateTimeZone object, string or NULL allowed.
-   *   Defaults to NULL.
+   *   @see __construct()
+   * @param array $settings
+   *   @see __construct()
+   */
+  public static function createFromArray(array $date_parts, $timezone = NULL, $settings = array()) {
+    $date_parts = static::prepareArray($date_parts, TRUE);
+    if (static::checkArray($date_parts)) {
+      // Even with validation, we can end up with a value that the
+      // parent class won't handle, like a year outside the range
+      // of -9999 to 9999, which will pass checkdate() but
+      // fail to construct a date object.
+      $iso_date = static::arrayToISO($date_parts);
+      return new static($iso_date, $timezone, $settings);
+    }
+    else {
+      throw new \Exception('The array contains invalid values.');
+    }
+  }
+
+  /**
+   * Creates a date object from timestamp input.
+   *
+   * The timezone of a timestamp is always UTC. The timezone for a
+   * timestamp indicates the timezone used by the format() method.
+   *
+   * @param int $timestamp
+   *   A UNIX timestamp.
+   * @param mixed $timezone
+   *   @see __construct()
+   * @param array $settings
+   *   @see __construct()
+   */
+  public static function createFromTimestamp($timestamp, $timezone = NULL, $settings = array()) {
+    if (!is_numeric($timestamp)) {
+      throw new \Exception('The timestamp must be numeric.');
+    }
+    $datetime = new static('', $timezone, $settings);
+    $datetime->setTimestamp($timestamp);
+    return $datetime;
+  }
+
+  /**
+   * Creates a date object from an input format.
+   *
    * @param string $format
    *   PHP date() type format for parsing the input. This is recommended
-   *   for specialized input with a known format. If provided the
+   *   to use things like negative years, which php's parser fails on, or
+   *   any other specialized input with a known format. If provided the
    *   date will be created using the createFromFormat() method.
-   *   Defaults to NULL.
    *   @see http://us3.php.net/manual/en/datetime.createfromformat.php
+   * @param mixed $time
+   *   @see __construct()
+   * @param mixed $timezone
+   *   @see __construct()
    * @param array $settings
    *   - validate_format: (optional) Boolean choice to validate the
    *     created date using the input format. The format used in
@@ -129,6 +193,47 @@ class DateTimePlus extends \DateTime {
    *     possible to a validation step to confirm that the date created
    *     from a format string exactly matches the input. This option
    *     indicates the format can be used for validation. Defaults to TRUE.
+   *   @see __construct()
+   */
+  public static function createFromFormat($format, $time, $timezone = NULL, $settings = array()) {
+    if (!isset($settings['validate_format'])) {
+      $settings['validate_format'] = TRUE;
+    }
+
+    // Tries to create a date from the format and use it if possible.
+    // A regular try/catch won't work right here, if the value is
+    // invalid it doesn't return an exception.
+    $datetimeplus = new static('', $timezone, $settings);
+
+    $date = \DateTime::createFromFormat($format, $time, $datetimeplus->getTimezone());
+    if (!$date instanceOf \DateTime) {
+      throw new \Exception('The date cannot be created from a format.');
+    }
+    else {
+      $datetimeplus->setTimestamp($date->getTimestamp());
+      $datetimeplus->setTimezone($date->getTimezone());
+
+      // The createFromFormat function is forgiving, it might create a date that
+      // is not exactly a match for the provided value, so test for that. For
+      // instance, an input value of '11' using a format of Y (4 digits) gets
+      // created as '0011' instead of '2011'. Use the parent::format() because
+      // we do not want to use the IntlDateFormatter here.
+      if ($settings['validate_format'] && $date->format($format) != $time) {
+        throw new \Exception('The created date does not match the input value.');
+      }
+    }
+    return $datetimeplus;
+  }
+
+  /**
+   * Constructs a date object set to a requested date and timezone.
+   *
+   * @param string $time
+   *   A date/time string. Defaults to 'now'.
+   * @param mixed $timezone
+   *   PHP DateTimeZone object, string or NULL allowed.
+   *   Defaults to NULL.
+   * @param array $settings
    *   - langcode: (optional) String two letter language code to construct
    *     the locale string by the intlDateFormatter class. Used to control
    *     the result of the format() method if that class is available.
@@ -142,66 +247,36 @@ class DateTimePlus extends \DateTime {
    *   - debug: (optional) Boolean choice to leave debug values in the
    *     date object for debugging purposes. Defaults to FALSE.
    */
-  public function __construct($time = 'now', $timezone = NULL, $format = NULL, $settings = array()) {
+  public function __construct($time = 'now', $timezone = NULL, $settings = array()) {
 
     // Unpack settings.
-    $this->validateFormat = !empty($settings['validate_format']) ? $settings['validate_format'] : TRUE;
     $this->langcode = !empty($settings['langcode']) ? $settings['langcode'] : NULL;
     $this->country = !empty($settings['country']) ? $settings['country'] : NULL;
     $this->calendar = !empty($settings['calendar']) ? $settings['calendar'] : static::CALENDAR;
 
-    // Store the original input so it is available for validation.
-    $this->inputTimeRaw = $time;
-    $this->inputTimeZoneRaw = $timezone;
-    $this->inputFormatRaw = $format;
-
     // Massage the input values as necessary.
-    $this->prepareTime($time);
-    $this->prepareTimezone($timezone);
-    $this->prepareFormat($format);
+    $prepared_time = $this->prepareTime($time);
+    $prepared_timezone = $this->prepareTimezone($timezone);
 
-    // Create a date as a clone of an input DateTime object.
-    if ($this->inputIsObject()) {
-      $this->constructFromObject();
+    try {
+      if (!empty($prepared_time)) {
+        $test = date_parse($prepared_time);
+        if (!empty($test['errors'])) {
+          $this->errors[] = $test['errors'];
+        }
+      }
+
+      if (empty($this->errors)) {
+        parent::__construct($prepared_time, $prepared_timezone);
+      }
     }
-
-    // Create date from array of date parts.
-    elseif ($this->inputIsArray()) {
-      $this->constructFromArray();
-    }
-
-    // Create a date from a Unix timestamp.
-    elseif ($this->inputIsTimestamp()) {
-      $this->constructFromTimestamp();
-    }
-
-    // Create a date from a time string and an expected format.
-    elseif ($this->inputIsFormat()) {
-      $this->constructFromFormat();
-    }
-
-    // Create a date from any other input.
-    else {
-      $this->constructFallback();
+    catch (\Exception $e) {
+      $this->errors[] = $e->getMessage();
     }
 
     // Clean up the error messages.
     $this->checkErrors();
     $this->errors = array_unique($this->errors);
-
-    // Now that we've validated the input, clean up the extra values.
-    if (empty($settings['debug'])) {
-      unset(
-        $this->inputTimeRaw,
-        $this->inputTimeAdjusted,
-        $this->inputTimeZoneRaw,
-        $this->inputTimeZoneAdjusted,
-        $this->inputFormatRaw,
-        $this->inputFormatAdjusted,
-        $this->validateFormat
-      );
-    }
-
   }
 
   /**
@@ -228,7 +303,7 @@ class DateTimePlus extends \DateTime {
    *   or an array of date parts.
    */
   protected function prepareTime($time) {
-    $this->inputTimeAdjusted = $time;
+    return $time;
   }
 
   /**
@@ -247,12 +322,6 @@ class DateTimePlus extends \DateTime {
       $timezone_adjusted = $timezone;
     }
 
-    // When the passed-in time is a DateTime object with its own
-    // timezone, try to use the date's timezone.
-    elseif (empty($timezone) && $this->inputTimeAdjusted instanceOf \DateTime) {
-      $timezone_adjusted = $this->inputTimeAdjusted->getTimezone();
-    }
-
     // Allow string timezone input, and create a timezone from it.
     elseif (!empty($timezone) && is_string($timezone)) {
       $timezone_adjusted = new \DateTimeZone($timezone);
@@ -267,7 +336,7 @@ class DateTimePlus extends \DateTime {
     }
 
     // We are finally certain that we have a usable timezone.
-    $this->inputTimeZoneAdjusted = $timezone_adjusted;
+    return $timezone_adjusted;
   }
 
   /**
@@ -280,179 +349,10 @@ class DateTimePlus extends \DateTime {
    *   A PHP format string.
    */
   protected function prepareFormat($format) {
-    $this->inputFormatAdjusted = $format;
+    return $format;
   }
 
-  /**
-   * Checks whether input is a DateTime object.
-   *
-   * @return boolean
-   *   TRUE if the input time is a DateTime object.
-   */
-  public function inputIsObject() {
-    return $this->inputTimeAdjusted instanceOf \DateTime;
-  }
 
-  /**
-   * Creates a date object from an input date object.
-   */
-  protected function constructFromObject() {
-    try {
-      $this->inputTimeAdjusted = $this->inputTimeAdjusted->format(static::FORMAT);
-      parent::__construct($this->inputTimeAdjusted, $this->inputTimeZoneAdjusted);
-    }
-    catch (\Exception $e) {
-      $this->errors[] = $e->getMessage();
-    }
-  }
-
-  /**
-   * Checks whether input time seems to be a timestamp.
-   *
-   * Providing an input format will prevent ISO values without separators
-   * from being mis-interpreted as timestamps. Providing a format can also
-   * avoid interpreting a value like '2010' with a format of 'Y' as a
-   * timestamp. The 'U' format indicates this is a timestamp.
-   *
-   * @return boolean
-   *   TRUE if the input time is a timestamp.
-   */
-  public function inputIsTimestamp() {
-    return is_numeric($this->inputTimeAdjusted) && (empty($this->inputFormatAdjusted) || $this->inputFormatAdjusted == 'U');
-  }
-
-  /**
-   * Creates a date object from timestamp input.
-   *
-   * The timezone of a timestamp is always UTC. The timezone for a
-   * timestamp indicates the timezone used by the format() method.
-   */
-  protected function constructFromTimestamp() {
-    try {
-      parent::__construct('', $this->inputTimeZoneAdjusted);
-      $this->setTimestamp($this->inputTimeAdjusted);
-    }
-    catch (\Exception $e) {
-      $this->errors[] = $e->getMessage();
-    }
-  }
-
-  /**
-   * Checks if input is an array of date parts.
-   *
-   * @return boolean
-   *   TRUE if the input time is a DateTime object.
-   */
-  public function inputIsArray() {
-    return is_array($this->inputTimeAdjusted);
-  }
-
-  /**
-   * Creates a date object from an array of date parts.
-   *
-   * Converts the input value into an ISO date, forcing a full ISO
-   * date even if some values are missing.
-   */
-  protected function constructFromArray() {
-    try {
-      parent::__construct('', $this->inputTimeZoneAdjusted);
-      $this->inputTimeAdjusted = static::prepareArray($this->inputTimeAdjusted, TRUE);
-      if (static::checkArray($this->inputTimeAdjusted)) {
-        // Even with validation, we can end up with a value that the
-        // parent class won't handle, like a year outside the range
-        // of -9999 to 9999, which will pass checkdate() but
-        // fail to construct a date object.
-        $this->inputTimeAdjusted = static::arrayToISO($this->inputTimeAdjusted);
-        parent::__construct($this->inputTimeAdjusted, $this->inputTimeZoneAdjusted);
-      }
-      else {
-        throw new \Exception('The array contains invalid values.');
-      }
-    }
-    catch (\Exception $e) {
-      $this->errors[] = $e->getMessage();
-    }
-  }
-
-  /**
-   * Checks if input is a string with an expected format.
-   *
-   * @return boolean
-   *   TRUE if the input time is a string with an expected format.
-   */
-  public function inputIsFormat() {
-    return is_string($this->inputTimeAdjusted) && !empty($this->inputFormatAdjusted);
-  }
-
-  /**
-   * Creates a date object from an input format.
-   */
-  protected function constructFromFormat() {
-    // Tries to create a date from the format and use it if possible.
-    // A regular try/catch won't work right here, if the value is
-    // invalid it doesn't return an exception.
-    try {
-      parent::__construct('', $this->inputTimeZoneAdjusted);
-      $date = parent::createFromFormat($this->inputFormatAdjusted, $this->inputTimeAdjusted, $this->inputTimeZoneAdjusted);
-      if (!$date instanceOf \DateTime) {
-        throw new \Exception('The date cannot be created from a format.');
-      }
-      else {
-        $this->setTimestamp($date->getTimestamp());
-        $this->setTimezone($date->getTimezone());
-
-        try {
-          // The createFromFormat function is forgiving, it might
-          // create a date that is not exactly a match for the provided
-          // value, so test for that. For instance, an input value of
-          // '11' using a format of Y (4 digits) gets created as
-          // '0011' instead of '2011'.
-          // Use the parent::format() because we do not want to use
-          // the IntlDateFormatter here.
-          if ($this->validateFormat && parent::format($this->inputFormatAdjusted) != $this->inputTimeRaw) {
-            throw new \Exception('The created date does not match the input value.');
-          }
-        }
-        catch (\Exception $e) {
-          $this->errors[] = $e->getMessage();
-        }
-      }
-    }
-    catch (\Exception $e) {
-      $this->errors[] = $e->getMessage();
-    }
-  }
-
-  /**
-   * Creates a date when none of the other methods are appropriate.
-   *
-   * Fallback construction for values that don't match any of the
-   * other patterns. Lets the parent dateTime attempt to turn this string
-   * into a valid date.
-   */
-  protected function constructFallback() {
-
-    try {
-      // One last test for invalid input before we try to construct
-      // a date. If the input contains totally bogus information
-      // it will blow up badly if we pass it to the constructor.
-      // The date_parse() function will tell us if the input
-      // makes sense.
-      if (!empty($this->inputTimeAdjusted)) {
-        $test = date_parse($this->inputTimeAdjusted);
-        if (!empty($test['errors'])) {
-          $this->errors[] = $test['errors'];
-        }
-      }
-
-      if (empty($this->errors)) {
-        parent::__construct($this->inputTimeAdjusted, $this->inputTimeZoneAdjusted);
-      }
-    }
-    catch (\Exception $e) {
-      $this->errors[] = $e->getMessage();
-    }
-  }
 
   /**
    * Examines getLastErrors() to see what errors to report.
@@ -655,7 +555,14 @@ class DateTimePlus extends \DateTime {
     $country = !empty($country) ? $country : $this->country;
     $calendar = !empty($calendar) ? $calendar : $this->calendar;
 
-    return class_exists('IntlDateFormatter') && !empty($calendar) && !empty($langcode) && !empty($country);
+    return $this->intlDateFormatterExists() && !empty($calendar) && !empty($langcode) && !empty($country);
+  }
+
+  public static function intlDateFormatterExists() {
+    if (static::$intlExtentionExists === NULL) {
+      static::$intlExtentionExists = class_exists('IntlDateFormatter');
+    }
+    return static::$intlExtentionExists;
   }
 
   /**

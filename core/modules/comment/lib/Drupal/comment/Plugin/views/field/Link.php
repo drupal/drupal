@@ -43,7 +43,10 @@ class Link extends FieldPluginBase {
 
   public function query() {}
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $comment = $this->getEntity($values);
     return $this->renderLink($comment, $values);
   }

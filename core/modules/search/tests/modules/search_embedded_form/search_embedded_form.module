@@ -30,7 +30,7 @@ function search_embedded_form_menu() {
  * @see search_embedded_form_form_submit().
  */
 function search_embedded_form_form($form, &$form_state) {
-  $count = config('search_embedded_form.settings')->get('submitted');
+  $count = Drupal::config('search_embedded_form.settings')->get('submitted');
 
   $form['name'] = array(
     '#type' => 'textfield',
@@ -56,7 +56,7 @@ function search_embedded_form_form($form, &$form_state) {
  * Submit handler for search_embedded_form_form().
  */
 function search_embedded_form_form_submit($form, &$form_state) {
-  $config = config('search_embedded_form.settings');
+  $config = Drupal::config('search_embedded_form.settings');
   $submit_count = (int) $config->get('submitted');
   $config->set('submitted', $submit_count + 1)->save();
   drupal_set_message(t('Test form was submitted'));

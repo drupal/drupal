@@ -10,9 +10,7 @@ use Guzzle\Http\Message\Response;
  */
 class BadResponseException extends RequestException
 {
-    /**
-     * @var Response
-     */
+    /** @var Response */
     private $response;
 
     /**
@@ -41,8 +39,6 @@ class BadResponseException extends RequestException
             '[status code] ' . $response->getStatusCode(),
             '[reason phrase] ' . $response->getReasonPhrase(),
             '[url] ' . $request->getUrl(),
-            '[request] ' . (string) $request,
-            '[response] ' . (string) $response
         ));
 
         $e = new $class($message);

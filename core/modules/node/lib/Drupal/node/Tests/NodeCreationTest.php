@@ -104,10 +104,10 @@ class NodeCreationTest extends NodeTestBase {
    */
   function testUnpublishedNodeCreation() {
     // Set the front page to the test page.
-    config('system.site')->set('page.front', 'test-page')->save();
+    \Drupal::config('system.site')->set('page.front', 'test-page')->save();
 
     // Set "Basic page" content type to be unpublished by default.
-    config('node.type.page')->set('settings.node.options', array())->save();
+    \Drupal::config('node.type.page')->set('settings.node.options', array())->save();
 
     // Create a node.
     $edit = array();

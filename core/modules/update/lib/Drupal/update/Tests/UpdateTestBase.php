@@ -43,9 +43,9 @@ abstract class UpdateTestBase extends WebTestBase {
   protected function refreshUpdateStatus($xml_map, $url = 'update-test') {
     // Tell the Update Manager module to fetch from the URL provided by
     // update_test module.
-    config('update.settings')->set('fetch.url', url($url, array('absolute' => TRUE)))->save();
+    \Drupal::config('update.settings')->set('fetch.url', url($url, array('absolute' => TRUE)))->save();
     // Save the map for update_test_mock_page() to use.
-    config('update_test.settings')->set('xml_map', $xml_map)->save();
+    \Drupal::config('update_test.settings')->set('xml_map', $xml_map)->save();
     // Manually check the update status.
     $this->drupalGet('admin/reports/updates/check');
   }

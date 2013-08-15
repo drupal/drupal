@@ -73,6 +73,23 @@ class FilterFormatUpgradePathTest extends UpgradePathTestBase {
     // Check that role 5 cannot access to the defined text formats
     $this->assertNoFieldChecked('edit-5-use-text-format-format-one', 'Use text format format_one permission for role is set correctly.');
     $this->assertNoFieldChecked('edit-5-use-text-format-format-two', 'Use text format format_two permission for role is set correctly.');
+
+    // Check that the format has the missing filter.
+    $two = filter_format_load('format_two');
+    $this->assertTrue($two->filters()->has('missing_filter'));
+
+    // Try to use a filter format with a missing filter, this should not throw
+    // an exception.
+    $empty_markup = check_markup($this->randomName(), 'format_two');
+    $this->assertIdentical($empty_markup, '', 'The filtered text is empty while a filter is missing.');
+
+    // Editing and saving the format should drop the missing filter.
+    $this->drupalGet('admin/config/content/formats/manage/format_two');
+    $this->assertRaw(t('The %filter filter is missing, and will be removed once this format is saved.', array('%filter' => 'missing_filter')));
+    $this->drupalPost(NULL, array(), t('Save configuration'));
+    filter_formats_reset();
+    $two = filter_format_load('format_two');
+    $this->assertFalse($two->filters()->has('missing_filter'));
   }
 
 }

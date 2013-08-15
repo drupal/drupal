@@ -109,12 +109,14 @@ use Drupal\Core\Database\Query\Condition;
  * object-oriented API for defining a query structurally. For example, rather
  * than:
  * @code
- * INSERT INTO {example} (id, uid, path, name) VALUES (1, 2, 'home', 'Home path');
+ * INSERT INTO {example} (id, uid, path, name) VALUES (1, 2, 'path', 'Name');
  * @endcode
  * one would instead write:
  * @code
- * $fields = array('nid' => 1, 'title' => 'my title', 'body' => 'my body');
- * db_insert('node')->fields($fields)->execute();
+ * $fields = array('id' => 1, 'uid' => 2, 'path' => 'path', 'name' => 'Name');
+ * db_insert('example')
+ *   ->fields($fields)
+ *   ->execute();
  * @endcode
  * This method allows databases that need special data type handling to do so,
  * while also allowing optimizations such as multi-insert queries. UPDATE and
@@ -202,10 +204,10 @@ use Drupal\Core\Database\Query\Condition;
  * @param $options
  *   An array of options to control how the query operates.
  *
- * @return DatabaseStatementInterface
+ * @return \Drupal\Core\Database\StatementInterface
  *   A prepared statement object, already executed.
  *
- * @see DatabaseConnection::defaultOptions()
+ * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
 function db_query($query, array $args = array(), array $options = array()) {
   if (empty($options['target'])) {
@@ -234,10 +236,10 @@ function db_query($query, array $args = array(), array $options = array()) {
  * @param $options
  *   An array of options to control how the query operates.
  *
- * @return DatabaseStatementInterface
+ * @return \Drupal\Core\Database\StatementInterface
  *   A prepared statement object, already executed.
  *
- * @see DatabaseConnection::defaultOptions()
+ * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
 function db_query_range($query, $from, $count, array $args = array(), array $options = array()) {
   if (empty($options['target'])) {
@@ -267,7 +269,7 @@ function db_query_range($query, $from, $count, array $args = array(), array $opt
  * @return
  *   The name of the temporary table.
  *
- * @see DatabaseConnection::defaultOptions()
+ * @see \Drupal\Core\Database\Connection::defaultOptions()
  */
 function db_query_temporary($query, array $args = array(), array $options = array()) {
   if (empty($options['target'])) {
@@ -285,8 +287,8 @@ function db_query_temporary($query, array $args = array(), array $options = arra
  * @param $options
  *   An array of options to control how the query operates.
  *
- * @return InsertQuery
- *   A new InsertQuery object for this connection.
+ * @return \Drupal\Core\Database\Query\Insert
+ *   A new Insert object for this connection.
  */
 function db_insert($table, array $options = array()) {
   if (empty($options['target']) || $options['target'] == 'slave') {
@@ -303,8 +305,8 @@ function db_insert($table, array $options = array()) {
  * @param $options
  *   An array of options to control how the query operates.
  *
- * @return MergeQuery
- *   A new MergeQuery object for this connection.
+ * @return \Drupal\Core\Database\Query\Merge
+ *   A new Merge object for this connection.
  */
 function db_merge($table, array $options = array()) {
   if (empty($options['target']) || $options['target'] == 'slave') {
@@ -321,8 +323,8 @@ function db_merge($table, array $options = array()) {
  * @param $options
  *   An array of options to control how the query operates.
  *
- * @return UpdateQuery
- *   A new UpdateQuery object for this connection.
+ * @return \Drupal\Core\Database\Query\Update
+ *   A new Update object for this connection.
  */
 function db_update($table, array $options = array()) {
   if (empty($options['target']) || $options['target'] == 'slave') {
@@ -339,8 +341,8 @@ function db_update($table, array $options = array()) {
  * @param $options
  *   An array of options to control how the query operates.
  *
- * @return DeleteQuery
- *   A new DeleteQuery object for this connection.
+ * @return \Drupal\Core\Database\Query\Delete
+ *   A new Delete object for this connection.
  */
 function db_delete($table, array $options = array()) {
   if (empty($options['target']) || $options['target'] == 'slave') {
@@ -357,8 +359,8 @@ function db_delete($table, array $options = array()) {
  * @param $options
  *   An array of options to control how the query operates.
  *
- * @return TruncateQuery
- *   A new TruncateQuery object for this connection.
+ * @return \Drupal\Core\Database\Query\Truncate
+ *   A new Truncate object for this connection.
  */
 function db_truncate($table, array $options = array()) {
   if (empty($options['target']) || $options['target'] == 'slave') {
@@ -378,8 +380,8 @@ function db_truncate($table, array $options = array()) {
  * @param $options
  *   An array of options to control how the query operates.
  *
- * @return SelectQuery
- *   A new SelectQuery object for this connection.
+ * @return \Drupal\Core\Database\Query\Select
+ *   A new Select object for this connection.
  */
 function db_select($table, $alias = NULL, array $options = array()) {
   if (empty($options['target'])) {
@@ -397,8 +399,8 @@ function db_select($table, $alias = NULL, array $options = array()) {
  *   An array of options to control how the transaction operates:
  *   - target: The database target name.
  *
- * @return DatabaseTransaction
- *   A new DatabaseTransaction object for this connection.
+ * @return \Drupal\Core\Database\Transaction
+ *   A new Transaction object for this connection.
  */
 function db_transaction($name = NULL, array $options = array()) {
   if (empty($options['target'])) {
@@ -530,7 +532,8 @@ function db_next_id($existing_id = 0) {
 /**
  * Returns a new DatabaseCondition, set to "OR" all conditions together.
  *
- * @return Condition
+ * @return \Drupal\Core\Database\Query\Condition
+ *   A new Condition object, set to "OR" all conditions together.
  */
 function db_or() {
   return new Condition('OR');
@@ -539,7 +542,8 @@ function db_or() {
 /**
  * Returns a new DatabaseCondition, set to "AND" all conditions together.
  *
- * @return Condition
+ * @return \Drupal\Core\Database\Query\Condition
+ *   A new Condition object, set to "AND" all conditions together.
  */
 function db_and() {
   return new Condition('AND');
@@ -548,7 +552,8 @@ function db_and() {
 /**
  * Returns a new DatabaseCondition, set to "XOR" all conditions together.
  *
- * @return Condition
+ * @return \Drupal\Core\Database\Query\Condition
+ *   A new Condition object, set to "XOR" all conditions together.
  */
 function db_xor() {
   return new Condition('XOR');
@@ -562,7 +567,9 @@ function db_xor() {
  *
  * @param $conjunction
  *   The conjunction to use for query conditions (AND, OR or XOR).
- * @return Condition
+ *
+ * @return \Drupal\Core\Database\Query\Condition
+ *   A new Condition object, set to the specified conjunction.
  */
 function db_condition($conjunction) {
   return new Condition($conjunction);
@@ -677,6 +684,23 @@ function _db_create_keys_sql($spec) {
  */
 function db_rename_table($table, $new_name) {
   return Database::getConnection()->schema()->renameTable($table, $new_name);
+}
+
+/**
+ * Copies the structure of a table.
+ *
+ * @param string $source
+ *   The name of the table to be copied.
+ * @param string $destination
+ *   The name for the new table.
+ *
+ * @return \Drupal\Core\Database\StatementInterface
+ *   The result of the executed query.
+ *
+ * @see \Drupal\Core\Database\Schema::copyTable()
+ */
+function db_copy_table_schema($source, $destination) {
+  return Database::getConnection()->schema()->copyTable($source, $destination);
 }
 
 /**

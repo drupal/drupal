@@ -329,7 +329,7 @@ function node_type_get_names() {
   $config_names = config_get_storage_names_with_prefix('node.type.');
   $names = array();
   foreach ($config_names as $config_name) {
-    $config = config($config_name);
+    $config = Drupal::config($config_name);
     $names[$config->get('type')] = $config->get('name');
   }
   cache()->set($cid, $names, CacheBackendInterface::CACHE_PERMANENT, array(
@@ -807,7 +807,7 @@ function node_permission() {
   );
 
   // Generate standard node permissions for all applicable node types.
-  foreach (node_permissions_get_configured_types() as $name => $type) {
+  foreach (node_permissions_get_configured_types() as $type) {
     $perms += node_list_permissions($type);
   }
 
@@ -1489,7 +1489,7 @@ function node_modules_uninstalled($modules) {
   // Remove module-specific settings from all node types.
   $config_names = config_get_storage_names_with_prefix('node.type.');
   foreach ($config_names as $config_name) {
-    $config = config($config_name);
+    $config = Drupal::config($config_name);
     $changed = FALSE;
     foreach ($modules as $module) {
       if ($config->get('settings.' . $module)) {
@@ -1572,7 +1572,7 @@ function node_block_access($block) {
 function node_feed($nids = FALSE, $channel = array()) {
   global $base_url;
   $language_content = language(Language::TYPE_CONTENT);
-  $rss_config = config('system.rss');
+  $rss_config = Drupal::config('system.rss');
 
   if ($nids === FALSE) {
     $nids = db_select('node_field_data', 'n')
@@ -1624,7 +1624,7 @@ function node_feed($nids = FALSE, $channel = array()) {
 
   $channel_defaults = array(
     'version'     => '2.0',
-    'title'       => config('system.site')->get('name'),
+    'title'       => Drupal::config('system.site')->get('name'),
     'link'        => $base_url,
     'description' => $rss_config->get('channel.description'),
     'language'    => $language_content->id
@@ -1711,7 +1711,7 @@ function node_page_view(EntityInterface $node) {
  * Implements hook_update_index().
  */
 function node_update_index() {
-  $limit = (int) config('search.settings')->get('index.cron_limit');
+  $limit = (int) Drupal::config('search.settings')->get('index.cron_limit');
 
   $result = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, n.nid ASC", 0, $limit, array(), array('target' => 'slave'));
   $nids = $result->fetchCol();
@@ -1914,9 +1914,9 @@ function node_form_system_site_information_settings_form_alter(&$form, &$form_st
   $form['front_page']['default_nodes_main'] = array(
     '#type' => 'select',
     '#title' => t('Number of posts on front page'),
-    '#default_value' => config('node.settings')->get('items_per_page'),
+    '#default_value' => Drupal::config('node.settings')->get('items_per_page'),
     '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
-    '#access' => (config('system.site')->get('page.front') == 'node'),
+    '#access' => (Drupal::config('system.site')->get('page.front') == 'node'),
     '#description' => t('The maximum number of posts displayed on overview pages such as the front page.'),
   );
   $form['#submit'][] = 'node_form_system_site_information_settings_form_submit';
@@ -1928,7 +1928,7 @@ function node_form_system_site_information_settings_form_alter(&$form, &$form_st
  * @see node_form_system_site_information_settings_form_alter()
  */
 function node_form_system_site_information_settings_form_submit($form, &$form_state) {
-  config('node.settings')
+  Drupal::config('node.settings')
     ->set('items_per_page', $form_state['values']['default_nodes_main'])
     ->save();
 }
@@ -2263,9 +2263,6 @@ function node_query_node_access_alter(AlterableInterface $query) {
   }
   if (!$op = $query->getMetaData('op')) {
     $op = 'view';
-  }
-  if (!$langcode = $query->getMetaData('langcode')) {
-    $langcode = FALSE;
   }
 
   // If $account can bypass node access, or there are no node access modules,
@@ -2609,6 +2606,6 @@ function node_library_info() {
  */
 function node_system_info_alter(&$info, $file, $type) {
   if ($type == 'module' && $file->name == 'translation') {
-    $info['hidden'] = !module_exists('translation') && config('system.module.disabled')->get('translation') === NULL;
+    $info['hidden'] = !module_exists('translation') && Drupal::config('system.module.disabled')->get('translation') === NULL;
   }
 }

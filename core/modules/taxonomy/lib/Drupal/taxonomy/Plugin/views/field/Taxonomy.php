@@ -7,6 +7,7 @@
 
 namespace Drupal\taxonomy\Plugin\views\field;
 
+use Drupal\views\Plugin\views\area\Result;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ResultRow;
@@ -88,7 +89,10 @@ class Taxonomy extends FieldPluginBase {
     return $data;
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     return $this->renderLink($this->sanitizeValue($value), $values);
   }

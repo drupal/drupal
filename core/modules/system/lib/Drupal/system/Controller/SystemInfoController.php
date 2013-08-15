@@ -53,7 +53,7 @@ class SystemInfoController implements ControllerInterface {
   public function status() {
     $requirements = $this->systemManager->listRequirements();
     $this->systemManager->fixAnonymousUid();
-    return theme('status_report', array('requirements' => $requirements));
+    return array('#theme' => 'status_report', '#requirements' => $requirements);
   }
 
   /**

@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 
 /**
@@ -40,7 +41,10 @@ class Markup extends FieldPluginBase {
     }
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     if (is_array($this->format)) {
       $format = $this->getValue($values, 'format');

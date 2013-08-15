@@ -99,13 +99,15 @@ class CustomBlockFieldTest extends CustomBlockTestBase {
       $this->field['field_name'] . '[und][0][title]' => 'Example.com'
     );
     $this->drupalPost(NULL, $edit, t('Save'));
+    $block = entity_load('custom_block', 1);
+    $url = 'admin/structure/block/add/custom_block:' . $block->uuid() . '/' . \Drupal::config('system.theme')->get('default');
     // Place the block.
     $instance = array(
       'machine_name' => drupal_strtolower($edit['info']),
       'settings[label]' => $edit['info'],
       'region' => 'sidebar_first',
     );
-    $this->drupalPost(NULL, $instance, t('Save block'));
+    $this->drupalPost($url, $instance, t('Save block'));
     // Navigate to home page.
     $this->drupalGet('<front>');
     $this->assertLinkByHref('http://example.com');

@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\views\ResultRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Datetime\Date as DateService;
 
@@ -129,7 +130,10 @@ class Date extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     $format = $this->options['date_format'];
     if (in_array($format, array('custom', 'raw time ago', 'time ago', 'raw time hence', 'time hence', 'raw time span', 'time span', 'raw time span', 'inverse time span', 'time span'))) {

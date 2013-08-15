@@ -243,15 +243,6 @@ input.form-radio {
 
 /* @group Lists */
 
-.horizontal > * + * {
-  margin-left: 9px; /* LTR */
-  padding-left: 9px; /* LTR */
-}
-[dir="rtl"] .horizontal > * + * {
-  margin-right: 9px;
-  padding-right: 9px;
-}
-
 .views-ui-view-title {
   font-weight: bold;
 }
@@ -674,15 +665,6 @@ ul#views-display-menu-tabs li.add ul.action-list li{
 .views-ui-display-tab-bucket h3 {
   font-size: small;
   margin: 0;
-}
-
-.views-ui-display-tab-bucket .horizontal.actions {
-  margin-right: 6px;
-}
-
-.views-ui-display-tab-bucket .actions.horizontal li + li {
-  margin-left: 3px;
-  padding-left: 3px;
 }
 
 .views-ui-display-tab-bucket.access {

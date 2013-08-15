@@ -11,7 +11,7 @@ use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\Annotation\FieldType;
 use Drupal\Core\Entity\Field\PrepareCacheInterface;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\FieldInterface;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase;
 
 /**
@@ -57,7 +57,7 @@ class DateTimeItem extends ConfigFieldItemBase implements PrepareCacheInterface 
   /**
    * {@inheritdoc}
    */
-  public static function schema(Field $field) {
+  public static function schema(FieldInterface $field) {
     return array(
       'columns' => array(
         'value' => array(
@@ -76,7 +76,7 @@ class DateTimeItem extends ConfigFieldItemBase implements PrepareCacheInterface 
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, array &$form_state, $has_data) {
     $element = array();
 
     $element['datetime_type'] = array(
@@ -122,9 +122,14 @@ class DateTimeItem extends ConfigFieldItemBase implements PrepareCacheInterface 
     $value = $this->get('value')->getValue();
     if (!empty($value)) {
       $storage_format = $this->getFieldSetting('datetime_type') == 'date' ? DATETIME_DATE_STORAGE_FORMAT : DATETIME_DATETIME_STORAGE_FORMAT;
-      $date = new DrupalDateTime($value, DATETIME_STORAGE_TIMEZONE, $storage_format);
-      if ($date instanceOf DrupalDateTime && !$date->hasErrors()) {
-        $this->set('date', $date);
+      try {
+        $date = DrupalDateTime::createFromFormat($storage_format, $value, DATETIME_STORAGE_TIMEZONE);
+        if ($date instanceOf DrupalDateTime && !$date->hasErrors()) {
+          $this->set('date', $date);
+        }
+      }
+      catch (\Exception $e) {
+        // @todo Handle this.
       }
     }
   }

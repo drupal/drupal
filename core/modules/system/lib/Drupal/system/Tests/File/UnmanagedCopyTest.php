@@ -23,7 +23,7 @@ class UnmanagedCopyTest extends FileTestBase {
    * Copy a normal file.
    */
   function testNormal() {
-    $config = config('system.file');
+    $config = \Drupal::config('system.file');
     // Create a file for testing
     $uri = $this->createUri();
 
@@ -65,7 +65,7 @@ class UnmanagedCopyTest extends FileTestBase {
    * Copy a file onto itself.
    */
   function testOverwriteSelf() {
-    $config = config('system.file');
+    $config = \Drupal::config('system.file');
     // Create a file for testing
     $uri = $this->createUri();
 

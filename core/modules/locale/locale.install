@@ -12,9 +12,9 @@ use Drupal\Core\Language\Language;
  */
 function locale_install() {
   // Create the interface translations directory and ensure it's writable.
-  if (!$directory = config('locale.settings')->get('translation.path')) {
+  if (!$directory = Drupal::config('locale.settings')->get('translation.path')) {
     $directory = conf_path() . '/files/translations';
-    config('locale.settings')->set('translation.path', $directory)->save();
+    Drupal::config('locale.settings')->set('translation.path', $directory)->save();
   }
   file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
 }
@@ -23,7 +23,7 @@ function locale_install() {
  * Implements hook_uninstall().
  */
 function locale_uninstall() {
-  $config = config('locale.settings');
+  $config = Drupal::config('locale.settings');
   // Delete all JavaScript translation files.
   $locale_js_directory = 'public://' . $config->get('javascript.directory');
 
@@ -468,7 +468,7 @@ function locale_update_8002() {
  */
 function locale_update_8003() {
   $message = '';
-  $config = config('language.negotiation');
+  $config = Drupal::config('language.negotiation');
 
   $domains = $config->get('url.domains') ?: array();
   // $used_domains keeps track of the domain names in use.
@@ -953,7 +953,7 @@ function locale_update_8016() {
   foreach ($result as $format) {
     $language = $format->language;
     // Create config objects for the language if not yet done.
-    config("locale.config.$language.system.date_format." . $format->type)
+    Drupal::config("locale.config.$language.system.date_format." . $format->type)
       ->set('pattern.php', $format->format)
       ->save();
   }

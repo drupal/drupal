@@ -330,7 +330,7 @@ abstract class Connection implements \Serializable {
    *   The query string as SQL, with curly-braces surrounding the
    *   table names.
    *
-   * @return Drupal\Core\Database\StatementInterface
+   * @return \Drupal\Core\Database\StatementInterface
    *   A PDO prepared statement ready for its execute() method.
    */
   public function prepareQuery($query) {
@@ -402,7 +402,7 @@ abstract class Connection implements \Serializable {
   /**
    * Gets the current logging object for this connection.
    *
-   * @return DatabaseLog
+   * @return \Drupal\Core\Database\Log
    *   The current logging object for this connection. If there isn't one,
    *   NULL is returned.
    */
@@ -666,7 +666,7 @@ abstract class Connection implements \Serializable {
    *   it may be a driver-specific subclass of SelectQuery, depending on the
    *   driver.
    *
-   * @see Drupal\Core\Database\Query\Select
+   * @see \Drupal\Core\Database\Query\Select
    */
   public function select($table, $alias = NULL, array $options = array()) {
     $class = $this->getDriverClass('Select');
@@ -679,10 +679,10 @@ abstract class Connection implements \Serializable {
    * @param $options
    *   An array of options on the query.
    *
-   * @return Drupal\Core\Database\Query\Insert
+   * @return \Drupal\Core\Database\Query\Insert
    *   A new Insert query object.
    *
-   * @see Drupal\Core\Database\Query\Insert
+   * @see \Drupal\Core\Database\Query\Insert
    */
   public function insert($table, array $options = array()) {
     $class = $this->getDriverClass('Insert');
@@ -695,10 +695,10 @@ abstract class Connection implements \Serializable {
    * @param $options
    *   An array of options on the query.
    *
-   * @return Drupal\Core\Database\Query\Merge
+   * @return \Drupal\Core\Database\Query\Merge
    *   A new Merge query object.
    *
-   * @see Drupal\Core\Database\Query\Merge
+   * @see \Drupal\Core\Database\Query\Merge
    */
   public function merge($table, array $options = array()) {
     $class = $this->getDriverClass('Merge');
@@ -712,10 +712,10 @@ abstract class Connection implements \Serializable {
    * @param $options
    *   An array of options on the query.
    *
-   * @return Drupal\Core\Database\Query\Update
+   * @return \Drupal\Core\Database\Query\Update
    *   A new Update query object.
    *
-   * @see Drupal\Core\Database\Query\Update
+   * @see \Drupal\Core\Database\Query\Update
    */
   public function update($table, array $options = array()) {
     $class = $this->getDriverClass('Update');
@@ -728,10 +728,10 @@ abstract class Connection implements \Serializable {
    * @param $options
    *   An array of options on the query.
    *
-   * @return Drupal\Core\Database\Query\Delete
+   * @return \Drupal\Core\Database\Query\Delete
    *   A new Delete query object.
    *
-   * @see Drupal\Core\Database\Query\Delete
+   * @see \Drupal\Core\Database\Query\Delete
    */
   public function delete($table, array $options = array()) {
     $class = $this->getDriverClass('Delete');
@@ -744,10 +744,10 @@ abstract class Connection implements \Serializable {
    * @param $options
    *   An array of options on the query.
    *
-   * @return Drupal\Core\Database\Query\Truncate
+   * @return \Drupal\Core\Database\Query\Truncate
    *   A new Truncate query object.
    *
-   * @see Drupal\Core\Database\Query\Truncate
+   * @see \Drupal\Core\Database\Query\Truncate
    */
   public function truncate($table, array $options = array()) {
     $class = $this->getDriverClass('Truncate');
@@ -759,7 +759,7 @@ abstract class Connection implements \Serializable {
    *
    * This method will lazy-load the appropriate schema library file.
    *
-   * @return Drupal\Core\Database\Schema
+   * @return \Drupal\Core\Database\Schema
    *   The database Schema object for this connection.
    */
   public function schema() {
@@ -879,10 +879,10 @@ abstract class Connection implements \Serializable {
    * @param $name
    *   Optional name of the savepoint.
    *
-   * @return Drupal\Core\Database\Transaction
-   *   A DatabaseTransaction object.
+   * @return \Drupal\Core\Database\Transaction
+   *   A Transaction object.
    *
-   * @see Drupal\Core\Database\Transaction
+   * @see \Drupal\Core\Database\Transaction
    */
   public function startTransaction($name = '') {
     $class = $this->getDriverClass('Transaction');
@@ -898,9 +898,9 @@ abstract class Connection implements \Serializable {
    *   The name of the savepoint. The default, 'drupal_transaction', will roll
    *   the entire transaction back.
    *
-   * @throws Drupal\Core\Database\TransactionNoActiveException
+   * @throws \Drupal\Core\Database\TransactionNoActiveException
    *
-   * @see DatabaseTransaction::rollback()
+   * @see \Drupal\Core\Database\Transaction::rollback()
    */
   public function rollback($savepoint_name = 'drupal_transaction') {
     if (!$this->supportsTransactions()) {
@@ -949,9 +949,9 @@ abstract class Connection implements \Serializable {
    *
    * If no transaction is already active, we begin a new transaction.
    *
-   * @throws Drupal\Core\Database\TransactionNameNonUniqueException
+   * @throws \Drupal\Core\Database\TransactionNameNonUniqueException
    *
-   * @see Drupal\Core\Database\Transaction
+   * @see \Drupal\Core\Database\Transaction
    */
   public function pushTransaction($name) {
     if (!$this->supportsTransactions()) {
@@ -981,10 +981,10 @@ abstract class Connection implements \Serializable {
    * @param $name
    *   The name of the savepoint
    *
-   * @throws Drupal\Core\Database\TransactionNoActiveException
-   * @throws Drupal\Core\Database\TransactionCommitFailedException
+   * @throws \Drupal\Core\Database\TransactionNoActiveException
+   * @throws \Drupal\Core\Database\TransactionCommitFailedException
    *
-   * @see DatabaseTransaction
+   * @see \Drupal\Core\Database\Transaction
    */
   public function popTransaction($name) {
     if (!$this->supportsTransactions()) {
@@ -1046,7 +1046,7 @@ abstract class Connection implements \Serializable {
    * @param $options
    *   An array of options on the query.
    *
-   * @return Drupal\Core\Database\StatementInterface
+   * @return \Drupal\Core\Database\StatementInterface
    *   A database query result resource, or NULL if the query was not executed
    *   correctly.
    */
@@ -1157,7 +1157,7 @@ abstract class Connection implements \Serializable {
    * @return
    *   The extra handling directives for the specified operator, or NULL.
    *
-   * @see Drupal\Core\Database\Query\Condition::compile()
+   * @see \Drupal\Core\Database\Query\Condition::compile()
    */
   abstract public function mapConditionOperator($operator);
 
@@ -1169,9 +1169,9 @@ abstract class Connection implements \Serializable {
    * A direct commit bypasses all of the safety checks we've built on top of
    * PDO's transaction routines.
    *
-   * @throws Drupal\Core\Database\TransactionExplicitCommitNotAllowedException
+   * @throws \Drupal\Core\Database\TransactionExplicitCommitNotAllowedException
    *
-   * @see Drupal\Core\Database\Transaction
+   * @see \Drupal\Core\Database\Transaction
    */
   public function commit() {
     throw new TransactionExplicitCommitNotAllowedException();

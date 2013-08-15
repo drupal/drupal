@@ -252,7 +252,7 @@ function search_get_info($all = FALSE) {
   }
 
   // Return only modules that are set to active in search settings.
-  return array_intersect_key($search_hooks, array_flip(config('search.settings')->get('active_modules')));
+  return array_intersect_key($search_hooks, array_flip(Drupal::config('search.settings')->get('active_modules')));
 }
 
 /**
@@ -263,7 +263,7 @@ function search_get_info($all = FALSE) {
  */
 function search_get_default_module_info() {
   $info = search_get_info();
-  $default = config('search.settings')->get('default_module');
+  $default = Drupal::config('search.settings')->get('default_module');
   if (isset($info[$default])) {
     return $info[$default];
   }
@@ -362,7 +362,7 @@ function search_cron() {
   // to date.
   drupal_register_shutdown_function('search_update_totals');
 
-  foreach (config('search.settings')->get('active_modules') as $module) {
+  foreach (Drupal::config('search.settings')->get('active_modules') as $module) {
     // Update word index
     module_invoke($module, 'update_index');
   }
@@ -423,7 +423,7 @@ function search_simplify($text, $langcode = NULL) {
   search_invoke_preprocess($text, $langcode);
 
   // Simple CJK handling
-  if (config('search.settings')->get('index.overlap_cjk')) {
+  if (Drupal::config('search.settings')->get('index.overlap_cjk')) {
     $text = preg_replace_callback('/[' . PREG_CLASS_CJK . ']+/u', 'search_expand_cjk', $text);
   }
 
@@ -477,7 +477,7 @@ function search_simplify($text, $langcode = NULL) {
  *   Tokenized text, starting and ending with a space character.
  */
 function search_expand_cjk($matches) {
-  $min = config('search.settings')->get('index.minimum_word_size');
+  $min = Drupal::config('search.settings')->get('index.minimum_word_size');
   $str = $matches[0];
   $length = drupal_strlen($str);
   // If the text is shorter than the minimum word size, don't tokenize it.
@@ -558,7 +558,7 @@ function search_invoke_preprocess(&$text, $langcode = NULL) {
  * @ingroup search
  */
 function search_index($sid, $module, $text, $langcode) {
-  $minimum_word_size = config('search.settings')->get('index.minimum_word_size');
+  $minimum_word_size = Drupal::config('search.settings')->get('index.minimum_word_size');
 
   // Link matching
   global $base_url;
@@ -567,7 +567,7 @@ function search_index($sid, $module, $text, $langcode) {
   // Multipliers for scores of words inside certain HTML tags. The weights are stored
   // in a variable so that modules can overwrite the default weights.
   // Note: 'a' must be included for link ranking to work.
-  $tags = config('search.settings')->get('index.tag_weights');
+  $tags = Drupal::config('search.settings')->get('index.tag_weights');
 
   // Strip off all ignored tags to speed up processing, but insert space before/after
   // them to keep word boundaries.
@@ -1001,63 +1001,6 @@ function search_form($form, &$form_state, $action = '', $keys = '', $module = NU
 }
 
 /**
- * Form constructor for the search block's search box.
- *
- * @param $form_id
- *   The unique string identifying the desired form.
- *
- * @see search_box_form_submit()
- *
- * @ingroup forms
- */
-function search_box($form, &$form_state, $form_id) {
-  $form[$form_id] = array(
-    '#type' => 'search',
-    '#title' => t('Search'),
-    '#title_display' => 'invisible',
-    '#size' => 15,
-    '#default_value' => '',
-    '#attributes' => array('title' => t('Enter the terms you wish to search for.')),
-  );
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
-  $form['#submit'][] = 'search_box_form_submit';
-
-  return $form;
-}
-
-/**
- * Form submission handler for search_box().
- */
-function search_box_form_submit($form, &$form_state) {
-  // The search form relies on control of the redirect destination for its
-  // functionality, so we override any static destination set in the request.
-  // See http://drupal.org/node/292565.
-  if (isset($_GET['destination'])) {
-    unset($_GET['destination']);
-  }
-
-  // Check to see if the form was submitted empty.
-  // If it is empty, display an error message.
-  // (This method is used instead of setting #required to TRUE for this field
-  // because that results in a confusing error message.  It would say a plain
-  // "field is required" because the search keywords field has no title.
-  // The error message would also complain about a missing #title field.)
-  if ($form_state['values']['search_block_form'] == '') {
-    form_set_error('keys', t('Please enter some keywords.'));
-  }
-
-  $form_id = $form['form_id']['#value'];
-  $info = search_get_default_module_info();
-  if ($info) {
-    $form_state['redirect'] = 'search/' . $info['path'] . '/' . trim($form_state['values'][$form_id]);
-  }
-  else {
-    form_set_error(NULL, t('Search is currently disabled.'), 'error');
-  }
-}
-
-/**
  * Performs a search by calling hook_search_execute().
  *
  * @param $keys
@@ -1316,15 +1259,4 @@ function search_simplify_excerpt_match($key, $text, $offset, $boundary, $langcod
  */
 function _search_excerpt_match_filter($var) {
   return strlen(trim($var[0]));
-}
-
-/**
- * Implements hook_forms().
- */
-function search_forms() {
-  $forms['search_block_form']= array(
-    'callback' => 'search_box',
-    'callback arguments' => array('search_block_form'),
-  );
-  return $forms;
 }

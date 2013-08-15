@@ -113,6 +113,7 @@ class UserPermissionsForm implements FormInterface, ControllerInterface {
       '#type' => 'table',
       '#header' => array(t('Permission')),
       '#id' => 'permissions',
+      '#sticky' => TRUE,
     );
     foreach ($role_names as $rid => $name) {
       $form['permissions']['#header'][] = array(

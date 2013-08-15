@@ -34,7 +34,7 @@ abstract class ConfigFieldItemBase extends FieldItemBase implements ConfigFieldI
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, array &$form_state) {
+  public function settingsForm(array $form, array &$form_state, $has_data) {
     return array();
   }
 

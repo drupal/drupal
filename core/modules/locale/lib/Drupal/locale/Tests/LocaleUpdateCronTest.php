@@ -46,7 +46,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
 
     // Setup local and remote translations files.
     $this->setTranslationFiles();
-    config('locale.settings')->set('translation.default_filename', '%project-%version.%language._po')->save();
+    \Drupal::config('locale.settings')->set('translation.default_filename', '%project-%version.%language._po')->save();
 
     // Update translations using batch to ensure a clean test starting point.
     $this->drupalGet('admin/reports/translations/check');
@@ -108,6 +108,8 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $queue = \Drupal::queue('locale_translation', TRUE);
     $this->assertEqual($queue->numberOfItems(), 3, 'Queue holds tasks for one project.');
 
+    // Ensure last checked is updated to a greater time than the initial value.
+    sleep(1);
     // Test: Execute cron and check if tasks are executed correctly.
     // Run cron to process the tasks in the queue.
     $this->drupalGet('admin/reports/status/run-cron');

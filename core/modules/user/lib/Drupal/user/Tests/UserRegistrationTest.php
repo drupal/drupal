@@ -28,7 +28,7 @@ class UserRegistrationTest extends WebTestBase {
   }
 
   function testRegistrationWithEmailVerification() {
-    $config = config('user.settings');
+    $config = \Drupal::config('user.settings');
     // Require e-mail verification.
     $config->set('verify_mail', TRUE)->save();
 
@@ -61,7 +61,7 @@ class UserRegistrationTest extends WebTestBase {
   }
 
   function testRegistrationWithoutEmailVerification() {
-    $config = config('user.settings');
+    $config = \Drupal::config('user.settings');
     // Don't require e-mail verification and allow registration by site visitors
     // without administrator approval.
     $config
@@ -126,7 +126,7 @@ class UserRegistrationTest extends WebTestBase {
   function testRegistrationEmailDuplicates() {
     // Don't require e-mail verification and allow registration by site visitors
     // without administrator approval.
-    config('user.settings')
+    \Drupal::config('user.settings')
       ->set('verify_mail', FALSE)
       ->set('register', USER_REGISTER_VISITORS)
       ->save();
@@ -152,13 +152,13 @@ class UserRegistrationTest extends WebTestBase {
   function testRegistrationDefaultValues() {
     // Don't require e-mail verification and allow registration by site visitors
     // without administrator approval.
-    $config_user_settings = config('user.settings')
+    $config_user_settings = \Drupal::config('user.settings')
       ->set('verify_mail', FALSE)
       ->set('register', USER_REGISTER_VISITORS)
       ->save();
 
     // Set the default timezone to Brussels.
-    $config_system_date = config('system.date')
+    $config_system_date = \Drupal::config('system.date')
       ->set('timezone.user.configurable', 1)
       ->set('timezone.default', 'Europe/Brussels')
       ->save();

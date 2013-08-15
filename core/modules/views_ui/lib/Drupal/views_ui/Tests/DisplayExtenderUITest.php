@@ -31,7 +31,7 @@ class DisplayExtenderUITest extends UITestBase {
    * Tests the display extender UI.
    */
   public function testDisplayExtenderUI() {
-    config('views.settings')->set('display_extenders', array('display_extender_test'))->save();
+    \Drupal::config('views.settings')->set('display_extenders', array('display_extender_test'))->save();
 
     $view = views_get_view('test_view');
     $view_edit_url = "admin/structure/views/view/{$view->storage->id()}/edit";

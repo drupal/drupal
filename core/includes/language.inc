@@ -192,7 +192,7 @@ function language_types_get_configurable() {
  */
 function language_types_disable($types) {
   $configurable = language_types_get_configurable();
-  config('system.language.types')->set('configurable', array_diff($configurable, $types))->save();
+  Drupal::config('system.language.types')->set('configurable', array_diff($configurable, $types))->save();
 }
 
 /**
@@ -252,7 +252,7 @@ function language_types_set(array $configurable_language_types) {
   }
 
   // Store the language type configuration.
-  $config = config('system.language.types');
+  $config = Drupal::config('system.language.types');
   $config->set('configurable', array_keys(array_filter($language_types)))->save();
   $config->set('all', array_keys($language_types))->save();
 
@@ -493,7 +493,7 @@ function language_negotiation_method_invoke($method_id, $method = NULL, $request
   *   A valid language code on success, FALSE otherwise.
   */
 function language_from_selected($languages) {
-  $langcode = (string) config('language.negotiation')->get('selected_langcode');
+  $langcode = (string) Drupal::config('language.negotiation')->get('selected_langcode');
   // Replace the site's default langcode by its real value.
   if ($langcode == 'site_default') {
     $langcode = language_default()->id;

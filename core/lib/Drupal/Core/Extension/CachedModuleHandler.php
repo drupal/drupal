@@ -46,24 +46,6 @@ class CachedModuleHandler extends ModuleHandler implements CachedModuleHandlerIn
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::getBootstrapModules().
-   */
-  public function getBootstrapModules() {
-    if (isset($this->bootstrapModules)) {
-      return $this->bootstrapModules;
-    }
-    if ($cached = $this->bootstrapCache->get('bootstrap_modules')) {
-      $bootstrap_list = $cached->data;
-    }
-    else {
-      $bootstrap_list = $this->state->get('system.module.bootstrap') ?: array();
-      $this->bootstrapCache->set('bootstrap_modules', $bootstrap_list);
-    }
-    $this->bootstrapModules = array_keys($bootstrap_list);
-    return $this->bootstrapModules;
-  }
-
-  /**
    * Overrides \Drupal\Core\Extension\ModuleHandler::getHookInfo().
    */
   public function getHookInfo() {

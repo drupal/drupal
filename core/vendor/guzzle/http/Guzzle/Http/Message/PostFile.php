@@ -2,6 +2,7 @@
 
 namespace Guzzle\Http\Message;
 
+use Guzzle\Common\Version;
 use Guzzle\Common\Exception\InvalidArgumentException;
 use Guzzle\Http\Mimetypes;
 
@@ -26,9 +27,6 @@ class PostFile implements PostFileInterface
         $this->contentType = $contentType ?: $this->guessContentType();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setFieldName($name)
     {
         $this->fieldName = $name;
@@ -36,17 +34,11 @@ class PostFile implements PostFileInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFieldName()
     {
         return $this->fieldName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setFilename($filename)
     {
         // Remove leading @ symbol
@@ -63,17 +55,11 @@ class PostFile implements PostFileInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFilename()
     {
         return $this->filename;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setContentType($type)
     {
         $this->contentType = $type;
@@ -81,24 +67,36 @@ class PostFile implements PostFileInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getContentType()
     {
         return $this->contentType;
     }
 
+    public function getCurlValue()
+    {
+        // PHP 5.5 introduced a CurlFile object that deprecates the old @filename syntax
+        // See: https://wiki.php.net/rfc/curl-file-upload
+        if (function_exists('curl_file_create')) {
+            return curl_file_create($this->filename, $this->contentType, basename($this->filename));
+        }
+
+        // Use the old style if using an older version of PHP
+        $value = "@{$this->filename};filename=" . basename($this->filename);
+        if ($this->contentType) {
+            $value .= ';type=' . $this->contentType;
+        }
+
+        return $value;
+    }
+
     /**
-     * {@inheritdoc}
+     * @deprecated
+     * @codeCoverageIgnore
      */
     public function getCurlString()
     {
-        $disposition = ';filename=' . basename($this->filename);
-
-        return $this->contentType
-            ? '@' . $this->filename . ';type=' . $this->contentType . $disposition
-            : '@' . $this->filename . $disposition;
+        Version::warn(__METHOD__ . ' is deprecated. Use getCurlValue()');
+        return $this->getCurlValue();
     }
 
     /**

@@ -192,10 +192,12 @@ abstract class RESTTestBase extends WebTestBase {
    *   The HTTP method to enable, e.g. GET, POST etc.
    * @param string $format
    *   (Optional) The serialization format, e.g. hal_json.
+   * @param array $auth
+   *   (Optional) The list of valid authentication methods.
    */
-  protected function enableService($resource_type, $method = 'GET', $format = NULL) {
+  protected function enableService($resource_type, $method = 'GET', $format = NULL, $auth = array()) {
     // Enable REST API for this entity type.
-    $config = config('rest.settings');
+    $config = \Drupal::config('rest.settings');
     $settings = array();
     if ($resource_type) {
       if ($format) {
@@ -205,11 +207,15 @@ abstract class RESTTestBase extends WebTestBase {
         $settings[$resource_type][$method] = array();
       }
     }
+    if (is_array($auth) && !empty($auth)) {
+      $settings[$resource_type][$method]['supported_auth'] = $auth;
+    }
+
     $config->set('resources', $settings);
     $config->save();
 
     // Rebuild routing cache, so that the REST API paths are available.
-    drupal_container()->get('router.builder')->rebuild();
+    $this->container->get('router.builder')->rebuild();
     // Reset the Simpletest permission cache, so that the new resource
     // permissions get picked up.
     drupal_static_reset('checkPermissions');

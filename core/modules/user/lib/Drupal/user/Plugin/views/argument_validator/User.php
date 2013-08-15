@@ -124,7 +124,7 @@ class User extends ArgumentValidatorPluginBase {
     }
     else {
       if ($type == 'name' || $type == 'either') {
-        $name = $GLOBALS['user']->getUserName() ?: config('user.settings')->get('anonymous');
+        $name = $GLOBALS['user']->getUserName() ?: \Drupal::config('user.settings')->get('anonymous');
         if ($argument == $name) {
           $account = clone $GLOBALS['user'];
         }

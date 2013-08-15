@@ -1575,10 +1575,6 @@ details.fieldset-no-legend {
   top: -1px;
 }
 
-.views-ui-dialog details:not(.collapsed) {
-  padding-top: 1.5em;
-}
-
 .filterable-option .form-item.form-type-checkbox {
   /* This selector is aggressive because Seven's reset for .form-items is aggressive. */
   padding-bottom: 4px;

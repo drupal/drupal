@@ -116,15 +116,15 @@ class TokenReplaceTest extends WebTestBase {
     );
 
     // Set a few site variables.
-    config('system.site')
+    \Drupal::config('system.site')
       ->set('name', '<strong>Drupal<strong>')
       ->set('slogan', '<blink>Slogan</blink>')
       ->save();
 
     // Generate and test sanitized tokens.
     $tests = array();
-    $tests['[site:name]'] = check_plain(config('system.site')->get('name'));
-    $tests['[site:slogan]'] = filter_xss_admin(config('system.site')->get('slogan'));
+    $tests['[site:name]'] = check_plain(\Drupal::config('system.site')->get('name'));
+    $tests['[site:slogan]'] = filter_xss_admin(\Drupal::config('system.site')->get('slogan'));
     $tests['[site:mail]'] = 'simpletest@example.com';
     $tests['[site:url]'] = url('<front>', $url_options);
     $tests['[site:url-brief]'] = preg_replace(array('!^https?://!', '!/$!'), '', url('<front>', $url_options));
@@ -139,8 +139,8 @@ class TokenReplaceTest extends WebTestBase {
     }
 
     // Generate and test unsanitized tokens.
-    $tests['[site:name]'] = config('system.site')->get('name');
-    $tests['[site:slogan]'] = config('system.site')->get('slogan');
+    $tests['[site:name]'] = \Drupal::config('system.site')->get('name');
+    $tests['[site:slogan]'] = \Drupal::config('system.site')->get('slogan');
 
     foreach ($tests as $input => $expected) {
       $output = $token_service->replace($input, array(), array('langcode' => $language_interface->id, 'sanitize' => FALSE));

@@ -92,7 +92,7 @@ class DateUpgradePathTest extends UpgradePathTestBase {
     );
 
     foreach ($expected_de_formats as $locale_format) {
-      $format = config('locale.config.de.system.date_format.' . $locale_format['type'])->get('pattern.php');
+      $format = \Drupal::config('locale.config.de.system.date_format.' . $locale_format['type'])->get('pattern.php');
       $this->assertEqual($locale_format['format'], $format);
     }
   }

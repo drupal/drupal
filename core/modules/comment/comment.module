@@ -1431,7 +1431,7 @@ function comment_preview(CommentInterface $comment) {
       $comment->name->value = check_plain($account->getUsername());
     }
     elseif (empty($comment->name->value)) {
-      $comment->name->value = config('user.settings')->get('anonymous');
+      $comment->name->value = Drupal::config('user.settings')->get('anonymous');
     }
 
     $comment->created->value = !empty($comment->created->value) ? $comment->created->value : REQUEST_TIME;
@@ -1548,7 +1548,7 @@ function template_preprocess_comment(&$variables) {
     $variables['user_picture'] = array();
   }
 
-  if (config('user.settings')->get('signatures') && $account->getSignature()) {
+  if (Drupal::config('user.settings')->get('signatures') && $account->getSignature()) {
     $variables['signature'] = check_markup($account->getSignature(), $account->getSignatureFormat(), '', TRUE) ;
   }
   else {

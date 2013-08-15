@@ -42,19 +42,19 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
   function testConfigLocaleOverride() {
     $name = 'config_test.system';
     // The default language is en so the config key should be localised.
-    $config = config($name);
+    $config = \Drupal::config($name);
     $this->assertIdentical($config->get('foo'), 'en bar');
     $this->assertIdentical($config->get('404'), 'herp');
 
     // Ensure that we get the expected value when we avoid overrides.
     config_context_enter('config.context.free');
-    $config_admin = config($name);
+    $config_admin = \Drupal::config($name);
     $this->assertIdentical($config_admin->get('foo'), 'bar');
     $this->assertIdentical($config_admin->get('404'), 'herp');
 
     // Leave the non override context.
     config_context_leave();
-    $config = config($name);
+    $config = \Drupal::config($name);
     $this->assertIdentical($config->get('foo'), 'en bar');
     $this->assertIdentical($config->get('404'), 'herp');
   }
@@ -89,7 +89,7 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
 
     $user_config_context = config_context_enter('Drupal\user\UserConfigContext');
     $user_config_context->setAccount($account);
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'fr bar');
     // Ensure the non-overriden value is still the same.
     $this->assertIdentical($config->get('404'), 'herp');
@@ -99,7 +99,7 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
     // in a user based language override context, the English language override
     // applies due to the negotiated language for the page.
     config_context_leave();
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'en bar');
 
     $account = entity_create('user', array(
@@ -114,7 +114,7 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
     $config_factory->enterContext($user_config_context->setAccount($account));
     // Should not have to re-initialize the configuration object to get new
     // overrides as the new context will have a different uuid.
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'de bar');
 
     // Enter an english context on top of the german context.
@@ -128,24 +128,24 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
     // Create a new user config context to stack on top of the existign one.
     $en_user_config_context = config_context_enter('Drupal\user\UserConfigContext');
     $en_user_config_context->setAccount($account);
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'en bar');
 
     // Ensure that we get the expected value when we leave the english user
     // context.
     config_context_leave();
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'de bar');
 
     // Ensure that we get the expected value when we leave the german user
     // context.
     config_context_leave();
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'en bar');
 
     // Ensure that we cannot leave the default context.
     config_context_leave();
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'en bar');
   }
 
@@ -171,7 +171,7 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
     $language = language_load('fr');
     $language_config_context = config_context_enter('Drupal\language\LanguageConfigContext');
     $language_config_context->setLanguage($language);
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'fr bar');
     // Ensure the non-overridden value is still the same.
     $this->assertIdentical($config->get('404'), 'herp');
@@ -181,7 +181,7 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
     // in a language override context, the English language override
     // applies due to the negotiated language for the page.
     config_context_leave();
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'en bar');
 
     $config_factory = \Drupal::service('config.factory');
@@ -189,7 +189,7 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
     $config_factory->enterContext($language_config_context->setLanguage($language));
     // Should not have to re-initialize the configuration object to get new
     // overrides as the new context will have a different uuid.
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'de bar');
 
     // Enter an english context on top of the german context.
@@ -197,24 +197,24 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
     // Create a new language config context to stack on top of the existing one.
     $en_language_config_context = config_context_enter('Drupal\language\LanguageConfigContext');
     $en_language_config_context->setLanguage($language);
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'en bar');
 
     // Ensure that we get the expected value when we leave the english
     // language context.
     config_context_leave();
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'de bar');
 
     // Ensure that we get the expected value when we leave the german
     // language context.
     config_context_leave();
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'en bar');
 
     // Ensure that we cannot leave the default context.
     config_context_leave();
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'en bar');
   }
 
@@ -248,7 +248,7 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
 
     $user_config_context = config_context_enter('Drupal\user\UserConfigContext');
     $user_config_context->setAccount($account);
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'fr bar');
     // Ensure the value overriden from global $conf works.
     $this->assertIdentical($config->get('404'), 'global herp');
@@ -258,21 +258,21 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
     // in a user based language override context, the English language override
     // applies due to the negotiated language for the page.
     config_context_leave();
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'en bar');
     // Global override should still apply.
     $this->assertIdentical($config->get('404'), 'global herp');
 
     // Ensure that we cannot leave the default context.
     config_context_leave();
-    $config = config('config_test.system');
+    $config = \Drupal::config('config_test.system');
     $this->assertIdentical($config->get('foo'), 'en bar');
     // Global override should still apply.
     $this->assertIdentical($config->get('404'), 'global herp');
 
     // Ensure that we get the expected value when we avoid overrides.
     config_context_enter('config.context.free');
-    $config_admin = config('config_test.system');
+    $config_admin = \Drupal::config('config_test.system');
     // Language override should not apply anymore.
     $this->assertIdentical($config_admin->get('foo'), 'bar');
     // Global override should not apply.

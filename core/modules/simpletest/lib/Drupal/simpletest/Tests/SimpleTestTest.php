@@ -61,7 +61,7 @@ class SimpleTestTest extends WebTestBase {
       $this->drupalGet('test-page');
       $this->assertTrue($this->drupalGetHeader('Date'), 'An HTTP header was received.');
       $this->assertTitle(t('Test page | @site-name', array(
-        '@site-name' => config('system.site')->get('name'),
+        '@site-name' => \Drupal::config('system.site')->get('name'),
       )));
       $this->assertNoTitle('Foo');
 

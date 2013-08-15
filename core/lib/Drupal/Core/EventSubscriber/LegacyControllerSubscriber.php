@@ -37,11 +37,11 @@ class LegacyControllerSubscriber implements EventSubscriberInterface {
    */
   public function onKernelControllerLegacy(FilterControllerEvent $event) {
     $request = $event->getRequest();
-    $router_item = $request->attributes->get('_drupal_menu_item');
-    $controller = $event->getController();
 
-    // This BC logic applies only to functions. Otherwise, skip it.
-    if (is_string($controller) && function_exists($controller)) {
+    // If we're dealing with a legacy route, wrap the controller in a closure
+    // so parameters still work.
+    if ($request->attributes->get('_legacy')) {
+      $router_item = $request->attributes->get('_drupal_menu_item');
       $new_controller = function() use ($router_item) {
         return call_user_func_array($router_item['page_callback'], $router_item['page_arguments']);
       };

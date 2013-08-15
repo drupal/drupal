@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Plugin\views\field;
 
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Component\Annotation\PluginID;
@@ -100,7 +101,10 @@ class Boolean extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     if (!empty($this->options['not'])) {
       $value = !$value;

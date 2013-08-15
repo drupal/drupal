@@ -7,12 +7,12 @@
 
 namespace Drupal\image\Tests;
 
-use Drupal\system\Tests\Image\ToolkitTestBase;
+use Drupal\simpletest\WebTestBase;
 
 /**
  * Tests the file move function for images and image styles.
  */
-class FileMoveTest extends ToolkitTestBase {
+class FileMoveTest extends WebTestBase {
 
   /**
    * Modules to enable.
@@ -38,7 +38,7 @@ class FileMoveTest extends ToolkitTestBase {
 
     // Create derivative image.
     $styles = entity_load_multiple('image_style');
-    $style = image_style_load(key($styles));
+    $style = reset($styles);
     $original_uri = $file->getFileUri();
     $derivative_uri = $style->buildUri($original_uri);
     $style->createDerivative($original_uri, $derivative_uri);

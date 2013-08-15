@@ -48,7 +48,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface {
       $maintenance_page = array(
         '#theme' => 'maintenance_page',
         '#content' => filter_xss_admin(
-          t(config('system.maintenance')->get('message'), array('@site' => config('system.site')->get('name')))
+          t(\Drupal::config('system.maintenance')->get('message'), array('@site' => \Drupal::config('system.site')->get('name')))
         ),
       );
       $content = drupal_render($maintenance_page);

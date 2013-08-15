@@ -19,7 +19,7 @@ function content_translation_help($path, $arg) {
     case 'admin/help#content_translation':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Content Translation module allows you to create and manage translations for your Drupal site content. You can specify which elements need to be translated at the content-type level for content items and comments, at the vocabulary level for taxonomy terms, and at the site level for user accounts. Other modules may provide additional elements that can be translated. For more information, see the online handbook entry for <a href="!url">Content Translation</a>.', array('!url' => 'http://drupal.org/documentation/modules/entity_translation')) . '</p>';
+      $output .= '<p>' . t('The Content Translation module allows you to create and manage translations for your Drupal site content. You can specify which elements need to be translated at the content-type level for content items and comments, at the vocabulary level for taxonomy terms, and at the site level for user accounts. Other modules may provide additional elements that can be translated. For more information, see the online handbook entry for <a href="!url">Content Translation</a>.', array('!url' => 'http://drupal.org/documentation/modules/translation_entity')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Enabling translation') . '</dt>';
@@ -413,7 +413,7 @@ function content_translation_get_config_key($entity_type, $bundle, $setting) {
  */
 function content_translation_get_config($entity_type, $bundle, $setting) {
   $key = content_translation_get_config_key($entity_type, $bundle, $setting);
-  return config('content_translation.settings')->get($key);
+  return Drupal::config('content_translation.settings')->get($key);
 }
 
 /**
@@ -430,7 +430,7 @@ function content_translation_get_config($entity_type, $bundle, $setting) {
  */
 function content_translation_set_config($entity_type, $bundle, $setting, $value) {
   $key = content_translation_get_config_key($entity_type, $bundle, $setting);
-  return config('content_translation.settings')->set($key, $value)->save();
+  return Drupal::config('content_translation.settings')->set($key, $value)->save();
 }
 
 /**

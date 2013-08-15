@@ -3,49 +3,28 @@
 namespace Guzzle\Http\Curl;
 
 use Guzzle\Http\Message\RequestInterface;
+use Guzzle\Http\EntityBody;
+use Guzzle\Http\Message\Response;
 
 /**
  * Mediator between curl handles and request objects
  */
 class RequestMediator
 {
-    /**
-     * @var RequestInterface
-     */
+    /** @var RequestInterface */
     protected $request;
 
-    /**
-     * @var bool Whether or not to emit read/write events
-     */
+    /** @var bool Whether or not to emit read/write events */
     protected $emitIo;
 
     /**
-     * @var CurlHandle
-     */
-    protected $curlHandle;
-
-    /**
      * @param RequestInterface $request Request to mediate
+     * @param bool             $emitIo  Set to true to dispatch events on input and output
      */
-    public function __construct(RequestInterface $request)
+    public function __construct(RequestInterface $request, $emitIo = false)
     {
         $this->request = $request;
-        $this->emitIo = $request->getParams()->get('curl.emit_io');
-    }
-
-    /**
-     * Set the associated CurlHandle object
-     *
-     * @param CurlHandle $handle Curl handle
-     *
-     * @return RequestMediator
-     */
-    public function setCurlHandle(CurlHandle $handle)
-    {
-        $this->curlHandle = $handle;
-        $this->request->getParams()->set('curl_handle', $handle);
-
-        return $this;
+        $this->emitIo = $emitIo;
     }
 
     /**
@@ -58,22 +37,59 @@ class RequestMediator
      */
     public function receiveResponseHeader($curl, $header)
     {
-        return $this->request->receiveResponseHeader($header);
+        static $normalize = array("\r", "\n");
+        $length = strlen($header);
+        $header = str_replace($normalize, '', $header);
+
+        if (strpos($header, 'HTTP/') === 0) {
+
+            $startLine = explode(' ', $header, 3);
+            $code = $startLine[1];
+            $status = isset($startLine[2]) ? $startLine[2] : '';
+
+            // Only download the body of the response to the specified response
+            // body when a successful response is received.
+            if ($code >= 200 && $code < 300) {
+                $body = $this->request->getResponseBody();
+            } else {
+                $body = EntityBody::factory();
+            }
+
+            $response = new Response($code, null, $body);
+            $response->setStatus($code, $status);
+            $this->request->startResponse($response);
+
+            $this->request->dispatch('request.receive.status_line', array(
+                'request'       => $this,
+                'line'          => $header,
+                'status_code'   => $code,
+                'reason_phrase' => $status
+            ));
+
+        } elseif ($pos = strpos($header, ':')) {
+            $this->request->getResponse()->addHeader(
+                trim(substr($header, 0, $pos)),
+                trim(substr($header, $pos + 1))
+            );
+        }
+
+        return $length;
     }
 
     /**
      * Received a progress notification
      *
-     * @param int $downloadSize Total download size
-     * @param int $downloaded   Amount of bytes downloaded
-     * @param int $uploadSize   Total upload size
-     * @param int $uploaded     Amount of bytes uploaded
+     * @param int        $downloadSize Total download size
+     * @param int        $downloaded   Amount of bytes downloaded
+     * @param int        $uploadSize   Total upload size
+     * @param int        $uploaded     Amount of bytes uploaded
+     * @param resource   $handle       CurlHandle object
      */
-    public function progress($downloadSize, $downloaded, $uploadSize, $uploaded)
+    public function progress($downloadSize, $downloaded, $uploadSize, $uploaded, $handle = null)
     {
         $this->request->dispatch('curl.callback.progress', array(
             'request'       => $this->request,
-            'handle'        => $this->curlHandle,
+            'handle'        => $handle,
             'download_size' => $downloadSize,
             'downloaded'    => $downloaded,
             'upload_size'   => $uploadSize,
@@ -112,18 +128,15 @@ class RequestMediator
      */
     public function readRequestBody($ch, $fd, $length)
     {
-        $read = '';
-
-        if ($this->request->getBody()) {
-            $read = $this->request->getBody()->read($length);
-            if ($this->emitIo) {
-                $this->request->dispatch('curl.callback.read', array(
-                    'request' => $this->request,
-                    'read'    => $read
-                ));
-            }
+        if (!($body = $this->request->getBody())) {
+            return '';
         }
 
-        return !$read ? '' : $read;
+        $read = (string) $body->read($length);
+        if ($this->emitIo) {
+            $this->request->dispatch('curl.callback.read', array('request' => $this->request, 'read' => $read));
+        }
+
+        return $read;
     }
 }

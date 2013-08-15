@@ -9,6 +9,7 @@ namespace Drupal\file\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ResultRow;
 
 /**
  * Returns a pure file extension of the file, for example 'module'.
@@ -41,7 +42,10 @@ class Extension extends FieldPluginBase {
     );
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     if (!$this->options['extension_detect_tar']) {
       if (preg_match('/\.([^\.]+)$/', $value, $match)) {

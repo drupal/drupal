@@ -142,7 +142,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *
    * @param $distinct
    *   TRUE to flag this query DISTINCT, FALSE to disable it.
-   * @return SelectQueryInterface
+   * @return \Drupal\Core\Database\Query\SelectInterface
    *   The called object.
    */
   public function distinct($distinct = TRUE);
@@ -184,7 +184,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   An indexed array of fields present in the specified table that should be
    *   included in this query. If not specified, $table_alias.* will be generated
    *   without any aliases.
-   * @return Drupal\Core\Database\Query\SelectInterface
+   * @return \Drupal\Core\Database\Query\SelectInterface
    *   The called object.
    */
   public function fields($table_alias, array $fields = array());
@@ -352,7 +352,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   The field on which to order.
    * @param $direction
    *   The direction to sort. Legal values are "ASC" and "DESC".
-   * @return Drupal\Core\Database\Query\SelectInterface
+   * @return \Drupal\Core\Database\Query\SelectInterface
    *   The called object.
    */
   public function orderBy($field, $direction = 'ASC');
@@ -374,7 +374,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *
    * for an example of such an alternate sorting mechanism.
    *
-   * @return Drupal\Core\Database\Query\SelectInterface
+   * @return \Drupal\Core\Database\Query\SelectInterface
    *   The called object
    */
   public function orderRandom();
@@ -390,7 +390,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   range directives that are set.
    * @param $length
    *   The number of records to return from the result set.
-   * @return Drupal\Core\Database\Query\SelectInterface
+   * @return \Drupal\Core\Database\Query\SelectInterface
    *   The called object.
    */
   public function range($start = NULL, $length = NULL);
@@ -415,7 +415,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * @param $type
    *   The type of UNION to add to the query. Defaults to plain
    *   UNION.
-   * @return Drupal\Core\Database\Query\SelectInterface
+   * @return \Drupal\Core\Database\Query\SelectInterface
    *   The called object.
    */
   public function union(SelectInterface $query, $type = '');
@@ -425,7 +425,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *
    * @param $field
    *   The field on which to group. This should be the field as aliased.
-   * @return Drupal\Core\Database\Query\SelectInterface
+   * @return \Drupal\Core\Database\Query\SelectInterface
    *   The called object.
    */
   public function groupBy($field);
@@ -433,7 +433,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
   /**
    * Get the equivalent COUNT query of this query as a new query object.
    *
-   * @return Drupal\Core\Database\Query\SelectInterface
+   * @return \Drupal\Core\Database\Query\SelectInterface
    *   A new SelectQuery object with no fields or expressions besides COUNT(*).
    */
   public function countQuery();
@@ -472,7 +472,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    *   The comparison operator, such as =, <, or >=. It also accepts more complex
    *   options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is an array
    *   = otherwise.
-   * @return Drupal\Core\Database\Query\ConditionInterface
+   * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function havingCondition($field, $value = NULL, $operator = NULL);
@@ -497,7 +497,7 @@ interface SelectInterface extends ConditionInterface, AlterableInterface, Extend
    * @param $set
    *   IF TRUE, FOR UPDATE will be added to the query, if FALSE then it won't.
    *
-   * @return Drupal\Core\Database\Query\ConditionInterface
+   * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function forUpdate($set = TRUE);

@@ -51,7 +51,7 @@ class LocalTasksTest extends WebTestBase {
     ));
 
     // Enable addition of tasks in menu_test_menu_local_tasks().
-    config('menu_test.settings')->set('tasks.add', TRUE)->save();
+    \Drupal::config('menu_test.settings')->set('tasks.add', TRUE)->save();
 
     // Verify that the added tasks appear even if there are no tasks normally.
     $this->drupalGet('menu-test/tasks/empty');
@@ -80,7 +80,7 @@ class LocalTasksTest extends WebTestBase {
     ));
 
     // Enable manipulation of tasks in menu_test_menu_local_tasks_alter().
-    config('menu_test.settings')->set('tasks.alter', TRUE)->save();
+    \Drupal::config('menu_test.settings')->set('tasks.alter', TRUE)->save();
 
     // Verify that the added tasks appear even if there are no tasks normally.
     $this->drupalGet('menu-test/tasks/empty');

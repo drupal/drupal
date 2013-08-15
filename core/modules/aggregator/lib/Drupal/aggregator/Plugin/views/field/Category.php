@@ -77,7 +77,7 @@ class Category extends FieldPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function render($values) {
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     return $this->renderLink($this->sanitizeValue($value), $values);
   }

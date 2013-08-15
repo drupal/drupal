@@ -8,6 +8,7 @@
 namespace Drupal\image\Plugin\ImageEffect;
 
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Image\ImageInterface;
 use Drupal\image\Annotation\ImageEffect;
 
 /**
@@ -24,17 +25,17 @@ class CropImageEffect extends ResizeImageEffect {
   /**
    * {@inheritdoc}
    */
-  public function applyEffect($image) {
+  public function applyEffect(ImageInterface $image) {
     // Set sane default values.
     $this->configuration += array(
       'anchor' => 'center-center',
     );
 
     list($x, $y) = explode('-', $this->configuration['anchor']);
-    $x = image_filter_keyword($x, $image->info['width'], $this->configuration['width']);
-    $y = image_filter_keyword($y, $image->info['height'], $this->configuration['height']);
-    if (!image_crop($image, $x, $y, $this->configuration['width'], $this->configuration['height'])) {
-      watchdog('image', 'Image crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit->getPluginId(), '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
+    $x = image_filter_keyword($x, $image->getWidth(), $this->configuration['width']);
+    $y = image_filter_keyword($y, $image->getHeight(), $this->configuration['height']);
+    if (!$image->crop($x, $y, $this->configuration['width'], $this->configuration['height'])) {
+      watchdog('image', 'Image crop failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()), WATCHDOG_ERROR);
       return FALSE;
     }
     return TRUE;

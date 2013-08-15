@@ -39,7 +39,7 @@ abstract class BlockTestBase extends WebTestBase {
     parent::setUp();
 
     // Use the test page as the front page.
-    config('system.site')->set('page.front', 'test-page')->save();
+    \Drupal::config('system.site')->set('page.front', 'test-page')->save();
 
     // Create Full HTML text format.
     $full_html_format = entity_create('filter_format', array(
@@ -71,7 +71,7 @@ abstract class BlockTestBase extends WebTestBase {
     $manager = $this->container->get('plugin.manager.block');
     $instances = config_get_storage_names_with_prefix('plugin.core.block.' . $default_theme);
     foreach ($instances as $plugin_id) {
-      config($plugin_id)->delete();
+      \Drupal::config($plugin_id)->delete();
     }
   }
 

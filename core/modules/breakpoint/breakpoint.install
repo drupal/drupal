@@ -9,8 +9,6 @@
  * Implements hook_enable().
  *
  * Import breakpoints from all enabled themes.
- *
- * @todo: This should be removed if https://drupal.org/node/1813100 is resolved.
  */
 function breakpoint_enable() {
   // Import breakpoints from themes.

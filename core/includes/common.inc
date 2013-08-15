@@ -1315,6 +1315,12 @@ function l($text, $path, array $options = array()) {
     'language' => NULL,
   );
 
+  // Add a hreflang attribute if we know the language of this link's url and
+  // hreflang has not already been set.
+  if (!empty($variables['options']['language']) && !isset($variables['options']['attributes']['hreflang'])) {
+    $variables['options']['attributes']['hreflang'] = $variables['options']['language']->id;
+  }
+
   // Because l() is called very often we statically cache values that require an
   // extra function call.
   static $drupal_static_fast;
@@ -1854,7 +1860,7 @@ function drupal_pre_render_styles($elements) {
   $css_assets = $elements['#items'];
 
   // Aggregate the CSS if necessary, but only during normal site operation.
-  if (!defined('MAINTENANCE_MODE') && config('system.performance')->get('css.preprocess')) {
+  if (!defined('MAINTENANCE_MODE') && Drupal::config('system.performance')->get('css.preprocess')) {
     $css_assets = \Drupal::service('asset.css.collection_optimizer')->optimize($css_assets);
   }
   return \Drupal::service('asset.css.collection_renderer')->render($css_assets);
@@ -1877,7 +1883,7 @@ function drupal_clear_css_cache() {
  */
 function drupal_delete_file_if_stale($uri) {
   // Default stale file threshold is 30 days.
-  if (REQUEST_TIME - filemtime($uri) > config('system.performance')->get('stale_file_threshold')) {
+  if (REQUEST_TIME - filemtime($uri) > Drupal::config('system.performance')->get('stale_file_threshold')) {
     file_unmanaged_delete($uri);
   }
 }
@@ -2300,10 +2306,13 @@ function drupal_js_defaults($data = NULL) {
  * @param $javascript
  *   (optional) An array with all JavaScript code. Defaults to the default
  *   JavaScript array for the given scope.
- * @param $skip_alter
+ * @param bool $skip_alter
  *   (optional) If set to TRUE, this function skips calling drupal_alter() on
  *   $javascript, useful when the calling function passes a $javascript array
  *   that has already been altered.
+ * @param bool $is_ajax
+ *   (optional) If set to TRUE, this function is called from an Ajax request and
+ *   adds javascript settings to update ajaxPageState values.
  *
  * @return
  *   All JavaScript code segments and includes for the scope as HTML tags.
@@ -2312,7 +2321,7 @@ function drupal_js_defaults($data = NULL) {
  * @see locale_js_alter()
  * @see drupal_js_defaults()
  */
-function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALSE) {
+function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALSE, $is_ajax = FALSE) {
   if (!isset($javascript)) {
     $javascript = drupal_add_js();
   }
@@ -2338,12 +2347,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
     uasort($items, 'drupal_sort_css_js');
     // Don't add settings if there is no other JavaScript on the page, unless
     // this is an AJAX request.
-    // @todo Clean up container call.
-    $container = drupal_container();
-    if ($container->has('content_negotiation') && $container->isScopeActive('request')) {
-      $type = $container->get('content_negotiation')->getContentType($container->get('request'));
-    }
-    if (!empty($items['settings']) || (!empty($type) && $type == 'ajax')) {
+    if (!empty($items['settings']) || $is_ajax) {
       global $theme_key;
       // Provide the page with information about the theme that's used, so that
       // a later AJAX request can be rendered using the same theme.
@@ -2483,7 +2487,7 @@ function drupal_pre_render_scripts($elements) {
 
   // Aggregate the JavaScript if necessary, but only during normal site
   // operation.
-  if (!defined('MAINTENANCE_MODE') && config('system.performance')->get('js.preprocess')) {
+  if (!defined('MAINTENANCE_MODE') && Drupal::config('system.performance')->get('js.preprocess')) {
     $js_assets = \Drupal::service('asset.js.collection_optimizer')->optimize($js_assets);
   }
   return \Drupal::service('asset.js.collection_renderer')->render($js_assets);
@@ -3028,21 +3032,21 @@ function drupal_json_decode($var) {
 /**
  * Ensures the private key variable used to generate tokens is set.
  *
- * @return
+ * @return string
  *   The private key.
+ *
+ * @see \Drupal\Core\Access\CsrfTokenManager
+ *
+ * @deprecated as of Drupal 8.0. Use the 'private_key' service instead.
  */
 function drupal_get_private_key() {
-  if (!($key = Drupal::state()->get('system.private_key'))) {
-    $key = Crypt::randomStringHashed(55);
-    Drupal::state()->set('system.private_key', $key);
-  }
-  return $key;
+  return \Drupal::service('private_key')->get();
 }
 
 /**
  * Generates a token based on $value, the user session, and the private key.
  *
- * @param $value
+ * @param string $value
  *   An additional value to base the token on.
  *
  * @return string
@@ -3051,28 +3055,34 @@ function drupal_get_private_key() {
  *   'drupal_private_key' configuration variable.
  *
  * @see drupal_get_hash_salt()
+ * @see \Drupal\Core\Access\CsrfTokenManager
+ *
+ * @deprecated as of Drupal 8.0. Use the csrf_token service instead.
  */
 function drupal_get_token($value = '') {
-  return Crypt::hmacBase64($value, session_id() . drupal_get_private_key() . drupal_get_hash_salt());
+  return \Drupal::csrfToken()->get($value);
 }
 
 /**
  * Validates a token based on $value, the user session, and the private key.
  *
- * @param $token
+ * @param string $token
  *   The token to be validated.
- * @param $value
+ * @param string $value
  *   An additional value to base the token on.
- * @param $skip_anonymous
+ * @param bool $skip_anonymous
  *   Set to true to skip token validation for anonymous users.
  *
- * @return
+ * @return bool
  *   True for a valid token, false for an invalid token. When $skip_anonymous
  *   is true, the return value will always be true for anonymous users.
+ *
+ * @see \Drupal\Core\Access\CsrfTokenManager
+ *
+ * @deprecated as of Drupal 8.0. Use the csrf_token service instead.
  */
 function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
-  global $user;
-  return (($skip_anonymous && $user->id() == 0) || ($token == drupal_get_token($value)));
+  return \Drupal::csrfToken()->validate($token, $value, $skip_anonymous);
 }
 
 /**
@@ -3080,13 +3090,13 @@ function drupal_valid_token($token, $value = '', $skip_anonymous = FALSE) {
  */
 function _drupal_bootstrap_code() {
   require_once __DIR__ . '/../../' . settings()->get('path_inc', 'core/includes/path.inc');
+  require_once __DIR__ . '/module.inc';
   require_once __DIR__ . '/theme.inc';
   require_once __DIR__ . '/pager.inc';
   require_once __DIR__ . '/../../' . settings()->get('menu_inc', 'core/includes/menu.inc');
   require_once __DIR__ . '/tablesort.inc';
   require_once __DIR__ . '/file.inc';
   require_once __DIR__ . '/unicode.inc';
-  require_once __DIR__ . '/image.inc';
   require_once __DIR__ . '/form.inc';
   require_once __DIR__ . '/mail.inc';
   require_once __DIR__ . '/ajax.inc';
@@ -3109,7 +3119,7 @@ function _drupal_bootstrap_code() {
   }
 
   // Set the allowed protocols once we have the config available.
-  $allowed_protocols = \Drupal::config('system.filter')->get('protocols');
+  $allowed_protocols = Drupal::config('system.filter')->get('protocols');
   if (!isset($allowed_protocols)) {
     // filter_xss_admin() is called by the installer and update.php, in which
     // case the configuration may not exist (yet). Provide a minimal default set
@@ -3166,16 +3176,21 @@ function _drupal_bootstrap_full($skip = FALSE) {
  * @see drupal_page_header()
  */
 function drupal_page_set_cache(Response $response, Request $request) {
-  global $base_root;
-
   if (drupal_page_is_cacheable()) {
+
+    // Check if the current page may be compressed.
+    $page_compressed = Drupal::config('system.performance')->get('response.gzip') && extension_loaded('zlib');
+
     $cache = (object) array(
-      'cid' => $base_root . $request->getRequestUri(),
+      'cid' => drupal_page_cache_get_cid($request),
       'data' => array(
         'path' => $request->attributes->get('_system_path'),
         'body' => $response->getContent(),
         'title' => drupal_get_title(),
         'headers' => array(),
+        // We need to store whether page was compressed or not,
+        // because by the time it is read, the configuration might change.
+        'page_compressed' => $page_compressed,
       ),
       'tags' => array('content' => TRUE),
       'expire' => CacheBackendInterface::CACHE_PERMANENT,
@@ -3192,12 +3207,12 @@ function drupal_page_set_cache(Response $response, Request $request) {
 
      // Use the actual timestamp from an Expires header, if available.
     if ($date = $response->getExpires()) {
-      $date = new DrupalDateTime($date);
+      $date = DrupalDateTime::createFromDateTime($date);
       $cache->expire = $date->getTimestamp();
     }
 
     if ($cache->data['body']) {
-      if (config('system.performance')->get('response.gzip') && extension_loaded('zlib')) {
+      if ($page_compressed) {
         $cache->data['body'] = gzencode($cache->data['body'], 9, FORCE_GZIP);
       }
       cache('page')->set($cache->cid, $cache->data, $cache->expire, $cache->tags);
@@ -4730,11 +4745,6 @@ function drupal_flush_all_caches() {
   // Ensure that all modules that are currently supposed to be enabled are
   // actually loaded.
   $module_handler->loadAll();
-
-  // Update the list of bootstrap modules.
-  // Allows developers to get new bootstrap hooks implementations registered
-  // without having to write a hook_update_N() function.
-  _system_update_bootstrap_status();
 
   // Rebuild the schema and cache a fully-built schema based on new module data.
   // This is necessary for any invocation of index.php, because setting cache

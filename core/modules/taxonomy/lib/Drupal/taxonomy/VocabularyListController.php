@@ -74,7 +74,7 @@ class VocabularyListController extends ConfigEntityListController implements For
     unset($row['id']);
 
     $row['label'] = array(
-      '#markup' => check_plain($row['label']),
+      '#markup' => $row['label'],
     );
     $row['#weight'] = $entity->get('weight');
     // Add weight column.

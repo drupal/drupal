@@ -8,6 +8,7 @@
 namespace Drupal\image\Plugin\ImageEffect;
 
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Image\ImageInterface;
 use Drupal\image\Annotation\ImageEffect;
 use Drupal\image\ConfigurableImageEffectInterface;
 use Drupal\image\ImageEffectBase;
@@ -26,7 +27,7 @@ class RotateImageEffect extends ImageEffectBase implements ConfigurableImageEffe
   /**
    * {@inheritdoc}
    */
-  public function applyEffect($image) {
+  public function applyEffect(ImageInterface $image) {
     // Set sane default values.
     $this->configuration += array(
       'degrees' => 0,
@@ -53,8 +54,8 @@ class RotateImageEffect extends ImageEffectBase implements ConfigurableImageEffe
       $this->configuration['degrees'] = rand(-1 * $degrees, $degrees);
     }
 
-    if (!image_rotate($image, $this->configuration['degrees'], $this->configuration['bgcolor'])) {
-      watchdog('image', 'Image rotate failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->toolkit->getPluginId(), '%path' => $image->source, '%mimetype' => $image->info['mime_type'], '%dimensions' => $image->info['width'] . 'x' . $image->info['height']), WATCHDOG_ERROR);
+    if (!$image->rotate($this->configuration['degrees'], $this->configuration['bgcolor'])) {
+      watchdog('image', 'Image rotate failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()), WATCHDOG_ERROR);
       return FALSE;
     }
     return TRUE;

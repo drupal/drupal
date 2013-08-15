@@ -12,7 +12,7 @@ chdir('../../..');
 include_once dirname(dirname(__DIR__)) . '/includes/bootstrap.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
 
-if (config('statistics.settings')->get('count_content_views')) {
+if (\Drupal::config('statistics.settings')->get('count_content_views')) {
   $nid = filter_input(INPUT_POST, 'nid', FILTER_VALIDATE_INT);
   if ($nid) {
     db_merge('node_counter')

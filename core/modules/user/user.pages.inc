@@ -39,7 +39,7 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
   }
   else {
     // Time out, in seconds, until login URL expires.
-    $timeout = config('user.settings')->get('password_reset_timeout');
+    $timeout = Drupal::config('user.settings')->get('password_reset_timeout');
     $current = REQUEST_TIME;
     $account = user_load($uid);
     // Verify that the user exists and is active.
@@ -123,9 +123,10 @@ function template_preprocess_user(&$variables) {
  */
 function user_edit_cancel_submit($form, &$form_state) {
   $destination = array();
-  if (isset($_GET['destination'])) {
+  $query = Drupal::request()->query;
+  if ($query->has('destination')) {
     $destination = drupal_get_destination();
-    unset($_GET['destination']);
+    $query->remove('destination');
   }
   // Note: We redirect from user/uid/edit to user/uid/cancel to make the tabs disappear.
   $account = $form_state['controller']->getEntity();
@@ -165,7 +166,7 @@ function user_cancel_confirm_form($form, &$form_state, $account) {
     '#description' => t('When enabled, the user must confirm the account cancellation via e-mail.'),
   );
   // Also allow to send account canceled notification mail, if enabled.
-  $default_notify = config('user.settings')->get('notify.status_canceled');
+  $default_notify = Drupal::config('user.settings')->get('notify.status_canceled');
   $form['user_cancel_notify'] = array(
     '#type' => 'checkbox',
     '#title' => t('Notify user when account is canceled.'),
@@ -181,7 +182,7 @@ function user_cancel_confirm_form($form, &$form_state, $account) {
   else {
     $question = t('Are you sure you want to cancel the account %name?', array('%name' => $account->getUsername()));
   }
-  $default_method = config('user.settings')->get('cancel_method');
+  $default_method = Drupal::config('user.settings')->get('cancel_method');
   $description = NULL;
   if ($can_select_method) {
     $description = t('Select the method to cancel the account above.');
@@ -247,7 +248,7 @@ function user_cancel_confirm_form_submit($form, &$form_state) {
  * @see user_multiple_cancel_confirm()
  */
 function user_cancel_methods() {
-  $anonymous_name = config('user.settings')->get('anonymous');
+  $anonymous_name = Drupal::config('user.settings')->get('anonymous');
   $methods = array(
     'user_cancel_block' => array(
       'title' => t('Disable the account and keep its content.'),
@@ -271,7 +272,7 @@ function user_cancel_methods() {
   drupal_alter('user_cancel_methods', $methods);
 
   // Turn all methods into real form elements.
-  $default_method = config('user.settings')->get('cancel_method');
+  $default_method = Drupal::config('user.settings')->get('cancel_method');
   $form = array(
     '#options' => array(),
     '#default_value' => $default_method,
@@ -308,7 +309,7 @@ function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
     // Validate expiration and hashed password/login.
     if ($timestamp <= $current && $current - $timestamp < $timeout && $account->id() && $timestamp >= $account->getLastLoginTime() && $hashed_pass == user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime())) {
       $edit = array(
-        'user_cancel_notify' => isset($account_data['cancel_notify']) ? $account_data['cancel_notify'] : config('user.settings')->get('notify.status_canceled'),
+        'user_cancel_notify' => isset($account_data['cancel_notify']) ? $account_data['cancel_notify'] : Drupal::config('user.settings')->get('notify.status_canceled'),
       );
       user_cancel($edit, $account->id(), $account_data['cancel_method']);
       // Since user_cancel() is not invoked via Form API, batch processing needs

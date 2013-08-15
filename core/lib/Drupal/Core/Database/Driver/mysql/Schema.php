@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Database\Driver\mysql;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Condition;
 use Drupal\Core\Database\SchemaObjectExistsException;
@@ -62,8 +63,6 @@ class Schema extends DatabaseSchema {
    * from the condition criteria.
    */
   protected function buildTableNameCondition($table_name, $operator = '=', $add_prefix = TRUE) {
-    $info = $this->connection->getConnectionOptions();
-
     $table_info = $this->getPrefixInfo($table_name, $add_prefix);
 
     $condition = new Condition('AND');
@@ -325,6 +324,21 @@ class Schema extends DatabaseSchema {
 
     $this->connection->query('DROP TABLE {' . $table . '}');
     return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function copyTable($source, $destination) {
+    if (!$this->tableExists($source)) {
+      throw new SchemaObjectDoesNotExistException(String::format("Cannot copy @source to @destination: table @source doesn't exist.", array('@source' => $source, '@destination' => $destination)));
+    }
+    if ($this->tableExists($destination)) {
+      throw new SchemaObjectExistsException(String::format("Cannot copy @source to @destination: table @destination already exists.", array('@source' => $source, '@destination' => $destination)));
+    }
+
+    $info = $this->getPrefixInfo($destination);
+    return $this->connection->query('CREATE TABLE `' . $info['table'] . '` LIKE {' . $source . '}');
   }
 
   public function addField($table, $field, $spec, $keys_new = array()) {

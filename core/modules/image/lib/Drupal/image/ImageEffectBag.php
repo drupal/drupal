@@ -26,17 +26,6 @@ class ImageEffectBag extends DefaultPluginBag {
   }
 
   /**
-   * Removes an instance ID.
-   *
-   * @param string $instance_id
-   *   An image effect instance IDs.
-   */
-  public function removeInstanceID($instance_id) {
-    unset($this->instanceIDs[$instance_id], $this->configurations[$instance_id]);
-    $this->remove($instance_id);
-  }
-
-  /**
    * Updates the configuration for an image effect instance.
    *
    * If there is no plugin instance yet, a new will be instantiated. Otherwise,

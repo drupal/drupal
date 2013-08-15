@@ -36,8 +36,7 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
- *     "uuid" = "uuid",
- *     "status" = "status"
+ *     "uuid" = "uuid"
  *   }
  * )
  */

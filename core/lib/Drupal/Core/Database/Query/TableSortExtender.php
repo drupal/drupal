@@ -34,7 +34,7 @@ class TableSortExtender extends SelectExtender {
    * @param array $header
    *   Table header array.
    *
-   * @return SelectQueryInterface
+   * @return \Drupal\Core\Database\Query\SelectInterface
    *   The called object.
    *
    * @see theme_table()

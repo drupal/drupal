@@ -26,4 +26,16 @@ class ResultRow {
    */
   public $_relationship_entities = array();
 
+  /**
+   * Constructs a ResultRow object.
+   *
+   * @param array $values
+   *   (optional) An array of values to add as properties on the object.
+   */
+  public function __construct(array $values = array()) {
+    foreach ($values as $key => $value) {
+      $this->{$key} = $value;
+    }
+  }
+
 }

@@ -33,7 +33,7 @@ class NewDefaultThemeBlocksTest extends WebTestBase {
    * Check the enabled Bartik blocks are correctly copied over.
    */
   function testNewDefaultThemeBlocks() {
-    $default_theme = config('system.theme')->get('default');
+    $default_theme = \Drupal::config('system.theme')->get('default');
 
     // Add several block instances.
     $this->adminUser = $this->drupalCreateUser(array('administer blocks'));
@@ -51,7 +51,7 @@ class NewDefaultThemeBlocksTest extends WebTestBase {
     $new_theme = 'bartik';
     $this->assertFalse($new_theme == $default_theme, 'The new theme is different from the previous default theme.');
     theme_enable(array($new_theme));
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', $new_theme)
       ->save();
 

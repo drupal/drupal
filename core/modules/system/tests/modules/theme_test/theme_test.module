@@ -163,6 +163,13 @@ function theme_test_preprocess_html(&$variables) {
 }
 
 /**
+ * Implements hook_page_alter().
+ */
+function theme_test_page_alter(&$page) {
+  $page['page_bottom']['theme_test_page_bottom'] = array('#markup' => 'theme test page bottom markup');
+}
+
+/**
  * Theme function for testing theme('theme_test_foo').
  */
 function theme_theme_test_foo($variables) {

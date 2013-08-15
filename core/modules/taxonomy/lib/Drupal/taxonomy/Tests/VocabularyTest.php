@@ -71,7 +71,7 @@ class VocabularyTest extends TaxonomyTestBase {
     $edit['vid'] = 'don_t_panic';
     $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
 
-    $site_name = config('system.site')->get('name');
+    $site_name = \Drupal::config('system.site')->get('name');
     $this->assertTitle(t('Don\'t Panic | @site-name', array('@site-name' => $site_name)));
     $this->assertNoTitle(t('Don&#039;t Panic | @site-name', array('@site-name' => $site_name)));
   }

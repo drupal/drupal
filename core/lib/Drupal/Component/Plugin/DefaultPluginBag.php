@@ -133,4 +133,12 @@ class DefaultPluginBag extends PluginBag {
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function removeInstanceID($instance_id) {
+    parent::removeInstanceID($instance_id);
+    unset($this->configurations[$instance_id]);
+  }
+
 }

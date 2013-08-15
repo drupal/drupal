@@ -27,13 +27,19 @@ class TwigTransTokenParser extends \Twig_TokenParser {
   public function parse(\Twig_Token $token) {
     $lineno = $token->getLine();
     $stream = $this->parser->getStream();
+    $body = NULL;
+    $options = NULL;
     $count = NULL;
     $plural = NULL;
 
-    if (!$stream->test(\Twig_Token::BLOCK_END_TYPE)) {
+    if (!$stream->test(\Twig_Token::BLOCK_END_TYPE) && $stream->test(\Twig_Token::STRING_TYPE)) {
       $body = $this->parser->getExpressionParser()->parseExpression();
     }
-    else {
+    if (!$stream->test(\Twig_Token::BLOCK_END_TYPE) && $stream->test(\Twig_Token::NAME_TYPE, 'with')) {
+      $stream->next();
+      $options = $this->parser->getExpressionParser()->parseExpression();
+    }
+    if (!$body) {
       $stream->expect(\Twig_Token::BLOCK_END_TYPE);
       $body = $this->parser->subparse(array($this, 'decideForFork'));
       if ('plural' === $stream->next()->getValue()) {
@@ -47,7 +53,7 @@ class TwigTransTokenParser extends \Twig_TokenParser {
 
     $this->checkTransString($body, $lineno);
 
-    $node = new TwigNodeTrans($body, $plural, $count, $lineno, $this->getTag());
+    $node = new TwigNodeTrans($body, $plural, $count, $options, $lineno, $this->getTag());
 
     return $node;
   }

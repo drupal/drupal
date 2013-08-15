@@ -191,7 +191,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->enableModules(array('user'));
     $this->installConfig(array('user'));
     $this->assertTrue($this->container->get('config.storage')->exists('user.settings'));
-    $this->assertTrue(config('user.settings')->get('register'));
+    $this->assertTrue(\Drupal::config('user.settings')->get('register'));
   }
 
   /**

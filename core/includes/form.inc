@@ -4574,7 +4574,7 @@ function form_process_weight($element) {
   $element['#is_weight'] = TRUE;
 
   // If the number of options is small enough, use a select field.
-  $max_elements = config('system.site')->get('weight_select_max');
+  $max_elements = Drupal::config('system.site')->get('weight_select_max');
   if ($element['#delta'] <= $max_elements) {
     $element['#type'] = 'select';
     for ($n = (-1 * $element['#delta']); $n <= $element['#delta']; $n++) {
@@ -4842,6 +4842,7 @@ function _form_set_attributes(&$element, $class = array()) {
   }
   if (isset($element['#parents']) && form_get_error($element) !== NULL && !empty($element['#validated'])) {
     $element['#attributes']['class'][] = 'error';
+    $element['#attributes']['aria-invalid'] = 'true';
   }
 }
 

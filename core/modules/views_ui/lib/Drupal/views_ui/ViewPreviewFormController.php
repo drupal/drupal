@@ -73,7 +73,7 @@ class ViewPreviewFormController extends ViewFormControllerBase implements Entity
       '#type' => 'checkbox',
       '#id' => 'edit-displays-live-preview',
       '#title' => t('Auto preview'),
-      '#default_value' => config('views.settings')->get('ui.always_live_preview'),
+      '#default_value' => \Drupal::config('views.settings')->get('ui.always_live_preview'),
     );
 
     // Add the arguments textfield
@@ -89,7 +89,7 @@ class ViewPreviewFormController extends ViewFormControllerBase implements Entity
       $args = explode('/', $form_state['values']['view_args']);
     }
 
-    if (!empty($form_state['show_preview'])) {
+    if (!empty($form_state['show_preview']) || !empty($form_state['input']['js'])) {
       $form['preview'] = array(
         '#weight' => 110,
         '#theme_wrappers' => array('container'),
@@ -122,7 +122,7 @@ class ViewPreviewFormController extends ViewFormControllerBase implements Entity
           'wrapper' => 'views-preview-wrapper',
           'event' => 'click',
           'progress' => array('type' => 'throbber'),
-          'method' => 'replace',
+          'method' => 'replaceWith',
         ),
       ),
     );

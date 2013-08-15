@@ -2442,7 +2442,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
     '#type' => 'select',
     '#title' => t('Default country'),
     '#empty_value' => '',
-    '#default_value' => config('system.date')->get('country.default'),
+    '#default_value' => Drupal::config('system.date')->get('country.default'),
     '#options' => $countries,
     '#description' => t('Select the default country for the site.'),
     '#weight' => 0,
@@ -2509,13 +2509,13 @@ function install_configure_form_validate($form, &$form_state) {
 function install_configure_form_submit($form, &$form_state) {
   global $user;
 
-  config('system.site')
+  Drupal::config('system.site')
     ->set('name', $form_state['values']['site_name'])
     ->set('mail', $form_state['values']['site_mail'])
     ->set('langcode', language_default()->id)
     ->save();
 
-  config('system.date')
+  Drupal::config('system.date')
     ->set('timezone.default', $form_state['values']['date_default_timezone'])
     ->set('country.default', $form_state['values']['site_default_country'])
     ->save();
@@ -2527,7 +2527,7 @@ function install_configure_form_submit($form, &$form_state) {
     // Add the site maintenance account's email address to the list of
     // addresses to be notified when updates are available, if selected.
     if ($form_state['values']['update_status_module'][2]) {
-      config('update.settings')->set('notification.emails', array($form_state['values']['account']['mail']))->save();
+      Drupal::config('update.settings')->set('notification.emails', array($form_state['values']['account']['mail']))->save();
     }
   }
 

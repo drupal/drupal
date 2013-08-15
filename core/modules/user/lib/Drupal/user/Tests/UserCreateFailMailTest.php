@@ -37,7 +37,7 @@ class UserCreateFailMailTest extends WebTestBase {
     $this->drupalLogin($user);
 
     // Replace the mail functionality with a fake, malfunctioning service.
-    config('system.mail')->set('interface.default', 'Drupal\system_mail_failure_test\TestPhpMailFailure')->save();
+    \Drupal::config('system.mail')->set('interface.default', 'Drupal\system_mail_failure_test\TestPhpMailFailure')->save();
     // Create a user, but fail to send an email.
     $name = $this->randomName();
     $edit = array(

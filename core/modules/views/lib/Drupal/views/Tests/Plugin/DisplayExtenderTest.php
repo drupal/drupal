@@ -41,7 +41,7 @@ class DisplayExtenderTest extends PluginTestBase {
    * Test display extenders.
    */
   public function testDisplayExtenders() {
-    config('views.settings')->set('display_extenders', array('display_extender_test'))->save();
+    \Drupal::config('views.settings')->set('display_extenders', array('display_extender_test'))->save();
     $this->assertEqual(count(views_get_enabled_display_extenders()), 1, 'Make sure that there is only one enabled display extender.');
 
     $view = views_get_view('test_view');

@@ -96,17 +96,23 @@ class CssOptimizer implements AssetOptimizerInterface {
     if ($basepath && !file_uri_scheme($file)) {
       $file = $basepath . '/' . $file;
     }
+    // Store the parent base path to restore it later.
+    $parent_base_path = $basepath;
+    // Set the current base path to process possible child imports.
     $basepath = dirname($file);
 
     // Load the CSS stylesheet. We suppress errors because themes may specify
     // stylesheets in their .info.yml file that don't exist in the theme's path,
     // but are merely there to disable certain module CSS files.
+    $content = '';
     if ($contents = @file_get_contents($file)) {
       // Return the processed stylesheet.
-      return $this->processCss($contents, $_optimize);
+      $content = $this->processCss($contents, $_optimize);
     }
 
-    return '';
+    // Restore the parent base path as the file and its childen are processed.
+    $basepath = $parent_base_path;
+    return $content;
   }
 
   /**
@@ -199,7 +205,7 @@ class CssOptimizer implements AssetOptimizerInterface {
 
     // Replaces @import commands with the actual stylesheet content.
     // This happens recursively but omits external files.
-    $contents = preg_replace_callback('/@import\s*(?:url\(\s*)?[\'"]?(?![a-z]+:)([^\'"\()]+)[\'"]?\s*\)?\s*;/', array($this, 'loadNestedFile'), $contents);
+    $contents = preg_replace_callback('/@import\s*(?:url\(\s*)?[\'"]?(?![a-z]+:)(?!\/\/)([^\'"\()]+)[\'"]?\s*\)?\s*;/', array($this, 'loadNestedFile'), $contents);
 
     return $contents;
   }

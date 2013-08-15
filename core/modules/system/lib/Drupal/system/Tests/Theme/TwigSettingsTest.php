@@ -78,7 +78,7 @@ class TwigSettingsTest extends WebTestBase {
   function testTwigCacheOverride() {
     $extension = twig_extension();
     theme_enable(array('test_theme'));
-    config('system.theme')
+    \Drupal::config('system.theme')
       ->set('default', 'test_theme')
       ->save();
 

@@ -68,7 +68,7 @@ class ImageUpgradePathTest extends UpgradePathTestBase {
       ),
     );
     foreach ($expected_styles as $name => $style) {
-      $config = config('image.style.' . $name);
+      $config = \Drupal::config('image.style.' . $name);
       // Replace placeholder with image effect name keys with UUID's generated
       // during by the image style upgrade functions.
       foreach ($config->get('effects') as $uuid => $effect) {

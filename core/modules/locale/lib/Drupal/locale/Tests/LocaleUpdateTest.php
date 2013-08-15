@@ -65,7 +65,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    */
   function testUpdateProjectsHidden() {
     module_load_include('compare.inc', 'locale');
-    $config = config('locale.settings');
+    $config = \Drupal::config('locale.settings');
 
     // Make the test modules look like a normal custom module.
     \Drupal::state()->set('locale.test_system_info_alter', TRUE);
@@ -97,7 +97,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    * for local files only, check for both local and remote files.
    */
   function testUpdateCheckStatus() {
-    $config = config('locale.settings');
+    $config = \Drupal::config('locale.settings');
     // Set a flag to let the locale_test module replace the project data with a
     // set of test projects.
     \Drupal::state()->set('locale.test_projects_alter', TRUE);
@@ -149,7 +149,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *  - Import overwrite: all existing translations
    */
   function testUpdateImportSourceRemote() {
-    $config = config('locale.settings');
+    $config = \Drupal::config('locale.settings');
 
     // Build the test environment.
     $this->setTranslationFiles();
@@ -211,7 +211,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *  - Import overwrite: all existing translations
    */
   function testUpdateImportSourceLocal() {
-    $config = config('locale.settings');
+    $config = \Drupal::config('locale.settings');
 
     // Build the test environment.
     $this->setTranslationFiles();
@@ -265,7 +265,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *  - Import overwrite: only overwrite non-customized translations
    */
   function testUpdateImportModeNonCustomized() {
-    $config = config('locale.settings');
+    $config = \Drupal::config('locale.settings');
 
     // Build the test environment.
     $this->setTranslationFiles();
@@ -301,7 +301,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    *  - Import overwrite: don't overwrite any existing translation
    */
   function testUpdateImportModeNone() {
-    $config = config('locale.settings');
+    $config = \Drupal::config('locale.settings');
 
     // Build the test environment.
     $this->setTranslationFiles();

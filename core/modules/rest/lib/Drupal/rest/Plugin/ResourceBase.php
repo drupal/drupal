@@ -8,13 +8,51 @@
 namespace Drupal\rest\Plugin;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
  * Common base class for resource plugins.
  */
-abstract class ResourceBase extends PluginBase implements ResourceInterface {
+abstract class ResourceBase extends PluginBase implements ContainerFactoryPluginInterface, ResourceInterface {
+
+  /**
+   * The available serialization formats.
+   *
+   * @var array
+   */
+  protected $serializerFormats = array();
+
+  /**
+   * Constructs a Drupal\rest\Plugin\ResourceBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param array $serializer_formats
+   *   The available serialization formats.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, array $serializer_formats) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->serializerFormats = $serializer_formats;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->getParameter('serializer.formats')
+    );
+  }
 
   /**
    * Implements ResourceInterface::permissions().
@@ -68,8 +106,7 @@ abstract class ResourceBase extends PluginBase implements ResourceInterface {
         case 'HEAD':
           // Restrict GET and HEAD requests to the media type specified in the
           // HTTP Accept headers.
-          $formats = drupal_container()->getParameter('serializer.formats');
-          foreach ($formats as $format_name) {
+          foreach ($this->serializerFormats as $format_name) {
             // Expose one route per available format.
             //$format_route = new Route($route->getPattern(), $route->getDefaults(), $route->getRequirements());
             $format_route = clone $route;
@@ -124,4 +161,5 @@ abstract class ResourceBase extends PluginBase implements ResourceInterface {
     }
     return $available;
   }
+
 }

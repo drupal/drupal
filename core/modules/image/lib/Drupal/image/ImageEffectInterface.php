@@ -9,6 +9,7 @@ namespace Drupal\image;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Core\Image\ImageInterface;
 
 /**
  * Defines the interface for image effects.
@@ -18,13 +19,13 @@ interface ImageEffectInterface extends PluginInspectionInterface, ConfigurablePl
   /**
    * Applies an image effect to the image object.
    *
-   * @param \stdClass $image
-   *   An image object returned by image_load().
+   * @param \Drupal\Core\Image\ImageInterface $image
+   *   An image file object.
    *
    * @return bool
    *   TRUE on success. FALSE if unable to perform the image effect on the image.
    */
-  public function applyEffect($image);
+  public function applyEffect(ImageInterface $image);
 
   /**
    * Determines the dimensions of the styled image.

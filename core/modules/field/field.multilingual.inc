@@ -155,7 +155,7 @@ function field_content_languages() {
  * Checks whether field language fallback is enabled.
  */
 function field_language_fallback_enabled() {
-  return language_multilingual() && config('field.settings')->get('language_fallback');
+  return language_multilingual() && Drupal::config('field.settings')->get('language_fallback');
 }
 
 /**

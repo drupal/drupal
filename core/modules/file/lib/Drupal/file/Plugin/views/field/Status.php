@@ -9,6 +9,7 @@ namespace Drupal\file\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
+use Drupal\views\ResultRow;
 
 /**
  * Field handler to translate a node type into its readable form.
@@ -19,7 +20,10 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
  */
 class Status extends FieldPluginBase {
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     return _views_file_status($value);
   }

@@ -363,7 +363,7 @@ function language_configuration_element_submit(&$form, &$form_state) {
  *   - language_show: if the language element should be hidden or not.
  */
 function language_save_default_configuration($entity_type, $bundle, $values = array()) {
-  config('language.settings')->set(language_get_default_configuration_settings_key($entity_type, $bundle), array('langcode' => $values['langcode'], 'language_show' => $values['language_show']))->save();
+  Drupal::config('language.settings')->set(language_get_default_configuration_settings_key($entity_type, $bundle), array('langcode' => $values['langcode'], 'language_show' => $values['language_show']))->save();
 }
 
 /**
@@ -380,7 +380,7 @@ function language_save_default_configuration($entity_type, $bundle, $values = ar
  *   - language_show: if the language element is hidden or not.
  */
 function language_get_default_configuration($entity_type, $bundle) {
-  $configuration = config('language.settings')->get(language_get_default_configuration_settings_key($entity_type, $bundle));
+  $configuration = Drupal::config('language.settings')->get(language_get_default_configuration_settings_key($entity_type, $bundle));
   if (is_null($configuration)) {
     $configuration = array();
   }
@@ -397,7 +397,7 @@ function language_get_default_configuration($entity_type, $bundle) {
  *   A string representing the bundle.
  */
 function language_clear_default_configuration($entity_type, $bundle) {
-  config('language.settings')->clear(language_get_default_configuration_settings_key($entity_type, $bundle))->save();
+  Drupal::config('language.settings')->clear(language_get_default_configuration_settings_key($entity_type, $bundle))->save();
 }
 
 /**
@@ -803,7 +803,7 @@ function language_preprocess_block(&$variables) {
  *   Drupal language codes as values.
  */
 function language_get_browser_drupal_langcode_mappings() {
-  $config = config('language.mappings');
+  $config = Drupal::config('language.mappings');
   if ($config->isNew()) {
     return array();
   }
@@ -818,7 +818,7 @@ function language_get_browser_drupal_langcode_mappings() {
  *   Drupal language codes as values.
  */
 function language_set_browser_drupal_langcode_mappings($mappings) {
-  $config = config('language.mappings');
+  $config = Drupal::config('language.mappings');
   $config->setData($mappings);
   $config->save();
 }

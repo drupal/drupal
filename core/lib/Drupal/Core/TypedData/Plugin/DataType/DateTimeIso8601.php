@@ -29,7 +29,13 @@ class DateTimeIso8601 extends String implements DateTimeInterface {
    */
   public function getDateTime() {
     if ($this->value) {
-      return new DrupalDateTime($this->value);
+      if (is_array($this->value)) {
+        $datetime = DrupalDateTime::createFromArray($this->value);
+      }
+      else {
+        $datetime = new DrupalDateTime($this->value);
+      }
+      return $datetime;
     }
   }
 

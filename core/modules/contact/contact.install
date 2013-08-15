@@ -12,11 +12,11 @@ use Drupal\Core\Language\Language;
  * Implements hook_install().
  */
 function contact_install() {
-  $site_mail = config('system.site')->get('mail');
+  $site_mail = Drupal::config('system.site')->get('mail');
   if (empty($site_mail)) {
     $site_mail = ini_get('sendmail_from');
   }
-  config('contact.category.feedback')->set('recipients', array($site_mail))->save();
+  Drupal::config('contact.category.feedback')->set('recipients', array($site_mail))->save();
 }
 
 /**
@@ -61,12 +61,12 @@ function contact_update_8001() {
     $category->id = $category->cid;
     // Save default category setting.
     if ($category->selected) {
-      config('contact.settings')
+      Drupal::config('contact.settings')
         ->set('default_category', $category->id)
         ->save();
     }
     // Save the config object.
-    config('contact.category.' . $category->id)
+    Drupal::config('contact.category.' . $category->id)
       ->set('id', $category->id)
       ->set('uuid', $uuid->generate())
       ->set('label', $category->category)

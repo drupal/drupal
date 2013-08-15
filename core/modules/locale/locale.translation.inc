@@ -236,7 +236,7 @@ function locale_translation_source_build($project, $langcode, $filename = NULL) 
   $source->timestamp = 0;
   $source->last_checked = 0;
 
-  $filename = $filename ? $filename : config('locale.settings')->get('translation.default_filename');
+  $filename = $filename ? $filename : Drupal::config('locale.settings')->get('translation.default_filename');
 
   // If the server_pattern contains a remote file path we will check for a
   // remote file. The local version of this file will only be checked if a
@@ -322,7 +322,7 @@ function locale_translation_build_server_pattern($project, $template) {
  */
 function locale_cron_fill_queue() {
   $updates = array();
-  $config = config('locale.settings');
+  $config = Drupal::config('locale.settings');
 
   // Determine which project+language should be updated.
   $last = REQUEST_TIME - $config->get('translation.update_interval_days') * 3600 * 24;
@@ -425,7 +425,7 @@ function _locale_translation_source_compare($source1, $source2) {
  *   Array of translation import options.
  */
 function _locale_translation_default_update_options() {
-  $config = config('locale.settings');
+  $config = Drupal::config('locale.settings');
   return array(
     'customized' => LOCALE_NOT_CUSTOMIZED,
     'overwrite_options' => array(

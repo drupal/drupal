@@ -18,7 +18,7 @@ use Drupal\Core\Config\Config;
  *
  * @see Drupal\Core\Config\Config
  * @see Drupal\Core\Config\ConfigFactory
- * @see config()
+ * @see \Drupal::config()
  */
 interface ContextInterface {
 

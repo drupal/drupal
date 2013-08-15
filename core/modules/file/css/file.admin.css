@@ -9,7 +9,7 @@
  */
 .form-managed-file .form-file,
 .form-managed-file .form-submit {
-  margin: 0;
+  margin: 0 0.5em;
 }
 .form-managed-file .progress-disabled {
   display: inline;

@@ -36,11 +36,11 @@ interface ConditionInterface {
    *   complex options such as IN, LIKE, or BETWEEN. Defaults to IN if $value is
    *   an array, and = otherwise.
    *
-   * @return QueryConditionInterface
+   * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    *
-   * @see Drupal\Core\Database\Query\ConditionInterface::isNull()
-   * @see Drupal\Core\Database\Query\ConditionInterface::isNotNull()
+   * @see \Drupal\Core\Database\Query\ConditionInterface::isNull()
+   * @see \Drupal\Core\Database\Query\ConditionInterface::isNotNull()
    */
   public function condition($field, $value = NULL, $operator = NULL);
 
@@ -53,7 +53,7 @@ interface ConditionInterface {
    * @param $args
    *   An associative array of arguments.
    *
-   * @return Drupal\Core\Database\Query\ConditionInterface
+   * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function where($snippet, $args = array());
@@ -64,7 +64,7 @@ interface ConditionInterface {
    * @param $field
    *   The name of the field to check.
    *
-   * @return Drupal\Core\Database\Query\ConditionInterface
+   * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function isNull($field);
@@ -75,7 +75,7 @@ interface ConditionInterface {
    * @param $field
    *   The name of the field to check.
    *
-   * @return Drupal\Core\Database\Query\ConditionInterface
+   * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function isNotNull($field);
@@ -83,10 +83,10 @@ interface ConditionInterface {
   /**
    * Sets a condition that the specified subquery returns values.
    *
-   * @param Drupal\Core\Database\Query\SelectInterface $select
+   * @param \Drupal\Core\Database\Query\SelectInterface $select
    *   The subquery that must contain results.
    *
-   * @return Drupal\Core\Database\Query\ConditionInterface
+   * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function exists(SelectInterface $select);
@@ -94,10 +94,10 @@ interface ConditionInterface {
   /**
    * Sets a condition that the specified subquery returns no values.
    *
-   * @param Drupal\Core\Database\Query\SelectInterface $select
+   * @param \Drupal\Core\Database\Query\SelectInterface $select
    *   The subquery that must not contain results.
    *
-   * @return Drupal\Core\Database\Query\ConditionInterface
+   * @return \Drupal\Core\Database\Query\ConditionInterface
    *   The called object.
    */
   public function notExists(SelectInterface $select);

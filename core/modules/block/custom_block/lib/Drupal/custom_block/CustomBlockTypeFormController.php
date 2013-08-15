@@ -101,7 +101,7 @@ class CustomBlockTypeFormController extends EntityFormController {
       watchdog('custom_block', 'Custom block type %label has been added.', array('%label' => $block_type->label()), WATCHDOG_NOTICE, l(t('Edit'), $uri['path'] . '/edit'));
     }
 
-    $form_state['redirect'] = 'admin/structure/custom-blocks';
+    $form_state['redirect'] = 'admin/structure/custom-blocks/types';
   }
 
   /**

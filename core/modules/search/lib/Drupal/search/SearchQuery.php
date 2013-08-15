@@ -200,7 +200,7 @@ class SearchQuery extends SelectExtender {
     // Classify tokens.
     $or = FALSE;
     $warning = '';
-    $limit_combinations = config('search.settings')->get('and_or_limit');
+    $limit_combinations = \Drupal::config('search.settings')->get('and_or_limit');
     // The first search expression does not count as AND.
     $and_count = -1;
     $or_count = 0;
@@ -323,7 +323,7 @@ class SearchQuery extends SelectExtender {
     $split = explode(' ', $word);
     foreach ($split as $s) {
       $num = is_numeric($s);
-      if ($num || drupal_strlen($s) >= config('search.settings')->get('index.minimum_word_size')) {
+      if ($num || drupal_strlen($s) >= \Drupal::config('search.settings')->get('index.minimum_word_size')) {
         if (!isset($this->words[$s])) {
           $this->words[$s] = $s;
           $num_new_scores++;
@@ -349,11 +349,11 @@ class SearchQuery extends SelectExtender {
     $this->parseSearchExpression();
 
     if (count($this->words) == 0) {
-      form_set_error('keys', format_plural(config('search.settings')->get('index.minimum_word_size'), 'You must include at least one positive keyword with 1 character or more.', 'You must include at least one positive keyword with @count characters or more.'));
+      form_set_error('keys', format_plural(\Drupal::config('search.settings')->get('index.minimum_word_size'), 'You must include at least one positive keyword with 1 character or more.', 'You must include at least one positive keyword with @count characters or more.'));
       return FALSE;
     }
     if ($this->expressionsIgnored) {
-      drupal_set_message(t('Your search used too many AND/OR expressions. Only the first @count terms were included in this search.', array('@count' => config('search.settings')->get('and_or_limit'))), 'warning');
+      drupal_set_message(t('Your search used too many AND/OR expressions. Only the first @count terms were included in this search.', array('@count' => \Drupal::config('search.settings')->get('and_or_limit'))), 'warning');
     }
     $this->executedFirstPass = TRUE;
 

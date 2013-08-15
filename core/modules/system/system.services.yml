@@ -3,14 +3,6 @@ services:
     class: Drupal\system\Access\CronAccessCheck
     tags:
       - { name: access_check }
-  access_check.system_plugin_ui:
-    class: Drupal\system\Access\SystemPluginUiCheck
-    tags:
-      - { name: access_check }
-    arguments: ['@plugin.manager.system.plugin_ui']
-  plugin.manager.system.plugin_ui:
-    class: Drupal\system\Plugin\Type\PluginUIManager
-    arguments: ['@container.namespaces']
   system.manager:
     class: Drupal\system\SystemManager
     arguments: ['@module_handler', '@database']

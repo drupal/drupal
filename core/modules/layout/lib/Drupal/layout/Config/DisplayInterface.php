@@ -41,7 +41,7 @@ interface DisplayInterface extends ConfigEntityInterface {
    * displays (e.g., by a "regular" page, by an administrative page, and within
    * one or more dashboards). This function returns the block instances that
    * have been added to this display. Each key of the returned array is the
-   * block instance's configuration object name, and config() may be called on
+   * block instance's configuration object name, and \Drupal::config() may be called on
    * it in order to retrieve the full configuration that is shared across all
    * displays. For each key, the value is an array of display-specific
    * configuration, primarily the 'region' and 'weight', and anything else that

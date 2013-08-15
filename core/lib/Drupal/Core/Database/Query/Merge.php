@@ -126,8 +126,8 @@ class Merge extends Query implements ConditionInterface {
   /**
   * Constructs a Merge object.
   *
-  * @param Drupal\Core\Database\Connection $connection
-  *   A Drupal\Core\Database\Connection object.
+  * @param \Drupal\Core\Database\Connection $connection
+  *   A Connection object.
   * @param string $table
   *   Name of the table to associate with this query.
   * @param array $options
@@ -148,7 +148,7 @@ class Merge extends Query implements ConditionInterface {
    *   The table name or the subquery to be used. Use a Select query object to
    *   pass in a subquery.
    *
-   * @return Drupal\Core\Database\Query\Merge
+   * @return \Drupal\Core\Database\Query\Merge
    *   The called object.
    */
   protected function conditionTable($table) {
@@ -163,7 +163,7 @@ class Merge extends Query implements ConditionInterface {
    *   An associative array of fields to write into the database. The array keys
    *   are the field names and the values are the values to which to set them.
    *
-   * @return Drupal\Core\Database\Query\Merge
+   * @return \Drupal\Core\Database\Query\Merge
    *   The called object.
    */
   public function updateFields(array $fields) {
@@ -188,7 +188,7 @@ class Merge extends Query implements ConditionInterface {
    *   If specified, this is an array of key/value pairs for named placeholders
    *   corresponding to the expression.
    *
-   * @return Drupal\Core\Database\Query\Merge
+   * @return \Drupal\Core\Database\Query\Merge
    *   The called object.
    */
   public function expression($field, $expression, array $arguments = NULL) {
@@ -213,7 +213,7 @@ class Merge extends Query implements ConditionInterface {
    *   An array of fields to insert into the database. The values must be
    *   specified in the same order as the $fields array.
    *
-   * @return Drupal\Core\Database\Query\Merge
+   * @return \Drupal\Core\Database\Query\Merge
    *   The called object.
    */
   public function insertFields(array $fields, array $values = array()) {
@@ -240,7 +240,7 @@ class Merge extends Query implements ConditionInterface {
    *   An array of values for which to use the default values
    *   specified in the table definition.
    *
-   * @return Drupal\Core\Database\Query\Merge
+   * @return \Drupal\Core\Database\Query\Merge
    *   The called object.
    */
   public function useDefaults(array $fields) {
@@ -266,7 +266,7 @@ class Merge extends Query implements ConditionInterface {
    *   An array of values to set into the database. The values must be
    *   specified in the same order as the $fields array.
    *
-   * @return Drupal\Core\Database\Query\Merge
+   * @return \Drupal\Core\Database\Query\Merge
    *   The called object.
    */
   public function fields(array $fields, array $values = array()) {
@@ -300,7 +300,7 @@ class Merge extends Query implements ConditionInterface {
    *   An array of values to set into the database. The values must be
    *   specified in the same order as the $fields array.
    *
-   * @return Drupal\Core\Database\Query\Merge
+   * @return \Drupal\Core\Database\Query\Merge
    *   The called object.
    */
   public function key(array $fields, array $values = array()) {

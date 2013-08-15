@@ -35,7 +35,7 @@ class TwigDebugMarkupTest extends WebTestBase {
   function testTwigDebugMarkup() {
     $extension = twig_extension();
     theme_enable(array('test_theme'));
-    config('system.theme')->set('default', 'test_theme')->save();
+    \Drupal::config('system.theme')->set('default', 'test_theme')->save();
     // Enable debug, rebuild the service container, and clear all caches.
     $this->settingsSet('twig_debug', TRUE);
     $this->rebuildContainer();

@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Component\Utility\String;
 
 /**
  * Provides a generic implementation of an entity list controller.
@@ -144,7 +145,7 @@ class EntityListController implements EntityListControllerInterface, EntityContr
    * @see Drupal\Core\Entity\EntityListController::render()
    */
   public function buildRow(EntityInterface $entity) {
-    $row['label'] = $entity->label();
+    $row['label'] = String::checkPlain($entity->label());
     $row['id'] = $entity->id();
     $operations = $this->buildOperations($entity);
     $row['operations']['data'] = $operations;

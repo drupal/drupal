@@ -170,7 +170,7 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
     );
 
     foreach ($expected_config as $file => $values) {
-      $config = config($file);
+      $config = \Drupal::config($file);
       $this->verbose(print_r($config->get(), TRUE));
       foreach ($values as $name => $value) {
         $stored = $config->get($name);

@@ -435,9 +435,9 @@ class BookTest extends WebTestBase {
     //   'page',
     // );
     // @endcode
-    $current_config = config('book.settings')->init()->get();
+    $current_config = \Drupal::config('book.settings')->init()->get();
     $this->drupalPost('admin/structure/book/settings', array(), t('Save configuration'));
-    $this->assertIdentical($current_config, config('book.settings')->init()->get());
+    $this->assertIdentical($current_config, \Drupal::config('book.settings')->init()->get());
 
     // Change the name, machine name and description.
     $edit = array(
@@ -456,9 +456,9 @@ class BookTest extends WebTestBase {
     //   'zebra',
     // );
     // @endcode
-    $current_config = config('book.settings')->init()->get();
+    $current_config = \Drupal::config('book.settings')->init()->get();
     $this->drupalPost('admin/structure/book/settings', array(), t('Save configuration'));
-    $this->assertIdentical($current_config, config('book.settings')->init()->get());
+    $this->assertIdentical($current_config, \Drupal::config('book.settings')->init()->get());
 
     $edit = array(
       'name' => 'Animal book',
@@ -474,13 +474,13 @@ class BookTest extends WebTestBase {
     //   'zebra',
     // );
     // @endcode
-    $current_config = config('book.settings')->init()->get();
+    $current_config = \Drupal::config('book.settings')->init()->get();
     $this->drupalPost('admin/structure/book/settings', array(), t('Save configuration'));
-    $this->assertIdentical($current_config, config('book.settings')->init()->get());
+    $this->assertIdentical($current_config, \Drupal::config('book.settings')->init()->get());
 
     // Ensure that after all the node type changes book.settings:child_type has
     // the expected value.
-    $this->assertEqual(config('book.settings')->get('child_type'), 'zebra');
+    $this->assertEqual(\Drupal::config('book.settings')->get('child_type'), 'zebra');
   }
 
   /**

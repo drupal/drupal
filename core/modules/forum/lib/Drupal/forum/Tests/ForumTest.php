@@ -240,7 +240,7 @@ class ForumTest extends WebTestBase {
    */
   function testAddOrphanTopic() {
     // Must remove forum topics to test creating orphan topics.
-    $vid = config('forum.settings')->get('vocabulary');
+    $vid = \Drupal::config('forum.settings')->get('vocabulary');
     $tids = \Drupal::entityQuery('taxonomy_term')
       ->condition('vid', $vid)
       ->execute();
@@ -340,7 +340,7 @@ class ForumTest extends WebTestBase {
    */
   function editForumVocabulary() {
     // Backup forum taxonomy.
-    $vid = config('forum.settings')->get('vocabulary');
+    $vid = \Drupal::config('forum.settings')->get('vocabulary');
     $original_vocabulary = entity_load('taxonomy_vocabulary', $vid);
 
     // Generate a random name and description.
@@ -406,7 +406,7 @@ class ForumTest extends WebTestBase {
     );
 
     // Verify forum.
-    $term = db_query("SELECT * FROM {taxonomy_term_data} t WHERE t.vid = :vid AND t.name = :name AND t.description = :desc", array(':vid' => config('forum.settings')->get('vocabulary'), ':name' => $name, ':desc' => $description))->fetchAssoc();
+    $term = db_query("SELECT * FROM {taxonomy_term_data} t WHERE t.vid = :vid AND t.name = :name AND t.description = :desc", array(':vid' => \Drupal::config('forum.settings')->get('vocabulary'), ':name' => $name, ':desc' => $description))->fetchAssoc();
     $this->assertTrue(!empty($term), 'The ' . $type . ' exists in the database');
 
     // Verify forum hierarchy.
@@ -437,7 +437,7 @@ class ForumTest extends WebTestBase {
 
     // Assert that the associated term has been removed from the
     // forum_containers variable.
-    $containers = config('forum.settings')->get('containers');
+    $containers = \Drupal::config('forum.settings')->get('containers');
     $this->assertFalse(in_array($tid, $containers), 'The forum_containers variable has been updated.');
   }
 
@@ -573,13 +573,17 @@ class ForumTest extends WebTestBase {
     $this->drupalGet('node/' . $node->id());
     $this->assertResponse(200);
     $this->assertTitle($node->label() . ' | Drupal', 'Forum node was displayed');
-    $breadcrumb = array(
+    $breadcrumb_build = array(
       l(t('Home'), NULL),
       l(t('Forums'), 'forum'),
       l($this->forumContainer['name'], 'forum/' . $this->forumContainer['tid']),
       l($this->forum['name'], 'forum/' . $this->forum['tid']),
     );
-    $this->assertRaw(theme('breadcrumb', array('breadcrumb' => $breadcrumb)), 'Breadcrumbs were displayed');
+    $breadcrumb = array(
+      '#theme' => 'breadcrumb',
+      '#breadcrumb' => $breadcrumb_build,
+    );
+    $this->assertRaw(drupal_render($breadcrumb), 'Breadcrumbs were displayed');
 
     // View forum edit node.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -628,15 +632,19 @@ class ForumTest extends WebTestBase {
     $this->assertResponse(200);
     $this->assertTitle($forum['name'] . ' | Drupal');
 
-    $breadcrumb = array(
+    $breadcrumb_build = array(
       l(t('Home'), NULL),
       l(t('Forums'), 'forum'),
     );
     if (isset($parent)) {
-      $breadcrumb[] = l($parent['name'], 'forum/' . $parent['tid']);
+      $breadcrumb_build[] = l($parent['name'], 'forum/' . $parent['tid']);
     }
 
-    $this->assertRaw(theme('breadcrumb', array('breadcrumb' => $breadcrumb)));
+    $breadcrumb = array(
+      '#theme' => 'breadcrumb',
+      '#breadcrumb' => $breadcrumb_build,
+    );
+    $this->assertRaw(drupal_render($breadcrumb), 'Breadcrumbs were displayed');
   }
 
   /**

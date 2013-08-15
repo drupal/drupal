@@ -187,11 +187,11 @@ class CustomBlockFormController extends EntityFormControllerNG {
           $form_state['redirect'] = 'admin/structure/block/add/custom_block:' . $block->uuid->value . '/' . $theme;
         }
         else {
-          $form_state['redirect'] = 'admin/structure/block/add/custom_block:' . $block->uuid->value . '/' . config('system.theme')->get('default');
+          $form_state['redirect'] = 'admin/structure/block/add/custom_block:' . $block->uuid->value . '/' . \Drupal::config('system.theme')->get('default');
         }
       }
       else {
-        $form_state['redirect'] = 'admin/structure/block';
+        $form_state['redirect'] = 'admin/structure/custom-blocks';
       }
     }
     else {
@@ -217,6 +217,21 @@ class CustomBlockFormController extends EntityFormControllerNG {
     }
     $block = $this->buildEntity($form, $form_state);
     $form_state['redirect'] = array('block/' . $block->id() . '/delete', array('query' => $destination));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, array &$form_state) {
+    if ($this->entity->isNew()) {
+      // @todo Inject this once https://drupal.org/node/2060865 is in.
+      $exists = \Drupal::entityManager()->getStorageController('custom_block')->loadByProperties(array('info' => $form_state['values']['info']));
+      if (!empty($exists)) {
+        form_set_error('info', t('A block with description %name already exists.', array(
+        '%name' => $form_state['values']['info']
+      )));
+      }
+    }
   }
 
 }

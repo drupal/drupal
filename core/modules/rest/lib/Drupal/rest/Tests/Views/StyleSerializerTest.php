@@ -109,7 +109,7 @@ class StyleSerializerTest extends PluginTestBase {
     $this->executeView($view);
 
     // Get the serializer service.
-    $serializer = drupal_container()->get('serializer');
+    $serializer = $this->container->get('serializer');
 
     $entities = array();
     foreach ($view->result as $row) {

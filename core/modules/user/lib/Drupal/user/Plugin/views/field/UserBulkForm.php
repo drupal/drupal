@@ -7,9 +7,9 @@
 
 namespace Drupal\user\Plugin\views\field;
 
+use Drupal\views\Plugin\views\field\ActionBulkForm;
 use Drupal\Component\Annotation\PluginID;
 use Drupal\Core\Entity\EntityManager;
-use Drupal\system\Plugin\views\field\BulkFormBase;
 use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @PluginID("user_bulk_form")
  */
-class UserBulkForm extends BulkFormBase {
+class UserBulkForm extends ActionBulkForm {
 
   /**
    * {@inheritdoc}

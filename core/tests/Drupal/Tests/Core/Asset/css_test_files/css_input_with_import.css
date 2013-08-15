@@ -2,6 +2,8 @@
 
 @import "import1.css";
 @import "import2.css";
+@import url("http://example.com/style.css");
+@import url("//example.com/style.css");
 
 body {
   margin: 0;

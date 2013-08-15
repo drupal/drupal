@@ -125,7 +125,6 @@ function menu_menu() {
  */
 function menu_entity_info(&$entity_info) {
   $entity_info['menu']['controllers']['list'] = 'Drupal\menu\MenuListController';
-  $entity_info['menu']['controllers']['access'] = 'Drupal\menu\MenuAccessController';
   $entity_info['menu']['uri_callback'] = 'menu_uri';
   $entity_info['menu']['controllers']['form'] = array(
     'add' => 'Drupal\menu\MenuFormController',
@@ -144,7 +143,7 @@ function menu_entity_bundle_info() {
   $bundles = array();
   $config_names = config_get_storage_names_with_prefix('menu.menu.');
   foreach ($config_names as $config_name) {
-    $config = config($config_name);
+    $config = Drupal::config($config_name);
     $bundles['menu_link'][$config->get('id')] = array(
       'label' => $config->get('label'),
     );
@@ -237,7 +236,7 @@ function menu_menu_insert(Menu $menu) {
   // Make sure the menu is present in the active menus variable so that its
   // items may appear in the menu active trail.
   // See menu_set_active_menu_names().
-  $config = config('system.menu');
+  $config = Drupal::config('system.menu');
 
   $active_menus = $config->get('active_menus_default') ?: array_keys(menu_get_menus());
   if (!in_array($menu->id(), $active_menus)) {
@@ -313,7 +312,7 @@ function menu_parent_options(array $menus, MenuLink $menu_link = NULL, $type = N
   // allow contrib modules to provide more scalable pattern choosers.
   // hook_form_alter is too late in itself because all the possible parents are
   // retrieved here, unless override_parent_selector is set to TRUE.
-  if (config('menu.settings')->get('override_parent_selector')) {
+  if (Drupal::config('menu.settings')->get('override_parent_selector')) {
     return array();
   }
 

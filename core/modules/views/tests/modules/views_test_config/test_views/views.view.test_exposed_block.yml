@@ -1,0 +1,56 @@
+base_table: node
+core: '8'
+description: ''
+status: '1'
+display:
+  default:
+    display_options:
+      access:
+        type: none
+      cache:
+        type: none
+      exposed_form:
+        options:
+          reset_button: '1'
+        type: basic
+      filters:
+        type:
+          expose:
+            identifier: type
+            label: 'Content: Type'
+            operator_id: type_op
+            reduce: '0'
+          exposed: '1'
+          field: type
+          id: type
+          table: node_field_data
+          plugin_id: node_type
+          provider: views
+      pager:
+        type: full
+      query:
+        options:
+          query_comment: '0'
+        type: views_query
+      style:
+        type: default
+      row:
+        type: 'entity:node'
+        options:
+          comments: '0'
+          links: '1'
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  page_1:
+    display_options:
+      path: test_exposed_block
+      exposed_block: '1'
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: '0'
+label: ''
+id: test_exposed_block
+tag: ''

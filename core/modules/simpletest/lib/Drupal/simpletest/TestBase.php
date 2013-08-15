@@ -702,7 +702,7 @@ abstract class TestBase {
    */
   public function run(array $methods = array()) {
     TestServiceProvider::$currentTest = $this;
-    $simpletest_config = config('simpletest.settings');
+    $simpletest_config = \Drupal::config('simpletest.settings');
 
     $class = get_class($this);
     if ($simpletest_config->get('verbose')) {

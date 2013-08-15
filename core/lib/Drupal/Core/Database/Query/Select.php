@@ -72,14 +72,14 @@ class Select extends Query implements SelectInterface {
   /**
    * The conditional object for the WHERE clause.
    *
-   * @var Drupal\Core\Database\Query\Condition
+   * @var \Drupal\Core\Database\Query\Condition
    */
   protected $where;
 
   /**
    * The conditional object for the HAVING clause.
    *
-   * @var Drupal\Core\Database\Query\Condition
+   * @var \Drupal\Core\Database\Query\Condition
    */
   protected $having;
 
@@ -598,7 +598,7 @@ class Select extends Query implements SelectInterface {
   /**
    * Prepares a count query from the current query object.
    *
-   * @return Drupal\Core\Database\Query\Select
+   * @return \Drupal\Core\Database\Query\Select
    *   A new query object ready to have COUNT(*) performed on it.
    */
   protected function prepareCountQuery() {
@@ -629,7 +629,7 @@ class Select extends Query implements SelectInterface {
 
       // Also remove 'all_fields' statements, which are expanded into tablename.*
       // when the query is executed.
-      foreach ($count->tables as $alias => &$table) {
+      foreach ($count->tables as &$table) {
         unset($table['all_fields']);
       }
     }
@@ -683,12 +683,12 @@ class Select extends Query implements SelectInterface {
         $fields[] = $this->connection->escapeTable($alias) . '.*';
       }
     }
-    foreach ($this->fields as $alias => $field) {
+    foreach ($this->fields as $field) {
       // Always use the AS keyword for field aliases, as some
       // databases require it (e.g., PostgreSQL).
       $fields[] = (isset($field['table']) ? $this->connection->escapeTable($field['table']) . '.' : '') . $this->connection->escapeField($field['field']) . ' AS ' . $this->connection->escapeAlias($field['alias']);
     }
-    foreach ($this->expressions as $alias => $expression) {
+    foreach ($this->expressions as $expression) {
       $fields[] = $expression['expression'] . ' AS ' . $this->connection->escapeAlias($expression['alias']);
     }
     $query .= implode(', ', $fields);
@@ -696,7 +696,7 @@ class Select extends Query implements SelectInterface {
 
     // FROM - We presume all queries have a FROM, as any query that doesn't won't need the query builder anyway.
     $query .= "\nFROM ";
-    foreach ($this->tables as $alias => $table) {
+    foreach ($this->tables as $table) {
       $query .= "\n";
       if (isset($table['join type'])) {
         $query .= $table['join type'] . ' JOIN ';

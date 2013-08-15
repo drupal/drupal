@@ -91,7 +91,6 @@ function views_theme($existing, $type, $theme, $path) {
   // Our extra version of pager from pager.inc
   $hooks['views_mini_pager'] = $base + array(
     'variables' => array('tags' => array(), 'quantity' => 10, 'element' => 0, 'parameters' => array()),
-    'pattern' => 'views_mini_pager__',
   );
 
   $variables = array(
@@ -110,7 +109,6 @@ function views_theme($existing, $type, $theme, $path) {
 
   // Default view themes
   $hooks['views_view_field'] = $base + array(
-    'pattern' => 'views_view_field__',
     'variables' => array('view' => NULL, 'field' => NULL, 'row' => NULL),
   );
   $hooks['views_view_grouping'] = $base + array(
@@ -122,7 +120,7 @@ function views_theme($existing, $type, $theme, $path) {
 
   // Register theme functions for all style plugins
   foreach ($plugins as $type => $info) {
-    foreach ($info as $plugin => $def) {
+    foreach ($info as $def) {
       // Not all plugins have theme functions, and they can also explicitly
       // prevent a theme function from being registered automatically.
       if (!isset($def['theme']) || empty($def['register_theme'])) {
@@ -130,7 +128,6 @@ function views_theme($existing, $type, $theme, $path) {
       }
 
       $hooks[$def['theme']] = array(
-        'pattern' => $def['theme'] . '__',
         'variables' => $variables[$type],
       );
 
@@ -165,7 +162,6 @@ function views_theme($existing, $type, $theme, $path) {
 
   $hooks['views_exposed_form'] = $base + array(
     'template' => 'views-exposed-form',
-    'pattern' => 'views_exposed_form__',
     'render element' => 'form',
   );
 
@@ -193,7 +189,7 @@ function views_plugin_list() {
   $plugin_data = views_get_plugin_definitions();
   $plugins = array();
   foreach (views_get_enabled_views() as $view) {
-    foreach ($view->get('display') as $display_id => $display) {
+    foreach ($view->get('display') as $display) {
       foreach ($plugin_data as $type => $info) {
         if ($type == 'display' && isset($display['display_plugin'])) {
           $name = $display['display_plugin'];
@@ -485,8 +481,6 @@ function views_preprocess_html(&$variables) {
     if ($key !== FALSE) {
       unset($variables['attributes']['class'][$key]);
       $variables['attributes']['data-views-page-contextual-id'] = $variables['title_suffix']['contextual_links']['#id'];
-      // Add the JavaScript, with a group and weight such that it will run
-      // before modules/contextual/contextual.js.
       drupal_add_library('views', 'views.contextual-links');
     }
   }
@@ -821,6 +815,7 @@ function views_library_info() {
     'title' => 'Views Contextual links',
     'version' => VERSION,
     'js' => array(
+      // Set to -10 to move it before the contextual links javascript file.
       "$path/js/views-contextual.js" => array('group' => JS_LIBRARY, 'weight' => -10),
     ),
     'dependencies' => array(
@@ -895,7 +890,7 @@ function views_get_plugin_definitions() {
  * Get enabled display extenders.
  */
 function views_get_enabled_display_extenders() {
-  $enabled = array_filter((array) config('views.settings')->get('display_extenders'));
+  $enabled = array_filter((array) Drupal::config('views.settings')->get('display_extenders'));
 
   return drupal_map_assoc($enabled);
 }
@@ -1172,7 +1167,8 @@ function views_form($form, &$form_state, ViewExecutable $view, $output) {
 function views_form_views_form($form, &$form_state, ViewExecutable $view, $output) {
   $form['#prefix'] = '<div class="views-form">';
   $form['#suffix'] = '</div>';
-  $form['#theme'] = 'views_form_views_form';
+  $form['#theme'] = 'form';
+  $form['#pre_render'][] = 'views_pre_render_views_form_views_form';
   $form['#validate'][] = 'views_form_views_form_validate';
   $form['#submit'][] = 'views_form_views_form_submit';
 
@@ -1261,7 +1257,7 @@ function views_form_views_form_validate($form, &$form_state) {
   $view = $form_state['build_info']['args'][0];
 
   // Call the validation method on every field handler that has it.
-  foreach ($view->field as $field_name => $field) {
+  foreach ($view->field as $field) {
     if (method_exists($field, 'views_form_validate')) {
       $field->views_form_validate($form, $form_state);
     }
@@ -1269,7 +1265,7 @@ function views_form_views_form_validate($form, &$form_state) {
 
   // Call the validate method on every area handler that has it.
   foreach (array('header', 'footer') as $area) {
-    foreach ($view->{$area} as $area_name => $area_handler) {
+    foreach ($view->{$area} as $area_handler) {
       if (method_exists($area_handler, 'views_form_validate')) {
         $area_handler->views_form_validate($form, $form_state);
       }
@@ -1286,7 +1282,7 @@ function views_form_views_form_submit($form, &$form_state) {
   $view = $form_state['build_info']['args'][0];
 
   // Call the submit method on every field handler that has it.
-  foreach ($view->field as $field_name => $field) {
+  foreach ($view->field as $field) {
     if (method_exists($field, 'views_form_submit')) {
       $field->views_form_submit($form, $form_state);
     }
@@ -1294,12 +1290,50 @@ function views_form_views_form_submit($form, &$form_state) {
 
   // Call the submit method on every area handler that has it.
   foreach (array('header', 'footer') as $area) {
-    foreach ($view->{$area} as $area_name => $area_handler) {
+    foreach ($view->{$area} as $area_handler) {
       if (method_exists($area_handler, 'views_form_submit')) {
         $area_handler->views_form_submit($form, $form_state);
       }
     }
   }
+}
+
+/**
+ * Replaces views substitution placeholders.
+ *
+ * @param array $element
+ *   An associative array containing the properties of the element.
+ *   Properties used: #substitutions, #children.
+ * @return array
+ *   The $element with prepared variables ready for #theme 'form'
+ *   in views_form_views_form.
+ */
+function views_pre_render_views_form_views_form($element) {
+  // Placeholders and their substitutions (usually rendered form elements).
+  $search = array();
+  $replace = array();
+
+  // Add in substitutions provided by the form.
+  foreach ($element['#substitutions']['#value'] as $substitution) {
+    $field_name = $substitution['field_name'];
+    $row_id = $substitution['row_id'];
+
+    $search[] = $substitution['placeholder'];
+    $replace[] = isset($element[$field_name][$row_id]) ? drupal_render($element[$field_name][$row_id]) : '';
+  }
+  // Add in substitutions from hook_views_form_substitutions().
+  $substitutions = Drupal::moduleHandler()->invokeAll('views_form_substitutions');
+  foreach ($substitutions as $placeholder => $substitution) {
+    $search[] = $placeholder;
+    $replace[] = $substitution;
+  }
+
+  // Apply substitutions to the rendered output.
+  $element['output']['#markup'] = str_replace($search, $replace, $element['output']['#markup']);
+
+  // Render and add remaining form fields.
+  $element['#children'] = drupal_render_children($element);
+  return $element;
 }
 
 /**
@@ -1629,7 +1663,7 @@ function views_element_validate_tags($element, &$form_state) {
  *   If TRUE, the data will be cached specific to the currently active language.
  */
 function views_cache_set($cid, $data, $use_language = FALSE) {
-  if (config('views.settings')->get('skip_cache')) {
+  if (Drupal::config('views.settings')->get('skip_cache')) {
     return;
   }
   if ($use_language) {
@@ -1653,7 +1687,7 @@ function views_cache_set($cid, $data, $use_language = FALSE) {
  *   The cache or FALSE on failure.
  */
 function views_cache_get($cid, $use_language = FALSE) {
-  if (config('views.settings')->get('skip_cache')) {
+  if (Drupal::config('views.settings')->get('skip_cache')) {
     return FALSE;
   }
   if ($use_language) {

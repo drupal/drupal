@@ -33,9 +33,6 @@
         }
       }
     },
-    detach: function (context, settings) {
-      $(context).find('form').off('submit.dialogSubmit');
-    },
 
     /**
      * Scan a dialog for any primary buttons and move them to the button area.
@@ -69,12 +66,6 @@
           }
         });
       });
-      if ($buttons.length) {
-        $dialog.find('form').on('submit.dialogSubmit', function (e) {
-          $buttons.first().trigger('click');
-          e.preventDefault();
-        });
-      }
       return buttons;
     }
   };

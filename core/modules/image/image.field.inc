@@ -226,15 +226,14 @@ function _image_field_resolution_validate($element, &$form_state) {
  * Implements hook_field_presave().
  */
 function image_field_presave(EntityInterface $entity, $field, $instance, $langcode, &$items) {
-
+  $image_factory = Drupal::service('image.factory');
   // Determine the dimensions if necessary.
   foreach ($items as &$item) {
     if (!isset($item['width']) || !isset($item['height'])) {
-      $info = image_get_info(file_load($item['target_id'])->getFileUri());
-
-      if (is_array($info)) {
-        $item['width'] = $info['width'];
-        $item['height'] = $info['height'];
+      $image = $image_factory->get(file_load($item['target_id'])->getFileUri());
+      if ($image->getExtension()) {
+        $item['width'] = $image->getWidth();
+        $item['height'] = $image->getHeight();
       }
     }
   }
@@ -301,11 +300,10 @@ function image_field_widget_process($element, &$form_state, $form) {
       $variables['height'] = $element['#value']['height'];
     }
     else {
-      $info = image_get_info($file->getFileUri());
-
-      if (is_array($info)) {
-        $variables['width'] = $info['width'];
-        $variables['height'] = $info['height'];
+      $image = Drupal::service('image.factory')->get($file->getFileUri());
+      if ($image->getExtension()) {
+        $variables['width'] = $image->getWidth();
+        $variables['height'] = $image->getHeight();
       }
       else {
         $variables['width'] = $variables['height'] = NULL;

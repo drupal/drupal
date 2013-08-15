@@ -1127,7 +1127,7 @@ class ViewExecutable {
       $exposed_form->query();
     }
 
-    if (config('views.settings')->get('sql_signature')) {
+    if (\Drupal::config('views.settings')->get('sql_signature')) {
       $this->query->addSignature($this);
     }
 
@@ -1278,7 +1278,7 @@ class ViewExecutable {
     }
 
     drupal_theme_initialize();
-    $config = config('views.settings');
+    $config = \Drupal::config('views.settings');
 
     $exposed_form = $this->display_handler->getPlugin('exposed_form');
     $exposed_form->preRender($this->result);
@@ -1714,7 +1714,7 @@ class ViewExecutable {
       foreach ($this->build_info['breadcrumb'] as $path => $title) {
         // Check to see if the frontpage is in the breadcrumb trail; if it
         // is, we'll remove that from the actual breadcrumb later.
-        if ($path == config('system.site')->get('page.front')) {
+        if ($path == \Drupal::config('system.site')->get('page.front')) {
           $base = FALSE;
           $title = t('Home');
         }

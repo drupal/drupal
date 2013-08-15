@@ -15,6 +15,11 @@ interface StreamInterface
     public function __toString();
 
     /**
+     * Close the underlying stream
+     */
+    public function close();
+
+    /**
      * Get stream metadata
      *
      * @param string $key Specific metadata to retrieve
@@ -41,6 +46,13 @@ interface StreamInterface
     public function setStream($stream, $size = null);
 
     /**
+     * Detach the current stream resource
+     *
+     * @return self
+     */
+    public function detachStream();
+
+    /**
      * Get the stream wrapper type
      *
      * @return string
@@ -50,7 +62,7 @@ interface StreamInterface
     /**
      * Wrapper specific data attached to this stream.
      *
-     * @return string
+     * @return array
      */
     public function getWrapperData();
 
@@ -83,6 +95,13 @@ interface StreamInterface
     public function isReadable();
 
     /**
+     * Check if the stream is repeatable
+     *
+     * @return bool
+     */
+    public function isRepeatable();
+
+    /**
      * Check if the stream is writable
      *
      * @return bool
@@ -95,6 +114,13 @@ interface StreamInterface
      * @return bool
      */
     public function isConsumed();
+
+    /**
+     * Alias of isConsumed
+     *
+     * @return bool
+     */
+    public function feof();
 
     /**
      * Check if the stream is a local stream vs a remote stream
@@ -115,7 +141,7 @@ interface StreamInterface
      *
      * @param int $size Size of the stream contents in bytes
      *
-     * @return Stream
+     * @return self
      */
     public function setSize($size);
 
@@ -161,4 +187,32 @@ interface StreamInterface
      * @return bool Returns true on success or false on failure
      */
     public function rewind();
+
+    /**
+     * Read a line from the stream up to the maximum allowed buffer length
+     *
+     * @param int $maxLength Maximum buffer length
+     *
+     * @return string|bool
+     */
+    public function readLine($maxLength = null);
+
+    /**
+     * Set custom data on the stream
+     *
+     * @param string $key   Key to set
+     * @param mixed  $value Value to set
+     *
+     * @return self
+     */
+    public function setCustomData($key, $value);
+
+    /**
+     * Get custom data from the stream
+     *
+     * @param string $key Key to retrieve
+     *
+     * @return null|mixed
+     */
+    public function getCustomData($key);
 }

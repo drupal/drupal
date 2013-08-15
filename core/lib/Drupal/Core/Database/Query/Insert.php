@@ -55,15 +55,15 @@ class Insert extends Query {
   /**
    * A SelectQuery object to fetch the rows that should be inserted.
    *
-   * @var SelectQueryInterface
+   * @var \Drupal\Core\Database\Query\SelectInterface
    */
   protected $fromQuery;
 
   /**
    * Constructs an Insert object.
    *
-   * @param Drupal\Core\Database\Connection $connection
-   *   A DatabaseConnection object.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   A Connection object.
    * @param string $table
    *   Name of the table to associate with this query.
    * @param array $options
@@ -94,7 +94,7 @@ class Insert extends Query {
    *   An array of fields to insert into the database. The values must be
    *   specified in the same order as the $fields array.
    *
-   * @return Drupal\Core\Database\Query\Insert
+   * @return \Drupal\Core\Database\Query\Insert
    *   The called object.
    */
   public function fields(array $fields, array $values = array()) {
@@ -125,7 +125,7 @@ class Insert extends Query {
    * @param $values
    *   An array of values to add to the query.
    *
-   * @return Drupal\Core\Database\Query\Insert
+   * @return \Drupal\Core\Database\Query\Insert
    *   The called object.
    */
   public function values(array $values) {
@@ -159,7 +159,7 @@ class Insert extends Query {
    *   An array of values for which to use the default values
    *   specified in the table definition.
    *
-   * @return Drupal\Core\Database\Query\Insert
+   * @return \Drupal\Core\Database\Query\Insert
    *   The called object.
    */
   public function useDefaults(array $fields) {
@@ -170,10 +170,10 @@ class Insert extends Query {
   /**
    * Sets the fromQuery on this InsertQuery object.
    *
-   * @param SelectQueryInterface $query
+   * @param \Drupal\Core\Database\Query\SelectInterface $query
    *   The query to fetch the rows that should be inserted.
    *
-   * @return InsertQuery
+   * @return \Drupal\Core\Database\Query\Insert
    *   The called object.
    */
   public function from(SelectInterface $query) {
@@ -266,8 +266,8 @@ class Insert extends Query {
    * @return
    *   TRUE if the validation was successful, FALSE if not.
    *
-   * @throws Drupal\Core\Database\Query\FieldsOverlapException
-   * @throws Drupal\Core\Database\Query\NoFieldsException
+   * @throws \Drupal\Core\Database\Query\FieldsOverlapException
+   * @throws \Drupal\Core\Database\Query\NoFieldsException
    */
   public function preExecute() {
     // Confirm that the user did not try to specify an identical

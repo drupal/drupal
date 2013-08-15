@@ -60,7 +60,7 @@ class ContactUpgradePathTest extends UpgradePathTestBase {
     $this->assertEqual($contact_category->recipients, array('test1@example.com', 'test2@example.com'));
 
     // Ensure that the default category has been maintained.
-    $this->assertEqual(config('contact.settings')->get('default_category'), $default_contact_category, 'Default category upgraded.');
+    $this->assertEqual(\Drupal::config('contact.settings')->get('default_category'), $default_contact_category, 'Default category upgraded.');
 
     // Check that no default config imported on upgrade.
     $this->assertFalse(entity_load('contact_category', 'feedback'));

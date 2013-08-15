@@ -26,3 +26,10 @@ block_admin_add:
     _content: '\Drupal\block\Controller\BlockAddController::blockAddConfigureForm'
   requirements:
     _permission: 'administer blocks'
+
+block_autocomplete:
+  pattern: '/block/autocomplete'
+  defaults:
+    _controller: '\Drupal\block\Controller\BlockAutocompleteController::autocomplete'
+  requirements:
+    _permission: 'administer blocks'

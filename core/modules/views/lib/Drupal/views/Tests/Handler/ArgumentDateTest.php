@@ -142,7 +142,7 @@ class ArgumentDateTest extends ViewUnitTestBase {
     $view->destroy();
 
     $view->setDisplay('embed_2');
-    $this->executeView($view, array('23'));
+    $this->executeView($view, array('12'));
     $expected = array();
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
   }
@@ -296,7 +296,7 @@ class ArgumentDateTest extends ViewUnitTestBase {
     $view->destroy();
 
     $view->setDisplay('embed_5');
-    $this->executeView($view, array('23'));
+    $this->executeView($view, array('201301'));
     $expected = array();
     $this->assertIdenticalResultset($view, $expected, $this->columnMap);
   }

@@ -84,7 +84,7 @@ class ExceptionController extends ContainerAware {
     $system_path = $request->attributes->get('_system_path');
     watchdog('access denied', $system_path, NULL, WATCHDOG_WARNING);
 
-    $path = $this->container->get('path.alias_manager')->getSystemPath(config('system.site')->get('page.403'));
+    $path = $this->container->get('path.alias_manager')->getSystemPath(\Drupal::config('system.site')->get('page.403'));
     if ($path && $path != $system_path) {
       // Keep old path for reference, and to allow forms to redirect to it.
       if (!isset($_GET['destination'])) {
@@ -139,7 +139,7 @@ class ExceptionController extends ContainerAware {
     watchdog('page not found', check_plain($request->attributes->get('_system_path')), NULL, WATCHDOG_WARNING);
 
     // Check for and return a fast 404 page if configured.
-    $config = config('system.performance');
+    $config = \Drupal::config('system.performance');
 
     $exclude_paths = $config->get('fast_404.exclude_paths');
     if ($config->get('fast_404.enabled') && $exclude_paths && !preg_match($exclude_paths, $request->getPathInfo())) {
@@ -158,7 +158,7 @@ class ExceptionController extends ContainerAware {
       $_GET['destination'] = $system_path;
     }
 
-    $path = $this->container->get('path.alias_manager')->getSystemPath(config('system.site')->get('page.404'));
+    $path = $this->container->get('path.alias_manager')->getSystemPath(\Drupal::config('system.site')->get('page.404'));
     if ($path && $path != $system_path) {
       // @todo Um, how do I specify an override URL again? Totally not clear. Do
       //   that and sub-call the kernel rather than using meah().

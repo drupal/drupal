@@ -224,7 +224,7 @@ function system_permission() {
     ),
     'view the administration theme' => array(
       'title' => t('View the administration theme'),
-      'description' => config('system.theme')->get('admin') ?: t('This is only used when the site is configured to use a separate administration theme on the <a href="@appearance-url">Appearance</a> page.', array('@appearance-url' => url('admin/appearance'))),
+      'description' => Drupal::config('system.theme')->get('admin') ?: t('This is only used when the site is configured to use a separate administration theme on the <a href="@appearance-url">Appearance</a> page.', array('@appearance-url' => url('admin/appearance'))),
     ),
     'access site reports' => array(
       'title' => t('View site reports'),
@@ -964,81 +964,7 @@ function system_menu() {
     );
   }
 
-  foreach (drupal_container()->get('plugin.manager.system.plugin_ui')->getDefinitions() as $plugin_id => $plugin) {
-    if ($plugin['menu'] === TRUE) {
-      $items[$plugin['path'] . '/' . $plugin_id . '/' . $plugin['suffix']] = array(
-        'title' => $plugin['title'],
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array($plugin['id'], $plugin_id),
-        'access callback' => 'system_plugin_ui_access',
-        'access arguments' => array($plugin_id),
-        'type' => $plugin['type'],
-      );
-      if (!empty($plugin['default_task'])) {
-        $items[$plugin['path'] . '/' . $plugin_id . '/' . $plugin['suffix'] . '/' . $plugin['task_suffix']] = array(
-          'title' => $plugin['task_title'],
-          'type' => MENU_DEFAULT_LOCAL_TASK,
-          'weight' => -10,
-        );
-      }
-      $items[$plugin['path'] . '/' . $plugin_id . '/%'] = array(
-        'title' => $plugin['title'],
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array($plugin['id'], $plugin_id, (count(explode('/', $plugin['path'])) + 1)),
-        'access callback' => 'system_plugin_ui_access',
-        'access arguments' => array($plugin_id, (count(explode('/', $plugin['path'])) + 1)),
-        'type' => MENU_CALLBACK,
-      );
-      if (!empty($plugin['file'])) {
-        $items[$plugin['path'] . '/' . $plugin_id . '/' . $plugin['suffix']]['file'] = $plugin['file'];
-        $items[$plugin['path'] . '/' . $plugin_id . '/%']['file'] = $plugin['file'];
-        if (!empty($plugin['file_path'])) {
-          $items[$plugin['path'] . '/' . $plugin_id . '/' . $plugin['suffix']]['file path'] = $plugin['file_path'];
-          $items[$plugin['path'] . '/' . $plugin_id . '/%']['file path'] = $plugin['file_path'];
-        }
-      }
-    }
-  }
-
   return $items;
-}
-
-/**
- * Proxies to the plugin class' form method.
- *
- * @todo This needs more explanation, an @see or two, and parameter
- *   documentation. Also "proxies" is a weird word to use.
- */
-function system_plugin_ui_form($form, &$form_state, $plugin, $facet = NULL) {
-  $plugin_ui = drupal_container()->get('plugin.manager.system.plugin_ui')->createInstance($plugin);
-  $form = $plugin_ui->form($form, $form_state, $facet);
-  $form['#validate'][] = array($plugin_ui, 'formValidate');
-  $form['#submit'][] = array($plugin_ui, 'formSubmit');
-  return $form;
-}
-
-/**
- * Checks access for a given plugin using the plugin's access() method.
- *
- * @todo This needs more explanation, some @see, and parameter documentation.
- * @todo What the heck kind of parameter name is "facet"?
- */
-function system_plugin_ui_access($plugin, $facet = NULL) {
-  $plugin_ui = drupal_container()->get('plugin.manager.system.plugin_ui')->createInstance($plugin);
-  return $plugin_ui->access($facet);
-}
-
-/**
- * Implements hook_forms().
- */
-function system_forms() {
-  $forms = array();
-  foreach (drupal_container()->get('plugin.manager.system.plugin_ui')->getDefinitions() as $plugin_id => $plugin) {
-    if (empty($forms[$plugin['id']])) {
-      $forms[$plugin['id']]['callback'] = 'system_plugin_ui_form';
-    }
-  }
-  return $forms;
 }
 
 /**
@@ -1327,7 +1253,7 @@ function system_library_info() {
   $libraries['jquery'] = array(
     'title' => 'jQuery',
     'website' => 'http://jquery.com',
-    'version' => '2.0',
+    'version' => '2.0.3',
     'js' => array(
       'core/assets/vendor/jquery/jquery.js' => array('group' => JS_LIBRARY, 'weight' => -20),
     ),
@@ -1350,7 +1276,7 @@ function system_library_info() {
   $libraries['jquery.form'] = array(
     'title' => 'jQuery Form Plugin',
     'website' => 'http://malsup.com/jquery/form/',
-    'version' => '3.27',
+    'version' => '3.39',
     'js' => array(
       'core/assets/vendor/jquery-form/jquery.form.js' => array(),
     ),
@@ -2049,19 +1975,6 @@ function system_library_info() {
       array('system', 'jquery.once'),
     ),
   );
-  $libraries['drupal.system.cron'] = array(
-    'title' => 'System cron',
-    'version' => VERSION,
-    'js' => array(
-      drupal_get_path('module', 'system') . '/system.cron.js' => array(),
-    ),
-    'dependencies' => array(
-      array('system', 'jquery'),
-      array('system', 'drupal'),
-      array('system', 'drupalSettings'),
-      array('system', 'jquery.once'),
-    ),
-  );
   $libraries['drupal.system.modules'] = array(
     'title' => 'System modules',
     'version' => VERSION,
@@ -2098,7 +2011,7 @@ function system_stream_wrappers() {
   );
 
   // Only register the private file stream wrapper if a file path has been set.
-  if (config('system.file')->get('path.private')) {
+  if (Drupal::config('system.file')->get('path.private')) {
     $wrappers['private'] = array(
       'name' => t('Private files'),
       'class' => 'Drupal\Core\StreamWrapper\PrivateStream',
@@ -2333,7 +2246,7 @@ function system_custom_theme() {
     $request = drupal_container()->get('request');
     $path = $request->attributes->get('_system_path');
     if (user_access('view the administration theme') && path_is_admin($path)) {
-      return config('system.theme')->get('admin');
+      return Drupal::config('system.theme')->get('admin');
     }
   }
 }
@@ -2342,7 +2255,7 @@ function system_custom_theme() {
  * Implements hook_form_FORM_ID_alter().
  */
 function system_form_user_form_alter(&$form, &$form_state) {
-  if (config('system.date')->get('timezone.user.configurable')) {
+  if (Drupal::config('system.date')->get('timezone.user.configurable')) {
     system_user_timezone($form, $form_state);
   }
 }
@@ -2351,7 +2264,7 @@ function system_form_user_form_alter(&$form, &$form_state) {
  * Implements hook_form_FORM_ID_alter().
  */
 function system_form_user_register_form_alter(&$form, &$form_state) {
-  $config = config('system.date');
+  $config = Drupal::config('system.date');
   if ($config->get('timezone.user.configurable') && $config->get('timezone.user.default') == DRUPAL_USER_TIMEZONE_SELECT) {
     system_user_timezone($form, $form_state);
   }
@@ -2361,7 +2274,7 @@ function system_form_user_register_form_alter(&$form, &$form_state) {
  * Implements hook_user_presave().
  */
 function system_user_presave(UserInterface $account) {
-  $config = config('system.date');
+  $config = Drupal::config('system.date');
   if ($config->get('timezone.user.configurable') && !$account->getTimeZone() && !$config->get('timezone.user.default')) {
     $account->timezone = $config->get('timezone.default');
   }
@@ -2371,7 +2284,7 @@ function system_user_presave(UserInterface $account) {
  * Implements hook_user_login().
  */
 function system_user_login($account) {
-  $config = config('system.date');
+  $config = Drupal::config('system.date');
   // If the user has a NULL time zone, notify them to set a time zone.
   if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
     drupal_set_message(t('Configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => url("user/$account->id()/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
@@ -2393,7 +2306,7 @@ function system_user_timezone(&$form, &$form_state) {
   $form['timezone']['timezone'] = array(
     '#type' => 'select',
     '#title' => t('Time zone'),
-    '#default_value' => $account->getTimezone() ? $account->getTimezone() : config('system.date')->get('timezone.default'),
+    '#default_value' => $account->getTimezone() ? $account->getTimezone() : Drupal::config('system.date')->get('timezone.default'),
     '#options' => system_time_zones($account->id() != $user->id()),
     '#description' => t('Select the desired local time and time zone. Dates and times throughout this site will be displayed using this time zone.'),
   );
@@ -2618,7 +2531,6 @@ function _system_rebuild_module_data() {
     'version' => NULL,
     'php' => DRUPAL_MINIMUM_PHP,
     'files' => array(),
-    'bootstrap' => 0,
   );
 
   // Read info files for each module.
@@ -2684,8 +2596,8 @@ function system_rebuild_module_data() {
     $files = array();
     ksort($modules);
     // Add name, status, weight, and schema version.
-    $enabled_modules = (array) config('system.module')->get('enabled');
-    $disabled_modules = (array) config('system.module.disabled')->get();
+    $enabled_modules = (array) Drupal::config('system.module')->get('enabled');
+    $disabled_modules = (array) Drupal::config('system.module.disabled')->get();
     $all_modules = $enabled_modules + $disabled_modules;
     foreach ($modules as $module => $record) {
       $record->name = $module;
@@ -2702,23 +2614,6 @@ function system_rebuild_module_data() {
     Drupal::state()->set('system.module.files', $files);
   }
   return $modules_cache;
-}
-
-/**
- * Refreshes the list of bootstrap modules.
- *
- * This is called internally by module_enable/disable() to flag modules that
- * implement hooks used during bootstrap, such as hook_watchdog(). These modules
- * are loaded earlier to invoke the hooks.
- */
-function _system_update_bootstrap_status() {
-  $bootstrap_modules = array();
-  foreach (bootstrap_hooks() as $hook) {
-    foreach (Drupal::moduleHandler()->getImplementations($hook) as $module) {
-      $bootstrap_modules[$module] = drupal_get_filename('module', $module);
-    }
-  }
-  Drupal::state()->set('system.module.bootstrap', $bootstrap_modules);
 }
 
 /**
@@ -2855,7 +2750,7 @@ function system_rebuild_theme_data() {
   //   based on the current config. Remove this code when themes have a proper
   //   installation status.
   // @see http://drupal.org/node/1067408
-  $enabled_themes = (array) config('system.theme')->get('enabled');
+  $enabled_themes = (array) Drupal::config('system.theme')->get('enabled');
   $files = array();
   foreach ($themes as $name => $theme) {
     $theme->status = (int) isset($enabled_themes[$name]);
@@ -3082,7 +2977,7 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
 function system_admin_compact_mode() {
   // PHP converts dots into underscores in cookie names to avoid problems with
   // its parser, so we use a converted cookie name.
-  return isset($_COOKIE['Drupal_visitor_admin_compact_mode']) ? $_COOKIE['Drupal_visitor_admin_compact_mode'] : config('system.site')->get('admin_compact_mode');
+  return isset($_COOKIE['Drupal_visitor_admin_compact_mode']) ? $_COOKIE['Drupal_visitor_admin_compact_mode'] : Drupal::config('system.site')->get('admin_compact_mode');
 }
 
 /**
@@ -3355,7 +3250,7 @@ function system_run_automated_cron() {
   // If the site is not fully installed, suppress the automated cron run.
   // Otherwise it could be triggered prematurely by Ajax requests during
   // installation.
-  if (($threshold = config('system.cron')->get('threshold.autorun')) > 0 && variable_get('install_task') == 'done') {
+  if (($threshold = Drupal::config('system.cron')->get('threshold.autorun')) > 0 && variable_get('install_task') == 'done') {
     $cron_last = Drupal::state()->get('system.cron_last') ?: NULL;
     if (!isset($cron_last) || (REQUEST_TIME - $cron_last > $threshold)) {
       drupal_cron_run();

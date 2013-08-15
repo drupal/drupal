@@ -43,7 +43,7 @@ class PagerSelectExtender extends SelectExtender {
   /**
    * The count query that will be used for this pager.
    *
-   * @var SelectQueryInterface
+   * @var \Drupal\Core\Database\Query\SelectInterface
    */
   protected $customCountQuery = FALSE;
 
@@ -104,7 +104,7 @@ class PagerSelectExtender extends SelectExtender {
    * You will rarely need to specify a count query directly.  If not specified,
    * one is generated off of the pager query itself.
    *
-   * @param SelectQueryInterface $query
+   * @param \Drupal\Core\Database\Query\SelectInterface $query
    *   The count query object.  It must return a single row with a single column,
    *   which is the total number of records.
    */
@@ -118,7 +118,7 @@ class PagerSelectExtender extends SelectExtender {
    * The count query may be specified manually or, by default, taken from the
    * query we are extending.
    *
-   * @return SelectQueryInterface
+   * @return \Drupal\Core\Database\Query\SelectInterface
    *   A count query object.
    */
   public function getCountQuery() {

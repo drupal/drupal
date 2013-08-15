@@ -30,7 +30,7 @@ function contact_site_page(Category $category = NULL) {
 
   if (!isset($category)) {
     $categories = entity_load_multiple('contact_category');
-    $default_category = config('contact.settings')->get('default_category');
+    $default_category = Drupal::config('contact.settings')->get('default_category');
     if (isset($categories[$default_category])) {
       $category = $categories[$default_category];
     }
@@ -93,7 +93,7 @@ function contact_personal_page($recipient) {
  * @see contact_personal_page()
  */
 function contact_flood_control() {
-  $config = config('contact.settings');
+  $config = Drupal::config('contact.settings');
   $limit = $config->get('flood.limit');
   $interval = $config->get('flood.interval');
   if (!Drupal::service('flood')->isAllowed('contact', $limit, $interval)) {

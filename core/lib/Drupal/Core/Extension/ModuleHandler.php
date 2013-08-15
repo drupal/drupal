@@ -29,13 +29,6 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected $loadedFiles;
 
   /**
-   * List of enabled bootstrap modules.
-   *
-   * @var array
-   */
-  protected $bootstrapModules;
-
-  /**
    * List of enabled modules.
    *
    * @var array
@@ -125,17 +118,6 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::loadBootstrapModules().
-   */
-  public function loadBootstrapModules() {
-    if (!$this->loaded) {
-      foreach ($this->getBootstrapModules() as $module) {
-        $this->load($module);
-      }
-    }
-  }
-
-  /**
    * Implements \Drupal\Core\Extension\ModuleHandlerInterface::isLoaded().
    */
   public function isLoaded() {
@@ -160,19 +142,10 @@ class ModuleHandler implements ModuleHandlerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Extension\ModuleHandlerInterface::getBootstrapModules().
-   */
-  public function getBootstrapModules() {
-    // The basic module handler does not know anything about how to retrieve a
-    // list of bootstrap modules.
-    return array();
-  }
-
-  /**
    * Implements \Drupal\Core\Extension\ModuleHandlerInterface::buildModuleDependencies().
    */
   public function buildModuleDependencies(array $modules) {
-    foreach ($modules as $name => $module) {
+    foreach ($modules as $module) {
       $graph[$module->name]['edges'] = array();
       if (isset($module->info['dependencies']) && is_array($module->info['dependencies'])) {
         foreach ($module->info['dependencies'] as $dependency) {
@@ -582,8 +555,8 @@ class ModuleHandler implements ModuleHandlerInterface {
 
     $modules_installed = array();
     $modules_enabled = array();
-    $module_config = config('system.module');
-    $disabled_config = config('system.module.disabled');
+    $module_config = \Drupal::config('system.module');
+    $disabled_config = \Drupal::config('system.module.disabled');
     foreach ($module_list as $module) {
       // Only process modules that are not already enabled.
       // A module is only enabled if it is configured as enabled. Custom or
@@ -648,10 +621,6 @@ class ModuleHandler implements ModuleHandlerInterface {
         if ($kernel = drupal_container()->get('kernel', ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
           $kernel->updateModules($module_filenames, $module_filenames);
         }
-
-        // Refresh the list of modules that implement bootstrap hooks.
-        // @see bootstrap_hooks()
-        _system_update_bootstrap_status();
 
         // Refresh the schema to include it.
         drupal_get_schema(NULL, TRUE);
@@ -751,8 +720,8 @@ class ModuleHandler implements ModuleHandlerInterface {
 
     $invoke_modules = array();
 
-    $module_config = config('system.module');
-    $disabled_config = config('system.module.disabled');
+    $module_config = \Drupal::config('system.module');
+    $disabled_config = \Drupal::config('system.module.disabled');
     foreach ($module_list as $module) {
       // Only process modules that are enabled.
       // A module is only enabled if it is configured as enabled. Custom or
@@ -796,7 +765,6 @@ class ModuleHandler implements ModuleHandlerInterface {
       // Invoke hook_modules_disabled before disabling modules,
       // so we can still call module hooks to get information.
       $this->invokeAll('modules_disabled', array($invoke_modules));
-      _system_update_bootstrap_status();
 
       // Update the kernel to exclude the disabled modules.
       $enabled = $this->getModuleList();
@@ -843,7 +811,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     }
 
     $schema_store = \Drupal::keyValue('system.schema');
-    $disabled_config = config('system.module.disabled');
+    $disabled_config = \Drupal::config('system.module.disabled');
     foreach ($module_list as $module) {
       // Uninstall the module.
       module_load_install($module);

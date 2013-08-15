@@ -37,9 +37,9 @@ class ConfigInstallTest extends DrupalUnitTestBase {
     $default_configuration_entity = 'config_test.dynamic.dotted.default';
 
     // Verify that default module config does not exist before installation yet.
-    $config = config($default_config);
+    $config = \Drupal::config($default_config);
     $this->assertIdentical($config->isNew(), TRUE);
-    $config = config($default_configuration_entity);
+    $config = \Drupal::config($default_configuration_entity);
     $this->assertIdentical($config->isNew(), TRUE);
 
     // Install the test module.
@@ -47,9 +47,9 @@ class ConfigInstallTest extends DrupalUnitTestBase {
     $this->installConfig(array('config_test'));
 
     // Verify that default module config exists.
-    $config = config($default_config);
+    $config = \Drupal::config($default_config);
     $this->assertIdentical($config->isNew(), FALSE);
-    $config = config($default_configuration_entity);
+    $config = \Drupal::config($default_configuration_entity);
     $this->assertIdentical($config->isNew(), FALSE);
 
     // Verify that configuration import callback was invoked for the dynamic

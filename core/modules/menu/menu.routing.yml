@@ -24,28 +24,28 @@ menu_link_add:
   defaults:
     _content: '\Drupal\menu\Controller\MenuController::addLink'
   requirements:
-    _permission: 'administer menu'
+    _entity_create_access: 'menu_link'
 
 menu_link_edit:
   pattern: '/admin/structure/menu/item/{menu_link}/edit'
   defaults:
     _entity_form: 'menu_link'
   requirements:
-    _permission: 'administer menu'
+    _entity_access: 'menu_link.update'
 
 menu_link_reset:
   pattern: 'admin/structure/menu/item/{menu_link}/reset'
   defaults:
     _entity_form: 'menu_link.reset'
   requirements:
-    _permission: 'administer menu'
+    _entity_access: 'menu_link.reset'
 
 menu_link_delete:
   pattern: 'admin/structure/menu/item/{menu_link}/delete'
   defaults:
     _entity_form: 'menu_link.delete'
   requirements:
-    _access_menu_delete_link: 'TRUE'
+    _entity_access: 'menu_link.delete'
 
 menu_menu_add:
   pattern: '/admin/structure/menu/add'

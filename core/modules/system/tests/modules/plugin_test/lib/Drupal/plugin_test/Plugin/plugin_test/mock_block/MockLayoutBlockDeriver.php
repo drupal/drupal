@@ -44,7 +44,7 @@ class MockLayoutBlockDeriver implements DerivativeInterface {
 
       // We also allow them to add a customized one. Here, we just mock the
       // customized one, but in a real implementation, this would be fetched
-      // from some config() object.
+      // from some \Drupal::config() object.
       'foo' => array(
         'label' => t('Layout Foo'),
       ) + $base_plugin_definition,

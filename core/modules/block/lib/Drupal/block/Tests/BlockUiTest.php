@@ -110,7 +110,7 @@ class BlockUiTest extends WebTestBase {
    */
   function testBlockSearch() {
     $block = t('Administration');
-    $blocks = drupal_json_decode($this->drupalGet('system/autocomplete/block_plugin_ui:stark', array('query' => array('q' => $block))));
+    $blocks = drupal_json_decode($this->drupalGet('block/autocomplete', array('query' => array('q' => $block))));
     $this->assertEqual($blocks['system_menu_block:menu-admin'], $block, t('Can search for block with name !block.', array('!block' => $block)));
   }
 

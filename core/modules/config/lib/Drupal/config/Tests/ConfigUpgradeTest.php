@@ -59,7 +59,7 @@ class ConfigUpgradeTest extends WebTestBase {
     ));
 
     // Verify that variables have been converted and default values exist.
-    $config = config('config_upgrade.test');
+    $config = \Drupal::config('config_upgrade.test');
     $this->assertIdentical($config->get('foo'), $this->testContent);
     $this->assertIdentical($config->get('parent.bar'), $this->testContent);
     $this->assertIdentical($config->get('parent.baz'), 'Baz');
@@ -80,7 +80,7 @@ class ConfigUpgradeTest extends WebTestBase {
     ));
 
     // Verify that new variables have been converted and existing still exist.
-    $config = config('config_upgrade.test');
+    $config = \Drupal::config('config_upgrade.test');
     $this->assertIdentical($config->get('foo'), $this->testContent);
     $this->assertIdentical($config->get('parent.bar'), $this->testContent);
     $this->assertIdentical($config->get('parent.baz'), 'Baz');
@@ -101,7 +101,7 @@ class ConfigUpgradeTest extends WebTestBase {
 
     // For this test it is essential that update_variables_to_config has already
     // run on the config object.
-    config('config_upgrade.test')
+    \Drupal::config('config_upgrade.test')
       ->set('numeric_keys.403', '')
       ->set('numeric_keys.404', '')
       ->save();
@@ -118,6 +118,6 @@ class ConfigUpgradeTest extends WebTestBase {
       'config_upgrade_404' => 'numeric_keys.404',
     ));
 
-    $this->assertIdentical(config('config_upgrade.test')->get('numeric_keys'), array(403 => 'custom403', 404 => 'custom404'));
+    $this->assertIdentical(\Drupal::config('config_upgrade.test')->get('numeric_keys'), array(403 => 'custom403', 404 => 'custom404'));
   }
 }

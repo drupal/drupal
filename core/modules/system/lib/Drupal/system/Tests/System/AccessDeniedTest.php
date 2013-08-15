@@ -78,7 +78,7 @@ class AccessDeniedTest extends WebTestBase {
 
     // Log back in, set the custom 403 page to /user and remove the block
     $this->drupalLogin($this->admin_user);
-    config('system.site')->set('page.403', 'user')->save();
+    \Drupal::config('system.site')->set('page.403', 'user')->save();
     $edit = array(
       'region' => -1,
     );

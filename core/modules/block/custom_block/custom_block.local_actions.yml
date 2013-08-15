@@ -1,0 +1,5 @@
+custom_block_type_add:
+  route_name: custom_block_type_add
+  title: 'Add custom block type'
+  appears_on:
+    - custom_block_type_list

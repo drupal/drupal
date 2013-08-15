@@ -10,14 +10,12 @@
  */
 function rest_permission() {
   $permissions = array();
-  if (drupal_container()->has('plugin.manager.rest')) {
-    $manager = drupal_container()->get('plugin.manager.rest');
-    $resources = config('rest.settings')->get('resources');
-    if ($resources && $enabled = array_intersect_key($manager->getDefinitions(), $resources)) {
-      foreach ($enabled as $key => $resource) {
-        $plugin = $manager->getInstance(array('id' => $key));
-        $permissions = array_merge($permissions, $plugin->permissions());
-      }
+  $manager = Drupal::service('plugin.manager.rest');
+  $resources = Drupal::config('rest.settings')->get('resources');
+  if ($resources && $enabled = array_intersect_key($manager->getDefinitions(), $resources)) {
+    foreach ($enabled as $key => $resource) {
+      $plugin = $manager->getInstance(array('id' => $key));
+      $permissions = array_merge($permissions, $plugin->permissions());
     }
   }
   return $permissions;

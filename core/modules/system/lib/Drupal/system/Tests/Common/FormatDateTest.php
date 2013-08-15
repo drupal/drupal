@@ -38,7 +38,7 @@ class FormatDateTest extends WebTestBase {
   function setUp() {
     parent::setUp('language');
 
-    config('system.date')
+    \Drupal::config('system.date')
       ->set('timezone.user.configurable', 1)
       ->save();
     $formats = $this->container->get('plugin.manager.entity')

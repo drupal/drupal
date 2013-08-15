@@ -34,8 +34,8 @@ class Delete extends Query implements ConditionInterface {
   /**
    * Constructs a Delete object.
    *
-   * @param Drupal\Core\Database\Connection $connection
-   *   A DatabaseConnection object.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   A Connection object.
    * @param string $table
    *   Name of the table to associate with this query.
    * @param array $options

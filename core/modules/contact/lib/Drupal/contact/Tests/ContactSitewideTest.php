@@ -44,7 +44,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     $flood_limit = 3;
-    config('contact.settings')
+    \Drupal::config('contact.settings')
       ->set('flood.limit', $flood_limit)
       ->set('flood.interval', 600)
       ->save();
@@ -110,7 +110,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertRaw(t('Category %label has been added.', array('%label' => $label)));
 
     // Check that the category was created in site default language.
-    $langcode = config('contact.category.' . $id)->get('langcode');
+    $langcode = \Drupal::config('contact.category.' . $id)->get('langcode');
     $default_langcode = language_default()->id;
     $this->assertEqual($langcode, $default_langcode);
 
@@ -119,15 +119,15 @@ class ContactSitewideTest extends WebTestBase {
 
     // Test update contact form category.
     $this->updateCategory($id, $label = $this->randomName(16), $recipients_str = implode(',', array($recipients[0], $recipients[1])), $reply = $this->randomName(30), FALSE);
-    $config = config('contact.category.' . $id)->get();
+    $config = \Drupal::config('contact.category.' . $id)->get();
     $this->assertEqual($config['label'], $label);
     $this->assertEqual($config['recipients'], array($recipients[0], $recipients[1]));
     $this->assertEqual($config['reply'], $reply);
-    $this->assertNotEqual($id, config('contact.settings')->get('default_category'));
+    $this->assertNotEqual($id, \Drupal::config('contact.settings')->get('default_category'));
     $this->assertRaw(t('Category %label has been updated.', array('%label' => $label)));
 
     // Reset the category back to be the default category.
-    config('contact.settings')->set('default_category', $id)->save();
+    \Drupal::config('contact.settings')->set('default_category', $id)->save();
 
     // Ensure that the contact form is shown without a category selection input.
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access site-wide contact form'));
@@ -182,7 +182,7 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertText(t('Message field is required.'));
 
     // Test contact form with no default category selected.
-    config('contact.settings')
+    \Drupal::config('contact.settings')
       ->set('default_category', '')
       ->save();
     $this->drupalGet('contact');
@@ -202,7 +202,7 @@ class ContactSitewideTest extends WebTestBase {
     // Submit contact form one over limit.
     $this->drupalGet('contact');
     $this->assertResponse(403);
-    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => config('contact.settings')->get('flood.limit'), '@interval' => format_interval(600))));
+    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => \Drupal::config('contact.settings')->get('flood.limit'), '@interval' => format_interval(600))));
 
     // Test listing controller.
     $this->drupalLogin($admin_user);
@@ -376,7 +376,7 @@ class ContactSitewideTest extends WebTestBase {
     $edit['mail'] = $mail;
     $edit['subject'] = $subject;
     $edit['message'] = $message;
-    if ($id == config('contact.settings')->get('default_category')) {
+    if ($id == \Drupal::config('contact.settings')->get('default_category')) {
       $this->drupalPost('contact', $edit, t('Send message'));
     }
     else {

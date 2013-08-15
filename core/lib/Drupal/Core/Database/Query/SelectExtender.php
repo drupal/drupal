@@ -17,14 +17,14 @@ class SelectExtender implements SelectInterface {
   /**
    * The Select query object we are extending/decorating.
    *
-   * @var Drupal\Core\Database\Query\SelectInterface
+   * @var \Drupal\Core\Database\Query\SelectInterface
    */
   protected $query;
 
   /**
    * The connection object on which to run this query.
    *
-   * @var DatabaseConnection
+   * @var \Drupal\Core\Database\Connection
    */
   protected $connection;
 

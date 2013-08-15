@@ -23,7 +23,7 @@ function rdf_update_8000() {
     $bundle = $row['bundle'];
 
     // Create a config object for the mapping.
-    $config = config("rdf.mapping.$entity_type.$bundle")
+    $config = Drupal::config("rdf.mapping.$entity_type.$bundle")
       ->set('id', "$entity_type.$bundle")
       ->set('uuid', $uuid->generate())
       ->set('targetEntityType', $entity_type)

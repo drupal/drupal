@@ -85,7 +85,7 @@ class Search extends FilterPluginBase {
     if (!empty($form_state['values'][$key])) {
       $this->query_parse_search_expression($form_state['values'][$key]);
       if (count($this->search_query->words()) == 0) {
-        form_set_error($key, format_plural(config('search.settings')->get('index.minimum_word_size'), 'You must include at least one positive keyword with 1 character or more.', 'You must include at least one positive keyword with @count characters or more.'));
+        form_set_error($key, format_plural(\Drupal::config('search.settings')->get('index.minimum_word_size'), 'You must include at least one positive keyword with 1 character or more.', 'You must include at least one positive keyword with @count characters or more.'));
       }
     }
   }

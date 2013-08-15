@@ -7,33 +7,13 @@
 
 namespace Drupal\block\Controller;
 
-use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller for building the block instance add form.
  */
-class BlockAddController implements ControllerInterface {
-
-  /**
-   * Constructs a Block object.
-   *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
-   *   Entity manager service.
-   */
-  public function __construct(EntityManager $entity_manager) {
-    $this->entityManager = $entity_manager;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('plugin.manager.entity')
-    );
-  }
+class BlockAddController extends ControllerBase {
 
   /**
    * Build the block instance add form.
@@ -51,8 +31,9 @@ class BlockAddController implements ControllerInterface {
     drupal_set_title(t('Configure block'));
 
     // Create a block entity.
-    $entity = $this->entityManager->getStorageController('block')->create(array('plugin' => $plugin_id, 'theme' => $theme));
+    $entity = $this->entityManager()->getStorageController('block')->create(array('plugin' => $plugin_id, 'theme' => $theme));
 
-    return $this->entityManager->getForm($entity);
+    return $this->entityManager()->getForm($entity);
   }
+
 }

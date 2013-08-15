@@ -1745,7 +1745,7 @@ abstract class DisplayPluginBase extends PluginBase {
           $this->theme = $theme;
         }
         elseif (empty($this->theme)) {
-          $this->theme = config('system.theme')->get('default');
+          $this->theme = \Drupal::config('system.theme')->get('default');
         }
 
         if (isset($GLOBALS['theme']) && $GLOBALS['theme'] == $this->theme) {

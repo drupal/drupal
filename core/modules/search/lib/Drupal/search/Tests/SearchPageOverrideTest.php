@@ -37,7 +37,7 @@ class SearchPageOverrideTest extends SearchTestBase {
     $this->drupalLogin($this->search_user);
 
     // Enable the extra type module for searching.
-    config('search.settings')->set('active_modules', array('node' => 'node', 'user' => 'user', 'search_extra_type' => 'search_extra_type'))->save();
+    \Drupal::config('search.settings')->set('active_modules', array('node' => 'node', 'user' => 'user', 'search_extra_type' => 'search_extra_type'))->save();
     menu_router_rebuild();
   }
 

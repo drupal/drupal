@@ -236,18 +236,11 @@ class BlockListController extends ConfigEntityListController implements FormInte
    * {@inheritdoc}
    */
   public function getOperations(EntityInterface $entity) {
-    $uri = $entity->uri();
-    $operations = array();
-    $operations['configure'] = array(
-      'title' => t('configure'),
-      'href' => $uri['path'],
-      'options' => $uri['options'],
-    );
-    $operations['delete'] = array(
-      'title' => t('delete'),
-      'href' => $uri['path'] . '/delete',
-      'options' => $uri['options'],
-    );
+    $operations = parent::getOperations($entity);
+
+    if (isset($operations['edit'])) {
+      $operations['edit']['title'] = t('Configure');
+    }
 
     return $operations;
   }

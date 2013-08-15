@@ -9,6 +9,7 @@ namespace Drupal\views\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * A handler to run a field through simple XSS filtering.
@@ -19,7 +20,10 @@ use Drupal\Component\Annotation\PluginID;
  */
 class Xss extends FieldPluginBase {
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     $value = $this->getValue($values);
     return $this->sanitizeValue($value, 'xss');
   }

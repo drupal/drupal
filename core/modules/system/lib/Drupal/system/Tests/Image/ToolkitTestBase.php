@@ -9,7 +9,6 @@ namespace Drupal\system\Tests\Image;
 
 use Drupal\simpletest\WebTestBase;
 use Drupal\system\Plugin\ImageToolkitManager;
-use stdClass;
 
 /**
  * Base class for image manipulation testing.
@@ -23,8 +22,25 @@ abstract class ToolkitTestBase extends WebTestBase {
    */
   public static $modules = array('image_test');
 
+  /**
+   * The image toolkit.
+   *
+   * @var \Drupal\system\Plugin\ImageToolkitInterface
+   */
   protected $toolkit;
+
+  /**
+   * The URI for the file.
+   *
+   * @var string
+   */
   protected $file;
+
+  /**
+   * The image object for the test file.
+   *
+   * @var \Drupal\Core\Image\ImageInterface
+   */
   protected $image;
 
   function setUp() {
@@ -38,15 +54,25 @@ abstract class ToolkitTestBase extends WebTestBase {
     $file = current($this->drupalGetTestFiles('image'));
     $this->file = $file->uri;
 
-    // Setup a dummy image to work with, this replicate image_load() so we
-    // can avoid calling it.
-    $this->image = new stdClass();
-    $this->image->source = $this->file;
-    $this->image->info = image_get_info($this->file);
-    $this->image->toolkit = $this->toolkit;
+    // Setup a dummy image to work with.
+    $this->image = $this->getImage();
 
     // Clear out any hook calls.
     $this->imageTestReset();
+  }
+
+  /**
+   * Sets up an image with the custom toolkit.
+   *
+   * @return \Drupal\Core\Image\ImageInterface
+   *   The image object.
+   */
+  protected function getImage() {
+    $image = $this->container->get('image.factory')
+      ->setToolkit($this->toolkit)
+      ->get($this->file);
+    $image->getResource();
+    return $image;
   }
 
   /**

@@ -9,6 +9,7 @@ namespace Drupal\taxonomy\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\ResultRow;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Annotation\PluginID;
 
@@ -53,7 +54,10 @@ class LinkEdit extends FieldPluginBase {
     $this->addAdditionalFields();
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     // Check there is an actual value, as on a relationship there may not be.
     if ($tid = $this->getValue($values, 'tid')) {
       // Mock a term object for taxonomy_term_access(). Use machine name and

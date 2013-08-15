@@ -96,7 +96,7 @@ function field_sql_storage_update_8000(&$sandbox) {
   // Retrieve the next field definition. When the index exceeds the number of
   // 'configuration' fields, use it to iterate on deleted fields.
   if (isset($config_names[$sandbox['index']])) {
-    $field_config = config($config_names[$sandbox['index']])->get();
+    $field_config = Drupal::config($config_names[$sandbox['index']])->get();
   }
   else {
     $field_config = $deleted_fields[$sandbox['index'] - count($config_names)];

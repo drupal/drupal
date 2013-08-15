@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\field;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * A handler to provide a field that is completely custom by the administrator.
@@ -41,7 +42,10 @@ class Custom extends FieldPluginBase {
     $form['#pre_render'][] = array($this, 'preRenderCustomForm');
   }
 
-  public function render($values) {
+  /**
+   * {@inheritdoc}
+   */
+  public function render(ResultRow $values) {
     // Return the text, so the code never thinks the value is empty.
     return $this->options['alter']['text'];
   }

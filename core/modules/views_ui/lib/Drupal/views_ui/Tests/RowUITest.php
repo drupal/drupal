@@ -34,7 +34,6 @@ class RowUITest extends UITestBase {
    */
   public function testRowUI() {
     $view_name = 'test_view';
-    $view = views_get_view($view_name);
     $view_edit_url = "admin/structure/views/view/$view_name/edit";
 
     $row_plugin_url = "admin/structure/views/nojs/display/$view_name/default/row";

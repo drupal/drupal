@@ -28,7 +28,7 @@ class PageViewTest extends NodeTestBase {
     $this->assertTrue(node_load($node->id()), 'Node created.');
 
     // Try to edit with anonymous user.
-    $html = $this->drupalGet("node/$node->nid/edit");
+    $this->drupalGet("node/$node->nid/edit");
     $this->assertResponse(403);
 
     // Create a user without permission to edit node.

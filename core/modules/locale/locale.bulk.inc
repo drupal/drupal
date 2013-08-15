@@ -243,7 +243,7 @@ function locale_translate_export_form_submit($form, &$form_state) {
   if (!empty($item)) {
     $uri = tempnam('temporary://', 'po_');
     $header = $reader->getHeader();
-    $header->setProjectName(config('system.site')->get('name'));
+    $header->setProjectName(Drupal::config('system.site')->get('name'));
     $header->setLanguageName($languageName);
 
     $writer = new PoStreamWriter;
@@ -348,7 +348,7 @@ function locale_translate_get_interface_translation_files($projects = array(), $
   // containing a project name and language code: {project}.{langcode}.po or
   // {project}-{version}.{langcode}.po.
   // Only files of known projects and languages will be returned.
-  $directory = config('locale.settings')->get('translation.path');
+  $directory = Drupal::config('locale.settings')->get('translation.path');
   $result = file_scan_directory($directory, '![a-z_]+(\-[0-9a-z\.\-\+]+|)\.[^\./]+\.po$!', array('recurse' => FALSE));
 
   foreach ($result as $file) {
@@ -799,7 +799,7 @@ function locale_config_batch_build(array $names, array $langcodes, $options = ar
     $batch_names[] = $name;
     $i++;
     // During installation the caching of configuration objects is disabled
-    // so it is very expensive to initialize the config() object on each request.
+    // so it is very expensive to initialize the Drupal::config() object on each request.
     // We batch a small number of configuration object upgrades together to
     // improve the overall performance of the process.
     if ($i % 20 == 0) {

@@ -78,7 +78,7 @@ class UserEditTest extends WebTestBase {
     $this->drupalLogout();
 
     // Test that the password strength indicator displays.
-    $config = config('user.settings');
+    $config = \Drupal::config('user.settings');
     $this->drupalLogin($user1);
 
     $config->set('password_strength', TRUE)->save();

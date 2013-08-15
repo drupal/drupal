@@ -9,7 +9,6 @@ use Drupal\file\Plugin\Core\Entity\File;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Drupal\file\FileUsage\DatabaseFileUsageBackend;
 use Drupal\file\FileUsage\FileUsageInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
@@ -36,6 +35,15 @@ function file_help($path, $arg) {
       $output .= '<dd>' . t("When you create a File field, you can specify a directory where the files will be stored, which can be within either the <em>public</em> or <em>private</em> files directory. Files in the public directory can be accessed directly through the web server; when public files are listed, direct links to the files are used, and anyone who knows a file's URL can download the file. Files in the private directory are not accessible directly through the web server; when private files are listed, the links are Drupal path requests. This adds to server load and download time, since Drupal must start up and resolve the path for each file download request, but allows for access restrictions.") . '</dd>';
       $output .= '</dl>';
       return $output;
+  }
+}
+
+/**
+ * Implements hook_modules_uninstalled().
+ */
+function file_modules_uninstalled($modules) {
+  foreach ($modules as $module) {
+    file_usage()->deleteByModule($module);
   }
 }
 
@@ -406,7 +414,7 @@ function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
 }
 
 /**
- * Checks that the file is recognized by image_get_info() as an image.
+ * Checks that the file is recognized by Image::getInfo() as an image.
  *
  * @param Drupal\file\File $file
  *   A file entity.
@@ -419,8 +427,8 @@ function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
 function file_validate_is_image(File $file) {
   $errors = array();
 
-  $info = image_get_info($file->getFileUri());
-  if (!$info || empty($info['extension'])) {
+  $image = Drupal::service('image.factory')->get($file->getFileUri());
+  if (!$image->getExtension()) {
     $errors[] = t('Only JPEG, PNG and GIF images are allowed.');
   }
 
@@ -454,16 +462,19 @@ function file_validate_image_resolution(File $file, $maximum_dimensions = 0, $mi
   $errors = array();
 
   // Check first that the file is an image.
-  if ($info = image_get_info($file->getFileUri())) {
+  $image_factory = Drupal::service('image.factory');
+  $image = $image_factory->get($file->getFileUri());
+  if ($image->getExtension()) {
     if ($maximum_dimensions) {
       // Check that it is smaller than the given dimensions.
       list($width, $height) = explode('x', $maximum_dimensions);
-      if ($info['width'] > $width || $info['height'] > $height) {
+      if ($image->getWidth() > $width || $image->getHeight() > $height) {
         // Try to resize the image to fit the dimensions.
-        if ($image = image_load($file->getFileUri())) {
-          image_scale($image, $width, $height);
-          image_save($image);
-          $file->filesize = $image->info['file_size'];
+        $image = $image_factory->get($file->getFileUri());
+        if ($image->getResource()) {
+          $image->scale($width, $height);
+          $image->save();
+          $file->filesize = $image->getFileSize();
           drupal_set_message(t('The image was resized to fit within the maximum allowed dimensions of %dimensions pixels.', array('%dimensions' => $maximum_dimensions)));
         }
         else {
@@ -475,7 +486,7 @@ function file_validate_image_resolution(File $file, $maximum_dimensions = 0, $mi
     if ($minimum_dimensions) {
       // Check that it is larger than the given dimensions.
       list($width, $height) = explode('x', $minimum_dimensions);
-      if ($info['width'] < $width || $info['height'] < $height) {
+      if ($image->getWidth() < $width || $image->getHeight() < $height) {
         $errors[] = t('The image is too small; the minimum dimensions are %dimensions pixels.', array('%dimensions' => $minimum_dimensions));
       }
     }
@@ -864,7 +875,7 @@ function file_save_upload($form_field_name, $validators = array(), $destination 
     // rename filename.php.foo and filename.php to filename.php.foo.txt and
     // filename.php.txt, respectively). Don't rename if 'allow_insecure_uploads'
     // evaluates to TRUE.
-    if (!config('system.file')->get('allow_insecure_uploads') && preg_match('/\.(php|pl|py|cgi|asp|js)(\.|$)/i', $file->getFilename()) && (substr($file->getFilename(), -4) != '.txt')) {
+    if (!Drupal::config('system.file')->get('allow_insecure_uploads') && preg_match('/\.(php|pl|py|cgi|asp|js)(\.|$)/i', $file->getFilename()) && (substr($file->getFilename(), -4) != '.txt')) {
       $file->setMimeType('text/plain');
       $file->setFileUri($file->getFileUri() . '.txt');
       $file->setFilename($file->getFilename() . '.txt');
@@ -1652,7 +1663,7 @@ function file_icon_url(File $file, $icon_directory = NULL) {
 function file_icon_path(File $file, $icon_directory = NULL) {
   // Use the default set of icons if none specified.
   if (!isset($icon_directory)) {
-    $icon_directory = config('file.settings')->get('icon.directory');
+    $icon_directory = Drupal::config('file.settings')->get('icon.directory');
   }
 
   // If there's an icon matching the exact mimetype, go for it.

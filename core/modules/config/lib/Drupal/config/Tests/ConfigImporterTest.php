@@ -72,10 +72,10 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     $dynamic_name = 'config_test.dynamic.dotted.default';
 
     // Verify the default configuration values exist.
-    $config = config($dynamic_name);
+    $config = \Drupal::config($dynamic_name);
     $this->assertIdentical($config->get('id'), 'dotted.default');
 
-    // Verify that a bare config() does not involve module APIs.
+    // Verify that a bare \Drupal::config() does not involve module APIs.
     $this->assertFalse(isset($GLOBALS['hook_config_test']));
   }
 
@@ -103,7 +103,7 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     $staging = $this->container->get('config.storage.staging');
 
     // Verify the default configuration values exist.
-    $config = config($dynamic_name);
+    $config = \Drupal::config($dynamic_name);
     $this->assertIdentical($config->get('id'), 'dotted.default');
 
     // Delete the file from the staging directory.
@@ -115,7 +115,7 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     // Verify the file has been removed.
     $this->assertIdentical($storage->read($dynamic_name), FALSE);
 
-    $config = config($dynamic_name);
+    $config = \Drupal::config($dynamic_name);
     $this->assertIdentical($config->get('id'), NULL);
 
     // Verify that appropriate module API hooks have been invoked.
@@ -160,7 +160,7 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     $this->configImporter->reset()->import();
 
     // Verify the values appeared.
-    $config = config($dynamic_name);
+    $config = \Drupal::config($dynamic_name);
     $this->assertIdentical($config->get('label'), $original_dynamic_data['label']);
 
     // Verify that appropriate module API hooks have been invoked.
@@ -199,18 +199,18 @@ class ConfigImporterTest extends DrupalUnitTestBase {
     $staging->write($dynamic_name, $original_dynamic_data);
 
     // Verify the active configuration still returns the default values.
-    $config = config($name);
+    $config = \Drupal::config($name);
     $this->assertIdentical($config->get('foo'), 'bar');
-    $config = config($dynamic_name);
+    $config = \Drupal::config($dynamic_name);
     $this->assertIdentical($config->get('label'), 'Default');
 
     // Import.
     $this->configImporter->reset()->import();
 
     // Verify the values were updated.
-    $config = config($name);
+    $config = \Drupal::config($name);
     $this->assertIdentical($config->get('foo'), 'beer');
-    $config = config($dynamic_name);
+    $config = \Drupal::config($dynamic_name);
     $this->assertIdentical($config->get('label'), 'Updated');
 
     // Verify that the original file content is still the same.

@@ -9,6 +9,7 @@ namespace Drupal\comment\Plugin\views\field;
 
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\views\ResultRow;
 
 /**
  * Handler for showing comment module's entity links.
@@ -61,9 +62,9 @@ class EntityLink extends FieldPluginBase {
   }
 
   /**
-   * Overrides \Drupal\views\Plugin\views\field\FieldPluginBase::render().
+   * {@inheritdoc}
    */
-  public function render($values) {
+  public function render(ResultRow $values) {
     $entity = $this->getEntity($values);
 
     // Only render the links, if they are defined.

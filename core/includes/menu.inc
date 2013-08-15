@@ -1821,7 +1821,7 @@ function menu_list_system_menus() {
  * Returns an array of links to be rendered as the Main menu.
  */
 function menu_main_menu() {
-  $config = config('menu.settings');
+  $config = Drupal::config('menu.settings');
   $menu_enabled = module_exists('menu');
   // When menu module is not enabled, we need a hardcoded default value.
   $main_links_source = $menu_enabled ? $config->get('main_links') : 'main';
@@ -1832,7 +1832,7 @@ function menu_main_menu() {
  * Returns an array of links to be rendered as the Secondary links.
  */
 function menu_secondary_menu() {
-  $config = config('menu.settings');
+  $config = Drupal::config('menu.settings');
   $menu_enabled = module_exists('menu');
   // When menu module is not enabled, we need a hardcoded default value.
   $main_links_source = $menu_enabled ? $config->get('main_links') : 'main';
@@ -2376,7 +2376,7 @@ function menu_set_active_menu_names($menu_names = NULL) {
     $active = $menu_names;
   }
   elseif (!isset($active)) {
-    $config = config('system.menu');
+    $config = Drupal::config('system.menu');
     $active = $config->get('active_menus_default') ?: array_keys(menu_list_system_menus());
   }
   return $active;
@@ -2840,15 +2840,13 @@ function menu_get_router() {
  * @todo This function should be removed/refactored.
  */
 function _menu_navigation_links_rebuild($menu) {
-  if (module_exists('menu_link')) {
-    $menu_link_controller = Drupal::entityManager()
-      ->getStorageController('menu_link');
+  if (!module_exists('menu_link')) {
+    // The Menu link module may not be available during install, so rebuild
+    // when possible.
+    return;
   }
-  else {
-    // The Menu link module is not available at install time, so we need to
-    // hardcode the default storage controller.
-    $menu_link_controller = new MenuLinkStorageController('menu_link', Drupal::service('database'), Drupal::service('router.route_provider'));
-  }
+  $menu_link_controller = Drupal::entityManager()
+    ->getStorageController('menu_link');
 
   // Add normal and suggested items as links.
   $router_items = array();
@@ -3400,7 +3398,7 @@ function _menu_router_save($menu, $masks) {
  */
 function _menu_site_is_offline($check_only = FALSE) {
   // Check if site is in maintenance mode.
-  if (config('system.maintenance')->get('enabled')) {
+  if (Drupal::config('system.maintenance')->get('enabled')) {
     if (user_access('access site in maintenance mode')) {
       // Ensure that the maintenance mode message is displayed only once
       // (allowing for page redirects) and specifically suppress its display on

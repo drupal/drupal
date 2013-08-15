@@ -31,7 +31,7 @@ class DefaultProcessor extends PluginBase implements ProcessorInterface {
    * Implements \Drupal\aggregator\Plugin\ProcessorInterface::settingsForm().
    */
   public function settingsForm(array $form, array &$form_state) {
-    $config = config('aggregator.settings');
+    $config = \Drupal::config('aggregator.settings');
     $processors = $config->get('processors');
     $info = $this->getPluginDefinition();
     $items = drupal_map_assoc(array(3, 5, 10, 15, 20, 25), array($this, 'formatItems'));
@@ -87,7 +87,7 @@ class DefaultProcessor extends PluginBase implements ProcessorInterface {
    * Implements \Drupal\aggregator\Plugin\ProcessorInterface::settingsSubmit().
    */
   public function settingsSubmit(array $form, array &$form_state) {
-    $config = config('aggregator.settings');
+    $config = \Drupal::config('aggregator.settings');
     $config->set('items.expire', $form_state['values']['aggregator_clear'])
       ->set('items.teaser_length', $form_state['values']['aggregator_teaser_length'])
       ->set('source.list_max', $form_state['values']['aggregator_summary_items'])
@@ -164,7 +164,7 @@ class DefaultProcessor extends PluginBase implements ProcessorInterface {
    * Expires items from a feed depending on expiration settings.
    */
   public function postProcess(Feed $feed) {
-    $aggregator_clear = config('aggregator.settings')->get('items.expire');
+    $aggregator_clear = \Drupal::config('aggregator.settings')->get('items.expire');
 
     if ($aggregator_clear != AGGREGATOR_CLEAR_NEVER) {
       // Remove all items that are older than flush item timer.

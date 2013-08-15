@@ -174,10 +174,8 @@ class MenuFormController extends EntityFormController implements EntityControlle
    */
   protected function actions(array $form, array &$form_state) {
     $actions = parent::actions($form, $form_state);
-    $menu = $this->entity;
 
-    $system_menus = menu_list_system_menus();
-    $actions['delete']['#access'] = !$menu->isNew() && !isset($system_menus[$menu->id()]);
+    $actions['delete']['#access'] = !$this->entity->isNew() && $this->entity->access('delete');
 
     // Add the language configuration submit handler. This is needed because the
     // submit button has custom submit handlers.
@@ -223,8 +221,10 @@ class MenuFormController extends EntityFormController implements EntityControlle
    */
   public function save(array $form, array &$form_state) {
     $menu = $this->entity;
+    // @todo Get rid of menu_list_system_menus() https://drupal.org/node/1882552
+    //   Supposed menu item declared by hook_menu()
+    //   Should be moved to submitOverviewForm()
     $system_menus = menu_list_system_menus();
-
     if (!$menu->isNew() || isset($system_menus[$menu->id()])) {
       $this->submitOverviewForm($form, $form_state);
     }
@@ -354,31 +354,27 @@ class MenuFormController extends EntityFormController implements EntityControlle
         );
         // Build a list of operations.
         $operations = array();
-        $links = array();
-        $links['edit'] = array(
+        $operations['edit'] = array(
           'title' => t('Edit'),
           'href' => 'admin/structure/menu/item/' . $item['mlid'] . '/edit',
         );
-        $operations['edit'] = array('#type' => 'link', '#title' => t('Edit'), '#href' => 'admin/structure/menu/item/' . $item['mlid'] . '/edit');
         // Only items created by the menu module can be deleted.
-        if ($item['module'] == 'menu' || $item['updated'] == 1) {
-          $links['delete'] = array(
+        if ($item->access('delete')) {
+          $operations['delete'] = array(
             'title' => t('Delete'),
             'href' => 'admin/structure/menu/item/' . $item['mlid'] . '/delete',
           );
-          $operations['delete'] = array('#type' => 'link', '#title' => t('Delete'), '#href' => 'admin/structure/menu/item/' . $item['mlid'] . '/delete');
         }
         // Set the reset column.
-        elseif ($item['module'] == 'system' && $item['customized']) {
-          $links['reset'] = array(
+        elseif ($item->access('reset')) {
+          $operations['reset'] = array(
             'title' => t('Reset'),
             'href' => 'admin/structure/menu/item/' . $item['mlid'] . '/reset',
           );
-          $operations['reset'] = array('#type' => 'link', '#title' => t('Reset'), '#href' => 'admin/structure/menu/item/' . $item['mlid'] . '/reset');
         }
         $form[$mlid]['operations'] = array(
           '#type' => 'operations',
-          '#links' => $links,
+          '#links' => $operations,
         );
       }
 

@@ -43,7 +43,7 @@ function bartik_preprocess_page(&$variables) {
     $variables['secondary_menu']['#attributes']['class'] = array('links', 'inline', 'clearfix');
   }
 
-  $site_config = config('system.site');
+  $site_config = Drupal::config('system.site');
   // Always print the site name and slogan, but if they are toggled off, we'll
   // just hide them visually.
   $variables['hide_site_name']   = theme_get_setting('features.name') ? FALSE : TRUE;
@@ -87,7 +87,7 @@ function bartik_preprocess_maintenance_page(&$variables) {
   drupal_add_css(drupal_get_path('theme', 'bartik') . '/css/maintenance-page.css');
   $variables['styles'] = drupal_get_css();
 
-  $site_config = config('system.site');
+  $site_config = Drupal::config('system.site');
   // Always print the site name and slogan, but if they are toggled off, we'll
   // just hide them visually.
   $variables['hide_site_name']   = theme_get_setting('features.name') ? FALSE : TRUE;

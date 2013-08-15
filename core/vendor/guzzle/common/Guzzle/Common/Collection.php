@@ -3,25 +3,22 @@
 namespace Guzzle\Common;
 
 use Guzzle\Common\Exception\InvalidArgumentException;
+use Guzzle\Common\Exception\RuntimeException;
 
 /**
  * Key value pair collection object
  */
 class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, ToArrayInterface
 {
-    /**
-     * @var array Data associated with the object.
-     */
+    /** @var array Data associated with the object. */
     protected $data;
 
     /**
-     * Constructor
-     *
      * @param array $data Associative array of data to set
      */
-    public function __construct(array $data = null)
+    public function __construct(array $data = array())
     {
-        $this->data = $data ?: array();
+        $this->data = $data;
     }
 
     /**
@@ -34,21 +31,81 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, ToArra
      * @return self
      * @throws InvalidArgumentException if a parameter is missing
      */
-    public static function fromConfig(array $config = null, array $defaults = null, array $required = null)
+    public static function fromConfig(array $config = array(), array $defaults = array(), array $required = array())
     {
-        $collection = new self($defaults);
+        $data = $config + $defaults;
 
-        foreach ((array) $config as $key => $value) {
-            $collection->set($key, $value);
+        if ($missing = array_diff($required, array_keys($data))) {
+            throw new InvalidArgumentException('Config is missing the following keys: ' . implode(', ', $missing));
         }
 
-        foreach ((array) $required as $key) {
-            if ($collection->hasKey($key) === false) {
-                throw new InvalidArgumentException("Config must contain a '{$key}' key");
-            }
-        }
+        return new self($data);
+    }
 
-        return $collection;
+    public function count()
+    {
+        return count($this->data);
+    }
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->data);
+    }
+
+    public function toArray()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Removes all key value pairs
+     *
+     * @return Collection
+     */
+    public function clear()
+    {
+        $this->data = array();
+
+        return $this;
+    }
+
+    /**
+     * Get all or a subset of matching key value pairs
+     *
+     * @param array $keys Pass an array of keys to retrieve only a subset of key value pairs
+     *
+     * @return array Returns an array of all matching key value pairs
+     */
+    public function getAll(array $keys = null)
+    {
+        return $keys ? array_intersect_key($this->data, array_flip($keys)) : $this->data;
+    }
+
+    /**
+     * Get a specific key value.
+     *
+     * @param string $key Key to retrieve.
+     *
+     * @return mixed|null Value of the key or NULL
+     */
+    public function get($key)
+    {
+        return isset($this->data[$key]) ? $this->data[$key] : null;
+    }
+
+    /**
+     * Set a key value pair
+     *
+     * @param string $key   Key to set
+     * @param mixed  $value Value to set
+     *
+     * @return Collection Returns a reference to the object
+     */
+    public function set($key, $value)
+    {
+        $this->data[$key] = $value;
+
+        return $this;
     }
 
     /**
@@ -74,89 +131,17 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, ToArra
     }
 
     /**
-     * Removes all key value pairs
+     * Remove a specific key value pair
+     *
+     * @param string $key A key to remove
      *
      * @return Collection
      */
-    public function clear()
+    public function remove($key)
     {
-        $this->data = array();
+        unset($this->data[$key]);
 
         return $this;
-    }
-
-    /**
-     * Return the number of keys
-     *
-     * @return integer
-     */
-    public function count()
-    {
-        return count($this->data);
-    }
-
-    /**
-     * Iterates over each key value pair in the collection passing them to the Closure. If the  Closure function returns
-     * true, the current value from input is returned into the result Collection.  The Closure must accept three
-     * parameters: (string) $key, (string) $value and return Boolean TRUE or FALSE for each value.
-     *
-     * @param \Closure $closure Closure evaluation function
-     * @param bool     $static  Set to TRUE to use the same class as the return rather than returning a Collection
-     *
-     * @return Collection
-     */
-    public function filter(\Closure $closure, $static = true)
-    {
-        $collection = ($static) ? new static() : new self();
-        foreach ($this->data as $key => $value) {
-            if ($closure($key, $value)) {
-                $collection->add($key, $value);
-            }
-        }
-
-        return $collection;
-    }
-
-    /**
-     * Get an iterator object
-     *
-     * @return array
-     */
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->data);
-    }
-
-    /**
-     * Get a specific key value.
-     *
-     * @param string $key Key to retrieve.
-     *
-     * @return mixed|null Value of the key or NULL
-     */
-    public function get($key)
-    {
-        return isset($this->data[$key]) ? $this->data[$key] : null;
-    }
-
-    /**
-     * Get all or a subset of matching key value pairs
-     *
-     * @param array $keys Pass an array of keys to retrieve only a subset of key value pairs
-     *
-     * @return array Returns an array of all matching key value pairs
-     */
-    public function getAll(array $keys = null)
-    {
-        return $keys ? array_intersect_key($this->data, array_flip($keys)) : $this->data;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toArray()
-    {
-        return $this->data;
     }
 
     /**
@@ -212,6 +197,58 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, ToArra
     }
 
     /**
+     * Replace the data of the object with the value of an array
+     *
+     * @param array $data Associative array of data
+     *
+     * @return Collection Returns a reference to the object
+     */
+    public function replace(array $data)
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Add and merge in a Collection or array of key value pair data.
+     *
+     * @param Collection|array $data Associative array of key value pair data
+     *
+     * @return Collection Returns a reference to the object.
+     */
+    public function merge($data)
+    {
+        foreach ($data as $key => $value) {
+            $this->add($key, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Over write key value pairs in this collection with all of the data from an array or collection.
+     *
+     * @param array|\Traversable $data Values to override over this config
+     *
+     * @return self
+     */
+    public function overwriteWith($data)
+    {
+        if (is_array($data)) {
+            $this->data = $data + $this->data;
+        } elseif ($data instanceof Collection) {
+            $this->data = $data->toArray() + $this->data;
+        } else {
+            foreach ($data as $key => $value) {
+                $this->data[$key] = $value;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Returns a Collection containing all the elements of the collection after applying the callback function to each
      * one. The Closure should accept three parameters: (string) $key, (string) $value, (array) $context and return a
      * modified value
@@ -233,134 +270,74 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, ToArra
     }
 
     /**
-     * Add and merge in a Collection or array of key value pair data.
+     * Iterates over each key value pair in the collection passing them to the Closure. If the  Closure function returns
+     * true, the current value from input is returned into the result Collection.  The Closure must accept three
+     * parameters: (string) $key, (string) $value and return Boolean TRUE or FALSE for each value.
      *
-     * @param Collection|array $data Associative array of key value pair data
+     * @param \Closure $closure Closure evaluation function
+     * @param bool     $static  Set to TRUE to use the same class as the return rather than returning a Collection
      *
-     * @return Collection Returns a reference to the object.
+     * @return Collection
      */
-    public function merge($data)
+    public function filter(\Closure $closure, $static = true)
     {
-        if ($data instanceof self) {
-            $data = $data->getAll();
-        } elseif (!is_array($data)) {
-            return $this;
+        $collection = ($static) ? new static() : new self();
+        foreach ($this->data as $key => $value) {
+            if ($closure($key, $value)) {
+                $collection->add($key, $value);
+            }
         }
 
-        if (empty($this->data)) {
-            $this->data = $data;
-        } else {
-            foreach ($data as $key => $value) {
-                $this->add($key, $value);
+        return $collection;
+    }
+
+    public function offsetExists($offset)
+    {
+        return isset($this->data[$offset]);
+    }
+
+    public function offsetGet($offset)
+    {
+        return isset($this->data[$offset]) ? $this->data[$offset] : null;
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        $this->data[$offset] = $value;
+    }
+
+    public function offsetUnset($offset)
+    {
+        unset($this->data[$offset]);
+    }
+
+    /**
+     * Set a value into a nested array key. Keys will be created as needed to set the value.
+     *
+     * @param string $path  Path to set
+     * @param mixed  $value Value to set at the key
+     *
+     * @return self
+     * @throws RuntimeException when trying to setPath using a nested path that travels through a scalar value
+     */
+    public function setPath($path, $value)
+    {
+        $current =& $this->data;
+        $queue = explode('/', $path);
+        while (null !== ($key = array_shift($queue))) {
+            if (!is_array($current)) {
+                throw new RuntimeException("Trying to setPath {$path}, but {$key} is set and is not an array");
+            } elseif (!$queue) {
+                $current[$key] = $value;
+            } elseif (isset($current[$key])) {
+                $current =& $current[$key];
+            } else {
+                $current[$key] = array();
+                $current =& $current[$key];
             }
         }
 
         return $this;
-    }
-
-    /**
-     * ArrayAccess implementation of offsetExists()
-     *
-     * @param string $offset Array key
-     *
-     * @return bool
-     */
-    public function offsetExists($offset)
-    {
-        return $this->hasKey($offset) !== false;
-    }
-
-    /**
-     * ArrayAccess implementation of offsetGet()
-     *
-     * @param string $offset Array key
-     *
-     * @return null|mixed
-     */
-    public function offsetGet($offset)
-    {
-        return $this->get($offset);
-    }
-
-    /**
-     * ArrayAccess implementation of offsetGet()
-     *
-     * @param string $offset Array key
-     * @param mixed  $value  Value to set
-     */
-    public function offsetSet($offset, $value)
-    {
-        $this->set($offset, $value);
-    }
-
-    /**
-     * ArrayAccess implementation of offsetUnset()
-     *
-     * @param string $offset Array key
-     */
-    public function offsetUnset($offset)
-    {
-        $this->remove($offset);
-    }
-
-    /**
-     * Remove a specific key value pair
-     *
-     * @param string $key A key to remove
-     *
-     * @return Collection
-     */
-    public function remove($key)
-    {
-        unset($this->data[$key]);
-
-        return $this;
-    }
-
-    /**
-     * Replace the data of the object with the value of an array
-     *
-     * @param array $data Associative array of data
-     *
-     * @return Collection Returns a reference to the object
-     */
-    public function replace(array $data)
-    {
-        $this->data = $data;
-
-        return $this;
-    }
-
-    /**
-     * Set a key value pair
-     *
-     * @param string $key   Key to set
-     * @param mixed  $value Value to set
-     *
-     * @return Collection Returns a reference to the object
-     */
-    public function set($key, $value)
-    {
-        $this->data[$key] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Inject configuration settings into an input string
-     *
-     * @param string $input  Input to inject
-     *
-     * @return string
-     */
-    public function inject($input)
-    {
-        $replace = array();
-        foreach ($this->data as $key => $val) {
-            $replace['{' . $key . '}'] = $val;
-        }
-
-        return strtr($input, $replace);
     }
 
     /**
@@ -376,67 +353,51 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, ToArra
      */
     public function getPath($path, $separator = '/', $data = null)
     {
-        // Assume the data of the collection if no data was passed into the method
         if ($data === null) {
-            $data = &$this->data;
+            $data =& $this->data;
         }
 
-        // Break the path into an array if needed
-        if (!is_array($path)) {
-            $path = explode($separator, $path);
-        }
-
-        // Using an iterative approach rather than recursion for speed
+        $path = is_array($path) ? $path : explode($separator, $path);
         while (null !== ($part = array_shift($path))) {
-
             if (!is_array($data)) {
                 return null;
-            }
-
-            // The value does not exist in the array or the path has more but the value is not an array
-            if (!isset($data[$part])) {
-
-                // Not using a wildcard and the key was not found, so return null
-                if ($part != '*') {
-                    return null;
-                }
-
-                // If using a wildcard search, then diverge and combine paths
+            } elseif (isset($data[$part])) {
+                $data =& $data[$part];
+            } elseif ($part != '*') {
+                return null;
+            } else {
+                // Perform a wildcard search by diverging and merging paths
                 $result = array();
                 foreach ($data as $value) {
                     if (!$path) {
                         $result = array_merge_recursive($result, (array) $value);
-                    } else {
-                        $test = $this->getPath($path, $separator, $value);
-                        if ($test !== null) {
-                            $result = array_merge_recursive($result, (array) $test);
-                        }
+                    } elseif (null !== ($test = $this->getPath($path, $separator, $value))) {
+                        $result = array_merge_recursive($result, (array) $test);
                     }
                 }
-
                 return $result;
             }
-
-            // Descend deeper into the data
-            $data = &$data[$part];
         }
 
         return $data;
     }
 
     /**
-     * Over write key value pairs in this collection with all of the data from an array or collection.
+     * Inject configuration settings into an input string
      *
-     * @param array|\Traversable $data Values to override over this config
+     * @param string $input Input to inject
      *
-     * @return self
+     * @return string
+     * @deprecated
      */
-    public function overwriteWith($data)
+    public function inject($input)
     {
-        foreach ($data as $k => $v) {
-            $this->set($k, $v);
+        Version::warn(__METHOD__ . ' is deprecated');
+        $replace = array();
+        foreach ($this->data as $key => $val) {
+            $replace['{' . $key . '}'] = $val;
         }
 
-        return $this;
+        return strtr($input, $replace);
     }
 }

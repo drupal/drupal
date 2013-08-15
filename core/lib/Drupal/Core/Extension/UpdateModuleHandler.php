@@ -75,13 +75,13 @@ class UpdateModuleHandler extends ModuleHandler {
         }
       }
       // Enable the module with a weight of 0.
-      $module_config = config('system.module');
+      $module_config = \Drupal::config('system.module');
       $module_config
         ->set("enabled.$module", 0)
         ->set('enabled', module_config_sort($module_config->get('enabled')))
         ->save();
       // Ensure the module is not contained in disabled modules.
-      config('system.module.disabled')
+      \Drupal::config('system.module.disabled')
         ->clear($module)
         ->save();
 

@@ -230,7 +230,7 @@ class Feed extends EntityNG implements FeedInterface {
       // Make sure there is no active block for this feed.
       $block_configs = config_get_storage_names_with_prefix('plugin.core.block');
       foreach ($block_configs as $config_id) {
-        $config = config($config_id);
+        $config = \Drupal::config($config_id);
         if ($config->get('id') == 'aggregator_feed_block:' . $entity->id()) {
           $config->delete();
         }

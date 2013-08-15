@@ -52,7 +52,7 @@ function color_update_8001() {
     // Get theme name from color palette variable.
     preg_match('/color_(.*)_palette/', $theme_palette, $matches);
     $theme_key = $matches[1];
-    $config = config('color.' . $theme_key);
+    $config = Drupal::config('color.' . $theme_key);
     $config->set('palette', update_variable_get('color_' . $theme_key . '_palette'));
     $config->set('logo', update_variable_get('color_' . $theme_key . '_logo'));
     $config->set('stylesheets', update_variable_get('color_' . $theme_key . '_stylesheets'));
