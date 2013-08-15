@@ -18,6 +18,7 @@ use Drupal\Core\Annotation\Translation;
  *   id = "system_menu_block",
  *   admin_label = @Translation("System Menu"),
  *   module = "system",
+ *   category = "menu",
  *   derivative = "Drupal\system\Plugin\Derivative\SystemMenuBlock"
  * )
  */

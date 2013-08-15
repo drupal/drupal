@@ -16,7 +16,9 @@ use Drupal\Core\Template\Attribute;
 function block_admin_demo($theme = NULL) {
   return array(
     '#attached' => array(
-      'css' => array(drupal_get_path('module', 'block') . '/css/block.admin.css'),
+      'library' => array(
+        array('block', 'drupal.block.admin'),
+      ),
     ),
   );
 }

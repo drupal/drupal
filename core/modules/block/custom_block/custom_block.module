@@ -31,19 +31,6 @@ function custom_block_help($path, $arg) {
  * Implements hook_menu_local_tasks().
  */
 function custom_block_menu_local_tasks(&$data, $router_item, $root_path) {
-  // Add the "Add custom block" action link to the theme-specific block library
-  // listing page.
-  // @todo This should just be $root_path == 'admin/structure/block/list/%/add'
-  //   but block_menu() registers static router paths instead of dynamic ones.
-  if (preg_match('@^admin/structure/block/list/(.*)/add$@', $root_path)) {
-    $item = menu_get_item('block/add');
-    if ($item['access']) {
-      $data['actions']['block/add'] = array(
-        '#theme' => 'menu_local_action',
-        '#link' => $item,
-      );
-    }
-  }
   if ($router_item['route_name'] == 'custom_block_list') {
     // @todo Move to a LocalAction plugin when https://drupal.org/node/2045267
     //   allows local actions to work with query strings.
@@ -55,6 +42,19 @@ function custom_block_menu_local_tasks(&$data, $router_item, $root_path) {
         '#theme' => 'menu_local_action',
         '#link' => $item,
       );
+    }
+  }
+}
+
+/**
+ * Implements hook_menu_local_actions_alter().
+ */
+function custom_block_menu_local_actions_alter(&$actions) {
+  if (isset($actions['local_action_static:custom_block_add_action'])) {
+    foreach (list_themes() as $theme => $theme_info) {
+      if ($theme_info->status) {
+        $actions['local_action_static:custom_block_add_action']['appears_on'][] = "block_admin_display.$theme";
+      }
     }
   }
 }
@@ -244,27 +244,6 @@ function custom_block_add_body_field($block_type_id, $label = 'Block body') {
   }
 
   return $instance;
-}
-
-/**
- * Implements hook_form_FORM_ID_alter() for block_plugin_ui().
- */
-function custom_block_form_block_plugin_ui_alter(&$form, $form_state) {
-  foreach ($form['left']['plugin_library']['#rows'] as $plugin_id => &$row) {
-    // @todo Clean up when http://drupal.org/node/1874498 lands.
-    if (strpos($plugin_id, ':') === FALSE) {
-      continue;
-    }
-    list($base, $derivative) = explode(':', $plugin_id);
-    if ($base !== 'custom_block') {
-      continue;
-    }
-    $custom_block = entity_load_by_uuid('custom_block', $derivative);
-    $row['1']['data']['#links']['edit'] = array(
-      'title' => t('Edit'),
-      'href' => 'block/' . $custom_block->id(),
-    );
-  }
 }
 
 /**

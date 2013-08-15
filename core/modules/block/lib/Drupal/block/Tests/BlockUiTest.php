@@ -106,12 +106,27 @@ class BlockUiTest extends WebTestBase {
   }
 
   /**
-   * Test block search.
+   * Tests the block categories on the listing page.
    */
-  function testBlockSearch() {
-    $block = t('Administration');
-    $blocks = drupal_json_decode($this->drupalGet('block/autocomplete', array('query' => array('q' => $block))));
-    $this->assertEqual($blocks['system_menu_block:menu-admin'], $block, t('Can search for block with name !block.', array('!block' => $block)));
+  public function testCandidateBlockList() {
+    $arguments = array(
+      ':ul_class' => 'block-list',
+      ':li_class' => 'test-block-instantiation',
+      ':href' => 'admin/structure/block/add/test_block_instantiation/stark',
+      ':text' => 'Display message',
+    );
+
+    $this->drupalGet('admin/structure/block');
+    $elements = $this->xpath('//details[@id="edit-block-test"]//ul[contains(@class, :ul_class)]/li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
+    $this->assertTrue(!empty($elements), 'The test block appears in the category for its module.');
+
+    // Trigger the custom category addition in block_test_block_alter().
+    $this->container->get('state')->set('block_test_info_alter', TRUE);
+    $this->container->get('plugin.manager.block')->clearCachedDefinitions();
+
+    $this->drupalGet('admin/structure/block');
+    $elements = $this->xpath('//details[@id="edit-custom-category"]//ul[contains(@class, :ul_class)]/li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
+    $this->assertTrue(!empty($elements), 'The test block appears in a custom category controlled by block_test_block_alter().');
   }
 
   /**

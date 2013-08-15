@@ -190,10 +190,6 @@ function system_theme() {
     'system_date_format_localize_form' => array(
       'render element' => 'form',
     ),
-    'system_plugin_ui_form' => array(
-      'template' => 'system-plugin-ui-form',
-      'render element' => 'form',
-    ),
   ));
 }
 
@@ -2334,19 +2330,6 @@ function system_preprocess_block(&$variables) {
       $variables['attributes']['role'] = 'navigation';
       $variables['attributes']['class'][] = 'block-menu';
   }
-}
-
-/**
- * Prepares variables for system plugin UI form templates.
- *
- * Default template: system-plugin-ui-form.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - form: The plugin form elements.
-*/
-function template_preprocess_system_plugin_ui_form(&$variables) {
-  drupal_add_css(drupal_get_path('module', 'system') . '/css/system.plugin.ui.css');
 }
 
 /**
