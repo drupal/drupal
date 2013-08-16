@@ -287,6 +287,14 @@ class BlockFormController extends EntityFormController implements EntityControll
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function delete(array $form, array &$form_state) {
+    parent::delete($form, $form_state);
+    $form_state['redirect'] = 'admin/structure/block/manage/' . $this->entity->id() . '/delete';
+  }
+
+  /**
    * Generates a unique machine name for a block.
    *
    * @param \Drupal\block\BlockInterface $block

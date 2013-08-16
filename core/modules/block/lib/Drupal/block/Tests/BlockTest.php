@@ -135,6 +135,13 @@ class BlockTest extends BlockTestBase {
     // is my_block_instance_name.
     $xpath = $this->buildXPathQuery('//div[@id=:id]/*', array(':id' => 'block-' . strtr(strtolower($block['machine_name']), '-', '_')));
     $this->assertNoFieldByXPath($xpath, FALSE, 'Block found in no regions.');
+
+    // Test deleting the block from the edit form.
+    $this->drupalGet('admin/structure/block/manage/' . $block['theme'] . '.' . $block['machine_name']);
+    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->assertRaw(t('Are you sure you want to delete the block %name?', array('%name' => $block['settings[label]'])));
+    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->assertRaw(t('The block %name has been removed.', array('%name' => $block['settings[label]'])));
   }
 
   /**

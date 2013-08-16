@@ -202,6 +202,10 @@ class AggregatorController implements ControllerInterface {
         'title' => t('Edit'),
         'href' => "admin/config/services/aggregator/edit/category/$category->cid",
       );
+      $links['delete'] = array(
+        'title' => t('Delete'),
+        'href' => "admin/config/services/aggregator/delete/category/$category->cid",
+      );
       $row[] = array(
         'data' => array(
           '#type' => 'operations',

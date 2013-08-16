@@ -13,3 +13,6 @@ services:
     arguments: ['@database']
     tags:
       - { name: access_check }
+  aggregator.category.storage:
+    class: Drupal\aggregator\CategoryStorageController
+    arguments: ['@database']
