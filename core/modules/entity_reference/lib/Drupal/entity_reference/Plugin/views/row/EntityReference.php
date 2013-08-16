@@ -21,6 +21,7 @@ use Drupal\views\Plugin\views\row\Fields;
  *   title = @Translation("Entity Reference inline fields"),
  *   help = @Translation("Displays the fields with an optional template."),
  *   theme = "views_view_fields",
+ *   register_theme = FALSE,
  *   display_types = {"entity_reference"}
  * )
  */

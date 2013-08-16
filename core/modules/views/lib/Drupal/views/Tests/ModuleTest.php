@@ -247,7 +247,7 @@ class ModuleTest extends ViewUnitTestBase {
     // Test using the 'test' style plugin type only returns the test_style and
     // mapping_test plugins.
     $plugins = views_fetch_plugin_names('style', 'test');
-    $this->assertIdentical(array_keys($plugins), array('mapping_test', 'test_style'));
+    $this->assertIdentical(array_keys($plugins), array('mapping_test', 'test_style', 'test_template_style'));
 
     // Test a non existent style plugin type returns no plugins.
     $plugins = views_fetch_plugin_names('style', $this->randomString());

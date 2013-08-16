@@ -20,6 +20,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  *   title = @Translation("Content"),
  *   help = @Translation("Display the content with standard node view."),
  *   theme = "views_view_row_rss",
+ *   register_theme = FALSE,
  *   base = {"node"},
  *   display_types = {"feed"},
  *   module = "node"

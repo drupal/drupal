@@ -24,6 +24,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
  *   title = @Translation("Block"),
  *   help = @Translation("Display the view as a block."),
  *   theme = "views_view",
+ *   register_theme = FALSE,
  *   uses_hook_block = TRUE,
  *   contextual_links_locations = {"block"},
  *   admin = @Translation("Block")

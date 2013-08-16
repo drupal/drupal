@@ -17,6 +17,7 @@ use Drupal\Core\Annotation\Translation;
  *   id = "display_no_area_test",
  *   title = @Translation("Display test no area"),
  *   theme = "views_view",
+ *   register_theme = FALSE,
  *   contextual_links_locations = {"view"}
  * )
  */
