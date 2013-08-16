@@ -107,7 +107,7 @@ class UserLoginTest extends WebTestBase {
     $default_count_log2 = 16;
 
     // Retrieve instance of password hashing algorithm
-    $password_hasher = drupal_container()->get('password');
+    $password_hasher = $this->container->get('password');
 
     // Create a new user and authenticate.
     $account = $this->drupalCreateUser(array());

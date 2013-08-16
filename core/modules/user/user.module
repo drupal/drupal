@@ -597,7 +597,7 @@ function user_validate_current_pass(&$form, &$form_state) {
     // that prevent them from being empty if they are changed.
     $current_value = $account->getPropertyDefinition($key) ? $account->get($key)->value : $account->$key;
     if ((strlen(trim($form_state['values'][$key])) > 0) && ($form_state['values'][$key] != $current_value)) {
-      $current_pass_failed = empty($form_state['values']['current_pass']) || !drupal_container()->get('password')->check($form_state['values']['current_pass'], $account);
+      $current_pass_failed = empty($form_state['values']['current_pass']) || !Drupal::service('password')->check($form_state['values']['current_pass'], $account);
       if ($current_pass_failed) {
         form_set_error('current_pass', t("Your current password is missing or incorrect; it's required to change the %name.", array('%name' => $name)));
         form_set_error($key);
@@ -1100,7 +1100,7 @@ function user_authenticate($name, $password) {
   if (!empty($name) && !empty($password)) {
     $account = user_load_by_name($name);
     if ($account) {
-      $password_hasher = drupal_container()->get('password');
+      $password_hasher = Drupal::service('password');
       if ($password_hasher->check($password, $account)) {
         // Successful authentication.
         $uid = $account->id();
@@ -2002,7 +2002,7 @@ function user_modules_installed($modules) {
  */
 function user_modules_uninstalled($modules) {
   // Remove any potentially orphan module data stored for users.
-  drupal_container()->get('user.data')->delete($modules);
+  Drupal::service('user.data')->delete($modules);
 }
 
 /**

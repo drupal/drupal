@@ -72,7 +72,7 @@ class UserCancelTest extends WebTestBase {
     $password = user_password();
     $account = array(
       'name' => 'user1',
-      'pass' => drupal_container()->get('password')->hash(trim($password)),
+      'pass' => $this->container->get('password')->hash(trim($password)),
     );
     // We cannot use $account->save() here, because this would result in the
     // password being hashed again.
