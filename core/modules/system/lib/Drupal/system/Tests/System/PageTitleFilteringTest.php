@@ -2,22 +2,24 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\System\PageTitleFilteringTest.
+ * Contains \Drupal\system\Tests\System\PageTitleTest.
  */
 
 namespace Drupal\system\Tests\System;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Utility\Title;
 use Drupal\simpletest\WebTestBase;
 
-class PageTitleFilteringTest extends WebTestBase {
+class PageTitleTest extends WebTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('node');
+  public static $modules = array('node', 'test_page_test');
 
   protected $content_user;
   protected $saved_title;
@@ -27,7 +29,7 @@ class PageTitleFilteringTest extends WebTestBase {
    */
   public static function getInfo() {
     return array(
-      'name' => 'HTML in page titles',
+      'name' => 'Page titles',
       'description' => 'Tests correct handling or conversion by drupal_set_title() and drupal_get_title() and checks the correct escaping of site name and slogan.',
       'group' => 'System'
     );
@@ -61,10 +63,10 @@ class PageTitleFilteringTest extends WebTestBase {
    */
   function testTitleTags() {
     $title = "string with <em>HTML</em>";
-    // drupal_set_title's $filter is CHECK_PLAIN by default, so the title should be
+    // drupal_set_title's $filter is Title::CHECK_PLAIN by default, so the title should be
     // returned with check_plain().
-    drupal_set_title($title, CHECK_PLAIN);
-    $this->assertTrue(strpos(drupal_get_title(), '<em>') === FALSE, 'Tags in title converted to entities when $output is CHECK_PLAIN.');
+    drupal_set_title($title, Title::CHECK_PLAIN);
+    $this->assertTrue(strpos(drupal_get_title(), '<em>') === FALSE, 'Tags in title converted to entities when $output is Title::CHECK_PLAIN.');
     // drupal_set_title's $filter is passed as PASS_THROUGH, so the title should be
     // returned with HTML.
     drupal_set_title($title, PASS_THROUGH);
@@ -122,4 +124,18 @@ class PageTitleFilteringTest extends WebTestBase {
     $this->assertNoRaw($slogan, 'Check for the unfiltered version of the slogan.');
     $this->assertRaw($slogan_filtered, 'Check for the filtered version of the slogan.');
   }
+
+  /**
+   * Tests the page title of render arrays.
+   *
+   * @see \Drupal\test_page_test\Controller\Test::renderTitle()
+   */
+  public function testRenderTitle() {
+    $this->drupalGet('test-render-title');
+
+    $this->assertTitle('Foo | Drupal');
+    $result = $this->xpath('//h1');
+    $this->assertEqual('Foo', (string) $result[0]);
+  }
+
 }

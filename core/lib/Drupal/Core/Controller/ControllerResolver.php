@@ -28,7 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *    controller by using a service:method notation (Symfony uses the same
  *    convention).
  */
-class ControllerResolver extends BaseControllerResolver {
+class ControllerResolver extends BaseControllerResolver implements ControllerResolverInterface {
 
   /**
    * The injection container that should be injected into all controllers.
@@ -36,6 +36,13 @@ class ControllerResolver extends BaseControllerResolver {
    * @var Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $container;
+
+  /**
+   * The PSR-3 logger. (optional)
+   *
+   * @var \Psr\Log\LoggerInterface;
+   */
+  protected $logger;
 
   /**
    * Constructs a new ControllerResolver.
@@ -49,6 +56,47 @@ class ControllerResolver extends BaseControllerResolver {
     $this->container = $container;
 
     parent::__construct($logger);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getControllerFromDefinition($controller, $path = '') {
+    if (is_array($controller) || (is_object($controller) && method_exists($controller, '__invoke'))) {
+      return $controller;
+    }
+
+    if (strpos($controller, ':') === FALSE) {
+      if (method_exists($controller, '__invoke')) {
+        return new $controller;
+      }
+      elseif (function_exists($controller)) {
+        return $controller;
+      }
+    }
+
+    $callable = $this->createController($controller);
+
+    if (!is_callable($callable)) {
+      throw new \InvalidArgumentException(sprintf('The controller for URI "%s" is not callable.', $path));
+    }
+
+    return $callable;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getController(Request $request) {
+    if (!$controller = $request->attributes->get('_controller')) {
+      if ($this->logger !== NULL) {
+        $this->logger->warning('Unable to look for the controller as the "_controller" parameter is missing');
+      }
+
+      return FALSE;
+    }
+    return $this->getControllerFromDefinition($controller, $request->getPathInfo());
   }
 
   /**

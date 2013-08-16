@@ -24,5 +24,6 @@ block_admin_add:
   pattern: '/admin/structure/block/add/{plugin_id}/{theme}'
   defaults:
     _content: '\Drupal\block\Controller\BlockAddController::blockAddConfigureForm'
+    _title: 'Configure block'
   requirements:
     _permission: 'administer blocks'

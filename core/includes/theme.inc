@@ -8,6 +8,7 @@
  * customized by user themes.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Language\Language;
@@ -2565,6 +2566,7 @@ function template_preprocess_html(&$variables) {
       $head_title['slogan'] = strip_tags(filter_xss_admin($site_config->get('slogan')));
     }
   }
+
   $variables['head_title_array'] = $head_title;
   $variables['head_title'] = implode(' | ', $head_title);
 
@@ -2675,7 +2677,13 @@ function template_preprocess_page(&$variables) {
   $variables['site_name']         = (theme_get_setting('features.name') ? check_plain($site_config->get('name')) : '');
   $variables['site_slogan']       = (theme_get_setting('features.slogan') ? filter_xss_admin($site_config->get('slogan')) : '');
   $variables['tabs']              = menu_local_tabs();
-  $variables['title']             = new RenderWrapper('drupal_get_title');
+
+  if (isset($variables['page']['#title'])) {
+    $variables['title'] = $variables['page']['#title'];
+  }
+  else {
+    $variables['title'] = new RenderWrapper('drupal_get_title');
+  }
 
   // Pass the main menu and secondary menu to the template as render arrays.
   if (!empty($variables['main_menu'])) {
@@ -2844,11 +2852,17 @@ function template_preprocess_maintenance_page(&$variables) {
   $site_name = $site_config->get('name');
   $site_slogan = $site_config->get('slogan');
 
-  // Construct page title
-  if (drupal_get_title()) {
+   // Construct the page title.
+  if (isset($variables['page']['#title'])) {
+    $head_title = array(
+      'title' => strip_tags($variables['page']['#title']),
+      'name' => String::checkPlain($site_config->get('name')),
+    );
+  }
+  elseif (drupal_get_title()) {
     $head_title = array(
       'title' => strip_tags(drupal_get_title()),
-      'name' => check_plain($site_name),
+      'name' => String::checkPlain($site_config->get('name')),
     );
   }
   else {
@@ -2889,7 +2903,6 @@ function template_preprocess_maintenance_page(&$variables) {
   $variables['site_name']         = (theme_get_setting('features.name') ? check_plain($site_name) : '');
   $variables['site_slogan']       = (theme_get_setting('features.slogan') ? filter_xss_admin($site_slogan) : '');
   $variables['tabs']              = '';
-  $variables['title']             = drupal_get_title();
 
   // Compile a list of classes that are going to be applied to the body element.
   $variables['attributes']['class'][] = 'maintenance-page';
@@ -2925,6 +2938,14 @@ function template_preprocess_maintenance_page(&$variables) {
   // be called when printed.
   $variables['styles'] = new RenderWrapper('drupal_get_css', array($css));
   $variables['scripts'] = new RenderWrapper('drupal_get_js');
+
+  // Allow the page to define a title.
+  if (isset($variables['page']['#title'])) {
+    $variables['title'] = $variables['page']['#title'];
+  }
+  if (!isset($variables['title'])) {
+    $variables['title'] = drupal_get_title();
+  }
 }
 
 /**

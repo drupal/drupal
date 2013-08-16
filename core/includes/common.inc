@@ -3646,6 +3646,11 @@ function drupal_pre_render_dropbutton($element) {
 function drupal_render_page($page) {
   $main_content_display = &drupal_static('system_main_content_added', FALSE);
 
+  // Pull out the page title to set it back later.
+  if (is_array($page) && isset($page['#title'])) {
+    $title = $page['#title'];
+  }
+
   // Allow menu callbacks to return strings or arbitrary arrays to render.
   // If the array returned is not of #type page directly, we need to fill
   // in the page with defaults.
@@ -3668,6 +3673,11 @@ function drupal_render_page($page) {
   // control page regions (for example, the Block module) are enabled.
   if (!$main_content_display) {
     $page['content']['system_main'] = drupal_set_page_content();
+  }
+
+  // Set back the previously stored title.
+  if (isset($title)) {
+    $page['#title'] = $title;
   }
 
   return drupal_render($page);

@@ -10,6 +10,7 @@ use Drupal\Component\Utility\Url;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
+use Drupal\Core\Utility\Title;
 use Symfony\Component\ClassLoader\ClassLoader;
 use Symfony\Component\ClassLoader\ApcClassLoader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -202,12 +203,9 @@ const DRUPAL_EXTENSION_NAME_MAX_LENGTH = 50;
 define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 
 /**
- * Flag for drupal_set_title(); text is not sanitized, so run check_plain().
- */
-const CHECK_PLAIN = 0;
-
-/**
  * Flag for drupal_set_title(); text has already been sanitized.
+ *
+ * @todo Move to the Title class.
  */
 const PASS_THROUGH = -1;
 
@@ -1696,7 +1694,7 @@ function drupal_get_title() {
  *   Optional string value to assign to the page title; or if set to NULL
  *   (default), leaves the current title unchanged.
  * @param $output
- *   Optional flag - normally should be left as CHECK_PLAIN. Only set to
+ *   Optional flag - normally should be left as Title::CHECK_PLAIN. Only set to
  *   PASS_THROUGH if you have already removed any possibly dangerous code
  *   from $title using a function like check_plain() or filter_xss(). With this
  *   flag the string will be passed through unchanged.
@@ -1704,7 +1702,7 @@ function drupal_get_title() {
  * @return
  *   The updated title of the current page.
  */
-function drupal_set_title($title = NULL, $output = CHECK_PLAIN) {
+function drupal_set_title($title = NULL, $output = Title::CHECK_PLAIN) {
   $stored_title = &drupal_static(__FUNCTION__);
 
   if (isset($title)) {

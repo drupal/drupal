@@ -1,0 +1,6 @@
+test_page_render_title:
+  pattern: "/test-render-title"
+  defaults:
+    _content: 'Drupal\test_page_test\Controller\Test::renderTitle'
+  requirements:
+    _access: 'TRUE'
