@@ -121,7 +121,6 @@ Menu system
 - Károly Négyesi 'chx' http://drupal.org/user/9446
 
 Path system
-- Dave Reid 'davereid' http://drupal.org/user/53892
 - Nathaniel Catchpole 'catch' http://drupal.org/user/35733
 
 Plugin system
@@ -215,7 +214,7 @@ Configuration module
 - ?
 
 Contact module
-- Dave Reid 'davereid' http://drupal.org/user/53892
+- ?
 
 Contextual module
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
@@ -299,7 +298,7 @@ Overlay module
 - ?
 
 Path module
-- Dave Reid 'davereid' http://drupal.org/user/53892
+- ?
 
 Phone module
 - Dave Reid 'davereid' http://drupal.org/user/53892
