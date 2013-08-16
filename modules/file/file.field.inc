@@ -186,7 +186,7 @@ function file_field_load($entity_type, $entities, $field, $instances, $langcode,
         $items[$id][$delta] = NULL;
       }
       else {
-        $items[$id][$delta] = array_merge($item, (array) $files[$item['fid']]);
+        $items[$id][$delta] = array_merge((array) $files[$item['fid']], $item);
       }
     }
   }
