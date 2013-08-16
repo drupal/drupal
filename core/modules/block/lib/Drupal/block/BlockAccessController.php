@@ -8,13 +8,47 @@
 namespace Drupal\block;
 
 use Drupal\Core\Entity\EntityAccessController;
+use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Path\AliasManagerInterface;
+use Drupal\Component\Utility\Unicode;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a Block access controller.
  */
-class BlockAccessController extends EntityAccessController {
+class BlockAccessController extends EntityAccessController implements EntityControllerInterface {
+
+  /**
+   * The node grant storage.
+   *
+   * @var \Drupal\Core\Path\AliasManagerInterface
+   */
+  protected $aliasManager;
+
+  /**
+   * Constructs a BlockAccessController object.
+   *
+   * @param string $entity_type
+   *   The entity type of the access controller instance.
+   * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
+   *   The alias manager.
+   */
+  public function __construct($entity_type, AliasManagerInterface $alias_manager) {
+    parent::__construct($entity_type);
+    $this->aliasManager = $alias_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+    return new static(
+      $entity_type,
+      $container->get('path.alias_manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -64,7 +98,7 @@ class BlockAccessController extends EntityAccessController {
       if ($visibility['path']['visibility'] < BLOCK_VISIBILITY_PHP) {
         // Compare the lowercase path alias (if any) and internal path.
         $path = current_path();
-        $path_alias = drupal_strtolower(drupal_container()->get('path.alias_manager')->getPathAlias($path));
+        $path_alias = Unicode::strtolower($this->aliasManager->getPathAlias($path));
         $page_match = drupal_match_path($path_alias, $pages) || (($path != $path_alias) && drupal_match_path($path, $pages));
         // When $block->visibility has a value of 0
         // (BLOCK_VISIBILITY_NOTLISTED), the block is displayed on all pages
