@@ -95,7 +95,6 @@ Form system
 
 Image system
 - Andrew Morton 'drewish' http://drupal.org/user/34869
-- Nathan Haug 'quicksketch' http://drupal.org/user/35821
 
 Install system
 - David Rothstein 'David_Rothstein' http://drupal.org/user/124982
@@ -270,7 +269,7 @@ Help module
 - ?
 
 Image module
-- Nathan Haug 'quicksketch' http://drupal.org/user/35821
+- ?
 
 Link module
 - ?
