@@ -76,13 +76,13 @@ class NodeBlockFunctionalTest extends NodeTestBase {
     // Change the changed time for node so that we can test ordering.
     db_update('node_field_data')
       ->fields(array(
-        'changed' => $node1->changed + 100,
+        'changed' => $node1->getChangedTime() + 100,
       ))
       ->condition('nid', $node2->id())
       ->execute();
     db_update('node_field_data')
       ->fields(array(
-        'changed' => $node1->changed + 200,
+        'changed' => $node1->getChangedTime() + 200,
       ))
       ->condition('nid', $node3->id())
       ->execute();

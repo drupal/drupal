@@ -2534,7 +2534,7 @@ function template_preprocess_html(&$variables) {
 
   // If on an individual node page, add the node type to body classes.
   if ($node = menu_get_object()) {
-    $variables['attributes']['class'][] = drupal_html_class('node-type-' . $node->type);
+    $variables['attributes']['class'][] = drupal_html_class('node-type-' . $node->getType());
   }
 
   // Initializes attributes which are specific to the html and body elements.

@@ -145,6 +145,20 @@ class Node extends EntityNG implements NodeInterface {
   /**
    * {@inheritdoc}
    */
+  public function getType() {
+    return $this->bundle();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTitle() {
+    return $this->get('title')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setTitle($title) {
     $this->set('title', $title);
     return $this;
@@ -184,7 +198,7 @@ class Node extends EntityNG implements NodeInterface {
    * {@inheritdoc}
    */
   public function setPromoted($promoted) {
-    $this->set('promoted', $promoted ? NODE_PROMOTED : NODE_NOT_PROMOTED);
+    $this->set('promote', $promoted ? NODE_PROMOTED : NODE_NOT_PROMOTED);
     return $this;
   }
 
@@ -221,12 +235,7 @@ class Node extends EntityNG implements NodeInterface {
    * {@inheritdoc}
    */
   public function getAuthor() {
-    $entity = $this->get('uid')->entity;
-    // If no user is given, default to the anonymous user.
-    if (!$entity) {
-      return user_load(0);
-    }
-    return $entity;
+    return $this->get('uid')->entity;
   }
 
   /**

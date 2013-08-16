@@ -1008,7 +1008,7 @@ function menu_item_route_access(Route $route, $href, &$map) {
  * "story" content type:
  * @code
  * $node = menu_get_object();
- * $story = $node->type == 'story';
+ * $story = $node->getType() == 'story';
  * @endcode
  *
  * @param $type

@@ -115,7 +115,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'vid':
-          $replacements[$original] = $node->vid;
+          $replacements[$original] = $node->getRevisionId();
           break;
 
         case 'tnid':
@@ -123,7 +123,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'type':
-          $replacements[$original] = $sanitize ? check_plain($node->type) : $node->type;
+          $replacements[$original] = $sanitize ? check_plain($node->getType()) : $node->getType();
           break;
 
         case 'type-name':
@@ -132,14 +132,14 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'title':
-          $replacements[$original] = $sanitize ? check_plain($node->title) : $node->title;
+          $replacements[$original] = $sanitize ? check_plain($node->getTitle()) : $node->getTitle();
           break;
 
         case 'body':
         case 'summary':
           if (($items = $node->getTranslation($langcode)->get('body')) && !$items->isEmpty()) {
             $item = $items[0];
-            $instance = field_info_instance('node', 'body', $node->type);
+            $instance = field_info_instance('node', 'body', $node->getType());
             $field_langcode = field_language($node, 'body', $langcode);
 
             // If the summary was requested and is not empty, use it.
@@ -155,7 +155,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
                 // Get the 'trim_length' size used for the 'teaser' mode, if
                 // present, or use the default trim_length size.
-                $display_options = entity_get_display('node', $node->type, 'teaser')->getComponent('body');
+                $display_options = entity_get_display('node', $node->getType(), 'teaser')->getComponent('body');
                 if (isset($display_options['settings']['trim_length'])) {
                   $length = $display_options['settings']['trim_length'];
                 }
@@ -172,7 +172,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'langcode':
-          $replacements[$original] = $sanitize ? check_plain($node->langcode) : $node->langcode;
+          $replacements[$original] = $sanitize ? check_plain($node->language()->id) : $node->language()->id;
           break;
 
         case 'url':
@@ -185,32 +185,30 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
         // Default values for the chained tokens handled below.
         case 'author':
-          $account = user_load($node->uid);
-          $name = user_format_name($account);
-          $replacements[$original] = $sanitize ? check_plain($name) : $name;
+          $account = $node->getAuthor() ? $node->getAuthor() : user_load(0);
+          $replacements[$original] = $sanitize ? check_plain($account->label()) : $account->label();
           break;
 
         case 'created':
-          $replacements[$original] = format_date($node->created, 'medium', '', NULL, $langcode);
+          $replacements[$original] = format_date($node->getCreatedTime(), 'medium', '', NULL, $langcode);
           break;
 
         case 'changed':
-          $replacements[$original] = format_date($node->changed, 'medium', '', NULL, $langcode);
+          $replacements[$original] = format_date($node->getChangedTime(), 'medium', '', NULL, $langcode);
           break;
       }
     }
 
     if ($author_tokens = $token_service->findWithPrefix($tokens, 'author')) {
-      $author = user_load($node->uid);
-      $replacements += $token_service->generate('user', $author_tokens, array('user' => $author), $options);
+      $replacements += $token_service->generate('user', $author_tokens, array('user' => $node->getAuthor()), $options);
     }
 
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
-      $replacements += $token_service->generate('date', $created_tokens, array('date' => $node->created), $options);
+      $replacements += $token_service->generate('date', $created_tokens, array('date' => $node->getCreatedTime()), $options);
     }
 
     if ($changed_tokens = $token_service->findWithPrefix($tokens, 'changed')) {
-      $replacements += $token_service->generate('date', $changed_tokens, array('date' => $node->changed), $options);
+      $replacements += $token_service->generate('date', $changed_tokens, array('date' => $node->getChangedTime()), $options);
     }
   }
 

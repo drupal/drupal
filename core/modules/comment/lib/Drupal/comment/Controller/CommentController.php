@@ -121,7 +121,7 @@ class CommentController implements ControllerInterface {
         throw new AccessDeniedHttpException();
       }
       // Find the current display page for this comment.
-      $page = comment_get_display_page($comment->id(), $node->type);
+      $page = comment_get_display_page($comment->id(), $node->getType());
       // @todo: Cleaner sub request handling.
       $redirect_request = Request::create('/node/' . $node->id(), 'GET', $request->query->all(), $request->cookies->all(), array(), $request->server->all());
       $redirect_request->query->set('page', $page);

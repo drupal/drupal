@@ -85,7 +85,7 @@ class NodeType extends ConditionPluginBase {
    */
   public function evaluate() {
     $node = $this->getContextValue('node');
-    return in_array($node->type, $this->configuration['bundles']);
+    return in_array($node->getType(), $this->configuration['bundles']);
   }
 
 }

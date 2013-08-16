@@ -5,15 +5,16 @@
  *
  * Available variables:
  * - node: Full node entity.
- *   - type: The type of the node, for example, "page" or "article".
- *   - uid: The user ID of the node author.
- *   - created: Formatted creation date. Preprocess functions can reformat it by
- *     calling format_date() with the desired parameters on
- *     $variables['node']->created.
- *   - promote: Whether the node is promoted to the front page.
+ *   - id: The node ID
+ *   - bundle: The type of the node, for example, "page" or "article".
+ *   - authorid: The user ID of the node author.
+ *   - createdtime: Formatted creation date. Preprocess functions can reformat
+       it by calling format_date() with the desired parameters on
+ *     $variables['node']->getCreatedTime().
+ *   - promoted: Whether the node is promoted to the front page.
  *   - sticky: Whether the node is 'sticky'. Sticky nodes are ordered above
  *     other non-sticky nodes in teaser listings
- *   - status: Whether the node is published.
+ *   - published: Whether the node is published.
  *   - comment: A value representing the comment status of the current node. May
  *     be one of the following:
  *     - 0: The comment form and any existing comments are hidden.
@@ -77,7 +78,7 @@
  * @ingroup themeable
  */
 #}
-<article id="node-{{ node.nid }}" class="{{ attributes.class}} clearfix"{{ attributes }} role="article">
+<article id="node-{{ node.id }}" class="{{ attributes.class}} clearfix"{{ attributes }} role="article">
 
   <header>
     {{ title_prefix }}

@@ -76,21 +76,20 @@ function tracker_page($account = NULL, $set_title = FALSE) {
 
       $mark_build = array(
         '#theme' => 'mark',
-        '#status' => node_mark($node->id(), $node->changed),
+        '#status' => node_mark($node->id(), $node->getChangedTime()),
       );
 
       $row = array(
         'type' => check_plain(node_get_type_label($node)),
-        // Do not use $node->label(), because $node comes from the database.
-        'title' => array('data' => l($node->title, 'node/' . $node->id()) . ' ' . drupal_render($mark_build)),
-        'author' => array('data' => array('#theme' => 'username', '#account' => user_load($node->uid))),
+        'title' => array('data' => l($node->getTitle(), 'node/' . $node->id()) . ' ' . drupal_render($mark_build)),
+        'author' => array('data' => array('#theme' => 'username', '#account' => $node->getAuthor())),
         'replies' => array('class' => array('replies'), 'data' => $comments),
         'last updated' => array('data' => t('!time ago', array('!time' => format_interval(REQUEST_TIME - $node->last_activity)))),
       );
 
       // Adds extra RDFa markup to the $row array if the RDF module is enabled.
       if (module_exists('rdf')) {
-        $mapping = rdf_get_mapping('node', $node->type);
+        $mapping = rdf_get_mapping('node', $node->getType());
         // Adds RDFa markup to the title of the node. Because the RDFa markup is
         // added to the td tag which might contain HTML code, we specify an
         // empty datatype to ensure the value of the title read by the RDFa

@@ -26,9 +26,9 @@ class CommentFormController extends EntityFormControllerNG {
 
     // Use #comment-form as unique jump target, regardless of node type.
     $form['#id'] = drupal_html_id('comment_form');
-    $form['#theme'] = array('comment_form__node_' . $node->type, 'comment_form');
+    $form['#theme'] = array('comment_form__node_' . $node->getType(), 'comment_form');
 
-    $anonymous_contact = variable_get('comment_anonymous_' . $node->type, COMMENT_ANONYMOUS_MAYNOT_CONTACT);
+    $anonymous_contact = variable_get('comment_anonymous_' . $node->getType(), COMMENT_ANONYMOUS_MAYNOT_CONTACT);
     $is_admin = $comment->id() && user_access('administer comments');
 
     if (!$user->isAuthenticated() && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
@@ -145,7 +145,7 @@ class CommentFormController extends EntityFormControllerNG {
       '#title' => t('Subject'),
       '#maxlength' => 64,
       '#default_value' => $comment->subject->value,
-      '#access' => variable_get('comment_subject_field_' . $node->type, 1) == 1,
+      '#access' => variable_get('comment_subject_field_' . $node->getType(), 1) == 1,
     );
 
     // Used for conditional validation of author fields.
@@ -178,7 +178,7 @@ class CommentFormController extends EntityFormControllerNG {
     $element = parent::actions($form, $form_state);
     $comment = $this->entity;
     $node = $comment->nid->entity;
-    $preview_mode = variable_get('comment_preview_' . $node->type, DRUPAL_OPTIONAL);
+    $preview_mode = variable_get('comment_preview_' . $node->getType(), DRUPAL_OPTIONAL);
 
     // No delete action on the comment form.
     unset($element['delete']);
@@ -341,7 +341,7 @@ class CommentFormController extends EntityFormControllerNG {
       }
       $query = array();
       // Find the current display page for this comment.
-      $page = comment_get_display_page($comment->id(), $node->type);
+      $page = comment_get_display_page($comment->id(), $node->getType());
       if ($page > 0) {
         $query['page'] = $page;
       }

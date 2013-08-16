@@ -432,8 +432,8 @@ function comment_get_recent($number = 10) {
  *   "page=X" if the page number is greater than zero; empty string otherwise.
  */
 function comment_new_page_count($num_comments, $new_replies, EntityInterface $node) {
-  $mode = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED);
-  $comments_per_page = variable_get('comment_default_per_page_' . $node->type, 50);
+  $mode = variable_get('comment_default_mode_' . $node->getType(), COMMENT_MODE_THREADED);
+  $comments_per_page = variable_get('comment_default_per_page_' . $node->getType(), 50);
   $pagenum = NULL;
   $flat = $mode == COMMENT_MODE_FLAT ? TRUE : FALSE;
   if ($num_comments <= $comments_per_page) {
@@ -551,7 +551,7 @@ function comment_node_view(EntityInterface $node, EntityDisplay $display, $view_
         }
       }
       if ($node->comment == COMMENT_NODE_OPEN) {
-        $comment_form_location = variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW);
+        $comment_form_location = variable_get('comment_form_location_' . $node->getType(), COMMENT_FORM_BELOW);
         if (user_access('post comments')) {
           $links['comment-add'] = array(
             'title' => t('Add new comment'),
@@ -581,7 +581,7 @@ function comment_node_view(EntityInterface $node, EntityDisplay $display, $view_
       // But we don't want this link if we're building the node for search
       // indexing or constructing a search result excerpt.
       if ($node->comment == COMMENT_NODE_OPEN) {
-        $comment_form_location = variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW);
+        $comment_form_location = variable_get('comment_form_location_' . $node->getType(), COMMENT_FORM_BELOW);
         if (user_access('post comments')) {
           // Show the "post comment" link if the form is on another page, or
           // if there are existing comments that the link will skip past.
@@ -643,8 +643,8 @@ function comment_node_page_additions(EntityInterface $node) {
   // Unpublished comments are not included in $node->comment_count, so show
   // comments unconditionally if the user is an administrator.
   if (($node->comment_count && user_access('access comments')) || user_access('administer comments')) {
-    $mode = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED);
-    $comments_per_page = variable_get('comment_default_per_page_' . $node->type, 50);
+    $mode = variable_get('comment_default_mode_' . $node->getType(), COMMENT_MODE_THREADED);
+    $comments_per_page = variable_get('comment_default_per_page_' . $node->getType(), 50);
     if ($cids = comment_get_thread($node, $mode, $comments_per_page)) {
       $comments = comment_load_multiple($cids);
       comment_prepare_thread($comments);
@@ -655,13 +655,13 @@ function comment_node_page_additions(EntityInterface $node) {
   }
 
   // Append comment form if needed.
-  if (user_access('post comments') && $node->comment == COMMENT_NODE_OPEN && (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW) == COMMENT_FORM_BELOW)) {
+  if (user_access('post comments') && $node->comment == COMMENT_NODE_OPEN && (variable_get('comment_form_location_' . $node->getType(), COMMENT_FORM_BELOW) == COMMENT_FORM_BELOW)) {
     $additions['comment_form'] = comment_add($node);
   }
 
   if ($additions) {
     $additions += array(
-      '#theme' => 'comment_wrapper__node_' . $node->type,
+      '#theme' => 'comment_wrapper__node_' . $node->getType(),
       '#node' => $node,
       'comments' => array(),
       'comment_form' => array(),
@@ -684,7 +684,7 @@ function comment_node_page_additions(EntityInterface $node) {
  *   The renderable array for the comment addition form.
  */
 function comment_add(EntityInterface $node, $pid = NULL) {
-  $values = array('nid' => $node->id(), 'pid' => $pid, 'node_type' => 'comment_node_' . $node->type);
+  $values = array('nid' => $node->id(), 'pid' => $pid, 'node_type' => 'comment_node_' . $node->getType());
   $comment = entity_create('comment', $values);
   return Drupal::entityManager()->getForm($comment);
 }
@@ -1118,9 +1118,9 @@ function comment_node_load($nodes, $types) {
     }
     else {
       $node->cid = 0;
-      $node->last_comment_timestamp = $node->created;
+      $node->last_comment_timestamp = $node->getCreatedTime();
       $node->last_comment_name = '';
-      $node->last_comment_uid = $node->uid;
+      $node->last_comment_uid = $node->getAuthorId();
       $node->comment_count = 0;
     }
   }
@@ -1143,7 +1143,7 @@ function comment_node_load($nodes, $types) {
  */
 function comment_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
   if (!isset($node->comment)) {
-    $node->comment = variable_get("comment_$node->type", COMMENT_NODE_OPEN);
+    $node->comment = variable_get('comment_' . $node->getType(), COMMENT_NODE_OPEN);
   }
 }
 
@@ -1158,9 +1158,9 @@ function comment_node_insert(EntityInterface $node) {
       ->fields(array(
         'nid' => $node->id(),
         'cid' => 0,
-        'last_comment_timestamp' => $node->changed,
+        'last_comment_timestamp' => $node->getChangedTime(),
         'last_comment_name' => NULL,
-        'last_comment_uid' => $node->uid,
+        'last_comment_uid' => $node->getAuthorId(),
         'comment_count' => 0,
       ))
       ->execute();
@@ -1208,8 +1208,8 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
   }
 
   if ($index_comments) {
-    $mode = variable_get('comment_default_mode_' . $node->type, COMMENT_MODE_THREADED);
-    $comments_per_page = variable_get('comment_default_per_page_' . $node->type, 50);
+    $mode = variable_get('comment_default_mode_' . $node->getType(), COMMENT_MODE_THREADED);
+    $comments_per_page = variable_get('comment_default_per_page_' . $node->getType(), 50);
     if ($node->comment && $cids = comment_get_thread($node, $mode, $comments_per_page)) {
       $comments = comment_load_multiple($cids);
       comment_prepare_thread($comments);
@@ -1610,7 +1610,7 @@ function template_preprocess_comment(&$variables) {
     $variables['attributes']['class'][] = 'by-anonymous';
   }
   else {
-    if ($comment->uid->target_id == $variables['node']->uid) {
+    if ($comment->uid->target_id == $variables['node']->getAuthorId()) {
       $variables['attributes']['class'][] = 'by-node-author';
     }
     if ($comment->uid->target_id == $variables['user']->id()) {
@@ -1651,7 +1651,7 @@ function theme_comment_post_forbidden($variables) {
     if ($authenticated_post_comments) {
       // We cannot use drupal_get_destination() because these links
       // sometimes appear on /node and taxonomy listing pages.
-      if (variable_get('comment_form_location_' . $node->type, COMMENT_FORM_BELOW) == COMMENT_FORM_SEPARATE_PAGE) {
+      if (variable_get('comment_form_location_' . $node->getType(), COMMENT_FORM_BELOW) == COMMENT_FORM_SEPARATE_PAGE) {
         $destination = array('destination' => 'comment/reply/' . $node->id() . '#comment-form');
       }
       else {
@@ -1683,7 +1683,7 @@ function theme_comment_post_forbidden($variables) {
 function template_preprocess_comment_wrapper(&$variables) {
   // Provide contextual information.
   $variables['node'] = $variables['content']['#node'];
-  $variables['display_mode'] = variable_get('comment_default_mode_' . $variables['node']->type, COMMENT_MODE_THREADED);
+  $variables['display_mode'] = variable_get('comment_default_mode_' . $variables['node']->getType(), COMMENT_MODE_THREADED);
 
   // The comment form is optional and may not exist.
   $variables['content'] += array('comment_form' => array());

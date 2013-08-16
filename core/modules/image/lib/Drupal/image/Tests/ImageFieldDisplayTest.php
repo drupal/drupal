@@ -72,7 +72,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       'type' => 'image',
       'settings' => array('image_link' => 'file'),
     );
-    $display = entity_get_display('node', $node->type, 'default');
+    $display = entity_get_display('node', $node->getType(), 'default');
     $display->setComponent($field_name, $display_options)
       ->save();
 

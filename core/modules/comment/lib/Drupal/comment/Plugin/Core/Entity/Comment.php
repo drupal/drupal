@@ -217,7 +217,7 @@ class Comment extends EntityNG implements CommentInterface {
   public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
     if (empty($values['node_type']) && !empty($values['nid'])) {
       $node = node_load(is_object($values['nid']) ? $values['nid']->value : $values['nid']);
-      $values['node_type'] = 'comment_node_' . $node->type;
+      $values['node_type'] = 'comment_node_' . $node->getType();
     }
   }
 

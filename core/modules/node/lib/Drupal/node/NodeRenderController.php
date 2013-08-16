@@ -49,7 +49,7 @@ class NodeRenderController extends EntityRenderController {
           'title' => t('Read more<span class="visually-hidden"> about @title</span>', array(
             '@title' => $node_title_stripped,
           )),
-          'href' => 'node/' . $entity->nid,
+          'href' => 'node/' . $entity->id(),
           'html' => TRUE,
           'attributes' => array(
             'rel' => 'tag',

@@ -537,8 +537,8 @@ function node_load_multiple(array $nids = NULL, $reset = FALSE) {
  *   (optional) Whether to reset the node_load_multiple() cache. Defaults to
  *   FALSE.
  *
- * @return \Drupal\node\Node|null
- *   A fully-populated node entity or NULL if the node is not found.
+ * @return \Drupal\node\NodeInterface|null
+ *   A fully-populated node entity, or NULL if the node is not found.
  */
 function node_load($nid = NULL, $reset = FALSE) {
   $entity = entity_load('node', $nid, $reset);
@@ -548,11 +548,11 @@ function node_load($nid = NULL, $reset = FALSE) {
 /**
  * Loads a node revision from the database.
  *
- * @param int $nid
+ * @param int $vid
  *   The node revision id.
  *
- * @return \Drupal\node\Node|null
- *   A fully-populated node entity or NULL if the node is not found.
+ * @return \Drupal\node\NodeInterface|null
+ *   A fully-populated node entity, or NULL if the node is not found.
  */
 function node_revision_load($vid = NULL) {
   return entity_revision_load('node', $vid);
@@ -693,7 +693,7 @@ function template_preprocess_node(&$variables) {
   //   http://drupal.org/node/1941286.
   $username = array(
     '#theme' => 'username',
-    '#account' => user_load($node->uid),
+    '#account' => $node->getAuthor(),
     '#link_options' => array('attributes' => array('rel' => 'author')),
   );
   $variables['name'] = drupal_render($username);
@@ -951,7 +951,7 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
     $uri = $node->uri();
     $username = array(
       '#theme' => 'username',
-      '#account' => user_load($node->uid),
+      '#account' => $node->getAuthor(),
     );
     $results[] = array(
       'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE, 'language' => $language))),

@@ -214,7 +214,7 @@ function hook_node_grants($account, $op) {
  * - 'gid': A 'grant ID' from hook_node_grants().
  * - 'grant_view': If set to 1 a user that has been identified as a member
  *   of this gid within this realm can view this node. This should usually be
- *   set to $node->status. Failure to do so may expose unpublished content
+ *   set to $node->isPublished(). Failure to do so may expose unpublished content
  *   to some users.
  * - 'grant_update': If set to 1 a user that has been identified as a member
  *   of this gid within this realm can edit this node.
@@ -257,15 +257,15 @@ function hook_node_grants($account, $op) {
  * @see hook_node_access_records_alter()
  * @ingroup node_access
  */
-function hook_node_access_records(\Drupal\Core\Entity\EntityInterface $node) {
+function hook_node_access_records(\Drupal\node\NodeInterface $node) {
   // We only care about the node if it has been marked private. If not, it is
   // treated just like any other node and we completely ignore it.
   if ($node->private) {
     $grants = array();
     // Only published Catalan translations of private nodes should be viewable
-    // to all users. If we fail to check $node->status, all users would be able
+    // to all users. If we fail to check $node->isPublished(), all users would be able
     // to view an unpublished node.
-    if ($node->status) {
+    if ($node->isPublished()) {
       $grants[] = array(
         'realm' => 'example',
         'gid' => 1,
@@ -281,7 +281,7 @@ function hook_node_access_records(\Drupal\Core\Entity\EntityInterface $node) {
     // have status unpublished.
     $grants[] = array(
       'realm' => 'example_author',
-      'gid' => $node->uid,
+      'gid' => $node->getAuthorId(),
       'grant_view' => 1,
       'grant_update' => 1,
       'grant_delete' => 1,
@@ -438,7 +438,7 @@ function hook_node_delete(\Drupal\Core\Entity\EntityInterface $node) {
  */
 function hook_node_revision_delete(\Drupal\Core\Entity\EntityInterface $node) {
   db_delete('mytable')
-    ->condition('vid', $node->vid)
+    ->condition('vid', $node->getRevisionId())
     ->execute();
 }
 
@@ -567,8 +567,8 @@ function hook_node_load($nodes, $types) {
  *
  * @ingroup node_access
  */
-function hook_node_access($node, $op, $account, $langcode) {
-  $type = is_string($node) ? $node : $node->type;
+function hook_node_access(\Drupal\node\NodeInterface $node, $op, $account, $langcode) {
+  $type = is_string($node) ? $node : $node->getType();
 
   $configured_types = node_permissions_get_configured_types();
   if (isset($configured_types[$type])) {
@@ -577,13 +577,13 @@ function hook_node_access($node, $op, $account, $langcode) {
     }
 
     if ($op == 'update') {
-      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->id() == $node->uid))) {
+      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->id() == $node->getAuthorId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }
 
     if ($op == 'delete') {
-      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->id() == $node->uid))) {
+      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->id() == $node->getAuthorId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }
@@ -612,7 +612,7 @@ function hook_node_access($node, $op, $account, $langcode) {
  */
 function hook_node_prepare_form(\Drupal\node\NodeInterface $node, $form_display, $operation, array &$form_state) {
   if (!isset($node->comment)) {
-    $node->comment = variable_get("comment_$node->type", COMMENT_NODE_OPEN);
+    $node->comment = variable_get('comment_' . $node->getType(), COMMENT_NODE_OPEN);
   }
 }
 

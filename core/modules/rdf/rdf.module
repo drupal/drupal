@@ -277,7 +277,7 @@ function rdf_preprocess_node(&$variables) {
   // Adds RDFa markup for the date.
   $created_mapping = $mapping->getPreparedFieldMapping('created');
   if (!empty($created_mapping) && $variables['submitted']) {
-    $date_attributes = rdf_rdfa_attributes($created_mapping, $variables['node']->created);
+    $date_attributes = rdf_rdfa_attributes($created_mapping, $variables['node']->getCreatedTime());
     $rdf_metadata = array(
       '#theme' => 'rdf_metadata',
       '#metadata' => array($date_attributes),

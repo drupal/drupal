@@ -86,7 +86,7 @@ class TranslationTest extends WebTestBase {
     $languages = language_list();
     $prefixes = language_negotiation_url_prefixes();
     $this->drupalGet('node/' . $node->id() . '/translate');
-    $this->assertLinkByHref($prefixes['es'] . '/node/add/' . $node->type, 0, format_string('The "add translation" link for %language points to the localized path of the target language.', array('%language' => $languages['es']->name)));
+    $this->assertLinkByHref($prefixes['es'] . '/node/add/' . $node->getType(), 0, format_string('The "add translation" link for %language points to the localized path of the target language.', array('%language' => $languages['es']->name)));
 
     // Submit translation in Spanish.
     $node_translation_title = $this->randomName();
@@ -450,7 +450,7 @@ class TranslationTest extends WebTestBase {
 
     $result = TRUE;
     $languages = language_list();
-    $page_language = $languages[$node->langcode];
+    $page_language = $languages[$node->language()->id];
     $translation_language = $languages[$translation->langcode];
     $url = url("node/$translation->nid", array('language' => $translation_language));
 

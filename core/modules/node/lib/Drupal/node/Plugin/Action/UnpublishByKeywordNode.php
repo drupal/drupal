@@ -29,7 +29,7 @@ class UnpublishByKeywordNode extends ConfigurableActionBase {
     foreach ($this->configuration['keywords'] as $keyword) {
       $elements = node_view(clone $node);
       if (strpos(drupal_render($elements), $keyword) !== FALSE || strpos($node->label(), $keyword) !== FALSE) {
-        $node->status = NODE_NOT_PUBLISHED;
+        $node->setPublished(FALSE);
         $node->save();
         break;
       }

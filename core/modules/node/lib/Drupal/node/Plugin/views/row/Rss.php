@@ -117,7 +117,7 @@ class Rss extends RowPluginBase {
     $node->rss_elements = array(
       array(
         'key' => 'pubDate',
-        'value' => gmdate('r', $node->created),
+        'value' => gmdate('r', $node->getCreatedTime()),
       ),
       array(
         'key' => 'dc:creator',

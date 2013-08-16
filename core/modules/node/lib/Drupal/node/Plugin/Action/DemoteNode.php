@@ -26,7 +26,7 @@ class DemoteNode extends ActionBase {
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
-    $entity->promote = NODE_NOT_PROMOTED;
+    $entity->setPromoted(FALSE);
     $entity->save();
   }
 

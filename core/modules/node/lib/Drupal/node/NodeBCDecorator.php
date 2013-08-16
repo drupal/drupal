@@ -17,8 +17,21 @@ class NodeBCDecorator extends EntityBCDecorator implements NodeInterface {
   /**
    * {@inheritdoc}
    */
+  public function getType() {
+    return $this->decorated->getType();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setTitle($title) {
-    $this->decorated->setTitle($title);
+    return $this->decorated->setTitle($title);
+  }
+  /**
+   * {@inheritdoc}
+   */
+  public function getTitle() {
+    return $this->decorated->getTitle();
   }
 
   /**

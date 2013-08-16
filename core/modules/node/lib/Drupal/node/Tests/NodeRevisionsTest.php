@@ -85,11 +85,11 @@ class NodeRevisionsTest extends NodeTestBase {
     $node = $nodes[3];
 
     // Confirm the correct revision text appears on "view revisions" page.
-    $this->drupalGet("node/$node->nid/revisions/$node->vid/view");
+    $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/view");
     $this->assertText($node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'], 'Correct text displays for version.');
 
     // Confirm the correct log message appears on "revisions overview" page.
-    $this->drupalGet("node/$node->nid/revisions");
+    $this->drupalGet("node/" . $node->id() . "/revisions");
     foreach ($logs as $log) {
       $this->assertText($log, 'Log message found.');
     }
@@ -98,34 +98,34 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertTrue($node->isDefaultRevision(), 'Third node revision is the default one.');
 
     // Confirm that revisions revert properly.
-    $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/revert", array(), t('Revert'));
+    $this->drupalPost("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionid() . "/revert", array(), t('Revert'));
     $this->assertRaw(t('@type %title has been reverted back to the revision from %revision-date.',
                         array('@type' => 'Basic page', '%title' => $nodes[1]->label(),
-                              '%revision-date' => format_date($nodes[1]->revision_timestamp))), 'Revision reverted.');
+                              '%revision-date' => format_date($nodes[1]->getRevisionCreationTime()))), 'Revision reverted.');
     $reverted_node = node_load($node->id(), TRUE);
     $this->assertTrue(($nodes[1]->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'] == $reverted_node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value']), 'Node reverted correctly.');
 
     // Confirm that this is not the default version.
-    $node = node_revision_load($node->vid);
+    $node = node_revision_load($node->getRevisionId());
     $this->assertFalse($node->isDefaultRevision(), 'Third node revision is not the default one.');
 
     // Confirm revisions delete properly.
-    $this->drupalPost("node/$node->nid/revisions/{$nodes[1]->vid}/delete", array(), t('Delete'));
+    $this->drupalPost("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", array(), t('Delete'));
     $this->assertRaw(t('Revision from %revision-date of @type %title has been deleted.',
-                        array('%revision-date' => format_date($nodes[1]->revision_timestamp),
+                        array('%revision-date' => format_date($nodes[1]->getRevisionCreationTime()),
                               '@type' => 'Basic page', '%title' => $nodes[1]->label())), 'Revision deleted.');
-    $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid and vid = :vid', array(':nid' => $node->id(), ':vid' => $nodes[1]->vid))->fetchField() == 0, 'Revision not found.');
+    $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid and vid = :vid', array(':nid' => $node->id(), ':vid' => $nodes[1]->getRevisionId()))->fetchField() == 0, 'Revision not found.');
 
     // Set the revision timestamp to an older date to make sure that the
     // confirmation message correctly displays the stored revision date.
     $old_revision_date = REQUEST_TIME - 86400;
     db_update('node_field_revision')
-      ->condition('vid', $nodes[2]->vid)
+      ->condition('vid', $nodes[2]->getRevisionId())
       ->fields(array(
         'revision_timestamp' => $old_revision_date,
       ))
       ->execute();
-    $this->drupalPost("node/$node->nid/revisions/{$nodes[2]->vid}/revert", array(), t('Revert'));
+    $this->drupalPost("node/" . $node->id() . "/revisions/" . $nodes[2]->getRevisionId() . "/revert", array(), t('Revert'));
     $this->assertRaw(t('@type %title has been reverted back to the revision from %revision-date.', array(
       '@type' => 'Basic page',
       '%title' => $nodes[2]->label(),
@@ -146,7 +146,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertNoText($new_body, 'Revision body text is not present on default version of node.');
 
     // Verify that the new body text is present on the revision.
-    $this->drupalGet("node/$node->nid/revisions/" . $new_node_revision->vid . "/view");
+    $this->drupalGet("node/" . $node->id() . "/revisions/" . $new_node_revision->getRevisionId() . "/view");
     $this->assertText($new_body, 'Revision body text is present when loading specific revision.');
 
     // Verify that the non-default revision vid is greater than the default
@@ -157,7 +157,7 @@ class NodeRevisionsTest extends NodeTestBase {
       ->execute()
       ->fetchCol();
     $default_revision_vid = $default_revision[0];
-    $this->assertTrue($new_node_revision->vid > $default_revision_vid, 'Revision vid is greater than default revision vid.');
+    $this->assertTrue($new_node_revision->getRevisionId() > $default_revision_vid, 'Revision vid is greater than default revision vid.');
   }
 
   /**

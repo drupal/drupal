@@ -108,7 +108,7 @@ class EntityFilteringThemeTest extends WebTestBase {
     // Create a test comment on the test node.
     $this->comment = entity_create('comment', array(
       'nid' => $this->node->id(),
-      'node_type' => $this->node->type,
+      'node_type' => $this->node->getType(),
       'status' => COMMENT_PUBLISHED,
       'subject' => $this->xss_label,
       'comment_body' => array($this->randomName()),

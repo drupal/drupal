@@ -49,7 +49,7 @@ class CommentStatisticsTest extends CommentTestBase {
 
     // Checks the initial values of node comment statistics with no comment.
     $node = node_load($this->node->id());
-    $this->assertEqual($node->last_comment_timestamp, $this->node->created, 'The initial value of node last_comment_timestamp is the node created date.');
+    $this->assertEqual($node->last_comment_timestamp, $this->node->getCreatedTime(), 'The initial value of node last_comment_timestamp is the node created date.');
     $this->assertEqual($node->last_comment_name, NULL, 'The initial value of node last_comment_name is NULL.');
     $this->assertEqual($node->last_comment_uid, $this->web_user->id(), 'The initial value of node last_comment_uid is the node uid.');
     $this->assertEqual($node->comment_count, 0, 'The initial value of node comment_count is zero.');

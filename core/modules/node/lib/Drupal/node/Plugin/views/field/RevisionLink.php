@@ -70,7 +70,7 @@ class RevisionLink extends Link {
     $vid = $this->getValue($values, 'node_vid');
     $node = $this->getEntity($values);
     // Unpublished nodes ignore access control.
-    $node->status = 1;
+    $node->setPublished(TRUE);
     // Ensure user has access to perform the operation on this node.
     if (!node_access($op, $node)) {
       return array($node, NULL);

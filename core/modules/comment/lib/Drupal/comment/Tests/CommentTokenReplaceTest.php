@@ -67,7 +67,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:parent:cid]'] = $comment->pid->target_id;
     $tests['[comment:parent:title]'] = check_plain($parent_comment->subject->value);
     $tests['[comment:node:nid]'] = $comment->nid->target_id;
-    $tests['[comment:node:title]'] = check_plain($node->title);
+    $tests['[comment:node:title]'] = check_plain($node->getTitle());
     $tests['[comment:author:uid]'] = $comment->uid->target_id;
     $tests['[comment:author:name]'] = check_plain($this->admin_user->getUsername());
 
@@ -87,7 +87,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[comment:title]'] = $comment->subject->value;
     $tests['[comment:body]'] = $comment->comment_body->value;
     $tests['[comment:parent:title]'] = $parent_comment->subject->value;
-    $tests['[comment:node:title]'] = $node->title;
+    $tests['[comment:node:title]'] = $node->getTitle();
     $tests['[comment:author:name]'] = $this->admin_user->getUsername();
 
     foreach ($tests as $input => $expected) {

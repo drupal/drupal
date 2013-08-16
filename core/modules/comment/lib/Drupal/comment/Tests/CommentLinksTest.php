@@ -143,7 +143,7 @@ class CommentLinksTest extends CommentTestBase {
         $comment = entity_create('comment', array(
           'cid' => NULL,
           'nid' => $this->node->id(),
-          'node_type' => $this->node->type,
+          'node_type' => $this->node->getType(),
           'pid' => 0,
           'uid' => 0,
           'status' => COMMENT_PUBLISHED,
@@ -167,8 +167,8 @@ class CommentLinksTest extends CommentTestBase {
     }
 
     // Change comment settings.
-    variable_set('comment_form_location_' . $this->node->type, $info['form']);
-    variable_set('comment_anonymous_' . $this->node->type, $info['contact']);
+    variable_set('comment_form_location_' . $this->node->getType(), $info['form']);
+    variable_set('comment_anonymous_' . $this->node->getType(), $info['contact']);
     if ($this->node->comment != $info['comments']) {
       $this->node->comment = $info['comments'];
       $this->node->save();

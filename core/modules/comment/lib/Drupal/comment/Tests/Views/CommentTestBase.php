@@ -41,7 +41,7 @@ abstract class CommentTestBase extends ViewTestBase {
     $this->drupalLogin($this->account);
 
     $this->node_user_posted = $this->drupalCreateNode();
-    $this->node_user_commented = $this->drupalCreateNode(array('uid' => $this->account2->uid));
+    $this->node_user_commented = $this->drupalCreateNode(array('uid' => $this->account2->id()));
 
     $comment = array(
       'uid' => $this->loggedInUser->id(),

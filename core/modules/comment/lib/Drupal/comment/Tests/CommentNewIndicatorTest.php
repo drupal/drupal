@@ -49,7 +49,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
     $comment = entity_create('comment', array(
       'cid' => NULL,
       'nid' => $this->node->id(),
-      'node_type' => $this->node->type,
+      'node_type' => $this->node->getType(),
       'pid' => 0,
       'uid' => $this->loggedInUser->id(),
       'status' => COMMENT_PUBLISHED,

@@ -16,6 +16,23 @@ use Drupal\user\UserInterface;
 interface NodeInterface extends ContentEntityInterface {
 
   /**
+   * Returns the node type.
+   *
+   * @return string
+   *   The node type.
+   */
+  public function getType();
+
+  /**
+   *
+   * Returns the node title.
+   *
+   * @return string
+   *   Title of the node.
+   */
+  public function getTitle();
+
+  /**
    * Sets the node title.
    *
    * @param string $title
