@@ -237,6 +237,7 @@ services:
     arguments: ['@router.route_provider', '@path_processor_manager', '@config.factory', '@settings']
     calls:
       - [setRequest, ['@?request']]
+      - [setContext, ['@?router.request_context']]
     tags:
       - { name: persist }
   router.dynamic:
