@@ -162,7 +162,7 @@ function hook_data_type_info_alter(&$data_types) {
  *   again an associative array. Possible keys are:
  *   - 'worker callback': A PHP callable to call. It will be called
  *     with one argument, the item created via
- *     Drupal\Core\Queue\QueueInterface::createItem() in hook_cron().
+ *     \Drupal\Core\Queue\QueueInterface::createItem().
  *   - 'cron': (optional) An associative array containing the optional key:
  *     - 'time': (optional) How much time Drupal cron should spend on calling
  *       this worker in seconds. Defaults to 15.
