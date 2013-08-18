@@ -8,7 +8,7 @@
 namespace Drupal\forum\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\taxonomy\Plugin\Core\Entity\Term;
+use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -19,7 +19,7 @@ class DeleteForm extends ConfirmFormBase {
   /**
    * The taxonomy term being deleted.
    *
-   * @var \Drupal\taxonomy\Plugin\Core\Entity\Term
+   * @var \Drupal\taxonomy\Entity\Term
    */
   protected $taxonomyTerm;
 

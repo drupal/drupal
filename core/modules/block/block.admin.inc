@@ -5,7 +5,7 @@
  * Admin page callbacks for the block module.
  */
 
-use Drupal\block\Plugin\Core\Entity\Block;
+use Drupal\block\Entity\Block;
 use Drupal\Core\Template\Attribute;
 
 /**

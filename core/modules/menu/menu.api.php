@@ -17,7 +17,7 @@
  * Contributed modules may use the information to perform actions based on the
  * information entered into the menu system.
  *
- * @param \Drupal\system\Plugin\Core\Entity\Menu $menu
+ * @param \Drupal\system\Entity\Menu $menu
  *   A menu entity.
  *
  * @see hook_menu_update()
@@ -37,7 +37,7 @@ function hook_menu_insert($menu) {
  * Contributed modules may use the information to perform actions based on the
  * information entered into the menu system.
  *
- * @param \Drupal\system\Plugin\Core\Entity\Menu $menu
+ * @param \Drupal\system\Entity\Menu $menu
  *   A menu entity.
  *
  * @see hook_menu_insert()
@@ -58,7 +58,7 @@ function hook_menu_update($menu) {
  * information to perform actions based on the information entered into the menu
  * system.
  *
- * @param \Drupal\system\Plugin\Core\Entity\Menu $menu
+ * @param \Drupal\system\Entity\Menu $menu
  *   A menu entity.
  *
  * @see hook_menu_insert()

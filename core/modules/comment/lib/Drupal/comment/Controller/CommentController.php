@@ -8,7 +8,7 @@
 namespace Drupal\comment\Controller;
 
 use Drupal\comment\CommentInterface;
-use Drupal\comment\Plugin\Core\Entity\Comment;
+use Drupal\comment\Entity\Comment;
 use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Routing\PathBasedGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * Controller for the comment entity.
  *
- * @see \Drupal\comment\Plugin\Core\Entity\Comment.
+ * @see \Drupal\comment\Entity\Comment.
  */
 class CommentController implements ControllerInterface {
 

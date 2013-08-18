@@ -11,7 +11,7 @@ use Drupal\ckeditor\CKEditorPluginContextualInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\ckeditor\Annotation\CKEditorPlugin;
 use Drupal\Core\Annotation\Translation;
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Entity\Editor;
 
 /**
  * Defines a "Llama" plugin, with a contextually enabled "llama" feature.

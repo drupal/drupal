@@ -8,7 +8,7 @@
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\FieldUpdateForbiddenException;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\Entity\Field;
 
 /**
  * Implements hook_help().

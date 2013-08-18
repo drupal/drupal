@@ -7,7 +7,7 @@
 namespace Drupal\breakpoint\Tests;
 
 use Drupal\Tests\UnitTestCase;
-use Drupal\breakpoint\Plugin\Core\Entity\Breakpoint;
+use Drupal\breakpoint\Entity\Breakpoint;
 use Drupal\breakpoint\InvalidBreakpointMediaQueryException;
 
 /**

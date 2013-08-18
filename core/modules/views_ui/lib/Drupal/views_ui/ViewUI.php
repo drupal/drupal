@@ -14,7 +14,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\query\Sql;
-use Drupal\views\Plugin\Core\Entity\View;
+use Drupal\views\Entity\View;
 use Drupal\views\ViewStorageInterface;
 
 /**
@@ -100,7 +100,7 @@ class ViewUI implements ViewStorageInterface {
   /**
    * The View storage object.
    *
-   * @var \Drupal\views\Plugin\Core\Entity\View
+   * @var \Drupal\views\Entity\View
    */
   protected $storage;
 

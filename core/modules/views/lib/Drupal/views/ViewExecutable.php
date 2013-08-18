@@ -29,7 +29,7 @@ class ViewExecutable {
   /**
    * The config entity in which the view is stored.
    *
-   * @var Drupal\views\Plugin\Core\Entity\View
+   * @var Drupal\views\Entity\View
    */
   public $storage;
 

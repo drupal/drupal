@@ -5,7 +5,7 @@
  * Defines a "managed_file" Form API field and a "file" field for Field module.
  */
 
-use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\file\Entity\File;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\JsonResponse;

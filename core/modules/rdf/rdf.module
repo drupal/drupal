@@ -64,7 +64,7 @@ function rdf_help($path, $arg) {
  * @param string $bundle
  *   The bundle.
  *
- * @return \Drupal\rdf\Plugin\Core\Entity\RdfMapping
+ * @return \Drupal\rdf\Entity\RdfMapping
  *   The RdfMapping object.
  */
 function rdf_get_mapping($entity_type, $bundle) {

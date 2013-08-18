@@ -237,7 +237,7 @@ abstract class WebTestBase extends TestBase {
    *   - revision: 1. (Backwards-compatible binary flag indicating whether a
    *     new revision should be created; use 1 to specify a new revision.)
    *
-   * @return \Drupal\node\Plugin\Core\Entity\Node
+   * @return \Drupal\node\Entity\Node
    *   The created node entity.
    */
   protected function drupalCreateNode(array $settings = array()) {
@@ -301,7 +301,7 @@ abstract class WebTestBase extends TestBase {
    *   An array of settings to change from the defaults.
    *   Example: 'type' => 'foo'.
    *
-   * @return \Drupal\node\Plugin\Core\Entity\NodeType
+   * @return \Drupal\node\Entity\NodeType
    *   Created content type.
    */
   protected function drupalCreateContentType(array $values = array()) {
@@ -355,7 +355,7 @@ abstract class WebTestBase extends TestBase {
    *   - theme: The default theme.
    *   - visibility: Empty array.
    *
-   * @return \Drupal\block\Plugin\Core\Entity\Block
+   * @return \Drupal\block\Entity\Block
    *   The block entity.
    *
    * @todo
@@ -465,7 +465,7 @@ abstract class WebTestBase extends TestBase {
    * @param string $name
    *   The user name.
    *
-   * @return \Drupal\user\Plugin\Core\Entity\User|false
+   * @return \Drupal\user\Entity\User|false
    *   A fully loaded user object with pass_raw property, or FALSE if account
    *   creation fails.
    */

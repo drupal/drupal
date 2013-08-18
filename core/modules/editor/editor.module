@@ -5,8 +5,8 @@
  * Adds bindings for client-side "text editors" to text formats.
  */
 
-use Drupal\file\Plugin\Core\Entity\File;
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\file\Entity\File;
+use Drupal\editor\Entity\Editor;
 use Drupal\Component\Utility\NestedArray;
 
 /**
@@ -319,7 +319,7 @@ function editor_form_filter_admin_format_submit($form, &$form_state) {
 /**
  * Loads an individual configured text editor based on text format ID.
  *
- * @return \Drupal\editor\Plugin\Core\Entity\Editor|null
+ * @return \Drupal\editor\Entity\Editor|null
  *   A text editor object, or NULL.
  */
 function editor_load($format_id) {

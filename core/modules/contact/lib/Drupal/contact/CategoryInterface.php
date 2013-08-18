@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\contact\Plugin\Core\Entity\CategoryInterface.
+ * Contains \Drupal\contact\Entity\CategoryInterface.
  */
 
 namespace Drupal\contact;

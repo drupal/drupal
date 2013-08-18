@@ -5,7 +5,7 @@
  * Enables the use of personal and site-wide contact forms.
  */
 
-use Drupal\contact\Plugin\Core\Entity\Category;
+use Drupal\contact\Entity\Category;
 use Drupal\user\UserInterface;
 
 /**
@@ -233,7 +233,7 @@ function contact_field_extra_fields() {
  * @param $id
  *   The ID of the contact category to load.
  *
- * @return \Drupal\contact\Plugin\Core\Entity\Category|null
+ * @return \Drupal\contact\Entity\Category|null
  *   A Category object or NULL if the requested $id does not exist.
  */
 function contact_category_load($id) {
@@ -243,7 +243,7 @@ function contact_category_load($id) {
 /**
  * Entity URI callback.
  *
- * @param Drupal\contact\Plugin\Core\Entity\Category $category
+ * @param Drupal\contact\Entity\Category $category
  *   A contact category entity.
  *
  * @return array

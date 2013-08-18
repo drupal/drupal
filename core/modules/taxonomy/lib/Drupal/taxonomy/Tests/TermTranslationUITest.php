@@ -23,7 +23,7 @@ class TermTranslationUITest extends ContentTranslationUITest {
   /**
    * The vocabulary used for creating terms.
    *
-   * @var \Drupal\taxonomy\Plugin\Core\Entity\Vocabulary
+   * @var \Drupal\taxonomy\Entity\Vocabulary
    */
   protected $vocabulary;
 

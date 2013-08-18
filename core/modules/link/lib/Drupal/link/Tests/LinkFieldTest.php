@@ -25,14 +25,14 @@ class LinkFieldTest extends WebTestBase {
   /**
    * A field to use in this test class.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\Field
+   * @var \Drupal\field\Entity\Field
    */
   protected $field;
 
   /**
    * The instance used in this test class.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   * @var \Drupal\field\Entity\FieldInstance
    */
   protected $instance;
 

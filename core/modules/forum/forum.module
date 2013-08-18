@@ -7,7 +7,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\NodeInterface;
-use Drupal\taxonomy\Plugin\Core\Entity\Term;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Implements hook_help().

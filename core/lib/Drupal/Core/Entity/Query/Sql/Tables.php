@@ -10,7 +10,7 @@ namespace Drupal\Core\Entity\Query\Sql;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Entity\Query\QueryException;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\Entity\Field;
 
 /**
  * Adds tables and fields to the SQL entity query.

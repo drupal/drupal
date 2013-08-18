@@ -9,7 +9,7 @@ namespace Drupal\aggregator\Tests;
 
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
-use Drupal\aggregator\Plugin\Core\Entity\Feed;
+use Drupal\aggregator\Entity\Feed;
 
 /**
  * Defines a base class for testing the Aggregator module.
@@ -47,7 +47,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    * @param array $edit
    *   Array with additional form fields.
    *
-   * @return \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
+   * @return \Drupal\aggregator\Entity\Feed $feed
    *   Full feed object if possible.
    *
    * @see getFeedEditArray()
@@ -65,7 +65,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   /**
    * Deletes an aggregator feed.
    *
-   * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
+   * @param \Drupal\aggregator\Entity\Feed $feed
    *   Feed object representing the feed.
    */
   function deleteFeed(Feed $feed) {
@@ -110,7 +110,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    * @param array $values
    *   (optional) Default values to initialize object properties with.
    *
-   * @return \Drupal\aggregator\Plugin\Core\Entity\Feed
+   * @return \Drupal\aggregator\Entity\Feed
    *   A feed object.
    */
   function getFeedEditObject($feed_url = NULL, array $values = array()) {
@@ -147,7 +147,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    * This method simulates a click to
    * admin/config/services/aggregator/update/$fid.
    *
-   * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
+   * @param \Drupal\aggregator\Entity\Feed $feed
    *   Feed object representing the feed.
    * @param int|null $expected_count
    *   Expected number of feed items. If omitted no check will happen.
@@ -182,7 +182,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   /**
    * Confirms an item removal from a feed.
    *
-   * @param  \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
+   * @param  \Drupal\aggregator\Entity\Feed $feed
    *   Feed object representing the feed.
    */
   function removeFeedItems(Feed $feed) {
@@ -193,7 +193,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   /**
    * Adds and removes feed items and ensure that the count is zero.
    *
-   * @param  \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
+   * @param  \Drupal\aggregator\Entity\Feed $feed
    *   Feed object representing the feed.
    * @param int $expected_count
    *   Expected number of feed items.
@@ -210,7 +210,7 @@ abstract class AggregatorTestBase extends WebTestBase {
   /**
    * Pulls feed categories from {aggregator_category_feed} table.
    *
-   * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
+   * @param \Drupal\aggregator\Entity\Feed $feed
    *   Feed object representing the feed.
    */
   function getFeedCategories(Feed $feed) {

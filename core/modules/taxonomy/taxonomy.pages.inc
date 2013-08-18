@@ -5,14 +5,14 @@
  * Page callbacks for the taxonomy module.
  */
 
-use Drupal\taxonomy\Plugin\Core\Entity\Term;
-use Drupal\taxonomy\Plugin\Core\Entity\Vocabulary;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Menu callback; displays all nodes associated with a term.
  *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Term $term
+ * @param Drupal\taxonomy\Entity\Term $term
  *   The taxonomy term entity.
  */
 function taxonomy_term_page(Term $term) {
@@ -65,7 +65,7 @@ function taxonomy_term_page(Term $term) {
 /**
  * Generate the content feed for a taxonomy term.
  *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Term $term
+ * @param Drupal\taxonomy\Entity\Term $term
  *   The taxonomy term entity.
  */
 function taxonomy_term_feed(Term $term) {

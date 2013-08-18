@@ -40,7 +40,7 @@ abstract class NodeTestBase extends WebTestBase {
    *   and account, with each key as the name of an operation (e.g. 'view',
    *   'delete') and each value a Boolean indicating whether access to that
    *   operation should be granted.
-   * @param \Drupal\node\Plugin\Core\Entity\Node $node
+   * @param \Drupal\node\Entity\Node $node
    *   The node object to check.
    * @param \Drupal\Core\Session\AccountInterface $account
    *   The user account for which to check access.

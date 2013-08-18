@@ -8,9 +8,9 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\Core\Language\Language;
-use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
+use Drupal\entity\Entity\EntityDisplay;
 use Drupal\Core\Template\Attribute;
-use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
+use Drupal\menu_link\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorageController;
 use Drupal\node\NodeInterface;
 
@@ -220,7 +220,7 @@ function book_menu() {
 /**
  * Access callback: Determines if the book export page is accessible.
  *
- * @param \Drupal\node\Plugin\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\Entity\EntityInterface $node
  *   The node whose export page is to be viewed.
  */
 function book_export_access(EntityInterface $node) {

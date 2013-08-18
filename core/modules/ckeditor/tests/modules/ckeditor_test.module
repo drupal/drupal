@@ -5,7 +5,7 @@
  * Helper module for the CKEditor tests.
  */
 
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Entity\Editor;
 
 /**
  * Implements hook_ckeditor_css_alter().

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\breakpoint\Plugin\Core\Entity\BreakpointGroupInterface.
+ * Contains \Drupal\breakpoint\Entity\BreakpointGroupInterface.
  */
 
 namespace Drupal\breakpoint;

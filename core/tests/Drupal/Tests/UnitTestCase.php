@@ -138,7 +138,7 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
       ->method('getMachineNameSuggestion')
       ->will($this->returnValue($machine_name));
 
-    $block = $this->getMockBuilder('Drupal\block\Plugin\Core\Entity\Block')
+    $block = $this->getMockBuilder('Drupal\block\Entity\Block')
       ->disableOriginalConstructor()
       ->getMock();
     $block->expects($this->any())

@@ -7,7 +7,7 @@
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\Language;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\field\Entity\FieldInstance;
 use Drupal\field\Field;
 
 /**

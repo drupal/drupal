@@ -8,7 +8,7 @@
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
-use Drupal\filter\Plugin\Core\Entity\FilterFormat;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Non-HTML markup language filters that generate HTML.
@@ -747,7 +747,7 @@ function check_markup($text, $format_id = NULL, $langcode = '', $cache = FALSE, 
   // Cache the filtered text. This cache is infinitely valid. It becomes
   // obsolete when $text changes (which leads to a new $cache_id). It is
   // automatically flushed when the text format is updated.
-  // @see \Drupal\filter\Plugin\Core\Entity\FilterFormat::save()
+  // @see \Drupal\filter\Entity\FilterFormat::save()
   if ($cache) {
     cache('filter')->set($cache_id, $text, CacheBackendInterface::CACHE_PERMANENT, array('filter_format' => $format->format));
   }

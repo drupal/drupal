@@ -14,7 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 /**
  * Defines an access controller for the menu link entity.
  *
- * @see \Drupal\menu_link\Plugin\Core\Entity\MenuLink
+ * @see \Drupal\menu_link\Entity\MenuLink
  */
 class MenuLinkAccessController extends EntityAccessController {
 

@@ -453,7 +453,7 @@ function block_list($region) {
  * @param string $entity_id
  *   The block ID.
  *
- * @return \Drupal\block\Plugin\Core\Entity\Block
+ * @return \Drupal\block\Entity\Block
  *   The loaded block object.
  */
 function block_load($entity_id) {

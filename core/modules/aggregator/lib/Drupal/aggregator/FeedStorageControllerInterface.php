@@ -7,7 +7,7 @@
 
 namespace Drupal\aggregator;
 
-use Drupal\aggregator\Plugin\Core\Entity\Feed;
+use Drupal\aggregator\Entity\Feed;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 
 /**

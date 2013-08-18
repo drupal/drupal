@@ -4,15 +4,15 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
-use Drupal\file\Plugin\Core\Entity\File;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\entity\Entity\EntityDisplay;
+use Drupal\file\Entity\File;
+use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Drupal\user\RoleInterface;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
+use Drupal\menu_link\Entity\MenuLink;
 
 /**
  * @file

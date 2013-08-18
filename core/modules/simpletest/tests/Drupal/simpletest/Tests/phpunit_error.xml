@@ -20,19 +20,19 @@ Undefined index: foo
     <testsuite name="Drupal\Tests\Core\Route\RoleAccessCheckTest" file="/var/www/d8/core/tests/Drupal/Tests/Core/Route/RoleAccessCheckTestkTest.php" namespace="Drupal\Tests\Core\Route" fullPackage="Drupal.Tests.Core.Route" tests="3" assertions="3" failures="3" errors="0" time="0.009176">
       <testsuite name="Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess" tests="3" assertions="3" failures="3" errors="0" time="0.009176">
         <testcase name="testRoleAccess with data set #0" assertions="1" time="0.004519">
-          <failure type="PHPUnit_Framework_ExpectationFailedException">Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess with data set #0 ('role_test_1', array(Drupal\user\Plugin\Core\Entity\User, Drupal\user\Plugin\Core\Entity\User))
+          <failure type="PHPUnit_Framework_ExpectationFailedException">Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess with data set #0 ('role_test_1', array(Drupal\user\Entity\User, Drupal\user\Entity\User))
             Access granted for user with the roles role_test_1 on path: role_test_1
             Failed asserting that false is true.
           </failure>
         </testcase>
         <testcase name="testRoleAccess with data set #1" assertions="1" time="0.002354">
-          <failure type="PHPUnit_Framework_ExpectationFailedException">Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess with data set #1 ('role_test_2', array(Drupal\user\Plugin\Core\Entity\User, Drupal\user\Plugin\Core\Entity\User))
+          <failure type="PHPUnit_Framework_ExpectationFailedException">Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess with data set #1 ('role_test_2', array(Drupal\user\Entity\User, Drupal\user\Entity\User))
             Access granted for user with the roles role_test_2 on path: role_test_2
             Failed asserting that false is true.
           </failure>
         </testcase>
         <testcase name="testRoleAccess with data set #2" assertions="1" time="0.002303">
-          <failure type="PHPUnit_Framework_ExpectationFailedException">Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess with data set #2 ('role_test_3', array(Drupal\user\Plugin\Core\Entity\User))
+          <failure type="PHPUnit_Framework_ExpectationFailedException">Drupal\Tests\Core\Route\RoleAccessCheckTest::testRoleAccess with data set #2 ('role_test_3', array(Drupal\user\Entity\User))
             Access granted for user with the roles role_test_1, role_test_2 on path: role_test_3
             Failed asserting that false is true.
           </failure>

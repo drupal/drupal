@@ -26,7 +26,7 @@ class FileItemTest extends FieldUnitTestBase {
   /**
    * Created file entity.
    *
-   * @var \Drupal\file\Plugin\Core\Entity\File
+   * @var \Drupal\file\Entity\File
    */
   protected $file;
 

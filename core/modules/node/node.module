@@ -20,8 +20,8 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\NodeTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
-use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\entity\Entity\EntityDisplay;
+use Drupal\file\Entity\File;
 use Drupal\user\UserInterface;
 
 /**

@@ -8,7 +8,7 @@
 namespace Drupal\ckeditor;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Entity\Editor;
 
 /**
  * Defines a base CKEditor plugin implementation.

@@ -86,7 +86,7 @@ class RowPluginTest extends NodeTestBase {
    *   (optional) An associative array of settings for the comment, as used in
    *   entity_create().
    *
-   * @return \Drupal\comment\Plugin\Core\Entity\Comment
+   * @return \Drupal\comment\Entity\Comment
    *   Returns the created and saved comment.
    */
   public function drupalCreateComment(array $settings = array()) {

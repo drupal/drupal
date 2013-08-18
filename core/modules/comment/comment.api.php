@@ -54,10 +54,10 @@ function hook_comment_update(Drupal\comment\Comment $comment) {
  * This hook runs after a new comment object has just been instantiated. It can
  * be used to set initial values, e.g. to provide defaults.
  *
- * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
+ * @param \Drupal\comment\Entity\Comment $comment
  *   The comment object.
  */
-function hook_comment_create(\Drupal\comment\Plugin\Core\Entity\Comment $comment) {
+function hook_comment_create(\Drupal\comment\Entity\Comment $comment) {
   if (!isset($comment->foo)) {
     $comment->foo = 'some_initial_value';
   }
@@ -79,9 +79,9 @@ function hook_comment_load(Drupal\comment\Comment $comments) {
 /**
  * Act on a comment that is being assembled before rendering.
  *
- * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment $comment
+ * @param \Drupal\comment\Entity\Comment $comment $comment
  *   Passes in the comment the action is being performed on.
- * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ * @param \Drupal\entity\Entity\EntityDisplay $display
  *   The entity_display object holding the display options configured for the
  *   comment components.
  * @param $view_mode
@@ -91,7 +91,7 @@ function hook_comment_load(Drupal\comment\Comment $comments) {
  *
  * @see hook_entity_view()
  */
-function hook_comment_view(\Drupal\comment\Plugin\Core\Entity\Comment $comment, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display, $view_mode, $langcode) {
+function hook_comment_view(\Drupal\comment\Entity\Comment $comment, \Drupal\entity\Entity\EntityDisplay $display, $view_mode, $langcode) {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
   // node type in hook_field_extra_fields().
@@ -117,16 +117,16 @@ function hook_comment_view(\Drupal\comment\Plugin\Core\Entity\Comment $comment, 
  *
  * @param $build
  *   A renderable array representing the comment.
- * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
+ * @param \Drupal\comment\Entity\Comment $comment
  *   The comment being rendered.
- * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ * @param \Drupal\entity\Entity\EntityDisplay $display
  *   The entity_display object holding the display options configured for the
  *   comment components.
  *
  * @see comment_view()
  * @see hook_entity_view_alter()
  */
-function hook_comment_view_alter(&$build, \Drupal\comment\Plugin\Core\Entity\Comment $comment, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display) {
+function hook_comment_view_alter(&$build, \Drupal\comment\Entity\Comment $comment, \Drupal\entity\Entity\EntityDisplay $display) {
   // Check for the existence of a field added by another module.
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.

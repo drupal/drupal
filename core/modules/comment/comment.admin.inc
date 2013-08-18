@@ -5,7 +5,7 @@
  * Admin page callbacks for the Comment module.
  */
 
-use Drupal\comment\Plugin\Core\Entity\Comment;
+use Drupal\comment\Entity\Comment;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -270,7 +270,7 @@ function comment_multiple_delete_confirm_submit($form, &$form_state) {
 /**
  * Page callback: Shows a confirmation page for comment deletions.
  *
- * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
+ * @param \Drupal\comment\Entity\Comment $comment
  *   The comment entity that is about to be deleted.
  *
  * @see comment_menu()

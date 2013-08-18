@@ -5,7 +5,7 @@
  * Allows users to manage customizable lists of shortcut links.
  */
 
-use Drupal\shortcut\Plugin\Core\Entity\Shortcut;
+use Drupal\shortcut\Entity\Shortcut;
 
 /**
  * Implements hook_help().
@@ -161,7 +161,7 @@ function shortcut_admin_paths() {
 /**
  * Access callback for editing a shortcut set.
  *
- * @param $shortcut_set Drupal\shortcut\Plugin\Core\Entity\Shortcut
+ * @param $shortcut_set Drupal\shortcut\Entity\Shortcut
  *   (optional) The shortcut set to be edited. If not set, the current user's
  *   shortcut set will be used.
  *
@@ -278,7 +278,7 @@ function shortcut_set_reset_link_weights(&$shortcut_set) {
 /**
  * Assigns a user to a particular shortcut set.
  *
- * @param $shortcut_set Drupal\shortcut\Plugin\Core\Entity\Shortcut
+ * @param $shortcut_set Drupal\shortcut\Entity\Shortcut
  *   An object representing the shortcut set.
  * @param $account
  *   A user account that will be assigned to use the set.
@@ -423,7 +423,7 @@ function shortcut_valid_link($path) {
 /**
  * Returns an array of shortcut links, suitable for rendering.
  *
- * @param $shortcut_set Drupal\shortcut\Plugin\Core\Entity\Shortcut
+ * @param $shortcut_set Drupal\shortcut\Entity\Shortcut
  *   (optional) An object representing the set whose links will be displayed.
  *   If not provided, the user's current set will be displayed.
  * @return

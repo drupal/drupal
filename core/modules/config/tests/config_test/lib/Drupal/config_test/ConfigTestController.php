@@ -7,7 +7,7 @@
 
 namespace Drupal\config_test;
 
-use Drupal\config_test\Plugin\Core\Entity\ConfigTest;
+use Drupal\config_test\Entity\ConfigTest;
 use Drupal\Component\Utility\String;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -20,7 +20,7 @@ class ConfigTestController {
   /**
    * Presents the ConfigTest edit form.
    *
-   * @param \Drupal\config_test\Plugin\Core\Entity\ConfigTest $config_test
+   * @param \Drupal\config_test\Entity\ConfigTest $config_test
    *   The ConfigTest object to edit.
    *
    * @return array

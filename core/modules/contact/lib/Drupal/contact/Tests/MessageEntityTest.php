@@ -6,13 +6,13 @@
 
 namespace Drupal\contact\Tests;
 
-use Drupal\contact\Plugin\Core\Entity\Message;
+use Drupal\contact\Entity\Message;
 use Drupal\simpletest\DrupalUnitTestBase;
 
 /**
  * Tests the message entity class.
  *
- * @see \Drupal\contact\Plugin\Core\Entity\Message
+ * @see \Drupal\contact\Entity\Message
  */
 class MessageEntityTest extends DrupalUnitTestBase {
 

@@ -17,7 +17,7 @@ abstract class ConfigFieldItemBase extends FieldItemBase implements ConfigFieldI
   /**
    * The Field instance definition.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   * @var \Drupal\field\Entity\FieldInstance
    */
   public $instance;
 

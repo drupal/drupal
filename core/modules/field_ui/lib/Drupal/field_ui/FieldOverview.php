@@ -12,7 +12,7 @@ use Drupal\Core\Entity\Field\FieldTypePluginManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\field_ui\OverviewBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\Entity\Field;
 
 /**
  * Field UI field overview form.

@@ -112,7 +112,7 @@ class EntityManager extends PluginManagerBase {
     $this->cache = $cache;
     $this->languageManager = $language_manager;
 
-    $this->discovery = new AnnotatedClassDiscovery('Plugin/Core/Entity', $namespaces, $annotation_namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
+    $this->discovery = new AnnotatedClassDiscovery('Entity', $namespaces, $annotation_namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
     $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
     $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->id, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));

@@ -5,7 +5,7 @@
  * Documentation for CKEditor module APIs.
  */
 
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Entity\Editor;
 
 /**
  * @addtogroup hooks

@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Tests\Menu;
 
-use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
+use Drupal\menu_link\Entity\MenuLink;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Routing\Route;

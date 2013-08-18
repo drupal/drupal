@@ -7,8 +7,8 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityNG;
-use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
-use Drupal\entity\Plugin\Core\Entity\EntityFormDisplay;
+use Drupal\entity\Entity\EntityDisplay;
+use Drupal\entity\Entity\EntityFormDisplay;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\Field\PrepareCacheInterface;
 
@@ -382,7 +382,7 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
  *
  * Used to invoke methods on an instance's widget.
  *
- * @param \Drupal\entity\Plugin\Core\Entity\EntityFormDisplay $form_display
+ * @param \Drupal\entity\Entity\EntityFormDisplay $form_display
  *   An EntityFormDisplay object.
  *
  * @return callable $target_function
@@ -1061,7 +1061,7 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity with fields to render.
- * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ * @param \Drupal\entity\Entity\EntityDisplay $display
  *   The entity display object.
  * @param $langcode
  *   The language the field values are to be shown in. If no language is

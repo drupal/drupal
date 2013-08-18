@@ -13,7 +13,7 @@ use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\ckeditor\Annotation\CKEditorPlugin;
 use Drupal\Core\Annotation\Translation;
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Entity\Editor;
 
 /**
  * Defines a "LlamaContextualAndbutton" plugin, with a contextually OR toolbar

@@ -6,9 +6,9 @@
  */
 
 use Drupal\taxonomy\VocabularyInterface;
-use Drupal\node\Plugin\Core\Entity\Node;
-use Drupal\taxonomy\Plugin\Core\Entity\Term;
-use Drupal\taxonomy\Plugin\Core\Entity\Vocabulary;
+use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 
@@ -401,7 +401,7 @@ function taxonomy_check_vocabulary_hierarchy(VocabularyInterface $vocabulary, $c
 /**
  * Generates an array which displays a term detail page.
  *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Term $term
+ * @param Drupal\taxonomy\Entity\Term $term
  *   A taxonomy term object.
  * @param string $view_mode
  *   View mode, e.g. 'full', 'teaser'...
@@ -483,7 +483,7 @@ function template_preprocess_taxonomy_term(&$variables) {
 /**
  * Returns whether the current page is the page of the passed-in term.
  *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Term $term
+ * @param Drupal\taxonomy\Entity\Term $term
  *   A taxonomy term entity.
  */
 function taxonomy_term_is_page(Term $term) {
@@ -810,7 +810,7 @@ function taxonomy_vocabulary_load_multiple(array $vids = NULL) {
  * Sorts vocabularies by its weight and label.
  *
  * @param array $vocabularies
- *   An array of \Drupal\taxonomy\Plugin\Core\Entity\Vocabulary objects.
+ *   An array of \Drupal\taxonomy\Entity\Vocabulary objects.
  */
 function taxonomy_vocabulary_sort(array &$vocabularies = array()) {
   // @todo Remove error suppressing when http://drupal.org/node/1799600 is
@@ -826,7 +826,7 @@ function taxonomy_vocabulary_sort(array &$vocabularies = array()) {
  * @param int $vid
  *   The vocabulary's ID.
  *
- * @return \Drupal\taxonomy\Plugin\Core\Entity\Vocabulary|null
+ * @return \Drupal\taxonomy\Entity\Vocabulary|null
  *   The taxonomy vocabulary entity, if exists, NULL otherwise. Results are
  *   statically cached.
  */
@@ -842,7 +842,7 @@ function taxonomy_vocabulary_load($vid) {
  * @param $tid
  *   A term's ID
  *
- * @return \Drupal\taxonomy\Plugin\Core\Entity\Term|null
+ * @return \Drupal\taxonomy\Entity\Term|null
  *   A taxonomy term entity, or NULL if the term was not found. Results are
  *   statically cached.
  */
@@ -1020,7 +1020,7 @@ function taxonomy_allowed_values(FieldDefinitionInterface $field_definition, Ent
 /**
  * Title callback for term pages.
  *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Term $term
+ * @param Drupal\taxonomy\Entity\Term $term
  *   A taxonomy term entity.
  *
  * @return
@@ -1122,7 +1122,7 @@ function taxonomy_node_insert(EntityInterface $node) {
  * The index lists all terms that are related to a given node entity, and is
  * therefore maintained at the entity level.
  *
- * @param \Drupal\node\Plugin\Core\Entity\Node $node
+ * @param \Drupal\node\Entity\Node $node
  *   The node entity.
  */
 function taxonomy_build_node_index($node) {

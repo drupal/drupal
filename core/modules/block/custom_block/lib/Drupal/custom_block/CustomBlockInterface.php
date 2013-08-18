@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\custom_block\Plugin\Core\Entity\CustomBlockInterface.
+ * Contains \Drupal\custom_block\Entity\CustomBlockInterface.
  */
 
 namespace Drupal\custom_block;

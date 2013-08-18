@@ -14,7 +14,7 @@ use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Language\Language;
 use Drupal\views\ViewExecutable;
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\views\Plugin\Core\Entity\View;
+use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use Drupal\field\FieldInstanceInterface;
 
@@ -1075,7 +1075,7 @@ function views_get_views_as_options($views_only = FALSE, $filter = 'all', $exclu
 /**
  * Returns whether the view is enabled.
  *
- * @param Drupal\views\Plugin\Core\Entity\View $view
+ * @param Drupal\views\Entity\View $view
  *   The view object to check.
  *
  * @return bool
@@ -1088,7 +1088,7 @@ function views_view_is_enabled(View $view) {
 /**
  * Returns whether the view is disabled.
  *
- * @param Drupal\views\Plugin\Core\Entity\View $view
+ * @param Drupal\views\Entity\View $view
  *   The view object to check.
  *
  * @return bool
@@ -1101,7 +1101,7 @@ function views_view_is_disabled(View $view) {
 /**
  * Enables and saves a view.
  *
- * @param Drupal\views\Plugin\Core\Entity\View $view
+ * @param Drupal\views\Entity\View $view
  *   The View object to disable.
  */
 function views_enable_view(View $view) {
@@ -1111,7 +1111,7 @@ function views_enable_view(View $view) {
 /**
  * Disables and saves a view.
  *
- * @param Drupal\views\Plugin\Core\Entity\View $view
+ * @param Drupal\views\Entity\View $view
  *   The View object to disable.
  */
 function views_disable_view(View $view) {

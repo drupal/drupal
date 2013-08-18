@@ -8,7 +8,7 @@
 namespace Drupal\aggregator\Plugin\aggregator\fetcher;
 
 use Drupal\aggregator\Plugin\FetcherInterface;
-use Drupal\aggregator\Plugin\Core\Entity\Feed;
+use Drupal\aggregator\Entity\Feed;
 use Drupal\aggregator\Annotation\AggregatorFetcher;
 use Drupal\Core\Annotation\Translation;
 use Guzzle\Http\Exception\BadResponseException;

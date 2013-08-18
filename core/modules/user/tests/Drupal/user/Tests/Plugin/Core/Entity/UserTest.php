@@ -2,18 +2,18 @@
 
 /**
  * @file
- * Contains \Drupal\user\Tests\Plugin\Core\Entity\UserTest.
+ * Contains \Drupal\user\Tests\Entity\UserTest.
  */
 
-namespace Drupal\user\Tests\Plugin\Core\Entity;
+namespace Drupal\user\Tests\Entity;
 
 use Drupal\Tests\Core\Session\UserSessionTest;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\user\Entity\User;
 
 /**
  * Tests the user object.
  *
- * @see \Drupal\user\Plugin\Core\Entity\User
+ * @see \Drupal\user\Entity\User
  */
 class UserTest extends UserSessionTest {
 
@@ -29,7 +29,7 @@ class UserTest extends UserSessionTest {
    * {@inheritdoc}
    */
   protected function createUserSession(array $rids = array()) {
-    $user = $this->getMockBuilder('Drupal\user\Plugin\Core\Entity\User')
+    $user = $this->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
       ->setMethods(array('getRoles', 'id'))
       ->getMock();

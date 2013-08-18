@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Tests;
 
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\field\Entity\FieldInstance;
 use Drupal\Core\Entity\EntityInterface;
 
 use Drupal\Core\Language\Language;

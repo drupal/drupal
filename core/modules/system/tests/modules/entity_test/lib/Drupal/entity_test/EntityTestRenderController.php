@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityRenderController;
 /**
  * Defines an entity render controller for a test entity.
  *
- * @see \Drupal\entity_test\Plugin\Core\Entity\EntityTestRender
+ * @see \Drupal\entity_test\Entity\EntityTestRender
  */
 class EntityTestRenderController extends EntityRenderController {
 

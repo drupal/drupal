@@ -14,7 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 /**
  * Access controller for the comment entity.
  *
- * @see \Drupal\comment\Plugin\Core\Entity\Comment.
+ * @see \Drupal\comment\Entity\Comment.
  */
 class CommentAccessController extends EntityAccessController {
 

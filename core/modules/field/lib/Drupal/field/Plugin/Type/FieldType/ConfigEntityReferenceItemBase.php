@@ -34,7 +34,7 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
   /**
    * The Field instance definition.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   * @var \Drupal\field\Entity\FieldInstance
    */
   protected $instance;
 
@@ -44,7 +44,7 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
    * Copied from \Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase,
    * since we cannot extend it.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   * @var \Drupal\field\Entity\FieldInstance
    */
   public function getInstance() {
     if (!isset($this->instance) && $parent = $this->getParent()) {

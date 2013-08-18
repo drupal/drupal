@@ -788,7 +788,7 @@ function hook_node_submit(\Drupal\Core\Entity\EntityInterface $node, $form, &$fo
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node that is being assembled for rendering.
- * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ * @param \Drupal\entity\Entity\EntityDisplay $display
  *   The entity_display object holding the display options configured for the
  *   node components.
  * @param string $view_mode
@@ -802,7 +802,7 @@ function hook_node_submit(\Drupal\Core\Entity\EntityInterface $node, $form, &$fo
  *
  * @ingroup node_api_hooks
  */
-function hook_node_view(\Drupal\Core\Entity\EntityInterface $node, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display, $view_mode, $langcode) {
+function hook_node_view(\Drupal\Core\Entity\EntityInterface $node, \Drupal\entity\Entity\EntityDisplay $display, $view_mode, $langcode) {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
   // node type in hook_field_extra_fields().
@@ -831,7 +831,7 @@ function hook_node_view(\Drupal\Core\Entity\EntityInterface $node, \Drupal\entit
  *   A renderable array representing the node content.
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node being rendered.
- * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ * @param \Drupal\entity\Entity\EntityDisplay $display
  *   The entity_display object holding the display options configured for the
  *   node components.
  *
@@ -840,7 +840,7 @@ function hook_node_view(\Drupal\Core\Entity\EntityInterface $node, \Drupal\entit
  *
  * @ingroup node_api_hooks
  */
-function hook_node_view_alter(&$build, \Drupal\Core\Entity\EntityInterface $node, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display) {
+function hook_node_view_alter(&$build, \Drupal\Core\Entity\EntityInterface $node, \Drupal\entity\Entity\EntityDisplay $display) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;

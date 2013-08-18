@@ -5,8 +5,8 @@
  * Manage breakpoints and breakpoint groups for responsive designs.
  */
 
-use Drupal\breakpoint\Plugin\Core\Entity\Breakpoint;
-use Drupal\breakpoint\Plugin\Core\Entity\BreakpointGroup;
+use Drupal\breakpoint\Entity\Breakpoint;
+use Drupal\breakpoint\Entity\BreakpointGroup;
 use Drupal\Core\Config\Entity\ConfigStorageController;
 
 /**
@@ -294,7 +294,7 @@ function breakpoint_get_module_media_queries($module) {
  * @param string $id
  *   The id of the breakpoint group to load.
  *
- * @return \Drupal\breakpoint\Plugin\Core\Entity\BreakpointGroup|null
+ * @return \Drupal\breakpoint\Entity\BreakpointGroup|null
  *   The breakpoint group, or NULL if there is no entity with the given id.
  *
  * @todo Remove this in a follow-up issue.
@@ -310,7 +310,7 @@ function breakpoint_group_load($id) {
  * @param int $id
  *   The id of the breakpoint to load.
  *
- * @return \Drupal\breakpoint\Plugin\Core\Entity\Breakpoint|null
+ * @return \Drupal\breakpoint\Entity\Breakpoint|null
  *   The entity object, or NULL if there is no entity with the given id.
  *
  * @todo Remove this in a follow-up issue.
@@ -364,7 +364,7 @@ function breakpoint_select_options() {
  * @param string $source_type
  *   Either Breakpoint::SOURCE_TYPE_THEME or Breakpoint::SOURCE_TYPE_MODULE.
  *
- * @return Drupal\breakpoint\Plugin\Core\Entity\BreakpointGroup
+ * @return Drupal\breakpoint\Entity\BreakpointGroup
  *
  * @see _breakpoint_import_media_queries()
  * @see _breakpoint_import_breakpoint_groups()

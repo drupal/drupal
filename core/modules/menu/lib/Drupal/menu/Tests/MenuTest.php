@@ -452,7 +452,7 @@ class MenuTest extends MenuWebTestBase {
    * @param string $menu_name Menu name.
    * @param string $weight Menu weight
    *
-   * @return \Drupal\menu_link\Plugin\Core\Entity\MenuLink $menu_link
+   * @return \Drupal\menu_link\Entity\MenuLink $menu_link
    *   A menu link entity.
    */
   function addMenuLink($plid = 0, $link = '<front>', $menu_name = 'tools', $expanded = TRUE, $weight = '0') {

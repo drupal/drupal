@@ -9,7 +9,7 @@ namespace Drupal\aggregator\Plugin\aggregator\processor;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
-use Drupal\aggregator\Plugin\Core\Entity\Feed;
+use Drupal\aggregator\Entity\Feed;
 use Drupal\aggregator\Annotation\AggregatorProcessor;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Database;

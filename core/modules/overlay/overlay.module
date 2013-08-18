@@ -8,7 +8,7 @@
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Drupal\block\Plugin\Core\Entity\Block;
+use Drupal\block\Entity\Block;
 use Drupal\Core\Session\AccountInterface;
 
 /**

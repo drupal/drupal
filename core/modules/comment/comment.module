@@ -10,8 +10,8 @@
  */
 
 use Drupal\node\NodeTypeInterface;
-use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
-use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\entity\Entity\EntityDisplay;
+use Drupal\file\Entity\File;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,7 +78,7 @@ const COMMENT_NODE_CLOSED = 1;
  */
 const COMMENT_NODE_OPEN = 2;
 
-use Drupal\comment\Plugin\Core\Entity\Comment;
+use Drupal\comment\Entity\Comment;
 
 /**
  * Implements hook_help().
@@ -1476,7 +1476,7 @@ function comment_preprocess_block(&$variables) {
  * This helper handles anonymous authors in addition to registered comment
  * authors.
  *
- * @return \Drupal\user\Plugin\Core\Entity\User
+ * @return \Drupal\user\Entity\User
  *   A user account, for use with theme_username() or the user_picture template.
  */
 function comment_prepare_author(Comment $comment) {

@@ -35,7 +35,7 @@ class IntegrationTest extends ViewTestBase {
   /**
    * Stores the node object which is used by the test.
    *
-   * @var \Drupal\node\Plugin\Core\Entity\Node
+   * @var \Drupal\node\Entity\Node
    */
   protected $node;
 

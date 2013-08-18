@@ -89,7 +89,7 @@ class EntityResolverTest extends NormalizerTestBase {
       ),
     );
 
-    $denormalized = $this->container->get('serializer')->denormalize($data, 'Drupal\entity_test\Plugin\Core\Entity\EntityTestMulRev', $this->format);
+    $denormalized = $this->container->get('serializer')->denormalize($data, 'Drupal\entity_test\Entity\EntityTestMulRev', $this->format);
     $field_value = $denormalized->get('field_test_entity_reference')->getValue();
     $this->assertEqual($field_value[0]['target_id'], 1, 'Entity reference resolved using UUID.');
   }

@@ -258,7 +258,7 @@ class ModuleTest extends ViewUnitTestBase {
    * Helper to return an expected views option array.
    *
    * @param array $views
-   *   An array of Drupal\views\Plugin\Core\Entity\View objects for which to
+   *   An array of Drupal\views\Entity\View objects for which to
    *   create an options array.
    *
    * @return array

@@ -14,7 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 /**
  * Defines an access controller for the node type entity.
  *
- * @see \Drupal\node\Plugin\Core\Entity\NodeType.
+ * @see \Drupal\node\Entity\NodeType.
  */
 class NodeTypeAccessController extends EntityAccessController {
 

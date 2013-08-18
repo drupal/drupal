@@ -6,9 +6,9 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\entity\Plugin\Core\Entity\EntityFormDisplay;
-use Drupal\field\Plugin\Core\Entity\Field;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\entity\Entity\EntityFormDisplay;
+use Drupal\field\Entity\Field;
+use Drupal\field\Entity\FieldInstance;
 
 /**
  * Filter that limits test entity list to revisable ones.
@@ -286,7 +286,7 @@ function entity_test_edit(EntityInterface $entity) {
  * @param bool $reset
  *   A boolean indicating that the internal cache should be reset.
  *
- * @return \Drupal\entity_test\Plugin\Core\Entity\EntityTest
+ * @return \Drupal\entity_test\Entity\EntityTest
  *   The loaded entity object, or NULL if the entity cannot be loaded.
  */
 function entity_test_load($id, $reset = FALSE) {
@@ -301,7 +301,7 @@ function entity_test_load($id, $reset = FALSE) {
  * @param bool $reset
  *   A boolean indicating that the internal cache should be reset.
  *
- * @return \Drupal\entity_test\Plugin\Core\Entity\EntityTestRev
+ * @return \Drupal\entity_test\Entity\EntityTestRev
  *   The loaded entity object, or NULL if the entity cannot be loaded.
  */
 function entity_test_rev_load($id, $reset = FALSE) {
@@ -316,7 +316,7 @@ function entity_test_rev_load($id, $reset = FALSE) {
  * @param bool $reset
  *   A boolean indicating that the internal cache should be reset.
  *
- * @return \Drupal\entity_test\Plugin\Core\Entity\EntityTestMul
+ * @return \Drupal\entity_test\Entity\EntityTestMul
  *   The loaded entity object, or FALSE if the entity cannot be loaded.
  */
 function entity_test_mul_load($id, $reset = FALSE) {
@@ -331,7 +331,7 @@ function entity_test_mul_load($id, $reset = FALSE) {
  * @param bool $reset
  *   A boolean indicating that the internal cache should be reset.
  *
- * @return \Drupal\entity_test\Plugin\Core\Entity\EntityTestMulRev
+ * @return \Drupal\entity_test\Entity\EntityTestMulRev
  *   The loaded entity object, or NULL if the entity cannot be loaded.
  */
 function entity_test_mulrev_load($id, $reset = FALSE) {
@@ -468,9 +468,9 @@ function entity_test_entity_test_mul_translation_delete(EntityInterface $transla
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity the field belongs to.
- * @param \Drupal\field\Plugin\Core\Entity\Field $field
+ * @param \Drupal\field\Entity\Field $field
  *   The field for which default values should be provided.
- * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
+ * @param \Drupal\field\Entity\FieldInstance $instance
  *   The field instance for which default values should be provided.
  * @param string $langcode
  *   The field language code to fill-in with the default value.

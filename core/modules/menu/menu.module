@@ -13,9 +13,9 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\block\BlockPluginInterface;
-use Drupal\system\Plugin\Core\Entity\Menu;
+use Drupal\system\Entity\Menu;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
+use Drupal\menu_link\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorageController;
 use Drupal\node\NodeInterface;
 
@@ -155,7 +155,7 @@ function menu_entity_bundle_info() {
 /**
  * Entity URI callback.
  *
- * @param \Drupal\system\Plugin\Core\Entity\Menu $menu
+ * @param \Drupal\system\Entity\Menu $menu
  *   A Menu entity.
  */
 function menu_uri(Menu $menu) {
@@ -293,7 +293,7 @@ function menu_menu_delete(Menu $menu) {
  *
  * @param array $menus
  *   An array of menu names and titles, such as from menu_get_menus().
- * @param \Drupal\menu_link\Plugin\Core\Entity\MenuLink $menu_link
+ * @param \Drupal\menu_link\Entity\MenuLink $menu_link
  *   The menu link for which to generate a list of parents.
  *   If $menu_link->id() == 0 then the complete tree is returned.
  * @param string $type

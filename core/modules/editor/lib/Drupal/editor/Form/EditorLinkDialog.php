@@ -8,7 +8,7 @@
 namespace Drupal\editor\Form;
 
 use Drupal\Core\Form\FormInterface;
-use Drupal\filter\Plugin\Core\Entity\FilterFormat;
+use Drupal\filter\Entity\FilterFormat;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\editor\Ajax\EditorDialogSave;
@@ -29,7 +29,7 @@ class EditorLinkDialog implements FormInterface {
   /**
    * {@inheritdoc}
    *
-   * @param \Drupal\filter\Plugin\Core\Entity\FilterFormat $filter_format
+   * @param \Drupal\filter\Entity\FilterFormat $filter_format
    *   The filter format for which this dialog corresponds.
    */
   public function buildForm(array $form, array &$form_state, FilterFormat $filter_format = NULL) {

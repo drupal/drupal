@@ -9,7 +9,7 @@ namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityRenderController;
-use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
+use Drupal\entity\Entity\EntityDisplay;
 
 /**
  * Render controller for taxonomy terms.

@@ -8,7 +8,7 @@
 namespace Drupal\shortcut\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
+use Drupal\menu_link\Entity\MenuLink;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -19,7 +19,7 @@ class LinkDelete extends ConfirmFormBase {
   /**
    * The menu link to delete.
    *
-   * @var \Drupal\menu_link\Plugin\Core\Entity\MenuLink
+   * @var \Drupal\menu_link\Entity\MenuLink
    */
   protected $menuLink;
 

@@ -49,7 +49,7 @@ class EntityViewControllerTest extends UnitTestCase{
       ->will($this->returnValue($render_controller));
 
     // Mock an 'entity_test_render' entity.
-    $entity = $this->getMockBuilder('Drupal\entity_test\Plugin\Core\Entity\EntityTestRender')
+    $entity = $this->getMockBuilder('Drupal\entity_test\Entity\EntityTestRender')
       ->disableOriginalConstructor()
       ->getMock();
 

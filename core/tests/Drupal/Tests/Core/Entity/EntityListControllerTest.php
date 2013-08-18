@@ -21,7 +21,7 @@ class EntityListControllerTest extends UnitTestCase {
   /**
    * The entity used to construct the EntityListController.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\Role
+   * @var \Drupal\user\Entity\Role
    */
   protected $role;
 
@@ -53,7 +53,7 @@ class EntityListControllerTest extends UnitTestCase {
       'label' => 'label',
     ),
     'config_prefix' => 'user.role',
-    'class' => 'Drupal\user\Plugin\Core\Entity\Role',
+    'class' => 'Drupal\user\Entity\Role',
   );
 
 
@@ -64,7 +64,7 @@ class EntityListControllerTest extends UnitTestCase {
     parent::setUp();
 
     $this->role = $this
-      ->getMockBuilder('Drupal\user\Plugin\Core\Entity\Role')
+      ->getMockBuilder('Drupal\user\Entity\Role')
       ->setConstructorArgs(array('entityInfo' => static::$entityInfo, 'user_role'))
       ->getMock();
 

@@ -6,8 +6,8 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\field\Plugin\Core\Entity\Field;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\field\Entity\Field;
+use Drupal\field\Entity\FieldInstance;
 use Drupal\field\FieldException;
 
 /**

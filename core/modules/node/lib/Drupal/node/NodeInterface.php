@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\node\Plugin\Core\Entity\NodeInterface.
+ * Contains \Drupal\node\Entity\NodeInterface.
  */
 
 namespace Drupal\node;

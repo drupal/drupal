@@ -5,7 +5,7 @@
  * Enables users to create menu links.
  */
 
-use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
+use Drupal\menu_link\Entity\MenuLink;
 
 function menu_link_help($path, $arg) {
   switch ($path) {
@@ -20,7 +20,7 @@ function menu_link_help($path, $arg) {
 /**
  * Entity URI callback.
  *
- * @param \Drupal\menu_link\Plugin\Core\Entity\MenuLink $menu_link
+ * @param \Drupal\menu_link\Entity\MenuLink $menu_link
  *   A menu link entity.
  */
 function menu_link_uri(MenuLink $menu_link) {
@@ -41,7 +41,7 @@ function menu_link_uri(MenuLink $menu_link) {
  * @param bool $reset
  *   (optional) Whether to reset the menu_link_load_multiple() cache.
  *
- * @return \Drupal\menu_link\Plugin\Core\Entity\MenuLink|null
+ * @return \Drupal\menu_link\Entity\MenuLink|null
  *   A menu link entity, or NULL if there is no entity with the given ID.
  */
 function menu_link_load($mlid = NULL, $reset = FALSE) {
@@ -56,7 +56,7 @@ function menu_link_load($mlid = NULL, $reset = FALSE) {
  * @param bool $reset
  *   (optional) Whether to reset the internal cache.
  *
- * @return array<\Drupal\menu_link\Plugin\Core\Entity\MenuLink>
+ * @return array<\Drupal\menu_link\Entity\MenuLink>
  *   An array of menu link entities indexed by entity IDs.
  *
  * @see menu_link_load()
@@ -123,7 +123,7 @@ function menu_link_delete_multiple(array $mlids, $force = FALSE, $prevent_repare
  * After calling this function, rebuild the menu cache using
  * menu_cache_clear_all().
  *
- * @param \Drupal\menu_link\Plugin\Core\Entity\MenuLink $menu_link
+ * @param \Drupal\menu_link\Entity\MenuLink $menu_link
  *   The menu link entity to be saved.
  *
  * @return int|bool

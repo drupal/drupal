@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\editor\Plugin\Core\Entity\EditPluginInterface.
+ * Contains \Drupal\editor\Entity\EditPluginInterface.
  */
 
 namespace Drupal\editor;

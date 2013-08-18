@@ -10,7 +10,7 @@ namespace Drupal\views_ui\Tests {
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
-use Drupal\views\Plugin\Core\Entity\View;
+use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutableFactory;
 
 class ViewListControllerTest extends UnitTestCase {

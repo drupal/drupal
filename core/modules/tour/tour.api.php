@@ -40,7 +40,7 @@ function hook_tour_tips_info_alter(&$info) {
  * Act on tour objects when loaded.
  *
  * @param array $entities
- *   An array of \Drupal\tour\Plugin\Core\Entity\Tour objects, indexed by id.
+ *   An array of \Drupal\tour\Entity\Tour objects, indexed by id.
  */
 function hook_tour_load($entities) {
   if (isset($entities['tour-entity-create-test-en'])) {
@@ -53,7 +53,7 @@ function hook_tour_load($entities) {
  *
  * This hook is invoked before the tour object is saved to configuration.
  *
- * @param \Drupal\tour\Plugin\Core\Entity\Tour $entity
+ * @param \Drupal\tour\Entity\Tour $entity
  *   The tour object.
  *
  * @see hook_tour_insert()
@@ -68,7 +68,7 @@ function hook_tour_presave($entity) {
 /**
  * Respond to creation of a new tour.
  *
- * @param \Drupal\tour\Plugin\Core\Entity\Tour $entity
+ * @param \Drupal\tour\Entity\Tour $entity
  *   The tour object being inserted.
  */
 function hook_tour_insert($entity) {
@@ -79,7 +79,7 @@ function hook_tour_insert($entity) {
 /**
  * Respond to updates to a tour object.
  *
- * @param \Drupal\tour\Plugin\Core\Entity\Tour $entity
+ * @param \Drupal\tour\Entity\Tour $entity
  *   The tour object being updated.
  */
 function hook_tour_update($entity) {

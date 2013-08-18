@@ -14,7 +14,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
   /**
    * The field entity.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\Field
+   * @var \Drupal\field\Entity\Field
    */
   protected $field;
 

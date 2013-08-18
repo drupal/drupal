@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\menu_link\Plugin\Core\Entity\MenuLinkInterface.
+ * Contains \Drupal\menu_link\Entity\MenuLinkInterface.
  */
 
 namespace Drupal\menu_link;
