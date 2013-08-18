@@ -29,7 +29,7 @@ class FrameworkTest extends AjaxTestBase {
   /**
    * Ensures ajax_render() returns JavaScript settings from the page request.
    */
-  function testAJAXRender() {
+  public function testAJAXRender() {
     // Verify that settings command is generated when JavaScript settings are
     // set via drupal_add_js().
     $commands = $this->drupalGetAJAX('ajax-test/render');
@@ -40,7 +40,7 @@ class FrameworkTest extends AjaxTestBase {
   /**
    * Tests AjaxResponse::prepare() AJAX commands ordering.
    */
-  function testOrder() {
+  public function testOrder() {
     $path = drupal_get_path('module', 'system');
     $expected_commands = array();
 
@@ -82,7 +82,7 @@ class FrameworkTest extends AjaxTestBase {
   /**
    * Tests behavior of ajax_render_error().
    */
-  function testAJAXRenderError() {
+  public function testAJAXRenderError() {
     // Verify custom error message.
     $edit = array(
       'message' => 'Custom error message.',
@@ -95,7 +95,7 @@ class FrameworkTest extends AjaxTestBase {
   /**
    * Tests that new JavaScript and CSS files are lazy-loaded on an AJAX request.
    */
-  function testLazyLoad() {
+  public function testLazyLoad() {
     $expected = array(
       'setting_name' => 'ajax_forms_test_lazy_load_form_submit',
       'setting_value' => 'executed',
@@ -183,9 +183,21 @@ class FrameworkTest extends AjaxTestBase {
   }
 
   /**
+   * Tests that drupalSettings.currentPath is not updated on AJAX requests.
+   */
+  public function testCurrentPathChange() {
+    $commands = $this->drupalPostAJAX('ajax_forms_test_lazy_load_form', array('add_files' => FALSE), array('op' => t('Submit')));
+    foreach ($commands as $command) {
+      if ($command['command'] == 'settings') {
+        $this->assertFalse(isset($command['settings']['currentPath']), 'Value of drupalSettings.currentPath is not updated after an AJAX request.');
+      }
+    }
+  }
+
+  /**
    * Tests that overridden CSS files are not added during lazy load.
    */
-  function testLazyLoadOverriddenCSS() {
+  public function testLazyLoadOverriddenCSS() {
     // The test theme overrides system.module.css without an implementation,
     // thereby removing it.
     theme_enable(array('test_theme'));
