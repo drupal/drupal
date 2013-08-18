@@ -66,7 +66,6 @@
 <article class="{{ attributes.class }} clearfix"{{ attributes }} role="article">
 
   <header class="comment-header">
-
     <div class="attribution">
       {{ user_picture }}
 
@@ -92,38 +91,36 @@
         {% endif %}
       </div>
     </div> <!-- /.attribution -->
-
-    <div class="comment-text">
-      <div class="comment-arrow"></div>
-
-      {% if new %}
-        <span class="new">{{ new }}</span>
-      {% endif %}
-
-      {{ title_prefix }}
-      <h3{{ title_attributes }}>{{ title }}</h3>
-      {{ title_suffix }}
-    </div> <!-- /.comment-text -->
-
   </header> <!-- /.comment-header -->
 
-  <div{{ content_attributes }}>
-    {# We hide the links now so that we can render them later. #}
-    {% hide(content.links) %}
-    {{ content }}
+  <div class="comment-text">
+    <div class="comment-arrow"></div>
 
-  </div> <!-- /.content -->
-
-  <footer class="comment-footer">
-    {% if signature %}
-    <div class="user-signature clearfix">
-      {{ signature }}
-    </div>
+    {% if new %}
+      <span class="new">{{ new }}</span>
     {% endif %}
 
-    <nav>
-      {{ content.links }}
-    </nav>
-  </footer> <!-- /.comment-footer -->
+    {{ title_prefix }}
+    <h3{{ title_attributes }}>{{ title }}</h3>
+    {{ title_suffix }}
+
+    <div{{ content_attributes }}>
+      {# We hide the links now so that we can render them later. #}
+      {% hide(content.links) %}
+      {{ content }}
+    </div> <!-- /.content -->
+
+    <footer class="comment-footer">
+      {% if signature %}
+      <div class="user-signature clearfix">
+        {{ signature }}
+      </div>
+      {% endif %}
+
+      <nav>
+        {{ content.links }}
+      </nav>
+    </footer> <!-- /.comment-footer -->
+  </div> <!-- /.comment-text -->
 
 </article>
