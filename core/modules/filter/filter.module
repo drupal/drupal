@@ -1514,7 +1514,8 @@ function _filter_html_image_secure_process($text) {
     $src = $image->getAttribute('src');
     // Remove absolute URLs pointing to the local domain to prevent mixed
     // content errors.
-    $image->setAttribute('src', preg_replace('|^https?://' . $_SERVER['HTTP_HOST'] . '|', '', $src));
+    $request = Drupal::request();
+    $image->setAttribute('src', preg_replace('|^https?://' . $request->getHost() . '|', '', $src));
 
     // Verify that $src starts with $base_path.
     // This also ensures that external images cannot be referenced.
