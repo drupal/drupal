@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\editor\Tests\EditorIntegrationTest.
+ * Contains \Drupal\editor\Tests\EditIntegrationTest.
  */
 
 namespace Drupal\editor\Tests;

@@ -373,4 +373,5 @@ class EditLoadingTest extends WebTestBase {
     }
     return $extra_post;
   }
+
 }
