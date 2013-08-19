@@ -60,22 +60,16 @@ class LanguageListController extends ConfigEntityListController implements FormI
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $row = parent::buildHeader();
-    unset($row['id']);
-    $row['label'] = t('Name');
-    $row['weight'] = t('Weight');
-    return $row;
+    $header['label'] = t('Name');
+    $header['weight'] = t('Weight');
+    return $header + parent::buildHeader();
   }
-
 
   /**
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row = parent::buildRow($entity);
-
     $row['#attributes']['class'][] = 'draggable';
-    unset($row['id']);
 
     $row['label'] = array(
       '#markup' => check_plain($entity->get('label')),
@@ -92,7 +86,7 @@ class LanguageListController extends ConfigEntityListController implements FormI
       '#delta' => 30,
     );
 
-    return $row;
+    return $row + parent::buildRow($entity);
   }
 
   /**

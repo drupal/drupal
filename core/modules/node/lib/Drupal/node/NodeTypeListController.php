@@ -63,13 +63,12 @@ class NodeTypeListController extends ConfigEntityListController implements Entit
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $row['title'] = t('Name');
-    $row['description'] = array(
+    $header['title'] = t('Name');
+    $header['description'] = array(
       'data' => t('Description'),
       'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
     );
-    $row['operations'] = t('Operations');
-    return $row;
+    return $header + parent::buildHeader();
   }
 
   /**
@@ -77,12 +76,11 @@ class NodeTypeListController extends ConfigEntityListController implements Entit
    */
   public function buildRow(EntityInterface $entity) {
     $row['title'] = array(
-      'data' => String::checkPlain($entity->label()),
+      'data' => $this->getLabel($entity),
       'class' => array('menu-label'),
     );
     $row['description'] = Xss::filterAdmin($entity->description);
-    $row['operations']['data'] = $this->buildOperations($entity);
-    return $row;
+    return $row + parent::buildRow($entity);
   }
 
   /**

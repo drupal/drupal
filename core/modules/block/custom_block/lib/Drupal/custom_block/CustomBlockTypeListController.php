@@ -48,22 +48,19 @@ class CustomBlockTypeListController extends ConfigEntityListController {
    * Overrides \Drupal\Core\Entity\EntityListController::buildHeader().
    */
   public function buildHeader() {
-    $row['type'] = t('Block type');
-    $row['description'] = t('Description');
-    $row['operations'] = t('Operations');
-    return $row;
+    $header['type'] = t('Block type');
+    $header['description'] = t('Description');
+    return $header + parent::buildHeader();
   }
 
   /**
    * Overrides \Drupal\Core\Entity\EntityListController::buildRow().
    */
   public function buildRow(EntityInterface $entity) {
-    parent::buildRow($entity);
     $uri = $entity->uri();
     $row['type'] = l($entity->label(), $uri['path'], $uri['options']);
     $row['description'] = filter_xss_admin($entity->description);
-    $row['operations']['data'] = $this->buildOperations($entity);
-    return $row;
+    return $row + parent::buildRow($entity);
   }
 
   /**

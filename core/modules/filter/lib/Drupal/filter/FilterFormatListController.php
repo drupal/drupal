@@ -89,11 +89,10 @@ class FilterFormatListController extends ConfigEntityListController implements F
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $row['name'] = t('Name');
-    $row['roles'] = t('Roles');
-    $row['weight'] = t('Weight');
-    $row['operations'] = t('Operations');
-    return $row;
+    $header['name'] = t('Name');
+    $header['roles'] = t('Roles');
+    $header['weight'] = t('Weight');
+    return $header + parent::buildHeader();
   }
 
   /**
@@ -118,7 +117,7 @@ class FilterFormatListController extends ConfigEntityListController implements F
       }
     }
     else {
-      $row['name'] = array('#markup' => String::checkPlain($entity->label()));
+      $row['name'] = array('#markup' => $this->getLabel($entity));
       $roles = array_map('\Drupal\Component\Utility\String::checkPlain', filter_get_roles_by_format($entity));
       $roles_markup = $roles ? implode(', ', $roles) : t('No roles may use this format');
     }
@@ -133,8 +132,7 @@ class FilterFormatListController extends ConfigEntityListController implements F
       '#attributes' => array('class' => array('text-format-order-weight')),
     );
 
-    $row['operations'] = $this->buildOperations($entity);
-    return $row;
+    return $row + parent::buildRow($entity);
   }
 
   /**

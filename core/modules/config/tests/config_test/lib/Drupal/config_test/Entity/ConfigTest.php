@@ -21,7 +21,7 @@ use Drupal\config_test\ConfigTestInterface;
  *   module = "config_test",
  *   controllers = {
  *     "storage" = "Drupal\config_test\ConfigTestStorageController",
- *     "list" = "Drupal\Core\Config\Entity\ConfigEntityListController",
+ *     "list" = "Drupal\config_test\ConfigTestListController",
  *     "form" = {
  *       "default" = "Drupal\config_test\ConfigTestFormController",
  *       "delete" = "Drupal\config_test\Form\ConfigTestDeleteForm"

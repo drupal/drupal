@@ -75,19 +75,16 @@ class ImageStyleListController extends ConfigEntityListController implements Ent
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $row = parent::buildHeader();
-    unset($row['id']);
-    $row['label'] = $this->translator->translate('Style name');
-    return $row;
+    $header['label'] = $this->translator->translate('Style name');
+    return $header + parent::buildHeader();
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row = parent::buildRow($entity);
-    unset($row['id']);
-    return $row;
+    $row['label'] = $this->getLabel($entity);
+    return $row + parent::buildRow($entity);
   }
 
   /**

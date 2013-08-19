@@ -16,19 +16,21 @@ use Drupal\Core\Entity\EntityInterface;
 class PictureMappingListController extends ConfigEntityListController {
 
   /**
-   * Overrides Drupal\config\EntityListControllerBase::hookMenu().
+   * {@inheritdoc}
    */
-  public function hookMenu() {
-    $path = $this->entityInfo['list path'];
-    $items = parent::hookMenu();
+  public function buildHeader() {
+    $header['label'] = t('Label');
+    $header['id'] = t('Machine name');
+    return $header + parent::buildHeader();
+  }
 
-    // Override the access callback.
-    $items[$path]['title'] = 'Picture Mappings';
-    $items[$path]['description'] = 'Manage list of picture mappings.';
-    $items[$path]['access callback'] = 'user_access';
-    $items[$path]['access arguments'] = array('administer pictures');
-
-    return $items;
+  /**
+   * {@inheritdoc}
+   */
+  public function buildRow(EntityInterface $entity) {
+    $row['label'] = $this->getLabel($entity);
+    $row['id'] = $entity->id();
+    return $row + parent::buildRow($entity);
   }
 
   /**

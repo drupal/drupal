@@ -21,6 +21,7 @@ use Drupal\Core\Language\Language;
  *   module = "entity_test",
  *   controllers = {
  *     "storage" = "Drupal\entity_test\EntityTestStorageController",
+ *     "list" = "Drupal\entity_test\EntityTestListController",
  *     "access" = "Drupal\entity_test\EntityTestAccessController",
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestFormController"

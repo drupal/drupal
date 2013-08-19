@@ -47,18 +47,17 @@ class CategoryListController extends ConfigEntityListController {
    * Overrides Drupal\Core\Entity\EntityListController::buildHeader().
    */
   public function buildHeader() {
-    $row['category'] = t('Category');
-    $row['recipients'] = t('Recipients');
-    $row['selected'] = t('Selected');
-    $row['operations'] = t('Operations');
-    return $row;
+    $header['category'] = t('Category');
+    $header['recipients'] = t('Recipients');
+    $header['selected'] = t('Selected');
+    return $header + parent::buildHeader();
   }
 
   /**
    * Overrides Drupal\Core\Entity\EntityListController::buildRow().
    */
   public function buildRow(EntityInterface $entity) {
-    $row['category'] = check_plain($entity->label());
+    $row['category'] = $this->getLabel($entity);
     // Special case the personal category.
     if ($entity->id() == 'personal') {
       $row['recipients'] = t('Selected user');
@@ -69,8 +68,7 @@ class CategoryListController extends ConfigEntityListController {
       $default_category = \Drupal::config('contact.settings')->get('default_category');
       $row['selected'] = ($default_category == $entity->id() ? t('Yes') : t('No'));
     }
-    $row['operations']['data'] = $this->buildOperations($entity);
-    return $row;
+    return $row + parent::buildRow($entity);
   }
 
 }

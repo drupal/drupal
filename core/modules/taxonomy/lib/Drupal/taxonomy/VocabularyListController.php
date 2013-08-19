@@ -56,25 +56,20 @@ class VocabularyListController extends ConfigEntityListController implements For
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $row = parent::buildHeader();
-    $row['label'] = t('Vocabulary name');
-    unset($row['id']);
-    $row['weight'] = t('Weight');
-    return $row;
+    $header['label'] = t('Vocabulary name');
+    $header['weight'] = t('Weight');
+    return $header + parent::buildHeader();
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row = parent::buildRow($entity);
-
     // Override default values to markup elements.
     $row['#attributes']['class'][] = 'draggable';
-    unset($row['id']);
 
     $row['label'] = array(
-      '#markup' => $row['label'],
+      '#markup' => $this->getLabel($entity),
     );
     $row['#weight'] = $entity->get('weight');
     // Add weight column.
@@ -85,7 +80,7 @@ class VocabularyListController extends ConfigEntityListController implements For
       '#default_value' => $entity->get('weight'),
       '#attributes' => array('class' => array('weight')),
     );
-    return $row;
+    return $row + parent::buildRow($entity);
   }
 
   /**
@@ -106,9 +101,8 @@ class VocabularyListController extends ConfigEntityListController implements For
     );
     unset($build['#header']['weight']);
     foreach ($entities as $entity) {
-      $row = parent::buildRow($entity);
-      unset($row['id']);
-      $build['#rows'][$entity->id()] = $row;
+      $row['label'] = $this->getLabel($entity);
+      $build['#rows'][$entity->id()] = $row + parent::buildRow($entity);
     }
     return $build;
   }
