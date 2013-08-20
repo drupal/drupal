@@ -9,18 +9,18 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
 use Drupal\field\FieldInterface;
 use Drupal\field\FieldInstanceInterface;
-use Drupal\Core\Entity\EntityNG;
 
 /*
  * Load all public Field API functions. Drupal currently has no
  * mechanism for auto-loading core APIs, so we have to load them on
  * every page request.
  */
-require_once __DIR__ . '/field.crud.inc';
 require_once __DIR__ . '/field.info.inc';
 require_once __DIR__ . '/field.multilingual.inc';
 require_once __DIR__ . '/field.attach.inc';
 require_once __DIR__ . '/field.form.inc';
+require_once __DIR__ . '/field.purge.inc';
+require_once __DIR__ . '/field.deprecated.inc';
 
 /**
  * @defgroup field Field API
@@ -332,46 +332,61 @@ function field_field_widget_info_alter(&$info) {
 }
 
 /**
- * Applies language fallback rules to the fields attached to the given entity.
- *
- * Core language fallback rules simply check if fields have a field translation
- * for the requested language code. If so, the requested language is returned,
- * otherwise all the fallback candidates are inspected to see if there is a
- * field translation available in another language.
- * By default this is called by field_field_language_alter(), but this
- * behavior can be disabled by setting the 'field.settings.language_fallback'
- * variable to FALSE.
- *
- * @param $field_langcodes
- *   A reference to an array of language codes keyed by field name.
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity to be displayed.
- * @param $langcode
- *   The language code $entity has to be displayed in.
+ * Implements hook_entity_bundle_create().
  */
-function field_language_fallback(&$field_langcodes, EntityInterface $entity, $langcode) {
-  // Lazily init fallback candidates to avoid unnecessary calls.
-  $fallback_candidates = NULL;
+function field_entity_bundle_create($entity_type, $bundle) {
+  // Clear the cache.
+  field_cache_clear();
+}
 
-  foreach ($field_langcodes as $field_name => $field_langcode) {
-    // If the requested language is defined for the current field use it,
-    // otherwise search for a fallback value among the fallback candidates.
-    if (isset($entity->{$field_name}[$langcode])) {
-      $field_langcodes[$field_name] = $langcode;
-    }
-    elseif (!empty($entity->{$field_name})) {
-      if (!isset($fallback_candidates)) {
-        require_once DRUPAL_ROOT . '/core/includes/language.inc';
-        $fallback_candidates = language_fallback_get_candidates();
-      }
-      foreach ($fallback_candidates as $fallback_langcode) {
-        if (isset($entity->{$field_name}[$fallback_langcode])) {
-          $field_langcodes[$field_name] = $fallback_langcode;
-          break;
-        }
-      }
+/**
+ * Implements hook_entity_bundle_rename().
+ */
+function field_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
+  $instances = field_read_instances();
+  foreach ($instances as $instance) {
+    if ($instance->entity_type == $entity_type && $instance->bundle == $bundle_old) {
+      $id_new = $instance['entity_type'] . '.' . $bundle_new . '.' . $instance['field_name'];
+      $instance->id = $id_new;
+      $instance->bundle = $bundle_new;
+      $instance->allowBundleRename();
+      $instance->save();
     }
   }
+
+  // Clear the field cache.
+  field_cache_clear();
+
+  // Update bundle settings.
+  $settings = variable_get('field_bundle_settings_' . $entity_type . '__' . $bundle_old, array());
+  variable_set('field_bundle_settings_' . $entity_type . '__' . $bundle_new, $settings);
+  variable_del('field_bundle_settings_' . $entity_type . '__' . $bundle_old);
+}
+
+/**
+ * Implements hook_entity_bundle_delete().
+ *
+ * This deletes the data for the field instances as well as the field instances
+ * themselves. This function actually just marks the data and field instances as
+ * deleted, leaving the garbage collection for a separate process, because it is
+ * not always possible to delete this much data in a single page request
+ * (particularly since for some field types, the deletion is more than just a
+ * simple DELETE query).
+ */
+function field_entity_bundle_delete($entity_type, $bundle) {
+  // Get the instances on the bundle. field_read_instances() must be used
+  // here since field_info_instances() does not return instances for disabled
+  // entity types or bundles.
+  $instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle), array('include_inactive' => TRUE));
+  foreach ($instances as $instance) {
+    $instance->delete();
+  }
+
+  // Clear the cache.
+  field_cache_clear();
+
+  // Clear bundle display settings.
+  variable_del('field_bundle_settings_' . $entity_type . '__' . $bundle);
 }
 
 /**
@@ -499,17 +514,6 @@ function field_get_default_value(EntityInterface $entity, $field, $instance, $la
     $items = $instance['default_value'];
   }
   return $items;
-}
-
-/**
- * Callback for usort() within theme_field_multiple_value_form().
- *
- * Sorts using ['_weight']['#value']
- */
-function _field_sort_items_value_helper($a, $b) {
-  $a_weight = (is_array($a) && isset($a['_weight']['#value']) ? $a['_weight']['#value'] : 0);
-  $b_weight = (is_array($b) && isset($b['_weight']['#value']) ? $b['_weight']['#value'] : 0);
-  return $a_weight - $b_weight;
 }
 
 /**
@@ -825,29 +829,6 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
   }
 
   return $output;
-}
-
-/**
- * Returns the field items in the language they currently would be displayed.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity containing the data to be displayed.
- * @param $field_name
- *   The field to be displayed.
- * @param $langcode
- *   (optional) The language code $entity->{$field_name} has to be displayed in.
- *   Defaults to the current language.
- *
- * @return
- *   An array with available field items keyed by delta.
- *
- * @deprecated as of Drupal 8.0. Use
- *   $entity->getTranslation($langcode)->{$field_name}
- */
-function field_get_items(EntityInterface $entity, $field_name, $langcode = NULL) {
-  $entity = $entity->getBCEntity();
-  $langcode = field_language($entity, $field_name, $langcode);
-  return isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
 }
 
 /**

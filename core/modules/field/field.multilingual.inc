@@ -1,13 +1,12 @@
 <?php
 
-use Drupal\Core\Entity\EntityInterface;
-
 /**
  * @file
  * Functions implementing Field API multilingual support.
  */
 
 use Drupal\Core\Language\Language;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * @defgroup field_language Field Language API
@@ -63,6 +62,50 @@ use Drupal\Core\Language\Language;
  * See @link field Field API @endlink for information about the other parts of
  * the Field API.
  */
+
+
+/**
+ * Applies language fallback rules to the fields attached to the given entity.
+ *
+ * Core language fallback rules simply check if fields have a field translation
+ * for the requested language code. If so, the requested language is returned,
+ * otherwise all the fallback candidates are inspected to see if there is a
+ * field translation available in another language.
+ * By default this is called by field_field_language_alter(), but this
+ * behavior can be disabled by setting the 'field.settings.language_fallback'
+ * variable to FALSE.
+ *
+ * @param $field_langcodes
+ *   A reference to an array of language codes keyed by field name.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity to be displayed.
+ * @param $langcode
+ *   The language code $entity has to be displayed in.
+ */
+function field_language_fallback(&$field_langcodes, EntityInterface $entity, $langcode) {
+  // Lazily init fallback candidates to avoid unnecessary calls.
+  $fallback_candidates = NULL;
+
+  foreach ($field_langcodes as $field_name => $field_langcode) {
+    // If the requested language is defined for the current field use it,
+    // otherwise search for a fallback value among the fallback candidates.
+    if (isset($entity->{$field_name}[$langcode])) {
+      $field_langcodes[$field_name] = $langcode;
+    }
+    elseif (!empty($entity->{$field_name})) {
+      if (!isset($fallback_candidates)) {
+        require_once DRUPAL_ROOT . '/core/includes/language.inc';
+        $fallback_candidates = language_fallback_get_candidates();
+      }
+      foreach ($fallback_candidates as $fallback_langcode) {
+        if (isset($entity->{$field_name}[$fallback_langcode])) {
+          $field_langcodes[$field_name] = $fallback_langcode;
+          break;
+        }
+      }
+    }
+  }
+}
 
 /**
  * Collects the available language codes for the given entity type and field.

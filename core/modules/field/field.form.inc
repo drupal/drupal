@@ -95,6 +95,17 @@ function theme_field_multiple_value_form($variables) {
 }
 
 /**
+ * Callback for usort() within theme_field_multiple_value_form().
+ *
+ * Sorts using ['_weight']['#value']
+ */
+function _field_sort_items_value_helper($a, $b) {
+  $a_weight = (is_array($a) && isset($a['_weight']['#value']) ? $a['_weight']['#value'] : 0);
+  $b_weight = (is_array($b) && isset($b['_weight']['#value']) ? $b['_weight']['#value'] : 0);
+  return $a_weight - $b_weight;
+}
+
+/**
  * After-build callback for field elements in a form.
  *
  * This stores the final location of the field within the form structure so that
