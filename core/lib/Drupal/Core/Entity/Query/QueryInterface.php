@@ -177,20 +177,6 @@ interface QueryInterface extends AlterableInterface {
   public function execute();
 
   /**
-   * Creates an object holding a group of conditions.
-   *
-   * See andConditionGroup() and orConditionGroup() for more.
-   *
-   * @param $conjunction
-   *   - AND (default): this is the equivalent of andConditionGroup().
-   *   - OR: this is the equivalent of andConditionGroup().
-   *
-   * return ConditionInterface
-   *   An object holding a group of conditions.
-   */
-  public function conditionGroupFactory($conjunction = 'AND');
-
-  /**
    * Creates a new group of conditions ANDed together.
    *
    * For example, consider a drawing entity type with a 'figures' multi-value

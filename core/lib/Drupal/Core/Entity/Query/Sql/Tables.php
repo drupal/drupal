@@ -15,7 +15,7 @@ use Drupal\field\Entity\Field;
 /**
  * Adds tables and fields to the SQL entity query.
  */
-class Tables {
+class Tables implements TablesInterface {
 
   /**
    * @var \Drupal\Core\Database\Query\SelectInterface
@@ -45,22 +45,14 @@ class Tables {
   /**
    * @param \Drupal\Core\Database\Query\SelectInterface $sql_query
    */
-  function __construct(SelectInterface $sql_query) {
+  public function __construct(SelectInterface $sql_query) {
     $this->sqlQuery = $sql_query;
   }
 
   /**
-   * @param string $field
-   *   If it contains a dot, then field name dot field column. If it doesn't
-   *   then entity property name.
-   * @param string $type
-   *   Join type, can either be INNER or LEFT.
-   * @return string
-   *   The return value is a string containing the alias of the table, a dot
-   *   and the appropriate SQL column as passed in. This allows the direct use
-   *   of this in a query for a condition or sort.
+   * {@inheritdoc}
    */
-  function addField($field, $type, $langcode) {
+  public function addField($field, $type, $langcode) {
     $entity_type = $this->sqlQuery->getMetaData('entity_type');
     $age = $this->sqlQuery->getMetaData('age');
     // This variable ensures grouping works correctly. For example:
