@@ -136,7 +136,7 @@ function views_theme($existing, $type, $theme, $path) {
       // templates folder. This will be in any case the root of the given module
       // so we always need a module definition.
       // @todo: watchdog or exception?
-      if (!isset($def['provider'])) {
+      if (!isset($def['provider']) || !Drupal::moduleHandler()->moduleExists($def['provider'])) {
         continue;
       }
 
