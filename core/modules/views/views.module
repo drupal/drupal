@@ -120,6 +120,7 @@ function views_theme($existing, $type, $theme, $path) {
   );
 
   $plugins = views_get_plugin_definitions();
+  $module_handler = Drupal::moduleHandler();
 
   // Register theme functions for all style plugins. It provides a basic auto
   // implementation of theme functions or template files by using the plugin
@@ -136,7 +137,7 @@ function views_theme($existing, $type, $theme, $path) {
       // templates folder. This will be in any case the root of the given module
       // so we always need a module definition.
       // @todo: watchdog or exception?
-      if (!isset($def['provider']) || !Drupal::moduleHandler()->moduleExists($def['provider'])) {
+      if (!isset($def['provider']) || !$module_handler->moduleExists($def['provider'])) {
         continue;
       }
 
