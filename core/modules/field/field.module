@@ -234,44 +234,6 @@ function field_system_info_alter(&$info, $file, $type) {
 }
 
 /**
- * Implements hook_entity_create().
- */
-function field_entity_create(EntityInterface $entity) {
-  $info = $entity->entityInfo();
-  if (!empty($info['fieldable'])) {
-    field_populate_default_values($entity, $entity->language()->id);
-  }
-}
-
-/**
- * Inserts a default value for each entity field not having one.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity for the operation.
- * @param string $langcode
- *   (optional) The field language code to fill-in with the default value.
- *   Defaults to the entity language.
- */
-function field_populate_default_values(EntityInterface $entity, $langcode = NULL) {
-  // Ensure we are working with a BC mode entity.
-  $entity = $entity->getBCEntity();
-
-  $entity_type = $entity->entityType();
-  $langcode = $langcode ?: $entity->language()->id;
-  foreach (field_info_instances($entity_type, $entity->bundle()) as $field_name => $instance) {
-    $field = field_info_field($field_name);
-    $field_langcode = field_is_translatable($entity_type, $field) ? $langcode : Language::LANGCODE_NOT_SPECIFIED;
-    // We need to preserve existing values.
-    if (empty($entity->{$field_name}) || !array_key_exists($field_langcode, $entity->{$field_name})) {
-      $items = field_get_default_value($entity, $field, $instance, $field_langcode);
-      if (!empty($items)) {
-        $entity->{$field_name}[$field_langcode] = $items;
-      }
-    }
-  }
-}
-
-/**
  * Implements hook_entity_field_info() to define all configured fields.
  */
 function field_entity_field_info($entity_type) {
@@ -490,30 +452,6 @@ function field_sync_field_status() {
   $state->set('field.field.deleted', $deleted_fields);
 
   field_cache_clear();
-}
-
-/**
- * Helper function to get the default value for a field on an entity.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity for the operation.
- * @param $field
- *   The field structure.
- * @param $instance
- *   The instance structure.
- * @param $langcode
- *   The field language to fill-in with the default value.
- */
-function field_get_default_value(EntityInterface $entity, $field, $instance, $langcode = NULL) {
-  $items = array();
-  if (!empty($instance['default_value_function'])) {
-    $function = $instance['default_value_function'];
-    $items = $function($entity, $field, $instance, $langcode);
-  }
-  elseif (!empty($instance['default_value'])) {
-    $items = $instance['default_value'];
-  }
-  return $items;
 }
 
 /**

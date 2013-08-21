@@ -10,6 +10,7 @@ namespace Drupal\field\Entity;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\FieldException;
 use Drupal\field\FieldInterface;
 
@@ -647,6 +648,11 @@ class Field extends ConfigEntityBase implements FieldInterface {
   public function isFieldRequired() {
     return FALSE;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFieldDefaultValue(EntityInterface $entity) { }
 
   /**
    * {@inheritdoc}

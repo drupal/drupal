@@ -72,4 +72,11 @@ class ConfigField extends Field implements ConfigFieldInterface {
     return $constraints;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDefaultValue() {
+    return $this->getInstance()->getFieldDefaultValue($this->getParent());
+  }
+
 }

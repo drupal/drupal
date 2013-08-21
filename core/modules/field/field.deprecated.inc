@@ -1188,3 +1188,25 @@ function field_get_items(EntityInterface $entity, $field_name, $langcode = NULL)
   $langcode = field_language($entity, $field_name, $langcode);
   return isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
 }
+
+/**
+ * Helper function to get the default value for a field on an entity.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity for the operation.
+ * @param $field
+ *   The field structure.
+ * @param $instance
+ *   The instance structure.
+ * @param $langcode
+ *   The field language to fill-in with the default value.
+ *
+ * @return array
+ *   The default value for the field.
+ *
+ * @deprecated as of Drupal 8.0. Use
+ *   $instance->getFieldDefaultValue($entity)
+ */
+function field_get_default_value(EntityInterface $entity, $field, $instance, $langcode = NULL) {
+  return $instance->getFieldDefaultValue($entity);
+}

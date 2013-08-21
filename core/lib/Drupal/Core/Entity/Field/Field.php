@@ -224,14 +224,32 @@ class Field extends ItemList implements FieldInterface {
    * {@inheritdoc}
    */
   public function applyDefaultValue($notify = TRUE) {
-    if (isset($this->definition['settings']['default_value'])) {
-      $this->setValue($this->definition['settings']['default_value'], $notify);
-    }
-    else {
+    // @todo Remove getDefaultValue() and directly call
+    // FieldDefinition::getFieldDefaultValue() here, once
+    // https://drupal.org/node/2047229 is fixed.
+    $value = $this->getDefaultValue();
+    // NULL or array() mean "no default value", but  0, '0' and the empty string
+    // are valid default values.
+    if (!isset($value) || (is_array($value) && empty($value))) {
       // Create one field item and apply defaults.
       $this->offsetGet(0)->applyDefaultValue(FALSE);
     }
+    else {
+      $this->setValue($value, $notify);
+    }
     return $this;
+  }
+
+  /**
+   * Returns the default value for the field.
+   *
+   * @return array
+   *   The default value for the field.
+   */
+  protected function getDefaultValue() {
+    if (isset($this->definition['settings']['default_value'])) {
+      return $this->definition['settings']['default_value'];
+    }
   }
 
   /**
