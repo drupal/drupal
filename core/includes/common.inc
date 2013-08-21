@@ -3916,7 +3916,7 @@ function drupal_render(&$elements) {
       // only this theme() call. This allows #theme hooks and #theme_wrappers
       // hooks to share variable names without conflict or ambiguity.
       $wrapper_elements = $elements;
-      if (is_array($value)) {
+      if (is_string($key)) {
         $wrapper_hook = $key;
         foreach ($value as $attribute => $override) {
           $wrapper_elements[$attribute] = $override;
