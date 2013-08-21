@@ -25,23 +25,23 @@ class MachineName extends FieldPluginBase {
   /**
    * @var array Stores the available options.
    */
-  var $value_options;
+  protected $valueOptions;
 
   public function getValueOptions() {
-    if (isset($this->value_options)) {
+    if (isset($this->valueOptions)) {
       return;
     }
 
     if (isset($this->definition['options callback']) && is_callable($this->definition['options callback'])) {
       if (isset($this->definition['options arguments']) && is_array($this->definition['options arguments'])) {
-        $this->value_options = call_user_func_array($this->definition['options callback'], $this->definition['options arguments']);
+        $this->valueOptions = call_user_func_array($this->definition['options callback'], $this->definition['options arguments']);
       }
       else {
-        $this->value_options = call_user_func($this->definition['options callback']);
+        $this->valueOptions = call_user_func($this->definition['options callback']);
       }
     }
     else {
-      $this->value_options = array();
+      $this->valueOptions = array();
     }
   }
 
@@ -72,11 +72,11 @@ class MachineName extends FieldPluginBase {
    */
   public function render(ResultRow $values) {
     $value = $values->{$this->field_alias};
-    if (!empty($this->options['machine_name']) || !isset($this->value_options[$value])) {
+    if (!empty($this->options['machine_name']) || !isset($this->valueOptions[$value])) {
       $result = check_plain($value);
     }
     else {
-      $result = $this->value_options[$value];
+      $result = $this->valueOptions[$value];
     }
 
     return $result;
