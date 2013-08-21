@@ -187,7 +187,8 @@ class DbLogTest extends WebTestBase {
     }
 
     // View the database log event page.
-    $this->drupalGet('admin/reports/event/1');
+    $wid = db_query('SELECT MIN(wid) FROM {watchdog}')->fetchField();
+    $this->drupalGet('admin/reports/event/' . $wid);
     $this->assertResponse($response);
     if ($response == 200) {
       $this->assertText(t('Details'), 'DBLog event node was displayed');
