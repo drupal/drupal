@@ -46,6 +46,7 @@ Configuration system
 - Greg Dunlap 'heyrocker' http://drupal.org/user/128537
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
 - Alex Pott 'alexpott' http://drupal.org/user/157725
+- Matthew Tift 'mtift' https://drupal.org/user/751908
 
 Configuration entity system
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
