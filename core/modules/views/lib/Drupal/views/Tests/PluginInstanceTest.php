@@ -84,10 +84,9 @@ class PluginInstanceTest extends ViewUnitTestBase {
    * This will iterate through all plugins from _views_fetch_plugin_data().
    */
   public function testPluginInstances() {
-    $container = drupal_container();
     foreach ($this->definitions as $type => $plugins) {
       // Get a plugin manager for this type.
-      $manager = $container->get("plugin.manager.views.$type");
+      $manager = $this->container->get("plugin.manager.views.$type");
       foreach ($plugins as $id => $definition) {
         // Get a reflection class for this plugin.
         // We only want to test true plugins, i.e. They extend PluginBase.

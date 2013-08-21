@@ -211,7 +211,7 @@ abstract class SqlBase extends PagerPluginBase {
 
   public function query() {
     if ($this->itemsPerPageExposed()) {
-      $query = drupal_container()->get('request')->query;
+      $query = \Drupal::request()->query;
       $items_per_page = $query->get('items_per_page');
       if ($items_per_page > 0) {
         $this->options['items_per_page'] = $items_per_page;
@@ -221,7 +221,7 @@ abstract class SqlBase extends PagerPluginBase {
       }
     }
     if ($this->isOffsetExposed()) {
-      $query = drupal_container()->get('request')->query;
+      $query = \Drupal::request()->query;
       $offset = $query->get('offset');
       if (isset($offset) && $offset >= 0) {
         $this->options['offset'] = $offset;
@@ -265,7 +265,7 @@ abstract class SqlBase extends PagerPluginBase {
 
     // Fill in missing values in the global page array, in case the global page
     // array hasn't been initialized before.
-    $page = drupal_container()->get('request')->query->get('page');
+    $page = \Drupal::request()->query->get('page');
     $page = isset($page) ? explode(',', $page) : array();
 
     for ($i = 0; $i <= $this->options['id'] || $i < count($pager_page_array); $i++) {
