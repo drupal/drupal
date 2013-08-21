@@ -889,8 +889,10 @@ function variable_initialize($conf = array()) {
  * @return
  *   The value of the variable. Unserialization is taken care of as necessary.
  *
- * @see variable_del()
- * @see variable_set()
+ * @deprecated This will be removed in Drupal 8.0. Instead, use the
+ *   configuration API.
+ *
+ * @see \Drupal\Core\Config::get()
  */
 function variable_get($name, $default = NULL) {
   global $conf;
@@ -911,8 +913,10 @@ function variable_get($name, $default = NULL) {
  *   The value to set. This can be any PHP data type; these functions take care
  *   of serialization as necessary.
  *
- * @see variable_del()
- * @see variable_get()
+ * @deprecated This will be removed in Drupal 8.0. Instead, use the
+ *   configuration API.
+ *
+ * @see \Drupal\Core\Config::set()
  */
 function variable_set($name, $value) {
   global $conf;
@@ -934,8 +938,10 @@ function variable_set($name, $value) {
  * @param $name
  *   The name of the variable to undefine.
  *
- * @see variable_get()
- * @see variable_set()
+ * @deprecated This will be removed in Drupal 8.0. Instead, use the
+ *   configuration API.
+ *
+ * @see \Drupal\Core\Config::clear()
  */
 function variable_del($name) {
   global $conf;
