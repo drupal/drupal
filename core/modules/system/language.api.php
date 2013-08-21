@@ -199,7 +199,7 @@ function hook_language_fallback_candidates_alter(array &$fallback_candidates) {
  * // Use the current default interface language.
  * $langcode = language(\Drupal\Core\Language\Language::TYPE_INTERFACE)->id;
  * // Instantiate the transliteration class.
- * $trans = drupal_container()->get('transliteration');
+ * $trans = Drupal::transliteration();
  * // Use this to transliterate some text.
  * $transformed = $trans->transliterate($string, $langcode);
  * @endcode

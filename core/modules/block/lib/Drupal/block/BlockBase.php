@@ -177,7 +177,7 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
     // @todo This is basically the same as what is done in
     //   \Drupal\system\MachineNameController::transliterate(), so it might make
     //   sense to provide a common service for the two.
-    $transliteration_service = \Drupal::service('transliteration');
+    $transliteration_service = \Drupal::transliteration();
     $transliterated = $transliteration_service->transliterate($admin_label, Language::LANGCODE_DEFAULT, '_');
 
     $replace_pattern = '[^a-z0-9_.]+';

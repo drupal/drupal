@@ -401,4 +401,14 @@ class Drupal {
     return static::$container->get('csrf_token');
   }
 
+  /**
+   * Returns the transliteration service.
+   *
+   * @return \Drupal\Core\Transliteration\PHPTransliteration
+   *   The transliteration manager.
+   */
+  public static function transliteration() {
+    return static::$container->get('transliteration');
+  }
+
 }
