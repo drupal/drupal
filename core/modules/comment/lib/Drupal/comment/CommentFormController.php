@@ -87,7 +87,7 @@ class CommentFormController extends EntityFormControllerNG {
     if ($is_admin) {
       $form['author']['name']['#title'] = t('Authored by');
       $form['author']['name']['#description'] = t('Leave blank for %anonymous.', array('%anonymous' => \Drupal::config('user.settings')->get('anonymous')));
-      $form['author']['name']['#autocomplete_path'] = 'user/autocomplete';
+      $form['author']['name']['#autocomplete_route_name'] = 'user_autocomplete';
     }
     elseif ($user->isAuthenticated()) {
       $form['author']['name']['#type'] = 'item';

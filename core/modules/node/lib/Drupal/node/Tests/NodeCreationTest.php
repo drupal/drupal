@@ -123,4 +123,26 @@ class NodeCreationTest extends NodeTestBase {
     $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit["title"])));
   }
 
+  /**
+   * Tests the author autocompletion textfield.
+   */
+  public function testAuthorAutocomplete() {
+    $admin_user = $this->drupalCreateUser(array('administer nodes', 'create page content'));
+    $this->drupalLogin($admin_user);
+
+    $this->drupalGet('node/add/page');
+
+    $result = $this->xpath('//input[@id = "edit-name-autocomplete"]');
+    $this->assertEqual(count($result), 0, 'No autocompletion without access user profiles.');
+
+    $admin_user = $this->drupalCreateUser(array('administer nodes', 'create page content', 'access user profiles'));
+    $this->drupalLogin($admin_user);
+
+    $this->drupalGet('node/add/page');
+
+    $result = $this->xpath('//input[@id = "edit-name-autocomplete"]');
+    $this->assertEqual((string) $result[0]['value'], url('user/autocomplete'));
+    $this->assertEqual(count($result), 1, 'Ensure that the user does have access to the autocompletion');
+  }
+
 }
