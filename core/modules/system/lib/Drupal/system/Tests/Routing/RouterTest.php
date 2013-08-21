@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Routing;
 
 use Drupal\simpletest\WebTestBase;
+use Symfony\Component\Routing\RequestContext;
 
 /**
  * Functional class for the full integrated routing system.
@@ -140,6 +141,24 @@ class RouterTest extends WebTestBase {
     // In some instances, the subrequest handling may get confused and render
     // a page inception style. This test verifies that is not happening.
     $this->assertNoPattern('#</body>.*</body>#s', 'There was no double-page effect from a misrendered subrequest.');
+  }
+
+  /**
+   * Checks the generate method on the url generator using the front router.
+   */
+  public function testUrlGeneratorFront() {
+    // Setup the request context of the URL generator. Note: Just calling the
+    // code without a proper request, does not setup the request context
+    // automatically.
+    $context = new RequestContext();
+    $context->fromRequest($this->container->get('request'));
+    $this->container->get('url_generator')->setRequest($this->container->get('request'));
+    $this->container->get('url_generator')->setContext($context);
+
+    global $base_path;
+
+    $this->assertEqual($this->container->get('url_generator')->generate('<front>'), $base_path);
+    $this->assertEqual($this->container->get('url_generator')->generateFromPath('<front>'), $base_path);
   }
 
   /**

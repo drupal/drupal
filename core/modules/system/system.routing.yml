@@ -202,6 +202,11 @@ system_theme_settings_global:
   requirements:
     _permission: 'administer themes'
 
+'<front>':
+  pattern: '/'
+  requirements:
+    _access: 'TRUE'
+
 system_modules_uninstall:
   pattern: 'admin/modules/uninstall'
   defaults:
