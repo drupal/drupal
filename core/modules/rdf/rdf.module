@@ -260,7 +260,7 @@ function rdf_preprocess_node(&$variables) {
   $title_mapping = $mapping->getPreparedFieldMapping('title');
   if ($title_mapping) {
     $title_attributes['property'] = empty($title_mapping['properties']) ? NULL : $title_mapping['properties'];
-    $title_attributes['content'] = $variables['label'];
+    $title_attributes['content'] = $variables['node']->label();
     $variables['title_suffix']['rdf_meta_title'] = array(
       '#theme' => 'rdf_metadata',
       '#metadata' => array($title_attributes),

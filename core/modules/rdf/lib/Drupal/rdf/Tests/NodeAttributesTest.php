@@ -51,7 +51,12 @@ class NodeAttributesTest extends NodeTestBase {
    * Creates a node of type article and tests its RDFa markup.
    */
   function testNodeAttributes() {
-    $node = $this->drupalCreateNode(array('type' => 'article'));
+    // Create node with single quotation mark title to ensure it does not get
+    // escaped more than once.
+    $node = $this->drupalCreateNode(array(
+      'type' => 'article',
+      'title' => $this->randomName(8) . "'",
+    ));
 
     $node_uri = url('node/' . $node->id(), array('absolute' => TRUE));
     $base_uri = url('<front>', array('absolute' => TRUE));
