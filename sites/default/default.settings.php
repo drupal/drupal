@@ -455,6 +455,15 @@ $settings['update_free_access'] = FALSE;
 # $settings['mixed_mode_sessions'] = TRUE;
 
 /**
+ * Public file path:
+ *
+ * A local file system path where public files will be stored. This directory
+ * must exist and be writable by Drupal. This directory must be relative to
+ * the Drupal installation directory and be accessible over the web.
+ */
+# $settings['file_public_path'] = 'sites/default/files';
+
+/**
  * Session write interval:
  *
  * Set the minimum interval between each session write to database.

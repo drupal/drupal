@@ -227,25 +227,6 @@ function image_permission() {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter().
- */
-function image_form_system_file_system_settings_alter(&$form, &$form_state) {
-  $form['#submit'][] = 'image_system_file_system_settings_submit';
-}
-
-/**
- * Form submission handler for system_file_system_settings().
- *
- * Adds a menu rebuild after the public file path has been changed, so that the
- * menu router item depending on that file path will be regenerated.
- */
-function image_system_file_system_settings_submit($form, &$form_state) {
-  if ($form['file_public_path']['#default_value'] !== $form_state['values']['file_public_path']) {
-    Drupal::state()->set('menu_rebuild_needed', TRUE);
-  }
-}
-
-/**
  * Implements hook_file_download().
  *
  * Control the access to files underneath the styles directory.

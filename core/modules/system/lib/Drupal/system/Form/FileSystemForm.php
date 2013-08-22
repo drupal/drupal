@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\system\SystemConfigFormBase;
 
 /**
@@ -27,12 +28,11 @@ class FileSystemForm extends SystemConfigFormBase {
   public function buildForm(array $form, array &$form_state) {
     $config = $this->configFactory->get('system.file');
     $form['file_public_path'] = array(
-      '#type' => 'textfield',
+      '#type' => 'item',
       '#title' => t('Public file system path'),
-      '#default_value' => variable_get('file_public_path', conf_path() . '/files'),
-      '#maxlength' => 255,
-      '#description' => t('A local file system path where public files will be stored. This directory must exist and be writable by Drupal. This directory must be relative to the Drupal installation directory and be accessible over the web.'),
-      '#after_build' => array('system_check_directory'),
+      '#default_value' => PublicStream::basePath(),
+      '#markup' => PublicStream::basePath(),
+      '#description' => t('A local file system path where public files will be stored. This directory must exist and be writable by Drupal. This directory must be relative to the Drupal installation directory and be accessible over the web. This must be changed in settings.php'),
     );
 
     $form['file_private_path'] = array(
@@ -78,7 +78,6 @@ class FileSystemForm extends SystemConfigFormBase {
     $config = $this->configFactory->get('system.file')
       ->set('path.private', $form_state['values']['file_private_path'])
       ->set('path.temporary', $form_state['values']['file_temporary_path']);
-    variable_set('file_public_path', $form_state['values']['file_public_path']);
 
     if (isset($form_state['values']['file_default_scheme'])) {
       $config->set('default_scheme', $form_state['values']['file_default_scheme']);

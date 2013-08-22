@@ -9,6 +9,7 @@ use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\Language;
+use Drupal\Core\StreamWrapper\PublicStream;
 
 /**
  * Implements hook_requirements().
@@ -302,7 +303,7 @@ function system_requirements($phase) {
   if ($phase != 'install') {
     $filesystem_config = Drupal::config('system.file');
     $directories = array(
-      variable_get('file_public_path', conf_path() . '/files'),
+      PublicStream::basePath(),
       // By default no private files directory is configured. For private files
       // to be secure the admin needs to provide a path outside the webroot.
       $filesystem_config->get('path.private'),
@@ -315,8 +316,8 @@ function system_requirements($phase) {
   if ($phase == 'install') {
     global $conf;
     $directories = array();
-    if (!empty($conf['file_public_path'])) {
-      $directories[] = $conf['file_public_path'];
+    if ($file_public_path = settings()->get('file_public_path')) {
+      $directories[] = $file_public_path;
     }
     else {
       // If we are installing Drupal, the settings.php file might not exist yet
@@ -2239,6 +2240,15 @@ function system_update_8059() {
     'language_content' => 'configurable.language_content',
     'language_url' => 'configurable.language_content',
   ));
+}
+
+/**
+ * Move the file_public_path variable to settings.
+ */
+function system_upgrade_8060() {
+  if ($path = update_variable_get('file_public_path')) {
+    drupal_rewrite_settings(array('settings' => array('file_public_path' => $path)));
+  }
 }
 
 /**

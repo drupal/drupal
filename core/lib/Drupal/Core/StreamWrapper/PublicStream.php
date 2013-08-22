@@ -16,20 +16,36 @@ namespace Drupal\Core\StreamWrapper;
 class PublicStream extends LocalStream {
 
   /**
-   * Implements Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath()
+   * {@inheritdoc}
    */
   public function getDirectoryPath() {
-    return variable_get('file_public_path', conf_path() . '/files');
+    return static::basePath();
   }
 
   /**
-   * Implements Drupal\Core\StreamWrapper\StreamWrapperInterface::getExternalUrl().
-   *
-   * @return string
-   *   Returns the HTML URI of a public file.
+   * {@inheritdoc}
    */
-  function getExternalUrl() {
+  public function getExternalUrl() {
     $path = str_replace('\\', '/', $this->getTarget());
     return $GLOBALS['base_url'] . '/' . self::getDirectoryPath() . '/' . drupal_encode_path($path);
   }
+
+  /**
+   * Returns the base path for public://.
+   *
+   * @return string
+   *   The base path for public:// typically sites/default/files.
+   */
+  public static function basePath() {
+    $base_path = settings()->get('file_public_path', conf_path() . '/files');
+    if ($test_prefix = drupal_valid_test_ua()) {
+      // Append the testing suffix unless already given.
+      // @see Drupal\simpletest\WebTestBase::setUp()
+      if (strpos($base_path, '/simpletest/' . substr($test_prefix, 10)) === FALSE) {
+        return $base_path . '/simpletest/' . substr($test_prefix, 10);
+      }
+    }
+    return $base_path;
+  }
+
 }
