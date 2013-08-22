@@ -364,7 +364,7 @@ class Drupal {
   /**
    * Returns the url generator service.
    *
-   * @return \Drupal\Core\Routing\UrlGeneratorInterface
+   * @return \Drupal\Core\Routing\PathBasedGeneratorInterface
    *   The url generator service.
    */
   public static function urlGenerator() {

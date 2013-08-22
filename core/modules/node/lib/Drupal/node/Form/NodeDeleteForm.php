@@ -9,8 +9,9 @@ namespace Drupal\node\Form;
 
 use Drupal\Core\Entity\EntityNGConfirmFormBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Routing\PathBasedGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Provides a form for deleting a node.
@@ -20,7 +21,7 @@ class NodeDeleteForm extends EntityNGConfirmFormBase {
   /**
    * The URL generator.
    *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
+   * @var \Drupal\Core\Routing\PathBasedGeneratorInterface
    */
   protected $urlGenerator;
 
@@ -34,12 +35,12 @@ class NodeDeleteForm extends EntityNGConfirmFormBase {
   /**
    * Constructs a NodeDeleteForm object.
    *
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\PathBasedGeneratorInterface $url_generator
    *   The URL generator.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $node_type_storage
    *   The node type storage.
    */
-  public function __construct(UrlGeneratorInterface $url_generator, EntityStorageControllerInterface $node_type_storage) {
+  public function __construct(PathBasedGeneratorInterface $url_generator, EntityStorageControllerInterface $node_type_storage) {
     $this->urlGenerator = $url_generator;
     $this->nodeTypeStorage = $node_type_storage;
   }

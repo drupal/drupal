@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\EventSubscriber;
 
-use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Routing\PathBasedGeneratorInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
@@ -22,17 +22,17 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
   /**
    * The url generator service.
    *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
+   * @var \Drupal\Core\Routing\PathBasedGeneratorInterface
    */
   protected $urlGenerator;
 
   /**
    * Constructs a RedirectResponseSubscriber object.
    *
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\PathBasedGeneratorInterface $url_generator
    *   The url generator service.
    */
-  public function __construct(UrlGeneratorInterface $url_generator) {
+  public function __construct(PathBasedGeneratorInterface $url_generator) {
     $this->urlGenerator = $url_generator;
   }
 

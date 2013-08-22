@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Routing\PathBasedGeneratorInterface;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -24,7 +24,7 @@ class ImageStyleListController extends ConfigEntityListController implements Ent
   /**
    * The URL generator.
    *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
+   * @var \Drupal\Core\Routing\PathBasedGeneratorInterface
    */
   protected $urlGenerator;
 
@@ -46,12 +46,12 @@ class ImageStyleListController extends ConfigEntityListController implements Ent
    *   The image style entity storage controller class.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke hooks on.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\PathBasedGeneratorInterface $url_generator
    *   The URL generator.
    * @param \Drupal\Core\StringTranslation\Translator\TranslatorInterface $translator
    *   The translation manager.
    */
-  public function __construct($entity_type, array $entity_info, EntityStorageControllerInterface $image_style_storage, ModuleHandlerInterface $module_handler, UrlGeneratorInterface $url_generator, TranslatorInterface $translator) {
+  public function __construct($entity_type, array $entity_info, EntityStorageControllerInterface $image_style_storage, ModuleHandlerInterface $module_handler, PathBasedGeneratorInterface $url_generator, TranslatorInterface $translator) {
     parent::__construct($entity_type, $entity_info, $image_style_storage, $module_handler);
     $this->urlGenerator = $url_generator;
     $this->translator = $translator;

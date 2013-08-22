@@ -10,7 +10,7 @@ namespace Drupal\comment\Controller;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Routing\PathBasedGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +28,7 @@ class CommentController implements ControllerInterface {
   /**
    * The url generator service.
    *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
+   * @var \Drupal\Core\Routing\PathBasedGeneratorInterface
    */
   protected $urlGenerator;
 
@@ -42,12 +42,12 @@ class CommentController implements ControllerInterface {
   /**
    * Constructs a CommentController object.
    *
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\PathBasedGeneratorInterface $url_generator
    *   The url generator service.
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   HTTP kernel to handle requests.
    */
-  public function __construct(UrlGeneratorInterface $url_generator, HttpKernelInterface $httpKernel) {
+  public function __construct(PathBasedGeneratorInterface $url_generator, HttpKernelInterface $httpKernel) {
     $this->urlGenerator = $url_generator;
     $this->httpKernel = $httpKernel;
   }

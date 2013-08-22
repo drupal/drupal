@@ -9,6 +9,7 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Core\CacheDecorator\AliasManagerCacheDecorator;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
+use Drupal\Core\Routing\PathBasedGeneratorInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;

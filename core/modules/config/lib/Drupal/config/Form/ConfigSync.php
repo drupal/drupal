@@ -15,7 +15,7 @@ use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigException;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Routing\PathBasedGeneratorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -65,7 +65,7 @@ class ConfigSync extends FormBase {
   /**
    * URL generator service.
    *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
+   * @var \Drupal\Core\Routing\PathBasedGeneratorInterface
    */
   protected $urlGenerator;
 
@@ -84,10 +84,10 @@ class ConfigSync extends FormBase {
    *   Configuration object factory.
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   Entity manager.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\PathBasedGeneratorInterface $url_generator
    *   The url generator service.
    */
-  public function __construct(StorageInterface $sourceStorage, StorageInterface $targetStorage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigFactory $config_factory, EntityManager $entity_manager, UrlGeneratorInterface $url_generator) {
+  public function __construct(StorageInterface $sourceStorage, StorageInterface $targetStorage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigFactory $config_factory, EntityManager $entity_manager, PathBasedGeneratorInterface $url_generator) {
     $this->sourceStorage = $sourceStorage;
     $this->targetStorage = $targetStorage;
     $this->lock = $lock;

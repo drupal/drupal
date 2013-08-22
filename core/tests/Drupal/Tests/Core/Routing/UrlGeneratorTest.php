@@ -37,13 +37,6 @@ class UrlGeneratorTest extends UnitTestCase {
    */
   protected $generator;
 
-  /**
-   * A second url generator to test, set to assume mixed-mode sessions.
-   *
-   * @var \Drupal\Core\Routing\UrlGenerator
-   */
-  protected $generatorMixedMode;
-
   protected $aliasManager;
 
   public static function getInfo() {
@@ -72,29 +65,33 @@ class UrlGeneratorTest extends UnitTestCase {
       ->getMock();
     // We need to set up return value maps for both the getRouteByName() and the
     // getRoutesByNames() method calls on the route provider. The parameters
-    // are not passed in and default to an empty array.
+    // passed in will be slightly different but based on the same information.
     $route_name_return_map = $routes_names_return_map = array();
     $return_map_values = array(
       array(
         'route_name' => 'test_1',
+        'parameters' => array(),
         'return' => $first_route,
       ),
       array(
         'route_name' => 'test_2',
+        'parameters' => array('narf' => '5'),
         'return' => $second_route,
       ),
       array(
         'route_name' => 'test_3',
+        'parameters' => array(),
         'return' => $third_route,
       ),
       array(
         'route_name' => 'test_4',
+        'parameters' => array(),
         'return' => $fourth_route,
       ),
     );
     foreach ($return_map_values as $values) {
-      $route_name_return_map[] = array($values['route_name'], array(), $values['return']);
-      $routes_names_return_map[] = array(array($values['route_name']), array(), $values['return']);
+      $route_name_return_map[] = array($values['route_name'], $values['parameters'], $values['return']);
+      $routes_names_return_map[] = array(array($values['route_name']), $values['parameters'], $values['return']);
     }
     $provider->expects($this->any())
       ->method('getRouteByName')
@@ -125,12 +122,8 @@ class UrlGeneratorTest extends UnitTestCase {
 
     $generator = new UrlGenerator($provider, $processor_manager, $config_factory_stub, new Settings(array()));
     $generator->setContext($context);
-    $this->generator = $generator;
 
-    // Second generator for mixed-mode sessions.
-    $generator = new UrlGenerator($provider, $processor_manager, $config_factory_stub, new Settings(array('mixed_mode_sessions' => TRUE)));
-    $generator->setContext($context);
-    $this->generatorMixedMode = $generator;
+    $this->generator = $generator;
   }
 
   /**
@@ -163,10 +156,6 @@ class UrlGeneratorTest extends UnitTestCase {
     $url = $this->generator->generate('test_1');
     $this->assertEquals('/hello/world', $url);
 
-    // Check that the two generate methods return the same result.
-    $url_from_route = $this->generator->generateFromRoute('test_1');
-    $this->assertEquals($url_from_route, $url);
-
     $path = $this->generator->getPathFromRoute('test_1');
     $this->assertEquals('test/one', $path);
   }
@@ -186,20 +175,7 @@ class UrlGeneratorTest extends UnitTestCase {
    */
   public function testAliasGenerationWithParameters() {
     $url = $this->generator->generate('test_2', array('narf' => '5'));
-    $this->assertEquals('/goodbye/cruel/world', $url);
-
-    $options = array('fragment' => 'top');
-    // Extra parameters should appear in the query string.
-    $url = $this->generator->generateFromRoute('test_1', array('zoo' => '5'), $options);
-    $this->assertEquals('/hello/world?zoo=5#top', $url);
-
-    $options = array('query' => array('page' => '1'), 'fragment' => 'bottom');
-    $url = $this->generator->generateFromRoute('test_2', array('narf' => '5'), $options);
-    $this->assertEquals('/goodbye/cruel/world?page=1#bottom', $url);
-
-    // Changing the parameters, the route still matches but there is no alias.
-    $url = $this->generator->generateFromRoute('test_2', array('narf' => '7'), $options);
-    $this->assertEquals('/test/two/7?page=1#bottom', $url);
+    $this->assertEquals('/goodbye/cruel/world', $url, 'Correct URL generated including alias and parameters.');
 
     $path = $this->generator->getPathFromRoute('test_2', array('narf' => '5'));
     $this->assertEquals('test/two/5', $path);
@@ -219,11 +195,6 @@ class UrlGeneratorTest extends UnitTestCase {
   public function testAbsoluteURLGeneration() {
     $url = $this->generator->generate('test_1', array(), TRUE);
     $this->assertEquals('http://localhost/hello/world', $url);
-
-    $options = array('absolute' => TRUE, 'fragment' => 'top');
-    // Extra parameters should appear in the query string.
-    $url = $this->generator->generateFromRoute('test_1', array('zoo' => '5'), $options);
-    $this->assertEquals('http://localhost/hello/world?zoo=5#top', $url);
   }
 
   /**
@@ -232,15 +203,6 @@ class UrlGeneratorTest extends UnitTestCase {
   public function testUrlGenerationWithHttpsRequirement() {
     $url = $this->generator->generate('test_4', array(), TRUE);
     $this->assertEquals('https://localhost/test/four', $url);
-
-    $options = array('absolute' => TRUE, 'https' => TRUE);
-    // Mixed-mode sessions are not enabled, so the https option is ignored.
-    $url = $this->generator->generateFromRoute('test_1', array(), $options);
-    $this->assertEquals('http://localhost/hello/world', $url);
-
-    // Mixed-mode sessions are enabled, so the https option is obeyed.
-    $url = $this->generatorMixedMode->generateFromRoute('test_1', array(), $options);
-    $this->assertEquals('https://localhost/hello/world', $url);
   }
 
   /**
