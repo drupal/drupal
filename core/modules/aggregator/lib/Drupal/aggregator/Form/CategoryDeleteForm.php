@@ -13,9 +13,7 @@ use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 
 /**
  * Provides a confirm delete form.
@@ -49,13 +47,6 @@ class CategoryDeleteForm extends ConfirmFormBase implements ControllerInterface 
    * @var \Drupal\aggregator\CategoryStorageControllerInterface
    */
   protected $categoryStorageController;
-
-  /**
-   * The current request.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
 
   /**
    * Creates a new CategoryDeleteForm.
@@ -126,8 +117,6 @@ class CategoryDeleteForm extends ConfirmFormBase implements ControllerInterface 
    *   An associative array containing the structure of the form.
    * @param array $form_state
    *   An associative array containing the current state of the form.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
    * @param int|null $cid
    *   The category ID.
    *
@@ -137,14 +126,13 @@ class CategoryDeleteForm extends ConfirmFormBase implements ControllerInterface 
    * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
    *   If the cid param or category is not found.
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL, $cid = NULL) {
+  public function buildForm(array $form, array &$form_state, $cid = NULL) {
     $category = $this->categoryStorageController->load($cid);
     if (empty($cid) || empty($category)) {
       throw new NotFoundHttpException();
     }
     $this->category = $category;
-    $this->request = $request;
-    return parent::buildForm($form, $form_state, $request);
+    return parent::buildForm($form, $form_state);
   }
 
   /**
@@ -158,7 +146,7 @@ class CategoryDeleteForm extends ConfirmFormBase implements ControllerInterface 
     $this->deleteBlocks($cid);
     watchdog('aggregator', 'Category %category deleted.', array('%category' => $title));
     drupal_set_message(t('The category %category has been deleted.', array('%category' => $title)));
-    if (preg_match('/^\/admin/', $this->request->getPathInfo())) {
+    if (preg_match('/^\/admin/', $this->getRequest()->getPathInfo())) {
       $form_state['redirect'] = 'admin/config/services/aggregator/';
     }
     else {

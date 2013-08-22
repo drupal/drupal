@@ -18,6 +18,7 @@ use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\InfoHookDecorator;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -88,6 +89,13 @@ class EntityManager extends PluginManagerBase {
   protected $fieldDefinitions;
 
   /**
+   * The string translationManager.
+   *
+   * @var \Drupal\Core\StringTranslation\TranslationInterface
+   */
+  protected $translationManager;
+
+  /**
    * Constructs a new Entity plugin manager.
    *
    * @param \Traversable $namespaces
@@ -101,8 +109,10 @@ class EntityManager extends PluginManagerBase {
    *   The cache backend to use.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   *   The string translationManager.
    */
-  public function __construct(\Traversable $namespaces, ContainerInterface $container, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager) {
+  public function __construct(\Traversable $namespaces, ContainerInterface $container, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager, TranslationInterface $translation_manager) {
     // Allow the plugin definition to be altered by hook_entity_info_alter().
     $annotation_namespaces = array(
       'Drupal\Core\Entity\Annotation' => DRUPAL_ROOT . '/core/lib',
@@ -111,6 +121,7 @@ class EntityManager extends PluginManagerBase {
     $this->moduleHandler = $module_handler;
     $this->cache = $cache;
     $this->languageManager = $language_manager;
+    $this->translationManager = $translation_manager;
 
     $this->discovery = new AnnotatedClassDiscovery('Entity', $namespaces, $annotation_namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
@@ -229,13 +240,18 @@ class EntityManager extends PluginManagerBase {
   public function getFormController($entity_type, $operation) {
     if (!isset($this->controllers['form'][$operation][$entity_type])) {
       $class = $this->getControllerClass($entity_type, 'form', $operation);
-      if (in_array('Drupal\Core\Entity\EntityControllerInterface', class_implements($class))) {
-        $this->controllers['form'][$operation][$entity_type] = $class::createInstance($this->container, $entity_type, $this->getDefinition($entity_type));
+      if (in_array('Drupal\Core\Controller\ControllerInterface', class_implements($class))) {
+        $controller = $class::create($this->container);
       }
       else {
-        $this->controllers['form'][$operation][$entity_type] = new $class($this->container->get('module_handler'));
+        $controller = new $class();
       }
-      $this->controllers['form'][$operation][$entity_type]->setOperation($operation);
+
+      $controller
+        ->setTranslationManager($this->translationManager)
+        ->setModuleHandler($this->moduleHandler)
+        ->setOperation($operation);
+      $this->controllers['form'][$operation][$entity_type] = $controller;
     }
     return $this->controllers['form'][$operation][$entity_type];
   }

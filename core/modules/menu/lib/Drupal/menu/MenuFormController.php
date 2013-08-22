@@ -8,10 +8,8 @@
 namespace Drupal\menu;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Entity\Query\QueryFactory;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\menu_link\MenuLinkStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base form controller for menu edit forms.
  */
-class MenuFormController extends EntityFormController implements EntityControllerInterface {
+class MenuFormController extends EntityFormController {
 
   /**
    * The factory for entity queries.
@@ -45,16 +43,12 @@ class MenuFormController extends EntityFormController implements EntityControlle
   /**
    * Constructs a MenuFormController object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to invoke hooks on.
    * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query_factory
    *   The factory for entity queries.
    * @param \Drupal\menu_link\MenuLinkStorageControllerInterface $menu_link_storage
    *   The menu link storage controller.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, QueryFactory $entity_query_factory, MenuLinkStorageControllerInterface $menu_link_storage) {
-    parent::__construct($module_handler);
-
+  public function __construct(QueryFactory $entity_query_factory, MenuLinkStorageControllerInterface $menu_link_storage) {
     $this->entityQueryFactory = $entity_query_factory;
     $this->menuLinkStorage = $menu_link_storage;
   }
@@ -62,9 +56,8 @@ class MenuFormController extends EntityFormController implements EntityControlle
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('entity.query'),
       $container->get('plugin.manager.entity')->getStorageController('menu_link')
     );

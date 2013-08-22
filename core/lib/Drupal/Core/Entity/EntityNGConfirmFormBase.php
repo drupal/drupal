@@ -7,20 +7,13 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Component\Utility\Url;
 use Drupal\Core\Form\ConfirmFormInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a generic base class for an entity-based confirmation form.
  */
 abstract class EntityNGConfirmFormBase extends EntityFormControllerNG implements ConfirmFormInterface {
-
-  /**
-   * The request object.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
 
   /**
    * {@inheritdoc}
@@ -60,8 +53,7 @@ abstract class EntityNGConfirmFormBase extends EntityFormControllerNG implements
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
-    $this->request = $request;
+  public function buildForm(array $form, array &$form_state) {
     $form = parent::buildForm($form, $form_state);
 
     $form['#attributes']['class'][] = 'confirmation';
@@ -94,8 +86,9 @@ abstract class EntityNGConfirmFormBase extends EntityFormControllerNG implements
 
     $path = $this->getCancelPath();
     // Prepare cancel link.
-    if ($this->request->query->has('destination')) {
-      $options = drupal_parse_url($this->request->query->get('destination'));
+    $query = $this->getRequest()->query;
+    if ($query->has('destination')) {
+      $options = Url::parse($query->get('destination'));
     }
     elseif (is_array($path)) {
       $options = $path;

@@ -7,18 +7,16 @@
 
 namespace Drupal\block;
 
-use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\Query\QueryFactory;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides form controller for block instance forms.
  */
-class BlockFormController extends EntityFormController implements EntityControllerInterface {
+class BlockFormController extends EntityFormController {
 
   /**
    * The block storage controller.
@@ -37,16 +35,12 @@ class BlockFormController extends EntityFormController implements EntityControll
   /**
    * Constructs a BlockFormController object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The module handler service.
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The entity manager.
    * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query_factory
    *   The entity query factory.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, EntityManager $entity_manager, QueryFactory $entity_query_factory) {
-    parent::__construct($module_handler);
-
+  public function __construct(EntityManager $entity_manager, QueryFactory $entity_query_factory) {
     $this->storageController = $entity_manager->getStorageController('block');
     $this->entityQueryFactory = $entity_query_factory;
   }
@@ -54,9 +48,8 @@ class BlockFormController extends EntityFormController implements EntityControll
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('plugin.manager.entity'),
       $container->get('entity.query')
     );

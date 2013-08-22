@@ -6,9 +6,10 @@
 
 namespace Drupal\statistics;
 
+use Drupal\Core\Config\Context\ContextInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\system\SystemConfigFormBase;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Extension\ModuleHandler;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -19,7 +20,7 @@ class StatisticsSettingsForm extends SystemConfigFormBase {
   /**
    * The module handler.
    *
-   * @var \Drupal\Core\Extension\ModuleHandler
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;
 
@@ -28,11 +29,14 @@ class StatisticsSettingsForm extends SystemConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Extension\ModuleHandler $module_handler
+   * @param \Drupal\Core\Config\Context\ContextInterface $context
+   *   The configuration context to use.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(ConfigFactory $config_factory, ModuleHandler $module_handler) {
-    $this->configFactory = $config_factory;
+  public function __construct(ConfigFactory $config_factory, ContextInterface $context, ModuleHandlerInterface $module_handler) {
+    parent::__construct($config_factory, $context);
+
     $this->moduleHandler = $module_handler;
   }
 
@@ -42,6 +46,7 @@ class StatisticsSettingsForm extends SystemConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.context.free'),
       $container->get('module_handler')
     );
   }

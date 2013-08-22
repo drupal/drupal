@@ -7,7 +7,9 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\BaseFormIdInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\entity\EntityFormDisplayInterface;
 
 /**
@@ -36,6 +38,17 @@ interface EntityFormControllerInterface extends BaseFormIdInterface {
    *   Returns TRUE if the entity form language matches the entity one.
    */
   public function isDefaultFormLangcode(array $form_state);
+
+  /**
+   * Sets the operation for this form.
+   *
+   * @param string $operation
+   *   The name of the current operation.
+   *
+   * @return self
+   *   The entity form.
+   */
+  public function setOperation($operation);
 
   /**
    * Returns the operation identifying the form controller.
@@ -138,5 +151,27 @@ interface EntityFormControllerInterface extends BaseFormIdInterface {
    *   An associative array containing the current state of the form.
    */
   public function submit(array $form, array &$form_state);
+
+  /**
+   * Sets the translation manager for this form.
+   *
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   *   The translation manager.
+   *
+   * @return self
+   *   The entity form.
+   */
+  public function setTranslationManager(TranslationInterface $translation_manager);
+
+  /**
+   * Sets the module handler for this form.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   *
+   * @return self
+   *   The entity form.
+   */
+  public function setModuleHandler(ModuleHandlerInterface $module_handler);
 
 }

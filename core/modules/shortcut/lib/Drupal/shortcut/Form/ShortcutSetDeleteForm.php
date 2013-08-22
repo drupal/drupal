@@ -8,17 +8,14 @@
 namespace Drupal\shortcut\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Entity\EntityControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\shortcut\ShortcutSetStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Connection;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Builds the shortcut set deletion form.
  */
-class ShortcutSetDeleteForm extends EntityConfirmFormBase implements EntityControllerInterface {
+class ShortcutSetDeleteForm extends EntityConfirmFormBase {
 
   /**
    * The database connection.
@@ -37,8 +34,7 @@ class ShortcutSetDeleteForm extends EntityConfirmFormBase implements EntityContr
   /**
    * Constructs a ShortcutSetDeleteForm object.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, Connection $database, ShortcutSetStorageControllerInterface $storage_controller) {
-    parent::__construct($module_handler);
+  public function __construct(Connection $database, ShortcutSetStorageControllerInterface $storage_controller) {
     $this->database = $database;
     $this->storageController = $storage_controller;
   }
@@ -46,9 +42,8 @@ class ShortcutSetDeleteForm extends EntityConfirmFormBase implements EntityContr
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('database'),
       $container->get('plugin.manager.entity')->getStorageController('shortcut_set')
     );
@@ -78,7 +73,7 @@ class ShortcutSetDeleteForm extends EntityConfirmFormBase implements EntityContr
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
+  public function buildForm(array $form, array &$form_state) {
     // Find out how many users are directly assigned to this shortcut set, and
     // make a message.
     $number = $this->storageController->countAssignedUsers($this->entity);
@@ -99,7 +94,7 @@ class ShortcutSetDeleteForm extends EntityConfirmFormBase implements EntityContr
       '#markup' => $info,
     );
 
-    return parent::buildForm($form, $form_state, $request);
+    return parent::buildForm($form, $form_state);
   }
 
   /**

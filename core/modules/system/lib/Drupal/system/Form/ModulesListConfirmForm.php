@@ -11,10 +11,8 @@ use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
-use Drupal\Core\StringTranslation\TranslationManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Builds a confirmation form for enabling modules with dependencies.
@@ -36,36 +34,11 @@ class ModulesListConfirmForm extends ConfirmFormBase implements ControllerInterf
   protected $keyValueExpirable;
 
   /**
-   * The translation manager service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationManager
-   */
-  protected $translationManager;
-
-  /**
-   * The request object.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
    * An associative list of modules to enable or disable.
    *
    * @var array
    */
   protected $modules = array();
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('module_handler'),
-      $container->get('keyvalue.expirable')->get('module_list'),
-      $container->get('string_translation')
-    );
-  }
 
   /**
    * Constructs a ModulesListConfirmForm object.
@@ -74,20 +47,27 @@ class ModulesListConfirmForm extends ConfirmFormBase implements ControllerInterf
    *   The module handler.
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable
    *   The key value expirable factory.
-   * @param \Drupal\Core\StringTranslation\TranslationManager
-   *   The translation manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, TranslationManager $translation_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable) {
     $this->moduleHandler = $module_handler;
     $this->keyValueExpirable = $key_value_expirable;
-    $this->translationManager = $translation_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('module_handler'),
+      $container->get('keyvalue.expirable')->get('module_list')
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->translationManager->translate('Some required modules must be enabled');
+    return $this->t('Some required modules must be enabled');
   }
 
   /**
@@ -101,14 +81,14 @@ class ModulesListConfirmForm extends ConfirmFormBase implements ControllerInterf
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return $this->translationManager->translate('Continue');
+    return $this->t('Continue');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->translationManager->translate('Would you like to continue with the above?');
+    return $this->t('Would you like to continue with the above?');
   }
 
   /**
@@ -121,17 +101,14 @@ class ModulesListConfirmForm extends ConfirmFormBase implements ControllerInterf
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
-    $account = $request->attributes->get('_account')->id();
+  public function buildForm(array $form, array &$form_state) {
+    $account = $this->getCurrentUser()->id();
     $this->modules = $this->keyValueExpirable->get($account);
 
     // Redirect to the modules list page if the key value store is empty.
     if (!$this->modules) {
       return new RedirectResponse(url($this->getCancelPath(), array('absolute' => TRUE)));
     }
-
-    // Store the request for use in the submit handler.
-    $this->request = $request;
 
     $items = array();
     // Display a list of required modules that have to be installed as well but
@@ -155,7 +132,7 @@ class ModulesListConfirmForm extends ConfirmFormBase implements ControllerInterf
       '#items' => $items,
     );
 
-    return parent::buildForm($form, $form_state, $this->request);
+    return parent::buildForm($form, $form_state);
   }
 
   /**
@@ -163,7 +140,7 @@ class ModulesListConfirmForm extends ConfirmFormBase implements ControllerInterf
    */
   public function submitForm(array &$form, array &$form_state) {
     // Remove the key value store entry.
-    $account = $this->request->attributes->get('_account')->id();
+    $account = $this->getCurrentUser()->id();
     $this->keyValueExpirable->delete($account);
 
     // Gets list of modules prior to install process.
@@ -181,7 +158,7 @@ class ModulesListConfirmForm extends ConfirmFormBase implements ControllerInterf
     // message if there are changes.
     if ($before != $this->moduleHandler->getModuleList()) {
       drupal_flush_all_caches();
-      drupal_set_message($this->translationManager->translate('The configuration options have been saved.'));
+      drupal_set_message($this->t('The configuration options have been saved.'));
     }
 
     $form_state['redirect'] = $this->getCancelPath();

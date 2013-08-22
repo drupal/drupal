@@ -8,16 +8,14 @@
 namespace Drupal\views_ui\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Builds the form to break the lock of an edited view.
  */
-class BreakLockForm extends EntityConfirmFormBase implements EntityControllerInterface {
+class BreakLockForm extends EntityConfirmFormBase {
 
   /**
    * Stores the Entity manager.
@@ -49,7 +47,7 @@ class BreakLockForm extends EntityConfirmFormBase implements EntityControllerInt
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.entity'),
       $container->get('user.tempstore')
@@ -100,12 +98,12 @@ class BreakLockForm extends EntityConfirmFormBase implements EntityControllerInt
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
+  public function buildForm(array $form, array &$form_state) {
     if (!$this->tempStore->getMetadata($this->entity->id())) {
       $form['message']['#markup'] = t('There is no lock on view %name to break.', array('%name' => $this->entity->id()));
       return $form;
     }
-    return parent::buildForm($form, $form_state, $request);
+    return parent::buildForm($form, $form_state);
   }
 
   /**

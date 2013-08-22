@@ -8,16 +8,14 @@
 namespace Drupal\taxonomy\Form;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\taxonomy\VocabularyStorageControllerInterface;
 use Drupal\Core\Entity\EntityNGConfirmFormBase;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Cache\Cache;
 
 /**
  * Provides a deletion confirmation form for taxonomy term.
  */
-class TermDeleteForm extends EntityNGConfirmFormBase implements EntityControllerInterface {
+class TermDeleteForm extends EntityNGConfirmFormBase {
 
   /**
    * The taxonomy vocabulary storage controller.
@@ -29,20 +27,18 @@ class TermDeleteForm extends EntityNGConfirmFormBase implements EntityController
   /**
    * Constructs a new TermDelete object.
    *
-   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
+   * @param \Drupal\taxonomy\VocabularyStorageControllerInterface $storage_controller
    *   The Entity manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, VocabularyStorageControllerInterface $storage_controller) {
-    parent::__construct($module_handler);
+  public function __construct(VocabularyStorageControllerInterface $storage_controller) {
     $this->vocabularyStorageController = $storage_controller;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('plugin.manager.entity')->getStorageController('taxonomy_vocabulary')
     );
   }

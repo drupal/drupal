@@ -9,7 +9,6 @@ namespace Drupal\image\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\image\ImageStyleInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Form for deleting an image effect.
@@ -61,11 +60,11 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, ImageStyleInterface $image_style = NULL, $image_effect = NULL, Request $request = NULL) {
+  public function buildForm(array $form, array &$form_state, ImageStyleInterface $image_style = NULL, $image_effect = NULL) {
     $this->imageStyle = $image_style;
     $this->imageEffect = $this->imageStyle->getEffect($image_effect);
 
-    return parent::buildForm($form, $form_state, $request);
+    return parent::buildForm($form, $form_state);
   }
 
   /**

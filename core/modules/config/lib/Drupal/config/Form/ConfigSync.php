@@ -7,25 +7,22 @@
 
 namespace Drupal\config\Form;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
-use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Config\StorageComparer;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\ConfigException;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 use Drupal\Core\Routing\PathBasedGeneratorInterface;
-use \Drupal\Core\Entity\EntityManager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Construct the storage changes in a configuration synchronization form.
  */
-class ConfigSync implements ControllerInterface, FormInterface {
+class ConfigSync extends FormBase {
 
   /**
    * The database lock object.
@@ -66,14 +63,6 @@ class ConfigSync implements ControllerInterface, FormInterface {
   protected $entity_manager;
 
   /**
-   * The translation manager service.
-   *
-   * @var \Drupal\Core\StringTranslation\Translator\TranslatorInterface
-   */
-  protected $translationManager;
-
-
-  /**
    * URL generator service.
    *
    * @var \Drupal\Core\Routing\PathBasedGeneratorInterface
@@ -83,8 +72,6 @@ class ConfigSync implements ControllerInterface, FormInterface {
   /**
    * Constructs the object.
    *
-   * @param \Drupal\Core\Database\Connection; $database
-   *   The database object.
    * @param \Drupal\Core\Config\StorageInterface $sourceStorage
    *   The source storage object.
    * @param \Drupal\Core\Config\StorageInterface $targetStorage
@@ -95,21 +82,18 @@ class ConfigSync implements ControllerInterface, FormInterface {
    *   Event dispatcher.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   Configuration object factory.
-   * @param \Drupal\Core\Entity\EntityManager
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   Entity manager.
-   * @param \Drupal\Core\StringTranslation\Translator\TranslatorInterface $translation_manager
-   *   The translation manager.
    * @param \Drupal\Core\Routing\PathBasedGeneratorInterface $url_generator
    *   The url generator service.
    */
-  public function __construct(StorageInterface $sourceStorage, StorageInterface $targetStorage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigFactory $config_factory, EntityManager $entity_manger, TranslatorInterface $translation_manager, PathBasedGeneratorInterface $url_generator) {
+  public function __construct(StorageInterface $sourceStorage, StorageInterface $targetStorage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigFactory $config_factory, EntityManager $entity_manager, PathBasedGeneratorInterface $url_generator) {
     $this->sourceStorage = $sourceStorage;
     $this->targetStorage = $targetStorage;
     $this->lock = $lock;
     $this->eventDispatcher = $event_dispatcher;
     $this->configFactory = $config_factory;
-    $this->entity_manager = $entity_manger;
-    $this->translationManager = $translation_manager;
+    $this->entity_manager = $entity_manager;
     $this->urlGenerator = $url_generator;
   }
 
@@ -124,7 +108,6 @@ class ConfigSync implements ControllerInterface, FormInterface {
       $container->get('event_dispatcher'),
       $container->get('config.factory'),
       $container->get('plugin.manager.entity'),
-      $container->get('string_translation'),
       $container->get('url_generator')
     );
   }
@@ -143,14 +126,14 @@ class ConfigSync implements ControllerInterface, FormInterface {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => $this->translationManager->translate('Import all'),
+      '#value' => $this->t('Import all'),
     );
 
     $source_list = $this->sourceStorage->listAll();
     $config_comparer = new StorageComparer($this->sourceStorage, $this->targetStorage);
     if (empty($source_list) || !$config_comparer->createChangelist()->hasChanges()) {
       $form['no_changes'] = array(
-        '#markup' => $this->translationManager->translate('There are no configuration changes.'),
+        '#markup' => $this->t('There are no configuration changes.'),
       );
       $form['actions']['#access'] = FALSE;
       return $form;
@@ -194,7 +177,7 @@ class ConfigSync implements ControllerInterface, FormInterface {
 
       foreach ($config_files as $config_file) {
         $links['view_diff'] = array(
-          'title' => $this->translationManager->translate('View differences'),
+          'title' => $this->t('View differences'),
           'href' => $this->urlGenerator->getPathFromRoute('config_diff', array('config_file' => $config_file)),
           'attributes' => array(
             'class' => array('use-ajax'),
@@ -222,12 +205,6 @@ class ConfigSync implements ControllerInterface, FormInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitForm(array &$form, array &$form_state) {
     $config_importer = new ConfigImporter(
       $form_state['storage_comparer'],
@@ -237,13 +214,13 @@ class ConfigSync implements ControllerInterface, FormInterface {
       $this->lock
     );
     if ($config_importer->alreadyImporting()) {
-      drupal_set_message($this->translationManager->translate('Another request may be synchronizing configuration already.'));
+      drupal_set_message($this->t('Another request may be synchronizing configuration already.'));
     }
     else{
       try {
         $config_importer->import();
         drupal_flush_all_caches();
-        drupal_set_message($this->translationManager->translate('The configuration was imported successfully.'));
+        drupal_set_message($this->t('The configuration was imported successfully.'));
       }
       catch (ConfigException $e) {
         // Return a negative result for UI purposes. We do not differentiate
@@ -252,7 +229,7 @@ class ConfigSync implements ControllerInterface, FormInterface {
         // multiple developers or site builders attempt to do it without
         // coordinating.
         watchdog_exception('config_import', $e);
-        drupal_set_message($this->translationManager->translate('The import failed due to an error. Any errors have been logged.'), 'error');
+        drupal_set_message($this->t('The import failed due to an error. Any errors have been logged.'), 'error');
       }
     }
   }

@@ -7,17 +7,14 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Datetime\Date;
 use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Entity\EntityControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Builds a form to delete a date format.
  */
-class DateFormatDeleteForm extends EntityConfirmFormBase implements EntityControllerInterface {
+class DateFormatDeleteForm extends EntityConfirmFormBase {
 
   /**
    * The date service.
@@ -29,23 +26,18 @@ class DateFormatDeleteForm extends EntityConfirmFormBase implements EntityContro
   /**
    * Constructs an DateFormatDeleteForm object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler service.
    * @param \Drupal\Core\Datetime\Date $date_service
    *   The date service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, Date $date_service) {
-    parent::__construct($module_handler);
-
+  public function __construct(Date $date_service) {
     $this->dateService = $date_service;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('date')
     );
   }

@@ -7,10 +7,8 @@
 
 namespace Drupal\menu_link;
 
-use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Core\Routing\UrlGenerator;
 use Drupal\menu_link\MenuLinkStorageControllerInterface;
@@ -19,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Form controller for the node edit forms.
  */
-class MenuLinkFormController extends EntityFormController implements EntityControllerInterface {
+class MenuLinkFormController extends EntityFormController {
 
   /**
    * The menu link storage controller.
@@ -45,13 +43,14 @@ class MenuLinkFormController extends EntityFormController implements EntityContr
   /**
    * Constructs a new MenuLinkFormController object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The module handler service.
+   * @param \Drupal\menu_link\MenuLinkStorageControllerInterface $menu_link_storage_controller
+   *   The menu link storage.
    * @param \Drupal\Core\Path\AliasManagerInterface $path_alias_manager
    *   The path alias manager.
+   * @param \Drupal\Core\Routing\UrlGenerator $url_generator
+   *   The URL generator.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, MenuLinkStorageControllerInterface $menu_link_storage_controller, AliasManagerInterface $path_alias_manager, UrlGenerator $url_generator) {
-    parent::__construct($module_handler);
+  public function __construct(MenuLinkStorageControllerInterface $menu_link_storage_controller, AliasManagerInterface $path_alias_manager, UrlGenerator $url_generator) {
     $this->menuLinkStorageController = $menu_link_storage_controller;
     $this->pathAliasManager = $path_alias_manager;
     $this->urlGenerator = $url_generator;
@@ -60,9 +59,8 @@ class MenuLinkFormController extends EntityFormController implements EntityContr
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info, $operation = NULL) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('plugin.manager.entity')->getStorageController('menu_link'),
       $container->get('path.alias_manager.cached'),
       $container->get('url_generator')

@@ -8,12 +8,9 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\Core\StringTranslation\TranslationManager;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
@@ -37,36 +34,11 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase implements ControllerI
   protected $keyValueExpirable;
 
   /**
-   * The translation manager service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationManager
-   */
-  protected $translationManager;
-
-  /**
-   * The request object.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
    * An array of modules to uninstall.
    *
    * @var array
    */
   protected $modules = array();
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('module_handler'),
-      $container->get('keyvalue.expirable')->get('modules_uninstall'),
-      $container->get('string_translation')
-    );
-  }
 
   /**
    * Constructs a ModulesUninstallConfirmForm object.
@@ -75,27 +47,34 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase implements ControllerI
    *   The module handler.
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable
    *   The key value expirable factory.
-   * @param \Drupal\Core\StringTranslation\TranslationManager
-   *   The translation manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, TranslationManager $translation_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable) {
     $this->moduleHandler = $module_handler;
     $this->keyValueExpirable = $key_value_expirable;
-    $this->translationManager = $translation_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('module_handler'),
+      $container->get('keyvalue.expirable')->get('modules_uninstall')
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->translationManager->translate('Confirm uninstall');
+    return $this->t('Confirm uninstall');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return $this->translationManager->translate('Uninstall');
+    return $this->t('Uninstall');
   }
 
   /**
@@ -109,7 +88,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase implements ControllerI
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->translationManager->translate('Would you like to continue with uninstalling the above?');
+    return $this->t('Would you like to continue with uninstalling the above?');
   }
 
   /**
@@ -122,12 +101,9 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase implements ControllerI
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
-    // Store the request for use in the submit handler.
-    $this->request = $request;
-
+  public function buildForm(array $form, array &$form_state) {
     // Retrieve the list of modules from the key value store.
-    $account = $request->attributes->get('_account')->id();
+    $account = $this->getCurrentUser()->id();
     $this->modules = $this->keyValueExpirable->get($account);
 
     // Prevent this page from showing when the module list is empty.
@@ -136,7 +112,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase implements ControllerI
     }
 
     $data = system_rebuild_module_data();
-    $form['text']['#markup'] = '<p>' . $this->translationManager->translate('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') . '</p>';
+    $form['text']['#markup'] = '<p>' . $this->t('The following modules will be completely uninstalled from your site, and <em>all data from these modules will be lost</em>!') . '</p>';
     $form['modules'] = array(
       '#theme' => 'item_list',
       '#items' => array_map(function ($module) use ($data) {
@@ -144,7 +120,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase implements ControllerI
       }, $this->modules),
     );
 
-    return parent::buildForm($form, $form_state, $request);
+    return parent::buildForm($form, $form_state);
   }
 
   /**
@@ -152,13 +128,13 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase implements ControllerI
    */
   public function submitForm(array &$form, array &$form_state) {
     // Clear the key value store entry.
-    $account = $this->request->attributes->get('_account')->id();
+    $account = $this->getCurrentUser()->id();
     $this->keyValueExpirable->delete($account);
 
     // Uninstall the modules.
     $this->moduleHandler->uninstall($this->modules);
 
-    drupal_set_message($this->translationManager->translate('The selected modules have been uninstalled.'));
+    drupal_set_message($this->t('The selected modules have been uninstalled.'));
     $form_state['redirect'] = 'admin/modules/uninstall';
   }
 

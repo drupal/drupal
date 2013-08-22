@@ -35,7 +35,7 @@ class ThemeSettingsForm extends SystemConfigFormBase {
    *   The factory for configuration objects.
    * @param \Drupal\Core\Config\Context\ContextInterface $context
    *   The configuration context to use.
-   * @param Drupal\Core\Extension\ModuleHandlerInterface
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface
    *   The module handler instance to use.
    */
   public function __construct(ConfigFactory $config_factory, ContextInterface $context, ModuleHandlerInterface $module_handler) {
