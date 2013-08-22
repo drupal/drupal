@@ -2554,7 +2554,13 @@ function template_preprocess_html(&$variables) {
 
   $site_config = Drupal::config('system.site');
   // Construct page title.
-  if (drupal_get_title()) {
+  if (isset($variables['page']['#title'])) {
+    $head_title = array(
+      'title' => strip_tags($variables['page']['#title']),
+      'name' => String::checkPlain($site_config->get('name')),
+    );
+  }
+  elseif (drupal_get_title()) {
     $head_title = array(
       'title' => strip_tags(drupal_get_title()),
       'name' => check_plain($site_config->get('name')),
