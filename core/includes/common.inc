@@ -448,7 +448,6 @@ function drupal_get_query_parameters(array $query = NULL, array $exclude = array
 /**
  * Parses an array into a valid, rawurlencoded query string.
  *
- * @see \Drupal\Core\Routing\PathBasedGeneratorInterface::httpBuildQuery()
  * @see drupal_get_query_parameters()
  * @deprecated as of Drupal 8.0. Use Url::buildQuery() instead.
  * @ingroup php_wrappers
@@ -1192,7 +1191,7 @@ function datetime_default_format_type() {
  * When creating links in modules, consider whether l() could be a better
  * alternative than url().
  *
- * @see \Drupal\Core\Routing\PathBasedGeneratorInterface::generateFromPath().
+ * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromPath().
  */
 function url($path = NULL, array $options = array()) {
   $generator = Drupal::urlGenerator();

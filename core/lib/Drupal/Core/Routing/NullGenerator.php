@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Routing;
 
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -23,9 +22,12 @@ class NullGenerator extends UrlGenerator {
   }
 
   /**
-   * Overrides Drupal\Core\Routing\UrlGenerator::generate();
+   * {@inheritdoc}
+   *
+   * generate(), generateFromRoute(), and getPathFromRoute() all call this
+   * protected method.
    */
-  public function generate($name, $parameters = array(), $absolute = FALSE) {
+  protected function getRoute($name) {
     throw new RouteNotFoundException();
   }
 

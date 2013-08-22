@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Routing\PathBasedGeneratorInterface;
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\Component\Utility\String;
@@ -24,7 +24,7 @@ class NodeTypeListController extends ConfigEntityListController implements Entit
   /**
    * The url generator service.
    *
-   * @var \Drupal\Core\Routing\PathBasedGeneratorInterface
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface
    */
   protected $urlGenerator;
 
@@ -39,10 +39,10 @@ class NodeTypeListController extends ConfigEntityListController implements Entit
    *   The entity storage controller class.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke hooks on.
-   * @param \Drupal\Core\Routing\PathBasedGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
    */
-  public function __construct($entity_type, array $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler, PathBasedGeneratorInterface $url_generator) {
+  public function __construct($entity_type, array $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler, UrlGeneratorInterface $url_generator) {
     parent::__construct($entity_type, $entity_info, $storage, $module_handler);
     $this->urlGenerator = $url_generator;
   }
