@@ -114,7 +114,7 @@ abstract class ControllerBase extends ContainerAware {
   /**
    * Returns the url generator service.
    *
-   * @return \Drupal\Core\Routing\PathBasedGeneratorInterface
+   * @return \Drupal\Core\Routing\UrlGeneratorInterface
    *   The url generator service.
    */
   protected function urlGenerator() {

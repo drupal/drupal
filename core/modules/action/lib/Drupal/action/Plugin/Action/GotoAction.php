@@ -11,7 +11,7 @@ use Drupal\Core\Annotation\Action;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Action\ConfigurableActionBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Routing\PathBasedGeneratorInterface;
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -38,7 +38,7 @@ class GotoAction extends ConfigurableActionBase implements ContainerFactoryPlugi
   /**
    * The url generator service.
    *
-   * @var \Drupal\Core\Routing\PathBasedGeneratorInterface
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface
    */
   protected $urlGenerator;
 
@@ -53,10 +53,10 @@ class GotoAction extends ConfigurableActionBase implements ContainerFactoryPlugi
    *   The plugin implementation definition.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The tempstore factory.
-   * @param \Drupal\Core\Routing\PathBasedGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EventDispatcherInterface $dispatcher, PathBasedGeneratorInterface $url_generator) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EventDispatcherInterface $dispatcher, UrlGeneratorInterface $url_generator) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
     $this->dispatcher = $dispatcher;
