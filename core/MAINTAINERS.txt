@@ -174,7 +174,7 @@ Security
 - Greg Knaddison 'greggles' http://drupal.org/user/36762
 
 Translations
-- Gerhard Killesreiter 'killes' http://drupal.org/user/83
+- ?
 
 User experience and usability
 - Roy Scholten 'yoroy' http://drupal.org/user/41502
