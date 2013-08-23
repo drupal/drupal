@@ -16,4 +16,4 @@ services:
       - { name: access_check }
   plugin.manager.filter:
     class: Drupal\filter\FilterPluginManager
-    arguments: ['@container.namespaces']
+    arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
