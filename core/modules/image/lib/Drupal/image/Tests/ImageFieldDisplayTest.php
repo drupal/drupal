@@ -59,12 +59,13 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
 
     // Test that the default formatter is being used.
     $image_uri = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri();
-    $image_info = array(
-      'uri' => $image_uri,
-      'width' => 40,
-      'height' => 20,
+    $image = array(
+      '#theme' => 'image',
+      '#uri' => $image_uri,
+      '#width' => 40,
+      '#height' => 20,
     );
-    $default_output = theme('image', $image_info);
+    $default_output = drupal_render($image);
     $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
 
     // Test the image linked to file formatter.
@@ -76,7 +77,13 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $display->setComponent($field_name, $display_options)
       ->save();
 
-    $default_output = l(theme('image', $image_info), file_create_url($image_uri), array('html' => TRUE));
+    $image = array(
+      '#theme' => 'image',
+      '#uri' => $image_uri,
+      '#width' => 40,
+      '#height' => 20,
+    );
+    $default_output = l($image, file_create_url($image_uri), array('html' => TRUE));
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, 'Image linked to file formatter displaying correctly on full node view.');
     // Verify that the image can be downloaded.
@@ -100,7 +107,13 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $display_options['settings']['image_link'] = 'content';
     $display->setComponent($field_name, $display_options)
       ->save();
-    $default_output = l(theme('image', $image_info), 'node/' . $nid, array('html' => TRUE, 'attributes' => array('class' => 'active')));
+    $image = array(
+      '#theme' => 'image',
+      '#uri' => $image_uri,
+      '#width' => 40,
+      '#height' => 20,
+    );
+    $default_output = l($image, 'node/' . $nid, array('html' => TRUE, 'attributes' => array('class' => 'active')));
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, 'Image linked to content formatter displaying correctly on full node view.');
 
@@ -113,11 +126,14 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Ensure the derivative image is generated so we do not have to deal with
     // image style callback paths.
     $this->drupalGet(entity_load('image_style', 'thumbnail')->buildUrl($image_uri));
-    $image_info['uri'] = $image_uri;
-    $image_info['width'] = 100;
-    $image_info['height'] = 50;
-    $image_info['style_name'] = 'thumbnail';
-    $default_output = theme('image_style', $image_info);
+    $image_style = array(
+      '#theme' => 'image_style',
+      '#uri' => $image_uri,
+      '#width' => 100,
+      '#height' => 50,
+      '#style_name' => 'thumbnail',
+    );
+    $default_output = drupal_render($image_style);
     $this->drupalGet('node/' . $nid);
     $this->assertRaw($default_output, 'Image style thumbnail formatter displaying correctly on full node view.');
 
@@ -164,29 +180,31 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Verify that the attached image is being previewed using the 'medium'
     // style.
     $node = node_load($nid, TRUE);
-    $image_info = array(
-      'uri' => file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri(),
-      'width' => 220,
-      'height' => 110,
-      'style_name' => 'medium',
+    $image_style = array(
+      '#theme' => 'image_style',
+      '#uri' => file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri(),
+      '#width' => 220,
+      '#height' => 110,
+      '#style_name' => 'medium',
     );
-    $default_output = theme('image_style', $image_info);
+    $default_output = drupal_render($image_style);
     $this->assertRaw($default_output, "Preview image is displayed using 'medium' style.");
 
     // Add alt/title fields to the image and verify that they are displayed.
-    $image_info = array(
-      'uri' => file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri(),
-      'alt' => $this->randomName(),
-      'title' => $this->randomName(),
-      'width' => 40,
-      'height' => 20,
+    $image = array(
+      '#theme' => 'image',
+      '#uri' => file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri(),
+      '#alt' => $this->randomName(),
+      '#title' => $this->randomName(),
+      '#width' => 40,
+      '#height' => 20,
     );
     $edit = array(
-      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][alt]' => $image_info['alt'],
-      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][title]' => $image_info['title'],
+      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][alt]' => $image['#alt'],
+      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][title]' => $image['#title'],
     );
     $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save and keep published'));
-    $default_output = theme('image', $image_info);
+    $default_output = drupal_render($image);
     $this->assertRaw($default_output, 'Image displayed using user supplied alt and title attributes.');
 
     // Verify that alt/title longer than allowed results in a validation error.
@@ -232,9 +250,13 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
     $field = field_info_field($field_name);
-    $image = file_load($field['settings']['default_image']);
-    $this->assertTrue($image->isPermanent(), 'The default image status is permanent.');
-    $default_output = theme('image', array('uri' => $image->getFileUri()));
+    $file = file_load($field['settings']['default_image']);
+    $this->assertTrue($file->isPermanent(), 'The default image status is permanent.');
+    $image = array(
+      '#theme' => 'image',
+      '#uri' => $file->getFileUri(),
+    );
+    $default_output = drupal_render($image);
     $this->drupalGet('node/' . $node->id());
     $this->assertRaw($default_output, 'Default image displayed when no user supplied image is present.');
 
@@ -242,12 +264,13 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // is not displayed.
     $nid = $this->uploadNodeImage($images[1], $field_name, 'article');
     $node = node_load($nid, TRUE);
-    $image_info = array(
-      'uri' => file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri(),
-      'width' => 40,
-      'height' => 20,
+    $image = array(
+      '#theme' => 'image',
+      '#uri' => file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri(),
+      '#width' => 40,
+      '#height' => 20,
     );
-    $image_output = theme('image', $image_info);
+    $image_output = drupal_render($image);
     $this->drupalGet('node/' . $nid);
     $this->assertNoRaw($default_output, 'Default image is not displayed when user supplied image is present.');
     $this->assertRaw($image_output, 'User supplied image is displayed.');
@@ -274,13 +297,17 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     field_info_cache_clear();
 
     $private_field = field_info_field($private_field_name);
-    $image = file_load($private_field['settings']['default_image']);
-    $this->assertEqual('private', file_uri_scheme($image->getFileUri()), 'Default image uses private:// scheme.');
-    $this->assertTrue($image->isPermanent(), 'The default image status is permanent.');
+    $file = file_load($private_field['settings']['default_image']);
+    $this->assertEqual('private', file_uri_scheme($file->getFileUri()), 'Default image uses private:// scheme.');
+    $this->assertTrue($file->isPermanent(), 'The default image status is permanent.');
     // Create a new node with no image attached and ensure that default private
     // image is displayed.
     $node = $this->drupalCreateNode(array('type' => 'article'));
-    $default_output = theme('image', array('uri' => $image->getFileUri()));
+    $image = array(
+      '#theme' => 'image',
+      '#uri' => $file->getFileUri(),
+    );
+    $default_output = drupal_render($image);
     $this->drupalGet('node/' . $node->id());
     $this->assertRaw($default_output, 'Default private image displayed when no user supplied image is present.');
   }

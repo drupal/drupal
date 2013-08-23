@@ -311,7 +311,11 @@ function image_field_widget_process($element, &$form_state, $form) {
     }
 
     $element['preview'] = array(
-      '#markup' => theme('image_style', $variables),
+      '#theme' => 'image_style',
+      '#width' => $variables['width'],
+      '#height' => $variables['height'],
+      '#style_name' => $variables['style_name'],
+      '#uri' => $variables['uri'],
     );
 
     // Store the dimensions in the form so the file doesn't have to be accessed
