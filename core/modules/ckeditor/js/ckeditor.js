@@ -41,6 +41,10 @@ Drupal.editors.ckeditor = {
   attachInlineEditor: function (element, format, mainToolbarId, floatedToolbarId) {
     this._loadExternalPlugins(format);
     this._ACF_HACK_to_support_blacklisted_attributes(element, format);
+    // Also pass settings that are Drupal-specific.
+    format.editorSettings.drupal = {
+      format: format.format
+    };
 
     var settings = $.extend(true, {}, format.editorSettings);
 
