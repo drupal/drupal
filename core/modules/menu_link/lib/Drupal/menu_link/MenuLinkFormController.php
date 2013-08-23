@@ -221,6 +221,7 @@ class MenuLinkFormController extends EntityFormController {
     if ($menu_link->link_path != $normal_path) {
       drupal_set_message(t('The menu system stores system paths only, but will use the URL alias for display. %link_path has been stored as %normal_path', array('%link_path' => $menu_link->link_path, '%normal_path' => $normal_path)));
       $menu_link->link_path = $normal_path;
+      $form_state['values']['link_path'] = $normal_path;
     }
     if (!url_is_external($menu_link->link_path)) {
       $parsed_link = parse_url($menu_link->link_path);
