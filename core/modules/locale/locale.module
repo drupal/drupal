@@ -246,7 +246,7 @@ function locale_theme() {
       'template' => 'locale-translation-last-check',
     ),
     'locale_translation_update_info' => array(
-      'arguments' => array('updates' => array(), 'not_found' => array()),
+      'variables' => array('updates' => array(), 'not_found' => array()),
       'file' => 'locale.pages.inc',
       'template' => 'locale-translation-update-info',
     ),
