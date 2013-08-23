@@ -407,7 +407,6 @@ td.group-title {
  * the float edit option columns.
  */
 #edit-options details {
-  float: left;
   width: 100%;
 }
 
@@ -1178,4 +1177,9 @@ div.messages {
 
 .views-list-section {
   margin-bottom: 2em;
+}
+
+.form-textarea-wrapper,
+.form-item-options-content {
+  width: 100%;
 }
