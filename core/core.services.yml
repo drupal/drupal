@@ -487,6 +487,9 @@ services:
   flood:
     class: Drupal\Core\Flood\DatabaseBackend
     arguments: ['@database', '@request']
+  mail.factory:
+    class: Drupal\Core\Mail\MailFactory
+    arguments: ['@config.factory']
   plugin.manager.condition:
     class: Drupal\Core\Condition\ConditionManager
     arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
