@@ -254,9 +254,9 @@ class Block extends DisplayPluginBase {
         case 'items_per_page':
           $form['override']['items_per_page'] = array(
             '#type' => 'select',
-            '#title' => t('Items per page'),
+            '#title' => t('Items per block'),
             '#options' => array(
-              'none' => t('Use default settings'),
+              'none' => t('@count (default setting)', array('@count' => $this->getPlugin('pager')->getItemsPerPage())),
               5 => 5,
               10 => 10,
               20 => 20,

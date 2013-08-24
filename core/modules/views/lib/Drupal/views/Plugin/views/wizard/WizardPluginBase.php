@@ -402,7 +402,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $this->buildFormStyle($form, $form_state, 'block');
     $form['displays']['block']['options']['items_per_page'] = array(
-      '#title' => t('Items per page'),
+      '#title' => t('Items per block'),
       '#type' => 'number',
       '#default_value' => 5,
       '#min' => 0,
