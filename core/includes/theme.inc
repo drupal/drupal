@@ -1123,7 +1123,7 @@ function theme($hook, $variables = array()) {
 
   // restore path_to_theme()
   $theme_path = $temp;
-  return $output;
+  return (string) $output;
 }
 
 /**
