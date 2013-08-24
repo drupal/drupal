@@ -25,20 +25,6 @@ function overlay_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu()
- */
-function overlay_menu() {
-  $items['overlay-ajax/%'] = array(
-    'title' => '',
-    'page callback' => 'overlay_ajax_render_region',
-    'page arguments' => array(1),
-    'access arguments' => array('access overlay'),
-    'type' => MENU_CALLBACK,
-  );
-  return $items;
-}
-
-/**
  * Implements hook_admin_paths().
  */
 function overlay_admin_paths() {
@@ -842,18 +828,4 @@ function overlay_trigger_refresh() {
     drupal_add_js(array('overlayChild' => array('refreshPage' => TRUE)), array('type' => 'setting'));
     unset($_SESSION['overlay_refresh_parent']);
   }
-}
-
-/**
- * Prints the markup obtained by rendering a single region of the page.
- *
- * This function is intended to be called via Ajax.
- *
- * @param $region
- *   The name of the page region to render.
- *
- * @see Drupal.overlay.refreshRegions()
- */
-function overlay_ajax_render_region($region) {
-  return new Response(overlay_render_region($region));
 }

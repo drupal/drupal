@@ -7,16 +7,50 @@
 
 namespace Drupal\overlay\Controller;
 
+use Drupal\Core\Controller\ControllerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Controller routines for overlay routes.
+ *
+ * @todo keeping the controllerInterface since we should be injecting
+ * something to take care of the overlay_render_region() call.
  */
-class OverlayController {
+class OverlayController implements ControllerInterface {
 
   /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static();
+  }
+
+  /**
+   * Constructs a OverlayController object.
+   */
+  public function __construct() {
+  }
+
+  /**
+   * Prints the markup obtained by rendering a single region of the page.
+   *
+   * @todo add a DI for managing the overlay_render_region() call.
+   *
+   * @param string
+   *   The name of the page region to render.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response
+   *
+   * @see Drupal.overlay.refreshRegions()
+   */
+  public function regionRender($region) {
+    return new Response(overlay_render_region($region));
+  }
+   /**
    * Dismisses the overlay accessibility message for this user.
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -40,5 +74,4 @@ class OverlayController {
     // Destination is normally given. Go to the user profile as a fallback.
     return new RedirectResponse(url('user/' . $account->id() . '/edit', array('absolute' => TRUE)));
   }
-
 }
