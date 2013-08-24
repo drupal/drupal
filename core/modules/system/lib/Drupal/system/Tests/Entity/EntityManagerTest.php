@@ -28,6 +28,7 @@ class EntityManagerTest extends EntityUnitTestBase {
   public function testMethods() {
     // Tests the has controller method.
     $entity_manager = $this->container->get('plugin.manager.entity');
+    $this->assertEqual(spl_object_hash($entity_manager), spl_object_hash($this->container->get('entity.manager')));
 
     $this->assertFalse($entity_manager->hasController('non_existent', 'storage'), 'A non existent entity type has no controller.');
     $this->assertFalse($entity_manager->hasController('non_existent', 'non_existent'), 'A non existent entity type has no controller.');

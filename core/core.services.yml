@@ -160,6 +160,8 @@ services:
   plugin.manager.entity:
     class: Drupal\Core\Entity\EntityManager
     arguments: ['@container.namespaces', '@service_container', '@module_handler', '@cache.cache', '@language_manager', '@string_translation']
+  entity.manager:
+    alias: plugin.manager.entity
   plugin.manager.entity.field.field_type:
     class: Drupal\Core\Entity\Field\FieldTypePluginManager
     arguments: ['@container.namespaces', '@cache.entity', '@language_manager', '@module_handler']
