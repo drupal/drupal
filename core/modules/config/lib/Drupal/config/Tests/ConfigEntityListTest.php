@@ -63,7 +63,7 @@ class ConfigEntityListTest extends WebTestBase {
         'title' => t('Disable'),
         'href' => $uri['path'] . '/disable',
         'options' => $uri['options'],
-        'weight' => 20,
+        'weight' => 40,
       ),
       'delete' => array (
         'title' => t('Delete'),

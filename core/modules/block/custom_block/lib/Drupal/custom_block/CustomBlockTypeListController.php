@@ -20,26 +20,10 @@ class CustomBlockTypeListController extends ConfigEntityListController {
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
-    if (module_exists('field_ui')) {
-      $uri = $entity->uri();
-      $operations['manage-fields'] = array(
-        'title' => t('Manage fields'),
-        'href' => $uri['path'] . '/fields',
-        'options' => $uri['options'],
-        'weight' => 0,
-      );
-      $operations['manage-form-display'] = array(
-        'title' => t('Manage form display'),
-        'href' => $uri['path'] . '/form-display',
-        'options' => $uri['options'],
-        'weight' => 5,
-      );
-      $operations['manage-display'] = array(
-        'title' => t('Manage display'),
-        'href' => $uri['path'] . '/display',
-        'options' => $uri['options'],
-        'weight' => 10,
-      );
+    // Place the edit operation after the operations added by field_ui.module
+    // which have the weights 15, 20, 25.
+    if (isset($operations['edit'])) {
+      $operations['edit']['weight'] = 30;
     }
     return $operations;
   }

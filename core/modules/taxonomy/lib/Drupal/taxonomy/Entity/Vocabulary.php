@@ -31,6 +31,7 @@ use Drupal\taxonomy\VocabularyInterface;
  *     }
  *   },
  *   config_prefix = "taxonomy.vocabulary",
+ *   bundle_of = "taxonomy_term",
  *   entity_keys = {
  *     "id" = "vid",
  *     "label" = "name",

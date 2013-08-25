@@ -31,6 +31,7 @@ use Drupal\Core\Annotation\Translation;
  *     "list" = "Drupal\node\NodeTypeListController",
  *   },
  *   config_prefix = "node.type",
+ *   bundle_of = "node",
  *   entity_keys = {
  *     "id" = "type",
  *     "label" = "name",

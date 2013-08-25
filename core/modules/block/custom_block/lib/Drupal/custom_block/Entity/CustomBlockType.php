@@ -32,6 +32,7 @@ use Drupal\custom_block\CustomBlockTypeInterface;
  *     "list" = "Drupal\custom_block\CustomBlockTypeListController"
  *   },
  *   config_prefix = "custom_block.type",
+ *   bundle_of = "custom_block",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",

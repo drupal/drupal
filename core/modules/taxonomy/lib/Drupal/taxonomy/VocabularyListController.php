@@ -45,7 +45,7 @@ class VocabularyListController extends ConfigEntityListController implements For
       'title' => t('add terms'),
       'href' => $uri['path'] . '/add',
       'options' => $uri['options'],
-      'weight' => 30,
+      'weight' => 10,
     );
     unset($operations['delete']);
 

@@ -32,6 +32,7 @@ use Drupal\contact\CategoryInterface;
  *   },
  *   uri_callback = "contact_category_uri",
  *   config_prefix = "contact.category",
+ *   bundle_of = "contact_message",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",

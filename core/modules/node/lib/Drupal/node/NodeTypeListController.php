@@ -88,33 +88,10 @@ class NodeTypeListController extends ConfigEntityListController implements Entit
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
-    $uri = $entity->uri();
-    if ($this->moduleHandler->moduleExists('field_ui') && user_access('administer node fields')) {
-      $operations['manage-fields'] = array(
-        'title' => t('Manage fields'),
-        'href' => $uri['path'] . '/fields',
-        'options' => $uri['options'],
-        'weight' => 0,
-      );
-    }
-    if ($this->moduleHandler->moduleExists('field_ui') && user_access('administer node form display')) {
-      $operations['manage-form-display'] = array(
-        'title' => t('Manage form display'),
-        'href' => $uri['path'] . '/form-display',
-        'options' => $uri['options'],
-        'weight' => 5,
-      );
-    }
-    if ($this->moduleHandler->moduleExists('field_ui') && user_access('administer node display')) {
-      $operations['manage-display'] = array(
-        'title' => t('Manage display'),
-        'href' => $uri['path'] . '/display',
-        'options' => $uri['options'],
-        'weight' => 10,
-      );
-    }
-    if ($entity->isLocked()) {
-      unset($operations['delete']);
+    // Place the edit operation after the operations added by field_ui.module
+    // which have the weights 15, 20, 25.
+    if (isset($operations['edit'])) {
+      $operations['edit']['weight'] = 30;
     }
     return $operations;
   }

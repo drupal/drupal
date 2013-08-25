@@ -155,6 +155,17 @@ class EntityType extends Plugin {
   public $translation = array();
 
   /**
+   * The name of the entity type for which bundles are provided.
+   *
+   * It can be used by other modules to act accordingly; for example,
+   * the Field UI module uses it to add operation links to manage fields and
+   * displays.
+   *
+   * @var string
+   */
+  public $bundle_of;
+
+  /**
    * An array describing how the Field API can extract certain information from
    * objects of this entity type:
    * - id: The name of the property that contains the primary ID of the entity.

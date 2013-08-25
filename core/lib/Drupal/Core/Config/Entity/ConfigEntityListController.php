@@ -52,7 +52,7 @@ class ConfigEntityListController extends EntityListController {
           'title' => t('Disable'),
           'href' => $uri['path'] . '/disable',
           'options' => $uri['options'],
-          'weight' => 20,
+          'weight' => 40,
         );
       }
     }
