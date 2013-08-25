@@ -12,6 +12,13 @@ namespace Drupal\shortcut\Tests;
  */
 class ShortcutLinksTest extends ShortcutTestBase {
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('router_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Shortcut link functionality',
@@ -40,6 +47,8 @@ class ShortcutLinksTest extends ShortcutTestBase {
       array('path' => 'admin/config/system/site-information'),
       array('path' => 'node/' . $this->node->id() . '/edit'),
       array('path' => $path['alias']),
+      array('path' => 'router_test/test2'),
+      array('path' => 'router_test/test3/value'),
     );
 
     // Check that each new shortcut links where it should.
