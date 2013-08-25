@@ -8,16 +8,15 @@
 namespace Drupal\language\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a 'Language switcher' block.
  *
- * @Plugin(
+ * @Block(
  *   id = "language_block",
  *   admin_label = @Translation("Language switcher"),
- *   module = "language",
  *   derivative = "Drupal\language\Plugin\Derivative\LanguageBlock"
  * )
  */

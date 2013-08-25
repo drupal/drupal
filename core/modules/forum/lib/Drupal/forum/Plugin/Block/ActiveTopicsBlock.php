@@ -7,16 +7,15 @@
 
 namespace Drupal\forum\Plugin\Block;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides an 'Active forum topics' block.
  *
- * @Plugin(
+ * @Block(
  *   id = "forum_active_block",
- *   admin_label = @Translation("Active forum topics"),
- *   module = "forum"
+ *   admin_label = @Translation("Active forum topics")
  * )
  */
 class ActiveTopicsBlock extends ForumBlockBase {

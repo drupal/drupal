@@ -8,16 +8,15 @@
 namespace Drupal\menu\Plugin\Block;
 
 use Drupal\system\Plugin\Block\SystemMenuBlock;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a generic Menu block.
  *
- * @Plugin(
+ * @Block(
  *   id = "menu_menu_block",
  *   admin_label = @Translation("Menu"),
- *   module = "menu",
  *   derivative = "Drupal\menu\Plugin\Derivative\MenuBlock"
  * )
  */

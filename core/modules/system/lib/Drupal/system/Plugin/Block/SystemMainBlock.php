@@ -8,16 +8,15 @@
 namespace Drupal\system\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a 'Main page content' block.
  *
- * @Plugin(
+ * @Block(
  *   id = "system_main_block",
- *   admin_label = @Translation("Main page content"),
- *   module = "system"
+ *   admin_label = @Translation("Main page content")
  * )
  */
 class SystemMainBlock extends BlockBase {

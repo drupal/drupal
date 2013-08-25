@@ -8,16 +8,15 @@
 namespace Drupal\block_test\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a basic block for testing block instantiation and configuration.
  *
- * @Plugin(
+ * @Block(
  *   id = "test_block_instantiation",
- *   admin_label = @Translation("Display message"),
- *   module = "block_test"
+ *   admin_label = @Translation("Display message")
  * )
  */
 class TestBlockInstantiation extends BlockBase {

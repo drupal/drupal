@@ -8,16 +8,15 @@
 namespace Drupal\system\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a block to display the breadcrumbs.
  *
- * @Plugin(
+ * @Block(
  *   id = "system_breadcrumb_block",
- *   admin_label = @Translation("Breadcrumbs"),
- *   module = "system"
+ *   admin_label = @Translation("Breadcrumbs")
  * )
  */
 class SystemBreadcrumbBlock extends BlockBase {

@@ -8,16 +8,15 @@
 namespace Drupal\block_test\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a block to test caching.
  *
- * @Plugin(
+ * @Block(
  *   id = "test_cache",
- *   admin_label = @Translation("Test block caching"),
- *   module = "block_test"
+ *   admin_label = @Translation("Test block caching")
  * )
  */
 class TestCacheBlock extends BlockBase {

@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\Block;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Component\Utility\Xss;
@@ -16,10 +16,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a generic Views block.
  *
- * @Plugin(
+ * @Block(
  *   id = "views_block",
  *   admin_label = @Translation("Views Block"),
- *   module = "views",
  *   derivative = "Drupal\views\Plugin\Derivative\ViewsBlock"
  * )
  */

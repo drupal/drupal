@@ -8,7 +8,7 @@
 namespace Drupal\custom_block\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -18,10 +18,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a generic custom block type.
  *
- * @Plugin(
+ * @Block(
  *  id = "custom_block",
  *  admin_label = @Translation("Custom block"),
- *  module = "custom_block",
  *  derivative = "Drupal\custom_block\Plugin\Derivative\CustomBlock"
  * )
  */

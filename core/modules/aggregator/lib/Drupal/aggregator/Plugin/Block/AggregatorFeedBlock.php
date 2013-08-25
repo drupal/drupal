@@ -8,16 +8,15 @@
 namespace Drupal\aggregator\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides an 'Aggregator feed' block with the latest items from the feed.
  *
- * @Plugin(
+ * @Block(
  *   id = "aggregator_feed_block",
  *   admin_label = @Translation("Aggregator feed"),
- *   module = "aggregator",
  *   derivative = "Drupal\aggregator\Plugin\Derivative\AggregatorFeedBlock"
  * )
  */

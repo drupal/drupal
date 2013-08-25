@@ -7,16 +7,15 @@
 
 namespace Drupal\views\Plugin\Block;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a 'Views Exposed Filter' block.
  *
- * @Plugin(
+ * @Block(
  *   id = "views_exposed_filter_block",
  *   admin_label = @Translation("Views Exposed Filter Block"),
- *   module = "views",
  *   derivative = "Drupal\views\Plugin\Derivative\ViewsExposedFilterBlock"
  * )
  */
