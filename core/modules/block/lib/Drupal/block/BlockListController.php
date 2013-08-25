@@ -287,10 +287,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
       'block-list-right',
     );
 
-    $form['right']['list']['#type'] = 'container';
-    $form['right']['list']['#attributes']['class'][] = 'entity-meta';
-
-    $form['right']['list']['title'] = array(
+    $form['right']['title'] = array(
       '#type' => 'container',
       '#children' => '<h3>' . t('Place blocks') . '</h3>',
       '#attributes' => array(
@@ -299,7 +296,8 @@ class BlockListController extends ConfigEntityListController implements FormInte
         ),
       ),
     );
-    $form['right']['list']['search'] = array(
+
+    $form['right']['filter'] = array(
       '#type' => 'search',
       '#title' => t('Filter'),
       '#title_display' => 'invisible',
@@ -311,6 +309,9 @@ class BlockListController extends ConfigEntityListController implements FormInte
         'title' => t('Enter a part of the block name to filter by.'),
       ),
     );
+
+    $form['right']['list']['#type'] = 'container';
+    $form['right']['list']['#attributes']['class'][] = 'entity-meta';
 
     // Sort the plugins first by category, then by label.
     $plugins = $this->blockManager->getDefinitions();
