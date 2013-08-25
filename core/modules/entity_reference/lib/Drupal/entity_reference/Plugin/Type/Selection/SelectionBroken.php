@@ -8,6 +8,7 @@
 namespace Drupal\entity_reference\Plugin\Type\Selection;
 
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 
 /**
  * A null implementation of SelectionInterface.
@@ -15,9 +16,9 @@ use Drupal\Core\Database\Query\SelectInterface;
 class SelectionBroken implements SelectionInterface {
 
   /**
-   * Implements SelectionInterface::settingsForm().
+   * {@inheritdoc}
    */
-  public static function settingsForm(&$field, &$instance) {
+  public static function settingsForm(FieldDefinitionInterface $field_definition) {
     $form['selection_handler'] = array(
       '#markup' => t('The selected selection handler is broken.'),
     );
@@ -25,33 +26,34 @@ class SelectionBroken implements SelectionInterface {
   }
 
   /**
-   * Implements SelectionInterface::getReferenceableEntities().
+   * {@inheritdoc}
    */
   public function getReferenceableEntities($match = NULL, $match_operator = 'CONTAINS', $limit = 0) {
     return array();
   }
 
   /**
-   * Implements SelectionInterface::countReferenceableEntities().
+   * {@inheritdoc}
    */
   public function countReferenceableEntities($match = NULL, $match_operator = 'CONTAINS') {
     return 0;
   }
 
   /**
-   * Implements SelectionInterface::validateReferenceableEntities().
+   * {@inheritdoc}
    */
   public function validateReferenceableEntities(array $ids) {
     return array();
   }
 
   /**
-   * Implements SelectionInterface::validateAutocompleteInput().
+   * {@inheritdoc}
    */
   public function validateAutocompleteInput($input, &$element, &$form_state, $form, $strict = TRUE) { }
 
   /**
-   * Implements SelectionInterface::entityQueryAlter().
+   * {@inheritdoc}
    */
   public function entityQueryAlter(SelectInterface $query) { }
+
 }
