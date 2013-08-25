@@ -148,6 +148,15 @@ class Drupal {
   }
 
   /**
+   * Gets the current active user.
+   *
+   * @return \Drupal\Core\Session\AccountInterface
+   */
+  public static function currentUser() {
+    return static::$container->get('current_user');
+  }
+
+  /**
    * Retrieves the entity manager service.
    *
    * @return \Drupal\Core\Entity\EntityManager

@@ -286,7 +286,7 @@ function _block_get_renderable_region($list = array()) {
   // the regular 'roles define permissions' schema, it brings too many
   // chances of having unwanted output get in the cache and later be served
   // to other users. We therefore exclude user 1 from block caching.
-  $not_cacheable = $GLOBALS['user']->id() == 1 ||
+  $not_cacheable = Drupal::currentUser()->id() == 1 ||
     count(Drupal::moduleHandler()->getImplementations('node_grants')) ||
     !\Drupal::request()->isMethodSafe();
 

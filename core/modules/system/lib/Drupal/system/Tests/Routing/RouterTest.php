@@ -162,6 +162,24 @@ class RouterTest extends WebTestBase {
   }
 
   /**
+   * Tests the user account on the DIC.
+   */
+  public function testUserAccount() {
+    $account = $this->drupalCreateUser();
+    $this->drupalLogin($account);
+
+    $second_account = $this->drupalCreateUser();
+
+    $this->drupalGet('router_test/test12/' . $second_account->id());
+    $this->assertText($account->getUsername() . ':' . $second_account->getUsername());
+    $this->assertEqual($account->id(), $this->loggedInUser->id(), 'Ensure that the user was not changed.');
+
+    $this->drupalGet('router_test/test13/' . $second_account->id());
+    $this->assertText($account->getUsername() . ':' . $second_account->getUsername());
+    $this->assertEqual($account->id(), $this->loggedInUser->id(), 'Ensure that the user was not changed.');
+  }
+
+  /**
    * Checks that an ajax request gets rendered as an Ajax response, by mime.
    *
    * @todo This test will not work until the Ajax enhancer is corrected. However,

@@ -122,6 +122,16 @@ abstract class ControllerBase extends ContainerAware {
   }
 
   /**
+   * Returns the current user.
+   *
+   * @return \Drupal\Core\Session\AccountInterface
+   *   The current user.
+   */
+  protected function currentUser() {
+    return $this->container->get('current_user');
+  }
+
+  /**
    * Translates a string to the current language or to a given language using
    * the string translation service.
    *

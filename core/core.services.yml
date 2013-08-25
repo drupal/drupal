@@ -603,6 +603,12 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@authentication']
+  current_user:
+    class: Drupal\Core\Session\AccountInterface
+    factory_method: authenticate
+    factory_service: authentication
+    arguments: ['@request']
+    scope: request
   asset.css.collection_renderer:
     class: Drupal\Core\Asset\CssCollectionRenderer
   asset.css.collection_optimizer:

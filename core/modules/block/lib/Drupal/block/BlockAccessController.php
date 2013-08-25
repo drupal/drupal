@@ -69,14 +69,13 @@ class BlockAccessController extends EntityAccessController implements EntityCont
     }
 
     // Otherwise, check for other access restrictions.
-    global $user;
 
     // User role access handling.
     // If a block has no roles associated, it is displayed for every role.
     // For blocks with roles associated, if none of the user's roles matches
     // the settings from this block, access is denied.
     $visibility = $entity->get('visibility');
-    if (!empty($visibility['role']['roles']) && !array_intersect(array_filter($visibility['role']['roles']), $user->getRoles())) {
+    if (!empty($visibility['role']['roles']) && !array_intersect(array_filter($visibility['role']['roles']), $account->getRoles())) {
       // No match.
       return FALSE;
     }
