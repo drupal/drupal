@@ -33,14 +33,14 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to delete the @effect effect from the %style style?', array('%style' => $this->imageStyle->label(), '@effect' => $this->imageEffect->label()));
+    return $this->t('Are you sure you want to delete the @effect effect from the %style style?', array('%style' => $this->imageStyle->label(), '@effect' => $this->imageEffect->label()));
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return t('Delete');
+    return $this->t('Delete');
   }
 
   /**
@@ -72,7 +72,7 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     $this->imageStyle->deleteImageEffect($this->imageEffect);
-    drupal_set_message(t('The image effect %name has been deleted.', array('%name' => $this->imageEffect->label())));
+    drupal_set_message($this->t('The image effect %name has been deleted.', array('%name' => $this->imageEffect->label())));
     $form_state['redirect'] = 'admin/config/media/image-styles/manage/' . $this->imageStyle->id();
   }
 
