@@ -118,7 +118,6 @@ class NodeAccessLanguageTest extends NodeTestBase {
 
     $node = $this->drupalCreateNode(array('body' => array(array()), 'langcode' => 'hu'));
     $this->assertTrue($node->language()->id == 'hu', 'Node created as Hungarian.');
-    $expected_node_access = array('view' => TRUE, 'update' => FALSE, 'delete' => FALSE);
     $expected_node_access_no_access = array('view' => FALSE, 'update' => FALSE, 'delete' => FALSE);
 
     // Creating a private node with langcode Hungarian, will be saved as the
