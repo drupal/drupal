@@ -8,9 +8,9 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\Core\Language\Language;
-use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
+use Drupal\entity\Entity\EntityDisplay;
 use Drupal\Core\Template\Attribute;
-use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
+use Drupal\menu_link\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorageController;
 use Drupal\node\NodeInterface;
 
@@ -120,13 +120,13 @@ function book_permission() {
  * @param $view_mode
  *   The view mode of the node.
  */
-function book_node_view_link(EntityInterface $node, $view_mode) {
+function book_node_view_link(NodeInterface $node, $view_mode) {
   $links = array();
 
   if (isset($node->book['depth'])) {
     if ($view_mode == 'full' && node_is_page($node)) {
       $child_type = Drupal::config('book.settings')->get('child_type');
-      if ((user_access('add content to books') || user_access('administer book outlines')) && node_access('create', $child_type) && $node->status == 1 && $node->book['depth'] < MENU_MAX_DEPTH) {
+      if ((user_access('add content to books') || user_access('administer book outlines')) && node_access('create', $child_type) && $node->isPublished() && $node->book['depth'] < MENU_MAX_DEPTH) {
         $links['book_add_child'] = array(
           'title' => t('Add child page'),
           'href' => 'node/add/' . $child_type,
@@ -220,7 +220,7 @@ function book_menu() {
 /**
  * Access callback: Determines if the book export page is accessible.
  *
- * @param \Drupal\node\Plugin\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\Entity\EntityInterface $node
  *   The node whose export page is to be viewed.
  */
 function book_export_access(EntityInterface $node) {
@@ -307,7 +307,7 @@ function book_form_node_form_alter(&$form, &$form_state, $form_id) {
   $node = $form_state['controller']->getEntity();
   $access = user_access('administer book outlines');
   if (!$access) {
-    if (user_access('add content to books') && ((!empty($node->book['mlid']) && !$node->isNew()) || book_type_is_allowed($node->type))) {
+    if (user_access('add content to books') && ((!empty($node->book['mlid']) && !$node->isNew()) || book_type_is_allowed($node->getType()))) {
       // Already in the book hierarchy, or this node type is allowed.
       $access = TRUE;
     }

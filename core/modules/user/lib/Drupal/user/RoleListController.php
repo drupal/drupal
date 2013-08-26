@@ -27,11 +27,9 @@ class RoleListController extends ConfigEntityListController implements FormInter
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $row = parent::buildHeader();
-    $row['label'] = t('Name');
-    unset($row['id']);
-    $row['weight'] = t('Weight');
-    return $row;
+    $header['label'] = t('Name');
+    $header['weight'] = t('Weight');
+    return $header + parent::buildHeader();
   }
 
   /**
@@ -56,14 +54,11 @@ class RoleListController extends ConfigEntityListController implements FormInter
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row = parent::buildRow($entity);
-
     // Override default values to markup elements.
     $row['#attributes']['class'][] = 'draggable';
-    unset($row['id']);
 
     $row['label'] = array(
-      '#markup' => $row['label'],
+      '#markup' => $this->getLabel($entity),
     );
     $row['#weight'] = $entity->get('weight');
     // Add weight column.
@@ -74,7 +69,7 @@ class RoleListController extends ConfigEntityListController implements FormInter
       '#default_value' => $entity->get('weight'),
       '#attributes' => array('class' => array('weight')),
     );
-    return $row;
+    return $row + parent::buildRow($entity);
   }
 
   /**

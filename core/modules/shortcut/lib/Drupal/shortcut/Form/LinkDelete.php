@@ -8,8 +8,7 @@
 namespace Drupal\shortcut\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\menu_link\Entity\MenuLink;
 
 /**
  * Builds the shortcut link deletion form.
@@ -19,7 +18,7 @@ class LinkDelete extends ConfirmFormBase {
   /**
    * The menu link to delete.
    *
-   * @var \Drupal\menu_link\Plugin\Core\Entity\MenuLink
+   * @var \Drupal\menu_link\Entity\MenuLink
    */
   protected $menuLink;
 
@@ -54,10 +53,10 @@ class LinkDelete extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, MenuLink $menu_link = NULL, Request $request = NULL) {
+  public function buildForm(array $form, array &$form_state, MenuLink $menu_link = NULL) {
     $this->menuLink = $menu_link;
 
-    return parent::buildForm($form, $form_state, $request);
+    return parent::buildForm($form, $form_state);
   }
 
   /**

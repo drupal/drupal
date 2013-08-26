@@ -24,6 +24,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
  *   title = @Translation("Block"),
  *   help = @Translation("Display the view as a block."),
  *   theme = "views_view",
+ *   register_theme = FALSE,
  *   uses_hook_block = TRUE,
  *   contextual_links_locations = {"block"},
  *   admin = @Translation("Block")
@@ -253,9 +254,9 @@ class Block extends DisplayPluginBase {
         case 'items_per_page':
           $form['override']['items_per_page'] = array(
             '#type' => 'select',
-            '#title' => t('Items per page'),
+            '#title' => t('Items per block'),
             '#options' => array(
-              'none' => t('Use default settings'),
+              'none' => t('@count (default setting)', array('@count' => $this->getPlugin('pager')->getItemsPerPage())),
               5 => 5,
               10 => 10,
               20 => 20,

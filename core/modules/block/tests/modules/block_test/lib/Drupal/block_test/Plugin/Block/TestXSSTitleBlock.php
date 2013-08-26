@@ -7,15 +7,14 @@
 
 namespace Drupal\block_test\Plugin\Block;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 
 /**
  * Provides a block to test XSS in title.
  *
- * @Plugin(
+ * @Block(
  *   id = "test_xss_title",
- *   admin_label = "<script>alert('XSS subject');</script>",
- *   module = "block_test"
+ *   admin_label = "<script>alert('XSS subject');</script>"
  * )
  */
 class TestXSSTitleBlock extends TestCacheBlock {

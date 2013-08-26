@@ -8,16 +8,15 @@
 namespace Drupal\node\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a 'Syndicate' block that links to the site's RSS feed.
  *
- * @Plugin(
+ * @Block(
  *   id = "node_syndicate_block",
- *   admin_label = @Translation("Syndicate"),
- *   module = "node"
+ *   admin_label = @Translation("Syndicate")
  * )
  */
 class SyndicateBlock extends BlockBase {

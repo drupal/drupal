@@ -8,7 +8,7 @@
 namespace Drupal\picture\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\breakpoint\Plugin\Core\Entity\Breakpoint;
+use Drupal\breakpoint\Entity\Breakpoint;
 use Drupal\image\Tests\ImageFieldTestBase;
 
 /**

@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\Path;
 
+use Drupal\Core\Cache\MemoryCounterBackend;
 use Drupal\Core\Path\Path;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Path\AliasManager;
@@ -158,8 +159,12 @@ class AliasTest extends PathUnitTestBase {
     // Prepare database table.
     $connection = Database::getConnection();
     $this->fixtures->createTables($connection);
+
+    $memoryCounterBackend = new MemoryCounterBackend('cache');
+
     // Create AliasManager and Path object.
-    $whitelist = new AliasWhitelist('path_alias_whitelist', $this->container->get('cache.cache'), $this->container->get('lock'), $this->container->get('state'), $connection);
+
+    $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $connection);
     $aliasManager = new AliasManager($connection, $whitelist, $this->container->get('language_manager'));
     $path = new Path($connection, $aliasManager);
 
@@ -189,5 +194,24 @@ class AliasTest extends PathUnitTestBase {
     $this->assertTrue($whitelist->get('admin'));
     $this->assertNull($whitelist->get($this->randomName()));
 
+    // Destruct the whitelist so that the caches are written.
+    $whitelist->destruct();
+    $this->assertEqual($memoryCounterBackend->getCounter('set', 'path_alias_whitelist'), 1);
+    $memoryCounterBackend->resetCounter();
+
+    // Re-initialize the whitelist using the same cache backend, should load
+    // from cache.
+    $whitelist = new AliasWhitelist('path_alias_whitelist', $memoryCounterBackend, $this->container->get('lock'), $this->container->get('state'), $connection);
+    $this->assertNull($whitelist->get('user'));
+    $this->assertTrue($whitelist->get('admin'));
+    $this->assertNull($whitelist->get($this->randomName()));
+    $this->assertEqual($memoryCounterBackend->getCounter('get', 'path_alias_whitelist'), 1);
+    $this->assertEqual($memoryCounterBackend->getCounter('set', 'path_alias_whitelist'), 0);
+
+    // Destruct the whitelist, should not attempt to write the cache again.
+    $whitelist->destruct();
+    $this->assertEqual($memoryCounterBackend->getCounter('get', 'path_alias_whitelist'), 1);
+    $this->assertEqual($memoryCounterBackend->getCounter('set', 'path_alias_whitelist'), 0);
   }
+
 }

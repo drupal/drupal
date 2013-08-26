@@ -10,12 +10,13 @@ namespace Drupal\Core\Entity\Query\Sql;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Entity\Query\QueryException;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\Entity\Field;
+use Drupal\field\Field as FieldInfo;
 
 /**
  * Adds tables and fields to the SQL entity query.
  */
-class Tables {
+class Tables implements TablesInterface {
 
   /**
    * @var \Drupal\Core\Database\Query\SelectInterface
@@ -45,23 +46,17 @@ class Tables {
   /**
    * @param \Drupal\Core\Database\Query\SelectInterface $sql_query
    */
-  function __construct(SelectInterface $sql_query) {
+  public function __construct(SelectInterface $sql_query) {
     $this->sqlQuery = $sql_query;
   }
 
   /**
-   * @param string $field
-   *   If it contains a dot, then field name dot field column. If it doesn't
-   *   then entity property name.
-   * @param string $type
-   *   Join type, can either be INNER or LEFT.
-   * @return string
-   *   The return value is a string containing the alias of the table, a dot
-   *   and the appropriate SQL column as passed in. This allows the direct use
-   *   of this in a query for a condition or sort.
+   * {@inheritdoc}
    */
-  function addField($field, $type, $langcode) {
+  public function addField($field, $type, $langcode) {
     $entity_type = $this->sqlQuery->getMetaData('entity_type');
+    $entity_manager = \Drupal::entityManager();
+    $field_info = FieldInfo::fieldInfo();
     $age = $this->sqlQuery->getMetaData('age');
     // This variable ensures grouping works correctly. For example:
     // ->condition('tags', 2, '>')
@@ -77,12 +72,12 @@ class Tables {
     // This will contain the definitions of the last specifier seen by the
     // system.
     $propertyDefinitions = array();
-    $entity_info = entity_get_info($entity_type);
+    $entity_info = $entity_manager->getDefinition($entity_type);
     // Use the lightweight and fast field map for checking whether a specifier
     // is a field or not. While calling field_info_field() on every specifier
     // delivers the same information, if no specifiers are using the field API
     // it is much faster if field_info_field() is never called.
-    $field_map = field_info_field_map();
+    $field_map = $field_info->getFieldMap();
     for ($key = 0; $key <= $count; $key ++) {
       // If there is revision support and only the current revision is being
       // queried then use the revision id. Otherwise, the entity id will do.
@@ -105,10 +100,10 @@ class Tables {
       // Normally it is a field name, but field_purge_batch() is passing in
       // id:$field_id so check that first.
       if (substr($specifier, 0, 3) == 'id:') {
-        $field = field_info_field_by_id(substr($specifier, 3));
+        $field = $field_info->getFieldById((substr($specifier, 3)));
       }
       elseif (isset($field_map[$specifier])) {
-        $field = field_info_field($specifier);
+        $field = $field_info->getField($specifier);
       }
       else {
         $field = FALSE;
@@ -137,8 +132,17 @@ class Tables {
             $relationship_specifier = $specifiers[$key + 1];
 
             // Get the field definitions form a mocked entity.
-            $entity = entity_create($entity_type, array());
-            $propertyDefinitions = $entity->{$field['field_name']}->getPropertyDefinitions();
+            $values = array();
+            $field_name = $field->getFieldName();
+            // If there are bundles, pick one.
+            if (!empty($entity_info['entity_keys']['bundle'])) {
+              $values[$entity_info['entity_keys']['bundle']] = reset($field_map[$field_name]['bundles'][$entity_type]);
+            }
+            $entity = $entity_manager
+              ->getStorageController($entity_type)
+              ->create($values)
+              ->getNGEntity();
+            $propertyDefinitions = $entity->$field_name->getPropertyDefinitions();
 
             // If the column is not yet known, ie. the
             // $node->field_image->entity case then use first property as
@@ -184,10 +188,14 @@ class Tables {
           $values = array();
           // If there are bundles, pick one. It does not matter which,
           // properties exist on all bundles.
-          if (!empty($entity_info['entity keys']['bundle'])) {
-            $values[$entity_info['entity keys']['bundle']] = key(entity_get_bundles('node'));
+          if (!empty($entity_info['entity_keys']['bundle'])) {
+            $bundles = entity_get_bundles($entity_type);
+            $values[$entity_info['entity_keys']['bundle']] = key($bundles);
           }
-          $entity = entity_create($entity_type, $values);
+          $entity = $entity_manager
+            ->getStorageController($entity_type)
+            ->create($values)
+            ->getNGEntity();
           $propertyDefinitions = $entity->$specifier->getPropertyDefinitions();
           $relationship_specifier = $specifiers[$key + 1];
           $next_index_prefix = $relationship_specifier;
@@ -196,7 +204,7 @@ class Tables {
         if (isset($propertyDefinitions[$relationship_specifier]) && $entity->{$specifier}->get('entity') instanceof EntityReference) {
           // If it is, use the entity type.
           $entity_type = $propertyDefinitions[$relationship_specifier]['constraints']['EntityType'];
-          $entity_info = entity_get_info($entity_type);
+          $entity_info = $entity_manager->getDefinition($entity_type);
           // Add the new entity base table using the table and sql column.
           $join_condition= '%alias.' . $entity_info['entity_keys']['id'] . " = $table.$sql_column";
           $base_table = $this->sqlQuery->leftJoin($entity_info['base_table'], NULL, $join_condition);

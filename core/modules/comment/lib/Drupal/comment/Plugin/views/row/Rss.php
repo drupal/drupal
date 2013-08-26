@@ -20,6 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *   title = @Translation("Comment"),
  *   help = @Translation("Display the comment as RSS."),
  *   theme = "views_view_row_rss",
+ *   register_theme = FALSE,
  *   base = {"comment"},
  *   display_types = {"feed"}
  * )

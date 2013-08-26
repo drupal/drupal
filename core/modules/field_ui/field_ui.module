@@ -5,6 +5,7 @@
  * Allows administrators to attach custom fields to fieldable types.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity\EntityViewModeInterface;
 
 /**
@@ -290,6 +291,43 @@ function field_ui_form_node_type_form_alter(&$form, $form_state) {
     $form['actions']['save_continue']['#value'] = t('Save and manage fields');
     $form['actions']['save_continue']['#weight'] = $form['actions']['save_continue']['#weight'] + 5;
     $form['actions']['save_continue']['#submit'][] = 'field_ui_form_node_type_form_submit';
+  }
+}
+
+/**
+ * Implements hook_entity_operation_alter().
+ */
+function field_ui_entity_operation_alter(array &$operations, EntityInterface $entity) {
+  $info = $entity->entityInfo();
+  // Add manage fields and display links if this entity type is the bundle
+  // of another.
+  if (!empty($info['bundle_of'])) {
+    $bundle_of = $info['bundle_of'];
+    $uri = $entity->uri();
+    if (user_access('administer '. $bundle_of . ' fields')) {
+      $operations['manage-fields'] = array(
+        'title' => t('Manage fields'),
+        'href' => $uri['path'] . '/fields',
+        'options' => $uri['options'],
+        'weight' => 15,
+      );
+    }
+    if (user_access('administer '. $bundle_of . ' form display')) {
+      $operations['manage-form-display'] = array(
+        'title' => t('Manage form display'),
+        'href' => $uri['path'] . '/form-display',
+        'options' => $uri['options'],
+        'weight' => 20,
+      );
+    }
+    if (user_access('administer '. $bundle_of . ' display')) {
+      $operations['manage-display'] = array(
+        'title' => t('Manage display'),
+        'href' => $uri['path'] . '/display',
+        'options' => $uri['options'],
+        'weight' => 25,
+      );
+    }
   }
 }
 

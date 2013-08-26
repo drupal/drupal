@@ -8,9 +8,13 @@
 namespace Drupal\dblog\Controller;
 
 use Drupal\Component\Utility\Unicode;
+use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\Datetime\Date;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\user\UserStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -33,12 +37,25 @@ class DbLogController implements ControllerInterface {
   protected $moduleHandler;
 
   /**
+   * The date service.
+   *
+   * @var \Drupal\Core\Datetime\Date
+   */
+  protected $date;
+  /**
+   * @var \Drupal\user\UserStorageControllerInterface
+   */
+  protected $userStorage;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('database'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('date'),
+      $container->get('plugin.manager.entity')->getStorageController('user')
     );
   }
 
@@ -50,9 +67,11 @@ class DbLogController implements ControllerInterface {
    * @param ModuleHandlerInterface $module_handler
    *   A module handler.
    */
-  public function __construct(Connection $database, ModuleHandlerInterface $module_handler) {
+  public function __construct(Connection $database, ModuleHandlerInterface $module_handler, Date $date, UserStorageControllerInterface $user_storage) {
     $this->database = $database;
     $this->moduleHandler = $module_handler;
+    $this->date = $date;
+    $this->userStorage = $user_storage;
   }
 
   /**
@@ -169,10 +188,10 @@ class DbLogController implements ControllerInterface {
           // Cells.
           array('class' => array('icon')),
           t($dblog->type),
-          format_date($dblog->timestamp, 'short'),
+          $this->date->format($dblog->timestamp, 'short'),
           $message,
           array('data' => $username),
-          filter_xss($dblog->link),
+          Xss::filter($dblog->link),
         ),
         // Attributes for table row.
         'class' => array(drupal_html_class('dblog-' . $dblog->type), $classes[$dblog->severity]),
@@ -190,6 +209,78 @@ class DbLogController implements ControllerInterface {
 
     return $build;
 
+  }
+
+  /**
+   * Displays details about a specific database log message.
+   *
+   * @param int $event_id
+   *   Unique ID of the database log message.
+   *
+   * @return array
+   *   If the ID is located in the Database Logging table, a build array in the
+   *   format expected by drupal_render();
+   *
+   */
+  public function eventDetails($event_id) {
+    $build = array();
+    if ($dblog = $this->database->query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = :id', array(':id' => $event_id))->fetchObject()) {
+      $severity = watchdog_severity_levels();
+      // Check for required properties.
+      if (isset($dblog->message) && isset($dblog->variables)) {
+        // Inject variables into the message if required.
+        $message = $dblog->variables === 'N;' ? $dblog->message : t($dblog->message, unserialize($dblog->variables));
+      }
+      $username = array(
+        '#theme' => 'username',
+        '#account' => user_load($dblog->uid),
+      );
+      $rows = array(
+        array(
+          array('data' => t('Type'), 'header' => TRUE),
+          t($dblog->type),
+        ),
+        array(
+          array('data' => t('Date'), 'header' => TRUE),
+          $this->date->format($dblog->timestamp, 'long'),
+        ),
+        array(
+          array('data' => t('User'), 'header' => TRUE),
+          array('data' => $username),
+        ),
+        array(
+          array('data' => t('Location'), 'header' => TRUE),
+          l($dblog->location, $dblog->location),
+        ),
+        array(
+          array('data' => t('Referrer'), 'header' => TRUE),
+          l($dblog->referer, $dblog->referer),
+        ),
+        array(
+          array('data' => t('Message'), 'header' => TRUE),
+          $message,
+        ),
+        array(
+          array('data' => t('Severity'), 'header' => TRUE),
+          $severity[$dblog->severity],
+        ),
+        array(
+          array('data' => t('Hostname'), 'header' => TRUE),
+          String::checkPlain($dblog->hostname),
+        ),
+        array(
+          array('data' => t('Operations'), 'header' => TRUE),
+          $dblog->link,
+        ),
+      );
+      $build['dblog_table'] = array(
+        '#theme' => 'table',
+        '#rows' => $rows,
+        '#attributes' => array('class' => array('dblog-event')),
+      );
+    }
+
+    return $build;
   }
 
   /**

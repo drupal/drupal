@@ -3,6 +3,7 @@
  * @file
  * This script runs Drupal tests from command line.
  */
+use Drupal\Core\StreamWrapper\PublicStream;
 
 const SIMPLETEST_SCRIPT_COLOR_PASS = 32; // Green.
 const SIMPLETEST_SCRIPT_COLOR_FAIL = 31; // Red.
@@ -304,6 +305,7 @@ function simpletest_script_init($server_software) {
   $_SERVER['REQUEST_URI'] = $path .'/';
   $_SERVER['REQUEST_METHOD'] = 'GET';
   $_SERVER['SCRIPT_NAME'] = $path .'/index.php';
+  $_SERVER['SCRIPT_FILENAME'] = $path .'/index.php';
   $_SERVER['PHP_SELF'] = $path .'/index.php';
   $_SERVER['HTTP_USER_AGENT'] = 'Drupal command line';
 
@@ -398,7 +400,7 @@ function simpletest_script_execute_batch($test_classes) {
           echo 'FATAL ' . $child['class'] . ': test runner returned a non-zero error code (' . $status['exitcode'] . ').' . "\n";
           if ($args['die-on-fail']) {
             list($db_prefix, ) = simpletest_last_test_get($child['test_id']);
-            $public_files = variable_get('file_public_path', conf_path() . '/files');
+            $public_files = PublicStream::basePath();
             $test_directory = $public_files . '/simpletest/' . substr($db_prefix, 10);
             echo 'Simpletest database and files kept and test exited immediately on fail so should be reproducible if you change settings.php to use the database prefix '. $db_prefix . ' and config directories in '. $test_directory . "\n";
             $args['keep-results'] = TRUE;
@@ -567,7 +569,7 @@ function simpletest_script_cleanup($test_id, $test_class, $exitcode) {
 
   // Check whether a test file directory was setup already.
   // @see prepareEnvironment()
-  $public_files = variable_get('file_public_path', conf_path() . '/files');
+  $public_files = PublicStream::basePath();
   $test_directory = $public_files . '/simpletest/' . substr($db_prefix, 10);
   if (is_dir($test_directory)) {
     // Output the error_log.

@@ -8,7 +8,7 @@
 namespace Drupal\overlay\EventSubscriber;
 
 use Drupal\Core\ContentNegotiation;
-use Drupal\Core\Routing\PathBasedGeneratorInterface;
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\user\UserData;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -38,7 +38,7 @@ class OverlaySubscriber implements EventSubscriberInterface {
   /**
    * The url generator service.
    *
-   * @var \Drupal\Core\Routing\PathBasedGeneratorInterface
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface
    */
   protected $urlGenerator;
 
@@ -49,10 +49,10 @@ class OverlaySubscriber implements EventSubscriberInterface {
    *   The content negotiation service.
    * @param \Drupal\user\UserData $user_data
    *   The user.data service.
-   * @param \Drupal\Core\Routing\PathBasedGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
    */
-  public function __construct(ContentNegotiation $negotiation, UserData $user_data, PathBasedGeneratorInterface $url_generator) {
+  public function __construct(ContentNegotiation $negotiation, UserData $user_data, UrlGeneratorInterface $url_generator) {
     $this->negotiation = $negotiation;
     $this->userData = $user_data;
     $this->urlGenerator = $url_generator;

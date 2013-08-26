@@ -8,16 +8,15 @@
 namespace Drupal\statistics\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a 'Popular content' block.
  *
- * @Plugin(
+ * @Block(
  *   id = "statistics_popular_block",
- *   admin_label = @Translation("Popular content"),
- *   module = "statistics"
+ *   admin_label = @Translation("Popular content")
  * )
  */
 class StatisticsPopularBlock extends BlockBase {

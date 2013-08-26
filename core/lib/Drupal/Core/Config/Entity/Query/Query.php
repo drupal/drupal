@@ -9,7 +9,6 @@ namespace Drupal\Core\Config\Entity\Query;
 
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\EntityManager;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Query\QueryBase;
 use Drupal\Core\Entity\Query\QueryInterface;
 
@@ -49,13 +48,6 @@ class Query extends QueryBase implements QueryInterface {
     parent::__construct($entity_type, $conjunction);
     $this->entityManager = $entity_manager;
     $this->configStorage = $config_storage;
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\Query\QueryInterface::conditionGroupFactory().
-   */
-  public function conditionGroupFactory($conjunction = 'AND') {
-    return new Condition($conjunction);
   }
 
   /**

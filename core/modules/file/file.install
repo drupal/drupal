@@ -5,7 +5,7 @@
  * Install, update and uninstall functions for File module.
  */
 
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\Entity\Field;
 
 /**
  * Implements hook_schema().

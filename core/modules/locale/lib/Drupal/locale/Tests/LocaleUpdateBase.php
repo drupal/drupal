@@ -7,6 +7,7 @@
 
 namespace Drupal\locale\Tests;
 
+use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Component\Utility\String;
 
@@ -172,7 +173,7 @@ EOF;
     \Drupal::state()->set('locale.test_projects_alter', TRUE);
 
     // Setup the environment.
-    $public_path = variable_get('file_public_path', conf_path() . '/files');
+    $public_path = PublicStream::basePath();
     $this->setTranslationsDirectory($public_path . '/local');
     $config->set('translation.default_filename', '%project-%version.%language._po')->save();
 

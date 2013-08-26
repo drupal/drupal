@@ -59,7 +59,7 @@ function dblog_top($type) {
     $rows[] = array($dblog->count, $message);
   }
 
-  $build['dblog_top_table']  = array(
+  $build['dblog_top_table'] = array(
     '#theme' => 'table',
     '#header' => $header,
     '#rows' => $rows,
@@ -68,120 +68,6 @@ function dblog_top($type) {
   $build['dblog_top_pager'] = array('#theme' => 'pager');
 
   return $build;
-}
-
-/**
- * Page callback: Displays details about a specific database log message.
- *
- * @param int $id
- *   Unique ID of the database log message.
- *
- * @return array|string
- *   If the ID is located in the Database Logging table, a build array in the
- *   format expected by drupal_render(); otherwise, an empty string.
- *
- * @see dblog_menu()
- */
-function dblog_event($id) {
-  $severity = watchdog_severity_levels();
-  $result = db_query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = :id', array(':id' => $id))->fetchObject();
-  if ($dblog = $result) {
-    // Check for required properties.
-    if (isset($dblog->message) && isset($dblog->variables)) {
-      // Messages without variables or user specified text.
-      if ($dblog->variables === 'N;') {
-        $message = $dblog->message;
-      }
-      // Message to translate with injected variables.
-      else {
-        $message = t($dblog->message, unserialize($dblog->variables));
-      }
-    }
-    $username = array(
-      '#theme' => 'username',
-      '#account' => user_load($dblog->uid),
-    );
-    $rows = array(
-      array(
-        array('data' => t('Type'), 'header' => TRUE),
-        t($dblog->type),
-      ),
-      array(
-        array('data' => t('Date'), 'header' => TRUE),
-        format_date($dblog->timestamp, 'long'),
-      ),
-      array(
-        array('data' => t('User'), 'header' => TRUE),
-        drupal_render($username),
-      ),
-      array(
-        array('data' => t('Location'), 'header' => TRUE),
-        l($dblog->location, $dblog->location),
-      ),
-      array(
-        array('data' => t('Referrer'), 'header' => TRUE),
-        l($dblog->referer, $dblog->referer),
-      ),
-      array(
-        array('data' => t('Message'), 'header' => TRUE),
-        $message,
-      ),
-      array(
-        array('data' => t('Severity'), 'header' => TRUE),
-        $severity[$dblog->severity],
-      ),
-      array(
-        array('data' => t('Hostname'), 'header' => TRUE),
-        check_plain($dblog->hostname),
-      ),
-      array(
-        array('data' => t('Operations'), 'header' => TRUE),
-        $dblog->link,
-      ),
-    );
-    $build['dblog_table'] = array(
-      '#theme' => 'table',
-      '#rows' => $rows,
-      '#attributes' => array('class' => array('dblog-event')),
-    );
-    return $build;
-  }
-  else {
-    return '';
-  }
-}
-
-/**
- * Builds a query for database log administration filters based on session.
- *
- * @return array
- *   An associative array with keys 'where' and 'args'.
- */
-function dblog_build_filter_query() {
-  if (empty($_SESSION['dblog_overview_filter'])) {
-    return;
-  }
-
-  $filters = dblog_filters();
-
-  // Build query
-  $where = $args = array();
-  foreach ($_SESSION['dblog_overview_filter'] as $key => $filter) {
-    $filter_where = array();
-    foreach ($filter as $value) {
-      $filter_where[] = $filters[$key]['where'];
-      $args[] = $value;
-    }
-    if (!empty($filter_where)) {
-      $where[] = '(' . implode(' OR ', $filter_where) . ')';
-    }
-  }
-  $where = !empty($where) ? implode(' AND ', $where) : '';
-
-  return array(
-    'where' => $where,
-    'args' => $args,
-  );
 }
 
 /**

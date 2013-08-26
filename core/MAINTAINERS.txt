@@ -46,6 +46,7 @@ Configuration system
 - Greg Dunlap 'heyrocker' http://drupal.org/user/128537
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
 - Alex Pott 'alexpott' http://drupal.org/user/157725
+- Matthew Tift 'mtift' https://drupal.org/user/751908
 
 Configuration entity system
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
@@ -95,7 +96,6 @@ Form system
 
 Image system
 - Andrew Morton 'drewish' http://drupal.org/user/34869
-- Nathan Haug 'quicksketch' http://drupal.org/user/35821
 
 Install system
 - David Rothstein 'David_Rothstein' http://drupal.org/user/124982
@@ -122,7 +122,6 @@ Menu system
 - Károly Négyesi 'chx' http://drupal.org/user/9446
 
 Path system
-- Dave Reid 'davereid' http://drupal.org/user/53892
 - Nathaniel Catchpole 'catch' http://drupal.org/user/35733
 
 Plugin system
@@ -175,7 +174,7 @@ Security
 - Greg Knaddison 'greggles' http://drupal.org/user/36762
 
 Translations
-- Gerhard Killesreiter 'killes' http://drupal.org/user/83
+- ?
 
 User experience and usability
 - Roy Scholten 'yoroy' http://drupal.org/user/41502
@@ -216,7 +215,7 @@ Configuration module
 - ?
 
 Contact module
-- Dave Reid 'davereid' http://drupal.org/user/53892
+- ?
 
 Contextual module
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
@@ -270,7 +269,7 @@ Help module
 - ?
 
 Image module
-- Nathan Haug 'quicksketch' http://drupal.org/user/35821
+- ?
 
 Link module
 - ?
@@ -300,7 +299,7 @@ Overlay module
 - ?
 
 Path module
-- Dave Reid 'davereid' http://drupal.org/user/53892
+- ?
 
 Phone module
 - Dave Reid 'davereid' http://drupal.org/user/53892

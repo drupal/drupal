@@ -42,7 +42,7 @@ class SearchAdvancedSearchFormTest extends SearchTestBase {
    * Test using the advanced search form to limit search to nodes of type "Basic page".
    */
   function testNodeType() {
-    $this->assertTrue($this->node->type == 'page', 'Node type is Basic page.');
+    $this->assertTrue($this->node->getType() == 'page', 'Node type is Basic page.');
 
     // Assert that the dummy title doesn't equal the real title.
     $dummy_title = 'Lorem ipsum';

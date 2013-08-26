@@ -8,21 +8,19 @@
 namespace Drupal\user\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\user\Form\UserLoginForm;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a 'User login' block.
  *
- * @Plugin(
+ * @Block(
  *   id = "user_login_block",
- *   admin_label = @Translation("User login"),
- *   module = "user"
+ *   admin_label = @Translation("User login")
  * )
  */
 class UserLoginBlock extends BlockBase implements ContainerFactoryPluginInterface {

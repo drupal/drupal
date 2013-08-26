@@ -7,12 +7,14 @@
 
 namespace Drupal\rest\Plugin\Derivative;
 
-use Drupal\Component\Plugin\Derivative\DerivativeInterface;
+use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Drupal\Core\Entity\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a resource plugin definition for every entity type.
  */
-class EntityDerivative implements DerivativeInterface {
+class EntityDerivative implements ContainerDerivativeInterface {
 
   /**
    * List of derivative definitions.
@@ -20,6 +22,32 @@ class EntityDerivative implements DerivativeInterface {
    * @var array
    */
   protected $derivatives;
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
+   * Constructs an EntityDerivative object.
+   *
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager.
+   */
+  public function __construct(EntityManager $entity_manager) {
+    $this->entityManager = $entity_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, $base_plugin_id) {
+    return new static(
+      $container->get('plugin.manager.entity')
+    );
+  }
 
   /**
    * Implements DerivativeInterface::getDerivativeDefinition().
@@ -39,7 +67,7 @@ class EntityDerivative implements DerivativeInterface {
   public function getDerivativeDefinitions(array $base_plugin_definition) {
     if (!isset($this->derivatives)) {
       // Add in the default plugin configuration and the resource type.
-      foreach (entity_get_info() as $entity_type => $entity_info) {
+      foreach ($this->entityManager->getDefinitions() as $entity_type => $entity_info) {
         $this->derivatives[$entity_type] = array(
           'id' => 'entity:' . $entity_type,
           'entity_type' => $entity_type,

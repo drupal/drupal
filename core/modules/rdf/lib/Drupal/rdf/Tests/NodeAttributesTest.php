@@ -51,7 +51,12 @@ class NodeAttributesTest extends NodeTestBase {
    * Creates a node of type article and tests its RDFa markup.
    */
   function testNodeAttributes() {
-    $node = $this->drupalCreateNode(array('type' => 'article'));
+    // Create node with single quotation mark title to ensure it does not get
+    // escaped more than once.
+    $node = $this->drupalCreateNode(array(
+      'type' => 'article',
+      'title' => $this->randomName(8) . "'",
+    ));
 
     $node_uri = url('node/' . $node->id(), array('absolute' => TRUE));
     $base_uri = url('<front>', array('absolute' => TRUE));
@@ -77,21 +82,21 @@ class NodeAttributesTest extends NodeTestBase {
     // Node title.
     $expected_value = array(
       'type' => 'literal',
-      'value' => $node->title,
+      'value' => $node->getTitle(),
       'lang' => 'en',
     );
     $this->assertTrue($graph->hasProperty($node_uri, 'http://purl.org/dc/terms/title', $expected_value), 'Node title found in RDF output (dc:title).');
     // Node date.
     $expected_value = array(
       'type' => 'literal',
-      'value' => date('c', $node->created),
+      'value' => date('c', $node->getCreatedTime()),
       'datatype' => 'http://www.w3.org/2001/XMLSchema#dateTime',
     );
     $this->assertTrue($graph->hasProperty($node_uri, 'http://purl.org/dc/terms/date', $expected_value), 'Node date found in RDF output (dc:date).');
     // Node date.
     $expected_value = array(
       'type' => 'literal',
-      'value' => date('c', $node->created),
+      'value' => date('c', $node->getCreatedTime()),
       'datatype' => 'http://www.w3.org/2001/XMLSchema#dateTime',
     );
     $this->assertTrue($graph->hasProperty($node_uri, 'http://purl.org/dc/terms/created', $expected_value), 'Node date found in RDF output (dc:created).');

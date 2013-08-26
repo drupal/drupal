@@ -148,6 +148,15 @@ class Drupal {
   }
 
   /**
+   * Gets the current active user.
+   *
+   * @return \Drupal\Core\Session\AccountInterface
+   */
+  public static function currentUser() {
+    return static::$container->get('current_user');
+  }
+
+  /**
    * Retrieves the entity manager service.
    *
    * @return \Drupal\Core\Entity\EntityManager
@@ -364,7 +373,7 @@ class Drupal {
   /**
    * Returns the url generator service.
    *
-   * @return \Drupal\Core\Routing\PathBasedGeneratorInterface
+   * @return \Drupal\Core\Routing\UrlGeneratorInterface
    *   The url generator service.
    */
   public static function urlGenerator() {
@@ -399,6 +408,16 @@ class Drupal {
    */
   public static function csrfToken() {
     return static::$container->get('csrf_token');
+  }
+
+  /**
+   * Returns the transliteration service.
+   *
+   * @return \Drupal\Core\Transliteration\PHPTransliteration
+   *   The transliteration manager.
+   */
+  public static function transliteration() {
+    return static::$container->get('transliteration');
   }
 
 }

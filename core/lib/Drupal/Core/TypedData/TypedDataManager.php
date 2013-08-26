@@ -215,9 +215,6 @@ class TypedDataManager extends DefaultPluginManager {
    *   The new property instance.
    *
    * @see \Drupal\Core\TypedData\TypedDataManager::create()
-   *
-   * @todo: Add type-hinting to $object once entities implement the
-   *   TypedDataInterface.
    */
   public function getPropertyInstance(TypedDataInterface $object, $property_name, $value = NULL) {
     $definition = $object->getRoot()->getDefinition();

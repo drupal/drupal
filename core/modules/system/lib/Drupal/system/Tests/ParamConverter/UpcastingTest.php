@@ -51,12 +51,12 @@ class UpcastingTest extends WebTestBase {
 
     // paramconverter_test/test_node_user_user/{node}/{foo}/{user}
     // options.parameters.foo.type = entity:user
-    $this->drupalGet("paramconverter_test/test_node_user_user/{$node->nid}/" . $user->id() . "/" . $user->id());
+    $this->drupalGet("paramconverter_test/test_node_user_user/" . $node->id() . "/" . $user->id() . "/" . $user->id());
     $this->assertRaw("user: {$user->label()}, node: {$node->label()}, foo: {$user->label()}", 'foo converted to user as well');
 
     // paramconverter_test/test_node_node_foo/{user}/{node}/{foo}
     // options.parameters.user.type = entity:node
-    $this->drupalGet("paramconverter_test/test_node_node_foo/{$node->nid}/{$node->nid}/$foo");
+    $this->drupalGet("paramconverter_test/test_node_node_foo/" . $node->id() . "/" . $node->id() . "/$foo");
     $this->assertRaw("user: {$node->label()}, node: {$node->label()}, foo: $foo", 'user is upcast to node (rather than to user)');
   }
 
@@ -68,7 +68,7 @@ class UpcastingTest extends WebTestBase {
     $parent = $this->drupalCreateNode(array('title' => $this->randomName(8)));
     // paramconverter_test/node/{node}/set/parent/{parent}
     // options.parameters.parent.type = entity:node
-    $this->drupalGet("paramconverter_test/node/" . $node->nid . "/set/parent/" . $parent->nid);
-    $this->assertRaw("Setting '" . $parent->title . "' as parent of '" . $node->title . "'.");
+    $this->drupalGet("paramconverter_test/node/" . $node->id() . "/set/parent/" . $parent->id());
+    $this->assertRaw("Setting '" . $parent->getTitle() . "' as parent of '" . $node->getTitle() . "'.");
   }
 }

@@ -8,7 +8,6 @@
 namespace Drupal\field_ui;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Controller\ControllerInterface;
 use Drupal\entity\EntityDisplayBaseInterface;
 use Drupal\field\FieldInstanceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -16,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Field UI form display overview form.
  */
-class FormDisplayOverview extends DisplayOverviewBase implements ControllerInterface {
+class FormDisplayOverview extends DisplayOverviewBase {
 
   /**
    * {@inheritdoc}
@@ -24,6 +23,7 @@ class FormDisplayOverview extends DisplayOverviewBase implements ControllerInter
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.entity'),
+      $container->get('plugin.manager.entity.field.field_type'),
       $container->get('plugin.manager.field.widget')
     );
   }
@@ -42,10 +42,10 @@ class FormDisplayOverview extends DisplayOverviewBase implements ControllerInter
     $field_row = parent::buildFieldRow($field_id, $instance, $entity_display, $form, $form_state);
 
     // Update the (invisible) title of the 'plugin' column.
-    $field_row['plugin']['#title'] = t('Formatter for @title', array('@title' => $instance['label']));
+    $field_row['plugin']['#title'] = $this->t('Formatter for @title', array('@title' => $instance['label']));
     if (!empty($field_row['plugin']['settings_edit_form']) && ($plugin = $entity_display->getRenderer($field_id))) {
       $plugin_type_info = $plugin->getPluginDefinition();
-      $field_row['plugin']['settings_edit_form']['label']['#markup'] = t('Widget settings:') . ' <span class="plugin-name">' . $plugin_type_info['label'] . '</span>';
+      $field_row['plugin']['settings_edit_form']['label']['#markup'] = $this->t('Widget settings:') . ' <span class="plugin-name">' . $plugin_type_info['label'] . '</span>';
     }
 
     return $field_row;
@@ -117,10 +117,10 @@ class FormDisplayOverview extends DisplayOverviewBase implements ControllerInter
    */
   protected function getTableHeader() {
     return array(
-      t('Field'),
-      t('Weight'),
-      t('Parent'),
-      array('data' => t('Widget'), 'colspan' => 3),
+      $this->t('Field'),
+      $this->t('Weight'),
+      $this->t('Parent'),
+      array('data' => $this->t('Widget'), 'colspan' => 3),
     );
   }
 

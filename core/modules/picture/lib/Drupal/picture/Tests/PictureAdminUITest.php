@@ -8,7 +8,7 @@
 namespace Drupal\picture\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\breakpoint\Plugin\Core\Entity\Breakpoint;
+use Drupal\breakpoint\Entity\Breakpoint;
 
 /**
  * Tests for breakpoint sets admin interface.

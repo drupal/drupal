@@ -178,7 +178,7 @@ function shortcut_set_switch_submit($form, &$form_state) {
  *   An associative array containing the structure of the form.
  * @param $form_state
  *   An associative array containing the current state of the form.
- * @param $shortcut_set Drupal\shortcut\Plugin\Core\Entity\Shortcut
+ * @param $shortcut_set Drupal\shortcut\Entity\Shortcut
  *   An object representing the shortcut set to which the link will be added.
  *
  * @return
@@ -326,7 +326,7 @@ function shortcut_link_add_submit($form, &$form_state) {
  *
  * @param $link
  *   An array representing a shortcut link.
- * @param $shortcut_set Drupal\shortcut\Plugin\Core\Entity\Shortcut
+ * @param $shortcut_set Drupal\shortcut\Entity\Shortcut
  *   An object representing the shortcut set which the link will be added to.
  *   The links in the shortcut set will be re-weighted so that the new link is
  *   at the end, and some existing links may be disabled (if the $limit

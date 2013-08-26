@@ -25,21 +25,21 @@ class CustomBlockFieldTest extends CustomBlockTestBase {
   /**
    * The created field.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\Field
+   * @var \Drupal\field\Entity\Field
    */
   protected $field;
 
   /**
    * The created instance.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   * @var \Drupal\field\Entity\FieldInstance
    */
   protected $instance;
 
   /**
    * The block type.
    *
-   * @var \Drupal\custom_block\Plugin\Core\Entity\CustomBlockType
+   * @var \Drupal\custom_block\Entity\CustomBlockType
    */
   protected $blockType;
 

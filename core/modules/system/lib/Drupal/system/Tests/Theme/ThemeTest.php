@@ -58,6 +58,24 @@ class ThemeTest extends WebTestBase {
   }
 
   /**
+   * Test that theme() returns expected data types.
+   */
+  function testThemeDataTypes() {
+    // theme_test_false is an implemented theme hook so theme() should return a
+    // string, even though the theme function itself can return anything.
+    $foos = array('null' => NULL, 'false' => FALSE, 'integer' => 1, 'string' => 'foo');
+    foreach ($foos as $type => $example) {
+      $output = theme('theme_test_foo', array('foo' => $example));
+      $this->assertTrue(is_string($output), format_string('theme() returns a string for data type !type.', array('!type' => $type)));
+    }
+
+    // suggestionnotimplemented is not an implemented theme hook so theme()
+    // should return FALSE instead of a string.
+    $output = theme(array('suggestionnotimplemented'));
+    $this->assertIdentical($output, FALSE, 'theme() returns FALSE when a hook suggestion is not implemented.');
+  }
+
+  /**
    * Test function theme_get_suggestions() for SA-CORE-2009-003.
    */
   function testThemeSuggestions() {

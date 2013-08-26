@@ -77,10 +77,10 @@ class Date extends Formula {
         return parent::getDefaultArgument();
       }
       elseif ($this->options['default_argument_type'] == 'node_created') {
-        return date($this->argFormat, $node->created);
+        return date($this->argFormat, $node->getCreatedTime());
       }
       elseif ($this->options['default_argument_type'] == 'node_changed') {
-        return date($this->argFormat, $node->changed);
+        return date($this->argFormat, $node->getChangedTime());
       }
     }
 

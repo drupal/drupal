@@ -9,15 +9,12 @@ namespace Drupal\taxonomy\Form;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Entity\EntityControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides confirmation form for resetting a vocabulary to alphabetical order.
  */
-class VocabularyResetForm extends EntityConfirmFormBase implements EntityControllerInterface {
+class VocabularyResetForm extends EntityConfirmFormBase {
 
   /**
    * The database connection object.
@@ -29,18 +26,15 @@ class VocabularyResetForm extends EntityConfirmFormBase implements EntityControl
   /**
    * Constructs a new VocabularyResetForm object.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, Connection $connection) {
-    parent::__construct($module_handler);
-
+  public function __construct(Connection $connection) {
     $this->connection = $connection;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('database')
     );
   }

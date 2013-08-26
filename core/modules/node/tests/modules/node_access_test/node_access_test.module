@@ -10,6 +10,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_node_grants().
@@ -32,7 +33,7 @@ function node_access_test_node_grants($account, $op) {
 /**
  * Implements hook_node_access_records().
  */
-function node_access_test_node_access_records(EntityInterface $node) {
+function node_access_test_node_access_records(NodeInterface $node) {
   $grants = array();
   // For NodeAccessBaseTableTestCase, only set records for private nodes.
   if (!Drupal::state()->get('node_access_test.private') || $node->private) {
@@ -56,7 +57,7 @@ function node_access_test_node_access_records(EntityInterface $node) {
     // means there are many many groups of just 1 user.
     $grants[] = array(
       'realm' => 'node_access_test_author',
-      'gid' => $node->uid,
+      'gid' => $node->getAuthorId(),
       'grant_view' => 1,
       'grant_update' => 1,
       'grant_delete' => 1,

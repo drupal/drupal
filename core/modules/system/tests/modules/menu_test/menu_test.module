@@ -5,7 +5,7 @@
  * Module that implements various hooks for menu tests.
  */
 
-use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
+use Drupal\menu_link\Entity\MenuLink;
 
 /**
  * Implements hook_menu().

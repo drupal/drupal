@@ -7,6 +7,7 @@
 
 use Drupal\Core\StreamWrapper\LocalStream;
 use Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage;
+use Drupal\Core\StreamWrapper\PublicStream;
 
 /**
  * Stream wrapper bit flags that are the basis for composite types.
@@ -385,7 +386,7 @@ function file_stream_wrapper_get_instance_by_uri($uri) {
  * @param $scheme
  *   If the stream was "public://target", "public" would be the scheme.
  *
- * @return
+ * @return \Drupal\Core\StreamWrapper\StreamWrapperInterface
  *   Returns a new stream wrapper object appropriate for the given $scheme.
  *   For example, for the public scheme a stream wrapper object
  *   (Drupal\Core\StreamWrapper\PublicStream).
@@ -1614,7 +1615,7 @@ function file_directory_temp() {
 
     if (empty($temporary_directory)) {
       // If no directory has been found default to 'files/tmp'.
-      $temporary_directory = variable_get('file_public_path', conf_path() . '/files') . '/tmp';
+      $temporary_directory = PublicStream::basePath() . '/tmp';
 
       // Windows accepts paths with either slash (/) or backslash (\), but will
       // not accept a path which contains both a slash and a backslash. Since

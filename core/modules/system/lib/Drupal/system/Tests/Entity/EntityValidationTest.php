@@ -133,6 +133,12 @@ class EntityValidationTest extends EntityUnitTestBase {
     $this->assertEqual($violation->getRoot(), $test_entity, 'Violation root is entity.');
     $this->assertEqual($violation->getPropertyPath(), 'name.0.value', 'Violation property path is correct.');
     $this->assertEqual($violation->getInvalidValue(), $test_entity->name->value, 'Violation contains invalid value.');
+
+    $test_entity = clone $entity;
+    $test_entity->set('user_id', 9999);
+    $violations = $test_entity->validate();
+    $this->assertEqual($violations->count(), 1, 'Validation failed.');
+    $this->assertEqual($violations[0]->getMessage(), t('The referenced entity (%type: %id) does not exist.', array('%type' => 'user', '%id' => 9999)));
   }
 
 }

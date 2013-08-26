@@ -159,7 +159,9 @@ services:
       - { name: persist }
   plugin.manager.entity:
     class: Drupal\Core\Entity\EntityManager
-    arguments: ['@container.namespaces', '@service_container', '@module_handler', '@cache.cache', '@language_manager']
+    arguments: ['@container.namespaces', '@service_container', '@module_handler', '@cache.cache', '@language_manager', '@string_translation']
+  entity.manager:
+    alias: plugin.manager.entity
   plugin.manager.entity.field.field_type:
     class: Drupal\Core\Entity\Field\FieldTypePluginManager
     arguments: ['@container.namespaces', '@cache.entity', '@language_manager', '@module_handler']
@@ -171,7 +173,7 @@ services:
     arguments: ['@container.namespaces']
   plugin.manager.menu.local_action:
     class: Drupal\Core\Menu\LocalActionManager
-    arguments: ['@container.namespaces', '@controller_resolver', '@request', '@module_handler']
+    arguments: ['@container.namespaces', '@controller_resolver', '@request', '@module_handler', '@cache.cache', '@language_manager']
   plugin.manager.menu.local_task:
     class: Drupal\Core\Menu\LocalTaskManager
     arguments: ['@container.namespaces', '@controller_resolver', '@request', '@router.route_provider', '@module_handler']
@@ -237,6 +239,7 @@ services:
     arguments: ['@router.route_provider', '@path_processor_manager', '@config.factory', '@settings']
     calls:
       - [setRequest, ['@?request']]
+      - [setContext, ['@?router.request_context']]
     tags:
       - { name: persist }
   router.dynamic:
@@ -349,7 +352,7 @@ services:
       - { name: event_subscriber }
   controller.page:
     class: Drupal\Core\Controller\HtmlPageController
-    arguments: ['@http_kernel']
+    arguments: ['@http_kernel', '@controller_resolver']
   controller.dialog:
     class: Drupal\Core\Controller\DialogController
     arguments: ['@http_kernel']
@@ -486,6 +489,9 @@ services:
   flood:
     class: Drupal\Core\Flood\DatabaseBackend
     arguments: ['@database', '@request']
+  mail.factory:
+    class: Drupal\Core\Mail\MailFactory
+    arguments: ['@config.factory']
   plugin.manager.condition:
     class: Drupal\Core\Condition\ConditionManager
     arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
@@ -597,6 +603,12 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@authentication']
+  current_user:
+    class: Drupal\Core\Session\AccountInterface
+    factory_method: authenticate
+    factory_service: authentication
+    arguments: ['@request']
+    scope: request
   asset.css.collection_renderer:
     class: Drupal\Core\Asset\CssCollectionRenderer
   asset.css.collection_optimizer:

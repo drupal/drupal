@@ -14,14 +14,14 @@ use Drupal\Tests\UnitTestCase;
  *
  * @group Entity
  *
- * @see \Drupal\Core\Entity\EntityListController
+ * @see \Drupal\entity_test\EntityTestListController
  */
 class EntityListControllerTest extends UnitTestCase {
 
   /**
    * The entity used to construct the EntityListController.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\Role
+   * @var \Drupal\user\Entity\Role
    */
   protected $role;
 
@@ -53,7 +53,7 @@ class EntityListControllerTest extends UnitTestCase {
       'label' => 'label',
     ),
     'config_prefix' => 'user.role',
-    'class' => 'Drupal\user\Plugin\Core\Entity\Role',
+    'class' => 'Drupal\user\Entity\Role',
   );
 
 
@@ -64,7 +64,7 @@ class EntityListControllerTest extends UnitTestCase {
     parent::setUp();
 
     $this->role = $this
-      ->getMockBuilder('Drupal\user\Plugin\Core\Entity\Role')
+      ->getMockBuilder('Drupal\user\Entity\Role')
       ->setConstructorArgs(array('entityInfo' => static::$entityInfo, 'user_role'))
       ->getMock();
 
@@ -78,7 +78,7 @@ class EntityListControllerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $this->entityListController = $this->getMock('Drupal\Core\Entity\EntityListController', array('buildOperations'), array('user_role', static::$entityInfo, $role_storage_controller, $module_handler));
+    $this->entityListController = $this->getMock('Drupal\entity_test\EntityTestListController', array('buildOperations'), array('user_role', static::$entityInfo, $role_storage_controller, $module_handler));
 
     $this->entityListController->expects($this->any())
       ->method('buildOperations')
@@ -132,13 +132,13 @@ class EntityListControllerTest extends UnitTestCase {
   public function providerTestBuildRow() {
     $tests = array();
     // Checks that invalid multi-byte sequences are rejected.
-    $tests[] = array("Foo\xC0barbaz", '', 'EntityListController::buildRow() rejects invalid sequence "Foo\xC0barbaz"', TRUE);
-    $tests[] = array("\xc2\"", '', 'EntityListController::buildRow() rejects invalid sequence "\xc2\""', TRUE);
-    $tests[] = array("Fooÿñ", "Fooÿñ", 'EntityListController::buildRow() accepts valid sequence "Fooÿñ"');
+    $tests[] = array("Foo\xC0barbaz", '', 'EntityTestListController::buildRow() rejects invalid sequence "Foo\xC0barbaz"', TRUE);
+    $tests[] = array("\xc2\"", '', 'EntityTestListController::buildRow() rejects invalid sequence "\xc2\""', TRUE);
+    $tests[] = array("Fooÿñ", "Fooÿñ", 'EntityTestListController::buildRow() accepts valid sequence "Fooÿñ"');
 
     // Checks that special characters are escaped.
-    $tests[] = array("<script>", '&lt;script&gt;', 'EntityListController::buildRow() escapes &lt;script&gt;');
-    $tests[] = array('<>&"\'', '&lt;&gt;&amp;&quot;&#039;', 'EntityListController::buildRow() escapes reserved HTML characters.');
+    $tests[] = array("<script>", '&lt;script&gt;', 'EntityTestListController::buildRow() escapes &lt;script&gt;');
+    $tests[] = array('<>&"\'', '&lt;&gt;&amp;&quot;&#039;', 'EntityTestListController::buildRow() escapes reserved HTML characters.');
 
     return $tests;
 

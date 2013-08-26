@@ -26,8 +26,8 @@ class PromoteNode extends ActionBase {
    * {@inheritdoc}
    */
   public function execute($entity = NULL) {
-    $entity->status = NODE_PUBLISHED;
-    $entity->promote = NODE_PROMOTED;
+    $entity->setPublished(TRUE);
+    $entity->setPromoted(TRUE);
     $entity->save();
   }
 

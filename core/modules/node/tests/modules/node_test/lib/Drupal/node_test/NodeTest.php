@@ -7,7 +7,7 @@
 
 namespace Drupal\node_test;
 
-use Drupal\node\Plugin\Core\Entity\Node;
+use Drupal\node\Entity\Node;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 
 /**

@@ -9,8 +9,6 @@ namespace Drupal\forum\Form;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Entity\EntityControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\taxonomy\TermFormController;
 use Drupal\taxonomy\TermStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Base form controller for forum term edit forms.
  */
-class ForumFormController extends TermFormController implements EntityControllerInterface {
+class ForumFormController extends TermFormController {
 
   /**
    * Reusable type field to use in status messages.
@@ -43,13 +41,6 @@ class ForumFormController extends TermFormController implements EntityController
   protected $config;
 
   /**
-   * The current request.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
    * Term Storage Controller.
    *
    * @var \Drupal\taxonomy\TermStorageControllerInterface
@@ -59,30 +50,22 @@ class ForumFormController extends TermFormController implements EntityController
   /**
    * Constructs a new ForumFormController object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory service.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
    * @param \Drupal\taxonomy\TermStorageControllerInterface $storage_controller
    *   The storage controller.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactory $config_factory, Request $request, TermStorageControllerInterface $storage_controller) {
-    parent::__construct($module_handler);
+  public function __construct(ConfigFactory $config_factory, TermStorageControllerInterface $storage_controller) {
     $this->config = $config_factory->get('forum.settings');
-    $this->request = $request;
     $this->storageController = $storage_controller;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('config.factory'),
-      $container->get('request'),
       $container->get('plugin.manager.entity')->getStorageController('taxonomy_term')
     );
   }
@@ -160,9 +143,10 @@ class ForumFormController extends TermFormController implements EntityController
    */
   public function delete(array $form, array &$form_state) {
     $destination = array();
-    if ($this->request->query->get('destination')) {
+    $request = $this->getRequest();
+    if ($request->query->has('destination')) {
       $destination = drupal_get_destination();
-      $this->request->query->remove('destination');
+      $request->query->remove('destination');
     }
     $term = $this->getEntity($form_state);
     $form_state['redirect'] = array(

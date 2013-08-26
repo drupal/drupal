@@ -4,3 +4,10 @@ dblog_overview:
     _content: '\Drupal\dblog\Controller\DbLogController::overview'
   requirements:
     _permission: 'access site reports'
+
+dblog_event:
+  pattern: 'admin/reports/event/{event_id}'
+  defaults:
+    _content: '\Drupal\dblog\Controller\DbLogController::eventDetails'
+  requirements:
+    _permission: 'access site reports'

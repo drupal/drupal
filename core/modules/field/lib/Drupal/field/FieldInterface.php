@@ -40,7 +40,7 @@ interface FieldInterface extends ConfigEntityInterface, FieldDefinitionInterface
    *   The array of field columns, keyed by column name, in the same format
    *   returned by getSchema().
    *
-   * @see \Drupal\field\Plugin\Core\Entity\FieldInterface::getSchema()
+   * @see \Drupal\field\Entity\FieldInterface::getSchema()
    */
   public function getColumns();
 

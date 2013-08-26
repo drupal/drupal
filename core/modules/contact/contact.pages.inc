@@ -5,14 +5,14 @@
  * Page callbacks for the Contact module.
  */
 
-use Drupal\contact\Plugin\Core\Entity\Category;
+use Drupal\contact\Entity\Category;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Page callback: Presents the site-wide contact form.
  *
- * @param Drupal\contact\Plugin\Core\Entity\Category $category
+ * @param Drupal\contact\Entity\Category $category
  *   (optional) The contact category to use.
  *
  * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException

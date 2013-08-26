@@ -53,6 +53,13 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
   protected $cacheKey;
 
   /**
+   * An array of cache tags to use for the cached definitions.
+   *
+   * @var array
+   */
+  protected $cacheTags = array();
+
+  /**
    * Name of the alter hook if one should be invoked.
    *
    * @var string
@@ -116,12 +123,16 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    * @param string $cache_key_prefix
    *   Cache key prefix to use, the language code will be appended
    *   automatically.
+   * @param array $cache_tags
+   *   (optional) When providing a list of cache tags, the cached definitions
+   *   are tagged and are used to clear the cache.
    */
-  public function setCacheBackend(CacheBackendInterface $cache_backend, LanguageManager $language_manager, $cache_key_prefix) {
+  public function setCacheBackend(CacheBackendInterface $cache_backend, LanguageManager $language_manager, $cache_key_prefix, array $cache_tags = array()) {
     $this->languageManager = $language_manager;
     $this->cacheBackend = $cache_backend;
     $this->cacheKeyPrefix = $cache_key_prefix;
     $this->cacheKey = $cache_key_prefix . ':' . $language_manager->getLanguage(Language::TYPE_INTERFACE)->id;
+    $this->cacheTags = $cache_tags;
   }
 
   /**
@@ -169,12 +180,18 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    */
   public function clearCachedDefinitions() {
     if ($this->cacheBackend) {
-      $cache_keys = array();
-      // @todo: Use $this->languageManager->languageList() after http://drupal.org/node/1862202 is in.
-      foreach (language_list() as $langcode => $language) {
-        $cache_keys[] = $this->cacheKeyPrefix . ':' .$langcode;
+      if ($this->cacheTags) {
+        // Use the cache tags to clear the cache.
+        $this->cacheBackend->deleteTags($this->cacheTags);
       }
-      $this->cacheBackend->deleteMultiple($cache_keys);
+      else {
+        $cache_keys = array();
+        // @todo: Use $this->languageManager->languageList() after http://drupal.org/node/1862202 is in.
+        foreach (language_list() as $langcode => $language) {
+          $cache_keys[] = $this->cacheKeyPrefix . ':' .$langcode;
+        }
+        $this->cacheBackend->deleteMultiple($cache_keys);
+      }
     }
     $this->definitions = NULL;
   }
@@ -203,7 +220,7 @@ class DefaultPluginManager extends PluginManagerBase implements PluginManagerInt
    */
   protected function setCachedDefinitions($definitions) {
     if ($this->cacheBackend) {
-      $this->cacheBackend->set($this->cacheKey, $definitions);
+      $this->cacheBackend->set($this->cacheKey, $definitions, CacheBackendInterface::CACHE_PERMANENT, $this->cacheTags);
     }
     $this->definitions = $definitions;
   }

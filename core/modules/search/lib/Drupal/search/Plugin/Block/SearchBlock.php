@@ -8,7 +8,7 @@
 namespace Drupal\search\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\search\Form\SearchBlockForm;
@@ -18,10 +18,9 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Provides a 'Search form' block.
  *
- * @Plugin(
+ * @Block(
  *   id = "search_form_block",
- *   admin_label = @Translation("Search form"),
- *   module = "search"
+ *   admin_label = @Translation("Search form")
  * )
  */
 class SearchBlock extends BlockBase implements ContainerFactoryPluginInterface {

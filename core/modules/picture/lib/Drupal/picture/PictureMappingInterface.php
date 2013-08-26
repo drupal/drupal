@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\picture\Plugin\Core\Entity\PictureMappingInterface.
+ * Contains \Drupal\picture\Entity\PictureMappingInterface.
  */
 
 namespace Drupal\picture;

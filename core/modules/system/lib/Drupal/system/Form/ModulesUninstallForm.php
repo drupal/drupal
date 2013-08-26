@@ -7,19 +7,15 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Core\Form\FormInterface;
-use Drupal\Core\StringTranslation\TranslationManager;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
-use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for uninstalling modules.
  */
-class ModulesUninstallForm implements FormInterface, ControllerInterface {
+class ModulesUninstallForm extends FormBase {
 
   /**
    * The module handler service.
@@ -36,27 +32,12 @@ class ModulesUninstallForm implements FormInterface, ControllerInterface {
   protected $keyValueExpirable;
 
   /**
-   * The translation manager service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationManager
-   */
-  protected $translationManager;
-
-  /**
-   * The request object.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('module_handler'),
-      $container->get('keyvalue.expirable')->get('modules_uninstall'),
-      $container->get('string_translation')
+      $container->get('keyvalue.expirable')->get('modules_uninstall')
     );
   }
 
@@ -67,13 +48,10 @@ class ModulesUninstallForm implements FormInterface, ControllerInterface {
    *   The module handler.
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable
    *   The key value expirable factory.
-   * @param \Drupal\Core\StringTranslation\TranslationManager $translation_manager
-   *   The translation manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, TranslationManager $translation_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable) {
     $this->moduleHandler = $module_handler;
     $this->keyValueExpirable = $key_value_expirable;
-    $this->translationManager = $translation_manager;
   }
 
   /**
@@ -86,10 +64,7 @@ class ModulesUninstallForm implements FormInterface, ControllerInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
-    // Store the request for use in the submit handler.
-    $this->request = $request;
-
+  public function buildForm(array $form, array &$form_state) {
     // Make sure the install API is available.
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
 
@@ -118,11 +93,11 @@ class ModulesUninstallForm implements FormInterface, ControllerInterface {
       $name = $module->info['name'] ?: $module->name;
       $form['modules'][$module->name]['#module_name'] = $name;
       $form['modules'][$module->name]['name']['#markup'] = $name;
-      $form['modules'][$module->name]['description']['#markup'] = $this->translationManager->translate($module->info['description']);
+      $form['modules'][$module->name]['description']['#markup'] = $this->t($module->info['description']);
 
       $form['uninstall'][$module->name] = array(
         '#type' => 'checkbox',
-        '#title' => $this->translationManager->translate('Uninstall @module module', array('@module' => $name)),
+        '#title' => $this->t('Uninstall @module module', array('@module' => $name)),
         '#title_display' => 'invisible',
       );
 
@@ -141,7 +116,7 @@ class ModulesUninstallForm implements FormInterface, ControllerInterface {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => $this->translationManager->translate('Uninstall'),
+      '#value' => $this->t('Uninstall'),
     );
 
     return $form;
@@ -153,7 +128,7 @@ class ModulesUninstallForm implements FormInterface, ControllerInterface {
   public function validateForm(array &$form, array &$form_state) {
     // Form submitted, but no modules selected.
     if (!array_filter($form_state['values']['uninstall'])) {
-      drupal_set_message($this->translationManager->translate('No modules selected.'), 'error');
+      drupal_set_message($this->t('No modules selected.'), 'error');
       $form_state['redirect'] = 'admin/modules/uninstall';
     }
   }
@@ -165,7 +140,7 @@ class ModulesUninstallForm implements FormInterface, ControllerInterface {
     // Save all the values in an expirable key value store.
     $modules = $form_state['values']['uninstall'];
     $uninstall = array_keys(array_filter($modules));
-    $account = $this->request->attributes->get('_account')->id();
+    $account = $this->getCurrentUser()->id();
     $this->keyValueExpirable->setWithExpire($account, $uninstall, 60);
 
     // Redirect to the confirm form.

@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
@@ -492,7 +493,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
    */
   public function getContainedStrings(TypedDataInterface $wrapper, $depth, array &$strings) {
 
-    if ($wrapper->getType() == 'string') {
+    if ($wrapper instanceof StringInterface) {
       $strings[] = $wrapper->getValue();
     }
 

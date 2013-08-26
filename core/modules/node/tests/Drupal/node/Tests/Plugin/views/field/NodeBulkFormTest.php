@@ -32,7 +32,7 @@ class NodeBulkFormTest extends UnitTestCase {
     $actions = array();
 
     for ($i = 1; $i <= 2; $i++) {
-      $action = $this->getMockBuilder('Drupal\system\Plugin\Core\Entity\Action')
+      $action = $this->getMockBuilder('Drupal\system\Entity\Action')
         ->disableOriginalConstructor()
         ->getMock();
       $action->expects($this->any())
@@ -41,7 +41,7 @@ class NodeBulkFormTest extends UnitTestCase {
       $actions[$i] = $action;
     }
 
-    $action = $this->getMockBuilder('Drupal\system\Plugin\Core\Entity\Action')
+    $action = $this->getMockBuilder('Drupal\system\Entity\Action')
       ->disableOriginalConstructor()
       ->getMock();
     $action->expects($this->any())

@@ -607,7 +607,7 @@ class ForumTest extends WebTestBase {
       // Verify topic was moved to a different forum.
       $forum_tid = db_query("SELECT tid FROM {forum} WHERE nid = :nid AND vid = :vid", array(
         ':nid' => $node->id(),
-        ':vid' => $node->vid,
+        ':vid' => $node->getRevisionId(),
       ))->fetchField();
       $this->assertTrue($forum_tid == $this->root_forum['tid'], 'The forum topic is linked to a different forum');
 

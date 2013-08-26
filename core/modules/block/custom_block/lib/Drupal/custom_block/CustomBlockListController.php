@@ -19,19 +19,16 @@ class CustomBlockListController extends EntityListController {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header = parent::buildHeader();
     $header['label'] = t('Block description');
-    unset($header['id']);
-    return $header;
+    return $header + parent::buildHeader();
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row = parent::buildRow($entity);
-    unset($row['id']);
-    return $row;
+    $row['label'] = $this->getLabel($entity);
+    return $row + parent::buildRow($entity);
   }
 
   /**

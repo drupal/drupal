@@ -19,7 +19,7 @@ class ConfigField extends Field implements ConfigFieldInterface {
   /**
    * The Field instance definition.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   * @var \Drupal\field\Entity\FieldInstance
    */
   protected $instance;
 
@@ -70,6 +70,13 @@ class ConfigField extends Field implements ConfigFieldInterface {
     }
 
     return $constraints;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getDefaultValue() {
+    return $this->getInstance()->getFieldDefaultValue($this->getParent());
   }
 
 }

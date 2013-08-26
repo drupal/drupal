@@ -10,8 +10,6 @@ namespace Drupal\system\Form;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Datetime\Date;
-use Drupal\Core\Entity\EntityControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\Query\QueryFactory;
@@ -20,7 +18,7 @@ use Drupal\Core\Entity\EntityFormController;
 /**
  * Provides a base form controller for date formats.
  */
-abstract class DateFormatFormBase extends EntityFormController implements EntityControllerInterface {
+abstract class DateFormatFormBase extends EntityFormController {
 
   /**
    * The date pattern type.
@@ -46,16 +44,12 @@ abstract class DateFormatFormBase extends EntityFormController implements Entity
   /**
    * Constructs a new date format form.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
    *   The entity query factory.
    * @param \Drupal\Core\Datetime\Date $date_service
    *   The date service.
    */
-  function __construct(ModuleHandlerInterface $module_handler, QueryFactory $query_factory, Date $date_service) {
-    parent::__construct($module_handler);
-
+  public function __construct(QueryFactory $query_factory, Date $date_service) {
     $date = new DrupalDateTime();
     $this->patternType = $date->canUseIntl() ? DrupalDateTime::INTL : DrupalDateTime::PHP;
 
@@ -66,9 +60,8 @@ abstract class DateFormatFormBase extends EntityFormController implements Entity
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('entity.query'),
       $container->get('date')
     );

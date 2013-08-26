@@ -51,7 +51,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
    *
    * @var string
    */
-  protected $entityClass = 'Drupal\entity_test\Plugin\Core\Entity\EntityTest';
+  protected $entityClass = 'Drupal\entity_test\Entity\EntityTest';
 
   /**
    * Overrides \Drupal\simpletest\DrupalUnitTestBase::setup().

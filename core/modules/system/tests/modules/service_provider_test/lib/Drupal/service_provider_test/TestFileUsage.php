@@ -7,7 +7,7 @@
 
 namespace Drupal\service_provider_test;
 
-use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\file\Entity\File;
 use Drupal\file\FileUsage\FileUsageBase;
 
 class TestFileUsage extends FileUsageBase {

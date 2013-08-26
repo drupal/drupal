@@ -6,7 +6,7 @@
  */
 
 use Drupal\Component\Uuid\Uuid;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\Entity\Field;
 
 /**
  * Implements hook_uninstall().

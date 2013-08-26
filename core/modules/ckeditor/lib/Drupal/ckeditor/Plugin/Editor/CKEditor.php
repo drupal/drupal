@@ -13,7 +13,7 @@ use Drupal\editor\Plugin\EditorBase;
 use Drupal\editor\Annotation\Editor;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\editor\Plugin\Core\Entity\Editor as EditorEntity;
+use Drupal\editor\Entity\Editor as EditorEntity;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -252,7 +252,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    *
    * @see getJSSettings()
    *
-   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
    * @return array
    *   An array containing the "toolbar" configuration.
@@ -283,7 +283,7 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
    *
    * @see getJSSettings()
    *
-   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
    * @return array
    *   An array containing the "contentsCss" configuration.

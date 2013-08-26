@@ -53,9 +53,14 @@ function theme_image_style_effects($variables) {
     )));
   }
 
-  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'image-style-effects')));
+  $table = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#attributes' => array('id' => 'image-style-effects'),
+  );
   drupal_add_tabledrag('image-style-effects', 'order', 'sibling', 'image-effect-order-weight');
-  return $output;
+  return drupal_render($table);
 }
 
 /**
@@ -117,10 +122,17 @@ function theme_image_style_preview($variables) {
 
   // Build the preview of the original image.
   $original_url = file_create_url($original_path);
+  $image = array(
+    '#theme' => 'image',
+    '#uri' => $original_path,
+    '#alt' => t('Sample original image'),
+    '#title' => '',
+    '#attributes' => $original_image,
+  );
   $output .= '<div class="preview-image-wrapper">';
   $output .= t('original') . ' (' . l(t('view actual size'), $original_url) . ')';
   $output .= '<div class="preview-image original-image" style="' . $original_image['style'] . '">';
-  $output .= '<a href="' . $original_url . '">' . theme('image', array('uri' => $original_path, 'alt' => t('Sample original image'), 'title' => '', 'attributes' => $original_image)) . '</a>';
+  $output .= '<a href="' . $original_url . '">' . drupal_render($image) . '</a>';
   $output .= '<div class="height" style="height: ' . $original_height . 'px"><span>' . $original_image['height'] . 'px</span></div>';
   $output .= '<div class="width" style="width: ' . $original_width . 'px"><span>' . $original_image['width'] . 'px</span></div>';
   $output .= '</div>'; // End preview-image.
@@ -128,10 +140,17 @@ function theme_image_style_preview($variables) {
 
   // Build the preview of the image style.
   $preview_url = file_create_url($preview_file) . '?cache_bypass=' . REQUEST_TIME;
+  $image = array(
+    '#theme' => 'image',
+    '#uri' => $preview_url,
+    '#alt' => t('Sample modified image'),
+    '#title' => '',
+    '#attributes' => $preview_image,
+  );
   $output .= '<div class="preview-image-wrapper">';
   $output .= check_plain($style->label()) . ' (' . l(t('view actual size'), file_create_url($preview_file) . '?' . time()) . ')';
   $output .= '<div class="preview-image modified-image" style="' . $preview_image['style'] . '">';
-  $output .= '<a href="' . file_create_url($preview_file) . '?' . time() . '">' . theme('image', array('uri' => $preview_url, 'alt' => t('Sample modified image'), 'title' => '', 'attributes' => $preview_image)) . '</a>';
+  $output .= '<a href="' . file_create_url($preview_file) . '?' . time() . '">' . drupal_render($image) . '</a>';
   $output .= '<div class="height" style="height: ' . $preview_height . 'px"><span>' . $preview_image['height'] . 'px</span></div>';
   $output .= '<div class="width" style="width: ' . $preview_width . 'px"><span>' . $preview_image['width'] . 'px</span></div>';
   $output .= '</div>'; // End preview-image.
@@ -166,7 +185,13 @@ function theme_image_anchor($variables) {
     }
   }
 
-  return theme('table', array('header' => array(), 'rows' => $rows, 'attributes' => array('class' => array('image-anchor'))));
+  $table = array(
+    '#theme' => 'table',
+    '#header' => array(),
+    '#rows' => $rows,
+    '#attributes' => array('class' => array('image-anchor')),
+  );
+  return drupal_render($table);
 }
 
 /**
@@ -199,8 +224,11 @@ function theme_image_resize_summary($variables) {
  * @ingroup themeable
  */
 function theme_image_scale_summary($variables) {
-  $data = $variables['data'];
-  return theme('image_resize_summary', array('data' => $data)) . ' ' . ($data['upscale'] ? '(' . t('upscaling allowed') . ')' : '');
+  $image_resize_summary = array(
+    '#theme' => 'image_resize_summary',
+    '#data' => $variables['data'],
+  );
+  return drupal_render($image_resize_summary) . ' ' . ($variables['data']['upscale'] ? '(' . t('upscaling allowed') . ')' : '');
 }
 
 /**

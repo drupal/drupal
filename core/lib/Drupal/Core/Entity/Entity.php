@@ -431,24 +431,16 @@ class Entity implements IteratorAggregate, EntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function getType() {
-    // @todo: This does not make much sense, so remove once TypedDataInterface
-    // is removed. See https://drupal.org/node/2002138.
-    if ($this->bundle() != $this->entityType()) {
-      return 'entity:' . $this->entityType() . ':' . $this->bundle();
-    }
-    return 'entity:' . $this->entityType();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getDefinition() {
     // @todo: This does not make much sense, so remove once TypedDataInterface
     // is removed. See https://drupal.org/node/2002138.
-    return array(
-      'type' => $this->getType()
-    );
+    if ($this->bundle() != $this->entityType()) {
+      $type = 'entity:' . $this->entityType() . ':' . $this->bundle();
+    }
+    else {
+      $type = 'entity:' . $this->entityType();
+    }
+    return array('type' => $type);
   }
 
   /**

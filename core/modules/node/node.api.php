@@ -216,7 +216,7 @@ function hook_node_grants($account, $op) {
  * - 'gid': A 'grant ID' from hook_node_grants().
  * - 'grant_view': If set to 1 a user that has been identified as a member
  *   of this gid within this realm can view this node. This should usually be
- *   set to $node->status. Failure to do so may expose unpublished content
+ *   set to $node->isPublished(). Failure to do so may expose unpublished content
  *   to some users.
  * - 'grant_update': If set to 1 a user that has been identified as a member
  *   of this gid within this realm can edit this node.
@@ -259,15 +259,15 @@ function hook_node_grants($account, $op) {
  * @see hook_node_access_records_alter()
  * @ingroup node_access
  */
-function hook_node_access_records(\Drupal\Core\Entity\EntityInterface $node) {
+function hook_node_access_records(\Drupal\node\NodeInterface $node) {
   // We only care about the node if it has been marked private. If not, it is
   // treated just like any other node and we completely ignore it.
   if ($node->private) {
     $grants = array();
     // Only published Catalan translations of private nodes should be viewable
-    // to all users. If we fail to check $node->status, all users would be able
+    // to all users. If we fail to check $node->isPublished(), all users would be able
     // to view an unpublished node.
-    if ($node->status) {
+    if ($node->isPublished()) {
       $grants[] = array(
         'realm' => 'example',
         'gid' => 1,
@@ -283,7 +283,7 @@ function hook_node_access_records(\Drupal\Core\Entity\EntityInterface $node) {
     // have status unpublished.
     $grants[] = array(
       'realm' => 'example_author',
-      'gid' => $node->uid,
+      'gid' => $node->getAuthorId(),
       'grant_view' => 1,
       'grant_update' => 1,
       'grant_delete' => 1,
@@ -440,7 +440,7 @@ function hook_node_delete(\Drupal\Core\Entity\EntityInterface $node) {
  */
 function hook_node_revision_delete(\Drupal\Core\Entity\EntityInterface $node) {
   db_delete('mytable')
-    ->condition('vid', $node->vid)
+    ->condition('vid', $node->getRevisionId())
     ->execute();
 }
 
@@ -570,8 +570,8 @@ function hook_node_load($nodes, $types) {
  *
  * @ingroup node_access
  */
-function hook_node_access($node, $op, $account, $langcode) {
-  $type = is_string($node) ? $node : $node->type;
+function hook_node_access(\Drupal\node\NodeInterface $node, $op, $account, $langcode) {
+  $type = is_string($node) ? $node : $node->getType();
 
   $configured_types = node_permissions_get_configured_types();
   if (isset($configured_types[$type])) {
@@ -580,13 +580,13 @@ function hook_node_access($node, $op, $account, $langcode) {
     }
 
     if ($op == 'update') {
-      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->id() == $node->uid))) {
+      if (user_access('edit any ' . $type . ' content', $account) || (user_access('edit own ' . $type . ' content', $account) && ($account->id() == $node->getAuthorId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }
 
     if ($op == 'delete') {
-      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->id() == $node->uid))) {
+      if (user_access('delete any ' . $type . ' content', $account) || (user_access('delete own ' . $type . ' content', $account) && ($account->id() == $node->getAuthorId()))) {
         return NODE_ACCESS_ALLOW;
       }
     }
@@ -791,7 +791,7 @@ function hook_node_submit(\Drupal\Core\Entity\EntityInterface $node, $form, &$fo
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node that is being assembled for rendering.
- * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ * @param \Drupal\entity\Entity\EntityDisplay $display
  *   The entity_display object holding the display options configured for the
  *   node components.
  * @param string $view_mode
@@ -804,7 +804,7 @@ function hook_node_submit(\Drupal\Core\Entity\EntityInterface $node, $form, &$fo
  *
  * @ingroup node_api_hooks
  */
-function hook_node_view(\Drupal\Core\Entity\EntityInterface $node, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display, $view_mode, $langcode) {
+function hook_node_view(\Drupal\Core\Entity\EntityInterface $node, \Drupal\entity\Entity\EntityDisplay $display, $view_mode, $langcode) {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
   // node type in hook_field_extra_fields().
@@ -833,7 +833,7 @@ function hook_node_view(\Drupal\Core\Entity\EntityInterface $node, \Drupal\entit
  *   A renderable array representing the node content.
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node being rendered.
- * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ * @param \Drupal\entity\Entity\EntityDisplay $display
  *   The entity_display object holding the display options configured for the
  *   node components.
  *
@@ -842,7 +842,7 @@ function hook_node_view(\Drupal\Core\Entity\EntityInterface $node, \Drupal\entit
  *
  * @ingroup node_api_hooks
  */
-function hook_node_view_alter(&$build, \Drupal\Core\Entity\EntityInterface $node, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display) {
+function hook_node_view_alter(&$build, \Drupal\Core\Entity\EntityInterface $node, \Drupal\entity\Entity\EntityDisplay $display) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;

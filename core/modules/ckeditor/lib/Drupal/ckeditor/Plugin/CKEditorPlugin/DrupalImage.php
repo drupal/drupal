@@ -10,7 +10,7 @@ namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\ckeditor\Annotation\CKEditorPlugin;
 use Drupal\Core\Annotation\Translation;
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Entity\Editor;
 
 /**
  * Defines the "drupalimage" plugin.

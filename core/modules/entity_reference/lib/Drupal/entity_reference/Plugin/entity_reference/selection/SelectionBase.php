@@ -54,15 +54,14 @@ class SelectionBase implements SelectionInterface {
   /**
    * {@inheritdoc}
    */
-  public static function settingsForm(&$field, &$instance) {
-    $entity_info = entity_get_info($field['settings']['target_type']);
-    $bundles = entity_get_bundles($field['settings']['target_type']);
+  public static function settingsForm(FieldDefinitionInterface $field_definition) {
+    $target_type = $field_definition->getFieldSetting('target_type');
+    $selection_handler_settings = $field_definition->getFieldSetting('handler_settings') ?: array();
+    $entity_info = \Drupal::entityManager()->getDefinition($target_type);
+    $bundles = entity_get_bundles($target_type);
 
     // Merge-in default values.
-    if (!isset($instance['settings']['handler_settings'])) {
-      $instance['settings']['handler_settings'] = array();
-    }
-    $instance['settings']['handler_settings'] += array(
+    $selection_handler_settings += array(
       'target_bundles' => array(),
       'sort' => array(
         'field' => '_none',
@@ -78,10 +77,10 @@ class SelectionBase implements SelectionInterface {
 
       $target_bundles_title = t('Bundles');
       // Default core entity types with sensible labels.
-      if ($field['settings']['target_type'] == 'node') {
+      if ($target_type == 'node') {
         $target_bundles_title = t('Content types');
       }
-      elseif ($field['settings']['target_type'] == 'taxonomy_term') {
+      elseif ($target_type == 'taxonomy_term') {
         $target_bundles_title = t('Vocabularies');
       }
 
@@ -89,7 +88,7 @@ class SelectionBase implements SelectionInterface {
         '#type' => 'checkboxes',
         '#title' => $target_bundles_title,
         '#options' => $bundle_options,
-        '#default_value' => (!empty($instance['settings']['handler_settings']['target_bundles'])) ? $instance['settings']['handler_settings']['target_bundles'] : array(),
+        '#default_value' => (!empty($selection_handler_settings['target_bundles'])) ? $selection_handler_settings['target_bundles'] : array(),
         '#required' => TRUE,
         '#size' => 6,
         '#multiple' => TRUE,
@@ -106,7 +105,7 @@ class SelectionBase implements SelectionInterface {
     // @todo Use Entity::getPropertyDefinitions() when all entity types are
     // converted to the new Field API.
     $fields = drupal_map_assoc(drupal_schema_fields_sql($entity_info['base_table']));
-    foreach (field_info_instances($field['settings']['target_type']) as $bundle_instances) {
+    foreach (field_info_instances($target_type) as $bundle_instances) {
       foreach ($bundle_instances as $instance_name => $instance_info) {
         $field_info = field_info_field($instance_name);
         foreach ($field_info['columns'] as $column_name => $column_info) {
@@ -123,7 +122,7 @@ class SelectionBase implements SelectionInterface {
       ) + $fields,
       '#ajax' => TRUE,
       '#limit_validation_errors' => array(),
-      '#default_value' => $instance['settings']['handler_settings']['sort']['field'],
+      '#default_value' => $selection_handler_settings['sort']['field'],
     );
 
     $form['sort']['settings'] = array(
@@ -132,9 +131,9 @@ class SelectionBase implements SelectionInterface {
       '#process' => array('_entity_reference_form_process_merge_parent'),
     );
 
-    if ($instance['settings']['handler_settings']['sort']['field'] != '_none') {
+    if ($selection_handler_settings['sort']['field'] != '_none') {
       // Merge-in default values.
-      $instance['settings']['handler_settings']['sort'] += array(
+      $selection_handler_settings['sort'] += array(
         'direction' => 'ASC',
       );
 
@@ -146,7 +145,7 @@ class SelectionBase implements SelectionInterface {
           'ASC' => t('Ascending'),
           'DESC' => t('Descending'),
         ),
-        '#default_value' => $instance['settings']['handler_settings']['sort']['direction'],
+        '#default_value' => $selection_handler_settings['sort']['direction'],
       );
     }
 

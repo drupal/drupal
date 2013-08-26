@@ -47,7 +47,7 @@ class SummaryLengthTest extends NodeTestBase {
     $this->assertRaw($expected);
 
     // Change the teaser length for "Basic page" content type.
-    $display = entity_get_display('node', $node->type, 'teaser');
+    $display = entity_get_display('node', $node->getType(), 'teaser');
     $display_options = $display->getComponent('body');
     $display_options['settings']['trim_length'] = 200;
     $display->setComponent('body', $display_options)

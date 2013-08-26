@@ -7,6 +7,7 @@
 
 namespace Drupal\aggregator\Form;
 
+use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\system\SystemConfigFormBase;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\aggregator\Plugin\AggregatorPluginManager;
@@ -40,6 +41,8 @@ class SettingsForm extends SystemConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\Core\Config\Context\ContextInterface $context
+   *   The configuration context to use.
    * @param \Drupal\aggregator\Plugin\AggregatorPluginManager $fetcher_manager
    *   The aggregator fetcher plugin manager.
    * @param \Drupal\aggregator\Plugin\AggregatorPluginManager $parser_manager
@@ -47,8 +50,9 @@ class SettingsForm extends SystemConfigFormBase {
    * @param \Drupal\aggregator\Plugin\AggregatorPluginManager $processor_manager
    *   The aggregator processor plugin manager.
    */
-  public function __construct(ConfigFactory $config_factory, AggregatorPluginManager $fetcher_manager, AggregatorPluginManager $parser_manager, AggregatorPluginManager $processor_manager) {
-    $this->configFactory = $config_factory;
+  public function __construct(ConfigFactory $config_factory, ContextInterface $context, AggregatorPluginManager $fetcher_manager, AggregatorPluginManager $parser_manager, AggregatorPluginManager $processor_manager) {
+    parent::__construct($config_factory, $context);
+
     $this->managers = array(
       'fetcher' => $fetcher_manager,
       'parser' => $parser_manager,
@@ -68,6 +72,7 @@ class SettingsForm extends SystemConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.context.free'),
       $container->get('plugin.manager.aggregator.fetcher'),
       $container->get('plugin.manager.aggregator.parser'),
       $container->get('plugin.manager.aggregator.processor')

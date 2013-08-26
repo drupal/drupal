@@ -190,10 +190,6 @@ function system_theme() {
     'system_date_format_localize_form' => array(
       'render element' => 'form',
     ),
-    'system_plugin_ui_form' => array(
-      'template' => 'system-plugin-ui-form',
-      'render element' => 'form',
-    ),
   ));
 }
 
@@ -629,13 +625,6 @@ function system_menu() {
     'page callback' => 'system_admin_menu_block_page',
     'weight' => 9,
     'menu_name' => 'admin',
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/compact'] = array(
-    'title' => 'Compact mode',
-    'page callback' => 'system_admin_compact_page',
-    'access arguments' => array('access administration pages'),
-    'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
   $items['admin/tasks'] = array(
@@ -2337,19 +2326,6 @@ function system_preprocess_block(&$variables) {
 }
 
 /**
- * Prepares variables for system plugin UI form templates.
- *
- * Default template: system-plugin-ui-form.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - form: The plugin form elements.
-*/
-function template_preprocess_system_plugin_ui_form(&$variables) {
-  drupal_add_css(drupal_get_path('module', 'system') . '/css/system.plugin.ui.css');
-}
-
-/**
  * Provide a single block on the administration overview page.
  *
  * @param $item
@@ -2964,31 +2940,20 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
  * such as the configuration page and the permissions page.
  *
  * Whether the user is in compact mode is determined by a cookie, which is set
- * for the user by system_admin_compact_page().
+ * for the user by \Drupal\system\Controller\SystemController::compactPage().
  *
  * If the user does not have the cookie, the default value is given by the
  * system variable 'admin_compact_mode', which itself defaults to FALSE. This
  * does not have a user interface to set it: it is a hidden variable which can
  * be set in the settings.php file.
  *
- * @return
+ * @return bool
  *   TRUE when in compact mode, FALSE when in expanded mode.
  */
 function system_admin_compact_mode() {
   // PHP converts dots into underscores in cookie names to avoid problems with
   // its parser, so we use a converted cookie name.
   return isset($_COOKIE['Drupal_visitor_admin_compact_mode']) ? $_COOKIE['Drupal_visitor_admin_compact_mode'] : Drupal::config('system.site')->get('admin_compact_mode');
-}
-
-/**
- * Menu callback; Sets whether the admin menu is in compact mode or not.
- *
- * @param $mode
- *   Valid values are 'on' and 'off'.
- */
-function system_admin_compact_page($mode = 'off') {
-  user_cookie_save(array('admin_compact_mode' => ($mode == 'on')));
-  return new RedirectResponse(url('<front>', array('absolute' => TRUE)));
 }
 
 /**

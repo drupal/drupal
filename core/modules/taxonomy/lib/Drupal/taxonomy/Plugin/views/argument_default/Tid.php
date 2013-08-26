@@ -135,7 +135,7 @@ class Tid extends ArgumentDefaultPluginBase {
       // Just check, if a node could be detected.
       if ($node) {
         $taxonomy = array();
-        $fields = field_info_instances('node', $node->type);
+        $fields = field_info_instances('node', $node->getType());
         foreach ($fields as $name => $info) {
           $field_info = field_info_field($name);
           if ($field_info['type'] == 'taxonomy_term_reference') {

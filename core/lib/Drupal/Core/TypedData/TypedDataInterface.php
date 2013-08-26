@@ -15,14 +15,6 @@ use Drupal\user;
 interface TypedDataInterface {
 
   /**
-   * Gets the data type.
-   *
-   * @return string
-   *   The data type of the wrapped data.
-   */
-  public function getType();
-
-  /**
    * Gets the data definition.
    *
    * @return array

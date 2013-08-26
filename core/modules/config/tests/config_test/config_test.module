@@ -5,7 +5,7 @@
  * Provides Config module hook implementations for testing purposes.
  */
 
-use Drupal\config_test\Plugin\Core\Entity\ConfigTest;
+use Drupal\config_test\Entity\ConfigTest;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 require_once dirname(__FILE__) . '/config_test.hooks.inc';
@@ -13,7 +13,7 @@ require_once dirname(__FILE__) . '/config_test.hooks.inc';
 /**
  * Entity URI callback.
  *
- * @param Drupal\config_test\Plugin\Core\Entity\ConfigTest $config_test
+ * @param Drupal\config_test\Entity\ConfigTest $config_test
  *   A ConfigTest entity.
  */
 function config_test_uri(ConfigTest $config_test) {

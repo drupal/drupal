@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\node\Plugin\Core\Entity\NodeInterface.
+ * Contains \Drupal\node\Entity\NodeInterface.
  */
 
 namespace Drupal\node;
@@ -14,6 +14,23 @@ use Drupal\user\UserInterface;
  * Provides an interface defining a node entity.
  */
 interface NodeInterface extends ContentEntityInterface {
+
+  /**
+   * Returns the node type.
+   *
+   * @return string
+   *   The node type.
+   */
+  public function getType();
+
+  /**
+   *
+   * Returns the node title.
+   *
+   * @return string
+   *   Title of the node.
+   */
+  public function getTitle();
 
   /**
    * Sets the node title.

@@ -172,20 +172,20 @@ function seven_form_node_form_alter(&$form, &$form_state) {
     'published' => array(
       '#type' => 'item',
       '#wrapper_attributes' => array('class' => array('published')),
-      '#markup' => !empty($node->status) ? t('Published') : t('Not published'),
+      '#markup' => $node->isPublished() ? t('Published') : t('Not published'),
       '#access' => !$node->isNew(),
     ),
     'changed' => array(
       '#type' => 'item',
       '#wrapper_attributes' => array('class' => array('changed', 'container-inline')),
       '#title' => t('Last saved'),
-      '#markup' => !$node->isNew() ? format_date($node->changed, 'short') : t('Not saved yet'),
+      '#markup' => !$node->isNew() ? format_date($node->getChangedTime(), 'short') : t('Not saved yet'),
     ),
     'author' => array(
       '#type' => 'item',
       '#wrapper_attributes' => array('class' => array('author', 'container-inline')),
       '#title' => t('Author'),
-      '#markup' => user_format_name(user_load($node->uid)),
+      '#markup' => $node->getAuthor()->getUsername(),
     ),
   );
   $form['revision_information']['#type'] = 'container';

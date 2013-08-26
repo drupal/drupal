@@ -155,7 +155,7 @@ abstract class FileFieldTestBase extends WebTestBase {
       $node->setNewRevision();
       $node->save();
       $node = node_load($nid, TRUE);
-      $this->assertNotEqual($nid, $node->vid, 'Node revision exists.');
+      $this->assertNotEqual($nid, $node->getRevisionId(), 'Node revision exists.');
     }
 
     // Attach a file to the node.

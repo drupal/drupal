@@ -1741,7 +1741,7 @@ abstract class DisplayPluginBase extends PluginBase {
         break;
       case 'analyze-theme':
         $form['#title'] .= t('Theming information');
-        if ($theme = drupal_container()->get('request')->request->get('theme')) {
+        if ($theme = \Drupal::request()->request->get('theme')) {
           $this->theme = $theme;
         }
         elseif (empty($this->theme)) {

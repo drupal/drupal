@@ -41,7 +41,7 @@ class EntityAccessCheckTest extends UnitTestCase {
   public function testAccess() {
     $route = new Route('/foo', array(), array('_entity_access' => 'node.update'));
     $request = new Request();
-    $node = $this->getMockBuilder('Drupal\node\Plugin\Core\Entity\Node')
+    $node = $this->getMockBuilder('Drupal\node\Entity\Node')
       ->disableOriginalConstructor()
       ->getMock();
     $node->expects($this->any())

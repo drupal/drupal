@@ -8,7 +8,6 @@
 namespace Drupal\form_test;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a test confirmation form.
@@ -60,10 +59,10 @@ class ConfirmFormTestForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
+  public function buildForm(array $form, array &$form_state) {
     $form['element'] = array('#markup' => '<p>The ConfirmFormTestForm::buildForm() method was used for this form.</p>');
 
-    return parent::buildForm($form, $form_state, $request);
+    return parent::buildForm($form, $form_state);
   }
 
   /**

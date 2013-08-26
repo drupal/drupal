@@ -7,16 +7,15 @@
 
 namespace Drupal\forum\Plugin\Block;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a 'New forum topics' block.
  *
- * @Plugin(
+ * @Block(
  *   id = "forum_new_block",
- *   admin_label = @Translation("New forum topics"),
- *   module = "forum"
+ *   admin_label = @Translation("New forum topics")
  * )
  */
 class NewTopicsBlock extends ForumBlockBase {

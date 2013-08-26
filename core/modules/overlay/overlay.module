@@ -8,7 +8,7 @@
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Drupal\block\Plugin\Core\Entity\Block;
+use Drupal\block\Entity\Block;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -22,20 +22,6 @@ function overlay_help($path, $arg) {
       $output .= '<p>' . t('The Overlay module makes the administration pages on your site display in a JavaScript overlay of the page you were viewing when you clicked the administrative link, instead of replacing the page in your browser window. Use the close link on the overlay to return to the page you were viewing when you clicked the link. For more information, see the online handbook entry for <a href="@overlay">Overlay module</a>.', array('@overlay' => 'http://drupal.org/documentation/modules/overlay')) . '</p>';
       return $output;
   }
-}
-
-/**
- * Implements hook_menu()
- */
-function overlay_menu() {
-  $items['overlay-ajax/%'] = array(
-    'title' => '',
-    'page callback' => 'overlay_ajax_render_region',
-    'page arguments' => array(1),
-    'access arguments' => array('access overlay'),
-    'type' => MENU_CALLBACK,
-  );
-  return $items;
 }
 
 /**
@@ -842,18 +828,4 @@ function overlay_trigger_refresh() {
     drupal_add_js(array('overlayChild' => array('refreshPage' => TRUE)), array('type' => 'setting'));
     unset($_SESSION['overlay_refresh_parent']);
   }
-}
-
-/**
- * Prints the markup obtained by rendering a single region of the page.
- *
- * This function is intended to be called via Ajax.
- *
- * @param $region
- *   The name of the page region to render.
- *
- * @see Drupal.overlay.refreshRegions()
- */
-function overlay_ajax_render_region($region) {
-  return new Response(overlay_render_region($region));
 }

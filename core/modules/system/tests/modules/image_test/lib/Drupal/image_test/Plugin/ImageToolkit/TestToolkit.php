@@ -8,7 +8,7 @@
 namespace Drupal\image_test\Plugin\ImageToolkit;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\system\Annotation\ImageToolkit;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Image\ImageInterface;
 use Drupal\system\Plugin\ImageToolkitInterface;
@@ -16,7 +16,7 @@ use Drupal\system\Plugin\ImageToolkitInterface;
 /**
  * Defines a Test toolkit for image manipulation within Drupal.
  *
- * @Plugin(
+ * @ImageToolkit(
  *   id = "test",
  *   title = @Translation("A dummy toolkit that works")
  * )

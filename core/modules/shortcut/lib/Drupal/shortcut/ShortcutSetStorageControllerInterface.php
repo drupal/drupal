@@ -51,7 +51,7 @@ interface ShortcutSetStorageControllerInterface extends EntityStorageControllerI
   /**
    * Get the name of the set assigned to this user.
    *
-   * @param \Drupal\user\Plugin\Core\Entity\User
+   * @param \Drupal\user\Entity\User
    *   The user account.
    *
    * @return string

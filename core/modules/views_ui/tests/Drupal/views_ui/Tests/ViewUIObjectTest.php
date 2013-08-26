@@ -58,7 +58,7 @@ class ViewUIObjectTest extends UnitTestCase {
       }
     }
 
-    $storage = $this->getMock('Drupal\views\Plugin\Core\Entity\View', $interface_methods, array(array(), 'view'));
+    $storage = $this->getMock('Drupal\views\Entity\View', $interface_methods, array(array(), 'view'));
     $executable = $this->getMockBuilder('Drupal\views\ViewExecutable')
       ->disableOriginalConstructor()
       ->setConstructorArgs(array($storage))

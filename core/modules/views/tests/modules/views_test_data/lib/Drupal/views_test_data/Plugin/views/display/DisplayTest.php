@@ -18,6 +18,7 @@ use Drupal\Core\Annotation\Translation;
  *   id = "display_test",
  *   title = @Translation("Display test"),
  *   theme = "views_view",
+ *   register_theme = FALSE,
  *   contextual_links_locations = {"view"}
  * )
  */

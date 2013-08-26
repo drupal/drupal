@@ -9,7 +9,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
-use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
+use Drupal\menu_link\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorageController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -1008,7 +1008,7 @@ function menu_item_route_access(Route $route, $href, &$map) {
  * "story" content type:
  * @code
  * $node = menu_get_object();
- * $story = $node->type == 'story';
+ * $story = $node->getType() == 'story';
  * @endcode
  *
  * @param $type

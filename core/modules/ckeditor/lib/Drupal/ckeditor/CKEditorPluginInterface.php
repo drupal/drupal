@@ -8,7 +8,7 @@
 namespace Drupal\ckeditor;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Entity\Editor;
 
 /**
  * Defines an interface for (loading of) CKEditor plugins.
@@ -43,7 +43,7 @@ interface CKEditorPluginInterface extends PluginInspectionInterface {
   /**
    * Returns a list of plugins this plugin requires.
    *
-   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
    * @return array
    *   An unindexed array of plugin names this plugin requires. Each plugin is
@@ -57,7 +57,7 @@ interface CKEditorPluginInterface extends PluginInspectionInterface {
    * These libraries will be attached to the text_format element on which the
    * editor is being loaded.
    *
-   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
    * @return array
    *   An array of libraries suitable for usage in a render API #attached
@@ -85,7 +85,7 @@ interface CKEditorPluginInterface extends PluginInspectionInterface {
    * If there are plugin-specific settings (verify with isset()), they can be
    * found at $editor->settings['plugins'][$plugin_id].
    *
-   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
    * @return array
    *   A keyed array, whose keys will end up as keys under CKEDITOR.config.

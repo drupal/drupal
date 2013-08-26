@@ -21,6 +21,7 @@ use Drupal\views\Plugin\views\style\StylePluginBase;
  *   title = @Translation("Entity Reference list"),
  *   help = @Translation("Returns results as a PHP array of labels and rendered rows."),
  *   theme = "views_view_unformatted",
+ *   register_theme = FALSE,
  *   display_types = {"entity_reference"}
  * )
  */

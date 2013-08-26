@@ -8,7 +8,7 @@
 namespace Drupal\field\Plugin\Type\Widget;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\field\Entity\FieldInstance;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 

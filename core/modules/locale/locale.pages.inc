@@ -520,9 +520,15 @@ function locale_translation_status_form($form, &$form_state) {
 
     // Build data options for the select table.
     foreach($updates as $langcode => $update) {
+      $locale_translation_update_info = array('#theme' => 'locale_translation_update_info');
+      foreach (array('updates', 'not_found') as $update_status) {
+        if (isset($update[$update_status])) {
+          $locale_translation_update_info['#' . $update_status] = $update[$update_status];
+        }
+      }
       $options[$langcode] = array(
         'title' => check_plain($languages[$langcode]->name),
-        'status' => array('class' => array('description', 'expand', 'priority-low'), 'data' => theme('locale_translation_update_info', $update)),
+        'status' => array('class' => array('description', 'expand', 'priority-low'), 'data' => drupal_render($locale_translation_update_info)),
       );
     }
     // Sort the table data on language name.
@@ -718,13 +724,16 @@ function theme_locale_translate_edit_form_strings($variables) {
       array('data' => $string['translations']),
     );
   }
-  $output .= theme('table', array(
-    'header' => $header,
-    'rows' => $rows,
-    'empty' => t('No strings available.'),
-    'attributes' => array('class' => array('locale-translate-edit-table')),
-  ));
-  $output .= theme('pager');
+  $table = array(
+    '#theme' => 'table',
+    '#header' => $header,
+    '#rows' => $rows,
+    '#empty' => t('No strings available.'),
+    '#attributes' => array('class' => array('locale-translate-edit-table')),
+  );
+  $output .= drupal_render($table);
+  $pager = array('#theme' => 'pager');
+  $output .= drupal_render($pager);
   return $output;
 }
 
@@ -747,8 +756,8 @@ function template_preprocess_locale_translation_update_info(&$variables) {
 
   // Build output for available updates.
   if (isset($variables['updates'])) {
+    $releases = array();
     if ($variables['updates']) {
-      $releases = array();
       foreach ($variables['updates'] as $update) {
         $modules[] = $update['name'];
         $releases[] = t('@module (@date)', array('@module' => $update['name'], '@date' => format_date($update['timestamp'], 'html_date')));
@@ -763,9 +772,9 @@ function template_preprocess_locale_translation_update_info(&$variables) {
 
   // Build output for updates not found.
   if (isset($variables['not_found'])) {
+    $releases = array();
     $variables['missing_updates_status'] = format_plural(count($variables['not_found']), 'Missing translations for one project', 'Missing translations for @count projects');
     if ($variables['not_found']) {
-      $releases = array();
       foreach ($variables['not_found'] as $update) {
         $version = $update['version'] ? $update['version'] : t('no version');
         $releases[] = t('@module (@version).', array('@module' => $update['name'], '@version' => $version)) . ' ' . $update['info'];

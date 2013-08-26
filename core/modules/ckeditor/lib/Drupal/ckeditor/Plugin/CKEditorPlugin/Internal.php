@@ -11,7 +11,7 @@ use Drupal\ckeditor\CKEditorPluginBase;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\ckeditor\Annotation\CKEditorPlugin;
 use Drupal\Core\Annotation\Translation;
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Entity\Editor;
 
 /**
  * Defines the "internal" plugin (i.e. core plugins part of our CKEditor build).
@@ -241,7 +241,7 @@ class Internal extends CKEditorPluginBase {
    *
    * @see getConfig()
    *
-   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
    *
    * @return array
@@ -275,7 +275,7 @@ class Internal extends CKEditorPluginBase {
    *
    * @see getConfig()
    *
-   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
    *
    * @return string|TRUE

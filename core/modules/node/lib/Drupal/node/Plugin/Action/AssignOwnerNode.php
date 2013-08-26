@@ -107,7 +107,7 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
         '#type' => 'textfield',
         '#title' => t('Username'),
         '#default_value' => $owner_name,
-        '#autocomplete_path' => 'user/autocomplete',
+        '#autocomplete_route_name' => 'user_autocomplete',
         '#size' => '6',
         '#maxlength' => '60',
         '#description' => $description,

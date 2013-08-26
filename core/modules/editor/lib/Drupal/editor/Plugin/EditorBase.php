@@ -8,7 +8,7 @@
 namespace Drupal\editor\Plugin;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Entity\Editor;
 use Drupal\editor\Plugin\EditorPluginInterface;
 
 /**

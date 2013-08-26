@@ -16,6 +16,7 @@ use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\UserSession;
+use Drupal\Core\StreamWrapper\PublicStream;
 use PDO;
 use stdClass;
 use DOMDocument;
@@ -237,7 +238,7 @@ abstract class WebTestBase extends TestBase {
    *   - revision: 1. (Backwards-compatible binary flag indicating whether a
    *     new revision should be created; use 1 to specify a new revision.)
    *
-   * @return \Drupal\node\Plugin\Core\Entity\Node
+   * @return \Drupal\node\Entity\Node
    *   The created node entity.
    */
   protected function drupalCreateNode(array $settings = array()) {
@@ -301,7 +302,7 @@ abstract class WebTestBase extends TestBase {
    *   An array of settings to change from the defaults.
    *   Example: 'type' => 'foo'.
    *
-   * @return \Drupal\node\Plugin\Core\Entity\NodeType
+   * @return \Drupal\node\Entity\NodeType
    *   Created content type.
    */
   protected function drupalCreateContentType(array $values = array()) {
@@ -355,7 +356,7 @@ abstract class WebTestBase extends TestBase {
    *   - theme: The default theme.
    *   - visibility: Empty array.
    *
-   * @return \Drupal\block\Plugin\Core\Entity\Block
+   * @return \Drupal\block\Entity\Block
    *   The block entity.
    *
    * @todo
@@ -416,7 +417,7 @@ abstract class WebTestBase extends TestBase {
       $original = drupal_get_path('module', 'simpletest') . '/files';
       $files = file_scan_directory($original, '/(html|image|javascript|php|sql)-.*/');
       foreach ($files as $file) {
-        file_unmanaged_copy($file->uri, variable_get('file_public_path', conf_path() . '/files'));
+        file_unmanaged_copy($file->uri, PublicStream::basePath());
       }
 
       $this->generatedTestFiles = TRUE;
@@ -465,7 +466,7 @@ abstract class WebTestBase extends TestBase {
    * @param string $name
    *   The user name.
    *
-   * @return \Drupal\user\Plugin\Core\Entity\User|false
+   * @return \Drupal\user\Entity\User|false
    *   A fully loaded user object with pass_raw property, or FALSE if account
    *   creation fails.
    */
@@ -772,7 +773,7 @@ abstract class WebTestBase extends TestBase {
         NestedArray::setValue($GLOBALS['conf'], array_merge(array($config_base), explode('.', $name)), $value);
       }
     }
-    $GLOBALS['conf']['file_public_path'] = $this->public_files_directory;
+    $this->settingsSet('file_public_path', $this->public_files_directory);
     // Execute the non-interactive installer.
     require_once DRUPAL_ROOT . '/core/includes/install.core.inc';
     $this->settingsSet('cache', array('default' => 'cache.backend.memory'));
@@ -820,7 +821,6 @@ abstract class WebTestBase extends TestBase {
       }
       $config->save();
     }
-    variable_set('file_public_path', $this->public_files_directory);
 
     // Use the test mail class instead of the default mail handler class.
     \Drupal::config('system.mail')->set('interface.default', 'Drupal\Core\Mail\VariableLog')->save();

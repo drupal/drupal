@@ -12,27 +12,14 @@ use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\field\FieldInterface;
 
 /**
- * Implements hook_field_info().
+ * Implements hook_field_info_alter().
  */
-function entity_reference_field_info() {
-  $field_info['entity_reference'] = array(
-    'label' => t('Entity Reference'),
-    'description' => t('This field references another entity.'),
-    'settings' => array(
-      // Default to a primary entity type (i.e. node or user).
-      'target_type' => module_exists('node') ? 'node' : 'user',
-    ),
-    'instance_settings' => array(
-      // The selection handler for this instance.
-      'handler' => 'default',
-      // The handler settings.
-      'handler_settings' => array(),
-    ),
-    'default_widget' => 'entity_reference_autocomplete',
-    'default_formatter' => 'entity_reference_label',
-    'class' => '\Drupal\entity_reference\Type\ConfigurableEntityReferenceItem',
-  );
-  return $field_info;
+function entity_reference_field_info_alter(&$info) {
+  if (!Drupal::moduleHandler()->moduleExists('node')) {
+    // Fall back to another primary entity type if the Node module is not
+    // available.
+    $info['entity_reference']['settings']['target_type'] = 'user';
+  }
 }
 
 /**
@@ -77,74 +64,6 @@ function entity_reference_field_widget_info_alter(&$info) {
 }
 
 /**
- * Implements hook_field_presave().
- *
- * Create an entity on the fly.
- */
-function entity_reference_field_presave(EntityInterface $entity, $field, $instance, $langcode, &$items) {
-  foreach ($items as $delta => $item) {
-    if (empty($item['target_id']) && !empty($item['entity']) && $item['entity']->isNew()) {
-      $item['entity']->save();
-      $items[$delta]['target_id'] = $item['entity']->id();
-    }
-  }
-}
-
-/**
- * Implements hook_field_validate().
- */
-function entity_reference_field_validate(EntityInterface $entity = NULL, $field, $instance, $langcode, $items, &$errors) {
-  $ids = array();
-  foreach ($items as $delta => $item) {
-    if (!empty($item['target_id']) && (!empty($item['entity']) && !$item['entity']->isNew())) {
-      $ids[$item['target_id']] = $delta;
-    }
-  }
-
-  if ($ids) {
-    $valid_ids = Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($instance, $entity)->validateReferenceableEntities(array_keys($ids));
-
-    $invalid_entities = array_diff_key($ids, array_flip($valid_ids));
-    if ($invalid_entities) {
-      foreach ($invalid_entities as $id => $delta) {
-        $errors[$field['field_name']][$langcode][$delta][] = array(
-          'error' => 'entity_reference_invalid_entity',
-          'message' => t('The referenced entity (@type: @id) does not exist.', array('@type' => $field['settings']['target_type'], '@id' => $id)),
-        );
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_field_settings_form().
- */
-function entity_reference_field_settings_form($field, $instance) {
-  // Select the target entity type.
-  $entity_type_options = array();
-  foreach (entity_get_info() as $entity_type => $entity_info) {
-    // @todo As the database schema can currently only store numeric IDs of
-    // referenced entities and configuration entities have string IDs, prevent
-    // configuration entities from being referenced.
-    if (!is_subclass_of($entity_info['class'], '\Drupal\Core\Config\Entity\ConfigEntityInterface')) {
-      $entity_type_options[$entity_type] = $entity_info['label'];
-    }
-  }
-
-  $form['target_type'] = array(
-    '#type' => 'select',
-    '#title' => t('Type of item to reference'),
-    '#options' => $entity_type_options,
-    '#default_value' => $field['settings']['target_type'],
-    '#required' => TRUE,
-    '#disabled' => $field->hasData(),
-    '#size' => 1,
-  );
-
-  return $form;
-}
-
-/**
  * Implements hook_ENTITY_TYPE_update() for 'field_entity'.
  *
  * Reset the instance handler settings, when the target type is changed.
@@ -174,79 +93,6 @@ function entity_reference_field_entity_update(FieldInterface $field) {
       $instance->save();
     }
   }
-}
-
-/**
- * Implements hook_field_instance_settings_form().
- */
-function entity_reference_field_instance_settings_form($field, $instance, $form_state) {
-  $field = isset($form_state['entity_reference']['field']) ? $form_state['entity_reference']['field'] : $field;
-  $instance = isset($form_state['entity_reference']['instance']) ? $form_state['entity_reference']['instance'] : $instance;
-
-  $settings = $instance['settings'];
-  $settings += array('handler' => 'default');
-
-  // Get all selection plugins for this entity type.
-  $selection_plugins = Drupal::service('plugin.manager.entity_reference.selection')->getSelectionGroups($field['settings']['target_type']);
-  $handler_groups = array_keys($selection_plugins);
-
-  $handlers = Drupal::service('plugin.manager.entity_reference.selection')->getDefinitions();
-  $handlers_options = array();
-  foreach ($handlers as $plugin_id => $plugin) {
-    // We only display base plugins (e.g. 'default', 'views', ..) and not entity
-    // type specific plugins (e.g. 'default_node', 'default_user', ...).
-    if (in_array($plugin_id, $handler_groups)) {
-      $handlers_options[$plugin_id] = check_plain($plugin['label']);
-    }
-  }
-
-  $form = array(
-    '#type' => 'container',
-    '#attached' => array(
-      'css' => array(drupal_get_path('module', 'entity_reference') . '/css/entity_reference.admin.css'),
-    ),
-    '#process' => array(
-      '_entity_reference_field_instance_settings_ajax_process',
-    ),
-    '#element_validate' => array('_entity_reference_field_instance_settings_validate'),
-    '#field' => $field,
-    '#instance' => $instance,
-  );
-  $form['handler'] = array(
-    '#type' => 'details',
-    '#title' => t('Reference type'),
-    '#tree' => TRUE,
-    '#process' => array('_entity_reference_form_process_merge_parent'),
-  );
-
-  $form['handler']['handler'] = array(
-    '#type' => 'select',
-    '#title' => t('Reference method'),
-    '#options' => $handlers_options,
-    '#default_value' => $settings['handler'],
-    '#required' => TRUE,
-    '#ajax' => TRUE,
-    '#limit_validation_errors' => array(),
-  );
-  $form['handler']['handler_submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Change handler'),
-    '#limit_validation_errors' => array(),
-    '#attributes' => array(
-      'class' => array('js-hide'),
-    ),
-    '#submit' => array('entity_reference_settings_ajax_submit'),
-  );
-
-  $form['handler']['handler_settings'] = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('entity_reference-settings')),
-  );
-
-  $handler = Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($instance);
-  $form['handler']['handler_settings'] += $handler->settingsForm($field, $instance);
-
-  return $form;
 }
 
 /**
@@ -300,21 +146,6 @@ function _entity_reference_form_process_merge_parent($element) {
 function _entity_reference_element_validate_filter(&$element, &$form_state) {
   $element['#value'] = array_filter($element['#value']);
   form_set_value($element, $element['#value'], $form_state);
-}
-
-/**
- * Form element validation handler; Stores the new values in the form state.
- *
- * @see entity_reference_field_instance_settings_form()
- */
-function _entity_reference_field_instance_settings_validate($form, &$form_state) {
-  $instance = $form['#instance'];
-  if (isset($form_state['values']['instance'])) {
-    $instance['settings'] = $form_state['values']['instance']['settings'];
-  }
-  $form_state['entity_reference']['instance'] = $instance;
-
-  unset($form_state['values']['instance']['settings']['handler_submit']);
 }
 
 /**

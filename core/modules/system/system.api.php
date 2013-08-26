@@ -162,7 +162,7 @@ function hook_data_type_info_alter(&$data_types) {
  *   again an associative array. Possible keys are:
  *   - 'worker callback': A PHP callable to call. It will be called
  *     with one argument, the item created via
- *     Drupal\Core\Queue\QueueInterface::createItem() in hook_cron().
+ *     \Drupal\Core\Queue\QueueInterface::createItem().
  *   - 'cron': (optional) An associative array containing the optional key:
  *     - 'time': (optional) How much time Drupal cron should spend on calling
  *       this worker in seconds. Defaults to 15.
@@ -1861,10 +1861,10 @@ function hook_mail($key, &$message, $params) {
   if (isset($params['node'])) {
     $node = $params['node'];
     $variables += array(
-      '%uid' => $node->uid,
+      '%uid' => $node->getAuthorId(),
       '%node_url' => url('node/' . $node->id(), array('absolute' => TRUE)),
       '%node_type' => node_get_type_label($node),
-      '%title' => $node->title,
+      '%title' => $node->getTitle(),
       '%teaser' => $node->teaser,
       '%body' => $node->body,
     );
@@ -3144,7 +3144,7 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'title':
-          $replacements[$original] = $sanitize ? check_plain($node->title) : $node->title;
+          $replacements[$original] = $sanitize ? check_plain($node->getTitle()) : $node->getTitle();
           break;
 
         case 'edit-url':
@@ -3153,23 +3153,22 @@ function hook_tokens($type, $tokens, array $data = array(), array $options = arr
 
         // Default values for the chained tokens handled below.
         case 'author':
-          $name = ($node->uid == 0) ? Drupal::config('user.settings')->get('anonymous') : $node->name;
-          $replacements[$original] = $sanitize ? filter_xss($name) : $name;
+          $account = $node->getAuthor() ? $node->getAuthor() : user_load(0);
+          $replacements[$original] = $sanitize ? check_plain($account->label()) : $account->label();
           break;
 
         case 'created':
-          $replacements[$original] = format_date($node->created, 'medium', '', NULL, $langcode);
+          $replacements[$original] = format_date($node->getCreatedTime(), 'medium', '', NULL, $langcode);
           break;
       }
     }
 
     if ($author_tokens = $token_service->findWithPrefix($tokens, 'author')) {
-      $author = user_load($node->uid);
-      $replacements += $token_service->generate('user', $author_tokens, array('user' => $author), $options);
+      $replacements += $token_service->generate('user', $author_tokens, array('user' => $node->getAuthor()), $options);
     }
 
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
-      $replacements += $token_service->generate('date', $created_tokens, array('date' => $node->created), $options);
+      $replacements += $token_service->generate('date', $created_tokens, array('date' => $node->getCreatedTime()), $options);
     }
   }
 

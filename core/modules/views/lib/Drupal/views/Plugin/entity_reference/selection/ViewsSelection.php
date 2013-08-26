@@ -58,12 +58,13 @@ class ViewsSelection implements SelectionInterface {
   /**
    * {@inheritdoc}
    */
-  public static function settingsForm(&$field, &$instance) {
-    $view_settings = empty($instance['settings']['handler_settings']['view']) ? array() : $instance['settings']['handler_settings']['view'];
+  public static function settingsForm(FieldDefinitionInterface $field_definition) {
+    $selection_handler_settings = $field_definition->getFieldSetting('handler_settings') ?: array();
+    $view_settings = !empty($selection_handler_settings['view']) ? $selection_handler_settings['view'] : array();
     $displays = views_get_applicable_views('entity_reference_display');
     // Filter views that list the entity type we want, and group the separate
     // displays by view.
-    $entity_info = entity_get_info($field['settings']['target_type']);
+    $entity_info = \Drupal::entityManager()->getDefinition($field_definition->getFieldSetting('target_type'));
     $options = array();
     foreach ($displays as $data) {
       list($view, $display_id) = $data;
@@ -78,7 +79,7 @@ class ViewsSelection implements SelectionInterface {
     // into 'view_name' and 'view_display' in the final submitted values, so
     // we massage the data at validate time on the wrapping element (not
     // ideal).
-    $plugin = new static($field, $instance);
+    $plugin = new static($field_definition);
     $form['view']['#element_validate'] = array(array($plugin, 'settingsFormValidate'));
 
     if ($options) {

@@ -23,7 +23,7 @@ use Drupal\field\Plugin\Type\Widget\WidgetBase;
  *   },
  *   settings = {
  *     "size" = "60",
- *     "autocomplete_path" = "taxonomy/autocomplete",
+ *     "autocomplete_route_name" = "taxonomy_autocomplete",
  *     "placeholder" = ""
  *   },
  *   multiple_values = TRUE
@@ -73,7 +73,8 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
     $element += array(
       '#type' => 'textfield',
       '#default_value' => taxonomy_implode_tags($tags),
-      '#autocomplete_path' => $this->getSetting('autocomplete_path') . '/' . $this->fieldDefinition->getFieldName(),
+      '#autocomplete_route_name' => $this->getSetting('autocomplete_route_name'),
+      '#autocomplete_route_parameters' => array('field_name' => $this->fieldDefinition->getFieldName()),
       '#size' => $this->getSetting('size'),
       '#placeholder' => $this->getSetting('placeholder'),
       '#maxlength' => 1024,

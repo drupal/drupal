@@ -7,27 +7,26 @@
 
 namespace Drupal\views_ui\Tests;
 
-use Drupal\Core\Language\Language;
-use Drupal\simpletest\WebTestBase;
+use Drupal\tour\Tests\TourTestBase;
 
 /**
  * Tests tour functionality.
  */
-class ViewsUITourTest extends UITestBase {
+class ViewsUITourTest extends TourTestBase {
+
+  /**
+   * An admin user with administrative permissions for views.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('tour');
-
-  /**
-   * Views used by this test.
-   *
-   * @var array
-   */
-  public static $testViews = array('test_view');
+  public static $modules = array('views_ui', 'tour');
 
   public static function getInfo() {
     return array(
@@ -39,16 +38,23 @@ class ViewsUITourTest extends UITestBase {
 
   protected function setUp() {
     parent::setUp();
-    $this->drupalLogin($this->drupalCreateUser(array('access tour', 'administer views')));
+    $this->adminUser = $this->drupalCreateUser(array('administer views', 'access tour'));
+    $this->drupalLogin($this->adminUser);
   }
 
   /**
-   * Tests the Views UI tour.
+   * Tests views_ui tour tip availability.
    */
-  public function testTourFunctionality() {
-    $this->drupalGet('admin/structure/views/view/test_view');
-    $elements = $this->xpath('//ol[@id="tour"]');
-    $this->assertEqual(count($elements), 1, 'Found a tour on the test view.');
+  public function testViewsUiTourTips() {
+    // Create a basic view that shows all content, with a page and a block
+    // display.
+    $view['label'] = $this->randomName(16);
+    $view['id'] = strtolower($this->randomName(16));
+    $view['page[create]'] = 1;
+    $view['page[path]'] = $this->randomName(16);
+    $view_path = $view['page[path]'];
+    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
+    $this->assertTourTips();
   }
 
 }

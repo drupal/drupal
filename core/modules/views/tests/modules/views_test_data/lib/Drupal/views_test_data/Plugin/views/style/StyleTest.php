@@ -21,6 +21,7 @@ use Drupal\views\Plugin\views\style\StylePluginBase;
  *   title = @Translation("Test style plugin"),
  *   help = @Translation("Provides a generic style test plugin."),
  *   theme = "views_view_style_test",
+ *   register_theme = FALSE,
  *   display_types = {"normal", "test"}
  * )
  */

@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\file\Entity\File;
 
 /**
  * Implements hook_menu().

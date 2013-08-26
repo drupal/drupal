@@ -63,10 +63,7 @@ function dblog_menu() {
   );
   $items['admin/reports/event/%'] = array(
     'title' => 'Details',
-    'page callback' => 'dblog_event',
-    'page arguments' => array(3),
-    'access arguments' => array('access site reports'),
-    'file' => 'dblog.admin.inc',
+    'route_name' => 'dblog_event',
   );
 
   if (module_exists('search')) {

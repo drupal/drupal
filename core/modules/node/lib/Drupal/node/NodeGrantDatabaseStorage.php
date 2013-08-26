@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -71,7 +71,7 @@ class NodeGrantDatabaseStorage implements NodeGrantDatabaseStorageInterface {
       ->condition('langcode', $langcode);
     // If the node is published, also take the default grant into account. The
     // default is saved with a node ID of 0.
-    $status = $node instanceof EntityNG ? $node->status : $node->get('status', $langcode)->value;
+    $status = $node->isPublished();
     if ($status) {
       $nids = $query->orConditionGroup()
         ->condition($nids)

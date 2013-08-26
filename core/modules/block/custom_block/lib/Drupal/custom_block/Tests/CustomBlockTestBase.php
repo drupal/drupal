@@ -59,7 +59,7 @@ abstract class CustomBlockTestBase extends WebTestBase {
    * @param string $bundle
    *   (optional) Bundle name. Defaults to 'basic'.
    *
-   * @return Drupal\custom_block\Plugin\Core\Entity\CustomBlock
+   * @return Drupal\custom_block\Entity\CustomBlock
    *   Created custom block.
    */
   protected function createCustomBlock($title = FALSE, $bundle = 'basic') {
@@ -80,7 +80,7 @@ abstract class CustomBlockTestBase extends WebTestBase {
    * @param string $label
    *   The block type label.
    *
-   * @return Drupal\custom_block\Plugin\Core\Entity\CustomBlockType
+   * @return Drupal\custom_block\Entity\CustomBlockType
    *   Created custom block type.
    */
   protected function createCustomBlockType($label) {

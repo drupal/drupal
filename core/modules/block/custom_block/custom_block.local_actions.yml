@@ -3,3 +3,9 @@ custom_block_type_add:
   title: 'Add custom block type'
   appears_on:
     - custom_block_type_list
+
+custom_block_add_action:
+  route_name: custom_block_add_page
+  title: 'Add custom block'
+  appears_on:
+    - block_admin_display

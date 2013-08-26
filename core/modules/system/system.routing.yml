@@ -10,6 +10,15 @@ system.cron:
     _controller: '\Drupal\system\CronController::run'
   requirements:
     _access_system_cron: 'TRUE'
+
+system_admin_compact_page:
+  pattern: '/admin/compact/{mode}'
+  defaults:
+    _controller: 'Drupal\system\Controller\SystemController::compactPage'
+    mode: 'off'
+  requirements:
+    _permission: 'access administration pages'
+
 system.machine_name_transliterate:
   pattern: '/machine_name/transliterate'
   defaults:
@@ -192,6 +201,11 @@ system_theme_settings_global:
     _form: '\Drupal\system\Form\ThemeSettingsForm'
   requirements:
     _permission: 'administer themes'
+
+'<front>':
+  pattern: '/'
+  requirements:
+    _access: 'TRUE'
 
 system_modules_uninstall:
   pattern: 'admin/modules/uninstall'

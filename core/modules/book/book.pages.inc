@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *   currently supported in book module:
  *   - html: Printer-friendly HTML.
  *   Other types may be supported in contributed modules.
- * @param \Drupal\node\Plugin\Core\Entity\EntityInterface $node
+ * @param \Drupal\node\Entity\EntityInterface $node
  *   The node to export.
  *
  * @return
@@ -57,7 +57,7 @@ function book_export($type, EntityInterface $node) {
  * look like level 3 sections, no matter their depth relative to the node
  * selected to be exported as printer-friendly HTML.
  *
- * @param \Drupal\node\Plugin\Core\Entity\Node
+ * @param \Drupal\node\Entity\Node
  *   The node to export.
  *
  * @return

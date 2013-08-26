@@ -7,23 +7,20 @@
 
 namespace Drupal\node\Form;
 
-use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityNGConfirmFormBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Routing\PathBasedGeneratorInterface;
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Provides a form for deleting a node.
  */
-class NodeDeleteForm extends EntityNGConfirmFormBase implements EntityControllerInterface {
+class NodeDeleteForm extends EntityNGConfirmFormBase {
 
   /**
    * The URL generator.
    *
-   * @var \Drupal\Core\Routing\PathBasedGeneratorInterface
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface
    */
   protected $urlGenerator;
 
@@ -37,16 +34,12 @@ class NodeDeleteForm extends EntityNGConfirmFormBase implements EntityController
   /**
    * Constructs a NodeDeleteForm object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler service.
-   * @param \Drupal\Core\Routing\PathBasedGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The URL generator.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $node_type_storage
    *   The node type storage.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, PathBasedGeneratorInterface $url_generator, EntityStorageControllerInterface $node_type_storage) {
-    parent::__construct($module_handler);
-
+  public function __construct(UrlGeneratorInterface $url_generator, EntityStorageControllerInterface $node_type_storage) {
     $this->urlGenerator = $url_generator;
     $this->nodeTypeStorage = $node_type_storage;
   }
@@ -54,9 +47,8 @@ class NodeDeleteForm extends EntityNGConfirmFormBase implements EntityController
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('url_generator'),
       $container->get('plugin.manager.entity')->getStorageController('node_type')
     );

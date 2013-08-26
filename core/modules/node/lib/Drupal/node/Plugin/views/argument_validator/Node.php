@@ -106,7 +106,7 @@ class Node extends ArgumentValidatorPluginBase {
           return TRUE;
         }
 
-        return isset($types[$node->type]);
+        return isset($types[$node->getType()]);
 
       case 'nids':
         $nids = new stdClass();
@@ -121,7 +121,7 @@ class Node extends ArgumentValidatorPluginBase {
 
         $nodes = node_load_multiple($nids->value);
         foreach ($nodes as $node) {
-          if ($types && empty($types[$node->type])) {
+          if ($types && empty($types[$node->getType()])) {
             return FALSE;
           }
 

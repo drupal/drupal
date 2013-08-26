@@ -2,6 +2,8 @@ editor_field_untransformed_text:
   pattern: '/editor/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
   defaults:
     _controller: '\Drupal\editor\EditorController::getUntransformedText'
+  options:
+    _access_mode: 'ALL'
   requirements:
     _permission: 'access in-place editing'
     _access_edit_entity_field: 'TRUE'

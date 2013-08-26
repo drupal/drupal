@@ -50,18 +50,6 @@ class RouteSubscriber implements EventSubscriberInterface {
         )
       );
       $collection->add("block_admin_display.$key", $route);
-
-      // The block plugin listing page.
-      $route = new Route(
-        "admin/structure/block/list/$key/add/{category}",
-        array(
-          '_form' => '\Drupal\block\Form\PlaceBlocksForm',
-          'category' => NULL,
-          'theme' => $key,
-        ),
-        array('_block_themes_access' => 'TRUE')
-      );
-      $collection->add("block_plugin_ui.$key", $route);
     }
   }
 

@@ -6,9 +6,9 @@
  */
 
 use Drupal\taxonomy\VocabularyInterface;
-use Drupal\node\Plugin\Core\Entity\Node;
-use Drupal\taxonomy\Plugin\Core\Entity\Term;
-use Drupal\taxonomy\Plugin\Core\Entity\Vocabulary;
+use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 
@@ -292,14 +292,6 @@ function taxonomy_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'taxonomy.pages.inc',
   );
-  $items['taxonomy/autocomplete/%'] = array(
-    'title' => 'Autocomplete taxonomy',
-    'page callback' => 'taxonomy_autocomplete',
-    'page arguments' => array(2),
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-    'file' => 'taxonomy.pages.inc',
-  );
 
   $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary'] = array(
     'title callback' => 'entity_page_label',
@@ -401,7 +393,7 @@ function taxonomy_check_vocabulary_hierarchy(VocabularyInterface $vocabulary, $c
 /**
  * Generates an array which displays a term detail page.
  *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Term $term
+ * @param Drupal\taxonomy\Entity\Term $term
  *   A taxonomy term object.
  * @param string $view_mode
  *   View mode, e.g. 'full', 'teaser'...
@@ -483,7 +475,7 @@ function template_preprocess_taxonomy_term(&$variables) {
 /**
  * Returns whether the current page is the page of the passed-in term.
  *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Term $term
+ * @param Drupal\taxonomy\Entity\Term $term
  *   A taxonomy term entity.
  */
 function taxonomy_term_is_page(Term $term) {
@@ -810,7 +802,7 @@ function taxonomy_vocabulary_load_multiple(array $vids = NULL) {
  * Sorts vocabularies by its weight and label.
  *
  * @param array $vocabularies
- *   An array of \Drupal\taxonomy\Plugin\Core\Entity\Vocabulary objects.
+ *   An array of \Drupal\taxonomy\Entity\Vocabulary objects.
  */
 function taxonomy_vocabulary_sort(array &$vocabularies = array()) {
   // @todo Remove error suppressing when http://drupal.org/node/1799600 is
@@ -826,7 +818,7 @@ function taxonomy_vocabulary_sort(array &$vocabularies = array()) {
  * @param int $vid
  *   The vocabulary's ID.
  *
- * @return \Drupal\taxonomy\Plugin\Core\Entity\Vocabulary|null
+ * @return \Drupal\taxonomy\Entity\Vocabulary|null
  *   The taxonomy vocabulary entity, if exists, NULL otherwise. Results are
  *   statically cached.
  */
@@ -842,7 +834,7 @@ function taxonomy_vocabulary_load($vid) {
  * @param $tid
  *   A term's ID
  *
- * @return \Drupal\taxonomy\Plugin\Core\Entity\Term|null
+ * @return \Drupal\taxonomy\Entity\Term|null
  *   A taxonomy term entity, or NULL if the term was not found. Results are
  *   statically cached.
  */
@@ -1020,7 +1012,7 @@ function taxonomy_allowed_values(FieldDefinitionInterface $field_definition, Ent
 /**
  * Title callback for term pages.
  *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Term $term
+ * @param Drupal\taxonomy\Entity\Term $term
  *   A taxonomy term entity.
  *
  * @return
@@ -1122,7 +1114,7 @@ function taxonomy_node_insert(EntityInterface $node) {
  * The index lists all terms that are related to a given node entity, and is
  * therefore maintained at the entity level.
  *
- * @param \Drupal\node\Plugin\Core\Entity\Node $node
+ * @param \Drupal\node\Entity\Node $node
  *   The node entity.
  */
 function taxonomy_build_node_index($node) {
@@ -1130,22 +1122,14 @@ function taxonomy_build_node_index($node) {
   // only data for current, published nodes.
   $status = NULL;
   if (Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
-    // If a node property is not set in the node object when $node->save() is
-    // called, the old value from $node->original is used.
-    if (!empty($node->original)) {
-      $status = (int)(!empty($node->status) || (!isset($node->status) && !empty($node->original->status)));
-      $sticky = (int)(!empty($node->sticky) || (!isset($node->sticky) && !empty($node->original->sticky)));
-    }
-    else {
-      $status = (int)(!empty($node->status));
-      $sticky = (int)(!empty($node->sticky));
-    }
+    $status = $node->isPublished();
+    $sticky = (int) $node->isSticky();
   }
   // We only maintain the taxonomy index for published nodes.
   if ($status && $node->isDefaultRevision()) {
     // Collect a unique list of all the term IDs from all node fields.
     $tid_all = array();
-    foreach (field_info_instances('node', $node->type) as $instance) {
+    foreach (field_info_instances('node', $node->getType()) as $instance) {
       $field_name = $instance['field_name'];
       $field = field_info_field($field_name);
       if ($field['module'] == 'taxonomy' && $field['storage']['type'] == 'field_sql_storage') {
@@ -1177,7 +1161,7 @@ function taxonomy_build_node_index($node) {
           'nid' => $node->id(),
           'tid' => $tid,
           'sticky' => $sticky,
-          'created' => $node->created,
+          'created' => $node->getCreatedTime(),
         ));
       }
       $query->execute();

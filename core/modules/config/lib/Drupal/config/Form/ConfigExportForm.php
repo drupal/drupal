@@ -7,12 +7,12 @@
 
 namespace Drupal\config\Form;
 
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormBase;
 
 /**
  * Defines the configuration export form.
  */
-class ConfigExportForm implements FormInterface {
+class ConfigExportForm extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -26,19 +26,13 @@ class ConfigExportForm implements FormInterface {
    */
   public function buildForm(array $form, array &$form_state) {
     $form['description'] = array(
-      '#markup' => '<p>' . t('Use the export button below to download your site configuration.') . '</p>',
+      '#markup' => '<p>' . $this->t('Use the export button below to download your site configuration.') . '</p>',
     );
     $form['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Export'),
+      '#value' => $this->t('Export'),
     );
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, array &$form_state) {
   }
 
   /**

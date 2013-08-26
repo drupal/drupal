@@ -448,7 +448,6 @@ function drupal_get_query_parameters(array $query = NULL, array $exclude = array
 /**
  * Parses an array into a valid, rawurlencoded query string.
  *
- * @see \Drupal\Core\Routing\PathBasedGeneratorInterface::httpBuildQuery()
  * @see drupal_get_query_parameters()
  * @deprecated as of Drupal 8.0. Use Url::buildQuery() instead.
  * @ingroup php_wrappers
@@ -1192,7 +1191,7 @@ function datetime_default_format_type() {
  * When creating links in modules, consider whether l() could be a better
  * alternative than url().
  *
- * @see \Drupal\Core\Routing\PathBasedGeneratorInterface::generateFromPath().
+ * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromPath().
  */
 function url($path = NULL, array $options = array()) {
   $generator = Drupal::urlGenerator();
@@ -3646,6 +3645,11 @@ function drupal_pre_render_dropbutton($element) {
 function drupal_render_page($page) {
   $main_content_display = &drupal_static('system_main_content_added', FALSE);
 
+  // Pull out the page title to set it back later.
+  if (is_array($page) && isset($page['#title'])) {
+    $title = $page['#title'];
+  }
+
   // Allow menu callbacks to return strings or arbitrary arrays to render.
   // If the array returned is not of #type page directly, we need to fill
   // in the page with defaults.
@@ -3668,6 +3672,11 @@ function drupal_render_page($page) {
   // control page regions (for example, the Block module) are enabled.
   if (!$main_content_display) {
     $page['content']['system_main'] = drupal_set_page_content();
+  }
+
+  // Set back the previously stored title.
+  if (isset($title)) {
+    $page['#title'] = $title;
   }
 
   return drupal_render($page);
@@ -3906,7 +3915,7 @@ function drupal_render(&$elements) {
       // only this theme() call. This allows #theme hooks and #theme_wrappers
       // hooks to share variable names without conflict or ambiguity.
       $wrapper_elements = $elements;
-      if (is_array($value)) {
+      if (is_string($key)) {
         $wrapper_hook = $key;
         foreach ($value as $attribute => $override) {
           $wrapper_elements[$attribute] = $override;

@@ -52,7 +52,7 @@ class TrackerUserUidTest extends TrackerTestBase {
 
     // Change the filter value to our user.
     $view->initHandlers();
-    $view->filter['uid_touch_tracker']->value = $this->node->uid;
+    $view->filter['uid_touch_tracker']->value = $this->node->getAuthorId();
     $this->executeView($view);
 
     // We should have one result as the filter is set for the created user.
@@ -70,7 +70,7 @@ class TrackerUserUidTest extends TrackerTestBase {
 
     // Test the correct argument UID.
     $view->initHandlers();
-    $this->executeView($view, array($this->node->uid));
+    $this->executeView($view, array($this->node->getAuthorId()));
     $this->assertIdenticalResultSet($view, $expected, $map);
   }
 

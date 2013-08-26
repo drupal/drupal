@@ -63,7 +63,7 @@ class DisplayBag extends DefaultPluginBag {
    * Overrides \Drupal\Component\Plugin\PluginBag::clear().
    */
   public function clear() {
-    foreach (array_filter($this->pluginInstances) as $display_id => $display) {
+    foreach (array_filter($this->pluginInstances) as $display) {
       $display->destroy();
     }
 

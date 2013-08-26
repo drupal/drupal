@@ -71,16 +71,23 @@ abstract class TextItemBase extends ConfigFieldItemBase implements PrepareCacheI
    * {@inheritdoc}
    */
   public function prepareCache() {
-    // Where possible, generate the sanitized version of each field early so
-    // that it is cached in the field cache. This avoids the need to look up the
-    // field in the filter cache separately.
+    // Where possible, generate the sanitized version of each textual property
+    // (e.g., 'value', 'summary') within this field item early so that it is
+    // cached in the field cache. This avoids the need to look up the sanitized
+    // value in the filter cache separately.
     $text_processing = $this->getFieldSetting('text_processing');
     if (!$text_processing || filter_format_allowcache($this->get('format')->getValue())) {
       $itemBC = $this->getValue();
       $langcode = $this->getParent()->getParent()->language()->id;
-      $this->set('safe_value', text_sanitize($text_processing, $langcode, $itemBC, 'value'));
-      if ($this->getType() == 'field_item:text_with_summary') {
-        $this->set('safe_summary', text_sanitize($text_processing, $langcode, $itemBC, 'summary'));
+      // The properties that need sanitizing are the ones that are the 'text
+      // source' of a TextProcessed computed property.
+      // @todo Clean up this mess by making the TextProcessed property type
+      //   support its own cache integration: https://drupal.org/node/2026339.
+      foreach ($this->getPropertyDefinitions() as $definition) {
+        if (isset($definition['class']) && ($definition['class'] == '\Drupal\text\TextProcessed')) {
+          $source_property = $definition['settings']['text source'];
+          $this->set('safe_' . $source_property, text_sanitize($text_processing, $langcode, $itemBC, $source_property));
+        }
       }
     }
   }

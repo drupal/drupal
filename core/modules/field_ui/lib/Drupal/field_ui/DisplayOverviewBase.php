@@ -9,6 +9,7 @@ namespace Drupal\field_ui;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\Field\FieldTypePluginManager;
 use Drupal\entity\EntityDisplayBaseInterface;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\field_ui\OverviewBase;
@@ -38,14 +39,27 @@ abstract class DisplayOverviewBase extends OverviewBase {
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The entity manager.
+   * @param \Drupal\Core\Entity\Field\FieldTypePluginManager $field_type_manager
+   *   The field type manager.
    * @param \Drupal\Component\Plugin\PluginManagerBase $plugin_manager
    *   The widget or formatter plugin manager.
    */
-  public function __construct(EntityManager $entity_manager, PluginManagerBase $plugin_manager) {
+  public function __construct(EntityManager $entity_manager, FieldTypePluginManager $field_type_manager, PluginManagerBase $plugin_manager) {
     parent::__construct($entity_manager);
 
+    $this->fieldTypes = $field_type_manager->getDefinitions();
     $this->pluginManager = $plugin_manager;
-    $this->fieldTypes = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.entity'),
+      $container->get('plugin.manager.entity.field.field_type'),
+      $container->get('plugin.manager.field.widget')
+    );
   }
 
   /**
@@ -54,13 +68,13 @@ abstract class DisplayOverviewBase extends OverviewBase {
   public function getRegions() {
     return array(
       'content' => array(
-        'title' => t('Content'),
+        'title' => $this->t('Content'),
         'invisible' => TRUE,
-        'message' => t('No field is displayed.')
+        'message' => $this->t('No field is displayed.')
       ),
       'hidden' => array(
-        'title' => t('Disabled'),
-        'message' => t('No field is hidden.')
+        'title' => $this->t('Disabled'),
+        'message' => $this->t('No field is hidden.')
       ),
     );
   }
@@ -91,7 +105,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
     );
 
     if (empty($instances) && empty($extra_fields)) {
-      drupal_set_message(t('There are no fields yet added. You can add new fields on the <a href="@link">Manage fields</a> page.', array('@link' => url($this->adminPath . '/fields'))), 'warning');
+      drupal_set_message($this->t('There are no fields yet added. You can add new fields on the <a href="@link">Manage fields</a> page.', array('@link' => url($this->adminPath . '/fields'))), 'warning');
       return $form;
     }
 
@@ -128,7 +142,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
       if ($display_modes = $this->getDisplayModes()) {
         $form['modes'] = array(
           '#type' => 'details',
-          '#title' => t('Custom display settings'),
+          '#title' => $this->t('Custom display settings'),
           '#collapsed' => TRUE,
         );
         // Collect options and default values for the 'Custom display settings'
@@ -144,7 +158,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
         }
         $form['modes']['display_modes_custom'] = array(
           '#type' => 'checkboxes',
-          '#title' => t('Use custom display settings for the following modes'),
+          '#title' => $this->t('Use custom display settings for the following modes'),
           '#options' => $options,
           '#default_value' => $default,
         );
@@ -160,7 +174,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
     $form['refresh_rows'] = array('#type' => 'hidden');
     $form['refresh'] = array(
       '#type' => 'submit',
-      '#value' => t('Refresh'),
+      '#value' => $this->t('Refresh'),
       '#op' => 'refresh_table',
       '#submit' => array(array($this, 'multistepSubmit')),
       '#ajax' => array(
@@ -175,7 +189,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
     );
 
     $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
+    $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Save'));
 
     $form['#attached']['library'][] = array('field_ui', 'drupal.field_ui');
 
@@ -220,7 +234,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
       ),
       'weight' => array(
         '#type' => 'textfield',
-        '#title' => t('Weight for @title', array('@title' => $instance['label'])),
+        '#title' => $this->t('Weight for @title', array('@title' => $instance['label'])),
         '#title_display' => 'invisible',
         '#default_value' => $display_options ? $display_options['weight'] : '0',
         '#size' => 3,
@@ -229,7 +243,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
       'parent_wrapper' => array(
         'parent' => array(
           '#type' => 'select',
-          '#title' => t('Label display for @title', array('@title' => $instance['label'])),
+          '#title' => $this->t('Label display for @title', array('@title' => $instance['label'])),
           '#title_display' => 'invisible',
           '#options' => drupal_map_assoc(array_keys($this->getRegions())),
           '#empty_value' => '',
@@ -248,7 +262,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
     $field_row['plugin'] = array(
       'type' => array(
         '#type' => 'select',
-        '#title' => t('Plugin for @title', array('@title' => $instance['label'])),
+        '#title' => $this->t('Plugin for @title', array('@title' => $instance['label'])),
         '#title_display' => 'invisible',
         '#options' => $this->getPluginOptions($field['type']),
         '#default_value' => $display_options ? $display_options['type'] : 'hidden',
@@ -298,7 +312,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
             '#attributes' => array('class' => array('field-plugin-settings-edit-form')),
             '#parents' => array('fields', $field_id, 'settings_edit_form'),
             'label' => array(
-              '#markup' => t('Plugin settings'),
+              '#markup' => $this->t('Plugin settings'),
             ),
             'settings' => $settings_form,
             'actions' => array(
@@ -306,13 +320,13 @@ abstract class DisplayOverviewBase extends OverviewBase {
               'save_settings' => $base_button + array(
                 '#type' => 'submit',
                 '#name' => $field_id . '_plugin_settings_update',
-                '#value' => t('Update'),
+                '#value' => $this->t('Update'),
                 '#op' => 'update',
               ),
               'cancel_settings' => $base_button + array(
                 '#type' => 'submit',
                 '#name' => $field_id . '_plugin_settings_cancel',
-                '#value' => t('Cancel'),
+                '#value' => $this->t('Cancel'),
                 '#op' => 'cancel',
                 // Do not check errors for the 'Cancel' button, but make sure we
                 // get the value of the 'plugin type' select.
@@ -345,7 +359,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
             '#type' => 'image_button',
             '#name' => $field_id . '_settings_edit',
             '#src' => 'core/misc/configure-dark.png',
-            '#attributes' => array('class' => array('field-plugin-settings-edit'), 'alt' => t('Edit')),
+            '#attributes' => array('class' => array('field-plugin-settings-edit'), 'alt' => $this->t('Edit')),
             '#op' => 'edit',
             // Do not check errors for the 'Edit' button, but make sure we get
             // the value of the 'plugin type' select.
@@ -386,7 +400,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
       ),
       'weight' => array(
         '#type' => 'textfield',
-        '#title' => t('Weight for @title', array('@title' => $extra_field['label'])),
+        '#title' => $this->t('Weight for @title', array('@title' => $extra_field['label'])),
         '#title_display' => 'invisible',
         '#default_value' => $display_options ? $display_options['weight'] : 0,
         '#size' => 3,
@@ -395,7 +409,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
       'parent_wrapper' => array(
         'parent' => array(
           '#type' => 'select',
-          '#title' => t('Parents for @title', array('@title' => $extra_field['label'])),
+          '#title' => $this->t('Parents for @title', array('@title' => $extra_field['label'])),
           '#title_display' => 'invisible',
           '#options' => drupal_map_assoc(array_keys($this->getRegions())),
           '#empty_value' => '',
@@ -411,7 +425,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
       'plugin' => array(
         'type' => array(
           '#type' => 'select',
-          '#title' => t('Visibility for @title', array('@title' => $extra_field['label'])),
+          '#title' => $this->t('Visibility for @title', array('@title' => $extra_field['label'])),
           '#title_display' => 'invisible',
           '#options' => $this->getExtraFieldVisibilityOptions(),
           '#default_value' => $display_options ? 'visible' : 'hidden',
@@ -510,7 +524,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
 
           $display_mode_label = $display_modes[$mode]['label'];
           $path = $this->getOverviewPath($mode);
-          drupal_set_message(t('The %display_mode mode now uses custom display settings. You might want to <a href="@url">configure them</a>.', array('%display_mode' => $display_mode_label, '@url' => url($path))));
+          drupal_set_message($this->t('The %display_mode mode now uses custom display settings. You might want to <a href="@url">configure them</a>.', array('%display_mode' => $display_mode_label, '@url' => url($path))));
         }
         $display_mode_bundle_settings[$mode]['status'] = !empty($value);
       }
@@ -519,7 +533,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
       $this->saveDisplayModeSettings($display_mode_bundle_settings);
     }
 
-    drupal_set_message(t('Your settings have been saved.'));
+    drupal_set_message($this->t('Your settings have been saved.'));
   }
 
   /**
@@ -705,8 +719,8 @@ abstract class DisplayOverviewBase extends OverviewBase {
    */
   protected function getExtraFieldVisibilityOptions() {
     return array(
-      'visible' => t('Visible'),
-      'hidden' => '- ' . t('Hidden') . ' -',
+      'visible' => $this->t('Visible'),
+      'hidden' => '- ' . $this->t('Hidden') . ' -',
     );
   }
 

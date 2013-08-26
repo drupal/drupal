@@ -17,7 +17,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\field\Entity\FieldInstance;
 
 /**
  * Plugin type manager for field formatters.

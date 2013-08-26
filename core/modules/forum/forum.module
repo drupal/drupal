@@ -6,9 +6,8 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
-use Drupal\taxonomy\Plugin\Core\Entity\Term;
 use Drupal\Core\Language\Language;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Implements hook_help().
@@ -265,7 +264,7 @@ function forum_uri($forum) {
  */
 function _forum_node_check_node_type(EntityInterface $node) {
   // Fetch information about the forum field.
-  $instance = field_info_instance('node', 'taxonomy_forums', $node->type);
+  $instance = field_info_instance('node', 'taxonomy_forums', $node->getType());
   return !empty($instance);
 }
 
@@ -342,7 +341,7 @@ function forum_node_update(EntityInterface $node) {
       if (!empty($node->forum_tid)) {
         db_update('forum')
           ->fields(array('tid' => $node->forum_tid))
-          ->condition('vid', $node->vid)
+          ->condition('vid', $node->getRevisionId())
           ->execute();
       }
       // The node is removed from the forum.
@@ -357,7 +356,7 @@ function forum_node_update(EntityInterface $node) {
         db_insert('forum')
           ->fields(array(
             'tid' => $node->forum_tid,
-            'vid' => $node->vid,
+            'vid' => $node->getRevisionId(),
             'nid' => $node->id(),
           ))
           ->execute();
@@ -368,12 +367,12 @@ function forum_node_update(EntityInterface $node) {
     if (!empty($node->shadow)) {
       db_delete('forum')
         ->condition('nid', $node->id())
-        ->condition('vid', $node->vid)
+        ->condition('vid', $node->getRevisionId())
         ->execute();
       db_insert('forum')
         ->fields(array(
           'nid' => $node->id(),
-          'vid' => $node->vid,
+          'vid' => $node->getRevisionId(),
           'tid' => $node->forum_tid,
         ))
         ->execute();
@@ -390,7 +389,7 @@ function forum_node_insert(EntityInterface $node) {
       $nid = db_insert('forum')
         ->fields(array(
           'tid' => $node->forum_tid,
-          'vid' => $node->vid,
+          'vid' => $node->getRevisionId(),
           'nid' => $node->id(),
         ))
         ->execute();
@@ -419,7 +418,7 @@ function forum_node_load($nodes) {
   $node_vids = array();
   foreach ($nodes as $node) {
     if (_forum_node_check_node_type($node)) {
-      $node_vids[] = $node->vid;
+      $node_vids[] = $node->getRevisionId();
     }
   }
   if (!empty($node_vids)) {
@@ -508,18 +507,18 @@ function forum_comment_delete($comment) {
  * Implements hook_field_storage_pre_insert().
  */
 function forum_field_storage_pre_insert(EntityInterface $entity, &$skip_fields) {
-  if ($entity->entityType() == 'node' && $entity->status && _forum_node_check_node_type($entity)) {
+  if ($entity->entityType() == 'node' && $entity->isPublished() && _forum_node_check_node_type($entity)) {
     $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
     foreach ($entity->getTranslationLanguages() as $langcode => $language) {
       $translation = $entity->getTranslation($langcode);
       $query->values(array(
         'nid' => $entity->id(),
-        'title' => $translation->title->value,
+        'title' => $translation->label(),
         'tid' => $translation->taxonomy_forums->target_id,
-        'sticky' => $entity->sticky,
-        'created' => $entity->created,
+        'sticky' => (int) $entity->isSticky(),
+        'created' => $entity->getCreatedTime(),
         'comment_count' => 0,
-        'last_comment_timestamp' => $entity->created,
+        'last_comment_timestamp' => $entity->getCreatedTime(),
       ));
     }
     $query->execute();
@@ -535,26 +534,27 @@ function forum_field_storage_pre_update(EntityInterface $entity, &$skip_fields) 
   if ($entity->entityType() == 'node' && _forum_node_check_node_type($entity)) {
 
     // If the node is published, update the forum index.
-    if ($entity->status) {
+    if ($entity->isPublished()) {
 
       // We don't maintain data for old revisions, so clear all previous values
       // from the table. Since this hook runs once per field, per object, make
       // sure we only wipe values once.
-      if (!isset($first_call[$entity->nid])) {
-        $first_call[$entity->nid] = FALSE;
+      if (!isset($first_call[$entity->id()])) {
+        $first_call[$entity->id()] = FALSE;
         db_delete('forum_index')->condition('nid', $entity->id())->execute();
       }
       $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
-      foreach ($entity->taxonomy_forums as $language) {
-        foreach ($language as $item) {
+      foreach ($entity->getTranslationLanguages() as $langcode => $language) {
+        $translation = $entity->getTranslation($langcode);
+        foreach ($translation->taxonomy_forums as $item) {
           $query->values(array(
-            'nid' => $entity->nid,
-            'title' => $entity->title,
-            'tid' => $item['target_id'],
-            'sticky' => $entity->sticky,
-            'created' => $entity->created,
+            'nid' => $entity->id(),
+            'title' => $translation->label(),
+            'tid' => $item->target_id,
+            'sticky' => (int) $entity->isSticky(),
+            'created' => $entity->getCreatedTime(),
             'comment_count' => 0,
-            'last_comment_timestamp' => $entity->created,
+            'last_comment_timestamp' => $entity->getCreatedTime(),
           ));
         }
       }
@@ -1116,7 +1116,7 @@ function template_preprocess_forum_topic_list(&$variables) {
         '#new_posts' => $topic->new,
         '#num_posts' => $topic->comment_count,
         '#comment_mode' => $topic->comment_mode,
-        '#sticky' => $topic->sticky,
+        '#sticky' => $topic->isSticky(),
         '#first_new' => $topic->first_new,
       );
       $variables['topics'][$id]->zebra = $row % 2 == 0 ? 'odd' : 'even';
@@ -1127,12 +1127,12 @@ function template_preprocess_forum_topic_list(&$variables) {
       // them is a shadow copy.
       if ($variables['tid'] != $topic->forum_tid) {
         $variables['topics'][$id]->moved = TRUE;
-        $variables['topics'][$id]->title = check_plain($topic->title);
+        $variables['topics'][$id]->title = check_plain($topic->getTitle());
         $variables['topics'][$id]->message = l(t('This topic has been moved'), "forum/$topic->forum_tid");
       }
       else {
         $variables['topics'][$id]->moved = FALSE;
-        $variables['topics'][$id]->title = l($topic->title, 'node/' . $topic->id());
+        $variables['topics'][$id]->title = l($topic->getTitle(), 'node/' . $topic->id());
         $variables['topics'][$id]->message = '';
       }
       $forum_submitted = array('#theme' => 'forum_submitted', '#topic' => $topic);

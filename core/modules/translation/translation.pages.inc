@@ -30,7 +30,7 @@ function translation_node_overview(EntityInterface $node) {
   else {
     // We have no translation source nid, this could be a new set, emulate that.
     $tnid = $node->nid;
-    $translations = array($node->langcode => $node);
+    $translations = array($node->language()->id => $node);
   }
 
   $type = Drupal::config('translation.settings')->get('language_type');
@@ -55,7 +55,7 @@ function translation_node_overview(EntityInterface $node) {
           ) + $links->links[$langcode];
         }
       }
-      $status = $translation_node->status ? t('Published') : t('Not published');
+      $status = $translation_node->isPublished() ? t('Published') : t('Not published');
       $status .= $translation_node->translate ? ' - <span class="marker">' . t('outdated') . '</span>' : '';
       if ($translation_node->id() == $tnid) {
         $language_name = t('<strong>@language_name</strong> (source)', array('@language_name' => $language_name));
@@ -65,7 +65,7 @@ function translation_node_overview(EntityInterface $node) {
       // No such translation in the set yet: help user to create it.
       $title = t('n/a');
       if (node_access('create', $node)) {
-        $path = 'node/add/' . $node->type;
+        $path = 'node/add/' . $node->getType();
         $links = language_negotiation_get_switch_links($type, $path);
         $query = array('query' => array('translation' => $node->id(), 'target' => $langcode));
         if (!empty($links->links[$langcode]['href'])) {

@@ -7,12 +7,12 @@
 
 namespace Drupal\Core\Form;
 
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\Component\Utility\Url;
 
 /**
  * Provides an generic base class for a confirmation form.
  */
-abstract class ConfirmFormBase implements ConfirmFormInterface {
+abstract class ConfirmFormBase extends FormBase implements ConfirmFormInterface {
 
   /**
    * {@inheritdoc}
@@ -45,11 +45,12 @@ abstract class ConfirmFormBase implements ConfirmFormInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
+  public function buildForm(array $form, array &$form_state) {
     $path = $this->getCancelPath();
     // Prepare cancel link.
-    if ($request->query->has('destination')) {
-      $options = drupal_parse_url($request->query->get('destination'));
+    $query = $this->getRequest()->query;
+    if ($query->has('destination')) {
+      $options = Url::parse($query->get('destination'));
     }
     elseif (is_array($path)) {
       $options = $path;
@@ -80,12 +81,6 @@ abstract class ConfirmFormBase implements ConfirmFormInterface {
       $form['#theme'] = 'confirm_form';
     }
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, array &$form_state) {
   }
 
 }

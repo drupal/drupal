@@ -8,16 +8,15 @@
 namespace Drupal\system\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a 'System Help' block.
  *
- * @Plugin(
+ * @Block(
  *   id = "system_help_block",
- *   admin_label = @Translation("System Help"),
- *   module = "system"
+ *   admin_label = @Translation("System Help")
  * )
  */
 class SystemHelpBlock extends BlockBase {

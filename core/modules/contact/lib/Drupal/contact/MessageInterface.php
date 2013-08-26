@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\contact\Plugin\Core\Entity\MessageInterface.
+ * Contains \Drupal\contact\Entity\MessageInterface.
  */
 
 namespace Drupal\contact;

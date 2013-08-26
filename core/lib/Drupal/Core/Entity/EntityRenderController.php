@@ -6,7 +6,7 @@
  */
 
 namespace Drupal\Core\Entity;
-use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
+use Drupal\entity\Entity\EntityDisplay;
 
 use Drupal\Core\Language\Language;
 
@@ -72,7 +72,7 @@ class EntityRenderController implements EntityRenderControllerInterface {
    *   The render array that is being created.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to be prepared.
-   * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+   * @param \Drupal\entity\Entity\EntityDisplay $display
    *   The entity_display object holding the display options configured for
    *   the entity components.
    * @param string $view_mode

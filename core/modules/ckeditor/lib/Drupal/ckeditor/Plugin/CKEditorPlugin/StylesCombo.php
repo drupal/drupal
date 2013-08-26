@@ -12,7 +12,7 @@ use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\ckeditor\Annotation\CKEditorPlugin;
 use Drupal\Core\Annotation\Translation;
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Entity\Editor;
 
 /**
  * Defines the "stylescombo" plugin.

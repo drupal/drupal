@@ -22,7 +22,7 @@ function hook_rest_resource_alter(&$definitions) {
     // class.
     $definitions['entity:node']['class'] = 'Drupal\mymodule\Plugin\rest\resource\NodeResource';
     // Serialized nodes should be expanded to my specific node class.
-    $definitions['entity:node']['serialization_class'] = 'Drupal\mymodule\Plugin\Core\Entity\MyNode';
+    $definitions['entity:node']['serialization_class'] = 'Drupal\mymodule\Entity\MyNode';
   }
   // We don't want Views to show up in the array of plugins at all.
   unset($definitions['entity:view']);

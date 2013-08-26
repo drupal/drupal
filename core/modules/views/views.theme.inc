@@ -1063,9 +1063,18 @@ function template_preprocess_views_exposed_form(&$variables) {
 }
 
 /**
- * Theme function for the Mini pager.
+ * Prepares variables for views mini-pager templates.
+ *
+ * Default template: views-mini-pager.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - tags: Provides link text for the next/previous links.
+ *   - element: The pager's id.
+ *   - parameters: Any extra GET parameters that should be retained, such as
+ *     exposed input.
  */
-function theme_views_mini_pager($variables) {
+function template_preprocess_views_mini_pager(&$variables) {
   global $pager_page_array, $pager_total;
 
   $tags = &$variables['tags'];
@@ -1132,9 +1141,10 @@ function theme_views_mini_pager($variables) {
   // link, which means that we are on the first page and there is no next page
   // available/wanted.
   if (empty($li_next) && empty($li_previous)) {
-    return '';
+    return;
   }
 
+  $items = array();
   $items[] = array(
     '#wrapper_attributes' => array('class' => array('pager-previous')),
   ) + $li_previous;
@@ -1148,16 +1158,11 @@ function theme_views_mini_pager($variables) {
     '#wrapper_attributes' => array('class' => array('pager-next')),
   ) + $li_next;
 
-  $item_list = array(
+  $variables['items'] = array(
     '#theme' => 'item_list__pager',
     '#items' => $items,
-    '#title' => NULL,
-    '#list_type' => 'ul',
-    '#attributes' => array(
-      'class' => array('pager'),
-    ),
+    '#attributes' => array('class' => array('pager')),
   );
-  return drupal_render($item_list);
 }
 
 /**

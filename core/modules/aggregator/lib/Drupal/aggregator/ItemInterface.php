@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\aggregator\Plugin\Core\Entity\ItemInterface.
+ * Contains \Drupal\aggregator\Entity\ItemInterface.
  */
 
 namespace Drupal\aggregator;

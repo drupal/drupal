@@ -20,7 +20,7 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  * formats as needed. Individual filters can be enabled and configured
  * differently for each text format.
  *
- * @see \Drupal\filter\Plugin\Core\Entity\FilterFormat
+ * @see \Drupal\filter\Entity\FilterFormat
  *
  * Filtering is a two-step process. First, the content is 'prepared' by calling
  * the FilterInterface::prepare() method for every filter. The purpose is to

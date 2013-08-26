@@ -10,7 +10,7 @@ namespace Drupal\editor_test\Plugin\Editor;
 use Drupal\editor\Plugin\EditorBase;
 use Drupal\editor\Annotation\Editor;
 use Drupal\Core\Annotation\Translation;
-use Drupal\editor\Plugin\Core\Entity\Editor as EditorEntity;
+use Drupal\editor\Entity\Editor as EditorEntity;
 
 /**
  * Defines a Unicorn-powered text editor for Drupal.

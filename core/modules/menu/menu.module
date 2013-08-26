@@ -13,9 +13,9 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\block\BlockPluginInterface;
-use Drupal\system\Plugin\Core\Entity\Menu;
+use Drupal\system\Entity\Menu;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Drupal\menu_link\Plugin\Core\Entity\MenuLink;
+use Drupal\menu_link\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorageController;
 use Drupal\node\NodeInterface;
 
@@ -155,7 +155,7 @@ function menu_entity_bundle_info() {
 /**
  * Entity URI callback.
  *
- * @param \Drupal\system\Plugin\Core\Entity\Menu $menu
+ * @param \Drupal\system\Entity\Menu $menu
  *   A Menu entity.
  */
 function menu_uri(Menu $menu) {
@@ -293,7 +293,7 @@ function menu_menu_delete(Menu $menu) {
  *
  * @param array $menus
  *   An array of menu names and titles, such as from menu_get_menus().
- * @param \Drupal\menu_link\Plugin\Core\Entity\MenuLink $menu_link
+ * @param \Drupal\menu_link\Entity\MenuLink $menu_link
  *   The menu link for which to generate a list of parents.
  *   If $menu_link->id() == 0 then the complete tree is returned.
  * @param string $type
@@ -457,12 +457,12 @@ function menu_node_predelete(EntityInterface $node) {
 function menu_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
   if (empty($node->menu)) {
     // Prepare the node for the edit form so that $node->menu always exists.
-    $menu_name = strtok(variable_get('menu_parent_' . $node->type, 'main:0'), ':');
+    $menu_name = strtok(variable_get('menu_parent_' . $node->getType(), 'main:0'), ':');
     $menu_link = FALSE;
     if ($node->id()) {
       $mlid = FALSE;
       // Give priority to the default menu
-      $type_menus = variable_get('menu_options_' . $node->type, array('main' => 'main'));
+      $type_menus = variable_get('menu_options_' . $node->getType(), array('main' => 'main'));
       if (in_array($menu_name, $type_menus)) {
         $query = Drupal::entityQuery('menu_link')
           ->condition('link_path', 'node/' . $node->id())
@@ -526,7 +526,7 @@ function menu_form_node_form_alter(&$form, $form_state) {
   // @todo This must be handled in a #process handler.
   $node = $form_state['controller']->getEntity();
   $link = $node->menu;
-  $type = $node->type;
+  $type = $node->getType();
   $options = menu_parent_options(menu_get_menus(), $link, $type);
   // If no possible parent menu items were found, there is nothing to display.
   if (empty($options)) {

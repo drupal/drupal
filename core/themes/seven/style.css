@@ -1763,11 +1763,7 @@ details.fieldset-no-legend {
   screen and (max-width: 1020px),
   (orientation: landscape) and (max-device-height: 1020px) {
 
-  .toolbar-vertical .layout-region-node-secondary {
-    margin-bottom: 0;
-    padding-bottom: 0;
-    display: block;
-  }
+  .toolbar-vertical .block-list-right,
   .toolbar-vertical .layout-region-node-secondary {
     margin-bottom: 0;
     padding-bottom: 0;

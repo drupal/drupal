@@ -589,6 +589,7 @@ function simpletest_clean_environment() {
 
   // Detect test classes that have been added, renamed or deleted.
   cache()->delete('simpletest');
+  cache()->delete('simpletest_phpunit');
 }
 
 /**
@@ -718,25 +719,35 @@ function simpletest_library_info() {
  *  If TRUE, returns a flat array of class names only.
  */
 function simpletest_phpunit_get_available_tests() {
-  // Load the PHPUnit configuration file, which tells us where to find the
-  // tests.
-  $phpunit_config = simpletest_phpunit_configuration_filepath();
-  $configuration = PHPUnit_Util_Configuration::getInstance($phpunit_config);
-  // Find all the tests and get a list of unique class names.
-  $test_suite = $configuration->getTestSuiteConfiguration(NULL);
-  $test_classes = array();
-  foreach ($test_suite AS $test) {
-    // PHPUnit returns a warning message if something is wrong with a test,
-    // throw an exception to avoid an error when trying to call getInfo() on
-    // this.
-    if ($test instanceof PHPUnit_Framework_Warning) {
-      throw new RuntimeException($test->getMessage());
+  // Try to load the class names array from cache.
+  if ($cache = \Drupal::cache()->get('simpletest_phpunit')) {
+    $test_classes = $cache->data;
+  }
+  else {
+    // If there was no cached data available we have to find the tests.
+    // Load the PHPUnit configuration file, which tells us where to find the
+    // tests.
+    $phpunit_config = simpletest_phpunit_configuration_filepath();
+    $configuration = PHPUnit_Util_Configuration::getInstance($phpunit_config);
+    // Find all the tests and get a list of unique class names.
+    $test_suite = $configuration->getTestSuiteConfiguration(NULL);
+    $test_classes = array();
+    foreach ($test_suite as $test) {
+      // PHPUnit returns a warning message if something is wrong with a test,
+      // throw an exception to avoid an error when trying to call getInfo() on
+      // this.
+      if ($test instanceof PHPUnit_Framework_Warning) {
+        throw new RuntimeException($test->getMessage());
+      }
+
+      $name = get_class($test);
+      if (!array_key_exists($name, $test_classes)) {
+        $test_classes[$name] = $test->getInfo();
+      }
     }
 
-    $name = get_class($test);
-    if (!array_key_exists($name, $test_classes)) {
-      $test_classes[$name] =  $test->getInfo();
-    }
+    // Since we have recalculated, we now need to store the new data into cache.
+    \Drupal::cache()->set('simpletest_phpunit', $test_classes);
   }
 
   return $test_classes;

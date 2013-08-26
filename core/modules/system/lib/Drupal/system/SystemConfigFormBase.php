@@ -7,16 +7,15 @@
 
 namespace Drupal\system;
 
-use Drupal\Core\Form\FormInterface;
-use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\Context\ContextInterface;
+use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base class for implementing system configuration forms.
  */
-abstract class SystemConfigFormBase implements FormInterface, ControllerInterface {
+abstract class SystemConfigFormBase extends FormBase {
 
   /**
    * Stores the configuration factory.
@@ -55,7 +54,7 @@ abstract class SystemConfigFormBase implements FormInterface, ControllerInterfac
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save configuration'),
+      '#value' => $this->t('Save configuration'),
       '#button_type' => 'primary',
     );
 
@@ -66,16 +65,10 @@ abstract class SystemConfigFormBase implements FormInterface, ControllerInterfac
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
-   */
-  public function validateForm(array &$form, array &$form_state) {
-  }
-
-  /**
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, array &$form_state) {
-    drupal_set_message(t('The configuration options have been saved.'));
+    drupal_set_message($this->t('The configuration options have been saved.'));
   }
 
 }

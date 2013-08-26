@@ -8,16 +8,16 @@
 namespace Drupal\system\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a 'System Menu' block.
  *
- * @Plugin(
+ * @Block(
  *   id = "system_menu_block",
  *   admin_label = @Translation("System Menu"),
- *   module = "system",
+ *   category = "menu",
  *   derivative = "Drupal\system\Plugin\Derivative\SystemMenuBlock"
  * )
  */
@@ -28,7 +28,7 @@ class SystemMenuBlock extends BlockBase {
    */
   public function access() {
     // @todo The 'Tools' menu should be available to anonymous users.
-    list($plugin, $derivative) = explode(':', $this->getPluginId());
+    list( , $derivative) = explode(':', $this->getPluginId());
     return ($GLOBALS['user']->isAuthenticated() || in_array($derivative, array('menu-main', 'menu-tools', 'menu-footer')));
   }
 
@@ -36,7 +36,7 @@ class SystemMenuBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
-    list($plugin, $derivative) = explode(':', $this->getPluginId());
+    list( , $derivative) = explode(':', $this->getPluginId());
     // Derivatives are prefixed with 'menu-'.
     $menu = substr($derivative, 5);
     return menu_tree($menu);

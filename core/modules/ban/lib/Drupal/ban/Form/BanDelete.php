@@ -11,7 +11,6 @@ use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\ban\BanIpManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -30,6 +29,7 @@ class BanDelete extends ConfirmFormBase implements ControllerInterface {
    * Constructs a new BanDelete object.
    *
    * @param \Drupal\ban\BanIpManager $ip_manager
+   *   The IP manager.
    */
   public function __construct(BanIpManager $ip_manager) {
     $this->ipManager = $ip_manager;
@@ -55,14 +55,14 @@ class BanDelete extends ConfirmFormBase implements ControllerInterface {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to unblock %ip?', array('%ip' => $this->banIp));
+    return $this->t('Are you sure you want to unblock %ip?', array('%ip' => $this->banIp));
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return t('Delete');
+    return $this->t('Delete');
   }
 
   /**
@@ -78,11 +78,11 @@ class BanDelete extends ConfirmFormBase implements ControllerInterface {
    * @param string $ban_id
    *   The IP address record ID to unban.
    */
-  public function buildForm(array $form, array &$form_state, $ban_id = '', Request $request = NULL) {
+  public function buildForm(array $form, array &$form_state, $ban_id = '') {
     if (!$this->banIp = $this->ipManager->findById($ban_id)) {
       throw new NotFoundHttpException();
     }
-    return parent::buildForm($form, $form_state, $request);
+    return parent::buildForm($form, $form_state);
   }
 
   /**

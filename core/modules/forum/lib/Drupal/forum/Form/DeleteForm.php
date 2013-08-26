@@ -8,8 +8,7 @@
 namespace Drupal\forum\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\taxonomy\Plugin\Core\Entity\Term;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Builds the form to delete a forum term.
@@ -19,7 +18,7 @@ class DeleteForm extends ConfirmFormBase {
   /**
    * The taxonomy term being deleted.
    *
-   * @var \Drupal\taxonomy\Plugin\Core\Entity\Term
+   * @var \Drupal\taxonomy\Entity\Term
    */
   protected $taxonomyTerm;
 
@@ -54,10 +53,10 @@ class DeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Term $taxonomy_term = NULL, Request $request = NULL) {
+  public function buildForm(array $form, array &$form_state, Term $taxonomy_term = NULL) {
     $this->taxonomyTerm = $taxonomy_term;
 
-    return parent::buildForm($form, $form_state, $request);
+    return parent::buildForm($form, $form_state);
   }
 
   /**

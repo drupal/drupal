@@ -205,4 +205,5 @@ class TermFormController extends EntityFormControllerNG {
     }
     $form_state['redirect'] = array('taxonomy/term/' . $this->entity->id() . '/delete', array('query' => $destination));
   }
+
 }

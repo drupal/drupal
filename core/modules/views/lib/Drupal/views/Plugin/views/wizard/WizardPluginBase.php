@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\wizard;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\views\Plugin\Core\Entity\View;
+use Drupal\views\Entity\View;
 use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -402,7 +402,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $this->buildFormStyle($form, $form_state, 'block');
     $form['displays']['block']['options']['items_per_page'] = array(
-      '#title' => t('Items per page'),
+      '#title' => t('Items per block'),
       '#type' => 'number',
       '#default_value' => 5,
       '#min' => 0,

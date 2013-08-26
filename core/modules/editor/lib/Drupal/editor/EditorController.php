@@ -15,7 +15,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\editor\Ajax\GetUntransformedTextCommand;
 use Drupal\editor\Form\EditorImageDialog;
 use Drupal\editor\Form\EditorLinkDialog;
-use Drupal\filter\Plugin\Core\Entity\FilterFormat;
+use Drupal\filter\Entity\FilterFormat;
 
 /**
  * Returns responses for Editor module routes.

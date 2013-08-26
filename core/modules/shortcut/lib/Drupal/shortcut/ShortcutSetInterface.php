@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\shortcut\Plugin\Core\Entity\ShortcutSetInterface.
+ * Contains \Drupal\shortcut\Entity\ShortcutSetInterface.
  */
 
 namespace Drupal\shortcut;

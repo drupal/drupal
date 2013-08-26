@@ -17,7 +17,7 @@ class MenuTest extends MenuWebTestBase {
    *
    * @var array
    */
-  public static $modules = array('block', 'test_page_test', 'contextual');
+  public static $modules = array('block', 'test_page_test', 'contextual', 'path');
 
   protected $big_user;
   protected $std_user;
@@ -161,7 +161,7 @@ class MenuTest extends MenuWebTestBase {
     // Enable the custom menu block.
     $menu_name = 'menu-' . $menu_name; // Drupal prepends the name with 'menu-'.
     // Confirm that the custom menu block is available.
-    $this->drupalGet('admin/structure/block/list/' . \Drupal::config('system.theme')->get('default') . '/add');
+    $this->drupalGet('admin/structure/block/list/' . \Drupal::config('system.theme')->get('default'));
     $this->assertText($label);
 
     // Enable the block.
@@ -205,7 +205,13 @@ class MenuTest extends MenuWebTestBase {
     $node2 = $this->drupalCreateNode(array('type' => 'article'));
     $node3 = $this->drupalCreateNode(array('type' => 'article'));
     $node4 = $this->drupalCreateNode(array('type' => 'article'));
-    $node5 = $this->drupalCreateNode(array('type' => 'article'));
+    // Create a node with an alias.
+    $node5 = $this->drupalCreateNode(array(
+      'type' => 'article',
+      'path' => array(
+        'alias' => 'node5',
+      ),
+    ));
 
     // Add menu links.
     $item1 = $this->addMenuLink(0, 'node/' . $node1->id(), $menu_name);
@@ -247,6 +253,8 @@ class MenuTest extends MenuWebTestBase {
     // Add more menu links.
     $item4 = $this->addMenuLink(0, 'node/' . $node4->id(), $menu_name);
     $item5 = $this->addMenuLink($item4['mlid'], 'node/' . $node5->id(), $menu_name);
+    // Create a menu link pointing to an alias.
+    $item6 = $this->addMenuLink($item4['mlid'], 'node5', $menu_name, TRUE, '0', 'node/' . $node5->id());
     $this->assertMenuLink($item4['mlid'], array(
       'depth' => 1,
       'has_children' => 1,
@@ -261,6 +269,16 @@ class MenuTest extends MenuWebTestBase {
       'p1' => $item4['mlid'],
       'p2' => $item5['mlid'],
       'p3' => 0,
+      // See above.
+      'langcode' => 'en',
+    ));
+    $this->assertMenuLink($item6['mlid'], array(
+      'depth' => 2,
+      'has_children' => 0,
+      'p1' => $item4['mlid'],
+      'p2' => $item6['mlid'],
+      'p3' => 0,
+      'link_path' => 'node/' . $node5->id(),
       // See above.
       'langcode' => 'en',
     ));
@@ -379,7 +397,7 @@ class MenuTest extends MenuWebTestBase {
 
     // Make sure menu shows up with new name in block addition.
     $default_theme = variable_get('theme_default', 'stark');
-    $this->drupalget('admin/structure/block/list/' . $default_theme . '/add');
+    $this->drupalget('admin/structure/block/list/' . $default_theme);
     $this->assertText($edit['label']);
   }
 
@@ -451,11 +469,13 @@ class MenuTest extends MenuWebTestBase {
    * @param string $link Link path.
    * @param string $menu_name Menu name.
    * @param string $weight Menu weight
+   * @param string $actual_link
+   *   Actual link path in case $link is an alias.
    *
-   * @return \Drupal\menu_link\Plugin\Core\Entity\MenuLink $menu_link
+   * @return \Drupal\menu_link\Entity\MenuLink $menu_link
    *   A menu link entity.
    */
-  function addMenuLink($plid = 0, $link = '<front>', $menu_name = 'tools', $expanded = TRUE, $weight = '0') {
+  function addMenuLink($plid = 0, $link = '<front>', $menu_name = 'tools', $expanded = TRUE, $weight = '0', $actual_link = FALSE) {
     // View add menu link page.
     $this->drupalGet("admin/structure/menu/manage/$menu_name/add");
     $this->assertResponse(200);
@@ -471,6 +491,9 @@ class MenuTest extends MenuWebTestBase {
       'weight' => $weight,
     );
 
+    if (!$actual_link) {
+      $actual_link = $link;
+    }
     // Add menu link.
     $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertResponse(200);
@@ -479,7 +502,7 @@ class MenuTest extends MenuWebTestBase {
     $menu_links = entity_load_multiple_by_properties('menu_link', array('link_title' => $title));
     $menu_link = reset($menu_links);
     $this->assertTrue($menu_link, 'Menu link was found in database.');
-    $this->assertMenuLink($menu_link->id(), array('menu_name' => $menu_name, 'link_path' => $link, 'has_children' => 0, 'plid' => $plid));
+    $this->assertMenuLink($menu_link->id(), array('menu_name' => $menu_name, 'link_path' => $actual_link, 'has_children' => 0, 'plid' => $plid));
 
     return $menu_link;
   }

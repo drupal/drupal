@@ -27,9 +27,6 @@ class BlockAddController extends ControllerBase {
    *   The block instance edit form.
    */
   public function blockAddConfigureForm($plugin_id, $theme) {
-    // Set the page title.
-    drupal_set_title(t('Configure block'));
-
     // Create a block entity.
     $entity = $this->entityManager()->getStorageController('block')->create(array('plugin' => $plugin_id, 'theme' => $theme));
 

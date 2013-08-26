@@ -7,7 +7,7 @@
 namespace Drupal\breakpoint\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\breakpoint\Plugin\Core\Entity\Breakpoint;
+use Drupal\breakpoint\Entity\Breakpoint;
 
 /**
  * Base class for Breakpoint tests.

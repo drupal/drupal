@@ -376,6 +376,9 @@ function form_test_permission() {
     'access vertical_tab_test tabs' => array(
       'title' => t('Access vertical_tab_test tabs'),
     ),
+    'access autocomplete test' => array(
+      'title' => t('Access autocomplete test'),
+    ),
   );
   return $perms;
 }

@@ -329,7 +329,7 @@ class CommentAttributesTest extends CommentTestBase {
    * @param $pid
    *   Comment id of the parent comment in a thread.
    *
-   * @return \Drupal\comment\Plugin\Core\Entity\Comment
+   * @return \Drupal\comment\Entity\Comment
    *   The saved comment.
    */
   function saveComment($nid, $uid, $contact = NULL, $pid = 0) {

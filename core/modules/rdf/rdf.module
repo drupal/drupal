@@ -64,7 +64,7 @@ function rdf_help($path, $arg) {
  * @param string $bundle
  *   The bundle.
  *
- * @return \Drupal\rdf\Plugin\Core\Entity\RdfMapping
+ * @return \Drupal\rdf\Entity\RdfMapping
  *   The RdfMapping object.
  */
 function rdf_get_mapping($entity_type, $bundle) {
@@ -262,7 +262,7 @@ function rdf_preprocess_node(&$variables) {
   $title_mapping = $mapping->getPreparedFieldMapping('title');
   if ($title_mapping) {
     $title_attributes['property'] = empty($title_mapping['properties']) ? NULL : $title_mapping['properties'];
-    $title_attributes['content'] = $variables['label'];
+    $title_attributes['content'] = $variables['node']->label();
     $variables['title_suffix']['rdf_meta_title'] = array(
       '#theme' => 'rdf_metadata',
       '#metadata' => array($title_attributes),
@@ -279,7 +279,7 @@ function rdf_preprocess_node(&$variables) {
   // Adds RDFa markup for the date.
   $created_mapping = $mapping->getPreparedFieldMapping('created');
   if (!empty($created_mapping) && $variables['submitted']) {
-    $date_attributes = rdf_rdfa_attributes($created_mapping, $variables['node']->created);
+    $date_attributes = rdf_rdfa_attributes($created_mapping, $variables['node']->getCreatedTime());
     $rdf_metadata = array(
       '#theme' => 'rdf_metadata',
       '#metadata' => array($date_attributes),

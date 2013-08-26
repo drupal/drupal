@@ -8,16 +8,15 @@
 namespace Drupal\system\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Provides a 'Powered by Drupal' block.
  *
- * @Plugin(
+ * @Block(
  *   id = "system_powered_by_block",
- *   admin_label = @Translation("Powered by Drupal"),
- *   module = "system"
+ *   admin_label = @Translation("Powered by Drupal")
  * )
  */
 class SystemPoweredByBlock extends BlockBase {

@@ -48,7 +48,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     // Check that the file exists on disk and in the database.
     $node = node_load($nid, TRUE);
     $node_file_r1 = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id']);
-    $node_vid_r1 = $node->vid;
+    $node_vid_r1 = $node->getRevisionId();
     $this->assertFileExists($node_file_r1, 'New file saved to disk on node creation.');
     $this->assertFileEntryExists($node_file_r1, 'File entry exists in database on node creation.');
     $this->assertFileIsPermanent($node_file_r1, 'File is permanent.');
@@ -57,7 +57,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $this->replaceNodeFile($test_file, $field_name, $nid);
     $node = node_load($nid, TRUE);
     $node_file_r2 = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id']);
-    $node_vid_r2 = $node->vid;
+    $node_vid_r2 = $node->getRevisionId();
     $this->assertFileExists($node_file_r2, 'Replacement file exists on disk after creating new revision.');
     $this->assertFileEntryExists($node_file_r2, 'Replacement file entry exists in database after creating new revision.');
     $this->assertFileIsPermanent($node_file_r2, 'Replacement file is permanent.');
@@ -75,7 +75,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $this->drupalPost('node/' . $nid . '/edit', array('revision' => '1'), t('Save and keep published'));
     $node = node_load($nid, TRUE);
     $node_file_r3 = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id']);
-    $node_vid_r3 = $node->vid;
+    $node_vid_r3 = $node->getRevisionId();
     $this->assertEqual($node_file_r2->id(), $node_file_r3->id(), 'Previous revision file still in place after creating a new revision without a new file.');
     $this->assertFileIsPermanent($node_file_r3, 'New revision file is permanent.');
 
@@ -83,7 +83,7 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $this->drupalPost('node/' . $nid . '/revisions/' . $node_vid_r1 . '/revert', array(), t('Revert'));
     $node = node_load($nid, TRUE);
     $node_file_r4 = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id']);
-    $node_vid_r4 = $node->vid;
+    $node_vid_r4 = $node->getRevisionId();
     $this->assertEqual($node_file_r1->id(), $node_file_r4->id(), 'Original revision file still in place after reverting to the original revision.');
     $this->assertFileIsPermanent($node_file_r4, 'Original revision file still permanent after reverting to the original revision.');
 

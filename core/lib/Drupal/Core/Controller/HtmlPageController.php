@@ -24,12 +24,22 @@ class HtmlPageController {
   protected $httpKernel;
 
   /**
+   * The controller resolver.
+   *
+   * @var \Drupal\Core\Controller\ControllerResolverInterface
+   */
+  protected $controllerResolver;
+
+  /**
    * Constructs a new HtmlPageController.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $kernel
+   * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
+   *   The controller resolver.
    */
-  public function __construct(HttpKernelInterface $kernel) {
+  public function __construct(HttpKernelInterface $kernel, ControllerResolverInterface $controller_resolver) {
     $this->httpKernel = $kernel;
+    $this->controllerResolver = $controller_resolver;
   }
 
   /**
@@ -44,28 +54,24 @@ class HtmlPageController {
    *   A response object.
    */
   public function content(Request $request, $_content) {
-
-    // @todo When we have a Generator, we can replace the forward() call with
-    // a render() call, which would handle ESI and hInclude as well.  That will
-    // require an _internal route.  For examples, see:
-    // https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Resources/config/routing/internal.xml
-    // https://github.com/symfony/symfony/blob/master/src/Symfony/Bundle/FrameworkBundle/Controller/InternalController.php
-    $attributes = clone $request->attributes;
-    $controller = $_content;
-
-    // We need to clean off the derived information and such so that the
-    // subrequest can be processed properly without leaking data through.
-    $attributes->remove('_system_path');
-    $attributes->remove('_content');
-
-    $response = $this->httpKernel->forward($controller, $attributes->all(), $request->query->all());
-
-    // For successful (HTTP status 200) responses, decorate with blocks.
-    if ($response->isOk()) {
-      $page_content = $response->getContent();
-      $response = new Response(drupal_render_page($page_content));
+    $callable = $this->controllerResolver->getControllerFromDefinition($_content);
+    $arguments = $this->controllerResolver->getArguments($request, $callable);
+    $page_content = call_user_func_array($callable, $arguments);
+    if ($page_content instanceof Response) {
+      return $page_content;
+    }
+    if (!is_array($page_content)) {
+      $page_content = array(
+        '#markup' => $page_content,
+      );
+    }
+    // If no title was returned fall back to one defined in the route.
+    if (!isset($page_content['#title']) && $request->attributes->has('_title')) {
+      $page_content['#title'] = $request->attributes->get('_title');
     }
 
+    $response = new Response(drupal_render_page($page_content));
     return $response;
   }
+
 }

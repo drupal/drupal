@@ -8,7 +8,7 @@
 namespace Drupal\custom_block\Tests;
 
 use Drupal\content_translation\Tests\ContentTranslationUITest;
-use Drupal\custom_block\Plugin\Core\Entity\CustomBlock;
+use Drupal\custom_block\Entity\CustomBlock;
 
 /**
  * Tests the Custom Block Translation UI.
@@ -77,7 +77,7 @@ class CustomBlockTranslationUITest extends ContentTranslationUITest {
    *   (optional) Bundle name. When no value is given, defaults to
    *   $this->bundle. Defaults to FALSE.
    *
-   * @return Drupal\custom_block\Plugin\Core\Entity\CustomBlock
+   * @return Drupal\custom_block\Entity\CustomBlock
    *   Created custom block.
    */
   protected function createCustomBlock($title = FALSE, $bundle = FALSE) {

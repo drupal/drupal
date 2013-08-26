@@ -15,7 +15,7 @@ content:
     weight: '-4'
     settings:
       size: '60'
-      autocomplete_path: taxonomy/autocomplete
+      autocomplete_route_name: taxonomy_autocomplete
       placeholder: ''
   field_image:
     type: image_image

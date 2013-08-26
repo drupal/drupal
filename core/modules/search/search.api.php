@@ -226,12 +226,12 @@ function hook_search_execute($keys = NULL, $conditions = NULL) {
       'type' => check_plain(node_get_type_label($node)),
       'title' => $node->label($item->langcode),
       'user' => drupal_render($username),
-      'date' => $node->changed,
+      'date' => $node->getChangedTime(),
       'node' => $node,
       'extra' => $extra,
       'score' => $item->calculated_score,
       'snippet' => search_excerpt($keys, $node->rendered, $item->langcode),
-      'langcode' => $node->langcode,
+      'langcode' => $node->language()->id,
     );
   }
   return $results;
@@ -347,7 +347,7 @@ function hook_update_index() {
 
     // Save the changed time of the most recent indexed node, for the search
     // results half-life calculation.
-    \Drupal::state()->set('node.cron_last', $node->changed);
+    \Drupal::state()->set('node.cron_last', $node->getChangedTime());
 
     // Render the node.
     $build = node_view($node, 'search_index');
