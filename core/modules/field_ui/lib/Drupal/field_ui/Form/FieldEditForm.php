@@ -7,19 +7,20 @@
 
 namespace Drupal\field_ui\Form;
 
-use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\TypedData\TypedDataManager;
+use Drupal\field\FieldInfo;
 use Drupal\field\FieldInstanceInterface;
-use Drupal\field\Field;
 use Drupal\field_ui\FieldUI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for the field settings edit page.
  */
-class FieldEditForm implements FormInterface, ControllerInterface {
+class FieldEditForm extends FormBase {
 
   /**
    * The field instance being edited.
@@ -36,6 +37,20 @@ class FieldEditForm implements FormInterface, ControllerInterface {
   protected $entityManager;
 
   /**
+   * The field info service.
+   *
+   * @var \Drupal\field\FieldInfo
+   */
+  protected $fieldInfo;
+
+  /**
+   * The typed data manager.
+   *
+   * @var \Drupal\Core\TypedData\TypedDataManager
+   */
+  protected $typedData;
+
+  /**
    * {@inheritdoc}
    */
   public function getFormID() {
@@ -47,9 +62,15 @@ class FieldEditForm implements FormInterface, ControllerInterface {
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The entity manager.
+   * @param \Drupal\field\FieldInfo $field_info
+   *   The field info service.
+   * @param \Drupal\Core\TypedData\TypedDataManager $typed_data
+   *   The typed data manager.
    */
-  public function __construct(EntityManager $entity_manager) {
+  public function __construct(EntityManager $entity_manager, FieldInfo $field_info, TypedDataManager $typed_data) {
     $this->entityManager = $entity_manager;
+    $this->fieldInfo = $field_info;
+    $this->typedData = $typed_data;
   }
 
   /**
@@ -57,7 +78,9 @@ class FieldEditForm implements FormInterface, ControllerInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')
+      $container->get('plugin.manager.entity'),
+      $container->get('field.info'),
+      $container->get('typed_data')
     );
   }
 
@@ -72,7 +95,7 @@ class FieldEditForm implements FormInterface, ControllerInterface {
 
     drupal_set_title($this->instance->label());
 
-    $description = '<p>' . t('These settings apply to the %field field everywhere it is used. These settings impact the way that data is stored in the database and cannot be changed once data has been created.', array('%field' => $this->instance->label())) . '</p>';
+    $description = '<p>' . $this->t('These settings apply to the %field field everywhere it is used. These settings impact the way that data is stored in the database and cannot be changed once data has been created.', array('%field' => $this->instance->label())) . '</p>';
 
     // Create a form structure for the field values.
     $form['field'] = array(
@@ -83,7 +106,7 @@ class FieldEditForm implements FormInterface, ControllerInterface {
     // See if data already exists for this field.
     // If so, prevent changes to the field settings.
     if ($field->hasData()) {
-      $form['field']['#prefix'] = '<div class="messages messages--error">' . t('There is data for this field in the database. The field settings can no longer be changed.') . '</div>' . $form['field']['#prefix'];
+      $form['field']['#prefix'] = '<div class="messages messages--error">' . $this->t('There is data for this field in the database. The field settings can no longer be changed.') . '</div>' . $form['field']['#prefix'];
     }
 
     // Build the configurable field values.
@@ -96,15 +119,15 @@ class FieldEditForm implements FormInterface, ControllerInterface {
       '#parents' => array('field'),
       '#field_prefix' => '<div class="container-inline">',
       '#field_suffix' => '</div>',
-      '#title' => t('Allowed number of values'),
+      '#title' => $this->t('Allowed number of values'),
     );
     $form['field']['cardinality_container']['cardinality'] = array(
       '#type' => 'select',
-      '#title' => t('Allowed number of values'),
+      '#title' => $this->t('Allowed number of values'),
       '#title_display' => 'invisible',
       '#options' => array(
-        'number' => t('Limited'),
-        FIELD_CARDINALITY_UNLIMITED => t('Unlimited'),
+        'number' => $this->t('Limited'),
+        FIELD_CARDINALITY_UNLIMITED => $this->t('Unlimited'),
       ),
       '#default_value' => ($cardinality == FIELD_CARDINALITY_UNLIMITED) ? FIELD_CARDINALITY_UNLIMITED : 'number',
     );
@@ -112,7 +135,7 @@ class FieldEditForm implements FormInterface, ControllerInterface {
       '#type' => 'number',
       '#default_value' => $cardinality != FIELD_CARDINALITY_UNLIMITED ? $cardinality : 1,
       '#min' => 1,
-      '#title' => t('Limit'),
+      '#title' => $this->t('Limit'),
       '#title_display' => 'invisible',
       '#size' => 2,
       '#states' => array(
@@ -141,7 +164,7 @@ class FieldEditForm implements FormInterface, ControllerInterface {
     $form['field']['settings'] += $this->getFieldItem($entity, $field['field_name'])->settingsForm($form, $form_state, $field->hasData());
 
     $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save field settings'));
+    $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Save field settings'));
     return $form;
   }
 
@@ -153,7 +176,7 @@ class FieldEditForm implements FormInterface, ControllerInterface {
     $cardinality = $form_state['values']['field']['cardinality'];
     $cardinality_number = $form_state['values']['field']['cardinality_number'];
     if ($cardinality === 'number' && empty($cardinality_number)) {
-      form_error($form['field']['cardinality_container']['cardinality_number'], t('Number of values is required.'));
+      form_error($form['field']['cardinality_container']['cardinality_number'], $this->t('Number of values is required.'));
     }
   }
 
@@ -174,7 +197,7 @@ class FieldEditForm implements FormInterface, ControllerInterface {
     unset($field_values['container']);
 
     // Merge incoming form values into the existing field.
-    $field = Field::fieldInfo()->getField($field_values['field_name']);
+    $field = $this->fieldInfo->getField($field_values['field_name']);
     foreach ($field_values as $key => $value) {
       $field[$key] = $value;
     }
@@ -182,7 +205,7 @@ class FieldEditForm implements FormInterface, ControllerInterface {
     // Update the field.
     try {
       $field->save();
-      drupal_set_message(t('Updated field %label field settings.', array('%label' => $this->instance->label())));
+      drupal_set_message($this->t('Updated field %label field settings.', array('%label' => $this->instance->label())));
       $next_destination = FieldUI::getNextDestination();
       if (empty($next_destination)) {
         $next_destination = $this->entityManager->getAdminPath($this->instance->entity_type, $this->instance->bundle) . '/fields';
@@ -190,7 +213,7 @@ class FieldEditForm implements FormInterface, ControllerInterface {
       $form_state['redirect'] = $next_destination;
     }
     catch (\Exception $e) {
-      drupal_set_message(t('Attempt to update field %label failed: %message.', array('%label' => $this->instance->label(), '%message' => $e->getMessage())), 'error');
+      drupal_set_message($this->t('Attempt to update field %label failed: %message.', array('%label' => $this->instance->label(), '%message' => $e->getMessage())), 'error');
     }
   }
 
@@ -208,12 +231,12 @@ class FieldEditForm implements FormInterface, ControllerInterface {
    *   The field item object.
    */
   protected function getFieldItem(EntityInterface $entity, $field_name) {
-    if ($entity instanceof \Drupal\Core\Entity\EntityNG) {
+    if ($entity instanceof EntityNG) {
       $item = $entity->get($field_name)->offsetGet(0);
     }
     else {
-      $definitions = \Drupal::entityManager()->getFieldDefinitions($entity->entityType(), $entity->bundle());
-      $item = \Drupal::typedData()->create($definitions[$field_name], array(), $field_name, $entity)->offsetGet(0);
+      $definitions = $this->entityManager->getFieldDefinitions($entity->entityType(), $entity->bundle());
+      $item = $this->typedData->create($definitions[$field_name], array(), $field_name, $entity)->offsetGet(0);
     }
     return $item;
   }
