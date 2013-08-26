@@ -41,13 +41,6 @@ class ForumFormController extends TermFormController {
   protected $config;
 
   /**
-   * The current request.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
    * Term Storage Controller.
    *
    * @var \Drupal\taxonomy\TermStorageControllerInterface
@@ -59,14 +52,11 @@ class ForumFormController extends TermFormController {
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory service.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
    * @param \Drupal\taxonomy\TermStorageControllerInterface $storage_controller
    *   The storage controller.
    */
-  public function __construct(ConfigFactory $config_factory, Request $request, TermStorageControllerInterface $storage_controller) {
+  public function __construct(ConfigFactory $config_factory, TermStorageControllerInterface $storage_controller) {
     $this->config = $config_factory->get('forum.settings');
-    $this->request = $request;
     $this->storageController = $storage_controller;
   }
 
@@ -76,7 +66,6 @@ class ForumFormController extends TermFormController {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('request'),
       $container->get('plugin.manager.entity')->getStorageController('taxonomy_term')
     );
   }
@@ -154,9 +143,10 @@ class ForumFormController extends TermFormController {
    */
   public function delete(array $form, array &$form_state) {
     $destination = array();
-    if ($this->request->query->get('destination')) {
+    $request = $this->getRequest();
+    if ($request->query->has('destination')) {
       $destination = drupal_get_destination();
-      $this->request->query->remove('destination');
+      $request->query->remove('destination');
     }
     $term = $this->getEntity($form_state);
     $form_state['redirect'] = array(
