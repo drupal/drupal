@@ -8,7 +8,7 @@
 namespace Drupal\language\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Routing\PathBasedGeneratorInterface;
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,17 +22,17 @@ class LanguageDeleteForm extends EntityConfirmFormBase {
   /**
    * The urlGenerator service.
    *
-   * @var \Drupal\Core\Routing\PathBasedGeneratorInterface
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface
    */
   protected $urlGenerator;
 
   /**
    * Constructs a new LanguageDeleteForm object.
    *
-   * @param \Drupal\Core\Routing\PathBasedGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
    */
-  public function __construct(PathBasedGeneratorInterface $url_generator) {
+  public function __construct(UrlGeneratorInterface $url_generator) {
     $this->urlGenerator = $url_generator;
   }
 
