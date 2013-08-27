@@ -2252,6 +2252,21 @@ function system_upgrade_8060() {
 }
 
 /**
+ * Add route_parameters column to the menu_links table.
+ */
+function system_update_8060() {
+  $spec = array(
+    'description' => 'Serialized array of route parameters of this menu link.',
+    'type' => 'blob',
+    'size' => 'big',
+    'not null' => FALSE,
+    'serialize' => TRUE,
+  );
+
+  db_add_field('menu_links', 'route_parameters', $spec);
+}
+
+/**
  * @} End of "defgroup updates-7.x-to-8.x".
  * The next series of updates should start at 9000.
  */

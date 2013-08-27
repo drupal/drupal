@@ -13,6 +13,14 @@ use Drupal\simpletest\WebTestBase;
  * Tests for menu links.
  */
 class LinksTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('router_test');
+
   public static function getInfo() {
     return array(
       'name' => 'Menu links',
@@ -229,4 +237,28 @@ class LinksTest extends WebTestBase {
     );
     $this->assertMenuLinkParents($links, $expected_hierarchy);
   }
+
+  /**
+   * Tests the router system integration (route_name and route_parameters).
+   */
+  public function testRouterIntegration() {
+    $menu_link = entity_create('menu_link', array(
+      'link_path' => 'router_test/test1',
+    ));
+    $menu_link->save();
+    $this->assertEqual($menu_link->route_name, 'router_test_1');
+    $this->assertEqual($menu_link->route_parameters, array());
+
+    $menu_link = entity_create('menu_link', array(
+      'link_path' => 'router_test/test3/test',
+    ));
+    $menu_link->save();
+    $this->assertEqual($menu_link->route_name, 'router_test_3');
+    $this->assertEqual($menu_link->route_parameters, array('value' => 'test'));
+
+    $menu_link = entity_load('menu_link', $menu_link->id());
+    $this->assertEqual($menu_link->route_name, 'router_test_3');
+    $this->assertEqual($menu_link->route_parameters, array('value' => 'test'));
+  }
+
 }
