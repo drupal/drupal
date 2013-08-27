@@ -19,7 +19,7 @@ class NodeValidationTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'entity', 'field', 'text', 'field_sql_storage');
+  public static $modules = array('node', 'entity', 'field', 'text', 'field_sql_storage', 'filter');
 
   public static function getInfo() {
     return array(

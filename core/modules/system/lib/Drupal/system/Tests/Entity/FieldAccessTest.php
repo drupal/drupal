@@ -19,7 +19,7 @@ class FieldAccessTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity', 'entity_test', 'field', 'field_sql_storage', 'system', 'text', 'user');
+  public static $modules = array('entity', 'entity_test', 'field', 'field_sql_storage', 'system', 'text', 'filter', 'user');
 
   /**
    * Holds the currently active global user ID that initiated the test run.

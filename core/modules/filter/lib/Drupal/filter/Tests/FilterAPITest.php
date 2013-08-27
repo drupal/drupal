@@ -7,14 +7,17 @@
 
 namespace Drupal\filter\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\Core\TypedData\AllowedValuesInterface;
+use Drupal\filter\Plugin\DataType\FilterFormat;
+use Drupal\system\Tests\Entity\EntityUnitTestBase;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
  * Tests the behavior of Filter's API.
  */
-class FilterAPITest extends DrupalUnitTestBase {
+class FilterAPITest extends EntityUnitTestBase {
 
-  public static $modules = array('system', 'filter', 'filter_test');
+  public static $modules = array('system', 'filter', 'filter_test', 'user');
 
   public static function getInfo() {
     return array(
@@ -27,7 +30,8 @@ class FilterAPITest extends DrupalUnitTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->installConfig(array('system'));
+    $this->installConfig(array('system', 'filter'));
+    $this->installSchema('user', array('users_roles'));
 
     // Create Filtered HTML format.
     $filtered_html_format = entity_create('filter_format', array(
@@ -184,4 +188,87 @@ class FilterAPITest extends DrupalUnitTestBase {
     );
   }
 
+  /**
+   * Tests the function of the typed data type.
+   */
+  function testTypedDataAPI() {
+    $definition = array('type' => 'filter_format');
+    $data = \Drupal::typedData()->create($definition);
+
+    $this->assertTrue($data instanceof AllowedValuesInterface, 'Typed data object implements \Drupal\Core\TypedData\AllowedValuesInterface');
+
+    $filtered_html_user = $this->createUser(array('uid' => 2), array(
+      filter_permission_name(filter_format_load('filtered_html')),
+    ));
+
+    // Test with anonymous user.
+    $user = drupal_anonymous_user();
+    $this->container->set('current_user', $user);
+
+    $available_values = $data->getPossibleValues();
+    $this->assertEqual($available_values, array('filtered_html', 'full_html', 'plain_text'));
+    $available_options = $data->getPossibleOptions();
+    $expected_available_options = array(
+      'filtered_html' => 'Filtered HTML',
+      'full_html' => 'Full HTML',
+      'plain_text' => 'Plain text',
+    );
+    $this->assertEqual($available_options, $expected_available_options);
+    $allowed_values = $data->getSettableValues($user);
+    $this->assertEqual($allowed_values, array('plain_text'));
+    $allowed_options = $data->getSettableOptions($user);
+    $this->assertEqual($allowed_options, array('plain_text' => 'Plain text'));
+
+    $data->setValue('foo');
+    $violations = $data->validate();
+    $this->assertFilterFormatViolation($violations, 'foo');
+
+    // Make sure the information provided by a violation is correct.
+    $violation = $violations[0];
+    $this->assertEqual($violation->getRoot(), $data, 'Violation root is filter format.');
+    $this->assertEqual($violation->getPropertyPath(), '', 'Violation property path is correct.');
+    $this->assertEqual($violation->getInvalidValue(), 'foo', 'Violation contains invalid value.');
+
+    $data->setValue('plain_text');
+    $violations = $data->validate();
+    $this->assertEqual(count($violations), 0, "No validation violation for format 'plain_text' found");
+
+    // Anonymous doesn't have access to the 'filtered_html' format.
+    $data->setValue('filtered_html');
+    $violations = $data->validate();
+    $this->assertFilterFormatViolation($violations, 'filtered_html');
+
+    // Set user with access to 'filtered_html' format.
+    $this->container->set('current_user', $filtered_html_user);
+    $violations = $data->validate();
+    $this->assertEqual(count($violations), 0, "No validation violation for accessible format 'filtered_html' found.");
+
+    $allowed_values = $data->getSettableValues($filtered_html_user);
+    $this->assertEqual($allowed_values, array('filtered_html', 'plain_text'));
+    $allowed_options = $data->getSettableOptions($filtered_html_user);
+    $expected_allowed_options = array(
+      'filtered_html' => 'Filtered HTML',
+      'plain_text' => 'Plain text',
+    );
+    $this->assertEqual($allowed_options, $expected_allowed_options);
+  }
+
+  /**
+   * Checks if an expected violation exists in the given violations.
+   *
+   * @param \Symfony\Component\Validator\ConstraintViolationListInterface $violations
+   *   The violations to assert.
+   * @param mixed $invalid_value
+   *   The expected invalid value.
+   */
+  public function assertFilterFormatViolation(ConstraintViolationListInterface $violations, $invalid_value) {
+    $filter_format_violation_found = FALSE;
+    foreach ($violations as $violation) {
+      if ($violation->getRoot() instanceof FilterFormat && $violation->getInvalidValue() === $invalid_value) {
+        $filter_format_violation_found = TRUE;
+        break;
+      }
+    }
+    $this->assertTrue($filter_format_violation_found, format_string('Validation violation for invalid value "%invalid_value" found', array('%invalid_value' => $invalid_value)));
+  }
 }

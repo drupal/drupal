@@ -108,6 +108,22 @@ abstract class LegacyConfigFieldItem extends ConfigFieldItemBase implements Prep
   }
 
   /**
+   * Returns options provided via the legacy callback hook_options_list().
+   *
+   * @todo: Convert all legacy callback implementations to methods.
+   *
+   * @see \Drupal\Core\TypedData\AllowedValuesInterface
+   */
+  public function getSettableOptions() {
+    $definition = $this->getPluginDefinition();
+    $callback = "{$definition['provider']}_options_list";
+    if (function_exists($callback)) {
+      $entity = $this->getParent()->getParent();
+      return $callback($this->getInstance(), $entity);
+    }
+  }
+
+  /**
    * Returns the legacy callback for a given field type "hook".
    *
    * @param string $hook

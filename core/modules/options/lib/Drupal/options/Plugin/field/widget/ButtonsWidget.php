@@ -34,7 +34,7 @@ class ButtonsWidget extends OptionsWidgetBase {
   public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $element = parent::formElement($items, $delta, $element, $langcode, $form, $form_state);
 
-    $options = $this->getOptions();
+    $options = $this->getOptions($items[$delta]);
     $selected = $this->getSelectedOptions($items);
 
     // If required and there is one single option, preselect it.
