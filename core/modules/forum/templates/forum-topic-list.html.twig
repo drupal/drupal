@@ -13,7 +13,7 @@
  *   - icon: The icon to display.
  *   - moved: A flag to indicate whether the topic has been moved to another
  *     forum.
- *   - title: The title of the topic. Safe to output.
+ *   - title_link: The title of the topic. Safe to output.
  *   - message: If the topic has been moved, this contains an explanation and a
  *     link.
  *   - zebra: 'even' or 'odd', used for row class.
@@ -21,7 +21,7 @@
  *   - new_replies: A flag to indicate whether there are unread comments.
  *   - new_url: If there are unread replies, this is a link to them.
  *   - new_text: Text containing the translated, properly pluralized count.
- *   - created: Text representing when the topic was posted. Safe to output.
+ *   - submitted: Text representing when the topic was posted. Safe to output.
  *   - last_reply: Text representing when the topic was last replied to.
  *   - timestamp: The raw timestamp this topic was posted.
  * - topic_id: Numeric ID for the current forum topic.
@@ -42,10 +42,10 @@
         {{ topic.icon }}
         <div class="title">
           <div>
-            {{ topic.title }}
+            {{ topic.title_link }}
           </div>
           <div>
-            {{ topic.created }}
+            {{ topic.submitted }}
           </div>
         </div>
       </td>

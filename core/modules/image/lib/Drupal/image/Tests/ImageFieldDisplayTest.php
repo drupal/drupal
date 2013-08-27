@@ -58,7 +58,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node = node_load($nid, TRUE);
 
     // Test that the default formatter is being used.
-    $image_uri = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri();
+    $image_uri = file_load($node->{$field_name}->target_id)->getFileUri();
     $image = array(
       '#theme' => 'image',
       '#uri' => $image_uri,
@@ -182,7 +182,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node = node_load($nid, TRUE);
     $image_style = array(
       '#theme' => 'image_style',
-      '#uri' => file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri(),
+      '#uri' => file_load($node->{$field_name}->target_id)->getFileUri(),
       '#width' => 220,
       '#height' => 110,
       '#style_name' => 'medium',
@@ -193,7 +193,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Add alt/title fields to the image and verify that they are displayed.
     $image = array(
       '#theme' => 'image',
-      '#uri' => file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri(),
+      '#uri' => file_load($node->{$field_name}->target_id)->getFileUri(),
       '#alt' => $this->randomName(),
       '#title' => $this->randomName(),
       '#width' => 40,
@@ -266,7 +266,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $node = node_load($nid, TRUE);
     $image = array(
       '#theme' => 'image',
-      '#uri' => file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri(),
+      '#uri' => file_load($node->{$field_name}->target_id)->getFileUri(),
       '#width' => 40,
       '#height' => 20,
     );

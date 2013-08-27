@@ -26,22 +26,21 @@ class NodeStorageController extends DatabaseStorageControllerNG {
     if (empty($values['created'])) {
       $values['created'] = REQUEST_TIME;
     }
-    return parent::create($values)->getBCEntity();
+    return parent::create($values);
   }
 
   /**
    * Overrides Drupal\Core\Entity\DatabaseStorageControllerNG::attachLoad().
    */
   protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
-    $nodes = $this->mapFromStorageRecords($queried_entities, $load_revision);
+    $queried_entities = $this->mapFromStorageRecords($queried_entities, $load_revision);
 
     // Create an array of nodes for each content type and pass this to the
     // object type specific callback. To preserve backward-compatibility we
     // pass on BC decorators to node-specific hooks, while we pass on the
     // regular entity objects else.
     $typed_nodes = array();
-    foreach ($nodes as $id => $node) {
-      $queried_entities[$id] = $node->getBCEntity();
+    foreach ($queried_entities as $id => $node) {
       $typed_nodes[$node->bundle()][$id] = $queried_entities[$id];
     }
 
@@ -69,31 +68,6 @@ class NodeStorageController extends DatabaseStorageControllerNG {
     foreach (\Drupal::moduleHandler()->getImplementations($this->entityType . '_load') as $module) {
       call_user_func_array($module . '_' . $this->entityType . '_load', $args);
     }
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\DatabaseStorageController::invokeHook().
-   */
-  protected function invokeHook($hook, EntityInterface $node) {
-    $node = $node->getUntranslated()->getBCEntity();
-
-    // Inline parent::invokeHook() to pass on BC-entities to node-specific
-    // hooks.
-
-    $function = 'field_attach_' . $hook;
-    // @todo: field_attach_delete_revision() is named the wrong way round,
-    // consider renaming it.
-    if ($function == 'field_attach_revision_delete') {
-      $function = 'field_attach_delete_revision';
-    }
-    if (!empty($this->entityInfo['fieldable']) && function_exists($function)) {
-      $function($node);
-    }
-
-    // Invoke the hook.
-    module_invoke_all($this->entityType . '_' . $hook, $node);
-    // Invoke the respective entity-level hook.
-    module_invoke_all('entity_' . $hook, $node, $this->entityType);
   }
 
   /**

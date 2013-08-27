@@ -113,7 +113,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
 
     $referencing_nid = key($result);
     $referencing_node = node_load($referencing_nid);
-    $this->assertEqual($referenced_nid, $referencing_node->test_field[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'], 'Newly created node is referenced from the referencing node.');
+    $this->assertEqual($referenced_nid, $referencing_node->test_field->target_id, 'Newly created node is referenced from the referencing node.');
 
     // Now try to view the node and check that the referenced node is shown.
     $this->drupalGet('node/' . $referencing_node->id());

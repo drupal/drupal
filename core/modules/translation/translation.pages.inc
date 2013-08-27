@@ -22,14 +22,14 @@ use Drupal\Core\Entity\EntityInterface;
 function translation_node_overview(EntityInterface $node) {
   include_once DRUPAL_ROOT . '/core/includes/language.inc';
 
-  if ($node->tnid) {
+  if ($node->tnid->value) {
     // Already part of a set, grab that set.
-    $tnid = $node->tnid;
-    $translations = translation_node_get_translations($node->tnid);
+    $tnid = $node->tnid->value;
+    $translations = translation_node_get_translations($node->tnid->value);
   }
   else {
     // We have no translation source nid, this could be a new set, emulate that.
-    $tnid = $node->nid;
+    $tnid = $node->id();
     $translations = array($node->language()->id => $node);
   }
 
@@ -42,7 +42,8 @@ function translation_node_overview(EntityInterface $node) {
     if (isset($translations[$langcode])) {
       // Existing translation in the translation set: display status.
       // We load the full node to check whether the user can edit it.
-      $translation_node = node_load($translations[$langcode]->nid);
+      $nid = $translations[$langcode] instanceof EntityInterface ? $translations[$langcode]->id() : $translations[$langcode]->nid;
+      $translation_node = node_load($nid);
       $path = 'node/' . $translation_node->id();
       $links = language_negotiation_get_switch_links($type, $path);
       $title = empty($links->links[$langcode]['href']) ? l($translation_node->label(), $path) : l($translation_node->label(), $links->links[$langcode]['href'], $links->links[$langcode]);
@@ -56,7 +57,7 @@ function translation_node_overview(EntityInterface $node) {
         }
       }
       $status = $translation_node->isPublished() ? t('Published') : t('Not published');
-      $status .= $translation_node->translate ? ' - <span class="marker">' . t('outdated') . '</span>' : '';
+      $status .= $translation_node->translate->value ? ' - <span class="marker">' . t('outdated') . '</span>' : '';
       if ($translation_node->id() == $tnid) {
         $language_name = t('<strong>@language_name</strong> (source)', array('@language_name' => $language_name));
       }

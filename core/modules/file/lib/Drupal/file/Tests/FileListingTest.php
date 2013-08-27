@@ -82,7 +82,7 @@ class FileListingTest extends FileFieldTestBase {
         'files[file_' . Language::LANGCODE_NOT_SPECIFIED . '_' . 0 . ']' => drupal_realpath($file->getFileUri()),
       );
       $this->drupalPost(NULL, $edit, t('Save'));
-      $node = entity_load('node', $node->id())->getNGEntity();
+      $node = entity_load('node', $node->id());
     }
 
     $this->drupalGet('admin/content/files');

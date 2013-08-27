@@ -516,7 +516,7 @@ function theme_comment_block($variables) {
 function comment_node_view(EntityInterface $node, EntityDisplay $display, $view_mode) {
   $links = array();
 
-  if ($node->comment != COMMENT_NODE_HIDDEN) {
+  if ($node->comment->value != COMMENT_NODE_HIDDEN) {
     if ($view_mode == 'rss') {
       // Add a comments RSS element which is a URL to the comments of this node.
       $node->rss_elements[] = array(
@@ -550,7 +550,7 @@ function comment_node_view(EntityInterface $node, EntityDisplay $display, $view_
           }
         }
       }
-      if ($node->comment == COMMENT_NODE_OPEN) {
+      if ($node->comment->value == COMMENT_NODE_OPEN) {
         $comment_form_location = variable_get('comment_form_location_' . $node->getType(), COMMENT_FORM_BELOW);
         if (user_access('post comments')) {
           $links['comment-add'] = array(
@@ -580,7 +580,7 @@ function comment_node_view(EntityInterface $node, EntityDisplay $display, $view_
       // allowed to post comments and if this node is allowing new comments.
       // But we don't want this link if we're building the node for search
       // indexing or constructing a search result excerpt.
-      if ($node->comment == COMMENT_NODE_OPEN) {
+      if ($node->comment->value == COMMENT_NODE_OPEN) {
         $comment_form_location = variable_get('comment_form_location_' . $node->getType(), COMMENT_FORM_BELOW);
         if (user_access('post comments')) {
           // Show the "post comment" link if the form is on another page, or
@@ -655,7 +655,7 @@ function comment_node_page_additions(EntityInterface $node) {
   }
 
   // Append comment form if needed.
-  if (user_access('post comments') && $node->comment == COMMENT_NODE_OPEN && (variable_get('comment_form_location_' . $node->getType(), COMMENT_FORM_BELOW) == COMMENT_FORM_BELOW)) {
+  if (user_access('post comments') && $node->comment->value == COMMENT_NODE_OPEN && (variable_get('comment_form_location_' . $node->getType(), COMMENT_FORM_BELOW) == COMMENT_FORM_BELOW)) {
     $additions['comment_form'] = comment_add($node);
   }
 
@@ -874,7 +874,7 @@ function comment_view(Comment $comment, $view_mode = 'full', $langcode = NULL) {
  */
 function comment_links(Comment $comment, EntityInterface $node) {
   $links = array();
-  if ($node->comment == COMMENT_NODE_OPEN) {
+  if ($node->comment->value == COMMENT_NODE_OPEN) {
     if ($comment->access('delete')) {
       $links['comment-delete'] = array(
         'title' => t('delete'),
@@ -1072,7 +1072,7 @@ function comment_form_node_form_alter(&$form, $form_state) {
     '#weight' => 30,
   );
   $comment_count = $node->id() ? db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array(':nid' => $node->id()))->fetchField() : 0;
-  $comment_settings = ($node->comment == COMMENT_NODE_HIDDEN && empty($comment_count)) ? COMMENT_NODE_CLOSED : $node->comment;
+  $comment_settings = ($node->comment->value == COMMENT_NODE_HIDDEN && empty($comment_count)) ? COMMENT_NODE_CLOSED : $node->comment->value;
   $form['comment_settings']['comment'] = array(
     '#type' => 'radios',
     '#title' => t('Comments'),
@@ -1113,7 +1113,7 @@ function comment_node_load($nodes, $types) {
   // assign values without hitting the database.
   foreach ($nodes as $node) {
     // Store whether comments are enabled for this node.
-    if ($node->comment != COMMENT_NODE_HIDDEN) {
+    if ($node->comment->value != COMMENT_NODE_HIDDEN) {
       $comments_enabled[] = $node->id();
     }
     else {
@@ -1142,7 +1142,7 @@ function comment_node_load($nodes, $types) {
  * Implements hook_node_prepare_form().
  */
 function comment_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
-  if (!isset($node->comment)) {
+  if (!isset($node->comment->value)) {
     $node->comment = variable_get('comment_' . $node->getType(), COMMENT_NODE_OPEN);
   }
 }
@@ -1209,8 +1209,8 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
 
   if ($index_comments) {
     $mode = variable_get('comment_default_mode_' . $node->getType(), COMMENT_MODE_THREADED);
-    $comments_per_page = variable_get('comment_default_per_page_' . $node->getType(), 50);
-    if ($node->comment && $cids = comment_get_thread($node, $mode, $comments_per_page)) {
+    $comments_per_page = variable_get('comment_default_per_page_' . $node->bundle(), 50);
+    if ($node->comment->value && $cids = comment_get_thread($node, $mode, $comments_per_page)) {
       $comments = comment_load_multiple($cids);
       comment_prepare_thread($comments);
       $build = comment_view_multiple($comments, $langcode);
@@ -1236,11 +1236,11 @@ function comment_update_index() {
  */
 function comment_node_search_result(EntityInterface $node) {
   // Do not make a string if comments are hidden.
-  if (user_access('access comments') && $node->comment != COMMENT_NODE_HIDDEN) {
+  if (user_access('access comments') && $node->comment->value != COMMENT_NODE_HIDDEN) {
     $comments = db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = :nid', array('nid' => $node->id()))->fetchField();
     // Do not make a string if comments are closed and there are currently
     // zero comments.
-    if ($node->comment != COMMENT_NODE_CLOSED || $comments > 0) {
+    if ($node->comment->value != COMMENT_NODE_CLOSED || $comments > 0) {
       return array('comment' => format_plural($comments, '1 comment', '@count comments'));
     }
   }

@@ -260,7 +260,7 @@ function hook_node_grants($account, $op) {
 function hook_node_access_records(\Drupal\node\NodeInterface $node) {
   // We only care about the node if it has been marked private. If not, it is
   // treated just like any other node and we completely ignore it.
-  if ($node->private) {
+  if ($node->private->value) {
     $grants = array();
     // Only published Catalan translations of private nodes should be viewable
     // to all users. If we fail to check $node->isPublished(), all users would be able
@@ -611,7 +611,7 @@ function hook_node_access(\Drupal\node\NodeInterface $node, $op, $account, $lang
  * @ingroup node_api_hooks
  */
 function hook_node_prepare_form(\Drupal\node\NodeInterface $node, $form_display, $operation, array &$form_state) {
-  if (!isset($node->comment)) {
+  if (!isset($node->comment->value)) {
     $node->comment = variable_get('comment_' . $node->getType(), COMMENT_NODE_OPEN);
   }
 }

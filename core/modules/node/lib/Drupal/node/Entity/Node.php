@@ -12,7 +12,6 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\node\NodeInterface;
-use Drupal\node\NodeBCDecorator;
 
 /**
  * Defines the node entity class.
@@ -104,7 +103,7 @@ class Node extends EntityNG implements NodeInterface {
       // need to make sure $entity->log is reset whenever it is empty.
       // Therefore, this code allows us to avoid clobbering an existing log
       // entry with an empty one.
-      $record->log = $this->original->log;
+      $record->log = $this->original->log->value;
     }
   }
 
@@ -116,19 +115,8 @@ class Node extends EntityNG implements NodeInterface {
     // default revision. There's no need to delete existing records if the node
     // is new.
     if ($this->isDefaultRevision()) {
-      \Drupal::entityManager()->getAccessController('node')->writeGrants($this->getBCEntity(), $update);
+      \Drupal::entityManager()->getAccessController('node')->writeGrants($this, $update);
     }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBCEntity() {
-    if (!isset($this->bcEntity)) {
-      $this->getPropertyDefinitions();
-      $this->bcEntity = new NodeBCDecorator($this, $this->fieldDefinitions);
-    }
-    return $this->bcEntity;
   }
 
   /**

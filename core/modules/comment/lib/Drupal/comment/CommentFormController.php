@@ -318,7 +318,7 @@ class CommentFormController extends EntityFormControllerNG {
     $node = node_load($form_state['values']['nid']);
     $comment = $this->entity;
 
-    if (user_access('post comments') && (user_access('administer comments') || $node->comment == COMMENT_NODE_OPEN)) {
+    if (user_access('post comments') && (user_access('administer comments') || $node->comment->value == COMMENT_NODE_OPEN)) {
       // Save the anonymous user information to a cookie for reuse.
       if (user_is_anonymous()) {
         user_cookie_save(array_intersect_key($form_state['values'], array_flip(array('name', 'mail', 'homepage'))));

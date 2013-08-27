@@ -122,7 +122,7 @@ class Rss extends RowPluginBase {
       ),
       array(
         'key' => 'dc:creator',
-        'value' => $node->name,
+        'value' => $node->getAuthor()->getUsername(),
       ),
       array(
         'key' => 'guid',

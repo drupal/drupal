@@ -726,10 +726,10 @@ class Field extends FieldPluginBase {
       if ($data) {
         // Now, overwrite the original value with our aggregated value.
         // This overwrites it so there is always just one entry.
-        $processed_entity->{$this->definition['field_name']}[$langcode] = array($base_value);
+        $processed_entity->getTranslation($langcode)->{$this->definition['field_name']} = array($base_value);
       }
       else {
-        $processed_entity->{$this->definition['field_name']}[$langcode] = array();
+        $processed_entity->getTranslation($langcode)->{$this->definition['field_name']} = array();
       }
     }
 
@@ -740,7 +740,7 @@ class Field extends FieldPluginBase {
 
     // We are supposed to show only certain deltas.
     if ($this->limit_values && !empty($processed_entity->{$this->definition['field_name']})) {
-      $all_values = !empty($processed_entity->{$this->definition['field_name']}[$langcode]) ? $processed_entity->{$this->definition['field_name']}[$langcode] : array();
+      $all_values = !empty($processed_entity->getTranslation($langcode)->{$this->definition['field_name']}) ? $processed_entity->getTranslation($langcode)->{$this->definition['field_name']}->getValue() : array();
       if ($this->options['delta_reversed']) {
         $all_values = array_reverse($all_values);
       }
@@ -786,7 +786,7 @@ class Field extends FieldPluginBase {
           }
         }
       }
-      $processed_entity->{$this->definition['field_name']}[$langcode] = $new_values;
+      $processed_entity->getTranslation($langcode)->{$this->definition['field_name']} = $new_values;
     }
 
     return $processed_entity;

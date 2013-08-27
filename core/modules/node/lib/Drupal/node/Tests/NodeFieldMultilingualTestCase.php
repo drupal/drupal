@@ -82,7 +82,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
     $this->drupalPost('node/add/page', $edit, t('Save'));
 
     // Check that the node exists in the database.
-    $node = $this->drupalGetNodeByTitle($edit[$title_key])->getNGEntity();
+    $node = $this->drupalGetNodeByTitle($edit[$title_key]);
     $this->assertTrue($node, 'Node found in database.');
     $this->assertTrue($node->language()->id == $langcode && $node->body->value == $body_value, 'Field language correctly set.');
 
@@ -94,7 +94,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
       'langcode' => $langcode,
     );
     $this->drupalPost(NULL, $edit, t('Save'));
-    $node = $this->drupalGetNodeByTitle($edit[$title_key], TRUE)->getNGEntity();
+    $node = $this->drupalGetNodeByTitle($edit[$title_key], TRUE);
     $this->assertTrue($node, 'Node found in database.');
     $this->assertTrue($node->language()->id == $langcode && $node->body->value == $body_value, 'Field language correctly changed.');
 
@@ -136,7 +136,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
       ':id' => 'node-' . $node->id(),
       ':class' => 'content',
     ));
-    $this->assertEqual(current($body), $node->body['en'][0]['value'], 'Node body found.');
+    $this->assertEqual(current($body), $node->body->value, 'Node body found.');
   }
 
 }

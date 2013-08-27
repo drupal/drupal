@@ -635,7 +635,7 @@ function node_row_node_view_preprocess_node(&$variables) {
     unset($variables['content']['links']);
   }
 
-  if (!empty($options['comments']) && user_access('access comments') && $node->comment) {
+  if (!empty($options['comments']) && user_access('access comments') && $node->comment->value) {
     $variables['content']['comments'] = comment_node_page_additions($node);
   }
 }

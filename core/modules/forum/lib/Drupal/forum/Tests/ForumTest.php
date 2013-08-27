@@ -529,7 +529,7 @@ class ForumTest extends WebTestBase {
     // Retrieve node object, ensure that the topic was created and in the proper forum.
     $node = $this->drupalGetNodeByTitle($title);
     $this->assertTrue($node != NULL, format_string('Node @title was loaded', array('@title' => $title)));
-    $this->assertEqual($node->taxonomy_forums[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'], $tid, 'Saved forum topic was in the expected forum');
+    $this->assertEqual($node->taxonomy_forums->target_id, $tid, 'Saved forum topic was in the expected forum');
 
     // View forum topic.
     $this->drupalGet('node/' . $node->id());
