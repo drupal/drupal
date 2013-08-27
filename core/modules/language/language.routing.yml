@@ -25,3 +25,17 @@ language_admin_overview:
     _entity_list: 'language_entity'
   requirements:
     _permission: 'administer languages'
+
+language_delete:
+  pattern: '/admin/config/regional/language/delete/{language_entity}'
+  defaults:
+    _entity_form: 'language_entity.delete'
+  requirements:
+    _entity_access: 'language_entity.delete'
+
+language_negotiation_browser_delete:
+  pattern: 'admin/config/regional/language/detection/browser/delete/{browser_langcode}'
+  defaults:
+    _form: '\Drupal\language\Form\NegotiationBrowserDeleteForm'
+  requirements:
+    _permission: 'administer languages'
