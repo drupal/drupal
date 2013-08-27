@@ -33,6 +33,7 @@ use Drupal\user\RoleInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "uuid" = "uuid",
+ *     "weight" = "weight",
  *     "label" = "label"
  *   }
  * )

@@ -7,14 +7,18 @@
 
 namespace Drupal\taxonomy;
 
-use Drupal\Core\Config\Entity\ConfigEntityListController;
+use Drupal\Core\Config\Entity\DraggableListController;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Form\FormInterface;
 
 /**
  * Provides a listing of vocabularies.
  */
-class VocabularyListController extends ConfigEntityListController implements FormInterface {
+class VocabularyListController extends DraggableListController {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $entitiesKey = 'vocabularies';
 
   /**
    * {@inheritdoc}
@@ -65,21 +69,7 @@ class VocabularyListController extends ConfigEntityListController implements For
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    // Override default values to markup elements.
-    $row['#attributes']['class'][] = 'draggable';
-
-    $row['label'] = array(
-      '#markup' => $this->getLabel($entity),
-    );
-    $row['#weight'] = $entity->get('weight');
-    // Add weight column.
-    $row['weight'] = array(
-      '#type' => 'weight',
-      '#title' => t('Weight for @title', array('@title' => $entity->label())),
-      '#title_display' => 'invisible',
-      '#default_value' => $entity->get('weight'),
-      '#attributes' => array('class' => array('weight')),
-    );
+    $row['label'] = $this->getLabel($entity);
     return $row + parent::buildRow($entity);
   }
 
@@ -88,22 +78,13 @@ class VocabularyListController extends ConfigEntityListController implements For
    */
   public function render() {
     $entities = $this->load();
-    if (count($entities) > 1) {
-      // Creates a form for manipulating vocabulary weights if more then one
-      // vocabulary exists.
-      return drupal_get_form($this);
+    // If there are not multiple vocabularies, disable dragging by unsetting the
+    // weight key.
+    if (count($entities) <= 1) {
+      unset($this->weightKey);
     }
-    $build = array(
-      '#theme' => 'table',
-      '#header' => $this->buildHeader(),
-      '#rows' => array(),
-      '#empty' => t('No vocabularies available. <a href="@link">Add vocabulary</a>.', array('@link' => url('admin/structure/taxonomy/add'))),
-    );
-    unset($build['#header']['weight']);
-    foreach ($entities as $entity) {
-      $row['label'] = $this->getLabel($entity);
-      $build['#rows'][$entity->id()] = $row + parent::buildRow($entity);
-    }
+    $build = parent::render();
+    $build['#empty'] = t('No vocabularies available. <a href="@link">Add vocabulary</a>.', array('@link' => url('admin/structure/taxonomy/add')));
     return $build;
   }
 
@@ -111,27 +92,9 @@ class VocabularyListController extends ConfigEntityListController implements For
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $form['vocabularies'] = array(
-      '#type' => 'table',
-      '#header' => $this->buildHeader(),
-      '#tabledrag' => array(
-        array('order', 'sibling', 'weight'),
-      ),
-      '#attributes' => array(
-        'id' => 'taxonomy',
-      ),
-    );
-
-    foreach ($this->load() as $entity) {
-      $form['vocabularies'][$entity->id()] = $this->buildRow($entity);
-    }
-
-    $form['actions']['#type'] = 'actions';
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save'),
-      '#button_type' => 'primary',
-    );
+    $form = parent::buildForm($form, $form_state);
+    $form['vocabularies']['#attributes'] = array('id' => 'taxonomy');
+    $form['actions']['submit']['#value'] = t('Save');
 
     return $form;
   }
@@ -139,24 +102,8 @@ class VocabularyListController extends ConfigEntityListController implements For
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
-    // No validation.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitForm(array &$form, array &$form_state) {
-    $vocabularies = $form_state['values']['vocabularies'];
-
-    $entities = entity_load_multiple($this->entityType, array_keys($vocabularies));
-    foreach ($vocabularies as $id => $value) {
-      if (isset($entities[$id]) && $value['weight'] != $entities[$id]->get('weight')) {
-        // Update changed weight.
-        $entities[$id]->set('weight', $value['weight']);
-        $entities[$id]->save();
-      }
-    }
+    parent::submitForm($form, $form_state);
 
     drupal_set_message(t('The configuration options have been saved.'));
   }

@@ -30,6 +30,7 @@ use Drupal\language\LanguageInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
+ *     "weight" = "weight",
  *     "uuid" = "uuid"
  *   }
  * )
