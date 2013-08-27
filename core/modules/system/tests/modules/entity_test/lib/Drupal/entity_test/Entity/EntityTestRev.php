@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Test entity - revisions"),
  *   module = "entity_test",
  *   controllers = {
- *     "storage" = "Drupal\entity_test\EntityTestRevStorageController",
+ *     "storage" = "Drupal\entity_test\EntityTestStorageController",
  *     "access" = "Drupal\entity_test\EntityTestAccessController",
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestFormController"
@@ -60,5 +60,19 @@ class EntityTestRev extends EntityTest {
    */
   public function getRevisionId() {
     return $this->get('revision_id')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions($entity_type) {
+    $fields = parent::baseFieldDefinitions($entity_type);
+    $fields['revision_id'] = array(
+      'label' => t('ID'),
+      'description' => t('The version id of the test entity.'),
+      'type' => 'integer_field',
+      'read-only' => TRUE,
+    );
+    return $fields;
   }
 }

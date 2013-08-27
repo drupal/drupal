@@ -235,4 +235,47 @@ class CustomBlock extends EntityNG implements CustomBlockInterface {
     parent::delete();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions($entity_type) {
+    $properties['id'] = array(
+      'label' => t('ID'),
+      'description' => t('The custom block ID.'),
+      'type' => 'integer_field',
+      'read-only' => TRUE,
+    );
+    $properties['uuid'] = array(
+      'label' => t('UUID'),
+      'description' => t('The custom block UUID.'),
+      'type' => 'uuid_field',
+    );
+    $properties['revision_id'] = array(
+      'label' => t('Revision ID'),
+      'description' => t('The revision ID.'),
+      'type' => 'integer_field',
+    );
+    $properties['langcode'] = array(
+      'label' => t('Language code'),
+      'description' => t('The comment language code.'),
+      'type' => 'language_field',
+    );
+    $properties['info'] = array(
+      'label' => t('Subject'),
+      'description' => t('The custom block name.'),
+      'type' => 'string_field',
+    );
+    $properties['type'] = array(
+      'label' => t('Block type'),
+      'description' => t('The block type.'),
+      'type' => 'string_field',
+    );
+    $properties['log'] = array(
+      'label' => t('Revision log message'),
+      'description' => t('The revision log message.'),
+      'type' => 'string_field',
+    );
+    return $properties;
+  }
+
 }

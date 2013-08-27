@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Test entity - revisions and data table"),
  *   module = "entity_test",
  *   controllers = {
- *     "storage" = "Drupal\entity_test\EntityTestMulRevStorageController",
+ *     "storage" = "Drupal\entity_test\EntityTestStorageController",
  *     "access" = "Drupal\entity_test\EntityTestAccessController",
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestFormController"
@@ -41,5 +41,24 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class EntityTestMulRev extends EntityTestRev {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions($entity_type) {
+    $fields = parent::baseFieldDefinitions($entity_type);
+    $fields['revision_id'] = array(
+      'label' => t('ID'),
+      'description' => t('The version id of the test entity.'),
+      'type' => 'integer_field',
+      'read-only' => TRUE,
+    );
+    $fields['default_langcode'] = array(
+      'label' => t('Default language'),
+      'description' => t('Flag to inditcate whether this is the default language.'),
+      'type' => 'boolean_field',
+    );
+    return $fields;
+  }
 
 }

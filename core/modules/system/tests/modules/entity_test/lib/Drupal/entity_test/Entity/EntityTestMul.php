@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Test entity - data table"),
  *   module = "entity_test",
  *   controllers = {
- *     "storage" = "Drupal\entity_test\EntityTestMulStorageController",
+ *     "storage" = "Drupal\entity_test\EntityTestStorageController",
  *     "access" = "Drupal\entity_test\EntityTestAccessController",
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestFormController"
@@ -39,5 +39,18 @@ use Drupal\Core\Annotation\Translation;
  * )
  */
 class EntityTestMul extends EntityTest {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions($entity_type) {
+    $fields = parent::baseFieldDefinitions($entity_type);
+    $fields['default_langcode'] = array(
+      'label' => t('Default language'),
+      'description' => t('Flag to indicate whether this is the default language.'),
+      'type' => 'boolean_field',
+    );
+    return $fields;
+  }
 
 }

@@ -410,4 +410,109 @@ class User extends EntityNG implements UserInterface {
     return $this;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions($entity_type) {
+    $properties['uid'] = array(
+      'label' => t('User ID'),
+      'description' => t('The user ID.'),
+      'type' => 'integer_field',
+      'read-only' => TRUE,
+    );
+    $properties['uuid'] = array(
+      'label' => t('UUID'),
+      'description' => t('The user UUID.'),
+      'type' => 'uuid_field',
+      'read-only' => TRUE,
+    );
+    $properties['langcode'] = array(
+      'label' => t('Language code'),
+      'description' => t('The user language code.'),
+      'type' => 'language_field',
+    );
+    $properties['preferred_langcode'] = array(
+      'label' => t('Language code'),
+      'description' => t("The user's preferred langcode for receiving emails and viewing the site."),
+      'type' => 'language_field',
+    );
+    $properties['preferred_admin_langcode'] = array(
+      'label' => t('Language code'),
+      'description' => t("The user's preferred langcode for viewing administration pages."),
+      'type' => 'language_field',
+    );
+    $properties['name'] = array(
+      'label' => t('Name'),
+      'description' => t('The name of this user'),
+      'type' => 'string_field',
+      'settings' => array('default_value' => ''),
+    );
+    $properties['pass'] = array(
+      'label' => t('Name'),
+      'description' => t('The password of this user (hashed)'),
+      'type' => 'string_field',
+    );
+    $properties['mail'] = array(
+      'label' => t('Name'),
+      'description' => t('The e-mail of this user'),
+      'type' => 'string_field',
+      'settings' => array('default_value' => ''),
+    );
+    $properties['signature'] = array(
+      'label' => t('Name'),
+      'description' => t('The signature of this user'),
+      'type' => 'string_field',
+    );
+    $properties['signature_format'] = array(
+      'label' => t('Name'),
+      'description' => t('The signature format of this user'),
+      'type' => 'string_field',
+    );
+    $properties['theme'] = array(
+      'label' => t('Theme'),
+      'description' => t('The default theme of this user'),
+      'type' => 'string_field',
+    );
+    $properties['timezone'] = array(
+      'label' => t('Timezone'),
+      'description' => t('The timezone of this user'),
+      'type' => 'string_field',
+    );
+    $properties['status'] = array(
+      'label' => t('User status'),
+      'description' => t('Whether the user is active (1) or blocked (0).'),
+      'type' => 'boolean_field',
+      'settings' => array('default_value' => 1),
+    );
+    $properties['created'] = array(
+      'label' => t('Created'),
+      'description' => t('The time that the node was created.'),
+      'type' => 'integer_field',
+    );
+    $properties['access'] = array(
+      'label' => t('Last access'),
+      'description' => t('The time that the user last accessed the site.'),
+      'type' => 'integer_field',
+      'settings' => array('default_value' => 0),
+    );
+    $properties['login'] = array(
+      'label' => t('Last login'),
+      'description' => t('The time that the user last logged in.'),
+      'type' => 'integer_field',
+      'settings' => array('default_value' => 0),
+    );
+    $properties['init'] = array(
+      'label' => t('Init'),
+      'description' => t('The email address used for initial account creation.'),
+      'type' => 'string_field',
+      'settings' => array('default_value' => ''),
+    );
+    $properties['roles'] = array(
+      'label' => t('Roles'),
+      'description' => t('The roles the user has.'),
+      'type' => 'string_field',
+    );
+    return $properties;
+  }
+
 }

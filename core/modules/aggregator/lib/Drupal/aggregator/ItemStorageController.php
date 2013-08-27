@@ -29,59 +29,6 @@ class ItemStorageController extends DatabaseStorageControllerNG implements ItemS
   }
 
   /**
-   * Implements Drupal\Core\Entity\DataBaseStorageControllerNG::baseFieldDefinitions().
-   */
-  public function baseFieldDefinitions() {
-    $fields['iid'] = array(
-      'label' => t('ID'),
-      'description' => t('The ID of the aggregor item.'),
-      'type' => 'integer_field',
-      'read-only' => TRUE,
-    );
-    $fields['fid'] = array(
-      'label' => t('Aggregator feed ID'),
-      'description' => t('The ID of the aggregator feed.'),
-      'type' => 'integer_field',
-    );
-    $fields['title'] = array(
-      'label' => t('Title'),
-      'description' => t('The title of the feed item.'),
-      'type' => 'string_field',
-    );
-    $fields['langcode'] = array(
-      'label' => t('Language code'),
-      'description' => t('The feed item language code.'),
-      'type' => 'language_field',
-    );
-    $fields['link'] = array(
-      'label' => t('Link'),
-      'description' => t('The link of the feed item.'),
-      'type' => 'uri_field',
-    );
-    $fields['author'] = array(
-      'label' => t('Author'),
-      'description' => t('The author of the feed item.'),
-      'type' => 'string_field',
-    );
-    $fields['description'] = array(
-      'label' => t('Description'),
-      'description' => t('The body of the feed item.'),
-      'type' => 'string_field',
-    );
-    $fields['timestamp'] = array(
-      'label' => t('Posted timestamp'),
-      'description' => t('Posted date of the feed item, as a Unix timestamp.'),
-      'type' => 'integer_field',
-    );
-    $fields['guid'] = array(
-      'label' => t('GUID'),
-      'description' => t('Unique identifier for the feed item.'),
-      'type' => 'string_field',
-    );
-    return $fields;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function loadCategories(array $entities) {
