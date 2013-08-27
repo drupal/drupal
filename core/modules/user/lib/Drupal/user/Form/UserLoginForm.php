@@ -8,18 +8,15 @@
 namespace Drupal\user\Form;
 
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Flood\FloodInterface;
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormBase;
 use Drupal\user\UserStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a user login form.
  */
-class UserLoginForm implements FormInterface, ControllerInterface {
+class UserLoginForm extends FormBase {
 
   /**
    * The config factory.
@@ -27,13 +24,6 @@ class UserLoginForm implements FormInterface, ControllerInterface {
    * @var \Drupal\Core\Config\ConfigFactory
    */
   protected $configFactory;
-
-  /**
-   * The request object.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
 
   /**
    * The flood service.
@@ -47,7 +37,7 @@ class UserLoginForm implements FormInterface, ControllerInterface {
    *
    * @var \Drupal\user\UserStorageControllerInterface
    */
-  protected $storageController;
+  protected $userStorage;
 
   /**
    * Constructs a new UserLoginForm.
@@ -56,13 +46,13 @@ class UserLoginForm implements FormInterface, ControllerInterface {
    *   The config factory.
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
-   * @param \Drupal\user\UserStorageControllerInterface $storage_controller
+   * @param \Drupal\user\UserStorageControllerInterface $user_storage
    *   The user storage controller.
    */
-  public function __construct(ConfigFactory $config_factory, FloodInterface $flood, UserStorageControllerInterface $storage_controller) {
+  public function __construct(ConfigFactory $config_factory, FloodInterface $flood, UserStorageControllerInterface $user_storage) {
     $this->configFactory = $config_factory;
     $this->flood = $flood;
-    $this->storageController = $storage_controller;
+    $this->userStorage = $user_storage;
   }
 
   /**
@@ -86,15 +76,14 @@ class UserLoginForm implements FormInterface, ControllerInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
-    $this->request = $request;
+  public function buildForm(array $form, array &$form_state) {
     // Display login form:
     $form['name'] = array(
       '#type' => 'textfield',
-      '#title' => t('Username'),
+      '#title' => $this->t('Username'),
       '#size' => 60,
       '#maxlength' => USERNAME_MAX_LENGTH,
-      '#description' => t('Enter your @s username.', array('@s' => $this->configFactory->get('system.site')->get('name'))),
+      '#description' => $this->t('Enter your @s username.', array('@s' => $this->configFactory->get('system.site')->get('name'))),
       '#required' => TRUE,
       '#attributes' => array(
         'autocorrect' => 'off',
@@ -106,14 +95,14 @@ class UserLoginForm implements FormInterface, ControllerInterface {
 
     $form['pass'] = array(
       '#type' => 'password',
-      '#title' => t('Password'),
+      '#title' => $this->t('Password'),
       '#size' => 60,
-      '#description' => t('Enter the password that accompanies your username.'),
+      '#description' => $this->t('Enter the password that accompanies your username.'),
       '#required' => TRUE,
     );
 
     $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Log in'));
+    $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Log in'));
 
     $form['#validate'][] = array($this, 'validateName');
     $form['#validate'][] = array($this, 'validateAuthentication');
@@ -125,14 +114,8 @@ class UserLoginForm implements FormInterface, ControllerInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitForm(array &$form, array &$form_state) {
-    $account = $this->storageController->load($form_state['uid']);
+    $account = $this->userStorage->load($form_state['uid']);
     $form_state['redirect'] = 'user/' . $account->id();
 
     user_login_finalize($account);
@@ -144,7 +127,7 @@ class UserLoginForm implements FormInterface, ControllerInterface {
   public function validateName(array &$form, array &$form_state) {
     if (!empty($form_state['values']['name']) && user_is_blocked($form_state['values']['name'])) {
       // Blocked in user administration.
-      form_set_error('name', t('The username %name has not been activated or is blocked.', array('%name' => $form_state['values']['name'])));
+      form_set_error('name', $this->t('The username %name has not been activated or is blocked.', array('%name' => $form_state['values']['name'])));
     }
   }
 
@@ -166,7 +149,7 @@ class UserLoginForm implements FormInterface, ControllerInterface {
         $form_state['flood_control_triggered'] = 'ip';
         return;
       }
-      $accounts = $this->storageController->loadByProperties(array('name' => $form_state['values']['name'], 'status' => 1));
+      $accounts = $this->userStorage->loadByProperties(array('name' => $form_state['values']['name'], 'status' => 1));
       $account = reset($accounts);
       if ($account) {
         if ($flood_config->get('uid_only')) {
@@ -178,7 +161,7 @@ class UserLoginForm implements FormInterface, ControllerInterface {
           // The default identifier is a combination of uid and IP address. This
           // is less secure but more resistant to denial-of-service attacks that
           // could lock out all users with public user names.
-          $identifier = $account->id() . '-' . $this->request->getClientIP();
+          $identifier = $account->id() . '-' . $this->getRequest()->getClientIP();
         }
         $form_state['flood_control_user_identifier'] = $identifier;
 
@@ -216,19 +199,19 @@ class UserLoginForm implements FormInterface, ControllerInterface {
         }
         else {
           // We did not find a uid, so the limit is IP-based.
-          form_set_error('name', t('Sorry, too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
+          form_set_error('name', $this->t('Sorry, too many failed login attempts from your IP address. This IP address is temporarily blocked. Try again later or <a href="@url">request a new password</a>.', array('@url' => url('user/password'))));
         }
       }
       else {
-        form_set_error('name', t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password', array('query' => array('name' => $form_state['values']['name']))))));
-        $accounts = $this->storageController->loadByProperties(array('name' => $form_state['values']['name']));
+        form_set_error('name', $this->t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>', array('@password' => url('user/password', array('query' => array('name' => $form_state['values']['name']))))));
+        $accounts = $this->userStorage->loadByProperties(array('name' => $form_state['values']['name']));
         if (!empty($accounts)) {
           watchdog('user', 'Login attempt failed for %user.', array('%user' => $form_state['values']['name']));
         }
         else {
           // If the username entered is not a valid user,
           // only store the IP address.
-          watchdog('user', 'Login attempt failed from %ip.', array('%ip' => $this->request->getClientIp()));
+          watchdog('user', 'Login attempt failed from %ip.', array('%ip' => $this->getRequest()->getClientIp()));
         }
       }
     }

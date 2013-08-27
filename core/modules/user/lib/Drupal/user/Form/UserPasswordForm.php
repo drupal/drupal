@@ -7,8 +7,7 @@
 
 namespace Drupal\user\Form;
 
-use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\user\UserStorageControllerInterface;
@@ -18,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a user password reset form.
  */
-class UserPasswordForm implements FormInterface, ControllerInterface {
+class UserPasswordForm extends FormBase {
 
   /**
    * The user storage controller.
@@ -70,12 +69,10 @@ class UserPasswordForm implements FormInterface, ControllerInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
-    global $user;
-
+  public function buildForm(array $form, array &$form_state) {
     $form['name'] = array(
       '#type' => 'textfield',
-      '#title' => t('Username or e-mail address'),
+      '#title' => $this->t('Username or e-mail address'),
       '#size' => 60,
       '#maxlength' => max(USERNAME_MAX_LENGTH, EMAIL_MAX_LENGTH),
       '#required' => TRUE,
@@ -87,20 +84,21 @@ class UserPasswordForm implements FormInterface, ControllerInterface {
       ),
     );
     // Allow logged in users to request this also.
+    $user = $this->getCurrentUser();
     if ($user->isAuthenticated()) {
       $form['name']['#type'] = 'value';
       $form['name']['#value'] = $user->getEmail();
       $form['mail'] = array(
         '#prefix' => '<p>',
-        '#markup' =>  t('Password reset instructions will be mailed to %email. You must log out to use the password reset link in the e-mail.', array('%email' => $user->getEmail())),
+        '#markup' =>  $this->t('Password reset instructions will be mailed to %email. You must log out to use the password reset link in the e-mail.', array('%email' => $user->getEmail())),
         '#suffix' => '</p>',
       );
     }
     else {
-      $form['name']['#default_value'] = $request->query->get('name');
+      $form['name']['#default_value'] = $this->getRequest()->query->get('name');
     }
     $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('E-mail new password'));
+    $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('E-mail new password'));
 
     return $form;
   }
@@ -121,7 +119,7 @@ class UserPasswordForm implements FormInterface, ControllerInterface {
       form_set_value(array('#parents' => array('account')), $account, $form_state);
     }
     else {
-      form_set_error('name', t('Sorry, %name is not recognized as a username or an e-mail address.', array('%name' => $name)));
+      form_set_error('name', $this->t('Sorry, %name is not recognized as a username or an e-mail address.', array('%name' => $name)));
     }
   }
 
@@ -136,7 +134,7 @@ class UserPasswordForm implements FormInterface, ControllerInterface {
     $mail = _user_mail_notify('password_reset', $account, $langcode);
     if (!empty($mail)) {
       watchdog('user', 'Password reset instructions mailed to %name at %email.', array('%name' => $account->getUsername(), '%email' => $account->getEmail()));
-      drupal_set_message(t('Further instructions have been sent to your e-mail address.'));
+      drupal_set_message($this->t('Further instructions have been sent to your e-mail address.'));
     }
 
     $form_state['redirect'] = 'user';

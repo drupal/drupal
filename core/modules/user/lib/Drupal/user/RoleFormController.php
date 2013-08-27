@@ -22,12 +22,12 @@ class RoleFormController extends EntityFormController {
     $entity = $this->entity;
     $form['label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Role name'),
+      '#title' => $this->t('Role name'),
       '#default_value' => $entity->label(),
       '#size' => 30,
       '#required' => TRUE,
       '#maxlength' => 64,
-      '#description' => t('The name for this role. Example: "Moderator", "Editorial board", "Site architect".'),
+      '#description' => $this->t('The name for this role. Example: "Moderator", "Editorial board", "Site architect".'),
     );
     $form['id'] = array(
       '#type' => 'machine_name',
@@ -68,12 +68,12 @@ class RoleFormController extends EntityFormController {
     $entity->set('label', trim($entity->label()));
     $uri = $entity->uri();
     if ($entity->save() == SAVED_UPDATED) {
-      drupal_set_message(t('Role %label has been updated.', array('%label' => $entity->label())));
-      watchdog('user', 'Role %label has been updated.', array('%label' => $entity->label()), WATCHDOG_NOTICE, l(t('Edit'), $uri['path']));
+      drupal_set_message($this->t('Role %label has been updated.', array('%label' => $entity->label())));
+      watchdog('user', 'Role %label has been updated.', array('%label' => $entity->label()), WATCHDOG_NOTICE, l($this->t('Edit'), $uri['path']));
     }
     else {
-      drupal_set_message(t('Role %label has been added.', array('%label' => $entity->label())));
-      watchdog('user', 'Role %label has been added.', array('%label' => $entity->label()), WATCHDOG_NOTICE, l(t('Edit'), $uri['path']));
+      drupal_set_message($this->t('Role %label has been added.', array('%label' => $entity->label())));
+      watchdog('user', 'Role %label has been added.', array('%label' => $entity->label()), WATCHDOG_NOTICE, l($this->t('Edit'), $uri['path']));
     }
     $form_state['redirect'] = 'admin/people/roles';
   }
