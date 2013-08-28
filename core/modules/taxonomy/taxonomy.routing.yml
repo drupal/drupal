@@ -12,6 +12,13 @@ taxonomy_term_add:
   requirements:
     _access_taxonomy_term_create: 'taxonomy_term'
 
+taxonomy_term_edit:
+  pattern: '/taxonomy/term/{taxonomy_term}/edit'
+  defaults:
+    _entity_form: 'taxonomy_term.default'
+  requirements:
+    _entity_access: 'taxonomy_term.update'
+
 taxonomy_term_delete:
   pattern: '/taxonomy/term/{taxonomy_term}/delete'
   defaults:
