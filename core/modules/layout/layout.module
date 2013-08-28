@@ -16,27 +16,9 @@ function layout_menu() {
   );
   $items['admin/structure/templates/manage/%'] = array(
     'title' => 'View template',
-    'page callback' => 'layout_page_view',
-    'page arguments' => array(4),
-    'access callback' => 'layout_user_access',
-    'access arguments' => array(4),
-    'file' => 'layout.admin.inc',
+    'route_name' => 'layout_page_view',
   );
   return $items;
-}
-
-/**
- * Access callback: Checks the existence of a layout.
- *
- * @param string $key
- *   The key of the page layout being requested.
- *
- * @return bool
- *   TRUE if the current user can access page layout menu items; FALSE
- *   otherwise.
- */
-function layout_user_access($key) {
-  return (user_access('administer layouts') && Drupal::service('plugin.manager.layout')->getDefinition($key));
 }
 
 /**
