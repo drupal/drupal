@@ -320,7 +320,7 @@ function field_info_instances($entity_type = NULL, $bundle_name = NULL) {
  *   NULL if the instance does not exist.
  *
  * @deprecated as of Drupal 8.0. Use
- *   Field::fieldInfo()->getBundleInstance($entity_type, $bundle, $field_name).
+ *   Field::fieldInfo()->getInstance($entity_type, $bundle_name, $field_name).
  */
 function field_info_instance($entity_type, $field_name, $bundle_name) {
   return Field::fieldInfo()->getInstance($entity_type, $bundle_name, $field_name);
