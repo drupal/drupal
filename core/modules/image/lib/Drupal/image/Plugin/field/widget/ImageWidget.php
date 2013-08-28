@@ -9,7 +9,6 @@ namespace Drupal\image\Plugin\field\widget;
 
 use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
-use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Drupal\file\Plugin\field\widget\FileWidget;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
@@ -26,8 +25,7 @@ use Drupal\Core\Entity\Field\FieldInterface;
  *   settings = {
  *     "progress_indicator" = "throbber",
  *     "preview_image_style" = "thumbnail",
- *   },
- *   default_value = FALSE
+ *   }
  * )
  */
 class ImageWidget extends FileWidget {

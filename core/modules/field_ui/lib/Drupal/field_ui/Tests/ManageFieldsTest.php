@@ -292,8 +292,8 @@ class ManageFieldsTest extends FieldUiTestBase {
 
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/' . $instance->id();
-    $element_id = "edit-$field_name-$langcode-0-value";
-    $element_name = "{$field_name}[$langcode][0][value]";
+    $element_id = "edit-default-value-input-$field_name-$langcode-0-value";
+    $element_name = "default_value_input[{$field_name}][$langcode][0][value]";
     $this->drupalGet($admin_path);
     $this->assertFieldById($element_id, '', 'The default value widget was empty.');
 
@@ -322,15 +322,11 @@ class ManageFieldsTest extends FieldUiTestBase {
     $instance = field_info_instance('node', $field_name, $this->type);
     $this->assertEqual($instance['default_value'], NULL, 'The default value was correctly saved.');
 
-    // Change the widget to TestFieldWidgetNoDefault.
+    // Check that the default widget is used when the field is hidden.
     entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')
-      ->setComponent($field_name, array(
-        'type' => 'test_field_widget_no_default',
-      ))
-      ->save();
-
+      ->removeComponent($field_name)->save();
     $this->drupalGet($admin_path);
-    $this->assertNoFieldById($element_id, '', 'No default value was possible for widget that disables default value.');
+    $this->assertFieldById($element_id, '', 'The default value widget was displayed when field is hidden.');
   }
 
   /**

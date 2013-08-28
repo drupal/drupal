@@ -101,7 +101,7 @@ class NodeAccessFieldTest extends NodeTestBase {
     // Modify the field default as the content admin.
     $edit = array();
     $default = 'Sometimes words have two meanings';
-    $edit["{$this->field_name}[$langcode][0][value]"] = $default;
+    $edit["default_value_input[{$this->field_name}][$langcode][0][value]"] = $default;
     $this->drupalPost(
       "admin/structure/types/manage/page/fields/node.page.{$this->field_name}",
       $edit,
