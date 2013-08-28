@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Tests\File;
 
+use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -82,7 +83,7 @@ class StreamWrapperTest extends WebTestBase {
     // Test file_build_uri() and
     // Drupal\Core\StreamWrapper\LocalStream::getDirectoryPath().
     $this->assertEqual(file_build_uri('foo/bar.txt'), 'public://foo/bar.txt', 'Expected scheme was added.');
-    $this->assertEqual(file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath(), variable_get('file_public_path'), 'Expected default directory path was returned.');
+    $this->assertEqual(file_stream_wrapper_get_instance_by_scheme('public')->getDirectoryPath(), PublicStream::basePath(), 'Expected default directory path was returned.');
     $this->assertEqual(file_stream_wrapper_get_instance_by_scheme('temporary')->getDirectoryPath(), $config->get('path.temporary'), 'Expected temporary directory path was returned.');
     $config->set('default_scheme', 'private')->save();
     $this->assertEqual(file_build_uri('foo/bar.txt'), 'private://foo/bar.txt', 'Got a valid URI from foo/bar.txt.');

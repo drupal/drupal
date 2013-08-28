@@ -9,14 +9,14 @@ namespace Drupal\taxonomy\Plugin\views\argument_default;
 
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsArgumentDefault;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 
 /**
  * Taxonomy tid default argument.
  *
- * @Plugin(
+ * @ViewsArgumentDefault(
  *   id = "taxonomy_tid",
  *   module = "taxonomy",
  *   title = @Translation("Taxonomy term ID from URL")
@@ -135,7 +135,7 @@ class Tid extends ArgumentDefaultPluginBase {
       // Just check, if a node could be detected.
       if ($node) {
         $taxonomy = array();
-        $fields = field_info_instances('node', $node->type);
+        $fields = field_info_instances('node', $node->getType());
         foreach ($fields as $name => $info) {
           $field_info = field_info_field($name);
           if ($field_info['type'] == 'taxonomy_term_reference') {

@@ -59,7 +59,7 @@ class RegisterFormController extends AccountFormController {
    */
   protected function actions(array $form, array &$form_state) {
     $element = parent::actions($form, $form_state);
-    $element['submit']['#value'] = t('Create new account');
+    $element['submit']['#value'] = $this->t('Create new account');
     return $element;
   }
 
@@ -101,7 +101,7 @@ class RegisterFormController extends AccountFormController {
     $form_state['user'] = $account;
     $form_state['values']['uid'] = $account->id();
 
-    watchdog('user', 'New user: %name %email.', array('%name' => $form_state['values']['name'], '%email' => '<' . $form_state['values']['mail'] . '>'), WATCHDOG_NOTICE, l(t('edit'), 'user/' . $account->id() . '/edit'));
+    watchdog('user', 'New user: %name %email.', array('%name' => $form_state['values']['name'], '%email' => '<' . $form_state['values']['mail'] . '>'), WATCHDOG_NOTICE, l($this->t('edit'), 'user/' . $account->id() . '/edit'));
 
     // Add plain text password into user account to generate mail tokens.
     $account->password = $pass;
@@ -109,28 +109,28 @@ class RegisterFormController extends AccountFormController {
     // New administrative account without notification.
     $uri = $account->uri();
     if ($admin && !$notify) {
-      drupal_set_message(t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->getUsername())));
+      drupal_set_message($this->t('Created a new user account for <a href="@url">%name</a>. No e-mail has been sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->getUsername())));
     }
     // No e-mail verification required; log in user immediately.
     elseif (!$admin && !\Drupal::config('user.settings')->get('verify_mail') && $account->isActive()) {
       _user_mail_notify('register_no_approval_required', $account);
       user_login_finalize($account);
-      drupal_set_message(t('Registration successful. You are now logged in.'));
+      drupal_set_message($this->t('Registration successful. You are now logged in.'));
       $form_state['redirect'] = '';
     }
     // No administrator approval required.
     elseif ($account->isActive() || $notify) {
       if (!$account->getEmail() && $notify) {
-        drupal_set_message(t('The new user <a href="@url">%name</a> was created without an email address, so no welcome message was sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->getUsername())));
+        drupal_set_message($this->t('The new user <a href="@url">%name</a> was created without an email address, so no welcome message was sent.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->getUsername())));
       }
       else {
         $op = $notify ? 'register_admin_created' : 'register_no_approval_required';
         if (_user_mail_notify($op, $account)) {
           if ($notify) {
-            drupal_set_message(t('A welcome message with further instructions has been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->getUsername())));
+            drupal_set_message($this->t('A welcome message with further instructions has been e-mailed to the new user <a href="@url">%name</a>.', array('@url' => url($uri['path'], $uri['options']), '%name' => $account->getUsername())));
           }
           else {
-            drupal_set_message(t('A welcome message with further instructions has been sent to your e-mail address.'));
+            drupal_set_message($this->t('A welcome message with further instructions has been sent to your e-mail address.'));
             $form_state['redirect'] = '';
           }
         }
@@ -139,7 +139,7 @@ class RegisterFormController extends AccountFormController {
     // Administrator approval required.
     else {
       _user_mail_notify('register_pending_approval', $account);
-      drupal_set_message(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, a welcome message with further instructions has been sent to your e-mail address.'));
+      drupal_set_message($this->t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, a welcome message with further instructions has been sent to your e-mail address.'));
       $form_state['redirect'] = '';
     }
   }

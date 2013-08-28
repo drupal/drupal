@@ -133,6 +133,15 @@ class AjaxResponse extends JsonResponse {
     $scripts = drupal_add_js();
     if (!empty($scripts['settings'])) {
       $settings = drupal_merge_js_settings($scripts['settings']['data']);
+      // During Ajax requests basic path-specific settings are excluded from
+      // new drupalSettings values. The original page where this request comes
+      // from already has the right values for the keys below. An Ajax request
+      // would update them with values for the Ajax request and incorrectly
+      // override the page's values.
+      // @see drupal_add_js
+      foreach (array('basePath', 'currentPath', 'scriptPath', 'pathPrefix') as $item) {
+        unset($settings[$item]);
+      }
       $this->addCommand(new SettingsCommand($settings, TRUE), TRUE);
     }
 

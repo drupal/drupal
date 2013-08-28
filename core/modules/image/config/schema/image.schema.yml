@@ -12,7 +12,7 @@ image.size:
       label: 'Height'
 
 # Image styles (multiple).
-# Plugin \Drupal\image\Plugin\Core\Entity\ImageStyle
+# Plugin \Drupal\image\Entity\ImageStyle
 image.style.*:
   type: mapping
   label: 'Image style'

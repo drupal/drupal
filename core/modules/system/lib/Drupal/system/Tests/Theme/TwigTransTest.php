@@ -29,7 +29,7 @@ class TwigTransTest extends WebTestBase {
   /**
    * An administrative user for testing.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var \Drupal\user\Entity\User
    */
   protected $admin_user;
 

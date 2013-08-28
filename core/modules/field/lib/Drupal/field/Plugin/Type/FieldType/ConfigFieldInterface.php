@@ -17,7 +17,7 @@ interface ConfigFieldInterface extends FieldInterface {
   /**
    * Returns the field instance definition.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   * @var \Drupal\field\Entity\FieldInstance
    */
   public function getInstance();
 

@@ -6,14 +6,18 @@
 
 namespace Drupal\language;
 
-use Drupal\Core\Config\Entity\ConfigEntityListController;
+use Drupal\Core\Config\Entity\DraggableListController;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Form\FormInterface;
 
 /**
  * User interface for the language overview screen.
  */
-class LanguageListController extends ConfigEntityListController implements FormInterface {
+class LanguageListController extends DraggableListController {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $entitiesKey = 'languages';
 
   /**
    * {@inheritdoc}
@@ -60,91 +64,33 @@ class LanguageListController extends ConfigEntityListController implements FormI
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $row = parent::buildHeader();
-    unset($row['id']);
-    $row['label'] = t('Name');
-    $row['weight'] = t('Weight');
-    return $row;
+    $header['label'] = t('Name');
+    return $header + parent::buildHeader();
   }
-
 
   /**
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row = parent::buildRow($entity);
-
-    $row['#attributes']['class'][] = 'draggable';
-    unset($row['id']);
-
-    $row['label'] = array(
-      '#markup' => check_plain($entity->get('label')),
-    );
-
-    $row['#weight'] = $entity->get('weight');
-    // Add weight column.
-    $row['weight'] = array(
-      '#type' => 'weight',
-      '#title' => t('Weight for @title', array('@title' => $entity->label())),
-      '#title_display' => 'invisible',
-      '#default_value' => $entity->get('weight'),
-      '#attributes' => array('class' => array('weight')),
-      '#delta' => 30,
-    );
-
-    return $row;
+    $row['label'] = $this->getLabel($entity);
+    return $row + parent::buildRow($entity);
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $languages = $this->load();
-
-    $form['languages'] = array(
-      '#languages' => $languages,
-      '#type' => 'table',
-      '#header' => $this->buildHeader(),
-      '#empty' => t('There are no languages', array('@label' => $this->entityInfo['label'])),
-      '#tabledrag' => array(
-        array('order', 'sibling', 'weight'),
-      ),
-    );
-
-    foreach ($languages as $entity) {
-      $form['languages'][$entity->id()] = $this->buildRow($entity);
-    }
-
-    $form['actions']['#type'] = 'actions';
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save configuration'),
-    );
-
+    $form = parent::buildForm($form, $form_state);
+    $form[$this->entitiesKey]['#languages'] = $this->entities;
+    $form['actions']['submit']['#value'] = t('Save configuration');
     return $form;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
-    // No validation.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitForm(array &$form, array &$form_state) {
-    $languages = $form_state['values']['languages'];
-
-    $language_entities = $this->load();
-    foreach ($languages as $langcode => $language) {
-      if (isset($language_entities[$langcode]) && $language['weight'] != $language_entities[$langcode]->get('weight')) {
-        // Update changed weight.
-        $language_entities[$langcode]->set('weight', $language['weight']);
-        $language_entities[$langcode]->save();
-      }
-    }
+    parent::submitForm($form, $form_state);
 
     // Kill the static cache in language_list().
     drupal_static_reset('language_list');
@@ -155,10 +101,4 @@ class LanguageListController extends ConfigEntityListController implements FormI
     drupal_set_message(t('Configuration saved.'));
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function render() {
-    return drupal_get_form($this);
-  }
 }

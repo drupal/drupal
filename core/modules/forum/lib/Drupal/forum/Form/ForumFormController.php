@@ -9,17 +9,15 @@ namespace Drupal\forum\Form;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Entity\EntityControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\taxonomy\TermFormController;
 use Drupal\taxonomy\TermStorageControllerInterface;
+use Drupal\taxonomy\VocabularyStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Base form controller for forum term edit forms.
  */
-class ForumFormController extends TermFormController implements EntityControllerInterface {
+class ForumFormController extends TermFormController {
 
   /**
    * Reusable type field to use in status messages.
@@ -43,47 +41,36 @@ class ForumFormController extends TermFormController implements EntityController
   protected $config;
 
   /**
-   * The current request.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
    * Term Storage Controller.
    *
    * @var \Drupal\taxonomy\TermStorageControllerInterface
    */
-  protected $storageController;
+  protected $termStorage;
 
   /**
    * Constructs a new ForumFormController object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
+   * @param \Drupal\taxonomy\VocabularyStorageControllerInterface $vocab_storage
+   *   The vocabulary storage.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory service.
-   * @param \Symfony\Component\HttpFoundation\Request $request
-   *   The current request.
-   * @param \Drupal\taxonomy\TermStorageControllerInterface $storage_controller
-   *   The storage controller.
+   * @param \Drupal\taxonomy\TermStorageControllerInterface $term_storage
+   *   The term storage.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactory $config_factory, Request $request, TermStorageControllerInterface $storage_controller) {
-    parent::__construct($module_handler);
-    $this->config = $config_factory->get('forum.settings');
-    $this->request = $request;
-    $this->storageController = $storage_controller;
+  public function __construct(VocabularyStorageControllerInterface $vocab_storage, ConfigFactory $config_factory, TermStorageControllerInterface $term_storage) {
+    parent::__construct($vocab_storage, $config_factory);
+    $this->termStorage = $term_storage;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
+    $entity_manager = $container->get('plugin.manager.entity');
     return new static(
-      $container->get('module_handler'),
+      $entity_manager->getStorageController('taxonomy_vocabulary'),
       $container->get('config.factory'),
-      $container->get('request'),
-      $container->get('plugin.manager.entity')->getStorageController('taxonomy_term')
+      $entity_manager->getStorageController('taxonomy_term')
     );
   }
 
@@ -96,11 +83,11 @@ class ForumFormController extends TermFormController implements EntityController
     $form = parent::form($form, $form_state, $taxonomy_term);
 
     // Set the title and description of the name field.
-    $form['name']['#title'] = t('Forum name');
-    $form['name']['#description'] = t('Short but meaningful name for this collection of threaded discussions.');
+    $form['name']['#title'] = $this->t('Forum name');
+    $form['name']['#description'] = $this->t('Short but meaningful name for this collection of threaded discussions.');
 
     // Change the description.
-    $form['description']['#description'] = t('Description and guidelines for discussions within this forum.');
+    $form['description']['#description'] = $this->t('Description and guidelines for discussions within this forum.');
 
     // Re-use the weight field.
     $form['weight'] = $form['relations']['weight'];
@@ -110,10 +97,10 @@ class ForumFormController extends TermFormController implements EntityController
 
     // Our parent field is different to the taxonomy term.
     $form['parent']['#tree'] = TRUE;
-    $form['parent'][0] = $this->forumParentSelect($taxonomy_term->id(), t('Parent'));
+    $form['parent'][0] = $this->forumParentSelect($taxonomy_term->id(), $this->t('Parent'));
 
     $form['#theme'] = 'forum_form';
-    $this->forumFormType = t('forum');
+    $this->forumFormType = $this->t('forum');
     return $form;
   }
 
@@ -135,17 +122,17 @@ class ForumFormController extends TermFormController implements EntityController
   public function save(array $form, array &$form_state) {
     $term = $this->entity;
 
-    $status = $this->storageController->save($term);
+    $status = $this->termStorage->save($term);
     switch ($status) {
       case SAVED_NEW:
-        drupal_set_message(t('Created new @type %term.', array('%term' => $term->label(), '@type' => $this->forumFormType)));
-        watchdog('forum', 'Created new @type %term.', array('%term' => $term->label(), '@type' => $this->forumFormType), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/forum/edit/' . $this->urlStub . '/' . $term->id()));
+        drupal_set_message($this->t('Created new @type %term.', array('%term' => $term->label(), '@type' => $this->forumFormType)));
+        watchdog('forum', 'Created new @type %term.', array('%term' => $term->label(), '@type' => $this->forumFormType), WATCHDOG_NOTICE, l($this->t('edit'), 'admin/structure/forum/edit/' . $this->urlStub . '/' . $term->id()));
         $form_state['values']['tid'] = $term->id();
         break;
 
       case SAVED_UPDATED:
-        drupal_set_message(t('The @type %term has been updated.', array('%term' => $term->label(), '@type' => $this->forumFormType)));
-        watchdog('taxonomy', 'Updated @type %term.', array('%term' => $term->label(), '@type' => $this->forumFormType), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/forum/edit/' . $this->urlStub . '/' . $term->id()));
+        drupal_set_message($this->t('The @type %term has been updated.', array('%term' => $term->label(), '@type' => $this->forumFormType)));
+        watchdog('taxonomy', 'Updated @type %term.', array('%term' => $term->label(), '@type' => $this->forumFormType), WATCHDOG_NOTICE, l($this->t('edit'), 'admin/structure/forum/edit/' . $this->urlStub . '/' . $term->id()));
         // Clear the page and block caches to avoid stale data.
         Cache::invalidateTags(array('content' => TRUE));
         break;
@@ -160,9 +147,10 @@ class ForumFormController extends TermFormController implements EntityController
    */
   public function delete(array $form, array &$form_state) {
     $destination = array();
-    if ($this->request->query->get('destination')) {
+    $request = $this->getRequest();
+    if ($request->query->has('destination')) {
       $destination = drupal_get_destination();
-      $this->request->query->remove('destination');
+      $request->query->remove('destination');
     }
     $term = $this->getEntity($form_state);
     $form_state['redirect'] = array(
@@ -193,7 +181,7 @@ class ForumFormController extends TermFormController implements EntityController
       $parent = 0;
     }
 
-    $vid = $this->config->get('vocabulary');
+    $vid = $this->configFactory->get('forum.settings')->get('vocabulary');
     // @todo Inject a taxonomy service when one exists.
     $children = taxonomy_get_tree($vid, $tid, NULL, TRUE);
 
@@ -205,7 +193,7 @@ class ForumFormController extends TermFormController implements EntityController
 
     // @todo Inject a taxonomy service when one exists.
     $tree = taxonomy_get_tree($vid, 0, NULL, TRUE);
-    $options[0] = '<' . t('root') . '>';
+    $options[0] = '<' . $this->t('root') . '>';
     if ($tree) {
       foreach ($tree as $term) {
         if (!in_array($term->id(), $exclude)) {
@@ -214,7 +202,7 @@ class ForumFormController extends TermFormController implements EntityController
       }
     }
 
-    $description = t('Forums may be placed at the top (root) level, or inside another container or forum.');
+    $description = $this->t('Forums may be placed at the top (root) level, or inside another container or forum.');
 
     return array(
       '#type' => 'select',

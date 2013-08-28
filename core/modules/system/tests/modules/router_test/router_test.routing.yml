@@ -69,3 +69,18 @@ router_test_11:
     _user_is_logged_in: 'TRUE'
   defaults:
     _content: '\Drupal\router_test\TestContent::test11'
+
+router_test_12:
+  pattern: '/router_test/test12/{user}'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _content: '\Drupal\router_test\TestContent::subrequestTest'
+
+router_test_13:
+  pattern: '/router_test/test13/{user}'
+  requirements:
+    _access: 'TRUE'
+  defaults:
+    _content: '\Drupal\router_test\TestContent::testAccount'
+

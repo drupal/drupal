@@ -14,7 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 /**
  * Defines an access controller for the image style entity.
  *
- * @see \Drupal\image\Plugin\Core\Entity\ImageStyle
+ * @see \Drupal\image\Entity\ImageStyle
  */
 class ImageStyleAccessController extends EntityAccessController {
 

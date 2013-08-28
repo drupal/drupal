@@ -15,6 +15,13 @@ use Drupal\Core\Database\Query\Condition as SqlCondition;
 class Condition extends ConditionBase {
 
   /**
+   * The SQL entity query object this condition belongs to.
+   *
+   * @var \Drupal\Core\Entity\Query\Sql\Query
+   */
+  protected $query;
+
+  /**
    * Implements Drupal\Core\Entity\Query\ConditionInterface::compile().
    */
   public function compile($conditionContainer) {
@@ -24,7 +31,7 @@ class Condition extends ConditionBase {
     // can join tables as necessary. On the other hand, conditions need to be
     // added to the $conditionContainer object to keep grouping.
     $sqlQuery = $conditionContainer instanceof SelectInterface ? $conditionContainer : $conditionContainer->sqlQuery;
-    $tables = new Tables($sqlQuery);
+    $tables = $this->query->getTables($sqlQuery);
     foreach ($this->conditions as $condition) {
       if ($condition['field'] instanceOf ConditionInterface) {
         $sqlCondition = new SqlCondition($condition['field']->getConjunction());

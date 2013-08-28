@@ -171,6 +171,23 @@ abstract class QueryBase {
   }
 
   /**
+   * Creates an object holding a group of conditions.
+   *
+   * See andConditionGroup() and orConditionGroup() for more.
+   *
+   * @param string $conjunction
+   *   - AND (default): this is the equivalent of andConditionGroup().
+   *   - OR: this is the equivalent of orConditionGroup().
+   *
+   * @return \Drupal\Core\Entity\Query\ConditionInterface
+   *   An object holding a group of conditions.
+   */
+  protected function conditionGroupFactory($conjunction = 'AND') {
+    $class = static::getNamespace($this) . '\\Condition';
+    return new $class($conjunction, $this);
+  }
+
+  /**
    * Implements \Drupal\Core\Entity\Query\QueryInterface::andConditionGroup().
    */
   public function andConditionGroup() {
@@ -400,6 +417,20 @@ abstract class QueryBase {
    */
   protected function getAggregationAlias($field, $function) {
     return strtolower($field . '_'. $function);
+  }
+
+  /**
+   * Returns the namespace of an object.
+   *
+   * @param $object
+   *   The object.
+   *
+   * @return string
+   *   The namespace.
+   */
+  public static function getNamespace($object) {
+    $class = get_class($object);
+    return substr($class, 0, strrpos($class, '\\'));
   }
 
 }

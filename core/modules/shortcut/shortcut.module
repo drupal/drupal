@@ -5,7 +5,8 @@
  * Allows users to manage customizable lists of shortcut links.
  */
 
-use Drupal\shortcut\Plugin\Core\Entity\Shortcut;
+use Drupal\shortcut\Entity\Shortcut;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
@@ -161,7 +162,7 @@ function shortcut_admin_paths() {
 /**
  * Access callback for editing a shortcut set.
  *
- * @param $shortcut_set Drupal\shortcut\Plugin\Core\Entity\Shortcut
+ * @param $shortcut_set Drupal\shortcut\Entity\Shortcut
  *   (optional) The shortcut set to be edited. If not set, the current user's
  *   shortcut set will be used.
  *
@@ -278,7 +279,7 @@ function shortcut_set_reset_link_weights(&$shortcut_set) {
 /**
  * Assigns a user to a particular shortcut set.
  *
- * @param $shortcut_set Drupal\shortcut\Plugin\Core\Entity\Shortcut
+ * @param $shortcut_set Drupal\shortcut\Entity\Shortcut
  *   An object representing the shortcut set.
  * @param $account
  *   A user account that will be assigned to use the set.
@@ -401,10 +402,10 @@ function shortcut_set_title_exists($title) {
 /**
  * Determines if a path corresponds to a valid shortcut link.
  *
- * @param $path
+ * @param string $path
  *   The path to the link.
  *
- * @return
+ * @return bool
  *   TRUE if the shortcut link is valid, FALSE otherwise. Valid links are ones
  *   that correspond to actual paths on the site.
  *
@@ -416,14 +417,15 @@ function shortcut_valid_link($path) {
   if ($path != $normal_path) {
     $path = $normal_path;
   }
+
   // An empty path is valid too and will be converted to <front>.
-  return (!url_is_external($path) && menu_get_item($path)) || empty($path) || $path == '<front>';
+  return (!url_is_external($path) && (Drupal::service('router.route_provider')->getRoutesByPattern('/' . $path)->count() > 0 || menu_get_item($path))) || empty($path) || $path == '<front>';
 }
 
 /**
  * Returns an array of shortcut links, suitable for rendering.
  *
- * @param $shortcut_set Drupal\shortcut\Plugin\Core\Entity\Shortcut
+ * @param $shortcut_set Drupal\shortcut\Entity\Shortcut
  *   (optional) An object representing the set whose links will be displayed.
  *   If not provided, the user's current set will be displayed.
  * @return

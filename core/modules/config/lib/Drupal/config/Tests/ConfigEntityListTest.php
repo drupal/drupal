@@ -8,7 +8,7 @@
 namespace Drupal\config\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\config_test\Plugin\Core\Entity\ConfigTest;
+use Drupal\config_test\Entity\ConfigTest;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 
 /**
@@ -63,7 +63,7 @@ class ConfigEntityListTest extends WebTestBase {
         'title' => t('Disable'),
         'href' => $uri['path'] . '/disable',
         'options' => $uri['options'],
-        'weight' => 20,
+        'weight' => 40,
       ),
       'delete' => array (
         'title' => t('Delete'),

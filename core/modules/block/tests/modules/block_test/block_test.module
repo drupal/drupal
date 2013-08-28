@@ -12,3 +12,12 @@ function block_test_system_theme_info() {
   $themes['block_test_theme'] = drupal_get_path('module', 'block_test') . '/themes/block_test_theme/block_test_theme.info.yml';
   return $themes;
 }
+
+/**
+ * Implements hook_block_alter().
+ */
+function block_test_block_alter(&$block_info) {
+  if (Drupal::state()->get('block_test_info_alter') && isset($block_info['test_block_instantiation'])) {
+    $block_info['test_block_instantiation']['category'] = t('Custom category');
+  }
+}

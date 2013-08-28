@@ -5,13 +5,13 @@
  * User page callbacks for the Aggregator module.
  */
 
-use Drupal\aggregator\Plugin\Core\Entity\Feed;
+use Drupal\aggregator\Entity\Feed;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Page callback: Displays all the items captured from the particular feed.
  *
- * @param \Drupal\aggregator\Plugin\Core\Entity\Feed $feed
+ * @param \Drupal\aggregator\Entity\Feed $feed
  *   The feed for which to display all items.
  *
  * @return string
@@ -369,7 +369,7 @@ function theme_aggregator_page_opml($variables) {
  *
  * @param array $variables
  *   An associative array containing:
- *   - source: A Drupal\aggregator\Plugin\Core\Entity\Feed instance representing
+ *   - source: A Drupal\aggregator\Entity\Feed instance representing
  *     the feed source.
  *   - summary_items: An array of feed items.
  */
@@ -423,7 +423,7 @@ function template_preprocess_aggregator_summary_item(&$variables) {
  *
  * @param array $variables
  *   An associative array containing:
- *   - aggregator_feed: A Drupal\aggregator\Plugin\Core\Entity\Feed instance
+ *   - aggregator_feed: A Drupal\aggregator\Entity\Feed instance
  *     representing the feed source.
  */
 function template_preprocess_aggregator_feed_source(&$variables) {

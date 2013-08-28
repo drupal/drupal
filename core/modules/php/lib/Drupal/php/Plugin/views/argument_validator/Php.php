@@ -7,7 +7,7 @@
 
 namespace Drupal\php\Plugin\views\argument_validator;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsArgumentValidator;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
 
@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
 /**
  * Provide PHP code to validate whether or not an argument is ok.
  *
- * @Plugin(
+ * @ViewsArgumentValidator(
  *   id = "php",
  *   module = "php",
  *   title = @Translation("PHP Code")

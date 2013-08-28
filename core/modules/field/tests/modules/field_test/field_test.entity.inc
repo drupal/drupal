@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\field_test\Plugin\Core\Entity\TestEntity;
+use Drupal\field_test\Entity\TestEntity;
 
 /**
  * Implements hook_entity_info().

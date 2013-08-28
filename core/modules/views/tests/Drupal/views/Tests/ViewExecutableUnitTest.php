@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests;
 
 use Drupal\Tests\UnitTestCase;
-use Drupal\views\Plugin\Core\Entity\View;
+use Drupal\views\Entity\View;
 use Drupal\views\ViewExecutable;
 
 /**

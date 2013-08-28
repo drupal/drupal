@@ -29,12 +29,6 @@ function update_test_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  $items['503-error'] = array(
-    'title' => t('503 Service unavailable'),
-    'page callback' => 'update_callback_service_unavailable',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
 
   return $items;
 }
@@ -162,14 +156,4 @@ function update_test_filetransfer_info() {
       'weight' => -20,
     ),
   );
-}
-
-/**
- * Page callback: Displays an Error 503 (Service unavailable) page.
- *
- * @see update_test_menu()
- */
-function update_callback_service_unavailable() {
-  drupal_add_http_header('Status', '503 Service unavailable');
-  print "503 Service Temporarily Unavailable";
 }

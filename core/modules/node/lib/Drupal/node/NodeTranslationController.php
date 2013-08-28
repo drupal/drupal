@@ -54,7 +54,7 @@ class NodeTranslationController extends ContentTranslationControllerNG {
     if (isset($form_state['values']['content_translation'])) {
       $form_controller = content_translation_form_controller($form_state);
       $translation = &$form_state['values']['content_translation'];
-      $translation['status'] = $form_controller->getEntity()->status;
+      $translation['status'] = $form_controller->getEntity()->isPublished();
       $translation['name'] = $form_state['values']['name'];
       $translation['created'] = $form_state['values']['date'];
     }

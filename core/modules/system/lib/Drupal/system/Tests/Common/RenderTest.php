@@ -134,6 +134,15 @@ class RenderTest extends WebTestBase {
         ),
         'expected' => '<div class="foo"><div class="bar"></div></div>',
       ),
+      // Array syntax theme hook suggestion in #theme_wrappers.
+      array(
+        'name' => '#theme_wrappers implements an array style theme hook suggestion',
+        'value' => array(
+          '#theme_wrappers' => array(array('container')),
+          '#attributes' => array('class' => 'foo'),
+        ),
+        'expected' => '<div class="foo"></div>',
+      ),
 
       // Test handling of #markup as a fallback for #theme hooks.
       // Simple #markup with no theme.

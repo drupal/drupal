@@ -14,7 +14,7 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\edit\Form\EditFieldForm;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
+use Drupal\entity\Entity\EntityDisplay;
 use Drupal\user\TempStoreFactory;
 
 /**

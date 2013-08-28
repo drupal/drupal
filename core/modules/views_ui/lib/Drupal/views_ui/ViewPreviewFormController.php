@@ -7,15 +7,13 @@
 
 namespace Drupal\views_ui;
 
-use Drupal\Core\Entity\EntityControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for the Views preview form.
  */
-class ViewPreviewFormController extends ViewFormControllerBase implements EntityControllerInterface {
+class ViewPreviewFormController extends ViewFormControllerBase {
 
   /**
    * The views temp store.
@@ -27,29 +25,24 @@ class ViewPreviewFormController extends ViewFormControllerBase implements Entity
   /**
    * Constructs a new ViewPreviewFormController object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The module handler service.
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, TempStoreFactory $temp_store_factory) {
-    parent::__construct($module_handler);
-
+  public function __construct(TempStoreFactory $temp_store_factory) {
     $this->tempStore = $temp_store_factory->get('views');
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('user.tempstore')
     );
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::form().
+   * {@inheritdoc}
    */
   public function form(array $form, array &$form_state) {
     $view = $this->entity;
@@ -72,15 +65,15 @@ class ViewPreviewFormController extends ViewFormControllerBase implements Entity
     $form['controls']['live_preview'] = array(
       '#type' => 'checkbox',
       '#id' => 'edit-displays-live-preview',
-      '#title' => t('Auto preview'),
+      '#title' => $this->t('Auto preview'),
       '#default_value' => \Drupal::config('views.settings')->get('ui.always_live_preview'),
     );
 
     // Add the arguments textfield
     $form['controls']['view_args'] = array(
       '#type' => 'textfield',
-      '#title' => t('Preview with contextual filters:'),
-      '#description' => t('Separate contextual filter values with a "/". For example, %example.', array('%example' => '40/12/10')),
+      '#title' => $this->t('Preview with contextual filters:'),
+      '#description' => $this->t('Separate contextual filter values with a "/". For example, %example.', array('%example' => '40/12/10')),
       '#id' => 'preview-args',
     );
 
@@ -103,7 +96,7 @@ class ViewPreviewFormController extends ViewFormControllerBase implements Entity
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::actions().
+   * {@inheritdoc}
    */
   protected function actions(array $form, array &$form_state) {
     $view = $this->entity;
@@ -113,7 +106,7 @@ class ViewPreviewFormController extends ViewFormControllerBase implements Entity
       ),
       'button' => array(
         '#type' => 'submit',
-        '#value' => t('Update preview'),
+        '#value' => $this->t('Update preview'),
         '#attributes' => array('class' => array('arguments-preview')),
         '#submit' => array(array($this, 'submitPreview')),
         '#id' => 'preview-submit',

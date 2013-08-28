@@ -8,7 +8,7 @@
 namespace Drupal\editor\Plugin;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Entity\Editor;
 
 /**
  * Defines an interface for configurable text editors.
@@ -24,7 +24,7 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    *
    * @return array
    *   An array of settings as they would be stored by a configured text editor
-   *   entity (\Drupal\editor\Plugin\Core\Entity\Editor).
+   *   entity (\Drupal\editor\Entity\Editor).
    */
   function getDefaultSettings();
 
@@ -40,7 +40,7 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    *   An empty form array to be populated with a configuration form, if any.
    * @param array $form_state
    *   The state of the entire filter administration form.
-   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
    *
    * @return array
@@ -83,7 +83,7 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    * of the text editor into JavaScript variables that will be accessible when
    * the text editor is loaded.
    *
-   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
    *
    * @return array
@@ -102,7 +102,7 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    * different library for different configurations, instead of being forced to
    * always use the same method.
    *
-   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
    *
    * @return array

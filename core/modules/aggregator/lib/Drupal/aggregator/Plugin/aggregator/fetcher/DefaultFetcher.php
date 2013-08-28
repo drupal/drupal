@@ -7,12 +7,15 @@
 
 namespace Drupal\aggregator\Plugin\aggregator\fetcher;
 
-use Drupal\aggregator\Plugin\FetcherInterface;
-use Drupal\aggregator\Plugin\Core\Entity\Feed;
 use Drupal\aggregator\Annotation\AggregatorFetcher;
+use Drupal\aggregator\Plugin\FetcherInterface;
+use Drupal\aggregator\Entity\Feed;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Guzzle\Http\ClientInterface;
 use Guzzle\Http\Exception\BadResponseException;
 use Guzzle\Http\Exception\RequestException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a default fetcher implementation.
@@ -25,14 +28,39 @@ use Guzzle\Http\Exception\RequestException;
  *   description = @Translation("Downloads data from a URL using Drupal's HTTP request handler.")
  * )
  */
-class DefaultFetcher implements FetcherInterface {
+class DefaultFetcher implements FetcherInterface, ContainerFactoryPluginInterface {
 
   /**
-   * Implements \Drupal\aggregator\Plugin\FetcherInterface::fetch().
+   * The HTTP client to fetch the feed data with.
+   *
+   * @var \Guzzle\Http\ClientInterface
+   */
+  protected $httpClient;
+
+  /**
+   * Constructs a DefaultFetcher object.
+   *
+   * @param \Guzzle\Http\ClientInterface $http_client
+   *   A Guzzle client object.
+   */
+  public function __construct(ClientInterface $http_client) {
+    $this->httpClient = $http_client;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $container->get('http_default_client')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function fetch(Feed $feed) {
-    // @todo: Inject the http client.
-    $request = \Drupal::httpClient()->get($feed->url->value);
+    $request = $this->httpClient->get($feed->url->value);
     $feed->source_string = FALSE;
 
     // Generate conditional GET headers.

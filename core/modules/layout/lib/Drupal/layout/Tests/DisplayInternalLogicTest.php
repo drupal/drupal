@@ -8,8 +8,8 @@
 namespace Drupal\layout\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\layout\Plugin\Core\Entity\Display;
-use Drupal\layout\Plugin\Core\Entity\UnboundDisplay;
+use Drupal\layout\Entity\Display;
+use Drupal\layout\Entity\UnboundDisplay;
 
 /**
  * Tests the API and internal logic offered by Displays.
@@ -26,21 +26,21 @@ class DisplayInternalLogicTest extends WebTestBase {
   /**
    * The twocol test display.
    *
-   * @var \Drupal\layout\Plugin\Core\Entity\Display
+   * @var \Drupal\layout\Entity\Display
    */
   public $twocol;
 
   /**
    * The onecol test display.
    *
-   * @var \Drupal\layout\Plugin\Core\Entity\Display
+   * @var \Drupal\layout\Entity\Display
    */
   public $onecol;
 
   /**
    * The unbound test display.
    *
-   * @var \Drupal\layout\Plugin\Core\Entity\UnboundDisplay
+   * @var \Drupal\layout\Entity\UnboundDisplay
    */
   public $unbound;
 

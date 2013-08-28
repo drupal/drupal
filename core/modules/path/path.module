@@ -5,10 +5,8 @@
  * Enables users to rename URLs.
  */
 
-use Drupal\Core\Entity\EntityInterface;
-
 use Drupal\Core\Language\Language;
-use Drupal\taxonomy\Plugin\Core\Entity\Term;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Implements hook_help().
@@ -101,8 +99,8 @@ function path_form_node_form_alter(&$form, $form_state) {
   $path = array();
   if (!$node->isNew()) {
     $conditions = array('source' => 'node/' . $node->id());
-    if ($node->langcode != Language::LANGCODE_NOT_SPECIFIED) {
-      $conditions['langcode'] = $node->langcode;
+    if ($node->language()->id != Language::LANGCODE_NOT_SPECIFIED) {
+      $conditions['langcode'] = $node->language()->id;
     }
     $path = Drupal::service('path.crud')->load($conditions);
     if ($path === FALSE) {
@@ -113,7 +111,7 @@ function path_form_node_form_alter(&$form, $form_state) {
     'pid' => NULL,
     'source' => $node->id() ? 'node/' . $node->id() : NULL,
     'alias' => '',
-    'langcode' => isset($node->langcode) ? $node->langcode : Language::LANGCODE_NOT_SPECIFIED,
+    'langcode' => $node->language()->id,
   );
 
   $form['path'] = array(
@@ -182,51 +180,6 @@ function path_form_element_validate($element, &$form_state, $complete_form) {
 }
 
 /**
- * Implements hook_node_insert().
- */
-function path_node_insert(EntityInterface $node) {
-  if (isset($node->path)) {
-    $alias = trim($node->path['alias']);
-    // Only save a non-empty alias.
-    if (!empty($alias)) {
-      // Ensure fields for programmatic executions.
-      $source = 'node/' . $node->id();
-      $langcode = isset($node->langcode) ? $node->langcode : Language::LANGCODE_NOT_SPECIFIED;
-      Drupal::service('path.crud')->save($source, $alias, $langcode);
-    }
-  }
-}
-
-/**
- * Implements hook_node_update().
- */
-function path_node_update(EntityInterface $node) {
-  if (isset($node->path)) {
-    $path = $node->path;
-    $alias = trim($path['alias']);
-    // Delete old alias if user erased it.
-    if (!empty($path['pid']) && empty($path['alias'])) {
-      Drupal::service('path.crud')->delete(array('pid' => $path['pid']));
-    }
-    // Only save a non-empty alias.
-    if (!empty($path['alias'])) {
-      // Ensure fields for programmatic executions.
-      $source = 'node/' . $node->id();
-      $langcode = isset($node->langcode) ? $node->langcode : Language::LANGCODE_NOT_SPECIFIED;
-      Drupal::service('path.crud')->save($source, $alias, $langcode, $path['pid']);
-    }
-  }
-}
-
-/**
- * Implements hook_node_predelete().
- */
-function path_node_predelete(EntityInterface $node) {
-  // Delete all aliases associated with this node.
-  Drupal::service('path.crud')->delete(array('source' => 'node/' . $node->id()));
-}
-
-/**
  * Implements hook_form_FORM_ID_alter() for taxonomy_term_form().
  */
 function path_form_taxonomy_term_form_alter(&$form, $form_state) {
@@ -266,7 +219,7 @@ function path_form_taxonomy_term_form_alter(&$form, $form_state) {
  * Implements hook_entity_field_info().
  */
 function path_entity_field_info($entity_type) {
-  if ($entity_type === 'taxonomy_term') {
+  if ($entity_type === 'taxonomy_term' || $entity_type === 'node') {
     $info['definitions']['path'] = array(
       'type' => 'path_field',
       'label' => t('The path alias'),
@@ -278,48 +231,53 @@ function path_entity_field_info($entity_type) {
 }
 
 /**
- * Implements hook_taxonomy_term_insert().
+ * Implements hook_entity_insert().
+ *
+ * @todo: Move this to methods on the FieldItem class.
  */
-function path_taxonomy_term_insert(Term $term) {
-  if (isset($term->path)) {
-    $term->path->alias = trim($term->path->alias);
+function path_entity_insert(EntityInterface $entity) {
+  if ($entity->getPropertyDefinition('path')) {
+    $entity->path->alias = trim($entity->path->alias);
     // Only save a non-empty alias.
-    if (!empty($term->path->alias)) {
+    if (!empty($entity->path->alias)) {
       // Ensure fields for programmatic executions.
-      $source = 'taxonomy/term/' . $term->id();
-      $langcode = Language::LANGCODE_NOT_SPECIFIED;
-      Drupal::service('path.crud')->save($source, $term->path->alias, $langcode);
+      $uri = $entity->uri();
+      $langcode = $entity->language()->id;
+      Drupal::service('path.crud')->save($uri['path'], $entity->path->alias, $langcode);
     }
   }
 }
 
 /**
- * Implements hook_taxonomy_term_update().
+ * Implements hook_entity_update().
  */
-function path_taxonomy_term_update(Term $term) {
-  if (isset($term->path)) {
-    $term->path->alias = trim($term->path->alias);
+function path_entity_update(EntityInterface $entity) {
+  if ($entity->getPropertyDefinition('path')) {
+    $entity->path->alias = trim($entity->path->alias);
     // Delete old alias if user erased it.
-    if (!empty($term->path->pid) && empty($term->path->alias)) {
-      Drupal::service('path.crud')->delete(array('pid' => $term->path->pid));
+    if ($entity->path->pid && !$entity->path->alias) {
+      Drupal::service('path.crud')->delete(array('pid' => $entity->path->pid));
     }
     // Only save a non-empty alias.
-    if ($term->path->alias) {
-      $pid = (!empty($term->path->pid) ? $term->path->pid  : NULL);
+    if ($entity->path->alias) {
+      $pid = $entity->path->pid;
       // Ensure fields for programmatic executions.
-      $source = 'taxonomy/term/' . $term->id();
-      $langcode = Language::LANGCODE_NOT_SPECIFIED;
-      Drupal::service('path.crud')->save($source, $term->path->alias, $langcode, $pid);
+      $uri = $entity->uri();
+      $langcode = $entity->language()->id;
+      Drupal::service('path.crud')->save($uri['path'], $entity->path->alias, $langcode, $pid);
     }
   }
 }
 
 /**
- * Implements hook_taxonomy_term_delete().
+ * Implements hook_entity_predelete().
  */
-function path_taxonomy_term_delete(Term $term) {
-  // Delete all aliases associated with this term.
-  Drupal::service('path.crud')->delete(array('source' => 'taxonomy/term/' . $term->id()));
+function path_entity_predelete(EntityInterface $entity) {
+  if ($entity->getPropertyDefinition('path')) {
+    // Delete all aliases associated with this term.
+    $uri = $entity->uri();
+    Drupal::service('path.crud')->delete(array('source' => $uri['path']));
+  }
 }
 
 /**

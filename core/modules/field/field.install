@@ -6,7 +6,7 @@
  */
 
 use Drupal\Component\Uuid\Uuid;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\Entity\Field;
 
 /**
  * Creates a field by writing directly to configuration.

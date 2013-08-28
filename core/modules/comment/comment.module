@@ -11,9 +11,10 @@
  */
 
 use Drupal\comment\CommentInterface;
-use Drupal\comment\Plugin\Core\Entity\Comment;
-use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
-use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\comment\Entity\Comment;
+use Drupal\entity\Entity\EntityDisplay;
+use Drupal\file\Entity\File;
+use Drupal\node\NodeTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityNG;
 use Symfony\Component\HttpFoundation\Request;
@@ -1494,7 +1495,7 @@ function comment_preprocess_block(&$variables) {
  * @param \Drupal\comment\CommentInterface $comment
  *   The comment to which the author replied.
  *
- * @return \Drupal\user\Plugin\Core\Entity\User
+ * @return \Drupal\user\Entity\User
  *   A user account, for use with theme_username() or the user_picture template.
  */
 function comment_prepare_author(CommentInterface $comment) {

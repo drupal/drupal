@@ -69,7 +69,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::getFormSubmitAction().
    */
   protected function getFormSubmitAction(EntityInterface $entity) {
-    if ($entity->status) {
+    if ($entity->isPublished()) {
       return t('Save and unpublish');
     }
     return t('Save and keep unpublished');

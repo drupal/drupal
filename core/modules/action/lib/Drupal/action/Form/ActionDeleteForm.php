@@ -18,14 +18,14 @@ class ActionDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to delete the action %action?', array('%action' => $this->entity->label()));
+    return $this->t('Are you sure you want to delete the action %action?', array('%action' => $this->entity->label()));
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return t('Delete');
+    return $this->t('Delete');
   }
 
   /**
@@ -42,7 +42,7 @@ class ActionDeleteForm extends EntityConfirmFormBase {
     $this->entity->delete();
 
     watchdog('user', 'Deleted action %aid (%action)', array('%aid' => $this->entity->id(), '%action' => $this->entity->label()));
-    drupal_set_message(t('Action %action was deleted', array('%action' => $this->entity->label())));
+    drupal_set_message($this->t('Action %action was deleted', array('%action' => $this->entity->label())));
 
     $form_state['redirect'] = 'admin/config/system/actions';
   }

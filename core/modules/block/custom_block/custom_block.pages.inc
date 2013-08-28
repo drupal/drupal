@@ -5,8 +5,8 @@
  * Provides page callbacks for custom blocks.
  */
 
-use Drupal\custom_block\Plugin\Core\Entity\CustomBlockType;
-use Drupal\custom_block\Plugin\Core\Entity\CustomBlock;
+use Drupal\custom_block\Entity\CustomBlockType;
+use Drupal\custom_block\Entity\CustomBlock;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -39,7 +39,7 @@ function template_preprocess_custom_block_add_list(&$variables) {
 /**
  * Page callback: Form constructor for the custom block deletion form.
  *
- * @param Drupal\custom_block\Plugin\Core\Entity\CustomBlock $block
+ * @param Drupal\custom_block\Entity\CustomBlock $block
  *   The custom block to be deleted.
  *
  * @see custom_block_menu()

@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\TypedData\Type\StringInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 
 /**
@@ -376,7 +377,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
 
     $textfield_properties = $entity->field_test_text->getPropertyDefinitions();
     $this->assertEqual($textfield_properties['value']['type'], 'string', $entity_type .': String value property of the test-text field found.');
-    $this->assertEqual($textfield_properties['format']['type'], 'string', $entity_type .': String format field of the test-text field found.');
+    $this->assertEqual($textfield_properties['format']['type'], 'filter_format', $entity_type .': String format field of the test-text field found.');
     $this->assertEqual($textfield_properties['processed']['type'], 'string', $entity_type .': String processed property of the test-text field found.');
 
     // @todo: Once the user entity has definitions, continue testing getting
@@ -492,7 +493,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
    */
   public function getContainedStrings(TypedDataInterface $wrapper, $depth, array &$strings) {
 
-    if ($wrapper->getType() == 'string') {
+    if ($wrapper instanceof StringInterface) {
       $strings[] = $wrapper->getValue();
     }
 

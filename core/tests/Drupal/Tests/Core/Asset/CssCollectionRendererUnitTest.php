@@ -33,14 +33,6 @@ if (!function_exists('variable_get')) {
 
 }
 
-if (!function_exists('check_plain')) {
-
-  function check_plain($text) {
-    return $text;
-  }
-
-}
-
 }
 
 

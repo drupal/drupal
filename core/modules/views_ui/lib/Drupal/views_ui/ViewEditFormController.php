@@ -10,10 +10,7 @@ namespace Drupal\views_ui;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\ReplaceCommand;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\views\ViewExecutable;
-use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -21,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Form controller for the Views edit form.
  */
-class ViewEditFormController extends ViewFormControllerBase implements EntityControllerInterface {
+class ViewEditFormController extends ViewFormControllerBase {
 
   /**
    * The views temp store.
@@ -40,16 +37,12 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
   /**
    * Constructs a new ViewEditFormController object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The module handler service.
    * @param \Drupal\user\TempStoreFactory $temp_store_factory
    *   The factory for the temp store object.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, TempStoreFactory $temp_store_factory, Request $request) {
-    parent::__construct($module_handler);
-
+  public function __construct(TempStoreFactory $temp_store_factory, Request $request) {
     $this->tempStore = $temp_store_factory->get('views');
     $this->request = $request;
   }
@@ -57,16 +50,15 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info, $operation = NULL) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('user.tempstore'),
       $container->get('request')
     );
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::form().
+   * {@inheritdoc}
    */
   public function form(array $form, array &$form_state) {
     $view = $this->entity;
@@ -83,7 +75,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
 
     if ($display_id) {
       if (!$view->getExecutable()->setDisplay($display_id)) {
-        $form['#markup'] = t('Invalid display id @display', array('@display' => $display_id));
+        $form['#markup'] = $this->t('Invalid display id @display', array('@display' => $display_id));
         return $form;
       }
     }
@@ -135,7 +127,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       $form['locked'] = array(
         '#type' => 'container',
         '#attributes' => array('class' => array('view-locked', 'messages', 'messages--warning')),
-        '#children' => t('This view is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href="!break">break this lock</a>.', $lock_message_substitutions),
+        '#children' => $this->t('This view is being edited by user !user, and is therefore locked from editing by others. This lock is !age old. Click here to <a href="!break">break this lock</a>.', $lock_message_substitutions),
         '#weight' => -10,
       );
     }
@@ -143,7 +135,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       $form['changed'] = array(
         '#type' => 'container',
         '#attributes' => array('class' => array('view-changed', 'messages', 'messages--warning')),
-        '#children' => t('You have unsaved changes.'),
+        '#children' => $this->t('You have unsaved changes.'),
         '#weight' => -10,
       );
       if (empty($view->changed)) {
@@ -152,7 +144,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     }
 
     $form['displays'] = array(
-      '#prefix' => '<h1 class="unit-title clearfix">' . t('Displays') . '</h1>',
+      '#prefix' => '<h1 class="unit-title clearfix">' . $this->t('Displays') . '</h1>',
       '#type' => 'container',
       '#attributes' => array(
         'class' => array(
@@ -178,7 +170,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       // Add a text that the display is disabled.
       if ($view->getExecutable()->displayHandlers->has($display_id)) {
         if (!$view->getExecutable()->displayHandlers->get($display_id)->isEnabled()) {
-          $form['displays']['settings']['disabled']['#markup'] = t('This display is disabled.');
+          $form['displays']['settings']['disabled']['#markup'] = $this->t('This display is disabled.');
         }
       }
 
@@ -221,14 +213,14 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::actions().
+   * {@inheritdoc}
    */
   protected function actions(array $form, array &$form_state) {
     $actions = parent::actions($form, $form_state);
     unset($actions['delete']);
 
     $actions['cancel'] = array(
-      '#value' => t('Cancel'),
+      '#value' => $this->t('Cancel'),
       '#submit' => array(
         array($this, 'cancel'),
       ),
@@ -237,7 +229,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::validate().
+   * {@inheritdoc}
    */
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
@@ -251,7 +243,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::submit().
+   * {@inheritdoc}
    */
   public function submit(array $form, array &$form_state) {
     parent::submit($form, $form_state);
@@ -307,7 +299,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     }
 
     $view->save();
-    drupal_set_message(t('The view %name has been saved.', array('%name' => $view->label())));
+    drupal_set_message($this->t('The view %name has been saved.', array('%name' => $view->label())));
 
     // Remove this view from cache so we can edit it properly.
     $this->tempStore->delete($view->id());
@@ -338,9 +330,9 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     // If the plugin doesn't exist, display an error message instead of an edit
     // page.
     if (empty($display)) {
-      $title = isset($display->display['display_title']) ? $display->display['display_title'] : t('Invalid');
+      $title = isset($display->display['display_title']) ? $display->display['display_title'] : $this->t('Invalid');
       // @TODO: Improved UX for the case where a plugin is missing.
-      $build['#markup'] = t("Error: Display @display refers to a plugin named '@plugin', but that plugin is not available.", array('@display' => $display->display['id'], '@plugin' => $display->display['display_plugin']));
+      $build['#markup'] = $this->t("Error: Display @display refers to a plugin named '@plugin', but that plugin is not available.", array('@display' => $display->display['id'], '@plugin' => $display->display['display_plugin']));
     }
     // Build the content of the edit page.
     else {
@@ -391,7 +383,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
         if (!$is_enabled) {
           $build['top']['actions']['enable'] = array(
             '#type' => 'submit',
-            '#value' => t('Enable @display_title', array('@display_title' => $display_title)),
+            '#value' => $this->t('Enable @display_title', array('@display_title' => $display_title)),
             '#limit_validation_errors' => array(),
             '#submit' => array(array($this, 'submitDisplayEnable'), array($this, 'submitDelayDestination')),
             '#prefix' => '<li class="enable">',
@@ -405,8 +397,8 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
           if ($path && (strpos($path, '%') === FALSE)) {
             $build['top']['actions']['path'] = array(
               '#type' => 'link',
-              '#title' => t('View @display', array('@display' => $display['display_title'])),
-              '#options' => array('alt' => array(t("Go to the real page for this display"))),
+              '#title' => $this->t('View @display', array('@display' => $display['display_title'])),
+              '#options' => array('alt' => array($this->t("Go to the real page for this display"))),
               '#href' => $path,
               '#prefix' => '<li class="view">',
               "#suffix" => '</li>',
@@ -416,7 +408,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
         if (!$is_default) {
           $build['top']['actions']['duplicate'] = array(
             '#type' => 'submit',
-            '#value' => t('Clone @display_title', array('@display_title' => $display_title)),
+            '#value' => $this->t('Clone @display_title', array('@display_title' => $display_title)),
             '#limit_validation_errors' => array(),
             '#submit' => array(array($this, 'submitDisplayDuplicate'), array($this, 'submitDelayDestination')),
             '#prefix' => '<li class="duplicate">',
@@ -426,7 +418,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
         // Always allow a display to be deleted.
         $build['top']['actions']['delete'] = array(
           '#type' => 'submit',
-          '#value' => t('Delete @display_title', array('@display_title' => $display_title)),
+          '#value' => $this->t('Delete @display_title', array('@display_title' => $display_title)),
           '#limit_validation_errors' => array(),
           '#submit' => array(array($this, 'submitDisplayDelete'), array($this, 'submitDelayDestination')),
           '#prefix' => '<li class="delete">',
@@ -440,7 +432,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
 
           $build['top']['actions']['clone_as'][$type] = array(
             '#type' => 'submit',
-            '#value' => t('Clone as @type', array('@type' => $label)),
+            '#value' => $this->t('Clone as @type', array('@type' => $label)),
             '#limit_validation_errors' => array(),
             '#submit' => array(array($this, 'submitCloneDisplayAsType'), array($this, 'submitDelayDestination')),
             '#prefix' => '<li class="duplicate">',
@@ -451,7 +443,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       else {
         $build['top']['actions']['undo_delete'] = array(
           '#type' => 'submit',
-          '#value' => t('Undo delete of @display_title', array('@display_title' => $display_title)),
+          '#value' => $this->t('Undo delete of @display_title', array('@display_title' => $display_title)),
           '#limit_validation_errors' => array(),
           '#submit' => array(array($this, 'submitDisplayUndoDelete'), array($this, 'submitDelayDestination')),
           '#prefix' => '<li class="undo-delete">',
@@ -461,7 +453,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       if ($is_enabled) {
         $build['top']['actions']['disable'] = array(
           '#type' => 'submit',
-          '#value' => t('Disable @display_title', array('@display_title' => $display_title)),
+          '#value' => $this->t('Disable @display_title', array('@display_title' => $display_title)),
           '#limit_validation_errors' => array(),
           '#submit' => array(array($this, 'submitDisplayDisable'), array($this, 'submitDelayDestination')),
           '#prefix' => '<li class="disable">',
@@ -473,7 +465,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       // The area above the three columns.
       $build['top']['display_title'] = array(
         '#theme' => 'views_ui_display_tab_setting',
-        '#description' => t('Display name'),
+        '#description' => $this->t('Display name'),
         '#link' => $view->getExecutable()->displayHandlers->get($display['id'])->optionLink(check_plain($display_title), 'display_title'),
       );
     }
@@ -497,7 +489,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     // The third column buckets are wrapped in details.
     $build['columns']['third'] = array(
       '#type' => 'details',
-      '#title' => t('Advanced'),
+      '#title' => $this->t('Advanced'),
       '#collapsed' => TRUE,
       '#theme_wrappers' => array('details'),
       '#attributes' => array(
@@ -669,21 +661,21 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       ),
       '#links' => array(
         'edit-details' => array(
-          'title' => t('Edit view name/description'),
+          'title' => $this->t('Edit view name/description'),
           'href' => "admin/structure/views/nojs/edit-details/{$view->id()}/$display_id",
           'attributes' => array('class' => array('views-ajax-link')),
         ),
         'analyze' => array(
-          'title' => t('Analyze view'),
+          'title' => $this->t('Analyze view'),
           'href' => "admin/structure/views/nojs/analyze/{$view->id()}/$display_id",
           'attributes' => array('class' => array('views-ajax-link')),
         ),
         'clone' => array(
-          'title' => t('Clone view'),
+          'title' => $this->t('Clone view'),
           'href' => "admin/structure/views/view/{$view->id()}/clone",
         ),
         'reorder' => array(
-          'title' => t('Reorder displays'),
+          'title' => $this->t('Reorder displays'),
           'href' => "admin/structure/views/nojs/reorder-displays/{$view->id()}/$display_id",
           'attributes' => array('class' => array('views-ajax-link')),
         ),
@@ -693,17 +685,17 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     // Let other modules add additional links here.
     \Drupal::moduleHandler()->alter('views_ui_display_top_links', $element['extra_actions']['#links'], $view, $display_id);
 
-    if (isset($view->type) && $view->type != t('Default')) {
-      if ($view->type == t('Overridden')) {
+    if (isset($view->type) && $view->type != $this->t('Default')) {
+      if ($view->type == $this->t('Overridden')) {
         $element['extra_actions']['#links']['revert'] = array(
-          'title' => t('Revert view'),
+          'title' => $this->t('Revert view'),
           'href' => "admin/structure/views/view/{$view->id()}/revert",
           'query' => array('destination' => "admin/structure/views/view/{$view->id()}"),
         );
       }
       else {
         $element['extra_actions']['#links']['delete'] = array(
-          'title' => t('Delete view'),
+          'title' => $this->t('Delete view'),
           'href' => "admin/structure/views/view/{$view->id()}/delete",
         );
       }
@@ -714,7 +706,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       if ($display_id) {
         $tabs[$display_id]['#active'] = TRUE;
       }
-      $tabs['#prefix'] = '<h2 class="visually-hidden">' . t('Secondary tabs') . '</h2><ul id = "views-display-menu-tabs" class="tabs secondary">';
+      $tabs['#prefix'] = '<h2 class="visually-hidden">' . $this->t('Secondary tabs') . '</h2><ul id = "views-display-menu-tabs" class="tabs secondary">';
       $tabs['#suffix'] = '</ul>';
       $element['tabs'] = $tabs;
     }
@@ -723,14 +715,14 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     foreach (views_fetch_plugin_names('display', NULL, array($view->get('base_table'))) as $type => $label) {
       $element['add_display'][$type] = array(
         '#type' => 'submit',
-        '#value' => t('Add !display', array('!display' => $label)),
+        '#value' => $this->t('Add !display', array('!display' => $label)),
         '#limit_validation_errors' => array(),
         '#submit' => array(array($this, 'submitDisplayAdd'), array($this, 'submitDelayDestination')),
         '#attributes' => array('class' => array('add-display')),
         // Allow JavaScript to remove the 'Add ' prefix from the button label when
         // placing the button in a "Add" dropdown menu.
         '#process' => array_merge(array('views_ui_form_button_was_clicked'), element_info_property('submit', '#process', array())),
-        '#values' => array(t('Add !display', array('!display' => $label)), $label),
+        '#values' => array($this->t('Add !display', array('!display' => $label)), $label),
       );
     }
 
@@ -897,7 +889,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     $build['#name'] = $build['#title'] = $types[$type]['title'];
 
     $rearrange_url = "admin/structure/views/nojs/rearrange/{$view->id()}/{$display['id']}/$type";
-    $rearrange_text = t('Rearrange');
+    $rearrange_text = $this->t('Rearrange');
     $class = 'icon compact rearrange';
 
     // Different types now have different rearrange forms, so we use this switch
@@ -907,7 +899,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
         // The rearrange form for filters contains the and/or UI, so override
         // the used path.
         $rearrange_url = "admin/structure/views/nojs/rearrange-filter/{$view->id()}/{$display['id']}";
-        $rearrange_text = t('And/Or, Rearrange');
+        $rearrange_text = $this->t('And/Or, Rearrange');
         // TODO: Add another class to have another symbol for filter rearrange.
         $class = 'icon compact rearrange';
         break;
@@ -917,7 +909,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
         $uses_fields = $style_plugin && $style_plugin->usesFields();
         if (!$uses_fields) {
           $build['fields'][] = array(
-            '#markup' => t('The selected style or row format does not utilize fields.'),
+            '#markup' => $this->t('The selected style or row format does not utilize fields.'),
             '#theme_wrappers' => array('views_ui_container'),
             '#attributes' => array('class' => array('views-display-setting')),
           );
@@ -929,7 +921,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       case 'empty':
         if (!$executable->display_handler->usesAreas()) {
           $build[$type][] = array(
-            '#markup' => t('The selected display type does not utilize @type plugins', array('@type' => $type)),
+            '#markup' => $this->t('The selected display type does not utilize @type plugins', array('@type' => $type)),
             '#theme_wrappers' => array('views_ui_container'),
             '#attributes' => array('class' => array('views-display-setting')),
           );
@@ -943,7 +935,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     $count_handlers = count($executable->display_handler->getHandlers($type));
 
     // Create the add text variable for the add action.
-    $add_text = t('Add <span class="visually-hidden">@type</span>', array('@type' => $types[$type]['ltitle']));
+    $add_text = $this->t('Add <span class="visually-hidden">@type</span>', array('@type' => $types[$type]['ltitle']));
 
     $actions['add'] = array(
       'title' => $add_text,
@@ -953,7 +945,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
     );
     if ($count_handlers > 0) {
       // Create the rearrange text variable for the rearrange action.
-      $rearrange_text = $type == 'filter' ? t('And/Or Rearrange <span class="visually-hidden">filter criteria</span>') : t('Rearrange <span class="visually-hidden">@type</span>', array('@type' => $types[$type]['ltitle']));
+      $rearrange_text = $type == 'filter' ? $this->t('And/Or Rearrange <span class="visually-hidden">filter criteria</span>') : $this->t('Rearrange <span class="visually-hidden">@type</span>', array('@type' => $types[$type]['ltitle']));
 
       $actions['rearrange'] = array(
         'title' => $rearrange_text,
@@ -1014,7 +1006,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       $handler = $executable->display_handler->getHandler($type, $id);
       if (empty($handler)) {
         $build['fields'][$id]['#class'][] = 'broken';
-        $field_name = t('Broken/missing handler: @table > @field', array('@table' => $field['table'], '@field' => $field['field']));
+        $field_name = $this->t('Broken/missing handler: @table > @field', array('@table' => $field['table'], '@field' => $field['field']));
         $build['fields'][$id]['#link'] = l($field_name, "admin/structure/views/nojs/config-item/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-ajax-link')), 'html' => TRUE));
         continue;
       }
@@ -1030,17 +1022,17 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
       if (!empty($field['exclude'])) {
         $link_attributes['class'][] = 'views-field-excluded';
         // Add a [hidden] marker, if the field is excluded.
-        $link_text .= ' [' . t('hidden') . ']';
+        $link_text .= ' [' . $this->t('hidden') . ']';
       }
       $build['fields'][$id]['#link'] = l($link_text, "admin/structure/views/nojs/config-item/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => $link_attributes, 'html' => TRUE));
       $build['fields'][$id]['#class'][] = drupal_clean_css_identifier($display['id']. '-' . $type . '-' . $id);
 
       if ($executable->display_handler->useGroupBy() && $handler->usesGroupBy()) {
-        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Aggregation settings') . '</span>', "admin/structure/views/nojs/config-item-group/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => 'views-button-configure views-ajax-link', 'title' => t('Aggregation settings')), 'html' => TRUE));
+        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . $this->t('Aggregation settings') . '</span>', "admin/structure/views/nojs/config-item-group/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => 'views-button-configure views-ajax-link', 'title' => $this->t('Aggregation settings')), 'html' => TRUE));
       }
 
       if ($handler->hasExtraOptions()) {
-        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . t('Settings') . '</span>', "admin/structure/views/nojs/config-item-extra/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => t('Settings')), 'html' => TRUE));
+        $build['fields'][$id]['#settings_links'][] = l('<span class="label">' . $this->t('Settings') . '</span>', "admin/structure/views/nojs/config-item-extra/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-button-configure', 'views-ajax-link'), 'title' => $this->t('Settings')), 'html' => TRUE));
       }
 
       if ($grouping) {
@@ -1064,7 +1056,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
           $build['fields'][] = array(
             '#theme' => 'views_ui_display_tab_setting',
             '#class' => array('views-group-text'),
-            '#link' => ($group_info['operator'] == 'OR' ? t('OR') : t('AND')),
+            '#link' => ($group_info['operator'] == 'OR' ? $this->t('OR') : $this->t('AND')),
           );
         }
         // Display an operator between each pair of filters within the group.
@@ -1072,7 +1064,7 @@ class ViewEditFormController extends ViewFormControllerBase implements EntityCon
         $last = end($keys);
         foreach ($contents as $key => $pid) {
           if ($key != $last) {
-            $store[$pid]['#link'] .= '&nbsp;&nbsp;' . ($group_info['groups'][$gid] == 'OR' ? t('OR') : t('AND'));
+            $store[$pid]['#link'] .= '&nbsp;&nbsp;' . ($group_info['groups'][$gid] == 'OR' ? $this->t('OR') : $this->t('AND'));
           }
           $build['fields'][$pid] = $store[$pid];
         }

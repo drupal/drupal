@@ -8,16 +8,13 @@
 namespace Drupal\node\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Entity\EntityControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Database\Connection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a form for content type deletion.
  */
-class NodeTypeDeleteConfirm extends EntityConfirmFormBase implements EntityControllerInterface {
+class NodeTypeDeleteConfirm extends EntityConfirmFormBase {
 
   /**
    * The database connection.
@@ -29,22 +26,18 @@ class NodeTypeDeleteConfirm extends EntityConfirmFormBase implements EntityContr
   /**
    * Constructs a new NodeTypeDeleteConfirm object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The module handler service.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, Connection $database) {
-    parent::__construct($module_handler);
+  public function __construct(Connection $database) {
     $this->database = $database;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('database')
     );
   }
@@ -73,7 +66,7 @@ class NodeTypeDeleteConfirm extends EntityConfirmFormBase implements EntityContr
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
+  public function buildForm(array $form, array &$form_state) {
     $num_nodes = $this->database->query("SELECT COUNT(*) FROM {node} WHERE type = :type", array(':type' => $this->entity->id()))->fetchField();
     if ($num_nodes) {
       drupal_set_title($this->getQuestion(), PASS_THROUGH);
@@ -82,7 +75,7 @@ class NodeTypeDeleteConfirm extends EntityConfirmFormBase implements EntityContr
       return $form;
     }
 
-    return parent::buildForm($form, $form_state, $request);
+    return parent::buildForm($form, $form_state);
   }
 
   /**

@@ -8,8 +8,7 @@
 namespace Drupal\forum\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\taxonomy\Plugin\Core\Entity\Term;
-use Symfony\Component\HttpFoundation\Request;
+use Drupal\taxonomy\TermInterface;
 
 /**
  * Builds the form to delete a forum term.
@@ -19,7 +18,7 @@ class DeleteForm extends ConfirmFormBase {
   /**
    * The taxonomy term being deleted.
    *
-   * @var \Drupal\taxonomy\Plugin\Core\Entity\Term
+   * @var \Drupal\taxonomy\TermInterface
    */
   protected $taxonomyTerm;
 
@@ -34,7 +33,7 @@ class DeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to delete the forum %label?', array('%label' => $this->taxonomyTerm->label()));
+    return $this->t('Are you sure you want to delete the forum %label?', array('%label' => $this->taxonomyTerm->label()));
   }
 
   /**
@@ -48,16 +47,16 @@ class DeleteForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return t('Delete');
+    return $this->t('Delete');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Term $taxonomy_term = NULL, Request $request = NULL) {
+  public function buildForm(array $form, array &$form_state, TermInterface $taxonomy_term = NULL) {
     $this->taxonomyTerm = $taxonomy_term;
 
-    return parent::buildForm($form, $form_state, $request);
+    return parent::buildForm($form, $form_state);
   }
 
   /**
@@ -65,7 +64,7 @@ class DeleteForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     $this->taxonomyTerm->delete();
-    drupal_set_message(t('The forum %label and all sub-forums have been deleted.', array('%label' => $this->taxonomyTerm->label())));
+    drupal_set_message($this->t('The forum %label and all sub-forums have been deleted.', array('%label' => $this->taxonomyTerm->label())));
     watchdog('forum', 'forum: deleted %label and all its sub-forums.', array('%label' => $this->taxonomyTerm->label()), WATCHDOG_NOTICE);
     $form_state['redirect'] = 'admin/structure/forum';
   }

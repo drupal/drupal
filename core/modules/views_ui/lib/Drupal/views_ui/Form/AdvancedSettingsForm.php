@@ -15,14 +15,14 @@ use Drupal\system\SystemConfigFormBase;
 class AdvancedSettingsForm extends SystemConfigFormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'views_ui_admin_settings_advanced';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
     $form = parent::buildForm($form, $form_state);
@@ -30,39 +30,39 @@ class AdvancedSettingsForm extends SystemConfigFormBase {
     $config = $this->configFactory->get('views.settings');
     $form['cache'] = array(
       '#type' => 'details',
-      '#title' => t('Caching'),
+      '#title' => $this->t('Caching'),
     );
 
     $form['cache']['skip_cache'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Disable views data caching'),
-      '#description' => t("Views caches data about tables, modules and views available, to increase performance. By checking this box, Views will skip this cache and always rebuild this data when needed. This can have a serious performance impact on your site."),
+      '#title' => $this->t('Disable views data caching'),
+      '#description' => $this->t("Views caches data about tables, modules and views available, to increase performance. By checking this box, Views will skip this cache and always rebuild this data when needed. This can have a serious performance impact on your site."),
       '#default_value' => $config->get('skip_cache'),
     );
 
     $form['cache']['clear_cache'] = array(
       '#type' => 'submit',
-      '#value' => t("Clear Views' cache"),
+      '#value' => $this->t("Clear Views' cache"),
       '#submit' => array(array($this, 'cacheSubmit')),
     );
 
     $form['debug'] = array(
       '#type' => 'details',
-      '#title' => t('Debugging'),
+      '#title' => $this->t('Debugging'),
     );
 
     $form['debug']['sql_signature'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Add Views signature to all SQL queries'),
-      '#description' => t("All Views-generated queries will include the name of the views and display 'view-name:display-name' as a string  at the end of the SELECT clause. This makes identifying Views queries in database server logs simpler, but should only be used when troubleshooting."),
+      '#title' => $this->t('Add Views signature to all SQL queries'),
+      '#description' => $this->t("All Views-generated queries will include the name of the views and display 'view-name:display-name' as a string  at the end of the SELECT clause. This makes identifying Views queries in database server logs simpler, but should only be used when troubleshooting."),
 
       '#default_value' => $config->get('sql_signature'),
     );
 
     $form['debug']['no_javascript'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Disable JavaScript with Views'),
-      '#description' => t("If you are having problems with the JavaScript, you can disable it here. The Views UI should degrade and still be usable without javascript; it's just not as good."),
+      '#title' => $this->t('Disable JavaScript with Views'),
+      '#description' => $this->t("If you are having problems with the JavaScript, you can disable it here. The Views UI should degrade and still be usable without javascript; it's just not as good."),
       '#default_value' => $config->get('no_javascript'),
     );
 
@@ -72,11 +72,11 @@ class AdvancedSettingsForm extends SystemConfigFormBase {
         '#type' => 'details',
       );
       $form['extenders']['display_extenders'] = array(
-        '#title' => t('Display extenders'),
+        '#title' => $this->t('Display extenders'),
         '#default_value' => array_filter($config->get('display_extenders')),
         '#options' => $options,
         '#type' => 'checkboxes',
-        '#description' => t('Select extensions of the views interface.')
+        '#description' => $this->t('Select extensions of the views interface.')
       );
     }
 
@@ -84,7 +84,7 @@ class AdvancedSettingsForm extends SystemConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
     $this->configFactory->get('views.settings')
@@ -100,7 +100,7 @@ class AdvancedSettingsForm extends SystemConfigFormBase {
    */
   public function cacheSubmit() {
     views_invalidate_cache();
-    drupal_set_message(t('The cache has been cleared.'));
+    drupal_set_message($this->t('The cache has been cleared.'));
   }
 
 }

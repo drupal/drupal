@@ -94,7 +94,7 @@ class ViewsTaxonomyAutocompleteTest extends ViewTestBase {
    * @param string $name
    *   (optional) The name of the taxonomy term.
    *
-   * @return \Drupal\taxonomy\Plugin\Core\Entity\Term
+   * @return \Drupal\taxonomy\Entity\Term
    *   The created taxonomy term.
    */
   protected function createTerm($name = NULL) {

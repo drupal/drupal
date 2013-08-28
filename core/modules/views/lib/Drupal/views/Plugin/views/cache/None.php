@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\cache;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsCache;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ingroup views_cache_plugins
  *
- * @Plugin(
+ * @ViewsCache(
  *   id = "none",
  *   title = @Translation("None"),
  *   help = @Translation("No caching of Views data.")

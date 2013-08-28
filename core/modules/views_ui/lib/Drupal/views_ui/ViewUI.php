@@ -14,7 +14,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\query\Sql;
-use Drupal\views\Plugin\Core\Entity\View;
+use Drupal\views\Entity\View;
 use Drupal\views\ViewStorageInterface;
 
 /**
@@ -100,7 +100,7 @@ class ViewUI implements ViewStorageInterface {
   /**
    * The View storage object.
    *
-   * @var \Drupal\views\Plugin\Core\Entity\View
+   * @var \Drupal\views\Entity\View
    */
   protected $storage;
 
@@ -1081,13 +1081,6 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::getType().
-   */
-  public function getType() {
-    return $this->storage->getType();
-  }
-
-  /**
    * Implements \Drupal\Core\TypedData\TypedDataInterface::getDefinition().
    */
   public function getDefinition() {
@@ -1242,5 +1235,15 @@ class ViewUI implements ViewStorageInterface {
    */
   public function uriRelationships() {
     return $this->storage->uriRelationships();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions($entity_type) {
+    // @todo: This class is not directly defined as an entity type and does
+    //   not have base definitions but has to implement this method. Remove in
+    //   http://drupal.org/node/2024963.
+    return array();
   }
 }

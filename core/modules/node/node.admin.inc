@@ -236,10 +236,10 @@ function node_admin_nodes() {
     '#empty' => t('No content available.'),
   );
   foreach ($nodes as $node) {
-    $l_options = $node->langcode != Language::LANGCODE_NOT_SPECIFIED && isset($languages[$node->langcode]) ? array('language' => $languages[$node->langcode]) : array();
+    $l_options = $node->language()->id != Language::LANGCODE_NOT_SPECIFIED && isset($languages[$node->language()->id]) ? array('language' => $languages[$node->language()->id]) : array();
     $mark = array(
       '#theme' => 'mark',
-      '#status' => node_mark($node->id(), $node->changed),
+      '#status' => node_mark($node->id(), $node->getChangedTime()),
     );
     $form['nodes'][$node->id()]['title'] = array(
       '#type' => 'link',
@@ -253,17 +253,17 @@ function node_admin_nodes() {
     );
     $form['nodes'][$node->id()]['author'] = array(
       '#theme' => 'username',
-      '#account' => user_load($node->uid),
+      '#account' => $node->getAuthor(),
     );
     $form['nodes'][$node->id()]['status'] = array(
-      '#markup' => $node->status ? t('published') : t('not published'),
+      '#markup' => $node->isPublished() ? t('published') : t('not published'),
     );
     $form['nodes'][$node->id()]['changed'] = array(
-      '#markup' => format_date($node->changed, 'short'),
+      '#markup' => format_date($node->getChangedTime(), 'short'),
     );
     if ($multilingual) {
       $form['nodes'][$node->id()]['language_name'] = array(
-        '#markup' => language_name($node->langcode),
+        '#markup' => $node->language()->name,
       );
     }
 

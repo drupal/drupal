@@ -11,6 +11,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\node\NodeInterface;
 
 /**
  * Page callback: Displays add content links for available content types.
@@ -90,7 +91,7 @@ function node_add($node_type) {
     'name' => $user->getUsername(),
     'type' => $type,
     'langcode' => $langcode ? $langcode : language_default()->id,
-  ))->getBCEntity();
+  ));
   drupal_set_title(t('Create @name', array('@name' => $node_type->name)), PASS_THROUGH);
   return Drupal::entityManager()->getForm($node);
 }
@@ -106,23 +107,8 @@ function node_add($node_type) {
  *
  * @see node_form_build_preview()
  */
-function node_preview(EntityInterface $node) {
+function node_preview(NodeInterface $node) {
   if (node_access('create', $node) || node_access('update', $node)) {
-    // Load the user's name when needed.
-    if (isset($node->name)) {
-      // The use of isset() is mandatory in the context of user IDs, because
-      // user ID 0 denotes the anonymous user.
-      if ($user = user_load_by_name($node->name)) {
-        $node->uid = $user->id();
-      }
-      else {
-        $node->uid = 0; // anonymous user
-      }
-    }
-    elseif ($node->uid) {
-      $user = user_load($node->uid);
-      $node->name = $user->getUsername();
-    }
 
     $node->changed = REQUEST_TIME;
 
@@ -198,7 +184,7 @@ function node_revision_overview($node) {
   $revisions = node_revision_list($node);
 
   $rows = array();
-  $type = $node->type;
+  $type = $node->getType();
 
   $revert_permission = FALSE;
   if ((user_access("revert $type revisions") || user_access('revert all revisions') || user_access('administer nodes')) && node_access('update', $node)) {
@@ -225,18 +211,18 @@ function node_revision_overview($node) {
         '#theme' => 'username',
         '#account' => user_load($revision->uid),
       );
-      $row[] = t('!date by !username', array('!date' => l(format_date($revision->revision_timestamp, 'short'), "node/$node->nid/revisions/$revision->vid/view"), '!username' => drupal_render($username)))
+      $row[] = t('!date by !username', array('!date' => l(format_date($revision->revision_timestamp, 'short'), "node/" . $node->id() . "/revisions/" . $revision->vid . "/view"), '!username' => drupal_render($username)))
                . (($revision->log != '') ? '<p class="revision-log">' . filter_xss($revision->log) . '</p>' : '');
       if ($revert_permission) {
         $links['revert'] = array(
           'title' => t('Revert'),
-          'href' => "node/$node->nid/revisions/$revision->vid/revert",
+          'href' => "node/" . $node->id() . "/revisions/" . $revision->vid . "/revert",
         );
       }
       if ($delete_permission) {
         $links['delete'] = array(
           'title' => t('Delete'),
-          'href' => "node/$node->nid/revisions/$revision->vid/delete",
+          'href' => "node/" . $node->id() . "/revisions/" . $revision->vid . "/delete",
         );
       }
       $row[] = array(

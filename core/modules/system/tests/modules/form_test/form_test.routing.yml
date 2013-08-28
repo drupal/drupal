@@ -46,3 +46,24 @@ form_test.route7:
     _form: '\Drupal\form_test\ConfirmFormArrayPathTestForm'
   requirements:
     _access: 'TRUE'
+
+form_test.route8:
+  pattern: '/form-test/autocomplete'
+  defaults:
+    _form: '\Drupal\form_test\FormTestAutocompleteForm'
+  requirements:
+    _access: 'TRUE'
+
+form_test.autocomplete_1:
+  pattern: '/form-test/autocomplete-1'
+  defaults:
+    controller: '\Drupal\form_test\AutocompleteController::autocomplete1'
+  requirements:
+    _permission: 'access autocomplete test'
+
+form_test.autocomplete_2:
+  pattern: '/form-test/autocomplete-2/{param}'
+  defaults:
+    controller: '\Drupal\form_test\AutocompleteController::autocomplete1'
+  requirements:
+    _permission: 'access autocomplete test'

@@ -86,11 +86,12 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
     );
     $field['settings']['allowed_values']['vocabulary'] = $vocabulary->id();
     entity_create('field_entity', $field)->save();
+    entity_test_create_bundle('test_bundle');
     // Third, create the instance.
     entity_create('field_instance', array(
       'entity_type' => 'entity_test',
       'field_name' => $this->fieldName,
-      'bundle' => 'entity_test',
+      'bundle' => 'test_bundle',
     ))->save();
     // Create two terms and also two accounts.
     for ($i = 0; $i <= 1; $i++) {
@@ -106,7 +107,7 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
     // 0th account and 0th term, the 1st and 2nd entity will point to the
     // 1st account and 1st term.
     for ($i = 0; $i <= 2; $i++) {
-      $entity = entity_create('entity_test', array());
+      $entity = entity_create('entity_test', array('type' => 'test_bundle'));
       $entity->name->value = $this->randomName();
       $index = $i ? 1 : 0;
       $entity->user_id->target_id = $this->accounts[$index]->id();

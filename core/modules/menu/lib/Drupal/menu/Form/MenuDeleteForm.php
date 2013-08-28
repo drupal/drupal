@@ -9,15 +9,13 @@ namespace Drupal\menu\Form;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a confirmation form for deletion of a custom menu.
  */
-class MenuDeleteForm extends EntityConfirmFormBase implements EntityControllerInterface {
+class MenuDeleteForm extends EntityConfirmFormBase {
 
   /**
    * The menu link storage controller.
@@ -36,15 +34,12 @@ class MenuDeleteForm extends EntityConfirmFormBase implements EntityControllerIn
   /**
    * Constructs a new MenuDeleteForm.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The module handler service.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
    *   The menu link storage controller.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, EntityStorageControllerInterface $storage_controller, Connection $connection) {
-    parent::__construct($module_handler);
+  public function __construct(EntityStorageControllerInterface $storage_controller, Connection $connection) {
     $this->storageController = $storage_controller;
     $this->connection = $connection;
   }
@@ -52,9 +47,8 @@ class MenuDeleteForm extends EntityConfirmFormBase implements EntityControllerIn
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('plugin.manager.entity')->getStorageController('menu_link'),
       $container->get('database')
     );

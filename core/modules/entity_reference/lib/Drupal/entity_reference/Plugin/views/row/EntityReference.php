@@ -7,7 +7,7 @@
 
 namespace Drupal\entity_reference\Plugin\views\row;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsRow;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\row\Fields;
 
@@ -16,11 +16,12 @@ use Drupal\views\Plugin\views\row\Fields;
  *
  * @ingroup views_row_plugins
  *
- * @Plugin(
+ * @ViewsRow(
  *   id = "entity_reference",
  *   title = @Translation("Entity Reference inline fields"),
  *   help = @Translation("Displays the fields with an optional template."),
  *   theme = "views_view_fields",
+ *   register_theme = FALSE,
  *   display_types = {"entity_reference"}
  * )
  */

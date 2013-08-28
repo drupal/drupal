@@ -58,7 +58,7 @@ interface RdfMappingInterface extends ConfigEntityInterface {
    * @param array $mapping
    *   The bundle mapping.
    *
-   * @return \Drupal\rdf\Plugin\Core\Entity\RdfMapping
+   * @return \Drupal\rdf\Entity\RdfMapping
    *   The RdfMapping object.
    */
   public function setBundleMapping(array $mapping);
@@ -103,7 +103,7 @@ interface RdfMappingInterface extends ConfigEntityInterface {
    * @param array $mapping
    *   The field mapping.
    *
-   * @return \Drupal\rdf\Plugin\Core\Entity\RdfMapping
+   * @return \Drupal\rdf\Entity\RdfMapping
    *   The RdfMapping object.
    */
   public function setFieldMapping($field_name, array $mapping = array());

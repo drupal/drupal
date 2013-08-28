@@ -7,15 +7,14 @@
 
 namespace Drupal\field_ui;
 
+use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Entity\EntityManager;
-use Drupal\Core\Form\FormInterface;
 
 /**
  * Abstract base class for Field UI overview forms.
  */
-abstract class OverviewBase implements FormInterface, ControllerInterface {
+abstract class OverviewBase extends FormBase {
 
   /**
    * The name of the entity type.
@@ -91,12 +90,6 @@ abstract class OverviewBase implements FormInterface, ControllerInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
-   */
-  public function validateForm(array &$form, array &$form_state) {
-  }
-
-  /**
    * Implements \Drupal\Core\Form\FormInterface::submitForm().
    */
   public function submitForm(array &$form, array &$form_state) {
@@ -111,12 +104,12 @@ abstract class OverviewBase implements FormInterface, ControllerInterface {
    *     return array(
    *       'content' => array(
    *         // label for the region.
-   *         'title' => t('Content'),
+   *         'title' => $this->t('Content'),
    *         // Indicates if the region is visible in the UI.
    *         'invisible' => TRUE,
    *         // A mesage to indicate that there is nothing to be displayed in
    *         // the region.
-   *         'message' => t('No field is displayed.'),
+   *         'message' => $this->t('No field is displayed.'),
    *       ),
    *     );
    *   @endcode

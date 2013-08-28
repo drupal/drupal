@@ -7,9 +7,13 @@
 
 namespace Drupal\aggregator\Form;
 
-use Drupal\system\SystemConfigFormBase;
-use Drupal\Core\Config\ConfigFactory;
 use Drupal\aggregator\Plugin\AggregatorPluginManager;
+use Drupal\Component\Utility\String;
+use Drupal\Core\Config\Context\ContextInterface;
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\system\SystemConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -20,9 +24,16 @@ class SettingsForm extends SystemConfigFormBase {
   /**
    * The aggregator plugin managers.
    *
-   * @var array
+   * @var \Drupal\aggregator\Plugin\AggregatorPluginManager[]
    */
   protected $managers = array();
+
+  /**
+   * The instantiated plugin instances that have configuration forms.
+   *
+   * @var \Drupal\Core\Plugin\PluginFormInterface[]
+   */
+  protected $configurableInstances = array();
 
   /**
    * The aggregator plugin definitions.
@@ -40,15 +51,20 @@ class SettingsForm extends SystemConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The factory for configuration objects.
+   * @param \Drupal\Core\Config\Context\ContextInterface $context
+   *   The configuration context to use.
    * @param \Drupal\aggregator\Plugin\AggregatorPluginManager $fetcher_manager
    *   The aggregator fetcher plugin manager.
    * @param \Drupal\aggregator\Plugin\AggregatorPluginManager $parser_manager
    *   The aggregator parser plugin manager.
    * @param \Drupal\aggregator\Plugin\AggregatorPluginManager $processor_manager
    *   The aggregator processor plugin manager.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   *   The string translation manager.
    */
-  public function __construct(ConfigFactory $config_factory, AggregatorPluginManager $fetcher_manager, AggregatorPluginManager $parser_manager, AggregatorPluginManager $processor_manager) {
-    $this->configFactory = $config_factory;
+  public function __construct(ConfigFactory $config_factory, ContextInterface $context, AggregatorPluginManager $fetcher_manager, AggregatorPluginManager $parser_manager, AggregatorPluginManager $processor_manager, TranslationInterface $translation_manager) {
+    parent::__construct($config_factory, $context);
+    $this->translationManager = $translation_manager;
     $this->managers = array(
       'fetcher' => $fetcher_manager,
       'parser' => $parser_manager,
@@ -57,7 +73,7 @@ class SettingsForm extends SystemConfigFormBase {
     // Get all available fetcher, parser and processor definitions.
     foreach (array('fetcher', 'parser', 'processor') as $type) {
       foreach ($this->managers[$type]->getDefinitions() as $id => $definition) {
-        $this->definitions[$type][$id] = format_string('@title <span class="description">@description</span>', array('@title' => $definition['title'], '@description' => $definition['description']));
+        $this->definitions[$type][$id] = String::format('@title <span class="description">@description</span>', array('@title' => $definition['title'], '@description' => $definition['description']));
       }
     }
   }
@@ -68,21 +84,23 @@ class SettingsForm extends SystemConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.context.free'),
       $container->get('plugin.manager.aggregator.fetcher'),
       $container->get('plugin.manager.aggregator.parser'),
-      $container->get('plugin.manager.aggregator.processor')
+      $container->get('plugin.manager.aggregator.processor'),
+      $container->get('string_translation')
     );
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'aggregator_admin_form';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
     $config = $this->configFactory->get('aggregator.settings');
@@ -90,11 +108,11 @@ class SettingsForm extends SystemConfigFormBase {
     // Global aggregator settings.
     $form['aggregator_allowed_html_tags'] = array(
       '#type' => 'textfield',
-      '#title' => t('Allowed HTML tags'),
+      '#title' => $this->t('Allowed HTML tags'),
       '#size' => 80,
       '#maxlength' => 255,
       '#default_value' => $config->get('items.allowed_html'),
-      '#description' => t('A space-separated list of HTML tags allowed in the content of feed items. Disallowed tags are stripped from the content.'),
+      '#description' => $this->t('A space-separated list of HTML tags allowed in the content of feed items. Disallowed tags are stripped from the content.'),
     );
 
     // Only show basic configuration if there are actually options.
@@ -102,8 +120,8 @@ class SettingsForm extends SystemConfigFormBase {
     if (count($this->definitions['fetcher']) > 1) {
       $basic_conf['aggregator_fetcher'] = array(
         '#type' => 'radios',
-        '#title' => t('Fetcher'),
-        '#description' => t('Fetchers download data from an external source. Choose a fetcher suitable for the external source you would like to download from.'),
+        '#title' => $this->t('Fetcher'),
+        '#description' => $this->t('Fetchers download data from an external source. Choose a fetcher suitable for the external source you would like to download from.'),
         '#options' => $this->definitions['fetcher'],
         '#default_value' => $config->get('fetcher'),
       );
@@ -111,8 +129,8 @@ class SettingsForm extends SystemConfigFormBase {
     if (count($this->definitions['parser']) > 1) {
       $basic_conf['aggregator_parser'] = array(
         '#type' => 'radios',
-        '#title' => t('Parser'),
-        '#description' => t('Parsers transform downloaded data into standard structures. Choose a parser suitable for the type of feeds you would like to aggregate.'),
+        '#title' => $this->t('Parser'),
+        '#description' => $this->t('Parsers transform downloaded data into standard structures. Choose a parser suitable for the type of feeds you would like to aggregate.'),
         '#options' => $this->definitions['parser'],
         '#default_value' => $config->get('parser'),
       );
@@ -120,8 +138,8 @@ class SettingsForm extends SystemConfigFormBase {
     if (count($this->definitions['processor']) > 1) {
       $basic_conf['aggregator_processors'] = array(
         '#type' => 'checkboxes',
-        '#title' => t('Processors'),
-        '#description' => t('Processors act on parsed feed data, for example they store feed items. Choose the processors suitable for your task.'),
+        '#title' => $this->t('Processors'),
+        '#description' => $this->t('Processors act on parsed feed data, for example they store feed items. Choose the processors suitable for your task.'),
         '#options' => $this->definitions['processor'],
         '#default_value' => $config->get('processors'),
       );
@@ -129,35 +147,67 @@ class SettingsForm extends SystemConfigFormBase {
     if (count($basic_conf)) {
       $form['basic_conf'] = array(
         '#type' => 'details',
-        '#title' => t('Basic configuration'),
-        '#description' => t('For most aggregation tasks, the default settings are fine.'),
+        '#title' => $this->t('Basic configuration'),
+        '#description' => $this->t('For most aggregation tasks, the default settings are fine.'),
         '#collapsed' => FALSE,
       );
       $form['basic_conf'] += $basic_conf;
     }
 
-    // Implementing processor plugins will expect an array at $form['processors'].
-    $form['processors'] = array();
-    // Call settingsForm() for each active processor.
-    foreach ($this->definitions['processor'] as $id => $definition) {
-      if (in_array($id, $config->get('processors'))) {
-        $form = $this->managers['processor']->createInstance($id)->settingsForm($form, $form_state);
+    // Call buildConfigurationForm() on the active fetcher and parser.
+    foreach (array('fetcher', 'parser') as $type) {
+      $active = $config->get($type);
+      if (array_key_exists($active, $this->definitions[$type])) {
+        $instance = $this->managers[$type]->createInstance($active);
+        if ($instance instanceof PluginFormInterface) {
+          $form = $instance->buildConfigurationForm($form, $form_state);
+          // Store the instance for validate and submit handlers.
+          // Keying by ID would bring conflicts, because two instances of a
+          // different type could have the same ID.
+          $this->configurableInstances[] = $instance;
+        }
       }
     }
+
+    // Implementing processor plugins will expect an array at $form['processors'].
+    $form['processors'] = array();
+    // Call buildConfigurationForm() for each active processor.
+    foreach ($this->definitions['processor'] as $id => $definition) {
+      if (in_array($id, $config->get('processors'))) {
+        $instance = $this->managers['processor']->createInstance($id);
+        if ($instance instanceof PluginFormInterface) {
+          $form = $instance->buildConfigurationForm($form, $form_state);
+          // Store the instance for validate and submit handlers.
+          // Keying by ID would bring conflicts, because two instances of a
+          // different type could have the same ID.
+          $this->configurableInstances[] = $instance;
+        }
+      }
+    }
+
     return parent::buildForm($form, $form_state);
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
+   */
+  public function validateForm(array &$form, array &$form_state) {
+    parent::validateForm($form, $form_state);
+    // Let active plugins validate their settings.
+    foreach ($this->configurableInstances as $instance) {
+      $instance->validateConfigurationForm($form, $form_state);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
     parent::submitForm($form, $form_state);
     $config = $this->configFactory->get('aggregator.settings');
-    // Let active processors save their settings.
-    foreach ($this->definitions['processor'] as $id => $definition) {
-      if (in_array($id, $config->get('processors'))) {
-        $this->managers['processor']->createInstance($id)->settingsSubmit($form, $form_state);
-      }
+    // Let active plugins save their settings.
+    foreach ($this->configurableInstances as $instance) {
+      $instance->submitConfigurationForm($form, $form_state);
     }
 
     $config->set('items.allowed_html', $form_state['values']['aggregator_allowed_html_tags']);

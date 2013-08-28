@@ -81,10 +81,10 @@ class CommentTranslationUITest extends ContentTranslationUITest {
   /**
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::createEntity().
    */
-  protected function createEntity($values, $langcode, $bundle_name = 'comment_article') {
-    if ($bundle_name == 'comment_article') {
+  protected function createEntity($values, $langcode, $node_bundle = 'comment_article') {
+    if ($node_bundle == 'comment_article') {
       $node_type = 'article';
-      $field_name = $bundle_name;
+      $field_name = $node_bundle;
     }
     else {
       $node_type = 'page';
@@ -98,9 +98,9 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     ));
     $values['entity_id'] = $node->id();
     $values['entity_type'] = 'node';
-    $values['field_name'] = $bundle_name;
-    $values['uid'] = $node->uid;
-    return parent::createEntity($values, $langcode, $bundle_name);
+    $values['field_name'] = $node_bundle;
+    $values['uid'] = $node->getAuthorId();
+    return parent::createEntity($values, $langcode, $node_bundle);
   }
 
   /**

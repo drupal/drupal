@@ -9,15 +9,13 @@ namespace Drupal\action;
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Core\Action\ActionManager;
-use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form controller for action add forms.
  */
-class ActionAddFormController extends ActionFormControllerBase implements EntityControllerInterface {
+class ActionAddFormController extends ActionFormControllerBase {
 
   /**
    * The action manager.
@@ -29,15 +27,13 @@ class ActionAddFormController extends ActionFormControllerBase implements Entity
   /**
    * Constructs a new ActionAddFormController.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The module handler service.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
    *   The action storage controller.
    * @param \Drupal\Core\Action\ActionManager $action_manager
    *   The action plugin manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, EntityStorageControllerInterface $storage_controller, ActionManager $action_manager) {
-    parent::__construct($module_handler, $storage_controller);
+  public function __construct(EntityStorageControllerInterface $storage_controller, ActionManager $action_manager) {
+    parent::__construct($storage_controller);
 
     $this->actionManager = $action_manager;
   }
@@ -45,10 +41,9 @@ class ActionAddFormController extends ActionFormControllerBase implements Entity
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
-      $container->get('plugin.manager.entity')->getStorageController($entity_type),
+      $container->get('plugin.manager.entity')->getStorageController('action'),
       $container->get('plugin.manager.action')
     );
   }

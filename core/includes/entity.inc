@@ -293,7 +293,7 @@ function entity_load_by_uuid($entity_type, $uuid, $reset = FALSE) {
  * can either implement the Drupal\Core\Entity\EntityStorageControllerInterface
  * interface, or, most commonly, extend the
  * Drupal\Core\Entity\DatabaseStorageController class.
- * See Drupal\node\Plugin\Core\Entity\Node and Drupal\node\NodeStorageController
+ * See Drupal\node\Entity\Node and Drupal\node\NodeStorageController
  * for an example.
  *
  * @param string $entity_type
@@ -689,7 +689,7 @@ function entity_view_multiple(array $entities, $view_mode, $langcode = NULL) {
  *   The view mode, or 'default' to retrieve the 'default' display object for
  *   this bundle.
  *
- * @return \Drupal\entity\Plugin\Core\Entity\EntityDisplay
+ * @return \Drupal\entity\Entity\EntityDisplay
  *   The display object associated to the view mode.
  */
 function entity_get_display($entity_type, $bundle, $view_mode) {
@@ -731,7 +731,7 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
  * @param string $view_mode
  *  The view mode being rendered.
  *
- * @return \Drupal\entity\Plugin\Core\Entity\EntityDisplay
+ * @return \Drupal\entity\Entity\EntityDisplay
  *   The display object that should be used to render the entity.
  *
  * @see entity_get_display().
@@ -784,7 +784,7 @@ function entity_get_render_display(EntityInterface $entity, $view_mode) {
  * @param string $form_mode
  *   The form mode.
  *
- * @return \Drupal\entity\Plugin\Core\Entity\EntityFormDisplay
+ * @return \Drupal\entity\Entity\EntityFormDisplay
  *   The EntityFormDisplay object associated to the form mode.
  */
 function entity_get_form_display($entity_type, $bundle, $form_mode) {
@@ -822,7 +822,7 @@ function entity_get_form_display($entity_type, $bundle, $form_mode) {
  * @param string $form_mode
  *   The form mode being rendered.
  *
- * @return \Drupal\entity\Plugin\Core\Entity\EntityFormDisplay
+ * @return \Drupal\entity\Entity\EntityFormDisplay
  *   The form display object that should be used to render the entity form.
  *
  * @see entity_get_form_display().

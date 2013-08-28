@@ -67,3 +67,31 @@ aggregator_categories:
     _content: '\Drupal\aggregator\Controller\AggregatorController::categories'
   requirements:
     _access_aggregator_categories: 'TRUE'
+
+aggregator_category_edit:
+  pattern: 'aggregator/categories/{cid}/configure'
+  defaults:
+    _form: '\Drupal\aggregator\Form\CategoryAdminForm'
+  requirements:
+    _permission: 'administer news feeds'
+
+aggregator_category_admin_edit:
+  pattern: 'admin/config/services/aggregator/edit/category/{cid}'
+  defaults:
+    _form: '\Drupal\aggregator\Form\CategoryAdminForm'
+  requirements:
+    _permission: 'administer news feeds'
+
+aggregator_category_delete:
+  pattern: 'admin/config/services/aggregator/delete/category/{cid}'
+  defaults:
+    _form: '\Drupal\aggregator\Form\CategoryDeleteForm'
+  requirements:
+    _permission: 'administer news feeds'
+
+aggregator_category_add:
+  pattern: 'admin/config/services/aggregator/add/category'
+  defaults:
+    _form: '\Drupal\aggregator\Form\CategoryAdminForm'
+  requirements:
+    _permission: 'administer news feeds'

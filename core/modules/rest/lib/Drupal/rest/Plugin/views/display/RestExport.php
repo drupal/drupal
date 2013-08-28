@@ -7,7 +7,8 @@
 
 namespace Drupal\rest\Plugin\views\display;
 
-use Drupal\Component\Annotation\Plugin;
+
+use Drupal\views\Annotation\ViewsDisplay;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\ContentNegotiation;
 use Drupal\views\ViewExecutable;
@@ -22,7 +23,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @ingroup views_display_plugins
  *
- * @Plugin(
+ * @ViewsDisplay(
  *   id = "rest_export",
  *   module = "rest",
  *   title = @Translation("REST export"),
@@ -253,16 +254,18 @@ class RestExport extends PathPluginBase {
    */
   public function collectRoutes(RouteCollection $collection) {
     parent::collectRoutes($collection);
+    $view_id = $this->view->storage->id();
+    $display_id = $this->display['id'];
 
-    $style_plugin = $this->getPlugin('style');
-    // REST exports should only respond to get methods.
-    $requirements = array('_method' => 'GET');
+    if ($route = $collection->get("view.$view_id.$display_id")) {
+      $style_plugin = $this->getPlugin('style');
+      // REST exports should only respond to get methods.
+      $requirements = array('_method' => 'GET');
 
-    // Format as a string using pipes as a delimeter.
-    $requirements['_format'] = implode('|', $style_plugin->getFormats());
+      // Format as a string using pipes as a delimeter.
+      $requirements['_format'] = implode('|', $style_plugin->getFormats());
 
-    // Add the new requirements to each route.
-    foreach ($collection as $route) {
+      // Add the new requirements to the route.
       $route->addRequirements($requirements);
     }
   }

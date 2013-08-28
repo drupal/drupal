@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\display;
 
 use Drupal\views\ViewExecutable;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsDisplay;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ingroup views_display_plugins
  *
- * @Plugin(
+ * @ViewsDisplay(
  *   id = "attachment",
  *   title = @Translation("Attachment"),
  *   help = @Translation("Attachments added to other displays to achieve multiple views in the same view."),

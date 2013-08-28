@@ -20,8 +20,8 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\NodeTypeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Template\Attribute;
-use Drupal\entity\Plugin\Core\Entity\EntityDisplay;
-use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\entity\Entity\EntityDisplay;
+use Drupal\file\Entity\File;
 use Drupal\user\UserInterface;
 
 /**
@@ -520,12 +520,7 @@ function node_type_update_nodes($old_id, $new_id) {
  * @see Drupal\Core\Entity\Query\EntityQueryInterface
  */
 function node_load_multiple(array $nids = NULL, $reset = FALSE) {
-  $entities = entity_load_multiple('node', $nids, $reset);
-  // Return BC-entities.
-  foreach ($entities as $id => $entity) {
-    $entities[$id] = $entity->getBCEntity();
-  }
-  return $entities;
+  return entity_load_multiple('node', $nids, $reset);
 }
 
 /**
@@ -537,60 +532,24 @@ function node_load_multiple(array $nids = NULL, $reset = FALSE) {
  *   (optional) Whether to reset the node_load_multiple() cache. Defaults to
  *   FALSE.
  *
- * @return \Drupal\node\Node|null
- *   A fully-populated node entity or NULL if the node is not found.
+ * @return \Drupal\node\NodeInterface|null
+ *   A fully-populated node entity, or NULL if the node is not found.
  */
 function node_load($nid = NULL, $reset = FALSE) {
-  $entity = entity_load('node', $nid, $reset);
-  return $entity ? $entity->getBCEntity() : NULL;
+  return entity_load('node', $nid, $reset);
 }
 
 /**
  * Loads a node revision from the database.
  *
- * @param int $nid
+ * @param int $vid
  *   The node revision id.
  *
- * @return \Drupal\node\Node|null
- *   A fully-populated node entity or NULL if the node is not found.
+ * @return \Drupal\node\NodeInterface|null
+ *   A fully-populated node entity, or NULL if the node is not found.
  */
 function node_revision_load($vid = NULL) {
   return entity_revision_load('node', $vid);
-}
-
-/**
- * Prepares a node for saving by populating the author and creation date.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   A node object.
- *
- * @return Drupal\node\Node
- *   An updated node object.
- */
-function node_submit(EntityInterface $node) {
-  global $user;
-
-  // A user might assign the node author by entering a user name in the node
-  // form, which we then need to translate to a user ID.
-  if (isset($node->name)) {
-    if ($account = user_load_by_name($node->name)) {
-      $node->setAuthorId($account->id());
-    }
-    else {
-      $node->setAuthorId(0);
-    }
-  }
-
-  // If a new revision is created, save the current user as revision author.
-  if ($node->isNewRevision()) {
-    $node->setRevisionAuthorId($user->id());
-    $node->setRevisionCreationTime(REQUEST_TIME);
-  }
-
-  $node->setCreatedTime(!empty($node->date) && $node->date instanceOf DrupalDateTime ? $node->date->getTimestamp() : REQUEST_TIME);
-  $node->validated = TRUE;
-
-  return $node;
 }
 
 /**
@@ -693,7 +652,7 @@ function template_preprocess_node(&$variables) {
   //   http://drupal.org/node/1941286.
   $username = array(
     '#theme' => 'username',
-    '#account' => user_load($node->uid),
+    '#account' => $node->getAuthor(),
     '#link_options' => array('attributes' => array('rel' => 'author')),
   );
   $variables['name'] = drupal_render($username);
@@ -951,7 +910,7 @@ function node_search_execute($keys = NULL, $conditions = NULL) {
     $uri = $node->uri();
     $username = array(
       '#theme' => 'username',
-      '#account' => user_load($node->uid),
+      '#account' => $node->getAuthor(),
     );
     $results[] = array(
       'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE, 'language' => $language))),

@@ -53,44 +53,6 @@ class UsageTest extends FileManagedTestBase {
   }
 
   /**
-   * Tests file_usage()->deleteByModule().
-   */
-  function testDeleteByModule() {
-    $file = $this->createFile();
-    db_insert('file_usage')
-      ->fields(array(
-        'fid' => $file->id(),
-        'module' => 'testing',
-        'type' => 'foo',
-        'id' => 1,
-        'count' => 1
-      ))
-      ->execute();
-    db_insert('file_usage')
-      ->fields(array(
-        'fid' => $file->id(),
-        'module' => 'testing',
-        'type' => 'bar',
-        'id' => 2,
-        'count' => 2
-      ))
-      ->execute();
-    db_insert('file_usage')
-      ->fields(array(
-        'fid' => $file->id(),
-        'module' => 'file',
-        'type' => 'bar',
-        'id' => 2,
-        'count' => 2
-      ))
-      ->execute();
-
-    file_usage()->deleteByModule('testing');
-
-    $this->assertIdentical(array('file' => array('bar' => array(2 => '2'))), file_usage()->listUsage($file), 'All records for the "testing" module have been deleted.');
-  }
-
-  /**
    * Tests file_usage()->add().
    */
   function testAddUsage() {

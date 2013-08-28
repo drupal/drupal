@@ -115,7 +115,6 @@ class EntityValidationTest extends EntityUnitTestBase {
     $this->assertEqual($violations->count(), 1, 'Validation failed.');
     $this->assertEqual($violations[0]->getMessage(), t('This value is too long. It should have %limit characters or less.', array('%limit' => '12')));
 
-
     $test_entity = clone $entity;
     $test_entity->type->value = NULL;
     $violations = $test_entity->validate();
@@ -133,6 +132,24 @@ class EntityValidationTest extends EntityUnitTestBase {
     $this->assertEqual($violation->getRoot(), $test_entity, 'Violation root is entity.');
     $this->assertEqual($violation->getPropertyPath(), 'name.0.value', 'Violation property path is correct.');
     $this->assertEqual($violation->getInvalidValue(), $test_entity->name->value, 'Violation contains invalid value.');
+
+    $test_entity = clone $entity;
+    $test_entity->set('user_id', 9999);
+    $violations = $test_entity->validate();
+    $this->assertEqual($violations->count(), 1, 'Validation failed.');
+    $this->assertEqual($violations[0]->getMessage(), t('The referenced entity (%type: %id) does not exist.', array('%type' => 'user', '%id' => 9999)));
+
+    $test_entity = clone $entity;
+    $test_entity->field_test_text->format = $this->randomString(33);
+    $violations = $test_entity->validate();
+    $this->assertEqual($violations->count(), 1, 'Validation failed.');
+    $this->assertEqual($violations[0]->getMessage(), t('The value you selected is not a valid choice.'));
+
+    // Make sure the information provided by a violation is correct.
+    $violation = $violations[0];
+    $this->assertEqual($violation->getRoot(), $test_entity, 'Violation root is entity.');
+    $this->assertEqual($violation->getPropertyPath(), 'field_test_text.0.format', 'Violation property path is correct.');
+    $this->assertEqual($violation->getInvalidValue(), $test_entity->field_test_text->format, 'Violation contains invalid value.');
   }
 
 }

@@ -78,10 +78,11 @@ class BlockFormControllerTest extends UnitTestCase {
       ->method('getStorageController')
       ->will($this->returnValue($block_storage));
 
-    $module_handler = $this->getMockBuilder('Drupal\Core\Extension\ModuleHandlerInterface')
+    $language_manager = $this->getMockBuilder('Drupal\Core\Language\LanguageManager')
+      ->disableOriginalConstructor()
       ->getMock();
 
-    $block_form_controller = new BlockFormController($module_handler, $entity_manager, $query_factory);
+    $block_form_controller = new BlockFormController($entity_manager, $query_factory, $language_manager);
 
     // Ensure that the block with just one other instance gets the next available
     // name suggestion.

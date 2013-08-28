@@ -34,7 +34,7 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
   /**
    * The Field instance definition.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   * @var \Drupal\field\Entity\FieldInstance
    */
   protected $instance;
 
@@ -44,7 +44,7 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
    * Copied from \Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase,
    * since we cannot extend it.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   * @var \Drupal\field\Entity\FieldInstance
    */
   public function getInstance() {
     if (!isset($this->instance) && $parent = $this->getParent()) {
@@ -145,6 +145,24 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
       return $callback($this->getInstance()->getField(), $this->getInstance(), $form_state);
     }
     return array();
+  }
+
+  /**
+   * Returns options provided via the legacy callback hook_options_list().
+   *
+   * @todo: Convert all legacy callback implementations to methods.
+   *
+   * @see \Drupal\Core\TypedData\AllowedValuesInterface
+   */
+  public function getSettableOptions() {
+    $definition = $this->getPluginDefinition();
+    $callback = "{$definition['provider']}_options_list";
+    if (function_exists($callback)) {
+      // We are at the field item level, so we need to go two levels up to get
+      // to the entity object.
+      $entity = $this->getParent()->getParent();
+      return $callback($this->getInstance(), $entity);
+    }
   }
 
   /**

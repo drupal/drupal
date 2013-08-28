@@ -7,16 +7,15 @@
 
 namespace Drupal\entity\Form;
 
-use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\Query\QueryFactory;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the generic base class for entity display mode forms.
  */
-abstract class EntityDisplayModeFormBase extends EntityFormController implements EntityControllerInterface {
+abstract class EntityDisplayModeFormBase extends EntityFormController {
 
   /**
    * The entity query factory.
@@ -33,31 +32,41 @@ abstract class EntityDisplayModeFormBase extends EntityFormController implements
   protected $entityInfo;
 
   /**
+   * The entity manager.
+   *
+   * @var \Drupal\Component\Plugin\PluginManagerInterface
+   */
+  protected $entityManager;
+
+  /**
    * Constructs a new EntityDisplayModeFormBase.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
    *   The entity query factory.
-   * @param array $entity_info
-   *   The entity type definition.
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, QueryFactory $query_factory, array $entity_info) {
-    parent::__construct($module_handler);
-
+  public function __construct(QueryFactory $query_factory, EntityManager $entity_manager) {
     $this->queryFactory = $query_factory;
-    $this->entityInfo = $entity_info;
+    $this->entityManager = $entity_manager;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
       $container->get('entity.query'),
-      $entity_info
+      $container->get('plugin.manager.entity')
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function init(array &$form_state) {
+    parent::init($form_state);
+    $this->entityInfo = $this->entityManager->getDefinition($this->entity->entityType());
   }
 
   /**

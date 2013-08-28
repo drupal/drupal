@@ -5,3 +5,9 @@ overlay_message:
   requirements:
     _access_overlay_dismiss_message: 'TRUE'
 
+overlay_ajax:
+  pattern: '/overlay-ajax/{region}'
+  defaults:
+    _controller: '\Drupal\overlay\Controller\OverlayController::regionRender'
+  requirements:
+    _permission: 'access overlay'

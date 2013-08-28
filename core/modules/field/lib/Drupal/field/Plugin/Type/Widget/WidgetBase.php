@@ -370,7 +370,9 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
           foreach ($delta_violations as $violation) {
             // @todo: Pass $violation->arrayPropertyPath as property path.
             $error_element = $this->errorElement($delta_element, $violation, $form, $form_state);
-            form_error($error_element, $violation->getMessage());
+            if ($error_element !== FALSE) {
+              form_error($error_element, $violation->getMessage());
+            }
           }
         }
         // Reinitialize the errors list for the next submit.

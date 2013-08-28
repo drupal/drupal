@@ -7,15 +7,15 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
-use Drupal\field\Plugin\Core\Entity\Field;
-use Drupal\field\Plugin\Core\Entity\FieldInstance;
+use Drupal\field\Entity\Field;
+use Drupal\field\Entity\FieldInstance;
 
 /**
  * Returns a form element to configure field synchronization.
  *
- * @param \Drupal\field\Plugin\Core\Entity\Field $field
+ * @param \Drupal\field\Entity\Field $field
  *   A field definition array.
- * @param \Drupal\field\Plugin\Core\Entity\FieldInstance $instance
+ * @param \Drupal\field\Entity\FieldInstance $instance
  *   A field instance definition object.
  *
  * @return array

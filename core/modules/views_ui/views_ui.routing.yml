@@ -29,14 +29,14 @@ views_ui.settings.advanced:
 views_ui.reports.fields:
   pattern: '/admin/reports/fields/views-fields'
   defaults:
-    _controller: '\Drupal\views_ui\Controller\ViewsUIController::reportFields'
+    _content: '\Drupal\views_ui\Controller\ViewsUIController::reportFields'
   requirements:
     _permission: 'administer views'
 
 views_ui.reports.plugins:
   pattern: '/admin/reports/views-plugins'
   defaults:
-    _controller: '\Drupal\views_ui\Controller\ViewsUIController::reportPlugins'
+    _content: '\Drupal\views_ui\Controller\ViewsUIController::reportPlugins'
   requirements:
     _permission: 'administer views'
 
@@ -76,7 +76,7 @@ views_ui.edit:
       view:
         tempstore: TRUE
   defaults:
-    _controller: '\Drupal\views_ui\Controller\ViewsUIController::edit'
+    _content: '\Drupal\views_ui\Controller\ViewsUIController::edit'
   requirements:
     _permission: 'administer views'
 
@@ -87,7 +87,7 @@ views_ui.edit.display:
       view:
         tempstore: TRUE
   defaults:
-    _controller: '\Drupal\views_ui\Controller\ViewsUIController::edit'
+    _content: '\Drupal\views_ui\Controller\ViewsUIController::edit'
     display_id: NULL
   requirements:
     _permission: 'administer views'

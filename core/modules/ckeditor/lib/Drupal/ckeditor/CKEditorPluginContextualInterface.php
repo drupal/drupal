@@ -7,7 +7,7 @@
 
 namespace Drupal\ckeditor;
 
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Entity\Editor;
 
 /**
  * Defines an interface for contextually enabled CKEditor plugins.
@@ -29,7 +29,7 @@ interface CKEditorPluginContextualInterface extends CKEditorPluginInterface {
    *
    * The editor's settings can be found in $editor->settings.
    *
-   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
    *
    * @return bool

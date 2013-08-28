@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\filter\Plugin\Core\Entity\FilterFormatInterface.
+ * Contains \Drupal\filter\Entity\FilterFormatInterface.
  */
 
 namespace Drupal\filter;

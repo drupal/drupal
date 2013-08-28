@@ -7,9 +7,7 @@
 
 namespace Drupal\action;
 
-use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityFormController;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -17,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a base form controller for action forms.
  */
-abstract class ActionFormControllerBase extends EntityFormController implements EntityControllerInterface {
+abstract class ActionFormControllerBase extends EntityFormController {
 
   /**
    * The action plugin being configured.
@@ -36,24 +34,19 @@ abstract class ActionFormControllerBase extends EntityFormController implements 
   /**
    * Constructs a new action form.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface
-   *   The module handler service.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
    *   The action storage controller.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, EntityStorageControllerInterface $storage_controller) {
-    parent::__construct($module_handler);
-
+  public function __construct(EntityStorageControllerInterface $storage_controller) {
     $this->storageController = $storage_controller;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
-      $container->get('plugin.manager.entity')->getStorageController($entity_type)
+      $container->get('plugin.manager.entity')->getStorageController('action')
     );
   }
 
@@ -71,19 +64,19 @@ abstract class ActionFormControllerBase extends EntityFormController implements 
   public function form(array $form, array &$form_state) {
     $form['label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Label'),
+      '#title' => $this->t('Label'),
       '#default_value' => $this->entity->label(),
       '#maxlength' => '255',
-      '#description' => t('A unique label for this advanced action. This label will be displayed in the interface of modules that integrate with actions.'),
+      '#description' => $this->t('A unique label for this advanced action. This label will be displayed in the interface of modules that integrate with actions.'),
     );
 
     $form['id'] = array(
       '#type' => 'machine_name',
-      '#title' => t('Machine name'),
+      '#title' => $this->t('Machine name'),
       '#default_value' => $this->entity->id(),
       '#disabled' => !$this->entity->isNew(),
       '#maxlength' => 64,
-      '#description' => t('A unique name for this action. It must only contain lowercase letters, numbers and underscores.'),
+      '#description' => $this->t('A unique name for this action. It must only contain lowercase letters, numbers and underscores.'),
       '#machine_name' => array(
         'exists' => array($this, 'exists'),
       ),
@@ -155,7 +148,7 @@ abstract class ActionFormControllerBase extends EntityFormController implements 
    */
   public function save(array $form, array &$form_state) {
     $this->entity->save();
-    drupal_set_message(t('The action has been successfully saved.'));
+    drupal_set_message($this->t('The action has been successfully saved.'));
 
     $form_state['redirect'] = 'admin/config/system/actions';
   }

@@ -29,7 +29,7 @@ class ViewExecutable {
   /**
    * The config entity in which the view is stored.
    *
-   * @var Drupal\views\Plugin\Core\Entity\View
+   * @var Drupal\views\Entity\View
    */
   public $storage;
 
@@ -570,7 +570,7 @@ class ViewExecutable {
     // Fill our input either from $_GET or from something previously set on the
     // view.
     if (empty($this->exposed_input)) {
-      $this->exposed_input = drupal_container()->get('request')->query->all();
+      $this->exposed_input = \Drupal::request()->query->all();
       // unset items that are definitely not our input:
       foreach (array('page', 'q') as $key) {
         if (isset($this->exposed_input[$key])) {

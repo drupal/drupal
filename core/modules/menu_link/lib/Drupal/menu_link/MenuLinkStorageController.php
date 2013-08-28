@@ -111,6 +111,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
 
     foreach ($menu_links as &$menu_link) {
       $menu_link->options = unserialize($menu_link->options);
+      $menu_link->route_parameters = unserialize($menu_link->route_parameters);
 
       // Use the weight property from the menu link.
       $menu_link->router_item['weight'] = $menu_link->weight;

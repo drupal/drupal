@@ -86,7 +86,7 @@ class TranslationTest extends WebTestBase {
     $languages = language_list();
     $prefixes = language_negotiation_url_prefixes();
     $this->drupalGet('node/' . $node->id() . '/translate');
-    $this->assertLinkByHref($prefixes['es'] . '/node/add/' . $node->type, 0, format_string('The "add translation" link for %language points to the localized path of the target language.', array('%language' => $languages['es']->name)));
+    $this->assertLinkByHref($prefixes['es'] . '/node/add/' . $node->getType(), 0, format_string('The "add translation" link for %language points to the localized path of the target language.', array('%language' => $languages['es']->name)));
 
     // Submit translation in Spanish.
     $node_translation_title = $this->randomName();
@@ -112,11 +112,11 @@ class TranslationTest extends WebTestBase {
     $edit["body[$langcode][0][value]"] = $this->randomName();
     $this->drupalPost('node/add/page', $edit, t('Save'), array('query' => array('translation' => $node->id(), 'language' => 'es')));
     $duplicate = $this->drupalGetNodeByTitle($edit["title"]);
-    $this->assertEqual($duplicate->tnid, 0, 'The node does not have a tnid.');
+    $this->assertEqual($duplicate->tnid->value, 0, 'The node does not have a tnid.');
 
     // Update original and mark translation as outdated.
     $node_body = $this->randomName();
-    $node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'] = $node_body;
+    $node->body->value = $node_body;
     $edit = array();
     $edit["body[$langcode][0][value]"] = $node_body;
     $edit['translation[retranslate]'] = TRUE;
@@ -139,7 +139,7 @@ class TranslationTest extends WebTestBase {
     $this->drupalGet('node/add/page');
     $this->assertFieldByXPath('//select[@name="langcode"]//option', Language::LANGCODE_NOT_SPECIFIED, 'Language neutral is available in language selection with disabled languages.');
     $node2 = $this->createPage($this->randomName(), $this->randomName(), Language::LANGCODE_NOT_SPECIFIED);
-    $this->assertRaw($node2->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'], 'Language neutral content created with disabled languages available.');
+    $this->assertRaw($node2->body->value, 'Language neutral content created with disabled languages available.');
 
     // Leave just one language installed and check that the translation overview
     // page is still accessible.
@@ -171,7 +171,7 @@ class TranslationTest extends WebTestBase {
     // Unpublish the Spanish translation to check that the related language
     // switch link is not shown.
     $this->drupalLogin($this->admin_user);
-    $this->drupalPost("node/$translation_es->nid/edit", array(), t('Save and unpublish'));
+    $this->drupalPost('node/' . $translation_es->id() . '/edit', array(), t('Save and unpublish'));
     $this->drupalLogin($this->translator);
     $this->assertLanguageSwitchLinks($node, $translation_es, FALSE);
 
@@ -181,7 +181,7 @@ class TranslationTest extends WebTestBase {
     $edit = array('language_interface[enabled][language-url]' => FALSE);
     $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
     $this->resetCaches();
-    $this->drupalPost("node/$translation_es->nid/edit", array(), t('Save and publish'));
+    $this->drupalPost('node/' . $translation_es->id() . '/edit', array(), t('Save and publish'));
     $this->drupalLogin($this->translator);
     $this->assertLanguageSwitchLinks($node, $translation_es, TRUE, 'node');
   }
@@ -396,7 +396,7 @@ class TranslationTest extends WebTestBase {
     // Check to make sure that translation was successful.
     $translation = $this->drupalGetNodeByTitle($title);
     $this->assertTrue($translation, 'Node found in database.');
-    $this->assertTrue($translation->tnid == $node->id(), 'Translation set id correctly stored.');
+    $this->assertTrue($translation->tnid->value == $node->id(), 'Translation set id correctly stored.');
 
     return $translation;
   }
@@ -440,7 +440,7 @@ class TranslationTest extends WebTestBase {
    * @return
    *   TRUE if the language switch links are found, FALSE if not.
    */
-  function assertLanguageSwitchLinks(NodeInterface $node, $translation, $find = TRUE, $types = NULL) {
+  function assertLanguageSwitchLinks(NodeInterface $node, NodeInterface $translation, $find = TRUE, $types = NULL) {
     if (empty($types)) {
       $types = array('node', 'block-language');
     }
@@ -449,10 +449,9 @@ class TranslationTest extends WebTestBase {
     }
 
     $result = TRUE;
-    $languages = language_list();
-    $page_language = $languages[$node->langcode];
-    $translation_language = $languages[$translation->langcode];
-    $url = url("node/$translation->nid", array('language' => $translation_language));
+    $page_language = $node->language();
+    $translation_language = $translation->language();
+    $url = url('node/' . $translation->id(), array('language' => $translation_language));
 
     $this->drupalGet('node/' . $node->id(), array('language' => $page_language));
 
@@ -468,7 +467,7 @@ class TranslationTest extends WebTestBase {
       // node uses the article tag.
       $tag = $type == 'node' ? 'article' : 'div';
 
-      if ($translation->nid) {
+      if ($translation->id()) {
         $xpath = '//' . $tag . '[contains(@class, :type)]//a[@href=:url]';
       }
       else {

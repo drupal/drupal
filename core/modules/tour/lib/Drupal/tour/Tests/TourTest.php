@@ -8,12 +8,12 @@
 namespace Drupal\tour\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\simpletest\WebTestBase;
+use Drupal\tour\Tests\TourTestBase;
 
 /**
  * Tests tour functionality.
  */
-class TourTest extends WebTestBase {
+class TourTest extends TourTestBasic {
 
   /**
    * Modules to enable.
@@ -22,18 +22,30 @@ class TourTest extends WebTestBase {
    */
   public static $modules = array('tour', 'locale', 'language', 'tour_test');
 
+  /**
+   * The permissions required for a logged in user to test tour tips.
+   *
+   * @var array
+   *   A list of permissions.
+   */
+  protected $permissions = array('access tour', 'administer languages');
+
+  /**
+   * Tour tip attributes to be tested. Keyed by the path.
+   *
+   * @var array
+   *   An array of tip attributes, keyed by path.
+   */
+  protected $tips = array(
+    'tour-test-1' => array(),
+  );
+
   public static function getInfo() {
     return array(
       'name' => 'Tour tests',
       'description' => 'Test the functionality of tour tips.',
       'group' => 'Tour',
     );
-  }
-
-  protected function setUp() {
-    parent::setUp();
-
-    $this->drupalLogin($this->drupalCreateUser(array('access tour', 'administer languages')));
   }
 
   /**
@@ -48,6 +60,13 @@ class TourTest extends WebTestBase {
       ':text' => 'The first tip',
     ));
     $this->assertEqual(count($elements), 1, 'Found English variant of tip 1.');
+
+    // Test the TourTestBase class assertTourTips() method.
+    $tips = array();
+    $tips[] = array('data-id' => 'tour-test-1');
+    $tips[] = array('data-class' => 'tour-test-5');
+    $this->assertTourTips($tips);
+    $this->assertTourTips();
 
     $elements = $this->xpath('//li[@data-id=:data_id and @class=:classes and ./p//a[@href=:href and contains(., :text)]]', array(
       ':classes' => 'tip-module-tour-test tip-type-text tip-tour-test-1 even last',

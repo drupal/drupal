@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains \Drupal\simpletest\Form\SimpletestSettingsForm.
@@ -14,50 +15,50 @@ use Drupal\system\SystemConfigFormBase;
 class SimpletestSettingsForm extends SystemConfigFormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'simpletest_settings_form';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
     $config = $this->configFactory->get('simpletest.settings');
     $form['general'] = array(
       '#type' => 'details',
-      '#title' => t('General'),
+      '#title' => $this->t('General'),
     );
     $form['general']['simpletest_clear_results'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Clear results after each complete test suite run'),
-      '#description' => t('By default SimpleTest will clear the results after they have been viewed on the results page, but in some cases it may be useful to leave the results in the database. The results can then be viewed at <em>admin/config/development/testing/results/[test_id]</em>. The test ID can be found in the database, simpletest table, or kept track of when viewing the results the first time. Additionally, some modules may provide more analysis or features that require this setting to be disabled.'),
+      '#title' => $this->t('Clear results after each complete test suite run'),
+      '#description' => $this->t('By default SimpleTest will clear the results after they have been viewed on the results page, but in some cases it may be useful to leave the results in the database. The results can then be viewed at <em>admin/config/development/testing/results/[test_id]</em>. The test ID can be found in the database, simpletest table, or kept track of when viewing the results the first time. Additionally, some modules may provide more analysis or features that require this setting to be disabled.'),
       '#default_value' => $config->get('clear_results'),
     );
     $form['general']['simpletest_verbose'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Provide verbose information when running tests'),
-      '#description' => t('The verbose data will be printed along with the standard assertions and is useful for debugging. The verbose data will be erased between each test suite run. The verbose data output is very detailed and should only be used when debugging.'),
+      '#title' => $this->t('Provide verbose information when running tests'),
+      '#description' => $this->t('The verbose data will be printed along with the standard assertions and is useful for debugging. The verbose data will be erased between each test suite run. The verbose data output is very detailed and should only be used when debugging.'),
       '#default_value' => $config->get('verbose'),
     );
 
     $form['httpauth'] = array(
       '#type' => 'details',
-      '#title' => t('HTTP authentication'),
-      '#description' => t('HTTP auth settings to be used by the SimpleTest browser during testing. Useful when the site requires basic HTTP authentication.'),
+      '#title' => $this->t('HTTP authentication'),
+      '#description' => $this->t('HTTP auth settings to be used by the SimpleTest browser during testing. Useful when the site requires basic HTTP authentication.'),
       '#collapsed' => TRUE,
     );
     $form['httpauth']['simpletest_httpauth_method'] = array(
       '#type' => 'select',
-      '#title' => t('Method'),
+      '#title' => $this->t('Method'),
       '#options' => array(
-        CURLAUTH_BASIC => t('Basic'),
-        CURLAUTH_DIGEST => t('Digest'),
-        CURLAUTH_GSSNEGOTIATE => t('GSS negotiate'),
-        CURLAUTH_NTLM => t('NTLM'),
-        CURLAUTH_ANY => t('Any'),
-        CURLAUTH_ANYSAFE => t('Any safe'),
+        CURLAUTH_BASIC => $this->t('Basic'),
+        CURLAUTH_DIGEST => $this->t('Digest'),
+        CURLAUTH_GSSNEGOTIATE => $this->t('GSS negotiate'),
+        CURLAUTH_NTLM => $this->t('NTLM'),
+        CURLAUTH_ANY => $this->t('Any'),
+        CURLAUTH_ANYSAFE => $this->t('Any safe'),
       ),
       '#default_value' => $config->get('httpauth.method'),
     );
@@ -65,25 +66,25 @@ class SimpletestSettingsForm extends SystemConfigFormBase {
     $password = $config->get('httpauth.password');
     $form['httpauth']['simpletest_httpauth_username'] = array(
       '#type' => 'textfield',
-      '#title' => t('Username'),
+      '#title' => $this->t('Username'),
       '#default_value' => $username,
     );
     if (!empty($username) && !empty($password)) {
-      $form['httpauth']['simpletest_httpauth_username']['#description'] = t('Leave this blank to delete both the existing username and password.');
+      $form['httpauth']['simpletest_httpauth_username']['#description'] = $this->t('Leave this blank to delete both the existing username and password.');
     }
     $form['httpauth']['simpletest_httpauth_password'] = array(
       '#type' => 'password',
-      '#title' => t('Password'),
+      '#title' => $this->t('Password'),
     );
     if ($password) {
-      $form['httpauth']['simpletest_httpauth_password']['#description'] = t('To change the password, enter the new password here.');
+      $form['httpauth']['simpletest_httpauth_password']['#description'] = $this->t('To change the password, enter the new password here.');
     }
 
     return parent::buildForm($form, $form_state);
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, array &$form_state) {
     $config = $this->configFactory->get('simpletest.settings');
@@ -96,14 +97,14 @@ class SimpletestSettingsForm extends SystemConfigFormBase {
     // If a password was provided but a username wasn't, the credentials are
     // incorrect, so throw an error.
     if (empty($form_state['values']['simpletest_httpauth_username']) && !empty($form_state['values']['simpletest_httpauth_password'])) {
-      form_set_error('simpletest_httpauth_username', t('HTTP authentication credentials must include a username in addition to a password.'));
+      form_set_error('simpletest_httpauth_username', $this->t('HTTP authentication credentials must include a username in addition to a password.'));
     }
 
     parent::validateForm($form, $form_state);
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
     $this->configFactory->get('simpletest.settings')

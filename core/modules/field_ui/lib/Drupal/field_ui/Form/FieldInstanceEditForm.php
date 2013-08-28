@@ -7,12 +7,11 @@
 
 namespace Drupal\field_ui\Form;
 
-use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\Field\FieldTypePluginManager;
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormBase;
 use Drupal\Core\Language\Language;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\field\Plugin\Type\Widget\WidgetPluginManager;
@@ -22,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a form for the field instance settings form.
  */
-class FieldInstanceEditForm implements FormInterface, ControllerInterface {
+class FieldInstanceEditForm extends FormBase {
 
   /**
    * The field instance being edited.
@@ -98,7 +97,7 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
     $entity_form_display = entity_get_form_display($entity_type, $bundle, 'default');
     $bundles = entity_get_bundles();
 
-    drupal_set_title(t('%instance settings for %bundle', array(
+    drupal_set_title($this->t('%instance settings for %bundle', array(
       '%instance' => $this->instance->label(),
       '%bundle' => $bundles[$entity_type][$bundle]['label'],
     )), PASS_THROUGH);
@@ -112,7 +111,7 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
 
     if (!empty($field['locked'])) {
       $form['locked'] = array(
-        '#markup' => t('The field %field is locked and cannot be edited.', array('%field' => $this->instance->label())),
+        '#markup' => $this->t('The field %field is locked and cannot be edited.', array('%field' => $this->instance->label())),
       );
       return $form;
     }
@@ -139,7 +138,7 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
     // Build the configurable instance values.
     $form['instance']['label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Label'),
+      '#title' => $this->t('Label'),
       '#default_value' => $this->instance->label() ?: $field['field_name'],
       '#required' => TRUE,
       '#weight' => -20,
@@ -147,16 +146,16 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
 
     $form['instance']['description'] = array(
       '#type' => 'textarea',
-      '#title' => t('Help text'),
+      '#title' => $this->t('Help text'),
       '#default_value' => !empty($this->instance['description']) ? $this->instance['description'] : '',
       '#rows' => 5,
-      '#description' => t('Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags', array('@tags' => _field_filter_xss_display_allowed_tags())) . '<br />' . t('This field supports tokens.'),
+      '#description' => $this->t('Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags', array('@tags' => _field_filter_xss_display_allowed_tags())) . '<br />' . $this->t('This field supports tokens.'),
       '#weight' => -10,
     );
 
     $form['instance']['required'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Required field'),
+      '#title' => $this->t('Required field'),
       '#default_value' => !empty($this->instance['required']),
       '#weight' => -5,
     );
@@ -173,11 +172,11 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save settings')
+      '#value' => $this->t('Save settings')
     );
     $form['actions']['delete'] = array(
       '#type' => 'submit',
-      '#value' => t('Delete field'),
+      '#value' => $this->t('Delete field'),
       '#submit' => array(array($this, 'delete')),
     );
     return $form;
@@ -239,7 +238,7 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
     }
     $this->instance->save();
 
-    drupal_set_message(t('Saved %label configuration.', array('%label' => $this->instance->label())));
+    drupal_set_message($this->t('Saved %label configuration.', array('%label' => $this->instance->label())));
 
     $form_state['redirect'] = $this->getNextDestination();
   }
@@ -265,9 +264,9 @@ class FieldInstanceEditForm implements FormInterface, ControllerInterface {
 
     $element = array(
       '#type' => 'details',
-      '#title' => t('Default value'),
+      '#title' => $this->t('Default value'),
       '#tree' => TRUE,
-      '#description' => t('The default value for this field, used when creating new content.'),
+      '#description' => $this->t('The default value for this field, used when creating new content.'),
       // Stick to an empty 'parents' on this form in order not to breaks widgets
       // that do not use field_widget_[field|instance]() and still access
       // $form_state['field'] directly.

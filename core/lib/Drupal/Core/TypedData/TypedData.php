@@ -59,13 +59,6 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::getType().
-   */
-  public function getType() {
-    return $this->definition['type'];
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getPluginId() {

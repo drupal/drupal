@@ -36,7 +36,7 @@ class SelectionTest extends WebTestBase {
 
     $nodes = array();
     foreach (array($node1, $node2, $node3) as $node) {
-      $nodes[$node->type][$node->id()] = $node->label();
+      $nodes[$node->getType()][$node->id()] = $node->label();
     }
 
     // Create a field and instance.

@@ -88,7 +88,7 @@ class RowPluginTest extends NodeTestBase {
    *   (optional) An associative array of settings for the comment, as used in
    *   entity_create().
    *
-   * @return \Drupal\comment\Plugin\Core\Entity\Comment
+   * @return \Drupal\comment\Entity\Comment
    *   Returns the created and saved comment.
    */
   public function drupalCreateComment(array $settings = array()) {
@@ -119,11 +119,8 @@ class RowPluginTest extends NodeTestBase {
     $output = $view->preview();
     $output = drupal_render($output);
     foreach ($this->nodes as $node) {
-      $body = $node->body;
-      $teaser = $body[Language::LANGCODE_NOT_SPECIFIED][0]['summary'];
-      $full = $body[Language::LANGCODE_NOT_SPECIFIED][0]['value'];
-      $this->assertFalse(strpos($output, $teaser) !== FALSE, 'Make sure the teaser appears in the output of the view.');
-      $this->assertTrue(strpos($output, $full) !== FALSE, 'Make sure the full text appears in the output of the view.');
+      $this->assertFalse(strpos($output, $node->body->summary) !== FALSE, 'Make sure the teaser appears in the output of the view.');
+      $this->assertTrue(strpos($output, $node->body->value) !== FALSE, 'Make sure the full text appears in the output of the view.');
     }
 
     // Test with teasers.
@@ -131,11 +128,8 @@ class RowPluginTest extends NodeTestBase {
     $output = $view->preview();
     $output = drupal_render($output);
     foreach ($this->nodes as $node) {
-      $body = $node->body;
-      $teaser = $body[Language::LANGCODE_NOT_SPECIFIED][0]['summary'];
-      $full = $body[Language::LANGCODE_NOT_SPECIFIED][0]['value'];
-      $this->assertTrue(strpos($output, $teaser) !== FALSE, 'Make sure the teaser appears in the output of the view.');
-      $this->assertFalse(strpos($output, $full) !== FALSE, 'Make sure the full text does not appears in the output of the view if teaser is set as viewmode.');
+      $this->assertTrue(strpos($output, $node->body->summary) !== FALSE, 'Make sure the teaser appears in the output of the view.');
+      $this->assertFalse(strpos($output, $node->body->value) !== FALSE, 'Make sure the full text does not appears in the output of the view if teaser is set as viewmode.');
     }
 
     // Test with links disabled.

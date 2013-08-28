@@ -20,7 +20,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
   /**
    * The field instance.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\FieldInstance
+   * @var \Drupal\field\Entity\FieldInstance
    */
   protected $instance;
 

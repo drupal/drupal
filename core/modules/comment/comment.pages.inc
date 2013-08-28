@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\comment\Plugin\Core\Entity\Comment;
+use Drupal\comment\Entity\Comment;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Drupal\Core\Language\Language;
@@ -93,22 +93,10 @@ function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
     elseif ($entity->access('view')) {
       // We make sure the field value isn't set so we don't end up with a
       // redirect loop.
-      // @todo Remove when node is an NG entity.
-      if ($entity->entityType() == 'node') {
-        $bc_entity = $entity->getBCEntity();
-        $original_value = $bc_entity->{$field_name};
-        $bc_entity->{$field_name} = array(
-          Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN)),
-        );
-        $build['comment_entity'] = entity_view($bc_entity, 'full');
-        $bc_entity->{$field_name} = $original_value;
-      }
-      else {
-        $original_value = $entity->{$field_name}->status;
-        $entity->{$field_name}->status = COMMENT_HIDDEN;
-        $build['comment_entity'] = entity_view($entity, 'full');
-        $entity->{$field_name}->status = $original_value;
-      }
+      $original_value = $entity->{$field_name}->status;
+      $entity->{$field_name}->status = COMMENT_HIDDEN;
+      $build['comment_entity'] = entity_view($entity, 'full');
+      $entity->{$field_name}->status = $original_value;
     }
 
     // Should we show the reply box?

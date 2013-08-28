@@ -7,6 +7,7 @@
 
 namespace Drupal\system\Form;
 
+use Drupal\Core\StreamWrapper\PublicStream;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Cache\Cache;
@@ -34,7 +35,7 @@ class ThemeSettingsForm extends SystemConfigFormBase {
    *   The factory for configuration objects.
    * @param \Drupal\Core\Config\Context\ContextInterface $context
    *   The configuration context to use.
-   * @param Drupal\Core\Extension\ModuleHandlerInterface
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface
    *   The module handler instance to use.
    */
   public function __construct(ConfigFactory $config_factory, ContextInterface $context, ModuleHandlerInterface $module_handler) {
@@ -240,7 +241,7 @@ class ThemeSettingsForm extends SystemConfigFormBase {
 
         // Prepare local file path for description.
         if ($original_path && isset($friendly_path)) {
-          $local_file = strtr($original_path, array('public:/' => variable_get('file_public_path', conf_path() . '/files')));
+          $local_file = strtr($original_path, array('public:/' => PublicStream::basePath()));
         }
         elseif ($theme_name) {
           $local_file = drupal_get_path('theme', $theme_name) . '/' . $default;

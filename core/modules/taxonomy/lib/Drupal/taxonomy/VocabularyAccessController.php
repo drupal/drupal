@@ -14,7 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 /**
  * Defines an access controller for the vocabulary entity.
  *
- * @see \Drupal\taxonomy\Plugin\Core\Entity\Vocabulary.
+ * @see \Drupal\taxonomy\Entity\Vocabulary.
  */
 class VocabularyAccessController extends EntityAccessController {
 

@@ -86,9 +86,9 @@ class ActionListController extends ConfigEntityListController implements EntityC
    */
   public function buildRow(EntityInterface $entity) {
     $row['type'] = $entity->getType();
-    $row['label'] = String::checkPlain($entity->label());
+    $row['label'] = $this->getLabel($entity);
     if ($this->hasConfigurableActions) {
-      $row['operations']['data'] = $this->buildOperations($entity);
+      $row += parent::buildRow($entity);
     }
     return $row;
   }
@@ -100,8 +100,7 @@ class ActionListController extends ConfigEntityListController implements EntityC
     $header = array(
       'type' => t('Action type'),
       'label' => t('Label'),
-      'operations' => t('Operations'),
-    );
+    ) + parent::buildHeader();
     return $header;
   }
 

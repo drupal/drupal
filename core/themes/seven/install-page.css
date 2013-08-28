@@ -173,7 +173,8 @@ body.install-page #page-title {
   right: auto;
   }
 }
-.install-page .password-parent {
+.install-page .password-parent,
+.install-page .confirm-parent {
   width: auto;
 }
 .install-page div.form-item div.password-suggestions {

@@ -13,7 +13,7 @@ use Drupal\Core\Session\AccountInterface;
 /**
  * Defines an access controller for the contact category entity.
  *
- * @see \Drupal\contact\Plugin\Core\Entity\Category.
+ * @see \Drupal\contact\Entity\Category.
  */
 class CategoryAccessController extends EntityAccessController {
 

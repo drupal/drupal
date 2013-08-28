@@ -30,13 +30,21 @@ abstract class ConditionFundamentals {
   protected $conjunction;
 
   /**
+   * The query this condition belongs to.
+   *
+   * @var \Drupal\Core\Entity\Query\QueryInterface
+   */
+  protected $query;
+
+  /**
    * Constructs a Condition object.
    *
    * @param string $conjunction
    *   The operator to use to combine conditions: 'AND' or 'OR'.
    */
-  public function __construct($conjunction = 'AND') {
+  public function __construct($conjunction, QueryInterface $query) {
     $this->conjunction = $conjunction;
+    $this->query = $query;
   }
 
   /**

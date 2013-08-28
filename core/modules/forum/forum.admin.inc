@@ -5,7 +5,7 @@
  * Administrative page callbacks for the Forum module.
  */
 
-use Drupal\taxonomy\Plugin\Core\Entity\Term;
+use Drupal\taxonomy\Entity\Term;
 
 /**
  * Form constructor for the forum overview form.

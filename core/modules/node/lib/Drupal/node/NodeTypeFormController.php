@@ -8,13 +8,12 @@
 namespace Drupal\node;
 
 use Drupal\Core\Entity\EntityFormController;
-use Drupal\Core\Entity\EntityControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for node type forms.
  */
-class NodeTypeFormController extends EntityFormController implements EntityControllerInterface {
+class NodeTypeFormController extends EntityFormController {
 
   /**
    * {@inheritdoc}

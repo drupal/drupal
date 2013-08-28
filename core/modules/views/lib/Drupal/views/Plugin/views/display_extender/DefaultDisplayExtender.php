@@ -7,17 +7,16 @@
 
 namespace Drupal\views\Plugin\views\display_extender;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsDisplayExtender;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * @todo
  *
- * @Plugin(
+ * @ViewsDisplayExtender(
  *   id = "default",
  *   title = @Translation("Empty display extender"),
  *   help = @Translation("Default settings for this view."),
- *   enabled = FALSE,
  *   no_ui = TRUE
  * )
  */

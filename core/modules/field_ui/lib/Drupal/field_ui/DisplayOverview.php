@@ -8,7 +8,6 @@
 namespace Drupal\field_ui;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Controller\ControllerInterface;
 use Drupal\entity\EntityDisplayBaseInterface;
 use Drupal\field\FieldInstanceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -16,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Field UI display overview form.
  */
-class DisplayOverview extends DisplayOverviewBase implements ControllerInterface {
+class DisplayOverview extends DisplayOverviewBase {
 
   /**
    * {@inheritdoc}
@@ -24,6 +23,7 @@ class DisplayOverview extends DisplayOverviewBase implements ControllerInterface
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('plugin.manager.entity'),
+      $container->get('plugin.manager.entity.field.field_type'),
       $container->get('plugin.manager.field.formatter')
     );
   }
@@ -46,7 +46,7 @@ class DisplayOverview extends DisplayOverviewBase implements ControllerInterface
     $label = array(
       'label' => array(
         '#type' => 'select',
-        '#title' => t('Label display for @title', array('@title' => $instance['label'])),
+        '#title' => $this->t('Label display for @title', array('@title' => $instance['label'])),
         '#title_display' => 'invisible',
         '#options' => $this->getFieldLabelOptions(),
         '#default_value' => $display_options ? $display_options['label'] : 'above',
@@ -57,10 +57,10 @@ class DisplayOverview extends DisplayOverviewBase implements ControllerInterface
     $field_row = array_slice($field_row, 0, $label_position, TRUE) + $label + array_slice($field_row, $label_position, count($field_row) - 1, TRUE);
 
     // Update the (invisible) title of the 'plugin' column.
-    $field_row['plugin']['#title'] = t('Formatter for @title', array('@title' => $instance['label']));
+    $field_row['plugin']['#title'] = $this->t('Formatter for @title', array('@title' => $instance['label']));
     if (!empty($field_row['plugin']['settings_edit_form'])) {
       $plugin_type_info = $entity_display->getRenderer($field_id)->getPluginDefinition();
-      $field_row['plugin']['settings_edit_form']['label']['#markup'] = t('Format settings:') . ' <span class="plugin-name">' . $plugin_type_info['label'] . '</span>';
+      $field_row['plugin']['settings_edit_form']['label']['#markup'] = $this->t('Format settings:') . ' <span class="plugin-name">' . $plugin_type_info['label'] . '</span>';
     }
 
     return $field_row;
@@ -119,7 +119,7 @@ class DisplayOverview extends DisplayOverviewBase implements ControllerInterface
    * {@inheritdoc}
    */
   protected function getPluginOptions($field_type) {
-    return parent::getPluginOptions($field_type) + array('hidden' => '- ' . t('Hidden') . ' -');
+    return parent::getPluginOptions($field_type) + array('hidden' => '- ' . $this->t('Hidden') . ' -');
   }
 
   /**
@@ -157,11 +157,11 @@ class DisplayOverview extends DisplayOverviewBase implements ControllerInterface
    */
   protected function getTableHeader() {
     return array(
-      t('Field'),
-      t('Weight'),
-      t('Parent'),
-      t('Label'),
-      array('data' => t('Format'), 'colspan' => 3),
+      $this->t('Field'),
+      $this->t('Weight'),
+      $this->t('Parent'),
+      $this->t('Label'),
+      array('data' => $this->t('Format'), 'colspan' => 3),
     );
   }
 
@@ -180,9 +180,9 @@ class DisplayOverview extends DisplayOverviewBase implements ControllerInterface
    */
   protected function getFieldLabelOptions() {
     return array(
-      'above' => t('Above'),
-      'inline' => t('Inline'),
-      'hidden' => '- ' . t('Hidden') . ' -',
+      'above' => $this->t('Above'),
+      'inline' => $this->t('Inline'),
+      'hidden' => '- ' . $this->t('Hidden') . ' -',
     );
   }
 

@@ -8,13 +8,13 @@
 namespace Drupal\file\Plugin\views\wizard;
 
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsWizard;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Tests creating managed files views with the wizard.
  *
- * @Plugin(
+ * @ViewsWizard(
  *   id = "file_managed",
  *   module = "file",
  *   base_table = "file_managed",

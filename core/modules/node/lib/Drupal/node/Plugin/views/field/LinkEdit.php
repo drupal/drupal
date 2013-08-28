@@ -30,7 +30,7 @@ class LinkEdit extends Link {
     }
 
     $this->options['alter']['make_link'] = TRUE;
-    $this->options['alter']['path'] = "node/$node->nid/edit";
+    $this->options['alter']['path'] = "node/" . $node->id() . "/edit";
     $this->options['alter']['query'] = drupal_get_destination();
 
     $text = !empty($this->options['text']) ? $this->options['text'] : t('edit');

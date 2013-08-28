@@ -7,8 +7,8 @@
 
 namespace Drupal\views\Plugin\views\access;
 
+use Drupal\views\Annotation\ViewsAccess;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Session\AccountInterface;
 
 use Symfony\Component\Routing\Route;
@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Route;
  *
  * @ingroup views_access_plugins
  *
- * @Plugin(
+ * @ViewsAccess(
  *   id = "none",
  *   title = @Translation("None"),
  *   help = @Translation("Will be available to all users.")

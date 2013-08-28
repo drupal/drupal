@@ -8,7 +8,7 @@
  * calling file_test_get_calls() or file_test_set_return().
  */
 
-use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\file\Entity\File;
 
 const FILE_URL_TEST_CDN_1 = 'http://cdn1.example.com';
 const FILE_URL_TEST_CDN_2 = 'http://cdn2.example.com';

@@ -48,6 +48,6 @@ class LegacyTest extends TaxonomyTestBase {
     $this->drupalPost('node/add/article', $edit, t('Save and publish'));
     // Checks that the node has been saved.
     $node = $this->drupalGetNodeByTitle($edit['title']);
-    $this->assertEqual($node->created, $date->getTimestamp(), 'Legacy node was saved with the right date.');
+    $this->assertEqual($node->getCreatedTime(), $date->getTimestamp(), 'Legacy node was saved with the right date.');
   }
 }

@@ -19,9 +19,8 @@ class ShortcutSetListController extends ConfigEntityListController {
    * Overrides \Drupal\Core\Entity\EntityListController::buildHeader().
    */
   public function buildHeader() {
-    $row['label'] = t('Name');
-    $row['operations'] = t('Operations');
-    return $row;
+    $header['name'] = t('Name');
+    return $header + parent::buildHeader();
   }
 
   /**
@@ -47,9 +46,8 @@ class ShortcutSetListController extends ConfigEntityListController {
    * Overrides \Drupal\Core\Entity\EntityListController::buildRow().
    */
   public function buildRow(EntityInterface $entity) {
-    $row['name'] = check_plain($entity->label());
-    $row['operations']['data'] = $this->buildOperations($entity);
-    return $row;
+    $row['name'] = $this->getLabel($entity);
+    return $row + parent::buildRow($entity);
   }
 
 }

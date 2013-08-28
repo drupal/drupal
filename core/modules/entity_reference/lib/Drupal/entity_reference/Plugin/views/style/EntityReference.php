@@ -7,7 +7,7 @@
 
 namespace Drupal\entity_reference\Plugin\views\style;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsStyle;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\style\StylePluginBase;
 
@@ -16,11 +16,12 @@ use Drupal\views\Plugin\views\style\StylePluginBase;
  *
  * @ingroup views_style_plugins
  *
- * @Plugin(
+ * @ViewsStyle(
  *   id = "entity_reference",
  *   title = @Translation("Entity Reference list"),
  *   help = @Translation("Returns results as a PHP array of labels and rendered rows."),
  *   theme = "views_view_unformatted",
+ *   register_theme = FALSE,
  *   display_types = {"entity_reference"}
  * )
  */

@@ -18,10 +18,10 @@ use Drupal\Core\Entity\EntityInterface;
  * This hook runs after a new vocabulary object has just been instantiated. It
  * can be used to set initial values, e.g. to provide defaults.
  *
- * @param \Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
+ * @param \Drupal\taxonomy\Entity\Vocabulary $vocabulary
  *   The vocabulary object.
  */
-function hook_taxonomy_vocabulary_create(\Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_create(\Drupal\taxonomy\Entity\Vocabulary $vocabulary) {
   if (!isset($vocabulary->foo)) {
     $vocabulary->foo = NULL;
   }
@@ -52,10 +52,10 @@ function hook_taxonomy_vocabulary_load(array $vocabularies) {
  * Modules implementing this hook can act on the vocabulary object before it is
  * inserted or updated.
  *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
+ * @param Drupal\taxonomy\Entity\Vocabulary $vocabulary
  *   A taxonomy vocabulary entity.
  */
-function hook_taxonomy_vocabulary_presave(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_presave(Drupal\taxonomy\Entity\Vocabulary $vocabulary) {
   $vocabulary->foo = 'bar';
 }
 
@@ -65,10 +65,10 @@ function hook_taxonomy_vocabulary_presave(Drupal\taxonomy\Plugin\Core\Entity\Voc
  * Modules implementing this hook can act on the vocabulary object when saved
  * to the database.
  *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
+ * @param Drupal\taxonomy\Entity\Vocabulary $vocabulary
  *   A taxonomy vocabulary entity.
  */
-function hook_taxonomy_vocabulary_insert(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_insert(Drupal\taxonomy\Entity\Vocabulary $vocabulary) {
   if ($vocabulary->id() == 'my_vocabulary') {
     $vocabulary->weight = 100;
   }
@@ -79,10 +79,10 @@ function hook_taxonomy_vocabulary_insert(Drupal\taxonomy\Plugin\Core\Entity\Voca
  *
  * Modules implementing this hook can act on the vocabulary object when updated.
  *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
+ * @param Drupal\taxonomy\Entity\Vocabulary $vocabulary
  *   A taxonomy vocabulary entity.
  */
-function hook_taxonomy_vocabulary_update(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_update(Drupal\taxonomy\Entity\Vocabulary $vocabulary) {
   db_update('mytable')
     ->fields(array('foo' => $vocabulary->foo))
     ->condition('vid', $vocabulary->id())
@@ -95,12 +95,12 @@ function hook_taxonomy_vocabulary_update(Drupal\taxonomy\Plugin\Core\Entity\Voca
  * This hook is invoked before entity_bundle_delete() is called and before
  * the vocabulary is actually removed.
  *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
+ * @param Drupal\taxonomy\Entity\Vocabulary $vocabulary
  *   The taxonomy vocabulary entity that is about to be deleted.
  *
  * @see hook_taxonomy_vocabulary_delete()
  */
-function hook_taxonomy_vocabulary_predelete(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_predelete(Drupal\taxonomy\Entity\Vocabulary $vocabulary) {
   db_delete('mytable_index')
     ->condition('vid', $vocabulary->id())
     ->execute();
@@ -112,12 +112,12 @@ function hook_taxonomy_vocabulary_predelete(Drupal\taxonomy\Plugin\Core\Entity\V
  * This hook is invoked after entity_bundle_delete() has been called and after
  * the vocabulary has been removed.
  *
- * @param Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary
+ * @param Drupal\taxonomy\Entity\Vocabulary $vocabulary
  *   The taxonomy vocabulary entity that has been deleted.
  *
  * @see hook_taxonomy_vocabulary_predelete()
  */
-function hook_taxonomy_vocabulary_delete(Drupal\taxonomy\Plugin\Core\Entity\Vocabulary $vocabulary) {
+function hook_taxonomy_vocabulary_delete(Drupal\taxonomy\Entity\Vocabulary $vocabulary) {
   db_delete('mytable')
     ->condition('vid', $vocabulary->id())
     ->execute();
@@ -129,10 +129,10 @@ function hook_taxonomy_vocabulary_delete(Drupal\taxonomy\Plugin\Core\Entity\Voca
  * This hook runs after a new term object has just been instantiated. It can be
  * used to set initial values, e.g. to provide defaults.
  *
- * @param \Drupal\taxonomy\Plugin\Core\Entity\Term $term
+ * @param \Drupal\taxonomy\Entity\Term $term
  *   The term object.
  */
-function hook_taxonomy_term_create(\Drupal\taxonomy\Plugin\Core\Entity\Term $term) {
+function hook_taxonomy_term_create(\Drupal\taxonomy\Entity\Term $term) {
   if (!isset($term->foo)) {
     $term->foo = 'some_initial_value';
   }
@@ -248,9 +248,9 @@ function hook_taxonomy_term_delete(Drupal\taxonomy\Term $term) {
  * structure of $term->content is a renderable array as expected by
  * drupal_render().
  *
- * @param \Drupal\taxonomy\Plugin\Core\Entity\Term $term
+ * @param \Drupal\taxonomy\Entity\Term $term
  *   The term that is being assembled for rendering.
- * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ * @param \Drupal\entity\Entity\EntityDisplay $display
  *   The entity_display object holding the display options configured for the
  *   term components.
  * @param $view_mode
@@ -260,7 +260,7 @@ function hook_taxonomy_term_delete(Drupal\taxonomy\Term $term) {
  *
  * @see hook_entity_view()
  */
-function hook_taxonomy_term_view(\Drupal\taxonomy\Plugin\Core\Entity\Term $term, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display, $view_mode, $langcode) {
+function hook_taxonomy_term_view(\Drupal\taxonomy\Entity\Term $term, \Drupal\entity\Entity\EntityDisplay $display, $view_mode, $langcode) {
   // Only do the extra work if the component is configured to be displayed.
   // This assumes a 'mymodule_addition' extra field has been defined for the
   // vocabulary in hook_field_extra_fields().
@@ -287,15 +287,15 @@ function hook_taxonomy_term_view(\Drupal\taxonomy\Plugin\Core\Entity\Term $term,
  *
  * @param $build
  *   A renderable array representing the taxonomy term content.
- * @param \Drupal\taxonomy\Plugin\Core\Entity\Term $term
+ * @param \Drupal\taxonomy\Entity\Term $term
  *   The taxonomy term being rendered.
- * @param \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display
+ * @param \Drupal\entity\Entity\EntityDisplay $display
  *   The entity_display object holding the display options configured for the
  *   term components.
  *
  * @see hook_entity_view_alter()
  */
-function hook_taxonomy_term_view_alter(&$build, \Drupal\taxonomy\Plugin\Core\Entity\Term $term, \Drupal\entity\Plugin\Core\Entity\EntityDisplay $display) {
+function hook_taxonomy_term_view_alter(&$build, \Drupal\taxonomy\Entity\Term $term, \Drupal\entity\Entity\EntityDisplay $display) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;

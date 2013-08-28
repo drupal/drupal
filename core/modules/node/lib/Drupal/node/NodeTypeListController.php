@@ -11,7 +11,7 @@ use Drupal\Core\Entity\EntityControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Routing\PathBasedGeneratorInterface;
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\Xss;
 use Drupal\Component\Utility\String;
@@ -24,7 +24,7 @@ class NodeTypeListController extends ConfigEntityListController implements Entit
   /**
    * The url generator service.
    *
-   * @var \Drupal\Core\Routing\PathBasedGeneratorInterface
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface
    */
   protected $urlGenerator;
 
@@ -39,10 +39,10 @@ class NodeTypeListController extends ConfigEntityListController implements Entit
    *   The entity storage controller class.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke hooks on.
-   * @param \Drupal\Core\Routing\PathBasedGeneratorInterface $url_generator
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
    */
-  public function __construct($entity_type, array $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler, PathBasedGeneratorInterface $url_generator) {
+  public function __construct($entity_type, array $entity_info, EntityStorageControllerInterface $storage, ModuleHandlerInterface $module_handler, UrlGeneratorInterface $url_generator) {
     parent::__construct($entity_type, $entity_info, $storage, $module_handler);
     $this->urlGenerator = $url_generator;
   }
@@ -63,13 +63,12 @@ class NodeTypeListController extends ConfigEntityListController implements Entit
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $row['title'] = t('Name');
-    $row['description'] = array(
+    $header['title'] = t('Name');
+    $header['description'] = array(
       'data' => t('Description'),
       'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
     );
-    $row['operations'] = t('Operations');
-    return $row;
+    return $header + parent::buildHeader();
   }
 
   /**
@@ -77,12 +76,11 @@ class NodeTypeListController extends ConfigEntityListController implements Entit
    */
   public function buildRow(EntityInterface $entity) {
     $row['title'] = array(
-      'data' => String::checkPlain($entity->label()),
+      'data' => $this->getLabel($entity),
       'class' => array('menu-label'),
     );
     $row['description'] = Xss::filterAdmin($entity->description);
-    $row['operations']['data'] = $this->buildOperations($entity);
-    return $row;
+    return $row + parent::buildRow($entity);
   }
 
   /**
@@ -90,33 +88,10 @@ class NodeTypeListController extends ConfigEntityListController implements Entit
    */
   public function getOperations(EntityInterface $entity) {
     $operations = parent::getOperations($entity);
-    $uri = $entity->uri();
-    if ($this->moduleHandler->moduleExists('field_ui') && user_access('administer node fields')) {
-      $operations['manage-fields'] = array(
-        'title' => t('Manage fields'),
-        'href' => $uri['path'] . '/fields',
-        'options' => $uri['options'],
-        'weight' => 0,
-      );
-    }
-    if ($this->moduleHandler->moduleExists('field_ui') && user_access('administer node form display')) {
-      $operations['manage-form-display'] = array(
-        'title' => t('Manage form display'),
-        'href' => $uri['path'] . '/form-display',
-        'options' => $uri['options'],
-        'weight' => 5,
-      );
-    }
-    if ($this->moduleHandler->moduleExists('field_ui') && user_access('administer node display')) {
-      $operations['manage-display'] = array(
-        'title' => t('Manage display'),
-        'href' => $uri['path'] . '/display',
-        'options' => $uri['options'],
-        'weight' => 10,
-      );
-    }
-    if ($entity->isLocked()) {
-      unset($operations['delete']);
+    // Place the edit operation after the operations added by field_ui.module
+    // which have the weights 15, 20, 25.
+    if (isset($operations['edit'])) {
+      $operations['edit']['weight'] = 30;
     }
     return $operations;
   }

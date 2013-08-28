@@ -1,0 +1,46 @@
+base_field: id
+base_table: views_test_data
+core: 8.x
+description: ''
+status: '1'
+display:
+  default:
+    display_plugin: default
+    id: default
+    display_title: Master
+    position: '1'
+    display_options:
+      access: {  }
+      cache: {  }
+      query: {  }
+      pager: {  }
+      style:
+        type: test_template_style
+      row:
+        type: fields
+        options: {  }
+      fields:
+        id:
+          id: id
+          table: views_test_data
+          field: id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: ''
+          exclude: '0'
+          alter: {  }
+          provider: views_test_config
+      filters: {  }
+      sorts: {  }
+      header: {  }
+      footer: {  }
+      empty: {  }
+      relationships: {  }
+      arguments: {  }
+label: test_view_display_template
+module: views
+id: test_view_display_template
+tag: ''
+uuid: a8e37ebf-573e-4cb9-83f5-a259f12bdc7a
+langcode: en

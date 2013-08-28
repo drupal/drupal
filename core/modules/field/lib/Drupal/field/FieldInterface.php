@@ -13,7 +13,7 @@ use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 /**
  * Provides an interface defining a field entity.
  */
-interface FieldInterface extends ConfigEntityInterface, FieldDefinitionInterface, \ArrayAccess, \Serializable {
+interface FieldInterface extends ConfigEntityInterface, FieldDefinitionInterface, \ArrayAccess {
 
   /**
    * Returns the field schema.
@@ -40,7 +40,7 @@ interface FieldInterface extends ConfigEntityInterface, FieldDefinitionInterface
    *   The array of field columns, keyed by column name, in the same format
    *   returned by getSchema().
    *
-   * @see \Drupal\field\Plugin\Core\Entity\FieldInterface::getSchema()
+   * @see \Drupal\field\Entity\FieldInterface::getSchema()
    */
   public function getColumns();
 

@@ -238,7 +238,7 @@ class Schema extends DatabaseSchema {
 
   public function renameTable($table, $new_name) {
     if (!$this->tableExists($table)) {
-      throw new SchemaObjectDoesNotExistException(t("Cannot @ename @table to @table_new: table @table doesn't exist.", array('@table' => $table, '@table_new' => $new_name)));
+      throw new SchemaObjectDoesNotExistException(t("Cannot rename @table to @table_new: table @table doesn't exist.", array('@table' => $table, '@table_new' => $new_name)));
     }
     if ($this->tableExists($new_name)) {
       throw new SchemaObjectExistsException(t("Cannot rename @table to @table_new: table @table_new already exists.", array('@table' => $table, '@table_new' => $new_name)));

@@ -7,15 +7,11 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Form\FormInterface;
-use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
-use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
-use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormBase;
+use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides module enable/disable interface.
@@ -25,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  * requires. See drupal_parse_info_file() for info on module.info.yml
  * descriptors.
  */
-class ModulesListForm implements FormInterface, ControllerInterface {
+class ModulesListForm extends FormBase {
 
   /**
    * The module handler service.
@@ -42,27 +38,12 @@ class ModulesListForm implements FormInterface, ControllerInterface {
   protected $keyValueExpirable;
 
   /**
-   * The translation manager service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationManager
-   */
-  protected $translationManager;
-
-  /**
-   * The request object.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('module_handler'),
-      $container->get('keyvalue.expirable')->get('module_list'),
-      $container->get('string_translation')
+      $container->get('keyvalue.expirable')->get('module_list')
     );
   }
 
@@ -73,13 +54,10 @@ class ModulesListForm implements FormInterface, ControllerInterface {
    *   The module handler.
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable
    *   The key value expirable factory.
-   * @param \Drupal\Core\StringTranslation\TranslationManager
-   *   The translation manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, TranslationManager $translation_manager) {
+  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable) {
     $this->moduleHandler = $module_handler;
     $this->keyValueExpirable = $key_value_expirable;
-    $this->translationManager = $translation_manager;
   }
 
   /**
@@ -92,15 +70,12 @@ class ModulesListForm implements FormInterface, ControllerInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
+  public function buildForm(array $form, array &$form_state) {
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
     $distribution = check_plain(drupal_install_profile_distribution_name());
 
     // Include system.admin.inc so we can use the sort callbacks.
     $this->moduleHandler->loadInclude('system', 'inc', 'system.admin');
-
-    // Store the request for use in the submit handler.
-    $this->request = $request;
 
     $form['filters'] = array(
       '#type' => 'container',
@@ -111,14 +86,14 @@ class ModulesListForm implements FormInterface, ControllerInterface {
 
     $form['filters']['text'] = array(
       '#type' => 'search',
-      '#title' => $this->translationManager->translate('Search'),
+      '#title' => $this->t('Search'),
       '#size' => 30,
-      '#placeholder' => $this->translationManager->translate('Enter module name'),
+      '#placeholder' => $this->t('Enter module name'),
       '#attributes' => array(
         'class' => array('table-filter-text'),
         'data-table' => '#system-modules',
         'autocomplete' => 'off',
-        'title' => $this->translationManager->translate('Enter a part of the module name or description to filter by.'),
+        'title' => $this->t('Enter a part of the module name or description to filter by.'),
       ),
     );
 
@@ -139,12 +114,12 @@ class ModulesListForm implements FormInterface, ControllerInterface {
     foreach (element_children($form['modules']) as $package) {
       $form['modules'][$package] += array(
         '#type' => 'details',
-        '#title' => $this->translationManager->translate($package),
+        '#title' => $this->t($package),
         '#theme' => 'system_modules_details',
         '#header' => array(
-          array('data' => '<span class="visually-hidden">' . $this->translationManager->translate('Enabled') . '</span>', 'class' => array('checkbox')),
-          array('data' => $this->translationManager->translate('Name'), 'class' => array('name')),
-          array('data' => $this->translationManager->translate('Description'), 'class' => array('description', RESPONSIVE_PRIORITY_LOW)),
+          array('data' => '<span class="visually-hidden">' . $this->t('Enabled') . '</span>', 'class' => array('checkbox')),
+          array('data' => $this->t('Name'), 'class' => array('name')),
+          array('data' => $this->t('Description'), 'class' => array('description', RESPONSIVE_PRIORITY_LOW)),
         ),
         '#attributes' => array('class' => array('package-listing')),
         // Ensure that the "Core" package comes first.
@@ -159,7 +134,7 @@ class ModulesListForm implements FormInterface, ControllerInterface {
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => $this->translationManager->translate('Save configuration'),
+      '#value' => $this->t('Save configuration'),
     );
 
     return $form;
@@ -184,7 +159,7 @@ class ModulesListForm implements FormInterface, ControllerInterface {
     $row['#required_by'] = array();
 
     $row['name']['#markup'] = $module->info['name'];
-    $row['description']['#markup'] = $this->translationManager->translate($module->info['description']);
+    $row['description']['#markup'] = $this->t($module->info['description']);
     $row['version']['#markup'] = $module->info['version'];
 
     // Add links for each module.
@@ -197,9 +172,9 @@ class ModulesListForm implements FormInterface, ControllerInterface {
       if ($this->moduleHandler->invoke($module->name, 'help', array("admin/help#$module->name", $help))) {
         $row['links']['help'] = array(
           '#type' => 'link',
-          '#title' => $this->translationManager->translate('Help'),
+          '#title' => $this->t('Help'),
           '#href' => "admin/help/$module->name",
-          '#options' => array('attributes' => array('class' =>  array('module-link', 'module-link-help'), 'title' => $this->translationManager->translate('Help'))),
+          '#options' => array('attributes' => array('class' =>  array('module-link', 'module-link-help'), 'title' => $this->t('Help'))),
         );
       }
     }
@@ -209,9 +184,9 @@ class ModulesListForm implements FormInterface, ControllerInterface {
     if ($module->status && user_access('administer permissions') && in_array($module->name, $this->moduleHandler->getImplementations('permission'))) {
       $row['links']['permissions'] = array(
         '#type' => 'link',
-        '#title' => $this->translationManager->translate('Permissions'),
+        '#title' => $this->t('Permissions'),
         '#href' => 'admin/people/permissions',
-        '#options' => array('fragment' => 'module-' . $module->name, 'attributes' => array('class' => array('module-link', 'module-link-permissions'), 'title' => $this->translationManager->translate('Configure permissions'))),
+        '#options' => array('fragment' => 'module-' . $module->name, 'attributes' => array('class' => array('module-link', 'module-link-permissions'), 'title' => $this->t('Configure permissions'))),
       );
     }
 
@@ -221,7 +196,7 @@ class ModulesListForm implements FormInterface, ControllerInterface {
       if (($configure = menu_get_item($module->info['configure'])) && $configure['access']) {
         $row['links']['configure'] = array(
           '#type' => 'link',
-          '#title' => $this->translationManager->translate('Configure'),
+          '#title' => $this->t('Configure'),
           '#href' => $configure['href'],
           '#options' => array('attributes' => array('class' => array('module-link', 'module-link-configure'), 'title' => $configure['description'])),
         );
@@ -231,7 +206,7 @@ class ModulesListForm implements FormInterface, ControllerInterface {
     // Present a checkbox for installing and indicating the status of a module.
     $row['enable'] = array(
       '#type' => 'checkbox',
-      '#title' => $this->translationManager->translate('Enable'),
+      '#title' => $this->t('Enable'),
       '#default_value' => (bool) $module->status,
     );
 
@@ -249,7 +224,7 @@ class ModulesListForm implements FormInterface, ControllerInterface {
     // Check the core compatibility.
     if ($module->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
       $compatible = FALSE;
-      $status .= $this->translationManager->translate('This version is not compatible with Drupal !core_version and should be replaced.', array(
+      $status .= $this->t('This version is not compatible with Drupal !core_version and should be replaced.', array(
         '!core_version' => DRUPAL_CORE_COMPATIBILITY,
       ));
     }
@@ -258,7 +233,7 @@ class ModulesListForm implements FormInterface, ControllerInterface {
     if (version_compare(phpversion(), $module->info['php']) < 0) {
       $compatible = FALSE;
       $required = $module->info['php'] . (substr_count($module->info['php'], '.') < 2 ? '.*' : '');
-      $status .= $this->translationManager->translate('This module requires PHP version @php_required and is incompatible with PHP version !php_version.', array(
+      $status .= $this->t('This module requires PHP version @php_required and is incompatible with PHP version !php_version.', array(
         '@php_required' => $required,
         '!php_version' => phpversion(),
       ));
@@ -276,7 +251,7 @@ class ModulesListForm implements FormInterface, ControllerInterface {
     // If this module requires other modules, add them to the array.
     foreach ($module->requires as $dependency => $version) {
       if (!isset($modules[$dependency])) {
-        $row['#requires'][$dependency] = $this->translationManager->translate('@module (<span class="admin-missing">missing</span>)', array('@module' => Unicode::ucfirst($dependency)));
+        $row['#requires'][$dependency] = $this->t('@module (<span class="admin-missing">missing</span>)', array('@module' => Unicode::ucfirst($dependency)));
         $row['enable']['#disabled'] = TRUE;
       }
       // Only display visible modules.
@@ -285,7 +260,7 @@ class ModulesListForm implements FormInterface, ControllerInterface {
         // Disable the module's checkbox if it is incompatible with the
         // dependency's version.
         if ($incompatible_version = drupal_check_incompatibility($version, str_replace(DRUPAL_CORE_COMPATIBILITY . '-', '', $modules[$dependency]->info['version']))) {
-          $row['#requires'][$dependency] = $this->translationManager->translate('@module (<span class="admin-missing">incompatible with</span> version @version)', array(
+          $row['#requires'][$dependency] = $this->t('@module (<span class="admin-missing">incompatible with</span> version @version)', array(
             '@module' => $name . $incompatible_version,
             '@version' => $modules[$dependency]->info['version'],
           ));
@@ -294,16 +269,16 @@ class ModulesListForm implements FormInterface, ControllerInterface {
         // Disable the checkbox if the dependency is incompatible with this
         // version of Drupal core.
         elseif ($modules[$dependency]->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
-          $row['#requires'][$dependency] = $this->translationManager->translate('@module (<span class="admin-missing">incompatible with</span> this version of Drupal core)', array(
+          $row['#requires'][$dependency] = $this->t('@module (<span class="admin-missing">incompatible with</span> this version of Drupal core)', array(
             '@module' => $name,
           ));
           $row['enable']['#disabled'] = TRUE;
         }
         elseif ($modules[$dependency]->status) {
-          $row['#requires'][$dependency] = $this->translationManager->translate('@module', array('@module' => $name));
+          $row['#requires'][$dependency] = $this->t('@module', array('@module' => $name));
         }
         else {
-          $row['#requires'][$dependency] = $this->translationManager->translate('@module (<span class="admin-disabled">disabled</span>)', array('@module' => $name));
+          $row['#requires'][$dependency] = $this->t('@module (<span class="admin-disabled">disabled</span>)', array('@module' => $name));
         }
       }
     }
@@ -313,11 +288,11 @@ class ModulesListForm implements FormInterface, ControllerInterface {
     foreach ($module->required_by as $dependent => $version) {
       if (isset($modules[$dependent]) && empty($modules[$dependent]->info['hidden'])) {
         if ($modules[$dependent]->status == 1 && $module->status == 1) {
-          $row['#required_by'][$dependent] = $this->translationManager->translate('@module', array('@module' => $modules[$dependent]->info['name']));
+          $row['#required_by'][$dependent] = $this->t('@module', array('@module' => $modules[$dependent]->info['name']));
           $row['enable']['#disabled'] = TRUE;
         }
         else {
-          $row['#required_by'][$dependent] = $this->translationManager->translate('@module (<span class="admin-disabled">disabled</span>)', array('@module' => $modules[$dependent]->info['name']));
+          $row['#required_by'][$dependent] = $this->t('@module (<span class="admin-disabled">disabled</span>)', array('@module' => $modules[$dependent]->info['name']));
         }
       }
     }
@@ -412,12 +387,6 @@ class ModulesListForm implements FormInterface, ControllerInterface {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submitForm(array &$form, array &$form_state) {
     // Retrieve a list of modules to enable/disable and their dependencies.
     $modules = $this->buildModuleList($form_state);
@@ -426,7 +395,7 @@ class ModulesListForm implements FormInterface, ControllerInterface {
     // dependencies that are not enabled yet, redirect to the confirmation form.
     if (!empty($modules['dependencies']) || !empty($modules['missing'])) {
       // Write the list of changed module states into a key value store.
-      $account = $this->request->attributes->get('_account')->id();
+      $account = $this->getCurrentUser()->id();
       $this->keyValueExpirable->setWithExpire($account, $modules, 60);
 
       // Redirect to the confirmation form.

@@ -129,7 +129,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
     $access_user = $this->drupalCreateUser(array('access content', 'create article content', 'node test view', 'search content'));
     $this->drupalLogin($access_user);
 
-    foreach ($this->nodesByUser as $uid => $private_status) {
+    foreach ($this->nodesByUser as $private_status) {
       foreach ($private_status as $nid => $is_private) {
         $this->drupalGet('node/' . $nid);
         $this->assertResponse(200);

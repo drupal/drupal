@@ -7,14 +7,14 @@
 
 namespace Drupal\node\Plugin\views\argument_validator;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsArgumentValidator;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
 
 /**
  * Validate whether an argument is an acceptable node.
  *
- * @Plugin(
+ * @ViewsArgumentValidator(
  *   id = "node",
  *   module = "node",
  *   title = @Translation("Content")
@@ -106,7 +106,7 @@ class Node extends ArgumentValidatorPluginBase {
           return TRUE;
         }
 
-        return isset($types[$node->type]);
+        return isset($types[$node->getType()]);
 
       case 'nids':
         $nids = new stdClass();
@@ -121,7 +121,7 @@ class Node extends ArgumentValidatorPluginBase {
 
         $nodes = node_load_multiple($nids->value);
         foreach ($nodes as $node) {
-          if ($types && empty($types[$node->type])) {
+          if ($types && empty($types[$node->getType()])) {
             return FALSE;
           }
 

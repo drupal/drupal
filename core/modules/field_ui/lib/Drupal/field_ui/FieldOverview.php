@@ -12,7 +12,7 @@ use Drupal\Core\Entity\Field\FieldTypePluginManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\field_ui\OverviewBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\Entity\Field;
 
 /**
  * Field UI field overview form.
@@ -66,10 +66,10 @@ class FieldOverview extends OverviewBase {
   public function getRegions() {
     return array(
       'content' => array(
-        'title' => t('Content'),
+        'title' => $this->t('Content'),
         'invisible' => TRUE,
         // @todo Bring back this message in https://drupal.org/node/1963340.
-        //'message' => t('No fields are present yet.'),
+        //'message' => $this->t('No fields are present yet.'),
       ),
     );
   }
@@ -104,10 +104,10 @@ class FieldOverview extends OverviewBase {
       '#type' => 'field_ui_table',
       '#tree' => TRUE,
       '#header' => array(
-        t('Label'),
-        t('Machine name'),
-        t('Field type'),
-        t('Operations'),
+        $this->t('Label'),
+        $this->t('Machine name'),
+        $this->t('Field type'),
+        $this->t('Operations'),
       ),
       '#regions' => $this->getRegions(),
       '#attributes' => array(
@@ -134,25 +134,25 @@ class FieldOverview extends OverviewBase {
           '#type' => 'link',
           '#title' => $field_types[$field['type']]['label'],
           '#href' => $admin_field_path . '/field',
-          '#options' => array('attributes' => array('title' => t('Edit field settings.'))),
+          '#options' => array('attributes' => array('title' => $this->t('Edit field settings.'))),
         ),
       );
 
       $links = array();
       $links['edit'] = array(
-        'title' => t('Edit'),
+        'title' => $this->t('Edit'),
         'href' => $admin_field_path,
-        'attributes' => array('title' => t('Edit instance settings.')),
+        'attributes' => array('title' => $this->t('Edit instance settings.')),
       );
       $links['field-settings'] = array(
-        'title' => t('Field settings'),
+        'title' => $this->t('Field settings'),
         'href' => $admin_field_path . '/field',
-        'attributes' => array('title' => t('Edit field settings.')),
+        'attributes' => array('title' => $this->t('Edit field settings.')),
       );
       $links['delete'] = array(
-        'title' => t('Delete'),
+        'title' => $this->t('Delete'),
         'href' => "$admin_field_path/delete",
-        'attributes' => array('title' => t('Delete instance.')),
+        'attributes' => array('title' => $this->t('Delete instance.')),
       );
       // Allow altering the operations on this entity listing.
       $this->moduleHandler->alter('entity_operation', $links, $instance);
@@ -162,7 +162,7 @@ class FieldOverview extends OverviewBase {
       );
 
       if (!empty($field['locked'])) {
-        $table[$name]['operations'] = array('#markup' => t('Locked'));
+        $table[$name]['operations'] = array('#markup' => $this->t('Locked'));
         $table[$name]['#attributes']['class'][] = 'menu-disabled';
       }
     }
@@ -184,22 +184,22 @@ class FieldOverview extends OverviewBase {
         '#attributes' => array('class' => array('add-new')),
         'label' => array(
           '#type' => 'textfield',
-          '#title' => t('New field label'),
+          '#title' => $this->t('New field label'),
           '#title_display' => 'invisible',
           '#size' => 15,
-          '#description' => t('Label'),
-          '#prefix' => '<div class="label-input"><div class="add-new-placeholder">' . t('Add new field') .'</div>',
+          '#description' => $this->t('Label'),
+          '#prefix' => '<div class="label-input"><div class="add-new-placeholder">' . $this->t('Add new field') .'</div>',
           '#suffix' => '</div>',
         ),
         'field_name' => array(
           '#type' => 'machine_name',
-          '#title' => t('New field name'),
+          '#title' => $this->t('New field name'),
           '#title_display' => 'invisible',
           // This field should stay LTR even for RTL languages.
           '#field_prefix' => '<span dir="ltr">' . $field_prefix,
           '#field_suffix' => '</span>&lrm;',
           '#size' => 15,
-          '#description' => t('A unique machine-readable name containing letters, numbers, and underscores.'),
+          '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
           // Calculate characters depending on the length of the field prefix
           // setting. Maximum length is 32.
           '#maxlength' => Field::ID_MAX_LENGTH - strlen($field_prefix),
@@ -214,11 +214,11 @@ class FieldOverview extends OverviewBase {
         ),
         'type' => array(
           '#type' => 'select',
-          '#title' => t('Type of new field'),
+          '#title' => $this->t('Type of new field'),
           '#title_display' => 'invisible',
           '#options' => $field_type_options,
-          '#empty_option' => t('- Select a field type -'),
-          '#description' => t('Type of data to store.'),
+          '#empty_option' => $this->t('- Select a field type -'),
+          '#description' => $this->t('Type of data to store.'),
           '#attributes' => array('class' => array('field-type-select')),
           '#cell_attributes' => array('colspan' => 2),
           '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
@@ -238,7 +238,7 @@ class FieldOverview extends OverviewBase {
       // Build list of options.
       $existing_field_options = array();
       foreach ($existing_fields as $field_name => $info) {
-        $text = t('@type: @field (@label)', array(
+        $text = $this->t('@type: @field (@label)', array(
           '@type' => $info['type_label'],
           '@label' => $info['label'],
           '@field' => $info['field'],
@@ -253,21 +253,21 @@ class FieldOverview extends OverviewBase {
         '#region_callback' => array($this, 'getRowRegion'),
         'label' => array(
           '#type' => 'textfield',
-          '#title' => t('Existing field label'),
+          '#title' => $this->t('Existing field label'),
           '#title_display' => 'invisible',
           '#size' => 15,
-          '#description' => t('Label'),
+          '#description' => $this->t('Label'),
           '#attributes' => array('class' => array('label-textfield')),
-          '#prefix' => '<div class="label-input"><div class="add-new-placeholder">' . t('Re-use existing field') .'</div>',
+          '#prefix' => '<div class="label-input"><div class="add-new-placeholder">' . $this->t('Re-use existing field') .'</div>',
           '#suffix' => '</div>',
         ),
         'field_name' => array(
           '#type' => 'select',
-          '#title' => t('Existing field to share'),
+          '#title' => $this->t('Existing field to share'),
           '#title_display' => 'invisible',
           '#options' => $existing_field_options,
-          '#empty_option' => t('- Select an existing field -'),
-          '#description' => t('Field to share'),
+          '#empty_option' => $this->t('- Select an existing field -'),
+          '#description' => $this->t('Field to share'),
           '#attributes' => array('class' => array('field-select')),
           '#cell_attributes' => array('colspan' => 3),
           '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
@@ -285,7 +285,7 @@ class FieldOverview extends OverviewBase {
     $form['fields'] = $table;
 
     $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save'));
+    $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Save'));
 
     return $form;
   }
@@ -315,12 +315,12 @@ class FieldOverview extends OverviewBase {
     if (array_filter(array($field['label'], $field['field_name'], $field['type']))) {
       // Missing label.
       if (!$field['label']) {
-        form_set_error('fields][_add_new_field][label', t('Add new field: you need to provide a label.'));
+        form_set_error('fields][_add_new_field][label', $this->t('Add new field: you need to provide a label.'));
       }
 
       // Missing field name.
       if (!$field['field_name']) {
-        form_set_error('fields][_add_new_field][field_name', t('Add new field: you need to provide a field name.'));
+        form_set_error('fields][_add_new_field][field_name', $this->t('Add new field: you need to provide a field name.'));
       }
       // Field name validation.
       else {
@@ -333,7 +333,7 @@ class FieldOverview extends OverviewBase {
 
       // Missing field type.
       if (!$field['type']) {
-        form_set_error('fields][_add_new_field][type', t('Add new field: you need to select a field type.'));
+        form_set_error('fields][_add_new_field][type', $this->t('Add new field: you need to select a field type.'));
       }
     }
   }
@@ -359,12 +359,12 @@ class FieldOverview extends OverviewBase {
       if (array_filter(array($field['label'], $field['field_name']))) {
         // Missing label.
         if (!$field['label']) {
-          form_set_error('fields][_add_existing_field][label', t('Re-use existing field: you need to provide a label.'));
+          form_set_error('fields][_add_existing_field][label', $this->t('Re-use existing field: you need to provide a label.'));
         }
 
         // Missing existing field name.
         if (!$field['field_name']) {
-          form_set_error('fields][_add_existing_field][field_name', t('Re-use existing field: you need to select a field.'));
+          form_set_error('fields][_add_existing_field][field_name', $this->t('Re-use existing field: you need to select a field.'));
         }
       }
     }
@@ -422,7 +422,7 @@ class FieldOverview extends OverviewBase {
         $form_state['fields_added']['_add_new_field'] = $field['field_name'];
       }
       catch (\Exception $e) {
-        drupal_set_message(t('There was a problem creating field %label: !message', array('%label' => $instance['label'], '!message' => $e->getMessage())), 'error');
+        drupal_set_message($this->t('There was a problem creating field %label: !message', array('%label' => $instance['label'], '!message' => $e->getMessage())), 'error');
       }
     }
 
@@ -431,7 +431,7 @@ class FieldOverview extends OverviewBase {
       $values = $form_values['_add_existing_field'];
       $field = field_info_field($values['field_name']);
       if (!empty($field['locked'])) {
-        drupal_set_message(t('The field %label cannot be added because it is locked.', array('%label' => $values['label'])), 'error');
+        drupal_set_message($this->t('The field %label cannot be added because it is locked.', array('%label' => $values['label'])), 'error');
       }
       else {
         $instance = array(
@@ -464,7 +464,7 @@ class FieldOverview extends OverviewBase {
           $form_state['fields_added']['_add_existing_field'] = $instance['field_name'];
         }
         catch (\Exception $e) {
-          drupal_set_message(t('There was a problem creating field instance %label: @message.', array('%label' => $instance['label'], '@message' => $e->getMessage())), 'error');
+          drupal_set_message($this->t('There was a problem creating field instance %label: @message.', array('%label' => $instance['label'], '@message' => $e->getMessage())), 'error');
         }
       }
     }
@@ -479,7 +479,7 @@ class FieldOverview extends OverviewBase {
       $form_state['redirect'] = array($options['path'], $options);
     }
     else {
-      drupal_set_message(t('Your settings have been saved.'));
+      drupal_set_message($this->t('Your settings have been saved.'));
     }
   }
 

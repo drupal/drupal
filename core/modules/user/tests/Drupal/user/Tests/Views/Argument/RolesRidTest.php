@@ -10,7 +10,7 @@ namespace Drupal\user\Tests\Views\Argument;
 use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
-use Drupal\user\Plugin\Core\Entity\Role;
+use Drupal\user\Entity\Role;
 use Drupal\user\Plugin\views\argument\RolesRid;
 
 /**
@@ -31,7 +31,7 @@ class RolesRidTest extends UnitTestCase {
       'label' => 'label',
     ),
     'config_prefix' => 'user.role',
-    'class' => 'Drupal\user\Plugin\Core\Entity\Role',
+    'class' => 'Drupal\user\Entity\Role',
   );
 
   public static function getInfo() {

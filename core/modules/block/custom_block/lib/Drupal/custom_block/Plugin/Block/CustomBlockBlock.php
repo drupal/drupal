@@ -8,20 +8,71 @@
 namespace Drupal\custom_block\Plugin\Block;
 
 use Drupal\block\BlockBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\block\Plugin\Type\BlockManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a generic custom block type.
  *
- * @Plugin(
+ * @Block(
  *  id = "custom_block",
  *  admin_label = @Translation("Custom block"),
- *  module = "custom_block",
  *  derivative = "Drupal\custom_block\Plugin\Derivative\CustomBlock"
  * )
  */
-class CustomBlockBlock extends BlockBase {
+class CustomBlockBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The Plugin Block Manager.
+   *
+   * @var \Drupal\block\Plugin\Type\BlockManager.
+   */
+  protected $blockManager;
+
+  /**
+   * The Module Handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface.
+   */
+  protected $moduleHandler;
+
+  /**
+   * Constructs a new CustomBlockBlock.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin ID for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\block\Plugin\Type\BlockManager
+   *   The Plugin Block Manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface
+   *   The Module Handler.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, BlockManager $block_manager, ModuleHandlerInterface $module_handler) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->blockManager = $block_manager;
+    $this->moduleHandler = $module_handler;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('plugin.manager.block'),
+      $container->get('module_handler')
+    );
+  }
 
   /**
    * Overrides \Drupal\block\BlockBase::settings().
@@ -61,8 +112,8 @@ class CustomBlockBlock extends BlockBase {
    */
   public function blockSubmit($form, &$form_state) {
     // Invalidate the block cache to update custom block-based derivatives.
-    if (module_exists('block')) {
-      drupal_container()->get('plugin.manager.block')->clearCachedDefinitions();
+    if ($this->moduleHandler->moduleExists('block')) {
+      $this->blockManager->clearCachedDefinitions();
     }
   }
 

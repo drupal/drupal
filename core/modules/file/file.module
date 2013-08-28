@@ -5,7 +5,7 @@
  * Defines a "managed_file" Form API field and a "file" field for Field module.
  */
 
-use Drupal\file\Plugin\Core\Entity\File;
+use Drupal\file\Entity\File;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Template\Attribute;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,15 +35,6 @@ function file_help($path, $arg) {
       $output .= '<dd>' . t("When you create a File field, you can specify a directory where the files will be stored, which can be within either the <em>public</em> or <em>private</em> files directory. Files in the public directory can be accessed directly through the web server; when public files are listed, direct links to the files are used, and anyone who knows a file's URL can download the file. Files in the private directory are not accessible directly through the web server; when private files are listed, the links are Drupal path requests. This adds to server load and download time, since Drupal must start up and resolve the path for each file download request, but allows for access restrictions.") . '</dd>';
       $output .= '</dl>';
       return $output;
-  }
-}
-
-/**
- * Implements hook_modules_uninstalled().
- */
-function file_modules_uninstalled($modules) {
-  foreach ($modules as $module) {
-    file_usage()->deleteByModule($module);
   }
 }
 

@@ -25,21 +25,21 @@ class OptionsWidgetsTest extends FieldTestBase {
  /**
    * A field with cardinality 1 to use in this test class.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\Field
+   * @var \Drupal\field\Entity\Field
    */
   protected $card_1;
 
   /**
    * A field with cardinality 2 to use in this test class.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\Field
+   * @var \Drupal\field\Entity\Field
    */
   protected $card_2;
 
   /**
    * A boolean field to use in this test class.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\Field
+   * @var \Drupal\field\Entity\Field
    */
   protected $bool;
 

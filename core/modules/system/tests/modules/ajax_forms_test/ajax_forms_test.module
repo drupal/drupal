@@ -534,6 +534,13 @@ function ajax_forms_test_validation_number_form_callback($form, $form_state) {
  * Form builder: Builds a form that triggers a simple AJAX callback.
  */
 function ajax_forms_test_lazy_load_form($form, &$form_state) {
+  // We attach a JavaScript setting, so that one of the generated AJAX commands
+  // will be a settings command. We can then check the settings command to
+  // ensure that the 'currentPath' setting is not part of the Ajax response.
+  $form['#attached']['js'][] = array(
+    'type' => 'setting',
+    'data' => array('test' => 'currentPathUpdate'),
+  );
   $form['add_files'] = array(
     '#type' => 'checkbox',
     '#default_value' => FALSE,

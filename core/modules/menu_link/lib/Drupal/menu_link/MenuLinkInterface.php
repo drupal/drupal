@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\menu_link\Plugin\Core\Entity\MenuLinkInterface.
+ * Contains \Drupal\menu_link\Entity\MenuLinkInterface.
  */
 
 namespace Drupal\menu_link;
@@ -56,15 +56,16 @@ interface MenuLinkInterface extends ContentEntityInterface {
   public static function buildFromRouterItem(array $item);
 
   /**
-   * Returns the route_name matching a URL.
+   * Returns the route_name and route parameters matching a system path.
    *
    * @param string $link_path
    *   The link path to find a route name for.
    *
-   * @return string
-   *   The route name.
+   * @return array
+   *   Returns an array with both the route name and parameters, or an empty
+   *   array if no route was matched.
    */
-  public static function findRouteName($link_path);
+  public static function findRouteNameParameters($link_path);
 
   /**
    * Sets the p1 through p9 properties for a menu link entity being saved.

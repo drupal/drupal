@@ -11,7 +11,6 @@ use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Config\ConfigFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Builds a form for enabling a module.
@@ -34,6 +33,9 @@ class DateFormatLocalizeResetForm extends ConfirmFormBase implements ControllerI
 
   /**
    * Constructs a DateFormatLocalizeResetForm object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The config factory.
    */
   public function __construct(ConfigFactory $config_factory) {
     $this->configFactory = $config_factory;
@@ -92,10 +94,10 @@ class DateFormatLocalizeResetForm extends ConfirmFormBase implements ControllerI
    *   The language code.
    *
    */
-  public function buildForm(array $form, array &$form_state, $langcode = NULL, Request $request = NULL) {
+  public function buildForm(array $form, array &$form_state, $langcode = NULL) {
     $this->language = language_load($langcode);
 
-    return parent::buildForm($form, $form_state, $request);
+    return parent::buildForm($form, $form_state);
   }
 
   /**

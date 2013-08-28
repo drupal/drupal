@@ -52,7 +52,7 @@ class PageEditTest extends NodeTestBase {
 
     // Check that "edit" link points to correct page.
     $this->clickLink(t('Edit'));
-    $edit_url = url("node/$node->nid/edit", array('absolute' => TRUE));
+    $edit_url = url("node/" . $node->id() . "/edit", array('absolute' => TRUE));
     $actual_url = $this->getURL();
     $this->assertEqual($edit_url, $actual_url, 'On edit page.');
 
@@ -78,7 +78,7 @@ class PageEditTest extends NodeTestBase {
     $second_web_user = $this->drupalCreateUser(array('administer nodes', 'edit any page content'));
     $this->drupalLogin($second_web_user);
     // Edit the same node, creating a new revision.
-    $this->drupalGet("node/$node->nid/edit");
+    $this->drupalGet("node/" . $node->id() . "/edit");
     $edit = array();
     $edit['title'] = $this->randomName(8);
     $edit[$body_key] = $this->randomName(16);
@@ -87,15 +87,15 @@ class PageEditTest extends NodeTestBase {
 
     // Ensure that the node revision has been created.
     $revised_node = $this->drupalGetNodeByTitle($edit['title'], TRUE);
-    $this->assertNotIdentical($node->vid, $revised_node->vid, 'A new revision has been created.');
+    $this->assertNotIdentical($node->getRevisionId(), $revised_node->getRevisionId(), 'A new revision has been created.');
     // Ensure that the node author is preserved when it was not changed in the
     // edit form.
-    $this->assertIdentical($node->uid, $revised_node->uid, 'The node author has been preserved.');
+    $this->assertIdentical($node->getAuthorId(), $revised_node->getAuthorId(), 'The node author has been preserved.');
     // Ensure that the revision authors are different since the revisions were
     // made by different users.
-    $first_node_version = node_revision_load($node->vid);
-    $second_node_version = node_revision_load($revised_node->vid);
-    $this->assertNotIdentical($first_node_version->revision_uid, $second_node_version->revision_uid, 'Each revision has a distinct user.');
+    $first_node_version = node_revision_load($node->getRevisionId());
+    $second_node_version = node_revision_load($revised_node->getRevisionId());
+    $this->assertNotIdentical($first_node_version->getRevisionAuthor()->id(), $second_node_version->getRevisionAuthor()->id(), 'Each revision has a distinct user.');
   }
 
   /**
@@ -114,7 +114,7 @@ class PageEditTest extends NodeTestBase {
 
     // Check that the node was authored by the currently logged in user.
     $node = $this->drupalGetNodeByTitle($edit['title']);
-    $this->assertIdentical($node->uid, $this->admin_user->id(), 'Node authored by admin user.');
+    $this->assertIdentical($node->getAuthorId(), $this->admin_user->id(), 'Node authored by admin user.');
 
     // Try to change the 'authored by' field to an invalid user name.
     $edit = array(
@@ -128,14 +128,14 @@ class PageEditTest extends NodeTestBase {
     $edit['name'] = '';
     $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
     $node = node_load($node->id(), TRUE);
-    $this->assertIdentical($node->uid, '0', 'Node authored by anonymous user.');
+    $this->assertIdentical($node->getAuthorId(), '0', 'Node authored by anonymous user.');
 
     // Change the authored by field to another user's name (that is not
     // logged in).
     $edit['name'] = $this->web_user->getUsername();
     $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
-    $node = node_load($node->nid, TRUE);
-    $this->assertIdentical($node->uid, $this->web_user->id(), 'Node authored by normal user.');
+    $node = node_load($node->id(), TRUE);
+    $this->assertIdentical($node->getAuthorId(), $this->web_user->id(), 'Node authored by normal user.');
 
     // Check that normal users cannot change the authored by information.
     $this->drupalLogin($this->web_user);

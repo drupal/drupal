@@ -9,12 +9,12 @@ namespace Drupal\user\Tests;
 
 use Drupal\Core\Language\Language;
 use Drupal\simpletest\DrupalUnitTestBase;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\user\Entity\User;
 
 /**
  * Tests the user entity class.
  *
- * @see \Drupal\user\Plugin\Core\Entity\User
+ * @see \Drupal\user\Entity\User
  */
 class UserEntityTest extends DrupalUnitTestBase {
 
@@ -36,9 +36,9 @@ class UserEntityTest extends DrupalUnitTestBase {
   /**
    * Tests some of the methods.
    *
-   * @see \Drupal\user\Plugin\Core\Entity\User::getRoles()
-   * @see \Drupal\user\Plugin\Core\Entity\User::addRole()
-   * @see \Drupal\user\Plugin\Core\Entity\User::removeRole()
+   * @see \Drupal\user\Entity\User::getRoles()
+   * @see \Drupal\user\Entity\User::addRole()
+   * @see \Drupal\user\Entity\User::removeRole()
    */
   public function testUserMethods() {
     $role_storage = $this->container->get('plugin.manager.entity')->getStorageController('user_role');

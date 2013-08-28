@@ -85,7 +85,7 @@ class ViewsBlockTest extends UnitTestCase {
       ->setMethods(NULL)
       ->getMock();
 
-    $this->view = $this->getMockBuilder('Drupal\views\Plugin\Core\Entity\View')
+    $this->view = $this->getMockBuilder('Drupal\views\Entity\View')
       ->disableOriginalConstructor()
       ->getMock();
 

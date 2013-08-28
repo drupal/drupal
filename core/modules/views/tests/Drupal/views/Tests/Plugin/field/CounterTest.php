@@ -9,7 +9,7 @@ namespace Drupal\views\Tests\Plugin\field;
 
 use Drupal\Component\Utility\String;
 use Drupal\Tests\UnitTestCase;
-use Drupal\views\Plugin\Core\Entity\View;
+use Drupal\views\Entity\View;
 use Drupal\views\Plugin\views\field\Counter;
 use Drupal\views\ResultRow;
 use Drupal\views\Tests\ViewTestData;

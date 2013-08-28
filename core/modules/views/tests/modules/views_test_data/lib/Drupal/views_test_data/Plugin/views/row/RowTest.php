@@ -7,7 +7,7 @@
 
 namespace Drupal\views_test_data\Plugin\views\row;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsRow;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\row\RowPluginBase;
 
@@ -16,11 +16,12 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  *
  * @ingroup views_row_plugins
  *
- * @Plugin(
+ * @ViewsRow(
  *   id = "test_row",
  *   title = @Translation("Test row plugin"),
  *   help = @Translation("Provides a generic row test plugin."),
  *   theme = "views_view_row_test",
+ *   module = "views_test_data",
  *   display_types = {"normal", "test"}
  * )
  */

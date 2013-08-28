@@ -1,0 +1,6 @@
+update_test_503:
+  pattern: '/503-error'
+  defaults:
+    _controller: 'Drupal\update_test\Controller\UpdateTestController::updateError'
+  requirements:
+    _access: 'TRUE'

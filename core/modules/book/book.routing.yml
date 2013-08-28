@@ -15,6 +15,6 @@ book_admin:
 book_settings:
   pattern: '/admin/structure/book/settings'
   defaults:
-    _form: 'Drupal\book\BookSettingsForm'
+    _form: 'Drupal\book\Form\BookSettingsForm'
   requirements:
     _permission: 'administer site configuration'

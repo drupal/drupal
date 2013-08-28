@@ -14,7 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 /**
  * Defines an access controller for the taxonomy term entity.
  *
- * @see \Drupal\taxonomy\Plugin\Core\Entity\Term
+ * @see \Drupal\taxonomy\Entity\Term
  */
 class TermAccessController extends EntityAccessController {
 

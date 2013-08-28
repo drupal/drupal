@@ -8,10 +8,7 @@
 namespace Drupal\image\Form;
 
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 use Drupal\image\ConfigurableImageEffectInterface;
-use Drupal\image\Form\ImageStyleFormBase;
 use Drupal\image\ImageEffectManager;
 use Drupal\Component\Utility\String;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -31,28 +28,22 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   /**
    * Constructs an ImageStyleEditForm object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler service.
    * @param \Drupal\Core\Entity\EntityStorageControllerInterface $image_style_storage
    *   The storage controller.
    * @param \Drupal\image\ImageEffectManager $image_effect_manager
    *   The image effect manager service.
-   * @param \Drupal\Core\StringTranslation\Translator\TranslatorInterface $translator
-   *   The translator service.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, EntityStorageControllerInterface $image_style_storage, TranslatorInterface $translator, ImageEffectManager $image_effect_manager) {
-    parent::__construct($module_handler, $image_style_storage, $translator);
+  public function __construct(EntityStorageControllerInterface $image_style_storage, ImageEffectManager $image_effect_manager) {
+    parent::__construct($image_style_storage);
     $this->imageEffectManager = $image_effect_manager;
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+  public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
-      $container->get('plugin.manager.entity')->getStorageController($entity_type),
-      $container->get('string_translation'),
+      $container->get('plugin.manager.entity')->getStorageController('image_style'),
       $container->get('plugin.manager.image.effect')
     );
   }
@@ -63,7 +54,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
   public function form(array $form, array &$form_state) {
 
     // @todo Remove drupal_set_title() in http://drupal.org/node/1981644
-    $title = $this->translator->translate('Edit style %name', array('%name' => $this->entity->label()));
+    $title = $this->t('Edit style %name', array('%name' => $this->entity->label()));
     drupal_set_title($title, PASS_THROUGH);
 
     $form['#tree'] = TRUE;
@@ -73,7 +64,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
     $preview_arguments = array('#theme' => 'image_style_preview', '#style' => $this->entity);
     $form['preview'] = array(
       '#type' => 'item',
-      '#title' => $this->translator->translate('Preview'),
+      '#title' => $this->t('Preview'),
       '#markup' => drupal_render($preview_arguments),
       // Render preview above parent elements.
       '#weight' => -5,
@@ -94,7 +85,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
       $form['effects'][$key]['summary'] = $effect->getSummary();
       $form['effects'][$key]['weight'] = array(
         '#type' => 'weight',
-        '#title' => $this->translator->translate('Weight for @title', array('@title' => $effect->label())),
+        '#title' => $this->t('Weight for @title', array('@title' => $effect->label())),
         '#title_display' => 'invisible',
         '#default_value' => $effect->getWeight(),
       );
@@ -103,12 +94,12 @@ class ImageStyleEditForm extends ImageStyleFormBase {
       $is_configurable = $effect instanceof ConfigurableImageEffectInterface;
       if ($is_configurable) {
         $links['edit'] = array(
-          'title' => $this->translator->translate('edit'),
+          'title' => $this->t('edit'),
           'href' => 'admin/config/media/image-styles/manage/' . $this->entity->id() . '/effects/' . $key,
         );
       }
       $links['delete'] = array(
-        'title' => $this->translator->translate('delete'),
+        'title' => $this->t('delete'),
         'href' => 'admin/config/media/image-styles/manage/' . $this->entity->id() . '/effects/' . $key . '/delete',
       );
       $form['effects'][$key]['operations'] = array(
@@ -117,13 +108,13 @@ class ImageStyleEditForm extends ImageStyleFormBase {
       );
       $form['effects'][$key]['configure'] = array(
         '#type' => 'link',
-        '#title' => $this->translator->translate('edit'),
+        '#title' => $this->t('edit'),
         '#href' => 'admin/config/media/image-styles/manage/' . $this->entity->id() . '/effects/' . $key,
         '#access' => $is_configurable,
       );
       $form['effects'][$key]['remove'] = array(
         '#type' => 'link',
-        '#title' => $this->translator->translate('delete'),
+        '#title' => $this->t('delete'),
         '#href' => 'admin/config/media/image-styles/manage/' . $this->entity->id() . '/effects/' . $key . '/delete',
       );
     }
@@ -143,20 +134,20 @@ class ImageStyleEditForm extends ImageStyleFormBase {
     );
     $form['effects']['new']['new'] = array(
       '#type' => 'select',
-      '#title' => $this->translator->translate('Effect'),
+      '#title' => $this->t('Effect'),
       '#title_display' => 'invisible',
       '#options' => $new_effect_options,
-      '#empty_option' => $this->translator->translate('Select a new effect'),
+      '#empty_option' => $this->t('Select a new effect'),
     );
     $form['effects']['new']['weight'] = array(
       '#type' => 'weight',
-      '#title' => $this->translator->translate('Weight for new effect'),
+      '#title' => $this->t('Weight for new effect'),
       '#title_display' => 'invisible',
       '#default_value' => count($form['effects']) - 1,
     );
     $form['effects']['new']['add'] = array(
       '#type' => 'submit',
-      '#value' => $this->translator->translate('Add'),
+      '#value' => $this->t('Add'),
       '#validate' => array(array($this, 'effectValidate')),
       '#submit' => array(array($this, 'effectSave')),
     );
@@ -169,7 +160,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
    */
   public function effectValidate($form, &$form_state) {
     if (!$form_state['values']['new']) {
-      form_error($form['effects']['new']['new'], $this->translator->translate('Select an effect to add.'));
+      form_error($form['effects']['new']['new'], $this->t('Select an effect to add.'));
     }
   }
 
@@ -189,7 +180,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
     $status = parent::save($form, $form_state);
 
     if ($status == SAVED_UPDATED) {
-      drupal_set_message($this->translator->translate('Changes to the style have been saved.'));
+      drupal_set_message($this->t('Changes to the style have been saved.'));
     }
 
     // Check if this field has any configuration options.
@@ -209,7 +200,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
       );
       $effect_id = $this->entity->saveImageEffect($effect);
       if (!empty($effect_id)) {
-        drupal_set_message($this->translator->translate('The image effect was successfully applied.'));
+        drupal_set_message($this->t('The image effect was successfully applied.'));
       }
     }
   }
@@ -225,7 +216,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
     }
 
     parent::save($form, $form_state);
-    drupal_set_message($this->translator->translate('Changes to the style have been saved.'));
+    drupal_set_message($this->t('Changes to the style have been saved.'));
   }
 
   /**
@@ -233,7 +224,7 @@ class ImageStyleEditForm extends ImageStyleFormBase {
    */
   public function actions(array $form, array &$form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = $this->translator->translate('Update style');
+    $actions['submit']['#value'] = $this->t('Update style');
 
     return $actions;
   }

@@ -7,16 +7,14 @@
 
 namespace Drupal\aggregator\Plugin;
 
-use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Component\Plugin\Factory\DefaultFactory;
-use Drupal\Core\Language\Language;
-use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
-use Drupal\Core\Plugin\Discovery\CacheDecorator;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Plugin\DefaultPluginManager;
 
 /**
  * Manages aggregator plugins.
  */
-class AggregatorPluginManager extends PluginManagerBase {
+class AggregatorPluginManager extends DefaultPluginManager {
 
   /**
    * Constructs a AggregatorPluginManager object.
@@ -25,9 +23,13 @@ class AggregatorPluginManager extends PluginManagerBase {
    *   The plugin type, for example fetcher.
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations,
+   *   keyed by the corresponding namespace to look for plugin implementations.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   Cache backend instance to use.
+   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager.
    */
-  public function __construct($type, \Traversable $namespaces) {
+  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager) {
     $type_annotations = array(
       'fetcher' => 'Drupal\aggregator\Annotation\AggregatorFetcher',
       'parser' => 'Drupal\aggregator\Annotation\AggregatorParser',
@@ -38,8 +40,8 @@ class AggregatorPluginManager extends PluginManagerBase {
       'Drupal\aggregator\Annotation' => DRUPAL_ROOT . '/core/modules/aggregator/lib',
     );
 
-    $this->discovery = new AnnotatedClassDiscovery("Plugin/aggregator/$type", $namespaces, $annotation_namespaces, $type_annotations[$type]);
-    $this->discovery = new CacheDecorator($this->discovery, "aggregator_$type:" . language(Language::TYPE_INTERFACE)->id);
-    $this->factory = new DefaultFactory($this->discovery);
+    parent::__construct("Plugin/aggregator/$type", $namespaces, $annotation_namespaces, $type_annotations[$type]);
+    $this->setCacheBackend($cache_backend, $language_manager, "aggregator_$type");
   }
+
 }

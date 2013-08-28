@@ -74,11 +74,11 @@ function hook_block_view_BASE_BLOCK_ID_alter(array &$build, \Drupal\block\BlockP
  * Modules may implement this hook if they want to have a say in whether or not
  * a given user has access to perform a given operation on a block instance.
  *
- * @param \Drupal\block\Plugin\Core\Entity\Block $block
+ * @param \Drupal\block\Entity\Block $block
  *   The block instance.
  * @param string $operation
  *   The operation to be performed, e.g., 'view', 'create', 'delete', 'update'.
- * @param \Drupal\user\Plugin\Core\Entity\User $account
+ * @param \Drupal\user\Entity\User $account
  *   The user object to perform the access check operation on.
  * @param string $langcode
  *   The language code to perform the access check operation on.
@@ -91,7 +91,7 @@ function hook_block_view_BASE_BLOCK_ID_alter(array &$build, \Drupal\block\BlockP
  * @see \Drupal\Core\Entity\EntityAccessController::access()
  * @see \Drupal\block\BlockAccessController::checkAccess()
  */
-function hook_block_access(\Drupal\block\Plugin\Core\Entity\Block $block, $operation, \Drupal\user\Plugin\Core\Entity\User $account, $langcode) {
+function hook_block_access(\Drupal\block\Entity\Block $block, $operation, \Drupal\user\Entity\User $account, $langcode) {
   // Example code that would prevent displaying the 'Powered by Drupal' block in
   // a region different than the footer.
   if ($operation == 'view' && $block->get('plugin') == 'system_powered_by_block' && $block->get('region') != 'footer') {

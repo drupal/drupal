@@ -114,11 +114,21 @@ abstract class ControllerBase extends ContainerAware {
   /**
    * Returns the url generator service.
    *
-   * @return \Drupal\Core\Routing\PathBasedGeneratorInterface
+   * @return \Drupal\Core\Routing\UrlGeneratorInterface
    *   The url generator service.
    */
   protected function urlGenerator() {
     return $this->container->get('url_generator');
+  }
+
+  /**
+   * Returns the current user.
+   *
+   * @return \Drupal\Core\Session\AccountInterface
+   *   The current user.
+   */
+  protected function currentUser() {
+    return $this->container->get('current_user');
   }
 
   /**

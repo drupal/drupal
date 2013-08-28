@@ -9,7 +9,10 @@ namespace Drupal\filter;
 
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Plugin\Discovery\AlterDecorator;
 use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
 use Drupal\Core\Plugin\Discovery\CacheDecorator;
@@ -20,7 +23,7 @@ use Drupal\Core\Plugin\Factory\ContainerFactory;
  *
  * @see hook_filter_info_alter()
  */
-class FilterPluginManager extends PluginManagerBase {
+class FilterPluginManager extends DefaultPluginManager {
 
   /**
    * Constructs a FilterPluginManager object.
@@ -28,16 +31,18 @@ class FilterPluginManager extends PluginManagerBase {
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   Cache backend instance to use.
+   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler to invoke the alter hook with.
    */
-  public function __construct(\Traversable $namespaces) {
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
     $annotation_namespaces = array('Drupal\filter\Annotation' => $namespaces['Drupal\filter']);
-    $this->discovery = new AnnotatedClassDiscovery('Plugin/Filter', $namespaces, $annotation_namespaces, 'Drupal\filter\Annotation\Filter');
-    $this->discovery = new AlterDecorator($this->discovery, 'filter_info');
-    $cache_key = 'filter_plugins:' . language(Language::TYPE_INTERFACE)->id;
-    $cache_tags = array('filter_formats' => TRUE);
-    $this->discovery = new CacheDecorator($this->discovery, $cache_key, 'cache', CacheBackendInterface::CACHE_PERMANENT, $cache_tags);
-
-    $this->factory = new ContainerFactory($this);
+    parent::__construct('Plugin/Filter', $namespaces, $annotation_namespaces, 'Drupal\filter\Annotation\Filter');
+    $this->alterInfo($module_handler, 'filter_info');
+    $this->setCacheBackend($cache_backend, $language_manager, 'filter_plugins', array('filter_formats' => TRUE));
   }
 
   /**

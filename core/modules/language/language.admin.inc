@@ -214,47 +214,6 @@ function language_admin_edit_form_submit($form, &$form_state) {
 }
 
 /**
- * User interface for the language deletion confirmation screen.
- */
-function language_admin_delete_form($form, &$form_state, $language) {
-  $langcode = $language->id;
-
-  if (language_default()->id == $langcode) {
-    drupal_set_message(t('The default language cannot be deleted.'));
-    return new RedirectResponse(url('admin/config/regional/language', array('absolute' => TRUE)));
-  }
-
-  // For other languages, warn the user that data loss is ahead.
-  $languages = language_list();
-
-  if (!isset($languages[$langcode])) {
-    throw new NotFoundHttpException();
-  }
-  else {
-    $form['langcode'] = array('#type' => 'value', '#value' => $langcode);
-    return confirm_form($form, t('Are you sure you want to delete the language %language?', array('%language' => $languages[$langcode]->name)), 'admin/config/regional/language', t('Deleting a language will remove all interface translations associated with it, and posts in this language will be set to be language neutral. This action cannot be undone.'), t('Delete'), t('Cancel'));
-  }
-}
-
-/**
- * Process language deletion submissions.
- */
-function language_admin_delete_form_submit($form, &$form_state) {
-  $langcode = $form_state['values']['langcode'];
-  $languages = language_list();
-  $language = $languages[$langcode];
-
-  $success = language_delete($langcode);
-
-  if ($success) {
-    $t_args = array('%language' => $language->name, '%langcode' => $language->id);
-    drupal_set_message(t('The %language (%langcode) language has been removed.', $t_args));
-  }
-
-  $form_state['redirect'] = 'admin/config/regional/language';
-}
-
-/**
  * Prepare a language code list for unused predefined languages.
  */
 function language_admin_predefined_list() {
@@ -709,31 +668,6 @@ function language_negotiation_configure_browser_form_submit($form, &$form_state)
     language_set_browser_drupal_langcode_mappings($mappings);
   }
   $form_state['redirect'] = 'admin/config/regional/language/detection';
-}
-
-/**
- * Form for deleting a browser language negotiation mapping.
- */
-function language_negotiation_configure_browser_delete_form($form, &$form_state, $browser_langcode) {
-  $form_state['browser_langcode'] = $browser_langcode;
-  $question = t('Are you sure you want to delete %browser_langcode?', array(
-    '%browser_langcode' => $browser_langcode,
-  ));
-  $path = 'admin/config/regional/language/detection/browser';
-  return confirm_form($form, $question, $path, '');
-}
-
-/**
- * Form submit handler to delete a browser language negotiation mapping.
- */
-function language_negotiation_configure_browser_delete_form_submit($form, &$form_state) {
-  $browser_langcode = $form_state['browser_langcode'];
-  $mappings = language_get_browser_drupal_langcode_mappings();
-  if (array_key_exists($browser_langcode, $mappings)) {
-    unset($mappings[$browser_langcode]);
-    language_set_browser_drupal_langcode_mappings($mappings);
-  }
-  $form_state['redirect'] = 'admin/config/regional/language/detection/browser';
 }
 
 /**

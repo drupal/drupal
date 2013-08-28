@@ -5,7 +5,7 @@
  * Picture display formatter for image fields.
  */
 
-use Drupal\picture\Plugin\Core\Entity\PictureMapping;
+use Drupal\picture\Entity\PictureMapping;
 use \Drupal\Core\Template\Attribute;
 
 /**

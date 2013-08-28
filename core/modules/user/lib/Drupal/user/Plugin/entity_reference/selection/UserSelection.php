@@ -10,6 +10,7 @@ namespace Drupal\user\Plugin\entity_reference\selection;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\entity_reference\Annotation\EntityReferenceSelection;
 use Drupal\entity_reference\Plugin\entity_reference\selection\SelectionBase;
 
@@ -29,9 +30,11 @@ class UserSelection extends SelectionBase {
   /**
    * {@inheritdoc}
    */
-  public static function settingsForm(&$field, &$instance) {
+  public static function settingsForm(FieldDefinitionInterface $field_definition) {
+    $selection_handler_settings = $field_definition->getFieldSetting('handler_settings');
+
     // Merge in default values.
-    $instance['settings']['handler_settings'] += array(
+    $selection_handler_settings += array(
       'filter' => array(
         'type' => '_none',
       ),
@@ -47,7 +50,7 @@ class UserSelection extends SelectionBase {
       ),
       '#ajax' => TRUE,
       '#limit_validation_errors' => array(),
-      '#default_value' => $instance['settings']['handler_settings']['filter']['type'],
+      '#default_value' => $selection_handler_settings['filter']['type'],
     );
 
     $form['filter']['settings'] = array(
@@ -56,9 +59,9 @@ class UserSelection extends SelectionBase {
       '#process' => array('_entity_reference_form_process_merge_parent'),
     );
 
-    if ($instance['settings']['handler_settings']['filter']['type'] == 'role') {
+    if ($selection_handler_settings['filter']['type'] == 'role') {
       // Merge in default values.
-      $instance['settings']['handler_settings']['filter'] += array(
+      $selection_handler_settings['filter'] += array(
         'role' => NULL,
       );
 
@@ -67,11 +70,11 @@ class UserSelection extends SelectionBase {
         '#title' => t('Restrict to the selected roles'),
         '#required' => TRUE,
         '#options' => array_diff_key(user_role_names(TRUE), drupal_map_assoc(array(DRUPAL_AUTHENTICATED_RID))),
-        '#default_value' => $instance['settings']['handler_settings']['filter']['role'],
+        '#default_value' => $selection_handler_settings['filter']['role'],
       );
     }
 
-    $form += parent::settingsForm($field, $instance);
+    $form += parent::settingsForm($field_definition);
 
     return $form;
   }

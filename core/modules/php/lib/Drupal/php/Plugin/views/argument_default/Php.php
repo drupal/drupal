@@ -7,7 +7,7 @@
 
 namespace Drupal\php\Plugin\views\argument_default;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsArgumentDefault;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 
@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 /**
  * Default argument plugin to provide a PHP code block.
  *
- * @Plugin(
+ * @ViewsArgumentDefault(
  *   id = "php",
  *   module = "php",
  *   title = @Translation("PHP Code")

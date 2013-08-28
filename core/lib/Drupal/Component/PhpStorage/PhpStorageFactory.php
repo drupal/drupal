@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\Component\PhpStorage;
+use Drupal\Core\StreamWrapper\PublicStream;
 
 /**
  * Creates a php storage object
@@ -49,8 +50,7 @@ class PhpStorageFactory {
       $configuration['bin'] = $name;
     }
     if (!isset($configuration['directory'])) {
-      $path = isset($conf['file_public_path']) ? $conf['file_public_path'] : conf_path() . '/files';
-      $configuration['directory'] = DRUPAL_ROOT . "/$path/php";
+      $configuration['directory'] = DRUPAL_ROOT . '/' . PublicStream::basePath() . '/php';
     }
     return new $class($configuration);
   }

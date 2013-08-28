@@ -10,6 +10,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_node_grants().
@@ -32,10 +33,10 @@ function node_access_test_node_grants($account, $op) {
 /**
  * Implements hook_node_access_records().
  */
-function node_access_test_node_access_records(EntityInterface $node) {
+function node_access_test_node_access_records(NodeInterface $node) {
   $grants = array();
   // For NodeAccessBaseTableTestCase, only set records for private nodes.
-  if (!Drupal::state()->get('node_access_test.private') || $node->private) {
+  if (!Drupal::state()->get('node_access_test.private') || $node->private->value) {
     $grants[] = array(
       'realm' => 'node_access_test',
       'gid' => 8888,
@@ -56,7 +57,7 @@ function node_access_test_node_access_records(EntityInterface $node) {
     // means there are many many groups of just 1 user.
     $grants[] = array(
       'realm' => 'node_access_test_author',
-      'gid' => $node->uid,
+      'gid' => $node->getAuthorId(),
       'grant_view' => 1,
       'grant_update' => 1,
       'grant_delete' => 1,
@@ -77,6 +78,21 @@ function node_access_test_permission() {
 }
 
 /**
+ * Implements hook_entity_field_info().
+ */
+function node_access_test_entity_field_info($entity_type) {
+  if ($entity_type === 'node') {
+    $info['definitions']['private'] = array(
+      'type' => 'boolean_field',
+      'label' => t('Private'),
+      'computed' => TRUE,
+      'list' => TRUE,
+    );
+    return $info;
+  }
+}
+
+/**
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function node_access_test_form_node_form_alter(&$form, $form_state) {
@@ -87,7 +103,7 @@ function node_access_test_form_node_form_alter(&$form, $form_state) {
       '#type' => 'checkbox',
       '#title' => t('Private'),
       '#description' => t('Check here if this content should be set private and only shown to privileged users.'),
-      '#default_value' => isset($node->private) ? $node->private : FALSE,
+      '#default_value' => $node->private->value,
     );
   }
 }
@@ -128,12 +144,10 @@ function node_access_test_node_update(EntityInterface $node) {
  * Helper for node insert/update.
  */
 function _node_access_test_node_write(EntityInterface $node) {
-  if (isset($node->private)) {
-    db_merge('node_access_test')
-      ->key(array('nid' => $node->id()))
-      ->fields(array('private' => (int) $node->private))
-      ->execute();
-  }
+  db_merge('node_access_test')
+    ->key(array('nid' => $node->id()))
+    ->fields(array('private' => (int) $node->private->value))
+    ->execute();
 }
 
 /**

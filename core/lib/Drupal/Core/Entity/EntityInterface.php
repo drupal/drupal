@@ -326,4 +326,20 @@ interface EntityInterface extends IdentifiableInterface, ComplexDataInterface, A
    */
   public function initTranslation($langcode);
 
+  /**
+   * Defines the base fields of the entity type.
+   *
+   * @param string $entity_type
+   *   The entity type to return properties for. Useful when a single class is
+   *   used for multiple, possibly dynamic entity types.
+   *
+   * @return array
+   *   An array of entity field definitions as specified by
+   *   \Drupal\Core\Entity\EntityManager::getFieldDefinitions(), keyed by field
+   *   name.
+   *
+   * @see \Drupal\Core\Entity\EntityManager::getFieldDefinitions()
+   */
+  public static function baseFieldDefinitions($entity_type);
+
 }

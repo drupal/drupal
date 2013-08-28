@@ -24,12 +24,6 @@ block_admin_add:
   pattern: '/admin/structure/block/add/{plugin_id}/{theme}'
   defaults:
     _content: '\Drupal\block\Controller\BlockAddController::blockAddConfigureForm'
-  requirements:
-    _permission: 'administer blocks'
-
-block_autocomplete:
-  pattern: '/block/autocomplete'
-  defaults:
-    _controller: '\Drupal\block\Controller\BlockAutocompleteController::autocomplete'
+    _title: 'Configure block'
   requirements:
     _permission: 'administer blocks'

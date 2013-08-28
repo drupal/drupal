@@ -7,7 +7,7 @@
 
 namespace Drupal\ckeditor\Tests;
 
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Entity\Editor;
 use Drupal\simpletest\WebTestBase;
 
 /**

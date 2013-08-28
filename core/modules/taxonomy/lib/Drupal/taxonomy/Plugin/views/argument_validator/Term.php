@@ -9,14 +9,14 @@ namespace Drupal\taxonomy\Plugin\views\argument_validator;
 
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsArgumentValidator;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
 
 /**
  * Validate whether an argument is an acceptable node.
  *
- * @Plugin(
+ * @ViewsArgumentValidator(
  *   id = "taxonomy_term",
  *   module = "taxonomy",
  *   title = @Translation("Taxonomy term")

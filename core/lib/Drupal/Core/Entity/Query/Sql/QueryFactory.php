@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\Query\QueryBase;
 use Drupal\Core\Entity\Query\QueryFactoryInterface;
 
 /**
@@ -32,7 +33,7 @@ class QueryFactory implements QueryFactoryInterface {
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection used by the entity query.
    */
-  function __construct(Connection $connection) {
+  public function __construct(Connection $connection) {
     $this->connection = $connection;
   }
 
@@ -48,8 +49,9 @@ class QueryFactory implements QueryFactoryInterface {
    * @return \Drupal\Core\Entity\Query\Sql\Query
    *   The factored query.
    */
-  function get($entity_type, $conjunction, EntityManager $entity_manager) {
-    return new Query($entity_type, $entity_manager, $conjunction, $this->connection);
+  public function get($entity_type, $conjunction, EntityManager $entity_manager) {
+    $class = QueryBase::getNamespace($this) . '\\Query';
+    return new $class($entity_type, $entity_manager, $conjunction, $this->connection);
   }
 
   /**
@@ -64,8 +66,9 @@ class QueryFactory implements QueryFactoryInterface {
    * @return \Drupal\Core\Entity\Query\Sql\QueryAggregate
    *   The factored aggregation query.
    */
-  function getAggregate($entity_type, $conjunction, EntityManager $entity_manager) {
-    return new QueryAggregate($entity_type, $entity_manager, $conjunction, $this->connection);
+  public function getAggregate($entity_type, $conjunction, EntityManager $entity_manager) {
+    $class = QueryBase::getNamespace($this) . '\\QueryAggregate';
+    return new $class($entity_type, $entity_manager, $conjunction, $this->connection);
   }
 
 }

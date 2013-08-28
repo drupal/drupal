@@ -859,6 +859,10 @@ ul.links {
   border-right: 1px solid #fff4f4;
 }
 
+.comment-footer {
+  display: table-row;
+}
+
 /* ------------------ Sidebar ----------------- */
 .sidebar .section {
   padding-top: 10px;

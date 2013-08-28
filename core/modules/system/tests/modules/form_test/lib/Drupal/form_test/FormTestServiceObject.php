@@ -7,22 +7,22 @@
 
 namespace Drupal\form_test;
 
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormBase;
 
 /**
  * Provides a test form object.
  */
-class FormTestServiceObject implements FormInterface {
+class FormTestServiceObject extends FormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'form_test_form_test_service_object';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
     $form['element'] = array('#markup' => 'The FormTestServiceObject::buildForm() method was used for this form.');
@@ -30,29 +30,29 @@ class FormTestServiceObject implements FormInterface {
     $form['bananas'] = array(
       '#type' => 'textfield',
       '#default_value' => 'brown',
-      '#title' => t('Bananas'),
+      '#title' => $this->t('Bananas'),
     );
 
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save'),
+      '#value' => $this->t('Save'),
     );
     return $form;
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, array &$form_state) {
-    drupal_set_message(t('The FormTestServiceObject::validateForm() method was used for this form.'));
+    drupal_set_message($this->t('The FormTestServiceObject::validateForm() method was used for this form.'));
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    drupal_set_message(t('The FormTestServiceObject::submitForm() method was used for this form.'));
+    drupal_set_message($this->t('The FormTestServiceObject::submitForm() method was used for this form.'));
     \Drupal::config('form_test.object')
       ->set('bananas', $form_state['values']['bananas'])
       ->save();

@@ -53,6 +53,13 @@ class AliasWhitelist extends CacheCollector {
     parent::__construct($cid, $cache, $lock);
     $this->state = $state;
     $this->connection = $connection;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function lazyLoadCache() {
+    parent::lazyLoadCache();
 
     // On a cold start $this->storage will be empty and the whitelist will
     // need to be rebuilt from scratch. The whitelist is initialized from the

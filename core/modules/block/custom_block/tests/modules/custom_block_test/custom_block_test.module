@@ -8,7 +8,7 @@
  * interaction with the custom_block module.
  */
 
-use Drupal\custom_block\Plugin\Core\Entity\CustomBlock;
+use Drupal\custom_block\Entity\CustomBlock;
 
 /**
  * Implements hook_custom_block_load().

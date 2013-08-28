@@ -16,7 +16,7 @@ use Drupal\Core\Entity\EntityAccessController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\user\Plugin\Core\Entity\User;
+use Drupal\user\Entity\User;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -100,13 +100,8 @@ class NodeAccessController extends EntityAccessController implements NodeAccessC
    */
   protected function checkAccess(EntityInterface $node, $operation, $langcode, AccountInterface $account) {
     // Fetch information from the node object if possible.
-    $status = isset($node->status) ? $node->status : NULL;
-    $uid = isset($node->uid) ? $node->uid : NULL;
-    // If it is a proper EntityNG object, use the proper methods.
-    if ($node instanceof EntityNG) {
-      $status = $node->getTranslation($langcode)->status->value;
-      $uid = $node->getTranslation($langcode)->uid->value;
-    }
+    $status = $node->getTranslation($langcode)->isPublished();
+    $uid = $node->getTranslation($langcode)->getAuthorId();
 
     // Check if authors can view their own unpublished nodes.
     if ($operation === 'view' && !$status && user_access('view own unpublished content', $account)) {

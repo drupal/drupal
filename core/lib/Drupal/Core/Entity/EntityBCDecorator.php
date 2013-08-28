@@ -432,13 +432,6 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
   /**
    * Forwards the call to the decorated entity.
    */
-  public function getType() {
-    return $this->decorated->getType();
-  }
-
-  /**
-   * Forwards the call to the decorated entity.
-   */
   public function getDefinition() {
     return $this->decorated->getDefinition();
   }
@@ -624,6 +617,13 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
    */
   public function initTranslation($langcode) {
     $this->decorated->initTranslation($langcode);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions($entity_type) {
+    return array();
   }
 
 }

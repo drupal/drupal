@@ -39,7 +39,7 @@ class RemoveRoleUserTest extends UnitTestCase {
     parent::setUp();
 
     $this->account = $this
-      ->getMockBuilder('Drupal\user\Plugin\Core\Entity\User')
+      ->getMockBuilder('Drupal\user\Entity\User')
       ->disableOriginalConstructor()
       ->getMock();
   }

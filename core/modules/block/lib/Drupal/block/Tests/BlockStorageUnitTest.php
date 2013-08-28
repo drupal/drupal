@@ -13,7 +13,7 @@ use Drupal\block_test\Plugin\Block\TestHtmlIdBlock;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\block\BlockStorageController;
 use Drupal\Core\Entity\EntityMalformedException;
-use Drupal\block\Plugin\Core\Entity\Block;
+use Drupal\block\Entity\Block;
 use Drupal\block\BlockInterface;
 
 /**

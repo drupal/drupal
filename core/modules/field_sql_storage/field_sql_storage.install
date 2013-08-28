@@ -5,7 +5,7 @@
  * Install, update, and uninstall functions for the Field SQL Storage module.
  */
 
-use Drupal\field\Plugin\Core\Entity\Field;
+use Drupal\field\Entity\Field;
 
 /**
  * Writes field data directly to SQL storage.

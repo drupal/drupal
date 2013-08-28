@@ -1,0 +1,5 @@
+taxonomy_add_vocabulary_local_action:
+  route_name: taxonomy_vocabulary_add
+  title: 'Add vocabulary'
+  appears_on:
+    - taxonomy_vocabulary_list

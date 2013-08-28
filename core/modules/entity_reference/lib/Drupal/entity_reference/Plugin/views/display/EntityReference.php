@@ -7,7 +7,7 @@
 
 namespace Drupal\entity_reference\Plugin\views\display;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsDisplay;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 
@@ -20,12 +20,13 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
  *
  * @ingroup views_display_plugins
  *
- * @Plugin(
+ * @ViewsDisplay(
  *   id = "entity_reference",
  *   title = @Translation("Entity Reference"),
  *   admin = @Translation("Entity Reference Source"),
  *   help = @Translation("Selects referenceable entities for an entity reference field."),
  *   theme = "views_view",
+ *   register_theme = FALSE,
  *   uses_hook_menu = FALSE,
  *   entity_reference_display = TRUE
  * )

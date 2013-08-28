@@ -7,16 +7,18 @@
 
 namespace Drupal\views_test_data\Plugin\views\display;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsDisplay;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a Display test plugin with areas disabled.
  *
- * @Plugin(
+ * @ViewsDisplay(
  *   id = "display_no_area_test",
  *   title = @Translation("Display test no area"),
+ *   help = @Translation("Defines a display test with areas disabled."),
  *   theme = "views_view",
+ *   register_theme = FALSE,
  *   contextual_links_locations = {"view"}
  * )
  */

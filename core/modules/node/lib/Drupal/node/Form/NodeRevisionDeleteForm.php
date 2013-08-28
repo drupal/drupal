@@ -13,7 +13,6 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a form for reverting a node revision.
@@ -107,9 +106,9 @@ class NodeRevisionDeleteForm extends ConfirmFormBase implements ControllerInterf
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL, $node_revision = NULL) {
+  public function buildForm(array $form, array &$form_state, $node_revision = NULL) {
     $this->revision = $this->nodeStorage->loadRevision($node_revision);
-    return parent::buildForm($form, $form_state, $request);
+    return parent::buildForm($form, $form_state);
   }
 
   /**

@@ -4078,16 +4078,42 @@ function theme_vertical_tabs($variables) {
  * @code
  * '#autocomplete_path' => 'mymodule_autocomplete/' . $some_key . '/' . $some_id,
  * @endcode
+ * Or if your route is called 'mymodule_autocomplete' with the path of
+ * '/mymodule-autocomplete/{a}/{b}':
+ * @code
+ * '#autocomplete_route_name' => 'mymodule_autocomplete',
+ * '#autocomplete_route_parameters' => array('a' => $some_key, 'b' => $some_id),
+ * @endcode
  * The user types in "keywords" so the full path called is:
  * 'mymodule_autocomplete/$some_key/$some_id?q=keywords'
  *
- * @param $element
+ * @param array $element
  *   The form element to process. Properties used:
  *   - #autocomplete_path: A system path to be used as callback URL by the
  *     autocomplete JavaScript library.
+ *   - #autocomplete_route_name: A route to be used as callback URL by the
+ *     autocomplete JavaScript library.
+ *   - #autocomplete_route_parameters: The parameters to be used in conjunction
+ *     with the route name.
+ * @param array $form_state
+ *   An associative array containing the current state of the form.
+ *
+ * @return array
+ *   The form element.
  */
 function form_process_autocomplete($element, &$form_state) {
-  if (!empty($element['#autocomplete_path']) && drupal_valid_path($element['#autocomplete_path'])) {
+  $access = FALSE;
+  if (!empty($element['#autocomplete_route_name'])) {
+    $parameters = isset($element['#autocomplete_route_parameters']) ? $element['#autocomplete_route_parameters'] : array();
+
+    $path = Drupal::urlGenerator()->generate($element['#autocomplete_route_name'], $parameters);
+    $access = Drupal::service('access_manager')->checkNamedRoute($element['#autocomplete_route_name'], $parameters);
+  }
+  elseif (!empty($element['#autocomplete_path'])) {
+    $path = url($element['#autocomplete_path'], array('absolute' => TRUE));
+    $access = drupal_valid_path($element['#autocomplete_path']);
+  }
+  if ($access) {
     $element['#attributes']['class'][] = 'form-autocomplete';
     $element['#attached']['library'][] = array('system', 'drupal.autocomplete');
     // Provide a hidden element for the JavaScript behavior to bind to. Since
@@ -4097,7 +4123,7 @@ function form_process_autocomplete($element, &$form_state) {
     $element['autocomplete'] = array(
       '#type' => 'hidden',
       '#input' => FALSE,
-      '#value' => url($element['#autocomplete_path'], array('absolute' => TRUE)),
+      '#value' => $path,
       '#disabled' => TRUE,
       '#attributes' => array(
         'class' => array('autocomplete'),

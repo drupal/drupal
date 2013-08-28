@@ -7,6 +7,7 @@
 
 namespace Drupal\views_ui\Form\Ajax;
 
+use Drupal\Component\Utility\String;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\ViewExecutable;
 
@@ -16,21 +17,21 @@ use Drupal\views\ViewExecutable;
 class RearrangeFilter extends ViewsFormBase {
 
   /**
-   * Implements \Drupal\views_ui\Form\Ajax\ViewsFormInterface::getFormKey().
+   * {@inheritdoc}
    */
   public function getFormKey() {
     return 'rearrange-filter';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'views_ui_rearrange_filter_form';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
     $view = &$form_state['view'];
@@ -40,11 +41,11 @@ class RearrangeFilter extends ViewsFormBase {
     $types = ViewExecutable::viewsHandlerTypes();
     $executable = $view->getExecutable();
     if (!$executable->setDisplay($display_id)) {
-      views_ajax_render(t('Invalid display id @display', array('@display' => $display_id)));
+      views_ajax_render($this->t('Invalid display id @display', array('@display' => $display_id)));
     }
     $display = $executable->displayHandlers->get($display_id);
-    $form['#title'] = check_plain($display->display['display_title']) . ': ';
-    $form['#title'] .= t('Rearrange @type', array('@type' => $types[$type]['ltitle']));
+    $form['#title'] = String::checkPlain($display->display['display_title']) . ': ';
+    $form['#title'] .= $this->t('Rearrange @type', array('@type' => $types[$type]['ltitle']));
     $form['#section'] = $display_id . 'rearrange-item';
 
     if ($display->defaultableSections($types[$type]['plural'])) {
@@ -86,15 +87,15 @@ class RearrangeFilter extends ViewsFormBase {
     $form['filter_groups']['operator'] = array(
       '#type' => 'select',
       '#options' => array(
-        'AND' => t('And'),
-        'OR' => t('Or'),
+        'AND' => $this->t('And'),
+        'OR' => $this->t('Or'),
       ),
       '#default_value' => $groups['operator'],
       '#attributes' => array(
         'class' => array('warning-on-change'),
       ),
-      '#title' => t('Operator to use on all groups'),
-      '#description' => t('Either "group 0 AND group 1 AND group 2" or "group 0 OR group 1 OR group 2", etc'),
+      '#title' => $this->t('Operator to use on all groups'),
+      '#description' => $this->t('Either "group 0 AND group 1 AND group 2" or "group 0 OR group 1 OR group 2", etc'),
       '#access' => $grouping,
     );
 
@@ -102,11 +103,11 @@ class RearrangeFilter extends ViewsFormBase {
 
     foreach ($groups['groups'] as $id => $group) {
       $form['filter_groups']['groups'][$id] = array(
-        '#title' => t('Operator'),
+        '#title' => $this->t('Operator'),
         '#type' => 'select',
         '#options' => array(
-          'AND' => t('And'),
-          'OR' => t('Or'),
+          'AND' => $this->t('And'),
+          'OR' => $this->t('Or'),
         ),
         '#default_value' => $group,
         '#attributes' => array(
@@ -118,7 +119,7 @@ class RearrangeFilter extends ViewsFormBase {
       if ($id != 1) {
         $form['remove_groups'][$id] = array(
           '#type' => 'submit',
-          '#value' => t('Remove group @group', array('@group' => $id)),
+          '#value' => $this->t('Remove group @group', array('@group' => $id)),
           '#id' => "views-remove-group-$id",
           '#attributes' => array(
             'class' => array('views-remove-group'),
@@ -126,7 +127,7 @@ class RearrangeFilter extends ViewsFormBase {
           '#group' => $id,
         );
       }
-      $group_options[$id] = $id == 1 ? t('Default group') : t('Group @group', array('@group' => $id));
+      $group_options[$id] = $id == 1 ? $this->t('Default group') : $this->t('Group @group', array('@group' => $id));
       $form['#group_renders'][$id] = array();
     }
 
@@ -182,7 +183,7 @@ class RearrangeFilter extends ViewsFormBase {
         );
       }
       else {
-        $form['filters'][$id]['name'] = array('#markup' => t('Broken field @id', array('@id' => $id)));
+        $form['filters'][$id]['name'] = array('#markup' => $this->t('Broken field @id', array('@id' => $id)));
       }
       $form['filters'][$id]['removed'] = array(
         '#type' => 'checkbox',
@@ -199,7 +200,7 @@ class RearrangeFilter extends ViewsFormBase {
     $view->getStandardButtons($form, $form_state, 'views_ui_rearrange_filter_form');
     $form['buttons']['add_group'] = array(
       '#type' => 'submit',
-      '#value' => t('Create new filter group'),
+      '#value' => $this->t('Create new filter group'),
       '#id' => 'views-add-group',
       '#group' => 'add',
     );
@@ -208,7 +209,7 @@ class RearrangeFilter extends ViewsFormBase {
   }
 
   /**
-   * Overrides \Drupal\views_ui\Form\Ajax\ViewsFormBase::submitForm().
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
     $types = ViewExecutable::viewsHandlerTypes();

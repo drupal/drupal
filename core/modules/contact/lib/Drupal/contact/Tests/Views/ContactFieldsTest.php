@@ -24,7 +24,7 @@ class ContactFieldsTest extends ViewTestBase {
   /**
    * Contains the field definition array attached to contact used for this test.
    *
-   * @var \Drupal\field\Plugin\Core\Entity\Field
+   * @var \Drupal\field\Entity\Field
    */
   protected $field;
 

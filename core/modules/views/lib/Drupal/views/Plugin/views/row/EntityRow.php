@@ -10,13 +10,13 @@ namespace Drupal\views\Plugin\views\row;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Generic entity row plugin to provide a common base for all entity types.
  *
- * @Plugin(
+ * @ViewsRow(
  *   id = "entity",
  *   derivative = "Drupal\views\Plugin\Derivative\ViewsEntityRow"
  * )

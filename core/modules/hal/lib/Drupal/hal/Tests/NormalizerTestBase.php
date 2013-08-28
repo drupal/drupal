@@ -30,7 +30,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity', 'entity_test', 'entity_reference', 'field', 'field_sql_storage', 'hal', 'language', 'rest', 'serialization', 'system', 'text', 'user');
+  public static $modules = array('entity', 'entity_test', 'entity_reference', 'field', 'field_sql_storage', 'hal', 'language', 'rest', 'serialization', 'system', 'text', 'user', 'filter');
 
   /**
    * The mock serializer.
@@ -51,7 +51,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
    *
    * @var string
    */
-  protected $entityClass = 'Drupal\entity_test\Plugin\Core\Entity\EntityTest';
+  protected $entityClass = 'Drupal\entity_test\Entity\EntityTest';
 
   /**
    * Overrides \Drupal\simpletest\DrupalUnitTestBase::setup().

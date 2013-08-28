@@ -12,7 +12,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
 /**
  * Defines a test for testing aggregation support for entity query.
  *
- * @see \Drupal\entity_test\Plugin\Core\Entity\EntityTest
+ * @see \Drupal\entity_test\Entity\EntityTest
  */
 class EntityQueryAggregateTest extends EntityUnitTestBase {
 

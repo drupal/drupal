@@ -22,7 +22,7 @@ class FieldAccessTest extends FieldTestBase {
   /**
    * Node entity to use in this test.
    *
-   * @var \Drupal\node\Plugin\Core\Entity\Node
+   * @var \Drupal\node\Entity\Node
    */
   protected $node;
 

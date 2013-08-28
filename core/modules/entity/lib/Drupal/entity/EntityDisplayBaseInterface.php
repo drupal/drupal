@@ -23,7 +23,7 @@ interface EntityDisplayBaseInterface extends ConfigEntityInterface {
    * @param $view_mode
    *   The view mode for the new object.
    *
-   * @return \Drupal\entity\Plugin\Core\Entity\EntityDisplay
+   * @return \Drupal\entity\Entity\EntityDisplay
    *   The new object.
    */
   public function createCopy($view_mode);
@@ -56,7 +56,7 @@ interface EntityDisplayBaseInterface extends ConfigEntityInterface {
    * @param array $options
    *   The display options.
    *
-   * @return \Drupal\entity\Plugin\Core\Entity\EntityDisplay
+   * @return \Drupal\entity\Entity\EntityDisplay
    *   The EntityDisplay object.
    */
   public function setComponent($name, array $options = array());
@@ -67,7 +67,7 @@ interface EntityDisplayBaseInterface extends ConfigEntityInterface {
    * @param string $name
    *   The name of the component.
    *
-   * @return \Drupal\entity\Plugin\Core\Entity\EntityDisplay
+   * @return \Drupal\entity\Entity\EntityDisplay
    *   The EntityDisplay object.
    */
   public function removeComponent($name);

@@ -35,7 +35,8 @@ class BlockManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Block', $namespaces);
+    $annotation_namespaces = array('Drupal\block\Annotation' => $namespaces['Drupal\block']);
+    parent::__construct('Plugin/Block', $namespaces, $annotation_namespaces, 'Drupal\block\Annotation\Block');
     $this->alterInfo($module_handler, 'block');
     $this->setCacheBackend($cache_backend, $language_manager, 'block_plugins');
   }
@@ -48,6 +49,7 @@ class BlockManager extends DefaultPluginManager {
 
     // Ensure that every block has a category.
     $definition += array(
+      'module' => $definition['provider'],
       'category' => $definition['provider'],
     );
   }

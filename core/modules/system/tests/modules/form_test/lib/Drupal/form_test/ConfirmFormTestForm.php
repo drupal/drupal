@@ -8,7 +8,6 @@
 namespace Drupal\form_test;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a test confirmation form.
@@ -26,7 +25,7 @@ class ConfirmFormTestForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('ConfirmFormTestForm::getQuestion().');
+    return $this->t('ConfirmFormTestForm::getQuestion().');
   }
 
   /**
@@ -40,37 +39,37 @@ class ConfirmFormTestForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return t('ConfirmFormTestForm::getDescription().');
+    return $this->t('ConfirmFormTestForm::getDescription().');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return t('ConfirmFormTestForm::getConfirmText().');
+    return $this->t('ConfirmFormTestForm::getConfirmText().');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getCancelText() {
-    return t('ConfirmFormTestForm::getCancelText().');
+    return $this->t('ConfirmFormTestForm::getCancelText().');
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL) {
+  public function buildForm(array $form, array &$form_state) {
     $form['element'] = array('#markup' => '<p>The ConfirmFormTestForm::buildForm() method was used for this form.</p>');
 
-    return parent::buildForm($form, $form_state, $request);
+    return parent::buildForm($form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    drupal_set_message(t('The ConfirmFormTestForm::submitForm() method was used for this form.'));
+    drupal_set_message($this->t('The ConfirmFormTestForm::submitForm() method was used for this form.'));
     $form_state['redirect'] = '';
   }
 

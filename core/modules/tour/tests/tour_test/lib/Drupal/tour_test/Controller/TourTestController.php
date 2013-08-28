@@ -33,12 +33,33 @@ class TourTestController implements ControllerInterface {
         ),
         '#children' => t('Where does the rain in Spain fail?'),
       ),
+      'tip-3' => array(
+        '#type' => 'container',
+        '#attributes' => array(
+          'id' => 'tour-test-3',
+        ),
+        '#children' => t('Tip created now?'),
+      ),
       'tip-4' => array(
         '#type' => 'container',
         '#attributes' => array(
           'id' => 'tour-test-4',
         ),
         '#children' => t('Tip created later?'),
+      ),
+      'tip-5' => array(
+        '#type' => 'container',
+        '#attributes' => array(
+          'class' => 'tour-test-5',
+        ),
+        '#children' => t('Tip created later?'),
+      ),
+      'code-tip-1' => array(
+        '#type' => 'container',
+        '#attributes' => array(
+          'id' => 'tour-code-test-1',
+        ),
+        '#children' => t('Tip created now?'),
       ),
     );
   }

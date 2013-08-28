@@ -137,18 +137,6 @@ interface EntityStorageControllerInterface {
   public function save(EntityInterface $entity);
 
   /**
-   * Defines the base fields of the entity type.
-   *
-   * @return array
-   *   An array of entity field definitions as specified by
-   *   \Drupal\Core\Entity\EntityManager::getFieldDefinitions(), keyed by field
-   *   name.
-   *
-   * @see \Drupal\Core\Entity\EntityManager::getFieldDefinitions()
-   */
-  public function baseFieldDefinitions();
-
-  /**
    * Gets the name of the service for the query for this entity storage.
    *
    * @return string

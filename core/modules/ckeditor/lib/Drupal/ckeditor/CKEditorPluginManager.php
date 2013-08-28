@@ -12,7 +12,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
-use Drupal\editor\Plugin\Core\Entity\Editor;
+use Drupal\editor\Entity\Editor;
 
 /**
  * CKEditor Plugin manager.
@@ -54,7 +54,7 @@ class CKEditorPluginManager extends DefaultPluginManager {
    * even implicitly loaded (i.e. internal) plugins, then set the optional
    * second parameter.
    *
-   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
    * @param bool $include_internal_plugins
    *   Defaults to FALSE. When set to TRUE, plugins whose isInternal() method
@@ -137,7 +137,7 @@ class CKEditorPluginManager extends DefaultPluginManager {
    *   A reference to an associative array containing the structure of the form.
    * @param array &$form_state
    *   A reference to a keyed array containing the current state of the form.
-   * @param \Drupal\editor\Plugin\Core\Entity\Editor $editor
+   * @param \Drupal\editor\Entity\Editor $editor
    *   A configured text editor object.
    */
   public function injectPluginSettingsForm(array &$form, array &$form_state, Editor $editor) {

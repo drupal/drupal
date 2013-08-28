@@ -25,7 +25,7 @@ abstract class CommentTestBase extends ViewTestBase {
   /**
    * Stores a comment used by the tests.
    *
-   * @var \Drupal\comment\Plugin\Core\Entity\Comment
+   * @var \Drupal\comment\Entity\Comment
    */
   public $comment;
 

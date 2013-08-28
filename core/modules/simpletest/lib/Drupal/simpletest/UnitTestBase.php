@@ -56,7 +56,7 @@ abstract class UnitTestBase extends TestBase {
     $conf = array();
     drupal_static_reset();
 
-    $conf['file_public_path'] = $this->public_files_directory;
+    $this->settingsSet('file_public_path', $this->public_files_directory);
 
     // Change the database prefix.
     // All static variables need to be reset before the database prefix is

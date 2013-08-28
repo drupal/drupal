@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\Query\QueryBase;
 use Drupal\Core\Entity\Query\QueryException;
@@ -85,13 +86,6 @@ class Query extends QueryBase implements QueryInterface {
     $this->connection = $connection;
   }
 
-
-  /**
-   * Implements Drupal\Core\Entity\Query\QueryInterface::conditionGroupFactory().
-   */
-  public function conditionGroupFactory($conjunction = 'AND') {
-    return new Condition($conjunction);
-  }
 
   /**
    * Implements \Drupal\Core\Entity\Query\QueryInterface::execute().
@@ -289,7 +283,7 @@ class Query extends QueryBase implements QueryInterface {
    */
   protected function getSqlField($field, $langcode) {
     if (!isset($this->tables)) {
-      $this->tables = new Tables($this->sqlQuery);
+      $this->tables = $this->getTables($this->sqlQuery);
     }
     $base_property = "base_table.$field";
     if (isset($this->sqlFields[$base_property])) {
@@ -318,6 +312,20 @@ class Query extends QueryBase implements QueryInterface {
     parent::__clone();
     $this->sqlFields = array();
     $this->sqlGroupBy = array();
+  }
+
+  /**
+   * Gets the Tables object for this query.
+   *
+   * @param \Drupal\Core\Database\Query\SelectInterface $sql_query
+   *   The SQL query object being built.
+   *
+   * @return \Drupal\Core\Entity\Query\Sql\TablesInterface
+   *   The object that adds tables and fields to the SQL query object.
+   */
+  public function getTables(SelectInterface $sql_query) {
+    $class = QueryBase::getNamespace($this) . '\\Tables';
+    return new $class($sql_query);
   }
 
 }

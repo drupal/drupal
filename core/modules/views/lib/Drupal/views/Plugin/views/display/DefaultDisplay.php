@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsDisplay;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ingroup views_display_plugins
  *
- * @Plugin(
+ * @ViewsDisplay(
  *   id = "default",
  *   title = @Translation("Master"),
  *   help = @Translation("Default settings for this view."),

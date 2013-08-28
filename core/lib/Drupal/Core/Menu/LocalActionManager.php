@@ -7,7 +7,9 @@
 
 namespace Drupal\Core\Menu;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Menu\LocalActionInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,13 +59,18 @@ class LocalActionManager extends DefaultPluginManager {
    *   instances.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   Cache backend instance to use.
+   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager.
    */
-  public function __construct(\Traversable $namespaces, ControllerResolverInterface $controller_resolver, Request $request, ModuleHandlerInterface $module_handler) {
+  public function __construct(\Traversable $namespaces, ControllerResolverInterface $controller_resolver, Request $request, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManager $language_manager) {
     parent::__construct('Plugin/Menu/LocalAction', $namespaces, array(), 'Drupal\Core\Annotation\Menu\LocalAction');
 
     $this->controllerResolver = $controller_resolver;
     $this->request = $request;
     $this->alterInfo($module_handler, 'menu_local_actions');
+    $this->setCacheBackend($cache_backend, $language_manager, 'local_action_plugins');
   }
 
   /**

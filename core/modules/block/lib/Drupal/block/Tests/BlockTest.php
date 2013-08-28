@@ -135,6 +135,13 @@ class BlockTest extends BlockTestBase {
     // is my_block_instance_name.
     $xpath = $this->buildXPathQuery('//div[@id=:id]/*', array(':id' => 'block-' . strtr(strtolower($block['machine_name']), '-', '_')));
     $this->assertNoFieldByXPath($xpath, FALSE, 'Block found in no regions.');
+
+    // Test deleting the block from the edit form.
+    $this->drupalGet('admin/structure/block/manage/' . $block['theme'] . '.' . $block['machine_name']);
+    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->assertRaw(t('Are you sure you want to delete the block %name?', array('%name' => $block['settings[label]'])));
+    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->assertRaw(t('The block %name has been removed.', array('%name' => $block['settings[label]'])));
   }
 
   /**
@@ -274,7 +281,7 @@ class BlockTest extends BlockTestBase {
     }
 
     // Ensure that the disabled module's block plugin is no longer available.
-    $this->drupalGet('admin/structure/block/list/' . \Drupal::config('system.theme')->get('default') . '/add');
+    $this->drupalGet('admin/structure/block/list/' . \Drupal::config('system.theme')->get('default'));
     $this->assertNoText(t('Test block caching'));
 
     // Confirm that the block is no longer displayed on the front page.

@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\pager;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsPager;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ingroup views_pager_plugins
  *
- * @Plugin(
+ * @ViewsPager(
  *   id = "mini",
  *   title = @Translation("Paged output, mini pager"),
  *   short_title = @Translation("Mini"),

@@ -57,7 +57,7 @@ class UserCancelTest extends WebTestBase {
 
     // Confirm user's content has not been altered.
     $test_node = node_load($node->id(), TRUE);
-    $this->assertTrue(($test_node->uid == $account->id() && $test_node->status == 1), 'Node of the user has not been altered.');
+    $this->assertTrue(($test_node->getAuthorId() == $account->id() && $test_node->isPublished()), 'Node of the user has not been altered.');
   }
 
   /**
@@ -72,7 +72,7 @@ class UserCancelTest extends WebTestBase {
     $password = user_password();
     $account = array(
       'name' => 'user1',
-      'pass' => drupal_container()->get('password')->hash(trim($password)),
+      'pass' => $this->container->get('password')->hash(trim($password)),
     );
     // We cannot use $account->save() here, because this would result in the
     // password being hashed again.
@@ -138,7 +138,7 @@ class UserCancelTest extends WebTestBase {
 
     // Confirm user's content has not been altered.
     $test_node = node_load($node->id(), TRUE);
-    $this->assertTrue(($test_node->uid == $account->id() && $test_node->status == 1), 'Node of the user has not been altered.');
+    $this->assertTrue(($test_node->getAuthorId() == $account->id() && $test_node->isPublished()), 'Node of the user has not been altered.');
   }
 
   /**
@@ -212,9 +212,9 @@ class UserCancelTest extends WebTestBase {
 
     // Confirm user's content has been unpublished.
     $test_node = node_load($node->id(), TRUE);
-    $this->assertTrue($test_node->status == 0, 'Node of the user has been unpublished.');
-    $test_node = node_revision_load($node->vid);
-    $this->assertTrue($test_node->status == 0, 'Node revision of the user has been unpublished.');
+    $this->assertFalse($test_node->isPublished(), 'Node of the user has been unpublished.');
+    $test_node = node_revision_load($node->getRevisionId());
+    $this->assertFalse($test_node->isPublished(), 'Node revision of the user has been unpublished.');
 
     // Confirm that the confirmation message made it through to the end user.
     $this->assertRaw(t('%name has been disabled.', array('%name' => $account->getUsername())), "Confirmation message displayed to user.");
@@ -238,7 +238,7 @@ class UserCancelTest extends WebTestBase {
     // Create a node with two revisions, the initial one belonging to the
     // cancelling user.
     $revision_node = $this->drupalCreateNode(array('uid' => $account->id()));
-    $revision = $revision_node->vid;
+    $revision = $revision_node->getRevisionId();
     $settings = get_object_vars($revision_node);
     $settings['revision'] = 1;
     $settings['uid'] = 1; // Set new/current revision to someone else.
@@ -261,11 +261,11 @@ class UserCancelTest extends WebTestBase {
 
     // Confirm that user's content has been attributed to anonymous user.
     $test_node = node_load($node->id(), TRUE);
-    $this->assertTrue(($test_node->uid == 0 && $test_node->status == 1), 'Node of the user has been attributed to anonymous user.');
+    $this->assertTrue(($test_node->getAuthorId() == 0 && $test_node->isPublished()), 'Node of the user has been attributed to anonymous user.');
     $test_node = node_revision_load($revision, TRUE);
-    $this->assertTrue(($test_node->revision_uid == 0 && $test_node->status == 1), 'Node revision of the user has been attributed to anonymous user.');
+    $this->assertTrue(($test_node->getRevisionAuthor()->id() == 0 && $test_node->isPublished()), 'Node revision of the user has been attributed to anonymous user.');
     $test_node = node_load($revision_node->id(), TRUE);
-    $this->assertTrue(($test_node->uid != 0 && $test_node->status == 1), "Current revision of the user's node was not attributed to anonymous user.");
+    $this->assertTrue(($test_node->getAuthorId() != 0 && $test_node->isPublished()), "Current revision of the user's node was not attributed to anonymous user.");
 
     // Confirm that the confirmation message made it through to the end user.
     $this->assertRaw(t('%name has been deleted.', array('%name' => $account->getUsername())), "Confirmation message displayed to user.");
@@ -305,7 +305,7 @@ class UserCancelTest extends WebTestBase {
     // Create a node with two revisions, the initial one belonging to the
     // cancelling user.
     $revision_node = $this->drupalCreateNode(array('uid' => $account->id()));
-    $revision = $revision_node->vid;
+    $revision = $revision_node->getRevisionId();
     $settings = get_object_vars($revision_node);
     $settings['revision'] = 1;
     $settings['uid'] = 1; // Set new/current revision to someone else.

@@ -8,7 +8,7 @@
 namespace Drupal\picture\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\breakpoint\Plugin\Core\Entity\Breakpoint;
+use Drupal\breakpoint\Entity\Breakpoint;
 use Drupal\image\Tests\ImageFieldTestBase;
 
 /**
@@ -123,7 +123,7 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
     $node = node_load($nid, TRUE);
 
     // Test that the default formatter is being used.
-    $image_uri = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id'])->getFileUri();
+    $image_uri = file_load($node->{$field_name}->target_id)->getFileUri();
     $image = array(
       '#theme' => 'image',
       '#uri' => $image_uri,

@@ -9,13 +9,13 @@ namespace Drupal\node;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityFormControllerNG;
 use Drupal\Core\Language\Language;
 
 /**
  * Form controller for the node edit forms.
  */
-class NodeFormController extends EntityFormController {
+class NodeFormController extends EntityFormControllerNG {
 
   /**
    * Default settings for this content/node type.
@@ -42,16 +42,16 @@ class NodeFormController extends EntityFormController {
     if ($node->isNew()) {
       foreach (array('status', 'promote', 'sticky') as $key) {
         // Multistep node forms might have filled in something already.
-        if (!isset($node->$key)) {
+        if ($node->$key->isEmpty()) {
           $node->$key = (int) in_array($key, $this->settings['options']);
         }
       }
       global $user;
-      $node->uid = $user->id();
-      $node->created = REQUEST_TIME;
+      $node->setAuthorId($user->id());
+      $node->setCreatedTime(REQUEST_TIME);
     }
     else {
-      $node->date = format_date($node->created, 'custom', 'Y-m-d H:i:s O');
+      $node->date = format_date($node->getCreatedTime(), 'custom', 'Y-m-d H:i:s O');
       // Remove the log message from the original node entity.
       $node->log = NULL;
     }
@@ -82,7 +82,7 @@ class NodeFormController extends EntityFormController {
     // Override the default CSS class name, since the user-defined node type
     // name in 'TYPE-node-form' potentially clashes with third-party class
     // names.
-    $form['#attributes']['class'][0] = drupal_html_class('node-' . $node->type . '-form');
+    $form['#attributes']['class'][0] = drupal_html_class('node-' . $node->getType() . '-form');
 
     // Basic node information.
     // These elements are just values so they are not even sent to the client.
@@ -96,26 +96,26 @@ class NodeFormController extends EntityFormController {
     // Changed must be sent to the client, for later overwrite error checking.
     $form['changed'] = array(
       '#type' => 'hidden',
-      '#default_value' => isset($node->changed) ? $node->changed : NULL,
+      '#default_value' => $node->getChangedTime(),
     );
 
-    $node_type = node_type_load($node->type);
+    $node_type = node_type_load($node->getType());
     if ($node_type->has_title) {
       $form['title'] = array(
         '#type' => 'textfield',
         '#title' => check_plain($node_type->title_label),
         '#required' => TRUE,
-        '#default_value' => $node->title,
+        '#default_value' => $node->title->value,
         '#maxlength' => 255,
         '#weight' => -5,
       );
     }
 
-    $language_configuration = module_invoke('language', 'get_default_configuration', 'node', $node->type);
+    $language_configuration = module_invoke('language', 'get_default_configuration', 'node', $node->getType());
     $form['langcode'] = array(
       '#title' => t('Language'),
       '#type' => 'language_select',
-      '#default_value' => $node->langcode,
+      '#default_value' => $node->getUntranslated()->language()->id,
       '#languages' => Language::STATE_ALL,
       '#access' => isset($language_configuration['language_show']) && $language_configuration['language_show'],
     );
@@ -155,7 +155,7 @@ class NodeFormController extends EntityFormController {
       '#type' => 'textarea',
       '#title' => t('Revision log message'),
       '#rows' => 4,
-      '#default_value' => !empty($node->log) ? $node->log : '',
+      '#default_value' => !empty($node->log->value) ? $node->log->value : '',
       '#description' => t('Briefly describe the changes you have made.'),
       '#states' => array(
         'visible' => array(
@@ -190,8 +190,8 @@ class NodeFormController extends EntityFormController {
       '#type' => 'textfield',
       '#title' => t('Authored by'),
       '#maxlength' => 60,
-      '#autocomplete_path' => 'user/autocomplete',
-      '#default_value' => !empty($node->name) ? $node->name : '',
+      '#autocomplete_route_name' => 'user_autocomplete',
+      '#default_value' => $node->getAuthorId()? $node->getAuthor()->getUsername() : '',
       '#weight' => -1,
       '#description' => t('Leave blank for %anonymous.', array('%anonymous' => $user_config->get('anonymous'))),
     );
@@ -199,7 +199,7 @@ class NodeFormController extends EntityFormController {
       '#type' => 'textfield',
       '#title' => t('Authored on'),
       '#maxlength' => 25,
-      '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the time of form submission.', array('%time' => !empty($node->date) ? date_format(date_create($node->date), 'Y-m-d H:i:s O') : format_date($node->created, 'custom', 'Y-m-d H:i:s O'), '%timezone' => !empty($node->date) ? date_format(date_create($node->date), 'O') : format_date($node->created, 'custom', 'O'))),
+      '#description' => t('Format: %time. The date format is YYYY-MM-DD and %timezone is the time zone offset from UTC. Leave blank to use the time of form submission.', array('%time' => !empty($node->date) ? date_format(date_create($node->date), 'Y-m-d H:i:s O') : format_date($node->getCreatedTime(), 'custom', 'Y-m-d H:i:s O'), '%timezone' => !empty($node->date) ? date_format(date_create($node->date), 'O') : format_date($node->getCreatedTime(), 'custom', 'O'))),
       '#default_value' => !empty($node->date) ? $node->date : '',
     );
 
@@ -222,13 +222,13 @@ class NodeFormController extends EntityFormController {
     $form['options']['promote'] = array(
       '#type' => 'checkbox',
       '#title' => t('Promoted to front page'),
-      '#default_value' => $node->promote,
+      '#default_value' => $node->isPromoted(),
     );
 
     $form['options']['sticky'] = array(
       '#type' => 'checkbox',
       '#title' => t('Sticky at top of lists'),
-      '#default_value' => $node->sticky,
+      '#default_value' => $node->isSticky(),
     );
 
     // This form uses a button-level #submit handler for the form's main submit
@@ -271,7 +271,7 @@ class NodeFormController extends EntityFormController {
         $element['publish']['#value'] = t('Save and publish');
       }
       else {
-        $element['publish']['#value'] = $node->status ? t('Save and keep published') : t('Save and publish');
+        $element['publish']['#value'] = $node->isPublished() ? t('Save and keep published') : t('Save and publish');
       }
       $element['publish']['#weight'] = 0;
       array_unshift($element['publish']['#submit'], array($this, 'publish'));
@@ -283,13 +283,13 @@ class NodeFormController extends EntityFormController {
         $element['unpublish']['#value'] = t('Save as unpublished');
       }
       else {
-        $element['unpublish']['#value'] = !$node->status ? t('Save and keep unpublished') : t('Save and unpublish');
+        $element['unpublish']['#value'] = !$node->isPublished() ? t('Save and keep unpublished') : t('Save and unpublish');
       }
       $element['unpublish']['#weight'] = 10;
       array_unshift($element['unpublish']['#submit'], array($this, 'unpublish'));
 
       // If already published, the 'publish' button is primary.
-      if ($node->status) {
+      if ($node->isPublished()) {
         unset($element['unpublish']['#button_type']);
       }
       // Otherwise, the 'unpublish' button is primary and should come first.
@@ -327,16 +327,16 @@ class NodeFormController extends EntityFormController {
   public function validate(array $form, array &$form_state) {
     $node = $this->buildEntity($form, $form_state);
 
-    if ($node->id() && (node_last_changed($node->id(), $this->getFormLangcode($form_state)) > $node->changed)) {
+    if ($node->id() && (node_last_changed($node->id(), $this->getFormLangcode($form_state)) > $node->getChangedTime())) {
       form_set_error('changed', t('The content on this page has either been modified by another user, or you have already submitted modifications using this form. As a result, your changes cannot be saved.'));
     }
 
     // Validate the "authored by" field.
-    if (!empty($node->name) && !($account = user_load_by_name($node->name))) {
+    if (!empty($form_state['values']['name']) && !($account = user_load_by_name($form_state['values']['name']))) {
       // The use of empty() is mandatory in the context of usernames
       // as the empty string denotes the anonymous user. In case we
       // are dealing with an anonymous user we set the user ID to 0.
-      form_set_error('name', t('The username %name does not exist.', array('%name' => $node->name)));
+      form_set_error('name', t('The username %name does not exist.', array('%name' => $form_state['values']['name'])));
     }
 
     // Validate the "authored on" field.
@@ -373,9 +373,13 @@ class NodeFormController extends EntityFormController {
     // Save as a new revision if requested to do so.
     if (!empty($form_state['values']['revision'])) {
       $node->setNewRevision();
+      // If a new revision is created, save the current user as revision author.
+      $node->setRevisionCreationTime(REQUEST_TIME);
+      global $user;
+      $node->setRevisionAuthorId($user->id());
     }
 
-    node_submit($node);
+    $node->validated = TRUE;
     foreach (\Drupal::moduleHandler()->getImplementations('node_submit') as $module) {
       $function = $module . '_node_submit';
       $function($node, $form, $form_state);
@@ -411,7 +415,7 @@ class NodeFormController extends EntityFormController {
    */
   public function publish(array $form, array &$form_state) {
     $node = $this->entity;
-    $node->status = 1;
+    $node->setPublished(TRUE);
     return $node;
   }
 
@@ -425,9 +429,33 @@ class NodeFormController extends EntityFormController {
    */
   public function unpublish(array $form, array &$form_state) {
     $node = $this->entity;
-    $node->status = 0;
+    $node->setPublished(FALSE);
     return $node;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildEntity(array $form, array &$form_state) {
+    $entity = parent::buildEntity($form, $form_state);
+    // A user might assign the node author by entering a user name in the node
+    // form, which we then need to translate to a user ID.
+    if (!empty($form_state['values']['name']) && $account = user_load_by_name($form_state['values']['name'])) {
+      $entity->setAuthorId($account->id());
+    }
+    else {
+      $entity->setAuthorId(0);
+    }
+
+    if (!empty($form_state['values']['date']) && $form_state['values']['date'] instanceOf DrupalDateTime) {
+      $entity->setCreatedTime($form_state['values']['date']->getTimestamp());
+    }
+    else {
+      $entity->setCreatedTime(REQUEST_TIME);
+    }
+    return $entity;
+  }
+
 
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::save().
@@ -437,7 +465,7 @@ class NodeFormController extends EntityFormController {
     $insert = $node->isNew();
     $node->save();
     $node_link = l(t('view'), 'node/' . $node->id());
-    $watchdog_args = array('@type' => $node->type, '%title' => $node->label());
+    $watchdog_args = array('@type' => $node->getType(), '%title' => $node->label());
     $t_args = array('@type' => node_get_type_label($node), '%title' => $node->label());
 
     if ($insert) {
