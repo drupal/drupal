@@ -7,11 +7,11 @@
 
 namespace Drupal\aggregator\Form;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\aggregator\FeedStorageControllerInterface;
+use Drupal\Component\Utility\Url;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\Query\QueryFactory;
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Guzzle\Http\Exception\RequestException;
 use Guzzle\Http\Exception\BadResponseException;
@@ -20,7 +20,7 @@ use Guzzle\Http\Client;
 /**
  * Imports feeds from OPML.
  */
-class OpmlFeedAdd implements ControllerInterface, FormInterface {
+class OpmlFeedAdd extends FormBase {
 
   /**
    * The database connection object.
@@ -37,11 +37,11 @@ class OpmlFeedAdd implements ControllerInterface, FormInterface {
   protected $queryFactory;
 
   /**
-   * The entity manager.
+   * The feed storage.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\aggregator\FeedStorageControllerInterface
    */
-  protected $entityManager;
+  protected $feedStorage;
 
   /**
    * The HTTP client to fetch the feed data with.
@@ -53,19 +53,19 @@ class OpmlFeedAdd implements ControllerInterface, FormInterface {
   /**
    * Constructs a database object.
    *
-   * @param \Drupal\Core\Database\Connection; $database
+   * @param \Drupal\Core\Database\Connection $database
    *   The database object.
    * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
    *   The entity query object.
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
-   *   The entity manager.
-   * @param \Guzzle\Http\Client
+   * @param \Drupal\aggregator\FeedStorageControllerInterface $feed_storage
+   *   The feed storage.
+   * @param \Guzzle\Http\Client $http_client
    *   The Guzzle HTTP client.
    */
-  public function __construct(Connection $database, QueryFactory $query_factory, EntityManager $entity_manager, Client $http_client) {
+  public function __construct(Connection $database, QueryFactory $query_factory, FeedStorageControllerInterface $feed_storage, Client $http_client) {
     $this->database = $database;
     $this->queryFactory = $query_factory;
-    $this->entityManager = $entity_manager;
+    $this->feedStorage = $feed_storage;
     $this->httpClient = $http_client;
   }
 
@@ -76,7 +76,7 @@ class OpmlFeedAdd implements ControllerInterface, FormInterface {
     return new static(
       $container->get('database'),
       $container->get('entity.query'),
-      $container->get('plugin.manager.entity'),
+      $container->get('plugin.manager.entity')->getStorageController('aggregator_feed'),
       $container->get('http_default_client')
     );
   }
@@ -97,28 +97,28 @@ class OpmlFeedAdd implements ControllerInterface, FormInterface {
 
     $form['upload'] = array(
       '#type' => 'file',
-      '#title' => t('OPML File'),
-      '#description' => t('Upload an OPML file containing a list of feeds to be imported.'),
+      '#title' => $this->t('OPML File'),
+      '#description' => $this->t('Upload an OPML file containing a list of feeds to be imported.'),
     );
     $form['remote'] = array(
       '#type' => 'url',
-      '#title' => t('OPML Remote URL'),
+      '#title' => $this->t('OPML Remote URL'),
       '#maxlength' => 1024,
-      '#description' => t('Enter the URL of an OPML file. This file will be downloaded and processed only once on submission of the form.'),
+      '#description' => $this->t('Enter the URL of an OPML file. This file will be downloaded and processed only once on submission of the form.'),
     );
     $form['refresh'] = array(
       '#type' => 'select',
-      '#title' => t('Update interval'),
+      '#title' => $this->t('Update interval'),
       '#default_value' => 3600,
       '#options' => $period,
-      '#description' => t('The length of time between feed updates. Requires a correctly configured <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))),
+      '#description' => $this->t('The length of time between feed updates. Requires a correctly configured <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))),
     );
     $form['block'] = array(
       '#type' => 'select',
-      '#title' => t('News items in block'),
+      '#title' => $this->t('News items in block'),
       '#default_value' => 5,
       '#options' => drupal_map_assoc(array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)),
-      '#description' => t("Drupal can make a block with the most recent news items of a feed. You can <a href=\"@block-admin\">configure blocks</a> to be displayed in the sidebar of your page. This setting lets you configure the number of news items to show in a feed's block. If you choose '0' these feeds' blocks will be disabled.", array('@block-admin' => url('admin/structure/block'))),
+      '#description' => $this->t("Drupal can make a block with the most recent news items of a feed. You can <a href=\"@block-admin\">configure blocks</a> to be displayed in the sidebar of your page. This setting lets you configure the number of news items to show in a feed's block. If you choose '0' these feeds' blocks will be disabled.", array('@block-admin' => url('admin/structure/block'))),
     );
 
     // Handling of categories.
@@ -126,15 +126,15 @@ class OpmlFeedAdd implements ControllerInterface, FormInterface {
     if ($options) {
       $form['category'] = array(
         '#type' => 'checkboxes',
-        '#title' => t('Categorize news items'),
+        '#title' => $this->t('Categorize news items'),
         '#options' => $options,
-        '#description' => t('New feed items are automatically filed in the checked categories.'),
+        '#description' => $this->t('New feed items are automatically filed in the checked categories.'),
       );
     }
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Import'),
+      '#value' => $this->t('Import'),
     );
 
     return $form;
@@ -146,7 +146,7 @@ class OpmlFeedAdd implements ControllerInterface, FormInterface {
   public function validateForm(array &$form, array &$form_state) {
     // If both fields are empty or filled, cancel.
     if (empty($form_state['values']['remote']) == empty($_FILES['files']['name']['upload'])) {
-      form_set_error('remote', t('You must <em>either</em> upload a file or enter a URL.'));
+      form_set_error('remote', $this->t('You must <em>either</em> upload a file or enter a URL.'));
     }
   }
 
@@ -154,7 +154,6 @@ class OpmlFeedAdd implements ControllerInterface, FormInterface {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $data = '';
     $validators = array('file_validate_extensions' => array('opml xml'));
     if ($file = file_save_upload('upload', $validators, FALSE, 0)) {
       $data = file_get_contents($file->getFileUri());
@@ -168,27 +167,27 @@ class OpmlFeedAdd implements ControllerInterface, FormInterface {
       catch (BadResponseException $e) {
         $response = $e->getResponse();
         watchdog('aggregator', 'Failed to download OPML file due to "%error".', array('%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase()), WATCHDOG_WARNING);
-        drupal_set_message(t('Failed to download OPML file due to "%error".', array('%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase())));
+        drupal_set_message($this->t('Failed to download OPML file due to "%error".', array('%error' => $response->getStatusCode() . ' ' . $response->getReasonPhrase())));
         return;
       }
       catch (RequestException $e) {
         watchdog('aggregator', 'Failed to download OPML file due to "%error".', array('%error' => $e->getMessage()), WATCHDOG_WARNING);
-        drupal_set_message(t('Failed to download OPML file due to "%error".', array('%error' => $e->getMessage())));
+        drupal_set_message($this->t('Failed to download OPML file due to "%error".', array('%error' => $e->getMessage())));
         return;
       }
     }
 
     $feeds = $this->parseOpml($data);
     if (empty($feeds)) {
-      drupal_set_message(t('No new feed has been added.'));
+      drupal_set_message($this->t('No new feed has been added.'));
       return;
     }
 
     // @todo Move this functionality to a processor.
     foreach ($feeds as $feed) {
       // Ensure URL is valid.
-      if (!valid_url($feed['url'], TRUE)) {
-        drupal_set_message(t('The URL %url is invalid.', array('%url' => $feed['url'])), 'warning');
+      if (!Url::isValid($feed['url'], TRUE)) {
+        drupal_set_message($this->t('The URL %url is invalid.', array('%url' => $feed['url'])), 'warning');
         continue;
       }
 
@@ -200,28 +199,24 @@ class OpmlFeedAdd implements ControllerInterface, FormInterface {
       $ids = $query
         ->condition($condition)
         ->execute();
-      $result = $this->entityManager
-        ->getStorageController('aggregator_feed')
-        ->loadMultiple($ids);
+      $result = $this->feedStorage->loadMultiple($ids);
       foreach ($result as $old) {
         if (strcasecmp($old->label(), $feed['title']) == 0) {
-          drupal_set_message(t('A feed named %title already exists.', array('%title' => $old->label())), 'warning');
+          drupal_set_message($this->t('A feed named %title already exists.', array('%title' => $old->label())), 'warning');
           continue 2;
         }
         if (strcasecmp($old->url->value, $feed['url']) == 0) {
-          drupal_set_message(t('A feed with the URL %url already exists.', array('%url' => $old->url->value)), 'warning');
+          drupal_set_message($this->t('A feed with the URL %url already exists.', array('%url' => $old->url->value)), 'warning');
           continue 2;
         }
       }
 
-      $new_feed = $this->entityManager
-        ->getStorageController('aggregator_feed')
-        ->create(array(
-          'title' => $feed['title'],
-          'url' => $feed['url'],
-          'refresh' => $form_state['values']['refresh'],
-          'block' => $form_state['values']['block'],
-        ));
+      $new_feed = $this->feedStorage->create(array(
+        'title' => $feed['title'],
+        'url' => $feed['url'],
+        'refresh' => $form_state['values']['refresh'],
+        'block' => $form_state['values']['block'],
+      ));
       $new_feed->categories = $form_state['values']['category'];
       $new_feed->save();
     }
@@ -240,7 +235,7 @@ class OpmlFeedAdd implements ControllerInterface, FormInterface {
    * @param $opml
    *   The complete contents of an OPML document.
    *
-   * @return
+   * @return array
    *   An array of feeds, each an associative array with a "title" and a "url"
    *   element, or NULL if the OPML document failed to be parsed. An empty array
    *   will be returned if the document is valid but contains no feeds, as some

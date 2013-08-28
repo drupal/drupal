@@ -24,14 +24,14 @@ class SettingsForm extends SystemConfigFormBase {
   /**
    * The aggregator plugin managers.
    *
-   * @var array
+   * @var \Drupal\aggregator\Plugin\AggregatorPluginManager[]
    */
   protected $managers = array();
 
   /**
    * The instantiated plugin instances that have configuration forms.
    *
-   * @var array
+   * @var \Drupal\Core\Plugin\PluginFormInterface[]
    */
   protected $configurableInstances = array();
 
