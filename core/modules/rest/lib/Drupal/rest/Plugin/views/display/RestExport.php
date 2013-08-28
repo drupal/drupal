@@ -7,7 +7,8 @@
 
 namespace Drupal\rest\Plugin\views\display;
 
-use Drupal\Component\Annotation\Plugin;
+
+use Drupal\views\Annotation\ViewsDisplay;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\ContentNegotiation;
 use Drupal\views\ViewExecutable;
@@ -22,7 +23,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @ingroup views_display_plugins
  *
- * @Plugin(
+ * @ViewsDisplay(
  *   id = "rest_export",
  *   module = "rest",
  *   title = @Translation("REST export"),

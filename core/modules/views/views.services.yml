@@ -1,7 +1,7 @@
 services:
   plugin.manager.views.access:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [access, '@container.namespaces']
+    arguments: [access, '@container.namespaces', '@cache.views_info', '@language_manager', '@module_handler']
   plugin.manager.views.area:
     class: Drupal\views\Plugin\ViewsHandlerManager
     arguments: [area, '@container.namespaces', '@views.views_data']
@@ -10,22 +10,22 @@ services:
     arguments: [argument, '@container.namespaces', '@views.views_data']
   plugin.manager.views.argument_default:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [argument_default, '@container.namespaces']
+    arguments: [argument_default, '@container.namespaces', '@cache.views_info', '@language_manager', '@module_handler']
   plugin.manager.views.argument_validator:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [argument_validator, '@container.namespaces']
+    arguments: [argument_validator, '@container.namespaces', '@cache.views_info', '@language_manager', '@module_handler']
   plugin.manager.views.cache:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [cache, '@container.namespaces']
+    arguments: [cache, '@container.namespaces', '@cache.views_info', '@language_manager', '@module_handler']
   plugin.manager.views.display_extender:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [display_extender, '@container.namespaces']
+    arguments: [display_extender, '@container.namespaces', '@cache.views_info', '@language_manager', '@module_handler']
   plugin.manager.views.display:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [display, '@container.namespaces']
+    arguments: [display, '@container.namespaces', '@cache.views_info', '@language_manager', '@module_handler']
   plugin.manager.views.exposed_form:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [exposed_form, '@container.namespaces']
+    arguments: [exposed_form, '@container.namespaces', '@cache.views_info', '@language_manager', '@module_handler']
   plugin.manager.views.field:
     class: Drupal\views\Plugin\ViewsHandlerManager
     arguments: [field, '@container.namespaces', '@views.views_data']
@@ -37,25 +37,25 @@ services:
     arguments: [join, '@container.namespaces', '@views.views_data']
   plugin.manager.views.pager:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [pager, '@container.namespaces']
+    arguments: [pager, '@container.namespaces', '@cache.views_info', '@language_manager', '@module_handler']
   plugin.manager.views.query:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [query, '@container.namespaces']
+    arguments: [query, '@container.namespaces', '@cache.views_info', '@language_manager', '@module_handler']
   plugin.manager.views.relationship:
     class: Drupal\views\Plugin\ViewsHandlerManager
     arguments: [relationship, '@container.namespaces', '@views.views_data']
   plugin.manager.views.row:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [row, '@container.namespaces']
+    arguments: [row, '@container.namespaces', '@cache.views_info', '@language_manager', '@module_handler']
   plugin.manager.views.sort:
     class: Drupal\views\Plugin\ViewsHandlerManager
     arguments: [sort, '@container.namespaces', '@views.views_data']
   plugin.manager.views.style:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [style, '@container.namespaces']
+    arguments: [style, '@container.namespaces', '@cache.views_info', '@language_manager', '@module_handler']
   plugin.manager.views.wizard:
     class: Drupal\views\Plugin\ViewsPluginManager
-    arguments: [wizard, '@container.namespaces']
+    arguments: [wizard, '@container.namespaces', '@cache.views_info', '@language_manager', '@module_handler']
   views.views_data:
     class: Drupal\views\ViewsData
     arguments: ['@cache.views_info', '@config.factory', '@module_handler', '@language_manager']

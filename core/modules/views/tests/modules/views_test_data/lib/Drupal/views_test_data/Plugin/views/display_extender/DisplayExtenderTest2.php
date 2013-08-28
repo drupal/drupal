@@ -7,13 +7,13 @@
 
 namespace Drupal\views_test_data\Plugin\views\display_extender;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsDisplayExtender;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines another display extender test plugin.
  *
- * @Plugin(
+ * @ViewsDisplayExtender(
  *   id = "display_extender_test_2",
  *   title = @Translation("Display extender test number two")
  * )

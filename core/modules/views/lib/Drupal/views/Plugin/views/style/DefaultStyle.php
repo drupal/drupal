@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\style;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsStyle;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ingroup views_style_plugins
  *
- * @Plugin(
+ * @ViewsStyle(
  *   id = "default",
  *   title = @Translation("Unformatted list"),
  *   help = @Translation("Displays rows one after another."),

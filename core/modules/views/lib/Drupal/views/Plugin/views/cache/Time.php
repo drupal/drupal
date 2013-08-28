@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\cache;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsCache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Annotation\Translation;
 
@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ingroup views_cache_plugins
  *
- * @Plugin(
+ * @ViewsCache(
  *   id = "time",
  *   title = @Translation("Time-based"),
  *   help = @Translation("Simple time-based caching of data.")

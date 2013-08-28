@@ -10,15 +10,16 @@ namespace Drupal\views_test_data\Plugin\views\query;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsQuery;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a query test plugin.
  *
- * @Plugin(
+ * @ViewsQuery(
  *   id = "query_test",
- *   title = @Translation("Query test")
+ *   title = @Translation("Query test"),
+ *   help = @Translation("Defines a query test plugin.")
  * )
  */
 class QueryTest extends QueryPluginBase {

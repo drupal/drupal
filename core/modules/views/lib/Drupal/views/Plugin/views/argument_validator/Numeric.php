@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument_validator;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsArgumentValidator;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ingroup views_argument_validate_plugins
  *
- * @Plugin(
+ * @ViewsArgumentValidator(
  *   id = "numeric",
  *   title = @Translation("Numeric")
  * )

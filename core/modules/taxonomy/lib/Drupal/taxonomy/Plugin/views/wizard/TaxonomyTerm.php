@@ -8,13 +8,13 @@
 namespace Drupal\taxonomy\Plugin\views\wizard;
 
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsWizard;
 use Drupal\Core\Annotation\Translation;
 
 /**
  * Tests creating taxonomy views with the wizard.
  *
- * @Plugin(
+ * @ViewsWizard(
  *   id = "taxonomy_term",
  *   module = "taxonomy",
  *   base_table = "taxonomy_term_data",

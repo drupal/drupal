@@ -8,7 +8,7 @@
 namespace Drupal\views\Plugin\views\style;
 
 use Drupal\views\Plugin\views\style\StylePluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsStyle;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -16,7 +16,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ingroup views_style_plugins
  *
- * @Plugin(
+ * @ViewsStyle(
  *   id = "default_summary",
  *   title = @Translation("List"),
  *   help = @Translation("Displays the default summary as a list."),

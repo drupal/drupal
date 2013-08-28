@@ -13,7 +13,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Core\Database\DatabaseExceptionWrapper;
 use Drupal\views\Plugin\views\join\JoinPluginBase;
 use Drupal\views\Plugin\views\HandlerBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsQuery;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Views;
@@ -21,7 +21,7 @@ use Drupal\views\Views;
 /**
  * @todo.
  *
- * @Plugin(
+ * @ViewsQuery(
  *   id = "views_query",
  *   title = @Translation("SQL Query"),
  *   help = @Translation("Query will be generated and run using the Drupal database API.")

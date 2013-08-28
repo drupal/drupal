@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Plugin\views\row;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsRow;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\row\RowPluginBase;
 
@@ -15,7 +15,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  * Plugin which performs a node_view on the resulting object
  * and formats it as an RSS item.
  *
- * @Plugin(
+ * @ViewsRow(
  *   id = "node_rss",
  *   title = @Translation("Content"),
  *   help = @Translation("Display the content with standard node view."),

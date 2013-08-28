@@ -7,12 +7,14 @@
 
 namespace Drupal\views\Plugin\views\wizard;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsWizard;
+use Drupal\Core\Annotation\Translation;
 
 /**
- * @Plugin(
+ * @ViewsWizard(
  *   id = "standard",
- *   derivative = "Drupal\views\Plugin\Derivative\DefaultWizardDeriver"
+ *   derivative = "Drupal\views\Plugin\Derivative\DefaultWizardDeriver",
+ *   title = @Translation("Default wizard")
  * )
  */
 class Standard extends WizardPluginBase {

@@ -9,7 +9,7 @@ namespace Drupal\views\Plugin\views\pager;
 
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsPager;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -17,7 +17,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ingroup views_pager_plugins
  *
- * @Plugin(
+ * @ViewsPager(
  *   id = "none",
  *   title = @Translation("Display all items"),
  *   help = @Translation("Display all items that this view might find."),
