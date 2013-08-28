@@ -15,7 +15,7 @@ use Drupal\system\SystemConfigFormBase;
 class SystemConfigFormTestForm extends SystemConfigFormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'form_test_system_config_test_form';
