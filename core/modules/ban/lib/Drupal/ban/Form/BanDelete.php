@@ -7,7 +7,6 @@
 
 namespace Drupal\ban\Form;
 
-use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\ban\BanIpManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -16,7 +15,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Provides a form to unban IP addresses.
  */
-class BanDelete extends ConfirmFormBase implements ControllerInterface {
+class BanDelete extends ConfirmFormBase {
 
   /**
    * The banned IP address.
@@ -91,7 +90,7 @@ class BanDelete extends ConfirmFormBase implements ControllerInterface {
   public function submitForm(array &$form, array &$form_state) {
     $this->ipManager->unbanIp($this->banIp);
     watchdog('user', 'Deleted %ip', array('%ip' => $this->banIp));
-    drupal_set_message(t('The IP address %ip was deleted.', array('%ip' => $this->banIp)));
+    drupal_set_message($this->t('The IP address %ip was deleted.', array('%ip' => $this->banIp)));
     $form_state['redirect'] = 'admin/config/people/ban';
   }
 
