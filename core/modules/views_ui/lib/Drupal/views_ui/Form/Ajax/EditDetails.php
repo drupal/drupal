@@ -16,26 +16,26 @@ use Drupal\views_ui\ViewUI;
 class EditDetails extends ViewsFormBase {
 
   /**
-   * Implements \Drupal\views_ui\Form\Ajax\ViewsFormInterface::getFormKey().
+   * {@inheritdoc}
    */
   public function getFormKey() {
     return 'edit-details';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'views_ui_edit_details_form';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
     $view = &$form_state['view'];
 
-    $form['#title'] = t('View name and description');
+    $form['#title'] = $this->t('View name and description');
     $form['#section'] = 'details';
 
     $form['details'] = array(
@@ -44,27 +44,27 @@ class EditDetails extends ViewsFormBase {
     );
     $form['details']['label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Human-readable name'),
-      '#description' => t('A descriptive human-readable name for this view. Spaces are allowed'),
+      '#title' => $this->t('Human-readable name'),
+      '#description' => $this->t('A descriptive human-readable name for this view. Spaces are allowed'),
       '#default_value' => $view->label(),
     );
     $form['details']['langcode'] = array(
       '#type' => 'language_select',
-      '#title' => t('View language'),
-      '#description' => t('Language of labels and other textual elements in this view.'),
+      '#title' => $this->t('View language'),
+      '#description' => $this->t('Language of labels and other textual elements in this view.'),
       '#default_value' => $view->get('langcode'),
     );
     $form['details']['tag'] = array(
       '#type' => 'textfield',
-      '#title' => t('View tag'),
-      '#description' => t('Optionally, enter a comma delimited list of tags for this view to use in filtering and sorting views on the administrative page.'),
+      '#title' => $this->t('View tag'),
+      '#description' => $this->t('Optionally, enter a comma delimited list of tags for this view to use in filtering and sorting views on the administrative page.'),
       '#default_value' => $view->get('tag'),
       '#autocomplete_path' => 'admin/views/ajax/autocomplete/tag',
     );
     $form['details']['description'] = array(
       '#type' => 'textfield',
-      '#title' => t('View description'),
-      '#description' => t('This description will appear on the Views administrative UI to tell you what the view is about.'),
+      '#title' => $this->t('View description'),
+      '#description' => $this->t('This description will appear on the Views administrative UI to tell you what the view is about.'),
       '#default_value' => $view->get('description'),
     );
 
@@ -73,7 +73,7 @@ class EditDetails extends ViewsFormBase {
   }
 
   /**
-   * Overrides \Drupal\views_ui\Form\Ajax\ViewsFormBase::submitForm().
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
     $view = $form_state['view'];

@@ -39,7 +39,7 @@ abstract class ViewFormControllerBase extends EntityFormController {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::prepareForm().
+   * {@inheritdoc}
    */
   protected function prepareEntity() {
     // Determine the displays available for editing.
@@ -145,7 +145,7 @@ abstract class ViewFormControllerBase extends EntityFormController {
         $tabs[$id]['#access'] = TRUE;
         // Add a class to mark the error and a title to make a hover tip.
         $tabs[$id]['#link']['localized_options']['attributes']['class'][] = 'error';
-        $tabs[$id]['#link']['localized_options']['attributes']['title'] = t('This display has one or more validation errors.');
+        $tabs[$id]['#link']['localized_options']['attributes']['title'] = $this->t('This display has one or more validation errors.');
       }
     }
 
@@ -172,7 +172,7 @@ abstract class ViewFormControllerBase extends EntityFormController {
    */
   public function getDisplayLabel(ViewUI $view, $display_id, $check_changed = TRUE) {
     $display = $view->get('display');
-    $title = $display_id == 'default' ? t('Master') : $display[$display_id]['display_title'];
+    $title = $display_id == 'default' ? $this->t('Master') : $display[$display_id]['display_title'];
     $title = views_ui_truncate($title, 25);
 
     if ($check_changed && !empty($view->changed_display[$display_id])) {

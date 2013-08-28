@@ -7,7 +7,7 @@
 
 namespace Drupal\views_ui\Form\Ajax;
 
-use Drupal\views_ui\ViewUI;
+use Drupal\Core\Form\FormBase;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views\Ajax;
 use Drupal\Core\Ajax\AjaxResponse;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * Provides a base class for Views UI AJAX forms.
  */
-abstract class ViewsFormBase implements ViewsFormInterface {
+abstract class ViewsFormBase extends FormBase implements ViewsFormInterface {
 
   /**
    * The ID of the item this form is manipulating.
@@ -57,7 +57,7 @@ abstract class ViewsFormBase implements ViewsFormInterface {
   }
 
   /**
-   * Implements \Drupal\views_ui\Form\Ajax\ViewsFormInterface::getFormState().
+   * {@inheritdoc}
    */
   public function getFormState(ViewStorageInterface $view, $display_id, $js) {
     // $js may already have been converted to a Boolean.
@@ -79,7 +79,7 @@ abstract class ViewsFormBase implements ViewsFormInterface {
   }
 
   /**
-   * Implements \Drupal\views_ui\Form\Ajax\ViewsFormInterface::getForm().
+   * {@inheritdoc}
    */
   public function getForm(ViewStorageInterface $view, $display_id, $js) {
     $form_state = $this->getFormState($view, $display_id, $js);
@@ -174,13 +174,13 @@ abstract class ViewsFormBase implements ViewsFormInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, array &$form_state) {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
   }

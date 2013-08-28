@@ -15,27 +15,27 @@ use Drupal\views_ui\ViewUI;
 class ReorderDisplays extends ViewsFormBase {
 
   /**
-   * Implements \Drupal\views_ui\Form\Ajax\ViewsFormInterface::getFormKey().
+   * {@inheritdoc}
    */
   public function getFormKey() {
     return 'reorder-displays';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'views_ui_reorder_displays_form';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
     $view = $form_state['view'];
     $display_id = $form_state['display_id'];
 
-    $form['#title'] = t('Reorder displays');
+    $form['#title'] = $this->t('Reorder displays');
     $form['#section'] = 'reorder';
     $form['#action'] = url('admin/structure/views/nojs/reorder-displays/' . $view->id() . '/' . $display_id);
     $form['view'] = array(
@@ -57,8 +57,8 @@ class ReorderDisplays extends ViewsFormBase {
     $form['displays'] = array(
       '#type' => 'table',
       '#id' => 'reorder-displays',
-      '#header' => array(t('Display'), t('Weight'), t('Remove')),
-      '#empty' => t('No displays available.'),
+      '#header' => array($this->t('Display'), $this->t('Weight'), $this->t('Remove')),
+      '#empty' => $this->t('No displays available.'),
       '#tabledrag' => array(
         array('order', 'sibling', 'weight'),
       ),
@@ -89,7 +89,7 @@ class ReorderDisplays extends ViewsFormBase {
         '#type' => 'weight',
         '#value' => $display['position'],
         '#delta' => $count,
-        '#title' => t('Weight for @display', array('@display' => $display['display_title'])),
+        '#title' => $this->t('Weight for @display', array('@display' => $display['display_title'])),
         '#title_display' => 'invisible',
         '#attributes' => array(
           'class' => array('weight'),
@@ -107,7 +107,7 @@ class ReorderDisplays extends ViewsFormBase {
         ),
         'link' => array(
           '#type' => 'link',
-          '#title' => '<span>' . t('Remove') . '</span>',
+          '#title' => '<span>' . $this->t('Remove') . '</span>',
           '#href' => 'javascript:void()',
           '#options' => array(
             'html' => TRUE,
@@ -115,8 +115,8 @@ class ReorderDisplays extends ViewsFormBase {
           '#attributes' => array(
             'id' => 'display-remove-link-' . $id,
             'class' => array('views-button-remove', 'display-remove-link'),
-            'alt' => t('Remove this display'),
-            'title' => t('Remove this display'),
+            'alt' => $this->t('Remove this display'),
+            'title' => $this->t('Remove this display'),
           ),
         ),
         '#access' => ($id !== 'default'),
@@ -139,7 +139,7 @@ class ReorderDisplays extends ViewsFormBase {
   }
 
   /**
-   * Overrides \Drupal\views_ui\Form\Ajax\ViewsFormBase::submitForm().
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
     $view = $form_state['view'];

@@ -24,14 +24,14 @@ class ConfigItemExtra extends ViewsFormBase {
   }
 
   /**
-   * Implements \Drupal\views_ui\Form\Ajax\ViewsFormInterface::getFormKey().
+   * {@inheritdoc}
    */
   public function getFormKey() {
     return 'config-item-extra';
   }
 
   /**
-   * Overrides \Drupal\views_ui\Form\Ajax\ViewsFormBase::getForm().
+   * {@inheritdoc}
    */
   public function getForm(ViewStorageInterface $view, $display_id, $js, $type = NULL, $id = NULL) {
     $this->setType($type);
@@ -40,14 +40,14 @@ class ConfigItemExtra extends ViewsFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'views_ui_config_item_extra_form';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
     $view = &$form_state['view'];
@@ -69,13 +69,13 @@ class ConfigItemExtra extends ViewsFormBase {
     if ($item) {
       $handler = $executable->display_handler->getHandler($type, $id);
       if (empty($handler)) {
-        $form['markup'] = array('#markup' => t("Error: handler for @table > @field doesn't exist!", array('@table' => $item['table'], '@field' => $item['field'])));
+        $form['markup'] = array('#markup' => $this->t("Error: handler for @table > @field doesn't exist!", array('@table' => $item['table'], '@field' => $item['field'])));
       }
       else {
         $handler->init($executable, $executable->display_handler, $item);
         $types = ViewExecutable::viewsHandlerTypes();
 
-        $form['#title'] = t('Configure extra settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
+        $form['#title'] = $this->t('Configure extra settings for @type %item', array('@type' => $types[$type]['lstitle'], '%item' => $handler->adminLabel()));
 
         $form['#section'] = $display_id . '-' . $type . '-' . $id;
 
@@ -90,14 +90,14 @@ class ConfigItemExtra extends ViewsFormBase {
   }
 
   /**
-   * Overrides \Drupal\views_ui\Form\Ajax\ViewsFormBase::validateForm().
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, array &$form_state) {
     $form_state['handler']->validateExtraOptionsForm($form['options'], $form_state);
   }
 
   /**
-   * Overrides \Drupal\views_ui\Form\Ajax\ViewsFormBase::submitForm().
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
     // Run it through the handler's submit function.
