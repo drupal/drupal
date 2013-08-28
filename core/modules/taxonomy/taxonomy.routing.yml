@@ -26,6 +26,13 @@ taxonomy_term_delete:
   requirements:
     _entity_access: 'taxonomy_term.delete'
 
+taxonomy_vocabulary_add:
+  pattern: '/admin/structure/taxonomy/add'
+  defaults:
+    _entity_form: 'taxonomy_vocabulary'
+  requirements:
+    _entity_create_access: 'taxonomy_vocabulary'
+
 taxonomy_vocabulary_delete:
   pattern: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/delete'
   defaults:

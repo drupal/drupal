@@ -8,18 +8,6 @@
 use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
- * Page callback: provides the vocabulary creation form.
- */
-function taxonomy_vocabulary_add() {
-  $vocabulary = entity_create('taxonomy_vocabulary', array(
-    // Default the new vocabulary to the site's default language. This is the
-    // most likely default value until we have better flexible settings.
-    'langcode' => language_default()->id,
-  ));
-  return Drupal::entityManager()->getForm($vocabulary);
-}
-
-/**
  * Form builder for the taxonomy terms overview.
  *
  * Display a tree of all the terms in a vocabulary, with options to edit

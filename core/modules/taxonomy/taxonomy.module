@@ -241,12 +241,8 @@ function taxonomy_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/structure/taxonomy/add'] = array(
-    'title' => 'Add vocabulary',
-    'page callback' => 'taxonomy_vocabulary_add',
-    'access callback' => 'entity_page_create_access',
-    'access arguments' => array('taxonomy_vocabulary'),
-    'type' => MENU_LOCAL_ACTION,
-    'file' => 'taxonomy.admin.inc',
+    'route_name' => 'taxonomy_vocabulary_add',
+    'type' => MENU_SIBLING_LOCAL_TASK,
   );
 
   $items['taxonomy/term/%taxonomy_term'] = array(
