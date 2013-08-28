@@ -31,24 +31,15 @@
 .contextual .trigger {
   background-attachment: scroll;
   background-color: #fff;
-  background-image: url(../../../misc/edit.png);
-  background-position: center center;
-  background-repeat: no-repeat;
-  background-size: 16px 16px;
   border: 1px solid #ddd;
   border-radius: 13px;
   box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-  /* Override the .focusable height: auto */
-  height: 28px !important;
   float: right; /* LTR */
   margin: 0;
   overflow: hidden;
   padding: 0 2px;
   position: relative;
   right: 2px; /* LTR */
-  /* Override the .focusable height: auto */
-  width: 28px !important;
-  text-indent: -9999px;
   cursor: pointer;
 }
 [dir="rtl"] .contextual .trigger {

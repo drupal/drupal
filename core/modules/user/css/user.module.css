@@ -106,14 +106,3 @@ div.password-suggestions ul {
     width: 100%;
   }
 }
-
-/**
- * Toolbar icon.
- */
-.toolbar-icon-user:before {
-  background-image: url(../images/icon-user.png);
-}
-.toolbar-icon-user:active:before,
-.toolbar-icon-user.active:before {
-  background-image: url(../images/icon-user-active.png);
-}

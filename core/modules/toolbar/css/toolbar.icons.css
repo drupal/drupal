@@ -1,6 +1,8 @@
 /**
- * @file toolbar.icons.css
+ * @file
+ * Styling for toolbar module icons.
  */
+
 .toolbar .toolbar-icon {
   padding-left: 2.75em; /* LTR */
   position: relative;
@@ -14,6 +16,7 @@
   background-color: transparent;
   background-position: center center;
   background-repeat: no-repeat;
+  background-size: 100% auto;
   content: '';
   display: block;
   height: 100%;
@@ -21,6 +24,9 @@
   position: absolute;
   top: 0;
   width: 20px;
+}
+.no-svg .toolbar .toolbar-icon:before {
+  background-size: auto auto;
 }
 [dir="rtl"] .toolbar .toolbar-icon:before {
   left: auto;
@@ -57,81 +63,165 @@
 }
 
 /**
- * Top level icons
+ * Top level icons.
  */
-.toolbar-icon-home:before {
-  background-image: url("../images/icon-home.png");
+.toolbar-bar .toolbar-icon-home:before {
+  background-image: url("../../../misc/icons/bebebe/house.svg");
 }
-.toolbar-icon-home:active:before,
-.toolbar-icon-home.active:before {
-  background-image: url("../images/icon-home-active.png");
+.no-svg .toolbar-bar .toolbar-icon-home:before {
+  background-image: url("../../../misc/icons/bebebe/house.png");
 }
-.toolbar-icon-menu:before {
-  background-image: url("../images/icon-menu.png");
+.toolbar-bar .toolbar-icon-home:active:before,
+.toolbar-bar .toolbar-icon-home.active:before {
+  background-image: url("../../../misc/icons/ffffff/house.svg");
 }
-.toolbar-icon-menu:active:before,
-.toolbar-icon-menu.active:before {
-  background-image: url("../images/icon-menu-active.png");
+.no-svg .toolbar-bar .toolbar-icon-home:active:before,
+.no-svg .toolbar-bar .toolbar-icon-home.active:before {
+  background-image: url("../../../misc/icons/ffffff/house.png");
+}
+.toolbar-bar .toolbar-icon-menu:before {
+  background-image: url("../../../misc/icons/bebebe/hamburger.svg");
+}
+.no-svg .toolbar-bar .toolbar-icon-menu:before {
+  background-image: url("../../../misc/icons/bebebe/hamburger.png");
+}
+.toolbar-bar .toolbar-icon-menu:active:before,
+.toolbar-bar .toolbar-icon-menu.active:before {
+  background-image: url("../../../misc/icons/ffffff/hamburger.svg");
+}
+.no-svg .toolbar-bar .toolbar-icon-menu:active:before,
+.no-svg .toolbar-bar .toolbar-icon-menu.active:before {
+  background-image: url("../../../misc/icons/ffffff/hamburger.png");
+}
+.toolbar-bar .toolbar-icon-help:before {
+  background-image: url("../../../misc/icons/bebebe/questionmark-disc.svg");
+}
+.no-svg .toolbar-bar .toolbar-icon-help:before {
+  background-image: url("../../../misc/icons/bebebe/questionmark-disc.png");
+}
+.toolbar-bar .toolbar-icon-help:active:before,
+.toolbar-bar .toolbar-icon-help.active:before {
+  background-image: url("../../../misc/icons/ffffff/questionmark-disc.svg");
+}
+.no-svg .toolbar-bar .toolbar-icon-help:active:before,
+.no-svg .toolbar-bar .toolbar-icon-help.active:before {
+  background-image: url("../../../misc/icons/ffffff/questionmark-disc.png");
 }
 
 /**
  * Main menu icons.
  */
 .toolbar-icon-content:before {
-  background-image: url("../images/icon-content.png");
+  background-image: url("../../../misc/icons/787878/file.svg");
+}
+.no-svg .toolbar-icon-content:before {
+  background-image: url("../../../misc/icons/787878/file.png");
 }
 .toolbar-icon-content:active:before,
 .toolbar-icon-content.active:before {
-  background-image: url("../images/icon-content-active.png");
+  background-image: url("../../../misc/icons/000000/file.svg");
+}
+.no-svg .toolbar-icon-content:active:before,
+.no-svg .toolbar-icon-content.active:before {
+  background-image: url("../../../misc/icons/000000/file.png");
 }
 .toolbar-icon-structure:before {
-  background-image: url("../images/icon-structure.png");
+  background-image: url("../../../misc/icons/787878/orgchart.svg");
+}
+.no-svg .toolbar-icon-structure:before {
+  background-image: url("../../../misc/icons/787878/orgchart.png");
 }
 .toolbar-icon-structure:active:before,
 .toolbar-icon-structure.active:before {
-  background-image: url("../images/icon-structure-active.png");
+  background-image: url("../../../misc/icons/000000/orgchart.svg");
+}
+.no-svg .toolbar-icon-structure:active:before,
+.no-svg .toolbar-icon-structure.active:before {
+  background-image: url("../../../misc/icons/000000/orgchart.png");
 }
 .toolbar-icon-appearance:before {
-  background-image: url("../images/icon-appearance.png");
+  background-image: url("../../../misc/icons/787878/paintbrush.svg");
+}
+.no-svg .toolbar-icon-appearance:before {
+  background-image: url("../../../misc/icons/787878/paintbrush.png");
 }
 .toolbar-icon-appearance:active:before,
 .toolbar-icon-appearance.active:before {
-  background-image: url("../images/icon-appearance-active.png");
+  background-image: url("../../../misc/icons/000000/paintbrush.svg");
+}
+.no-svg .toolbar-icon-appearance:active:before,
+.no-svg .toolbar-icon-appearance.active:before {
+  background-image: url("../../../misc/icons/000000/paintbrush.png");
 }
 .toolbar-icon-people:before {
-  background-image: url("../images/icon-people.png");
+  background-image: url("../../../misc/icons/787878/people.svg");
+}
+.no-svg .toolbar-icon-people:before {
+  background-image: url("../../../misc/icons/787878/people.png");
 }
 .toolbar-icon-people:active:before,
 .toolbar-icon-people.active:before {
-  background-image: url("../images/icon-people-active.png");
+  background-image: url("../../../misc/icons/000000/people.svg");
+}
+.no-svg .toolbar-icon-people:active:before,
+.no-svg .toolbar-icon-people.active:before {
+  background-image: url("../../../misc/icons/000000/people.png");
 }
 .toolbar-icon-extend:before {
-  background-image: url("../images/icon-extend.png");
+  background-image: url("../../../misc/icons/787878/puzzlepiece.svg");
+}
+.no-svg .toolbar-icon-extend:before {
+  background-image: url("../../../misc/icons/787878/puzzlepiece.png");
 }
 .toolbar-icon-extend:active:before,
 .toolbar-icon-extend.active:before {
-  background-image: url("../images/icon-extend-active.png");
+  background-image: url("../../../misc/icons/000000/puzzlepiece.svg");
+}
+.no-svg .toolbar-icon-extend:active:before,
+.no-svg .toolbar-icon-extend.active:before {
+  background-image: url("../../../misc/icons/000000/puzzlepiece.png");
 }
 .toolbar-icon-configuration:before {
-  background-image: url("../images/icon-configuration.png");
+  background-image: url("../../../misc/icons/787878/wrench.svg");
+}
+.no-svg .toolbar-icon-configuration:before {
+  background-image: url("../../../misc/icons/787878/wrench.png");
 }
 .toolbar-icon-configuration:active:before,
 .toolbar-icon-configuration.active:before {
-  background-image: url("../images/icon-configuration-active.png");
+  background-image: url("../../../misc/icons/000000/wrench.svg");
+}
+.no-svg .toolbar-icon-configuration:active:before,
+.no-svg .toolbar-icon-configuration.active:before {
+  background-image: url("../../../misc/icons/000000/wrench.png");
 }
 .toolbar-icon-reports:before {
-  background-image: url("../images/icon-reports.png");
+  background-image: url("../../../misc/icons/787878/barchart.svg");
+}
+.no-svg .toolbar-icon-reports:before {
+  background-image: url("../../../misc/icons/787878/barchart.png");
 }
 .toolbar-icon-reports:active:before,
 .toolbar-icon-reports.active:before {
-  background-image: url("../images/icon-reports-active.png");
+  background-image: url("../../../misc/icons/000000/barchart.svg");
+}
+.no-svg .toolbar-icon-reports:active:before,
+.no-svg .toolbar-icon-reports.active:before {
+  background-image: url("../../../misc/icons/000000/barchart.png");
 }
 .toolbar-icon-help:before {
-  background-image: url("../images/icon-help.png");
+  background-image: url("../../../misc/icons/787878/questionmark-disc.svg");
+}
+.no-svg .toolbar-icon-help:before {
+  background-image: url("../../../misc/icons/787878/questionmark-disc.png");
 }
 .toolbar-icon-help:active:before,
 .toolbar-icon-help.active:before {
-  background-image: url("../images/icon-help-active.png");
+  background-image: url("../../../misc/icons/000000/questionmark-disc.svg");
+}
+.no-svg .toolbar-icon-help:active:before,
+.no-svg .toolbar-icon-help.active:before {
+  background-image: url("../../../misc/icons/000000/questionmark-disc.png");
 }
 
 @media only screen and (min-width: 16.5em) {
@@ -144,11 +234,14 @@
     width: 4em;
   }
   .toolbar .toolbar-bar .toolbar-icon:before {
+    background-size: 42% auto;
     left: 0; /* LTR */
     width: 100%;
   }
-  [dir="rtl"] .toolbar .toolbar-bar .toolbar-icon:before {
+  .no-svg .toolbar .toolbar-bar .toolbar-icon:before {
     background-size: auto auto;
+  }
+  [dir="rtl"] .toolbar .toolbar-bar .toolbar-icon:before {
     left: auto;
     right: 0;
   }
@@ -168,11 +261,123 @@
     padding-right: 2.75em;
   }
   .toolbar .toolbar-bar .toolbar-icon:before {
+    background-size: 100% auto;
     left: 0.6667em; /* LTR */
     width: 20px;
+  }
+  .no-svg .toolbar .toolbar-bar .toolbar-icon:before {
+    background-size: auto auto;
   }
   [dir="rtl"] .toolbar .toolbar-bar .toolbar-icon:before {
     left: 0;
     right: 0.6667em;
   }
 }
+
+/**
+ * Handle.
+ */
+.toolbar .toolbar-icon.toolbar-handle {
+  width: 3em;
+  text-indent: -9999px;
+}
+.toolbar .toolbar-icon.toolbar-handle:before {
+  background-image: url("../../../misc/icons/5181c6/chevron-disc-down.svg");
+  left: 0; /* LTR */
+}
+.no-svg .toolbar .toolbar-icon.toolbar-handle:before {
+  background-image: url("../../../misc/icons/5181c6/chevron-disc-down.png");
+  left: 0; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-icon.toolbar-handle:before {
+  left: auto;
+  right: 0;
+}
+[dir="rtl"].no-svg .toolbar .toolbar-icon.toolbar-handle:before {
+  left: auto;
+  right: 0;
+}
+.toolbar .toolbar-icon.toolbar-handle.open:before {
+  background-image: url("../../../misc/icons/787878/chevron-disc-up.svg");
+}
+.no-svg .toolbar .toolbar-icon.toolbar-handle.open:before {
+  background-image: url("../../../misc/icons/787878/chevron-disc-up.png");
+}
+.toolbar .menu .menu .toolbar-icon.toolbar-handle:before {
+  background-image: url("../../../misc/icons/5181c6/twistie-down.svg");
+  background-size: 75% 75%;
+}
+.no-svg .toolbar .menu .menu .toolbar-icon.toolbar-handle:before {
+  background-image: url("../../../misc/icons/5181c6/twistie-down.png");
+  background-size: auto auto;
+}
+.toolbar .menu .menu .toolbar-icon.toolbar-handle.open:before {
+  background-image: url("../../../misc/icons/787878/twistie-up.svg");
+  background-size: 75% 75%;
+}
+.no-svg .toolbar .menu .menu .toolbar-icon.toolbar-handle.open:before {
+  background-image: url("../../../misc/icons/787878/twistie-up.png");
+  background-size: auto auto;
+}
+
+/**
+ * Orientation toggle.
+ */
+.toolbar .toolbar-toggle-orientation button {
+  height: 16px;
+  padding: 0;
+  text-indent: -999em;
+  width: 20px;
+}
+.toolbar .toolbar-toggle-orientation button:before {
+  left: 0; /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-toggle-orientation button:before {
+  left: auto;
+  right: 0;
+}
+[dir="rtl"] .toolbar .toolbar-toggle-orientation .toolbar-icon {
+  padding-right: 0;
+}
+/**
+ * In order to support a hover effect on the SVG images, while also supporting
+ * RTL text direction and no SVG support, this little icon requires some very
+ * specific targeting, setting and unsetting.
+ */
+.toolbar .toolbar-toggle-orientation [value="vertical"]:before {
+  background-image: url("../../../misc/icons/bebebe/push-left.svg"); /* LTR */
+}
+.toolbar .toolbar-toggle-orientation [value="vertical"]:hover:before {
+  background-image: url("../../../misc/icons/787878/push-left.svg"); /* LTR */
+}
+.no-svg .toolbar .toolbar-toggle-orientation [value="vertical"]:before {
+  background-image: url("../../../misc/icons/bebebe/push-left.png"); /* LTR */
+}
+.no-svg .toolbar .toolbar-toggle-orientation [value="vertical"]:hover:before {
+  background-image: url("../../../misc/icons/787878/push-left.png"); /* LTR */
+}
+[dir="rtl"] .toolbar .toolbar-toggle-orientation [value="vertical"]:before {
+  background-image: url("../../../misc/icons/bebebe/push-right.svg");
+}
+[dir="rtl"] .toolbar .toolbar-toggle-orientation [value="vertical"]:hover:before {
+  background-image: url("../../../misc/icons/787878/push-right.svg");
+}
+[dir="rtl"].no-svg .toolbar .toolbar-toggle-orientation [value="vertical"]:before {
+  background-image: url("../../../misc/icons/bebebe/push-right.png");
+}
+[dir="rtl"].no-svg .toolbar .toolbar-toggle-orientation [value="vertical"]:hover:before {
+  background-image: url("../../../misc/icons/787878/push-right.png");
+}
+.toolbar .toolbar-toggle-orientation [value="horizontal"]:before {
+  background-image: url("../../../misc/icons/bebebe/push-up.svg");
+}
+.toolbar .toolbar-toggle-orientation [value="horizontal"]:hover:before {
+  background-image: url("../../../misc/icons/787878/push-up.svg");
+}
+.no-svg .toolbar .toolbar-toggle-orientation [value="horizontal"]:before {
+  background-image: url("../../../misc/icons/bebebe/push-up.png");
+}
+.no-svg .toolbar .toolbar-toggle-orientation [value="horizontal"]:hover:before {
+  background-image: url("../../../misc/icons/787878/push-up.png");
+}
+

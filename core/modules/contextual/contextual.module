@@ -115,6 +115,7 @@ function contextual_library_info() {
     'css' => array(
       $path . '/css/contextual.module.css' => array(),
       $path . '/css/contextual.theme.css' => array(),
+      $path . '/css/contextual.icons.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),

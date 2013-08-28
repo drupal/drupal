@@ -2101,6 +2101,11 @@ function user_toolbar() {
       ),
     ),
     '#weight' => 100,
+    '#attached' => array(
+      'library' => array(
+        array('user', 'drupal.user.icons'),
+      ),
+    ),
   );
 
   return $items;
@@ -2110,14 +2115,15 @@ function user_toolbar() {
  * Implements hook_library_info().
  */
 function user_library_info() {
+  $path = drupal_get_path('module', 'user');
   $libraries['drupal.user'] = array(
     'title' => 'User',
     'version' => VERSION,
     'js' => array(
-      drupal_get_path('module', 'user') . '/user.js' => array(),
+      $path . '/user.js' => array(),
     ),
     'css' => array(
-      drupal_get_path('module', 'user') . '/css/user.module.css' => array(),
+      $path . '/css/user.module.css' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),
@@ -2130,12 +2136,20 @@ function user_library_info() {
     'title' => 'User permissions',
     'version' => VERSION,
     'js' => array(
-      drupal_get_path('module', 'user') . '/user.permissions.js' => array(),
+      $path . '/user.permissions.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
+    ),
+  );
+
+  $libraries['drupal.user.icons'] = array(
+    'title' => 'User icon styling',
+    'version' => VERSION,
+    'css' => array(
+      $path . '/css/user.icons.css' => array(),
     ),
   );
 

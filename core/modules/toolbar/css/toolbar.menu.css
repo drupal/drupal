@@ -1,7 +1,8 @@
 /**
  * @file toolbar.menu.css
  */
-.toolbar .menu {
+.toolbar .menu,
+[dir="rtl"] .toolbar .menu {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -85,29 +86,10 @@
   padding: 0;
   position: absolute;
   right: 0; /* LTR */
-  text-indent: -9999px;
   top: 0;
-  width: 3em;
   z-index: 1;
 }
 [dir="rtl"] .toolbar .toolbar-icon.toolbar-handle {
   left: 0;
   right: auto;
-}
-.toolbar .toolbar-icon.toolbar-handle:before {
-  background-image: url("../images/icon-open.png");
-  left: 0; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-icon.toolbar-handle:before {
-  left: auto;
-  right: 0;
-}
-.toolbar .toolbar-icon.toolbar-handle.open:before {
-  background-image: url("../images/icon-collapse.png");
-}
-.toolbar .menu .menu .toolbar-icon.toolbar-handle:before {
-  background-image: url("../images/icon-child-open.png");
-}
-.toolbar .menu .menu .toolbar-icon.toolbar-handle.open:before {
-  background-image: url("../images/icon-child-collapse.png");
 }
