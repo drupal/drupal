@@ -7,11 +7,14 @@
 
 namespace Drupal\aggregator_test\Plugin\aggregator\processor;
 
-use Drupal\Component\Plugin\PluginBase;
+use Drupal\aggregator\Plugin\AggregatorPluginSettingsBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
 use Drupal\aggregator\Entity\Feed;
 use Drupal\aggregator\Annotation\AggregatorProcessor;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a default processor implementation.
@@ -24,14 +27,49 @@ use Drupal\Core\Annotation\Translation;
  *   description = @Translation("Test generic processor functionality.")
  * )
  */
-class TestProcessor extends PluginBase implements ProcessorInterface {
+class TestProcessor extends AggregatorPluginSettingsBase implements ProcessorInterface, ContainerFactoryPluginInterface {
 
   /**
-   * Implements \Drupal\aggregator\Plugin\ProcessorInterface::settingsForm().
+   * Contains the configuration object factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
    */
-  public function settingsForm(array $form, array &$form_state) {
-    $config = \Drupal::config('aggregator.settings');
-    $processors = $config->get('processors');
+  protected $configFactory;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('config.factory')
+    );
+  }
+
+  /**
+   * Constructs a TestProcessor object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Config\ConfigFactory $config
+   *   The configuration factory object.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ConfigFactory $config) {
+    $this->configFactory = $config;
+    parent::__construct($configuration + $this->getConfiguration(), $plugin_id, $plugin_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, array &$form_state) {
+    $processors = $this->configFactory->get('aggregator.settings')->get('processors');
     $info = $this->getPluginDefinition();
 
     $form['processors'][$info['id']] = array(
@@ -46,22 +84,21 @@ class TestProcessor extends PluginBase implements ProcessorInterface {
       '#type' => 'number',
       '#min' => 1,
       '#max' => 1000,
-      '#default_value' => \Drupal::config('aggregator_test.settings')->get('items.dummy_length'),
+      '#default_value' => $this->configuration['items']['dummy_length'],
     );
     return $form;
   }
 
   /**
-   * Implements \Drupal\aggregator\Plugin\ProcessorInterface::settingsSubmit().
+   * {@inheritdoc}
    */
-  public function settingsSubmit(array $form, array &$form_state) {
-    \Drupal::config('aggregator_test.settings')
-      ->set('items.dummy_length', $form_state['values']['dummy_length'])
-      ->save();
+  public function submitConfigurationForm(array &$form, array &$form_state) {
+    $this->configuration['items']['dummy_length'] = $form_state['values']['dummy_length'];
+    $this->setConfiguration($this->configuration);
   }
 
   /**
-   * Implements \Drupal\aggregator\Plugin\ProcessorInterface::process().
+   * {@inheritdoc}
    */
   public function process(Feed $feed) {
     foreach ($feed->items as &$item) {
@@ -71,7 +108,7 @@ class TestProcessor extends PluginBase implements ProcessorInterface {
   }
 
   /**
-   * Implements \Drupal\aggregator\Plugin\ProcessorInterface::remove().
+   * {@inheritdoc}
    */
   public function remove(Feed $feed) {
     // Append a random number, just to change the feed description.
@@ -79,11 +116,30 @@ class TestProcessor extends PluginBase implements ProcessorInterface {
   }
 
   /**
-   * Implements \Drupal\aggregator\Plugin\ProcessorInterface::postProcess().
+   * {@inheritdoc}
    */
   public function postProcess(Feed $feed) {
     // Double the refresh rate.
     $feed->refresh->value *= 2;
     $feed->save();
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfiguration() {
+    return $this->configFactory->get('aggregator_test.settings')->get();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConfiguration(array $configuration) {
+    $config = $this->configFactory->get('aggregator_test.settings');
+    foreach ($configuration as $key => $value) {
+      $config->set($key, $value);
+    }
+    $config->save();
+  }
+
 }

@@ -7,12 +7,15 @@
 
 namespace Drupal\aggregator\Plugin\aggregator\processor;
 
-use Drupal\Component\Plugin\PluginBase;
+use Drupal\aggregator\Annotation\AggregatorProcessor;
+use Drupal\aggregator\Plugin\AggregatorPluginSettingsBase;
 use Drupal\aggregator\Plugin\ProcessorInterface;
 use Drupal\aggregator\Entity\Feed;
-use Drupal\aggregator\Annotation\AggregatorProcessor;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Config\ConfigFactory;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a default processor implementation.
@@ -25,14 +28,51 @@ use Drupal\Core\Database\Database;
  *   description = @Translation("Creates lightweight records from feed items.")
  * )
  */
-class DefaultProcessor extends PluginBase implements ProcessorInterface {
+class DefaultProcessor extends AggregatorPluginSettingsBase implements ProcessorInterface, ContainerFactoryPluginInterface {
 
   /**
-   * Implements \Drupal\aggregator\Plugin\ProcessorInterface::settingsForm().
+   * Contains the configuration object factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
    */
-  public function settingsForm(array $form, array &$form_state) {
-    $config = \Drupal::config('aggregator.settings');
-    $processors = $config->get('processors');
+  protected $configFactory;
+
+  /**
+   * Constructs a DefaultProcessor object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Config\ConfigFactory $config
+   *   The configuration factory object.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ConfigFactory $config) {
+    $this->configFactory = $config;
+    // @todo Refactor aggregator plugins to ConfigEntity so merging
+    //   the configuration here is not needed.
+    parent::__construct($configuration + $this->getConfiguration(), $plugin_id, $plugin_definition);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('config.factory')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form, array &$form_state) {
+    $processors = $this->configuration['processors'];
     $info = $this->getPluginDefinition();
     $items = drupal_map_assoc(array(3, 5, 10, 15, 20, 25), array($this, 'formatItems'));
     $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval');
@@ -52,7 +92,7 @@ class DefaultProcessor extends PluginBase implements ProcessorInterface {
     $form['processors'][$info['id']]['aggregator_summary_items'] = array(
       '#type' => 'select',
       '#title' => t('Number of items shown in listing pages'),
-      '#default_value' => $config->get('source.list_max'),
+      '#default_value' => $this->configuration['source']['list_max'],
       '#empty_value' => 0,
       '#options' => $items,
     );
@@ -60,7 +100,7 @@ class DefaultProcessor extends PluginBase implements ProcessorInterface {
     $form['processors'][$info['id']]['aggregator_clear'] = array(
       '#type' => 'select',
       '#title' => t('Discard items older than'),
-      '#default_value' => $config->get('items.expire'),
+      '#default_value' => $this->configuration['items']['expire'],
       '#options' => $period,
       '#description' => t('Requires a correctly configured <a href="@cron">cron maintenance task</a>.', array('@cron' => url('admin/reports/status'))),
     );
@@ -68,7 +108,7 @@ class DefaultProcessor extends PluginBase implements ProcessorInterface {
     $form['processors'][$info['id']]['aggregator_category_selector'] = array(
       '#type' => 'radios',
       '#title' => t('Select categories using'),
-      '#default_value' => $config->get('source.category_selector'),
+      '#default_value' => $this->configuration['source']['category_selector'],
       '#options' => array('checkboxes' => t('checkboxes'),
       'select' => t('multiple selector')),
       '#description' => t('For a small number of categories, checkboxes are easier to use, while a multiple selector works well with large numbers of categories.'),
@@ -76,27 +116,27 @@ class DefaultProcessor extends PluginBase implements ProcessorInterface {
     $form['processors'][$info['id']]['aggregator_teaser_length'] = array(
       '#type' => 'select',
       '#title' => t('Length of trimmed description'),
-      '#default_value' => $config->get('items.teaser_length'),
+      '#default_value' => $this->configuration['items']['teaser_length'],
       '#options' => drupal_map_assoc(array(0, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000), array($this, 'formatCharacters')),
-      '#description' => t("The maximum number of characters used in the trimmed version of content.")
+      '#description' => t('The maximum number of characters used in the trimmed version of content.'),
     );
     return $form;
   }
 
   /**
-   * Implements \Drupal\aggregator\Plugin\ProcessorInterface::settingsSubmit().
+   * {@inheritdoc}
    */
-  public function settingsSubmit(array $form, array &$form_state) {
-    $config = \Drupal::config('aggregator.settings');
-    $config->set('items.expire', $form_state['values']['aggregator_clear'])
-      ->set('items.teaser_length', $form_state['values']['aggregator_teaser_length'])
-      ->set('source.list_max', $form_state['values']['aggregator_summary_items'])
-      ->set('source.category_selector', $form_state['values']['aggregator_category_selector'])
-      ->save();
+  public function submitConfigurationForm(array &$form, array &$form_state) {
+    $this->configuration['items']['expire'] = $form_state['values']['aggregator_clear'];
+    $this->configuration['items']['teaser_length'] = $form_state['values']['aggregator_teaser_length'];
+    $this->configuration['source']['list_max'] = $form_state['values']['aggregator_summary_items'];
+    $this->configuration['source']['category_selector'] = $form_state['values']['aggregator_category_selector'];
+    // @todo Refactor aggregator plugins to ConfigEntity so this is not needed.
+    $this->setConfiguration($this->configuration);
   }
 
   /**
-   * Implements \Drupal\aggregator\Plugin\ProcessorInterface::process().
+   * {@inheritdoc}
    */
   public function process(Feed $feed) {
     if (!is_array($feed->items)) {
@@ -147,7 +187,7 @@ class DefaultProcessor extends PluginBase implements ProcessorInterface {
   }
 
   /**
-   * Implements \Drupal\aggregator\Plugin\ProcessorInterface::remove().
+   * {@inheritdoc}
    */
   public function remove(Feed $feed) {
     $iids = Database::getConnection()->query('SELECT iid FROM {aggregator_item} WHERE fid = :fid', array(':fid' => $feed->id()))->fetchCol();
@@ -164,7 +204,7 @@ class DefaultProcessor extends PluginBase implements ProcessorInterface {
    * Expires items from a feed depending on expiration settings.
    */
   public function postProcess(Feed $feed) {
-    $aggregator_clear = \Drupal::config('aggregator.settings')->get('items.expire');
+    $aggregator_clear = $this->configuration['items']['expire'];
 
     if ($aggregator_clear != AGGREGATOR_CLEAR_NEVER) {
       // Remove all items that are older than flush item timer.
@@ -178,6 +218,24 @@ class DefaultProcessor extends PluginBase implements ProcessorInterface {
         entity_delete_multiple('aggregator_item', $iids);
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfiguration() {
+    return $this->configFactory->get('aggregator.settings')->get();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConfiguration(array $configuration) {
+    $config = $this->configFactory->get('aggregator.settings');
+    foreach ($configuration as $key => $value) {
+      $config->set($key, $value);
+    }
+    $config->save();
   }
 
   /**
@@ -207,4 +265,5 @@ class DefaultProcessor extends PluginBase implements ProcessorInterface {
   protected function formatCharacters($length) {
     return ($length == 0) ? t('Unlimited') : format_plural($length, '1 character', '@count characters');
   }
+
 }

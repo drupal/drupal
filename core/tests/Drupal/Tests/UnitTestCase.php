@@ -147,4 +147,20 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase {
     return $block;
   }
 
+  /**
+   * Returns a stub translation manager that just returns the passed string.
+   *
+   * @return \PHPUnit_Framework_MockObject_MockBuilder
+   *   A MockBuilder of \Drupal\Core\StringTranslation\TranslationInterface
+   */
+  public function getStringTranslationStub() {
+    $translation = $this->getMockBuilder('Drupal\Core\StringTranslation\TranslationManager')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $translation->expects($this->any())
+      ->method('translate')
+      ->will($this->returnArgument(0));
+    return $translation;
+  }
+
 }
