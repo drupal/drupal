@@ -54,7 +54,7 @@ class TermDeleteForm extends EntityNGConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to delete the term %title?', array('%title' => $this->entity->label()));
+    return $this->t('Are you sure you want to delete the term %title?', array('%title' => $this->entity->label()));
   }
 
   /**
@@ -68,14 +68,14 @@ class TermDeleteForm extends EntityNGConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return t('Deleting a term will delete all its children if there are any. This action cannot be undone.');
+    return $this->t('Deleting a term will delete all its children if there are any. This action cannot be undone.');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return t('Delete');
+    return $this->t('Delete');
   }
 
   /**
@@ -88,7 +88,7 @@ class TermDeleteForm extends EntityNGConfirmFormBase {
     // @todo Move to storage controller http://drupal.org/node/1988712
     taxonomy_check_vocabulary_hierarchy($vocabulary, array('tid' => $this->entity->id()));
 
-    drupal_set_message(t('Deleted term %name.', array('%name' => $this->entity->label())));
+    drupal_set_message($this->t('Deleted term %name.', array('%name' => $this->entity->label())));
     watchdog('taxonomy', 'Deleted term %name.', array('%name' => $this->entity->label()), WATCHDOG_NOTICE);
     $form_state['redirect'] = 'admin/structure/taxonomy';
     Cache::invalidateTags(array('content' => TRUE));

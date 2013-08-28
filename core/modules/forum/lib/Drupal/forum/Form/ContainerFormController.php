@@ -28,12 +28,12 @@ class ContainerFormController extends ForumFormController {
     $form = parent::form($form, $form_state, $taxonomy_term);
 
     // Set the title and description of the name field.
-    $form['name']['#title'] = t('Container name');
-    $form['name']['#description'] = t('Short but meaningful name for this collection of related forums.');
+    $form['name']['#title'] = $this->t('Container name');
+    $form['name']['#description'] = $this->t('Short but meaningful name for this collection of related forums.');
 
     // Alternate description for the container parent.
-    $form['parent'][0]['#description'] = t('Containers are usually placed at the top (root) level, but may also be placed inside another container or forum.');
-    $this->forumFormType = t('forum container');
+    $form['parent'][0]['#description'] = $this->t('Containers are usually placed at the top (root) level, but may also be placed inside another container or forum.');
+    $this->forumFormType = $this->t('forum container');
     return $form;
   }
 
@@ -45,9 +45,10 @@ class ContainerFormController extends ForumFormController {
     $term = parent::save($form, $form_state);
     if ($is_new) {
       // Update config item to track the container terms.
-      $containers = $this->config->get('containers');
+      $config = $this->configFactory->get('forum.settings');
+      $containers = $config->get('containers');
       $containers[] = $term->id();
-      $this->config->set('containers', $containers)->save();
+      $config->set('containers', $containers)->save();
     }
   }
 
