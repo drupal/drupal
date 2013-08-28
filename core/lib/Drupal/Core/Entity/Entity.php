@@ -634,4 +634,11 @@ class Entity implements IteratorAggregate, EntityInterface {
     //   http://drupal.org/node/2004244
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions($entity_type) {
+    return array();
+  }
+
 }

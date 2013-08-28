@@ -19,7 +19,7 @@ class EditTestBase extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'entity', 'entity_test', 'field', 'field_sql_storage', 'field_test', 'number', 'text', 'edit');
+  public static $modules = array('system', 'entity', 'entity_test', 'field', 'field_sql_storage', 'field_test', 'number', 'filter', 'user', 'text', 'edit');
   /**
    * Sets the default field storage backend for fields created during tests.
    */
@@ -28,7 +28,7 @@ class EditTestBase extends DrupalUnitTestBase {
 
     $this->installSchema('system', 'variable');
     $this->installSchema('entity_test', array('entity_test', 'entity_test_rev'));
-    $this->installConfig(array('field'));
+    $this->installConfig(array('field', 'filter'));
   }
 
   /**

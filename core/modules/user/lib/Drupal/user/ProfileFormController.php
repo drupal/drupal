@@ -20,7 +20,7 @@ class ProfileFormController extends AccountFormController {
     $account = $this->entity;
 
     $element['delete']['#type'] = 'submit';
-    $element['delete']['#value'] = t('Cancel account');
+    $element['delete']['#value'] = $this->t('Cancel account');
     $element['delete']['#submit'] = array('user_edit_cancel_submit');
     $element['delete']['#access'] = $account->id() > 1 && (($account->id() == $GLOBALS['user']->id() && user_access('cancel account')) || user_access('administer users'));
 
@@ -39,6 +39,7 @@ class ProfileFormController extends AccountFormController {
     // information:
     cache_invalidate_tags(array('content' => TRUE));
 
-    drupal_set_message(t('The changes have been saved.'));
+    drupal_set_message($this->t('The changes have been saved.'));
   }
+
 }

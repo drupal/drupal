@@ -59,7 +59,7 @@ class NodeRevisionsTest extends NodeTestBase {
 
       // Create revision with a random title and body and update variables.
       $node->title = $this->randomName();
-      $node->body[$node->language()->id][0] = array(
+      $node->body = array(
         'value' => $this->randomName(32),
         'format' => filter_default_format(),
       );
@@ -86,7 +86,7 @@ class NodeRevisionsTest extends NodeTestBase {
 
     // Confirm the correct revision text appears on "view revisions" page.
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/view");
-    $this->assertText($node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'], 'Correct text displays for version.');
+    $this->assertText($node->body->value, 'Correct text displays for version.');
 
     // Confirm the correct log message appears on "revisions overview" page.
     $this->drupalGet("node/" . $node->id() . "/revisions");
@@ -103,7 +103,7 @@ class NodeRevisionsTest extends NodeTestBase {
                         array('@type' => 'Basic page', '%title' => $nodes[1]->label(),
                               '%revision-date' => format_date($nodes[1]->getRevisionCreationTime()))), 'Revision reverted.');
     $reverted_node = node_load($node->id(), TRUE);
-    $this->assertTrue(($nodes[1]->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'] == $reverted_node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value']), 'Node reverted correctly.');
+    $this->assertTrue(($nodes[1]->body->value == $reverted_node->body->value), 'Node reverted correctly.');
 
     // Confirm that this is not the default version.
     $node = node_revision_load($node->getRevisionId());
@@ -136,7 +136,7 @@ class NodeRevisionsTest extends NodeTestBase {
     // This will create a new revision that is not "front facing".
     $new_node_revision = clone $node;
     $new_body = $this->randomName();
-    $new_node_revision->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'] = $new_body;
+    $new_node_revision->body->value = $new_body;
     // Save this as a non-default revision.
     $new_node_revision->setNewRevision();
     $new_node_revision->isDefaultRevision = FALSE;
@@ -183,7 +183,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->drupalGet('node/' . $node->id());
     $this->assertText($new_title, 'New node title appears on the page.');
     $node_revision = node_load($node->id(), TRUE);
-    $this->assertEqual($node_revision->log, $log, 'After an existing node revision is re-saved without a log message, the original log message is preserved.');
+    $this->assertEqual($node_revision->log->value, $log, 'After an existing node revision is re-saved without a log message, the original log message is preserved.');
 
     // Create another node with an initial log message.
     $node = $this->drupalCreateNode(array('log' => $log));
@@ -201,6 +201,6 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->drupalGet('node/' . $node->id());
     $this->assertText($new_title, 'New node title appears on the page.');
     $node_revision = node_load($node->id(), TRUE);
-    $this->assertTrue(empty($node_revision->log), 'After a new node revision is saved with an empty log message, the log message for the node is empty.');
+    $this->assertTrue(empty($node_revision->log->value), 'After a new node revision is saved with an empty log message, the log message for the node is empty.');
   }
 }

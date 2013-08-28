@@ -8,13 +8,14 @@
 namespace Drupal\user\Plugin\views\argument_default;
 
 use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsArgumentDefault;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 
 /**
  * Default argument plugin to extract a user via menu_get_object.
  *
- * @Plugin(
+ * @ViewsArgumentDefault(
  *   id = "user",
  *   module = "user",
  *   title = @Translation("User ID from URL")

@@ -262,7 +262,7 @@ function hook_node_grants($account, $op) {
 function hook_node_access_records(\Drupal\node\NodeInterface $node) {
   // We only care about the node if it has been marked private. If not, it is
   // treated just like any other node and we completely ignore it.
-  if ($node->private) {
+  if ($node->private->value) {
     $grants = array();
     // Only published Catalan translations of private nodes should be viewable
     // to all users. If we fail to check $node->isPublished(), all users would be able

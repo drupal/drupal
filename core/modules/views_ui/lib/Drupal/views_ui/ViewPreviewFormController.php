@@ -42,7 +42,7 @@ class ViewPreviewFormController extends ViewFormControllerBase {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::form().
+   * {@inheritdoc}
    */
   public function form(array $form, array &$form_state) {
     $view = $this->entity;
@@ -65,15 +65,15 @@ class ViewPreviewFormController extends ViewFormControllerBase {
     $form['controls']['live_preview'] = array(
       '#type' => 'checkbox',
       '#id' => 'edit-displays-live-preview',
-      '#title' => t('Auto preview'),
+      '#title' => $this->t('Auto preview'),
       '#default_value' => \Drupal::config('views.settings')->get('ui.always_live_preview'),
     );
 
     // Add the arguments textfield
     $form['controls']['view_args'] = array(
       '#type' => 'textfield',
-      '#title' => t('Preview with contextual filters:'),
-      '#description' => t('Separate contextual filter values with a "/". For example, %example.', array('%example' => '40/12/10')),
+      '#title' => $this->t('Preview with contextual filters:'),
+      '#description' => $this->t('Separate contextual filter values with a "/". For example, %example.', array('%example' => '40/12/10')),
       '#id' => 'preview-args',
     );
 
@@ -96,7 +96,7 @@ class ViewPreviewFormController extends ViewFormControllerBase {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::actions().
+   * {@inheritdoc}
    */
   protected function actions(array $form, array &$form_state) {
     $view = $this->entity;
@@ -106,7 +106,7 @@ class ViewPreviewFormController extends ViewFormControllerBase {
       ),
       'button' => array(
         '#type' => 'submit',
-        '#value' => t('Update preview'),
+        '#value' => $this->t('Update preview'),
         '#attributes' => array('class' => array('arguments-preview')),
         '#submit' => array(array($this, 'submitPreview')),
         '#id' => 'preview-submit',

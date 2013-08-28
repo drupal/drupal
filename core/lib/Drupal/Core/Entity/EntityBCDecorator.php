@@ -619,4 +619,11 @@ class EntityBCDecorator implements IteratorAggregate, EntityInterface {
     $this->decorated->initTranslation($langcode);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions($entity_type) {
+    return array();
+  }
+
 }

@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\row;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsRow;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ingroup views_row_plugins
  *
- * @Plugin(
+ * @ViewsRow(
  *   id = "fields",
  *   title = @Translation("Fields"),
  *   help = @Translation("Displays the fields with an optional template."),

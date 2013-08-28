@@ -395,8 +395,9 @@ class EntityManager extends PluginManagerBase {
         $this->entityFieldInfo[$entity_type] = $cache->data;
       }
       else {
+        $class = $this->factory->getPluginClass($entity_type, $this->getDefinition($entity_type));
         $this->entityFieldInfo[$entity_type] = array(
-          'definitions' => $this->getStorageController($entity_type)->baseFieldDefinitions(),
+          'definitions' => $class::baseFieldDefinitions($entity_type),
           // Contains definitions of optional (per-bundle) fields.
           'optional' => array(),
           // An array keyed by bundle name containing the optional fields added

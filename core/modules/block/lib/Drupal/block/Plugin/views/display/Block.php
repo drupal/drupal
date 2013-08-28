@@ -8,7 +8,7 @@
 
 namespace Drupal\block\Plugin\views\display;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsDisplay;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\Block\ViewsBlock;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -18,7 +18,7 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
  *
  * @ingroup views_display_plugins
  *
- * @Plugin(
+ * @ViewsDisplay(
  *   id = "block",
  *   module = "block",
  *   title = @Translation("Block"),

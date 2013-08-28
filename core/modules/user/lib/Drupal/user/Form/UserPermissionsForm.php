@@ -9,16 +9,15 @@ namespace Drupal\user\Form;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormBase;
 use Drupal\user\RoleStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the user permissions administration form.
  */
-class UserPermissionsForm implements FormInterface, ControllerInterface {
+class UserPermissionsForm extends FormBase {
 
   /**
    * The module handler.
@@ -111,7 +110,7 @@ class UserPermissionsForm implements FormInterface, ControllerInterface {
 
     $form['permissions'] = array(
       '#type' => 'table',
-      '#header' => array(t('Permission')),
+      '#header' => array($this->t('Permission')),
       '#id' => 'permissions',
       '#sticky' => TRUE,
     );
@@ -138,7 +137,7 @@ class UserPermissionsForm implements FormInterface, ControllerInterface {
           $perm_item += array(
             'description' => '',
             'restrict access' => FALSE,
-            'warning' => !empty($perm_item['restrict access']) ? t('Warning: Give to trusted roles only; this permission has security implications.') : '',
+            'warning' => !empty($perm_item['restrict access']) ? $this->t('Warning: Give to trusted roles only; this permission has security implications.') : '',
           );
           $options[$perm] = '';
           $user_permission_description = array(
@@ -173,17 +172,11 @@ class UserPermissionsForm implements FormInterface, ControllerInterface {
     }
 
     $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Save permissions'));
+    $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Save permissions'));
 
     $form['#attached']['library'][] = array('user', 'drupal.user.permissions');
 
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, array &$form_state) {
   }
 
   /**
@@ -194,7 +187,7 @@ class UserPermissionsForm implements FormInterface, ControllerInterface {
       user_role_change_permissions($role_name, $form_state['values'][$role_name]);
     }
 
-    drupal_set_message(t('The changes have been saved.'));
+    drupal_set_message($this->t('The changes have been saved.'));
 
     // Clear the cached pages and blocks.
     Cache::invalidateTags(array('content' => TRUE));

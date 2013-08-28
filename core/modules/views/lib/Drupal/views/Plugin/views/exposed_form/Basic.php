@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\exposed_form;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsExposedForm;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ingroup views_exposed_form_plugins
  *
- * @Plugin(
+ * @ViewsExposedForm(
  *   id = "basic",
  *   title = @Translation("Basic"),
  *   help = @Translation("Basic exposed form")

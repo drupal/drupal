@@ -24,12 +24,16 @@ use Drupal\language\LanguageInterface;
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "list" = "Drupal\language\LanguageListController",
- *     "access" = "Drupal\language\LanguageAccessController"
+ *     "access" = "Drupal\language\LanguageAccessController",
+ *     "form" = {
+ *       "delete" = "Drupal\language\Form\LanguageDeleteForm"
+ *     }
  *   },
  *   config_prefix = "language.entity",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
+ *     "weight" = "weight",
  *     "uuid" = "uuid"
  *   }
  * )

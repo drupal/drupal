@@ -18,7 +18,7 @@ class UserRoleDelete extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to delete the role %name?', array('%name' => $this->entity->label()));
+    return $this->t('Are you sure you want to delete the role %name?', array('%name' => $this->entity->label()));
   }
 
   /**
@@ -32,7 +32,7 @@ class UserRoleDelete extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return t('Delete');
+    return $this->t('Delete');
   }
 
   /**
@@ -41,7 +41,7 @@ class UserRoleDelete extends EntityConfirmFormBase {
   public function submit(array $form, array &$form_state) {
     $this->entity->delete();
     watchdog('user', 'Role %name has been deleted.', array('%name' => $this->entity->label()));
-    drupal_set_message(t('Role %name has been deleted.', array('%name' => $this->entity->label())));
+    drupal_set_message($this->t('Role %name has been deleted.', array('%name' => $this->entity->label())));
     $form_state['redirect'] = 'admin/people/roles';
   }
 

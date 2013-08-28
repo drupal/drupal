@@ -241,12 +241,8 @@ function taxonomy_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/structure/taxonomy/add'] = array(
-    'title' => 'Add vocabulary',
-    'page callback' => 'taxonomy_vocabulary_add',
-    'access callback' => 'entity_page_create_access',
-    'access arguments' => array('taxonomy_vocabulary'),
-    'type' => MENU_LOCAL_ACTION,
-    'file' => 'taxonomy.admin.inc',
+    'route_name' => 'taxonomy_vocabulary_add',
+    'type' => MENU_SIBLING_LOCAL_TASK,
   );
 
   $items['taxonomy/term/%taxonomy_term'] = array(
@@ -265,14 +261,11 @@ function taxonomy_menu() {
   );
   $items['taxonomy/term/%taxonomy_term/edit'] = array(
     'title' => 'Edit',
-    'page callback' => 'entity_get_form',
-    'page arguments' => array(2, 'default', array()),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(2, 'update'),
+    'title callback' => 'taxonomy_term_title',
+    'title arguments' => array(2),
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'weight' => 10,
-    'file' => 'taxonomy.admin.inc',
   );
   $items['taxonomy/term/%taxonomy_term/delete'] = array(
     'title' => 'Delete',
@@ -1133,21 +1126,10 @@ function taxonomy_build_node_index($node) {
       $field_name = $instance['field_name'];
       $field = field_info_field($field_name);
       if ($field['module'] == 'taxonomy' && $field['storage']['type'] == 'field_sql_storage') {
-        // If a field value is not set in the node object when $node->save() is
-        // called, the old value from $node->original is used.
-        if (isset($node->{$field_name})) {
-          $items = $node->{$field_name};
-        }
-        elseif (isset($node->original->{$field_name})) {
-          $items = $node->original->{$field_name};
-        }
-        else {
-          continue;
-        }
-        foreach (field_available_languages('node', $field) as $langcode) {
-          if (!empty($items[$langcode])) {
-            foreach ($items[$langcode] as $item) {
-              $tid_all[$item['target_id']] = $item['target_id'];
+        foreach ($node->getTranslationLanguages() as $language) {
+          foreach ($node->getTranslation($language->id)->$field_name as $item) {
+            if (!$item->isEmpty()) {
+              $tid_all[$item->target_id] = $item->target_id;
             }
           }
         }

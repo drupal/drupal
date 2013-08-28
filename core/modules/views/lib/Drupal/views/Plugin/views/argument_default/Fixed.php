@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\argument_default;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsArgumentDefault;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ingroup views_argument_default_plugins
  *
- * @Plugin(
+ * @ViewsArgumentDefault(
  *   id = "fixed",
  *   title = @Translation("Fixed")
  * )

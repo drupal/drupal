@@ -257,6 +257,13 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
   public $route_name;
 
   /**
+   * The parameters of the route associated with this menu link, if any.
+   *
+   * @var array
+   */
+  public $route_parameters;
+
+  /**
    * The route object associated with this menu link, if any.
    *
    * @var \Symfony\Component\Routing\Route
@@ -485,7 +492,13 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
     }
     // Find the route_name.
     if (!isset($this->route_name)) {
-      $this->route_name = $this::findRouteName($this->link_path);
+      if ($result = static::findRouteNameParameters($this->link_path)) {
+        list($this->route_name, $this->route_parameters) = $result;
+      }
+      else {
+        $this->route_name = '';
+        $this->route_parameters = array();
+      }
     }
   }
 
@@ -508,7 +521,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
   /**
    * {@inheritdoc}
    */
-  public static function findRouteName($link_path) {
+  public static function findRouteNameParameters($link_path) {
     // Look up the route_name used for the given path.
     $request = Request::create('/' . $link_path);
     $request->attributes->set('_system_path', $link_path);
@@ -517,10 +530,13 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
       // legacy router which will call hook_menu() and you will get back to
       // this method.
       $result = \Drupal::service('router.dynamic')->matchRequest($request);
-      return isset($result['_route']) ? $result['_route'] : '';
+      $return = array();
+      $return[] = isset($result['_route']) ? $result['_route'] : '';
+      $return[] = $result['_raw_variables']->all();
+      return $return;
     }
     catch (\Exception $e) {
-      return '';
+      return array();
     }
   }
 

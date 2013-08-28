@@ -480,9 +480,7 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
    */
   protected function getTranslatedEntity(array $form_state) {
     $langcode = $this->getFormLangcode($form_state);
-    $translation = $this->entity->getTranslation($langcode);
-    // Ensure that the entity object is a BC entity if the original one is.
-    return $this->entity instanceof EntityBCDecorator ? $translation->getBCEntity() : $translation;
+    return $this->entity->getTranslation($langcode);
   }
 
   /**

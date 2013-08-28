@@ -32,7 +32,7 @@ abstract class TextItemBase extends ConfigFieldItemBase implements PrepareCacheI
         'label' => t('Text value'),
       );
       static::$propertyDefinitions['format'] = array(
-        'type' => 'string',
+        'type' => 'filter_format',
         'label' => t('Text format'),
       );
       static::$propertyDefinitions['processed'] = array(

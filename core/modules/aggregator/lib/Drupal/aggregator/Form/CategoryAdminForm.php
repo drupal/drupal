@@ -9,25 +9,14 @@ namespace Drupal\aggregator\Form;
 
 use Drupal\aggregator\CategoryStorageControllerInterface;
 use Drupal\block\Plugin\Type\BlockManager;
-use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\Database\Connection;
-use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a form for configuring aggregator categories.
  */
-class CategoryAdminForm implements FormInterface, ControllerInterface {
-
-  /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection.
-   */
-  protected $database;
+class CategoryAdminForm extends FormBase {
 
   /**
    * The module handler.
@@ -44,13 +33,6 @@ class CategoryAdminForm implements FormInterface, ControllerInterface {
   protected $categoryStorageController;
 
   /**
-   * The current request.
-   *
-   * @var \Symfony\Component\HttpFoundation\Request
-   */
-  protected $request;
-
-  /**
    * The block manager.
    *
    * @var \Drupal\block\Plugin\Type\BlockManager
@@ -60,8 +42,6 @@ class CategoryAdminForm implements FormInterface, ControllerInterface {
   /**
    * Creates a new CategoryForm object.
    *
-   * @param \Drupal\Core\Database\Connection $database
-   *   The database connection.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\aggregator\CategoryStorageControllerInterface $category_storage_controller
@@ -69,8 +49,7 @@ class CategoryAdminForm implements FormInterface, ControllerInterface {
    * @param \Drupal\block\Plugin\Type\BlockManager $block_manager
    *   (optional) The block manager. Used if block module is enabled.
    */
-  public function __construct(Connection $database, ModuleHandlerInterface $module_handler, CategoryStorageControllerInterface $category_storage_controller, BlockManager $block_manager = NULL) {
-    $this->database = $database;
+  public function __construct(ModuleHandlerInterface $module_handler, CategoryStorageControllerInterface $category_storage_controller, BlockManager $block_manager = NULL) {
     $this->moduleHandler = $module_handler;
     $this->categoryStorageController = $category_storage_controller;
     $this->blockManager = $block_manager;
@@ -85,7 +64,6 @@ class CategoryAdminForm implements FormInterface, ControllerInterface {
       $block_manager = $container->get('plugin.manager.block');
     }
     return new static(
-      $container->get('database'),
       $container->get('module_handler'),
       $container->get('aggregator.category.storage'),
       $block_manager
@@ -102,30 +80,29 @@ class CategoryAdminForm implements FormInterface, ControllerInterface {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, $cid = NULL, Request $request = NULL) {
-    $this->request = $request;
+  public function buildForm(array $form, array &$form_state, $cid = NULL) {
     $category = $this->categoryStorageController->load($cid);
     $form['title'] = array(
       '#type' => 'textfield',
-      '#title' => t('Title'),
+      '#title' => $this->t('Title'),
       '#default_value' => isset($category->title) ? $category->title : '',
       '#maxlength' => 64,
       '#required' => TRUE,
     );
     $form['description'] = array(
       '#type' => 'textarea',
-      '#title' => t('Description'),
+      '#title' => $this->t('Description'),
       '#default_value' => isset($category->description) ? $category->description : '',
     );
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save'),
+      '#value' => $this->t('Save'),
     );
     if (!empty($category->cid)) {
       $form['actions']['delete'] = array(
         '#type' => 'submit',
-        '#value' => t('Delete'),
+        '#value' => $this->t('Delete'),
       );
       $form['cid'] = array('#type' => 'hidden', '#value' => $category->cid);
     }
@@ -137,7 +114,7 @@ class CategoryAdminForm implements FormInterface, ControllerInterface {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, array &$form_state) {
-    if ($form_state['values']['op'] == t('Save')) {
+    if ($form_state['values']['op'] == $this->t('Save')) {
       // Check for duplicate titles.
       $title = $form_state['values']['title'];
       if (isset($form_state['values']['cid'])) {
@@ -148,7 +125,7 @@ class CategoryAdminForm implements FormInterface, ControllerInterface {
         $unique = $this->categoryStorageController->isUnique($title);
       }
       if (!$unique) {
-        form_set_error('title', t('A category named %category already exists. Enter a unique title.', array('%category' => $title)));
+        form_set_error('title', $this->t('A category named %category already exists. Enter a unique title.', array('%category' => $title)));
       }
     }
   }
@@ -165,7 +142,7 @@ class CategoryAdminForm implements FormInterface, ControllerInterface {
     $title = $form_state['values']['title'];
 
     // Redirect to a confirm delete form.
-    if ($form_state['values']['op'] == t('Delete')) {
+    if ($form_state['values']['op'] == $this->t('Delete')) {
       $cid = $form_state['values']['cid'];
       $form_state['redirect'] = 'admin/config/services/aggregator/delete/category/' . $cid;
       return;
@@ -175,8 +152,8 @@ class CategoryAdminForm implements FormInterface, ControllerInterface {
     if (!empty($form_state['values']['cid'])) {
       $cid = $form_state['values']['cid'];
       $this->categoryStorageController->update((object) $form_state['values']);
-      drupal_set_message(t('The category %category has been updated.', array('%category' => $title)));
-      if (preg_match('/^\/admin/', $this->request->getPathInfo())) {
+      drupal_set_message($this->t('The category %category has been updated.', array('%category' => $title)));
+      if (preg_match('/^\/admin/', $this->getRequest()->getPathInfo())) {
         $form_state['redirect'] = 'admin/config/services/aggregator/';
       }
       else {
@@ -188,8 +165,8 @@ class CategoryAdminForm implements FormInterface, ControllerInterface {
 
     // Insert the category.
     $cid = $this->categoryStorageController->save((object) $form_state['values']);
-    watchdog('aggregator', 'Category %category added.', array('%category' => $form_state['values']['title']), WATCHDOG_NOTICE, l(t('view'), 'admin/config/services/aggregator'));
-    drupal_set_message(t('The category %category has been added.', array('%category' => $title)));
+    watchdog('aggregator', 'Category %category added.', array('%category' => $form_state['values']['title']), WATCHDOG_NOTICE, l($this->t('view'), 'admin/config/services/aggregator'));
+    drupal_set_message($this->t('The category %category has been added.', array('%category' => $title)));
 
     $this->updateMenuLink('insert', $link_path . $cid, $title);
 

@@ -11,6 +11,7 @@ use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
+use Symfony\Component\Validator\ConstraintViolationInterface;
 
 /**
  * Plugin implementation of the 'text_textarea' widget.
@@ -86,6 +87,18 @@ class TextareaWidget extends WidgetBase {
       $element['value'] = $main_widget;
     }
 
+    return $element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function errorElement(array $element, ConstraintViolationInterface $violation, array $form, array &$form_state) {
+    if ($violation->arrayPropertyPath == array('format') && isset($element['format']['#access']) && !$element['format']['#access']) {
+      // Ignore validation errors for formats if formats may not be changed,
+      // i.e. when existing formats become invalid. See filter_process_format().
+      return FALSE;
+    }
     return $element;
   }
 

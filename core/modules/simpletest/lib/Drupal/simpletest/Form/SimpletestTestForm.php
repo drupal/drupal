@@ -7,12 +7,12 @@
 
 namespace Drupal\simpletest\Form;
 
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormBase;
 
 /**
  * List tests arranged in groups that can be selected and run.
  */
-class SimpletestTestForm implements FormInterface {
+class SimpletestTestForm extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -34,21 +34,21 @@ class SimpletestTestForm implements FormInterface {
     );
     $form['filters']['text'] = array(
       '#type' => 'search',
-      '#title' => t('Search'),
+      '#title' => $this->t('Search'),
       '#size' => 30,
-      '#placeholder' => t('Enter test name…'),
+      '#placeholder' => $this->t('Enter test name…'),
       '#attributes' => array(
         'class' => array('table-filter-text'),
         'data-table' => '#simpletest-test-form',
         'autocomplete' => 'off',
-        'title' => t('Enter at least 3 characters of the test name or description to filter by.'),
+        'title' => $this->t('Enter at least 3 characters of the test name or description to filter by.'),
       ),
     );
 
     $form['tests'] = array(
       '#type' => 'details',
-      '#title' => t('Tests'),
-      '#description' => t('Select the test(s) or test group(s) you would like to run, and click <em>Run tests</em>.'),
+      '#title' => $this->t('Tests'),
+      '#description' => $this->t('Select the test(s) or test group(s) you would like to run, and click <em>Run tests</em>.'),
     );
 
     $form['tests']['table'] = array(
@@ -77,16 +77,16 @@ class SimpletestTestForm implements FormInterface {
     // Action buttons.
     $form['tests']['op'] = array(
       '#type' => 'submit',
-      '#value' => t('Run tests'),
+      '#value' => $this->t('Run tests'),
     );
     $form['clean'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Clean test environment'),
-      '#description' => t('Remove tables with the prefix "simpletest" and temporary directories that are left over from tests that crashed. This is intended for developers when creating tests.'),
+      '#title' => $this->t('Clean test environment'),
+      '#description' => $this->t('Remove tables with the prefix "simpletest" and temporary directories that are left over from tests that crashed. This is intended for developers when creating tests.'),
     );
     $form['clean']['op'] = array(
       '#type' => 'submit',
-      '#value' => t('Clean environment'),
+      '#value' => $this->t('Clean environment'),
       '#submit' => array('simpletest_clean_environment'),
     );
 
@@ -122,7 +122,7 @@ class SimpletestTestForm implements FormInterface {
       $form_state['redirect'] = 'admin/config/development/testing/results/' . $test_id;
     }
     else {
-      drupal_set_message(t('No test(s) selected.'), 'error');
+      drupal_set_message($this->t('No test(s) selected.'), 'error');
     }
   }
 

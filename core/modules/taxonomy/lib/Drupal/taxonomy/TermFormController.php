@@ -7,8 +7,11 @@
 
 namespace Drupal\taxonomy;
 
+use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityFormControllerNG;
 use Drupal\Core\Language\Language;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base for controller for taxonomy term edit forms.
@@ -16,11 +19,48 @@ use Drupal\Core\Language\Language;
 class TermFormController extends EntityFormControllerNG {
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::form().
+   * The vocabulary storage.
+   *
+   * @var \Drupal\taxonomy\VocabularyStorageControllerInterface
+   */
+  protected $vocabStorage;
+
+  /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
+   * Constructs a new TermFormController.
+   *
+   * @param \Drupal\taxonomy\VocabularyStorageControllerInterface $vocab_storage
+   *   The vocabulary storage.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The config factory.
+   */
+  public function __construct(VocabularyStorageControllerInterface $vocab_storage, ConfigFactory $config_factory) {
+    $this->vocabStorage = $vocab_storage;
+    $this->configFactory = $config_factory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.entity')->getStorageController('taxonomy_vocabulary'),
+      $container->get('config.factory')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function form(array $form, array &$form_state) {
     $term = $this->entity;
-    $vocabulary = entity_load('taxonomy_vocabulary', $term->bundle());
+    $vocabulary = $this->vocabStorage->load($term->bundle());
 
     $parent = array_keys(taxonomy_term_load_parents($term->id()));
     $form_state['taxonomy']['parent'] = $parent;
@@ -28,7 +68,7 @@ class TermFormController extends EntityFormControllerNG {
 
     $form['name'] = array(
       '#type' => 'textfield',
-      '#title' => t('Name'),
+      '#title' => $this->t('Name'),
       '#default_value' => $term->name->value,
       '#maxlength' => 255,
       '#required' => TRUE,
@@ -37,23 +77,23 @@ class TermFormController extends EntityFormControllerNG {
 
     $form['description'] = array(
       '#type' => 'text_format',
-      '#title' => t('Description'),
+      '#title' => $this->t('Description'),
       '#default_value' => $term->description->value,
       '#format' => $term->format->value,
       '#weight' => 0,
     );
-    $language_configuration = module_invoke('language', 'get_default_configuration', 'taxonomy_term', $vocabulary->id());
+    $language_configuration = $this->moduleHandler->moduleExists('language') ? language_get_default_configuration('taxonomy_term', $vocabulary->id()) : FALSE;
     $form['langcode'] = array(
       '#type' => 'language_select',
-      '#title' => t('Language'),
+      '#title' => $this->t('Language'),
       '#languages' => Language::STATE_ALL,
       '#default_value' => $term->getUntranslated()->language()->id,
-      '#access' => !is_null($language_configuration['language_show']) && $language_configuration['language_show'],
+      '#access' => !empty($language_configuration['language_show']),
     );
 
     $form['relations'] = array(
       '#type' => 'details',
-      '#title' => t('Relations'),
+      '#title' => $this->t('Relations'),
       '#collapsed' => ($vocabulary->hierarchy != TAXONOMY_HIERARCHY_MULTIPLE),
       '#weight' => 10,
     );
@@ -62,7 +102,7 @@ class TermFormController extends EntityFormControllerNG {
     // numbers of items so we check for taxonomy.settings:override_selector
     // before loading the full vocabulary. Contrib modules can then intercept
     // before hook_form_alter to provide scalable alternatives.
-    if (!\Drupal::config('taxonomy.settings')->get('override_selector')) {
+    if (!$this->configFactory->get('taxonomy.settings')->get('override_selector')) {
       $parent = array_keys(taxonomy_term_load_parents($term->id()));
       $children = taxonomy_get_tree($vocabulary->id(), $term->id());
 
@@ -73,7 +113,7 @@ class TermFormController extends EntityFormControllerNG {
       $exclude[] = $term->id();
 
       $tree = taxonomy_get_tree($vocabulary->id());
-      $options = array('<' . t('root') . '>');
+      $options = array('<' . $this->t('root') . '>');
       if (empty($parent)) {
         $parent = array(0);
       }
@@ -85,7 +125,7 @@ class TermFormController extends EntityFormControllerNG {
 
       $form['relations']['parent'] = array(
         '#type' => 'select',
-        '#title' => t('Parent terms'),
+        '#title' => $this->t('Parent terms'),
         '#options' => $options,
         '#default_value' => $parent,
         '#multiple' => TRUE,
@@ -94,10 +134,10 @@ class TermFormController extends EntityFormControllerNG {
 
     $form['relations']['weight'] = array(
       '#type' => 'textfield',
-      '#title' => t('Weight'),
+      '#title' => $this->t('Weight'),
       '#size' => 6,
       '#default_value' => $term->weight->value,
-      '#description' => t('Terms are displayed in ascending order by weight.'),
+      '#description' => $this->t('Terms are displayed in ascending order by weight.'),
       '#required' => TRUE,
     );
 
@@ -119,19 +159,19 @@ class TermFormController extends EntityFormControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::validate().
+   * {@inheritdoc}
    */
   public function validate(array $form, array &$form_state) {
     parent::validate($form, $form_state);
 
     // Ensure numeric values.
     if (isset($form_state['values']['weight']) && !is_numeric($form_state['values']['weight'])) {
-      form_set_error('weight', t('Weight value must be numeric.'));
+      form_set_error('weight', $this->t('Weight value must be numeric.'));
     }
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::buildEntity().
+   * {@inheritdoc}
    */
   public function buildEntity(array $form, array &$form_state) {
     $term = parent::buildEntity($form, $form_state);
@@ -152,21 +192,21 @@ class TermFormController extends EntityFormControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::save().
+   * {@inheritdoc}
    */
   public function save(array $form, array &$form_state) {
     $term = $this->entity;
 
     switch ($term->save()) {
       case SAVED_NEW:
-        drupal_set_message(t('Created new term %term.', array('%term' => $term->label())));
-        watchdog('taxonomy', 'Created new term %term.', array('%term' => $term->label()), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->id() . '/edit'));
+        drupal_set_message($this->t('Created new term %term.', array('%term' => $term->label())));
+        watchdog('taxonomy', 'Created new term %term.', array('%term' => $term->label()), WATCHDOG_NOTICE, l($this->t('edit'), 'taxonomy/term/' . $term->id() . '/edit'));
         break;
       case SAVED_UPDATED:
-        drupal_set_message(t('Updated term %term.', array('%term' => $term->label())));
-        watchdog('taxonomy', 'Updated term %term.', array('%term' => $term->label()), WATCHDOG_NOTICE, l(t('edit'), 'taxonomy/term/' . $term->id() . '/edit'));
+        drupal_set_message($this->t('Updated term %term.', array('%term' => $term->label())));
+        watchdog('taxonomy', 'Updated term %term.', array('%term' => $term->label()), WATCHDOG_NOTICE, l($this->t('edit'), 'taxonomy/term/' . $term->id() . '/edit'));
         // Clear the page and block caches to avoid stale data.
-        cache_invalidate_tags(array('content' => TRUE));
+        Cache::invalidateTags(array('content' => TRUE));
         break;
     }
 
@@ -195,7 +235,7 @@ class TermFormController extends EntityFormControllerNG {
   }
 
   /**
-   * Overrides Drupal\Core\Entity\EntityFormController::delete().
+   * {@inheritdoc}
    */
   public function delete(array $form, array &$form_state) {
     $destination = array();

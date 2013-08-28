@@ -7,52 +7,53 @@
 
 namespace Drupal\form_test;
 
-use Drupal\Core\Form\FormInterface;
+use Drupal\Component\Utility\String;
+use Drupal\Core\Form\FormBase;
 
 /**
  * Provides a test form object that needs arguments.
  */
-class FormTestArgumentsObject implements FormInterface {
+class FormTestArgumentsObject extends FormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'form_test_form_test_arguments_object';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state, $arg = NULL) {
     $form['element'] = array('#markup' => 'The FormTestArgumentsObject::buildForm() method was used for this form.');
 
     $form['bananas'] = array(
       '#type' => 'textfield',
-      '#default_value' => check_plain($arg),
-      '#title' => t('Bananas'),
+      '#default_value' => String::checkPlain($arg),
+      '#title' => $this->t('Bananas'),
     );
 
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = array(
       '#type' => 'submit',
-      '#value' => t('Save'),
+      '#value' => $this->t('Save'),
     );
     return $form;
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * {@inheritdoc}
    */
   public function validateForm(array &$form, array &$form_state) {
-    drupal_set_message(t('The FormTestArgumentsObject::validateForm() method was used for this form.'));
+    drupal_set_message($this->t('The FormTestArgumentsObject::validateForm() method was used for this form.'));
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    drupal_set_message(t('The FormTestArgumentsObject::submitForm() method was used for this form.'));
+    drupal_set_message($this->t('The FormTestArgumentsObject::submitForm() method was used for this form.'));
     \Drupal::config('form_test.object')
       ->set('bananas', $form_state['values']['bananas'])
       ->save();

@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\display;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsDisplay;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
  * @todo: Wait until annotations/plugins support access mehtods.
  * no_ui => !\Drupal::config('views.settings')->get('ui.show.display_embed'),
  *
- * @Plugin(
+ * @ViewsDisplay(
  *   id = "embed",
  *   title = @Translation("Embed"),
  *   help = @Translation("Provide a display which can be embedded using the views api."),

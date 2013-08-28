@@ -29,10 +29,11 @@ function node_access_test_language_node_access_records(EntityInterface $node) {
   // Create grants for each translation of the node.
   foreach ($node->getTranslationLanguages() as $langcode => $language) {
     // If the translation is not marked as private, grant access.
+    $translation = $node->getTranslation($langcode);
     $grants[] = array(
       'realm' => 'node_access_language_test',
       'gid' => 7888,
-      'grant_view' => empty($node->field_private[$langcode][0]['value']) ? 1 : 0,
+      'grant_view' => empty($translation->field_private->value) ? 1 : 0,
       'grant_update' => 0,
       'grant_delete' => 0,
       'priority' => 0,

@@ -623,13 +623,11 @@ function node_views_data() {
  * Implements hook_preprocess_node().
  */
 function node_row_node_view_preprocess_node(&$variables) {
-  $node = $variables['node'];
   $options = $variables['view']->rowPlugin->options;
 
   if (!$options['links']) {
     unset($variables['content']['links']);
   }
-
 }
 
 /**

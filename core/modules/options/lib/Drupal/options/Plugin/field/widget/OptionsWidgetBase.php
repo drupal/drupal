@@ -9,10 +9,18 @@ namespace Drupal\options\Plugin\field\widget;
 
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
 /**
  * Base class for the 'options_*' widgets.
+ *
+ * Field types willing to enable one or several of the widgets defined in
+ * options.module (select, radios/checkboxes, on/off checkbox) need to
+ * implement the AllowedValuesInterface to specify the list of options to
+ * display in the widgets.
+ *
+ * @see \Drupal\Core\TypedData\AllowedValuesInterface
  */
 abstract class OptionsWidgetBase extends WidgetBase {
 
@@ -49,7 +57,6 @@ abstract class OptionsWidgetBase extends WidgetBase {
   public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     // Prepare some properties for the child methods to build the actual form
     // element.
-    $this->entity = $element['#entity'];
     $this->required = $element['#required'];
     $cardinality = $this->fieldDefinition->getFieldCardinality();
     $this->multiple = ($cardinality == FIELD_CARDINALITY_UNLIMITED) || ($cardinality > 1);
@@ -107,17 +114,16 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * Returns the array of options for the widget.
    *
+   * @param \Drupal\Core\Entity\Field\FieldItemInterface $item
+   *   The field item.
+   *
    * @return array
    *   The array of options for the widget.
    */
-  protected function getOptions() {
+  protected function getOptions(FieldItemInterface $item) {
     if (!isset($this->options)) {
-      $module_handler = \Drupal::moduleHandler();
-
-      // Get the list of options from the field type module, and sanitize them.
-      $field_type_info = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($this->fieldDefinition->getFieldType());
-      $module = $field_type_info['provider'];
-      $options = (array) $module_handler->invoke($module, 'options_list', array($this->fieldDefinition, $this->entity));
+      // Limit the settable options for the current user account.
+      $options = $item->getSettableOptions(\Drupal::currentUser());
 
       // Add an empty option if the widget needs one.
       if ($empty_option = $this->getEmptyOption()) {
@@ -134,9 +140,10 @@ abstract class OptionsWidgetBase extends WidgetBase {
         $options = array('_none' => $label) + $options;
       }
 
+      $module_handler = \Drupal::moduleHandler();
       $context = array(
         'fieldDefinition' => $this->fieldDefinition,
-        'entity' => $this->entity,
+        'entity' => $item->getParent()->getParent(),
       );
       $module_handler->alter('options_list', $options, $context);
 
@@ -158,13 +165,15 @@ abstract class OptionsWidgetBase extends WidgetBase {
    *
    * @param FieldInterface $items
    *   The field values.
+   * @param int $delta
+   *   (optional) The delta of the item to get options for. Defaults to 0.
    *
    * @return array
    *   The array of corresponding selected options.
    */
-  protected function getSelectedOptions(FieldInterface $items) {
+  protected function getSelectedOptions(FieldInterface $items, $delta = 0) {
     // We need to check against a flat list of options.
-    $flat_options = $this->flattenOptions($this->getOptions());
+    $flat_options = $this->flattenOptions($this->getOptions($items[$delta]));
 
     $selected_options = array();
     foreach ($items as $item) {

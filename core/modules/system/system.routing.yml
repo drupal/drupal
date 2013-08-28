@@ -227,3 +227,10 @@ system_timezone:
     _controller: '\Drupal\system\Controller\TimezoneController::getTimezone'
   requirements:
     _access: 'TRUE'
+
+system_admin_config:
+  pattern: '/admin/config'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::overview'
+  requirements:
+    _permission: 'access administration pages'

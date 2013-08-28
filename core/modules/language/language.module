@@ -94,12 +94,7 @@ function language_menu() {
     'file' => 'language.admin.inc',
   );
   $items['admin/config/regional/language/delete/%language'] = array(
-    'title' => 'Confirm delete',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('language_admin_delete_form', 5),
-    'access callback' => 'language_access_language_edit_or_delete',
-    'access arguments' => array(5),
-    'file' => 'language.admin.inc',
+    'route_name' => 'language_delete',
   );
 
   // Language negotiation.
@@ -129,13 +124,6 @@ function language_menu() {
     'access arguments' => array('administer languages'),
     'file' => 'language.admin.inc',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
-  );
-  $items['admin/config/regional/language/detection/browser/delete/%'] = array(
-    'title' => 'Delete language mapping',
-    'page arguments' => array('language_negotiation_configure_browser_delete_form', 7),
-    'type' => MENU_CALLBACK,
-    'access arguments' => array('administer languages'),
-    'file' => 'language.admin.inc',
   );
   $items['admin/config/regional/language/detection/selected'] = array(
     'title' => 'Selected language detection configuration',

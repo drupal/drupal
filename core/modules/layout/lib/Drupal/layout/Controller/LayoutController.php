@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Contains \Drupal\layout\Controller\LayoutController.
@@ -6,6 +7,7 @@
 
 namespace Drupal\layout\Controller;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerInterface;
 use Drupal\layout\Plugin\Type\LayoutManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -76,4 +78,31 @@ class LayoutController implements ControllerInterface {
     t('module');
     t('theme');
   }
+
+  /**
+   * Demonstrates a layout template.
+   *
+   * @param string $key
+   *   The key of the page layout being requested.
+   *
+   * @return array
+   *   An array as expected by drupal_render().
+   */
+  public function layoutPageView($key) {
+    $layout = $this->layoutManager->getDefinition($key);
+    drupal_set_title(t('View template %name', array('%name' => $layout['title'])), PASS_THROUGH);
+
+    // Render the layout in an admin context with region demonstrations.
+    $instance = $this->layoutManager->createInstance($key, array());
+    $regions = $instance->getRegions();
+    foreach ($regions as $region => $info) {
+      $regions[$region] = '<div class="layout-region-demonstration">' . String::checkPlain($info['label']) . '</div>';
+    }
+    $build['demonstration']['#markup'] = $instance->renderLayout(TRUE, $regions);
+
+    // @todo Convert layout.admin.css to a library.
+    $build['#attached']['css'][] = drupal_get_path('module', 'layout') . '/layout.admin.css';
+    return $build;
+  }
+
 }

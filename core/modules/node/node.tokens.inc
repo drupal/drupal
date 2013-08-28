@@ -119,7 +119,7 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
           break;
 
         case 'tnid':
-          $replacements[$original] = $node->tnid;
+          $replacements[$original] = $node->tnid->value;
           break;
 
         case 'type':

@@ -264,7 +264,8 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    * This appears on the ui beside each plugin and beside the settings link.
    */
   public function pluginTitle() {
-    if (isset($this->definition['short_title'])) {
+    // Short_title is optional so its defaults to an empty string.
+    if (!empty($this->definition['short_title'])) {
       return check_plain($this->definition['short_title']);
     }
     return check_plain($this->definition['title']);

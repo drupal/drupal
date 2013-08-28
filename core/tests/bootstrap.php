@@ -25,3 +25,7 @@ define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);
 // numbers handling.
 // @see drupal_environment_initialize()
 setlocale(LC_ALL, 'C');
+
+// Set the default timezone. While this doesn't cause any tests to fail, PHP
+// complains if 'date.timezone' is not set in php.ini.
+date_default_timezone_set('UTC');

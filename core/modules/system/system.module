@@ -727,9 +727,7 @@ function system_menu() {
   $items['admin/config'] = array(
     'title' => 'Configuration',
     'description' => 'Administer settings.',
-    'page callback' => 'system_admin_config_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config',
   );
 
   // Media settings.

@@ -35,6 +35,7 @@ use Drupal\taxonomy\VocabularyInterface;
  *   entity_keys = {
  *     "id" = "vid",
  *     "label" = "name",
+ *     "weight" = "weight",
  *     "uuid" = "uuid"
  *   }
  * )

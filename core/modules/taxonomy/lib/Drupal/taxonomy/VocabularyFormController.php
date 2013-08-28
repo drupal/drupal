@@ -23,7 +23,7 @@ class VocabularyFormController extends EntityFormController {
 
     $form['name'] = array(
       '#type' => 'textfield',
-      '#title' => t('Name'),
+      '#title' => $this->t('Name'),
       '#default_value' => $vocabulary->name,
       '#maxlength' => 255,
       '#required' => TRUE,
@@ -39,24 +39,24 @@ class VocabularyFormController extends EntityFormController {
     );
     $form['description'] = array(
       '#type' => 'textfield',
-      '#title' => t('Description'),
+      '#title' => $this->t('Description'),
       '#default_value' => $vocabulary->description,
     );
 
-    // $form['langcode'] is not wrapped in an if (module_exists('language'))
-    // check because the language_select form element works also without the
-    // language module being installed.
-    // http://drupal.org/node/1749954 documents the new element.
+    // $form['langcode'] is not wrapped in an
+    // if ($this->moduleHandler->moduleExists('language')) check because the
+    // language_select form element works also without the language module being
+    // installed. http://drupal.org/node/1749954 documents the new element.
     $form['langcode'] = array(
       '#type' => 'language_select',
-      '#title' => t('Vocabulary language'),
+      '#title' => $this->t('Vocabulary language'),
       '#languages' => Language::STATE_ALL,
       '#default_value' => $vocabulary->langcode,
     );
-    if (module_exists('language')) {
+    if ($this->moduleHandler->moduleExists('language')) {
       $form['default_terms_language'] = array(
         '#type' => 'details',
-        '#title' => t('Terms language'),
+        '#title' => $this->t('Terms language'),
       );
       $form['default_terms_language']['default_language'] = array(
         '#type' => 'language_configuration',
@@ -78,7 +78,7 @@ class VocabularyFormController extends EntityFormController {
   }
 
   /**
-   * Returns an array of supported actions for the current entity form.
+   * {@inheritdoc}
    */
   protected function actions(array $form, array &$form_state) {
     // If we are displaying the delete confirmation skip the regular actions.
@@ -86,14 +86,14 @@ class VocabularyFormController extends EntityFormController {
       $actions = parent::actions($form, $form_state);
       // Add the language configuration submit handler. This is needed because
       // the submit button has custom submit handlers.
-      if (module_exists('language')) {
-        array_unshift($actions['submit']['#submit'],'language_configuration_element_submit');
+      if ($this->moduleHandler->moduleExists('language')) {
+        array_unshift($actions['submit']['#submit'], 'language_configuration_element_submit');
         array_unshift($actions['submit']['#submit'], array($this, 'languageConfigurationSubmit'));
       }
       // We cannot leverage the regular submit handler definition because we
       // have button-specific ones here. Hence we need to explicitly set it for
       // the submit action, otherwise it would be ignored.
-      if (module_exists('content_translation')) {
+      if ($this->moduleHandler->moduleExists('content_translation')) {
         array_unshift($actions['submit']['#submit'], 'content_translation_language_configuration_element_submit');
       }
       return $actions;
@@ -130,14 +130,14 @@ class VocabularyFormController extends EntityFormController {
 
     switch ($vocabulary->save()) {
       case SAVED_NEW:
-        drupal_set_message(t('Created new vocabulary %name.', array('%name' => $vocabulary->name)));
-        watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/manage/' . $vocabulary->id() . '/edit'));
+        drupal_set_message($this->t('Created new vocabulary %name.', array('%name' => $vocabulary->name)));
+        watchdog('taxonomy', 'Created new vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l($this->t('edit'), 'admin/structure/taxonomy/manage/' . $vocabulary->id() . '/edit'));
         $form_state['redirect'] = 'admin/structure/taxonomy/manage/' . $vocabulary->id();
         break;
 
       case SAVED_UPDATED:
-        drupal_set_message(t('Updated vocabulary %name.', array('%name' => $vocabulary->name)));
-        watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l(t('edit'), 'admin/structure/taxonomy/manage/' . $vocabulary->id() . '/edit'));
+        drupal_set_message($this->t('Updated vocabulary %name.', array('%name' => $vocabulary->name)));
+        watchdog('taxonomy', 'Updated vocabulary %name.', array('%name' => $vocabulary->name), WATCHDOG_NOTICE, l($this->t('edit'), 'admin/structure/taxonomy/manage/' . $vocabulary->id() . '/edit'));
         $form_state['redirect'] = 'admin/structure/taxonomy';
         break;
     }

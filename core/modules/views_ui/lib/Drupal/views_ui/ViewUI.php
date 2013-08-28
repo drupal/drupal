@@ -1236,4 +1236,14 @@ class ViewUI implements ViewStorageInterface {
   public function uriRelationships() {
     return $this->storage->uriRelationships();
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions($entity_type) {
+    // @todo: This class is not directly defined as an entity type and does
+    //   not have base definitions but has to implement this method. Remove in
+    //   http://drupal.org/node/2024963.
+    return array();
+  }
 }

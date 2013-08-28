@@ -553,14 +553,6 @@ class DatabaseStorageController extends EntityStorageControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function baseFieldDefinitions() {
-    // @todo: Define abstract once all entity types have been converted.
-    return array();
-  }
-
-  /**
    * Implements \Drupal\Core\Entity\EntityStorageControllerInterface::getQueryServiceName().
    */
   public function getQueryServiceName() {

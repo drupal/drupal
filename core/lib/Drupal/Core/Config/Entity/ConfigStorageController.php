@@ -438,14 +438,6 @@ class ConfigStorageController extends EntityStorageControllerBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function baseFieldDefinitions() {
-    // @todo: Define abstract once all entity types have been converted.
-    return array();
-  }
-
-  /**
    * Invokes a hook on behalf of the entity.
    *
    * @param $hook

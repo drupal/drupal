@@ -15,14 +15,14 @@ use Drupal\system\SystemConfigFormBase;
 class ForumSettingsForm extends SystemConfigFormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'forum_admin_settings';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
     $config = $this->configFactory->get('forum.settings');
@@ -30,38 +30,38 @@ class ForumSettingsForm extends SystemConfigFormBase {
     $number = drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 150, 200, 250, 300, 350, 400, 500));
     $form['forum_hot_topic'] = array(
       '#type' => 'select',
-      '#title' => t('Hot topic threshold'),
+      '#title' => $this->t('Hot topic threshold'),
       '#default_value' => $config->get('topics.hot_threshold'),
       '#options' => $number,
-      '#description' => t('The number of replies a topic must have to be considered "hot".'),
+      '#description' => $this->t('The number of replies a topic must have to be considered "hot".'),
     );
     $number = drupal_map_assoc(array(10, 25, 50, 75, 100));
     $form['forum_per_page'] = array(
       '#type' => 'select',
-      '#title' => t('Topics per page'),
+      '#title' => $this->t('Topics per page'),
       '#default_value' => $config->get('topics.page_limit'),
       '#options' => $number,
-      '#description' => t('Default number of forum topics displayed per page.'),
+      '#description' => $this->t('Default number of forum topics displayed per page.'),
     );
     $forder = array(
-      1 => t('Date - newest first'),
-      2 => t('Date - oldest first'),
-      3 => t('Posts - most active first'),
-      4 => t('Posts - least active first')
+      1 => $this->t('Date - newest first'),
+      2 => $this->t('Date - oldest first'),
+      3 => $this->t('Posts - most active first'),
+      4 => $this->t('Posts - least active first')
     );
     $form['forum_order'] = array(
       '#type' => 'radios',
-      '#title' => t('Default order'),
+      '#title' => $this->t('Default order'),
       '#default_value' => $config->get('topics.order'),
       '#options' => $forder,
-      '#description' => t('Default display order for topics.'),
+      '#description' => $this->t('Default display order for topics.'),
     );
 
     return parent::buildForm($form, $form_state);
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
     $this->configFactory->get('forum.settings')

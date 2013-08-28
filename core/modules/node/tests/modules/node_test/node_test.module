@@ -139,7 +139,7 @@ function node_test_node_presave(EntityInterface $node) {
   // Determine changes.
   if (!empty($node->original) && $node->original->getTitle() == 'test_changes') {
     if ($node->original->getTitle() != $node->getTitle()) {
-      $node->title .= '_presave';
+      $node->title->value .= '_presave';
     }
   }
 }
@@ -151,7 +151,7 @@ function node_test_node_update(EntityInterface $node) {
   // Determine changes on update.
   if (!empty($node->original) && $node->original->getTitle() == 'test_changes') {
     if ($node->original->getTitle() != $node->getTitle()) {
-      $node->title .= '_update';
+      $node->title->value .= '_update';
     }
   }
 }
@@ -177,7 +177,7 @@ function node_test_entity_view_mode_alter(&$view_mode, Drupal\Core\Entity\Entity
 function node_test_node_insert(EntityInterface $node) {
   // Set the node title to the node ID and save.
   if ($node->getTitle() == 'new') {
-    $node->title = 'Node '. $node->id();
+    $node->setTitle('Node '. $node->id());
     $node->save();
   }
 }

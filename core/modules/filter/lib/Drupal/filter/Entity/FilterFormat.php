@@ -36,6 +36,7 @@ use Drupal\filter\FilterBag;
  *     "id" = "format",
  *     "label" = "name",
  *     "uuid" = "uuid",
+ *     "weight" = "weight",
  *     "status" = "status"
  *   }
  * )

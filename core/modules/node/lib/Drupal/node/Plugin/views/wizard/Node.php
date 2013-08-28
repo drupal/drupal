@@ -8,7 +8,7 @@
 namespace Drupal\node\Plugin\views\wizard;
 
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsWizard;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -18,14 +18,13 @@ use Drupal\Core\Annotation\Translation;
 /**
  * Tests creating node views with the wizard.
  *
- * @Plugin(
+ * @ViewsWizard(
  *   id = "node",
  *   module = "node",
  *   base_table = "node",
  *   title = @Translation("Content")
  * )
  */
-
 class Node extends WizardPluginBase {
 
   /**

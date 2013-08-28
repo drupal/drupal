@@ -6,7 +6,8 @@
  */
 
 namespace Drupal\system\Tests\Upgrade;
-use Drupal\Core\Language\Language;
+
+use Drupal\field\Field;
 
 /**
  * Tests upgrade of system variables.
@@ -209,16 +210,10 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
     // The deleted field uuid and deleted instance field_uuid must match.
     $this->assertEqual($deleted_field['uuid'], $deleted_instance['field_uuid']);
 
-    // Check that pre-existing deleted field values are read correctly.
-    $entity = _field_create_entity_from_ids((object) array(
-      'entity_type' => 'node',
-      'bundle' => 'article',
-      'entity_id' => 2,
-      'revision_id' => 2,
-    ));
-    field_attach_load('node', array(2 => $entity), FIELD_LOAD_CURRENT, array('instance' => entity_create('field_instance', $deleted_instance)));
-    $deleted_value = $entity->get('test_deleted_field');
-    $this->assertEqual($deleted_value[Language::LANGCODE_NOT_SPECIFIED][0]['value'], 'Some deleted value');
+    // Check that pre-existing deleted field table is renamed correctly.
+    $field_entity = new Field($deleted_field);
+    $table_name = _field_sql_storage_tablename($deleted_field);
+    $this->assertEqual("field_deleted_data_" . substr(hash('sha256', $deleted_field['uuid']), 0, 10), $table_name);
 
     // Check that creation of a new node works as expected.
     $value = $this->randomName();

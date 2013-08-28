@@ -24,14 +24,14 @@ class AddItem extends ViewsFormBase {
   }
 
   /**
-   * Implements \Drupal\views_ui\Form\Ajax\ViewsFormInterface::getFormKey().
+   * {@inheritdoc}
    */
   public function getFormKey() {
     return 'add-item';
   }
 
   /**
-   * Overrides \Drupal\views_ui\Form\Ajax\ViewsFormBase::getForm().
+   * {@inheritdoc}
    */
   public function getForm(ViewStorageInterface $view, $display_id, $js, $type = NULL) {
     $this->setType($type);
@@ -39,14 +39,14 @@ class AddItem extends ViewsFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'views_ui_add_item_form';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
     $view = &$form_state['view'];
@@ -72,7 +72,7 @@ class AddItem extends ViewsFormBase {
       $type = $types[$type]['type'];
     }
 
-    $form['#title'] = t('Add @type', array('@type' => $ltitle));
+    $form['#title'] = $this->t('Add @type', array('@type' => $ltitle));
     $form['#section'] = $display_id . 'add-item';
 
     // Add the display override dropdown.
@@ -90,13 +90,13 @@ class AddItem extends ViewsFormBase {
       );
       $form['override']['controls']['options_search'] = array(
         '#type' => 'textfield',
-        '#title' => t('Search'),
+        '#title' => $this->t('Search'),
       );
 
-      $groups = array('all' => t('- All -'));
+      $groups = array('all' => $this->t('- All -'));
       $form['override']['controls']['group'] = array(
         '#type' => 'select',
-        '#title' => t('Type'),
+        '#title' => $this->t('Type'),
         '#options' => array(),
       );
 
@@ -137,7 +137,7 @@ class AddItem extends ViewsFormBase {
           $zebra_class = ($zebra % 2) ? 'odd' : 'even';
           $form['options']['name'][$key] = array(
             '#type' => 'checkbox',
-            '#title' => t('!group: !field', array('!group' => $option['group'], '!field' => $option['title'])),
+            '#title' => $this->t('!group: !field', array('!group' => $option['group'], '!field' => $option['title'])),
             '#description' => $option['help'],
             '#return_value' => $key,
             '#prefix' => "<div class='$zebra_class filterable-option'>",
@@ -161,17 +161,17 @@ class AddItem extends ViewsFormBase {
     }
     else {
       $form['options']['markup'] = array(
-        '#markup' => '<div class="form-item">' . t('There are no @types available to add.', array('@types' =>  $ltitle)) . '</div>',
+        '#markup' => '<div class="form-item">' . $this->t('There are no @types available to add.', array('@types' =>  $ltitle)) . '</div>',
       );
     }
     // Add a div to show the selected items
     $form['selected'] = array(
       '#type' => 'item',
-      '#markup' => '<span class="views-ui-view-title">' . t('Selected:') . '</span> ' . '<div class="views-selected-options"></div>',
+      '#markup' => '<span class="views-ui-view-title">' . $this->t('Selected:') . '</span> ' . '<div class="views-selected-options"></div>',
       '#theme_wrappers' => array('form_element', 'views_ui_container'),
       '#attributes' => array('class' => array('container-inline', 'views-add-form-selected')),
     );
-    $view->getStandardButtons($form, $form_state, 'views_ui_add_item_form', t('Add and configure @types', array('@types' => $ltitle)));
+    $view->getStandardButtons($form, $form_state, 'views_ui_add_item_form', $this->t('Add and configure @types', array('@types' => $ltitle)));
 
     // Remove the default submit function.
     $form['buttons']['submit']['#submit'] = array_filter($form['buttons']['submit']['#submit'], function($var) {

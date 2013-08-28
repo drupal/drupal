@@ -7,18 +7,16 @@
 
 namespace Drupal\views\Plugin;
 
-use Drupal\Component\Plugin\PluginManagerBase;
-use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
-use Drupal\Component\Plugin\Discovery\ProcessDecorator;
-use Drupal\Core\Plugin\Discovery\AlterDecorator;
-use Drupal\Core\Plugin\Discovery\AnnotatedClassDiscovery;
-use Drupal\Core\Plugin\Discovery\CacheDecorator;
-use Drupal\Core\Plugin\Factory\ContainerFactory;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Plugin\DefaultPluginManager;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Plugin type manager for all views plugins.
  */
-class ViewsPluginManager extends PluginManagerBase {
+class ViewsPluginManager extends DefaultPluginManager {
 
   /**
    * Constructs a ViewsPluginManager object.
@@ -28,15 +26,17 @@ class ViewsPluginManager extends PluginManagerBase {
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths
    *   keyed by the corresponding namespace to look for plugin implementations,
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
+   *   Cache backend instance to use.
+   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler to invoke the alter hook with.
    */
-  public function __construct($type, \Traversable $namespaces) {
-    $this->discovery = new AnnotatedClassDiscovery("Plugin/views/$type", $namespaces);
-    $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
-    $this->discovery = new ProcessDecorator($this->discovery, array($this, 'processDefinition'));
-    $this->discovery = new AlterDecorator($this->discovery, 'views_plugins_' . $type);
-    $this->discovery = new CacheDecorator($this->discovery, 'views:' . $type, 'views_info');
-
-    $this->factory = new ContainerFactory($this);
+  public function __construct($type, \Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
+    $annotation_namespaces = array('Drupal\views\Annotation' => $namespaces['Drupal\views']);
+    $plugin_definition_annotation_name = 'Drupal\views\Annotation\Views' . Container::camelize($type);
+    parent::__construct("Plugin/views/$type", $namespaces, $annotation_namespaces, $plugin_definition_annotation_name);
 
     $this->defaults += array(
       'parent' => 'parent',
@@ -44,6 +44,9 @@ class ViewsPluginManager extends PluginManagerBase {
       'module' => 'views',
       'register_theme' => TRUE,
     );
+
+    $this->alterInfo($module_handler, 'views_plugins_' . $type);
+    $this->setCacheBackend($cache_backend, $language_manager, 'views:' . $type);
   }
 
 }

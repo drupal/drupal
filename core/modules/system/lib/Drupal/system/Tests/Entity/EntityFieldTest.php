@@ -377,7 +377,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
 
     $textfield_properties = $entity->field_test_text->getPropertyDefinitions();
     $this->assertEqual($textfield_properties['value']['type'], 'string', $entity_type .': String value property of the test-text field found.');
-    $this->assertEqual($textfield_properties['format']['type'], 'string', $entity_type .': String format field of the test-text field found.');
+    $this->assertEqual($textfield_properties['format']['type'], 'filter_format', $entity_type .': String format field of the test-text field found.');
     $this->assertEqual($textfield_properties['processed']['type'], 'string', $entity_type .': String processed property of the test-text field found.');
 
     // @todo: Once the user entity has definitions, continue testing getting

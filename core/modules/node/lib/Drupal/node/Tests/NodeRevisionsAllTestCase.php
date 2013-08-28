@@ -59,7 +59,7 @@ class NodeRevisionsAllTestCase extends NodeTestBase {
 
       // Create revision with a random title and body and update variables.
       $node->title = $this->randomName();
-      $node->body[$node->language()->id][0] = array(
+      $node->body = array(
         'value' => $this->randomName(32),
         'format' => filter_default_format(),
       );
@@ -98,7 +98,7 @@ class NodeRevisionsAllTestCase extends NodeTestBase {
 
     // Confirm the correct revision text appears on "view revisions" page.
     $this->drupalGet("node/" . $node->id() . "/revisions/" . $node->getRevisionId() . "/view");
-    $this->assertText($node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'], 'Correct text displays for version.');
+    $this->assertText($node->body->value, 'Correct text displays for version.');
 
     // Confirm the correct log message appears on "revisions overview" page.
     $this->drupalGet("node/" . $node->id() . "/revisions");
@@ -119,7 +119,7 @@ class NodeRevisionsAllTestCase extends NodeTestBase {
       )),
       'Revision reverted.');
     $reverted_node = node_load($node->id(), TRUE);
-    $this->assertTrue(($nodes[1]->body[Language::LANGCODE_NOT_SPECIFIED][0]['value'] == $reverted_node->body[Language::LANGCODE_NOT_SPECIFIED][0]['value']), 'Node reverted correctly.');
+    $this->assertTrue(($nodes[1]->body->value == $reverted_node->body->value), 'Node reverted correctly.');
 
     // Confirm that this is not the current version.
     $node = node_revision_load($node->getRevisionId());

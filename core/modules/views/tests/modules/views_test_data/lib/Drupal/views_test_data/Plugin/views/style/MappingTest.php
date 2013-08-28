@@ -8,7 +8,7 @@
 namespace Drupal\views_test_data\Plugin\views\style;
 
 use Drupal\views\Plugin\views\style\Mapping;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsStyle;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\field\Numeric;
 
@@ -17,7 +17,7 @@ use Drupal\views\Plugin\views\field\Numeric;
  *
  * @ingroup views_style_plugins
  *
- * @Plugin(
+ * @ViewsStyle(
  *   id = "mapping_test",
  *   title = @Translation("Field mapping"),
  *   help = @Translation("Maps specific fields to specific purposes."),

@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\exposed_form;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsExposedForm;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Views;
 
@@ -16,7 +16,7 @@ use Drupal\views\Views;
  *
  * @ingroup views_exposed_form_plugins
  *
- * @Plugin(
+ * @ViewsExposedForm(
  *   id = "input_required",
  *   title = @Translation("Input required"),
  *   help = @Translation("An exposed form that only renders a view if the form contains user input.")

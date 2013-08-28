@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Plugin\views\argument_default;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsArgumentDefault;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 
@@ -16,7 +16,7 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  *
  * This plugin actually has no options so it odes not need to do a great deal.
  *
- * @Plugin(
+ * @ViewsArgumentDefault(
  *   id = "node",
  *   module = "node",
  *   title = @Translation("Content ID from URL")

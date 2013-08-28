@@ -21,31 +21,6 @@ use Drupal\aggregator\Entity\Feed;
 interface ProcessorInterface {
 
   /**
-   * Returns a form to configure settings for the processor.
-   *
-   * @param array $form
-   *   The form definition array where the settings form is being included in.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
-   *
-   * @return array
-   *   The form elements for the processor settings.
-   */
-  public function settingsForm(array $form, array &$form_state);
-
-  /**
-   * Adds processor specific submission handling for the configuration form.
-   *
-   * @param array $form
-   *   The form definition array where the settings form is being included in.
-   * @param array $form_state
-   *   An associative array containing the current state of the form.
-   *
-   * @see \Drupal\aggregator\Plugin\ProcessorInterface::settingsForm()
-   */
-  public function settingsSubmit(array $form, array &$form_state);
-
-  /**
    * Processes feed data.
    *
    * @param \Drupal\aggregator\Entity\Feed $feed

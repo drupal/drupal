@@ -7,7 +7,7 @@
 
 namespace Drupal\user\Plugin\views\argument_validator;
 
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsArgumentValidator;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Database\Connection;
 use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * converts either one into the user's UID.  This validator also sets the
  * argument's title to the username.
  *
- * @Plugin(
+ * @ViewsArgumentValidator(
  *   id = "user",
  *   module = "user",
  *   title = @Translation("User")

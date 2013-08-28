@@ -127,6 +127,9 @@ class Connection extends DatabaseConnection {
     return parent::serialize();
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function __destruct() {
     if ($this->needsCleanup) {
       $this->nextIdDelete();

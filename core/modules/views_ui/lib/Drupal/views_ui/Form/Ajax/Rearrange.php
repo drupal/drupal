@@ -23,14 +23,14 @@ class Rearrange extends ViewsFormBase {
   }
 
   /**
-   * Implements \Drupal\views_ui\Form\Ajax\ViewsFormInterface::getFormKey().
+   * {@inheritdoc}
    */
   public function getFormKey() {
     return 'rearrange';
   }
 
   /**
-   * Overrides \Drupal\views_ui\Form\Ajax\ViewsFormBase::getForm().
+   * {@inheritdoc}
    */
   public function getForm(ViewStorageInterface $view, $display_id, $js, $type = NULL) {
     $this->setType($type);
@@ -38,14 +38,14 @@ class Rearrange extends ViewsFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'views_ui_rearrange_form';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
     $view = &$form_state['view'];
@@ -56,7 +56,7 @@ class Rearrange extends ViewsFormBase {
     $executable = $view->getExecutable();
     $executable->setDisplay($display_id);
     $display = &$executable->displayHandlers->get($display_id);
-    $form['#title'] = t('Rearrange @type', array('@type' => $types[$type]['ltitle']));
+    $form['#title'] = $this->t('Rearrange @type', array('@type' => $types[$type]['ltitle']));
     $form['#section'] = $display_id . 'rearrange-item';
 
     if ($display->defaultableSections($types[$type]['plural'])) {
@@ -74,8 +74,8 @@ class Rearrange extends ViewsFormBase {
 
     $form['fields'] = array(
       '#type' => 'table',
-      '#header' => array('', t('Weight'), t('Remove')),
-      '#empty' => t('No fields available.'),
+      '#header' => array('', $this->t('Weight'), $this->t('Remove')),
+      '#empty' => $this->t('No fields available.'),
       '#tabledrag' => array(
         array('order', 'sibling', 'weight'),
       ),
@@ -101,7 +101,7 @@ class Rearrange extends ViewsFormBase {
         );
       }
       else {
-        $form['fields'][$id]['name'] = array('#markup' => t('Broken field @id', array('@id' => $id)));
+        $form['fields'][$id]['name'] = array('#markup' => $this->t('Broken field @id', array('@id' => $id)));
       }
 
       $form['fields'][$id]['weight'] = array(
@@ -115,7 +115,7 @@ class Rearrange extends ViewsFormBase {
         '#id' => 'views-removed-' . $id,
         '#attributes' => array('class' => array('views-remove-checkbox')),
         '#default_value' => 0,
-        '#suffix' => l('<span>' . t('Remove') . '</span>', 'javascript:void()', array('attributes' => array('id' => 'views-remove-link-' . $id, 'class' => array('views-hidden', 'views-button-remove', 'views-remove-link'), 'alt' => t('Remove this item'), 'title' => t('Remove this item')), 'html' => TRUE)),
+        '#suffix' => l('<span>' . $this->t('Remove') . '</span>', 'javascript:void()', array('attributes' => array('id' => 'views-remove-link-' . $id, 'class' => array('views-hidden', 'views-button-remove', 'views-remove-link'), 'alt' => $this->t('Remove this item'), 'title' => $this->t('Remove this item')), 'html' => TRUE)),
       );
     }
 
@@ -130,7 +130,7 @@ class Rearrange extends ViewsFormBase {
   }
 
   /**
-   * Overrides \Drupal\views_ui\Form\Ajax\ViewsFormBase::submitForm().
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
     $types = ViewExecutable::viewsHandlerTypes();

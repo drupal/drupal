@@ -9,13 +9,13 @@ namespace Drupal\node;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityFormController;
+use Drupal\Core\Entity\EntityFormControllerNG;
 use Drupal\Core\Language\Language;
 
 /**
  * Form controller for the node edit forms.
  */
-class NodeFormController extends EntityFormController {
+class NodeFormController extends EntityFormControllerNG {
 
   /**
    * Default settings for this content/node type.
@@ -42,7 +42,7 @@ class NodeFormController extends EntityFormController {
     if ($node->isNew()) {
       foreach (array('status', 'promote', 'sticky') as $key) {
         // Multistep node forms might have filled in something already.
-        if (!isset($node->$key)) {
+        if ($node->$key->isEmpty()) {
           $node->$key = (int) in_array($key, $this->settings['options']);
         }
       }
@@ -105,7 +105,7 @@ class NodeFormController extends EntityFormController {
         '#type' => 'textfield',
         '#title' => check_plain($node_type->title_label),
         '#required' => TRUE,
-        '#default_value' => $node->title,
+        '#default_value' => $node->title->value,
         '#maxlength' => 255,
         '#weight' => -5,
       );
@@ -155,7 +155,7 @@ class NodeFormController extends EntityFormController {
       '#type' => 'textarea',
       '#title' => t('Revision log message'),
       '#rows' => 4,
-      '#default_value' => !empty($node->log) ? $node->log : '',
+      '#default_value' => !empty($node->log->value) ? $node->log->value : '',
       '#description' => t('Briefly describe the changes you have made.'),
       '#states' => array(
         'visible' => array(
@@ -191,7 +191,7 @@ class NodeFormController extends EntityFormController {
       '#title' => t('Authored by'),
       '#maxlength' => 60,
       '#autocomplete_route_name' => 'user_autocomplete',
-      '#default_value' => !empty($node->name) ? $node->name : '',
+      '#default_value' => $node->getAuthorId()? $node->getAuthor()->getUsername() : '',
       '#weight' => -1,
       '#description' => t('Leave blank for %anonymous.', array('%anonymous' => $user_config->get('anonymous'))),
     );
@@ -332,11 +332,11 @@ class NodeFormController extends EntityFormController {
     }
 
     // Validate the "authored by" field.
-    if (!empty($node->name) && !($account = user_load_by_name($node->name))) {
+    if (!empty($form_state['values']['name']) && !($account = user_load_by_name($form_state['values']['name']))) {
       // The use of empty() is mandatory in the context of usernames
       // as the empty string denotes the anonymous user. In case we
       // are dealing with an anonymous user we set the user ID to 0.
-      form_set_error('name', t('The username %name does not exist.', array('%name' => $node->name)));
+      form_set_error('name', t('The username %name does not exist.', array('%name' => $form_state['values']['name'])));
     }
 
     // Validate the "authored on" field.
@@ -373,9 +373,13 @@ class NodeFormController extends EntityFormController {
     // Save as a new revision if requested to do so.
     if (!empty($form_state['values']['revision'])) {
       $node->setNewRevision();
+      // If a new revision is created, save the current user as revision author.
+      $node->setRevisionCreationTime(REQUEST_TIME);
+      global $user;
+      $node->setRevisionAuthorId($user->id());
     }
 
-    node_submit($node);
+    $node->validated = TRUE;
     foreach (\Drupal::moduleHandler()->getImplementations('node_submit') as $module) {
       $function = $module . '_node_submit';
       $function($node, $form, $form_state);
@@ -428,6 +432,30 @@ class NodeFormController extends EntityFormController {
     $node->setPublished(FALSE);
     return $node;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildEntity(array $form, array &$form_state) {
+    $entity = parent::buildEntity($form, $form_state);
+    // A user might assign the node author by entering a user name in the node
+    // form, which we then need to translate to a user ID.
+    if (!empty($form_state['values']['name']) && $account = user_load_by_name($form_state['values']['name'])) {
+      $entity->setAuthorId($account->id());
+    }
+    else {
+      $entity->setAuthorId(0);
+    }
+
+    if (!empty($form_state['values']['date']) && $form_state['values']['date'] instanceOf DrupalDateTime) {
+      $entity->setCreatedTime($form_state['values']['date']->getTimestamp());
+    }
+    else {
+      $entity->setCreatedTime(REQUEST_TIME);
+    }
+    return $entity;
+  }
+
 
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::save().

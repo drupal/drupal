@@ -46,7 +46,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       //   does not yet support file uploads.
       $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
       $node = node_load($nid, TRUE);
-      $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id']);
+      $node_file = file_load($node->{$field_name}->target_id);
       $this->assertFileExists($node_file, 'New file saved to disk on node creation.');
 
       // Ensure the file can be downloaded.
@@ -79,7 +79,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       // Save the node and ensure it does not have the file.
       $this->drupalPost(NULL, array(), t('Save and keep published'));
       $node = node_load($nid, TRUE);
-      $this->assertTrue(empty($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id']), 'File was successfully removed from the node.');
+      $this->assertTrue(empty($node->{$field_name}->target_id), 'File was successfully removed from the node.');
     }
   }
 
@@ -196,7 +196,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
       $nid = $matches[1];
       $node = node_load($nid, TRUE);
-      $this->assertTrue(empty($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id']), 'Node was successfully saved without any files.');
+      $this->assertTrue(empty($node->{$field_name}->target_id), 'Node was successfully saved without any files.');
     }
   }
 
@@ -219,7 +219,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $this->drupalPost("admin/structure/types/manage/$type_name/fields/$instance->id/field", $edit, t('Save field settings'));
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = node_load($nid, TRUE);
-    $node_file = file_load($node->{$field_name}[Language::LANGCODE_NOT_SPECIFIED][0]['target_id']);
+    $node_file = file_load($node->{$field_name}->target_id);
     $this->assertFileExists($node_file, 'New file saved to disk on node creation.');
 
     // Ensure the private file is available to the user who uploaded it.

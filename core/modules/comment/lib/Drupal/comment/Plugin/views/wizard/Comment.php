@@ -8,7 +8,7 @@
 namespace Drupal\comment\Plugin\views\wizard;
 
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsWizard;
 use Drupal\Core\Annotation\Translation;
 
 /**
@@ -18,7 +18,7 @@ use Drupal\Core\Annotation\Translation;
 /**
  * Tests creating comment views with the wizard.
  *
- * @Plugin(
+ * @ViewsWizard(
  *   id = "comment",
  *   module = "comment",
  *   base_table = "comment",

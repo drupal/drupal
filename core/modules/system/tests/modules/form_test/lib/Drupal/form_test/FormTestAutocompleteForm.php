@@ -7,12 +7,12 @@
 
 namespace Drupal\form_test;
 
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormBase;
 
 /**
  * Defines a test form using autocomplete textfields.
  */
-class FormTestAutocompleteForm implements FormInterface {
+class FormTestAutocompleteForm extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -38,12 +38,6 @@ class FormTestAutocompleteForm implements FormInterface {
     );
 
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, array &$form_state) {
   }
 
   /**

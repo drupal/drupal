@@ -327,7 +327,17 @@ function book_form_node_form_alter(&$form, &$form_state, $form_id) {
         'css' => array(drupal_get_path('module', 'book') . '/css/book.admin.css'),
       ),
     );
+    $form['#entity_builders'][] = 'book_node_builder';
   }
+}
+
+/**
+ * Entity form builder to add the book information to the node.
+ *
+ * @todo: Remove this in favor of an entity field.
+ */
+function book_node_builder($entity_type, $entity, &$form, &$form_state) {
+  $entity->book = $form_state['values']['book'];
 }
 
 /**

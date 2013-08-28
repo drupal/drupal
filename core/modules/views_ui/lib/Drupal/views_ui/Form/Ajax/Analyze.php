@@ -17,26 +17,26 @@ use Drupal\views\Analyzer;
 class Analyze extends ViewsFormBase {
 
   /**
-   * Implements \Drupal\views_ui\Form\Ajax\ViewsFormInterface::getFormKey().
+   * {@inheritdoc}
    */
   public function getFormKey() {
     return 'analyze';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'views_ui_analyze_view_form';
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
     $view = &$form_state['view'];
 
-    $form['#title'] = t('View analysis');
+    $form['#title'] = $this->t('View analysis');
     $form['#section'] = 'analyze';
 
     $analyzer = Views::analyzer();
@@ -55,7 +55,7 @@ class Analyze extends ViewsFormBase {
   }
 
   /**
-   * Overrides \Drupal\views_ui\Form\Ajax\ViewsFormBase::submitForm().
+   * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
     $form_state['redirect'] = 'admin/structure/views/view/' . $form_state['view']->id() . '/edit';

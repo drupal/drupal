@@ -9,17 +9,22 @@ namespace Drupal\filter;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Config\Entity\ConfigEntityListController;
+use Drupal\Core\Config\Entity\DraggableListController;
+use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Form\FormInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines the filter format list controller.
  */
-class FilterFormatListController extends ConfigEntityListController implements FormInterface {
+class FilterFormatListController extends DraggableListController implements EntityControllerInterface {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $entitiesKey = 'formats';
 
   /**
    * The config factory service.
@@ -71,13 +76,6 @@ class FilterFormatListController extends ConfigEntityListController implements F
   /**
    * {@inheritdoc}
    */
-  public function render() {
-    return drupal_get_form($this);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function load() {
     // Only list enabled filters.
     return array_filter(parent::load(), function ($entity) {
@@ -89,9 +87,8 @@ class FilterFormatListController extends ConfigEntityListController implements F
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['name'] = t('Name');
+    $header['label'] = t('Name');
     $header['roles'] = t('Roles');
-    $header['weight'] = t('Weight');
     return $header + parent::buildHeader();
   }
 
@@ -99,14 +96,10 @@ class FilterFormatListController extends ConfigEntityListController implements F
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    $row['#attributes']['class'][] = 'draggable';
-    $row['#weight'] = $entity->get('weight');
-
     // Check whether this is the fallback text format. This format is available
     // to all roles and cannot be disabled via the admin interface.
-    $row['#is_fallback'] = $entity->isFallbackFormat();
-    if ($row['#is_fallback']) {
-      $row['name'] = array('#markup' => String::placeholder($entity->label()));
+    if ($entity->isFallbackFormat()) {
+      $row['label'] = String::placeholder($entity->label());
 
       $fallback_choice = $this->configFactory->get('filter.settings')->get('always_show_fallback_choice');
       if ($fallback_choice) {
@@ -117,20 +110,12 @@ class FilterFormatListController extends ConfigEntityListController implements F
       }
     }
     else {
-      $row['name'] = array('#markup' => $this->getLabel($entity));
+      $row['label'] = $this->getLabel($entity);
       $roles = array_map('\Drupal\Component\Utility\String::checkPlain', filter_get_roles_by_format($entity));
       $roles_markup = $roles ? implode(', ', $roles) : t('No roles may use this format');
     }
 
-    $row['roles'] = array('#markup' => $roles_markup);
-
-    $row['weight'] = array(
-      '#type' => 'weight',
-      '#title' => t('Weight for @title', array('@title' => $entity->label())),
-      '#title_display' => 'invisible',
-      '#default_value' => $entity->get('weight'),
-      '#attributes' => array('class' => array('text-format-order-weight')),
-    );
+    $row['roles'] = !empty($this->weightKey) ? array('#markup' => $roles_markup) : $roles_markup;
 
     return $row + parent::buildRow($entity);
   }
@@ -159,47 +144,15 @@ class FilterFormatListController extends ConfigEntityListController implements F
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $form['#tree'] = TRUE;
-    $form['formats'] = array(
-      '#type' => 'table',
-      '#header' => $this->buildHeader(),
-      '#empty' => t('There is no @label yet.', array('@label' => $this->entityInfo['label'])),
-      '#tabledrag' => array(
-        array('order', 'sibling', 'text-format-order-weight'),
-      ),
-    );
-    foreach ($this->load() as $entity) {
-      $form['formats'][$entity->id()] = $this->buildRow($entity);
-    }
-    $form['actions']['#type'] = 'actions';
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save changes'),
-      '#button_type' => 'primary',
-    );
+    $form = parent::buildForm($form, $form_state);
+    $form['actions']['submit']['#value'] = t('Save changes');
     return $form;
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, array &$form_state) {
-  }
-
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $values = $form_state['values']['formats'];
-
-    $entities = $this->storage->loadMultiple(array_keys($values));
-    foreach ($values as $id => $value) {
-      if (isset($entities[$id]) && $value['weight'] != $entities[$id]->get('weight')) {
-        // Update changed weight.
-        $entities[$id]->set('weight', $value['weight']);
-        $entities[$id]->save();
-      }
-    }
+    parent::submitForm($form, $form_state);
 
     filter_formats_reset();
     drupal_set_message(t('The text format ordering has been saved.'));

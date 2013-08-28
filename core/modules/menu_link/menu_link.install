@@ -202,6 +202,13 @@ function menu_link_schema() {
         'type' => 'varchar',
         'length' => 255,
       ),
+      'route_parameters' => array(
+        'description' => 'Serialized array of route parameters of this menu link.',
+        'type' => 'blob',
+        'size' => 'big',
+        'not null' => FALSE,
+        'serialize' => TRUE,
+      ),
     ),
     'indexes' => array(
       'path_menu' => array(array('link_path', 128), 'menu_name'),

@@ -18,7 +18,7 @@ class FeedItemsRemoveForm extends EntityNGConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to remove all items from the feed %feed?', array('%feed' => $this->entity->label()));
+    return $this->t('Are you sure you want to remove all items from the feed %feed?', array('%feed' => $this->entity->label()));
   }
 
   /**
@@ -32,7 +32,7 @@ class FeedItemsRemoveForm extends EntityNGConfirmFormBase {
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return t('Remove items');
+    return $this->t('Remove items');
   }
 
   /**

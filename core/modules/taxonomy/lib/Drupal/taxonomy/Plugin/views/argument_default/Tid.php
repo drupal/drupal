@@ -9,14 +9,14 @@ namespace Drupal\taxonomy\Plugin\views\argument_default;
 
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
-use Drupal\Component\Annotation\Plugin;
+use Drupal\views\Annotation\ViewsArgumentDefault;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
 
 /**
  * Taxonomy tid default argument.
  *
- * @Plugin(
+ * @ViewsArgumentDefault(
  *   id = "taxonomy_tid",
  *   module = "taxonomy",
  *   title = @Translation("Taxonomy term ID from URL")

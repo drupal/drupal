@@ -18,30 +18,30 @@ class ViewCloneFormController extends ViewFormControllerBase {
   public function init(array &$form_state) {
     parent::init($form_state);
 
-    drupal_set_title(t('Clone of @label', array('@label' => $this->entity->label())));
+    drupal_set_title($this->t('Clone of @label', array('@label' => $this->entity->label())));
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityFormController::prepareForm().
+   * {@inheritdoc}
    */
   protected function prepareEntity() {
     // Do not prepare the entity while it is being added.
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityFormController::form().
+   * {@inheritdoc}
    */
   public function form(array $form, array &$form_state) {
     parent::form($form, $form_state);
 
     $form['label'] = array(
       '#type' => 'textfield',
-      '#title' => t('View name'),
+      '#title' => $this->t('View name'),
       '#required' => TRUE,
       '#size' => 32,
       '#default_value' => '',
       '#maxlength' => 255,
-      '#default_value' => t('Clone of @label', array('@label' => $this->entity->label())),
+      '#default_value' => $this->t('Clone of @label', array('@label' => $this->entity->label())),
     );
     $form['id'] = array(
       '#type' => 'machine_name',
@@ -51,18 +51,18 @@ class ViewCloneFormController extends ViewFormControllerBase {
         'source' => array('label'),
       ),
       '#default_value' => '',
-      '#description' => t('A unique machine-readable name for this View. It must only contain lowercase letters, numbers, and underscores.'),
+      '#description' => $this->t('A unique machine-readable name for this View. It must only contain lowercase letters, numbers, and underscores.'),
     );
 
     return $form;
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityFormController::actions().
+   * {@inheritdoc}
    */
   protected function actions(array $form, array &$form_state) {
     $actions['submit'] = array(
-      '#value' => t('Clone'),
+      '#value' => $this->t('Clone'),
       '#submit' => array(
         array($this, 'submit'),
       ),
@@ -71,7 +71,7 @@ class ViewCloneFormController extends ViewFormControllerBase {
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\EntityFormController::form().
+   * {@inheritdoc}
    */
   public function submit(array $form, array &$form_state) {
     $original = parent::submit($form, $form_state);

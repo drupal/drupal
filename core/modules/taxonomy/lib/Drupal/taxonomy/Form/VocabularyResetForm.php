@@ -50,7 +50,7 @@ class VocabularyResetForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to reset the vocabulary %title to alphabetical order?', array('%title' => $this->entity->label()));
+    return $this->t('Are you sure you want to reset the vocabulary %title to alphabetical order?', array('%title' => $this->entity->label()));
   }
 
   /**
@@ -64,14 +64,14 @@ class VocabularyResetForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return t('Resetting a vocabulary will discard all custom ordering and sort items alphabetically.');
+    return $this->t('Resetting a vocabulary will discard all custom ordering and sort items alphabetically.');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    return t('Reset to alphabetical');
+    return $this->t('Reset to alphabetical');
   }
 
   /**
@@ -83,7 +83,7 @@ class VocabularyResetForm extends EntityConfirmFormBase {
       ->condition('vid', $this->entity->id())
       ->execute();
 
-    drupal_set_message(t('Reset vocabulary %name to alphabetical order.', array('%name' => $this->entity->label())));
+    drupal_set_message($this->t('Reset vocabulary %name to alphabetical order.', array('%name' => $this->entity->label())));
     watchdog('taxonomy', 'Reset vocabulary %name to alphabetical order.', array('%name' => $this->entity->label()), WATCHDOG_NOTICE);
     $form_state['redirect'] = 'admin/structure/taxonomy/manage/' . $this->entity->id();
   }
