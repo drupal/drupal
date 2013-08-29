@@ -87,7 +87,7 @@
   position: absolute;
   max-width: 320px;
   width: 320px;
-  z-index: 350;
+  z-index: 100;
 }
 .edit-toolbar-container > .edit-toolbar-pointer,
 .edit-toolbar-container > .edit-toolbar-lining {
