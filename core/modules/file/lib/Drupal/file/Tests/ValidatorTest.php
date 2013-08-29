@@ -129,7 +129,7 @@ class ValidatorTest extends FileManagedTestBase {
    * Test file_validate_size().
    */
   function testFileValidateSize() {
-    global $user;
+    $user = $this->container->get('current_user');
     $original_user = $user;
     drupal_save_session(FALSE);
 
