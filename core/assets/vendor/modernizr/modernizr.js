@@ -1,5 +1,5 @@
 /* Modernizr 2.6.2 (Custom Build) | MIT & BSD
- * Build: http://modernizr.com/download/#-inputtypes-touch-cssclasses-addtest-teststyles-prefixes-elem_details
+ * Build: http://modernizr.com/download/#-inputtypes-svg-touch-cssclasses-addtest-teststyles-prefixes-elem_details
  */
 ;
 
@@ -28,6 +28,7 @@ window.Modernizr = (function( window, document, undefined ) {
     prefixes = ' -webkit- -moz- -o- -ms- '.split(' '),
 
 
+    ns = {'svg': 'http://www.w3.org/2000/svg'},
 
     tests = {},
     inputs = {},
@@ -37,7 +38,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
     slice = classes.slice,
 
-    featureName, 
+    featureName,
 
 
     injectElementWithStyles = function( rule, callback, nodes, testnames ) {
@@ -86,7 +87,7 @@ window.Modernizr = (function( window, document, undefined ) {
       };
     }
     else {
-      hasOwnProp = function (object, property) { 
+      hasOwnProp = function (object, property) {
         return ((property in object) && is(object.constructor.prototype[property], 'undefined'));
       };
     }
@@ -180,6 +181,9 @@ window.Modernizr = (function( window, document, undefined ) {
 
         return bool;
     };
+    tests['svg'] = function() {
+        return !!document.createElementNS && !!document.createElementNS(ns.svg, 'svg').createSVGRect;
+    };
     function webforms() {
                             Modernizr['inputtypes'] = (function(props) {
 
@@ -254,7 +258,7 @@ window.Modernizr = (function( window, document, undefined ) {
 
        }
 
-       return Modernizr; 
+       return Modernizr;
      };
 
 

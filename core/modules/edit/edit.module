@@ -92,7 +92,6 @@ function edit_library_info() {
       $path . '/js/views/EntityView.js' => $options,
       $path . '/js/views/EntityToolbarView.js' => $options,
       $path . '/js/views/ContextualLinkView.js' => $options,
-      $path . '/js/views/ModalView.js' => $options,
       $path . '/js/views/FieldToolbarView.js' => $options,
       $path . '/js/views/EditorView.js' => $options,
       // Other.
@@ -115,6 +114,7 @@ function edit_library_info() {
       array('system', 'drupal.ajax'),
       array('system', 'drupal.debounce'),
       array('system', 'drupalSettings'),
+      array('system', 'drupal.dialog'),
     ),
   );
   $libraries['edit.editorWidget.form'] = array(

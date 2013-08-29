@@ -61,7 +61,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
     // Generate and set a D7-compatible session cookie.
     $this->curlInitialize();
     $sid = Crypt::hashBase64(uniqid(mt_rand(), TRUE) . Crypt::randomBytes(55));
-    curl_setopt($this->curlHandle, CURLOPT_COOKIE, rawurlencode(session_name()) . '=' . rawurlencode($sid));
+    $this->curlCookies[] = rawurlencode(session_name()) . '=' . rawurlencode($sid);
 
     // Force our way into the session of the child site.
     drupal_save_session(TRUE);

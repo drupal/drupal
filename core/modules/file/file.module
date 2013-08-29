@@ -389,7 +389,7 @@ function file_validate_extensions(File $file, $extensions) {
  * @see hook_file_validate()
  */
 function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
-  global $user;
+  $user = Drupal::currentUser();
   $errors = array();
 
   if ($file_limit && $file->getSize() > $file_limit) {
@@ -510,7 +510,7 @@ function file_validate_image_resolution(File $file, $maximum_dimensions = 0, $mi
  * @see file_unmanaged_save_data()
  */
 function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAME) {
-  global $user;
+  $user = Drupal::currentUser();
 
   if (empty($destination)) {
     $destination = file_default_scheme() . '://';
@@ -609,7 +609,7 @@ function file_theme() {
  * be re-used by other File-like modules, such as Image.
  */
 function file_file_download($uri, $field_type = 'file') {
-  global $user;
+  $user = Drupal::currentUser();
 
   // Get the file record based on the URI. If not in the database just return.
   $files = entity_load_multiple_by_properties('file', array('uri' => $uri));
@@ -767,7 +767,7 @@ function file_cron() {
  *   - destination: Path to the file after it is moved (same as 'uri').
  */
 function file_save_upload($form_field_name, $validators = array(), $destination = FALSE, $delta = NULL, $replace = FILE_EXISTS_RENAME) {
-  global $user;
+  $user = Drupal::currentUser();
   static $upload_cache;
 
   // Make sure there's an upload to process.

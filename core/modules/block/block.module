@@ -288,7 +288,7 @@ function _block_get_renderable_region($list = array()) {
   // to other users. We therefore exclude user 1 from block caching.
   $not_cacheable = Drupal::currentUser()->id() == 1 ||
     count(Drupal::moduleHandler()->getImplementations('node_grants')) ||
-    !\Drupal::request()->isMethodSafe();
+    !Drupal::request()->isMethodSafe();
 
   foreach ($list as $key => $block) {
     $settings = $block->get('settings');

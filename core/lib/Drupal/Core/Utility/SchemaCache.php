@@ -18,8 +18,9 @@ class SchemaCache extends CacheArray {
    * Constructs a SchemaCache object.
    */
   public function __construct() {
+    $request = \Drupal::request();
     // Cache by request method.
-    parent::__construct('schema:runtime:' . ($_SERVER['REQUEST_METHOD'] == 'GET'), 'cache', array('schema' => TRUE));
+    parent::__construct('schema:runtime:' . ($request->isMethod('GET')), 'cache', array('schema' => TRUE));
   }
 
   /**

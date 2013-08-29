@@ -44,6 +44,13 @@ class DefaultPluginBag extends PluginBag {
   protected $pluginKey = 'id';
 
   /**
+   * The original order of the instances.
+   *
+   * @var array
+   */
+  protected $originalOrder = array();
+
+  /**
    * Constructs a new DefaultPluginBag object.
    *
    * @param \Drupal\Component\Plugin\PluginManagerInterface $manager
@@ -58,6 +65,8 @@ class DefaultPluginBag extends PluginBag {
 
     if (!empty($configurations)) {
       $this->instanceIDs = MapArray::copyValuesToKeys(array_keys($configurations));
+      // Store the original order of the instance IDs for export.
+      $this->originalOrder = $this->instanceIDs;
     }
   }
 
@@ -65,7 +74,7 @@ class DefaultPluginBag extends PluginBag {
    * {@inheritdoc}
    */
   protected function initializePlugin($instance_id) {
-    $configuration = $this->configurations[$instance_id];
+    $configuration = isset($this->configurations[$instance_id]) ? $this->configurations[$instance_id] : array();
     if (!isset($configuration[$this->pluginKey])) {
       throw new PluginException(String::format("Unknown plugin ID '@instance'.", array('@instance' => $instance_id)));
     }
@@ -103,6 +112,12 @@ class DefaultPluginBag extends PluginBag {
   public function getConfiguration() {
     $instances = array();
     $this->rewind();
+    // Store the current order of the instances.
+    $current_order = $this->instanceIDs;
+    // Reorder the instances to match the original order, adding new instances
+    // to the end.
+    $this->instanceIDs = $this->originalOrder + $current_order;
+
     foreach ($this as $instance_id => $instance) {
       if ($instance instanceof ConfigurablePluginInterface) {
         $instances[$instance_id] = $instance->getConfiguration();
@@ -111,6 +126,8 @@ class DefaultPluginBag extends PluginBag {
         $instances[$instance_id] = $this->configurations[$instance_id];
       }
     }
+    // Restore the current order.
+    $this->instanceIDs = $current_order;
     return $instances;
   }
 
@@ -138,6 +155,7 @@ class DefaultPluginBag extends PluginBag {
    */
   public function removeInstanceID($instance_id) {
     parent::removeInstanceID($instance_id);
+    unset($this->originalOrder[$instance_id]);
     unset($this->configurations[$instance_id]);
   }
 

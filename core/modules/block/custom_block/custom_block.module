@@ -121,14 +121,10 @@ function custom_block_menu() {
   );
   $items['block/%custom_block/delete'] = array(
     'title' => 'Delete',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('custom_block_delete_form', 1),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'delete'),
     'weight' => 1,
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
-    'file' => 'custom_block.pages.inc',
+    'route_name' => 'custom_block_delete',
   );
   return $items;
 }

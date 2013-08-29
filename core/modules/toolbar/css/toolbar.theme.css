@@ -172,24 +172,4 @@
 .toolbar .toolbar-toggle-orientation button {
   cursor: pointer;
   display: inline-block;
-  height: 16px;
-  padding: 0;
-  text-indent: -999em;
-  width: 20px;
-}
-.toolbar .toolbar-toggle-orientation button:before {
-  left: 0; /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-toggle-orientation button:before {
-  left: auto;
-  right: 0;
-}
-.toolbar .toolbar-toggle-orientation [value="vertical"]:before {
-  background-image: url('../images/icon-toggle-vertical.png'); /* LTR */
-}
-[dir="rtl"] .toolbar .toolbar-toggle-orientation [value="vertical"]:before {
-  background-image: url('../images/icon-toggle-vertical-rtl.png');
-}
-.toolbar .toolbar-toggle-orientation [value="horizontal"]:before {
-  background-image: url('../images/icon-toggle-horizontal.png');
 }

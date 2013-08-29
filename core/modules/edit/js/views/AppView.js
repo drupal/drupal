@@ -317,49 +317,62 @@ Drupal.edit.AppView = Backbone.View.extend({
    * @see acceptEditorStateChange()
    */
   confirmEntityDeactivation: function (entityModel) {
+    var that = this;
+    var discardDialog;
+
+    function closeDiscardDialog (action) {
+      discardDialog.close(action);
+      // The active modal has been removed.
+      that.model.set('activeModal', null);
+
+      // If the targetState is saving, the field must be saved, then the
+      // entity must be saved.
+      if (action === 'save') {
+        entityModel.set('state', 'committing', {confirmed : true});
+      }
+      else {
+        entityModel.set('state', 'deactivating', {confirmed : true});
+        // Editing has been canceled and the changes will not be saved. Mark
+        // the page for reload if the entityModel declares that it requires
+        // a reload.
+        if (entityModel.get('reload')) {
+          reload = true;
+          entityModel.set('reload', false);
+        }
+      }
+    }
+
     // Only instantiate if there isn't a modal instance visible yet.
     if (!this.model.get('activeModal')) {
-      var that = this;
-      var modal = new Drupal.edit.ModalView({
-        model: this.model,
-        message: Drupal.t('You have unsaved changes'),
+      discardDialog = Drupal.dialog('<div>' + Drupal.t('You have unsaved changes') + '</div>', {
+        title: Drupal.t('Discard changes?'),
+        dialogClass: 'edit-discard-modal',
+        resizable: false,
         buttons: [
           {
-            action: 'save',
-            type: 'submit',
-            classes: 'action-save edit-button',
-            label: Drupal.t('Save')
+            text: Drupal.t('Save'),
+            click: function() {
+              closeDiscardDialog('save');
+            }
           },
           {
-            action: 'discard',
-            classes: 'action-cancel edit-button',
-            label: Drupal.t('Discard changes')
-          }
-        ],
-        callback: function (action) {
-          // The active modal has been removed.
-          that.model.set('activeModal', null);
-          // If the targetState is saving, the field must be saved, then the
-          // entity must be saved.
-          if (action === 'save') {
-            entityModel.set('state', 'committing', {confirmed : true});
-          }
-          else {
-            entityModel.set('state', 'deactivating', {confirmed : true});
-            // Editing has been canceled and the changes will not be saved. Mark
-            // the page for reload if the entityModel declares that it requires
-            // a reload.
-            if (entityModel.get('reload')) {
-              reload = true;
-              entityModel.set('reload', false);
+            text: Drupal.t('Discard changes'),
+            click: function() {
+              closeDiscardDialog('discard');
             }
           }
-        }
+        ],
+        // Prevent this modal from being closed without the user making a choice
+        // as per http://stackoverflow.com/a/5438771.
+        closeOnEscape: false,
+        create: function () {
+          $(this).parent().find('.ui-dialog-titlebar-close').remove();
+        },
+        beforeClose: false
       });
-      this.model.set('activeModal', modal);
-      // The modal will set the activeModal property on the model when rendering
-      // to prevent multiple modals from being instantiated.
-      modal.render();
+      this.model.set('activeModal', discardDialog);
+
+      discardDialog.showModal();
     }
   },
 

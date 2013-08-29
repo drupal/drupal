@@ -79,4 +79,88 @@ class ConfigField extends Field implements ConfigFieldInterface {
     return $this->getInstance()->getFieldDefaultValue($this->getParent());
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultValuesForm(array &$form, array &$form_state) {
+    if (empty($this->getInstance()->default_value_function)) {
+      $entity = $this->getParent();
+      $widget = $this->defaultValueWidget($form_state);
+
+      // Place the input in a separate place in the submitted values tree.
+      $element = array('#parents' => array('default_value_input'));
+      $element += $widget->form($entity, $entity->language()->id, $this, $element, $form_state);
+
+      return $element;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultValuesFormValidate(array $element, array &$form, array &$form_state) {
+    $entity = $this->getParent();
+    $langcode = $entity->language()->id;
+    $widget = $this->defaultValueWidget($form_state);
+
+    // Extract the submitted value, and validate it.
+    $widget->extractFormValues($entity, $langcode, $this, $element, $form_state);
+    $violations = $this->validate();
+
+    if (count($violations)) {
+      // Store reported errors in $form_state.
+      $field_name = $this->getFieldDefinition()->getFieldName();
+      $field_state = field_form_get_state($element['#parents'], $field_name, $langcode, $form_state);
+      $field_state['constraint_violations'] = $violations;
+      field_form_set_state($element['#parents'], $field_name, $langcode, $form_state, $field_state);
+
+      // Assign reported errors to the correct form element.
+      $widget->flagErrors($entity, $langcode, $this, $element, $form_state);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultValuesFormSubmit(array $element, array &$form, array &$form_state) {
+    $entity = $this->getParent();
+    $langcode = $entity->language()->id;
+    $widget = $this->defaultValueWidget($form_state);
+
+    // Extract the submitted value, and return it as an array.
+    $widget->extractFormValues($entity, $langcode, $this, $element, $form_state);
+    return $this->getValue();
+  }
+
+  /**
+   * Returns the widget object used in default value form.
+   *
+   * @param array $form_state
+   *   The form state of the (entire) configuration form.
+   *
+   * @return \Drupal\field\Plugin\Type\Widget\WidgetInterface
+   *   A Widget object.
+   */
+  protected function defaultValueWidget(array &$form_state) {
+    if (!isset($form_state['default_value_widget'])) {
+      $entity = $this->getParent();
+
+      // Force a non-required widget.
+      $this->getFieldDefinition()->required = FALSE;
+      $this->getFieldDefinition()->description = '';
+
+      // Use the widget currently configured for the 'default' form mode, or
+      // fallback to the default widget for the field type.
+      $entity_form_display = entity_get_form_display($entity->entityType(), $entity->bundle(), 'default');
+      $widget = $entity_form_display->getRenderer($this->getFieldDefinition()->getFieldName());
+      if (!$widget) {
+        $widget = \Drupal::service('plugin.manager.field.widget')->getInstance(array('field_definition' => $this->getFieldDefinition()));
+      }
+
+      $form_state['default_value_widget'] = $widget;
+    }
+
+    return $form_state['default_value_widget'];
+  }
+
 }

@@ -1,0 +1,22 @@
+/**
+ * @file
+ * Styling for the user module icons.
+ */
+
+/**
+ * Toolbar tab icon.
+ */
+.toolbar-bar .toolbar-icon-user:before {
+  background-image: url("../../../misc/icons/bebebe/person.svg");
+}
+.no-svg .toolbar-bar .toolbar-icon-user:before {
+  background-image: url("../../../misc/icons/bebebe/person.png");
+}
+.toolbar-bar .toolbar-icon-user:active:before,
+.toolbar-bar .toolbar-icon-user.active:before {
+  background-image: url("../../../misc/icons/ffffff/person.svg");
+}
+.no-svg .toolbar-bar .toolbar-icon-user:active:before,
+.no-svg .toolbar-bar .toolbar-icon-user.active:before {
+  background-image: url("../../../misc/icons/ffffff/person.png");
+}

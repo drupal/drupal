@@ -80,7 +80,7 @@ function toolbar_element_info() {
       // The id cannot be simply "toolbar" or it will clash with the simpletest
       // tests listing which produces a checkbox with attribute id="toolbar"
       'id' => 'toolbar-administration',
-      'class' => array('toolbar',),
+      'class' => array('toolbar'),
       'role' => 'navigation',
     ),
     // Metadata for the administration bar.
@@ -88,7 +88,7 @@ function toolbar_element_info() {
       '#heading' => t('Toolbar items'),
       '#attributes' => array(
         'id' => 'toolbar-bar',
-        'class' => array('toolbar-bar', 'clearfix',),
+        'class' => array('toolbar-bar', 'clearfix'),
       ),
     ),
   );
@@ -595,6 +595,7 @@ function toolbar_library_info() {
       drupal_get_path('module', 'toolbar') . '/css/toolbar.icons.css',
     ),
     'dependencies' => array(
+      array('system', 'modernizr'),
       array('system', 'jquery'),
       array('system', 'drupal'),
       array('system', 'drupalSettings'),
