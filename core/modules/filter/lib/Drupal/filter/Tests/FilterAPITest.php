@@ -107,7 +107,7 @@ class FilterAPITest extends EntityUnitTestBase {
     );
     $this->assertIdentical(
       filter_get_filter_types_by_format('filtered_html'),
-      array(FILTER_TYPE_HTML_RESTRICTOR, FILTER_TYPE_MARKUP_LANGUAGE),
+      array(FILTER_TYPE_MARKUP_LANGUAGE, FILTER_TYPE_HTML_RESTRICTOR),
       'filter_get_filter_types_by_format() works as expected for the filtered_html format.'
     );
 
