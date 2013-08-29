@@ -10,7 +10,7 @@ filter_tips:
   defaults:
     _content: '\Drupal\filter\Controller\FilterController::filterTips'
   requirements:
-    _filter_access: 'TRUE'
+    _entity_access: 'filter_format.view'
 
 filter_admin_overview:
   pattern: '/admin/config/content/formats'
@@ -38,5 +38,8 @@ filter_admin_disable:
   pattern: '/admin/config/content/formats/manage/{filter_format}/disable'
   defaults:
     _entity_form: 'filter_format.disable'
+  options:
+     _access_mode: 'ALL'
   requirements:
     _filter_disable_format_access: 'TRUE'
+    _permission: 'administer filters'

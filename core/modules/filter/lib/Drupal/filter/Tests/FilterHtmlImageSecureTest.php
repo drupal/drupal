@@ -61,7 +61,7 @@ class FilterHtmlImageSecureTest extends WebTestBase {
       'access comments',
       'post comments',
       'skip comment approval',
-      filter_permission_name($filtered_html_format),
+      $filtered_html_format->getPermissionName(),
     ));
     $this->drupalLogin($this->web_user);
 

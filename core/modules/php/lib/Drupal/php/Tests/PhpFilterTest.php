@@ -26,7 +26,7 @@ class PhpFilterTest extends PhpTestBase {
    */
   function testPhpFilter() {
     // Log in as a user with permission to use the PHP code text format.
-    $php_code_permission = filter_permission_name(filter_format_load('php_code'));
+    $php_code_permission = entity_load('filter_format', 'php_code')->getPermissionName();
     $web_user = $this->drupalCreateUser(array('access content', 'create page content', 'edit own page content', $php_code_permission));
     $this->drupalLogin($web_user);
 

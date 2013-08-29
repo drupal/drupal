@@ -34,14 +34,14 @@ class FilterAdminTest extends WebTestBase {
     parent::setUp();
 
     // Create users.
-    $basic_html_format = filter_format_load('basic_html');
-    $restricted_html_format = filter_format_load('restricted_html');
-    $full_html_format = filter_format_load('full_html');
+    $basic_html_format = entity_load('filter_format', 'basic_html');
+    $restricted_html_format = entity_load('filter_format', 'restricted_html');
+    $full_html_format = entity_load('filter_format', 'full_html');
     $this->admin_user = $this->drupalCreateUser(array(
       'administer filters',
-      filter_permission_name($basic_html_format),
-      filter_permission_name($restricted_html_format),
-      filter_permission_name($full_html_format),
+      $basic_html_format->getPermissionName(),
+      $restricted_html_format->getPermissionName(),
+      $full_html_format->getPermissionName(),
     ));
 
     $this->web_user = $this->drupalCreateUser(array('create page content', 'edit own page content'));
@@ -143,8 +143,9 @@ class FilterAdminTest extends WebTestBase {
     $this->assertResponse(403, 'The fallback format cannot be disabled.');
 
     // Verify access permissions to Full HTML format.
-    $this->assertTrue(filter_access(filter_format_load($full), $this->admin_user), 'Admin user may use Full HTML.');
-    $this->assertFalse(filter_access(filter_format_load($full), $this->web_user), 'Web user may not use Full HTML.');
+    $full_format = entity_load('filter_format', $full);
+    $this->assertTrue($full_format->access('view', $this->admin_user), 'Admin user may use Full HTML.');
+    $this->assertFalse($full_format->access('view', $this->web_user), 'Web user may not use Full HTML.');
 
     // Add an additional tag.
     $edit = array();
@@ -199,7 +200,7 @@ class FilterAdminTest extends WebTestBase {
     $this->assertRaw(t('Added text format %format.', array('%format' => $edit['name'])), 'New filter created.');
 
     filter_formats_reset();
-    $format = filter_format_load($edit['format']);
+    $format = entity_load('filter_format', $edit['format']);
     $this->assertNotNull($format, 'Format found in database.');
     $this->drupalGet('admin/config/content/formats/manage/' . $format->format);
     $this->assertFieldByName('roles[' . DRUPAL_AUTHENTICATED_RID . ']', '', 'Role found.');
@@ -212,7 +213,7 @@ class FilterAdminTest extends WebTestBase {
     $this->assertRaw(t('Disabled text format %format.', array('%format' => $edit['name'])), 'Format successfully disabled.');
 
     // Allow authenticated users on full HTML.
-    $format = filter_format_load($full);
+    $format = entity_load('filter_format', $full);
     $edit = array();
     $edit['roles[' . DRUPAL_ANONYMOUS_RID . ']'] = 0;
     $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = 1;

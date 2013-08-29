@@ -62,7 +62,7 @@ class UserSignatureTest extends WebTestBase {
     ));
     $this->full_html_format->save();
 
-    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array(filter_permission_name($this->filtered_html_format)));
+    user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array($this->filtered_html_format->getPermissionName()));
     $this->checkPermissions(array(), TRUE);
 
     // Create regular and administrative users.
@@ -70,7 +70,7 @@ class UserSignatureTest extends WebTestBase {
 
     $admin_permissions = array('administer comments');
     foreach (filter_formats() as $format) {
-      if ($permission = filter_permission_name($format)) {
+      if ($permission = $format->getPermissionName()) {
         $admin_permissions[] = $permission;
       }
     }

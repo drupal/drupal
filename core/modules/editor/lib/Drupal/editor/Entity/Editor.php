@@ -71,7 +71,7 @@ class Editor extends ConfigEntityBase implements EditorInterface {
    * Overrides Drupal\Core\Entity\Entity::label().
    */
   public function label($langcode = NULL) {
-    $format = filter_format_load($this->format);
+    $format = entity_load('filter_format', $this->format);
     return $format->name;
   }
 

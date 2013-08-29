@@ -35,11 +35,11 @@ abstract class PhpTestBase extends WebTestBase {
 
     // Verify that the PHP code text format was inserted.
     $php_format_id = 'php_code';
-    $this->php_code_format = filter_format_load($php_format_id);
+    $this->php_code_format = entity_load('filter_format', $php_format_id);
     $this->assertEqual($this->php_code_format->name, 'PHP code', 'PHP code text format was created.');
 
     // Verify that the format has the PHP code filter enabled.
-    $filters = filter_list_format($php_format_id);
+    $filters = $this->php_code_format->filters();
     $this->assertTrue($filters->get('php_code')->status, 'PHP code filter is enabled.');
 
     // Verify that the format exists on the administration page.

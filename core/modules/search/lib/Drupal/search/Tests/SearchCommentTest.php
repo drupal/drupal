@@ -38,10 +38,10 @@ class SearchCommentTest extends SearchTestBase {
 
     // Create and log in an administrative user having access to the Full HTML
     // text format.
-    $full_html_format = filter_format_load('full_html');
+    $full_html_format = entity_load('filter_format', 'full_html');
     $permissions = array(
       'administer filters',
-      filter_permission_name($full_html_format),
+      $full_html_format->getPermissionName(),
       'administer permissions',
       'create page content',
       'skip comment approval',

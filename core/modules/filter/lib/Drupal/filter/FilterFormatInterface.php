@@ -49,4 +49,13 @@ interface FilterFormatInterface extends ConfigEntityInterface {
    */
   public function isFallbackFormat();
 
+  /**
+   * Returns the machine-readable permission name for the text format.
+   *
+   * @return string|bool
+   *   The machine-readable permission name, or FALSE if the text format is
+   *   malformed or is the fallback format (which is available to all users).
+   */
+  public function getPermissionName();
+
 }

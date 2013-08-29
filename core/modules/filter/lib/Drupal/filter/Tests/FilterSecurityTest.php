@@ -56,7 +56,7 @@ class FilterSecurityTest extends WebTestBase {
     ));
     $filtered_html_format->save();
 
-    $filtered_html_permission = filter_permission_name($filtered_html_format);
+    $filtered_html_permission = $filtered_html_format->getPermissionName();
     user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array($filtered_html_permission));
 
     $this->admin_user = $this->drupalCreateUser(array('administer modules', 'administer filters', 'administer site configuration'));
