@@ -105,7 +105,6 @@ class DownloadTest extends FileManagedTestBase {
       'clean' => '',
       'unclean' => 'index.php/',
     );
-    $generator = $this->container->get('url_generator');
     foreach ($clean_url_settings as $clean_url_setting => $script_path) {
       $clean_urls = $clean_url_setting == 'clean';
       $request = $this->prepareRequestForGenerator($clean_urls);
