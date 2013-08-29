@@ -8,6 +8,8 @@
 use Drupal\file\Entity\File;
 use Drupal\editor\Entity\Editor;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\field\Field;
 
 /**
  * Implements hook_help().
@@ -383,4 +385,183 @@ function editor_pre_render_format($element) {
   $element['#attached'] = NestedArray::mergeDeep($element['#attached'], $manager->getAttachments($format_ids));
 
   return $element;
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function editor_entity_insert(EntityInterface $entity) {
+  $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
+  foreach ($referenced_files_by_field as $field => $uuids) {
+    _editor_record_file_usage($uuids, $entity);
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function editor_entity_update(EntityInterface $entity) {
+  // On new revisions, all files are considered to be a new usage and no
+  // deletion of previous file usages are necessary.
+  if (!empty($entity->original) && $entity->getRevisionId() != $entity->original->getRevisionId()) {
+    $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
+    foreach ($referenced_files_by_field as $field => $uuids) {
+      _editor_record_file_usage($uuids, $entity);
+    }
+  }
+  // On modified revisions, detect which file references have been added (and
+  // record their usage) and which ones have been removed (delete their usage).
+  // File references that existed both in the previous version of the revision
+  // and in the new one don't need their usage to be updated.
+  else {
+    $original_uuids_by_field = _editor_get_file_uuids_by_field($entity->original);
+    $uuids_by_field = _editor_get_file_uuids_by_field($entity);
+
+    // Detect file usages that should be incremented.
+    foreach ($uuids_by_field as $field => $uuids) {
+      $added_files = array_diff($uuids_by_field[$field], $original_uuids_by_field[$field]);
+      _editor_record_file_usage($added_files, $entity);
+    }
+
+    // Detect file usages that should be decremented.
+    foreach ($original_uuids_by_field as $field => $uuids) {
+      $removed_files = array_diff($original_uuids_by_field[$field], $uuids_by_field[$field]);
+      _editor_delete_file_usage($removed_files, $entity, 1);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function editor_entity_delete(EntityInterface $entity) {
+  $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
+  foreach ($referenced_files_by_field as $field => $uuids) {
+    _editor_delete_file_usage($uuids, $entity, 0);
+  }
+}
+
+/**
+ * Implements hook_entity_revision_delete().
+ */
+function editor_entity_revision_delete(EntityInterface $entity) {
+  $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
+  foreach ($referenced_files_by_field as $field => $uuids) {
+    _editor_delete_file_usage($uuids, $entity, 1);
+  }
+}
+
+/**
+ * Records file usage of files referenced by processed text fields.
+ *
+ * Every referenced file that does not yet have the FILE_STATUS_PERMANENT state,
+ * will be given that state.
+ *
+ * @param array $uuids
+ *   An array of file entity UUIDs.
+ * @param EntityInterface $entity
+ *   An entity whose fields to inspect for file references.
+ */
+function _editor_record_file_usage(array $uuids, EntityInterface $entity) {
+  foreach ($uuids as $uuid) {
+    $file = entity_load_by_uuid('file', $uuid);
+    if ($file->status !== FILE_STATUS_PERMANENT) {
+      $file->status = FILE_STATUS_PERMANENT;
+      $file->save();
+    }
+    file_usage()->add($file, 'editor', $entity->entityType(), $entity->id());
+  }
+}
+
+/**
+ * Deletes file usage of files referenced by processed text fields.
+ *
+ * @param array $uuids
+ *   An array of file entity UUIDs.
+ * @param EntityInterface $entity
+ *   An entity whose fields to inspect for file references.
+ * @param $count
+ *   The number of references to delete. Should be 1 when deleting a single
+ *   revision and 0 when deleting an entity entirely.
+ *
+ * @see Drupal\file\FileUsage\FileUsageInterface::delete()
+ */
+function _editor_delete_file_usage(array $uuids, EntityInterface $entity, $count) {
+  foreach ($uuids as $uuid) {
+    $file = entity_load_by_uuid('file', $uuid);
+    file_usage()->delete($file, 'editor', $entity->entityType(), $entity->id(), $count);
+  }
+}
+
+/**
+ * Finds all files referenced (data-editor-file-uuid) by processed text fields.
+ *
+ * @param EntityInterface $entity
+ *   An entity whose fields to analyze.
+ *
+ * @return array
+ *   An array of file entity UUIDs.
+ */
+function _editor_get_file_uuids_by_field(EntityInterface $entity) {
+  $uuids = array();
+
+  $processed_text_fields = _editor_get_processed_text_fields($entity);
+  foreach ($processed_text_fields as $processed_text_field) {
+    $text = $entity->get($processed_text_field)->value;
+    $uuids[$processed_text_field] = _editor_parse_file_uuids($text);
+  }
+  return $uuids;
+}
+
+/**
+ * Determines the text fields on an entity that have text processing enabled.
+ *
+ * @param EntityInterface $entity
+ *   An entity whose fields to analyze.
+ *
+ * @return array
+ *   The names of the fields on this entity that have text processing enabled.
+ */
+function _editor_get_processed_text_fields(EntityInterface $entity) {
+  $properties = $entity->getPropertyDefinitions();
+  if (empty($properties)) {
+    return array();
+  }
+
+  // Find all configurable fields, because only they could have a
+  // text_processing setting.
+  $configurable_fields = array_keys(array_filter($properties, function ($definition) {
+    return isset($definition['configurable']) && $definition['configurable'] === TRUE;
+  }));
+  if (empty($configurable_fields)) {
+    return array();
+  }
+
+  // Only return fields that have text processing enabled.
+  return array_filter($configurable_fields, function ($field) use ($entity) {
+    $settings = Field::fieldInfo()
+      ->getInstance($entity->entityType(), $entity->bundle(), $field)
+      ->getFieldSettings();
+    return isset($settings['text_processing']) && $settings['text_processing'] === '1';
+  });
+}
+
+/**
+ * Parse an HTML snippet for any data-editor-file-uuid attributes.
+ *
+ * @param string $text
+ *   The partial (X)HTML snippet to load. Invalid markup will be corrected on
+ *   import.
+ *
+ * @return array
+ *   An array of all found UUIDs.
+ */
+function _editor_parse_file_uuids($text) {
+  $dom = filter_dom_load($text);
+  $xpath = new \DOMXPath($dom);
+  $uuids = array();
+  foreach ($xpath->query('//*[@data-editor-file-uuid]') as $node) {
+    $uuids[] = $node->getAttribute('data-editor-file-uuid');
+  }
+  return $uuids;
 }

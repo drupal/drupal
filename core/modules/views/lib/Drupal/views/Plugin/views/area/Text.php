@@ -39,7 +39,7 @@ class Text extends TokenizeAreaPluginBase {
       '#default_value' => $this->options['content'],
       '#rows' => 6,
       '#format' => isset($this->options['format']) ? $this->options['format'] : filter_default_format(),
-      '#wysiwyg' => FALSE,
+      '#editor' => FALSE,
     );
   }
 

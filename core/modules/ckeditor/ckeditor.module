@@ -79,6 +79,20 @@ function ckeditor_library_info() {
       array('system', 'underscore')
     ),
   );
+  $libraries['drupal.ckeditor.drupalimage.admin'] = array(
+    'title' => 'Only show the "drupalimage" plugin settings when its button is enabled.',
+    'version' => VERSION,
+    'js' => array(
+      $module_path . '/js/ckeditor.drupalimage.admin.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'jquery.once'),
+      array('system', 'drupal.vertical-tabs'),
+      array('system', 'drupalSettings'),
+    ),
+  );
   $libraries['drupal.ckeditor.stylescombo.admin'] = array(
     'title' => 'Only show the "stylescombo" plugin settings when its button is enabled.',
     'version' => VERSION,
@@ -91,8 +105,6 @@ function ckeditor_library_info() {
       array('system', 'jquery.once'),
       array('system', 'drupal.vertical-tabs'),
       array('system', 'drupalSettings'),
-      // @todo D8 formUpdated event should be debounced already.
-      array('system', 'drupal.debounce'),
     ),
   );
   $libraries['ckeditor'] = array(
