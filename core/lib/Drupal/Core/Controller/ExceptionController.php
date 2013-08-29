@@ -87,8 +87,8 @@ class ExceptionController extends ContainerAware {
     $path = $this->container->get('path.alias_manager')->getSystemPath(\Drupal::config('system.site')->get('page.403'));
     if ($path && $path != $system_path) {
       // Keep old path for reference, and to allow forms to redirect to it.
-      if (!isset($_GET['destination'])) {
-        $_GET['destination'] = $system_path;
+      if (!$request->query->has('destination')) {
+        $request->query->set('destination', $system_path);
       }
 
       $subrequest = Request::create('/' . $path, 'get', array('destination' => $system_path), $request->cookies->all(), array(), $request->server->all());
@@ -154,8 +154,8 @@ class ExceptionController extends ContainerAware {
     $system_path = $request->attributes->get('_system_path');
 
     // Keep old path for reference, and to allow forms to redirect to it.
-    if (!isset($_GET['destination'])) {
-      $_GET['destination'] = $system_path;
+    if (!$request->query->has('destination')) {
+      $request->query->set('destination', $system_path);
     }
 
     $path = $this->container->get('path.alias_manager')->getSystemPath(\Drupal::config('system.site')->get('page.404'));
