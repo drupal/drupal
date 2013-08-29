@@ -148,6 +148,8 @@ Drupal.verticalTab.prototype = {
   tabShow: function () {
     // Display the tab.
     this.item.show();
+    // Show the vertical tabs.
+    this.item.closest('.form-type-vertical-tabs').show();
     // Update .first marker for items. We need recurse from parent to retain the
     // actual DOM element order as jQuery implements sortOrder, but not as public
     // method.
@@ -177,6 +179,10 @@ Drupal.verticalTab.prototype = {
     var $firstTab = this.details.siblings('.vertical-tabs-pane:not(.vertical-tab-hidden):first');
     if ($firstTab.length) {
       $firstTab.data('verticalTab').focus();
+    }
+    // Hide the vertical tabs (if no tabs remain).
+    else {
+      this.item.closest('.form-type-vertical-tabs').hide();
     }
     return this;
   }

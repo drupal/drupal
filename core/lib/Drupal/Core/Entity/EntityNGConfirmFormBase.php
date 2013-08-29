@@ -70,6 +70,14 @@ abstract class EntityNGConfirmFormBase extends EntityFormControllerNG implements
   /**
    * {@inheritdoc}
    */
+  public function form(array $form, array &$form_state) {
+    // Do not attach fields to the confirm form.
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function init(array &$form_state) {
     parent::init($form_state);
 

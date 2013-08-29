@@ -1,0 +1,68 @@
+/**
+ * @file
+ * Styling for the shortcut module icons.
+ */
+
+/**
+ * Toolbar tab icon.
+ */
+.toolbar-bar .toolbar-icon-shortcut:before {
+  background-image: url("../../../misc/icons/bebebe/star.svg");
+}
+.no-svg .toolbar-bar .toolbar-icon-shortcut:before {
+  background-image: url("../../../misc/icons/bebebe/star.png");
+}
+.toolbar-bar .toolbar-icon-shortcut:active:before,
+.toolbar-bar .toolbar-icon-shortcut.active:before {
+  background-image: url("../../../misc/icons/ffffff/star.svg");
+}
+.no-svg .toolbar-bar .toolbar-icon-shortcut:active:before,
+.no-svg .toolbar-bar .toolbar-icon-shortcut.active:before {
+  background-image: url("../../../misc/icons/ffffff/star.png");
+}
+
+/**
+ * Add/remove links.
+ */
+.add-or-remove-shortcuts .icon {
+  background: transparent url("../images/shortcut-add.png") no-repeat;
+  height: 12px;
+  margin-left: 8px; /* LTR */
+  overflow: hidden;
+  text-indent: 12px;
+  width: 12px;
+}
+.no-svg .add-or-remove-shortcuts .icon {
+  background: transparent url("../images/shortcut-add.png") no-repeat;
+}
+[dir="rtl"] .add-or-remove-shortcuts .icon {
+  margin-left: 0;
+  margin-right: 8px;
+}
+[dir="rtl"] .add-or-remove-shortcuts .text {
+  padding: 0 10px 0 6px;
+}
+[dir="rtl"] .add-or-remove-shortcuts a:focus .text,
+[dir="rtl"] .add-or-remove-shortcuts a:hover .text {
+  border-radius: 5px 0 0 5px;
+}
+.add-shortcut a:focus .icon,
+.add-shortcut a:hover .icon {
+  background-position: 0 -12px; /* LTR */
+}
+[dir="rtl"] .add-shortcut a:focus .icon,
+[dir="rtl"] .add-shortcut a:hover .icon {
+  background-position: 0 -24px;
+}
+.remove-shortcut .icon {
+  margin-top: 4px;
+  background-position: -12px 0;
+}
+.remove-shortcut a:focus .icon,
+.remove-shortcut a:hover .icon {
+  background-position: -12px -12px; /* LTR */
+}
+[dir="rtl"] .remove-shortcut a:focus .icon,
+[dir="rtl"] .remove-shortcut a:hover .icon {
+  background-position: -12px -24px;
+}

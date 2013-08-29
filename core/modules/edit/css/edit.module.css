@@ -33,20 +33,6 @@
 }
 
 /**
- * Edit mode: modal.
- */
-#edit_modal {
-  z-index: 350;
-  position: fixed;
-  top: 40%;
-  left: 40%; /* LTR */
-}
-[dir="rtl"] #edit_modal {
-  left: auto;
-  right: 40%;
-}
-
-/**
  * Edit mode: type=direct.
  */
 .edit-validation-errors {
@@ -101,7 +87,7 @@
   position: absolute;
   max-width: 320px;
   width: 320px;
-  z-index: 350;
+  z-index: 100;
 }
 .edit-toolbar-container > .edit-toolbar-pointer,
 .edit-toolbar-container > .edit-toolbar-lining {

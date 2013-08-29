@@ -22,22 +22,6 @@ Drupal.theme.editBackstage = function (settings) {
 };
 
 /**
- * Theme function for a modal of the Edit module.
- *
- * @return String
- *   The corresponding HTML.
- */
-Drupal.theme.editModal = function () {
-  var classes = 'edit-animate-slow edit-animate-invisible edit-animate-delay-veryfast';
-  var html = '';
-  html += '<div id="edit_modal" class="' + classes + '" role="dialog">';
-  html += '  <div class="main"><p></p></div>';
-  html += '  <div class="actions"></div>';
-  html += '</div>';
-  return html;
-};
-
-/**
  * Theme function for a toolbar container of the Edit module.
  *
  * @param Object settings
@@ -133,7 +117,6 @@ Drupal.theme.editToolgroup = function (settings) {
  *     - String type: the type of the button (defaults to 'button')
  *     - Array classes: the classes of the button.
  *     - String label: the label of the button.
- *     - String action: sets a data-edit-modal-action attribute.
  * @return String
  *   The corresponding HTML.
  */
@@ -152,8 +135,7 @@ Drupal.theme.editButtons = function (settings) {
         attributes.push(attr + ((attrMap[attr]) ? '="' + attrMap[attr] + '"' : '' ));
       }
     }
-    html += '<button type="' + button.type + '" class="' + button.classes + '"'  + ' ' + attributes.join(' ');
-    html += ((button.action) ? ' data-edit-modal-action="' + button.action + '"' : '') + '>';
+    html += '<button type="' + button.type + '" class="' + button.classes + '"'  + ' ' + attributes.join(' ') + '>';
     html += button.label;
     html += '</button>';
   }

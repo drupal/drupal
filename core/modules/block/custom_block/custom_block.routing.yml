@@ -34,6 +34,13 @@ custom_block_edit:
     _entity_access: 'custom_block.update'
     custom_block: \d+
 
+custom_block_delete:
+  pattern: '/block/{custom_block}/delete'
+  defaults:
+    _entity_form: 'custom_block.delete'
+  requirements:
+    _entity_access: 'custom_block.delete'
+
 custom_block_type_add:
   pattern: '/admin/structure/custom-blocks/types/add'
   defaults:

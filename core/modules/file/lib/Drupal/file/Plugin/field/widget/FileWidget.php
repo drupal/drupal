@@ -24,8 +24,7 @@ use Drupal\Core\Entity\Field\FieldInterface;
  *   },
  *   settings = {
  *     "progress_indicator" = "throbber"
- *   },
- *   default_value = FALSE
+ *   }
  * )
  */
 class FileWidget extends WidgetBase {

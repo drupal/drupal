@@ -30,6 +30,7 @@ function file_field_info() {
       'default_widget' => 'file_generic',
       'default_formatter' => 'file_default',
       'class' => '\Drupal\file\Type\FileItem',
+      'list_class' => '\Drupal\file\Type\FileField',
     ),
   );
 }

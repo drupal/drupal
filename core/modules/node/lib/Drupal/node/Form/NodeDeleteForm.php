@@ -79,14 +79,6 @@ class NodeDeleteForm extends EntityNGConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
-    // Do not attach fields to the delete form.
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function submit(array $form, array &$form_state) {
     $this->entity->delete();
     watchdog('content', '@type: deleted %title.', array('@type' => $this->entity->bundle(), '%title' => $this->entity->label()));

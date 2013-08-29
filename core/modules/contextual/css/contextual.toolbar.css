@@ -3,15 +3,6 @@
  * Styling for contextual module's toolbar tab.
  */
 
-/* Tab icon. */
-.toolbar-icon-edit:before {
-  background-image: url(../../../misc/edit.png);
-}
-.toolbar-icon-edit:active:before,
-.active.toolbar-icon-edit:before {
-  background-image: url(../../../misc/edit-active.png);
-}
-
 /* Tab appearance. */
 .toolbar .toolbar-bar .contextual-toolbar-tab.toolbar-tab {
   float: right; /* LTR */
@@ -20,6 +11,7 @@
   float: left;
 }
 .toolbar .toolbar-bar .contextual-toolbar-tab button {
+  margin: 0;
   padding-bottom: 1em;
   padding-top: 1em;
   /* Hide tab text. */

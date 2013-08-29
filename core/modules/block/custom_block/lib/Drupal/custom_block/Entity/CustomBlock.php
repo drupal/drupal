@@ -29,6 +29,7 @@ use Drupal\custom_block\CustomBlockInterface;
  *     "form" = {
  *       "add" = "Drupal\custom_block\CustomBlockFormController",
  *       "edit" = "Drupal\custom_block\CustomBlockFormController",
+ *       "delete" = "Drupal\custom_block\Form\CustomBlockDeleteForm",
  *       "default" = "Drupal\custom_block\CustomBlockFormController"
  *     },
  *     "translation" = "Drupal\custom_block\CustomBlockTranslationController"

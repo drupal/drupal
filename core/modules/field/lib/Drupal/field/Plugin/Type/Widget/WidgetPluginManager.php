@@ -87,12 +87,18 @@ class WidgetPluginManager extends DefaultPluginManager {
    *   A Widget object.
    */
   public function getInstance(array $options) {
+    // Fill in defaults for missing properties.
+    $options += array(
+      'configuration' => array(),
+      'prepare' => TRUE,
+    );
+
     $configuration = $options['configuration'];
     $field_definition = $options['field_definition'];
     $field_type = $field_definition->getFieldType();
 
     // Fill in default configuration if needed.
-    if (!isset($options['prepare']) || $options['prepare'] == TRUE) {
+    if ($options['prepare']) {
       $configuration = $this->prepareConfiguration($field_type, $configuration);
     }
 

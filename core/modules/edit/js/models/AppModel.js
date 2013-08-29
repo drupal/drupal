@@ -6,7 +6,7 @@ Drupal.edit.AppModel = Backbone.Model.extend({
   defaults: {
     highlightedEditor: null,
     activeEditor: null,
-    // Reference to a ModalView-instance if a state change requires
+    // Reference to a Drupal.dialog instance if a state change requires
     // confirmation.
     activeModal: null
   }

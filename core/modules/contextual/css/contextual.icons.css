@@ -1,0 +1,41 @@
+/**
+ * @file
+ * Styling for contextual module icons.
+ */
+
+/**
+ * Toolbar tab icon.
+ */
+.toolbar-bar .toolbar-icon-edit:before {
+  background-image: url("../../../misc/icons/bebebe/pencil.svg");
+}
+.no-svg .toolbar-bar .toolbar-icon-edit:before {
+  background-image: url("../../../misc/icons/bebebe/pencil.png");
+}
+.toolbar-bar .toolbar-icon-edit:active:before,
+.toolbar-bar .toolbar-icon-edit.active:before {
+  background-image: url("../../../misc/icons/ffffff/pencil.svg");
+}
+.no-svg .toolbar-bar .toolbar-icon-edit:active:before,
+.no-svg .toolbar-bar .toolbar-icon-edit.active:before {
+  background-image: url("../../../misc/icons/ffffff/pencil.png");
+}
+
+/**
+ * Contextual trigger.
+ */
+.contextual .trigger {
+  background-image: url("../../../misc/icons/787878/pencil.svg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  /* Override the .focusable height: auto */
+  height: 28px !important;
+  /* Override the .focusable height: auto */
+  width: 28px !important;
+  text-indent: -9999px;
+
+}
+.no-svg .contextual .trigger {
+  background-image: url("../../../misc/icons/787878/pencil.png");
+}
