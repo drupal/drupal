@@ -80,7 +80,6 @@ class SaveUploadTest extends FileManagedTestBase {
     file_test_reset();
 
     // Upload a second file.
-    $max_fid_before = db_query('SELECT MAX(fid) AS fid FROM {file_managed}')->fetchField();
     $image2 = current($this->drupalGetTestFiles('image'));
     $edit = array('files[file_test_upload]' => drupal_realpath($image2->uri));
     $this->drupalPost('file-test/upload', $edit, t('Submit'));
