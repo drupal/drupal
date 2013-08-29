@@ -134,11 +134,13 @@ function forum_menu() {
     'title' => 'Add container',
     'tab_parent' => 'admin/structure/forum',
     'route_name' => 'forum_add_container',
+    'type' => MENU_LOCAL_ACTION,
   );
   $items['admin/structure/forum/add/forum'] = array(
     'tab_parent' => 'admin/structure/forum',
     'title' => 'Add forum',
     'route_name' => 'forum_add_forum',
+    'type' => MENU_LOCAL_ACTION,
   );
   $items['admin/structure/forum/settings'] = array(
     'title' => 'Settings',
