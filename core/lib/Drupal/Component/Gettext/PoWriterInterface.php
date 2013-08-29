@@ -21,7 +21,7 @@ interface PoWriterInterface extends PoMetadataInterface {
    * @param PoItem $item
    *   One specific item to write.
    */
-  function writeItem(PoItem $item);
+  public function writeItem(PoItem $item);
 
   /**
    * Writes all or the given amount of items.
@@ -32,5 +32,6 @@ interface PoWriterInterface extends PoMetadataInterface {
    *   Amount of items to read from $reader to write. If -1, all items are
    *   read from $reader.
    */
-  function writeItems(PoReaderInterface $reader, $count = -1);
+  public function writeItems(PoReaderInterface $reader, $count = -1);
+
 }
