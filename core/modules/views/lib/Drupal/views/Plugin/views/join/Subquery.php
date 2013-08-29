@@ -60,7 +60,6 @@ class Subquery extends JoinPluginBase {
       if (is_array($this->extra)) {
         $extras = array();
         foreach ($this->extra as $info) {
-          $extra = '';
           // Figure out the table name. Remember, only use aliases provided
           // if at all possible.
           $join_table = '';
