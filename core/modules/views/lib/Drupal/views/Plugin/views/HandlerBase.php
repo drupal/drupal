@@ -90,7 +90,6 @@ abstract class HandlerBase extends PluginBase {
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    $display_id = $this->view->current_display;
     // Check to see if this handler type is defaulted. Note that
     // we have to do a lookup because the type is singular but the
     // option is stored as the plural.
@@ -107,9 +106,6 @@ abstract class HandlerBase extends PluginBase {
     $plural = $this->definition['plugin_type'];
     if (isset($types[$plural]['plural'])) {
       $plural = $types[$plural]['plural'];
-    }
-    if ($this->view->display_handler->isDefaulted($plural)) {
-      $display_id = 'default';
     }
 
     $this->unpackOptions($this->options, $options);
@@ -331,7 +327,6 @@ abstract class HandlerBase extends PluginBase {
    */
   public function buildGroupByForm(&$form, &$form_state) {
     $display_id = $form_state['display_id'];
-    $types = ViewExecutable::viewsHandlerTypes();
     $type = $form_state['type'];
     $id = $form_state['id'];
 
