@@ -1,0 +1,6 @@
+url_alter_test_foo:
+  pattern: 'url-alter-test/foo'
+  defaults:
+    _content: '\Drupal\url_alter_test\Controller\URLAlterTestController::foo'
+  requirements:
+    _permission: 'access content'
