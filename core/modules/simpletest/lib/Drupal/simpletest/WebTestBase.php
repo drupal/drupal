@@ -176,6 +176,13 @@ abstract class WebTestBase extends TestBase {
   protected $kernel;
 
   /**
+   * Cookies to set on curl requests.
+   *
+   * @var array
+   */
+  protected $curlCookies = array();
+
+  /**
    * Constructor for \Drupal\simpletest\WebTestBase.
    */
   function __construct($test_id = NULL) {
@@ -971,8 +978,10 @@ abstract class WebTestBase extends TestBase {
     $this->loggedInUser = FALSE;
     $this->additionalCurlOptions = array();
 
-    // Close the CURL handler.
+    // Close the CURL handler and reset the cookies array used for upgrade
+    // testing so test classes containing multiple tests are not polluted.
     $this->curlClose();
+    $this->curlCookies = array();
   }
 
   /**
@@ -1070,6 +1079,10 @@ abstract class WebTestBase extends TestBase {
       $curl_options[CURLOPT_HTTPHEADER][] = 'Expect:';
     }
 
+    $cookies = array();
+    if (!empty($this->curlCookies)) {
+      $cookies = $this->curlCookies;
+    }
     // In order to debug webtests you need to either set a cookie or have the
     // xdebug session in the URL. If the developer listens to connection on the
     // parent site, by default the cookie is not forwarded to the client side,
@@ -1077,6 +1090,11 @@ abstract class WebTestBase extends TestBase {
     // this bit of information is forwarded. Make sure that the debugger listens
     // to at least three external connections.
     if (isset($_COOKIE['XDEBUG_SESSION'])) {
+      $cookies[] = 'XDEBUG_SESSION=' . $_COOKIE['XDEBUG_SESSION'];
+    }
+
+    // Merge additional cookies in.
+    if (!empty($cookies)) {
       $curl_options += array(
         CURLOPT_COOKIE => '',
       );
@@ -1084,7 +1102,7 @@ abstract class WebTestBase extends TestBase {
       if (!empty($curl_options[CURLOPT_COOKIE])) {
         $curl_options[CURLOPT_COOKIE] = rtrim($curl_options[CURLOPT_COOKIE], '; ') . '; ';
       }
-      $curl_options[CURLOPT_COOKIE] .= 'XDEBUG_SESSION=' . $_COOKIE['XDEBUG_SESSION'] . '; ';
+      $curl_options[CURLOPT_COOKIE] .= implode('; ', $cookies) . ';';
     }
 
     curl_setopt_array($this->curlHandle, $this->additionalCurlOptions + $curl_options);
