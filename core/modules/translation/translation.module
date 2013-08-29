@@ -152,7 +152,7 @@ function translation_node_create_access($account) {
 function translation_user_can_translate_node($node, $account = NULL) {
   // If no user object is supplied, the access check is for the current user.
   if (empty($account)) {
-    $account = $GLOBALS['user'];
+    $account = Drupal::currentUser();
   }
   return node_access('view', $node, $account) && (user_access('translate all content', $account) || ($node->getAuthorId() == $account->id() && user_access('translate own content', $account)));
 }
