@@ -172,7 +172,7 @@ function tracker_cron() {
  */
 function _tracker_myrecent_access($account) {
   // This path is only allowed for authenticated users looking at their own content.
-  return $account->id() && ($GLOBALS['user']->id() == $account->id()) && user_access('access content');
+  return $account->id() && ($GLOBALS['user']->id() == $account->id()) && $account->hasPermission('access content');
 }
 
 /**
@@ -188,7 +188,7 @@ function _tracker_myrecent_access($account) {
  * @see tracker_menu()
  */
 function _tracker_user_access($account) {
-  return $account->access('view') && user_access('access content');
+  return $account->access('view') && $account->hasPermission('access content');
 }
 
 /**
