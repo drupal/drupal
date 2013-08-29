@@ -128,7 +128,7 @@ class Combine extends String {
 
   protected function opRegex($expression) {
     $placeholder = $this->placeholder();
-    $this->query->addWhereExpression($this->options['group'], "$expression RLIKE $placeholder", array($placeholder => $this->value));
+    $this->query->addWhereExpression($this->options['group'], "$expression REGEXP $placeholder", array($placeholder => $this->value));
   }
 
   protected function opEmpty($expression) {
