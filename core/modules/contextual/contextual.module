@@ -109,8 +109,8 @@ function contextual_library_info() {
     'version' => VERSION,
     'js' => array(
       // Add the JavaScript, with a group and weight such that it will run
-      // before modules/contextual/contextual.toolbar.js.
-      $path . '/contextual.js' => array('group' => JS_LIBRARY, 'weight' => -2),
+      // before modules/contextual/js/contextual.toolbar.js.
+      $path . '/js/contextual.js' => array('group' => JS_LIBRARY, 'weight' => -2),
     ),
     'css' => array(
       $path . '/css/contextual.module.css' => array(),
@@ -132,7 +132,7 @@ function contextual_library_info() {
     'js' => array(
       // Add the JavaScript, with a group and weight such that it will run
       // before modules/overlay/overlay-parent.js.
-      $path . '/contextual.toolbar.js' => array('group' => JS_LIBRARY, 'weight' => -1),
+      $path . '/js/contextual.toolbar.js' => array('group' => JS_LIBRARY, 'weight' => -1),
     ),
     'css' => array(
       $path . '/css/contextual.toolbar.css' => array(),
