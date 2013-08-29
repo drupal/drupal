@@ -282,7 +282,6 @@ class String extends FilterPluginBase {
       $words = trim($match[2], ',?!();:-');
       $words = $phrase ? array($words) : preg_split('/ /', $words, -1, PREG_SPLIT_NO_EMPTY);
       foreach ($words as $word) {
-        $placeholder = $this->placeholder();
         $where->condition($field, '%' . db_like(trim($word, " ,!?")) . '%', 'LIKE');
       }
     }
