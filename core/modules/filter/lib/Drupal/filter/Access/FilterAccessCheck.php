@@ -31,13 +31,13 @@ class FilterAccessCheck implements StaticAccessCheckInterface {
       // Handle special cases up front. All users have access to the fallback
       // format.
       if ($format->format == filter_fallback_format()) {
-        return TRUE;
+        return static::ALLOW;
       }
 
       // Check the permission if one exists; otherwise, we have a non-existent
       // format so we return FALSE.
       $permission = filter_permission_name($format);
-      return !empty($permission) && user_access($permission);
+      return !empty($permission) && user_access($permission) ? static::ALLOW : static::DENY;
     }
   }
 }

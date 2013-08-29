@@ -28,10 +28,10 @@ class FormatDisableCheck implements StaticAccessCheckInterface {
    */
   public function access(Route $route, Request $request) {
     if ($format = $request->attributes->get('filter_format')) {
-      return user_access('administer filters') && ($format->format != filter_fallback_format());
+      return (user_access('administer filters') && ($format->format != filter_fallback_format())) ? static::ALLOW : static::DENY;
     }
 
-    return FALSE;
+    return static::DENY;
   }
 
 }

@@ -30,12 +30,12 @@ class CronAccessCheck implements StaticAccessCheckInterface {
     $key = $request->attributes->get('key');
     if ($key != \Drupal::state()->get('system.cron_key')) {
       watchdog('cron', 'Cron could not run because an invalid key was used.', array(), WATCHDOG_NOTICE);
-      return FALSE;
+      return static::KILL;
     }
     elseif (\Drupal::config('system.maintenance')->get('enabled')) {
       watchdog('cron', 'Cron could not run because the site is in maintenance mode.', array(), WATCHDOG_NOTICE);
-      return FALSE;
+      return static::KILL;
     }
-    return TRUE;
+    return static::ALLOW;
   }
 }

@@ -45,12 +45,12 @@ class EntityAccessCheck implements StaticAccessCheckInterface {
     if ($request->attributes->has($entity_type)) {
       $entity = $request->attributes->get($entity_type);
       if ($entity instanceof EntityInterface) {
-        return $entity->access($operation);
+        return $entity->access($operation) ? static::ALLOW : static::DENY;
       }
     }
     // No opinion, so other access checks should decide if access should be
     // allowed or not.
-    return NULL;
+    return static::DENY;
   }
 
 }

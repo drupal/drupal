@@ -28,7 +28,7 @@ class BlockThemeAccessCheck implements StaticAccessCheckInterface {
    */
   public function access(Route $route, Request $request) {
     $theme = $request->attributes->get('theme');
-    return user_access('administer blocks') && drupal_theme_access($theme);
+    return (user_access('administer blocks') && drupal_theme_access($theme)) ? static::ALLOW : static::DENY;
   }
 
 }
