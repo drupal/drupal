@@ -1415,8 +1415,6 @@ function comment_preview(CommentInterface $comment) {
   global $user;
   $preview_build = array();
   $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
-  // @todo Drop the conversion after http://drupal.org/node/1818580 in.
-  $entity = $entity->getBCEntity();
 
   if (!form_get_errors()) {
     // Attach the user and time information.
