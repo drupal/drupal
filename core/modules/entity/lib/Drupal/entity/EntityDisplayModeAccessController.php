@@ -24,7 +24,7 @@ class EntityDisplayModeAccessController extends EntityAccessController {
       return TRUE;
     }
     elseif (in_array($operation, array('create', 'update', 'delete'))) {
-      return user_access('administer display modes', $account);
+      return $account->hasPermission('administer display modes');
     }
   }
 

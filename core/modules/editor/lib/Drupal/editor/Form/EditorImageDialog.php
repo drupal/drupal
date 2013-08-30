@@ -13,6 +13,8 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\editor\Ajax\EditorDialogSave;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
+use Drupal\Core\StreamWrapper\LocalStream;
+use Drupal\file\FileInterface;
 
 /**
  * Provides an image dialog for text editors.
@@ -42,15 +44,49 @@ class EditorImageDialog implements FormInterface {
     $form['#prefix'] = '<div id="editor-image-dialog-form">';
     $form['#suffix'] = '</div>';
 
-    // Everything under the "attributes" key is merged directly into the
-    // generated img tag's attributes.
-    $form['attributes']['src'] = array(
-      '#title' => t('URL'),
-      '#type' => 'textfield',
-      '#default_value' => isset($input['src']) ? $input['src'] : '',
-      '#maxlength' => 2048,
+    $editor = editor_load($filter_format->format);
+
+    // Construct strings to use in the upload validators.
+    if (!empty($editor->image_upload['dimensions'])) {
+      $max_dimensions = $editor->image_upload['dimensions']['max_width'] . 'x' . $editor->image_upload['dimensions']['max_height'];
+    }
+    else {
+      $max_dimensions = 0;
+    }
+    $max_filesize = min(parse_size($editor->image_upload['max_size']), file_upload_max_size());
+
+    $existing_file = isset($input['data-editor-file-uuid']) ? entity_load_by_uuid('file', $input['data-editor-file-uuid']) : NULL;
+    $fid = $existing_file ? $existing_file->id() : NULL;
+
+    $form['fid'] = array(
+      '#title' => t('Image'),
+      '#type' => 'managed_file',
+      '#upload_location' => $editor->image_upload['scheme'] . '://' .$editor->image_upload['directory'],
+      '#default_value' => $fid ? array($fid) : NULL,
+      '#upload_validators' => array(
+        'file_validate_extensions' => array('gif png jpg jpeg'),
+        'file_validate_size' => array($max_filesize),
+        'file_validate_image_resolution' => array($max_dimensions),
+      ),
       '#required' => TRUE,
     );
+
+    $form['attributes']['src'] = array(
+     '#title' => t('URL'),
+     '#type' => 'textfield',
+     '#default_value' => isset($input['src']) ? $input['src'] : '',
+     '#maxlength' => 2048,
+     '#required' => TRUE,
+    );
+
+    // If the editor has image uploads enabled, show a managed_file form item,
+    // otherwise show a (file URL) text form item.
+    if ($editor->image_upload['status'] === '1') {
+      $form['attributes']['src']['#access'] = FALSE;
+    }
+    else {
+      $form['fid']['#access'] = FALSE;
+    }
 
     $form['attributes']['alt'] = array(
       '#title' => t('Alternative text'),
@@ -119,6 +155,14 @@ class EditorImageDialog implements FormInterface {
    */
   public function submitForm(array &$form, array &$form_state) {
     $response = new AjaxResponse();
+
+    // Convert any uploaded files from the FID values to data-editor-file-uuid
+    // attributes.
+    if (!empty($form_state['values']['fid'][0])) {
+      $file = file_load($form_state['values']['fid'][0]);
+      $form_state['values']['attributes']['src'] = file_create_url($file->getFileUri());
+      $form_state['values']['attributes']['data-editor-file-uuid'] = $file->uuid();
+    }
 
     if (form_get_errors()) {
       unset($form['#prefix'], $form['#suffix']);

@@ -188,7 +188,7 @@ class TextFieldTest extends WebTestBase {
     // Disable all text formats besides the plain text fallback format.
     $this->drupalLogin($this->admin_user);
     foreach (filter_formats() as $format) {
-      if ($format->format != filter_fallback_format()) {
+      if (!$format->isFallbackFormat()) {
         $this->drupalPost('admin/config/content/formats/manage/' . $format->format . '/disable', array(), t('Disable'));
       }
     }
@@ -230,9 +230,9 @@ class TextFieldTest extends WebTestBase {
     $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
     filter_formats_reset();
     $this->checkPermissions(array(), TRUE);
-    $format = filter_format_load($edit['format']);
+    $format = entity_load('filter_format', $edit['format']);
     $format_id = $format->format;
-    $permission = filter_permission_name($format);
+    $permission = $format->getPermissionName();
     $roles = $this->web_user->getRoles();
     $rid = $roles[0];
     user_role_grant_permissions($rid, array($permission));

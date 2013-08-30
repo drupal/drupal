@@ -315,6 +315,18 @@ function hook_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
 }
 
 /**
+ * Respond to entity revision deletion.
+ *
+ * This hook runs after the entity type-specific revision delete hook.
+ *
+ * @param Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object for the entity revision that has been deleted.
+ */
+function hook_entity_revision_delete(Drupal\Core\Entity\EntityInterface $entity) {
+  // @todo: code example
+}
+
+/**
  * Alter or execute an Drupal\Core\Entity\Query\EntityQueryInterface.
  *
  * @param \Drupal\Core\Entity\Query\QueryInterface $query

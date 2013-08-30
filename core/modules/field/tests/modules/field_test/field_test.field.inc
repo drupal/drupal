@@ -208,7 +208,7 @@ function field_test_field_access($op, FieldInterface $field, $entity_type, $enti
 
   // Only grant view access to test_view_field fields when the user has
   // 'view test_view_field content' permission.
-  if ($field['field_name'] == 'test_view_field' && $op == 'view' && !user_access('view test_view_field content')) {
+  if ($field['field_name'] == 'test_view_field' && $op == 'view' && !$account->hasPermission('view test_view_field content')) {
     return FALSE;
   }
 

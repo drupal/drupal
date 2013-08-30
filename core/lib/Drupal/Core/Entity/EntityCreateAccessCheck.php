@@ -52,7 +52,7 @@ class EntityCreateAccessCheck implements StaticAccessCheckInterface {
    */
   public function access(Route $route, Request $request) {
     list($entity_type, $bundle) = explode(':', $route->getRequirement($this->requirementsKey) . ':');
-    return $this->entityManager->getAccessController($entity_type)->createAccess($bundle);
+    return $this->entityManager->getAccessController($entity_type)->createAccess($bundle) ? static::ALLOW : static::DENY;
   }
 
 }

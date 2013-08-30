@@ -12,6 +12,32 @@ editor.editor.*:
       label: 'Text editor'
     settings:
       type: editor.settings.[%parent.editor]
+    image_upload:
+      type: mapping
+      label: 'Image upload settings'
+      mapping:
+        status:
+          type: boolean
+          label: 'Status'
+        scheme:
+          type: string
+          label: 'File storage'
+        directory:
+          type: string
+          label: 'Upload directory'
+        max_size:
+          type: string
+          label: 'Maximum file size'
+        max_dimensions:
+          type: mapping
+          label: 'Maximum dimensions'
+          mapping:
+            width:
+              type: integer
+              label: 'Maximum width'
+            height:
+              type: integer
+              label: 'Maximum height'
     status:
       type: boolean
       label: 'Status'

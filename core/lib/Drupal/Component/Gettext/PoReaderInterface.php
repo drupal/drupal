@@ -20,5 +20,6 @@ interface PoReaderInterface extends PoMetadataInterface {
    * @return Drupal\Component\Gettext\PoItem
    *   Wrapper for item data instance.
    */
-  function readItem();
+  public function readItem();
+
 }

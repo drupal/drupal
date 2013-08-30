@@ -30,7 +30,7 @@ class LinkDeleteAccessCheck implements StaticAccessCheckInterface {
     $menu_link = $request->attributes->get('menu_link');
     $set_name = str_replace('shortcut-', '', $menu_link['menu_name']);
     if ($shortcut_set = shortcut_set_load($set_name)) {
-      return shortcut_set_edit_access($shortcut_set);
+      return shortcut_set_edit_access($shortcut_set) ? static::ALLOW : static::DENY;
     }
   }
 

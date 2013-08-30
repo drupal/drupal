@@ -89,9 +89,6 @@ class FileWidget extends WidgetBase {
         break;
     }
 
-    $id_prefix = implode('-', array_merge($parents, array($field_name)));
-    $wrapper_id = drupal_html_id($id_prefix . '-add-more-wrapper');
-
     $title = check_plain($this->fieldDefinition->getFieldLabel());
     $description = field_filter_xss($this->fieldDefinition->getFieldDescription());
 

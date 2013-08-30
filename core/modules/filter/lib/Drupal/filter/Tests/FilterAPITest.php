@@ -198,7 +198,7 @@ class FilterAPITest extends EntityUnitTestBase {
     $this->assertTrue($data instanceof AllowedValuesInterface, 'Typed data object implements \Drupal\Core\TypedData\AllowedValuesInterface');
 
     $filtered_html_user = $this->createUser(array('uid' => 2), array(
-      filter_permission_name(filter_format_load('filtered_html')),
+      entity_load('filter_format', 'filtered_html')->getPermissionName(),
     ));
 
     // Test with anonymous user.

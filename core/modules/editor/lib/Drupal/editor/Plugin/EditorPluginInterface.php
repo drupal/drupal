@@ -26,7 +26,7 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    *   An array of settings as they would be stored by a configured text editor
    *   entity (\Drupal\editor\Entity\Editor).
    */
-  function getDefaultSettings();
+  public function getDefaultSettings();
 
   /**
    * Returns a settings form to configure this text editor.
@@ -46,7 +46,7 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    * @return array
    *   A render array for the settings form.
    */
-  function settingsForm(array $form, array &$form_state, Editor $editor);
+  public function settingsForm(array $form, array &$form_state, Editor $editor);
 
   /**
    * Validates the settings form for an editor.
@@ -60,7 +60,7 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    * @param array $form_state
    *   A reference to a keyed array containing the current state of the form.
    */
-  function settingsFormValidate(array $form, array &$form_state);
+  public function settingsFormValidate(array $form, array &$form_state);
 
   /**
    * Modifies any values in the form state to prepare them for saving.
@@ -73,7 +73,7 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    * @param array $form_state
    *   A reference to a keyed array containing the current state of the form.
    */
-  function settingsFormSubmit(array $form, array &$form_state);
+  public function settingsFormSubmit(array $form, array &$form_state);
 
   /**
    * Returns JavaScript settings to be attached.
@@ -93,7 +93,7 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    * @see drupal_process_attached()
    * @see EditorManager::getAttachments()
    */
-  function getJSSettings(Editor $editor);
+  public function getJSSettings(Editor $editor);
 
   /**
    * Returns libraries to be attached.
@@ -112,5 +112,6 @@ interface EditorPluginInterface extends PluginInspectionInterface {
    * @see drupal_process_attached()
    * @see EditorManager::getAttachments()
    */
-  function getLibraries(Editor $editor);
+  public function getLibraries(Editor $editor);
+
 }

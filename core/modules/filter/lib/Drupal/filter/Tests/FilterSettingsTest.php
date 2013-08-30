@@ -62,7 +62,7 @@ class FilterSettingsTest extends DrupalUnitTestBase {
     filter_formats_reset();
 
     // Verify that saved filter settings have not been changed.
-    foreach (filter_list_format($filter_defaults_format->format) as $name => $filter) {
+    foreach ($filter_defaults_format->filters() as $name => $filter) {
       $this->assertEqual($filter->weight, $saved_settings[$name]['weight'], format_string('@name filter weight %saved equals %previous', array(
         '@name' => $name,
         '%saved' => $filter->weight,

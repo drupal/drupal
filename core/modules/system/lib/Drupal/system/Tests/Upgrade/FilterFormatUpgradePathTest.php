@@ -41,16 +41,14 @@ class FilterFormatUpgradePathTest extends UpgradePathTestBase {
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Checks that all the formats were upgraded
-    $one = filter_format_load('format_one');
+    $one = entity_load('filter_format', 'format_one');
     $this->assertTrue(!empty($one), 'Filter Format one was successfully upgraded');
-    $two = filter_format_load('format_two');
+    $two = entity_load('filter_format', 'format_two');
     $this->assertTrue(!empty($two), 'Filter Format two was successfully upgraded');
 
-    // Filter format 'Three' is disabled, and filter_format_load should return
-    // FALSE. However the entity should be accessible using entity_load.
-    $three_disabled = filter_format_load('format_three');
+    // Filter format 'Three' is disabled.
     $three_entity = entity_load('filter_format', 'format_three');
-    $this->assertTrue(empty($three_disabled) && !empty($three_entity), 'Filter Format three was successfully upgraded and it is disabled');
+    $this->assertFalse($three_entity->status(), 'Filter Format three was successfully upgraded and it is disabled');
 
     // Check the access to the text formats.
 
@@ -75,7 +73,7 @@ class FilterFormatUpgradePathTest extends UpgradePathTestBase {
     $this->assertNoFieldChecked('edit-5-use-text-format-format-two', 'Use text format format_two permission for role is set correctly.');
 
     // Check that the format has the missing filter.
-    $two = filter_format_load('format_two');
+    $two = entity_load('filter_format', 'format_two');
     $this->assertTrue($two->filters()->has('missing_filter'));
 
     // Try to use a filter format with a missing filter, this should not throw
@@ -88,7 +86,7 @@ class FilterFormatUpgradePathTest extends UpgradePathTestBase {
     $this->assertRaw(t('The %filter filter is missing, and will be removed once this format is saved.', array('%filter' => 'missing_filter')));
     $this->drupalPost(NULL, array(), t('Save configuration'));
     filter_formats_reset();
-    $two = filter_format_load('format_two');
+    $two = entity_load('filter_format', 'format_two');
     $this->assertFalse($two->filters()->has('missing_filter'));
   }
 

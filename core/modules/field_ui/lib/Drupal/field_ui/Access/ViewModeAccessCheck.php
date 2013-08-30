@@ -35,7 +35,7 @@ class ViewModeAccessCheck implements StaticAccessCheckInterface {
       $visibility = ($view_mode == 'default') || !empty($view_mode_settings[$view_mode]['status']);
       if ($visibility) {
         $permission = $route->getRequirement('_field_ui_view_mode_access');
-        return user_access($permission);
+        return user_access($permission) ? static::ALLOW : static::DENY;
       }
     }
   }

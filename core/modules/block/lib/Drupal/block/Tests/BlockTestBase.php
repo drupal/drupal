@@ -53,7 +53,7 @@ abstract class BlockTestBase extends WebTestBase {
     // text format.
     $this->adminUser = $this->drupalCreateUser(array(
       'administer blocks',
-      filter_permission_name($full_html_format),
+      $full_html_format->getPermissionName(),
       'access administration pages',
     ));
     $this->drupalLogin($this->adminUser);

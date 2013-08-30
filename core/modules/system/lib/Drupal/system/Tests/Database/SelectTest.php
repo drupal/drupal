@@ -368,6 +368,75 @@ class SelectTest extends DatabaseTestBase {
   }
 
   /**
+   * Tests that filter by a regular expression works as expected.
+   */
+  public function testRegexCondition() {
+
+    $test_groups[] = array(
+      'regex' => 'hn$',
+      'expected' => array(
+        'John',
+      ),
+    );
+    $test_groups[] = array(
+      'regex' => '^Pau',
+      'expected' => array(
+        'Paul',
+      ),
+    );
+    $test_groups[] = array(
+      'regex' => 'Ringo|George',
+      'expected' => array(
+        'Ringo', 'George',
+      ),
+    );
+
+
+    $database = $this->container->get('database');
+    foreach ($test_groups as $test_group) {
+      $query = $database->select('test', 't');
+      $query->addField('t', 'name');
+      $query->condition('t.name', $test_group['regex'], 'REGEXP');
+      $result = $query->execute()->fetchCol();
+
+      $this->assertEqual(count($result), count($test_group['expected']), 'Returns the expected number of rows.');
+      $this->assertEqual(sort($result), sort($test_group['expected']), 'Returns the expected rows.');
+    }
+
+    // Ensure that filter by "#" still works due to the quoting.
+    $database->insert('test')
+      ->fields(array(
+        'name' => 'Pete',
+        'age' => 26,
+        'job' => '#Drummer',
+      ))
+      ->execute();
+
+    $test_groups = array();
+    $test_groups[] = array(
+      'regex' => '#Drummer',
+      'expected' => array(
+        'Pete',
+      ),
+    );
+    $test_groups[] = array(
+      'regex' => '#Singer',
+      'expected' => array(
+      ),
+    );
+
+    foreach ($test_groups as $test_group) {
+      $query = $database->select('test', 't');
+      $query->addField('t', 'name');
+      $query->condition('t.job', $test_group['regex'], 'REGEXP');
+      $result = $query->execute()->fetchCol();
+
+      $this->assertEqual(count($result), count($test_group['expected']), 'Returns the expected number of rows.');
+      $this->assertEqual(sort($result), sort($test_group['expected']), 'Returns the expected rows.');
+    }
+  }
+
+  /**
    * Tests that aliases are renamed when they are duplicates.
    */
   function testSelectDuplicateAlias() {

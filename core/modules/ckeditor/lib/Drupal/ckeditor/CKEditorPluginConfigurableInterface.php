@@ -40,6 +40,6 @@ interface CKEditorPluginConfigurableInterface extends CKEditorPluginInterface {
    * @return array|FALSE
    *   A render array for the settings form, or FALSE if there is none.
    */
-  function settingsForm(array $form, array &$form_state, Editor $editor);
+  public function settingsForm(array $form, array &$form_state, Editor $editor);
 
 }

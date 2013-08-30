@@ -128,6 +128,7 @@ class Connection extends DatabaseConnection {
     $pdo->sqliteCreateFunction('substring', array(__CLASS__, 'sqlFunctionSubstring'), 3);
     $pdo->sqliteCreateFunction('substring_index', array(__CLASS__, 'sqlFunctionSubstringIndex'), 3);
     $pdo->sqliteCreateFunction('rand', array(__CLASS__, 'sqlFunctionRand'));
+    $pdo->sqliteCreateFunction('regexp', array(__CLASS__, 'sqlFunctionRegexp'));
 
     // Execute sqlite init_commands.
     if (isset($connection_options['init_commands'])) {
@@ -234,6 +235,15 @@ class Connection extends DatabaseConnection {
       mt_srand($seed);
     }
     return mt_rand() / mt_getrandmax();
+  }
+
+  /**
+   * SQLite compatibility implementation for the REGEXP SQL operator.
+   *
+   * The REGEXP operator is a special syntax for the regexp() user function.
+   */
+  public static function sqlFunctionRegexp($string, $pattern) {
+    return preg_match('#' . str_replace('#', '\#', $pattern) . '#i', $string);
   }
 
   /**

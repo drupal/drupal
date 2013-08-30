@@ -47,7 +47,7 @@ class CategoriesAccessCheck implements StaticAccessCheckInterface {
   public function access(Route $route, Request $request) {
     // @todo Replace user_access() with a correctly injected and session-using
     // alternative.
-    return user_access('access news feeds') && (bool) $this->database->queryRange('SELECT 1 FROM {aggregator_category}', 0, 1)->fetchField();
+    return user_access('access news feeds') && (bool) $this->database->queryRange('SELECT 1 FROM {aggregator_category}', 0, 1)->fetchField() ? static::ALLOW : static::DENY;
   }
 
 }

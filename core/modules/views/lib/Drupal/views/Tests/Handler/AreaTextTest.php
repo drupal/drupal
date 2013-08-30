@@ -37,6 +37,7 @@ class AreaTextTest extends ViewUnitTestBase {
     parent::setUp();
 
     $this->installConfig(array('system', 'filter'));
+    $this->installSchema('user', array('users'));
   }
 
   public function testAreaText() {

@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, Drupal) {
 
 "use strict";
 
@@ -90,4 +90,4 @@ Drupal.tableSelectRange = function (from, to, state) {
   }
 };
 
-})(jQuery);
+})(jQuery, Drupal);

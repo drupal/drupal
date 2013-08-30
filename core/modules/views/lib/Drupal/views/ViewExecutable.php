@@ -1173,7 +1173,6 @@ class ViewExecutable {
         foreach ($multiple_exposed_input as $group_id) {
           // Give this handler access to the exposed filter input.
           if (!empty($this->exposed_data)) {
-            $converted = FALSE;
             if ($handlers[$id]->isAGroup()) {
               $converted = $handlers[$id]->convertExposedInput($this->exposed_data, $group_id);
               $handlers[$id]->storeGroupInput($this->exposed_data, $converted);
@@ -1278,7 +1277,6 @@ class ViewExecutable {
     }
 
     drupal_theme_initialize();
-    $config = \Drupal::config('views.settings');
 
     $exposed_form = $this->display_handler->getPlugin('exposed_form');
     $exposed_form->preRender($this->result);
@@ -1636,7 +1634,7 @@ class ViewExecutable {
       // Exclude arguments that were computed, not passed on the URL.
       $position = 0;
       if (!empty($this->argument)) {
-        foreach ($this->argument as $argument_id => $argument) {
+        foreach ($this->argument as $argument) {
           if (!empty($argument->is_default) && !empty($argument->options['default_argument_skip_url'])) {
             unset($args[$position]);
           }

@@ -23,7 +23,7 @@ interface PoMetadataInterface {
    * @param string $langcode
    *   Language code string.
    */
-  function setLangcode($langcode);
+  public function setLangcode($langcode);
 
   /**
    * Get language code.
@@ -31,7 +31,7 @@ interface PoMetadataInterface {
    * @return string
    *   Language code string.
    */
-  function getLangcode();
+  public function getLangcode();
 
   /**
    * Set header metadata.
@@ -39,7 +39,7 @@ interface PoMetadataInterface {
    * @param Drupal\Component\Gettext\PoHeader $header
    *   Header object representing metadata in a PO header.
    */
-  function setHeader(PoHeader $header);
+  public function setHeader(PoHeader $header);
 
   /**
    * Get header metadata.
@@ -47,5 +47,6 @@ interface PoMetadataInterface {
    * @return Drupal\Component\Gettext\PoHeader $header
    *   Header instance representing metadata in a PO header.
    */
-  function getHeader();
+  public function getHeader();
+
 }

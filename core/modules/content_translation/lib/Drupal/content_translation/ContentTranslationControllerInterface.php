@@ -171,4 +171,5 @@ interface ContentTranslationControllerInterface {
    *   The entity being created or edited.
    */
   public function entityFormAlter(array &$form, array &$form_state, EntityInterface $entity);
+
 }

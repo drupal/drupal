@@ -110,6 +110,12 @@ class String extends FilterPluginBase {
         'method' => 'opLongerThan',
         'values' => 1,
       ),
+      'regular_expression' => array(
+        'title' => t('Regular expression'),
+        'short' => t('regex'),
+        'method' => 'opRegex',
+        'values' => 1,
+      ),
     );
     // if the definition allows for the empty operator, add it.
     if (!empty($this->definition['allow empty'])) {
@@ -125,17 +131,6 @@ class String extends FilterPluginBase {
           'method' => 'opEmpty',
           'short' => t('not empty'),
           'values' => 0,
-        ),
-      );
-    }
-    // Add regexp support for MySQL.
-    if (Database::getConnection()->databaseType() == 'mysql') {
-      $operators += array(
-        'regular_expression' => array(
-          'title' => t('Regular expression'),
-          'short' => t('regex'),
-          'method' => 'opRegex',
-          'values' => 1,
         ),
       );
     }
@@ -287,7 +282,6 @@ class String extends FilterPluginBase {
       $words = trim($match[2], ',?!();:-');
       $words = $phrase ? array($words) : preg_split('/ /', $words, -1, PREG_SPLIT_NO_EMPTY);
       foreach ($words as $word) {
-        $placeholder = $this->placeholder();
         $where->condition($field, '%' . db_like(trim($word, " ,!?")) . '%', 'LIKE');
       }
     }
@@ -331,8 +325,14 @@ class String extends FilterPluginBase {
     $this->query->addWhereExpression($this->options['group'], "LENGTH($field) > $placeholder", array($placeholder => $this->value));
   }
 
+  /**
+   * Filters by a regular expression.
+   *
+   * @param string $field
+   *   The expression pointing to the queries field, for example "foo.bar".
+   */
   protected function opRegex($field) {
-    $this->query->addWhere($this->options['group'], $field, $this->value, 'RLIKE');
+    $this->query->addWhere($this->options['group'], $field, $this->value, 'REGEXP');
   }
 
   protected function opEmpty($field) {

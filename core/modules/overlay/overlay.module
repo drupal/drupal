@@ -82,7 +82,7 @@ function overlay_field_extra_fields() {
  */
 function overlay_form_user_form_alter(&$form, &$form_state) {
   $account = $form_state['controller']->getEntity();
-  if (user_access('access overlay', $account)) {
+  if ($account->hasPermission('access overlay')) {
     $account_data = Drupal::service('user.data')->get('overlay', $account->id(), 'enabled');
     $form['overlay_control'] = array(
       '#type' => 'details',
@@ -218,7 +218,7 @@ function overlay_disable_message() {
   global $user;
 
   $build = array();
-  if ($user->isAnonymous() || !user_access('access overlay')) {
+  if ($user->isAnonymous() || !$user->hasPermission('access overlay')) {
     return $build;
   }
 

@@ -282,6 +282,9 @@ class ForumTest extends WebTestBase {
     $this->forumContainer = $this->createForum('container');
     // Verify "edit container" link exists and functions correctly.
     $this->drupalGet('admin/structure/forum');
+    // Verify action links are there.
+    $this->assertLink('Add forum');
+    $this->assertLink('Add container');
     $this->clickLink('edit container');
     $this->assertRaw('Edit container', 'Followed the link to edit the container');
     // Create forum inside the forum container.
