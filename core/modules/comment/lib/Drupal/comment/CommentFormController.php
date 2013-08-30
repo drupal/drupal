@@ -30,8 +30,8 @@ class CommentFormController extends EntityFormControllerNG {
     $form['#id'] = drupal_html_id('comment_form');
     $form['#theme'] = array('comment_form__' . $comment->entity_type->value . '__' . $entity->bundle() . '__' . $comment->field_name->value, 'comment_form');
 
-    $anonymous_contact = $instance['settings']['anonymous'];
-    $is_admin = ($comment->id() && user_access('administer comments'));
+    $anonymous_contact = $instance->getFieldSetting('anonymous');
+    $is_admin = $comment->id() && user_access('administer comments');
 
     if (!$user->isAuthenticated() && $anonymous_contact != COMMENT_ANONYMOUS_MAYNOT_CONTACT) {
       $form['#attached']['library'][] = array('system', 'jquery.cookie');
