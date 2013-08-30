@@ -28,12 +28,7 @@ class SubtreeAccess implements StaticAccessCheckInterface {
    */
   public function access(Route $route, Request $request) {
     $hash = $request->get('hash');
-    if (user_access('access toolbar') && ($hash == _toolbar_get_subtree_hash())) {
-      return TRUE;
-    }
-    else {
-      return NULL;
-    }
+    return (user_access('access toolbar') && ($hash == _toolbar_get_subtree_hash())) ? static::ALLOW : static::DENY;
   }
 
 }

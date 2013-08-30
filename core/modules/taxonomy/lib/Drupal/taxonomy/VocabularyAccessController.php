@@ -22,14 +22,14 @@ class VocabularyAccessController extends EntityAccessController {
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
-    return user_access('administer taxonomy', $account);
+    return $account->hasPermission('administer taxonomy');
   }
 
   /**
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return user_access('administer taxonomy', $account);
+    return $account->hasPermission('administer taxonomy');
   }
 
 }

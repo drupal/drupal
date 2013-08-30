@@ -35,7 +35,7 @@ class FormModeAccessCheck implements StaticAccessCheckInterface {
       $visibility = ($form_mode == 'default') || !empty($form_mode_settings[$form_mode]['status']);
       if ($visibility) {
         $permission = $route->getRequirement('_field_ui_form_mode_access');
-        return user_access($permission);
+        return user_access($permission) ? static::ALLOW : static::DENY;
       }
     }
   }

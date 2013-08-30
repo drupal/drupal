@@ -78,7 +78,7 @@ abstract class FilterFormatFormControllerBase extends EntityFormController {
       '#default_value' => $format->id(),
       '#maxlength' => 255,
       '#machine_name' => array(
-        'exists' => 'filter_format_exists',
+        'exists' => array($this, 'exists'),
         'source' => array('name'),
       ),
       '#disabled' => !$format->isNew(),
@@ -197,6 +197,22 @@ abstract class FilterFormatFormControllerBase extends EntityFormController {
   }
 
   /**
+   * Determines if the format already exists.
+   *
+   * @param string $format_id
+   *   The format ID
+   *
+   * @return bool
+   *   TRUE if the format exists, FALSE otherwise.
+   */
+  public function exists($format_id) {
+    return (bool) $this->queryFactory
+      ->get('filter_format')
+      ->condition('format', $format_id)
+      ->execute();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function validate(array $form, array &$form_state) {
@@ -241,7 +257,7 @@ abstract class FilterFormatFormControllerBase extends EntityFormController {
     $format->save();
 
     // Save user permissions.
-    if ($permission = filter_permission_name($format)) {
+    if ($permission = $format->getPermissionName()) {
       foreach ($form_state['values']['roles'] as $rid => $enabled) {
         user_role_change_permissions($rid, array($permission => $enabled));
       }

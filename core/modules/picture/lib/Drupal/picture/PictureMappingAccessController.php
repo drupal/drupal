@@ -24,7 +24,7 @@ class PictureMappingAccessController extends EntityAccessController {
       return TRUE;
     }
     elseif (in_array($operation, array('update', 'delete'))) {
-      return user_access('administer pictures', $account);
+      return $account->hasPermission('administer pictures');
     }
   }
 
@@ -32,7 +32,7 @@ class PictureMappingAccessController extends EntityAccessController {
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return user_access('administer pictures', $account);
+    return $account->hasPermission('administer pictures');
   }
 
 }

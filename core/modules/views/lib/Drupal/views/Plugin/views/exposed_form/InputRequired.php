@@ -41,7 +41,7 @@ class InputRequired extends ExposedFormPluginBase {
       '#description' => t('Text to display instead of results until the user selects and applies an exposed filter.'),
       '#default_value' => $this->options['text_input_required'],
       '#format' => isset($this->options['text_input_required_format']) ? $this->options['text_input_required_format'] : filter_default_format(),
-      '#wysiwyg' => FALSE,
+      '#editor' => FALSE,
     );
   }
 
@@ -56,7 +56,7 @@ class InputRequired extends ExposedFormPluginBase {
     if (!isset($cache)) {
       $view = $this->view;
       if (is_array($view->filter) && count($view->filter)) {
-        foreach ($view->filter as $filter_id => $filter) {
+        foreach ($view->filter as $filter) {
           if ($filter->isExposed()) {
             $identifier = $filter->options['expose']['identifier'];
             if (isset($view->exposed_input[$identifier])) {

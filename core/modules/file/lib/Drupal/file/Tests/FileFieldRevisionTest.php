@@ -83,7 +83,6 @@ class FileFieldRevisionTest extends FileFieldTestBase {
     $this->drupalPost('node/' . $nid . '/revisions/' . $node_vid_r1 . '/revert', array(), t('Revert'));
     $node = node_load($nid, TRUE);
     $node_file_r4 = file_load($node->{$field_name}->target_id);
-    $node_vid_r4 = $node->getRevisionId();
     $this->assertEqual($node_file_r1->id(), $node_file_r4->id(), 'Original revision file still in place after reverting to the original revision.');
     $this->assertFileIsPermanent($node_file_r4, 'Original revision file still permanent after reverting to the original revision.');
 

@@ -41,7 +41,7 @@ class FilterDefaultConfigTest extends DrupalUnitTestBase {
    */
   function testInstallation() {
     // Verify that the format was installed correctly.
-    $format = filter_format_load('filter_test');
+    $format = entity_load('filter_format', 'filter_test');
     $this->assertTrue((bool) $format);
     $this->assertEqual($format->id(), 'filter_test');
     $this->assertEqual($format->label(), 'Test format');
@@ -82,7 +82,7 @@ class FilterDefaultConfigTest extends DrupalUnitTestBase {
    */
   function testUpdateRoles() {
     // Verify role permissions declared in default config.
-    $format = filter_format_load('filter_test');
+    $format = entity_load('filter_format', 'filter_test');
     $this->assertEqual(array_keys(filter_get_roles_by_format($format)), array(
       DRUPAL_ANONYMOUS_RID,
       DRUPAL_AUTHENTICATED_RID,
@@ -95,7 +95,7 @@ class FilterDefaultConfigTest extends DrupalUnitTestBase {
     $format->save();
 
     // Verify that roles have not been updated.
-    $format = filter_format_load('filter_test');
+    $format = entity_load('filter_format', 'filter_test');
     $this->assertEqual(array_keys(filter_get_roles_by_format($format)), array(
       DRUPAL_ANONYMOUS_RID,
       DRUPAL_AUTHENTICATED_RID,

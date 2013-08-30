@@ -37,11 +37,12 @@ class FilterDefaultFormatTest extends WebTestBase {
       );
       $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
       $this->resetFilterCaches();
-      $formats[] = filter_format_load($edit['format']);
+      $formats[] = entity_load('filter_format', $edit['format']);
     }
     list($first_format, $second_format) = $formats;
-    $first_user = $this->drupalCreateUser(array(filter_permission_name($first_format), filter_permission_name($second_format)));
-    $second_user = $this->drupalCreateUser(array(filter_permission_name($second_format)));
+    $second_format_permission = $second_format->getPermissionName();
+    $first_user = $this->drupalCreateUser(array($first_format->getPermissionName(), $second_format_permission));
+    $second_user = $this->drupalCreateUser(array($second_format_permission));
 
     // Adjust the weights so that the first and second formats (in that order)
     // are the two lowest weighted formats available to any user.

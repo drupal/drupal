@@ -1382,7 +1382,7 @@ function hook_field_storage_purge(\Drupal\Core\Entity\EntityInterface $entity, $
  */
 function hook_field_access($op, \Drupal\field\FieldInterface $field, $entity_type, $entity, $account) {
   if ($field['field_name'] == 'field_of_interest' && $op == 'edit') {
-    return user_access('edit field of interest', $account);
+    return $account->hasPermission('edit field of interest');
   }
   return TRUE;
 }

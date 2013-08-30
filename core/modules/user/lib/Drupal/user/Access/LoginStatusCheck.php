@@ -27,7 +27,7 @@ class LoginStatusCheck implements StaticAccessCheckInterface {
    * {@inheritdoc}
    */
   public function access(Route $route, Request $request) {
-    return (bool) $GLOBALS['user']->id();
+    return $GLOBALS['user']->isAuthenticated() ? static::ALLOW : static::DENY;
   }
 
 }

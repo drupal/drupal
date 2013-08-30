@@ -55,12 +55,10 @@ class CSRFAccessCheck implements AccessCheckInterface {
     ) {
       $csrf_token = $request->headers->get('X-CSRF-Token');
       if (!drupal_valid_token($csrf_token, 'rest')) {
-        return FALSE;
+        return static::KILL;
       }
     }
-    // As we do not perform any authorization here we always return NULL to
-    // indicate that other access checkers should decide if the request is
-    // legit.
-    return NULL;
+    // Let other access checkers decide if the request is legit.
+    return static::ALLOW;
   }
 }

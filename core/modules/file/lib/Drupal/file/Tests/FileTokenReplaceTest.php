@@ -27,10 +27,6 @@ class FileTokenReplaceTest extends FileFieldTestBase {
   function testFileTokenReplacement() {
     $token_service = \Drupal::token();
     $language_interface = language(Language::TYPE_INTERFACE);
-    $url_options = array(
-      'absolute' => TRUE,
-      'language' => $language_interface,
-    );
 
     // Create file field.
     $type_name = 'article';

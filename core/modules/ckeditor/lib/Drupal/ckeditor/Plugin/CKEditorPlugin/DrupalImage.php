@@ -8,6 +8,7 @@
 namespace Drupal\ckeditor\Plugin\CKEditorPlugin;
 
 use Drupal\ckeditor\CKEditorPluginBase;
+use Drupal\ckeditor\CKEditorPluginConfigurableInterface;
 use Drupal\ckeditor\Annotation\CKEditorPlugin;
 use Drupal\Core\Annotation\Translation;
 use Drupal\editor\Entity\Editor;
@@ -17,11 +18,11 @@ use Drupal\editor\Entity\Editor;
  *
  * @CKEditorPlugin(
  *   id = "drupalimage",
- *   label = @Translation("Drupal image"),
+ *   label = @Translation("Image"),
  *   module = "ckeditor"
  * )
  */
-class DrupalImage extends CKEditorPluginBase {
+class DrupalImage extends CKEditorPluginBase implements CKEditorPluginConfigurableInterface {
 
   /**
    * {@inheritdoc}
@@ -59,6 +60,38 @@ class DrupalImage extends CKEditorPluginBase {
         'image' => drupal_get_path('module', 'ckeditor') . '/js/plugins/drupalimage/image.png',
       ),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @see \Drupal\editor\Form\EditorImageDialog
+   * @see editor_image_upload_settings_form()
+   */
+  public function settingsForm(array $form, array &$form_state, Editor $editor) {
+    form_load_include($form_state, 'inc', 'editor', 'editor.admin');
+    $form['image_upload'] = editor_image_upload_settings_form($editor);
+    $form['image_upload']['#attached']['library'][] = array('ckeditor', 'drupal.ckeditor.drupalimage.admin');
+    $form['image_upload']['#element_validate'] = array(
+      array($this, 'validateImageUploadSettings'),
+    );
+
+    return $form;
+  }
+
+  /**
+   * #element_validate handler for the "image_upload" element in settingsForm().
+   *
+   * Moves the text editor's image upload settings from the DrupalImage plugin's
+   * own settings into $editor->image_upload.
+   *
+   * @see \Drupal\editor\Form\EditorImageDialog
+   * @see editor_image_upload_settings_form()
+   */
+  function validateImageUploadSettings(array $element, array &$form_state) {
+    $settings = &$form_state['values']['editor']['settings']['plugins']['drupalimage']['image_upload'];
+    $form_state['editor']->image_upload = $settings;
+    unset($form_state['values']['editor']['settings']['plugins']['drupalimage']);
   }
 
 }

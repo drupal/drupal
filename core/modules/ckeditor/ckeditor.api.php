@@ -47,7 +47,7 @@ function hook_ckeditor_plugin_info_alter(array &$plugins) {
  * @param $editor
  *   The text editor object as returned by editor_load(), for which these files
  *   are being loaded. Based on this information, it is possible to load the
- *   corresponding text format object as returned by filter_format_load().
+ *   corresponding text format object.
  *
  * @see _ckeditor_theme_css()
  */

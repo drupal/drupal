@@ -27,7 +27,7 @@ class TaxonomyTermCreateAccess extends EntityCreateAccessCheck {
   public function access(Route $route, Request $request) {
     $entity_type = $route->getRequirement($this->requirementsKey);
     if ($vocabulary = $request->attributes->get('taxonomy_vocabulary')) {
-      return $this->entityManager->getAccessController($entity_type)->createAccess($vocabulary->id());
+      return $this->entityManager->getAccessController($entity_type)->createAccess($vocabulary->id()) ? static::ALLOW : static::DENY;
     }
     return parent::access($route, $request);
   }

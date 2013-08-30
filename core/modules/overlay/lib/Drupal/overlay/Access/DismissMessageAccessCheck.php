@@ -28,7 +28,7 @@ class DismissMessageAccessCheck implements AccessCheckInterface {
    */
   public function access(Route $route, Request $request) {
     $account = $request->attributes->get('_account');
-    if (!user_access('access overlay', $account)) {
+    if (!$account->hasPermission('access overlay')) {
       return static::DENY;
     }
     // It's unlikely, but possible that "access overlay" permission is granted

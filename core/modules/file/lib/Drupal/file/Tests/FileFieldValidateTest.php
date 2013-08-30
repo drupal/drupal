@@ -36,7 +36,6 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $test_file = $this->getTestFile('text');
 
     // Try to post a new node without uploading a file.
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array("title" => $this->randomName());
     $this->drupalPost('node/add/' . $type_name, $edit, t('Save and publish'));
     $this->assertRaw(t('!title field is required.', array('!title' => $instance['label'])), 'Node save failed when required file field was empty.');
@@ -98,7 +97,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
       $this->assertFileEntryExists($node_file, format_string('File entry exists after uploading a file (%filesize) under the max limit (%maxsize).', array('%filesize' => format_size($small_file->getSize()), '%maxsize' => $max_filesize)));
 
       // Check that uploading the large file fails (1M limit).
-      $nid = $this->uploadNodeFile($large_file, $field_name, $type_name);
+      $this->uploadNodeFile($large_file, $field_name, $type_name);
       $error_message = t('The file is %filesize exceeding the maximum file size of %maxsize.', array('%filesize' => format_size($large_file->getSize()), '%maxsize' => format_size($file_limit)));
       $this->assertRaw($error_message, format_string('Node save failed when file (%filesize) exceeded the max upload size (%maxsize).', array('%filesize' => format_size($large_file->getSize()), '%maxsize' => $max_filesize)));
     }
@@ -139,7 +138,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $this->updateFileField($field_name, $type_name, array('file_extensions' => 'txt'));
 
     // Check that the file with the wrong extension cannot be uploaded.
-    $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
+    $this->uploadNodeFile($test_file, $field_name, $type_name);
     $error_message = t('Only files with the following extensions are allowed: %files-allowed.', array('%files-allowed' => 'txt'));
     $this->assertRaw($error_message, 'Node save failed when file uploaded with the wrong extension.');
 

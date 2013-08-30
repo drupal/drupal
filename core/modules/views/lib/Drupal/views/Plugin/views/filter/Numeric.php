@@ -85,6 +85,12 @@ class Numeric extends FilterPluginBase {
         'short' => t('not between'),
         'values' => 2,
       ),
+      'regular_expression' => array(
+        'title' => t('Regular expression'),
+        'short' => t('regex'),
+        'method' => 'op_regex',
+        'values' => 1,
+      ),
     );
 
     // if the definition allows for the empty operator, add it.
@@ -101,18 +107,6 @@ class Numeric extends FilterPluginBase {
           'method' => 'opEmpty',
           'short' => t('not empty'),
           'values' => 0,
-        ),
-      );
-    }
-
-    // Add regexp support for MySQL.
-    if (Database::getConnection()->databaseType() == 'mysql') {
-      $operators += array(
-        'regular_expression' => array(
-          'title' => t('Regular expression'),
-          'short' => t('regex'),
-          'method' => 'opRegex',
-          'values' => 1,
         ),
       );
     }
@@ -275,8 +269,14 @@ class Numeric extends FilterPluginBase {
     $this->query->addWhere($this->options['group'], $field, NULL, $operator);
   }
 
+  /**
+   * Filters by a regular expression.
+   *
+   * @param string $field
+   *   The expression pointing to the queries field, for example "foo.bar".
+   */
   protected function opRegex($field) {
-    $this->query->addWhere($this->options['group'], $field, $this->value, 'RLIKE');
+    $this->query->addWhere($this->options['group'], $field, $this->value, 'REGEXP');
   }
 
   public function adminSummary() {

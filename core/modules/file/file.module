@@ -64,7 +64,6 @@ function file_menu() {
  * The managed file element may be used anywhere in Drupal.
  */
 function file_element_info() {
-  $file_path = drupal_get_path('module', 'file');
   $types['managed_file'] = array(
     '#input' => TRUE,
     '#process' => array('file_managed_file_process'),
@@ -560,7 +559,6 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
  *   \Symfony\Component\HttpFoundation\StreamedResponse.
  */
 function file_get_content_headers(File $file) {
-  $name = mime_header_encode($file->getFilename());
   $type = mime_header_encode($file->getMimeType());
 
   return array(
@@ -1310,7 +1308,7 @@ function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) 
       // Load files if the FIDs have changed to confirm they exist.
       if (!empty($input['fids'])) {
         $fids = array();
-        foreach ($input['fids'] as $key => $fid) {
+        foreach ($input['fids'] as $fid) {
           if ($file = file_load($fid)) {
             $fids[] = $file->id();
           }
@@ -1333,7 +1331,7 @@ function file_managed_file_value(&$element, $input = FALSE, $form_state = NULL) 
     // Confirm that the file exists when used as a default value.
     if (!empty($default_fids)) {
       $fids = array();
-      foreach ($default_fids as $key => $fid) {
+      foreach ($default_fids as $fid) {
         if ($file = file_load($fid)) {
           $fids[] = $file->id();
         }

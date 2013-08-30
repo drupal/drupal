@@ -26,21 +26,21 @@ class FilterFormatAccessController extends EntityAccessController {
       return TRUE;
     }
 
-    if (user_access('administer filters', $account)) {
+    if ($operation != 'view' && $account->hasPermission('administer filters')) {
       return TRUE;
     }
 
     // Check the permission if one exists; otherwise, we have a non-existent
     // format so we return FALSE.
-    $permission = filter_permission_name($entity);
-    return !empty($permission) && user_access($permission, $account);
+    $permission = $entity->getPermissionName();
+    return !empty($permission) && $account->hasPermission($permission);
   }
 
   /**
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return user_access('administer filters', $account);
+    return $account->hasPermission('administer filters');
   }
 
 }

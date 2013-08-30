@@ -31,7 +31,7 @@ class ViewsAccessCheck implements StaticAccessCheckInterface {
   public function access(Route $route, Request $request) {
     $access = user_access('access all views');
 
-    return $access ?: NULL;
+    return $access ? static::ALLOW : static::DENY;
   }
 
 }

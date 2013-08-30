@@ -24,14 +24,11 @@ class FormatDisableCheck implements StaticAccessCheckInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Access\AccessCheckInterface::access().
+   * {@inheritdoc}
    */
   public function access(Route $route, Request $request) {
-    if ($format = $request->attributes->get('filter_format')) {
-      return user_access('administer filters') && ($format->format != filter_fallback_format());
-    }
-
-    return FALSE;
+    $format = $request->attributes->get('filter_format');
+    return ($format && !$format->isFallbackFormat()) ? static::ALLOW : static::DENY;
   }
 
 }

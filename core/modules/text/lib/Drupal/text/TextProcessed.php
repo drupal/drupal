@@ -88,4 +88,5 @@ class TextProcessed extends TypedData {
       // throw new ReadOnlyException('Unable to set a computed property.');
     }
   }
+
 }

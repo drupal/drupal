@@ -202,11 +202,6 @@ abstract class StylePluginBase extends PluginBase {
    */
   public function tokenizeValue($value, $row_index) {
     if (strpos($value, '[') !== FALSE || strpos($value, '!') !== FALSE || strpos($value, '%') !== FALSE) {
-      $fake_item = array(
-        'alter_text' => TRUE,
-        'text' => $value,
-      );
-
       // Row tokens might be empty, for example for node row style.
       $tokens = isset($this->row_tokens[$row_index]) ? $this->row_tokens[$row_index] : array();
       if (!empty($this->view->build_info['substitutions'])) {

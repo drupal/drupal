@@ -29,6 +29,6 @@ class TestAccessCheck implements AccessCheckInterface {
   public function access(Route $route, Request $request) {
     // No opinion, so other access checks should decide if access should be
     // allowed or not.
-    return NULL;
+    return static::DENY;
   }
 }
