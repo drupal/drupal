@@ -8,6 +8,29 @@
 use Drupal\Core\Template\RenderWrapper;
 
 /**
+ * Implements hook_library_info().
+ */
+function seven_library_info() {
+  $path = drupal_get_path('theme', 'seven');
+
+  $libraries['install-page'] = array(
+    'version' => VERSION,
+    'js' => array(
+      $path . '/js/mobile.install.js' => array(
+        'group' => JS_THEME,
+      ),
+    ),
+    'css' => array(
+      $path . '/install-page.css' => array(
+        'group' => CSS_AGGREGATE_THEME,
+      ),
+    ),
+  );
+
+  return $libraries;
+}
+
+/**
  * Implements hook_preprocess_HOOK() for maintenance-page.html.twig.
  */
 function seven_preprocess_maintenance_page(&$variables) {
@@ -143,10 +166,19 @@ function seven_tablesort_indicator($variables) {
  * Implements hook_preprocess_install_page().
  */
 function seven_preprocess_install_page(&$variables) {
-  drupal_add_js(drupal_get_path('theme', 'seven') . '/js/mobile.install.js');
-  drupal_add_css(drupal_get_path('theme', 'seven') . '/install-page.css', array('group' => CSS_AGGREGATE_THEME));
   $variables['styles'] = new RenderWrapper('drupal_get_css');
   $variables['scripts'] = new RenderWrapper('drupal_get_js');
+
+  // Normally we could attach libraries via hook_page_alter(), but when the
+  // database is inactive it's not called so we add them here.
+  $libraries = array(
+    '#attached' => array(
+      'library' => array(
+        array('seven', 'install-page'),
+      ),
+    ),
+  );
+  drupal_render($libraries);
 }
 
 /**

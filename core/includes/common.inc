@@ -1266,6 +1266,12 @@ function drupal_http_header_attributes(array $attributes = array()) {
  * This keeps the context of the link title ('settings' in the example) for
  * translators.
  *
+ * This function does not support generating links from internal routes. For
+ * that use \Drupal\Core\Utility\LinkGenerator::generate(), which is exposed via
+ * the 'link_generator' service. It requires an internal route name and does not
+ * support external URLs. Using Drupal 7 style system paths should be avoided if
+ * possible but l() should still be used when rendering links to external URLs.
+ *
  * @param string|array $text
  *   The link text for the anchor tag as a translated string or render array.
  * @param string $path
@@ -3471,8 +3477,12 @@ function drupal_pre_render_html_tag($element) {
  * @param $elements
  *   A structured array whose keys form the arguments to l():
  *   - #title: The link text to pass as argument to l().
- *   - #href: The URL path component to pass as argument to l().
- *   - #options: (optional) An array of options to pass to l().
+ *   - One of the following
+ *     - #route_name and (optionally) and a #route_parameters array; The route
+ *       name and route parameters which will be passed into the link generator.
+ *     - #href: The system path or URL to pass as argument to l().
+ *   - #options: (optional) An array of options to pass to l() or the link
+ *     generator.
  *
  * @return
  *   The passed-in elements containing a rendered link in '#markup'.
@@ -3513,7 +3523,13 @@ function drupal_pre_render_link($element) {
     $element = ajax_pre_render_element($element);
   }
 
-  $element['#markup'] = l($element['#title'], $element['#href'], $element['#options']);
+  if (isset($element['#route_name'])) {
+    $element['#route_parameters'] = empty($element['#route_parameters']) ? array() : $element['#route_parameters'];
+    $element['#markup'] = Drupal::linkGenerator()->generate($element['#title'], $element['#route_name'], $element['#route_parameters'], $element['#options']);
+  }
+  else {
+    $element['#markup'] = l($element['#title'], $element['#href'], $element['#options']);
+  }
   return $element;
 }
 

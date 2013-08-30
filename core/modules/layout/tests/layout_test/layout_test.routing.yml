@@ -1,6 +1,0 @@
-layout_test_page:
-  pattern: '/layout-test'
-  defaults:
-    _content: '\Drupal\layout_test\Controller\LayoutTestController::layoutTestPage'
-  requirements:
-    _access: 'TRUE'

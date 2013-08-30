@@ -223,7 +223,7 @@ function node_uri(EntityInterface $node) {
  * Implements hook_admin_paths().
  */
 function node_admin_paths() {
-  if (variable_get('node_admin_theme')) {
+  if (Drupal::config('node.settings')->get('use_admin_theme')) {
     $paths = array(
       'node/*/edit' => TRUE,
       'node/*/delete' => TRUE,
@@ -1900,10 +1900,10 @@ function node_form_system_site_information_settings_form_submit($form, &$form_st
  * @see node_form_system_themes_admin_form_submit()
  */
 function node_form_system_themes_admin_form_alter(&$form, &$form_state, $form_id) {
-  $form['admin_theme']['node_admin_theme'] = array(
+  $form['admin_theme']['use_admin_theme'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use the administration theme when editing or creating content'),
-    '#default_value' => variable_get('node_admin_theme', '0'),
+    '#default_value' => Drupal::config('node.settings')->get('use_admin_theme'),
   );
   $form['#submit'][] = 'node_form_system_themes_admin_form_submit';
 }
@@ -1914,7 +1914,9 @@ function node_form_system_themes_admin_form_alter(&$form, &$form_state, $form_id
  * @see node_form_system_themes_admin_form_alter()
  */
 function node_form_system_themes_admin_form_submit($form, &$form_state) {
-  variable_set('node_admin_theme', $form_state['values']['node_admin_theme']);
+  Drupal::config('node.settings')
+    ->set('use_admin_theme', $form_state['values']['use_admin_theme'])
+    ->save();
 }
 
 /**
