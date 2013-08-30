@@ -98,7 +98,7 @@ function _translation_tab_access(NodeInterface $node) {
  * Implements hook_admin_paths().
  */
 function translation_admin_paths() {
-  if (variable_get('node_admin_theme')) {
+  if (Drupal::config('node.settings')->get('use_admin_theme')) {
     $paths = array(
       'node/*/translate' => TRUE,
     );

@@ -35,7 +35,7 @@ class OverlayCloseTest extends WebTestBase {
   function testNodeCreation() {
     // Make sure the node creation page is considered an administrative path
     // (which will appear in the overlay).
-    variable_set('node_admin_theme', TRUE);
+    $this->container->get('config.factory')->get('node.settings')->set('use_admin_theme', '1')->save();
 
     // Create a content type and a user who has permission to create it inside
     // the overlay.

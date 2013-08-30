@@ -430,7 +430,6 @@ function node_uninstall() {
 
   // Delete remaining general module variables.
   Drupal::state()->delete('node.node_access_needs_rebuild');
-  variable_del('node_admin_theme');
   variable_del('node_recent_block_count');
 
   // Delete any stored state.
@@ -1112,6 +1111,17 @@ function node_update_8020() {
     }
   }
   Drupal::state()->set('node.type.locked', $locked);
+}
+
+/**
+ * Converts node_admin_theme variable to config.
+ *
+ * @ingroup config_upgrade
+ */
+function node_update_8021() {
+  update_variables_to_config('node.settings', array(
+    'node_admin_theme' => 'use_admin_theme'
+  ));
 }
 
 /**
