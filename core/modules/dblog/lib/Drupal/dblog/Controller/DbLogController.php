@@ -10,6 +10,7 @@ namespace Drupal\dblog\Controller;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Datetime\Date;
@@ -20,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Returns responses for dblog routes.
  */
-class DbLogController implements ControllerInterface {
+class DbLogController extends ControllerBase implements ControllerInterface {
 
   /**
    * The database service.
@@ -176,7 +177,7 @@ class DbLogController implements ControllerInterface {
         if (isset($dblog->wid)) {
           // Truncate link_text to 56 chars of message.
           $log_text = Unicode::truncate(filter_xss($message, array()), 56, TRUE, TRUE);
-          $message = l($log_text, 'admin/reports/event/' . $dblog->wid, array('html' => TRUE));
+          $message = $this->l($log_text, 'dblog_event',  array('event_id' => $dblog->wid), array('html' => TRUE));
         }
       }
       $username = array(
