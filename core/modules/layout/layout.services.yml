@@ -1,9 +1,0 @@
-services:
-  plugin.manager.layout:
-    class: Drupal\layout\Plugin\Type\LayoutManager
-    arguments: ['@container.namespaces']
-  access_check.layout:
-    class: Drupal\layout\Access\LayoutAccessCheck
-    arguments: ['@plugin.manager.layout']
-    tags:
-      - { name: access_check }
