@@ -381,6 +381,15 @@ class Drupal {
   }
 
   /**
+   * Returns the link generator service.
+   *
+   * @return \Drupal\Core\Utility\LinkGeneratorInterface
+   */
+  public static function linkGenerator() {
+    return static::$container->get('link_generator');
+  }
+
+  /**
    * Returns the string translation service.
    *
    * @return \Drupal\Core\StringTranslation\TranslationManager

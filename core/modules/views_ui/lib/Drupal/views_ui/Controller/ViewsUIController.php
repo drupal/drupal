@@ -20,7 +20,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Utility\LinkGeneratorInterface;
 
 /**
  * Returns responses for Views UI routes.
@@ -44,9 +45,16 @@ class ViewsUIController implements ControllerInterface {
   /**
    * The URL generator to use.
    *
-   * @var \Symfony\Component\Routing\Generator\UrlGeneratorInterface
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface
    */
   protected $urlGenerator;
+
+  /**
+   * The link generator to use.
+   *
+   * @var \Drupal\Core\Utility\LinkGeneratorInterface
+   */
+  protected $linkGenerator;
 
   /**
    * Constructs a new \Drupal\views_ui\Controller\ViewsUIController object.
@@ -55,13 +63,14 @@ class ViewsUIController implements ControllerInterface {
    *   The Entity manager.
    * @param \Drupal\views\ViewsData views_data
    *   The Views data cache object.
-   * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface
    *   The URL generator.
    */
-  public function __construct(EntityManager $entity_manager, ViewsData $views_data, UrlGeneratorInterface $url_generator) {
+  public function __construct(EntityManager $entity_manager, ViewsData $views_data, UrlGeneratorInterface $url_generator, LinkGeneratorInterface $link_generator) {
     $this->entityManager = $entity_manager;
     $this->viewsData = $views_data;
     $this->urlGenerator = $url_generator;
+    $this->linkGenerator = $link_generator;
   }
 
   /**
@@ -71,7 +80,8 @@ class ViewsUIController implements ControllerInterface {
     return new static(
       $container->get('plugin.manager.entity'),
       $container->get('views.views_data'),
-      $container->get('url_generator')
+      $container->get('url_generator'),
+      $container->get('link_generator')
     );
   }
 
@@ -114,7 +124,7 @@ class ViewsUIController implements ControllerInterface {
     foreach ($fields as $field_name => $views) {
       $rows[$field_name]['data'][0] = check_plain($field_name);
       foreach ($views as $view) {
-        $rows[$field_name]['data'][1][] = l($view, "admin/structure/views/view/$view");
+        $rows[$field_name]['data'][1][] = $this->linkGenerator->generate($view, 'views_ui.edit', array('view' => $view));
       }
       $rows[$field_name]['data'][1] = implode(', ', $rows[$field_name]['data'][1]);
     }
@@ -142,7 +152,7 @@ class ViewsUIController implements ControllerInterface {
     foreach ($rows as &$row) {
       // Link each view name to the view itself.
       foreach ($row['views'] as $row_name => $view) {
-        $row['views'][$row_name] = l($view, "admin/structure/views/view/$view");
+        $row['views'][$row_name] = $this->linkGenerator->generate($view, 'views_ui.edit', array('view' => $view));
       }
       $row['views'] = implode(', ', $row['views']);
     }

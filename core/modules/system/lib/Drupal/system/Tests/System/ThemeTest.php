@@ -183,7 +183,7 @@ class ThemeTest extends WebTestBase {
     // Enable an administration theme and show it on the node admin pages.
     $edit = array(
       'admin_theme' => 'seven',
-      'node_admin_theme' => TRUE,
+      'use_admin_theme' => TRUE,
     );
     $this->drupalPost('admin/appearance', $edit, t('Save configuration'));
 
@@ -201,7 +201,7 @@ class ThemeTest extends WebTestBase {
 
     // Disable the admin theme on the node admin pages.
     $edit = array(
-      'node_admin_theme' => FALSE,
+      'use_admin_theme' => FALSE,
     );
     $this->drupalPost('admin/appearance', $edit, t('Save configuration'));
 
@@ -217,7 +217,7 @@ class ThemeTest extends WebTestBase {
       ->save();
     $edit = array(
       'admin_theme' => '0',
-      'node_admin_theme' => FALSE,
+      'use_admin_theme' => FALSE,
     );
     $this->drupalPost('admin/appearance', $edit, t('Save configuration'));
 

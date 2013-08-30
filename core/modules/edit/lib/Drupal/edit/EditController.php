@@ -214,8 +214,6 @@ class EditController implements ControllerInterface {
       // The form submission saved the entity in tempstore. Return the
       // updated view of the field from the tempstore copy.
       $entity = $this->tempStoreFactory->get('edit')->get($entity->uuid());
-      // @todo Remove when http://drupal.org/node/1346214 is complete.
-      $entity = $entity->getBCEntity();
       $output = field_view_field($entity, $field_name, $view_mode_id, $langcode);
 
       $response->addCommand(new FieldFormSavedCommand(drupal_render($output)));

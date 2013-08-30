@@ -74,7 +74,7 @@ class ShortcutLinksTest extends ShortcutTestBase {
   function testShortcutQuickLink() {
     theme_enable(array('seven'));
     \Drupal::config('system.theme')->set('admin', 'seven')->save();
-    variable_set('node_admin_theme', TRUE);
+    $this->container->get('config.factory')->get('node.settings')->set('use_admin_theme', '1')->save();
 
     $link = reset($this->set->links);
 

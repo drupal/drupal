@@ -21,7 +21,7 @@ use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\PathProcessor\OutboundPathProcessorInterface;
 
 /**
- * A Generator creates URL strings based on a specified route.
+ * Defines an interface which generates a link with route names and parameters.
  */
 class UrlGenerator extends ProviderBasedGenerator implements UrlGeneratorInterface {
 
