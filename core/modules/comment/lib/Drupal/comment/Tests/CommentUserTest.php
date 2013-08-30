@@ -7,9 +7,10 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\comment\Plugin\Core\Entity\Comment;
-use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Language\Language;
+use Drupal\comment\CommentInterface;
+use Drupal\simpletest\WebTestBase;
+use Drupal\user\UserInterface;
 
 /**
  * Tests basic comment functionality against a user entity.
@@ -26,14 +27,14 @@ class CommentUserTest extends WebTestBase {
   /**
    * An administrative user with permission to configure comment settings.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var \Drupal\user\UserInterface
    */
   protected $admin_user;
 
   /**
    * A normal user with permission to post comments.
    *
-   * @var \Drupal\user\Plugin\Core\Entity\User
+   * @var \Drupal\user\UserInterface
    */
   protected $web_user;
 
@@ -52,7 +53,7 @@ class CommentUserTest extends WebTestBase {
     parent::setUp();
 
     // Create comment field on user bundle.
-    comment_add_default_comment_field('user', 'user');
+    $this->container->get('comment.manager')->addDefaultField('user', 'user');
 
     // Create two test users.
     $this->admin_user = $this->drupalCreateUser(array(
@@ -90,7 +91,7 @@ class CommentUserTest extends WebTestBase {
   /**
    * Posts a comment.
    *
-   * @param \Drupal\user\Plugin\Core\Entity\User|null $account
+   * @param \Drupal\user\UserInterface|null $account
    *   User to post comment on or NULL to post to the previously loaded page.
    * @param $comment
    *   Comment body.
@@ -100,7 +101,7 @@ class CommentUserTest extends WebTestBase {
    *   Set to NULL for no contact info, TRUE to ignore success checking, and
    *   array of values to set contact info.
    */
-  function postComment($account, $comment, $subject = '', $contact = NULL) {
+  function postComment(UserInterface $account, $comment, $subject = '', $contact = NULL) {
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array();
     $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
@@ -164,7 +165,7 @@ class CommentUserTest extends WebTestBase {
   /**
    * Checks current page for specified comment.
    *
-   * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
+   * @param \Drupal\comment\CommentInterface $comment
    *   The comment object.
    * @param boolean $reply
    *   Boolean indicating whether the comment is a reply to another comment.
@@ -172,7 +173,7 @@ class CommentUserTest extends WebTestBase {
    * @return boolean
    *   Boolean indicating whether the comment was found.
    */
-  function commentExists(Comment $comment = NULL, $reply = FALSE) {
+  function commentExists(CommentInterface $comment = NULL, $reply = FALSE) {
     if ($comment) {
       $regex = '/' . ($reply ? '<div class="indented">(.*?)' : '');
       $regex .= '<a id="comment-' . $comment->id() . '"(.*?)'; // Comment anchor.
@@ -190,10 +191,10 @@ class CommentUserTest extends WebTestBase {
   /**
    * Deletes a comment.
    *
-   * @param \Drupal\comment\Plugin\Core\Entity\Comment $comment
+   * @param \Drupal\comment\CommentInterface $comment
    *   Comment to delete.
    */
-  function deleteComment(Comment $comment) {
+  function deleteComment(CommentInterface $comment) {
     $this->drupalPost('comment/' . $comment->id() . '/delete', array(), t('Delete'));
     $this->assertText(t('The comment and all its replies have been deleted.'), 'Comment deleted.');
   }
