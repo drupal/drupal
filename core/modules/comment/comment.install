@@ -572,12 +572,10 @@ function comment_update_8006(&$sandbox) {
     // Add a default comment field for existing node comments.
     $field_name = 'comment_node_' . $node_type;
     $field = array(
-      'cardinality' => '1',
       // We need one per content type to match the existing comment bundles.
       'id' => $field_name,
-      'module' => 'comment',
-      'translatable' => '0',
       'type' => 'comment',
+      'module' => 'comment',
     );
     // Make sure field doesn't already exist.
     $index = 0;
@@ -616,14 +614,14 @@ function comment_update_8006(&$sandbox) {
         'preview' => update_variable_get('comment_preview_' . $node_type, 1),
       );
       $instance = array(
+        'id' => "node.$node_type." . $field['id'],
+        'entity_type' => 'node',
         'bundle' => $node_type,
         'default_value' => array(array('status' => $default_value)),
         'deleted' => '0',
         'description' => '',
-        'entity_type' => 'node',
-        'id' => $field['id'],
         'label' => 'Comment settings',
-        'required' => 1,
+        'required' => TRUE,
         'settings' => $instance_settings,
       );
       _update_8003_field_create_instance($field, $instance);
@@ -657,13 +655,13 @@ function comment_update_8006(&$sandbox) {
       ->save();
 
     // Clean up old variables.
-    variable_del('comment_' . $node_type);
-    variable_del('comment_default_mode_' . $node_type);
-    variable_del('comment_default_per_page_' . $node_type);
-    variable_del('comment_anonymous_' . $node_type);
-    variable_del('comment_subject_field_' . $node_type);
-    variable_del('comment_form_location_' . $node_type);
-    variable_del('comment_preview_' . $node_type);
+    update_variable_del('comment_' . $node_type);
+    update_variable_del('comment_default_mode_' . $node_type);
+    update_variable_del('comment_default_per_page_' . $node_type);
+    update_variable_del('comment_anonymous_' . $node_type);
+    update_variable_del('comment_subject_field_' . $node_type);
+    update_variable_del('comment_form_location_' . $node_type);
+    update_variable_del('comment_preview_' . $node_type);
   }
 }
 
