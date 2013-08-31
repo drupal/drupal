@@ -4,10 +4,12 @@ services:
     arguments: ['@container.namespaces']
   access_check.edit.entity_field:
     class: Drupal\edit\Access\EditEntityFieldAccessCheck
+    arguments: ['@plugin.manager.entity', '@field.info']
     tags:
       - { name: access_check }
   access_check.edit.entity:
     class: Drupal\edit\Access\EditEntityAccessCheck
+    arguments: ['@plugin.manager.entity']
     tags:
       - { name: access_check }
   edit.editor.selector:

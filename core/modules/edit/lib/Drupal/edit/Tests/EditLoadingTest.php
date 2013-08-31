@@ -89,6 +89,34 @@ class EditLoadingTest extends WebTestBase {
     $response = $this->retrieveMetadata(array('node/1/body/und/full'));
     $this->assertIdentical('{}', $response);
     $this->assertResponse(403);
+
+    // Edit's JavaScript would never hit these endpoints if the metadata was
+    // empty as above, but we need to make sure that malicious users aren't able
+    // to use any of the other endpoints either.
+    $response = $this->retrieveAttachments(array('form'));
+    // @todo Uncomment the below once https://drupal.org/node/2063303 is fixed.
+    // $this->assertIdentical('[]', $response);
+    $this->assertResponse(403);
+    $response = $this->retrieveFieldForm('node/1/body/und/full');
+    // @todo Uncomment the below once https://drupal.org/node/2063303 is fixed.
+    // $this->assertIdentical('[]', $response);
+    $this->assertResponse(403);
+    $edit = array();
+    $edit['form_id'] = 'edit_field_form';
+    $edit['form_token'] = 'xIOzMjuc-PULKsRn_KxFn7xzNk5Bx7XKXLfQfw1qOnA';
+    $edit['form_build_id'] = 'form-kVmovBpyX-SJfTT5kY0pjTV35TV-znor--a64dEnMR8';
+    $edit['body[und][0][summary]'] = '';
+    $edit['body[und][0][value]'] = '<p>Malicious content.</p>';
+    $edit['body[und][0][format]'] = 'filtered_html';
+    $edit['op'] = t('Save');
+    $response = $this->submitFieldForm('node/1/body/und/full', $edit);
+    // @todo Uncomment the below once https://drupal.org/node/2063303 is fixed.
+    // $this->assertIdentical('[]', $response);
+    $this->assertResponse(403);
+    $response = $this->saveEntity('node/1');
+    // @todo Uncomment the below once https://drupal.org/node/2063303 is fixed.
+    // $this->assertIdentical('[]', $response);
+    $this->assertResponse(403);
   }
 
   /**
