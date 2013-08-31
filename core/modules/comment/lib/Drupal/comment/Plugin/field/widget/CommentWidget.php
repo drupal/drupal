@@ -67,7 +67,7 @@ class CommentWidget extends WidgetBase {
         // Collapse the advanced settings when they are the same
         // as the defaults for the instance.
         // @todo Add $this->defaultStatus($field) and compare actual values.
-        '#collapsed' => ($items->getValue() == $field->default_value),
+        '#collapsed' => ($items->getValue() == $field->getFieldDefaultValue($entity)),
         '#group' => 'advanced',
         '#attributes' => array(
           'class' => array('comment-' . drupal_html_class($element['#entity_type']) . '-settings-form'),
