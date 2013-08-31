@@ -1415,8 +1415,6 @@ function comment_preview(CommentInterface $comment) {
   global $user;
   $preview_build = array();
   $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
-  // @todo Drop the conversion after http://drupal.org/node/1818580 in.
-  $entity = $entity->getBCEntity();
 
   if (!form_get_errors()) {
     // Attach the user and time information.
@@ -1463,12 +1461,10 @@ function comment_preview(CommentInterface $comment) {
     // entity is rendered, it excludes the comment field output. As objects are
     // always addressed by reference we ensure changes are not lost by setting
     // the value back to its original state after the call to entity_view().
-    $original_value = $entity->{$comment->field_name->value};
-    $entity->{$comment->field_name->value} = array(
-      Language::LANGCODE_NOT_SPECIFIED => array(array('status' => COMMENT_HIDDEN)),
-    );
+    $original_value = $entity->get($comment->field_name->value);
+    $entity->set($comment->field_name->value, COMMENT_HIDDEN);
     $build = entity_view($entity, 'full');
-    $entity->{$comment->field_name->value} = $original_value;
+    $entity->set($comment->field_name->value, $original_value);
   }
 
   $preview_build['comment_output_below'] = $build;
