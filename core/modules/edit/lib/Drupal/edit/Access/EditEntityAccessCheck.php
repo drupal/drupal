@@ -12,11 +12,29 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityManager;
 
 /**
  * Access check for editing entities.
  */
 class EditEntityAccessCheck implements StaticAccessCheckInterface {
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
+   * Constructs a EditEntityAccessCheck object.
+   *
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager.
+   */
+  public function __construct(EntityManager $entity_manager) {
+    $this->entityManager = $entity_manager;
+  }
 
   /**
    * {@inheritdoc}
@@ -53,10 +71,10 @@ class EditEntityAccessCheck implements StaticAccessCheckInterface {
     if (!is_object($entity = $request->attributes->get('entity'))) {
       $entity_id = $entity;
       $entity_type = $request->attributes->get('entity_type');
-      if (!$entity_type || !entity_get_info($entity_type)) {
+      if (!$entity_type || !$this->entityManager->getDefinition($entity_type)) {
         throw new NotFoundHttpException();
       }
-      $entity = entity_load($entity_type, $entity_id);
+      $entity = $this->entityManager->getStorageController($entity_type)->load($entity_id);
       if (!$entity) {
         throw new NotFoundHttpException();
       }

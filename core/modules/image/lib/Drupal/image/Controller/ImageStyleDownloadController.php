@@ -8,12 +8,9 @@
 namespace Drupal\image\Controller;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Lock\LockBackendInterface;
-use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 use Drupal\image\ImageStyleInterface;
 use Drupal\system\FileDownloadController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -29,25 +26,11 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 class ImageStyleDownloadController extends FileDownloadController implements ControllerInterface {
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\config\ConfigFactory
-   */
-  protected $configFactory;
-
-  /**
    * The lock backend.
    *
    * @var \Drupal\Core\Lock\LockBackendInterface
    */
   protected $lock;
-
-  /**
-   * The translator service.
-   *
-   * @var \Drupal\Core\StringTranslation\Translator\TranslatorInterface
-   */
-  protected $translator;
 
   /**
    * The image factory.
@@ -59,22 +42,13 @@ class ImageStyleDownloadController extends FileDownloadController implements Con
   /**
    * Constructs a ImageStyleDownloadController object.
    *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
-   *   The config factory.
    * @param \Drupal\Core\Lock\LockBackendInterface $lock
    *   The lock backend.
-   * @param \Drupal\Core\StringTranslation\Translator\TranslatorInterface $translator
-   *   The translator service.
    * @param \Drupal\Core\Image\ImageFactory $image_factory
    *   The image factory.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, ConfigFactory $config_factory, LockBackendInterface $lock, TranslatorInterface $translator, ImageFactory $image_factory) {
-    parent::__construct($module_handler);
-    $this->configFactory = $config_factory;
+  public function __construct(LockBackendInterface $lock, ImageFactory $image_factory) {
     $this->lock = $lock;
-    $this->translator = $translator;
     $this->imageFactory = $image_factory;
   }
 
@@ -83,10 +57,7 @@ class ImageStyleDownloadController extends FileDownloadController implements Con
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('module_handler'),
-      $container->get('config.factory'),
       $container->get('lock'),
-      $container->get('string_translation'),
       $container->get('image.factory')
     );
   }
@@ -105,6 +76,8 @@ class ImageStyleDownloadController extends FileDownloadController implements Con
    *
    * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
    *   Thrown when the user does not have access to the file.
+   * @throws \Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException
+   *   Thrown when the file is still being generated.
    *
    * @return \Symfony\Component\HttpFoundation\BinaryFileResponse|\Symfony\Component\HttpFoundation\Response
    *   The transferred file as response or some error response.
@@ -120,7 +93,7 @@ class ImageStyleDownloadController extends FileDownloadController implements Con
     // bypass the latter check, but this will increase the site's vulnerability
     // to denial-of-service attacks.
     $valid = !empty($image_style) && file_stream_wrapper_valid_scheme($scheme);
-    if (!$this->configFactory->get('image.settings')->get('allow_insecure_derivatives')) {
+    if (!$this->config('image.settings')->get('allow_insecure_derivatives')) {
       $valid &= $request->query->get(IMAGE_DERIVATIVE_TOKEN) === $image_style->getPathToken($image_uri);
     }
     if (!$valid) {
@@ -137,7 +110,7 @@ class ImageStyleDownloadController extends FileDownloadController implements Con
         return parent::download($request, $scheme);
       }
       else {
-        $headers = $this->moduleHandler->invokeAll('file_download', array($image_uri));
+        $headers = $this->moduleHandler()->invokeAll('file_download', array($image_uri));
         if (in_array(-1, $headers) || empty($headers)) {
           throw new AccessDeniedHttpException();
         }
@@ -147,7 +120,7 @@ class ImageStyleDownloadController extends FileDownloadController implements Con
     // Don't try to generate file if source is missing.
     if (!file_exists($image_uri)) {
       watchdog('image', 'Source image at %source_image_path not found while trying to generate derivative image at %derivative_path.',  array('%source_image_path' => $image_uri, '%derivative_path' => $derivative_uri));
-      return new Response($this->translator->translate('Error generating image, missing source file.'), 404);
+      return new Response($this->t('Error generating image, missing source file.'), 404);
     }
 
     // Don't start generating the image if the derivative already exists or if
@@ -158,7 +131,7 @@ class ImageStyleDownloadController extends FileDownloadController implements Con
       if (!$lock_acquired) {
         // Tell client to retry again in 3 seconds. Currently no browsers are
         // known to support Retry-After.
-        throw new ServiceUnavailableHttpException(3, $this->translator->translate('Image generation in progress. Try again shortly.'));
+        throw new ServiceUnavailableHttpException(3, $this->t('Image generation in progress. Try again shortly.'));
       }
     }
 
@@ -181,7 +154,7 @@ class ImageStyleDownloadController extends FileDownloadController implements Con
     }
     else {
       watchdog('image', 'Unable to generate the derived image located at %path.', array('%path' => $derivative_uri));
-      return new Response($this->translator->translate('Error generating image.'), 500);
+      return new Response($this->t('Error generating image.'), 500);
     }
   }
 

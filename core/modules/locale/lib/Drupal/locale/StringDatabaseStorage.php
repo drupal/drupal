@@ -146,6 +146,8 @@ class StringDatabaseStorage implements StringStorageInterface {
       $created = FALSE;
       foreach ($locations as $type => $location) {
         foreach ($location as $name => $lid) {
+          // Make sure that the name isn't longer than 255 characters.
+          $name = substr($name, 0, 255);
           if (!$lid) {
             $this->dbDelete('locales_location', array('sid' => $string->getId(), 'type' => $type, 'name' => $name))
               ->execute();

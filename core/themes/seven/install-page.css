@@ -29,23 +29,25 @@ body.install-page {
 @media all and (min-width: 48em) { /* 768px */
   html, body {
     height: 100%;
+    text-align: center;
+    white-space: nowrap;
     margin: 0;
   }
-  .vertically-centered {
-    min-height: 100%;
-    display: table;
-    width: 100%;
-  }
-  .vertically-centered__inner {
-    display: table-cell;
-    padding: 70px 0;
-    width: 100%;
+  body:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    width: 0;
     vertical-align: middle;
+    margin-right: -0.35em;
   }
   body.install-page #page {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: left;
+    white-space: normal;
     border-radius: 5px;
     width: 75%;
-    margin: 0 auto;
     max-width: 770px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     padding: 1em 2em 1em 0; /* LTR */

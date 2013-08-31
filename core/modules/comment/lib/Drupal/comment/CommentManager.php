@@ -43,6 +43,22 @@ class CommentManager {
   }
 
   /**
+   * Utility function to return URI of the comment's parent entity.
+   *
+   * @param \Drupal\comment\CommentInterface $comment
+   *   The comment entity.
+   *
+   * @return array
+   *   An array returned by \Drupal\Core\Entity\EntityInterface::uri().
+   */
+  public function getParentEntityUri(CommentInterface $comment) {
+    return $this->entityManager
+      ->getStorageController($comment->entity_type->value)
+      ->load($comment->entity_id->value)
+      ->uri();
+  }
+
+  /**
    * Utility function to return an array of comment fields.
    *
    * @param string $entity_type

@@ -23,7 +23,8 @@ function contextual_menu() {
  * Implements hook_toolbar().
  */
 function contextual_toolbar() {
-  if (!user_access('access contextual links')) {
+
+  if (!Drupal::currentUser()->hasPermission('access contextual links')) {
     return;
   }
 
@@ -61,7 +62,8 @@ function contextual_toolbar() {
  * @see contextual_preprocess()
  */
 function contextual_page_build(&$page) {
-  if (!user_access('access contextual links')) {
+
+  if (!Drupal::currentUser()->hasPermission('access contextual links')) {
     return;
   }
 

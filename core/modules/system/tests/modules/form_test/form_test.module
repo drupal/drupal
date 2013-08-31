@@ -2263,7 +2263,7 @@ function form_test_user_register_form_rebuild($form, &$form_state) {
  * Menu callback that returns two instances of the node form.
  */
 function form_test_two_instances() {
-  global $user;
+  $user = Drupal::currentUser();
   $node1 = entity_create('node', array(
     'uid' => $user->id(),
     'name' => $user->getUsername(),

@@ -7,8 +7,6 @@
 
 namespace Drupal\field;
 
-use Drupal;
-
 /**
  * Static service container wrapper for Field.
  */
@@ -21,7 +19,7 @@ class Field {
    *   Returns a field info object.
    */
   public static function fieldInfo() {
-    return Drupal::service('field.info');
+    return \Drupal::service('field.info');
   }
 
 }

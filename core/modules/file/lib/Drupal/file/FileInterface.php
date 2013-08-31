@@ -8,12 +8,13 @@
 namespace Drupal\file;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\user\UserInterface;
 
 /**
  * Defines getter and setter methods for file entity base fields.
  */
-interface FileInterface extends ContentEntityInterface {
+interface FileInterface extends ContentEntityInterface, EntityChangedInterface {
 
   /**
    * Returns the name of the file.
@@ -109,14 +110,6 @@ interface FileInterface extends ContentEntityInterface {
    * Sets the file status to temporary.
    */
   public function setTemporary();
-
-  /**
-   * Returns the timestamp when the file was created.
-   *
-   * @return int
-   *   Creation timestamp of the file.
-   */
-  public function getChangedTime();
 
   /**
    * Returns the user that owns this file.

@@ -20,6 +20,13 @@ comment_permalink:
   requirements:
     _entity_access: 'comment.view'
 
+comment_confirm_delete:
+  pattern: '/comment/{comment}/delete'
+  defaults:
+    _entity_form: 'comment.delete'
+  requirements:
+    _entity_access: 'comment.delete'
+
 comment_overview_bundles:
   pattern: '/admin/structure/comments'
   defaults:

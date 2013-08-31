@@ -114,6 +114,7 @@ function path_form_node_form_alter(&$form, $form_state) {
     'langcode' => $node->language()->id,
   );
 
+  $account = Drupal::currentUser();
   $form['path'] = array(
     '#type' => 'details',
     '#title' => t('URL path settings'),
@@ -125,7 +126,7 @@ function path_form_node_form_alter(&$form, $form_state) {
     '#attached' => array(
       'library' => array(array('path', 'drupal.path')),
     ),
-    '#access' => user_access('create url aliases') || user_access('administer url aliases'),
+    '#access' => $account->hasPermission('create url aliases') || $account->hasPermission('administer url aliases'),
     '#weight' => 30,
     '#tree' => TRUE,
     '#element_validate' => array('path_form_element_validate'),
@@ -183,6 +184,7 @@ function path_form_element_validate($element, &$form_state, $complete_form) {
  * Implements hook_form_FORM_ID_alter() for taxonomy_term_form().
  */
 function path_form_taxonomy_term_form_alter(&$form, $form_state) {
+  $account = Drupal::currentUser();
   // Make sure this does not show up on the delete confirmation form.
   if (empty($form_state['confirm_delete'])) {
     $term = $form_state['controller']->getEntity();
@@ -197,7 +199,7 @@ function path_form_taxonomy_term_form_alter(&$form, $form_state) {
       'langcode' => Language::LANGCODE_NOT_SPECIFIED,
     );
     $form['path'] = array(
-      '#access' => user_access('create url aliases') || user_access('administer url aliases'),
+      '#access' => $account->hasPermission('create url aliases') || $account->hasPermission('administer url aliases'),
       '#tree' => TRUE,
       '#element_validate' => array('path_form_element_validate'),
     );

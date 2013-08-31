@@ -25,16 +25,24 @@ CKEDITOR.plugins.add('drupallink', {
           linkDOMElement = linkElement.$;
 
           // Populate an array with the link's current attributes.
-          var attribute = null;
+          var attribute = null, attributeName;
           for (var key = 0; key < linkDOMElement.attributes.length; key++) {
             attribute = linkDOMElement.attributes.item(key);
-            existingValues[attribute.nodeName.toLowerCase()] = attribute.nodeValue;
+            attributeName = attribute.nodeName.toLowerCase();
+            // Don't consider data-cke-saved- attributes; they're just there to
+            // work around browser quirks.
+            if (attributeName.substring(0, 15) === 'data-cke-saved-') {
+              continue;
+            }
+            // Store the value for this attribute, unless there's a
+            // data-cke-saved- alternative for it, which will contain the quirk-
+            // free, original value.
+            existingValues[attributeName] = linkElement.data('cke-saved-' + attributeName) || attribute.nodeValue;
           }
         }
 
         // Prepare a save callback to be used upon saving the dialog.
         var saveCallback = function (returnValues) {
-          // Save snapshot for undo support.
           editor.fire('saveSnapshot');
 
           // Create a new link element if needed.
@@ -65,7 +73,9 @@ CKEDITOR.plugins.add('drupallink', {
               if (returnValues.attributes.hasOwnProperty(key)) {
                 // Update the property if a value is specified.
                 if (returnValues.attributes[key].length > 0) {
-                  linkElement.setAttribute(key, returnValues.attributes[key]);
+                  var value = returnValues.attributes[key];
+                  linkElement.data('cke-saved-' + key, value);
+                  linkElement.setAttribute(key, value);
                 }
                 // Delete the property if set to an empty string.
                 else {
@@ -74,6 +84,9 @@ CKEDITOR.plugins.add('drupallink', {
               }
             }
           }
+
+          // Save snapshot for undo support.
+          editor.fire('saveSnapshot');
         };
         // Drupal.t() will not work inside CKEditor plugins because CKEditor
         // loads the JavaScript file instead of Drupal. Pull translated strings
