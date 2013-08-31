@@ -460,4 +460,12 @@ class Comment extends EntityNG implements CommentInterface {
     );
     return $properties;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getChangedTime() {
+    return $this->changed->value;
+  }
+
 }
