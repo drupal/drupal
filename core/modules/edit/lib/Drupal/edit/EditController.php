@@ -7,7 +7,6 @@
 
 namespace Drupal\edit;
 
-use Drupal;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

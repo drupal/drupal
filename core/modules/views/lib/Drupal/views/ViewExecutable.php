@@ -7,7 +7,6 @@
 
 namespace Drupal\views;
 
-use Drupal;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewStorageInterface;
 use Drupal\Component\Utility\Tags;

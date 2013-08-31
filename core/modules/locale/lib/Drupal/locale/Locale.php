@@ -7,8 +7,6 @@
 
 namespace Drupal\locale;
 
-use Drupal;
-
 /**
  * Static service container wrapper for locale.
  */
@@ -25,6 +23,6 @@ class Locale {
    * @return \Drupal\locale\LocaleConfigManager
    */
   public static function config() {
-    return Drupal::service('locale.config.typed');
+    return \Drupal::service('locale.config.typed');
   }
 }
