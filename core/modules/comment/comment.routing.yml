@@ -19,3 +19,9 @@ comment_permalink:
     _controller: '\Drupal\comment\Controller\CommentController::commentPermalink'
   requirements:
     _entity_access: 'comment.view'
+comment_confirm_delete:
+  pattern: '/comment/{comment}/delete'
+  defaults:
+    _entity_form: 'comment.delete'
+  requirements:
+    _entity_access: 'comment.delete'

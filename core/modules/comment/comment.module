@@ -224,12 +224,8 @@ function comment_menu() {
   );
   $items['comment/%comment/delete'] = array(
     'title' => 'Delete',
-    'page callback' => 'comment_confirm_delete_page',
-    'page arguments' => array(1),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'delete'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'comment.admin.inc',
+    'route_name' => 'comment_confirm_delete',
     'weight' => 20,
   );
   $items['comment/reply/%node'] = array(

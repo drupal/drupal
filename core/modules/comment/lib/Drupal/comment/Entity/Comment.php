@@ -27,7 +27,8 @@ use Drupal\Core\Language\Language;
  *     "access" = "Drupal\comment\CommentAccessController",
  *     "render" = "Drupal\comment\CommentRenderController",
  *     "form" = {
- *       "default" = "Drupal\comment\CommentFormController"
+ *       "default" = "Drupal\comment\CommentFormController",
+ *       "delete" = "Drupal\comment\Form\DeleteForm"
  *     },
  *     "translation" = "Drupal\comment\CommentTranslationController"
  *   },
