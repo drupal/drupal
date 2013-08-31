@@ -540,7 +540,7 @@ function theme_comment_block($variables) {
 function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode) {
   if ($entity->entityType() != 'node') {
     // Comment links are only added to node entity type for backwards
-    // compatability. Should you require comment links for other entity types
+    // compatibility. Should you require comment links for other entity types
     // you can do-so by implementing a new field formatter.
     // @todo Make this configurable from the formatter see
     //   http://drupal.org/node/1901110
@@ -548,8 +548,12 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
   }
   $fields = Drupal::service('comment.manager')->getFields('node');
   foreach ($fields as $field_name => $detail) {
+    // Skip fields that entity does not have.
+    if (!$entity->getPropertyDefinition($field_name)) {
+      continue;
+    }
     $links = array();
-    $commenting_status = _comment_get_default_status(field_get_items($entity, $field_name));
+    $commenting_status = $entity->get($field_name)->status;
     if ($commenting_status) {
       $instance = Drupal::service('field.info')->getInstance('node', $entity->bundle(), $field_name);
       // Entity have commenting open or close.
@@ -624,7 +628,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
         // But we don't want this link if we're building the entity for search
         // indexing or constructing a search result excerpt.
         if ($commenting_status == COMMENT_OPEN) {
-          $comment_form_location = $instance['settings']['form_location'];
+          $comment_form_location = $instance->getFieldSetting('form_location');
           if (user_access('post comments')) {
             // Show the "post comment" link if the form is on another page, or
             // if there are existing comments that the link will skip past.
@@ -874,7 +878,7 @@ function comment_view(CommentInterface $comment, $view_mode = 'full', $langcode 
  */
 function comment_links(CommentInterface $comment, EntityInterface $entity, $field_name) {
   $links = array();
-  $status = _comment_get_default_status(field_get_items($entity, $field_name));
+  $status = $entity->get($field_name)->status;
   if ($status == COMMENT_OPEN) {
     if ($comment->access('delete')) {
       $links['comment-delete'] = array(
@@ -1149,7 +1153,7 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
       $mode = $instance->getFieldSetting('default_mode');
       $comments_per_page = $instance->getFieldSetting('per_page');
       if (($items = field_get_items($node, $field_name)) &&
-        _comment_get_default_status($items) && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
+        $items->status && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
         $comments = comment_load_multiple($cids);
         comment_prepare_thread($comments);
         $build = comment_view_multiple($comments);
@@ -1898,26 +1902,6 @@ function comment_mark(CommentInterface $comment) {
  */
 function comment_add_default_comment_field($entity_type, $bundle, $field_name = 'comment', $default_value = COMMENT_OPEN) {
   return Drupal::service('comment.manager')->addDefaultField($entity_type, $bundle, $field_name, $default_value);
-}
-
-/**
- * Helper to get default value for field.
- *
- * @param array $values
- *   The field values array or NULL for field create with field UI.
- *
- * @return int
- *   The value when exists or COMMENT_OPEN.
- *
- * @todo Replace with field default value after http://drupal.org/node/1919834
- */
-function _comment_get_default_status($values) {
-  // We only ever process first value if any.
-  // @todo Remove when all entities are NG.
-  if (is_object($values)) {
-    $values = $values->getValue();
-  }
-  return isset($values[0]['status']) ? $values[0]['status'] : COMMENT_OPEN;
 }
 
 /**

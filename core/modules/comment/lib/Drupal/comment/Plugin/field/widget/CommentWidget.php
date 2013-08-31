@@ -36,7 +36,7 @@ class CommentWidget extends WidgetBase {
       '#type' => 'radios',
       '#title' => t('Comments'),
       '#title_display' => 'invisible',
-      '#default_value' => _comment_get_default_status($items),
+      '#default_value' => $items[$delta]->status,
       '#options' => array(
         COMMENT_OPEN => t('Open'),
         COMMENT_CLOSED => t('Closed'),
@@ -66,7 +66,8 @@ class CommentWidget extends WidgetBase {
         '#type' => 'details',
         // Collapse the advanced settings when they are the same
         // as the defaults for the instance.
-        '#collapsed' => (_comment_get_default_status($items) == _comment_get_default_status($field->default_value)),
+        // @todo Add $this->defaultStatus($field) and compare actual values.
+        '#collapsed' => ($items->getValue() == $field->default_value),
         '#group' => 'advanced',
         '#attributes' => array(
           'class' => array('comment-' . drupal_html_class($element['#entity_type']) . '-settings-form'),
