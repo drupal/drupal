@@ -10,7 +10,6 @@ namespace Drupal\block;
 use Drupal\Core\Entity\EntityAccessController;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Path\AliasManagerInterface;
 use Drupal\Component\Utility\Unicode;
@@ -33,14 +32,11 @@ class BlockAccessController extends EntityAccessController implements EntityCont
    *
    * @param string $entity_type
    *   The entity type of the access controller instance.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to invoke access hooks with.
    * @param \Drupal\Core\Path\AliasManagerInterface $alias_manager
    *   The alias manager.
    */
-  public function __construct($entity_type, ModuleHandlerInterface $module_handler, AliasManagerInterface $alias_manager) {
-    parent::__construct($entity_type, $module_handler);
-
+  public function __construct($entity_type, AliasManagerInterface $alias_manager) {
+    parent::__construct($entity_type);
     $this->aliasManager = $alias_manager;
   }
 
@@ -50,7 +46,6 @@ class BlockAccessController extends EntityAccessController implements EntityCont
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
       $entity_type,
-      $container->get('module_handler'),
       $container->get('path.alias_manager')
     );
   }

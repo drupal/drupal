@@ -413,12 +413,14 @@ class EntityNG extends Entity {
    * {@inheritdoc}
    */
   public function access($operation = 'view', AccountInterface $account = NULL) {
-    $access_controller = \Drupal::entityManager()->getAccessController($this->entityType);
-
     if ($operation == 'create') {
-      return $access_controller->createAccess($this->bundle(), $account);
+      return \Drupal::entityManager()
+        ->getAccessController($this->entityType)
+        ->createAccess($this->bundle(), $account);
     }
-    return $access_controller->access($this, $operation, $this->activeLangcode, $account);
+    return \Drupal::entityManager()
+      ->getAccessController($this->entityType)
+      ->access($this, $operation, $this->activeLangcode, $account);
   }
 
   /**

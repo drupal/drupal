@@ -7,15 +7,13 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Defines a default implementation for entity access controllers.
  */
-class EntityAccessController implements EntityAccessControllerInterface, EntityControllerInterface {
+class EntityAccessController implements EntityAccessControllerInterface {
 
   /**
    * Stores calculcated access check results.
@@ -32,33 +30,13 @@ class EntityAccessController implements EntityAccessControllerInterface, EntityC
   protected $entityType;
 
   /**
-   * The module handler
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
    * Constructs an access controller instance.
    *
    * @param string $entity_type
    *   The entity type of the access controller instance.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler to invoke access hooks with.
    */
-  public function __construct($entity_type, ModuleHandlerInterface $module_handler) {
-    $this->entityType = $entity_type;
-    $this->moduleHandler = $module_handler;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
-    return new static(
-      $entity_type,
-      $container->get('module_handler')
-    );
+  public function __construct($entity_type) {
+    $this->entity_type = $entity_type;
   }
 
   /**
@@ -80,7 +58,7 @@ class EntityAccessController implements EntityAccessControllerInterface, EntityC
     // We grant access to the entity if both of these conditions are met:
     // - No modules say to deny access.
     // - At least one module says to grant access.
-    $access = $this->moduleHandler->invokeAll($entity->entityType() . '_access', array($entity, $operation, $account, $langcode));
+    $access = module_invoke_all($entity->entityType() . '_access', $entity, $operation, $account, $langcode);
 
     if (($return = $this->processAccessHookResults($access)) === NULL) {
       // No module had an opinion about the access, so let's the access
@@ -218,7 +196,7 @@ class EntityAccessController implements EntityAccessControllerInterface, EntityC
     // We grant access to the entity if both of these conditions are met:
     // - No modules say to deny access.
     // - At least one module says to grant access.
-    $access = $this->moduleHandler->invokeAll($this->entityType . '_create_access', array($account, $context['langcode']));
+    $access = module_invoke_all($this->entity_type . '_create_access', $account, $context['langcode']);
 
     if (($return = $this->processAccessHookResults($access)) === NULL) {
       // No module had an opinion about the access, so let's the access
