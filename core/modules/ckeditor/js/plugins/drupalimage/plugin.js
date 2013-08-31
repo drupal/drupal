@@ -26,15 +26,23 @@ CKEDITOR.plugins.add('drupalimage', {
           existingValues.width = imageDOMElement ? imageDOMElement.width : '';
           existingValues.height = imageDOMElement ? imageDOMElement.height : '';
           // Populate all other attributes by their specified attribute values.
-          var attribute = null;
+          var attribute = null, attributeName;
           for (var key = 0; key < imageDOMElement.attributes.length; key++) {
             attribute = imageDOMElement.attributes.item(key);
-            existingValues[attribute.nodeName.toLowerCase()] = attribute.nodeValue;
+            attributeName = attribute.nodeName.toLowerCase();
+            // Don't consider data-cke-saved- attributes; they're just there to
+            // work around browser quirks.
+            if (attributeName.substring(0, 15) === 'data-cke-saved-') {
+              continue;
+            }
+            // Store the value for this attribute, unless there's a
+            // data-cke-saved- alternative for it, which will contain the quirk-
+            // free, original value.
+            existingValues[attributeName] = imageElement.data('cke-saved-' + attributeName) || attribute.nodeValue;
           }
         }
 
         function saveCallback (returnValues) {
-          // Save snapshot for undo support.
           editor.fire('saveSnapshot');
 
           // Create a new image element if needed.
@@ -53,7 +61,9 @@ CKEDITOR.plugins.add('drupalimage', {
               if (returnValues.attributes.hasOwnProperty(key)) {
                 // Update the property if a value is specified.
                 if (returnValues.attributes[key].length > 0) {
-                  imageElement.setAttribute(key, returnValues.attributes[key]);
+                  var value = returnValues.attributes[key];
+                  imageElement.data('cke-saved-' + key, value);
+                  imageElement.setAttribute(key, value);
                 }
                 // Delete the property if set to an empty string.
                 else {
@@ -62,6 +72,9 @@ CKEDITOR.plugins.add('drupalimage', {
               }
             }
           }
+
+          // Save snapshot for undo support.
+          editor.fire('saveSnapshot');
         }
 
         // Drupal.t() will not work inside CKEditor plugins because CKEditor
