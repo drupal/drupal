@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Component\Utility\String;
 
@@ -45,6 +46,13 @@ class EntityListController implements EntityListControllerInterface, EntityContr
    * @see entity_get_info()
    */
   protected $entityInfo;
+
+  /**
+   * The translation manager service.
+   *
+   * @var \Drupal\Core\StringTranslation\TranslationInterface
+   */
+  protected $translationManager;
 
   /**
    * {@inheritdoc}
@@ -203,6 +211,42 @@ class EntityListController implements EntityListControllerInterface, EntityContr
       }
     }
     return $build;
+  }
+
+  /**
+   * Translates a string to the current language or to a given language.
+   *
+   * See the t() documentation for details.
+   */
+  protected function t($string, array $args = array(), array $options = array()) {
+    return $this->getTranslationManager()->translate($string, $args, $options);
+  }
+
+  /**
+   * Gets the translation manager.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslationInterface
+   *   The translation manager.
+   */
+  protected function getTranslationManager() {
+    if (!$this->translationManager) {
+      $this->translationManager = \Drupal::translation();
+    }
+    return $this->translationManager;
+  }
+
+  /**
+   * Sets the translation manager for this form.
+   *
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   *   The translation manager.
+   *
+   * @return self
+   *   The entity form.
+   */
+  public function setTranslationManager(TranslationInterface $translation_manager) {
+    $this->translationManager = $translation_manager;
+    return $this;
   }
 
 }

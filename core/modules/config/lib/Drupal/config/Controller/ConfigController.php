@@ -10,7 +10,6 @@ namespace Drupal\config\Controller;
 use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Component\Archiver\ArchiveTar;
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\system\FileDownloadController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,7 +36,7 @@ class ConfigController implements ControllerInterface {
   /**
    * The file download controller.
    *
-   * @var \Drupal\Core\Controller\ControllerInterface
+   * @var \Drupal\system\FileDownloadController
    */
   protected $fileDownloadController;
 
@@ -45,10 +44,12 @@ class ConfigController implements ControllerInterface {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
+    $file_download = new FileDownloadController();
+    $file_download->setContainer($container);
     return new static(
       $container->get('config.storage'),
       $container->get('config.storage.staging'),
-      FileDownloadController::create($container)
+      $file_download
     );
   }
 
@@ -59,10 +60,10 @@ class ConfigController implements ControllerInterface {
    *   The target storage.
    * @param \Drupal\Core\Config\StorageInterface $source_storage
    *   The source storage
-   * @param \Drupal\Core\Controller\ControllerInterface $file_download_controller
+   * @param \Drupal\system\FileDownloadController $file_download_controller
    *   The file download controller.
    */
-  public function __construct(StorageInterface $target_storage, StorageInterface $source_storage, ControllerInterface $file_download_controller) {
+  public function __construct(StorageInterface $target_storage, StorageInterface $source_storage, FileDownloadController $file_download_controller) {
     $this->targetStorage = $target_storage;
     $this->sourceStorage = $source_storage;
     $this->fileDownloadController = $file_download_controller;

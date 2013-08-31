@@ -7,9 +7,7 @@
 
 namespace Drupal\system;
 
-use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -18,33 +16,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 /**
  * System file controller.
  */
-class FileDownloadController implements ControllerInterface {
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * Constructs a FileDownloadController object.
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   */
-  public function __construct(ModuleHandlerInterface $module_handler) {
-    $this->moduleHandler = $module_handler;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('module_handler')
-    );
-  }
+class FileDownloadController extends ControllerBase {
 
   /**
    * Handles private file transfers.
@@ -78,7 +50,7 @@ class FileDownloadController implements ControllerInterface {
 
     if (file_stream_wrapper_valid_scheme($scheme) && file_exists($uri)) {
       // Let other modules provide headers and controls access to the file.
-      $headers = $this->moduleHandler->invokeAll('file_download', array($uri));
+      $headers = $this->moduleHandler()->invokeAll('file_download', array($uri));
 
       foreach ($headers as $result) {
         if ($result == -1) {

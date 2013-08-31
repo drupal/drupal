@@ -10,7 +10,7 @@ namespace Drupal\Core\Menu\Plugin\Derivative;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Core\StringTranslation\TranslationManager;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Discovery\YamlDiscovery;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -44,7 +44,7 @@ class StaticLocalActionDeriver implements ContainerDerivativeInterface {
   /**
    * The translation manager.
    *
-   * @var \Drupal\Core\StringTranslation\TranslationManager
+   * @var \Drupal\Core\StringTranslation\TranslationInterface
    */
   protected $translationManager;
 
@@ -66,10 +66,10 @@ class StaticLocalActionDeriver implements ContainerDerivativeInterface {
    *   The base plugin ID.
    * @param\Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
-   * @param \Drupal\Core\StringTranslation\TranslationManager translation_manager
+   * @param \Drupal\Core\StringTranslation\TranslationInterface translation_manager
    *   The translation manager.
    */
-  public function __construct($base_plugin_id, ModuleHandlerInterface $module_handler, TranslationManager $translation_manager) {
+  public function __construct($base_plugin_id, ModuleHandlerInterface $module_handler, TranslationInterface $translation_manager) {
     $this->basePluginId = $base_plugin_id;
     $this->moduleHandler = $module_handler;
     $this->translationManager = $translation_manager;
@@ -103,13 +103,22 @@ class StaticLocalActionDeriver implements ContainerDerivativeInterface {
           $info += array('provider' => $module);
           // Make sure 'appears_on' is an array.
           $info['appears_on'] = (array) $info['appears_on'];
-          $info['title'] = $this->translationManager->translate($info['title']);
+          $info['title'] = $this->t($info['title']);
           $this->derivatives[$name] = $info + $base_plugin_definition;
         }
       }
     }
 
     return $this->derivatives;
+  }
+
+  /**
+   * Translates a string to the current language or to a given language.
+   *
+   * See the t() documentation for details.
+   */
+  protected function t($string, array $args = array(), array $options = array()) {
+    return $this->translationManager->translate($string, $args, $options);
   }
 
 }

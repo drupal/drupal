@@ -9,7 +9,7 @@ namespace Drupal\aggregator\Plugin\Derivative;
 
 use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
 use Drupal\Core\Database\Connection;
-use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -43,7 +43,7 @@ class AggregatorCategoryBlock implements ContainerDerivativeInterface {
   /**
    * The translation manager.
    *
-   * @var \Drupal\Core\StringTranslation\Translator\TranslatorInterface
+   * @var \Drupal\Core\StringTranslation\TranslationInterface
    */
   protected $translationManager;
 
@@ -54,10 +54,10 @@ class AggregatorCategoryBlock implements ContainerDerivativeInterface {
    *   The base plugin ID.
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection.
-   * @param \Drupal\Core\StringTranslation\Translator\TranslatorInterface $translation_manager
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
    *   The translation manager.
    */
-  public function __construct($base_plugin_id, Connection $connection, TranslatorInterface $translation_manager) {
+  public function __construct($base_plugin_id, Connection $connection, TranslationInterface $translation_manager) {
     $this->basePluginId = $base_plugin_id;
     $this->connection = $connection;
     $this->translationManager = $translation_manager;
@@ -83,7 +83,7 @@ class AggregatorCategoryBlock implements ContainerDerivativeInterface {
     }
     $result = $this->connection->query('SELECT cid, title FROM {aggregator_category} ORDER BY title WHERE cid = :cid', array(':cid' => $derivative_id))->fetchObject();
     $this->derivatives[$derivative_id] = $base_plugin_definition;
-    $this->derivatives[$derivative_id]['admin_label'] = $this->translationManager->translate('@title category latest items', array('@title' => $result->title));
+    $this->derivatives[$derivative_id]['admin_label'] = $this->t('@title category latest items', array('@title' => $result->title));
     return $this->derivatives[$derivative_id];
   }
 
@@ -95,9 +95,18 @@ class AggregatorCategoryBlock implements ContainerDerivativeInterface {
     $result = $this->connection->query('SELECT cid, title FROM {aggregator_category} ORDER BY title');
     foreach ($result as $category) {
       $this->derivatives[$category->cid] = $base_plugin_definition;
-      $this->derivatives[$category->cid]['admin_label'] = $this->translationManager->translate('@title category latest items', array('@title' => $category->title));
+      $this->derivatives[$category->cid]['admin_label'] = $this->t('@title category latest items', array('@title' => $category->title));
     }
     return $this->derivatives;
+  }
+
+  /**
+   * Translates a string to the current language or to a given language.
+   *
+   * See the t() documentation for details.
+   */
+  protected function t($string, array $args = array(), array $options = array()) {
+    return $this->translationManager->translate($string, $args, $options);
   }
 
 }
