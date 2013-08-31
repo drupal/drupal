@@ -280,7 +280,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       'files[field_' . $name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_' . 0 . ']' => drupal_realpath($text_file->getFileUri()),
       'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $comment_body = $this->randomName(),
     );
-    $this->drupalPost('node/' . $node->nid, $edit, t('Save'));
+    $this->drupalPost('node/' . $node->id(), $edit, t('Save'));
 
     // Get the comment ID.
     preg_match('/comment-([0-9]+)/', $this->getUrl(), $matches);

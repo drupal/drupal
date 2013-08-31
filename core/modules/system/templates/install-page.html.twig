@@ -20,59 +20,56 @@
   {{ scripts }}
 </head>
 <body class="install-page">
-  <div class="vertically-centered">
-    <div class="vertically-centered__inner">
-      <div id="page">
-        <div id="header">
-          {% if site_name %}
-            <h1 id="site-name">
-              <span>{{ site_name }}</span>
-            </h1>
-          {% endif %}
+  <div id="page">
+    <div id="header">
+      {% if site_name %}
+        <h1 id="site-name">
+          <span>{{ site_name }}</span>
+        </h1>
+      {% endif %}
 
-          {% if site_slogan %}
-            <div id="site-slogan">{{ site_slogan }}</div>
-          {% endif %}
+      {% if site_slogan %}
+        <div id="site-slogan">{{ site_slogan }}</div>
+      {% endif %}
 
-          {% if header %}
-            <div id="header-region">
-              {{ header }}
-            </div>
-          {% endif %}
+      {% if header %}
+        <div id="header-region">
+          {{ header }}
+        </div>
+      {% endif %}
 
-        </div> <!-- /header -->
+    </div> <!-- /header -->
 
-        <div id="container" class="clearfix">
+    <div id="container" class="clearfix">
 
-          {% if sidebar_first %}
-            <div id="sidebar-first" class="column sidebar">
-              {{ sidebar_first }}
-            </div> <!-- /sidebar-first -->
-          {% endif %}
+      {% if sidebar_first %}
+        <div id="sidebar-first" class="column sidebar">
+          {{ sidebar_first }}
+        </div> <!-- /sidebar-first -->
+      {% endif %}
 
-          <div id="content" class="column">
-              {% if title %}<h1 class="title" id="page-title">{{ title }}</h1>{% endif %}
-              {% if messages %}{{ messages }}{% endif %}
-              <div id="content-content" class="clearfix">
-                {{ content }}
-          </div> <!-- /content -->
+      <div id="content" class="column">
+        {% if title %}<h1 class="title" id="page-title">{{ title }}</h1>{% endif %}
+        {% if messages %}{{ messages }}{% endif %}
+        <div id="content-content" class="clearfix">
+          {{ content }}
+        </div> <!-- /content-content -->
+      </div> <!-- /content -->
 
-          {% if sidebar_second %}
-            <div id="sidebar-second" class="column sidebar">
-              {{ sidebar_second }}
-            </div> <!-- /sidebar-second -->
-          {% endif %}
+      {% if sidebar_second %}
+        <div id="sidebar-second" class="column sidebar">
+          {{ sidebar_second }}
+        </div> <!-- /sidebar-second -->
+      {% endif %}
 
-        </div> <!-- /container -->
+    </div> <!-- /container -->
 
-        <div id="footer-wrapper">
-          <div id="footer">
-            {% if footer %}{{ footer }}{% endif %}
-          </div> <!-- /footer -->
-        </div> <!-- /footer-wrapper -->
+    <div id="footer-wrapper">
+      <div id="footer">
+        {% if footer %}{{ footer }}{% endif %}
+      </div> <!-- /footer -->
+    </div> <!-- /footer-wrapper -->
 
-      </div> <!-- /page -->
-    </div>
-  </div>
+  </div> <!-- /page -->
 </body>
 </html>

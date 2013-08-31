@@ -27,7 +27,7 @@ class Tasks extends InstallTasks {
    * Returns a human-readable name string for MySQL and equivalent databases.
    */
   public function name() {
-    return t('MySQL, MariaDB, or equivalent');
+    return t('MySQL, MariaDB, Percona Server, or equivalent');
   }
 
   /**

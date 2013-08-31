@@ -10,18 +10,14 @@
  * book page, user etc.
  */
 
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
 use Drupal\entity\Entity\EntityDisplay;
-use Drupal\file\Entity\File;
-use Drupal\node\NodeTypeInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityNG;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Drupal\Core\Language\Language;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\field\FieldInterface;
+use Drupal\file\Entity\File;
 
 /**
  * Comment is awaiting approval.
@@ -268,12 +264,8 @@ function comment_menu() {
   );
   $items['comment/%comment/delete'] = array(
     'title' => 'Delete',
-    'page callback' => 'comment_confirm_delete_page',
-    'page arguments' => array(1),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'delete'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'comment.admin.inc',
+    'route_name' => 'comment_confirm_delete',
     'weight' => 20,
   );
   $items['comment/reply/%/%comment_entity_reply/%'] = array(
@@ -454,8 +446,8 @@ function comment_get_recent($number = 10) {
  */
 function comment_new_page_count($num_comments, $new_replies, EntityInterface $entity, $field_name = 'comment') {
   $instance = Drupal::service('field.info')->getInstance($entity->entityType(), $entity->bundle(), $field_name);
-  $mode = $instance['settings']['default_mode'];
-  $comments_per_page = $instance['settings']['per_page'];
+  $mode = $instance->getFieldSetting('default_mode');
+  $comments_per_page = $instance->getFieldSetting('per_page');
   $pagenum = NULL;
   $flat = $mode == COMMENT_MODE_FLAT ? TRUE : FALSE;
   if ($num_comments <= $comments_per_page) {
@@ -601,7 +593,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
         }
         // Provide a link to new comment form.
         if ($commenting_status == COMMENT_OPEN) {
-          $comment_form_location = $instance['settings']['form_location'];
+          $comment_form_location = $instance->getFieldSetting('form_location');
           if (user_access('post comments')) {
             $links['comment-add'] = array(
               'title' => t('Add new comment'),
@@ -1077,26 +1069,16 @@ function comment_entity_insert(EntityInterface $entity) {
     ));
     foreach ($fields as $field_name => $detail) {
       // There is at least one comment field, the query needs to be executed.
-      // @todo Tidy when all entities are NG.
-     // Default to current user when entity does not have a uid property.
+      // Default to current user when entity does not have a uid property.
       $last_comment_uid = $user->id();
-      if (!empty($entity->uid)) {
-        if (is_object($entity->uid)) {
-          $last_comment_uid = $entity->uid->value;
-        }
-        else {
-          $last_comment_uid = $entity->uid;
-        }
+      // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
+      if ($entity->getPropertyDefinition('uid')) {
+        $last_comment_uid = $entity->get('uid')->value;
       }
       // Default to REQUEST_TIME when entity does not have a changed property.
       $last_comment_timestamp = REQUEST_TIME;
-      if (!empty($entity->changed)) {
-        if (is_object($entity->changed)) {
-          $last_comment_timestamp = $entity->changed->value;
-        }
-        else {
-          $last_comment_timestamp = $entity->changed;
-        }
+      if ($entity instanceof EntityChangedInterface) {
+        $last_comment_timestamp = $entity->getChangedTime();
       }
       $query->values(array(
         'entity_id' => $entity->id(),
@@ -1163,9 +1145,9 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
 
   if ($index_comments) {
     foreach (Drupal::service('comment.manager')->getFields('node') as $field_name => $info) {
-      $instance = Drupal::service('field.info')->getInstance('node', $node->type, $field_name);
-      $mode = $instance['settings']['default_mode'];
-      $comments_per_page = $instance['settings']['per_page'];
+      $instance = Drupal::service('field.info')->getInstance('node', $node->getType(), $field_name);
+      $mode = $instance->getFieldSetting('default_mode');
+      $comments_per_page = $instance->getFieldSetting('per_page');
       if (($items = field_get_items($node, $field_name)) &&
         _comment_get_default_status($items) && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
         $comments = comment_load_multiple($cids);
@@ -1368,9 +1350,8 @@ function comment_get_display_ordinal($cid, $instance) {
   if (!user_access('administer comments')) {
     $query->condition('c1.status', COMMENT_PUBLISHED);
   }
-  $mode = $instance['settings']['default_mode'];
 
-  if ($mode == COMMENT_MODE_FLAT) {
+  if ($instance->getFieldSetting('default_mode') == COMMENT_MODE_FLAT) {
     // For flat comments, cid is used for ordering comments due to
     // unpredictable behavior with timestamp, so we make the same assumption
     // here.
@@ -1402,7 +1383,7 @@ function comment_get_display_ordinal($cid, $instance) {
  */
 function comment_get_display_page($cid, $instance) {
   $ordinal = comment_get_display_ordinal($cid, $instance);
-  $comments_per_page = $instance['settings']['per_page'];
+  $comments_per_page = $instance->getFieldSetting('per_page');
   return floor($ordinal / $comments_per_page);
 }
 
@@ -1625,9 +1606,8 @@ function template_preprocess_comment(&$variables) {
     $variables['attributes']['class'][] = 'by-anonymous';
   }
   else {
-    // @todo Drop instanceof condition after http://drupal.org/node/1818580 in.
-    if (($comment_entity instanceof EntityNG && !empty($comment_entity->uid->target_id) && $comment->uid->target_id == $comment_entity->uid->target_id) ||
-        (!empty($comment_entity->uid) && $comment->uid->target_id == $comment_entity->uid)) {
+    // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
+    if ($comment_entity->getPropertyDefinition('uid') && $comment->uid->target_id == $comment_entity->get('uid')->value) {
       $variables['attributes']['class'][] = 'by-' . $comment_entity->entityType() . '-author';
     }
     if ($comment->uid->target_id == $variables['user']->id()) {
@@ -1653,7 +1633,6 @@ function template_preprocess_comment(&$variables) {
 function theme_comment_post_forbidden($variables) {
   $entity = $variables['entity'];
   $field_name = $variables['field_name'];
-  $instance = Drupal::service('field.info')->getInstance($entity->entityType(), $entity->bundle(), $field_name);
   global $user;
 
   // Since this is expensive to compute, we cache it so that a page with many
@@ -1669,14 +1648,15 @@ function theme_comment_post_forbidden($variables) {
     }
 
     if ($authenticated_post_comments) {
+      $instance = Drupal::service('field.info')->getInstance($entity->entityType(), $entity->bundle(), $field_name);
       // We cannot use drupal_get_destination() because these links
       // sometimes appear on /node and taxonomy listing pages.
-      if ($instance['settings']['form_location'] == COMMENT_FORM_SEPARATE_PAGE) {
-        $destination = array('destination' => 'comment/reply/' . $entity->entityType() . '/' . $entity->id() . '/' . $field_name .'#comment-form');
+      if ($instance->getFieldSetting('form_location') == COMMENT_FORM_SEPARATE_PAGE) {
+        $destination = array('destination' => 'comment/reply/' . $entity->entityType() . '/' . $entity->id() . '/' . $field_name . '#comment-form');
       }
       else {
         $uri = $entity->uri();
-        $destination = array('destination' => $uri['path'] . "#comment-form");
+        $destination = array('destination' => $uri['path'] . '#comment-form');
       }
 
       if (Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {

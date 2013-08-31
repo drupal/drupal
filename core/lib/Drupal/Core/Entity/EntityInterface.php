@@ -138,6 +138,9 @@ interface EntityInterface extends IdentifiableInterface, ComplexDataInterface, A
   /**
    * Saves an entity permanently.
    *
+   * When saving existing entities, the entity is assumed to be complete,
+   * partial updates of entities are not supported.
+   *
    * @return
    *   Either SAVED_NEW or SAVED_UPDATED, depending on the operation performed.
    *

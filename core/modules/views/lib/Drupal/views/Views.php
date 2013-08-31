@@ -7,8 +7,6 @@
 
 namespace Drupal\views;
 
-use Drupal;
-
 /**
  * Static service container wrapper for views.
  */
@@ -21,7 +19,7 @@ class Views {
    *   Returns a views data cache object.
    */
   public static function viewsData() {
-    return Drupal::service('views.views_data');
+    return \Drupal::service('views.views_data');
   }
 
   /**
@@ -31,7 +29,7 @@ class Views {
    *   Returns a views data helper object.
    */
   public static function viewsDataHelper() {
-    return Drupal::service('views.views_data_helper');
+    return \Drupal::service('views.views_data_helper');
   }
 
   /**
@@ -41,7 +39,7 @@ class Views {
    *   Returns a views executable factory.
    */
   public static function executableFactory() {
-    return Drupal::service('views.executable');
+    return \Drupal::service('views.executable');
   }
 
   /**
@@ -51,7 +49,7 @@ class Views {
    *   Returns a view analyzer object.
    */
   public static function analyzer() {
-    return Drupal::service('views.analyzer');
+    return \Drupal::service('views.analyzer');
   }
 
   /**
@@ -63,7 +61,7 @@ class Views {
    * @return \Drupal\views\Plugin\ViewsPluginManager
    */
   public static function pluginManager($type) {
-    return Drupal::service('plugin.manager.views.' . $type);
+    return \Drupal::service('plugin.manager.views.' . $type);
   }
 
   /**
@@ -72,7 +70,7 @@ class Views {
    * @return \Drupal\views\Plugin\ViewsHandlerManager
    */
   public static function handlerManager($type) {
-    return Drupal::service('plugin.manager.views.' . $type);
+    return \Drupal::service('plugin.manager.views.' . $type);
   }
 
   /**
@@ -85,7 +83,7 @@ class Views {
    *   A view executable instance, from the loaded entity.
    */
   public static function getView($id) {
-    $view = Drupal::service('plugin.manager.entity')->getStorageController('view')->load($id);
+    $view = \Drupal::service('plugin.manager.entity')->getStorageController('view')->load($id);
     if ($view) {
       return static::executableFactory()->get($view);
     }

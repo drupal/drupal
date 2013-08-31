@@ -902,7 +902,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
     $result = array();
     foreach ($query->execute() as $row) {
       $topic = $nodes[$row->nid];
-      $topic->comment_mode = !empty($topic->comment_node_forum[Language::LANGCODE_NOT_SPECIFIED][0]['comment']) ? $topic->comment_node_forum[Language::LANGCODE_NOT_SPECIFIED][0]['comment'] : COMMENT_HIDDEN;
+      $topic->comment_mode = $topic->comment_node_forum;
 
       foreach ($row as $key => $value) {
         $topic->{$key} = $value;

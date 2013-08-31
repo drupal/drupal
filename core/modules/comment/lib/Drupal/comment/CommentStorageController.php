@@ -9,7 +9,7 @@ namespace Drupal\comment;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\DatabaseStorageControllerNG;
-use Drupal\comment\CommentInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 
 /**
  * Defines the controller class for comments.
@@ -40,7 +40,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
    * {@inheritdoc}
    */
   protected function attachLoad(&$records, $load_revision = FALSE) {
-    // Set up standard comment properties.
+    // Prepare standard comment fields.
     foreach ($records as $key => &$record) {
       $record->name = $record->uid ? $record->registered_name : $record->name;
     }
@@ -101,12 +101,12 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
           'comment_count' => 0,
           // Use the created date of the entity if it's set,
           // or default to REQUEST_TIME.
-          'last_comment_timestamp' => isset($entity->created->value) ? $entity->created->value : REQUEST_TIME,
+          'last_comment_timestamp' => ($entity instanceof EntityChangedInterface) ? $entity->getChangedTime() : REQUEST_TIME,
           'last_comment_name' => '',
-          // @todo Refactor when http://drupal.org/node/585838 lands.
+          // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
           // Get the user ID from the entity if it's set, or default to the
           // currently logged in user.
-          'last_comment_uid' => isset($entity->uid->target_id) ? $entity->uid->target_id : $user->id(),
+          'last_comment_uid' => $entity->getPropertyDefinition('uid') ? $entity->get('uid')->value : $user->id(),
         ))
         ->condition('entity_id', $comment->entity_id->value)
         ->condition('entity_type', $comment->entity_type->value)

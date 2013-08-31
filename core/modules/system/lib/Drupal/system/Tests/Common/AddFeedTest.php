@@ -96,11 +96,13 @@ class AddFeedTest extends WebTestBase {
    * @see http://drupal.org/node/1211668
    */
   function testFeedIconEscaping() {
-    $variables = array();
-    $variables['url'] = 'node';
-    $variables['title'] = '<>&"\'';
-    $text = theme_feed_icon($variables);
+    $variables = array(
+      '#theme' => 'feed_icon',
+      '#url' => 'node',
+      '#title' => '<>&"\'',
+    );
+    $text = drupal_render($variables);
     preg_match('/title="(.*?)"/', $text, $matches);
-    $this->assertEqual($matches[1], 'Subscribe to &amp;&quot;&#039;', 'theme_feed_icon() escapes reserved HTML characters.');
+    $this->assertEqual($matches[1], 'Subscribe to &amp;&quot;&#039;', 'feed_icon template escapes reserved HTML characters.');
   }
 }
