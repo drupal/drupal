@@ -1159,7 +1159,7 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
 
   if ($index_comments) {
     foreach (Drupal::service('comment.manager')->getFields('node') as $field_name => $info) {
-      $instance = Drupal::service('field.info')->getInstance('node', $node->type, $field_name);
+      $instance = Drupal::service('field.info')->getInstance('node', $node->getType(), $field_name);
       $mode = $instance['settings']['default_mode'];
       $comments_per_page = $instance['settings']['per_page'];
       if (($items = field_get_items($node, $field_name)) &&

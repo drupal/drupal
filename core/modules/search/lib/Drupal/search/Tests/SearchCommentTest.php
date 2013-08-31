@@ -164,7 +164,7 @@ class SearchCommentTest extends SearchTestBase {
     $this->setRolePermissions($this->admin_role);
     $this->assertCommentAccess(FALSE, 'Admin user has search permission but no access comments permission, comments should not be indexed');
 
-    $this->drupalGet('node/' . $this->node->nid);
+    $this->drupalGet('node/' . $this->node->id());
     $this->setRolePermissions($this->admin_role, TRUE);
     $this->assertCommentAccess(TRUE, 'Admin user has search permission and access comments permission, comments should be indexed');
 
