@@ -5,6 +5,7 @@
  * Administrative page callbacks for the Forum module.
  */
 
+use Drupal\taxonomy\Form\OverviewTerms;
 use Drupal\taxonomy\Entity\Term;
 
 /**
@@ -22,7 +23,9 @@ function forum_overview($form, &$form_state) {
 
   $vid = $config->get('vocabulary');
   $vocabulary = entity_load('taxonomy_vocabulary', $vid);
-  $form = taxonomy_overview_terms($form, $form_state, $vocabulary);
+  // @todo temporary, will be fixed in http://drupal.org/node/1974210.
+  $overview = OverviewTerms::create(Drupal::getContainer());
+  $form = $overview->buildForm($form, $form_state, $vocabulary);
 
   foreach (element_children($form['terms']) as $key) {
     if (isset($form['terms'][$key]['#term'])) {
@@ -50,7 +53,8 @@ function forum_overview($form, &$form_state) {
   unset($form['actions']['reset_alphabetical']);
 
   // The form needs to have submit and validate handlers set explicitly.
-  $form['#submit'] = array('taxonomy_overview_terms_submit'); // Use the existing taxonomy overview submit handler.
+  // Use the existing taxonomy overview submit handler.
+  $form['#submit'] = array(array($overview, 'submitForm'));
   $form['terms']['#empty'] = t('No containers or forums available. <a href="@container">Add container</a> or <a href="@forum">Add forum</a>.', array('@container' => url('admin/structure/forum/add/container'), '@forum' => url('admin/structure/forum/add/forum')));
   return $form;
 }
