@@ -50,7 +50,7 @@ class AreaEntityTest extends ViewTestBase {
    */
   public function testEntityAreaData() {
     $data = $this->container->get('views.views_data')->get('views');
-    $entity_info = $this->container->get('plugin.manager.entity')->getDefinitions();
+    $entity_info = $this->container->get('entity.manager')->getDefinitions();
 
     $expected_entities = array_filter($entity_info, function($info) {
       return !empty($info['controllers']['render']);
@@ -82,7 +82,7 @@ class AreaEntityTest extends ViewTestBase {
     for ($i = 0; $i < 2; $i++) {
       $random_label = $this->randomName();
       $data = array('bundle' => 'entity_test_render', 'name' => $random_label);
-      $entity_test = $this->container->get('plugin.manager.entity')->getStorageController('entity_test_render')->create($data);
+      $entity_test = $this->container->get('entity.manager')->getStorageController('entity_test_render')->create($data);
       $entity_test->save();
       $entities[] = $entity_test;
     }

@@ -88,7 +88,7 @@ class DateTimeDefaultFormatter extends FormatterBase implements ContainerFactory
       $configuration['label'],
       $configuration['view_mode'],
       $container->get('date'),
-      $container->get('plugin.manager.entity')->getStorageController('date_format')
+      $container->get('entity.manager')->getStorageController('date_format')
     );
   }
 

@@ -49,7 +49,7 @@ class MenuDeleteForm extends EntityConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')->getStorageController('menu_link'),
+      $container->get('entity.manager')->getStorageController('menu_link'),
       $container->get('database')
     );
   }

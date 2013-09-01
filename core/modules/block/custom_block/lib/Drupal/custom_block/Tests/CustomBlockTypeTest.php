@@ -151,7 +151,7 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
 
     // Get the custom block storage controller.
     $storage_controller = $this->container
-      ->get('plugin.manager.entity')
+      ->get('entity.manager')
       ->getStorageController('custom_block');
 
     // Test that adding a block from the 'place blocks' form sends you to the

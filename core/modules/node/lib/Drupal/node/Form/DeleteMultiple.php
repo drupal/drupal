@@ -60,7 +60,7 @@ class DeleteMultiple extends ConfirmFormBase implements ContainerInjectionInterf
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('user.tempstore'),
-      $container->get('plugin.manager.entity')
+      $container->get('entity.manager')
     );
   }
 

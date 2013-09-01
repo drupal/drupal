@@ -46,7 +46,7 @@ class HtmlEntityFormController extends HtmlFormController {
    * @endcode
    */
   protected function getFormObject(Request $request, $form_arg) {
-    $manager = $this->container->get('plugin.manager.entity');
+    $manager = $this->container->get('entity.manager');
 
     // If no operation is provided, use 'default'.
     $form_arg .= '.default';

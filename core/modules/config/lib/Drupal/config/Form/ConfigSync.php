@@ -107,7 +107,7 @@ class ConfigSync extends FormBase {
       $container->get('lock'),
       $container->get('event_dispatcher'),
       $container->get('config.factory'),
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('url_generator')
     );
   }

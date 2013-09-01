@@ -70,7 +70,7 @@ class CategoryDeleteForm extends ConfirmFormBase implements ContainerInjectionIn
   public static function create(ContainerInterface $container) {
     return new static (
       $container->get('module_handler'),
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('aggregator.category.storage')
     );
   }

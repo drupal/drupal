@@ -49,7 +49,7 @@ class QueryGroupByTest extends ViewUnitTestBase {
 
     $this->installSchema('entity_test', array('entity_test'));
 
-    $this->storageController = $this->container->get('plugin.manager.entity')->getStorageController('entity_test');
+    $this->storageController = $this->container->get('entity.manager')->getStorageController('entity_test');
   }
 
 

@@ -39,7 +39,7 @@ class CommentPreviewTest extends CommentTestBase {
     user_install_picture_field();
 
     // Add the basic_html filter format from the standard install profile.
-    $filter_format_storage_controller = $this->container->get('plugin.manager.entity')->getStorageController('filter_format');
+    $filter_format_storage_controller = $this->container->get('entity.manager')->getStorageController('filter_format');
     $filter_format = $filter_format_storage_controller->create(array(
       'format' => 'basic_html',
       'name' => 'Basic HTML',

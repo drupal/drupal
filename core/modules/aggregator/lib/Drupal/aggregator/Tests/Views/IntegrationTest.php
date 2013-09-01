@@ -58,8 +58,8 @@ class IntegrationTest extends ViewUnitTestBase {
 
     ViewTestData::importTestViews(get_class($this), array('aggregator_test_views'));
 
-    $this->itemStorageController = $this->container->get('plugin.manager.entity')->getStorageController('aggregator_item');
-    $this->feedStorageController = $this->container->get('plugin.manager.entity')->getStorageController('aggregator_feed');
+    $this->itemStorageController = $this->container->get('entity.manager')->getStorageController('aggregator_item');
+    $this->feedStorageController = $this->container->get('entity.manager')->getStorageController('aggregator_feed');
   }
 
   /**

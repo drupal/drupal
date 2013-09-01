@@ -1,4 +1,4 @@
 services:
   content_translation.synchronizer:
     class: Drupal\content_translation\FieldTranslationSynchronizer
-    arguments: ['@plugin.manager.entity']
+    arguments: ['@entity.manager']

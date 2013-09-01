@@ -79,7 +79,7 @@ class FieldListController extends ConfigEntityListController {
     return new static(
       $entity_type,
       $entity_info,
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('module_handler'),
       $container->get('plugin.manager.entity.field.field_type')
     );

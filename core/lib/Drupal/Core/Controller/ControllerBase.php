@@ -38,7 +38,7 @@ abstract class ControllerBase extends ContainerAware {
    *   The entity manager service.
    */
   protected function entityManager() {
-    return $this->container->get('plugin.manager.entity');
+    return $this->container->get('entity.manager');
   }
 
   /**

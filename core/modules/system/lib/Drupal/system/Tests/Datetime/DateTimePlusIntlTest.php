@@ -76,7 +76,7 @@ class DateTimePlusIntlTest extends DrupalUnitTestBase {
     $this->assertTrue($intl_date->canUseIntl(), 'DateTimePlus object can use intl when provided with country and langcode settings.');
     $this->assertFalse($php_date->canUseIntl(), 'DateTimePlus object will fallback to use PHP when not provided with country setting.');
 
-    $default_formats = $this->container->get('plugin.manager.entity')
+    $default_formats = $this->container->get('entity.manager')
       ->getStorageController('date_format')
       ->loadMultiple();
 

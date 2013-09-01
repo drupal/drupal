@@ -78,7 +78,7 @@ class ViewsUIController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('views.views_data'),
       $container->get('url_generator'),
       $container->get('link_generator')

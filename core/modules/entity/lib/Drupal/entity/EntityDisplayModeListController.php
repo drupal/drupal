@@ -49,7 +49,7 @@ class EntityDisplayModeListController extends ConfigEntityListController {
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
-    $entity_manager = $container->get('plugin.manager.entity');
+    $entity_manager = $container->get('entity.manager');
     return new static(
       $entity_type,
       $entity_info,

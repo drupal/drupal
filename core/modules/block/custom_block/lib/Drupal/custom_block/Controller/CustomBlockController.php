@@ -41,7 +41,7 @@ class CustomBlockController implements ContainerInjectionInterface {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    $entity_manager = $container->get('plugin.manager.entity');
+    $entity_manager = $container->get('entity.manager');
     return new static(
       $entity_manager,
       $entity_manager->getStorageController('custom_block'),

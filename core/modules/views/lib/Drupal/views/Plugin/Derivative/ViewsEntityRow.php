@@ -71,7 +71,7 @@ class ViewsEntityRow implements ContainerDerivativeInterface {
   public static function create(ContainerInterface $container, $base_plugin_id) {
     return new static(
       $base_plugin_id,
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('views.views_data')
     );
   }

@@ -45,7 +45,7 @@ class ShortcutSetDeleteForm extends EntityConfirmFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('database'),
-      $container->get('plugin.manager.entity')->getStorageController('shortcut_set')
+      $container->get('entity.manager')->getStorageController('shortcut_set')
     );
   }
 

@@ -189,7 +189,7 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     $this->assertTrue($this->container->get('module_handler')->moduleExists('views'), 'Views is enabled after the upgrade.');
-    $view = $this->container->get('plugin.manager.entity')->getStorageController('view')->load('frontpage');
+    $view = $this->container->get('entity.manager')->getStorageController('view')->load('frontpage');
     $this->assertTrue($view->status(), 'The frontpage view is enabled after the upgrade.');
   }
 

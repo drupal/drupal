@@ -56,7 +56,7 @@ class DbLogController extends ControllerBase implements ContainerInjectionInterf
       $container->get('database'),
       $container->get('module_handler'),
       $container->get('date'),
-      $container->get('plugin.manager.entity')->getStorageController('user')
+      $container->get('entity.manager')->getStorageController('user')
     );
   }
 

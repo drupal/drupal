@@ -114,7 +114,7 @@ class DefaultViewsTest extends ViewTestBase {
    */
   public function testDefaultViews() {
     // Get all default views.
-    $controller = $this->container->get('plugin.manager.entity')->getStorageController('view');
+    $controller = $this->container->get('entity.manager')->getStorageController('view');
     $views = $controller->loadMultiple();
 
     foreach ($views as $name => $view_storage) {

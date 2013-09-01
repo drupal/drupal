@@ -59,7 +59,7 @@ class MenuFormController extends EntityFormController {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.query'),
-      $container->get('plugin.manager.entity')->getStorageController('menu_link')
+      $container->get('entity.manager')->getStorageController('menu_link')
     );
   }
 

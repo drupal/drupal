@@ -41,7 +41,7 @@ class UserEntityTest extends DrupalUnitTestBase {
    * @see \Drupal\user\Entity\User::removeRole()
    */
   public function testUserMethods() {
-    $role_storage = $this->container->get('plugin.manager.entity')->getStorageController('user_role');
+    $role_storage = $this->container->get('entity.manager')->getStorageController('user_role');
     $role_storage->create(array('id' => 'test_role_one'))->save();
     $role_storage->create(array('id' => 'test_role_two'))->save();
     $role_storage->create(array('id' => 'test_role_three'))->save();

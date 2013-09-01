@@ -43,7 +43,7 @@ class EntityViewControllerTest extends WebTestBase {
     for ($i = 0; $i < 2; $i++) {
       $random_label = $this->randomName();
       $data = array('bundle' => 'entity_test_render', 'name' => $random_label);
-      $entity_test = $this->container->get('plugin.manager.entity')->getStorageController('entity_test_render')->create($data);
+      $entity_test = $this->container->get('entity.manager')->getStorageController('entity_test_render')->create($data);
       $entity_test->save();
       $this->entities[] = $entity_test;
     }

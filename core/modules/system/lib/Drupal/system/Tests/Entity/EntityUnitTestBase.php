@@ -39,7 +39,7 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->entityManager = $this->container->get('plugin.manager.entity');
+    $this->entityManager = $this->container->get('entity.manager');
     $this->state = $this->container->get('state');
 
     $this->installSchema('user', 'users');

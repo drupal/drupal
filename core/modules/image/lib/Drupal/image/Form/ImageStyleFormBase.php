@@ -38,7 +38,7 @@ abstract class ImageStyleFormBase extends EntityFormController {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')->getStorageController('image_style')
+      $container->get('entity.manager')->getStorageController('image_style')
     );
   }
 

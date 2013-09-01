@@ -83,7 +83,7 @@ class FieldInstanceStorageController extends ConfigStorageController {
       $container->get('config.factory'),
       $container->get('config.storage'),
       $container->get('entity.query'),
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('module_handler'),
       $container->get('state')
     );

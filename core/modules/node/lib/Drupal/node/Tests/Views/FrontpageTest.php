@@ -40,7 +40,7 @@ class FrontPageTest extends ViewTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $this->nodeStorageController = $this->container->get('plugin.manager.entity')->getStorageController('node');
+    $this->nodeStorageController = $this->container->get('entity.manager')->getStorageController('node');
   }
 
   /**

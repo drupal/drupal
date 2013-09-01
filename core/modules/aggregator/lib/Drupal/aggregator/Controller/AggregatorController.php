@@ -86,7 +86,7 @@ class AggregatorController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('database'),
       $container->get('config.factory'),
       $container->get('module_handler'),

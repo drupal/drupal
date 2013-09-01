@@ -95,7 +95,7 @@ class EditController implements ContainerInjectionInterface {
       $container->get('user.tempstore'),
       $container->get('edit.metadata.generator'),
       $container->get('edit.editor.selector'),
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('field.info')
     );
   }

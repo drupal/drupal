@@ -86,7 +86,7 @@ class RolesRidTest extends UnitTestCase {
     //   entity_get_info(), which in turn wraps \Drupal::entityManager(). Set
     //   the entity manager until this is fixed.
     $container = new ContainerBuilder();
-    $container->set('plugin.manager.entity', $entity_manager);
+    $container->set('entity.manager', $entity_manager);
     \Drupal::setContainer($container);
 
     $roles_rid_argument = new RolesRid(array(), 'users_roles_rid', array(), $entity_manager);

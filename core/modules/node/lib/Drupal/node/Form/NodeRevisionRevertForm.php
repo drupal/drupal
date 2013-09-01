@@ -47,7 +47,7 @@ class NodeRevisionRevertForm extends ConfirmFormBase implements ContainerInjecti
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')->getStorageController('node')
+      $container->get('entity.manager')->getStorageController('node')
     );
   }
 

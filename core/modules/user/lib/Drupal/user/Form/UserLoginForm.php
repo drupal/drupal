@@ -62,7 +62,7 @@ class UserLoginForm extends FormBase {
     return new static(
       $container->get('config.factory'),
       $container->get('flood'),
-      $container->get('plugin.manager.entity')->getStorageController('user')
+      $container->get('entity.manager')->getStorageController('user')
     );
   }
 

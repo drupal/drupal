@@ -55,7 +55,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')->getStorageController('view'),
+      $container->get('entity.manager')->getStorageController('view'),
       $container->get('views.executable')
     );
   }

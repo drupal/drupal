@@ -44,9 +44,9 @@ class ForumController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('config.factory'),
-      $container->get('plugin.manager.entity')->getStorageController('taxonomy_term')
+      $container->get('entity.manager')->getStorageController('taxonomy_term')
     );
   }
 

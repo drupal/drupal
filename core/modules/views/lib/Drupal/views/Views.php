@@ -83,7 +83,7 @@ class Views {
    *   A view executable instance, from the loaded entity.
    */
   public static function getView($id) {
-    $view = \Drupal::service('plugin.manager.entity')->getStorageController('view')->load($id);
+    $view = \Drupal::service('entity.manager')->getStorageController('view')->load($id);
     if ($view) {
       return static::executableFactory()->get($view);
     }

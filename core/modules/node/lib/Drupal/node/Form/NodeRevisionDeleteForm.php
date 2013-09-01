@@ -67,7 +67,7 @@ class NodeRevisionDeleteForm extends ConfirmFormBase implements ContainerInjecti
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    $entity_manager = $container->get('plugin.manager.entity');
+    $entity_manager = $container->get('entity.manager');
     return new static(
       $entity_manager->getStorageController('node'),
       $entity_manager->getStorageController('node_type'),

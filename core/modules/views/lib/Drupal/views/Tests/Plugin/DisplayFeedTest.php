@@ -92,7 +92,7 @@ class DisplayFeedTest extends PluginTestBase {
     $result = $this->xpath('//title');
     $this->assertEqual($result[0], $site_name, 'The site title is used for the feed title.');
 
-    $view = $this->container->get('plugin.manager.entity')->getStorageController('view')->load('test_feed_display');
+    $view = $this->container->get('entity.manager')->getStorageController('view')->load('test_feed_display');
     $display = &$view->getDisplay('feed_1');
     $display['display_options']['sitename_title'] = 0;
     $view->save();

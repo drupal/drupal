@@ -33,7 +33,7 @@ class ConfigEntityUnitTest extends DrupalUnitTestBase {
    * Tests storage controller methods.
    */
   public function testStorageControllerMethods() {
-    $controller = $this->container->get('plugin.manager.entity')->getStorageController('config_test');
+    $controller = $this->container->get('entity.manager')->getStorageController('config_test');
     $info = entity_get_info('config_test');
 
     $expected = $info['config_prefix'] . '.';
