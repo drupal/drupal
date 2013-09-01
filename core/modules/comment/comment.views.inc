@@ -601,9 +601,9 @@ function comment_views_data_alter(&$data) {
     ),
   );
 
-  // Provide a integration for each entity type.
+  // Provide a integration for each entity type except comment.
   foreach (Drupal::entityManager()->getDefinitions() as $entity_type => $entity_info) {
-    if (!isset($entity_info['base_table'])) {
+    if ($entity_type == 'comment' || empty($entity_info['fieldable']) || !isset($entity_info['base_table'])) {
       continue;
     }
     $fields = Drupal::service('comment.manager')->getFields($entity_type);
