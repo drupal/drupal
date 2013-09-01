@@ -1149,11 +1149,14 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
 
   if ($index_comments) {
     foreach (Drupal::service('comment.manager')->getFields('node') as $field_name => $info) {
+      // Skip fields that entity does not have.
+      if (!$node->getPropertyDefinition($field_name)) {
+        continue;
+      }
       $instance = Drupal::service('field.info')->getInstance('node', $node->getType(), $field_name);
       $mode = $instance->getFieldSetting('default_mode');
       $comments_per_page = $instance->getFieldSetting('per_page');
-      if (($items = field_get_items($node, $field_name)) &&
-        $items->status && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
+      if ($node->get($field_name)->status && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
         $comments = comment_load_multiple($cids);
         comment_prepare_thread($comments);
         $build = comment_view_multiple($comments);
