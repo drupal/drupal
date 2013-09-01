@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Language\Language;
+use Drupal\field\FieldInfo;
 use PDO;
 
 use Drupal\Core\Entity\Query\QueryInterface;
@@ -53,8 +54,8 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   /**
    * Overrides DatabaseStorageController::__construct().
    */
-  public function __construct($entity_type, array $entity_info, Connection $database) {
-    parent::__construct($entity_type,$entity_info, $database);
+  public function __construct($entity_type, array $entity_info, Connection $database, FieldInfo $field_info) {
+    parent::__construct($entity_type,$entity_info, $database, $field_info);
     $this->bundleKey = !empty($this->entityInfo['entity_keys']['bundle']) ? $this->entityInfo['entity_keys']['bundle'] : FALSE;
     $this->entityClass = $this->entityInfo['class'];
 
@@ -367,6 +368,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         $this->resetCache(array($entity->id()));
         $entity->postSave($this, TRUE);
         $this->invokeFieldMethod('update', $entity);
+        $this->saveFieldItems($entity, TRUE);
         $this->invokeHook('update', $entity);
         if ($this->dataTable) {
           $this->invokeTranslationHooks($entity);
@@ -389,6 +391,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
         $entity->enforceIsNew(FALSE);
         $entity->postSave($this, FALSE);
         $this->invokeFieldMethod('insert', $entity);
+        $this->saveFieldItems($entity, FALSE);
         $this->invokeHook('insert', $entity);
       }
 
@@ -603,6 +606,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       $entity_class::postDelete($this, $entities);
       foreach ($entities as $entity) {
         $this->invokeFieldMethod('delete', $entity);
+        $this->deleteFieldItems($entity);
         $this->invokeHook('delete', $entity);
       }
       // Ignore slave server temporarily.

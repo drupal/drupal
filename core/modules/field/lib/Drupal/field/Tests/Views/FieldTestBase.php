@@ -59,7 +59,11 @@ abstract class FieldTestBase extends ViewTestBase {
     $field_names = array();
     for ($i = 0; $i < $amount; $i++) {
       $field_names[$i] = 'field_name_' . $i;
-      $field = array('field_name' => $field_names[$i], 'type' => 'text');
+      $field = array(
+        'name' => $field_names[$i],
+        'entity_type' => 'node',
+        'type' => 'text',
+      );
 
       $this->fields[$i] = $field = entity_create('field_entity', $field);
       $field->save();
@@ -70,7 +74,7 @@ abstract class FieldTestBase extends ViewTestBase {
   function setUpInstances($bundle = 'page') {
     foreach ($this->fields as $key => $field) {
       $instance = array(
-        'field_name' => $field['field_name'],
+        'field_name' => $field['name'],
         'entity_type' => 'node',
         'bundle' => 'page',
       );

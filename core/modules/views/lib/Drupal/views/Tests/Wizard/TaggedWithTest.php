@@ -56,7 +56,8 @@ class TaggedWithTest extends WizardTestBase {
 
     // Create the tag field itself.
     $this->tag_field = entity_create('field_entity', array(
-      'field_name' => 'field_views_testing_tags',
+      'name' => 'field_views_testing_tags',
+      'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
       'settings' => array(
@@ -108,7 +109,7 @@ class TaggedWithTest extends WizardTestBase {
     $node_add_path = 'node/add/' . $this->node_type_with_tags->type;
 
     // Create three nodes, with different tags.
-    $tag_field = $this->tag_field->id() . '[' . Language::LANGCODE_NOT_SPECIFIED . ']';
+    $tag_field = $this->tag_field->name . '[' . Language::LANGCODE_NOT_SPECIFIED . ']';
     $edit = array();
     $edit['title'] = $node_tag1_title = $this->randomName();
     $edit[$tag_field] = 'tag1';

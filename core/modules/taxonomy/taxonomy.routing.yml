@@ -48,7 +48,7 @@ taxonomy_vocabulary_reset:
     _permission: 'administer taxonomy'
 
 taxonomy_autocomplete:
-  pattern: '/taxonomy/autocomplete/{field_name}'
+  pattern: '/taxonomy/autocomplete/{entity_type}/{field_name}'
   defaults:
     _controller: '\Drupal\taxonomy\Controller\TermAutocompleteController::autocomplete'
   requirements:

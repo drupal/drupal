@@ -93,6 +93,8 @@ class TermAutocompleteController implements ControllerInterface {
    *
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
+   * @param string $entity_type
+   *   The entity_type.
    * @param string $field_name
    *   The name of the term reference field.
    *
@@ -101,13 +103,13 @@ class TermAutocompleteController implements ControllerInterface {
    *   autocomplete suggestions for taxonomy terms. Otherwise a normal response
    *   containing an error message.
    */
-  public function autocomplete(Request $request, $field_name) {
+  public function autocomplete(Request $request, $entity_type, $field_name) {
     // A comma-separated list of term names entered in the autocomplete form
     // element. Only the last term is used for autocompletion.
     $tags_typed = $request->query->get('q');
 
     // Make sure the field exists and is a taxonomy field.
-    if (!($field = $this->fieldInfo->getField($field_name)) || $field['type'] !== 'taxonomy_term_reference') {
+    if (!($field = $this->fieldInfo->getField($entity_type, $field_name)) || $field['type'] !== 'taxonomy_term_reference') {
       // Error string. The JavaScript handler will realize this is not JSON and
       // will display it as debugging information.
       return new Response(t('Taxonomy field @field_name not found.', array('@field_name' => $field_name)), 403);

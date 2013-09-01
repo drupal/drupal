@@ -12,6 +12,10 @@ function comment_uninstall() {
   // Remove variables.
   variable_del('comment_block_count');
   $node_types = array_keys(node_type_get_types());
+  Drupal::entityManager()->addNamespaces(new ArrayIterator(array(
+    'Drupal\comment' => DRUPAL_ROOT . '/core/modules/comment/lib',
+  )));
+  drupal_classloader_register('comment', 'core/modules/comment');
   foreach ($node_types as $node_type) {
     entity_invoke_bundle_hook('delete', 'comment', 'comment_node_' . $node_type);
     variable_del('comment_' . $node_type);

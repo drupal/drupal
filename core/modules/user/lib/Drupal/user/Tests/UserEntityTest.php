@@ -23,7 +23,7 @@ class UserEntityTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user');
+  public static $modules = array('system', 'user', 'field');
 
   public static function getInfo() {
     return array(

@@ -89,7 +89,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
     );
     $this->assertSettings('comment', 'comment_node_article', TRUE, $edit);
     field_info_cache_clear();
-    $field = field_info_field('comment_body');
+    $field = field_info_field('comment', 'comment_body');
     $this->assertTrue($field['translatable'], 'Comment body is translatable.');
 
     // Test that language settings are correctly stored.

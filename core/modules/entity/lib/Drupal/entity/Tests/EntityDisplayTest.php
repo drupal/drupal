@@ -131,7 +131,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
    * Tests the behavior of a field component within an EntityDisplay object.
    */
   public function testFieldComponent() {
-    $this->enableModules(array('field_sql_storage', 'field_test'));
+    $this->enableModules(array('field_test'));
 
     $display = entity_create('entity_display', array(
       'targetEntityType' => 'entity_test',
@@ -142,7 +142,8 @@ class EntityDisplayTest extends DrupalUnitTestBase {
     $field_name = 'test_field';
     // Create a field and an instance.
     $field = entity_create('field_entity', array(
-      'field_name' => $field_name,
+      'name' => $field_name,
+      'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
     $field->save();
@@ -202,7 +203,7 @@ class EntityDisplayTest extends DrupalUnitTestBase {
    * Tests renaming and deleting a bundle.
    */
   public function testRenameDeleteBundle() {
-    $this->enableModules(array('field_sql_storage', 'field_test', 'node', 'system', 'text'));
+    $this->enableModules(array('field_test', 'node', 'system', 'text'));
     $this->installSchema('system', array('variable'));
     $this->installSchema('node', array('node'));
 
@@ -239,12 +240,13 @@ class EntityDisplayTest extends DrupalUnitTestBase {
    * Tests deleting field instance.
    */
   public function testDeleteFieldInstance() {
-    $this->enableModules(array('field_sql_storage', 'field_test'));
+    $this->enableModules(array('field_test'));
 
     $field_name = 'test_field';
     // Create a field and an instance.
     $field = entity_create('field_entity', array(
-      'field_name' => $field_name,
+      'name' => $field_name,
+      'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
     $field->save();

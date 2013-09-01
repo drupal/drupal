@@ -14,7 +14,7 @@ use Drupal\simpletest\DrupalUnitTestBase;
  */
 class TreeOutputTest extends DrupalUnitTestBase {
 
-  public static $modules = array('system', 'menu_link');
+  public static $modules = array('system', 'menu_link', 'field');
 
   /**
    * Dummy link structure acceptable for menu_tree_output().

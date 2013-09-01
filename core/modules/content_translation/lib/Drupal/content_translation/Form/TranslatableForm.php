@@ -8,7 +8,8 @@
 namespace Drupal\content_translation\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\field\Field;
+use Drupal\field\Entity\Field;
+use Drupal\field\Field as FieldInfo;
 
 /**
  * Provides a confirm form for changing translatable status on translation
@@ -19,9 +20,9 @@ class TranslatableForm extends ConfirmFormBase {
   /**
    * The field info we are changing translatable status on.
    *
-   * @var array.
+   * @var \Drupal\field\Entity\Field
    */
-  protected $fieldInfo;
+  protected $field;
 
   /**
    * The field name we are changing translatable
@@ -42,7 +43,7 @@ class TranslatableForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    if ($field['translatable']) {
+    if ($this->field['translatable']) {
       $question = t('Are you sure you want to disable translation for the %name field?', array('%name' => $this->fieldName));
     }
     else {
@@ -58,7 +59,7 @@ class TranslatableForm extends ConfirmFormBase {
     $description = t('By submitting this form these changes will apply to the %name field everywhere it is used.',
       array('%name' => $this->fieldName)
     );
-    $description .= $this->fieldInfo['translatable'] ? "<br>" . t("<strong>All the existing translations of this field will be deleted.</strong><br>This action cannot be undone.") : '';
+    $description .= $this->field['translatable'] ? "<br>" . t("<strong>All the existing translations of this field will be deleted.</strong><br>This action cannot be undone.") : '';
     return $description;
   }
 
@@ -71,12 +72,14 @@ class TranslatableForm extends ConfirmFormBase {
 
   /**
    * {@inheritdoc}
+   * @param string $entity_type
+   *   The entity type.
    * @param string $field_name
    *   The field name.
    */
-  public function buildForm(array $form, array &$form_state, $field_name = NULL) {
+  public function buildForm(array $form, array &$form_state, $entity_type = NULL, $field_name = NULL) {
     $this->fieldName = $field_name;
-    $this->fieldInfo = Field::fieldInfo($field_name);
+    $this->fieldInfo = FieldInfo::fieldInfo()->getField($entity_type, $field_name);
 
     return parent::buildForm($form, $form_state);
   }
@@ -127,6 +130,7 @@ class TranslatableForm extends ConfirmFormBase {
       array(
         'content_translation_translatable_switch', array(
           !$translatable,
+          $this->field['entity_type'],
           $this->fieldName,
         ),
       ),

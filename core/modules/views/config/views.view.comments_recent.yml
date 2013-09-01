@@ -378,7 +378,7 @@ display:
           provider: comment
         comment:
           id: comment
-          table: field_data_comment_body
+          table: comment__comment_body
           field: comment_body
           label: ''
           plugin_id: field

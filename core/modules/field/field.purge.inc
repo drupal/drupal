@@ -5,7 +5,6 @@
  * Field CRUD API, handling field and field instance creation and deletion.
  */
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Entity\Field;
 use Drupal\field\FieldException;
 
@@ -111,7 +110,7 @@ function field_purge_batch($batch_size) {
       'bundle' => $instance['bundle'],
     );
     // field_purge_data() will need the field array.
-    $field = field_info_field_by_id($instance['field_id']);
+    $field = $instance->getField();
     // Retrieve some entities.
     $query = $factory->get($entity_type)
       ->condition('id:' . $field['uuid'] . '.deleted', 1)
@@ -121,21 +120,12 @@ function field_purge_batch($batch_size) {
       $query->condition($info[$entity_type]['entity_keys']['bundle'], $ids->bundle);
     }
     $results = $query->execute();
-
     if ($results) {
-      $entities = array();
       foreach ($results as $revision_id => $entity_id) {
-        // This might not be the revision id if the entity type does not support
-        // revisions but _field_create_entity_from_ids() checks that and
-        // disregards this value so there is no harm setting it.
         $ids->revision_id = $revision_id;
         $ids->entity_id = $entity_id;
-        $entities[$entity_id] = _field_create_entity_from_ids($ids);
-      }
-      field_attach_load($entity_type, $entities, FIELD_LOAD_CURRENT, array('instance' => $instance));
-      foreach ($entities as $entity) {
-        // Purge the data for the entity.
-        field_purge_data($entity, $field, $instance);
+        $entity = _field_create_entity_from_ids($ids);
+        Drupal::entityManager()->getStorageController($entity_type)->onFieldItemsPurge($entity, $instance);
       }
     }
     else {
@@ -156,37 +146,6 @@ function field_purge_batch($batch_size) {
 }
 
 /**
- * Purges the field data for a single field on a single pseudo-entity.
- *
- * This is basically the same as field_attach_delete() except it only applies to
- * a single field. The entity itself is not being deleted, and it is quite
- * possible that other field data will remain attached to it.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The pseudo-entity whose field data is being purged.
- * @param $field
- *   The (possibly deleted) field whose data is being purged.
- * @param $instance
- *   The deleted field instance whose data is being purged.
- */
-function field_purge_data(EntityInterface $entity, $field, $instance) {
-  foreach ($entity->{$field->id()} as $value) {
-    $definition = _field_generate_entity_field_definition($field, $instance);
-    $items = \Drupal::typedData()->create($definition, $value, $field->id(), $entity);
-    $items->delete();
-  }
-
-  // Tell the field storage system to purge the data.
-  module_invoke($field['storage']['module'], 'field_storage_purge', $entity, $field, $instance);
-
-  // Let other modules act on purging the data.
-  foreach (Drupal::moduleHandler()->getImplementations('field_attach_purge') as $module) {
-    $function = $module . '_field_attach_purge';
-    $function($entity, $field, $instance);
-  }
-}
-
-/**
  * Purges a field instance record from the database.
  *
  * This function assumes all data for the instance has already been purged and
@@ -196,10 +155,6 @@ function field_purge_data(EntityInterface $entity, $field, $instance) {
  *   The instance record to purge.
  */
 function field_purge_instance($instance) {
-  // Notify the storage engine.
-  $field = field_info_field_by_id($instance['field_id']);
-  module_invoke($field['storage']['module'], 'field_storage_purge_instance', $instance);
-
   $state = Drupal::state();
   $deleted_instances = $state->get('field.instance.deleted');
   unset($deleted_instances[$instance['uuid']]);
@@ -232,8 +187,8 @@ function field_purge_field($field) {
   unset($deleted_fields[$field['uuid']]);
   $state->set('field.field.deleted', $deleted_fields);
 
-  // Notify the storage engine.
-  module_invoke($field['storage']['module'], 'field_storage_purge_field', $field);
+  // Notify the storage layer.
+  Drupal::entityManager()->getStorageController($field->entity_type)->onFieldPurge($field);
 
   // Clear the cache.
   field_info_cache_clear();

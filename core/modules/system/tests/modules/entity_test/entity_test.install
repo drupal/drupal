@@ -9,14 +9,6 @@
  * Implements hook_install().
  */
 function entity_test_install() {
-  // Auto-create a field for testing.
-  entity_create('field_entity', array(
-    'field_name' => 'field_test_text',
-    'type' => 'text',
-    'cardinality' => 1,
-    'translatable' => FALSE,
-  ))->save();
-
   $entity_types = array(
     'entity_test',
     'entity_test_rev',
@@ -24,6 +16,14 @@ function entity_test_install() {
     'entity_test_mulrev',
   );
   foreach ($entity_types as $entity_type) {
+    // Auto-create fields for testing.
+    entity_create('field_entity', array(
+      'name' => 'field_test_text',
+      'entity_type' => $entity_type,
+      'type' => 'text',
+      'cardinality' => 1,
+      'translatable' => FALSE,
+    ))->save();
     entity_create('field_instance', array(
       'entity_type' => $entity_type,
       'field_name' => 'field_test_text',

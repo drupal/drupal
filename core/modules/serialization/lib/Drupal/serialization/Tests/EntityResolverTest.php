@@ -38,7 +38,8 @@ class EntityResolverTest extends NormalizerTestBase {
       'settings' => array(
         'target_type' => 'entity_test_mulrev',
       ),
-      'field_name' => 'field_test_entity_reference',
+      'name' => 'field_test_entity_reference',
+      'entity_type' => 'entity_test_mulrev',
       'type' => 'entity_reference',
     ))->save();
 

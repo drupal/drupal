@@ -89,7 +89,7 @@ class EntityReferenceFieldTest extends EntityUnitTestBase {
       array('target_bundles' => array($this->bundle))
     );
 
-    $this->field = Field::fieldInfo()->getField($this->fieldName);
+    $this->field = Field::fieldInfo()->getField($this->entityType, $this->fieldName);
     $instances = Field::fieldInfo()->getBundleInstances($this->entityType, $this->bundle);
     $this->instance = $instances[$this->fieldName];
   }

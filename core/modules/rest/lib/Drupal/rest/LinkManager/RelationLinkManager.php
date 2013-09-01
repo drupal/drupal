@@ -74,16 +74,14 @@ class RelationLinkManager implements RelationLinkManagerInterface{
   protected function writeCache() {
     $data = array();
 
-    foreach (field_info_fields() as $field_info) {
-      foreach ($field_info['bundles'] as $entity_type => $bundles) {
-        foreach ($bundles as $bundle) {
-          $relation_uri = $this->getRelationUri($entity_type, $bundle, $field_info['field_name']);
-          $data[$relation_uri] = array(
-            'entity_type' => $entity_type,
-            'bundle' => $bundle,
-            'field_name' => $field_info['field_name'],
-          );
-        }
+    foreach (field_info_fields() as $field) {
+      foreach ($field['bundles'] as $bundle) {
+        $relation_uri = $this->getRelationUri($field->entity_type, $bundle, $field->name);
+        $data[$relation_uri] = array(
+          'entity_type' => $field->entity_type,
+          'bundle' => $bundle,
+          'field_name' => $field->name,
+        );
       }
     }
     // These URIs only change when field info changes, so cache it permanently

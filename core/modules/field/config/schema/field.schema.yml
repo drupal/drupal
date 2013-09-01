@@ -4,9 +4,6 @@ field.settings:
   type: mapping
   label: 'Field settings'
   mapping:
-    default_storage:
-      type: string
-      label: 'The default storage backend for a field'
     language_fallback:
       type: boolean
       label: 'Whether the field display falls back to global language fallback configuration'
@@ -30,6 +27,9 @@ field.field.*:
     langcode:
       type: string
       label: 'Default language'
+    entity_type:
+      type: string
+      label: 'Entity type'
     type:
       type: string
       label: 'Type'
@@ -41,28 +41,6 @@ field.field.*:
     active:
       type: boolean
       label: 'Active'
-    entity_types:
-      type: sequence
-      label: 'Allowed entity types'
-      sequence:
-        - type: string
-          label: 'Entity type'
-    storage:
-      type: mapping
-      label: 'Storage'
-      mapping:
-        type:
-          type: string
-          label: 'Type'
-        settings:
-          type: field_storage.[%parent.type].settings
-          label: 'Settings'
-        module:
-          type: string
-          label: 'Module'
-        active:
-          type: boolean
-          label: 'Active'
     locked:
       type: boolean
       label: 'Locked'
@@ -101,9 +79,6 @@ field.instance.*.*.*:
     field_uuid:
       type: string
       label: 'Field UUID'
-    entity_type:
-      type: string
-      label: 'Allowed entity types'
     bundle:
       type: string
       label: 'Bundle'

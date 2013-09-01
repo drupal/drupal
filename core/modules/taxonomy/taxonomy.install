@@ -6,12 +6,17 @@
  */
 
 use Drupal\Component\Uuid\Uuid;
+use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\field\Entity\Field;
 
 /**
  * Implements hook_uninstall().
  */
 function taxonomy_uninstall() {
+  Drupal::entityManager()->addNamespaces(new ArrayIterator(array(
+    'Drupal\taxonomy' => DRUPAL_ROOT . '/core/modules/taxonomy/lib',
+  )));
+  drupal_classloader_register('taxonomy', 'core/modules/taxonomy');
   // Remove taxonomy_term bundles.
   $config_names = config_get_storage_names_with_prefix('taxonomy.vocabulary.');
   foreach ($config_names as $config_name) {
@@ -199,9 +204,9 @@ function taxonomy_field_schema($field) {
  */
 function taxonomy_update_dependencies() {
   // Convert the 'tid' column of the taxonomy reference field to 'target_id'
-  // after fields and instances have been moved to the config system.
+  // after the field tables have been reorganized.
   $dependencies['taxonomy'][8007] = array(
-    'field' => 8003,
+    'field' => 8006,
   );
   return $dependencies;
 }
@@ -356,16 +361,16 @@ function taxonomy_update_8007() {
   foreach (config_get_storage_names_with_prefix('field.field.') as $config_name) {
     $field_config = Drupal::config($config_name);
     // Only update taxonomy reference fields that use the default SQL storage.
-    if ($field_config->get('type') == 'taxonomy_term_reference' && $field_config->get('storage.type') == 'field_sql_storage') {
+    if ($field_config->get('type') == 'taxonomy_term_reference') {
       $field = new Field($field_config->get());
 
       $tables = array(
-        _field_sql_storage_tablename($field),
-        _field_sql_storage_revision_tablename($field),
+        DatabaseStorageController::_fieldTableName($field),
+        DatabaseStorageController::_fieldRevisionTableName($field),
       );
 
       foreach ($tables as $table_name) {
-        db_change_field($table_name, $field->id() . '_tid', $field->id() . '_target_id', array(
+        db_change_field($table_name, $field->name . '_tid', $field->name . '_target_id', array(
           'description' => 'The ID of the target entity.',
           'type' => 'int',
           'unsigned' => TRUE,
@@ -373,8 +378,8 @@ function taxonomy_update_8007() {
         ));
 
         // Change the index.
-        db_drop_index($table_name, $field->id() . '_tid');
-        db_add_index($table_name, $field->id() . '_target_id', array($field->id() . '_target_id'));
+        db_drop_index($table_name, $field->name . '_tid');
+        db_add_index($table_name, $field->name . '_target_id', array($field->name . '_target_id'));
       }
 
       // Update the indexes in field config as well.

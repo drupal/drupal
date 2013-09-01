@@ -49,7 +49,8 @@ class ImageItemTest extends FieldUnitTestBase {
     $this->installSchema('file', array('file_managed', 'file_usage'));
 
     entity_create('field_entity', array(
-      'field_name' => 'image_test',
+      'name' => 'image_test',
+      'entity_type' => 'entity_test',
       'type' => 'image',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     ))->save();

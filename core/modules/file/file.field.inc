@@ -356,7 +356,7 @@ function file_field_widget_multiple_count_validate($element, &$form_state, $form
   array_pop($parents);
   $current = count(element_children(NestedArray::getValue($form, $parents))) - 1;
 
-  $field = field_info_field($element['#field_name']);
+  $field = field_info_field($element['#entity_type'], $element['#field_name']);
   $uploaded = count($values['fids']);
   $count = $uploaded + $current;
   if ($count > $field['cardinality']) {

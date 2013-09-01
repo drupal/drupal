@@ -333,8 +333,7 @@ class Entity implements IteratorAggregate, EntityInterface {
       // Go through translatable properties and determine all languages for
       // which translated values are available.
       foreach (field_info_instances($this->entityType, $this->bundle()) as $field_name => $instance) {
-        $field = field_info_field($field_name);
-        if (field_is_translatable($this->entityType, $field) && isset($this->$field_name)) {
+        if (field_is_translatable($this->entityType, $instance->getField()) && isset($this->$field_name)) {
           foreach (array_filter($this->$field_name) as $langcode => $value)  {
             $languages[$langcode] = TRUE;
           }

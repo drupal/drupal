@@ -35,6 +35,10 @@ function block_update_dependencies() {
   $dependencies['block'][8005] = array(
     'user' => 8016,
   );
+  // Migrate custom blocks after field storage has been reorganized.
+  $dependencies['block'][8008] = array(
+    'field' => 8006,
+  );
   return $dependencies;
 }
 
@@ -247,9 +251,9 @@ function block_update_8008() {
 
     // First, create the body field.
     $body_field = array(
-      'id' => 'block_body',
+      'name' => 'block_body',
+      'entity_type' => 'custom_block',
       'type' => 'text_with_summary',
-      'entity_types' => array('custom_block'),
       'module' => 'text',
       'cardinality' => 1,
       'schema' => array(
@@ -283,8 +287,8 @@ function block_update_8008() {
     );
     _update_8003_field_create_field($body_field);
 
+
     $instance = array(
-      'id' => 'custom_block.basic.block_body',
       'entity_type' => 'custom_block',
       'bundle' => 'basic',
       'label' => 'Block body',
@@ -338,7 +342,7 @@ function block_update_8008() {
         );
         // This is a core update and no contrib modules are enabled yet, so
         // we can assume default field storage for a faster update.
-        _update_8000_field_sql_storage_write('custom_block', 'basic', $block->bid, $block->bid, 'block_body', $data);
+        _update_8006_field_write_data_sql('custom_block', 'basic', $block->bid, $block->bid, 'block_body', $data);
 
         $sandbox['last'] = $block->bid;
         $sandbox['count'] += 1;

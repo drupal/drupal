@@ -18,7 +18,6 @@ use Drupal\field\FieldInterface;
 
 require_once __DIR__ . '/field_test.entity.inc';
 require_once __DIR__ . '/field_test.field.inc';
-require_once __DIR__ . '/field_test.storage.inc';
 
 /**
  * Implements hook_permission().

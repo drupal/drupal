@@ -160,9 +160,8 @@ function hook_comment_unpublish(Drupal\comment\Comment $comment) {
 /**
  * Act before comment deletion.
  *
- * This hook is invoked from entity_delete_multiple() before
- * field_attach_delete() is called and before the comment is actually removed
- * from the database.
+ * This hook is invoked from entity_delete_multiple() before field values are
+ * deleted and before the comment is actually removed from the database.
  *
  * @param Drupal\comment\Comment $comment
  *   The comment object for the comment that is about to be deleted.
@@ -180,9 +179,8 @@ function hook_comment_predelete(Drupal\comment\Comment $comment) {
 /**
  * Respond to comment deletion.
  *
- * This hook is invoked from entity_delete_multiple() after
- * field_attach_delete() has called and after the comment has been removed from
- * the database.
+ * This hook is invoked from entity_delete_multiple() after field values are
+ * deleted and after the comment has been removed from the database.
  *
  * @param Drupal\comment\Comment $comment
  *   The comment object for the comment that has been deleted.

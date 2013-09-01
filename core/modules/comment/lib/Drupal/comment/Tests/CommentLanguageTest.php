@@ -71,7 +71,7 @@ class CommentLanguageTest extends WebTestBase {
     $this->drupalPost("user/" . $admin_user->id() . "/edit", $edit, t('Save'));
 
     // Make comment body translatable.
-    $field = field_info_field('comment_body');
+    $field = field_info_field('comment', 'comment_body');
     $field['translatable'] = TRUE;
     $field->save();
     $this->assertTrue(field_is_translatable('comment', $field), 'Comment body is translatable.');

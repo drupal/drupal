@@ -118,7 +118,7 @@ class FieldOverview extends OverviewBase {
 
     // Fields.
     foreach ($instances as $name => $instance) {
-      $field = field_info_field($instance['field_name']);
+      $field = $instance->getField();
       $admin_field_path = $this->adminPath . '/fields/' . $instance->id();
       $table[$name] = array(
         '#attributes' => array(
@@ -202,7 +202,7 @@ class FieldOverview extends OverviewBase {
           '#description' => $this->t('A unique machine-readable name containing letters, numbers, and underscores.'),
           // Calculate characters depending on the length of the field prefix
           // setting. Maximum length is 32.
-          '#maxlength' => Field::ID_MAX_LENGTH - strlen($field_prefix),
+          '#maxlength' => Field::NAME_MAX_LENGTH - strlen($field_prefix),
           '#prefix' => '<div class="add-new-placeholder">&nbsp;</div>',
           '#machine_name' => array(
             'source' => array('fields', $name, 'label'),
@@ -382,12 +382,13 @@ class FieldOverview extends OverviewBase {
       $values = $form_values['_add_new_field'];
 
       $field = array(
-        'field_name' => $values['field_name'],
+        'name' => $values['field_name'],
+        'entity_type' => $this->entity_type,
         'type' => $values['type'],
         'translatable' => $values['translatable'],
       );
       $instance = array(
-        'field_name' => $field['field_name'],
+        'field_name' => $values['field_name'],
         'entity_type' => $this->entity_type,
         'bundle' => $this->bundle,
         'label' => $values['label'],
@@ -403,14 +404,14 @@ class FieldOverview extends OverviewBase {
         // default widget and settings). It stays hidden for other form modes
         // until it is explicitly configured.
         entity_get_form_display($this->entity_type, $this->bundle, 'default')
-          ->setComponent($field['field_name'])
+          ->setComponent($values['field_name'])
           ->save();
 
         // Make sure the field is displayed in the 'default' view mode (using
         // default formatter and settings). It stays hidden for other view
         // modes until it is explicitly configured.
         entity_get_display($this->entity_type, $this->bundle, 'default')
-          ->setComponent($field['field_name'])
+          ->setComponent($values['field_name'])
           ->save();
 
         // Always show the field settings step, as the cardinality needs to be
@@ -419,7 +420,7 @@ class FieldOverview extends OverviewBase {
         $destinations[] = $this->adminPath . '/fields/' . $new_instance->id();
 
         // Store new field information for any additional submit handlers.
-        $form_state['fields_added']['_add_new_field'] = $field['field_name'];
+        $form_state['fields_added']['_add_new_field'] = $values['field_name'];
       }
       catch (\Exception $e) {
         drupal_set_message($this->t('There was a problem creating field %label: !message', array('%label' => $instance['label'], '!message' => $e->getMessage())), 'error');
@@ -429,7 +430,7 @@ class FieldOverview extends OverviewBase {
     // Re-use existing field.
     if (!empty($form_values['_add_existing_field']['field_name'])) {
       $values = $form_values['_add_existing_field'];
-      $field = field_info_field($values['field_name']);
+      $field = field_info_field($this->entity_type, $values['field_name']);
       if (!empty($field['locked'])) {
         drupal_set_message($this->t('The field %label cannot be added because it is locked.', array('%label' => $values['label'])), 'error');
       }
@@ -490,37 +491,42 @@ class FieldOverview extends OverviewBase {
    *   An array of existing fields keyed by field name.
    */
   protected function getExistingFieldOptions() {
-    $info = array();
-    $field_types = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
+    $options = array();
 
-    foreach (field_info_instances() as $existing_entity_type => $bundles) {
-      foreach ($bundles as $existing_bundle => $instances) {
-        // No need to look in the current bundle.
-        if (!($existing_bundle == $this->bundle && $existing_entity_type == $this->entity_type)) {
-          foreach ($instances as $instance) {
-            $field = field_info_field($instance['field_name']);
-            // Don't show
-            // - locked fields,
-            // - fields already in the current bundle,
-            // - fields that cannot be added to the entity type,
-            // - fields that should not be added via user interface.
-
-            if (empty($field['locked'])
-              && !field_info_instance($this->entity_type, $field['field_name'], $this->bundle)
-              && (empty($field['entity_types']) || in_array($this->entity_type, $field['entity_types']))
-              && empty($field_types[$field['type']]['no_ui'])) {
-              $info[$instance['field_name']] = array(
-                'type' => $field['type'],
-                'type_label' => $field_types[$field['type']]['label'],
-                'field' => $field['field_name'],
-                'label' => $instance['label'],
-              );
-            }
-          }
+    // Collect candidate field instances: all instances of fields for this
+    // entity type that are not already present in the current bundle.
+    $field_map = field_info_field_map();
+    $instance_ids = array();
+    if (!empty($field_map[$this->entity_type])) {
+      foreach ($field_map[$this->entity_type] as $field_name => $data) {
+        if (!in_array($this->bundle, $data['bundles'])) {
+          $bundle = reset($data['bundles']);
+          $instance_ids[] = $this->entity_type . '.' . $bundle . '.' . $field_name;
         }
       }
     }
-    return $info;
+
+    // Load the instances and build the list of options.
+    if ($instance_ids) {
+      $field_types = $this->fieldTypeManager->getDefinitions();
+      $instances = $this->entityManager->getStorageController('field_instance')->loadMultiple($instance_ids);
+      foreach ($instances as $instance) {
+        $field = $instance->getField();
+        // Do not show:
+        // - locked fields,
+        // - fields that should not be added via user interface.
+        if (empty($field['locked']) && empty($field_types[$field['type']]['no_ui'])) {
+          $options[$field->name] = array(
+            'type' => $field->type,
+            'type_label' => $field_types[$field->type]['label'],
+            'field' => $field->name,
+            'label' => $instance->label,
+          );
+        }
+      }
+    }
+
+    return $options;
   }
 
   /**
@@ -538,7 +544,7 @@ class FieldOverview extends OverviewBase {
 
     // We need to check inactive fields as well, so we can't use
     // field_info_fields().
-    return (bool) field_read_fields(array('field_name' => $field_name), array('include_inactive' => TRUE));
+    return (bool) field_read_fields(array('entity_type' => $this->entity_type, 'name' => $field_name), array('include_inactive' => TRUE));
   }
 
 }

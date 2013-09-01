@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityBCDecorator;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Password\PasswordInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\field\FieldInfo;
 use Drupal\user\UserDataInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\DatabaseStorageControllerNG;
@@ -46,13 +47,15 @@ class UserStorageController extends DatabaseStorageControllerNG implements UserS
    *   An array of entity info for the entity type.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection to be used.
+   * @param \Drupal\field\FieldInfo $field_info
+   *   The field info service.
    * @param \Drupal\Core\Password\PasswordInterface $password
    *   The password hashing service.
    * @param \Drupal\user\UserDataInterface $user_data
    *   The user data service.
    */
-  public function __construct($entity_type, $entity_info, Connection $database, PasswordInterface $password, UserDataInterface $user_data) {
-    parent::__construct($entity_type, $entity_info, $database);
+  public function __construct($entity_type, $entity_info, Connection $database, FieldInfo $field_info, PasswordInterface $password, UserDataInterface $user_data) {
+    parent::__construct($entity_type, $entity_info, $database, $field_info);
 
     $this->password = $password;
     $this->userData = $user_data;
@@ -66,6 +69,7 @@ class UserStorageController extends DatabaseStorageControllerNG implements UserS
       $entity_type,
       $entity_info,
       $container->get('database'),
+      $container->get('field.info'),
       $container->get('password'),
       $container->get('user.data')
     );
@@ -139,23 +143,4 @@ class UserStorageController extends DatabaseStorageControllerNG implements UserS
       ->execute();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  protected function invokeHook($hook, EntityInterface $entity) {
-    $function = 'field_attach_' . $hook;
-    // @todo: field_attach_delete_revision() is named the wrong way round,
-    // consider renaming it.
-    if ($function == 'field_attach_revision_delete') {
-      $function = 'field_attach_delete_revision';
-    }
-    if (!empty($this->entityInfo['fieldable']) && function_exists($function)) {
-      $function($entity);
-    }
-
-    // Invoke the hook.
-    \Drupal::moduleHandler()->invokeAll($this->entityType . '_' . $hook, array($entity));
-    // Invoke the respective entity-level hook.
-    \Drupal::moduleHandler()->invokeAll('entity_' . $hook, array($entity, $this->entityType));
-  }
 }

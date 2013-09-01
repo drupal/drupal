@@ -42,7 +42,8 @@ class TestItemTest extends FieldUnitTestBase {
 
     // Create an field field and instance for validation.
     $field = array(
-      'field_name' => $this->field_name,
+      'name' => $this->field_name,
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
     );
     entity_create('field_entity', $field)->save();

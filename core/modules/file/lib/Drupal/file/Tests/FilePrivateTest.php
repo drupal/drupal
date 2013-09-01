@@ -41,11 +41,11 @@ class FilePrivateTest extends FileFieldTestBase {
   function testPrivateFile() {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
-    $this->createFileField($field_name, $type_name, array('uri_scheme' => 'private'));
+    $this->createFileField($field_name, 'node', $type_name, array('uri_scheme' => 'private'));
 
     // Create a field with no view access - see field_test_field_access().
     $no_access_field_name = 'field_no_view_access';
-    $this->createFileField($no_access_field_name, $type_name, array('uri_scheme' => 'private'));
+    $this->createFileField($no_access_field_name, 'node', $type_name, array('uri_scheme' => 'private'));
 
     $test_file = $this->getTestFile('text');
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name, TRUE, array('private' => TRUE));

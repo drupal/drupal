@@ -26,7 +26,7 @@ display:
           provider: views
         body_value:
           id: body_value
-          table: field_data_body
+          table: node__body
           field: body_value
           relationship: none
           group_type: group

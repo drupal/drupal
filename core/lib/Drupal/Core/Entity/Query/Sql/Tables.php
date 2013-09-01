@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Entity\Query\QueryException;
 use Drupal\field\Entity\Field;
@@ -102,8 +103,8 @@ class Tables implements TablesInterface {
       if (substr($specifier, 0, 3) == 'id:') {
         $field = $field_info->getFieldById((substr($specifier, 3)));
       }
-      elseif (isset($field_map[$specifier])) {
-        $field = $field_info->getField($specifier);
+      elseif (isset($field_map[$entity_type][$specifier])) {
+        $field = $field_info->getField($entity_type, $specifier);
       }
       else {
         $field = FALSE;
@@ -136,7 +137,7 @@ class Tables implements TablesInterface {
             $field_name = $field->getFieldName();
             // If there are bundles, pick one.
             if (!empty($entity_info['entity_keys']['bundle'])) {
-              $values[$entity_info['entity_keys']['bundle']] = reset($field_map[$field_name]['bundles'][$entity_type]);
+              $values[$entity_info['entity_keys']['bundle']] = reset($field_map[$entity_type][$field_name]['bundles']);
             }
             $entity = $entity_manager
               ->getStorageController($entity_type)
@@ -161,7 +162,7 @@ class Tables implements TablesInterface {
           $column = 'value';
         }
         $table = $this->ensureFieldTable($index_prefix, $field, $type, $langcode, $base_table, $entity_id_field, $field_id_field);
-        $sql_column = _field_sql_storage_columnname($field['field_name'], $column);
+        $sql_column = DatabaseStorageController::_fieldColumnName($field, $column);
       }
       // This is an entity property (non-configurable field).
       else {
@@ -250,12 +251,12 @@ class Tables implements TablesInterface {
   protected function ensureFieldTable($index_prefix, &$field, $type, $langcode, $base_table, $entity_id_field, $field_id_field) {
     $field_name = $field['field_name'];
     if (!isset($this->fieldTables[$index_prefix . $field_name])) {
-      $table = $this->sqlQuery->getMetaData('age') == FIELD_LOAD_CURRENT ? _field_sql_storage_tablename($field) : _field_sql_storage_revision_tablename($field);
+      $table = $this->sqlQuery->getMetaData('age') == FIELD_LOAD_CURRENT ? DatabaseStorageController::_fieldTableName($field) : DatabaseStorageController::_fieldRevisionTableName($field);
       if ($field['cardinality'] != 1) {
         $this->sqlQuery->addMetaData('simple_query', FALSE);
       }
       $entity_type = $this->sqlQuery->getMetaData('entity_type');
-      $this->fieldTables[$index_prefix . $field_name] = $this->addJoin($type, $table, "%alias.$field_id_field = $base_table.$entity_id_field AND %alias.entity_type = '$entity_type'", $langcode);
+      $this->fieldTables[$index_prefix . $field_name] = $this->addJoin($type, $table, "%alias.$field_id_field = $base_table.$entity_id_field", $langcode);
     }
     return $this->fieldTables[$index_prefix . $field_name];
   }

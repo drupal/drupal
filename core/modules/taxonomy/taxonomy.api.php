@@ -213,9 +213,8 @@ function hook_taxonomy_term_update(Drupal\taxonomy\Term $term) {
 /**
  * Act before taxonomy term deletion.
  *
- * This hook is invoked from taxonomy term deletion before
- * field_attach_delete() is called and before the term is actually removed from
- * the database.
+ * This hook is invoked from taxonomy term deletion before field values are
+ * deleted and before the term is actually removed from the database.
  *
  * @param Drupal\taxonomy\Term $term
  *   The taxonomy term entity that is about to be deleted.
@@ -229,8 +228,8 @@ function hook_taxonomy_term_predelete(Drupal\taxonomy\Term $term) {
 /**
  * Respond to taxonomy term deletion.
  *
- * This hook is invoked from taxonomy term deletion after field_attach_delete()
- * has been called and after the term has been removed from the database.
+ * This hook is invoked from taxonomy term deletion after field values are
+ * deleted and after the term has been removed from the database.
  *
  * @param Drupal\taxonomy\Term $term
  *   The taxonomy term entity that has been deleted.

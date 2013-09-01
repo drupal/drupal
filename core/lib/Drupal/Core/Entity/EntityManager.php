@@ -89,6 +89,15 @@ class EntityManager extends PluginManagerBase {
   protected $fieldDefinitions;
 
   /**
+   * The root paths.
+   *
+   * @see \Drupal\Core\Entity\EntityManager::__construct().
+   *
+   * @var \Traversable
+   */
+  protected $namespaces;
+
+  /**
    * The string translationManager.
    *
    * @var \Drupal\Core\StringTranslation\TranslationInterface
@@ -114,22 +123,46 @@ class EntityManager extends PluginManagerBase {
    */
   public function __construct(\Traversable $namespaces, ContainerInterface $container, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager, TranslationInterface $translation_manager) {
     // Allow the plugin definition to be altered by hook_entity_info_alter().
-    $annotation_namespaces = array(
-      'Drupal\Core\Entity\Annotation' => DRUPAL_ROOT . '/core/lib',
-    );
 
     $this->moduleHandler = $module_handler;
     $this->cache = $cache;
     $this->languageManager = $language_manager;
+    $this->namespaces = $namespaces;
     $this->translationManager = $translation_manager;
 
+    $this->doDiscovery($namespaces);
+    $this->factory = new DefaultFactory($this->discovery);
+    $this->container = $container;
+  }
+
+  protected function doDiscovery($namespaces) {
+    $annotation_namespaces = array(
+      'Drupal\Core\Entity\Annotation' => DRUPAL_ROOT . '/core/lib',
+    );
     $this->discovery = new AnnotatedClassDiscovery('Entity', $namespaces, $annotation_namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
     $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
     $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->id, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
+  }
 
-    $this->factory = new DefaultFactory($this->discovery);
-    $this->container = $container;
+  /**
+   * Add more namespaces to the entity manager.
+   *
+   * This is usually only necessary for uninstall purposes.
+   *
+   * @todo Remove this method, along with doDiscovery(), when
+   * https://drupal.org/node/1199946 is fixed.
+   *
+   * @param \Traversable $namespaces
+   *
+   * @see comment_uninstall()
+   */
+  public function addNamespaces(\Traversable $namespaces) {
+    reset($this->namespaces);
+    $iterator = new \AppendIterator;
+    $iterator->append(new \IteratorIterator($this->namespaces));
+    $iterator->append($namespaces);
+    $this->doDiscovery($iterator);
   }
 
   /**
@@ -164,6 +197,9 @@ class EntityManager extends PluginManagerBase {
    */
   public function getControllerClass($entity_type, $controller_type, $nested = NULL) {
     $definition = $this->getDefinition($entity_type);
+    if (!$definition) {
+      throw new \InvalidArgumentException(sprintf('The %s entity type does not exist.', $entity_type));
+    }
     $definition = $definition['controllers'];
     if (!$definition) {
       throw new \InvalidArgumentException(sprintf('The entity type (%s) does not exist.', $entity_type));

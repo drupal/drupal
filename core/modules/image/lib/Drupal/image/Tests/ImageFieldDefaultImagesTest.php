@@ -60,7 +60,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     $instance_field_settings = $instance->getFieldSettings();
     $this->assertEqual($instance_field_settings['default_image'], $default_images['instance']->id());
 
-    $field = entity_load('field_entity', $field_name);
+    $field = $instance->getField();
 
     // The field default image id should be 1.
     $this->assertEqual($field->getFieldSetting('default_image'), $default_images['field']->id());
@@ -71,7 +71,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
 
     // Add another instance with another default image to the page content type.
     $instance2 = entity_create('field_instance', array(
-      'field_name' => $field->id(),
+      'field_name' => $field->name,
       'entity_type' => 'node',
       'bundle' => 'page',
       'label' => $instance->label(),
@@ -82,12 +82,12 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     ));
     $instance2->save();
 
-    $widget_settings = entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')->getComponent($field['field_name']);
+    $widget_settings = entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')->getComponent($field_name);
     entity_get_form_display('node', 'page', 'default')
-      ->setComponent($field->id(), $widget_settings)
+      ->setComponent($field_name, $widget_settings)
       ->save();
     entity_get_display('node', 'page', 'default')
-      ->setComponent($field->id())
+      ->setComponent($field_name)
       ->save();
 
     // Confirm the defaults are present on the article field settings form.

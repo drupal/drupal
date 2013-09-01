@@ -21,7 +21,7 @@ class MessageEntityTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'contact');
+  public static $modules = array('system', 'contact', 'field');
 
   public static function getInfo() {
     return array(

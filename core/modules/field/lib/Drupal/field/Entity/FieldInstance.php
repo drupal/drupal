@@ -7,6 +7,7 @@
 
 namespace Drupal\field\Entity;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
@@ -35,7 +36,7 @@ use Drupal\field\FieldInstanceInterface;
 class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
 
   /**
-   * The instance ID (machine name).
+   * The instance ID.
    *
    * The ID consists of 3 parts: the entity type, bundle and the field name.
    *
@@ -235,10 +236,10 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   public function __construct(array $values, $entity_type = 'field_instance') {
     // Accept incoming 'field_name' instead of 'field_uuid', for easier DX on
     // creation of new instances.
-    if (isset($values['field_name']) && !isset($values['field_uuid'])) {
-      $field = field_info_field($values['field_name']);
+    if (isset($values['field_name']) && isset($values['entity_type']) && !isset($values['field_uuid'])) {
+      $field = field_info_field($values['entity_type'], $values['field_name']);
       if (!$field) {
-        throw new FieldException(format_string('Attempt to create an instance of unknown, disabled, or deleted field @field_id', array('@field_id' => $values['field_name'])));
+        throw new FieldException(format_string('Attempt to create an instance of field @field_name that does not exist on entity type @entity_type.', array('@field_name' => $values['field_name'], '@entity_type' => $values['entity_type'])));
       }
       $values['field_uuid'] = $field->uuid;
     }
@@ -267,16 +268,16 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
 
     // Check required properties.
     if (empty($values['entity_type'])) {
-      throw new FieldException(format_string('Attempt to create an instance of field @field_id without an entity type.', array('@field_id' => $this->field->id)));
+      throw new FieldException(format_string('Attempt to create an instance of field @field_name without an entity_type.', array('@field_name' => $this->field->name)));
     }
     if (empty($values['bundle'])) {
-      throw new FieldException(format_string('Attempt to create an instance of field @field_id without a bundle.', array('@field_id' => $this->field->id)));
+      throw new FieldException(format_string('Attempt to create an instance of field @field_name without a bundle.', array('@field_name' => $this->field->name)));
     }
 
-    // 'Label' defaults to the field ID (mostly useful for field instances
+    // 'Label' defaults to the field name (mostly useful for field instances
     // created in tests).
     $values += array(
-      'label' => $this->field->id,
+      'label' => $this->field->name,
     );
     parent::__construct($values, $entity_type);
   }
@@ -285,7 +286,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    * {@inheritdoc}
    */
   public function id() {
-    return $this->entity_type . '.' . $this->bundle . '.' . $this->field->id;
+    return $this->entity_type . '.' . $this->bundle . '.' . $this->field->name;
   }
 
   /**
@@ -357,14 +358,9 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
   protected function saveNew() {
     $instance_controller = \Drupal::entityManager()->getStorageController($this->entityType);
 
-    // Check that the field can be attached to this entity type.
-    if (!empty($this->field->entity_types) && !in_array($this->entity_type, $this->field->entity_types)) {
-      throw new FieldException(format_string('Attempt to create an instance of field @field_id on forbidden entity type @entity_type.', array('@field_id' => $this->field->id, '@entity_type' => $this->entity_type)));
-    }
-
     // Ensure the field instance is unique within the bundle.
     if ($prior_instance = $instance_controller->load($this->id())) {
-      throw new FieldException(format_string('Attempt to create an instance of field @field_id on bundle @bundle that already has an instance of that field.', array('@field_id' => $this->field->id, '@bundle' => $this->bundle)));
+      throw new FieldException(format_string('Attempt to create an instance of field %name on bundle @bundle that already has an instance of that field.', array('%name' => $this->field->name, '@bundle' => $this->bundle)));
     }
 
     // Set the field UUID.
@@ -412,6 +408,9 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
     // Ensure default values are present.
     $this->prepareSave();
 
+    // Notify the entity storage controller.
+    \Drupal::entityManager()->getStorageController($this->entity_type)->onInstanceUpdate($this);
+
     // Save the configuration.
     $result = parent::save();
     field_cache_clear();
@@ -439,7 +438,6 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    */
   public function delete($field_cleanup = TRUE) {
     if (!$this->deleted) {
-      $module_handler = \Drupal::moduleHandler();
       $state = \Drupal::state();
 
       // Delete the configuration of this instance and save the configuration
@@ -453,16 +451,15 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
 
       parent::delete();
 
+      // Notify the entity storage controller.
+      \Drupal::entityManager()->getStorageController($this->entity_type)->onInstanceDelete($this);
+
       // Clear the cache.
       field_cache_clear();
 
-      // Mark instance data for deletion by invoking
-      // hook_field_storage_delete_instance().
-      $module_handler->invoke($this->field->storage['module'], 'field_storage_delete_instance', array($this));
-
       // Remove the instance from the entity form displays.
       if ($form_display = entity_load('entity_form_display', $this->entity_type . '.' . $this->bundle . '.default')) {
-        $form_display->removeComponent($this->field->id())->save();
+        $form_display->removeComponent($this->field->name)->save();
       }
 
       // Remove the instance from the entity displays.
@@ -472,7 +469,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
         $ids[] = $this->entity_type . '.' . $this->bundle . '.' . $view_mode;
       }
       foreach (entity_load_multiple('entity_display', $ids) as $display) {
-        $display->removeComponent($this->field->id())->save();
+        $display->removeComponent($this->field->name)->save();
       }
 
       // Delete the field itself if we just deleted its last instance.
@@ -493,7 +490,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
    * {@inheritdoc}
    */
   public function getFieldName() {
-    return $this->field->id;
+    return $this->field->name;
   }
 
   /**
@@ -620,7 +617,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
       return $this->field_uuid;
     }
     if ($offset == 'field_name') {
-      return $this->field->id;
+      return $this->field->name;
     }
     return $this->{$offset};
   }

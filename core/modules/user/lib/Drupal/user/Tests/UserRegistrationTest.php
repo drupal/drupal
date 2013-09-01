@@ -196,8 +196,9 @@ class UserRegistrationTest extends WebTestBase {
   function testRegistrationWithUserFields() {
     // Create a field, and an instance on 'user' entity type.
     $field = entity_create('field_entity', array(
+      'name' => 'test_user_field',
+      'entity_type' => 'user',
       'type' => 'test_field',
-      'field_name' => 'test_user_field',
       'cardinality' => 1,
     ));
     $field->save();

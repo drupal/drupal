@@ -155,7 +155,8 @@ class VocabularyUnitTest extends TaxonomyTestBase {
   function testTaxonomyVocabularyChangeMachineName() {
     // Add a field instance to the vocabulary.
     entity_create('field_entity', array(
-      'field_name' => 'field_test',
+      'name' => 'field_test',
+      'entity_type' => 'taxonomy_term',
       'type' => 'test_field',
     ))->save();
     entity_create('field_instance', array(
@@ -187,7 +188,8 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     // removed when the module is uninstalled.
     $this->field_name = drupal_strtolower($this->randomName() . '_field_name');
     $this->field_definition = array(
-      'field_name' => $this->field_name,
+      'name' => $this->field_name,
+      'entity_type' => 'taxonomy_term',
       'type' => 'text',
       'cardinality' => 4
     );

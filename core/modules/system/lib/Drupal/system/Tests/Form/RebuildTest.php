@@ -72,7 +72,8 @@ class RebuildTest extends WebTestBase {
     // Create a multi-valued field for 'page' nodes to use for Ajax testing.
     $field_name = 'field_ajax_test';
     $field = array(
-      'field_name' => $field_name,
+      'name' => $field_name,
+      'entity_type' => 'node',
       'type' => 'text',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     );

@@ -40,8 +40,7 @@ function content_translation_overview(EntityInterface $entity) {
     // Determine whether the current entity is translatable.
     $translatable = FALSE;
     foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
-      $field_name = $instance['field_name'];
-      $field = field_info_field($field_name);
+      $field = $instance->getField();
       if ($field['translatable']) {
         $translatable = TRUE;
         break;
@@ -246,7 +245,7 @@ function content_translation_prepare_translation(EntityInterface $entity, Langua
   else {
     $instances = field_info_instances($entity->entityType(), $entity->bundle());
     foreach ($instances as $field_name => $instance) {
-      $field = field_info_field($field_name);
+      $field = $instance->getField();
       if (!empty($field['translatable'])) {
         $value = $entity->get($field_name);
         $value[$target->id] = isset($value[$source->id]) ? $value[$source->id] : array();

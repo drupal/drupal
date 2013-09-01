@@ -34,7 +34,7 @@ class FileListingTest extends FileFieldTestBase {
 
     $this->admin_user = $this->drupalCreateUser(array('access files overview', 'bypass node access'));
     $this->base_user = $this->drupalCreateUser();
-    $this->createFileField('file', 'article', array(), array('file_extensions' => 'txt png'));
+    $this->createFileField('file', 'node', 'article', array(), array('file_extensions' => 'txt png'));
   }
 
   /**

@@ -31,11 +31,13 @@ class FieldImportDeleteTest extends FieldUnitTestBase {
    * Tests deleting fields and instances as part of config import.
    */
   public function testImportDelete() {
-    $field_id = 'field_test_import';
-    $field_id_2 = 'field_test_import_2';
-    $instance_id = "entity_test.test_bundle.$field_id";
-    $instance_id_2a = "entity_test.test_bundle.$field_id_2";
-    $instance_id_2b = "entity_test.test_bundle_2.$field_id_2";
+    $field_name = 'field_test_import';
+    $field_id = "entity_test.$field_name";
+    $field_name_2 = 'field_test_import_2';
+    $field_id_2 = "entity_test.$field_name_2";
+    $instance_id = "entity_test.test_bundle.$field_name";
+    $instance_id_2a = "entity_test.test_bundle.$field_name_2";
+    $instance_id_2b = "entity_test.test_bundle_2.$field_name_2";
     $field_config_name = "field.field.$field_id";
     $field_config_name_2 = "field.field.$field_id_2";
     $instance_config_name = "field.instance.$instance_id";

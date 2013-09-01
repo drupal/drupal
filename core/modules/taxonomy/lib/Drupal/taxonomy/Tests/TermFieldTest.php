@@ -46,7 +46,8 @@ class TermFieldTest extends TaxonomyTestBase {
     // Setup a field and instance.
     $this->field_name = drupal_strtolower($this->randomName());
     $this->field = entity_create('field_entity', array(
-      'field_name' => $this->field_name,
+      'name' => $this->field_name,
+      'entity_type' => 'entity_test',
       'type' => 'taxonomy_term_reference',
       'settings' => array(
         'allowed_values' => array(
@@ -159,7 +160,7 @@ class TermFieldTest extends TaxonomyTestBase {
     $this->vocabulary->save();
 
     // Check that the field instance is still attached to the vocabulary.
-    $field = field_info_field($this->field_name);
+    $field = field_info_field('entity_test', $this->field_name);
     $allowed_values = $field['settings']['allowed_values'];
     $this->assertEqual($allowed_values[0]['vocabulary'], $new_name, 'Index 0: Machine name was updated correctly.');
     $this->assertEqual($allowed_values[1]['vocabulary'], $new_name, 'Index 1: Machine name was updated correctly.');

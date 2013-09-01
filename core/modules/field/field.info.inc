@@ -41,74 +41,7 @@ function field_info_cache_clear() {
   Drupal::typedData()->clearCachedDefinitions();
   Drupal::service('plugin.manager.entity.field.field_type')->clearCachedDefinitions();
 
-  _field_info_collate_types_reset();
   Field::fieldInfo()->flush();
-}
-
-/**
- * Collates all information on field types, widget types and related structures.
- *
- * @return
- *   An associative array containing:
- *   - 'storage types': Array of hook_field_storage_info() results, keyed by
- *     storage type names. Each element has the following components: label,
- *     description, and settings from hook_field_storage_info(), as well as
- *     module, giving the module that exposes the storage type.
- *
- * @see _field_info_collate_types_reset()
- */
-function _field_info_collate_types() {
-  $language_interface = language(Language::TYPE_INTERFACE);
-
-  // Use the advanced drupal_static() pattern, since this is called very often.
-  static $drupal_static_fast;
-
-  if (!isset($drupal_static_fast)) {
-    $drupal_static_fast['field_info_collate_types'] = &drupal_static(__FUNCTION__);
-  }
-  $info = &$drupal_static_fast['field_info_collate_types'];
-
-  // The _info() hooks invoked below include translated strings, so each
-  // language is cached separately.
-  $langcode = $language_interface->id;
-
-  if (!isset($info)) {
-    if ($cached = cache('field')->get("field_info_types:$langcode")) {
-      $info = $cached->data;
-    }
-    else {
-      $info = array(
-        'storage types' => array(),
-      );
-
-      // Populate storage types.
-      foreach (Drupal::moduleHandler()->getImplementations('field_storage_info') as $module) {
-        $storage_types = (array) module_invoke($module, 'field_storage_info');
-        foreach ($storage_types as $name => $storage_info) {
-          // Provide defaults.
-          $storage_info += array(
-            'settings' => array(),
-          );
-          $info['storage types'][$name] = $storage_info;
-          $info['storage types'][$name]['module'] = $module;
-        }
-      }
-      drupal_alter('field_storage_info', $info['storage types']);
-
-      cache('field')->set("field_info_types:$langcode", $info, CacheBackendInterface::CACHE_PERMANENT, array('field_info_types' => TRUE));
-    }
-  }
-
-  return $info;
-}
-
-/**
- * Clears collated information on field and widget types and related structures.
- */
-function _field_info_collate_types_reset() {
-  drupal_static_reset('_field_info_collate_types');
-  // Clear all languages.
-  cache('field')->deleteTags(array('field_info_types' => TRUE));
 }
 
 /**
@@ -135,31 +68,6 @@ function field_behaviors_widget($op, $instance) {
 }
 
 /**
- * Returns information about field storage from hook_field_storage_info().
- *
- * @param $storage_type
- *   (optional) A storage type name. If omitted, all storage types will be
- *   returned.
- *
- * @return
- *   Either a storage type description, as provided by
- *   hook_field_storage_info(), or an array of all existing storage types, keyed
- *   by storage type name.
- */
-function field_info_storage_types($storage_type = NULL) {
-  $info = _field_info_collate_types();
-  $storage_types = $info['storage types'];
-  if ($storage_type) {
-    if (isset($storage_types[$storage_type])) {
-      return $storage_types[$storage_type];
-    }
-  }
-  else {
-    return $storage_types;
-  }
-}
-
-/**
  * Returns all field definitions.
  *
  * Use of this function should be avoided when possible, since it loads and
@@ -171,26 +79,16 @@ function field_info_storage_types($storage_type = NULL) {
  * field_info_field() on each individual field instead.
  *
  * @return
- *   An array of field definitions, keyed by field name. Each field has an
- *   additional property, 'bundles', which is an array of all the bundles to
- *   which this field belongs, keyed by entity type.
+ *   An array of field definitions, keyed by field UUID.
  *
  * @see field_info_field_map()
  */
 function field_info_fields() {
-  $info = Field::fieldInfo()->getFields();
-
-  $fields = array();
-  foreach ($info as $key => $field) {
-    if (!$field['deleted']) {
-      $fields[$field['field_name']] = $field;
-    }
-  }
-
-  return $fields;
+  // Filter out deleted fields.
+  return array_filter(Field::fieldInfo()->getFields(), function ($field) {
+    return !$field->deleted;
+  });
 }
-
-
 
 /**
  * Returns a list and settings of pseudo-field elements in a given bundle.
@@ -249,22 +147,6 @@ function field_info_extra_fields($entity_type, $bundle, $context) {
   $info = Field::fieldInfo()->getBundleExtraFields($entity_type, $bundle);
 
   return isset($info[$context]) ? $info[$context] : array();
-}
-
-/**
- * Returns a field storage type's default settings.
- *
- * @param $type
- *   A field storage type name.
- *
- * @return
- *   The storage type's default settings, as provided by
- *   hook_field_storage_info(), or an empty array if type or settings are
- *   undefined.
- */
-function field_info_storage_settings($type) {
-  $info = field_info_storage_types($type);
-  return isset($info['settings']) ? $info['settings'] : array();
 }
 
 /**

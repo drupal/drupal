@@ -21,7 +21,6 @@ class TelephoneFieldTest extends WebTestBase {
    */
   public static $modules = array(
     'field',
-    'field_sql_storage',
     'node',
     'telephone'
   );
@@ -54,7 +53,8 @@ class TelephoneFieldTest extends WebTestBase {
 
     // Add the telepone field to the article content type.
     entity_create('field_entity', array(
-      'field_name' => 'field_telephone',
+      'name' => 'field_telephone',
+      'entity_type' => 'node',
       'type' => 'telephone',
     ))->save();
     entity_create('field_instance', array(

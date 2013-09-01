@@ -1,5 +1,5 @@
 content_translation_translatable:
-  pattern: 'admin/config/regional/content_translation/translatable/{field_name}'
+  pattern: 'admin/config/regional/content_translation/translatable/{entity_type}/{field_name}'
   defaults:
     _form: 'Drupal\content_translation\Form\TranslatableForm'
   requirements:

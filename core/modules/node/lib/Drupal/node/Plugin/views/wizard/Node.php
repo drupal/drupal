@@ -306,9 +306,13 @@ class Node extends WizardPluginBase {
         '#type' => 'textfield',
         '#title' => t('tagged with'),
         '#autocomplete_route_name' => 'taxonomy_autocomplete',
-        '#autocomplete_route_parameters' => array('field_name' => $tag_field_name),
+        '#autocomplete_route_parameters' => array(
+          'entity_type' => $this->entity_type,
+          'field_name' => $tag_field_name,
+        ),
         '#size' => 30,
         '#maxlength' => 1024,
+        '#entity_type' => $this->entity_type,
         '#field_name' => $tag_field_name,
         '#element_validate' => array('views_ui_taxonomy_autocomplete_validate'),
       );

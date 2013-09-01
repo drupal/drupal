@@ -30,7 +30,8 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $this->langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->field_name = 'taxonomy_' . $this->vocabulary->id();
     entity_create('field_entity', array(
-      'field_name' => $this->field_name,
+      'name' => $this->field_name,
+      'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
       'settings' => array(

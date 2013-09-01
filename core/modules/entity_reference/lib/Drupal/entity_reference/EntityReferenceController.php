@@ -69,7 +69,7 @@ class EntityReferenceController implements ControllerInterface {
    *   The matched labels as json.
    */
   public function handleAutocomplete(Request $request, $type, $field_name, $entity_type, $bundle_name, $entity_id) {
-    if (!$field = field_info_field($field_name)) {
+    if (!$field = field_info_field($entity_type, $field_name)) {
       throw new AccessDeniedHttpException();
     }
 

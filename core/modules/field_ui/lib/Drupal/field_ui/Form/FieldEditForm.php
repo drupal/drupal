@@ -197,7 +197,7 @@ class FieldEditForm extends FormBase {
     unset($field_values['container']);
 
     // Merge incoming form values into the existing field.
-    $field = $this->fieldInfo->getField($field_values['field_name']);
+    $field = $this->instance->getField();
     foreach ($field_values as $key => $value) {
       $field[$key] = $value;
     }
