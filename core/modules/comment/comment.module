@@ -123,10 +123,12 @@ function comment_help($path, $arg) {
  */
 function comment_entity_bundle_info() {
   $bundles = array();
-  foreach (Drupal::service('comment.manager')->getFields() as $field_name => $field_info) {
-    $bundles['comment'][$field_name] = array(
-      'label' => $field_name,
-    );
+  foreach (Drupal::service('comment.manager')->getAllFields() as $entity_type => $fields) {
+    foreach ($fields as $field_name => $field_info) {
+      $bundles['comment'][$entity_type . '_' . $field_name] = array(
+        'label' => $entity_type . '_' . $field_name,
+      );
+    }
   }
   return $bundles;
 }
@@ -140,6 +142,8 @@ function comment_entity_bundle_info() {
  * @return string|false
  *   The field name as of the comment field entity or FALSE if $field_name
  *   is not a comment field.
+ *
+ * @todo remove as unused.
  */
 function comment_field_name_load($field_name) {
   if (($field = entity_load('field_entity', $field_name)) && $field->getFieldType() == 'comment') {
@@ -164,21 +168,23 @@ function comment_uri(Comment $comment) {
  */
 function comment_field_extra_fields() {
   $return = array();
-  foreach (Drupal::service('comment.manager')->getFields() as $field_name => $field_info) {
-    $return['comment'][$field_name] = array(
-      'form' => array(
-        'author' => array(
-          'label' => t('Author'),
-          'description' => t('Author textfield'),
-          'weight' => -2,
+  foreach (Drupal::service('comment.manager')->getAllFields() as $entity_type => $fields) {
+    foreach ($fields as $field_name => $field_info) {
+      $return['comment'][$entity_type . '_' . $field_name] = array(
+        'form' => array(
+          'author' => array(
+            'label' => t('Author'),
+            'description' => t('Author textfield'),
+            'weight' => -2,
+          ),
+          'subject' => array(
+            'label' => t('Subject'),
+            'description' => t('Subject textfield'),
+            'weight' => -1,
+          ),
         ),
-        'subject' => array(
-          'label' => t('Subject'),
-          'description' => t('Subject textfield'),
-          'weight' => -1,
-        ),
-      ),
-    );
+      );
+    }
   }
 
   return $return;
@@ -351,20 +357,6 @@ function comment_reply_access(EntityInterface $entity) {
   // hook_comment_access and if no other modules object, grant access.
   $access = Drupal::moduleHandler()->invokeAll('comment_access', $entity);
   return !in_array(COMMENT_ACCESS_DENY, $access, TRUE);
-}
-
- /**
- * Creates a comment_body field instance.
- *
- * @param string $entity_type
- *   Entity type to which the comment field is attached.
- * @param string $bundle_name
- *   Bundle of entity type to which comment field is attached
- * @param string $field_name
- *   Name of the comment field attached to the entity type and bundle.
- */
-function _comment_body_field_create($entity_type, $bundle_name, $field_name) {
-  Drupal::service('comment.manager')->addBodyField($field_name);
 }
 
 /**
@@ -1022,8 +1014,7 @@ function comment_translation_configuration_element_submit($form, &$form_state) {
  * Implements hook_entity_load().
  */
 function comment_entity_load($entities, $entity_type) {
-  $fields = Drupal::service('comment.manager')->getFields($entity_type);
-  if (!$fields) {
+  if (!Drupal::service('comment.manager')->getFields($entity_type)) {
     // Do not query database when entity has no comment fields.
     return;
   }
@@ -1824,7 +1815,7 @@ function comment_library_info() {
  */
 function comment_field_instance_create(FieldInstanceInterface $instance) {
   if ($instance->getFieldType() == 'comment') {
-    Drupal::service('comment.manager')->addBodyField($instance->getFieldName());
+    Drupal::service('comment.manager')->addBodyField($instance->entity_type, $instance->getFieldName());
     Drupal::cache()->delete('comment_entity_info');
   }
 }
