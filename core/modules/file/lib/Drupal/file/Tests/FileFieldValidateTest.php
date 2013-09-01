@@ -30,8 +30,8 @@ class FileFieldValidateTest extends FileFieldTestBase {
   function testRequired() {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
-    $field = $this->createFileField($field_name, $type_name, array(), array('required' => '1'));
-    $instance = field_info_instance('node', $field_name, $type_name);
+    $field = $this->createFileField($field_name, 'node', $type_name, array(), array('required' => '1'));
+    $instance = field_info_instance($field_name, 'node', $type_name);
 
     $test_file = $this->getTestFile('text');
 
@@ -52,7 +52,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
 
     // Try again with a multiple value field.
     $field->delete();
-    $this->createFileField($field_name, $type_name, array('cardinality' => FIELD_CARDINALITY_UNLIMITED), array('required' => '1'));
+    $this->createFileField($field_name, 'node', $type_name, array('cardinality' => FIELD_CARDINALITY_UNLIMITED), array('required' => '1'));
 
     // Try to post a new node without uploading a file in the multivalue field.
     $edit = array('title' => $this->randomName());
@@ -73,7 +73,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
   function testFileMaxSize() {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
-    $this->createFileField($field_name, $type_name, array(), array('required' => '1'));
+    $this->createFileField($field_name, 'node', $type_name, array(), array('required' => '1'));
 
     $small_file = $this->getTestFile('text', 131072); // 128KB.
     $large_file = $this->getTestFile('text', 1310720); // 1.2MB
@@ -119,7 +119,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
   function testFileExtension() {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
-    $this->createFileField($field_name, $type_name);
+    $this->createFileField($field_name, 'node', $type_name);
 
     $test_file = $this->getTestFile('image');
     list(, $test_file_extension) = explode('.', $test_file->getFilename());

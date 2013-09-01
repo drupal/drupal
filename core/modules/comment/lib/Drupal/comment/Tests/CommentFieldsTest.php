@@ -43,7 +43,7 @@ class CommentFieldsTest extends CommentTestBase {
     $instance->delete();
 
     // Check that the 'comment_body' field is deleted.
-    $field = $this->container->get('field.info')->getField('comment_body');
+    $field = $this->container->get('field.info')->getField('comment', 'comment_body');
     $this->assertTrue(empty($field), 'The comment_body field was deleted');
 
     // Create a new content type.
@@ -53,7 +53,7 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Check that the 'comment_body' field exists and has an instance on the
     // new comment bundle.
-    $field = $this->container->get('field.info')->getField('comment_body');
+    $field = $this->container->get('field.info')->getField('comment', 'comment_body');
     $this->assertTrue($field, 'The comment_body field exists');
     $instances = $this->container->get('field.info')->getInstances('comment');
     $this->assertTrue(isset($instances['comment']['comment_body']), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
@@ -68,8 +68,9 @@ class CommentFieldsTest extends CommentTestBase {
     $this->drupalLogin($this->admin_user);
 
     // Drop default comment field added in CommentTestBase::setup().
-    entity_load('field_entity', 'comment')->delete();
-    if ($field = field_info_field('comment_node_forum')) {
+    // @todo WTF#1497374
+    entity_load('field_entity', 'node.comment')->delete();
+    if ($field = field_info_field('node', 'comment_node_forum')) {
       $field->delete();
     }
 

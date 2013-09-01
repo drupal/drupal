@@ -33,8 +33,17 @@ class NestedFormTest extends FieldTestBase {
     $web_user = $this->drupalCreateUser(array('view test entity', 'administer entity_test content'));
     $this->drupalLogin($web_user);
 
-    $this->field_single = array('field_name' => 'field_single', 'type' => 'test_field');
-    $this->field_unlimited = array('field_name' => 'field_unlimited', 'type' => 'test_field', 'cardinality' => FIELD_CARDINALITY_UNLIMITED);
+    $this->field_single = array(
+      'name' => 'field_single',
+      'entity_type' => 'entity_test',
+      'type' => 'test_field',
+    );
+    $this->field_unlimited = array(
+      'name' => 'field_unlimited',
+      'entity_type' => 'entity_test',
+      'type' => 'test_field',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+    );
 
     $this->instance = array(
       'entity_type' => 'entity_test',

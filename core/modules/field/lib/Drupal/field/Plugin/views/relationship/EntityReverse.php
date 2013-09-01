@@ -28,7 +28,7 @@ class EntityReverse extends RelationshipPluginBase  {
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    $this->field_info = field_info_field($this->definition['field_name']);
+    $this->field_info = field_info_field($this->definition['entity_type'], $this->definition['field_name']);
   }
 
   /**

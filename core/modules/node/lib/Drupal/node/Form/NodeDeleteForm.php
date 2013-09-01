@@ -50,7 +50,7 @@ class NodeDeleteForm extends EntityNGConfirmFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('url_generator'),
-      $container->get('plugin.manager.entity')->getStorageController('node_type')
+      $container->get('entity.manager')->getStorageController('node_type')
     );
   }
 

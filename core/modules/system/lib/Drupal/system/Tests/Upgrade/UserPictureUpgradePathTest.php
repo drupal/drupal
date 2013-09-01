@@ -52,7 +52,7 @@ class UserPictureUpgradePathTest extends UpgradePathTestBase {
 
     // Check file usage for the default image.
     $usage = file_usage()->listUsage($file);
-    $field = field_info_field('user_picture');
+    $field = field_info_field('user', 'user_picture');
     $this->assertTrue(isset($usage['image']['default_image'][$field['uuid']]));
 
     $this->assertEqual($instance['settings']['max_resolution'], '800x800', 'User picture maximum resolution has been migrated.');

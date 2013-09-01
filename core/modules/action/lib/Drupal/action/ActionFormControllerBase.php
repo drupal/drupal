@@ -46,7 +46,7 @@ abstract class ActionFormControllerBase extends EntityFormController {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')->getStorageController('action')
+      $container->get('entity.manager')->getStorageController('action')
     );
   }
 

@@ -195,7 +195,7 @@ function field_test_field_storage_delete(EntityInterface $entity, $fields) {
   // does, is highly inefficient in our case...
   foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     if (isset($fields[$instance['field_id']])) {
-      $field = field_info_field_by_id($instance['field_id']);
+      $field = $instance->getField();
       field_test_field_storage_purge($entity, $field, $instance);
     }
   }
@@ -403,7 +403,7 @@ function field_test_field_storage_delete_field($field) {
 function field_test_field_storage_delete_instance($instance) {
   $data = _field_test_storage_data();
 
-  $field = field_info_field($instance['field_name']);
+  $field = $instance->getField();
   $field_data = &$data[$field['uuid']];
   foreach (array('current', 'revisions') as $sub_table) {
     foreach ($field_data[$sub_table] as &$row) {
@@ -424,8 +424,8 @@ function field_test_entity_bundle_rename($entity_type, $bundle_old, $bundle_new)
 
   // We need to account for deleted or inactive fields and instances.
   $instances = field_read_instances(array('bundle' => $bundle_new), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
-  foreach ($instances as $field_name => $instance) {
-    $field = field_info_field_by_id($instance['field_id']);
+  foreach ($instances as $instance) {
+    $field = $instance->getField();
     if ($field && $field['storage']['type'] == 'field_test_storage') {
       $field_data = &$data[$field['uuid']];
       foreach (array('current', 'revisions') as $sub_table) {

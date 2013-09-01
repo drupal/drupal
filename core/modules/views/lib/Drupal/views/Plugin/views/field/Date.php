@@ -66,7 +66,7 @@ class Date extends FieldPluginBase {
       $plugin_id,
       $plugin_definition,
       $container->get('date'),
-      $container->get('plugin.manager.entity')->getStorageController('date_format')
+      $container->get('entity.manager')->getStorageController('date_format')
     );
   }
 

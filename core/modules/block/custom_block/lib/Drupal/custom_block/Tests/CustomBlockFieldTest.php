@@ -65,13 +65,14 @@ class CustomBlockFieldTest extends CustomBlockTestBase {
 
     // Create a field with settings to validate.
     $this->field = entity_create('field_entity', array(
-      'field_name' => drupal_strtolower($this->randomName()),
+      'name' => drupal_strtolower($this->randomName()),
+      'entity_type' => 'custom_block',
       'type' => 'link',
       'cardinality' => 2,
     ));
     $this->field->save();
     $this->instance = entity_create('field_instance', array(
-      'field_name' => $this->field->id(),
+      'field_name' => $this->field->name,
       'entity_type' => 'custom_block',
       'bundle' => 'link',
       'settings' => array(

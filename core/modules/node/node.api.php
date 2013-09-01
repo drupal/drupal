@@ -41,7 +41,6 @@ use Drupal\Component\Utility\Xss;
  *   - hook_node_presave() (all)
  *   - hook_entity_presave() (all)
  *   - Node and revision records are written to the database
- *   - field_attach_insert()
  *   - hook_node_insert() (all)
  *   - hook_entity_insert() (all)
  *   - hook_node_access_records() (all)
@@ -51,7 +50,6 @@ use Drupal\Component\Utility\Xss;
  *   - hook_node_presave() (all)
  *   - hook_entity_presave() (all)
  *   - Node and revision records are written to the database
- *   - field_attach_update()
  *   - hook_node_update() (all)
  *   - hook_entity_update() (all)
  *   - hook_node_access_records() (all)
@@ -59,7 +57,6 @@ use Drupal\Component\Utility\Xss;
  * - Loading a node (calling node_load(), node_load_multiple(), entity_load(),
  *   or entity_load_multiple() with $entity_type of 'node'):
  *   - Node and revision information is read from database.
- *   - field_attach_load_revision() and field_attach_load()
  *   - hook_entity_load() (all)
  *   - hook_node_load() (all)
  * - Viewing a single node (calling node_view() - note that the input to
@@ -85,7 +82,6 @@ use Drupal\Component\Utility\Xss;
  *   - Node is loaded (see Loading section above)
  *   - hook_node_predelete() (all)
  *   - hook_entity_predelete() (all)
- *   - field_attach_delete()
  *   - Node and revision information are deleted from database
  *   - hook_node_delete() (all)
  *   - hook_entity_delete() (all)
@@ -93,7 +89,6 @@ use Drupal\Component\Utility\Xss;
  *   - Node is loaded (see Loading section above)
  *   - Revision information is deleted from database
  *   - hook_node_revision_delete() (all)
- *   - field_attach_delete_revision()
  * - Preparing a node for editing (calling node_form() - note that if it is an
  *   existing node, it will already be loaded; see the Loading section above):
  *   - hook_node_prepare_form() (all)
@@ -393,7 +388,7 @@ function hook_node_grants_alter(&$grants, $account, $op) {
  * Act before node deletion.
  *
  * This hook is invoked from entity_delete_multiple() before
- * hook_entity_predelete() and field_attach_delete() are called, and before
+ * hook_entity_predelete() is called and field values are deleted, and before
  * the node is removed from the node table in the database.
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
@@ -412,8 +407,8 @@ function hook_node_predelete(\Drupal\Core\Entity\EntityInterface $node) {
 /**
  * Respond to node deletion.
  *
- * This hook is invoked from entity_delete_multiple() after field_attach_delete()
- * has been called and after the node has been removed from the database.
+ * This hook is invoked from entity_delete_multiple() after field values are
+ * deleted and after the node has been removed from the database.
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node that has been deleted.
@@ -430,8 +425,7 @@ function hook_node_delete(\Drupal\Core\Entity\EntityInterface $node) {
  * Respond to deletion of a node revision.
  *
  * This hook is invoked from node_revision_delete() after the revision has been
- * removed from the node_revision table, and before
- * field_attach_delete_revision() is called.
+ * removed from the node_revision table, and before field values are deleted.
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node revision (node object) that is being deleted.
@@ -449,7 +443,7 @@ function hook_node_revision_delete(\Drupal\Core\Entity\EntityInterface $node) {
  *
  * This hook is invoked from $node->save() after the database query that will
  * insert the node into the node table is scheduled for execution, and after
- * field_attach_insert() is called.
+ * field values are saved.
  *
  * Note that when this hook is invoked, the changes have not yet been written to
  * the database, because a database transaction is still in progress. The
@@ -670,8 +664,8 @@ function hook_node_presave(\Drupal\Core\Entity\EntityInterface $node) {
  * Respond to updates to a node.
  *
  * This hook is invoked from $node->save() after the database query that will
- * update node in the node table is scheduled for execution, and after
- * field_attach_update() is called.
+ * update node in the node table is scheduled for execution, and after field
+ * values are saved.
  *
  * Note that when this hook is invoked, the changes have not yet been written to
  * the database, because a database transaction is still in progress. The

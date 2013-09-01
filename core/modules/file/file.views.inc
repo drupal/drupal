@@ -7,6 +7,9 @@
  * @ingroup views_module_handlers
  */
 
+use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\field\FieldInterface;
+
 /**
  * Implements hook_views_data().
  */
@@ -460,7 +463,7 @@ function file_views_data() {
  *
  * @see field_views_field_default_views_data()
  */
-function file_field_views_data($field) {
+function file_field_views_data(FieldInterface $field) {
   $data = field_views_field_default_views_data($field);
   foreach ($data as $table_name => $table_data) {
     // Add the relationship only on the fid field.
@@ -481,38 +484,31 @@ function file_field_views_data($field) {
  *
  * Views integration to provide reverse relationships on file fields.
  */
-function file_field_views_data_views_data_alter(&$data, $field) {
-  foreach ($field['bundles'] as $entity_type => $bundles) {
-    $entity_info = entity_get_info($entity_type);
-    $pseudo_field_name = 'reverse_' . $field['field_name'] . '_' . $entity_type;
+function file_field_views_data_views_data_alter(array &$data, FieldInterface $field) {
+  $entity_type = $field['entity_type'];
+  $entity_info = entity_get_info($entity_type);
+  $pseudo_field_name = 'reverse_' . $field['field_name'] . '_' . $entity_type;
 
-    list($label, $all_labels) = field_views_field_label($field['field_name']);
-    $entity = $entity_info['label'];
-    if ($entity == t('Node')) {
-      $entity = t('Content');
-    }
+  list($label,) = field_views_field_label($entity_type, $field['field_name']);
+  $entity_label = ($entity_info['label'] == t('Node')) ? t('Content') : $entity_info['label'];
 
-    $data['file_managed'][$pseudo_field_name]['relationship'] = array(
-      'title' => t('@entity using @field', array('@entity' => $entity, '@field' => $label)),
-      'help' => t('Relate each @entity with a @field set to the file.', array('@entity' => $entity, '@field' => $label)),
-      'id' => 'entity_reverse',
-      'field_name' => $field['field_name'],
-      'field table' => _field_sql_storage_tablename($field),
-      'field field' => $field['field_name'] . '_target_id',
-      'base' => $entity_info['base_table'],
-      'base field' => $entity_info['entity_keys']['id'],
-      'label' => t('!field_name', array('!field_name' => $field['field_name'])),
-      'join_extra' => array(
-        0 => array(
-          'field' => 'entity_type',
-          'value' => $entity_type,
-        ),
-        1 => array(
-          'field' => 'deleted',
-          'value' => 0,
-          'numeric' => TRUE,
-        ),
+  $data['file_managed'][$pseudo_field_name]['relationship'] = array(
+    'title' => t('@entity using @field', array('@entity' => $entity_label, '@field' => $label)),
+    'help' => t('Relate each @entity with a @field set to the file.', array('@entity' => $entity_label, '@field' => $label)),
+    'id' => 'entity_reverse',
+    'field_name' => $field['field_name'],
+    'entity_type' => $field['entity_type'],
+    'field table' => DatabaseStorageController::_fieldTableName($field),
+    'field field' => $field['field_name'] . '_target_id',
+    'base' => $entity_info['base_table'],
+    'base field' => $entity_info['entity_keys']['id'],
+    'label' => t('!field_name', array('!field_name' => $field['field_name'])),
+    'join_extra' => array(
+      0 => array(
+        'field' => 'deleted',
+        'value' => 0,
+        'numeric' => TRUE,
       ),
-    );
-  }
+    ),
+  );
 }

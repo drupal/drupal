@@ -7,14 +7,14 @@
 
 namespace Drupal\update\Controller;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routines for update routes.
  */
-class UpdateController implements ControllerInterface {
+class UpdateController implements ContainerInjectionInterface {
 
   /**
    * Module handler service.

@@ -9,7 +9,7 @@ namespace Drupal\comment\Controller;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\Entity\Comment;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -25,7 +25,7 @@ use Drupal\node\NodeInterface;
  *
  * @see \Drupal\comment\Entity\Comment.
  */
-class CommentController implements ControllerInterface {
+class CommentController implements ContainerInjectionInterface {
 
   /**
    * The url generator service.

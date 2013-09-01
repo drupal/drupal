@@ -79,7 +79,7 @@ class FieldStorageController extends ConfigStorageController {
       $container->get('config.factory'),
       $container->get('config.storage'),
       $container->get('entity.query'),
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('module_handler'),
       $container->get('state')
     );
@@ -98,9 +98,10 @@ class FieldStorageController extends ConfigStorageController {
     unset($conditions['include_deleted']);
 
     // Get fields stored in configuration.
-    if (isset($conditions['field_name'])) {
+    if (isset($conditions['entity_type']) && isset($conditions['field_name'])) {
       // Optimize for the most frequent case where we do have a specific ID.
-      $fields = $this->entityManager->getStorageController($this->entityType)->loadMultiple(array($conditions['field_name']));
+      $id = $conditions['entity_type'] . $conditions['field_name'];
+      $fields = $this->entityManager->getStorageController($this->entityType)->loadMultiple(array($id));
     }
     else {
       // No specific ID, we need to examine all existing fields.
@@ -118,7 +119,6 @@ class FieldStorageController extends ConfigStorageController {
     // Translate "do not include inactive instances" into actual conditions.
     if (!$include_inactive) {
       $conditions['active'] = TRUE;
-      $conditions['storage.active'] = TRUE;
     }
 
     // Collect matching fields.
@@ -127,12 +127,8 @@ class FieldStorageController extends ConfigStorageController {
       foreach ($conditions as $key => $value) {
         // Extract the actual value against which the condition is checked.
         switch ($key) {
-          case 'storage.active':
-            $checked_value = $field->storage['active'];
-            break;
-
           case 'field_name';
-            $checked_value = $field->id;
+            $checked_value = $field->name;
             break;
 
           default:

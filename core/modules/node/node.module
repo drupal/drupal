@@ -395,13 +395,13 @@ function node_type_load($name) {
  */
 function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
    // Add or remove the body field, as needed.
-  $field = field_info_field('body');
+  $field = field_info_field('node', 'body');
   $instance = field_info_instance('node', 'body', $type->id());
   if (empty($field)) {
     $field = entity_create('field_entity', array(
-      'field_name' => 'body',
+      'name' => 'body',
+      'entity_type' => 'node',
       'type' => 'text_with_summary',
-      'entity_types' => array('node'),
     ));
     $field->save();
   }
@@ -417,20 +417,20 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
 
     // Assign widget settings for the 'default' form mode.
     entity_get_form_display('node', $type->type, 'default')
-      ->setComponent($field->id(), array(
+      ->setComponent('body', array(
         'type' => 'text_textarea_with_summary',
       ))
       ->save();
 
     // Assign display settings for the 'default' and 'teaser' view modes.
     entity_get_display('node', $type->type, 'default')
-      ->setComponent($field->id(), array(
+      ->setComponent('body', array(
         'label' => 'hidden',
         'type' => 'text_default',
       ))
       ->save();
     entity_get_display('node', $type->type, 'teaser')
-      ->setComponent($field->id(), array(
+      ->setComponent('body', array(
         'label' => 'hidden',
         'type' => 'text_summary_or_trimmed',
       ))

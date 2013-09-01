@@ -33,7 +33,8 @@ class OptionsDynamicValuesTest extends FieldTestBase {
 
     $this->field_name = 'test_options';
     entity_create('field_entity', array(
-      'field_name' => $this->field_name,
+      'name' => $this->field_name,
+      'entity_type' => 'entity_test_rev',
       'type' => 'list_text',
       'cardinality' => 1,
       'settings' => array(

@@ -63,7 +63,8 @@ class EntityQueryTest extends EntityUnitTestBase {
     $greetings = drupal_strtolower($this->randomName());
     foreach (array($figures => 'shape', $greetings => 'text') as $field_name => $field_type) {
       $field = entity_create('field_entity', array(
-        'field_name' => $field_name,
+        'name' => $field_name,
+        'entity_type' => 'entity_test_mulrev',
         'type' => $field_type,
         'cardinality' => 2,
         'translatable' => TRUE,
@@ -81,7 +82,7 @@ class EntityQueryTest extends EntityUnitTestBase {
       entity_test_create_bundle($bundle);
       foreach ($fields as $field) {
         entity_create('field_instance', array(
-          'field_name' => $field->id(),
+          'field_name' => $field->name,
           'entity_type' => 'entity_test_mulrev',
           'bundle' => $bundle,
         ))->save();
@@ -404,12 +405,19 @@ class EntityQueryTest extends EntityUnitTestBase {
   }
 
   /**
-   * Test entity count query.
+   * Test that count queries are separated across entity types.
    */
   protected function testCount() {
-    // Attach the existing 'figures' field to a second entity type so that we
-    // can test whether cross entity type fields produce the correct query.
+    // Create a field with the same name in a different entity type.
     $field_name = $this->figures;
+    $field = entity_create('field_entity', array(
+      'name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'shape',
+      'cardinality' => 2,
+      'translatable' => TRUE,
+    ));
+    $field->save();
     $bundle = $this->randomName();
     entity_create('field_instance', array(
       'field_name' => $field_name,
@@ -424,6 +432,7 @@ class EntityQueryTest extends EntityUnitTestBase {
     $entity->enforceIsNew();
     $entity->setNewRevision();
     $entity->save();
+
     // As the single entity of this type we just saved does not have a value
     // in the color field, the result should be 0.
     $count = $this->factory->get('entity_test')

@@ -40,7 +40,8 @@ class UserCreateTest extends WebTestBase {
     // Create a field and an instance.
     $field_name = 'test_field';
     $field = array(
-      'field_name' => $field_name,
+      'name' => $field_name,
+      'entity_type' => 'user',
       'module' => 'image',
       'type' => 'image',
       'cardinality' => 1,

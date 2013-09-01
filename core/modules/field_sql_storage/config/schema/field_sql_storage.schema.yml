@@ -1,7 +1,0 @@
-# Schema for configuration files of the Field SQL Storage module.
-
-field_storage.field_sql_storage.settings:
-  type: sequence
-  label: 'Settings'
-  sequence:
-    - type: string

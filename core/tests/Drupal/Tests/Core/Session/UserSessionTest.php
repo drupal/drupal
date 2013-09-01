@@ -113,7 +113,7 @@ class UserSessionTest extends UnitTestCase {
       ->with($this->equalTo('user_role'))
       ->will($this->returnValue($role_storage));
     $container = new ContainerBuilder();
-    $container->set('plugin.manager.entity', $entity_manager);
+    $container->set('entity.manager', $entity_manager);
     \Drupal::setContainer($container);
 
     $this->users['user_one'] = $this->createUserSession(array('role_one'));

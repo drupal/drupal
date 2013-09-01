@@ -190,7 +190,8 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
             // of making LegacyConfigFieldItem implement PrepareCacheInterface.
             // @todo Remove once all core field types have been converted (see
             // http://drupal.org/node/2014671).
-            || (is_subclass_of($type_definition['class'], '\Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem') && function_exists($type_definition['provider'] . '_field_load'))) {
+            || (is_subclass_of($type_definition['class'], '\Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem')
+              && isset($type_definition['provider']) && function_exists($type_definition['provider'] . '_field_load'))) {
 
             // Call the prepareCache() method directly on each item
             // individually.
@@ -231,6 +232,22 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
         }
       }
     }
+  }
+
+  /**
+   * Invokes a hook on behalf of the entity.
+   *
+   * @param string $hook
+   *   One of 'presave', 'insert', 'update', 'predelete', 'delete', or
+   *  'revision_delete'.
+   * @param \Drupal\Core\Entity\EntityInterface  $entity
+   *   The entity object.
+   */
+  protected function invokeHook($hook, EntityInterface $entity) {
+    // Invoke the hook.
+    module_invoke_all($this->entityType . '_' . $hook, $entity);
+    // Invoke the respective entity-level hook.
+    module_invoke_all('entity_' . $hook, $entity, $this->entityType);
   }
 
   /**

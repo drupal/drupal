@@ -7,7 +7,7 @@
 
 namespace Drupal\image\Form;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\image\ImageEffectManager;
 use Drupal\image\ImageStyleInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides an add form for image effects.
  */
-class ImageEffectAddForm extends ImageEffectFormBase implements ControllerInterface {
+class ImageEffectAddForm extends ImageEffectFormBase implements ContainerInjectionInterface {
 
   /**
    * The image effect manager.

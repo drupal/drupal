@@ -8,7 +8,7 @@
 namespace Drupal\aggregator\Form;
 
 use Drupal\aggregator\CategoryStorageControllerInterface;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Provides a confirm delete form.
  */
-class CategoryDeleteForm extends ConfirmFormBase implements ControllerInterface {
+class CategoryDeleteForm extends ConfirmFormBase implements ContainerInjectionInterface {
 
   /**
    * The category to be deleted.
@@ -70,7 +70,7 @@ class CategoryDeleteForm extends ConfirmFormBase implements ControllerInterface 
   public static function create(ContainerInterface $container) {
     return new static (
       $container->get('module_handler'),
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('aggregator.category.storage')
     );
   }

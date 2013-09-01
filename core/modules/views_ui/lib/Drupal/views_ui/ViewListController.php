@@ -34,7 +34,7 @@ class ViewListController extends ConfigEntityListController implements EntityCon
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
     return new static(
       $entity_type,
-      $container->get('plugin.manager.entity')->getStorageController($entity_type),
+      $container->get('entity.manager')->getStorageController($entity_type),
       $entity_info,
       $container->get('plugin.manager.views.display'),
       $container->get('module_handler')

@@ -74,7 +74,10 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
       '#type' => 'textfield',
       '#default_value' => taxonomy_implode_tags($tags),
       '#autocomplete_route_name' => $this->getSetting('autocomplete_route_name'),
-      '#autocomplete_route_parameters' => array('field_name' => $this->fieldDefinition->getFieldName()),
+      '#autocomplete_route_parameters' => array(
+        'entity_type' => $items->getParent()->entityType(),
+        'field_name' => $this->fieldDefinition->getFieldName(),
+      ),
       '#size' => $this->getSetting('size'),
       '#placeholder' => $this->getSetting('placeholder'),
       '#maxlength' => 1024,

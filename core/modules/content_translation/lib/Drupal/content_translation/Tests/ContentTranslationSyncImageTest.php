@@ -57,7 +57,8 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
     $this->cardinality = 3;
 
     entity_create('field_entity', array(
-      'field_name' => $this->fieldName,
+      'name' => $this->fieldName,
+      'entity_type' => $this->entityType,
       'type' => 'image',
       'cardinality' => $this->cardinality,
       'translatable' => TRUE,

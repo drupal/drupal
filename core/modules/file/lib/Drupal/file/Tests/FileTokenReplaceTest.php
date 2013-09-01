@@ -31,7 +31,7 @@ class FileTokenReplaceTest extends FileFieldTestBase {
     // Create file field.
     $type_name = 'article';
     $field_name = 'field_' . strtolower($this->randomName());
-    $this->createFileField($field_name, $type_name);
+    $this->createFileField($field_name, 'node', $type_name);
 
     $test_file = $this->getTestFile('text');
     // Coping a file to test uploads with non-latin filenames.

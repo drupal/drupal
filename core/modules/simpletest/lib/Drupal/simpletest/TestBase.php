@@ -1307,7 +1307,7 @@ abstract class TestBase {
         $config_comparer,
         $this->container->get('event_dispatcher'),
         $this->container->get('config.factory'),
-        $this->container->get('plugin.manager.entity'),
+        $this->container->get('entity.manager'),
         $this->container->get('lock')
       );
     }

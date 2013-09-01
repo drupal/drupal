@@ -69,7 +69,7 @@ class BlockFormController extends EntityFormController {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('entity.query'),
       $container->get('language_manager')
     );

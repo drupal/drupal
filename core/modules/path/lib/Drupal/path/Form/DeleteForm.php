@@ -7,7 +7,7 @@
 
 namespace Drupal\path\Form;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Path\Path;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Builds the form to delete a path alias.
  */
-class DeleteForm extends ConfirmFormBase implements ControllerInterface {
+class DeleteForm extends ConfirmFormBase implements ContainerInjectionInterface {
 
   /**
    * The path crud service.

@@ -90,8 +90,8 @@ abstract class LegacyConfigFieldItem extends ConfigFieldItemBase implements Prep
       $langcode = $entity->language()->id;
       $entity_id = $entity->id();
 
-      // hook_field_attach_load() receives items keyed by entity id, and alter
-      // then by reference.
+      // hook_field_load() receives items keyed by entity id, and alters then by
+      // reference.
       $items = array($entity_id => array(0 => $this->getValue(TRUE)));
       $args = array(
         $entity->entityType(),

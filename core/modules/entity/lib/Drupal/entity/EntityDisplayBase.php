@@ -209,7 +209,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
     }
 
     if ($instance = field_info_instance($this->targetEntityType, $name, $this->bundle)) {
-      $field = field_info_field($instance['field_name']);
+      $field = $instance->getField();
       $options = $this->pluginManager->prepareConfiguration($field['type'], $options);
 
       // Clear the persisted plugin, if any.

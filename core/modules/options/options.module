@@ -384,16 +384,14 @@ function _options_values_in_use($field, $values) {
   if ($values) {
     $field = field_info_field_by_id($field['uuid']);
     $factory = Drupal::service('entity.query');
-    foreach ($field['bundles'] as $entity_type => $bundle) {
-      $result = $factory->get($entity_type)
-        ->condition($field['field_name'] . '.value', $values)
-        ->count()
-        ->accessCheck(FALSE)
-        ->range(0, 1)
-        ->execute();
-      if ($result) {
-        return TRUE;
-      }
+    $result = $factory->get($field->entity_type)
+      ->condition($field['field_name'] . '.value', $values)
+      ->count()
+      ->accessCheck(FALSE)
+      ->range(0, 1)
+      ->execute();
+    if ($result) {
+      return TRUE;
     }
   }
 

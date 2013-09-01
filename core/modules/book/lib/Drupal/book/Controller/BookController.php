@@ -6,7 +6,7 @@
 
 namespace Drupal\book\Controller;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Drupal\book\BookManager;
@@ -14,7 +14,7 @@ use Drupal\book\BookManager;
 /**
  * Controller routines for book routes.
  */
-class BookController implements ControllerInterface {
+class BookController implements ContainerInjectionInterface {
 
   /**
    * Book Manager Service.

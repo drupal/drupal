@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity\Controller;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a generic controller to render a single entity.
  */
-class EntityViewController implements ControllerInterface {
+class EntityViewController implements ContainerInjectionInterface {
 
   /**
    * The entity manager
@@ -39,7 +39,7 @@ class EntityViewController implements ControllerInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')
+      $container->get('entity.manager')
     );
   }
 

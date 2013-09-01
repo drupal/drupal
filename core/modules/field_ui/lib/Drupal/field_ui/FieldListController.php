@@ -12,7 +12,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\Field\FieldTypePluginManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\field\FieldInfo;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,13 +25,6 @@ class FieldListController extends ConfigEntityListController {
    * @var array
    */
   protected $fieldTypes;
-
-  /**
-   * An array of field data.
-   *
-   * @var array
-   */
-  protected $fieldInfo;
 
   /**
    * The entity manager.
@@ -71,10 +63,9 @@ class FieldListController extends ConfigEntityListController {
    * @param \Drupal\Core\Entity\Field\FieldTypePluginManager $field_type_manager
    *   The 'field type' plugin manager.
    */
-  public function __construct($entity_type, array $entity_info, EntityManager $entity_manager, ModuleHandlerInterface $module_handler, FieldInfo $field_info, FieldTypePluginManager $field_type_manager) {
+  public function __construct($entity_type, array $entity_info, EntityManager $entity_manager, ModuleHandlerInterface $module_handler, FieldTypePluginManager $field_type_manager) {
     parent::__construct($entity_type, $entity_info, $entity_manager->getStorageController($entity_type), $module_handler);
 
-    $this->fieldInfo = $field_info->getFieldMap();
     $this->entityManager = $entity_manager;
     $this->bundles = entity_get_bundles();
     $this->fieldTypeManager = $field_type_manager;
@@ -88,9 +79,8 @@ class FieldListController extends ConfigEntityListController {
     return new static(
       $entity_type,
       $entity_info,
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('module_handler'),
-      $container->get('field.info'),
       $container->get('plugin.manager.entity.field.field_type')
     );
   }
@@ -111,24 +101,22 @@ class FieldListController extends ConfigEntityListController {
   /**
    * {@inheritdoc}
    */
-  public function buildRow(EntityInterface $entity) {
-    if ($entity->locked) {
+  public function buildRow(EntityInterface $field) {
+    if ($field->locked) {
       $row['class'] = array('menu-disabled');
-      $row['data']['id'] =  t('@field_name (Locked)', array('@field_name' => $entity->id()));
+      $row['data']['id'] =  t('@field_name (Locked)', array('@field_name' => $field->name));
     }
     else {
-      $row['data']['id'] = $entity->id();
+      $row['data']['id'] = $field->name;
     }
 
-    $field_type = $this->fieldTypes[$entity->getFieldType()];
+    $field_type = $this->fieldTypes[$field->type];
     $row['data']['type'] = t('@type (module: @module)', array('@type' => $field_type['label'], '@module' => $field_type['provider']));
 
     $usage = array();
-    foreach($this->fieldInfo[$entity->id()]['bundles'] as $entity_type => $field_bundles) {
-      foreach($field_bundles as $bundle) {
-        $admin_path = $this->entityManager->getAdminPath($entity_type, $bundle);
-        $usage[] = $admin_path ? l($this->bundles[$entity_type][$bundle]['label'], $admin_path . '/fields') : $this->bundles[$entity_type][$bundle]['label'];
-      }
+    foreach ($field->getBundles() as $bundle) {
+      $admin_path = $this->entityManager->getAdminPath($field->entity_type, $bundle);
+      $usage[] = $admin_path ? l($this->bundles[$field->entity_type][$bundle]['label'], $admin_path . '/fields') : $this->bundles[$field->entity_type][$bundle]['label'];
     }
     $row['data']['usage'] = implode(', ', $usage);
     return $row;

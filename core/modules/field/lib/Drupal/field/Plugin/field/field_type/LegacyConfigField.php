@@ -42,8 +42,8 @@ class LegacyConfigField extends ConfigField {
     $entity = $this->getParent();
     $langcode = $entity->language()->id;
 
-    if (isset($legacy_errors[$this->getInstance()->getField()->id()][$langcode])) {
-      foreach ($legacy_errors[$this->getInstance()->getField()->id()][$langcode] as $delta => $item_errors) {
+    if (isset($legacy_errors[$this->getInstance()->getField()->name][$langcode])) {
+      foreach ($legacy_errors[$this->getInstance()->getField()->name][$langcode] as $delta => $item_errors) {
         foreach ($item_errors as $item_error) {
           // We do not have the information about which column triggered the
           // error, so assume the first column...

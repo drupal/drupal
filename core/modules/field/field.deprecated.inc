@@ -164,18 +164,20 @@ function field_info_formatter_settings($type) {
  * The function only returns active, non deleted fields.
  *
  * @return
- *   An array keyed by field name. Each value is an array with two entries:
+ *   An array keyed by entity type. Each value is an array which keys are
+ *   field names and value is an array with two entries:
  *   - type: The field type.
- *   - bundles: The bundles in which the field appears, as an array with entity
- *     types as keys and the array of bundle names as values.
+ *   - bundles: The bundles in which the field appears.
  * Example:
  * @code
  * array(
- *   'body' => array(
- *     'bundles' => array(
- *       'node' => array('page', 'article'),
+ *   'node' => array(
+ *     'body' => array(
+ *       'bundles' => array(
+ *         'page', 'article'
+ *       ),
+ *       'type' => 'text_with_summary',
  *     ),
- *     'type' => 'text_with_summary',
  *   ),
  * );
  * @endcode
@@ -188,8 +190,10 @@ function field_info_field_map() {
 }
 
 /**
- * Returns data about an individual field, given a field name.
+ * Returns data about an individual field.
  *
+ * @param $entity_type
+ *   The entity type.
  * @param $field_name
  *   The name of the field to retrieve. $field_name can only refer to a
  *   non-deleted, active field. For deleted fields, use
@@ -207,8 +211,8 @@ function field_info_field_map() {
  * @deprecated as of Drupal 8.0. Use
  *   Field::fieldInfo()->getField($field_name).
  */
-function field_info_field($field_name) {
-  return Field::fieldInfo()->getField($field_name);
+function field_info_field($entity_type, $field_name) {
+  return Field::fieldInfo()->getField($entity_type, $field_name);
 }
 
 /**
@@ -334,6 +338,8 @@ function field_info_instance($entity_type, $field_name, $bundle_name) {
  * This function will not return deleted fields. Use field_read_fields() instead
  * for this purpose.
  *
+ * @param $entity_type
+ *   The entity type.
  * @param $field_name
  *   The field name to read.
  * @param array $include_additional
@@ -347,8 +353,8 @@ function field_info_instance($entity_type, $field_name, $bundle_name) {
  * @deprecated as of Drupal 8.0. Use
  *   entity_load('field_entity', 'field_name').
  */
-function field_read_field($field_name, $include_additional = array()) {
-  $fields = field_read_fields(array('field_name' => $field_name), $include_additional);
+function field_read_field($entity_type, $field_name, $include_additional = array()) {
+  $fields = field_read_fields(array('entity_type' => $entity_type, 'name' => $field_name), $include_additional);
   return $fields ? current($fields) : FALSE;
 }
 
@@ -583,215 +589,6 @@ function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langc
 }
 
 /**
- * Loads fields for the current revisions of a group of entities.
- *
- * Loads all fields for each entity object in a group of a single entity type.
- * The loaded field values are added directly to the entity objects.
- *
- * field_attach_load() is automatically called by the default entity controller
- * class, and thus, in most cases, doesn't need to be explicitly called by the
- * entity type module.
- *
- * @param $entity_type
- *   The type of entities in $entities; e.g., 'node' or 'user'.
- * @param $entities
- *   An array of entities for which to load fields, keyed by entity ID. Each
- *   entity needs to have its 'bundle', 'id' and (if applicable) 'revision' keys
- *   filled in. The function adds the loaded field data directly in the entity
- *   objects of the $entities array.
- * @param $age
- *   FIELD_LOAD_CURRENT to load the most recent revision for all fields, or
- *   FIELD_LOAD_REVISION to load the version indicated by each entity. Defaults
- *   to FIELD_LOAD_CURRENT; use field_attach_load_revision() instead of passing
- *   FIELD_LOAD_REVISION.
- * @param $options
- *   An associative array of additional options, with the following keys:
- *   - instance: A field instance entity, If provided, only values for the
- *     corresponding field will be loaded, and no cache is written. This
- *     option is only supported when all $entities are within the same bundle.
- *
- * @deprecated as of Drupal 8.0. Use the entity system instead.
- */
-function field_attach_load($entity_type, $entities, $age = FIELD_LOAD_CURRENT, $options = array()) {
-  $load_current = $age == FIELD_LOAD_CURRENT;
-  $load_deleted = !empty($options['instance']->deleted);
-
-  // Merge default options.
-  $options += array('instance' => NULL);
-  // Set options for hook invocations.
-  $hook_options = array(
-    'deleted' => $load_deleted,
-  );
-  if ($options['instance']) {
-    $hook_options['field_id'] = $options['instance']->field_uuid;
-  }
-
-  $info = entity_get_info($entity_type);
-  // Only the most current revision of non-deleted fields for cacheable entity
-  // types can be cached.
-  $cache_read = $load_current && $info['field_cache'] && !$load_deleted;
-  // In addition, do not write to the cache when loading a single field.
-  $cache_write = $cache_read && !isset($options['instance']);
-
-  if (empty($entities)) {
-    return;
-  }
-
-  // Ensure we are working with a BC mode entity.
-  foreach ($entities as $id => $entity) {
-    $entities[$id] = $entity->getBCEntity();
-  }
-
-  // Assume all entities will need to be queried. Entities found in the cache
-  // will be removed from the list.
-  $queried_entities = $entities;
-
-  // Fetch available entities from cache, if applicable.
-  if ($cache_read) {
-    // Build the list of cache entries to retrieve.
-    $cids = array();
-    foreach ($entities as $id => $entity) {
-      $cids[] = "field:$entity_type:$id";
-    }
-    $cache = cache('field')->getMultiple($cids);
-    // Put the cached field values back into the entities and remove them from
-    // the list of entities to query.
-    foreach ($entities as $id => $entity) {
-      $cid = "field:$entity_type:$id";
-      if (isset($cache[$cid])) {
-        unset($queried_entities[$id]);
-        foreach ($cache[$cid]->data as $field_name => $values) {
-          $entity->$field_name = $values;
-        }
-      }
-    }
-  }
-
-  // Fetch other entities from their storage location.
-  if ($queried_entities) {
-    // The invoke order is:
-    // - hook_field_storage_pre_load()
-    // - storage backend's hook_field_storage_load()
-    // - Field class's prepareCache() method.
-    // - hook_field_attach_load()
-
-    // Invoke hook_field_storage_pre_load(): let any module load field
-    // data before the storage engine, accumulating along the way.
-    $skip_fields = array();
-    foreach (Drupal::moduleHandler()->getImplementations('field_storage_pre_load') as $module) {
-      $function = $module . '_field_storage_pre_load';
-      $function($entity_type, $queried_entities, $age, $skip_fields, $hook_options);
-    }
-
-    // Collect the storage backends used by the remaining fields in the entities.
-    $storages = array();
-    foreach ($queried_entities as $entity) {
-      $id = $entity->id();
-      $vid = $entity->getRevisionId();
-
-      // Determine the list of field instances to work on.
-      if ($options['instance']) {
-        $instances = array($options['instance']);
-      }
-      else {
-        $instances = field_info_instances($entity_type, $entity->bundle());
-      }
-
-      foreach ($instances as $instance) {
-        $field = $instance->getField();
-        $field_name = $field->id();
-        if (!isset($queried_entities[$id]->{$field_name})) {
-          $queried_entities[$id]->{$field_name} = array();
-        }
-        if (!isset($skip_fields[$field->uuid])) {
-          $storages[$field->storage['type']][$field->uuid][] = $load_current ? $id : $vid;
-        }
-      }
-    }
-
-    // Invoke hook_field_storage_load() on the relevant storage backends.
-    foreach ($storages as $storage => $fields) {
-      $storage_info = field_info_storage_types($storage);
-      module_invoke($storage_info['module'], 'field_storage_load', $entity_type, $queried_entities, $age, $fields, $hook_options);
-    }
-
-    // Invoke the field type's prepareCache() method.
-    if (empty($options['instance'])) {
-      foreach ($queried_entities as $entity) {
-        \Drupal::entityManager()
-          ->getStorageController($entity_type)
-          ->invokeFieldItemPrepareCache($entity);
-      }
-    }
-    else {
-      // Do not rely on invokeFieldItemPrepareCache(), which only works on
-      // fields listed in getFieldDefinitions(), and will fail if we are loading
-      // values for a deleted field. Instead, generate FieldItem objects
-      // directly, and call their prepareCache() method.
-      foreach ($queried_entities as $entity) {
-        $field = $options['instance']->getField();
-        $field_name = $field->id();
-        // Call the prepareCache() method on each item.
-        foreach ($entity->{$field_name} as $langcode => $values) {
-          $definition = _field_generate_entity_field_definition($field, $options['instance']);
-          $items = \Drupal::typedData()->create($definition, $values, $field_name, $entity);
-          foreach ($items as $item) {
-            if ($item instanceof PrepareCacheInterface) {
-              $item->prepareCache();
-            }
-          }
-          $entity->{$field_name}[$langcode] = $items->getValue();
-        }
-      }
-    }
-
-    // Invoke hook_field_attach_load(): let other modules act on loading the
-    // entity.
-    Drupal::moduleHandler()->invokeAll('field_attach_load', $entity_type, $queried_entities, $age, $options);
-
-    // Build cache data.
-    if ($cache_write) {
-      foreach ($queried_entities as $id => $entity) {
-        $data = array();
-        $instances = field_info_instances($entity_type, $entity->bundle());
-        foreach ($instances as $instance) {
-          $data[$instance['field_name']] = $queried_entities[$id]->{$instance['field_name']};
-        }
-        $cid = "field:$entity_type:$id";
-        cache('field')->set($cid, $data);
-      }
-    }
-  }
-}
-
-/**
- * Loads all fields for previous versions of a group of entities.
- *
- * Loading different versions of the same entities is not supported, and should
- * be done by separate calls to the function.
- *
- * field_attach_load_revision() is automatically called by the default entity
- * controller class, and thus, in most cases, doesn't need to be explicitly
- * called by the entity type module.
- *
- * @param $entity_type
- *   The type of entities in $entities; e.g. 'node' or 'user'.
- * @param $entities
- *   An array of entities for which to load fields, keyed by entity ID. Each
- *   entity needs to have its 'bundle', 'id' and (if applicable) 'revision' keys
- *   filled. The function adds the loaded field data directly in the entity
- *   objects of the $entities array.
- * @param $options
- *   An associative array of additional options. See field_attach_load() for
- *   details.
- *
- * @deprecated as of Drupal 8.0. Use the entity system instead.
- */
-function field_attach_load_revision($entity_type, $entities, $options = array()) {
-  return field_attach_load($entity_type, $entities, FIELD_LOAD_REVISION, $options);
-}
-
-/**
  * Performs field validation against form-submitted field values.
  *
  * There are two levels of validation for fields in forms: widget validation and
@@ -837,7 +634,7 @@ function field_attach_form_validate(EntityInterface $entity, $form, &$form_state
         $has_violations = TRUE;
 
         // Place violations in $form_state.
-        $langcode = field_is_translatable($entity->entityType(), field_info_field($field_name)) ? $entity->language()->id : Language::LANGCODE_NOT_SPECIFIED;
+        $langcode = field_is_translatable($entity->entityType(), field_info_field($entity->entityType(), $field_name)) ? $entity->language()->id : Language::LANGCODE_NOT_SPECIFIED;
         $field_state = field_form_get_state($form['#parents'], $field_name, $langcode, $form_state);
         $field_state['constraint_violations'] = $field_violations;
         field_form_set_state($form['#parents'], $field_name, $langcode, $form_state, $field_state);
@@ -889,165 +686,12 @@ function field_attach_extract_form_values(EntityInterface $entity, $form, &$form
 }
 
 /**
- * Save field data for a new entity.
- *
- * The passed-in entity must already contain its id and (if applicable)
- * revision id attributes.
- * Default values (if any) will be saved for fields not present in the
- * $entity.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity with fields to save.
- * @return
- *   Default values (if any) will be added to the $entity parameter for fields
- *   it leaves unspecified.
- *
- * @deprecated as of Drupal 8.0. Use the entity system instead.
- */
-function field_attach_insert(EntityInterface $entity) {
-  // Ensure we are working with a BC mode entity.
-  $entity = $entity->getBCEntity();
-
-  // Let any module insert field data before the storage engine, accumulating
-  // saved fields along the way.
-  $skip_fields = array();
-  foreach (Drupal::moduleHandler()->getImplementations('field_storage_pre_insert') as $module) {
-    $function = $module . '_field_storage_pre_insert';
-    $function($entity, $skip_fields);
-  }
-
-  // Collect the storage backends used by the remaining fields in the entities.
-  $storages = array();
-  foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
-    $field = field_info_field_by_id($instance['field_id']);
-    $field_id = $field['uuid'];
-    $field_name = $field['field_name'];
-    if (!empty($entity->$field_name)) {
-      // Collect the storage backend if the field has not been written yet.
-      if (!isset($skip_fields[$field_id])) {
-        $storages[$field['storage']['type']][$field_id] = $field_id;
-      }
-    }
-  }
-
-  // Field storage backends save any remaining unsaved fields.
-  foreach ($storages as $storage => $fields) {
-    $storage_info = field_info_storage_types($storage);
-    module_invoke($storage_info['module'], 'field_storage_write', $entity, FIELD_STORAGE_INSERT, $fields);
-  }
-}
-
-/**
- * Saves field data for an existing entity.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity with fields to save.
- *
- * @deprecated as of Drupal 8.0. Use the entity system instead.
- */
-function field_attach_update(EntityInterface $entity) {
-  // Ensure we are working with a BC mode entity.
-  $entity = $entity->getBCEntity();
-
-  // Let any module update field data before the storage engine, accumulating
-  // saved fields along the way.
-  $skip_fields = array();
-  foreach (Drupal::moduleHandler()->getImplementations('field_storage_pre_update') as $module) {
-    $function = $module . '_field_storage_pre_update';
-    $function($entity, $skip_fields);
-  }
-
-  // Collect the storage backends used by the remaining fields in the entities.
-  $storages = array();
-  foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
-    $field = field_info_field_by_id($instance['field_id']);
-    $field_id = $field['uuid'];
-    // Collect the storage backend if the field has not been written yet.
-    if (!isset($skip_fields[$field_id])) {
-      $storages[$field['storage']['type']][$field_id] = $field_id;
-    }
-  }
-
-  // Field storage backends save any remaining unsaved fields.
-  foreach ($storages as $storage => $fields) {
-    $storage_info = field_info_storage_types($storage);
-    module_invoke($storage_info['module'], 'field_storage_write', $entity, FIELD_STORAGE_UPDATE, $fields);
-  }
-
-  $entity_info = $entity->entityInfo();
-  if ($entity_info['field_cache']) {
-    cache('field')->delete('field:' . $entity->entityType() . ':' . $entity->id());
-  }
-}
-
-/**
- * Deletes field data for an existing entity. This deletes all revisions of
- * field data for the entity.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity whose field data to delete.
- *
- * @deprecated as of Drupal 8.0. Use the entity system instead.
- */
-function field_attach_delete(EntityInterface $entity) {
-  // Ensure we are working with a BC mode entity.
-  $entity = $entity->getBCEntity();
-
-  // Collect the storage backends used by the fields in the entities.
-  $storages = array();
-  foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
-    $field = field_info_field_by_id($instance['field_id']);
-    $field_id = $field['uuid'];
-    $storages[$field['storage']['type']][$field_id] = $field_id;
-  }
-
-  // Field storage backends delete their data.
-  foreach ($storages as $storage => $fields) {
-    $storage_info = field_info_storage_types($storage);
-    module_invoke($storage_info['module'], 'field_storage_delete', $entity, $fields);
-  }
-
-  $entity_info = $entity->entityInfo();
-  if ($entity_info['field_cache']) {
-    cache('field')->delete('field:' . $entity->entityType() . ':' . $entity->id());
-  }
-}
-
-/**
- * Delete field data for a single revision of an existing entity. The passed
- * entity must have a revision ID attribute.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity with fields to save.
- *
- * @deprecated as of Drupal 8.0. Use the entity system instead.
- */
-function field_attach_delete_revision(EntityInterface $entity) {
-  // Ensure we are working with a BC mode entity.
-  $entity = $entity->getBCEntity();
-
-  // Collect the storage backends used by the fields in the entities.
-  $storages = array();
-  foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
-    $field = field_info_field_by_id($instance['field_id']);
-    $field_id = $field['uuid'];
-    $storages[$field['storage']['type']][$field_id] = $field_id;
-  }
-
-  // Field storage backends delete their data.
-  foreach ($storages as $storage => $fields) {
-    $storage_info = field_info_storage_types($storage);
-    module_invoke($storage_info['module'], 'field_storage_delete_revision', $entity, $fields);
-  }
-}
-
-/**
  * Prepares field data prior to display.
  *
  * This function lets field types and formatters load additional data needed for
- * display that is not automatically loaded during field_attach_load(). It
- * accepts an array of entities to allow query optimization when displaying
- * lists of entities.
+ * display that is not automatically loaded during entity loading. It accepts an
+ * array of entities to allow query optimization when displaying lists of
+ * entities.
  *
  * field_attach_prepare_view() and field_attach_view() are two halves of the
  * same operation. It is safe to call field_attach_prepare_view() multiple times

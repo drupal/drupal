@@ -6,7 +6,7 @@
 
 namespace Drupal\help\Controller;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Controller routines for help routes.
  */
-class HelpController implements ControllerInterface {
+class HelpController implements ContainerInjectionInterface {
 
   /**
    * Stores the module handler.

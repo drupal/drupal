@@ -72,7 +72,7 @@ abstract class ViewsBlockBase extends BlockBase implements ContainerFactoryPlugi
     return new static(
       $configuration, $plugin_id, $plugin_definition,
       $container->get('views.executable'),
-      $container->get('plugin.manager.entity')->getStorageController('view')
+      $container->get('entity.manager')->getStorageController('view')
     );
   }
 

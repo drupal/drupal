@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Form;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Provides a base class for forms.
  */
-abstract class FormBase implements FormInterface, ControllerInterface {
+abstract class FormBase implements FormInterface, ContainerInjectionInterface {
 
   /**
    * The translation manager service.

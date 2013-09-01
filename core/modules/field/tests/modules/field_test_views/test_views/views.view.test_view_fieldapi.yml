@@ -16,7 +16,7 @@ display:
           provider: node
         field_name_0:
           id: field_name_0
-          table: field_data_field_name_0
+          table: node__field_name_0
           field: field_name_0
           plugin_id: field
           provider: field

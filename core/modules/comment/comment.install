@@ -15,6 +15,11 @@ use Drupal\field\Entity\Field;
 function comment_uninstall() {
   // Remove variables.
   variable_del('comment_block_count');
+  // @todo WTF#1497374
+  Drupal::entityManager()->addNamespaces(new ArrayIterator(array(
+    'Drupal\comment' => DRUPAL_ROOT . '/core/modules/comment/lib',
+  )));
+  drupal_classloader_register('comment', 'core/modules/comment');
   // We cannot use CommentManager::getFields() because comment.module is
   // disabled and it's fields inactive.
   foreach (_update_comment_get_comment_fields() as $field_name => $field) {

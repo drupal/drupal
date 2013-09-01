@@ -57,7 +57,7 @@ abstract class EntityDisplayModeFormBase extends EntityFormController {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('entity.query'),
-      $container->get('plugin.manager.entity')
+      $container->get('entity.manager')
     );
   }
 

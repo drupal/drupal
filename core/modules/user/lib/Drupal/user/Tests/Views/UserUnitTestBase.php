@@ -51,7 +51,7 @@ abstract class UserUnitTestBase extends ViewUnitTestBase {
     $this->installSchema('user', array('users', 'users_roles'));
     $this->installSchema('system', 'sequences');
 
-    $entity_manager = $this->container->get('plugin.manager.entity');
+    $entity_manager = $this->container->get('entity.manager');
     $this->roleStorageController = $entity_manager->getStorageController('user_role');
     $this->userStorageController = $entity_manager->getStorageController('user');
   }

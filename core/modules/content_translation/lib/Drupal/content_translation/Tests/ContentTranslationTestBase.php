@@ -162,8 +162,9 @@ abstract class ContentTranslationTestBase extends WebTestBase {
     $this->fieldName = 'field_test_et_ui_test';
 
     entity_create('field_entity', array(
-      'field_name' => $this->fieldName,
+      'name' => $this->fieldName,
       'type' => 'text',
+      'entity_type' => $this->entityType,
       'cardinality' => 1,
       'translatable' => TRUE,
     ))->save();
@@ -202,7 +203,7 @@ abstract class ContentTranslationTestBase extends WebTestBase {
     if (!empty($info['entity_keys']['bundle'])) {
       $entity_values[$info['entity_keys']['bundle']] = $bundle_name ?: $this->bundle;
     }
-    $controller = $this->container->get('plugin.manager.entity')->getStorageController($this->entityType);
+    $controller = $this->container->get('entity.manager')->getStorageController($this->entityType);
     if (!($controller instanceof DatabaseStorageControllerNG)) {
       foreach ($values as $property => $value) {
         if (is_array($value)) {

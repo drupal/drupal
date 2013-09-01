@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * Builds a confirmation form for enabling modules with dependencies.
  */
-class ModulesListConfirmForm extends ConfirmFormBase implements ControllerInterface {
+class ModulesListConfirmForm extends ConfirmFormBase implements ContainerInjectionInterface {
 
   /**
    * The module handler service.

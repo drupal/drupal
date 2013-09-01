@@ -27,7 +27,7 @@ class FileFieldPathTest extends FileFieldTestBase {
   function testUploadPath() {
     $field_name = strtolower($this->randomName());
     $type_name = 'article';
-    $this->createFileField($field_name, $type_name);
+    $this->createFileField($field_name, 'node', $type_name);
     $test_file = $this->getTestFile('text');
 
     // Create a new node.

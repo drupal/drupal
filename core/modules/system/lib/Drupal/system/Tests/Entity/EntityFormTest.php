@@ -97,7 +97,7 @@ class EntityFormTest extends WebTestBase {
   protected function loadEntityByName($entity_type, $name) {
     // Always load the entity from the database to ensure that changes are
     // correctly picked up.
-    $this->container->get('plugin.manager.entity')->getStorageController($entity_type)->resetCache();
+    $this->container->get('entity.manager')->getStorageController($entity_type)->resetCache();
     return current(entity_load_multiple_by_properties($entity_type, array('name' => $name)));
   }
 }

@@ -51,7 +51,7 @@ class UserPasswordForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')->getStorageController('user'),
+      $container->get('entity.manager')->getStorageController('user'),
       $container->get('language_manager')
     );
   }

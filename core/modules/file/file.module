@@ -648,7 +648,7 @@ function file_file_download($uri, $field_type = 'file') {
   foreach ($references as $field_name => $field_references) {
     foreach ($field_references as $entity_type => $entities) {
       foreach ($entities as $entity) {
-        $field = field_info_field($field_name);
+        $field = field_info_field($entity_type, $field_name);
         // Check if access to this field is not disallowed.
         if (!field_access('view', $field, $entity_type, $entity)) {
           $denied = TRUE;
@@ -1867,7 +1867,7 @@ function file_get_file_references(File $file, $field = NULL, $age = FIELD_LOAD_R
           // This contains the possible field names.
           $instances = field_info_instances($entity_type, $bundle);
           foreach ($instances as $field_name => $instance) {
-            $current_field = field_info_field($field_name);
+            $current_field = $instance->getField();
             // If this is the first time this field type is seen, check
             // whether it references files.
             if (!isset($field_columns[$current_field['type']])) {
@@ -1905,9 +1905,11 @@ function file_get_file_references(File $file, $field = NULL, $age = FIELD_LOAD_R
   // cache is very small so this will be very fast.
   if ($field || $field_type) {
     foreach ($return as $field_name => $data) {
-      $current_field = field_info_field($field_name);
-      if (($field_type && $current_field['type'] != $field_type) || ($field && $field['id'] != $current_field['id'])) {
-        unset($return[$field_name]);
+      foreach (array_keys($data) as $entity_type) {
+        $current_field = field_info_field($entity_type, $field_name);
+        if (($field_type && $current_field['type'] != $field_type) || ($field && $field['id'] != $current_field['id'])) {
+          unset($return[$field_name][$entity_type]);
+        }
       }
     }
   }

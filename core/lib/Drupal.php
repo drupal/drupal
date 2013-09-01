@@ -163,7 +163,7 @@ class Drupal {
    *   The entity manager service.
    */
   public static function entityManager() {
-    return static::$container->get('plugin.manager.entity');
+    return static::$container->get('entity.manager');
   }
 
   /**

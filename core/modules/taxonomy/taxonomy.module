@@ -5,12 +5,13 @@
  * Enables the organization of content into categories.
  */
 
-use Drupal\taxonomy\VocabularyInterface;
+use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\taxonomy\VocabularyInterface;
 
 /**
  * Denotes that no term in the vocabulary has a parent.
@@ -287,13 +288,9 @@ function taxonomy_menu() {
   );
 
   $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary'] = array(
+    'route_name' => 'taxonomy_overview_terms',
     'title callback' => 'entity_page_label',
     'title arguments' => array(4),
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('taxonomy_overview_terms', 4),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(4, 'view'),
-    'file' => 'taxonomy.admin.inc',
   );
   $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary/list'] = array(
     'title' => 'List',
@@ -306,7 +303,6 @@ function taxonomy_menu() {
     'access callback' => 'entity_page_access',
     'access arguments' => array(4, 'update'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'taxonomy.admin.inc',
   );
   $items['admin/structure/taxonomy/%taxonomy_vocabulary/delete'] = array(
     'title' => 'Delete',
@@ -1113,19 +1109,20 @@ function taxonomy_node_insert(EntityInterface $node) {
 function taxonomy_build_node_index($node) {
   // We maintain a denormalized table of term/node relationships, containing
   // only data for current, published nodes.
-  $status = NULL;
-  if (Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
-    $status = $node->isPublished();
-    $sticky = (int) $node->isSticky();
+  if (!Drupal::config('taxonomy.settings')->get('maintain_index_table') || !(Drupal::entityManager()->getStorageController('node') instanceof DatabaseStorageController)) {
+    return;
   }
+
+  $status = $node->isPublished();
+  $sticky = (int) $node->isSticky();
   // We only maintain the taxonomy index for published nodes.
   if ($status && $node->isDefaultRevision()) {
     // Collect a unique list of all the term IDs from all node fields.
     $tid_all = array();
     foreach (field_info_instances('node', $node->getType()) as $instance) {
-      $field_name = $instance['field_name'];
-      $field = field_info_field($field_name);
-      if ($field['module'] == 'taxonomy' && $field['storage']['type'] == 'field_sql_storage') {
+      $field = $instance->getField();
+      $field_name = $field->getFieldName();
+      if ($field['module'] == 'taxonomy') {
         foreach ($node->getTranslationLanguages() as $language) {
           foreach ($node->getTranslation($language->id)->$field_name as $item) {
             if (!$item->isEmpty()) {

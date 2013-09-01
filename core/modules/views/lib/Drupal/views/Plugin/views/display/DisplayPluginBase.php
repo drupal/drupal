@@ -10,7 +10,7 @@ namespace Drupal\views\Plugin\views\display;
 use Drupal\Core\Language\Language;
 use Drupal\views\Plugin\views\area\AreaPluginBase;
 use Drupal\views\ViewExecutable;
-use \Drupal\views\Plugin\views\PluginBase;
+use Drupal\views\Plugin\views\PluginBase;
 use Drupal\views\Views;
 
 /**

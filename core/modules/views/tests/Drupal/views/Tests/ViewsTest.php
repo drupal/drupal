@@ -49,7 +49,7 @@ class ViewsTest extends UnitTestCase {
       ->method('getStorageController')
       ->with('view')
       ->will($this->returnValue($view_storage_controller));
-    $container->set('plugin.manager.entity', $entity_manager);
+    $container->set('entity.manager', $entity_manager);
 
     \Drupal::setContainer($container);
   }

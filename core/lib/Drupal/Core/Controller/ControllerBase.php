@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * difficult to unit test. Therefore this base class should only be used by
  * controller classes that contain only trivial glue code.  Controllers that
  * contain sufficiently complex logic that it's worth testing should not use
- * this base class but use ControllerInterface instead, or even better be
+ * this base class but use ContainerInjectionInterface instead, or even better be
  * refactored to be trivial glue code.
  *
  * The services exposed here are those that it is reasonable for a well-behaved
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * need to be refactored into a thin controller and a dependent unit-testable
  * service.
  *
- * @see \Drupal\Core\Controller\ControllerInterface
+ * @see \Drupal\Core\DependencyInjection\ContainerInjectionInterface
  */
 abstract class ControllerBase extends ContainerAware {
 
@@ -38,7 +38,7 @@ abstract class ControllerBase extends ContainerAware {
    *   The entity manager service.
    */
   protected function entityManager() {
-    return $this->container->get('plugin.manager.entity');
+    return $this->container->get('entity.manager');
   }
 
   /**

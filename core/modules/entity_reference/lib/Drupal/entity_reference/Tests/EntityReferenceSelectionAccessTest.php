@@ -24,7 +24,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
     );
   }
 
-  public static $modules = array('node', 'comment', 'entity_reference');
+  public static $modules = array('node', 'comment', 'entity_reference', 'entity_test');
 
   function setUp() {
     parent::setUp();
@@ -61,19 +61,20 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
   public function testNodeHandler() {
     // Create a field and instance.
     $field = entity_create('field_entity', array(
+      'name' => 'test_field',
+      'entity_type' => 'entity_test',
       'translatable' => FALSE,
       'entity_types' => array(),
       'settings' => array(
         'target_type' => 'node',
       ),
-      'field_name' => 'test_field',
       'type' => 'entity_reference',
       'cardinality' => '1',
     ));
     $field->save();
     $instance = entity_create('field_instance', array(
       'field_name' => 'test_field',
-      'entity_type' => 'test_entity',
+      'entity_type' => 'entity_test',
       'bundle' => 'test_bundle',
       'settings' => array(
         'handler' => 'default',
@@ -205,19 +206,19 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
   public function testUserHandler() {
     // Create a field and instance.
     $field = entity_create('field_entity', array(
+      'name' => 'test_field',
+      'entity_type' => 'entity_test',
       'translatable' => FALSE,
-      'entity_types' => array(),
       'settings' => array(
         'target_type' => 'user',
       ),
-      'field_name' => 'test_field',
       'type' => 'entity_reference',
       'cardinality' => '1',
     ));
     $field->save();
     $instance = entity_create('field_instance', array(
       'field_name' => 'test_field',
-      'entity_type' => 'test_entity',
+      'entity_type' => 'entity_test',
       'bundle' => 'test_bundle',
       'settings' => array(
         'handler' => 'default',
@@ -351,19 +352,20 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
   public function testCommentHandler() {
     // Create a field and instance.
     $field = entity_create('field_entity', array(
+      'name' => 'test_field',
+      'entity_type' => 'entity_test',
       'translatable' => FALSE,
       'entity_types' => array(),
       'settings' => array(
         'target_type' => 'comment',
       ),
-      'field_name' => 'test_field',
       'type' => 'entity_reference',
       'cardinality' => '1',
     ));
     $field->save();
     $instance = entity_create('field_instance', array(
       'field_name' => 'test_field',
-      'entity_type' => 'test_entity',
+      'entity_type' => 'entity_test',
       'bundle' => 'test_bundle',
       'settings' => array(
         'handler' => 'default',

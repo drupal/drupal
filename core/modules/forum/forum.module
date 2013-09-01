@@ -173,8 +173,8 @@ function forum_menu_local_tasks(&$data, $router_item, $root_path) {
     if ($forum_term) {
       $links = array();
       // Loop through all bundles for forum taxonomy vocabulary field.
-      $field = field_info_field('taxonomy_forums');
-      foreach ($field['bundles']['node'] as $type_name) {
+      $field = field_info_field('node', 'taxonomy_forums');
+      foreach ($field['bundles'] as $type_name) {
         if (($type = entity_load('node_type', $type_name)) && node_access('create', $type_name)) {
           $links[$type_name] = array(
             '#theme' => 'menu_local_action',
@@ -377,7 +377,35 @@ function forum_node_update(EntityInterface $node) {
           'tid' => $node->forum_tid,
         ))
         ->execute();
-     }
+    }
+
+    // If the node is published, update the forum index.
+    if ($node->isPublished()) {
+      db_delete('forum_index')->condition('nid', $node->id())->execute();
+      $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
+      foreach ($node->getTranslationLanguages() as $langcode => $language) {
+        $translation = $node->getTranslation($langcode);
+        foreach ($translation->taxonomy_forums as $item) {
+          $query->values(array(
+            'nid' => $node->id(),
+            'title' => $translation->label(),
+            'tid' => $item->target_id,
+            'sticky' => (int) $node->isSticky(),
+            'created' => $node->getCreatedTime(),
+            'comment_count' => 0,
+            'last_comment_timestamp' => $node->getCreatedTime(),
+          ));
+        }
+      }
+      $query->execute();
+      // The logic for determining last_comment_count is fairly complex, so
+      // call _forum_update_forum_index() too.
+      _forum_update_forum_index($node->id());
+    }
+    // When a forum node is unpublished, remove it from the forum_index table.
+    else {
+      db_delete('forum_index')->condition('nid', $node->id())->execute();
+    }
   }
 }
 
@@ -394,6 +422,24 @@ function forum_node_insert(EntityInterface $node) {
           'nid' => $node->id(),
         ))
         ->execute();
+    }
+
+    // If the node is published, update the forum index.
+    if ($node->isPublished()) {
+      $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
+      foreach ($node->getTranslationLanguages() as $langcode => $language) {
+        $translation = $node->getTranslation($langcode);
+        $query->values(array(
+          'nid' => $node->id(),
+          'title' => $translation->label(),
+          'tid' => $translation->taxonomy_forums->target_id,
+          'sticky' => (int) $node->isSticky(),
+          'created' => $node->getCreatedTime(),
+          'comment_count' => 0,
+          'last_comment_timestamp' => $node->getCreatedTime(),
+        ));
+      }
+      $query->execute();
     }
   }
 }
@@ -501,77 +547,6 @@ function forum_comment_unpublish($comment) {
 function forum_comment_delete($comment) {
   if ($comment->entity_type->value == 'node') {
     _forum_update_forum_index($comment->entity_id->target_id);
-  }
-}
-
-/**
- * Implements hook_field_storage_pre_insert().
- */
-function forum_field_storage_pre_insert(EntityInterface $entity, &$skip_fields) {
-  $entity = $entity->getNGEntity();
-  if ($entity->entityType() == 'node' && $entity->isPublished() && _forum_node_check_node_type($entity)) {
-    $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
-    foreach ($entity->getTranslationLanguages() as $langcode => $language) {
-      $translation = $entity->getTranslation($langcode);
-      $query->values(array(
-        'nid' => $entity->id(),
-        'title' => $translation->label(),
-        'tid' => $translation->taxonomy_forums->target_id,
-        'sticky' => (int) $entity->isSticky(),
-        'created' => $entity->getCreatedTime(),
-        'comment_count' => 0,
-        'last_comment_timestamp' => $entity->getCreatedTime(),
-      ));
-    }
-    $query->execute();
-  }
-}
-
-/**
- * Implements hook_field_storage_pre_update().
- */
-function forum_field_storage_pre_update(EntityInterface $entity, &$skip_fields) {
-  $first_call = &drupal_static(__FUNCTION__, array());
-
-  $entity = $entity->getNGEntity();
-  if ($entity->entityType() == 'node' && _forum_node_check_node_type($entity)) {
-
-    // If the node is published, update the forum index.
-    if ($entity->isPublished()) {
-
-      // We don't maintain data for old revisions, so clear all previous values
-      // from the table. Since this hook runs once per field, per object, make
-      // sure we only wipe values once.
-      if (!isset($first_call[$entity->id()])) {
-        $first_call[$entity->id()] = FALSE;
-        db_delete('forum_index')->condition('nid', $entity->id())->execute();
-      }
-      $query = db_insert('forum_index')->fields(array('nid', 'title', 'tid', 'sticky', 'created', 'comment_count', 'last_comment_timestamp'));
-      foreach ($entity->getTranslationLanguages() as $langcode => $language) {
-        $translation = $entity->getTranslation($langcode);
-        foreach ($translation->taxonomy_forums as $item) {
-          $query->values(array(
-            'nid' => $entity->id(),
-            'title' => $translation->label(),
-            'tid' => $item->target_id,
-            'sticky' => (int) $entity->isSticky(),
-            'created' => $entity->getCreatedTime(),
-            'comment_count' => 0,
-            'last_comment_timestamp' => $entity->getCreatedTime(),
-          ));
-        }
-      }
-      $query->execute();
-      // The logic for determining last_comment_count is fairly complex, so
-      // call _forum_update_forum_index() too.
-      _forum_update_forum_index($entity->id());
-    }
-
-    // When a forum node is unpublished, remove it from the forum_index table.
-    else {
-      db_delete('forum_index')->condition('nid', $entity->id())->execute();
-    }
-
   }
 }
 

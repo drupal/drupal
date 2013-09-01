@@ -70,7 +70,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
     return new static(
       $entity_type,
       $entity_info,
-      $container->get('plugin.manager.entity')->getStorageController($entity_type),
+      $container->get('entity.manager')->getStorageController($entity_type),
       $container->get('module_handler'),
       $container->get('plugin.manager.block')
     );

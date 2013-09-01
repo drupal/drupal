@@ -21,7 +21,6 @@ class reEnableModuleFieldTest extends WebTestBase {
    */
   public static $modules = array(
     'field',
-    'field_sql_storage',
     'node',
     // We use telephone module instead of test_field because test_field is
     // hidden and does not display on the admin/modules page.
@@ -51,7 +50,8 @@ class reEnableModuleFieldTest extends WebTestBase {
 
     // Add a telephone field to the article content type.
     $field = entity_create('field_entity', array(
-      'field_name' => 'field_telephone',
+      'name' => 'field_telephone',
+      'entity_type' => 'node',
       'type' => 'telephone',
     ));
     $field->save();

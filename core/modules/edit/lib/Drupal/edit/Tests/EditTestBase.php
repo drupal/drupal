@@ -19,7 +19,8 @@ class EditTestBase extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'entity', 'entity_test', 'field', 'field_sql_storage', 'field_test', 'number', 'filter', 'user', 'text', 'edit');
+  public static $modules = array('system', 'entity', 'entity_test', 'field', 'field_test', 'number', 'filter', 'user', 'text', 'edit');
+
   /**
    * Sets the default field storage backend for fields created during tests.
    */
@@ -55,7 +56,8 @@ class EditTestBase extends DrupalUnitTestBase {
   function createFieldWithInstance($field_name, $type, $cardinality, $label, $instance_settings, $widget_type, $widget_settings, $formatter_type, $formatter_settings) {
     $field = $field_name . '_field';
     $this->$field = entity_create('field_entity', array(
-      'field_name' => $field_name,
+      'name' => $field_name,
+      'entity_type' => 'entity_test',
       'type' => $type,
       'cardinality' => $cardinality,
     ));

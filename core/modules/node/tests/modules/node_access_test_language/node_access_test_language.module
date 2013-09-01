@@ -51,7 +51,8 @@ function node_access_test_language_node_access_records(EntityInterface $node) {
  */
 function node_access_test_language_enable() {
   $field_private = entity_create('field_entity', array(
-    'field_name' => 'field_private',
+    'name' => 'field_private',
+    'entity_type' => 'node',
     'type' => 'list_boolean',
     'cardinality' => 1,
     'translatable'  => TRUE,
@@ -62,7 +63,7 @@ function node_access_test_language_enable() {
   $field_private->save();
 
   entity_create('field_instance', array(
-    'field_name' => $field_private->id(),
+    'field_name' => $field_private->name,
     'entity_type' => 'node',
     'bundle' => 'page',
     'widget' => array(

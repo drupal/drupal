@@ -7,7 +7,7 @@
 
 namespace Drupal\menu\Controller;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\menu_link\MenuLinkStorageControllerInterface;
 use Drupal\system\MenuInterface;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Returns responses for Menu routes.
  */
-class MenuController implements ControllerInterface {
+class MenuController implements ContainerInjectionInterface {
 
   /**
    * The menu link storage.
@@ -52,8 +52,8 @@ class MenuController implements ControllerInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')->getStorageController('menu_link'),
-      $container->get('plugin.manager.entity')
+      $container->get('entity.manager')->getStorageController('menu_link'),
+      $container->get('entity.manager')
     );
   }
 

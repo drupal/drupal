@@ -1,7 +1,7 @@
 services:
   field_ui.subscriber:
     class: Drupal\field_ui\Routing\RouteSubscriber
-    arguments: ['@plugin.manager.entity']
+    arguments: ['@entity.manager']
     tags:
      - { name: event_subscriber }
   access_check.field_ui.view_mode:

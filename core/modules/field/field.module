@@ -46,9 +46,7 @@ require_once __DIR__ . '/field.deprecated.inc';
  * type 'image'. The administrator (again, via a UI) creates two Field
  * Instances, one attaching the field 'subtitle' to the 'node' bundle 'article'
  * and one attaching the field 'photo' to the 'node' bundle 'article'. When the
- * node system uses the Field Attach API to load all fields for an Article node,
- * it passes the node's entity type (which is 'node') and content type (which is
- * 'article') as the node's bundle. field_attach_load() then loads the
+ * node storage controller loads an Article node, it loads the values of the
  * 'subtitle' and 'photo' fields because they are both attached to the 'node'
  * bundle 'article'.
  *
@@ -272,7 +270,7 @@ function field_entity_field_info($entity_type) {
 function _field_generate_entity_field_definition(FieldInterface $field, FieldInstanceInterface $instance = NULL) {
   // @todo: Allow for adding field type settings.
   $definition = array(
-    'label' => t('Field !name', array('!name' => $field->id())),
+    'label' => t('Field !name', array('!name' => $field->name)),
     'type' => 'field_item:' . $field->type,
     'list' => TRUE,
     'configurable' => TRUE,
@@ -399,24 +397,8 @@ function field_sync_field_status() {
   // modules.
   $changed = array();
   $modules = $module_handler->getModuleList();
-  foreach ($modules as $module => $module_info) {
-    // Collect storage backends exposed by the module.
-    $storage_types = (array) $module_handler->invoke($module, 'field_storage_info');
-
-    if ($storage_types) {
-      foreach ($fields as $uuid => &$field) {
-        // Associate storage backends.
-        if (isset($storage_types[$field['storage']['type']]) && ($field['storage']['module'] !== $module || !$field['storage']['active'])) {
-          $field['storage']['module'] = $module;
-          $field['storage']['active'] = TRUE;
-          $changed[$uuid] = $field;
-        }
-      }
-    }
-  }
-
   $field_types = Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
-  // Set fields with missing field type or storage modules to inactive.
+  // Set fields with missing field type modules to inactive.
   foreach ($fields as $uuid => &$field) {
     // Associate field types.
     if (isset($field_types[$field['type']]) && ($field['module'] != $field_types[$field['type']]['provider'] || !$field['active'])) {
@@ -426,11 +408,6 @@ function field_sync_field_status() {
     }
     if (!isset($modules[$field['module']]) && $field['active']) {
       $field['active'] = FALSE;
-      $changed[$uuid] = $field;
-    }
-    // Disassociate storage backends.
-    if (!isset($modules[$field['storage']['module']]) && $field['storage']['active']) {
-      $field['storage']['active'] = FALSE;
       $changed[$uuid] = $field;
     }
   }
@@ -444,8 +421,6 @@ function field_sync_field_status() {
       Drupal::config('field.field.' . $field['id'])
         ->set('module', $field['module'])
         ->set('active', $field['active'])
-        ->set('storage.module', $field['storage']['module'])
-        ->set('storage.active', $field['storage']['active'])
         ->save();
     }
   }
@@ -641,7 +616,7 @@ function field_view_value(EntityInterface $entity, $field_name, $item, $display 
   // Ensure we are working with a BC mode entity.
   $entity = $entity->getBCEntity();
 
-  if ($field = field_info_field($field_name)) {
+  if ($field = field_info_field($entity->entityType(), $field_name)) {
     // Determine the langcode that will be used by language fallback.
     $langcode = field_language($entity, $field_name, $langcode);
 
@@ -731,7 +706,7 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
     $view_mode = '_custom';
     // hook_field_attach_display_alter() needs to receive the 'prepared'
     // $display_options, so we cannot let preparation happen internally.
-    $field = field_info_field($field_name);
+    $field = field_info_field($entity_type, $field_name);
     $formatter_manager = drupal_container()->get('plugin.manager.field.formatter');
     $display_options = $formatter_manager->prepareConfiguration($field['type'], $display_options);
     $formatter = $formatter_manager->getInstance(array(
@@ -876,10 +851,12 @@ function template_preprocess_field(&$variables, $hook) {
   // Add default CSS classes. Since there can be many fields rendered on a page,
   // save some overhead by calling strtr() directly instead of
   // drupal_html_class().
+  $variables['entity_type_css'] = strtr($element['#entity_type'], '_', '-');
   $variables['field_name_css'] = strtr($element['#field_name'], '_', '-');
   $variables['field_type_css'] = strtr($element['#field_type'], '_', '-');
   $variables['attributes']['class'] = array(
     'field',
+    'field-' . $variables['entity_type_css'] . '--' . $variables['field_name_css'],
     'field-name-' . $variables['field_name_css'],
     'field-type-' . $variables['field_type_css'],
     'field-label-' . $element['#label_display'],
@@ -894,8 +871,9 @@ function template_preprocess_field(&$variables, $hook) {
   $variables['theme_hook_suggestions'] = array(
     'field__' . $element['#field_type'],
     'field__' . $element['#field_name'],
-    'field__' . $element['#bundle'],
-    'field__' . $element['#field_name'] . '__' . $element['#bundle'],
+    'field__' . $element['#entity_type'] . '__' . $element['#bundle'],
+    'field__' . $element['#entity_type'] . '__' . $element['#field_name'],
+    'field__' . $element['#entity_type'] . '__' . $element['#field_name'] . '__' . $element['#bundle'],
   );
 
   static $default_attributes;

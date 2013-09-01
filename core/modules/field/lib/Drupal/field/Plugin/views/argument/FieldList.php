@@ -35,7 +35,7 @@ class FieldList extends Numeric {
   public function init(ViewExecutable $view, DisplayPluginBase $display, array &$options = NULL) {
     parent::init($view, $display, $options);
 
-    $field = field_info_field($this->definition['field_name']);
+    $field = field_info_field($this->definition['entity_type'], $this->definition['field_name']);
     $this->allowed_values = options_allowed_values($field);
   }
 

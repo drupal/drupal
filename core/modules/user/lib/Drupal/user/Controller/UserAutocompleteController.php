@@ -10,13 +10,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\user\UserAutocomplete;
 
 /**
  * Controller routines for taxonomy user routes.
  */
-class UserAutocompleteController implements ControllerInterface {
+class UserAutocompleteController implements ContainerInjectionInterface {
 
   /**
    * The user autocomplete helper class to find matching user names.

@@ -14,7 +14,7 @@ class ActiveTest extends FieldTestBase {
    *
    * @var array
    */
-  public static $modules = array('field_test');
+  public static $modules = array('field_test', 'entity_test');
 
   public static function getInfo() {
     return array(
@@ -28,62 +28,28 @@ class ActiveTest extends FieldTestBase {
    * Test that fields are properly marked active or inactive.
    */
   function testActive() {
-    $field_definition = array(
-      'field_name' => 'field_1',
+    $field_name = 'field_1';
+    entity_create('field_entity', array(
+      'name' => $field_name,
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
-      // For this test, we need a storage backend provided by a different
-      // module than field_test.module.
-      'storage' => array(
-        'type' => 'field_sql_storage',
-      ),
-    );
-    entity_create('field_entity', $field_definition)->save();
+    ))->save();
 
-    // Test disabling and enabling:
-    // - the field type module,
-    // - the storage module,
-    // - both.
-    $this->_testActiveHelper($field_definition, array('field_test'));
-    $this->_testActiveHelper($field_definition, array('field_sql_storage'));
-    $this->_testActiveHelper($field_definition, array('field_test', 'field_sql_storage'));
-  }
+    // Check that the field is correctly found.
+    $field = field_read_field('entity_test', $field_name);
+    $this->assertFalse(empty($field), 'The field was properly read.');
 
-  /**
-   * Helper function for testActive().
-   *
-   * Test dependency between a field and a set of modules.
-   *
-   * @param $field_definition
-   *   A field definition.
-   * @param $modules
-   *   An aray of module names. The field will be tested to be inactive as long
-   *   as any of those modules is disabled.
-   */
-  function _testActiveHelper($field_definition, $modules) {
-    $field_name = $field_definition['field_name'];
+    // Disable the module providing the field type, and check that the field is
+    // found only if explicitly requesting inactive fields.
+    module_disable(array('field_test'));
+    $field = field_read_field('entity_test', $field_name);
+    $this->assertTrue(empty($field), 'The field is marked inactive when the field type is absent.');
+    $field = field_read_field('entity_test', $field_name, array('include_inactive' => TRUE));
+    $this->assertFalse(empty($field), 'The field is properly read when explicitly fetching inactive fields.');
 
-    // Read the field.
-    $field = field_read_field($field_name);
-    $this->assertTrue($field_definition <= $field, 'The field was properly read.');
-
-    module_disable($modules, FALSE);
-
-    $fields = field_read_fields(array('field_name' => $field_name), array('include_inactive' => TRUE));
-    $this->assertTrue(isset($fields[$field_name]) && $field_definition < $field, 'The field is properly read when explicitly fetching inactive fields.');
-
-    // Re-enable modules one by one, and check that the field is still inactive
-    // while some modules remain disabled.
-    while ($modules) {
-      $field = field_read_field($field_name);
-      $this->assertTrue(empty($field), format_string('%modules disabled. The field is marked inactive.', array('%modules' => implode(', ', $modules))));
-
-      $module = array_shift($modules);
-      module_enable(array($module), FALSE);
-    }
-
-    // Check that the field is active again after all modules have been
-    // enabled.
-    $field = field_read_field($field_name);
-    $this->assertTrue($field_definition <= $field, 'The field was was marked active.');
+    // Re-enable the module, and check that the field is active again.
+    module_enable(array('field_test'));
+    $field = field_read_field('entity_test', $field_name);
+    $this->assertFalse(empty($field), 'The field was was marked active.');
   }
 }

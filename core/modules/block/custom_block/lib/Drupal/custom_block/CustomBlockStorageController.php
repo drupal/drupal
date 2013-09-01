@@ -16,7 +16,7 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
  * This extends the Drupal\Core\Entity\DatabaseStorageControllerNG class,
  * adding required special handling for custom block entities.
  */
-class CustomBlockStorageController extends DatabaseStorageControllerNG implements EntityStorageControllerInterface {
+class CustomBlockStorageController extends DatabaseStorageControllerNG {
 
   /**
    * Overrides \Drupal\Core\Entity\DatabaseStorageController::attachLoad().

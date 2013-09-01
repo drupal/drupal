@@ -39,7 +39,7 @@ class TermDeleteForm extends EntityNGConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')->getStorageController('taxonomy_vocabulary')
+      $container->get('entity.manager')->getStorageController('taxonomy_vocabulary')
     );
   }
 

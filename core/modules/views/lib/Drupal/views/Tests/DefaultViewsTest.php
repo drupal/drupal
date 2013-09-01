@@ -62,7 +62,8 @@ class DefaultViewsTest extends ViewTestBase {
     // Setup a field and instance.
     $this->field_name = drupal_strtolower($this->randomName());
     entity_create('field_entity', array(
-      'field_name' => $this->field_name,
+      'name' => $this->field_name,
+      'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       'settings' => array(
         'allowed_values' => array(
@@ -118,7 +119,7 @@ class DefaultViewsTest extends ViewTestBase {
    */
   public function testDefaultViews() {
     // Get all default views.
-    $controller = $this->container->get('plugin.manager.entity')->getStorageController('view');
+    $controller = $this->container->get('entity.manager')->getStorageController('view');
     $views = $controller->loadMultiple();
 
     foreach ($views as $name => $view_storage) {
