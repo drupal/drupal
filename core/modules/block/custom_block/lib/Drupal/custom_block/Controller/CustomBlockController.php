@@ -8,13 +8,13 @@
 namespace Drupal\custom_block\Controller;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\custom_block\CustomBlockTypeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class CustomBlockController implements ControllerInterface {
+class CustomBlockController implements ContainerInjectionInterface {
 
   /**
    * The entity manager.

@@ -8,13 +8,13 @@
 namespace Drupal\entity\Controller;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides methods for entity display mode routes.
  */
-class EntityDisplayModeController implements ControllerInterface {
+class EntityDisplayModeController implements ContainerInjectionInterface {
 
   /**
    * The entity manager.

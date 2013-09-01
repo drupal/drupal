@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\field\FieldInfo;
@@ -28,7 +28,7 @@ use Drupal\user\TempStoreFactory;
 /**
  * Returns responses for Edit module routes.
  */
-class EditController implements ControllerInterface {
+class EditController implements ContainerInjectionInterface {
 
   /**
    * The TempStore factory.

@@ -8,7 +8,7 @@
 namespace Drupal\image\Controller;
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Image\ImageFactory;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\image\ImageStyleInterface;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 /**
  * Defines a controller to serve image styles.
  */
-class ImageStyleDownloadController extends FileDownloadController implements ControllerInterface {
+class ImageStyleDownloadController extends FileDownloadController implements ContainerInjectionInterface {
 
   /**
    * The lock backend.

@@ -276,7 +276,7 @@ class EntityManager extends PluginManagerBase {
   public function getFormController($entity_type, $operation) {
     if (!isset($this->controllers['form'][$operation][$entity_type])) {
       $class = $this->getControllerClass($entity_type, 'form', $operation);
-      if (in_array('Drupal\Core\Controller\ControllerInterface', class_implements($class))) {
+      if (in_array('Drupal\Core\DependencyInjection\ContainerInjectionInterface', class_implements($class))) {
         $controller = $class::create($this->container);
       }
       else {

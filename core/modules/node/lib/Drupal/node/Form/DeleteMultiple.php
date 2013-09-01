@@ -8,7 +8,7 @@
 namespace Drupal\node\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Component\Utility\String;
 use Drupal\user\TempStoreFactory;
@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a node deletion confirmation form.
  */
-class DeleteMultiple extends ConfirmFormBase implements ControllerInterface {
+class DeleteMultiple extends ConfirmFormBase implements ContainerInjectionInterface {
 
   /**
    * The array of nodes to delete.

@@ -6,12 +6,12 @@
 
 namespace Drupal\design_test\Controller;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 
 /**
  * Controller routines for design_test routes.
  */
-class DesignTestController implements ControllerInterface {
+class DesignTestController implements ContainerInjectionInterface {
 
   /**
    * {@inheritdoc}

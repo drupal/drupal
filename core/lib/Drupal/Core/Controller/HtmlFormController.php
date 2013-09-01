@@ -82,7 +82,7 @@ class HtmlFormController implements ContainerAwareInterface {
   protected function getFormObject(Request $request, $form_arg) {
     // If this is a class, instantiate it.
     if (class_exists($form_arg)) {
-      if (in_array('Drupal\Core\Controller\ControllerInterface', class_implements($form_arg))) {
+      if (in_array('Drupal\Core\DependencyInjection\ContainerInjectionInterface', class_implements($form_arg))) {
         return $form_arg::create($this->container);
       }
 

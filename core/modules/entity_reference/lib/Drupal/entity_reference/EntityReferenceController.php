@@ -11,12 +11,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 
 /**
  * Defines route controller for entity reference.
  */
-class EntityReferenceController implements ControllerInterface {
+class EntityReferenceController implements ContainerInjectionInterface {
 
   /**
    * The autocomplete helper for entity references.

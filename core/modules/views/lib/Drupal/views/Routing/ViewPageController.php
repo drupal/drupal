@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Routing;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\views\ViewExecutableFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Defines a page controller to execute and render a view.
  */
-class ViewPageController implements ControllerInterface {
+class ViewPageController implements ContainerInjectionInterface {
 
   /**
    * The entity storage controller.

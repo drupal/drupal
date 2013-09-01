@@ -7,7 +7,7 @@
 
 namespace Drupal\router_test;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * Test controllers that are intended to be wrapped in a main controller.
  */
-class TestContent extends ContainerAware implements ControllerInterface {
+class TestContent extends ContainerAware implements ContainerInjectionInterface {
 
   /**
    * The HTTP kernel.

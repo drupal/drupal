@@ -7,7 +7,7 @@
 
 namespace Drupal\language_test\Controller;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * Controller routines for language_test routes.
  */
-class LanguageTestController implements ControllerInterface {
+class LanguageTestController implements ContainerInjectionInterface {
 
   /**
    * The HTTP kernel service.

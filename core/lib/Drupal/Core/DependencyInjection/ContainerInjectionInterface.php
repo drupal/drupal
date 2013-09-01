@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Controller\ControllerInterface.
+ * Contains \Drupal\Core\Controller\ContainerInjectionInterface.
  */
 
-namespace Drupal\Core\Controller;
+namespace Drupal\Core\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * the controller very difficult to unit test so should only be used for
  * controllers that are trivial in complexity.
  */
-interface ControllerInterface {
+interface ContainerInjectionInterface {
 
   /**
    * Instantiates a new instance of this controller.

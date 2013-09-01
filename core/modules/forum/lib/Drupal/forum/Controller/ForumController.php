@@ -8,7 +8,7 @@
 namespace Drupal\forum\Controller;
 
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\taxonomy\TermStorageControllerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Controller routines for forum routes.
  */
-class ForumController implements ControllerInterface {
+class ForumController implements ContainerInjectionInterface {
 
   /**
    * Entity Manager Service.

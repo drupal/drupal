@@ -7,14 +7,14 @@
 
 namespace Drupal\system\Controller;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller for admin section.
  */
-class AdminController implements ControllerInterface {
+class AdminController implements ContainerInjectionInterface {
 
   /**
    * Module handler service.

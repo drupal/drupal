@@ -9,7 +9,7 @@ namespace Drupal\system;
 
 use Drupal\Component\Transliteration\TransliterationInterface;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Controller routines for machine name transliteration routes.
  */
-class MachineNameController implements ControllerInterface {
+class MachineNameController implements ContainerInjectionInterface {
 
   /**
    * The transliteration helper.

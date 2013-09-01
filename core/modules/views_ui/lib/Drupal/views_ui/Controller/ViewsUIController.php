@@ -11,7 +11,7 @@ use Drupal\views\ViewExecutable;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\ViewsData;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +26,7 @@ use Drupal\Core\Utility\LinkGeneratorInterface;
 /**
  * Returns responses for Views UI routes.
  */
-class ViewsUIController implements ControllerInterface {
+class ViewsUIController implements ContainerInjectionInterface {
 
   /**
    * Stores the Entity manager.

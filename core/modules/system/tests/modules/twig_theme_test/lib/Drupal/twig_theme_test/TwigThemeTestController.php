@@ -7,13 +7,13 @@
 
 namespace Drupal\twig_theme_test;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routines for Twig theme test routes.
  */
-class TwigThemeTestController implements ControllerInterface {
+class TwigThemeTestController implements ContainerInjectionInterface {
 
   /**
    * Creates the controller.

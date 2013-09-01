@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Form;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\node\NodeInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a form for reverting a node revision.
  */
-class NodeRevisionRevertForm extends ConfirmFormBase implements ControllerInterface {
+class NodeRevisionRevertForm extends ConfirmFormBase implements ContainerInjectionInterface {
 
   /**
    * The node revision.

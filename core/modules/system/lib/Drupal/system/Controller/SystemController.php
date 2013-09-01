@@ -8,7 +8,7 @@
 namespace Drupal\system\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\system\SystemManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * Returns responses for System routes.
  */
-class SystemController extends ControllerBase implements ControllerInterface {
+class SystemController extends ControllerBase implements ContainerInjectionInterface {
 
   /**
    * The entity query factory object.

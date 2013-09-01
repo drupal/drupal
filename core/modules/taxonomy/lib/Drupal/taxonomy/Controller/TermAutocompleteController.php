@@ -10,7 +10,7 @@ namespace Drupal\taxonomy\Controller;
 use Drupal\Component\Utility\Tags;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\String;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\field\FieldInfo;
 use Drupal\taxonomy\TermStorageControllerInterface;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * Returns autocomplete responses for taxonomy terms.
  */
-class TermAutocompleteController implements ControllerInterface {
+class TermAutocompleteController implements ContainerInjectionInterface {
 
   /**
    * Taxonomy term entity query interface.
