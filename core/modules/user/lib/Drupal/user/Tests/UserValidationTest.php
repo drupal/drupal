@@ -7,18 +7,41 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\simpletest\WebTestBase;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\simpletest\DrupalUnitTestBase;
 
-class UserValidationTest extends WebTestBase {
+/**
+ * Performs validation tests on user fields.
+ */
+class UserValidationTest extends DrupalUnitTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('field', 'user', 'system');
+
   public static function getInfo() {
     return array(
-      'name' => 'Username/e-mail validation',
-      'description' => 'Verify that username/email validity checks behave as designed.',
+      'name' => 'User validation',
+      'description' => 'Verify that user validity checks behave as designed.',
       'group' => 'User'
     );
   }
 
-  // Username validation.
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+    $this->installSchema('user', array('users'));
+    $this->installSchema('system', array('sequences'));
+  }
+
+  /**
+   * Tests user name validation.
+   */
   function testUsernames() {
     $test_cases = array( // '<username>' => array('<description>', 'assert<testName>'),
       'foo'                    => array('Valid username', 'assertNull'),
@@ -43,5 +66,97 @@ class UserValidationTest extends WebTestBase {
       $result = user_validate_name($name);
       $this->$test($result, $description . ' (' . $name . ')');
     }
+  }
+
+  /**
+   * Runs entity validation checks.
+   */
+  function testValidation() {
+    $user = entity_create('user', array('name' => 'test'));
+    $violations = $user->validate();
+    $this->assertEqual(count($violations), 0, 'No violations when validating a default user.');
+
+    // Only test one example invalid name here, the rest is already covered in
+    // the testUsernames() method in this class.
+    $name = $this->randomName(61);
+    $user->set('name', $name);
+    $violations = $user->validate();
+    $this->assertEqual(count($violations), 1, 'Violation found when name is too long.');
+    $this->assertEqual($violations[0]->getPropertyPath(), 'name.0.value');
+    $this->assertEqual($violations[0]->getMessage(), t('The username %name is too long: it must be %max characters or less.', array('%name' => $name, '%max' => 60)));
+
+    // Create a second test user to provoke a name collision.
+    $user2 = entity_create('user', array(
+      'name' => 'existing',
+      'mail' => 'existing@exmaple.com',
+    ));
+    $user2->save();
+    $user->set('name', 'existing');
+    $violations = $user->validate();
+    $this->assertEqual(count($violations), 1, 'Violation found on name collision.');
+    $this->assertEqual($violations[0]->getPropertyPath(), 'name.0.value');
+    $this->assertEqual($violations[0]->getMessage(), t('The name %name is already taken.', array('%name' => 'existing')));
+
+    // Make the name valid.
+    $user->set('name', $this->randomName());
+
+    $user->set('mail', 'invalid');
+    $violations = $user->validate();
+    $this->assertEqual(count($violations), 1, 'Violation found when email is invalid');
+    $this->assertEqual($violations[0]->getPropertyPath(), 'mail.0.value');
+    $this->assertEqual($violations[0]->getMessage(), t('This value is not a valid email address.'));
+
+    $mail = $this->randomName(EMAIL_MAX_LENGTH - 11) . '@example.com';
+    $user->set('mail', $mail);
+    $violations = $user->validate();
+    $this->assertEqual(count($violations), 1, 'Violation found when email is too long');
+    $this->assertEqual($violations[0]->getPropertyPath(), 'mail.0.value');
+    $this->assertEqual($violations[0]->getMessage(), t('This value is not a valid email address.'));
+
+    // Provoke a e-mail collision with an exsiting user.
+    $user->set('mail', 'existing@exmaple.com');
+    $violations = $user->validate();
+    $this->assertEqual(count($violations), 1, 'Violation found when e-mail already exists.');
+    $this->assertEqual($violations[0]->getPropertyPath(), 'mail.0.value');
+    $this->assertEqual($violations[0]->getMessage(), t('The e-mail address %mail is already taken.', array('%mail' => 'existing@exmaple.com')));
+    $user->set('mail', NULL);
+
+    $user->set('signature', $this->randomString(256));
+    $this->assertLengthViolation($user, 'signature', 255);
+    $user->set('signature', NULL);
+
+    $user->set('theme', $this->randomString(DRUPAL_EXTENSION_NAME_MAX_LENGTH + 1));
+    $this->assertLengthViolation($user, 'theme', DRUPAL_EXTENSION_NAME_MAX_LENGTH);
+    $user->set('theme', NULL);
+
+    $user->set('timezone', $this->randomString(33));
+    $this->assertLengthViolation($user, 'timezone', 32);
+    $user->set('timezone', NULL);
+
+    $user->set('init', 'invalid');
+    $violations = $user->validate();
+    $this->assertEqual(count($violations), 1, 'Violation found when init email is invalid');
+    $this->assertEqual($violations[0]->getPropertyPath(), 'init.0.value');
+    $this->assertEqual($violations[0]->getMessage(), t('This value is not a valid email address.'));
+
+    // @todo Test user role validation once https://drupal.org/node/2015701 got
+    // committed.
+  }
+
+  /**
+   * Verifies that a length violation exists for the given field.
+   *
+   * @param \Drupal\core\Entity\EntityInterface $entity
+   *   The entity object to validate.
+   * @param string $field_name
+   *   The field that violates the maximum length.
+   * @param int $length
+   *   Number of characters that was exceeded.
+  */
+  protected function assertLengthViolation(EntityInterface $entity, $field_name, $length) {
+    $violations = $entity->validate();
+    $this->assertEqual(count($violations), 1, "Violation found when $field_name is too long.");
+    $this->assertEqual($violations[0]->getPropertyPath(), "$field_name.0.value");
+    $this->assertEqual($violations[0]->getMessage(), t('This value is too long. It should have %limit characters or less.', array('%limit' => $length)));
   }
 }
