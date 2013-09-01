@@ -97,7 +97,7 @@ class CommentManager {
    *   The bundle to attach the default comment field instance to.
    * @param string $field_name
    *   (optional) Field name to use for the comment field. Defaults to 'comment'.
-   * @param string $default_value
+   * @param int $default_value
    *   (optional) Default value, one of COMMENT_HIDDEN, COMMENT_OPEN,
    *   COMMENT_CLOSED. Defaults to COMMENT_OPEN.
    */

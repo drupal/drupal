@@ -286,7 +286,7 @@ function comment_menu() {
  *
  * Loads the entity given and entity id and entity type
  *
- * @param integer $entity_id
+ * @param int $entity_id
  *   The entity ID.
  * @param array $args
  *   The menu args passed from the %map load argument.
@@ -1024,7 +1024,7 @@ function comment_translation_configuration_element_submit($form, &$form_state) {
 function comment_entity_load($entities, $entity_type) {
   $fields = Drupal::service('comment.manager')->getFields($entity_type);
   if (!$fields) {
-    // Do not query database when entity has not comment fields.
+    // Do not query database when entity has no comment fields.
     return;
   }
   // Load comment information from the database and add it to the entity's
@@ -1058,8 +1058,8 @@ function comment_entity_insert(EntityInterface $entity) {
   global $user;
   // Allow bulk updates and inserts to temporarily disable the
   // maintenance of the {comment_entity_statistics} table.
-  $fields = Drupal::service('comment.manager')->getFields($entity->entityType());
-  if ($fields && Drupal::state()->get('comment.maintain_entity_statistics')) {
+  if (Drupal::state()->get('comment.maintain_entity_statistics') &&
+    $fields = Drupal::service('comment.manager')->getFields($entity->entityType())) {
     $query = db_insert('comment_entity_statistics')
      ->fields(array(
       'entity_id',
@@ -1072,6 +1072,10 @@ function comment_entity_insert(EntityInterface $entity) {
       'comment_count'
     ));
     foreach ($fields as $field_name => $detail) {
+      // Skip fields that entity does not have.
+      if (!$entity->getPropertyDefinition($field_name)) {
+        continue;
+      }
       // There is at least one comment field, the query needs to be executed.
       // Default to current user when entity does not have a uid property.
       $last_comment_uid = $user->id();
@@ -1186,6 +1190,10 @@ function comment_node_search_result(EntityInterface $node) {
   $comments = 0;
   $open = FALSE;
   foreach ($comment_fields as $field_name => $info) {
+    // Skip fields that entity does not have.
+    if (!$node->getPropertyDefinition($field_name)) {
+      continue;
+    }
     // Do not make a string if comments are hidden.
     if (user_access('access comments') && ($items = field_get_items($node, $field_name)) &&
       isset($items[0]['status']) && $items[0]['status'] != COMMENT_HIDDEN) {
@@ -1273,7 +1281,7 @@ function comment_load($cid, $reset = FALSE) {
 /**
  * Gets the number of new comments for the current user and the specified node.
  *
- * @param integer $entity_id
+ * @param int $entity_id
  *   Entity ID of the entity to which the comments are attached.
  * @param string $entity_type
  *   Entity type of the entity to which the comments are attached.
@@ -1336,7 +1344,7 @@ function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestam
  * Count the number of comments which appear before the comment we want to
  * display, taking into account display settings and threading.
  *
- * @param integer $cid
+ * @param int $cid
  *   The comment ID.
  * @param array $instance
  *   Field instance as returned from field_info_instance().
@@ -1865,7 +1873,7 @@ function comment_mark(CommentInterface $comment) {
     return MARK_READ;
   }
   if (!isset($cache[$cid])) {
-    if ($comment->entity_type->value == 'node' && module_exists('history')) {
+    if ($comment->entity_type->value == 'node' && Drupal::moduleHandler()->moduleExists('history')) {
       $cache[$cid] = history_read($comment->entity_id->value);
     }
     else {

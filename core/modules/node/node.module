@@ -244,7 +244,7 @@ function node_admin_paths() {
  *
  * @param $result
  *   A database result object from a query to fetch node entities. If your
- *   query joins the {node_comment_statistics} table so that the comment_count
+ *   query joins the {entity_comment_statistics} table so that the comment_count
  *   field is available, a title attribute will be added to show the number of
  *   comments.
  * @param $title
