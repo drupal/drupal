@@ -1816,10 +1816,6 @@ function comment_library_info() {
  */
 function comment_field_instance_create(FieldInstanceInterface $instance) {
   if ($instance->getFieldType() == 'comment') {
-    if (empty($instance->default_value)) {
-      // Set comments enabled by default when field created via UI.
-      $instance->default_value = array(array('status' => COMMENT_OPEN));
-    }
     Drupal::service('comment.manager')->addBodyField($instance->getFieldName());
     Drupal::cache()->delete('comment_entity_info');
   }
