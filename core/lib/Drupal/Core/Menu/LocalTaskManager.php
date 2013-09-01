@@ -7,7 +7,10 @@
 
 namespace Drupal\Core\Menu;
 
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\Language;
+use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,14 +66,19 @@ class LocalTaskManager extends DefaultPluginManager {
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider to load routes by name.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.u
+   *   The module handler.
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
+   *   The cache backend.
+   * @param \Drupal\Core\Language\LanguageManager $language_manager
+   *   The language manager.
    */
-  public function __construct(\Traversable $namespaces, ControllerResolverInterface $controller_resolver, Request $request, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler) {
+  public function __construct(\Traversable $namespaces, ControllerResolverInterface $controller_resolver, Request $request, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager) {
     parent::__construct('Plugin/Menu/LocalTask', $namespaces, array(), 'Drupal\Core\Annotation\Menu\LocalTask');
     $this->controllerResolver = $controller_resolver;
     $this->request = $request;
     $this->routeProvider = $route_provider;
     $this->alterInfo($module_handler, 'local_tasks');
+    $this->setCacheBackend($cache, $language_manager, 'local_task', array('local_task' => TRUE));
   }
 
   /**
@@ -118,64 +126,78 @@ class LocalTaskManager extends DefaultPluginManager {
   public function getLocalTasksForRoute($route_name) {
     if (!isset($this->instances[$route_name])) {
       $this->instances[$route_name] = array();
-      // @todo - optimize this lookup by compiling or caching.
-      $definitions = $this->getDefinitions();
-      // We build the hierarchy by finding all tabs that should
-      // appear on the current route.
-      $tab_root_ids = array();
-      $parents = array();
-      foreach ($definitions as $plugin_id => $task_info) {
-        if ($route_name == $task_info['route_name']) {
-          $tab_root_ids[$task_info['tab_root_id']] = TRUE;
-          // Tabs that link to the current route are viable parents
-          // and their parent and children should be visible also.
-          // @todo - this only works for 2 levels of tabs.
-          // instead need to iterate up.
-          $parents[$plugin_id] = TRUE;
-          if (!empty($task_info['tab_parent_id'])) {
-            $parents[$task_info['tab_parent_id']] = TRUE;
-          }
-        }
+      if ($cache = $this->cacheBackend->get($this->cacheKey . ':' . $route_name)) {
+        $tab_root_ids = $cache->data['tab_root_ids'];
+        $parents = $cache->data['parents'];
+        $children = $cache->data['children'];
       }
-      if ($tab_root_ids) {
-        // Find all the plugins with the same root and that are at the top
-        // level or that have a visible parent.
+      else {
+        $definitions = $this->getDefinitions();
+        // We build the hierarchy by finding all tabs that should
+        // appear on the current route.
+        $tab_root_ids = array();
+        $parents = array();
         $children = array();
-        foreach ($definitions  as $plugin_id => $task_info) {
-          if (!empty($tab_root_ids[$task_info['tab_root_id']]) && (empty($task_info['tab_parent_id']) || !empty($parents[$task_info['tab_parent_id']]))) {
-            // Concat '> ' with root ID for the parent of top-level tabs.
-            $parent = empty($task_info['tab_parent_id']) ? '> ' . $task_info['tab_root_id'] : $task_info['tab_parent_id'];
-            $children[$parent][$plugin_id] = $task_info;
+        foreach ($definitions as $plugin_id => $task_info) {
+          if ($route_name == $task_info['route_name']) {
+            $tab_root_ids[$task_info['tab_root_id']] = $task_info['tab_root_id'];
+            // Tabs that link to the current route are viable parents
+            // and their parent and children should be visible also.
+            // @todo - this only works for 2 levels of tabs.
+            // instead need to iterate up.
+            $parents[$plugin_id] = TRUE;
+            if (!empty($task_info['tab_parent_id'])) {
+              $parents[$task_info['tab_parent_id']] = TRUE;
+            }
           }
         }
-        foreach (array_keys($tab_root_ids) as $root_id) {
-          // Convert the tree keyed by plugin IDs into a simple one with
-          // integer depth.  Create instances for each plugin along the way.
-          $level = 0;
-          // We used this above as the top-level parent array key.
-          $next_parent = '> ' . $root_id;
-          do {
-            $parent = $next_parent;
-            $next_parent = FALSE;
-            foreach ($children[$parent] as $plugin_id => $task_info) {
-              $plugin = $this->createInstance($plugin_id);
-              $this->instances[$route_name][$level][$plugin_id] = $plugin;
-              // Normally, l() compares the href of every link with the current
-              // path and sets the active class accordingly. But the parents of
-              // the current local task may be on a different route in which
-              // case we have to set the class manually by flagging it active.
-              if (!empty($parents[$plugin_id]) && $route_name != $task_info['route_name']) {
-                $plugin->setActive();
-              }
-              if (isset($children[$plugin_id])) {
-                // This tab has visible children
-                $next_parent = $plugin_id;
-              }
+        if ($tab_root_ids) {
+          // Find all the plugins with the same root and that are at the top
+          // level or that have a visible parent.
+          foreach ($definitions  as $plugin_id => $task_info) {
+            if (!empty($tab_root_ids[$task_info['tab_root_id']]) && (empty($task_info['tab_parent_id']) || !empty($parents[$task_info['tab_parent_id']]))) {
+              // Concat '> ' with root ID for the parent of top-level tabs.
+              $parent = empty($task_info['tab_parent_id']) ? '> ' . $task_info['tab_root_id'] : $task_info['tab_parent_id'];
+              $children[$parent][$plugin_id] = $task_info;
             }
-            $level++;
-          } while ($next_parent);
+          }
         }
+        $data = array(
+          'tab_root_ids' => $tab_root_ids,
+          'parents' => $parents,
+          'children' => $children,
+        );
+        $this->cacheBackend->set($this->cacheKey . ':' . $route_name, $data, CacheBackendInterface::CACHE_PERMANENT, array('local_task'));
       }
+      // Create a plugin instance for each element of the hierarchy.
+      foreach ($tab_root_ids as $root_id) {
+        // Convert the tree keyed by plugin IDs into a simple one with
+        // integer depth.  Create instances for each plugin along the way.
+        $level = 0;
+        // We used this above as the top-level parent array key.
+        $next_parent = '> ' . $root_id;
+        do {
+          $parent = $next_parent;
+          $next_parent = FALSE;
+          foreach ($children[$parent] as $plugin_id => $task_info) {
+            $plugin = $this->createInstance($plugin_id);
+            $this->instances[$route_name][$level][$plugin_id] = $plugin;
+            // Normally, l() compares the href of every link with the current
+            // path and sets the active class accordingly. But the parents of
+            // the current local task may be on a different route in which
+            // case we have to set the class manually by flagging it active.
+            if (!empty($parents[$plugin_id]) && $route_name != $task_info['route_name']) {
+              $plugin->setActive();
+            }
+            if (isset($children[$plugin_id])) {
+              // This tab has visible children
+              $next_parent = $plugin_id;
+            }
+          }
+          $level++;
+        } while ($next_parent);
+      }
+
     }
     return $this->instances[$route_name];
   }
