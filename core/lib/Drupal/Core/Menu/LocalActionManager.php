@@ -70,7 +70,7 @@ class LocalActionManager extends DefaultPluginManager {
     $this->controllerResolver = $controller_resolver;
     $this->request = $request;
     $this->alterInfo($module_handler, 'menu_local_actions');
-    $this->setCacheBackend($cache_backend, $language_manager, 'local_action_plugins');
+    $this->setCacheBackend($cache_backend, $language_manager, 'local_action');
   }
 
   /**
@@ -121,12 +121,22 @@ class LocalActionManager extends DefaultPluginManager {
   public function getActionsForRoute($route_name) {
     if (!isset($this->instances[$route_name])) {
       $this->instances[$route_name] = array();
-      // @todo - optimize this lookup by compiling or caching.
-      foreach ($this->getDefinitions() as $plugin_id => $action_info) {
-        if (in_array($route_name, $action_info['appears_on'])) {
-          $plugin = $this->createInstance($plugin_id);
-          $this->instances[$route_name][$plugin_id] = $plugin;
+      if ($cache = $this->cacheBackend->get($this->cacheKey . ':' . $route_name)) {
+        $route_actions = $cache->data;
+      }
+      else {
+        // Iterate over all plugin definitions to find those that appear on the
+        // current route, then cache the list.
+        $route_actions = array();
+        foreach ($this->getDefinitions() as $plugin_id => $action_info) {
+          if (in_array($route_name, $action_info['appears_on'])) {
+            $route_actions[] = $plugin_id;
+          }
         }
+        $this->cacheBackend->set($this->cacheKey . ':' . $route_name, $route_actions, CacheBackendInterface::CACHE_PERMANENT, array('local_action'));
+      }
+      foreach ($route_actions as $plugin_id) {
+        $this->instances[$route_name][$plugin_id] = $this->createInstance($plugin_id);
       }
     }
     return $this->instances[$route_name];
