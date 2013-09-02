@@ -7,13 +7,8 @@
 
 namespace Drupal\field\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
- * Unit test class for storage-related field_attach_* functions.
- *
- * All field_attach_* test work with all field_storage plugins and
- * all hook_field_attach_pre_{load,insert,update}() hooks.
+ * Unit test class for storage-related field behavior.
  */
 class FieldAttachStorageTest extends FieldUnitTestBase {
 
