@@ -163,11 +163,8 @@ function aggregator_menu() {
   );
   $items['aggregator/categories/%aggregator_category/categorize'] = array(
     'title' => 'Categorize',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('aggregator_page_category_form', 2),
-    'access arguments' => array('administer news feeds'),
     'type' => MENU_LOCAL_TASK,
-    'file' => 'aggregator.pages.inc',
+    'route_name' => 'aggregator_categorize_category_form',
   );
   $items['aggregator/categories/%aggregator_category/configure'] = array(
     'title' => 'Configure',
@@ -189,11 +186,8 @@ function aggregator_menu() {
   );
   $items['aggregator/sources/%aggregator_feed/categorize'] = array(
     'title' => 'Categorize',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('aggregator_page_source_form', 2),
-    'access arguments' => array('administer news feeds'),
+    'route_name' => 'aggregator_categorize_feed_form',
     'type' => MENU_LOCAL_TASK,
-    'file' => 'aggregator.pages.inc',
   );
   $items['aggregator/sources/%aggregator_feed/configure'] = array(
     'title' => 'Configure',

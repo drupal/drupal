@@ -411,14 +411,15 @@ $settings['update_free_access'] = FALSE;
 /**
  * Class Loader.
  *
- * By default, Drupal uses the Symfony UniversalClassLoader which is best for
- * development, as it does not break when code is moved on the file system.
- * The APC classloader provides better performance and is recommended for
- * production sites.
+ * By default, Drupal uses Composer's ClassLoader, which is best for
+ * development, as it does not break when code is moved on the file
+ * system. It is possible, however, to wrap the class loader with a
+ * cached class loader solution for better performance, which is
+ * recommended for production sites.
  *
  * Examples:
- *  $class_loader = 'apc'
- *  $class_loader = 'default'
+ *   $settings['class_loader'] = 'apc';
+ *   $settings['class_loader'] = 'default';
  */
 # $settings['class_loader'] = 'apc';
 

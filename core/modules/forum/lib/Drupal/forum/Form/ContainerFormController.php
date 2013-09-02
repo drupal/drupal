@@ -42,14 +42,8 @@ class ContainerFormController extends ForumFormController {
    */
   public function save(array $form, array &$form_state) {
     $is_new = $this->entity->isNew();
+    $this->entity->forum_container = TRUE;
     $term = parent::save($form, $form_state);
-    if ($is_new) {
-      // Update config item to track the container terms.
-      $config = $this->configFactory->get('forum.settings');
-      $containers = $config->get('containers');
-      $containers[] = $term->id();
-      $config->set('containers', $containers)->save();
-    }
   }
 
 }

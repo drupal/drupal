@@ -49,11 +49,6 @@ function file_menu() {
     'theme callback' => 'ajax_base_page_theme',
     'type' => MENU_CALLBACK,
   );
-  $items['file/progress'] = array(
-    'route name' => 'file.ajax.progress',
-    'theme callback' => 'ajax_base_page_theme',
-    'type' => MENU_CALLBACK,
-  );
 
   return $items;
 }

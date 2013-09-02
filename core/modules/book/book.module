@@ -187,14 +187,6 @@ function book_menu() {
     'route_name' => 'book_render',
     'type' => MENU_SUGGESTED_ITEM,
   );
-  $items['book/export/%/%node'] = array(
-    'page callback' => 'book_export',
-    'page arguments' => array(2, 3),
-    'access callback' => 'book_export_access',
-    'access arguments' => array(3),
-    'type' => MENU_CALLBACK,
-    'file' => 'book.pages.inc',
-  );
   $items['node/%node/outline'] = array(
     'title' => 'Outline',
     'page callback' => 'book_outline',
@@ -215,16 +207,6 @@ function book_menu() {
   );
 
   return $items;
-}
-
-/**
- * Access callback: Determines if the book export page is accessible.
- *
- * @param \Drupal\node\Entity\EntityInterface $node
- *   The node whose export page is to be viewed.
- */
-function book_export_access(EntityInterface $node) {
-  return user_access('access printer-friendly version') && node_access('view', $node);
 }
 
 /**
@@ -1142,68 +1124,6 @@ function template_preprocess_book_export_html(&$variables) {
   $attributes['lang'] = $language_interface->id;
   $attributes['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
   $variables['html_attributes'] = new Attribute($attributes);
-}
-
-/**
- * Traverses the book tree to build printable or exportable output.
- *
- * During the traversal, the $visit_func() callback is applied to each node and
- * is called recursively for each child of the node (in weight, title order).
- *
- * @param $tree
- *   A subtree of the book menu hierarchy, rooted at the current page.
- * @param $visit_func
- *   A function callback to be called upon visiting a node in the tree.
- *
- * @return
- *   The output generated in visiting each node.
- */
-function book_export_traverse($tree, $visit_func) {
-  $output = '';
-
-  foreach ($tree as $data) {
-    // Note- access checking is already performed when building the tree.
-    if ($node = node_load($data['link']['nid'])) {
-      $children = '';
-
-      if ($data['below']) {
-        $children = book_export_traverse($data['below'], $visit_func);
-      }
-
-      if (!empty($visit_func)) {
-        $output .= call_user_func($visit_func, $node, $children);
-      }
-      else {
-        // Use the default function.
-        $output .= book_node_export($node, $children);
-      }
-    }
-  }
-
-  return $output;
-}
-
-/**
- * Generates printer-friendly HTML for a node.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The node that will be output.
- * @param $children
- *   (optional) All the rendered child nodes within the current node. Defaults
- *   to an empty string.
- *
- * @return
- *   The HTML generated for the given node.
- *
- * @see book_export_traverse()
- */
-function book_node_export(EntityInterface $node, $children = '') {
-  $build = node_view($node, 'print');
-  unset($build['#theme']);
-  // @todo Rendering should happen in the template using render().
-  $node->rendered = drupal_render($build);
-  $book_node_export_html = array('#theme' => 'book_node_export_html', '#node' => $node, '#children' => $children );
-  return drupal_render($book_node_export_html);
 }
 
 /**

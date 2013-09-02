@@ -8,7 +8,9 @@
  * See COPYRIGHT.txt and LICENSE.txt files in the "core" directory.
  */
 
+require_once __DIR__ . '/core/vendor/autoload.php';
 require_once __DIR__ . '/core/includes/bootstrap.inc';
+
 try {
   drupal_handle_request();
 }

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Plugin\DerivativeTest.
+ * Contains \Drupal\system\Tests\Plugin\DerivativeTest.
  */
 
 namespace Drupal\system\Tests\Plugin;

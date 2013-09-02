@@ -54,7 +54,7 @@ class AdvancedSettingsForm extends SystemConfigFormBase {
     $form['debug']['sql_signature'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Add Views signature to all SQL queries'),
-      '#description' => $this->t("All Views-generated queries will include the name of the views and display 'view-name:display-name' as a string  at the end of the SELECT clause. This makes identifying Views queries in database server logs simpler, but should only be used when troubleshooting."),
+      '#description' => $this->t("All Views-generated queries will include the name of the views and display 'view-name:display-name' as a string at the end of the SELECT clause. This makes identifying Views queries in database server logs simpler, but should only be used when troubleshooting."),
 
       '#default_value' => $config->get('sql_signature'),
     );

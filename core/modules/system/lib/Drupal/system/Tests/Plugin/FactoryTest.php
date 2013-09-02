@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Plugin\FactoryTest.
+ * Contains \Drupal\system\Tests\Plugin\FactoryTest.
  */
 
 namespace Drupal\system\Tests\Plugin;

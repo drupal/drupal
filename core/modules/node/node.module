@@ -2006,19 +2006,7 @@ function node_access($op, $node, $account = NULL, $langcode = NULL) {
 
   // If no language code was provided, default to the node's langcode.
   if (empty($langcode)) {
-    $langcode = $node->language()->id;
-    // If the Language module is enabled, try to use the language from content
-    // negotiation.
-    if (module_exists('language')) {
-      // Load languages the node exists in.
-      $node_translations = $node->getTranslationLanguages();
-      // Load the language from content negotiation.
-      $content_negotiation_langcode = language(Language::TYPE_CONTENT)->id;
-      // If there is a translation available, use it.
-      if (isset($node_translations[$content_negotiation_langcode])) {
-        $langcode = $content_negotiation_langcode;
-      }
-    }
+    $langcode = $node->prepareLangcode();
   }
   return $access_controller->access($node, $op, $langcode, $account);
 }

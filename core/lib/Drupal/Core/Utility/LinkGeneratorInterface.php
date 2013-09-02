@@ -22,7 +22,7 @@ interface LinkGeneratorInterface {
    * However, for links enclosed in translatable text you should use t() and
    * embed the HTML anchor tag directly in the translated string. For example:
    * @code
-   * t('Visit the <a href="@url">content types</a> page', array('@url' => Drupal::urlGenerator()->generate('node_overview_types')));
+   * t('Visit the <a href="@url">content types</a> page', array('@url' => Drupal::url('node_overview_types')));
    * @endcode
    * This keeps the context of the link title ('settings' in the example) for
    * translators.
@@ -58,6 +58,14 @@ interface LinkGeneratorInterface {
    *
    * @return string
    *   An HTML string containing a link to the given route and parameters.
+   *
+   * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
+   *   Thrown when the named route doesn't exist.
+   * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
+   *   Thrown when some parameters are missing that are mandatory for the route.
+   * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
+   *   Thrown when a parameter value for a placeholder is not correct because it
+   *   does not match the requirement.
    *
    * @see \Drupal\Core\Routing\UrlGenerator::generateFromRoute()
    */

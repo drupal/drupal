@@ -494,11 +494,10 @@ function hook_node_create(\Drupal\Core\Entity\EntityInterface $node) {
  *
  * This hook is invoked during node loading, which is handled by entity_load(),
  * via classes Drupal\node\NodeStorageController and
- * Drupal\Core\Entity\DatabaseStorageController. After the node information is
- * read from the database or the entity cache, then field_attach_load_revision()
- * or field_attach_load() is called, then hook_entity_load() is invoked on all
- * implementing modules, and finally hook_node_load() is invoked on all
- * implementing modules.
+ * Drupal\Core\Entity\DatabaseStorageController. After the node information and
+ * field values are read from the database or the entity cache,
+ * hook_entity_load() is invoked on all implementing modules, and finally
+ * hook_node_load() is invoked on all implementing modules.
  *
  * @param $nodes
  *   An array of the nodes being loaded, keyed by nid.

@@ -12,7 +12,6 @@ use Drupal\Core\Config\BootstrapConfigStorageFactory;
 use Drupal\Core\CoreServiceProvider;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\YamlFileLoader;
-use Symfony\Component\ClassLoader\ClassLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Dumper\PhpDumper;
@@ -20,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
+use Composer\Autoload\ClassLoader;
 
 /**
  * The DrupalKernel class is the core of Drupal itself.
@@ -97,7 +97,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
   /**
    * The classloader object.
    *
-   * @var \Symfony\Component\ClassLoader\ClassLoader
+   * @var \Composer\Autoload\ClassLoader
    */
   protected $classLoader;
 
@@ -150,7 +150,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    *   String indicating the environment, e.g. 'prod' or 'dev'. Used by
    *   Symfony\Component\HttpKernel\Kernel::__construct(). Drupal does not use
    *   this value currently. Pass 'prod'.
-   * @param \Symfony\Component\ClassLoader\ClassLoader $class_loader
+   * @param \Composer\Autoload\ClassLoader $class_loader
    *   (optional) The classloader is only used if $storage is not given or
    *   the load from storage fails and a container rebuild is required. In
    *   this case, the loaded modules will be registered with this loader in
@@ -521,7 +521,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $container->setParameter('container.namespaces', $namespaces);
 
     // Register synthetic services.
-    $container->register('class_loader', 'Symfony\Component\ClassLoader\ClassLoader')->setSynthetic(TRUE);
+    $container->register('class_loader')->setSynthetic(TRUE);
     $container->register('kernel', 'Symfony\Component\HttpKernel\KernelInterface')->setSynthetic(TRUE);
     $container->register('service_container', 'Symfony\Component\DependencyInjection\ContainerInterface')->setSynthetic(TRUE);
     $yaml_loader = new YamlFileLoader($container);
@@ -661,6 +661,8 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Registers a list of namespaces.
    */
   protected function registerNamespaces(array $namespaces = array()) {
-    $this->classLoader->addPrefixes($namespaces);
+    foreach ($namespaces as $prefix => $path) {
+      $this->classLoader->add($prefix, $path);
+    }
   }
 }

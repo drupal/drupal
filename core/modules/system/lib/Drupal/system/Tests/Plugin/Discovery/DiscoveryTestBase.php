@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Plugin\Discovery\DiscoveryTestBase.
+ * Contains \Drupal\system\Tests\Plugin\Discovery\DiscoveryTestBase.
  */
 
 namespace Drupal\system\Tests\Plugin\Discovery;

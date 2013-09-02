@@ -275,7 +275,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $this->assertFalse(cache('field')->get($cid), 'Cached: no cache entry on insert');
 
     // Load, and check that a cache entry is present with the expected values.
-    $controller = $this->container->get('plugin.manager.entity')->getStorageController($entity->entityType());
+    $controller = $this->container->get('entity.manager')->getStorageController($entity->entityType());
     $controller->resetCache();
     $controller->load($entity->id());
     $cache = cache('field')->get($cid);

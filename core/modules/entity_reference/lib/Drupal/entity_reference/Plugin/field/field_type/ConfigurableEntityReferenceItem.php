@@ -67,7 +67,7 @@ class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase impl
     );
 
     // Create a foreign key to the target entity type base type.
-    $entity_manager = \Drupal::service('plugin.manager.entity');
+    $entity_manager = \Drupal::service('entity.manager');
     if (is_subclass_of($entity_manager->getControllerClass($field['settings']['target_type'], 'storage'), 'Drupal\Core\Entity\DatabaseStorageController')) {
       $entity_info = $entity_manager->getDefinition($field['settings']['target_type']);
 

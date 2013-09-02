@@ -87,7 +87,7 @@ abstract class LocalStream implements StreamWrapperInterface {
       $uri = $this->uri;
     }
 
-    list($scheme, $target) = explode('://', $uri, 2);
+    list(, $target) = explode('://', $uri, 2);
 
     // Remove erroneous leading or trailing, forward-slashes and backslashes.
     return trim($target, '\/');
@@ -403,8 +403,8 @@ abstract class LocalStream implements StreamWrapperInterface {
    * @see drupal_dirname()
    */
   public function dirname($uri = NULL) {
-    list($scheme, $target) = explode('://', $uri, 2);
-    $target  = $this->getTarget($uri);
+    list($scheme, ) = explode('://', $uri, 2);
+    $target = $this->getTarget($uri);
     $dirname = dirname($target);
 
     if ($dirname == '.') {

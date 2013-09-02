@@ -56,7 +56,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('plugin.manager.entity.field.field_type'),
       $container->get('plugin.manager.field.widget')
     );

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Plugin\Discovery\AnnotatedClassDiscoveryTest.
+ * Contains \Drupal\system\Tests\Plugin\Discovery\AnnotatedClassDiscoveryTest.
  */
 
 namespace Drupal\system\Tests\Plugin\Discovery;

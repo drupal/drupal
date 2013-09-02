@@ -7,13 +7,8 @@
 
 namespace Drupal\field\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
- * Unit test class for storage-related field_attach_* functions.
- *
- * All field_attach_* test work with all field_storage plugins and
- * all hook_field_attach_pre_{load,insert,update}() hooks.
+ * Unit test class for storage-related field behavior.
  */
 class FieldAttachStorageTest extends FieldUnitTestBase {
 
@@ -74,7 +69,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
       $values[$current_revision] = $current_values;
     }
 
-    $storage_controller =  $this->container->get('plugin.manager.entity')->getStorageController($entity_type);
+    $storage_controller =  $this->container->get('entity.manager')->getStorageController($entity_type);
     $storage_controller->resetCache();
     $entity = $storage_controller->load($entity_id);
     // Confirm current revision loads the correct data.
@@ -160,7 +155,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     }
 
     // Check that a single load correctly loads field values for both entities.
-    $controller = $this->container->get('plugin.manager.entity')->getStorageController($entity->entityType());
+    $controller = $this->container->get('entity.manager')->getStorageController($entity->entityType());
     $controller->resetCache();
     $entities = $controller->loadMultiple();
     foreach ($entities as $index => $entity) {
@@ -270,7 +265,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $entity->setNewRevision();
     $entity->save();
     $vids[] = $entity->getRevisionId();
-    $controller = $this->container->get('plugin.manager.entity')->getStorageController($entity->entityType());
+    $controller = $this->container->get('entity.manager')->getStorageController($entity->entityType());
     $controller->resetCache();
 
     // Confirm each revision loads
@@ -336,7 +331,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     $this->assertIdentical($this->instance['bundle'], $new_bundle, "Bundle name has been updated in the instance.");
 
     // Verify the field data is present on load.
-    $controller = $this->container->get('plugin.manager.entity')->getStorageController($entity->entityType());
+    $controller = $this->container->get('entity.manager')->getStorageController($entity->entityType());
     $controller->resetCache();
     $entity = $controller->load($entity->id());
     $this->assertEqual(count($entity->{$this->field_name}), $this->field['cardinality'], "Bundle name has been updated in the field storage");
@@ -391,7 +386,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
     entity_test_delete_bundle($this->instance['bundle'], $entity_type);
 
     // Verify no data gets loaded
-    $controller = $this->container->get('plugin.manager.entity')->getStorageController($entity->entityType());
+    $controller = $this->container->get('entity.manager')->getStorageController($entity->entityType());
     $controller->resetCache();
     $entity= $controller->load($entity->id());
 

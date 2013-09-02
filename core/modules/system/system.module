@@ -1249,8 +1249,8 @@ function system_library_info() {
   // jQuery Once.
   $libraries['jquery.once'] = array(
     'title' => 'jQuery Once',
-    'website' => 'http://plugins.jquery.com/project/once',
-    'version' => '1.2',
+    'website' => 'http://plugins.jquery.com/once/',
+    'version' => '1.2.3',
     'js' => array(
       'core/assets/vendor/jquery-once/jquery.once.js' => array('group' => JS_LIBRARY, 'weight' => -19),
     ),

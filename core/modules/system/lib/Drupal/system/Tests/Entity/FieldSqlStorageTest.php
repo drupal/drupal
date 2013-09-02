@@ -94,7 +94,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    */
   function testFieldLoad() {
     $entity_type = $bundle = 'entity_test_rev';
-    $storage_controller = $this->container->get('plugin.manager.entity')->getStorageController($entity_type);
+    $storage_controller = $this->container->get('entity.manager')->getStorageController($entity_type);
 
     $columns = array('bundle', 'deleted', 'entity_id', 'revision_id', 'delta', 'langcode', DatabaseStorageController::_fieldColumnName($this->field, 'value'));
 
@@ -259,7 +259,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
   function testLongNames() {
     // Use one of the longest entity_type names in core.
     $entity_type = $bundle = 'entity_test_label_callback';
-    $storage_controller = $this->container->get('plugin.manager.entity')->getStorageController($entity_type);
+    $storage_controller = $this->container->get('entity.manager')->getStorageController($entity_type);
 
     // Create two fields with instances, and generate randome values.
     $name_base = drupal_strtolower($this->randomName(Field::NAME_MAX_LENGTH - 1));
@@ -411,7 +411,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
 
     // Verify that the tables were not dropped in the process.
     field_cache_clear();
-    $entity = $this->container->get('plugin.manager.entity')->getStorageController($entity_type)->load(1);
+    $entity = $this->container->get('entity.manager')->getStorageController($entity_type)->load(1);
     $this->assertEqual($entity->$field_name->value, 'field data', t("Index changes performed without dropping the tables"));
   }
 

@@ -48,22 +48,7 @@ use Drupal\entity\Entity\EntityFormDisplay;
  * allows any module to act on Field Attach operations for any entity after the
  * operation is complete, and access or modify all the field, form, or display
  * data for that entity and operation. For example, field_attach_view() invokes
- * hook_field_attach_view_alter(). These all-module hooks are distinct from
- * those of the Field Types API, such as hook_field_load(), that are only
- * invoked for the module that defines a specific field type.
- *
- * field_attach_load(), field_attach_insert(), and field_attach_update() also
- * define pre-operation hooks, e.g. hook_field_attach_pre_load(). These hooks
- * run before the corresponding Field Storage API and Field Type API operations.
- * They allow modules to define additional storage locations (e.g.
- * denormalizing, mirroring) for field data on a per-field basis. They also
- * allow modules to take over field storage completely by instructing other
- * implementations of the same hook and the Field Storage API itself not to
- * operate on specified fields.
- *
- * The pre-operation hooks do not make the Field Storage API irrelevant. The
- * Field Storage API is essentially the "fallback mechanism" for any fields that
- * aren't being intercepted explicitly by pre-operation hooks.
+ * hook_field_attach_view_alter().
  *
  * @link field_language Field language API @endlink provides information about
  * the structure of field objects.

@@ -190,7 +190,7 @@ class ForumTest extends WebTestBase {
     $this->assertEqual($topics, '6', 'Number of topics found.');
 
     // Verify the number of unread topics.
-    $unread_topics = _forum_topics_unread($this->forum['tid'], $this->edit_any_topics_user->id());
+    $unread_topics = $this->container->get('forum_manager')->unreadTopics($this->forum['tid'], $this->edit_any_topics_user->id());
     $unread_topics = format_plural($unread_topics, '1 new post', '@count new posts');
     $xpath = $this->buildXPathQuery('//tr[@id=:forum]//td[@class="topics"]//a', $forum_arg);
     $this->assertFieldByXPath($xpath, $unread_topics, 'Number of unread topics found.');
@@ -417,6 +417,8 @@ class ForumTest extends WebTestBase {
     $parent_tid = db_query("SELECT t.parent FROM {taxonomy_term_hierarchy} t WHERE t.tid = :tid", array(':tid' => $tid))->fetchField();
     $this->assertTrue($parent == $parent_tid, 'The ' . $type . ' is linked to its container');
 
+    $forum = $this->container->get('plugin.manager.entity')->getStorageController('taxonomy_term')->load($tid);
+    $this->assertEqual(($type == 'forum container'), (bool) $forum->forum_container->value);
     return $term;
   }
 
@@ -437,11 +439,6 @@ class ForumTest extends WebTestBase {
     // Assert that the forum no longer exists.
     $this->drupalGet('forum/' . $tid);
     $this->assertResponse(404, 'The forum was not found');
-
-    // Assert that the associated term has been removed from the
-    // forum_containers variable.
-    $containers = \Drupal::config('forum.settings')->get('containers');
-    $this->assertFalse(in_array($tid, $containers), 'The forum_containers variable has been updated.');
   }
 
   /**
