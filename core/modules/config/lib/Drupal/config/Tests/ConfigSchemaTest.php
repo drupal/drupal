@@ -154,7 +154,43 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $definition = config_typed()->getDefinition('config_test.someschema.somemodule.section_two.subsection');
     // The other file should have the same schema.
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for config_test.someschema.somemodule.section_two.subsection');
+  }
 
+  /**
+   * Tests metadata retrieval with several levels of %parent indirection.
+   */
+  function testSchemaMappingWithParents() {
+    $config_data = config_typed()->get('config_test.someschema.with_parents');
+
+    // Test fetching parent one level up.
+    $entry = $config_data->get('one_level');
+    $definition = $entry['testitem']->getDefinition();
+    $expected = array(
+      'type' => 'config_test.someschema.with_parents.key_1',
+      'label' => 'Test item nested one level',
+      'class' => '\Drupal\Core\TypedData\Plugin\DataType\String',
+    );
+    $this->assertEqual($definition, $expected);
+
+    // Test fetching parent two levels up.
+    $entry = $config_data->get('two_levels');
+    $definition = $entry['wrapper']['testitem']->getDefinition();
+    $expected = array(
+      'type' => 'config_test.someschema.with_parents.key_2',
+      'label' => 'Test item nested two levels',
+      'class' => '\Drupal\Core\TypedData\Plugin\DataType\String',
+    );
+    $this->assertEqual($definition, $expected);
+
+    // Test fetching parent three levels up.
+    $entry = $config_data->get('three_levels');
+    $definition = $entry['wrapper_1']['wrapper_2']['testitem']->getDefinition();
+    $expected = array(
+      'type' => 'config_test.someschema.with_parents.key_3',
+      'label' => 'Test item nested three levels',
+      'class' => '\Drupal\Core\TypedData\Plugin\DataType\String',
+    );
+    $this->assertEqual($definition, $expected);
   }
 
   /**

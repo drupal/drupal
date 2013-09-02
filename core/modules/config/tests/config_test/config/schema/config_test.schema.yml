@@ -7,6 +7,60 @@ config_test.someschema:
     "testlist":
       label: "Test list"
 
+config_test.someschema.with_parents:
+  label: "Schema test data with parenting"
+  type: mapping
+  mapping:
+    one_level:
+      label: "Parenting one level up"
+      type: mapping
+      mapping:
+        target_key:
+          label: "Key used in parent relation"
+          type: string
+        testitem:
+          type: config_test.someschema.with_parents.[%parent.target_key]
+    two_levels:
+      label: "Parenting two levels up"
+      type: mapping
+      mapping:
+        target_key:
+          label: "Key used in parent relation"
+          type: string
+        wrapper:
+          label: "Wrapper"
+          type: mapping
+          mapping:
+            testitem:
+              type: config_test.someschema.with_parents.[%parent.%parent.target_key]
+    three_levels:
+      label: "Parenting three levels up"
+      type: mapping
+      mapping:
+        target_key:
+          label: "Key used in parent relation"
+          type: string
+        wrapper_1:
+          label: "Wrapper 1"
+          type: mapping
+          mapping:
+            wrapper_2:
+              label: "Wrapper 2"
+              type: mapping
+              mapping:
+                testitem:
+                  type: config_test.someschema.with_parents.[%parent.%parent.%parent.target_key]
+
+config_test.someschema.with_parents.key_1:
+  label: "Test item nested one level"
+  type: string
+config_test.someschema.with_parents.key_2:
+  label: "Test item nested two levels"
+  type: string
+config_test.someschema.with_parents.key_3:
+  label: "Test item nested three levels"
+  type: string
+
 config_test.someschema.somemodule.*.*:
   type: mapping
   label: 'Schema multiple filesytem marker test'
