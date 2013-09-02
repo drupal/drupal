@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Plugin\AlterDecoratorTest.
+ * Contains \Drupal\system\Tests\Plugin\AlterDecoratorTest.
  */
 
 namespace Drupal\system\Tests\Plugin;

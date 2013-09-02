@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Plugin\PluginTestBase.
+ * Contains \Drupal\system\Tests\Plugin\PluginTestBase.
  */
 
 namespace Drupal\system\Tests\Plugin;

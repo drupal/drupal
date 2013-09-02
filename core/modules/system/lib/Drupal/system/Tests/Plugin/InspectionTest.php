@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Plugin\InspectionTest
+ * Contains \Drupal\system\Tests\Plugin\InspectionTest
  */
 
 namespace Drupal\system\Tests\Plugin;
