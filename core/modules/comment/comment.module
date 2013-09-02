@@ -125,7 +125,7 @@ function comment_entity_bundle_info() {
   $bundles = array();
   foreach (Drupal::service('comment.manager')->getAllFields() as $entity_type => $fields) {
     foreach ($fields as $field_name => $field_info) {
-      $bundles['comment'][$entity_type . '.' . $field_name] = array(
+      $bundles['comment'][$entity_type . '__' . $field_name] = array(
         'label' => $entity_type . '_' . $field_name,
       );
     }
@@ -174,7 +174,7 @@ function comment_field_extra_fields() {
   $return = array();
   foreach (Drupal::service('comment.manager')->getAllFields() as $entity_type => $fields) {
     foreach ($fields as $field_name => $field_info) {
-      $return['comment'][$entity_type . '.' . $field_name] = array(
+      $return['comment'][$entity_type . '__' . $field_name] = array(
         'form' => array(
           'author' => array(
             'label' => t('Author'),
@@ -464,7 +464,7 @@ function comment_new_page_count($num_comments, $new_replies, EntityInterface $en
       ->fields('comment', array('thread'))
       ->condition('entity_id', $entity->id())
       ->condition('entity_type', $entity->entityType())
-      ->condition('field_id', $entity->entityType() . '.' . $field_name)
+      ->condition('field_id', $entity->entityType() . '__' . $field_name)
       ->condition('status', COMMENT_PUBLISHED)
       ->orderBy('created', 'DESC')
       ->orderBy('cid', 'DESC')
@@ -488,7 +488,7 @@ function comment_new_page_count($num_comments, $new_replies, EntityInterface $en
                       AND status = :status AND SUBSTRING(thread, 1, (LENGTH(thread) - 1)) < :thread', array(
       ':status' => COMMENT_PUBLISHED,
       ':entity_id' => $entity->id(),
-      ':field_id' => $entity->entityType() . '.' . $field_name,
+      ':field_id' => $entity->entityType() . '__' . $field_name,
       ':entity_type' => $entity->entityType(),
       ':thread' => $first_thread,
     ))->fetchField();
@@ -758,7 +758,7 @@ function comment_get_thread(EntityInterface $entity, $field_name, $mode, $commen
   $query
     ->condition('c.entity_id', $entity->id())
     ->condition('c.entity_type', $entity->entityType())
-    ->condition('c.field_id', $entity->entityType() . '.' . $field_name)
+    ->condition('c.field_id', $entity->entityType() . '__' . $field_name)
     ->addTag('entity_access')
     ->addTag('comment_filter')
     ->addMetaData('base_table', 'comment')
@@ -771,7 +771,7 @@ function comment_get_thread(EntityInterface $entity, $field_name, $mode, $commen
   $count_query
     ->condition('c.entity_id', $entity->id())
     ->condition('c.entity_type', $entity->entityType())
-    ->condition('c.field_id', $entity->entityType() . '.' . $field_name)
+    ->condition('c.field_id', $entity->entityType() . '__' . $field_name)
     ->addTag('entity_access')
     ->addTag('comment_filter')
     ->addMetaData('base_table', 'comment')
@@ -1030,7 +1030,7 @@ function comment_entity_load($entities, $entity_type) {
     ->condition('ces.entity_type', $entity_type)
     ->execute();
   foreach ($result as $record) {
-    $parts = explode('.', $record->field_id);
+    $parts = explode('__', $record->field_id);
     list(, $field_name) = $parts;
     if (empty($entities[$record->entity_id]->comment_statistics)) {
       $entities[$record->entity_id]->comment_statistics = array();
@@ -1088,7 +1088,7 @@ function comment_entity_insert(EntityInterface $entity) {
       $query->values(array(
         'entity_id' => $entity->id(),
         'entity_type' => $entity->entityType(),
-        'field_id' => $entity->entityType() . '.' . $field_name,
+        'field_id' => $entity->entityType() . '__' . $field_name,
         'cid' => 0,
         'last_comment_timestamp' => $last_comment_timestamp,
         'last_comment_name' => NULL,
@@ -1323,7 +1323,7 @@ function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestam
       ->condition('c.created', $timestamp, '>');
     if ($field_name) {
       // Limit to a particular field.
-      $query->condition('c.field_id', $entity_type . '.' . $field_name);
+      $query->condition('c.field_id', $entity_type . '__' . $field_name);
     }
 
     return $query->execute()
@@ -1454,9 +1454,7 @@ function comment_preview(CommentInterface $comment) {
     // entity is rendered, it excludes the comment field output. As objects are
     // always addressed by reference we ensure changes are not lost by setting
     // the value back to its original state after the call to entity_view().
-    $parts = explode('.', $comment->field_id->value);
-    list(, $field_name) = $parts;
-    $original_value = $entity->get($field_name);
+    $original_value = $entity->get($comment->field_name->value);
     $entity->set($field_name, COMMENT_HIDDEN);
     $build = entity_view($entity, 'full');
     $entity->set($field_name, $original_value);
@@ -1775,7 +1773,7 @@ function comment_ranking() {
         'alias' => 'ces',
         // Default to comment field as this is the most common use case for
         // nodes.
-        'on' => "ces.entity_id = i.sid AND ces.entity_type = 'node' AND ces.field_id = 'node.comment'",
+        'on' => "ces.entity_id = i.sid AND ces.entity_type = 'node' AND ces.field_id = 'node__comment'",
       ),
       // Inverse law that maps the highest reply count on the site to 1 and 0 to 0.
       'score' => '2.0 - 2.0 / (1.0 + ces.comment_count * CAST(:scale AS DECIMAL))',
@@ -1847,7 +1845,7 @@ function comment_field_instance_delete(FieldInstanceInterface $instance) {
     // Delete all comments that used by the entity bundle.
     $comments = db_query("SELECT cid FROM {comment} WHERE entity_type = :entity_type AND field_id = :field_id", array(
       ':entity_type' => $instance->entityType(),
-      ':field_id' => $instance->entityType() . '.' . $instance->getFieldName(),
+      ':field_id' => $instance->entityType() . '__' . $instance->getFieldName(),
     ))->fetchCol();
     entity_delete_multiple('comment', $comments);
     Drupal::cache()->delete('comment_entity_info');

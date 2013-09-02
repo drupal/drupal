@@ -458,6 +458,13 @@ class Comment extends EntityNG implements CommentInterface {
       'computed' => TRUE,
       'class' => '\Drupal\comment\CommentNewItem',
     );
+    $properties['field_name'] = array(
+      'label' => t('Comment field name'),
+      'description' => t("The field name through which this comment was added."),
+      'type' => 'string_field',
+      'computed' => TRUE,
+      'class' => '\Drupal\comment\CommentFieldName',
+    );
     return $properties;
   }
 
@@ -473,7 +480,7 @@ class Comment extends EntityNG implements CommentInterface {
    */
   public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
     if (empty($values['field_id']) && !empty($values['field_name']) && !empty($values['entity_type'])) {
-      $values['field_id'] = $values['entity_type'] . '.' . $values['field_name'];
+      $values['field_id'] = $values['entity_type'] . '__' . $values['field_name'];
     }
   }
 

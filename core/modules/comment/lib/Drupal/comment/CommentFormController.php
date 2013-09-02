@@ -24,12 +24,11 @@ class CommentFormController extends EntityFormControllerNG {
     $comment = $this->entity;
 
     $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
-    $field = entity_load('field_entity', $comment->field_id->value);
-    $instance = field_info_instance($comment->entity_type->value, $field->getFieldName(), $entity->bundle());
+    $instance = field_info_instance($comment->entity_type->value, $comment->field_name->value, $entity->bundle());
 
     // Use #comment-form as unique jump target, regardless of entity type.
     $form['#id'] = drupal_html_id('comment_form');
-    $form['#theme'] = array('comment_form__' . $comment->entity_type->value . '__' . $entity->bundle() . '__' . $field->getFieldName(), 'comment_form');
+    $form['#theme'] = array('comment_form__' . $comment->entity_type->value . '__' . $entity->bundle() . '__' . $comment->field_name->value, 'comment_form');
 
     $anonymous_contact = $instance->getFieldSetting('anonymous');
     $is_admin = $comment->id() && user_access('administer comments');
@@ -42,7 +41,7 @@ class CommentFormController extends EntityFormControllerNG {
     // If not replying to a comment, use our dedicated page callback for new
     // comments on entities.
     if (!$comment->id() && empty($comment->pid->target_id)) {
-      $form['#action'] = url('comment/reply/' . $comment->entity_type->value . '/' . $comment->entity_id->value . '/' . $field->getFieldName());
+      $form['#action'] = url('comment/reply/' . $comment->entity_type->value . '/' . $comment->entity_id->value . '/' . $comment->field_name->value);
     }
 
     if (isset($form_state['comment_preview'])) {
@@ -181,8 +180,7 @@ class CommentFormController extends EntityFormControllerNG {
     $element = parent::actions($form, $form_state);
     $comment = $this->entity;
     $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
-    $field = entity_load('field_entity', $comment->field_id->value);
-    $instance = field_info_instance($comment->entity_type->value, $field->getFieldName(), $entity->bundle());
+    $instance = field_info_instance($comment->entity_type->value, $comment->field_name->value, $entity->bundle());
     $preview_mode = $instance['settings']['preview'];
 
     // No delete action on the comment form.
@@ -322,7 +320,7 @@ class CommentFormController extends EntityFormControllerNG {
   public function save(array $form, array &$form_state) {
     $entity = entity_load($form_state['values']['entity_type'], $form_state['values']['entity_id']);
     $comment = $this->entity;
-    $field_name = $form_state['values']['field_name'];
+    $field_name = $this->entity->field_name->value;
     $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
     $items = field_get_items($entity, $field_name);
     $status = reset($items);

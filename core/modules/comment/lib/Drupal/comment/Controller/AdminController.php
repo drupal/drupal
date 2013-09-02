@@ -137,12 +137,12 @@ class AdminController implements ContainerInjectionInterface {
           // @todo Check proper permissions for operations.
           $links['fields'] = array(
             'title' => t('Manage fields'),
-            'href' => 'admin/structure/comments/manage/' . $entity_type . '_' . $field_name . '/fields',
+            'href' => 'admin/structure/comments/manage/' . $entity_type . '__' . $field_name . '/fields',
             'weight' => 5,
           );
           $links['display'] = array(
             'title' => t('Manage display'),
-            'href' => 'admin/structure/comments/manage/' . $entity_type . '_' . $field_name . '/display',
+            'href' => 'admin/structure/comments/manage/' . $entity_type . '__' . $field_name . '/display',
             'weight' => 10,
           );
 
@@ -151,7 +151,7 @@ class AdminController implements ContainerInjectionInterface {
             '#links' => $links,
           );
         }
-        $rows[$entity_type . '_' . $field_name] = $row;
+        $rows[$entity_type . '__' . $field_name] = $row;
       }
     }
 

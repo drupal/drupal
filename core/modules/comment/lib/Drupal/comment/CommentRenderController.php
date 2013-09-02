@@ -57,7 +57,7 @@ class CommentRenderController extends EntityRenderController {
         throw new \InvalidArgumentException(t('Invalid entity for comment.'));
       }
       $entity->content['#entity'] = $entity;
-      $entity->content['#theme'] = 'comment__' . $entity->entity_type->value . '__' . $comment_entity->bundle() . '__' . $entity->field_name->value;
+      $entity->content['#theme'] = 'comment__' . $entity->field_id->value . '__' . $comment_entity->bundle();
       $entity->content['links'] = array(
         '#theme' => 'links__comment',
         '#pre_render' => array('drupal_pre_render_links'),

@@ -578,9 +578,11 @@ function comment_update_8006(&$sandbox) {
     $field_name = 'comment_' . $node_type;
     $field = array(
       // We need one per content type to match the existing comment bundles.
-      'id' => $field_name,
+      'id' => 'node_' . $field_name,
       'type' => 'comment',
       'module' => 'comment',
+      'name' => $field_name,
+      'entity_type' => 'node',
     );
     // Make sure field doesn't already exist.
     $index = 0;

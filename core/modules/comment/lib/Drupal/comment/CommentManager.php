@@ -181,7 +181,7 @@ class CommentManager {
       $field->save();
     }
     // Create the instance if needed, field name defaults to 'comment'.
-    $comment_bundle = $entity_type . '_' . $field_name;
+    $comment_bundle = $entity_type . '__' . $field_name;
     $field_instance = $this->entityManager
       ->getStorageController('field_instance')
       ->load("comment.$comment_bundle.comment_body");

@@ -24,4 +24,5 @@ interface CommentInterface extends ContentEntityInterface, EntityChangedInterfac
    *   UrlGenerator::generateFromPath().
    */
   public function permalink();
+
 }
