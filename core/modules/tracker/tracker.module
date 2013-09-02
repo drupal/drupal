@@ -7,6 +7,7 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\NodeInterface;
+use Drupal\Core\Session\AccountInterface;
 
 /**
  * Implements hook_help().
@@ -170,9 +171,9 @@ function tracker_cron() {
  *
  * @see tracker_menu()
  */
-function _tracker_myrecent_access($account) {
+function _tracker_myrecent_access(AccountInterface $account) {
   // This path is only allowed for authenticated users looking at their own content.
-  return $account->id() && ($GLOBALS['user']->id() == $account->id()) && $account->hasPermission('access content');
+  return $account->id() && (Drupal::currentUser()->id() == $account->id()) && $account->hasPermission('access content');
 }
 
 /**
