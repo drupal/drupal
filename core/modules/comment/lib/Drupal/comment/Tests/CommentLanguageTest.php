@@ -123,7 +123,7 @@ class CommentLanguageTest extends WebTestBase {
           ->fields('c', array('cid'))
           ->condition('entity_id', $node->id())
           ->condition('entity_type', 'node')
-          ->condition('field_name', 'comment')
+          ->condition('field_id', 'node__comment')
           ->orderBy('cid', 'DESC')
           ->range(0, 1)
           ->execute()
