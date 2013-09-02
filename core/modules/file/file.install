@@ -309,35 +309,37 @@ function file_update_8003() {
     if (in_array($field_config->get('type'), array('file', 'image'))) {
       $field = new Field($field_config->get());
 
-      $tables = array(
-        DatabaseStorageController::_fieldTableName($field),
-        DatabaseStorageController::_fieldRevisionTableName($field),
-      );
+      if (db_table_exists(DatabaseStorageController::_fieldTableName($field))) {
+        $tables = array(
+          DatabaseStorageController::_fieldTableName($field),
+          DatabaseStorageController::_fieldRevisionTableName($field),
+        );
 
-      foreach ($tables as $table_name) {
-        // Skip fields which were created during the upgrade process.
-        if (!db_field_exists($table_name, $field->name . '_fid')) {
-          continue 2;
+        foreach ($tables as $table_name) {
+          // Skip fields which were created during the upgrade process.
+          if (!db_field_exists($table_name, $field->name . '_fid')) {
+            continue 2;
+          }
+
+          db_change_field($table_name, $field->name . '_fid', $field->name . '_target_id', array(
+            'description' => 'The ID of the target entity.',
+            'type' => 'int',
+            'unsigned' => TRUE,
+            'not null' => TRUE,
+          ));
+
+          // Change the index.
+          db_drop_index($table_name, $field->name . '_fid');
+          db_add_index($table_name, $field->name . '_target_id', array($field->name . '_target_id'));
         }
 
-        db_change_field($table_name, $field->name . '_fid', $field->name . '_target_id', array(
-          'description' => 'The ID of the target entity.',
-          'type' => 'int',
-          'unsigned' => TRUE,
-          'not null' => TRUE,
-        ));
-
-        // Change the index.
-        db_drop_index($table_name, $field->name . '_fid');
-        db_add_index($table_name, $field->name . '_target_id', array($field->name . '_target_id'));
+        // Update the indexes in field config as well.
+        $indexes = $field_config->get('indexes');
+        unset($indexes['fid']);
+        $indexes['target_id'] = array('target_id');
+        $field_config->set('indexes', $indexes);
+        $field_config->save();
       }
-
-      // Update the indexes in field config as well.
-      $indexes = $field_config->get('indexes');
-      unset($indexes['fid']);
-      $indexes['target_id'] = array('target_id');
-      $field_config->set('indexes', $indexes);
-      $field_config->save();
     }
   }
 }
