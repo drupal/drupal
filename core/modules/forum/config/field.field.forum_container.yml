@@ -1,0 +1,18 @@
+id: taxonomy_term.forum_container
+uuid: babf2ba1-505f-4c71-8a07-7be19f4fb9f3
+status: '1'
+langcode: en
+name: forum_container
+type: list_boolean
+settings:
+  allowed_values:
+    - ''
+    - ''
+  allowed_values_function: ''
+module: options
+active: '1'
+entity_type: taxonomy_term
+locked: '1'
+cardinality: '1'
+translatable: '0'
+indexes: {  }

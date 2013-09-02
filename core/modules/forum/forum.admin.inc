@@ -32,7 +32,7 @@ function forum_overview($form, &$form_state) {
       $term = $form['terms'][$key]['#term'];
       $form['terms'][$key]['term']['#href'] = 'forum/' . $term->id();
       unset($form['terms'][$key]['operations']['#links']['delete']);
-      if (in_array($form['terms'][$key]['#term']->id(), $config->get('containers'))) {
+      if (!empty($term->forum_container->value)) {
         $form['terms'][$key]['operations']['#links']['edit']['title'] = t('edit container');
         $form['terms'][$key]['operations']['#links']['edit']['href'] = 'admin/structure/forum/edit/container/' . $term->id();
         // We don't want the redirect from the link so we can redirect the

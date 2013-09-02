@@ -5,6 +5,8 @@
  * Install, update, and uninstall functions for the Forum module.
  */
 
+use Drupal\Core\Language\Language;
+
 /**
  * Implements hook_install().
  */
@@ -73,6 +75,7 @@ function forum_enable() {
       'description' => '',
       'parent' => array(0),
       'vid' => $vocabulary->id(),
+      'forum_container' => 0,
     ));
     $term->save();
 
@@ -109,6 +112,18 @@ function forum_enable() {
 }
 
 /**
+ * Implements hook_modules_preinstall().
+ */
+function forum_modules_preinstall($modules) {
+  $list_boolean = Drupal::service('plugin.manager.entity.field.field_type')->getDefinition('list_boolean');
+  if (empty($list_boolean) && in_array('forum', $modules)) {
+    // Make sure that the list_boolean field type is available before our
+    // default config is installed.
+    field_info_cache_clear();
+  }
+}
+
+/**
  * Implements hook_uninstall().
  */
 function forum_uninstall() {
@@ -119,8 +134,15 @@ function forum_uninstall() {
     $field->delete();
   }
 
-  // Purge field data now to allow taxonomy module to be uninstalled
-  // if this is the only field remaining.
+  if ($field = field_info_field('taxonomy_term', 'forum_container')) {
+    $field->delete();
+  }
+
+  // Purge field data now to allow taxonomy and options module to be uninstalled
+  // if this is the only field remaining. We need to run it twice because
+  // field_purge_batch() will not remove the instance and the field in the same
+  // pass.
+  field_purge_batch(10);
   field_purge_batch(10);
   // Allow to delete a forum's node type.
   $locked = Drupal::state()->get('node.type.locked');
@@ -261,13 +283,131 @@ function forum_update_last_removed() {
  * @ingroup config_upgrade
  */
 function forum_update_8000() {
+  $map = db_query('SELECT vid, machine_name FROM {taxonomy_vocabulary}')->fetchAllKeyed();
+  $forum_vid = update_variable_get('forum_nav_vocabulary', FALSE);
+  if (!empty($map[$forum_vid])) {
+    // Update the variable to reference the machine name instead of the vid.
+    update_variable_set('forum_nav_vocabulary', $map[$forum_vid]);
+  }
   update_variables_to_config('forum.settings', array(
     'forum_hot_topic' => 'topics.hot_threshold',
     'forum_per_page' => 'topics.page_limit',
     'forum_order' => 'topics.order',
     'forum_nav_vocabulary' => 'vocabulary',
-    'forum_containers' => 'containers',
     'forum_block_num_active' => 'block.active.limit',
     'forum_block_num_new' => 'block.new.limit',
   ));
+}
+
+/**
+ * Implements hook_update_dependencies().
+ */
+function forum_update_dependencies() {
+  // Convert containers to field after the fields and instances are converted to
+  // ConfigEntities.
+  $dependencies['forum'][8001] = array(
+    'field' => 8003,
+    'taxonomy' => 8007,
+  );
+  return $dependencies;
+}
+
+/**
+ * Adds the forum_container field and copies the values over.
+ */
+function forum_update_8001() {
+  $vocabulary = config('forum.settings')->get('vocabulary');
+  // Create the field and instance.
+  $field = array(
+    'id' => 'taxonomy_term.forum_container',
+    'name' => 'forum_container',
+    'entity_type' => 'taxonomy_term',
+    'module' => 'options',
+    'type' => 'list_boolean',
+    'cardinality' => 1,
+    'locked' => TRUE,
+    'indexes' => array(),
+    'settings' => array(
+      'allowed_values' => array('', ''),
+      'allowed_values_function' => '',
+    ),
+    'schema' => array(
+      'columns' => array(
+        'value' => array(
+          'type' => 'int',
+          'not null' => FALSE,
+        ),
+      ),
+      'indexes' => array(),
+      'foreign keys' => array(),
+    ),
+  );
+  _update_8003_field_create_field($field);
+
+  $instance = array(
+    'id' => 'taxonomy_term.' . $vocabulary . '.forum_container',
+    'entity_type' => 'taxonomy_term',
+    'label' => 'Container',
+    'bundle' => $vocabulary,
+    'description' => '',
+    'required' => TRUE,
+    'settings' => array(),
+    'default_value' => array('value' => 0),
+  );
+  _update_8003_field_create_instance($field, $instance);
+}
+
+/**
+ * Migrate forum containers from variable to field values.
+ */
+function forum_update_8002(&$sandbox) {
+  // Initialize total values to process.
+  if (!isset($sandbox['total'])) {
+    $containers = update_variable_get('forum_containers', array());
+    $vocabulary = config('forum.settings')->get('vocabulary');
+    $sandbox['containers'] = $containers;
+    $sandbox['vocabulary'] = $vocabulary;
+    $sandbox['total'] = count($containers);
+    $sandbox['processed'] = 0;
+  }
+
+  if ($sandbox['total']) {
+    // Retrieve next 20 containers to migrate.
+    $containers = array_splice($containers, $sandbox['processed'], 20);
+    foreach ($containers as $tid) {
+      // Add a row to the field data and revision tables.
+      db_insert('taxonomy_term__forum_container')
+        ->fields(array(
+          'bundle' => $sandbox['vocabulary'],
+          'entity_id' => $tid,
+          'revision_id' => $tid,
+          'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+          'delta' => 0,
+          'forum_container_value' => 1,
+        ))
+        ->execute();
+      db_insert('taxonomy_term_revision__forum_container')
+        ->fields(array(
+          'bundle' => $vocabulary,
+          'entity_id' => $tid,
+          'revision_id' => $tid,
+          'langcode' => Language::LANGCODE_NOT_SPECIFIED,
+          'delta' => 0,
+          'forum_container_value' => 1,
+        ))
+        ->execute();
+    }
+
+    // Report status.
+    $sandbox['processed'] += count($containers);
+  }
+  $sandbox['#finished'] = $sandbox['total'] ? $sandbox['processed'] / $sandbox['total'] : 1;
+
+}
+
+/**
+ * Remove the forum_containers variable.
+ */
+function forum_update_8003() {
+  update_variable_del('forum_containers');
 }
