@@ -125,7 +125,7 @@ function comment_entity_bundle_info() {
   $bundles = array();
   foreach (Drupal::service('comment.manager')->getAllFields() as $entity_type => $fields) {
     foreach ($fields as $field_name => $field_info) {
-      $bundles['comment'][$field_info->id()] = array(
+      $bundles['comment'][$field_info['id']] = array(
         'label' => $entity_type . '_' . $field_name,
       );
     }
@@ -174,7 +174,7 @@ function comment_field_extra_fields() {
   $return = array();
   foreach (Drupal::service('comment.manager')->getAllFields() as $entity_type => $fields) {
     foreach ($fields as $field_name => $field_info) {
-      $return['comment'][$field_info->id()] = array(
+      $return['comment'][$field_info['id']] = array(
         'form' => array(
           'author' => array(
             'label' => t('Author'),

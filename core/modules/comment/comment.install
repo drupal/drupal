@@ -575,7 +575,7 @@ function comment_update_8006(&$sandbox) {
     // COMMENT_OPEN
     $default_value = update_variable_get('comment_' . $node_type, 2);
     // Add a default comment field for existing node comments.
-    $field_name = 'comment_node_' . $node_type;
+    $field_name = 'comment_' . $node_type;
     $field = array(
       // We need one per content type to match the existing comment bundles.
       'id' => $field_name,
@@ -704,7 +704,7 @@ function comment_update_8007(&$sandbox) {
     ->fetchAllAssoc('nid');
 
   if (count($nodes) > 0) {
-    $insert = db_insert('field_data_comment_node_' . $sandbox['node_type'])
+    $insert = db_insert('node__comment_' . $sandbox['node_type'])
       ->fields(array(
         'entity_type',
         'bundle',
@@ -712,9 +712,9 @@ function comment_update_8007(&$sandbox) {
         'revision_id',
         'langcode',
         'delta',
-        'comment_node_' . $sandbox['node_type'] . '_status',
+        'comment_' . $sandbox['node_type'] . '_status',
       ));
-    $revision = db_insert('field_revision_comment_node_' . $sandbox['node_type'])
+    $revision = db_insert('node__comment_' . $sandbox['node_type'])
       ->fields(array(
         'entity_type',
         'bundle',
@@ -722,13 +722,13 @@ function comment_update_8007(&$sandbox) {
         'revision_id',
         'langcode',
         'delta',
-        'comment_node_' . $sandbox['node_type'] . '_status',
+        'comment_' . $sandbox['node_type'] . '_status',
       ));
 
     // Update the field name to match the node type.
     db_update('comment')
       ->fields(array(
-        'field_id' => 'node.comment_node_' . $sandbox['node_type'],
+        'field_id' => 'node.comment_' . $sandbox['node_type'],
       ))
       ->condition('entity_id', array_keys($nodes))
       ->execute();
@@ -740,7 +740,7 @@ function comment_update_8007(&$sandbox) {
         'revision_id' => $node->vid,
         'langcode' => Language::LANGCODE_NOT_SPECIFIED,
         'delta' => 0,
-        'comment_node_' . $sandbox['node_type'] . '_status' => $node->comment,
+        'comment_' . $sandbox['node_type'] . '_status' => $node->comment,
       ));
       $revision->values(array(
         'entity_type' => 'node',
@@ -749,7 +749,7 @@ function comment_update_8007(&$sandbox) {
         'revision_id' => $node->vid,
         'langcode' => Language::LANGCODE_NOT_SPECIFIED,
         'delta' => 0,
-        'comment_node_' . $sandbox['node_type'] . '_status' => $node->comment,
+        'comment_' . $sandbox['node_type'] . '_status' => $node->comment,
       ));
       $sandbox['progress']++;
       $sandbox['current_nid'] = $nid;
@@ -759,7 +759,7 @@ function comment_update_8007(&$sandbox) {
     // Populate the field name to match the node type.
     db_update('comment_entity_statistics')
       ->fields(array(
-        'field_id' => 'node.comment_node_' . $sandbox['node_type'],
+        'field_id' => 'node.comment_' . $sandbox['node_type'],
       ))
       ->condition('entity_id', array_keys($nodes))
       ->execute();
