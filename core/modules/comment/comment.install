@@ -600,9 +600,9 @@ function comment_update_8006(&$sandbox) {
       // registered.
       // @todo Remove once https://drupal.org/node/1199946 is in.
       require_once __DIR__ . '/lib/Drupal/comment/Plugin/field/field_type/CommentItem.php';
-      $field_object = new Field($field);
-      $field['schema'] = CommentItem::schema($field_object);
     }
+    $field_object = new Field($field);
+    $field['schema'] = CommentItem::schema($field_object);
     _update_8003_field_create_field($field);
 
     if (Drupal::config("field.instance.node.$node_type." . $field['id'])->isNew()) {
