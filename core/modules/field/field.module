@@ -69,6 +69,10 @@ require_once __DIR__ . '/field.deprecated.inc';
  *   fields, instances, widgets, and related information defined by or with the
  *   Field API.
  *
+ * - @link field_storage Field Storage API @endlink: Provides a pluggable back
+ *   -end storage system for actual field data. The default implementation,
+ *   field_sql_storage.module, stores field data in the local SQL database.
+ *
  * - @link field_purge Field API bulk data deletion @endlink: Cleans up after
  *   bulk deletion operations such as deletion of field or field_instance.
  *
@@ -109,11 +113,15 @@ const FIELD_BEHAVIOR_CUSTOM = 0x0004;
 
 /**
  * Load the most recent version of an entity's field data.
+ *
+ * @see field_attach_load().
  */
 const FIELD_LOAD_CURRENT = 'FIELD_LOAD_CURRENT';
 
 /**
  * Load the version of an entity's field data specified in the entity.
+ *
+ * @see field_attach_load().
  */
 const FIELD_LOAD_REVISION = 'FIELD_LOAD_REVISION';
 
@@ -151,7 +159,10 @@ function field_help($path, $arg) {
         '#theme' => 'item_list',
         '#items' => $items['items'],
       );
-      $output .= drupal_render($item_list);
+      $output .= drupal_render($item_list) . '</dd>';
+      $output .= '<dt>' . t('Managing field data storage') . '</dt>';
+      $output .= '<dd>' . t('Developers of field modules can either use the default <a href="@sql-store">Field SQL Storage module</a> to store data for their fields, or a contributed or custom module developed using the <a href="@storage-api">field storage API</a>.', array('@storage-api' => 'http://api.drupal.org/api/group/field_storage/8', '@sql-store' => url('admin/help/field_sql_storage'))) . '</dd>';
+      $output .= '</dl>';
       return $output;
   }
 }

@@ -112,6 +112,9 @@ function hook_field_extra_fields_alter(&$info) {
  * appears in edit forms, while @link field_formatter formatters @endlink
  * specify how the field appears in displayed entities.
  *
+ * A third kind of pluggable handler, storage backends, is defined by the
+ * @link field_storage Field Storage API @endlink.
+ *
  * See @link field Field API @endlink for information about the other parts of
  * the Field API.
  */
@@ -538,10 +541,11 @@ function hook_field_update_forbid($field, $prior_field) {
 /**
  * Acts when a field record is being purged.
  *
- * In field_purge_field(), after the field definition has been removed from the
- * the system, the entity storage has purged stored field data, and the field
- * info cache has been cleared, this hook is invoked on all modules to allow
- * them to respond to the field being purged.
+ * In field_purge_field(), after the field configuration has been removed from
+ * the database, the field storage module has had a chance to run its
+ * hook_field_storage_purge_field(), and the field info cache has been cleared,
+ * this hook is invoked on all modules to allow them to respond to the field
+ * being purged.
  *
  * @param $field
  *   The field being purged.
@@ -555,10 +559,11 @@ function hook_field_purge_field($field) {
 /**
  * Acts when a field instance is being purged.
  *
- * In field_purge_instance(), after the instance definition has been removed
- * from the the system, the entity storage has purged stored field data, and the
- * field info cache has been cleared, this hook is invoked on all modules to
- * allow them to respond to the field instance being purged.
+ * In field_purge_instance(), after the field instance has been removed from the
+ * database, the field storage module has had a chance to run its
+ * hook_field_storage_purge_instance(), and the field info cache has been
+ * cleared, this hook is invoked on all modules to allow them to respond to the
+ * field instance being purged.
  *
  * @param $instance
  *   The instance being purged.

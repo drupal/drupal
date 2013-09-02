@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Provides support for field data purge after mass deletion.
+ * Field CRUD API, handling field and field instance creation and deletion.
  */
 
 use Drupal\field\Entity\Field;
@@ -17,21 +17,26 @@ use Drupal\field\FieldException;
  * entities as well as deleting entire fields or field instances in a single
  * operation.
  *
- * When a single entity is deleted, the Entity storage controller performs the
- * following operations:
- * - Invoking the FieldInterface delete() method for each field on the
- *   entity. A file field type might use this method to delete uploaded files
- *   from the filesystem.
- * - Removing the data from storage.
- * - Invoking the global hook_entity_delete() for all modules that implement it.
- *   Each hook implementation receives the entity being deleted and can operate
- *   on whichever subset of the entity's bundle's fields it chooses to.
+ * Deleting field data items for an entity with field_attach_delete() involves
+ * three separate operations:
+ * - Invoking the Field Type API hook_field_delete() for each field on the
+ *   entity. The hook for each field type receives the entity and the specific
+ *   field being deleted. A file field module might use this hook to delete
+ *   uploaded files from the filesystem.
+ * - Invoking the Field Storage API hook_field_storage_delete() to remove data
+ *   from the primary field storage. The hook implementation receives the entity
+ *   being deleted and deletes data for all of the entity's bundle's fields.
+ * - Invoking the global Field Attach API hook_field_attach_delete() for all
+ *   modules that implement it. Each hook implementation receives the entity
+ *   being deleted and can operate on whichever subset of the entity's bundle's
+ *   fields it chooses to.
  *
- * Similar operations are performed on deletion of a single entity revision.
+ * These hooks are invoked immediately when field_attach_delete() is called.
+ * Similar operations are performed for field_attach_delete_revision().
  *
  * When a field, bundle, or field instance is deleted, it is not practical to
- * perform those operations immediately on every affected entity in a single
- * page request; there could be thousands or millions of them. Instead, the
+ * invoke these hooks immediately on every affected entity in a single page
+ * request; there could be thousands or millions of them. Instead, the
  * appropriate field data items, instances, and/or fields are marked as deleted
  * so that subsequent load or query operations will not return them. Later, a
  * separate process cleans up, or "purges", the marked-as-deleted data by going
@@ -39,18 +44,34 @@ use Drupal\field\FieldException;
  * field and instance records.
  *
  * Purging field data is made somewhat tricky by the fact that, while
- * $entity->delete() has a complete entity to pass to the various deletion
- * steps, the Field API purge process only has the field data it has previously
+ * field_attach_delete() has a complete entity to pass to the various deletion
+ * hooks, the Field API purge process only has the field data it has previously
  * stored. It cannot reconstruct complete original entities to pass to the
- * deletion operations. It is even possible that the original entity to which
- * some Field API data was attached has been itself deleted before the field
- * purge operation takes place.
+ * deletion hooks. It is even possible that the original entity to which some
+ * Field API data was attached has been itself deleted before the field purge
+ * operation takes place.
  *
- * Field API resolves this problem by using stub entities during purge
- * operations, containing only the information from the original entity that
- * Field API knows about: entity type, ID, revision ID, and bundle. It also
- * contains the field data for whichever field instance is currently being
- * purged.
+ * Field API resolves this problem by using "pseudo-entities" during purge
+ * operations. A pseudo-entity contains only the information from the original
+ * entity that Field API knows about: entity type, ID, revision ID, and bundle.
+ * It also contains the field data for whichever field instance is currently
+ * being purged. For example, suppose that the node type 'story' used to contain
+ * a field called 'subtitle' but the field was deleted. If node 37 was a story
+ * with a subtitle, the pseudo-entity passed to the purge hooks would look
+ * something like this:
+ *
+ * @code
+ *   $entity = stdClass Object(
+ *     [nid] => 37,
+ *     [vid] => 37,
+ *     [type] => 'story',
+ *     [subtitle] => array(
+ *       [0] => array(
+ *         'value' => 'subtitle text',
+ *       ),
+ *     ),
+ *   );
+ * @endcode
  *
  * See @link field Field API @endlink for information about the other parts of
  * the Field API.
