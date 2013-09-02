@@ -39,12 +39,12 @@ use Drupal\Core\Language\Language;
  *   route_base_path = "admin/structure/comments/manage/{bundle}",
  *   entity_keys = {
  *     "id" = "cid",
- *     "bundle" = "field_name",
+ *     "bundle" = "field_id",
  *     "label" = "subject",
  *     "uuid" = "uuid"
  *   },
  *   bundle_keys = {
- *     "bundle" = "field_name"
+ *     "bundle" = "field_id"
  *   },
  *   links = {
  *     "canonical" = "/comment/{comment}",
@@ -98,7 +98,7 @@ class Comment extends EntityNG implements CommentInterface {
    *
    * @var \Drupal\Core\Entity\Field\FieldInterface
    */
-  public $field_name;
+  public $field_id;
 
   /**
    * The comment language code.
@@ -200,7 +200,7 @@ class Comment extends EntityNG implements CommentInterface {
     unset($this->uuid);
     unset($this->pid);
     unset($this->entity_id);
-    unset($this->field_name);
+    unset($this->field_id);
     unset($this->subject);
     unset($this->uid);
     unset($this->name);
@@ -446,9 +446,9 @@ class Comment extends EntityNG implements CommentInterface {
       'description' => t("The entity type to which this comment is attached."),
       'type' => 'string_field',
     );
-    $properties['field_name'] = array(
-      'label' => t('Field name'),
-      'description' => t("The comment field name."),
+    $properties['field_id'] = array(
+      'label' => t('Field ID'),
+      'description' => t("The comment field id."),
       'type' => 'string_field',
     );
     $properties['new'] = array(
@@ -466,6 +466,15 @@ class Comment extends EntityNG implements CommentInterface {
    */
   public function getChangedTime() {
     return $this->changed->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
+    if (empty($values['field_id']) && !empty($values['field_name']) && !empty($values['entity_type'])) {
+      $values['field_id'] = $values['entity_type'] . '.' . $values['field_name'];
+    }
   }
 
 }

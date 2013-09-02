@@ -35,7 +35,7 @@ function comment_uninstall() {
  */
 function comment_enable() {
   $comment_fields = _update_comment_get_comment_fields();
-  $entity_info = Drupal::service('plugin.manager.entity')->getDefinitions();
+  $entity_info = Drupal::service('entity.manager')->getDefinitions();
   foreach ($comment_fields as $field_name => $info) {
     foreach ($info['bundles'] as $entity_type => $bundles) {
       foreach ($bundles as $bundle) {
@@ -66,7 +66,7 @@ function comment_enable() {
           }
           $query->addField('e', $entity_detail['entity_keys']['id'], 'entity_id');
           $query->addExpression("'$entity_type'", 'entity_type');
-          $query->addExpression("'$field_name'", 'field_name');
+          $query->addExpression("'$entity_type.$field_name'", 'field_id');
           $query->addExpression('0', 'comment_count');
           $query->addExpression('NULL', 'last_comment_name');
           $query->isNull('ces.comment_count');
@@ -148,12 +148,12 @@ function comment_schema() {
         'length' => 255,
         'description' => 'The entity_type to which this comment is a reply.',
       ),
-      'field_name' => array(
+      'field_id' => array(
         'type' => 'varchar',
         'not null' => TRUE,
-        'default' => 'comment',
+        'default' => 'node.comment',
         'length' => 255,
-        'description' => 'The field_name through which this comment was added.',
+        'description' => 'The field_id through which this comment was added.',
       ),
       'uid' => array(
         'type' => 'int',
@@ -233,7 +233,7 @@ function comment_schema() {
       'comment_num_new' => array(
         'entity_id',
         array('entity_type', 32),
-        array('field_name', 32),
+        array('field_id', 32),
         'status',
         'created',
         'cid',
@@ -243,7 +243,7 @@ function comment_schema() {
       'comment_entity_langcode' => array(
         'entity_id',
         array('entity_type', 32),
-        array('field_name', 32),
+        array('field_id', 32),
         'langcode',
       ),
       'comment_created' => array('created'),
@@ -277,12 +277,12 @@ function comment_schema() {
         'length' => 255,
         'description' => 'The entity_type to which this comment is a reply.',
       ),
-      'field_name' => array(
+      'field_id' => array(
         'type' => 'varchar',
         'not null' => TRUE,
-        'default' => 'comment',
+        'default' => 'node.comment',
         'length' => 255,
-        'description' => 'The field_name through which this comment was added.',
+        'description' => 'The field_id through which this comment was added.',
       ),
       'cid' => array(
         'type' => 'int',
@@ -317,7 +317,7 @@ function comment_schema() {
         'description' => 'The total number of comments on this entity.',
       ),
     ),
-    'primary key' => array('entity_id', array('entity_type', 32), array('field_name', 32)),
+    'primary key' => array('entity_id', array('entity_type', 32), array('field_id', 32)),
     'indexes' => array(
       'last_comment_timestamp' => array('last_comment_timestamp'),
       'comment_count' => array('comment_count'),
@@ -477,7 +477,7 @@ function comment_update_8005(&$sandbox) {
   db_drop_index('comment', 'comment_num_new');
   db_drop_index('comment', 'comment_nid_langcode');
 
-  // Add the entity_type and field_name columns to comment.
+  // Add the entity_type and field id columns to comment.
   db_add_field('comment', 'entity_type', array(
     'type' => 'varchar',
     'not null' => TRUE,
@@ -485,12 +485,12 @@ function comment_update_8005(&$sandbox) {
     'length' => 255,
     'description' => 'The entity_type to which this comment is a reply.',
   ));
-  db_add_field('comment', 'field_name', array(
+  db_add_field('comment', 'field_id', array(
     'type' => 'varchar',
     'not null' => TRUE,
-    'default' => 'comment',
+    'default' => 'node.comment',
     'length' => 255,
-    'description' => 'The field_name to which this comment is a reply.',
+    'description' => 'The field_id to which this comment is a reply.',
   ));
   // Rename the nid column to entity_id.
   db_change_field('comment', 'nid', 'entity_id', array(
@@ -502,7 +502,7 @@ function comment_update_8005(&$sandbox) {
   db_add_index('comment', 'comment_num_new', array(
     'entity_id',
     array('entity_type', 32),
-    array('field_name', 32),
+    array('field_id', 32),
     'status',
     'created',
     'cid',
@@ -512,7 +512,7 @@ function comment_update_8005(&$sandbox) {
   db_add_index('comment', 'comment_entity_langcode', array(
     'entity_id',
     array('entity_type', 32),
-    array('field_name', 32),
+    array('field_id', 32),
     'langcode',
   ));
 
@@ -529,7 +529,7 @@ function comment_update_8005(&$sandbox) {
   // Rename {node_comment_statistics} to {comment_entity_statistics}.
   db_rename_table('node_comment_statistics', 'comment_entity_statistics');
 
-  // Add the entity_type and field_name columns to comment_entity_statistics.
+  // Add the entity_type and field id columns to comment_entity_statistics.
   db_add_field('comment_entity_statistics', 'entity_type', array(
     'type' => 'varchar',
     'not null' => TRUE,
@@ -537,12 +537,12 @@ function comment_update_8005(&$sandbox) {
     'length' => 255,
     'description' => 'The entity_type to which this comment is a reply.',
   ));
-  db_add_field('comment_entity_statistics', 'field_name', array(
+  db_add_field('comment_entity_statistics', 'field_id', array(
     'type' => 'varchar',
     'not null' => TRUE,
     'default' => 'comment',
     'length' => 255,
-    'description' => 'The field_name to which this comment is a reply.',
+    'description' => 'The field_id to which this comment is a reply.',
   ));
   // Rename the nid column in entity_comment_statistics to entity_id.
   db_change_field('comment_entity_statistics', 'nid', 'entity_id', array(
@@ -553,7 +553,7 @@ function comment_update_8005(&$sandbox) {
   ));
 
   // Add indexes.
-  db_add_primary_key('comment_entity_statistics', array('entity_id', array('entity_type', 32), array('field_name',32)));
+  db_add_primary_key('comment_entity_statistics', array('entity_id', array('entity_type', 32), array('field_id',32)));
   db_add_index('comment_entity_statistics', 'last_comment_timestamp', array('last_comment_timestamp'));
   db_add_index('comment_entity_statistics', 'comment_count', array('comment_count'));
   db_add_index('comment_entity_statistics', 'last_comment_uid', array('last_comment_uid'));
@@ -728,7 +728,7 @@ function comment_update_8007(&$sandbox) {
     // Update the field name to match the node type.
     db_update('comment')
       ->fields(array(
-        'field_name' => 'comment_node_' . $sandbox['node_type'],
+        'field_id' => 'node.comment_node_' . $sandbox['node_type'],
       ))
       ->condition('entity_id', array_keys($nodes))
       ->execute();
@@ -759,7 +759,7 @@ function comment_update_8007(&$sandbox) {
     // Populate the field name to match the node type.
     db_update('comment_entity_statistics')
       ->fields(array(
-        'field_name' => 'comment_node_' . $sandbox['node_type'],
+        'field_id' => 'node.comment_node_' . $sandbox['node_type'],
       ))
       ->condition('entity_id', array_keys($nodes))
       ->execute();

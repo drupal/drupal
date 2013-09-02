@@ -88,7 +88,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
     $query->addTag('node_access');
   }
   $result = $query
-    ->fields('c', array('cid', 'subject', 'name', 'changed', 'entity_id', 'entity_type', 'field_name'))
+    ->fields('c', array('cid', 'subject', 'name', 'changed', 'entity_id', 'entity_type', 'field_id'))
     ->condition('c.status', $status)
     ->limit(50)
     ->orderByHeader($header)
