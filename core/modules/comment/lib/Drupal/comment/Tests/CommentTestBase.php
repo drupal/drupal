@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains Drupal\comment\Tests\CommentTestBase.
+ * Contains \Drupal\comment\Tests\CommentTestBase.
  */
 
 namespace Drupal\comment\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\comment\Entity\Comment;
+use Drupal\comment\CommentInterface;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -26,21 +26,21 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * An administrative user with permission to configure comment settings.
    *
-   * @var Drupal\user\User
+   * @var \Drupal\user\UserInterface
    */
   protected $admin_user;
 
   /**
    * A normal user with permission to post comments.
    *
-   * @var Drupal\user\User
+   * @var \Drupal\user\UserInterface
    */
   protected $web_user;
 
   /**
    * A test node to which comments will be posted.
    *
-   * @var Drupal\node\Node
+   * @var \Drupal\node\NodeInterface
    */
   protected $node;
 
@@ -69,7 +69,6 @@ abstract class CommentTestBase extends WebTestBase {
       'post comments',
       'create article content',
       'edit own comments',
-      'post comments',
       'skip comment approval',
       'access content',
     ));
@@ -81,8 +80,8 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * Posts a comment.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $node|null $node
-   *   Node to post comment on or NULL to post to the previusly loaded page.
+   * @param \Drupal\Core\Entity\EntityInterface|null $entity
+   *   Node to post comment on or NULL to post to the previously loaded page.
    * @param $comment
    *   Comment body.
    * @param $subject
@@ -90,8 +89,11 @@ abstract class CommentTestBase extends WebTestBase {
    * @param $contact
    *   Set to NULL for no contact info, TRUE to ignore success checking, and
    *   array of values to set contact info.
+   *
+   * @return \Drupal\comment\CommentInterface|null
+   *   The posted comment or NULL when posted comment was not found.
    */
-  function postComment($node, $comment, $subject = '', $contact = NULL) {
+  function postComment($entity, $comment, $subject = '', $contact = NULL) {
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array();
     $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
@@ -100,8 +102,8 @@ abstract class CommentTestBase extends WebTestBase {
     $subject_mode = variable_get('comment_subject_field_article', 1);
 
     // Must get the page before we test for fields.
-    if ($node !== NULL) {
-      $this->drupalGet('comment/reply/' . $node->id());
+    if ($entity !== NULL) {
+      $this->drupalGet('comment/reply/' . $entity->id());
     }
 
     if ($subject_mode == TRUE) {
@@ -147,15 +149,14 @@ abstract class CommentTestBase extends WebTestBase {
     }
 
     if (isset($match[1])) {
-      $entity = comment_load($match[1], TRUE);
-      return $entity;
+      return comment_load($match[1], TRUE);
     }
   }
 
   /**
    * Checks current page for specified comment.
    *
-   * @param Drupal\comment\Comment $comment
+   * @param \Drupal\comment\CommentInterface $comment
    *   The comment object.
    * @param boolean $reply
    *   Boolean indicating whether the comment is a reply to another comment.
@@ -163,7 +164,7 @@ abstract class CommentTestBase extends WebTestBase {
    * @return boolean
    *   Boolean indicating whether the comment was found.
    */
-  function commentExists(Comment $comment = NULL, $reply = FALSE) {
+  function commentExists(CommentInterface $comment = NULL, $reply = FALSE) {
     if ($comment) {
       $regex = '/' . ($reply ? '<div class="indented">(.*?)' : '');
       $regex .= '<a id="comment-' . $comment->id() . '"(.*?)'; // Comment anchor.
@@ -181,10 +182,10 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * Deletes a comment.
    *
-   * @param Drupal\comment\Comment $comment
+   * @param \Drupal\comment\CommentInterface $comment
    *   Comment to delete.
    */
-  function deleteComment(Comment $comment) {
+  function deleteComment(CommentInterface $comment) {
     $this->drupalPost('comment/' . $comment->id() . '/delete', array(), t('Delete'));
     $this->assertText(t('The comment and all its replies have been deleted.'), 'Comment deleted.');
   }
@@ -285,14 +286,14 @@ abstract class CommentTestBase extends WebTestBase {
   /**
    * Performs the specified operation on the specified comment.
    *
-   * @param object $comment
+   * @param \Drupal\comment\CommentInterface $comment
    *   Comment to perform operation on.
    * @param string $operation
    *   Operation to perform.
    * @param boolean $aproval
    *   Operation is found on approval page.
    */
-  function performCommentOperation($comment, $operation, $approval = FALSE) {
+  function performCommentOperation(CommentInterface $comment, $operation, $approval = FALSE) {
     $edit = array();
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id() . ']'] = TRUE;
