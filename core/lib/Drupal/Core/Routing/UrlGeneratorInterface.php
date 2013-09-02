@@ -131,10 +131,13 @@ interface UrlGeneratorInterface extends VersatileGeneratorInterface {
    * @return string
    *   The generated URL for the given route.
    *
-   * @throws RouteNotFoundException              If the named route doesn't exist
-   * @throws MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
-   * @throws InvalidParameterException           When a parameter value for a placeholder is not correct because
-   *                                             it does not match the requirement
+   * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException
+   *   Thrown when the named route doesn't exist.
+   * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException
+   *   Thrown when some parameters are missing that are mandatory for the route.
+   * @throws \Symfony\Component\Routing\Exception\InvalidParameterException
+   *   Thrown when a parameter value for a placeholder is not correct because it
+   *   does not match the requirement.
    */
   public function generateFromRoute($name, $parameters = array(), $options = array());
 
