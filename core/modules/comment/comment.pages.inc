@@ -62,12 +62,10 @@ function comment_reply(EntityInterface $entity, $field_name, $pid = NULL) {
         // Load the parent comment.
         $comment = comment_load($pid);
         if ($comment->status->value == COMMENT_PUBLISHED) {
-          $parts = explode('.', $comment->field_id);
-          list(, $record_field_name) = $parts;
           // If that comment exists, make sure that the current comment and the
           // parent comment both belong to the same parent node.
           if ($comment->entity_id->value != $entity->id() ||
-              $record_field_name != $field_name ||
+              $comment->field_name->value != $field_name ||
               $comment->entity_type->value != $entity->entityType()) {
             // Attempting to reply to a comment not belonging to the current
             // entity.

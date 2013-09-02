@@ -1454,7 +1454,8 @@ function comment_preview(CommentInterface $comment) {
     // entity is rendered, it excludes the comment field output. As objects are
     // always addressed by reference we ensure changes are not lost by setting
     // the value back to its original state after the call to entity_view().
-    $original_value = $entity->get($comment->field_name->value);
+    $field_name = $comment->field_name->value;
+    $original_value = $entity->get($field_name);
     $entity->set($field_name, COMMENT_HIDDEN);
     $build = entity_view($entity, 'full');
     $entity->set($field_name, $original_value);

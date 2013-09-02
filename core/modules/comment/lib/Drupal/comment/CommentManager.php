@@ -71,7 +71,7 @@ class CommentManager {
    *   - bundles: The bundles in which the field appears, as an array with entity
    *     types as keys and the array of bundle names as values.
    *
-   * @see field_info_field_map().
+   * @see field_info_field_map()
    */
   public function getFields($entity_type = NULL) {
     $map = $this->getAllFields();
@@ -89,7 +89,6 @@ class CommentManager {
     // Build a list of comment fields only.
     $comment_fields = array();
     foreach ($map as $entity_type => $data) {
-      // $comment_fields[$entity_type] = array_filter($data, function ($value) { return ($value['type']  == 'comment'); });
       foreach ($data as $field_name => $field_info) {
         if ($field_info['type'] == 'comment') {
           $comment_fields[$entity_type][$field_name] = $field_info;
