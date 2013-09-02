@@ -142,9 +142,9 @@ class ForumManager implements ForumManagerInterface {
     global $user, $forum_topic_list_header;
 
     $forum_topic_list_header = array(
-      array('data' => $this->translationManager->translate('Topic'), 'field' => 'f.title'),
-      array('data' => $this->translationManager->translate('Replies'), 'field' => 'f.comment_count'),
-      array('data' => $this->translationManager->translate('Last reply'), 'field' => 'f.last_comment_timestamp'),
+      array('data' => $this->t('Topic'), 'field' => 'f.title'),
+      array('data' => $this->t('Replies'), 'field' => 'f.comment_count'),
+      array('data' => $this->t('Last reply'), 'field' => 'f.last_comment_timestamp'),
     );
 
     $order = $this->getTopicOrder($sortby);
@@ -548,4 +548,14 @@ class ForumManager implements ForumManagerInterface {
         ->execute();
     }
   }
+
+  /**
+   * Translates a string to the current language or to a given language.
+   *
+   * See the t() documentation for details.
+   */
+  protected function t($string, array $args = array(), array $options = array()) {
+    return $this->translationManager->translate($string, $args, $options);
+  }
+
 }

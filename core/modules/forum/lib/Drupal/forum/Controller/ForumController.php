@@ -11,7 +11,7 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Controller\ControllerInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityManager;
-use Drupal\Core\StringTranslation\TranslationManager;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\forum\ForumManagerInterface;
 use Drupal\taxonomy\TermInterface;
 use Drupal\taxonomy\TermStorageControllerInterface;
@@ -61,7 +61,7 @@ class ForumController implements ContainerInjectionInterface {
   /**
    * Translation manager service.
    *
-   * @var \Drupal\Core\StringTranslation\TranslationManager
+   * @var \Drupal\Core\StringTranslation\TranslationInterface
    */
   protected $translationManager;
 
@@ -78,10 +78,10 @@ class ForumController implements ContainerInjectionInterface {
    *   Term storage controller.
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The entity manager service.
-   * @param \Drupal\Core\StringTranslation\TranslationManager $translation_manager
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
    *   The translation manager service.
    */
-  public function __construct(Config $config, ForumManagerInterface $forum_manager, VocabularyStorageControllerInterface $vocabulary_storage_controller, TermStorageControllerInterface $term_storage_controller, EntityManager $entity_manager, TranslationManager $translation_manager) {
+  public function __construct(Config $config, ForumManagerInterface $forum_manager, VocabularyStorageControllerInterface $vocabulary_storage_controller, TermStorageControllerInterface $term_storage_controller, EntityManager $entity_manager, TranslationInterface $translation_manager) {
     $this->config = $config;
     $this->forumManager = $forum_manager;
     $this->vocabularyStorageController = $vocabulary_storage_controller;
@@ -143,7 +143,7 @@ class ForumController implements ContainerInjectionInterface {
     $build = $this->build($index->forums, $index);
     if (empty($index->forums)) {
       // Root of empty forum.
-      $build['#title'] = $this->translationManager->translate('No forums defined');
+      $build['#title'] = $this->t('No forums defined');
     }
     else {
       // Set the page title to forum's vocabulary name.
@@ -210,6 +210,15 @@ class ForumController implements ContainerInjectionInterface {
       'forum_container' => 1,
     ));
     return $this->entityManager->getForm($taxonomy_term, 'container');
+  }
+
+  /**
+   * Translates a string to the current language or to a given language.
+   *
+   * See the t() documentation for details.
+   */
+  protected function t($string, array $args = array(), array $options = array()) {
+    return $this->translationManager->translate($string, $args, $options);
   }
 
 }
