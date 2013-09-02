@@ -1357,7 +1357,7 @@ class ViewExecutable {
     }
 
     // Let modules modify the view output after it is rendered.
-    $module_handler->invokeAll('views_post_render', array($this, $this->display_handler->output, $cache));
+    $module_handler->invokeAll('views_post_render', array($this, &$this->display_handler->output, $cache));
 
     // Let the themes play too, because post render is a very themey thing.
     foreach ($GLOBALS['base_theme_info'] as $base) {
@@ -1441,7 +1441,7 @@ class ViewExecutable {
     }
 
     // Let modules modify the view just prior to executing it.
-    \Drupal::moduleHandler()->invokeAll('views_pre_view', array($this, $display_id, $this->args));
+    \Drupal::moduleHandler()->invokeAll('views_pre_view', array($this, $display_id, &$this->args));
 
     // Allow hook_views_pre_view() to set the dom_id, then ensure it is set.
     $this->dom_id = !empty($this->dom_id) ? $this->dom_id : hash('sha256', $this->storage->id() . REQUEST_TIME . mt_rand());
