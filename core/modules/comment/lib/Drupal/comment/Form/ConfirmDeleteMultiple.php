@@ -49,7 +49,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase implements ContainerInjectio
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')->getStorageController('comment')
+      $container->get('entity.manager')->getStorageController('comment')
     );
   }
 
