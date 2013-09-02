@@ -3,6 +3,9 @@
  * @file
  * This script runs Drupal tests from command line.
  */
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
 use Drupal\Core\StreamWrapper\PublicStream;
 
 const SIMPLETEST_SCRIPT_COLOR_PASS = 32; // Green.

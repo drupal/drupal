@@ -27,7 +27,10 @@
       "Drupal\\Core": "core/lib/",
       "Drupal\\Component": "core/lib/",
       "Drupal\\Driver": "drivers/lib/"
-    }
+    },
+    "files": [
+      "core/lib/Drupal.php"
+    ]
   },
   "config": {
     "vendor-dir": "core/vendor",

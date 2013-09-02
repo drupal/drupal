@@ -20,5 +20,6 @@ foreach ($_SERVER as $key => $value) {
 
 // Change current directory to the Drupal root.
 chdir('../../../..');
+require_once dirname(dirname(dirname(__DIR__))) . '/vendor/autoload.php';
 require_once dirname(dirname(dirname(__DIR__))) . '/includes/bootstrap.inc';
 drupal_handle_request(TRUE);
