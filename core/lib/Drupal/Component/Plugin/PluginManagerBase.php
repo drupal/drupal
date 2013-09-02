@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Plugin\PluginManagerBase
+ * Contains \Drupal\Component\Plugin\PluginManagerBase
  */
 
 namespace Drupal\Component\Plugin;

@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Definition of Drupal\Component\Plugin\PluginInspectionInterface.
+ * Contains \Drupal\Component\Plugin\PluginInspectionInterface.
  */
 
 namespace Drupal\Component\Plugin;
