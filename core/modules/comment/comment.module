@@ -1198,7 +1198,7 @@ function comment_node_search_result(EntityInterface $node) {
         // At least one comment field is open.
         $open = TRUE;
       }
-      $comments += db_query("SELECT comment_count FROM {comment_entity_statistics} WHERE entity_id = :nid AND entity_type = 'node' AND field_name = :field_name", array(
+      $comments += db_query("SELECT comment_count FROM {comment_entity_statistics} WHERE entity_id = :nid AND entity_type = 'node' AND field_id = :field_id", array(
         'nid' => $node->id(),
         'field_id' => 'node.' . $field_name)
       )->fetchField();

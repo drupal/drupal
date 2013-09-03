@@ -101,8 +101,8 @@ abstract class CommentTestBase extends WebTestBase {
     $edit = array();
     $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
 
-    if ($node !== NULL) {
-      $instance = $this->container->get('field.info')->getInstance('node', $node->bundle(), 'comment');
+    if ($entity !== NULL) {
+      $instance = $this->container->get('field.info')->getInstance('node', $entity->bundle(), 'comment');
     }
     else {
       $instance = $this->container->get('field.info')->getInstance('node', 'article', 'comment');
@@ -112,7 +112,7 @@ abstract class CommentTestBase extends WebTestBase {
 
     // Must get the page before we test for fields.
     if ($entity !== NULL) {
-      $this->drupalGet('comment/reply/node/' . $node->id() . '/comment');
+      $this->drupalGet('comment/reply/node/' . $entity->id() . '/comment');
     }
 
     if ($subject_mode == TRUE) {
