@@ -630,7 +630,7 @@ function toolbar_library_info() {
  * Returns the hash of the per-user rendered toolbar subtrees.
  */
 function _toolbar_get_subtree_hash() {
-  global $user;
+  $user = Drupal::currentUser();
   $cid = $user->id() . ':' . language(Language::TYPE_INTERFACE)->id;
   if ($cache = cache('toolbar')->get($cid)) {
     $hash = $cache->data;
