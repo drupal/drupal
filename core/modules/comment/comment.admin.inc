@@ -125,13 +125,17 @@ function comment_admin_overview($form, &$form_state, $arg) {
       '#theme' => 'username',
       '#account' => comment_prepare_author($comment),
     );
+    $body = '';
+    if (!empty($comment->comment_body->value)) {
+      $body = $comment->comment_body->value;
+    }
     $options[$comment->id()] = array(
       'subject' => array(
         'data' => array(
           '#type' => 'link',
           '#title' => $comment->subject->value,
           '#href' => 'comment/' . $comment->id(),
-          '#options' => array('attributes' => array('title' => truncate_utf8($comment->comment_body->value, 128)), 'fragment' => 'comment-' . $comment->id()),
+          '#options' => array('attributes' => array('title' => truncate_utf8($body, 128)), 'fragment' => 'comment-' . $comment->id()),
         ),
       ),
       'author' => drupal_render($username),
