@@ -485,7 +485,7 @@ function forum_permission() {
  */
 function forum_comment_publish($comment) {
   if ($comment->entity_type->value == 'node') {
-    Drupal::service('forum_manager')->updateIndex($comment->nid->target_id);
+    Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
   }
 }
 
@@ -499,7 +499,7 @@ function forum_comment_update($comment) {
   // $comment->save() calls hook_comment_publish() for all published comments,
   // so we need to handle all other values here.
   if (!$comment->status->value && $comment->entity_type->value == 'node') {
-    Drupal::service('forum_manager')->updateIndex($comment->nid->target_id);
+    Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
   }
 }
 
@@ -508,7 +508,7 @@ function forum_comment_update($comment) {
  */
 function forum_comment_unpublish($comment) {
   if ($comment->entity_type->value == 'node') {
-    Drupal::service('forum_manager')->updateIndex($comment->nid->target_id);
+    Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
   }
 }
 
@@ -517,7 +517,7 @@ function forum_comment_unpublish($comment) {
  */
 function forum_comment_delete($comment) {
   if ($comment->entity_type->value == 'node') {
-    Drupal::service('forum_manager')->updateIndex($comment->nid->target_id);
+    Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
   }
 }
 

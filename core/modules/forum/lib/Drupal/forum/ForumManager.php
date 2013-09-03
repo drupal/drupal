@@ -185,7 +185,7 @@ class ForumManager implements ForumManagerInterface {
         ->extend('Drupal\Core\Database\Query\TableSortExtender');
       $query->fields('n', array('nid'));
 
-      $query->join('comment_entity_statistics', 'ces', "n.nid = ces.entity_id AND ces.field_id = 'node.comment_node_forum' AND ces.entity_type = 'node'");
+      $query->join('comment_entity_statistics', 'ces', "n.nid = ces.entity_id AND ces.field_id = 'node__comment_forum' AND ces.entity_type = 'node'");
       $query->fields('ces', array(
         'cid',
         'last_comment_uid',
@@ -193,7 +193,7 @@ class ForumManager implements ForumManagerInterface {
         'comment_count'
       ));
 
-      $query->join('forum_index', 'f', 'f.nid = ncs.nid');
+      $query->join('forum_index', 'f', 'f.nid = n.nid');
       $query->addField('f', 'tid', 'forum_tid');
 
       $query->join('users', 'u', 'n.uid = u.uid');
@@ -356,7 +356,7 @@ class ForumManager implements ForumManagerInterface {
     // Query "Last Post" information for this forum.
     $query = $this->connection->select('node_field_data', 'n');
     $query->join('forum', 'f', 'n.vid = f.vid AND f.tid = :tid', array(':tid' => $tid));
-    $query->join('comment_entity_statistics', 'ces', "n.nid = ces.entity_id AND ces.field_id = 'node.comment_node_forum' AND ces.entity_type = 'node'");
+    $query->join('comment_entity_statistics', 'ces', "n.nid = ces.entity_id AND ces.field_id = 'node__comment_forum' AND ces.entity_type = 'node'");
     $query->join('users', 'u', 'ces.last_comment_uid = u.uid');
     $query->addExpression('CASE ces.last_comment_uid WHEN 0 THEN ces.last_comment_name ELSE u.name END', 'last_comment_name');
 
@@ -394,7 +394,7 @@ class ForumManager implements ForumManagerInterface {
     if (empty($this->forumStatistics)) {
       // Prime the statistics.
       $query = $this->connection->select('node_field_data', 'n');
-      $query->join('comment_entity_statistics', 'ces', "n.nid = ces.entity_id AND ces.field_id = 'node.comment_node_forum' AND ces.entity_type = 'node'");
+      $query->join('comment_entity_statistics', 'ces', "n.nid = ces.entity_id AND ces.field_id = 'node__comment_forum' AND ces.entity_type = 'node'");
       $query->join('forum', 'f', 'n.vid = f.vid');
       $query->addExpression('COUNT(n.nid)', 'topic_count');
       $query->addExpression('SUM(ces.comment_count)', 'comment_count');
@@ -515,14 +515,14 @@ class ForumManager implements ForumManagerInterface {
    * {@inheritdoc}
    */
   public function updateIndex($nid) {
-    $count = $this->connection->query('SELECT COUNT(cid) FROM {comment} c INNER JOIN {forum_index} i ON c.nid = i.nid WHERE c.nid = :nid AND c.status = :status', array(
+    $count = $this->connection->query("SELECT COUNT(cid) FROM {comment} c INNER JOIN {forum_index} i ON c.entity_id = i.nid WHERE c.entity_id = :nid AND c.field_id = 'node__comment_forum' AND c.entity_type = 'node' AND c.status = :status", array(
       ':nid' => $nid,
       ':status' => COMMENT_PUBLISHED,
     ))->fetchField();
 
     if ($count > 0) {
       // Comments exist.
-      $last_reply = $this->connection->queryRange('SELECT cid, name, created, uid FROM {comment} WHERE nid = :nid AND status = :status ORDER BY cid DESC', 0, 1, array(
+      $last_reply = $this->connection->queryRange("SELECT cid, name, created, uid FROM {comment} WHERE entity_id = :nid AND field_id = 'node__comment_forum' AND entity_type = 'node' AND status = :status ORDER BY cid DESC", 0, 1, array(
         ':nid' => $nid,
         ':status' => COMMENT_PUBLISHED,
       ))->fetchObject();
