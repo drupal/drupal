@@ -85,7 +85,7 @@ class TypedConfigManager extends PluginManagerBase {
       // Replace variable names in definition.
       $replace = is_array($value) ? $value : array();
       if (isset($parent)) {
-        $replace['%parent'] = $parent->getValue();
+        $replace['%parent'] = $parent;
       }
       if (isset($name)) {
         $replace['%key'] = $name;
@@ -268,7 +268,19 @@ class TypedConfigManager extends PluginManagerBase {
       }
       else {
         // Get nested value and continue processing.
-        $data = $data[$name];
+        if ($name == '%parent') {
+          // Switch replacement values with values from the parent.
+          $parent = $data['%parent'];
+          $data = $parent->getValue();
+          // The special %parent and %key values now need to point one level up.
+          if ($new_parent = $parent->getParent()) {
+            $data['%parent'] = $new_parent;
+            $data['%key'] = $new_parent->getName();
+          }
+        }
+        else {
+          $data = $data[$name];
+        }
       }
     }
   }
