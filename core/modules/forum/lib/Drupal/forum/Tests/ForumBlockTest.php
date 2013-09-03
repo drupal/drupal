@@ -106,7 +106,7 @@ class ForumBlockTest extends WebTestBase {
       $date->modify('+1 minute');
       $comment = entity_create('comment', array(
         'entity_id' => $node->id(),
-        'field_name' => 'comment_node_forum',
+        'field_name' => 'comment_forum',
         'entity_type' => 'node',
         'node_type' => 'node_type_' . $node->bundle(),
         'subject' => $this->randomString(20),
