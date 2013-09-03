@@ -708,7 +708,6 @@ function comment_update_8007(&$sandbox) {
   if (count($nodes) > 0) {
     $insert = db_insert('node__comment_' . $sandbox['node_type'])
       ->fields(array(
-        'entity_type',
         'bundle',
         'entity_id',
         'revision_id',
@@ -716,9 +715,8 @@ function comment_update_8007(&$sandbox) {
         'delta',
         'comment_' . $sandbox['node_type'] . '_status',
       ));
-    $revision = db_insert('node__comment_' . $sandbox['node_type'])
+    $revision = db_insert('node_revision__comment_' . $sandbox['node_type'])
       ->fields(array(
-        'entity_type',
         'bundle',
         'entity_id',
         'revision_id',
@@ -730,13 +728,12 @@ function comment_update_8007(&$sandbox) {
     // Update the field name to match the node type.
     db_update('comment')
       ->fields(array(
-        'field_id' => 'node.comment_' . $sandbox['node_type'],
+        'field_id' => 'node__comment_' . $sandbox['node_type'],
       ))
       ->condition('entity_id', array_keys($nodes))
       ->execute();
     foreach ($nodes as $nid => $node) {
       $insert->values(array(
-        'entity_type' => 'node',
         'bundle' => $sandbox['node_type'],
         'entity_id' => $nid,
         'revision_id' => $node->vid,
@@ -745,7 +742,6 @@ function comment_update_8007(&$sandbox) {
         'comment_' . $sandbox['node_type'] . '_status' => $node->comment,
       ));
       $revision->values(array(
-        'entity_type' => 'node',
         'bundle' => $sandbox['node_type'],
         'entity_id' => $nid,
         'revision_id' => $node->vid,
@@ -761,7 +757,7 @@ function comment_update_8007(&$sandbox) {
     // Populate the field name to match the node type.
     db_update('comment_entity_statistics')
       ->fields(array(
-        'field_id' => 'node.comment_' . $sandbox['node_type'],
+        'field_id' => 'node__comment_' . $sandbox['node_type'],
       ))
       ->condition('entity_id', array_keys($nodes))
       ->execute();
