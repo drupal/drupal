@@ -1158,6 +1158,7 @@ function file_managed_file_process($element, &$form_state, $form) {
     '#name' => $parents_prefix . '_upload_button',
     '#type' => 'submit',
     '#value' => t('Upload'),
+    '#attributes' => array('class' => array('js-hide')),
     '#validate' => array(),
     '#submit' => array('file_managed_file_submit'),
     '#limit_validation_errors' => array($element['#parents']),
