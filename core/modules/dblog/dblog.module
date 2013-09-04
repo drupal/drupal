@@ -11,6 +11,7 @@
  * @see watchdog()
  */
 
+use Drupal\Component\Utility\MapArray;
 use Drupal\Core\Database\Database;
 
 /**
@@ -131,7 +132,7 @@ function _dblog_get_message_types() {
     $types[] = $object->type;
   }
 
-  return $types;
+  return MapArray::copyValuesToKeys($types);
 }
 
 /**
