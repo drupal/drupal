@@ -1200,7 +1200,7 @@ function comment_node_search_result(EntityInterface $node) {
       }
       $comments += db_query("SELECT comment_count FROM {comment_entity_statistics} WHERE entity_id = :nid AND entity_type = 'node' AND field_id = :field_id", array(
         'nid' => $node->id(),
-        'field_id' => 'node.' . $field_name)
+        'field_id' => 'node__' . $field_name)
       )->fetchField();
     }
   }

@@ -493,7 +493,7 @@ function comment_update_8005(&$sandbox) {
   db_add_field('comment', 'field_id', array(
     'type' => 'varchar',
     'not null' => TRUE,
-    'default' => 'node.comment',
+    'default' => 'node__comment',
     'length' => 255,
     'description' => 'The field_id to which this comment is a reply.',
   ));
@@ -545,7 +545,7 @@ function comment_update_8005(&$sandbox) {
   db_add_field('comment_entity_statistics', 'field_id', array(
     'type' => 'varchar',
     'not null' => TRUE,
-    'default' => 'comment',
+    'default' => 'node__comment',
     'length' => 255,
     'description' => 'The field_id to which this comment is a reply.',
   ));
@@ -583,7 +583,7 @@ function comment_update_8006(&$sandbox) {
     $field_name = 'comment_' . $node_type;
     $field = array(
       // We need one per content type to match the existing comment bundles.
-      'id' => 'node_' . $field_name,
+      'id' => 'node.' . $field_name,
       'type' => 'comment',
       'module' => 'comment',
       'name' => $field_name,
@@ -592,9 +592,10 @@ function comment_update_8006(&$sandbox) {
     // Make sure field doesn't already exist.
     $index = 0;
 
-    while (!Drupal::config('field.field.' . $field['id'])->isNew()) {
+    while (!Drupal::config('field.field.node.' . $field['name'])->isNew()) {
       // Append a numeric index.
-      $field['id'] = $field_name . '_' . $index;
+      $field['id'] = 'node.' . $field_name . '_' . $index;
+      $field['name'] = $field_name . '_' . $index;
       // Increment index.
       $index++;
     }
@@ -610,7 +611,7 @@ function comment_update_8006(&$sandbox) {
     $field['schema'] = CommentItem::schema($field_object);
     _update_8003_field_create_field($field);
 
-    if (Drupal::config("field.instance.node.$node_type." . $field['id'])->isNew()) {
+    if (Drupal::config("field.instance.node.$node_type." . $field['name'])->isNew()) {
       // Add the comment field, setting the instance settings to match those for
       // the given node_type.
       $instance_settings = array(
@@ -626,7 +627,7 @@ function comment_update_8006(&$sandbox) {
         'preview' => update_variable_get('comment_preview_' . $node_type, 1),
       );
       $instance = array(
-        'id' => "node.$node_type." . $field['id'],
+        'id' => "node.$node_type." . $field['name'],
         'entity_type' => 'node',
         'bundle' => $node_type,
         'default_value' => array(array('status' => $default_value)),
@@ -649,11 +650,11 @@ function comment_update_8006(&$sandbox) {
 
     // Assign display settings for the 'default' and 'full' view modes.
     $display = _update_8000_entity_get_display('node', $node_type, 'default');
-    $display->set('content.' . $field['id'], $display_options_default)
+    $display->set('content.' . $field['name'], $display_options_default)
       ->save();
 
     $display = _update_8000_entity_get_display('node', $node_type, 'full');
-    $display->set('content.' . $field['id'], $display_options_default)
+    $display->set('content.' . $field['name'], $display_options_default)
       ->save();
 
     // Assign widget settings for the 'default' form mode.
@@ -663,7 +664,7 @@ function comment_update_8006(&$sandbox) {
       'weight' => 20,
     );
     $display = _update_8000_entity_get_form_display('node', $node_type, 'default');
-    $display->set('content.' . $field['id'], $display_options_default)
+    $display->set('content.' . $field['name'], $display_options_default)
       ->save();
 
     // Clean up old variables.

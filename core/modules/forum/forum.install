@@ -110,7 +110,13 @@ function forum_enable() {
       ->save();
   }
   // Add the comment field to the forum node type.
-  if (!field_read_field('comment_forum', array('include_inactive' => TRUE))) {
+  $fields = entity_load_multiple_by_properties('field_entity', array(
+    'type' => 'comment',
+    'name' => 'comment_forum',
+    'include_inactive' => TRUE,
+    'include_deleted' => FALSE,
+  ));
+  if (empty($fields)) {
     comment_add_default_comment_field('node', 'forum', 'comment_forum', COMMENT_OPEN);
   }
 }
@@ -242,7 +248,7 @@ function forum_schema() {
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default'=> 0,
+        'default' => 0,
       ),
       'last_comment_timestamp' => array(
         'type' => 'int',
@@ -276,7 +282,6 @@ function forum_schema() {
       ),
     ),
   );
-
 
   return $schema;
 }
