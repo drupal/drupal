@@ -91,7 +91,7 @@ class ForumManager implements ForumManagerInterface {
   /**
    * Cached forum index.
    *
-   * @var \Drupal\taxonomy\Plugin\Core\Entity\Term;
+   * @var \Drupal\taxonomy\TermInterface
    */
   protected $index;
 
