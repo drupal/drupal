@@ -14,6 +14,7 @@ function contextual_menu() {
   $items['contextual/render'] = array(
     'route_name' => 'contextual_render',
     'theme callback' => 'ajax_base_page_theme',
+    'type' => MENU_CALLBACK,
   );
 
   return $items;

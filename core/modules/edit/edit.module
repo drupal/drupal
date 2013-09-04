@@ -26,10 +26,12 @@ function edit_menu() {
   $items['edit/metadata'] = array(
     'route_name' => 'edit_metadata',
     'theme callback' => 'ajax_base_page_theme',
+    'type' => MENU_CALLBACK,
   );
   $items['edit/form/%/%/%/%/%'] = array(
     'route_name' => 'edit_field_form',
     'theme callback' => 'ajax_base_page_theme',
+    'type' => MENU_CALLBACK,
   );
 
   return $items;
