@@ -1028,7 +1028,7 @@ class Sql extends QueryPluginBase {
 
       if (!empty($info['conditions'])) {
         $sub_group = $info['type'] == 'OR' ? db_or() : db_and();
-        foreach ($info['conditions'] as $key => $clause) {
+        foreach ($info['conditions'] as $clause) {
           // DBTNG doesn't support to add the same subquery twice to the main
           // query and the count query, so clone the subquery to have two instances
           // of the same object. - http://drupal.org/node/1112854
@@ -1227,9 +1227,6 @@ class Sql extends QueryPluginBase {
       $query->distinct();
     }
 
-    $joins = $where = $having = $orderby = $groupby = '';
-    $fields = $distinct = array();
-
     // Add all the tables to the query via joins. We assume all LEFT joins.
     foreach ($this->table_queue as $table) {
       if (is_object($table['join'])) {
@@ -1321,10 +1318,10 @@ class Sql extends QueryPluginBase {
    */
   public function getWhereArgs() {
     $args = array();
-    foreach ($this->where as $group => $where) {
+    foreach ($this->where as $where) {
       $args = array_merge($args, $where['args']);
     }
-    foreach ($this->having as $group => $having) {
+    foreach ($this->having as $having) {
       $args = array_merge($args, $having['args']);
     }
     return $args;
@@ -1366,7 +1363,6 @@ class Sql extends QueryPluginBase {
    * $view->current_page.
    */
   function execute(ViewExecutable $view) {
-    $external = FALSE; // Whether this query will run against an external database.
     $query = $view->build_info['query'];
     $count_query = $view->build_info['count_query'];
 
@@ -1382,7 +1378,6 @@ class Sql extends QueryPluginBase {
       }
     }
 
-    $items = array();
     if ($query) {
       $additional_arguments = \Drupal::moduleHandler()->invokeAll('views_query_substitutions', array($view));
 
@@ -1542,7 +1537,7 @@ class Sql extends QueryPluginBase {
       // Drupal core currently has no way to load multiple revisions. Sad.
       if ($table['revision']) {
         $entities = array();
-        foreach ($ids as $index => $revision_id) {
+        foreach ($ids as $revision_id) {
           $entity = entity_revision_load($entity_type, $revision_id);
           if ($entity) {
             $entities[$revision_id] = $entity;
