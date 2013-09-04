@@ -149,7 +149,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       $graph[$module->name]['edges'] = array();
       if (isset($module->info['dependencies']) && is_array($module->info['dependencies'])) {
         foreach ($module->info['dependencies'] as $dependency) {
-          $dependency_data = $this->parseDependency($dependency);
+          $dependency_data = static::parseDependency($dependency);
           $graph[$module->name]['edges'][$dependency_data['name']] = $dependency_data;
         }
       }
@@ -459,7 +459,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    *
    * @see drupal_check_incompatibility()
    */
-  protected function parseDependency($dependency) {
+  public static function parseDependency($dependency) {
     // We use named subpatterns and support every op that version_compare
     // supports. Also, op is optional and defaults to equals.
     $p_op = '(?<operation>!=|==|=|<|<=|>|>=|<>)?';
