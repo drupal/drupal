@@ -46,7 +46,6 @@ function locale_test_locale_translation_projects_alter(&$projects) {
     $remote_url = $url . PublicStream::basePath() . '/remote/';
 
     // Completely replace the project data with a set of test projects.
-    $base_url = url();
     $projects = array (
       'contrib_module_one' => array (
         'name' => 'contrib_module_one',
