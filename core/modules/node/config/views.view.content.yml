@@ -279,6 +279,7 @@ display:
           text: Translate
           optional: '1'
           plugin_id: content_translation_link
+          provider: content_translation
         dropbutton:
           id: dropbutton
           table: views

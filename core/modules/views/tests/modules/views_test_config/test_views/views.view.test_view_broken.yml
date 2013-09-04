@@ -1,0 +1,89 @@
+base_table: views_test_data
+core: '8'
+description: ''
+status: '1'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: '0'
+        pager: '0'
+        pager_options: '0'
+        sorts: '0'
+      fields:
+        id_broken:
+          field: id_broken
+          id: id_broken
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          provider: views
+      filters:
+        id_broken:
+          field: id_broken
+          id: id_broken
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          provider: views
+      arguments:
+        id_broken:
+          field: id_broken
+          id: id_broken
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          provider: views
+      sorts:
+        id_broken:
+          field: id_broken
+          id: id_broken
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          order: ASC
+          provider: views
+      relationships:
+        id_broken:
+          field: id_broken
+          id: id_broken
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          provider: views
+      header:
+        id_broken:
+          field: id_broken
+          id: id_broken
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          provider: views
+      footer:
+        id_broken:
+          field: id_broken
+          id: id_broken
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          provider: views
+      empty:
+        id_broken:
+          field: id_broken
+          id: id_broken
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          provider: views
+      pager:
+        options:
+          offset: '0'
+        type: none
+      pager_options: {  }
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+label: 'Test view'
+id: test_view_broken
+tag: ''

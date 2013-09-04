@@ -102,11 +102,12 @@ class ConfigItem extends ViewsFormBase {
 
           // If this relationship is valid for this type, add it to the list.
           $data = Views::viewsData()->get($relationship['table']);
-          $base = $data[$relationship['field']]['relationship']['base'];
-          $base_fields = Views::viewsDataHelper()->fetchFields($base, $form_state['type'], $executable->display_handler->useGroupBy());
-          if (isset($base_fields[$item['table'] . '.' . $item['field']])) {
-            $relationship_handler->init($executable, $executable->display_handler, $relationship);
-            $relationship_options[$relationship['id']] = $relationship_handler->adminLabel();
+          if (isset($data[$relationship['field']]['relationship']['base']) && $base = $data[$relationship['field']]['relationship']['base']) {
+            $base_fields = Views::viewsDataHelper()->fetchFields($base, $form_state['type'], $executable->display_handler->useGroupBy());
+            if (isset($base_fields[$item['table'] . '.' . $item['field']])) {
+              $relationship_handler->init($executable, $executable->display_handler, $relationship);
+              $relationship_options[$relationship['id']] = $relationship_handler->adminLabel();
+            }
           }
         }
 
