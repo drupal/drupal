@@ -179,6 +179,74 @@ function taxonomy_views_data() {
     ),
   );
 
+  $data['taxonomy_term_data']['changed'] = array(
+    'title' => t('Updated date'),
+    'help' => t('The date the term was last updated.'),
+    'field' => array(
+      'id' => 'date',
+    ),
+    'sort' => array(
+      'id' => 'date'
+    ),
+    'filter' => array(
+      'id' => 'date',
+    ),
+  );
+
+  $data['taxonomy_term_data']['changed_fulldate'] = array(
+    'title' => t('Updated date'),
+    'help' => t('Date in the form of CCYYMMDD.'),
+    'argument' => array(
+      'field' => 'changed',
+      'id' => 'date_fulldate',
+    ),
+  );
+
+  $data['taxonomy_term_data']['changed_year_month'] = array(
+    'title' => t('Updated year + month'),
+    'help' => t('Date in the form of YYYYMM.'),
+    'argument' => array(
+      'field' => 'changed',
+      'id' => 'date_year_month',
+    ),
+  );
+
+  $data['taxonomy_term_data']['changed_year'] = array(
+    'title' => t('Updated year'),
+    'help' => t('Date in the form of YYYY.'),
+    'argument' => array(
+      'field' => 'changed',
+      'id' => 'date_year',
+    ),
+  );
+
+  $data['taxonomy_term_data']['changed_month'] = array(
+    'title' => t('Updated month'),
+    'help' => t('Date in the form of MM (01 - 12).'),
+    'argument' => array(
+      'field' => 'changed',
+      'id' => 'date_month',
+    ),
+  );
+
+  $data['taxonomy_term_data']['changed_day'] = array(
+    'title' => t('Updated day'),
+    'help' => t('Date in the form of DD (01 - 31).'),
+    'argument' => array(
+      'field' => 'changed',
+      'id' => 'date_day',
+    ),
+  );
+
+  $data['taxonomy_term_data']['changed_week'] = array(
+    'title' => t('Updated week'),
+    'help' => t('Date in the form of WW (01 - 53).'),
+    'argument' => array(
+      'field' => 'changed',
+      'id' => 'date_week',
+    ),
+  );
+
   // Content translation field.
   if (Drupal::moduleHandler()->moduleExists('content_translation')) {
     $data['taxonomy_term_data']['translation_link'] = array(
