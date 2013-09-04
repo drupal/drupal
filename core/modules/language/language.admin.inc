@@ -831,7 +831,6 @@ function theme_language_content_settings_table($variables) {
  * Form submission handler for language_content_settings_form().
  */
 function language_content_settings_form_submit(array $form, array &$form_state) {
-  $entity_types = $form_state['values']['entity_types'];
   $settings = &$form_state['values']['settings'];
   foreach ($settings as $entity_type => $entity_settings) {
     foreach ($entity_settings as $bundle => $bundle_settings) {
