@@ -2752,7 +2752,7 @@ function drupal_classloader($class_loader = NULL) {
       $class_loader = settings()->get('class_loader', 'default');
     }
     if ($class_loader === 'apc') {
-      require_once __DIR__ . '/../vendor/symfony/class-loader/Symfony/Component/Classloader/ApcClassLoader.php';
+      require_once __DIR__ . '/../vendor/symfony/class-loader/Symfony/Component/ClassLoader/ApcClassLoader.php';
       $apc_loader = new ApcClassLoader('drupal.' . drupal_get_hash_salt(), $loader);
       $loader->unregister();
       $apc_loader->register();
