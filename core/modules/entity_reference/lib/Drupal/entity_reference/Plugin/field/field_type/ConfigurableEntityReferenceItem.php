@@ -128,7 +128,7 @@ class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase impl
    * {@inheritdoc}
    */
   public function instanceSettingsForm(array $form, array &$form_state) {
-    $field_definition = isset($form_state['instance']) ? $form_state['instance'] : $this->getInstance();
+    $instance = $form_state['instance'];
 
     // Get all selection plugins for this entity type.
     $selection_plugins = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionGroups($this->getFieldSetting('target_type'));
@@ -166,7 +166,7 @@ class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase impl
       '#type' => 'select',
       '#title' => t('Reference method'),
       '#options' => $handlers_options,
-      '#default_value' => $field_definition->getFieldSetting('handler') ?: 'default',
+      '#default_value' => $instance->getFieldSetting('handler'),
       '#required' => TRUE,
       '#ajax' => TRUE,
       '#limit_validation_errors' => array(),
@@ -186,8 +186,8 @@ class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase impl
       '#attributes' => array('class' => array('entity_reference-settings')),
     );
 
-    $handler = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($field_definition);
-    $form['handler']['handler_settings'] += $handler->settingsForm($field_definition);
+    $handler = \Drupal::service('plugin.manager.entity_reference.selection')->getSelectionHandler($instance);
+    $form['handler']['handler_settings'] += $handler->settingsForm($instance);
 
     return $form;
   }
