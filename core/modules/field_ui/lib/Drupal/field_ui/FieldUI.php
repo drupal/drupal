@@ -7,6 +7,8 @@
 
 namespace Drupal\field_ui;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Static service container wrapper for Field UI.
  */
@@ -18,11 +20,11 @@ class FieldUI {
    * @return array
    *   An array of redirect paths.
    */
-  public static function getNextDestination() {
+  public static function getNextDestination(Request $request) {
     $next_destination = array();
-    $destinations = !empty($_REQUEST['destinations']) ? $_REQUEST['destinations'] : array();
+    $destinations = $request->query->get('destinations');
     if (!empty($destinations)) {
-      unset($_REQUEST['destinations']);
+      $request->query->remove('destinations');
       $path = array_shift($destinations);
       $options = drupal_parse_url($path);
       if ($destinations) {

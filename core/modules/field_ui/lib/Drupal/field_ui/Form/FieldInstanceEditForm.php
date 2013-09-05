@@ -198,9 +198,10 @@ class FieldInstanceEditForm extends FormBase {
    */
   public function delete(array &$form, array &$form_state) {
     $destination = array();
-    if (isset($_GET['destination'])) {
+    $request = $this->getRequest();
+    if ($request->query->has('destination')) {
       $destination = drupal_get_destination();
-      unset($_GET['destination']);
+      $request->query->remove('destination');
     }
     $form_state['redirect'] = array('admin/structure/types/manage/' . $this->instance['bundle'] . '/fields/' . $this->instance->id() . '/delete', array('query' => $destination));
   }
@@ -234,7 +235,7 @@ class FieldInstanceEditForm extends FormBase {
    *   Either the next path, or an array of redirect paths.
    */
   protected function getNextDestination() {
-    $next_destination = FieldUI::getNextDestination();
+    $next_destination = FieldUI::getNextDestination($this->getRequest());
     if (empty($next_destination)) {
       $next_destination = $this->entityManager->getAdminPath($this->instance->entity_type, $this->instance->bundle) . '/fields';
     }
