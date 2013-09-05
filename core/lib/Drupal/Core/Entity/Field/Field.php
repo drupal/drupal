@@ -11,6 +11,7 @@ use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\ItemList;
+use Drupal\Core\Language\Language;
 
 /**
  * Represents an entity field; that is, a list of field item objects.
@@ -37,6 +38,13 @@ class Field extends ItemList implements FieldInterface {
   protected $list = array();
 
   /**
+   * The langcode of the field values held in the object.
+   *
+   * @var string
+   */
+  protected $langcode = Language::LANGCODE_DEFAULT;
+
+  /**
    * Overrides TypedData::__construct().
    */
   public function __construct(array $definition, $name = NULL, TypedDataInterface $parent = NULL) {
@@ -46,6 +54,20 @@ class Field extends ItemList implements FieldInterface {
     // \Drupal\Core\TypedData\TypedDataManager::getPropertyInstance() will
     // already have this field item ready for use after cloning.
     $this->list[0] = $this->createItem(0);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setLangcode($langcode) {
+    $this->langcode = $langcode;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLangcode() {
+    return $this->langcode;
   }
 
   /**
