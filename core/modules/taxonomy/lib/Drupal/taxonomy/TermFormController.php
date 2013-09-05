@@ -239,9 +239,8 @@ class TermFormController extends EntityFormControllerNG {
    */
   public function delete(array $form, array &$form_state) {
     $destination = array();
-    if (isset($_GET['destination'])) {
+    if ($this->getRequest()->query->has('destination')) {
       $destination = drupal_get_destination();
-      unset($_GET['destination']);
     }
     $form_state['redirect'] = array('taxonomy/term/' . $this->entity->id() . '/delete', array('query' => $destination));
   }
