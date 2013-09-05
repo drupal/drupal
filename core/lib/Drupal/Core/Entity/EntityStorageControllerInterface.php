@@ -21,6 +21,16 @@ namespace Drupal\Core\Entity;
 interface EntityStorageControllerInterface {
 
   /**
+   * Load the most recent version of an entity's field data.
+   */
+  const FIELD_LOAD_CURRENT = 'FIELD_LOAD_CURRENT';
+
+  /**
+   * Load the version of an entity's field data specified in the entity.
+   */
+  const FIELD_LOAD_REVISION = 'FIELD_LOAD_REVISION';
+
+  /**
    * Resets the internal, static entity cache.
    *
    * @param $ids

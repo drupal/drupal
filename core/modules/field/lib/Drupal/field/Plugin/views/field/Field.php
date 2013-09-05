@@ -9,6 +9,7 @@ namespace Drupal\field\Plugin\views\field;
 
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\field\Plugin\Type\Formatter\FormatterPluginManager;
 use Drupal\views\ViewExecutable;
@@ -202,7 +203,7 @@ class Field extends FieldPluginBase {
       $options += is_array($this->options['group_columns']) ? $this->options['group_columns'] : array();
 
       $fields = array();
-      $rkey = $this->definition['is revision'] ? 'FIELD_LOAD_REVISION' : 'FIELD_LOAD_CURRENT';
+      $rkey = $this->definition['is revision'] ? EntityStorageControllerInterface::FIELD_LOAD_REVISION : EntityStorageControllerInterface::FIELD_LOAD_CURRENT;
       // Go through the list and determine the actual column name from field api.
       foreach ($options as $column) {
         $name = $column;

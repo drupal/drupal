@@ -9,6 +9,7 @@
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\field\FieldInterface;
 
 /**
@@ -144,20 +145,20 @@ function field_views_field_default_views_data(FieldInterface $field) {
 
   // Description of the field tables.
   $field_tables = array(
-    FIELD_LOAD_CURRENT => array(
+    EntityStorageControllerInterface::FIELD_LOAD_CURRENT => array(
       'table' => DatabaseStorageController::_fieldTableName($field),
       'alias' => "{$entity_type}__{$field->name}",
     ),
   );
   if ($supports_revisions) {
-    $field_tables[FIELD_LOAD_REVISION] = array(
+    $field_tables[EntityStorageControllerInterface::FIELD_LOAD_REVISION] = array(
       'table' => DatabaseStorageController::_fieldRevisionTableName($field),
       'alias' => "{$entity_type}_revision__{$field->name}",
     );
   }
 
   // Build the relationships between the field table and the entity tables.
-  $table_alias = $field_tables[FIELD_LOAD_CURRENT]['alias'];
+  $table_alias = $field_tables[EntityStorageControllerInterface::FIELD_LOAD_CURRENT]['alias'];
   $data[$table_alias]['table']['join'][$entity_table] = array(
     'left_field' => $entity_info['entity_keys']['id'],
     'field' => 'entity_id',
@@ -166,7 +167,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
     ),
   );
   if ($supports_revisions) {
-    $table_alias = $field_tables[FIELD_LOAD_REVISION]['alias'];
+    $table_alias = $field_tables[EntityStorageControllerInterface::FIELD_LOAD_REVISION]['alias'];
     $data[$table_alias]['table']['join'][$entity_revision_table] = array(
       'left_field' => $entity_info['entity_keys']['revision'],
       'field' => 'revision_id',
@@ -195,7 +196,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
     $table = $table_info['table'];
     $table_alias = $table_info['alias'];
 
-    if ($type == FIELD_LOAD_CURRENT) {
+    if ($type == EntityStorageControllerInterface::FIELD_LOAD_CURRENT) {
       $group = $group_name;
       $field_alias = $field_name;
     }
@@ -216,7 +217,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
     $aliases = array();
     $also_known = array();
     foreach ($all_labels as $label_name => $true) {
-      if ($type == FIELD_LOAD_CURRENT) {
+      if ($type == EntityStorageControllerInterface::FIELD_LOAD_CURRENT) {
         if ($label != $label_name) {
           $aliases[] = array(
             'base' => $entity_table,
@@ -255,7 +256,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
       'entity_tables' => $entity_tables,
       // Default the element type to div, let the UI change it if necessary.
       'element type' => 'div',
-      'is revision' => $type == FIELD_LOAD_REVISION,
+      'is revision' => $type == EntityStorageControllerInterface::FIELD_LOAD_REVISION,
     );
   }
 
@@ -301,7 +302,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
       $table = $table_info['table'];
       $table_alias = $table_info['alias'];
 
-      if ($type == FIELD_LOAD_CURRENT) {
+      if ($type == EntityStorageControllerInterface::FIELD_LOAD_CURRENT) {
         $group = $group_name;
       }
       else {

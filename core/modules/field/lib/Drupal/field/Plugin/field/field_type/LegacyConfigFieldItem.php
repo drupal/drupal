@@ -8,6 +8,7 @@
 namespace Drupal\field\Plugin\field\field_type;
 
 use Drupal\Core\Entity\Field\PrepareCacheInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase;
 use Drupal\field\FieldInterface;
 use Drupal\field\FieldInstanceInterface;
@@ -101,7 +102,7 @@ abstract class LegacyConfigFieldItem extends ConfigFieldItemBase implements Prep
         array($entity_id => $this->getFieldInstance()),
         $langcode,
         &$items,
-        FIELD_LOAD_CURRENT,
+        EntityStorageControllerInterface::FIELD_LOAD_CURRENT,
       );
       call_user_func_array($callback, $args);
       $this->setValue($items[$entity_id][0]);

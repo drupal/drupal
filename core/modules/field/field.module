@@ -108,16 +108,6 @@ const FIELD_BEHAVIOR_DEFAULT = 0x0002;
 const FIELD_BEHAVIOR_CUSTOM = 0x0004;
 
 /**
- * Load the most recent version of an entity's field data.
- */
-const FIELD_LOAD_CURRENT = 'FIELD_LOAD_CURRENT';
-
-/**
- * Load the version of an entity's field data specified in the entity.
- */
-const FIELD_LOAD_REVISION = 'FIELD_LOAD_REVISION';
-
-/**
  * Implements hook_help().
  */
 function field_help($path, $arg) {

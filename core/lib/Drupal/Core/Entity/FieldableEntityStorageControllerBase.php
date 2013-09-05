@@ -26,8 +26,10 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
    * @param array $entities
    *   An array of entities keyed by entity ID.
    * @param int $age
-   *   FIELD_LOAD_CURRENT to load the most recent revision for all fields, or
-   *   FIELD_LOAD_REVISION to load the version indicated by each entity.
+   *   EntityStorageControllerInterface::FIELD_LOAD_CURRENT to load the most
+   *   recent revision for all fields, or
+   *   EntityStorageControllerInterface::FIELD_LOAD_REVISION to load the version
+   *   indicated by each entity.
    */
   protected function loadFieldItems(array $entities, $age) {
     if (empty($entities)) {
@@ -36,7 +38,7 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
 
     // Only the most current revision of non-deleted fields for cacheable entity
     // types can be cached.
-    $load_current = $age == FIELD_LOAD_CURRENT;
+    $load_current = $age == static::FIELD_LOAD_CURRENT;
     $info = entity_get_info($this->entityType);
     $use_cache = $load_current && $info['field_cache'];
 
@@ -165,8 +167,10 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
    * @param array $entities
    *   An array of entities keyed by entity ID.
    * @param int $age
-   *   FIELD_LOAD_CURRENT to load the most recent revision for all fields, or
-   *   FIELD_LOAD_REVISION to load the version indicated by each entity.
+   *   EntityStorageControllerInterface::FIELD_LOAD_CURRENT to load the most
+   *   recent revision for all fields, or
+   *   EntityStorageControllerInterface::FIELD_LOAD_REVISION to load the version
+   *   indicated by each entity.
    */
   abstract protected function doLoadFieldItems($entities, $age);
 
