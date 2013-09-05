@@ -109,3 +109,10 @@ user_login:
     _form: '\Drupal\user\Form\UserLoginForm'
   requirements:
     _access: 'TRUE'
+
+user_edit:
+  pattern: '/user/{user}/edit'
+  defaults:
+    _entity_form: 'user.default'
+  requirements:
+    _entity_access: 'user.update'

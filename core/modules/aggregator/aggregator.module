@@ -191,17 +191,13 @@ function aggregator_menu() {
   );
   $items['aggregator/sources/%aggregator_feed/configure'] = array(
     'title' => 'Configure',
-    'page callback' => 'entity_get_form',
-    'page arguments' => array(2),
-    'access arguments' => array('administer news feeds'),
+    'route_name' => 'aggregator_feed_configure',
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
   );
   $items['admin/config/services/aggregator/edit/feed/%aggregator_feed'] = array(
     'title' => 'Edit feed',
-    'page callback' => 'entity_get_form',
-    'page arguments' => array(6),
-    'access arguments' => array('administer news feeds'),
+    'route_name' => 'aggregator_feed_edit',
   );
   $items['admin/config/services/aggregator/delete/feed/%aggregator_feed'] = array(
     'title' => 'Delete feed',

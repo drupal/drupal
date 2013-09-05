@@ -929,12 +929,8 @@ function user_menu() {
   );
   $items['user/%user/edit'] = array(
     'title' => 'Edit',
-    'page callback' => 'entity_get_form',
-    'page arguments' => array(1),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'update'),
+    'route_name' => 'user_edit',
     'type' => MENU_LOCAL_TASK,
-    'file' => 'user.pages.inc',
   );
   return $items;
 }
