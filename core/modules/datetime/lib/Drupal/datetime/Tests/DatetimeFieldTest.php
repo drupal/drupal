@@ -326,7 +326,6 @@ class DatetimeFieldTest extends WebTestBase {
     $this->instance->save();
 
     // Display creation form.
-    $date = new DrupalDateTime();
     $this->drupalGet('entity_test/add');
 
     // See that no date is set.
