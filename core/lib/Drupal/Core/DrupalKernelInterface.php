@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  * This interface extends Symfony's KernelInterface and adds methods for
  * responding to modules being enabled or disabled during its lifetime.
  */
-interface DrupalKernelInterface extends HttpKernelInterface, \Serializable {
+interface DrupalKernelInterface extends HttpKernelInterface {
 
   /**
    * Boots the current kernel.

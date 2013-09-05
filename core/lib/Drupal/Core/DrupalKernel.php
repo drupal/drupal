@@ -36,7 +36,7 @@ use Composer\Autoload\ClassLoader;
  */
 class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
 
-  const CONTAINER_BASE_CLASS = 'Container';
+  const CONTAINER_BASE_CLASS = '\Drupal\Core\DependencyInjection\Container';
 
   /**
    * Holds the container instance.
@@ -164,21 +164,6 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
     $this->booted = false;
     $this->classLoader = $class_loader;
     $this->allowDumping = $allow_dumping;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function serialize() {
-    return serialize(array($this->environment, $this->classLoader, $this->allowDumping));
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function unserialize($data) {
-    list($environment, $class_loader, $allow_dumping) = unserialize($data);
-    $this->__construct($environment, $class_loader, $allow_dumping);
   }
 
   /**

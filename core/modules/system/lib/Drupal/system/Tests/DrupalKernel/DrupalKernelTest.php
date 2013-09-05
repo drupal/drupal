@@ -60,7 +60,7 @@ class DrupalKernelTest extends UnitTestBase {
     $container = $kernel->getContainer();
     $refClass = new ReflectionClass($container);
     $is_compiled_container =
-      $refClass->getParentClass()->getName() == 'Symfony\Component\DependencyInjection\Container' &&
+      $refClass->getParentClass()->getName() == 'Drupal\Core\DependencyInjection\Container' &&
       !$refClass->isSubclassOf('Symfony\Component\DependencyInjection\ContainerBuilder');
     $this->assertTrue($is_compiled_container);
 
@@ -74,7 +74,7 @@ class DrupalKernelTest extends UnitTestBase {
     $container = $kernel->getContainer();
     $refClass = new ReflectionClass($container);
     $is_compiled_container =
-      $refClass->getParentClass()->getName() == 'Symfony\Component\DependencyInjection\Container' &&
+      $refClass->getParentClass()->getName() == 'Drupal\Core\DependencyInjection\Container' &&
       !$refClass->isSubclassOf('Symfony\Component\DependencyInjection\ContainerBuilder');
     $this->assertTrue($is_compiled_container);
     // Test that our synthetic services are there.
@@ -114,15 +114,4 @@ class DrupalKernelTest extends UnitTestBase {
     $this->assertEqual($modules['service_provider_test'], drupal_get_filename('module', 'service_provider_test'));
   }
 
-  /**
-   * Tests kernel serialization/unserialization.
-   */
-  public function testSerialization() {
-    $classloader = drupal_classloader();
-    $kernel = new DrupalKernel('testing', $classloader);
-
-    $string = serialize($kernel);
-    $unserialized_kernel = unserialize($string);
-    $this->assertTrue($unserialized_kernel instanceof DrupalKernel);
-  }
 }
