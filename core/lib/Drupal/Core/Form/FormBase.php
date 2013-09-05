@@ -9,6 +9,7 @@ namespace Drupal\Core\Form;
 
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\DependencyInjection\DependencySerialization;
+use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +34,13 @@ abstract class FormBase extends DependencySerialization implements FormInterface
   protected $request;
 
   /**
+   * The URL generator.
+   *
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface
+   */
+  protected $urlGenerator;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
@@ -53,6 +61,19 @@ abstract class FormBase extends DependencySerialization implements FormInterface
    */
   protected function t($string, array $args = array(), array $options = array()) {
     return $this->getTranslationManager()->translate($string, $args, $options);
+  }
+
+  /**
+   * Generates a URL or path for a specific route based on the given parameters.
+   *
+   * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
+   *   details on the arguments, usage, and possible exceptions.
+   *
+   * @return string
+   *   The generated URL for the given route.
+   */
+  public function url($route_name, $route_parameters = array(), $options = array()) {
+    return $this->getUrlGenerator()->generateFromRoute($route_name, $route_parameters, $options);
   }
 
   /**
@@ -113,6 +134,29 @@ abstract class FormBase extends DependencySerialization implements FormInterface
    */
   protected function getCurrentUser() {
     return $this->getRequest()->attributes->get('_account');
+  }
+
+  /**
+   * Gets the URL generator.
+   *
+   * @return \Drupal\Core\Routing\UrlGeneratorInterface
+   *   The URL generator.
+   */
+  protected function getUrlGenerator() {
+    if (!$this->urlGenerator) {
+      $this->urlGenerator = \Drupal::urlGenerator();
+    }
+    return $this->urlGenerator;
+  }
+
+  /**
+   * Sets the URL generator.
+   *
+   * @param \Drupal\Core\Routing\UrlGeneratorInterface
+   *   The URL generator.
+   */
+  public function setUrlGenerator(UrlGeneratorInterface $url_generator) {
+    $this->urlGenerator = $url_generator;
   }
 
 }
