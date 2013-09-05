@@ -8,6 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Language\Language;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Tests the basic Entity API.
@@ -349,7 +350,11 @@ class EntityQueryTest extends EntityUnitTestBase {
 
     // Test the pager by setting element #1 to page 2 with a page size of 4.
     // Results will be #8-12 from above.
-    $_GET['page'] = '0,2';
+    $request = Request::createFromGlobals();
+    $request->query->replace(array(
+      'page' => '0,2',
+    ));
+    \Drupal::getContainer()->set('request', $request);
     $this->queryResults = $this->factory->get('entity_test_mulrev')
       ->sort("$figures.color")
       ->sort("$greetings.format")
@@ -376,8 +381,13 @@ class EntityQueryTest extends EntityUnitTestBase {
     // While ordering on bundles do not give us a definite order, we can still
     // assert that all entities from one bundle are after the other as the
     // order dictates.
-    $_GET['sort'] = 'asc';
-    $_GET['order'] = 'Type';
+    $request = Request::createFromGlobals();
+    $request->query->replace(array(
+      'sort' => 'asc',
+      'order' => 'Type',
+    ));
+    \Drupal::getContainer()->set('request', $request);
+
     $header = array(
       'id' => array('data' => 'Id', 'specifier' => 'id'),
       'type' => array('data' => 'Type', 'specifier' => 'type'),
@@ -387,7 +397,12 @@ class EntityQueryTest extends EntityUnitTestBase {
       ->tableSort($header)
       ->execute());
     $this->assertBundleOrder('asc');
-    $_GET['sort'] = 'desc';
+
+    $request->query->add(array(
+      'sort' => 'desc',
+    ));
+    \Drupal::getContainer()->set('request', $request);
+
     $header = array(
       'id' => array('data' => 'Id', 'specifier' => 'id'),
       'type' => array('data' => 'Type', 'specifier' => 'type'),
@@ -396,8 +411,12 @@ class EntityQueryTest extends EntityUnitTestBase {
       ->tableSort($header)
       ->execute());
     $this->assertBundleOrder('desc');
+
     // Ordering on ID is definite, however.
-    $_GET['order'] = 'Id';
+    $request->query->add(array(
+      'order' => 'Id',
+    ));
+    \Drupal::getContainer()->set('request', $request);
     $this->queryResults = $this->factory->get('entity_test_mulrev')
       ->tableSort($header)
       ->execute();
