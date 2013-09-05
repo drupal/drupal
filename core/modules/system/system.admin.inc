@@ -770,39 +770,6 @@ function theme_system_themes_page($variables) {
 }
 
 /**
- * Page callback: Displays edit date format links for each language.
- *
- * @see locale_menu()
- */
-function system_date_format_language_overview_page() {
-  $header = array(t('Language'), t('Operations'));
-
-  $languages = language_list();
-  foreach ($languages as $langcode => $language) {
-    $row = array();
-    $row[] = $language->name;
-    $links = array();
-    $links['edit'] = array(
-      'title' => t('Edit'),
-      'href' => "admin/config/regional/date-time/locale/$langcode/edit",
-    );
-    $links['reset'] = array(
-      'title' => t('Reset'),
-      'href' => "admin/config/regional/date-time/locale/$langcode/reset",
-    );
-    $row[] = array(
-      'data' => array(
-        '#type' => 'operations',
-        '#links' => $links,
-      ),
-    );
-    $rows[] = $row;
-  }
-
-  return theme('table', array('header' => $header, 'rows' => $rows));
-}
-
-/**
  * Form constructor for the date localization configuration form.
  *
  * @param $langcode

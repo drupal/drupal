@@ -930,11 +930,9 @@ function system_menu() {
     $items['admin/config/regional/date-time/locale'] = array(
       'title' => 'Localize',
       'description' => 'Configure date formats for each locale',
-      'page callback' => 'system_date_format_language_overview_page',
-      'access arguments' => array('administer site configuration'),
       'type' => MENU_LOCAL_TASK,
       'weight' => -8,
-      'file' => 'system.admin.inc',
+      'route_name' => 'date_format_language_overview',
     );
     $items['admin/config/regional/date-time/locale/%/edit'] = array(
       'title' => 'Localize date formats',

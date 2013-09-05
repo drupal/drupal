@@ -117,6 +117,13 @@ date_format_edit:
   requirements:
     _entity_access: 'date_format.update'
 
+date_format_language_overview:
+  pattern: '/admin/config/regional/date-time/locale'
+  defaults:
+    _controller: '\Drupal\system\Controller\DateFormatLanguageController::overviewPage'
+  requirements:
+    _permission: 'administer site configuration'
+
 date_format_delete:
   pattern: 'admin/config/regional/date-time/formats/manage/{date_format}/delete'
   defaults:
