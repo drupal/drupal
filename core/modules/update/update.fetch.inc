@@ -277,7 +277,7 @@ function _update_create_fetch_task($project) {
 function _update_build_fetch_url($project, $site_key = '') {
   $name = $project['name'];
   $url = _update_get_fetch_url_base($project);
-  $url .= '/' . $name . '/' . DRUPAL_CORE_COMPATIBILITY;
+  $url .= '/' . $name . '/' . Drupal::CORE_COMPATIBILITY;
 
   // Only append usage infomation if we have a site key and the project is
   // enabled. We do not want to record usage statistics for disabled projects.

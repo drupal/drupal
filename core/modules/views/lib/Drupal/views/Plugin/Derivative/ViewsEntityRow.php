@@ -50,7 +50,7 @@ class ViewsEntityRow implements ContainerDerivativeInterface {
   protected $viewsData;
 
   /**
-   * Constructs a ViewsBlock object.
+   * Constructs a ViewsEntityRow object.
    *
    * @param string $base_plugin_id
    *   The base plugin ID.

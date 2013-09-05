@@ -473,7 +473,7 @@ class FieldOverview extends OverviewBase {
     if ($destinations) {
       $destination = drupal_get_destination();
       $destinations[] = $destination['destination'];
-      unset($_GET['destination']);
+      $this->getRequest()->query->remove('destination');
       $path = array_shift($destinations);
       $options = drupal_parse_url($path);
       $options['query']['destinations'] = $destinations;

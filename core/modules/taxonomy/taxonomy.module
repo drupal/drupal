@@ -262,8 +262,9 @@ function taxonomy_menu() {
   );
   $items['taxonomy/term/%taxonomy_term/edit'] = array(
     'title' => 'Edit',
-    'title callback' => 'taxonomy_term_title',
+    'title callback' => 'entity_page_label',
     'title arguments' => array(2),
+    'route_name' => 'taxonomy_term_edit',
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'weight' => 10,
@@ -298,10 +299,7 @@ function taxonomy_menu() {
   );
   $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary/edit'] = array(
     'title' => 'Edit',
-    'page callback' => 'entity_get_form',
-    'page arguments' => array(4),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(4, 'update'),
+    'route_name' => 'taxonomy_vocabulary_edit',
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/structure/taxonomy/%taxonomy_vocabulary/delete'] = array(
@@ -1197,7 +1195,7 @@ function taxonomy_taxonomy_term_delete(Term $term) {
 function taxonomy_library_info() {
   $libraries['drupal.taxonomy'] = array(
     'title' => 'Taxonomy',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'taxonomy') . '/taxonomy.js' => array(),
     ),

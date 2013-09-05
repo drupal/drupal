@@ -32,12 +32,12 @@ a.block-demo-backlink:hover {
   text-decoration: underline;
 }
 
-.block-list-region {
+.layout-region {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-.block-list-right {
+.block-list-secondary {
   border: 1px solid #bfbfbf;
   border-bottom-width: 0;
 }
@@ -52,7 +52,7 @@ a.block-demo-backlink:hover {
 .block-list a:before {
   content: '+ ';
 }
-.block-list-right .form-type-search {
+.block-list-secondary .form-type-search {
   padding: 0 1em;
 }
 
@@ -61,35 +61,35 @@ a.block-demo-backlink:hover {
 screen and (min-width: 780px),
 (orientation: landscape) and (min-device-height: 780px) {
 
-  .block-list-left {
+  .block-list-primary {
     float: left; /* LTR */
     width: 75%;
     padding-right: 2em;
   }
-  [dir="rtl"] .block-list-left {
+  [dir="rtl"] .block-list-primary {
     float: right;
     padding-left: 2em;
     padding-right: 0;
   }
 
-  .block-list-right {
+  .block-list-secondary {
     float: right; /* LTR */
     width: 25%;
   }
-  [dir="rtl"] .block-list-right {
+  [dir="rtl"] .block-list-secondary {
     float: left;
   }
 
   /* @todo File an issue to add a standard class to all text-like inputs */
-  .block-list-right .form-autocomplete,
-  .block-list-right .form-text,
-  .block-list-right .form-tel,
-  .block-list-right .form-email,
-  .block-list-right .form-url,
-  .block-list-right .form-search,
-  .block-list-right .form-number,
-  .block-list-right .form-color,
-  .block-list-right textarea {
+  .block-list-secondary .form-autocomplete,
+  .block-list-secondary .form-text,
+  .block-list-secondary .form-tel,
+  .block-list-secondary .form-email,
+  .block-list-secondary .form-url,
+  .block-list-secondary .form-search,
+  .block-list-secondary .form-number,
+  .block-list-secondary .form-color,
+  .block-list-secondary textarea {
     -webkit-box-sizing: border-box;
     -moz-box-sizing:    border-box;
     box-sizing:         border-box;
@@ -108,8 +108,8 @@ screen and (min-width: 780px),
 screen and (max-width: 1020px),
 (orientation: landscape) and (max-device-height: 1020px) {
 
-  .toolbar-vertical .block-list-left,
-  .toolbar-vertical .block-list-right {
+  .toolbar-vertical .block-list-primary,
+  .toolbar-vertical .block-list-secondary {
     float: none;
     width: auto;
     padding-right: 0;

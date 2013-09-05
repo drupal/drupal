@@ -28,6 +28,22 @@ use Drupal\Core\TypedData\ListInterface;
 interface FieldInterface extends ListInterface, AccessibleInterface {
 
   /**
+   * Sets the langcode of the field values held in the object.
+   *
+   * @param string $langcode
+   *   The langcode.
+   */
+  public function setLangcode($langcode);
+
+  /**
+   * Gets the langcode of the field values held in the object.
+   *
+   * @return $langcode
+   *   The langcode.
+   */
+  public function getLangcode();
+
+  /**
    * Gets the field definition.
    *
    * @return \Drupal\Core\Entity\Field\FieldDefinitionInterface

@@ -144,7 +144,7 @@ abstract class EntityStorageControllerBase implements EntityStorageControllerInt
       // @todo getTranslation() only works on NG entities. Remove the condition
       // and the second code branch when all core entity types are converted.
       if ($translation = $entity->getTranslation($langcode)) {
-        foreach ($translation as $field_name => $field) {
+        foreach ($translation as $field) {
           $field->$method();
         }
       }

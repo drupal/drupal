@@ -351,7 +351,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
   protected function attachLoad(&$queried_entities, $load_revision = FALSE) {
     // Attach field values.
     if ($this->entityInfo['fieldable']) {
-      $this->loadFieldItems($queried_entities, $load_revision ? FIELD_LOAD_REVISION : FIELD_LOAD_CURRENT);
+      $this->loadFieldItems($queried_entities, $load_revision ? static::FIELD_LOAD_REVISION : static::FIELD_LOAD_CURRENT);
     }
 
     // Call hook_entity_load().
@@ -550,7 +550,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
    * {@inheritdoc}
    */
   protected function doLoadFieldItems($entities, $age) {
-    $load_current = $age == FIELD_LOAD_CURRENT;
+    $load_current = $age == static::FIELD_LOAD_CURRENT;
 
     // Collect entities ids and bundles.
     $bundles = array();

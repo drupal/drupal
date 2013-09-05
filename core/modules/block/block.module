@@ -89,6 +89,10 @@ function block_theme() {
       'render element' => 'elements',
       'template' => 'block',
     ),
+    'block_list' => array(
+      'render element' => 'form',
+      'template' => 'block-list',
+    ),
   );
 }
 
@@ -622,7 +626,7 @@ function block_language_delete($language) {
 function block_library_info() {
   $libraries['drupal.block'] = array(
     'title' => 'Block',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'block') . '/block.js' => array(),
     ),
@@ -633,7 +637,7 @@ function block_library_info() {
   );
   $libraries['drupal.block.admin'] = array(
     'title' => 'Block admin',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'block') . '/js/block.admin.js' => array(),
     ),

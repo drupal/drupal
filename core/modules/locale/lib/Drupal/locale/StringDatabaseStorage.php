@@ -83,7 +83,7 @@ class StringDatabaseStorage implements StringStorageInterface {
 
     if (!empty($values)) {
       $string = new TranslationString($values);
-      $this->checkVersion($string, VERSION);
+      $this->checkVersion($string, \Drupal::VERSION);
       $string->setStorage($this);
       return $string;
     }
@@ -156,7 +156,7 @@ class StringDatabaseStorage implements StringStorageInterface {
             // This is a new location to add, take care not to duplicate.
             $this->connection->merge('locales_location', $this->options)
               ->key(array('sid' => $string->getId(), 'type' => $type, 'name' => $name))
-              ->fields(array('version' => VERSION))
+              ->fields(array('version' => \Drupal::VERSION))
               ->execute();
             $created = TRUE;
           }
@@ -165,7 +165,7 @@ class StringDatabaseStorage implements StringStorageInterface {
       }
       if ($created) {
         // As we've set a new location, check string version too.
-        $this->checkVersion($string, VERSION);
+        $this->checkVersion($string, \Drupal::VERSION);
       }
     }
   }

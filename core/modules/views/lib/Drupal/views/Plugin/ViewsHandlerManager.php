@@ -77,7 +77,7 @@ class ViewsHandlerManager extends PluginManagerBase {
   public function getHandler($item, $override = NULL) {
     $table = $item['table'];
     $field = $item['field'];
-    $optional = isset($item['optional']) ? $item['optional'] : FALSE;
+    $optional = !empty($item['optional']);
     // Get the plugin manager for this type.
     $data = $this->viewsData->get($table);
 
@@ -118,7 +118,7 @@ class ViewsHandlerManager extends PluginManagerBase {
     }
 
     // Finally, use the 'broken' handler.
-    return $this->createInstance('broken');
+    return $this->createInstance('broken', array('optional' => $optional, 'original_configuration' => $item));
   }
 
 }

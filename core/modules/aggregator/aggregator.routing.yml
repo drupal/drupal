@@ -33,6 +33,20 @@ aggregator_feed_add:
   requirements:
     _permission: 'administer news feeds'
 
+aggregator_feed_configure:
+  pattern: 'aggregator/sources/{aggregator_feed}/configure'
+  defaults:
+    _entity_form: 'aggregator_feed.default'
+  requirements:
+    _permission: 'administer news feeds'
+
+aggregator_feed_edit:
+  pattern: 'admin/config/services/aggregator/edit/feed/{aggregator_feed}'
+  defaults:
+    _entity_form: 'aggregator_feed.default'
+  requirements:
+    _permission: 'administer news feeds'
+
 aggregator_feed_refresh:
   pattern: '/admin/config/services/aggregator/update/{aggregator_feed}'
   defaults:

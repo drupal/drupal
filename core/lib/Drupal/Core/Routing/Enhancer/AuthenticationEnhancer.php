@@ -51,7 +51,13 @@ class AuthenticationEnhancer implements RouteEnhancerInterface {
       // If the request was authenticated with a non-permitted provider,
       // force the user back to anonymous.
       if (!in_array($auth_provider_triggered, $auth_providers)) {
-        $request->attributes->set('_account', drupal_anonymous_user());
+        $anonymous_user = drupal_anonymous_user();
+        $request->attributes->set('_account', $anonymous_user);
+
+        // The global $user object is included for backward compatibility only
+        // and should be considered deprecated.
+        // @todo Remove this line once global $user is no longer used.
+        $GLOBALS['user'] = $anonymous_user;
       }
     }
     return $defaults;

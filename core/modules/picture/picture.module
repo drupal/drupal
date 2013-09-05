@@ -87,7 +87,7 @@ function picture_library_info() {
   $libraries['picturefill'] = array(
     'title' => t('Picturefill'),
     'website' => 'http://drupal.org/node/1775530',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'picture') . '/picturefill/picturefill.js' => array('type' => 'file', 'weight' => -10, 'group' => JS_DEFAULT),
     ),

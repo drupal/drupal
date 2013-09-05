@@ -1281,7 +1281,7 @@ function book_menu_subtree_data($link) {
 function book_library_info() {
   $libraries['drupal.book'] = array(
     'title' => 'Book',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'book') . '/book.js' => array(),
     ),

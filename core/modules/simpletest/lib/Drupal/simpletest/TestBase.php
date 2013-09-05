@@ -181,6 +181,13 @@ abstract class TestBase {
   protected $configImporter;
 
   /**
+   * The random generator.
+   *
+   * @var \Drupal\Component\Utility\Random
+   */
+  protected $randomGenerator;
+
+  /**
    * Constructor for Test.
    *
    * @param $test_id
@@ -1194,7 +1201,38 @@ abstract class TestBase {
    * @see \Drupal\Component\Utility\Random::string()
    */
   public function randomString($length = 8) {
-    return Random::string($length, TRUE);
+    return $this->getRandomGenerator()->string($length, TRUE, array($this, 'randomStringValidate'));
+  }
+
+  /**
+   * Callback for random string validation.
+   *
+   * @see \Drupal\Component\Utility\Random::string()
+   *
+   * @param string $string
+   *   The random string to validate.
+   *
+   * @return bool
+   *   TRUE if the random string is valid, FALSE if not.
+   */
+  public function randomStringValidate($string) {
+    // Consecutive spaces causes issues for
+    // Drupal\simpletest\WebTestBase::assertLink().
+    if (preg_match('/\s{2,}/', $string)) {
+      return FALSE;
+    }
+
+    // Starting with a space means that length might not be what is expected.
+    if (preg_match('/^\s/', $string)) {
+      return FALSE;
+    }
+
+    // Ending with a space means that length might not be what is expected.
+    if (preg_match('/\s$/', $string)) {
+      return FALSE;
+    }
+
+    return TRUE;
   }
 
   /**
@@ -1212,7 +1250,7 @@ abstract class TestBase {
    * @see \Drupal\Component\Utility\Random::name()
    */
   public function randomName($length = 8) {
-    return Random::name($length, TRUE);
+    return $this->getRandomGenerator()->name($length, TRUE);
   }
 
   /**
@@ -1228,7 +1266,20 @@ abstract class TestBase {
    * @see \Drupal\Component\Utility\Random::object()
    */
   public function randomObject($size = 4) {
-    return Random::object($size);
+    return $this->getRandomGenerator()->object($size);
+  }
+
+  /**
+   * Gets the random generator for the utility methods.
+   *
+   * @return \Drupal\Component\Utility\Random
+   *   The random generator
+   */
+  protected function getRandomGenerator() {
+    if (!is_object($this->randomGenerator)) {
+      $this->randomGenerator = new Random();
+    }
+    return $this->randomGenerator;
   }
 
   /**

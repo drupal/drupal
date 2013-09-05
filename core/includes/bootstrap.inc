@@ -29,16 +29,6 @@ use Drupal\Core\Session\UserSession;
  */
 
 /**
- * The current system version.
- */
-const VERSION = '8.0-dev';
-
-/**
- * Core API compatibility.
- */
-const DRUPAL_CORE_COMPATIBILITY = '8.x';
-
-/**
  * Minimum supported version of PHP.
  */
 const DRUPAL_MINIMUM_PHP = '5.3.10';
@@ -2752,7 +2742,7 @@ function drupal_classloader($class_loader = NULL) {
       $class_loader = settings()->get('class_loader', 'default');
     }
     if ($class_loader === 'apc') {
-      require_once __DIR__ . '/../vendor/symfony/class-loader/Symfony/Component/Classloader/ApcClassLoader.php';
+      require_once __DIR__ . '/../vendor/symfony/class-loader/Symfony/Component/ClassLoader/ApcClassLoader.php';
       $apc_loader = new ApcClassLoader('drupal.' . drupal_get_hash_salt(), $loader);
       $loader->unregister();
       $apc_loader->register();

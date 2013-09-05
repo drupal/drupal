@@ -880,15 +880,13 @@ function user_menu() {
 
   // Administration pages.
   $items['admin/config/people'] = array(
-   'title' => 'People',
-   'description' => 'Configure user accounts.',
-   'position' => 'left',
-   'weight' => -20,
-   'page callback' => 'system_admin_menu_block_page',
-   'access arguments' => array('access administration pages'),
-   'file' => 'system.admin.inc',
-   'file path' => drupal_get_path('module', 'system'),
+    'title' => 'People',
+    'description' => 'Configure user accounts.',
+    'position' => 'left',
+    'weight' => -20,
+    'route_name' => 'user_admin_index',
   );
+
   $items['admin/config/people/accounts'] = array(
     'title' => 'Account settings',
     'description' => 'Configure default behavior of users, including registration requirements, e-mails, and fields.',
@@ -931,12 +929,8 @@ function user_menu() {
   );
   $items['user/%user/edit'] = array(
     'title' => 'Edit',
-    'page callback' => 'entity_get_form',
-    'page arguments' => array(1),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'update'),
+    'route_name' => 'user_edit',
     'type' => MENU_LOCAL_TASK,
-    'file' => 'user.pages.inc',
   );
   return $items;
 }
@@ -2105,7 +2099,7 @@ function user_library_info() {
   $path = drupal_get_path('module', 'user');
   $libraries['drupal.user'] = array(
     'title' => 'User',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/user.js' => array(),
     ),
@@ -2121,7 +2115,7 @@ function user_library_info() {
 
   $libraries['drupal.user.permissions'] = array(
     'title' => 'User permissions',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/user.permissions.js' => array(),
     ),
@@ -2134,7 +2128,7 @@ function user_library_info() {
 
   $libraries['drupal.user.icons'] = array(
     'title' => 'User icon styling',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'css' => array(
       $path . '/css/user.icons.css' => array(),
     ),

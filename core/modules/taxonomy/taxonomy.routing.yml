@@ -33,6 +33,13 @@ taxonomy_vocabulary_add:
   requirements:
     _entity_create_access: 'taxonomy_vocabulary'
 
+taxonomy_vocabulary_edit:
+  pattern: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/edit'
+  defaults:
+    _entity_form: 'taxonomy_vocabulary.default'
+  requirements:
+    _entity_access: 'taxonomy_vocabulary.update'
+
 taxonomy_vocabulary_delete:
   pattern: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/delete'
   defaults:

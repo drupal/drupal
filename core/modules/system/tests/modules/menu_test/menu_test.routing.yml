@@ -4,6 +4,14 @@ menu_login_callback:
     _content: '\Drupal\menu_test\TestControllers::testLogin'
   requirements:
     _access: 'TRUE'
+
+menu_callback_description:
+  pattern: 'menu_callback_description'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access content'
+
 menu_router_test1:
   pattern: '/foo/{bar}'
   defaults:

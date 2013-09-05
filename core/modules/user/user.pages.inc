@@ -119,21 +119,6 @@ function template_preprocess_user(&$variables) {
 }
 
 /**
- * Submit function for the 'Cancel account' button on the user edit form.
- */
-function user_edit_cancel_submit($form, &$form_state) {
-  $destination = array();
-  $query = Drupal::request()->query;
-  if ($query->has('destination')) {
-    $destination = drupal_get_destination();
-    $query->remove('destination');
-  }
-  // Note: We redirect from user/uid/edit to user/uid/cancel to make the tabs disappear.
-  $account = $form_state['controller']->getEntity();
-  $form_state['redirect'] = array("user/" . $account->id() . "/cancel", array('query' => $destination));
-}
-
-/**
  * Form builder; confirm form for cancelling user account.
  *
  * @ingroup forms

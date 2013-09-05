@@ -120,6 +120,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
    */
   public function buildForm(array $form, array &$form_state) {
     $entities = $this->load();
+    $form['#theme'] = array('block_list');
     $form['#attached']['library'][] = array('system', 'drupal.tableheader');
     $form['#attached']['library'][] = array('block', 'drupal.block');
     $form['#attached']['library'][] = array('block', 'drupal.block.admin');
@@ -127,13 +128,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
 
     // Add a last region for disabled blocks.
     $block_regions_with_disabled = $this->regions + array(BLOCK_REGION_NONE => BLOCK_REGION_NONE);
-    $form['left']['#type'] = 'container';
-    $form['left']['#attributes']['class'] = array(
-      'block-list-region',
-      'block-list-left',
-    );
-
-    $form['left']['block_regions'] = array(
+    $form['block_regions'] = array(
       '#type' => 'value',
       '#value' => $block_regions_with_disabled,
     );
@@ -144,11 +139,11 @@ class BlockListController extends ConfigEntityListController implements FormInte
     $weight_delta = round(count($entities) / 2);
 
     // Build the form tree.
-    $form['left']['edited_theme'] = array(
+    $form['edited_theme'] = array(
       '#type' => 'value',
       '#value' => $this->theme,
     );
-    $form['left']['blocks'] = array(
+    $form['blocks'] = array(
       '#type' => 'table',
       '#header' => array(
         t('Block'),
@@ -174,7 +169,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
 
     // Loop over each region and build blocks.
     foreach ($block_regions_with_disabled as $region => $title) {
-      $form['left']['blocks']['#tabledrag'][] = array(
+      $form['blocks']['#tabledrag'][] = array(
         'match',
         'sibling',
         'block-region-select',
@@ -182,27 +177,27 @@ class BlockListController extends ConfigEntityListController implements FormInte
         NULL,
         FALSE,
       );
-      $form['left']['blocks']['#tabledrag'][] = array(
+      $form['blocks']['#tabledrag'][] = array(
         'order',
         'sibling',
         'block-weight',
         'block-weight-' . $region,
       );
 
-      $form['left']['blocks'][$region] = array(
+      $form['blocks'][$region] = array(
         '#attributes' => array(
           'class' => array('region-title', 'region-title-' . $region, 'odd'),
           'no_striping' => TRUE,
         ),
       );
-      $form['left']['blocks'][$region]['title'] = array(
+      $form['blocks'][$region]['title'] = array(
         '#markup' => $region != BLOCK_REGION_NONE ? $title : t('Disabled'),
         '#wrapper_attributes' => array(
           'colspan' => 5,
         ),
       );
 
-      $form['left']['blocks'][$region . '-message'] = array(
+      $form['blocks'][$region . '-message'] = array(
         '#attributes' => array(
           'class' => array(
             'region-message',
@@ -211,7 +206,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
           ),
         ),
       );
-      $form['left']['blocks'][$region . '-message']['message'] = array(
+      $form['blocks'][$region . '-message']['message'] = array(
         '#markup' => '<em>' . t('No blocks in this region') . '</em>',
         '#wrapper_attributes' => array(
           'colspan' => 5,
@@ -222,19 +217,19 @@ class BlockListController extends ConfigEntityListController implements FormInte
         foreach ($blocks[$region] as $info) {
           $entity_id = $info['entity_id'];
 
-          $form['left']['blocks'][$entity_id] = array(
+          $form['blocks'][$entity_id] = array(
             '#attributes' => array(
               'class' => array('draggable'),
             ),
           );
 
-          $form['left']['blocks'][$entity_id]['info'] = array(
+          $form['blocks'][$entity_id]['info'] = array(
             '#markup' => check_plain($info['admin_label']),
             '#wrapper_attributes' => array(
               'class' => array('block'),
             ),
           );
-          $form['left']['blocks'][$entity_id]['region-theme']['region'] = array(
+          $form['blocks'][$entity_id]['region-theme']['region'] = array(
             '#type' => 'select',
             '#default_value' => $region,
             '#empty_value' => BLOCK_REGION_NONE,
@@ -246,12 +241,12 @@ class BlockListController extends ConfigEntityListController implements FormInte
             ),
             '#parents' => array('blocks', $entity_id, 'region'),
           );
-          $form['left']['blocks'][$entity_id]['region-theme']['theme'] = array(
+          $form['blocks'][$entity_id]['region-theme']['theme'] = array(
             '#type' => 'hidden',
             '#value' => $this->theme,
             '#parents' => array('blocks', $entity_id, 'theme'),
           );
-          $form['left']['blocks'][$entity_id]['weight'] = array(
+          $form['blocks'][$entity_id]['weight'] = array(
             '#type' => 'weight',
             '#default_value' => $info['weight'],
             '#delta' => $weight_delta,
@@ -261,33 +256,27 @@ class BlockListController extends ConfigEntityListController implements FormInte
               'class' => array('block-weight', 'block-weight-' . $region),
             ),
           );
-          $form['left']['blocks'][$entity_id]['operations'] = $this->buildOperations($info['entity']);
+          $form['blocks'][$entity_id]['operations'] = $this->buildOperations($info['entity']);
         }
       }
     }
 
     // Do not allow disabling the main system content block when it is present.
-    if (isset($form['left']['blocks']['system_main']['region'])) {
-      $form['left']['blocks']['system_main']['region']['#required'] = TRUE;
+    if (isset($form['blocks']['system_main']['region'])) {
+      $form['blocks']['system_main']['region']['#required'] = TRUE;
     }
 
-    $form['left']['actions'] = array(
+    $form['actions'] = array(
       '#tree' => FALSE,
       '#type' => 'actions',
     );
-    $form['left']['actions']['submit'] = array(
+    $form['actions']['submit'] = array(
       '#type' => 'submit',
       '#value' => t('Save blocks'),
       '#button_type' => 'primary',
     );
 
-    $form['right']['#type'] = 'container';
-    $form['right']['#attributes']['class'] = array(
-      'block-list-region',
-      'block-list-right',
-    );
-
-    $form['right']['title'] = array(
+    $form['place_blocks']['title'] = array(
       '#type' => 'container',
       '#children' => '<h3>' . t('Place blocks') . '</h3>',
       '#attributes' => array(
@@ -297,7 +286,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
       ),
     );
 
-    $form['right']['filter'] = array(
+    $form['place_blocks']['filter'] = array(
       '#type' => 'search',
       '#title' => t('Filter'),
       '#title_display' => 'invisible',
@@ -310,8 +299,8 @@ class BlockListController extends ConfigEntityListController implements FormInte
       ),
     );
 
-    $form['right']['list']['#type'] = 'container';
-    $form['right']['list']['#attributes']['class'][] = 'entity-meta';
+    $form['place_blocks']['list']['#type'] = 'container';
+    $form['place_blocks']['list']['#attributes']['class'][] = 'entity-meta';
 
     // Sort the plugins first by category, then by label.
     $plugins = $this->blockManager->getDefinitions();
@@ -323,8 +312,8 @@ class BlockListController extends ConfigEntityListController implements FormInte
     });
     foreach ($plugins as $plugin_id => $plugin_definition) {
       $category = $plugin_definition['category'];
-      if (!isset($form['right']['list'][$category])) {
-        $form['right']['list'][$category] = array(
+      if (!isset($form['place_blocks']['list'][$category])) {
+        $form['place_blocks']['list'][$category] = array(
           '#type' => 'details',
           '#title' => $category,
           'content' => array(
@@ -338,7 +327,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
           ),
         );
       }
-      $form['right']['list'][$category]['content']['#links'][$plugin_id] = array(
+      $form['place_blocks']['list'][$category]['content']['#links'][$plugin_id] = array(
         'title' => $plugin_definition['admin_label'],
         'href' => 'admin/structure/block/add/' . $plugin_id . '/' . $this->theme,
         'attributes' => array(

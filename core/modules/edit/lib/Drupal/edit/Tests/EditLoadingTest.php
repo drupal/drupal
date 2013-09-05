@@ -165,7 +165,7 @@ class EditLoadingTest extends WebTestBase {
     $this->assertIdentical('settings', $ajax_commands[0]['command'], 'The first AJAX command is a settings command.');
     // Second command: insert libraries into DOM.
     $this->assertIdentical('insert', $ajax_commands[1]['command'], 'The second AJAX command is an append command.');
-    $command = new AppendCommand('body', '<script src="' . file_create_url('core/modules/edit/js/editors/formEditor.js') . '?v=' . VERSION . '"></script>' . "\n");
+    $command = new AppendCommand('body', '<script src="' . file_create_url('core/modules/edit/js/editors/formEditor.js') . '?v=' . \Drupal::VERSION . '"></script>' . "\n");
     $this->assertIdentical($command->render(), $ajax_commands[1], 'The append command contains the expected data.');
 
     // Retrieving the form for this field should result in a 200 response,

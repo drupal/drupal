@@ -11,28 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
- * Provide a single block from the administration menu as a page.
- *
- * This function is often a destination for these blocks.
- * For example, 'admin/structure/types' needs to have a destination to be valid
- * in the Drupal menu system, but too much information there might be
- * hidden, so we supply the contents of the block.
- *
- * @return
- *   The output HTML.
- */
-function system_admin_menu_block_page() {
-  $item = menu_get_item();
-  if ($content = system_admin_menu_block($item)) {
-    $output = theme('admin_block_content', array('content' => $content));
-  }
-  else {
-    $output = t('You do not have any administrative items.');
-  }
-  return $output;
-}
-
-/**
  * Menu callback; displays a listing of all themes.
  */
 function system_themes_page() {
@@ -77,7 +55,7 @@ function system_themes_page() {
      // Ensure this theme is compatible with this version of core.
      // Require the 'content' region to make sure the main page
      // content has a common place in all themes.
-      $theme->incompatible_core = !isset($theme->info['core']) || ($theme->info['core'] != DRUPAL_CORE_COMPATIBILITY) || (!isset($theme->info['regions']['content']));
+      $theme->incompatible_core = !isset($theme->info['core']) || ($theme->info['core'] != Drupal::CORE_COMPATIBILITY) || (!isset($theme->info['regions']['content']));
       $theme->incompatible_php = version_compare(phpversion(), $theme->info['php']) < 0;
       // Confirmed that the base theme is available.
       $theme->incompatible_base = (isset($theme->info['base theme']) && !isset($themes[$theme->info['base theme']]));
@@ -736,7 +714,7 @@ function theme_system_themes_page($variables) {
 
       // Make sure to provide feedback on compatibility.
       if (!empty($theme->incompatible_core)) {
-        $output .= '<div class="incompatible">' . t('This version is not compatible with Drupal !core_version and should be replaced.', array('!core_version' => DRUPAL_CORE_COMPATIBILITY)) . '</div>';
+        $output .= '<div class="incompatible">' . t('This version is not compatible with Drupal !core_version and should be replaced.', array('!core_version' => Drupal::CORE_COMPATIBILITY)) . '</div>';
       }
       elseif (!empty($theme->incompatible_php)) {
         if (substr_count($theme->info['php'], '.') < 2) {
@@ -767,39 +745,6 @@ function theme_system_themes_page($variables) {
   $output .= '</div>';
 
   return $output;
-}
-
-/**
- * Page callback: Displays edit date format links for each language.
- *
- * @see locale_menu()
- */
-function system_date_format_language_overview_page() {
-  $header = array(t('Language'), t('Operations'));
-
-  $languages = language_list();
-  foreach ($languages as $langcode => $language) {
-    $row = array();
-    $row[] = $language->name;
-    $links = array();
-    $links['edit'] = array(
-      'title' => t('Edit'),
-      'href' => "admin/config/regional/date-time/locale/$langcode/edit",
-    );
-    $links['reset'] = array(
-      'title' => t('Reset'),
-      'href' => "admin/config/regional/date-time/locale/$langcode/reset",
-    );
-    $row[] = array(
-      'data' => array(
-        '#type' => 'operations',
-        '#links' => $links,
-      ),
-    );
-    $rows[] = $row;
-  }
-
-  return theme('table', array('header' => $header, 'rows' => $rows));
 }
 
 /**

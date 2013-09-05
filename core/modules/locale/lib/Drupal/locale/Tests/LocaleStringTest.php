@@ -73,7 +73,7 @@ class LocaleStringTest extends WebTestBase {
     // Check version handling and updating.
     $this->assertEqual($source->version, 'none', 'String originally created without version.');
     $string = $this->storage->findTranslation(array('lid' => $source->lid));
-    $this->assertEqual($string->version, VERSION, 'Checked and updated string version to Drupal version.');
+    $this->assertEqual($string->version, \Drupal::VERSION, 'Checked and updated string version to Drupal version.');
 
     // Create translation and find it by lid and source.
     $langcode = 'es';

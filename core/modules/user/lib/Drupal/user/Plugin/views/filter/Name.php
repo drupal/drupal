@@ -112,7 +112,6 @@ class Name extends InOperator {
     $uids = array();
     $placeholders = array();
     $args = array();
-    $results = array();
     foreach ($values as $value) {
       if (strtolower($value) == 'anonymous') {
         $uids[] = 0;

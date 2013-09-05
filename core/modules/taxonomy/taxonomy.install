@@ -83,6 +83,12 @@ function taxonomy_schema() {
         'default' => 0,
         'description' => 'The weight of this term in relation to other terms.',
       ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the term was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
     ),
     'primary key' => array('tid'),
     'unique keys' => array(
@@ -392,4 +398,18 @@ function taxonomy_update_8007() {
       }
     }
   }
+}
+
+/**
+ * Add a changed column for taxonomy terms.
+ */
+function taxonomy_update_8008() {
+  $spec = array(
+    'description' => 'The Unix timestamp when the term was most recently saved.',
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+    'initial' => REQUEST_TIME,
+  );
+  db_add_field('taxonomy_term_data', 'changed', $spec);
 }

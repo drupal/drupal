@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity\Query\Sql;
 
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\Plugin\DataType\EntityReference;
 use Drupal\Core\Entity\Query\QueryException;
@@ -82,7 +83,7 @@ class Tables implements TablesInterface {
     for ($key = 0; $key <= $count; $key ++) {
       // If there is revision support and only the current revision is being
       // queried then use the revision id. Otherwise, the entity id will do.
-      if (!empty($entity_info['entity_keys']['revision']) && $age == FIELD_LOAD_CURRENT) {
+      if (!empty($entity_info['entity_keys']['revision']) && $age == EntityStorageControllerInterface::FIELD_LOAD_CURRENT) {
         // This contains the relevant SQL field to be used when joining entity
         // tables.
         $entity_id_field = $entity_info['entity_keys']['revision'];
@@ -251,7 +252,7 @@ class Tables implements TablesInterface {
   protected function ensureFieldTable($index_prefix, &$field, $type, $langcode, $base_table, $entity_id_field, $field_id_field) {
     $field_name = $field['field_name'];
     if (!isset($this->fieldTables[$index_prefix . $field_name])) {
-      $table = $this->sqlQuery->getMetaData('age') == FIELD_LOAD_CURRENT ? DatabaseStorageController::_fieldTableName($field) : DatabaseStorageController::_fieldRevisionTableName($field);
+      $table = $this->sqlQuery->getMetaData('age') == EntityStorageControllerInterface::FIELD_LOAD_CURRENT ? DatabaseStorageController::_fieldTableName($field) : DatabaseStorageController::_fieldRevisionTableName($field);
       if ($field['cardinality'] != 1) {
         $this->sqlQuery->addMetaData('simple_query', FALSE);
       }

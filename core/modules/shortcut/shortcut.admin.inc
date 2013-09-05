@@ -27,7 +27,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  * @see shortcut_set_switch_submit()
  */
 function shortcut_set_switch($form, &$form_state, $account = NULL) {
-  global $user;
+  $user = Drupal::currentUser();
+
   if (!isset($account)) {
     $account = $user;
   }
@@ -42,7 +43,7 @@ function shortcut_set_switch($form, &$form_state, $account = NULL) {
   }
 
   // Only administrators can add shortcut sets.
-  $add_access = user_access('administer shortcuts');
+  $add_access = $user->hasPermission('administer shortcuts');
   if ($add_access) {
     $options['new'] = t('New set');
   }

@@ -161,7 +161,7 @@ class CssOptimizer implements AssetOptimizerInterface {
    */
   protected function processCss($contents, $optimize = FALSE) {
     // Remove multiple charset declarations for standards compliance (and fixing Safari problems).
-    $contents = preg_replace('/^@charset\s+[\'"](\S*)\b[\'"];/i', '', $contents);
+    $contents = preg_replace('/^@charset\s+[\'"](\S*?)\b[\'"];/i', '', $contents);
 
     if ($optimize) {
       // Perform some safe CSS optimizations.

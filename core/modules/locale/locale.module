@@ -652,7 +652,7 @@ function locale_js_alter(&$javascript) {
 function locale_library_info() {
   $libraries['drupal.locale.admin'] = array(
     'title' => 'Locale',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'locale') . '/locale.admin.js' => array(),
     ),
@@ -664,7 +664,7 @@ function locale_library_info() {
   );
   $libraries['drupal.locale.datepicker'] = array(
     'title' => 'Locale Datepicker UI',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'locale') . '/locale.datepicker.js' => array(),
     ),

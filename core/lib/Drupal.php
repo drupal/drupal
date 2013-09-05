@@ -77,6 +77,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Drupal {
 
   /**
+   * The current system version.
+   */
+  const VERSION = '8.0-dev';
+
+  /**
+   * Core API compatibility.
+   */
+  const CORE_COMPATIBILITY = '8.x';
+
+  /**
    * The currently active container object.
    *
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
@@ -493,7 +503,7 @@ class Drupal {
    * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute()
    * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
    */
-  public function l($text, $route_name, array $parameters = array(), array $options = array()) {
+  public static function l($text, $route_name, array $parameters = array(), array $options = array()) {
     return static::$container->get('link_generator')->generate($text, $route_name, $parameters, $options);
   }
 

@@ -222,7 +222,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     }
   }
 
-  if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+  if (Drupal::request()->isXmlHttpRequest()) {
     if ($fatal) {
       if (error_displayable($error)) {
         // When called from JavaScript, simply output the error message.

@@ -6,6 +6,8 @@
 
 namespace Drupal\system;
 
+use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Entity\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -30,6 +32,20 @@ class SystemManager {
   protected $database;
 
   /**
+   * The menu link storage.
+   *
+   * @var \Drupal\menu_link\MenuLinkStorageControllerInterface
+   */
+  protected $menuLinkStorage;
+
+  /**
+   * A static cache of menu items.
+   *
+   * @var array
+   */
+  protected $menuItems;
+
+  /**
    * Requirement severity -- Requirement successfully met.
    */
   const REQUIREMENT_OK = 0;
@@ -46,10 +62,18 @@ class SystemManager {
 
   /**
    * Constructs a SystemManager object.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   * @param \Drupal\Core\Database\Connection $database
+   *   The database connection.
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, Connection $database) {
+  public function __construct(ModuleHandlerInterface $module_handler, Connection $database, EntityManager $entity_manager) {
     $this->moduleHandler = $module_handler;
     $this->database = $database;
+    $this->menuLinkStorage = $entity_manager->getStorageController('menu_link');
   }
 
   /**
@@ -122,6 +146,85 @@ class SystemManager {
       }
     }
     return $severity;
+  }
+
+  /**
+   * Loads the contents of a menu block.
+   *
+   * This function is often a destination for these blocks.
+   * For example, 'admin/structure/types' needs to have a destination to be
+   * valid in the Drupal menu system, but too much information there might be
+   * hidden, so we supply the contents of the block.
+   *
+   * @return array
+   *   A render array suitable for drupal_render.
+   */
+  public function getBlockContents() {
+    $item = menu_get_item();
+    if ($content = $this->getAdminBlock($item)) {
+      $output = array(
+        '#theme' => 'admin_block_content',
+        '#content' => $content,
+      );
+    }
+    else {
+      $output = array(
+        '#type' => 'markup',
+        '#markup' => t('You do not have any administrative items.'),
+      );
+    }
+    return $output;
+  }
+
+  /**
+   * Provide a single block on the administration overview page.
+   *
+   * @param \Drupal\menu_link\MenuLinkInterface|array $item
+   *   The menu item to be displayed.
+   *
+   * @return array
+   *   An array of menu items, as expected by theme_admin_block_content().
+   */
+  public function getAdminBlock($item) {
+    // If we are calling this function for a menu item that corresponds to a
+    // local task (for example, admin/tasks), then we want to retrieve the
+    // parent item's child links, not this item's (since this item won't have
+    // any).
+    if ($item['tab_root'] != $item['path']) {
+      $item = menu_get_item($item['tab_root_href']);
+    }
+
+    if (!isset($item['mlid'])) {
+      $menu_links = $this->menuLinkStorage->loadByProperties(array('router_path' => $item['path'], 'module' => 'system'));
+      $menu_link = reset($menu_links);
+      $item['mlid'] = $menu_link->id();
+      $item['menu_name'] = $menu_link->menu_name;
+    }
+
+    if (isset($this->menuItems[$item['mlid']])) {
+      return $this->menuItems[$item['mlid']];
+    }
+
+    $content = array();
+    $menu_links = $this->menuLinkStorage->loadByProperties(array('plid' => $item['mlid'], 'menu_name' => $item['menu_name'], 'hidden' => 0));
+    foreach ($menu_links as $link) {
+      _menu_link_translate($link);
+      if ($link['access']) {
+        // The link description, either derived from 'description' in
+        // hook_menu() or customized via menu module is used as title attribute.
+        if (!empty($link['localized_options']['attributes']['title'])) {
+          $link['description'] = $link['localized_options']['attributes']['title'];
+          unset($link['localized_options']['attributes']['title']);
+        }
+        // Prepare for sorting as in function _menu_tree_check_access().
+        // The weight is offset so it is always positive, with a uniform 5-digits.
+        $key = (50000 + $link['weight']) . ' ' . Unicode::strtolower($link['title']) . ' ' . $link['mlid'];
+        $content[$key] = $link;
+      }
+    }
+    ksort($content);
+    $this->menuItems[$item['mlid']] = $content;
+    return $content;
   }
 
 }

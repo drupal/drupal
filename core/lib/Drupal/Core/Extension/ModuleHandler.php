@@ -149,7 +149,7 @@ class ModuleHandler implements ModuleHandlerInterface {
       $graph[$module->name]['edges'] = array();
       if (isset($module->info['dependencies']) && is_array($module->info['dependencies'])) {
         foreach ($module->info['dependencies'] as $dependency) {
-          $dependency_data = $this->parseDependency($dependency);
+          $dependency_data = static::parseDependency($dependency);
           $graph[$module->name]['edges'][$dependency_data['name']] = $dependency_data;
         }
       }
@@ -459,12 +459,12 @@ class ModuleHandler implements ModuleHandlerInterface {
    *
    * @see drupal_check_incompatibility()
    */
-  protected function parseDependency($dependency) {
+  public static function parseDependency($dependency) {
     // We use named subpatterns and support every op that version_compare
     // supports. Also, op is optional and defaults to equals.
     $p_op = '(?<operation>!=|==|=|<|<=|>|>=|<>)?';
     // Core version is always optional: 8.x-2.x and 2.x is treated the same.
-    $p_core = '(?:' . preg_quote(DRUPAL_CORE_COMPATIBILITY) . '-)?';
+    $p_core = '(?:' . preg_quote(\Drupal::CORE_COMPATIBILITY) . '-)?';
     $p_major = '(?<major>\d+)';
     // By setting the minor version to x, branches can be matched.
     $p_minor = '(?<minor>(?:\d+|x)(?:-[A-Za-z]+\d+)?)';

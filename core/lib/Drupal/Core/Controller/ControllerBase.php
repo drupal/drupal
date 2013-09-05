@@ -186,23 +186,9 @@ abstract class ControllerBase extends ContainerAware {
   }
 
   /**
-   * Translates a string to the current language or to a given language using
-   * the string translation service.
+   * Translates a string to the current language or to a given language.
    *
-   * @param string $string
-   *   A string containing the English string to translate.
-   * @param array $args
-   *   An associative array of replacements to make after translation. Based
-   *   on the first character of the key, the value is escaped and/or themed.
-   *   See \Drupal\Core\Utility\String::format() for details.
-   * @param array $options
-   *   An associative array of additional options, with the following elements:
-   *   - 'langcode': The language code to translate to a language other than
-   *      what is used to display the page.
-   *   - 'context': The context the source string belongs to.
-   *
-   * @return string
-   *   The translated string.
+   * See the t() documentation for details.
    */
   protected function t($string, array $args = array(), array $options = array()) {
     return $this->container->get('string_translation')->translate($string, $args, $options);

@@ -9,6 +9,7 @@ namespace Drupal\field\Plugin\field\field_type;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Plugin\Type\FieldType\ConfigField;
+use Drupal\field\FieldInstanceInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
@@ -41,14 +42,16 @@ class LegacyConfigField extends ConfigField {
 
     $entity = $this->getParent();
     $langcode = $entity->language()->id;
+    $field_name = $this->getFieldDefinition()->getFieldName();
 
-    if (isset($legacy_errors[$this->getInstance()->getField()->name][$langcode])) {
-      foreach ($legacy_errors[$this->getInstance()->getField()->name][$langcode] as $delta => $item_errors) {
+    if (isset($legacy_errors[$field_name][$langcode])) {
+      foreach ($legacy_errors[$field_name][$langcode] as $delta => $item_errors) {
         foreach ($item_errors as $item_error) {
           // We do not have the information about which column triggered the
           // error, so assume the first column...
-          $column = key($this->getInstance()->getField()->getColumns());
-          $violations->add(new ConstraintViolation($item_error['message'], $item_error['message'], array(), $this, $delta . '.' . $column, $this->offsetGet($delta)->get($column)->getValue(), NULL, $item_error['error']));
+          $property_names = $this->getFieldDefinition()->getFieldPropertyNames();
+          $property_name = $property_names[0];
+          $violations->add(new ConstraintViolation($item_error['message'], $item_error['message'], array(), $this, $delta . '.' . $property_name, $this->offsetGet($delta)->get($property_name)->getValue(), NULL, $item_error['error']));
         }
       }
     }
@@ -115,14 +118,28 @@ class LegacyConfigField extends ConfigField {
       $items = (array) $this->getValue(TRUE);
       $args = array_merge(array(
         $entity,
-        $this->getInstance()->getField(),
-        $this->getInstance(),
+        $this->getFieldInstance()->getField(),
+        $this->getFieldInstance(),
         $langcode,
         &$items
       ), $args);
       call_user_func_array($callback, $args);
       $this->setValue($items);
     }
+  }
+
+  /**
+   * Returns the field instance.
+   *
+   * @return \Drupal\field\FieldInstanceInterface
+   *   The field instance.
+   */
+  protected function getFieldInstance() {
+    $instance = $this->getFieldDefinition();
+    if (!($instance instanceof FieldInstanceInterface)) {
+      throw new \UnexpectedValueException('LegacyConfigField::getFieldInstance() called for a field whose definition is not a field instance.');
+    }
+    return $instance;
   }
 
 }

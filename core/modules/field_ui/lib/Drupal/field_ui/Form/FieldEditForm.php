@@ -206,7 +206,7 @@ class FieldEditForm extends FormBase {
     try {
       $field->save();
       drupal_set_message($this->t('Updated field %label field settings.', array('%label' => $this->instance->label())));
-      $next_destination = FieldUI::getNextDestination();
+      $next_destination = FieldUI::getNextDestination($this->getRequest());
       if (empty($next_destination)) {
         $next_destination = $this->entityManager->getAdminPath($this->instance->entity_type, $this->instance->bundle) . '/fields';
       }

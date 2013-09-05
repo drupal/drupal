@@ -27,7 +27,7 @@ class FilterFormat extends String implements AllowedValuesInterface {
    * {@inheritdoc}
    */
   public function getPossibleValues(AccountInterface $account = NULL) {
-    return array_keys($this->getPossibleOptions());
+    return array_keys($this->getPossibleOptions($account));
   }
 
   /**

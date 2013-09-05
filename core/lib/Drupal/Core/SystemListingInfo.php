@@ -61,7 +61,7 @@ class SystemListingInfo extends SystemListing {
         // If the module or theme is incompatible with Drupal core, remove it
         // from the array for the current search directory, so it is not
         // overwritten when merged with the $files array.
-        if (isset($info['core']) && $info['core'] != DRUPAL_CORE_COMPATIBILITY) {
+        if (isset($info['core']) && $info['core'] != \Drupal::CORE_COMPATIBILITY) {
           unset($files_to_add[$file_key]);
         }
       }

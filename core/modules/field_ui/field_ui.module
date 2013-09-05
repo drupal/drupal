@@ -349,7 +349,7 @@ function field_ui_form_node_type_form_submit($form, &$form_state) {
 function field_ui_library_info() {
   $libraries['drupal.field_ui'] = array(
     'title' => 'Field UI',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'field_ui') . '/field_ui.js' => array(),
     ),

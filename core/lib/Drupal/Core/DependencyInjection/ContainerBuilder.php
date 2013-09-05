@@ -7,15 +7,15 @@
 
 namespace Drupal\Core\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder as BaseContainerBuilder;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerBuilder as SymfonyContainerBuilder;
+use Symfony\Component\DependencyInjection\Container as SymfonyContainer;
 
 /**
  * Drupal's dependency injection container builder.
  *
  * @todo Submit upstream patches to Symfony to not require these overrides.
  */
-class ContainerBuilder extends BaseContainerBuilder {
+class ContainerBuilder extends SymfonyContainerBuilder {
 
   /**
    * Overrides Symfony\Component\DependencyInjection\ContainerBuilder::addObjectResource().
@@ -39,7 +39,7 @@ class ContainerBuilder extends BaseContainerBuilder {
    *   services in a frozen builder.
    */
   public function set($id, $service, $scope = self::SCOPE_CONTAINER) {
-    Container::set($id, $service, $scope);
+    SymfonyContainer::set($id, $service, $scope);
   }
 
 }

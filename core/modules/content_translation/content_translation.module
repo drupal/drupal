@@ -356,7 +356,7 @@ function content_translation_library_info() {
   $path = drupal_get_path('module', 'content_translation');
   $libraries['drupal.content_translation.admin'] = array(
     'title' => 'Content translation UI',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/content_translation.admin.js' => array(),
     ),

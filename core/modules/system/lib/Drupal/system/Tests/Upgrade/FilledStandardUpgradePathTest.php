@@ -106,6 +106,10 @@ class FilledStandardUpgradePathTest extends UpgradePathTestBase {
       $this->assertTrue(isset($entity_view_modes['full']));
     }
 
+    // Ensure that taxonomy terms have a 'changed' timestamp.
+    $term = entity_load('taxonomy_term', 1);
+    $this->assertNotEqual($term->getChangedTime(), 0);
+
     // Check that user data has been migrated correctly.
     $query = db_query('SELECT * FROM {users_data}');
 

@@ -621,11 +621,9 @@ function system_menu() {
   );
   $items['admin'] = array(
     'title' => 'Administration',
-    'access arguments' => array('access administration pages'),
-    'page callback' => 'system_admin_menu_block_page',
+    'route_name' => 'system_admin',
     'weight' => 9,
     'menu_name' => 'admin',
-    'file' => 'system.admin.inc',
   );
   $items['admin/tasks'] = array(
     'title' => 'Tasks',
@@ -645,9 +643,7 @@ function system_menu() {
     'description' => 'Administer blocks, content types, menus, etc.',
     'position' => 'right',
     'weight' => -8,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_structure',
   );
   // Appearance.
   $items['admin/appearance'] = array(
@@ -736,9 +732,7 @@ function system_menu() {
     'description' => 'Media tools.',
     'position' => 'left',
     'weight' => -10,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_media',
   );
   $items['admin/config/media/file-system'] = array(
     'title' => 'File system',
@@ -759,9 +753,7 @@ function system_menu() {
     'description' => 'Tools related to web services.',
     'position' => 'right',
     'weight' => 0,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_services',
   );
   $items['admin/config/services/rss-publishing'] = array(
     'title' => 'RSS publishing',
@@ -775,9 +767,7 @@ function system_menu() {
     'description' => 'Development tools.',
     'position' => 'right',
     'weight' => -10,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_development',
   );
   $items['admin/config/development/maintenance'] = array(
     'title' => 'Maintenance mode',
@@ -804,9 +794,7 @@ function system_menu() {
     'description' => 'Regional settings, localization and translation.',
     'position' => 'left',
     'weight' => -5,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_regional',
   );
   $items['admin/config/regional/settings'] = array(
     'title' => 'Regional settings',
@@ -844,9 +832,7 @@ function system_menu() {
     'description' => 'Local site search, metadata and SEO.',
     'position' => 'left',
     'weight' => -10,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_search',
   );
 
   // System settings.
@@ -855,9 +841,7 @@ function system_menu() {
     'description' => 'General system related configuration.',
     'position' => 'right',
     'weight' => -20,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_system',
   );
   $items['admin/config/system/site-information'] = array(
     'title' => 'Site information',
@@ -876,9 +860,7 @@ function system_menu() {
     'title' => 'User interface',
     'description' => 'Tools that enhance the user interface.',
     'position' => 'right',
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_ui',
     'weight' => -15,
   );
   $items['admin/config/workflow'] = array(
@@ -886,29 +868,23 @@ function system_menu() {
     'description' => 'Content workflow, editorial workflow tools.',
     'position' => 'right',
     'weight' => 5,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_workflow',
   );
   $items['admin/config/content'] = array(
     'title' => 'Content authoring',
     'description' => 'Settings related to formatting and authoring content.',
     'position' => 'left',
     'weight' => -15,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_content',
   );
 
   // Reports.
   $items['admin/reports'] = array(
     'title' => 'Reports',
     'description' => 'View reports, updates, and errors.',
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access site reports'),
+    'route_name' => 'system_admin_reports',
     'weight' => 5,
     'position' => 'left',
-    'file' => 'system.admin.inc',
   );
   $items['admin/reports/status'] = array(
     'title' => 'Status report',
@@ -930,11 +906,9 @@ function system_menu() {
     $items['admin/config/regional/date-time/locale'] = array(
       'title' => 'Localize',
       'description' => 'Configure date formats for each locale',
-      'page callback' => 'system_date_format_language_overview_page',
-      'access arguments' => array('administer site configuration'),
       'type' => MENU_LOCAL_TASK,
       'weight' => -8,
-      'file' => 'system.admin.inc',
+      'route_name' => 'date_format_language_overview',
     );
     $items['admin/config/regional/date-time/locale/%/edit'] = array(
       'title' => 'Localize date formats',
@@ -976,7 +950,7 @@ function system_library_info() {
   // Drupal-specific JavaScript.
   $libraries['drupal'] = array(
     'title' => 'Drupal',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/drupal.js' => array('group' => JS_LIBRARY, 'weight' => -18),
     ),
@@ -988,7 +962,7 @@ function system_library_info() {
   // Drupal settings.
   $libraries['drupalSettings'] = array(
     'title' => 'Drupal Settings',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       array('type' => 'setting', 'data' => array()),
     ),
@@ -998,7 +972,7 @@ function system_library_info() {
   $libraries['drupal.ajax'] = array(
     'title' => 'Drupal AJAX',
     'website' => 'http://api.drupal.org/api/group/ajax/8',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/ajax.js' => array('group' => JS_LIBRARY, 'weight' => 2),
     ),
@@ -1014,7 +988,7 @@ function system_library_info() {
   // Drupal's Screen Reader change announcement utility.
   $libraries['drupal.announce'] = array(
     'title' => 'Drupal announce',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/announce.js' => array('group' => JS_LIBRARY),
     ),
@@ -1027,7 +1001,7 @@ function system_library_info() {
   // Drupal's batch API.
   $libraries['drupal.batch'] = array(
     'title' => 'Drupal batch API',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/batch.js' => array('group' => JS_DEFAULT, 'cache' => FALSE),
     ),
@@ -1044,7 +1018,7 @@ function system_library_info() {
   // Drupal's progress indicator.
   $libraries['drupal.progress'] = array(
     'title' => 'Drupal progress indicator',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/progress.js' => array('group' => JS_DEFAULT),
     ),
@@ -1058,7 +1032,7 @@ function system_library_info() {
   // Drupal's form library.
   $libraries['drupal.form'] = array(
     'title' => 'Drupal form library',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/form.js' => array('group' => JS_LIBRARY, 'weight' => 1),
     ),
@@ -1073,7 +1047,7 @@ function system_library_info() {
   // Drupal's dialog component.
   $libraries['drupal.dialog'] = array(
     'title' => 'Drupal Dialog',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/dialog.js' => array('group' => JS_LIBRARY),
     ),
@@ -1092,7 +1066,7 @@ function system_library_info() {
   // Drupal's integration between AJAX and dialogs.
   $libraries['drupal.dialog.ajax'] = array(
     'title' => 'Drupal Dialog AJAX',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/dialog.ajax.js' => array('group' => JS_LIBRARY, 'weight' => 3),
     ),
@@ -1108,7 +1082,7 @@ function system_library_info() {
   // Drupal's states library.
   $libraries['drupal.states'] = array(
     'title' => 'Drupal states',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/states.js' => array('group' => JS_LIBRARY, 'weight' => 1),
     ),
@@ -1123,7 +1097,7 @@ function system_library_info() {
   // Drupal's tabledrag library.
   $libraries['drupal.tabledrag'] = array(
     'title' => 'Drupal tabledrag',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/tabledrag.js' => array('group' => JS_LIBRARY, 'weight' => -1),
     ),
@@ -1140,7 +1114,7 @@ function system_library_info() {
   // Drupal's responsive table API.
   $libraries['drupal.tableresponsive'] = array(
     'title' => 'Drupal responsive table API',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/tableresponsive.js' => array('group' => JS_LIBRARY),
     ),
@@ -1154,7 +1128,7 @@ function system_library_info() {
   // Collapsible details.
   $libraries['drupal.collapse'] = array(
     'title' => 'Collapsible details',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/collapse.js' => array('group' => JS_DEFAULT),
     ),
@@ -1171,7 +1145,7 @@ function system_library_info() {
   // Drupal's autocomplete widget.
   $libraries['drupal.autocomplete'] = array(
     'title' => 'Drupal autocomplete',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/autocomplete.js' => array('group' => JS_DEFAULT),
     ),
@@ -1187,7 +1161,7 @@ function system_library_info() {
   // elements like the overlay.
   $libraries['drupal.displace'] = array(
     'title' => 'Drupal displace',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/displace.js' => array('group' => JS_LIBRARY),
     ),
@@ -1201,7 +1175,7 @@ function system_library_info() {
   // Manages tab orders in the document.
   $libraries['drupal.tabbingmanager'] = array(
     'title' => 'Drupal tabbing manager',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/tabbingmanager.js' => array('group' => JS_LIBRARY),
     ),
@@ -1216,7 +1190,7 @@ function system_library_info() {
   // A utility function to limit calls to a function with a given time.
   $libraries['drupal.debounce'] = array(
     'title' => 'Drupal debounce',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/debounce.js' => array('group' => JS_LIBRARY),
     ),
@@ -1330,7 +1304,7 @@ function system_library_info() {
   $libraries['matchmedia'] = array(
     'title' => 'window.matchMedia polyfill',
     'website' => 'http://drupal.org/node/1815602',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/matchmedia.js' => array(),
     ),
@@ -1401,7 +1375,7 @@ function system_library_info() {
   // Drupal's base CSS.
   $libraries['drupal.base'] = array(
     'title' => 'Drupal base CSS',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'css' => array(
       'core/misc/drupal.base.css' => array(
         'every_page' => TRUE,
@@ -1901,7 +1875,7 @@ function system_library_info() {
   );
   $libraries['drupal.tableselect'] = array(
     'title' => 'Tableselect',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/tableselect.js' => array(),
     ),
@@ -1912,7 +1886,7 @@ function system_library_info() {
   );
   $libraries['drupal.tableheader'] = array(
     'title' => 'Table header',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/tableheader.js' => array(),
     ),
@@ -1926,7 +1900,7 @@ function system_library_info() {
   );
   $libraries['drupal.timezone'] = array(
     'title' => 'Timezone',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/timezone.js' => array(),
     ),
@@ -1937,7 +1911,7 @@ function system_library_info() {
   );
   $libraries['drupal.machine-name'] = array(
     'title' => 'Machine name',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/machine-name.js' => array(),
     ),
@@ -1951,7 +1925,7 @@ function system_library_info() {
 
   $libraries['drupal.system'] = array(
     'title' => 'System',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'system') . '/system.js' => array(),
     ),
@@ -1964,7 +1938,7 @@ function system_library_info() {
   );
   $libraries['drupal.system.modules'] = array(
     'title' => 'System modules',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'system') . '/system.modules.js' => array(),
     ),
@@ -2321,55 +2295,6 @@ function system_preprocess_block(&$variables) {
       $variables['attributes']['role'] = 'navigation';
       $variables['attributes']['class'][] = 'block-menu';
   }
-}
-
-/**
- * Provide a single block on the administration overview page.
- *
- * @param $item
- *   The menu item to be displayed.
- */
-function system_admin_menu_block($item) {
-  $cache = &drupal_static(__FUNCTION__, array());
-  // If we are calling this function for a menu item that corresponds to a
-  // local task (for example, admin/tasks), then we want to retrieve the
-  // parent item's child links, not this item's (since this item won't have
-  // any).
-  if ($item['tab_root'] != $item['path']) {
-    $item = menu_get_item($item['tab_root_href']);
-  }
-
-  if (!isset($item['mlid'])) {
-    $menu_links = entity_load_multiple_by_properties('menu_link', array('router_path' => $item['path'], 'module' => 'system'));
-    $menu_link = reset($menu_links);
-    $item['mlid'] = $menu_link->id();
-    $item['menu_name'] = $menu_link->menu_name;
-  }
-
-  if (isset($cache[$item['mlid']])) {
-    return $cache[$item['mlid']];
-  }
-
-  $content = array();
-  $menu_links = entity_load_multiple_by_properties('menu_link', array('plid' => $item['mlid'], 'menu_name' => $item['menu_name'], 'hidden' => 0));
-  foreach ($menu_links as $link) {
-    _menu_link_translate($link);
-    if ($link['access']) {
-      // The link description, either derived from 'description' in
-      // hook_menu() or customized via menu module is used as title attribute.
-      if (!empty($link['localized_options']['attributes']['title'])) {
-        $link['description'] = $link['localized_options']['attributes']['title'];
-        unset($link['localized_options']['attributes']['title']);
-      }
-      // Prepare for sorting as in function _menu_tree_check_access().
-      // The weight is offset so it is always positive, with a uniform 5-digits.
-      $key = (50000 + $link['weight']) . ' ' . drupal_strtolower($link['title']) . ' ' . $link['mlid'];
-      $content[$key] = $link;
-    }
-  }
-  ksort($content);
-  $cache[$item['mlid']] = $content;
-  return $content;
 }
 
 /**

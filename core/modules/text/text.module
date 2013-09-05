@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityInterface;
 function text_library_info() {
   $libraries['drupal.text'] = array(
     'title' => 'Text',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'text') . '/text.js' => array(),
     ),

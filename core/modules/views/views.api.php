@@ -336,7 +336,7 @@ function hook_views_data_alter(array &$data) {
 function hook_views_query_substitutions(ViewExecutable $view) {
   // Example from views_views_query_substitutions().
   return array(
-    '***CURRENT_VERSION***' => VERSION,
+    '***CURRENT_VERSION***' => Drupal::VERSION,
     '***CURRENT_TIME***' => REQUEST_TIME,
     '***CURRENT_LANGUAGE***' => language(\Drupal\Core\Language\Language::TYPE_CONTENT)->id,
     '***DEFAULT_LANGUAGE***' => language_default()->id,

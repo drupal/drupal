@@ -1,0 +1,24 @@
+{#
+/**
+ * @file
+ * Two column template for the block add/edit form.
+ *
+ * This template will be used when a block edit form specifies 'block_edit_form'
+ * as its #theme callback.  Otherwise, by default, block add/edit forms will be
+ * themed by theme_form().
+ *
+ * Available variables:
+ * - form: The block add/edit form.
+ *
+ * @ingroup themeable
+ */
+#}
+{% hide(form.place_blocks) %}
+<div class="layout-block-list clearfix">
+  <div class="layout-region block-list-primary">
+    {{ form }}
+  </div>
+  <div class="layout-region block-list-secondary">
+    {{ form.place_blocks }}
+  </div>
+</div>

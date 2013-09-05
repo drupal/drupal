@@ -7,11 +7,9 @@
 
 use Drupal\file\Entity\File;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Template\Attribute;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\file\FileUsage\FileUsageInterface;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\ReplaceCommand;
 
 // Load all Field module hooks for File.
 require_once __DIR__ . '/file.field.inc';
@@ -621,7 +619,7 @@ function file_file_download($uri, $field_type = 'file') {
   }
 
   // Find out which (if any) fields of this type contain the file.
-  $references = file_get_file_references($file, NULL, FIELD_LOAD_CURRENT, $field_type);
+  $references = file_get_file_references($file, NULL, EntityStorageControllerInterface::FIELD_LOAD_CURRENT, $field_type);
 
   // Stop processing if there are no references in order to avoid returning
   // headers for files controlled by other modules. Make an exception for
@@ -1158,6 +1156,7 @@ function file_managed_file_process($element, &$form_state, $form) {
     '#name' => $parents_prefix . '_upload_button',
     '#type' => 'submit',
     '#value' => t('Upload'),
+    '#attributes' => array('class' => array('js-hide')),
     '#validate' => array(),
     '#submit' => array('file_managed_file_submit'),
     '#limit_validation_errors' => array($element['#parents']),
@@ -1826,8 +1825,10 @@ function file_icon_map(File $file) {
  *   reference check to the given field.
  * @param $age
  *   (optional) A constant that specifies which references to count. Use
- *   FIELD_LOAD_REVISION to retrieve all references within all revisions or
- *   FIELD_LOAD_CURRENT to retrieve references only in the current revisions.
+ *   EntityStorageControllerInterface::FIELD_LOAD_REVISION to retrieve all
+ *   references within all revisions or
+ *   EntityStorageControllerInterface::FIELD_LOAD_CURRENT to retrieve references
+ *   only in the current revisions.
  * @param $field_type
  *   (optional) The name of a field type. If given, limits the reference check
  *   to fields of the given type. If both $field and $field_type is given but
@@ -1838,7 +1839,7 @@ function file_icon_map(File $file) {
  *   A multidimensional array. The keys are field_name, entity_type,
  *   entity_id and the value is an entity referencing this file.
  */
-function file_get_file_references(File $file, $field = NULL, $age = FIELD_LOAD_REVISION, $field_type = 'file') {
+function file_get_file_references(File $file, $field = NULL, $age = EntityStorageControllerInterface::FIELD_LOAD_REVISION, $field_type = 'file') {
   $references = &drupal_static(__FUNCTION__, array());
   $field_columns = &drupal_static(__FUNCTION__ . ':field_columns', array());
 
@@ -1852,7 +1853,7 @@ function file_get_file_references(File $file, $field = NULL, $age = FIELD_LOAD_R
       // The usage table contains usage of every revision. If we are looking
       // for every revision or the entity does not support revisions then
       // every usage is already a match.
-      $match_entity_type = $age == FIELD_LOAD_REVISION || !isset($entity_info['entity_keys']['revision']);
+      $match_entity_type = $age == EntityStorageControllerInterface::FIELD_LOAD_REVISION || !isset($entity_info['entity_keys']['revision']);
       $entities = entity_load_multiple($entity_type, array_keys($entity_ids));
       foreach ($entities as $entity) {
         $bundle = $entity->bundle();
@@ -1921,7 +1922,7 @@ function file_get_file_references(File $file, $field = NULL, $age = FIELD_LOAD_R
 function file_library_info() {
   $libraries['drupal.file'] = array(
     'title' => 'File',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'file') . '/file.js' => array(),
     ),

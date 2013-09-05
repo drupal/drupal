@@ -27,15 +27,50 @@ class Broken extends FilterPluginBase {
   }
 
   public function adminLabel($short = FALSE) {
-    return t('Broken/missing handler');
+    $args = array(
+      '@module' => $this->definition['original_configuration']['provider'],
+    );
+    return $this->isOptional() ? t('Optional handler is missing (Module: @module) …', $args) : t('Broken/missing handler (Module: @module) …', $args);
   }
 
   public function defineOptions() { return array(); }
   public function ensureMyTable() { /* No table to ensure! */ }
   public function query($group_by = FALSE) { /* No query to run */ }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildOptionsForm(&$form, &$form_state) {
-    $form['markup'] = array(
-      '#markup' => '<div class="form-item description">' . t('The handler for this item is broken or missing and cannot be used. If a module provided the handler and was disabled, re-enabling the module may restore it. Otherwise, you should probably delete this item.') . '</div>',
+    if ($this->isOptional()) {
+      $description_top = t('The handler for this item is optional. The following details are available:');
+    }
+    else {
+      $description_top = t('The handler for this item is broken or missing. The following details are available:');
+    }
+
+    $items = array(
+      t('Module: @module', array('@module' => $this->definition['original_configuration']['provider'])),
+      t('Table: @table', array('@table' => $this->definition['original_configuration']['table'])),
+      t('Field: @field', array('@field' => $this->definition['original_configuration']['field'])),
+    );
+
+    $description_bottom = t('Enabling the appropriate module will may solve this issue. Otherwise, check to see if there is a module update available.');
+
+    $form['description'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array('form-item', 'description'),
+      ),
+      'description_top' => array(
+        '#markup' => '<p>' . $description_top . '</p>',
+      ),
+      'detail_list' => array(
+        '#theme' => 'item_list',
+        '#items' => $items,
+      ),
+      'description_bottom' => array(
+        '#markup' => '<p>' . $description_bottom . '</p>',
+      ),
     );
   }
 

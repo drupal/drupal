@@ -15,23 +15,6 @@ use Drupal\Core\Entity\Field\FieldItemBase;
 abstract class ConfigFieldItemBase extends FieldItemBase implements ConfigFieldItemInterface {
 
   /**
-   * The Field instance definition.
-   *
-   * @var \Drupal\field\Entity\FieldInstance
-   */
-  public $instance;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getInstance() {
-    if (!isset($this->instance) && $parent = $this->getParent()) {
-      $this->instance = $parent->getInstance();
-    }
-    return $this->instance;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function settingsForm(array $form, array &$form_state, $has_data) {

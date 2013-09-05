@@ -79,7 +79,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    *
    * @var int
    */
-  protected $core = DRUPAL_CORE_COMPATIBILITY;
+  protected $core = \Drupal::CORE_COMPATIBILITY;
 
   /**
    * Stores all display handlers of this view.

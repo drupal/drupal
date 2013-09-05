@@ -16,13 +16,6 @@ use Drupal\field\FieldInterface;
 interface ConfigFieldItemInterface extends FieldItemInterface {
 
   /**
-   * Returns the field instance definition.
-   *
-   * @var \Drupal\field\FieldInstanceInterface
-   */
-  public function getInstance();
-
-  /**
    * Returns the schema for the field.
    *
    * This method is static, because the field schema information is needed on

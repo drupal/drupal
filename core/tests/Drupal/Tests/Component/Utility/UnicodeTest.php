@@ -12,6 +12,11 @@ use Drupal\Component\Utility\Unicode;
 
 /**
  * Test unicode handling features implemented in Unicode component.
+ *
+ * @see \Drupal\Component\Utility\Unicode
+ *
+ * @group Drupal
+ * @group Unicode
  */
 class UnicodeTest extends UnitTestCase {
 
@@ -85,9 +90,10 @@ class UnicodeTest extends UnitTestCase {
   public function providerTestMimeHeader() {
     return array(
       array('tést.txt', '=?UTF-8?B?dMOpc3QudHh0?='),
+      // Simple ASCII characters.
+      array('ASCII', 'ASCII'),
     );
   }
-
 
   /**
    * Tests Unicode::strtolower().
@@ -193,6 +199,11 @@ class UnicodeTest extends UnitTestCase {
    * @dataProvider providerStrlen
    */
   public function testStrlen($text, $expected) {
+    // Run through multibyte code path.
+    Unicode::setStatus(Unicode::STATUS_MULTIBYTE);
+    $this->assertEquals($expected, Unicode::strlen($text));
+    // Run through singlebyte code path.
+    Unicode::setStatus(Unicode::STATUS_SINGLEBYTE);
     $this->assertEquals($expected, Unicode::strlen($text));
   }
 
@@ -217,6 +228,11 @@ class UnicodeTest extends UnitTestCase {
    * @dataProvider providerSubstr
    */
   public function testSubstr($text, $start, $length, $expected) {
+    // Run through multibyte code path.
+    Unicode::setStatus(Unicode::STATUS_MULTIBYTE);
+    $this->assertEquals($expected, Unicode::substr($text, $start, $length));
+    // Run through singlebyte code path.
+    Unicode::setStatus(Unicode::STATUS_SINGLEBYTE);
     $this->assertEquals($expected, Unicode::substr($text, $start, $length));
   }
 
@@ -330,6 +346,109 @@ class UnicodeTest extends UnitTestCase {
       array('Help! Help! Help!', 4, 'Hel…', TRUE, TRUE),
       array('Help! Help! Help!', 3, 'He…', TRUE, TRUE),
       array('Help! Help! Help!', 2, 'H…', TRUE, TRUE),
+    );
+  }
+
+  /**
+   * Tests Unicode::truncateBytes().
+   *
+   * @param string $text
+   *   The string to truncate.
+   * @param int $max_length
+   *   The upper limit on the returned string length.
+   * @param string $expected
+   *   The expected return from Unicode::truncateBytes().
+   *
+   * @dataProvider providerTestTruncateBytes
+   */
+  public function testTruncateBytes($text, $max_length, $expected) {
+    $this->assertEquals($expected, Unicode::truncateBytes($text, $max_length), 'The string was not correctly truncated.');
+  }
+
+  /**
+   * Provides data for self::testTruncateBytes().
+   *
+   * @return array
+   *   An array of arrays, each containing the parameters to
+   *   self::testTruncateBytes().
+   */
+  public function providerTestTruncateBytes() {
+    return array(
+      // String shorter than max length.
+      array('Short string', 42, 'Short string'),
+      // Simple string longer than max length.
+      array('Longer string than previous.', 10, 'Longer str'),
+      // Unicode.
+      array('以呂波耳・ほへとち。リヌルヲ。', 10, '以呂波'),
+    );
+  }
+
+  /**
+   * Tests Unicode::validateUtf8().
+   *
+   * @param string $text
+   *   The text to validate.
+   * @param boolean $expected
+   *   The expected return value from Unicode::validateUtf8().
+   * @param string $message
+   *   The message to display on failure.
+   *
+   * @dataProvider providerTestValidateUtf8
+   */
+  public function testValidateUtf8($text, $expected, $message) {
+    $this->assertEquals($expected, Unicode::validateUtf8($text), $message);
+  }
+
+  /**
+   * Provides data for self::testValidateUtf8().
+   *
+   * @return array
+   *   An array of arrays, each containing the parameters for
+   *   self::testValidateUtf8().
+   *
+   * Invalid UTF-8 examples sourced from http://stackoverflow.com/a/11709412/109119.
+   */
+  public function providerTestValidateUtf8() {
+    return array(
+      // Empty string.
+      array('', TRUE, 'An empty string did not validate.'),
+      // Simple text string.
+      array('Simple text.', TRUE, 'A simple ASCII text string did not validate.'),
+      // Invalid UTF-8, overlong 5 byte encoding.
+      array(chr(0xF8) . chr(0x80) . chr(0x80) . chr(0x80) . chr(0x80), FALSE, 'Invalid UTF-8 was validated.'),
+      // High code-point without trailing characters.
+      array(chr(0xD0) . chr(0x01), FALSE, 'Invalid UTF-8 was validated.'),
+    );
+  }
+
+  /**
+   * Tests Unicode::convertToUtf8().
+   *
+   * @param string $data
+   *   The data to be converted.
+   * @param string $encoding
+   *   The encoding the data is in.
+   * @param string|bool $expected
+   *   The expected result.
+   *
+   * @dataProvider providerTestConvertToUtf8
+   */
+  public function testConvertToUtf8($data, $encoding, $expected) {
+    $this->assertEquals($expected, Unicode::convertToUtf8($data, $encoding));
+  }
+
+  /**
+   * Provides data to self::testConvertToUtf8().
+   *
+   * @return array
+   *   An array of arrays, each containg the parameters to
+   *   self::testConvertUtf8().  }
+   */
+  public function providerTestConvertToUtf8() {
+    return array(
+      array(chr(0x97), 'Windows-1250', '—'),
+      array(chr(0x99), 'Windows-1250', '™'),
+      array(chr(0x80), 'Windows-1250', '€'),
     );
   }
 

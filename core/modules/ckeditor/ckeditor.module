@@ -42,7 +42,7 @@ function ckeditor_library_info() {
   );
   $libraries['drupal.ckeditor'] = array(
     'title' => 'Drupal behavior to enable CKEditor on textareas.',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $module_path . '/js/ckeditor.js' => array(),
       array('data' => $settings, 'type' => 'setting'),
@@ -58,7 +58,7 @@ function ckeditor_library_info() {
   );
   $libraries['drupal.ckeditor.admin'] = array(
     'title' => 'Drupal behavior for drag-and-drop CKEditor toolbar builder UI.',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $module_path . '/js/ckeditor.admin.js' => array(),
     ),
@@ -81,7 +81,7 @@ function ckeditor_library_info() {
   );
   $libraries['drupal.ckeditor.drupalimage.admin'] = array(
     'title' => 'Only show the "drupalimage" plugin settings when its button is enabled.',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $module_path . '/js/ckeditor.drupalimage.admin.js' => array(),
     ),
@@ -95,7 +95,7 @@ function ckeditor_library_info() {
   );
   $libraries['drupal.ckeditor.stylescombo.admin'] = array(
     'title' => 'Only show the "stylescombo" plugin settings when its button is enabled.',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $module_path . '/js/ckeditor.stylescombo.admin.js' => array(),
     ),
