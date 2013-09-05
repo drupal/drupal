@@ -1456,7 +1456,7 @@ function filter_library_info() {
 
   $libraries['drupal.filter.admin'] = array(
     'title' => 'Filter',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/filter.admin.js' => array(),
     ),
@@ -1472,7 +1472,7 @@ function filter_library_info() {
   );
   $libraries['drupal.filter.filter_html.admin'] = array(
     'title' => 'Automatic "Limit allowed HTML tags" filter setting updating.',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/filter.filter_html.admin.js' => array(),
     ),
@@ -1484,7 +1484,7 @@ function filter_library_info() {
   );
   $libraries['drupal.filter'] = array(
     'title' => 'Filter',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/filter.js' => array(),
     ),
@@ -1499,7 +1499,7 @@ function filter_library_info() {
   );
   $libraries['caption'] = array(
     'title' => 'Captions for images and alignments',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'css' => array(
       $path . '/css/filter.caption.css',
     ),

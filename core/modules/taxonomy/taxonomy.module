@@ -1195,7 +1195,7 @@ function taxonomy_taxonomy_term_delete(Term $term) {
 function taxonomy_library_info() {
   $libraries['drupal.taxonomy'] = array(
     'title' => 'Taxonomy',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'taxonomy') . '/taxonomy.js' => array(),
     ),

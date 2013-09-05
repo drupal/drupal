@@ -584,7 +584,7 @@ function language_delete($langcode) {
 function language_library_info() {
   $libraries['language.admin'] = array(
     'title' => 'Language detection admin',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'language') . '/language.admin.js' => array(),
     ),

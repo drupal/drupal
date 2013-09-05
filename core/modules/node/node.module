@@ -2505,7 +2505,7 @@ function node_language_delete($language) {
 function node_library_info() {
   $libraries['drupal.node'] = array(
     'title' => 'Node',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'node') . '/node.js' => array(),
     ),
@@ -2518,7 +2518,7 @@ function node_library_info() {
   );
   $libraries['drupal.node.preview'] = array(
     'title' => 'Node preview',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'node') . '/node.preview.js' => array(),
     ),
@@ -2529,7 +2529,7 @@ function node_library_info() {
   );
   $libraries['drupal.content_types'] = array(
     'title' => 'Content types',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'node') . '/content_types.js' => array(),
     ),

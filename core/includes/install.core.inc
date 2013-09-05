@@ -1689,8 +1689,8 @@ function install_check_localization_server($uri) {
  *   Associative array containing 'core' and 'version' of the release.
  */
 function install_get_localization_release() {
-  if (strpos(VERSION, 'dev')) {
-    list($version, ) = explode('-', VERSION);
+  if (strpos(Drupal::VERSION, 'dev')) {
+    list($version, ) = explode('-', Drupal::VERSION);
     list($major, $minor) = explode('.', $version);
 
     // Calculate the major and minor release numbers to fall back to.
@@ -1704,7 +1704,7 @@ function install_get_localization_release() {
     $release = "$major.$minor";
   }
   else {
-    $release = VERSION;
+    $release = Drupal::VERSION;
   }
 
   return array(

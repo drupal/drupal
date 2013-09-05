@@ -464,7 +464,7 @@ class ModuleHandler implements ModuleHandlerInterface {
     // supports. Also, op is optional and defaults to equals.
     $p_op = '(?<operation>!=|==|=|<|<=|>|>=|<>)?';
     // Core version is always optional: 8.x-2.x and 2.x is treated the same.
-    $p_core = '(?:' . preg_quote(DRUPAL_CORE_COMPATIBILITY) . '-)?';
+    $p_core = '(?:' . preg_quote(\Drupal::CORE_COMPATIBILITY) . '-)?';
     $p_major = '(?<major>\d+)';
     // By setting the minor version to x, branches can be matched.
     $p_minor = '(?<minor>(?:\d+|x)(?:-[A-Za-z]+\d+)?)';

@@ -354,7 +354,7 @@ function _drupal_default_html_head() {
   );
   // Show Drupal and the major version number in the META GENERATOR tag.
   // Get the major version.
-  list($version, ) = explode('.', VERSION);
+  list($version, ) = explode('.', Drupal::VERSION);
   $elements['system_meta_generator'] = array(
     '#type' => 'html_tag',
     '#tag' => 'meta',
@@ -4614,7 +4614,7 @@ function drupal_parse_info_file($filename) {
       $parser = new Parser();
       $info[$filename] = $parser->parse(file_get_contents($filename));
       if (isset($info[$filename]['version']) && $info[$filename]['version'] === 'VERSION') {
-        $info[$filename]['version'] = VERSION;
+        $info[$filename]['version'] = Drupal::VERSION;
       }
     }
   }

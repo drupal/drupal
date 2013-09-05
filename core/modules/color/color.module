@@ -740,7 +740,7 @@ function _color_rgb2hsl($rgb) {
 function color_library_info() {
   $libraries['drupal.color'] = array(
     'title' => 'Color',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'color') . '/color.js' => array(),
     ),
@@ -754,7 +754,7 @@ function color_library_info() {
   );
   $libraries['drupal.color.preview'] = array(
     'title' => 'Color preview',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'color') . '/preview.js' => array(),
     ),

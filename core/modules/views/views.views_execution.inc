@@ -15,7 +15,7 @@ use Drupal\views\ViewExecutable;
  */
 function views_views_query_substitutions(ViewExecutable $view) {
   return array(
-    '***CURRENT_VERSION***' => VERSION,
+    '***CURRENT_VERSION***' => Drupal::VERSION,
     '***CURRENT_TIME***' => REQUEST_TIME,
     '***CURRENT_LANGUAGE***' => language(Language::TYPE_CONTENT)->id,
     '***DEFAULT_LANGUAGE***' => language_default()->id,

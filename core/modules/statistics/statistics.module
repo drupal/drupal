@@ -251,7 +251,7 @@ function statistics_preprocess_block(&$variables) {
 function statistics_library_info() {
   $libraries['drupal.statistics'] = array(
     'title' => 'Statistics',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'statistics') . '/statistics.js' => array(
         'scope' => 'footer'

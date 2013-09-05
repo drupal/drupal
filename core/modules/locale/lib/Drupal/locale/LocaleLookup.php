@@ -97,7 +97,7 @@ class LocaleLookup extends CacheCollector {
       $this->stringStorage->createString(array(
         'source' => $offset,
         'context' => $this->context,
-        'version' => VERSION
+        'version' => \Drupal::VERSION
       ))->addLocation('path', request_uri())->save();
       $value = TRUE;
     }

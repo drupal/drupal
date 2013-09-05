@@ -594,7 +594,7 @@ function translation_language_switch_links_alter(array &$links, $type, $path) {
 function translation_library_info() {
   $libraries['drupal.translation'] = array(
     'title' => 'Translation',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'translation') . '/translation.js' => array(),
     ),

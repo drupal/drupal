@@ -77,6 +77,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Drupal {
 
   /**
+   * The current system version.
+   */
+  const VERSION = '8.0-dev';
+
+  /**
+   * Core API compatibility.
+   */
+  const CORE_COMPATIBILITY = '8.x';
+
+  /**
    * The currently active container object.
    *
    * @var \Symfony\Component\DependencyInjection\ContainerInterface

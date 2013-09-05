@@ -193,7 +193,7 @@ function views_ui_library_info() {
 
   $libraries['views_ui.admin'] = array(
     'title' => 'Views UI ADMIN',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . 'ajax.js' => array('group' => JS_DEFAULT),
       $path . 'views-admin.js' => array('group' => JS_DEFAULT),

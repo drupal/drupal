@@ -1782,7 +1782,7 @@ function comment_file_download_access($field, EntityInterface $entity, File $fil
 function comment_library_info() {
   $libraries['drupal.comment'] = array(
     'title' => 'Comment',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'comment') . '/comment-node-form.js' => array(),
     ),

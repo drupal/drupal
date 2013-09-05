@@ -55,7 +55,7 @@ function system_themes_page() {
      // Ensure this theme is compatible with this version of core.
      // Require the 'content' region to make sure the main page
      // content has a common place in all themes.
-      $theme->incompatible_core = !isset($theme->info['core']) || ($theme->info['core'] != DRUPAL_CORE_COMPATIBILITY) || (!isset($theme->info['regions']['content']));
+      $theme->incompatible_core = !isset($theme->info['core']) || ($theme->info['core'] != Drupal::CORE_COMPATIBILITY) || (!isset($theme->info['regions']['content']));
       $theme->incompatible_php = version_compare(phpversion(), $theme->info['php']) < 0;
       // Confirmed that the base theme is available.
       $theme->incompatible_base = (isset($theme->info['base theme']) && !isset($themes[$theme->info['base theme']]));
@@ -714,7 +714,7 @@ function theme_system_themes_page($variables) {
 
       // Make sure to provide feedback on compatibility.
       if (!empty($theme->incompatible_core)) {
-        $output .= '<div class="incompatible">' . t('This version is not compatible with Drupal !core_version and should be replaced.', array('!core_version' => DRUPAL_CORE_COMPATIBILITY)) . '</div>';
+        $output .= '<div class="incompatible">' . t('This version is not compatible with Drupal !core_version and should be replaced.', array('!core_version' => Drupal::CORE_COMPATIBILITY)) . '</div>';
       }
       elseif (!empty($theme->incompatible_php)) {
         if (substr_count($theme->info['php'], '.') < 2) {

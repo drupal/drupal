@@ -14,7 +14,7 @@ function seven_library_info() {
   $path = drupal_get_path('theme', 'seven');
 
   $libraries['install-page'] = array(
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/js/mobile.install.js' => array(
         'group' => JS_THEME,

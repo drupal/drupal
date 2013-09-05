@@ -1922,7 +1922,7 @@ function file_get_file_references(File $file, $field = NULL, $age = EntityStorag
 function file_library_info() {
   $libraries['drupal.file'] = array(
     'title' => 'File',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'file') . '/file.js' => array(),
     ),

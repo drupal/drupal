@@ -29,16 +29,6 @@ use Drupal\Core\Session\UserSession;
  */
 
 /**
- * The current system version.
- */
-const VERSION = '8.0-dev';
-
-/**
- * Core API compatibility.
- */
-const DRUPAL_CORE_COMPATIBILITY = '8.x';
-
-/**
  * Minimum supported version of PHP.
  */
 const DRUPAL_MINIMUM_PHP = '5.3.10';

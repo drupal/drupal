@@ -950,7 +950,7 @@ function system_library_info() {
   // Drupal-specific JavaScript.
   $libraries['drupal'] = array(
     'title' => 'Drupal',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/drupal.js' => array('group' => JS_LIBRARY, 'weight' => -18),
     ),
@@ -962,7 +962,7 @@ function system_library_info() {
   // Drupal settings.
   $libraries['drupalSettings'] = array(
     'title' => 'Drupal Settings',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       array('type' => 'setting', 'data' => array()),
     ),
@@ -972,7 +972,7 @@ function system_library_info() {
   $libraries['drupal.ajax'] = array(
     'title' => 'Drupal AJAX',
     'website' => 'http://api.drupal.org/api/group/ajax/8',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/ajax.js' => array('group' => JS_LIBRARY, 'weight' => 2),
     ),
@@ -988,7 +988,7 @@ function system_library_info() {
   // Drupal's Screen Reader change announcement utility.
   $libraries['drupal.announce'] = array(
     'title' => 'Drupal announce',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/announce.js' => array('group' => JS_LIBRARY),
     ),
@@ -1001,7 +1001,7 @@ function system_library_info() {
   // Drupal's batch API.
   $libraries['drupal.batch'] = array(
     'title' => 'Drupal batch API',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/batch.js' => array('group' => JS_DEFAULT, 'cache' => FALSE),
     ),
@@ -1018,7 +1018,7 @@ function system_library_info() {
   // Drupal's progress indicator.
   $libraries['drupal.progress'] = array(
     'title' => 'Drupal progress indicator',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/progress.js' => array('group' => JS_DEFAULT),
     ),
@@ -1032,7 +1032,7 @@ function system_library_info() {
   // Drupal's form library.
   $libraries['drupal.form'] = array(
     'title' => 'Drupal form library',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/form.js' => array('group' => JS_LIBRARY, 'weight' => 1),
     ),
@@ -1047,7 +1047,7 @@ function system_library_info() {
   // Drupal's dialog component.
   $libraries['drupal.dialog'] = array(
     'title' => 'Drupal Dialog',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/dialog.js' => array('group' => JS_LIBRARY),
     ),
@@ -1066,7 +1066,7 @@ function system_library_info() {
   // Drupal's integration between AJAX and dialogs.
   $libraries['drupal.dialog.ajax'] = array(
     'title' => 'Drupal Dialog AJAX',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/dialog.ajax.js' => array('group' => JS_LIBRARY, 'weight' => 3),
     ),
@@ -1082,7 +1082,7 @@ function system_library_info() {
   // Drupal's states library.
   $libraries['drupal.states'] = array(
     'title' => 'Drupal states',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/states.js' => array('group' => JS_LIBRARY, 'weight' => 1),
     ),
@@ -1097,7 +1097,7 @@ function system_library_info() {
   // Drupal's tabledrag library.
   $libraries['drupal.tabledrag'] = array(
     'title' => 'Drupal tabledrag',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/tabledrag.js' => array('group' => JS_LIBRARY, 'weight' => -1),
     ),
@@ -1114,7 +1114,7 @@ function system_library_info() {
   // Drupal's responsive table API.
   $libraries['drupal.tableresponsive'] = array(
     'title' => 'Drupal responsive table API',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/tableresponsive.js' => array('group' => JS_LIBRARY),
     ),
@@ -1128,7 +1128,7 @@ function system_library_info() {
   // Collapsible details.
   $libraries['drupal.collapse'] = array(
     'title' => 'Collapsible details',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/collapse.js' => array('group' => JS_DEFAULT),
     ),
@@ -1145,7 +1145,7 @@ function system_library_info() {
   // Drupal's autocomplete widget.
   $libraries['drupal.autocomplete'] = array(
     'title' => 'Drupal autocomplete',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/autocomplete.js' => array('group' => JS_DEFAULT),
     ),
@@ -1161,7 +1161,7 @@ function system_library_info() {
   // elements like the overlay.
   $libraries['drupal.displace'] = array(
     'title' => 'Drupal displace',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/displace.js' => array('group' => JS_LIBRARY),
     ),
@@ -1175,7 +1175,7 @@ function system_library_info() {
   // Manages tab orders in the document.
   $libraries['drupal.tabbingmanager'] = array(
     'title' => 'Drupal tabbing manager',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/tabbingmanager.js' => array('group' => JS_LIBRARY),
     ),
@@ -1190,7 +1190,7 @@ function system_library_info() {
   // A utility function to limit calls to a function with a given time.
   $libraries['drupal.debounce'] = array(
     'title' => 'Drupal debounce',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/debounce.js' => array('group' => JS_LIBRARY),
     ),
@@ -1304,7 +1304,7 @@ function system_library_info() {
   $libraries['matchmedia'] = array(
     'title' => 'window.matchMedia polyfill',
     'website' => 'http://drupal.org/node/1815602',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/matchmedia.js' => array(),
     ),
@@ -1375,7 +1375,7 @@ function system_library_info() {
   // Drupal's base CSS.
   $libraries['drupal.base'] = array(
     'title' => 'Drupal base CSS',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'css' => array(
       'core/misc/drupal.base.css' => array(
         'every_page' => TRUE,
@@ -1875,7 +1875,7 @@ function system_library_info() {
   );
   $libraries['drupal.tableselect'] = array(
     'title' => 'Tableselect',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/tableselect.js' => array(),
     ),
@@ -1886,7 +1886,7 @@ function system_library_info() {
   );
   $libraries['drupal.tableheader'] = array(
     'title' => 'Table header',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/tableheader.js' => array(),
     ),
@@ -1900,7 +1900,7 @@ function system_library_info() {
   );
   $libraries['drupal.timezone'] = array(
     'title' => 'Timezone',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/timezone.js' => array(),
     ),
@@ -1911,7 +1911,7 @@ function system_library_info() {
   );
   $libraries['drupal.machine-name'] = array(
     'title' => 'Machine name',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       'core/misc/machine-name.js' => array(),
     ),
@@ -1925,7 +1925,7 @@ function system_library_info() {
 
   $libraries['drupal.system'] = array(
     'title' => 'System',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'system') . '/system.js' => array(),
     ),
@@ -1938,7 +1938,7 @@ function system_library_info() {
   );
   $libraries['drupal.system.modules'] = array(
     'title' => 'System modules',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'system') . '/system.modules.js' => array(),
     ),

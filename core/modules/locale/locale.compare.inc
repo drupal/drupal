@@ -92,7 +92,7 @@ function locale_translation_build_projects() {
     // For every project store information.
     $data += array(
       'version' => isset($data['info']['version']) ? $data['info']['version'] : '',
-      'core' => isset($data['info']['core']) ? $data['info']['core'] : DRUPAL_CORE_COMPATIBILITY,
+      'core' => isset($data['info']['core']) ? $data['info']['core'] : Drupal::CORE_COMPATIBILITY,
       // A project can provide the path and filename pattern to download the
       // gettext file. Use the default if not.
       'server_pattern' => isset($data['info']['interface translation server pattern']) && $data['info']['interface translation server pattern'] ? $data['info']['interface translation server pattern'] : $default_server['pattern'],

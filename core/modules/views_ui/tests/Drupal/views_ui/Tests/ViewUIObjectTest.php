@@ -13,10 +13,6 @@ use Drupal\views\ViewExecutable;
 use Drupal\views_ui\ViewUI;
 use Symfony\Component\DependencyInjection\Container;
 
-if (!defined('DRUPAL_CORE_COMPATIBILITY')) {
-  define('DRUPAL_CORE_COMPATIBILITY', '8.x');
-}
-
 /**
  * Tests the ViewUI class.
  *

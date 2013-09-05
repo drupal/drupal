@@ -222,10 +222,10 @@ class ModulesListForm extends FormBase {
     $status = '';
 
     // Check the core compatibility.
-    if ($module->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
+    if ($module->info['core'] != \Drupal::CORE_COMPATIBILITY) {
       $compatible = FALSE;
       $status .= $this->t('This version is not compatible with Drupal !core_version and should be replaced.', array(
-        '!core_version' => DRUPAL_CORE_COMPATIBILITY,
+        '!core_version' => \Drupal::CORE_COMPATIBILITY,
       ));
     }
 
@@ -259,7 +259,7 @@ class ModulesListForm extends FormBase {
         $name = $modules[$dependency]->info['name'];
         // Disable the module's checkbox if it is incompatible with the
         // dependency's version.
-        if ($incompatible_version = drupal_check_incompatibility($version, str_replace(DRUPAL_CORE_COMPATIBILITY . '-', '', $modules[$dependency]->info['version']))) {
+        if ($incompatible_version = drupal_check_incompatibility($version, str_replace(\Drupal::CORE_COMPATIBILITY . '-', '', $modules[$dependency]->info['version']))) {
           $row['#requires'][$dependency] = $this->t('@module (<span class="admin-missing">incompatible with</span> version @version)', array(
             '@module' => $name . $incompatible_version,
             '@version' => $modules[$dependency]->info['version'],
@@ -268,7 +268,7 @@ class ModulesListForm extends FormBase {
         }
         // Disable the checkbox if the dependency is incompatible with this
         // version of Drupal core.
-        elseif ($modules[$dependency]->info['core'] != DRUPAL_CORE_COMPATIBILITY) {
+        elseif ($modules[$dependency]->info['core'] != \Drupal::CORE_COMPATIBILITY) {
           $row['#requires'][$dependency] = $this->t('@module (<span class="admin-missing">incompatible with</span> this version of Drupal core)', array(
             '@module' => $name,
           ));

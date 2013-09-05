@@ -2099,7 +2099,7 @@ function user_library_info() {
   $path = drupal_get_path('module', 'user');
   $libraries['drupal.user'] = array(
     'title' => 'User',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/user.js' => array(),
     ),
@@ -2115,7 +2115,7 @@ function user_library_info() {
 
   $libraries['drupal.user.permissions'] = array(
     'title' => 'User permissions',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/user.permissions.js' => array(),
     ),
@@ -2128,7 +2128,7 @@ function user_library_info() {
 
   $libraries['drupal.user.icons'] = array(
     'title' => 'User icon styling',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'css' => array(
       $path . '/css/user.icons.css' => array(),
     ),

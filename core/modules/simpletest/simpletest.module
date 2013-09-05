@@ -686,7 +686,7 @@ function simpletest_mail_alter(&$message) {
 function simpletest_library_info() {
   $libraries['drupal.simpletest'] = array(
     'title' => 'Simpletest',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'simpletest') . '/simpletest.js' => array(),
     ),

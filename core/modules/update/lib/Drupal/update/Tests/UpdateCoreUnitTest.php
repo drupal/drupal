@@ -45,20 +45,20 @@ class UpdateCoreUnitTest extends UnitTestBase {
     $project['info']['project status url'] = 'http://www.example.com';
     $project['includes'] = array('module1' => 'Module 1', 'module2' => 'Module 2');
     $site_key = '';
-    $expected = 'http://www.example.com/' . $project['name'] . '/' . DRUPAL_CORE_COMPATIBILITY;
+    $expected = 'http://www.example.com/' . $project['name'] . '/' . \Drupal::CORE_COMPATIBILITY;
     $url = _update_build_fetch_url($project, $site_key);
     $this->assertEqual($url, $expected, "'$url' when no site_key provided should be '$expected'.");
 
     //For disabled projects it shouldn't add the site key either.
     $site_key = 'site_key';
     $project['project_type'] = 'disabled';
-    $expected = 'http://www.example.com/' . $project['name'] . '/' . DRUPAL_CORE_COMPATIBILITY;
+    $expected = 'http://www.example.com/' . $project['name'] . '/' . \Drupal::CORE_COMPATIBILITY;
     $url = _update_build_fetch_url($project, $site_key);
     $this->assertEqual($url, $expected, "'$url' should be '$expected' for disabled projects.");
 
     //for enabled projects, adding the site key
     $project['project_type'] = '';
-    $expected = 'http://www.example.com/' . $project['name'] . '/' . DRUPAL_CORE_COMPATIBILITY;
+    $expected = 'http://www.example.com/' . $project['name'] . '/' . \Drupal::CORE_COMPATIBILITY;
     $expected .= '?site_key=site_key';
     $expected .= '&list=' . rawurlencode('module1,module2');
     $url = _update_build_fetch_url($project, $site_key);
@@ -67,7 +67,7 @@ class UpdateCoreUnitTest extends UnitTestBase {
     // http://drupal.org/node/1481156 test incorrect logic when URL contains
     // a question mark.
     $project['info']['project status url'] = 'http://www.example.com/?project=';
-    $expected = 'http://www.example.com/?project=/' . $project['name'] . '/' . DRUPAL_CORE_COMPATIBILITY;
+    $expected = 'http://www.example.com/?project=/' . $project['name'] . '/' . \Drupal::CORE_COMPATIBILITY;
     $expected .= '&site_key=site_key';
     $expected .= '&list=' . rawurlencode('module1,module2');
     $url = _update_build_fetch_url($project, $site_key);
