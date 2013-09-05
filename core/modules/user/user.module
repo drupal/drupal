@@ -466,6 +466,11 @@ function user_permission() {
       'title' => t('Administer permissions'),
       'restrict access' => TRUE,
     ),
+    'administer account settings' => array(
+      'title' => t('Administer account settings'),
+      'description' => t('Configure site-wide settings and behavior for <a href="@url">user accounts and registration</a>.', array('@url' => url('admin/config/people'))),
+      'restrict access' => TRUE,
+    ),
     'administer users' => array(
       'title' => t('Administer users'),
       'restrict access' => TRUE,

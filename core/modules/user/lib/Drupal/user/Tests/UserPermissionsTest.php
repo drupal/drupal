@@ -25,7 +25,7 @@ class UserPermissionsTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->admin_user = $this->drupalCreateUser(array('administer permissions', 'access user profiles', 'administer site configuration', 'administer modules', 'administer users'));
+    $this->admin_user = $this->drupalCreateUser(array('administer permissions', 'access user profiles', 'administer site configuration', 'administer modules', 'administer account settings'));
 
     // Find the new role ID.
     $all_rids = $this->admin_user->getRoles();

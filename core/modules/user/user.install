@@ -1012,11 +1012,31 @@ function user_update_8016() {
 }
 
 /**
+ * Grant "administer account settings" to roles with "administer users."
+ */
+function user_update_8017() {
+  $rids = db_query("SELECT rid FROM {role_permission} WHERE permission = :perm", array(':perm' => 'administer users'))->fetchCol();
+  // None found.
+  if (empty($rids)) {
+    return;
+  }
+  $insert = db_insert('role_permission')->fields(array('rid', 'permission', 'module'));
+  foreach ($rids as $rid) {
+    $insert->values(array(
+      'rid' => $rid,
+      'permission' => 'administer account settings',
+      'module' => 'user'
+    ));
+  }
+  $insert->execute();
+}
+
+/**
  * Migrate user roles into configuration.
  *
  * @ingroup config_upgrade
  */
-function user_update_8017() {
+function user_update_8018() {
   $uuid = new Uuid();
 
   $roles = db_select('role', 'r')
@@ -1038,7 +1058,7 @@ function user_update_8017() {
 /**
  * Use the maximum allowed module name length in module name database fields.
  */
-function user_update_8018() {
+function user_update_8019() {
   if (db_field_exists('role_permission', 'module')) {
     $spec = array(
       'type' => 'varchar',
@@ -1095,7 +1115,7 @@ function _user_update_map_rid($rid) {
  *
  * @ingroup config_upgrade
  */
-function user_update_8019() {
+function user_update_8020() {
   $db_permissions = db_select('role_permission', 'p')
     ->fields('p')
     ->execute()
@@ -1117,7 +1137,7 @@ function user_update_8019() {
 /**
  * Create the 'register' form mode.
  */
-function user_update_8020() {
+function user_update_8021() {
   $uuid = new Uuid();
 
   Drupal::config("entity.form_mode.user.register")

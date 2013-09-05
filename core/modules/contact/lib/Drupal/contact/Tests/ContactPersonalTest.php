@@ -54,7 +54,7 @@ class ContactPersonalTest extends WebTestBase {
     parent::setUp();
 
     // Create an admin user.
-    $this->admin_user = $this->drupalCreateUser(array('administer contact forms', 'administer users'));
+    $this->admin_user = $this->drupalCreateUser(array('administer contact forms', 'administer users', 'administer account settings'));
 
     // Create some normal users with their contact forms enabled by default.
     \Drupal::config('contact.settings')->set('user_default_enabled', 1)->save();
