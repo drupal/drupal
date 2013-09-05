@@ -21,3 +21,11 @@ tips:
     weight: "1"
     attributes:
       data-id: tour-test-3
+  tour-test-6:
+    id: tour-test-6
+    plugin: text
+    label: Im a list
+    body: <p>Im all these things:</p><ul><li>Modal</li><li>Awesome</li></ul>
+    weight: "6"
+    attributes:
+      data-id: tour-test-3

@@ -38,7 +38,7 @@ class TourTestBase extends WebTestBase {
     // Get the rendered tips and their data-id and data-class attributes.
     if (empty($tips)) {
       // Tips are rendered as <li> elements inside <ol id="tour">.
-      $rendered_tips = $this->xpath('//ol[@id = "tour"]//li');
+      $rendered_tips = $this->xpath('//ol[@id = "tour"]//li[starts-with(@class, "tip")]');
       foreach ($rendered_tips as $rendered_tip) {
         $attributes = (array) $rendered_tip->attributes();
         $tips[] = $attributes['@attributes'];
