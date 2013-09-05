@@ -38,7 +38,7 @@ user_account_settings:
   defaults:
     _form: '\Drupal\user\AccountSettingsForm'
   requirements:
-    _permission: 'administer users'
+    _permission: 'administer account settings'
 
 user_admin_create:
   pattern: '/admin/people/create'

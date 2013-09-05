@@ -39,6 +39,7 @@ class ContactSitewideTest extends WebTestBase {
       'access site-wide contact form',
       'administer contact forms',
       'administer users',
+      'administer account settings',
       'administer contact_message fields',
     ));
     $this->drupalLogin($admin_user);
