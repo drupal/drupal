@@ -392,7 +392,7 @@ function shortcut_default_set($account = NULL) {
  */
 function shortcut_set_title_exists($title) {
   $sets = entity_load_multiple('shortcut_set');
-  foreach ($sets as $id => $set) {
+  foreach ($sets as $set) {
     if ($set->label == $title) {
       return TRUE;
     }
@@ -473,7 +473,7 @@ function shortcut_preprocess_page(&$variables) {
     $shortcut_set = shortcut_current_displayed_set();
 
     // Check if $link is already a shortcut and set $link_mode accordingly.
-    foreach ($shortcut_set->links as $uuid => $shortcut) {
+    foreach ($shortcut_set->links as $shortcut) {
       if ($link == $shortcut['link_path']) {
         $mlid = $shortcut['mlid'];
         break;
