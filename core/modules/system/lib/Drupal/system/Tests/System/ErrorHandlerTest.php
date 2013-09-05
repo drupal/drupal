@@ -37,19 +37,19 @@ class ErrorHandlerTest extends WebTestBase {
     $error_notice = array(
       '%type' => 'Notice',
       '!message' => 'Undefined variable: bananas',
-      '%function' => 'error_test_generate_warnings()',
+      '%function' => 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()',
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     );
     $error_warning = array(
       '%type' => 'Warning',
       '!message' => 'Division by zero',
-      '%function' => 'error_test_generate_warnings()',
+      '%function' => 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()',
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     );
     $error_user_notice = array(
       '%type' => 'User warning',
       '!message' => 'Drupal is awesome',
-      '%function' => 'error_test_generate_warnings()',
+      '%function' => 'Drupal\error_test\Controller\ErrorTestController->generateWarnings()',
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     );
 
@@ -97,14 +97,14 @@ class ErrorHandlerTest extends WebTestBase {
     $error_exception = array(
       '%type' => 'Exception',
       '!message' => 'Drupal is awesome',
-      '%function' => 'error_test_trigger_exception()',
+      '%function' => 'Drupal\error_test\Controller\ErrorTestController->triggerException()',
       '%line' => 56,
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     );
     $error_pdo_exception = array(
       '%type' => 'DatabaseExceptionWrapper',
       '!message' => 'SELECT * FROM bananas_are_awesome',
-      '%function' => 'error_test_trigger_pdo_exception()',
+      '%function' => 'Drupal\error_test\Controller\ErrorTestController->triggerPDOException()',
       '%line' => 64,
       '%file' => drupal_get_path('module', 'error_test') . '/error_test.module',
     );
