@@ -61,8 +61,7 @@ class AuthTest extends RESTTestBase {
     // Try to read the resource with session cookie authentication, which is
     // not enabled and should not work.
     $response = $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'GET', NULL, $this->defaultMimeType);
-    $this->assertResponse('403', 'HTTP response code is 403 when the request is authenticated but not authorized.');
-    $this->drupalLogout();
+    $this->assertResponse('401', 'HTTP response code is 401 when the request is authenticated but not authorized.');
 
     // Now read it with the Basic authentication which is enabled and should
     // work.

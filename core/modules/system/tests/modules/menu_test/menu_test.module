@@ -24,14 +24,12 @@ function menu_test_menu() {
     'type' => MENU_CALLBACK,
     'access arguments' => array('access content'),
   );
-  // This item uses system_admin_menu_block_page() to list child items.
+  // This item uses SystemController::systemAdminMenuBlockPage() to list child
+  // items.
   $items['menu_callback_description'] = array(
     'title' => 'Menu item title',
-    'page callback' => 'system_admin_menu_block_page',
     'description' => 'Menu item description parent',
-    'access arguments' => array('access content'),
-    'file' => 'system.admin.inc',
-    'file path' => drupal_get_path('module', 'system'),
+    'route_name' => 'menu_callback_description',
   );
   // This item tests the description key.
   $items['menu_callback_description/description-plain'] = array(
@@ -293,21 +291,6 @@ function menu_test_menu() {
   $items['menu-test/custom-404-page'] = array(
     'title' => 'Custom 404 page',
     'page callback' => 'menu_test_custom_403_404_callback',
-    'access arguments' => array('access content'),
-  );
-
-  // File inheritance tests. This menu item should inherit the page callback
-  // system_admin_menu_block_page() and therefore render its children as links
-  // on the page.
-  $items['admin/config/development/file-inheritance'] = array(
-    'title' => 'File inheritance',
-    'description' => 'Test file inheritance',
-    'access arguments' => array('access content'),
-  );
-  $items['admin/config/development/file-inheritance/inherit'] = array(
-    'title' => 'Inherit',
-    'description' => 'File inheritance test description',
-    'page callback' => 'menu_test_callback',
     'access arguments' => array('access content'),
   );
 

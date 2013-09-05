@@ -621,11 +621,9 @@ function system_menu() {
   );
   $items['admin'] = array(
     'title' => 'Administration',
-    'access arguments' => array('access administration pages'),
-    'page callback' => 'system_admin_menu_block_page',
+    'route_name' => 'system_admin',
     'weight' => 9,
     'menu_name' => 'admin',
-    'file' => 'system.admin.inc',
   );
   $items['admin/tasks'] = array(
     'title' => 'Tasks',
@@ -645,9 +643,7 @@ function system_menu() {
     'description' => 'Administer blocks, content types, menus, etc.',
     'position' => 'right',
     'weight' => -8,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_structure',
   );
   // Appearance.
   $items['admin/appearance'] = array(
@@ -736,9 +732,7 @@ function system_menu() {
     'description' => 'Media tools.',
     'position' => 'left',
     'weight' => -10,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_media',
   );
   $items['admin/config/media/file-system'] = array(
     'title' => 'File system',
@@ -759,9 +753,7 @@ function system_menu() {
     'description' => 'Tools related to web services.',
     'position' => 'right',
     'weight' => 0,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_services',
   );
   $items['admin/config/services/rss-publishing'] = array(
     'title' => 'RSS publishing',
@@ -775,9 +767,7 @@ function system_menu() {
     'description' => 'Development tools.',
     'position' => 'right',
     'weight' => -10,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_development',
   );
   $items['admin/config/development/maintenance'] = array(
     'title' => 'Maintenance mode',
@@ -804,9 +794,7 @@ function system_menu() {
     'description' => 'Regional settings, localization and translation.',
     'position' => 'left',
     'weight' => -5,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_regional',
   );
   $items['admin/config/regional/settings'] = array(
     'title' => 'Regional settings',
@@ -844,9 +832,7 @@ function system_menu() {
     'description' => 'Local site search, metadata and SEO.',
     'position' => 'left',
     'weight' => -10,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_search',
   );
 
   // System settings.
@@ -855,9 +841,7 @@ function system_menu() {
     'description' => 'General system related configuration.',
     'position' => 'right',
     'weight' => -20,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_system',
   );
   $items['admin/config/system/site-information'] = array(
     'title' => 'Site information',
@@ -876,9 +860,7 @@ function system_menu() {
     'title' => 'User interface',
     'description' => 'Tools that enhance the user interface.',
     'position' => 'right',
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_ui',
     'weight' => -15,
   );
   $items['admin/config/workflow'] = array(
@@ -886,29 +868,23 @@ function system_menu() {
     'description' => 'Content workflow, editorial workflow tools.',
     'position' => 'right',
     'weight' => 5,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_workflow',
   );
   $items['admin/config/content'] = array(
     'title' => 'Content authoring',
     'description' => 'Settings related to formatting and authoring content.',
     'position' => 'left',
     'weight' => -15,
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access administration pages'),
-    'file' => 'system.admin.inc',
+    'route_name' => 'system_admin_config_content',
   );
 
   // Reports.
   $items['admin/reports'] = array(
     'title' => 'Reports',
     'description' => 'View reports, updates, and errors.',
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('access site reports'),
+    'route_name' => 'system_admin_reports',
     'weight' => 5,
     'position' => 'left',
-    'file' => 'system.admin.inc',
   );
   $items['admin/reports/status'] = array(
     'title' => 'Status report',
@@ -2319,55 +2295,6 @@ function system_preprocess_block(&$variables) {
       $variables['attributes']['role'] = 'navigation';
       $variables['attributes']['class'][] = 'block-menu';
   }
-}
-
-/**
- * Provide a single block on the administration overview page.
- *
- * @param $item
- *   The menu item to be displayed.
- */
-function system_admin_menu_block($item) {
-  $cache = &drupal_static(__FUNCTION__, array());
-  // If we are calling this function for a menu item that corresponds to a
-  // local task (for example, admin/tasks), then we want to retrieve the
-  // parent item's child links, not this item's (since this item won't have
-  // any).
-  if ($item['tab_root'] != $item['path']) {
-    $item = menu_get_item($item['tab_root_href']);
-  }
-
-  if (!isset($item['mlid'])) {
-    $menu_links = entity_load_multiple_by_properties('menu_link', array('router_path' => $item['path'], 'module' => 'system'));
-    $menu_link = reset($menu_links);
-    $item['mlid'] = $menu_link->id();
-    $item['menu_name'] = $menu_link->menu_name;
-  }
-
-  if (isset($cache[$item['mlid']])) {
-    return $cache[$item['mlid']];
-  }
-
-  $content = array();
-  $menu_links = entity_load_multiple_by_properties('menu_link', array('plid' => $item['mlid'], 'menu_name' => $item['menu_name'], 'hidden' => 0));
-  foreach ($menu_links as $link) {
-    _menu_link_translate($link);
-    if ($link['access']) {
-      // The link description, either derived from 'description' in
-      // hook_menu() or customized via menu module is used as title attribute.
-      if (!empty($link['localized_options']['attributes']['title'])) {
-        $link['description'] = $link['localized_options']['attributes']['title'];
-        unset($link['localized_options']['attributes']['title']);
-      }
-      // Prepare for sorting as in function _menu_tree_check_access().
-      // The weight is offset so it is always positive, with a uniform 5-digits.
-      $key = (50000 + $link['weight']) . ' ' . drupal_strtolower($link['title']) . ' ' . $link['mlid'];
-      $content[$key] = $link;
-    }
-  }
-  ksort($content);
-  $cache[$item['mlid']] = $content;
-  return $content;
 }
 
 /**

@@ -137,15 +137,6 @@ class MenuRouterTest extends WebTestBase {
   }
 
   /**
-   * Test that 'page callback', 'file' and 'file path' keys are properly
-   * inherited from parent menu paths.
-   */
-  function testFileInheritance() {
-    $this->drupalGet('admin/config/development/file-inheritance');
-    $this->assertText('File inheritance test description', 'File inheritance works.');
-  }
-
-  /**
    * Test path containing "exotic" characters.
    */
   function testExoticPath() {

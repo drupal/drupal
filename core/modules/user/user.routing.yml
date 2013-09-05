@@ -26,6 +26,13 @@ user_autocomplete_anonymous:
   requirements:
     _permission: 'access user profiles'
 
+user_admin_index:
+  pattern: '/admin/config/people'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access administration pages'
+
 user_account_settings:
   pattern: '/admin/config/people/accounts'
   defaults:
