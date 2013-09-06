@@ -146,6 +146,21 @@ abstract class UpgradePathTestBase extends WebTestBase {
 
     $this->pass('Finished loading the dump.');
 
+    // Override $update_free_access in settings.php to allow the anonymous user
+    // to run updates.
+    $install_profile = unserialize(db_query('SELECT value FROM {variable} WHERE name = :name', array(':name' => 'install_profile'))->fetchField());
+    $settings = array(
+      'settings' => array(
+        'install_profile' => (object) array(
+          'value' => $install_profile,
+          'required' => TRUE,
+        ),
+      ),
+    );
+    $this->writeSettings($settings);
+    $this->settingsSet('install_profile', $install_profile);
+    $this->profile = $install_profile;
+
     // Ensure that the session is not written to the new environment and replace
     // the global $user session with uid 1 from the new test site.
     drupal_save_session(FALSE);

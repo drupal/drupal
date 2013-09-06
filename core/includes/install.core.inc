@@ -1234,6 +1234,14 @@ function install_settings_form_submit($form, &$form_state) {
     );
   }
 
+  // Remember the profile which was used.
+  $settings['settings'] = array(
+    'install_profile' => (object) array(
+      'value' => $install_state['parameters']['profile'],
+      'required' => TRUE,
+    ),
+  );
+
   drupal_rewrite_settings($settings);
 
   // Add the config directories to settings.php.
@@ -1986,8 +1994,6 @@ function install_update_configuration_translations(&$install_state) {
  */
 function install_finished(&$install_state) {
   $profile = drupal_get_profile();
-  // Remember the profile which was used.
-  variable_set('install_profile', $profile);
 
   // Installation profiles are always loaded last.
   module_set_weight($profile, 1000);

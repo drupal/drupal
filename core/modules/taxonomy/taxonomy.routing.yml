@@ -10,7 +10,7 @@ taxonomy_term_add:
   defaults:
     _content: '\Drupal\taxonomy\Controller\TaxonomyController::addForm'
   requirements:
-    _access_taxonomy_term_create: 'taxonomy_term'
+    _entity_create_access: 'taxonomy_term:{taxonomy_vocabulary}'
 
 taxonomy_term_edit:
   pattern: '/taxonomy/term/{taxonomy_term}/edit'

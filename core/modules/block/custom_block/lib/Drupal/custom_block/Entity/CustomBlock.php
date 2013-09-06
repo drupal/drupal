@@ -36,7 +36,7 @@ use Drupal\custom_block\CustomBlockInterface;
  *   },
  *   base_table = "custom_block",
  *   revision_table = "custom_block_revision",
- *   route_base_path = "admin/structure/custom-blocks/manage/{bundle}",
+ *   route_base_path = "admin/structure/block/custom-blocks/manage/{bundle}",
  *   menu_base_path = "block/%custom_block",
  *   menu_edit_path = "block/%custom_block",
  *   fieldable = TRUE,
@@ -190,6 +190,14 @@ class CustomBlock extends EntityNG implements CustomBlockInterface {
   /**
    * {@inheritdoc}
    */
+  public function preSave(EntityStorageControllerInterface $storage_controller) {
+    // Before saving the custom block, set changed time.
+    $this->changed->value = REQUEST_TIME;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
     // Invalidate the block cache to update custom block-based derivatives.
     \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
@@ -276,7 +284,19 @@ class CustomBlock extends EntityNG implements CustomBlockInterface {
       'description' => t('The revision log message.'),
       'type' => 'string_field',
     );
+    $properties['changed'] = array(
+      'label' => t('Changed'),
+      'description' => t('The time that the custom block was last edited.'),
+      'type' => 'integer_field',
+    );
     return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getChangedTime() {
+    return $this->get('changed')->value;
   }
 
 }

@@ -115,9 +115,13 @@ function block_permission() {
 function block_menu() {
   $default_theme = Drupal::config('system.theme')->get('default');
   $items['admin/structure/block'] = array(
-    'title' => 'Blocks',
+    'title' => 'Block layout',
     'description' => 'Configure what block content appears in your site\'s sidebars and other regions.',
     'route_name' => 'block_admin_display',
+  );
+  $items['admin/structure/block/list'] = array(
+    'title' => 'Block layout',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/structure/block/manage/%block'] = array(
     'title' => 'Configure block',

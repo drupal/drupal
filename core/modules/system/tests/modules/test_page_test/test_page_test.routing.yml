@@ -4,3 +4,18 @@ test_page_render_title:
     _content: 'Drupal\test_page_test\Controller\Test::renderTitle'
   requirements:
     _access: 'TRUE'
+
+admin_test_page_render_title:
+  pattern: "/admin/test-render-title"
+  defaults:
+    _content: 'Drupal\test_page_test\Controller\Test::renderTitle'
+  requirements:
+    _access: 'TRUE'
+
+test_page_render_title_controller:
+  pattern: "/test-render-title-controller"
+  defaults:
+    _controller: 'Drupal\test_page_test\Controller\Test::renderTitle'
+  requirements:
+    _access: 'TRUE'
+

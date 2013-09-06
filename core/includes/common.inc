@@ -2,6 +2,7 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Json;
+use Drupal\Component\Utility\Settings;
 use Drupal\Component\Utility\SortArray;
 use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Tags;
@@ -269,11 +270,17 @@ function drupal_get_region_content($region = NULL, $delimiter = ' ') {
 function drupal_get_profile() {
   global $install_state;
 
-  if (isset($install_state['parameters']['profile'])) {
-    $profile = $install_state['parameters']['profile'];
+  if (drupal_installation_attempted()) {
+    // If the profile has been selected return it.
+    if (isset($install_state['parameters']['profile'])) {
+      $profile = $install_state['parameters']['profile'];
+    }
+    else {
+      $profile = '';
+    }
   }
   else {
-    $profile = variable_get('install_profile', 'standard');
+    $profile = settings()->get('install_profile') ?: 'standard';
   }
 
   return $profile;

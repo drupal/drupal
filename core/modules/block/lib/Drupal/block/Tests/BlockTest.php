@@ -273,7 +273,7 @@ class BlockTest extends BlockTestBase {
     $this->drupalGet('admin/structure/block');
     $this->assertResponse(200);
     // A 200 response is possible with a fatal error, so check the title too.
-    $this->assertTitle(t('Blocks | Drupal'));
+    $this->assertTitle(t('Block layout') . ' | Drupal');
 
     // Ensure that the disabled module's block instance is not listed.
     foreach ($regions as $region) {

@@ -47,6 +47,8 @@ function custom_block_test_custom_block_presave(CustomBlock $custom_block) {
   if (!empty($custom_block->original) && $custom_block->original->info->value == 'test_changes') {
     if ($custom_block->original->info->value != $custom_block->info->value) {
       $custom_block->info->value .= '_presave';
+      // Drupal 1.0 release.
+      $custom_block->changed = 979534800;
     }
   }
 }

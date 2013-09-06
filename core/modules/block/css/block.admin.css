@@ -55,6 +55,9 @@ a.block-demo-backlink:hover {
 .block-list-secondary .form-type-search {
   padding: 0 1em;
 }
+#block-placed {
+  background-color: #ffd;
+}
 
 /* Wide screens */
 @media

@@ -1,5 +1,5 @@
 custom_block_type_list:
-  pattern: '/admin/structure/custom-blocks/types'
+  pattern: '/admin/structure/block/custom-blocks/types'
   defaults:
     _entity_list: 'custom_block_type'
   requirements:
@@ -20,7 +20,7 @@ custom_block_add_form:
     _permission: 'administer blocks'
 
 custom_block_type_delete:
-  pattern: '/admin/structure/custom-blocks/manage/{custom_block_type}/delete'
+  pattern: '/admin/structure/block/custom-blocks/manage/{custom_block_type}/delete'
   defaults:
     _entity_form: 'custom_block_type.delete'
   requirements:
@@ -42,22 +42,23 @@ custom_block_delete:
     _entity_access: 'custom_block.delete'
 
 custom_block_type_add:
-  pattern: '/admin/structure/custom-blocks/types/add'
+  pattern: '/admin/structure/block/custom-blocks/types/add'
   defaults:
     _entity_form: 'custom_block_type.add'
   requirements:
     _permission: 'administer blocks'
 
 custom_block_type_edit:
-  pattern: '/admin/structure/custom-blocks/manage/{custom_block_type}'
+  pattern: '/admin/structure/block/custom-blocks/manage/{custom_block_type}'
   defaults:
     _entity_form: 'custom_block_type.edit'
   requirements:
     _entity_access: 'custom_block_type.update'
 
 custom_block_list:
-  pattern: '/admin/structure/custom-blocks'
+  pattern: '/admin/structure/block/custom-blocks'
   defaults:
+    _title: 'Custom block library'
     _entity_list: 'custom_block'
   requirements:
     _permission: 'administer blocks'

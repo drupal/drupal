@@ -59,7 +59,7 @@ class CustomBlockDeleteForm extends EntityNGConfirmFormBase {
     $this->entity->delete();
     drupal_set_message($this->t('Custom block %label has been deleted.', array('%label' => $this->entity->label())));
     watchdog('custom_block', 'Custom block %label has been deleted.', array('%label' => $this->entity->label()), WATCHDOG_NOTICE);
-    $form_state['redirect'] = 'admin/structure/custom-blocks';
+    $form_state['redirect'] = 'admin/structure/block/custom-blocks';
   }
 
 }

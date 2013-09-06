@@ -330,6 +330,20 @@ class CKEditorTest extends DrupalUnitTestBase {
     $this->assertTrue($langcodes['sr-latn'] == 'sr-latn', '"sr-latn" properly resolved');
   }
 
+  /**
+   * Tests that CKEditor plugins participate in JS translation.
+   */
+  function testJSTranslation() {
+    $this->enableModules(array('locale'));
+    $this->installSchema('locale', 'locales_source');
+    $this->installSchema('locale', 'locales_location');
+    $editor = entity_load('editor', 'filtered_html');
+    $this->ckeditor->getJSSettings($editor);
+    $localeStorage = $this->container->get('locale.storage');
+    $string = $localeStorage->findString(array('source' => 'Image Properties', 'context' => ''));
+    $this->assertTrue(!empty($string), 'String from JavaScript file saved.');
+  }
+
   protected function getDefaultInternalConfig() {
     return array(
       'customConfig' => '',

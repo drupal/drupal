@@ -40,7 +40,7 @@ class CustomBlockListController extends EntityListController {
     if (isset($operations['edit'])) {
       $uri = $entity->uri();
       $operations['edit']['href'] = $uri['path'];
-      $operations['edit']['query']['destination'] = 'admin/structure/custom-blocks';
+      $operations['edit']['query']['destination'] = 'admin/structure/block/custom-blocks';
     }
     return $operations;
   }

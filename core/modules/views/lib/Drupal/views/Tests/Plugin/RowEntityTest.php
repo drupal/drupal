@@ -53,6 +53,7 @@ class RowEntityTest extends ViewUnitTestBase {
 
     $this->installSchema('system', array('menu_router'));
     $this->installSchema('taxonomy', array('taxonomy_term_data', 'taxonomy_term_hierarchy'));
+    $this->installConfig(array('taxonomy'));
   }
 
   /**
@@ -69,6 +70,15 @@ class RowEntityTest extends ViewUnitTestBase {
     $this->content = drupal_render($this->content);
 
     $this->assertText($term->label(), 'The rendered entity appears as row in the view.');
+
+    // Tests the available view mode options.
+    $form = array();
+    $form_state = array();
+    $form_state['view'] = $view->storage;
+    $view->rowPlugin->buildOptionsForm($form, $form_state);
+
+    $this->assertTrue(isset($form['view_mode']['#options']['full']), 'Ensure that the full view mode is available');
+    $this->assertTrue(isset($form['view_mode']['#options']['default']), 'Ensure that the default view mode is available');
   }
 
   /**

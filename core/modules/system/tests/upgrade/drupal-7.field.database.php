@@ -55,6 +55,241 @@ db_insert('variable')
   ))
   ->execute();
 
+// Add a field shared across different entity types (instance on article nodes
+// and users).
+$field_id = db_insert('field_config')
+  ->fields(array(
+    'field_name' => 'test_shared_field',
+    'type' => 'text',
+    'module' => 'text',
+    'active' => 1,
+    'storage_type' => 'field_sql_storage',
+    'storage_module' => 'field_sql_storage',
+    'storage_active' => 1,
+    'locked' => 0,
+    'data' => serialize(array(
+      'entity_types' => array(),
+      'settings' => array(
+        'max_length' => 255,
+      ),
+      'storage' => array(
+        'type' => 'field_sql_storage',
+        'settings' => array(),
+        'module' => 'field_sql_storage',
+        'active' => 1,
+      ),
+      'indexes' => array(
+        'format' => array(0 => 'format')
+      ),
+      'foreign keys' => array(
+        'format' => array(
+          'table' => 'filter_format',
+          'columns' => array('format' => 'format')
+        )
+      )
+    )),
+    'cardinality' => 1,
+    'translatable' => 0,
+    'deleted' => 0,
+  ))
+  ->execute();
+db_insert('field_config_instance')
+  ->fields(array(
+    'field_id' => $field_id,
+    'field_name' => 'test_shared_field',
+    'entity_type' => 'node',
+    'bundle' => 'article',
+    'data' => serialize(array(
+      'label' => 'Long text',
+      'description' => '',
+      'required' => FALSE,
+      'widget' => array(
+        'type' => 'text_textfield',
+        'weight' => 4,
+        'module' => 'text',
+        'active' => 1,
+        'settings' => array(
+          'size' => 60,
+        ),
+      ),
+      'settings' => array(
+        'text_processing' => 0,
+        'user_register_form' => FALSE,
+      ),
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'type' => 'text_default',
+          'settings' => array(),
+          'module' => 'text',
+          'weight' => 10,
+        ),
+      ),
+    )),
+    'deleted' => 0
+  ))
+  ->execute();
+db_insert('field_config_instance')
+  ->fields(array(
+    'field_id' => $field_id,
+    'field_name' => 'test_shared_field',
+    'entity_type' => 'user',
+    'bundle' => 'user',
+    'data' => serialize(array(
+      'label' => 'Shared field',
+      'description' => '',
+      'required' => FALSE,
+      'widget' => array(
+        'type' => 'text_textfield',
+        'weight' => 4,
+        'module' => 'text',
+        'active' => 1,
+        'settings' => array(
+          'size' => 60,
+        ),
+      ),
+      'settings' => array(
+        'text_processing' => 0,
+        'user_register_form' => FALSE,
+      ),
+      'display' => array(
+        'default' => array(
+          'label' => 'above',
+          'type' => 'text_default',
+          'settings' => array(),
+          'module' => 'text',
+          'weight' => 10,
+        ),
+      ),
+    )),
+    'deleted' => 0
+  ))
+  ->execute();
+// Create the corresponding storage tables.
+$schema = array(
+  'fields' => array(
+    'entity_type' => array(
+      'type' => 'varchar',
+      'length' => 128,
+      'not null' => TRUE,
+      'default' => '',
+    ),
+    'bundle' => array(
+      'type' => 'varchar',
+      'length' => 128,
+      'not null' => TRUE,
+      'default' => '',
+    ),
+    'deleted' => array(
+      'type' => 'int',
+      'size' => 'tiny',
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+    'entity_id' => array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ),
+    'revision_id' => array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => FALSE,
+    ),
+    'language' => array(
+      'type' => 'varchar',
+      'length' => 32,
+      'not null' => TRUE,
+      'default' => '',
+    ),
+    'delta' => array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ),
+    'test_shared_field_value' => array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => FALSE,
+    ),
+    'test_shared_field_format' => array(
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => FALSE,
+    ),
+  ),
+  'primary key' => array(
+    'entity_type',
+    'entity_id',
+    'deleted',
+    'delta',
+    'language',
+  ),
+  'indexes' => array(
+    'entity_type' => array(
+      'entity_type',
+    ),
+    'bundle' => array(
+      'bundle',
+    ),
+    'deleted' => array(
+      'deleted',
+    ),
+    'entity_id' => array(
+      'entity_id',
+    ),
+    'revision_id' => array(
+      'revision_id',
+    ),
+    'language' => array(
+      'language',
+    ),
+    'test_shared_field_format' => array(
+      'test_shared_field_format',
+    ),
+  ),
+  'foreign keys' => array(
+    'test_shared_field_format' => array(
+      'table' => 'filter_format',
+      'columns' => array(
+        'test_shared_field_format' => 'format',
+      ),
+    ),
+  ),
+  'module' => 'field_sql_storage',
+  'name' => 'field_data_test_shared_field',
+);
+db_create_table('field_data_test_shared_field', $schema);
+$schema['primary key'] = array(
+  'entity_type',
+  'entity_id',
+  'revision_id',
+  'deleted',
+  'delta',
+  'language',
+);
+$schema['name'] = 'field_revision_test_shared_field';
+db_create_table('field_revision_test_shared_field', $schema);
+
+// Add a value for the 'test_shared_field' field on user 1.
+$field_data_row = array(
+  'entity_type' => 'user',
+  'bundle' => 'user',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'und',
+  'delta' => '0',
+  'test_shared_field_value' => 'Shared field: value for user 1',
+  'test_shared_field_format' => 'filtered_html',
+);
+db_insert('field_data_test_shared_field')
+  ->fields($field_data_row)
+  ->execute();
+db_insert('field_revision_test_shared_field')
+  ->fields($field_data_row)
+  ->execute();
+
 // Add one node.
 db_insert('node')
   ->fields(array(
@@ -88,7 +323,7 @@ db_insert('node_revision')
     'sticky' => '0',
   ))
   ->execute();
-
+// Add a value for the 'body' field.
 $field_data_row = array(
   'entity_type' => 'node',
   'bundle' => 'article',
@@ -105,6 +340,24 @@ db_insert('field_data_body')
   ->fields($field_data_row)
   ->execute();
 db_insert('field_revision_body')
+  ->fields($field_data_row)
+  ->execute();
+// Add a value for the 'test_shared_field' field.
+$field_data_row = array(
+  'entity_type' => 'node',
+  'bundle' => 'article',
+  'deleted' => '0',
+  'entity_id' => '1',
+  'revision_id' => '1',
+  'language' => 'und',
+  'delta' => '0',
+  'test_shared_field_value' => 'Shared field: value for node 1',
+  'test_shared_field_format' => 'filtered_html',
+);
+db_insert('field_data_test_shared_field')
+  ->fields($field_data_row)
+  ->execute();
+db_insert('field_revision_test_shared_field')
   ->fields($field_data_row)
   ->execute();
 

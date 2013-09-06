@@ -585,31 +585,47 @@ function locale_system_remove($components) {
 
 /**
  * Implements hook_js_alter().
- *
- * This function checks all JavaScript files currently added via drupal_add_js()
- * and invokes parsing if they have not yet been parsed for Drupal.t()
- * and Drupal.formatPlural() calls. Also refreshes the JavaScript translation
- * file if necessary, and adds it to the page.
  */
 function locale_js_alter(&$javascript) {
-
-  $language_interface = language(Language::TYPE_INTERFACE);
-
-  $dir = 'public://' . Drupal::config('local.settings')->get('javascript.directory');
-  $parsed = Drupal::state()->get('system.javascript_parsed') ?: array();
-  $files = $new_files = FALSE;
-
+  $files = array();
   foreach ($javascript as $item) {
     if (isset($item['type']) && $item['type'] == 'file') {
-      $files = TRUE;
-      $filepath = $item['data'];
-      if (!in_array($filepath, $parsed)) {
-        // Don't parse our own translations files.
-        if (substr($filepath, 0, strlen($dir)) != $dir) {
-          _locale_parse_js_file($filepath);
-          $parsed[] = $filepath;
-          $new_files = TRUE;
-        }
+      $files[] = $item['data'];
+    }
+  }
+  if ($translation_file = locale_js_translate($files)) {
+    $javascript[$translation_file] = drupal_js_defaults($translation_file);
+  }
+}
+
+/**
+ * Returns a list of translation files given a list of JavaScript files.
+ *
+ * This function checks all JavaScript files passed and invokes parsing if they
+ * have not yet been parsed for Drupal.t() and Drupal.formatPlural() calls.
+ * Also refreshes the JavaScript translation files if necessary, and returns
+ * the filepath to the translation file (if any).
+ *
+ * @param array $files
+ *   An array of local file paths.
+ * @return string|NULL
+ *   The filepath to the translation file or NULL if no translation is
+ *   applicable.
+ */
+function locale_js_translate(array $files = array()) {
+  $language_interface = language(Language::TYPE_INTERFACE);
+
+  $dir = 'public://' . Drupal::config('locale.settings')->get('javascript.directory');
+  $parsed = Drupal::state()->get('system.javascript_parsed') ?: array();
+  $new_files = FALSE;
+
+  foreach ($files as $filepath) {
+    if (!in_array($filepath, $parsed)) {
+      // Don't parse our own translations files.
+      if (substr($filepath, 0, strlen($dir)) != $dir) {
+        _locale_parse_js_file($filepath);
+        $parsed[] = $filepath;
+        $new_files = TRUE;
       }
     }
   }
@@ -639,11 +655,12 @@ function locale_js_alter(&$javascript) {
 
   // Add the translation JavaScript file to the page.
   $locale_javascripts = Drupal::state()->get('translation.javascript') ?: array();
-  if ($files && !empty($locale_javascripts[$language_interface->id])) {
+  $translation_file = NULL;
+  if (!empty($files) && !empty($locale_javascripts[$language_interface->id])) {
     // Add the translation JavaScript file to the page.
-    $file = $dir . '/' . $language_interface->id . '_' . $locale_javascripts[$language_interface->id] . '.js';
-    $javascript[$file] = drupal_js_defaults($file);
+    $translation_file = $dir . '/' . $language_interface->id . '_' . $locale_javascripts[$language_interface->id] . '.js';
   }
+  return $translation_file;
 }
 
 /**

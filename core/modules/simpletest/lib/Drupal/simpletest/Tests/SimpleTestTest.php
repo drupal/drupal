@@ -65,10 +65,6 @@ class SimpleTestTest extends WebTestBase {
       )));
       $this->assertNoTitle('Foo');
 
-      global $base_url;
-      $this->drupalGet(url($base_url . '/core/install.php', array('external' => TRUE, 'absolute' => TRUE)));
-      $this->assertResponse(403, 'Cannot access install.php.');
-
       $user = $this->drupalCreateUser();
       $this->drupalLogin($user);
       $headers = $this->drupalGetHeaders(TRUE);
@@ -91,6 +87,15 @@ class SimpleTestTest extends WebTestBase {
       ));
       $headers = $this->drupalGetHeaders(TRUE);
       $this->assertEqual(count($headers), 2, 'Simpletest stopped following redirects after the first one.');
+
+      // Remove the Simpletest settings.php so we can test the protection
+      // against requests that forge a valid testing user agent to gain access
+      // to the installer.
+      drupal_unlink($this->public_files_directory . '/settings.php');
+      global $base_url;
+      $this->drupalGet(url($base_url . '/core/install.php', array('external' => TRUE, 'absolute' => TRUE)));
+      $this->assertResponse(403, 'Cannot access install.php.');
+
     }
   }
 

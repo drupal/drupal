@@ -243,3 +243,8 @@ db_insert('variable')->fields(array(
     'value' => serialize('public://color/seven-09696463/dummy-screenshot.png'),
   ))
   ->execute();
+
+db_update('variable')
+  ->fields(array('value' => 's:7:"minimal";'))
+  ->condition('name', 'install_profile')
+  ->execute();

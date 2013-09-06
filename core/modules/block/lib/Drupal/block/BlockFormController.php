@@ -293,7 +293,9 @@ class BlockFormController extends EntityFormController {
 
     drupal_set_message($this->t('The block configuration has been saved.'));
     Cache::invalidateTags(array('content' => TRUE));
-    $form_state['redirect'] = 'admin/structure/block/list/' . $entity->get('theme');
+    $form_state['redirect'] = array('admin/structure/block/list/' . $entity->get('theme'), array(
+      'query' => array('block-placement' => drupal_html_class($this->entity->id())),
+    ));
   }
 
   /**
