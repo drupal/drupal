@@ -734,7 +734,7 @@ function drupal_get_filename($type, $name, $filename = NULL) {
     $files[$type] = array();
   }
 
-  if (!empty($filename) && file_exists($filename)) {
+  if (!empty($filename)) {
     $files[$type][$name] = $filename;
   }
   elseif (isset($files[$type][$name])) {
