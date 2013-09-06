@@ -46,7 +46,7 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
     $node = $this->drupalCreateNode(array('body' => array(array()), 'langcode' => 'en'));
 
     // First update the index. This does the initial processing.
-    node_update_index();
+    $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
 
     // Then, run the shutdown function. Testing is a unique case where indexing
     // and searching has to happen in the same request, so running the shutdown
@@ -73,7 +73,7 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
     ));
 
     // First update the index. This does the initial processing.
-    node_update_index();
+    $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
 
     // Then, run the shutdown function. Testing is a unique case where indexing
     // and searching has to happen in the same request, so running the shutdown

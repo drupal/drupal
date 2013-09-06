@@ -13,8 +13,8 @@
  * Available variables:
  * - search_results: All results as it is rendered through
  *   search-result.html.twig.
- * - module: The machine-readable name of the module (tab) being searched, such
- *   as 'node' or 'user'.
+ * - plugin_id: The machine-readable name of the plugin being executed, such
+ *   as 'node_search' or 'user_search'.
  * - pager: The pager next/prev links to display, if any.
  * - help: HTML for help text to display when no results are found.
  *
@@ -25,7 +25,7 @@
 #}
 {% if search_results %}
   <h2>{{ 'Search results'|t }}</h2>
-  <ol class="search-results {{ module }}-results">
+  <ol class="search-results {{ plugin_id }}-results">
     {{ search_results }}
   </ol>
   {{ pager }}

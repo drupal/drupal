@@ -4,18 +4,18 @@ search.settings:
   type: mapping
   label: 'Search settings'
   mapping:
-    active_modules:
+    active_plugins:
       type: sequence
-      label: 'Active search modules'
+      label: 'Active search plugins'
       sequence:
         - type: string
-          label: 'Module'
+          label: 'Plugin'
     and_or_limit:
       type: integer
       label: 'AND/OR combination limit'
-    default_module:
+    default_plugin:
       type: string
-      label: 'Default search module'
+      label: 'Default search plugin'
     index:
       type: mapping
       label: 'Indexing settings'

@@ -120,43 +120,6 @@ function search_schema() {
     'primary key' => array('word'),
   );
 
-  $schema['search_node_links'] = array(
-    'description' => 'Stores items (like nodes) that link to other nodes, used to improve search scores for nodes that are frequently linked to.',
-    'fields' => array(
-      'sid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The {search_dataset}.sid of the searchable item containing the link to the node.',
-      ),
-      'type' => array(
-        'type' => 'varchar',
-        'length' => 16,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The {search_dataset}.type of the searchable item containing the link to the node.',
-      ),
-      'nid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The {node}.nid that this item links to.',
-      ),
-      'caption' => array(
-        'type' => 'text',
-        'size' => 'big',
-        'not null' => FALSE,
-        'description' => 'The text used to link to the {node}.nid.',
-      ),
-    ),
-    'primary key' => array('sid', 'type', 'nid'),
-    'indexes' => array(
-      'nid' => array('nid'),
-    ),
-  );
-
   return $schema;
 }
 
@@ -166,15 +129,51 @@ function search_schema() {
  * @ingroup config_upgrade
  */
 function search_update_8000() {
+  // Run this first so the config is sure to be empty.
+  _search_update_8000_modules_mapto_plugins(array('user' => 'user_search', 'node' => 'node_search'));
+  $active_plugins = \Drupal::config('search.settings')->get('active_plugins');
   update_variables_to_config('search.settings', array(
    'minimum_word_size' => 'index.minimum_word_size',
    'overlap_cjk' => 'index.overlap_cjk',
    'search_cron_limit' => 'index.cron_limit',
    'search_tag_weights' => 'index.tag_weights',
-   'search_active_modules' => 'active_modules',
    'search_and_or_limit' => 'and_or_limit',
-   'search_default_module' => 'default_module',
   ));
+  // update_variables_to_config() merges in all the default values from the YAML
+  // file, so we need re-save the list of active plugins we found.
+  \Drupal::config('search.settings')->set('active_plugins', $active_plugins)->save();
+}
+
+/**
+ * Update search module variables to plugin IDs.
+ *
+ * This function may also be called by contributed modules that implement a
+ * search plugin that is an update of a hook_search_info() implementation.
+ */
+function _search_update_8000_modules_mapto_plugins(array $map) {
+  $active_modules = update_variable_get('search_active_modules', array('node', 'user'));
+  $config = \Drupal::config('search.settings');
+  $active_plugins = $config->get('active_plugins');
+  foreach($active_modules as $idx => $module) {
+    if (isset($map[$module])) {
+      $plugin_id = $map[$module];
+      $active_plugins[$plugin_id] = $plugin_id;
+      unset($active_modules[$idx]);
+    }
+  }
+  $config->set('active_plugins', $active_plugins);
+  if ($active_modules) {
+    update_variable_set('search_active_modules', $active_modules);
+  }
+  else {
+    update_variable_del('search_active_modules');
+  }
+  $default_module = update_variable_get('search_default_module', 'node');
+  if (isset($map[$default_module])) {
+    $config->set('default_plugin', $map[$default_module]);
+    update_variable_del('search_default_module');
+  }
+  $config->save();
 }
 
 /**
@@ -185,7 +184,8 @@ function search_update_8001() {
   // need to recreate search data through running cron.
   db_truncate('search_dataset');
   db_truncate('search_index');
-  db_truncate('search_node_links');
+  // This table is no longer used.
+  db_drop_table('search_node_links');
 
   // Add the fields and indexes.
   db_drop_primary_key('search_dataset');

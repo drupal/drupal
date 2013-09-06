@@ -6,18 +6,34 @@
 
 namespace Drupal\search\Form;
 
-use Drupal\system\SystemConfigFormBase;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\Extension\ModuleHandler;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
-use Drupal\Component\Utility\NestedArray;
+use Drupal\search\SearchPluginManager;
+use Drupal\system\SystemConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure search settings for this site.
  */
 class SearchSettingsForm extends SystemConfigFormBase {
+
+  /**
+   * A configuration object with the current search settings.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $searchSettings;
+
+  /**
+   * A search plugin manager object.
+   *
+   * @var \Drupal\search\SearchPluginManager
+   */
+  protected $searchPluginManager;
+
   /**
    * The module handler.
    *
@@ -39,13 +55,17 @@ class SearchSettingsForm extends SystemConfigFormBase {
    *   The configuration factory object that manages search settings.
    * @param \Drupal\Core\Config\Context\ContextInterface $context
    *   The context interface
-   * @param \Drupal\Core\Extension\ModuleHandler $module_handler
+   * @param \Drupal\search\SearchPluginManager $manager
+   *   The manager for search plugins.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state
    *   The state key/value store interface, gives access to state based config settings.
    */
-  public function __construct(ConfigFactory $config_factory, ContextInterface $context, ModuleHandler $module_handler, KeyValueStoreInterface $state) {
+  public function __construct(ConfigFactory $config_factory, ContextInterface $context, SearchPluginManager $manager, ModuleHandlerInterface $module_handler, KeyValueStoreInterface $state) {
     parent::__construct($config_factory, $context);
+    $this->searchSettings = $config_factory->get('search.settings');
+    $this->searchPluginManager = $manager;
     $this->moduleHandler = $module_handler;
     $this->state = $state;
   }
@@ -57,6 +77,7 @@ class SearchSettingsForm extends SystemConfigFormBase {
     return new static(
       $container->get('config.factory'),
       $container->get('config.context.free'),
+      $container->get('plugin.manager.search'),
       $container->get('module_handler'),
       $container->get('state')
     );
@@ -70,38 +91,39 @@ class SearchSettingsForm extends SystemConfigFormBase {
   }
 
   /**
-   * Returns names of available search modules.
+   * Returns names of available search plugins.
    *
    * @return array
-   *   An array of the names of enabled modules that call hook_search_info
-   *   sorted into alphabetical order.
+   *   An array of the names of available search plugins.
    */
-  protected function getModuleOptions() {
-    $search_info = search_get_info(TRUE);
-    $names = system_get_module_info('name');
-    $names = array_intersect_key($names, $search_info);
-    asort($names, SORT_STRING);
-    return $names;
+  protected function getOptions() {
+    $options = array();
+    foreach ($this->searchPluginManager->getDefinitions() as $plugin_id => $search_info) {
+      $options[$plugin_id] = $search_info['title'] . ' (' . $plugin_id . ')';
+    }
+    asort($options, SORT_STRING);
+    return $options;
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $config = $this->configFactory->get('search.settings');
-    // Collect some stats
+
+    // Collect some stats.
     $remaining = 0;
     $total = 0;
-    foreach ($config->get('active_modules') as $module) {
-      if ($status = $this->moduleHandler->invoke($module, 'search_status')) {
+
+    foreach ($this->searchPluginManager->getActiveIndexingPlugins() as $plugin) {
+      if ($status = $plugin->indexStatus()) {
         $remaining += $status['remaining'];
         $total += $status['total'];
       }
     }
-
+    $active_plugins = $this->searchPluginManager->getActivePlugins();
     $this->moduleHandler->loadAllIncludes('admin.inc');
     $count = format_plural($remaining, 'There is 1 item left to index.', 'There are @count items left to index.');
-    $percentage = ((int)min(100, 100 * ($total - $remaining) / max(1, $total))) . '%';
+    $percentage = ((int) min(100, 100 * ($total - $remaining) / max(1, $total))) . '%';
     $status = '<p><strong>' . t('%percentage of the site has been indexed.', array('%percentage' => $percentage)) . ' ' . $count . '</strong></p>';
     $form['status'] = array(
       '#type' => 'details',
@@ -124,7 +146,7 @@ class SearchSettingsForm extends SystemConfigFormBase {
     $form['indexing_throttle']['cron_limit'] = array(
       '#type' => 'select',
       '#title' => t('Number of items to index per cron run'),
-      '#default_value' => $config->get('index.cron_limit'),
+      '#default_value' => $this->searchSettings->get('index.cron_limit'),
       '#options' => $items,
       '#description' => t('The maximum number of items indexed in each pass of a <a href="@cron">cron maintenance task</a>. If necessary, reduce the number of items to prevent timeouts and memory errors while indexing.', array('@cron' => $this->url('system_status')))
     );
@@ -139,7 +161,7 @@ class SearchSettingsForm extends SystemConfigFormBase {
     $form['indexing_settings']['minimum_word_size'] = array(
       '#type' => 'number',
       '#title' => t('Minimum word length to index'),
-      '#default_value' => $config->get('index.minimum_word_size'),
+      '#default_value' => $this->searchSettings->get('index.minimum_word_size'),
       '#min' => 1,
       '#max' => 1000,
       '#description' => t('The number of characters a word has to be to be indexed. A lower setting means better search result ranking, but also a larger database. Each search query must contain at least one keyword that is this size (or longer).')
@@ -147,40 +169,37 @@ class SearchSettingsForm extends SystemConfigFormBase {
     $form['indexing_settings']['overlap_cjk'] = array(
       '#type' => 'checkbox',
       '#title' => t('Simple CJK handling'),
-      '#default_value' => $config->get('index.overlap_cjk'),
+      '#default_value' => $this->searchSettings->get('index.overlap_cjk'),
       '#description' => t('Whether to apply a simple Chinese/Japanese/Korean tokenizer based on overlapping sequences. Turn this off if you want to use an external preprocessor for this instead. Does not affect other languages.')
     );
 
     $form['active'] = array(
       '#type' => 'details',
-      '#title' => t('Active search modules')
+      '#title' => t('Active search plugins')
     );
-    $module_options = $this->getModuleOptions();
-    $form['active']['active_modules'] = array(
+    $options = $this->getOptions();
+    $form['active']['active_plugins'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Active modules'),
+      '#title' => t('Active plugins'),
       '#title_display' => 'invisible',
-      '#default_value' => $config->get('active_modules'),
-      '#options' => $module_options,
-      '#description' => t('Choose which search modules are active from the available modules.')
+      '#default_value' => $this->searchSettings->get('active_plugins'),
+      '#options' => $options,
+      '#description' => t('Choose which search plugins are active from the available plugins.')
     );
-    $form['active']['default_module'] = array(
-      '#title' => t('Default search module'),
+    $form['active']['default_plugin'] = array(
+      '#title' => t('Default search plugin'),
       '#type' => 'radios',
-      '#default_value' => $config->get('default_module'),
-      '#options' => $module_options,
-      '#description' => t('Choose which search module is the default.')
+      '#default_value' => $this->searchSettings->get('default_plugin'),
+      '#options' => $options,
+      '#description' => t('Choose which search plugin is the default.')
     );
 
-    // Per module settings
-    foreach ($config->get('active_modules') as $module) {
-      $added_form = $this->moduleHandler->invoke($module, 'search_admin');
-      if (is_array($added_form)) {
-        $form = NestedArray::mergeDeep($form, $added_form);
-      }
+    // Per plugin settings.
+    foreach ($active_plugins as $plugin) {
+      $plugin->addToAdminForm($form, $form_state);
     }
     // Set #submit so we are sure it's invoked even if one of
-    // the active search modules added its own #submit.
+    // the active search plugins added its own #submit.
     $form['#submit'][] = array($this, 'submitForm');
 
     return parent::buildForm($form, $form_state);
@@ -194,10 +213,10 @@ class SearchSettingsForm extends SystemConfigFormBase {
 
     // Check whether we selected a valid default.
     if ($form_state['triggering_element']['#value'] != t('Reset to defaults')) {
-      $new_modules = array_filter($form_state['values']['active_modules']);
-      $default = $form_state['values']['default_module'];
-      if (!in_array($default, $new_modules, TRUE)) {
-        form_set_error('default_module', t('Your default search module is not selected as an active module.'));
+      $new_plugins = array_filter($form_state['values']['active_plugins']);
+      $default = $form_state['values']['default_plugin'];
+      if (!in_array($default, $new_plugins, TRUE)) {
+        form_set_error('default_plugin', t('Your default search plugin is not selected as an active plugin.'));
       }
     }
   }
@@ -207,31 +226,35 @@ class SearchSettingsForm extends SystemConfigFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     parent::submitForm($form, $form_state);
-    $config = $this->configFactory->get('search.settings');
 
     // If these settings change, the index needs to be rebuilt.
-    if (($config->get('index.minimum_word_size') != $form_state['values']['minimum_word_size']) || ($config->get('index.overlap_cjk') != $form_state['values']['overlap_cjk'])) {
-      $config->set('index.minimum_word_size', $form_state['values']['minimum_word_size']);
-      $config->set('index.overlap_cjk', $form_state['values']['overlap_cjk']);
+    if (($this->searchSettings->get('index.minimum_word_size') != $form_state['values']['minimum_word_size']) || ($this->searchSettings->get('index.overlap_cjk') != $form_state['values']['overlap_cjk'])) {
+      $this->searchSettings->set('index.minimum_word_size', $form_state['values']['minimum_word_size']);
+      $this->searchSettings->set('index.overlap_cjk', $form_state['values']['overlap_cjk']);
       drupal_set_message(t('The index will be rebuilt.'));
       search_reindex();
     }
-    $config->set('index.cron_limit', $form_state['values']['cron_limit']);
-    $config->set('default_module', $form_state['values']['default_module']);
+    $this->searchSettings->set('index.cron_limit', $form_state['values']['cron_limit']);
+    $this->searchSettings->set('default_plugin', $form_state['values']['default_plugin']);
+
+    // Handle per-plugin submission logic.
+    foreach ($this->searchPluginManager->getActivePlugins() as $plugin) {
+      $plugin->submitAdminForm($form, $form_state);
+    }
 
     // Check whether we are resetting the values.
     if ($form_state['triggering_element']['#value'] == t('Reset to defaults')) {
-      $new_modules = array('node', 'user');
+      $new_plugins = array('node_search', 'user_search');
     }
     else {
-      $new_modules = array_filter($form_state['values']['active_modules']);
+      $new_plugins = array_filter($form_state['values']['active_plugins']);
     }
-    if ($config->get('active_modules') != $new_modules) {
-      $config->set('active_modules', $new_modules);
-      drupal_set_message(t('The active search modules have been changed.'));
+    if ($this->searchSettings->get('active_plugins') != $new_plugins) {
+      $this->searchSettings->set('active_plugins', $new_plugins);
+      drupal_set_message(t('The active search plugins have been changed.'));
       $this->state->set('menu_rebuild_needed', TRUE);
     }
-    $config->save();
+    $this->searchSettings->save();
   }
 
   /**
@@ -242,4 +265,5 @@ class SearchSettingsForm extends SystemConfigFormBase {
     // send the user to the confirmation page
     $form_state['redirect'] = 'admin/config/search/settings/reindex';
   }
+
 }

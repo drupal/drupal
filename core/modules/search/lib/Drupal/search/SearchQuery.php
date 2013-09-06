@@ -15,8 +15,8 @@ use Drupal\Core\Database\StatementEmpty;
 /**
  * Performs a query on the full-text search index for a word or words.
  *
- * This function is normally only called by each module that supports the
- * indexed search (and thus, implements hook_update_index()).
+ * This function is normally only called by each plugin that supports the
+ * indexed search.
  *
  * Results are retrieved in two logical passes. However, the two passes are
  * joined together into a single query, and in the case of most simple queries
@@ -28,7 +28,7 @@ use Drupal\Core\Database\StatementEmpty;
  * The second portion of the query further refines this set by verifying
  * advanced text conditions (such as negative or phrase matches).
  *
- * The used query object has the tag 'search_$module' and can be further
+ * The used query object has the tag 'search_$type' and can be further
  * extended with hook_query_alter().
  */
 class SearchQuery extends SelectExtender {
@@ -40,11 +40,11 @@ class SearchQuery extends SelectExtender {
   protected $searchExpression;
 
   /**
-   * The type of search (search module).
+   * The type of search (search type).
    *
    * This maps to the value of the type column in search_index, and is equal
-   * to the machine-readable name of the module that implements
-   * hook_search_info().
+   * to the machine-readable name of the entity type being indexed, or other
+   * identifier provided by a search plugin.
    *
    * @var string
    */
@@ -144,43 +144,17 @@ class SearchQuery extends SelectExtender {
    *
    * @param $query
    *   A search query string, which can contain options.
-   * @param $module
-   *   The search module. This maps to {search_index}.type in the database.
+   * @param $type
+   *   The search type. This maps to {search_index}.type in the database.
    *
    * @return
    *   The SearchQuery object.
    */
-  public function searchExpression($expression, $module) {
+  public function searchExpression($expression, $type) {
     $this->searchExpression = $expression;
-    $this->type = $module;
+    $this->type = $type;
 
     return $this;
-  }
-
-  /**
-   * Applies a search option and removes it from the search query string.
-   *
-   * These options are in the form option:value,value2,value3.
-   *
-   * @param $option
-   *   Name of the option.
-   * @param $column
-   *   Name of the database column to which the value should be applied.
-   *
-   * @return
-   *   TRUE if a value for that option was found, FALSE if not.
-   */
-  public function setOption($option, $column) {
-    if ($values = search_expression_extract($this->searchExpression, $option)) {
-      $or = db_or();
-      foreach (explode(',', $values) as $value) {
-        $or->condition($column, $value);
-      }
-      $this->condition($or);
-      $this->searchExpression = search_expression_insert($this->searchExpression, $option);
-      return TRUE;
-    }
-    return FALSE;
   }
 
   /**

@@ -11,12 +11,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * Page callback: Presents the search form and/or search results.
  *
- * @param $module
- *   Search module to use for the search.
+ * @param $plugin_id
+ *   Search plugin_id to use for the search.
  * @param $keys
  *   Keywords to use for the search.
  */
-function search_view($module = NULL, $keys = '') {
+function search_view($plugin_id = NULL, $keys = '') {
   $info = FALSE;
   $keys = trim($keys);
   // Also try to pull search keywords out of the $_REQUEST variable to
@@ -25,18 +25,19 @@ function search_view($module = NULL, $keys = '') {
     $keys = trim($_REQUEST['keys']);
   }
 
-  if (!empty($module)) {
-    $active_module_info = search_get_info();
-    if (isset($active_module_info[$module])) {
-      $info = $active_module_info[$module];
+  $manager = Drupal::service('plugin.manager.search');
+  if (!empty($plugin_id)) {
+    $active_plugin_info = $manager->getActiveDefinitions();
+    if (isset($active_plugin_info[$plugin_id])) {
+      $info = $active_plugin_info[$plugin_id];
     }
   }
 
-  if (empty($info)) {
-    // No path or invalid path: find the default module. Note that if there
-    // are no enabled search modules, this function should never be called,
+  if (empty($plugin_id) || empty($info)) {
+    // No path or invalid path: find the default plugin. Note that if there
+    // are no enabled search plugins, this function should never be called,
     // since hook_menu() would not have defined any search paths.
-    $info = search_get_default_module_info();
+    $info = search_get_default_plugin_info();
     // Redirect from bare /search or an invalid path to the default search path.
     $path = 'search/' . $info['path'];
     if ($keys) {
@@ -44,31 +45,28 @@ function search_view($module = NULL, $keys = '') {
     }
     return new RedirectResponse(url($path, array('absolute' => TRUE)));
   }
-
+  $plugin = $manager->createInstance($plugin_id);
+  $request = Drupal::request();
+  $plugin->setSearch($keys, $request->query->all(), $request->attributes->all());
   // Default results output is an empty string.
   $results = array('#markup' => '');
   // Process the search form. Note that if there is $_POST data,
-  // search_form_submit() will cause a redirect to search/[module path]/[keys],
+  // search_form_submit() will cause a redirect to search/[path]/[keys],
   // which will get us back to this page callback. In other words, the search
   // form submits with POST but redirects to GET. This way we can keep
   // the search query URL clean as a whistle.
   if (empty($_POST['form_id']) || $_POST['form_id'] != 'search_form') {
-    $conditions =  NULL;
-    if (isset($info['conditions_callback'])) {
-      // Build an optional array of more search conditions.
-      $conditions = call_user_func($info['conditions_callback'], $keys);
-    }
     // Only search if there are keywords or non-empty conditions.
-    if ($keys || !empty($conditions)) {
+    if ($plugin->isSearchExecutable()) {
       // Log the search keys.
       watchdog('search', 'Searched %type for %keys.', array('%keys' => $keys, '%type' => $info['title']), WATCHDOG_NOTICE, l(t('results'), 'search/' . $info['path'] . '/' . $keys));
 
       // Collect the search results.
-      $results = search_data($keys, $info['module'], $conditions);
+      $results = $plugin->buildResults();
     }
   }
   // The form may be altered based on whether the search was run.
-  $build['search_form'] = drupal_get_form('search_form', NULL, $keys, $info['module']);
+  $build['search_form'] = drupal_get_form('search_form', $plugin);
   $build['search_results'] = $results;
 
   return $build;
@@ -82,26 +80,25 @@ function search_view($module = NULL, $keys = '') {
  * @param array $variables
  *   An array with the following elements:
  *   - results: Search results array.
- *   - module: Module the search results came from (module implementing
- *     hook_search_info()).
+ *   - plugin_id: Plugin the search results came from.
  */
 function template_preprocess_search_results(&$variables) {
   $variables['search_results'] = '';
-  if (!empty($variables['module'])) {
-    $variables['module'] = check_plain($variables['module']);
+  if (!empty($variables['plugin_id'])) {
+    $variables['plugin_id'] = check_plain($variables['plugin_id']);
   }
   foreach ($variables['results'] as $result) {
     $variables['search_results'][] = array(
       '#theme' => 'search_result',
       '#result' => $result,
-      '#module' => $variables['module'],
+      '#plugin_id' => $variables['plugin_id'],
     );
   }
   $variables['pager'] = array('#theme' => 'pager');
   // @todo Revisit where this help text is added, see also
   //   http://drupal.org/node/1918856.
   $variables['help'] = search_help('search#noresults', drupal_help_arg());
-  $variables['theme_hook_suggestions'][] = 'search_results__' . $variables['module'];
+  $variables['theme_hook_suggestions'][] = 'search_results__' . $variables['plugin_id'];
 }
 
 /**
@@ -112,8 +109,7 @@ function template_preprocess_search_results(&$variables) {
  * @param array $variables
  *   An array with the following elements:
  *   - result: Individual search result.
- *   - module: Module the search results came from (module implementing
- *     hook_search_info()).
+ *   - plugin_id: Plugin the search results came from.
  *   - title_prefix: Additional output populated by modules, intended to be
  *     displayed in front of the main title tag that appears in the template.
  *   - title_suffix: Additional output populated by modules, intended to be
@@ -133,8 +129,8 @@ function template_preprocess_search_result(&$variables) {
   }
 
   $info = array();
-  if (!empty($result['module'])) {
-    $info['module'] = check_plain($result['module']);
+  if (!empty($result['plugin_id'])) {
+    $info['plugin_id'] = check_plain($result['plugin_id']);
   }
   if (!empty($result['user'])) {
     $info['user'] = $result['user'];
@@ -150,7 +146,7 @@ function template_preprocess_search_result(&$variables) {
   // Provide separated and grouped meta information..
   $variables['info_split'] = $info;
   $variables['info'] = implode(' - ', $info);
-  $variables['theme_hook_suggestions'][] = 'search_result__' . $variables['module'];
+  $variables['theme_hook_suggestions'][] = 'search_result__' . $variables['plugin_id'];
 }
 
 /**

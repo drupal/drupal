@@ -66,7 +66,7 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     $this->drupalPost('comment/reply/' . $this->searchable_nodes['1 comment']->id(), $edit_comment, t('Save'));
 
     // First update the index. This does the initial processing.
-    node_update_index();
+    $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
 
     // Then, run the shutdown function. Testing is a unique case where indexing
     // and searching has to happen in the same request, so running the shutdown
