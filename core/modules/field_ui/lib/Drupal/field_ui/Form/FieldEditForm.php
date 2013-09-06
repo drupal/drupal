@@ -78,7 +78,7 @@ class FieldEditForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('field.info'),
       $container->get('typed_data')
     );
@@ -197,7 +197,7 @@ class FieldEditForm extends FormBase {
     unset($field_values['container']);
 
     // Merge incoming form values into the existing field.
-    $field = $this->fieldInfo->getField($field_values['field_name']);
+    $field = $this->instance->getField();
     foreach ($field_values as $key => $value) {
       $field[$key] = $value;
     }
@@ -206,7 +206,7 @@ class FieldEditForm extends FormBase {
     try {
       $field->save();
       drupal_set_message($this->t('Updated field %label field settings.', array('%label' => $this->instance->label())));
-      $next_destination = FieldUI::getNextDestination();
+      $next_destination = FieldUI::getNextDestination($this->getRequest());
       if (empty($next_destination)) {
         $next_destination = $this->entityManager->getAdminPath($this->instance->entity_type, $this->instance->bundle) . '/fields';
       }

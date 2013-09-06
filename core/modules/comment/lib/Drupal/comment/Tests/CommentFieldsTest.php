@@ -37,13 +37,13 @@ class CommentFieldsTest extends CommentTestBase {
     comment_add_default_comment_field('node', 'test_node_type');
 
     // Check that the 'comment_body' field is present on the comment bundle.
-    $instance = $this->container->get('field.info')->getInstance('comment', 'comment', 'comment_body');
+    $instance = $this->container->get('field.info')->getInstance('comment', 'node__comment', 'comment_body');
     $this->assertTrue(!empty($instance), 'The comment_body field is added when a comment bundle is created');
 
     $instance->delete();
 
     // Check that the 'comment_body' field is deleted.
-    $field = $this->container->get('field.info')->getField('comment_body');
+    $field = $this->container->get('field.info')->getField('comment', 'comment_body');
     $this->assertTrue(empty($field), 'The comment_body field was deleted');
 
     // Create a new content type.
@@ -53,10 +53,10 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Check that the 'comment_body' field exists and has an instance on the
     // new comment bundle.
-    $field = $this->container->get('field.info')->getField('comment_body');
+    $field = $this->container->get('field.info')->getField('comment', 'comment_body');
     $this->assertTrue($field, 'The comment_body field exists');
     $instances = $this->container->get('field.info')->getInstances('comment');
-    $this->assertTrue(isset($instances['comment']['comment_body']), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
+    $this->assertTrue(isset($instances['node__comment']['comment_body']), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
   }
 
   /**
@@ -68,8 +68,9 @@ class CommentFieldsTest extends CommentTestBase {
     $this->drupalLogin($this->admin_user);
 
     // Drop default comment field added in CommentTestBase::setup().
-    entity_load('field_entity', 'comment')->delete();
-    if ($field = field_info_field('comment_node_forum')) {
+    // @todo WTF#1497374
+    entity_load('field_entity', 'node.comment')->delete();
+    if ($field = field_info_field('node', 'comment_node_forum')) {
       $field->delete();
     }
 
@@ -120,7 +121,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Disable text processing for comments.
     $this->drupalLogin($this->admin_user);
     $edit = array('instance[settings][text_processing]' => 0);
-    $this->drupalPost('admin/structure/comments/manage/comment/fields/comment.comment.comment_body', $edit, t('Save settings'));
+    $this->drupalPost('admin/structure/comments/manage/comment/fields/comment.node__comment.comment_body', $edit, t('Save settings'));
 
     // Post a comment without an explicit subject.
     $this->drupalLogin($this->web_user);

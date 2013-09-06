@@ -64,7 +64,8 @@ class NumberFieldTest extends WebTestBase {
   function testNumberDecimalField() {
     // Create a field with settings to validate.
     $this->field = entity_create('field_entity', array(
-      'field_name' => drupal_strtolower($this->randomName()),
+      'name' => drupal_strtolower($this->randomName()),
+      'entity_type' => 'entity_test',
       'type' => 'number_decimal',
       'settings' => array(
         'precision' => 8, 'scale' => 4, 'decimal_separator' => '.',
@@ -72,13 +73,13 @@ class NumberFieldTest extends WebTestBase {
     ));
     $this->field->save();
     entity_create('field_instance', array(
-      'field_name' => $this->field->id(),
+      'field_name' => $this->field->name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     ))->save();
 
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->field->id(), array(
+      ->setComponent($this->field->name, array(
         'type' => 'number',
         'settings' => array(
           'placeholder' => '0.00'
@@ -86,7 +87,7 @@ class NumberFieldTest extends WebTestBase {
       ))
       ->save();
     entity_get_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->field->id(), array(
+      ->setComponent($this->field->name, array(
         'type' => 'number_decimal',
       ))
       ->save();

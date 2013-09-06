@@ -44,13 +44,14 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     parent::setUp();
 
     $this->field_definition = array(
-      'field_name' => drupal_strtolower($this->randomName()),
+      'name' => drupal_strtolower($this->randomName()),
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
     );
     $this->field = entity_create('field_entity', $this->field_definition);
     $this->field->save();
     $this->instance_definition = array(
-      'field_name' => $this->field['field_name'],
+      'field_name' => $this->field->name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     );
@@ -101,40 +102,6 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     }
     catch (FieldException $e) {
       $this->pass(t('Cannot create an instance of a non-existing field.'));
-    }
-
-    // Create a field restricted to a specific entity type.
-    $field_restricted_definition = array(
-      'field_name' => drupal_strtolower($this->randomName()),
-      'type' => 'test_field',
-      'entity_types' => array('entity_test_cache'),
-    );
-    $field_restricted = entity_create('field_entity', $field_restricted_definition);
-    $field_restricted->save();
-
-    // Check that an instance can be added to an entity type allowed
-    // by the field.
-    try {
-      $instance = $this->instance_definition;
-      $instance['field_name'] = $field_restricted_definition['field_name'];
-      $instance['entity_type'] = 'entity_test_cache';
-      entity_create('field_instance', $instance)->save();
-      $this->pass(t('Can create an instance on an entity type allowed by the field.'));
-    }
-    catch (FieldException $e) {
-      $this->fail(t('Can create an instance on an entity type allowed by the field.'));
-    }
-
-    // Check that an instance cannot be added to an entity type
-    // forbidden by the field.
-    try {
-      $instance = $this->instance_definition;
-      $instance['field_name'] = $field_restricted_definition['field_name'];
-      entity_create('field_instance', $instance)->save();
-      $this->fail(t('Cannot create an instance on an entity type forbidden by the field.'));
-    }
-    catch (FieldException $e) {
-      $this->pass(t('Cannot create an instance on an entity type forbidden by the field.'));
     }
 
     // TODO: test other failures.
@@ -212,7 +179,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     $another_instance->delete();
     $deleted_fields = \Drupal::state()->get('field.field.deleted');
     $this->assertTrue(isset($deleted_fields[$another_instance['field_id']]), 'A deleted field is marked for deletion.');
-    $field = field_read_field($another_instance['field_name']);
+    $field = field_read_field($another_instance['entity_type'], $another_instance['field_name']);
     $this->assertFalse($field, 'The field marked to be deleted is not found anymore in the configuration.');
   }
 

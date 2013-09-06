@@ -8,8 +8,9 @@
 namespace Drupal\comment\Controller;
 
 use Drupal\comment\CommentInterface;
+use Drupal\comment\CommentManager;
 use Drupal\comment\Entity\Comment;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -25,7 +26,7 @@ use Drupal\node\NodeInterface;
  *
  * @see \Drupal\comment\Entity\Comment.
  */
-class CommentController implements ControllerInterface {
+class CommentController implements ContainerInjectionInterface {
 
   /**
    * The url generator service.
@@ -58,10 +59,11 @@ class CommentController implements ControllerInterface {
    * @param \Drupal\field\FieldInfo $field_info
    *   Field Info service.
    */
-  public function __construct(UrlGeneratorInterface $url_generator, HttpKernelInterface $httpKernel, FieldInfo $field_info) {
+  public function __construct(UrlGeneratorInterface $url_generator, HttpKernelInterface $httpKernel, FieldInfo $field_info, CommentManager $comment_manager) {
     $this->urlGenerator = $url_generator;
     $this->httpKernel = $httpKernel;
     $this->fieldInfo = $field_info;
+    $this->commentManager = $comment_manager;
   }
 
   /**
@@ -71,7 +73,8 @@ class CommentController implements ControllerInterface {
     return new static(
       $container->get('url_generator'),
       $container->get('http_kernel'),
-      $container->get('field.info')
+      $container->get('field.info'),
+      $container->get('comment.manager')
     );
   }
 
@@ -161,12 +164,7 @@ class CommentController implements ControllerInterface {
    *   Redirects user to new url.
    */
   public function redirectNode(NodeInterface $node) {
-    $fields = array_filter($this->fieldInfo->getFieldMap(), function ($value) use ($node) {
-      if ($value['type'] == 'comment' && isset($value['bundles']['node']) &&
-          in_array($node->bundle(), $value['bundles']['node'])) {
-        return TRUE;
-      }
-    });
+    $fields = $this->commentManager->getFields('node');
     // Legacy nodes only had a single comment field, so use the first comment
     // field on the entity.
     if (!empty($fields) && ($field_names = array_keys($fields)) && ($field_name = reset($field_names))) {

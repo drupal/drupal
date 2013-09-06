@@ -20,7 +20,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('user', 'entity', 'system', 'field', 'text', 'field_sql_storage', 'entity_test', 'field_test');
+  public static $modules = array('user', 'entity', 'system', 'field', 'text', 'entity_test', 'field_test');
 
   /**
    * A string for assert raw and text helper methods.
@@ -65,7 +65,12 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
     $instance_definition = 'instance_definition' . $suffix;
 
     $this->$field_name = drupal_strtolower($this->randomName() . '_field_name' . $suffix);
-    $this->$field = entity_create('field_entity', array('field_name' => $this->$field_name, 'type' => 'test_field', 'cardinality' => 4));
+    $this->$field = entity_create('field_entity', array(
+      'name' => $this->$field_name,
+      'entity_type' => $entity_type,
+      'type' => 'test_field',
+      'cardinality' => 4,
+    ));
     $this->$field->save();
     $this->$field_id = $this->{$field}['uuid'];
     $this->$instance_definition = array(
@@ -89,6 +94,22 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
         )
       ))
       ->save();
+  }
+
+  /**
+   * Saves and reloads an entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity to save.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The entity, freshly reloaded from storage.
+   */
+  protected function entitySaveReload(EntityInterface $entity) {
+    $entity->save();
+    $controller = $this->container->get('entity.manager')->getStorageController($entity->entityType());
+    $controller->resetCache();
+    return $controller->load($entity->id());
   }
 
   /**
@@ -125,9 +146,13 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
    *   (Optional) the name of the column to check.
    */
   function assertFieldValues(EntityInterface $entity, $field_name, $langcode, $expected_values, $column = 'value') {
-    $e = clone $entity;
-    field_attach_load('entity_test', array($e->id() => $e));
-    $values = isset($e->{$field_name}[$langcode]) ? $e->{$field_name}[$langcode] : array();
+    // Re-load the entity to make sure we have the latest changes.
+    entity_get_controller($entity->entityType())->resetCache(array($entity->id()));
+    $e = entity_load($entity->entityType(), $entity->id());
+    $field = $values = $e->getTranslation($langcode)->$field_name;
+    // Filter out empty values so that they don't mess with the assertions.
+    $field->filterEmptyValues();
+    $values = $field->getValue();
     $this->assertEqual(count($values), count($expected_values), 'Expected number of values were saved.');
     foreach ($expected_values as $key => $value) {
       $this->assertEqual($values[$key][$column], $value, format_string('Value @value was saved correctly.', array('@value' => $value)));

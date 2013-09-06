@@ -4,6 +4,6 @@ services:
     arguments: ['@database', '@module_handler']
   access_check.node.revision:
     class: Drupal\node\Access\NodeRevisionAccessCheck
-    arguments: ['@plugin.manager.entity', '@database']
+    arguments: ['@entity.manager', '@database']
     tags:
       - { name: access_check }

@@ -34,7 +34,6 @@ function statistics_token_info() {
 function statistics_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $token_service = Drupal::token();
 
-  $url_options = array('absolute' => TRUE);
   $replacements = array();
 
   if ($type == 'node' & !empty($data['node'])) {

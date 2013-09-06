@@ -36,8 +36,9 @@ class DateTimeItemTest extends FieldUnitTestBase {
 
     // Create a field with settings to validate.
     $this->field = entity_create('field_entity', array(
-      'field_name' => 'field_datetime',
+      'name' => 'field_datetime',
       'type' => 'datetime',
+      'entity_type' => 'entity_test',
       'settings' => array('datetime_type' => 'date'),
     ));
     $this->field->save();

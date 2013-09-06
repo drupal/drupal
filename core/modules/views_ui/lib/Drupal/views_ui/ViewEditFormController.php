@@ -1004,9 +1004,9 @@ class ViewEditFormController extends ViewFormControllerBase {
       $build['fields'][$id]['#theme'] = 'views_ui_display_tab_setting';
 
       $handler = $executable->display_handler->getHandler($type, $id);
-      if (empty($handler)) {
+      if ($handler->broken()) {
         $build['fields'][$id]['#class'][] = 'broken';
-        $field_name = $this->t('Broken/missing handler: @table > @field', array('@table' => $field['table'], '@field' => $field['field']));
+        $field_name = $handler->adminLabel();
         $build['fields'][$id]['#link'] = l($field_name, "admin/structure/views/nojs/config-item/{$view->id()}/{$display['id']}/$type/$id", array('attributes' => array('class' => array('views-ajax-link')), 'html' => TRUE));
         continue;
       }

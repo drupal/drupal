@@ -711,7 +711,7 @@ function menu_preprocess_block(&$variables) {
 function menu_library_info() {
   $libraries['drupal.menu'] = array(
     'title' => 'Menu',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'menu') . '/menu.js' => array(),
     ),
@@ -723,7 +723,7 @@ function menu_library_info() {
   );
   $libraries['drupal.menu.admin'] = array(
     'title' => 'Menu admin',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'menu') . '/menu.admin.js' => array(),
     ),

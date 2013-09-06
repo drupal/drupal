@@ -31,7 +31,7 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
 
     // Collect every possible entity attached to any of the entities.
     foreach ($entities as $id => $entity) {
-      foreach ($items[$id] as $delta => $item) {
+      foreach ($items[$id] as $item) {
         if (!empty($item->revision_id)) {
           $revision_ids[] = $item->revision_id;
         }

@@ -68,7 +68,8 @@ class LinkFieldTest extends WebTestBase {
     $field_name = drupal_strtolower($this->randomName());
     // Create a field with settings to validate.
     $this->field = entity_create('field_entity', array(
-      'field_name' => $field_name,
+      'name' => $field_name,
+      'entity_type' => 'entity_test',
       'type' => 'link',
     ));
     $this->field->save();
@@ -142,7 +143,8 @@ class LinkFieldTest extends WebTestBase {
     $field_name = drupal_strtolower($this->randomName());
     // Create a field with settings to validate.
     $this->field = entity_create('field_entity', array(
-      'field_name' => $field_name,
+      'name' => $field_name,
+      'entity_type' => 'entity_test',
       'type' => 'link',
     ));
     $this->field->save();
@@ -261,7 +263,8 @@ class LinkFieldTest extends WebTestBase {
     $field_name = drupal_strtolower($this->randomName());
     // Create a field with settings to validate.
     $this->field = entity_create('field_entity', array(
-      'field_name' => $field_name,
+      'name' => $field_name,
+      'entity_type' => 'entity_test',
       'type' => 'link',
       'cardinality' => 2,
     ));
@@ -404,7 +407,8 @@ class LinkFieldTest extends WebTestBase {
     $field_name = drupal_strtolower($this->randomName());
     // Create a field with settings to validate.
     $this->field = entity_create('field_entity', array(
-      'field_name' => $field_name,
+      'name' => $field_name,
+      'entity_type' => 'entity_test',
       'type' => 'link',
       'cardinality' => 2,
     ));
@@ -517,7 +521,7 @@ class LinkFieldTest extends WebTestBase {
    */
   protected function renderTestEntity($id, $view_mode = 'full', $reset = TRUE) {
     if ($reset) {
-      $this->container->get('plugin.manager.entity')->getStorageController('entity_test')->resetCache(array($id));
+      $this->container->get('entity.manager')->getStorageController('entity_test')->resetCache(array($id));
     }
     $entity = entity_load('entity_test', $id);
     $display = entity_get_display($entity->entityType(), $entity->bundle(), $view_mode);

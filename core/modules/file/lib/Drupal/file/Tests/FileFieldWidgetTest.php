@@ -35,7 +35,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   function testSingleValuedWidget() {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
-    $this->createFileField($field_name, $type_name);
+    $this->createFileField($field_name, 'node', $type_name);
 
     $test_file = $this->getTestFile('text');
 
@@ -96,8 +96,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // names).
     $field_name = 'test_file_field_1';
     $field_name2 = 'test_file_field_2';
-    $this->createFileField($field_name, $type_name, array('cardinality' => 3));
-    $this->createFileField($field_name2, $type_name, array('cardinality' => 3));
+    $this->createFileField($field_name, 'node', $type_name, array('cardinality' => 3));
+    $this->createFileField($field_name2, 'node', $type_name, array('cardinality' => 3));
 
     $test_file = $this->getTestFile('text');
 
@@ -209,7 +209,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
-    $this->createFileField($field_name, $type_name);
+    $this->createFileField($field_name, 'node', $type_name);
     $instance = field_info_instance('node', $field_name, $type_name);
 
     $test_file = $this->getTestFile('text');
@@ -259,7 +259,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       'fields[_add_new_field][field_name]' => $name = strtolower($this->randomName()),
       'fields[_add_new_field][type]' => 'file',
     );
-    $this->drupalPost('admin/structure/comments/manage/comment/fields', $edit, t('Save'));
+    $this->drupalPost('admin/structure/comments/manage/node__comment/fields', $edit, t('Save'));
     $edit = array('field[settings][uri_scheme]' => 'private');
     $this->drupalPost(NULL, $edit, t('Save field settings'));
     $this->drupalPost(NULL, array(), t('Save settings'));
@@ -319,7 +319,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   function testWidgetValidation() {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
-    $this->createFileField($field_name, $type_name);
+    $this->createFileField($field_name, 'node', $type_name);
     $this->updateFileField($field_name, $type_name, array('file_extensions' => 'txt'));
 
     foreach (array('nojs', 'js') as $type) {

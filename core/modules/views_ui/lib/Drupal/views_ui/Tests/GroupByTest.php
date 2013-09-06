@@ -52,7 +52,7 @@ class GroupByTest extends UITestBase {
 
     $this->drupalPost(NULL, array(), t('Save'));
 
-    $view = $this->container->get('plugin.manager.entity')->getStorageController('view')->load('test_views_groupby_save');
+    $view = $this->container->get('entity.manager')->getStorageController('view')->load('test_views_groupby_save');
     $display = $view->getDisplay('default');
     $this->assertTrue($display['display_options']['group_by'], 'The groupby setting was saved on the view.');
     $this->assertEqual($display['display_options']['fields']['id']['group_type'], 'count', 'Count groupby_type was saved on the view.');

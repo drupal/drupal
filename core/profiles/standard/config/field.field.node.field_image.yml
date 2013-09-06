@@ -1,0 +1,30 @@
+id: node.field_image
+name: field_image
+entity_type: node
+type: image
+module: image
+active: '1'
+settings:
+  uri_scheme: public
+  default_image: false
+  column_groups:
+    file:
+      label: File
+      columns:
+        - target_id
+        - width
+        - height
+    alt:
+      label: Alt
+      translatable: true
+    title:
+      label: Title
+      translatable: true
+locked: '0'
+cardinality: '1'
+translatable: '0'
+indexes:
+  target_id:
+    - target_id
+status: 1
+langcode: und

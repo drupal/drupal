@@ -62,7 +62,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
     $query->addExpression('COUNT(cid)');
     $count = $query->condition('c.entity_id', $comment->entity_id->value)
       ->condition('c.entity_type', $comment->entity_type->value)
-      ->condition('c.field_name', $comment->field_name->value)
+      ->condition('c.field_id', $comment->field_id->value)
       ->condition('c.status', COMMENT_PUBLISHED)
       ->execute()
       ->fetchField();
@@ -73,7 +73,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
         ->fields('c', array('cid', 'name', 'changed', 'uid'))
         ->condition('c.entity_id', $comment->entity_id->value)
         ->condition('c.entity_type', $comment->entity_type->value)
-        ->condition('c.field_name', $comment->field_name->value)
+        ->condition('c.field_id', $comment->field_id->value)
         ->condition('c.status', COMMENT_PUBLISHED)
         ->orderBy('c.created', 'DESC')
         ->range(0, 1)
@@ -89,7 +89,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
         ))
         ->condition('entity_id', $comment->entity_id->value)
         ->condition('entity_type', $comment->entity_type->value)
-        ->condition('field_name', $comment->field_name->value)
+        ->condition('field_id', $comment->field_id->value)
         ->execute();
     }
     else {
@@ -110,7 +110,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
         ))
         ->condition('entity_id', $comment->entity_id->value)
         ->condition('entity_type', $comment->entity_type->value)
-        ->condition('field_name', $comment->field_name->value)
+        ->condition('field_id', $comment->field_id->value)
         ->execute();
     }
   }
@@ -121,7 +121,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
   public function getMaxThread(EntityInterface $comment) {
     $query = $this->database->select('comment', 'c')
       ->condition('entity_id', $comment->entity_id->value)
-      ->condition('field_name', $comment->field_name->value)
+      ->condition('field_id', $comment->field_id->value)
       ->condition('entity_type', $comment->entity_type->value);
     $query->addExpression('MAX(thread)', 'thread');
     return $query->execute()
@@ -134,7 +134,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
   public function getMaxThreadPerThread(EntityInterface $comment) {
     $query = $this->database->select('comment', 'c')
       ->condition('entity_id', $comment->entity_id->value)
-      ->condition('field_name', $comment->field_name->value)
+      ->condition('field_id', $comment->field_id->value)
       ->condition('entity_type', $comment->entity_type->value)
       ->condition('thread', $comment->pid->entity->thread->value . '.%', 'LIKE');
     $query->addExpression('MAX(thread)', 'thread');

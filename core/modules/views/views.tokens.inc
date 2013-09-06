@@ -74,7 +74,6 @@ function views_tokens($type, $tokens, array $data = array(), array $options = ar
     $url_options['language'] = $options['language'];
   }
   $sanitize = !empty($options['sanitize']);
-  $langcode = isset($options['language']) ? $options['language']->id : NULL;
 
   $replacements = array();
 

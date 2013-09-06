@@ -76,7 +76,7 @@ class OpmlFeedAdd extends FormBase {
     return new static(
       $container->get('database'),
       $container->get('entity.query'),
-      $container->get('plugin.manager.entity')->getStorageController('aggregator_feed'),
+      $container->get('entity.manager')->getStorageController('aggregator_feed'),
       $container->get('http_default_client')
     );
   }

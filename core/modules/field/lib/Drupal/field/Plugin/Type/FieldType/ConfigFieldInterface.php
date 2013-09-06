@@ -15,13 +15,6 @@ use Drupal\Core\Entity\Field\FieldInterface;
 interface ConfigFieldInterface extends FieldInterface {
 
   /**
-   * Returns the field instance definition.
-   *
-   * @var \Drupal\field\Entity\FieldInstance
-   */
-  public function getInstance();
-
-  /**
    * Returns a form for the default value input.
    *
    * Invoked from \Drupal\field_ui\Form\FieldInstanceEditForm to allow

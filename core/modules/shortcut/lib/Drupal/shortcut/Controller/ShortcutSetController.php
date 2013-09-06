@@ -50,7 +50,7 @@ class ShortcutSetController extends ControllerBase {
       else {
         drupal_set_message(t('Unable to add a shortcut for %title.', array('%title' => $link['link_title'])));
       }
-      return new RedirectResponse($this->urlGenerator()->generateFromPath('<front>', array('absolute' => TRUE)));
+      return $this->redirect('<front>');
     }
 
     throw new AccessDeniedHttpException();

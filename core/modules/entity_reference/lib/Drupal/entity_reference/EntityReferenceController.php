@@ -11,12 +11,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 
 /**
  * Defines route controller for entity reference.
  */
-class EntityReferenceController implements ControllerInterface {
+class EntityReferenceController implements ContainerInjectionInterface {
 
   /**
    * The autocomplete helper for entity references.
@@ -69,7 +69,7 @@ class EntityReferenceController implements ControllerInterface {
    *   The matched labels as json.
    */
   public function handleAutocomplete(Request $request, $type, $field_name, $entity_type, $bundle_name, $entity_id) {
-    if (!$field = field_info_field($field_name)) {
+    if (!$field = field_info_field($entity_type, $field_name)) {
       throw new AccessDeniedHttpException();
     }
 

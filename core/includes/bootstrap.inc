@@ -11,7 +11,6 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Core\Database\Database;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Utility\Title;
-use Symfony\Component\ClassLoader\ClassLoader;
 use Symfony\Component\ClassLoader\ApcClassLoader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -28,16 +27,6 @@ use Drupal\Core\Session\UserSession;
  * @file
  * Functions that need to be loaded on every Drupal request.
  */
-
-/**
- * The current system version.
- */
-const VERSION = '8.0-dev';
-
-/**
- * Core API compatibility.
- */
-const DRUPAL_CORE_COMPATIBILITY = '8.x';
 
 /**
  * Minimum supported version of PHP.
@@ -510,9 +499,6 @@ function drupal_override_server_variables($variables = array()) {
  * Initializes the PHP environment.
  */
 function drupal_environment_initialize() {
-  // Make sure the \Drupal class is available.
-  require_once DRUPAL_ROOT . '/core/lib/Drupal.php';
-
   if (!isset($_SERVER['HTTP_REFERER'])) {
     $_SERVER['HTTP_REFERER'] = '';
   }
@@ -595,7 +581,8 @@ function drupal_settings_initialize() {
   if (is_readable(DRUPAL_ROOT . '/' . $conf_path . '/settings.php')) {
     include_once DRUPAL_ROOT . '/' . $conf_path . '/settings.php';
   }
-  require_once DRUPAL_ROOT . '/core/lib/Drupal/Component/Utility/Settings.php';
+  require_once __DIR__ . '../../lib/Drupal/Component/Utility/Settings.php';
+
   new Settings(isset($settings) ? $settings : array());
   $is_https = isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on';
 
@@ -2732,7 +2719,7 @@ function arg($index = NULL, $path = NULL) {
  *   loader class when calling drupal_classloader() from settings.php. It is
  *   ignored otherwise.
  *
- * @return \Symfony\Component\ClassLoader\ClassLoader
+ * @return \Composer\Autoload\ClassLoader
  *   A ClassLoader class instance (or extension thereof).
  */
 function drupal_classloader($class_loader = NULL) {
@@ -2743,9 +2730,8 @@ function drupal_classloader($class_loader = NULL) {
 
   if (!isset($loader)) {
 
-    // Include the Symfony ClassLoader for loading PSR-0-compatible classes.
-    require_once DRUPAL_ROOT . '/core/vendor/symfony/class-loader/Symfony/Component/ClassLoader/ClassLoader.php';
-    $loader = new ClassLoader();
+    // Retrieve the Composer ClassLoader for loading classes.
+    $loader = include __DIR__ . '/../vendor/autoload.php';
 
     // Register the class loader.
     // When configured to use APC, the ApcClassLoader is registered instead.
@@ -2756,20 +2742,11 @@ function drupal_classloader($class_loader = NULL) {
       $class_loader = settings()->get('class_loader', 'default');
     }
     if ($class_loader === 'apc') {
-      require_once DRUPAL_ROOT . '/core/vendor/symfony/class-loader/Symfony/Component/ClassLoader/ApcClassLoader.php';
+      require_once __DIR__ . '/../vendor/symfony/class-loader/Symfony/Component/ClassLoader/ApcClassLoader.php';
       $apc_loader = new ApcClassLoader('drupal.' . drupal_get_hash_salt(), $loader);
+      $loader->unregister();
       $apc_loader->register();
     }
-    else {
-      $loader->register();
-    }
-
-    // Register namespaces for vendor libraries managed by Composer.
-    $prefixes_and_namespaces = require DRUPAL_ROOT . '/core/vendor/composer/autoload_namespaces.php';
-    $loader->addPrefixes($prefixes_and_namespaces);
-
-    // Register the loader with PHP.
-    $loader->register();
   }
   return $loader;
 }
@@ -2784,7 +2761,7 @@ function drupal_classloader($class_loader = NULL) {
  */
 function drupal_classloader_register($name, $path) {
   $loader = drupal_classloader();
-  $loader->addPrefix('Drupal\\' . $name, DRUPAL_ROOT . '/' . $path . '/lib');
+  $loader->add('Drupal\\' . $name, DRUPAL_ROOT . '/' . $path . '/lib');
 }
 
 /**

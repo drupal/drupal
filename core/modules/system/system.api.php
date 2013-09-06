@@ -2277,7 +2277,7 @@ function hook_requirements($phase) {
   if ($phase == 'runtime') {
     $requirements['drupal'] = array(
       'title' => t('Drupal'),
-      'value' => VERSION,
+      'value' => Drupal::VERSION,
       'severity' => REQUIREMENT_INFO
     );
   }

@@ -62,7 +62,8 @@ class EmailFieldTest extends WebTestBase {
     // Create a field with settings to validate.
     $field_name = drupal_strtolower($this->randomName());
     $this->field = entity_create('field_entity', array(
-      'field_name' => $field_name,
+      'name' => $field_name,
+      'entity_type' => 'entity_test',
       'type' => 'email',
     ));
     $this->field->save();

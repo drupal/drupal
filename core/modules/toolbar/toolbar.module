@@ -585,7 +585,7 @@ function toolbar_in_active_trail($path) {
 function toolbar_library_info() {
   $libraries['toolbar'] = array(
     'title' => 'Toolbar',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'toolbar') . '/js/toolbar.js' => array(),
     ),
@@ -609,7 +609,7 @@ function toolbar_library_info() {
 
   $libraries['toolbar.menu'] = array(
     'title' => 'Toolbar nested accordion menus.',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'toolbar') . '/js/toolbar.menu.js' => array(),
     ),
@@ -630,7 +630,7 @@ function toolbar_library_info() {
  * Returns the hash of the per-user rendered toolbar subtrees.
  */
 function _toolbar_get_subtree_hash() {
-  global $user;
+  $user = Drupal::currentUser();
   $cid = $user->id() . ':' . language(Language::TYPE_INTERFACE)->id;
   if ($cache = cache('toolbar')->get($cid)) {
     $hash = $cache->data;

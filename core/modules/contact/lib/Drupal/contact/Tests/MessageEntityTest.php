@@ -21,7 +21,7 @@ class MessageEntityTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'contact');
+  public static $modules = array('system', 'contact', 'field');
 
   public static function getInfo() {
     return array(
@@ -40,7 +40,7 @@ class MessageEntityTest extends DrupalUnitTestBase {
    * Test some of the methods.
    */
   public function testMessageMethods() {
-    $message_storage = $this->container->get('plugin.manager.entity')->getStorageController('contact_message');
+    $message_storage = $this->container->get('entity.manager')->getStorageController('contact_message');
     $message = $message_storage->create(array('category' => 'feedback'));
 
     // Check for empty values first.

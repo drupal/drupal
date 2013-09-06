@@ -66,7 +66,7 @@ class ForumFormController extends TermFormController {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    $entity_manager = $container->get('plugin.manager.entity');
+    $entity_manager = $container->get('entity.manager');
     return new static(
       $entity_manager->getStorageController('taxonomy_vocabulary'),
       $container->get('config.factory'),

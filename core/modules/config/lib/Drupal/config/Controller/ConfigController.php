@@ -7,9 +7,9 @@
 
 namespace Drupal\config\Controller;
 
-use Drupal\Core\Controller\ControllerInterface;
-use Drupal\Core\Config\StorageInterface;
 use Drupal\Component\Archiver\ArchiveTar;
+use Drupal\Core\Config\StorageInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\system\FileDownloadController;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Returns responses for config module routes.
  */
-class ConfigController implements ControllerInterface {
+class ConfigController implements ContainerInjectionInterface {
 
   /**
    * The target storage.

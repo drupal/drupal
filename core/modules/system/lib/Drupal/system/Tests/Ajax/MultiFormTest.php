@@ -35,7 +35,8 @@ class MultiFormTest extends AjaxTestBase {
     // Create a multi-valued field for 'page' nodes to use for Ajax testing.
     $field_name = 'field_ajax_test';
     entity_create('field_entity', array(
-      'field_name' => $field_name,
+      'name' => $field_name,
+      'entity_type' => 'node',
       'type' => 'text',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     ))->save();

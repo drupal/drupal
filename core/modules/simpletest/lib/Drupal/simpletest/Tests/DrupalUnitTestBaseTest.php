@@ -232,12 +232,13 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
       'mode' => 'default',
     ));
     $field = entity_create('field_entity', array(
-      'field_name' => 'test_field',
+      'name' => 'test_field',
+      'entity_type' => 'entity_test',
       'type' => 'test_field'
     ));
     $field->save();
     entity_create('field_instance', array(
-      'field_name' => $field->id(),
+      'field_name' => $field->name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     ))->save();

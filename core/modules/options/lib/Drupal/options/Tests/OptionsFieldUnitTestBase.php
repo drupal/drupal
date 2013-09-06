@@ -58,7 +58,8 @@ class OptionsFieldUnitTestBase extends FieldUnitTestBase {
     $this->installSchema('system', 'menu_router');
 
     $this->fieldDefinition = array(
-      'field_name' => $this->fieldName,
+      'name' => $this->fieldName,
+      'entity_type' => 'entity_test',
       'type' => 'list_integer',
       'cardinality' => 1,
       'settings' => array(

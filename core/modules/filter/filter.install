@@ -41,7 +41,7 @@ function filter_update_8001() {
     $filters = db_query('SELECT name, module, status, weight, settings FROM {filter} WHERE format = :format ORDER BY weight, module, name', array(
       ':format' => $id,
     ), array('fetch' => PDO::FETCH_ASSOC))->fetchAllAssoc('name');
-    foreach ($filters as $name => &$filter) {
+    foreach ($filters as &$filter) {
       // The filter name is used as key only.
       unset($filter['name']);
       $filter['settings'] = unserialize($filter['settings']);

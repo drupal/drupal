@@ -44,6 +44,20 @@ Drupal.behaviors.fileValidateAutoAttach = {
 };
 
 /**
+ * Attach behaviors to managed file element upload fields.
+ */
+Drupal.behaviors.fileAutoUpload = {
+  attach: function (context) {
+    $(context).find('input[type="file"]').once('auto-file-upload').on('change.autoFileUpload', Drupal.file.triggerUploadButton);
+  },
+  detach: function (context, setting, trigger) {
+    if (trigger === 'unload') {
+      $(context).find('input[type="file"]').removeOnce('auto-file-upload').off('.autoFileUpload');
+    }
+  }
+};
+
+/**
  * Attach behaviors to the file upload and remove buttons.
  */
 Drupal.behaviors.fileButtons = {
@@ -103,6 +117,12 @@ Drupal.file = Drupal.file || {
         this.value = '';
       }
     }
+  },
+  /**
+   * Trigger the upload_button mouse event to auto-upload as a managed file.
+   */
+  triggerUploadButton: function (event){
+    $(event.target).closest('.form-managed-file').find('.form-submit').trigger('mousedown');
   },
   /**
    * Prevent file uploads when using buttons not intended to upload.

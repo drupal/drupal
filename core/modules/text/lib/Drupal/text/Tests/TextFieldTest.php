@@ -50,7 +50,8 @@ class TextFieldTest extends WebTestBase {
     // Create a field with settings to validate.
     $max_length = 3;
     $this->field = entity_create('field_entity', array(
-      'field_name' => drupal_strtolower($this->randomName()),
+      'name' => drupal_strtolower($this->randomName()),
+      'entity_type' => 'entity_test',
       'type' => 'text',
       'settings' => array(
         'max_length' => $max_length,
@@ -58,7 +59,7 @@ class TextFieldTest extends WebTestBase {
     ));
     $this->field->save();
     entity_create('field_instance', array(
-      'field_name' => $this->field->id(),
+      'field_name' => $this->field->name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     ))->save();
@@ -66,8 +67,8 @@ class TextFieldTest extends WebTestBase {
     // Test validation with valid and invalid values.
     $entity = entity_create('entity_test', array());
     for ($i = 0; $i <= $max_length + 2; $i++) {
-      $entity->{$this->field->id()}->value = str_repeat('x', $i);
-      $violations = $entity->{$this->field->id()}->validate();
+      $entity->{$this->field->name}->value = str_repeat('x', $i);
+      $violations = $entity->{$this->field->name}->validate();
       if ($i <= $max_length) {
         $this->assertEqual(count($violations), 0, "Length $i does not cause validation error when max_length is $max_length");
       }
@@ -90,10 +91,10 @@ class TextFieldTest extends WebTestBase {
    */
   function _testTextfieldWidgets($field_type, $widget_type) {
     // Setup a field and instance
-    $entity_type = 'entity_test';
     $this->field_name = drupal_strtolower($this->randomName());
     $this->field = entity_create('field_entity', array(
-      'field_name' => $this->field_name,
+      'name' => $this->field_name,
+      'entity_type' => 'entity_test',
       'type' => $field_type
     ));
     $this->field->save();
@@ -161,7 +162,8 @@ class TextFieldTest extends WebTestBase {
     // Setup a field and instance
     $this->field_name = drupal_strtolower($this->randomName());
     $this->field = entity_create('field_entity', array(
-      'field_name' => $this->field_name,
+      'name' => $this->field_name,
+      'entity_type' => 'entity_test',
       'type' => $field_type
     ));
     $this->field->save();
@@ -254,7 +256,7 @@ class TextFieldTest extends WebTestBase {
     $this->assertText(t('entity_test @id has been updated.', array('@id' => $id)), 'Entity was updated');
 
     // Display the entity.
-    $this->container->get('plugin.manager.entity')->getStorageController('entity_test')->resetCache(array($id));
+    $this->container->get('entity.manager')->getStorageController('entity_test')->resetCache(array($id));
     $entity = entity_load('entity_test', $id);
     $display = entity_get_display($entity->entityType(), $entity->bundle(), 'full');
     $entity->content = field_attach_view($entity, $display);

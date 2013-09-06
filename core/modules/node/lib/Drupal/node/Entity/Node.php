@@ -11,6 +11,8 @@ use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Language\Language;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -136,6 +138,40 @@ class Node extends EntityNG implements NodeInterface {
   public function getType() {
     return $this->bundle();
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($operation = 'view', AccountInterface $account = NULL) {
+    if ($operation == 'create') {
+      return parent::access($operation, $account);
+    }
+
+    return \Drupal::entityManager()
+      ->getAccessController($this->entityType)
+      ->access($this, $operation, $this->prepareLangcode(), $account);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function prepareLangcode() {
+    $langcode = $this->language()->id;
+    // If the Language module is enabled, try to use the language from content
+    // negotiation.
+    if (\Drupal::moduleHandler()->moduleExists('language')) {
+      // Load languages the node exists in.
+      $node_translations = $this->getTranslationLanguages();
+      // Load the language from content negotiation.
+      $content_negotiation_langcode = \Drupal::languageManager()->getLanguage(Language::TYPE_CONTENT)->id;
+      // If there is a translation available, use it.
+      if (isset($node_translations[$content_negotiation_langcode])) {
+        $langcode = $content_negotiation_langcode;
+      }
+    }
+    return $langcode;
+  }
+
 
   /**
    * {@inheritdoc}

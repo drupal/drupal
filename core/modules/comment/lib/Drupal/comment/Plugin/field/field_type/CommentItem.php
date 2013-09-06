@@ -81,8 +81,9 @@ class CommentItem extends ConfigFieldItemBase {
   public function instanceSettingsForm(array $form, array &$form_state) {
     $element = array();
 
-    $settings = $this->getInstance()->settings;
-    $field = $this->getInstance()->getField();
+    $instance = $this->getFieldDefinition();
+    $settings = $instance->settings;
+    $field = $instance->getField();
 
     $element['comment'] = array(
       '#type' => 'details',

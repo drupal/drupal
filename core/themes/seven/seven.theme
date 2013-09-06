@@ -14,7 +14,7 @@ function seven_library_info() {
   $path = drupal_get_path('theme', 'seven');
 
   $libraries['install-page'] = array(
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/js/mobile.install.js' => array(
         'group' => JS_THEME,
@@ -99,7 +99,7 @@ function seven_custom_block_add_list($variables) {
       $content = '<span class="label">' . check_plain($type->label()) . '</span>';
       $content .= '<div class="description">' . filter_xss_admin($type->description) . '</div>';
       $options['html'] = TRUE;
-      $output .= l($content, 'block/add/' . $type->id(), $options);
+      $output .= Drupal::l($content, 'custom_block_add_form' , array('custom_block_type' => $type->id()), $options);
       $output .= '</li>';
     }
     $output .= '</ul>';

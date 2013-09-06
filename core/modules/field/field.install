@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Uuid\Uuid;
+use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\field\Entity\Field;
 
 /**
@@ -29,8 +30,8 @@ function _update_8003_field_create_field(array &$field_config) {
 
   // Merge in default values.
   $field_config += array(
+    'id' => $field_config['entity_type'] . '.' . $field_config['name'],
     'uuid' => $uuid->generate(),
-    'entity_types' => array(),
     'cardinality' => 1,
     'translatable' => FALSE,
     'locked' => FALSE,
@@ -41,14 +42,6 @@ function _update_8003_field_create_field(array &$field_config) {
     'langcode' => 'und',
   );
 
-  // Set the storage.
-  $field_config['storage'] = array(
-    'type' => 'field_sql_storage',
-    'module' => 'field_sql_storage',
-    'active' => TRUE,
-    'settings' => array(),
-  );
-
   // Save in config.
   Drupal::config('field.field.' . $field_config['id'])
     ->setData($field_config)
@@ -56,15 +49,17 @@ function _update_8003_field_create_field(array &$field_config) {
 
   // Create storage for the field. This requires a field entity, but cannot use
   // the regular entity_create() function here.
-  $field_entity = new Field($field_config);
-  field_sql_storage_field_storage_create_field($field_entity);
+  $schema = DatabaseStorageController::_fieldSqlSchema(new Field($field_config), $field_config['schema']);
+  foreach ($schema as $name => $table) {
+    db_create_table($name, $table);
+  }
 }
 
 /**
  * Writes a field instance directly to configuration.
  *
  * Upgrades using this function need to use hook_update_dependencies() to ensure
-  * they get executed after field_update_8003().
+ * they get executed after field_update_8003().
  *
  * @param array $field_config
  *   An array of field properties.
@@ -78,6 +73,7 @@ function _update_8003_field_create_instance(array $field_config, array &$instanc
 
   // Merge in defaults.
   $instance_config += array(
+    'id' => $instance_config['entity_type'] . '.' . $instance_config['bundle'] . '.' . $field_config['name'],
     'description' => '',
     'required' => FALSE,
     'uuid' => $uuid->generate(),
@@ -95,6 +91,75 @@ function _update_8003_field_create_instance(array $field_config, array &$instanc
   Drupal::config('field.instance.' . $instance_config['id'])
     ->setData($instance_config)
     ->save();
+}
+
+/**
+ * Writes field data directly to SQL storage.
+ *
+ * @param string $entity_type
+ *   The entity type.
+ * @param string $bundle
+ *   The bundle.
+ * @param int $entity_id
+ *   The entity ID.
+ * @param int $revision_id
+ *   The entity revision ID.
+ * @param string $field_name
+ *   The field name.
+ * @param array $data
+ *   The field values, as an array keyed by langcode, delta and property name.
+ *
+ * @ingroup update_api
+ */
+function _update_8006_field_write_data_sql($entity_type, $bundle, $entity_id, $revision_id, $field_name, array $data) {
+  if (!isset($revision_id)) {
+    $revision_id = $entity_id;
+  }
+
+  $field_config = Drupal::config("field.field.$entity_type.$field_name");
+  $field = new Field($field_config);
+
+  $table_name = DatabaseStorageController::_fieldTableName($field);
+  $revision_name = DatabaseStorageController::_fieldRevisionTableName($field);
+
+  db_delete($table_name)
+    ->condition('entity_id', $entity_id)
+    ->execute();
+  db_delete($revision_name)
+    ->condition('entity_id', $entity_id)
+    ->condition('revision_id', $revision_id)
+    ->execute();
+
+  $columns = array();
+  foreach ($data as $langcode => $items) {
+    foreach ($items as $delta => $item) {
+      $record = array(
+        'entity_id' => $entity_id,
+        'revision_id' => $revision_id,
+        'bundle' => $bundle,
+        'delta' => $delta,
+        'langcode' => $langcode,
+      );
+      foreach ($item as $column => $value) {
+        $record[DatabaseStorageController::_fieldColumnName($field_name, $column)] = $value;
+      }
+
+      $records[] = $record;
+      // Record the columns used.
+      $columns += $record;
+    }
+  }
+
+  if ($columns) {
+    $query = db_insert($table_name)->fields(array_keys($columns));
+    $revision_query = db_insert($revision_name)->fields(array_keys($columns));
+    foreach ($records as $record) {
+      $query->values($record);
+      $revision_query->values($record);
+    }
+    $query->execute();
+    $revision_query->execute();
+  }
 }
 
 /**
@@ -255,27 +320,22 @@ function field_update_8003() {
   $field_data = array();
 
   // Migrate field definitions.
-  $records = db_query("SELECT * FROM {field_config}")->fetchAll(PDO::FETCH_ASSOC);
+  $records = db_query("SELECT DISTINCT entity_type, fc.* FROM {field_config} fc INNER JOIN {field_config_instance} fci ON fc.id = fci.field_id")->fetchAll(PDO::FETCH_ASSOC);
   foreach ($records as $record) {
     $record['data'] = unserialize($record['data']);
 
     $config = array(
-      'id' => $record['field_name'],
+      'id' => $record['entity_type'] . '.' . $record['field_name'],
+      'name' => $record['field_name'],
       'uuid' => $uuid->generate(),
       'type' => $record['type'],
       'module' => $record['module'],
       'active' => $record['active'],
+      'entity_type' => $record['entity_type'],
       'settings' => $record['data']['settings'],
-      'storage' => array(
-        'type' => $record['storage_type'],
-        'module' => $record['storage_module'],
-        'active' => $record['storage_active'],
-        'settings' => $record['data']['storage']['settings'],
-      ),
       'locked' => $record['locked'],
       'cardinality' => $record['cardinality'],
       'translatable' => $record['translatable'],
-      'entity_types' => $record['data']['entity_types'],
       'indexes' => $record['data']['indexes'] ?: array(),
       'status' => 1,
       'langcode' => 'und',
@@ -295,19 +355,17 @@ function field_update_8003() {
     else {
       $config['deleted'] = TRUE;
       $deleted_fields[$config['uuid']] = $config;
-      // Additionally, rename the data tables for deleted fields. Technically
-      // this would belong in an update in field_sql_storage.module, but it is
-      // easier to do it now, when the old numeric ID is available.
-      if ($config['storage']['type'] == 'field_sql_storage') {
-        $field = new Field($config);
-        $tables = array(
-          "field_deleted_data_{$record['id']}" => _field_sql_storage_tablename($field),
-          "field_deleted_revision_{$record['id']}" => _field_sql_storage_revision_tablename($field),
-        );
-        foreach ($tables as $table_old => $table_new) {
-          if (db_table_exists($table_old)) {
-            db_rename_table($table_old, $table_new);
-          }
+      // This will not be saved but the DatabaseStorageController helpers need
+      // the field object.
+      $field = new Field($config);
+      // Additionally, rename the data tables for deleted fields.
+      $tables = array(
+        "field_deleted_data_{$record['id']}" => 'old_' . DatabaseStorageController::_fieldTableName($field),
+        "field_deleted_revision_{$record['id']}" => 'old_' . DatabaseStorageController::_fieldRevisionTableName($field),
+      );
+      foreach ($tables as $table_old => $table_new) {
+        if (db_table_exists($table_old)) {
+          db_rename_table($table_old, $table_new);
         }
       }
     }
@@ -371,14 +429,13 @@ function field_update_8003() {
 }
 
 /**
- * Moves field_storage_default and field_language_fallback to config.
+ * Moves field_language_fallback to config.
  *
  * @ingroup config_upgrade
  */
 function field_update_8004() {
   update_variable_set('field_language_fallback', TRUE);
   update_variables_to_config('field.settings', array(
-    'field_storage_default' => 'default_storage',
     'field_language_fallback' => 'language_fallback',
   ));
 }
@@ -415,6 +472,106 @@ function field_update_8005() {
     ->setData($user_register_config_data)
     ->save();
 }
+
+
+/**
+ * Splits the field storage tables by entity type and also migrate langcode.
+ */
+function field_update_8006(&$sandbox) {
+  // Get field definitions from config, and deleted fields from state system.
+  $config_names = config_get_storage_names_with_prefix('field.field');
+  $deleted_fields = Drupal::state()->get('field.field.deleted') ?: array();
+  // Ditch UUID keys, we will iterate through deleted fields using a numeric
+  // index.
+  $deleted_fields = array_values($deleted_fields);
+
+  if (empty($config_names) && empty($deleted_fields)) {
+    return;
+  }
+
+  if (!isset($sandbox['index'])) {
+    $sandbox['index'] = 0;
+    $sandbox['max'] = count($config_names) + count($deleted_fields);
+  }
+
+  // Retrieve the next field definition. When the index exceeds the number of
+  // 'configuration' fields, use it to iterate on deleted fields.
+  if (isset($config_names[$sandbox['index']])) {
+    $field_config = Drupal::config($config_names[$sandbox['index']])->get();
+  }
+  else {
+    $field_config = $deleted_fields[$sandbox['index'] - count($config_names)];
+  }
+
+  // Prepare updated schema data structures.
+  $field = new Field($field_config);
+  $tables = array(
+    array(
+      'old_table' => 'field_data_' . $field_config['name'],
+      'new_table' => DatabaseStorageController::_fieldTableName($field),
+      'primary_key' => array(
+        'entity_id',
+        'deleted',
+        'delta',
+        'langcode',
+      ),
+    ),
+    array(
+      'old_table' => 'field_revision_' . $field_config['name'],
+      'new_table' => DatabaseStorageController::_fieldRevisionTableName($field),
+      'primary_key' => array(
+        'entity_id',
+        'revision_id',
+        'deleted',
+        'delta',
+        'langcode',
+      ),
+    ),
+  );
+
+  // Move the field data to the new table.
+  foreach ($tables as $table_data) {
+    // Split data from the old "per field" table to the new "per entity type and
+    // field" table.
+    $new_table = $table_data['new_table'];
+    $original_table = empty($field_config['deleted']) ? $table_data['old_table'] : 'old_' . $new_table;
+    if (db_table_exists($original_table)) {
+      // Create the new table, with the same schema as the old one.
+      if (!db_table_exists($new_table)) {
+        db_copy_table_schema($original_table, $new_table);
+      }
+      // Copy relevant rows.
+      $from_query = db_select($original_table, 'original')
+        ->fields('original')
+        ->condition('entity_type', $field_config['entity_type']);
+      db_insert($new_table)
+        ->from($from_query)
+        ->execute();
+      // Drop the 'entity_type' column and previous primary key.
+      db_drop_primary_key($new_table);
+      db_drop_field($new_table, 'entity_type');
+      // Rename 'language' to 'langcode'. Tables created during the upgrade
+      // before this update function might already have the langcode column.
+      if (db_field_exists($new_table, 'language')) {
+        db_drop_index($new_table, 'language');
+        db_change_field($new_table, 'language', 'langcode', array(
+          'type' => 'varchar',
+          'length' => 32,
+          'not null' => TRUE,
+          'default' => '',
+        ));
+        db_add_index($new_table, 'langcode', array('langcode'));
+      }
+      // Create new primary key.
+      db_add_primary_key($new_table, $table_data['primary_key']);
+    }
+  }
+
+  $sandbox['index']++;
+  $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['index'] / $sandbox['max']);
+}
+
+
 
 /**
  * @} End of "addtogroup updates-7.x-to-8.x".

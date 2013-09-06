@@ -1,0 +1,15 @@
+id: entity_test.field_test_import_2
+langcode: und
+name: field_test_import_2
+entity_type: entity_test
+type: text
+settings:
+  max_length: '255'
+module: text
+active: '1'
+locked: '0'
+cardinality: '1'
+translatable: false
+indexes:
+  format:
+    - format

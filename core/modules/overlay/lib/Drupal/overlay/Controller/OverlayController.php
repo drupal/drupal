@@ -7,7 +7,7 @@
 
 namespace Drupal\overlay\Controller;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  * @todo keeping the controllerInterface since we should be injecting
  * something to take care of the overlay_render_region() call.
  */
-class OverlayController implements ControllerInterface {
+class OverlayController implements ContainerInjectionInterface {
 
   /**
    * {@inheritdoc}

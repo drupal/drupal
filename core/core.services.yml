@@ -157,11 +157,11 @@ services:
     arguments: [ '%container.namespaces%' ]
     tags:
       - { name: persist }
-  plugin.manager.entity:
+  entity.manager:
     class: Drupal\Core\Entity\EntityManager
     arguments: ['@container.namespaces', '@service_container', '@module_handler', '@cache.cache', '@language_manager', '@string_translation']
-  entity.manager:
-    alias: plugin.manager.entity
+  plugin.manager.entity:
+    alias: entity.manager
   plugin.manager.entity.field.field_type:
     class: Drupal\Core\Entity\Field\FieldTypePluginManager
     arguments: ['@container.namespaces', '@cache.entity', '@language_manager', '@module_handler']
@@ -176,7 +176,7 @@ services:
     arguments: ['@container.namespaces', '@controller_resolver', '@request', '@module_handler', '@cache.cache', '@language_manager']
   plugin.manager.menu.local_task:
     class: Drupal\Core\Menu\LocalTaskManager
-    arguments: ['@container.namespaces', '@controller_resolver', '@request', '@router.route_provider', '@module_handler']
+    arguments: ['@container.namespaces', '@controller_resolver', '@request', '@router.route_provider', '@module_handler', '@cache.cache', '@language_manager']
   request:
     class: Symfony\Component\HttpFoundation\Request
     # @TODO the synthetic setting must be uncommented whenever drupal_session_initialize()
@@ -265,7 +265,7 @@ services:
       - [add, ['@legacy_router']]
   entity.query:
     class: Drupal\Core\Entity\Query\QueryFactory
-    arguments: ['@plugin.manager.entity']
+    arguments: ['@entity.manager']
     calls:
       - [setContainer, ['@service_container']]
   entity.query.config:
@@ -314,12 +314,12 @@ services:
     class: Drupal\Core\ParamConverter\EntityConverter
     tags:
       - { name: paramconverter }
-    arguments: ['@plugin.manager.entity']
+    arguments: ['@entity.manager']
   route_subscriber.entity:
     class: Drupal\Core\EventSubscriber\EntityRouteAlterSubscriber
     tags:
       - { name: event_subscriber }
-    arguments: ['@plugin.manager.entity']
+    arguments: ['@entity.manager']
   reverse_proxy_subscriber:
     class: Drupal\Core\EventSubscriber\ReverseProxySubscriber
     tags:
@@ -406,7 +406,7 @@ services:
       - { name: access_check }
   access_check.entity_create:
     class: Drupal\Core\Entity\EntityCreateAccessCheck
-    arguments: ['@plugin.manager.entity']
+    arguments: ['@entity.manager']
     tags:
       - { name: access_check }
   maintenance_mode_subscriber:
@@ -537,7 +537,7 @@ services:
     arguments: ['@module_handler']
   date:
     class: Drupal\Core\Datetime\Date
-    arguments: ['@plugin.manager.entity', '@language_manager']
+    arguments: ['@entity.manager', '@language_manager']
   feed.bridge.reader:
     class: Drupal\Component\Bridge\ZfExtensionManagerSfContainer
     calls:

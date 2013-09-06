@@ -9,14 +9,14 @@ namespace Drupal\system\Controller;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\system\SystemManager;
 
 /**
  * Returns responses for System Info routes.
  */
-class SystemInfoController implements ControllerInterface {
+class SystemInfoController implements ContainerInjectionInterface {
 
   /**
    * System Manager Service.

@@ -200,7 +200,7 @@ class ModuleApiTest extends WebTestBase {
     $this->assertTrue(in_array('comment', $info['dependencies']), 'Comment module is listed as a dependency of the installation profile.');
     $this->assertTrue(module_exists('comment'), 'Comment module is enabled.');
     // Delete comment field to allow comment module disable.
-    entity_load('field_entity', 'comment_node_forum')->delete();
+    entity_load('field_entity', 'node.comment_forum')->delete();
     // Purge comment field storage data.
     field_purge_batch(10);
     module_disable(array('comment'));

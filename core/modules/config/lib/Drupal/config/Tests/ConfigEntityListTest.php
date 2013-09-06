@@ -35,7 +35,7 @@ class ConfigEntityListTest extends WebTestBase {
    * Tests entity list controller methods.
    */
   function testList() {
-    $controller = $this->container->get('plugin.manager.entity')
+    $controller = $this->container->get('entity.manager')
       ->getListController('config_test');
 
     // Test getStorageController() method.
@@ -123,7 +123,7 @@ class ConfigEntityListTest extends WebTestBase {
 
     // Test that config entities that do not support status, do not have
     // enable/disable operations.
-    $controller = $this->container->get('plugin.manager.entity')
+    $controller = $this->container->get('entity.manager')
       ->getListController('config_test_no_status');
 
     $list = $controller->load();

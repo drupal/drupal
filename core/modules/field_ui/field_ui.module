@@ -217,7 +217,7 @@ function field_ui_instance_load($field_name, $entity_type, $bundle_name, $bundle
     $bundle_name = field_extract_bundle($entity_type, $bundle);
   }
   // Check whether the field exists at all.
-  if ($field = field_info_field($field_name)) {
+  if ($field = field_info_field($entity_type, $field_name)) {
     // Only return the field if a field instance exists for the given entity
     // type and bundle.
     if ($instance = field_info_instance($entity_type, $field_name, $bundle_name)) {
@@ -349,7 +349,7 @@ function field_ui_form_node_type_form_submit($form, &$form_state) {
 function field_ui_library_info() {
   $libraries['drupal.field_ui'] = array(
     'title' => 'Field UI',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'field_ui') . '/field_ui.js' => array(),
     ),

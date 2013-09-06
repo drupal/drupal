@@ -33,6 +33,13 @@ taxonomy_vocabulary_add:
   requirements:
     _entity_create_access: 'taxonomy_vocabulary'
 
+taxonomy_vocabulary_edit:
+  pattern: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/edit'
+  defaults:
+    _entity_form: 'taxonomy_vocabulary.default'
+  requirements:
+    _entity_access: 'taxonomy_vocabulary.update'
+
 taxonomy_vocabulary_delete:
   pattern: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/delete'
   defaults:
@@ -48,8 +55,16 @@ taxonomy_vocabulary_reset:
     _permission: 'administer taxonomy'
 
 taxonomy_autocomplete:
-  pattern: '/taxonomy/autocomplete/{field_name}'
+  pattern: '/taxonomy/autocomplete/{entity_type}/{field_name}'
   defaults:
     _controller: '\Drupal\taxonomy\Controller\TermAutocompleteController::autocomplete'
   requirements:
     _permission: 'access content'
+
+taxonomy_overview_terms:
+  pattern: 'admin/structure/taxonomy/manage/{taxonomy_vocabulary}'
+  defaults:
+    _form: 'Drupal\taxonomy\Form\OverviewTerms'
+  requirements:
+    _entity_access: 'taxonomy_vocabulary.view'
+

@@ -176,6 +176,14 @@ class Term extends EntityNG implements TermInterface {
   /**
    * {@inheritdoc}
    */
+  public function preSave(EntityStorageControllerInterface $storage_controller) {
+    // Before saving the term, set changed time.
+    $this->changed->value = REQUEST_TIME;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
     // Only change the parents if a value is set, keep the existing values if
     // not.
@@ -241,7 +249,19 @@ class Term extends EntityNG implements TermInterface {
       'settings' => array('default_value' => 0),
       'computed' => TRUE,
     );
+    $properties['changed'] = array(
+      'label' => t('Changed'),
+      'description' => t('The time that the term was last edited.'),
+      'type' => 'integer_field',
+    );
     return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getChangedTime() {
+    return $this->changed->value;
   }
 
 }

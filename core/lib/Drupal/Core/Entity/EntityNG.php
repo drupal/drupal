@@ -315,7 +315,9 @@ class EntityNG extends Entity {
             $value = $this->values[$property_name][$default_langcode];
           }
         }
-        $this->fields[$property_name][$langcode] = \Drupal::typedData()->getPropertyInstance($this, $property_name, $value);
+        $field = \Drupal::typedData()->getPropertyInstance($this, $property_name, $value);
+        $field->setLangcode($langcode);
+        $this->fields[$property_name][$langcode] = $field;
       }
     }
     return $this->fields[$property_name][$langcode];

@@ -9,7 +9,7 @@ namespace Drupal\views\Controller;
 
 use Drupal\Component\Utility\Url;
 use Drupal\Core\Ajax\ReplaceCommand;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\views\Ajax\ScrollTopCommand;
 use Drupal\views\Ajax\ViewAjaxResponse;
@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Defines a controller to load a view via AJAX.
  */
-class ViewAjaxController implements ControllerInterface {
+class ViewAjaxController implements ContainerInjectionInterface {
 
   /**
    * The entity storage controller for views.
@@ -55,7 +55,7 @@ class ViewAjaxController implements ControllerInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')->getStorageController('view'),
+      $container->get('entity.manager')->getStorageController('view'),
       $container->get('views.executable')
     );
   }

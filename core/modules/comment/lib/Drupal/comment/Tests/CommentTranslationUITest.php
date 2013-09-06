@@ -37,7 +37,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
   function setUp() {
     $this->entityType = 'comment';
     $this->nodeBundle = 'article';
-    $this->bundle = 'comment_article';
+    $this->bundle = 'node__comment_article';
     $this->testLanguageSelector = FALSE;
     $this->subject = $this->randomName();
     parent::setUp();
@@ -54,7 +54,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     // Add another comment field with new bundle to page content type.
     comment_add_default_comment_field('node', 'page');
     // Mark this bundle as translatable.
-    content_translation_set_config('comment', 'comment_article', 'enabled', TRUE);
+    content_translation_set_config('comment', 'node__comment_article', 'enabled', TRUE);
     // Refresh entity info.
     entity_info_cache_clear();
     // Flush the permissions after adding the translatable comment bundle.
@@ -73,7 +73,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
    */
   function setupTestFields() {
     parent::setupTestFields();
-    $field = field_info_field('comment_body');
+    $field = field_info_field('comment', 'comment_body');
     $field['translatable'] = TRUE;
     $field->save();
   }
@@ -81,10 +81,10 @@ class CommentTranslationUITest extends ContentTranslationUITest {
   /**
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::createEntity().
    */
-  protected function createEntity($values, $langcode, $node_bundle = 'comment_article') {
-    if ($node_bundle == 'comment_article') {
+  protected function createEntity($values, $langcode, $node_bundle = 'node__comment_article') {
+    if ($node_bundle == 'node__comment_article') {
       $node_type = 'article';
-      $field_name = $node_bundle;
+      $field_name = 'comment_article';
     }
     else {
       $node_type = 'page';
@@ -98,7 +98,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     ));
     $values['entity_id'] = $node->id();
     $values['entity_type'] = 'node';
-    $values['field_name'] = $node_bundle;
+    $values['field_id'] = $node_bundle;
     $values['uid'] = $node->getAuthorId();
     return parent::createEntity($values, $langcode, $node_bundle);
   }

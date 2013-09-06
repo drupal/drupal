@@ -26,7 +26,7 @@ function tour_library_info() {
 
   $libraries['tour'] = array(
     'title' => 'Tour',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       // Add the JavaScript, with a group and weight such that it will run
       // before modules/overlay/overlay-parent.js.
@@ -44,7 +44,7 @@ function tour_library_info() {
 
   $libraries['tour-styling'] = array(
     'title' => 'Tour',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'css' => array(
       $path . '/css/tour.module.css' => array('media' => 'screen'),
     )
@@ -73,7 +73,7 @@ function tour_library_info() {
  * Implements hook_toolbar().
  */
 function tour_toolbar() {
-  if (!user_access('access tour')) {
+  if (!Drupal::currentUser()->hasPermission('access tour')) {
     return;
   }
 
@@ -107,7 +107,7 @@ function tour_toolbar() {
  * Implements hook_preprocess_HOOK() for page.tpl.php.
  */
 function tour_preprocess_page(&$variables) {
-  if (!user_access('access tour')) {
+  if (!Drupal::currentUser()->hasPermission('access tour')) {
     return;
   }
 

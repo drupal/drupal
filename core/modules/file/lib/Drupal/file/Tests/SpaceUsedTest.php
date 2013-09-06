@@ -43,7 +43,7 @@ class SpaceUsedTest extends FileManagedTestBase {
    * Test different users with the default status.
    */
   function testFileSpaceUsed() {
-    $file = $this->container->get('plugin.manager.entity')->getStorageController('file');
+    $file = $this->container->get('entity.manager')->getStorageController('file');
     // Test different users with default status.
     $this->assertEqual($file->spaceUsed(2), 70);
     $this->assertEqual($file->spaceUsed(3), 300);

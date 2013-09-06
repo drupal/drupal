@@ -813,14 +813,14 @@ function views_library_info() {
   $path = drupal_get_path('module', 'views');
   $libraries['views.module'] = array(
     'title' => 'Views base',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'css' => array(
       "$path/css/views.module.css"
     ),
   );
   $libraries['views.ajax'] = array(
     'title' => 'Views AJAX',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       "$path/js/base.js" => array('group' => JS_DEFAULT),
       "$path/js/ajax_view.js" => array('group' => JS_DEFAULT),
@@ -836,7 +836,7 @@ function views_library_info() {
   );
   $libraries['views.contextual-links'] = array(
     'title' => 'Views Contextual links',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       // Set to -10 to move it before the contextual links javascript file.
       "$path/js/views-contextual.js" => array('group' => JS_LIBRARY, 'weight' => -10),
@@ -848,7 +848,7 @@ function views_library_info() {
   );
   $libraries['views.exposed-form'] = array(
     'title' => 'Views exposed form',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'css' => array(
       "$path/css/views.exposed_form.css",
     ),

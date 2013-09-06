@@ -35,7 +35,7 @@ class EntityReferenceTaxonomyTermRssFormatter extends EntityReferenceFormatterBa
   public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
     $elements = array();
 
-    foreach ($items as $delta => $item) {
+    foreach ($items as $item) {
       $entity->rss_elements[] = array(
         'key' => 'category',
         'value' => $item->entity->label(),

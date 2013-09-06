@@ -75,4 +75,14 @@ interface ConfigEntityInterface extends EntityInterface {
    */
   public function status();
 
+  /**
+   * Retrieves the exportable properties of the entity.
+   *
+   * These are the values that get saved into config.
+   *
+   * @return array
+   *   An array of exportable properties and their values.
+   */
+  public function getExportProperties();
+
 }

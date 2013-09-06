@@ -36,12 +36,13 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
     $this->referenced_type = $referenced->type;
 
     entity_create('field_entity', array(
+      'name' => 'test_field',
+      'entity_type' => 'node',
       'translatable' => FALSE,
       'entity_types' => array(),
       'settings' => array(
         'target_type' => 'node',
       ),
-      'field_name' => 'test_field',
       'type' => 'entity_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     ))->save();

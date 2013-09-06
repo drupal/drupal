@@ -7,13 +7,13 @@
 
 namespace Drupal\common_test\Controller;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routines for common_test routes.
  */
-class CommonTestController implements ControllerInterface {
+class CommonTestController implements ContainerInjectionInterface {
 
   /**
    * {@inheritdoc}

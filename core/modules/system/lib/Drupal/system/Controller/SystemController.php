@@ -8,7 +8,7 @@
 namespace Drupal\system\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\system\SystemManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * Returns responses for System routes.
  */
-class SystemController extends ControllerBase implements ControllerInterface {
+class SystemController extends ControllerBase implements ContainerInjectionInterface {
 
   /**
    * The entity query factory object.
@@ -96,11 +96,9 @@ class SystemController extends ControllerBase implements ControllerInterface {
             unset($item['localized_options']['attributes']['title']);
           }
           $block = $item;
-          // @todo Replace system_admin_menu_block() in
-          //   https://drupal.org/node/1987814.
           $block['content'] = array(
             '#theme' => 'admin_block_content',
-            '#content' => system_admin_menu_block($item),
+            '#content' => $this->systemManager->getAdminBlock($item),
           );
 
           if (!empty($block['content'])) {
@@ -138,6 +136,13 @@ class SystemController extends ControllerBase implements ControllerInterface {
   public function compactPage($mode) {
     user_cookie_save(array('admin_compact_mode' => ($mode == 'on')));
     return $this->redirect('front');
+  }
+
+  /**
+   * Provides a single block from the administration menu as a page.
+   */
+  public function systemAdminMenuBlockPage() {
+    return $this->systemManager->getBlockContents();
   }
 
 }

@@ -200,7 +200,7 @@ function content_translation_menu() {
     }
   }
 
-  $items['admin/config/regional/content_translation/translatable/%'] = array(
+  $items['admin/config/regional/content_translation/translatable/%/%'] = array(
     'title' => 'Confirm change in translatability.',
     'description' => 'Confirm page for changing field translatability.',
     'route_name' => 'content_translation_translatable',
@@ -356,7 +356,7 @@ function content_translation_library_info() {
   $path = drupal_get_path('module', 'content_translation');
   $libraries['drupal.content_translation.admin'] = array(
     'title' => 'Content translation UI',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/content_translation.admin.js' => array(),
     ),
@@ -621,7 +621,7 @@ function content_translation_form_alter(array &$form, array &$form_state) {
       else {
         foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
           $field_name = $instance['field_name'];
-          $field = field_info_field($field_name);
+          $field = $instance->getField();
           $form[$field_name]['#multilingual'] = !empty($field['translatable']);
         }
       }
@@ -808,6 +808,7 @@ function content_translation_field_extra_fields() {
  */
 function content_translation_form_field_ui_field_edit_form_alter(array &$form, array &$form_state, $form_id) {
   $field = $form['#field'];
+  $entity_type = $field['entity_type'];
   $field_name = $field['field_name'];
   $translatable = $field['translatable'];
   $label = t('Field translation');
@@ -821,7 +822,7 @@ function content_translation_form_field_ui_field_edit_form_alter(array &$form, a
         '#type' => 'link',
         '#prefix' => t('This field has data in existing content.') . ' ',
         '#title' => !$translatable ? t('Enable translation') : t('Disable translation'),
-        '#href' => 'admin/config/regional/content_translation/translatable/' . $field_name,
+        '#href' => "admin/config/regional/content_translation/translatable/$entity_type/$field_name",
         '#options' => array('query' => drupal_get_destination()),
         '#access' => user_access('administer content translation'),
       ),
@@ -1022,7 +1023,7 @@ function content_translation_save_settings($settings) {
         // Store whether fields have translation enabled or not.
         if (!empty($bundle_settings['columns'])) {
           foreach ($bundle_settings['columns'] as $field_name => $column_settings) {
-            $field = field_info_field($field_name);
+            $field = field_info_field($entity_type, $field_name);
             $instance = field_info_instance($entity_type, $field_name, $bundle);
             if ($field['translatable']) {
               $instance['settings']['translation_sync'] = $column_settings;

@@ -6,7 +6,7 @@
 
 namespace Drupal\locale\Controller;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * Return response for manual check translations.
  */
-class LocaleController implements ControllerInterface {
+class LocaleController implements ContainerInjectionInterface {
 
   /**
    * The module handler.

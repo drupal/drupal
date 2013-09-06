@@ -70,7 +70,8 @@ class DisplayApiTest extends FieldUnitTestBase {
     $this->cardinality = 4;
 
     $field = array(
-      'field_name' => $this->field_name,
+      'name' => $this->field_name,
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
       'cardinality' => $this->cardinality,
     );

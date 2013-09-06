@@ -24,6 +24,14 @@ use Drupal\Core\TypedData\ComplexDataInterface;
 interface FieldItemInterface extends ComplexDataInterface {
 
   /**
+   * Gets the langcode of the field values held in the object.
+   *
+   * @return $langcode
+   *   The langcode.
+   */
+  public function getLangcode();
+
+  /**
    * Gets the field definition.
    *
    * @return \Drupal\Core\Entity\Field\FieldDefinitionInterface

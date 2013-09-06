@@ -20,7 +20,7 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('entity', 'user', 'system', 'field', 'text', 'filter', 'field_sql_storage', 'entity_test');
+  public static $modules = array('entity', 'user', 'system', 'field', 'text', 'filter', 'entity_test');
 
   /**
    * The entity manager service.
@@ -39,7 +39,7 @@ abstract class EntityUnitTestBase extends DrupalUnitTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->entityManager = $this->container->get('plugin.manager.entity');
+    $this->entityManager = $this->container->get('entity.manager');
     $this->state = $this->container->get('state');
 
     $this->installSchema('user', 'users');

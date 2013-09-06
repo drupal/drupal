@@ -9,45 +9,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\entity\Entity\EntityFormDisplay;
 
 /**
- * @defgroup field_storage Field Storage API
- * @{
- * Implements a storage engine for Field API data.
- *
- * The Field Attach API uses the Field Storage API to perform all "database
- * access". Each Field Storage API hook function defines a primitive database
- * operation such as read, write, or delete. The default field storage module,
- * field_sql_storage.module, uses the local SQL database to implement these
- * operations, but alternative field storage backends can choose to represent
- * the data in SQL differently or use a completely different storage mechanism
- * such as a cloud-based database.
- *
- * Each field defines which storage backend it uses. The Drupal configuration
- * 'field.settings.default_storage' identifies the storage backend used by
- * default.
- *
- * See @link field Field API @endlink for information about the other parts of
- * the Field API.
- */
-
-/**
- * Argument for an update operation.
- *
- * This is used in hook_field_storage_write when updating an existing entity.
- */
-const FIELD_STORAGE_UPDATE = 'update';
-
-/**
- * Argument for an insert operation.
- *
- * This is used in hook_field_storage_write when inserting a new entity.
- */
-const FIELD_STORAGE_INSERT = 'insert';
-
-/**
- * @} End of "defgroup field_storage".
- */
-
-/**
  * @defgroup field_attach Field Attach API
  * @{
  * Operates on Field API data attached to Drupal entities.
@@ -87,22 +48,7 @@ const FIELD_STORAGE_INSERT = 'insert';
  * allows any module to act on Field Attach operations for any entity after the
  * operation is complete, and access or modify all the field, form, or display
  * data for that entity and operation. For example, field_attach_view() invokes
- * hook_field_attach_view_alter(). These all-module hooks are distinct from
- * those of the Field Types API, such as hook_field_load(), that are only
- * invoked for the module that defines a specific field type.
- *
- * field_attach_load(), field_attach_insert(), and field_attach_update() also
- * define pre-operation hooks, e.g. hook_field_attach_pre_load(). These hooks
- * run before the corresponding Field Storage API and Field Type API operations.
- * They allow modules to define additional storage locations (e.g.
- * denormalizing, mirroring) for field data on a per-field basis. They also
- * allow modules to take over field storage completely by instructing other
- * implementations of the same hook and the Field Storage API itself not to
- * operate on specified fields.
- *
- * The pre-operation hooks do not make the Field Storage API irrelevant. The
- * Field Storage API is essentially the "fallback mechanism" for any fields that
- * aren't being intercepted explicitly by pre-operation hooks.
+ * hook_field_attach_view_alter().
  *
  * @link field_language Field language API @endlink provides information about
  * the structure of field objects.
@@ -166,7 +112,7 @@ function field_invoke_method($method, $target_function, EntityInterface $entity,
     $target = call_user_func($target_function, $instance);
 
     if (method_exists($target, $method)) {
-      $field = field_info_field_by_id($instance['field_id']);
+      $field = $instance->getField();
       $field_name = $field['field_name'];
 
       // Determine the list of languages to iterate on.
@@ -273,7 +219,7 @@ function field_invoke_method_multiple($method, $target_function, array $entities
 
         // Unless a language code suggestion is provided we iterate on all the
         // available language codes.
-        $field = field_info_field_by_id($instance['field_id']);
+        $field = $instance->getField();
         $available_langcodes = field_available_languages($entity_type, $field);
         $langcode = !empty($options['langcode'][$id]) ? $options['langcode'][$id] : $options['langcode'];
         $langcodes = _field_language_suggestion($available_langcodes, $langcode, $field_name);

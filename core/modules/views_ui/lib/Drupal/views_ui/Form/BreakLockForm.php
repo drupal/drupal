@@ -49,7 +49,7 @@ class BreakLockForm extends EntityConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('user.tempstore')
     );
   }

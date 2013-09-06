@@ -88,7 +88,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
     $query->addTag('node_access');
   }
   $result = $query
-    ->fields('c', array('cid', 'subject', 'name', 'changed', 'entity_id', 'entity_type', 'field_name'))
+    ->fields('c', array('cid', 'subject', 'name', 'changed', 'entity_id', 'entity_type', 'field_id'))
     ->condition('c.status', $status)
     ->limit(50)
     ->orderByHeader($header)
@@ -125,13 +125,17 @@ function comment_admin_overview($form, &$form_state, $arg) {
       '#theme' => 'username',
       '#account' => comment_prepare_author($comment),
     );
+    $body = '';
+    if (!empty($comment->comment_body->value)) {
+      $body = $comment->comment_body->value;
+    }
     $options[$comment->id()] = array(
       'subject' => array(
         'data' => array(
           '#type' => 'link',
           '#title' => $comment->subject->value,
           '#href' => 'comment/' . $comment->id(),
-          '#options' => array('attributes' => array('title' => truncate_utf8($comment->comment_body->value, 128)), 'fragment' => 'comment-' . $comment->id()),
+          '#options' => array('attributes' => array('title' => truncate_utf8($body, 128)), 'fragment' => 'comment-' . $comment->id()),
         ),
       ),
       'author' => drupal_render($username),

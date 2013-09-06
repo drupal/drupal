@@ -98,7 +98,7 @@ function comment_views_data() {
     'help' => t('Hostname of user that posted the comment.'),
     'field' => array(
       'id' => 'standard',
-     ),
+    ),
     'filter' => array(
       'id' => 'string',
     ),
@@ -115,7 +115,7 @@ function comment_views_data() {
     'help' => t('E-mail of user that posted the comment. Will be empty if the author is a registered user.'),
     'field' => array(
       'id' => 'standard',
-     ),
+    ),
     'filter' => array(
       'id' => 'string',
     ),
@@ -334,9 +334,9 @@ function comment_views_data() {
     ),
   );
 
-  $data['comment']['field_name'] = array(
-    'title' => t('Comment field name'),
-    'help' => t('The Field name from which the comment originated.'),
+  $data['comment']['field_id'] = array(
+    'title' => t('Comment field id'),
+    'help' => t('The Field id from which the comment originated.'),
     'field' => array(
       'id' => 'standard',
     ),
@@ -437,7 +437,7 @@ function comment_views_data() {
     if ($type == 'comment' || empty($entity_info['fieldable']) || !isset($entity_info['base_table'])) {
       continue;
     }
-    // @todo As you can't have multiple joins this join doesn't use the field_name yet.
+    // @todo As you can't have multiple joins this join doesn't use the field_id yet.
     if (Drupal::service('comment.manager')->getFields($type)) {
       // Explain how this table joins to others.
       $data['comment_entity_statistics']['table']['join'][$entity_info['base_table']] = array(
@@ -565,9 +565,9 @@ function comment_views_data() {
       'id' => 'standard',
     ),
   );
-  $data['comment_entity_statistics']['field_name'] = array(
-    'title' => t('Comment field name'),
-    'help' => t('The Field name from which the comment originated.'),
+  $data['comment_entity_statistics']['field_id'] = array(
+    'title' => t('Comment field id'),
+    'help' => t('The Field id from which the comment originated.'),
     'field' => array(
       'id' => 'standard',
     ),
@@ -589,9 +589,8 @@ function comment_views_data() {
  * Implements hook_views_data_alter().
  */
 function comment_views_data_alter(&$data) {
-  // new comments are only supported for node table because it requires the
+  // New comments are only supported for node table because it requires the
   // history table.
-  // new comments
   $data['node']['new_comments'] = array(
     'title' => t('New comments'),
     'help' => t('The number of new comments on the node.'),
@@ -601,9 +600,9 @@ function comment_views_data_alter(&$data) {
     ),
   );
 
-  // Provide a integration for each entity type.
+  // Provide a integration for each entity type except comment.
   foreach (Drupal::entityManager()->getDefinitions() as $entity_type => $entity_info) {
-    if (!isset($entity_info['base_table'])) {
+    if ($entity_type == 'comment' || empty($entity_info['fieldable']) || !isset($entity_info['base_table'])) {
       continue;
     }
     $fields = Drupal::service('comment.manager')->getFields($entity_type);
@@ -665,8 +664,8 @@ function comment_views_data_alter(&$data) {
                 'value' => $entity_type,
               ),
               array(
-                'field' => 'field_name',
-                'value' => $field_name,
+                'field' => 'field_id',
+                'value' => $entity_type . '.' . $field_name,
               ),
             ),
           ),

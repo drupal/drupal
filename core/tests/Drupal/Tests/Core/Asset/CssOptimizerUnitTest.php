@@ -201,6 +201,38 @@ class CssOptimizerUnitTest extends UnitTestCase {
   }
 
   /**
+   * Tests optimizing a CSS asset containing charset declaration.
+   */
+  function testOptimizeRemoveCharset() {
+    $cases = array(
+      array(
+        'asset' => array(
+          'type' => 'inline', 
+          'data' => '@charset "UTF-8";html{font-family:"sans-serif";}',
+          'preprocess' => FALSE,
+        ),
+        'expected' => 'html{font-family:"sans-serif";}',
+      ),
+      array(
+        // This asset contains extra \n character.
+        'asset' => array(
+          'type' => 'inline',
+          'data' => "@charset 'UTF-8';\nhtml{font-family:'sans-serif';}",
+          'preprocess' => FALSE,
+        ),
+        'expected' => "\nhtml{font-family:'sans-serif';}",
+      ),
+    );
+    foreach ($cases as $case) {
+      $this->assertEquals(
+        $case['expected'],
+        $this->optimizer->optimize($case['asset']),
+        'CSS optimizing correctly removes the charset declaration.'
+      );
+    }
+  }
+
+  /**
    * Tests a file CSS asset with preprocessing disabled.
    */
   function testTypeFilePreprocessingDisabled() {

@@ -1,3 +1,2 @@
-default_storage: field_sql_storage
 language_fallback: '1'
 purge_batch_size: 10

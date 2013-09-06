@@ -9,7 +9,7 @@ namespace Drupal\aggregator\Controller;
 
 use Drupal\aggregator\FeedInterface;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 /**
  * Returns responses for aggregator module routes.
  */
-class AggregatorController implements ControllerInterface {
+class AggregatorController implements ContainerInjectionInterface {
 
   /**
    * Stores the Entity manager.
@@ -86,7 +86,7 @@ class AggregatorController implements ControllerInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity'),
+      $container->get('entity.manager'),
       $container->get('database'),
       $container->get('config.factory'),
       $container->get('module_handler'),

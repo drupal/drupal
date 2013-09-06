@@ -21,7 +21,7 @@ abstract class FileFormatterBase extends FormatterBase {
     // Remove files specified to not be displayed.
     $fids = array();
     foreach ($entities as $id => $entity) {
-      foreach ($items[$id] as $delta => $item) {
+      foreach ($items[$id] as $item) {
         if ($this->isDisplayed($item) && !empty($item->target_id)) {
           // Load the files from the files table.
           $fids[] = $item->target_id;
@@ -33,7 +33,7 @@ abstract class FileFormatterBase extends FormatterBase {
       $files = file_load_multiple($fids);
 
       foreach ($entities as $id => $entity) {
-        foreach ($items[$id] as $delta => $item) {
+        foreach ($items[$id] as $item) {
           // If the file does not exist, mark the entire item as empty.
           if (!empty($item->target_id)) {
             $item->entity = isset($files[$item->target_id]) ? $files[$item->target_id] : NULL;

@@ -74,7 +74,7 @@ class CommentLanguageTest extends WebTestBase {
     comment_add_default_comment_field('node', 'article');
 
     // Make comment body translatable.
-    $field = field_info_field('comment_body');
+    $field = field_info_field('comment', 'comment_body');
     $field['translatable'] = TRUE;
     $field->save();
     $this->assertTrue(field_is_translatable('comment', $field), 'Comment body is translatable.');
@@ -123,7 +123,7 @@ class CommentLanguageTest extends WebTestBase {
           ->fields('c', array('cid'))
           ->condition('entity_id', $node->id())
           ->condition('entity_type', 'node')
-          ->condition('field_name', 'comment')
+          ->condition('field_id', 'node__comment')
           ->orderBy('cid', 'DESC')
           ->range(0, 1)
           ->execute()

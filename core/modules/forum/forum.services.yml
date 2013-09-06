@@ -1,6 +1,9 @@
 services:
+  forum_manager:
+    class: Drupal\forum\ForumManager
+    arguments: ['@config.factory', '@plugin.manager.entity', '@database', '@field.info', '@string_translation']
   forum.breadcrumb:
     class: Drupal\forum\ForumBreadcrumbBuilder
-    arguments: ['@plugin.manager.entity', '@config.factory']
+    arguments: ['@entity.manager', '@config.factory', '@forum_manager']
     tags:
       - { name: breadcrumb_builder, priority: 1001 }

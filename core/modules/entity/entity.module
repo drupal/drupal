@@ -30,10 +30,7 @@ function entity_menu() {
   $items['admin/structure/display-modes'] = array(
     'title' => 'Display modes',
     'description' => 'Configure what displays are available for your content and forms.',
-    'page callback' => 'system_admin_menu_block_page',
-    'access arguments' => array('administer display modes'),
-    'file' => 'system.admin.inc',
-    'file path' => drupal_get_path('module', 'system'),
+    'route_name' => 'entity_display_mode',
   );
 
   // View modes.

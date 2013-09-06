@@ -47,7 +47,6 @@ class RedirectResponseSubscriber implements EventSubscriberInterface {
     if ($response instanceOf RedirectResponse) {
       $options = array();
 
-      $redirect_path = $response->getTargetUrl();
       $destination = $event->getRequest()->query->get('destination');
       // A destination in $_GET always overrides the current RedirectResponse.
       // We do not allow absolute URLs to be passed via $_GET, as this can be an

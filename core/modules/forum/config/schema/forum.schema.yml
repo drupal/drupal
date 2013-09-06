@@ -22,12 +22,6 @@ forum.settings:
             limit:
               type: integer
               label: 'New forum Count'
-    containers:
-      type: sequence
-      label: 'Containers to group related forums'
-      sequence:
-        - type: integer
-          label: 'Taxonomy Term ID'
     topics:
       type: mapping
       label: 'Forum topics block'

@@ -7,7 +7,7 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Config\ConfigFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Builds a form for enabling a module.
  */
-class DateFormatLocalizeResetForm extends ConfirmFormBase implements ControllerInterface {
+class DateFormatLocalizeResetForm extends ConfirmFormBase implements ContainerInjectionInterface {
 
   /**
    * The language to be reset.

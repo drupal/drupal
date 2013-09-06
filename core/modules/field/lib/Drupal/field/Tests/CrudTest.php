@@ -7,7 +7,6 @@
 
 namespace Drupal\field\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\field\FieldException;
 
 class CrudTest extends FieldUnitTestBase {
@@ -37,14 +36,15 @@ class CrudTest extends FieldUnitTestBase {
    */
   function testCreateField() {
     $field_definition = array(
-      'field_name' => 'field_2',
+      'name' => 'field_2',
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
     );
     field_test_memorize();
     $field = entity_create('field_entity', $field_definition);
     $field->save();
     $mem = field_test_memorize();
-    $this->assertIdentical($mem['field_test_field_entity_create'][0][0]['field_name'], $field_definition['field_name'], 'hook_entity_create() called with correct arguments.');
+    $this->assertIdentical($mem['field_test_field_entity_create'][0][0]['field_name'], $field_definition['name'], 'hook_entity_create() called with correct arguments.');
     $this->assertIdentical($mem['field_test_field_entity_create'][0][0]['type'], $field_definition['type'], 'hook_entity_create() called with correct arguments.');
 
     // Read the configuration. Check against raw configuration data rather than
@@ -53,7 +53,9 @@ class CrudTest extends FieldUnitTestBase {
     $field_config = \Drupal::config('field.field.' . $field->id())->get();
 
     // Ensure that basic properties are preserved.
-    $this->assertEqual($field_config['id'], $field_definition['field_name'], 'The field name is properly saved.');
+    $this->assertEqual($field_config['name'], $field_definition['name'], 'The field name is properly saved.');
+    $this->assertEqual($field_config['entity_type'], $field_definition['entity_type'], 'The field entity type is properly saved.');
+    $this->assertEqual($field_config['id'], $field_definition['entity_type'] . '.' . $field_definition['name'], 'The field id is properly saved.');
     $this->assertEqual($field_config['type'], $field_definition['type'], 'The field type is properly saved.');
 
     // Ensure that cardinality defaults to 1.
@@ -62,9 +64,6 @@ class CrudTest extends FieldUnitTestBase {
     // Ensure that default settings are present.
     $field_type = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field_definition['type']);
     $this->assertEqual($field_config['settings'], $field_type['settings'], 'Default field settings have been written.');
-
-    // Ensure that default storage was set.
-    $this->assertEqual($field_config['storage']['type'], \Drupal::config('field.settings')->get('default_storage'), 'The field type is properly saved.');
 
     // Guarantee that the name is unique.
     try {
@@ -78,7 +77,8 @@ class CrudTest extends FieldUnitTestBase {
     // Check that field type is required.
     try {
       $field_definition = array(
-        'field_name' => 'field_1',
+        'name' => 'field_1',
+        'entity_type' => 'entity_type',
       );
       entity_create('field_entity', $field_definition)->save();
       $this->fail(t('Cannot create a field with no type.'));
@@ -90,7 +90,8 @@ class CrudTest extends FieldUnitTestBase {
     // Check that field name is required.
     try {
       $field_definition = array(
-        'type' => 'test_field'
+        'type' => 'test_field',
+        'entity_type' => 'entity_test',
       );
       entity_create('field_entity', $field_definition)->save();
       $this->fail(t('Cannot create an unnamed field.'));
@@ -98,11 +99,24 @@ class CrudTest extends FieldUnitTestBase {
     catch (FieldException $e) {
       $this->pass(t('Cannot create an unnamed field.'));
     }
+    // Check that entity type is required.
+    try {
+      $field_definition = array(
+        'name' => 'test_field',
+        'type' => 'test_field'
+      );
+      entity_create('field_entity', $field_definition)->save();
+      $this->fail('Cannot create a field without an entity type.');
+    }
+    catch (FieldException $e) {
+      $this->pass('Cannot create a field without an entity type.');
+    }
 
     // Check that field name must start with a letter or _.
     try {
       $field_definition = array(
-        'field_name' => '2field_2',
+        'name' => '2field_2',
+        'entity_type' => 'entity_test',
         'type' => 'test_field',
       );
       entity_create('field_entity', $field_definition)->save();
@@ -115,7 +129,8 @@ class CrudTest extends FieldUnitTestBase {
     // Check that field name must only contain lowercase alphanumeric or _.
     try {
       $field_definition = array(
-        'field_name' => 'field#_3',
+        'name' => 'field#_3',
+        'entity_type' => 'entity_test',
         'type' => 'test_field',
       );
       entity_create('field_entity', $field_definition)->save();
@@ -128,7 +143,8 @@ class CrudTest extends FieldUnitTestBase {
     // Check that field name cannot be longer than 32 characters long.
     try {
       $field_definition = array(
-        'field_name' => '_12345678901234567890123456789012',
+        'name' => '_12345678901234567890123456789012',
+        'entity_type' => 'entity_test',
         'type' => 'test_field',
       );
       entity_create('field_entity', $field_definition)->save();
@@ -143,7 +159,8 @@ class CrudTest extends FieldUnitTestBase {
     try {
       $field_definition = array(
         'type' => 'test_field',
-        'field_name' => 'id',
+        'name' => 'id',
+        'entity_type' => 'entity_test',
       );
       entity_create('field_entity', $field_definition)->save();
       $this->fail(t('Cannot create a field bearing the name of an entity key.'));
@@ -161,7 +178,8 @@ class CrudTest extends FieldUnitTestBase {
    */
   function testCreateFieldWithExplicitSchema() {
     $field_definition = array(
-      'field_name' => 'field_2',
+      'name' => 'field_2',
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
       'schema' => array(
         'dummy' => 'foobar'
@@ -172,68 +190,31 @@ class CrudTest extends FieldUnitTestBase {
   }
 
   /**
-   * Test failure to create a field.
-   */
-  function testCreateFieldFail() {
-    $field_name = 'duplicate';
-    $field_definition = array('field_name' => $field_name, 'type' => 'test_field', 'storage' => array('type' => 'field_test_storage_failure'));
-    $field = entity_load('field_entity', $field_name);
-
-    // The field does not exist.
-    $this->assertFalse($field, 'The field does not exist.');
-
-    // Try to create the field.
-    try {
-      entity_create('field_entity', $field_definition)->save();
-      $this->assertTrue(FALSE, 'Field creation (correctly) fails.');
-    }
-    catch (\Exception $e) {
-      $this->assertTrue(TRUE, 'Field creation (correctly) fails.');
-    }
-
-    // The field does not exist.
-    $field = entity_load('field_entity', $field_name);
-    $this->assertFalse($field, 'The field does not exist.');
-  }
-
-  /**
-   * Tests reading a single field definition.
-   */
-  function testReadField() {
-    $field_definition = array(
-      'field_name' => 'field_1',
-      'type' => 'test_field',
-    );
-    entity_create('field_entity', $field_definition)->save();
-
-    // Read the field back.
-    $field = field_read_field($field_definition['field_name']);
-    $this->assertTrue($field_definition < $field, 'The field was properly read.');
-  }
-
-  /**
    * Tests reading field definitions.
    */
   function testReadFields() {
     $field_definition = array(
-      'field_name' => 'field_1',
+      'name' => 'field_1',
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
     );
-    entity_create('field_entity', $field_definition)->save();
+    $field = entity_create('field_entity', $field_definition);
+    $field->save();
+    $id = $field->id();
 
     // Check that 'single column' criteria works.
-    $fields = field_read_fields(array('field_name' => $field_definition['field_name']));
-    $this->assertTrue(count($fields) == 1 && isset($fields[$field_definition['field_name']]), 'The field was properly read.');
+    $fields = field_read_fields(array('id' => $id));
+    $this->assertTrue(count($fields) == 1 && isset($fields[$id]), 'The field was properly read.');
 
     // Check that 'multi column' criteria works.
-    $fields = field_read_fields(array('field_name' => $field_definition['field_name'], 'type' => $field_definition['type']));
-    $this->assertTrue(count($fields) == 1 && isset($fields[$field_definition['field_name']]), 'The field was properly read.');
-    $fields = field_read_fields(array('field_name' => $field_definition['field_name'], 'type' => 'foo'));
+    $fields = field_read_fields(array('id' => $id, 'type' => $field_definition['type']));
+    $this->assertTrue(count($fields) == 1 && isset($fields[$id]), 'The field was properly read.');
+    $fields = field_read_fields(array('name' => $field_definition['name'], 'type' => 'foo'));
     $this->assertTrue(empty($fields), 'No field was found.');
 
     // Create an instance of the field.
     $instance_definition = array(
-      'field_name' => $field_definition['field_name'],
+      'field_name' => $field_definition['name'],
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     );
@@ -246,11 +227,14 @@ class CrudTest extends FieldUnitTestBase {
   function testFieldIndexes() {
     // Check that indexes specified by the field type are used by default.
     $field_definition = array(
-      'field_name' => 'field_1',
+      'name' => 'field_1',
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
     );
-    entity_create('field_entity', $field_definition)->save();
-    $field = field_read_field($field_definition['field_name']);
+    $field = entity_create('field_entity', $field_definition);
+    $field->save();
+    field_cache_clear();
+    $field = entity_load('field_entity', $field->id());
     $schema = $field->getSchema();
     $expected_indexes = array('value' => array('value'));
     $this->assertEqual($schema['indexes'], $expected_indexes, 'Field type indexes saved by default');
@@ -258,14 +242,17 @@ class CrudTest extends FieldUnitTestBase {
     // Check that indexes specified by the field definition override the field
     // type indexes.
     $field_definition = array(
-      'field_name' => 'field_2',
+      'name' => 'field_2',
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
       'indexes' => array(
         'value' => array(),
       ),
     );
-    entity_create('field_entity', $field_definition)->save();
-    $field = field_read_field($field_definition['field_name']);
+    $field = entity_create('field_entity', $field_definition);
+    $field->save();
+    field_cache_clear();
+    $field = entity_load('field_entity', $field->id());
     $schema = $field->getSchema();
     $expected_indexes = array('value' => array());
     $this->assertEqual($schema['indexes'], $expected_indexes, 'Field definition indexes override field type indexes');
@@ -273,14 +260,18 @@ class CrudTest extends FieldUnitTestBase {
     // Check that indexes specified by the field definition add to the field
     // type indexes.
     $field_definition = array(
-      'field_name' => 'field_3',
+      'name' => 'field_3',
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
       'indexes' => array(
         'value_2' => array('value'),
       ),
     );
-    entity_create('field_entity', $field_definition)->save();
-    $field = field_read_field($field_definition['field_name']);
+    $field = entity_create('field_entity', $field_definition);
+    $field->save();
+    $id = $field->id();
+    field_cache_clear();
+    $field = entity_load('field_entity', $id);
     $schema = $field->getSchema();
     $expected_indexes = array('value' => array('value'), 'value_2' => array('value'));
     $this->assertEqual($schema['indexes'], $expected_indexes, 'Field definition indexes are merged with field type indexes');
@@ -293,30 +284,38 @@ class CrudTest extends FieldUnitTestBase {
     // TODO: Also test deletion of the data stored in the field ?
 
     // Create two fields (so we can test that only one is deleted).
-    $this->field = array('field_name' => 'field_1', 'type' => 'test_field');
+    $this->field = array(
+      'name' => 'field_1',
+      'type' => 'test_field',
+      'entity_type' => 'entity_test',
+    );
     entity_create('field_entity', $this->field)->save();
-    $this->another_field = array('field_name' => 'field_2', 'type' => 'test_field');
+    $this->another_field = array(
+      'name' => 'field_2',
+      'type' => 'test_field',
+      'entity_type' => 'entity_test',
+    );
     entity_create('field_entity', $this->another_field)->save();
 
     // Create instances for each.
     $this->instance_definition = array(
-      'field_name' => $this->field['field_name'],
+      'field_name' => $this->field['name'],
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     );
     entity_create('field_instance', $this->instance_definition)->save();
     $another_instance_definition = $this->instance_definition;
-    $another_instance_definition['field_name'] = $this->another_field['field_name'];
+    $another_instance_definition['field_name'] = $this->another_field['name'];
     entity_create('field_instance', $another_instance_definition)->save();
 
     // Test that the first field is not deleted, and then delete it.
-    $field = field_read_field($this->field['field_name'], array('include_deleted' => TRUE));
+    $field = field_read_field('entity_test', $this->field['name'], array('include_deleted' => TRUE));
     $this->assertTrue(!empty($field) && empty($field['deleted']), 'A new field is not marked for deletion.');
-    field_info_field($this->field['field_name'])->delete();
+    field_info_field('entity_test', $this->field['name'])->delete();
 
     // Make sure that the field is marked as deleted when it is specifically
     // loaded.
-    $field = field_read_field($this->field['field_name'], array('include_deleted' => TRUE));
+    $field = field_read_field('entity_test', $this->field['name'], array('include_deleted' => TRUE));
     $this->assertTrue(!empty($field['deleted']), 'A deleted field is marked for deletion.');
 
     // Make sure that this field's instance is marked as deleted when it is
@@ -325,7 +324,7 @@ class CrudTest extends FieldUnitTestBase {
     $this->assertTrue(!empty($instance['deleted']), 'An instance for a deleted field is marked for deletion.');
 
     // Try to load the field normally and make sure it does not show up.
-    $field = field_read_field($this->field['field_name']);
+    $field = field_read_field('entity_test', $this->field['name']);
     $this->assertTrue(empty($field), 'A deleted field is not loaded by default.');
 
     // Try to load the instance normally and make sure it does not show up.
@@ -333,7 +332,7 @@ class CrudTest extends FieldUnitTestBase {
     $this->assertTrue(empty($instance), 'An instance for a deleted field is not loaded by default.');
 
     // Make sure the other field (and its field instance) are not deleted.
-    $another_field = field_read_field($this->another_field['field_name']);
+    $another_field = field_read_field('entity_test', $this->another_field['name']);
     $this->assertTrue(!empty($another_field) && empty($another_field['deleted']), 'A non-deleted field is not marked for deletion.');
     $another_instance = field_read_instance('entity_test', $another_instance_definition['field_name'], $another_instance_definition['bundle']);
     $this->assertTrue(!empty($another_instance) && empty($another_instance['deleted']), 'An instance of a non-deleted field is not marked for deletion.');
@@ -342,21 +341,18 @@ class CrudTest extends FieldUnitTestBase {
     // write data into it.
     entity_create('field_entity', $this->field)->save();
     entity_create('field_instance', $this->instance_definition)->save();
-    $field = field_read_field($this->field['field_name']);
+    $field = field_read_field('entity_test', $this->field['name']);
     $this->assertTrue(!empty($field) && empty($field['deleted']), 'A new field with a previously used name is created.');
     $instance = field_read_instance('entity_test', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
     $this->assertTrue(!empty($instance) && empty($instance['deleted']), 'A new instance for a previously used field name is created.');
 
     // Save an entity with data for the field
-    $entity = entity_create('entity_test', array('id' => 0, 'revision_id' => 0));
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
+    $entity = entity_create('entity_test', array());
     $values[0]['value'] = mt_rand(1, 127);
     $entity->{$field['field_name']}->value = $values[0]['value'];
-    field_attach_insert($entity);
+    $entity = $this->entitySaveReload($entity);
 
     // Verify the field is present on load
-    $entity = entity_create('entity_test', array('id' => 0, 'revision_id' => 0));
-    field_attach_load('entity_test', array(0 => $entity));
     $this->assertIdentical(count($entity->{$field['field_name']}), count($values), "Data in previously deleted field saves and loads correctly");
     foreach ($values as $delta => $value) {
       $this->assertEqual($entity->{$field['field_name']}[$delta]->value, $values[$delta]['value'], "Data in previously deleted field saves and loads correctly");
@@ -364,7 +360,11 @@ class CrudTest extends FieldUnitTestBase {
   }
 
   function testUpdateFieldType() {
-    $field_definition = array('field_name' => 'field_type', 'type' => 'number_decimal');
+    $field_definition = array(
+      'name' => 'field_type',
+      'entity_type' => 'entity_test',
+      'type' => 'number_decimal',
+    );
     $field = entity_create('field_entity', $field_definition);
     $field->save();
 
@@ -387,7 +387,8 @@ class CrudTest extends FieldUnitTestBase {
     // systems, it makes a good test case.
     $cardinality = 4;
     $field = entity_create('field_entity', array(
-      'field_name' => 'field_update',
+      'name' => 'field_update',
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
       'cardinality' => $cardinality,
     ));
@@ -400,22 +401,18 @@ class CrudTest extends FieldUnitTestBase {
     $instance->save();
 
     do {
-      // We need a unique ID for our entity. $cardinality will do.
-      $id = $cardinality;
-      $entity = entity_create('entity_test', array('id' => $id, 'revision_id' => $id));
+      $entity = entity_create('entity_test', array());
       // Fill in the entity with more values than $cardinality.
       for ($i = 0; $i < 20; $i++) {
-        $entity->field_update[$i]->value = $i;
+        // We can not use $i here because 0 values are filtered out.
+        $entity->field_update[$i]->value = $i + 1;
       }
-      // Save the entity.
-      field_attach_insert($entity);
       // Load back and assert there are $cardinality number of values.
-      $entity = entity_create('entity_test', array('id' => $id, 'revision_id' => $id));
-      field_attach_load('entity_test', array($id => $entity));
-      $this->assertEqual(count($entity->field_update), $field->cardinality, 'Cardinality is kept');
+      $entity = $this->entitySaveReload($entity);
+      $this->assertEqual(count($entity->field_update), $field->cardinality);
       // Now check the values themselves.
       for ($delta = 0; $delta < $cardinality; $delta++) {
-        $this->assertEqual($entity->field_update[$delta]->value, $delta, 'Value is kept');
+        $this->assertEqual($entity->field_update[$delta]->value, $delta + 1);
       }
       // Increase $cardinality and set the field cardinality to the new value.
       $field->cardinality = ++$cardinality;
@@ -428,7 +425,8 @@ class CrudTest extends FieldUnitTestBase {
    */
   function testUpdateFieldForbid() {
     $field = entity_create('field_entity', array(
-      'field_name' => 'forbidden',
+      'name' => 'forbidden',
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
       'settings' => array(
         'changeable' => 0,

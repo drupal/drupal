@@ -25,7 +25,7 @@ class UserPermissionsTest extends WebTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->admin_user = $this->drupalCreateUser(array('administer permissions', 'access user profiles', 'administer site configuration', 'administer modules', 'administer users'));
+    $this->admin_user = $this->drupalCreateUser(array('administer permissions', 'access user profiles', 'administer site configuration', 'administer modules', 'administer account settings'));
 
     // Find the new role ID.
     $all_rids = $this->admin_user->getRoles();
@@ -47,7 +47,7 @@ class UserPermissionsTest extends WebTestBase {
     $edit[$rid . '[administer nodes]'] = TRUE;
     $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), 'Successful save message displayed.');
-    $storage_controller = $this->container->get('plugin.manager.entity')->getStorageController('user_role');
+    $storage_controller = $this->container->get('entity.manager')->getStorageController('user_role');
     $storage_controller->resetCache();
     $this->assertTrue(user_access('administer nodes', $account), 'User now has "administer nodes" permission.');
 

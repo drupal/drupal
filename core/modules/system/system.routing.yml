@@ -4,6 +4,91 @@ system.ajax:
     _controller: '\Drupal\system\Controller\FormAjaxController::content'
   requirements:
     _access: 'TRUE'
+
+system_admin:
+  pattern: '/admin'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access administration pages'
+
+system_admin_structure:
+  pattern: '/admin/structure'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access administration pages'
+
+system_admin_reports:
+  pattern: '/admin/reports'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access site reports'
+
+system_admin_config_media:
+  pattern: '/admin/config/media'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access administration pages'
+
+system_admin_config_services:
+  pattern: '/admin/config/services'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access administration pages'
+
+system_admin_config_development:
+  pattern: '/admin/config/development'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access administration pages'
+
+system_admin_config_regional:
+  pattern: '/admin/config/regional'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access administration pages'
+
+system_admin_config_search:
+  pattern: '/admin/config/search'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access administration pages'
+
+system_admin_config_system:
+  pattern: '/admin/config/system'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access administration pages'
+
+system_admin_config_ui:
+  pattern: '/admin/config/user-interface'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access administration pages'
+
+system_admin_config_workflow:
+  pattern: '/admin/config/workflow'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access administration pages'
+
+system_admin_config_content:
+  pattern: '/admin/config/content'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access administration pages'
+
 system.cron:
   pattern: '/cron/{key}'
   defaults:
@@ -116,6 +201,13 @@ date_format_edit:
     _entity_form: 'date_format.edit'
   requirements:
     _entity_access: 'date_format.update'
+
+date_format_language_overview:
+  pattern: '/admin/config/regional/date-time/locale'
+  defaults:
+    _controller: '\Drupal\system\Controller\DateFormatLanguageController::overviewPage'
+  requirements:
+    _permission: 'administer site configuration'
 
 date_format_delete:
   pattern: 'admin/config/regional/date-time/formats/manage/{date_format}/delete'

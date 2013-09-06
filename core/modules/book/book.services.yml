@@ -1,4 +1,7 @@
 services:
   book.manager:
     class: Drupal\book\BookManager
-    arguments: ['@database', '@plugin.manager.entity']
+    arguments: ['@database', '@entity.manager']
+  book.export:
+    class: Drupal\book\BookExport
+    arguments: ['@entity.manager']

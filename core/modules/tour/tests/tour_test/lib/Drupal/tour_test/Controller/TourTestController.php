@@ -6,13 +6,13 @@
 
 namespace Drupal\tour_test\Controller;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routines for tour_test routes.
  */
-class TourTestController implements ControllerInterface {
+class TourTestController implements ContainerInjectionInterface {
 
   /**
    * {@inheritdoc}

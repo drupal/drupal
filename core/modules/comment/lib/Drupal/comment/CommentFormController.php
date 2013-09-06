@@ -165,7 +165,7 @@ class CommentFormController extends EntityFormControllerNG {
 
     // Add internal comment properties.
     $original = $comment->getUntranslated();
-    foreach (array('cid', 'pid', 'entity_id', 'entity_type', 'field_name', 'uid', 'langcode') as $key) {
+    foreach (array('cid', 'pid', 'entity_id', 'entity_type', 'field_id', 'uid', 'langcode') as $key) {
       $key_name = key($comment->$key->offsetGet(0)->getPropertyDefinitions());
       $form[$key] = array('#type' => 'value', '#value' => $original->$key->{$key_name});
     }
@@ -320,7 +320,7 @@ class CommentFormController extends EntityFormControllerNG {
   public function save(array $form, array &$form_state) {
     $entity = entity_load($form_state['values']['entity_type'], $form_state['values']['entity_id']);
     $comment = $this->entity;
-    $field_name = $form_state['values']['field_name'];
+    $field_name = $this->entity->field_name->value;
     $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
     $items = field_get_items($entity, $field_name);
     $status = reset($items);

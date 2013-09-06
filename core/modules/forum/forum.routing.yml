@@ -4,12 +4,28 @@ forum_delete:
     _form: 'Drupal\forum\Form\DeleteForm'
   requirements:
     _permission: 'administer forums'
+
 forum_settings:
   pattern: '/admin/structure/forum/settings'
   defaults:
     _form: '\Drupal\forum\ForumSettingsForm'
   requirements:
     _permission: 'administer forums'
+
+forum_index:
+  pattern: '/forum'
+  defaults:
+    _content: 'Drupal\forum\Controller\ForumController::forumIndex'
+  requirements:
+    _permission: 'access content'
+
+forum_page:
+  pattern: '/forum/{taxonomy_term}'
+  defaults:
+    _content: 'Drupal\forum\Controller\ForumController::forumPage'
+  requirements:
+    _permission: 'access content'
+
 forum_add_container:
   pattern: 'admin/structure/forum/add/container'
   defaults:

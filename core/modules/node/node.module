@@ -244,7 +244,7 @@ function node_admin_paths() {
  *
  * @param $result
  *   A database result object from a query to fetch node entities. If your
- *   query joins the {node_comment_statistics} table so that the comment_count
+ *   query joins the {entity_comment_statistics} table so that the comment_count
  *   field is available, a title attribute will be added to show the number of
  *   comments.
  * @param $title
@@ -395,13 +395,13 @@ function node_type_load($name) {
  */
 function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
    // Add or remove the body field, as needed.
-  $field = field_info_field('body');
+  $field = field_info_field('node', 'body');
   $instance = field_info_instance('node', 'body', $type->id());
   if (empty($field)) {
     $field = entity_create('field_entity', array(
-      'field_name' => 'body',
+      'name' => 'body',
+      'entity_type' => 'node',
       'type' => 'text_with_summary',
-      'entity_types' => array('node'),
     ));
     $field->save();
   }
@@ -417,20 +417,20 @@ function node_add_body_field(NodeTypeInterface $type, $label = 'Body') {
 
     // Assign widget settings for the 'default' form mode.
     entity_get_form_display('node', $type->type, 'default')
-      ->setComponent($field->id(), array(
+      ->setComponent('body', array(
         'type' => 'text_textarea_with_summary',
       ))
       ->save();
 
     // Assign display settings for the 'default' and 'teaser' view modes.
     entity_get_display('node', $type->type, 'default')
-      ->setComponent($field->id(), array(
+      ->setComponent('body', array(
         'label' => 'hidden',
         'type' => 'text_default',
       ))
       ->save();
     entity_get_display('node', $type->type, 'teaser')
-      ->setComponent($field->id(), array(
+      ->setComponent('body', array(
         'label' => 'hidden',
         'type' => 'text_summary_or_trimmed',
       ))
@@ -2006,19 +2006,7 @@ function node_access($op, $node, $account = NULL, $langcode = NULL) {
 
   // If no language code was provided, default to the node's langcode.
   if (empty($langcode)) {
-    $langcode = $node->language()->id;
-    // If the Language module is enabled, try to use the language from content
-    // negotiation.
-    if (module_exists('language')) {
-      // Load languages the node exists in.
-      $node_translations = $node->getTranslationLanguages();
-      // Load the language from content negotiation.
-      $content_negotiation_langcode = language(Language::TYPE_CONTENT)->id;
-      // If there is a translation available, use it.
-      if (isset($node_translations[$content_negotiation_langcode])) {
-        $langcode = $content_negotiation_langcode;
-      }
-    }
+    $langcode = $node->prepareLangcode();
   }
   return $access_controller->access($node, $op, $langcode, $account);
 }
@@ -2517,7 +2505,7 @@ function node_language_delete($language) {
 function node_library_info() {
   $libraries['drupal.node'] = array(
     'title' => 'Node',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'node') . '/node.js' => array(),
     ),
@@ -2530,7 +2518,7 @@ function node_library_info() {
   );
   $libraries['drupal.node.preview'] = array(
     'title' => 'Node preview',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'node') . '/node.preview.js' => array(),
     ),
@@ -2541,7 +2529,7 @@ function node_library_info() {
   );
   $libraries['drupal.content_types'] = array(
     'title' => 'Content types',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'node') . '/content_types.js' => array(),
     ),

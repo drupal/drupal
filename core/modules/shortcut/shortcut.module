@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Implements hook_help().
  */
 function shortcut_help($path, $arg) {
-  global $user;
+  $user = Drupal::currentUser();
 
   switch ($path) {
     case 'admin/help#shortcut':
@@ -32,7 +32,7 @@ function shortcut_help($path, $arg) {
 
     case 'admin/config/user-interface/shortcut':
     case 'admin/config/user-interface/shortcut/%':
-      if (user_access('switch shortcut sets')) {
+      if ($user->hasPermission('switch shortcut sets')) {
         $output = '<p>' . t('Define which shortcut set you are using on the <a href="@shortcut-link">Shortcuts tab</a> of your account page.', array('@shortcut-link' => url("user/{$user->id()}/shortcuts"))) . '</p>';
         return $output;
       }
@@ -171,12 +171,13 @@ function shortcut_admin_paths() {
  *   otherwise.
  */
 function shortcut_set_edit_access($shortcut_set = NULL) {
+  $account = Drupal::currentUser();
   // Sufficiently-privileged users can edit their currently displayed shortcut
   // set, but not other sets. Shortcut administrators can edit any set.
-  if (user_access('administer shortcuts')) {
+  if ($account->hasPermission('administer shortcuts')) {
     return TRUE;
   }
-  if (user_access('customize shortcut links')) {
+  if ($account->hasPermission('customize shortcut links')) {
     return !isset($shortcut_set) || $shortcut_set == shortcut_current_displayed_set();
   }
   return FALSE;
@@ -195,14 +196,14 @@ function shortcut_set_edit_access($shortcut_set = NULL) {
  *   provided account, FALSE otherwise.
  */
 function shortcut_set_switch_access($account = NULL) {
-  global $user;
+  $user = Drupal::currentUser();
 
-  if (user_access('administer shortcuts')) {
+  if ($user->hasPermission('administer shortcuts')) {
     // Administrators can switch anyone's shortcut set.
     return TRUE;
   }
 
-  if (!user_access('switch shortcut sets')) {
+  if (!$user->hasPermission('switch shortcut sets')) {
     // The user has no permission to switch anyone's shortcut set.
     return FALSE;
   }
@@ -391,7 +392,7 @@ function shortcut_default_set($account = NULL) {
  */
 function shortcut_set_title_exists($title) {
   $sets = entity_load_multiple('shortcut_set');
-  foreach ($sets as $id => $set) {
+  foreach ($sets as $set) {
     if ($set->label == $title) {
       return TRUE;
     }
@@ -472,7 +473,7 @@ function shortcut_preprocess_page(&$variables) {
     $shortcut_set = shortcut_current_displayed_set();
 
     // Check if $link is already a shortcut and set $link_mode accordingly.
-    foreach ($shortcut_set->links as $uuid => $shortcut) {
+    foreach ($shortcut_set->links as $shortcut) {
       if ($link == $shortcut['link_path']) {
         $mlid = $shortcut['mlid'];
         break;
@@ -563,7 +564,7 @@ function shortcut_library_info() {
   $path = drupal_get_path('module', 'shortcut');
   $libraries['drupal.shortcut.admin'] = array(
     'title' => 'Shortcut configuration',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/shortcut.admin.js' => array(),
     ),
@@ -574,7 +575,7 @@ function shortcut_library_info() {
   );
   $libraries['drupal.shortcut'] = array(
     'title' => 'Shortcut UI',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'css' => array(
       $path . '/css/shortcut.module.css' => array(),
       $path . '/css/shortcut.theme.css' => array(),

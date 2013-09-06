@@ -41,7 +41,7 @@ class FormatDateTest extends WebTestBase {
     \Drupal::config('system.date')
       ->set('timezone.user.configurable', 1)
       ->save();
-    $formats = $this->container->get('plugin.manager.entity')
+    $formats = $this->container->get('entity.manager')
       ->getStorageController('date_format')
       ->loadMultiple(array('long', 'medium', 'short'));
     $formats['long']->setPattern('l, j. F Y - G:i')->save();

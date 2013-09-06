@@ -32,15 +32,6 @@ class FieldInfoTest extends FieldUnitTestBase {
       $this->assertEqual($info[$t_key]['provider'], 'field_test',  'Field type field_test module appears.');
     }
 
-    $storage_info = field_test_field_storage_info();
-    $info = field_info_storage_types();
-    foreach ($storage_info as $s_key => $storage) {
-      foreach ($storage as $key => $val) {
-        $this->assertEqual($info[$s_key][$key], $val, format_string('Storage type %s_key key %key is %value', array('%s_key' => $s_key, '%key' => $key, '%value' => print_r($val, TRUE))));
-      }
-      $this->assertEqual($info[$s_key]['module'], 'field_test',  'Storage type field_test module appears.');
-    }
-
     // Verify that no unexpected instances exist.
     $instances = field_info_instances('entity_test');
     $expected = array();
@@ -51,25 +42,26 @@ class FieldInfoTest extends FieldUnitTestBase {
     // Create a field, verify it shows up.
     $core_fields = field_info_fields();
     $field = entity_create('field_entity', array(
-      'field_name' => drupal_strtolower($this->randomName()),
+      'name' => drupal_strtolower($this->randomName()),
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
     ));
     $field->save();
     $fields = field_info_fields();
     $this->assertEqual(count($fields), count($core_fields) + 1, 'One new field exists');
-    $this->assertEqual($fields[$field['field_name']]['field_name'], $field['field_name'], 'info fields contains field name');
-    $this->assertEqual($fields[$field['field_name']]['type'], $field['type'], 'info fields contains field type');
-    $this->assertEqual($fields[$field['field_name']]['module'], 'field_test', 'info fields contains field module');
+    $this->assertEqual($fields[$field['uuid']]['field_name'], $field['field_name'], 'info fields contains field name');
+    $this->assertEqual($fields[$field['uuid']]['type'], $field['type'], 'info fields contains field type');
+    $this->assertEqual($fields[$field['uuid']]['module'], 'field_test', 'info fields contains field module');
     $settings = array('test_field_setting' => 'dummy test string');
     foreach ($settings as $key => $val) {
-      $this->assertEqual($fields[$field['field_name']]['settings'][$key], $val, format_string('Field setting %key has correct default value %value', array('%key' => $key, '%value' => $val)));
+      $this->assertEqual($fields[$field['uuid']]['settings'][$key], $val, format_string('Field setting %key has correct default value %value', array('%key' => $key, '%value' => $val)));
     }
-    $this->assertEqual($fields[$field['field_name']]['cardinality'], 1, 'info fields contains cardinality 1');
-    $this->assertEqual($fields[$field['field_name']]['active'], TRUE, 'info fields contains active 1');
+    $this->assertEqual($fields[$field['uuid']]['cardinality'], 1, 'info fields contains cardinality 1');
+    $this->assertEqual($fields[$field['uuid']]['active'], TRUE, 'info fields contains active 1');
 
     // Create an instance, verify that it shows up
     $instance_definition = array(
-      'field_name' => $field['field_name'],
+      'field_name' => $field['name'],
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
       'label' => $this->randomName(),
@@ -121,7 +113,8 @@ class FieldInfoTest extends FieldUnitTestBase {
    */
   function testFieldPrepare() {
     $field_definition = array(
-      'field_name' => 'field',
+      'name' => 'field',
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
     );
     $field = entity_create('field_entity', $field_definition);
@@ -136,7 +129,7 @@ class FieldInfoTest extends FieldUnitTestBase {
     field_info_cache_clear();
 
     // Read the field back.
-    $field = field_info_field($field_definition['field_name']);
+    $field = field_info_field('entity_test', $field_definition['name']);
 
     // Check that all expected settings are in place.
     $field_type = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field_definition['type']);
@@ -148,12 +141,13 @@ class FieldInfoTest extends FieldUnitTestBase {
    */
   function testInstancePrepare() {
     $field_definition = array(
-      'field_name' => 'field',
+      'name' => 'field',
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
     );
     entity_create('field_entity', $field_definition)->save();
     $instance_definition = array(
-      'field_name' => $field_definition['field_name'],
+      'field_name' => $field_definition['name'],
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     );
@@ -182,8 +176,10 @@ class FieldInfoTest extends FieldUnitTestBase {
   function testInstanceDisabledEntityType() {
     // For this test the field type and the entity type must be exposed by
     // different modules.
+    $this->enableModules(array('node', 'comment'));
     $field_definition = array(
-      'field_name' => 'field',
+      'name' => 'field',
+      'entity_type' => 'comment',
       'type' => 'test_field',
     );
     entity_create('field_entity', $field_definition)->save();
@@ -192,7 +188,7 @@ class FieldInfoTest extends FieldUnitTestBase {
       'entity_type' => 'comment',
       'bundle' => 'comment_node_article',
     );
-    entity_create('field_instance', $instance_definition)->save();
+    entity_create('field_instance', $instance_definition);
 
     // Disable coment module. This clears field_info cache.
     module_disable(array('comment'));
@@ -212,11 +208,18 @@ class FieldInfoTest extends FieldUnitTestBase {
     // Create a couple fields.
     $fields  = array(
       array(
-        'field_name' => 'field_1',
+        'name' => 'field_1',
+        'entity_type' => 'entity_test',
         'type' => 'test_field',
       ),
       array(
-        'field_name' => 'field_2',
+        'name' => 'field_2',
+        'entity_type' => 'entity_test',
+        'type' => 'hidden_test_field',
+      ),
+      array(
+        'name' => 'field_2',
+        'entity_type' => 'entity_test_cache',
         'type' => 'hidden_test_field',
       ),
     );
@@ -252,17 +255,20 @@ class FieldInfoTest extends FieldUnitTestBase {
     }
 
     $expected = array(
-      'field_1' => array(
-        'type' => 'test_field',
-        'bundles' => array(
-          'entity_test' => array('entity_test', 'test_bundle_2'),
+      'entity_test' => array(
+        'field_1' => array(
+          'type' => 'test_field',
+          'bundles' => array('entity_test', 'test_bundle_2'),
+        ),
+        'field_2' => array(
+          'type' => 'hidden_test_field',
+          'bundles' => array('entity_test'),
         ),
       ),
-      'field_2' => array(
-        'type' => 'hidden_test_field',
-        'bundles' => array(
-          'entity_test' => array('entity_test'),
-          'entity_test_cache' => array('entity_test'),
+      'entity_test_cache' => array(
+        'field_2' => array(
+          'type' => 'hidden_test_field',
+          'bundles' => array('entity_test')
         ),
       ),
     );
@@ -293,12 +299,13 @@ class FieldInfoTest extends FieldUnitTestBase {
     // field_info_fields().
     $field_name = drupal_strtolower($this->randomName());
     $field = entity_create('field_entity', array(
-      'field_name' => $field_name,
+      'name' => $field_name,
+      'entity_type' => 'entity_test',
       'type' => 'test_field',
     ));
     $field->save();
     $fields = field_info_fields();
-    $this->assertTrue(isset($fields[$field_name]), 'The test field is initially found in the array returned by field_info_fields().');
+    $this->assertTrue(isset($fields[$field->uuid]), 'The test field is initially found in the array returned by field_info_fields().');
 
     // Now rebuild the field info cache, and set a variable which will cause
     // the cache to be cleared while it's being rebuilt; see
@@ -307,7 +314,7 @@ class FieldInfoTest extends FieldUnitTestBase {
     field_info_cache_clear();
     \Drupal::state()->set('field_test.clear_info_cache_in_hook_entity_info', TRUE);
     $fields = field_info_fields();
-    $this->assertTrue(isset($fields[$field_name]), 'The test field is found in the array returned by field_info_fields() even if its cache is cleared while being rebuilt.');
+    $this->assertTrue(isset($fields[$field->uuid]), 'The test field is found in the array returned by field_info_fields() even if its cache is cleared while being rebuilt.');
   }
 
   /**

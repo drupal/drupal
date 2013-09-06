@@ -7,6 +7,7 @@
 
 namespace Drupal\contact\Tests\Views;
 
+use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\views\Tests\ViewTestBase;
 
 /**
@@ -40,13 +41,14 @@ class ContactFieldsTest extends ViewTestBase {
     parent::setUp();
 
     $this->field = entity_create('field_entity', array(
-      'field_name' => strtolower($this->randomName()),
+      'name' => strtolower($this->randomName()),
+      'entity_type' => 'contact_message',
       'type' => 'text'
     ));
     $this->field->save();
 
     entity_create('field_instance', array(
-      'field_name' => $this->field->id(),
+      'field_name' => $this->field->name,
       'entity_type' => 'contact_message',
       'bundle' => 'contact_message',
     ))->save();
@@ -58,16 +60,11 @@ class ContactFieldsTest extends ViewTestBase {
    * Tests the views data generation.
    */
   public function testViewsData() {
-    $table_name = _field_sql_storage_tablename($this->field);
+    // Test that the field is not exposed to views, since contact_message
+    // entities have no storage.
+    $table_name = DatabaseStorageController::_fieldTableName($this->field);
     $data = $this->container->get('views.views_data')->get($table_name);
-
-    // Test that the expected data array is returned.
-    $expected = array('', '_value', '_format');
-    $this->assertEqual(count($data), count($expected), 'The expected amount of array keys were found.');
-    foreach ($expected as $suffix) {
-      $this->assertTrue(isset($data[$this->field->id() . $suffix]));
-    }
-    $this->assertTrue(empty($data['table']['join']), 'The field is not joined to the non existent contact message base table.');
+    $this->assertFalse($data, 'The field is not exposed to Views.');
   }
 
 }

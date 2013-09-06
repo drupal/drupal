@@ -26,12 +26,19 @@ user_autocomplete_anonymous:
   requirements:
     _permission: 'access user profiles'
 
+user_admin_index:
+  pattern: '/admin/config/people'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'access administration pages'
+
 user_account_settings:
   pattern: '/admin/config/people/accounts'
   defaults:
     _form: '\Drupal\user\AccountSettingsForm'
   requirements:
-    _permission: 'administer users'
+    _permission: 'administer account settings'
 
 user_admin_create:
   pattern: '/admin/people/create'
@@ -102,3 +109,10 @@ user_login:
     _form: '\Drupal\user\Form\UserLoginForm'
   requirements:
     _access: 'TRUE'
+
+user_edit:
+  pattern: '/user/{user}/edit'
+  defaults:
+    _entity_form: 'user.default'
+  requirements:
+    _entity_access: 'user.update'

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Plugin\CacheDecoratorLanguageTest.
+ * Contains \Drupal\system\Tests\Plugin\CacheDecoratorLanguageTest.
  */
 
 namespace Drupal\system\Tests\Plugin;

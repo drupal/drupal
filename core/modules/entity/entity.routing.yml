@@ -1,3 +1,10 @@
+entity_display_mode:
+  pattern: '/admin/structure/display-modes'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+  requirements:
+    _permission: 'administer display modes'
+
 entity_view_mode.list:
   pattern: '/admin/structure/display-modes/view'
   defaults:

@@ -42,7 +42,8 @@ class ManageFieldsTest extends FieldUiTestBase {
     $vocabulary->save();
 
     $field = array(
-      'field_name' => 'field_' . $vocabulary->id(),
+      'name' => 'field_' . $vocabulary->id(),
+      'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
     );
     entity_create('field_entity', $field)->save();
@@ -116,13 +117,6 @@ class ManageFieldsTest extends FieldUiTestBase {
       'fields[_add_new_field][field_name]' => $this->field_name_input,
     );
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->type, $edit);
-
-    // Assert the field appears in the "re-use existing field" section for
-    // different entity types; e.g. if a field was added in a node entity, it
-    // should also appear in the 'taxonomy term' entity.
-    $vocabulary = entity_load('taxonomy_vocabulary', 'tags');
-    $this->drupalGet('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/fields');
-    $this->assertTrue($this->xpath('//select[@name="fields[_add_existing_field][field_name]"]//option[@value="' . $this->field_name . '"]'), 'Existing field was found in taxonomy term fields.');
   }
 
   /**
@@ -162,9 +156,8 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->drupalGet('admin/structure/types/manage/page/fields');
     $this->assertRaw(t('Re-use existing field'), '"Re-use existing field" was found.');
 
-    // Check that the list of options respects entity type restrictions on
-    // fields. The 'comment' field is restricted to the 'comment' entity type
-    // and should not appear in the list.
+    // Check that fields of other entity types (here, the 'comment_body' field)
+    // do not show up in the "Re-use existing field" list.
     $this->assertFalse($this->xpath('//select[@id="edit-add-existing-field-field-name"]//option[@value="comment"]'), 'The list of options respects entity type restrictions.');
 
     // Add a new field based on an existing field.
@@ -231,7 +224,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Reset the fields info.
     field_info_cache_clear();
     // Assert field settings.
-    $field = field_info_field($field_name);
+    $field = field_info_field($entity_type, $field_name);
     $this->assertTrue($field['settings']['test_field_setting'] == $string, 'Field settings were found.');
 
     // Assert instance settings.
@@ -276,7 +269,8 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Create a test field and instance.
     $field_name = 'test';
     entity_create('field_entity', array(
-      'field_name' => $field_name,
+      'name' => $field_name,
+      'entity_type' => 'node',
       'type' => 'test_field'
     ))->save();
     $instance = entity_create('field_instance', array(
@@ -362,7 +356,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Check that the field instance was deleted.
     $this->assertNull(field_info_instance('node', $this->field_name, $this->type), 'Field instance was deleted.');
     // Check that the field was not deleted
-    $this->assertNotNull(field_info_field($this->field_name), 'Field was not deleted.');
+    $this->assertNotNull(field_info_field('node', $this->field_name), 'Field was not deleted.');
 
     // Delete the second instance.
     $this->fieldUIDeleteField($bundle_path2, "node.$type_name2.$this->field_name", $this->field_label, $type_name2);
@@ -372,7 +366,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Check that the field instance was deleted.
     $this->assertNull(field_info_instance('node', $this->field_name, $type_name2), 'Field instance was deleted.');
     // Check that the field was deleted too.
-    $this->assertNull(field_info_field($this->field_name), 'Field was deleted.');
+    $this->assertNull(field_info_field('node', $this->field_name), 'Field was deleted.');
   }
 
   /**
@@ -382,7 +376,8 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Create a locked field and attach it to a bundle. We need to do this
     // programatically as there's no way to create a locked field through UI.
     $field = entity_create('field_entity', array(
-      'field_name' => strtolower($this->randomName(8)),
+      'name' => strtolower($this->randomName(8)),
+      'entity_type' => 'node',
       'type' => 'test_field',
       'cardinality' => 1,
       'locked' => TRUE
@@ -401,11 +396,11 @@ class ManageFieldsTest extends FieldUiTestBase {
 
     // Check that the links for edit and delete are not present.
     $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields');
-    $locked = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field->id()));
+    $locked = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field->name));
     $this->assertTrue(in_array('Locked', $locked), 'Field is marked as Locked in the UI');
-    $edit_link = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field->id()));
+    $edit_link = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field->name));
     $this->assertFalse(in_array('edit', $edit_link), 'Edit option for locked field is not present the UI');
-    $delete_link = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field->id()));
+    $delete_link = $this->xpath('//tr[@id=:field_name]/td[4]', array(':field_name' => $field->name));
     $this->assertFalse(in_array('delete', $delete_link), 'Delete option for locked field is not present the UI');
   }
 
@@ -421,7 +416,11 @@ class ManageFieldsTest extends FieldUiTestBase {
 
     // Create a field and an instance programmatically.
     $field_name = 'hidden_test_field';
-    entity_create('field_entity', array('field_name' => $field_name, 'type' => $field_name))->save();
+    entity_create('field_entity', array(
+      'name' => $field_name,
+      'entity_type' => 'node',
+      'type' => $field_name,
+    ))->save();
     $instance = array(
       'field_name' => $field_name,
       'bundle' => $this->type,
@@ -497,7 +496,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     // Check that the field instance was deleted.
     $this->assertNull(field_info_instance('taxonomy_term', $this->field_name, 'tags'), 'Field instance was deleted.');
     // Check that the field was deleted too.
-    $this->assertNull(field_info_field($this->field_name), 'Field was deleted.');
+    $this->assertNull(field_info_field('taxonomy_term', $this->field_name), 'Field was deleted.');
   }
 
   /**
@@ -506,7 +505,8 @@ class ManageFieldsTest extends FieldUiTestBase {
   function testHelpDescriptions() {
     // Create an image field
     entity_create('field_entity', array(
-      'field_name' => 'field_image',
+      'name' => 'field_image',
+      'entity_type' => 'node',
       'type' => 'image',
     ))->save();
 

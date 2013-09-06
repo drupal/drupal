@@ -10,7 +10,7 @@ namespace Drupal\comment\Form;
 use Drupal\comment\CommentStorageControllerInterface;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Provides the comment multiple delete confirmation form.
  */
-class ConfirmDeleteMultiple extends ConfirmFormBase implements ControllerInterface {
+class ConfirmDeleteMultiple extends ConfirmFormBase implements ContainerInjectionInterface {
 
   /**
    * The comment storage.
@@ -49,7 +49,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase implements ControllerInterfa
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')->getStorageController('comment')
+      $container->get('entity.manager')->getStorageController('comment')
     );
   }
 

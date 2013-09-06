@@ -59,7 +59,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
 
     // Make node body translatable.
-    $field = field_info_field('body');
+    $field = field_info_field('node', 'body');
     $field->translatable = TRUE;
     $field->save();
   }

@@ -3,6 +3,7 @@
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Component\Utility\Url;
 
 /**
  * @file
@@ -100,7 +101,7 @@ function tablesort_cell($cell, $header, $ts, $i) {
  *   page request except for those pertaining to table sorting.
  */
 function tablesort_get_query_parameters() {
-  return drupal_get_query_parameters($_GET, array('sort', 'order'));
+  return Url::filterQueryParameters(Drupal::request()->query->all(), array('sort', 'order'));
 }
 
 /**
@@ -115,7 +116,7 @@ function tablesort_get_query_parameters() {
  *   - "sql": The name of the database field to sort on.
  */
 function tablesort_get_order($headers) {
-  $order = isset($_GET['order']) ? $_GET['order'] : '';
+  $order = Drupal::request()->query->get('order', '');
   foreach ($headers as $header) {
     if (is_array($header)) {
       if (isset($header['data']) && $order == $header['data']) {
@@ -150,8 +151,9 @@ function tablesort_get_order($headers) {
  *   The current sort direction ("asc" or "desc").
  */
 function tablesort_get_sort($headers) {
-  if (isset($_GET['sort'])) {
-    return (strtolower($_GET['sort']) == 'desc') ? 'desc' : 'asc';
+  $query = Drupal::request()->query;
+  if ($query->has('sort')) {
+    return (strtolower($query->get('sort')) == 'desc') ? 'desc' : 'asc';
   }
   // The user has not specified a sort. Use the default for the currently sorted
   // header if specified; otherwise use "asc".

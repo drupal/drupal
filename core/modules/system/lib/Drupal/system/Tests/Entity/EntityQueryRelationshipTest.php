@@ -81,7 +81,8 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
     // Second, create the field.
     $this->fieldName = strtolower($this->randomName());
     $field = array(
-      'field_name' => $this->fieldName,
+      'name' => $this->fieldName,
+      'entity_type' => 'entity_test',
       'type' => 'taxonomy_term_reference',
     );
     $field['settings']['allowed_values']['vocabulary'] = $vocabulary->id();

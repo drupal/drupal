@@ -8,7 +8,7 @@
 namespace Drupal\system\Controller;
 
 use Drupal\Core\Config\Config;
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 /**
  * Controller for theme handling.
  */
-class ThemeController implements ControllerInterface {
+class ThemeController implements ContainerInjectionInterface {
 
   /**
    * The system.theme config object.

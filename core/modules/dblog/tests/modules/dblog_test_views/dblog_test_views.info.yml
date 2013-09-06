@@ -1,0 +1,9 @@
+name: 'Dblog test views'
+description: 'Provides default views for views dblog tests.'
+package: Testing
+version: VERSION
+core: 8.x
+dependencies:
+  - dblog
+  - views
+hidden: TRUE

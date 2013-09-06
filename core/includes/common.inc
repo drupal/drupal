@@ -354,7 +354,7 @@ function _drupal_default_html_head() {
   );
   // Show Drupal and the major version number in the META GENERATOR tag.
   // Get the major version.
-  list($version, ) = explode('.', VERSION);
+  list($version, ) = explode('.', Drupal::VERSION);
   $elements['system_meta_generator'] = array(
     '#type' => 'html_tag',
     '#tag' => 'meta',
@@ -4093,7 +4093,7 @@ function show(&$element) {
  * @see drupal_render_cache_set()
  */
 function drupal_render_cache_get($elements) {
-  if (!in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD')) || !$cid = drupal_render_cid_create($elements)) {
+  if (!Drupal::request()->isMethodSafe() || !$cid = drupal_render_cid_create($elements)) {
     return FALSE;
   }
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
@@ -4125,7 +4125,7 @@ function drupal_render_cache_get($elements) {
  */
 function drupal_render_cache_set(&$markup, $elements) {
   // Create the cache ID for the element.
-  if (!in_array($_SERVER['REQUEST_METHOD'], array('GET', 'HEAD')) || !$cid = drupal_render_cid_create($elements)) {
+  if (!Drupal::request()->isMethodSafe() || !$cid = drupal_render_cid_create($elements)) {
     return FALSE;
   }
 
@@ -4614,7 +4614,7 @@ function drupal_parse_info_file($filename) {
       $parser = new Parser();
       $info[$filename] = $parser->parse(file_get_contents($filename));
       if (isset($info[$filename]['version']) && $info[$filename]['version'] === 'VERSION') {
-        $info[$filename]['version'] = VERSION;
+        $info[$filename]['version'] = Drupal::VERSION;
       }
     }
   }

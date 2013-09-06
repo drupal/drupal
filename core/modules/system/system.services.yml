@@ -5,7 +5,7 @@ services:
       - { name: access_check }
   system.manager:
     class: Drupal\system\SystemManager
-    arguments: ['@module_handler', '@database']
+    arguments: ['@module_handler', '@database', '@entity.manager']
   system.breadcrumb.legacy:
     class: Drupal\system\LegacyBreadcrumbBuilder
     tags:

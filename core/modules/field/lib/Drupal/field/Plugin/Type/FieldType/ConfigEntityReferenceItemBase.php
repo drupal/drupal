@@ -10,6 +10,7 @@ namespace Drupal\field\Plugin\Type\FieldType;
 use Drupal\Core\Entity\Plugin\DataType\EntityReferenceItem;
 use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemInterface;
 use Drupal\field\FieldInterface;
+use Drupal\field\FieldInstanceInterface;
 
 /**
  * A common base class for configurable entity reference fields.
@@ -30,28 +31,6 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
    * @var array
    */
   static $propertyDefinitions;
-
-  /**
-   * The Field instance definition.
-   *
-   * @var \Drupal\field\Entity\FieldInstance
-   */
-  protected $instance;
-
-  /**
-   * Returns the field instance definition.
-   *
-   * Copied from \Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase,
-   * since we cannot extend it.
-   *
-   * @var \Drupal\field\Entity\FieldInstance
-   */
-  public function getInstance() {
-    if (!isset($this->instance) && $parent = $this->getParent()) {
-      $this->instance = $parent->getInstance();
-    }
-    return $this->instance;
-  }
 
   /**
    * {@inheritdoc}
@@ -127,9 +106,13 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
    */
   public function settingsForm(array $form, array &$form_state, $has_data) {
     if ($callback = $this->getLegacyCallback('settings_form')) {
+      $instance = $this->getFieldDefinition();
+      if (!($instance instanceof FieldInstanceInterface)) {
+        throw new \UnexpectedValueException('ConfigEntityReferenceItemBase::settingsForm() called for a field whose definition is not a field instance.');
+      }
       // hook_field_settings_form() used to receive the $instance (not actually
       // needed), and the value of field_has_data().
-      return $callback($this->getInstance()->getField(), $this->getInstance(), $has_data);
+      return $callback($instance->getField(), $instance, $has_data);
     }
     return array();
   }
@@ -142,7 +125,11 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
    */
   public function instanceSettingsForm(array $form, array &$form_state) {
     if ($callback = $this->getLegacyCallback('instance_settings_form')) {
-      return $callback($this->getInstance()->getField(), $this->getInstance(), $form_state);
+      $instance = $this->getFieldDefinition();
+      if (!($instance instanceof FieldInstanceInterface)) {
+        throw new \UnexpectedValueException('ConfigEntityReferenceItemBase::instanceSettingsForm() called for a field whose definition is not a field instance.');
+      }
+      return $callback($instance->getField(), $instance, $form_state);
     }
     return array();
   }
@@ -161,7 +148,7 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
       // We are at the field item level, so we need to go two levels up to get
       // to the entity object.
       $entity = $this->getParent()->getParent();
-      return $callback($this->getInstance(), $entity);
+      return $callback($this->getFieldDefinition(), $entity);
     }
   }
 

@@ -27,7 +27,7 @@ const USERNAME_MAX_LENGTH = 60;
 /**
  * Maximum length of user e-mail text field.
  */
-const EMAIL_MAX_LENGTH = 254;
+const EMAIL_MAX_LENGTH = 255;
 
 /**
  * Only administrators can create user accounts.
@@ -321,37 +321,24 @@ function user_load_by_name($name) {
 
 /**
  * Verify the syntax of the given name.
+ *
+ * @param string $name
+ *   The user name to validate.
+ *
+ * @return string|null
+ *   A translated violation message if the name is invalid or NULL if the name
+ *   is valid.
+ *
  */
 function user_validate_name($name) {
-  if (!$name) {
-    return t('You must enter a username.');
-  }
-  if (substr($name, 0, 1) == ' ') {
-    return t('The username cannot begin with a space.');
-  }
-  if (substr($name, -1) == ' ') {
-    return t('The username cannot end with a space.');
-  }
-  if (strpos($name, '  ') !== FALSE) {
-    return t('The username cannot contain multiple spaces in a row.');
-  }
-  if (preg_match('/[^\x{80}-\x{F7} a-z0-9@_.\'-]/i', $name)) {
-    return t('The username contains an illegal character.');
-  }
-  if (preg_match('/[\x{80}-\x{A0}' .         // Non-printable ISO-8859-1 + NBSP
-                  '\x{AD}' .                // Soft-hyphen
-                  '\x{2000}-\x{200F}' .     // Various space characters
-                  '\x{2028}-\x{202F}' .     // Bidirectional text overrides
-                  '\x{205F}-\x{206F}' .     // Various text hinting characters
-                  '\x{FEFF}' .              // Byte order mark
-                  '\x{FF01}-\x{FF60}' .     // Full-width latin
-                  '\x{FFF9}-\x{FFFD}' .     // Replacement characters
-                  '\x{0}-\x{1F}]/u',        // NULL byte and control characters
-                  $name)) {
-    return t('The username contains an illegal character.');
-  }
-  if (drupal_strlen($name) > USERNAME_MAX_LENGTH) {
-    return t('The username %name is too long: it must be %max characters or less.', array('%name' => $name, '%max' => USERNAME_MAX_LENGTH));
+  $data = \Drupal::typedData()->create(array(
+    'type' => 'string',
+    'constraints' => array('UserName' => array()),
+  ));
+  $data->setValue($name);
+  $violations = $data->validate();
+  if (count($violations) > 0) {
+    return $violations[0]->getMessage();
   }
 }
 
@@ -477,6 +464,11 @@ function user_permission() {
   return array(
     'administer permissions' =>  array(
       'title' => t('Administer permissions'),
+      'restrict access' => TRUE,
+    ),
+    'administer account settings' => array(
+      'title' => t('Administer account settings'),
+      'description' => t('Configure site-wide settings and behavior for <a href="@url">user accounts and registration</a>.', array('@url' => url('admin/config/people'))),
       'restrict access' => TRUE,
     ),
     'administer users' => array(
@@ -893,15 +885,13 @@ function user_menu() {
 
   // Administration pages.
   $items['admin/config/people'] = array(
-   'title' => 'People',
-   'description' => 'Configure user accounts.',
-   'position' => 'left',
-   'weight' => -20,
-   'page callback' => 'system_admin_menu_block_page',
-   'access arguments' => array('access administration pages'),
-   'file' => 'system.admin.inc',
-   'file path' => drupal_get_path('module', 'system'),
+    'title' => 'People',
+    'description' => 'Configure user accounts.',
+    'position' => 'left',
+    'weight' => -20,
+    'route_name' => 'user_admin_index',
   );
+
   $items['admin/config/people/accounts'] = array(
     'title' => 'Account settings',
     'description' => 'Configure default behavior of users, including registration requirements, e-mails, and fields.',
@@ -944,12 +934,8 @@ function user_menu() {
   );
   $items['user/%user/edit'] = array(
     'title' => 'Edit',
-    'page callback' => 'entity_get_form',
-    'page arguments' => array(1),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'update'),
+    'route_name' => 'user_edit',
     'type' => MENU_LOCAL_TASK,
-    'file' => 'user.pages.inc',
   );
   return $items;
 }
@@ -2118,7 +2104,7 @@ function user_library_info() {
   $path = drupal_get_path('module', 'user');
   $libraries['drupal.user'] = array(
     'title' => 'User',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/user.js' => array(),
     ),
@@ -2134,7 +2120,7 @@ function user_library_info() {
 
   $libraries['drupal.user.permissions'] = array(
     'title' => 'User permissions',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/user.permissions.js' => array(),
     ),
@@ -2147,7 +2133,7 @@ function user_library_info() {
 
   $libraries['drupal.user.icons'] = array(
     'title' => 'User icon styling',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'css' => array(
       $path . '/css/user.icons.css' => array(),
     ),

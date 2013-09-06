@@ -288,7 +288,7 @@ function path_entity_predelete(EntityInterface $entity) {
 function path_library_info() {
   $libraries['drupal.path'] = array(
     'title' => 'Path',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'path') . '/path.js' => array(),
     ),

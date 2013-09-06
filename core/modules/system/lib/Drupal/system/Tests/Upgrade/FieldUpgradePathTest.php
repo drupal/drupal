@@ -7,7 +7,8 @@
 
 namespace Drupal\system\Tests\Upgrade;
 
-use Drupal\field\Field;
+use Drupal\Core\Entity\DatabaseStorageController;
+use Drupal\field\Entity\Field;
 
 /**
  * Tests upgrade of system variables.
@@ -122,27 +123,24 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
     // Check that the configuration for the 'body' field is correct.
-    $config = \Drupal::config('field.field.body')->get();
+    $config = \Drupal::config('field.field.node.body')->get();
+    // This will be necessary to retrieve the table name.
+    $field_entity = new Field($config);
     // We cannot predict the value of the UUID, we just check it's present.
     $this->assertFalse(empty($config['uuid']));
     $field_uuid = $config['uuid'];
     unset($config['uuid']);
     $this->assertEqual($config, array(
-      'id' => 'body',
+      'id' => 'node.body',
+      'name' => 'body',
       'type' => 'text_with_summary',
       'module' => 'text',
       'active' => '1',
+      'entity_type' => 'node',
       'settings' => array(),
-      'storage' => array(
-        'type' => 'field_sql_storage',
-        'module' => 'field_sql_storage',
-        'active' => '1',
-        'settings' => array(),
-      ),
       'locked' => 0,
       'cardinality' => 1,
       'translatable' => 0,
-      'entity_types' => array('node'),
       'indexes' => array(
         'format' => array('format')
       ),
@@ -196,7 +194,7 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
     $uuid_key = key($deleted_fields);
     $deleted_field = $deleted_fields[$uuid_key];
     $this->assertEqual($deleted_field['uuid'], $uuid_key);
-    $this->assertEqual($deleted_field['id'], 'test_deleted_field');
+    $this->assertEqual($deleted_field['id'], 'node.test_deleted_field');
 
     // Check that the definition of a deleted instance is stored in state rather
     // than config.
@@ -212,8 +210,9 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
 
     // Check that pre-existing deleted field table is renamed correctly.
     $field_entity = new Field($deleted_field);
-    $table_name = _field_sql_storage_tablename($deleted_field);
+    $table_name = DatabaseStorageController::_fieldTableName($field_entity);
     $this->assertEqual("field_deleted_data_" . substr(hash('sha256', $deleted_field['uuid']), 0, 10), $table_name);
+    $this->assertTrue(db_table_exists($table_name));
 
     // Check that creation of a new node works as expected.
     $value = $this->randomName();

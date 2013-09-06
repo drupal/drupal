@@ -26,10 +26,12 @@ function edit_menu() {
   $items['edit/metadata'] = array(
     'route_name' => 'edit_metadata',
     'theme callback' => 'ajax_base_page_theme',
+    'type' => MENU_CALLBACK,
   );
   $items['edit/form/%/%/%/%/%'] = array(
     'route_name' => 'edit_field_form',
     'theme callback' => 'ajax_base_page_theme',
+    'type' => MENU_CALLBACK,
   );
 
   return $items;
@@ -77,7 +79,7 @@ function edit_library_info() {
   );
   $libraries['edit'] = array(
     'title' => 'Edit: in-place editing',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       // Core.
       $path . '/js/edit.js' => $options,
@@ -119,7 +121,7 @@ function edit_library_info() {
   );
   $libraries['edit.editorWidget.form'] = array(
     'title' => 'Form in-place editor',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/js/editors/formEditor.js' => $options,
     ),
@@ -129,7 +131,7 @@ function edit_library_info() {
   );
   $libraries['edit.editorWidget.direct'] = array(
     'title' => 'Direct in-place editor',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/js/editors/directEditor.js' => $options,
     ),

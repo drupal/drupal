@@ -16,7 +16,7 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('serialization', 'system', 'entity', 'field', 'entity_test', 'text', 'filter', 'field_sql_storage');
+  public static $modules = array('serialization', 'system', 'entity', 'field', 'entity_test', 'text', 'filter');
 
   protected function setUp() {
     parent::setUp();
@@ -27,7 +27,8 @@ abstract class NormalizerTestBase extends DrupalUnitTestBase {
 
     // Auto-create a field for testing.
     entity_create('field_entity', array(
-      'field_name' => 'field_test_text',
+      'name' => 'field_test_text',
+      'entity_type' => 'entity_test_mulrev',
       'type' => 'text',
       'cardinality' => 1,
       'translatable' => FALSE,

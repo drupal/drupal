@@ -7,13 +7,13 @@
 
 namespace Drupal\theme_test;
 
-use Drupal\Core\Controller\ControllerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Controller routines for theme test routes.
  */
-class ThemeTestController implements ControllerInterface {
+class ThemeTestController implements ContainerInjectionInterface {
 
   /**
    * {@inheritdoc}

@@ -43,7 +43,7 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
       'description_field' => '1',
     );
     $widget_settings = array();
-    $this->createFileField($field_name, $type_name, $field_settings, $instance_settings, $widget_settings);
+    $this->createFileField($field_name, 'node', $type_name, $field_settings, $instance_settings, $widget_settings);
 
     // RSS display must be added manually.
     $this->drupalGet("admin/structure/types/manage/$type_name/display");

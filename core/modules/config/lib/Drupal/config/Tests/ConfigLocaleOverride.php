@@ -21,7 +21,7 @@ class ConfigLocaleOverride extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('locale', 'config_test', 'user', 'language', 'system');
+  public static $modules = array('locale', 'config_test', 'user', 'language', 'system', 'field');
 
   public static function getInfo() {
     return array(

@@ -43,7 +43,7 @@ class ActionAddFormController extends ActionFormControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity')->getStorageController('action'),
+      $container->get('entity.manager')->getStorageController('action'),
       $container->get('plugin.manager.action')
     );
   }

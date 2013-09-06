@@ -70,7 +70,7 @@ class ActionUnitTest extends DrupalUnitTestBase {
 
     // Create a new unsaved user.
     $name = $this->randomName();
-    $user_storage = $this->container->get('plugin.manager.entity')->getStorageController('user');
+    $user_storage = $this->container->get('entity.manager')->getStorageController('user');
     $account = $user_storage->create(array('name' => $name, 'bundle' => 'user'));
     $loaded_accounts = $user_storage->loadMultiple();
     $this->assertEqual(count($loaded_accounts), 0);

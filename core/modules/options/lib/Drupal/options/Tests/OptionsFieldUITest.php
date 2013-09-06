@@ -231,7 +231,7 @@ class OptionsFieldUITest extends FieldTestBase {
     $this->drupalGet($this->admin_path);
     $this->assertFieldByName('on', $on, t("The 'On' value is stored correctly."));
     $this->assertFieldByName('off', $off, t("The 'Off' value is stored correctly."));
-    $field = field_info_field($this->field_name);
+    $field = field_info_field('node', $this->field_name);
     $this->assertEqual($field['settings']['allowed_values'], $allowed_values, 'The allowed value is correct');
     $this->assertFalse(isset($field['settings']['on']), 'The on value is not saved into settings');
     $this->assertFalse(isset($field['settings']['off']), 'The off value is not saved into settings');
@@ -259,7 +259,8 @@ class OptionsFieldUITest extends FieldTestBase {
   protected function createOptionsField($type) {
     // Create a test field and instance.
     entity_create('field_entity', array(
-      'field_name' => $this->field_name,
+      'name' => $this->field_name,
+      'entity_type' => 'node',
       'type' => $type,
     ))->save();
     entity_create('field_instance', array(
@@ -294,7 +295,7 @@ class OptionsFieldUITest extends FieldTestBase {
     }
     else {
       field_info_cache_clear();
-      $field = field_info_field($this->field_name);
+      $field = field_info_field('node', $this->field_name);
       $this->assertIdentical($field['settings']['allowed_values'], $result, $message);
     }
   }

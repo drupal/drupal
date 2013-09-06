@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Plugin\Discovery\StaticDiscoveryTest.
+ * Contains \Drupal\system\Tests\Plugin\Discovery\StaticDiscoveryTest.
  */
 
 namespace Drupal\system\Tests\Plugin\Discovery;

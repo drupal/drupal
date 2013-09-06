@@ -73,7 +73,7 @@ class ViewStorageTest extends ViewUnitTestBase {
   function testConfigurationEntityCRUD() {
     // Get the configuration entity information and controller.
     $this->info = entity_get_info('view');
-    $this->controller = $this->container->get('plugin.manager.entity')->getStorageController('view');
+    $this->controller = $this->container->get('entity.manager')->getStorageController('view');
 
     // Confirm that an info array has been returned.
     $this->assertTrue(!empty($this->info) && is_array($this->info), 'The View info array is loaded.');

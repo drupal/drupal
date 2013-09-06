@@ -95,7 +95,7 @@ function _content_translation_form_language_content_settings_form_alter(array &$
           // @todo Exploit field definitions once all core entities and field
           // types are migrated to the Entity Field API.
           foreach ($fields as $field_name => $instance) {
-            $field = field_info_field($field_name);
+            $field = $instance->getField();
             $form['settings'][$entity_type][$bundle]['fields'][$field_name] = array(
               '#label' => $instance['label'],
               '#type' => 'checkbox',
@@ -326,7 +326,7 @@ function _content_translation_update_field_translatability($settings) {
         foreach ($bundle_settings['fields'] as $field_name => $translatable) {
           // If a field is enabled for translation for at least one instance we
           // need to mark it as translatable.
-          $fields[$field_name] = $translatable || !empty($fields[$field_name]);
+          $fields[$entity_type][$field_name] = $translatable || !empty($fields[$entity_type][$field_name]);
         }
       }
       // @todo Store non-configurable field settings to be able to alter their
@@ -335,22 +335,24 @@ function _content_translation_update_field_translatability($settings) {
   }
 
   $operations = array();
-  foreach ($fields as $field_name => $translatable) {
-    $field = field_info_field($field_name);
-    if ($field['translatable'] != $translatable) {
-      // If a field is untranslatable, it can have no data except under
-      // Language::LANGCODE_NOT_SPECIFIED. Thus we need a field to be translatable before
-      // we convert data to the entity language. Conversely we need to switch
-      // data back to Language::LANGCODE_NOT_SPECIFIED before making a field
-      // untranslatable lest we lose information.
-      $field_operations = array(
-        array('content_translation_translatable_switch', array($translatable, $field_name)),
-      );
-      if ($field->hasData()) {
-        $field_operations[] = array('content_translation_translatable_batch', array($translatable, $field_name));
-        $field_operations = $translatable ? $field_operations : array_reverse($field_operations);
+  foreach ($fields as $entity_type => $entity_type_fields) {
+    foreach ($entity_type_fields as $field_name => $translatable) {
+      $field = field_info_field($entity_type, $field_name);
+      if ($field['translatable'] != $translatable) {
+        // If a field is untranslatable, it can have no data except under
+        // Language::LANGCODE_NOT_SPECIFIED. Thus we need a field to be translatable before
+        // we convert data to the entity language. Conversely we need to switch
+        // data back to Language::LANGCODE_NOT_SPECIFIED before making a field
+        // untranslatable lest we lose information.
+        $field_operations = array(
+          array('content_translation_translatable_switch', array($translatable, $entity_type, $field_name)),
+        );
+        if ($field->hasData()) {
+          $field_operations[] = array('content_translation_translatable_batch', array($translatable, $field_name));
+          $field_operations = $translatable ? $field_operations : array_reverse($field_operations);
+        }
+        $operations = array_merge($operations, $field_operations);
       }
-      $operations = array_merge($operations, $field_operations);
     }
   }
 
@@ -374,11 +376,13 @@ function _content_translation_update_field_translatability($settings) {
  * @param bool $translatable
  *   Indicator of whether the field should be made translatable (TRUE) or
  *   untranslatble (FALSE).
+ * @param string $entity_type
+ *   Field entity type.
  * @param string $field_name
  *   Field machine name.
  */
-function content_translation_translatable_switch($translatable, $field_name) {
-  $field = field_info_field($field_name);
+function content_translation_translatable_switch($translatable, $entity_type, $field_name) {
+  $field = field_info_field($entity_type, $field_name);
   if ($field['translatable'] !== $translatable) {
     $field['translatable'] = $translatable;
     $field->save();
@@ -395,10 +399,6 @@ function content_translation_translatable_switch($translatable, $field_name) {
  *   Field machine name.
  */
 function content_translation_translatable_batch($translatable, $field_name, &$context) {
-  $field = field_info_field($field_name);
-  $column = isset($field['columns']['value']) ? 'value' : key($field['columns']);
-  $query_field = "$field_name.$column";
-
   // Determine the entity types to act on.
   $entity_types = array();
   foreach (field_info_instances() as $entity_type => $info) {
@@ -417,6 +417,10 @@ function content_translation_translatable_batch($translatable, $field_name, &$co
     $context['sandbox']['max'] = 0;
 
     foreach ($entity_types as $entity_type) {
+      $field = field_info_field($entity_type, $field_name);
+      $column = isset($field['columns']['value']) ? 'value' : key($field['columns']);
+      $query_field = "$field_name.$column";
+
       // How many entities will need processing?
       $query = Drupal::entityQuery($entity_type);
       $count = $query
@@ -444,6 +448,9 @@ function content_translation_translatable_batch($translatable, $field_name, &$co
     $info = entity_get_info($entity_type);
     $offset = $context['sandbox']['progress_entity_type'][$entity_type];
     $query = Drupal::entityQuery($entity_type);
+    $field = field_info_field($entity_type, $field_name);
+    $column = isset($field['columns']['value']) ? 'value' : key($field['columns']);
+    $query_field = "$field_name.$column";
     $result = $query
       ->exists($query_field)
       ->sort($info['entity_keys']['id'])

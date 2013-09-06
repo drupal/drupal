@@ -71,7 +71,7 @@ function editor_library_info() {
 
   $libraries['drupal.editor.admin'] = array(
     'title' => 'Text Editor',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/js/editor.admin.js' => array(),
     ),
@@ -82,7 +82,7 @@ function editor_library_info() {
   );
   $libraries['drupal.editor'] = array(
     'title' => 'Text Editor',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/js/editor.js' => array(),
     ),
@@ -99,7 +99,7 @@ function editor_library_info() {
 
   $libraries['drupal.editor.dialog'] = array(
     'title' => 'Text Editor Dialog',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/js/editor.dialog.js' => array('weight' => 2),
     ),
@@ -113,7 +113,7 @@ function editor_library_info() {
 
   $libraries['edit.formattedTextEditor.editor'] = array(
     'title' => 'Formatted text editor',
-    'version' => VERSION,
+    'version' => Drupal::VERSION,
     'js' => array(
       $path . '/js/editor.formattedTextEditor.js' => array(
         'scope' => 'footer',
@@ -148,6 +148,7 @@ function editor_menu() {
   $items['editor/%/%/%/%/%'] = array(
     'route_name' => 'editor_field_untransformed_text',
     'theme callback' => 'ajax_base_page_theme',
+    'type' => MENU_CALLBACK,
   );
 
   return $items;

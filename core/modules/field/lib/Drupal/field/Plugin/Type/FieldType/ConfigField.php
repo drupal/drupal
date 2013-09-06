@@ -36,19 +36,12 @@ class ConfigField extends Field implements ConfigFieldInterface {
   /**
    * {@inheritdoc}
    */
-  public function getInstance() {
+  public function getFieldDefinition() {
     if (!isset($this->instance) && $parent = $this->getParent()) {
       $instances = FieldAPI::fieldInfo()->getBundleInstances($parent->entityType(), $parent->bundle());
       $this->instance = $instances[$this->getName()];
     }
     return $this->instance;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getFieldDefinition() {
-    return $this->getInstance();
   }
 
   /**
@@ -76,14 +69,14 @@ class ConfigField extends Field implements ConfigFieldInterface {
    * {@inheritdoc}
    */
   protected function getDefaultValue() {
-    return $this->getInstance()->getFieldDefaultValue($this->getParent());
+    return $this->getFieldDefinition()->getFieldDefaultValue($this->getParent());
   }
 
   /**
    * {@inheritdoc}
    */
   public function defaultValuesForm(array &$form, array &$form_state) {
-    if (empty($this->getInstance()->default_value_function)) {
+    if (empty($this->getFieldDefinition()->default_value_function)) {
       $entity = $this->getParent();
       $widget = $this->defaultValueWidget($form_state);
 

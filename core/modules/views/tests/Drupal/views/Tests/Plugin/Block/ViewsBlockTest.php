@@ -12,9 +12,6 @@ use Drupal\views\Plugin\Block\ViewsBlock;
 use Drupal\block\Plugin\views\display\Block;
 
 // @todo Remove this once the constant got converted.
-if (!defined('DRUPAL_CORE_COMPATIBILITY')) {
-  define('DRUPAL_CORE_COMPATIBILITY', '8.x');
-}
 if (!defined('BLOCK_LABEL_VISIBLE')) {
   define('BLOCK_LABEL_VISIBLE', 'visible');
 }
