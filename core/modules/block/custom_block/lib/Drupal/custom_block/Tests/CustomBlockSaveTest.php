@@ -75,6 +75,7 @@ class CustomBlockSaveTest extends CustomBlockTestBase {
   public function testDeterminingChanges() {
     // Initial creation.
     $block = $this->createCustomBlock('test_changes');
+    $this->assertEqual($block->getChangedTime(), REQUEST_TIME, 'Creating a block sets default "changed" timestamp.');
 
     // Update the block without applying changes.
     $block->save();
@@ -86,8 +87,9 @@ class CustomBlockSaveTest extends CustomBlockTestBase {
 
     // The hook implementations custom_block_test_custom_block_presave() and
     // custom_block_test_custom_block_update() determine changes and change the
-    // title.
+    // title as well as programatically set the 'changed' timestamp.
     $this->assertEqual($block->label(), 'updated_presave_update', 'Changes have been determined.');
+    $this->assertEqual($block->getChangedTime(), 979534800, 'Saving a custom block uses "changed" timestamp set in presave hook.');
 
     // Test the static block load cache to be cleared.
     $block = custom_block_load($block->id->value);

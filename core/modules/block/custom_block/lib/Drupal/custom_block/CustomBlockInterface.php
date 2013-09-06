@@ -8,11 +8,12 @@
 namespace Drupal\custom_block;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityChangedInterface;
 
 /**
  * Provides an interface defining a custom block entity.
  */
-interface CustomBlockInterface extends ContentEntityInterface {
+interface CustomBlockInterface extends ContentEntityInterface, EntityChangedInterface {
 
   /**
    * Sets the theme value.

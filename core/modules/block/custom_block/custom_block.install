@@ -48,6 +48,12 @@ function custom_block_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the custom block was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       'langcode' => array(
         'description' => 'The {language}.langcode of this node.',
         'type' => 'varchar',
@@ -103,6 +109,12 @@ function custom_block_schema() {
         'not null' => TRUE,
         'default' => '',
         'description' => 'Block description.',
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the version was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
       ),
     ),
     'primary key' => array('revision_id'),
@@ -153,6 +165,12 @@ function custom_block_schema_0() {
         'not null' => TRUE,
         'default' => '',
       ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the custom block was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
       'langcode' => array(
         'description' => 'The {language}.langcode of this node.',
         'type' => 'varchar',
@@ -208,6 +226,12 @@ function custom_block_schema_0() {
         'not null' => TRUE,
         'default' => '',
         'description' => 'Block description.',
+      ),
+      'changed' => array(
+        'description' => 'The Unix timestamp when the version was most recently saved.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
       ),
     ),
     'primary key' => array('revision_id'),

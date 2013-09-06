@@ -206,13 +206,15 @@ function block_update_8007() {
     'info',
     'revision_id',
     'langcode',
-    'type'
+    'type',
+    'changed',
   ));
   $revision_insert = db_insert('custom_block_revision')->fields(array(
     'id',
     'revision_id',
     'log',
-    'info'
+    'info',
+    'changed',
   ));
   foreach ($results as $block) {
     $custom_block = array(
@@ -221,13 +223,15 @@ function block_update_8007() {
       'info' => $block->info,
       'revision_id' => $block->bid,
       'langcode' => Language::LANGCODE_NOT_SPECIFIED,
-      'type' => 'basic'
+      'type' => 'basic',
+      'changed' => REQUEST_TIME,
     );
     $revision = array(
       'id' => $block->bid,
       'revision_id' => $block->bid,
       'info' => $block->info,
-      'log' => 'Initial value from 7.x to 8.x upgrade'
+      'log' => 'Initial value from 7.x to 8.x upgrade',
+      'changed' => REQUEST_TIME,
     );
     $block_insert->values($custom_block);
     $revision_insert->values($revision);
