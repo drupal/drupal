@@ -19,7 +19,7 @@ class PageTitleTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'test_page_test');
+  public static $modules = array('node', 'test_page_test', 'form_test');
 
   protected $content_user;
   protected $saved_title;
@@ -136,6 +136,20 @@ class PageTitleTest extends WebTestBase {
     $this->assertTitle('Foo | Drupal');
     $result = $this->xpath('//h1');
     $this->assertEqual('Foo', (string) $result[0]);
+
+    // Test a controller using _controller instead of _content.
+    $this->drupalGet('test-render-title-controller');
+
+    $this->assertTitle('Foo | Drupal');
+    $result = $this->xpath('//h1');
+    $this->assertEqual('Foo', (string) $result[0]);
+
+    // Test forms
+    $this->drupalGet('form-test/object-builder');
+
+    $this->assertTitle('Test dynamic title | Drupal');
+    $result = $this->xpath('//h1');
+    $this->assertEqual('Test dynamic title', (string) $result[0]);
   }
 
 }

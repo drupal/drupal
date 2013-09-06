@@ -37,6 +37,9 @@ class FormTestObject extends FormBase {
       '#type' => 'submit',
       '#value' => $this->t('Save'),
     );
+
+    $form['#title'] = 'Test dynamic title';
+
     return $form;
   }
 

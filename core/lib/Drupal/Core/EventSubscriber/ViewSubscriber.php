@@ -71,6 +71,12 @@ class ViewSubscriber implements EventSubscriberInterface {
           '#markup' => $page_result,
         );
       }
+
+      // If no title was returned fall back to one defined in the route.
+      if (!isset($page_result['#title']) && $request->attributes->has('_title')) {
+        $page_result['#title'] = $request->attributes->get('_title');
+      }
+
       $event->setResponse(new Response(drupal_render_page($page_result)));
     }
     else {
@@ -83,6 +89,12 @@ class ViewSubscriber implements EventSubscriberInterface {
           '#markup' => $page_result,
         );
       }
+
+      // If no title was returned fall back to one defined in the route.
+      if (!isset($page_result['#title']) && $request->attributes->has('_title')) {
+        $page_result['#title'] = $request->attributes->get('_title');
+      }
+
       $event->setResponse(new Response(drupal_render($page_result)));
     }
   }

@@ -5,6 +5,7 @@
  * Displays the Drupal administration interface in an overlay.
  */
 
+use Drupal\Core\Template\RenderWrapper;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -360,7 +361,13 @@ function overlay_preprocess_maintenance_page(&$variables) {
  */
 function template_preprocess_overlay(&$variables) {
   $variables['tabs'] = menu_primary_local_tasks();
-  $variables['title'] = drupal_get_title();
+
+  if (isset($variables['page']['#title'])) {
+    $variables['title'] = $variables['page']['#title'];
+  }
+  else {
+    $variables['title'] = new RenderWrapper('drupal_get_title');
+  }
   $variables['disable_overlay'] = overlay_disable_message();
 
   // Add attributes for the overlay container.
