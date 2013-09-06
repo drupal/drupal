@@ -260,6 +260,11 @@ class CKEditor extends EditorBase implements ContainerFactoryPluginInterface {
       'drupalExternalPlugins' => array_map('file_create_url', $external_plugin_files),
     );
 
+    // Parse all CKEditor plugin JavaScript files for translations.
+    if ($this->moduleHandler->moduleExists('locale')) {
+      locale_js_translate(array_values($settings['drupalExternalPlugins']));
+    }
+
     ksort($settings);
 
     return $settings;
