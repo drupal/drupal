@@ -16,6 +16,7 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines the block list controller.
@@ -35,6 +36,13 @@ class BlockListController extends ConfigEntityListController implements FormInte
    * @var string
    */
   protected $theme;
+
+  /**
+   * The current request.
+   *
+   * @var \Symfony\Component\HttpFoundation\Request
+   */
+  protected $request;
 
   /**
    * The block manager.
@@ -98,8 +106,18 @@ class BlockListController extends ConfigEntityListController implements FormInte
 
   /**
    * Overrides \Drupal\Core\Entity\EntityListController::render().
+   *
+   * @param string|null $theme
+   *   (optional) The theme to display the blocks for. If NULL, the current
+   *   theme will be used.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The current request.
+   *
+   * @return array
+   *   The block list as a renderable array.
    */
-  public function render($theme = NULL) {
+  public function render($theme = NULL, Request $request = NULL) {
+    $this->request = $request;
     // If no theme was specified, use the current theme.
     $this->theme = $theme ?: $GLOBALS['theme_key'];
 
@@ -119,6 +137,14 @@ class BlockListController extends ConfigEntityListController implements FormInte
    * Form constructor for the main block administration form.
    */
   public function buildForm(array $form, array &$form_state) {
+    $placement = FALSE;
+    if ($this->request->query->has('block-placement')) {
+      $placement = $this->request->query->get('block-placement');
+      $form['#attached']['js'][] = array(
+        'type' => 'setting',
+        'data' => array('blockPlacement' => $placement),
+      );
+    }
     $entities = $this->load();
     $form['#theme'] = array('block_list');
     $form['#attached']['library'][] = array('system', 'drupal.tableheader');
@@ -222,6 +248,9 @@ class BlockListController extends ConfigEntityListController implements FormInte
               'class' => array('draggable'),
             ),
           );
+          if ($placement && $placement == drupal_html_class($entity_id)) {
+            $form['blocks'][$entity_id]['#attributes']['id'] = 'block-placed';
+          }
 
           $form['blocks'][$entity_id]['info'] = array(
             '#markup' => check_plain($info['admin_label']),
