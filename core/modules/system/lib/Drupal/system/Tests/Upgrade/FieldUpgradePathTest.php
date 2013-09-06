@@ -124,8 +124,6 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
 
     // Check that the configuration for the 'body' field is correct.
     $config = \Drupal::config('field.field.node.body')->get();
-    // This will be necessary to retrieve the table name.
-    $field_entity = new Field($config);
     // We cannot predict the value of the UUID, we just check it's present.
     $this->assertFalse(empty($config['uuid']));
     $field_uuid = $config['uuid'];
@@ -178,11 +176,74 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
       ));
     }
 
-    // Check that field values in a pre-existing node are read correctly.
-    $body = node_load(1)->get('body');
-    $this->assertEqual($body->value, 'Some value');
-    $this->assertEqual($body->summary, 'Some summary');
-    $this->assertEqual($body->format, 'filtered_html');
+    // Check that the field that was shared in two entity types got split into
+    // two separate config entities.
+    $config = \Drupal::config('field.field.node.test_shared_field')->get();
+    // We cannot predict the value of the UUID, we just check it's present.
+    $this->assertFalse(empty($config['uuid']));
+    $field_uuid_node = $config['uuid'];
+    unset($config['uuid']);
+    $this->assertEqual($config, array(
+      'id' => 'node.test_shared_field',
+      'name' => 'test_shared_field',
+      'type' => 'text',
+      'module' => 'text',
+      'active' => '1',
+      'entity_type' => 'node',
+      'settings' => array(
+        'max_length' => '255',
+      ),
+      'locked' => 0,
+      'cardinality' => 1,
+      'translatable' => 0,
+      'indexes' => array(
+        'format' => array('format')
+      ),
+      'status' => 1,
+      'langcode' => 'und',
+    ));
+    $config = \Drupal::config('field.field.user.test_shared_field')->get();
+    // We cannot predict the value of the UUID, we just check it's present.
+    $this->assertFalse(empty($config['uuid']));
+    $field_uuid_user = $config['uuid'];
+    unset($config['uuid']);
+    $this->assertEqual($config, array(
+      'id' => 'user.test_shared_field',
+      'name' => 'test_shared_field',
+      'type' => 'text',
+      'module' => 'text',
+      'active' => '1',
+      'entity_type' => 'user',
+      'settings' => array(
+        'max_length' => '255',
+      ),
+      'locked' => 0,
+      'cardinality' => 1,
+      'translatable' => 0,
+      'indexes' => array(
+        'format' => array('format')
+      ),
+      'status' => 1,
+      'langcode' => 'und',
+    ));
+
+    // Check that the corresponding instances point to the correct field UUIDs.
+    $config = \Drupal::config('field.instance.node.article.test_shared_field')->get();
+    $this->assertEqual($config['field_uuid'], $field_uuid_node);
+    $config = \Drupal::config('field.instance.user.user.test_shared_field')->get();
+    $this->assertEqual($config['field_uuid'], $field_uuid_user);
+
+    // Check that field values in the pre-existing node are read correctly.
+    $node = node_load(1);
+    $this->assertEqual($node->body->value, 'Some value');
+    $this->assertEqual($node->body->summary, 'Some summary');
+    $this->assertEqual($node->body->format, 'filtered_html');
+    $this->assertEqual($node->test_shared_field->value, 'Shared field: value for node 1');
+    $this->assertEqual($node->test_shared_field->format, 'filtered_html');
+    // Check that field values in the pre-existing user are read correctly.
+    $account = user_load(1);
+    $this->assertEqual($account->test_shared_field->value, 'Shared field: value for user 1');
+    $this->assertEqual($account->test_shared_field->format, 'filtered_html');
 
     // Check that the definition of a deleted field is stored in state rather
     // than config.
