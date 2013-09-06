@@ -7,8 +7,6 @@
 
 namespace Drupal\shortcut\Tests;
 
-use Drupal\simpletest\WebTestBase;
-
 /**
  * Defines shortcut set test cases.
  */
@@ -26,9 +24,15 @@ class ShortcutSetsTest extends ShortcutTestBase {
    * Tests creating a shortcut set.
    */
   function testShortcutSetAdd() {
-    $new_set = $this->generateShortcutSet($this->randomName());
-    $sets = entity_load_multiple('shortcut_set');
-    $this->assertTrue(isset($sets[$new_set->id()]), 'Successfully created a shortcut set.');
+    $this->drupalGet('admin/config/user-interface/shortcut');
+    $this->clickLink(t('Add shortcut set'));
+    $edit = array(
+      'label' => $this->randomName(),
+      'id' => strtolower($this->randomName()),
+    );
+    $this->drupalPost(NULL, $edit, t('Save'));
+    $new_set = $this->container->get('entity.manager')->getStorageController('shortcut_set')->load($edit['id']);
+    $this->assertIdentical($new_set->id(), $edit['id'], 'Successfully created a shortcut set.');
     $this->drupalGet('user/' . $this->admin_user->id() . '/shortcuts');
     $this->assertText($new_set->label(), 'Generated shortcut set was listed as a choice on the user account page.');
   }

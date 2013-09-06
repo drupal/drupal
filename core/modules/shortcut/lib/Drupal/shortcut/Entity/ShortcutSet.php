@@ -26,6 +26,7 @@ use Drupal\shortcut\ShortcutSetInterface;
  *     "list" = "Drupal\shortcut\ShortcutSetListController",
  *     "form" = {
  *       "default" = "Drupal\shortcut\ShortcutSetFormController",
+ *       "add" = "Drupal\shortcut\ShortcutSetFormController",
  *       "edit" = "Drupal\shortcut\ShortcutSetFormController",
  *       "customize" = "Drupal\shortcut\Form\SetCustomize",
  *       "delete" = "Drupal\shortcut\Form\ShortcutSetDeleteForm"
