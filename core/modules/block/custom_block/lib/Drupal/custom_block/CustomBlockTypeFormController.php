@@ -101,7 +101,7 @@ class CustomBlockTypeFormController extends EntityFormController {
       watchdog('custom_block', 'Custom block type %label has been added.', array('%label' => $block_type->label()), WATCHDOG_NOTICE, l(t('Edit'), $uri['path'] . '/edit'));
     }
 
-    $form_state['redirect'] = 'admin/structure/custom-blocks/types';
+    $form_state['redirect'] = 'admin/structure/block/custom-blocks/types';
   }
 
   /**
@@ -109,7 +109,7 @@ class CustomBlockTypeFormController extends EntityFormController {
    */
   public function delete(array $form, array &$form_state) {
     $block_type = $this->entity;
-    $form_state['redirect'] = 'admin/structure/custom-blocks/manage/' . $block_type->id() . '/delete';
+    $form_state['redirect'] = 'admin/structure/block/custom-blocks/manage/' . $block_type->id() . '/delete';
   }
 
 }

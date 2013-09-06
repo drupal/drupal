@@ -36,7 +36,7 @@ use Drupal\custom_block\CustomBlockInterface;
  *   },
  *   base_table = "custom_block",
  *   revision_table = "custom_block_revision",
- *   route_base_path = "admin/structure/custom-blocks/manage/{bundle}",
+ *   route_base_path = "admin/structure/block/custom-blocks/manage/{bundle}",
  *   menu_base_path = "block/%custom_block",
  *   menu_edit_path = "block/%custom_block",
  *   fieldable = TRUE,

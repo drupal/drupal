@@ -37,10 +37,10 @@ class CustomBlockListTest extends WebTestBase {
    */
   public function testListing() {
     $this->drupalLogin($this->drupalCreateUser(array('administer blocks')));
-    $this->drupalGet('admin/structure/custom-blocks');
+    $this->drupalGet('admin/structure/block/custom-blocks');
 
     // Test for the page title.
-    $this->assertTitle(t('Custom blocks') . ' | Drupal');
+    $this->assertTitle(t('Custom block library') . ' | Drupal');
 
     // Test for the table.
     $element = $this->xpath('//div[@class="l-content"]//table');
