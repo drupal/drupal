@@ -12,6 +12,11 @@ namespace Drupal\system\Tests\Upgrade;
  */
 class BareMinimalNoConfigUpgradePathTest extends BareMinimalUpgradePathTest {
 
+  /**
+   * The installation profile used in the upgrade test.
+   */
+  protected $profile = 'minimal';
+
   public static function getInfo() {
     return array(
       'name'  => 'Basic minimal profile upgrade, no config',
@@ -34,6 +39,12 @@ class BareMinimalNoConfigUpgradePathTest extends BareMinimalUpgradePathTest {
     $settings['config_directories'] = (object) array(
       'value' => array(),
       'required' => TRUE,
+    );
+    $settings['settings'] = array(
+      'install_profile' => (object) array(
+        'value' => $this->profile,
+        'required' => TRUE,
+      ),
     );
     $this->writeSettings($settings);
   }

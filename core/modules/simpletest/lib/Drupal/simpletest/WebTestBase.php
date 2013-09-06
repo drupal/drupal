@@ -786,6 +786,22 @@ abstract class WebTestBase extends TestBase {
     $this->settingsSet('cache', array('default' => 'cache.backend.memory'));
     $parameters = $this->installParameters();
     install_drupal($parameters);
+
+    // Set the install_profile so that web requests to the requests to the child
+    // site have the correct profile.
+    $settings = array(
+      'settings' => array(
+        'install_profile' => (object) array(
+          'value' => $this->profile,
+          'required' => TRUE,
+        ),
+      ),
+    );
+    $this->writeSettings($settings);
+    // Override install profile in Settings to so the correct profile is used by
+    // tests.
+    $this->settingsSet('install_profile', $this->profile);
+
     $this->settingsSet('cache', array());
     $this->rebuildContainer();
 

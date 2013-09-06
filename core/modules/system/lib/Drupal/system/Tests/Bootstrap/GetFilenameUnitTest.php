@@ -26,6 +26,11 @@ class GetFilenameUnitTest extends UnitTestBase {
    * Tests that drupal_get_filename() works when the file is not in database.
    */
   function testDrupalGetFilename() {
+    // drupal_get_profile() is using obtaining the profile from state if the
+    // install_state global is not set.
+    global $install_state;
+    $install_state['parameters']['profile'] = 'testing';
+
     // Assert that the test is meaningful by making sure the keyvalue service
     // does not exist.
     $this->assertFalse(drupal_container()->has('keyvalue'), 'The container has no keyvalue service.');

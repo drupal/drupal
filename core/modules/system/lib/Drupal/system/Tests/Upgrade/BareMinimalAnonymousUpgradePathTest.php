@@ -28,9 +28,15 @@ class BareMinimalAnonymousUpgradePathTest extends BareMinimalUpgradePathTest {
 
     // Override $update_free_access in settings.php to allow the anonymous user
     // to run updates.
-    $settings['settings']['update_free_access'] = (object) array(
-      'value' => TRUE,
-      'required' => TRUE,
+    $settings['settings'] = array(
+      'update_free_access' => (object) array(
+        'value' => TRUE,
+        'required' => TRUE,
+      ),
+      'install_profile' => (object) array(
+        'value' => $this->profile,
+        'required' => TRUE,
+      ),
     );
     $this->writeSettings($settings);
   }
