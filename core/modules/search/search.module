@@ -8,6 +8,7 @@
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\search\SearchExpression;
+use Drupal\search\Plugin\SearchInterface;
 
 /**
  * Matches all 'N' Unicode character classes (numbers)
@@ -82,7 +83,7 @@ function search_help($path, $arg) {
       $output .= '<dt>' . t('Content reindexing') . '</dt>';
       $output .= '<dd>' . t('Content-related actions on your site (creating, editing, or deleting content and comments) automatically cause affected content items to be marked for indexing or reindexing at the next cron run. When content is marked for reindexing, the previous content remains in the index until cron runs, at which time it is replaced by the new content. Unlike content-related actions, actions related to the structure of your site do not cause affected content to be marked for reindexing. Examples of structure-related actions that affect content include deleting or editing taxonomy terms, enabling or disabling modules that add text to content (such as Taxonomy, Comment, and field-providing modules), and modifying the fields or display parameters of your content types. If you take one of these actions and you want to ensure that the search index is updated to reflect your changed site structure, you can mark all content for reindexing by clicking the "Re-index site" button on the <a href="@searchsettings">Search settings page</a>. If you have a lot of content on your site, it may take several cron runs for the content to be reindexed.', array('@searchsettings' => url('admin/config/search/settings'))) . '</dd>';
       $output .= '<dt>' . t('Configuring search settings') . '</dt>';
-      $output .= '<dd>' . t('Indexing behavior can be adjusted using the <a href="@searchsettings">Search settings page</a>. Users with <em>Administer search</em> permission can control settings such as the <em>Number of items to index per cron run</em>, <em>Indexing settings</em> (word length), <em>Active search modules</em>, and <em>Content ranking</em>, which lets you adjust the priority in which indexed content is returned in results.', array('@searchsettings' => url('admin/config/search/settings'))) . '</dd>';
+      $output .= '<dd>' . t('Indexing behavior can be adjusted using the <a href="@searchsettings">Search settings page</a>. Users with <em>Administer search</em> permission can control settings such as the <em>Number of items to index per cron run</em>, <em>Indexing settings</em> (word length), <em>Active search plugins</em>, and <em>Content ranking</em>, which lets you adjust the priority in which indexed content is returned in results.', array('@searchsettings' => url('admin/config/search/settings'))) . '</dd>';
       $output .= '<dt>' . t('Search block') . '</dt>';
       $output .= '<dd>' . t('The Search module includes a default <em>Search form</em> block, which can be enabled and configured on the <a href="@blocks">Blocks administration page</a>. The block is available to users with the <em>Search content</em> permission.', array('@blocks' => url('admin/structure/block'))) . '</dd>';
       $output .= '<dt>' . t('Extending Search module') . '</dt>';
@@ -106,12 +107,12 @@ function search_help($path, $arg) {
 function search_theme() {
   return array(
     'search_result' => array(
-      'variables' => array('result' => NULL, 'module' => NULL),
+      'variables' => array('result' => NULL, 'plugin_id' => NULL),
       'file' => 'search.pages.inc',
       'template' => 'search-result',
     ),
     'search_results' => array(
-      'variables' => array('results' => NULL, 'module' => NULL),
+      'variables' => array('results' => NULL, 'plugin_id' => NULL),
       'file' => 'search.pages.inc',
       'template' => 'search-results',
     ),
@@ -152,6 +153,7 @@ function search_menu() {
   $items['search'] = array(
     'title' => 'Search',
     'page callback' => 'search_view',
+    'page arguments' => array(NULL, '', ''),
     'access callback' => 'search_is_active',
     'type' => MENU_SUGGESTED_ITEM,
     'file' => 'search.pages.inc',
@@ -168,35 +170,34 @@ function search_menu() {
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
 
-  // Add paths for searching. We add each module search path twice: once without
+  // Add paths for searching. We add each plugin search path twice: once without
   // and once with %menu_tail appended. The reason for this is that we want to
   // preserve keywords when switching tabs, and also to have search tabs
   // highlighted properly. The only way to do that within the Drupal menu
   // system appears to be having two sets of tabs. See discussion on issue
   // http://drupal.org/node/245103 for details.
 
-  drupal_static_reset('search_get_info');
-  $default_info = search_get_default_module_info();
+  $default_info = search_get_default_plugin_info();
   if ($default_info) {
-    foreach (search_get_info() as $module => $search_info) {
+    foreach (Drupal::service('plugin.manager.search')->getActiveDefinitions() as $plugin_id => $search_info) {
       $path = 'search/' . $search_info['path'];
       $items[$path] = array(
         'title' => $search_info['title'],
         'page callback' => 'search_view',
-        'page arguments' => array($module, ''),
+        'page arguments' => array($plugin_id, ''),
         'access callback' => '_search_menu_access',
-        'access arguments' => array($module),
+        'access arguments' => array($plugin_id),
         'type' => MENU_LOCAL_TASK,
         'file' => 'search.pages.inc',
-        'weight' => $module == $default_info['module'] ? -10 : 0,
+        'weight' => $plugin_id == $default_info['id'] ? -10 : 0,
       );
       $items["$path/%menu_tail"] = array(
         'title' => $search_info['title'],
         'load arguments' => array('%map', '%index'),
         'page callback' => 'search_view',
-        'page arguments' => array($module, 2),
+        'page arguments' => array($plugin_id, 2),
         'access callback' => '_search_menu_access',
-        'access arguments' => array($module),
+        'access arguments' => array($plugin_id),
         // The default local task points to its parent, but this item points to
         // where it should so it should not be changed.
         'type' => MENU_LOCAL_TASK,
@@ -216,75 +217,46 @@ function search_menu() {
  * Determines access for the 'search' path.
  */
 function search_is_active() {
-  // This path cannot be accessed if there are no active modules.
-  return user_access('search content') && search_get_info();
+  // This path cannot be accessed if there are no active plugins.
+  $account = Drupal::request()->attributes->get('_account');
+  return !empty($account) && $account->hasPermission('search content') && Drupal::service('plugin.manager.search')->getActiveDefinitions();
 }
 
 /**
- * Returns information about available search modules.
+ * Returns information about the default search plugin.
  *
- * @param $all
- *   If TRUE, information about all enabled modules implementing
- *   hook_search_info() will be returned. If FALSE (default), only modules that
- *   have been set to active on the search settings page will be returned.
- *
- * @return
- *   Array of hook_search_info() return values, keyed by module name. The
- *   'title' and 'path' array elements will be set to defaults for each module
- *   if not supplied by hook_search_info(), and an additional array element of
- *   'module' will be added (set to the module name).
+ * @return array
+ *   The search plugin definition for the default search plugin, if any.
  */
-function search_get_info($all = FALSE) {
-  $search_hooks = &drupal_static(__FUNCTION__);
-
-  if (!isset($search_hooks)) {
-    foreach (Drupal::moduleHandler()->getImplementations('search_info') as $module) {
-      $search_hooks[$module] = call_user_func($module . '_search_info');
-      // Use module name as the default value.
-      $search_hooks[$module] += array('title' => $module, 'path' => $module);
-      // Include the module name itself in the array.
-      $search_hooks[$module]['module'] = $module;
-    }
-  }
-
-  if ($all) {
-    return $search_hooks;
-  }
-
-  // Return only modules that are set to active in search settings.
-  return array_intersect_key($search_hooks, array_flip(Drupal::config('search.settings')->get('active_modules')));
-}
-
-/**
- * Returns information about the default search module.
- *
- * @return
- *   The search_get_info() array element for the default search module, if any.
- */
-function search_get_default_module_info() {
-  $info = search_get_info();
-  $default = Drupal::config('search.settings')->get('default_module');
+function search_get_default_plugin_info() {
+  $info = Drupal::service('plugin.manager.search')->getActiveDefinitions();
+  $default = Drupal::config('search.settings')->get('default_plugin');
   if (isset($info[$default])) {
     return $info[$default];
   }
-  // The variable setting does not match any active module, so just return
-  // the info for the first active module (if any).
+  // The config setting does not match any active plugin, so just return
+  // the info for the first active plugin (if any).
   return reset($info);
 }
 
 /**
  * Access callback: Determines access for a search page.
  *
- * @param int $name
- *   The name of a search module (e.g., 'node')
+ * @param string $plugin_id
+ *   The name of a search plugin (e.g., 'node_search').
  *
  * @return bool
  *   TRUE if a user has access to the search page; FALSE otherwise.
  *
  * @see search_menu()
  */
-function _search_menu_access($name) {
-  return user_access('search content') && (!function_exists($name . '_search_access') || module_invoke($name, 'search_access'));
+function _search_menu_access($plugin_id) {
+  $account = Drupal::request()->attributes->get('_account');
+  // @todo - remove the empty() check once we are more confident
+  // that the account will be populated, especially during tests.
+  // @see https://drupal.org/node/2032553
+  $access = !empty($account) && $account->hasPermission('search content');
+  return $access && Drupal::service('plugin.manager.search')->pluginAccess($plugin_id, $account);
 }
 
 /**
@@ -292,25 +264,27 @@ function _search_menu_access($name) {
  *
  * @param $sid
  *   (optional) The ID of the item to remove from the search index. If
- *   specified, $module must also be given. Omit both $sid and $module to clear
+ *   specified, $type must also be given. Omit both $sid and $type to clear
  *   the entire search index.
- * @param $module
- *   (optional) The machine-readable name of the module for the item to remove
- *   from the search index.
+ * @param $type
+ *   (optional) The plugin ID or other machine-readable type for the item to
+ *   remove from the search index.
  * @param $reindex
  *   (optional) Boolean to specify whether reindexing happens.
  * @param $langcode
  *   (optional) Language code for the operation. If not provided, all
  *   index records for the $sid will be deleted.
  */
-function search_reindex($sid = NULL, $module = NULL, $reindex = FALSE, $langcode = NULL) {
-  if ($module == NULL && $sid == NULL) {
-    Drupal::moduleHandler()->invokeAll('search_reset');
+function search_reindex($sid = NULL, $type = NULL, $reindex = FALSE, $langcode = NULL) {
+  if ($type == NULL && $sid == NULL) {
+    foreach (Drupal::service('plugin.manager.search')->getActiveIndexingPlugins() as $plugin) {
+      $plugin->resetIndex();
+    }
   }
   else {
     $query = db_delete('search_dataset')
       ->condition('sid', $sid)
-      ->condition('type', $module);
+      ->condition('type', $type);
     if (!empty($langcode)) {
       $query->condition('langcode', $langcode);
     }
@@ -318,19 +292,11 @@ function search_reindex($sid = NULL, $module = NULL, $reindex = FALSE, $langcode
 
     $query = db_delete('search_index')
       ->condition('sid', $sid)
-      ->condition('type', $module);
+      ->condition('type', $type);
     if (!empty($langcode)) {
       $query->condition('langcode', $langcode);
     }
     $query->execute();
-
-    // Don't remove links if re-indexing.
-    if (!$reindex) {
-      db_delete('search_node_links')
-        ->condition('sid', $sid)
-        ->condition('type', $module)
-        ->execute();
-    }
   }
 }
 
@@ -353,7 +319,7 @@ function search_dirty($word = NULL) {
 /**
  * Implements hook_cron().
  *
- * Fires hook_update_index() in all modules and cleans up dirty words.
+ * Fires updateIndex() in all plugins and cleans up dirty words.
  *
  * @see search_dirty()
  */
@@ -362,9 +328,8 @@ function search_cron() {
   // to date.
   drupal_register_shutdown_function('search_update_totals');
 
-  foreach (Drupal::config('search.settings')->get('active_modules') as $module) {
-    // Update word index
-    module_invoke($module, 'update_index');
+  foreach (Drupal::service('plugin.manager.search')->getActiveIndexingPlugins() as $plugin) {
+    $plugin->updateIndex();
   }
 }
 
@@ -547,9 +512,8 @@ function search_invoke_preprocess(&$text, $langcode = NULL) {
  *
  * @param $sid
  *   An ID number identifying this particular item (e.g., node ID).
- * @param $module
- *   The machine-readable name of the module that this item comes from (a
- *   module that implements hook_search_info()).
+ * @param $type
+ *   The plugin ID or other machine-readable type of this item.
  * @param $text
  *   The content of this item. Must be a piece of HTML or plain text.
  * @param $langcode
@@ -557,20 +521,16 @@ function search_invoke_preprocess(&$text, $langcode = NULL) {
  *
  * @ingroup search
  */
-function search_index($sid, $module, $text, $langcode) {
+function search_index($sid, $type, $text, $langcode) {
   $minimum_word_size = Drupal::config('search.settings')->get('index.minimum_word_size');
 
-  // Link matching
-  global $base_url;
-  $node_regexp = '@href=[\'"]?(?:' . preg_quote($base_url, '@') . '/|' . preg_quote(base_path(), '@') . ')(?:\?q=)?/?((?![a-z]+:)[^\'">]+)[\'">]@i';
-
-  // Multipliers for scores of words inside certain HTML tags. The weights are stored
-  // in a variable so that modules can overwrite the default weights.
+  // Multipliers for scores of words inside certain HTML tags. The weights are
+  // stored in config so that modules can overwrite the default weights.
   // Note: 'a' must be included for link ranking to work.
   $tags = Drupal::config('search.settings')->get('index.tag_weights');
 
-  // Strip off all ignored tags to speed up processing, but insert space before/after
-  // them to keep word boundaries.
+  // Strip off all ignored tags to speed up processing, but insert space before
+  // and after them to keep word boundaries.
   $text = str_replace(array('<', '>'), array(' <', '> '), $text);
   $text = strip_tags($text, '<' . implode('><', array_keys($tags)) . '>');
 
@@ -580,14 +540,13 @@ function search_index($sid, $module, $text, $langcode) {
   // and begins and ends with a literal (inserting $null as required).
 
   $tag = FALSE; // Odd/even counter. Tag or no tag.
-  $link = FALSE; // State variable for link analyzer
   $score = 1; // Starting score per word
   $accum = ' '; // Accumulator for cleaned up data
   $tagstack = array(); // Stack with open tags
   $tagwords = 0; // Counter for consecutive words
   $focus = 1; // Focus state
 
-  $results = array(0 => array()); // Accumulator for words for index
+  $scored_words = array(); // Accumulator for words for index
 
   foreach ($split as $value) {
     if ($tag) {
@@ -606,9 +565,6 @@ function search_index($sid, $module, $text, $langcode) {
           // Remove from tag stack and decrement score
           $score = max(1, $score - $tags[array_shift($tagstack)]);
         }
-        if ($tagname == 'a') {
-          $link = FALSE;
-        }
       }
       else {
         if (isset($tagstack[0]) && $tagstack[0] == $tagname) {
@@ -622,20 +578,6 @@ function search_index($sid, $module, $text, $langcode) {
           array_unshift($tagstack, $tagname);
           $score += $tags[$tagname];
         }
-        if ($tagname == 'a') {
-          // Check if link points to a node on this site
-          if (preg_match($node_regexp, $value, $match)) {
-            $path = Drupal::service('path.alias_manager')->getSystemPath($match[1]);
-            if (preg_match('!(?:node|book)/(?:view/)?([0-9]+)!i', $path, $match)) {
-              $linknid = $match[1];
-              if ($linknid > 0) {
-                $link = TRUE;
-                $node = node_load($linknid);
-                $linktitle = $node->label();
-              }
-            }
-          }
-        }
       }
       // A tag change occurred, reset counter.
       $tagwords = 0;
@@ -643,36 +585,19 @@ function search_index($sid, $module, $text, $langcode) {
     else {
       // Note: use of PREG_SPLIT_DELIM_CAPTURE above will introduce empty values
       if ($value != '') {
-        if ($link) {
-          // Check to see if the node link text is its URL. If so, we use the target node title instead.
-          if (preg_match('!^https?://!i', $value)) {
-            $value = $linktitle;
-          }
-        }
         $words = search_index_split($value, $langcode);
         foreach ($words as $word) {
           // Add word to accumulator
           $accum .= $word . ' ';
           // Check wordlength
           if (is_numeric($word) || drupal_strlen($word) >= $minimum_word_size) {
-            // Links score mainly for the target.
-            if ($link) {
-              if (!isset($results[$linknid])) {
-                $results[$linknid] = array();
-              }
-              $results[$linknid][] = $word;
-              // Reduce score of the link caption in the source.
-              $focus *= 0.2;
+            if (!isset($scored_words[$word])) {
+              $scored_words[$word] = 0;
             }
-            // Fall-through
-            if (!isset($results[0][$word])) {
-              $results[0][$word] = 0;
-            }
-            $results[0][$word] += $score * $focus;
-
+            $scored_words[$word] += $score * $focus;
             // Focus is a decaying value in terms of the amount of unique words up to this point.
             // From 100 words and more, it decays, to e.g. 0.5 at 500 words and 0.3 at 1000 words.
-            $focus = min(1, .01 + 3.5 / (2 + count($results[0]) * .015));
+            $focus = min(1, .01 + 3.5 / (2 + count($scored_words) * .015));
           }
           $tagwords++;
           // Too many words inside a single tag probably mean a tag was accidentally left open.
@@ -686,21 +611,21 @@ function search_index($sid, $module, $text, $langcode) {
     $tag = !$tag;
   }
 
-  search_reindex($sid, $module, TRUE, $langcode);
+  search_reindex($sid, $type, TRUE, $langcode);
 
   // Insert cleaned up data into dataset
   db_insert('search_dataset')
     ->fields(array(
       'sid' => $sid,
       'langcode' => $langcode,
-      'type' => $module,
+      'type' => $type,
       'data' => $accum,
       'reindex' => 0,
     ))
     ->execute();
 
   // Insert results into search index
-  foreach ($results[0] as $word => $score) {
+  foreach ($scored_words as $word => $score) {
     // If a word already exists in the database, its score gets increased
     // appropriately. If not, we create a new record with the appropriate
     // starting score.
@@ -709,202 +634,29 @@ function search_index($sid, $module, $text, $langcode) {
         'word' => $word,
         'sid' => $sid,
         'langcode' => $langcode,
-        'type' => $module,
+        'type' => $type,
       ))
       ->fields(array('score' => $score))
       ->expression('score', 'score + :score', array(':score' => $score))
       ->execute();
     search_dirty($word);
   }
-  unset($results[0]);
-
-  // Get all previous links from this item.
-  $result = db_query("SELECT nid, caption FROM {search_node_links} WHERE sid = :sid AND type = :type", array(
-    ':sid' => $sid,
-    ':type' => $module
-  ), array('target' => 'slave'));
-  $links = array();
-  foreach ($result as $link) {
-    $links[$link->nid] = $link->caption;
-  }
-
-  // Now store links to nodes.
-  foreach ($results as $nid => $words) {
-    $caption = implode(' ', $words);
-    if (isset($links[$nid])) {
-      if ($links[$nid] != $caption) {
-        // Update the existing link and mark the node for reindexing.
-        db_update('search_node_links')
-          ->fields(array('caption' => $caption))
-          ->condition('sid', $sid)
-          ->condition('type', $module)
-          ->condition('nid', $nid)
-          ->execute();
-        search_touch_node($nid);
-      }
-      // Unset the link to mark it as processed.
-      unset($links[$nid]);
-    }
-    elseif ($sid != $nid || $module != 'node') {
-      // Insert the existing link and mark the node for reindexing, but don't
-      // reindex if this is a link in a node pointing to itself.
-      db_insert('search_node_links')
-        ->fields(array(
-          'caption' => $caption,
-          'sid' => $sid,
-          'type' => $module,
-          'nid' => $nid,
-        ))
-        ->execute();
-      search_touch_node($nid);
-    }
-  }
-  // Any left-over links in $links no longer exist. Delete them and mark the nodes for reindexing.
-  foreach ($links as $nid => $caption) {
-    db_delete('search_node_links')
-      ->condition('sid', $sid)
-      ->condition('type', $module)
-      ->condition('nid', $nid)
-      ->execute();
-    search_touch_node($nid);
-  }
 }
 
 /**
- * Changes a node's changed timestamp to 'now' to force reindexing.
+ * Changes the timestamp on an indexed item to 'now' to force reindexing.
  *
- * @param $nid
- *   The node ID of the node that needs reindexing.
+ * @param $type
+ *   The plugin ID or other machine-readable type of this item.
+ * @param $sid
+ *   An ID number identifying this particular item (e.g., node ID).
  */
-function search_touch_node($nid) {
+function search_mark_for_reindex($type, $sid) {
   db_update('search_dataset')
     ->fields(array('reindex' => REQUEST_TIME))
-    ->condition('type', 'node')
-    ->condition('sid', $nid)
+    ->condition('type', $type)
+    ->condition('sid', $sid)
     ->execute();
-}
-
-/**
- * Implements hook_node_update_index().
- */
-function search_node_update_index(EntityInterface $node) {
-  // Transplant links to a node into the target node.
-  $result = db_query("SELECT caption FROM {search_node_links} WHERE nid = :nid", array(':nid' => $node->id()), array('target' => 'slave'));
-  $output = array();
-  foreach ($result as $link) {
-    $output[] = $link->caption;
-  }
-  if (count($output)) {
-    return '<a>(' . implode(', ', $output) . ')</a>';
-  }
-}
-
-/**
- * Implements hook_node_update().
- */
-function search_node_update(EntityInterface $node) {
-  // Reindex the node when it is updated. The node is automatically indexed
-  // when it is added, simply by being added to the node table.
-  search_touch_node($node->id());
-}
-
-/**
- * Implements hook_comment_insert().
- */
-function search_comment_insert($comment) {
-  // Reindex the node when comments are added.
-  if ($comment->entity_type->value == 'node') {
-    search_touch_node($comment->entity_id->target_id);
-  }
-}
-
-/**
- * Implements hook_comment_update().
- */
-function search_comment_update($comment) {
-  // Reindex the node when comments are changed.
-  if ($comment->entity_type->value == 'node') {
-    search_touch_node($comment->entity_id->target_id);
-  }
-}
-
-/**
- * Implements hook_comment_delete().
- */
-function search_comment_delete($comment) {
-  // Reindex the node when comments are deleted.
-  if ($comment->entity_type->value == 'node') {
-    search_touch_node($comment->entity_id->target_id);
-  }
-}
-
-/**
- * Implements hook_comment_publish().
- */
-function search_comment_publish($comment) {
-  // Reindex the node when comments are published.
-  if ($comment->entity_type->value == 'node') {
-    search_touch_node($comment->entity_id->target_id);
-  }
-}
-
-/**
- * Implements hook_comment_unpublish().
- */
-function search_comment_unpublish($comment) {
-  // Reindex the node when comments are unpublished.
-  if ($comment->entity_type->value == 'node') {
-    search_touch_node($comment->entity_id->target_id);
-  }
-}
-
-/**
- * Extracts a module-specific search option from a search expression.
- *
- * Search options are added using search_expression_insert(), and retrieved
- * using search_expression_extract(). They take the form option:value, and
- * are added to the ordinary keywords in the search expression.
- *
- * @param $expression
- *   The search expression to extract from.
- * @param $option
- *   The name of the option to retrieve from the search expression.
- *
- * @return
- *   The value previously stored in the search expression for option $option,
- *   if any. Trailing spaces in values will not be included.
- */
-function search_expression_extract($expression, $option) {
-  $expression = new SearchExpression($expression);
-  return $expression->extract($option);
-}
-
-/**
- * Adds a module-specific search option to a search expression.
- *
- * Search options are added using search_expression_insert(), and retrieved
- * using search_expression_extract(). They take the form option:value, and
- * are added to the ordinary keywords in the search expression.
- *
- * @param $expression
- *   The search expression to add to.
- * @param $option
- *   The name of the option to add to the search expression.
- * @param $value
- *   The value to add for the option. If present, it will replace any previous
- *   value added for the option. Cannot contain any spaces or | characters, as
- *   these are used as delimiters. If you want to add a blank value $option: to
- *   the search expression, pass in an empty string or a string that is
- *   composed of only spaces. To clear a previously-stored option without
- *   adding a replacement, pass in NULL for $value or omit.
- *
- * @return
- *   The search expression, with any previous value for this option removed, and
- *   a new $option:$value pair added if $value was provided.
- */
-function search_expression_insert($expression, $option, $value = NULL) {
-  $expression = new SearchExpression($expression);
-  return $expression->insert($option, $value)->getExpression();
 }
 
 /**
@@ -916,65 +668,54 @@ function search_expression_insert($expression, $option, $value = NULL) {
  * data. Most of the system is handled by the Search module, so this must be
  * enabled for all of the search features to work.
  *
+ * To be discovered, the plugins must implement
+ * \Drupal\search\Plugin\SearchInterface and be annotated as
+ * \Drupal\search\Annotation\SearchPlugin plugins.
+ *
  * There are three ways to interact with the search system:
  * - Specifically for searching nodes, you can implement
  *   hook_node_update_index() and hook_node_search_result(). However, note that
  *   the search system already indexes all visible output of a node; i.e.,
- *   everything displayed normally by hook_node_view(). This is
+ *   everything displayed normally during node viewing. This is
  *   usually sufficient. You should only use this mechanism if you want
  *   additional, non-visible data to be indexed.
- * - Implement hook_search_info(). This will create a search tab for your
- *   module on the /search page with a simple keyword search form. You will
- *   also need to implement hook_search_execute() to perform the search.
- * - Implement hook_update_index(). This allows your module to use Drupal's
- *   HTML indexing mechanism for searching full text efficiently.
+ * - Define a plugin implementing \Drupal\search\Plugin\SearchInterface and
+ *   annotated as \Drupal\search\Annotation\SearchPlugin. This will create a
+ *   search tab for your plugin on the /search page with a simple keyword
+ *   search form. You will also need to implement the execute() method
+ *   from the interface to perform the search. A base class is provided in
+ *   \Drupal\search\Plugin\SearchPluginBase.
  *
  * If your module needs to provide a more complicated search form, then you
- * need to implement it yourself without hook_search_info(). In that case, you
- * should define it as a local task (tab) under the /search page (e.g.
- * /search/mymodule) so that users can easily find it.
+ * need to implement it yourself. In that case, you may wish to define it as a
+ * local task (tab) under the /search page (e.g. /search/mymodule) so that users
+ * can easily find it.
  */
 
 /**
  * Form constructor for the search form.
  *
+ * @param \Drupal\search\Plugin\SearchInterface $plugin
+ *   A search plugin instance to render the form for.
  * @param $action
  *   Form action. Defaults to "search/$path", where $path is the search path
- *   associated with the module in its hook_search_info(). This will be
- *   run through url().
- * @param $keys
- *   The search string entered by the user, containing keywords for the search.
- * @param $module
- *   The search module to render the form for: a module that implements
- *   hook_search_info(). If not supplied, the default search module is used.
+ *   associated with the plugin in its definition. This will be run through
+ *   url().
  * @param $prompt
  *   Label for the keywords field. Defaults to t('Enter your keywords') if
  *   NULL. Supply '' to omit.
  *
- * @return
- *   A Form API array for the search form.
- *
  * @see search_form_validate()
  * @see search_form_submit()
+ *
+ * @ingroup forms
  */
-function search_form($form, &$form_state, $action = '', $keys = '', $module = NULL, $prompt = NULL) {
-  $module_info = FALSE;
-  if (!$module) {
-    $module_info = search_get_default_module_info();
-  }
-  else {
-    $info = search_get_info();
-    $module_info = isset($info[$module]) ? $info[$module] : FALSE;
-  }
+function search_form($form, &$form_state, SearchInterface $plugin, $action = '', $prompt = NULL) {
 
-  // Sanity check.
-  if (!$module_info) {
-    form_set_error(NULL, t('Search is currently disabled.'), 'error');
-    return $form;
-  }
+  $plugin_info = $plugin->getPluginDefinition();
 
   if (!$action) {
-    $action = 'search/' . $module_info['path'];
+    $action = 'search/' . $plugin_info['path'];
   }
   if (!isset($prompt)) {
     $prompt = t('Enter your keywords');
@@ -983,12 +724,12 @@ function search_form($form, &$form_state, $action = '', $keys = '', $module = NU
   $form['#action'] = url($action);
   // Record the $action for later use in redirecting.
   $form_state['action'] = $action;
-  $form['module'] = array('#type' => 'value', '#value' => $module);
+  $form['plugin_id'] = array('#type' => 'value', '#value' => $plugin->getPluginId());
   $form['basic'] = array('#type' => 'container', '#attributes' => array('class' => array('container-inline')));
   $form['basic']['keys'] = array(
     '#type' => 'search',
     '#title' => $prompt,
-    '#default_value' => $keys,
+    '#default_value' => $plugin->getKeywords(),
     '#size' => $prompt ? 40 : 20,
     '#maxlength' => 255,
   );
@@ -996,35 +737,69 @@ function search_form($form, &$form_state, $action = '', $keys = '', $module = NU
   // that hook into the basic search form.
   $form['basic']['processed_keys'] = array('#type' => 'value', '#value' => '');
   $form['basic']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
+  // Make sure the default validate and submit handlers are added.
+  $form['#validate'][] = 'search_form_validate';
+  $form['#submit'][] = 'search_form_submit';
+  // Allow the plugin to add to or alter the search form.
+  $plugin->searchFormAlter($form, $form_state);
 
   return $form;
 }
 
 /**
- * Performs a search by calling hook_search_execute().
+ * Form constructor for the search block's search box.
  *
- * @param $keys
- *   Keyword query to search on.
- * @param $module
- *   Search module to search.
- * @param $conditions
- *   Optional array of additional search conditions.
+ * @param $form_id
+ *   The unique string identifying the desired form.
  *
- * @return
- *   Renderable array of search results. No return value if $keys are not
- *   supplied or if the given search module is not active.
+ * @see search_box_form_submit()
+ *
+ * @ingroup forms
  */
-function search_data($keys, $module, $conditions = NULL) {
-  $results = module_invoke($module, 'search_execute', $keys, $conditions);
-  if (Drupal::moduleHandler()->implementsHook($module, 'search_page')) {
-    return module_invoke($module, 'search_page', $results);
+function search_box($form, &$form_state, $form_id) {
+  $form[$form_id] = array(
+    '#type' => 'search',
+    '#title' => t('Search'),
+    '#title_display' => 'invisible',
+    '#size' => 15,
+    '#default_value' => '',
+    '#attributes' => array('title' => t('Enter the terms you wish to search for.')),
+  );
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
+  $form['#submit'][] = 'search_box_form_submit';
+
+  return $form;
+}
+
+/**
+ * Form submission handler for search_box().
+ */
+function search_box_form_submit($form, &$form_state) {
+  // The search form relies on control of the redirect destination for its
+  // functionality, so we override any static destination set in the request.
+  // See http://drupal.org/node/292565.
+  if (isset($_GET['destination'])) {
+    unset($_GET['destination']);
+  }
+
+  // Check to see if the form was submitted empty.
+  // If it is empty, display an error message.
+  // (This method is used instead of setting #required to TRUE for this field
+  // because that results in a confusing error message.  It would say a plain
+  // "field is required" because the search keywords field has no title.
+  // The error message would also complain about a missing #title field.)
+  if ($form_state['values']['search_block_form'] == '') {
+    form_set_error('keys', t('Please enter some keywords.'));
+  }
+
+  $form_id = $form['form_id']['#value'];
+  $info = search_get_default_plugin_info();
+  if ($info) {
+    $form_state['redirect'] = 'search/' . $info['path'] . '/' . trim($form_state['values'][$form_id]);
   }
   else {
-    return array(
-      '#theme' => 'search_results',
-      '#results' => $results,
-      '#module' => $module,
-    );
+    form_set_error(NULL, t('Search is currently disabled.'), 'error');
   }
 }
 

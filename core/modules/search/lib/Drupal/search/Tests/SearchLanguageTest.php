@@ -54,7 +54,11 @@ class SearchLanguageTest extends SearchTestBase {
     // Pick French and ensure it is selected.
     $edit = array('language[fr]' => TRUE);
     $this->drupalPost('search/node', $edit, t('Advanced search'));
-    $this->assertFieldByXPath('//input[@name="keys"]', 'language:fr', 'Language filter added to query.');
+    // Get the redirected URL.
+    $url = $this->getUrl();
+    $parts = parse_url($url);
+    $query_string = isset($parts['query']) ? rawurldecode($parts['query']) : '';
+    $this->assertTrue(strpos($query_string, '=language:fr') !== FALSE, 'Language filter language:fr add to the query string.');
 
     // Change the default language and delete English.
     $path = 'admin/config/regional/settings';

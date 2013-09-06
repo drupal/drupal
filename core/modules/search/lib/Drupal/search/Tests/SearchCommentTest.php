@@ -203,7 +203,7 @@ class SearchCommentTest extends SearchTestBase {
    */
   function assertCommentAccess($assume_access, $message) {
     // Invoke search index update.
-    search_touch_node($this->node->id());
+    search_mark_for_reindex('node_search', $this->node->id());
     $this->cronRun();
 
     // Search for the comment subject.

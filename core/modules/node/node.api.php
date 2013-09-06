@@ -97,14 +97,14 @@ use Drupal\Component\Utility\Xss;
  * - Validating a node during editing form submit (calling
  *   node_form_validate()):
  *   - hook_node_validate() (all)
- * - Searching (calling node_search_execute()):
+ * - Searching (using the 'node_search' plugin):
  *   - hook_ranking() (all)
  *   - Query is executed to find matching nodes
  *   - Resulting node is loaded (see Loading section above)
  *   - Resulting node is prepared for viewing (see Viewing a single node above)
- *   - comment_node_update_index() is called.
+ *   - comment_node_update_index() is called (this adds "N comments" text)
  *   - hook_node_search_result() (all)
- * - Search indexing (calling node_update_index()):
+ * - Search indexing (calling updateIndex() on the 'node_search' plugin):
  *   - Node is loaded (see Loading section above)
  *   - Node is prepared for viewing (see Viewing a single node above)
  *   - hook_node_update_index() (all)
@@ -615,8 +615,8 @@ function hook_node_prepare_form(\Drupal\node\NodeInterface $node, $form_display,
 /**
  * Act on a node being displayed as a search result.
  *
- * This hook is invoked from node_search_execute(), after node_load() and
- * node_view() have been called.
+ * This hook is invoked from the node search plugin during search execution,
+ * after loading and rendering the node.
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node being displayed in a search result.
@@ -689,8 +689,8 @@ function hook_node_update(\Drupal\Core\Entity\EntityInterface $node) {
 /**
  * Act on a node being indexed for searching.
  *
- * This hook is invoked during search indexing, after node_load(), and after the
- * result of node_view() is added as $node->rendered to the node object.
+ * This hook is invoked during search indexing, after loading, and after the
+ * result of rendering is added as $node->rendered to the node object.
  *
  * @param \Drupal\Core\Entity\EntityInterface $node
  *   The node being indexed.

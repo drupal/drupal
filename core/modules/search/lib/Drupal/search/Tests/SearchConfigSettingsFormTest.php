@@ -49,7 +49,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     $edit[$body_key] = l($node->label(), 'node/' . $node->id()) . ' pizza sandwich';
     $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
 
-    node_update_index();
+    $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
     search_update_totals();
 
     // Enable the search block.
@@ -57,7 +57,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
   }
 
   /**
-   * Verify the search settings form.
+   * Verifies the search settings form.
    */
   function testSearchSettingsPage() {
 
@@ -86,29 +86,29 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
   }
 
   /**
-   * Verify module-supplied settings form.
+   * Verifies plugin-supplied settings form.
    */
   function testSearchModuleSettingsPage() {
 
     // Test that the settings form displays the correct count of items left to index.
     $this->drupalGet('admin/config/search/settings');
 
-    // Ensure that the settings fieldset for the test module is not present on
+    // Ensure that the settings fieldset for the test plugin is not present on
     // the page
     $this->assertNoText(t('Extra type settings'));
     $this->assertNoText(t('Boost method'));
 
-    // Ensure that the test module is listed as an option
-    $this->assertTrue($this->xpath('//input[@id="edit-active-modules-search-extra-type"]'), 'Checkbox for activating search for an extra module is visible');
-    $this->assertTrue($this->xpath('//input[@id="edit-default-module-search-extra-type"]'), 'Radio button for setting extra module as default search module is visible');
+    // Ensure that the test plugin is listed as an option
+    $this->assertTrue($this->xpath('//input[@id="edit-active-plugins-search-extra-type-search"]'), 'Checkbox for activating search for an extra plugin is visible');
+    $this->assertTrue($this->xpath('//input[@id="edit-default-plugin-search-extra-type-search"]'), 'Radio button for setting extra plugin as default search plugin is visible');
 
-    // Enable search for the test module
-    $edit['active_modules[search_extra_type]'] = 'search_extra_type';
-    $edit['default_module'] = 'search_extra_type';
+    // Enable search for the test plugin
+    $edit['active_plugins[search_extra_type_search]'] = 'search_extra_type_search';
+    $edit['default_plugin'] = 'search_extra_type_search';
     $this->drupalPost('admin/config/search/settings', $edit, t('Save configuration'));
 
     // Ensure that the settings fieldset is visible after enabling search for
-    // the test module
+    // the test plugin
     $this->assertText(t('Extra type settings'));
     $this->assertText(t('Boost method'));
 
@@ -125,47 +125,47 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     // Ensure that the modifications took effect.
     $this->assertText(t('The configuration options have been saved.'));
     $this->assertTrue($this->xpath('//select[@id="edit-extra-type-settings-boost"]//option[@value="ii" and @selected="selected"]'), 'Module specific settings can be changed');
-    $this->assertTrue($this->xpath('//input[@id="edit-minimum-word-size" and @value="5"]'), 'Common search settings can be modified if a module-specific form is active');
+    $this->assertTrue($this->xpath('//input[@id="edit-minimum-word-size" and @value="5"]'), 'Common search settings can be modified if a plugin-specific form is active');
   }
 
   /**
-   * Verify that you can disable individual search modules.
+   * Verifies that you can disable individual search plugins.
    */
   function testSearchModuleDisabling() {
-    // Array of search modules to test: 'path' is the search path, 'title' is
+    // Array of search plugins to test: 'path' is the search path, 'title' is
     // the tab title, 'keys' are the keywords to search for, and 'text' is
     // the text to assert is on the results page.
-    $module_info = array(
-      'node' => array(
+    $plugin_info = array(
+      'node_search' => array(
         'path' => 'node',
         'title' => 'Content',
         'keys' => 'pizza',
         'text' => $this->search_node->label(),
       ),
-      'user' => array(
+      'user_search' => array(
         'path' => 'user',
         'title' => 'User',
         'keys' => $this->search_user->getUsername(),
         'text' => $this->search_user->getEmail(),
       ),
-      'search_extra_type' => array(
+      'search_extra_type_search' => array(
         'path' => 'dummy_path',
         'title' => 'Dummy search type',
         'keys' => 'foo',
         'text' => 'Dummy search snippet to display',
       ),
     );
-    $modules = array_keys($module_info);
+    $plugins = array_keys($plugin_info);
 
-    // Test each module if it's enabled as the only search module.
-    foreach ($modules as $module) {
-      // Enable the one module and disable other ones.
-      $info = $module_info[$module];
+    // Test each plugin if it's enabled as the only search plugin.
+    foreach ($plugins as $plugin) {
+      // Enable the one plugin and disable other ones.
+      $info = $plugin_info[$plugin];
       $edit = array();
-      foreach ($modules as $other) {
-        $edit['active_modules[' . $other . ']'] = (($other == $module) ? $module : FALSE);
+      foreach ($plugins as $other) {
+        $edit['active_plugins[' . $other . ']'] = (($other == $plugin) ? $plugin : FALSE);
       }
-      $edit['default_module'] = $module;
+      $edit['default_plugin'] = $plugin;
       $this->drupalPost('admin/config/search/settings', $edit, t('Save configuration'));
 
       // Run a search from the correct search URL.
@@ -173,16 +173,16 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
       $this->assertNoText('no results', $info['title'] . ' search found results');
       $this->assertText($info['text'], 'Correct search text found');
 
-      // Verify that other module search tab titles are not visible.
-      foreach ($modules as $other) {
-        if ($other != $module) {
-          $title = $module_info[$other]['title'];
+      // Verify that other plugin search tab titles are not visible.
+      foreach ($plugins as $other) {
+        if ($other != $plugin) {
+          $title = $plugin_info[$other]['title'];
           $this->assertNoText($title, $title . ' search tab is not shown');
         }
       }
 
       // Run a search from the search block on the node page. Verify you get
-      // to this module's search results page.
+      // to this plugin's search results page.
       $terms = array('search_block_form' => $info['keys']);
       $this->drupalPost('node', $terms, t('Search'));
       $this->assertEqual(
@@ -190,28 +190,28 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
         url('search/' . $info['path'] . '/' . $info['keys'], array('absolute' => TRUE)),
         'Block redirected to right search page');
 
-      // Try an invalid search path. Should redirect to our active module.
-      $this->drupalGet('search/not_a_module_path');
+      // Try an invalid search path. Should redirect to our active plugin.
+      $this->drupalGet('search/not_a_plugin_path');
       $this->assertEqual(
         $this->getURL(),
         url('search/' . $info['path'], array('absolute' => TRUE)),
         'Invalid search path redirected to default search page');
     }
 
-    // Test with all search modules enabled. When you go to the search
-    // page or run search, all modules should be shown.
+    // Test with all search plugins enabled. When you go to the search
+    // page or run search, all plugins should be shown.
     $edit = array();
-    foreach ($modules as $module) {
-      $edit['active_modules[' . $module . ']'] = $module;
+    foreach ($plugins as $plugin) {
+      $edit['active_plugins[' . $plugin . ']'] = $plugin;
     }
-    $edit['default_module'] = 'node';
+    $edit['default_plugin'] = 'node_search';
 
     $this->drupalPost('admin/config/search/settings', $edit, t('Save configuration'));
 
     foreach (array('search/node/pizza', 'search/node') as $path) {
       $this->drupalGet($path);
-      foreach ($modules as $module) {
-        $title = $module_info[$module]['title'];
+      foreach ($plugins as $plugin) {
+        $title = $plugin_info[$plugin]['title'];
         $this->assertText($title, format_string('%title search tab is shown', array('%title' => $title)));
       }
     }

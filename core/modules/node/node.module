@@ -9,12 +9,9 @@
  */
 
 use Drupal\Core\Language\Language;
-use Drupal\node\NodeInterface;
 use Symfony\Component\HttpFoundation\Response;
-
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Database\Query\AlterableInterface;
-use Drupal\Core\Database\Query\SelectExtender;
 use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\node\NodeTypeInterface;
@@ -774,161 +771,6 @@ function node_permission() {
 }
 
 /**
- * Gathers the rankings from the the hook_ranking() implementations.
- *
- * @param $query
- *   A query object that has been extended with the Search DB Extender.
- */
-function _node_rankings(SelectExtender $query) {
-  if ($ranking = Drupal::moduleHandler()->invokeAll('ranking')) {
-    $tables = &$query->getTables();
-    foreach ($ranking as $rank => $values) {
-      if ($node_rank = variable_get('node_rank_' . $rank, 0)) {
-        // If the table defined in the ranking isn't already joined, then add it.
-        if (isset($values['join']) && !isset($tables[$values['join']['alias']])) {
-          $query->addJoin($values['join']['type'], $values['join']['table'], $values['join']['alias'], $values['join']['on']);
-        }
-        $arguments = isset($values['arguments']) ? $values['arguments'] : array();
-        $query->addScore($values['score'], $arguments, $node_rank);
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_search_info().
- */
-function node_search_info() {
-  return array(
-    'title' => 'Content',
-    'path' => 'node',
-  );
-}
-
-/**
- * Implements hook_search_access().
- */
-function node_search_access() {
-  return user_access('access content');
-}
-
-/**
- * Implements hook_search_reset().
- */
-function node_search_reset() {
-  db_update('search_dataset')
-    ->fields(array('reindex' => REQUEST_TIME))
-    ->condition('type', 'node')
-    ->execute();
-}
-
-/**
- * Implements hook_search_status().
- */
-function node_search_status() {
-  $total = db_query('SELECT COUNT(*) FROM {node}')->fetchField();
-  $remaining = db_query("SELECT COUNT(*) FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0")->fetchField();
-  return array('remaining' => $remaining, 'total' => $total);
-}
-
-/**
- * Implements hook_search_admin().
- */
-function node_search_admin() {
-  // Output form for defining rank factor weights.
-  $form['content_ranking'] = array(
-    '#type' => 'details',
-    '#title' => t('Content ranking'),
-  );
-  $form['content_ranking']['#theme'] = 'node_search_admin';
-  $form['content_ranking']['info'] = array(
-    '#value' => '<em>' . t('The following numbers control which properties the content search should favor when ordering the results. Higher numbers mean more influence, zero means the property is ignored. Changing these numbers does not require the search index to be rebuilt. Changes take effect immediately.') . '</em>'
-  );
-
-  // Note: reversed to reflect that higher number = higher ranking.
-  $options = drupal_map_assoc(range(0, 10));
-  foreach (Drupal::moduleHandler()->invokeAll('ranking') as $var => $values) {
-    $form['content_ranking']['factors']['node_rank_' . $var] = array(
-      '#title' => $values['title'],
-      '#type' => 'select',
-      '#options' => $options,
-      '#default_value' => variable_get('node_rank_' . $var, 0),
-    );
-  }
-  return $form;
-}
-
-/**
- * Implements hook_search_execute().
- */
-function node_search_execute($keys = NULL, $conditions = NULL) {
-  // Build matching conditions
-  $query = db_select('search_index', 'i', array('target' => 'slave'))
-    ->extend('Drupal\search\SearchQuery')
-    ->extend('Drupal\Core\Database\Query\PagerSelectExtender');
-  $query->join('node_field_data', 'n', 'n.nid = i.sid');
-  $query
-    ->condition('n.status', 1)
-    ->addTag('node_access')
-    ->searchExpression($keys, 'node');
-
-  // Insert special keywords.
-  $query->setOption('type', 'n.type');
-  $query->setOption('langcode', 'n.langcode');
-  if ($query->setOption('term', 'ti.tid')) {
-    $query->join('taxonomy_index', 'ti', 'n.nid = ti.nid');
-  }
-  // Only continue if the first pass query matches.
-  if (!$query->executeFirstPass()) {
-    return array();
-  }
-
-  // Add the ranking expressions.
-  _node_rankings($query);
-
-  // Load results.
-  $find = $query
-    // Add the language code of the indexed item to the result of the query,
-    // since the node will be rendered using the respective language.
-    ->fields('i', array('langcode'))
-    ->limit(10)
-    ->execute();
-  $results = array();
-  foreach ($find as $item) {
-    // Render the node.
-    $node = node_load($item->sid);
-    $build = node_view($node, 'search_result', $item->langcode);
-    unset($build['#theme']);
-    $node->rendered = drupal_render($build);
-
-    // Fetch comments for snippet.
-    $node->rendered .= ' ' . module_invoke('comment', 'node_update_index', $node, $item->langcode);
-
-    $extra = Drupal::moduleHandler()->invokeAll('node_search_result', array($node, $item->langcode));
-
-    $language = language_load($item->langcode);
-    $uri = $node->uri();
-    $username = array(
-      '#theme' => 'username',
-      '#account' => $node->getAuthor(),
-    );
-    $results[] = array(
-      'link' => url($uri['path'], array_merge($uri['options'], array('absolute' => TRUE, 'language' => $language))),
-      'type' => check_plain(node_get_type_label($node)),
-      'title' => $node->label($item->langcode),
-      'user' => drupal_render($username),
-      'date' => $node->getChangedTime(),
-      'node' => $node,
-      'extra' => $extra,
-      'score' => $item->calculated_score,
-      'snippet' => search_excerpt($keys, $node->rendered, $item->langcode),
-      'langcode' => $node->language()->id,
-    );
-  }
-  return $results;
-}
-
-/**
  * Implements hook_ranking().
  */
 function node_ranking() {
@@ -1667,199 +1509,6 @@ function node_page_view(EntityInterface $node) {
 }
 
 /**
- * Implements hook_update_index().
- */
-function node_update_index() {
-  $limit = (int) Drupal::config('search.settings')->get('index.cron_limit');
-
-  $result = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {search_dataset} d ON d.type = 'node' AND d.sid = n.nid WHERE d.sid IS NULL OR d.reindex <> 0 ORDER BY d.reindex ASC, n.nid ASC", 0, $limit, array(), array('target' => 'slave'));
-  $nids = $result->fetchCol();
-  if (!$nids) {
-    return;
-  }
-
-  // The indexing throttle should be aware of the number of language variants
-  // of a node.
-  $counter = 0;
-  foreach (node_load_multiple($nids) as $node) {
-    // Determine when the maximum number of indexable items is reached.
-    $counter += count($node->getTranslationLanguages());
-    if ($counter > $limit) {
-      break;
-    }
-    _node_index_node($node);
-  }
-}
-
-/**
- * Indexes a single node.
- *
- * @param \Drupal\Core\Entity\EntityInterface $node
- *   The node to index.
- */
-function _node_index_node(EntityInterface $node) {
-
-  // Save the changed time of the most recent indexed node, for the search
-  // results half-life calculation.
-  Drupal::state()->set('node.cron_last', $node->getChangedTime());
-
-  $languages = $node->getTranslationLanguages();
-
-  foreach ($languages as $language) {
-    // Render the node.
-    $build = node_view($node, 'search_index', $language->id);
-
-    unset($build['#theme']);
-    $node->rendered = drupal_render($build);
-
-    $text = '<h1>' . check_plain($node->label($language->id)) . '</h1>' . $node->rendered;
-
-    // Fetch extra data normally not visible.
-    $extra = Drupal::moduleHandler()->invokeAll('node_update_index', array($node, $language->id));
-    foreach ($extra as $t) {
-      $text .= $t;
-    }
-
-    // Update index.
-    search_index($node->id(), 'node', $text, $language->id);
-  }
-}
-
-/**
- * Implements hook_form_FORM_ID_alter().
- *
- * @see node_search_validate()
- */
-function node_form_search_form_alter(&$form, $form_state) {
-  if (isset($form['module']) && $form['module']['#value'] == 'node' && user_access('use advanced search')) {
-    // Keyword boxes:
-    $form['advanced'] = array(
-      '#type' => 'details',
-      '#title' => t('Advanced search'),
-      '#collapsed' => TRUE,
-      '#attributes' => array('class' => array('search-advanced')),
-    );
-    $form['advanced']['keywords-fieldset'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Keywords'),
-      '#collapsible' => FALSE,
-    );
-    $form['advanced']['keywords'] = array(
-      '#prefix' => '<div class="criterion">',
-      '#suffix' => '</div>',
-    );
-    $form['advanced']['keywords-fieldset']['keywords']['or'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Containing any of the words'),
-      '#size' => 30,
-      '#maxlength' => 255,
-    );
-    $form['advanced']['keywords-fieldset']['keywords']['phrase'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Containing the phrase'),
-      '#size' => 30,
-      '#maxlength' => 255,
-    );
-    $form['advanced']['keywords-fieldset']['keywords']['negative'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Containing none of the words'),
-      '#size' => 30,
-      '#maxlength' => 255,
-    );
-
-    // Node types:
-    $types = array_map('check_plain', node_type_get_names());
-    $form['advanced']['types-fieldset'] = array(
-      '#type' => 'fieldset',
-      '#title' => t('Types'),
-      '#collapsible' => FALSE,
-    );
-    $form['advanced']['types-fieldset']['type'] = array(
-      '#type' => 'checkboxes',
-      '#title' => t('Only of the type(s)'),
-      '#prefix' => '<div class="criterion">',
-      '#suffix' => '</div>',
-      '#options' => $types,
-    );
-    $form['advanced']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Advanced search'),
-      '#prefix' => '<div class="action">',
-      '#suffix' => '</div>',
-      '#weight' => 100,
-    );
-
-    // Languages:
-    $language_options = array();
-    foreach (language_list(Language::STATE_ALL) as $langcode => $language) {
-      // Make locked languages appear special in the list.
-      $language_options[$langcode] = $language->locked ? t('- @name -', array('@name' => $language->name)) : $language->name;
-    }
-    if (count($language_options) > 1) {
-      $form['advanced']['lang-fieldset'] = array(
-        '#type' => 'fieldset',
-        '#title' => t('Languages'),
-        '#collapsible' => FALSE,
-        '#collapsed' => FALSE,
-      );
-      $form['advanced']['lang-fieldset']['language'] = array(
-        '#type' => 'checkboxes',
-        '#title' => t('Languages'),
-        '#prefix' => '<div class="criterion">',
-        '#suffix' => '</div>',
-        '#options' => $language_options,
-      );
-    }
-
-    $form['#validate'][] = 'node_search_validate';
-  }
-}
-
-/**
- * Form validation handler for node_form_search_form_alter().
- */
-function node_search_validate($form, &$form_state) {
-  // Initialize using any existing basic search keywords.
-  $keys = $form_state['values']['processed_keys'];
-
-  // Insert extra restrictions into the search keywords string.
-  if (isset($form_state['values']['type']) && is_array($form_state['values']['type'])) {
-    // Retrieve selected types - Form API sets the value of unselected
-    // checkboxes to 0.
-    $form_state['values']['type'] = array_filter($form_state['values']['type']);
-    if (count($form_state['values']['type'])) {
-      $keys = search_expression_insert($keys, 'type', implode(',', array_keys($form_state['values']['type'])));
-    }
-  }
-
-  if (isset($form_state['values']['term']) && is_array($form_state['values']['term']) && count($form_state['values']['term'])) {
-    $keys = search_expression_insert($keys, 'term', implode(',', $form_state['values']['term']));
-  }
-  if (isset($form_state['values']['language']) && is_array($form_state['values']['language'])) {
-    $languages = array_filter($form_state['values']['language']);
-    if (count($languages)) {
-      $keys = search_expression_insert($keys, 'language', implode(',', $languages));
-    }
-  }
-  if ($form_state['values']['or'] != '') {
-    if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' ' . $form_state['values']['or'], $matches)) {
-      $keys .= ' ' . implode(' OR ', $matches[1]);
-    }
-  }
-  if ($form_state['values']['negative'] != '') {
-    if (preg_match_all('/ ("[^"]+"|[^" ]+)/i', ' ' . $form_state['values']['negative'], $matches)) {
-      $keys .= ' -' . implode(' -', $matches[1]);
-    }
-  }
-  if ($form_state['values']['phrase'] != '') {
-    $keys .= ' "' . str_replace('"', ' ', $form_state['values']['phrase']) . '"';
-  }
-  if (!empty($keys)) {
-    form_set_value($form['basic']['processed_keys'], trim($keys), $form_state);
-  }
-}
-
-/**
  * Implements hook_form_FORM_ID_alter().
  *
  * Alters the System module's site information settings form to add a global
@@ -2556,5 +2205,77 @@ function node_library_info() {
 function node_system_info_alter(&$info, $file, $type) {
   if ($type == 'module' && $file->name == 'translation') {
     $info['hidden'] = !module_exists('translation') && Drupal::config('system.module.disabled')->get('translation') === NULL;
+  }
+}
+
+/**
+ * Marks a node to be re-indexed by the node_search plugin.
+ *
+ * @param int $nid
+ *   The node ID.
+ */
+function node_reindex_node_search($nid) {
+  if (Drupal::moduleHandler()->moduleExists('search')) {
+    // Reindex node context indexed by the node module search plugin.
+    search_mark_for_reindex('node_search', $nid);
+  }
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function node_node_update(EntityInterface $node) {
+  // Reindex the node when it is updated. The node is automatically indexed
+  // when it is added, simply by being added to the node table.
+  node_reindex_node_search($node->id());
+}
+
+/**
+ * Implements hook_comment_insert().
+ */
+function node_comment_insert($comment) {
+  // Reindex the node when comments are added.
+  if ($comment->entity_type->value == 'node') {
+    node_reindex_node_search($comment->entity_id->value);
+  }
+}
+
+/**
+ * Implements hook_comment_update().
+ */
+function node_comment_update($comment) {
+  // Reindex the node when comments are changed.
+  if ($comment->entity_type->value == 'node') {
+    node_reindex_node_search($comment->entity_id->value);
+  }
+}
+
+/**
+ * Implements hook_comment_delete().
+ */
+function node_comment_delete($comment) {
+  // Reindex the node when comments are deleted.
+  if ($comment->entity_type->value == 'node') {
+    node_reindex_node_search($comment->entity_id->value);
+  }
+}
+
+/**
+ * Implements hook_comment_publish().
+ */
+function node_comment_publish($comment) {
+  // Reindex the node when comments are published.
+  if ($comment->entity_type->value == 'node') {
+    node_reindex_node_search($comment->entity_id->value);
+  }
+}
+
+/**
+ * Implements hook_comment_unpublish().
+ */
+function node_comment_unpublish($comment) {
+  // Reindex the node when comments are unpublished.
+  if ($comment->entity_type->value == 'node') {
+    node_reindex_node_search($comment->entity_id->value);
   }
 }

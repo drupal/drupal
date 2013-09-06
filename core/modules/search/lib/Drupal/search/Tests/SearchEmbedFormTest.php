@@ -46,7 +46,7 @@ class SearchEmbedFormTest extends SearchTestBase {
 
     $this->node = $this->drupalCreateNode();
 
-    node_update_index();
+    $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
     search_update_totals();
 
     // Set up a dummy initial count of times the form has been submitted.

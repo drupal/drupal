@@ -1,0 +1,4 @@
+services:
+  plugin.manager.search:
+    class: Drupal\search\SearchPluginManager
+    arguments: ['@container.namespaces', '@config.factory']
