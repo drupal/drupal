@@ -619,4 +619,19 @@ class MenuRouterTest extends WebTestBase {
     $this->assertText("Sometimes there is a placeholder: 'foobar'.");
   }
 
+  /**
+   * Tests a menu on a router page.
+   */
+  public function testMenuOnRoute() {
+    module_enable(array('router_test'));
+    \Drupal::service('router.builder')->rebuild();
+
+    $this->drupalGet('router_test/test2');
+    $this->assertLinkByHref('menu_no_title_callback');
+    $this->assertLinkByHref('menu-title-test/case1');
+    $this->assertLinkByHref('menu-title-test/case2');
+    $this->assertLinkByHref('menu-title-test/case3');
+    $this->assertLinkByHref('menu-title-test/case4');
+  }
+
 }

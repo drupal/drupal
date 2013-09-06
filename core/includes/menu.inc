@@ -11,6 +11,7 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Template\Attribute;
 use Drupal\menu_link\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorageController;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Route;
@@ -1274,13 +1275,31 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
 
   // Check if the active trail has been overridden for this menu tree.
   $active_path = menu_tree_get_path($menu_name);
-  // Load the menu item corresponding to the current page.
-  if ($item = menu_get_item($active_path)) {
+  // Load the router item corresponding to the current page.
+  $request = \Drupal::request();
+  $system_path = NULL;
+  // @todo Remove once the old router system is removed.
+  if ($request->attributes->has('_legacy')) {
+    // Page is a 404 if no item is loaded.
+    if ($item = menu_get_item($active_path)) {
+      $system_path = $item['href'];
+      // Variable to indicate that we are not serving an access denied response
+      // for this page. Used to limit the number of links rendered.
+      $page_not_403 = (int) $item['access'];
+    }
+  }
+  elseif ($route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME)) {
+    // @todo https://drupal.org/node/2068471 is adding support so we can tell
+    // if this is called on a 404/403 page.
+    $system_path = $request->attributes->get('_system_path');
+    $page_not_403 = 1;
+  }
+  if (isset($system_path)) {
     if (isset($max_depth)) {
       $max_depth = min($max_depth, MENU_MAX_DEPTH);
     }
     // Generate a cache ID (cid) specific for this page.
-    $cid = 'links:' . $menu_name . ':page:' . $item['href'] . ':' . $language_interface->id . ':' . (int) $item['access'] . ':' . (int) $max_depth;
+    $cid = 'links:' . $menu_name . ':page:' . $system_path . ':' . $language_interface->id . ':' . $page_not_403 . ':' . (int) $max_depth;
     // If we are asked for the active trail only, and $menu_name has not been
     // built and cached for this page yet, then this likely means that it
     // won't be built anymore, as this function is invoked from
@@ -1311,9 +1330,9 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
         // We always want all the top-level links with plid == 0.
         $active_trail = array(0 => 0);
 
-        // If the item for the current page is accessible, build the tree
+        // If this page is accessible to the current user, build the tree
         // parameters accordingly.
-        if ($item['access']) {
+        if ($page_not_403) {
           // Find a menu link corresponding to the current path. If $active_path
           // is NULL, let menu_link_get_preferred() determine the path.
           if ($active_link = menu_link_get_preferred($active_path, $menu_name)) {
