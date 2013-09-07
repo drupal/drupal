@@ -17,7 +17,6 @@ use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemBase;
  *
  * @FieldType(
  *   id = "comment",
- *   module = "comment",
  *   label = @Translation("Comments"),
  *   description = @Translation("This field manages configuration and presentation of comments on an entity."),
  *   instance_settings = {
@@ -81,17 +80,18 @@ class CommentItem extends ConfigFieldItemBase {
   public function instanceSettingsForm(array $form, array &$form_state) {
     $element = array();
 
-    $instance = $this->getFieldDefinition();
-    $settings = $instance->settings;
-    $field = $instance->getField();
+    $settings = $this->getFieldSettings();
+
+    $entity_type = $this->getParent()->getParent()->getType();
+    $field_name = $this->getFieldDefinition()->getFieldName();
 
     $element['comment'] = array(
       '#type' => 'details',
       '#title' => t('Comment form settings'),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
-      '#field_name' => $field->id(),
-      '#process' => array('_comment_field_instance_settings_form_process'),
+      '#bundle' => "{$entity_type}__{$field_name}",
+      '#process' => array(array(get_class($this), '_comment_field_instance_settings_form_process')),
       '#attributes' => array(
         'class' => array('comment-instance-settings-form'),
       ),
@@ -151,8 +151,6 @@ class CommentItem extends ConfigFieldItemBase {
    */
   public function applyDefaultValue($notify = TRUE) {
     // Retrieve the configured default value for the instance.
-    //$defaults = $this->getInstance()->default_value;
-    //$this->setValue(reset($defaults), $notify);
     $this->setValue(array('status' => COMMENT_OPEN), $notify);
     return $this;
   }
@@ -163,6 +161,29 @@ class CommentItem extends ConfigFieldItemBase {
   public function isEmpty() {
     // We always want the values saved so we can rely on them.
     return FALSE;
+  }
+
+  /**
+   * Process callback to add submit handler for instance settings form.
+   *
+   * Attaches the required translation entity handlers for the instance which
+   * correlates one to one with the comment bundle.
+   */
+  public static function _comment_field_instance_settings_form_process($element) {
+    // Settings should not be stored as nested.
+    $parents = $element['#parents'];
+    array_pop($parents);
+    $element['#parents'] = $parents;
+    // Add translation entity handlers.
+    if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
+      $comment_form = $element;
+      $comment_form_state['content_translation']['key'] = 'language_configuration';
+      $element += content_translation_enable_widget('comment', $element['#bundle'], $comment_form, $comment_form_state);
+      $element['content_translation']['#parents'] = $element['content_translation']['#array_parents'] = array(
+        'content_translation'
+      );
+    }
+    return $element;
   }
 
 }

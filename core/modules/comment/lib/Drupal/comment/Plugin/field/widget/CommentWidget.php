@@ -30,7 +30,7 @@ class CommentWidget extends WidgetBase {
    */
   public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
     $field = $this->fieldDefinition;
-    $entity = $element['#entity'];
+    $entity = $items->getParent();
 
     $element['status'] = array(
       '#type' => 'radios',
