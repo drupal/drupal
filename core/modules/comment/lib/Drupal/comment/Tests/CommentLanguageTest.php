@@ -71,7 +71,7 @@ class CommentLanguageTest extends WebTestBase {
     $this->drupalPost("user/" . $admin_user->id() . "/edit", $edit, t('Save'));
 
     // Create comment field on article.
-    comment_add_default_comment_field('node', 'article');
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
 
     // Make comment body translatable.
     $field = field_info_field('comment', 'comment_body');

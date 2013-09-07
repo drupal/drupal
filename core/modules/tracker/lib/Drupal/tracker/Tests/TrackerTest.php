@@ -52,7 +52,7 @@ class TrackerTest extends WebTestBase {
     $permissions = array('access comments', 'create page content', 'post comments', 'skip comment approval');
     $this->user = $this->drupalCreateUser($permissions);
     $this->other_user = $this->drupalCreateUser($permissions);
-    comment_add_default_comment_field('node', 'page');
+    $this->container->get('comment.manager')->addDefaultField('node', 'page');
   }
 
   /**

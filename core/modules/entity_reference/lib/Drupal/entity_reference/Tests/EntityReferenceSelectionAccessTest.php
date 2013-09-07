@@ -399,7 +399,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
     }
 
     // Create comment field on article.
-    comment_add_default_comment_field('node', 'article');
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
 
     $comment_values = array(
       'published_published' => array(

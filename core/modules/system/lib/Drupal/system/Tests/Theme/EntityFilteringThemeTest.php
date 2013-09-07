@@ -98,7 +98,7 @@ class EntityFilteringThemeTest extends WebTestBase {
     $this->term->save();
 
     // Add a comment field.
-    comment_add_default_comment_field('node', 'article', 'comment', COMMENT_OPEN);
+    $this->container->get('comment.manager')->addDefaultField('node', 'article', 'comment', COMMENT_OPEN);
     // Create a test node tagged with the test term.
     $this->node = $this->drupalCreateNode(array(
       'title' => $this->xss_label,

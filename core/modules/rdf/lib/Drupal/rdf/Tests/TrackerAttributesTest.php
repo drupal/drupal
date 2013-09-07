@@ -88,7 +88,7 @@ class TrackerAttributesTest extends WebTestBase {
     ));
 
     // Create comment field on article.
-    comment_add_default_comment_field('node', 'article');
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
 
     // Sets base URI of the site used by the RDFa parser.
     $this->base_uri = url('<front>', array('absolute' => TRUE));

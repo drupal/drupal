@@ -30,7 +30,7 @@ abstract class TrackerTestBase extends ViewTestBase {
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
     // Add a comment field.
-    comment_add_default_comment_field('node', 'page');
+    $this->container->get('comment.manager')->addDefaultField('node', 'page');
 
     $permissions = array('access comments', 'create page content', 'post comments', 'skip comment approval');
     $account = $this->drupalCreateUser($permissions);

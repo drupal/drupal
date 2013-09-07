@@ -56,7 +56,7 @@ class RowPluginTest extends NodeTestBase {
 
     $this->drupalCreateContentType(array('type' => 'article'));
     // Create comment field on article.
-    comment_add_default_comment_field('node', 'article');
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
 
     // Create two nodes, with 5 comments on all of them.
     for ($i = 0; $i < 2; $i++) {

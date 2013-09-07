@@ -86,7 +86,7 @@ class ViewExecutableTest extends ViewUnitTestBase {
     $this->installSchema('node', array('node', 'node_field_data'));
     $this->installSchema('comment', array('comment', 'comment_entity_statistics'));
     $this->installConfig(array('field'));
-    comment_add_default_comment_field('node', 'page');
+    $this->container->get('comment.manager')->addDefaultField('node', 'page');
     parent::setUpFixtures();
 
     $this->installConfig(array('filter'));

@@ -35,7 +35,7 @@ class CommentUninstallTest extends WebTestBase {
     // Create an article content type.
     $this->drupalCreateContentType(array('type' => 'article', 'name' => t('Article')));
     // Create comment field on article so that adds 'comment_body' field.
-    comment_add_default_comment_field('node', 'article');
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
   }
 
   /**

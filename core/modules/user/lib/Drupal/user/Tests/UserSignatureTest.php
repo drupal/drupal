@@ -39,7 +39,7 @@ class UserSignatureTest extends WebTestBase {
     // Create Basic page node type.
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
     // Add a comment field with commenting enabled by default.
-    comment_add_default_comment_field('node', 'page');
+    $this->container->get('comment.manager')->addDefaultField('node', 'page');
 
     // Prefetch and create text formats.
     $this->filtered_html_format = entity_create('filter_format', array(

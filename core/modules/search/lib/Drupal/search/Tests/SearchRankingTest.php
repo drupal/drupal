@@ -44,7 +44,7 @@ class SearchRankingTest extends SearchTestBase {
     // Login with sufficient privileges.
     $this->drupalLogin($this->drupalCreateUser(array('post comments', 'skip comment approval', 'create page content')));
     // Add a comment field.
-    comment_add_default_comment_field('node', 'page');
+    $this->container->get('comment.manager')->addDefaultField('node', 'page');
 
     // Build a list of the rankings to test.
     $node_ranks = array('sticky', 'promote', 'relevance', 'recent', 'comments', 'views');

@@ -34,7 +34,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Do not make assumptions on default node types created by the test
     // installation profile, and create our own.
     $this->drupalCreateContentType(array('type' => 'test_node_type'));
-    comment_add_default_comment_field('node', 'test_node_type');
+    $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type');
 
     // Check that the 'comment_body' field is present on the comment bundle.
     $instance = $this->container->get('field.info')->getInstance('comment', 'node__comment', 'comment_body');
@@ -49,7 +49,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Create a new content type.
     $type_name = 'test_node_type_2';
     $this->drupalCreateContentType(array('type' => $type_name));
-    comment_add_default_comment_field('node', $type_name);
+    $this->container->get('comment.manager')->addDefaultField('node', $type_name);
 
     // Check that the 'comment_body' field exists and has an instance on the
     // new comment bundle.
@@ -101,7 +101,7 @@ class CommentFieldsTest extends CommentTestBase {
     $this->assertTrue($this->container->get('module_handler')->moduleExists('comment'), 'Comment module enabled.');
 
     // Create nodes of each type.
-    comment_add_default_comment_field('node', 'book');
+    $this->container->get('comment.manager')->addDefaultField('node', 'book');
     $book_node = $this->drupalCreateNode(array('type' => 'book'));
 
     $this->drupalLogout();

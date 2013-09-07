@@ -1890,26 +1890,6 @@ function comment_mark(CommentInterface $comment) {
 }
 
 /**
- * Utility method to add the default comment field to an entity.
- *
- * Attaches a comment field named 'comment' to the given entity type and bundle.
- * Largely replicates the default behaviour in Drupal 7 and earlier.
- *
- * @param string $entity_type
- *   The entity type to attach the default comment field to.
- * @param string $bundle
- *   The bundle to attach the default comment field instance to.
- * @param string $field_name
- *   (optional) Field name to use for the comment field. Defaults to 'comment'.
- * @param string $default_value
- *   (optional) Default value, one of COMMENT_HIDDEN, COMMENT_OPEN,
- *   COMMENT_CLOSED. Defaults to COMMENT_OPEN.
- */
-function comment_add_default_comment_field($entity_type, $bundle, $field_name = 'comment', $default_value = COMMENT_OPEN) {
-  return Drupal::service('comment.manager')->addDefaultField($entity_type, $bundle, $field_name, $default_value);
-}
-
-/**
  * Process callback to add submit handler for instance settings form.
  *
  * Attaches the required translation entity handlers for the instance which

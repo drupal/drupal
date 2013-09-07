@@ -37,7 +37,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
     // bundles.
     $this->drupalCreateContentType(array('type' => 'article'));
     $this->drupalCreateContentType(array('type' => 'page'));
-    comment_add_default_comment_field('node', 'article', 'comment_article');
+    $this->container->get('comment.manager')->addDefaultField('node', 'article', 'comment_article');
 
     $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content translation', 'administer content types', 'administer comment fields'));
     $this->drupalLogin($admin_user);

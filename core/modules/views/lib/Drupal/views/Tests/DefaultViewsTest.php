@@ -83,7 +83,7 @@ class DefaultViewsTest extends ViewTestBase {
     // Create a time in the past for the archive.
     $time = REQUEST_TIME - 3600;
 
-    comment_add_default_comment_field('node', 'page');
+    $this->container->get('comment.manager')->addDefaultField('node', 'page');
 
     $this->container->get('views.views_data')->clear();
 

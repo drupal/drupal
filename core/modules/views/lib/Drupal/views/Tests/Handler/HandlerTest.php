@@ -41,7 +41,7 @@ class HandlerTest extends ViewTestBase {
 
   protected function setUp() {
     parent::setUp();
-    comment_add_default_comment_field('node', 'page');
+    $this->container->get('comment.manager')->addDefaultField('node', 'page');
     $this->enableViewsTestModule();
   }
 

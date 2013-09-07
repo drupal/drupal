@@ -44,7 +44,7 @@ class EntityBCDecoratorTest extends EntityUnitTestBase  {
   public function testBCDecorator() {
     // Test using comment subject via the BC decorator.
     $this->createUser();
-    comment_add_default_comment_field('node', 'page');
+    $this->container->get('comment.manager')->addDefaultField('node', 'page');
     $node = entity_create('node', array(
       'type' => 'page',
       'uid' => 1,

@@ -50,9 +50,9 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     parent::setupBundle();
     $this->drupalCreateContentType(array('type' => $this->nodeBundle, 'name' => $this->nodeBundle));
     // Add a comment field to the article content type.
-    comment_add_default_comment_field('node', 'article', 'comment_article');
+    $this->container->get('comment.manager')->addDefaultField('node', 'article', 'comment_article');
     // Add another comment field with new bundle to page content type.
-    comment_add_default_comment_field('node', 'page');
+    $this->container->get('comment.manager')->addDefaultField('node', 'page');
     // Mark this bundle as translatable.
     content_translation_set_config('comment', 'node__comment_article', 'enabled', TRUE);
     // Refresh entity info.

@@ -278,7 +278,7 @@ class UserCancelTest extends WebTestBase {
     \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_delete')->save();
     module_enable(array('comment'));
     $this->resetAll();
-    comment_add_default_comment_field('node', 'page');
+    $this->container->get('comment.manager')->addDefaultField('node', 'page');
 
     // Create a user.
     $account = $this->drupalCreateUser(array('cancel account', 'post comments', 'skip comment approval'));

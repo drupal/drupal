@@ -133,7 +133,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
   public function testCommentHooks() {
     $account = $this->createUser();
     $this->enableModules(array('entity', 'filter'));
-    comment_add_default_comment_field('node', 'article', 'comment', COMMENT_OPEN);
+    $this->container->get('comment.manager')->addDefaultField('node', 'article', 'comment', COMMENT_OPEN);
 
     $node = entity_create('node', array(
       'uid' => $account->id(),

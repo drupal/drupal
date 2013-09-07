@@ -49,7 +49,7 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     $this->searching_user = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'skip comment approval'));
 
     // Add a comment field.
-    comment_add_default_comment_field('node', 'article');
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
     // Create initial nodes.
     $node_params = array('type' => 'article', 'body' => array(array('value' => 'SearchCommentToggleTestCase')));
 

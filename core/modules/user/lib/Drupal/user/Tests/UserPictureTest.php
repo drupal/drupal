@@ -43,7 +43,7 @@ class UserPictureTest extends WebTestBase {
       'skip comment approval',
     ));
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
-    comment_add_default_comment_field('node', 'article');
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
 
     // @see standard.install
     module_load_install('user');

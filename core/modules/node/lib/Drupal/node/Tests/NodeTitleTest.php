@@ -34,7 +34,7 @@ class NodeTitleTest extends NodeTestBase {
 
     $this->admin_user = $this->drupalCreateUser(array('administer nodes', 'create article content', 'create page content', 'post comments'));
     $this->drupalLogin($this->admin_user);
-    comment_add_default_comment_field('node', 'page');
+    $this->container->get('comment.manager')->addDefaultField('node', 'page');
   }
 
   /**

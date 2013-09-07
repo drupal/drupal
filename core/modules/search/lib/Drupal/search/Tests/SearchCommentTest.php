@@ -50,7 +50,7 @@ class SearchCommentTest extends SearchTestBase {
     $this->admin_user = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->admin_user);
     // Add a comment field.
-    comment_add_default_comment_field('node', 'article');
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
   }
 
   /**
