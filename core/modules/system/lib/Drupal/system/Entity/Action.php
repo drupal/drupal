@@ -26,7 +26,7 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "access" = "Drupal\action\ActionAccessController"
  *   },
- *   config_prefix = "action.action",
+ *   config_prefix = "system.action",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
