@@ -91,7 +91,7 @@ class CommentItem extends ConfigFieldItemBase {
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
       '#bundle' => "{$entity_type}__{$field_name}",
-      '#process' => array(array(get_class($this), '_comment_field_instance_settings_form_process')),
+      '#process' => array(array(get_class($this), 'processSettingsElement')),
       '#attributes' => array(
         'class' => array('comment-instance-settings-form'),
       ),
@@ -120,7 +120,7 @@ class CommentItem extends ConfigFieldItemBase {
         COMMENT_ANONYMOUS_MAY_CONTACT => t('Anonymous posters may leave their contact information'),
         COMMENT_ANONYMOUS_MUST_CONTACT => t('Anonymous posters must leave their contact information'),
       ),
-      '#access' => user_access('post comments', drupal_anonymous_user()),
+      '#access' => drupal_anonymous_user()->hasPermission('post comments'),
     );
     $element['comment']['subject'] = array(
       '#type' => 'checkbox',
@@ -169,7 +169,7 @@ class CommentItem extends ConfigFieldItemBase {
    * Attaches the required translation entity handlers for the instance which
    * correlates one to one with the comment bundle.
    */
-  public static function _comment_field_instance_settings_form_process($element) {
+  public static function processSettingsElement($element) {
     // Settings should not be stored as nested.
     $parents = $element['#parents'];
     array_pop($parents);

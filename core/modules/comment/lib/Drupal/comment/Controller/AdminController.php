@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Controller;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Extension\ModuleHandler;
@@ -99,8 +100,7 @@ class AdminController implements ContainerInjectionInterface {
       $header['operations'] = t('Operations');
     }
 
-    // @todo Remove when entity_get_bundles() is a method on the entity manager.
-    $entity_bundles = entity_get_bundles();
+    $entity_bundles = $this->entityManager->getAllBundleInfo();
     $entity_types = $this->entityManager->getDefinitions();
     $rows = array();
 
@@ -114,11 +114,11 @@ class AdminController implements ContainerInjectionInterface {
         $row = array(
           'class' => $field_info->get('locked') ? array('field-disabled') : array(''),
         );
-        $row['data']['field_name']['data'] = $field_info->get('locked') ? t('@field_name (Locked)', array('@field_name' => $field_name)) : check_plain($field_name);
+        $row['data']['field_name']['data'] = $field_info->get('locked') ? t('@field_name (Locked)', array('@field_name' => $field_name)) : String::checkPlain($field_name);
 
         $row['data']['usage']['data'] = array(
           '#theme' => 'item_list',
-          '#title' => check_plain($entity_types[$entity_type]['label']),
+          '#title' => String::checkPlain($entity_types[$entity_type]['label']),
           '#items' => array(),
         );
         foreach ($field_info_map['bundles'] as $bundle) {
@@ -177,19 +177,18 @@ class AdminController implements ContainerInjectionInterface {
    *   combinations on which the comment field is in use.
    */
   public function bundleInfo($field_name) {
-    // @todo Remove when entity_get_bundles() is a method on the entity manager.
-    $entity_bundles = entity_get_bundles();
+    $entity_bundles = $this->entityManager->getAllBundleInfo();
     $entity_types = $this->entityManager->getDefinitions();
     // Add a link to manage entity fields if the Field UI module is enabled.
     $field_ui_enabled = $this->moduleHandler->moduleExists('field_ui');
 
     // @todo Provide dynamic routing to get entity type and field name.
-    list($entity_type, $field) = explode('_', $field_name);
+    list($entity_type, $field) = explode('__', $field_name);
     $field_info = $this->fieldInfo->getField($entity_type, $field);
     // @todo Decide on better UX http://drupal.org/node/1901110
     $build['usage'] = array(
       '#theme' => 'item_list',
-      '#title' => check_plain($entity_types[$entity_type]['label']),
+      '#title' => String::checkPlain($entity_types[$entity_type]['label']),
       '#items' => array(),
     );
     // Loop over all of the entity types to which this comment field is
@@ -205,7 +204,7 @@ class AdminController implements ContainerInjectionInterface {
         else {
           // Field UI is disabled so fallback to a list of bundle labels
           // instead of links to configure fields.
-          $build['usage']['#items'][] = check_plain($entity_bundles[$entity_type][$bundle]['label']);
+          $build['usage']['#items'][] = String::checkPlain($entity_bundles[$entity_type][$bundle]['label']);
         }
       }
     }

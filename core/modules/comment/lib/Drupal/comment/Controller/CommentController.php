@@ -9,7 +9,8 @@ namespace Drupal\comment\Controller;
 
 use Drupal\comment\CommentInterface;
 use Drupal\comment\CommentManager;
-use Drupal\comment\Entity\Comment;
+use Drupal\field\FieldInfo;
+use Drupal\node\NodeInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -18,8 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Drupal\field\FieldInfo;
-use Drupal\node\NodeInterface;
 
 /**
  * Controller for the comment entity.
