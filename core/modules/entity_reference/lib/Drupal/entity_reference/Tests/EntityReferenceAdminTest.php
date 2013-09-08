@@ -88,6 +88,8 @@ class EntityReferenceAdminTest extends WebTestBase {
       $this->assertFieldByName('instance[settings][handler_settings][target_bundles][' . $bundle_name . ']');
     }
 
+    reset($bundles);
+
     // Test the sort settings.
     // Option 0: no sort.
     $this->assertFieldByName('instance[settings][handler_settings][sort][field]', '_none');

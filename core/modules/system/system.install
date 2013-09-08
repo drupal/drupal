@@ -2198,7 +2198,7 @@ function system_update_8057() {
         $action['aid'] = $action['callback'] . '_' . $action['aid'];
       }
       $configuration = unserialize($action['parameters']) ?: array();
-      Drupal::config('action.action.' . $action['aid'])
+      Drupal::config('system.action.' . $action['aid'])
         ->set('id', $action['aid'])
         ->set('label', $action['label'])
         ->set('status', '1')

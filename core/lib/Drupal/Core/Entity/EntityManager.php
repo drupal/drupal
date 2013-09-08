@@ -104,6 +104,13 @@ class EntityManager extends PluginManagerBase {
    */
   protected $translationManager;
 
+  /*
+   * Static cache of bundle information.
+   *
+   * @var array
+   */
+  protected $bundleInfo;
+
   /**
    * Constructs a new Entity plugin manager.
    *
@@ -164,6 +171,16 @@ class EntityManager extends PluginManagerBase {
     $iterator->append($namespaces);
     $this->doDiscovery($iterator);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function clearCachedDefinitions() {
+    parent::clearCachedDefinitions();
+
+    $this->bundleInfo = NULL;
+  }
+
 
   /**
    * Checks whether a certain entity type has a certain controller.
@@ -509,6 +526,48 @@ class EntityManager extends PluginManagerBase {
     unset($this->entityFieldInfo);
     unset($this->fieldDefinitions);
     $this->cache->deleteTags(array('entity_field_info' => TRUE));
+  }
+
+  /**
+   * Get the bundle info of an entity type.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   *
+   * @return array
+   *   Returns the bundle information for the specified entity type.
+   */
+  public function getBundleInfo($entity_type) {
+    $bundle_info = $this->getAllBundleInfo();
+    return isset($bundle_info[$entity_type]) ? $bundle_info[$entity_type] : array();
+  }
+
+  /**
+   * Get the bundle info of all entity types.
+   *
+   * @return array
+   *   An array of all bundle information.
+   */
+  public function getAllBundleInfo() {
+    if (!isset($this->bundleInfo)) {
+      $langcode = $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->id;
+      if ($cache = $this->cache->get("entity_bundle_info:$langcode")) {
+        $this->bundleInfo = $cache->data;
+      }
+      else {
+        $this->bundleInfo = $this->moduleHandler->invokeAll('entity_bundle_info');
+        // If no bundles are provided, use the entity type name and label.
+        foreach ($this->getDefinitions() as $type => $entity_info) {
+          if (!isset($this->bundleInfo[$type])) {
+            $this->bundleInfo[$type][$type]['label'] = $entity_info['label'];
+          }
+        }
+        $this->moduleHandler->alter('entity_bundle_info', $this->bundleInfo);
+        $this->cache->set("entity_bundle_info:$langcode", $this->bundleInfo, CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
+      }
+    }
+
+    return $this->bundleInfo;
   }
 
 }
