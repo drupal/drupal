@@ -1030,7 +1030,7 @@ function comment_entity_load($entities, $entity_type) {
     ->condition('ces.entity_type', $entity_type)
     ->execute();
   foreach ($result as $record) {
-    $parts = explode('__', $record->field_id);
+    $parts = explode('__', $record->field_id, 2);
     list(, $field_name) = $parts;
     if (empty($entities[$record->entity_id]->comment_statistics)) {
       $entities[$record->entity_id]->comment_statistics = array();
