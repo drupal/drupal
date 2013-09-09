@@ -52,12 +52,9 @@ class CommentItem extends ConfigFieldItemBase {
           'settings' => array('default_value' => COMMENT_OPEN),
         ),
         'cid' => array(
-          'type' => 'entity_reference_field',
+          'type' => 'integer_field',
           'label' => t('Last comment ID'),
-          'settings' => array(
-            'target_type' => 'comment',
-            'default_value' => 0,
-          ),
+          'settings' => array('default_value' => 0),
         ),
         'last_comment_timestamp' => array(
           'label' => t('Last comment timestamp'),
@@ -72,12 +69,9 @@ class CommentItem extends ConfigFieldItemBase {
           'settings' => array('default_value' => '')
         ),
         'last_comment_uid' => array(
-          'type' => 'entity_reference_field',
+          'type' => 'integer_field',
           'label' => t('Last comment user ID'),
-          'settings' => array(
-            'target_type' => 'user',
-            'default_value' => 0,
-          ),
+          'settings' => array('default_value' => 0),
         ),
         'comment_count' => array(
           'label' => t('Number of comments'),
