@@ -82,4 +82,21 @@ class CommentWidget extends WidgetBase {
     return $element;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function massageFormValues(array $values, array $form, array &$form_state) {
+    $new_values = array();
+    foreach ($values as &$value) {
+      $value += array(
+        'cid' => 0,
+        'last_comment_timestamp' => 0,
+        'last_comment_name' => '',
+        'last_comment_uid' => 0,
+        'comment_count' => 0,
+      );
+    }
+    return $new_values;
+  }
+
 }
