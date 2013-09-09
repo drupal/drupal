@@ -71,22 +71,34 @@ abstract class TextItemBase extends ConfigFieldItemBase implements PrepareCacheI
    * {@inheritdoc}
    */
   public function prepareCache() {
-    // Where possible, generate the sanitized version of each textual property
-    // (e.g., 'value', 'summary') within this field item early so that it is
-    // cached in the field cache. This avoids the need to look up the sanitized
-    // value in the filter cache separately.
+    // Where possible, generate the processed (sanitized) version of each
+    // textual property (e.g., 'value', 'summary') within this field item early
+    // so that it is cached in the field cache. This avoids the need to look up
+    // the sanitized value in the filter cache separately.
     $text_processing = $this->getFieldSetting('text_processing');
     if (!$text_processing || filter_format_allowcache($this->get('format')->getValue())) {
-      $itemBC = $this->getValue();
-      $langcode = $this->getParent()->getParent()->language()->id;
-      // The properties that need sanitizing are the ones that are the 'text
-      // source' of a TextProcessed computed property.
-      // @todo Clean up this mess by making the TextProcessed property type
-      //   support its own cache integration: https://drupal.org/node/2026339.
-      foreach ($this->getPropertyDefinitions() as $definition) {
+      foreach ($this->getPropertyDefinitions() as $property => $definition) {
         if (isset($definition['class']) && ($definition['class'] == '\Drupal\text\TextProcessed')) {
-          $source_property = $definition['settings']['text source'];
-          $this->set('safe_' . $source_property, text_sanitize($text_processing, $langcode, $itemBC, $source_property));
+          $this->get($property)->getValue();
+        }
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onChange($property_name) {
+    // Notify the parent of changes.
+    if (isset($this->parent)) {
+      $this->parent->onChange($this->name);
+    }
+
+    // Unset processed properties that are affected by the change.
+    foreach ($this->getPropertyDefinitions() as $property => $definition) {
+      if (isset($definition['class']) && ($definition['class'] == '\Drupal\text\TextProcessed')) {
+        if ($property_name == 'format' || (isset($definition['settings']['text source']) && $definition['settings']['text source'] == $property_name)) {
+          $this->set($property, NULL, FALSE);
         }
       }
     }

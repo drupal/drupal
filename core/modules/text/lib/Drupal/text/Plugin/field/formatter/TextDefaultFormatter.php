@@ -38,11 +38,7 @@ class TextDefaultFormatter extends FormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      // @todo Convert text_sanitize() to work on an NG $item. See
-      // https://drupal.org/node/2026339.
-      $itemBC = $item->getValue(TRUE);
-      $output = text_sanitize($this->getFieldSetting('text_processing'), $langcode, $itemBC, 'value');
-      $elements[$delta] = array('#markup' => $output);
+      $elements[$delta] = array('#markup' => $item->processed);
     }
 
     return $elements;
