@@ -470,10 +470,10 @@ function content_translation_translatable_batch($translatable, $field_name, &$co
 
       // We need a two-step approach while updating field translations: given
       // that field-specific update functions might rely on the stored values to
-      // perform their processing, see for instance file_field_update(), first
-      // we need to store the new translations and only after we can remove the
-      // old ones. Otherwise we might have data loss, since the removal of the
-      // old translations might occur before the new ones are stored.
+      // perform their processing first we need to store the new translations
+      // and only after we can remove the old ones. Otherwise we might have data
+      // loss, since the removal of the old translations might occur before the
+      // new ones are stored.
       if ($translatable && isset($entity->{$field_name}[Language::LANGCODE_NOT_SPECIFIED])) {
         // If the field is being switched to translatable and has data for
         // Language::LANGCODE_NOT_SPECIFIED then we need to move the data to the right

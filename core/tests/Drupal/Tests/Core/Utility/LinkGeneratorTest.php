@@ -7,11 +7,12 @@
 
 namespace Drupal\Tests\Core\Utility {
 
-  use Drupal\Core\Language\Language;
-  use Drupal\Core\Utility\LinkGenerator;
-  use Drupal\Tests\UnitTestCase;
-  use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-  use Symfony\Component\HttpFoundation\Request;
+use Drupal\Core\Language\Language;
+use Drupal\Core\Utility\LinkGenerator;
+use Drupal\Tests\UnitTestCase;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 /**
  * Tests the link generator.
@@ -311,7 +312,7 @@ class LinkGeneratorTest extends UnitTestCase {
    *   service.
    */
   public function testGenerateActive() {
-    $this->urlGenerator->expects($this->exactly(6))
+    $this->urlGenerator->expects($this->exactly(7))
       ->method('generateFromRoute')
       ->will($this->returnValueMap(array(
         array('test_route_1', array(), FALSE, '/test-route-1'),
@@ -320,9 +321,10 @@ class LinkGeneratorTest extends UnitTestCase {
         array('test_route_1', array(), FALSE, '/test-route-1'),
         array('test_route_3', array(), FALSE, '/test-route-3'),
         array('test_route_3', array(), FALSE, '/test-route-3'),
+        array('test_route_4', array('object' => '1'), FALSE, '/test-route-4/1'),
       )));
 
-    $this->moduleHandler->expects($this->exactly(6))
+    $this->moduleHandler->expects($this->exactly(7))
       ->method('alter');
 
     $this->setUpLanguageManager();
@@ -338,6 +340,10 @@ class LinkGeneratorTest extends UnitTestCase {
 
     // Render a link with the same path as the current path.
     $request = new Request(array(), array(), array('system_path' => 'test-route-1', RouteObjectInterface::ROUTE_NAME => 'test_route_1'));
+    // This attribute is expected to be set in a Drupal request by
+    // \Drupal\Core\ParamConverter\ParamConverterManager
+    $raw_variables = new ParameterBag();
+    $request->attributes->set('_raw_variables', $raw_variables);
     $this->linkGenerator->setRequest($request);
     $result = $this->linkGenerator->generate('Test', 'test_route_1');
     $this->assertTag(array(
@@ -367,7 +373,8 @@ class LinkGeneratorTest extends UnitTestCase {
 
     // Render a link with the same path and query parameter as the current path.
     $request = new Request(array('value' => 'example_1'), array(), array('system_path' => 'test-route-3', RouteObjectInterface::ROUTE_NAME => 'test_route_3'));
-    $parameters = $request->query->all();
+    $raw_variables = new ParameterBag();
+    $request->attributes->set('_raw_variables', $raw_variables);
     $this->linkGenerator->setRequest($request);
     $result = $this->linkGenerator->generate(
       'Test',
@@ -389,6 +396,21 @@ class LinkGeneratorTest extends UnitTestCase {
       array('query' => array('value' => 'example_2'))
     );
     $this->assertNotTag(array(
+      'tag' => 'a',
+      'attributes' => array('class' => 'active'),
+    ), $result);
+    // Render a link with the same path and query parameter as the current path.
+    $request = new Request(array('value' => 'example_1'), array(), array('system_path' => 'test-route-4/1', RouteObjectInterface::ROUTE_NAME => 'test_route_4'));
+    $raw_variables = new ParameterBag(array('object' => '1'));
+    $request->attributes->set('_raw_variables', $raw_variables);
+    $this->linkGenerator->setRequest($request);
+    $result = $this->linkGenerator->generate(
+      'Test',
+      'test_route_4',
+      array('object' => '1'),
+      array('query' => array('value' => 'example_1'))
+    );
+    $this->assertTag(array(
       'tag' => 'a',
       'attributes' => array('class' => 'active'),
     ), $result);

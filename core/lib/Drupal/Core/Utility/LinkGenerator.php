@@ -74,10 +74,13 @@ class LinkGenerator implements LinkGeneratorInterface {
   public function setRequest(Request $request) {
     // Pre-calculate and store values based on the request that may be used
     // repeatedly in generate().
+    $raw_variables = $request->attributes->get('_raw_variables');
+    // $raw_variables is a ParameterBag object or NULL.
+    $parameters = $raw_variables ? $raw_variables->all() : array();
     $this->active = array(
       'route_name' => $request->attributes->get(RouteObjectInterface::ROUTE_NAME),
       'language' => $this->languageManager->getLanguage(Language::TYPE_URL)->id,
-      'parameters' => (array) $request->attributes->get('_raw_variables') + (array) $request->query->all(),
+      'parameters' => $parameters + (array) $request->query->all(),
     );
   }
 
