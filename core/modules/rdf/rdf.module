@@ -290,10 +290,10 @@ function rdf_preprocess_node(&$variables) {
   // Adds RDFa markup annotating the number of comments a node has.
   $comment_count_mapping = $mapping->getPreparedFieldMapping('comment_count');
   if (Drupal::moduleHandler()->moduleExists('comment')) {
-    $fields = array_keys(Drupal::service('comment.manager')->getFields('node'));
-    $definitions = array_keys($variables['node']->getPropertyDefinitions());
-    $valid_fields = array_intersect($fields, $definitions);
     if (!empty($comment_count_mapping['properties'])) {
+      $fields = array_keys(Drupal::service('comment.manager')->getFields('node'));
+      $definitions = array_keys($variables['node']->getPropertyDefinitions());
+      $valid_fields = array_intersect($fields, $definitions);
       $count = 0;
       foreach ($valid_fields as $field_name) {
         $count += $variables['node']->get($field_name)->comment_count;
