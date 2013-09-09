@@ -55,7 +55,7 @@ function edit_permission() {
  * editing' permission.
  */
 function edit_page_build(&$page) {
-  if (!user_access('access in-place editing')) {
+  if (!Drupal::currentUser()->hasPermission('access in-place editing')) {
     return;
   }
 
