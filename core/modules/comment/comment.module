@@ -570,9 +570,9 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
         // or a link to add new comments if the user has permission, the node
         // is open to new comments, and there currently are none.
         if (user_access('access comments')) {
-          if (!empty($entity->comment_statistics[$field_name]->comment_count)) {
+          if (!empty($entity->get($field_name)->comment_count)) {
             $links['comment-comments'] = array(
-              'title' => format_plural($entity->comment_statistics[$field_name]->comment_count, '1 comment', '@count comments'),
+              'title' => format_plural($entity->get($field_name)->comment_count, '1 comment', '@count comments'),
               'href' => $uri['path'],
               'attributes' => array('title' => t('Jump to the first comment of this posting.')),
               'fragment' => 'comments',
@@ -583,7 +583,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
               $links['comment-new-comments'] = array(
                 'title' => format_plural($new, '1 new comment', '@count new comments'),
                 'href' => $uri['path'],
-                'query' => comment_new_page_count($entity->comment_statistics[$field_name]->comment_count, $new, $entity, $field_name),
+                'query' => comment_new_page_count($entity->get($field_name)->comment_count, $new, $entity, $field_name),
                 'attributes' => array('title' => t('Jump to the first new comment of this posting.')),
                 'fragment' => 'new',
                 'html' => TRUE,
@@ -628,7 +628,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
           if (user_access('post comments')) {
             // Show the "post comment" link if the form is on another page, or
             // if there are existing comments that the link will skip past.
-            if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE || (!empty($entity->comment_statistics[$field_name]->comment_count) && user_access('access comments'))) {
+            if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE || (!empty($entity->get($field_name)->comment_count) && user_access('access comments'))) {
               $links['comment-add'] = array(
                 'title' => t('Add new comment'),
                 'attributes' => array('title' => t('Share your thoughts and opinions related to this item.')),
@@ -1016,14 +1016,16 @@ function comment_translation_configuration_element_submit($form, &$form_state) {
 
 /**
  * Implements hook_entity_load().
+ *
+ * @see \Drupal\comment\Plugin\field\field_type\CommentItem::getPropertyDefinitions()
  */
 function comment_entity_load($entities, $entity_type) {
   if (!Drupal::service('comment.manager')->getFields($entity_type)) {
     // Do not query database when entity has no comment fields.
     return;
   }
-  // Load comment information from the database and add it to the entity's
-  // comment_statistics property, which is an array keyed by field_name.
+  // Load comment information from the database and update the entity's comment
+  // statistics properties, which are defined on each CommentItem field.
   $result = db_select('comment_entity_statistics', 'ces')
     ->fields('ces')
     ->condition('ces.entity_id', array_keys($entities))
@@ -1032,14 +1034,7 @@ function comment_entity_load($entities, $entity_type) {
   foreach ($result as $record) {
     $parts = explode('__', $record->field_id, 2);
     list(, $field_name) = $parts;
-    if (empty($entities[$record->entity_id]->comment_statistics)) {
-      $entities[$record->entity_id]->comment_statistics = array();
-    }
-
-    if (empty($entities[$record->entity_id]->comment_statistics[$field_name])) {
-      $entities[$record->entity_id]->comment_statistics[$field_name] = new \StdClass();
-    }
-    $comment_statistics = &$entities[$record->entity_id]->comment_statistics[$field_name];
+    $comment_statistics = $entities[$record->entity_id]->get($field_name);
     $comment_statistics->cid = $record->cid;
     $comment_statistics->last_comment_timestamp = $record->last_comment_timestamp;
     $comment_statistics->last_comment_name = $record->last_comment_name;

@@ -42,9 +42,9 @@ class CommentDefaultFormatter extends FormatterBase {
 
       // Only attempt to render comments if the entity has visible comments.
       // Unpublished comments are not included in
-      // $entity->comment_statistics[$field_name]->comment_count, but
-      // unpublished comments should display if the user is an administrator.
-      if (((!empty($entity->comment_statistics[$field_name]->comment_count) && user_access('access comments')) || user_access('administer comments')) &&
+      // $entity->get($field_name)->comment_count, but unpublished comments
+      // should display if the user is an administrator.
+      if ((($entity->get($field_name)->comment_count && user_access('access comments')) || user_access('administer comments')) &&
       !empty($entity->content['#view_mode']) &&
       !in_array($entity->content['#view_mode'], array('search_result', 'search_index'))) {
 

@@ -55,7 +55,7 @@ class CommentWidget extends WidgetBase {
     // If used for the field settings form or the entity doesn't have any
     // comments, the "hidden" option makes no sense, so don't even bother
     // presenting it to the user.
-    if (!empty($entity->field_ui_default_value) || empty($entity->comment_statistics[$field->getFieldName()]->comment_count)) {
+    if ($element['#field_parents'] != array('default_value_input') && !$entity->get($field->getFieldName())->comment_count) {
       $element['status'][COMMENT_HIDDEN]['#access'] = FALSE;
       // Also adjust the description of the "closed" option.
       $element['status'][COMMENT_CLOSED]['#description'] = t('Users cannot post comments.');
