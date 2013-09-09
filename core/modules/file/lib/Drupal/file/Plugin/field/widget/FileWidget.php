@@ -180,8 +180,6 @@ class FileWidget extends WidgetBase {
     // The field settings include defaults for the field type. However, this
     // widget is a base class for other widgets (e.g., ImageWidget) that may act
     // on field types without these expected settings.
-    // @todo Add support for merging settings of base types to implementations
-    //   of FieldDefinitionInterface::getFieldSettings().
     $field_settings += array(
       'display_default' => NULL,
       'display_field' => NULL,
@@ -200,8 +198,8 @@ class FileWidget extends WidgetBase {
     $element_info = element_info('managed_file');
     $element += array(
       '#type' => 'managed_file',
-      '#upload_location' => file_field_widget_uri($field_settings),
-      '#upload_validators' => file_field_widget_upload_validators($field_settings),
+      '#upload_location' => $items[$delta]->getUploadLocation(),
+      '#upload_validators' => $items[$delta]->getUploadValidators(),
       '#value_callback' => 'file_field_widget_value',
       '#process' => array_merge($element_info['#process'], array('file_field_widget_process')),
       '#progress_indicator' => $this->getSetting('progress_indicator'),
