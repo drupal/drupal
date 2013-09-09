@@ -1278,8 +1278,14 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
   // Load the router item corresponding to the current page.
   $request = \Drupal::request();
   $system_path = NULL;
+  if ($route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME)) {
+    // @todo https://drupal.org/node/2068471 is adding support so we can tell
+    // if this is called on a 404/403 page.
+    $system_path = $request->attributes->get('_system_path');
+    $page_not_403 = 1;
+  }
   // @todo Remove once the old router system is removed.
-  if ($request->attributes->has('_legacy')) {
+  elseif ($request->attributes->has('_legacy')) {
     // Page is a 404 if no item is loaded.
     if ($item = menu_get_item($active_path)) {
       $system_path = $item['href'];
@@ -1287,12 +1293,6 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
       // for this page. Used to limit the number of links rendered.
       $page_not_403 = (int) $item['access'];
     }
-  }
-  elseif ($route_name = $request->attributes->get(RouteObjectInterface::ROUTE_NAME)) {
-    // @todo https://drupal.org/node/2068471 is adding support so we can tell
-    // if this is called on a 404/403 page.
-    $system_path = $request->attributes->get('_system_path');
-    $page_not_403 = 1;
   }
   if (isset($system_path)) {
     if (isset($max_depth)) {
