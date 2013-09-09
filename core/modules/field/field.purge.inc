@@ -78,6 +78,13 @@ function field_purge_batch($batch_size) {
   foreach ($instances as $instance) {
     $entity_type = $instance['entity_type'];
 
+    // We cannot purge anything if the entity type is unknown (e.g. the
+    // providing module was uninstalled).
+    // @todo Revisit after https://drupal.org/node/2080823.
+    if (!isset($info[$entity_type])) {
+      continue;
+    }
+
     // EntityFieldQuery currently fails on conditions on comment bundle.
     // Remove when http://drupal.org/node/731724 is fixed.
     if ($entity_type == 'comment') {
@@ -117,6 +124,14 @@ function field_purge_batch($batch_size) {
   $deleted_fields = Drupal::state()->get('field.field.deleted') ?: array();
   foreach ($deleted_fields as $field) {
     $field = new Field($field);
+
+    // We cannot purge anything if the entity type is unknown (e.g. the
+    // providing module was uninstalled).
+    // @todo Revisit after https://drupal.org/node/2080823.
+    if (!isset($info[$field->entity_type])) {
+      continue;
+    }
+
     $instances = field_read_instances(array('field_id' => $field['uuid']), array('include_deleted' => 1));
     if (empty($instances)) {
       field_purge_field($field);

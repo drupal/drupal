@@ -68,7 +68,7 @@ class Editor extends PluginBase implements EditPluginInterface {
    * Implements \Drupal\edit\EditPluginInterface::getAttachments().
    */
   public function getAttachments() {
-    global $user;
+    $user = \Drupal::currentUser();
 
     $user_format_ids = array_keys(filter_formats($user));
     $manager = \Drupal::service('plugin.manager.editor');

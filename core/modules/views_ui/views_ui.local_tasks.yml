@@ -1,0 +1,22 @@
+views_ui_settings_tab:
+  route_name: views_ui.settings.basic
+  title: Settings
+  tab_root_id: views_ui_list_tab
+
+views_ui_settings_basic_tab:
+  route_name: views_ui.settings.basic
+  title: Basic
+  tab_root_id: views_ui_list_tab
+  tab_parent_id: views_ui_settings_tab
+
+views_ui_settings_advanced_tab:
+  route_name: views_ui.settings.advanced
+  title: Advanced
+  tab_root_id: views_ui_list_tab
+  tab_parent_id: views_ui_settings_tab
+  weight: 10
+
+views_ui_list_tab:
+  route_name: views_ui.list
+  title: List
+  tab_root_id: views_ui_list_tab

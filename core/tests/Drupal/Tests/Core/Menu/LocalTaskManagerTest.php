@@ -7,10 +7,8 @@
 
 namespace Drupal\Tests\Core\Menu;
 
-use Drupal\Component\Plugin\Factory\DefaultFactory;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\Language;
-use Drupal\system\Plugin\Type\MenuLocalTaskManager;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Zend\Stdlib\ArrayObject;
@@ -18,7 +16,7 @@ use Zend\Stdlib\ArrayObject;
 /**
  * Tests local tasks manager.
  *
- * @see \Drupal\system\Plugin\Type\MenuLocalTaskManager
+ * @see \Drupal\Core\Menu\LocalTaskManager
  */
 class LocalTaskManagerTest extends UnitTestCase {
 
@@ -293,6 +291,19 @@ class LocalTaskManagerTest extends UnitTestCase {
       'tab_root_id' => 'menu_local_task_test_tasks_view',
       'class' => 'Drupal\menu_test\Plugin\Menu\MenuLocalTasksTestTasksView',
     );
+    // Add the defaults from the LocalTaskManager.
+    foreach ($definitions as $id => &$info) {
+      $info += array(
+        'id' => '',
+        'route_name' => '',
+        'title' => '',
+        'tab_root_id' => '',
+        'tab_parent_id' => NULL,
+        'weight' => 0,
+        'options' => array(),
+        'class' => 'Drupal\Core\Menu\LocalTaskDefault',
+      );
+    }
     return $definitions;
   }
 
