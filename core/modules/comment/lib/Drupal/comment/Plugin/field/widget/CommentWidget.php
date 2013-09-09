@@ -86,7 +86,8 @@ class CommentWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function massageFormValues(array $values, array $form, array &$form_state) {
-    $new_values = array();
+    // Add default values for statistics properties because we don't want to
+    // have them in form.
     foreach ($values as &$value) {
       $value += array(
         'cid' => 0,
@@ -96,7 +97,7 @@ class CommentWidget extends WidgetBase {
         'comment_count' => 0,
       );
     }
-    return $new_values;
+    return $values;
   }
 
 }
