@@ -2965,7 +2965,6 @@ function system_cron() {
   // Cleanup the flood.
   Drupal::service('flood')->garbageCollection();
 
-  Drupal::moduleHandler()->invokeAll('cache_flush');
   foreach (Cache::getBins() as $cache_backend) {
     $cache_backend->garbageCollection();
   }
