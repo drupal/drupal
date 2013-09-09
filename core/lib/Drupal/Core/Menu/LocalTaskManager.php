@@ -7,11 +7,14 @@
 
 namespace Drupal\Core\Menu;
 
+use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
+use Drupal\Core\Plugin\Discovery\YamlDiscovery;
+use Drupal\Core\Plugin\Factory\ContainerFactory;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
@@ -24,6 +27,28 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
  * behalf of something else.
  */
 class LocalTaskManager extends DefaultPluginManager {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $defaults = array(
+    // (required) The name of the route this task links to.
+    'route_name' => '',
+    // The static title for the local task.
+    'title' => '',
+    // The plugin ID of the root tab.
+    'tab_root_id' => '',
+    // The plugin ID of the parent tab (or NULL for the top-level tab).
+    'tab_parent_id' => NULL,
+    // The weight of the tab.
+    'weight' => 0,
+    // The default link options.
+    'options' => array(),
+    // Default class for local task implementations.
+    'class' => 'Drupal\Core\Menu\LocalTaskDefault',
+    // The plugin id. Set by the plugin system and should never be provided in YAML.
+    'id' => '',
+  );
 
   /**
    * A controller resolver object.
@@ -56,9 +81,6 @@ class LocalTaskManager extends DefaultPluginManager {
   /**
    * Constructs a \Drupal\Core\Menu\LocalTaskManager object.
    *
-   * @param \Traversable $namespaces
-   *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations,
    * @param \Symfony\Component\HttpKernel\Controller\ControllerResolverInterface $controller_resolver
    *   An object to use in introspecting route methods.
    * @param \Symfony\Component\HttpFoundation\Request $request
@@ -72,13 +94,26 @@ class LocalTaskManager extends DefaultPluginManager {
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
    */
-  public function __construct(\Traversable $namespaces, ControllerResolverInterface $controller_resolver, Request $request, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager) {
-    parent::__construct('Plugin/Menu/LocalTask', $namespaces, array(), 'Drupal\Core\Annotation\Menu\LocalTask');
+  public function __construct(ControllerResolverInterface $controller_resolver, Request $request, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache, LanguageManager $language_manager) {
+    $this->discovery = new YamlDiscovery('local_tasks', $module_handler->getModuleDirectories());
+    $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
+    $this->factory = new ContainerFactory($this);
     $this->controllerResolver = $controller_resolver;
     $this->request = $request;
     $this->routeProvider = $route_provider;
     $this->alterInfo($module_handler, 'local_tasks');
     $this->setCacheBackend($cache, $language_manager, 'local_task', array('local_task' => TRUE));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function processDefinition(&$definition, $plugin_id) {
+    parent::processDefinition($definition, $plugin_id);
+     // If there is no route name, this is a broken definition.
+    if (empty($definition['route_name'])) {
+      throw new PluginException(sprintf('Plugin (%s) definition must include "route_name"', $plugin_id));
+    }
   }
 
   /**

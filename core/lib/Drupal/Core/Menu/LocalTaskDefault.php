@@ -2,28 +2,28 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Menu\LocalTaskBase.
+ * Contains \Drupal\Core\Menu\LocalTaskDefault.
  */
 
 namespace Drupal\Core\Menu;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Provides defaults and base methods for menu local tasks plugins.
+ * Default object used for LocalTaskPlugins.
  */
-abstract class LocalTaskBase extends PluginBase implements LocalTaskInterface, ContainerFactoryPluginInterface{
+class LocalTaskDefault extends PluginBase implements LocalTaskInterface, ContainerFactoryPluginInterface {
 
   /**
    * String translation object.
    *
-   * @var \Drupal\Core\StringTranslation\Translator\TranslatorInterface
+   * @var \Drupal\Core\StringTranslation\TranslationInterface
    */
-  protected $t;
+  protected $stringTranslation;
 
   /**
    * URL generator object.
@@ -40,7 +40,7 @@ abstract class LocalTaskBase extends PluginBase implements LocalTaskInterface, C
   protected $active = FALSE;
 
   /**
-   * Constructs a \Drupal\system\Plugin\LocalTaskBase object.
+   * Constructs a \Drupal\system\Plugin\LocalTaskDefault object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -48,14 +48,13 @@ abstract class LocalTaskBase extends PluginBase implements LocalTaskInterface, C
    *   The plugin_id for the plugin instance.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\StringTranslation\Translator\TranslatorInterface $string_translation
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation object.
    * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface $generator
    *   The url generator object.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, TranslatorInterface $string_translation, UrlGeneratorInterface $generator) {
-    // This is available for subclasses that need to translate a dynamic title.
-    $this->t = $string_translation;
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, TranslationInterface $string_translation, UrlGeneratorInterface $generator) {
+    $this->stringTranslation = $string_translation;
     $this->generator = $generator;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -74,6 +73,15 @@ abstract class LocalTaskBase extends PluginBase implements LocalTaskInterface, C
   }
 
   /**
+   * Translates a string to the current language or to a given language.
+   *
+   * See the t() documentation for details.
+   */
+  protected function t($string, array $args = array(), array $options = array()) {
+    return $this->stringTranslation->translate($string, $args, $options);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getRouteName() {
@@ -85,16 +93,17 @@ abstract class LocalTaskBase extends PluginBase implements LocalTaskInterface, C
    */
   public function getTitle() {
     // Subclasses may pull in the request or specific attributes as parameters.
-    return $this->pluginDefinition['title'];
+    return $this->t($this->pluginDefinition['title']);
   }
 
   /**
    * {@inheritdoc}
+   *
+   * @todo update based on https://drupal.org/node/2045267
    */
   public function getPath() {
     // Subclasses may set a request into the generator or use any desired method
     // to generate the path.
-    // @todo - use the new method from https://drupal.org/node/2031353
     $path = $this->generator->generate($this->getRouteName());
     // In order to get the Drupal path the base URL has to be stripped off.
     $base_url = $this->generator->getContext()->getBaseUrl();

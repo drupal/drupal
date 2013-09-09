@@ -176,7 +176,7 @@ services:
     arguments: ['@container.namespaces', '@controller_resolver', '@request', '@module_handler', '@cache.cache', '@language_manager']
   plugin.manager.menu.local_task:
     class: Drupal\Core\Menu\LocalTaskManager
-    arguments: ['@container.namespaces', '@controller_resolver', '@request', '@router.route_provider', '@module_handler', '@cache.cache', '@language_manager']
+    arguments: ['@controller_resolver', '@request', '@router.route_provider', '@module_handler', '@cache.cache', '@language_manager']
   request:
     class: Symfony\Component\HttpFoundation\Request
     # @TODO the synthetic setting must be uncommented whenever drupal_session_initialize()
