@@ -197,36 +197,5 @@ function hook_comment_delete(Drupal\comment\Comment $comment) {
 }
 
 /**
- * Controls access to entity comment forms.
- *
- * Used to control access to commenting on an entity where no
- * {%entity_type}_access function exists for the given entity.
- *
- * Modules may implement this hook if they want to have a say in whether or not
- * the logged in user has access to view an entity in order to reply to a
- * comment.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity to which the comment field is attached.
- *
- * @return mixed
- *   - COMMENT_ACCESS_DENY: if the operation is to be denied.
- *   - FALSE: to not affect this operation at all.
- *
- * @todo replace this with entity access controls once generic access controller
- *   lands.
- *
- * @see http://drupal.org/node/1696660
- */
-function hook_comment_access(\Drupal\Core\Entity\EntityInterface $entity) {
-  if ($entity->entityType() == 'comment') {
-    return COMMENT_ACCESS_DENY;
-  }
-
-  // Returning nothing from this function would have the same effect.
-  return FALSE;
-}
-
-/**
  * @} End of "addtogroup hooks".
  */
