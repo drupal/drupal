@@ -147,8 +147,7 @@ class ConfigEntityReferenceItemBase extends EntityReferenceItem implements Confi
     if (function_exists($callback)) {
       // We are at the field item level, so we need to go two levels up to get
       // to the entity object.
-      $entity = $this->getParent()->getParent();
-      return $callback($this->getFieldDefinition(), $entity);
+      return $callback($this->getFieldDefinition(), $this->getEntity());
     }
   }
 

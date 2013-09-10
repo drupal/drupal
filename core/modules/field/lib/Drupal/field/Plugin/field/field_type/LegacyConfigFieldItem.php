@@ -88,8 +88,7 @@ abstract class LegacyConfigFieldItem extends ConfigFieldItemBase implements Prep
    */
   public function prepareCache() {
     if ($callback = $this->getLegacyCallback('load')) {
-      $entity = $this->getParent()->getParent();
-      $langcode = $entity->language()->id;
+      $entity = $this->getEntity();
       $entity_id = $entity->id();
 
       // hook_field_load() receives items keyed by entity id, and alters then by
@@ -100,7 +99,7 @@ abstract class LegacyConfigFieldItem extends ConfigFieldItemBase implements Prep
         array($entity_id => $entity),
         $this->getFieldInstance()->getField(),
         array($entity_id => $this->getFieldInstance()),
-        $langcode,
+        $this->getLangcode(),
         &$items,
         EntityStorageControllerInterface::FIELD_LOAD_CURRENT,
       );
@@ -120,8 +119,7 @@ abstract class LegacyConfigFieldItem extends ConfigFieldItemBase implements Prep
     $definition = $this->getPluginDefinition();
     $callback = "{$definition['provider']}_options_list";
     if (function_exists($callback)) {
-      $entity = $this->getParent()->getParent();
-      return $callback($this->getFieldDefinition(), $entity);
+      return $callback($this->getFieldDefinition(), $this->getEntity());
     }
   }
 

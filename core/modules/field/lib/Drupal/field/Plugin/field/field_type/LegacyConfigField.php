@@ -7,7 +7,6 @@
 
 namespace Drupal\field\Plugin\field\field_type;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Plugin\Type\FieldType\ConfigField;
 use Drupal\field\FieldInstanceInterface;
 use Symfony\Component\Validator\ConstraintViolation;
@@ -40,8 +39,7 @@ class LegacyConfigField extends ConfigField {
     $legacy_errors = array();
     $this->legacyCallback('validate', array(&$legacy_errors));
 
-    $entity = $this->getParent();
-    $langcode = $entity->language()->id;
+    $langcode = $this->getLangcode();
     $field_name = $this->getFieldDefinition()->getFieldName();
 
     if (isset($legacy_errors[$field_name][$langcode])) {
@@ -108,19 +106,16 @@ class LegacyConfigField extends ConfigField {
     $module = $definition['provider'];
     $callback = "{$module}_field_{$hook}";
     if (function_exists($callback)) {
-      $entity = $this->getParent();
-      $langcode = $entity->language()->id;
-
       // We need to remove the empty "prototype" item here.
       // @todo Revisit after http://drupal.org/node/1988492.
       $this->filterEmptyValues();
-      // Legcacy callbacks alter $items by reference.
+      // Legacy callbacks alter $items by reference.
       $items = (array) $this->getValue(TRUE);
       $args = array_merge(array(
-        $entity,
+        $this->getEntity(),
         $this->getFieldInstance()->getField(),
         $this->getFieldInstance(),
-        $langcode,
+        $this->getLangcode(),
         &$items
       ), $args);
       call_user_func_array($callback, $args);

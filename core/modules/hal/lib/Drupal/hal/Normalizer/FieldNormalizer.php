@@ -31,7 +31,7 @@ class FieldNormalizer extends NormalizerBase {
     $normalized_field_items = array();
 
     // Get the field definition.
-    $entity = $field->getParent();
+    $entity = $field->getEntity();
     $field_name = $field->getName();
     $field_definition = $entity->getPropertyDefinition($field_name);
 
