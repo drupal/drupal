@@ -145,6 +145,31 @@ class BlockTest extends BlockTestBase {
   }
 
   /**
+   * Tests that the block form has a theme selector when not passed via the URL.
+   */
+  public function testBlockThemeSelector() {
+    // Enable all themes.
+    theme_enable(array('bartik', 'seven'));
+    $theme_settings = $this->container->get('config.factory')->get('system.theme');
+    foreach (array('bartik', 'stark', 'seven') as $theme) {
+      // Select the 'Powered by Drupal' block to be placed.
+      $block = array();
+      $block['machine_name'] = strtolower($this->randomName(8));
+      $block['theme'] = $theme;
+      $block['region'] = 'content';
+      $this->drupalPost('admin/structure/block/add/system_powered_by_block', $block, t('Save block'));
+      $this->assertText(t('The block configuration has been saved.'));
+      $this->assertUrl('admin/structure/block/list/' . $theme . '?block-placement=' . drupal_html_class($theme . ':' . $block['machine_name']));
+
+      // Set the default theme and ensure the block is placed.
+      $theme_settings->set('default', $theme)->save();
+      $this->drupalGet('');
+      $elements = $this->xpath('//div[@id = :id]', array(':id' => drupal_html_id('block-' . $block['machine_name'])));
+      $this->assertTrue(!empty($elements), 'The block was found.');
+    }
+  }
+
+  /**
    * Test block title display settings.
    */
   function testHideBlockTitle() {

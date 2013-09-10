@@ -77,7 +77,11 @@ class BlockFormControllerTest extends UnitTestCase {
       ->disableOriginalConstructor()
       ->getMock();
 
-    $block_form_controller = new BlockFormController($entity_manager, $query_factory, $language_manager);
+    $config_factory = $this->getMockBuilder('Drupal\Core\Config\ConfigFactory')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $block_form_controller = new BlockFormController($entity_manager, $query_factory, $language_manager, $config_factory);
 
     // Ensure that the block with just one other instance gets the next available
     // name suggestion.
