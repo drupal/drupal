@@ -2370,7 +2370,9 @@ function system_get_info($type, $name = NULL) {
   if ($type == 'module') {
     $data = system_rebuild_module_data();
     foreach (Drupal::moduleHandler()->getModuleList() as $module => $filename) {
-      $info[$module] = $data[$module]->info;
+      if (isset($data[$module])) {
+        $info[$module] = $data[$module]->info;
+      }
     }
   }
   else {
