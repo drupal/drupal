@@ -122,11 +122,12 @@ function book_permission() {
  */
 function book_node_view_link(NodeInterface $node, $view_mode) {
   $links = array();
+  $account = Drupal::currentUser();
 
   if (isset($node->book['depth'])) {
     if ($view_mode == 'full' && node_is_page($node)) {
       $child_type = Drupal::config('book.settings')->get('child_type');
-      if ((user_access('add content to books') || user_access('administer book outlines')) && node_access('create', $child_type) && $node->isPublished() && $node->book['depth'] < MENU_MAX_DEPTH) {
+      if (($account->hasPermission('add content to books') || $account->hasPermission('administer book outlines')) && node_access('create', $child_type) && $node->isPublished() && $node->book['depth'] < MENU_MAX_DEPTH) {
         $links['book_add_child'] = array(
           'title' => t('Add child page'),
           'href' => 'node/add/' . $child_type,
@@ -134,7 +135,7 @@ function book_node_view_link(NodeInterface $node, $view_mode) {
         );
       }
 
-      if (user_access('access printer-friendly version')) {
+      if ($account->hasPermission('access printer-friendly version')) {
         $links['book_printer'] = array(
           'title' => t('Printer-friendly version'),
           'href' => 'book/export/html/' . $node->id(),
@@ -222,7 +223,7 @@ function book_menu() {
  * @see book_menu()
  */
 function _book_outline_access(EntityInterface $node) {
-  return user_access('administer book outlines') && node_access('view', $node);
+  return Drupal::currentUser()->hasPermission('administer book outlines') && node_access('view', $node);
 }
 
 /**
@@ -287,9 +288,10 @@ function book_get_books() {
  */
 function book_form_node_form_alter(&$form, &$form_state, $form_id) {
   $node = $form_state['controller']->getEntity();
-  $access = user_access('administer book outlines');
+  $account = Drupal::currentUser();
+  $access = $account->hasPermission('administer book outlines');
   if (!$access) {
-    if (user_access('add content to books') && ((!empty($node->book['mlid']) && !$node->isNew()) || book_type_is_allowed($node->getType()))) {
+    if ($account->hasPermission('add content to books') && ((!empty($node->book['mlid']) && !$node->isNew()) || book_type_is_allowed($node->getType()))) {
       // Already in the book hierarchy, or this node type is allowed.
       $access = TRUE;
     }
@@ -451,7 +453,7 @@ function _book_add_form_elements(&$form, &$form_state, EntityInterface $node) {
     }
   }
 
-  if (user_access('create new books') && ($nid == 'new' || ($nid != $node->book['original_bid']))) {
+  if (Drupal::currentUser()->hasPermission('create new books') && ($nid == 'new' || ($nid != $node->book['original_bid']))) {
     // The node can become a new book, if it is not one already.
     $options = array($nid => t('- Create a new book -')) + $options;
   }
@@ -804,7 +806,7 @@ function book_page_alter(&$page) {
  */
 function book_node_presave(EntityInterface $node) {
   // Always save a revision for non-administrators.
-  if (!empty($node->book['bid']) && !user_access('administer nodes')) {
+  if (!empty($node->book['bid']) && !Drupal::currentUser()->hasPermission('administer nodes')) {
     $node->setNewRevision();
   }
   // Make sure a new node gets a new menu link.
@@ -872,7 +874,8 @@ function book_node_predelete(EntityInterface $node) {
  */
 function book_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
   // Prepare defaults for the add/edit form.
-  if (empty($node->book) && (user_access('add content to books') || user_access('administer book outlines'))) {
+  $account = Drupal::currentUser();
+  if (empty($node->book) && ($account->hasPermission('add content to books') || $account->hasPermission('administer book outlines'))) {
     $node->book = array();
 
     $query = \Drupal::request()->query;
