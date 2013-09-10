@@ -19,9 +19,18 @@ comment_permalink:
     _controller: '\Drupal\comment\Controller\CommentController::commentPermalink'
   requirements:
     _entity_access: 'comment.view'
+
 comment_confirm_delete:
   pattern: '/comment/{comment}/delete'
   defaults:
     _entity_form: 'comment.delete'
   requirements:
     _entity_access: 'comment.delete'
+
+comment_reply:
+  pattern: 'comment/reply/{node}/{pid}'
+  defaults:
+    _content: '\Drupal\comment\Controller\CommentController::getReplyForm'
+    pid: ~
+  requirements:
+    _entity_access: 'node.view'

@@ -1,0 +1,6 @@
+services:
+  comment.breadcrumb:
+    class: Drupal\comment\CommentBreadcrumbBuilder
+    tags:
+      - { name: breadcrumb_builder, priority: 100 }
+    arguments: ['@string_translation']
