@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\Core\Template;
+use Drupal\Component\Utility\String;
 
 /**
  * A class that defines a type of boolean HTML attribute.
@@ -41,7 +42,7 @@ class AttributeBoolean extends AttributeValueBase {
    */
   public function __toString() {
     $this->printed = TRUE;
-    return $this->value === FALSE ? '' : check_plain($this->name);
+    return $this->value === FALSE ? '' : String::checkPlain($this->name);
   }
 
 }

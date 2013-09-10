@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\Core\Template;
+use Drupal\Component\Utility\String;
 
 
 /**
@@ -103,7 +104,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
     $return = '';
     foreach ($this->storage as $name => $value) {
       if (!$value->printed()) {
-        $rendered = is_object($value) ? $value->render() : (check_plain($name) . ' = "' . check_plain($value) . '"');
+        $rendered = is_object($value) ? $value->render() : (String::checkPlain($name) . ' = "' . String::checkPlain($value) . '"');
         if ($rendered) {
           $return .= " $rendered";
         }
@@ -133,8 +134,8 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
   /**
    * Returns the whole array.
    */
-  public function value() {
-    return $this->value;
+  public function storage() {
+    return $this->storage;
   }
 
 }
