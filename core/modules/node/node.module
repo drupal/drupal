@@ -1105,8 +1105,12 @@ function node_page_title(EntityInterface $node) {
  *   A unix timestamp indicating the last time the node was changed.
  */
 function node_last_changed($nid, $langcode = NULL) {
-  $language_clause = isset($langcode) ? 'langcode = :langcode' : 'default_langcode = 1';
-  $result = db_query('SELECT changed FROM {node_field_data} WHERE nid = :nid AND ' . $language_clause, array(':nid' => $nid, ':langcode' => $langcode))->fetch();
+  if (isset($langcode)) {
+    $result = db_query('SELECT changed FROM {node_field_data} WHERE nid = :nid AND langcode = :langcode', array(':nid' => $nid, ':langcode' => $langcode))->fetch();
+  }
+  else {
+    $result = db_query('SELECT changed FROM {node_field_data} WHERE nid = :nid AND default_langcode = :default_langcode', array(':nid' => $nid, ':default_langcode' => 1))->fetch();
+  }
   return is_object($result) ? $result->changed : FALSE;
 }
 
