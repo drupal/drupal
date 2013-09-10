@@ -253,6 +253,9 @@ class Term extends EntityNG implements TermInterface {
       'label' => t('Changed'),
       'description' => t('The time that the term was last edited.'),
       'type' => 'integer_field',
+      'property_constraints' => array(
+        'value' => array('EntityChanged' => array()),
+      ),
     );
     return $properties;
   }

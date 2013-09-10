@@ -79,7 +79,7 @@ class FilterNumericTest extends ViewUnitTestBase {
   public function testFilterNumericExposedGroupedSimple() {
     $filters = $this->getGroupedExposedFilters();
     $view = views_get_view('test_view');
-    $view->storage->newDisplay('page', 'Page', 'page_1');
+    $view->newDisplay('page', 'Page', 'page_1');
 
     // Filter: Age, Operator: =, Value: 28
     $filters['age']['group_info']['default_group'] = 1;
@@ -172,7 +172,7 @@ class FilterNumericTest extends ViewUnitTestBase {
   public function testFilterNumericExposedGroupedBetween() {
     $filters = $this->getGroupedExposedFilters();
     $view = views_get_view('test_view');
-    $view->storage->newDisplay('page', 'Page', 'page_1');
+    $view->newDisplay('page', 'Page', 'page_1');
 
     // Filter: Age, Operator: between, Value: 26 and 29
     $filters['age']['group_info']['default_group'] = 2;
@@ -200,7 +200,7 @@ class FilterNumericTest extends ViewUnitTestBase {
   public function testFilterNumericExposedGroupedNotBetween() {
     $filters = $this->getGroupedExposedFilters();
     $view = views_get_view('test_view');
-    $view->storage->newDisplay('page', 'Page', 'page_1');
+    $view->newDisplay('page', 'Page', 'page_1');
 
     // Filter: Age, Operator: between, Value: 26 and 29
     $filters['age']['group_info']['default_group'] = 3;
@@ -288,7 +288,7 @@ class FilterNumericTest extends ViewUnitTestBase {
   public function testFilterNumericExposedGroupedEmpty() {
     $filters = $this->getGroupedExposedFilters();
     $view = views_get_view('test_view');
-    $view->storage->newDisplay('page', 'Page', 'page_1');
+    $view->newDisplay('page', 'Page', 'page_1');
 
     // Filter: Age, Operator: empty, Value:
     $filters['age']['group_info']['default_group'] = 4;
@@ -304,7 +304,7 @@ class FilterNumericTest extends ViewUnitTestBase {
   public function testFilterNumericExposedGroupedNotEmpty() {
     $filters = $this->getGroupedExposedFilters();
     $view = views_get_view('test_view');
-    $view->storage->newDisplay('page', 'Page', 'page_1');
+    $view->newDisplay('page', 'Page', 'page_1');
 
     // Filter: Age, Operator: empty, Value:
     $filters['age']['group_info']['default_group'] = 5;

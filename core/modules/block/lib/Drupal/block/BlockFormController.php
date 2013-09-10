@@ -8,6 +8,7 @@
 namespace Drupal\block;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityFormController;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\Query\QueryFactory;
@@ -49,6 +50,13 @@ class BlockFormController extends EntityFormController {
   protected $languageManager;
 
   /**
+   * The config factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
    * Constructs a BlockFormController object.
    *
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
@@ -57,11 +65,14 @@ class BlockFormController extends EntityFormController {
    *   The entity query factory.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Config\ConfigFactory $config_factory
+   *   The config factory.
    */
-  public function __construct(EntityManager $entity_manager, QueryFactory $entity_query_factory, LanguageManager $language_manager) {
+  public function __construct(EntityManager $entity_manager, QueryFactory $entity_query_factory, LanguageManager $language_manager, ConfigFactory $config_factory) {
     $this->storageController = $entity_manager->getStorageController('block');
     $this->entityQueryFactory = $entity_query_factory;
     $this->languageManager = $language_manager;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -71,7 +82,8 @@ class BlockFormController extends EntityFormController {
     return new static(
       $container->get('entity.manager'),
       $container->get('entity.query'),
-      $container->get('language_manager')
+      $container->get('language_manager'),
+      $container->get('config.factory')
     );
   }
 
@@ -228,6 +240,32 @@ class BlockFormController extends EntityFormController {
       '#description' => $this->t('Show this block only for the selected role(s). If you select no roles, the block will be visible to all users.'),
     );
 
+    // Theme settings.
+    if ($theme = $entity->get('theme')) {
+      $form['theme'] = array(
+        '#type' => 'value',
+        '#value' => $entity->get('theme'),
+      );
+    }
+    else {
+      $theme_options = array();
+      foreach (list_themes() as $theme_name => $theme_info) {
+        if (!empty($theme_info->status)) {
+          $theme_options[$theme_name] = $theme_info->info['name'];
+        }
+      }
+      $theme = $this->configFactory->get('system.theme')->get('default');
+      $form['theme'] = array(
+        '#type' => 'select',
+        '#options' => $theme_options,
+        '#title' => t('Theme'),
+        '#default_value' => $theme,
+        '#ajax' => array(
+          'callback' => array($this, 'themeSwitch'),
+          'wrapper' => 'edit-block-region-wrapper',
+        ),
+      );
+    }
     // Region settings.
     $form['region'] = array(
       '#type' => 'select',
@@ -235,9 +273,19 @@ class BlockFormController extends EntityFormController {
       '#description' => $this->t('Select the region where this block should be displayed.'),
       '#default_value' => $entity->get('region'),
       '#empty_value' => BLOCK_REGION_NONE,
-      '#options' => system_region_list($entity->get('theme'), REGIONS_VISIBLE),
+      '#options' => system_region_list($theme, REGIONS_VISIBLE),
+      '#prefix' => '<div id="edit-block-region-wrapper">',
+      '#suffix' => '</div>',
     );
     return $form;
+  }
+
+  /**
+   * Handles switching the available regions based on the selected theme.
+   */
+  public function themeSwitch($form, &$form_state) {
+    $form['region']['#options'] = system_region_list($form_state['values']['theme'], REGIONS_VISIBLE);
+    return $form['region'];
   }
 
   /**
@@ -257,7 +305,7 @@ class BlockFormController extends EntityFormController {
 
     $entity = $this->entity;
     if ($entity->isNew()) {
-      form_set_value($form['id'], $entity->get('theme') . '.' . $form_state['values']['machine_name'], $form_state);
+      form_set_value($form['id'], $form_state['values']['theme'] . '.' . $form_state['values']['machine_name'], $form_state);
     }
     if (!empty($form['machine_name']['#disabled'])) {
       $config_id = explode('.', $form_state['values']['machine_name']);
@@ -293,7 +341,7 @@ class BlockFormController extends EntityFormController {
 
     drupal_set_message($this->t('The block configuration has been saved.'));
     Cache::invalidateTags(array('content' => TRUE));
-    $form_state['redirect'] = array('admin/structure/block/list/' . $entity->get('theme'), array(
+    $form_state['redirect'] = array('admin/structure/block/list/' . $form_state['values']['theme'], array(
       'query' => array('block-placement' => drupal_html_class($this->entity->id())),
     ));
   }

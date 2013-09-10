@@ -27,7 +27,15 @@ comment_confirm_delete:
   requirements:
     _entity_access: 'comment.delete'
 
-comment_overview_bundles:
+comment_reply:
+  pattern: 'comment/reply/{entity_type}/{entity_id}/{field_name}/{pid}'
+  defaults:
+    _content: '\Drupal\comment\Controller\CommentController::getReplyForm'
+    pid: ~
+  requirements:
+    _access: 'TRUE'
+
+comment_bundle_list:
   pattern: '/admin/structure/comments'
   defaults:
     _content: 'Drupal\comment\Controller\AdminController::overviewBundles'

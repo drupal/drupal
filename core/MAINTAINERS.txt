@@ -55,10 +55,12 @@ Configuration system
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
 - Alex Pott 'alexpott' http://drupal.org/user/157725
 - Matthew Tift 'mtift' https://drupal.org/user/751908
+- Justin Randell 'beejeebus' https://drupal.org/user/38580
 
 Configuration entity system
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
 - Tim Plunkett 'tim.plunkett' http://drupal.org/user/241634
+- Justin Randell 'beejeebus' https://drupal.org/user/38580
 
 Cron system
 - Károly Négyesi 'chx' http://drupal.org/user/9446

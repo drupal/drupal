@@ -20,6 +20,7 @@ services:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin }
+      - { name: persist }
     factory_method: get
     factory_service: cache_factory
     arguments: [config]

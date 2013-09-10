@@ -1,15 +1,15 @@
 services:
+  comment.breadcrumb:
+    class: Drupal\comment\CommentBreadcrumbBuilder
+    tags:
+      - { name: breadcrumb_builder, priority: 100 }
+    arguments: ['@string_translation', '@plugin.manager.entity']
+
   comment.subscriber:
     class: Drupal\comment\Routing\RouteSubscriber
     arguments: ['@module_handler']
     tags:
      - { name: event_subscriber }
-
-  comment.breadcrumb:
-    class: Drupal\comment\CommentBreadcrumbBuilder
-    arguments: ['@plugin.manager.entity']
-    tags:
-      - { name: breadcrumb_builder, priority: 1002 }
 
   comment.manager:
     class: Drupal\comment\CommentManager

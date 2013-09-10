@@ -256,37 +256,6 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   }
 
   /**
-   * Creates a new display and a display handler instance for it.
-   *
-   * @param string $plugin_id
-   *   (optional) The plugin type from the Views plugin annotation. Defaults to
-   *   'page'.
-   * @param string $title
-   *   (optional) The title of the display. Defaults to NULL.
-   * @param string $id
-   *   (optional) The ID to use, e.g., 'default', 'page_1', 'block_2'. Defaults
-   *   to NULL.
-   *
-   * @return string|\Drupal\views\Plugin\views\display\DisplayPluginBase
-   *   A new display plugin instance if executable is set, the new display ID
-   *   otherwise.
-   */
-  public function newDisplay($plugin_id = 'page', $title = NULL, $id = NULL) {
-    $id = $this->addDisplay($plugin_id, $title, $id);
-
-    // We can't use get() here as it will create an ViewExecutable instance if
-    // there is not already one.
-    if (isset($this->executable)) {
-      $executable = $this->getExecutable();
-      $executable->initDisplay();
-      $executable->displayHandlers->addInstanceID($id);
-      return $executable->displayHandlers->get($id);
-    }
-
-    return $id;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function &getDisplay($display_id) {

@@ -226,7 +226,7 @@ function comment_menu() {
   $items['admin/structure/comments'] = array(
     'title' => 'Comment forms',
     'description' => 'Manage fields and displays settings for comment forms.',
-    'route_name' => 'comment_overview_bundles',
+    'route_name' => 'comment_bundle_list',
   );
   $items['admin/structure/comments/manage/%'] = array(
     'title' => 'Comment form',
@@ -278,6 +278,7 @@ function comment_menu() {
     'route_name' => 'comment_confirm_delete',
     'weight' => 20,
   );
+  /*
   $items['comment/reply/%/%comment_entity_reply/%'] = array(
     'title' => 'Add new comment',
     'page callback' => 'comment_reply',
@@ -286,7 +287,7 @@ function comment_menu() {
     'access callback' => 'comment_reply_access',
     'access arguments' => array(3),
     'file' => 'comment.pages.inc',
-  );
+  );*/
 
   return $items;
 }
@@ -658,7 +659,12 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
  *   The renderable array for the comment addition form.
  */
 function comment_add(EntityInterface $entity, $field_name = 'comment', $pid = NULL) {
-  $values = array('entity_id' => $entity->id(), 'pid' => $pid, 'entity_type' => $entity->entityType(), 'field_name' => $field_name);
+  $values = array(
+    'entity_type' => $entity->entityType(),
+    'entity_id' => $entity->id(),
+    'field_id' => $entity->entityType() . '__' . $field_name,
+    'pid' => $pid,
+  );
   $comment = entity_create('comment', $values);
   return Drupal::entityManager()->getForm($comment);
 }

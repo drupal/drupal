@@ -217,6 +217,7 @@ function color_scheme_form($complete_form, &$form_state, $theme) {
         '#title' => check_plain($names[$name]),
         '#default_value' => $value,
         '#size' => 8,
+        '#attributes' => array('dir' => 'ltr'),
       );
     }
   }

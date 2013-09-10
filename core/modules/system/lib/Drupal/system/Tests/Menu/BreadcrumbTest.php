@@ -48,9 +48,9 @@ class BreadcrumbTest extends MenuTestBase {
       'machine_name' => 'system_menu_tools',
       'region' => 'content',
     );
-    $this->drupalPlaceBlock('system_menu_block:menu-tools', $settings);
+    $this->drupalPlaceBlock('system_menu_block:tools', $settings);
     $settings['theme'] = \Drupal::config('system.theme')->get('admin');
-    $this->drupalPlaceBlock('system_menu_block:menu-tools', $settings);
+    $this->drupalPlaceBlock('system_menu_block:tools', $settings);
   }
 
   /**

@@ -169,7 +169,7 @@ class ViewStorageTest extends ViewUnitTestBase {
     // Check whether a display can be added and saved to a View.
     $view = entity_load('view', 'test_view_storage_new');
 
-    $new_id = $view->newDisplay('page', 'Test', 'test');
+    $new_id = $view->addDisplay('page', 'Test', 'test');
     $display = $view->get('display');
 
     // Ensure the right display_plugin is created/instantiated.
@@ -247,27 +247,6 @@ class ViewStorageTest extends ViewUnitTestBase {
     // $this->assertEqual($view->generateDisplayId('feed'), 'feed_1', 'The generated ID for the first instance of a plugin type should have an suffix of _1.');
     // $view->addDisplay('feed', 'feed title');
     // $this->assertEqual($view->generateDisplayId('feed'), 'feed_2', 'The generated ID for the first instance of a plugin type should have an suffix of _2.');
-
-    // Tests Drupal\views\Entity\View::newDisplay().
-    $view = $this->controller->create(array());
-    $view->newDisplay('default');
-
-    $display = $view->newDisplay('page');
-    $this->assertEqual($display, 'page_1');
-    $display = $view->newDisplay('page');
-    $this->assertEqual($display, 'page_2');
-    $display = $view->newDisplay('feed');
-    $this->assertEqual($display, 'feed_1');
-
-    $executable = $view->getExecutable();
-    $executable->initDisplay();
-
-    $this->assertTrue($executable->displayHandlers->get('page_1') instanceof Page);
-    $this->assertTrue($executable->displayHandlers->get('page_1')->default_display instanceof DefaultDisplay);
-    $this->assertTrue($executable->displayHandlers->get('page_2') instanceof Page);
-    $this->assertTrue($executable->displayHandlers->get('page_2')->default_display instanceof DefaultDisplay);
-    $this->assertTrue($executable->displayHandlers->get('feed_1') instanceof Feed);
-    $this->assertTrue($executable->displayHandlers->get('feed_1')->default_display instanceof DefaultDisplay);
 
     // Tests item related methods().
     $view = $this->controller->create(array('base_table' => 'views_test_data'));

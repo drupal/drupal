@@ -2377,7 +2377,11 @@ abstract class WebTestBase extends TestBase {
       ));
     }
     $options['absolute'] = TRUE;
-    return $this->assertEqual($this->getUrl(), $this->container->get('url_generator')->generateFromPath($path, $options), $message, $group);
+    // Paths in query strings can be encoded or decoded with no functional
+    // difference, decode them for comparison purposes.
+    $actual_url = urldecode($this->getUrl());
+    $expected_url = urldecode($this->container->get('url_generator')->generateFromPath($path, $options));
+    return $this->assertEqual($actual_url, $expected_url, $message, $group);
   }
 
   /**

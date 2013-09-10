@@ -8,6 +8,7 @@
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Template\Attribute;
 use Drupal\menu_link\Entity\MenuLink;
 use Drupal\menu_link\MenuLinkStorageController;
@@ -969,7 +970,7 @@ function _menu_link_translate(&$item, $translate = FALSE) {
  *   If the system path in $href does not match the $route.
  */
 function menu_item_route_access(Route $route, $href, &$map) {
-  $request = Request::create('/' . $href);
+  $request = RequestHelper::duplicate(\Drupal::request(), '/' . $href);
   $request->attributes->set('_system_path', $href);
   // Attempt to match this path to provide a fully built request to the
   // access checker.

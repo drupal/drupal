@@ -50,7 +50,7 @@ class BlockUiTest extends WebTestBase {
       array(
         'label' => 'Tools',
         'tr' => '5',
-        'plugin_id' => 'system_menu_block:menu-tools',
+        'plugin_id' => 'system_menu_block:tools',
         'settings' => array('region' => 'sidebar_second', 'machine_name' => 'tools'),
         'test_weight' => '-1',
       ),

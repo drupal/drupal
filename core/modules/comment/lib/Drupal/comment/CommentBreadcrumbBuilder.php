@@ -9,11 +9,20 @@ namespace Drupal\comment;
 
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
 use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\StringTranslation\TranslationManager;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
  * Class to define the comment breadcrumb builder.
  */
 class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
+
+  /**
+   * The translation manager service.
+   *
+   * @var \Drupal\Core\StringTranslation\TranslationManager
+   */
+  protected $translation;
 
   /**
    * Stores the Entity manager service.
@@ -23,12 +32,15 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $entityManager;
 
   /**
-   * Constructs a new CommentBreadcrumbBuilder.
+   * Constructs a CommentBreadcrumbBuilder object.
    *
+   * @param \Drupal\Core\StringTranslation\TranslationManager $translation
+   *   The translation manager.
    * @param \Drupal\Core\Entity\EntityManager
    *   The entity manager.
    */
-  public function __construct(EntityManager $entity_manager) {
+  public function __construct(TranslationManager $translation, EntityManager $entity_manager) {
+    $this->translation = $translation;
     $this->entityManager = $entity_manager;
   }
 
@@ -36,27 +48,17 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * {@inheritdoc}
    */
   public function build(array $attributes) {
-    // @todo This only works for legacy routes. Once
-    // comment/reply/%/%comment_entity_reply/% is converted to the new router
-    // this code will need to be updated.
-    if (isset($attributes['_drupal_menu_item'])) {
-      $item = $attributes['_drupal_menu_item'];
-      if ($item['path'] == 'comment/reply/%/%/%') {
-        $entity = $item['map'][3];
-        // Load the object in case of missing wildcard loaders.
-        if (!is_object($entity)) {
-          $entities = $this->entityManager->getStorageController($item['map'][2], array($entity));
-          $entity = reset($entities);
-        }
-        $breadcrumb[] = l(t('Home'), NULL);
-        $uri = $entity->uri();
-        $breadcrumb[] = l($entity->label(), $uri['path'], $uri['options']);
-      }
-    }
+    //$breadcrumb[] = l(t('Home'), NULL);
+    //return $breadcrumb;
+  }
 
-    if (!empty($breadcrumb)) {
-      return $breadcrumb;
-    }
+  /**
+   * Translates a string to the current language or to a given language.
+   *
+   * See the t() documentation for details.
+   */
+  protected function t($string, array $args = array(), array $options = array()) {
+    return $this->translation->translate($string, $args, $options);
   }
 
 }
