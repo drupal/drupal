@@ -8,6 +8,7 @@
 namespace Drupal\Core\Access;
 
 use Drupal\Core\ParamConverter\ParamConverterManager;
+use Drupal\Core\Routing\RequestHelper;
 use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouteCollection;
@@ -191,7 +192,7 @@ class AccessManager extends ContainerAware {
       $route = $this->routeProvider->getRouteByName($route_name, $parameters);
       if (empty($route_request)) {
         // Create a request and copy the account from the current request.
-        $route_request = Request::create($this->urlGenerator->generate($route_name, $parameters));
+        $route_request = RequestHelper::duplicate($this->request, $this->urlGenerator->generate($route_name, $parameters));
         $defaults = $parameters;
         $defaults['_account'] = $this->request->attributes->get('_account');
         $defaults[RouteObjectInterface::ROUTE_OBJECT] = $route;
