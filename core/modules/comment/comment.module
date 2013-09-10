@@ -278,36 +278,8 @@ function comment_menu() {
     'route_name' => 'comment_confirm_delete',
     'weight' => 20,
   );
-  /*
-  $items['comment/reply/%/%comment_entity_reply/%'] = array(
-    'title' => 'Add new comment',
-    'page callback' => 'comment_reply',
-    'page arguments' => array(3, 4),
-    'load arguments' => array('%map'),
-    'access callback' => 'comment_reply_access',
-    'access arguments' => array(3),
-    'file' => 'comment.pages.inc',
-  );*/
 
   return $items;
-}
-
-/**
- * Dynamic menu loader callback for comment/reply/%/%comment_entity/%.
- *
- * Loads the entity given and entity id and entity type
- *
- * @param int $entity_id
- *   The entity ID.
- * @param array $args
- *   The menu args passed from the %map load argument.
- *
- * @return \Drupal\Core\Entity\EntityInterface|false
- *   Returns an entity object or FALSE if not found.
- */
-function comment_entity_reply_load($entity_id, $args) {
-  list(, ,$entity_type, $entity_id, $field_name) = $args;
-  return entity_load($entity_type, $entity_id);
 }
 
 /**
@@ -326,23 +298,6 @@ function comment_count_unpublished() {
     ':status' => COMMENT_NOT_PUBLISHED,
   ))->fetchField();
   return t('Unapproved comments (@count)', array('@count' => $count));
-}
-
-/**
- * Access callback for testing user has access to view the subject of comments.
- *
- * Checks the user has view access to the entity which the comment reply is
- * against.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity which the comment field is attached to.
- *
- * @return bool
- *   TRUE or FALSE if the user has access
- */
-function comment_reply_access(EntityInterface $entity) {
-  // @todo Convert to access checker after https://drupal.org/node/1978958
-  return $entity->access('view');
 }
 
 /**
