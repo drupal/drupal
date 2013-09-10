@@ -8,6 +8,16 @@
 use Drupal\Core\Entity\EntityInterface;
 
 /**
+ * Implements hook_admin_paths().
+ */
+function tour_test_admin_paths() {
+  $paths = array(
+    'tour-test-1' => TRUE,
+  );
+  return $paths;
+}
+
+/**
  * Implements hook_menu().
  */
 function tour_test_menu() {
