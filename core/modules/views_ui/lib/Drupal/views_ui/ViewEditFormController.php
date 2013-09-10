@@ -682,6 +682,13 @@ class ViewEditFormController extends ViewFormControllerBase {
       ),
     );
 
+    if ($view->access('delete')) {
+      $element['extra_actions']['#links']['delete'] = array(
+        'title' => $this->t('Delete view'),
+        'href' => "admin/structure/views/view/{$view->id()}/delete",
+      );
+    }
+
     // Let other modules add additional links here.
     \Drupal::moduleHandler()->alter('views_ui_display_top_links', $element['extra_actions']['#links'], $view, $display_id);
 
