@@ -14,21 +14,6 @@ use Drupal\Component\Utility\NestedArray;
 const BLOCK_REGION_NONE = -1;
 
 /**
- * Users cannot control whether or not they see this block.
- */
-const BLOCK_CUSTOM_FIXED = 0;
-
-/**
- *  Shows this block by default, but lets individual users hide it.
- */
-const BLOCK_CUSTOM_ENABLED = 1;
-
-/**
- * Hides this block by default but lets individual users show it.
- */
-const BLOCK_CUSTOM_DISABLED = 2;
-
-/**
  * Shows this block on every page except the listed pages.
  */
 const BLOCK_VISIBILITY_NOTLISTED = 0;
