@@ -254,6 +254,18 @@ class CommentUserTest extends WebTestBase {
    * Tests anonymous comment functionality.
    */
   function testCommentUser() {
+    $limited_user = $this->drupalCreateUser(array(
+      'administer user fields'
+    ));
+    $this->drupalLogin($limited_user);
+    // Test that default field exists.
+    $this->drupalGet('admin/config/people/accounts/fields');
+    $this->assertText(t('Comment settings'));
+    $this->assertLinkByHref('admin/config/people/accounts/fields/user.user.comment');
+    // Test widget hidden option is not visible when there's no comments.
+    $this->drupalGet('admin/config/people/accounts/fields/user.user.comment');
+    $this->assertNoField('edit-default-value-input-comment-und-0-status-0');
+
     $this->drupalLogin($this->admin_user);
 
     // Post a comment.
@@ -351,26 +363,40 @@ class CommentUserTest extends WebTestBase {
     $this->assertText('You are not authorized to view comments');
     $this->assertNoText($comment1->subject->value, 'Comment not displayed.');
 
-    // Test settings of the field.
+    // Test comment field widget changes.
     $limited_user = $this->drupalCreateUser(array(
-      //'administer account settings',
-      'administer comments',
       'administer user fields'
     ));
     $this->drupalLogin($limited_user);
-    //$this->drupalGet('admin/config/people/accounts');
-    $this->drupalGet('admin/config/people/accounts/fields');
-    $this->assertText(t('Comment settings'));
     $this->drupalGet('admin/config/people/accounts/fields/user.user.comment');
+    $this->assertNoField('edit-default-value-input-comment-und-0-status-0');
+    $this->assertNoFieldChecked('edit-default-value-input-comment-und-0-status-1');
     $this->assertFieldChecked('edit-default-value-input-comment-und-0-status-2');
-    // Test hidden option in default settings.
-    $edit = array('default_value_input[comment][und][0][status]' => COMMENT_HIDDEN);
+    // Test hidden option change in field settings.
+    $edit = array('default_value_input[comment][und][0][status]' => COMMENT_CLOSED);
     $this->drupalPost(NULL, $edit, t('Save settings'));
     $this->drupalGet('admin/config/people/accounts/fields/user.user.comment');
-    $this->assertFieldChecked('edit-default-value-input-comment-und-0-status-0');
+    $this->assertNoFieldChecked('edit-default-value-input-comment-und-0-status-0');
+    $this->assertFieldChecked('edit-default-value-input-comment-und-0-status-1');
+    $this->assertNoFieldChecked('edit-default-value-input-comment-und-0-status-2');
     $this->drupalGet('user/' . $this->web_user->id());
     $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
     $this->assertNoLink('Add new comment', 'Link to add comment was found.');
+
+    // Test the new user commenting inherits default.
+    $limited_user = $this->drupalCreateUser(array(
+      'access user profiles',
+    ));
+    $this->drupalLogin($limited_user);
+    $this->drupalGet('user/' . $limited_user->id() . '/edit');
+    // @todo somehow default status applied, should be 1 checked.
+    $this->assertFieldChecked('edit-comment-und-0-status-2');
+    $this->assertNoFieldChecked('edit-comment-und-0-status-1');
+    $this->assertNoFieldChecked('edit-comment-und-0-status-0');
+
+    $this->drupalGet('comment/reply/user/comment/' . $limited_user->id());
+    $this->assertNoFieldByName('subject', '', 'Subject field found.');
+    $this->assertNoFieldByName("comment_body[$langcode][0][value]", '', 'Comment field found.');
   }
 
 }
