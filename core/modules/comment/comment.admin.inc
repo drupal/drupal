@@ -144,7 +144,8 @@ function comment_admin_overview($form, &$form_state, $arg) {
           '#type' => 'link',
           '#title' => $entity->label(),
           '#href' => $entity_uri['path'],
-          '#options' => $entity_uri['options']
+          '#options' => $entity_uri['options'],
+          '#access' => $entity->access('view'),
         ),
       ),
       'changed' => format_date($comment->changed->value, 'short'),

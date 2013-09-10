@@ -22,7 +22,7 @@ class CommentUserTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('comment', 'user');
+  public static $modules = array('comment', 'user', 'field_ui');
 
   /**
    * An administrative user with permission to configure comment settings.
@@ -290,6 +290,15 @@ class CommentUserTest extends WebTestBase {
     $this->drupalGet('admin/content/comment');
     $this->assertRaw('comments[' . $comment1->id() . ']', 'Comment was published.');
 
+    // Check that entity access applies to administrative page.
+    $this->assertText($this->web_user->label(), 'Name of commented account found.');
+    $limited_user = $this->drupalCreateUser(array(
+      'administer comments',
+    ));
+    $this->drupalLogin($limited_user);
+    $this->drupalGet('admin/content/comment');
+    $this->assertNoText($this->web_user->label(), 'No commented account name found.');
+
     $this->drupalLogout();
 
     // Reset.
@@ -341,6 +350,27 @@ class CommentUserTest extends WebTestBase {
     $this->drupalGet('comment/reply/user/' . $this->web_user->id() . '/comment/' . $comment1->id());
     $this->assertText('You are not authorized to view comments');
     $this->assertNoText($comment1->subject->value, 'Comment not displayed.');
+
+    // Test settings of the field.
+    $limited_user = $this->drupalCreateUser(array(
+      //'administer account settings',
+      'administer comments',
+      'administer user fields'
+    ));
+    $this->drupalLogin($limited_user);
+    //$this->drupalGet('admin/config/people/accounts');
+    $this->drupalGet('admin/config/people/accounts/fields');
+    $this->assertText(t('Comment settings'));
+    $this->drupalGet('admin/config/people/accounts/fields/user.user.comment');
+    $this->assertFieldChecked('edit-default-value-input-comment-und-0-status-2');
+    // Test hidden option in default settings.
+    $edit = array('default_value_input[comment][und][0][status]' => COMMENT_HIDDEN);
+    $this->drupalPost(NULL, $edit, t('Save settings'));
+    $this->drupalGet('admin/config/people/accounts/fields/user.user.comment');
+    $this->assertFieldChecked('edit-default-value-input-comment-und-0-status-0');
+    $this->drupalGet('user/' . $this->web_user->id());
+    $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
+    $this->assertNoLink('Add new comment', 'Link to add comment was found.');
   }
 
 }
