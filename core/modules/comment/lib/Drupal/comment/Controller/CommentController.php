@@ -227,7 +227,6 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
     // Entity loaded.
     $uri = $entity->uri();
     $build = array();
-    $build['#title'] = $this->t('Add new comment');
 
     // Check if the user has the proper permissions.
     if (!$account->hasPermission('post comments')) {

@@ -32,6 +32,7 @@ comment_reply:
   defaults:
     _content: '\Drupal\comment\Controller\CommentController::getReplyForm'
     pid: ~
+    _title: 'Add new comment'
   requirements:
     _access: 'TRUE'
 

@@ -48,17 +48,21 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * {@inheritdoc}
    */
   public function build(array $attributes) {
-    //$breadcrumb[] = l(t('Home'), NULL);
-    //return $breadcrumb;
-  }
+    if (!empty($attributes[RouteObjectInterface::ROUTE_NAME]) && $attributes[RouteObjectInterface::ROUTE_NAME] == 'comment_reply'
+      && isset($attributes['entity_type'])
+      && isset($attributes['entity_id'])
+      && isset($attributes['field_name'])
+      ) {
+      $breadcrumb[] = l(t('Home'), NULL);
+      // @todo clean-up.
+      $entity = entity_load($attributes['entity_type'], $attributes['entity_id']);
+      $uri = $entity->uri();
+      $breadcrumb[] = l($entity->label(), $uri['path'], $uri['options']);
+    }
 
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translation->translate($string, $args, $options);
+    if (!empty($breadcrumb)) {
+      return $breadcrumb;
+    }
   }
 
 }
