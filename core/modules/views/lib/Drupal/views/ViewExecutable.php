@@ -701,6 +701,31 @@ class ViewExecutable {
   }
 
   /**
+   * Creates a new display and a display handler instance for it.
+   *
+   * @param string $plugin_id
+   *   (optional) The plugin type from the Views plugin annotation. Defaults to
+   *   'page'.
+   * @param string $title
+   *   (optional) The title of the display. Defaults to NULL.
+   * @param string $id
+   *   (optional) The ID to use, e.g., 'default', 'page_1', 'block_2'. Defaults
+   *   to NULL.
+   *
+   * @return \Drupal\views\Plugin\views\display\DisplayPluginBase
+   *   A new display plugin instance if executable is set, the new display ID
+   *   otherwise.
+   */
+  public function newDisplay($plugin_id = 'page', $title = NULL, $id = NULL) {
+    $this->initDisplay();
+
+    $id = $this->storage->addDisplay($plugin_id, $title, $id);
+    $this->displayHandlers->addInstanceID($id);
+
+    return $this->displayHandlers->get($id);
+  }
+
+  /**
    * Gets the current style plugin.
    *
    * @return \Drupal\views\Plugin\views\style\StylePluginBase
