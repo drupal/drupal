@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Config;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
@@ -120,7 +121,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
       // While not all written data is read back, setting the cache instead of
       // just deleting it avoids cache rebuild stampedes.
       $this->cache->set($name, $data, CacheBackendInterface::CACHE_PERMANENT);
-      $this->cache->deleteTags(array($this::FIND_BY_PREFIX_CACHE_TAG => TRUE));
+      Cache::deleteTags(array($this::FIND_BY_PREFIX_CACHE_TAG => TRUE));
       $this->findByPrefixCache = array();
       return TRUE;
     }
@@ -135,7 +136,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
     // rebuilding the cache before the storage is gone.
     if ($this->storage->delete($name)) {
       $this->cache->delete($name);
-      $this->cache->deleteTags(array($this::FIND_BY_PREFIX_CACHE_TAG => TRUE));
+      Cache::deleteTags(array($this::FIND_BY_PREFIX_CACHE_TAG => TRUE));
       $this->findByPrefixCache = array();
       return TRUE;
     }
@@ -151,7 +152,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
     if ($this->storage->rename($name, $new_name)) {
       $this->cache->delete($name);
       $this->cache->delete($new_name);
-      $this->cache->deleteTags(array($this::FIND_BY_PREFIX_CACHE_TAG => TRUE));
+      Cache::deleteTags(array($this::FIND_BY_PREFIX_CACHE_TAG => TRUE));
       $this->findByPrefixCache = array();
       return TRUE;
     }
