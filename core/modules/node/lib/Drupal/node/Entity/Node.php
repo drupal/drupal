@@ -376,7 +376,7 @@ class Node extends EntityNG implements NodeInterface {
       'description' => t('The time that the node was last edited.'),
       'type' => 'integer_field',
       'property_constraints' => array(
-        'value' => array('NodeChanged' => array()),
+        'value' => array('EntityChanged' => array()),
       ),
     );
     $properties['comment'] = array(
