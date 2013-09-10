@@ -23,7 +23,7 @@ use Drupal\system\MenuInterface;
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController",
  *     "access" = "Drupal\system\MenuAccessController"
  *   },
- *   config_prefix = "menu.menu",
+ *   config_prefix = "system.menu",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
@@ -60,5 +60,35 @@ class Menu extends ConfigEntityBase implements MenuInterface {
    * @var string
    */
   public $description;
+
+  /**
+   * The locked status of this menu.
+   *
+   * @var bool
+   */
+  protected $locked = FALSE;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getExportProperties() {
+    $properties = parent::getExportProperties();
+    // @todo Make $description protected and include it here, see
+    //   https://drupal.org/node/2030645.
+    $names = array(
+      'locked',
+    );
+    foreach ($names as $name) {
+      $properties[$name] = $this->get($name);
+    }
+    return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isLocked() {
+    return (bool) $this->locked;
+  }
 
 }

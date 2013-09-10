@@ -8,29 +8,53 @@
 namespace Drupal\system\Plugin\Derivative;
 
 use Drupal\Component\Plugin\Derivative\DerivativeBase;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Plugin\Discovery\ContainerDerivativeInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides block plugin definitions for system menus.
+ * Provides block plugin definitions for custom menus.
  *
- * @see \Drupal\system\Plugin\block\block\SystemMenuBlock
+ * @see \Drupal\system\Plugin\Block\SystemMenuBlock
  */
-class SystemMenuBlock extends DerivativeBase {
+class SystemMenuBlock extends DerivativeBase implements ContainerDerivativeInterface {
+
+  /**
+   * The menu storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   */
+  protected $menuStorage;
+
+  /**
+   * Constructs new SystemMenuBlock.
+   *
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $menu_storage
+   *   The menu storage.
+   */
+  public function __construct(EntityStorageControllerInterface $menu_storage) {
+    $this->menuStorage = $menu_storage;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, $base_plugin_id) {
+    return new static(
+      $container->get('entity.manager')->getStorageController('menu')
+    );
+  }
+
   /**
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions(array $base_plugin_definition) {
-    // Provide a block plugin definition for each system menu.
-    foreach (menu_list_system_menus() as $menu => $name) {
-      // The block deltas need to be prefixed with 'menu-', since the 'main'
-      // menu would otherwise clash with the 'main' page content block.
-      $menu_key = 'menu-' . $menu;
-      $this->derivatives[$menu_key] = $base_plugin_definition;
-      // It is possible that users changed the menu label. Fall back on the
-      // built-in menu label if the entity was not found.
-      $entity = entity_load('menu', $menu);
-      $this->derivatives[$menu_key]['admin_label'] = !empty($entity) ? $entity->label() : $name;
-      $this->derivatives[$menu_key]['cache'] = DRUPAL_NO_CACHE;
+    foreach ($this->menuStorage->loadMultiple() as $menu => $entity) {
+      $this->derivatives[$menu] = $base_plugin_definition;
+      $this->derivatives[$menu]['admin_label'] = $entity->label();
+      $this->derivatives[$menu]['cache'] = DRUPAL_NO_CACHE;
     }
-    return parent::getDerivativeDefinitions($base_plugin_definition);
+    return $this->derivatives;
   }
+
 }

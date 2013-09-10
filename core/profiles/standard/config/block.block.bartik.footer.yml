@@ -3,7 +3,7 @@ weight: '0'
 status: '1'
 langcode: en
 region: footer
-plugin: 'system_menu_block:menu-footer'
+plugin: 'system_menu_block:footer'
 settings:
   label: 'Footer menu'
   module: system

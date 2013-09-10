@@ -589,7 +589,7 @@ function block_user_role_delete($role) {
  */
 function block_menu_delete($menu) {
   foreach (entity_load_multiple('block') as $block) {
-    if ($block->get('plugin') == 'menu_menu_block:' . $menu->id()) {
+    if ($block->get('plugin') == 'system_menu_block:' . $menu->id()) {
       $block->delete();
     }
   }

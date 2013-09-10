@@ -38,7 +38,7 @@ class BlockTemplateSuggestionsUnitTest extends WebTestBase {
     // and generates possibilities for each level of derivative.
     // @todo Clarify this comment.
     $block = entity_create('block', array(
-      'plugin' => 'system_menu_block:menu-admin',
+      'plugin' => 'system_menu_block:admin',
       'region' => 'footer',
       'id' => \Drupal::config('system.theme')->get('default') . '.machinename',
     ));
@@ -51,7 +51,7 @@ class BlockTemplateSuggestionsUnitTest extends WebTestBase {
     // Test adding a class to the block content.
     $variables['content_attributes']['class'][] = 'test-class';
     template_preprocess_block($variables);
-    $this->assertEqual($variables['theme_hook_suggestions'], array('block__system', 'block__system_menu_block', 'block__system_menu_block__menu_admin', 'block__machinename'));
+    $this->assertEqual($variables['theme_hook_suggestions'], array('block__system', 'block__system_menu_block', 'block__system_menu_block__admin', 'block__machinename'));
     $this->assertEqual($variables['content_attributes']['class'], array('test-class', 'content'), 'Default .content class added to block content_attributes');
   }
 

@@ -35,8 +35,8 @@ class TrailTest extends MenuTestBase {
 
     // This test puts menu links in the Tools and Administration menus and then
     // tests for their presence on the page.
-    $this->drupalPlaceBlock('system_menu_block:menu-tools');
-    $this->drupalPlaceBlock('system_menu_block:menu-admin');
+    $this->drupalPlaceBlock('system_menu_block:tools');
+    $this->drupalPlaceBlock('system_menu_block:admin');
   }
 
   /**

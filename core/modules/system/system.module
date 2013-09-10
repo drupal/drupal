@@ -9,7 +9,6 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Utility\ModuleInfo;
-use Drupal\system\Plugin\Block\SystemMenuBlock;
 use Drupal\user\UserInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -2283,17 +2282,24 @@ function system_user_timezone(&$form, &$form_state) {
  */
 function system_preprocess_block(&$variables) {
   // Derive the base plugin ID.
-  list($plugin_id) = explode(':', $variables['plugin_id'] . ':');
+  // @todo Clean up when http://drupal.org/node/1874498 lands.
+  list($plugin_id, $derivative) = explode(':', $variables['plugin_id'] . ':');
   switch ($plugin_id) {
     case 'system_powered_by_block':
       $variables['attributes']['role'] = 'complementary';
       break;
+
     case 'system_help_block':
       $variables['attributes']['role'] = 'complementary';
       break;
+
     case 'system_menu_block':
-      $variables['attributes']['role'] = 'navigation';
-      $variables['attributes']['class'][] = 'block-menu';
+      $menus = menu_list_system_menus();
+      if (isset($menus[$derivative])) {
+        $variables['attributes']['role'] = 'navigation';
+        $variables['attributes']['class'][] = 'block-menu';
+      }
+      break;
   }
 }
 

@@ -158,14 +158,12 @@ class MenuTest extends MenuWebTestBase {
     $this->drupalGet('admin/structure/menu');
     $this->assertText($label, 'Menu created');
 
-    // Enable the custom menu block.
-    $menu_name = 'menu-' . $menu_name; // Drupal prepends the name with 'menu-'.
     // Confirm that the custom menu block is available.
     $this->drupalGet('admin/structure/block/list/' . \Drupal::config('system.theme')->get('default'));
     $this->assertText($label);
 
     // Enable the block.
-    $this->drupalPlaceBlock('menu_menu_block:' . $menu_name);
+    $this->drupalPlaceBlock('system_menu_block:' . $menu_name);
     return menu_load($menu_name);
   }
 
@@ -407,7 +405,7 @@ class MenuTest extends MenuWebTestBase {
   public function testBlockContextualLinks() {
     $this->drupalLogin($this->drupalCreateUser(array('administer menu', 'access contextual links', 'administer blocks')));
     $this->addMenuLink();
-    $block = $this->drupalPlaceBlock('system_menu_block:menu-tools', array('label' => 'Tools', 'module' => 'system'));
+    $block = $this->drupalPlaceBlock('system_menu_block:tools', array('label' => 'Tools', 'module' => 'system'));
     $this->drupalGet('test-page');
 
     $id = 'block:admin/structure/block/manage:' . $block->id() . ':|menu:admin/structure/menu/manage:tools:';

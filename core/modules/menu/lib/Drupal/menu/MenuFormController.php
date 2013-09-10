@@ -73,8 +73,6 @@ class MenuFormController extends EntityFormController {
       drupal_set_title(t('Edit menu %label', array('%label' => $menu->label())), PASS_THROUGH);
     }
 
-    $system_menus = menu_list_system_menus();
-
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => t('Title'),
@@ -87,7 +85,6 @@ class MenuFormController extends EntityFormController {
       '#default_value' => $menu->id(),
       '#maxlength' => MENU_MAX_MENU_NAME_LENGTH_UI,
       '#description' => t('A unique name to construct the URL for the menu. It must only contain lowercase letters, numbers and hyphens.'),
-      '#field_prefix' => $menu->isNew() ? 'menu-' : '',
       '#machine_name' => array(
         'exists' => array($this, 'menuNameExists'),
         'source' => array('label'),
@@ -95,7 +92,7 @@ class MenuFormController extends EntityFormController {
         'replace' => '-',
       ),
       // A menu's machine name cannot be changed.
-      '#disabled' => !$menu->isNew() || isset($system_menus[$menu->id()]),
+      '#disabled' => !$menu->isNew() || $menu->isLocked(),
     );
     $form['description'] = array(
       '#type' => 'textfield',
@@ -128,7 +125,7 @@ class MenuFormController extends EntityFormController {
     }
 
     // Add menu links administration form for existing menus.
-    if (!$menu->isNew() || isset($system_menus[$menu->id()])) {
+    if (!$menu->isNew() || $menu->isLocked()) {
       // Form API supports constructing and validating self-contained sections
       // within forms, but does not allow to handle the form section's submission
       // equally separated yet. Therefore, we use a $form_state key to point to
@@ -157,9 +154,8 @@ class MenuFormController extends EntityFormController {
       return TRUE;
     }
 
-    // Check for a link assigned to this menu. 'menu-' is added to the menu name
-    // to avoid name-space conflicts.
-    return $this->entityQueryFactory->get('menu_link')->condition('menu_name', 'menu-' . $value)->range(0, 1)->count()->execute();
+    // Check for a link assigned to this menu.
+    return $this->entityQueryFactory->get('menu_link')->condition('menu_name', $value)->range(0, 1)->count()->execute();
   }
 
   /**
@@ -186,17 +182,6 @@ class MenuFormController extends EntityFormController {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function validate(array $form, array &$form_state) {
-    if ($this->entity->isNew()) {
-      // The machine name is validated automatically, we only need to add the
-      // 'menu-' prefix here.
-      $form_state['values']['id'] = 'menu-' . $form_state['values']['id'];
-    }
-  }
-
-  /**
    * Submit handler to update the bundle for the default language configuration.
    */
   public function languageConfigurationSubmit(array &$form, array &$form_state) {
@@ -214,11 +199,7 @@ class MenuFormController extends EntityFormController {
    */
   public function save(array $form, array &$form_state) {
     $menu = $this->entity;
-    // @todo Get rid of menu_list_system_menus() https://drupal.org/node/1882552
-    //   Supposed menu item declared by hook_menu()
-    //   Should be moved to submitOverviewForm()
-    $system_menus = menu_list_system_menus();
-    if (!$menu->isNew() || isset($system_menus[$menu->id()])) {
+    if (!$menu->isNew() || $menu->isLocked()) {
       $this->submitOverviewForm($form, $form_state);
     }
 

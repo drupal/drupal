@@ -24,10 +24,8 @@ class MenuAccessController extends EntityAccessController {
       return TRUE;
     }
     elseif ($operation == 'delete') {
-      // System menus could not be deleted.
-      // @todo Refactor in https://drupal.org/node/1882552
-      $system_menus = menu_list_system_menus();
-      if (isset($system_menus[$entity->id()])) {
+      // Locked menus could not be deleted.
+      if ($entity->isLocked()) {
         return FALSE;
       }
     }

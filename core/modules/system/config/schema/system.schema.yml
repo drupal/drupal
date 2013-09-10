@@ -308,7 +308,7 @@ system.theme:
         - type: string
           label: 'Theme'
 
-menu.menu.*:
+system.menu.*:
   type: mapping
   label: 'Menu'
   mapping:

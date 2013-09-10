@@ -39,7 +39,7 @@ class BlockHtmlIdTest extends WebTestBase {
     \Drupal::state()->set('block_test.content', $current_content);
 
     // Enable our test blocks.
-    $this->drupalPlaceBlock('system_menu_block:menu-tools');
+    $this->drupalPlaceBlock('system_menu_block:tools');
     $this->drupalPlaceBlock('test_html_id', array('machine_name' => 'test_id_block'));
   }
 

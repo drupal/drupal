@@ -141,7 +141,7 @@ function menu_entity_info(&$entity_info) {
  */
 function menu_entity_bundle_info() {
   $bundles = array();
-  $config_names = config_get_storage_names_with_prefix('menu.menu.');
+  $config_names = config_get_storage_names_with_prefix('system.menu.');
   foreach ($config_names as $config_name) {
     $config = Drupal::config($config_name);
     $bundles['menu_link'][$config->get('id')] = array(
@@ -386,7 +386,10 @@ function _menu_parents_recurse($tree, $menu_name, $indent, &$options, $exclude, 
  */
 function menu_block_view_system_menu_block_alter(array &$build, BlockPluginInterface $block) {
   // Add contextual links for system menu blocks.
-  if (isset($build['content'])) {
+  $menus = menu_list_system_menus();
+  // @todo Clean up when http://drupal.org/node/1874498 lands.
+  list(, $menu_name) = explode(':', $block->getPluginId());
+  if (isset($menus[$menu_name]) && isset($build['content'])) {
     foreach (element_children($build['content']) as $key) {
       $build['content']['#contextual_links']['menu'] = array('admin/structure/menu/manage', array($build['content'][$key]['#original_link']['menu_name']));
     }

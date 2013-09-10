@@ -65,7 +65,7 @@ class MenuRouterTest extends WebTestBase {
       ->set('admin', $this->admin_theme)
       ->save();
     theme_disable(array($this->alternate_theme));
-    $this->drupalPlaceBlock('system_menu_block:menu-tools');
+    $this->drupalPlaceBlock('system_menu_block:tools');
   }
 
   /**

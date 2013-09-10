@@ -14,4 +14,12 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
  */
 interface MenuInterface extends ConfigEntityInterface {
 
+  /**
+   * Determines if this menu is locked.
+   *
+   * @return bool
+   *   TRUE if the menu is locked, FALSE otherwise.
+   */
+  public function isLocked();
+
 }
