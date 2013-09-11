@@ -18,7 +18,6 @@ use Drupal\views\Plugin\views\style\StylePluginBase;
  *
  * @ViewsStyle(
  *   id = "test_template_style",
- *   module = "views_test_data",
  *   title = @Translation("Test style template plugin"),
  *   help = @Translation("Provides a generic style template test plugin."),
  *   theme = "views_view_style_template_test",

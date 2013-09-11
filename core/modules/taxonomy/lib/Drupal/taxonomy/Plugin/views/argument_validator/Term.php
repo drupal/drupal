@@ -18,7 +18,6 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  *
  * @ViewsArgumentValidator(
  *   id = "taxonomy_term",
- *   module = "taxonomy",
  *   title = @Translation("Taxonomy term")
  *   )
  */

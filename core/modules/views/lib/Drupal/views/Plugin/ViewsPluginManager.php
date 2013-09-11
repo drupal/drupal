@@ -41,7 +41,6 @@ class ViewsPluginManager extends DefaultPluginManager {
     $this->defaults += array(
       'parent' => 'parent',
       'plugin_type' => $type,
-      'module' => 'views',
       'register_theme' => TRUE,
     );
 

@@ -234,7 +234,7 @@ function views_plugin_list() {
           $plugins[$key] = array(
             'type' => $type,
             'title' => check_plain($info[$name]['title']),
-            'module' => check_plain($info[$name]['module']),
+            'provider' => check_plain($info[$name]['provider']),
             'views' => array(),
           );
         }

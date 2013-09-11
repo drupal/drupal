@@ -16,7 +16,6 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ViewsRow(
  *   id = "search_view",
- *   module = "search",
  *   title = @Translation("Search"),
  *   help = @Translation("Provides a row plugin to display search results.")
  * )

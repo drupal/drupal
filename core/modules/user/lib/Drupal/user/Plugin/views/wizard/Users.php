@@ -20,7 +20,6 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ViewsWizard(
  *   id = "users",
- *   module = "user",
  *   base_table = "users",
  *   title = @Translation("Users")
  * )

@@ -25,7 +25,6 @@ use Symfony\Component\Routing\RouteCollection;
  *
  * @ViewsDisplay(
  *   id = "rest_export",
- *   module = "rest",
  *   title = @Translation("REST export"),
  *   help = @Translation("Create a REST export resource."),
  *   uses_route = TRUE,

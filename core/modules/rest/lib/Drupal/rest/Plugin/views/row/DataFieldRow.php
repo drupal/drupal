@@ -20,7 +20,6 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ViewsRow(
  *   id = "data_field",
- *   module = "rest",
  *   title = @Translation("Fields"),
  *   help = @Translation("Use fields as row data."),
  *   display_types = {"data"}

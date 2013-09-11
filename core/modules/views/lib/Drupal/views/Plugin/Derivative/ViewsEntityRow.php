@@ -96,7 +96,7 @@ class ViewsEntityRow implements ContainerDerivativeInterface {
       if (isset($entity_info['base_table']) && $this->viewsData->get($entity_info['base_table']) && $this->entityManager->hasController($entity_type, 'render')) {
         $this->derivatives[$entity_type] = array(
           'id' => 'entity:' . $entity_type,
-          'module' => 'views',
+          'provider' => 'views',
           'title' => $entity_info['label'],
           'help' => t('Display the @label', array('@label' => $entity_info['label'])),
           'base' => array($entity_info['base_table']),

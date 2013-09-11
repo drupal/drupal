@@ -11,6 +11,7 @@ namespace Drupal\views\Tests;
  * Tests basic functions from the Views module.
  */
 use Drupal\views\Plugin\views\filter\Standard;
+use Drupal\Component\Utility\String;
 
 class ModuleTest extends ViewUnitTestBase {
 
@@ -19,7 +20,7 @@ class ModuleTest extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_view_status');
+  public static $testViews = array('test_view_status', 'test_view');
 
   /**
    * Stores the last triggered error, for example via debug().
@@ -252,6 +253,26 @@ class ModuleTest extends ViewUnitTestBase {
     // Test a non existent style plugin type returns no plugins.
     $plugins = views_fetch_plugin_names('style', $this->randomString());
     $this->assertIdentical($plugins, array());
+  }
+
+  /**
+   * Tests the views_plugin_list() function.
+   */
+  public function testViewsPluginList() {
+    $plugin_list = views_plugin_list();
+    // Only plugins used by 'test_view' should be in the plugin list.
+    foreach (array('display:default', 'pager:none') as $key) {
+      list($plugin_type, $plugin_id) = explode(':', $key);
+      $plugin_def = $this->container->get("plugin.manager.views.$plugin_type")->getDefinition($plugin_id);
+
+      $this->assertTrue(isset($plugin_list[$key]), String::format('The expected @key plugin list key was found.', array('@key' => $key)));
+      $plugin_details = $plugin_list[$key];
+
+      $this->assertEqual($plugin_details['type'], $plugin_type, 'The expected plugin type was found.');
+      $this->assertEqual($plugin_details['title'], $plugin_def['title'], 'The expected plugin title was found.');
+      $this->assertEqual($plugin_details['provider'], $plugin_def['provider'], 'The expected plugin provider was found.');
+      $this->assertTrue(in_array('test_view', $plugin_details['views']), 'The test_view View was found in the list of views using this plugin.');
+    }
   }
 
   /**

@@ -20,7 +20,6 @@ use Drupal\views\Plugin\views\display\DisplayPluginBase;
  *
  * @ViewsDisplay(
  *   id = "block",
- *   module = "block",
  *   title = @Translation("Block"),
  *   help = @Translation("Display the view as a block."),
  *   theme = "views_view",

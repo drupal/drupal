@@ -16,13 +16,6 @@ use Drupal\Component\Annotation\Plugin;
 abstract class ViewsPluginAnnotationBase extends Plugin implements AnnotationInterface {
 
   /**
-   * The module the plugin is defined by.
-   *
-   * @var string
-   */
-  public $module = 'views';
-
-  /**
    * A class to make the plugin derivative aware.
    *
    * @var string

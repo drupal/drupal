@@ -17,7 +17,6 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  *
  * @ViewsArgumentDefault(
  *   id = "php",
- *   module = "php",
  *   title = @Translation("PHP Code")
  * )
  */

@@ -22,7 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ViewsArgumentValidator(
  *   id = "user",
- *   module = "user",
  *   title = @Translation("User")
  * )
  */

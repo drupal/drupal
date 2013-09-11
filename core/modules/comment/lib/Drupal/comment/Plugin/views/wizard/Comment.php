@@ -20,7 +20,6 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ViewsWizard(
  *   id = "comment",
- *   module = "comment",
  *   base_table = "comment",
  *   title = @Translation("Comments")
  * )
