@@ -8,10 +8,12 @@
 
 namespace Drupal\block\Plugin\views\display;
 
+use Drupal\Component\Utility\String;
 use Drupal\views\Annotation\ViewsDisplay;
 use Drupal\Core\Annotation\Translation;
 use Drupal\views\Plugin\Block\ViewsBlock;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
+use Drupal\views\Views;
 
 /**
  * The plugin that handles a block.
@@ -45,6 +47,7 @@ class Block extends DisplayPluginBase {
     $options = parent::defineOptions();
 
     $options['block_description'] = array('default' => '', 'translatable' => TRUE);
+    $options['block_category'] = array('default' => 'Views', 'translatable' => TRUE);
     $options['block_caching'] = array('default' => DRUPAL_NO_CACHE);
 
     $options['allow'] = array(
@@ -107,11 +110,17 @@ class Block extends DisplayPluginBase {
     if (empty($block_description)) {
       $block_description = t('None');
     }
+    $block_category = String::checkPlain($this->getOption('block_category'));
 
     $options['block_description'] = array(
       'category' => 'block',
       'title' => t('Block name'),
       'value' => views_ui_truncate($block_description, 24),
+    );
+    $options['block_category'] = array(
+      'category' => 'block',
+      'title' => t('Block category'),
+      'value' => views_ui_truncate($block_category, 24),
     );
 
     $filtered_allow = array_filter($this->getOption('allow'));
@@ -172,6 +181,15 @@ class Block extends DisplayPluginBase {
           '#default_value' => $this->getOption('block_description'),
         );
         break;
+      case 'block_category':
+        $form['#title'] .= t('Block category');
+        $form['block_category'] = array(
+          '#type' => 'textfield',
+          '#autocomplete_route_name' => 'block.category_autocomplete',
+          '#description' => t('The category this block will appear under on the <a href="@href">blocks placement page</a>.', array('@href' => url('admin/structure/block'))),
+          '#default_value' => $this->getOption('block_category'),
+        );
+        break;
       case 'block_caching':
         $form['#title'] .= t('Block caching type');
 
@@ -216,6 +234,7 @@ class Block extends DisplayPluginBase {
     parent::submitOptionsForm($form, $form_state);
     switch ($form_state['section']) {
       case 'block_description':
+      case 'block_category':
       case 'block_caching':
       case 'allow':
         $this->setOption($form_state['section'], $form_state['values'][$form_state['section']]);
@@ -325,6 +344,17 @@ class Block extends DisplayPluginBase {
       }
       return FALSE;
     }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function newDisplay() {
+    $base_tables = Views::viewsData()->fetchBaseTables();
+    $base_table = $this->view->storage->get('base_table');
+    if (isset($base_tables[$base_table]['title'])) {
+      $this->setOption('block_category', $base_tables[$base_table]['title']);
+    }
+  }
 
   /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::remove().

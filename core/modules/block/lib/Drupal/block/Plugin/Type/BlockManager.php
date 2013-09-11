@@ -108,4 +108,18 @@ class BlockManager extends DefaultPluginManager {
     return $this->translationManager->translate($string, $args, $options);
   }
 
+  /**
+   * Gets the names of all block categories.
+   *
+   * @return array
+   *   An array of translated categories, sorted alphabetically.
+   */
+  public function getCategories() {
+    $categories = array_unique(array_values(array_map(function ($definition) {
+      return $definition['category'];
+    }, $this->getDefinitions())));
+    natcasesort($categories);
+    return $categories;
+  }
+
 }

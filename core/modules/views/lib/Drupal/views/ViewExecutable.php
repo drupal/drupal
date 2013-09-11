@@ -722,7 +722,9 @@ class ViewExecutable {
     $id = $this->storage->addDisplay($plugin_id, $title, $id);
     $this->displayHandlers->addInstanceID($id);
 
-    return $this->displayHandlers->get($id);
+    $display = $this->displayHandlers->get($id);
+    $display->newDisplay();
+    return $display;
   }
 
   /**

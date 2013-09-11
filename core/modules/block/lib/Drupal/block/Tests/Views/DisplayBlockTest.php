@@ -7,6 +7,7 @@
 
 namespace Drupal\block\Tests\Views;
 
+use Drupal\Component\Utility\String;
 use Drupal\views\Tests\ViewTestBase;
 use Drupal\views\Tests\ViewTestData;
 
@@ -44,6 +45,79 @@ class DisplayBlockTest extends ViewTestBase {
 
     ViewTestData::importTestViews(get_class($this), array('block_test_views'));
     $this->enableViewsTestModule();
+  }
+
+  /**
+   * Tests default and custom block categories.
+   */
+  public function testBlockCategory() {
+    $this->drupalLogin($this->drupalCreateUser(array('administer views', 'administer blocks')));
+
+    // Create a new view in the UI.
+    $edit = array();
+    $edit['label'] = $this->randomString();
+    $edit['id'] = strtolower($this->randomName());
+    $edit['show[wizard_key]'] = 'standard:views_test_data';
+    $edit['description'] = $this->randomString();
+    $edit['block[create]'] = TRUE;
+    $edit['block[style][row_plugin]'] = 'fields';
+    $this->drupalPost('admin/structure/views/add', $edit, t('Save and edit'));
+
+    // Test that the block was given a default category corresponding to its
+    // base table.
+    $arguments = array(
+      ':id' => 'edit-views-test-data',
+      ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-1',
+      ':href' => url('admin/structure/block/add/views_block:' . $edit['id'] . '-block_1/stark'),
+      ':text' => 'View: ' . $edit['label'],
+    );
+    $this->drupalGet('admin/structure/block');
+    $elements = $this->xpath('//details[@id=:id]//li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
+    $this->assertTrue(!empty($elements), 'The test block appears in the category for its base table.');
+
+    // Clone the block before changing the category.
+    $this->drupalPost('admin/structure/views/view/' . $edit['id'] . '/edit/block_1', array(), t('Clone @display_title', array('@display_title' => 'Block')));
+    $this->assertUrl('admin/structure/views/view/' . $edit['id'] . '/edit/block_2');
+
+    // Change the block category to a random string.
+    $this->drupalGet('admin/structure/views/view/' . $edit['id'] . '/edit/block_1');
+    $label = t('Views test data');
+    $link = $this->xpath('//a[@id="views-block-1-block-category" and normalize-space(text())=:label]', array(':label' => $label));
+    $this->assertTrue(!empty($link));
+    $this->clickLink($label);
+    $category = $this->randomString();
+    $this->drupalPost(NULL, array('block_category' => $category), t('Apply'));
+
+    // Clone the block after changing the category.
+    $this->drupalPost(NULL, array(), t('Clone @display_title', array('@display_title' => 'Block')));
+    $this->assertUrl('admin/structure/views/view/' . $edit['id'] . '/edit/block_3');
+
+    $this->drupalPost(NULL, array(), t('Save'));
+
+    // Test that the blocks are listed under the correct categories.
+    $category_id = 'edit-' . drupal_html_id(String::checkPlain($category));
+    $arguments[':id'] = $category_id;
+    $this->drupalGet('admin/structure/block');
+    $elements = $this->xpath('//details[@id=:id]//li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
+    $this->assertTrue(!empty($elements), 'The test block appears in the custom category.');
+
+    $arguments = array(
+      ':id' => 'edit-views-test-data',
+      ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-2',
+      ':href' => url('admin/structure/block/add/views_block:' . $edit['id'] . '-block_2/stark'),
+      ':text' => 'View: ' . $edit['label'],
+    );
+    $elements = $this->xpath('//details[@id=:id]//li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
+    $this->assertTrue(!empty($elements), 'The first cloned test block remains in the original category.');
+
+    $arguments = array(
+      ':id' => $category_id,
+      ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-3',
+      ':href' => url('admin/structure/block/add/views_block:' . $edit['id'] . '-block_3/stark'),
+      ':text' => 'View: ' . $edit['label'],
+    );
+    $elements = $this->xpath('//details[@id=:id]//li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
+    $this->assertTrue(!empty($elements), 'The second cloned test block appears in the custom category.');
   }
 
   /**

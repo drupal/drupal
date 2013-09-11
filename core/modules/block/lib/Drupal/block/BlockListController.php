@@ -9,6 +9,7 @@ namespace Drupal\block;
 
 use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Component\Utility\Json;
+use Drupal\Component\Utility\String;
 use Drupal\Core\Config\Entity\ConfigEntityListController;
 use Drupal\Core\Entity\EntityControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
@@ -340,7 +341,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
       return strnatcasecmp($a['admin_label'], $b['admin_label']);
     });
     foreach ($plugins as $plugin_id => $plugin_definition) {
-      $category = $plugin_definition['category'];
+      $category = String::checkPlain($plugin_definition['category']);
       if (!isset($form['place_blocks']['list'][$category])) {
         $form['place_blocks']['list'][$category] = array(
           '#type' => 'details',

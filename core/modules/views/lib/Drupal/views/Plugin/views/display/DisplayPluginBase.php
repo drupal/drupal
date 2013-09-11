@@ -115,8 +115,8 @@ abstract class DisplayPluginBase extends PluginBase {
   }
 
   public function initDisplay(ViewExecutable $view, array &$display, array &$options = NULL) {
-    $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->view = $view;
+    $this->setOptionDefaults($this->options, $this->defineOptions());
     $this->display = &$display;
 
     // Load extenders as soon as possible.
@@ -2675,6 +2675,14 @@ abstract class DisplayPluginBase extends PluginBase {
     }
 
     return $errors;
+  }
+
+  /**
+   * Reacts on adding a display.
+   *
+   * @see \Drupal\views\Entity\View::newDisplay()
+   */
+  public function newDisplay() {
   }
 
   /**

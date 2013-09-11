@@ -28,3 +28,10 @@ block_admin_add:
     _title: 'Configure block'
   requirements:
     _permission: 'administer blocks'
+
+block.category_autocomplete:
+  pattern: '/block-category/autocomplete'
+  defaults:
+    _controller: '\Drupal\block\Controller\CategoryAutocompleteController::autocomplete'
+  requirements:
+    _permission: 'administer blocks'
