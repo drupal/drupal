@@ -122,25 +122,25 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
       'string' => $default_string,
       'langcode' => $langcode_browser_fallback,
     );
-    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
     $textarea = current($this->xpath('//textarea'));
     $lid = (string) $textarea[0]['name'];
     $edit = array(
       $lid => $language_browser_fallback_string,
     );
-    $this->drupalPost('admin/config/regional/translate/translate', $edit, t('Save translations'));
+    $this->drupalPost('admin/config/regional/translate', $edit, t('Save translations'));
 
     $search = array(
       'string' => $default_string,
       'langcode' => $langcode,
     );
-    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
     $textarea = current($this->xpath('//textarea'));
     $lid = (string) $textarea[0]['name'];
     $edit = array(
       $lid => $language_string,
     );
-    $this->drupalPost('admin/config/regional/translate/translate', $edit, t('Save translations'));
+    $this->drupalPost('admin/config/regional/translate', $edit, t('Save translations'));
 
     // Configure URL language rewrite.
     variable_set('language_negotiation_url_type', Language::TYPE_INTERFACE);
