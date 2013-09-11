@@ -13,7 +13,9 @@ use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Node\NodeInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -42,16 +44,26 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
   protected $csrfToken;
 
   /**
+   * The current user service.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a CommentController object.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   HTTP kernel to handle requests.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token manager service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user service.
    */
-  public function __construct(HttpKernelInterface $httpKernel, CsrfTokenGenerator $csrf_token) {
+  public function __construct(HttpKernelInterface $httpKernel, CsrfTokenGenerator $csrf_token, AccountInterface $current_user) {
     $this->httpKernel = $httpKernel;
     $this->csrfToken = $csrf_token;
+    $this->currentUser = $current_user;
   }
   /**
    * {@inheritdoc}
@@ -59,7 +71,8 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('http_kernel'),
-      $container->get('csrf_token')
+      $container->get('csrf_token'),
+      $container->get('current_user')
     );
   }
 
@@ -221,6 +234,41 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
     $build['comment_form'] = $this->entityManager()->getForm($comment);
 
     return $build;
+  }
+
+  /**
+   * Returns a set of nodes' last read timestamps.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request of the page.
+   *
+   * @return Symfony\Component\HttpFoundation\JsonResponse
+   *   The JSON response.
+   */
+  public function renderNewCommentsNodeLinks(Request $request) {
+    if ($this->currentUser->isAnonymous()) {
+      throw new AccessDeniedHttpException();
+    }
+
+    $nids = $request->request->get('node_ids');
+    if (!isset($nids)) {
+      throw new NotFoundHttpException();
+    }
+    // Only handle up to 100 nodes.
+    $nids = array_slice($nids, 0, 100);
+
+    $links = array();
+    foreach ($nids as $nid) {
+      $node = node_load($nid);
+      $new = comment_num_new($node->id());
+      $query = comment_new_page_count($node->comment_count, $new, $node);
+      $links[$nid] = array(
+        'new_comment_count' => (int)$new,
+        'first_new_comment_link' => url('node/' . $node->id(), array('query' => $query, 'fragment' => 'new')),
+      );
+    }
+
+    return new JsonResponse($links);
   }
 
 }

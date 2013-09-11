@@ -154,10 +154,6 @@ class CommentLinksTest extends CommentTestBase {
         ));
         $comment->save();
         $this->comment = $comment;
-
-        // comment_num_new() relies on history_read(), so ensure that no one has
-        // seen the node of this comment.
-        db_delete('history')->condition('nid', $this->node->id())->execute();
       }
       else {
         $cids = db_query("SELECT cid FROM {comment}")->fetchCol();

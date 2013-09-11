@@ -145,6 +145,14 @@ class TrackerTest extends WebTestBase {
     $this->assertPattern('/' . $title . '.*new/', 'New nodes are flagged as such in the tracker listing.');
 
     $this->drupalGet('node/' . $node->id());
+    // Simulate the JavaScript on the node page to mark the node as read.
+    // @todo Get rid of curlExec() once https://drupal.org/node/2074037 lands.
+    $this->curlExec(array(
+      CURLOPT_URL => url('history/' . $node->id() . '/read', array('absolute' => TRUE)),
+      CURLOPT_HTTPHEADER => array(
+        'Accept: application/json',
+      ),
+    ));
     $this->drupalGet('tracker');
     $this->assertNoPattern('/' . $title . '.*new/', 'Visited nodes are not flagged as new.');
 
@@ -153,6 +161,14 @@ class TrackerTest extends WebTestBase {
     $this->assertPattern('/' . $title . '.*new/', 'For another user, new nodes are flagged as such in the tracker listing.');
 
     $this->drupalGet('node/' . $node->id());
+    // Simulate the JavaScript on the node page to mark the node as read.
+    // @todo Get rid of curlExec() once https://drupal.org/node/2074037 lands.
+    $this->curlExec(array(
+      CURLOPT_URL => url('history/' . $node->id() . '/read', array('absolute' => TRUE)),
+      CURLOPT_HTTPHEADER => array(
+        'Accept: application/json',
+      ),
+    ));
     $this->drupalGet('tracker');
     $this->assertNoPattern('/' . $title . '.*new/', 'For another user, visited nodes are not flagged as new.');
   }
@@ -173,8 +189,16 @@ class TrackerTest extends WebTestBase {
       'subject' => $this->randomName(),
       'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     );
-    // The new comment is automatically viewed by the current user.
     $this->drupalPost('comment/reply/' . $node->id(), $comment, t('Save'));
+    // The new comment is automatically viewed by the current user. Simulate the
+    // JavaScript that does this.
+    // @todo Get rid of curlExec() once https://drupal.org/node/2074037 lands.
+    $this->curlExec(array(
+      CURLOPT_URL => url('history/' . $node->id() . '/read', array('absolute' => TRUE)),
+      CURLOPT_HTTPHEADER => array(
+        'Accept: application/json',
+      ),
+    ));
 
     $this->drupalLogin($this->other_user);
     $this->drupalGet('tracker');

@@ -47,18 +47,19 @@ class ThemeInfoStylesTest extends WebTestBase {
 
     $this->drupalGet('theme-test/info/stylesheets');
 
-    $this->assertRaw("$base/base-add.css");
-    $this->assertRaw("$base/base-override.css");
-    $this->assertNoRaw("base-remove.css");
+    $this->assertIdentical(1, count($this->xpath("//link[contains(@href, '$base/base-add.css')]")), "$base/base-add.css found");
+    $this->assertIdentical(1, count($this->xpath("//link[contains(@href, '$base/base-override.css')]")), "$base/base-override.css found");
+    $this->assertIdentical(0, count($this->xpath("//link[contains(@href, 'base-remove.css')]")), "base-remove.css not found");
 
-    $this->assertRaw("$sub/sub-add.css");
+    $this->assertIdentical(1, count($this->xpath("//link[contains(@href, '$sub/sub-add.css')]")), "$sub/sub-add.css found");
 
-    $this->assertRaw("$sub/sub-override.css");
-    $this->assertRaw("$sub/base-add.sub-override.css");
-    $this->assertRaw("$sub/base-remove.sub-override.css");
+    $this->assertIdentical(1, count($this->xpath("//link[contains(@href, '$sub/sub-override.css')]")), "$sub/sub-override.css found");
+    $this->assertIdentical(1, count($this->xpath("//link[contains(@href, '$sub/base-add.sub-override.css')]")), "$sub/base-add.sub-override.css found");
+    $this->assertIdentical(1, count($this->xpath("//link[contains(@href, '$sub/base-remove.sub-override.css')]")), "$sub/base-remove.sub-override.css found");
 
-    $this->assertNoRaw("sub-remove.css");
-    $this->assertNoRaw("base-add.sub-remove.css");
-    $this->assertNoRaw("base-override.sub-remove.css");
+    $this->assertIdentical(0, count($this->xpath("//link[contains(@href, 'sub-remove.css')]")), "sub-remove.css not found");
+    $this->assertIdentical(0, count($this->xpath("//link[contains(@href, 'base-add.sub-remove.css')]")), "base-add.sub-remove.css not found");
+    $this->assertIdentical(0, count($this->xpath("//link[contains(@href, 'base-override.sub-remove.css')]")), "base-override.sub-remove.css not found");
   }
+
 }

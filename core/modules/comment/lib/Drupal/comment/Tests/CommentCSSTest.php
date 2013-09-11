@@ -82,6 +82,11 @@ class CommentCSSTest extends CommentTestBase {
       }
       // Request the node with the comment.
       $this->drupalGet('node/' . $node->id());
+      $settings = $this->drupalGetSettings();
+
+      // Verify the data-history-node-id attribute, which is necessary for the
+      // by-viewer class and the "new" indicator, see below.
+      $this->assertIdentical(1, count($this->xpath('//*[@data-history-node-id="' . $node->id() . '"]')), 'data-history-node-id attribute is set on node.');
 
       // Verify classes if the comment is visible for the current user.
       if ($case['comment_status'] == COMMENT_PUBLISHED || $case['user'] == 'admin') {
@@ -103,14 +108,12 @@ class CommentCSSTest extends CommentTestBase {
           $this->assertFalse(count($comments), 'by-node-author class not found.');
         }
 
-        // Verify the by-viewer class.
-        $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "by-viewer")]');
-        if ($case['comment_uid'] > 0 && $case['comment_uid'] == $case['user_uid']) {
-          $this->assertTrue(count($comments) == 1, 'by-viewer class found.');
-        }
-        else {
-          $this->assertFalse(count($comments), 'by-viewer class not found.');
-        }
+        // Verify the data-comment-user-id attribute, which is used by the
+        // drupal.comment-by-viewer library to add a by-viewer when the current
+        // user (the viewer) was the author of the comment. We do this in Java-
+        // Script to prevent breaking the render cache.
+        $this->assertIdentical(1, count($this->xpath('//*[contains(@class, "comment") and @data-comment-user-id="' . $case['comment_uid'] . '"]')), 'data-comment-user-id attribute is set on comment.');
+        $this->assertTrue(isset($settings['ajaxPageState']['js']['core/modules/comment/js/comment-by-viewer.js']), 'drupal.comment-by-viewer library is present.');
       }
 
       // Verify the unpublished class.
@@ -122,20 +125,14 @@ class CommentCSSTest extends CommentTestBase {
         $this->assertFalse(count($comments), 'unpublished class not found.');
       }
 
-      // Verify the new class.
+      // Verify the data-comment-timestamp attribute, which is used by the
+      // drupal.comment-new-indicator library to add a "new" indicator to each
+      // comment that was created or changed after the last time the current
+      // user read the corresponding node.
       if ($case['comment_status'] == COMMENT_PUBLISHED || $case['user'] == 'admin') {
-        $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "new")]');
-        if ($case['user'] != 'anonymous') {
-          $this->assertTrue(count($comments) == 1, 'new class found.');
-
-          // Request the node again. The new class should disappear.
-          $this->drupalGet('node/' . $node->id());
-          $comments = $this->xpath('//*[contains(@class, "comment") and contains(@class, "new")]');
-          $this->assertFalse(count($comments), 'new class not found.');
-        }
-        else {
-          $this->assertFalse(count($comments), 'new class not found.');
-        }
+        $this->assertIdentical(1, count($this->xpath('//*[contains(@class, "comment")]/*[@data-comment-timestamp="' . $comment->changed->value . '"]')), 'data-comment-timestamp attribute is set on comment');
+        $expectedJS = ($case['user'] !== 'anonymous');
+        $this->assertIdentical($expectedJS, isset($settings['ajaxPageState']['js']['core/modules/comment/js/comment-new-indicator.js']), 'drupal.comment-new-indicator library is present.');
       }
     }
   }

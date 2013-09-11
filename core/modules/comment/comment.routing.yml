@@ -34,3 +34,10 @@ comment_reply:
     pid: ~
   requirements:
     _entity_access: 'node.view'
+
+comment_new_comments_node_links:
+  pattern: '/comments/render_new_comments_node_links'
+  defaults:
+    _controller: '\Drupal\comment\Controller\CommentController::renderNewCommentsNodeLinks'
+  requirements:
+    _permission: 'access content'

@@ -116,6 +116,17 @@ function user_theme() {
 function user_page_build(&$page) {
   $path = drupal_get_path('module', 'user');
   $page['#attached']['css'][$path . '/css/user.module.css'] = array('every_page' => TRUE);
+
+  // Provide the user ID in drupalSettings to allow JavaScript code to customize
+  // the experience for the end user, rather than the server side, which would
+  // break the render cache.
+  global $user;
+  $page['#attached']['js'][] = array(
+    'type' => 'setting',
+    'data' => array('user' => array(
+      'uid' => $user->id(),
+    )),
+  );
 }
 
 /**
