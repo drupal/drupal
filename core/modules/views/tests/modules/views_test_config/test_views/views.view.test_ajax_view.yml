@@ -1,0 +1,64 @@
+base_table: views_test_data
+core: '8'
+description: ''
+status: '1'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: '0'
+        pager: '0'
+        pager_options: '0'
+        sorts: '0'
+      fields:
+        age:
+          field: age
+          id: age
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          provider: views_test_data
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          provider: views_test_data
+        name:
+          field: name
+          id: name
+          relationship: none
+          table: views_test_data
+          plugin_id: string
+          provider: views_test_data
+      pager:
+        options:
+          offset: '0'
+          items_per_page: 2
+        type: mini
+      pager_options: {  }
+      sorts:
+        id:
+          field: id
+          id: id
+          order: ASC
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+          provider: views_test_data
+      use_ajax: 1
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+  page_1:
+    display_options:
+      path: test_ajax_view
+    display_plugin: page
+    display_title: Page
+    id: page_1
+    position: '1'
+label: 'Test ajax view'
+id: test_ajax_view
+tag: ''
