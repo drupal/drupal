@@ -110,6 +110,12 @@ abbr.form-required, abbr.tabledrag-changed, abbr.ajax-changed {
 .container-inline label:after {
   content: ':';
 }
+.form-type-radios .container-inline label:after {
+  content: none;
+}
+.form-type-radios .container-inline .form-type-radio {
+  margin: 0 1em;
+}
 .container-inline .form-actions,
 .container-inline.form-actions {
   margin-top: 0;

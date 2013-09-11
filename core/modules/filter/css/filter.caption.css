@@ -8,6 +8,7 @@
  */
 .caption {
   display: table;
+  margin: 0;
 }
 .caption > * {
   display: block;
@@ -17,6 +18,16 @@
   display: table-caption;
   caption-side: bottom;
   max-width: none;
+}
+
+/**
+ * While editing and whenever the caption is empty, show a placeholder.
+ *
+ * Based on http://codepen.io/flesler/pen/AEIFc.
+ */
+.caption > figcaption[contenteditable=true]:empty:before {
+  content: attr(data-placeholder);
+  font-style: italic;
 }
 
 /**

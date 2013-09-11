@@ -7,19 +7,17 @@
 
 namespace Drupal\editor\Form;
 
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormBase;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\editor\Ajax\EditorDialogSave;
 use Drupal\Core\Ajax\CloseModalDialogCommand;
-use Drupal\Core\StreamWrapper\LocalStream;
-use Drupal\file\FileInterface;
 
 /**
  * Provides an image dialog for text editors.
  */
-class EditorImageDialog implements FormInterface {
+class EditorImageDialog extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -37,7 +35,10 @@ class EditorImageDialog implements FormInterface {
   public function buildForm(array $form, array &$form_state, FilterFormat $filter_format = NULL) {
     // The default values are set directly from $_POST, provided by the
     // editor plugin opening the dialog.
-    $input = isset($form_state['input']['editor_object']) ? $form_state['input']['editor_object'] : array();
+    if (!isset($form_state['image_element'])) {
+      $form_state['image_element'] = isset($form_state['input']['editor_object']) ? $form_state['input']['editor_object'] : array();
+    }
+    $image_element = $form_state['image_element'];
 
     $form['#tree'] = TRUE;
     $form['#attached']['library'][] = array('editor', 'drupal.editor.dialog');
@@ -55,11 +56,11 @@ class EditorImageDialog implements FormInterface {
     }
     $max_filesize = min(parse_size($editor->image_upload['max_size']), file_upload_max_size());
 
-    $existing_file = isset($input['data-editor-file-uuid']) ? entity_load_by_uuid('file', $input['data-editor-file-uuid']) : NULL;
+    $existing_file = isset($image_element['data-editor-file-uuid']) ? entity_load_by_uuid('file', $image_element['data-editor-file-uuid']) : NULL;
     $fid = $existing_file ? $existing_file->id() : NULL;
 
     $form['fid'] = array(
-      '#title' => t('Image'),
+      '#title' => $this->t('Image'),
       '#type' => 'managed_file',
       '#upload_location' => $editor->image_upload['scheme'] . '://' .$editor->image_upload['directory'],
       '#default_value' => $fid ? array($fid) : NULL,
@@ -72,9 +73,9 @@ class EditorImageDialog implements FormInterface {
     );
 
     $form['attributes']['src'] = array(
-     '#title' => t('URL'),
+     '#title' => $this->t('URL'),
      '#type' => 'textfield',
-     '#default_value' => isset($input['src']) ? $input['src'] : '',
+     '#default_value' => isset($image_element['src']) ? $image_element['src'] : '',
      '#maxlength' => 2048,
      '#required' => TRUE,
     );
@@ -83,28 +84,30 @@ class EditorImageDialog implements FormInterface {
     // otherwise show a (file URL) text form item.
     if ($editor->image_upload['status'] === '1') {
       $form['attributes']['src']['#access'] = FALSE;
+      $form['attributes']['src']['#required'] = FALSE;
     }
     else {
       $form['fid']['#access'] = FALSE;
+      $form['fid']['#required'] = FALSE;
     }
 
     $form['attributes']['alt'] = array(
-      '#title' => t('Alternative text'),
+      '#title' => $this->t('Alternative text'),
       '#type' => 'textfield',
-      '#default_value' => isset($input['alt']) ? $input['alt'] : '',
+      '#default_value' => isset($image_element['alt']) ? $image_element['alt'] : '',
       '#maxlength' => 2048,
     );
     $form['dimensions'] = array(
       '#type' => 'item',
-      '#title' => t('Image size'),
+      '#title' => $this->t('Image size'),
       '#field_prefix' => '<div class="container-inline">',
       '#field_suffix' => '</div>',
     );
     $form['dimensions']['width'] = array(
-      '#title' => t('Width'),
+      '#title' => $this->t('Width'),
       '#title_display' => 'invisible',
       '#type' => 'number',
-      '#default_value' => isset($input['width']) ? $input['width'] : '',
+      '#default_value' => isset($image_element['width']) ? $image_element['width'] : '',
       '#size' => 8,
       '#maxlength' => 8,
       '#min' => 1,
@@ -114,10 +117,10 @@ class EditorImageDialog implements FormInterface {
       '#parents' => array('attributes', 'width'),
     );
     $form['dimensions']['height'] = array(
-      '#title' => t('Height'),
+      '#title' => $this->t('Height'),
       '#title_display' => 'invisible',
       '#type' => 'number',
-      '#default_value' => isset($input['height']) ? $input['height'] : '',
+      '#default_value' => isset($image_element['height']) ? $image_element['height'] : '',
       '#size' => 8,
       '#maxlength' => 8,
       '#min' => 1,
@@ -127,12 +130,54 @@ class EditorImageDialog implements FormInterface {
       '#parents' => array('attributes', 'height'),
     );
 
+    // When Drupal core's filter_caption is being used, the text editor may
+    // offer the ability to change the alignment.
+    if (isset($image_element['data_align'])) {
+      $form['align'] = array(
+        '#title' => $this->t('Align'),
+        '#type' => 'radios',
+        '#options' => array(
+          'none' => $this->t('None'),
+          'left' => $this->t('Left'),
+          'center' => $this->t('Center'),
+          'right' => $this->t('Right'),
+        ),
+        '#default_value' => $image_element['data_align'] === '' ? 'none' : $image_element['data_align'],
+        '#wrapper_attributes' => array('class' => array('container-inline')),
+        '#attributes' => array('class' => array('container-inline')),
+        '#parents' => array('attributes', 'data_align'),
+      );
+    }
+
+    // When Drupal core's filter_caption is being used, the text editor may
+    // offer the ability to in-place edit the image's caption: show a toggle.
+    if (isset($image_element['hasCaption'])) {
+      $form['caption'] = array(
+        '#title' => $this->t('Caption'),
+        '#type' => 'checkbox',
+        '#default_value' => $image_element['hasCaption'] === 'true',
+        '#parents' => array('hasCaption'),
+      );
+    }
+
+    $has_align_or_caption = isset($image_element['data_align']) || isset($image_element['hasCaption']);
+    if ($has_align_or_caption && isset($image_element['isInline']) && $image_element['isInline'] === 'true') {
+      $form['align']['#type'] = 'item';
+      $form['align']['#description'] = t('Inline images cannot be aligned.');
+      unset($form['align']['#default_value']);
+
+      $form['caption']['#type'] = 'item';
+      $form['caption']['#description'] = $this->t('Inline images cannot be captioned.');
+      $form['caption']['#wrapper_attributes'] = array('class' => array('container-inline'));
+      $form['caption']['#attributes'] = array('class' => array('container-inline'));
+    }
+
     $form['actions'] = array(
       '#type' => 'actions',
     );
     $form['actions']['save_modal'] = array(
       '#type' => 'submit',
-      '#value' => t('Save'),
+      '#value' => $this->t('Save'),
       // No regular submit-handler. This form only works via JavaScript.
       '#submit' => array(),
       '#ajax' => array(
@@ -142,12 +187,6 @@ class EditorImageDialog implements FormInterface {
     );
 
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, array &$form_state) {
   }
 
   /**

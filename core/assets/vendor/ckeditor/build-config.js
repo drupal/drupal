@@ -1,4 +1,4 @@
-﻿/**
+/**
  * This is a Drupal-optimized build of CKEditor.
  *
  * You may re-use it at any time at http://ckeditor.com/builder to build
@@ -25,7 +25,7 @@ var CKBUILDER_CONFIG = {
 		'contents.css',
 		'styles.js',
 		'samples',
-		'skins/moono/readme.md',
+		'skins/moono/readme.md'
 	],
 	plugins : {
 		'about' : 1,
@@ -65,14 +65,7 @@ var CKBUILDER_CONFIG = {
 		'showborders' : 1,
 		'tableresize' : 1,
 		'sharedspace' : 1,
-		'sourcedialog' : 1
-		// @todo D8: CKEditor Widgets is not available in 4.1 RC, and we're not yet
-		// using this, so it's commented out for now. However, it will be readded in
-		// the nearby future.
-		// 'widget' : 1,
-		// 'widgetblockquote' : 1,
-		// 'widgetcaption' : 1,
-		// 'widgettime' : 1,
-		// 'widgetvideo' : 1
+		'sourcedialog' : 1,
+		'widget' : 1
 	}
 };

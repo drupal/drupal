@@ -5,6 +5,8 @@
  * Provides integration with the CKEditor WYSIWYG editor.
  */
 
+use Drupal\editor\Entity\Editor;
+
 /**
  * Implements hook_help().
  */
@@ -29,7 +31,7 @@ function ckeditor_help($path, $arg) {
   }
 }
 
-/*
+/**
  * Implements hook_library_info().
  */
 function ckeditor_library_info() {
@@ -107,9 +109,19 @@ function ckeditor_library_info() {
       array('system', 'drupalSettings'),
     ),
   );
+  $libraries['drupal.ckeditor.drupalimagecaption-theme'] = array(
+    'title' => 'Theming support for the imagecaption plugin.',
+    'version' => Drupal::VERSION,
+    'js' => array(
+      $module_path . '/js/plugins/drupalimagecaption/theme.js' => array(),
+    ),
+    'dependencies' => array(
+      array('ckeditor', 'ckeditor'),
+    ),
+  );
   $libraries['ckeditor'] = array(
     'title' => 'Loads the main CKEditor library.',
-    'version' => '4.2',
+    'version' => '4.3-dev — d8-imagecaption branch commit 887d81ac1824008b690e439a1b29eb4f13b51212',
     'js' => array(
       'core/assets/vendor/ckeditor/ckeditor.js' => array(
         'preprocess' => FALSE,
@@ -130,6 +142,25 @@ function ckeditor_theme() {
       'variables' => array('editor' => NULL, 'plugins' => NULL),
     ),
   );
+}
+
+/**
+ * Implements hook_ckeditor_css_alter().
+ */
+function ckeditor_ckeditor_css_alter(array &$css, Editor $editor) {
+    $filters = array();
+    if (!empty($editor->format)) {
+      $filters = entity_load('filter_format', $editor->format)
+        ->filters()
+        ->getAll();
+    }
+
+  // Add the filter caption CSS if the text format associated with this text
+  // editor uses the filter_caption filter. This is used by the included
+  // CKEditor DrupalImageCaption plugin.
+  if (isset($filters['filter_caption']) && $filters['filter_caption']->status) {
+    $css[] = drupal_get_path('module', 'filter') . '/css/filter.caption.css';
+  }
 }
 
 /**
