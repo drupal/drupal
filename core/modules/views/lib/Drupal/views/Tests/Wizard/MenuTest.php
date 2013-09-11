@@ -35,7 +35,7 @@ class MenuTest extends WizardTestBase {
     $view['page[link]'] = 1;
     $view['page[link_properties][menu_name]'] = 'main';
     $view['page[link_properties][title]'] = $this->randomName(16);
-    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
 
     // Make sure there is a link to the view from the front page (where we
     // expect the main menu to display).

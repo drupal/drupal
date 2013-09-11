@@ -38,7 +38,7 @@ class SearchLanguageTest extends SearchTestBase {
   function testLanguages() {
     // Add predefined language.
     $edit = array('predefined_langcode' => 'fr');
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
     $this->assertText('French', 'Language added successfully.');
 
     // Now we should have languages displayed.
@@ -48,12 +48,12 @@ class SearchLanguageTest extends SearchTestBase {
     $this->assertText(t('French'), 'French is a possible choice.');
 
     // Ensure selecting no language does not make the query different.
-    $this->drupalPost('search/node', array(), t('Advanced search'));
+    $this->drupalPostForm('search/node', array(), t('Advanced search'));
     $this->assertEqual($this->getUrl(), url('search/node/', array('absolute' => TRUE)), 'Correct page redirection, no language filtering.');
 
     // Pick French and ensure it is selected.
     $edit = array('language[fr]' => TRUE);
-    $this->drupalPost('search/node', $edit, t('Advanced search'));
+    $this->drupalPostForm('search/node', $edit, t('Advanced search'));
     // Get the redirected URL.
     $url = $this->getUrl();
     $parts = parse_url($url);
@@ -67,8 +67,8 @@ class SearchLanguageTest extends SearchTestBase {
     $edit = array(
       'site_default_language' => 'fr',
     );
-    $this->drupalpost($path, $edit, t('Save configuration'));
+    $this->drupalPostForm($path, $edit, t('Save configuration'));
     $this->assertNoOptionSelected('edit-site-default-language', 'en', 'Default language updated.');
-    $this->drupalPost('admin/config/regional/language/delete/en', array(), t('Delete'));
+    $this->drupalPostForm('admin/config/regional/language/delete/en', array(), t('Delete'));
   }
 }

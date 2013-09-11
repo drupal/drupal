@@ -44,7 +44,7 @@ class LanguageListTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'fr',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
     $this->assertText('French', 'Language added successfully.');
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), 'Correct page redirection.');
 
@@ -57,7 +57,7 @@ class LanguageListTest extends WebTestBase {
       'name' => $name,
       'direction' => '0',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), 'Correct page redirection.');
     $this->assertRaw('"edit-languages-' . $langcode .'-weight"', 'Language code found.');
     $this->assertText(t($name), 'Test language added.');
@@ -70,7 +70,7 @@ class LanguageListTest extends WebTestBase {
     $edit = array(
       'site_default_language' => $langcode,
     );
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->assertNoOptionSelected('edit-site-default-language', 'en', 'Default language updated.');
     $this->assertEqual($this->getUrl(), url($path, array('absolute' => TRUE)), 'Correct page redirection.');
 
@@ -87,7 +87,7 @@ class LanguageListTest extends WebTestBase {
     $edit = array(
       'name' => $name,
     );
-    $this->drupalPost('admin/config/regional/language/edit/' . $langcode, $edit, t('Save language'));
+    $this->drupalPostForm('admin/config/regional/language/edit/' . $langcode, $edit, t('Save language'));
     $this->assertRaw($name, 'The language has been updated.');
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), 'Correct page redirection.');
 
@@ -95,7 +95,7 @@ class LanguageListTest extends WebTestBase {
     $edit = array(
       'site_default_language' => 'en',
     );
-    $this->drupalPost($path, $edit, t('Save configuration'));
+    $this->drupalPostForm($path, $edit, t('Save configuration'));
     // Ensure 'delete' link works.
     $this->drupalGet('admin/config/regional/language');
     $this->clickLink(t('Delete'));
@@ -108,7 +108,7 @@ class LanguageListTest extends WebTestBase {
     $this->assertRaw($name, 'The language was not deleted.');
     // Delete the language for real. This a confirm form, we do not need any
     // fields changed.
-    $this->drupalPost('admin/config/regional/language/delete/' . $langcode, array(), t('Delete'));
+    $this->drupalPostForm('admin/config/regional/language/delete/' . $langcode, array(), t('Delete'));
     // We need raw here because %language and %langcode will add HTML.
     $t_args = array('%language' => $name, '%langcode' => $langcode);
     $this->assertRaw(t('The %language (%langcode) language has been removed.', $t_args), 'The test language has been removed.');
@@ -122,7 +122,7 @@ class LanguageListTest extends WebTestBase {
     $language_count =  $this->container->get('state')->get('language_count') ?: 1;
     $this->assertEqual($language_count, count($languages), 'Language count is correct.');
     // Delete French.
-    $this->drupalPost('admin/config/regional/language/delete/fr', array(), t('Delete'));
+    $this->drupalPostForm('admin/config/regional/language/delete/fr', array(), t('Delete'));
     // Get the count of languages.
     drupal_static_reset('language_list');
     $languages = language_list();
@@ -148,7 +148,7 @@ class LanguageListTest extends WebTestBase {
       'name' => $name,
       'direction' => '0',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), 'Correct page redirection.');
     $this->assertText($name, 'Name found.');
 
@@ -160,11 +160,11 @@ class LanguageListTest extends WebTestBase {
     $edit = array(
       'site_default_language' => $langcode,
     );
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->assertNoOptionSelected('edit-site-default-language', 'en', 'Default language updated.');
     $this->assertEqual($this->getUrl(), url($path, array('absolute' => TRUE)), 'Correct page redirection.');
 
-    $this->drupalPost('admin/config/regional/language/delete/en', array(), t('Delete'));
+    $this->drupalPostForm('admin/config/regional/language/delete/en', array(), t('Delete'));
     // We need raw here because %language and %langcode will add HTML.
     $t_args = array('%language' => 'English', '%langcode' => 'en');
     $this->assertRaw(t('The %language (%langcode) language has been removed.', $t_args), 'The English language has been removed.');

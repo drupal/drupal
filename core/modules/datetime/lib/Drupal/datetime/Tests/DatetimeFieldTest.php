@@ -113,7 +113,7 @@ class DatetimeFieldTest extends WebTestBase {
       'name' => $this->randomName(),
       "{$field_name}[$langcode][0][value][date]" => $date->format($date_format),
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
@@ -185,7 +185,7 @@ class DatetimeFieldTest extends WebTestBase {
       "{$field_name}[$langcode][0][value][date]" => $date->format($date_format),
       "{$field_name}[$langcode][0][value][time]" => $date->format($time_format),
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
@@ -279,7 +279,7 @@ class DatetimeFieldTest extends WebTestBase {
       $edit["{$field_name}[$langcode][0][value][$part]"] = $value;
     }
 
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
@@ -355,7 +355,7 @@ class DatetimeFieldTest extends WebTestBase {
       "{$field_name}[$langcode][0][value][date]" => $date_value,
       "{$field_name}[$langcode][0][value][time]" => '12:00:00',
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', 'Empty date value has been caught.');
 
     $date_value = 'aaaa-12-01';
@@ -363,7 +363,7 @@ class DatetimeFieldTest extends WebTestBase {
       "{$field_name}[$langcode][0][value][date]" => $date_value,
       "{$field_name}[$langcode][0][value][time]" => '00:00:00',
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid year value %date has been caught.', array('%date' => $date_value)));
 
     $date_value = '2012-75-01';
@@ -371,7 +371,7 @@ class DatetimeFieldTest extends WebTestBase {
       "{$field_name}[$langcode][0][value][date]" => $date_value,
       "{$field_name}[$langcode][0][value][time]" => '00:00:00',
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid month value %date has been caught.', array('%date' => $date_value)));
 
     $date_value = '2012-12-99';
@@ -379,7 +379,7 @@ class DatetimeFieldTest extends WebTestBase {
       "{$field_name}[$langcode][0][value][date]" => $date_value,
       "{$field_name}[$langcode][0][value][time]" => '00:00:00',
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid day value %date has been caught.', array('%date' => $date_value)));
 
     $date_value = '2012-12-01';
@@ -388,7 +388,7 @@ class DatetimeFieldTest extends WebTestBase {
       "{$field_name}[$langcode][0][value][date]" => $date_value,
       "{$field_name}[$langcode][0][value][time]" => $time_value,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', 'Empty time value has been caught.');
 
     $date_value = '2012-12-01';
@@ -397,7 +397,7 @@ class DatetimeFieldTest extends WebTestBase {
       "{$field_name}[$langcode][0][value][date]" => $date_value,
       "{$field_name}[$langcode][0][value][time]" => $time_value,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid hour value %time has been caught.', array('%time' => $time_value)));
 
     $date_value = '2012-12-01';
@@ -406,7 +406,7 @@ class DatetimeFieldTest extends WebTestBase {
       "{$field_name}[$langcode][0][value][date]" => $date_value,
       "{$field_name}[$langcode][0][value][time]" => $time_value,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid minute value %time has been caught.', array('%time' => $time_value)));
 
     $date_value = '2012-12-01';
@@ -415,7 +415,7 @@ class DatetimeFieldTest extends WebTestBase {
       "{$field_name}[$langcode][0][value][date]" => $date_value,
       "{$field_name}[$langcode][0][value][time]" => $time_value,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid second value %time has been caught.', array('%time' => $time_value)));
   }
 

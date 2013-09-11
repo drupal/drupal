@@ -37,7 +37,7 @@ class LanguageConfigurationElementTest extends WebTestBase {
     $this->drupalGet('language-tests/language_configuration_element');
     $edit['lang_configuration[langcode]'] = 'current_interface';
     $edit['lang_configuration[language_show]'] = FALSE;
-    $this->drupalPost(NULL, $edit, 'Save');
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $lang_conf = language_get_default_configuration('some_custom_type', 'some_bundle');
 
     // Check that the settings have been saved.
@@ -51,7 +51,7 @@ class LanguageConfigurationElementTest extends WebTestBase {
     $this->drupalGet('language-tests/language_configuration_element');
     $edit['lang_configuration[langcode]'] = 'authors_default';
     $edit['lang_configuration[language_show]'] = TRUE;
-    $this->drupalPost(NULL, $edit, 'Save');
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $lang_conf = language_get_default_configuration('some_custom_type', 'some_bundle');
 
     // Check that the settings have been saved.
@@ -124,7 +124,7 @@ class LanguageConfigurationElementTest extends WebTestBase {
       'language_configuration[langcode]' => 'current_interface',
       'language_configuration[language_show]' => TRUE,
     );
-    $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
     // Check the language default configuration for the articles.
     $configuration = language_get_default_configuration('node', 'article');
     $this->assertEqual($configuration, array('langcode' => 'current_interface', 'language_show' => TRUE), 'The default language configuration has been saved on the Article content type.');
@@ -132,7 +132,7 @@ class LanguageConfigurationElementTest extends WebTestBase {
     $edit = array(
       'type' => 'article_2'
     );
-    $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
     // Check that we still have the settings for the new node type.
     $configuration = language_get_default_configuration('node', 'article_2');
     $this->assertEqual($configuration, array('langcode' => 'current_interface', 'language_show' => TRUE), 'The default language configuration has been kept on the new Article content type.');

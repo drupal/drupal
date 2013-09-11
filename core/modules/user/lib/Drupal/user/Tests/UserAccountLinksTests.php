@@ -84,7 +84,7 @@ class UserAccountLinksTests extends WebTestBase {
     $edit = array(
       (string) $input[0] => FALSE,
     );
-    $this->drupalPost('admin/structure/menu/manage/account', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/menu/manage/account', $edit, t('Save'));
 
     // Get the homepage.
     $this->drupalGet('<front>');

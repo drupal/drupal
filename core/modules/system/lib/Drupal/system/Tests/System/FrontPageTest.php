@@ -56,12 +56,12 @@ class FrontPageTest extends WebTestBase {
 
     // Change the front page to an invalid path.
     $edit = array('site_frontpage' => 'kittens');
-    $this->drupalPost('admin/config/system/site-information', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
     $this->assertText(t("The path '@path' is either invalid or you do not have access to it.", array('@path' => $edit['site_frontpage'])));
 
     // Change the front page to a valid path.
     $edit['site_frontpage'] = $this->node_path;
-    $this->drupalPost('admin/config/system/site-information', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), 'The front page path has been saved.');
 
     $this->drupalGet('');

@@ -221,7 +221,7 @@ class OptionsFieldUITest extends FieldTestBase {
       'on' => $on,
       'off' => $off,
     );
-    $this->drupalPost($this->admin_path, $edit, t('Save field settings'));
+    $this->drupalPostForm($this->admin_path, $edit, t('Save field settings'));
     $this->assertRaw(t('Updated field %label field settings.', array('%label' => $this->field_name)));
 
     // Clear field cache.
@@ -288,7 +288,7 @@ class OptionsFieldUITest extends FieldTestBase {
    */
   function assertAllowedValuesInput($input_string, $result, $message) {
     $edit = array('field[settings][allowed_values]' => $input_string);
-    $this->drupalPost($this->admin_path, $edit, t('Save field settings'));
+    $this->drupalPostForm($this->admin_path, $edit, t('Save field settings'));
 
     if (is_string($result)) {
       $this->assertText($result, $message);
@@ -316,14 +316,14 @@ class OptionsFieldUITest extends FieldTestBase {
       'off' => $off,
     );
 
-    $this->drupalPost($this->admin_path, $edit, t('Save field settings'));
+    $this->drupalPostForm($this->admin_path, $edit, t('Save field settings'));
     $this->assertText(format_string('Updated field !field_name field settings.', array('!field_name' => $this->field_name)), "The 'On' and 'Off' form fields work for boolean fields.");
 
     // Select a default value.
     $edit = array(
       $this->field_name . '[und]' => '1',
     );
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
 
     // Check the node page and see if the values are correct.
     $file_formatters = array('list_default', 'list_key');
@@ -331,7 +331,7 @@ class OptionsFieldUITest extends FieldTestBase {
       $edit = array(
         "fields[$this->field_name][type]" => $formatter,
       );
-      $this->drupalPost('admin/structure/types/manage/' . $this->type_name . '/display', $edit, t('Save'));
+      $this->drupalPostForm('admin/structure/types/manage/' . $this->type_name . '/display', $edit, t('Save'));
       $this->drupalGet('node/' . $node->id());
 
       if ($formatter == 'list_default') {

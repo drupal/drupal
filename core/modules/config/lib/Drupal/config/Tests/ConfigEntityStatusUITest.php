@@ -39,7 +39,7 @@ class ConfigEntityStatusUITest extends WebTestBase {
       'id' => $id,
       'label' => $this->randomName(),
     );
-    $this->drupalPost('admin/structure/config_test/add', $edit, 'Save');
+    $this->drupalPostForm('admin/structure/config_test/add', $edit, 'Save');
 
     $uri = entity_load('config_test', $id)->uri();
 

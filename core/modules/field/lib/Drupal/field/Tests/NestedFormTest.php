@@ -107,7 +107,7 @@ class NestedFormTest extends FieldTestBase {
       'entity_2[field_unlimited][und][0][value]' => 12,
       'entity_2[field_unlimited][und][1][value]' => 13,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     field_cache_clear();
     $entity_1 = entity_load($entity_type, 1);
     $entity_2 = entity_load($entity_type, 2);
@@ -121,14 +121,14 @@ class NestedFormTest extends FieldTestBase {
     $edit = array(
       'field_unlimited[und][1][value]' => -1,
     );
-    $this->drupalPost('test-entity/nested/1/2', $edit, t('Save'));
+    $this->drupalPostForm('test-entity/nested/1/2', $edit, t('Save'));
     $this->assertRaw(t('%label does not accept the value -1', array('%label' => 'Unlimited field')), 'Entity 1: the field validation error was reported.');
     $error_field = $this->xpath('//input[@id=:id and contains(@class, "error")]', array(':id' => 'edit-field-unlimited-und-1-value'));
     $this->assertTrue($error_field, 'Entity 1: the error was flagged on the correct element.');
     $edit = array(
       'entity_2[field_unlimited][und][1][value]' => -1,
     );
-    $this->drupalPost('test-entity/nested/1/2', $edit, t('Save'));
+    $this->drupalPostForm('test-entity/nested/1/2', $edit, t('Save'));
     $this->assertRaw(t('%label does not accept the value -1', array('%label' => 'Unlimited field')), 'Entity 2: the field validation error was reported.');
     $error_field = $this->xpath('//input[@id=:id and contains(@class, "error")]', array(':id' => 'edit-entity-2-field-unlimited-und-1-value'));
     $this->assertTrue($error_field, 'Entity 2: the error was flagged on the correct element.');
@@ -140,17 +140,17 @@ class NestedFormTest extends FieldTestBase {
       'entity_2[field_unlimited][und][0][_weight]' => 0,
       'entity_2[field_unlimited][und][1][_weight]' => -1,
     );
-    $this->drupalPost('test-entity/nested/1/2', $edit, t('Save'));
+    $this->drupalPostForm('test-entity/nested/1/2', $edit, t('Save'));
     field_cache_clear();
     $this->assertFieldValues($entity_1, 'field_unlimited', Language::LANGCODE_NOT_SPECIFIED, array(3, 2));
     $this->assertFieldValues($entity_2, 'field_unlimited', Language::LANGCODE_NOT_SPECIFIED, array(13, 12));
 
     // Test the 'add more' buttons. Only Ajax submission is tested, because
     // the two 'add more' buttons present in the form have the same #value,
-    // which confuses drupalPost().
+    // which confuses drupalPostForm().
     // 'Add more' button in the first entity:
     $this->drupalGet('test-entity/nested/1/2');
-    $this->drupalPostAJAX(NULL, array(), 'field_unlimited_add_more');
+    $this->drupalPostAjaxForm(NULL, array(), 'field_unlimited_add_more');
     $this->assertFieldByName('field_unlimited[und][0][value]', 3, 'Entity 1: field_unlimited value 0 appears correctly is the form.');
     $this->assertFieldByName('field_unlimited[und][1][value]', 2, 'Entity 1: field_unlimited value 1 appears correctly is the form.');
     $this->assertFieldByName('field_unlimited[und][2][value]', '', 'Entity 1: field_unlimited value 2 appears correctly is the form.');
@@ -161,13 +161,13 @@ class NestedFormTest extends FieldTestBase {
       'entity_2[field_unlimited][und][1][value]' => 14,
       'entity_2[field_unlimited][und][2][value]' => 15,
     );
-    $this->drupalPostAJAX(NULL, $edit, 'entity_2_field_unlimited_add_more');
+    $this->drupalPostAjaxForm(NULL, $edit, 'entity_2_field_unlimited_add_more');
     $this->assertFieldByName('entity_2[field_unlimited][und][0][value]', 13, 'Entity 2: field_unlimited value 0 appears correctly is the form.');
     $this->assertFieldByName('entity_2[field_unlimited][und][1][value]', 14, 'Entity 2: field_unlimited value 1 appears correctly is the form.');
     $this->assertFieldByName('entity_2[field_unlimited][und][2][value]', 15, 'Entity 2: field_unlimited value 2 appears correctly is the form.');
     $this->assertFieldByName('entity_2[field_unlimited][und][3][value]', '', 'Entity 2: an empty widget was added for field_unlimited value 3.');
     // Save the form and check values are saved correctly.
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
     field_cache_clear();
     $this->assertFieldValues($entity_1, 'field_unlimited', Language::LANGCODE_NOT_SPECIFIED, array(3, 2));
     $this->assertFieldValues($entity_2, 'field_unlimited', Language::LANGCODE_NOT_SPECIFIED, array(13, 14, 15));

@@ -38,7 +38,7 @@ class HTMLIdTest extends WebTestBase {
 
     // Submit second form with empty title.
     $edit = array();
-    $this->drupalPost(NULL, $edit, 'Save', array(), array(), 'form-test-html-id--2');
+    $this->drupalPostForm(NULL, $edit, 'Save', array(), array(), 'form-test-html-id--2');
     $this->assertNoDuplicateIds('There are no duplicate IDs');
   }
 

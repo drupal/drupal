@@ -45,7 +45,7 @@ class OverlayCloseTest extends WebTestBase {
 
     // Create a new node, with ?render=overlay in the query parameter to
     // simulate creating it inside the overlay.
-    $this->drupalPost('node/add/test', array('title' => 'Test node title'), t('Save'), array('query' => array('render' => 'overlay')));
+    $this->drupalPostForm('node/add/test', array('title' => 'Test node title'), t('Save'), array('query' => array('render' => 'overlay')));
 
     // Make sure a bare minimum HTML page is displayed that contains the
     // JavaScript necessary to close the overlay.

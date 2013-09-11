@@ -40,7 +40,7 @@ class AggregatorConfigurationTest extends AggregatorTestBase {
       'aggregator_parser' => 'aggregator_test_parser',
       'aggregator_processors[aggregator_test_processor]' => 'aggregator_test_processor',
     );
-    $this->drupalPost('admin/config/services/aggregator/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/services/aggregator/settings', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'));
 
     foreach ($edit as $name => $value) {
@@ -53,7 +53,7 @@ class AggregatorConfigurationTest extends AggregatorTestBase {
     $edit = array(
       'dummy_length' => 100,
     );
-    $this->drupalPost('admin/config/services/aggregator/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/services/aggregator/settings', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'));
     $this->assertFieldByName('dummy_length', 100, '"dummy_length" has correct default value.');
 

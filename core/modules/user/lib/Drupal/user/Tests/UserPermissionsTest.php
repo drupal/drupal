@@ -45,7 +45,7 @@ class UserPermissionsTest extends WebTestBase {
     $this->assertFalse(user_access('administer nodes', $account), 'User does not have "administer nodes" permission.');
     $edit = array();
     $edit[$rid . '[administer nodes]'] = TRUE;
-    $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
+    $this->drupalPostForm('admin/people/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), 'Successful save message displayed.');
     $storage_controller = $this->container->get('entity.manager')->getStorageController('user_role');
     $storage_controller->resetCache();
@@ -55,7 +55,7 @@ class UserPermissionsTest extends WebTestBase {
     $this->assertTrue(user_access('access user profiles', $account), 'User has "access user profiles" permission.');
     $edit = array();
     $edit[$rid . '[access user profiles]'] = FALSE;
-    $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
+    $this->drupalPostForm('admin/people/permissions', $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), 'Successful save message displayed.');
     $storage_controller->resetCache();
     $this->assertFalse(user_access('access user profiles', $account), 'User no longer has "access user profiles" permission.');
@@ -71,7 +71,7 @@ class UserPermissionsTest extends WebTestBase {
     // Set the user's role to be the administrator role.
     $edit = array();
     $edit['user_admin_role'] = $this->rid;
-    $this->drupalPost('admin/config/people/accounts', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/people/accounts', $edit, t('Save configuration'));
 
     // Enable aggregator module and ensure the 'administer news feeds'
     // permission is assigned by default.
@@ -79,7 +79,7 @@ class UserPermissionsTest extends WebTestBase {
     $edit['modules[Core][aggregator][enable]'] = TRUE;
     // Aggregator depends on file module, enable that as well.
     $edit['modules[Core][file][enable]'] = TRUE;
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $this->assertTrue(user_access('administer news feeds', $this->admin_user), 'The permission was automatically assigned to the administrator role');
   }
 

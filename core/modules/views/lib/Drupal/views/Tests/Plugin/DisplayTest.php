@@ -126,7 +126,7 @@ class DisplayTest extends PluginTestBase {
     $this->clickLink('Test option title');
 
     $this->randomString = $this->randomString();
-    $this->drupalPost(NULL, array('test_option' => $this->randomString), t('Apply'));
+    $this->drupalPostForm(NULL, array('test_option' => $this->randomString), t('Apply'));
 
     // Check the new value has been saved by checking the UI summary text.
     $this->drupalGet('admin/structure/views/view/test_view/edit/display_test_1');

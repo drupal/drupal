@@ -44,7 +44,7 @@ class BlockAdminThemeTest extends WebTestBase {
     // Enable admin theme and confirm that tab is accessible.
     theme_enable(array('bartik'));
     $edit['admin_theme'] = 'bartik';
-    $this->drupalPost('admin/appearance', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/appearance', $edit, t('Save configuration'));
     $this->drupalGet('admin/structure/block/list/bartik');
     $this->assertResponse(200);
   }

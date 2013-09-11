@@ -105,7 +105,7 @@ class ElementsTableSelectTest extends WebTestBase {
     // Test a submission with one checkbox checked.
     $edit = array();
     $edit['tableselect[row1]'] = TRUE;
-    $this->drupalPost('form_test/tableselect/multiple-true', $edit, 'Submit');
+    $this->drupalPostForm('form_test/tableselect/multiple-true', $edit, 'Submit');
 
     $this->assertText(t('Submitted: row1 = row1'), 'Checked checkbox row1');
     $this->assertText(t('Submitted: row2 = 0'), 'Unchecked checkbox row2.');
@@ -114,7 +114,7 @@ class ElementsTableSelectTest extends WebTestBase {
     // Test a submission with multiple checkboxes checked.
     $edit['tableselect[row1]'] = TRUE;
     $edit['tableselect[row3]'] = TRUE;
-    $this->drupalPost('form_test/tableselect/multiple-true', $edit, 'Submit');
+    $this->drupalPostForm('form_test/tableselect/multiple-true', $edit, 'Submit');
 
     $this->assertText(t('Submitted: row1 = row1'), 'Checked checkbox row1.');
     $this->assertText(t('Submitted: row2 = 0'), 'Unchecked checkbox row2.');
@@ -127,7 +127,7 @@ class ElementsTableSelectTest extends WebTestBase {
    */
   function testMultipleFalseSubmit() {
     $edit['tableselect'] = 'row1';
-    $this->drupalPost('form_test/tableselect/multiple-false', $edit, 'Submit');
+    $this->drupalPostForm('form_test/tableselect/multiple-false', $edit, 'Submit');
     $this->assertText(t('Submitted: row1'), 'Selected radio button');
   }
 

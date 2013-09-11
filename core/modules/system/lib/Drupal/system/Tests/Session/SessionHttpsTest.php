@@ -54,14 +54,14 @@ class SessionHttpsTest extends WebTestBase {
     $form = $this->xpath('//form[@id="user-login-form"]');
     $form[0]['action'] = $this->httpsUrl('user');
     $edit = array('name' => $user->getUsername(), 'pass' => $user->pass_raw);
-    $this->drupalPost(NULL, $edit, t('Log in'));
+    $this->drupalPostForm(NULL, $edit, t('Log in'));
 
     // Test a second concurrent session.
     $this->curlClose();
     $this->drupalGet('user');
     $form = $this->xpath('//form[@id="user-login-form"]');
     $form[0]['action'] = $this->httpsUrl('user');
-    $this->drupalPost(NULL, $edit, t('Log in'));
+    $this->drupalPostForm(NULL, $edit, t('Log in'));
 
     // Check secure cookie on secure page.
     $this->assertTrue($this->cookies[$secure_session_name]['secure'], 'The secure cookie has the secure attribute');
@@ -97,7 +97,7 @@ class SessionHttpsTest extends WebTestBase {
     $form = $this->xpath('//form[@id="user-login-form"]');
     $form[0]['action'] = $this->httpUrl('user');
     $edit = array('name' => $user->getUsername(), 'pass' => $user->pass_raw);
-    $this->drupalPost(NULL, $edit, t('Log in'));
+    $this->drupalPostForm(NULL, $edit, t('Log in'));
     $this->drupalGet($this->httpUrl('admin/config'));
     $this->assertResponse(200);
     $sid = $this->cookies[$insecure_session_name]['value'];
@@ -155,7 +155,7 @@ class SessionHttpsTest extends WebTestBase {
       'name' => $user->getUsername(),
       'pass' => $user->pass_raw,
     );
-    $this->drupalPost(NULL, $edit, t('Log in'));
+    $this->drupalPostForm(NULL, $edit, t('Log in'));
     // Check secure cookie on secure page.
     $this->assertTrue($this->cookies[$secure_session_name]['secure'], 'The secure cookie has the secure attribute');
     // Check insecure cookie on secure page.
@@ -206,7 +206,7 @@ class SessionHttpsTest extends WebTestBase {
     $this->drupalGet('user');
     $form = $this->xpath('//form[@id="user-login-form"]');
     $form[0]['action'] = $this->httpsUrl('user');
-    $this->drupalPost(NULL, $edit, t('Log in'));
+    $this->drupalPostForm(NULL, $edit, t('Log in'));
 
     // Test that the user is also authenticated on the insecure site.
     $this->drupalGet("user/" . $user->id() . "/edit");

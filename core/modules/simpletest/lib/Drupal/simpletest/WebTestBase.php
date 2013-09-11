@@ -62,7 +62,7 @@ abstract class WebTestBase extends TestBase {
    * Indicates that headers should be dumped if verbose output is enabled.
    *
    * Headers are dumped to verbose by drupalGet(), drupalHead(), and
-   * drupalPost().
+   * drupalPostForm().
    *
    * @var bool
    */
@@ -642,7 +642,7 @@ abstract class WebTestBase extends TestBase {
       'name' => $account->getUsername(),
       'pass' => $account->pass_raw
     );
-    $this->drupalPost('user', $edit, t('Log in'));
+    $this->drupalPostForm('user', $edit, t('Log in'));
 
     // @see WebTestBase::drupalUserIsLoggedIn()
     if (isset($this->session_id)) {
@@ -960,7 +960,7 @@ abstract class WebTestBase extends TestBase {
    * Useful after a page request is made that changes a variable in a different
    * thread.
    *
-   * In other words calling a settings page with $this->drupalPost() with a
+   * In other words calling a settings page with $this->drupalPostForm() with a
    * changed value would update a variable to reflect that change, but in the
    * thread that made the call (thread running the test) the changed variable
    * would not be picked up.
@@ -1316,7 +1316,7 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Executes a POST request on a Drupal page.
+   * Executes a form submission.
    *
    * It will be done as usual POST request with SimpleBrowser.
    *
@@ -1328,11 +1328,11 @@ abstract class WebTestBase extends TestBase {
    *   @code
    *   // First step in form.
    *   $edit = array(...);
-   *   $this->drupalPost('some_url', $edit, t('Save'));
+   *   $this->drupalPostForm('some_url', $edit, t('Save'));
    *
    *   // Second step in form.
    *   $edit = array(...);
-   *   $this->drupalPost(NULL, $edit, t('Save'));
+   *   $this->drupalPostForm(NULL, $edit, t('Save'));
    *   @endcode
    * @param  $edit
    *   Field data in an associative array. Changes the current input fields
@@ -1401,11 +1401,11 @@ abstract class WebTestBase extends TestBase {
    * @param $extra_post
    *   (optional) A string of additional data to append to the POST submission.
    *   This can be used to add POST data for which there are no HTML fields, as
-   *   is done by drupalPostAJAX(). This string is literally appended to the
+   *   is done by drupalPostAjaxForm(). This string is literally appended to the
    *   POST data, so it must already be urlencoded and contain a leading "&"
    *   (e.g., "&extra_var1=hello+world&extra_var2=you%26me").
    */
-  protected function drupalPost($path, $edit, $submit, array $options = array(), array $headers = array(), $form_html_id = NULL, $extra_post = NULL) {
+  protected function drupalPostForm($path, $edit, $submit, array $options = array(), array $headers = array(), $form_html_id = NULL, $extra_post = NULL) {
     $submit_matches = FALSE;
     $ajax = is_array($submit);
     if (isset($path)) {
@@ -1454,13 +1454,7 @@ abstract class WebTestBase extends TestBase {
             }
           }
           else {
-            foreach ($post as $key => $value) {
-              // Encode according to application/x-www-form-urlencoded
-              // Both names and values needs to be urlencoded, according to
-              // http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.1
-              $post[$key] = urlencode($key) . '=' . urlencode($value);
-            }
-            $post = implode('&', $post) . $extra_post;
+            $post = $this->serializePostValues($post) . $extra_post;
           }
           $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $post, CURLOPT_HTTPHEADER => $headers));
           // Ensure that any changes to variables in the other thread are picked
@@ -1497,11 +1491,13 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Execute an Ajax submission.
+   * Executes an Ajax form submission.
    *
    * This executes a POST as ajax.js does. It uses the returned JSON data, an
    * array of commands, to update $this->content using equivalent DOM
    * manipulation as is used by ajax.js. It also returns the array of commands.
+   * It does not apply custom AJAX commands though, because emulation is only
+   * implemented for the AJAX commands that ship with Drupal core.
    *
    * @param $path
    *   Location of the form containing the Ajax enabled element to test. Can be
@@ -1522,7 +1518,7 @@ abstract class WebTestBase extends TestBase {
    *   (optional) Options to be forwarded to the url generator.
    * @param $headers
    *   (optional) An array containing additional HTTP request headers, each
-   *   formatted as "name: value". Forwarded to drupalPost().
+   *   formatted as "name: value". Forwarded to drupalPostForm().
    * @param $form_html_id
    *   (optional) HTML ID of the form to be submitted, use when there is more
    *   than one identical form on the same page and the value of the triggering
@@ -1535,12 +1531,12 @@ abstract class WebTestBase extends TestBase {
    * @return
    *   An array of Ajax commands.
    *
-   * @see drupalPost()
+   * @see drupalPostForm()
    * @see ajax.js
    */
-  protected function drupalPostAJAX($path, $edit, $triggering_element, $ajax_path = NULL, array $options = array(), array $headers = array(), $form_html_id = NULL, $ajax_settings = NULL) {
-    // Get the content of the initial page prior to calling drupalPost(), since
-    // drupalPost() replaces $this->content.
+  protected function drupalPostAjaxForm($path, $edit, $triggering_element, $ajax_path = NULL, array $options = array(), array $headers = array(), $form_html_id = NULL, $ajax_settings = NULL) {
+    // Get the content of the initial page prior to calling drupalPostForm(),
+    // since drupalPostForm() replaces $this->content.
     if (isset($path)) {
       $this->drupalGet($path, $options);
     }
@@ -1566,10 +1562,10 @@ abstract class WebTestBase extends TestBase {
     }
 
     // Add extra information to the POST data as ajax.js does.
-    $extra_post = '';
+    $extra_post = array();
     if (isset($ajax_settings['submit'])) {
       foreach ($ajax_settings['submit'] as $key => $value) {
-        $extra_post .= '&' . urlencode($key) . '=' . urlencode($value);
+        $extra_post[$key] = $value;
       }
     }
     $ajax_html_ids = array();
@@ -1577,18 +1573,11 @@ abstract class WebTestBase extends TestBase {
       $ajax_html_ids[] = (string) $element['id'];
     }
     if (!empty($ajax_html_ids)) {
-      $extra_post .= '&' . urlencode('ajax_html_ids') . '=' . urlencode(implode(' ', $ajax_html_ids));
+      $extra_post['ajax_html_ids'] = implode(' ', $ajax_html_ids);
     }
-    if (isset($drupal_settings['ajaxPageState'])) {
-      $extra_post .= '&' . urlencode('ajax_page_state[theme]') . '=' . urlencode($drupal_settings['ajaxPageState']['theme']);
-      $extra_post .= '&' . urlencode('ajax_page_state[theme_token]') . '=' . urlencode($drupal_settings['ajaxPageState']['theme_token']);
-      foreach ($drupal_settings['ajaxPageState']['css'] as $key => $value) {
-        $extra_post .= '&' . urlencode("ajax_page_state[css][$key]") . '=1';
-      }
-      foreach ($drupal_settings['ajaxPageState']['js'] as $key => $value) {
-        $extra_post .= '&' . urlencode("ajax_page_state[js][$key]") . '=1';
-      }
-    }
+    $extra_post += $this->getAjaxPageStatePostData();
+    // Now serialize all the $extra_post values, and prepend it with an '&'.
+    $extra_post = '&' . $this->serializePostValues($extra_post);
 
     // Unless a particular path is specified, use the one specified by the
     // Ajax settings, or else 'system/ajax'.
@@ -1597,7 +1586,7 @@ abstract class WebTestBase extends TestBase {
     }
 
     // Submit the POST request.
-    $return = drupal_json_decode($this->drupalPost(NULL, $edit, array('path' => $ajax_path, 'triggering_element' => $triggering_element), $options, $headers, $form_html_id, $extra_post));
+    $return = drupal_json_decode($this->drupalPostForm(NULL, $edit, array('path' => $ajax_path, 'triggering_element' => $triggering_element), $options, $headers, $form_html_id, $extra_post));
 
     // Change the page content by applying the returned commands.
     if (!empty($ajax_settings) && !empty($return)) {
@@ -1693,6 +1682,84 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
+   * Perform a POST HTTP request.
+   *
+   * @param string $path
+   *   Drupal path where the request should be POSTed to. Will be transformed
+   *   into an absolute path automatically.
+   * @param string $accept
+   *   The value for the "Accept" header. Usually either 'application/json' or
+   *   'application/vnd.drupal-ajax'.
+   * @param array $post
+   *   The POST data. When making a 'application/vnd.drupal-ajax' request, the
+   *   Ajax page state data should be included. Use getAjaxPageStatePostData()
+   *   for that.
+   * @param array $options
+   *   (optional) Options to be forwarded to the url generator. The 'absolute'
+   *   option will automatically be enabled.
+   *
+   * @return
+   *   The content returned from the call to curl_exec().
+   *
+   * @see WebTestBase::getAjaxPageStatePostData()
+   * @see WebTestBase::curlExec()
+   * @see url()
+   */
+  protected function drupalPost($path, $accept, array $post, $options = array()) {
+    return $this->curlExec(array(
+      CURLOPT_URL => url($path, $options + array('absolute' => TRUE)),
+      CURLOPT_POST => TRUE,
+      CURLOPT_POSTFIELDS => $this->serializePostValues($post),
+      CURLOPT_HTTPHEADER => array(
+        'Accept: ' . $accept,
+        'Content-Type: application/x-www-form-urlencoded',
+      ),
+    ));
+  }
+
+  /**
+   * Get the Ajax page state from drupalSettings and prepare it for POSTing.
+   *
+   * @return array
+   *   The Ajax page state POST data.
+   */
+  protected function getAjaxPageStatePostData() {
+    $post = array();
+    $drupal_settings = $this->drupalSettings;
+    if (isset($drupal_settings['ajaxPageState'])) {
+      $post['ajax_page_state[theme]'] = $drupal_settings['ajaxPageState']['theme'];
+      $post['ajax_page_state[theme_token]'] = $drupal_settings['ajaxPageState']['theme_token'];
+      foreach ($drupal_settings['ajaxPageState']['css'] as $key => $value) {
+        $post["ajax_page_state[css][$key]"] = 1;
+      }
+      foreach ($drupal_settings['ajaxPageState']['js'] as $key => $value) {
+        $post["ajax_page_state[js][$key]"] = 1;
+      }
+    }
+    return $post;
+  }
+
+  /**
+   * Serialize POST HTTP request values.
+   *
+   * Encode according to application/x-www-form-urlencoded. Both names and
+   * values needs to be urlencoded, according to
+   * http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.1
+   *
+   * @param array $post
+   *   The array of values to be POSTed.
+   *
+   * @return string
+   *   The serialized result.
+   */
+  protected function serializePostValues($post = array()) {
+    foreach ($post as $key => $value) {
+      $post[$key] = urlencode($key) . '=' . urlencode($value);
+    }
+    return implode('&', $post);
+  }
+
+  /**
    * Runs cron in the Drupal installed by Simpletest.
    */
   protected function cronRun() {
@@ -1753,7 +1820,7 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Handles form input related to drupalPost().
+   * Handles form input related to drupalPostForm().
    *
    * Ensure that the specified fields exist and attempt to create POST data in
    * the correct manner for the particular field type.

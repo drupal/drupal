@@ -59,7 +59,7 @@ class SearchEmbedFormTest extends SearchTestBase {
    */
   function testEmbeddedForm() {
     // First verify we can submit the form from the module's page.
-    $this->drupalPost('search_embedded_form',
+    $this->drupalPostForm('search_embedded_form',
       array('name' => 'John'),
       t('Send away'));
     $this->assertText(t('Test form was submitted'), 'Form message appears');
@@ -70,7 +70,7 @@ class SearchEmbedFormTest extends SearchTestBase {
     // Now verify that we can see and submit the form from the search results.
     $this->drupalGet('search/node/' . $this->node->label());
     $this->assertText(t('Your name'), 'Form is visible');
-    $this->drupalPost('search/node/' . $this->node->label(),
+    $this->drupalPostForm('search/node/' . $this->node->label(),
       array('name' => 'John'),
       t('Send away'));
     $this->assertText(t('Test form was submitted'), 'Form message appears');
@@ -80,7 +80,7 @@ class SearchEmbedFormTest extends SearchTestBase {
 
     // Now verify that if we submit the search form, it doesn't count as
     // our form being submitted.
-    $this->drupalPost('search',
+    $this->drupalPostForm('search',
       array('keys' => 'foo'),
       t('Search'));
     $this->assertNoText(t('Test form was submitted'), 'Form message does not appear');

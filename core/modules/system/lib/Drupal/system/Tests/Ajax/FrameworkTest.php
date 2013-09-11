@@ -60,7 +60,7 @@ class FrameworkTest extends AjaxTestBase {
 
     // Load any page with at least one CSS file, at least one JavaScript file
     // and at least one #ajax-powered element. The latter is an assumption of
-    // drupalPostAJAX(), the two former are assumptions of
+    // drupalPostAjaxForm(), the two former are assumptions of
     // AjaxReponse::ajaxRender().
     // @todo refactor AJAX Framework + tests to make less assumptions.
     $this->drupalGet('ajax_forms_test_lazy_load_form');
@@ -71,7 +71,7 @@ class FrameworkTest extends AjaxTestBase {
     // 3. JavaScript files in the header
     // 4. JavaScript files in the footer
     // 5. Any other AJAX commands, in whatever order they were added.
-    $commands = $this->drupalPostAJAX(NULL, array(), NULL, 'ajax-test/order', array(), array(), NULL, array());
+    $commands = $this->drupalPostAjaxForm(NULL, array(), NULL, 'ajax-test/order', array(), array(), NULL, array());
     $this->assertCommand(array_slice($commands, 0, 1), $expected_commands[0]->render(), 'Settings command is first.');
     $this->assertCommand(array_slice($commands, 1, 1), $expected_commands[1]->render(), 'CSS command is second (and CSS files are ordered correctly).');
     $this->assertCommand(array_slice($commands, 2, 1), $expected_commands[2]->render(), 'Header JS command is third.');
@@ -131,7 +131,7 @@ class FrameworkTest extends AjaxTestBase {
     $this->assertTrue(!isset($original_js[$expected['js']]), format_string('Page originally lacks the %js file, as expected.', array('%js' => $expected['js'])));
 
     // Submit the AJAX request without triggering files getting added.
-    $commands = $this->drupalPostAJAX(NULL, array('add_files' => FALSE), array('op' => t('Submit')));
+    $commands = $this->drupalPostAjaxForm(NULL, array('add_files' => FALSE), array('op' => t('Submit')));
     $new_settings = $this->drupalGetSettings();
     $new_css = $new_settings['ajaxPageState']['css'];
     $new_js = $new_settings['ajaxPageState']['js'];
@@ -156,7 +156,7 @@ class FrameworkTest extends AjaxTestBase {
     $this->assertFalse($found_markup_command, format_string('Page still lacks the %css and %js files, as expected.', array('%css' => $expected['css'], '%js' => $expected['js'])));
 
     // Submit the AJAX request and trigger adding files.
-    $commands = $this->drupalPostAJAX(NULL, array('add_files' => TRUE), array('op' => t('Submit')));
+    $commands = $this->drupalPostAjaxForm(NULL, array('add_files' => TRUE), array('op' => t('Submit')));
     $new_settings = $this->drupalGetSettings();
     $new_css = $new_settings['ajaxPageState']['css'];
     $new_js = $new_settings['ajaxPageState']['js'];
@@ -186,7 +186,7 @@ class FrameworkTest extends AjaxTestBase {
    * Tests that drupalSettings.currentPath is not updated on AJAX requests.
    */
   public function testCurrentPathChange() {
-    $commands = $this->drupalPostAJAX('ajax_forms_test_lazy_load_form', array('add_files' => FALSE), array('op' => t('Submit')));
+    $commands = $this->drupalPostAjaxForm('ajax_forms_test_lazy_load_form', array('add_files' => FALSE), array('op' => t('Submit')));
     foreach ($commands as $command) {
       if ($command['command'] == 'settings') {
         $this->assertFalse(isset($command['settings']['currentPath']), 'Value of drupalSettings.currentPath is not updated after an AJAX request.');
@@ -207,7 +207,7 @@ class FrameworkTest extends AjaxTestBase {
 
     // This gets the form, and emulates an Ajax submission on it, including
     // adding markup to the HEAD and BODY for any lazy loaded JS/CSS files.
-    $this->drupalPostAJAX('ajax_forms_test_lazy_load_form', array('add_files' => TRUE), array('op' => t('Submit')));
+    $this->drupalPostAjaxForm('ajax_forms_test_lazy_load_form', array('add_files' => TRUE), array('op' => t('Submit')));
 
     // Verify that the resulting HTML does not load the overridden CSS file.
     // We add a "?" to the assertion, because Drupal.settings may include

@@ -134,7 +134,7 @@ class TextFieldTest extends WebTestBase {
       'name' => $this->randomName(),
       "{$this->field_name}[$langcode][0][value]" => $value,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
@@ -191,7 +191,7 @@ class TextFieldTest extends WebTestBase {
     $this->drupalLogin($this->admin_user);
     foreach (filter_formats() as $format) {
       if (!$format->isFallbackFormat()) {
-        $this->drupalPost('admin/config/content/formats/manage/' . $format->format . '/disable', array(), t('Disable'));
+        $this->drupalPostForm('admin/config/content/formats/manage/' . $format->format . '/disable', array(), t('Disable'));
       }
     }
     $this->drupalLogin($this->web_user);
@@ -209,7 +209,7 @@ class TextFieldTest extends WebTestBase {
       'name' => $this->randomName(),
       "{$this->field_name}[$langcode][0][value]" => $value,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
@@ -229,7 +229,7 @@ class TextFieldTest extends WebTestBase {
       'format' => drupal_strtolower($this->randomName()),
       'name' => $this->randomName(),
     );
-    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
     filter_formats_reset();
     $this->checkPermissions(array(), TRUE);
     $format = entity_load('filter_format', $edit['format']);
@@ -252,7 +252,7 @@ class TextFieldTest extends WebTestBase {
       'name' => $this->randomName(),
       "{$this->field_name}[$langcode][0][format]" => $format_id,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText(t('entity_test @id has been updated.', array('@id' => $id)), 'Entity was updated');
 
     // Display the entity.

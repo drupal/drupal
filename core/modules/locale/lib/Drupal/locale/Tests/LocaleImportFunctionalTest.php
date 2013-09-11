@@ -89,7 +89,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
 
     // Try importing a .po file which doesn't exist.
     $name = $this->randomName(16);
-    $this->drupalPost('admin/config/regional/translate/import', array(
+    $this->drupalPostForm('admin/config/regional/translate/import', array(
       'langcode' => 'fr',
       'files[file]' => $name,
     ), t('Import'));
@@ -111,7 +111,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
       'langcode' => 'fr',
       'translation' => 'translated',
     );
-    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
+    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $this->assertText(t('No strings available.'), 'String not overwritten by imported string.');
 
     // This import should not have changed number of plural forms.
@@ -133,7 +133,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
       'langcode' => 'fr',
       'translation' => 'translated',
     );
-    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
+    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings available.'), 'String overwritten by imported string.');
     // This import should have changed number of plural forms.
     $locale_plurals = \Drupal::state()->get('locale.translation.plurals') ?: array();
@@ -169,7 +169,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
       'langcode' => 'fr',
       'translation' => 'translated',
     );
-    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
+    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $this->assertText(t('No strings available.'), 'Customized string not overwritten by imported string.');
 
     // Try importing a .po file with overriding strings, and ensure existing
@@ -188,7 +188,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
       'langcode' => 'fr',
       'translation' => 'translated',
     );
-    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
+    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings available.'), 'Customized string overwritten by imported string.');
 
   }
@@ -233,7 +233,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
       'langcode' => $langcode,
       'translation' => 'untranslated',
     );
-    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
+    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $this->assertText($str, 'Search found the string as untranslated.');
   }
 
@@ -264,7 +264,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
       'name' => $this->randomName(16),
       'direction' => '0',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 
     // Check for the source strings we are going to translate. Adding the
     // custom language should have made the process to export configuration
@@ -287,7 +287,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
         'langcode' => $langcode,
         'translation' => 'all',
       );
-      $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
+      $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
       $this->assertText($config_string[1], format_string('Translation of @string found.', array('@string' => $config_string[0])));
     }
 
@@ -314,7 +314,7 @@ class LocaleImportFunctionalTest extends WebTestBase {
     $name = tempnam('temporary://', "po_") . '.po';
     file_put_contents($name, $contents);
     $options['files[file]'] = $name;
-    $this->drupalPost('admin/config/regional/translate/import', $options, t('Import'));
+    $this->drupalPostForm('admin/config/regional/translate/import', $options, t('Import'));
     drupal_unlink($name);
   }
 

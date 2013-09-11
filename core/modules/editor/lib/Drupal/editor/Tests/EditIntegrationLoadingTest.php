@@ -93,7 +93,7 @@ class EditIntegrationLoadingTest extends WebTestBase {
       $this->assertRaw('<p>Do you also love Drupal?</p><figure class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
 
       // Retrieving the untransformed text should result in an empty 403 response.
-      $response = $this->retrieveUntransformedText('node/1/body/und/full');
+      $response = $this->drupalPost('editor/' . 'node/1/body/und/full', 'application/vnd.drupal-ajax', array());
       $this->assertResponse(403);
       // @todo Uncomment the below once https://drupal.org/node/2063303 is fixed.
       // $this->assertIdentical('[]', $response);
@@ -111,55 +111,12 @@ class EditIntegrationLoadingTest extends WebTestBase {
     // Ensure the text is transformed.
     $this->assertRaw('<p>Do you also love Drupal?</p><figure class="caption caption-img"><img src="druplicon.png" /><figcaption>Druplicon</figcaption></figure>');
 
-    $response = $this->retrieveUntransformedText('node/1/body/und/full');
+    $response = $this->drupalPost('editor/' . 'node/1/body/und/full', 'application/vnd.drupal-ajax', array());
     $this->assertResponse(200);
     $ajax_commands = drupal_json_decode($response);
     $this->assertIdentical(1, count($ajax_commands), 'The untransformed text POST request results in one AJAX command.');
     $this->assertIdentical('editorGetUntransformedText', $ajax_commands[0]['command'], 'The first AJAX command is an editorGetUntransformedText command.');
     $this->assertIdentical('<p>Do you also love Drupal?</p><img src="druplicon.png" data-caption="Druplicon" />', $ajax_commands[0]['data'], 'The editorGetUntransformedText command contains the expected data.');
-  }
-
-  /**
-   * Retrieve untransformed text from the server.
-   *
-   * @param string $field_id
-   *   An Edit field ID.
-   *
-   * @return string
-   *   The response body.
-   */
-  protected function retrieveUntransformedText($field_id) {
-    return $this->curlExec(array(
-      CURLOPT_URL => url('editor/' . $field_id, array('absolute' => TRUE)),
-      CURLOPT_POST => TRUE,
-      CURLOPT_POSTFIELDS => $this->getAjaxPageStatePostData(),
-      CURLOPT_HTTPHEADER => array(
-        'Accept: application/vnd.drupal-ajax',
-        'Content-Type: application/x-www-form-urlencoded',
-      ),
-    ));
-  }
-
-  /**
-   * Get extra information to the POST data as ajax.js does.
-   *
-   * @return string
-   *   Additional post data.
-   */
-  protected function getAjaxPageStatePostData() {
-    $extra_post = '';
-    $drupal_settings = $this->drupalSettings;
-    if (isset($drupal_settings['ajaxPageState'])) {
-      $extra_post .= '&' . urlencode('ajax_page_state[theme]') . '=' . urlencode($drupal_settings['ajaxPageState']['theme']);
-      $extra_post .= '&' . urlencode('ajax_page_state[theme_token]') . '=' . urlencode($drupal_settings['ajaxPageState']['theme_token']);
-      foreach ($drupal_settings['ajaxPageState']['css'] as $key => $value) {
-        $extra_post .= '&' . urlencode("ajax_page_state[css][$key]") . '=1';
-      }
-      foreach ($drupal_settings['ajaxPageState']['js'] as $key => $value) {
-        $extra_post .= '&' . urlencode("ajax_page_state[js][$key]") . '=1';
-      }
-    }
-    return $extra_post;
   }
 
 }

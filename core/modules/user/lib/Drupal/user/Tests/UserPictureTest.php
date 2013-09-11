@@ -65,8 +65,8 @@ class UserPictureTest extends WebTestBase {
 
     // Delete the picture.
     $edit = array();
-    $this->drupalPost('user/' . $this->web_user->id() . '/edit', $edit, t('Remove'));
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm('user/' . $this->web_user->id() . '/edit', $edit, t('Remove'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
 
     // Call system_cron() to clean up the file. Make sure the timestamp
     // of the file is older than DRUPAL_MAXIMUM_TEMP_FILE_AGE.
@@ -113,7 +113,7 @@ class UserPictureTest extends WebTestBase {
     $edit = array(
       'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomString(),
     );
-    $this->drupalPost('comment/reply/' . $node->id(), $edit, t('Save'));
+    $this->drupalPostForm('comment/reply/' . $node->id(), $edit, t('Save'));
     $this->assertRaw(file_uri_target($file->getFileUri()), 'User picture found on comment.');
 
     // Disable user pictures on comments and nodes.
@@ -131,7 +131,7 @@ class UserPictureTest extends WebTestBase {
    */
   function saveUserPicture($image) {
     $edit = array('files[user_picture_und_0]' => drupal_realpath($image->uri));
-    $this->drupalPost('user/' . $this->web_user->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('user/' . $this->web_user->id() . '/edit', $edit, t('Save'));
 
     // Load actual user data from database.
     $account = user_load($this->web_user->id(), TRUE);

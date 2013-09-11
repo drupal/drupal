@@ -44,19 +44,19 @@ class DisplayAttachmentTest extends UITestBase {
     }
 
     // Save the attachments and test the value on the view.
-    $this->drupalPost($attachment_display_url, array('displays[page_1]' => 1), t('Apply'));
+    $this->drupalPostForm($attachment_display_url, array('displays[page_1]' => 1), t('Apply'));
     $result = $this->xpath('//a[@id = :id]', array(':id' => 'views-attachment-1-displays'));
     $this->assertEqual($result[0]->attributes()->title, t('Page'));
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
 
     $view = views_get_view('test_attachment_ui');
     $view->initDisplay();
     $this->assertEqual(array_keys(array_filter($view->displayHandlers->get('attachment_1')->getOption('displays'))), array('page_1'), 'The attached displays got saved as expected');
 
-    $this->drupalPost($attachment_display_url, array('displays[default]' => 1, 'displays[page_1]' => 1), t('Apply'));
+    $this->drupalPostForm($attachment_display_url, array('displays[default]' => 1, 'displays[page_1]' => 1), t('Apply'));
     $result = $this->xpath('//a[@id = :id]', array(':id' => 'views-attachment-1-displays'));
     $this->assertEqual($result[0]->attributes()->title, t('Multiple displays'));
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
 
     $view = views_get_view('test_attachment_ui');
     $view->initDisplay();

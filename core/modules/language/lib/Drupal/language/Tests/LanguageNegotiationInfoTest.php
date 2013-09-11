@@ -35,7 +35,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
     require_once DRUPAL_ROOT .'/core/includes/language.inc';
     $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'view the administration theme'));
     $this->drupalLogin($admin_user);
-    $this->drupalPost('admin/config/regional/language/add', array('predefined_langcode' => 'it'), t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', array('predefined_langcode' => 'it'), t('Add language'));
   }
 
   /**
@@ -71,7 +71,7 @@ class LanguageNegotiationInfoTest extends WebTestBase {
       $test_type . '[enabled][' . $test_method_id . ']' => TRUE,
       $test_type . '[configurable]' => TRUE,
     );
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Remove the interface language negotiation method by updating the language
     // negotiation settings with the proper flag enabled.

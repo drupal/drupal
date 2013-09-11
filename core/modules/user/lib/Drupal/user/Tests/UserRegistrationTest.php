@@ -42,7 +42,7 @@ class UserRegistrationTest extends WebTestBase {
     $edit = array();
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
-    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $this->assertText(t('A welcome message with further instructions has been sent to your e-mail address.'), 'User registered successfully.');
     $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
@@ -53,7 +53,7 @@ class UserRegistrationTest extends WebTestBase {
     $edit = array();
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
-    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $this->container->get('entity.manager')->getStorageController('user')->resetCache();
     $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
@@ -76,13 +76,13 @@ class UserRegistrationTest extends WebTestBase {
     // Try entering a mismatching password.
     $edit['pass[pass1]'] = '99999.0';
     $edit['pass[pass2]'] = '99999';
-    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $this->assertText(t('The specified passwords do not match.'), 'Typing mismatched passwords displays an error message.');
 
     // Enter a correct password.
     $edit['pass[pass1]'] = $new_pass = $this->randomName();
     $edit['pass[pass2]'] = $new_pass;
-    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $this->container->get('entity.manager')->getStorageController('user')->resetCache();
     $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
@@ -96,7 +96,7 @@ class UserRegistrationTest extends WebTestBase {
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $edit['pass[pass1]'] = $pass = $this->randomName();
     $edit['pass[pass2]'] = $pass;
-    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $this->assertText(t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.'), 'Users are notified of pending approval');
 
     // Try to login before administrator approval.
@@ -104,7 +104,7 @@ class UserRegistrationTest extends WebTestBase {
       'name' => $name,
       'pass' => $pass,
     );
-    $this->drupalPost('user/login', $auth, t('Log in'));
+    $this->drupalPostForm('user/login', $auth, t('Log in'));
     $this->assertText(t('The username @name has not been activated or is blocked.', array('@name' => $name)), 'User cannot login yet.');
 
     // Activate the new account.
@@ -115,11 +115,11 @@ class UserRegistrationTest extends WebTestBase {
     $edit = array(
       'status' => 1,
     );
-    $this->drupalPost('user/' . $new_user->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('user/' . $new_user->id() . '/edit', $edit, t('Save'));
     $this->drupalLogout();
 
     // Login after administrator approval.
-    $this->drupalPost('user/login', $auth, t('Log in'));
+    $this->drupalPostForm('user/login', $auth, t('Log in'));
     $this->assertText(t('Member for'), 'User can log in after administrator approval.');
   }
 
@@ -139,13 +139,13 @@ class UserRegistrationTest extends WebTestBase {
     $edit['mail'] = $duplicate_user->getEmail();
 
     // Attempt to create a new account using an existing e-mail address.
-    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $this->assertText(t('The e-mail address @email is already registered.', array('@email' => $duplicate_user->getEmail())), 'Supplying an exact duplicate email address displays an error message');
 
     // Attempt to bypass duplicate email registration validation by adding spaces.
     $edit['mail'] = '   ' . $duplicate_user->getEmail() . '   ';
 
-    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $this->assertText(t('The e-mail address @email is already registered.', array('@email' => $duplicate_user->getEmail())), 'Supplying a duplicate email address with added whitespace displays an error message');
   }
 
@@ -173,7 +173,7 @@ class UserRegistrationTest extends WebTestBase {
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     $edit['pass[pass1]'] = $new_pass = $this->randomName();
     $edit['pass[pass2]'] = $new_pass;
-    $this->drupalPost(NULL, $edit, t('Create new account'));
+    $this->drupalPostForm(NULL, $edit, t('Create new account'));
 
     // Check user fields.
     $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
@@ -232,17 +232,17 @@ class UserRegistrationTest extends WebTestBase {
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     // Missing input in required field.
     $edit['test_user_field[und][0][value]'] = '';
-    $this->drupalPost(NULL, $edit, t('Create new account'));
+    $this->drupalPostForm(NULL, $edit, t('Create new account'));
     $this->assertRaw(t('@name field is required.', array('@name' => $instance->label())), 'Field validation error was correctly reported.');
     // Invalid input.
     $edit['test_user_field[und][0][value]'] = '-1';
-    $this->drupalPost(NULL, $edit, t('Create new account'));
+    $this->drupalPostForm(NULL, $edit, t('Create new account'));
     $this->assertRaw(t('%name does not accept the value -1.', array('%name' => $instance->label())), 'Field validation error was correctly reported.');
 
     // Submit with valid data.
     $value = rand(1, 255);
     $edit['test_user_field[und][0][value]'] = $value;
-    $this->drupalPost(NULL, $edit, t('Create new account'));
+    $this->drupalPostForm(NULL, $edit, t('Create new account'));
     // Check user fields.
     $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
     $new_user = reset($accounts);
@@ -258,19 +258,19 @@ class UserRegistrationTest extends WebTestBase {
       $edit = array();
       $edit['test_user_field[und][0][value]'] = $value;
       if ($js == 'js') {
-        $this->drupalPostAJAX(NULL, $edit, 'test_user_field_add_more');
-        $this->drupalPostAJAX(NULL, $edit, 'test_user_field_add_more');
+        $this->drupalPostAjaxForm(NULL, $edit, 'test_user_field_add_more');
+        $this->drupalPostAjaxForm(NULL, $edit, 'test_user_field_add_more');
       }
       else {
-        $this->drupalPost(NULL, $edit, t('Add another item'));
-        $this->drupalPost(NULL, $edit, t('Add another item'));
+        $this->drupalPostForm(NULL, $edit, t('Add another item'));
+        $this->drupalPostForm(NULL, $edit, t('Add another item'));
       }
       // Submit with three values.
       $edit['test_user_field[und][1][value]'] = $value + 1;
       $edit['test_user_field[und][2][value]'] = $value + 2;
       $edit['name'] = $name = $this->randomName();
       $edit['mail'] = $mail = $edit['name'] . '@example.com';
-      $this->drupalPost(NULL, $edit, t('Create new account'));
+      $this->drupalPostForm(NULL, $edit, t('Create new account'));
       // Check user fields.
       $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
       $new_user = reset($accounts);

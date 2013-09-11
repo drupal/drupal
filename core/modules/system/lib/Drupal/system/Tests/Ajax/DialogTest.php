@@ -109,9 +109,9 @@ class DialogTest extends AjaxTestBase {
     $this->assertRaw($dialog_contents, 'Non-JS normal dialog page present.');
 
     // Emulate going to the JS version of the page and check the JSON response.
-    // This needs to use WebTestBase::drupalPostAJAX() so that the correct
+    // This needs to use WebTestBase::drupalPostAjaxForm() so that the correct
     // dialog options are sent.
-    $ajax_result = $this->drupalPostAJAX('ajax-test/dialog', array(
+    $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', array(
         // We have to mock a form element to make drupalPost submit from a link.
         'textfield' => 'test',
       ), array(), 'ajax-test/dialog-contents', array(), array('Accept: application/vnd.drupal-dialog'), NULL, array(
@@ -122,9 +122,9 @@ class DialogTest extends AjaxTestBase {
     $this->assertEqual($normal_expected_response, $ajax_result[3], 'Normal dialog JSON response matches.');
 
     // Emulate going to the JS version of the page and check the JSON response.
-    // This needs to use WebTestBase::drupalPostAJAX() so that the correct
+    // This needs to use WebTestBase::drupalPostAjaxForm() so that the correct
     // dialog options are sent.
-    $ajax_result = $this->drupalPostAJAX('ajax-test/dialog', array(
+    $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', array(
         // We have to mock a form element to make drupalPost submit from a link.
         'textfield' => 'test',
       ), array(), 'ajax-test/dialog-contents', array(), array('Accept: application/vnd.drupal-dialog'), NULL, array(
@@ -141,7 +141,7 @@ class DialogTest extends AjaxTestBase {
     // Test submitting via a POST request through the button for modals. This
     // approach more accurately reflects the real responses by Drupal because
     // all of the necessary page variables are emulated.
-    $ajax_result = $this->drupalPostAJAX('ajax-test/dialog', array(), 'button1');
+    $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', array(), 'button1');
 
     // Check that CSS and JavaScript are "added" to the page dynamically.
     $dialog_css_exists = strpos($ajax_result[1]['data'], 'jquery.ui.dialog.css') !== FALSE;
@@ -155,7 +155,7 @@ class DialogTest extends AjaxTestBase {
     $this->assertEqual($modal_expected_response, $ajax_result[3], 'POST request modal dialog JSON response matches.');
 
     // Abbreviated test for "normal" dialogs, testing only the difference.
-    $ajax_result = $this->drupalPostAJAX('ajax-test/dialog', array(), 'button2');
+    $ajax_result = $this->drupalPostAjaxForm('ajax-test/dialog', array(), 'button2');
     $this->assertEqual($normal_expected_response, $ajax_result[3], 'POST request normal dialog JSON response matches.');
 
     // Check that requesting a form dialog without JS goes to a page.

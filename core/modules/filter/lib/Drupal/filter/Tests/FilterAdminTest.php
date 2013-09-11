@@ -61,7 +61,7 @@ class FilterAdminTest extends WebTestBase {
       'format' => $format_id,
       'name' => $name,
     );
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->drupalPostForm(NULL, $edit, t('Save configuration'));
 
     // Verify default weight of the text format.
     $this->drupalGet('admin/config/content/formats');
@@ -71,7 +71,7 @@ class FilterAdminTest extends WebTestBase {
     $edit = array(
       "formats[$format_id][weight]" => 5,
     );
-    $this->drupalPost('admin/config/content/formats', $edit, t('Save changes'));
+    $this->drupalPostForm('admin/config/content/formats', $edit, t('Save changes'));
     $this->assertFieldByName("formats[$format_id][weight]", 5, 'Text format weight was saved.');
 
     // Edit text format.
@@ -87,7 +87,7 @@ class FilterAdminTest extends WebTestBase {
       array('%href' => 'admin/config/content/formats/manage/' . $format_id)
     ));
     $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
-    $this->drupalPost(NULL, array(), t('Save configuration'));
+    $this->drupalPostForm(NULL, array(), t('Save configuration'));
 
     // Verify that the custom weight of the text format has been retained.
     $this->drupalGet('admin/config/content/formats');
@@ -96,7 +96,7 @@ class FilterAdminTest extends WebTestBase {
     // Disable text format.
     $this->assertLinkByHref('admin/config/content/formats/manage/' . $format_id . '/disable');
     $this->drupalGet('admin/config/content/formats/manage/' . $format_id . '/disable');
-    $this->drupalPost(NULL, array(), t('Disable'));
+    $this->drupalPostForm(NULL, array(), t('Disable'));
 
     // Verify that disabled text format no longer exists.
     $this->drupalGet('admin/config/content/formats/manage/' . $format_id);
@@ -108,7 +108,7 @@ class FilterAdminTest extends WebTestBase {
       'format' => $format_id,
       'name' => 'New format',
     );
-    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
     $this->assertText('The machine-readable name is already in use. It must be unique.');
 
     // Attempt to create a format of the same human readable name as the
@@ -117,7 +117,7 @@ class FilterAdminTest extends WebTestBase {
       'format' => 'new_format',
       'name' => $name,
     );
-    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
     $this->assertRaw(t('Text format names must be unique. A format named %name already exists.', array(
       '%name' => $name,
     )));
@@ -150,7 +150,7 @@ class FilterAdminTest extends WebTestBase {
     // Add an additional tag.
     $edit = array();
     $edit['filters[filter_html][settings][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <quote>';
-    $this->drupalPost('admin/config/content/formats/manage/' . $restricted, $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/manage/' . $restricted, $edit, t('Save configuration'));
     $this->assertUrl('admin/config/content/formats');
     $this->drupalGet('admin/config/content/formats/manage/' . $restricted);
     $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], 'Allowed HTML tag added.');
@@ -167,7 +167,7 @@ class FilterAdminTest extends WebTestBase {
     $edit = array();
     $edit['filters[' . $second_filter . '][weight]'] = 1;
     $edit['filters[' . $first_filter . '][weight]'] = 2;
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->assertUrl('admin/config/content/formats');
     $this->drupalGet('admin/config/content/formats/manage/' . $restricted);
     $this->assertFieldByName('filters[' . $second_filter . '][weight]', 1, 'Order saved successfully.');
@@ -195,7 +195,7 @@ class FilterAdminTest extends WebTestBase {
     $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = 1;
     $edit['filters[' . $second_filter . '][status]'] = TRUE;
     $edit['filters[' . $first_filter . '][status]'] = TRUE;
-    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
     $this->assertUrl('admin/config/content/formats');
     $this->assertRaw(t('Added text format %format.', array('%format' => $edit['name'])), 'New filter created.');
 
@@ -208,7 +208,7 @@ class FilterAdminTest extends WebTestBase {
     $this->assertFieldByName('filters[' . $first_filter . '][status]', '', 'Url filter found.');
 
     // Disable new filter.
-    $this->drupalPost('admin/config/content/formats/manage/' . $format->format . '/disable', array(), t('Disable'));
+    $this->drupalPostForm('admin/config/content/formats/manage/' . $format->format . '/disable', array(), t('Disable'));
     $this->assertUrl('admin/config/content/formats');
     $this->assertRaw(t('Disabled text format %format.', array('%format' => $edit['name'])), 'Format successfully disabled.');
 
@@ -217,7 +217,7 @@ class FilterAdminTest extends WebTestBase {
     $edit = array();
     $edit['roles[' . DRUPAL_ANONYMOUS_RID . ']'] = 0;
     $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = 1;
-    $this->drupalPost('admin/config/content/formats/manage/' . $full, $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/manage/' . $full, $edit, t('Save configuration'));
     $this->assertUrl('admin/config/content/formats');
     $this->assertRaw(t('The text format %format has been updated.', array('%format' => $format->name)), 'Full HTML format successfully updated.');
 
@@ -237,7 +237,7 @@ class FilterAdminTest extends WebTestBase {
     $edit["title"] = $this->randomName();
     $edit["body[$langcode][0][value]"] = $text;
     $edit["body[$langcode][0][format]"] = $basic;
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been created.', array('%title' => $edit["title"])), 'Filtered node created.');
 
     $node = $this->drupalGetNodeByTitle($edit["title"]);
@@ -254,7 +254,7 @@ class FilterAdminTest extends WebTestBase {
       ->save();
     $edit = array();
     $edit["body[$langcode][0][format]"] = $plain;
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('node/' . $node->id());
     $this->assertText(check_plain($text), 'The "Plain text" text format escapes all HTML tags.');
     \Drupal::config('filter.settings')
@@ -268,7 +268,7 @@ class FilterAdminTest extends WebTestBase {
     // Allowed tags.
     $edit = array();
     $edit['filters[filter_html][settings][allowed_html]'] = '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>';
-    $this->drupalPost('admin/config/content/formats/manage/' . $basic, $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/manage/' . $basic, $edit, t('Save configuration'));
     $this->assertUrl('admin/config/content/formats');
     $this->drupalGet('admin/config/content/formats/manage/' . $basic);
     $this->assertFieldByName('filters[filter_html][settings][allowed_html]', $edit['filters[filter_html][settings][allowed_html]'], 'Changes reverted.');
@@ -276,7 +276,7 @@ class FilterAdminTest extends WebTestBase {
     // Full HTML.
     $edit = array();
     $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = FALSE;
-    $this->drupalPost('admin/config/content/formats/manage/' . $full, $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/manage/' . $full, $edit, t('Save configuration'));
     $this->assertUrl('admin/config/content/formats');
     $this->assertRaw(t('The text format %format has been updated.', array('%format' => $format->name)), 'Full HTML format successfully reverted.');
     $this->drupalGet('admin/config/content/formats/manage/' . $full);
@@ -286,7 +286,7 @@ class FilterAdminTest extends WebTestBase {
     $edit = array();
     $edit['filters[' . $second_filter . '][weight]'] = 2;
     $edit['filters[' . $first_filter . '][weight]'] = 1;
-    $this->drupalPost('admin/config/content/formats/manage/' . $basic, $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/manage/' . $basic, $edit, t('Save configuration'));
     $this->assertUrl('admin/config/content/formats');
     $this->drupalGet('admin/config/content/formats/manage/' . $basic);
     $this->assertFieldByName('filters[' . $second_filter . '][weight]', $edit['filters[' . $second_filter . '][weight]'], 'Changes reverted.');
@@ -301,7 +301,7 @@ class FilterAdminTest extends WebTestBase {
     $edit = array(
       'filters[filter_url][settings][filter_url_length]' => $this->randomName(4),
     );
-    $this->drupalPost('admin/config/content/formats/manage/basic_html', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/manage/basic_html', $edit, t('Save configuration'));
     $this->assertNoRaw(t('The text format %format has been updated.', array('%format' => 'Basic HTML')));
   }
 }

@@ -46,34 +46,34 @@ class ProcessingTest extends WebTestBase {
   function testBatchForm() {
     // Batch 0: no operation.
     $edit = array('batch' => 'batch_0');
-    $this->drupalPost('batch-test/simple', $edit, 'Submit');
+    $this->drupalPostForm('batch-test/simple', $edit, 'Submit');
     $this->assertBatchMessages($this->_resultMessages('batch_0'), 'Batch with no operation performed successfully.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
 
     // Batch 1: several simple operations.
     $edit = array('batch' => 'batch_1');
-    $this->drupalPost('batch-test/simple', $edit, 'Submit');
+    $this->drupalPostForm('batch-test/simple', $edit, 'Submit');
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch with simple operations performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_1'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
 
     // Batch 2: one multistep operation.
     $edit = array('batch' => 'batch_2');
-    $this->drupalPost('batch-test/simple', $edit, 'Submit');
+    $this->drupalPostForm('batch-test/simple', $edit, 'Submit');
     $this->assertBatchMessages($this->_resultMessages('batch_2'), 'Batch with multistep operation performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_2'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
 
     // Batch 3: simple + multistep combined.
     $edit = array('batch' => 'batch_3');
-    $this->drupalPost('batch-test/simple', $edit, 'Submit');
+    $this->drupalPostForm('batch-test/simple', $edit, 'Submit');
     $this->assertBatchMessages($this->_resultMessages('batch_3'), 'Batch with simple and multistep operations performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_3'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
 
     // Batch 4: nested batch.
     $edit = array('batch' => 'batch_4');
-    $this->drupalPost('batch-test/simple', $edit, 'Submit');
+    $this->drupalPostForm('batch-test/simple', $edit, 'Submit');
     $this->assertBatchMessages($this->_resultMessages('batch_4'), 'Nested batch performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_4'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
@@ -87,13 +87,13 @@ class ProcessingTest extends WebTestBase {
     $this->assertText('step 1', 'Form is displayed in step 1.');
 
     // First step triggers batch 1.
-    $this->drupalPost(NULL, array(), 'Submit');
+    $this->drupalPostForm(NULL, array(), 'Submit');
     $this->assertBatchMessages($this->_resultMessages('batch_1'), 'Batch for step 1 performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_1'), 'Execution order was correct.');
     $this->assertText('step 2', 'Form is displayed in step 2.');
 
     // Second step triggers batch 2.
-    $this->drupalPost(NULL, array(), 'Submit');
+    $this->drupalPostForm(NULL, array(), 'Submit');
     $this->assertBatchMessages($this->_resultMessages('batch_2'), 'Batch for step 2 performed successfully.');
     $this->assertEqual(batch_test_stack(), $this->_resultStack('batch_2'), 'Execution order was correct.');
     $this->assertText('Redirection successful.', 'Redirection after batch execution is correct.');
@@ -107,7 +107,7 @@ class ProcessingTest extends WebTestBase {
     // handlers. Each submit handler modify the submitted 'value'.
     $value = rand(0, 255);
     $edit = array('value' => $value);
-    $this->drupalPost('batch-test/chained', $edit, 'Submit');
+    $this->drupalPostForm('batch-test/chained', $edit, 'Submit');
     // Check that result messages are present and in the correct order.
     $this->assertBatchMessages($this->_resultMessages('chained'), 'Batches defined in separate submit handlers performed successfully.');
     // The stack contains execution order of batch callbacks and submit

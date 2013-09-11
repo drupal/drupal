@@ -46,13 +46,13 @@ class LocaleContentTest extends WebTestBase {
     // Install the Arabic language (which is RTL) and configure as the default.
     $edit = array();
     $edit['predefined_langcode'] = 'ar';
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
     drupal_static_reset('language_list');
 
     $edit = array(
       'site_default_language' => 'ar',
     );
-    $this->drupalpost('admin/config/regional/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/settings', $edit, t('Save configuration'));
 
     // Verify that the machine name field is still LTR for a new content type.
     $this->drupalGet('admin/structure/types/add');
@@ -85,7 +85,7 @@ class LocaleContentTest extends WebTestBase {
       'name' => $name,
       'direction' => '0',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     drupal_static_reset('language_list');
 
     // Set the content type to use multilingual support.
@@ -94,7 +94,7 @@ class LocaleContentTest extends WebTestBase {
     $edit = array(
       'language_configuration[language_show]' => TRUE,
     );
-    $this->drupalPost("admin/structure/types/manage/{$type2->type}", $edit, t('Save content type'));
+    $this->drupalPostForm("admin/structure/types/manage/{$type2->type}", $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => $type2->name)));
     $this->drupalLogout();
     drupal_static_reset('language_list');
@@ -130,7 +130,7 @@ class LocaleContentTest extends WebTestBase {
     $edit = array(
       'langcode' => 'en',
     );
-    $this->drupalPost($path, $edit, t('Save'));
+    $this->drupalPostForm($path, $edit, t('Save'));
     $this->assertRaw(t('%title has been updated.', array('%title' => $node_title)));
 
     $this->drupalLogout();
@@ -153,13 +153,13 @@ class LocaleContentTest extends WebTestBase {
     // Install Arabic language.
     $edit = array();
     $edit['predefined_langcode'] = 'ar';
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
     drupal_static_reset('language_list');
 
     // Install Spanish language.
     $edit = array();
     $edit['predefined_langcode'] = 'es';
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
     drupal_static_reset('language_list');
 
     // Set the content type to use multilingual support.
@@ -167,7 +167,7 @@ class LocaleContentTest extends WebTestBase {
     $edit = array(
       'language_configuration[language_show]' => TRUE,
     );
-    $this->drupalPost("admin/structure/types/manage/{$type->type}", $edit, t('Save content type'));
+    $this->drupalPostForm("admin/structure/types/manage/{$type->type}", $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => $type->name)));
     $this->drupalLogout();
 
@@ -222,8 +222,8 @@ class LocaleContentTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     // Enable multiple languages.
-    $this->drupalPost('admin/config/regional/language/edit/en', array('locale_translate_english' => TRUE), t('Save language'));
-    $this->drupalPost('admin/config/regional/language/add', array('predefined_langcode' => 'zh-hant'), t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/edit/en', array('locale_translate_english' => TRUE), t('Save language'));
+    $this->drupalPostForm('admin/config/regional/language/add', array('predefined_langcode' => 'zh-hant'), t('Add language'));
     drupal_static_reset('language_list');
 
     // Create two nodes: English and Chinese.

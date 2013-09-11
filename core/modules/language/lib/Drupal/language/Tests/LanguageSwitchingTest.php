@@ -49,11 +49,11 @@ class LanguageSwitchingTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'fr',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Enable URL language detection and selection.
     $edit = array('language_interface[enabled][language-url]' => '1');
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Assert that the language switching block is displayed on the frontpage.
     $this->drupalGet('');
@@ -98,11 +98,11 @@ class LanguageSwitchingTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'fr',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Enable URL language detection and selection.
     $edit = array('language_interface[enabled][language-url]' => '1');
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     $function_name = '#type link';
 

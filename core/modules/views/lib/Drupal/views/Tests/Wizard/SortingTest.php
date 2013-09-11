@@ -39,7 +39,7 @@ class SortingTest extends WizardTestBase {
     $view1['page[create]'] = 1;
     $view1['page[title]'] = $this->randomName(16);
     $view1['page[path]'] = $this->randomName(16);
-    $this->drupalPost('admin/structure/views/add', $view1, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view1, t('Save and edit'));
     $this->drupalGet($view1['page[path]']);
     $this->assertResponse(200);
 
@@ -64,7 +64,7 @@ class SortingTest extends WizardTestBase {
     $view2['page[create]'] = 1;
     $view2['page[title]'] = $this->randomName(16);
     $view2['page[path]'] = $this->randomName(16);
-    $this->drupalPost('admin/structure/views/add', $view2, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view2, t('Save and edit'));
     $this->drupalGet($view2['page[path]']);
     $this->assertResponse(200);
 

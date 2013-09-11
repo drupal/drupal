@@ -49,13 +49,13 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
 
     // Enable URL language detection and selection.
     $edit = array('language_interface[enabled][language-url]' => '1');
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Set "Basic page" content type to use multilingual support.
     $edit = array(
       'language_configuration[language_show]' => TRUE,
     );
-    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
 
     // Make node body translatable.
@@ -79,7 +79,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
     $edit = array();
     $edit[$title_key] = $title_value;
     $edit[$body_key] = $body_value;
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
@@ -93,7 +93,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
       $title_key => $this->randomName(8),
       'langcode' => $langcode,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit[$title_key], TRUE);
     $this->assertTrue($node, 'Node found in database.');
     $this->assertTrue($node->language()->id == $langcode && $node->body->value == $body_value, 'Field language correctly changed.');
@@ -124,7 +124,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
     $edit = array();
     $edit[$title_key] = $title_value;
     $edit[$body_key] = $body_value;
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);

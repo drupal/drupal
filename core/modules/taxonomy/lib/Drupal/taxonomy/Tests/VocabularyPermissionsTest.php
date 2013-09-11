@@ -43,7 +43,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $edit = array();
     $edit['name'] = $this->randomName();
 
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw(t('Created new term %name.', array('%name' => $edit['name'])), 'Term created successfully.');
 
     $terms = taxonomy_term_load_multiple_by_name($edit['name']);
@@ -55,7 +55,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $this->assertText($edit['name'], 'Edit taxonomy term form opened successfully.');
 
     $edit['name'] = $this->randomName();
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw(t('Updated term %name.', array('%name' => $edit['name'])), 'Term updated successfully.');
 
     // Delete the vocabulary.
@@ -63,7 +63,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $this->assertRaw(t('Are you sure you want to delete the term %name?', array('%name' => $edit['name'])), 'Delete taxonomy term form opened successfully.');
 
     // Confirm deletion.
-    $this->drupalPost(NULL, NULL, t('Delete'));
+    $this->drupalPostForm(NULL, NULL, t('Delete'));
     $this->assertRaw(t('Deleted term %name.', array('%name' => $edit['name'])), 'Term deleted.');
 
     // Test as user with "edit" permissions.
@@ -83,7 +83,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $this->assertText($term->name->value, 'Edit taxonomy term form opened successfully.');
 
     $edit['name'] = $this->randomName();
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw(t('Updated term %name.', array('%name' => $edit['name'])), 'Term updated successfully.');
 
     // Delete the vocabulary.
@@ -110,7 +110,7 @@ class VocabularyPermissionsTest extends TaxonomyTestBase {
     $this->assertRaw(t('Are you sure you want to delete the term %name?', array('%name' => $term->label())), 'Delete taxonomy term form opened successfully.');
 
     // Confirm deletion.
-    $this->drupalPost(NULL, NULL, t('Delete'));
+    $this->drupalPostForm(NULL, NULL, t('Delete'));
     $this->assertRaw(t('Deleted term %name.', array('%name' => $term->label())), 'Term deleted.');
 
     // Test as user without proper permissions.

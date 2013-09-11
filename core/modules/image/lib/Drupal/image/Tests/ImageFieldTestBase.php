@@ -118,7 +118,7 @@ abstract class ImageFieldTestBase extends WebTestBase {
       'title' => $this->randomName(),
     );
     $edit['files[' . $field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_0]'] = drupal_realpath($image->uri);
-    $this->drupalPost('node/add/' . $type, $edit, t('Save and publish'));
+    $this->drupalPostForm('node/add/' . $type, $edit, t('Save and publish'));
 
     // Retrieve ID of the newly created node from the current URL.
     $matches = array();

@@ -52,7 +52,7 @@ class TaxonomyTermIndentationTest extends TaxonomyTestBase {
     );
 
     // Submit the edited form and check for HTML indentation element presence.
-    $this->drupalPost('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid'), $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->get('vid'), $edit, t('Save'));
     $this->assertPattern('|<div class="indentation">&nbsp;</div>|');
   }
 

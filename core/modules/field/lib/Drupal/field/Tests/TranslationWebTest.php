@@ -123,7 +123,7 @@ class TranslationWebTest extends FieldTestBase {
       "{$field_name}[$langcode][0][value]" => $entity->{$field_name}->value,
       'revision' => TRUE,
     );
-    $this->drupalPost($this->entity_type . '/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm($this->entity_type . '/manage/' . $entity->id() . '/edit', $edit, t('Save'));
 
     // Check translation revisions.
     $this->checkTranslationRevisions($entity->id(), $entity->getRevisionId(), $available_langcodes);

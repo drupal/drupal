@@ -33,7 +33,7 @@ class NodeAccessRebuildTest extends NodeTestBase {
   function testNodeAccessRebuild() {
     $this->drupalGet('admin/reports/status');
     $this->clickLink(t('Rebuild permissions'));
-    $this->drupalPost(NULL, array(), t('Rebuild permissions'));
+    $this->drupalPostForm(NULL, array(), t('Rebuild permissions'));
     $this->assertText(t('Content permissions have been rebuilt.'));
   }
 }

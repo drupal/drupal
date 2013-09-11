@@ -52,13 +52,13 @@ class SearchBlockTest extends SearchTestBase {
 
     // Test a normal search via the block form, from the front page.
     $terms = array('search_block_form' => 'test');
-    $this->drupalPost('node', $terms, t('Search'));
+    $this->drupalPostForm('node', $terms, t('Search'));
     $this->assertText('Your search yielded no results');
 
     // Test a search from the block on a 404 page.
     $this->drupalGet('foo');
     $this->assertResponse(404);
-    $this->drupalPost(NULL, $terms, t('Search'));
+    $this->drupalPostForm(NULL, $terms, t('Search'));
     $this->assertResponse(200);
     $this->assertText('Your search yielded no results');
 
@@ -66,7 +66,7 @@ class SearchBlockTest extends SearchTestBase {
     $visibility['path']['pages'] = 'search';
     $block->set('visibility', $visibility);
 
-    $this->drupalPost('node', $terms, t('Search'));
+    $this->drupalPostForm('node', $terms, t('Search'));
     $this->assertText('Your search yielded no results');
 
     // Confirm that the user is redirected to the search page.
@@ -78,7 +78,7 @@ class SearchBlockTest extends SearchTestBase {
 
     // Test an empty search via the block form, from the front page.
     $terms = array('search_block_form' => '');
-    $this->drupalPost('node', $terms, t('Search'));
+    $this->drupalPostForm('node', $terms, t('Search'));
     $this->assertText('Please enter some keywords');
 
     // Confirm that the user is redirected to the search page, when form is

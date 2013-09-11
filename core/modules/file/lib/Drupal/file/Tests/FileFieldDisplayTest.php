@@ -48,7 +48,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       $edit = array(
         "fields[$field_name][type]" => $formatter,
       );
-      $this->drupalPost("admin/structure/types/manage/$type_name/display", $edit, t('Save'));
+      $this->drupalPostForm("admin/structure/types/manage/$type_name/display", $edit, t('Save'));
       $this->drupalGet('node/' . $node->id());
       $this->assertNoText($field_name, format_string('Field label is hidden when no file attached for formatter %formatter', array('%formatter' => $formatter)));
     }
@@ -70,7 +70,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
 
     // Turn the "display" option off and check that the file is no longer displayed.
     $edit = array($field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][display]' => FALSE);
-    $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
 
     $this->assertNoRaw($default_output, 'Field is hidden when "display" option is unchecked.');
 
@@ -80,7 +80,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
       $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][description]' => $description,
       $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][display]' => TRUE,
     );
-    $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $this->assertText($description);
   }
 }

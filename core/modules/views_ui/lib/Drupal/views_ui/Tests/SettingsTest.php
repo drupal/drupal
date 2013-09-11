@@ -41,7 +41,7 @@ class SettingsTest extends UITestBase {
     $edit = array(
       'ui_show_master_display' => TRUE,
     );
-    $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/structure/views/settings', $edit, t('Save configuration'));
 
     $view = array();
     $view['label'] = $this->randomName(16);
@@ -50,7 +50,7 @@ class SettingsTest extends UITestBase {
     $view['page[create]'] = TRUE;
     $view['page[title]'] = $this->randomName(16);
     $view['page[path]'] = $this->randomName(16);
-    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
 
     // Configure to not always show the master display.
     // If you have a view without a page or block the master display should be
@@ -58,15 +58,15 @@ class SettingsTest extends UITestBase {
     $edit = array(
       'ui_show_master_display' => FALSE,
     );
-    $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/structure/views/settings', $edit, t('Save configuration'));
 
     $view['page[create]'] = FALSE;
-    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
 
     // Create a view with an additional display, so master should be hidden.
     $view['page[create]'] = TRUE;
     $view['id'] = strtolower($this->randomName());
-    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
 
     $this->assertNoLink(t('Master'));
 
@@ -77,42 +77,42 @@ class SettingsTest extends UITestBase {
     $edit = array(
       'ui_show_display_embed' => TRUE,
     );
-    $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/structure/views/settings', $edit, t('Save configuration'));
 
     $view['id'] = strtolower($this->randomName());
-    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
     $this->assertFieldById('edit-displays-top-add-display-embed');
 
     $edit = array(
       'ui_show_display_embed' => FALSE,
     );
-    $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/structure/views/settings', $edit, t('Save configuration'));
     views_invalidate_cache();
-    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
     $this->assertNoFieldById('edit-displays-top-add-display-embed');
 
     // Configure to hide/show the sql at the preview.
     $edit = array(
       'ui_show_sql_query_enabled' => FALSE,
     );
-    $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/structure/views/settings', $edit, t('Save configuration'));
 
     $view['id'] = strtolower($this->randomName());
-    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
 
-    $this->drupalPost(NULL, array(), t('Update preview'));
+    $this->drupalPostForm(NULL, array(), t('Update preview'));
     $xpath = $this->xpath('//div[@class="views-query-info"]/pre');
     $this->assertEqual(count($xpath), 0, 'The views sql is hidden.');
 
     $edit = array(
       'ui_show_sql_query_enabled' => TRUE,
     );
-    $this->drupalPost('admin/structure/views/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/structure/views/settings', $edit, t('Save configuration'));
 
     $view['id'] = strtolower($this->randomName());
-    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
 
-    $this->drupalPost(NULL, array(), t('Update preview'));
+    $this->drupalPostForm(NULL, array(), t('Update preview'));
     $xpath = $this->xpath('//div[@class="views-query-info"]//pre');
     $this->assertEqual(count($xpath), 1, 'The views sql is shown.');
     $this->assertFalse(strpos($xpath[0], 'db_condition_placeholder') !== FALSE, 'No placeholders are shown in the views sql.');

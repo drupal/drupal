@@ -59,7 +59,7 @@ class ManageDisplayTest extends FieldUiTestBase {
 
     // Change the formatter and check that the summary is updated.
     $edit = array('fields[field_test][type]' => 'field_test_multiple', 'refresh_rows' => 'field_test');
-    $this->drupalPostAJAX(NULL, $edit, array('op' => t('Refresh')));
+    $this->drupalPostAjaxForm(NULL, $edit, array('op' => t('Refresh')));
     $format = 'field_test_multiple';
     $default_settings = \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings($format);
     $setting_name = key($default_settings);
@@ -68,7 +68,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     $this->assertText("$setting_name: $setting_value", 'The expected summary is displayed.');
 
     // Submit the form and check that the display is updated.
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
     $display = entity_get_display('node', $this->type, 'default');
     $display_options = $display->getComponent('field_test');
     $current_format = $display_options['type'];
@@ -81,17 +81,17 @@ class ManageDisplayTest extends FieldUiTestBase {
 
     // Click on the formatter settings button to open the formatter settings
     // form.
-    $this->drupalPostAJAX(NULL, array(), "field_test_settings_edit");
+    $this->drupalPostAjaxForm(NULL, array(), "field_test_settings_edit");
 
     // Assert that the field added in
     // field_test_field_formatter_settings_form_alter() is present.
     $fieldname = 'fields[field_test][settings_edit_form][settings][field_test_formatter_settings_form_alter]';
     $this->assertField($fieldname, 'The field added in hook_field_formatter_settings_form_alter() is present on the settings form.');
     $edit = array($fieldname => 'foo');
-    $this->drupalPostAJAX(NULL, $edit, "field_test_plugin_settings_update");
+    $this->drupalPostAjaxForm(NULL, $edit, "field_test_plugin_settings_update");
 
     // Confirm that the settings are updated on the settings form.
-    $this->drupalPostAJAX(NULL, array(), "field_test_settings_edit");
+    $this->drupalPostAjaxForm(NULL, array(), "field_test_settings_edit");
     $this->assertFieldByName($fieldname, 'foo');
   }
 
@@ -125,7 +125,7 @@ class ManageDisplayTest extends FieldUiTestBase {
 
     // Change the widget and check that the summary is updated.
     $edit = array('fields[field_test][type]' => 'test_field_widget_multiple', 'refresh_rows' => 'field_test');
-    $this->drupalPostAJAX(NULL, $edit, array('op' => t('Refresh')));
+    $this->drupalPostAjaxForm(NULL, $edit, array('op' => t('Refresh')));
     $widget_type = 'test_field_widget_multiple';
     $default_settings = \Drupal::service('plugin.manager.field.widget')->getDefaultSettings($widget_type);
     $setting_name = key($default_settings);
@@ -134,7 +134,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     $this->assertText("$setting_name: $setting_value", 'The expected summary is displayed.');
 
     // Submit the form and check that the display is updated.
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
     $display = entity_get_form_display('node', $this->type, 'default');
     $display_options = $display->getComponent('field_test');
     $current_widget = $display_options['type'];
@@ -146,17 +146,17 @@ class ManageDisplayTest extends FieldUiTestBase {
     $this->assertText('field_test_field_widget_settings_summary_alter');
 
     // Click on the widget settings button to open the widget settings form.
-    $this->drupalPostAJAX(NULL, array(), "field_test_settings_edit");
+    $this->drupalPostAjaxForm(NULL, array(), "field_test_settings_edit");
 
     // Assert that the field added in
     // field_test_field_widget_settings_form_alter() is present.
     $fieldname = 'fields[field_test][settings_edit_form][settings][field_test_widget_settings_form_alter]';
     $this->assertField($fieldname, 'The field added in hook_field_widget_settings_form_alter() is present on the settings form.');
     $edit = array($fieldname => 'foo');
-    $this->drupalPostAJAX(NULL, $edit, "field_test_plugin_settings_update");
+    $this->drupalPostAjaxForm(NULL, $edit, "field_test_plugin_settings_update");
 
     // Confirm that the settings are updated on the settings form.
-    $this->drupalPostAJAX(NULL, array(), "field_test_settings_edit");
+    $this->drupalPostAjaxForm(NULL, array(), "field_test_settings_edit");
     $this->assertFieldByName($fieldname, 'foo');
   }
 
@@ -197,14 +197,14 @@ class ManageDisplayTest extends FieldUiTestBase {
     $edit = array(
       'fields[field_test][type]' => 'field_test_with_prepare_view',
     );
-    $this->drupalPost('admin/structure/types/manage/' . $this->type . '/display', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/types/manage/' . $this->type . '/display', $edit, t('Save'));
     $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected in view modes that use 'default' settings.");
 
     // Specialize the 'rss' mode, check that the field is displayed the same.
     $edit = array(
       "display_modes_custom[rss]" => TRUE,
     );
-    $this->drupalPost('admin/structure/types/manage/' . $this->type . '/display', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/types/manage/' . $this->type . '/display', $edit, t('Save'));
     $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected in newly specialized 'rss' mode.");
 
     // Set the field to 'hidden' in the view mode, check that the field is
@@ -212,7 +212,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     $edit = array(
       'fields[field_test][type]' => 'hidden',
     );
-    $this->drupalPost('admin/structure/types/manage/' . $this->type . '/display/rss', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/types/manage/' . $this->type . '/display/rss', $edit, t('Save'));
     $this->assertNodeViewNoText($node, 'rss', $value, "The field is hidden in 'rss' mode.");
 
     // Set the view mode back to 'default', check that the field is displayed
@@ -220,14 +220,14 @@ class ManageDisplayTest extends FieldUiTestBase {
     $edit = array(
       "display_modes_custom[rss]" => FALSE,
     );
-    $this->drupalPost('admin/structure/types/manage/' . $this->type . '/display', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/types/manage/' . $this->type . '/display', $edit, t('Save'));
     $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected when 'rss' mode is set back to 'default' settings.");
 
     // Specialize the view mode again.
     $edit = array(
       "display_modes_custom[rss]" => TRUE,
     );
-    $this->drupalPost('admin/structure/types/manage/' . $this->type . '/display', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/types/manage/' . $this->type . '/display', $edit, t('Save'));
     // Check that the previous settings for the view mode have been kept.
     $this->assertNodeViewNoText($node, 'rss', $value, "The previous settings are kept when 'rss' mode is specialized again.");
   }
@@ -261,7 +261,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     $this->assertNoText('Use custom display settings for the following view modes', 'Custom display settings fieldset found.');
 
     // This may not trigger a notice when 'view_modes_custom' isn't available.
-    $this->drupalPost('admin/structure/taxonomy/manage/' . $this->vocabulary . '/display', array(), t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary . '/display', array(), t('Save'));
   }
 
   /**

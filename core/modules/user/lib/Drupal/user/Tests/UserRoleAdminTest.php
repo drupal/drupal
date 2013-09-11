@@ -39,7 +39,7 @@ class UserRoleAdminTest extends WebTestBase {
     // correctly distinguish between role names and IDs.)
     $role_name = '123';
     $edit = array('label' => $role_name, 'id' => $role_name);
-    $this->drupalPost('admin/people/roles/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/people/roles/add', $edit, t('Save'));
     $this->assertRaw(t('Role %label has been added.', array('%label' => 123)));
     $role = entity_load('user_role', $role_name);
     $this->assertTrue(is_object($role), 'The role was successfully retrieved from the database.');
@@ -48,21 +48,21 @@ class UserRoleAdminTest extends WebTestBase {
     $this->assertEqual($role->langcode, $default_langcode);
 
     // Try adding a duplicate role.
-    $this->drupalPost('admin/people/roles/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/people/roles/add', $edit, t('Save'));
     $this->assertRaw(t('The machine-readable name is already in use. It must be unique.'), 'Duplicate role warning displayed.');
 
     // Test renaming a role.
     $old_name = $role_name;
     $role_name = '456';
     $edit = array('label' => $role_name);
-    $this->drupalPost("admin/people/roles/manage/{$role->id()}", $edit, t('Save'));
+    $this->drupalPostForm("admin/people/roles/manage/{$role->id()}", $edit, t('Save'));
     $this->assertRaw(t('Role %label has been updated.', array('%label' => $role_name)));
     $new_role = entity_load('user_role', $old_name);
     $this->assertEqual($new_role->label(), $role_name, 'The role name has been successfully changed.');
 
     // Test deleting a role.
-    $this->drupalPost("admin/people/roles/manage/{$role->id()}", array(), t('Delete'));
-    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->drupalPostForm("admin/people/roles/manage/{$role->id()}", array(), t('Delete'));
+    $this->drupalPostForm(NULL, array(), t('Delete'));
     $this->assertRaw(t('Role %label has been deleted.', array('%label' => $role_name)));
     $this->assertNoLinkByHref("admin/people/roles/manage/{$role->id()}", 'Role edit link removed.');
     $this->assertFalse(entity_load('user_role', $role_name), 'A deleted role can no longer be loaded.');
@@ -95,7 +95,7 @@ class UserRoleAdminTest extends WebTestBase {
       $saved_rids[] = $role->id;
       $weight--;
     }
-    $this->drupalPost('admin/people/roles', $edit, t('Save order'));
+    $this->drupalPostForm('admin/people/roles', $edit, t('Save order'));
     $this->assertText(t('The role settings have been updated.'), 'The role settings form submitted successfully.');
 
     // Load up the user roles with the new weights.

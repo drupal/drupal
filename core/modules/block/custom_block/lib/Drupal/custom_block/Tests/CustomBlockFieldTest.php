@@ -99,7 +99,7 @@ class CustomBlockFieldTest extends CustomBlockTestBase {
       $this->field['field_name'] . '[und][0][url]' => 'http://example.com',
       $this->field['field_name'] . '[und][0][title]' => 'Example.com'
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $block = entity_load('custom_block', 1);
     $url = 'admin/structure/block/add/custom_block:' . $block->uuid() . '/' . \Drupal::config('system.theme')->get('default');
     // Place the block.
@@ -108,7 +108,7 @@ class CustomBlockFieldTest extends CustomBlockTestBase {
       'settings[label]' => $edit['info'],
       'region' => 'sidebar_first',
     );
-    $this->drupalPost($url, $instance, t('Save block'));
+    $this->drupalPostForm($url, $instance, t('Save block'));
     // Navigate to home page.
     $this->drupalGet('<front>');
     $this->assertLinkByHref('http://example.com');

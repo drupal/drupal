@@ -89,7 +89,7 @@ class BlockUiTest extends WebTestBase {
       // Change the test block's weight.
       $edit['blocks[stark.' . $values['settings']['machine_name'] . '][weight]'] = $values['test_weight'];
     }
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $this->drupalPostForm('admin/structure/block', $edit, t('Save blocks'));
     foreach ($this->testBlocks as $values) {
       // Check if the region and weight settings changes have persisted.
       $this->assertOptionSelected(
@@ -136,12 +136,12 @@ class BlockUiTest extends WebTestBase {
     $url = 'admin/structure/block/add/test_block_instantiation/stark';
     $this->drupalGet($url);
     $this->assertFieldByName('machine_name', 'displaymessage', 'Block form uses raw machine name suggestion when no instance already exists.');
-    $this->drupalPost($url, array(), 'Save block');
+    $this->drupalPostForm($url, array(), 'Save block');
 
     // Now, check to make sure the form starts by autoincrementing correctly.
     $this->drupalGet($url);
     $this->assertFieldByName('machine_name', 'displaymessage_2', 'Block form appends _2 to plugin-suggested machine name when an instance already exists.');
-    $this->drupalPost($url, array(), 'Save block');
+    $this->drupalPostForm($url, array(), 'Save block');
 
     // And verify that it continues working beyond just the first two.
     $this->drupalGet($url);

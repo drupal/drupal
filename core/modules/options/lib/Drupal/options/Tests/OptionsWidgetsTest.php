@@ -141,7 +141,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Select first option.
     $edit = array("card_1[$langcode]" => 0);
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_1', $langcode, array(0));
 
     // Check that the selected button is checked.
@@ -152,7 +152,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Unselect option.
     $edit = array("card_1[$langcode]" => '_none');
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_1', $langcode, array());
 
     // Check that required radios with one option is auto-selected.
@@ -204,7 +204,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       "card_2[$langcode][1]" => FALSE,
       "card_2[$langcode][2]" => TRUE,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0, 2));
 
     // Display form: check that the right options are selected.
@@ -219,7 +219,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       "card_2[$langcode][1]" => FALSE,
       "card_2[$langcode][2]" => FALSE,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0));
 
     // Display form: check that the right options are selected.
@@ -234,7 +234,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       "card_2[$langcode][1]" => TRUE,
       "card_2[$langcode][2]" => TRUE,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('this field cannot hold more than 2 values', 'Validation error was displayed.');
 
     // Submit form: uncheck all options.
@@ -243,7 +243,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       "card_2[$langcode][1]" => FALSE,
       "card_2[$langcode][2]" => FALSE,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     // Check that the value was saved.
     $this->assertFieldValues($entity_init, 'card_2', $langcode, array());
 
@@ -298,12 +298,12 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: select invalid 'none' option.
     $edit = array("card_1[$langcode]" => '_none');
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw(t('!title field is required.', array('!title' => $instance['field_name'])), 'Cannot save a required field when selecting "none" from the select list.');
 
     // Submit form: select first option.
     $edit = array("card_1[$langcode]" => 0);
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_1', $langcode, array(0));
 
     // Display form: check that the right options are selected.
@@ -324,7 +324,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertTrue($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', array(':id' => 'edit-card-1-' . $langcode, ':label' => t('- None -'))), 'A non-required select list has a "None" choice.');
     // Submit form: Unselect the option.
     $edit = array("card_1[$langcode]" => '_none');
-    $this->drupalPost('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_1', $langcode, array());
 
     // Test optgroups.
@@ -343,7 +343,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: select first option.
     $edit = array("card_1[$langcode]" => 0);
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_1', $langcode, array(0));
 
     // Display form: check that the right options are selected.
@@ -354,7 +354,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: Unselect the option.
     $edit = array("card_1[$langcode]" => '_none');
-    $this->drupalPost('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_1', $langcode, array());
   }
 
@@ -394,7 +394,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: select first and third options.
     $edit = array("card_2[$langcode][]" => array(0 => 0, 2 => 2));
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0, 2));
 
     // Display form: check that the right options are selected.
@@ -405,7 +405,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: select only first option.
     $edit = array("card_2[$langcode][]" => array(0 => 0));
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0));
 
     // Display form: check that the right options are selected.
@@ -416,12 +416,12 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: select the three options while the field accepts only 2.
     $edit = array("card_2[$langcode][]" => array(0 => 0, 1 => 1, 2 => 2));
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('this field cannot hold more than 2 values', 'Validation error was displayed.');
 
     // Submit form: uncheck all options.
     $edit = array("card_2[$langcode][]" => array());
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_2', $langcode, array());
 
     // Test the 'None' option.
@@ -429,12 +429,12 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Check that the 'none' option has no efect if actual options are selected
     // as well.
     $edit = array("card_2[$langcode][]" => array('_none' => '_none', 0 => 0));
-    $this->drupalPost('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0));
 
     // Check that selecting the 'none' option empties the field.
     $edit = array("card_2[$langcode][]" => array('_none' => '_none'));
-    $this->drupalPost('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_2', $langcode, array());
 
     // A required select list does not have an empty key.
@@ -465,7 +465,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: select first option.
     $edit = array("card_2[$langcode][]" => array(0 => 0));
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0));
 
     // Display form: check that the right options are selected.
@@ -476,7 +476,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: Unselect the option.
     $edit = array("card_2[$langcode][]" => array('_none' => '_none'));
-    $this->drupalPost('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'card_2', $langcode, array());
   }
 
@@ -513,7 +513,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: check the option.
     $edit = array("bool[$langcode]" => TRUE);
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'bool', $langcode, array(1));
 
     // Display form: check that the right options are selected.
@@ -522,7 +522,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: uncheck the option.
     $edit = array("bool[$langcode]" => FALSE);
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertFieldValues($entity_init, 'bool', $langcode, array(0));
 
     // Display form: with 'off' value, option is unchecked.
@@ -570,7 +570,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     $field_name = $this->bool['field_name'];
     // Click on the widget settings button to open the widget settings form.
-    $this->drupalPostAJAX(NULL, array(), $field_name . "_settings_edit");
+    $this->drupalPostAjaxForm(NULL, array(), $field_name . "_settings_edit");
 
     $this->assertText(
       'Use field label instead of the "On value" as label',
@@ -579,15 +579,15 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Enable setting.
     $edit = array('fields[' . $field_name . '][settings_edit_form][settings][display_label]' => 1);
-    $this->drupalPostAJAX(NULL, $edit, $field_name . "_plugin_settings_update");
-    $this->drupalPost(NULL, NULL, 'Save');
+    $this->drupalPostAjaxForm(NULL, $edit, $field_name . "_plugin_settings_update");
+    $this->drupalPostForm(NULL, NULL, 'Save');
 
     // Go again to the form display page and check if the setting
     // is stored and has the expected effect.
     $this->drupalGet($fieldEditUrl);
     $this->assertText('Use field label: Yes', 'Checking the display settings checkbox updated the value.');
 
-    $this->drupalPostAJAX(NULL, array(), $field_name . "_settings_edit");
+    $this->drupalPostAjaxForm(NULL, array(), $field_name . "_settings_edit");
     $this->assertText(
       'Use field label instead of the "On value" as label',
       t('Display setting checkbox is available')

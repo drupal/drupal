@@ -72,7 +72,7 @@ class CommentApprovalTest extends CommentTestBase {
       "comments[{$comments[0]->id()}]" => 1,
       "comments[{$comments[1]->id()}]" => 1,
     );
-    $this->drupalPost(NULL, $edit, t('Update'));
+    $this->drupalPostForm(NULL, $edit, t('Update'));
     $this->assertText(t('Unapproved comments (@count)', array('@count' => 0)), 'All comments were approved.');
 
     // Delete multiple comments in one operation.
@@ -82,9 +82,9 @@ class CommentApprovalTest extends CommentTestBase {
       "comments[{$comments[1]->id()}]" => 1,
       "comments[{$anonymous_comment4->id()}]" => 1,
     );
-    $this->drupalPost(NULL, $edit, t('Update'));
+    $this->drupalPostForm(NULL, $edit, t('Update'));
     $this->assertText(t('Are you sure you want to delete these comments and all their children?'), 'Confirmation required.');
-    $this->drupalPost(NULL, $edit, t('Delete comments'));
+    $this->drupalPostForm(NULL, $edit, t('Delete comments'));
     $this->assertText(t('No comments available.'), 'All comments were deleted.');
   }
 

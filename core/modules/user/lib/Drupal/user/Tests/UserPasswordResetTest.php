@@ -57,14 +57,14 @@ class UserPasswordResetTest extends WebTestBase {
     $this->drupalGet('user/password');
 
     $edit = array('name' => $this->randomName(32));
-    $this->drupalPost(NULL, $edit, t('E-mail new password'));
+    $this->drupalPostForm(NULL, $edit, t('E-mail new password'));
 
     $this->assertText(t('Sorry, @name is not recognized as a username or an e-mail address.', array('@name' => $edit['name'])), 'Validation error message shown when trying to request password for invalid account.');
     $this->assertEqual(count($this->drupalGetMails(array('id' => 'user_password_reset'))), 0, 'No e-mail was sent when requesting a password for an invalid account.');
 
     // Reset the password by username via the password reset page.
     $edit['name'] = $this->account->getUsername();
-    $this->drupalPost(NULL, $edit, t('E-mail new password'));
+    $this->drupalPostForm(NULL, $edit, t('E-mail new password'));
 
      // Verify that the user was sent an e-mail.
     $this->assertMail('to', $this->account->getEmail(), 'Password e-mail sent to user.');
@@ -79,7 +79,7 @@ class UserPasswordResetTest extends WebTestBase {
     $this->assertText(t('This login can be used only once.'), 'Found warning about one-time login.');
 
     // Check successful login.
-    $this->drupalPost(NULL, NULL, t('Log in'));
+    $this->drupalPostForm(NULL, NULL, t('Log in'));
     $this->assertLink(t('Log out'));
     $this->assertTitle(t('@name | @site', array('@name' => $this->account->getUsername(), '@site' => \Drupal::config('system.site')->get('name'))), 'Logged in using password reset link.');
 
@@ -93,7 +93,7 @@ class UserPasswordResetTest extends WebTestBase {
     // Count email messages before to compare with after.
     $before = count($this->drupalGetMails(array('id' => 'user_password_reset')));
     $edit['name'] = $this->account->getEmail();
-    $this->drupalPost(NULL, $edit, t('E-mail new password'));
+    $this->drupalPostForm(NULL, $edit, t('E-mail new password'));
     $this->assertTrue( count($this->drupalGetMails(array('id' => 'user_password_reset'))) === $before + 1, 'E-mail sent when requesting password reset using e-mail address.');
 
     // Create a password reset link as if the request time was 60 seconds older than the allowed limit.
@@ -126,7 +126,7 @@ class UserPasswordResetTest extends WebTestBase {
       'name' => $this->randomName(),
       'pass' => $this->randomName(),
     );
-    $this->drupalPost('user', $edit, t('Log in'));
+    $this->drupalPostForm('user', $edit, t('Log in'));
     $this->assertRaw(t('Sorry, unrecognized username or password. <a href="@password">Have you forgotten your password?</a>',
       array('@password' => url('user/password', array('query' => array('name' => $edit['name']))))));
     unset($edit['pass']);

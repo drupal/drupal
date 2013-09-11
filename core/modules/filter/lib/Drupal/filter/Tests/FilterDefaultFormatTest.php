@@ -35,7 +35,7 @@ class FilterDefaultFormatTest extends WebTestBase {
         'format' => drupal_strtolower($this->randomName()),
         'name' => $this->randomName(),
       );
-      $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+      $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
       $this->resetFilterCaches();
       $formats[] = entity_load('filter_format', $edit['format']);
     }
@@ -49,7 +49,7 @@ class FilterDefaultFormatTest extends WebTestBase {
     $edit = array();
     $edit['formats[' . $first_format->format . '][weight]'] = -2;
     $edit['formats[' . $second_format->format . '][weight]'] = -1;
-    $this->drupalPost('admin/config/content/formats', $edit, t('Save changes'));
+    $this->drupalPostForm('admin/config/content/formats', $edit, t('Save changes'));
     $this->resetFilterCaches();
 
     // Check that each user's default format is the lowest weighted format that
@@ -65,7 +65,7 @@ class FilterDefaultFormatTest extends WebTestBase {
     // default.
     $edit = array();
     $edit['formats[' . $second_format->format . '][weight]'] = -3;
-    $this->drupalPost('admin/config/content/formats', $edit, t('Save changes'));
+    $this->drupalPostForm('admin/config/content/formats', $edit, t('Save changes'));
     $this->resetFilterCaches();
     $this->assertEqual(filter_default_format($first_user), filter_default_format($second_user), 'After the formats are reordered, both users have the same default format.');
   }

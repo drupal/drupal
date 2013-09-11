@@ -84,7 +84,7 @@ class NodeAccessBaseTableTest extends NodeTestBase {
           $edit['field_tags[und]'] = 'public';
         }
 
-        $this->drupalPost('node/add/article', $edit, t('Save'));
+        $this->drupalPostForm('node/add/article', $edit, t('Save'));
         $nid = db_query('SELECT nid FROM {node_field_data} WHERE title = :title', array(':title' => $edit['title']))->fetchField();
         $private_status = db_query('SELECT private FROM {node_access_test} where nid = :nid', array(':nid' => $nid))->fetchField();
         $this->assertTrue($is_private == $private_status, 'The private status of the node was properly set in the node_access_test table.');

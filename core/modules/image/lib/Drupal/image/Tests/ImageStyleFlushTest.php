@@ -73,14 +73,14 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
       'name' => $style_name,
       'label' => $style_label,
     );
-    $this->drupalPost('admin/config/media/image-styles/add', $edit, t('Create new style'));
+    $this->drupalPostForm('admin/config/media/image-styles/add', $edit, t('Create new style'));
 
     // Add each sample effect to the style.
     foreach ($effect_edits as $effect => $edit) {
       // Add the effect.
-      $this->drupalPost($style_path, array('new' => $effect), t('Add'));
+      $this->drupalPostForm($style_path, array('new' => $effect), t('Add'));
       if (!empty($edit)) {
-        $this->drupalPost(NULL, $edit, t('Add effect'));
+        $this->drupalPostForm(NULL, $edit, t('Add effect'));
       }
     }
 
@@ -104,9 +104,9 @@ class ImageStyleFlushTest extends ImageFieldTestBase {
     foreach ($style->getEffects() as $uuid => $effect) {
       $uuids[$effect->getPluginId()] = $uuid;
     }
-    $this->drupalPost($style_path . '/effects/' . $uuids['image_scale'] . '/delete', array(), t('Delete'));
+    $this->drupalPostForm($style_path . '/effects/' . $uuids['image_scale'] . '/delete', array(), t('Delete'));
     $this->assertResponse(200);
-    $this->drupalPost($style_path, array(), t('Update style'));
+    $this->drupalPostForm($style_path, array(), t('Update style'));
     $this->assertResponse(200);
 
     // Post flush, expected 1 image in the 'public' wrapper (sample.png).

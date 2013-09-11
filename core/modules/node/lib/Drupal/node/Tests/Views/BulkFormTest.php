@@ -46,7 +46,7 @@ class BulkFormTest extends NodeTestBase {
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_unpublish_action',
     );
-    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the node and check the status.
     $node = entity_load('node', $node->id(), TRUE);
     $this->assertFalse($node->isPublished(), 'Node has been unpublished');
@@ -56,7 +56,7 @@ class BulkFormTest extends NodeTestBase {
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_publish_action',
     );
-    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the node and check the status.
     $node = entity_load('node', $node->id(), TRUE);
     $this->assertTrue($node->isPublished(), 'Node has been published');
@@ -69,7 +69,7 @@ class BulkFormTest extends NodeTestBase {
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_make_sticky_action',
     );
-    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the node and check the status and sticky flag.
     $node = entity_load('node', $node->id(), TRUE);
     $this->assertTrue($node->isPublished(), 'Node has been published');
@@ -80,7 +80,7 @@ class BulkFormTest extends NodeTestBase {
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_make_unsticky_action',
     );
-    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the node and check the sticky flag.
     $node = entity_load('node', $node->id(), TRUE);
     $this->assertFalse($node->isSticky(), 'Node is not sticky anymore');
@@ -93,7 +93,7 @@ class BulkFormTest extends NodeTestBase {
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_promote_action',
     );
-    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the node and check the status and promoted flag.
     $node = entity_load('node', $node->id(), TRUE);
     $this->assertTrue($node->isPublished(), 'Node has been published');
@@ -104,7 +104,7 @@ class BulkFormTest extends NodeTestBase {
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_unpromote_action',
     );
-    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the node and check the promoted flag.
     $node = entity_load('node', $node->id(), TRUE);
     $this->assertFalse($node->isPromoted(), 'Node has been demoted');
@@ -114,8 +114,8 @@ class BulkFormTest extends NodeTestBase {
       'node_bulk_form[0]' => TRUE,
       'action' => 'node_delete_action',
     );
-    $this->drupalPost(NULL, $edit, t('Apply'));
-    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, array(), t('Delete'));
     // Re-load the node and check if it has been deleted.
     $node = entity_load('node', $node->id(), TRUE);
     $this->assertNull($node, 'Node has been deleted');

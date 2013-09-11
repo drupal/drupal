@@ -61,7 +61,7 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
       'id' => 'foo',
       'label' => 'title for foo',
     );
-    $this->drupalPost('admin/structure/block/custom-blocks/types/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/block/custom-blocks/types/add', $edit, t('Save'));
     $block_type = entity_load('custom_block_type', 'foo');
     $this->assertTrue($block_type, 'The new block type has been created.');
 
@@ -90,7 +90,7 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $edit = array(
       'label' => 'Bar',
     );
-    $this->drupalPost('admin/structure/block/custom-blocks/manage/basic', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/block/custom-blocks/manage/basic', $edit, t('Save'));
     field_info_cache_clear();
 
     $this->drupalGet('block/add');
@@ -99,9 +99,9 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $this->assertEqual(url('block/add/basic', array('absolute' => TRUE)), $this->getUrl(), 'Original machine name was used in URL.');
 
     // Remove the body field.
-    $this->drupalPost('admin/structure/block/custom-blocks/manage/basic/fields/custom_block.basic.block_body/delete', array(), t('Delete'));
+    $this->drupalPostForm('admin/structure/block/custom-blocks/manage/basic/fields/custom_block.basic.block_body/delete', array(), t('Delete'));
     // Resave the settings for this type.
-    $this->drupalPost('admin/structure/block/custom-blocks/manage/basic', array(), t('Save'));
+    $this->drupalPostForm('admin/structure/block/custom-blocks/manage/basic', array(), t('Save'));
     // Check that the body field doesn't exist.
     $this->drupalGet('block/add/basic');
     $this->assertNoRaw('Block body', 'Body field was not found.');
@@ -160,7 +160,7 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $this->clickLink(t('Add custom block'));
     $this->clickLink('foo');
     $edit = array('info' => $this->randomName(8));
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $blocks = $storage_controller->loadByProperties(array('info' => $edit['info']));
     if (!empty($blocks)) {
       $block = reset($blocks);
@@ -177,7 +177,7 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $this->clickLink(t('Add custom block'));
     $this->clickLink('foo');
     $edit = array('info' => $this->randomName(8));
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $blocks = $storage_controller->loadByProperties(array('info' => $edit['info']));
     if (!empty($blocks)) {
       $block = reset($blocks);

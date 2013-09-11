@@ -47,7 +47,7 @@ class UserLanguageCreationTest extends WebTestBase {
     $edit = array(
       'language_interface[enabled][language-url]' => TRUE,
     );
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
     $this->assertText(t('Language negotiation configuration saved.'), 'Set language negotiation.');
 
     // Check if the language selector is available on admin/people/create and
@@ -65,7 +65,7 @@ class UserLanguageCreationTest extends WebTestBase {
       'pass[pass2]' => $username,
     );
 
-    $this->drupalPost($langcode . '/admin/people/create', $edit, t('Create new account'));
+    $this->drupalPostForm($langcode . '/admin/people/create', $edit, t('Create new account'));
 
     $user = user_load_by_name($username);
     $this->assertEqual($user->getPreferredLangcode(), $langcode, 'New user has correct preferred language set.');
@@ -83,7 +83,7 @@ class UserLanguageCreationTest extends WebTestBase {
       'mail' => $this->randomName(4) . '@example.com',
     );
 
-    $this->drupalPost($langcode . '/user/register', $edit, t('Create new account'));
+    $this->drupalPostForm($langcode . '/user/register', $edit, t('Create new account'));
 
     $user = user_load_by_name($username);
     $this->assertEqual($user->getPreferredLangcode(), $langcode, 'New user has correct preferred language set.');
@@ -104,7 +104,7 @@ class UserLanguageCreationTest extends WebTestBase {
       'pass[pass2]' => $user->pass_raw,
     );
 
-    $this->drupalPost($user_edit, $edit, t('Save'));
+    $this->drupalPostForm($user_edit, $edit, t('Save'));
 
     $this->drupalLogin($user);
     $this->drupalGet($user_edit);

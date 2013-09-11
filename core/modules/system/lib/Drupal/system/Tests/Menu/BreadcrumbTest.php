@@ -273,14 +273,14 @@ class BreadcrumbTest extends MenuTestBase {
       'link_title' => 'Root',
       'link_path' => 'node',
     );
-    $this->drupalPost("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
+    $this->drupalPostForm("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
     $menu_links = entity_load_multiple_by_properties('menu_link', array('link_title' => 'Root'));
     $link = reset($menu_links);
 
     $edit = array(
       'menu[parent]' => $link['menu_name'] . ':' . $link['mlid'],
     );
-    $this->drupalPost('node/' . $parent->id() . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $parent->id() . '/edit', $edit, t('Save and keep published'));
     $expected = array(
       "node" => $link['link_title'],
     );
@@ -306,7 +306,7 @@ class BreadcrumbTest extends MenuTestBase {
     $edit = array(
       "field_tags[$langcode]" => implode(',', array_keys($tags)),
     );
-    $this->drupalPost('node/' . $parent->id() . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $parent->id() . '/edit', $edit, t('Save and keep published'));
 
     // Put both terms into a hierarchy Drupal » Breadcrumbs. Required for both
     // the menu links and the terms itself, since taxonomy_term_page() resets
@@ -320,7 +320,7 @@ class BreadcrumbTest extends MenuTestBase {
         $edit = array(
           'parent[]' => array($parent_tid),
         );
-        $this->drupalPost("taxonomy/term/{$term->id()}/edit", $edit, t('Save'));
+        $this->drupalPostForm("taxonomy/term/{$term->id()}/edit", $edit, t('Save'));
       }
       $parent_tid = $term->id();
     }
@@ -332,7 +332,7 @@ class BreadcrumbTest extends MenuTestBase {
         'link_path' => "taxonomy/term/{$term->id()}",
         'parent' => "$menu:{$parent_mlid}",
       );
-      $this->drupalPost("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
+      $this->drupalPostForm("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
       $menu_links = entity_load_multiple_by_properties('menu_link', array('link_title' => $edit['link_title'], 'link_path' => $edit['link_path']));
       $tags[$name]['link'] = reset($menu_links);
       $tags[$name]['link']['link_path'] = $edit['link_path'];
@@ -431,7 +431,7 @@ class BreadcrumbTest extends MenuTestBase {
       'link_title' => 'User',
       'link_path' => 'user',
     );
-    $this->drupalPost("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
+    $this->drupalPostForm("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
     $menu_links_user = entity_load_multiple_by_properties('menu_link', array('link_title' => $edit['link_title'], 'link_path' => $edit['link_path']));
     $link_user = reset($menu_links_user);
 
@@ -439,7 +439,7 @@ class BreadcrumbTest extends MenuTestBase {
       'link_title' => $this->admin_user->getUsername() . ' link',
       'link_path' => 'user/' . $this->admin_user->id(),
     );
-    $this->drupalPost("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
+    $this->drupalPostForm("admin/structure/menu/manage/$menu/add", $edit, t('Save'));
     $menu_links_admin_user = entity_load_multiple_by_properties('menu_link', array('link_title' => $edit['link_title'], 'link_path' => $edit['link_path']));
     $link_admin_user = reset($menu_links_admin_user);
 
@@ -465,7 +465,7 @@ class BreadcrumbTest extends MenuTestBase {
     $edit = array(
       'parent' => "$menu:{$link_user['mlid']}",
     );
-    $this->drupalPost("admin/structure/menu/item/{$link_admin_user['mlid']}/edit", $edit, t('Save'));
+    $this->drupalPostForm("admin/structure/menu/item/{$link_admin_user['mlid']}/edit", $edit, t('Save'));
 
     $this->drupalLogout();
     $trail = $home;

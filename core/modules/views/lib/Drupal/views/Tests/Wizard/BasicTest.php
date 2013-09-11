@@ -34,7 +34,7 @@ class BasicTest extends WizardTestBase {
     $view1['id'] = strtolower($this->randomName(16));
     $view1['description'] = $this->randomName(16);
     $view1['page[create]'] = FALSE;
-    $this->drupalPost('admin/structure/views/add', $view1, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view1, t('Save and edit'));
     $this->assertResponse(200);
     $this->drupalGet('admin/structure/views');
     $this->assertText($view1['label']);
@@ -61,7 +61,7 @@ class BasicTest extends WizardTestBase {
     $view2['page[path]'] = $this->randomName(16);
     $view2['page[feed]'] = 1;
     $view2['page[feed_properties][path]'] = $this->randomName(16);
-    $this->drupalPost('admin/structure/views/add', $view2, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view2, t('Save and edit'));
     $this->drupalGet($view2['page[path]']);
     $this->assertResponse(200);
 
@@ -105,7 +105,7 @@ class BasicTest extends WizardTestBase {
     $view3['page[path]'] = $this->randomName(16);
     $view3['block[create]'] = 1;
     $view3['block[title]'] = $this->randomName(16);
-    $this->drupalPost('admin/structure/views/add', $view3, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view3, t('Save and edit'));
     $this->drupalGet($view3['page[path]']);
     $this->assertResponse(200);
 
@@ -163,7 +163,7 @@ class BasicTest extends WizardTestBase {
     $view['id'] = $random_id;
     $view['description'] = $this->randomName(16);
     $view['page[create]'] = FALSE;
-    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
 
     // Make sure the plugin types that should not have empty options don't have.
     // Test against all values is unit tested.

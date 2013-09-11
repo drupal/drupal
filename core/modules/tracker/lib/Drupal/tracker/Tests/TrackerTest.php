@@ -113,7 +113,7 @@ class TrackerTest extends WebTestBase {
       'subject' => $this->randomName(),
       'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     );
-    $this->drupalPost('comment/reply/' . $other_published_my_comment->id(), $comment, t('Save'));
+    $this->drupalPostForm('comment/reply/' . $other_published_my_comment->id(), $comment, t('Save'));
 
     $this->drupalGet('user/' . $this->user->id() . '/track');
     $this->assertNoText($unpublished->label(), "Unpublished nodes do not show up in the users's tracker listing.");
@@ -124,7 +124,7 @@ class TrackerTest extends WebTestBase {
     // Verify that unpublished comments are removed from the tracker.
     $admin_user = $this->drupalCreateUser(array('post comments', 'administer comments', 'access user profiles'));
     $this->drupalLogin($admin_user);
-    $this->drupalPost('comment/1/edit', array('status' => COMMENT_NOT_PUBLISHED), t('Save'));
+    $this->drupalPostForm('comment/1/edit', array('status' => COMMENT_NOT_PUBLISHED), t('Save'));
     $this->drupalGet('user/' . $this->user->id() . '/track');
     $this->assertNoText($other_published_my_comment->label(), 'Unpublished comments are not counted on the tracker listing.');
   }
@@ -189,7 +189,7 @@ class TrackerTest extends WebTestBase {
       'subject' => $this->randomName(),
       'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     );
-    $this->drupalPost('comment/reply/' . $node->id(), $comment, t('Save'));
+    $this->drupalPostForm('comment/reply/' . $node->id(), $comment, t('Save'));
     // The new comment is automatically viewed by the current user. Simulate the
     // JavaScript that does this.
     // @todo Get rid of curlExec() once https://drupal.org/node/2074037 lands.
@@ -213,7 +213,7 @@ class TrackerTest extends WebTestBase {
     // If the comment is posted in the same second as the last one then Drupal
     // can't tell the difference, so we wait one second here.
     sleep(1);
-    $this->drupalPost('comment/reply/' . $node->id(), $comment, t('Save'));
+    $this->drupalPostForm('comment/reply/' . $node->id(), $comment, t('Save'));
 
     $this->drupalLogin($this->user);
     $this->drupalGet('tracker');
@@ -243,7 +243,7 @@ class TrackerTest extends WebTestBase {
       'subject' => $this->randomName(),
       'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomName(20),
     );
-    $this->drupalPost('comment/reply/' . $nodes[3]->id(), $comment, t('Save'));
+    $this->drupalPostForm('comment/reply/' . $nodes[3]->id(), $comment, t('Save'));
 
     // Start indexing backwards from node 3.
     \Drupal::state()->set('tracker.index_nid', 3);
@@ -299,7 +299,7 @@ class TrackerTest extends WebTestBase {
       'action' => 'node_unpublish_action',
       'node_bulk_form[0]' => $node->id(),
     );
-    $this->drupalPost('admin/content', $edit, t('Apply'));
+    $this->drupalPostForm('admin/content', $edit, t('Apply'));
 
     $this->drupalGet('tracker');
     $this->assertText(t('No content available.'), 'Node is displayed on the tracker listing pages.');

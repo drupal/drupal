@@ -88,8 +88,8 @@ class SearchRankingTest extends SearchTestBase {
     $edit['subject'] = 'my comment title';
     $edit['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = 'some random comment';
     $this->drupalGet('comment/reply/' . $nodes['comments'][1]->id());
-    $this->drupalPost(NULL, $edit, t('Preview'));
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Preview'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Enable counting of statistics.
     \Drupal::config('statistics.settings')->set('count_content_views', 1)->save();

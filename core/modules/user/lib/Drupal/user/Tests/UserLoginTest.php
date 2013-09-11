@@ -145,7 +145,7 @@ class UserLoginTest extends WebTestBase {
       'name' => $account->getUsername(),
       'pass' => $account->pass_raw,
     );
-    $this->drupalPost('user', $edit, t('Log in'));
+    $this->drupalPostForm('user', $edit, t('Log in'));
     $this->assertNoFieldByXPath("//input[@name='pass' and @value!='']", NULL, 'Password value attribute is blank.');
     if (isset($flood_trigger)) {
       if ($flood_trigger == 'user') {

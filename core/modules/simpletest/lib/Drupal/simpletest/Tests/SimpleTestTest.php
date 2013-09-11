@@ -82,7 +82,7 @@ class SimpleTestTest extends WebTestBase {
         'pass' => $user->pass_raw
       );
       $this->maximumRedirects = 1;
-      $this->drupalPost('user', $edit, t('Log in'), array(
+      $this->drupalPostForm('user', $edit, t('Log in'), array(
         'query' => array('destination' => 'user/logout'),
       ));
       $headers = $this->drupalGetHeaders(TRUE);
@@ -159,7 +159,7 @@ class SimpleTestTest extends WebTestBase {
 
         $edit = array();
         $edit['Drupal\simpletest\Tests\SimpleTestTest'] = TRUE;
-        $this->drupalPost(NULL, $edit, t('Run tests'));
+        $this->drupalPostForm(NULL, $edit, t('Run tests'));
 
         // Parse results and confirm that they are correct.
         $this->getTestResults();

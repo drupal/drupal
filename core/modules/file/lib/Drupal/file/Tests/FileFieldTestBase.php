@@ -168,7 +168,7 @@ abstract class FileFieldTestBase extends WebTestBase {
       $name .= '[]';
     }
     $edit[$name] = drupal_realpath($file->getFileUri());
-    $this->drupalPost("node/$nid/edit", $edit, t('Save and keep published'));
+    $this->drupalPostForm("node/$nid/edit", $edit, t('Save and keep published'));
 
     return $nid;
   }
@@ -183,8 +183,8 @@ abstract class FileFieldTestBase extends WebTestBase {
       'revision' => (string) (int) $new_revision,
     );
 
-    $this->drupalPost('node/' . $nid . '/edit', array(), t('Remove'));
-    $this->drupalPost(NULL, $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $nid . '/edit', array(), t('Remove'));
+    $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
   }
 
   /**
@@ -196,8 +196,8 @@ abstract class FileFieldTestBase extends WebTestBase {
       'revision' => (string) (int) $new_revision,
     );
 
-    $this->drupalPost('node/' . $nid . '/edit', array(), t('Remove'));
-    $this->drupalPost(NULL, $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $nid . '/edit', array(), t('Remove'));
+    $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
   }
 
   /**

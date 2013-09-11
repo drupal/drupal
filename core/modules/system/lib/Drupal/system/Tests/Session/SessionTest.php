@@ -65,7 +65,7 @@ class SessionTest extends WebTestBase {
       'name' => $user->getUsername(),
       'pass' => $user->pass_raw
     );
-    $this->drupalPost('user', $edit, t('Log in'));
+    $this->drupalPostForm('user', $edit, t('Log in'));
     $this->drupalGet('user');
     $pass = $this->assertText($user->getUsername(), format_string('Found name: %name', array('%name' => $user->getUsername())), 'User login');
     $this->_logged_in = $pass;

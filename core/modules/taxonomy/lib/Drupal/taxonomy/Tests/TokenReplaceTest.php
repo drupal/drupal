@@ -76,13 +76,13 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $edit = array();
     $edit['name'] = '<blink>Blinking Text</blink>';
     $edit['parent[]'] = array($term1->id());
-    $this->drupalPost('taxonomy/term/' . $term2->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('taxonomy/term/' . $term2->id() . '/edit', $edit, t('Save'));
 
     // Create node with term2.
     $edit = array();
     $node = $this->drupalCreateNode(array('type' => 'article'));
     $edit[$this->field_name . '[' . $this->langcode . '][]'] = $term2->id();
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Generate and test sanitized tokens for term1.
     $tests = array();

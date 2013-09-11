@@ -88,7 +88,7 @@ class reEnableModuleFieldTest extends WebTestBase {
       "title" => $this->randomName(),
       "field_telephone[und][0][value]" => "123456789",
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw('<a href="tel:123456789">');
 
     // Disable the telephone module and re-enable it.

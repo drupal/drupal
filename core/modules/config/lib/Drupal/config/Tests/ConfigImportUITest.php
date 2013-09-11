@@ -71,7 +71,7 @@ class ConfigImportUITest extends WebTestBase {
     $this->assertFieldById('edit-submit', t('Import all'));
 
     // Import and verify that both do not appear anymore.
-    $this->drupalPost(NULL, array(), t('Import all'));
+    $this->drupalPostForm(NULL, array(), t('Import all'));
     $this->assertNoText($name);
     $this->assertNoText($dynamic_name);
     $this->assertNoFieldById('edit-submit', t('Import all'));
@@ -106,7 +106,7 @@ class ConfigImportUITest extends WebTestBase {
     $this->container->get('lock')->acquire($config_importer_lock);
 
     // Attempt to import configuration and verify that an error message appears.
-    $this->drupalPost(NULL, array(), t('Import all'));
+    $this->drupalPostForm(NULL, array(), t('Import all'));
     $this->assertText(t('Another request may be synchronizing configuration already.'));
 
     // Release the lock, just to keep testing sane.

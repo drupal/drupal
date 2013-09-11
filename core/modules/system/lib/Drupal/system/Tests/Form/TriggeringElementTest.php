@@ -42,7 +42,7 @@ class TriggeringElementTest extends WebTestBase {
     // Ensure submitting a form with no buttons results in no
     // $form_state['triggering_element'] and the form submit handler not
     // running.
-    $this->drupalPost($path, $edit, NULL, array(), array(), $form_html_id);
+    $this->drupalPostForm($path, $edit, NULL, array(), array(), $form_html_id);
     $this->assertText('There is no clicked button.', '$form_state[\'triggering_element\'] set to NULL.');
     $this->assertNoText('Submit handler for form_test_clicked_button executed.', 'Form submit handler did not execute.');
 
@@ -50,15 +50,15 @@ class TriggeringElementTest extends WebTestBase {
     // $form_state['triggering_element'] being set to the first one the user has
     // access to. An argument with 'r' in it indicates a restricted
     // (#access=FALSE) button.
-    $this->drupalPost($path . '/s', $edit, NULL, array(), array(), $form_html_id);
+    $this->drupalPostForm($path . '/s', $edit, NULL, array(), array(), $form_html_id);
     $this->assertText('The clicked button is button1.', '$form_state[\'triggering_element\'] set to only button.');
     $this->assertText('Submit handler for form_test_clicked_button executed.', 'Form submit handler executed.');
 
-    $this->drupalPost($path . '/s/s', $edit, NULL, array(), array(), $form_html_id);
+    $this->drupalPostForm($path . '/s/s', $edit, NULL, array(), array(), $form_html_id);
     $this->assertText('The clicked button is button1.', '$form_state[\'triggering_element\'] set to first button.');
     $this->assertText('Submit handler for form_test_clicked_button executed.', 'Form submit handler executed.');
 
-    $this->drupalPost($path . '/rs/s', $edit, NULL, array(), array(), $form_html_id);
+    $this->drupalPostForm($path . '/rs/s', $edit, NULL, array(), array(), $form_html_id);
     $this->assertText('The clicked button is button2.', '$form_state[\'triggering_element\'] set to first available button.');
     $this->assertText('Submit handler for form_test_clicked_button executed.', 'Form submit handler executed.');
 
@@ -67,15 +67,15 @@ class TriggeringElementTest extends WebTestBase {
     // regardless of type. For the FAPI 'button' type, this should result in the
     // submit handler not executing. The types are 's'(ubmit), 'b'(utton), and
     // 'i'(mage_button).
-    $this->drupalPost($path . '/s/b/i', $edit, NULL, array(), array(), $form_html_id);
+    $this->drupalPostForm($path . '/s/b/i', $edit, NULL, array(), array(), $form_html_id);
     $this->assertText('The clicked button is button1.', '$form_state[\'triggering_element\'] set to first button.');
     $this->assertText('Submit handler for form_test_clicked_button executed.', 'Form submit handler executed.');
 
-    $this->drupalPost($path . '/b/s/i', $edit, NULL, array(), array(), $form_html_id);
+    $this->drupalPostForm($path . '/b/s/i', $edit, NULL, array(), array(), $form_html_id);
     $this->assertText('The clicked button is button1.', '$form_state[\'triggering_element\'] set to first button.');
     $this->assertNoText('Submit handler for form_test_clicked_button executed.', 'Form submit handler did not execute.');
 
-    $this->drupalPost($path . '/i/s/b', $edit, NULL, array(), array(), $form_html_id);
+    $this->drupalPostForm($path . '/i/s/b', $edit, NULL, array(), array(), $form_html_id);
     $this->assertText('The clicked button is button1.', '$form_state[\'triggering_element\'] set to first button.');
     $this->assertText('Submit handler for form_test_clicked_button executed.', 'Form submit handler executed.');
   }
@@ -93,12 +93,12 @@ class TriggeringElementTest extends WebTestBase {
 
     // Submit the form with 'button1=button1' in the POST data, which someone
     // trying to get around security safeguards could easily do. We have to do
-    // a little trickery here, to work around the safeguards in drupalPost(): by
+    // a little trickery here, to work around the safeguards in drupalPostForm(): by
     // renaming the text field that is in the form to 'button1', we can get the
     // data we want into $_POST.
     $elements = $this->xpath('//form[@id="' . $form_html_id . '"]//input[@name="text"]');
     $elements[0]['name'] = 'button1';
-    $this->drupalPost(NULL, array('button1' => 'button1'), NULL, array(), array(), $form_html_id);
+    $this->drupalPostForm(NULL, array('button1' => 'button1'), NULL, array(), array(), $form_html_id);
 
     // Ensure that $form_state['triggering_element'] was not set to the
     // restricted button. Do this with both a negative and positive assertion,

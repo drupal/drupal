@@ -263,7 +263,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
     $this->rebuildContainer();
 
     // Continue.
-    $this->drupalPost(NULL, array(), t('Continue'));
+    $this->drupalPostForm(NULL, array(), t('Continue'));
     if (!$this->assertResponse(200)) {
       throw new \Exception('POST to continue update.php did not return HTTP 200 status.');
     }
@@ -277,7 +277,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
     }
 
     // Go!
-    $this->drupalPost(NULL, array(), t('Apply pending updates'));
+    $this->drupalPostForm(NULL, array(), t('Apply pending updates'));
     if (!$this->assertResponse(200)) {
       throw new \Exception('POST to update.php to apply pending updates did not return HTTP 200 status.');
     }
@@ -306,7 +306,7 @@ abstract class UpgradePathTestBase extends WebTestBase {
 
     // Check if there still are pending updates.
     $this->getUpdatePhp();
-    $this->drupalPost(NULL, array(), t('Continue'));
+    $this->drupalPostForm(NULL, array(), t('Continue'));
     if (!$this->assertText(t('No pending updates.'), 'No pending updates at the end of the update process.')) {
       throw new \Exception('update.php still shows pending updates after execution.');
     }

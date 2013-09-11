@@ -30,7 +30,7 @@ class CategorizeFeedItemTest extends AggregatorTestBase {
 
     // Simulate form submission on "admin/config/services/aggregator/add/category".
     $edit = array('title' => $this->randomName(10), 'description' => '');
-    $this->drupalPost('admin/config/services/aggregator/add/category', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/services/aggregator/add/category', $edit, t('Save'));
     $this->assertRaw(t('The category %title has been added.', array('%title' => $edit['title'])), format_string('The category %title has been added.', array('%title' => $edit['title'])));
 
     $category = db_query("SELECT * FROM {aggregator_category} WHERE title = :title", array(':title' => $edit['title']))->fetch();

@@ -70,7 +70,7 @@ class BrokenSetUpTest extends WebTestBase {
     // interface within the simpletest child site.
     if (!drupal_valid_test_ua()) {
       $edit['Drupal\simpletest\Tests\BrokenSetUpTest'] = TRUE;
-      $this->drupalPost('admin/config/development/testing', $edit, t('Run tests'));
+      $this->drupalPostForm('admin/config/development/testing', $edit, t('Run tests'));
 
       // Verify that the broken test and its tearDown() method are skipped.
       $this->assertRaw(t('The test setUp() method has been run.'));

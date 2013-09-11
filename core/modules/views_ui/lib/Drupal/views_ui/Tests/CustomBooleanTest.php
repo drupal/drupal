@@ -96,10 +96,10 @@ class CustomBooleanTest extends UITestBase {
         'options[type_custom_true]' => $values['true'],
         'options[type_custom_false]' => $values['false'],
       );
-      $this->drupalPost('admin/structure/views/nojs/config-item/test_view/default/field/age', $options, 'Apply');
+      $this->drupalPostForm('admin/structure/views/nojs/config-item/test_view/default/field/age', $options, 'Apply');
 
       // Save the view.
-      $this->drupalPost('admin/structure/views/view/test_view', array(), 'Save');
+      $this->drupalPostForm('admin/structure/views/view/test_view', array(), 'Save');
 
       $view = views_get_view('test_view');
       $output = $view->preview();

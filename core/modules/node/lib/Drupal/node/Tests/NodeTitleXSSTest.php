@@ -31,7 +31,7 @@ class NodeTitleXSSTest extends NodeTestBase {
     $title = $xss . $this->randomName();
     $edit = array("title" => $title);
 
-    $this->drupalPost('node/add/page', $edit, t('Preview'));
+    $this->drupalPostForm('node/add/page', $edit, t('Preview'));
     $this->assertNoRaw($xss, 'Harmful tags are escaped when previewing a node.');
 
     $settings = array('title' => $title);

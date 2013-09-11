@@ -40,7 +40,7 @@ class BlockTest extends BlockTestBase {
     // authenticated users.
     $edit['visibility[path][pages]'] = 'user*';
     $edit['visibility[role][roles][' . DRUPAL_AUTHENTICATED_RID . ']'] = TRUE;
-    $this->drupalPost('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
+    $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->drupalGet('');
@@ -80,7 +80,7 @@ class BlockTest extends BlockTestBase {
     );
     // Set the block to be hidden on any user path, and to be shown only to
     // authenticated users.
-    $this->drupalPost('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
+    $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->drupalGet('user');
@@ -108,7 +108,7 @@ class BlockTest extends BlockTestBase {
     $block['region'] = 'header';
 
     // Set block title to confirm that interface works and override any custom titles.
-    $this->drupalPost('admin/structure/block/add/' . $block['id'] . '/' . $block['theme'], array('settings[label]' => $block['settings[label]'], 'machine_name' => $block['machine_name'], 'region' => $block['region']), t('Save block'));
+    $this->drupalPostForm('admin/structure/block/add/' . $block['id'] . '/' . $block['theme'], array('settings[label]' => $block['settings[label]'], 'machine_name' => $block['machine_name'], 'region' => $block['region']), t('Save block'));
     $this->assertText(t('The block configuration has been saved.'), 'Block title set.');
     // Check to see if the block was created by checking its configuration.
     $instance = entity_load('block', $block['theme'] . '.' . $block['machine_name']);
@@ -123,7 +123,7 @@ class BlockTest extends BlockTestBase {
     // Set the block to the disabled region.
     $edit = array();
     $edit['blocks[' . $block['theme'] . '.' . $block['machine_name'] . '][region]'] = -1;
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $this->drupalPostForm('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the block is now listed as disabled.
     $this->assertText(t('The block settings have been updated.'), 'Block successfully move to disabled region.');
@@ -138,9 +138,9 @@ class BlockTest extends BlockTestBase {
 
     // Test deleting the block from the edit form.
     $this->drupalGet('admin/structure/block/manage/' . $block['theme'] . '.' . $block['machine_name']);
-    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->drupalPostForm(NULL, array(), t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the block %name?', array('%name' => $block['settings[label]'])));
-    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->drupalPostForm(NULL, array(), t('Delete'));
     $this->assertRaw(t('The block %name has been removed.', array('%name' => $block['settings[label]'])));
   }
 
@@ -157,7 +157,7 @@ class BlockTest extends BlockTestBase {
       $block['machine_name'] = strtolower($this->randomName(8));
       $block['theme'] = $theme;
       $block['region'] = 'content';
-      $this->drupalPost('admin/structure/block/add/system_powered_by_block', $block, t('Save block'));
+      $this->drupalPostForm('admin/structure/block/add/system_powered_by_block', $block, t('Save block'));
       $this->assertText(t('The block configuration has been saved.'));
       $this->assertUrl('admin/structure/block/list/' . $theme . '?block-placement=' . drupal_html_class($theme . ':' . $block['machine_name']));
 
@@ -184,7 +184,7 @@ class BlockTest extends BlockTestBase {
       'region' => 'sidebar_first',
       'settings[label]' => $title,
     );
-    $this->drupalPost('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
+    $this->drupalPostForm('admin/structure/block/add/' . $block_name . '/' . $default_theme, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->drupalGet('user');
@@ -193,7 +193,7 @@ class BlockTest extends BlockTestBase {
     $edit = array(
       'settings[label_display]' => FALSE,
     );
-    $this->drupalPost('admin/structure/block/manage/' . $default_theme . '.' . $machine_name, $edit, t('Save block'));
+    $this->drupalPostForm('admin/structure/block/manage/' . $default_theme . '.' . $machine_name, $edit, t('Save block'));
     $this->assertText('The block configuration has been saved.', 'Block was saved');
 
     $this->drupalGet('user');
@@ -217,7 +217,7 @@ class BlockTest extends BlockTestBase {
     $block += array('theme' => \Drupal::config('system.theme')->get('default'));
     $edit = array();
     $edit['blocks[' . $block['theme'] . '.' . $block['machine_name'] . '][region]'] = $region;
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $this->drupalPostForm('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the block was moved to the proper region.
     $this->assertText(t('The block settings have been updated.'), format_string('Block successfully moved to %region_name region.', array( '%region_name' => $region)));
@@ -325,13 +325,13 @@ class BlockTest extends BlockTestBase {
       'machine_name' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
     );
-    $this->drupalPost('admin/structure/block/add/system_powered_by_block/stark', $edit, t('Save block'));
+    $this->drupalPostForm('admin/structure/block/add/system_powered_by_block/stark', $edit, t('Save block'));
     $this->assertText(t('The block configuration has been saved.'));
     $this->assertText($edit['settings[label]']);
 
     // Update the weight of a block.
     $edit = array('blocks[stark.' . $edit['machine_name'] . '][weight]' => -1);
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $this->drupalPostForm('admin/structure/block', $edit, t('Save blocks'));
     $this->assertText(t('The block settings have been updated.'));
 
     // Re-enable the module and refresh the definitions cache.

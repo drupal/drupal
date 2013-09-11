@@ -81,7 +81,7 @@ class TwigTransTest extends WebTestBase {
 
     // Assign Lolspeak (xx) to be the default language.
     $edit = array('site_default_language' => 'xx');
-    $this->drupalPost('admin/config/regional/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/settings', $edit, t('Save configuration'));
 
     // Reset the static cache of the language list.
     drupal_static_reset('language_list');
@@ -236,7 +236,7 @@ class TwigTransTest extends WebTestBase {
         );
 
         // Install the language in Drupal.
-        $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
+        $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
         $this->assertRaw('"edit-languages-' . $langcode . '-weight"', 'Language code found.');
 
         // Import the custom .po contents for the language.
@@ -247,7 +247,7 @@ class TwigTransTest extends WebTestBase {
           'langcode' => $langcode,
           'customized' => TRUE,
         );
-        $this->drupalPost('admin/config/regional/translate/import', $options, t('Import'));
+        $this->drupalPostForm('admin/config/regional/translate/import', $options, t('Import'));
         drupal_unlink($filename);
       }
     }

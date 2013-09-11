@@ -71,7 +71,7 @@ class NodeTypeTest extends NodeTestBase {
       'title_label' => 'title for foo',
       'type' => 'foo',
     );
-    $this->drupalPost('admin/structure/types/add', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/add', $edit, t('Save content type'));
     $type_exists = (bool) entity_load('node_type', 'foo');
     $this->assertTrue($type_exists, 'The new content type has been created in the database.');
   }
@@ -95,7 +95,7 @@ class NodeTypeTest extends NodeTestBase {
     $edit = array(
       'title_label' => 'Foo',
     );
-    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
     // Refresh the field information for the rest of the test.
     field_info_cache_clear();
 
@@ -109,7 +109,7 @@ class NodeTypeTest extends NodeTestBase {
       'type' => 'bar',
       'description' => 'Lorem ipsum.',
     );
-    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
     field_info_cache_clear();
 
     $this->drupalGet('node/add');
@@ -121,9 +121,9 @@ class NodeTypeTest extends NodeTestBase {
     $this->assertRaw('Body', 'Body field was found.');
 
     // Remove the body field.
-    $this->drupalPost('admin/structure/types/manage/bar/fields/node.bar.body/delete', array(), t('Delete'));
+    $this->drupalPostForm('admin/structure/types/manage/bar/fields/node.bar.body/delete', array(), t('Delete'));
     // Resave the settings for this type.
-    $this->drupalPost('admin/structure/types/manage/bar', array(), t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/bar', array(), t('Save content type'));
     // Check that the body field doesn't exist.
     $this->drupalGet('node/add/bar');
     $this->assertNoRaw('Body', 'Body field was not found.');

@@ -110,7 +110,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
     $this->drupalGet('admin/structure/types/manage/article');
     $this->assertField('language_configuration[content_translation]');
     $this->assertNoFieldChecked('edit-language-configuration-content-translation');
-    $this->drupalPost('admin/structure/types/manage/article', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/article', $edit, t('Save content type'));
     $this->drupalGet('admin/structure/types/manage/article');
     $this->assertFieldChecked('edit-language-configuration-content-translation');
   }
@@ -131,7 +131,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
    *   TRUE if the assertion succeeded, FALSE otherwise.
    */
   protected function assertSettings($entity_type, $bundle, $enabled, $edit) {
-    $this->drupalPost('admin/config/regional/content-language', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save'));
     $args = array('@entity_type' => $entity_type, '@bundle' => $bundle, '@enabled' => $enabled ? 'enabled' : 'disabled');
     $message = format_string('Translation for entity @entity_type (@bundle) is @enabled.', $args);
     field_info_cache_clear();

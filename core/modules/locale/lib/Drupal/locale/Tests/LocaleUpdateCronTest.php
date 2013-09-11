@@ -50,7 +50,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
 
     // Update translations using batch to ensure a clean test starting point.
     $this->drupalGet('admin/reports/translations/check');
-    $this->drupalPost('admin/reports/translations', array(), t('Update translations'));
+    $this->drupalPostForm('admin/reports/translations', array(), t('Update translations'));
 
     // Store translation status for comparison.
     $initial_history = locale_translation_get_file_history();
@@ -73,7 +73,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $edit = array(
       'update_interval_days' => 0,
     );
-    $this->drupalPost('admin/config/regional/translate/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, t('Save configuration'));
 
     // Execute locale cron taks to add tasks to the queue.
     locale_cron();
@@ -88,7 +88,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $edit = array(
       'update_interval_days' => 7,
     );
-    $this->drupalPost('admin/config/regional/translate/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, t('Save configuration'));
 
     // Execute locale cron taks to add tasks to the queue.
     locale_cron();

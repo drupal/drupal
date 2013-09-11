@@ -51,7 +51,7 @@ class FilterHooksTest extends WebTestBase {
     $edit['format'] = drupal_strtolower($this->randomName());
     $edit['name'] = $name;
     $edit['roles[' . DRUPAL_ANONYMOUS_RID . ']'] = 1;
-    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
     $this->assertRaw(t('Added text format %format.', array('%format' => $name)));
     $this->assertText('hook_filter_format_insert invoked.');
 
@@ -60,7 +60,7 @@ class FilterHooksTest extends WebTestBase {
     // Update text format.
     $edit = array();
     $edit['roles[' . DRUPAL_AUTHENTICATED_RID . ']'] = 1;
-    $this->drupalPost('admin/config/content/formats/manage/' . $format_id, $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/manage/' . $format_id, $edit, t('Save configuration'));
     $this->assertRaw(t('The text format %format has been updated.', array('%format' => $name)));
     $this->assertText('hook_filter_format_update invoked.');
 
@@ -72,11 +72,11 @@ class FilterHooksTest extends WebTestBase {
       "body[$language_not_specified][0][value]" => $this->randomName(32),
       "body[$language_not_specified][0][format]" => $format_id,
     );
-    $this->drupalPost("node/add/{$type->type}", $edit, t('Save and publish'));
+    $this->drupalPostForm("node/add/{$type->type}", $edit, t('Save and publish'));
     $this->assertText(t('@type @title has been created.', array('@type' => $type_name, '@title' => $title)));
 
     // Disable the text format.
-    $this->drupalPost('admin/config/content/formats/manage/' . $format_id . '/disable', array(), t('Disable'));
+    $this->drupalPostForm('admin/config/content/formats/manage/' . $format_id . '/disable', array(), t('Disable'));
     $this->assertRaw(t('Disabled text format %format.', array('%format' => $name)));
     $this->assertText('hook_filter_format_disable invoked.');
   }

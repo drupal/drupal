@@ -110,7 +110,7 @@ class TermIndexTest extends TaxonomyTestBase {
     $edit["body[$langcode][0][value]"] = $this->randomName();
     $edit["{$this->field_name_1}[$langcode][]"] = $term_1->id();
     $edit["{$this->field_name_2}[$langcode][]"] = $term_1->id();
-    $this->drupalPost('node/add/article', $edit, t('Save'));
+    $this->drupalPostForm('node/add/article', $edit, t('Save'));
 
     // Check that the term is indexed, and only once.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
@@ -122,7 +122,7 @@ class TermIndexTest extends TaxonomyTestBase {
 
     // Update the article to change one term.
     $edit["{$this->field_name_1}[$langcode][]"] = $term_2->id();
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that both terms are indexed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
@@ -138,7 +138,7 @@ class TermIndexTest extends TaxonomyTestBase {
 
     // Update the article to change another term.
     $edit["{$this->field_name_2}[$langcode][]"] = $term_2->id();
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that only one term is indexed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(

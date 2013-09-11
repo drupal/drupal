@@ -109,7 +109,7 @@ class LinkFieldTest extends WebTestBase {
       'name' => $this->randomName(),
       "{$field_name}[$langcode][0][url]" => $value,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
@@ -131,7 +131,7 @@ class LinkFieldTest extends WebTestBase {
         'name' => $this->randomName(),
         "{$field_name}[$langcode][0][url]" => $invalid_value,
       );
-      $this->drupalPost(NULL, $edit, t('Save'));
+      $this->drupalPostForm(NULL, $edit, t('Save'));
       $this->assertText(t('The URL @url is not valid.', array('@url' => $invalid_value)));
     }
   }
@@ -202,14 +202,14 @@ class LinkFieldTest extends WebTestBase {
           $edit = array(
             "{$field_name}[$langcode][0][url]" => 'http://www.example.com',
           );
-          $this->drupalPost(NULL, $edit, t('Save'));
+          $this->drupalPostForm(NULL, $edit, t('Save'));
           $this->assertText(t('!name field is required.', array('!name' => t('Link text'))));
 
           // Verify that the link text is not required, if the URL is empty.
           $edit = array(
             "{$field_name}[$langcode][0][url]" => '',
           );
-          $this->drupalPost(NULL, $edit, t('Save'));
+          $this->drupalPostForm(NULL, $edit, t('Save'));
           $this->assertNoText(t('!name field is required.', array('!name' => t('Link text'))));
 
           // Verify that a URL and link text meets requirements.
@@ -218,7 +218,7 @@ class LinkFieldTest extends WebTestBase {
             "{$field_name}[$langcode][0][url]" => 'http://www.example.com',
             "{$field_name}[$langcode][0][title]" => 'Example',
           );
-          $this->drupalPost(NULL, $edit, t('Save'));
+          $this->drupalPostForm(NULL, $edit, t('Save'));
           $this->assertNoText(t('!name field is required.', array('!name' => t('Link text'))));
         }
       }
@@ -232,7 +232,7 @@ class LinkFieldTest extends WebTestBase {
       "{$field_name}[$langcode][0][url]" => $value,
       "{$field_name}[$langcode][0][title]" => '',
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
@@ -248,7 +248,7 @@ class LinkFieldTest extends WebTestBase {
       'name' => $this->randomName(),
       "{$field_name}[$langcode][0][title]" => $title,
     );
-    $this->drupalPost("entity_test/manage/$id/edit", $edit, t('Save'));
+    $this->drupalPostForm("entity_test/manage/$id/edit", $edit, t('Save'));
     $this->assertText(t('entity_test @id has been updated.', array('@id' => $id)));
 
     $this->renderTestEntity($id);
@@ -315,7 +315,7 @@ class LinkFieldTest extends WebTestBase {
     );
     // Assert label is shown.
     $this->assertText('Read more about this entity');
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
@@ -453,7 +453,7 @@ class LinkFieldTest extends WebTestBase {
       "{$field_name}[$langcode][1][url]" => $url2,
       "{$field_name}[$langcode][1][title]" => $title2,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));

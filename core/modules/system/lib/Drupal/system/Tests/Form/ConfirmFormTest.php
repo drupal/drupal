@@ -42,12 +42,12 @@ class ConfirmFormTest extends WebTestBase {
     $this->assertUrl('admin', array(), "The form's cancel link was followed.");
 
     // Test submitting the form.
-    $this->drupalPost('form-test/confirm-form', NULL, t('ConfirmFormTestForm::getConfirmText().'));
+    $this->drupalPostForm('form-test/confirm-form', NULL, t('ConfirmFormTestForm::getConfirmText().'));
     $this->assertText('The ConfirmFormTestForm::submitForm() method was used for this form.');
     $this->assertUrl('', array(), "The form's redirect was followed.");
 
     // Test submitting the form with a destination.
-    $this->drupalPost('form-test/confirm-form', NULL, t('ConfirmFormTestForm::getConfirmText().'), array('query' => array('destination' => 'admin/config')));
+    $this->drupalPostForm('form-test/confirm-form', NULL, t('ConfirmFormTestForm::getConfirmText().'), array('query' => array('destination' => 'admin/config')));
     $this->assertUrl('admin/config', array(), "The form's redirect was not followed, the destination query string was followed.");
 
     // Test cancelling the form with a complex destination.

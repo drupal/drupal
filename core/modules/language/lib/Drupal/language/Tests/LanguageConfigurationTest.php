@@ -48,7 +48,7 @@ class LanguageConfigurationTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'fr',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, 'Add language');
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
     $this->assertText('French');
     $this->assertEqual($this->getUrl(), url('admin/config/regional/language', array('absolute' => TRUE)), 'Correct page redirection.');
     // Langcode for Languages is always 'en'.
@@ -70,7 +70,7 @@ class LanguageConfigurationTest extends WebTestBase {
     $edit = array(
       'site_default_language' => 'fr',
     );
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->assertOptionSelected('edit-site-default-language', 'fr', 'Default language updated.');
     $this->assertEqual($this->getUrl(), url('admin/config/regional/settings', array('absolute' => TRUE)), 'Correct page redirection.');
 
@@ -86,7 +86,7 @@ class LanguageConfigurationTest extends WebTestBase {
     $edit = array(
       'prefix[fr]' => 'french',
     );
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->assertFieldByXPath('//input[@name="prefix[fr]"]', 'french', 'French path prefix has changed.');
 
     // Check that prefix of non default language cannot be changed to
@@ -94,14 +94,14 @@ class LanguageConfigurationTest extends WebTestBase {
     $edit = array(
       'prefix[en]' => '',
     );
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->assertText(t('The prefix may only be left blank for the default language.'), 'English prefix cannot be changed to empty string.');
 
     //  Check that prefix cannot be changed to contain a slash.
     $edit = array(
       'prefix[en]' => 'foo/bar',
     );
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->assertText(t('The prefix may not contain a slash.'), 'English prefix cannot be changed to contain a slash.');
 
     // Remove English language and add a new Language to check if langcode of
@@ -110,7 +110,7 @@ class LanguageConfigurationTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'de',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, 'Add language');
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
     $language = $this->container->get('config.factory')->get('language.entity.de')->get();
     $this->assertEqual($language['langcode'], 'en');
   }
@@ -128,21 +128,21 @@ class LanguageConfigurationTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'fr',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, 'Add language');
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
     $this->checkConfigurableLanguageWeight('after adding new language');
 
     // Re-ordering languages.
     $edit = array(
       'languages[en][weight]' => $this->getHighestConfigurableLanguageWeight() + 1,
     );
-    $this->drupalPost('admin/config/regional/language', $edit, 'Save configuration');
+    $this->drupalPostForm('admin/config/regional/language', $edit, 'Save configuration');
     $this->checkConfigurableLanguageWeight('after re-ordering');
 
     // Remove predefined language.
     $edit = array(
       'confirm' => 1,
     );
-    $this->drupalPost('admin/config/regional/language/delete/fr', $edit, 'Delete');
+    $this->drupalPostForm('admin/config/regional/language/delete/fr', $edit, 'Delete');
     $this->checkConfigurableLanguageWeight('after deleting a language');
   }
 

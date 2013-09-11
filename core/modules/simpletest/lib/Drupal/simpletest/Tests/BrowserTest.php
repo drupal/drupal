@@ -32,7 +32,7 @@ class BrowserTest extends WebTestBase {
     $this->assertEqual($absolute, $this->url, 'Passed and requested URL are equal.');
     $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), 'Requested and returned absolute URL are equal.');
 
-    $this->drupalPost(NULL, array(), t('Log in'));
+    $this->drupalPostForm(NULL, array(), t('Log in'));
     $this->assertEqual($absolute, $this->url, 'Passed and requested URL are equal.');
     $this->assertEqual($this->url, $this->getAbsoluteUrl($this->url), 'Requested and returned absolute URL are equal.');
 

@@ -40,7 +40,7 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
     $edit["title"] = $this->randomName(8);
     $edit["body[$langcode][0][value]"] = t('Data that should appear only in the body for the node.');
     $edit["body[$langcode][0][summary]"] = t('Extra data that should appear only in the teaser for the node.');
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     $node = $this->drupalGetNodeByTitle($edit["title"]);
 

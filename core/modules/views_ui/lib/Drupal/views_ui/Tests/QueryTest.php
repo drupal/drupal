@@ -47,8 +47,8 @@ class QueryTest extends UITestBase {
     // Save some query settings.
     $query_settings_path = "admin/structure/views/nojs/display/test_view/default/query";
     $random_value = $this->randomName();
-    $this->drupalPost($query_settings_path, array('query[options][test_setting]' => $random_value), t('Apply'));
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm($query_settings_path, array('query[options][test_setting]' => $random_value), t('Apply'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
 
     // Check that the settings are saved into the view itself.
     $view = views_get_view('test_view');

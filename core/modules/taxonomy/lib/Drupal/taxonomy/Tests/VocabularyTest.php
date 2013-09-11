@@ -41,7 +41,7 @@ class VocabularyTest extends TaxonomyTestBase {
     $edit['name'] = $this->randomName();
     $edit['description'] = $this->randomName();
     $edit['vid'] = $vid;
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw(t('Created new vocabulary %name.', array('%name' => $edit['name'])), 'Vocabulary created successfully.');
 
     // Edit the vocabulary.
@@ -50,18 +50,18 @@ class VocabularyTest extends TaxonomyTestBase {
     $this->clickLink(t('edit vocabulary'));
     $edit = array();
     $edit['name'] = $this->randomName();
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->drupalGet('admin/structure/taxonomy');
     $this->assertText($edit['name'], 'Vocabulary found in the vocabulary overview listing.');
 
     // Try to submit a vocabulary with a duplicate machine name.
     $edit['vid'] = $vid;
-    $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
     $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
 
     // Try to submit an invalid machine name.
     $edit['vid'] = '!&^%';
-    $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
     $this->assertText(t('The machine-readable name must contain only lowercase letters, numbers, and underscores.'));
 
     // Ensure that vocabulary titles are escaped properly.
@@ -69,7 +69,7 @@ class VocabularyTest extends TaxonomyTestBase {
     $edit['name'] = 'Don\'t Panic';
     $edit['description'] = $this->randomName();
     $edit['vid'] = 'don_t_panic';
-    $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
 
     $site_name = \Drupal::config('system.site')->get('name');
     $this->assertTitle(t('Don\'t Panic | @site-name', array('@site-name' => $site_name)));
@@ -93,7 +93,7 @@ class VocabularyTest extends TaxonomyTestBase {
       $edit['vocabularies[' . $key . '][weight]'] = $weight;
     }
     // Saving the new weights via the interface.
-    $this->drupalPost('admin/structure/taxonomy', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy', $edit, t('Save'));
 
     // Load the vocabularies from the database.
     $this->container->get('entity.manager')->getStorageController('taxonomy_vocabulary')->resetCache();
@@ -132,7 +132,7 @@ class VocabularyTest extends TaxonomyTestBase {
       'name' => $this->randomName(),
       'vid' => $vid,
     );
-    $this->drupalPost('admin/structure/taxonomy/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/add', $edit, t('Save'));
     $this->assertText(t('Created new vocabulary'), 'New vocabulary was created.');
 
     // Check the created vocabulary.
@@ -142,12 +142,12 @@ class VocabularyTest extends TaxonomyTestBase {
 
     // Delete the vocabulary.
     $edit = array();
-    $this->drupalPost('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/edit', $edit, t('Delete'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/edit', $edit, t('Delete'));
     $this->assertRaw(t('Are you sure you want to delete the vocabulary %name?', array('%name' => $vocabulary->name)), '[confirm deletion] Asks for confirmation.');
     $this->assertText(t('Deleting a vocabulary will delete all the terms in it. This action cannot be undone.'), '[confirm deletion] Inform that all terms will be deleted.');
 
     // Confirm deletion.
-    $this->drupalPost(NULL, NULL, t('Delete'));
+    $this->drupalPostForm(NULL, NULL, t('Delete'));
     $this->assertRaw(t('Deleted vocabulary %name.', array('%name' => $vocabulary->name)), 'Vocabulary deleted.');
     $this->container->get('entity.manager')->getStorageController('taxonomy_vocabulary')->resetCache();
     $this->assertFalse(entity_load('taxonomy_vocabulary', $vid), 'Vocabulary not found.');

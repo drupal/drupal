@@ -54,7 +54,7 @@ class MainContentFallbackTest extends WebTestBase {
     $edit = array();
     // Disable the block module.
     $edit['modules[Core][block][enable]'] = FALSE;
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
     $this->rebuildContainer();
     $this->assertFalse(module_exists('block'), 'Block module disabled.');
@@ -88,7 +88,7 @@ class MainContentFallbackTest extends WebTestBase {
     $this->drupalLogin($this->admin_user);
     $edit = array();
     $edit['modules[Core][block][enable]'] = 'block';
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
     $this->rebuildContainer();
     $this->assertTrue(module_exists('block'), 'Block module re-enabled.');

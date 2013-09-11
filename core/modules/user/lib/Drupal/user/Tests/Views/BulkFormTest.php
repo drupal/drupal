@@ -39,7 +39,7 @@ class BulkFormTest extends UserTestBase {
     $edit = array(
       'action' => 'user_block_user_action',
     );
-    $this->drupalPost('test-user-bulk-form', $edit, t('Apply'));
+    $this->drupalPostForm('test-user-bulk-form', $edit, t('Apply'));
     // @todo Validation errors are only shown on page refresh.
     $this->drupalGet('test-user-bulk-form');
     $this->assertText(t('No users selected.'));
@@ -55,7 +55,7 @@ class BulkFormTest extends UserTestBase {
       'user_bulk_form[1]' => TRUE,
       'action' => 'user_add_role_action.' . $role,
     );
-    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the user and check their roles.
     $account = entity_load('user', $account->id(), TRUE);
     $this->assertTrue($account->hasRole($role), 'The user now has the custom role.');
@@ -64,7 +64,7 @@ class BulkFormTest extends UserTestBase {
       'user_bulk_form[1]' => TRUE,
       'action' => 'user_remove_role_action.' . $role,
     );
-    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the user and check their roles.
     $account = entity_load('user', $account->id(), TRUE);
     $this->assertFalse($account->hasRole($role), 'The user no longer has the custom role.');
@@ -76,7 +76,7 @@ class BulkFormTest extends UserTestBase {
       'user_bulk_form[1]' => TRUE,
       'action' => 'user_block_user_action',
     );
-    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
     // Re-load the user and check their status.
     $account = entity_load('user', $account->id(), TRUE);
     $this->assertTrue($account->isBlocked(), 'The user is blocked.');
@@ -96,7 +96,7 @@ class BulkFormTest extends UserTestBase {
       'user_bulk_form[0]' => TRUE,
       'action' => 'user_block_user_action',
     );
-    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
     $anonymous_account = user_load(0);
     $this->assertTrue($anonymous_account->isBlocked(), 'Ensure the anonymous user got blocked.');
   }

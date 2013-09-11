@@ -170,7 +170,7 @@ class TrackerAttributesTest extends WebTestBase {
       'subject' => $this->randomName(),
       'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomName(),
     );
-    $this->drupalPost('comment/reply/' . $node->id(), $comment, t('Save'));
+    $this->drupalPostForm('comment/reply/' . $node->id(), $comment, t('Save'));
 
     // Parses tracker page where the nodes are displayed in a table.
     $parser = new \EasyRdf_Parser_Rdfa();

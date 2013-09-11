@@ -39,7 +39,7 @@ class SyslogTest extends WebTestBase {
     $edit = array();
     // If we're on Windows, there is no configuration form.
     if (defined('LOG_LOCAL6')) {
-      $this->drupalPost('admin/config/development/logging', array('syslog_facility' => LOG_LOCAL6), t('Save configuration'));
+      $this->drupalPostForm('admin/config/development/logging', array('syslog_facility' => LOG_LOCAL6), t('Save configuration'));
       $this->assertText(t('The configuration options have been saved.'));
 
       $this->drupalGet('admin/config/development/logging');

@@ -78,7 +78,7 @@ class PageTitleTest extends WebTestBase {
       "body[$langcode][0][value]" => '!SimpleTest! test body' . $this->randomName(200),
     );
     // Create the node with HTML in the title.
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     $node = $this->drupalGetNodeByTitle($edit["title"]);
     $this->assertNotNull($node, 'Node created and found in database');
@@ -103,14 +103,14 @@ class PageTitleTest extends WebTestBase {
       'toggle_main_menu'      => TRUE,
       'toggle_secondary_menu' => TRUE,
     );
-    $this->drupalPost('admin/appearance/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/appearance/settings', $edit, t('Save configuration'));
 
     // Set title and slogan.
     $edit = array(
       'site_name'    => $title,
       'site_slogan'  => $slogan,
     );
-    $this->drupalPost('admin/config/system/site-information', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
 
     // Load frontpage.
     $this->drupalGet('');

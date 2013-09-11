@@ -53,7 +53,7 @@ class SearchNodeAccessTest extends SearchTestBase {
 
     // Submit a phrase wrapped in double quotes to include the punctuation.
     $edit = array('keys' => '"bunny\'s"');
-    $this->drupalPost('search/node', $edit, t('Search'));
+    $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertText($node->label());
   }
 }

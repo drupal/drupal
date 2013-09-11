@@ -53,7 +53,7 @@ class ItemsPerPageTest extends WizardTestBase {
     $view['block[create]'] = 1;
     $view['block[title]'] = $this->randomName(16);
     $view['block[items_per_page]'] = 3;
-    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
     $this->drupalGet($view['page[path]']);
     $this->assertResponse(200);
 

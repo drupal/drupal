@@ -79,7 +79,7 @@ class InstallerTest extends WebTestBase {
     $this->writeSettings($settings);
 
     $this->drupalGet($GLOBALS['base_url'] . '/core/install.php?langcode=en&profile=minimal');
-    $this->drupalPost(NULL, array(), 'Save and continue');
+    $this->drupalPostForm(NULL, array(), 'Save and continue');
     // Reload config directories.
     include $this->public_files_directory . '/settings.php';
     $prefix = substr($this->public_files_directory, strlen(conf_path() . '/files/'));

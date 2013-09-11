@@ -40,11 +40,11 @@ class LanguageUrlRewritingTest extends WebTestBase {
     // Install French language.
     $edit = array();
     $edit['predefined_langcode'] = 'fr';
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Enable URL language detection and selection.
     $edit = array('language_interface[enabled][language-url]' => 1);
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Reset static caching.
     drupal_static_reset('language_list');
@@ -108,7 +108,7 @@ class LanguageUrlRewritingTest extends WebTestBase {
       'language_negotiation_url_part' => LANGUAGE_NEGOTIATION_URL_DOMAIN,
       'domain[fr]' => $language_domain
     );
-    $this->drupalPost('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
     // Rebuild the container so that the new language gets picked up by services
     // that hold the list of languages.
     $this->rebuildContainer();

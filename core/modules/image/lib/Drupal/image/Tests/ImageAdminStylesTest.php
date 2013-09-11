@@ -57,7 +57,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'name' => $style_name,
       'label' => $style_label,
     );
-    $this->drupalPost('admin/config/media/image-styles/add', $edit, t('Create new style'));
+    $this->drupalPostForm('admin/config/media/image-styles/add', $edit, t('Create new style'));
     $this->assertRaw(t('Style %name was created.', array('%name' => $style_label)));
     $options = image_style_options();
     $this->assertTrue(array_key_exists($style_name, $options), format_string('Array key %key exists.', array('%key' => $style_name)));
@@ -106,7 +106,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'name' => $style_name,
       'label' => $style_label,
     );
-    $this->drupalPost('admin/config/media/image-styles/add', $edit, t('Create new style'));
+    $this->drupalPostForm('admin/config/media/image-styles/add', $edit, t('Create new style'));
     $this->assertRaw(t('Style %name was created.', array('%name' => $style_label)));
 
     // Add effect form.
@@ -114,9 +114,9 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Add each sample effect to the style.
     foreach ($effect_edits as $effect => $edit) {
       // Add the effect.
-      $this->drupalPost($style_path, array('new' => $effect), t('Add'));
+      $this->drupalPostForm($style_path, array('new' => $effect), t('Add'));
       if (!empty($edit)) {
-        $this->drupalPost(NULL, $edit, t('Add effect'));
+        $this->drupalPostForm(NULL, $edit, t('Add effect'));
       }
     }
 
@@ -182,7 +182,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $image_path = $this->createSampleImage($style);
     $this->assertEqual($this->getImageCount($style), 1, format_string('Image style %style image %file successfully generated.', array('%style' => $style->label(), '%file' => $image_path)));
 
-    $this->drupalPost($style_path, $edit, t('Update style'));
+    $this->drupalPostForm($style_path, $edit, t('Update style'));
 
     // Note that after changing the style name, the style path is changed.
     $style_path = 'admin/config/media/image-styles/manage/' . $style_name;
@@ -218,7 +218,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $this->assertEqual($this->getImageCount($style), 1, format_string('Image style %style image %file successfully generated.', array('%style' => $style->label(), '%file' => $image_path)));
 
     // Delete the 'image_crop' effect from the style.
-    $this->drupalPost($style_path . '/effects/' . $uuids['image_crop'] . '/delete', array(), t('Delete'));
+    $this->drupalPostForm($style_path . '/effects/' . $uuids['image_crop'] . '/delete', array(), t('Delete'));
     // Confirm that the form submission was successful.
     $this->assertResponse(200);
     $image_crop_effect = $style->getEffect($uuids['image_crop']);
@@ -238,7 +238,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     // Style deletion form.
 
     // Delete the style.
-    $this->drupalPost($style_path . '/delete', array(), t('Delete'));
+    $this->drupalPostForm($style_path . '/delete', array(), t('Delete'));
 
     // Confirm the style directory has been removed.
     $directory = file_default_scheme() . '://styles/' . $style_name;
@@ -289,7 +289,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
       'name' => $new_style_name,
       'label' => $new_style_label,
     );
-    $this->drupalPost($style_path . $style_name, $edit, t('Update style'));
+    $this->drupalPostForm($style_path . $style_name, $edit, t('Update style'));
     $this->assertText(t('Changes to the style have been saved.'), format_string('Style %name was renamed to %new_name.', array('%name' => $style_name, '%new_name' => $new_style_name)));
     $this->drupalGet('node/' . $nid);
 
@@ -301,7 +301,7 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
     $edit = array(
       'replacement' => 'thumbnail',
     );
-    $this->drupalPost($style_path . $new_style_name . '/delete', $edit, t('Delete'));
+    $this->drupalPostForm($style_path . $new_style_name . '/delete', $edit, t('Delete'));
     $message = t('Style %name was deleted.', array('%name' => $new_style_label));
     $this->assertRaw($message);
 
@@ -316,14 +316,14 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
   function testEditEffect() {
     // Add a scale effect.
     $this->drupalGet('admin/config/media/image-styles/add');
-    $this->drupalPost(NULL, array('label' => 'Test style effect edit', 'name' => 'test_style_effect_edit'), t('Create new style'));
-    $this->drupalPost(NULL, array('new' => 'image_scale_and_crop'), t('Add'));
-    $this->drupalPost(NULL, array('data[width]' => '300', 'data[height]' => '200'), t('Add effect'));
+    $this->drupalPostForm(NULL, array('label' => 'Test style effect edit', 'name' => 'test_style_effect_edit'), t('Create new style'));
+    $this->drupalPostForm(NULL, array('new' => 'image_scale_and_crop'), t('Add'));
+    $this->drupalPostForm(NULL, array('data[width]' => '300', 'data[height]' => '200'), t('Add effect'));
     $this->assertText(t('Scale and crop 300x200'));
 
     // There should normally be only one edit link on this page initially.
     $this->clickLink(t('edit'));
-    $this->drupalPost(NULL, array('data[width]' => '360', 'data[height]' => '240'), t('Update effect'));
+    $this->drupalPostForm(NULL, array('data[width]' => '360', 'data[height]' => '240'), t('Update effect'));
     $this->assertText(t('Scale and crop 360x240'));
 
     // Check that the previous effect is replaced.
@@ -331,17 +331,17 @@ class ImageAdminStylesTest extends ImageFieldTestBase {
 
     // Add another scale effect.
     $this->drupalGet('admin/config/media/image-styles/add');
-    $this->drupalPost(NULL, array('label' => 'Test style scale edit scale', 'name' => 'test_style_scale_edit_scale'), t('Create new style'));
-    $this->drupalPost(NULL, array('new' => 'image_scale'), t('Add'));
-    $this->drupalPost(NULL, array('data[width]' => '12', 'data[height]' => '19'), t('Add effect'));
+    $this->drupalPostForm(NULL, array('label' => 'Test style scale edit scale', 'name' => 'test_style_scale_edit_scale'), t('Create new style'));
+    $this->drupalPostForm(NULL, array('new' => 'image_scale'), t('Add'));
+    $this->drupalPostForm(NULL, array('data[width]' => '12', 'data[height]' => '19'), t('Add effect'));
 
     // Edit the scale effect that was just added.
     $this->clickLink(t('edit'));
-    $this->drupalPost(NULL, array('data[width]' => '24', 'data[height]' => '19'), t('Update effect'));
-    $this->drupalPost(NULL, array('new' => 'image_scale'), t('Add'));
+    $this->drupalPostForm(NULL, array('data[width]' => '24', 'data[height]' => '19'), t('Update effect'));
+    $this->drupalPostForm(NULL, array('new' => 'image_scale'), t('Add'));
 
     // Add another scale effect and make sure both exist.
-    $this->drupalPost(NULL, array('data[width]' => '12', 'data[height]' => '19'), t('Add effect'));
+    $this->drupalPostForm(NULL, array('data[width]' => '12', 'data[height]' => '19'), t('Add effect'));
     $this->assertText(t('Scale 24x19'));
     $this->assertText(t('Scale 12x19'));
   }

@@ -45,7 +45,7 @@ class ToolbarMenuTranslationTest extends WebTestBase {
 
     // Add Spanish.
     $edit['predefined_langcode'] = $langcode;
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
     // The menu item 'Structure' in the toolbar will be translated.
     $menu_item = 'Structure';
@@ -59,7 +59,7 @@ class ToolbarMenuTranslationTest extends WebTestBase {
       'langcode' => $langcode,
       'translation' => 'untranslated',
     );
-    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
+    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     // Make sure will be able to translate the menu item.
     $this->assertNoText('No strings available.', 'Search found the menu item as untranslated.');
 
@@ -74,7 +74,7 @@ class ToolbarMenuTranslationTest extends WebTestBase {
     $edit = array(
       $lid => $menu_item_translated,
     );
-    $this->drupalPost('admin/config/regional/translate', $edit, t('Save translations'));
+    $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
 
     // Search for the translated menu item.
     $search = array(
@@ -82,7 +82,7 @@ class ToolbarMenuTranslationTest extends WebTestBase {
       'langcode' => $langcode,
       'translation' => 'translated',
     );
-    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
+    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     // Make sure the menu item string was translated.
     $this->assertText($menu_item_translated, 'Search found the menu item as translated: ' . $menu_item_translated . '.');
 

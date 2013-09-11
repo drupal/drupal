@@ -128,7 +128,7 @@ class BookTest extends WebTestBase {
     $other_book = $this->createBookNode('new');
     $node = $this->createBookNode($book->id());
     $edit = array('book[bid]' => $other_book->id());
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     $this->drupalLogout();
     $this->drupalLogin($this->web_user);
@@ -249,13 +249,13 @@ class BookTest extends WebTestBase {
     $edit['book[bid]'] = $book_nid;
 
     if ($parent !== NULL) {
-      $this->drupalPost('node/add/book', $edit, t('Change book (update list of parents)'));
+      $this->drupalPostForm('node/add/book', $edit, t('Change book (update list of parents)'));
 
       $edit['book[plid]'] = $parent;
-      $this->drupalPost(NULL, $edit, t('Save'));
+      $this->drupalPostForm(NULL, $edit, t('Save'));
     }
     else {
-      $this->drupalPost('node/add/book', $edit, t('Save'));
+      $this->drupalPostForm('node/add/book', $edit, t('Save'));
     }
 
     // Check to make sure the book node was created.
@@ -323,7 +323,7 @@ class BookTest extends WebTestBase {
     // Give anonymous users the permission 'node test view'.
     $edit = array();
     $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
-    $this->drupalPost('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
+    $this->drupalPostForm('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), "Permission 'node test view' successfully assigned to anonymous users.");
 
     // Test correct display of the block.
@@ -344,7 +344,7 @@ class BookTest extends WebTestBase {
     // Give anonymous users the permission 'node test view'.
     $edit = array();
     $edit[DRUPAL_ANONYMOUS_RID . '[node test view]'] = TRUE;
-    $this->drupalPost('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
+    $this->drupalPostForm('admin/people/permissions/' . DRUPAL_ANONYMOUS_RID, $edit, t('Save permissions'));
     $this->assertText(t('The changes have been saved.'), "Permission 'node test view' successfully assigned to anonymous users.");
 
     // Create a book.
@@ -376,7 +376,7 @@ class BookTest extends WebTestBase {
      // Test access to delete top-level and child book nodes.
      $this->drupalGet('node/' . $this->book->id() . '/outline/remove');
      $this->assertResponse('403', 'Deleting top-level book node properly forbidden.');
-     $this->drupalPost('node/' . $nodes[4]->id() . '/outline/remove', $edit, t('Remove'));
+     $this->drupalPostForm('node/' . $nodes[4]->id() . '/outline/remove', $edit, t('Remove'));
      $node4 = node_load($nodes[4]->id(), TRUE);
      $this->assertTrue(empty($node4->book), 'Deleting child book node properly allowed.');
 
@@ -385,7 +385,7 @@ class BookTest extends WebTestBase {
        $nids[] = $node->id();
      }
      entity_delete_multiple('node', $nids);
-     $this->drupalPost('node/' . $this->book->id() . '/outline/remove', $edit, t('Remove'));
+     $this->drupalPostForm('node/' . $this->book->id() . '/outline/remove', $edit, t('Remove'));
      $node = node_load($this->book->id(), TRUE);
      $this->assertTrue(empty($node->book), 'Deleting childless top-level book node properly allowed.');
    }
@@ -400,7 +400,7 @@ class BookTest extends WebTestBase {
       'name' => 'Bar',
       'type' => 'bar',
     );
-    $this->drupalPost('admin/structure/types/manage/book', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/book', $edit, t('Save content type'));
 
     // Ensure that the config book.settings:allowed_types has been updated with
     // the new machine and the old one has been removed.
@@ -412,7 +412,7 @@ class BookTest extends WebTestBase {
       'title_label' => 'Title for basic page',
       'type' => 'page',
     );
-    $this->drupalPost('admin/structure/types/add', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/add', $edit, t('Save content type'));
 
     // Add page to the allowed node types.
     $edit = array(
@@ -420,7 +420,7 @@ class BookTest extends WebTestBase {
       'book_allowed_types[bar]' => 'bar',
     );
 
-    $this->drupalPost('admin/structure/book/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/structure/book/settings', $edit, t('Save configuration'));
     $this->assertTrue(book_type_is_allowed('bar'), 'Config book.settings:allowed_types contains the bar node type.');
     $this->assertTrue(book_type_is_allowed('page'), 'Config book.settings:allowed_types contains the page node type.');
 
@@ -436,7 +436,7 @@ class BookTest extends WebTestBase {
     // );
     // @endcode
     $current_config = \Drupal::config('book.settings')->init()->get();
-    $this->drupalPost('admin/structure/book/settings', array(), t('Save configuration'));
+    $this->drupalPostForm('admin/structure/book/settings', array(), t('Save configuration'));
     $this->assertIdentical($current_config, \Drupal::config('book.settings')->init()->get());
 
     // Change the name, machine name and description.
@@ -444,7 +444,7 @@ class BookTest extends WebTestBase {
       'name' => 'Zebra book',
       'type' => 'zebra',
     );
-    $this->drupalPost('admin/structure/types/manage/bar', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/bar', $edit, t('Save content type'));
     $this->assertTrue(book_type_is_allowed('zebra'), 'Config book.settings:allowed_types contains the zebra node type.');
     $this->assertTrue(book_type_is_allowed('page'), 'Config book.settings:allowed_types contains the page node type.');
 
@@ -457,14 +457,14 @@ class BookTest extends WebTestBase {
     // );
     // @endcode
     $current_config = \Drupal::config('book.settings')->init()->get();
-    $this->drupalPost('admin/structure/book/settings', array(), t('Save configuration'));
+    $this->drupalPostForm('admin/structure/book/settings', array(), t('Save configuration'));
     $this->assertIdentical($current_config, \Drupal::config('book.settings')->init()->get());
 
     $edit = array(
       'name' => 'Animal book',
       'type' => 'zebra',
     );
-    $this->drupalPost('admin/structure/types/manage/zebra', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/zebra', $edit, t('Save content type'));
 
     // Test the order of the book.settings::allowed_types configuration is as
     // expected. The order should be:
@@ -475,7 +475,7 @@ class BookTest extends WebTestBase {
     // );
     // @endcode
     $current_config = \Drupal::config('book.settings')->init()->get();
-    $this->drupalPost('admin/structure/book/settings', array(), t('Save configuration'));
+    $this->drupalPostForm('admin/structure/book/settings', array(), t('Save configuration'));
     $this->assertIdentical($current_config, \Drupal::config('book.settings')->init()->get());
 
     // Ensure that after all the node type changes book.settings:child_type has
@@ -504,7 +504,7 @@ class BookTest extends WebTestBase {
       // Put node 2 under node 1.
       "table[book-admin-{$node2->id()}][plid]" => $plid,
     );
-    $this->drupalPost(NULL, $edit, t('Save book pages'));
+    $this->drupalPostForm(NULL, $edit, t('Save book pages'));
     // Verify weight was updated.
     $this->assertFieldByName("table[book-admin-{$node1->id()}][weight]", 1);
     $this->assertFieldByName("table[book-admin-{$node2->id()}][weight]", 2);

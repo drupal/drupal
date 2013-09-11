@@ -70,12 +70,12 @@ class AreaTest extends HandlerTestBase {
       $edit_path = 'admin/structure/views/nojs/config-item/test_example_area/default/' . $type .'/test_example';
 
       // First setup an empty label.
-      $this->drupalPost($edit_path, array(), t('Apply'));
+      $this->drupalPostForm($edit_path, array(), t('Apply'));
       $this->assertText('Test Example area');
 
       // Then setup a no empty label.
       $labels[$type] = $this->randomName();
-      $this->drupalPost($edit_path, array('options[admin_label]' => $labels[$type]), t('Apply'));
+      $this->drupalPostForm($edit_path, array('options[admin_label]' => $labels[$type]), t('Apply'));
       // Make sure that the new label appears on the site.
       $this->assertText($labels[$type]);
 

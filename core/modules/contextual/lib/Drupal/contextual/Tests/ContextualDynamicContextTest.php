@@ -147,30 +147,10 @@ class ContextualDynamicContextTest extends WebTestBase {
    *   The response body.
    */
   protected function renderContextualLinks($ids, $current_path) {
-    // Build POST values.
     $post = array();
     for ($i = 0; $i < count($ids); $i++) {
       $post['ids[' . $i . ']'] = $ids[$i];
     }
-
-    // Serialize POST values.
-    foreach ($post as $key => $value) {
-      // Encode according to application/x-www-form-urlencoded
-      // Both names and values needs to be urlencoded, according to
-      // http://www.w3.org/TR/html4/interact/forms.html#h-17.13.4.1
-      $post[$key] = urlencode($key) . '=' . urlencode($value);
-    }
-    $post = implode('&', $post);
-
-    // Perform HTTP request.
-    return $this->curlExec(array(
-      CURLOPT_URL => url('contextual/render', array('absolute' => TRUE, 'query' => array('destination' => $current_path))),
-      CURLOPT_POST => TRUE,
-      CURLOPT_POSTFIELDS => $post,
-      CURLOPT_HTTPHEADER => array(
-        'Accept: application/json',
-        'Content-Type: application/x-www-form-urlencoded',
-      ),
-    ));
+    return $this->drupalPost('contextual/render', 'application/json', $post, array('query' => array('destination' => $current_path)));
   }
 }

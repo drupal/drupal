@@ -98,7 +98,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertTrue($node->isDefaultRevision(), 'Third node revision is the default one.');
 
     // Confirm that revisions revert properly.
-    $this->drupalPost("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionid() . "/revert", array(), t('Revert'));
+    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionid() . "/revert", array(), t('Revert'));
     $this->assertRaw(t('@type %title has been reverted back to the revision from %revision-date.',
                         array('@type' => 'Basic page', '%title' => $nodes[1]->label(),
                               '%revision-date' => format_date($nodes[1]->getRevisionCreationTime()))), 'Revision reverted.');
@@ -110,7 +110,7 @@ class NodeRevisionsTest extends NodeTestBase {
     $this->assertFalse($node->isDefaultRevision(), 'Third node revision is not the default one.');
 
     // Confirm revisions delete properly.
-    $this->drupalPost("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", array(), t('Delete'));
+    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[1]->getRevisionId() . "/delete", array(), t('Delete'));
     $this->assertRaw(t('Revision from %revision-date of @type %title has been deleted.',
                         array('%revision-date' => format_date($nodes[1]->getRevisionCreationTime()),
                               '@type' => 'Basic page', '%title' => $nodes[1]->label())), 'Revision deleted.');
@@ -125,7 +125,7 @@ class NodeRevisionsTest extends NodeTestBase {
         'revision_timestamp' => $old_revision_date,
       ))
       ->execute();
-    $this->drupalPost("node/" . $node->id() . "/revisions/" . $nodes[2]->getRevisionId() . "/revert", array(), t('Revert'));
+    $this->drupalPostForm("node/" . $node->id() . "/revisions/" . $nodes[2]->getRevisionId() . "/revert", array(), t('Revert'));
     $this->assertRaw(t('@type %title has been reverted back to the revision from %revision-date.', array(
       '@type' => 'Basic page',
       '%title' => $nodes[2]->label(),

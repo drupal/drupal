@@ -78,13 +78,13 @@ class CommentPreviewTest extends CommentTestBase {
     $edit['signature[value]'] = '<a href="http://example.com/">' . $test_signature. '</a>';
     $image = current($this->drupalGetTestFiles('image'));
     $edit['files[user_picture_und_0]'] = drupal_realpath($image->uri);
-    $this->drupalPost('user/' . $this->web_user->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('user/' . $this->web_user->id() . '/edit', $edit, t('Save'));
 
     // As the web user, fill in the comment form and preview the comment.
     $edit = array();
     $edit['subject'] = $this->randomName(8);
     $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
-    $this->drupalPost('node/' . $this->node->id(), $edit, t('Preview'));
+    $this->drupalPostForm('node/' . $this->node->id(), $edit, t('Preview'));
 
     // Check that the preview is displaying the title and body.
     $this->assertTitle(t('Preview comment | Drupal'), 'Page title is "Preview comment".');
@@ -126,7 +126,7 @@ class CommentPreviewTest extends CommentTestBase {
     $expected_form_date = $date->format('Y-m-d');
     $expected_form_time = $date->format('H:i:s');
     $comment = $this->postComment($this->node, $edit['subject'], $edit['comment_body[' . $langcode . '][0][value]'], TRUE);
-    $this->drupalPost('comment/' . $comment->id() . '/edit', $edit, t('Preview'));
+    $this->drupalPostForm('comment/' . $comment->id() . '/edit', $edit, t('Preview'));
 
     // Check that the preview is displaying the subject, comment, author and date correctly.
     $this->assertTitle(t('Preview comment | Drupal'), 'Page title is "Preview comment".');
@@ -143,7 +143,7 @@ class CommentPreviewTest extends CommentTestBase {
     $this->assertFieldByName('date[time]', $edit['date[time]'], 'Time field displayed.');
 
     // Check that saving a comment produces a success message.
-    $this->drupalPost('comment/' . $comment->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('comment/' . $comment->id() . '/edit', $edit, t('Save'));
     $this->assertText(t('Your comment has been posted.'), 'Comment posted.');
 
     // Check that the comment fields are correct after loading the saved comment.
@@ -161,7 +161,7 @@ class CommentPreviewTest extends CommentTestBase {
     $displayed['name'] = (string) current($this->xpath("//input[@id='edit-name']/@value"));
     $displayed['date[date]'] = (string) current($this->xpath("//input[@id='edit-date-date']/@value"));
     $displayed['date[time]'] = (string) current($this->xpath("//input[@id='edit-date-time']/@value"));
-    $this->drupalPost('comment/' . $comment->id() . '/edit', $displayed, t('Save'));
+    $this->drupalPostForm('comment/' . $comment->id() . '/edit', $displayed, t('Save'));
 
     // Check that the saved comment is still correct.
     $comment_loaded = comment_load($comment->id(), TRUE);

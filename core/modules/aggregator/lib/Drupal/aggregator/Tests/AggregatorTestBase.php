@@ -54,7 +54,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    */
   function createFeed($feed_url = NULL, array $edit = array()) {
     $edit = $this->getFeedEditArray($feed_url, $edit);
-    $this->drupalPost('admin/config/services/aggregator/add/feed', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/services/aggregator/add/feed', $edit, t('Save'));
     $this->assertRaw(t('The feed %name has been added.', array('%name' => $edit['title'])), format_string('The feed !name has been added.', array('!name' => $edit['title'])));
 
     $fid = db_query("SELECT fid FROM {aggregator_feed} WHERE title = :title AND url = :url", array(':title' => $edit['title'], ':url' => $edit['url']))->fetchField();
@@ -69,7 +69,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    *   Feed object representing the feed.
    */
   function deleteFeed(Feed $feed) {
-    $this->drupalPost('admin/config/services/aggregator/delete/feed/' . $feed->id(), array(), t('Delete'));
+    $this->drupalPostForm('admin/config/services/aggregator/delete/feed/' . $feed->id(), array(), t('Delete'));
     $this->assertRaw(t('The feed %title has been deleted.', array('%title' => $feed->label())), 'Feed deleted successfully.');
   }
 
@@ -186,7 +186,7 @@ abstract class AggregatorTestBase extends WebTestBase {
    *   Feed object representing the feed.
    */
   function removeFeedItems(Feed $feed) {
-    $this->drupalPost('admin/config/services/aggregator/remove/' . $feed->id(), array(), t('Remove items'));
+    $this->drupalPostForm('admin/config/services/aggregator/remove/' . $feed->id(), array(), t('Remove items'));
     $this->assertRaw(t('The news items from %title have been removed.', array('%title' => $feed->label())), 'Feed items removed.');
   }
 
@@ -362,7 +362,7 @@ EOF;
       $edit = array();
       $edit['title'] = $this->randomName();
       $edit["body[$langcode][0][value]"] = $this->randomName();
-      $this->drupalPost('node/add/article', $edit, t('Save'));
+      $this->drupalPostForm('node/add/article', $edit, t('Save'));
     }
   }
 

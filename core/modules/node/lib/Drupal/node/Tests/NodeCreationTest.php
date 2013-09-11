@@ -48,7 +48,7 @@ class NodeCreationTest extends NodeTestBase {
     $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName(8);
     $edit["body[$langcode][0][value]"] = $this->randomName(16);
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the Basic page has been created.
     $this->assertRaw(t('!post %title has been created.', array('!post' => 'Basic page', '%title' => $edit["title"])), 'Basic page created.');
@@ -113,7 +113,7 @@ class NodeCreationTest extends NodeTestBase {
     $edit = array();
     $edit["title"] = $this->randomName(8);
     $edit["body[" . Language::LANGCODE_NOT_SPECIFIED . "][0][value]"] = $this->randomName(16);
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the user was redirected to the home page.
     $this->assertUrl('');

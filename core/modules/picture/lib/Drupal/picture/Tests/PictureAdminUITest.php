@@ -92,7 +92,7 @@ class PictureAdminUITest extends WebTestBase {
       'id' => 'mapping_one',
       'breakpointGroup' => 'atestset',
     );
-    $this->drupalPost('admin/config/media/picturemapping/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/media/picturemapping/add', $edit, t('Save'));
 
     // Check if the new group is created.
     $this->assertResponse(200);
@@ -122,7 +122,7 @@ class PictureAdminUITest extends WebTestBase {
       'mappings[custom.user.medium][1x]' => 'medium',
       'mappings[custom.user.large][1x]' => 'large',
     );
-    $this->drupalPost('admin/config/media/picturemapping/mapping_one', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/media/picturemapping/mapping_one', $edit, t('Save'));
     $this->drupalGet('admin/config/media/picturemapping/mapping_one');
     $this->assertFieldByName('mappings[custom.user.small][1x]', 'thumbnail');
     $this->assertFieldByName('mappings[custom.user.small][2x]', '');
@@ -133,7 +133,7 @@ class PictureAdminUITest extends WebTestBase {
 
     // Delete the mapping.
     $this->drupalGet('admin/config/media/picturemapping/mapping_one/delete');
-    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->drupalPostForm(NULL, array(), t('Delete'));
     $this->drupalGet('admin/config/media/picturemapping');
     $this->assertText('There is no Picture mapping yet.');
   }

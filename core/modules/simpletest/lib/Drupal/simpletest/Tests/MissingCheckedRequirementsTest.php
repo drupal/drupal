@@ -56,7 +56,7 @@ class MissingCheckedRequirementsTest extends WebTestBase {
     if (!drupal_valid_test_ua()) {
       // Run this test from web interface.
       $edit['Drupal\simpletest\Tests\MissingCheckedRequirementsTest'] = TRUE;
-      $this->drupalPost('admin/config/development/testing', $edit, t('Run tests'));
+      $this->drupalPostForm('admin/config/development/testing', $edit, t('Run tests'));
       $this->assertRaw('Test is not allowed to run.', 'Test check for requirements came up.');
       $this->assertNoText('Test ran when it failed requirements check.', 'Test requirements stopped test from running.');
     }
