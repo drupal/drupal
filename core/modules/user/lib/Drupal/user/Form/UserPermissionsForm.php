@@ -139,7 +139,7 @@ class UserPermissionsForm extends FormBase {
             'restrict access' => FALSE,
             'warning' => !empty($perm_item['restrict access']) ? $this->t('Warning: Give to trusted roles only; this permission has security implications.') : '',
           );
-          $options[$perm] = '';
+          $options[$perm] = $perm_item['title'];
           $user_permission_description = array(
             '#theme' => 'user_permission_description',
             '#permission_item' => $perm_item,

@@ -262,8 +262,8 @@ class BlockListController extends ConfigEntityListController implements FormInte
             '#type' => 'select',
             '#default_value' => $region,
             '#empty_value' => BLOCK_REGION_NONE,
-            '#title_display' => 'invisible',
             '#title' => t('Region for @block block', array('@block' => $info['admin_label'])),
+            '#title_display' => 'invisible',
             '#options' => $this->regions,
             '#attributes' => array(
               'class' => array('block-region-select', 'block-region-' . $region),
@@ -279,8 +279,8 @@ class BlockListController extends ConfigEntityListController implements FormInte
             '#type' => 'weight',
             '#default_value' => $info['weight'],
             '#delta' => $weight_delta,
-            '#title_display' => 'invisible',
             '#title' => t('Weight for @block block', array('@block' => $info['admin_label'])),
+            '#title_display' => 'invisible',
             '#attributes' => array(
               'class' => array('block-weight', 'block-weight-' . $region),
             ),

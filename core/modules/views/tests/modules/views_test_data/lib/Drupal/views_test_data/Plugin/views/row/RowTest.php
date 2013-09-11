@@ -50,6 +50,7 @@ class RowTest extends RowPluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     $form['test_option'] = array(
+      '#title' => t('Test option'),
       '#type' => 'textfield',
       '#description' => t('This is a textfield for test_option.'),
       '#default_value' => $this->options['test_option'],

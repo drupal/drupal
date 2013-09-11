@@ -162,6 +162,11 @@ function update_manager_update_form($form, $form_state = array(), $context) {
         continue 2;
     }
 
+    // Use the project title for the tableselect checkboxes.
+    $entry['title'] = array('data' => array(
+      '#title' => $entry['title'],
+      '#markup' => $entry['title'],
+    ));
     $entry['#attributes'] = array('class' => array('update-' . $type));
 
     // Drupal core needs to be upgraded manually.

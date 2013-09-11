@@ -82,6 +82,7 @@ class DisplayTest extends DisplayPluginBase {
       case 'test_option':
         $form['#title'] .= t('Test option');
         $form['test_option'] = array(
+          '#title' => t('Test option'),
           '#type' => 'textfield',
           '#description' => t('This is a textfield for test_option.'),
           '#default_value' => $this->getOption('test_option'),

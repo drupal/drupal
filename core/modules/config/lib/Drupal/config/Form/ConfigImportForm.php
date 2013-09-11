@@ -59,9 +59,10 @@ class ConfigImportForm extends FormBase {
     );
     $form['import_tarball'] = array(
       '#type' => 'file',
-      '#value' => $this->t('Select your configuration export file'),
+      '#title' => $this->t('Select your configuration export file'),
       '#description' => $this->t('This form will redirect you to the import configuration screen.'),
     );
+
     $form['submit'] = array(
       '#type' => 'submit',
       '#value' => $this->t('Upload'),

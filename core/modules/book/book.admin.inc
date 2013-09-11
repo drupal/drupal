@@ -160,6 +160,8 @@ function _book_admin_table_tree($tree, &$form) {
       'depth' => array('#type' => 'value', '#value' => $data['link']['depth']),
       'href' => array('#type' => 'value', '#value' => $data['link']['href']),
       'title' => array(
+        '#title' => t('Title'),
+        '#title_display' => 'invisible',
         '#type' => 'textfield',
         '#default_value' => $data['link']['link_title'],
         '#maxlength' => 255,

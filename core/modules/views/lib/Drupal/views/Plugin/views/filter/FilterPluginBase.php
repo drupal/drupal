@@ -8,6 +8,7 @@
 namespace Drupal\views\Plugin\views\filter;
 
 use Drupal\views\Plugin\views\HandlerBase;
+use Drupal\Component\Utility\String;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\Component\Annotation\Plugin;
 use Drupal\views\ViewExecutable;
@@ -745,6 +746,7 @@ abstract class FilterPluginBase extends HandlerBase {
       $value = $this->options['group_info']['identifier'];
 
       $form[$value] = array(
+        '#title' => String::checkPlain($this->options['group_info']['label']),
         '#type' => $this->options['group_info']['widget'],
         '#default_value' => $this->group_info,
         '#options' => $groups,
@@ -784,10 +786,6 @@ abstract class FilterPluginBase extends HandlerBase {
       $operator = $this->options['expose']['operator_id'];
       $this->operatorForm($form, $form_state);
       $form[$operator] = $form['operator'];
-
-      if (isset($form[$operator]['#title'])) {
-        unset($form[$operator]['#title']);
-      }
 
       $this->exposedTranslate($form[$operator], 'operator');
 
@@ -954,7 +952,7 @@ abstract class FilterPluginBase extends HandlerBase {
       // In each row, we have to display the operator form and the value from
       // $row acts as a fake form to render each widget in a row.
       $row = array();
-      $groups[$item_id] = '';
+      $groups[$item_id] = t('Grouping @id', array('@id' => $item_id));
       $this->operatorForm($row, $form_state);
       // Force the operator form to be a select box. Some handlers uses
       // radios and they occupy a lot of space in a table row.
@@ -1012,12 +1010,16 @@ abstract class FilterPluginBase extends HandlerBase {
       // Per item group, we have a title that identifies it.
       $form['group_info']['group_items'][$item_id] = array(
         'title' => array(
+          '#title' => t('Label'),
+          '#title_display' => 'invisible',
           '#type' => 'textfield',
           '#size' => 20,
           '#default_value' => $default_title,
         ),
         'operator' => $row['operator'],
         'value' => $row['value'],
+        // No title is given here, since this input is never displayed. It is
+        // only triggered by JavaScript.
         'remove' => array(
           '#type' => 'checkbox',
           '#id' => 'views-removed-' . $item_id,
@@ -1025,6 +1027,8 @@ abstract class FilterPluginBase extends HandlerBase {
           '#default_value' => 0,
         ),
         'weight' => array(
+          '#title' => t('Weight'),
+          '#title_display' => 'invisible',
           '#type' => 'weight',
           '#delta' => 10,
           '#default_value' => $default_weight++,

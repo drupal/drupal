@@ -69,6 +69,7 @@ class DisplayExtenderTest extends DisplayExtenderPluginBase {
       case 'test_extender_test_option':
         $form['#title'] .= t('Test option');
         $form['test_extender_test_option'] = array(
+          '#title' => t('Test option'),
           '#type' => 'textfield',
           '#description' => t('This is a textfield for test_option.'),
           '#default_value' => $this->displayHandler->getOption('test_extender_test_option'),

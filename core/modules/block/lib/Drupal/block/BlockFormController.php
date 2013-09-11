@@ -102,7 +102,6 @@ class BlockFormController extends EntityFormController {
     // If creating a new block, calculate a safe default machine name.
     $form['machine_name'] = array(
       '#type' => 'machine_name',
-      '#title' => $this->t('Machine name'),
       '#maxlength' => 64,
       '#description' => $this->t('A unique name for this block instance. Must be alpha-numeric and underscore separated.'),
       '#default_value' => !$entity->isNew() ? $entity->id() : $this->getUniqueMachineName($entity),

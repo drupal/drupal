@@ -1411,6 +1411,7 @@ abstract class DisplayPluginBase extends PluginBase {
       case 'title':
         $form['#title'] .= t('The title of this view');
         $form['title'] = array(
+          '#title' => t('Title'),
           '#type' => 'textfield',
           '#description' => t('This title will be displayed with the view, wherever titles are normally displayed; i.e, as the page title, block title, etc.'),
           '#default_value' => $this->getOption('title'),
@@ -1500,6 +1501,8 @@ abstract class DisplayPluginBase extends PluginBase {
 
         $access = $this->getOption('access');
         $form['access']['type'] =  array(
+          '#title' => t('Access'),
+          '#title_display' => 'invisible',
           '#type' => 'radios',
           '#options' => views_fetch_plugin_names('access', $this->getType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $access['type'],
@@ -1535,6 +1538,8 @@ abstract class DisplayPluginBase extends PluginBase {
 
         $cache = $this->getOption('cache');
         $form['cache']['type'] =  array(
+          '#title' => t('Caching'),
+          '#title_display' => 'invisible',
           '#type' => 'radios',
           '#options' => views_fetch_plugin_names('cache', $this->getType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $cache['type'],
@@ -1626,6 +1631,8 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['#title'] .= t('How should this view be styled');
         $style_plugin = $this->getPlugin('style');
         $form['style'] =  array(
+          '#title' => t('Style'),
+          '#title_display' => 'invisible',
           '#type' => 'radios',
           '#options' => views_fetch_plugin_names('style', $this->getType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $style_plugin->definition['id'],
@@ -1668,6 +1675,8 @@ abstract class DisplayPluginBase extends PluginBase {
         $form['#title'] .= t('How should each row in this view be styled');
         $row_plugin_instance = $this->getPlugin('row');
         $form['row'] =  array(
+          '#title' => t('Row'),
+          '#title_display' => 'invisible',
           '#type' => 'radios',
           '#options' => views_fetch_plugin_names('row', $this->getType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $row_plugin_instance->definition['id'],
@@ -1692,6 +1701,7 @@ abstract class DisplayPluginBase extends PluginBase {
         $options['custom_url'] = t('Custom URL');
         if (count($options)) {
           $form['link_display'] = array(
+            '#title' => t('Custom URL'),
             '#type' => 'radios',
             '#options' => $options,
             '#description' => t("Which display to use to get this display's path for things like summary links, rss feed links, more links, etc."),
@@ -1859,6 +1869,8 @@ abstract class DisplayPluginBase extends PluginBase {
           '#suffix' => '</div>',
         );
         $form['box']['theme'] = array(
+          '#title' => t('Theme'),
+          '#title_display' => 'invisible',
           '#type' => 'select',
           '#options' => $options,
           '#default_value' => $this->theme,
@@ -1987,6 +1999,8 @@ abstract class DisplayPluginBase extends PluginBase {
 
         $exposed_form = $this->getOption('exposed_form');
         $form['exposed_form']['type'] =  array(
+          '#title' => t('Exposed form'),
+          '#title_display' => 'invisible',
           '#type' => 'radios',
           '#options' => views_fetch_plugin_names('exposed_form', $this->getType(), array($this->view->storage->get('base_table'))),
           '#default_value' => $exposed_form['type'],
@@ -2021,6 +2035,8 @@ abstract class DisplayPluginBase extends PluginBase {
 
         $pager = $this->getOption('pager');
         $form['pager']['type'] =  array(
+          '#title' => t('Pager'),
+          '#title_display' => 'invisible',
           '#type' => 'radios',
           '#options' => views_fetch_plugin_names('pager', !$this->usesPager() ? 'basic' : NULL, array($this->view->storage->get('base_table'))),
           '#default_value' => $pager['type'],

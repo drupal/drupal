@@ -155,6 +155,8 @@ class ContentTranslationController implements ContentTranslationControllerInterf
         '#weight' => -100,
         '#multilingual' => TRUE,
         'source' => array(
+          '#title' => t('Select source language'),
+          '#title_display' => 'invisible',
           '#type' => 'select',
           '#default_value' => $source_langcode,
           '#options' => array(),

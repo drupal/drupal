@@ -158,11 +158,15 @@ class RearrangeFilter extends ViewsFormBase {
       $form['#group_renders'][$field['group']][] = $id;
 
       $form['filters'][$id]['weight'] = array(
+        '#title' => t('Weight for @id', array('@id' => $id)),
+        '#title_display' => 'invisible',
         '#type' => 'textfield',
         '#default_value' => ++$count,
         '#size' => 8,
       );
       $form['filters'][$id]['group'] = array(
+        '#title' => t('Group for @id', array('@id' => $id)),
+        '#title_display' => 'invisible',
         '#type' => 'select',
         '#options' => $group_options,
         '#default_value' => $field['group'],
@@ -186,6 +190,8 @@ class RearrangeFilter extends ViewsFormBase {
         $form['filters'][$id]['name'] = array('#markup' => $this->t('Broken field @id', array('@id' => $id)));
       }
       $form['filters'][$id]['removed'] = array(
+        '#title' => t('Remove @id', array('@id' => $id)),
+        '#title_display' => 'invisible',
         '#type' => 'checkbox',
         '#id' => 'views-removed-' . $id,
         '#attributes' => array('class' => array('views-remove-checkbox')),

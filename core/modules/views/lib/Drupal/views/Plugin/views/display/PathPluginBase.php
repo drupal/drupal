@@ -305,6 +305,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
         $form['#title'] .= t('The menu path or URL of this view');
         $form['path'] = array(
           '#type' => 'textfield',
+          '#title' => t('Path'),
           '#description' => t('This view will be displayed by visiting this path on your site. You may use "%" in your URL to represent values that will be used for contextual filters: For example, "node/%/feed".'),
           '#default_value' => $this->getOption('path'),
           '#field_prefix' => '<span dir="ltr">' . url(NULL, array('absolute' => TRUE)),

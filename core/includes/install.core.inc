@@ -2470,6 +2470,7 @@ function _install_configure_form($form, &$form_state, &$install_state) {
   );
   $form['update_notifications']['update_status_module'] = array(
     '#type' => 'checkboxes',
+    '#title' => t('Update notifications'),
     '#options' => array(
       1 => t('Check for updates automatically'),
       2 => t('Receive e-mail notifications'),

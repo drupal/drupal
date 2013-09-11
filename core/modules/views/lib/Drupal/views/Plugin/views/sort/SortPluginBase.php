@@ -164,6 +164,7 @@ abstract class SortPluginBase extends HandlerBase {
     $options = $this->sortOptions();
     if (!empty($options)) {
       $form['order'] = array(
+        '#title' => t('Order'),
         '#type' => 'radios',
         '#options' => $options,
         '#default_value' => $this->options['order'],

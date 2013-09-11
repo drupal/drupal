@@ -185,6 +185,7 @@ class Attachment extends DisplayPluginBase {
       case 'attachment_position':
         $form['#title'] .= t('Position');
         $form['attachment_position'] = array(
+          '#title' => t('Position'),
           '#type' => 'radios',
           '#description' => t('Attach before or after the parent display?'),
           '#options' => $this->attachmentPositions(),
@@ -200,6 +201,7 @@ class Attachment extends DisplayPluginBase {
           }
         }
         $form['displays'] = array(
+          '#title' => t('Displays'),
           '#type' => 'checkboxes',
           '#description' => t('Select which display or displays this should attach to.'),
           '#options' => $displays,

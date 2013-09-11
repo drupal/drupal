@@ -218,6 +218,7 @@ class Feed extends PathPluginBase {
           }
         }
         $form['displays'] = array(
+          '#title' => t('Displays'),
           '#type' => 'checkboxes',
           '#description' => t('The feed icon will be available only to the selected displays.'),
           '#options' => $displays,

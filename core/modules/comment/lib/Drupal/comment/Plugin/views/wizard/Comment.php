@@ -88,8 +88,8 @@ class Comment extends WizardPluginBase {
       case 'comment':
         $style_form['row_options']['links'] = array(
           '#type' => 'select',
-          '#title_display' => 'invisible',
           '#title' => t('Should links be displayed below each comment'),
+          '#title_display' => 'invisible',
           '#options' => array(
             1 => t('with links (allow users to reply to the comment, etc.)'),
             0 => t('without links'),

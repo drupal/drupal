@@ -118,6 +118,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
       '#account' => comment_prepare_author($comment),
     );
     $options[$comment->id()] = array(
+      'title' => array('data' => array('#title' => $comment->subject->value ?: $comment->id())),
       'subject' => array(
         'data' => array(
           '#type' => 'link',

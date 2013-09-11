@@ -5,6 +5,7 @@
  * Interface translation summary, editing and deletion user interfaces.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Language\Language;
 use Drupal\locale\SourceString;
 use Drupal\locale\TranslationString;
@@ -520,6 +521,7 @@ function locale_translation_status_form($form, &$form_state) {
 
     // Build data options for the select table.
     foreach($updates as $langcode => $update) {
+      $title = String::checkPlain($languages[$langcode]->name);
       $locale_translation_update_info = array('#theme' => 'locale_translation_update_info');
       foreach (array('updates', 'not_found') as $update_status) {
         if (isset($update[$update_status])) {
@@ -527,12 +529,20 @@ function locale_translation_status_form($form, &$form_state) {
         }
       }
       $options[$langcode] = array(
-        'title' => check_plain($languages[$langcode]->name),
+        'title' => array(
+          'class' => array('label'),
+          'data' => array(
+            '#title' => $title,
+            '#markup' => $title
+          ),
+        ),
         'status' => array('class' => array('description', 'expand', 'priority-low'), 'data' => drupal_render($locale_translation_update_info)),
       );
     }
     // Sort the table data on language name.
-    uasort($options, 'drupal_sort_title');
+    uasort($options, function ($a, $b) {
+      return strcasecmp($a['title']['data']['#title'], $b['title']['data']['#title']);
+    });
   }
 
   $last_checked = Drupal::state()->get('locale.translation_last_checked');
@@ -639,13 +649,6 @@ function locale_translation_status_form_submit($form, &$form_state) {
  * translation files could not be found.
  */
 function locale_translation_language_table($form_element) {
-  // Add labels to Language names.
-  foreach ($form_element['#options'] as $langcode => $option) {
-    $id = $form_element[$langcode]['#id'];
-    $title = $option['title'];
-    $form_element['#options'][$langcode]['title'] = '<label for="' . $form_element[$langcode]['#id'] . '" class="language-name">' . $title . '</label>';
-  }
-
   // Remove checkboxes of languages without updates.
   if ($form_element['#not_found']) {
     foreach ($form_element['#not_found'] as $langcode) {

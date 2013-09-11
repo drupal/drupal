@@ -107,8 +107,8 @@ class Node extends WizardPluginBase {
       case 'teasers':
         $style_form['row_options']['links'] = array(
           '#type' => 'select',
-          '#title_display' => 'invisible',
           '#title' => t('Should links be displayed below each node'),
+          '#title_display' => 'invisible',
           '#options' => array(
             1 => t('with links (allow users to add comments, etc.)'),
             0 => t('without links'),
@@ -117,8 +117,8 @@ class Node extends WizardPluginBase {
         );
         $style_form['row_options']['comments'] = array(
           '#type' => 'select',
-          '#title_display' => 'invisible',
           '#title' => t('Should comments be displayed below each node'),
+          '#title_display' => 'invisible',
           '#options' => array(
             1 => t('with comments'),
             0 => t('without comments'),
