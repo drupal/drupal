@@ -2,9 +2,9 @@
 
 /**
  * @file
- * Database additions for user picture tests. Used in UserPictureUpgradePathTest.
+ * Database additions for forum upgrade tests. Used in ForumUpgradePathTest.
  *
- * This dump only contains data and schema components relevant for user picture
+ * This dump only contains data and schema components relevant for forum module
  * functionality. The drupal-7.bare.database.php file is imported before
  * this dump, so the two form the database structure expected in tests
  * altogether.
