@@ -52,8 +52,7 @@ class BlockManager extends DefaultPluginManager {
    *   The translation manager.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler, TranslationInterface $translation_manager) {
-    $annotation_namespaces = array('Drupal\block\Annotation' => $namespaces['Drupal\block']);
-    parent::__construct('Plugin/Block', $namespaces, $annotation_namespaces, 'Drupal\block\Annotation\Block');
+    parent::__construct('Plugin/Block', $namespaces, 'Drupal\block\Annotation\Block');
 
     $this->alterInfo($module_handler, 'block');
     $this->setCacheBackend($cache_backend, $language_manager, 'block_plugins');

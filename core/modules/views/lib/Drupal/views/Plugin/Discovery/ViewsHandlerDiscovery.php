@@ -41,16 +41,12 @@ class ViewsHandlerDiscovery extends AnnotatedClassDiscovery {
     $this->type = $type;
     $this->rootNamespacesIterator = $root_namespaces;
 
-    $annotation_namespaces = array(
-      'Drupal\Component\Annotation' => DRUPAL_ROOT . '/core/lib',
-    );
     $plugin_namespaces = array();
     foreach ($root_namespaces as $namespace => $dir) {
       $plugin_namespaces["$namespace\\Plugin\\views\\{$type}"] = array($dir);
     }
 
     $this->pluginNamespaces = $plugin_namespaces;
-    $this->annotationNamespaces = $annotation_namespaces;
     $this->pluginDefinitionAnnotationName = 'Drupal\Component\Annotation\PluginID';
   }
 

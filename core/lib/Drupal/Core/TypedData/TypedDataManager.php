@@ -49,10 +49,7 @@ class TypedDataManager extends DefaultPluginManager {
     $this->alterInfo($module_handler, 'data_type_info');
     $this->setCacheBackend($cache_backend, $language_manager, 'typed_data:types');
 
-    $annotation_namespaces = array(
-      'Drupal\Core\TypedData\Annotation' => DRUPAL_ROOT . '/core/lib',
-    );
-    parent::__construct('Plugin/DataType', $namespaces, $annotation_namespaces, 'Drupal\Core\TypedData\Annotation\DataType');
+    parent::__construct('Plugin/DataType', $namespaces, 'Drupal\Core\TypedData\Annotation\DataType');
   }
 
   /**

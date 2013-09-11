@@ -42,12 +42,9 @@ class CustomAnnotationClassDiscoveryTest extends DiscoveryTestBase {
       ),
     );
     $root_namespaces = new \ArrayObject(array('Drupal\plugin_test' => DRUPAL_ROOT . '/core/modules/system/tests/modules/plugin_test/lib'));
-    $annotation_namespaces = array(
-      'Drupal\plugin_test\Plugin\Annotation' => DRUPAL_ROOT . '/core/modules/system/tests/modules/plugin_test/lib',
-    );
 
-    $this->discovery = new AnnotatedClassDiscovery('Plugin/plugin_test/custom_annotation', $root_namespaces, $annotation_namespaces, 'Drupal\plugin_test\Plugin\Annotation\PluginExample');
-    $this->emptyDiscovery = new AnnotatedClassDiscovery('Plugin/non_existing_module/non_existing_plugin_type', $root_namespaces, $annotation_namespaces, 'Drupal\plugin_test\Plugin\Annotation\PluginExample');
+    $this->discovery = new AnnotatedClassDiscovery('Plugin/plugin_test/custom_annotation', $root_namespaces, 'Drupal\plugin_test\Plugin\Annotation\PluginExample');
+    $this->emptyDiscovery = new AnnotatedClassDiscovery('Plugin/non_existing_module/non_existing_plugin_type', $root_namespaces, 'Drupal\plugin_test\Plugin\Annotation\PluginExample');
   }
 
 }
