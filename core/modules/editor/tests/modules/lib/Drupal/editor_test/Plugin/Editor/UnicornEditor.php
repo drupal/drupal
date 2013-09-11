@@ -34,7 +34,11 @@ class UnicornEditor extends EditorBase {
    * Implements \Drupal\editor\Plugin\EditPluginInterface::settingsForm().
    */
   function settingsForm(array $form, array &$form_state, EditorEntity $editor) {
-    $form['foo'] = array('#type' => 'textfield', '#default_value' => 'bar');
+    $form['foo'] = array(
+      '#title' => t('Foo'),
+      '#type' => 'textfield',
+      '#default_value' => 'bar',
+    );
     return $form;
   }
 

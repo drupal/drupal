@@ -650,5 +650,5 @@ function node_views_wizard() {
  */
 function node_views_plugins_row_alter(array &$plugins) {
   $plugins['entity:node']['class'] = 'Drupal\node\Plugin\views\row\NodeRow';
-  $plugins['entity:node']['module'] = 'node';
+  $plugins['entity:node']['provider'] = 'node';
 }

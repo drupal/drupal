@@ -69,6 +69,7 @@ class ViewAddFormController extends ViewFormControllerBase {
 
     $form['name'] = array(
       '#type' => 'fieldset',
+      '#title' => t('View basic information'),
       '#attributes' => array('class' => array('fieldset-no-legend')),
     );
 
@@ -118,6 +119,7 @@ class ViewAddFormController extends ViewFormControllerBase {
     // properties of what the view will display.
     $form['displays']['show'] = array(
       '#type' => 'fieldset',
+      '#title' => t('View settings'),
       '#tree' => TRUE,
       '#attributes' => array('class' => array('container-inline')),
     );

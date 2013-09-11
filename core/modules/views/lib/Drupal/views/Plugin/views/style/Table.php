@@ -301,12 +301,16 @@ class Table extends StylePluginBase {
       $column_selector = ':input[name="style_options[columns][' . $field . ']"]';
 
       $form['columns'][$field] = array(
+        '#title' => t('Columns for @field', array('@field' => $field)),
+        '#title_display' => 'invisible',
         '#type' => 'select',
         '#options' => $field_names,
         '#default_value' => $column,
       );
       if ($handlers[$field]->clickSortable()) {
         $form['info'][$field]['sortable'] = array(
+          '#title' => t('Sortable for @field', array('@field' => $field)),
+          '#title_display' => 'invisible',
           '#type' => 'checkbox',
           '#default_value' => !empty($this->options['info'][$field]['sortable']),
           '#states' => array(
@@ -316,6 +320,8 @@ class Table extends StylePluginBase {
           ),
         );
         $form['info'][$field]['default_sort_order'] = array(
+          '#title' => t('Default sort order for @field', array('@field' => $field)),
+          '#title_display' => 'invisible',
           '#type' => 'select',
           '#options' => array('asc' => t('Ascending'), 'desc' => t('Descending')),
           '#default_value' => !empty($this->options['info'][$field]['default_sort_order']) ? $this->options['info'][$field]['default_sort_order'] : 'asc',
@@ -329,6 +335,8 @@ class Table extends StylePluginBase {
         // Provide an ID so we can have such things.
         $radio_id = drupal_html_id('edit-default-' . $field);
         $form['default'][$field] = array(
+          '#title' => t('Default sort for @field', array('@field' => $field)),
+          '#title_display' => 'invisible',
           '#type' => 'radio',
           '#return_value' => $field,
           '#parents' => array('style_options', 'default'),
@@ -344,6 +352,8 @@ class Table extends StylePluginBase {
         );
       }
       $form['info'][$field]['align'] = array(
+        '#title' => t('Alignment for @field', array('@field' => $field)),
+        '#title_display' => 'invisible',
         '#type' => 'select',
         '#default_value' => !empty($this->options['info'][$field]['align']) ? $this->options['info'][$field]['align'] : '',
         '#options' => array(
@@ -359,6 +369,8 @@ class Table extends StylePluginBase {
         ),
       );
       $form['info'][$field]['separator'] = array(
+        '#title' => t('Separator for @field', array('@field' => $field)),
+        '#title_display' => 'invisible',
         '#type' => 'textfield',
         '#size' => 10,
         '#default_value' => isset($this->options['info'][$field]['separator']) ? $this->options['info'][$field]['separator'] : '',
@@ -369,6 +381,8 @@ class Table extends StylePluginBase {
         ),
       );
       $form['info'][$field]['empty_column'] = array(
+        '#title' => t('Hide empty column for @field', array('@field' => $field)),
+        '#title_display' => 'invisible',
         '#type' => 'checkbox',
         '#default_value' => isset($this->options['info'][$field]['empty_column']) ? $this->options['info'][$field]['empty_column'] : FALSE,
         '#states' => array(
@@ -378,6 +392,8 @@ class Table extends StylePluginBase {
         ),
       );
       $form['info'][$field]['responsive'] = array(
+        '#title' => t('Responsive setting for @field', array('@field' => $field)),
+        '#title_display' => 'invisible',
         '#type' => 'select',
         '#default_value' => isset($this->options['info'][$field]['responsive']) ? $this->options['info'][$field]['responsive'] : '',
         '#options' => array('' => t('High'), RESPONSIVE_PRIORITY_MEDIUM => t('Medium'), RESPONSIVE_PRIORITY_LOW => t('Low')),
@@ -396,6 +412,8 @@ class Table extends StylePluginBase {
 
     // Provide a radio for no default sort
     $form['default'][-1] = array(
+      '#title' => t('No default sort'),
+      '#title_display' => 'invisible',
       '#type' => 'radio',
       '#return_value' => -1,
       '#parents' => array('style_options', 'default'),

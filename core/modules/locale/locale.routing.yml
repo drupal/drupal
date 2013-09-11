@@ -11,3 +11,10 @@ locale_check_translation:
     _controller: 'Drupal\locale\Controller\LocaleController::checkTranslation'
   requirements:
     _permission: 'translate interface'
+
+locale_translate_page:
+  pattern: '/admin/config/regional/translate'
+  defaults:
+    _content: 'Drupal\locale\Controller\LocaleController::translatePage'
+  requirements:
+    _permission: 'translate interface'

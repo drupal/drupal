@@ -21,9 +21,7 @@ class EntityChangedConstraintValidator extends ConstraintValidator {
    */
   public function validate($value, Constraint $constraint) {
     if (isset($value)) {
-      // We are on the field item level, so we need to go two levels up for the
-      // entity object.
-      $entity = $this->context->getMetadata()->getTypedData()->getParent()->getParent();
+      $entity = $this->context->getMetadata()->getTypedData()->getEntity();
       if (!$entity->isNew()) {
         $saved_entity = \Drupal::entityManager()->getStorageController($entity->entityType())->loadUnchanged($entity->id());
 

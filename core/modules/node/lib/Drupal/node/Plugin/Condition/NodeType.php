@@ -39,6 +39,7 @@ class NodeType extends ConditionPluginBase {
       $options[$type->type] = $type->name;
     }
     $form['bundles'] = array(
+      '#title' => t('Node types'),
       '#type' => 'checkboxes',
       '#options' => $options,
       '#required' => TRUE,

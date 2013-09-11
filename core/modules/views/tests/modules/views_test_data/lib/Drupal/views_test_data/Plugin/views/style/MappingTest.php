@@ -22,7 +22,6 @@ use Drupal\views\Plugin\views\field\Numeric;
  *   title = @Translation("Field mapping"),
  *   help = @Translation("Maps specific fields to specific purposes."),
  *   theme = "views_view_mapping_test",
- *   module = "views_test_data",
  *   display_types = {"normal", "test"}
  * )
  */

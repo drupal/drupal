@@ -173,9 +173,7 @@ function locale_menu() {
   $items['admin/config/regional/translate'] = array(
     'title' => 'User interface translation',
     'description' => 'Translate the built-in user interface.',
-    'page callback' => 'locale_translate_page',
-    'access arguments' => array('translate interface'),
-    'file' => 'locale.pages.inc',
+    'route_name' => 'locale_translate_page',
     'weight' => -5,
   );
   $items['admin/config/regional/translate/translate'] = array(
@@ -203,7 +201,6 @@ function locale_menu() {
   $items['admin/config/regional/translate/settings'] = array(
     'title' => 'Settings',
     'route_name' => 'locale_settings',
-    'access arguments' => array('translate interface'),
     'weight' => 100,
     'type' => MENU_LOCAL_TASK,
   );
@@ -758,7 +755,7 @@ function locale_form_language_admin_overview_form_alter(&$form, &$form_state) {
             '@total' => $total_strings,
             '@ratio' => $stats[$langcode]['ratio'],
           )),
-          'admin/config/regional/translate/translate',
+          'admin/config/regional/translate',
           array('query' => array('langcode' => $langcode))
         ),
       );

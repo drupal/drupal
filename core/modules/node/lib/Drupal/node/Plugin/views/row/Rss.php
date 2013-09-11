@@ -22,8 +22,7 @@ use Drupal\views\Plugin\views\row\RowPluginBase;
  *   theme = "views_view_row_rss",
  *   register_theme = FALSE,
  *   base = {"node"},
- *   display_types = {"feed"},
- *   module = "node"
+ *   display_types = {"feed"}
  * )
  */
 class Rss extends RowPluginBase {

@@ -49,6 +49,7 @@ function ajax_forms_test_simple_form($form, &$form_state) {
 
   $form = array();
   $form['select'] = array(
+    '#title' => t('Color'),
     '#type' => 'select',
     '#options' => array(
       'red' => 'red',
@@ -83,6 +84,7 @@ function ajax_forms_test_simple_form($form, &$form_state) {
   foreach ($invalid_callbacks as $key => $value) {
     $form['select_' . $key . '_callback'] = array(
       '#type' => 'select',
+      '#title' => t('Test %key callbacks', array('%key' => $key)),
       '#options' => array('red' => 'red'),
       '#ajax' => array('callback' => $value),
     );
@@ -542,6 +544,7 @@ function ajax_forms_test_lazy_load_form($form, &$form_state) {
     'data' => array('test' => 'currentPathUpdate'),
   );
   $form['add_files'] = array(
+    '#title' => t('Add files'),
     '#type' => 'checkbox',
     '#default_value' => FALSE,
   );

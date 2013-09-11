@@ -19,7 +19,6 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ViewsRow(
  *   id = "data_entity",
- *   module = "rest",
  *   title = @Translation("Entity"),
  *   help = @Translation("Use entities as row data."),
  *   display_types = {"data"}

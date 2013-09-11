@@ -60,6 +60,9 @@ views.display.block:
     block_description:
       type: text
       label: 'Block name'
+    block_category:
+      type: text
+      label: 'Block category'
     block_caching:
       type: boolean
       label: 'Block caching'

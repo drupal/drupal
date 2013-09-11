@@ -17,7 +17,6 @@ use Drupal\views\Plugin\views\argument_validator\ArgumentValidatorPluginBase;
  *
  * @ViewsArgumentValidator(
  *   id = "php",
- *   module = "php",
  *   title = @Translation("PHP Code")
  * )
  */

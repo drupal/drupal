@@ -211,6 +211,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $form['displays']['page'] = array(
       '#type' => 'fieldset',
+      '#title' => t('Page settings'),
       '#attributes' => array('class' => array('views-attachment', 'fieldset-no-legend')),
       '#tree' => TRUE,
     );
@@ -248,6 +249,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     );
     $form['displays']['page']['options']['style'] = array(
       '#type' => 'fieldset',
+      '#title' => t('Page display settings'),
       '#attributes' => array('class' => array('container-inline', 'fieldset-no-legend')),
     );
 
@@ -354,6 +356,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
 
     $form['displays']['block'] = array(
       '#type' => 'fieldset',
+      '#title' => t('Block settings'),
       '#attributes' => array('class' => array('views-attachment', 'fieldset-no-legend')),
       '#tree' => TRUE,
     );
@@ -385,6 +388,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
     );
     $form['displays']['block']['options']['style'] = array(
       '#type' => 'fieldset',
+      '#title' => t('Block display settings'),
       '#attributes' => array('class' => array('container-inline', 'fieldset-no-legend')),
     );
 

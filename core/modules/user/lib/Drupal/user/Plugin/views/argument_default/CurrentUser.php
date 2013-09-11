@@ -18,7 +18,6 @@ use Drupal\views\Plugin\views\argument_default\ArgumentDefaultPluginBase;
  *
  * @ViewsArgumentDefault(
  *   id = "current_user",
- *   module = "user",
  *   title = @Translation("User ID from logged in user")
  * )
  */

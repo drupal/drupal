@@ -26,8 +26,7 @@ class CommentNewValue extends TypedData {
       if (!isset($this->parent)) {
         throw new InvalidArgumentException('Computed properties require context for computation.');
       }
-      $field = $this->parent->getParent();
-      $entity = $field->getParent();
+      $entity = $this->parent->getEntity();
       $this->value = comment_mark($entity);
     }
     return $this->value;

@@ -20,7 +20,6 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ViewsWizard(
  *   id = "node_revision",
- *   module = "node",
  *   base_table = "node_field_revision",
  *   title = @Translation("Content revisions")
  * )

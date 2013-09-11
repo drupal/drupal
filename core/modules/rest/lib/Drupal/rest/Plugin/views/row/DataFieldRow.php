@@ -20,7 +20,6 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ViewsRow(
  *   id = "data_field",
- *   module = "rest",
  *   title = @Translation("Fields"),
  *   help = @Translation("Use fields as row data."),
  *   display_types = {"data"}
@@ -95,11 +94,15 @@ class DataFieldRow extends RowPluginBase {
           '#markup' => $id,
         );
         $form['field_options'][$id]['alias'] = array(
+          '#title' => t('Alias for @id', array('@id' => $id)),
+          '#title_display' => 'invisible',
           '#type' => 'textfield',
           '#default_value' => isset($options[$id]['alias']) ? $options[$id]['alias'] : '',
           '#element_validate' => array(array($this, 'validateAliasName')),
         );
         $form['field_options'][$id]['raw_output'] = array(
+          '#title' => t('Raw output for @id', array('@id' => $id)),
+          '#title_display' => 'invisible',
           '#type' => 'checkbox',
           '#default_value' => isset($options[$id]['raw_output']) ? $options[$id]['raw_output'] : '',
         );

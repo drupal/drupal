@@ -69,14 +69,14 @@ class LocaleConfigTranslationTest extends WebTestBase {
       'langcode' => $langcode,
       'translation' => 'all',
     );
-    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
     $textareas = $this->xpath('//textarea');
     $textarea = current($textareas);
     $lid = (string) $textarea[0]['name'];
     $edit = array(
       $lid => $site_name,
     );
-    $this->drupalPost('admin/config/regional/translate/translate', $edit, t('Save translations'));
+    $this->drupalPost('admin/config/regional/translate', $edit, t('Save translations'));
 
     $wrapper = $this->container->get('locale.config.typed')->get('system.site');
 
@@ -115,13 +115,13 @@ class LocaleConfigTranslationTest extends WebTestBase {
       'langcode' => $langcode,
       'translation' => 'all',
     );
-    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
     $textarea = current($this->xpath('//textarea'));
     $lid = (string) $textarea[0]['name'];
     $edit = array(
       $lid => $image_style_label,
     );
-    $this->drupalPost('admin/config/regional/translate/translate', $edit, t('Save translations'));
+    $this->drupalPost('admin/config/regional/translate', $edit, t('Save translations'));
 
     // Check the right single translation has been created.
     $translations = $this->storage->getTranslations(array('language' => $langcode, 'type' => 'configuration', 'name' => 'image.style.medium'));

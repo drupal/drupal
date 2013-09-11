@@ -22,7 +22,6 @@ use Symfony\Component\Serializer\SerializerInterface;
  *
  * @ViewsStyle(
  *   id = "serializer",
- *   module = "rest",
  *   title = @Translation("Serializer"),
  *   help = @Translation("Serializes views row data using the Serializer component."),
  *   display_types = {"data"}

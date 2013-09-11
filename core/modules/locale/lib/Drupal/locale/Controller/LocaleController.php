@@ -6,43 +6,15 @@
 
 namespace Drupal\locale\Controller;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Routing\UrlGeneratorInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Controller\ControllerBase;
+use Drupal\locale\Form\TranslateEditForm;
+use Drupal\locale\Form\TranslateFilterForm;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+
 /**
  * Return response for manual check translations.
  */
-class LocaleController implements ContainerInjectionInterface {
-
-  /**
-   * The module handler.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandlerInterface
-   */
-  protected $moduleHandler;
-
-  /**
-   * Constructs a \Drupal\locale\Controller\LocaleController object.
-   *
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler.
-   */
-  public function __construct(ModuleHandlerInterface $module_handler, UrlGeneratorInterface $url_generator) {
-    $this->moduleHandler = $module_handler;
-    $this->urlGenerator = $url_generator;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('module_handler'),
-      $container->get('url_generator')
-    );
-  }
+class LocaleController extends ControllerBase {
 
   /**
    * Checks for translation updates and displays the translations status.
@@ -53,11 +25,11 @@ class LocaleController implements ContainerInjectionInterface {
    *   A redirection to translations reports page.
    */
   public function checkTranslation() {
-    $this->moduleHandler->loadInclude('locale', 'inc', 'locale.compare');
+    $this->moduleHandler()->loadInclude('locale', 'inc', 'locale.compare');
 
     // Check translation status of all translatable project in all languages.
     // First we clear the cached list of projects. Although not strictly
-    // nescessary, this is helpfull in case the project list is out of sync.
+    // necessary, this is helpful in case the project list is out of sync.
     locale_translation_flush_projects();
     locale_translation_check_projects();
 
@@ -67,6 +39,21 @@ class LocaleController implements ContainerInjectionInterface {
       return batch_process('admin/reports/translations');
     }
 
-    return new RedirectResponse($this->urlGenerator->generateFromPath('admin/reports/translations', array('absolute' => TRUE)));
+    // @todo Use $this->redirect() after https://drupal.org/node/1978926.
+    return new RedirectResponse($this->urlGenerator()->generateFromPath('admin/reports/translations', array('absolute' => TRUE)));
   }
+
+  /**
+   * Shows the string search screen.
+   *
+   * @return array
+   *   The render array for the string search screen.
+   */
+  public function translatePage() {
+    return array(
+      'filter' => drupal_get_form(TranslateFilterForm::create($this->container)),
+      'form' => drupal_get_form(TranslateEditForm::create($this->container)),
+    );
+  }
+
 }

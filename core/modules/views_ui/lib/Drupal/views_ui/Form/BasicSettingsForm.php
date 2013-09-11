@@ -95,6 +95,7 @@ class BasicSettingsForm extends SystemConfigFormBase {
 
     $form['live_preview']['options']['ui_show_sql_query_where'] = array(
       '#type' => 'radios',
+      '#title' => t('Show SQL query'),
       '#options' => array(
         'above' => $this->t('Above the preview'),
         'below' => $this->t('Below the preview'),

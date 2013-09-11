@@ -28,6 +28,14 @@ use Drupal\Core\TypedData\ListInterface;
 interface FieldInterface extends ListInterface, AccessibleInterface {
 
   /**
+   * Gets the entity that field belongs to.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   *   The entity object.
+   */
+  public function getEntity();
+
+  /**
    * Sets the langcode of the field values held in the object.
    *
    * @param string $langcode

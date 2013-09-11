@@ -198,7 +198,7 @@ class LocalePluralFormatTest extends WebTestBase {
     $search = array(
       'langcode' => 'fr',
     );
-    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
     // Plural values for the langcode fr.
     $this->assertText('@count heure');
     $this->assertText('@count heures');
@@ -221,7 +221,7 @@ class LocalePluralFormatTest extends WebTestBase {
       'string' => '1 day',
       'langcode' => 'fr',
     );
-    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
 
     // Save complete translations for the string in langcode fr.
     $edit = array(
@@ -235,7 +235,7 @@ class LocalePluralFormatTest extends WebTestBase {
       'string' => '1 day',
       'langcode' => 'hr',
     );
-    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
 
     $edit = array(
       "strings[$lid][translations][0]" => '@count dan',

@@ -1,0 +1,6 @@
+user_form_test_current_password:
+  pattern: '/user_form_test_current_password/{user}'
+  defaults:
+    _form: '\Drupal\user_form_test\Form\TestCurrentPassword'
+  requirements:
+    _permission: 'administer users'

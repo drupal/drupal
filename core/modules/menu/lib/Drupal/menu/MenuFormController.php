@@ -315,8 +315,8 @@ class MenuFormController extends EntityFormController {
           '#type' => 'weight',
           '#delta' => $delta,
           '#default_value' => $item['weight'],
-          '#title_display' => 'invisible',
           '#title' => t('Weight for @title', array('@title' => $item['title'])),
+          '#title_display' => 'invisible',
         );
         $form[$mlid]['mlid'] = array(
           '#type' => 'hidden',

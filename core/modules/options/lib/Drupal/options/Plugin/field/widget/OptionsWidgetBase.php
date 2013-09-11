@@ -143,7 +143,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
       $module_handler = \Drupal::moduleHandler();
       $context = array(
         'fieldDefinition' => $this->fieldDefinition,
-        'entity' => $item->getParent()->getParent(),
+        'entity' => $item->getEntity(),
       );
       $module_handler->alter('options_list', $options, $context);
 

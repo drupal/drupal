@@ -384,5 +384,5 @@ function user_views_data() {
  */
 function user_views_plugins_row_alter(array &$plugins) {
   $plugins['entity:user']['class'] = 'Drupal\user\Plugin\views\row\UserRow';
-  $plugins['entity:user']['module'] = 'user';
+  $plugins['entity:user']['provider'] = 'user';
 }

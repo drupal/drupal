@@ -312,6 +312,7 @@ function _batch_test_nested_drupal_form_submit_callback($value) {
  */
 function batch_test_mock_form($form, $form_state) {
   $form['test_value'] = array(
+    '#title' => t('Test value'),
     '#type' => 'textfield',
   );
   $form['submit'] = array(

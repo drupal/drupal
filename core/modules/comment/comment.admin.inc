@@ -130,6 +130,7 @@ function comment_admin_overview($form, &$form_state, $arg) {
       $body = $comment->comment_body->value;
     }
     $options[$comment->id()] = array(
+      'title' => array('data' => array('#title' => $comment->subject->value ?: $comment->id())),
       'subject' => array(
         'data' => array(
           '#type' => 'link',

@@ -16,7 +16,6 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ViewsWizard(
  *   id = "file_managed",
- *   module = "file",
  *   base_table = "file_managed",
  *   title = @Translation("Files")
  * )

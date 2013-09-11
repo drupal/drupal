@@ -59,6 +59,13 @@ class Field extends ItemList implements FieldInterface {
   /**
    * {@inheritdoc}
    */
+  public function getEntity() {
+    return $this->getParent();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function setLangcode($langcode) {
     $this->langcode = $langcode;
   }

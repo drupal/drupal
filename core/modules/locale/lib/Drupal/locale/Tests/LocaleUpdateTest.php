@@ -167,7 +167,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
     $this->drupalGet('admin/reports/translations/check');
 
     // Check the status on the Available translation status page.
-    $this->assertRaw('<label for="edit-langcodes-de" class="language-name">German</label>', 'German language found');
+    $this->assertRaw('<label class="visually-hidden" for="edit-langcodes-de">Update German</label>', 'German language found');
     $this->assertText('Updates for: Contributed module one, Contributed module two, Custom module one, Locale test', 'Updates found');
     $this->assertText('Contributed module one (' . format_date($this->timestamp_now, 'html_date') . ')', 'Updates for Contrib module one');
     $this->assertText('Contributed module two (' . format_date($this->timestamp_new, 'html_date') . ')', 'Updates for Contrib module two');
@@ -452,7 +452,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'langcode' => $langcode,
       'translation' => 'translated',
     );
-    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
     $this->assertNoText(t('No strings available.'), 'String successfully imported.');
 
     // Ensure the multiline string was imported.
@@ -461,7 +461,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'langcode' => $langcode,
       'translation' => 'all',
     );
-    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
     $this->assertText('Multiline translation string to make sure that import works with it.', 'String successfully imported.');
 
     // Ensure 'Allowed HTML source string' was imported but the translation for
@@ -472,7 +472,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       'langcode' => $langcode,
       'translation' => 'all',
     );
-    $this->drupalPost('admin/config/regional/translate/translate', $search, t('Filter'));
+    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
     $this->assertText('Allowed HTML source string', 'String successfully imported.');
     $this->assertNoText('Another allowed HTML source string', 'String with disallowed translation not imported.');
   }

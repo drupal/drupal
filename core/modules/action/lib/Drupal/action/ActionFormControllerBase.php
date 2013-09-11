@@ -72,7 +72,6 @@ abstract class ActionFormControllerBase extends EntityFormController {
 
     $form['id'] = array(
       '#type' => 'machine_name',
-      '#title' => $this->t('Machine name'),
       '#default_value' => $this->entity->id(),
       '#disabled' => !$this->entity->isNew(),
       '#maxlength' => 64,

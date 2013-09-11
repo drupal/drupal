@@ -258,8 +258,8 @@ class OverviewTerms extends FormBase {
       $form['terms'][$key]['weight'] = array(
         '#type' => 'weight',
         '#delta' => $delta,
-        '#title_display' => 'invisible',
         '#title' => $this->t('Weight for added term'),
+        '#title_display' => 'invisible',
         '#default_value' => $term->weight->value,
         '#attributes' => array(
           'class' => array('term-weight'),

@@ -37,8 +37,9 @@ class ConfigField extends Field implements ConfigFieldInterface {
    * {@inheritdoc}
    */
   public function getFieldDefinition() {
-    if (!isset($this->instance) && $parent = $this->getParent()) {
-      $instances = FieldAPI::fieldInfo()->getBundleInstances($parent->entityType(), $parent->bundle());
+    if (!isset($this->instance)) {
+      $entity = $this->getEntity();
+      $instances = FieldAPI::fieldInfo()->getBundleInstances($entity->entityType(), $entity->bundle());
       $this->instance = $instances[$this->getName()];
     }
     return $this->instance;
@@ -69,7 +70,7 @@ class ConfigField extends Field implements ConfigFieldInterface {
    * {@inheritdoc}
    */
   protected function getDefaultValue() {
-    return $this->getFieldDefinition()->getFieldDefaultValue($this->getParent());
+    return $this->getFieldDefinition()->getFieldDefaultValue($this->getEntity());
   }
 
   /**
@@ -77,12 +78,11 @@ class ConfigField extends Field implements ConfigFieldInterface {
    */
   public function defaultValuesForm(array &$form, array &$form_state) {
     if (empty($this->getFieldDefinition()->default_value_function)) {
-      $entity = $this->getParent();
       $widget = $this->defaultValueWidget($form_state);
 
       // Place the input in a separate place in the submitted values tree.
       $element = array('#parents' => array('default_value_input'));
-      $element += $widget->form($entity, $entity->language()->id, $this, $element, $form_state);
+      $element += $widget->form($this->getEntity(), $this->getLangcode(), $this, $element, $form_state);
 
       return $element;
     }
@@ -92,11 +92,11 @@ class ConfigField extends Field implements ConfigFieldInterface {
    * {@inheritdoc}
    */
   public function defaultValuesFormValidate(array $element, array &$form, array &$form_state) {
-    $entity = $this->getParent();
-    $langcode = $entity->language()->id;
-    $widget = $this->defaultValueWidget($form_state);
+    $entity = $this->getEntity();
+    $langcode = $this->getLangcode();
 
     // Extract the submitted value, and validate it.
+    $widget = $this->defaultValueWidget($form_state);
     $widget->extractFormValues($entity, $langcode, $this, $element, $form_state);
     $violations = $this->validate();
 
@@ -116,12 +116,9 @@ class ConfigField extends Field implements ConfigFieldInterface {
    * {@inheritdoc}
    */
   public function defaultValuesFormSubmit(array $element, array &$form, array &$form_state) {
-    $entity = $this->getParent();
-    $langcode = $entity->language()->id;
-    $widget = $this->defaultValueWidget($form_state);
-
     // Extract the submitted value, and return it as an array.
-    $widget->extractFormValues($entity, $langcode, $this, $element, $form_state);
+    $widget = $this->defaultValueWidget($form_state);
+    $widget->extractFormValues($this->getEntity(), $this->getLangcode(), $this, $element, $form_state);
     return $this->getValue();
   }
 
@@ -136,7 +133,7 @@ class ConfigField extends Field implements ConfigFieldInterface {
    */
   protected function defaultValueWidget(array &$form_state) {
     if (!isset($form_state['default_value_widget'])) {
-      $entity = $this->getParent();
+      $entity = $this->getEntity();
 
       // Force a non-required widget.
       $this->getFieldDefinition()->required = FALSE;

@@ -16,7 +16,6 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ViewsWizard(
  *   id = "taxonomy_term",
- *   module = "taxonomy",
  *   base_table = "taxonomy_term_data",
  *   title = @Translation("Taxonomy terms")
  * )

@@ -20,7 +20,6 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ViewsWizard(
  *   id = "node",
- *   module = "node",
  *   base_table = "node",
  *   title = @Translation("Content")
  * )
@@ -108,8 +107,8 @@ class Node extends WizardPluginBase {
       case 'teasers':
         $style_form['row_options']['links'] = array(
           '#type' => 'select',
-          '#title_display' => 'invisible',
           '#title' => t('Should links be displayed below each node'),
+          '#title_display' => 'invisible',
           '#options' => array(
             1 => t('with links (allow users to add comments, etc.)'),
             0 => t('without links'),

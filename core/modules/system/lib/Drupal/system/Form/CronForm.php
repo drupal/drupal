@@ -84,6 +84,7 @@ class CronForm extends SystemConfigFormBase {
     );
 
     $form['cron'] = array(
+      '#title' => t('Cron settings'),
       '#type' => 'details',
     );
     $form['cron']['cron_safe_threshold'] = array(
