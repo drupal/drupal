@@ -4,3 +4,10 @@ common_test_l_active_class:
     _content: '\Drupal\common_test\Controller\CommonTestController::typeLinkActiveClass'
   requirements:
     _access: 'TRUE'
+common_test_drupal_render_invalid_keys:
+  pattern: 'common-test/drupal-render-invalid-keys'
+  defaults:
+    _title: 'Drupal Render'
+    _content: '\Drupal\common_test\Controller\CommonTestController::drupalRenderInvalidKeys'
+  requirements:
+    _permission: 'access content'
