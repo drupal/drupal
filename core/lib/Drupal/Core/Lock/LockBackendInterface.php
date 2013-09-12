@@ -48,8 +48,8 @@ interface LockBackendInterface {
    *   Miliseconds to wait for.
    *
    * @return bool
-   *   TRUE if the wait operation was successful and lock may be available. You
-   *   still need to acquire the lock manually and it may fail again.
+   *   TRUE if the lock holds, FALSE if it may be available. You still need to
+   *   acquire the lock manually and it may fail again.
    */
   public function wait($name, $delay = 30);
 
