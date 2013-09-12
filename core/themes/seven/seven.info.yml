@@ -9,7 +9,6 @@ stylesheets:
     - style.css
 stylesheets-override:
   - vertical-tabs.css
-  - vertical-tabs-rtl.css
   - jquery.ui.theme.css
 settings:
   # @todo D8: Remove once themes have to be installed.
