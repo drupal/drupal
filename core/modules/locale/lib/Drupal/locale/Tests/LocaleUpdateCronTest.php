@@ -55,7 +55,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     // Store translation status for comparison.
     $initial_history = locale_translation_get_file_history();
 
-    // Prepare for test: Simulate new translations being availabe.
+    // Prepare for test: Simulate new translations being available.
     // Change the last updated timestamp of a translation file.
     $contrib_module_two_uri = 'public://local/contrib_module_two-8.x-2.0-beta4.de._po';
     touch(drupal_realpath($contrib_module_two_uri), REQUEST_TIME);

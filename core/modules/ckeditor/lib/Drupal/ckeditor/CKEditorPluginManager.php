@@ -110,7 +110,7 @@ class CKEditorPluginManager extends DefaultPluginManager {
    * Retrieves all available CKEditor buttons, keyed by plugin ID.
    *
    * @return array
-   *   All availble CKEditor buttons, with plugin IDs as keys and button
+   *   All available CKEditor buttons, with plugin IDs as keys and button
    *   metadata (as implemented by getButtons()) as values.
    *
    * @see CKEditorPluginButtonsInterface::getButtons()

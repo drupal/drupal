@@ -217,7 +217,7 @@ class LanguageUILanguageNegotiationTest extends WebTestBase {
         'expect' => $language_string,
         'expected_method_id' => LANGUAGE_NEGOTIATION_URL,
         'http_header' => $http_header_browser_fallback,
-        'message' => 'URL (PATH) > BROWSER: with langage prefix, UI language is based on path prefix',
+        'message' => 'URL (PATH) > BROWSER: with language prefix, UI language is based on path prefix',
       ),
       // Default, browser language preference is not one of site's lang.
       array(

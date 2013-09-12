@@ -24,7 +24,7 @@ class UpdateCoreUnitTest extends UnitTestBase {
   public static function getInfo() {
     return array(
       'name' => "Unit tests",
-      'description' => 'Test update funcionality unrelated to the database.',
+      'description' => 'Test update functionality unrelated to the database.',
       'group' => 'Update',
     );
   }

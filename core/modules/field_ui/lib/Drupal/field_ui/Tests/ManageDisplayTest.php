@@ -192,7 +192,7 @@ class ManageDisplayTest extends FieldUiTestBase {
     $this->assertNodeViewText($node, 'rss', $output['field_test_default'], "The field is displayed as expected in view modes that use 'default' settings.");
     $this->assertNodeViewNoText($node, 'teaser', $value, "The field is hidden in view modes that use custom settings.");
 
-    // Change fomatter for 'default' mode, check that the field is displayed
+    // Change formatter for 'default' mode, check that the field is displayed
     // accordingly in 'rss' mode.
     $edit = array(
       'fields[field_test][type]' => 'field_test_with_prepare_view',
