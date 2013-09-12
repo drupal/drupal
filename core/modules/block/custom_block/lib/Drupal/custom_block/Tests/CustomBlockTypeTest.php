@@ -146,29 +146,52 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $type = $this->createCustomBlockType('foo');
     $type = $this->createCustomBlockType('bar');
 
-    // Get the default theme.
-    $theme = $this->container->get('config.factory')->get('system.theme')->get('default');
-
     // Get the custom block storage controller.
     $storage_controller = $this->container
       ->get('entity.manager')
       ->getStorageController('custom_block');
 
-    // Test that adding a block from the 'place blocks' form sends you to the
-    // block configure form.
-    $this->drupalGet('admin/structure/block/list/' . $theme . '/add');
-    $this->clickLink(t('Add custom block'));
-    $this->clickLink('foo');
-    $edit = array('info' => $this->randomName(8));
-    $this->drupalPostForm(NULL, $edit, t('Save'));
-    $blocks = $storage_controller->loadByProperties(array('info' => $edit['info']));
-    if (!empty($blocks)) {
-      $block = reset($blocks);
-      $destination = 'admin/structure/block/add/custom_block:' . $block->uuid() . '/' . $theme;
-      $this->assertUrl(url($destination, array('absolute' => TRUE)));
-    }
-    else {
-      $this->fail('Could not load created block.');
+    // Enable all themes.
+    theme_enable(array('bartik', 'seven'));
+    $themes = array('bartik', 'seven', 'stark');
+    $theme_settings = $this->container->get('config.factory')->get('system.theme');
+    foreach ($themes as $default_theme) {
+      // Change the default theme.
+      $theme_settings->set('default', $default_theme)->save();
+      menu_router_rebuild();
+
+      // For each enabled theme, go to its block page and test the redirects.
+      $themes = array('bartik', 'stark', 'seven');
+      foreach ($themes as $theme) {
+        // Test that adding a block from the 'place blocks' form sends you to the
+        // block configure form.
+        $path = $theme == $default_theme ? 'admin/structure/block' : "admin/structure/block/list/$theme";
+        $this->drupalGet($path);
+        $this->clickLink(t('Add custom block'));
+        // The seven theme has markup inside the link, we cannot use clickLink().
+        if ($default_theme == 'seven') {
+          $options = $theme != $default_theme ? array('query' => array('theme' => $theme)) : array();
+          $this->assertLinkByHref(url('block/add/foo', $options));
+          $this->drupalGet('block/add/foo', $options);
+        }
+        else {
+          $this->clickLink('foo');
+        }
+        // Create a new block.
+        $edit = array('info' => $this->randomName(8));
+        $this->drupalPostForm(NULL, $edit, t('Save'));
+        $blocks = $storage_controller->loadByProperties(array('info' => $edit['info']));
+        if (!empty($blocks)) {
+          $block = reset($blocks);
+          $destination = 'admin/structure/block/add/custom_block:' . $block->uuid() . '/' . $theme;
+          $this->assertUrl(url($destination, array('absolute' => TRUE)));
+          $this->drupalPostForm(NULL, array(), t('Save block'));
+          $this->assertUrl(url("admin/structure/block/list/$theme", array('absolute' => TRUE, 'query' => array('block-placement' => drupal_html_class($theme . '.' . $edit['info'])))));
+        }
+        else {
+          $this->fail('Could not load created block.');
+        }
+      }
     }
 
     // Test that adding a block from the 'custom blocks list' doesn't send you
@@ -180,11 +203,8 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $blocks = $storage_controller->loadByProperties(array('info' => $edit['info']));
     if (!empty($blocks)) {
-      $block = reset($blocks);
-      $destination = 'admin/structure/block/add/custom_block:' . $block->uuid() . '/' . $theme;
-      $this->assertUrl(url('admin/structure/block/custom-blocks', array(
-        'absolute' => TRUE
-      )));
+      $destination = 'admin/structure/block/custom-blocks';
+      $this->assertUrl(url($destination, array('absolute' => TRUE)));
     }
     else {
       $this->fail('Could not load created block.');
