@@ -20,6 +20,8 @@ Drupal requires:
   - MySQL 5.0.15 (or greater) (http://www.mysql.com/).
   - MariaDB 5.1.44 (or greater) (http://mariadb.org/). MariaDB is a fully
     compatible drop-in replacement for MySQL.
+  - Percona Server 5.1.70 (or greater) (http://www.percona.com/). Percona
+    Server is a backwards-compatible replacement for MySQL.
   - PostgreSQL 8.3 (or greater) (http://www.postgresql.org/).
   - SQLite 3.4.2 (or greater) (http://www.sqlite.org/).
 
