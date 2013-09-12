@@ -31,7 +31,7 @@ class DefaultMailSystem implements MailSystemInterface {
   /**
    * Send an e-mail message, using Drupal variables and default settings.
    *
-   * @see http://php.net/manual/en/function.mail.php
+   * @see http://php.net/manual/function.mail.php
    * @see drupal_mail()
    *
    * @param $message

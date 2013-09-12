@@ -93,7 +93,7 @@ define('STREAM_WRAPPERS_LOCAL_NORMAL', STREAM_WRAPPERS_LOCAL | STREAM_WRAPPERS_N
 /**
  * Generic PHP stream wrapper interface.
  *
- * @see http://www.php.net/manual/en/class.streamwrapper.php
+ * @see http://www.php.net/manual/class.streamwrapper.php
  */
 interface StreamWrapperInterface {
   public function stream_open($uri, $mode, $options, &$opened_url);
@@ -401,7 +401,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   Returns TRUE if file was opened successfully.
    *
-   * @see http://php.net/manual/en/streamwrapper.stream-open.php
+   * @see http://php.net/manual/streamwrapper.stream-open.php
    */
   public function stream_open($uri, $mode, $options, &$opened_path) {
     $this->uri = $uri;
@@ -429,7 +429,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   Always returns TRUE at the present time.
    *
-   * @see http://php.net/manual/en/streamwrapper.stream-lock.php
+   * @see http://php.net/manual/streamwrapper.stream-lock.php
    */
   public function stream_lock($operation) {
     if (in_array($operation, array(LOCK_SH, LOCK_EX, LOCK_UN, LOCK_NB))) {
@@ -448,7 +448,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   The string that was read, or FALSE in case of an error.
    *
-   * @see http://php.net/manual/en/streamwrapper.stream-read.php
+   * @see http://php.net/manual/streamwrapper.stream-read.php
    */
   public function stream_read($count) {
     return fread($this->handle, $count);
@@ -463,7 +463,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   The number of bytes written (integer).
    *
-   * @see http://php.net/manual/en/streamwrapper.stream-write.php
+   * @see http://php.net/manual/streamwrapper.stream-write.php
    */
   public function stream_write($data) {
     return fwrite($this->handle, $data);
@@ -475,7 +475,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   TRUE if end-of-file has been reached.
    *
-   * @see http://php.net/manual/en/streamwrapper.stream-eof.php
+   * @see http://php.net/manual/streamwrapper.stream-eof.php
    */
   public function stream_eof() {
     return feof($this->handle);
@@ -492,7 +492,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   TRUE on success.
    *
-   * @see http://php.net/manual/en/streamwrapper.stream-seek.php
+   * @see http://php.net/manual/streamwrapper.stream-seek.php
    */
   public function stream_seek($offset, $whence) {
     // fseek returns 0 on success and -1 on a failure.
@@ -506,7 +506,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   TRUE if data was successfully stored (or there was no data to store).
    *
-   * @see http://php.net/manual/en/streamwrapper.stream-flush.php
+   * @see http://php.net/manual/streamwrapper.stream-flush.php
    */
   public function stream_flush() {
     return fflush($this->handle);
@@ -518,7 +518,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   The current offset in bytes from the beginning of file.
    *
-   * @see http://php.net/manual/en/streamwrapper.stream-tell.php
+   * @see http://php.net/manual/streamwrapper.stream-tell.php
    */
   public function stream_tell() {
     return ftell($this->handle);
@@ -531,7 +531,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *   An array with file status, or FALSE in case of an error - see fstat()
    *   for a description of this array.
    *
-   * @see http://php.net/manual/en/streamwrapper.stream-stat.php
+   * @see http://php.net/manual/streamwrapper.stream-stat.php
    */
   public function stream_stat() {
     return fstat($this->handle);
@@ -543,7 +543,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   TRUE if stream was successfully closed.
    *
-   * @see http://php.net/manual/en/streamwrapper.stream-close.php
+   * @see http://php.net/manual/streamwrapper.stream-close.php
    */
   public function stream_close() {
     return fclose($this->handle);
@@ -558,7 +558,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   TRUE if resource was successfully deleted.
    *
-   * @see http://php.net/manual/en/streamwrapper.unlink.php
+   * @see http://php.net/manual/streamwrapper.unlink.php
    */
   public function unlink($uri) {
     $this->uri = $uri;
@@ -576,7 +576,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   TRUE if file was successfully renamed.
    *
-   * @see http://php.net/manual/en/streamwrapper.rename.php
+   * @see http://php.net/manual/streamwrapper.rename.php
    */
   public function rename($from_uri, $to_uri) {
     return rename($this->getLocalPath($from_uri), $this->getLocalPath($to_uri));
@@ -622,7 +622,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   TRUE if directory was successfully created.
    *
-   * @see http://php.net/manual/en/streamwrapper.mkdir.php
+   * @see http://php.net/manual/streamwrapper.mkdir.php
    */
   public function mkdir($uri, $mode, $options) {
     $this->uri = $uri;
@@ -654,7 +654,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   TRUE if directory was successfully removed.
    *
-   * @see http://php.net/manual/en/streamwrapper.rmdir.php
+   * @see http://php.net/manual/streamwrapper.rmdir.php
    */
   public function rmdir($uri, $options) {
     $this->uri = $uri;
@@ -678,7 +678,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    *   An array with file status, or FALSE in case of an error - see fstat()
    *   for a description of this array.
    *
-   * @see http://php.net/manual/en/streamwrapper.url-stat.php
+   * @see http://php.net/manual/streamwrapper.url-stat.php
    */
   public function url_stat($uri, $flags) {
     $this->uri = $uri;
@@ -704,7 +704,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   TRUE on success.
    *
-   * @see http://php.net/manual/en/streamwrapper.dir-opendir.php
+   * @see http://php.net/manual/streamwrapper.dir-opendir.php
    */
   public function dir_opendir($uri, $options) {
     $this->uri = $uri;
@@ -719,7 +719,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   The next filename, or FALSE if there are no more files in the directory.
    *
-   * @see http://php.net/manual/en/streamwrapper.dir-readdir.php
+   * @see http://php.net/manual/streamwrapper.dir-readdir.php
    */
   public function dir_readdir() {
     return readdir($this->handle);
@@ -731,7 +731,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   TRUE on success.
    *
-   * @see http://php.net/manual/en/streamwrapper.dir-rewinddir.php
+   * @see http://php.net/manual/streamwrapper.dir-rewinddir.php
    */
   public function dir_rewinddir() {
     rewinddir($this->handle);
@@ -747,7 +747,7 @@ abstract class DrupalLocalStreamWrapper implements DrupalStreamWrapperInterface 
    * @return
    *   TRUE on success.
    *
-   * @see http://php.net/manual/en/streamwrapper.dir-closedir.php
+   * @see http://php.net/manual/streamwrapper.dir-closedir.php
    */
   public function dir_closedir() {
     closedir($this->handle);

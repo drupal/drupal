@@ -9,7 +9,7 @@
  * Maps PHP error constants to watchdog severity levels.
  *
  * The error constants are documented at
- * http://php.net/manual/en/errorfunc.constants.php
+ * http://php.net/manual/errorfunc.constants.php
  *
  * @ingroup logging_severity_levels
  */
