@@ -51,8 +51,8 @@ class LocaleController extends ControllerBase {
    */
   public function translatePage() {
     return array(
-      'filter' => drupal_get_form(TranslateFilterForm::create($this->container)),
-      'form' => drupal_get_form(TranslateEditForm::create($this->container)),
+      'filter' => drupal_get_form(TranslateFilterForm::create($this->container())),
+      'form' => drupal_get_form(TranslateEditForm::create($this->container())),
     );
   }
 

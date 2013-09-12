@@ -139,7 +139,7 @@ class BlockFormController extends EntityFormController {
     //   this entire visibility settings section probably needs a separate user
     //   interface in the near future.
     $visibility = $entity->get('visibility');
-    $access = $this->getCurrentUser()->hasPermission('use PHP for settings');
+    $access = $this->currentUser()->hasPermission('use PHP for settings');
     if (!empty($visibility['path']['visibility']) && $visibility['path']['visibility'] == BLOCK_VISIBILITY_PHP && !$access) {
       $form['visibility']['path']['visibility'] = array(
         '#type' => 'value',

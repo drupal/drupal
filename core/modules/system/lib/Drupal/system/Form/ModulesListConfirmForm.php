@@ -102,7 +102,7 @@ class ModulesListConfirmForm extends ConfirmFormBase implements ContainerInjecti
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $account = $this->getCurrentUser()->id();
+    $account = $this->currentUser()->id();
     $this->modules = $this->keyValueExpirable->get($account);
 
     // Redirect to the modules list page if the key value store is empty.
@@ -140,7 +140,7 @@ class ModulesListConfirmForm extends ConfirmFormBase implements ContainerInjecti
    */
   public function submitForm(array &$form, array &$form_state) {
     // Remove the key value store entry.
-    $account = $this->getCurrentUser()->id();
+    $account = $this->currentUser()->id();
     $this->keyValueExpirable->delete($account);
 
     // Gets list of modules prior to install process.

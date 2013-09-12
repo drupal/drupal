@@ -42,7 +42,7 @@ class ErrorTestController extends ControllerBase {
    */
   public function triggerPDOException() {
     define('SIMPLETEST_COLLECT_ERRORS', FALSE);
-    $this->container->get('database')->query('SELECT * FROM bananas_are_awesome');
+    $this->container()->get('database')->query('SELECT * FROM bananas_are_awesome');
   }
 
 }

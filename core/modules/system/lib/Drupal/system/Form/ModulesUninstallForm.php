@@ -140,7 +140,7 @@ class ModulesUninstallForm extends FormBase {
     // Save all the values in an expirable key value store.
     $modules = $form_state['values']['uninstall'];
     $uninstall = array_keys(array_filter($modules));
-    $account = $this->getCurrentUser()->id();
+    $account = $this->currentUser()->id();
     $this->keyValueExpirable->setWithExpire($account, $uninstall, 60);
 
     // Redirect to the confirm form.

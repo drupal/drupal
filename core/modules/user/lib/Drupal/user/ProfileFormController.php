@@ -26,7 +26,7 @@ class ProfileFormController extends AccountFormController {
     $account = $this->entity;
 
     // The user doing the editing.
-    $user = $this->getCurrentUser();
+    $user = $this->currentUser();
     $element['delete']['#type'] = 'submit';
     $element['delete']['#value'] = $this->t('Cancel account');
     $element['delete']['#submit'] = array(array($this, 'editCancelSubmit'));
