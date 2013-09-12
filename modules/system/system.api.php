@@ -607,8 +607,7 @@ function hook_cron() {
  *   An associative array where the key is the queue name and the value is
  *   again an associative array. Possible keys are:
  *   - 'worker callback': The name of the function to call. It will be called
- *     with one argument, the item created via DrupalQueue::createItem() in
- *     hook_cron().
+ *     with one argument, the item created via DrupalQueue::createItem().
  *   - 'time': (optional) How much time Drupal should spend on calling this
  *     worker in seconds. Defaults to 15.
  *
