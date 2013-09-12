@@ -150,6 +150,18 @@ class PageTitleTest extends WebTestBase {
     $this->assertTitle('Test dynamic title | Drupal');
     $result = $this->xpath('//h1');
     $this->assertEqual('Test dynamic title', (string) $result[0]);
+
+    // Set some custom translated strings.
+    variable_set('locale_custom_strings_en', array('' => array(
+      'Static title' => 'Static title translated'
+    )));
+
+    // Ensure that the title got translated.
+    $this->drupalGet('test-page-static-title');
+
+    $this->assertTitle('Static title translated | Drupal');
+    $result = $this->xpath('//h1');
+    $this->assertEqual('Static title translated', (string) $result[0]);
   }
 
 }

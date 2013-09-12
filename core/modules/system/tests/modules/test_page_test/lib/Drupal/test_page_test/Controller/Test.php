@@ -26,4 +26,17 @@ class Test {
     return $build;
   }
 
+  /**
+   * Renders a page.
+   *
+   * @return array
+   *   A render array as expected by drupal_render().
+   */
+  public function staticTitle() {
+    $build = array();
+    $build['#markup'] = 'Hello Drupal';
+
+    return $build;
+  }
+
 }
