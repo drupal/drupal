@@ -28,6 +28,13 @@ use Drupal\Component\Annotation\AnnotationInterface;
  * @code
  *   use Drupal\Core\Annotation\Translation;
  * @endcode
+ *
+ * It is also possible to provide a context with the text, similar to t():
+ * @code
+ *   title = @ Translation("Bundle", context = "Validation"),
+ * @endcode
+ * Other t() arguments like language code are not valid to pass in. Only
+ * context is supported.
  * @}
  */
 
@@ -36,8 +43,8 @@ use Drupal\Component\Annotation\AnnotationInterface;
  *
  * Some metadata within an annotation needs to be translatable. This class
  * supports that need by allowing both the translatable string and, if
- * specified, a context for that string. This class is essentially a wrapper
- * around the traditional t() function in drupal.
+ * specified, a context for that string. The string (with optional context)
+ * is passed into t().
  *
  * @Annotation
  *
