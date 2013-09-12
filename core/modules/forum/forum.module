@@ -94,7 +94,6 @@ function forum_theme() {
     ),
     'forum_form' => array(
       'render element' => 'form',
-      'file' => 'forum.admin.inc',
     ),
   );
 }
@@ -116,26 +115,11 @@ function forum_menu() {
   $items['admin/structure/forum'] = array(
     'title' => 'Forums',
     'description' => 'Control forum hierarchy settings.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('forum_overview'),
-    'access arguments' => array('administer forums'),
-    'file' => 'forum.admin.inc',
+    'route_name' => 'forum_overview',
   );
   $items['admin/structure/forum/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/structure/forum/add/container'] = array(
-    'title' => 'Add container',
-    'tab_parent' => 'admin/structure/forum',
-    'route_name' => 'forum_add_container',
-    'type' => MENU_LOCAL_ACTION,
-  );
-  $items['admin/structure/forum/add/forum'] = array(
-    'tab_parent' => 'admin/structure/forum',
-    'title' => 'Add forum',
-    'route_name' => 'forum_add_forum',
-    'type' => MENU_LOCAL_ACTION,
   );
   $items['admin/structure/forum/settings'] = array(
     'title' => 'Settings',
@@ -151,6 +135,10 @@ function forum_menu() {
   $items['admin/structure/forum/edit/forum/%taxonomy_term'] = array(
     'title' => 'Edit forum',
     'route_name' => 'forum_edit_forum',
+  );
+  $items['admin/structure/forum/delete/forum/%taxonomy_term'] = array(
+    'title' => 'Delete forum',
+    'route_name' => 'forum_delete',
   );
   return $items;
 }
@@ -210,18 +198,6 @@ function forum_menu_local_tasks(&$data, $router_item, $root_path) {
       }
     }
     $data['actions'] += $links;
-  }
-}
-
-/**
- * Implements hook_menu_local_tasks_alter().
- *
- * Remove the 'Add Forum' and 'Add container' local tasks on the delete form.
- */
-function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
-  if ($root_path == 'admin/structure/forum' && !empty($router_item['map'][3]) &&
-      $router_item['map'][3] == 'delete') {
-    $data = array();
   }
 }
 
