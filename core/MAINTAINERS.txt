@@ -111,7 +111,7 @@ Image system
 - Andrew Morton 'drewish' http://drupal.org/user/34869
 
 Install system
-- David Rothstein 'David_Rothstein' http://drupal.org/user/124982
+- ?
 
 JavaScript
 - Théodore Biadala 'nod_' http://drupal.org/user/598310
@@ -343,7 +343,7 @@ Serialization module
 - Damian Lee 'damiankloip' http://drupal.org/user/1037976
 
 Shortcut module
-- David Rothstein 'David_Rothstein' http://drupal.org/user/124982
+- ?
 
 Simpletest module
 - Jimmy Berry 'boombatower' http://drupal.org/user/214218
