@@ -20,7 +20,7 @@ class FilterSecurityTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'php', 'filter_test');
+  public static $modules = array('node', 'filter_test');
 
   /**
    * A user with administrative permissions.

@@ -31,8 +31,8 @@ function module_test_system_info_alter(&$info, $file, $type) {
       $info['dependencies'][] = 'ban';
     }
     elseif ($file->name == 'ban') {
-      // Make ban depend on php module.
-      $info['dependencies'][] = 'php';
+      // Make ban depend on xmlrpc module.
+      $info['dependencies'][] = 'xmlrpc';
     }
   }
   elseif (Drupal::state()->get('module_test.dependency') == 'version dependency') {
@@ -41,11 +41,11 @@ function module_test_system_info_alter(&$info, $file, $type) {
       $info['dependencies'][] = 'ban';
     }
     elseif ($file->name == 'ban') {
-      // Make ban depend on a specific version of php module.
-      $info['dependencies'][] = 'php (1.x)';
+      // Make ban depend on a specific version of xmlrpc module.
+      $info['dependencies'][] = 'xmlrpc (1.x)';
     }
-    elseif ($file->name == 'php') {
-      // Set php module to a version compatible with the above.
+    elseif ($file->name == 'xmlrpc') {
+      // Set xmlrpc module to a version compatible with the above.
       $info['version'] = '8.x-1.0';
     }
   }
