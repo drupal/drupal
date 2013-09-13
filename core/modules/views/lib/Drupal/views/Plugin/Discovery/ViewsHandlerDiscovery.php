@@ -22,13 +22,6 @@ class ViewsHandlerDiscovery extends AnnotatedClassDiscovery {
   protected $type;
 
   /**
-   * An object containing the namespaces to look for plugin implementations.
-   *
-   * @var \Traversable
-   */
-  protected $rootNamespacesIterator;
-
-  /**
    * Constructs a ViewsHandlerDiscovery object.
    *
    * @param string $type
@@ -39,15 +32,7 @@ class ViewsHandlerDiscovery extends AnnotatedClassDiscovery {
    */
   function __construct($type, \Traversable $root_namespaces) {
     $this->type = $type;
-    $this->rootNamespacesIterator = $root_namespaces;
-
-    $plugin_namespaces = array();
-    foreach ($root_namespaces as $namespace => $dir) {
-      $plugin_namespaces["$namespace\\Plugin\\views\\{$type}"] = array($dir);
-    }
-
-    $this->pluginNamespaces = $plugin_namespaces;
-    $this->pluginDefinitionAnnotationName = 'Drupal\Component\Annotation\PluginID';
+    parent::__construct("Plugin/views/$type", $root_namespaces, 'Drupal\Component\Annotation\PluginID');
   }
 
   /**
@@ -60,18 +45,6 @@ class ViewsHandlerDiscovery extends AnnotatedClassDiscovery {
       $definitions[$key]['plugin_type'] = $this->type;
     }
     return $definitions;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function getPluginNamespaces() {
-    $plugin_namespaces = array();
-    foreach ($this->rootNamespacesIterator as $namespace => $dir) {
-      $plugin_namespaces["$namespace\\Plugin\\views\\{$this->type}"] = array($dir);
-    }
-
-    return $plugin_namespaces;
   }
 
 }
