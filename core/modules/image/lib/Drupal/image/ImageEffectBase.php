@@ -103,10 +103,17 @@ abstract class ImageEffectBase extends PluginBase implements ImageEffectInterfac
       'uuid' => '',
       'weight' => '',
     );
-    $this->configuration = $configuration['data'];
+    $this->configuration = $configuration['data'] + $this->getConfigurationDefaults();
     $this->uuid = $configuration['uuid'];
     $this->weight = $configuration['weight'];
     return $this;
+  }
+
+  /**
+   * Fallback for non-configurable effects.
+   */
+  public function getConfigurationDefaults() {
+    return array();
   }
 
 }

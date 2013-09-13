@@ -13,6 +13,14 @@ namespace Drupal\image;
 interface ConfigurableImageEffectInterface extends ImageEffectInterface {
 
   /**
+   * Define the effect configuration defaults.
+   *
+   * @return array
+   *   An associative array with defaults keyed by configuration names.
+   */
+  public function getConfigurationDefaults();
+
+  /**
    * Builds the part of the image effect form specific to this image effect.
    *
    * This method is only responsible for the form elements specific to this

@@ -27,13 +27,6 @@ class ScaleImageEffect extends ResizeImageEffect {
    * {@inheritdoc}
    */
   public function applyEffect(ImageInterface $image) {
-    // Set sane default values.
-    $this->configuration += array(
-      'width' => NULL,
-      'height' => NULL,
-      'upscale' => FALSE,
-    );
-
     if (!$image->scale($this->configuration['width'], $this->configuration['height'], $this->configuration['upscale'])) {
       watchdog('image', 'Image scale failed using the %toolkit toolkit on %path (%mimetype, %dimensions)', array('%toolkit' => $image->getToolkitId(), '%path' => $image->getSource(), '%mimetype' => $image->getMimeType(), '%dimensions' => $image->getWidth() . 'x' . $image->getHeight()), WATCHDOG_ERROR);
       return FALSE;
@@ -63,6 +56,15 @@ class ScaleImageEffect extends ResizeImageEffect {
   /**
    * {@inheritdoc}
    */
+  public function getConfigurationDefaults() {
+    return parent::getConfigurationDefaults() + array(
+      'upscale' => FALSE,
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getForm() {
     $form = parent::getForm();
     $form['#element_validate'] = array(array($this, 'validateScaleEffect'));
@@ -70,7 +72,7 @@ class ScaleImageEffect extends ResizeImageEffect {
     $form['height']['#required'] = FALSE;
     $form['upscale'] = array(
       '#type' => 'checkbox',
-      '#default_value' => (isset($this->configuration['upscale'])) ? $this->configuration['upscale'] : 0,
+      '#default_value' => $this->configuration['upscale'],
       '#title' => t('Allow Upscaling'),
       '#description' => t('Let scale make images larger than their original size'),
     );
