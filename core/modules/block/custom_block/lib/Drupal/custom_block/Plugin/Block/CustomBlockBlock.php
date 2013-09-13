@@ -75,9 +75,9 @@ class CustomBlockBlock extends BlockBase implements ContainerFactoryPluginInterf
   }
 
   /**
-   * Overrides \Drupal\block\BlockBase::settings().
+   * {@inheritdoc}
    */
-  public function settings() {
+  public function defaultConfiguration() {
     return array(
       'status' => TRUE,
       'info' => '',

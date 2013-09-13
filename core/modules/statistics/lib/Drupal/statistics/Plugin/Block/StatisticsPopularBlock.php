@@ -43,9 +43,9 @@ class StatisticsPopularBlock extends BlockBase {
   protected $last_list;
 
   /**
-   * Overrides \Drupal\block\BlockBase::settings().
+   * {@inheritdoc}
    */
-  public function settings() {
+  public function defaultConfiguration() {
     return array(
       'top_day_num' => 0,
       'top_all_num' => 0,

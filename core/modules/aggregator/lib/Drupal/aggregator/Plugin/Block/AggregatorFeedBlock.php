@@ -23,9 +23,9 @@ use Drupal\Core\Annotation\Translation;
 class AggregatorFeedBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::settings().
+   * {@inheritdoc}
    */
-  public function settings() {
+  public function defaultConfiguration() {
     // By default, the block will contain 10 feed items.
     return array(
       'block_count' => 10,

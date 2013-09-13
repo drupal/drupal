@@ -22,11 +22,11 @@ use Drupal\Core\Annotation\Translation;
 class TestCacheBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::settings().
+   * {@inheritdoc}
    *
    * Sets a different caching strategy for testing purposes.
    */
-  public function settings() {
+  public function defaultConfiguration() {
     return array(
       'cache' => DRUPAL_CACHE_PER_ROLE,
     );

@@ -45,7 +45,7 @@ class ViewsBlock extends ViewsBlockBase {
   /**
    * {@inheritdoc}
    */
-  public function settings() {
+  public function defaultConfiguration() {
     $settings = array();
 
     if ($this->displaySet) {

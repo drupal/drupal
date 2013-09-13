@@ -20,11 +20,11 @@ use Drupal\block\Annotation\Block;
 class TestXSSTitleBlock extends TestCacheBlock {
 
   /**
-   * Overrides \Drupal\block\BlockBase::settings().
+   * {@inheritdoc}
    *
    * Sets a different caching strategy for testing purposes.
    */
-  public function settings() {
+  public function defaultConfiguration() {
     return array(
       'cache' => DRUPAL_NO_CACHE,
     );

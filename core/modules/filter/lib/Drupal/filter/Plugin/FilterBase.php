@@ -109,6 +109,13 @@ abstract class FilterBase extends PluginBase implements FilterInterface {
   /**
    * {@inheritdoc}
    */
+  public function defaultConfiguration() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getType() {
     return $this->pluginDefinition['type'];
   }

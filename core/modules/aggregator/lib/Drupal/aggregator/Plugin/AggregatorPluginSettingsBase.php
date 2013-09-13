@@ -19,6 +19,13 @@ abstract class AggregatorPluginSettingsBase extends PluginBase implements Plugin
   /**
    * {@inheritdoc}
    */
+  public function defaultConfiguration() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function validateConfigurationForm(array &$form, array &$form_state) {
   }
 

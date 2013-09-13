@@ -69,7 +69,7 @@ class Block extends DisplayPluginBase {
    *   An array of block-specific settings to override the defaults provided in
    *   \Drupal\views\Plugin\Block\ViewsBlock::settings().
    *
-   * @see \Drupal\views\Plugin\Block\ViewsBlock::settings().
+   * @see \Drupal\views\Plugin\Block\ViewsBlock::defaultConfiguration()
    */
   public function blockSettings(array $settings) {
     $settings['items_per_page'] = 'none';

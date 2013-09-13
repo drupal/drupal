@@ -22,9 +22,9 @@ use Drupal\Core\Annotation\Translation;
 class UserNewBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::settings().
+   * {@inheritdoc}
    */
-  public function settings() {
+  public function defaultConfiguration() {
     return array(
       'properties' => array(
         'administrative' => TRUE
