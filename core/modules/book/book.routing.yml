@@ -15,7 +15,7 @@ book_admin:
 book_settings:
   pattern: '/admin/structure/book/settings'
   defaults:
-    _form: 'Drupal\book\Form\BookSettingsForm'
+    _form: '\Drupal\book\Form\BookSettingsForm'
   requirements:
     _permission: 'administer site configuration'
 
@@ -27,4 +27,14 @@ book_export:
     _access_mode: 'ALL'
   requirements:
     _permission: 'access printer-friendly version'
+    _entity_access: 'node.view'
+
+book_outline:
+  pattern: '/node/{node}/outline'
+  defaults:
+    _entity_form: 'node.book_outline'
+  options:
+    _access_mode: 'ALL'
+  requirements:
+    _permission: 'administer book outlines'
     _entity_access: 'node.view'
