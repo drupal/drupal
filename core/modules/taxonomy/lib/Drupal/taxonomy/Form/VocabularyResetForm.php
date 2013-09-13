@@ -56,8 +56,13 @@ class VocabularyResetForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/structure/taxonomy/manage/' . $this->entity->id();
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'taxonomy_overview_terms',
+      'route_parameters' => array(
+        'taxonomy_vocabulary' => $this->entity->id(),
+      ),
+    );
   }
 
   /**

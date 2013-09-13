@@ -67,8 +67,10 @@ class BanDelete extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/config/people/ban';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'ban_admin_page',
+    );
   }
 
   /**

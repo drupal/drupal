@@ -76,8 +76,10 @@ class DateFormatLocalizeResetForm extends ConfirmFormBase implements ContainerIn
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/config/regional/date-time/locale';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'date_format_language_overview',
+    );
   }
 
   /**

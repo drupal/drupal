@@ -26,8 +26,19 @@ class DeleteForm extends EntityNGConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'node/' . $this->entity->nid->target_id;
+  protected function actions(array $form, array &$form_state) {
+    $actions = parent::actions($form, $form_state);
+
+    // @todo Convert to getCancelRoute() after http://drupal.org/node/1987778.
+    $actions['cancel']['#href'] = 'node/' . $this->entity->nid->target_id;
+
+    return $actions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCancelRoute() {
   }
 
   /**

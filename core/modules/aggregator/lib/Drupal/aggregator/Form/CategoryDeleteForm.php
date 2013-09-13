@@ -85,8 +85,10 @@ class CategoryDeleteForm extends ConfirmFormBase implements ContainerInjectionIn
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/config/services/aggregator';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'aggregator_admin_overview',
+    );
   }
 
   /**

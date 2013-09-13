@@ -80,8 +80,10 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase implements ContainerIn
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/modules/uninstall';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'system_modules_uninstall',
+    );
   }
 
   /**

@@ -59,8 +59,8 @@ class FieldDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return $this->entityManager->getAdminPath($this->entity->entity_type, $this->entity->bundle) . '/fields';
+  public function getCancelRoute() {
+    return $this->entityManager->getAdminRouteInfo($this->entity->entity_type, $this->entity->bundle);
   }
 
   /**

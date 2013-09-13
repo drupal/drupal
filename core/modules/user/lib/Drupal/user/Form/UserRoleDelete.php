@@ -24,8 +24,10 @@ class UserRoleDelete extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/people/roles';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'user_role_list',
+    );
   }
 
   /**

@@ -31,8 +31,10 @@ class ImageStyleDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/config/media/image-styles';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'image_style_list',
+    );
   }
 
   /**

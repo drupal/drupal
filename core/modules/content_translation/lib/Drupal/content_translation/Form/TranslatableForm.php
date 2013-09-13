@@ -66,8 +66,10 @@ class TranslatableForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return '';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => '<front>',
+    );
   }
 
   /**

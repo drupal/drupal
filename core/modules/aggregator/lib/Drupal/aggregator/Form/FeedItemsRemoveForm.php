@@ -24,8 +24,10 @@ class FeedItemsRemoveForm extends EntityNGConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/config/services/aggregator';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'aggregator_admin_overview',
+    );
   }
 
   /**

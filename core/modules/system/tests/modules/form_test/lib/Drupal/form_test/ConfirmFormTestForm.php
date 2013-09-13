@@ -31,8 +31,10 @@ class ConfirmFormTestForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'system_admin',
+    );
   }
 
   /**

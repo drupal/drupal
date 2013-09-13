@@ -39,8 +39,7 @@ class DeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/structure/forum';
+  public function getCancelRoute() {
   }
 
   /**
@@ -56,7 +55,11 @@ class DeleteForm extends ConfirmFormBase {
   public function buildForm(array $form, array &$form_state, TermInterface $taxonomy_term = NULL) {
     $this->taxonomyTerm = $taxonomy_term;
 
-    return parent::buildForm($form, $form_state);
+    $form = parent::buildForm($form, $form_state);
+
+    // @todo Convert to getCancelRoute() after http://drupal.org/node/1974210.
+    $form['actions']['cancel']['#href'] = 'admin/structure/forum';
+    return $form;
   }
 
   /**

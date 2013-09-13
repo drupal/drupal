@@ -17,9 +17,10 @@ class EntityDisplayModeDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    $short_type = str_replace('_mode', '', $this->entity->entityType());
-    return "admin/structure/display-modes/$short_type";
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'entity_' . $this->entity->entityType() . '.list',
+    );
   }
 
   /**

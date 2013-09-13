@@ -411,6 +411,33 @@ class EntityManager extends PluginManagerBase {
   }
 
   /**
+   * Returns the route information for an entity type's bundle.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param string $bundle
+   *   The name of the bundle.
+   *
+   * @return array
+   *   An associative array with the following keys:
+   *   - route_name: The name of the route.
+   *   - route_parameters: (optional) An associative array of parameter names
+   *     and values.
+   */
+  public function getAdminRouteInfo($entity_type, $bundle) {
+    $entity_info = $this->getDefinition($entity_type);
+    if (isset($entity_info['bundle_prefix'])) {
+      $bundle = str_replace($entity_info['bundle_prefix'], '', $bundle);
+    }
+    return array(
+      'route_name' => 'field_ui.overview.' . $entity_type,
+      'route_parameters' => array(
+        'bundle' => $bundle,
+      )
+    );
+  }
+
+  /**
    * Gets an array of entity field definitions.
    *
    * If a bundle is passed, fields specific to this bundle are included. Entity

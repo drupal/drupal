@@ -21,17 +21,18 @@ interface ConfirmFormInterface extends FormInterface {
   public function getQuestion();
 
   /**
-   * Returns the page to go to if the user cancels the action.
+   * Returns the route to go to if the user cancels the action.
    *
-   * @return string|array
-   *   This can be either:
-   *   - A string containing a Drupal path.
-   *   - An associative array with a 'path' key. Additional array values are
-   *     passed as the $options parameter to l().
-   *   If the 'destination' query parameter is set in the URL when viewing a
-   *   confirmation form, that value will be used instead of this path.
+   * @return array
+   *   An associative array with the following keys:
+   *   - route_name: The name of the route.
+   *   - route_parameters: (optional) An associative array of parameter names
+   *     and values.
+   *   - options: (optional) An associative array of additional options. See
+   *     \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute() for
+   *     comprehensive documentation.
    */
-  public function getCancelPath();
+  public function getCancelRoute();
 
   /**
    * Returns additional text to display as a description.

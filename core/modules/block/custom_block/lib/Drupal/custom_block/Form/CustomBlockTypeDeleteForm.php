@@ -52,8 +52,10 @@ class CustomBlockTypeDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/structure/block/custom-blocks/types';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'custom_block_type_list',
+    );
   }
 
   /**

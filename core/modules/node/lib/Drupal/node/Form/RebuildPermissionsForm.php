@@ -28,8 +28,10 @@ class RebuildPermissionsForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/reports/status';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'system_status',
+    );
   }
 
   /**

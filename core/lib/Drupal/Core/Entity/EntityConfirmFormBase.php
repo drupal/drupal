@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Component\Utility\Url;
+use Drupal\Core\Form\ConfirmFormHelper;
 use Drupal\Core\Form\ConfirmFormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -85,24 +85,8 @@ abstract class EntityConfirmFormBase extends EntityFormController implements Con
     $actions['submit']['#value'] = $this->getConfirmText();
     unset($actions['delete']);
 
-    $path = $this->getCancelPath();
     // Prepare cancel link.
-    $query = $this->getRequest()->query;
-    if ($query->has('destination')) {
-      $options = Url::parse($query->get('destination'));
-    }
-    elseif (is_array($path)) {
-      $options = $path;
-    }
-    else {
-      $options = array('path' => $path);
-    }
-    $actions['cancel'] = array(
-      '#type' => 'link',
-      '#title' => $this->getCancelText(),
-      '#href' => $options['path'],
-      '#options' => $options,
-    );
+    $actions['cancel'] = ConfirmFormHelper::buildCancelLink($this, $this->getRequest());
     return $actions;
   }
 

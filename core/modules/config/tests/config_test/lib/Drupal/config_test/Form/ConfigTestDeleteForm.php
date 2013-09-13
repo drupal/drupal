@@ -31,8 +31,10 @@ class ConfigTestDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/structure/config_test';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'config_test_list_page',
+    );
   }
 
   /**

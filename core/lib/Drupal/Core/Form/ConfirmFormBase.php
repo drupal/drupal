@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Form;
 
-use Drupal\Component\Utility\Url;
-
 /**
  * Provides an generic base class for a confirmation form.
  */
@@ -46,19 +44,6 @@ abstract class ConfirmFormBase extends FormBase implements ConfirmFormInterface 
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $path = $this->getCancelPath();
-    // Prepare cancel link.
-    $query = $this->getRequest()->query;
-    if ($query->has('destination')) {
-      $options = Url::parse($query->get('destination'));
-    }
-    elseif (is_array($path)) {
-      $options = $path;
-    }
-    else {
-      $options = array('path' => $path);
-    }
-
     drupal_set_title($this->getQuestion(), PASS_THROUGH);
 
     $form['#attributes']['class'][] = 'confirmation';
@@ -70,12 +55,9 @@ abstract class ConfirmFormBase extends FormBase implements ConfirmFormInterface 
       '#type' => 'submit',
       '#value' => $this->getConfirmText(),
     );
-    $form['actions']['cancel'] = array(
-      '#type' => 'link',
-      '#title' => $this->getCancelText(),
-      '#href' => $options['path'],
-      '#options' => $options,
-    );
+
+    $form['actions']['cancel'] = ConfirmFormHelper::buildCancelLink($this, $this->getRequest());
+
     // By default, render the form using theme_confirm_form().
     if (!isset($form['#theme'])) {
       $form['#theme'] = 'confirm_form';

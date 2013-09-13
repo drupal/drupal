@@ -84,8 +84,13 @@ class BreakLockForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/structure/views/view/' . $this->entity->id();
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'views_ui.edit',
+      'route_parameters' => array(
+        'view' => $this->entity->id(),
+      ),
+    );
   }
 
   /**

@@ -70,8 +70,7 @@ class ConfirmDeleteMultiple extends ConfirmFormBase implements ContainerInjectio
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/content/comment';
+  public function getCancelRoute() {
   }
 
   /**
@@ -112,7 +111,11 @@ class ConfirmDeleteMultiple extends ConfirmFormBase implements ContainerInjectio
       $form_state['redirect'] = 'admin/content/comment';
     }
 
-    return parent::buildForm($form, $form_state, $request);
+    $form = parent::buildForm($form, $form_state);
+
+    // @todo Convert to getCancelRoute() after http://drupal.org/node/1986606.
+    $form['actions']['cancel']['#href'] = 'admin/content/comment';
+    return $form;
   }
 
   /**
