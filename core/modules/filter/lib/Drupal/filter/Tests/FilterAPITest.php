@@ -205,15 +205,18 @@ class FilterAPITest extends EntityUnitTestBase {
     $user = drupal_anonymous_user();
     $this->container->set('current_user', $user);
 
-    $available_values = $data->getPossibleValues();
-    $this->assertEqual($available_values, array('filtered_html', 'full_html', 'plain_text'));
-    $available_options = $data->getPossibleOptions();
     $expected_available_options = array(
       'filtered_html' => 'Filtered HTML',
       'full_html' => 'Full HTML',
+      'filter_test' => 'Test format',
       'plain_text' => 'Plain text',
     );
+
+    $available_values = $data->getPossibleValues();
+    $this->assertEqual($available_values, array_keys($expected_available_options));
+    $available_options = $data->getPossibleOptions();
     $this->assertEqual($available_options, $expected_available_options);
+
     $allowed_values = $data->getSettableValues($user);
     $this->assertEqual($allowed_values, array('plain_text'));
     $allowed_options = $data->getSettableOptions($user);

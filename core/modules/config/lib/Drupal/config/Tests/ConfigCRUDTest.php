@@ -182,17 +182,6 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
       $this->fail($message);
     }
 
-    // Verify an exception is thrown when importing configuration with an
-    // invalid name (missing a namespace).
-    $message = 'Expected ConfigNameException was thrown when attempting to install invalid configuration.';
-    try {
-      $this->enableModules(array('config_test_invalid_name'));
-      $this->installConfig(array('config_test_invalid_name'));
-      $this->fail($message);
-    }
-    catch (ConfigNameException $e) {
-      $this->pass($message);
-    }
   }
 }
 
