@@ -26,6 +26,11 @@ class CropImageEffect extends ResizeImageEffect {
    * {@inheritdoc}
    */
   public function applyEffect(ImageInterface $image) {
+    // Set sane default values.
+    $this->configuration += array(
+      'anchor' => 'center-center',
+    );
+
     list($x, $y) = explode('-', $this->configuration['anchor']);
     $x = image_filter_keyword($x, $image->getWidth(), $this->configuration['width']);
     $y = image_filter_keyword($y, $image->getHeight(), $this->configuration['height']);
@@ -49,16 +54,12 @@ class CropImageEffect extends ResizeImageEffect {
   /**
    * {@inheritdoc}
    */
-  public function getConfigurationDefaults() {
-    return parent::getConfigurationDefaults() + array(
+  public function getForm() {
+    $this->configuration += array(
+      'width' => '',
+      'height' => '',
       'anchor' => 'center-center',
     );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getForm() {
     $form = parent::getForm();
     $form['anchor'] = array(
       '#type' => 'radios',
