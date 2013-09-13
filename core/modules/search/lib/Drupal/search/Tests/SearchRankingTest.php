@@ -7,8 +7,6 @@
 
 namespace Drupal\search\Tests;
 
-use Drupal\Core\Language\Language;
-
 class SearchRankingTest extends SearchTestBase {
 
   /**
@@ -86,7 +84,7 @@ class SearchRankingTest extends SearchTestBase {
     // Add a comment to one of the nodes.
     $edit = array();
     $edit['subject'] = 'my comment title';
-    $edit['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = 'some random comment';
+    $edit['comment_body[0][value]'] = 'some random comment';
     $this->drupalGet('comment/reply/' . $nodes['comments'][1]->id());
     $this->drupalPostForm(NULL, $edit, t('Preview'));
     $this->drupalPostForm(NULL, $edit, t('Save'));

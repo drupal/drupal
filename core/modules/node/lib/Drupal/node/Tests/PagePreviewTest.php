@@ -110,10 +110,9 @@ class PagePreviewTest extends NodeTestBase {
    * Checks the node preview functionality.
    */
   function testPagePreview() {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $title_key = "title";
-    $body_key = "body[$langcode][0][value]";
-    $term_key = "{$this->field_name}[$langcode]";
+    $body_key = 'body[0][value]';
+    $term_key = $this->field_name;
 
     // Fill in node creation form and preview node.
     $edit = array();
@@ -182,10 +181,9 @@ class PagePreviewTest extends NodeTestBase {
    * Checks the node preview functionality, when using revisions.
    */
   function testPagePreviewWithRevisions() {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $title_key = "title";
-    $body_key = "body[$langcode][0][value]";
-    $term_key = "{$this->field_name}[$langcode]";
+    $title_key = 'title';
+    $body_key = 'body[0][value]';
+    $term_key = $this->field_name;
     // Force revision on "Basic page" content.
     $this->container->get('config.factory')->get('node.type.page')->set('settings.node.options', array('status', 'revision'))->save();
 

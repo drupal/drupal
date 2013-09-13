@@ -92,8 +92,7 @@ class EmailFieldTest extends WebTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $this->assertFieldByName("{$field_name}[$langcode][0][value]", '', 'Widget found.');
+    $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget found.');
     $this->assertRaw('placeholder="example@example.com"');
 
     // Submit a valid e-mail address and ensure it is accepted.
@@ -101,7 +100,7 @@ class EmailFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$field_name}[$langcode][0][value]" => $value,
+      "{$field_name}[0][value]" => $value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);

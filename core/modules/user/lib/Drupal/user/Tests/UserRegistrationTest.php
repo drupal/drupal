@@ -231,17 +231,17 @@ class UserRegistrationTest extends WebTestBase {
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
     // Missing input in required field.
-    $edit['test_user_field[und][0][value]'] = '';
+    $edit['test_user_field[0][value]'] = '';
     $this->drupalPostForm(NULL, $edit, t('Create new account'));
     $this->assertRaw(t('@name field is required.', array('@name' => $instance->label())), 'Field validation error was correctly reported.');
     // Invalid input.
-    $edit['test_user_field[und][0][value]'] = '-1';
+    $edit['test_user_field[0][value]'] = '-1';
     $this->drupalPostForm(NULL, $edit, t('Create new account'));
     $this->assertRaw(t('%name does not accept the value -1.', array('%name' => $instance->label())), 'Field validation error was correctly reported.');
 
     // Submit with valid data.
     $value = rand(1, 255);
-    $edit['test_user_field[und][0][value]'] = $value;
+    $edit['test_user_field[0][value]'] = $value;
     $this->drupalPostForm(NULL, $edit, t('Create new account'));
     // Check user fields.
     $accounts = entity_load_multiple_by_properties('user', array('name' => $name, 'mail' => $mail));
@@ -256,7 +256,7 @@ class UserRegistrationTest extends WebTestBase {
       // Add two inputs.
       $value = rand(1, 255);
       $edit = array();
-      $edit['test_user_field[und][0][value]'] = $value;
+      $edit['test_user_field[0][value]'] = $value;
       if ($js == 'js') {
         $this->drupalPostAjaxForm(NULL, $edit, 'test_user_field_add_more');
         $this->drupalPostAjaxForm(NULL, $edit, 'test_user_field_add_more');
@@ -266,8 +266,8 @@ class UserRegistrationTest extends WebTestBase {
         $this->drupalPostForm(NULL, $edit, t('Add another item'));
       }
       // Submit with three values.
-      $edit['test_user_field[und][1][value]'] = $value + 1;
-      $edit['test_user_field[und][2][value]'] = $value + 2;
+      $edit['test_user_field[1][value]'] = $value + 1;
+      $edit['test_user_field[2][value]'] = $value + 2;
       $edit['name'] = $name = $this->randomName();
       $edit['mail'] = $mail = $edit['name'] . '@example.com';
       $this->drupalPostForm(NULL, $edit, t('Create new account'));

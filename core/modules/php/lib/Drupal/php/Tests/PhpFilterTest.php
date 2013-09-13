@@ -7,8 +7,6 @@
 
 namespace Drupal\php\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests to make sure the PHP filter actually evaluates PHP code when used.
  */
@@ -39,8 +37,7 @@ class PhpFilterTest extends PhpTestBase {
 
     // Change filter to PHP filter and see that PHP code is evaluated.
     $edit = array();
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $edit["body[$langcode][0][format]"] = $this->php_code_format->format;
+    $edit['body[0][format]'] = $this->php_code_format->format;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node->label())), 'PHP code filter turned on.');
 

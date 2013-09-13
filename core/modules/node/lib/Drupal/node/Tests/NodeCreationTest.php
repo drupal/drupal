@@ -45,9 +45,8 @@ class NodeCreationTest extends NodeTestBase {
   function testNodeCreation() {
     // Create a node.
     $edit = array();
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName(8);
-    $edit["body[$langcode][0][value]"] = $this->randomName(16);
+    $edit["body[0][value]"] = $this->randomName(16);
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the Basic page has been created.
@@ -111,8 +110,8 @@ class NodeCreationTest extends NodeTestBase {
 
     // Create a node.
     $edit = array();
-    $edit["title"] = $this->randomName(8);
-    $edit["body[" . Language::LANGCODE_NOT_SPECIFIED . "][0][value]"] = $this->randomName(16);
+    $edit['title'] = $this->randomName(8);
+    $edit['body[0][value]'] = $this->randomName(16);
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the user was redirected to the home page.

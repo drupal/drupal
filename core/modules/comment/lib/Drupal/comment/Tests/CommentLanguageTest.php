@@ -7,7 +7,6 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -90,14 +89,12 @@ class CommentLanguageTest extends WebTestBase {
     // language and interface language do not influence comment language, as
     // only content language has to.
     foreach (language_list() as $node_langcode => $node_language) {
-      $langcode_not_specified = Language::LANGCODE_NOT_SPECIFIED;
-
       // Create "Article" content.
       $title = $this->randomName();
       $edit = array(
-        "title" => $title,
-        "body[$langcode_not_specified][0][value]" => $this->randomName(),
-        "langcode" => $node_langcode,
+        'title' => $title,
+        'body[0][value]' => $this->randomName(),
+        'langcode' => $node_langcode,
       );
       $this->drupalPostForm("node/add/article", $edit, t('Save'));
       $node = $this->drupalGetNodeByTitle($title);
@@ -109,7 +106,7 @@ class CommentLanguageTest extends WebTestBase {
         $comment_values[$node_langcode][$langcode] = $this->randomName();
         $edit = array(
           'subject' => $this->randomName(),
-          "comment_body[$langcode][0][value]" => $comment_values[$node_langcode][$langcode],
+          'comment_body[0][value]' => $comment_values[$node_langcode][$langcode],
         );
         $this->drupalPostForm($prefix . 'node/' . $node->id(), $edit, t('Preview'));
         $this->drupalPostForm(NULL, $edit, t('Save'));

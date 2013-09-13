@@ -7,8 +7,6 @@
 
 namespace Drupal\file\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests file field widget.
  */
@@ -73,7 +71,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertNoFieldByXPath('//input[@type="submit"]', t('Remove'), 'After clicking the "Remove" button, it is no longer displayed.');
       $this->assertFieldByXpath('//input[@type="submit"]', t('Upload'), 'After clicking the "Remove" button, the "Upload" button is displayed.');
       // Test label has correct 'for' attribute.
-      $label = $this->xpath("//label[@for='edit-" . drupal_clean_css_identifier($field_name) . "-" . Language::LANGCODE_NOT_SPECIFIED . "-0-upload']");
+      $label = $this->xpath("//label[@for='edit-" . drupal_clean_css_identifier($field_name) . "-0-upload']");
       $this->assertTrue(isset($label[0]), 'Label for upload found.');
 
       // Save the node and ensure it does not have the file.
@@ -113,7 +111,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->drupalGet("node/add/$type_name");
       foreach (array($field_name2, $field_name) as $each_field_name) {
         for ($delta = 0; $delta < 3; $delta++) {
-          $edit = array('files[' . $each_field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_' . $delta . '][]' => drupal_realpath($test_file->getFileUri()));
+          $edit = array('files[' . $each_field_name . '_' . $delta . '][]' => drupal_realpath($test_file->getFileUri()));
           // If the Upload button doesn't exist, drupalPostForm() will automatically
           // fail with an assertion message.
           $this->drupalPostForm(NULL, $edit, t('Upload'));
@@ -144,11 +142,11 @@ class FileFieldWidgetTest extends FileFieldTestBase {
               $check_field_name = $field_name;
             }
 
-            $this->assertIdentical((string) $button['name'], $check_field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_' . $key. '_remove_button');
+            $this->assertIdentical((string) $button['name'], $check_field_name . '_' . $key. '_remove_button');
           }
 
           // "Click" the remove button (emulating either a nojs or js submission).
-          $button_name = $current_field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_' . $delta . '_remove_button';
+          $button_name = $current_field_name . '_' . $delta . '_remove_button';
           switch ($type) {
             case 'nojs':
               // drupalPostForm() takes a $submit parameter that is the value of the
@@ -176,7 +174,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
           // Ensure an "Upload" button for the current field is displayed with the
           // correct name.
-          $upload_button_name = $current_field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_' . $remaining . '_upload_button';
+          $upload_button_name = $current_field_name . '_' . $remaining . '_upload_button';
           $buttons = $this->xpath('//input[@type="submit" and @value="Upload" and @name=:name]', array(':name' => $upload_button_name));
           $this->assertTrue(is_array($buttons) && count($buttons) == 1, format_string('The upload button is displayed with the correct name (JSMode=%type).', array('%type' => $type)));
 
@@ -273,8 +271,8 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     // Add a comment with a file.
     $text_file = $this->getTestFile('text');
     $edit = array(
-      'files[field_' . $name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_' . 0 . ']' => drupal_realpath($text_file->getFileUri()),
-      'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $comment_body = $this->randomName(),
+      'files[field_' . $name . '_' . 0 . ']' => drupal_realpath($text_file->getFileUri()),
+      'comment_body[0][value]' => $comment_body = $this->randomName(),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
@@ -325,7 +323,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->drupalGet("node/$nid/edit");
       $test_file_text = $this->getTestFile('text');
       $test_file_image = $this->getTestFile('image');
-      $name = 'files[' . $field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_0]';
+      $name = 'files[' . $field_name . '_0]';
 
       // Upload file with incorrect extension, check for validation error.
       $edit[$name] = drupal_realpath($test_file_image->getFileUri());

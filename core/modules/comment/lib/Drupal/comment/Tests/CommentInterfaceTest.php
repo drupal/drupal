@@ -7,8 +7,6 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests the comment module administrative and end-user-facing interfaces.
  */
@@ -26,7 +24,6 @@ class CommentInterfaceTest extends CommentTestBase {
    * Tests the comment interface.
    */
   function testCommentInterface() {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     // Set comments to have subject and preview disabled.
     $this->drupalLogin($this->admin_user);
     $this->setCommentPreview(DRUPAL_DISABLED);
@@ -144,7 +141,7 @@ class CommentInterfaceTest extends CommentTestBase {
     $this->assertTrue($this->node, 'Article node created.');
     $this->drupalGet('comment/reply/' . $this->node->id());
     $this->assertNoText('This discussion is closed', 'Posting to node with comments enabled');
-    $this->assertField('edit-comment-body-' . $langcode . '-0-value', 'Comment body field found.');
+    $this->assertField('edit-comment-body-0-value', 'Comment body field found.');
 
     // Delete comment and make sure that reply is also removed.
     $this->drupalLogout();

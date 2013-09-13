@@ -7,8 +7,6 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests anonymous commenting.
  */
@@ -68,12 +66,11 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->assertTrue($this->commentExists($anonymous_comment2), 'Anonymous comment with contact info (optional) found.');
 
     // Ensure anonymous users cannot post in the name of registered users.
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array(
       'name' => $this->admin_user->getUsername(),
       'mail' => $this->randomName() . '@example.com',
       'subject' => $this->randomName(),
-      "comment_body[$langcode][0][value]" => $this->randomName(),
+      'comment_body[0][value]' => $this->randomName(),
     );
     $this->drupalPostForm('comment/reply/' . $this->node->id(), $edit, t('Save'));
     $this->assertText(t('The name you used belongs to a registered user.'));
@@ -141,7 +138,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalGet('comment/reply/' . $this->node->id());
     $this->assertText('You are not authorized to post comments', 'Error attempting to post comment.');
     $this->assertNoFieldByName('subject', '', 'Subject field not found.');
-    $this->assertNoFieldByName("comment_body[$langcode][0][value]", '', 'Comment field not found.');
+    $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field not found.');
 
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,
@@ -161,7 +158,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalGet('node/' . $this->node->id());
     $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
     $this->assertFieldByName('subject', '', 'Subject field found.');
-    $this->assertFieldByName("comment_body[$langcode][0][value]", '', 'Comment field found.');
+    $this->assertFieldByName('comment_body[0][value]', '', 'Comment field found.');
 
     $this->drupalGet('comment/reply/' . $this->node->id() . '/' . $anonymous_comment3->id());
     $this->assertText('You are not authorized to view comments', 'Error attempting to post reply.');

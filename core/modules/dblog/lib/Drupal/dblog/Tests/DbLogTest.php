@@ -312,7 +312,6 @@ class DbLogTest extends WebTestBase {
     // Create a node using the form in order to generate an add content event
     // (which is not triggered by drupalCreateNode).
     $edit = $this->getContent($type);
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $title = $edit["title"];
     $this->drupalPostForm('node/add/' . $type, $edit, t('Save'));
     $this->assertResponse(200);
@@ -370,20 +369,19 @@ class DbLogTest extends WebTestBase {
    *   Random content needed by various node types.
    */
   private function getContent($type) {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     switch ($type) {
       case 'forum':
         $content = array(
-          "title" => $this->randomName(8),
-          "taxonomy_forums[$langcode]" => array(1),
-          "body[$langcode][0][value]" => $this->randomName(32),
+          'title' => $this->randomName(8),
+          'taxonomy_forums' => array(1),
+          'body[0][value]' => $this->randomName(32),
         );
         break;
 
       default:
         $content = array(
-          "title" => $this->randomName(8),
-          "body[$langcode][0][value]" => $this->randomName(32),
+          'title' => $this->randomName(8),
+          'body[0][value]' => $this->randomName(32),
         );
         break;
     }
@@ -400,9 +398,8 @@ class DbLogTest extends WebTestBase {
    *   Random content needed by various node types.
    */
   private function getContentUpdate($type) {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $content = array(
-      "body[$langcode][0][value]" => $this->randomName(32),
+      'body[0][value]' => $this->randomName(32),
     );
     return $content;
   }

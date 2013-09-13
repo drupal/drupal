@@ -7,8 +7,6 @@
 
 namespace Drupal\image\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Test class to check that formatters and display settings are working.
  */
@@ -175,8 +173,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // and title fields do not display until the image has been attached.
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
     $this->drupalGet('node/' . $nid . '/edit');
-    $this->assertFieldByName($field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][alt]', '', 'Alt field displayed on article form.');
-    $this->assertFieldByName($field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][title]', '', 'Title field displayed on article form.');
+    $this->assertFieldByName($field_name . '[0][alt]', '', 'Alt field displayed on article form.');
+    $this->assertFieldByName($field_name . '[0][title]', '', 'Title field displayed on article form.');
     // Verify that the attached image is being previewed using the 'medium'
     // style.
     $node = node_load($nid, TRUE);
@@ -200,8 +198,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
     );
     $edit = array(
-      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][alt]' => $image['#alt'],
-      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][title]' => $image['#title'],
+      $field_name . '[0][alt]' => $image['#alt'],
+      $field_name . '[0][title]' => $image['#title'],
     );
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $default_output = drupal_render($image);
@@ -210,8 +208,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // Verify that alt/title longer than allowed results in a validation error.
     $test_size = 2000;
     $edit = array(
-      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][alt]' => $this->randomName($test_size),
-      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][title]' => $this->randomName($test_size),
+      $field_name . '[0][alt]' => $this->randomName($test_size),
+      $field_name . '[0][title]' => $this->randomName($test_size),
     );
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $schema = $instance->getField()->getSchema();

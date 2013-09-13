@@ -321,7 +321,7 @@ class OptionsFieldUITest extends FieldTestBase {
 
     // Select a default value.
     $edit = array(
-      $this->field_name . '[und]' => '1',
+      $this->field_name => '1',
     );
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
 

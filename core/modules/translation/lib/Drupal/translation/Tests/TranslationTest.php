@@ -107,9 +107,8 @@ class TranslationTest extends WebTestBase {
     // Attempt a resubmission of the form - this emulates using the back button
     // to return to the page then resubmitting the form without a refresh.
     $edit = array();
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();
-    $edit["body[$langcode][0][value]"] = $this->randomName();
+    $edit['body[0][value]'] = $this->randomName();
     $this->drupalPostForm('node/add/page', $edit, t('Save'), array('query' => array('translation' => $node->id(), 'language' => 'es')));
     $duplicate = $this->drupalGetNodeByTitle($edit["title"]);
     $this->assertEqual($duplicate->tnid->value, 0, 'The node does not have a tnid.');
@@ -118,7 +117,7 @@ class TranslationTest extends WebTestBase {
     $node_body = $this->randomName();
     $node->body->value = $node_body;
     $edit = array();
-    $edit["body[$langcode][0][value]"] = $node_body;
+    $edit['body[0][value]'] = $node_body;
     $edit['translation[retranslate]'] = TRUE;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node_title)), 'Original node updated.');
@@ -129,7 +128,7 @@ class TranslationTest extends WebTestBase {
 
     // Update translation and mark as updated.
     $edit = array();
-    $edit["body[$langcode][0][value]"] = $this->randomName();
+    $edit['body[0][value]'] = $this->randomName();
     $edit['translation[status]'] = FALSE;
     $this->drupalPostForm('node/' . $node_translation->id() . '/edit', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been updated.', array('%title' => $node_translation_title)), 'Translated node updated.');
@@ -349,9 +348,8 @@ class TranslationTest extends WebTestBase {
    */
   function createPage($title, $body, $langcode = NULL) {
     $edit = array();
-    $field_langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $edit["title"] = $title;
-    $edit["body[$field_langcode][0][value]"] = $body;
+    $edit['title'] = $title;
+    $edit['body[0][value]'] = $body;
     if (!empty($langcode)) {
       $edit['langcode'] = $langcode;
     }
@@ -383,13 +381,11 @@ class TranslationTest extends WebTestBase {
   function createTranslation(EntityInterface $node, $title, $body, $langcode) {
     $this->drupalGet('node/add/page', array('query' => array('translation' => $node->id(), 'target' => $langcode)));
 
-    $field_langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $body_key = "body[$field_langcode][0][value]";
     $this->assertFieldByXPath('//input[@id="edit-title"]', $node->label(), "Original title value correctly populated.");
 
     $edit = array();
-    $edit["title"] = $title;
-    $edit[$body_key] = $body;
+    $edit['title'] = $title;
+    $edit['body[0][value]'] = $body;
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been created.', array('%title' => $title)), 'Translation created.');
 

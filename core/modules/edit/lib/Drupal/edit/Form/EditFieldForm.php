@@ -133,9 +133,7 @@ class EditFieldForm {
    */
   protected function simplify(array &$form, array &$form_state) {
     $field_name = $form_state['field_name'];
-    $langcode = $form_state['langcode'];
-
-    $widget_element =& $form[$field_name][$langcode];
+    $widget_element =& $form[$field_name]['widget'];
 
     // Hide the field label from displaying within the form, because JavaScript
     // displays the equivalent label that was provided within an HTML data

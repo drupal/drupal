@@ -7,7 +7,6 @@
 
 namespace Drupal\forum\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -42,17 +41,14 @@ class ForumIndexTest extends WebTestBase {
    * Tests the forum index for published and unpublished nodes.
    */
   function testForumIndexStatus() {
-
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     // The forum ID to use.
     $tid = 1;
 
     // Create a test node.
     $title = $this->randomName(20);
     $edit = array(
-      "title" => $title,
-      "body[$langcode][0][value]" => $this->randomName(200),
+      'title' => $title,
+      'body[0][value]' => $this->randomName(200),
     );
 
     // Create the forum topic, preselecting the forum ID via a URL parameter.

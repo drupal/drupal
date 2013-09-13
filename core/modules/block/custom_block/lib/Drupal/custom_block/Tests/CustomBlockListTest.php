@@ -7,7 +7,6 @@
 
 namespace Drupal\custom_block\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -64,9 +63,8 @@ class CustomBlockListTest extends WebTestBase {
     $this->clickLink($link_text);
     $this->assertResponse(200);
     $edit = array();
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit['info'] = $label;
-    $edit["block_body[$langcode][0][value]"] = $this->randomName(16);
+    $edit['block_body[0][value]'] = $this->randomName(16);
     $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Confirm that once the user returns to the listing, the text of the label

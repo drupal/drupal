@@ -7,8 +7,6 @@
 
 namespace Drupal\file\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests that formatters are working properly.
  */
@@ -69,7 +67,7 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     $this->assertRaw($default_output, 'Default formatter displaying correctly on full node view.');
 
     // Turn the "display" option off and check that the file is no longer displayed.
-    $edit = array($field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][display]' => FALSE);
+    $edit = array($field_name . '[0][display]' => FALSE);
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
 
     $this->assertNoRaw($default_output, 'Field is hidden when "display" option is unchecked.');
@@ -77,8 +75,8 @@ class FileFieldDisplayTest extends FileFieldTestBase {
     // Add a description and make sure that it is displayed.
     $description = $this->randomName();
     $edit = array(
-      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][description]' => $description,
-      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][display]' => TRUE,
+      $field_name . '[0][description]' => $description,
+      $field_name . '[0][display]' => TRUE,
     );
     $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $this->assertText($description);

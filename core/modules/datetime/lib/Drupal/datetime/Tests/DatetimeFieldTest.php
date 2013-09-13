@@ -7,7 +7,6 @@
 
 namespace Drupal\datetime\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 use Drupal\Core\Datetime\DrupalDateTime;
 
@@ -97,9 +96,8 @@ class DatetimeFieldTest extends WebTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $this->assertFieldByName("{$field_name}[$langcode][0][value][date]", '', 'Date element found.');
-    $this->assertNoFieldByName("{$field_name}[$langcode][0][value][time]", '', 'Time element not found.');
+    $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Date element found.');
+    $this->assertNoFieldByName("{$field_name}[0][value][time]", '', 'Time element not found.');
 
     // Submit a valid date and ensure it is accepted.
     $value = '2012-12-31 00:00:00';
@@ -111,7 +109,7 @@ class DatetimeFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$field_name}[$langcode][0][value][date]" => $date->format($date_format),
+      "{$field_name}[0][value][date]" => $date->format($date_format),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
@@ -168,9 +166,8 @@ class DatetimeFieldTest extends WebTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $this->assertFieldByName("{$field_name}[$langcode][0][value][date]", '', 'Date element found.');
-    $this->assertFieldByName("{$field_name}[$langcode][0][value][time]", '', 'Time element found.');
+    $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Date element found.');
+    $this->assertFieldByName("{$field_name}[0][value][time]", '', 'Time element found.');
 
     // Submit a valid date and ensure it is accepted.
     $value = '2012-12-31 00:00:00';
@@ -182,8 +179,8 @@ class DatetimeFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$field_name}[$langcode][0][value][date]" => $date->format($date_format),
-      "{$field_name}[$langcode][0][value][time]" => $date->format($time_format),
+      "{$field_name}[0][value][date]" => $date->format($date_format),
+      "{$field_name}[0][value][time]" => $date->format($time_format),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
@@ -250,21 +247,20 @@ class DatetimeFieldTest extends WebTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
-    $this->assertFieldByXPath("//*[@id=\"edit-$field_name-$langcode-0-value-year\"]", NULL, 'Year element found.');
-    $this->assertOptionSelected("edit-$field_name-$langcode-0-value-year", '', 'No year selected.');
-    $this->assertFieldByXPath("//*[@id=\"edit-$field_name-$langcode-0-value-month\"]", NULL, 'Month element found.');
-    $this->assertOptionSelected("edit-$field_name-$langcode-0-value-month", '', 'No month selected.');
-    $this->assertFieldByXPath("//*[@id=\"edit-$field_name-$langcode-0-value-day\"]", NULL, 'Day element found.');
-    $this->assertOptionSelected("edit-$field_name-$langcode-0-value-day", '', 'No day selected.');
-    $this->assertFieldByXPath("//*[@id=\"edit-$field_name-$langcode-0-value-hour\"]", NULL, 'Hour element found.');
-    $this->assertOptionSelected("edit-$field_name-$langcode-0-value-hour", '', 'No hour selected.');
-    $this->assertFieldByXPath("//*[@id=\"edit-$field_name-$langcode-0-value-minute\"]", NULL, 'Minute element found.');
-    $this->assertOptionSelected("edit-$field_name-$langcode-0-value-minute", '', 'No minute selected.');
-    $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-$langcode-0-value-second\"]", NULL, 'Second element not found.');
-    $this->assertFieldByXPath("//*[@id=\"edit-$field_name-$langcode-0-value-ampm\"]", NULL, 'AMPM element found.');
-    $this->assertOptionSelected("edit-$field_name-$langcode-0-value-ampm", '', 'No ampm selected.');
+    $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-year\"]", NULL, 'Year element found.');
+    $this->assertOptionSelected("edit-$field_name-0-value-year", '', 'No year selected.');
+    $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-month\"]", NULL, 'Month element found.');
+    $this->assertOptionSelected("edit-$field_name-0-value-month", '', 'No month selected.');
+    $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-day\"]", NULL, 'Day element found.');
+    $this->assertOptionSelected("edit-$field_name-0-value-day", '', 'No day selected.');
+    $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-hour\"]", NULL, 'Hour element found.');
+    $this->assertOptionSelected("edit-$field_name-0-value-hour", '', 'No hour selected.');
+    $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-minute\"]", NULL, 'Minute element found.');
+    $this->assertOptionSelected("edit-$field_name-0-value-minute", '', 'No minute selected.');
+    $this->assertNoFieldByXPath("//*[@id=\"edit-$field_name-0-value-second\"]", NULL, 'Second element not found.');
+    $this->assertFieldByXPath("//*[@id=\"edit-$field_name-0-value-ampm\"]", NULL, 'AMPM element found.');
+    $this->assertOptionSelected("edit-$field_name-0-value-ampm", '', 'No ampm selected.');
 
     // Submit a valid date and ensure it is accepted.
     $date_value = array('year' => 2012, 'month' => 12, 'day' => 31, 'hour' => 5, 'minute' => 15);
@@ -276,7 +272,7 @@ class DatetimeFieldTest extends WebTestBase {
     // Add the ampm indicator since we are testing 12 hour time.
     $date_value['ampm'] = 'am';
     foreach ($date_value as $part => $value) {
-      $edit["{$field_name}[$langcode][0][value][$part]"] = $value;
+      $edit["{$field_name}[0][value][$part]"] = $value;
     }
 
     $this->drupalPostForm(NULL, $edit, t('Save'));
@@ -284,12 +280,12 @@ class DatetimeFieldTest extends WebTestBase {
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
 
-    $this->assertOptionSelected("edit-$field_name-$langcode-0-value-year", '2012', 'Correct year selected.');
-    $this->assertOptionSelected("edit-$field_name-$langcode-0-value-month", '12', 'Correct month selected.');
-    $this->assertOptionSelected("edit-$field_name-$langcode-0-value-day", '31', 'Correct day selected.');
-    $this->assertOptionSelected("edit-$field_name-$langcode-0-value-hour", '5', 'Correct hour selected.');
-    $this->assertOptionSelected("edit-$field_name-$langcode-0-value-minute", '15', 'Correct minute selected.');
-    $this->assertOptionSelected("edit-$field_name-$langcode-0-value-ampm", 'am', 'Correct ampm selected.');
+    $this->assertOptionSelected("edit-$field_name-0-value-year", '2012', 'Correct year selected.');
+    $this->assertOptionSelected("edit-$field_name-0-value-month", '12', 'Correct month selected.');
+    $this->assertOptionSelected("edit-$field_name-0-value-day", '31', 'Correct day selected.');
+    $this->assertOptionSelected("edit-$field_name-0-value-hour", '5', 'Correct hour selected.');
+    $this->assertOptionSelected("edit-$field_name-0-value-minute", '15', 'Correct minute selected.');
+    $this->assertOptionSelected("edit-$field_name-0-value-ampm", 'am', 'Correct ampm selected.');
   }
 
   /**
@@ -311,14 +307,13 @@ class DatetimeFieldTest extends WebTestBase {
     $date = new DrupalDateTime();
     $date_format = 'Y-m-d';
     $this->drupalGet('entity_test/add');
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // See if current date is set. We cannot test for the precise time because
     // it may be a few seconds between the time the comparison date is created
     // and the form date, so we just test the date and that the time is not
     // empty.
-    $this->assertFieldByName("{$field_name}[$langcode][0][value][date]", $date->format($date_format), 'Date element found.');
-    $this->assertNoFieldByName("{$field_name}[$langcode][0][value][time]", '', 'Time element found.');
+    $this->assertFieldByName("{$field_name}[0][value][date]", $date->format($date_format), 'Date element found.');
+    $this->assertNoFieldByName("{$field_name}[0][value][time]", '', 'Time element found.');
 
     // Set the default value to 'blank'.
     $this->instance->settings['default_value'] = 'blank';
@@ -329,8 +324,8 @@ class DatetimeFieldTest extends WebTestBase {
     $this->drupalGet('entity_test/add');
 
     // See that no date is set.
-    $this->assertFieldByName("{$field_name}[$langcode][0][value][date]", '', 'Date element found.');
-    $this->assertFieldByName("{$field_name}[$langcode][0][value][time]", '', 'Time element found.');
+    $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Date element found.');
+    $this->assertFieldByName("{$field_name}[0][value][time]", '', 'Time element found.');
   }
 
   /**
@@ -345,39 +340,38 @@ class DatetimeFieldTest extends WebTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $this->assertFieldByName("{$field_name}[$langcode][0][value][date]", '', 'Date element found.');
-    $this->assertFieldByName("{$field_name}[$langcode][0][value][time]", '', 'Time element found.');
+    $this->assertFieldByName("{$field_name}[0][value][date]", '', 'Date element found.');
+    $this->assertFieldByName("{$field_name}[0][value][time]", '', 'Time element found.');
 
     // Submit invalid dates and ensure they is not accepted.
     $date_value = '';
     $edit = array(
-      "{$field_name}[$langcode][0][value][date]" => $date_value,
-      "{$field_name}[$langcode][0][value][time]" => '12:00:00',
+      "{$field_name}[0][value][date]" => $date_value,
+      "{$field_name}[0][value][time]" => '12:00:00',
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', 'Empty date value has been caught.');
 
     $date_value = 'aaaa-12-01';
     $edit = array(
-      "{$field_name}[$langcode][0][value][date]" => $date_value,
-      "{$field_name}[$langcode][0][value][time]" => '00:00:00',
+      "{$field_name}[0][value][date]" => $date_value,
+      "{$field_name}[0][value][time]" => '00:00:00',
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid year value %date has been caught.', array('%date' => $date_value)));
 
     $date_value = '2012-75-01';
     $edit = array(
-      "{$field_name}[$langcode][0][value][date]" => $date_value,
-      "{$field_name}[$langcode][0][value][time]" => '00:00:00',
+      "{$field_name}[0][value][date]" => $date_value,
+      "{$field_name}[0][value][time]" => '00:00:00',
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid month value %date has been caught.', array('%date' => $date_value)));
 
     $date_value = '2012-12-99';
     $edit = array(
-      "{$field_name}[$langcode][0][value][date]" => $date_value,
-      "{$field_name}[$langcode][0][value][time]" => '00:00:00',
+      "{$field_name}[0][value][date]" => $date_value,
+      "{$field_name}[0][value][time]" => '00:00:00',
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid day value %date has been caught.', array('%date' => $date_value)));
@@ -385,8 +379,8 @@ class DatetimeFieldTest extends WebTestBase {
     $date_value = '2012-12-01';
     $time_value = '';
     $edit = array(
-      "{$field_name}[$langcode][0][value][date]" => $date_value,
-      "{$field_name}[$langcode][0][value][time]" => $time_value,
+      "{$field_name}[0][value][date]" => $date_value,
+      "{$field_name}[0][value][time]" => $time_value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', 'Empty time value has been caught.');
@@ -394,8 +388,8 @@ class DatetimeFieldTest extends WebTestBase {
     $date_value = '2012-12-01';
     $time_value = '49:00:00';
     $edit = array(
-      "{$field_name}[$langcode][0][value][date]" => $date_value,
-      "{$field_name}[$langcode][0][value][time]" => $time_value,
+      "{$field_name}[0][value][date]" => $date_value,
+      "{$field_name}[0][value][time]" => $time_value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid hour value %time has been caught.', array('%time' => $time_value)));
@@ -403,8 +397,8 @@ class DatetimeFieldTest extends WebTestBase {
     $date_value = '2012-12-01';
     $time_value = '12:99:00';
     $edit = array(
-      "{$field_name}[$langcode][0][value][date]" => $date_value,
-      "{$field_name}[$langcode][0][value][time]" => $time_value,
+      "{$field_name}[0][value][date]" => $date_value,
+      "{$field_name}[0][value][time]" => $time_value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid minute value %time has been caught.', array('%time' => $time_value)));
@@ -412,8 +406,8 @@ class DatetimeFieldTest extends WebTestBase {
     $date_value = '2012-12-01';
     $time_value = '12:15:99';
     $edit = array(
-      "{$field_name}[$langcode][0][value][date]" => $date_value,
-      "{$field_name}[$langcode][0][value][time]" => $time_value,
+      "{$field_name}[0][value][date]" => $date_value,
+      "{$field_name}[0][value][time]" => $time_value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('date is invalid', format_string('Invalid second value %time has been caught.', array('%time' => $time_value)));

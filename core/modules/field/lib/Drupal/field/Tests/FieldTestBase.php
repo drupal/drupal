@@ -8,6 +8,7 @@
 namespace Drupal\field\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -41,14 +42,15 @@ abstract class FieldTestBase extends WebTestBase {
    *   The entity to test.
    * @param $field_name
    *   The name of the field to test
-   * @param $langcode
-   *   The language code for the values.
    * @param $expected_values
    *   The array of expected values.
+   * @param $langcode
+   *   (Optional) The language code for the values. Defaults to
+   *   Drupal\Core\Language\Language::LANGCODE_NOT_SPECIFIED.
    * @param $column
-   *   (Optional) the name of the column to check.
+   *   (Optional) The name of the column to check. Defaults to 'value'.
    */
-  function assertFieldValues(EntityInterface $entity, $field_name, $langcode, $expected_values, $column = 'value') {
+  function assertFieldValues(EntityInterface $entity, $field_name, $expected_values, $langcode = Language::LANGCODE_NOT_SPECIFIED, $column = 'value') {
     // Re-load the entity to make sure we have the latest changes.
     entity_get_controller($entity->entityType())->resetCache(array($entity->id()));
     $e = entity_load($entity->entityType(), $entity->id());

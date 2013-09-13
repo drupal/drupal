@@ -7,8 +7,6 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests changing view modes for nodes.
  */
@@ -36,10 +34,9 @@ class NodeEntityViewModeAlterTest extends NodeTestBase {
 
     // Create a node.
     $edit = array();
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $edit["title"] = $this->randomName(8);
-    $edit["body[$langcode][0][value]"] = t('Data that should appear only in the body for the node.');
-    $edit["body[$langcode][0][summary]"] = t('Extra data that should appear only in the teaser for the node.');
+    $edit['title'] = $this->randomName(8);
+    $edit['body[0][value]'] = t('Data that should appear only in the body for the node.');
+    $edit['body[0][summary]'] = t('Extra data that should appear only in the teaser for the node.');
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     $node = $this->drupalGetNodeByTitle($edit["title"]);

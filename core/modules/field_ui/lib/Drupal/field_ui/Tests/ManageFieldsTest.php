@@ -284,10 +284,9 @@ class ManageFieldsTest extends FieldUiTestBase {
       ->setComponent($field_name)
       ->save();
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/' . $instance->id();
-    $element_id = "edit-default-value-input-$field_name-$langcode-0-value";
-    $element_name = "default_value_input[{$field_name}][$langcode][0][value]";
+    $element_id = "edit-default-value-input-$field_name-0-value";
+    $element_name = "default_value_input[{$field_name}][0][value]";
     $this->drupalGet($admin_path);
     $this->assertFieldById($element_id, '', 'The default value widget was empty.');
 

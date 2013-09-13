@@ -356,12 +356,11 @@ EOF;
    *   (optional) The number of nodes to generate. Defaults to five.
    */
   function createSampleNodes($count = 5) {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     // Post $count article nodes.
     for ($i = 0; $i < $count; $i++) {
       $edit = array();
       $edit['title'] = $this->randomName();
-      $edit["body[$langcode][0][value]"] = $this->randomName();
+      $edit['body[0][value]'] = $this->randomName();
       $this->drupalPostForm('node/add/article', $edit, t('Save'));
     }
   }

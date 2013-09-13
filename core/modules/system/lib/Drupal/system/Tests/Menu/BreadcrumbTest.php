@@ -7,8 +7,6 @@
 
 namespace Drupal\system\Tests\Menu;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Menu breadcrumbs related tests.
  */
@@ -62,7 +60,6 @@ class BreadcrumbTest extends MenuTestBase {
     $admin = $home + array('admin' => t('Administration'));
     $config = $admin + array('admin/config' => t('Configuration'));
     $type = 'article';
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Verify breadcrumbs for default local tasks.
     $expected = array(
@@ -304,7 +301,7 @@ class BreadcrumbTest extends MenuTestBase {
       'Breadcrumbs' => array(),
     );
     $edit = array(
-      "field_tags[$langcode]" => implode(',', array_keys($tags)),
+      'field_tags' => implode(',', array_keys($tags)),
     );
     $this->drupalPostForm('node/' . $parent->id() . '/edit', $edit, t('Save and keep published'));
 

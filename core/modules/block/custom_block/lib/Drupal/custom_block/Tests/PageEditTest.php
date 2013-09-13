@@ -31,9 +31,8 @@ class PageEditTest extends CustomBlockTestBase {
   public function testPageEdit() {
     $this->drupalLogin($this->adminUser);
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $title_key = 'info';
-    $body_key = "block_body[$langcode][0][value]";
+    $body_key = 'block_body[0][value]';
     // Create block to edit.
     $edit = array();
     $edit['info'] = drupal_strtolower($this->randomName(8));

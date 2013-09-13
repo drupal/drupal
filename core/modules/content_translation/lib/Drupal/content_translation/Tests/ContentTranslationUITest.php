@@ -78,7 +78,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     $edit = array('source_langcode[source]' => $source_langcode);
     $path = $langcode . '/' . $base_path . '/translations/add/' . $default_langcode . '/' . $langcode;
     $this->drupalPostForm($path, $edit, t('Change'));
-    $this->assertFieldByXPath("//input[@name=\"{$this->fieldName}[fr][0][value]\"]", $values[$source_langcode][$this->fieldName][0]['value'], 'Source language correctly switched.');
+    $this->assertFieldByXPath("//input[@name=\"{$this->fieldName}[0][value]\"]", $values[$source_langcode][$this->fieldName][0]['value'], 'Source language correctly switched.');
 
     // Add another translation and mark the other ones as outdated.
     $values[$langcode] = $this->getNewEntityValues($langcode);
@@ -226,7 +226,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
     $langcode = $new ? Language::LANGCODE_NOT_SPECIFIED : $langcode;
     foreach ($values[$langcode] as $property => $value) {
       if (is_array($value)) {
-        $edit["{$property}[$langcode][0][value]"] = $value[0]['value'];
+        $edit["{$property}[0][value]"] = $value[0]['value'];
         unset($edit[$property]);
       }
     }

@@ -7,7 +7,6 @@
 
 namespace Drupal\forum\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -51,11 +50,10 @@ class ForumNodeAccessTest extends WebTestBase {
     $this->drupalLogin($admin_user);
 
     // Create a private node.
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $private_node_title = $this->randomName(20);
     $edit = array(
       'title' => $private_node_title,
-      "body[$langcode][0][value]" => $this->randomName(200),
+      'body[0][value]' => $this->randomName(200),
       'private' => TRUE,
     );
     $this->drupalPostForm('node/add/forum/1', $edit, t('Save'));
@@ -66,7 +64,7 @@ class ForumNodeAccessTest extends WebTestBase {
     $public_node_title = $this->randomName(20);
     $edit = array(
       'title' => $public_node_title,
-      "body[$langcode][0][value]" => $this->randomName(200),
+      'body[0][value]' => $this->randomName(200),
     );
     $this->drupalPostForm('node/add/forum/1', $edit, t('Save'));
     $public_node = $this->drupalGetNodeByTitle($public_node_title);

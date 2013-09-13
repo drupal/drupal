@@ -72,7 +72,7 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
     $langcode = language_get_default_langcode('node', 'page');
     $title_key = "title";
     $title_value = $this->randomName(8);
-    $body_key = "body[$langcode][0][value]";
+    $body_key = 'body[0][value]';
     $body_value = $this->randomName(16);
 
     // Create node to edit.
@@ -114,10 +114,9 @@ class NodeFieldMultilingualTestCase extends WebTestBase {
    */
   function testMultilingualDisplaySettings() {
     // Create "Basic page" content.
-    $langcode = language_get_default_langcode('node', 'page');
     $title_key = "title";
     $title_value = $this->randomName(8);
-    $body_key = "body[$langcode][0][value]";
+    $body_key = 'body[0][value]';
     $body_value = $this->randomName(16);
 
     // Create node to edit.

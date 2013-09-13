@@ -27,7 +27,6 @@ class TokenReplaceTest extends TaxonomyTestBase {
     $this->admin_user = $this->drupalCreateUser(array('administer taxonomy', 'bypass node access'));
     $this->drupalLogin($this->admin_user);
     $this->vocabulary = $this->createVocabulary();
-    $this->langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->field_name = 'taxonomy_' . $this->vocabulary->id();
     entity_create('field_entity', array(
       'name' => $this->field_name,
@@ -81,7 +80,7 @@ class TokenReplaceTest extends TaxonomyTestBase {
     // Create node with term2.
     $edit = array();
     $node = $this->drupalCreateNode(array('type' => 'article'));
-    $edit[$this->field_name . '[' . $this->langcode . '][]'] = $term2->id();
+    $edit[$this->field_name . '[]'] = $term2->id();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Generate and test sanitized tokens for term1.

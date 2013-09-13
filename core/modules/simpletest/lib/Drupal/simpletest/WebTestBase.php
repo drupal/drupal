@@ -1344,11 +1344,11 @@ abstract class WebTestBase extends TestBase {
    *   @code
    *   <textarea id="edit-body-und-0-value" class="text-full form-textarea
    *    resize-vertical" placeholder="" cols="60" rows="9"
-   *    name="body[und][0][value]"></textarea>
+   *    name="body[0][value]"></textarea>
    *   @endcode
    *   When testing this field using an $edit parameter, the code becomes:
    *   @code
-   *   $edit["body[und][0][value]"] = 'My test value';
+   *   $edit["body[0][value]"] = 'My test value';
    *   @endcode
    *
    *   A checkbox can be set to TRUE to be checked and should be set to FALSE to

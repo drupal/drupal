@@ -7,7 +7,6 @@
 
 namespace Drupal\link\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -95,11 +94,9 @@ class LinkFieldTest extends WebTestBase {
       ))
       ->save();
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$field_name}[$langcode][0][url]", '', 'Link URL field is displayed');
+    $this->assertFieldByName("{$field_name}[0][url]", '', 'Link URL field is displayed');
     $this->assertRaw('placeholder="http://example.com"');
 
     // Verify that a valid URL can be submitted.
@@ -107,7 +104,7 @@ class LinkFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$field_name}[$langcode][0][url]" => $value,
+      "{$field_name}[0][url]" => $value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
@@ -129,7 +126,7 @@ class LinkFieldTest extends WebTestBase {
       $edit = array(
         'user_id' => 1,
         'name' => $this->randomName(),
-        "{$field_name}[$langcode][0][url]" => $invalid_value,
+        "{$field_name}[0][url]" => $invalid_value,
       );
       $this->drupalPostForm(NULL, $edit, t('Save'));
       $this->assertText(t('The URL @url is not valid.', array('@url' => $invalid_value)));
@@ -174,8 +171,6 @@ class LinkFieldTest extends WebTestBase {
       ))
       ->save();
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     // Verify that the link text field works according to the field setting.
     foreach (array(DRUPAL_DISABLED, DRUPAL_REQUIRED, DRUPAL_OPTIONAL) as $title_setting) {
       // Update the link title field setting.
@@ -186,28 +181,28 @@ class LinkFieldTest extends WebTestBase {
       $this->drupalGet('entity_test/add');
       // Assert label is shown.
       $this->assertText('Read more about this entity');
-      $this->assertFieldByName("{$field_name}[$langcode][0][url]", '', 'URL field found.');
+      $this->assertFieldByName("{$field_name}[0][url]", '', 'URL field found.');
       $this->assertRaw('placeholder="http://example.com"');
 
       if ($title_setting === DRUPAL_DISABLED) {
-        $this->assertNoFieldByName("{$field_name}[$langcode][0][title]", '', 'Link text field not found.');
+        $this->assertNoFieldByName("{$field_name}[0][title]", '', 'Link text field not found.');
         $this->assertNoRaw('placeholder="Enter the text for this link"');
       }
       else {
         $this->assertRaw('placeholder="Enter the text for this link"');
 
-        $this->assertFieldByName("{$field_name}[$langcode][0][title]", '', 'Link text field found.');
+        $this->assertFieldByName("{$field_name}[0][title]", '', 'Link text field found.');
         if ($title_setting === DRUPAL_REQUIRED) {
           // Verify that the link text is required, if the URL is non-empty.
           $edit = array(
-            "{$field_name}[$langcode][0][url]" => 'http://www.example.com',
+            "{$field_name}[0][url]" => 'http://www.example.com',
           );
           $this->drupalPostForm(NULL, $edit, t('Save'));
           $this->assertText(t('!name field is required.', array('!name' => t('Link text'))));
 
           // Verify that the link text is not required, if the URL is empty.
           $edit = array(
-            "{$field_name}[$langcode][0][url]" => '',
+            "{$field_name}[0][url]" => '',
           );
           $this->drupalPostForm(NULL, $edit, t('Save'));
           $this->assertNoText(t('!name field is required.', array('!name' => t('Link text'))));
@@ -215,8 +210,8 @@ class LinkFieldTest extends WebTestBase {
           // Verify that a URL and link text meets requirements.
           $this->drupalGet('entity_test/add');
           $edit = array(
-            "{$field_name}[$langcode][0][url]" => 'http://www.example.com',
-            "{$field_name}[$langcode][0][title]" => 'Example',
+            "{$field_name}[0][url]" => 'http://www.example.com',
+            "{$field_name}[0][title]" => 'Example',
           );
           $this->drupalPostForm(NULL, $edit, t('Save'));
           $this->assertNoText(t('!name field is required.', array('!name' => t('Link text'))));
@@ -229,8 +224,8 @@ class LinkFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$field_name}[$langcode][0][url]" => $value,
-      "{$field_name}[$langcode][0][title]" => '',
+      "{$field_name}[0][url]" => $value,
+      "{$field_name}[0][title]" => '',
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
@@ -246,7 +241,7 @@ class LinkFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$field_name}[$langcode][0][title]" => $title,
+      "{$field_name}[0][title]" => $title,
     );
     $this->drupalPostForm("entity_test/manage/$id/edit", $edit, t('Save'));
     $this->assertText(t('entity_test @id has been updated.', array('@id' => $id)));
@@ -291,8 +286,6 @@ class LinkFieldTest extends WebTestBase {
       ->setComponent($field_name, $display_options)
       ->save();
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     // Create an entity with two link field values:
     // - The first field item uses a URL only.
     // - The second field item uses a URL and link text.
@@ -307,11 +300,11 @@ class LinkFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$field_name}[$langcode][0][url]" => $url1,
+      "{$field_name}[0][url]" => $url1,
       // Note that $title1 is not submitted.
-      "{$field_name}[$langcode][0][title]" => '',
-      "{$field_name}[$langcode][1][url]" => $url2,
-      "{$field_name}[$langcode][1][title]" => $title2,
+      "{$field_name}[0][title]" => '',
+      "{$field_name}[1][url]" => $url2,
+      "{$field_name}[1][title]" => $title2,
     );
     // Assert label is shown.
     $this->assertText('Read more about this entity');
@@ -434,8 +427,6 @@ class LinkFieldTest extends WebTestBase {
       ->setComponent($field_name, $display_options)
       ->save();
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     // Create an entity with two link field values:
     // - The first field item uses a URL only.
     // - The second field item uses a URL and link text.
@@ -449,9 +440,9 @@ class LinkFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$field_name}[$langcode][0][url]" => $url1,
-      "{$field_name}[$langcode][1][url]" => $url2,
-      "{$field_name}[$langcode][1][title]" => $title2,
+      "{$field_name}[0][url]" => $url1,
+      "{$field_name}[1][url]" => $url2,
+      "{$field_name}[1][title]" => $title2,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);

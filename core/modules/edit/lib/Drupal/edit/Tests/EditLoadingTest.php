@@ -108,9 +108,9 @@ class EditLoadingTest extends WebTestBase {
     $edit['form_id'] = 'edit_field_form';
     $edit['form_token'] = 'xIOzMjuc-PULKsRn_KxFn7xzNk5Bx7XKXLfQfw1qOnA';
     $edit['form_build_id'] = 'form-kVmovBpyX-SJfTT5kY0pjTV35TV-znor--a64dEnMR8';
-    $edit['body[und][0][summary]'] = '';
-    $edit['body[und][0][value]'] = '<p>Malicious content.</p>';
-    $edit['body[und][0][format]'] = 'filtered_html';
+    $edit['body[0][summary]'] = '';
+    $edit['body[0][value]'] = '<p>Malicious content.</p>';
+    $edit['body[0][format]'] = 'filtered_html';
     $edit['op'] = t('Save');
     $response = $this->drupalPost('edit/form/' . 'node/1/body/und/full', 'application/vnd.drupal-ajax', $post);
     // @todo Uncomment the below once https://drupal.org/node/2063303 is fixed.
@@ -195,9 +195,9 @@ class EditLoadingTest extends WebTestBase {
         'form_id' => 'edit_field_form',
         'form_token' => $token_match[1],
         'form_build_id' => $build_id_match[1],
-        'body[und][0][summary]' => '',
-        'body[und][0][value]' => '<p>Fine thanks.</p>',
-        'body[und][0][format]' => 'filtered_html',
+        'body[0][summary]' => '',
+        'body[0][value]' => '<p>Fine thanks.</p>',
+        'body[0][format]' => 'filtered_html',
         'op' => t('Save'),
       );
       $post += $this->getAjaxPageStatePostData();

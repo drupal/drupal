@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -53,7 +52,7 @@ class EntityFormTest extends WebTestBase {
    */
   function testEntityFormDisplayAlter() {
     $this->drupalGet('entity_test/add');
-    $altered_field = $this->xpath('//input[@name="field_test_text[und][0][value]" and @size="42"]');
+    $altered_field = $this->xpath('//input[@name="field_test_text[0][value]" and @size="42"]');
     $this->assertTrue(count($altered_field) === 1, 'The altered field has the correct size value.');
   }
 
@@ -64,14 +63,13 @@ class EntityFormTest extends WebTestBase {
    *   The entity type to run the tests with.
    */
   protected function assertFormCRUD($entity_type) {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $name1 = $this->randomName(8);
     $name2 = $this->randomName(10);
 
     $edit = array(
       'name' => $name1,
       'user_id' => mt_rand(0, 128),
-      "field_test_text[$langcode][0][value]" => $this->randomName(16),
+      'field_test_text[0][value]' => $this->randomName(16),
     );
 
     $this->drupalPostForm($entity_type . '/add', $edit, t('Save'));

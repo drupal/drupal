@@ -7,8 +7,6 @@
 
 namespace Drupal\search\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests that comment count display toggles properly on comment status of node
  *
@@ -60,7 +58,7 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     // Create a comment array
     $edit_comment = array();
     $edit_comment['subject'] = $this->randomName();
-    $edit_comment['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = $this->randomName();
+    $edit_comment['comment_body[0][value]'] = $this->randomName();
 
     // Post comment to the test node with comment
     $this->drupalPostForm('comment/reply/' . $this->searchable_nodes['1 comment']->id(), $edit_comment, t('Save'));

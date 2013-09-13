@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests\Wizard;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests the ability of the views wizard to create views filtered by taxonomy.
  */
@@ -109,14 +107,13 @@ class TaggedWithTest extends WizardTestBase {
     $node_add_path = 'node/add/' . $this->node_type_with_tags->type;
 
     // Create three nodes, with different tags.
-    $tag_field = $this->tag_field->name . '[' . Language::LANGCODE_NOT_SPECIFIED . ']';
     $edit = array();
     $edit['title'] = $node_tag1_title = $this->randomName();
-    $edit[$tag_field] = 'tag1';
+    $edit[$this->tag_field->name] = 'tag1';
     $this->drupalPostForm($node_add_path, $edit, t('Save'));
     $edit = array();
     $edit['title'] = $node_tag1_tag2_title = $this->randomName();
-    $edit[$tag_field] = 'tag1, tag2';
+    $edit[$this->tag_field->name] = 'tag1, tag2';
     $this->drupalPostForm($node_add_path, $edit, t('Save'));
     $edit = array();
     $edit['title'] = $node_no_tags_title = $this->randomName();

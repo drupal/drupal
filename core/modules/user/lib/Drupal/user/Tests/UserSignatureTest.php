@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -101,10 +100,9 @@ class UserSignatureTest extends WebTestBase {
     $this->assertFieldByName('signature[value]', $edit['signature[value]'], 'Submitted signature text found.');
 
     // Create a comment.
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array();
     $edit['subject'] = $this->randomName(8);
-    $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
+    $edit['comment_body[0][value]'] = $this->randomName(16);
     $this->drupalPostForm('comment/reply/' . $node->id(), $edit, t('Preview'));
     $this->drupalPostForm(NULL, array(), t('Save'));
 
@@ -116,7 +114,7 @@ class UserSignatureTest extends WebTestBase {
     // Log in as an administrator and edit the comment to use Full HTML, so
     // that the comment text itself is not filtered at all.
     $this->drupalLogin($this->admin_user);
-    $edit['comment_body[' . $langcode . '][0][format]'] = $this->full_html_format->format;
+    $edit['comment_body[0][format]'] = $this->full_html_format->format;
     $this->drupalPostForm('comment/' . $comment_id . '/edit', $edit, t('Save'));
 
     // Assert that the signature did not make it through unfiltered.

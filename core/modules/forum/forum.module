@@ -239,7 +239,6 @@ function forum_uri($forum) {
  */
 function forum_node_validate(EntityInterface $node, $form) {
   if (Drupal::service('forum_manager')->checkNodeType($node)) {
-    $langcode = $form['taxonomy_forums']['#language'];
     // vocabulary is selected, not a "container" term.
     if (!$node->taxonomy_forums->isEmpty()) {
       // Extract the node's proper topic ID.
@@ -541,16 +540,16 @@ function forum_form_node_form_alter(&$form, &$form_state, $form_id) {
   }
 
   if (isset($form['taxonomy_forums'])) {
-    $langcode = $form['taxonomy_forums']['#language'];
+    $widget =& $form['taxonomy_forums']['widget'];
     // Make the vocabulary required for 'real' forum-nodes.
-    $form['taxonomy_forums'][$langcode]['#required'] = TRUE;
-    $form['taxonomy_forums'][$langcode]['#multiple'] = FALSE;
-    if (empty($form['taxonomy_forums'][$langcode]['#default_value'])) {
+    $widget['#required'] = TRUE;
+    $widget['#multiple'] = FALSE;
+    if (empty($widget['#default_value'])) {
       // If there is no default forum already selected, try to get the forum
       // ID from the URL (e.g., if we are on a page like node/add/forum/2, we
       // expect "2" to be the ID of the forum that was requested).
       $requested_forum_id = arg(3);
-      $form['taxonomy_forums'][$langcode]['#default_value'] = is_numeric($requested_forum_id) ? $requested_forum_id : '';
+      $widget['#default_value'] = is_numeric($requested_forum_id) ? $requested_forum_id : '';
     }
   }
 }

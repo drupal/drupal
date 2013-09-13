@@ -253,14 +253,14 @@ class ContactSitewideTest extends WebTestBase {
     $edit = array(
       'subject' => $this->randomName(),
       'message' => $this->randomName(),
-      $field_name . '[und][0][value]' => $this->randomName(),
+      $field_name . '[0][value]' => $this->randomName(),
     );
     $this->drupalPostForm(NULL, $edit, t('Send message'));
     $mails = $this->drupalGetMails();
     $mail = array_pop($mails);
     $this->assertEqual($mail['subject'], t('[@label] @subject', array('@label' => $label, '@subject' => $edit['subject'])));
     $this->assertTrue(strpos($mail['body'], $field_label));
-    $this->assertTrue(strpos($mail['body'], $edit[$field_name . '[und][0][value]']));
+    $this->assertTrue(strpos($mail['body'], $edit[$field_name . '[0][value]']));
   }
 
   /**

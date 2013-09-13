@@ -111,7 +111,7 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Post a comment without an explicit subject.
     $this->drupalLogin($this->web_user);
-    $edit = array('comment_body[und][0][value]' => $this->randomName(8));
+    $edit = array('comment_body[0][value]' => $this->randomName(8));
     $this->drupalPostForm('node/' . $this->node->id(), $edit, t('Save'));
   }
 }

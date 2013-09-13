@@ -7,7 +7,6 @@
 
 namespace Drupal\filter\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -65,12 +64,11 @@ class FilterHooksTest extends WebTestBase {
     $this->assertText('hook_filter_format_update invoked.');
 
     // Use the format created.
-    $language_not_specified = Language::LANGCODE_NOT_SPECIFIED;
     $title = $this->randomName(8);
     $edit = array(
       "title" => $title,
-      "body[$language_not_specified][0][value]" => $this->randomName(32),
-      "body[$language_not_specified][0][format]" => $format_id,
+      "body[0][value]" => $this->randomName(32),
+      "body[0][format]" => $format_id,
     );
     $this->drupalPostForm("node/add/{$type->type}", $edit, t('Save and publish'));
     $this->assertText(t('@type @title has been created.', array('@type' => $type_name, '@title' => $title)));

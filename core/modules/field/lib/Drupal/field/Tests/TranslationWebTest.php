@@ -120,7 +120,7 @@ class TranslationWebTest extends FieldTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$field_name}[$langcode][0][value]" => $entity->{$field_name}->value,
+      "{$field_name}[0][value]" => $entity->{$field_name}->value,
       'revision' => TRUE,
     );
     $this->drupalPostForm($this->entity_type . '/manage/' . $entity->id() . '/edit', $edit, t('Save'));

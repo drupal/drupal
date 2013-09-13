@@ -7,8 +7,6 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests related to node type initial language.
  */
@@ -101,12 +99,10 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
    * Tests language field visibility features.
    */
   function testLanguageFieldVisibility() {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     // Creates a node to test Language field visibility feature.
     $edit = array(
       'title' => $this->randomName(8),
-      "body[$langcode][0][value]" => $this->randomName(16),
+      'body[0][value]' => $this->randomName(16),
     );
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit['title']);

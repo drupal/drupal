@@ -7,8 +7,6 @@
 
 namespace Drupal\taxonomy\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests the rendering of term reference fields in RSS feeds.
  */
@@ -94,9 +92,8 @@ class RssTest extends TaxonomyTestBase {
 
     // Post an article.
     $edit = array();
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();
-    $edit[$this->field_name . '[' . $langcode . '][]'] = $term1->id();
+    $edit[$this->field_name . '[]'] = $term1->id();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
 
     // Check that the term is displayed when the RSS feed is viewed.

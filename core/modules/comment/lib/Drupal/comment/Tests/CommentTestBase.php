@@ -94,9 +94,8 @@ abstract class CommentTestBase extends WebTestBase {
    *   The posted comment or NULL when posted comment was not found.
    */
   function postComment($entity, $comment, $subject = '', $contact = NULL) {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array();
-    $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
+    $edit['comment_body[0][value]'] = $comment;
 
     $preview_mode = variable_get('comment_preview_article', DRUPAL_OPTIONAL);
     $subject_mode = variable_get('comment_subject_field_article', 1);

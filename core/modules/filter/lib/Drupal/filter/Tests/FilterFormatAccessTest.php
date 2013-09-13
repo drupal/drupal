@@ -7,7 +7,6 @@
 
 namespace Drupal\filter\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -138,9 +137,8 @@ class FilterFormatAccessTest extends WebTestBase {
     // the disallowed format does not.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('node/add/page');
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $elements = $this->xpath('//select[@name=:name]/option', array(
-      ':name' => "body[$langcode][0][format]",
+      ':name' => 'body[0][format]',
       ':option' => $this->allowed_format->format,
     ));
     $options = array();
@@ -207,10 +205,8 @@ class FilterFormatAccessTest extends WebTestBase {
    * choose a new format before saving the page.
    */
   function testFormatWidgetPermissions() {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $title_key = "title";
-    $body_value_key = "body[$langcode][0][value]";
-    $body_format_key = "body[$langcode][0][format]";
+    $body_value_key = 'body[0][value]';
+    $body_format_key = 'body[0][format]';
 
     // Create node to edit.
     $this->drupalLogin($this->admin_user);

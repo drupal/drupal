@@ -96,7 +96,7 @@ class EntityReferenceAutoCreateTest extends WebTestBase {
 
     $edit = array(
       'title' => $this->randomName(),
-      'test_field[und][0][target_id]' => $new_title,
+      'test_field[0][target_id]' => $new_title,
     );
     $this->drupalPostForm("node/add/$this->referencing_type", $edit, 'Save');
 

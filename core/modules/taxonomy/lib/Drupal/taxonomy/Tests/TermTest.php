@@ -7,8 +7,6 @@
 
 namespace Drupal\taxonomy\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests for taxonomy term functions.
  */
@@ -111,10 +109,9 @@ class TermTest extends TaxonomyTestBase {
 
     // Post an article.
     $edit = array();
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $edit["title"] = $this->randomName();
-    $edit["body[$langcode][0][value]"] = $this->randomName();
-    $edit[$this->instance['field_name'] . '[' . $langcode . '][]'] = $term1->id();
+    $edit['title'] = $this->randomName();
+    $edit['body[0][value]'] = $this->randomName();
+    $edit[$this->instance['field_name'] . '[]'] = $term1->id();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
 
     // Check that the term is displayed when the node is viewed.
@@ -128,7 +125,7 @@ class TermTest extends TaxonomyTestBase {
     $this->assertText($term1->label(), 'Term is displayed after saving the node with no changes.');
 
     // Edit the node with a different term.
-    $edit[$this->instance['field_name'] . '[' . $langcode . '][]'] = $term2->id();
+    $edit[$this->instance['field_name'] . '[]'] = $term2->id();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     $this->drupalGet('node/' . $node->id());
@@ -163,12 +160,11 @@ class TermTest extends TaxonomyTestBase {
     );
 
     $edit = array();
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $edit["title"] = $this->randomName();
-    $edit["body[$langcode][0][value]"] = $this->randomName();
+    $edit['title'] = $this->randomName();
+    $edit['body[0][value]'] = $this->randomName();
     // Insert the terms in a comma separated list. Vocabulary 1 is a
     // free-tagging field created by the default profile.
-    $edit[$instance['field_name'] . "[$langcode]"] = drupal_implode_tags($terms);
+    $edit[$instance['field_name']] = drupal_implode_tags($terms);
 
     // Verify the placeholder is there.
     $this->drupalGet('node/add/article');
@@ -520,11 +516,10 @@ class TermTest extends TaxonomyTestBase {
 
     // Create a term and a node using it.
     $term = $this->createTerm($this->vocabulary);
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array();
-    $edit["title"] = $this->randomName(8);
-    $edit["body[$langcode][0][value]"] = $this->randomName(16);
-    $edit[$this->instance['field_name'] . '[' . $langcode . ']'] = $term->label();
+    $edit['title'] = $this->randomName(8);
+    $edit['body[0][value]'] = $this->randomName(16);
+    $edit[$this->instance['field_name']] = $term->label();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
 
     // Check that the term is displayed when editing and saving the node with no

@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -111,7 +110,7 @@ class UserPictureTest extends WebTestBase {
       ->save();
 
     $edit = array(
-      'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomString(),
+      'comment_body[0][value]' => $this->randomString(),
     );
     $this->drupalPostForm('comment/reply/' . $node->id(), $edit, t('Save'));
     $this->assertRaw(file_uri_target($file->getFileUri()), 'User picture found on comment.');
@@ -130,7 +129,7 @@ class UserPictureTest extends WebTestBase {
    * Edits the user picture for the test user.
    */
   function saveUserPicture($image) {
-    $edit = array('files[user_picture_und_0]' => drupal_realpath($image->uri));
+    $edit = array('files[user_picture_0]' => drupal_realpath($image->uri));
     $this->drupalPostForm('user/' . $this->web_user->id() . '/edit', $edit, t('Save'));
 
     // Load actual user data from database.

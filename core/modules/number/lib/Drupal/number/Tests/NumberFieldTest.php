@@ -7,7 +7,6 @@
 
 namespace Drupal\number\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -94,8 +93,7 @@ class NumberFieldTest extends WebTestBase {
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $this->assertFieldByName("{$this->field['field_name']}[$langcode][0][value]", '', 'Widget is displayed');
+    $this->assertFieldByName("{$this->field['field_name']}[0][value]", '', 'Widget is displayed');
     $this->assertRaw('placeholder="0.00"');
 
     // Submit a signed decimal value within the allowed precision and scale.
@@ -103,7 +101,7 @@ class NumberFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$this->field['field_name']}[$langcode][0][value]" => $value,
+      "{$this->field['field_name']}[0][value]" => $value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
@@ -123,7 +121,7 @@ class NumberFieldTest extends WebTestBase {
     foreach ($wrong_entries as $wrong_entry) {
       $this->drupalGet('entity_test/add');
       $edit = array(
-        "{$this->field['field_name']}[$langcode][0][value]" => $wrong_entry,
+        "{$this->field['field_name']}[0][value]" => $wrong_entry,
       );
       $this->drupalPostForm(NULL, $edit, t('Save'));
       $this->assertRaw(t('%name must be a number.', array('%name' => $this->field['field_name'])), 'Correctly failed to save decimal value with more than one decimal point.');
@@ -141,7 +139,7 @@ class NumberFieldTest extends WebTestBase {
     foreach ($wrong_entries as $wrong_entry) {
       $this->drupalGet('entity_test/add');
       $edit = array(
-        "{$this->field['field_name']}[$langcode][0][value]" => $wrong_entry,
+        "{$this->field['field_name']}[0][value]" => $wrong_entry,
       );
       $this->drupalPostForm(NULL, $edit, t('Save'));
       $this->assertRaw(t('%name must be a number.', array('%name' => $this->field['field_name'])), 'Correctly failed to save decimal value with minus sign in the wrong position.');
@@ -202,7 +200,7 @@ class NumberFieldTest extends WebTestBase {
     $rand_number = rand();
     $edit = array(
       'title' => $this->randomName(),
-      'field_' .$field_name . '[und][0][value]' => $rand_number,
+      'field_' .$field_name . '[0][value]' => $rand_number,
     );
     $this->drupalPostForm("node/add/$type", $edit, t('Save'));
 

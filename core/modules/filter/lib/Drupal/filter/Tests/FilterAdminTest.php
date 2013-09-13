@@ -7,7 +7,6 @@
 
 namespace Drupal\filter\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -233,10 +232,9 @@ class FilterAdminTest extends WebTestBase {
     $text = $body . '<random>' . $extra_text . '</random>';
 
     $edit = array();
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();
-    $edit["body[$langcode][0][value]"] = $text;
-    $edit["body[$langcode][0][format]"] = $basic;
+    $edit['body[0][value]'] = $text;
+    $edit['body[0][format]'] = $basic;
     $this->drupalPostForm('node/add/page', $edit, t('Save'));
     $this->assertRaw(t('Basic page %title has been created.', array('%title' => $edit["title"])), 'Filtered node created.');
 
@@ -253,7 +251,7 @@ class FilterAdminTest extends WebTestBase {
       ->set('always_show_fallback_choice', TRUE)
       ->save();
     $edit = array();
-    $edit["body[$langcode][0][format]"] = $plain;
+    $edit['body[0][format]'] = $plain;
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('node/' . $node->id());
     $this->assertText(check_plain($text), 'The "Plain text" text format escapes all HTML tags.');

@@ -7,7 +7,6 @@
 
 namespace Drupal\rdf\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\WebTestBase;
 
@@ -168,7 +167,7 @@ class TrackerAttributesTest extends WebTestBase {
     // Adds new comment to ensure the tracker is updated accordingly.
     $comment = array(
       'subject' => $this->randomName(),
-      'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $this->randomName(),
+      'comment_body[0][value]' => $this->randomName(),
     );
     $this->drupalPostForm('comment/reply/' . $node->id(), $comment, t('Save'));
 

@@ -85,11 +85,17 @@ function field_test_entity_nested_form($form, &$form_state, $entity_1, $entity_2
  * Validate handler for field_test_entity_nested_form().
  */
 function field_test_entity_nested_form_validate($form, &$form_state) {
-  $entity_1 = entity_create('entity_test', $form_state['values']);
+  $entity_1 = entity_create('entity_test', array(
+    'id' => $form_state['values']['id'],
+    'type' => $form_state['values']['type'],
+  ));
   field_attach_extract_form_values($entity_1, $form, $form_state);
   field_attach_form_validate($entity_1, $form, $form_state);
 
-  $entity_2 = entity_create('entity_test', $form_state['values']['entity_2']);
+  $entity_2 = entity_create('entity_test', array(
+    'id' => $form_state['values']['entity_2']['id'],
+    'type' => $form_state['values']['entity_2']['type'],
+  ));
   field_attach_extract_form_values($entity_2, $form['entity_2'], $form_state);
   field_attach_form_validate($entity_2, $form['entity_2'], $form_state);
 }
@@ -98,11 +104,17 @@ function field_test_entity_nested_form_validate($form, &$form_state) {
  * Submit handler for field_test_entity_nested_form().
  */
 function field_test_entity_nested_form_submit($form, &$form_state) {
-  $entity_1 = entity_create('entity_test', $form_state['values']);
+  $entity_1 = entity_create('entity_test', array(
+    'id' => $form_state['values']['id'],
+    'type' => $form_state['values']['type'],
+  ));
   field_attach_extract_form_values($entity_1, $form, $form_state);
   $entity_1->save();
 
-  $entity_2 = entity_create('entity_test', $form_state['values']['entity_2']);
+  $entity_2 = entity_create('entity_test', array(
+    'id' => $form_state['values']['entity_2']['id'],
+    'type' => $form_state['values']['entity_2']['type'],
+  ));
   field_attach_extract_form_values($entity_2, $form['entity_2'], $form_state);
   $entity_2->save();
 
