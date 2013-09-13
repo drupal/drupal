@@ -20,7 +20,7 @@ class FilterUnitTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'filter');
+  public static $modules = array('filter');
 
   /**
    * @var \Drupal\filter\Plugin\FilterInterface[]
