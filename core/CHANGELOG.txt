@@ -39,6 +39,7 @@ Drupal 8.0, xxxx-xx-xx (development version)
       * Blog
       * Dashboard
       * OpenID
+      * PHP Filter
       * Poll
       * Profile
       * Trigger
