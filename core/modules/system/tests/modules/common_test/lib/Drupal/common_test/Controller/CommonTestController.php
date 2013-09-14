@@ -73,4 +73,19 @@ class CommonTestController implements ContainerInjectionInterface {
     return drupal_render($element);
   }
 
+  /**
+   * Adds a JavaScript file and a CSS file with a query string appended.
+   *
+   * @return string
+   *   An empty string.
+   */
+  public function jsAndCssQuerystring() {
+    drupal_add_library('system', 'drupalSettings');
+    drupal_add_js(drupal_get_path('module', 'node') . '/node.js');
+    drupal_add_css(drupal_get_path('module', 'node') . '/css/node.admin.css');
+    // A relative URI may have a query string.
+    drupal_add_css('/' . drupal_get_path('module', 'node') . '/node-fake.css?arg1=value1&arg2=value2');
+    return '';
+  }
+
 }

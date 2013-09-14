@@ -11,3 +11,10 @@ common_test_drupal_render_invalid_keys:
     _content: '\Drupal\common_test\Controller\CommonTestController::drupalRenderInvalidKeys'
   requirements:
     _permission: 'access content'
+common_test_js_and_css_querystring:
+  pattern: '/common-test/query-string'
+  defaults:
+    _title: 'Test querystring'
+    _content: '\Drupal\common_test\Controller\CommonTestController::jsAndCssQuerystring'
+  requirements:
+    _permission: 'access content'
