@@ -152,10 +152,7 @@ function aggregator_menu() {
   $items['aggregator/categories/%aggregator_category'] = array(
     'title callback' => '_aggregator_category_title',
     'title arguments' => array(2),
-    'page callback' => 'aggregator_page_category',
-    'page arguments' => array(2),
-    'access arguments' => array('access news feeds'),
-    'file' => 'aggregator.pages.inc',
+    'route_name' => 'aggregator_category_view',
   );
   $items['aggregator/categories/%aggregator_category/view'] = array(
     'title' => 'View',
@@ -175,10 +172,7 @@ function aggregator_menu() {
   $items['aggregator/sources/%aggregator_feed'] = array(
     'title callback' => 'entity_page_label',
     'title arguments' => array(2),
-    'page callback' => 'aggregator_page_source',
-    'page arguments' => array(2),
-    'access arguments' => array('access news feeds'),
-    'file' => 'aggregator.pages.inc',
+    'route_name' => 'aggregator_feed_view',
   );
   $items['aggregator/sources/%aggregator_feed/view'] = array(
     'title' => 'View',
