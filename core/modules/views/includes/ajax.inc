@@ -5,16 +5,9 @@
  * Handles the server side AJAX interactions of Views.
  */
 
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Drupal\views\Ajax\HighlightCommand;
 use Drupal\views\Ajax\SetFormCommand;
-use Drupal\Core\Ajax\ReplaceCommand;
-use Drupal\views\Ajax\ScrollTopCommand;
-use Drupal\views\Ajax\ViewAjaxResponse;
 use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Component\Utility\Tags;
-use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\String;
 
 /**
  * @defgroup views_ajax Views AJAX library
@@ -77,54 +70,6 @@ function views_ajax_form_wrapper($form_id, &$form_state) {
   }
 
   return $output;
-}
-
-/**
- * Page callback for views taxonomy autocomplete.
- *
- * @param $vid
- *   The vocabulary id of the tags which should be returned.
- *
- * @see taxonomy_autocomplete()
- */
-function views_ajax_autocomplete_taxonomy($vid) {
-  // The user enters a comma-separated list of tags. We only autocomplete the
-  // last tag.
-  $tags_typed = Tags::explode(Drupal::request()->query->get('q'));
-  $tag_last = Unicode::strtolower(array_pop($tags_typed));
-  $term_matches = array();
-
-  if ($tag_last != '') {
-    $query = db_select('taxonomy_term_data', 't');
-    $query->addTag('term_access');
-
-    // Do not select already entered terms.
-    if (!empty($tags_typed)) {
-      $query->condition('t.name', $tags_typed, 'NOT IN');
-    }
-    // Select rows that match by term name.
-    $tags_return = $query
-      ->fields('t', array('tid', 'name'))
-      ->condition('t.vid', $vid)
-      ->condition('t.name', '%' . db_like($tag_last) . '%', 'LIKE')
-      ->range(0, 10)
-      ->execute()
-      ->fetchAllKeyed();
-
-    $prefix = count($tags_typed) ? Tags::implode($tags_typed) . ', ' : '';
-
-    foreach ($tags_return as $tid => $name) {
-      $n = $name;
-      // Term names containing commas or quotes must be wrapped in quotes.
-      if (strpos($name, ',') !== FALSE || strpos($name, '"') !== FALSE) {
-        $n = '"' . str_replace('"', '""', $name) . '"';
-      }
-      // Add term name to list of matches.
-      $term_matches[$prefix . $n] = String::checkPlain($name);
-    }
-  }
-
-  return new JsonResponse($term_matches);
 }
 
 /**
