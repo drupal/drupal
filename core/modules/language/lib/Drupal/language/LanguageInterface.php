@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\language\Entity\LanguageInterface.
+ * Contains \Drupal\language\LanguageInterface.
  */
 
 namespace Drupal\language;

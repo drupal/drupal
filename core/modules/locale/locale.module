@@ -819,7 +819,7 @@ function locale_form_language_admin_edit_form_alter(&$form, &$form_state) {
       '#type' => 'checkbox',
       '#default_value' => locale_translate_english(),
     );
-    $form['#submit'][] = 'locale_form_language_admin_edit_form_alter_submit';
+    $form['actions']['submit']['#submit'][] = 'locale_form_language_admin_edit_form_alter_submit';
   }
 }
 

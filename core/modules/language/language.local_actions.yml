@@ -1,0 +1,5 @@
+language_add_local_action:
+  route_name: language_add
+  title: 'Add language'
+  appears_on:
+    - language_admin_overview

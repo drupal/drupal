@@ -78,20 +78,12 @@ function language_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/config/regional/language/add'] = array(
-    'title' => 'Add language',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('language_admin_add_form'),
-    'access arguments' => array('administer languages'),
-    'type' => MENU_LOCAL_ACTION,
-    'file' => 'language.admin.inc',
+    'route_name' => 'language_add',
+    'type' => MENU_SIBLING_LOCAL_TASK,
   );
   $items['admin/config/regional/language/edit/%language'] = array(
     'title' => 'Edit language',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('language_admin_edit_form', 5),
-    'access callback' => 'language_access_language_edit_or_delete',
-    'access arguments' => array(5),
-    'file' => 'language.admin.inc',
+    'route_name' => 'language_edit',
   );
   $items['admin/config/regional/language/delete/%language'] = array(
     'route_name' => 'language_delete',

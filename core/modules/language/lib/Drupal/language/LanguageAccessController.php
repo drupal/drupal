@@ -19,13 +19,19 @@ class LanguageAccessController extends EntityAccessController {
    */
   public function access(EntityInterface $entity, $operation, $langcode = Language::LANGCODE_DEFAULT, AccountInterface $account = NULL) {
     switch ($operation) {
-      case 'create':
       case 'update':
       case 'delete':
         return !$entity->locked && user_access('administer languages');
         break;
     }
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    return $account->hasPermission('administer languages');
   }
 
 }
