@@ -33,6 +33,14 @@ language_delete:
   requirements:
     _entity_access: 'language_entity.delete'
 
+language_negotiation_browser:
+  pattern: '/admin/config/regional/language/detection/browser'
+  defaults:
+    _form: '\Drupal\language\Form\NegotiationBrowserForm'
+    _title: 'Browser language detection configuration'
+  requirements:
+    _permission: 'administer languages'
+
 language_negotiation_browser_delete:
   pattern: 'admin/config/regional/language/detection/browser/delete/{browser_langcode}'
   defaults:
