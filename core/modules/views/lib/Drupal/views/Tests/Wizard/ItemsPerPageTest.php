@@ -76,7 +76,7 @@ class ItemsPerPageTest extends WizardTestBase {
 
     // Confirm that the block is listed in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . \Drupal::config('system.theme')->get('default'));
-    $this->assertText('View: ' . $view['label']);
+    $this->assertText($view['label']);
 
     // Place the block, visit a page that displays the block, and check that the
     // nodes we expect appear in the correct order.

@@ -55,7 +55,7 @@ class OverrideDisplaysTest extends UITestBase {
 
     // Confirm that the view block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . \Drupal::config('system.theme')->get('default'));
-    $this->assertText('View: ' . $view['label']);
+    $this->assertText($view['label']);
 
     // Place the block.
     $this->drupalPlaceBlock("views_block:{$view['id']}-block_1");
@@ -113,7 +113,7 @@ class OverrideDisplaysTest extends UITestBase {
 
     // Confirm that the block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . \Drupal::config('system.theme')->get('default'));
-    $this->assertText('View: ' . $view['label']);
+    $this->assertText($view['label']);
 
     // Put the block into the first sidebar region, and make sure it will not
     // display on the view's page display (since we will be searching for the

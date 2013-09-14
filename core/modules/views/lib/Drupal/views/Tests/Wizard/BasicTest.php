@@ -45,7 +45,7 @@ class BasicTest extends WizardTestBase {
 
     // This view should not have a block.
     $this->drupalGet('admin/structure/block');
-    $this->assertNoText('View: ' . $view1['label']);
+    $this->assertNoText($view1['label']);
 
     // Create two nodes.
     $node1 = $this->drupalCreateNode(array('type' => 'page'));
@@ -123,7 +123,7 @@ class BasicTest extends WizardTestBase {
 
     // Confirm that the block is available in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . \Drupal::config('system.theme')->get('default'));
-    $this->assertText('View: ' . $view3['label']);
+    $this->assertText($view3['label']);
 
     // Place the block.
     $this->drupalPlaceBlock("views_block:{$view3['id']}-block_1");

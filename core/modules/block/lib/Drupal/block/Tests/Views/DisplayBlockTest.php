@@ -69,7 +69,7 @@ class DisplayBlockTest extends ViewTestBase {
       ':id' => 'edit-views-test-data',
       ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-1',
       ':href' => url('admin/structure/block/add/views_block:' . $edit['id'] . '-block_1/stark'),
-      ':text' => 'View: ' . $edit['label'],
+      ':text' => $edit['label'],
     );
     $this->drupalGet('admin/structure/block');
     $elements = $this->xpath('//details[@id=:id]//li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
@@ -105,7 +105,7 @@ class DisplayBlockTest extends ViewTestBase {
       ':id' => 'edit-views-test-data',
       ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-2',
       ':href' => url('admin/structure/block/add/views_block:' . $edit['id'] . '-block_2/stark'),
-      ':text' => 'View: ' . $edit['label'],
+      ':text' => $edit['label'],
     );
     $elements = $this->xpath('//details[@id=:id]//li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
     $this->assertTrue(!empty($elements), 'The first cloned test block remains in the original category.');
@@ -114,7 +114,7 @@ class DisplayBlockTest extends ViewTestBase {
       ':id' => $category_id,
       ':li_class' => 'views-block' . drupal_html_class($edit['id']) . '-block-3',
       ':href' => url('admin/structure/block/add/views_block:' . $edit['id'] . '-block_3/stark'),
-      ':text' => 'View: ' . $edit['label'],
+      ':text' => $edit['label'],
     );
     $elements = $this->xpath('//details[@id=:id]//li[contains(@class, :li_class)]/a[contains(@href, :href) and text()=:text]', $arguments);
     $this->assertTrue(!empty($elements), 'The second cloned test block appears in the custom category.');
