@@ -191,7 +191,7 @@ function update_authorize_update_batch_finished($success, $results) {
       $success = FALSE;
     }
   }
-  $offline = Drupal::config('system.maintenance')->get('enabled');
+  $offline = Drupal::state()->get('system.maintenance_mode');
   if ($success) {
     // Now that the update completed, we need to clear the available update data
     // and recompute our status, so prevent show bogus results.
@@ -199,7 +199,7 @@ function update_authorize_update_batch_finished($success, $results) {
 
     // Take the site out of maintenance mode if it was previously that way.
     if ($offline && isset($_SESSION['maintenance_mode']) && $_SESSION['maintenance_mode'] == FALSE) {
-      Drupal::config('system.maintenance')->set('enabled', FALSE)->save();
+      Drupal::state()->set('system.maintenance_mode', FALSE);
       $page_message = array(
         'message' => t('Update was completed successfully. Your site has been taken out of maintenance mode.'),
         'type' => 'status',
@@ -258,11 +258,11 @@ function update_authorize_install_batch_finished($success, $results) {
       $success = FALSE;
     }
   }
-  $offline = Drupal::config('system.maintenance')->get('enabled');
+  $offline = Drupal::state()->get('system.maintenance_mode');
   if ($success) {
     // Take the site out of maintenance mode if it was previously that way.
     if ($offline && isset($_SESSION['maintenance_mode']) && $_SESSION['maintenance_mode'] == FALSE) {
-      Drupal::config('system.maintenance')->set('enabled', FALSE)->save();
+      Drupal::state()->set('system.maintenance_mode', FALSE);
       $page_message = array(
         'message' => t('Installation was completed successfully. Your site has been taken out of maintenance mode.'),
         'type' => 'status',

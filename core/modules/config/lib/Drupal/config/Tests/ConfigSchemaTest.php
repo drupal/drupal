@@ -83,10 +83,6 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $expected = array();
     $expected['label'] = 'Maintenance mode';
     $expected['class'] = '\Drupal\Core\Config\Schema\Mapping';
-    $expected['mapping']['enabled'] = array(
-      'label' => 'Put site into maintenance mode',
-      'type' => 'boolean'
-    );
     $expected['mapping']['message'] = array(
       'label' =>  'Message to display when in maintenance mode',
       'type' => 'text',

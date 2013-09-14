@@ -151,7 +151,7 @@ class MenuRouterTest extends WebTestBase {
    * Test the theme callback when the site is in maintenance mode.
    */
   function testThemeCallbackMaintenanceMode() {
-    \Drupal::config('system.maintenance')->set('enabled', 1)->save();
+    $this->container->get('state')->set('system.maintenance_mode', TRUE);
     theme_enable(array($this->admin_theme));
 
     // For a regular user, the fact that the site is in maintenance mode means
@@ -166,7 +166,7 @@ class MenuRouterTest extends WebTestBase {
     $this->assertText('Custom theme: seven. Actual theme: seven.', 'The theme callback system is correctly triggered for an administrator when the site is in maintenance mode.');
     $this->assertRaw('seven/style.css', "The administrative theme's CSS appears on the page.");
 
-    \Drupal::config('system.maintenance')->set('enabled', 0)->save();
+    $this->container->get('state')->set('system.maintenance_mode', FALSE);
   }
 
   /**
@@ -175,7 +175,7 @@ class MenuRouterTest extends WebTestBase {
    * @see \Drupal\menu_test\EventSubscriber\MaintenanceModeSubscriber::onKernelRequestMaintenance().
    */
   function testMaintenanceModeLoginPaths() {
-    \Drupal::config('system.maintenance')->set('enabled', 1)->save();
+    $this->container->get('state')->set('system.maintenance_mode', TRUE);
 
     $offline_message = t('@site is currently under maintenance. We should be back shortly. Thank you for your patience.', array('@site' => \Drupal::config('system.site')->get('name')));
     $this->drupalGet('test-page');
@@ -183,7 +183,7 @@ class MenuRouterTest extends WebTestBase {
     $this->drupalGet('menu_login_callback');
     $this->assertText('This is TestControllers::testLogin.', 'Maintenance mode can be bypassed using an event subscriber.');
 
-    \Drupal::config('system.maintenance')->set('enabled', 0)->save();
+    $this->container->get('state')->set('system.maintenance_mode', FALSE);
   }
 
   /**

@@ -45,7 +45,6 @@ class SystemUpgradePathTest extends UpgradePathTestBase {
     );
 
     $expected_config['system.maintenance'] = array(
-      'enabled' => '1',
       'message' => 'Testing config upgrade',
     );
 

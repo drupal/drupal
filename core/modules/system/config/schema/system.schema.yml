@@ -40,9 +40,6 @@ system.maintenance:
   type: mapping
   label: 'Maintenance mode'
   mapping:
-    enabled:
-      type: boolean
-      label: 'Put site into maintenance mode'
     message:
       type: text
       label: 'Message to display when in maintenance mode'

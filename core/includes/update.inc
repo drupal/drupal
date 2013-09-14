@@ -880,11 +880,8 @@ function update_batch($start, $redirect = NULL, $url = NULL, $batch = array(), $
     $_SESSION['maintenance_mode'] = $maintenance_mode;
   }
   if (empty($_SESSION['maintenance_mode'])) {
-    $GLOBALS['conf']['system.maintenance']['enabled'] = TRUE;
-    // @todo This is borderline state, not config. Or a global system
-    //   "maintenance lock".
-    if (db_table_exists('config')) {
-      Drupal::config('system.maintenance')->set('enabled', TRUE)->save();
+    if (db_table_exists('state')) {
+      Drupal::state()->set('system.maintenance_mode', TRUE);
     }
   }
 
@@ -956,9 +953,7 @@ function update_finished($success, $results, $operations) {
   // Now that the update is done, we can put the site back online if it was
   // previously in maintenance mode.
   if (isset($_SESSION['maintenance_mode'])) {
-    $GLOBALS['conf']['system.maintenance']['enabled'] = FALSE;
-    // At this point, the configuration system should exist.
-    Drupal::config('system.maintenance')->set('enabled', FALSE)->save();
+    Drupal::state()->set('system.maintenance_mode', FALSE);
     unset($_SESSION['maintenance_mode']);
   }
 }
