@@ -326,3 +326,10 @@ system_admin_config:
     _content: '\Drupal\system\Controller\SystemController::overview'
   requirements:
     _permission: 'access administration pages'
+
+system_batch_page:
+  pattern: '/batch'
+  defaults:
+    _controller: '\Drupal\system\Controller\BatchController::batchPage'
+  requirements:
+    _access: 'TRUE'

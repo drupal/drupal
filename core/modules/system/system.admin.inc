@@ -274,29 +274,6 @@ function system_sort_themes($a, $b) {
 }
 
 /**
- * Default page callback for batches.
- */
-function system_batch_page() {
-  require_once DRUPAL_ROOT . '/core/includes/batch.inc';
-  $output = _batch_page();
-
-  if ($output === FALSE) {
-    throw new AccessDeniedHttpException();
-  }
-  elseif ($output instanceof Response) {
-    return $output;
-  }
-  elseif (isset($output)) {
-    // Force a page without blocks or messages to
-    // display a list of collected messages later.
-    drupal_set_page_content($output);
-    $page = element_info('page');
-    $page['#show_messages'] = FALSE;
-    return $page;
-  }
-}
-
-/**
  * Returns HTML for an administrative block for display.
  *
  * @param $variables

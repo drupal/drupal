@@ -20,6 +20,8 @@
  * @link authorize Authorized operation helper functions @endlink
  */
 
+use Symfony\Component\HttpFoundation\Request;
+
 // Change the directory to the Drupal root.
 chdir('..');
 
@@ -70,6 +72,9 @@ require_once __DIR__ . '/includes/ajax.inc';
 // We prepare only a minimal bootstrap. This includes the database and
 // variables, however, so we have access to the class autoloader.
 drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
+
+$request = Request::createFromGlobals();
+Drupal::getContainer()->set('request', $request);
 
 // This must go after drupal_bootstrap(), which unsets globals!
 global $conf;
@@ -136,8 +141,8 @@ if (authorize_access_allowed()) {
     $output .= theme('item_list', array('items' => $links, 'title' => t('Next steps')));
   }
   // If a batch is running, let it run.
-  elseif (isset($_GET['batch'])) {
-    $output = _batch_page();
+  elseif ($request->query->has('batch')) {
+    $output = _batch_page($request);
   }
   else {
     if (empty($_SESSION['authorize_operation']) || empty($_SESSION['authorize_filetransfer_info'])) {

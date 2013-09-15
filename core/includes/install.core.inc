@@ -652,7 +652,7 @@ function install_run_task($task, &$install_state) {
     // any output from the batch process, until the task is complete.
     elseif ($current_batch == $function) {
       include_once __DIR__ . '/batch.inc';
-      $output = _batch_page();
+      $output = _batch_page(Drupal::request());
       // Because Batch API now returns a JSON response for intermediary steps,
       // but the installer doesn't handle Response objects yet, just send the
       // output here and emulate the old model.
