@@ -52,7 +52,23 @@ class InlineFragmentRenderer extends RoutableFragmentRenderer
         $reference = null;
         if ($uri instanceof ControllerReference) {
             $reference = $uri;
+
+            // Remove attributes from the generated URI because if not, the Symfony
+            // routing system will use them to populate the Request attributes. We don't
+            // want that as we want to preserve objects (so we manually set Request attributes
+            // below instead)
+            $attributes = $reference->attributes;
+            $reference->attributes = array();
+
+            // The request format and locale might have been overriden by the user
+            foreach (array('_format', '_locale') as $key) {
+                if (isset($attributes[$key])) {
+                    $reference->attributes[$key] = $attributes[$key];
+                }
+            }
+
             $uri = $this->generateFragmentUri($uri, $request);
+            $reference->attributes = array_merge($attributes, $reference->attributes);
         }
 
         $subRequest = $this->createSubRequest($uri, $request);
@@ -103,10 +119,11 @@ class InlineFragmentRenderer extends RoutableFragmentRenderer
         // Sub-request object will point to localhost as client ip and real client ip
         // will be included into trusted header for client ip
         try {
-            $trustedHeaderName = Request::getTrustedHeaderName(Request::HEADER_CLIENT_IP);
-            $currentXForwardedFor = $request->headers->get($trustedHeaderName, '');
+            if ($trustedHeaderName = Request::getTrustedHeaderName(Request::HEADER_CLIENT_IP)) {
+                $currentXForwardedFor = $request->headers->get($trustedHeaderName, '');
 
-            $server['HTTP_'.$trustedHeaderName] = ($currentXForwardedFor ? $currentXForwardedFor.', ' : '').$request->getClientIp();
+                $server['HTTP_'.$trustedHeaderName] = ($currentXForwardedFor ? $currentXForwardedFor.', ' : '').$request->getClientIp();
+            }
         } catch (\InvalidArgumentException $e) {
             // Do nothing
         }

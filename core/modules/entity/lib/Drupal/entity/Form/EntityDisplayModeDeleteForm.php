@@ -19,7 +19,7 @@ class EntityDisplayModeDeleteForm extends EntityConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'entity_' . $this->entity->entityType() . '.list',
+      'route_name' => 'entity.' . $this->entity->entityType() . '_list',
     );
   }
 

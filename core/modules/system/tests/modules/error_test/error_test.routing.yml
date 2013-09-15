@@ -1,11 +1,11 @@
-error_test_generate_warnings:
+error_test.generate_warnings:
   pattern: '/error-test/generate-warnings'
   defaults:
     _content: '\Drupal\error_test\Controller\ErrorTestController::generateWarnings'
   requirements:
     _access: 'TRUE'
 
-error_test_generate_warnings_with_report:
+error_test.generate_warnings_with_report:
   pattern: '/error-test/generate-warnings-with-report'
   defaults:
     _content: '\Drupal\error_test\Controller\ErrorTestController::generateWarnings'
@@ -13,14 +13,14 @@ error_test_generate_warnings_with_report:
   requirements:
     _access: 'TRUE'
 
-error_test_trigger_exception:
+error_test.trigger_exception:
   pattern: '/error-test/trigger-exception'
   defaults:
     _content: '\Drupal\error_test\Controller\ErrorTestController::triggerException'
   requirements:
     _access: 'TRUE'
 
-error_test_trigger_pdo_exception:
+error_test.trigger_pdo_exception:
   pattern: '/error-test/trigger-pdo-exception'
   defaults:
     _content: '\Drupal\error_test\Controller\ErrorTestController::triggerPDOException'

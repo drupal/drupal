@@ -24,7 +24,7 @@ class ConfirmFormArrayPathTestForm extends ConfirmFormTestForm {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'system_admin',
+      'route_name' => 'system.admin',
       'options' => array(
         'query' => array(
           'destination' => 'admin/config',

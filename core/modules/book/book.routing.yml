@@ -1,25 +1,25 @@
-book_render:
+book.render:
   pattern: '/book'
   defaults:
     _content: '\Drupal\book\Controller\BookController::bookRender'
   requirements:
     _permission: 'access content'
 
-book_admin:
+book.admin:
   pattern: '/admin/structure/book'
   defaults:
     _content: '\Drupal\book\Controller\BookController::adminOverview'
   requirements:
     _permission: 'administer book outlines'
 
-book_settings:
+book.settings:
   pattern: '/admin/structure/book/settings'
   defaults:
     _form: '\Drupal\book\Form\BookSettingsForm'
   requirements:
     _permission: 'administer site configuration'
 
-book_export:
+book.export:
   pattern: '/book/export/{type}/{node}'
   defaults:
     _controller: '\Drupal\book\Controller\BookController::bookExport'
@@ -29,7 +29,7 @@ book_export:
     _permission: 'access printer-friendly version'
     _entity_access: 'node.view'
 
-book_outline:
+book.outline:
   pattern: '/node/{node}/outline'
   defaults:
     _entity_form: 'node.book_outline'
@@ -39,7 +39,7 @@ book_outline:
     _permission: 'administer book outlines'
     _entity_access: 'node.view'
 
-book_admin_edit:
+book.admin_edit:
   pattern: '/admin/structure/book/{node}'
   defaults:
     _form: 'Drupal\book\Form\BookAdminEditForm'

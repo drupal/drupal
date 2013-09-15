@@ -58,14 +58,14 @@ abstract class Kernel implements KernelInterface, TerminableInterface
     protected $booted;
     protected $name;
     protected $startTime;
-    protected $classes;
     protected $loadClassCache;
+    protected $errorReportingLevel;
 
-    const VERSION         = '2.3.0';
-    const VERSION_ID      = '20300';
+    const VERSION         = '2.3.4';
+    const VERSION_ID      = '20304';
     const MAJOR_VERSION   = '2';
     const MINOR_VERSION   = '3';
-    const RELEASE_VERSION = '0';
+    const RELEASE_VERSION = '4';
     const EXTRA_VERSION   = '';
 
     /**
@@ -83,7 +83,6 @@ abstract class Kernel implements KernelInterface, TerminableInterface
         $this->booted = false;
         $this->rootDir = $this->getRootDir();
         $this->name = $this->getName();
-        $this->classes = array();
         $this->bundles = array();
 
         if ($this->debug) {

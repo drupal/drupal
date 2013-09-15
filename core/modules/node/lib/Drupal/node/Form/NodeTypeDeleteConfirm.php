@@ -54,7 +54,7 @@ class NodeTypeDeleteConfirm extends EntityConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'node_overview_types',
+      'route_name' => 'node.overview_types',
     );
   }
 

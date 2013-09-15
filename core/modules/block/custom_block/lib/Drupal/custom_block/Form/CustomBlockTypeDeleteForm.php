@@ -54,7 +54,7 @@ class CustomBlockTypeDeleteForm extends EntityConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'custom_block_type_list',
+      'route_name' => 'custom_block.type_list',
     );
   }
 

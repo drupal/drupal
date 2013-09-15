@@ -51,7 +51,7 @@ function action_menu() {
   $items['admin/config/system/actions'] = array(
     'title' => 'Actions',
     'description' => 'Manage the actions defined for your site.',
-    'route_name' => 'action_admin',
+    'route_name' => 'action.admin',
   );
   $items['admin/config/system/actions/manage'] = array(
     'title' => 'Manage actions',
@@ -61,17 +61,17 @@ function action_menu() {
   $items['admin/config/system/actions/add'] = array(
     'title' => 'Create an advanced action',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
-    'route_name' => 'action_admin_add',
+    'route_name' => 'action.admin_add',
   );
   $items['admin/config/system/actions/configure'] = array(
     'title' => 'Configure an advanced action',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
-    'route_name' => 'action_admin_configure',
+    'route_name' => 'action.admin_configure',
   );
   $items['admin/config/system/actions/configure/%/delete'] = array(
     'title' => 'Delete action',
     'description' => 'Delete an action.',
-    'route_name' => 'action_delete',
+    'route_name' => 'action.delete',
   );
   return $items;
 }

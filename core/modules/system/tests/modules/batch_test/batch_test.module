@@ -44,31 +44,31 @@ function batch_test_menu() {
   // Programmatic form: the page submits the 'Chained' form through
   // drupal_form_submit().
   $items['batch-test/programmatic'] = array(
-    'route_name' => 'batch_test_programmatic',
+    'route_name' => 'batch_test.programmatic',
     'type' => MENU_LOCAL_TASK,
     'weight' => 3,
   );
   // No form: fire a batch simply by accessing a page.
   $items['batch-test/no-form'] = array(
-    'route_name' => 'batch_test_no_form',
+    'route_name' => 'batch_test.no_form',
     'type' => MENU_LOCAL_TASK,
     'weight' => 4,
   );
   // No form: fire a batch; return > 100% complete
   $items['batch-test/large-percentage'] = array(
-    'route_name' => 'batch_test_large_percentage',
+    'route_name' => 'batch_test.large_percentage',
     'type' => MENU_LOCAL_TASK,
     'weight' => 5,
   );
   // Tests programmatic form submission within a batch operation.
   $items['batch-test/nested-programmatic'] = array(
-    'route_name' => 'batch_test_nested_programmatic',
+    'route_name' => 'batch_test.nested_programmatic',
     'type' => MENU_LOCAL_TASK,
     'weight' => 6,
   );
   // Landing page to test redirects.
   $items['batch-test/redirect'] = array(
-    'route_name' => 'batch_test_redirect',
+    'route_name' => 'batch_test.redirect',
     'type' => MENU_LOCAL_TASK,
     'weight' => 7,
   );

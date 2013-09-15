@@ -12,28 +12,28 @@ views_ui.add:
   requirements:
     _permission: 'administer views'
 
-views_ui.settings.basic:
+views_ui.settings_basic:
   pattern: '/admin/structure/views/settings'
   defaults:
     _form: '\Drupal\views_ui\Form\BasicSettingsForm'
   requirements:
     _permission: 'administer views'
 
-views_ui.settings.advanced:
+views_ui.settings_advanced:
   pattern: '/admin/structure/views/settings/advanced'
   defaults:
     _form: '\Drupal\views_ui\Form\AdvancedSettingsForm'
   requirements:
     _permission: 'administer views'
 
-views_ui.reports.fields:
+views_ui.reports_fields:
   pattern: '/admin/reports/fields/views-fields'
   defaults:
     _content: '\Drupal\views_ui\Controller\ViewsUIController::reportFields'
   requirements:
     _permission: 'administer views'
 
-views_ui.reports.plugins:
+views_ui.reports_plugins:
   pattern: '/admin/reports/views-plugins'
   defaults:
     _content: '\Drupal\views_ui\Controller\ViewsUIController::reportPlugins'
@@ -80,7 +80,7 @@ views_ui.edit:
   requirements:
     _permission: 'administer views'
 
-views_ui.edit.display:
+views_ui.edit_display:
   pattern: '/admin/structure/views/view/{view}/edit/{display_id}'
   options:
     parameters:
@@ -104,14 +104,14 @@ views_ui.preview:
   requirements:
     _permission: 'administer views'
 
-views_ui.breakLock:
+views_ui.break_lock:
   pattern: '/admin/structure/views/view/{view}/break-lock'
   defaults:
     _entity_form: 'view.break_lock'
   requirements:
     _permission: 'administer views'
 
-views_ui.form.addItem:
+views_ui.form_add_item:
   pattern: '/admin/structure/views/{js}/add-item/{view}/{display_id}/{type}'
   options:
     parameters:
@@ -123,7 +123,7 @@ views_ui.form.addItem:
     _permission: 'administer views'
     js: 'nojs|ajax'
 
-views_ui.form.editDetails:
+views_ui.form_edit_details:
   pattern: '/admin/structure/views/{js}/edit-details/{view}/{display_id}'
   options:
     parameters:
@@ -135,7 +135,7 @@ views_ui.form.editDetails:
     _permission: 'administer views'
     js: 'nojs|ajax'
 
-views_ui.form.reorderDisplays:
+views_ui.form_reorder_displays:
   pattern: '/admin/structure/views/{js}/reorder-displays/{view}/{display_id}'
   options:
     parameters:
@@ -147,7 +147,7 @@ views_ui.form.reorderDisplays:
     _permission: 'administer views'
     js: 'nojs|ajax'
 
-views_ui.form.analyze:
+views_ui.form_analyze:
   pattern: '/admin/structure/views/{js}/analyze/{view}/{display_id}'
   options:
     parameters:
@@ -159,7 +159,7 @@ views_ui.form.analyze:
     _permission: 'administer views'
     js: 'nojs|ajax'
 
-views_ui.form.rearrange:
+views_ui.form_rearrange:
   pattern: '/admin/structure/views/{js}/rearrange/{view}/{display_id}/{type}'
   options:
     parameters:
@@ -171,7 +171,7 @@ views_ui.form.rearrange:
     _permission: 'administer views'
     js: 'nojs|ajax'
 
-views_ui.form.rearrangeFilter:
+views_ui.form_rearrange_filter:
   pattern: '/admin/structure/views/{js}/rearrange-filter/{view}/{display_id}'
   options:
     parameters:
@@ -183,7 +183,7 @@ views_ui.form.rearrangeFilter:
     _permission: 'administer views'
     js: 'nojs|ajax'
 
-views_ui.form.display:
+views_ui.form_display:
   pattern: '/admin/structure/views/{js}/display/{view}/{display_id}/{type}'
   options:
     parameters:
@@ -195,7 +195,7 @@ views_ui.form.display:
     _permission: 'administer views'
     js: 'nojs|ajax'
 
-views_ui.form.configItem:
+views_ui.form_config_item:
   pattern: '/admin/structure/views/{js}/config-item/{view}/{display_id}/{type}/{id}'
   options:
     parameters:
@@ -207,7 +207,7 @@ views_ui.form.configItem:
     _permission: 'administer views'
     js: 'nojs|ajax'
 
-views_ui.form.configItemExtra:
+views_ui.form_config_item_extra:
   pattern: '/admin/structure/views/{js}/config-item-extra/{view}/{display_id}/{type}/{id}'
   options:
     parameters:
@@ -219,7 +219,7 @@ views_ui.form.configItemExtra:
     _permission: 'administer views'
     js: 'nojs|ajax'
 
-views_ui.form.configItemGroup:
+views_ui.form_config_item_group:
   pattern: '/admin/structure/views/{js}/config-item-group/{view}/{display_id}/{type}/{id}'
   options:
     parameters:

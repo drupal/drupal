@@ -22,11 +22,11 @@ function tour_test_admin_paths() {
  */
 function tour_test_menu() {
   $items['tour-test-1'] = array(
-    'route_name' => 'tour_test_1',
+    'route_name' => 'tour_test.1',
     'title' => 'Tour test 1'
   );
   $items['tour-test-2/subpath'] = array(
-    'route_name' => 'tour_test_2',
+    'route_name' => 'tour_test.2',
     'title' => 'Tour test 2'
   );
   return $items;

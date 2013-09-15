@@ -46,18 +46,18 @@ function theme_test_system_theme_info() {
  */
 function theme_test_menu() {
   $items['theme-test/suggestion'] = array(
-    'route_name' => 'theme_test_suggestion',
+    'route_name' => 'theme_test.suggestion',
     'theme callback' => '_theme_custom_theme',
     'type' => MENU_CALLBACK,
   );
   $items['theme-test/alter'] = array(
     'theme callback' => '_theme_custom_theme',
-    'route_name' => 'theme_test_alter',
+    'route_name' => 'theme_test.alter',
     'type' => MENU_CALLBACK,
   );
   $items['theme-test/function-template-overridden'] = array(
     'theme callback' => '_theme_custom_theme',
-    'route_name' => 'function_template_override',
+    'route_name' => 'theme_test.function_template_override',
   );
   return $items;
 }

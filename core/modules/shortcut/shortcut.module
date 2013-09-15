@@ -88,16 +88,16 @@ function shortcut_menu() {
   $items['admin/config/user-interface/shortcut'] = array(
     'title' => 'Shortcuts',
     'description' => 'Add and modify shortcut sets.',
-    'route_name' => 'shortcut_set_admin',
+    'route_name' => 'shortcut.set_admin',
   );
   $items['admin/config/user-interface/shortcut/add-set'] = array(
     'title' => 'Add shortcut set',
-    'route_name' => 'shortcut_set_add',
+    'route_name' => 'shortcut.set_add',
     'type' => MENU_SIBLING_LOCAL_TASK,
   );
   $items['admin/config/user-interface/shortcut/manage/%shortcut_set'] = array(
     'title' => 'Edit shortcuts',
-    'route_name' => 'shortcut_set_customize',
+    'route_name' => 'shortcut.set_customize',
     'title callback' => 'entity_page_label',
     'title arguments' => array(5),
   );
@@ -107,13 +107,13 @@ function shortcut_menu() {
   );
   $items['admin/config/user-interface/shortcut/manage/%shortcut_set/edit'] = array(
     'title' => 'Edit set name',
-    'route_name' => 'shortcut_set_edit',
+    'route_name' => 'shortcut.set_edit',
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
   );
   $items['admin/config/user-interface/shortcut/manage/%shortcut_set/delete'] = array(
     'title' => 'Delete shortcut set',
-    'route_name' => 'shortcut_set_delete',
+    'route_name' => 'shortcut.set_delete',
   );
   $items['admin/config/user-interface/shortcut/manage/%shortcut_set/add-link'] = array(
     'title' => 'Add shortcut',
@@ -134,7 +134,7 @@ function shortcut_menu() {
   );
   $items['admin/config/user-interface/shortcut/link/%menu_link/delete'] = array(
     'title' => 'Delete shortcut',
-    'route_name' => 'shortcut_link_delete',
+    'route_name' => 'shortcut.link_delete',
   );
   $items['user/%user/shortcuts'] = array(
     'title' => 'Shortcuts',

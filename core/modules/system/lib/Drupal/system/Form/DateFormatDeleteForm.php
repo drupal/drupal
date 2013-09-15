@@ -64,7 +64,7 @@ class DateFormatDeleteForm extends EntityConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'date_format_list',
+      'route_name' => 'system.date_format_list',
     );
   }
 

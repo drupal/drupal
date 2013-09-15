@@ -34,7 +34,7 @@ class VocabularyDeleteForm extends EntityConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'taxonomy_vocabulary_list',
+      'route_name' => 'taxonomy.vocabulary_list',
     );
   }
 

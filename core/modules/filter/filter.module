@@ -125,33 +125,33 @@ function filter_menu() {
   $items['filter/tips'] = array(
     'title' => 'Compose tips',
     'type' => MENU_SUGGESTED_ITEM,
-    'route_name' => 'filter_tips_all',
+    'route_name' => 'filter.tips_all',
   );
   $items['filter/tips/%'] = array(
     'title' => 'Compose tips',
-    'route_name' => 'filter_tips',
+    'route_name' => 'filter.tips',
   );
   $items['admin/config/content/formats'] = array(
     'title' => 'Text formats',
     'description' => 'Configure how content input by users is filtered, including allowed HTML tags. Also allows enabling of module-provided filters.',
-    'route_name' => 'filter_admin_overview',
+    'route_name' => 'filter.admin_overview',
   );
   $items['admin/config/content/formats/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/config/content/formats/add'] = array(
-    'route_name' => 'filter_format_add',
+    'route_name' => 'filter.format_add',
     'type' => MENU_SIBLING_LOCAL_TASK,
   );
   $items['admin/config/content/formats/manage/%'] = array(
     'title callback' => 'entity_page_label',
     'title arguments' => array(5),
-    'route_name' => 'filter_format_edit',
+    'route_name' => 'filter.format_edit',
   );
   $items['admin/config/content/formats/manage/%/disable'] = array(
     'title' => 'Disable text format',
-    'route_name' => 'filter_admin_disable',
+    'route_name' => 'filter.admin_disable',
   );
   return $items;
 }

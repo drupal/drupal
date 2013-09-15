@@ -164,7 +164,7 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
 
     // @todo after https://drupal.org/node/1972246 find a new place for it.
     aggregator_refresh($aggregator_feed);
-    return $this->redirect('aggregator_admin_overview');
+    return $this->redirect('aggregator.admin_overview');
   }
 
   /**
@@ -331,7 +331,7 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
             ->viewMultiple($items, 'summary');
         }
       }
-      $feed->url = $this->urlGenerator()->generateFromRoute('aggregator_feed_view', array('aggregator_feed' => $feed->id()));
+      $feed->url = $this->urlGenerator()->generateFromRoute('aggregator.feed_view', array('aggregator_feed' => $feed->id()));
       $build[$feed->id()] = array(
         '#theme' => 'aggregator_summary_items',
         '#summary_items' => $summary_items,

@@ -246,18 +246,18 @@ class LinksTest extends WebTestBase {
       'link_path' => 'router_test/test1',
     ));
     $menu_link->save();
-    $this->assertEqual($menu_link->route_name, 'router_test_1');
+    $this->assertEqual($menu_link->route_name, 'router_test.1');
     $this->assertEqual($menu_link->route_parameters, array());
 
     $menu_link = entity_create('menu_link', array(
       'link_path' => 'router_test/test3/test',
     ));
     $menu_link->save();
-    $this->assertEqual($menu_link->route_name, 'router_test_3');
+    $this->assertEqual($menu_link->route_name, 'router_test.3');
     $this->assertEqual($menu_link->route_parameters, array('value' => 'test'));
 
     $menu_link = entity_load('menu_link', $menu_link->id());
-    $this->assertEqual($menu_link->route_name, 'router_test_3');
+    $this->assertEqual($menu_link->route_name, 'router_test.3');
     $this->assertEqual($menu_link->route_parameters, array('value' => 'test'));
   }
 

@@ -28,15 +28,15 @@ function config_test_uri(ConfigTest $config_test) {
 function config_test_menu() {
   $items['admin/structure/config_test'] = array(
     'title' => 'Test configuration',
-    'route_name' => 'config_test_list_page',
+    'route_name' => 'config_test.list_page',
   );
   $items['admin/structure/config_test/add'] = array(
     'title' => 'Add test configuration',
-    'route_name' => 'config_test_entity_add',
+    'route_name' => 'config_test.entity_add',
     'type' => MENU_SIBLING_LOCAL_TASK,
   );
   $items['admin/structure/config_test/manage/%config_test'] = array(
-    'route_name' => 'config_test_entity_edit',
+    'route_name' => 'config_test.entity',
   );
   $items['admin/structure/config_test/manage/%config_test/edit'] = array(
     'title' => 'Edit',
@@ -44,15 +44,15 @@ function config_test_menu() {
   );
   $items['admin/structure/config_test/manage/%config_test/delete'] = array(
     'title' => 'Delete',
-    'route_name' => 'config_test_entity_delete',
+    'route_name' => 'config_test.entity_delete',
   );
   $items['admin/structure/config_test/manage/%config_test/enable'] = array(
     'title' => 'Enable',
-    'route_name' => 'config_test_entity_enable',
+    'route_name' => 'config_test.entity_enable',
   );
   $items['admin/structure/config_test/manage/%config_test/disable'] = array(
     'title' => 'Disable',
-    'route_name' => 'config_test_entity_disable',
+    'route_name' => 'config_test.entity_disable',
   );
   return $items;
 }

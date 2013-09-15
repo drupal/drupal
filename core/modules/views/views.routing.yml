@@ -1,4 +1,4 @@
-views_ajax:
+views.ajax:
   pattern: '/views/ajax'
   defaults:
     _controller: '\Drupal\views\Controller\ViewAjaxController::ajaxView'

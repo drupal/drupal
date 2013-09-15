@@ -34,13 +34,13 @@ function views_ui_menu() {
   // when there is a route-aware breadcrumb builder.
   $items['admin/structure/views/settings'] = array(
     'title' => 'Settings',
-    'route_name' => 'views_ui.settings.basic',
+    'route_name' => 'views_ui.settings_basic',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
 
   $items['admin/structure/views/settings/advanced'] = array(
     'title' => 'Advanced',
-    'route_name' => 'views_ui.settings.advanced',
+    'route_name' => 'views_ui.settings_advanced',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
 
@@ -64,7 +64,7 @@ function views_ui_menu() {
 
   $items['admin/structure/views/view/%/break-lock'] = array(
     'title' => 'Break lock',
-    'route_name' => 'views_ui.breakLock',
+    'route_name' => 'views_ui.break_lock',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
 
@@ -77,7 +77,7 @@ function views_ui_menu() {
   $items['admin/reports/fields/views-fields'] = array(
     'title' => 'Used in views',
     'description' => 'Overview of fields used in all views.',
-    'route_name' => 'views_ui.reports.fields',
+    'route_name' => 'views_ui.reports_fields',
     'type' => MENU_LOCAL_TASK,
   );
 
@@ -85,7 +85,7 @@ function views_ui_menu() {
   $items['admin/reports/views-plugins'] = array(
     'title' => 'Views plugins',
     'description' => 'Overview of plugins used in all views.',
-    'route_name' => 'views_ui.reports.plugins',
+    'route_name' => 'views_ui.reports_plugins',
   );
 
   return $items;

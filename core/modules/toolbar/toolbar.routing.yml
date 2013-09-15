@@ -1,4 +1,4 @@
-toolbar_subtrees:
+toolbar.subtrees:
   pattern: '/toolbar/subtrees/{hash}'
   defaults:
     _controller: '\Drupal\toolbar\Routing\ToolbarController::subtreesJsonp'

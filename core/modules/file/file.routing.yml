@@ -1,10 +1,11 @@
-file.ajax.upload:
+file.ajax_upload:
   pattern: '/file/ajax'
   defaults:
     _controller: '\Drupal\file\Controller\FileWidgetAjaxController::upload'
   requirements:
     _permission: 'access content'
-file.ajax.progress:
+
+file.ajax_progress:
   pattern: '/file/progress'
   defaults:
     _controller: '\Drupal\file\Controller\FileWidgetAjaxController::progress'

@@ -190,7 +190,7 @@ class NodeFormController extends EntityFormControllerNG {
       '#type' => 'textfield',
       '#title' => t('Authored by'),
       '#maxlength' => 60,
-      '#autocomplete_route_name' => 'user_autocomplete',
+      '#autocomplete_route_name' => 'user.autocomplete',
       '#default_value' => $node->getAuthorId()? $node->getAuthor()->getUsername() : '',
       '#weight' => -1,
       '#description' => t('Leave blank for %anonymous.', array('%anonymous' => $user_config->get('anonymous'))),

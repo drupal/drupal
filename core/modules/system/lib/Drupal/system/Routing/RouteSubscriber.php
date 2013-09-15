@@ -39,7 +39,7 @@ class RouteSubscriber implements EventSubscriberInterface {
           '_form' => '\Drupal\system\Form\ThemeSettingsForm', 'theme_name' => $theme->name), array(
           '_permission' => 'administer themes',
         ));
-        $collection->add('system_theme_settings_' . $theme->name, $route);
+        $collection->add('system.theme_settings_' . $theme->name, $route);
       }
     }
   }

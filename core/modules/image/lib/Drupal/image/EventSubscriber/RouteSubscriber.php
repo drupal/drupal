@@ -49,7 +49,7 @@ class RouteSubscriber implements EventSubscriberInterface {
         '_access' => 'TRUE',
       )
     );
-    $collection->add('image_style_public', $route);
+    $collection->add('image.style_public', $route);
   }
 
 }

@@ -26,7 +26,7 @@ class CategoryDeleteForm extends EntityConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'contact_category_list',
+      'route_name' => 'contact.category_list',
     );
   }
 

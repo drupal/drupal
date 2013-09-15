@@ -95,7 +95,7 @@ function image_menu() {
   $items['admin/config/media/image-styles'] = array(
     'title' => 'Image styles',
     'description' => 'Configure styles that can be used for resizing or adjusting images on display.',
-    'route_name' => 'image_style_list',
+    'route_name' => 'image.style_list',
   );
   $items['admin/config/media/image-styles/list'] = array(
     'title' => 'List',
@@ -103,14 +103,14 @@ function image_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/config/media/image-styles/add'] = array(
-    'route_name' => 'image_style_add',
+    'route_name' => 'image.style_add',
     'type' => MENU_SIBLING_LOCAL_TASK,
     'weight' => 1,
   );
   $items['admin/config/media/image-styles/manage/%image_style'] = array(
     'title' => 'Edit style',
     'description' => 'Configure an image style.',
-    'route_name' => 'image_style_edit',
+    'route_name' => 'image.style_edit',
   );
   $items['admin/config/media/image-styles/manage/%image_style/edit'] = array(
     'title' => 'Edit',
@@ -121,22 +121,22 @@ function image_menu() {
     'description' => 'Delete an image style.',
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
-    'route_name' => 'image_style_delete',
+    'route_name' => 'image.style_delete',
   );
   $items['admin/config/media/image-styles/manage/%/effects/%'] = array(
     'title' => 'Edit image effect',
     'description' => 'Edit an existing effect within a style.',
-    'route_name' => 'image_effect_edit_form',
+    'route_name' => 'image.effect_edit_form',
   );
   $items['admin/config/media/image-styles/manage/%image_style/effects/%/delete'] = array(
     'title' => 'Delete image effect',
     'description' => 'Delete an existing effect from a style.',
-    'route_name' => 'image_effect_delete',
+    'route_name' => 'image.effect_delete',
   );
   $items['admin/config/media/image-styles/manage/%/add/%'] = array(
     'title' => 'Add image effect',
     'description' => 'Add a new effect to a style.',
-    'route_name' => 'image_effect_add_form',
+    'route_name' => 'image.effect_add_form',
   );
 
   return $items;

@@ -47,9 +47,7 @@ abstract class AbstractProcessTest extends \PHPUnit_Framework_TestCase
 
     public function testStopWithTimeoutIsActuallyWorking()
     {
-        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $this->markTestSkipped('Stop with timeout does not work on windows, it requires posix signals');
-        }
+        $this->verifyPosixIsEnabled();
 
         // exec is mandatory here since we send a signal to the process
         // see https://github.com/symfony/symfony/issues/5030 about prepending
@@ -64,7 +62,24 @@ abstract class AbstractProcessTest extends \PHPUnit_Framework_TestCase
         }
         $duration = microtime(true) - $start;
 
-        $this->assertLessThan(1.3, $duration);
+        $this->assertLessThan(1.8, $duration);
+    }
+
+    public function testCallbacksAreExecutedWithStart()
+    {
+        $data = '';
+
+        $process = $this->getProcess('echo "foo";sleep 1;echo "foo"');
+        $process->start(function ($type, $buffer) use (&$data) {
+            $data .= $buffer;
+        });
+
+        $start = microtime(true);
+        while ($process->isRunning()) {
+            usleep(10000);
+        }
+
+        $this->assertEquals("foo\nfoo\n", $data);
     }
 
     /**
@@ -228,6 +243,27 @@ abstract class AbstractProcessTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(strlen($process->getOutput()) > 0);
     }
 
+    public function testGetExitCodeIsNullOnStart()
+    {
+        $process = $this->getProcess('php -r "usleep(200000);"');
+        $this->assertNull($process->getExitCode());
+        $process->start();
+        $this->assertNull($process->getExitCode());
+        $process->wait();
+        $this->assertEquals(0, $process->getExitCode());
+    }
+
+    public function testGetExitCodeIsNullOnWhenStartingAgain()
+    {
+        $process = $this->getProcess('php -r "usleep(200000);"');
+        $process->run();
+        $this->assertEquals(0, $process->getExitCode());
+        $process->start();
+        $this->assertNull($process->getExitCode());
+        $process->wait();
+        $this->assertEquals(0, $process->getExitCode());
+    }
+
     public function testGetExitCode()
     {
         $process = $this->getProcess('php -m');
@@ -256,7 +292,7 @@ abstract class AbstractProcessTest extends \PHPUnit_Framework_TestCase
 
     public function testStop()
     {
-        $process = $this->getProcess('php -r "while (true) {}"');
+        $process = $this->getProcess('php -r "sleep(4);"');
         $process->start();
         $this->assertTrue($process->isRunning());
         $process->stop();
@@ -270,9 +306,21 @@ abstract class AbstractProcessTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($process->isSuccessful());
     }
 
+    public function testIsSuccessfulOnlyAfterTerminated()
+    {
+        $process = $this->getProcess('sleep 1');
+        $process->start();
+        while ($process->isRunning()) {
+            $this->assertFalse($process->isSuccessful());
+            usleep(300000);
+        }
+
+        $this->assertTrue($process->isSuccessful());
+    }
+
     public function testIsNotSuccessful()
     {
-        $process = $this->getProcess('php -r "while (true) {}"');
+        $process = $this->getProcess('php -r "sleep(4);"');
         $process->start();
         $this->assertTrue($process->isRunning());
         $process->stop();
@@ -318,7 +366,7 @@ abstract class AbstractProcessTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Windows does not support POSIX signals');
         }
 
-        $process = $this->getProcess('php -r "while (true) {}"');
+        $process = $this->getProcess('php -r "sleep(4);"');
         $process->start();
         $process->stop();
         $this->assertTrue($process->hasBeenSignaled());
@@ -333,7 +381,7 @@ abstract class AbstractProcessTest extends \PHPUnit_Framework_TestCase
         // SIGTERM is only defined if pcntl extension is present
         $termSignal = defined('SIGTERM') ? SIGTERM : 15;
 
-        $process = $this->getProcess('php -r "while (true) {}"');
+        $process = $this->getProcess('php -r "sleep(4);"');
         $process->start();
         $process->stop();
 
@@ -429,6 +477,7 @@ abstract class AbstractProcessTest extends \PHPUnit_Framework_TestCase
         $duration = microtime(true) - $start;
 
         $this->assertLessThan($timeout + $precision, $duration);
+        $this->assertFalse($process->isSuccessful());
     }
 
     public function testGetPid()
@@ -454,9 +503,7 @@ abstract class AbstractProcessTest extends \PHPUnit_Framework_TestCase
 
     public function testSignal()
     {
-        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $this->markTestSkipped('POSIX signals do not work on windows');
-        }
+        $this->verifyPosixIsEnabled();
 
         $process = $this->getProcess('exec php -f ' . __DIR__ . '/SignalListener.php');
         $process->start();
@@ -470,17 +517,42 @@ abstract class AbstractProcessTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Caught SIGUSR1', $process->getOutput());
     }
 
+    public function testExitCodeIsAvailableAfterSignal()
+    {
+        $this->verifyPosixIsEnabled();
+
+        $process = $this->getProcess('sleep 4');
+        $process->start();
+        $process->signal(SIGKILL);
+
+        while ($process->isRunning()) {
+            usleep(10000);
+        }
+
+        $this->assertFalse($process->isRunning());
+        $this->assertTrue($process->hasBeenSignaled());
+        $this->assertFalse($process->isSuccessful());
+        $this->assertEquals(137, $process->getExitCode());
+    }
+
     /**
      * @expectedException Symfony\Component\Process\Exception\LogicException
      */
     public function testSignalProcessNotRunning()
     {
+        $this->verifyPosixIsEnabled();
+        $process = $this->getProcess('php -m');
+        $process->signal(SIGHUP);
+    }
+
+    private function verifyPosixIsEnabled()
+    {
         if (defined('PHP_WINDOWS_VERSION_BUILD')) {
             $this->markTestSkipped('POSIX signals do not work on windows');
         }
-
-        $process = $this->getProcess('php -m');
-        $process->signal(SIGHUP);
+        if (!defined('SIGUSR1')) {
+            $this->markTestSkipped('The pcntl extension is not enabled');
+        }
     }
 
     /**

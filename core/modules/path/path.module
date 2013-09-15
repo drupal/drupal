@@ -76,7 +76,7 @@ function path_menu() {
   );
   $items['admin/config/search/path/delete/%path'] = array(
     'title' => 'Delete alias',
-    'route_name' => 'path_delete',
+    'route_name' => 'path.delete',
   );
   $items['admin/config/search/path/add'] = array(
     'title' => 'Add alias',

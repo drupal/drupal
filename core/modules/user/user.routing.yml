@@ -1,67 +1,67 @@
-user_register:
+user.register:
   pattern: '/user/register'
   defaults:
     _entity_form: 'user.register'
   requirements:
     _access_user_register: 'TRUE'
 
-user_logout:
+user.logout:
   pattern: '/user/logout'
   defaults:
     _controller: '\Drupal\user\Controller\UserController::logout'
   requirements:
     _user_is_logged_in: 'TRUE'
 
-user_autocomplete:
+user.autocomplete:
   pattern: '/user/autocomplete'
   defaults:
     _controller: '\Drupal\user\Controller\UserAutocompleteController::autocompleteUser'
   requirements:
     _permission: 'access user profiles'
 
-user_autocomplete_anonymous:
+user.autocomplete_anonymous:
   pattern: '/user/autocomplete/anonymous'
   defaults:
     _controller: '\Drupal\user\Controller\UserAutocompleteController::autocompleteUserAnonymous'
   requirements:
     _permission: 'access user profiles'
 
-user_admin_index:
+user.admin_index:
   pattern: '/admin/config/people'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access administration pages'
 
-user_account_settings:
+user.account_settings:
   pattern: '/admin/config/people/accounts'
   defaults:
     _form: '\Drupal\user\AccountSettingsForm'
   requirements:
     _permission: 'administer account settings'
 
-user_admin_create:
+user.admin_create:
   pattern: '/admin/people/create'
   defaults:
     _entity_form: 'user.register'
   requirements:
     _permission: 'administer users'
 
-user_admin_permissions:
+user.admin_permissions:
   pattern: '/admin/people/permissions'
   defaults:
     _form: '\Drupal\user\Form\UserPermissionsForm'
   requirements:
     _permission: 'administer permissions'
 
-user_admin_permission:
+user.admin_permission:
   pattern: '/admin/people/permissions/{role_id}'
   defaults:
     _form: '\Drupal\user\Form\UserPermissionsRoleSpecificForm'
   requirements:
     _permission: 'administer permissions'
 
-user_multiple_cancel_confirm:
+user.multiple_cancel_confirm:
   pattern: '/admin/people/cancel'
   defaults:
     _form: '\Drupal\user\Form\UserMultipleCancelConfirm'
@@ -69,63 +69,63 @@ user_multiple_cancel_confirm:
   requirements:
     _permission: 'administer users'
 
-user_role_list:
+user.role_list:
   pattern: '/admin/people/roles'
   defaults:
     _entity_list: 'user_role'
   requirements:
     _permission: 'administer permissions'
 
-user_role_add:
+user.role_add:
   pattern: '/admin/people/roles/add'
   defaults:
     _entity_form: user_role.default
   requirements:
     _permission: 'administer permissions'
 
-user_role_edit:
+user.role_edit:
   pattern: '/admin/people/roles/manage/{user_role}'
   defaults:
     _entity_form: user_role.default
   requirements:
     _entity_access: user_role.update
 
-user_role_delete:
+user.role_delete:
   pattern: '/admin/people/roles/manage/{user_role}/delete'
   defaults:
     _entity_form: user_role.delete
   requirements:
     _entity_access: user_role.delete
 
-user_pass:
+user.pass:
   pattern: '/user/password'
   defaults:
     _form: '\Drupal\user\Form\UserPasswordForm'
   requirements:
     _access: 'TRUE'
 
-user_page:
+user.page:
   pattern: '/user'
   defaults:
     _content: '\Drupal\user\Controller\UserController::userPage'
   requirements:
     _access: 'TRUE'
 
-user_login:
+user.login:
   pattern: '/user/login'
   defaults:
     _form: '\Drupal\user\Form\UserLoginForm'
   requirements:
     _access: 'TRUE'
 
-user_edit:
+user.edit:
   pattern: '/user/{user}/edit'
   defaults:
     _entity_form: 'user.default'
   requirements:
     _entity_access: 'user.update'
 
-user_cancel_confirm:
+user.cancel_confirm:
   pattern: '/user/{user}/cancel'
   defaults:
     _title: 'Cancel account'

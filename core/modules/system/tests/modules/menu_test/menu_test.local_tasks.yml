@@ -1,29 +1,29 @@
 menu_local_task_test_tasks_view:
-  route_name: menu_local_task_test_tasks_view
+  route_name: menu_test.local_task_test_tasks_view
   title: View
   tab_root_id: menu_local_task_test_tasks_view
 menu_local_task_test_tasks_edit:
-  route_name: menu_local_task_test_tasks_edit
+  route_name: menu_test.local_task_test_tasks_edit
   title: Edit
   tab_root_id: menu_local_task_test_tasks_view
 menu_local_task_test_tasks_settings:
-  route_name: menu_local_task_test_tasks_settings
+  route_name: menu_test.local_task_test_tasks_settings
   title: Settings
   tab_root_id: menu_local_task_test_tasks_view
 menu_local_task_test_tasks_settings_sub1:
-  route_name: menu_local_task_test_tasks_settings_sub1
+  route_name: menu_test.local_task_test_tasks_settings_sub1
   title: sub1
   tab_root_id: menu_local_task_test_tasks_view
   tab_parent_id: menu_local_task_test_tasks_settings
   class: Drupal\menu_test\Plugin\Menu\LocalTask\TestTasksSettingsSub1
   weight: -10
 menu_local_task_test_tasks_settings_sub2:
-  route_name: menu_local_task_test_tasks_settings_sub2
+  route_name: menu_test.local_task_test_tasks_settings_sub2
   title: sub2
   tab_root_id: menu_local_task_test_tasks_view
   tab_parent_id: menu_local_task_test_tasks_settings
 menu_local_task_test_tasks_settings_sub3:
-  route_name: menu_local_task_test_tasks_settings_sub3
+  route_name: menu_test.local_task_test_tasks_settings_sub3
   title: sub3
   tab_root_id: menu_local_task_test_tasks_view
   tab_parent_id: menu_local_task_test_tasks_settings

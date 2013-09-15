@@ -23,7 +23,7 @@ use Drupal\field\Plugin\Type\Widget\WidgetBase;
  *   },
  *   settings = {
  *     "size" = "60",
- *     "autocomplete_route_name" = "taxonomy_autocomplete",
+ *     "autocomplete_route_name" = "taxonomy.autocomplete",
  *     "placeholder" = ""
  *   },
  *   multiple_values = TRUE

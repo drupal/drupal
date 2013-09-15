@@ -41,7 +41,7 @@ class LinkDelete extends ConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'shortcut_set_customize',
+      'route_name' => 'shortcut.set_customize',
       'route_parameters' => array(
         'shortcut_set' => str_replace('shortcut-', '', $this->menuLink->menu_name),
       ),

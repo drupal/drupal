@@ -21,7 +21,7 @@ function plugin_test_plugin_test_alter(&$definitions) {
 function plugin_test_menu() {
   $items = array();
   $items['plugin_definition_test'] = array(
-    'route_name' => 'plugin_test_definitions',
+    'route_name' => 'plugin_test.definition',
   );
   return $items;
 }

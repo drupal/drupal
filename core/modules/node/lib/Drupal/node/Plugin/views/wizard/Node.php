@@ -292,7 +292,7 @@ class Node extends WizardPluginBase {
       $form['displays']['show']['tagged_with'] = array(
         '#type' => 'textfield',
         '#title' => t('tagged with'),
-        '#autocomplete_route_name' => 'taxonomy_autocomplete',
+        '#autocomplete_route_name' => 'taxonomy.autocomplete',
         '#autocomplete_route_parameters' => array(
           'entity_type' => $this->entity_type,
           'field_name' => $tag_field_name,

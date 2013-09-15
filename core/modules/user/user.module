@@ -734,7 +734,7 @@ function user_menu() {
     'title' => 'User account',
     'title callback' => 'user_menu_title',
     'weight' => -10,
-    'route_name' => 'user_page',
+    'route_name' => 'user.page',
     'menu_name' => 'account',
   );
 
@@ -751,12 +751,12 @@ function user_menu() {
   $items['user/register'] = array(
     'title' => 'Create new account',
     'type' => MENU_LOCAL_TASK,
-    'route_name' => 'user_register',
+    'route_name' => 'user.register',
   );
 
   $items['user/password'] = array(
     'title' => 'Request new password',
-    'route_name' => 'user_pass',
+    'route_name' => 'user.pass',
     'type' => MENU_LOCAL_TASK,
   );
   $items['user/reset/%/%/%'] = array(
@@ -770,7 +770,7 @@ function user_menu() {
 
   $items['user/logout'] = array(
     'title' => 'Log out',
-    'route_name' => 'user_logout',
+    'route_name' => 'user.logout',
     'weight' => 10,
     'menu_name' => 'account',
   );
@@ -789,24 +789,24 @@ function user_menu() {
   $items['admin/people/permissions'] = array(
     'title' => 'Permissions',
     'description' => 'Determine access to features by selecting permissions for roles.',
-    'route_name' => 'user_admin_permissions',
+    'route_name' => 'user.admin_permissions',
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/people/roles'] = array(
     'title' => 'Roles',
     'description' => 'List, edit, or add user roles.',
-    'route_name' => 'user_role_list',
+    'route_name' => 'user.role_list',
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/people/roles/add'] = array(
     'title' => 'Add role',
-    'route_name' => 'user_role_add',
+    'route_name' => 'user.role_add',
     'type' => MENU_LOCAL_ACTION,
   );
 
   $items['admin/people/roles/manage/%user_role'] = array(
     'title' => 'Edit role',
-    'route_name' => 'user_role_edit',
+    'route_name' => 'user.role_edit',
   );
   $items['admin/people/roles/manage/%user_role/edit'] = array(
     'title' => 'Edit',
@@ -814,14 +814,14 @@ function user_menu() {
   );
   $items['admin/people/roles/manage/%user_role/delete'] = array(
     'title' => 'Delete role',
-    'route_name' => 'user_role_delete',
+    'route_name' => 'user.role_delete',
     'weight' => 10,
     'context' => MENU_CONTEXT_INLINE,
   );
 
   $items['admin/people/create'] = array(
     'title' => 'Add user',
-    'route_name' => 'user_admin_create',
+    'route_name' => 'user.admin_create',
     'type' => MENU_LOCAL_ACTION,
   );
 
@@ -831,14 +831,14 @@ function user_menu() {
     'description' => 'Configure user accounts.',
     'position' => 'left',
     'weight' => -20,
-    'route_name' => 'user_admin_index',
+    'route_name' => 'user.admin_index',
   );
 
   $items['admin/config/people/accounts'] = array(
     'title' => 'Account settings',
     'description' => 'Configure default behavior of users, including registration requirements, e-mails, and fields.',
     'weight' => -10,
-    'route_name' => 'user_account_settings',
+    'route_name' => 'user.account_settings',
   );
   $items['admin/config/people/accounts/settings'] = array(
     'title' => 'Settings',
@@ -859,7 +859,7 @@ function user_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['user/%user/cancel'] = array(
-    'route_name' => 'user_cancel_confirm',
+    'route_name' => 'user.cancel_confirm',
   );
   $items['user/%user/cancel/confirm/%/%'] = array(
     'title' => 'Confirm account cancellation',
@@ -871,7 +871,7 @@ function user_menu() {
   );
   $items['user/%user/edit'] = array(
     'title' => 'Edit',
-    'route_name' => 'user_edit',
+    'route_name' => 'user.edit',
     'type' => MENU_LOCAL_TASK,
   );
   return $items;

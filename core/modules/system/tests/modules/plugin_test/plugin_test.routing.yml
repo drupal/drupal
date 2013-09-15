@@ -1,4 +1,4 @@
-plugin_definition_test:
+plugin_test.definition:
   pattern: '/plugin_definition_test'
   defaults:
     _content: '\Drupal\plugin_test\Controller\PluginTest::testDefinitions'

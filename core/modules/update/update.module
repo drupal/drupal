@@ -158,7 +158,7 @@ function update_menu() {
   $items['admin/reports/updates'] = array(
     'title' => 'Available updates',
     'description' => 'Get a status report about available updates for your installed modules and themes.',
-    'route_name' => 'update_status',
+    'route_name' => 'update.status',
     'weight' => -50,
   );
   $items['admin/reports/updates/list'] = array(
@@ -168,7 +168,7 @@ function update_menu() {
   );
   $items['admin/reports/updates/settings'] = array(
     'title' => 'Settings',
-    'route_name' => 'update_settings',
+    'route_name' => 'update.settings',
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,

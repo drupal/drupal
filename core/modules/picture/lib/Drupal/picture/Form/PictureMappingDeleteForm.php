@@ -23,7 +23,7 @@ class PictureMappingDeleteForm extends EntityConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'picture_mapping_page',
+      'route_name' => 'picture.mapping_page',
     );
   }
 

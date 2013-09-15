@@ -26,7 +26,7 @@ class MenuLinkResetForm extends EntityConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'menu_menu_edit',
+      'route_name' => 'menu.menu_edit',
       'route_parameters' => array(
         'menu' => $this->entity->menu_name,
       ),

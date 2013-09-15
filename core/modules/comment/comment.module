@@ -226,11 +226,11 @@ function comment_menu() {
   $items['admin/structure/comments'] = array(
     'title' => 'Comment forms',
     'description' => 'Manage fields and displays settings for comment forms.',
-    'route_name' => 'comment_bundle_list',
+    'route_name' => 'comment.bundle_list',
   );
   $items['admin/structure/comments/manage/%'] = array(
     'title' => 'Comment form',
-    'route_name' => 'comment_bundle',
+    'route_name' => 'comment.bundle',
   );
   $items['admin/content/comment'] = array(
     'title' => 'Comments',
@@ -254,7 +254,7 @@ function comment_menu() {
   );
   $items['comment/%comment'] = array(
     'title' => 'Comment permalink',
-    'route_name' => 'comment_permalink',
+    'route_name' => 'comment.permalink',
   );
   $items['comment/%comment/view'] = array(
     'title' => 'View comment',
@@ -265,17 +265,17 @@ function comment_menu() {
   $items['comment/%comment/edit'] = array(
     'title' => 'Edit',
     'type' => MENU_LOCAL_TASK,
-    'route_name' => 'comment_edit_page',
+    'route_name' => 'comment.edit_page',
   );
   $items['comment/%comment/approve'] = array(
     'title' => 'Approve',
     'weight' => 10,
-    'route_name' => 'comment_approve',
+    'route_name' => 'comment.approve',
   );
   $items['comment/%comment/delete'] = array(
     'title' => 'Delete',
     'type' => MENU_LOCAL_TASK,
-    'route_name' => 'comment_confirm_delete',
+    'route_name' => 'comment.confirm_delete',
     'weight' => 20,
   );
 

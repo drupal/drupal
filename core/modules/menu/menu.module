@@ -68,7 +68,7 @@ function menu_menu() {
   $items['admin/structure/menu'] = array(
     'title' => 'Menus',
     'description' => 'Add new menus to your site, edit existing menus, and rename and reorganize menu links.',
-    'route_name' => 'menu_overview_page',
+    'route_name' => 'menu.overview_page',
   );
   $items['admin/structure/menu/list'] = array(
     'title' => 'List menus',
@@ -76,24 +76,24 @@ function menu_menu() {
   );
   $items['admin/structure/menu/add'] = array(
     'title' => 'Add menu',
-    'route_name' => 'menu_menu_add',
+    'route_name' => 'menu.menu_add',
     'type' => MENU_LOCAL_ACTION,
   );
   $items['admin/structure/menu/settings'] = array(
     'title' => 'Settings',
-    'route_name' => 'menu_settings',
+    'route_name' => 'menu.settings',
     'type' => MENU_LOCAL_TASK,
     'weight' => 100,
   );
   $items['admin/structure/menu/manage/%menu'] = array(
     'title' => 'Edit menu',
-    'route_name' => 'menu_menu_edit',
+    'route_name' => 'menu.menu_edit',
     'title callback' => 'entity_page_label',
     'title arguments' => array(4),
   );
   $items['admin/structure/menu/manage/%menu/add'] = array(
     'title' => 'Add link',
-    'route_name' => 'menu_link_add',
+    'route_name' => 'menu.link_add',
     'type' => MENU_LOCAL_ACTION,
   );
   $items['admin/structure/menu/manage/%menu/edit'] = array(
@@ -103,19 +103,19 @@ function menu_menu() {
   );
   $items['admin/structure/menu/manage/%menu/delete'] = array(
     'title' => 'Delete menu',
-    'route_name' => 'menu_delete_menu',
+    'route_name' => 'menu.delete_menu',
   );
   $items['admin/structure/menu/item/%menu_link/edit'] = array(
     'title' => 'Edit menu link',
-    'route_name' => 'menu_link_edit',
+    'route_name' => 'menu.link_edit',
   );
   $items['admin/structure/menu/item/%menu_link/reset'] = array(
     'title' => 'Reset menu link',
-    'route_name' => 'menu_link_reset',
+    'route_name' => 'menu.link_reset',
   );
   $items['admin/structure/menu/item/%menu_link/delete'] = array(
     'title' => 'Delete menu link',
-    'route_name' => 'menu_link_delete',
+    'route_name' => 'menu.link_delete',
   );
   return $items;
 }

@@ -54,7 +54,7 @@ class ReindexConfirm extends ConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'search_settings',
+      'route_name' => 'search.settings',
     );
   }
 

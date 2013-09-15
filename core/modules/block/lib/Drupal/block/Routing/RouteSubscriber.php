@@ -49,7 +49,7 @@ class RouteSubscriber implements EventSubscriberInterface {
           '_block_themes_access' => 'TRUE',
         )
       );
-      $collection->add("block_admin_display.$key", $route);
+      $collection->add("block.admin_display_$key", $route);
     }
   }
 

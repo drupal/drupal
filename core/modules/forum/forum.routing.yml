@@ -1,60 +1,60 @@
-forum_delete:
+forum.delete:
   pattern: '/admin/structure/forum/delete/forum/{taxonomy_term}'
   defaults:
     _form: '\Drupal\forum\Form\DeleteForm'
   requirements:
     _permission: 'administer forums'
 
-forum_settings:
+forum.settings:
   pattern: '/admin/structure/forum/settings'
   defaults:
     _form: '\Drupal\forum\ForumSettingsForm'
   requirements:
     _permission: 'administer forums'
 
-forum_index:
+forum.index:
   pattern: '/forum'
   defaults:
     _content: '\Drupal\forum\Controller\ForumController::forumIndex'
   requirements:
     _permission: 'access content'
 
-forum_page:
+forum.page:
   pattern: '/forum/{taxonomy_term}'
   defaults:
     _content: '\Drupal\forum\Controller\ForumController::forumPage'
   requirements:
     _permission: 'access content'
 
-forum_add_container:
+forum.add_container:
   pattern: '/admin/structure/forum/add/container'
   defaults:
     _content: '\Drupal\forum\Controller\ForumController::addContainer'
   requirements:
     _permission: 'administer forums'
 
-forum_add_forum:
+forum.add_forum:
   pattern: '/admin/structure/forum/add/forum'
   defaults:
     _content: '\Drupal\forum\Controller\ForumController::addForum'
   requirements:
     _permission: 'administer forums'
 
-forum_edit_container:
+forum.edit_container:
   pattern: '/admin/structure/forum/edit/container/{taxonomy_term}'
   defaults:
     _entity_form: 'taxonomy_term.container'
   requirements:
     _permission: 'administer forums'
 
-forum_edit_forum:
+forum.edit_forum:
   pattern: '/admin/structure/forum/edit/forum/{taxonomy_term}'
   defaults:
     _entity_form: 'taxonomy_term.forum'
   requirements:
     _permission: 'administer forums'
 
-forum_overview:
+forum.overview:
   pattern: '/admin/structure/forum'
   defaults:
     _form: '\Drupal\forum\Form\Overview'

@@ -48,19 +48,17 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * {@inheritdoc}
    */
   public function build(array $attributes) {
-    if (!empty($attributes[RouteObjectInterface::ROUTE_NAME]) && $attributes[RouteObjectInterface::ROUTE_NAME] == 'comment_reply'
+    if (isset($attributes[RouteObjectInterface::ROUTE_NAME]) && $attributes[RouteObjectInterface::ROUTE_NAME] == 'comment.reply'
       && isset($attributes['entity_type'])
       && isset($attributes['entity_id'])
       && isset($attributes['field_name'])
       ) {
       $breadcrumb[] = l($this->t('Home'), NULL);
-      // @todo clean-up.
-      $entity = entity_load($attributes['entity_type'], $attributes['entity_id']);
+      $entity = $this->entityManager
+        ->getStorageController($attributes['entity_type'])
+        ->load($attributes['entity_id']);
       $uri = $entity->uri();
       $breadcrumb[] = l($entity->label(), $uri['path'], $uri['options']);
-    }
-
-    if (!empty($breadcrumb)) {
       return $breadcrumb;
     }
   }

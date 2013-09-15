@@ -178,7 +178,7 @@ class ConfigSync extends FormBase {
       foreach ($config_files as $config_file) {
         $links['view_diff'] = array(
           'title' => $this->t('View differences'),
-          'href' => $this->urlGenerator->getPathFromRoute('config_diff', array('config_file' => $config_file)),
+          'href' => $this->urlGenerator->getPathFromRoute('config.diff', array('config_file' => $config_file)),
           'attributes' => array(
             'class' => array('use-ajax'),
             'data-accepts' => 'application/vnd.drupal-modal',

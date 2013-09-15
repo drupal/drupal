@@ -14,9 +14,9 @@ use Drupal\Core\Annotation\Menu\LocalAction;
 /**
  * @LocalAction(
  *   id = "image_style_add_action",
- *   route_name = "image_style_add",
+ *   route_name = "image.style_add",
  *   title = @Translation("Add image style"),
- *   appears_on = {"image_style_list"}
+ *   appears_on = {"image.style_list"}
  * )
  */
 class ImageStyleAddLocalAction extends LocalActionBase {

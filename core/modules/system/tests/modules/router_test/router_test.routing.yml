@@ -1,25 +1,25 @@
-router_test_1:
+router_test.1:
   pattern: '/router_test/test1'
   defaults:
     _controller: '\Drupal\router_test\TestControllers::test1'
   requirements:
     _access: 'TRUE'
 
-router_test_2:
+router_test.2:
   pattern: '/router_test/test2'
   defaults:
     _content: '\Drupal\router_test\TestControllers::test2'
   requirements:
     _access: 'TRUE'
 
-router_test_3:
+router_test.3:
   pattern: '/router_test/test3/{value}'
   defaults:
     _content: '\Drupal\router_test\TestControllers::test3'
   requirements:
     _access: 'TRUE'
 
-router_test_4:
+router_test.4:
   pattern: '/router_test/test4/{value}'
   defaults:
     _content: '\Drupal\router_test\TestControllers::test4'
@@ -27,26 +27,26 @@ router_test_4:
   requirements:
     _access: 'TRUE'
 
-router_test_6:
+router_test.6:
   pattern: '/router_test/test6'
   defaults:
     _controller: '\Drupal\router_test\TestControllers::test1'
   requirements:
     _access: 'TRUE'
 
-router_test_7:
+router_test.7:
   pattern: '/router_test/test7'
   defaults:
     _controller: '\Drupal\router_test\TestControllers::test7'
   requirements:
     _permission: 'access test7'
 
-router_test_8:
+router_test.8:
   pattern: '/router_test/test8'
   defaults:
     _controller: '\Drupal\router_test\TestControllers::test8'
 
-router_test_9:
+router_test.9:
   pattern: '/router_test/test9'
   defaults:
     _controller: '\Drupal\router_test\TestControllers::test8'
@@ -54,14 +54,14 @@ router_test_9:
     _permission: 'access test7'
     _access_router_test: 'TRUE'
 
-router_test_10:
+router_test.10:
   pattern: '/router_test/test10'
   defaults:
     _content: '\Drupal\router_test\TestContent::test1'
   requirements:
     _access: 'TRUE'
 
-router_test_11:
+router_test.11:
   pattern: '/router_test/test11'
   options:
     _auth: [ 'http_basic' ]
@@ -70,14 +70,14 @@ router_test_11:
   defaults:
     _content: '\Drupal\router_test\TestContent::test11'
 
-router_test_12:
+router_test.12:
   pattern: '/router_test/test12/{user}'
   requirements:
     _access: 'TRUE'
   defaults:
     _content: '\Drupal\router_test\TestContent::subrequestTest'
 
-router_test_13:
+router_test.13:
   pattern: '/router_test/test13/{user}'
   requirements:
     _access: 'TRUE'

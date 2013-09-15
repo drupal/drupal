@@ -33,7 +33,7 @@ class ImageStyleDeleteForm extends EntityConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'image_style_list',
+      'route_name' => 'image.style_list',
     );
   }
 

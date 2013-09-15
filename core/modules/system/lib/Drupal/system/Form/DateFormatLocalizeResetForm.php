@@ -78,7 +78,7 @@ class DateFormatLocalizeResetForm extends ConfirmFormBase implements ContainerIn
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'date_format_language_overview',
+      'route_name' => 'system.date_format_language_overview',
     );
   }
 

@@ -12,12 +12,12 @@ function help_menu() {
   $items['admin/help'] = array(
     'title' => 'Help',
     'description' => 'Reference for usage, configuration, and modules.',
-    'route_name' => 'help_main',
+    'route_name' => 'help.main',
     'weight' => 9,
   );
 
   $items['admin/help/%'] = array(
-    'route_name' => 'help_page',
+    'route_name' => 'help.page',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
 

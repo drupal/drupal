@@ -1,18 +1,18 @@
-simpletest_settings:
+simpletest.settings:
   pattern: '/admin/config/development/testing/settings'
   defaults:
     _form: 'Drupal\simpletest\Form\SimpletestSettingsForm'
   requirements:
     _permission: 'administer unit tests'
 
-simpletest_test_form:
+simpletest.test_form:
   pattern: '/admin/config/development/testing'
   defaults:
     _form: '\Drupal\simpletest\Form\SimpletestTestForm'
   requirements:
     _permission: 'administer unit tests'
 
-simpletest_result_form:
+simpletest.result_form:
   pattern: '/admin/config/development/testing/results/{test_id}'
   defaults:
     _form: 'Drupal\simpletest\Form\SimpletestResultsForm'

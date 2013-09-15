@@ -1,11 +1,11 @@
-paramconverter_test_user_node_foo:
+paramconverter_test.user_node_foo:
   pattern: '/paramconverter_test/test_user_node_foo/{user}/{node}/{foo}'
   defaults:
     _content: '\Drupal\paramconverter_test\TestControllers::testUserNodeFoo'
   requirements:
     _access: 'TRUE'
 
-paramconverter_test_node_user_user:
+paramconverter_test.node_user_user:
   pattern: '/paramconverter_test/test_node_user_user/{node}/{foo}/{user}'
   defaults:
     _content: '\Drupal\paramconverter_test\TestControllers::testUserNodeFoo'
@@ -16,7 +16,7 @@ paramconverter_test_node_user_user:
       foo:
         type: 'entity:user'
 
-paramconverter_test_node_node_foo:
+paramconverter_test.node_node_foo:
   pattern: '/paramconverter_test/test_node_node_foo/{user}/{node}/{foo}'
   defaults:
     _content: '\Drupal\paramconverter_test\TestControllers::testUserNodeFoo'
@@ -27,7 +27,7 @@ paramconverter_test_node_node_foo:
       user:
         type: 'entity:node'
 
-paramconverter_test_node_set_parent:
+paramconverter_test.node_set_parent:
   pattern: '/paramconverter_test/node/{node}/set/parent/{parent}'
   requirements:
     _access: 'TRUE'

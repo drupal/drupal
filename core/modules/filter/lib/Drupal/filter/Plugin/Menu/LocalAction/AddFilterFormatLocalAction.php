@@ -14,9 +14,9 @@ use Drupal\Core\Annotation\Menu\LocalAction;
 /**
  * @LocalAction(
  *   id = "filter_format_add_local_action",
- *   route_name = "filter_format_add",
+ *   route_name = "filter.format_add",
  *   title = @Translation("Add text format"),
- *   appears_on = {"filter_admin_overview"}
+ *   appears_on = {"filter.admin_overview"}
  * )
  */
 class AddFilterFormatLocalAction extends LocalActionBase {

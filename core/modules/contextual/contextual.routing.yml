@@ -1,4 +1,4 @@
-contextual_render:
+contextual.render:
   pattern: '/contextual/render'
   defaults:
     _controller: '\Drupal\contextual\ContextualController::render'

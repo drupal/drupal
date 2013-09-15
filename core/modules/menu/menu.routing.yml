@@ -1,67 +1,67 @@
-menu_settings:
+menu.settings:
   pattern: '/admin/structure/menu/settings'
   defaults:
     _form: 'Drupal\menu\MenuSettingsForm'
   requirements:
     _permission: 'administer menu'
 
-menu_overview_page:
+menu.overview_page:
   pattern: '/admin/structure/menu'
   defaults:
     _entity_list: 'menu'
   requirements:
     _permission: 'administer menu'
 
-menu_parent_options_js:
+menu.parent_options_js:
   pattern: '/admin/structure/menu/parents'
   defaults:
     _controller: '\Drupal\menu\Controller\MenuController::getParentOptions'
   requirements:
     _permission: 'administer menu'
 
-menu_link_add:
+menu.link_add:
   pattern: '/admin/structure/menu/manage/{menu}/add'
   defaults:
     _content: '\Drupal\menu\Controller\MenuController::addLink'
   requirements:
     _entity_create_access: 'menu_link'
 
-menu_link_edit:
+menu.link_edit:
   pattern: '/admin/structure/menu/item/{menu_link}/edit'
   defaults:
     _entity_form: 'menu_link'
   requirements:
     _entity_access: 'menu_link.update'
 
-menu_link_reset:
+menu.link_reset:
   pattern: 'admin/structure/menu/item/{menu_link}/reset'
   defaults:
     _entity_form: 'menu_link.reset'
   requirements:
     _entity_access: 'menu_link.reset'
 
-menu_link_delete:
+menu.link_delete:
   pattern: 'admin/structure/menu/item/{menu_link}/delete'
   defaults:
     _entity_form: 'menu_link.delete'
   requirements:
     _entity_access: 'menu_link.delete'
 
-menu_menu_add:
+menu.menu_add:
   pattern: '/admin/structure/menu/add'
   defaults:
     _entity_form: 'menu.add'
   requirements:
     _entity_create_access: 'menu'
 
-menu_menu_edit:
+menu.menu_edit:
   pattern: '/admin/structure/menu/manage/{menu}'
   defaults:
     _entity_form: 'menu.edit'
   requirements:
     _entity_access: 'menu.update'
 
-menu_delete_menu:
+menu.delete_menu:
   pattern: 'admin/structure/menu/manage/{menu}/delete'
   defaults:
     _entity_form: 'menu.delete'

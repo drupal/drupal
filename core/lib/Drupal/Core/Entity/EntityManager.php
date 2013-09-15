@@ -434,7 +434,7 @@ class EntityManager extends PluginManagerBase {
       $bundle = str_replace($entity_info['bundle_prefix'], '', $bundle);
     }
     return array(
-      'route_name' => 'field_ui.overview.' . $entity_type,
+      'route_name' => "field_ui.overview_$entity_type",
       'route_parameters' => array(
         'bundle' => $bundle,
       )
