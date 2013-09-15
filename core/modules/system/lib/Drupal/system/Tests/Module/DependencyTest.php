@@ -179,9 +179,6 @@ class DependencyTest extends ModuleTestBase {
     $edit = array('modules[Core][forum][enable]' => FALSE);
     $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $this->assertModules(array('forum'), FALSE);
-    $edit = array('modules[Core][comment][enable]' => FALSE);
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('comment'), FALSE);
 
     // Check that the comment module cannot be uninstalled.
     $this->drupalGet('admin/modules');
@@ -196,7 +193,7 @@ class DependencyTest extends ModuleTestBase {
 
     // Disable the comment module.
     $edit = array('modules[Core][comment][enable]' => FALSE);
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $this->assertModules(array('comment'), FALSE);
     // Uninstall comment module.
     $edit = array('uninstall[comment]' => 'comment');
@@ -204,4 +201,5 @@ class DependencyTest extends ModuleTestBase {
     $this->drupalPostForm(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
   }
+
 }
