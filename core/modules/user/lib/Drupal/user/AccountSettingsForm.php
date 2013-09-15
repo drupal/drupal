@@ -134,7 +134,6 @@ class AccountSettingsForm extends SystemConfigFormBase {
       '#title' => $this->t('Enable password strength indicator'),
       '#default_value' => $config->get('password_strength'),
     );
-    form_load_include($form_state, 'inc', 'user', 'user.pages');
     $form['registration_cancellation']['user_cancel_method'] = array(
       '#type' => 'radios',
       '#title' => $this->t('When cancelling a user account'),

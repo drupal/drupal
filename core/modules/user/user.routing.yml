@@ -61,6 +61,14 @@ user_admin_permission:
   requirements:
     _permission: 'administer permissions'
 
+user_multiple_cancel_confirm:
+  pattern: '/admin/people/cancel'
+  defaults:
+    _form: '\Drupal\user\Form\UserMultipleCancelConfirm'
+    _title: 'Cancel user'
+  requirements:
+    _permission: 'administer users'
+
 user_role_list:
   pattern: '/admin/people/roles'
   defaults:
@@ -116,3 +124,11 @@ user_edit:
     _entity_form: 'user.default'
   requirements:
     _entity_access: 'user.update'
+
+user_cancel_confirm:
+  pattern: '/user/{user}/cancel'
+  defaults:
+    _title: 'Cancel account'
+    _entity_form: 'user.cancel'
+  requirements:
+    _entity_access: 'user.delete'

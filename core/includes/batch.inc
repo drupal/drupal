@@ -355,10 +355,10 @@ function _batch_next_set() {
   if (isset($batch['sets'][$batch['current_set'] + 1])) {
     $batch['current_set']++;
     $current_set = &_batch_current_set();
-    if (isset($current_set['form_submit']) && ($function = $current_set['form_submit']) && function_exists($function)) {
+    if (isset($current_set['form_submit']) && ($function = $current_set['form_submit']) && is_callable($function)) {
       // We use our stored copies of $form and $form_state to account for
       // possible alterations by previous form submit handlers.
-      $function($batch['form_state']['complete_form'], $batch['form_state']);
+      call_user_func_array($function, array($batch['form_state']['complete_form'], &$batch['form_state']));
     }
     return TRUE;
   }
