@@ -68,12 +68,12 @@ class DisplayFeedTest extends PluginTestBase {
     $this->assertEqual($options, array('default', 'page'), 'Make sure all displays appears as expected.');
 
     // Post and save this and check the output.
-    $this->drupalPost('admin/structure/views/nojs/display/test_feed_display/feed_1/displays', array('displays[page]' => 'page'), t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_feed_display/feed_1/displays', array('displays[page]' => 'page'), t('Apply'));
     $this->drupalGet('admin/structure/views/view/test_feed_display/edit/feed_1');
     $this->assertFieldByXpath('//*[@id="views-feed-1-displays"]', 'Page');
 
     // Add the default display, so there should now be multiple displays.
-    $this->drupalPost('admin/structure/views/nojs/display/test_feed_display/feed_1/displays', array('displays[default]' => 'default'), t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_feed_display/feed_1/displays', array('displays[default]' => 'default'), t('Apply'));
     $this->drupalGet('admin/structure/views/view/test_feed_display/edit/feed_1');
     $this->assertFieldByXpath('//*[@id="views-feed-1-displays"]', 'Multiple displays');
   }

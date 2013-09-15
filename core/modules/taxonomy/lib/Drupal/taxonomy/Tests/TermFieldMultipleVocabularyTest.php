@@ -7,8 +7,6 @@
 
 namespace Drupal\taxonomy\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests a taxonomy term reference field that allows multiple vocabularies.
  */
@@ -86,15 +84,14 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $term2 = $this->createTerm($this->vocabulary2);
 
     // Submit an entity with both terms.
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$this->field_name}[$langcode][]", '', 'Widget is displayed');
+    $this->assertFieldByName("{$this->field_name}[]", '', 'Widget is displayed');
     $edit = array(
       'user_id' => mt_rand(0, 10),
       'name' => $this->randomName(),
-      "{$this->field_name}[$langcode][]" => array($term1->id(), $term2->id()),
+      "{$this->field_name}[]" => array($term1->id(), $term2->id()),
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created.');
@@ -131,14 +128,14 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
 
     // The widget should still be displayed.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$this->field_name}[$langcode][]", '', 'Widget is still displayed');
+    $this->assertFieldByName("{$this->field_name}[]", '', 'Widget is still displayed');
 
     // Term 1 should still pass validation.
     $edit = array(
       'user_id' => mt_rand(0, 10),
       'name' => $this->randomName(),
-      "{$this->field_name}[$langcode][]" => array($term1->id()),
+      "{$this->field_name}[]" => array($term1->id()),
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
   }
 }

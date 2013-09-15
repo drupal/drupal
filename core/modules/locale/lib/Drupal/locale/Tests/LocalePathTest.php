@@ -60,11 +60,11 @@ class LocalePathTest extends WebTestBase {
       'name' => $name,
       'direction' => '0',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 
     // Set path prefix.
     $edit = array( "prefix[$langcode]" => $prefix );
-    $this->drupalPost('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
 
     // Check that the "xx" front page is readily available because path prefix
     // negotiation is pre-configured.
@@ -82,7 +82,7 @@ class LocalePathTest extends WebTestBase {
       'alias'    => $english_path,
       'langcode' => 'en',
     );
-    $this->drupalPost($path, $edit, t('Save'));
+    $this->drupalPostForm($path, $edit, t('Save'));
 
     // Create a path alias in new custom language.
     $custom_language_path = $this->randomName(8);
@@ -91,7 +91,7 @@ class LocalePathTest extends WebTestBase {
       'alias'    => $custom_language_path,
       'langcode' => $langcode,
     );
-    $this->drupalPost($path, $edit, t('Save'));
+    $this->drupalPostForm($path, $edit, t('Save'));
 
     // Confirm English language path alias works.
     $this->drupalGet($english_path);

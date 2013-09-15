@@ -7,8 +7,6 @@
 
 namespace Drupal\search\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Test config page.
  */
@@ -44,10 +42,9 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     $this->search_node = $node;
     // Link the node to itself to test that it's only indexed once. The content
     // also needs the word "pizza" so we can use it as the search keyword.
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $body_key = "body[$langcode][0][value]";
+    $body_key = 'body[0][value]';
     $edit[$body_key] = l($node->label(), 'node/' . $node->id()) . ' pizza sandwich';
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
 
     $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
     search_update_totals();
@@ -66,22 +63,22 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     $this->assertText(t('There are @count items left to index.', array('@count' => 0)));
 
     // Test the re-index button.
-    $this->drupalPost('admin/config/search/settings', array(), t('Re-index site'));
+    $this->drupalPostForm('admin/config/search/settings', array(), t('Re-index site'));
     $this->assertText(t('Are you sure you want to re-index the site'));
-    $this->drupalPost('admin/config/search/settings/reindex', array(), t('Re-index site'));
+    $this->drupalPostForm('admin/config/search/settings/reindex', array(), t('Re-index site'));
     $this->assertText(t('The index will be rebuilt'));
     $this->drupalGet('admin/config/search/settings');
     $this->assertText(t('There is 1 item left to index.'));
 
     // Test that the form saves with the default values.
-    $this->drupalPost('admin/config/search/settings', array(), t('Save configuration'));
+    $this->drupalPostForm('admin/config/search/settings', array(), t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), 'Form saves with the default values.');
 
     // Test that the form does not save with an invalid word length.
     $edit = array(
       'minimum_word_size' => $this->randomName(3),
     );
-    $this->drupalPost('admin/config/search/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/search/settings', $edit, t('Save configuration'));
     $this->assertNoText(t('The configuration options have been saved.'), 'Form does not save with an invalid word length.');
   }
 
@@ -105,7 +102,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     // Enable search for the test plugin
     $edit['active_plugins[search_extra_type_search]'] = 'search_extra_type_search';
     $edit['default_plugin'] = 'search_extra_type_search';
-    $this->drupalPost('admin/config/search/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/search/settings', $edit, t('Save configuration'));
 
     // Ensure that the settings fieldset is visible after enabling search for
     // the test plugin
@@ -120,7 +117,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
       'extra_type_settings[boost]' => 'ii',
       'minimum_word_size' => 5,
     );
-    $this->drupalPost('admin/config/search/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/search/settings', $edit, t('Save configuration'));
 
     // Ensure that the modifications took effect.
     $this->assertText(t('The configuration options have been saved.'));
@@ -166,7 +163,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
         $edit['active_plugins[' . $other . ']'] = (($other == $plugin) ? $plugin : FALSE);
       }
       $edit['default_plugin'] = $plugin;
-      $this->drupalPost('admin/config/search/settings', $edit, t('Save configuration'));
+      $this->drupalPostForm('admin/config/search/settings', $edit, t('Save configuration'));
 
       // Run a search from the correct search URL.
       $this->drupalGet('search/' . $info['path'] . '/' . $info['keys']);
@@ -184,7 +181,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
       // Run a search from the search block on the node page. Verify you get
       // to this plugin's search results page.
       $terms = array('search_block_form' => $info['keys']);
-      $this->drupalPost('node', $terms, t('Search'));
+      $this->drupalPostForm('node', $terms, t('Search'));
       $this->assertEqual(
         $this->getURL(),
         url('search/' . $info['path'] . '/' . $info['keys'], array('absolute' => TRUE)),
@@ -206,7 +203,7 @@ class SearchConfigSettingsFormTest extends SearchTestBase {
     }
     $edit['default_plugin'] = 'node_search';
 
-    $this->drupalPost('admin/config/search/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/search/settings', $edit, t('Save configuration'));
 
     foreach (array('search/node/pizza', 'search/node') as $path) {
       $this->drupalGet($path);

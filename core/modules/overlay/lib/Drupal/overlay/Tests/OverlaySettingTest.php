@@ -38,7 +38,7 @@ class OverlaySettingTest extends WebTestBase {
 
     $this->drupalGet('user/' . $user->id() . '/edit');
     $this->assertFieldChecked('edit-overlay');
-    $this->drupalPost(NULL, array('overlay' => FALSE), t('Save'));
+    $this->drupalPostForm(NULL, array('overlay' => FALSE), t('Save'));
     $this->assertNoFieldChecked('edit-overlay');
     $this->assertFalse(\Drupal::service('user.data')->get('overlay', $user->id(), 'enabled'), 'Overlay disabled');
 

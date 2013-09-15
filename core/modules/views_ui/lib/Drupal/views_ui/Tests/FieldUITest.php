@@ -40,7 +40,7 @@ class FieldUITest extends UITestBase {
 
     // Hides the field and check whether the hidden label is appended.
     $edit_handler_url = 'admin/structure/views/nojs/config-item/test_view/default/field/name';
-    $this->drupalPost($edit_handler_url, array('options[exclude]' => TRUE), t('Apply'));
+    $this->drupalPostForm($edit_handler_url, array('options[exclude]' => TRUE), t('Apply'));
 
     $this->assertText('Views test: Name (Name) [' . t('hidden') . ']');
   }

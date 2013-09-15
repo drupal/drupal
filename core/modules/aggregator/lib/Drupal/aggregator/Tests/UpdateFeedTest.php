@@ -33,7 +33,7 @@ class UpdateFeedTest extends AggregatorTestBase {
       if (isset($feed->{$same_field}->value)) {
         $edit[$same_field] = $feed->{$same_field}->value;
       }
-      $this->drupalPost('admin/config/services/aggregator/edit/feed/' . $feed->id(), $edit, t('Save'));
+      $this->drupalPostForm('admin/config/services/aggregator/edit/feed/' . $feed->id(), $edit, t('Save'));
       $this->assertRaw(t('The feed %name has been updated.', array('%name' => $edit['title'])), format_string('The feed %name has been updated.', array('%name' => $edit['title'])));
 
       // Check feed data.

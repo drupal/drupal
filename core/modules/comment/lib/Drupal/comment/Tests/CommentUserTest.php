@@ -102,9 +102,8 @@ class CommentUserTest extends WebTestBase {
    *   array of values to set contact info.
    */
   function postComment(UserInterface $account, $comment, $subject = '', $contact = NULL) {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array();
-    $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
+    $edit['comment_body[0][value]'] = $comment;
 
     $instance = field_info_instance('user', 'comment', 'user');
     $preview_mode = $instance['settings']['preview'];
@@ -129,19 +128,19 @@ class CommentUserTest extends WebTestBase {
       case DRUPAL_REQUIRED:
         // Preview required so no save button should be found.
         $this->assertNoFieldByName('op', t('Save'), 'Save button not found.');
-        $this->drupalPost(NULL, $edit, t('Preview'));
+        $this->drupalPostForm(NULL, $edit, t('Preview'));
         // Don't break here so that we can test post-preview field presence and
         // function below.
       case DRUPAL_OPTIONAL:
         $this->assertFieldByName('op', t('Preview'), 'Preview button found.');
         $this->assertFieldByName('op', t('Save'), 'Save button found.');
-        $this->drupalPost(NULL, $edit, t('Save'));
+        $this->drupalPostForm(NULL, $edit, t('Save'));
         break;
 
       case DRUPAL_DISABLED:
         $this->assertNoFieldByName('op', t('Preview'), 'Preview button not found.');
         $this->assertFieldByName('op', t('Save'), 'Save button found.');
-        $this->drupalPost(NULL, $edit, t('Save'));
+        $this->drupalPostForm(NULL, $edit, t('Save'));
         break;
     }
     $match = array();
@@ -158,7 +157,7 @@ class CommentUserTest extends WebTestBase {
     }
 
     if (isset($match[1])) {
-      return comment_load($match[1]);
+      return entity_load('comment', $match[1]);
     }
   }
 
@@ -195,7 +194,7 @@ class CommentUserTest extends WebTestBase {
    *   Comment to delete.
    */
   function deleteComment(CommentInterface $comment) {
-    $this->drupalPost('comment/' . $comment->id() . '/delete', array(), t('Delete'));
+    $this->drupalPostForm('comment/' . $comment->id() . '/delete', array(), t('Delete'));
     $this->assertText(t('The comment and all its replies have been deleted.'), 'Comment deleted.');
   }
 
@@ -223,10 +222,10 @@ class CommentUserTest extends WebTestBase {
     $edit = array();
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id() . ']'] = TRUE;
-    $this->drupalPost('admin/content/comment' . ($approval ? '/approval' : ''), $edit, t('Update'));
+    $this->drupalPostForm('admin/content/comment' . ($approval ? '/approval' : ''), $edit, t('Update'));
 
     if ($operation == 'delete') {
-      $this->drupalPost(NULL, array(), t('Delete comments'));
+      $this->drupalPostForm(NULL, array(), t('Delete comments'));
       $this->assertRaw(format_plural(1, 'Deleted 1 comment.', 'Deleted @count comments.'), format_string('Operation "@operation" was performed on comment.', array('@operation' => $operation)));
     }
     else {
@@ -332,8 +331,7 @@ class CommentUserTest extends WebTestBase {
     $this->drupalGet('comment/reply/user/' . $this->web_user->id() . '/comment');
     $this->assertText('You are not authorized to post comments', 'Error attempting to post comment.');
     $this->assertNoFieldByName('subject', '', 'Subject field not found.');
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $this->assertNoFieldByName("comment_body[$langcode][0][value]", '', 'Comment field not found.');
+    $this->assertNoFieldByName("comment_body[0][value]", '', 'Comment field not found.');
 
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,
@@ -357,7 +355,7 @@ class CommentUserTest extends WebTestBase {
     $this->drupalGet('user/' . $this->web_user->id());
     $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
     $this->assertFieldByName('subject', '', 'Subject field found.');
-    $this->assertFieldByName("comment_body[$langcode][0][value]", '', 'Comment field found.');
+    $this->assertFieldByName("comment_body[0][value]", '', 'Comment field found.');
 
     $this->drupalGet('comment/reply/user/' . $this->web_user->id() . '/comment/' . $comment1->id());
     $this->assertText('You are not authorized to view comments');
@@ -374,7 +372,7 @@ class CommentUserTest extends WebTestBase {
     $this->assertFieldChecked('edit-default-value-input-comment-und-0-status-2');
     // Test hidden option change in field settings.
     $edit = array('default_value_input[comment][und][0][status]' => COMMENT_CLOSED);
-    $this->drupalPost(NULL, $edit, t('Save settings'));
+    $this->drupalPostForm(NULL, $edit, t('Save settings'));
     $this->drupalGet('admin/config/people/accounts/fields/user.user.comment');
     $this->assertNoFieldChecked('edit-default-value-input-comment-und-0-status-0');
     $this->assertFieldChecked('edit-default-value-input-comment-und-0-status-1');
@@ -396,7 +394,7 @@ class CommentUserTest extends WebTestBase {
 
     $this->drupalGet('comment/reply/user/comment/' . $limited_user->id());
     $this->assertNoFieldByName('subject', '', 'Subject field found.');
-    $this->assertNoFieldByName("comment_body[$langcode][0][value]", '', 'Comment field found.');
+    $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field found.');
   }
 
 }

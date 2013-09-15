@@ -24,8 +24,10 @@ class ViewDeleteFormController extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/structure/views';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'views_ui.list',
+    );
   }
 
   /**

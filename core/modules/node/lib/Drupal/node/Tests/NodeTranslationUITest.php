@@ -95,7 +95,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
         if (!empty($status_actions)) {
           $action = array_shift($status_actions);
         }
-        $this->drupalPost($path, array(), $action, array('language' => $languages[$langcode]));
+        $this->drupalPostForm($path, array(), $action, array('language' => $languages[$langcode]));
       }
       $entity = entity_load($this->entityType, $this->entityId, TRUE);
       foreach ($this->langcodes as $langcode) {
@@ -128,7 +128,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
         'date[date]' => format_date($values[$langcode]['created'], 'custom', 'Y-m-d'),
         'date[time]' => format_date($values[$langcode]['created'], 'custom', 'H:i:s'),
       );
-      $this->drupalPost($path, $edit, $this->getFormSubmitAction($entity), array('language' => $languages[$langcode]));
+      $this->drupalPostForm($path, $edit, $this->getFormSubmitAction($entity), array('language' => $languages[$langcode]));
     }
 
     $entity = entity_load($this->entityType, $this->entityId, TRUE);

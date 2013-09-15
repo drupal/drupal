@@ -7,8 +7,6 @@
 
 namespace Drupal\search\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Test integration searching comments.
  */
@@ -68,24 +66,24 @@ class SearchCommentTest extends SearchTestBase {
     $edit = array(
       'filters[filter_html_escape][status]' => TRUE,
     );
-    $this->drupalPost('admin/config/content/formats/manage/' . $basic_html_format_id, $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/manage/' . $basic_html_format_id, $edit, t('Save configuration'));
     // Allow anonymous users to search content.
     $edit = array(
       DRUPAL_ANONYMOUS_RID . '[search content]' => 1,
       DRUPAL_ANONYMOUS_RID . '[access comments]' => 1,
       DRUPAL_ANONYMOUS_RID . '[post comments]' => 1,
     );
-    $this->drupalPost('admin/people/permissions', $edit, t('Save permissions'));
+    $this->drupalPostForm('admin/people/permissions', $edit, t('Save permissions'));
 
     // Create a node.
     $node = $this->drupalCreateNode(array('type' => 'article'));
     // Post a comment using 'Full HTML' text format.
     $edit_comment = array();
     $edit_comment['subject'] = 'Test comment subject';
-    $edit_comment['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
+    $edit_comment['comment_body[0][value]'] = '<h1>' . $comment_body . '</h1>';
     $full_html_format_id = 'full_html';
-    $edit_comment['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][format]'] = $full_html_format_id;
-    $this->drupalPost('comment/reply/node/' . $node->id() .'/comment', $edit_comment, t('Save'));
+    $edit_comment['comment_body[0][format]'] = $full_html_format_id;
+    $this->drupalPostForm('comment/reply/node/' . $node->id() .'/comment', $edit_comment, t('Save'));
 
     // Invoke search index update.
     $this->drupalLogout();
@@ -95,7 +93,7 @@ class SearchCommentTest extends SearchTestBase {
     $edit = array(
       'search_block_form' => "'" . $edit_comment['subject'] . "'",
     );
-    $this->drupalPost('', $edit, t('Search'));
+    $this->drupalPostForm('', $edit, t('Search'));
     $node2 = node_load($node->id(), TRUE);
     $this->assertText($node2->label(), 'Node found in search results.');
     $this->assertText($edit_comment['subject'], 'Comment subject found in search results.');
@@ -104,13 +102,13 @@ class SearchCommentTest extends SearchTestBase {
     $edit = array(
       'search_block_form' => "'" . $comment_body . "'",
     );
-    $this->drupalPost('', $edit, t('Search'));
+    $this->drupalPostForm('', $edit, t('Search'));
     $this->assertText($node2->label(), 'Node found in search results.');
 
     // Verify that comment is rendered using proper format.
     $this->assertText($comment_body, 'Comment body text found in search results.');
     $this->assertNoRaw(t('n/a'), 'HTML in comment body is not hidden.');
-    $this->assertNoRaw(check_plain($edit_comment['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]']), 'HTML in comment body is not escaped.');
+    $this->assertNoRaw(check_plain($edit_comment['comment_body[0][value]']), 'HTML in comment body is not escaped.');
 
     // Hide comments.
     $this->drupalLogin($this->admin_user);
@@ -122,7 +120,7 @@ class SearchCommentTest extends SearchTestBase {
     $this->cronRun();
 
     // Search for $title.
-    $this->drupalPost('', $edit, t('Search'));
+    $this->drupalPostForm('', $edit, t('Search'));
     $this->assertNoText($comment_body, 'Comment body text not found in search results.');
   }
 
@@ -145,8 +143,8 @@ class SearchCommentTest extends SearchTestBase {
     // Post a comment using 'Full HTML' text format.
     $edit_comment = array();
     $edit_comment['subject'] = $this->comment_subject;
-    $edit_comment['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = '<h1>' . $comment_body . '</h1>';
-    $this->drupalPost('comment/reply/node/' . $this->node->id() . '/comment', $edit_comment, t('Save'));
+    $edit_comment['comment_body[0][value]'] = '<h1>' . $comment_body . '</h1>';
+    $this->drupalPostForm('comment/reply/node/' . $this->node->id() . '/comment', $edit_comment, t('Save'));
 
     $this->drupalLogout();
     $this->setRolePermissions(DRUPAL_ANONYMOUS_RID);
@@ -210,7 +208,7 @@ class SearchCommentTest extends SearchTestBase {
     $edit = array(
       'search_block_form' => "'" . $this->comment_subject . "'",
     );
-    $this->drupalPost('', $edit, t('Search'));
+    $this->drupalPostForm('', $edit, t('Search'));
 
     if ($assume_access) {
       $expected_node_result = $this->assertText($this->node->label());
@@ -249,12 +247,12 @@ class SearchCommentTest extends SearchTestBase {
 
     // Search for 'comment'. Should be no results.
     $this->drupalLogin($user);
-    $this->drupalPost('search/node', array('keys' => 'comment'), t('Search'));
+    $this->drupalPostForm('search/node', array('keys' => 'comment'), t('Search'));
     $this->assertText(t('Your search yielded no results'), 'No results searching for the word comment');
 
     // Search for the node title. Should be found, and 'Add new comment' should
     // not be part of the search snippet.
-    $this->drupalPost('search/node', array('keys' => 'short'), t('Search'));
+    $this->drupalPostForm('search/node', array('keys' => 'short'), t('Search'));
     $this->assertText($node->label(), 'Search for keyword worked');
     $this->assertNoText(t('Add new comment'), 'Add new comment does not appear on search results page');
   }

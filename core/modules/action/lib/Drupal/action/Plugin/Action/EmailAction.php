@@ -105,7 +105,7 @@ class EmailAction extends ConfigurableActionBase implements ContainerFactoryPlug
   /**
    * {@inheritdoc}
    */
-  protected function getDefaultConfiguration() {
+  public function defaultConfiguration() {
     return array(
       'recipient' => '',
       'subject' => '',

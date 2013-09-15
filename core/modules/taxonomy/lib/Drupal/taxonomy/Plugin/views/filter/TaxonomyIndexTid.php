@@ -127,7 +127,8 @@ class TaxonomyIndexTid extends ManyToOne {
       );
 
       if ($this->options['limit']) {
-        $form['value']['#autocomplete_path'] = 'admin/views/ajax/autocomplete/taxonomy/' . $vocabulary->id();
+        $form['value']['#autocomplete_route_name'] = 'taxonomy_autocomplete_vid';
+        $form['value']['#autocomplete_route_parameters'] = array('taxonomy_vocabulary' => $vocabulary->id());
       }
     }
     else {

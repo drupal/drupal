@@ -25,8 +25,10 @@ class CustomBlockDeleteForm extends EntityNGConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/structure/block';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'block_admin_display',
+    );
   }
 
   /**

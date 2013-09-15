@@ -32,8 +32,7 @@ class NegotiationBrowserDeleteForm extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/config/regional/language/detection/browser';
+  public function getCancelRoute() {
   }
 
   /**
@@ -49,7 +48,11 @@ class NegotiationBrowserDeleteForm extends ConfirmFormBase {
   public function buildForm(array $form, array &$form_state, $browser_langcode = NULL) {
     $this->browserLangcode = $browser_langcode;
 
-    return parent::buildForm($form, $form_state);
+    $form = parent::buildForm($form, $form_state);
+
+    // @todo Convert to getCancelRoute() after http://drupal.org/node/2082071.
+    $form['actions']['cancel']['#href'] = 'admin/config/regional/language/detection/browser';
+    return $form;
   }
 
   /**

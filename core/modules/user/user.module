@@ -116,6 +116,17 @@ function user_theme() {
 function user_page_build(&$page) {
   $path = drupal_get_path('module', 'user');
   $page['#attached']['css'][$path . '/css/user.module.css'] = array('every_page' => TRUE);
+
+  // Provide the user ID in drupalSettings to allow JavaScript code to customize
+  // the experience for the end user, rather than the server side, which would
+  // break the render cache.
+  global $user;
+  $page['#attached']['js'][] = array(
+    'type' => 'setting',
+    'data' => array('user' => array(
+      'uid' => $user->id(),
+    )),
+  );
 }
 
 /**
@@ -813,14 +824,6 @@ function user_menu() {
     'route_name' => 'user_admin_create',
     'type' => MENU_LOCAL_ACTION,
   );
-  $items['admin/people/cancel'] = array(
-    'title' => 'Cancel user',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_multiple_cancel_confirm'),
-    'access arguments' => array('administer users'),
-    'file' => 'user.admin.inc',
-    'type' => MENU_CALLBACK,
-  );
 
   // Administration pages.
   $items['admin/config/people'] = array(
@@ -856,12 +859,7 @@ function user_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['user/%user/cancel'] = array(
-    'title' => 'Cancel account',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_cancel_confirm_form', 1),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'delete'),
-    'file' => 'user.pages.inc',
+    'route_name' => 'user_cancel_confirm',
   );
   $items['user/%user/cancel/confirm/%/%'] = array(
     'title' => 'Confirm account cancellation',
@@ -1294,6 +1292,62 @@ function _user_cancel_session_regenerate() {
 }
 
 /**
+ * Helper function to return available account cancellation methods.
+ *
+ * See documentation of hook_user_cancel_methods_alter().
+ *
+ * @return array
+ *   An array containing all account cancellation methods as form elements.
+ *
+ * @see hook_user_cancel_methods_alter()
+ * @see user_admin_settings()
+ */
+function user_cancel_methods() {
+  $user_settings = Drupal::config('user.settings');
+  $anonymous_name = $user_settings->get('anonymous');
+  $methods = array(
+    'user_cancel_block' => array(
+      'title' => t('Disable the account and keep its content.'),
+      'description' => t('Your account will be blocked and you will no longer be able to log in. All of your content will remain attributed to your user name.'),
+    ),
+    'user_cancel_block_unpublish' => array(
+      'title' => t('Disable the account and unpublish its content.'),
+      'description' => t('Your account will be blocked and you will no longer be able to log in. All of your content will be hidden from everyone but administrators.'),
+    ),
+    'user_cancel_reassign' => array(
+      'title' => t('Delete the account and make its content belong to the %anonymous-name user.', array('%anonymous-name' => $anonymous_name)),
+      'description' => t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', array('%anonymous-name' => $anonymous_name)),
+    ),
+    'user_cancel_delete' => array(
+      'title' => t('Delete the account and its content.'),
+      'description' => t('Your account will be removed and all account information deleted. All of your content will also be deleted.'),
+      'access' => Drupal::request()->attributes->get('_account')->hasPermission('administer users'),
+    ),
+  );
+  // Allow modules to customize account cancellation methods.
+  Drupal::moduleHandler()->alter('user_cancel_methods', $methods);
+
+  // Turn all methods into real form elements.
+  $form = array(
+    '#options' => array(),
+    '#default_value' => $user_settings->get('cancel_method'),
+  );
+  foreach ($methods as $name => $method) {
+    $form['#options'][$name] = $method['title'];
+    // Add the description for the confirmation form. This description is never
+    // shown for the cancel method option, only on the confirmation form.
+    // Therefore, we use a custom #confirm_description property.
+    if (isset($method['description'])) {
+      $form[$name]['#confirm_description'] = $method['description'];
+    }
+    if (isset($method['access'])) {
+      $form[$name]['#access'] = $method['access'];
+    }
+  }
+  return $form;
+}
+
+/**
  * Delete a user.
  *
  * @param $uid
@@ -1650,100 +1704,6 @@ function user_role_revoke_permissions($rid, array $permissions = array()) {
     $role->revokePermission($permission);
   }
   $role->save();
-}
-
-function user_multiple_cancel_confirm($form, &$form_state) {
-  // Retrieve the accounts to be canceled from the temp store.
-  $accounts = Drupal::service('user.tempstore')->get('user_user_operations_cancel')->get($GLOBALS['user']->id());
-  $form['accounts'] = array('#prefix' => '<ul>', '#suffix' => '</ul>', '#tree' => TRUE);
-  foreach ($accounts as $account) {
-    $uid = $account->id();
-    // Prevent user 1 from being canceled.
-    if ($uid <= 1) {
-      continue;
-    }
-    $form['accounts'][$uid] = array(
-      '#type' => 'hidden',
-      '#value' => $uid,
-      '#prefix' => '<li>',
-      '#suffix' => check_plain($account->getUsername()) . "</li>\n",
-    );
-  }
-
-  // Output a notice that user 1 cannot be canceled.
-  if (isset($accounts[1])) {
-    $redirect = (count($accounts) == 1);
-    $message = t('The user account %name cannot be cancelled.', array('%name' => $accounts[1]->name->value));
-    drupal_set_message($message, $redirect ? 'error' : 'warning');
-    // If only user 1 was selected, redirect to the overview.
-    if ($redirect) {
-      return new RedirectResponse(url('admin/people', array('absolute' => TRUE)));
-    }
-  }
-
-  $form['operation'] = array('#type' => 'hidden', '#value' => 'cancel');
-
-  form_load_include($form_state, 'inc', 'user', 'user.pages');
-  $form['user_cancel_method'] = array(
-    '#type' => 'radios',
-    '#title' => t('When cancelling these accounts'),
-  );
-  $form['user_cancel_method'] += user_cancel_methods();
-
-  // Allow to send the account cancellation confirmation mail.
-  $form['user_cancel_confirm'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Require e-mail confirmation to cancel account.'),
-    '#default_value' => FALSE,
-    '#description' => t('When enabled, the user must confirm the account cancellation via e-mail.'),
-  );
-  // Also allow to send account canceled notification mail, if enabled.
-  $form['user_cancel_notify'] = array(
-    '#type' => 'checkbox',
-    '#title' => t('Notify user when account is canceled.'),
-    '#default_value' => FALSE,
-    '#access' => Drupal::config('user.settings')->get('notify.status_canceled'),
-    '#description' => t('When enabled, the user will receive an e-mail notification after the account has been cancelled.'),
-  );
-
-  return confirm_form($form,
-                      t('Are you sure you want to cancel these user accounts?'),
-                      'admin/people', t('This action cannot be undone.'),
-                      t('Cancel accounts'), t('Cancel'));
-}
-
-/**
- * Submit handler for mass-account cancellation form.
- *
- * @see user_multiple_cancel_confirm()
- * @see user_cancel_confirm_form_submit()
- */
-function user_multiple_cancel_confirm_submit($form, &$form_state) {
-  global $user;
-
-  // Clear out the accounts from the temp store.
-  Drupal::service('user.tempstore')->get('user_user_operations_cancel')->delete($user->id());
-  if ($form_state['values']['confirm']) {
-    foreach ($form_state['values']['accounts'] as $uid => $value) {
-      // Prevent programmatic form submissions from cancelling user 1.
-      if ($uid <= 1) {
-        continue;
-      }
-      // Prevent user administrators from deleting themselves without confirmation.
-      if ($uid == $user->id()) {
-        $admin_form_state = $form_state;
-        unset($admin_form_state['values']['user_cancel_confirm']);
-        // The $user global is not a complete user entity, so load the full
-        // entity.
-        $admin_form_state['values']['_account'] = user_load($user->id());
-        user_cancel_confirm_form_submit(array(), $admin_form_state);
-      }
-      else {
-        user_cancel($form_state['values'], $uid, $form_state['values']['user_cancel_method']);
-      }
-    }
-  }
-  $form_state['redirect'] = 'admin/people';
 }
 
 /**

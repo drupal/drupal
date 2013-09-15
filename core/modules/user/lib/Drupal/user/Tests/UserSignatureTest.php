@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -96,18 +95,17 @@ class UserSignatureTest extends WebTestBase {
     $edit = array(
       'signature[value]' => $signature_text,
     );
-    $this->drupalPost('user/' . $this->web_user->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('user/' . $this->web_user->id() . '/edit', $edit, t('Save'));
 
     // Verify that values were stored.
     $this->assertFieldByName('signature[value]', $edit['signature[value]'], 'Submitted signature text found.');
 
     // Create a comment.
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array();
     $edit['subject'] = $this->randomName(8);
-    $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
-    $this->drupalPost('comment/reply/node/' . $node->id() .'/comment', $edit, t('Preview'));
-    $this->drupalPost(NULL, array(), t('Save'));
+    $edit['comment_body[0][value]'] = $this->randomName(16);
+    $this->drupalPostForm('comment/reply/node/' . $node->id() .'/comment', $edit, t('Preview'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
 
     // Get the comment ID. (This technique is the same one used in the Comment
     // module's CommentTestBase test case.)
@@ -117,8 +115,8 @@ class UserSignatureTest extends WebTestBase {
     // Log in as an administrator and edit the comment to use Full HTML, so
     // that the comment text itself is not filtered at all.
     $this->drupalLogin($this->admin_user);
-    $edit['comment_body[' . $langcode . '][0][format]'] = $this->full_html_format->format;
-    $this->drupalPost('comment/' . $comment_id . '/edit', $edit, t('Save'));
+    $edit['comment_body[0][format]'] = $this->full_html_format->format;
+    $this->drupalPostForm('comment/' . $comment_id . '/edit', $edit, t('Save'));
 
     // Assert that the signature did not make it through unfiltered.
     $this->drupalGet('node/' . $node->id());

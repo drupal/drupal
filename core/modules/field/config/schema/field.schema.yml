@@ -95,7 +95,7 @@ field.instance.*.*.*:
       type: field.[%parent.field_type].value
     default_value_function:
       type: string
-      label: 'Default value funtion'
+      label: 'Default value function'
     settings:
       type: field.[%parent.field_type].instance_settings
     field_type:

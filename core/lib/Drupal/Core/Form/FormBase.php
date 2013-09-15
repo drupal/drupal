@@ -60,7 +60,7 @@ abstract class FormBase extends DependencySerialization implements FormInterface
    * See the t() documentation for details.
    */
   protected function t($string, array $args = array(), array $options = array()) {
-    return $this->getTranslationManager()->translate($string, $args, $options);
+    return $this->translationManager()->translate($string, $args, $options);
   }
 
   /**
@@ -73,7 +73,7 @@ abstract class FormBase extends DependencySerialization implements FormInterface
    *   The generated URL for the given route.
    */
   public function url($route_name, $route_parameters = array(), $options = array()) {
-    return $this->getUrlGenerator()->generateFromRoute($route_name, $route_parameters, $options);
+    return $this->urlGenerator()->generateFromRoute($route_name, $route_parameters, $options);
   }
 
   /**
@@ -82,9 +82,9 @@ abstract class FormBase extends DependencySerialization implements FormInterface
    * @return \Drupal\Core\StringTranslation\TranslationInterface
    *   The translation manager.
    */
-  protected function getTranslationManager() {
+  protected function translationManager() {
     if (!$this->translationManager) {
-      $this->translationManager = \Drupal::translation();
+      $this->translationManager = $this->container()->get('string_translation');
     }
     return $this->translationManager;
   }
@@ -111,7 +111,7 @@ abstract class FormBase extends DependencySerialization implements FormInterface
    */
   protected function getRequest() {
     if (!$this->request) {
-      $this->request = \Drupal::request();
+      $this->request = $this->container()->get('request');
     }
     return $this->request;
   }
@@ -132,7 +132,7 @@ abstract class FormBase extends DependencySerialization implements FormInterface
    * @return \Drupal\Core\Session\AccountInterface
    *   The current user.
    */
-  protected function getCurrentUser() {
+  protected function currentUser() {
     return $this->getRequest()->attributes->get('_account');
   }
 
@@ -142,7 +142,7 @@ abstract class FormBase extends DependencySerialization implements FormInterface
    * @return \Drupal\Core\Routing\UrlGeneratorInterface
    *   The URL generator.
    */
-  protected function getUrlGenerator() {
+  protected function urlGenerator() {
     if (!$this->urlGenerator) {
       $this->urlGenerator = \Drupal::urlGenerator();
     }
@@ -157,6 +157,16 @@ abstract class FormBase extends DependencySerialization implements FormInterface
    */
   public function setUrlGenerator(UrlGeneratorInterface $url_generator) {
     $this->urlGenerator = $url_generator;
+  }
+
+  /**
+   * Returns the service container.
+   *
+   * @return \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The service container.
+   */
+  protected function container() {
+    return \Drupal::getContainer();
   }
 
 }

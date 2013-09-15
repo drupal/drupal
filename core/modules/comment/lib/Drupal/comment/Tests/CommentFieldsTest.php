@@ -84,19 +84,19 @@ class CommentFieldsTest extends CommentTestBase {
     // Disable the comment module.
     $edit = array();
     $edit['modules[Core][comment][enable]'] = FALSE;
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $this->rebuildContainer();
     $this->assertFalse($this->container->get('module_handler')->moduleExists('comment'), 'Comment module disabled.');
 
     // Enable core content type module (book).
     $edit = array();
     $edit['modules[Core][book][enable]'] = 'book';
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
 
     // Now enable the comment module.
     $edit = array();
     $edit['modules[Core][comment][enable]'] = 'comment';
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $this->rebuildContainer();
     $this->assertTrue($this->container->get('module_handler')->moduleExists('comment'), 'Comment module enabled.');
 
@@ -121,11 +121,11 @@ class CommentFieldsTest extends CommentTestBase {
     // Disable text processing for comments.
     $this->drupalLogin($this->admin_user);
     $edit = array('instance[settings][text_processing]' => 0);
-    $this->drupalPost('admin/structure/comments/manage/comment/fields/comment.node__comment.comment_body', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/structure/comments/manage/comment/fields/comment.node__comment.comment_body', $edit, t('Save settings'));
 
     // Post a comment without an explicit subject.
     $this->drupalLogin($this->web_user);
-    $edit = array('comment_body[und][0][value]' => $this->randomName(8));
-    $this->drupalPost('node/' . $this->node->id(), $edit, t('Save'));
+    $edit = array('comment_body[0][value]' => $this->randomName(8));
+    $this->drupalPostForm('node/' . $this->node->id(), $edit, t('Save'));
   }
 }

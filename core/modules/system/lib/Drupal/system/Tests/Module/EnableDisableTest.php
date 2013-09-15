@@ -94,11 +94,11 @@ class EnableDisableTest extends ModuleTestBase {
         $edit = array();
         $package = $module->info['package'];
         $edit['modules[' . $package . '][' . $name . '][enable]'] = $name;
-        $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+        $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
         // Handle the case where modules were installed along with this one and
         // where we therefore hit a confirmation screen.
         if (count($modules_to_enable) > 1) {
-          $this->drupalPost(NULL, array(), t('Continue'));
+          $this->drupalPostForm(NULL, array(), t('Continue'));
         }
         $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
 
@@ -168,7 +168,7 @@ class EnableDisableTest extends ModuleTestBase {
     foreach ($modules as $name => $module) {
       $edit['modules[' . $module->info['package'] . '][' . $name . '][enable]'] = $name;
     }
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
   }
 
@@ -185,7 +185,7 @@ class EnableDisableTest extends ModuleTestBase {
     // Disable the module.
     $edit = array();
     $edit['modules[' . $package . '][' . $module . '][enable]'] = FALSE;
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
     $this->assertModules(array($module), FALSE);
 
@@ -204,8 +204,8 @@ class EnableDisableTest extends ModuleTestBase {
     // Uninstall the module.
     $edit = array();
     $edit['uninstall[' . $module . ']'] = $module;
-    $this->drupalPost('admin/modules/uninstall', $edit, t('Uninstall'));
-    $this->drupalPost(NULL, NULL, t('Uninstall'));
+    $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
+    $this->drupalPostForm(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
     $this->assertModules(array($module), FALSE);
 

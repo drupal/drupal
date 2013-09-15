@@ -84,7 +84,7 @@ class UserAdminTest extends WebTestBase {
     $edit = array();
     $edit['action'] = 'user_block_user_action';
     $edit['user_bulk_form[1]'] = TRUE;
-    $this->drupalPost('admin/people', $edit, t('Apply'));
+    $this->drupalPostForm('admin/people', $edit, t('Apply'));
     $account = user_load($user_c->id(), TRUE);
     $this->assertTrue($account->isBlocked(), 'User C blocked');
 
@@ -98,7 +98,7 @@ class UserAdminTest extends WebTestBase {
     $editunblock = array();
     $editunblock['action'] = 'user_unblock_user_action';
     $editunblock['user_bulk_form[1]'] = TRUE;
-    $this->drupalPost('admin/people', $editunblock, t('Apply'));
+    $this->drupalPostForm('admin/people', $editunblock, t('Apply'));
     $account = user_load($user_c->id(), TRUE);
     $this->assertTrue($account->isActive(), 'User C unblocked');
     $this->assertMail("to", $account->getEmail(), "Activation mail sent to user C");
@@ -106,10 +106,10 @@ class UserAdminTest extends WebTestBase {
     // Test blocking and unblocking another user from /user/[uid]/edit form and sending of activation mail
     $user_d = $this->drupalCreateUser(array());
     $account1 = user_load($user_d->id(), TRUE);
-    $this->drupalPost('user/' . $account1->id() . '/edit', array('status' => 0), t('Save'));
+    $this->drupalPostForm('user/' . $account1->id() . '/edit', array('status' => 0), t('Save'));
     $account1 = user_load($user_d->id(), TRUE);
     $this->assertTrue($account1->isBlocked(), 'User D blocked');
-    $this->drupalPost('user/' . $account1->id() . '/edit', array('status' => TRUE), t('Save'));
+    $this->drupalPostForm('user/' . $account1->id() . '/edit', array('status' => TRUE), t('Save'));
     $account1 = user_load($user_d->id(), TRUE);
     $this->assertTrue($account1->isActive(), 'User D unblocked');
     $this->assertMail("to", $account1->getEmail(), "Activation mail sent to user D");
@@ -145,7 +145,7 @@ class UserAdminTest extends WebTestBase {
     $edit = array();
     $edit['name'] = $name = $this->randomName();
     $edit['mail'] = $mail = $edit['name'] . '@example.com';
-    $this->drupalPost('user/register', $edit, t('Create new account'));
+    $this->drupalPostForm('user/register', $edit, t('Create new account'));
     $subject = 'Account details for ' . $edit['name'] . ' at ' . $system->get('name') . ' (pending admin approval)';
     // Ensure that admin notification mail is sent to the configured
     // Notification E-mail address.

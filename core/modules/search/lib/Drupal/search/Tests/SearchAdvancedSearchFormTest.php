@@ -58,14 +58,14 @@ class SearchAdvancedSearchFormTest extends SearchTestBase {
 
     // Search for the title of the node with a POST query.
     $edit = array('or' => $this->node->label());
-    $this->drupalPost('search/node', $edit, t('Advanced search'));
+    $this->drupalPostForm('search/node', $edit, t('Advanced search'));
     $this->assertText($this->node->label(), 'Basic page node is found with POST query.');
 
     // Advanced search type option.
-    $this->drupalPost('search/node', array_merge($edit, array('type[page]' => 'page')), t('Advanced search'));
+    $this->drupalPostForm('search/node', array_merge($edit, array('type[page]' => 'page')), t('Advanced search'));
     $this->assertText($this->node->label(), 'Basic page node is found with POST query and type:page.');
 
-    $this->drupalPost('search/node', array_merge($edit, array('type[article]' => 'article')), t('Advanced search'));
+    $this->drupalPostForm('search/node', array_merge($edit, array('type[article]' => 'article')), t('Advanced search'));
     $this->assertText('bike shed', 'Article node is not found with POST query and type:article.');
   }
 }

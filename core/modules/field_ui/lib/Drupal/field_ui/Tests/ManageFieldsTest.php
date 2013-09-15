@@ -132,14 +132,14 @@ class ManageFieldsTest extends FieldUiTestBase {
     $edit = array(
       'field[settings][test_field_setting]' => $string,
     );
-    $this->drupalPost(NULL, $edit, t('Save field settings'));
+    $this->drupalPostForm(NULL, $edit, t('Save field settings'));
 
     // Go to the field instance edit page.
     $this->drupalGet('admin/structure/types/manage/' . $this->type . '/fields/' . $instance_id);
     $edit = array(
       'instance[settings][test_instance_setting]' => $string,
     );
-    $this->drupalPost(NULL, $edit, t('Save settings'));
+    $this->drupalPostForm(NULL, $edit, t('Save settings'));
 
     // Assert the field settings are correct.
     $this->assertFieldSettings($this->type, $this->field_name, $string);
@@ -183,7 +183,7 @@ class ManageFieldsTest extends FieldUiTestBase {
       'field[cardinality]' => 'number',
       'field[cardinality_number]' => '',
     );
-    $this->drupalPost($field_edit_path, $edit, t('Save field settings'));
+    $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Number of values is required.');
 
     // Submit a custom number.
@@ -191,7 +191,7 @@ class ManageFieldsTest extends FieldUiTestBase {
       'field[cardinality]' => 'number',
       'field[cardinality_number]' => 6,
     );
-    $this->drupalPost($field_edit_path, $edit, t('Save field settings'));
+    $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
     $this->assertFieldByXPath("//select[@name='field[cardinality]']", 'number');
@@ -201,7 +201,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $edit = array(
       'field[cardinality]' => FIELD_CARDINALITY_UNLIMITED,
     );
-    $this->drupalPost($field_edit_path, $edit, t('Save field settings'));
+    $this->drupalPostForm($field_edit_path, $edit, t('Save field settings'));
     $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
     $this->assertFieldByXPath("//select[@name='field[cardinality]']", FIELD_CARDINALITY_UNLIMITED);
@@ -249,7 +249,7 @@ class ManageFieldsTest extends FieldUiTestBase {
       'fields[_add_new_field][label]' => $field_exceed_max_length_label,
       'fields[_add_new_field][field_name]' => $field_exceed_max_length_input,
     );
-    $this->drupalPost('admin/structure/types/manage/' . $this->type . '/fields', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/types/manage/' . $this->type . '/fields', $edit, t('Save'));
     $this->assertText('New field name cannot be longer than 22 characters but is currently 23 characters long.');
 
     // Create a valid field.
@@ -284,21 +284,20 @@ class ManageFieldsTest extends FieldUiTestBase {
       ->setComponent($field_name)
       ->save();
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $admin_path = 'admin/structure/types/manage/' . $this->type . '/fields/' . $instance->id();
-    $element_id = "edit-default-value-input-$field_name-$langcode-0-value";
-    $element_name = "default_value_input[{$field_name}][$langcode][0][value]";
+    $element_id = "edit-default-value-input-$field_name-0-value";
+    $element_name = "default_value_input[{$field_name}][0][value]";
     $this->drupalGet($admin_path);
     $this->assertFieldById($element_id, '', 'The default value widget was empty.');
 
     // Check that invalid default values are rejected.
     $edit = array($element_name => '-1');
-    $this->drupalPost($admin_path, $edit, t('Save settings'));
+    $this->drupalPostForm($admin_path, $edit, t('Save settings'));
     $this->assertText("$field_name does not accept the value -1", 'Form vaildation failed.');
 
     // Check that the default value is saved.
     $edit = array($element_name => '1');
-    $this->drupalPost($admin_path, $edit, t('Save settings'));
+    $this->drupalPostForm($admin_path, $edit, t('Save settings'));
     $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
     field_info_cache_clear();
     $instance = field_info_instance('node', $field_name, $this->type);
@@ -310,7 +309,7 @@ class ManageFieldsTest extends FieldUiTestBase {
 
     // Check that the default value can be emptied.
     $edit = array($element_name => '');
-    $this->drupalPost(NULL, $edit, t('Save settings'));
+    $this->drupalPostForm(NULL, $edit, t('Save settings'));
     $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
     field_info_cache_clear();
     $instance = field_info_instance('node', $field_name, $this->type);
@@ -454,7 +453,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $options = array(
       'type' => $type2,
     );
-    $this->drupalPost('admin/structure/types/manage/' . $this->type, $options, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/' . $this->type, $options, t('Save content type'));
     $this->manageFieldsPage($type2);
   }
 
@@ -470,7 +469,7 @@ class ManageFieldsTest extends FieldUiTestBase {
       'fields[_add_new_field][type]' => 'taxonomy_term_reference',
     );
     $url = 'admin/structure/types/manage/' . $this->type . '/fields';
-    $this->drupalPost($url, $edit, t('Save'));
+    $this->drupalPostForm($url, $edit, t('Save'));
 
     $this->assertText(t('The machine-readable name is already in use. It must be unique.'));
     $this->assertUrl($url, array(), 'Stayed on the same page.');
@@ -522,12 +521,12 @@ class ManageFieldsTest extends FieldUiTestBase {
     $edit = array(
       'instance[description]' => '<strong>Test with an upload field.',
     );
-    $this->drupalPost('admin/structure/types/manage/article/fields/node.article.field_image', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_image', $edit, t('Save settings'));
 
     $edit = array(
       'instance[description]' => '<em>Test with a non upload field.',
     );
-    $this->drupalPost('admin/structure/types/manage/article/fields/node.article.field_tags', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_tags', $edit, t('Save settings'));
 
     $this->drupalGet('node/add/article');
     $this->assertRaw('<strong>Test with an upload field.</strong>');

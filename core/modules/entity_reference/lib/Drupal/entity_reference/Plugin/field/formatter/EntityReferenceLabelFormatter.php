@@ -56,17 +56,18 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
-    // Remove un-accessible items.
-    parent::viewElements($entity, $langcode, $items);
-
     $elements = array();
 
     foreach ($items as $delta => $item) {
-      if ($entity = $item->entity) {
-        $label = $entity->label();
+      if (!$item->access) {
+        // User doesn't have access to the referenced entity.
+        continue;
+      }
+      if ($referenced_entity = $item->entity) {
+        $label = $referenced_entity->label();
         // If the link is to be displayed and the entity has a uri,
         // display a link.
-        if ($this->getSetting('link') && $uri = $entity->uri()) {
+        if ($this->getSetting('link') && $uri = $referenced_entity->uri()) {
           $elements[$delta] = array(
             '#type' => 'link',
             '#title' => $label,

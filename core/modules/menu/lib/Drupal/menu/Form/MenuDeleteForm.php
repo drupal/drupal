@@ -64,8 +64,13 @@ class MenuDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/structure/menu/manage/' . $this->entity->id();
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'menu_menu_edit',
+      'route_parameters' => array(
+        'menu' => $this->entity->id(),
+      ),
+    );
   }
 
   /**

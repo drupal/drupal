@@ -219,7 +219,7 @@ class EntityListController implements EntityListControllerInterface, EntityContr
    * See the t() documentation for details.
    */
   protected function t($string, array $args = array(), array $options = array()) {
-    return $this->getTranslationManager()->translate($string, $args, $options);
+    return $this->translationManager()->translate($string, $args, $options);
   }
 
   /**
@@ -228,7 +228,7 @@ class EntityListController implements EntityListControllerInterface, EntityContr
    * @return \Drupal\Core\StringTranslation\TranslationInterface
    *   The translation manager.
    */
-  protected function getTranslationManager() {
+  protected function translationManager() {
     if (!$this->translationManager) {
       $this->translationManager = \Drupal::translation();
     }

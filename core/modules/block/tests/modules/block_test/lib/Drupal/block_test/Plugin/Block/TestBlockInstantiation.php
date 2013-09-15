@@ -24,7 +24,7 @@ class TestBlockInstantiation extends BlockBase {
   /**
    * {@inheritdoc}
    */
-  public function settings() {
+  public function defaultConfiguration() {
     return array(
       'display_message' => 'no message set',
     );

@@ -7,7 +7,6 @@
 
 namespace Drupal\text\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -119,12 +118,10 @@ class TextFieldTest extends WebTestBase {
       ->setComponent($this->field_name)
       ->save();
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', 'Widget is displayed');
-    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][format]", '1', 'Format selector is not displayed');
+    $this->assertFieldByName("{$this->field_name}[0][value]", '', 'Widget is displayed');
+    $this->assertNoFieldByName("{$this->field_name}[0][format]", '1', 'Format selector is not displayed');
     $this->assertRaw(format_string('placeholder="A placeholder on !widget_type"', array('!widget_type' => $widget_type)));
 
     // Submit with some value.
@@ -132,9 +129,9 @@ class TextFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$this->field_name}[$langcode][0][value]" => $value,
+      "{$this->field_name}[0][value]" => $value,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
@@ -185,13 +182,11 @@ class TextFieldTest extends WebTestBase {
       ->setComponent($this->field_name)
       ->save();
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     // Disable all text formats besides the plain text fallback format.
     $this->drupalLogin($this->admin_user);
     foreach (filter_formats() as $format) {
       if (!$format->isFallbackFormat()) {
-        $this->drupalPost('admin/config/content/formats/manage/' . $format->format . '/disable', array(), t('Disable'));
+        $this->drupalPostForm('admin/config/content/formats/manage/' . $format->format . '/disable', array(), t('Disable'));
       }
     }
     $this->drupalLogin($this->web_user);
@@ -199,17 +194,17 @@ class TextFieldTest extends WebTestBase {
     // Display the creation form. Since the user only has access to one format,
     // no format selector will be displayed.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", '', 'Widget is displayed');
-    $this->assertNoFieldByName("{$this->field_name}[$langcode][0][format]", '', 'Format selector is not displayed');
+    $this->assertFieldByName("{$this->field_name}[0][value]", '', 'Widget is displayed');
+    $this->assertNoFieldByName("{$this->field_name}[0][format]", '', 'Format selector is not displayed');
 
     // Submit with data that should be filtered.
     $value = '<em>' . $this->randomName() . '</em>';
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$this->field_name}[$langcode][0][value]" => $value,
+      "{$this->field_name}[0][value]" => $value,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
@@ -229,7 +224,7 @@ class TextFieldTest extends WebTestBase {
       'format' => drupal_strtolower($this->randomName()),
       'name' => $this->randomName(),
     );
-    $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
     filter_formats_reset();
     $this->checkPermissions(array(), TRUE);
     $format = entity_load('filter_format', $edit['format']);
@@ -243,16 +238,16 @@ class TextFieldTest extends WebTestBase {
     // Display edition form.
     // We should now have a 'text format' selector.
     $this->drupalGet('entity_test/manage/' . $id . '/edit');
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][value]", NULL, 'Widget is displayed');
-    $this->assertFieldByName("{$this->field_name}[$langcode][0][format]", NULL, 'Format selector is displayed');
+    $this->assertFieldByName("{$this->field_name}[0][value]", NULL, 'Widget is displayed');
+    $this->assertFieldByName("{$this->field_name}[0][format]", NULL, 'Format selector is displayed');
 
     // Edit and change the text format to the new one that was created.
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$this->field_name}[$langcode][0][format]" => $format_id,
+      "{$this->field_name}[0][format]" => $format_id,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText(t('entity_test @id has been updated.', array('@id' => $id)), 'Entity was updated');
 
     // Display the entity.

@@ -483,15 +483,10 @@ function field_read_instances($conditions = array(), $include_additional = array
  *   // most common case), and will therefore be repeated as many times as
  *   // needed, or 'multiple-values' (one single widget allows the input of
  *   // several values, e.g checkboxes, select box...).
- *   // The sub-array is nested into a $langcode key where $langcode has the
- *   // same value of the $langcode parameter above.
- *   // The '#language' key holds the same value of $langcode and it is used
- *   // to access the field sub-array when $langcode is unknown.
  *   'field_foo' => array(
- *     '#tree' => TRUE,
- *     '#field_name' => The name of the field,
- *     '#language' => $langcode,
- *     $langcode => array(
+ *     '#access' => TRUE if the current user has 'edit' grants for the field,
+ *       FALSE if not.
+ *     'widget' => array(
  *       '#field_name' => The name of the field,
  *       '#language' => $langcode,
  *       '#field_parents' => The 'parents' space for the field in the form,
@@ -634,10 +629,9 @@ function field_attach_form_validate(EntityInterface $entity, $form, &$form_state
         $has_violations = TRUE;
 
         // Place violations in $form_state.
-        $langcode = field_is_translatable($entity->entityType(), field_info_field($entity->entityType(), $field_name)) ? $entity->language()->id : Language::LANGCODE_NOT_SPECIFIED;
-        $field_state = field_form_get_state($form['#parents'], $field_name, $langcode, $form_state);
+        $field_state = field_form_get_state($form['#parents'], $field_name, $form_state);
         $field_state['constraint_violations'] = $field_violations;
-        field_form_set_state($form['#parents'], $field_name, $langcode, $form_state, $field_state);
+        field_form_set_state($form['#parents'], $field_name, $form_state, $field_state);
       }
     }
   }

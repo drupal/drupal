@@ -22,9 +22,9 @@ use Drupal\Core\Annotation\Translation;
 class RecentContentBlock extends BlockBase {
 
   /**
-   * Overrides \Drupal\block\BlockBase::settings().
+   * {@inheritdoc}
    */
-  public function settings() {
+  public function defaultConfiguration() {
     return array(
       'block_count' => 10,
     );

@@ -7,7 +7,6 @@
 
 namespace Drupal\options\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\field\FieldException;
 
 /**
@@ -34,14 +33,12 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
    * Test that allowed values can be updated.
    */
   function testUpdateAllowedValues() {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     // All three options appear.
     $entity = entity_create('entity_test', array());
     $form = \Drupal::entityManager()->getForm($entity);
-    $this->assertTrue(!empty($form[$this->fieldName][$langcode][1]), 'Option 1 exists');
-    $this->assertTrue(!empty($form[$this->fieldName][$langcode][2]), 'Option 2 exists');
-    $this->assertTrue(!empty($form[$this->fieldName][$langcode][3]), 'Option 3 exists');
+    $this->assertTrue(!empty($form[$this->fieldName]['widget'][1]), 'Option 1 exists');
+    $this->assertTrue(!empty($form[$this->fieldName]['widget'][2]), 'Option 2 exists');
+    $this->assertTrue(!empty($form[$this->fieldName]['widget'][3]), 'Option 3 exists');
 
     // Use one of the values in an actual entity, and check that this value
     // cannot be removed from the list.
@@ -65,9 +62,9 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     $this->field->save();
     $entity = entity_create('entity_test', array());
     $form = \Drupal::entityManager()->getForm($entity);
-    $this->assertTrue(empty($form[$this->fieldName][$langcode][1]), 'Option 1 does not exist');
-    $this->assertTrue(!empty($form[$this->fieldName][$langcode][2]), 'Option 2 exists');
-    $this->assertTrue(empty($form[$this->fieldName][$langcode][3]), 'Option 3 does not exist');
+    $this->assertTrue(empty($form[$this->fieldName]['widget'][1]), 'Option 1 does not exist');
+    $this->assertTrue(!empty($form[$this->fieldName]['widget'][2]), 'Option 2 exists');
+    $this->assertTrue(empty($form[$this->fieldName]['widget'][3]), 'Option 3 does not exist');
 
     // Completely new options appear.
     $this->field->settings['allowed_values'] = array(10 => 'Update', 20 => 'Twenty');
@@ -76,11 +73,11 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
     // setting, so we need to reintialize the entity object.
     $entity = entity_create('entity_test', array());
     $form = \Drupal::entityManager()->getForm($entity);
-    $this->assertTrue(empty($form[$this->fieldName][$langcode][1]), 'Option 1 does not exist');
-    $this->assertTrue(empty($form[$this->fieldName][$langcode][2]), 'Option 2 does not exist');
-    $this->assertTrue(empty($form[$this->fieldName][$langcode][3]), 'Option 3 does not exist');
-    $this->assertTrue(!empty($form[$this->fieldName][$langcode][10]), 'Option 10 exists');
-    $this->assertTrue(!empty($form[$this->fieldName][$langcode][20]), 'Option 20 exists');
+    $this->assertTrue(empty($form[$this->fieldName]['widget'][1]), 'Option 1 does not exist');
+    $this->assertTrue(empty($form[$this->fieldName]['widget'][2]), 'Option 2 does not exist');
+    $this->assertTrue(empty($form[$this->fieldName]['widget'][3]), 'Option 3 does not exist');
+    $this->assertTrue(!empty($form[$this->fieldName]['widget'][10]), 'Option 10 exists');
+    $this->assertTrue(!empty($form[$this->fieldName]['widget'][20]), 'Option 20 exists');
 
     // Options are reset when a new field with the same name is created.
     $this->field->delete();
@@ -97,8 +94,8 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
       ->save();
     $entity = entity_create('entity_test', array());
     $form = \Drupal::entityManager()->getForm($entity);
-    $this->assertTrue(!empty($form[$this->fieldName][$langcode][1]), 'Option 1 exists');
-    $this->assertTrue(!empty($form[$this->fieldName][$langcode][2]), 'Option 2 exists');
-    $this->assertTrue(!empty($form[$this->fieldName][$langcode][3]), 'Option 3 exists');
+    $this->assertTrue(!empty($form[$this->fieldName]['widget'][1]), 'Option 1 exists');
+    $this->assertTrue(!empty($form[$this->fieldName]['widget'][2]), 'Option 2 exists');
+    $this->assertTrue(!empty($form[$this->fieldName]['widget'][3]), 'Option 3 exists');
   }
 }

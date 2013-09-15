@@ -37,7 +37,7 @@ class RedirectTest extends UITestBase {
     $random_destination = $this->randomName();
     $edit_path = "admin/structure/views/view/$view_name/edit";
 
-    $this->drupalPost($edit_path, array(), t('Save') , array('query' => array('destination' => $random_destination)));
+    $this->drupalPostForm($edit_path, array(), t('Save') , array('query' => array('destination' => $random_destination)));
     $this->assertUrl($random_destination, array(), 'Make sure the user got redirected to the expected page defined in the destination.');
 
     // Setup a view with a certain page display path. If you change the path
@@ -51,8 +51,8 @@ class RedirectTest extends UITestBase {
     $edit_path = "admin/structure/views/view/$view_name/edit";
     $path_edit_path = "admin/structure/views/nojs/display/$view_name/page_1/path";
 
-    $this->drupalPost($path_edit_path, array('path' => $new_path), t('Apply'));
-    $this->drupalPost($edit_path, array(), t('Save'), array('query' => array('destination' => 'test-redirect-view')));
+    $this->drupalPostForm($path_edit_path, array('path' => $new_path), t('Apply'));
+    $this->drupalPostForm($edit_path, array(), t('Save'), array('query' => array('destination' => 'test-redirect-view')));
     $this->assertUrl($new_path, array(), 'Make sure the user got redirected to the expected page after changing the url of a page display.');
   }
 

@@ -395,7 +395,7 @@ class ModulesListForm extends FormBase {
     // dependencies that are not enabled yet, redirect to the confirmation form.
     if (!empty($modules['dependencies']) || !empty($modules['missing'])) {
       // Write the list of changed module states into a key value store.
-      $account = $this->getCurrentUser()->id();
+      $account = $this->currentUser()->id();
       $this->keyValueExpirable->setWithExpire($account, $modules, 60);
 
       // Redirect to the confirmation form.

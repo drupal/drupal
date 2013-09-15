@@ -84,7 +84,7 @@ class FilterFormatUpgradePathTest extends UpgradePathTestBase {
     // Editing and saving the format should drop the missing filter.
     $this->drupalGet('admin/config/content/formats/manage/format_two');
     $this->assertRaw(t('The %filter filter is missing, and will be removed once this format is saved.', array('%filter' => 'missing_filter')));
-    $this->drupalPost(NULL, array(), t('Save configuration'));
+    $this->drupalPostForm(NULL, array(), t('Save configuration'));
     filter_formats_reset();
     $two = entity_load('filter_format', 'format_two');
     $this->assertFalse($two->filters()->has('missing_filter'));

@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Controller;
 
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -31,15 +32,23 @@ class HtmlPageController {
   protected $controllerResolver;
 
   /**
+   * The translation manager service.
+   *
+   * @var \Drupal\Core\StringTranslation\TranslationInterface
+   */
+  protected $translationManager;
+
+  /**
    * Constructs a new HtmlPageController.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $kernel
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
    *   The controller resolver.
    */
-  public function __construct(HttpKernelInterface $kernel, ControllerResolverInterface $controller_resolver) {
+  public function __construct(HttpKernelInterface $kernel, ControllerResolverInterface $controller_resolver, TranslationInterface $translation_manager) {
     $this->httpKernel = $kernel;
     $this->controllerResolver = $controller_resolver;
+    $this->translationManager = $translation_manager;
   }
 
   /**
@@ -67,11 +76,20 @@ class HtmlPageController {
     }
     // If no title was returned fall back to one defined in the route.
     if (!isset($page_content['#title']) && $request->attributes->has('_title')) {
-      $page_content['#title'] = $request->attributes->get('_title');
+      $page_content['#title'] = $this->t($request->attributes->get('_title'));
     }
 
     $response = new Response(drupal_render_page($page_content));
     return $response;
+  }
+
+  /**
+   * Translates a string to the current language or to a given language.
+   *
+   * See the t() documentation for details.
+   */
+  protected function t($string, array $args = array(), array $options = array()) {
+    return $this->translationManager->translate($string, $args, $options);
   }
 
 }

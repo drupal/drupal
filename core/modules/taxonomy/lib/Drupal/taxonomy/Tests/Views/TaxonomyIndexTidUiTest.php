@@ -93,6 +93,16 @@ class TaxonomyIndexTidUiTest extends UITestBase {
         $this->assertEqual($terms[$i][$j]->id(), $tid);
       }
     }
+
+    // Ensure the autocomplete input element appears when using the 'textfield'
+    // type.
+    $view = entity_load('view', 'test_filter_taxonomy_index_tid');
+    $display =& $view->getDisplay('default');
+    $display['display_options']['filters']['tid']['type'] = 'textfield';
+    $view->save();
+    $this->drupalGet('admin/structure/views/nojs/config-item/test_filter_taxonomy_index_tid/default/filter/tid');
+    $result = $this->xpath('//input[@id = "edit-options-value-autocomplete"]');
+    $this->assertEqual((string) $result[0]['value'], url('taxonomy/autocomplete_vid/tags'));
   }
 
 }

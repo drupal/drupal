@@ -103,9 +103,9 @@ class ConfigField extends Field implements ConfigFieldInterface {
     if (count($violations)) {
       // Store reported errors in $form_state.
       $field_name = $this->getFieldDefinition()->getFieldName();
-      $field_state = field_form_get_state($element['#parents'], $field_name, $langcode, $form_state);
+      $field_state = field_form_get_state($element['#parents'], $field_name, $form_state);
       $field_state['constraint_violations'] = $violations;
-      field_form_set_state($element['#parents'], $field_name, $langcode, $form_state, $field_state);
+      field_form_set_state($element['#parents'], $field_name, $form_state, $field_state);
 
       // Assign reported errors to the correct form element.
       $widget->flagErrors($entity, $langcode, $this, $element, $form_state);

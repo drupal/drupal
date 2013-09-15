@@ -56,7 +56,7 @@ class UserBlocksTests extends WebTestBase {
     $edit = array();
     $edit['name'] = $user->getUsername();
     $edit['pass'] = $user->pass_raw;
-    $this->drupalPost('admin/people/permissions', $edit, t('Log in'));
+    $this->drupalPostForm('admin/people/permissions', $edit, t('Log in'));
     $this->assertNoText(t('User login'), 'Logged in.');
 
     // Check that we are still on the same page.
@@ -64,14 +64,14 @@ class UserBlocksTests extends WebTestBase {
 
     // Now, log out and repeat with a non-403 page.
     $this->drupalLogout();
-    $this->drupalPost('filter/tips', $edit, t('Log in'));
+    $this->drupalPostForm('filter/tips', $edit, t('Log in'));
     $this->assertNoText(t('User login'), 'Logged in.');
     $this->assertPattern('!<title.*?' . t('Compose tips') . '.*?</title>!', 'Still on the same page after login for allowed page');
 
     // Check that the user login block is not vulnerable to information
     // disclosure to third party sites.
     $this->drupalLogout();
-    $this->drupalPost('http://example.com/', $edit, t('Log in'), array('external' => FALSE));
+    $this->drupalPostForm('http://example.com/', $edit, t('Log in'), array('external' => FALSE));
     // Check that we remain on the site after login.
     $this->assertEqual(url('user/' . $user->id(), array('absolute' => TRUE)), $this->getUrl(), 'Redirected to user profile page after login from the frontpage');
   }

@@ -57,11 +57,21 @@ class ResizeImageEffect extends ImageEffectBase implements ConfigurableImageEffe
   /**
    * {@inheritdoc}
    */
+  public function defaultConfiguration() {
+    return array(
+      'width' => NULL,
+      'height' => NULL,
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getForm() {
     $form['width'] = array(
       '#type' => 'number',
       '#title' => t('Width'),
-      '#default_value' => isset($this->configuration['width']) ? $this->configuration['width'] : '',
+      '#default_value' => $this->configuration['width'],
       '#field_suffix' => ' ' . t('pixels'),
       '#required' => TRUE,
       '#min' => 1,
@@ -69,7 +79,7 @@ class ResizeImageEffect extends ImageEffectBase implements ConfigurableImageEffe
     $form['height'] = array(
       '#type' => 'number',
       '#title' => t('Height'),
-      '#default_value' => isset($this->configuration['height']) ? $this->configuration['height'] : '',
+      '#default_value' => $this->configuration['height'],
       '#field_suffix' => ' ' . t('pixels'),
       '#required' => TRUE,
       '#min' => 1,

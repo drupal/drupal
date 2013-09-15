@@ -301,6 +301,42 @@ function comment_count_unpublished() {
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_create() for 'field_instance'.
+ */
+function comment_field_instance_create(FieldInstanceInterface $instance) {
+  if ($instance->getFieldType() == 'comment') {
+    Drupal::service('comment.manager')->addBodyField($instance->entity_type, $instance->getFieldName());
+    Drupal::cache()->delete('comment_entity_info');
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for 'field_entity'.
+ */
+function comment_field_entity_delete(FieldInterface $field) {
+  if ($field->getFieldType() == 'comment') {
+    // Delete all fields and displays attached to the comment bundle.
+    entity_invoke_bundle_hook('delete', 'comment', $field->getFieldName());
+    Drupal::cache()->delete('comment_entity_info');
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for 'field_instance'.
+ */
+function comment_field_instance_delete(FieldInstanceInterface $instance) {
+  if ($instance->getFieldType() == 'comment') {
+    // Delete all comments that used by the entity bundle.
+    $comments = db_query("SELECT cid FROM {comment} WHERE entity_type = :entity_type AND field_id = :field_id", array(
+      ':entity_type' => $instance->entityType(),
+      ':field_id' => $instance->entityType() . '__' . $instance->getFieldName(),
+    ))->fetchCol();
+    entity_delete_multiple('comment', $comments);
+    Drupal::cache()->delete('comment_entity_info');
+  }
+}
+
+/**
  * Implements hook_permission().
  */
 function comment_permission() {
@@ -515,14 +551,15 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
               'fragment' => 'comments',
               'html' => TRUE,
             );
-            // Show a link to the first new comment.
-            if ($new = comment_num_new($entity->id(), $entity->entityType(), $field_name)) {
+            if (Drupal::moduleHandler()->moduleExists('history')) {
               $links['comment-new-comments'] = array(
-                'title' => format_plural($new, '1 new comment', '@count new comments'),
-                'href' => $uri['path'],
-                'query' => comment_new_page_count($entity->get($field_name)->comment_count, $new, $entity, $field_name),
-                'attributes' => array('title' => t('Jump to the first new comment of this posting.')),
-                'fragment' => 'new',
+                'title' => '',
+                'href' => '',
+                'attributes' => array(
+                  'class' => 'hidden',
+                  'title' => t('Jump to the first new comment of this posting.'),
+                  'data-history-node-last-comment-timestamp' => $entity->get($field_name)->last_comment_timestamp,
+                ),
                 'html' => TRUE,
               );
             }
@@ -597,10 +634,23 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
       '#links' => $links,
       '#attributes' => array('class' => array('links', 'inline')),
     );
+    if ($view_mode == 'teaser' && Drupal::moduleHandler()->moduleExists('history')) {
+      $entity->content['links']['#attached']['library'][] = array('comment', 'drupal.node-new-comments-link');
+    }
   }
 }
 
 /**
+ * Implements hook_node_view_alter().
+ */
+function comment_node_view_alter(&$build, EntityInterface $node, EntityDisplay $display) {
+  if (Drupal::moduleHandler()->moduleExists('history')) {
+    $build['#attributes']['data-history-node-id'] = $node->id();
+  }
+}
+
+/**
+ * Returns a rendered form to comment the given node.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity to which the comments are in reply to.
@@ -750,20 +800,10 @@ function comment_get_thread(EntityInterface $entity, $field_name, $mode, $commen
  *   An array of comment objects, keyed by comment ID.
  */
 function comment_prepare_thread(&$comments) {
-  // A flag stating if we are still searching for first new comment on the thread.
-  $first_new = TRUE;
-
   // A counter that helps track how indented we are.
   $divs = 0;
 
   foreach ($comments as $key => &$comment) {
-    if ($first_new && $comment->new->value != MARK_READ) {
-      // Assign the anchor only for the first new comment. This avoids duplicate
-      // id attributes on a page.
-      $first_new = FALSE;
-      $comment->first_new = TRUE;
-    }
-
     // The $divs element instructs #prefix whether to add an indent div or
     // close existing divs (a negative value).
     $comment->depth = count(explode('.', $comment->thread->value)) - 1;
@@ -1457,7 +1497,7 @@ function template_preprocess_comment(&$variables) {
     '#account' => $account,
   );
   $variables['author'] = drupal_render($username);
-  $variables['new'] = $comment->new->value ? t('new') : '';
+  $variables['new_indicator_timestamp'] = $comment->changed->value;
   $variables['created'] = format_date($comment->created->value);
   // Avoid calling format_date() twice on the same timestamp.
   if ($comment->changed->value == $comment->created->value) {
@@ -1549,9 +1589,6 @@ function template_preprocess_comment(&$variables) {
   if ($variables['status'] != 'published') {
     $variables['attributes']['class'][] = $variables['status'];
   }
-  if ($variables['new']) {
-    $variables['attributes']['class'][] = 'new';
-  }
   if (!$comment->uid->target_id) {
     $variables['attributes']['class'][] = 'by-anonymous';
   }
@@ -1560,12 +1597,12 @@ function template_preprocess_comment(&$variables) {
     if ($comment_entity->getPropertyDefinition('uid') && $comment->uid->target_id == $comment_entity->get('uid')->value) {
       $variables['attributes']['class'][] = 'by-' . $comment_entity->entityType() . '-author';
     }
-    if ($comment->uid->target_id == $variables['user']->id()) {
-      $variables['attributes']['class'][] = 'by-viewer';
-    }
   }
   // Add clearfix class.
   $variables['attributes']['class'][] = 'clearfix';
+
+  // Add comment author user ID. Necessary for the comment-by-viewer library.
+  $variables['attributes']['data-comment-user-id'] = $comment->uid->value;
 
   $variables['content_attributes']['class'][] = 'content';
 }
@@ -1738,11 +1775,12 @@ function comment_file_download_access($field, EntityInterface $entity, File $fil
  * Implements hook_library_info().
  */
 function comment_library_info() {
+  $path = drupal_get_path('module', 'comment');
   $libraries['drupal.comment'] = array(
     'title' => 'Comment',
     'version' => Drupal::VERSION,
     'js' => array(
-      drupal_get_path('module', 'comment') . '/comment-entity-form.js' => array(),
+      $path . '/comment-entity-form.js' => array(),
     ),
     'dependencies' => array(
       array('system', 'jquery'),
@@ -1750,78 +1788,42 @@ function comment_library_info() {
       array('system', 'drupal.form'),
     ),
   );
-
+  $libraries['drupal.comment-by-viewer'] = array(
+    'title' => 'Annotate comments by the current viewer for targeted styling',
+    'version' => Drupal::VERSION,
+    'js' => array(
+      $path . '/js/comment-by-viewer.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('system', 'drupalSettings'),
+    ),
+  );
+  $libraries['drupal.comment-new-indicator'] = array(
+    'title' => 'New comment indicator',
+    'version' => Drupal::VERSION,
+    'js' => array(
+      $path . '/js/comment-new-indicator.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('history', 'drupal.history'),
+      array('system', 'drupal.displace'),
+    ),
+  );
+  $libraries['drupal.node-new-comments-link'] = array(
+    'title' => 'New comments link',
+    'version' => Drupal::VERSION,
+    'js' => array(
+      $path . '/js/node-new-comments-link.js' => array(),
+    ),
+    'dependencies' => array(
+      array('system', 'jquery'),
+      array('system', 'drupal'),
+      array('history', 'drupal.history'),
+    ),
+  );
   return $libraries;
-}
-
-/**
- * Implements hook_ENTITY_TYPE_create() for 'field_instance'.
- */
-function comment_field_instance_create(FieldInstanceInterface $instance) {
-  if ($instance->getFieldType() == 'comment') {
-    Drupal::service('comment.manager')->addBodyField($instance->entity_type, $instance->getFieldName());
-    Drupal::cache()->delete('comment_entity_info');
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_delete() for 'field_entity'.
- */
-function comment_field_entity_delete(FieldInterface $field) {
-  if ($field->getFieldType() == 'comment') {
-    // Delete all fields and displays attached to the comment bundle.
-    entity_invoke_bundle_hook('delete', 'comment', $field->getFieldName());
-    Drupal::cache()->delete('comment_entity_info');
-  }
-}
-
-/**
- * Implements hook_ENTITY_TYPE_delete() for 'field_instance'.
- */
-function comment_field_instance_delete(FieldInstanceInterface $instance) {
-  if ($instance->getFieldType() == 'comment') {
-    // Delete all comments that used by the entity bundle.
-    $comments = db_query("SELECT cid FROM {comment} WHERE entity_type = :entity_type AND field_id = :field_id", array(
-      ':entity_type' => $instance->entityType(),
-      ':field_id' => $instance->entityType() . '__' . $instance->getFieldName(),
-    ))->fetchCol();
-    entity_delete_multiple('comment', $comments);
-    Drupal::cache()->delete('comment_entity_info');
-  }
-}
-
-/**
- * Decide on the type of marker to be shown for a comment.
- *
- * @param \Drupal\comment\CommentInterface $comment
- *   The comment for which the marker is to be shown.
- *
- * @return int
- *   The type of marker to be shown one of MARK_READ, MARK_UPDATED or MARK_NEW.
- */
-function comment_mark(CommentInterface $comment) {
-  global $user;
-  $cache = &drupal_static(__FUNCTION__, array());
-  $cid = $comment->entity_id->value . '__' . $comment->entity_type->value;
-
-  if (!$user->isAuthenticated()) {
-    return MARK_READ;
-  }
-  if (!isset($cache[$cid])) {
-    if ($comment->entity_type->value == 'node' && Drupal::moduleHandler()->moduleExists('history')) {
-      $cache[$cid] = history_read($comment->entity_id->value);
-    }
-    else {
-      // @todo - decide how to handle last viewed for other entities. For now
-      // assume REQUEST_TIME.
-      $cache[$cid] = REQUEST_TIME;
-    }
-  }
-  if ($cache[$cid] == 0 && $comment->changed->value > COMMENT_NEW_LIMIT) {
-    return MARK_NEW;
-  }
-  elseif ($comment->changed->value > $cache[$cid] && $comment->changed->value > COMMENT_NEW_LIMIT) {
-    return MARK_UPDATED;
-  }
-  return MARK_READ;
 }

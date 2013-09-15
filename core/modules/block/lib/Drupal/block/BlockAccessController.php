@@ -106,9 +106,6 @@ class BlockAccessController extends EntityAccessController implements EntityCont
         // listed in $block->pages.
         $page_match = !($visibility['path']['visibility'] xor $page_match);
       }
-      elseif (module_exists('php')) {
-        $page_match = php_eval($visibility['path']['pages']);
-      }
 
       // If there are page visibility restrictions and this page does not
       // match, deny access.

@@ -7,7 +7,6 @@
 
 namespace Drupal\options\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\field\Tests\FieldTestBase;
 
 /**
@@ -122,8 +121,6 @@ class OptionsWidgetsTest extends FieldTestBase {
       ))
       ->save();
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     // Create an entity.
     $entity = entity_create('entity_test', array(
       'user_id' => 1,
@@ -134,26 +131,26 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // With no field data, no buttons are checked.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertNoFieldChecked("edit-card-1-$langcode-0");
-    $this->assertNoFieldChecked("edit-card-1-$langcode-1");
-    $this->assertNoFieldChecked("edit-card-1-$langcode-2");
+    $this->assertNoFieldChecked('edit-card-1-0');
+    $this->assertNoFieldChecked('edit-card-1-1');
+    $this->assertNoFieldChecked('edit-card-1-2');
     $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>', 'Option text was properly filtered.');
 
     // Select first option.
-    $edit = array("card_1[$langcode]" => 0);
-    $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'card_1', $langcode, array(0));
+    $edit = array('card_1' => 0);
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'card_1', array(0));
 
     // Check that the selected button is checked.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertFieldChecked("edit-card-1-$langcode-0");
-    $this->assertNoFieldChecked("edit-card-1-$langcode-1");
-    $this->assertNoFieldChecked("edit-card-1-$langcode-2");
+    $this->assertFieldChecked('edit-card-1-0');
+    $this->assertNoFieldChecked('edit-card-1-1');
+    $this->assertNoFieldChecked('edit-card-1-2');
 
     // Unselect option.
-    $edit = array("card_1[$langcode]" => '_none');
-    $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'card_1', $langcode, array());
+    $edit = array('card_1' => '_none');
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'card_1', array());
 
     // Check that required radios with one option is auto-selected.
     $this->card_1->settings['allowed_values'] = array(99 => 'Only allowed value');
@@ -161,7 +158,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $instance->required = TRUE;
     $instance->save();
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertFieldChecked("edit-card-1-$langcode-99");
+    $this->assertFieldChecked('edit-card-1-99');
   }
 
   /**
@@ -181,8 +178,6 @@ class OptionsWidgetsTest extends FieldTestBase {
       ))
       ->save();
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     // Create an entity.
     $entity = entity_create('entity_test', array(
       'user_id' => 1,
@@ -193,59 +188,59 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Display form: with no field data, nothing is checked.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertNoFieldChecked("edit-card-2-$langcode-0");
-    $this->assertNoFieldChecked("edit-card-2-$langcode-1");
-    $this->assertNoFieldChecked("edit-card-2-$langcode-2");
+    $this->assertNoFieldChecked('edit-card-2-0');
+    $this->assertNoFieldChecked('edit-card-2-1');
+    $this->assertNoFieldChecked('edit-card-2-2');
     $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>', 'Option text was properly filtered.');
 
     // Submit form: select first and third options.
     $edit = array(
-      "card_2[$langcode][0]" => TRUE,
-      "card_2[$langcode][1]" => FALSE,
-      "card_2[$langcode][2]" => TRUE,
+      'card_2[0]' => TRUE,
+      'card_2[1]' => FALSE,
+      'card_2[2]' => TRUE,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0, 2));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'card_2', array(0, 2));
 
     // Display form: check that the right options are selected.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertFieldChecked("edit-card-2-$langcode-0");
-    $this->assertNoFieldChecked("edit-card-2-$langcode-1");
-    $this->assertFieldChecked("edit-card-2-$langcode-2");
+    $this->assertFieldChecked('edit-card-2-0');
+    $this->assertNoFieldChecked('edit-card-2-1');
+    $this->assertFieldChecked('edit-card-2-2');
 
     // Submit form: select only first option.
     $edit = array(
-      "card_2[$langcode][0]" => TRUE,
-      "card_2[$langcode][1]" => FALSE,
-      "card_2[$langcode][2]" => FALSE,
+      'card_2[0]' => TRUE,
+      'card_2[1]' => FALSE,
+      'card_2[2]' => FALSE,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'card_2', array(0));
 
     // Display form: check that the right options are selected.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertFieldChecked("edit-card-2-$langcode-0");
-    $this->assertNoFieldChecked("edit-card-2-$langcode-1");
-    $this->assertNoFieldChecked("edit-card-2-$langcode-2");
+    $this->assertFieldChecked('edit-card-2-0');
+    $this->assertNoFieldChecked('edit-card-2-1');
+    $this->assertNoFieldChecked('edit-card-2-2');
 
     // Submit form: select the three options while the field accepts only 2.
     $edit = array(
-      "card_2[$langcode][0]" => TRUE,
-      "card_2[$langcode][1]" => TRUE,
-      "card_2[$langcode][2]" => TRUE,
+      'card_2[0]' => TRUE,
+      'card_2[1]' => TRUE,
+      'card_2[2]' => TRUE,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('this field cannot hold more than 2 values', 'Validation error was displayed.');
 
     // Submit form: uncheck all options.
     $edit = array(
-      "card_2[$langcode][0]" => FALSE,
-      "card_2[$langcode][1]" => FALSE,
-      "card_2[$langcode][2]" => FALSE,
+      'card_2[0]' => FALSE,
+      'card_2[1]' => FALSE,
+      'card_2[2]' => FALSE,
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     // Check that the value was saved.
-    $this->assertFieldValues($entity_init, 'card_2', $langcode, array());
+    $this->assertFieldValues($entity_init, 'card_2', array());
 
     // Required checkbox with one option is auto-selected.
     $this->card_2->settings['allowed_values'] = array(99 => 'Only allowed value');
@@ -253,7 +248,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $instance->required = TRUE;
     $instance->save();
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertFieldChecked("edit-card-2-$langcode-99");
+    $this->assertFieldChecked('edit-card-2-99');
   }
 
   /**
@@ -274,8 +269,6 @@ class OptionsWidgetsTest extends FieldTestBase {
       ))
       ->save();
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     // Create an entity.
     $entity = entity_create('entity_test', array(
       'user_id' => 1,
@@ -287,32 +280,32 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Display form.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
     // A required field without any value has a "none" option.
-    $this->assertTrue($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', array(':id' => 'edit-card-1-' . $langcode, ':label' => t('- Select a value -'))), 'A required select list has a "Select a value" choice.');
+    $this->assertTrue($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', array(':id' => 'edit-card-1', ':label' => t('- Select a value -'))), 'A required select list has a "Select a value" choice.');
 
     // With no field data, nothing is selected.
-    $this->assertNoOptionSelected("edit-card-1-$langcode", '_none');
-    $this->assertNoOptionSelected("edit-card-1-$langcode", 0);
-    $this->assertNoOptionSelected("edit-card-1-$langcode", 1);
-    $this->assertNoOptionSelected("edit-card-1-$langcode", 2);
+    $this->assertNoOptionSelected('edit-card-1', '_none');
+    $this->assertNoOptionSelected('edit-card-1', 0);
+    $this->assertNoOptionSelected('edit-card-1', 1);
+    $this->assertNoOptionSelected('edit-card-1', 2);
     $this->assertRaw('Some dangerous &amp; unescaped markup', 'Option text was properly filtered.');
 
     // Submit form: select invalid 'none' option.
-    $edit = array("card_1[$langcode]" => '_none');
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $edit = array('card_1' => '_none');
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertRaw(t('!title field is required.', array('!title' => $instance['field_name'])), 'Cannot save a required field when selecting "none" from the select list.');
 
     // Submit form: select first option.
-    $edit = array("card_1[$langcode]" => 0);
-    $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'card_1', $langcode, array(0));
+    $edit = array('card_1' => 0);
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'card_1', array(0));
 
     // Display form: check that the right options are selected.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
     // A required field with a value has no 'none' option.
-    $this->assertFalse($this->xpath('//select[@id=:id]//option[@value="_none"]', array(':id' => 'edit-card-1-' . $langcode)), 'A required select list with an actual value has no "none" choice.');
-    $this->assertOptionSelected("edit-card-1-$langcode", 0);
-    $this->assertNoOptionSelected("edit-card-1-$langcode", 1);
-    $this->assertNoOptionSelected("edit-card-1-$langcode", 2);
+    $this->assertFalse($this->xpath('//select[@id=:id]//option[@value="_none"]', array(':id' => 'edit-card-1')), 'A required select list with an actual value has no "none" choice.');
+    $this->assertOptionSelected('edit-card-1', 0);
+    $this->assertNoOptionSelected('edit-card-1', 1);
+    $this->assertNoOptionSelected('edit-card-1', 2);
 
     // Make the field non required.
     $instance->required = FALSE;
@@ -321,11 +314,11 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Display form.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
     // A non-required field has a 'none' option.
-    $this->assertTrue($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', array(':id' => 'edit-card-1-' . $langcode, ':label' => t('- None -'))), 'A non-required select list has a "None" choice.');
+    $this->assertTrue($this->xpath('//select[@id=:id]//option[@value="_none" and text()=:label]', array(':id' => 'edit-card-1', ':label' => t('- None -'))), 'A non-required select list has a "None" choice.');
     // Submit form: Unselect the option.
-    $edit = array("card_1[$langcode]" => '_none');
-    $this->drupalPost('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'card_1', $langcode, array());
+    $edit = array('card_1' => '_none');
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'card_1', array());
 
     // Test optgroups.
 
@@ -335,27 +328,27 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Display form: with no field data, nothing is selected
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertNoOptionSelected("edit-card-1-$langcode", 0);
-    $this->assertNoOptionSelected("edit-card-1-$langcode", 1);
-    $this->assertNoOptionSelected("edit-card-1-$langcode", 2);
+    $this->assertNoOptionSelected('edit-card-1', 0);
+    $this->assertNoOptionSelected('edit-card-1', 1);
+    $this->assertNoOptionSelected('edit-card-1', 2);
     $this->assertRaw('Some dangerous &amp; unescaped markup', 'Option text was properly filtered.');
     $this->assertRaw('Group 1', 'Option groups are displayed.');
 
     // Submit form: select first option.
-    $edit = array("card_1[$langcode]" => 0);
-    $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'card_1', $langcode, array(0));
+    $edit = array('card_1' => 0);
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'card_1', array(0));
 
     // Display form: check that the right options are selected.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertOptionSelected("edit-card-1-$langcode", 0);
-    $this->assertNoOptionSelected("edit-card-1-$langcode", 1);
-    $this->assertNoOptionSelected("edit-card-1-$langcode", 2);
+    $this->assertOptionSelected('edit-card-1', 0);
+    $this->assertNoOptionSelected('edit-card-1', 1);
+    $this->assertNoOptionSelected('edit-card-1', 2);
 
     // Submit form: Unselect the option.
-    $edit = array("card_1[$langcode]" => '_none');
-    $this->drupalPost('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'card_1', $langcode, array());
+    $edit = array('card_1' => '_none');
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'card_1', array());
   }
 
   /**
@@ -375,8 +368,6 @@ class OptionsWidgetsTest extends FieldTestBase {
       ))
       ->save();
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     // Create an entity.
     $entity = entity_create('entity_test', array(
       'user_id' => 1,
@@ -387,61 +378,61 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Display form: with no field data, nothing is selected.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertNoOptionSelected("edit-card-2-$langcode", 0);
-    $this->assertNoOptionSelected("edit-card-2-$langcode", 1);
-    $this->assertNoOptionSelected("edit-card-2-$langcode", 2);
+    $this->assertNoOptionSelected('edit-card-2', 0);
+    $this->assertNoOptionSelected('edit-card-2', 1);
+    $this->assertNoOptionSelected('edit-card-2', 2);
     $this->assertRaw('Some dangerous &amp; unescaped markup', 'Option text was properly filtered.');
 
     // Submit form: select first and third options.
-    $edit = array("card_2[$langcode][]" => array(0 => 0, 2 => 2));
-    $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0, 2));
+    $edit = array('card_2[]' => array(0 => 0, 2 => 2));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'card_2', array(0, 2));
 
     // Display form: check that the right options are selected.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertOptionSelected("edit-card-2-$langcode", 0);
-    $this->assertNoOptionSelected("edit-card-2-$langcode", 1);
-    $this->assertOptionSelected("edit-card-2-$langcode", 2);
+    $this->assertOptionSelected('edit-card-2', 0);
+    $this->assertNoOptionSelected('edit-card-2', 1);
+    $this->assertOptionSelected('edit-card-2', 2);
 
     // Submit form: select only first option.
-    $edit = array("card_2[$langcode][]" => array(0 => 0));
-    $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0));
+    $edit = array('card_2[]' => array(0 => 0));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'card_2', array(0));
 
     // Display form: check that the right options are selected.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertOptionSelected("edit-card-2-$langcode", 0);
-    $this->assertNoOptionSelected("edit-card-2-$langcode", 1);
-    $this->assertNoOptionSelected("edit-card-2-$langcode", 2);
+    $this->assertOptionSelected('edit-card-2', 0);
+    $this->assertNoOptionSelected('edit-card-2', 1);
+    $this->assertNoOptionSelected('edit-card-2', 2);
 
     // Submit form: select the three options while the field accepts only 2.
-    $edit = array("card_2[$langcode][]" => array(0 => 0, 1 => 1, 2 => 2));
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $edit = array('card_2[]' => array(0 => 0, 1 => 1, 2 => 2));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertText('this field cannot hold more than 2 values', 'Validation error was displayed.');
 
     // Submit form: uncheck all options.
-    $edit = array("card_2[$langcode][]" => array());
-    $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'card_2', $langcode, array());
+    $edit = array('card_2[]' => array());
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'card_2', array());
 
     // Test the 'None' option.
 
     // Check that the 'none' option has no efect if actual options are selected
     // as well.
-    $edit = array("card_2[$langcode][]" => array('_none' => '_none', 0 => 0));
-    $this->drupalPost('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0));
+    $edit = array('card_2[]' => array('_none' => '_none', 0 => 0));
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'card_2', array(0));
 
     // Check that selecting the 'none' option empties the field.
-    $edit = array("card_2[$langcode][]" => array('_none' => '_none'));
-    $this->drupalPost('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'card_2', $langcode, array());
+    $edit = array('card_2[]' => array('_none' => '_none'));
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'card_2', array());
 
     // A required select list does not have an empty key.
     $instance->required = TRUE;
     $instance->save();
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertFalse($this->xpath('//select[@id=:id]//option[@value=""]', array(':id' => 'edit-card-2-' . $langcode)), 'A required select list does not have an empty key.');
+    $this->assertFalse($this->xpath('//select[@id=:id]//option[@value=""]', array(':id' => 'edit-card-2')), 'A required select list does not have an empty key.');
 
     // We do not have to test that a required select list with one option is
     // auto-selected because the browser does it for us.
@@ -457,27 +448,27 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Display form: with no field data, nothing is selected.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertNoOptionSelected("edit-card-2-$langcode", 0);
-    $this->assertNoOptionSelected("edit-card-2-$langcode", 1);
-    $this->assertNoOptionSelected("edit-card-2-$langcode", 2);
+    $this->assertNoOptionSelected('edit-card-2', 0);
+    $this->assertNoOptionSelected('edit-card-2', 1);
+    $this->assertNoOptionSelected('edit-card-2', 2);
     $this->assertRaw('Some dangerous &amp; unescaped markup', 'Option text was properly filtered.');
     $this->assertRaw('Group 1', 'Option groups are displayed.');
 
     // Submit form: select first option.
-    $edit = array("card_2[$langcode][]" => array(0 => 0));
-    $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'card_2', $langcode, array(0));
+    $edit = array('card_2[]' => array(0 => 0));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'card_2', array(0));
 
     // Display form: check that the right options are selected.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertOptionSelected("edit-card-2-$langcode", 0);
-    $this->assertNoOptionSelected("edit-card-2-$langcode", 1);
-    $this->assertNoOptionSelected("edit-card-2-$langcode", 2);
+    $this->assertOptionSelected('edit-card-2', 0);
+    $this->assertNoOptionSelected('edit-card-2', 1);
+    $this->assertNoOptionSelected('edit-card-2', 2);
 
     // Submit form: Unselect the option.
-    $edit = array("card_2[$langcode][]" => array('_none' => '_none'));
-    $this->drupalPost('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'card_2', $langcode, array());
+    $edit = array('card_2[]' => array('_none' => '_none'));
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'card_2', array());
   }
 
   /**
@@ -496,8 +487,6 @@ class OptionsWidgetsTest extends FieldTestBase {
       ))
       ->save();
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     // Create an entity.
     $entity = entity_create('entity_test', array(
       'user_id' => 1,
@@ -508,26 +497,26 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Display form: with no field data, option is unchecked.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertNoFieldChecked("edit-bool-$langcode");
+    $this->assertNoFieldChecked('edit-bool');
     $this->assertRaw('Some dangerous &amp; unescaped <strong>markup</strong>', 'Option text was properly filtered.');
 
     // Submit form: check the option.
-    $edit = array("bool[$langcode]" => TRUE);
-    $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'bool', $langcode, array(1));
+    $edit = array('bool' => TRUE);
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'bool', array(1));
 
     // Display form: check that the right options are selected.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertFieldChecked("edit-bool-$langcode");
+    $this->assertFieldChecked('edit-bool');
 
     // Submit form: uncheck the option.
-    $edit = array("bool[$langcode]" => FALSE);
-    $this->drupalPost(NULL, $edit, t('Save'));
-    $this->assertFieldValues($entity_init, 'bool', $langcode, array(0));
+    $edit = array('bool' => FALSE);
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertFieldValues($entity_init, 'bool', array(0));
 
     // Display form: with 'off' value, option is unchecked.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->assertNoFieldChecked("edit-bool-$langcode");
+    $this->assertNoFieldChecked('edit-bool');
   }
 
   /**
@@ -570,7 +559,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     $field_name = $this->bool['field_name'];
     // Click on the widget settings button to open the widget settings form.
-    $this->drupalPostAJAX(NULL, array(), $field_name . "_settings_edit");
+    $this->drupalPostAjaxForm(NULL, array(), $field_name . "_settings_edit");
 
     $this->assertText(
       'Use field label instead of the "On value" as label',
@@ -579,15 +568,15 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Enable setting.
     $edit = array('fields[' . $field_name . '][settings_edit_form][settings][display_label]' => 1);
-    $this->drupalPostAJAX(NULL, $edit, $field_name . "_plugin_settings_update");
-    $this->drupalPost(NULL, NULL, 'Save');
+    $this->drupalPostAjaxForm(NULL, $edit, $field_name . "_plugin_settings_update");
+    $this->drupalPostForm(NULL, NULL, 'Save');
 
     // Go again to the form display page and check if the setting
     // is stored and has the expected effect.
     $this->drupalGet($fieldEditUrl);
     $this->assertText('Use field label: Yes', 'Checking the display settings checkbox updated the value.');
 
-    $this->drupalPostAJAX(NULL, array(), $field_name . "_settings_edit");
+    $this->drupalPostAjaxForm(NULL, array(), $field_name . "_settings_edit");
     $this->assertText(
       'Use field label instead of the "On value" as label',
       t('Display setting checkbox is available')

@@ -75,7 +75,7 @@ class CronRunTest extends WebTestBase {
     // Disable the cron threshold through the interface.
     $admin_user = $this->drupalCreateUser(array('administer site configuration'));
     $this->drupalLogin($admin_user);
-    $this->drupalPost('admin/config/system/cron', array('cron_safe_threshold' => 0), t('Save configuration'));
+    $this->drupalPostForm('admin/config/system/cron', array('cron_safe_threshold' => 0), t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'));
     $this->drupalLogout();
 

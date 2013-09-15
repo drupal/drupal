@@ -139,7 +139,7 @@ class BlockFormController extends EntityFormController {
     //   this entire visibility settings section probably needs a separate user
     //   interface in the near future.
     $visibility = $entity->get('visibility');
-    $access = $this->getCurrentUser()->hasPermission('use PHP for settings');
+    $access = $this->currentUser()->hasPermission('use PHP for settings');
     if (!empty($visibility['path']['visibility']) && $visibility['path']['visibility'] == BLOCK_VISIBILITY_PHP && !$access) {
       $form['visibility']['path']['visibility'] = array(
         '#type' => 'value',
@@ -157,14 +157,6 @@ class BlockFormController extends EntityFormController {
       );
       $description = $this->t("Specify pages by using their paths. Enter one path per line. The '*' character is a wildcard. Example paths are %user for the current user's page and %user-wildcard for every user page. %front is the front page.", array('%user' => 'user', '%user-wildcard' => 'user/*', '%front' => '<front>'));
 
-      if ($this->moduleHandler->moduleExists('php') && $access) {
-        $options += array(BLOCK_VISIBILITY_PHP => $this->t('Pages on which this PHP code returns <code>TRUE</code> (experts only)'));
-        $title = $this->t('Pages or PHP code');
-        $description .= ' ' . $this->t('If the PHP option is chosen, enter PHP code between %php. Note that executing incorrect PHP code can break your Drupal site.', array('%php' => '<?php ?>'));
-      }
-      else {
-        $title = $this->t('Pages');
-      }
       $form['visibility']['path']['visibility'] = array(
         '#type' => 'radios',
         '#title' => $this->t('Show block on specific pages'),
@@ -173,7 +165,7 @@ class BlockFormController extends EntityFormController {
       );
       $form['visibility']['path']['pages'] = array(
         '#type' => 'textarea',
-        '#title' => '<span class="visually-hidden">' . $title . '</span>',
+        '#title' => '<span class="visually-hidden">' . $this->t('Pages') . '</span>',
         '#default_value' => !empty($visibility['path']['pages']) ? $visibility['path']['pages'] : '',
         '#description' => $description,
       );

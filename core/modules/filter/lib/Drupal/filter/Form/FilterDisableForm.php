@@ -24,8 +24,10 @@ class FilterDisableForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/config/content/formats';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'filter_admin_overview',
+    );
   }
 
   /**

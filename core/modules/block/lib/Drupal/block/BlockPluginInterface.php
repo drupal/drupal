@@ -22,18 +22,6 @@ use Drupal\Core\Plugin\PluginFormInterface;
 interface BlockPluginInterface extends ConfigurablePluginInterface, PluginFormInterface, PluginInspectionInterface {
 
   /**
-   * Returns the default settings for this block plugin.
-   *
-   * @return array
-   *   An associative array of block settings for this block, keyed by the
-   *   setting name.
-   *
-   * @todo Consider merging this with the general plugin configuration member
-   *   variable and its getter/setter in http://drupal.org/node/1764380.
-   */
-  public function settings();
-
-  /**
    * Indicates whether the block should be shown.
    *
    * This method allows base implementations to add general access restrictions

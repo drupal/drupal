@@ -7,8 +7,6 @@
 
 namespace Drupal\taxonomy\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests for taxonomy term field and formatter.
  */
@@ -103,17 +101,16 @@ class TermFieldTest extends TaxonomyTestBase {
     $term = $this->createTerm($this->vocabulary);
 
     // Display creation form.
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$this->field_name}[$langcode]", '', 'Widget is displayed.');
+    $this->assertFieldByName($this->field_name, '', 'Widget is displayed.');
 
     // Submit with some value.
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$this->field_name}[$langcode]" => array($term->id()),
+      $this->field_name => array($term->id()),
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
@@ -130,7 +127,7 @@ class TermFieldTest extends TaxonomyTestBase {
     // Delete the vocabulary and verify that the widget is gone.
     $this->vocabulary->delete();
     $this->drupalGet('entity_test/add');
-    $this->assertNoFieldByName("{$this->field_name}[$langcode]", '', 'Widget is not displayed');
+    $this->assertNoFieldByName($this->field_name, '', 'Widget is not displayed');
   }
 
   /**

@@ -34,12 +34,12 @@ class PreviewTest extends UITestBase {
     module_enable(array('contextual'));
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
     $this->assertResponse(200);
-    $this->drupalPost(NULL, $edit = array(), t('Update preview'));
+    $this->drupalPostForm(NULL, $edit = array(), t('Update preview'));
 
     $elements = $this->xpath('//div[@id="views-live-preview"]//ul[contains(@class, :ul-class)]/li[contains(@class, :li-class)]', array(':ul-class' => 'contextual-links', ':li-class' => 'filter-add'));
     $this->assertEqual(count($elements), 1, 'The contextual link to add a new field is shown.');
 
-    $this->drupalPost(NULL, $edit = array('view_args' => '100'), t('Update preview'));
+    $this->drupalPostForm(NULL, $edit = array('view_args' => '100'), t('Update preview'));
 
     // Test that area text and exposed filters are present and rendered.
     $this->assertFieldByName('id', NULL, 'ID exposed filter field found.');
@@ -55,19 +55,19 @@ class PreviewTest extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
     $this->assertResponse(200);
 
-    $this->drupalPost(NULL, $edit = array(), t('Update preview'));
+    $this->drupalPostForm(NULL, $edit = array(), t('Update preview'));
 
     $elements = $this->xpath('//div[@class = "view-content"]/div[contains(@class, views-row)]');
     $this->assertEqual(count($elements), 5);
 
     // Filter just the first result.
-    $this->drupalPost(NULL, $edit = array('view_args' => '1'), t('Update preview'));
+    $this->drupalPostForm(NULL, $edit = array('view_args' => '1'), t('Update preview'));
 
     $elements = $this->xpath('//div[@class = "view-content"]/div[contains(@class, views-row)]');
     $this->assertEqual(count($elements), 1);
 
     // Filter for no results.
-    $this->drupalPost(NULL, $edit = array('view_args' => '100'), t('Update preview'));
+    $this->drupalPostForm(NULL, $edit = array('view_args' => '100'), t('Update preview'));
 
     $elements = $this->xpath('//div[@class = "view-content"]/div[contains(@class, views-row)]');
     $this->assertEqual(count($elements), 0);
@@ -199,7 +199,7 @@ class PreviewTest extends UITestBase {
    */
   protected function getPreviewAJAX($view_name, $panel_id, $row_count) {
     $this->drupalGet('admin/structure/views/view/' . $view_name . '/preview/' . $panel_id);
-    $result = $this->drupalPostAJAX(NULL, array(), array('op' => t('Update preview')));
+    $result = $this->drupalPostAjaxForm(NULL, array(), array('op' => t('Update preview')));
     $this->assertPreviewAJAX($result, $row_count);
   }
 
@@ -217,7 +217,7 @@ class PreviewTest extends UITestBase {
       'wrapper' => 'views-preview-wrapper',
       'method' => 'replaceWith',
     );
-    $result = $this->drupalPostAJAX(NULL, array(), NULL, NULL, array(), array(), NULL, $ajax_settings);
+    $result = $this->drupalPostAjaxForm(NULL, array(), NULL, NULL, array(), array(), NULL, $ajax_settings);
     $this->assertPreviewAJAX($result, $row_count);
   }
 

@@ -60,8 +60,10 @@ class TermDeleteForm extends EntityNGConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/structure/taxonomy';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'taxonomy_vocabulary_list',
+    );
   }
 
   /**

@@ -188,7 +188,7 @@ class LanguageBrowserDetectionUnitTest extends WebTestBase {
 
     // Confirm the delete.
     $edit = array();
-    $this->drupalPost('admin/config/regional/language/detection/browser/delete/' . $browser_langcode, $edit, t('Confirm'));
+    $this->drupalPostForm('admin/config/regional/language/detection/browser/delete/' . $browser_langcode, $edit, t('Confirm'));
 
     // Check that ch-zn no longer exists.
     $this->assertNoField('edit-mappings-zh-cn-browser-langcode', 'Chinese browser language code no longer exists.');
@@ -198,13 +198,13 @@ class LanguageBrowserDetectionUnitTest extends WebTestBase {
       'new_mapping[browser_langcode]' => 'xx',
       'new_mapping[drupal_langcode]' => 'en',
     );
-    $this->drupalPost('admin/config/regional/language/detection/browser', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/language/detection/browser', $edit, t('Save configuration'));
     $this->drupalGet('admin/config/regional/language/detection/browser');
     $this->assertField('edit-mappings-xx-browser-langcode', 'xx', 'Browser language code found.');
     $this->assertField('edit-mappings-xx-drupal-langcode', 'en', 'Drupal language code found.');
 
     // Add the same custom mapping again.
-    $this->drupalPost('admin/config/regional/language/detection/browser', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/language/detection/browser', $edit, t('Save configuration'));
     $this->assertText('Browser language codes must be unique.');
 
     // Change browser language code of our custom mapping to zh-sg.
@@ -212,7 +212,7 @@ class LanguageBrowserDetectionUnitTest extends WebTestBase {
       'mappings[xx][browser_langcode]' => 'zh-sg',
       'mappings[xx][drupal_langcode]' => 'en',
     );
-    $this->drupalPost('admin/config/regional/language/detection/browser', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/language/detection/browser', $edit, t('Save configuration'));
     $this->assertText(t('Browser language codes must be unique.'));
 
     // Change Drupal language code of our custom mapping to zh-hans.
@@ -220,7 +220,7 @@ class LanguageBrowserDetectionUnitTest extends WebTestBase {
       'mappings[xx][browser_langcode]' => 'xx',
       'mappings[xx][drupal_langcode]' => 'zh-hans',
     );
-    $this->drupalPost('admin/config/regional/language/detection/browser', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/language/detection/browser', $edit, t('Save configuration'));
     $this->drupalGet('admin/config/regional/language/detection/browser');
     $this->assertField('edit-mappings-xx-browser-langcode', 'xx', 'Browser language code found.');
     $this->assertField('edit-mappings-xx-drupal-langcode', 'zh-hans', 'Drupal language code found.');

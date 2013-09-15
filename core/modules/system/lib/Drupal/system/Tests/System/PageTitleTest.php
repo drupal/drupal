@@ -7,8 +7,6 @@
 
 namespace Drupal\system\Tests\System;
 
-use Drupal\Component\Utility\String;
-use Drupal\Core\Language\Language;
 use Drupal\Core\Utility\Title;
 use Drupal\simpletest\WebTestBase;
 
@@ -72,13 +70,12 @@ class PageTitleTest extends WebTestBase {
     drupal_set_title($title, PASS_THROUGH);
     $this->assertTrue(strpos(drupal_get_title(), '<em>') !== FALSE, 'Tags in title are not converted to entities when $output is PASS_THROUGH.');
     // Generate node content.
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array(
-      "title" => '!SimpleTest! ' . $title . $this->randomName(20),
-      "body[$langcode][0][value]" => '!SimpleTest! test body' . $this->randomName(200),
+      'title' => '!SimpleTest! ' . $title . $this->randomName(20),
+      'body[0][value]' => '!SimpleTest! test body' . $this->randomName(200),
     );
     // Create the node with HTML in the title.
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     $node = $this->drupalGetNodeByTitle($edit["title"]);
     $this->assertNotNull($node, 'Node created and found in database');
@@ -103,14 +100,14 @@ class PageTitleTest extends WebTestBase {
       'toggle_main_menu'      => TRUE,
       'toggle_secondary_menu' => TRUE,
     );
-    $this->drupalPost('admin/appearance/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/appearance/settings', $edit, t('Save configuration'));
 
     // Set title and slogan.
     $edit = array(
       'site_name'    => $title,
       'site_slogan'  => $slogan,
     );
-    $this->drupalPost('admin/config/system/site-information', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/system/site-information', $edit, t('Save configuration'));
 
     // Load frontpage.
     $this->drupalGet('');
@@ -150,6 +147,18 @@ class PageTitleTest extends WebTestBase {
     $this->assertTitle('Test dynamic title | Drupal');
     $result = $this->xpath('//h1');
     $this->assertEqual('Test dynamic title', (string) $result[0]);
+
+    // Set some custom translated strings.
+    variable_set('locale_custom_strings_en', array('' => array(
+      'Static title' => 'Static title translated'
+    )));
+
+    // Ensure that the title got translated.
+    $this->drupalGet('test-page-static-title');
+
+    $this->assertTitle('Static title translated | Drupal');
+    $result = $this->xpath('//h1');
+    $this->assertEqual('Static title translated', (string) $result[0]);
   }
 
 }

@@ -47,7 +47,7 @@ class ConfigTest extends FileTestBase {
       $this->assertFieldByName($field);
     }
 
-    $this->drupalPost(NULL, $fields, t('Save configuration'));
+    $this->drupalPostForm(NULL, $fields, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'));
     foreach ($fields as $field => $value) {
       $this->assertFieldByName($field, $value);

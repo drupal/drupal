@@ -50,7 +50,7 @@ class SearchExactTest extends SearchTestBase {
 
     // Test that the correct number of pager links are found for keyword search.
     $edit = array('keys' => 'love pizza');
-    $this->drupalPost('search/node', $edit, t('Search'));
+    $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertLinkByHref('page=1', 0, '2nd page link is found for keyword search.');
     $this->assertLinkByHref('page=2', 0, '3rd page link is found for keyword search.');
     $this->assertLinkByHref('page=3', 0, '4th page link is found for keyword search.');
@@ -58,7 +58,7 @@ class SearchExactTest extends SearchTestBase {
 
     // Test that the correct number of pager links are found for exact phrase search.
     $edit = array('keys' => '"love pizza"');
-    $this->drupalPost('search/node', $edit, t('Search'));
+    $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertLinkByHref('page=1', 0, '2nd page link is found for exact phrase search.');
     $this->assertNoLinkByHref('page=2', '3rd page link is not found for exact phrase search.');
   }

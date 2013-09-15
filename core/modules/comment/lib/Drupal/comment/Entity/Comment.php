@@ -184,13 +184,6 @@ class Comment extends EntityNG implements CommentInterface {
   public $thread;
 
   /**
-   * The comment 'new' marker for the current user.
-   *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
-   */
-  public $new;
-
-  /**
    * Initialize the object. Invoked upon construction and wake up.
    */
   protected function init() {
@@ -212,7 +205,6 @@ class Comment extends EntityNG implements CommentInterface {
     unset($this->status);
     unset($this->thread);
     unset($this->entity_type);
-    unset($this->new);
   }
 
   /**
@@ -450,13 +442,6 @@ class Comment extends EntityNG implements CommentInterface {
       'label' => t('Field ID'),
       'description' => t("The comment field id."),
       'type' => 'string_field',
-    );
-    $properties['new'] = array(
-      'label' => t('Comment new marker'),
-      'description' => t("The comment 'new' marker for the current user (0 read, 1 new, 2 updated)."),
-      'type' => 'integer_field',
-      'computed' => TRUE,
-      'class' => '\Drupal\comment\CommentNewItem',
     );
     $properties['field_name'] = array(
       'label' => t('Comment field name'),

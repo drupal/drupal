@@ -80,9 +80,6 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
    * {@inheritdoc}
    */
   public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
-    // Remove un-accessible items.
-    parent::viewElements($entity, $langcode, $items);
-
     $view_mode = $this->getSetting('view_mode');
     $links = $this->getSetting('links');
 
@@ -91,6 +88,10 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
+      if (!$item->access) {
+        // User doesn't have access to the referenced entity.
+        continue;
+      }
       // Protect ourselves from recursive rendering.
       static $depth = 0;
       $depth++;

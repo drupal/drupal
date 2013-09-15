@@ -20,7 +20,7 @@ class FilterSecurityTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('node', 'php', 'filter_test');
+  public static $modules = array('node', 'filter_test');
 
   /**
    * A user with administrative permissions.
@@ -81,7 +81,7 @@ class FilterSecurityTest extends WebTestBase {
     $edit = array(
       'filters[filter_test_replace][status]' => 1,
     );
-    $this->drupalPost('admin/config/content/formats/manage/' . $format_id, $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/content/formats/manage/' . $format_id, $edit, t('Save configuration'));
 
     // Verify that filter_test_replace filter replaced the content.
     $this->drupalGet('node/' . $node->id());
@@ -89,7 +89,7 @@ class FilterSecurityTest extends WebTestBase {
     $this->assertText('Filter: Testing filter', 'Testing filter output found.');
 
     // Disable the text format entirely.
-    $this->drupalPost('admin/config/content/formats/manage/' . $format_id . '/disable', array(), t('Disable'));
+    $this->drupalPostForm('admin/config/content/formats/manage/' . $format_id . '/disable', array(), t('Disable'));
 
     // Verify that the content is empty, because the text format does not exist.
     $this->drupalGet('node/' . $node->id());

@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -92,7 +91,7 @@ class UserCancelTest extends WebTestBase {
       'action' => 'user_cancel_user_action',
       'user_bulk_form[0]' => TRUE,
     );
-    $this->drupalPost('admin/people', $edit, t('Apply'));
+    $this->drupalPostForm('admin/people', $edit, t('Apply'));
 
     // Verify that uid 1's account was not cancelled.
     $user1 = user_load(1, TRUE);
@@ -115,11 +114,11 @@ class UserCancelTest extends WebTestBase {
     $node = $this->drupalCreateNode(array('uid' => $account->id()));
 
     // Attempt to cancel account.
-    $this->drupalPost('user/' . $account->id() . '/edit', NULL, t('Cancel account'));
+    $this->drupalPostForm('user/' . $account->id() . '/edit', NULL, t('Cancel account'));
 
     // Confirm account cancellation.
     $timestamp = time();
-    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    $this->drupalPostForm(NULL, NULL, t('Cancel account'));
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
 
     // Attempt bogus account cancellation request confirmation.
@@ -156,7 +155,7 @@ class UserCancelTest extends WebTestBase {
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
-    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    $this->drupalPostForm(NULL, NULL, t('Cancel account'));
     $this->assertText(t('Are you sure you want to cancel your account?'), 'Confirmation form to cancel account displayed.');
     $this->assertText(t('Your account will be blocked and you will no longer be able to log in. All of your content will remain attributed to your user name.'), 'Informs that all content will be remain as is.');
     $this->assertNoText(t('Select the method to cancel the account above.'), 'Does not allow user to select account cancellation method.');
@@ -164,7 +163,7 @@ class UserCancelTest extends WebTestBase {
     // Confirm account cancellation.
     $timestamp = time();
 
-    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    $this->drupalPostForm(NULL, NULL, t('Cancel account'));
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
@@ -196,13 +195,13 @@ class UserCancelTest extends WebTestBase {
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
-    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    $this->drupalPostForm(NULL, NULL, t('Cancel account'));
     $this->assertText(t('Are you sure you want to cancel your account?'), 'Confirmation form to cancel account displayed.');
     $this->assertText(t('Your account will be blocked and you will no longer be able to log in. All of your content will be hidden from everyone but administrators.'), 'Informs that all content will be unpublished.');
 
     // Confirm account cancellation.
     $timestamp = time();
-    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    $this->drupalPostForm(NULL, NULL, t('Cancel account'));
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
@@ -246,13 +245,13 @@ class UserCancelTest extends WebTestBase {
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
-    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    $this->drupalPostForm(NULL, NULL, t('Cancel account'));
     $this->assertText(t('Are you sure you want to cancel your account?'), 'Confirmation form to cancel account displayed.');
     $this->assertRaw(t('Your account will be removed and all account information deleted. All of your content will be assigned to the %anonymous-name user.', array('%anonymous-name' => \Drupal::config('user.settings')->get('anonymous'))), 'Informs that all content will be attributed to anonymous account.');
 
     // Confirm account cancellation.
     $timestamp = time();
-    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    $this->drupalPostForm(NULL, NULL, t('Cancel account'));
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
@@ -290,13 +289,12 @@ class UserCancelTest extends WebTestBase {
     $node = $this->drupalCreateNode(array('uid' => $account->id()));
 
     // Create comment.
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array();
     $edit['subject'] = $this->randomName(8);
-    $edit['comment_body[' . $langcode . '][0][value]'] = $this->randomName(16);
+    $edit['comment_body[0][value]'] = $this->randomName(16);
 
-    $this->drupalPost('comment/reply/node/' . $node->id() . '/comment', $edit, t('Preview'));
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit, t('Preview'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
     $this->assertText(t('Your comment has been posted.'));
     $comments = entity_load_multiple_by_properties('comment', array('subject' => $edit['subject']));
     $comment = reset($comments);
@@ -313,13 +311,13 @@ class UserCancelTest extends WebTestBase {
 
     // Attempt to cancel account.
     $this->drupalGet('user/' . $account->id() . '/edit');
-    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    $this->drupalPostForm(NULL, NULL, t('Cancel account'));
     $this->assertText(t('Are you sure you want to cancel your account?'), 'Confirmation form to cancel account displayed.');
     $this->assertText(t('Your account will be removed and all account information deleted. All of your content will also be deleted.'), 'Informs that all content will be deleted.');
 
     // Confirm account cancellation.
     $timestamp = time();
-    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    $this->drupalPostForm(NULL, NULL, t('Cancel account'));
     $this->assertText(t('A confirmation request to cancel your account has been sent to your e-mail address.'), 'Account cancellation request mailed message displayed.');
 
     // Confirm account cancellation request.
@@ -351,12 +349,12 @@ class UserCancelTest extends WebTestBase {
 
     // Delete regular user.
     $this->drupalGet('user/' . $account->id() . '/edit');
-    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    $this->drupalPostForm(NULL, NULL, t('Cancel account'));
     $this->assertRaw(t('Are you sure you want to cancel the account %name?', array('%name' => $account->getUsername())), 'Confirmation form to cancel account displayed.');
     $this->assertText(t('Select the method to cancel the account above.'), 'Allows to select account cancellation method.');
 
     // Confirm deletion.
-    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    $this->drupalPostForm(NULL, NULL, t('Cancel account'));
     $this->assertRaw(t('%name has been deleted.', array('%name' => $account->getUsername())), 'User deleted.');
     $this->assertFalse(user_load($account->id()), 'User is not found in the database.');
   }
@@ -379,12 +377,12 @@ class UserCancelTest extends WebTestBase {
 
     // Delete regular user without e-mail address.
     $this->drupalGet('user/' . $account->id() . '/edit');
-    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    $this->drupalPostForm(NULL, NULL, t('Cancel account'));
     $this->assertRaw(t('Are you sure you want to cancel the account %name?', array('%name' => $account->getUsername())), 'Confirmation form to cancel account displayed.');
     $this->assertText(t('Select the method to cancel the account above.'), 'Allows to select account cancellation method.');
 
     // Confirm deletion.
-    $this->drupalPost(NULL, NULL, t('Cancel account'));
+    $this->drupalPostForm(NULL, NULL, t('Cancel account'));
     $this->assertRaw(t('%name has been deleted.', array('%name' => $account->getUsername())), 'User deleted.');
     $this->assertFalse(user_load($account->id()), 'User is not found in the database.');
   }
@@ -415,14 +413,14 @@ class UserCancelTest extends WebTestBase {
     for ($i = 0; $i <= 4; $i++) {
       $edit['user_bulk_form[' . $i . ']'] = TRUE;
     }
-    $this->drupalPost('admin/people', $edit, t('Apply'));
+    $this->drupalPostForm('admin/people', $edit, t('Apply'));
     $this->assertText(t('Are you sure you want to cancel these user accounts?'), 'Confirmation form to cancel accounts displayed.');
     $this->assertText(t('When cancelling these accounts'), 'Allows to select account cancellation method.');
     $this->assertText(t('Require e-mail confirmation to cancel account.'), 'Allows to send confirmation mail.');
     $this->assertText(t('Notify user when account is canceled.'), 'Allows to send notification mail.');
 
     // Confirm deletion.
-    $this->drupalPost(NULL, NULL, t('Cancel accounts'));
+    $this->drupalPostForm(NULL, NULL, t('Cancel accounts'));
     $status = TRUE;
     foreach ($users as $account) {
       $status = $status && (strpos($this->content, t('%name has been deleted.', array('%name' => $account->getUsername()))) !== FALSE);

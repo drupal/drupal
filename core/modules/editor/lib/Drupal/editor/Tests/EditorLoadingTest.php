@@ -102,7 +102,7 @@ class EditorLoadingTest extends WebTestBase {
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
     $this->assertTrue(count($body) === 1, 'A body field exists.');
     $this->assertTrue(count($format_selector) === 1, 'A single text format selector exists on the page.');
-    $specific_format_selector = $this->xpath('//select[contains(@class, "filter-list") and contains(@class, "editor") and @data-editor-for="edit-body-und-0-value"]');
+    $specific_format_selector = $this->xpath('//select[contains(@class, "filter-list") and contains(@class, "editor") and @data-editor-for="edit-body-0-value"]');
     $this->assertTrue(count($specific_format_selector) === 1, 'A single text format selector exists on the page and has the "editor" class and a "data-editor-for" attribute with the correct value.');
     $this->drupalLogout($this->privileged_user);
 
@@ -129,7 +129,7 @@ class EditorLoadingTest extends WebTestBase {
     $this->assertTrue($editor_js_present, 'Text Editor JavaScript is present.');
     $this->assertTrue(count($body) === 1, 'A body field exists.');
     $this->assertTrue(count($format_selector) === 0, 'No text format selector exists on the page.');
-    $hidden_input = $this->xpath('//input[@type="hidden" and @value="plain_text" and contains(@class, "editor") and @data-editor-for="edit-body-und-0-value"]');
+    $hidden_input = $this->xpath('//input[@type="hidden" and @value="plain_text" and contains(@class, "editor") and @data-editor-for="edit-body-0-value"]');
     $this->assertTrue(count($hidden_input) === 1, 'A single text format hidden input exists on the page and has the "editor" class and a "data-editor-for" attribute with the correct value.');
 
     // Create an "article" node that users the full_html text format, then try
@@ -148,7 +148,7 @@ class EditorLoadingTest extends WebTestBase {
     $this->assertFalse($editor_settings_present, 'No Text Editor module settings.');
     $this->assertFalse($editor_js_present, 'No Text Editor JavaScript.');
     $this->assertTrue(count($body) === 1, 'A body field exists.');
-    $this->assertFieldByXPath('//textarea[@id="edit-body-und-0-value" and @disabled="disabled"]', t('This field has been disabled because you do not have sufficient permissions to edit it.'), 'Text format access denied message found.');
+    $this->assertFieldByXPath('//textarea[@id="edit-body-0-value" and @disabled="disabled"]', t('This field has been disabled because you do not have sufficient permissions to edit it.'), 'Text format access denied message found.');
     $this->assertTrue(count($format_selector) === 0, 'No text format selector exists on the page.');
     $hidden_input = $this->xpath('//input[@type="hidden" and contains(@class, "editor")]');
     $this->assertTrue(count($hidden_input) === 0, 'A single text format hidden input does not exist on the page.');
@@ -164,7 +164,7 @@ class EditorLoadingTest extends WebTestBase {
       // Editor.module's JS present.
       isset($settings['ajaxPageState']['js']['core/modules/editor/js/editor.js']),
       // Body field.
-      $this->xpath('//textarea[@id="edit-body-und-0-value"]'),
+      $this->xpath('//textarea[@id="edit-body-0-value"]'),
       // Format selector.
       $this->xpath('//select[contains(@class, "filter-list")]'),
     );

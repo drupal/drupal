@@ -34,7 +34,7 @@ class SystemController extends ControllerBase implements ContainerInjectionInter
   protected $systemManager;
 
   /**
-   * Constructs a new ConfigController.
+   * Constructs a new SystemController.
    *
    * @param \Drupal\system\SystemManager $systemManager
    *   System manager service.

@@ -41,13 +41,13 @@ class SearchPageTextTest extends SearchTestBase {
 
     $edit = array();
     $edit['keys'] = 'bike shed ' . $this->randomName();
-    $this->drupalPost('search/node', $edit, t('Search'));
+    $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertText(t('Consider loosening your query with OR. bike OR shed will often show more results than bike shed.'), 'Help text is displayed when search returns no results.');
     $this->assertText(t('Search'));
     $this->assertTitle($title, 'Search page title is correct');
 
     $edit['keys'] = $this->searching_user->getUsername();
-    $this->drupalPost('search/user', $edit, t('Search'));
+    $this->drupalPostForm('search/user', $edit, t('Search'));
     $this->assertText(t('Search'));
     $this->assertTitle($title, 'Search page title is correct');
 
@@ -69,7 +69,7 @@ class SearchPageTextTest extends SearchTestBase {
       }
     }
     $edit['keys'] = implode(' ', $keys);
-    $this->drupalPost('search/node', $edit, t('Search'));
+    $this->drupalPostForm('search/node', $edit, t('Search'));
     $this->assertRaw(t('Your search used too many AND/OR expressions. Only the first @count terms were included in this search.', array('@count' => $limit)));
   }
 }

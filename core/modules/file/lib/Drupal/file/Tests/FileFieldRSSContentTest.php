@@ -50,12 +50,12 @@ class FileFieldRSSContentTest extends FileFieldTestBase {
     $edit = array(
       "display_modes_custom[rss]" => '1',
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Change the format to 'RSS enclosure'.
     $this->drupalGet("admin/structure/types/manage/$type_name/display/rss");
     $edit = array("fields[$field_name][type]" => 'file_rss_enclosure');
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Create a new node with a file field set. Promote to frontpage
     // needs to be set so this node will appear in the RSS feed.

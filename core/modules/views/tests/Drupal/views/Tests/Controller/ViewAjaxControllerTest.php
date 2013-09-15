@@ -177,7 +177,7 @@ class ViewAjaxControllerTest extends UnitTestCase {
 namespace {
   // @todo Remove once drupal_get_destination is converted to autoloadable code.
   if (!function_exists('drupal_static')) {
-    function drupal_static($key) {
+    function &drupal_static($key) {
       return $key;
     }
   }

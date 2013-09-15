@@ -7,8 +7,6 @@
 
 namespace Drupal\path\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests URL aliases for translated nodes.
  */
@@ -40,11 +38,11 @@ class PathLanguageTest extends PathTestBase {
     $edit = array();
     $edit['predefined_langcode'] = 'fr';
 
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Enable URL language detection and selection.
     $edit = array('language_interface[enabled][language-url]' => 1);
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
   }
 
   /**
@@ -55,7 +53,7 @@ class PathLanguageTest extends PathTestBase {
     $edit = array(
       'language_configuration[language_show]' => TRUE,
     );
-    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
     variable_set('node_type_language_translation_enabled_page', TRUE);
 
@@ -66,7 +64,7 @@ class PathLanguageTest extends PathTestBase {
     $edit = array();
     $edit['langcode'] = 'en';
     $edit['path[alias]'] = $english_alias;
-    $this->drupalPost('node/' . $english_node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $english_node->id() . '/edit', $edit, t('Save'));
 
     // Confirm that the alias works.
     $this->drupalGet($english_alias);
@@ -76,12 +74,11 @@ class PathLanguageTest extends PathTestBase {
     $this->drupalGet('node/' . $english_node->id() . '/translate');
     $this->clickLink(t('Add translation'));
     $edit = array();
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $edit["title"] = $this->randomName();
-    $edit["body[$langcode][0][value]"] = $this->randomName();
+    $edit['title'] = $this->randomName();
+    $edit['body[0][value]'] = $this->randomName();
     $french_alias = $this->randomName();
     $edit['path[alias]'] = $french_alias;
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Clear the path lookup cache.
     $this->container->get('path.alias_manager')->cacheClear();
@@ -112,11 +109,11 @@ class PathLanguageTest extends PathTestBase {
       'language_interface[enabled][language-url]' => 1,
       'language_interface[weight][language-url]' => -8,
     );
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Change user language preference.
     $edit = array('preferred_langcode' => 'fr');
-    $this->drupalPost("user/" . $this->web_user->id() . "/edit", $edit, t('Save'));
+    $this->drupalPostForm("user/" . $this->web_user->id() . "/edit", $edit, t('Save'));
 
     // Check that the English alias works. In this situation French is the
     // current UI and content language, while URL language is English (since we
@@ -135,7 +132,7 @@ class PathLanguageTest extends PathTestBase {
 
     // Disable URL language negotiation.
     $edit = array('language_interface[enabled][language-url]' => FALSE);
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Check that the English alias still works.
     $this->drupalGet($english_alias);

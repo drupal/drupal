@@ -50,10 +50,12 @@ class ReindexConfirm extends ConfirmFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\ConfirmFormBase::getCancelPath().
+   * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/config/search/settings';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'search_settings',
+    );
   }
 
   /**

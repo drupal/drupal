@@ -3,5 +3,6 @@ services:
     class: Drupal\form_test\FormTestServiceObject
   form_test.event_subscriber:
     class: Drupal\form_test\EventSubscriber\FormTestEventSubscriber
+    arguments: ['@module_handler']
     tags:
       - { name: event_subscriber }

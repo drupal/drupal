@@ -73,7 +73,7 @@ class FormatDateTest extends WebTestBase {
       'label' => 'Example Style',
       'date_format_pattern' => 'j M y',
     );
-    $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
+    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
 
     // Add a second date format with a different case than the first.
     $edit = array(
@@ -81,7 +81,7 @@ class FormatDateTest extends WebTestBase {
       'label' => 'Example Style Uppercase',
       'date_format_pattern' => 'j M Y',
     );
-    $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
+    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
     $this->assertText(t('Custom date format added.'));
 
     $timestamp = strtotime('2007-03-10T00:00:00+00:00');
@@ -115,17 +115,17 @@ class FormatDateTest extends WebTestBase {
       'name' => self::LANGCODE,
       'direction' => Language::DIRECTION_LTR,
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
 
     // Set language prefix.
     $edit = array('prefix[' . self::LANGCODE . ']' => self::LANGCODE);
-    $this->drupalPost('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
 
     // Create a test user to carry out the tests.
     $test_user = $this->drupalCreateUser();
     $this->drupalLogin($test_user);
     $edit = array('preferred_langcode' => self::LANGCODE, 'mail' => $test_user->getEmail(), 'timezone' => 'America/Los_Angeles');
-    $this->drupalPost('user/' . $test_user->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('user/' . $test_user->id() . '/edit', $edit, t('Save'));
 
     // Disable session saving as we are about to modify the global $user.
     drupal_save_session(FALSE);

@@ -61,7 +61,7 @@ class MessageAction extends ConfigurableActionBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  protected function getDefaultConfiguration() {
+  public function defaultConfiguration() {
     return array(
       'message' => '',
     );

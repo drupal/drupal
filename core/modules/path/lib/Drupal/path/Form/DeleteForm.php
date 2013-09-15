@@ -65,10 +65,9 @@ class DeleteForm extends ConfirmFormBase implements ContainerInjectionInterface 
   }
 
   /**
-   * Implements \Drupal\Core\Form\ConfirmFormBase::getCancelPath().
+   * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/config/search/path';
+  public function getCancelRoute() {
   }
 
   /**
@@ -77,7 +76,11 @@ class DeleteForm extends ConfirmFormBase implements ContainerInjectionInterface 
   public function buildForm(array $form, array &$form_state, $pid = NULL) {
     $this->pathAlias = $this->path->load(array('pid' => $pid));
 
-    return parent::buildForm($form, $form_state);
+    $form = parent::buildForm($form, $form_state);
+
+    // @todo Convert to getCancelRoute() after http://drupal.org/node/1987802.
+    $form['actions']['cancel']['#href'] = 'admin/config/search/path';
+    return $form;
   }
 
   /**

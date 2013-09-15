@@ -70,7 +70,7 @@ class AssignOwnerNode extends ConfigurableActionBase implements ContainerFactory
   /**
    * {@inheritdoc}
    */
-  protected function getDefaultConfiguration() {
+  public function defaultConfiguration() {
     return array(
       'owner_uid' => '',
     );

@@ -28,13 +28,6 @@ class RotateImageEffect extends ImageEffectBase implements ConfigurableImageEffe
    * {@inheritdoc}
    */
   public function applyEffect(ImageInterface $image) {
-    // Set sane default values.
-    $this->configuration += array(
-      'degrees' => 0,
-      'bgcolor' => NULL,
-      'random' => FALSE,
-    );
-
     // Convert short #FFF syntax to full #FFFFFF syntax.
     if (strlen($this->configuration['bgcolor']) == 4) {
       $c = $this->configuration['bgcolor'];
@@ -92,10 +85,21 @@ class RotateImageEffect extends ImageEffectBase implements ConfigurableImageEffe
   /**
    * {@inheritdoc}
    */
+  public function defaultConfiguration() {
+    return array(
+      'degrees' => 0,
+      'bgcolor' => NULL,
+      'random' => FALSE,
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getForm() {
     $form['degrees'] = array(
       '#type' => 'number',
-      '#default_value' => (isset($this->configuration['degrees'])) ? $this->configuration['degrees'] : 0,
+      '#default_value' => $this->configuration['degrees'],
       '#title' => t('Rotation angle'),
       '#description' => t('The number of degrees the image should be rotated. Positive numbers are clockwise, negative are counter-clockwise.'),
       '#field_suffix' => '&deg;',
@@ -103,7 +107,7 @@ class RotateImageEffect extends ImageEffectBase implements ConfigurableImageEffe
     );
     $form['bgcolor'] = array(
       '#type' => 'textfield',
-      '#default_value' => (isset($this->configuration['bgcolor'])) ? $this->configuration['bgcolor'] : '#FFFFFF',
+      '#default_value' => $this->configuration['bgcolor'],
       '#title' => t('Background color'),
       '#description' => t('The background color to use for exposed areas of the image. Use web-style hex colors (#FFFFFF for white, #000000 for black). Leave blank for transparency on image types that support it.'),
       '#size' => 7,
@@ -112,7 +116,7 @@ class RotateImageEffect extends ImageEffectBase implements ConfigurableImageEffe
     );
     $form['random'] = array(
       '#type' => 'checkbox',
-      '#default_value' => (isset($this->configuration['random'])) ? $this->configuration['random'] : 0,
+      '#default_value' => $this->configuration['random'],
       '#title' => t('Randomize'),
       '#description' => t('Randomize the rotation angle for each image. The angle specified above is used as a maximum.'),
     );

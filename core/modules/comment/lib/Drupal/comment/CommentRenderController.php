@@ -49,6 +49,8 @@ class CommentRenderController extends EntityRenderController {
       $comment_entities[$entity_type] = entity_load_multiple($entity_type, $entity_ids);
     }
 
+    global $user;
+
     foreach ($entities as $entity) {
       if (isset($comment_entities[$entity->entity_type->value][$entity->entity_id->value])) {
         $comment_entity = $comment_entities[$entity->entity_type->value][$entity->entity_id->value];
@@ -72,6 +74,14 @@ class CommentRenderController extends EntityRenderController {
           '#attributes' => array('class' => array('links', 'inline')),
         );
       }
+
+      if (!isset($entity->content['#attached'])) {
+        $entity->content['#attached'] = array();
+      }
+      $entity->content['#attached']['library'][] = array('comment', 'drupal.comment-by-viewer');
+      if (\Drupal::moduleHandler()->moduleExists('history') && $user->isAuthenticated()) {
+        $entity->content['#attached']['library'][] = array('comment', 'drupal.comment-new-indicator');
+      }
     }
   }
 
@@ -86,11 +96,6 @@ class CommentRenderController extends EntityRenderController {
       $instance = field_info_instance($comment_entity->entityType(), $comment->field_name->value, $comment_entity->bundle());
       $is_threaded = isset($comment->divs)
         && $instance['settings']['default_mode'] == COMMENT_MODE_THREADED;
-
-      // Add 'new' anchor if needed.
-      if (!empty($comment->first_new)) {
-        $prefix .= "<a id=\"new\"></a>\n";
-      }
 
       // Add indentation div or close open divs as needed.
       if ($is_threaded) {

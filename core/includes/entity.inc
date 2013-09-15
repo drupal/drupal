@@ -173,7 +173,7 @@ function entity_get_view_modes($entity_type = NULL) {
  *
  * @param string $entity_type
  *   The entity type to load, e.g. node or user.
- * @param int $id
+ * @param mixed $id
  *   The id of the entity to load.
  * @param bool $reset
  *   Whether to reset the internal cache for the requested entity type.

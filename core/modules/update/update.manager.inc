@@ -435,9 +435,9 @@ function update_manager_update_ready_form($form, &$form_state) {
  */
 function update_manager_update_ready_form_submit($form, &$form_state) {
   // Store maintenance_mode setting so we can restore it when done.
-  $_SESSION['maintenance_mode'] = Drupal::config('system.maintenance')->get('enabled');
+  $_SESSION['maintenance_mode'] = Drupal::state()->get('system.maintenance_mode');
   if ($form_state['values']['maintenance_mode'] == TRUE) {
-    Drupal::config('system.maintenance')->set('enabled', TRUE)->save();
+    Drupal::state()->set('system.maintenance_mode', TRUE);
   }
 
   if (!empty($_SESSION['update_manager_update_projects'])) {

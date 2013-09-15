@@ -1,0 +1,13 @@
+history_get_last_node_view:
+  pattern: '/history/get_node_read_timestamps'
+  defaults:
+    _controller: '\Drupal\history\Controller\HistoryController::getNodeReadTimestamps'
+  requirements:
+    _permission: 'access content'
+
+history_read_node:
+  pattern: '/history/{node}/read'
+  defaults:
+    _controller: '\Drupal\history\Controller\HistoryController::readNode'
+  requirements:
+    _entity_access: 'node.view'

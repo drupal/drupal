@@ -53,7 +53,7 @@ class UrlAlterFunctionalTest extends WebTestBase {
 
     // Test adding an alias via the UI.
     $edit = array('source' => "user/$uid/edit", 'alias' => 'alias/test2');
-    $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
     $this->assertText(t('The alias has been saved.'));
     $this->drupalGet('alias/test2');
     $this->assertResponse('200', 'The path alias gets resolved correctly');

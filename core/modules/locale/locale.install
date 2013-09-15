@@ -296,7 +296,7 @@ function locale_requirements($phase) {
     $languages = locale_translatable_language_list();
 
     if ($languages) {
-      // Determine the status of the translation updates per lanuage.
+      // Determine the status of the translation updates per language.
       $status = locale_translation_get_status();
       if ($status) {
         foreach ($status as $project_id => $project) {

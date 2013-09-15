@@ -58,21 +58,16 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    */
   public function form(EntityInterface $entity, $langcode, FieldInterface $items, array &$form, array &$form_state, $get_delta = NULL) {
     $field_name = $this->fieldDefinition->getFieldName();
-
     $parents = $form['#parents'];
 
-    $addition = array(
-      $field_name => array(),
-    );
-
     // Store field information in $form_state.
-    if (!field_form_get_state($parents, $field_name, $langcode, $form_state)) {
+    if (!field_form_get_state($parents, $field_name, $form_state)) {
       $field_state = array(
         'items_count' => count($items),
         'array_parents' => array(),
         'constraint_violations' => array(),
       );
-      field_form_set_state($parents, $field_name, $langcode, $form_state, $field_state);
+      field_form_set_state($parents, $field_name, $form_state, $field_state);
     }
 
     // Collect widget elements.
@@ -110,37 +105,38 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       $elements = $this->formMultipleElements($entity, $items, $langcode, $form, $form_state);
     }
 
-    // Also aid in theming of field widgets by rendering a classified
-    // container.
-    $addition[$field_name] = array(
-      '#type' => 'container',
-      '#attributes' => array(
-        'class' => array(
-          'field-type-' . drupal_html_class($this->fieldDefinition->getFieldType()),
-          'field-name-' . drupal_html_class($field_name),
-          'field-widget-' . drupal_html_class($this->getPluginId()),
-        ),
-      ),
-    );
-
     // Populate the 'array_parents' information in $form_state['field'] after
     // the form is built, so that we catch changes in the form structure performed
     // in alter() hooks.
     $elements['#after_build'][] = 'field_form_element_after_build';
     $elements['#field_name'] = $field_name;
+    // @todo Not strictly needed anymore.
     $elements['#language'] = $langcode;
     $elements['#field_parents'] = $parents;
+    // Enforce the structure of submitted values.
+    $elements['#parents'] = array_merge($parents, array($field_name));
+    // Most widgets need their internal structure preserved in submitted values.
+    $elements += array('#tree' => TRUE);
 
-    $addition[$field_name] += array(
-      '#tree' => TRUE,
-      // The '#language' key can be used to access the field's form element
-      // when $langcode is unknown.
-      '#language' => $langcode,
-      $langcode => $elements,
-      '#access' => $this->checkFieldAccess('edit', $entity),
+    $return = array(
+      $field_name => array(
+        // Aid in theming of widgets by rendering a classified container.
+        '#type' => 'container',
+        // Assign a different parent, to keep the main id for the widget itself.
+        '#parents' => array_merge($parents, array($field_name . '_wrapper')),
+        '#attributes' => array(
+          'class' => array(
+            'field-type-' . drupal_html_class($this->fieldDefinition->getFieldType()),
+            'field-name-' . drupal_html_class($field_name),
+            'field-widget-' . drupal_html_class($this->getPluginId()),
+          ),
+        ),
+        '#access' => $this->checkFieldAccess('edit', $entity),
+        'widget' => $elements,
+      ),
     );
 
-    return $addition;
+    return $return;
   }
 
   /**
@@ -159,7 +155,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     // Determine the number of widgets to display.
     switch ($cardinality) {
       case FIELD_CARDINALITY_UNLIMITED:
-        $field_state = field_form_get_state($parents, $field_name, $langcode, $form_state);
+        $field_state = field_form_get_state($parents, $field_name, $form_state);
         $max = $field_state['items_count'];
         $is_multiple = TRUE;
         break;
@@ -285,7 +281,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     $field_name = $this->fieldDefinition->getFieldName();
 
     // Extract the values from $form_state['values'].
-    $path = array_merge($form['#parents'], array($field_name, $langcode));
+    $path = array_merge($form['#parents'], array($field_name));
     $key_exists = NULL;
     $values = NestedArray::getValue($form_state['values'], $path, $key_exists);
 
@@ -322,12 +318,12 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       $items->filterEmptyValues();
 
       // Put delta mapping in $form_state, so that flagErrors() can use it.
-      $field_state = field_form_get_state($form['#parents'], $field_name, $langcode, $form_state);
+      $field_state = field_form_get_state($form['#parents'], $field_name, $form_state);
       foreach ($items as $delta => $item) {
         $field_state['original_deltas'][$delta] = $item->_original_delta;
         unset($item->_original_delta);
       }
-      field_form_set_state($form['#parents'], $field_name, $langcode, $form_state, $field_state);
+      field_form_set_state($form['#parents'], $field_name, $form_state, $field_state);
     }
   }
 
@@ -337,7 +333,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   public function flagErrors(EntityInterface $entity, $langcode, FieldInterface $items, array $form, array &$form_state) {
     $field_name = $this->fieldDefinition->getFieldName();
 
-    $field_state = field_form_get_state($form['#parents'], $field_name, $langcode, $form_state);
+    $field_state = field_form_get_state($form['#parents'], $field_name, $form_state);
 
     if (!empty($field_state['constraint_violations'])) {
       // Locate the correct element in the the form.
@@ -377,7 +373,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         }
         // Reinitialize the errors list for the next submit.
         $field_state['constraint_violations'] = array();
-        field_form_set_state($form['#parents'], $field_name, $langcode, $form_state, $field_state);
+        field_form_set_state($form['#parents'], $field_name, $form_state, $field_state);
       }
     }
   }

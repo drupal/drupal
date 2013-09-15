@@ -1476,15 +1476,16 @@ function theme_enable($theme_list) {
     }
 
     // The value is not used; the weight is ignored for themes currently.
-    $theme_config->set("enabled.$key", 0);
-    $disabled_themes->clear($key);
+    $theme_config->set("enabled.$key", 0)->save();
+    $disabled_themes->clear($key)->save();
+
+    // Refresh the theme list as config_install_default_config() needs an
+    // updated list to work.
+    list_themes(TRUE);
     // Install default configuration of the theme.
     config_install_default_config('theme', $key);
   }
-  $theme_config->save();
-  $disabled_themes->save();
 
-  list_themes(TRUE);
   Drupal::service('router.builder')->rebuild();
   menu_router_rebuild();
   drupal_theme_rebuild();

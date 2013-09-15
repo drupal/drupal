@@ -49,8 +49,6 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     $entity_type = 'entity_test';
     $entity_init = entity_create($entity_type, array());
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $options = array('field_name' => $this->field_name_2);
 
     // Populate values to be displayed.
     $values = $this->_generateTestFieldValues($this->field['cardinality']);
@@ -282,7 +280,7 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $this->assertEqual($cache->data[$this->field_name_2][$langcode], $values, 'Cached: correct cache entry on load');
 
     // Update with different values, and check that the cache entry is wiped.
-    $values = $this->_generateTestFieldValues($this->field_name_2['cardinality']);
+    $values = $this->_generateTestFieldValues($this->field_2->getFieldCardinality());
     $entity = entity_create($entity_type, array(
       'type' => $entity_type,
       'id' => $entity->id(),
@@ -302,8 +300,8 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
       'type' => $entity_type,
       'id' => $entity->id(),
     ));
-    $values = $this->_generateTestFieldValues($this->field_name_2['cardinality']);
-    $entity->{$this->field_name} = $values;
+    $values = $this->_generateTestFieldValues($this->field_2->getFieldCardinality());
+    $entity->{$this->field_name_2} = $values;
     $entity->setNewRevision();
     $entity->save();
     $this->assertFalse(cache('field')->get($cid), 'Cached: no cache entry on new revision creation');
@@ -330,7 +328,6 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     $entity_type = 'entity_test';
     $entity = entity_create($entity_type, array('id' => 1, 'revision_id' => 1, 'type' => $this->instance['bundle']));
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // When generating form for all fields.
     $form = array();
@@ -338,15 +335,15 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     $form_state['form_display'] = entity_get_form_display($entity_type, $this->instance['bundle'], 'default');
     field_attach_form($entity, $form, $form_state);
 
-    $this->assertEqual($form[$this->field_name][$langcode]['#title'], $this->instance['label'], "First field's form title is {$this->instance['label']}");
-    $this->assertEqual($form[$this->field_name_2][$langcode]['#title'], $this->instance_2['label'], "Second field's form title is {$this->instance_2['label']}");
+    $this->assertEqual($form[$this->field_name]['widget']['#title'], $this->instance['label'], "First field's form title is {$this->instance['label']}");
+    $this->assertEqual($form[$this->field_name_2]['widget']['#title'], $this->instance_2['label'], "Second field's form title is {$this->instance_2['label']}");
     for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
       // field_test_widget uses 'textfield'
-      $this->assertEqual($form[$this->field_name][$langcode][$delta]['value']['#type'], 'textfield', "First field's form delta $delta widget is textfield");
+      $this->assertEqual($form[$this->field_name]['widget'][$delta]['value']['#type'], 'textfield', "First field's form delta $delta widget is textfield");
     }
     for ($delta = 0; $delta < $this->field_2['cardinality']; $delta++) {
       // field_test_widget uses 'textfield'
-      $this->assertEqual($form[$this->field_name_2][$langcode][$delta]['value']['#type'], 'textfield', "Second field's form delta $delta widget is textfield");
+      $this->assertEqual($form[$this->field_name_2]['widget'][$delta]['value']['#type'], 'textfield', "Second field's form delta $delta widget is textfield");
     }
 
     // When generating form for a single field (the second field).
@@ -357,10 +354,10 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     field_attach_form($entity, $form, $form_state, NULL, $options);
 
     $this->assertFalse(isset($form[$this->field_name]), 'The first field does not exist in the form');
-    $this->assertEqual($form[$this->field_name_2][$langcode]['#title'], $this->instance_2['label'], "Second field's form title is {$this->instance_2['label']}");
+    $this->assertEqual($form[$this->field_name_2]['widget']['#title'], $this->instance_2['label'], "Second field's form title is {$this->instance_2['label']}");
     for ($delta = 0; $delta < $this->field_2['cardinality']; $delta++) {
       // field_test_widget uses 'textfield'
-      $this->assertEqual($form[$this->field_name_2][$langcode][$delta]['value']['#type'], 'textfield', "Second field's form delta $delta widget is textfield");
+      $this->assertEqual($form[$this->field_name_2]['widget'][$delta]['value']['#type'], 'textfield', "Second field's form delta $delta widget is textfield");
     }
   }
 
@@ -372,7 +369,6 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
 
     $entity_type = 'entity_test';
     $entity_init = entity_create($entity_type, array('id' => 1, 'revision_id' => 1, 'type' => $this->instance['bundle']));
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
 
     // Build the form for all fields.
     $form = array();
@@ -413,8 +409,8 @@ class FieldAttachOtherTest extends FieldUnitTestBase {
     // Pretend the form has been built.
     drupal_prepare_form('field_test_entity_form', $form, $form_state);
     drupal_process_form('field_test_entity_form', $form, $form_state);
-    $form_state['values'][$this->field_name][$langcode] = $values;
-    $form_state['values'][$this->field_name_2][$langcode] = $values_2;
+    $form_state['values'][$this->field_name] = $values;
+    $form_state['values'][$this->field_name_2] = $values_2;
 
     // Call field_attach_extract_form_values() for all fields.
     $entity = clone($entity_init);

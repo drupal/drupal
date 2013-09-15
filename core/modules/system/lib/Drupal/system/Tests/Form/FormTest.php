@@ -165,7 +165,7 @@ class FormTest extends WebTestBase {
 
     // Attempt to submit the form with no required fields set.
     $edit = array();
-    $this->drupalPost('form-test/validate-required', $edit, 'Submit');
+    $this->drupalPostForm('form-test/validate-required', $edit, 'Submit');
 
     // The only error messages that should appear are the relevant 'required'
     // messages for each field.
@@ -221,7 +221,7 @@ class FormTest extends WebTestBase {
       'select' => 'foo',
       'radios' => 'bar',
     );
-    $this->drupalPost(NULL, $edit, 'Submit');
+    $this->drupalPostForm(NULL, $edit, 'Submit');
     $this->assertNoFieldByXpath('//div[contains(@class, "error")]', FALSE, 'No error message is displayed when all required fields are filled.');
     $this->assertRaw("The form_test_validate_required_form form was submitted successfully.", 'Validation form submitted successfully.');
   }
@@ -242,7 +242,7 @@ class FormTest extends WebTestBase {
 
     // Attempt to submit the form with no required field set.
     $edit = array();
-    $this->drupalPost('form-test/validate-required-no-title', $edit, 'Submit');
+    $this->drupalPostForm('form-test/validate-required-no-title', $edit, 'Submit');
     $this->assertNoRaw("The form_test_validate_required_form_no_title form was submitted successfully.", 'Validation form submitted successfully.');
 
     // Check the page for the error class on the textfield.
@@ -256,7 +256,7 @@ class FormTest extends WebTestBase {
     $edit = array(
       'textfield' => $this->randomString(),
     );
-    $this->drupalPost(NULL, $edit, 'Submit');
+    $this->drupalPostForm(NULL, $edit, 'Submit');
     $this->assertNoFieldByXpath('//input[contains(@class, "error")]', FALSE, 'No error input form element class found.');
     $this->assertRaw("The form_test_validate_required_form_no_title form was submitted successfully.", 'Validation form submitted successfully.');
   }
@@ -269,11 +269,11 @@ class FormTest extends WebTestBase {
   function testCheckboxProcessing() {
     // First, try to submit without the required checkbox.
     $edit = array();
-    $this->drupalPost('form-test/checkbox', $edit, t('Submit'));
+    $this->drupalPostForm('form-test/checkbox', $edit, t('Submit'));
     $this->assertRaw(t('!name field is required.', array('!name' => 'required_checkbox')), 'A required checkbox is actually mandatory');
 
     // Now try to submit the form correctly.
-    $values = drupal_json_decode($this->drupalPost(NULL, array('required_checkbox' => 1), t('Submit')));
+    $values = drupal_json_decode($this->drupalPostForm(NULL, array('required_checkbox' => 1), t('Submit')));
     $expected_values = array(
       'disabled_checkbox_on' => 'disabled_checkbox_on',
       'disabled_checkbox_off' => '',
@@ -301,7 +301,7 @@ class FormTest extends WebTestBase {
     $this->drupalGet('form-test/select');
 
     // Posting without any values should throw validation errors.
-    $this->drupalPost(NULL, array(), 'Submit');
+    $this->drupalPostForm(NULL, array(), 'Submit');
     $this->assertNoText(t($error, array('!name' => $form['select']['#title'])));
     $this->assertNoText(t($error, array('!name' => $form['select_required']['#title'])));
     $this->assertNoText(t($error, array('!name' => $form['select_optional']['#title'])));
@@ -326,7 +326,7 @@ class FormTest extends WebTestBase {
       'no_default_empty_value_one' => 'three',
       'multiple_no_default_required[]' => 'three',
     );
-    $this->drupalPost(NULL, $edit, 'Submit');
+    $this->drupalPostForm(NULL, $edit, 'Submit');
     $values = drupal_json_decode($this->drupalGetContent());
 
     // Verify expected values.
@@ -405,7 +405,7 @@ class FormTest extends WebTestBase {
     // First test the number element type, then range.
     foreach (array('form-test/number', 'form-test/number/range') as $path) {
       // Post form and show errors.
-      $this->drupalPost($path, array(), 'Submit');
+      $this->drupalPostForm($path, array(), 'Submit');
 
       foreach ($expected as $element => $error) {
         // Create placeholder array.
@@ -433,13 +433,13 @@ class FormTest extends WebTestBase {
    * Tests default value handling of #type 'range' elements.
    */
   function testRange() {
-    $values = json_decode($this->drupalPost('form-test/range', array(), 'Submit'));
+    $values = json_decode($this->drupalPostForm('form-test/range', array(), 'Submit'));
     $this->assertEqual($values->with_default_value, 18);
     $this->assertEqual($values->float, 10.5);
     $this->assertEqual($values->integer, 6);
     $this->assertEqual($values->offset, 6.9);
 
-    $this->drupalPost('form-test/range/invalid', array(), 'Submit');
+    $this->drupalPostForm('form-test/range/invalid', array(), 'Submit');
     $this->assertFieldByXPath('//input[@type="range" and contains(@class, "error")]', NULL, 'Range element has the error class.');
   }
 
@@ -463,7 +463,7 @@ class FormTest extends WebTestBase {
       $edit = array(
         'color' => $input,
       );
-      $result = json_decode($this->drupalPost('form-test/color', $edit, 'Submit'));
+      $result = json_decode($this->drupalPostForm('form-test/color', $edit, 'Submit'));
       $this->assertEqual($result->color, $expected);
     }
 
@@ -473,7 +473,7 @@ class FormTest extends WebTestBase {
       $edit = array(
         'color' => $input,
       );
-      $this->drupalPost('form-test/color', $edit, 'Submit');
+      $this->drupalPostForm('form-test/color', $edit, 'Submit');
       $this->assertRaw(t('%name must be a valid color.', array('%name' => 'Color')));
     }
   }
@@ -506,11 +506,11 @@ class FormTest extends WebTestBase {
 
     // Submit the form with no input, as the browser does for disabled elements,
     // and fetch the $form_state['values'] that is passed to the submit handler.
-    $this->drupalPost('form-test/disabled-elements', array(), t('Submit'));
+    $this->drupalPostForm('form-test/disabled-elements', array(), t('Submit'));
     $returned_values['normal'] = drupal_json_decode($this->content);
 
     // Do the same with input, as could happen if JavaScript un-disables an
-    // element. drupalPost() emulates a browser by not submitting input for
+    // element. drupalPostForm() emulates a browser by not submitting input for
     // disabled elements, so we need to un-disable those elements first.
     $this->drupalGet('form-test/disabled-elements');
     $disabled_elements = array();
@@ -523,7 +523,7 @@ class FormTest extends WebTestBase {
     // the disabled container.
     $this->assertEqual(count($disabled_elements), 39, 'The correct elements have the disabled property in the HTML code.');
 
-    $this->drupalPost(NULL, $edit, t('Submit'));
+    $this->drupalPostForm(NULL, $edit, t('Submit'));
     $returned_values['hijacked'] = drupal_json_decode($this->content);
 
     // Ensure that the returned values match the form's default values in both
@@ -630,7 +630,7 @@ class FormTest extends WebTestBase {
     $this->drupalGet('form-test/input-forgery');
     $checkbox = $this->xpath('//input[@name="checkboxes[two]"]');
     $checkbox[0]['value'] = 'FORGERY';
-    $this->drupalPost(NULL, array('checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE), t('Submit'));
+    $this->drupalPostForm(NULL, array('checkboxes[one]' => TRUE, 'checkboxes[two]' => TRUE), t('Submit'));
     $this->assertText('An illegal choice has been detected.', 'Input forgery was detected.');
   }
 
@@ -663,7 +663,7 @@ class FormTest extends WebTestBase {
   function testMultiFormSameNameErrorClass() {
     $this->drupalGet('form-test/double-form');
     $edit = array();
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertFieldByXpath('//input[@id="edit-name" and contains(@class, "error")]', NULL, 'Error input form element class found for first element.');
     $this->assertNoFieldByXpath('//input[@id="edit-name--2" and contains(@class, "error")]', NULL, 'No error input form element class found for second element.');
   }
@@ -673,7 +673,7 @@ class FormTest extends WebTestBase {
    */
   public function testFormStateDatabaseConnection() {
     $this->assertNoText('Database connection found');
-    $this->drupalPost('form-test/form_state-database', array(), t('Submit'));
+    $this->drupalPostForm('form-test/form_state-database', array(), t('Submit'));
     $this->assertText('Database connection found');
   }
 }

@@ -136,8 +136,8 @@ class StyleSerializerTest extends PluginTestBase {
     $style_options = 'admin/structure/views/nojs/display/test_serializer_display_field/rest_export_1/style_options';
 
     // Select only 'xml' as an accepted format.
-    $this->drupalPost($style_options, array('style_options[formats][xml]' => 'xml'), t('Apply'));
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm($style_options, array('style_options[formats][xml]' => 'xml'), t('Apply'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
 
     // Should return a 406.
     $this->drupalGet('test/serialize/field', array(), array('Accept: application/json'));
@@ -147,8 +147,8 @@ class StyleSerializerTest extends PluginTestBase {
     $this->assertResponse(200, 'A 200 response was returned when XML was requested.');
 
     // Add 'json' as an accepted format, so we have multiple.
-    $this->drupalPost($style_options, array('style_options[formats][json]' => 'json'), t('Apply'));
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm($style_options, array('style_options[formats][json]' => 'json'), t('Apply'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
 
     // Should return a 200.
     // @todo This should be fixed when we have better content negotiation.
@@ -183,8 +183,8 @@ class StyleSerializerTest extends PluginTestBase {
 
     // Test an empty string for an alias, this should not be used. This also
     // tests that the form can be submitted with no aliases.
-    $this->drupalPost($row_options, array('row_options[field_options][name][alias]' => ''), t('Apply'));
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm($row_options, array('row_options[field_options][name][alias]' => ''), t('Apply'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
 
     $view = views_get_view('test_serializer_display_field');
     $view->setDisplay('rest_export_1');
@@ -210,16 +210,16 @@ class StyleSerializerTest extends PluginTestBase {
     );
 
     $edit = array('row_options[field_options][name][alias]' => $alias_map['name'], 'row_options[field_options][nothing][alias]' => $alias_map['nothing']);
-    $this->drupalPost($row_options, $edit, t('Apply'));
+    $this->drupalPostForm($row_options, $edit, t('Apply'));
     $this->assertText(t('The machine-readable name must contain only letters, numbers, dashes and underscores.'));
 
     // Change the map alias value to a valid one.
     $alias_map['nothing'] = $this->randomName();
 
     $edit = array('row_options[field_options][name][alias]' => $alias_map['name'], 'row_options[field_options][nothing][alias]' => $alias_map['nothing']);
-    $this->drupalPost($row_options, $edit, t('Apply'));
+    $this->drupalPostForm($row_options, $edit, t('Apply'));
 
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
 
     $view = views_get_view('test_serializer_display_field');
     $view->setDisplay('rest_export_1');
@@ -250,8 +250,8 @@ class StyleSerializerTest extends PluginTestBase {
 
     // Test an empty string for an alias, this should not be used. This also
     // tests that the form can be submitted with no aliases.
-    $this->drupalPost($row_options, array('row_options[field_options][created][raw_output]' => '1'), t('Apply'));
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm($row_options, array('row_options[field_options][created][raw_output]' => '1'), t('Apply'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
 
     $view = views_get_view('test_serializer_display_field');
     $view->setDisplay('rest_export_1');

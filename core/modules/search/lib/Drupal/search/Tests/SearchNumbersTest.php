@@ -82,14 +82,14 @@ class SearchNumbersTest extends SearchTestBase {
 
       // Verify that the node title does not appear on the search page
       // with a dummy search.
-      $this->drupalPost('search/node',
+      $this->drupalPostForm('search/node',
         array('keys' => 'foo'),
         t('Search'));
       $this->assertNoText($node->label(), $type . ': node title not shown in dummy search');
 
       // Verify that the node title does appear as a link on the search page
       // when searching for the number.
-      $this->drupalPost('search/node',
+      $this->drupalPostForm('search/node',
         array('keys' => $number),
         t('Search'));
       $this->assertText($node->label(), format_string('%type: node title shown (search found the node) in search for number %number.', array('%type' => $type, '%number' => $number)));

@@ -693,7 +693,7 @@ function locale_translate_file_attach_properties($file, $options = array()) {
     );
   }
 
-  // Extract project, verion and language code from the file name. Supported:
+  // Extract project, version and language code from the file name. Supported:
   // {project}-{version}.{langcode}.po, {prefix}.{langcode}.po or {langcode}.po
   preg_match('!
     (                       # project OR project and version OR emtpy (group 1)

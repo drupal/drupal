@@ -33,13 +33,13 @@ class DisplayPath extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display and check the appearing text.
-    $this->drupalPost(NULL, array(), 'Add Page');
+    $this->drupalPostForm(NULL, array(), 'Add Page');
     $this->assertText(t('No path is set'), 'The right text appears if no path was set.');
     $this->assertNoLink(t('View @display', array('@display' => 'page')), 'No view page link found on the page.');
 
     // Save a path and make sure the summary appears as expected.
     $random_path = $this->randomName();
-    $this->drupalPost('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => $random_path), t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => $random_path), t('Apply'));
     $this->assertText('/' . $random_path, 'The custom path appears in the summary.');
     $this->assertLink(t('View @display', array('@display' => 'Page')), 0, 'view page link found on the page.');
   }
@@ -49,9 +49,9 @@ class DisplayPath extends UITestBase {
    */
   public function testDeleteWithNoPath() {
     $this->drupalGet('admin/structure/views/view/test_view');
-    $this->drupalPost(NULL, array(), t('Add Page'));
-    $this->drupalPost(NULL, array(), t('Delete Page'));
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, array(), t('Add Page'));
+    $this->drupalPostForm(NULL, array(), t('Delete Page'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
     $this->assertRaw(t('The view %view has been saved.', array('%view' => 'Test view')));
   }
 
@@ -63,16 +63,16 @@ class DisplayPath extends UITestBase {
     $this->drupalGet('admin/structure/views/view/test_view');
 
     // Add a new page display.
-    $this->drupalPost(NULL, array(), 'Add Page');
+    $this->drupalPostForm(NULL, array(), 'Add Page');
     // Save a path.
-    $this->drupalPost('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => $this->randomString()), t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', array('path' => $this->randomString()), t('Apply'));
     $this->drupalGet('admin/structure/views/view/test_view');
 
-    $this->drupalPost('admin/structure/views/nojs/display/test_view/page_1/menu', array('menu[type]' => 'default tab', 'menu[title]' => 'Test tab title'), t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/menu', array('menu[type]' => 'default tab', 'menu[title]' => 'Test tab title'), t('Apply'));
     $this->assertResponse(200);
     $this->assertUrl('admin/structure/views/nojs/display/test_view/page_1/tab_options');
 
-    $this->drupalPost(NULL, array('tab_options[type]' => 'tab', 'tab_options[title]' => $this->randomString()), t('Apply'));
+    $this->drupalPostForm(NULL, array('tab_options[type]' => 'tab', 'tab_options[title]' => $this->randomString()), t('Apply'));
     $this->assertResponse(200);
     $this->assertUrl('admin/structure/views/view/test_view/edit/page_1');
 

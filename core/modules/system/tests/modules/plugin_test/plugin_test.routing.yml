@@ -1,0 +1,6 @@
+plugin_definition_test:
+  pattern: '/plugin_definition_test'
+  defaults:
+    _content: '\Drupal\plugin_test\Controller\PluginTest::testDefinitions'
+  requirements:
+    _access: 'TRUE'

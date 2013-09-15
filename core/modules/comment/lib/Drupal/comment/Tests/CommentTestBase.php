@@ -97,9 +97,8 @@ abstract class CommentTestBase extends WebTestBase {
    *   The posted comment or NULL when posted comment was not found.
    */
   function postComment($entity, $comment, $subject = '', $contact = NULL) {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array();
-    $edit['comment_body[' . $langcode . '][0][value]'] = $comment;
+    $edit['comment_body[0][value]'] = $comment;
 
     if ($entity !== NULL) {
       $instance = $this->container->get('field.info')->getInstance('node', $entity->bundle(), 'comment');
@@ -129,19 +128,19 @@ abstract class CommentTestBase extends WebTestBase {
       case DRUPAL_REQUIRED:
         // Preview required so no save button should be found.
         $this->assertNoFieldByName('op', t('Save'), 'Save button not found.');
-        $this->drupalPost(NULL, $edit, t('Preview'));
+        $this->drupalPostForm(NULL, $edit, t('Preview'));
         // Don't break here so that we can test post-preview field presence and
         // function below.
       case DRUPAL_OPTIONAL:
         $this->assertFieldByName('op', t('Preview'), 'Preview button found.');
         $this->assertFieldByName('op', t('Save'), 'Save button found.');
-        $this->drupalPost(NULL, $edit, t('Save'));
+        $this->drupalPostForm(NULL, $edit, t('Save'));
         break;
 
       case DRUPAL_DISABLED:
         $this->assertNoFieldByName('op', t('Preview'), 'Preview button not found.');
         $this->assertFieldByName('op', t('Save'), 'Save button found.');
-        $this->drupalPost(NULL, $edit, t('Save'));
+        $this->drupalPostForm(NULL, $edit, t('Save'));
         break;
     }
     $match = array();
@@ -195,7 +194,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   Comment to delete.
    */
   function deleteComment(CommentInterface $comment) {
-    $this->drupalPost('comment/' . $comment->id() . '/delete', array(), t('Delete'));
+    $this->drupalPostForm('comment/' . $comment->id() . '/delete', array(), t('Delete'));
     $this->assertText(t('The comment and all its replies have been deleted.'), 'Comment deleted.');
   }
 
@@ -308,10 +307,10 @@ abstract class CommentTestBase extends WebTestBase {
     $edit = array();
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id() . ']'] = TRUE;
-    $this->drupalPost('admin/content/comment' . ($approval ? '/approval' : ''), $edit, t('Update'));
+    $this->drupalPostForm('admin/content/comment' . ($approval ? '/approval' : ''), $edit, t('Update'));
 
     if ($operation == 'delete') {
-      $this->drupalPost(NULL, array(), t('Delete comments'));
+      $this->drupalPostForm(NULL, array(), t('Delete comments'));
       $this->assertRaw(format_plural(1, 'Deleted 1 comment.', 'Deleted @count comments.'), format_string('Operation "@operation" was performed on comment.', array('@operation' => $operation)));
     }
     else {

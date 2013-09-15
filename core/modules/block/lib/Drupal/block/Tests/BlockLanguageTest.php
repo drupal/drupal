@@ -45,7 +45,7 @@ class BlockLanguageTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'fr',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
     $this->assertText('French', 'Language added successfully.');
   }
 
@@ -65,13 +65,13 @@ class BlockLanguageTest extends WebTestBase {
       'machine_name' => strtolower($this->randomName(8)),
       'region' => 'sidebar_first',
     );
-    $this->drupalPost('admin/structure/block/add/system_powered_by_block' . '/' . $default_theme, $edit, t('Save block'));
+    $this->drupalPostForm('admin/structure/block/add/system_powered_by_block' . '/' . $default_theme, $edit, t('Save block'));
 
     // Change the default language.
     $edit = array(
       'site_default_language' => 'fr',
     );
-    $this->drupalpost('admin/config/regional/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/settings', $edit, t('Save configuration'));
 
     // Reset the static cache of the language list.
     drupal_static_reset('language_list');
@@ -109,7 +109,7 @@ class BlockLanguageTest extends WebTestBase {
     $this->assertTrue('fr' === $language, 'Language is set in the block configuration.');
 
     // Delete the language.
-    $this->drupalPost('admin/config/regional/language/delete/fr', array(), t('Delete'));
+    $this->drupalPostForm('admin/config/regional/language/delete/fr', array(), t('Delete'));
 
     // Check that the language is no longer stored in the configuration after
     // it is deleted.

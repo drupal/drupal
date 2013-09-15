@@ -49,7 +49,7 @@ class RebuildTest extends WebTestBase {
       'checkbox_1_default_on' => FALSE,
       'text_1' => 'foo',
     );
-    $this->drupalPost('form-test/form-rebuild-preserve-values', $edit, 'Add more');
+    $this->drupalPostForm('form-test/form-rebuild-preserve-values', $edit, 'Add more');
 
     // Verify that initial elements retained their submitted values.
     $this->assertFieldChecked('edit-checkbox-1-default-off', 'A submitted checked checkbox retained its checked state during a rebuild.');
@@ -96,7 +96,7 @@ class RebuildTest extends WebTestBase {
     // submission and verify it worked by ensuring the updated page has two text
     // field items in the field for which we just added an item.
     $this->drupalGet('node/add/page');
-    $this->drupalPostAJAX(NULL, array(), array('field_ajax_test_add_more' => t('Add another item')), 'system/ajax', array(), array(), 'page-node-form');
+    $this->drupalPostAjaxForm(NULL, array(), array('field_ajax_test_add_more' => t('Add another item')), 'system/ajax', array(), array(), 'page-node-form');
     $this->assert(count($this->xpath('//div[contains(@class, "field-name-field-ajax-test")]//input[@type="text"]')) == 2, 'AJAX submission succeeded.');
 
     // Submit the form with the non-Ajax "Save" button, leaving the title field
@@ -104,7 +104,7 @@ class RebuildTest extends WebTestBase {
     // occurred, because this test is for testing what happens when a form is
     // re-rendered without being re-built, which is what happens when there's
     // a validation error.
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
     $this->assertText('Title field is required.', 'Non-AJAX submission correctly triggered a validation error.');
 
     // Ensure that the form contains two items in the multi-valued field, so we

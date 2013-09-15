@@ -33,7 +33,7 @@ class FileInclusionTest extends WebTestBase {
    * Tests loading an include specified in hook_menu().
    */
   function testLoadMenuInclude() {
-    $this->drupalPostAJAX('form-test/load-include-menu', array(), array('op' => t('Save')), 'system/ajax', array(), array(), 'form-test-load-include-menu');
+    $this->drupalPostAjaxForm('form-test/load-include-menu', array(), array('op' => t('Save')), 'system/ajax', array(), array(), 'form-test-load-include-menu');
     $this->assertText('Submit callback called.');
   }
 
@@ -41,7 +41,7 @@ class FileInclusionTest extends WebTestBase {
    * Tests loading a custom specified include.
    */
   function testLoadCustomInclude() {
-    $this->drupalPost('form-test/load-include-custom', array(), t('Save'));
+    $this->drupalPostForm('form-test/load-include-custom', array(), t('Save'));
     $this->assertText('Submit callback called.');
   }
 }

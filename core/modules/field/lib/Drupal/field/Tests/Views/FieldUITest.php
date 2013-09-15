@@ -58,18 +58,18 @@ class FieldUITest extends FieldTestBase {
     sort($options, SORT_STRING);
     $this->assertEqual($options, array('text_default', 'text_plain', 'text_trimmed'), 'The text formatters for a simple text field appear as expected.');
 
-    $this->drupalPost(NULL, array('options[type]' => 'text_trimmed'), t('Apply'));
+    $this->drupalPostForm(NULL, array('options[type]' => 'text_trimmed'), t('Apply'));
 
     $this->drupalGet($url);
     $this->assertOptionSelected('edit-options-type', 'text_trimmed');
 
     $random_number = rand(100, 400);
-    $this->drupalPost(NULL, array('options[settings][trim_length]' => $random_number), t('Apply'));
+    $this->drupalPostForm(NULL, array('options[settings][trim_length]' => $random_number), t('Apply'));
     $this->drupalGet($url);
     $this->assertFieldByName('options[settings][trim_length]', $random_number, 'The formatter setting got saved.');
 
     // Save the view and test whether the settings are saved.
-    $this->drupalPost('admin/structure/views/view/test_view_fieldapi', array(), t('Save'));
+    $this->drupalPostForm('admin/structure/views/view/test_view_fieldapi', array(), t('Save'));
     $view = views_get_view('test_view_fieldapi');
     $view->initHandlers();
     $this->assertEqual($view->field['field_name_0']->options['type'], 'text_trimmed');

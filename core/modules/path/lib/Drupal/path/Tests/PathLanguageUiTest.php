@@ -38,11 +38,11 @@ class PathLanguageUiTest extends PathTestBase {
     $edit = array();
     $edit['predefined_langcode'] = 'fr';
 
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Enable URL language detection and selection.
     $edit = array('language_interface[enabled][language-url]' => 1);
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
   }
 
   /**
@@ -53,7 +53,7 @@ class PathLanguageUiTest extends PathTestBase {
     $edit = array();
     $edit['source'] = 'admin/config/search/path';
     $edit['alias'] = $name;
-    $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
     $this->drupalGet($name);
     $this->assertText(t('Filter aliases'), 'Language-neutral URL alias works');
@@ -68,7 +68,7 @@ class PathLanguageUiTest extends PathTestBase {
     $edit['source'] = 'admin/config/search/path';
     $edit['alias'] = $name;
     $edit['langcode'] = 'en';
-    $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
     $this->drupalGet($name);
     $this->assertText(t('Filter aliases'), 'English URL alias works');
@@ -83,7 +83,7 @@ class PathLanguageUiTest extends PathTestBase {
     $edit['source'] = 'admin/config/search/path';
     $edit['alias'] = $name;
     $edit['langcode'] = 'fr';
-    $this->drupalPost('admin/config/search/path/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/config/search/path/add', $edit, t('Save'));
 
     $this->drupalGet('fr/' . $name);
     $this->assertText(t('Filter aliases'), 'Foreign URL alias works');

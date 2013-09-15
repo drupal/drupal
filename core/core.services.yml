@@ -358,7 +358,7 @@ services:
       - { name: event_subscriber }
   controller.page:
     class: Drupal\Core\Controller\HtmlPageController
-    arguments: ['@http_kernel', '@controller_resolver']
+    arguments: ['@http_kernel', '@controller_resolver', '@string_translation']
   controller.dialog:
     class: Drupal\Core\Controller\DialogController
     arguments: ['@http_kernel']

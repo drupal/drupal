@@ -60,7 +60,7 @@ class BulkFormTest extends WebTestBase {
 
     // Set all nodes to sticky and check that.
     $edit += array('action' => 'node_make_sticky_action');
-    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
 
     foreach ($nodes as $node) {
       $changed_node = node_load($node->id());
@@ -74,7 +74,7 @@ class BulkFormTest extends WebTestBase {
     $this->assertTrue($node->isPublished(), 'The node is published.');
 
     $edit = array('action_bulk_form[0]' => TRUE, 'action' => 'node_unpublish_action');
-    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
 
     $this->assertText('Unpublish content was applied to 1 item.');
 

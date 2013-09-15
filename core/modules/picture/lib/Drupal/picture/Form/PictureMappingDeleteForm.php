@@ -21,8 +21,10 @@ class PictureMappingDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/config/media/picturemapping';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'picture_mapping_page',
+    );
   }
 
   /**

@@ -1,0 +1,48 @@
+batch_test_redirect:
+  pattern: '/batch-test/redirect'
+  defaults:
+    _content: '\Drupal\batch_test\Controller\BatchTestController::testRedirect'
+    _title: 'Redirect'
+  requirements:
+    _access:  'TRUE'
+
+batch_test_large_percentage:
+  pattern: '/batch-test/large-percentage'
+  defaults:
+    _content: '\Drupal\batch_test\Controller\BatchTestController::testLargePercentage'
+    _title: 'Simple page with batch over 100% complete'
+  requirements:
+    _access:  'TRUE'
+
+batch_test_nested_programmatic:
+  pattern: '/batch-test/nested-programmatic/{value}'
+  defaults:
+    _content: '\Drupal\batch_test\Controller\BatchTestController::testNestedDrupalFormSubmit'
+    _title: 'Nested programmatic'
+    value: '1'
+  requirements:
+    _access: 'TRUE'
+
+batch_test_no_form:
+  pattern: '/batch-test/no-form'
+  defaults:
+    _content: '\Drupal\batch_test\Controller\BatchTestController::testNoForm'
+    _title: 'Simple page'
+  requirements:
+    _access: 'TRUE'
+
+batch_test_programmatic:
+  pattern: '/batch-test/programmatic/{value}'
+  defaults:
+    _content: '\Drupal\batch_test\Controller\BatchTestController::testProgrammatic'
+    _title: 'Programmatic'
+    value: '1'
+  requirements:
+    _access: 'TRUE'
+
+batch_test_test_theme:
+  pattern: '/admin/batch-test/test-theme'
+  defaults:
+    _content: '\Drupal\batch_test\Controller\BatchTestController::testThemeBatch'
+  requirements:
+    _access: 'TRUE'

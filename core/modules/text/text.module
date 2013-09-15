@@ -51,11 +51,10 @@ function text_help($path, $arg) {
  * @param $text
  *   The content for which a summary will be generated.
  * @param $format
- *   The format of the content. If the PHP filter is present and $text contains
- *   PHP code, we do not split it up to prevent parse errors. If the line break
- *   filter is present then we treat newlines embedded in $text as line breaks.
- *   If the htmlcorrector filter is present, it will be run on the generated
- *   summary (if different from the incoming $text).
+ *   The format of the content. If the line break filter is present then we
+ *   treat newlines embedded in $text as line breaks. If the htmlcorrector
+ *   filter is present, it will be run on the generated summary (if different
+ *   from the incoming $text).
  * @param $size
  *   The desired character length of the summary. If omitted, the default value
  *   will be used. Ignored if the special delimiter is present in $text.
@@ -91,13 +90,6 @@ function text_summary($text, $format = NULL, $size = NULL) {
     if (!$filters) {
       return '';
     }
-  }
-
-  // We check for the presence of the PHP evaluator filter in the current
-  // format. If the body contains PHP code, we do not split it up to prevent
-  // parse errors.
-  if (isset($format) && $filters->has('php_code') && $filters->get('php_code')->status && strpos($text, '<?') !== FALSE) {
-    return $text;
   }
 
   // If we have a short body, the entire body is the summary.

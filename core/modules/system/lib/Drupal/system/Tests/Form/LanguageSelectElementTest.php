@@ -86,7 +86,7 @@ class LanguageSelectElementTest extends WebTestBase {
     // Check that the submitted values were the default values of the language
     // field elements.
     $edit = array();
-    $this->drupalPost(NULL, $edit, t('Submit'));
+    $this->drupalPostForm(NULL, $edit, t('Submit'));
     $values = drupal_json_decode($this->drupalGetContent());
     $this->assertEqual($values['languages_all'], 'xx');
     $this->assertEqual($values['languages_configurable'], 'en');

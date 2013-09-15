@@ -39,7 +39,7 @@ class ValidationTest extends WebTestBase {
     $edit = array(
       'name' => 'element_validate',
     );
-    $this->drupalPost(NULL, $edit, 'Save');
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertFieldByName('name', '#value changed by #element_validate', 'Form element #value was altered.');
     $this->assertText('Name value: value changed by form_set_value() in #element_validate', 'Form element value in $form_state was altered.');
 
@@ -48,7 +48,7 @@ class ValidationTest extends WebTestBase {
     $edit = array(
       'name' => 'validate',
     );
-    $this->drupalPost(NULL, $edit, 'Save');
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertFieldByName('name', '#value changed by #validate', 'Form element #value was altered.');
     $this->assertText('Name value: value changed by form_set_value() in #validate', 'Form element value in $form_state was altered.');
 
@@ -57,12 +57,12 @@ class ValidationTest extends WebTestBase {
     $edit = array(
       'name' => 'element_validate_access',
     );
-    $this->drupalPost(NULL, $edit, 'Save');
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertNoFieldByName('name', 'Form element was hidden.');
     $this->assertText('Name value: element_validate_access', 'Value for inaccessible form element exists.');
 
     // Verify that value for inaccessible form element persists.
-    $this->drupalPost(NULL, array(), 'Save');
+    $this->drupalPostForm(NULL, array(), 'Save');
     $this->assertNoFieldByName('name', 'Form element was hidden.');
     $this->assertText('Name value: element_validate_access', 'Value for inaccessible form element exists.');
   }
@@ -101,29 +101,29 @@ class ValidationTest extends WebTestBase {
     // #limit_validation_errors) and ensure that the title field is not
     // validated, but the #element_validate handler for the 'test' field
     // is triggered.
-    $this->drupalPost($path, $edit, t('Partial validate'));
+    $this->drupalPostForm($path, $edit, t('Partial validate'));
     $this->assertNoText(t('!name field is required.', array('!name' => 'Title')));
     $this->assertText('Test element is invalid');
 
     // Edge case of #limit_validation_errors containing numeric indexes: same
     // thing with the 'Partial validate (numeric index)' button and the
     // 'test_numeric_index' field.
-    $this->drupalPost($path, $edit, t('Partial validate (numeric index)'));
+    $this->drupalPostForm($path, $edit, t('Partial validate (numeric index)'));
     $this->assertNoText(t('!name field is required.', array('!name' => 'Title')));
     $this->assertText('Test (numeric index) element is invalid');
 
     // Ensure something like 'foobar' isn't considered "inside" 'foo'.
-    $this->drupalPost($path, $edit, t('Partial validate (substring)'));
+    $this->drupalPostForm($path, $edit, t('Partial validate (substring)'));
     $this->assertNoText(t('!name field is required.', array('!name' => 'Title')));
     $this->assertText('Test (substring) foo element is invalid');
 
     // Ensure not validated values are not available to submit handlers.
-    $this->drupalPost($path, array('title' => '', 'test' => 'valid'), t('Partial validate'));
+    $this->drupalPostForm($path, array('title' => '', 'test' => 'valid'), t('Partial validate'));
     $this->assertText('Only validated values appear in the form values.');
 
     // Now test full form validation and ensure that the #element_validate
     // handler is still triggered.
-    $this->drupalPost($path, $edit, t('Full validate'));
+    $this->drupalPostForm($path, $edit, t('Full validate'));
     $this->assertText(t('!name field is required.', array('!name' => 'Title')));
     $this->assertText('Test element is invalid');
   }
@@ -141,7 +141,7 @@ class ValidationTest extends WebTestBase {
       'textfield' => 'invalid',
       'tel' => 'valid',
     );
-    $this->drupalPost('form-test/pattern', $edit, 'Submit');
+    $this->drupalPostForm('form-test/pattern', $edit, 'Submit');
     $this->assertRaw($textfield_error);
     $this->assertNoRaw($tel_error);
     $this->assertNoRaw($password_error);
@@ -152,7 +152,7 @@ class ValidationTest extends WebTestBase {
       'tel' => '818937',
       'password' => '0100110',
     );
-    $this->drupalPost('form-test/pattern', $edit, 'Submit');
+    $this->drupalPostForm('form-test/pattern', $edit, 'Submit');
     $this->assertNoRaw($textfield_error);
     $this->assertRaw($tel_error);
     $this->assertNoRaw($password_error);
@@ -162,7 +162,7 @@ class ValidationTest extends WebTestBase {
       'textfield' => '',
       'tel' => '',
     );
-    $this->drupalPost('form-test/pattern', $edit, 'Submit');
+    $this->drupalPostForm('form-test/pattern', $edit, 'Submit');
     $this->assertNoRaw($textfield_error);
     $this->assertNoRaw($tel_error);
     $this->assertNoRaw($password_error);
@@ -171,7 +171,7 @@ class ValidationTest extends WebTestBase {
     $edit = array(
       'password' => $this->randomName(),
     );
-    $this->drupalPost('form-test/pattern', $edit, 'Submit');
+    $this->drupalPostForm('form-test/pattern', $edit, 'Submit');
     $this->assertNoRaw($textfield_error);
     $this->assertNoRaw($tel_error);
     $this->assertRaw($password_error);
@@ -183,7 +183,7 @@ class ValidationTest extends WebTestBase {
       'tel' => '',
       'url' => 'http://www.example.com/',
     );
-    $this->drupalPost('form-test/pattern', $edit, 'Submit');
+    $this->drupalPostForm('form-test/pattern', $edit, 'Submit');
     $this->assertNoRaw(t('%name field is not in the right format.', array('%name' => 'Client side validation')));
   }
 
@@ -198,7 +198,7 @@ class ValidationTest extends WebTestBase {
 
     // Verify that a custom #required error can be set.
     $edit = array();
-    $this->drupalPost('form-test/validate-required', $edit, 'Submit');
+    $this->drupalPostForm('form-test/validate-required', $edit, 'Submit');
 
     foreach (element_children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {
@@ -218,7 +218,7 @@ class ValidationTest extends WebTestBase {
       'checkboxes[foo]' => TRUE,
       'select' => 'foo',
     );
-    $this->drupalPost('form-test/validate-required', $edit, 'Submit');
+    $this->drupalPostForm('form-test/validate-required', $edit, 'Submit');
 
     foreach (element_children($form) as $key) {
       if (isset($form[$key]['#required_error'])) {

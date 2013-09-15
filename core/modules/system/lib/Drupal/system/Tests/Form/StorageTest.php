@@ -52,18 +52,18 @@ class StorageTest extends WebTestBase {
     $edit = array('title' => 'new', 'value' => 'value_is_set');
 
     // Use form rebuilding triggered by a submit button.
-    $this->drupalPost(NULL, $edit, 'Continue submit');
+    $this->drupalPostForm(NULL, $edit, 'Continue submit');
     $this->assertText('Form constructions: 2');
     $this->assertText('Form constructions: 3');
 
     // Reset the form to the values of the storage, using a form rebuild
     // triggered by button of type button.
-    $this->drupalPost(NULL, array('title' => 'changed'), 'Reset');
+    $this->drupalPostForm(NULL, array('title' => 'changed'), 'Reset');
     $this->assertFieldByName('title', 'new', 'Values have been resetted.');
     // After rebuilding, the form has been cached.
     $this->assertText('Form constructions: 4');
 
-    $this->drupalPost(NULL, $edit, 'Save');
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertText('Form constructions: 4');
     $this->assertText('Title: new', 'The form storage has stored the values.');
   }
@@ -78,16 +78,16 @@ class StorageTest extends WebTestBase {
     $edit = array('title' => 'new', 'value' => 'value_is_set');
 
     // Use form rebuilding triggered by a submit button.
-    $this->drupalPost(NULL, $edit, 'Continue submit');
+    $this->drupalPostForm(NULL, $edit, 'Continue submit');
     $this->assertText('Form constructions: 2');
 
     // Reset the form to the values of the storage, using a form rebuild
     // triggered by button of type button.
-    $this->drupalPost(NULL, array('title' => 'changed'), 'Reset');
+    $this->drupalPostForm(NULL, array('title' => 'changed'), 'Reset');
     $this->assertFieldByName('title', 'new', 'Values have been resetted.');
     $this->assertText('Form constructions: 3');
 
-    $this->drupalPost(NULL, $edit, 'Save');
+    $this->drupalPostForm(NULL, $edit, 'Save');
     $this->assertText('Form constructions: 3');
     $this->assertText('Title: new', 'The form storage has stored the values.');
   }
@@ -96,7 +96,7 @@ class StorageTest extends WebTestBase {
    * Tests validation when form storage is used.
    */
   function testValidation() {
-    $this->drupalPost('form_test/form-storage', array('title' => '', 'value' => 'value_is_set'), 'Continue submit');
+    $this->drupalPostForm('form_test/form-storage', array('title' => '', 'value' => 'value_is_set'), 'Continue submit');
     $this->assertPattern('/value_is_set/', 'The input values have been kept.');
   }
 
@@ -118,20 +118,20 @@ class StorageTest extends WebTestBase {
     // 'title' into form storage, but we want to verify that changes in the form
     // storage are updated in the cache during form validation.
     $edit = array('title' => 'foo');
-    $this->drupalPost(NULL, $edit, 'Continue submit');
+    $this->drupalPostForm(NULL, $edit, 'Continue submit');
 
     // In step 2, trigger a validation error for the required 'title' field, and
     // post the special 'change_title' value for the 'value' field, which
     // conditionally invokes the #element_validate handler to update the form
     // storage.
     $edit = array('title' => '', 'value' => 'change_title');
-    $this->drupalPost(NULL, $edit, 'Save');
+    $this->drupalPostForm(NULL, $edit, 'Save');
 
     // At this point, the form storage should contain updated values, but we do
     // not see them, because the form has not been rebuilt yet due to the
     // validation error. Post again and verify that the rebuilt form contains
     // the values of the updated form storage.
-    $this->drupalPost(NULL, array('title' => 'foo', 'value' => 'bar'), 'Save');
+    $this->drupalPostForm(NULL, array('title' => 'foo', 'value' => 'bar'), 'Save');
     $this->assertText("The thing has been changed.", 'The altered form storage value was updated in cache and taken over.');
   }
 
@@ -148,19 +148,19 @@ class StorageTest extends WebTestBase {
       array('query' => array('cache' => 1)),
     );
     foreach ($run_options as $options) {
-      $this->drupalPost('form-test/state-persist', array(), t('Submit'), $options);
+      $this->drupalPostForm('form-test/state-persist', array(), t('Submit'), $options);
       // The submit handler outputs the value in $form_state, assert it's there.
       $this->assertText('State persisted.');
 
       // Test it again, but first trigger a validation error, then test.
-      $this->drupalPost('form-test/state-persist', array('title' => ''), t('Submit'), $options);
+      $this->drupalPostForm('form-test/state-persist', array('title' => ''), t('Submit'), $options);
       $this->assertText(t('!name field is required.', array('!name' => 'title')));
       // Submit the form again triggering no validation error.
-      $this->drupalPost(NULL, array('title' => 'foo'), t('Submit'), $options);
+      $this->drupalPostForm(NULL, array('title' => 'foo'), t('Submit'), $options);
       $this->assertText('State persisted.');
 
       // Now post to the rebuilt form and verify it's still there afterwards.
-      $this->drupalPost(NULL, array('title' => 'bar'), t('Submit'), $options);
+      $this->drupalPostForm(NULL, array('title' => 'bar'), t('Submit'), $options);
       $this->assertText('State persisted.');
     }
   }

@@ -7,8 +7,6 @@
 
 namespace Drupal\views\Tests\Wizard;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests the ability of the views wizard to create views filtered by taxonomy.
  */
@@ -109,18 +107,17 @@ class TaggedWithTest extends WizardTestBase {
     $node_add_path = 'node/add/' . $this->node_type_with_tags->type;
 
     // Create three nodes, with different tags.
-    $tag_field = $this->tag_field->name . '[' . Language::LANGCODE_NOT_SPECIFIED . ']';
     $edit = array();
     $edit['title'] = $node_tag1_title = $this->randomName();
-    $edit[$tag_field] = 'tag1';
-    $this->drupalPost($node_add_path, $edit, t('Save'));
+    $edit[$this->tag_field->name] = 'tag1';
+    $this->drupalPostForm($node_add_path, $edit, t('Save'));
     $edit = array();
     $edit['title'] = $node_tag1_tag2_title = $this->randomName();
-    $edit[$tag_field] = 'tag1, tag2';
-    $this->drupalPost($node_add_path, $edit, t('Save'));
+    $edit[$this->tag_field->name] = 'tag1, tag2';
+    $this->drupalPostForm($node_add_path, $edit, t('Save'));
     $edit = array();
     $edit['title'] = $node_no_tags_title = $this->randomName();
-    $this->drupalPost($node_add_path, $edit, t('Save'));
+    $this->drupalPostForm($node_add_path, $edit, t('Save'));
 
     // Create a view that filters by taxonomy term "tag1". It should show only
     // the two nodes from above that are tagged with "tag1".
@@ -128,7 +125,7 @@ class TaggedWithTest extends WizardTestBase {
     // First select the node type and update the form so the correct tag field
     // is used.
     $view1['show[type]'] = $this->node_type_with_tags->type;
-    $this->drupalPost('admin/structure/views/add', $view1, t('Update "of type" choice'));
+    $this->drupalPostForm('admin/structure/views/add', $view1, t('Update "of type" choice'));
     // Now resubmit the entire form to the same URL.
     $view1['label'] = $this->randomName(16);
     $view1['id'] = strtolower($this->randomName(16));
@@ -137,7 +134,7 @@ class TaggedWithTest extends WizardTestBase {
     $view1['page[create]'] = 1;
     $view1['page[title]'] = $this->randomName(16);
     $view1['page[path]'] = $this->randomName(16);
-    $this->drupalPost(NULL, $view1, t('Save and edit'));
+    $this->drupalPostForm(NULL, $view1, t('Save and edit'));
     // Visit the page and check that the nodes we expect are present and the
     // ones we don't expect are absent.
     $this->drupalGet($view1['page[path]']);
@@ -150,7 +147,7 @@ class TaggedWithTest extends WizardTestBase {
     // the one node from above that is tagged with "tag2".
     $view2 = array();
     $view2['show[type]'] = $this->node_type_with_tags->type;
-    $this->drupalPost('admin/structure/views/add', $view2, t('Update "of type" choice'));
+    $this->drupalPostForm('admin/structure/views/add', $view2, t('Update "of type" choice'));
     $this->assertResponse(200);
     $view2['label'] = $this->randomName(16);
     $view2['id'] = strtolower($this->randomName(16));
@@ -159,7 +156,7 @@ class TaggedWithTest extends WizardTestBase {
     $view2['page[create]'] = 1;
     $view2['page[title]'] = $this->randomName(16);
     $view2['page[path]'] = $this->randomName(16);
-    $this->drupalPost(NULL, $view2, t('Save and edit'));
+    $this->drupalPostForm(NULL, $view2, t('Save and edit'));
     $this->assertResponse(200);
     $this->drupalGet($view2['page[path]']);
     $this->assertNoText($node_tag1_title);
@@ -180,10 +177,10 @@ class TaggedWithTest extends WizardTestBase {
     $this->drupalGet('admin/structure/views/add');
     $this->assertFieldByXpath($tags_xpath);
     $view['show[type]'] = $this->node_type_with_tags->type;
-    $this->drupalPost('admin/structure/views/add', $view, t('Update "of type" choice'));
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Update "of type" choice'));
     $this->assertFieldByXpath($tags_xpath);
     $view['show[type]'] = $this->node_type_without_tags->type;
-    $this->drupalPost(NULL, $view, t('Update "of type" choice'));
+    $this->drupalPostForm(NULL, $view, t('Update "of type" choice'));
     $this->assertNoFieldByXpath($tags_xpath);
 
     // If we add an instance of the tagging field to the second node type, the
@@ -198,10 +195,10 @@ class TaggedWithTest extends WizardTestBase {
       ->save();
 
     $view['show[type]'] = $this->node_type_with_tags->type;
-    $this->drupalPost('admin/structure/views/add', $view, t('Update "of type" choice'));
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Update "of type" choice'));
     $this->assertFieldByXpath($tags_xpath);
     $view['show[type]'] = $this->node_type_without_tags->type;
-    $this->drupalPost(NULL, $view, t('Update "of type" choice'));
+    $this->drupalPostForm(NULL, $view, t('Update "of type" choice'));
     $this->assertFieldByXpath($tags_xpath);
   }
 

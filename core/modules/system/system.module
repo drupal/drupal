@@ -893,11 +893,9 @@ function system_menu() {
 
   // Default page for batch operations.
   $items['batch'] = array(
-    'page callback' => 'system_batch_page',
-    'access callback' => TRUE,
+    'route_name' => 'system_batch_page',
     'theme callback' => '_system_batch_theme',
     'type' => MENU_CALLBACK,
-    'file' => 'system.admin.inc',
   );
 
   // Localize date formats.

@@ -7,8 +7,6 @@
 
 namespace Drupal\file\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests file listing page functionality.
  */
@@ -79,9 +77,9 @@ class FileListingTest extends FileFieldTestBase {
       $file = $this->getTestFile('image');
 
       $edit = array(
-        'files[file_' . Language::LANGCODE_NOT_SPECIFIED . '_' . 0 . ']' => drupal_realpath($file->getFileUri()),
+        'files[file_0]' => drupal_realpath($file->getFileUri()),
       );
-      $this->drupalPost(NULL, $edit, t('Save'));
+      $this->drupalPostForm(NULL, $edit, t('Save'));
       $node = entity_load('node', $node->id());
     }
 

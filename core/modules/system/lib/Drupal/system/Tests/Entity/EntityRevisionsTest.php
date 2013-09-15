@@ -108,6 +108,6 @@ class EntityRevisionsTest extends WebTestBase {
     $entity = entity_load($entity_type, $entity->id->value);
     $this->drupalGet($entity_type . '/manage/' . $entity->id->value);
     $this->assertFieldById('edit-name', $entity->name->value, format_string('%entity_type: Name matches in UI.', array('%entity_type' => $entity_type)));
-    $this->assertFieldById('edit-field-test-text-und-0-value', $entity->field_test_text->value, format_string('%entity_type: Text matches in UI.', array('%entity_type' => $entity_type)));
+    $this->assertFieldById('edit-field-test-text-0-value', $entity->field_test_text->value, format_string('%entity_type: Text matches in UI.', array('%entity_type' => $entity_type)));
   }
 }

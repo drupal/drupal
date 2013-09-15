@@ -23,7 +23,7 @@ class OverviewTerms extends FormBase {
    *
    * @var \Drupal\Core\Config\Config
    */
-  protected $config;
+  protected $configFactory;
 
   /**
    * The module handler service.
@@ -41,7 +41,7 @@ class OverviewTerms extends FormBase {
    *   The module handler service.
    */
   public function __construct(ConfigFactory $config_factory, ModuleHandlerInterface $module_handler) {
-    $this->config = $config_factory->get('taxonomy.settings');
+    $this->configFactory = $config_factory;
     $this->moduleHandler = $module_handler;
   }
 
@@ -87,7 +87,7 @@ class OverviewTerms extends FormBase {
 
     $page = $this->getRequest()->query->get('page') ?: 0;
     // Number of terms per page.
-    $page_increment = $this->config->get('terms_per_page_admin');
+    $page_increment = $this->configFactory->get('taxonomy.settings')->get('terms_per_page_admin');
     // Elements shown on this page.
     $page_entries = 0;
     // Elements at the root level before this page.

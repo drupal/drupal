@@ -39,16 +39,16 @@ class LanguagePathMonolingualTest extends WebTestBase {
     // Enable French language.
     $edit = array();
     $edit['predefined_langcode'] = 'fr';
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Make French the default language.
     $edit = array(
       'site_default_language' => 'fr',
     );
-    $this->drupalpost('admin/config/regional/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/settings', $edit, t('Save configuration'));
 
     // Delete English.
-    $this->drupalPost('admin/config/regional/language/delete/en', array(), t('Delete'));
+    $this->drupalPostForm('admin/config/regional/language/delete/en', array(), t('Delete'));
 
     // Verify that French is the only language.
     $this->assertFalse(language_multilingual(), 'Site is mono-lingual');
@@ -56,7 +56,7 @@ class LanguagePathMonolingualTest extends WebTestBase {
 
     // Set language detection to URL.
     $edit = array('language_interface[enabled][language-url]' => TRUE);
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Force languages to be initialized.
     drupal_language_initialize();

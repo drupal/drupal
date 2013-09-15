@@ -91,7 +91,7 @@ abstract class BlockTestBase extends WebTestBase {
     // Set the created block to a specific region.
     $edit = array();
     $edit['blocks[0][region]'] = $region;
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
+    $this->drupalPostForm('admin/structure/block', $edit, t('Save blocks'));
 
     // Confirm that the block was moved to the proper region.
     $this->assertText(t('The block settings have been updated.'), format_string('Block successfully moved to %region_name region.', array( '%region_name' => $region)));

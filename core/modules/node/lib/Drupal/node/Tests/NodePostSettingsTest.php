@@ -7,8 +7,6 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Checks that the post information displays when enabled for a content type.
  */
@@ -37,14 +35,13 @@ class NodePostSettingsTest extends NodeTestBase {
     // Set "Basic page" content type to display post information.
     $edit = array();
     $edit['settings[node][submitted]'] = TRUE;
-    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
 
     // Create a node.
     $edit = array();
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $edit["title"] = $this->randomName(8);
-    $edit["body[$langcode][0][value]"] = $this->randomName(16);
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $edit['title'] = $this->randomName(8);
+    $edit['body[0][value]'] = $this->randomName(16);
+    $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the post information is displayed.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
@@ -55,14 +52,13 @@ class NodePostSettingsTest extends NodeTestBase {
     // Set "Basic page" content type to display post information.
     $edit = array();
     $edit['settings[node][submitted]'] = FALSE;
-    $this->drupalPost('admin/structure/types/manage/page', $edit, t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
 
     // Create a node.
     $edit = array();
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $edit["title"] = $this->randomName(8);
-    $edit["body[$langcode][0][value]"] = $this->randomName(16);
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $edit['title'] = $this->randomName(8);
+    $edit['body[0][value]'] = $this->randomName(16);
+    $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the post information is displayed.
     $this->assertNoRaw('<span class="submitted">', 'Post information is not displayed.');

@@ -94,19 +94,4 @@ abstract class EntityReferenceFormatterBase extends FormatterBase {
       }
     }
   }
-
-  /**
-   * Overrides \Drupal\field\Plugin\Type\Formatter\FormatterBase::viewElements().
-   *
-   * @see \Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase::viewElements().
-   */
-  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
-    // Remove un-accessible items.
-    foreach ($items as $delta => $item) {
-      if (empty($item->access)) {
-        unset($items[$delta]);
-      }
-    }
-    return array();
-  }
 }

@@ -53,7 +53,7 @@ class ViewsUITourTest extends TourTestBase {
     $view['page[create]'] = 1;
     $view['page[path]'] = $this->randomName(16);
     $view_path = $view['page[path]'];
-    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
     $this->assertTourTips();
   }
 

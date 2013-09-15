@@ -42,7 +42,7 @@ class RedirectTest extends WebTestBase {
       'redirection' => TRUE,
       'destination' => $this->randomName(),
     );
-    $this->drupalPost($path, $edit, t('Submit'));
+    $this->drupalPostForm($path, $edit, t('Submit'));
     $this->assertUrl($edit['destination'], array(), 'Basic redirection works.');
 
 
@@ -50,7 +50,7 @@ class RedirectTest extends WebTestBase {
     $edit = array(
       'redirection' => FALSE,
     );
-    $this->drupalPost($path, $edit, t('Submit'));
+    $this->drupalPostForm($path, $edit, t('Submit'));
     $this->assertUrl($path, array(), 'When redirect is set to FALSE, there should be no redirection.');
 
     // Test redirection with query parameters.
@@ -58,14 +58,14 @@ class RedirectTest extends WebTestBase {
       'redirection' => TRUE,
       'destination' => $this->randomName(),
     );
-    $this->drupalPost($path, $edit, t('Submit'), $options);
+    $this->drupalPostForm($path, $edit, t('Submit'), $options);
     $this->assertUrl($edit['destination'], array(), 'Redirection with query parameters works.');
 
     // Test without redirection but with query parameters.
     $edit = array(
       'redirection' => FALSE,
     );
-    $this->drupalPost($path, $edit, t('Submit'), $options);
+    $this->drupalPostForm($path, $edit, t('Submit'), $options);
     $this->assertUrl($path, $options, 'When redirect is set to FALSE, there should be no redirection, and the query parameters should be passed along.');
 
     // Test redirection back to the original path.
@@ -73,7 +73,7 @@ class RedirectTest extends WebTestBase {
       'redirection' => TRUE,
       'destination' => '',
     );
-    $this->drupalPost($path, $edit, t('Submit'));
+    $this->drupalPostForm($path, $edit, t('Submit'));
     $this->assertUrl($path, array(), 'When using an empty redirection string, there should be no redirection.');
 
     // Test redirection back to the original path with query parameters.
@@ -81,7 +81,7 @@ class RedirectTest extends WebTestBase {
       'redirection' => TRUE,
       'destination' => '',
     );
-    $this->drupalPost($path, $edit, t('Submit'), $options);
+    $this->drupalPostForm($path, $edit, t('Submit'), $options);
     $this->assertUrl($path, $options, 'When using an empty redirection string, there should be no redirection, and the query parameters should be passed along.');
   }
 

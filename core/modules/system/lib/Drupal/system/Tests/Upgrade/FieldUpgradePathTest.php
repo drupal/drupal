@@ -279,9 +279,9 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
     $value = $this->randomName();
     $edit = array(
       'title' => 'Node after CMI conversion',
-      'body[und][0][value]' => $value,
+      'body[0][value]' => $value,
     );
-    $this->drupalPost('node/add/article', $edit, 'Save and publish');
+    $this->drupalPostForm('node/add/article', $edit, 'Save and publish');
     $this->assertText($value);
   }
 }

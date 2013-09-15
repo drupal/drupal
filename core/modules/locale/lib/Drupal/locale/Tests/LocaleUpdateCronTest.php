@@ -50,12 +50,12 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
 
     // Update translations using batch to ensure a clean test starting point.
     $this->drupalGet('admin/reports/translations/check');
-    $this->drupalPost('admin/reports/translations', array(), t('Update translations'));
+    $this->drupalPostForm('admin/reports/translations', array(), t('Update translations'));
 
     // Store translation status for comparison.
     $initial_history = locale_translation_get_file_history();
 
-    // Prepare for test: Simulate new translations being availabe.
+    // Prepare for test: Simulate new translations being available.
     // Change the last updated timestamp of a translation file.
     $contrib_module_two_uri = 'public://local/contrib_module_two-8.x-2.0-beta4.de._po';
     touch(drupal_realpath($contrib_module_two_uri), REQUEST_TIME);
@@ -73,7 +73,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $edit = array(
       'update_interval_days' => 0,
     );
-    $this->drupalPost('admin/config/regional/translate/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, t('Save configuration'));
 
     // Execute locale cron taks to add tasks to the queue.
     locale_cron();
@@ -88,7 +88,7 @@ class LocaleUpdateCronTest extends LocaleUpdateBase {
     $edit = array(
       'update_interval_days' => 7,
     );
-    $this->drupalPost('admin/config/regional/translate/settings', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/translate/settings', $edit, t('Save configuration'));
 
     // Execute locale cron taks to add tasks to the queue.
     locale_cron();

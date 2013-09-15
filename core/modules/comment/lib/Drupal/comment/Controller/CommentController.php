@@ -14,8 +14,9 @@ use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Routing\UrlGeneratorInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -51,19 +52,37 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
   protected $fieldInfo;
 
   /**
+   * The current user service.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * The comment manager service.
+   *
+   * @var \Drupal\comment\CommentManager
+   */
+  protected $commentManager;
+
+  /**
    * Constructs a CommentController object.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $httpKernel
    *   HTTP kernel to handle requests.
    * @param \Drupal\Core\Access\CsrfTokenGenerator $csrf_token
    *   The CSRF token manager service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user service.
    * @param \Drupal\field\FieldInfo $field_info
    *   Field Info service.
+   * @param \Drupal\comment\CommentManager $comment_manager
+   *   The comment manager service.
    */
-  public function __construct(HttpKernelInterface $httpKernel, CsrfTokenGenerator $csrf_token, UrlGeneratorInterface $url_generator, FieldInfo $field_info, CommentManager $comment_manager) {
+  public function __construct(HttpKernelInterface $httpKernel, CsrfTokenGenerator $csrf_token, AccountInterface $current_user, FieldInfo $field_info, CommentManager $comment_manager) {
     $this->httpKernel = $httpKernel;
     $this->csrfToken = $csrf_token;
-    $this->urlGenerator = $url_generator;
+    $this->currentUser = $current_user;
     $this->fieldInfo = $field_info;
     $this->commentManager = $comment_manager;
   }
@@ -75,7 +94,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
     return new static(
       $container->get('http_kernel'),
       $container->get('csrf_token'),
-      $container->get('url_generator'),
+      $container->get('current_user'),
       $container->get('field.info'),
       $container->get('comment.manager')
     );
@@ -231,14 +250,14 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
     // Check if the user has the proper permissions.
     if (!$account->hasPermission('post comments')) {
       drupal_set_message($this->t('You are not authorized to post comments.'), 'error');
-      return new RedirectResponse($this->urlGenerator()->generateFromRoute($uri['path'], array('absolute' => TRUE)));
+      return new RedirectResponse($this->urlGenerator()->generateFromPath($uri['path'], array('absolute' => TRUE)));
     }
 
     // The user is not just previewing a comment.
     if ($request->request->get('op') != $this->t('Preview')) {
       if ($entity->$field_name->status != COMMENT_OPEN) {
         drupal_set_message($this->t("This discussion is closed: you can't post new comments."), 'error');
-        return new RedirectResponse($this->urlGenerator()->generateFromRoute($uri['path'], array('absolute' => TRUE)));
+        return new RedirectResponse($this->urlGenerator()->generateFromPath($uri['path'], array('absolute' => TRUE)));
       }
 
       // $pid indicates that this is a reply to a comment.
@@ -284,6 +303,41 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
     $build['comment_form'] = $this->entityManager()->getForm($comment);
 
     return $build;
+  }
+
+  /**
+   * Returns a set of nodes' last read timestamps.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request of the page.
+   *
+   * @return \Symfony\Component\HttpFoundation\JsonResponse
+   *   The JSON response.
+   */
+  public function renderNewCommentsNodeLinks(Request $request) {
+    if ($this->currentUser->isAnonymous()) {
+      throw new AccessDeniedHttpException();
+    }
+
+    $nids = $request->request->get('node_ids');
+    if (!isset($nids)) {
+      throw new NotFoundHttpException();
+    }
+    // Only handle up to 100 nodes.
+    $nids = array_slice($nids, 0, 100);
+
+    $links = array();
+    foreach ($nids as $nid) {
+      $node = node_load($nid);
+      $new = comment_num_new($node->id());
+      $query = comment_new_page_count($node->comment_count, $new, $node);
+      $links[$nid] = array(
+        'new_comment_count' => (int)$new,
+        'first_new_comment_link' => url('node/' . $node->id(), array('query' => $query, 'fragment' => 'new')),
+      );
+    }
+
+    return new JsonResponse($links);
   }
 
 }

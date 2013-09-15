@@ -31,8 +31,10 @@ class ActionDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/config/system/actions';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'action_admin',
+    );
   }
 
   /**

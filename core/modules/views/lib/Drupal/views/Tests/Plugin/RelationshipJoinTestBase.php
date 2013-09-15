@@ -8,7 +8,7 @@
 namespace Drupal\views\Tests\Plugin;
 
 /**
- * Provies a base class for a testing a relationship.
+ * Provides a base class for a testing a relationship.
  *
  * @see \Drupal\views\Tests\Handler\JoinTest
  * @see \Drupal\views\Tests\Plugin\RelationshipTest

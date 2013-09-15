@@ -7,7 +7,6 @@
 
 namespace Drupal\file\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\file\FileInterface;
 use Drupal\simpletest\WebTestBase;
 
@@ -140,7 +139,6 @@ abstract class FileFieldTestBase extends WebTestBase {
    * Uploads a file to a node.
    */
   function uploadNodeFile($file, $field_name, $nid_or_type, $new_revision = TRUE, $extras = array()) {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array(
       "title" => $this->randomName(),
       'revision' => (string) (int) $new_revision,
@@ -163,12 +161,12 @@ abstract class FileFieldTestBase extends WebTestBase {
 
     // Attach a file to the node.
     $field = field_info_field('node', $field_name);
-    $name = 'files[' . $field_name . '_' . $langcode . '_0]';
+    $name = 'files[' . $field_name . '_0]';
     if ($field['cardinality'] != 1) {
       $name .= '[]';
     }
     $edit[$name] = drupal_realpath($file->getFileUri());
-    $this->drupalPost("node/$nid/edit", $edit, t('Save and keep published'));
+    $this->drupalPostForm("node/$nid/edit", $edit, t('Save and keep published'));
 
     return $nid;
   }
@@ -183,8 +181,8 @@ abstract class FileFieldTestBase extends WebTestBase {
       'revision' => (string) (int) $new_revision,
     );
 
-    $this->drupalPost('node/' . $nid . '/edit', array(), t('Remove'));
-    $this->drupalPost(NULL, $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $nid . '/edit', array(), t('Remove'));
+    $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
   }
 
   /**
@@ -192,12 +190,12 @@ abstract class FileFieldTestBase extends WebTestBase {
    */
   function replaceNodeFile($file, $field_name, $nid, $new_revision = TRUE) {
     $edit = array(
-      'files[' . $field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_0]' => drupal_realpath($file->getFileUri()),
+      'files[' . $field_name . '_0]' => drupal_realpath($file->getFileUri()),
       'revision' => (string) (int) $new_revision,
     );
 
-    $this->drupalPost('node/' . $nid . '/edit', array(), t('Remove'));
-    $this->drupalPost(NULL, $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $nid . '/edit', array(), t('Remove'));
+    $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
   }
 
   /**

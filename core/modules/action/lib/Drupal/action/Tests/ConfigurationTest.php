@@ -41,7 +41,7 @@ class ConfigurationTest extends WebTestBase {
     // Make a POST request to admin/config/system/actions.
     $edit = array();
     $edit['action'] = Crypt::hashBase64('action_goto_action');
-    $this->drupalPost('admin/config/system/actions', $edit, t('Create'));
+    $this->drupalPostForm('admin/config/system/actions', $edit, t('Create'));
     $this->assertResponse(200);
 
     // Make a POST request to the individual action configuration page.
@@ -50,7 +50,7 @@ class ConfigurationTest extends WebTestBase {
     $edit['label'] = $action_label;
     $edit['id'] = strtolower($action_label);
     $edit['url'] = 'admin';
-    $this->drupalPost('admin/config/system/actions/add/' . Crypt::hashBase64('action_goto_action'), $edit, t('Save'));
+    $this->drupalPostForm('admin/config/system/actions/add/' . Crypt::hashBase64('action_goto_action'), $edit, t('Save'));
     $this->assertResponse(200);
 
     // Make sure that the new complex action was saved properly.
@@ -65,7 +65,7 @@ class ConfigurationTest extends WebTestBase {
     $new_action_label = $this->randomName();
     $edit['label'] = $new_action_label;
     $edit['url'] = 'admin';
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $this->assertResponse(200);
 
     // Make sure that the action updated properly.
@@ -82,7 +82,7 @@ class ConfigurationTest extends WebTestBase {
     $this->clickLink(t('Delete'));
     $this->assertResponse(200);
     $edit = array();
-    $this->drupalPost("admin/config/system/actions/configure/$aid/delete", $edit, t('Delete'));
+    $this->drupalPostForm("admin/config/system/actions/configure/$aid/delete", $edit, t('Delete'));
     $this->assertResponse(200);
 
     // Make sure that the action was actually deleted.

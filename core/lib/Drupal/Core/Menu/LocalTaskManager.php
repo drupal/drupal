@@ -41,12 +41,12 @@ class LocalTaskManager extends DefaultPluginManager {
     // The plugin ID of the parent tab (or NULL for the top-level tab).
     'tab_parent_id' => NULL,
     // The weight of the tab.
-    'weight' => 0,
+    'weight' => NULL,
     // The default link options.
     'options' => array(),
     // Default class for local task implementations.
     'class' => 'Drupal\Core\Menu\LocalTaskDefault',
-    // The plugin id. Set by the plugin system and should never be provided in YAML.
+    // The plugin id. Set by the plugin system based on the top-level YAML key.
     'id' => '',
   );
 

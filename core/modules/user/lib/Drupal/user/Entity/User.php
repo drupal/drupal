@@ -27,6 +27,7 @@ use Drupal\user\UserInterface;
  *     "render" = "Drupal\Core\Entity\EntityRenderController",
  *     "form" = {
  *       "default" = "Drupal\user\ProfileFormController",
+ *       "cancel" = "Drupal\user\Form\UserCancelForm",
  *       "register" = "Drupal\user\RegisterFormController"
  *     },
  *     "translation" = "Drupal\user\ProfileTranslationController"

@@ -44,16 +44,11 @@ class ViewAjaxTest extends ViewTestBase {
     $data['view_name'] = 'test_ajax_view';
     $data['view_display_id'] = 'test_ajax_view';
 
-    $post = 'view_name=test_ajax_view&view_display_id=page_1';
-    $response = $this->curlExec(array(
-      CURLOPT_URL => url('views/ajax', array('absolute' => TRUE)),
-      CURLOPT_POST => TRUE,
-      CURLOPT_POSTFIELDS => $post,
-      CURLOPT_HTTPHEADER => array(
-        'Accept: application/json',
-        'Content-Type: application/x-www-form-urlencoded',
-      ),
-    ));
+    $post = array(
+      'view_name' => 'test_ajax_view',
+      'view_display_id' => 'page_1',
+    );
+    $response = $this->drupalPost('views/ajax', 'application/json', $post);
     $data = Json::decode($response);
 
     // Ensure that the view insert command is part of the result.

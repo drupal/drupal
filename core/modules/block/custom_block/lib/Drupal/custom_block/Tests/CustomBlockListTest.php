@@ -7,7 +7,6 @@
 
 namespace Drupal\custom_block\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -64,10 +63,9 @@ class CustomBlockListTest extends WebTestBase {
     $this->clickLink($link_text);
     $this->assertResponse(200);
     $edit = array();
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit['info'] = $label;
-    $edit["block_body[$langcode][0][value]"] = $this->randomName(16);
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $edit['block_body[0][value]'] = $this->randomName(16);
+    $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Confirm that once the user returns to the listing, the text of the label
     // (versus elsewhere on the page).
@@ -93,7 +91,7 @@ class CustomBlockListTest extends WebTestBase {
       $this->assertResponse(200);
       $this->assertTitle(strip_tags(t('Edit custom block %label', array('%label' => $label)) . ' | Drupal'));
       $edit = array('info' => $new_label);
-      $this->drupalPost(NULL, $edit, t('Save'));
+      $this->drupalPostForm(NULL, $edit, t('Save'));
     }
     else {
       $this->fail('Did not find Albatross block in the database.');
@@ -109,7 +107,7 @@ class CustomBlockListTest extends WebTestBase {
     $this->clickLink($delete_text);
     $this->assertResponse(200);
     $this->assertTitle(strip_tags(t('Are you sure you want to delete %label?', array('%label' => $new_label)) . ' | Drupal'));
-    $this->drupalPost(NULL, array(), $delete_text);
+    $this->drupalPostForm(NULL, array(), $delete_text);
 
     // Verify that the text of the label and machine name does not appear in
     // the list (though it may appear elsewhere on the page).

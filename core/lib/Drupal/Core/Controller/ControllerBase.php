@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Controller;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
@@ -29,7 +28,70 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @see \Drupal\Core\DependencyInjection\ContainerInjectionInterface
  */
-abstract class ControllerBase extends ContainerAware {
+abstract class ControllerBase {
+
+  /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
+   * The language manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManager
+   */
+  protected $languageManager;
+
+  /**
+   * The translation manager.
+   *
+   * @var \Drupal\Core\StringTranslation\TranslationInterface
+   */
+  protected $translationManager;
+
+  /**
+   * The configuration factory.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $configFactory;
+
+  /**
+   * The key-value storage.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $keyValue;
+
+  /**
+   * The url generator.
+   *
+   * @var \Drupal\Core\Routing\UrlGeneratorInterface
+   */
+  protected $urlGenerator;
+
+  /**
+   * The current user service.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * The state service.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $stateService;
+
+  /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
 
   /**
    * Retrieves the entity manager service.
@@ -38,7 +100,10 @@ abstract class ControllerBase extends ContainerAware {
    *   The entity manager service.
    */
   protected function entityManager() {
-    return $this->container->get('entity.manager');
+    if (!$this->entityManager) {
+      $this->entityManager = $this->container()->get('entity.manager');
+    }
+    return $this->entityManager;
   }
 
   /**
@@ -52,7 +117,7 @@ abstract class ControllerBase extends ContainerAware {
    *   The cache object associated with the specified bin.
    */
   protected function cache($bin = 'cache') {
-    return $this->container->get('cache.' . $bin);
+    return $this->container()->get('cache.' . $bin);
   }
 
   /**
@@ -72,7 +137,10 @@ abstract class ControllerBase extends ContainerAware {
    *   A configuration object.
    */
   protected function config($name) {
-    return $this->container->get('config.factory')->get($name);
+    if (!$this->configFactory) {
+      $this->configFactory = $this->container()->get('config.factory')->get($name);
+    }
+    return $this->configFactory;
   }
 
   /**
@@ -84,7 +152,10 @@ abstract class ControllerBase extends ContainerAware {
    * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
   protected function keyValue($collection) {
-    return $this->container->get('keyvalue')->get($collection);
+    if (!$this->keyValue) {
+      $this->keyValue = $this->container()->get('keyvalue')->get($collection);
+    }
+    return $this->keyValue;
   }
 
   /**
@@ -99,7 +170,10 @@ abstract class ControllerBase extends ContainerAware {
    * @return \Drupal\Core\KeyValueStore\KeyValueStoreInterface
    */
   protected function state() {
-    return $this->container->get('state');
+    if (!$this->stateService) {
+      $this->stateService = $this->container()->get('state');
+    }
+    return $this->stateService;
   }
 
   /**
@@ -108,7 +182,10 @@ abstract class ControllerBase extends ContainerAware {
    * @return \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected function moduleHandler() {
-    return $this->container->get('module_handler');
+    if (!$this->moduleHandler) {
+      $this->moduleHandler = $this->container()->get('module_handler');
+    }
+    return $this->moduleHandler;
   }
 
   /**
@@ -118,20 +195,23 @@ abstract class ControllerBase extends ContainerAware {
    *   The URL generator service.
    */
   protected function urlGenerator() {
-    return $this->container->get('url_generator');
+    if (!$this->urlGenerator) {
+      $this->urlGenerator = $this->container()->get('url_generator');
+    }
+    return $this->urlGenerator;
   }
 
   /**
    * Renders a link to a route given a route name and its parameters.
    *
-   * @see  \Drupal\Core\Utility\LinkGeneratorInterface::generate() for details
+   * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate() for details
    *   on the arguments, usage, and possible exceptions.
    *
    * @return string
    *   An HTML string containing a link to the given route and parameters.
    */
   public function l($text, $route_name, array $parameters = array(), array $options = array()) {
-    return $this->container->get('link_generator')->generate($text, $route_name, $parameters, $options);
+    return $this->container()->get('link_generator')->generate($text, $route_name, $parameters, $options);
   }
 
   /**
@@ -141,7 +221,10 @@ abstract class ControllerBase extends ContainerAware {
    *   The current user.
    */
   protected function currentUser() {
-    return $this->container->get('current_user');
+    if (!$this->currentUser) {
+      $this->currentUser = $this->container()->get('current_user');
+    }
+    return $this->currentUser;
   }
 
   /**
@@ -150,7 +233,20 @@ abstract class ControllerBase extends ContainerAware {
    * See the t() documentation for details.
    */
   protected function t($string, array $args = array(), array $options = array()) {
-    return $this->container->get('string_translation')->translate($string, $args, $options);
+    return $this->translationManager()->translate($string, $args, $options);
+  }
+
+  /**
+   * Returns the translation manager.
+   *
+   * @return \Drupal\Core\StringTranslation\TranslationInterface
+   *   The translation manager.
+   */
+  protected function translationManager() {
+    if (!$this->translationManager) {
+      $this->translationManager = $this->container()->get('string_translation');
+    }
+    return $this->translationManager;
   }
 
   /**
@@ -160,7 +256,20 @@ abstract class ControllerBase extends ContainerAware {
    *   The language manager.
    */
   protected function languageManager() {
-    return $this->container->get('language_manager');
+    if (!$this->languageManager) {
+      $this->languageManager = $this->container()->get('language_manager');
+    }
+    return $this->languageManager;
+  }
+
+  /**
+   * Returns the service container.
+   *
+   * @return \Symfony\Component\DependencyInjection\ContainerInterface $container
+   *   The service container.
+   */
+  protected function container() {
+    return \Drupal::getContainer();
   }
 
   /**
@@ -176,7 +285,7 @@ abstract class ControllerBase extends ContainerAware {
    *   A redirect response object that may be returned by the controller.
    */
   public function redirect($route_name, array $route_parameters = array(), $status = 302) {
-    $url = $this->container->get('url_generator')->generate($route_name, $route_parameters, TRUE);
+    $url = $this->urlGenerator()->generate($route_name, $route_parameters, TRUE);
     return new RedirectResponse($url, $status);
   }
 
@@ -190,7 +299,7 @@ abstract class ControllerBase extends ContainerAware {
    *   The generated URL for the given route.
    */
   public function url($route_name, $route_parameters = array(), $options = array()) {
-    return $this->container->get('url_generator')->generateFromRoute($route_name, $route_parameters, $options);
+    return $this->urlGenerator()->generateFromRoute($route_name, $route_parameters, $options);
   }
 
 }

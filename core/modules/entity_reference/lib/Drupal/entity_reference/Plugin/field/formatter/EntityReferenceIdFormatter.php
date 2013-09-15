@@ -34,6 +34,10 @@ class EntityReferenceIdFormatter extends EntityReferenceFormatterBase {
     $elements = array();
 
     foreach ($items as $delta => $item) {
+      if (!$item->access) {
+        // User doesn't have access to the referenced entity.
+        continue;
+      }
       if (!empty($item->entity) && !empty($item->target_id)) {
         $elements[$delta] = array('#markup' => check_plain($item->target_id));
       }

@@ -49,11 +49,11 @@ class PagerTest extends PluginTestBase {
     $edit = array(
       'pager[type]' => 'full',
     );
-    $this->drupalPost('admin/structure/views/nojs/display/test_view/default/pager', $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, t('Apply'));
     $edit = array(
       'pager_options[items_per_page]' => 20,
     );
-    $this->drupalPost('admin/structure/views/nojs/display/test_view/default/pager_options', $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager_options', $edit, t('Apply'));
     $this->assertText('20 items');
 
     // Change type and check whether the type is new type is stored.
@@ -61,7 +61,7 @@ class PagerTest extends PluginTestBase {
     $edit = array(
       'pager[type]' => 'mini',
     );
-    $this->drupalPost('admin/structure/views/nojs/display/test_view/default/pager', $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/default/pager', $edit, t('Apply'));
     $this->drupalGet('admin/structure/views/view/test_view/edit');
     $this->assertText('Mini', 'Changed pager plugin, should change some text');
 
@@ -76,36 +76,36 @@ class PagerTest extends PluginTestBase {
     $edit = array(
       'pager[type]' => 'full',
     );
-    $this->drupalPost('admin/structure/views/nojs/display/test_store_pager_settings/default/pager', $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/default/pager', $edit, t('Apply'));
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit');
     $this->assertText('Full');
 
     $edit = array(
       'pager_options[items_per_page]' => 20,
     );
-    $this->drupalPost('admin/structure/views/nojs/display/test_store_pager_settings/default/pager_options', $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/default/pager_options', $edit, t('Apply'));
     $this->assertText('20 items');
 
     // add new display and test the settings again, by override it.
     $edit = array( );
     // Add a display and override the pager settings.
-    $this->drupalPost('admin/structure/views/view/test_store_pager_settings/edit', $edit, t('Add Page'));
+    $this->drupalPostForm('admin/structure/views/view/test_store_pager_settings/edit', $edit, t('Add Page'));
     $edit = array(
       'override[dropdown]' => 'page_1',
     );
-    $this->drupalPost('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager', $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager', $edit, t('Apply'));
 
     $edit = array(
       'pager[type]' => 'mini',
     );
-    $this->drupalPost('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager', $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/page_1/pager', $edit, t('Apply'));
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit');
     $this->assertText('Mini', 'Changed pager plugin, should change some text');
 
     $edit = array(
       'pager_options[items_per_page]' => 10,
     );
-    $this->drupalPost('admin/structure/views/nojs/display/test_store_pager_settings/default/pager_options', $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_store_pager_settings/default/pager_options', $edit, t('Apply'));
     $this->assertText('10 items', 'The default value has been changed.');
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit/page_1');
     $this->assertText('20 items', 'The original value remains unchanged.');

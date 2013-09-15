@@ -86,7 +86,7 @@ class DbLogTest extends WebTestBase {
     // Change the database log row limit.
     $edit = array();
     $edit['dblog_row_limit'] = $row_limit;
-    $this->drupalPost('admin/config/development/logging', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/development/logging', $edit, t('Save configuration'));
     $this->assertResponse(200);
 
     // Check row limit variable.
@@ -227,7 +227,7 @@ class DbLogTest extends WebTestBase {
     $edit['pass[pass1]'] = $pass;
     $edit['pass[pass2]'] = $pass;
     $edit['status'] = 1;
-    $this->drupalPost('admin/people/create', $edit, t('Create new account'));
+    $this->drupalPostForm('admin/people/create', $edit, t('Create new account'));
     $this->assertResponse(200);
     // Retrieve the user object.
     $user = user_load_by_name($name);
@@ -250,7 +250,7 @@ class DbLogTest extends WebTestBase {
     $this->drupalLogin($this->big_user);
     // Delete the user created at the start of this test.
     // We need to POST here to invoke batch_process() in the internal browser.
-    $this->drupalPost('user/' . $user->id() . '/cancel', array('user_cancel_method' => 'user_cancel_reassign'), t('Cancel account'));
+    $this->drupalPostForm('user/' . $user->id() . '/cancel', array('user_cancel_method' => 'user_cancel_reassign'), t('Cancel account'));
 
     // View the database log report.
     $this->drupalGet('admin/reports/dblog');
@@ -312,19 +312,18 @@ class DbLogTest extends WebTestBase {
     // Create a node using the form in order to generate an add content event
     // (which is not triggered by drupalCreateNode).
     $edit = $this->getContent($type);
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $title = $edit["title"];
-    $this->drupalPost('node/add/' . $type, $edit, t('Save'));
+    $this->drupalPostForm('node/add/' . $type, $edit, t('Save'));
     $this->assertResponse(200);
     // Retrieve the node object.
     $node = $this->drupalGetNodeByTitle($title);
     $this->assertTrue($node != NULL, format_string('Node @title was loaded', array('@title' => $title)));
     // Edit the node.
     $edit = $this->getContentUpdate($type);
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->assertResponse(200);
     // Delete the node.
-    $this->drupalPost('node/' . $node->id() . '/delete', array(), t('Delete'));
+    $this->drupalPostForm('node/' . $node->id() . '/delete', array(), t('Delete'));
     $this->assertResponse(200);
     // View the node (to generate page not found event).
     $this->drupalGet('node/' . $node->id());
@@ -370,20 +369,19 @@ class DbLogTest extends WebTestBase {
    *   Random content needed by various node types.
    */
   private function getContent($type) {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     switch ($type) {
       case 'forum':
         $content = array(
-          "title" => $this->randomName(8),
-          "taxonomy_forums[$langcode]" => array(1),
-          "body[$langcode][0][value]" => $this->randomName(32),
+          'title' => $this->randomName(8),
+          'taxonomy_forums' => array(1),
+          'body[0][value]' => $this->randomName(32),
         );
         break;
 
       default:
         $content = array(
-          "title" => $this->randomName(8),
-          "body[$langcode][0][value]" => $this->randomName(32),
+          'title' => $this->randomName(8),
+          'body[0][value]' => $this->randomName(32),
         );
         break;
     }
@@ -400,9 +398,8 @@ class DbLogTest extends WebTestBase {
    *   Random content needed by various node types.
    */
   private function getContentUpdate($type) {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $content = array(
-      "body[$langcode][0][value]" => $this->randomName(32),
+      'body[0][value]' => $this->randomName(32),
     );
     return $content;
   }
@@ -437,7 +434,7 @@ class DbLogTest extends WebTestBase {
     // Login the admin user.
     $this->drupalLogin($this->big_user);
     // Post in order to clear the database table.
-    $this->drupalPost('admin/reports/dblog', array(), t('Clear log messages'));
+    $this->drupalPostForm('admin/reports/dblog', array(), t('Clear log messages'));
     // Count the rows in watchdog that previously related to the deleted user.
     $count = db_query('SELECT COUNT(*) FROM {watchdog}')->fetchField();
     $this->assertEqual($count, 0, format_string('DBLog contains :count records after a clear.', array(':count' => $count)));
@@ -483,7 +480,7 @@ class DbLogTest extends WebTestBase {
       $edit = array(
         'type[]' => array($type_name),
       );
-      $this->drupalPost(NULL, $edit, t('Filter'));
+      $this->drupalPostForm(NULL, $edit, t('Filter'));
 
       // Count the number of entries of this type.
       $type_count = 0;
@@ -504,7 +501,7 @@ class DbLogTest extends WebTestBase {
         'type[]' => array($type['type']),
         'severity[]' => array($type['severity']),
       );
-      $this->drupalPost(NULL, $edit, t('Filter'));
+      $this->drupalPostForm(NULL, $edit, t('Filter'));
 
       $count = $this->getTypeCount($types);
       $this->assertEqual(array_sum($count), $type['count'], 'Count matched');
@@ -515,7 +512,7 @@ class DbLogTest extends WebTestBase {
     $this->assertText(t('Operations'), 'Operations text found');
 
     // Clear all logs and make sure the confirmation message is found.
-    $this->drupalPost('admin/reports/dblog', array(), t('Clear log messages'));
+    $this->drupalPostForm('admin/reports/dblog', array(), t('Clear log messages'));
     $this->assertText(t('Database log cleared.'), 'Confirmation message found');
   }
 

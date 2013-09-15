@@ -80,8 +80,10 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase implements ContainerIn
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/modules/uninstall';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'system_modules_uninstall',
+    );
   }
 
   /**
@@ -103,7 +105,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase implements ContainerIn
    */
   public function buildForm(array $form, array &$form_state) {
     // Retrieve the list of modules from the key value store.
-    $account = $this->getCurrentUser()->id();
+    $account = $this->currentUser()->id();
     $this->modules = $this->keyValueExpirable->get($account);
 
     // Prevent this page from showing when the module list is empty.
@@ -128,7 +130,7 @@ class ModulesUninstallConfirmForm extends ConfirmFormBase implements ContainerIn
    */
   public function submitForm(array &$form, array &$form_state) {
     // Clear the key value store entry.
-    $account = $this->getCurrentUser()->id();
+    $account = $this->currentUser()->id();
     $this->keyValueExpirable->delete($account);
 
     // Uninstall the modules.

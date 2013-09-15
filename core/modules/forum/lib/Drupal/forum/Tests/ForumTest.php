@@ -7,7 +7,6 @@
 
 namespace Drupal\forum\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\simpletest\WebTestBase;
 
@@ -115,7 +114,7 @@ class ForumTest extends WebTestBase {
     // Disable the Forum module.
     $edit = array();
     $edit['modules[Core][forum][enable]'] = FALSE;
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
     $this->rebuildContainer();
     $this->assertFalse(module_exists('forum'), 'Forum module is not enabled.');
@@ -124,7 +123,7 @@ class ForumTest extends WebTestBase {
     // recreate the taxonomy_forums field.
     $edit = array();
     $edit['modules[Core][forum][enable]'] = 'forum';
-    $this->drupalPost('admin/modules', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
     $this->rebuildContainer();
     $this->assertTrue(module_exists('forum'), 'Forum module is enabled.');
@@ -204,7 +203,7 @@ class ForumTest extends WebTestBase {
 
     // Test loading multiple forum nodes on the front page.
     $this->drupalLogin($this->drupalCreateUser(array('administer content types', 'create forum content', 'post comments')));
-    $this->drupalPost('admin/structure/types/manage/forum', array('settings[node][options][promote]' => 'promote'), t('Save content type'));
+    $this->drupalPostForm('admin/structure/types/manage/forum', array('settings[node][options][promote]' => 'promote'), t('Save content type'));
     $this->createForumTopic($this->forum, FALSE);
     $this->createForumTopic($this->forum, FALSE);
     $this->drupalGet('node');
@@ -212,14 +211,14 @@ class ForumTest extends WebTestBase {
     // Test adding a comment to a forum topic.
     $node = $this->createForumTopic($this->forum, FALSE);
     $edit = array();
-    $edit['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = $this->randomName();
-    $this->drupalPost('node/' . $node->id(), $edit, t('Save'));
+    $edit['comment_body[0][value]'] = $this->randomName();
+    $this->drupalPostForm('node/' . $node->id(), $edit, t('Save'));
     $this->assertResponse(200);
 
     // Test editing a forum topic that has a comment.
     $this->drupalLogin($this->edit_any_topics_user);
     $this->drupalGet('forum/' . $this->forum['tid']);
-    $this->drupalPost('node/' . $node->id() . '/edit', array(), t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', array(), t('Save'));
     $this->assertResponse(200);
 
     // Test the root forum page title change.
@@ -248,7 +247,7 @@ class ForumTest extends WebTestBase {
 
     // Create an orphan forum item.
     $this->drupalLogin($this->admin_user);
-    $this->drupalPost('node/add/forum', array('title' => $this->randomName(10), 'body[' . Language::LANGCODE_NOT_SPECIFIED .'][0][value]' => $this->randomName(120)), t('Save'));
+    $this->drupalPostForm('node/add/forum', array('title' => $this->randomName(10), 'body[0][value]' => $this->randomName(120)), t('Save'));
 
     $nid_count = db_query('SELECT COUNT(nid) FROM {node}')->fetchField();
     $this->assertEqual(0, $nid_count, 'A forum node was not created when missing a forum vocabulary.');
@@ -272,7 +271,7 @@ class ForumTest extends WebTestBase {
 
     // Add forum to the Tools menu.
     $edit = array();
-    $this->drupalPost('admin/structure/menu/manage/tools', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/menu/manage/tools', $edit, t('Save'));
     $this->assertResponse(200);
 
     // Edit forum taxonomy.
@@ -298,7 +297,7 @@ class ForumTest extends WebTestBase {
     // Create second forum in container.
     $this->delete_forum = $this->createForum('forum', $this->forumContainer['tid']);
     // Save forum overview.
-    $this->drupalPost('admin/structure/forum/', array(), t('Save'));
+    $this->drupalPostForm('admin/structure/forum/', array(), t('Save'));
     $this->assertRaw(t('The configuration options have been saved.'));
     // Delete this second forum.
     $this->deleteForum($this->delete_forum['tid']);
@@ -353,7 +352,7 @@ class ForumTest extends WebTestBase {
     );
 
     // Edit the vocabulary.
-    $this->drupalPost('admin/structure/taxonomy/manage/' . $original_vocabulary->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $original_vocabulary->id() . '/edit', $edit, t('Save'));
     $this->assertResponse(200);
     $this->assertRaw(t('Updated vocabulary %name.', array('%name' => $edit['name'])), 'Vocabulary was edited');
 
@@ -397,7 +396,7 @@ class ForumTest extends WebTestBase {
     );
 
     // Create forum.
-    $this->drupalPost('admin/structure/forum/add/' . $type, $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/forum/add/' . $type, $edit, t('Save'));
     $this->assertResponse(200);
     $type = ($type == 'container') ? 'forum container' : 'forum';
     $this->assertRaw(
@@ -430,11 +429,11 @@ class ForumTest extends WebTestBase {
    */
   function deleteForum($tid) {
     // Delete the forum.
-    $this->drupalPost('admin/structure/forum/edit/forum/' . $tid, array(), t('Delete'));
+    $this->drupalPostForm('admin/structure/forum/edit/forum/' . $tid, array(), t('Delete'));
     $this->assertText('Are you sure you want to delete the forum');
     $this->assertNoText('Add forum');
     $this->assertNoText('Add forum container');
-    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->drupalPostForm(NULL, array(), t('Delete'));
 
     // Assert that the forum no longer exists.
     $this->drupalGet('forum/' . $tid);
@@ -478,8 +477,8 @@ class ForumTest extends WebTestBase {
     // Post a reply to the topic.
     $edit = array();
     $edit['subject'] = $this->randomName();
-    $edit['comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]'] = $this->randomName();
-    $this->drupalPost('node/' . $node->id(), $edit, t('Save'));
+    $edit['comment_body[0][value]'] = $this->randomName();
+    $this->drupalPostForm('node/' . $node->id(), $edit, t('Save'));
     $this->assertResponse(200);
 
     // Login as the first user.
@@ -505,15 +504,14 @@ class ForumTest extends WebTestBase {
     $title = $this->randomName(20);
     $body = $this->randomName(200);
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit = array(
-      "title" => $title,
-      "body[$langcode][0][value]" => $body,
+      'title' => $title,
+      'body[0][value]' => $body,
     );
     $tid = $forum['tid'];
 
     // Create the forum topic, preselecting the forum ID via a URL parameter.
-    $this->drupalPost('node/add/forum/' . $tid, $edit, t('Save'));
+    $this->drupalPostForm('node/add/forum/' . $tid, $edit, t('Save'));
 
     $type = t('Forum topic');
     if ($container) {
@@ -595,13 +593,12 @@ class ForumTest extends WebTestBase {
     if ($response == 200) {
       // Edit forum node (including moving it to another forum).
       $edit = array();
-      $langcode = Language::LANGCODE_NOT_SPECIFIED;
-      $edit["title"] = 'node/' . $node->id();
-      $edit["body[$langcode][0][value]"] = $this->randomName(256);
+      $edit['title'] = 'node/' . $node->id();
+      $edit['body[0][value]'] = $this->randomName(256);
       // Assume the topic is initially associated with $forum.
-      $edit["taxonomy_forums[$langcode]"] = $this->root_forum['tid'];
+      $edit['taxonomy_forums'] = $this->root_forum['tid'];
       $edit['shadow'] = TRUE;
-      $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+      $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
       $this->assertRaw(t('Forum topic %title has been updated.', array('%title' => $edit["title"])), 'Forum node was edited');
 
       // Verify topic was moved to a different forum.
@@ -612,7 +609,7 @@ class ForumTest extends WebTestBase {
       $this->assertTrue($forum_tid == $this->root_forum['tid'], 'The forum topic is linked to a different forum');
 
       // Delete forum node.
-      $this->drupalPost('node/' . $node->id() . '/delete', array(), t('Delete'));
+      $this->drupalPostForm('node/' . $node->id() . '/delete', array(), t('Delete'));
       $this->assertResponse($response);
       $this->assertRaw(t('Forum topic %title has been deleted.', array('%title' => $edit['title'])), 'Forum node was deleted');
     }

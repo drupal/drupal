@@ -7,8 +7,6 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests the node edit functionality.
  */
@@ -37,14 +35,13 @@ class PageEditTest extends NodeTestBase {
   function testPageEdit() {
     $this->drupalLogin($this->web_user);
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $title_key = "title";
-    $body_key = "body[$langcode][0][value]";
+    $title_key = 'title';
+    $body_key = 'body[0][value]';
     // Create node to edit.
     $edit = array();
     $edit[$title_key] = $this->randomName(8);
     $edit[$body_key] = $this->randomName(16);
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, t('Save'));
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
@@ -68,7 +65,7 @@ class PageEditTest extends NodeTestBase {
     $edit[$title_key] = $this->randomName(8);
     $edit[$body_key] = $this->randomName(16);
     // Stay on the current page, without reloading.
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
 
     // Check that the title and body fields are displayed with the updated values.
     $this->assertText($edit[$title_key], 'Title displayed.');
@@ -83,7 +80,7 @@ class PageEditTest extends NodeTestBase {
     $edit['title'] = $this->randomName(8);
     $edit[$body_key] = $this->randomName(16);
     $edit['revision'] = TRUE;
-    $this->drupalPost(NULL, $edit, t('Save and keep published'));
+    $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
 
     // Ensure that the node revision has been created.
     $revised_node = $this->drupalGetNodeByTitle($edit['title'], TRUE);
@@ -105,12 +102,11 @@ class PageEditTest extends NodeTestBase {
     $this->drupalLogin($this->admin_user);
 
     // Create node to edit.
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $body_key = "body[$langcode][0][value]";
+    $body_key = 'body[0][value]';
     $edit = array();
     $edit['title'] = $this->randomName(8);
     $edit[$body_key] = $this->randomName(16);
-    $this->drupalPost('node/add/page', $edit, t('Save and publish'));
+    $this->drupalPostForm('node/add/page', $edit, t('Save and publish'));
 
     // Check that the node was authored by the currently logged in user.
     $node = $this->drupalGetNodeByTitle($edit['title']);
@@ -120,20 +116,20 @@ class PageEditTest extends NodeTestBase {
     $edit = array(
       'name' => 'invalid-name',
     );
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
     $this->assertText('The username invalid-name does not exist.');
 
     // Change the authored by field to an empty string, which should assign
     // authorship to the anonymous user (uid 0).
     $edit['name'] = '';
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
     $node = node_load($node->id(), TRUE);
     $this->assertIdentical($node->getAuthorId(), '0', 'Node authored by anonymous user.');
 
     // Change the authored by field to another user's name (that is not
     // logged in).
     $edit['name'] = $this->web_user->getUsername();
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save and keep published'));
     $node = node_load($node->id(), TRUE);
     $this->assertIdentical($node->getAuthorId(), $this->web_user->id(), 'Node authored by normal user.');
 

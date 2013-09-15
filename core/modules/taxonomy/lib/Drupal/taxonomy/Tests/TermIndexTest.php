@@ -7,8 +7,6 @@
 
 namespace Drupal\taxonomy\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests the hook implementations that maintain the taxonomy index.
  */
@@ -105,12 +103,11 @@ class TermIndexTest extends TaxonomyTestBase {
 
     // Post an article.
     $edit = array();
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $edit["title"] = $this->randomName();
-    $edit["body[$langcode][0][value]"] = $this->randomName();
-    $edit["{$this->field_name_1}[$langcode][]"] = $term_1->id();
-    $edit["{$this->field_name_2}[$langcode][]"] = $term_1->id();
-    $this->drupalPost('node/add/article', $edit, t('Save'));
+    $edit['body[0][value]'] = $this->randomName();
+    $edit["{$this->field_name_1}[]"] = $term_1->id();
+    $edit["{$this->field_name_2}[]"] = $term_1->id();
+    $this->drupalPostForm('node/add/article', $edit, t('Save'));
 
     // Check that the term is indexed, and only once.
     $node = $this->drupalGetNodeByTitle($edit["title"]);
@@ -121,8 +118,8 @@ class TermIndexTest extends TaxonomyTestBase {
     $this->assertEqual(1, $index_count, 'Term 1 is indexed once.');
 
     // Update the article to change one term.
-    $edit["{$this->field_name_1}[$langcode][]"] = $term_2->id();
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $edit["{$this->field_name_1}[]"] = $term_2->id();
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that both terms are indexed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(
@@ -137,8 +134,8 @@ class TermIndexTest extends TaxonomyTestBase {
     $this->assertEqual(1, $index_count, 'Term 2 is indexed.');
 
     // Update the article to change another term.
-    $edit["{$this->field_name_2}[$langcode][]"] = $term_2->id();
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $edit["{$this->field_name_2}[]"] = $term_2->id();
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     // Check that only one term is indexed.
     $index_count = db_query('SELECT COUNT(*) FROM {taxonomy_index} WHERE nid = :nid AND tid = :tid', array(

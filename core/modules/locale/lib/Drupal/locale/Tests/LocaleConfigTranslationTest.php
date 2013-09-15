@@ -52,11 +52,11 @@ class LocaleConfigTranslationTest extends WebTestBase {
       'name' => $name,
       'direction' => '0',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add custom language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
     $language = new Language(array('id' => $langcode));
     // Set path prefix.
     $edit = array( "prefix[$langcode]" => $langcode );
-    $this->drupalPost('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
 
     // Check site name string exists and create translation for it.
     $string = $this->storage->findString(array('source' => 'Drupal', 'context' => '', 'type' => 'configuration'));
@@ -69,14 +69,14 @@ class LocaleConfigTranslationTest extends WebTestBase {
       'langcode' => $langcode,
       'translation' => 'all',
     );
-    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
+    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $textareas = $this->xpath('//textarea');
     $textarea = current($textareas);
     $lid = (string) $textarea[0]['name'];
     $edit = array(
       $lid => $site_name,
     );
-    $this->drupalPost('admin/config/regional/translate', $edit, t('Save translations'));
+    $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
 
     $wrapper = $this->container->get('locale.config.typed')->get('system.site');
 
@@ -95,7 +95,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $this->assertFalse($string, 'Configuration strings have been created upon installation.');
 
     // Enable the image module.
-    $this->drupalPost('admin/modules', array('modules[Core][image][enable]' => "1"), t('Save configuration'));
+    $this->drupalPostForm('admin/modules', array('modules[Core][image][enable]' => "1"), t('Save configuration'));
     $this->resetAll();
 
     $string = $this->storage->findString(array('source' => 'Medium (220x220)', 'context' => '', 'type' => 'configuration'));
@@ -115,13 +115,13 @@ class LocaleConfigTranslationTest extends WebTestBase {
       'langcode' => $langcode,
       'translation' => 'all',
     );
-    $this->drupalPost('admin/config/regional/translate', $search, t('Filter'));
+    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
     $textarea = current($this->xpath('//textarea'));
     $lid = (string) $textarea[0]['name'];
     $edit = array(
       $lid => $image_style_label,
     );
-    $this->drupalPost('admin/config/regional/translate', $edit, t('Save translations'));
+    $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
 
     // Check the right single translation has been created.
     $translations = $this->storage->getTranslations(array('language' => $langcode, 'type' => 'configuration', 'name' => 'image.style.medium'));
@@ -139,9 +139,9 @@ class LocaleConfigTranslationTest extends WebTestBase {
     $this->assertEqual(\Drupal::config('locale.config.xx.image.style.medium')->get('label'), $image_style_label);
 
     // Disable and uninstall the module.
-    $this->drupalPost('admin/modules', array('modules[Core][image][enable]' => FALSE), t('Save configuration'));
-    $this->drupalPost('admin/modules/uninstall', array('uninstall[image]' => "image"), t('Uninstall'));
-    $this->drupalPost(NULL, array(), t('Uninstall'));
+    $this->drupalPostForm('admin/modules', array('modules[Core][image][enable]' => FALSE), t('Save configuration'));
+    $this->drupalPostForm('admin/modules/uninstall', array('uninstall[image]' => "image"), t('Uninstall'));
+    $this->drupalPostForm(NULL, array(), t('Uninstall'));
 
     // Ensure that the translated configuration has been removed.
     $this->assertFalse(\Drupal::config('locale.config.xx.image.style.medium')->get('label'), 'Translated configuration for image module removed.');

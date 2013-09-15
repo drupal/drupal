@@ -7,7 +7,6 @@
 
 namespace Drupal\filter\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -86,7 +85,7 @@ class FilterFormatAccessTest extends WebTestBase {
         'format' => drupal_strtolower($this->randomName()),
         'name' => $this->randomName(),
       );
-      $this->drupalPost('admin/config/content/formats/add', $edit, t('Save configuration'));
+      $this->drupalPostForm('admin/config/content/formats/add', $edit, t('Save configuration'));
       $this->resetFilterCaches();
       $formats[] = entity_load('filter_format', $edit['format']);
     }
@@ -138,9 +137,8 @@ class FilterFormatAccessTest extends WebTestBase {
     // the disallowed format does not.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('node/add/page');
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $elements = $this->xpath('//select[@name=:name]/option', array(
-      ':name' => "body[$langcode][0][format]",
+      ':name' => 'body[0][format]',
       ':option' => $this->allowed_format->format,
     ));
     $options = array();
@@ -207,10 +205,8 @@ class FilterFormatAccessTest extends WebTestBase {
    * choose a new format before saving the page.
    */
   function testFormatWidgetPermissions() {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-    $title_key = "title";
-    $body_value_key = "body[$langcode][0][value]";
-    $body_format_key = "body[$langcode][0][format]";
+    $body_value_key = 'body[0][value]';
+    $body_format_key = 'body[0][format]';
 
     // Create node to edit.
     $this->drupalLogin($this->admin_user);
@@ -218,7 +214,7 @@ class FilterFormatAccessTest extends WebTestBase {
     $edit['title'] = $this->randomName(8);
     $edit[$body_value_key] = $this->randomName(16);
     $edit[$body_format_key] = $this->disallowed_format->format;
-    $this->drupalPost('node/add/page', $edit, t('Save'));
+    $this->drupalPostForm('node/add/page', $edit, t('Save'));
     $node = $this->drupalGetNodeByTitle($edit['title']);
 
     // Try to edit with a less privileged user.
@@ -232,11 +228,11 @@ class FilterFormatAccessTest extends WebTestBase {
     // Verify that title can be changed, but preview displays original body.
     $new_edit = array();
     $new_edit['title'] = $this->randomName(8);
-    $this->drupalPost(NULL, $new_edit, t('Preview'));
+    $this->drupalPostForm(NULL, $new_edit, t('Preview'));
     $this->assertText($edit[$body_value_key], 'Old body found in preview.');
 
     // Save and verify that only the title was changed.
-    $this->drupalPost(NULL, $new_edit, t('Save'));
+    $this->drupalPostForm(NULL, $new_edit, t('Save'));
     $this->assertNoText($edit['title'], 'Old title not found.');
     $this->assertText($new_edit['title'], 'New title found.');
     $this->assertText($edit[$body_value_key], 'Old body found.');
@@ -273,7 +269,7 @@ class FilterFormatAccessTest extends WebTestBase {
     $old_title = $new_edit['title'];
     $new_title = $this->randomName(8);
     $edit = array('title' => $new_title);
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->assertText(t('!name field is required.', array('!name' => t('Text format'))), 'Error message is displayed.');
     $this->drupalGet('node/' . $node->id());
     $this->assertText($old_title, 'Old title found.');
@@ -281,7 +277,7 @@ class FilterFormatAccessTest extends WebTestBase {
 
     // Now select a new text format and make sure the node can be saved.
     $edit[$body_format_key] = filter_fallback_format();
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->assertUrl('node/' . $node->id());
     $this->assertText($new_title, 'New title found.');
     $this->assertNoText($old_title, 'Old title not found.');
@@ -290,7 +286,7 @@ class FilterFormatAccessTest extends WebTestBase {
     // other formats on the site (leaving only the fallback format).
     $this->drupalLogin($this->admin_user);
     $edit = array($body_format_key => $this->allowed_format->format);
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->assertUrl('node/' . $node->id());
     foreach (filter_formats() as $format) {
       if (!$format->isFallbackFormat()) {
@@ -307,13 +303,13 @@ class FilterFormatAccessTest extends WebTestBase {
     $old_title = $new_title;
     $new_title = $this->randomName(8);
     $edit = array('title' => $new_title);
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->assertText(t('!name field is required.', array('!name' => t('Text format'))), 'Error message is displayed.');
     $this->drupalGet('node/' . $node->id());
     $this->assertText($old_title, 'Old title found.');
     $this->assertNoText($new_title, 'New title not found.');
     $edit[$body_format_key] = filter_fallback_format();
-    $this->drupalPost('node/' . $node->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
     $this->assertUrl('node/' . $node->id());
     $this->assertText($new_title, 'New title found.');
     $this->assertNoText($old_title, 'Old title not found.');

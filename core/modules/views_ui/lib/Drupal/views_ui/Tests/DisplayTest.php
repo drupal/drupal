@@ -52,7 +52,7 @@ class DisplayTest extends UITestBase {
 
     $view += $default;
 
-    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
 
     return $default;
   }
@@ -71,7 +71,7 @@ class DisplayTest extends UITestBase {
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'Delete Page', 'Make sure there is a delete button on the page display.');
 
     // Delete the page, so we can test the undo process.
-    $this->drupalPost($path_prefix . '/page_1', array(), 'Delete Page');
+    $this->drupalPostForm($path_prefix . '/page_1', array(), 'Delete Page');
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'Undo delete of Page', 'Make sure there a undo button on the page display after deleting.');
     $element = $this->xpath('//a[contains(@href, :href) and contains(@class, :class)]', array(':href' => $path_prefix . '/page_1', ':class' => 'views-display-deleted-link'));
     $this->assertTrue(!empty($element), 'Make sure the display link is marked as to be deleted.');
@@ -80,13 +80,13 @@ class DisplayTest extends UITestBase {
     $this->assertTrue(!empty($element), 'Make sure the display link is marked as to be deleted.');
 
     // Undo the deleting of the display.
-    $this->drupalPost($path_prefix . '/page_1', array(), 'Undo delete of Page');
+    $this->drupalPostForm($path_prefix . '/page_1', array(), 'Undo delete of Page');
     $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-undo-delete', 'Undo delete of Page', 'Make sure there is no undo button on the page display after reverting.');
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-delete', 'Delete Page', 'Make sure there is a delete button on the page display after the reverting.');
 
     // Now delete again and save the view.
-    $this->drupalPost($path_prefix . '/page_1', array(), 'Delete Page');
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm($path_prefix . '/page_1', array(), 'Delete Page');
+    $this->drupalPostForm(NULL, array(), t('Save'));
 
     $this->assertNoLinkByHref($path_prefix . '/page_1', 'Make sure there is no display tab for the deleted display.');
   }
@@ -105,7 +105,7 @@ class DisplayTest extends UITestBase {
     $this->drupalGet($path_prefix);
 
     // Add a new display.
-    $this->drupalPost(NULL, array(), 'Add Page');
+    $this->drupalPostForm(NULL, array(), 'Add Page');
     $this->assertLinkByHref($path_prefix . '/page_1', 0, 'Make sure after adding a display the new display appears in the UI');
 
     $this->assertNoLink('Master*', 0, 'Make sure the master display is not marked as changed.');
@@ -132,8 +132,8 @@ class DisplayTest extends UITestBase {
       'displays[page_1][weight]' => 2,
       'displays[block_1][weight]' => 1
     );
-    $this->drupalPost(NULL, $edit, t('Apply'));
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
 
     $view = views_get_view($view['id']);
     $displays = $view->storage->get('display');
@@ -159,24 +159,24 @@ class DisplayTest extends UITestBase {
     $path_prefix = 'admin/structure/views/view/' . $view['id'] .'/edit';
 
     $this->drupalGet($path_prefix);
-    $this->drupalPost(NULL, array(), 'Clone Page');
+    $this->drupalPostForm(NULL, array(), 'Clone Page');
     $this->assertLinkByHref($path_prefix . '/page_2', 0, 'Make sure after cloning the new display appears in the UI');
     $this->assertUrl($path_prefix . '/page_2', array(), 'The user got redirected to the new display.');
 
     // Set the title and override the css classes.
     $random_title = $this->randomName();
     $random_css = $this->randomName();
-    $this->drupalPost("admin/structure/views/nojs/display/{$view['id']}/page_2/title", array('title' => $random_title), t('Apply'));
-    $this->drupalPost("admin/structure/views/nojs/display/{$view['id']}/page_2/css_class", array('override[dropdown]' => 'page_2', 'css_class' => $random_css), t('Apply'));
+    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_2/title", array('title' => $random_title), t('Apply'));
+    $this->drupalPostForm("admin/structure/views/nojs/display/{$view['id']}/page_2/css_class", array('override[dropdown]' => 'page_2', 'css_class' => $random_css), t('Apply'));
 
     // Clone as a different display type.
-    $this->drupalPost(NULL, array(), 'Clone as Block');
+    $this->drupalPostForm(NULL, array(), 'Clone as Block');
     $this->assertLinkByHref($path_prefix . '/block_1', 0, 'Make sure after cloning the new display appears in the UI');
     $this->assertUrl($path_prefix . '/block_1', array(), 'The user got redirected to the new display.');
     $this->assertText(t('Block settings'));
     $this->assertNoText(t('Page settings'));
 
-    $this->drupalPost(NULL, array(), t('Save'));
+    $this->drupalPostForm(NULL, array(), t('Save'));
     $view = views_get_view($view['id']);
     $view->initDisplay();
 
@@ -203,12 +203,12 @@ class DisplayTest extends UITestBase {
 
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-disable', '', 'Make sure the disable button is visible.');
     $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-enable', '', 'Make sure the enable button is not visible.');
-    $this->drupalPost(NULL, array(), 'Disable Page');
+    $this->drupalPostForm(NULL, array(), 'Disable Page');
     $this->assertTrue($this->xpath('//div[contains(@class, :class)]', array(':class' => 'views-display-disabled')), 'Make sure the disabled display css class appears once the display is marked as such.');
 
     $this->assertNoFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-disable', '', 'Make sure the disable button is not visible.');
     $this->assertFieldById('edit-displays-settings-settings-content-tab-content-details-top-actions-enable', '', 'Make sure the enable button is visible.');
-    $this->drupalPost(NULL, array(), 'Enable Page');
+    $this->drupalPostForm(NULL, array(), 'Enable Page');
     $this->assertFalse($this->xpath('//div[contains(@class, :class)]', array(':class' => 'views-display-disabled')), 'Make sure the disabled display css class does not appears once the display is enabled again.');
   }
 
@@ -264,7 +264,7 @@ class DisplayTest extends UITestBase {
     // Test setting the link display in the UI form.
     $path = 'admin/structure/views/view/test_display/edit/block_1';
     $link_display_path = 'admin/structure/views/nojs/display/test_display/block_1/link_display';
-    $this->drupalPost($link_display_path, array('link_display' => 'page_1'), t('Apply'));
+    $this->drupalPostForm($link_display_path, array('link_display' => 'page_1'), t('Apply'));
     // The form redirects to the master display.
     $this->drupalGet($path);
 
@@ -272,7 +272,7 @@ class DisplayTest extends UITestBase {
     $this->assertEqual($result[0], 'Page', 'Make sure that the link option summary shows the right linked display.');
 
     $link_display_path = 'admin/structure/views/nojs/display/test_display/block_1/link_display';
-    $this->drupalPost($link_display_path, array('link_display' => 'custom_url'), t('Apply'));
+    $this->drupalPostForm($link_display_path, array('link_display' => 'custom_url'), t('Apply'));
     // The form redirects to the master display.
     $this->drupalGet($path);
 
@@ -294,16 +294,8 @@ class DisplayTest extends UITestBase {
 
     // Get server-rendered contextual links.
     // @see \Drupal\contextual\Tests\ContextualDynamicContextTest:renderContextualLinks()
-    $post = urlencode('ids[0]') . '=' . urlencode($id);
-    $response = $this->curlExec(array(
-      CURLOPT_URL => url('contextual/render', array('absolute' => TRUE, 'query' => array('destination' => 'test-display'))),
-      CURLOPT_POST => TRUE,
-      CURLOPT_POSTFIELDS => $post,
-      CURLOPT_HTTPHEADER => array(
-        'Accept: application/json',
-        'Content-Type: application/x-www-form-urlencoded',
-      ),
-    ));
+    $post = array('ids[0]' => $id);
+    $response = $this->drupalPost('contextual/render', 'application/json', $post, array('query' => array('destination' => 'test-display')));
     $this->assertResponse(200);
     $json = drupal_json_decode($response);
     $this->assertIdentical($json[$id], '<ul class="contextual-links"><li class="views-ui-edit odd first last"><a href="' . base_path() . 'admin/structure/views/view/test_display/edit/page_1?destination=test-display">Edit view</a></li></ul>');

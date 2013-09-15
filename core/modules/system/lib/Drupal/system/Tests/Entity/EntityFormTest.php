@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -53,7 +52,7 @@ class EntityFormTest extends WebTestBase {
    */
   function testEntityFormDisplayAlter() {
     $this->drupalGet('entity_test/add');
-    $altered_field = $this->xpath('//input[@name="field_test_text[und][0][value]" and @size="42"]');
+    $altered_field = $this->xpath('//input[@name="field_test_text[0][value]" and @size="42"]');
     $this->assertTrue(count($altered_field) === 1, 'The altered field has the correct size value.');
   }
 
@@ -64,29 +63,28 @@ class EntityFormTest extends WebTestBase {
    *   The entity type to run the tests with.
    */
   protected function assertFormCRUD($entity_type) {
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
     $name1 = $this->randomName(8);
     $name2 = $this->randomName(10);
 
     $edit = array(
       'name' => $name1,
       'user_id' => mt_rand(0, 128),
-      "field_test_text[$langcode][0][value]" => $this->randomName(16),
+      'field_test_text[0][value]' => $this->randomName(16),
     );
 
-    $this->drupalPost($entity_type . '/add', $edit, t('Save'));
+    $this->drupalPostForm($entity_type . '/add', $edit, t('Save'));
     $entity = $this->loadEntityByName($entity_type, $name1);
     $this->assertTrue($entity, format_string('%entity_type: Entity found in the database.', array('%entity_type' => $entity_type)));
 
     $edit['name'] = $name2;
-    $this->drupalPost($entity_type . '/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm($entity_type . '/manage/' . $entity->id() . '/edit', $edit, t('Save'));
     $entity = $this->loadEntityByName($entity_type, $name1);
     $this->assertFalse($entity, format_string('%entity_type: The entity has been modified.', array('%entity_type' => $entity_type)));
     $entity = $this->loadEntityByName($entity_type, $name2);
     $this->assertTrue($entity, format_string('%entity_type: Modified entity found in the database.', array('%entity_type' => $entity_type)));
     $this->assertNotEqual($entity->name->value, $name1, format_string('%entity_type: The entity name has been modified.', array('%entity_type' => $entity_type)));
 
-    $this->drupalPost($entity_type . '/manage/' . $entity->id() . '/edit', array(), t('Delete'));
+    $this->drupalPostForm($entity_type . '/manage/' . $entity->id() . '/edit', array(), t('Delete'));
     $entity = $this->loadEntityByName($entity_type, $name2);
     $this->assertFalse($entity, format_string('%entity_type: Entity not found in the database.', array('%entity_type' => $entity_type)));
   }

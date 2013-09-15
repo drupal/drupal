@@ -55,7 +55,7 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
 
     // Search for the title of the node with a POST query.
     $edit = array('or' => $node->label());
-    $this->drupalPost('search/node', $edit, t('Advanced search'));
+    $this->drupalPostForm('search/node', $edit, t('Advanced search'));
 
     // Checks if the langcode has been passed by hook_search_preprocess().
     $this->assertText('Langcode Preprocess Test: en');
@@ -82,7 +82,7 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
 
     // Search for the title of the node with a POST query.
     $edit = array('or' => 'testing');
-    $this->drupalPost('search/node', $edit, t('Advanced search'));
+    $this->drupalPostForm('search/node', $edit, t('Advanced search'));
 
     // Check if the node has been found.
     $this->assertText('Search results');
@@ -90,7 +90,7 @@ class SearchPreprocessLangcodeTest extends SearchTestBase {
 
     // Search for the same node using a different query.
     $edit = array('or' => 'test');
-    $this->drupalPost('search/node', $edit, t('Advanced search'));
+    $this->drupalPostForm('search/node', $edit, t('Advanced search'));
 
     // Check if the node has been found.
     $this->assertText('Search results');

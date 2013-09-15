@@ -31,10 +31,17 @@ comment_reply:
   pattern: 'comment/reply/{entity_type}/{entity_id}/{field_name}/{pid}'
   defaults:
     _content: '\Drupal\comment\Controller\CommentController::getReplyForm'
-    pid: ~
     _title: 'Add new comment'
+    pid: ~
   requirements:
     _access: 'TRUE'
+
+comment_new_comments_node_links:
+  pattern: '/comments/render_new_comments_node_links'
+  defaults:
+    _controller: '\Drupal\comment\Controller\CommentController::renderNewCommentsNodeLinks'
+  requirements:
+    _permission: 'access content'
 
 comment_bundle_list:
   pattern: '/admin/structure/comments'

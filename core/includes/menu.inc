@@ -3418,7 +3418,7 @@ function _menu_router_save($menu, $masks) {
  */
 function _menu_site_is_offline($check_only = FALSE) {
   // Check if site is in maintenance mode.
-  if (Drupal::config('system.maintenance')->get('enabled')) {
+  if (Drupal::state()->get('system.maintenance_mode')) {
     if (user_access('access site in maintenance mode')) {
       // Ensure that the maintenance mode message is displayed only once
       // (allowing for page redirects) and specifically suppress its display on

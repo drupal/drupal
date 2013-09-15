@@ -397,9 +397,9 @@ class Drupal {
    * substituted for them in the pattern. Extra params are added as query
    * strings to the URL.
    *
-   * @param string $name
+   * @param string $route_name
    *   The name of the route
-   * @param array  $parameters
+   * @param array $route_parameters
    *   An associative array of parameter names and values.
    * @param array $options
    *   (optional) An associative array of additional options, with the following
@@ -432,7 +432,7 @@ class Drupal {
    *
    * @see \Drupal\Core\Routing\UrlGeneratorInterface::generateFromRoute()
    */
-  public static function url($route_name, $rotue_parameters = array(), $options = array()) {
+  public static function url($route_name, $route_parameters = array(), $options = array()) {
     return static::$container->get('url_generator')->generateFromRoute($route_name, $route_parameters, $options);
   }
 

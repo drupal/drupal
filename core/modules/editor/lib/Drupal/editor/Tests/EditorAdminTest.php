@@ -79,7 +79,7 @@ class EditorAdminTest extends WebTestBase {
     $edit = $this->selectUnicornEditor();
     // Configure Unicorn Editor's setting to another value.
     $edit['editor[settings][foo]'] = 'baz';
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->verifyUnicornEditorConfiguration('filtered_html', 'baz');
   }
 
@@ -96,7 +96,7 @@ class EditorAdminTest extends WebTestBase {
       'format' => 'monocerus',
     );
     $edit += $this->selectUnicornEditor();
-    $this->drupalPost(NULL, $edit, t('Save configuration'));
+    $this->drupalPostForm(NULL, $edit, t('Save configuration'));
     $this->verifyUnicornEditorConfiguration($edit['format']);
   }
 
@@ -133,7 +133,7 @@ class EditorAdminTest extends WebTestBase {
     $edit = array(
       'editor[editor]' => 'unicorn',
     );
-    $this->drupalPostAjax(NULL, $edit, 'editor_configure');
+    $this->drupalPostAjaxForm(NULL, $edit, 'editor_configure');
     $unicorn_setting_foo = $this->xpath('//input[@name="editor[settings][foo]" and @type="text" and @value="bar"]');
     $this->assertTrue(count($unicorn_setting_foo), "Unicorn Editor's settings form is present.");
 

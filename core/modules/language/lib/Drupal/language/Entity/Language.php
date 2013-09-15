@@ -26,6 +26,8 @@ use Drupal\language\LanguageInterface;
  *     "list" = "Drupal\language\LanguageListController",
  *     "access" = "Drupal\language\LanguageAccessController",
  *     "form" = {
+ *       "add" = "Drupal\language\Form\LanguageAddForm",
+ *       "edit" = "Drupal\language\Form\LanguageEditForm",
  *       "delete" = "Drupal\language\Form\LanguageDeleteForm"
  *     }
  *   },

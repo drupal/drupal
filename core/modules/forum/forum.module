@@ -96,7 +96,6 @@ function forum_theme() {
     ),
     'forum_form' => array(
       'render element' => 'form',
-      'file' => 'forum.admin.inc',
     ),
   );
 }
@@ -118,26 +117,11 @@ function forum_menu() {
   $items['admin/structure/forum'] = array(
     'title' => 'Forums',
     'description' => 'Control forum hierarchy settings.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('forum_overview'),
-    'access arguments' => array('administer forums'),
-    'file' => 'forum.admin.inc',
+    'route_name' => 'forum_overview',
   );
   $items['admin/structure/forum/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['admin/structure/forum/add/container'] = array(
-    'title' => 'Add container',
-    'tab_parent' => 'admin/structure/forum',
-    'route_name' => 'forum_add_container',
-    'type' => MENU_LOCAL_ACTION,
-  );
-  $items['admin/structure/forum/add/forum'] = array(
-    'tab_parent' => 'admin/structure/forum',
-    'title' => 'Add forum',
-    'route_name' => 'forum_add_forum',
-    'type' => MENU_LOCAL_ACTION,
   );
   $items['admin/structure/forum/settings'] = array(
     'title' => 'Settings',
@@ -153,6 +137,10 @@ function forum_menu() {
   $items['admin/structure/forum/edit/forum/%taxonomy_term'] = array(
     'title' => 'Edit forum',
     'route_name' => 'forum_edit_forum',
+  );
+  $items['admin/structure/forum/delete/forum/%taxonomy_term'] = array(
+    'title' => 'Delete forum',
+    'route_name' => 'forum_delete',
   );
   return $items;
 }
@@ -216,18 +204,6 @@ function forum_menu_local_tasks(&$data, $router_item, $root_path) {
 }
 
 /**
- * Implements hook_menu_local_tasks_alter().
- *
- * Remove the 'Add Forum' and 'Add container' local tasks on the delete form.
- */
-function forum_menu_local_tasks_alter(&$data, $router_item, $root_path) {
-  if ($root_path == 'admin/structure/forum' && !empty($router_item['map'][3]) &&
-      $router_item['map'][3] == 'delete') {
-    $data = array();
-  }
-}
-
-/**
  * Implements hook_entity_info().
  */
 function forum_entity_info(&$info) {
@@ -265,7 +241,6 @@ function forum_uri($forum) {
  */
 function forum_node_validate(EntityInterface $node, $form) {
   if (Drupal::service('forum_manager')->checkNodeType($node)) {
-    $langcode = $form['taxonomy_forums']['#language'];
     // vocabulary is selected, not a "container" term.
     if (!$node->taxonomy_forums->isEmpty()) {
       // Extract the node's proper topic ID.
@@ -573,16 +548,16 @@ function forum_form_node_form_alter(&$form, &$form_state, $form_id) {
   }
 
   if (isset($form['taxonomy_forums'])) {
-    $langcode = $form['taxonomy_forums']['#language'];
+    $widget =& $form['taxonomy_forums']['widget'];
     // Make the vocabulary required for 'real' forum-nodes.
-    $form['taxonomy_forums'][$langcode]['#required'] = TRUE;
-    $form['taxonomy_forums'][$langcode]['#multiple'] = FALSE;
-    if (empty($form['taxonomy_forums'][$langcode]['#default_value'])) {
+    $widget['#required'] = TRUE;
+    $widget['#multiple'] = FALSE;
+    if (empty($widget['#default_value'])) {
       // If there is no default forum already selected, try to get the forum
       // ID from the URL (e.g., if we are on a page like node/add/forum/2, we
       // expect "2" to be the ID of the forum that was requested).
       $requested_forum_id = arg(3);
-      $form['taxonomy_forums'][$langcode]['#default_value'] = is_numeric($requested_forum_id) ? $requested_forum_id : '';
+      $widget['#default_value'] = is_numeric($requested_forum_id) ? $requested_forum_id : '';
     }
   }
 }

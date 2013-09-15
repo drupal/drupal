@@ -432,6 +432,7 @@ function update_check_requirements($skip_warnings = FALSE) {
   }
 }
 
+
 // Some unavoidable errors happen because the database is not yet up-to-date.
 // Our custom error handler is not yet installed, so we just suppress them.
 ini_set('display_errors', FALSE);
@@ -452,11 +453,8 @@ require_once DRUPAL_ROOT . '/' . settings()->get('session_inc', 'core/includes/s
 drupal_session_initialize();
 
 // A request object from the HTTPFoundation to tell us about the request.
-// @todo These two lines were copied from index.php which has its own todo about
-// a change required here. Revisit this when that change has been made.
 $request = Request::createFromGlobals();
-drupal_container()
-  ->set('request', $request);
+Drupal::getContainer()->set('request', $request);
 
 // Ensure that URLs generated for the home and admin pages don't have 'update.php'
 // in them.
@@ -555,7 +553,7 @@ if (update_access_allowed()) {
     // Regular batch ops : defer to batch processing API.
     default:
       update_task_list('run');
-      $output = _batch_page();
+      $output = _batch_page($request);
       break;
   }
 }

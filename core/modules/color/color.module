@@ -369,15 +369,10 @@ function color_scheme_form_submit($form, &$form_state) {
   // Rewrite theme stylesheets.
   $css = array();
   foreach ($info['css'] as $stylesheet) {
-    // Build a temporary array with LTR and RTL files.
+    // Build a temporary array with CSS files.
     $files = array();
     if (file_exists($paths['source'] . $stylesheet)) {
       $files[] = $stylesheet;
-
-      $rtl_file = str_replace('.css', '-rtl.css', $stylesheet);
-      if (file_exists($paths['source'] . $rtl_file)) {
-        $files[] = $rtl_file;
-      }
     }
 
     foreach ($files as $file) {

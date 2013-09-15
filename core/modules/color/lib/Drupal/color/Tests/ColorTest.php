@@ -88,7 +88,7 @@ class ColorTest extends WebTestBase {
     $this->assertResponse(200);
     $edit['scheme'] = '';
     $edit[$test_values['palette_input']] = '#123456';
-    $this->drupalPost($settings_path, $edit, t('Save configuration'));
+    $this->drupalPostForm($settings_path, $edit, t('Save configuration'));
 
     $this->drupalGet('<front>');
     $stylesheets = \Drupal::config('color.' . $theme)->get('stylesheets');
@@ -100,7 +100,7 @@ class ColorTest extends WebTestBase {
     $this->drupalGet($settings_path);
     $this->assertResponse(200);
     $edit['scheme'] = $test_values['scheme'];
-    $this->drupalPost($settings_path, $edit, t('Save configuration'));
+    $this->drupalPostForm($settings_path, $edit, t('Save configuration'));
 
     $this->drupalGet('<front>');
     $stylesheets = \Drupal::config('color.' . $theme)->get('stylesheets');
@@ -136,7 +136,7 @@ class ColorTest extends WebTestBase {
 
     foreach ($this->colorTests as $color => $is_valid) {
       $edit['palette[bg]'] = $color;
-      $this->drupalPost($settings_path, $edit, t('Save configuration'));
+      $this->drupalPostForm($settings_path, $edit, t('Save configuration'));
 
       if($is_valid) {
         $this->assertText('The configuration options have been saved.');

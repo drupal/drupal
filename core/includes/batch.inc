@@ -16,23 +16,27 @@
 
 use Drupal\Core\Batch\Percentage;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Renders the batch processing page based on the current state of the batch.
  *
+ * @param \Symfony\Component\HttpFoundation\Request $request
+ *   The current request object.
+ *
  * @see _batch_shutdown()
  */
-function _batch_page() {
+function _batch_page(Request $request) {
   $batch = &batch_get();
 
-  if (!isset($_REQUEST['id'])) {
+  if (!($request_id = $request->get('id'))) {
     return FALSE;
   }
 
   // Retrieve the current state of the batch.
   if (!$batch) {
-    $batch = Drupal::service('batch.storage')->load($_REQUEST['id']);
+    $batch = Drupal::service('batch.storage')->load($request_id);
     if (!$batch) {
       drupal_set_message(t('No active batch.'), 'error');
       return new RedirectResponse(url('<front>', array('absolute' => TRUE)));
@@ -51,7 +55,7 @@ function _batch_page() {
     }
   }
 
-  $op = isset($_REQUEST['op']) ? $_REQUEST['op'] : '';
+  $op = $request->get('op', '');
   $output = NULL;
   switch ($op) {
     case 'start':
@@ -355,10 +359,10 @@ function _batch_next_set() {
   if (isset($batch['sets'][$batch['current_set'] + 1])) {
     $batch['current_set']++;
     $current_set = &_batch_current_set();
-    if (isset($current_set['form_submit']) && ($function = $current_set['form_submit']) && function_exists($function)) {
+    if (isset($current_set['form_submit']) && ($function = $current_set['form_submit']) && is_callable($function)) {
       // We use our stored copies of $form and $form_state to account for
       // possible alterations by previous form submit handlers.
-      $function($batch['form_state']['complete_form'], $batch['form_state']);
+      call_user_func_array($function, array($batch['form_state']['complete_form'], &$batch['form_state']));
     }
     return TRUE;
   }

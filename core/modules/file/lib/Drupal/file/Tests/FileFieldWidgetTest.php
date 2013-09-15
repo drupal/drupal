@@ -7,8 +7,6 @@
 
 namespace Drupal\file\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Tests file field widget.
  */
@@ -42,7 +40,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     foreach (array('nojs', 'js') as $type) {
       // Create a new node with the uploaded file and ensure it got uploaded
       // successfully.
-      // @todo This only tests a 'nojs' submission, because drupalPostAJAX()
+      // @todo This only tests a 'nojs' submission, because drupalPostAjaxForm()
       //   does not yet support file uploads.
       $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
       $node = node_load($nid, TRUE);
@@ -61,11 +59,11 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       // "Click" the remove button (emulating either a nojs or js submission).
       switch ($type) {
         case 'nojs':
-          $this->drupalPost(NULL, array(), t('Remove'));
+          $this->drupalPostForm(NULL, array(), t('Remove'));
           break;
         case 'js':
           $button = $this->xpath('//input[@type="submit" and @value="' . t('Remove') . '"]');
-          $this->drupalPostAJAX(NULL, array(), array((string) $button[0]['name'] => (string) $button[0]['value']));
+          $this->drupalPostAjaxForm(NULL, array(), array((string) $button[0]['name'] => (string) $button[0]['value']));
           break;
       }
 
@@ -73,11 +71,11 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertNoFieldByXPath('//input[@type="submit"]', t('Remove'), 'After clicking the "Remove" button, it is no longer displayed.');
       $this->assertFieldByXpath('//input[@type="submit"]', t('Upload'), 'After clicking the "Remove" button, the "Upload" button is displayed.');
       // Test label has correct 'for' attribute.
-      $label = $this->xpath("//label[@for='edit-" . drupal_clean_css_identifier($field_name) . "-" . Language::LANGCODE_NOT_SPECIFIED . "-0-upload']");
+      $label = $this->xpath("//label[@for='edit-" . drupal_clean_css_identifier($field_name) . "-0-upload']");
       $this->assertTrue(isset($label[0]), 'Label for upload found.');
 
       // Save the node and ensure it does not have the file.
-      $this->drupalPost(NULL, array(), t('Save and keep published'));
+      $this->drupalPostForm(NULL, array(), t('Save and keep published'));
       $node = node_load($nid, TRUE);
       $this->assertTrue(empty($node->{$field_name}->target_id), 'File was successfully removed from the node.');
     }
@@ -89,7 +87,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
   function testMultiValuedWidget() {
     $type_name = 'article';
     // Use explicit names instead of random names for those fields, because of a
-    // bug in drupalPost() with multiple file uploads in one form, where the
+    // bug in drupalPostForm() with multiple file uploads in one form, where the
     // order of uploads depends on the order in which the upload elements are
     // added to the $form (which, in the current implementation of
     // FileStorage::listAll(), comes down to the alphabetical order on field
@@ -107,16 +105,16 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       // until after the 3rd file, and after that, isn't displayed. Because
       // SimpleTest triggers the last button with a given name, so upload to the
       // second field first.
-      // @todo This is only testing a non-Ajax upload, because drupalPostAJAX()
+      // @todo This is only testing a non-Ajax upload, because drupalPostAjaxForm()
       //   does not yet emulate jQuery's file upload.
       //
       $this->drupalGet("node/add/$type_name");
       foreach (array($field_name2, $field_name) as $each_field_name) {
         for ($delta = 0; $delta < 3; $delta++) {
-          $edit = array('files[' . $each_field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_' . $delta . '][]' => drupal_realpath($test_file->getFileUri()));
-          // If the Upload button doesn't exist, drupalPost() will automatically
+          $edit = array('files[' . $each_field_name . '_' . $delta . '][]' => drupal_realpath($test_file->getFileUri()));
+          // If the Upload button doesn't exist, drupalPostForm() will automatically
           // fail with an assertion message.
-          $this->drupalPost(NULL, $edit, t('Upload'));
+          $this->drupalPostForm(NULL, $edit, t('Upload'));
         }
       }
       $this->assertNoFieldByXpath('//input[@type="submit"]', t('Upload'), 'After uploading 3 files for each field, the "Upload" button is no longer displayed.');
@@ -144,31 +142,31 @@ class FileFieldWidgetTest extends FileFieldTestBase {
               $check_field_name = $field_name;
             }
 
-            $this->assertIdentical((string) $button['name'], $check_field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_' . $key. '_remove_button');
+            $this->assertIdentical((string) $button['name'], $check_field_name . '_' . $key. '_remove_button');
           }
 
           // "Click" the remove button (emulating either a nojs or js submission).
-          $button_name = $current_field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_' . $delta . '_remove_button';
+          $button_name = $current_field_name . '_' . $delta . '_remove_button';
           switch ($type) {
             case 'nojs':
-              // drupalPost() takes a $submit parameter that is the value of the
+              // drupalPostForm() takes a $submit parameter that is the value of the
               // button whose click we want to emulate. Since we have multiple
               // buttons with the value "Remove", and want to control which one we
               // use, we change the value of the other ones to something else.
               // Since non-clicked buttons aren't included in the submitted POST
-              // data, and since drupalPost() will result in $this being updated
+              // data, and since drupalPostForm() will result in $this being updated
               // with a newly rebuilt form, this doesn't cause problems.
               foreach ($buttons as $button) {
                 if ($button['name'] != $button_name) {
                   $button['value'] = 'DUMMY';
                 }
               }
-              $this->drupalPost(NULL, array(), t('Remove'));
+              $this->drupalPostForm(NULL, array(), t('Remove'));
               break;
             case 'js':
-              // drupalPostAJAX() lets us target the button precisely, so we don't
+              // drupalPostAjaxForm() lets us target the button precisely, so we don't
               // require the workaround used above for nojs.
-              $this->drupalPostAJAX(NULL, array(), array($button_name => t('Remove')));
+              $this->drupalPostAjaxForm(NULL, array(), array($button_name => t('Remove')));
               break;
           }
           $num_expected_remove_buttons--;
@@ -176,7 +174,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
           // Ensure an "Upload" button for the current field is displayed with the
           // correct name.
-          $upload_button_name = $current_field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_' . $remaining . '_upload_button';
+          $upload_button_name = $current_field_name . '_' . $remaining . '_upload_button';
           $buttons = $this->xpath('//input[@type="submit" and @value="Upload" and @name=:name]', array(':name' => $upload_button_name));
           $this->assertTrue(is_array($buttons) && count($buttons) == 1, format_string('The upload button is displayed with the correct name (JSMode=%type).', array('%type' => $type)));
 
@@ -191,7 +189,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->assertNoFieldByXPath('//input[@type="submit"]', t('Remove'), format_string('After removing all files, there is no "Remove" button displayed (JSMode=%type).', array('%type' => $type)));
 
       // Save the node and ensure it does not have any files.
-      $this->drupalPost(NULL, array('title' => $this->randomName()), t('Save and publish'));
+      $this->drupalPostForm(NULL, array('title' => $this->randomName()), t('Save and publish'));
       $matches = array();
       preg_match('/node\/([0-9]+)/', $this->getUrl(), $matches);
       $nid = $matches[1];
@@ -216,7 +214,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Change the field setting to make its files private, and upload a file.
     $edit = array('field[settings][uri_scheme]' => 'private');
-    $this->drupalPost("admin/structure/types/manage/$type_name/fields/$instance->id/field", $edit, t('Save field settings'));
+    $this->drupalPostForm("admin/structure/types/manage/$type_name/fields/$instance->id/field", $edit, t('Save field settings'));
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
     $node = node_load($nid, TRUE);
     $node_file = file_load($node->{$field_name}->target_id);
@@ -259,10 +257,10 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       'fields[_add_new_field][field_name]' => $name = strtolower($this->randomName()),
       'fields[_add_new_field][type]' => 'file',
     );
-    $this->drupalPost('admin/structure/comments/manage/node__comment/fields', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/comments/manage/node__comment/fields', $edit, t('Save'));
     $edit = array('field[settings][uri_scheme]' => 'private');
-    $this->drupalPost(NULL, $edit, t('Save field settings'));
-    $this->drupalPost(NULL, array(), t('Save settings'));
+    $this->drupalPostForm(NULL, $edit, t('Save field settings'));
+    $this->drupalPostForm(NULL, array(), t('Save settings'));
 
     // Manually clear cache on the tester side.
     field_info_cache_clear();
@@ -271,16 +269,16 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     $edit = array(
       'title' => $this->randomName(),
     );
-    $this->drupalPost('node/add/article', $edit, t('Save and publish'));
+    $this->drupalPostForm('node/add/article', $edit, t('Save and publish'));
     $node = $this->drupalGetNodeByTitle($edit['title']);
 
     // Add a comment with a file.
     $text_file = $this->getTestFile('text');
     $edit = array(
-      'files[field_' . $name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_' . 0 . ']' => drupal_realpath($text_file->getFileUri()),
-      'comment_body[' . Language::LANGCODE_NOT_SPECIFIED . '][0][value]' => $comment_body = $this->randomName(),
+      'files[field_' . $name . '_' . 0 . ']' => drupal_realpath($text_file->getFileUri()),
+      'comment_body[0][value]' => $comment_body = $this->randomName(),
     );
-    $this->drupalPost('node/' . $node->id(), $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id(), $edit, t('Save'));
 
     // Get the comment ID.
     preg_match('/comment-([0-9]+)/', $this->getUrl(), $matches);
@@ -305,7 +303,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Unpublishes node.
     $this->drupalLogin($this->admin_user);
-    $this->drupalPost('node/' . $node->id() . '/edit', array(), t('Save and unpublish'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', array(), t('Save and unpublish'));
 
     // Ensures normal user can no longer download the file.
     $this->drupalLogin($user);
@@ -329,17 +327,17 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $this->drupalGet("node/$nid/edit");
       $test_file_text = $this->getTestFile('text');
       $test_file_image = $this->getTestFile('image');
-      $name = 'files[' . $field_name . '_' . Language::LANGCODE_NOT_SPECIFIED . '_0]';
+      $name = 'files[' . $field_name . '_0]';
 
       // Upload file with incorrect extension, check for validation error.
       $edit[$name] = drupal_realpath($test_file_image->getFileUri());
       switch ($type) {
         case 'nojs':
-          $this->drupalPost(NULL, $edit, t('Upload'));
+          $this->drupalPostForm(NULL, $edit, t('Upload'));
           break;
         case 'js':
           $button = $this->xpath('//input[@type="submit" and @value="' . t('Upload') . '"]');
-          $this->drupalPostAJAX(NULL, $edit, array((string) $button[0]['name'] => (string) $button[0]['value']));
+          $this->drupalPostAjaxForm(NULL, $edit, array((string) $button[0]['name'] => (string) $button[0]['value']));
           break;
       }
       $error_message = t('Only files with the following extensions are allowed: %files-allowed.', array('%files-allowed' => 'txt'));
@@ -349,11 +347,11 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       $edit[$name] = drupal_realpath($test_file_text->getFileUri());
       switch ($type) {
         case 'nojs':
-          $this->drupalPost(NULL, $edit, t('Upload'));
+          $this->drupalPostForm(NULL, $edit, t('Upload'));
           break;
         case 'js':
           $button = $this->xpath('//input[@type="submit" and @value="' . t('Upload') . '"]');
-          $this->drupalPostAJAX(NULL, $edit, array((string) $button[0]['name'] => (string) $button[0]['value']));
+          $this->drupalPostAjaxForm(NULL, $edit, array((string) $button[0]['name'] => (string) $button[0]['value']));
           break;
       }
       $this->assertNoRaw($error_message, t('Validation error removed when file with correct extension uploaded (JSMode=%type).', array('%type' => $type)));

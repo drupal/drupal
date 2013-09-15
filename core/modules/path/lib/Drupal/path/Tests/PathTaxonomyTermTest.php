@@ -54,7 +54,7 @@ class PathTaxonomyTermTest extends PathTestBase {
       'description[value]' => $description,
       'path[alias]' => $this->randomName(),
     );
-    $this->drupalPost('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add', $edit, t('Save'));
 
     // Confirm that the alias works.
     $this->drupalGet($edit['path[alias]']);
@@ -64,7 +64,7 @@ class PathTaxonomyTermTest extends PathTestBase {
     $tid = db_query("SELECT tid FROM {taxonomy_term_data} WHERE name = :name", array(':name' => $edit['name']))->fetchField();
     $edit2 = array();
     $edit2['path[alias]'] = $this->randomName();
-    $this->drupalPost('taxonomy/term/' . $tid . '/edit', $edit2, t('Save'));
+    $this->drupalPostForm('taxonomy/term/' . $tid . '/edit', $edit2, t('Save'));
 
     // Confirm that the changed alias works.
     $this->drupalGet($edit2['path[alias]']);
@@ -78,7 +78,7 @@ class PathTaxonomyTermTest extends PathTestBase {
     // Remove the term's URL alias.
     $edit3 = array();
     $edit3['path[alias]'] = '';
-    $this->drupalPost('taxonomy/term/' . $tid . '/edit', $edit3, t('Save'));
+    $this->drupalPostForm('taxonomy/term/' . $tid . '/edit', $edit3, t('Save'));
 
     // Confirm that the alias no longer works.
     $this->drupalGet($edit2['path[alias]']);

@@ -49,7 +49,7 @@ class TermLanguageTest extends TaxonomyTestBase {
     $edit = array(
       'default_language[language_show]' => TRUE,
     );
-    $this->drupalPost('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
 
     // Add a term.
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
@@ -60,7 +60,7 @@ class TermLanguageTest extends TaxonomyTestBase {
       'name' => $this->randomName(),
       'langcode' => 'aa',
     );
-    $this->drupalPost(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, $edit, t('Save'));
     $terms = taxonomy_term_load_multiple_by_name($edit['name']);
     $term = reset($terms);
     $this->assertEqual($term->language()->id, $edit['langcode']);
@@ -71,7 +71,7 @@ class TermLanguageTest extends TaxonomyTestBase {
 
     // Change the language of the term.
     $edit['langcode'] = 'bb';
-    $this->drupalPost('taxonomy/term/' . $term->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('taxonomy/term/' . $term->id() . '/edit', $edit, t('Save'));
 
     // Check again that on the edit page the language is correct.
     $this->drupalGet('taxonomy/term/' . $term->id() . '/edit');
@@ -85,7 +85,7 @@ class TermLanguageTest extends TaxonomyTestBase {
       'default_language[langcode]' => 'bb',
       'default_language[language_show]' => TRUE,
     );
-    $this->drupalPost('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->assertOptionSelected('edit-langcode', 'bb');
 
@@ -94,7 +94,7 @@ class TermLanguageTest extends TaxonomyTestBase {
       'default_language[langcode]' => 'current_interface',
       'default_language[language_show]' => TRUE,
     );
-    $this->drupalPost('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('aa/admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->assertOptionSelected('edit-langcode', 'aa');
     $this->drupalGet('bb/admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
@@ -112,7 +112,7 @@ class TermLanguageTest extends TaxonomyTestBase {
       'default_language[langcode]' => 'site_default',
       'default_language[language_show]' => TRUE,
     );
-    $this->drupalPost('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/edit', $edit, t('Save'));
     $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary->id() . '/add');
     $this->assertOptionSelected('edit-langcode', 'cc');
   }

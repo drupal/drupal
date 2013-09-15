@@ -9,49 +9,6 @@ use Drupal\aggregator\Entity\Feed;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Page callback: Displays all the items captured from the particular feed.
- *
- * @param \Drupal\aggregator\Entity\Feed $feed
- *   The feed for which to display all items.
- *
- * @return string
- *   The rendered list of items for the feed.
- *
- * @see aggregator_menu()
- */
-function aggregator_page_source(Feed $feed) {
-  $feed_source = entity_view($feed, 'default');
-
-  // It is safe to include the fid in the query because it's loaded from the
-  // database by aggregator_feed_load().
-  $items = aggregator_load_feed_items('source', $feed);
-
-  return _aggregator_page_list($items, arg(3), $feed_source);
-}
-
-/**
- * Form constructor to list items aggregated in a category.
- *
- * @param $category
- *   The category for which to list all of the aggregated items.
- *
- * @return string
- *   The rendered list of items for the feed.
- *
- * @see aggregator_menu()
- * @ingroup forms
- */
-function aggregator_page_category($category) {
-  drupal_add_feed('aggregator/rss/' . $category->cid, Drupal::config('system.site')->get('name') . ' ' . t('aggregator - @title', array('@title' => $category->title)));
-
-  // It is safe to include the cid in the query because it's loaded from the
-  // database by aggregator_category_load().
-  $items = aggregator_load_feed_items('category', $category);
-
-  return _aggregator_page_list($items, arg(3));
-}
-
-/**
  * Loads and optionally filters feed items.
  *
  * @param string $type
@@ -91,36 +48,6 @@ function aggregator_load_feed_items($type, $data = NULL, $limit = 20) {
     case 'category':
       return $storage_controller->loadByCategory($data->cid, $limit);
   }
-}
-
-/**
- * Prints an aggregator page listing a number of feed items.
- *
- * Various menu callbacks use this function to print their feeds.
- *
- * @param $items
- *   The items to be listed.
- * @param $op
- *   Which form should be added to the items. Only 'categorize' is now
- *   recognized.
- * @param $feed_source
- *   The feed source URL.
- *
- * @return
- *   The rendered list of items for the feed.
- */
-function _aggregator_page_list($items, $op, $feed_source = '') {
-  // Assemble output.
-  $build = array(
-    '#type' => 'container',
-    '#attributes' => array('class' => array('aggregator-wrapper')),
-  );
-  $build['feed_source'] = is_array($feed_source) ? $feed_source : array('#markup' => $feed_source);
-  if ($items) {
-    $build['items'] = entity_view_multiple($items, 'default');
-    $build['pager'] = array('#theme' => 'pager');
-  }
-  return $build;
 }
 
 /**

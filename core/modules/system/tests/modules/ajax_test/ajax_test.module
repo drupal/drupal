@@ -200,8 +200,8 @@ function ajax_test_dialog() {
  * Form builder: Renders buttons with #ajax['dialog'].
  */
 function ajax_test_dialog_form($form, &$form_state) {
-  // In order to use WebTestBase::drupalPostAJAX() to POST from a link, we need
-  // to have a dummy field we can set in WebTestBase::drupalPost() else it won't
+  // In order to use WebTestBase::drupalPostAjaxForm() to POST from a link, we need
+  // to have a dummy field we can set in WebTestBase::drupalPostForm() else it won't
   // submit anything.
   $form['textfield'] = array(
     '#type' => 'hidden'

@@ -55,8 +55,10 @@ class LanguageDeleteForm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
-    return 'admin/config/regional/language';
+  public function getCancelRoute() {
+    return array(
+      'route_name' => 'language_admin_overview',
+    );
   }
 
   /**

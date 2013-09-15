@@ -82,7 +82,7 @@ class InstallerTranslationTest extends InstallerTest {
     $this->writeSettings($settings);
 
     // Submit the installer with German language.
-    $this->drupalPost($GLOBALS['base_url'] . '/core/install.php', array('langcode' => 'de'), 'Save and continue');
+    $this->drupalPostForm($GLOBALS['base_url'] . '/core/install.php', array('langcode' => 'de'), 'Save and continue');
 
     // On the following page where installation profile is being selected the
     // interface should be already translated, so there is no "Set up database"
@@ -99,10 +99,10 @@ class InstallerTranslationTest extends InstallerTest {
     $submit_value = (string) current($this->xpath('//input[@type="submit"]/@value'));
 
     // Submit the minimal profile installation.
-    $this->drupalPost(NULL, array('profile' => 'minimal'), $submit_value);
+    $this->drupalPostForm(NULL, array('profile' => 'minimal'), $submit_value);
 
     // Submit the next step.
-    $this->drupalPost(NULL, array(), $submit_value);
+    $this->drupalPostForm(NULL, array(), $submit_value);
 
     // Reload config directories.
     include $this->public_files_directory . '/settings.php';

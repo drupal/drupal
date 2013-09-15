@@ -7,7 +7,6 @@
 
 namespace Drupal\forum\Tests;
 
-use Drupal\Core\Language\Language;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -42,21 +41,18 @@ class ForumIndexTest extends WebTestBase {
    * Tests the forum index for published and unpublished nodes.
    */
   function testForumIndexStatus() {
-
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     // The forum ID to use.
     $tid = 1;
 
     // Create a test node.
     $title = $this->randomName(20);
     $edit = array(
-      "title" => $title,
-      "body[$langcode][0][value]" => $this->randomName(200),
+      'title' => $title,
+      'body[0][value]' => $this->randomName(200),
     );
 
     // Create the forum topic, preselecting the forum ID via a URL parameter.
-    $this->drupalPost('node/add/forum/' . $tid, $edit, t('Save and publish'));
+    $this->drupalPostForm('node/add/forum/' . $tid, $edit, t('Save and publish'));
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($title);
@@ -67,7 +63,7 @@ class ForumIndexTest extends WebTestBase {
     $this->assertText($title, 'Published forum topic appears on index.');
 
     // Unpublish the node.
-    $this->drupalPost('node/' . $node->id() . '/edit', array(), t('Save and unpublish'));
+    $this->drupalPostForm('node/' . $node->id() . '/edit', array(), t('Save and unpublish'));
     $this->drupalGet('node/' . $node->id());
     $this->assertText(t('Access denied'), 'Unpublished node is no longer accessible.');
 

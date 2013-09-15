@@ -1526,14 +1526,7 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
  *     example, system-menus.css rather than simply menus.css. Themes can
  *     override module-supplied CSS files based on their filenames, and this
  *     prefixing helps prevent confusing name collisions for theme developers.
- *     See drupal_get_css() where the overrides are performed. Also, if the
- *     direction of the current language is right-to-left (Hebrew, Arabic,
- *     etc.), the function will also look for an RTL CSS file and append it to
- *     the list. The name of this file should have an '-rtl.css' suffix. For
- *     example, a CSS file called 'mymodule-name.css' will have a
- *     'mymodule-name-rtl.css' file added to the list, if exists in the same
- *     directory. This CSS file should contain overrides for properties which
- *     should be reversed or otherwise different in a right-to-left display.
+ *     See drupal_get_css() where the overrides are performed.
  *   - 'inline': A string of CSS that should be placed in the given scope. Note
  *     that it is better practice to use 'file' stylesheets, rather than
  *     'inline', as the CSS would then be aggregated and cached.
@@ -1698,10 +1691,6 @@ function drupal_add_css($data = NULL, $options = NULL) {
  * same filename. For example, themes/bartik/system-menus.css would replace
  * modules/system/system-menus.css. This allows themes to override complete
  * CSS files, rather than specific selectors, when necessary.
- *
- * If the original CSS file is being overridden by a theme, the theme is
- * responsible for supplying an accompanying RTL CSS file to replace the
- * module's.
  *
  * @param $css
  *   (optional) An array of CSS files. If no array is provided, the default

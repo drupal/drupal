@@ -249,7 +249,6 @@ function file_field_widget_submit($form, &$form_state) {
   // Go one level up in the form, to the widgets container.
   $element = NestedArray::getValue($form, array_slice($button['#array_parents'], 0, -1));
   $field_name = $element['#field_name'];
-  $langcode = $element['#language'];
   $parents = $element['#field_parents'];
 
   $submitted_values = NestedArray::getValue($form_state['values'], array_slice($button['#parents'], 0, -2));
@@ -282,9 +281,9 @@ function file_field_widget_submit($form, &$form_state) {
   NestedArray::setValue($form_state['values'], array_slice($button['#parents'], 0, -2), $submitted_values);
 
   // Update items.
-  $field_state = field_form_get_state($parents, $field_name, $langcode, $form_state);
+  $field_state = field_form_get_state($parents, $field_name, $form_state);
   $field_state['items'] = $submitted_values;
-  field_form_set_state($parents, $field_name, $langcode, $form_state, $field_state);
+  field_form_set_state($parents, $field_name, $form_state, $field_state);
 }
 
 /**

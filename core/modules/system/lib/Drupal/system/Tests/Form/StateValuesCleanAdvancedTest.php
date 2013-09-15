@@ -50,7 +50,7 @@ class StateValuesCleanAdvancedTest extends WebTestBase {
     $edit = array('files[image]' => drupal_realpath($this->image->uri));
 
     // Post the form.
-    $this->drupalPost('form_test/form-state-values-clean-advanced', $edit, t('Submit'));
+    $this->drupalPostForm('form_test/form-state-values-clean-advanced', $edit, t('Submit'));
 
     // Expecting a 200 HTTP code.
     $this->assertResponse(200, 'Received a 200 response for posted test file.');

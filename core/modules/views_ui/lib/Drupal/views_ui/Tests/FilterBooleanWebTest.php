@@ -33,10 +33,10 @@ class FilterBooleanWebTest extends UITestBase {
    * Tests the filter boolean UI.
    */
   public function testFilterBooleanUI() {
-    $this->drupalPost('admin/structure/views/nojs/add-item/test_view/default/filter', array('name[views_test_data.status]' => TRUE), t('Add and configure @handler', array('@handler' => t('filter criteria'))));
+    $this->drupalPostForm('admin/structure/views/nojs/add-item/test_view/default/filter', array('name[views_test_data.status]' => TRUE), t('Add and configure @handler', array('@handler' => t('filter criteria'))));
 
-    $this->drupalPost(NULL, array(), t('Expose filter'));
-    $this->drupalPost(NULL, array(), t('Grouped filters'));
+    $this->drupalPostForm(NULL, array(), t('Expose filter'));
+    $this->drupalPostForm(NULL, array(), t('Grouped filters'));
 
     $edit = array();
     $edit['options[group_info][group_items][1][title]'] = 'Published';
@@ -49,7 +49,7 @@ class FilterBooleanWebTest extends UITestBase {
     $edit['options[group_info][group_items][3][operator]'] = '!=';
     $edit['options[group_info][group_items][3][value]'] = 1;
 
-    $this->drupalPost(NULL, $edit, t('Apply'));
+    $this->drupalPostForm(NULL, $edit, t('Apply'));
 
     $this->drupalGet('admin/structure/views/nojs/config-item/test_view/default/filter/status');
 

@@ -87,7 +87,7 @@ class GotoAction extends ConfigurableActionBase implements ContainerFactoryPlugi
   /**
    * {@inheritdoc}
    */
-  protected function getDefaultConfiguration() {
+  public function defaultConfiguration() {
     return array(
       'url' => '',
     );

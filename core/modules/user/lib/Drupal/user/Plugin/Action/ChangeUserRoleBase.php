@@ -17,7 +17,7 @@ abstract class ChangeUserRoleBase extends ConfigurableActionBase {
   /**
    * {@inheritdoc}
    */
-  protected function getDefaultConfiguration() {
+  public function defaultConfiguration() {
     return array(
       'rid' => '',
     );

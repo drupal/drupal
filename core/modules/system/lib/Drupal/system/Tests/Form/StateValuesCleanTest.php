@@ -33,7 +33,7 @@ class StateValuesCleanTest extends WebTestBase {
    * Tests form_state_values_clean().
    */
   function testFormStateValuesClean() {
-    $values = drupal_json_decode($this->drupalPost('form_test/form-state-values-clean', array(), t('Submit')));
+    $values = drupal_json_decode($this->drupalPostForm('form_test/form-state-values-clean', array(), t('Submit')));
 
     // Setup the expected result.
     $result = array(

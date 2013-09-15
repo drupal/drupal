@@ -90,7 +90,7 @@ class DateTimeTest extends WebTestBase {
       'label' => $name,
       'date_format_pattern' => $date_format,
     );
-    $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
+    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/date-time', array('absolute' => TRUE)), 'Correct page redirection.');
     $this->assertText(t('Custom date format added.'), 'Date format added confirmation message appears.');
     $this->assertText($date_format_id, 'Custom date format appears in the date format list.');
@@ -102,13 +102,13 @@ class DateTimeTest extends WebTestBase {
     $edit = array(
       'date_format_pattern' => 'Y m',
     );
-    $this->drupalPost($this->getUrl(), $edit, t('Save format'));
+    $this->drupalPostForm($this->getUrl(), $edit, t('Save format'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/date-time', array('absolute' => TRUE)), 'Correct page redirection.');
     $this->assertText(t('Custom date format updated.'), 'Custom date format successfully updated.');
 
     // Delete custom date format.
     $this->clickLink(t('Delete'));
-    $this->drupalPost('admin/config/regional/date-time/formats/manage/' . $date_format_id . '/delete', array(), t('Remove'));
+    $this->drupalPostForm('admin/config/regional/date-time/formats/manage/' . $date_format_id . '/delete', array(), t('Remove'));
     $this->assertEqual($this->getUrl(), url('admin/config/regional/date-time', array('absolute' => TRUE)), 'Correct page redirection.');
     $this->assertText(t('Removed date format ' . $name), 'Custom date format removed.');
 

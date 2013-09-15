@@ -7,8 +7,6 @@
 
 namespace Drupal\image\Tests;
 
-use Drupal\Core\Language\Language;
-
 /**
  * Test class to check that formatters and display settings are working.
  */
@@ -175,8 +173,8 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     // and title fields do not display until the image has been attached.
     $nid = $this->uploadNodeImage($test_image, $field_name, 'article');
     $this->drupalGet('node/' . $nid . '/edit');
-    $this->assertFieldByName($field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][alt]', '', 'Alt field displayed on article form.');
-    $this->assertFieldByName($field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][title]', '', 'Title field displayed on article form.');
+    $this->assertFieldByName($field_name . '[0][alt]', '', 'Alt field displayed on article form.');
+    $this->assertFieldByName($field_name . '[0][title]', '', 'Title field displayed on article form.');
     // Verify that the attached image is being previewed using the 'medium'
     // style.
     $node = node_load($nid, TRUE);
@@ -200,20 +198,20 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
       '#height' => 20,
     );
     $edit = array(
-      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][alt]' => $image['#alt'],
-      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][title]' => $image['#title'],
+      $field_name . '[0][alt]' => $image['#alt'],
+      $field_name . '[0][title]' => $image['#title'],
     );
-    $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $default_output = drupal_render($image);
     $this->assertRaw($default_output, 'Image displayed using user supplied alt and title attributes.');
 
     // Verify that alt/title longer than allowed results in a validation error.
     $test_size = 2000;
     $edit = array(
-      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][alt]' => $this->randomName($test_size),
-      $field_name . '[' . Language::LANGCODE_NOT_SPECIFIED . '][0][title]' => $this->randomName($test_size),
+      $field_name . '[0][alt]' => $this->randomName($test_size),
+      $field_name . '[0][title]' => $this->randomName($test_size),
     );
-    $this->drupalPost('node/' . $nid . '/edit', $edit, t('Save and keep published'));
+    $this->drupalPostForm('node/' . $nid . '/edit', $edit, t('Save and keep published'));
     $schema = $instance->getField()->getSchema();
     $this->assertRaw(t('Alternate text cannot be longer than %max characters but is currently %length characters long.', array(
       '%max' => $schema['columns']['alt']['length'],
@@ -246,7 +244,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $edit = array(
       'files[field_settings_default_image]' => drupal_realpath($images[0]->uri),
     );
-    $this->drupalPost("admin/structure/types/manage/article/fields/node.article.$field_name/field", $edit, t('Save field settings'));
+    $this->drupalPostForm("admin/structure/types/manage/article/fields/node.article.$field_name/field", $edit, t('Save field settings'));
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
     $field = field_info_field('node', $field_name);
@@ -279,7 +277,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $edit = array(
       'field[settings][default_image][fids]' => 0,
     );
-    $this->drupalPost("admin/structure/types/manage/article/fields/node.article.$field_name/field", $edit, t('Save field settings'));
+    $this->drupalPostForm("admin/structure/types/manage/article/fields/node.article.$field_name/field", $edit, t('Save field settings'));
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
     $field = field_info_field('node', $field_name);
@@ -292,7 +290,7 @@ class ImageFieldDisplayTest extends ImageFieldTestBase {
     $edit = array(
       'files[field_settings_default_image]' => drupal_realpath($images[1]->uri),
     );
-    $this->drupalPost('admin/structure/types/manage/article/fields/node.article.' . $private_field_name . '/field', $edit, t('Save field settings'));
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $private_field_name . '/field', $edit, t('Save field settings'));
     // Clear field info cache so the new default image is detected.
     field_info_cache_clear();
 

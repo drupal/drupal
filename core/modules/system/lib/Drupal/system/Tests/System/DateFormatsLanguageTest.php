@@ -49,14 +49,14 @@ class DateFormatsLanguageTest extends WebTestBase {
     $edit = array(
       'predefined_langcode' => 'fr',
     );
-    $this->drupalPost('admin/config/regional/language/add', $edit, t('Add language'));
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add language'));
 
     // Set language negotiation.
     $language_type = Language::TYPE_INTERFACE;
     $edit = array(
       "{$language_type}[enabled][language-url]" => TRUE,
     );
-    $this->drupalPost('admin/config/regional/language/detection', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
 
     // Add new date format for French.
     $edit = array(
@@ -65,7 +65,7 @@ class DateFormatsLanguageTest extends WebTestBase {
       'date_format_pattern' => 'd.m.Y - H:i',
       'locales[]' => array('fr'),
     );
-    $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
+    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
 
     // Add new date format for English.
     $edit = array(
@@ -74,7 +74,7 @@ class DateFormatsLanguageTest extends WebTestBase {
       'date_format_pattern' => 'j M Y - g:ia',
       'locales[]' => array('en'),
     );
-    $this->drupalPost('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
+    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, t('Add format'));
 
     // Configure date formats.
     $this->drupalGet('admin/config/regional/date-time/locale');
@@ -84,7 +84,7 @@ class DateFormatsLanguageTest extends WebTestBase {
       'date_format_medium' => 'example_style_fr',
       'date_format_short' => 'example_style_fr',
     );
-    $this->drupalPost('admin/config/regional/date-time/locale/fr/edit', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/date-time/locale/fr/edit', $edit, t('Save configuration'));
     $this->assertText(t('Configuration saved.'), 'French date formats updated.');
 
     $edit = array(
@@ -92,7 +92,7 @@ class DateFormatsLanguageTest extends WebTestBase {
       'date_format_medium' => 'example_style_en',
       'date_format_short' => 'example_style_en',
     );
-    $this->drupalPost('admin/config/regional/date-time/locale/en/edit', $edit, t('Save configuration'));
+    $this->drupalPostForm('admin/config/regional/date-time/locale/en/edit', $edit, t('Save configuration'));
     $this->assertText(t('Configuration saved.'), 'English date formats updated.');
 
     // Create node content.
@@ -107,7 +107,7 @@ class DateFormatsLanguageTest extends WebTestBase {
     $this->assertText($french_date, 'French date format appears');
 
     // Make sure we can reset dates back to default.
-    $this->drupalPost('admin/config/regional/date-time/locale/en/reset', array(), t('Reset'));
+    $this->drupalPostForm('admin/config/regional/date-time/locale/en/reset', array(), t('Reset'));
     $this->drupalGet('node/' . $node->id());
     $this->assertNoText($english_date, 'English date format does not appear');
   }

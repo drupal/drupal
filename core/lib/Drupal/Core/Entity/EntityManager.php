@@ -143,10 +143,7 @@ class EntityManager extends PluginManagerBase {
   }
 
   protected function doDiscovery($namespaces) {
-    $annotation_namespaces = array(
-      'Drupal\Core\Entity\Annotation' => DRUPAL_ROOT . '/core/lib',
-    );
-    $this->discovery = new AnnotatedClassDiscovery('Entity', $namespaces, $annotation_namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
+    $this->discovery = new AnnotatedClassDiscovery('Entity', $namespaces, 'Drupal\Core\Entity\Annotation\EntityType');
     $this->discovery = new InfoHookDecorator($this->discovery, 'entity_info');
     $this->discovery = new AlterDecorator($this->discovery, 'entity_info');
     $this->discovery = new CacheDecorator($this->discovery, 'entity_info:' . $this->languageManager->getLanguage(Language::TYPE_INTERFACE)->id, 'cache', CacheBackendInterface::CACHE_PERMANENT, array('entity_info' => TRUE));
@@ -411,6 +408,33 @@ class EntityManager extends PluginManagerBase {
     }
 
     return $admin_path;
+  }
+
+  /**
+   * Returns the route information for an entity type's bundle.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param string $bundle
+   *   The name of the bundle.
+   *
+   * @return array
+   *   An associative array with the following keys:
+   *   - route_name: The name of the route.
+   *   - route_parameters: (optional) An associative array of parameter names
+   *     and values.
+   */
+  public function getAdminRouteInfo($entity_type, $bundle) {
+    $entity_info = $this->getDefinition($entity_type);
+    if (isset($entity_info['bundle_prefix'])) {
+      $bundle = str_replace($entity_info['bundle_prefix'], '', $bundle);
+    }
+    return array(
+      'route_name' => 'field_ui.overview.' . $entity_type,
+      'route_parameters' => array(
+        'bundle' => $bundle,
+      )
+    );
   }
 
   /**

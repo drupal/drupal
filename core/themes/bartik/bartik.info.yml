@@ -11,6 +11,8 @@ stylesheets:
     - css/colors.css
   print:
     - css/print.css
+ckeditor_stylesheets:
+  - css/ckeditor-iframe.css
 regions:
   header: Header
   help: Help

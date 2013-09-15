@@ -160,7 +160,7 @@ class ModuleApiTest extends WebTestBase {
     $this->assertTrue(module_exists('module_test'), 'Test module is enabled.');
     $this->assertFalse(module_exists('forum'), 'Forum module is disabled.');
     $this->assertFalse(module_exists('ban'), 'Ban module is disabled.');
-    $this->assertFalse(module_exists('php'), 'PHP module is disabled.');
+    $this->assertFalse(module_exists('xmlrpc'), 'XML-RPC module is disabled.');
 
     // First, create a fake missing dependency. Forum depends on ban, which
     // depends on a made-up module, foo. Nothing should be installed.
@@ -171,26 +171,26 @@ class ModuleApiTest extends WebTestBase {
     $this->assertFalse(module_exists('forum'), 'module_enable() aborts if dependencies are missing.');
 
     // Now, fix the missing dependency. Forum module depends on ban, but ban
-    // depends on the PHP module. module_enable() should work.
+    // depends on the XML-RPC module. module_enable() should work.
     \Drupal::state()->set('module_test.dependency', 'dependency');
     drupal_static_reset('system_rebuild_module_data');
     $result = module_enable(array('forum'));
     $this->assertTrue($result, 'module_enable() returns the correct value.');
     // Verify that the fake dependency chain was installed.
-    $this->assertTrue(module_exists('ban') && module_exists('php'), 'Dependency chain was installed by module_enable().');
+    $this->assertTrue(module_exists('ban') && module_exists('xmlrpc'), 'Dependency chain was installed by module_enable().');
     // Verify that the original module was installed.
     $this->assertTrue(module_exists('forum'), 'Module installation with unlisted dependencies succeeded.');
     // Finally, verify that the modules were enabled in the correct order.
     $module_order = \Drupal::state()->get('system_test.module_enable_order') ?: array();
-    $this->assertEqual($module_order, array('php', 'ban', 'forum'), 'Modules were enabled in the correct order by module_enable().');
+    $this->assertEqual($module_order, array('xmlrpc', 'ban', 'forum'), 'Modules were enabled in the correct order by module_enable().');
 
-    // Now, disable the PHP module. Both forum and ban should be disabled as
+    // Now, disable the XML-RPC module. Both forum and ban should be disabled as
     // well, in the correct order.
-    module_disable(array('php'));
+    module_disable(array('xmlrpc'));
     $this->assertTrue(!module_exists('forum') && !module_exists('ban'), 'Depedency chain was disabled by module_disable().');
-    $this->assertFalse(module_exists('php'), 'Disabling a module with unlisted dependents succeeded.');
+    $this->assertFalse(module_exists('xmlrpc'), 'Disabling a module with unlisted dependents succeeded.');
     $disabled_modules = \Drupal::state()->get('module_test.disable_order') ?: array();
-    $this->assertEqual($disabled_modules, array('forum', 'ban', 'php'), 'Modules were disabled in the correct order by module_disable().');
+    $this->assertEqual($disabled_modules, array('forum', 'ban', 'xmlrpc'), 'Modules were disabled in the correct order by module_disable().');
 
     // Disable a module that is listed as a dependency by the installation
     // profile. Make sure that the profile itself is not on the list of
@@ -209,25 +209,25 @@ class ModuleApiTest extends WebTestBase {
     $this->assertTrue(in_array('comment', $disabled_modules), 'Comment module is in the list of disabled modules.');
     $this->assertFalse(in_array($profile, $disabled_modules), 'The installation profile is not in the list of disabled modules.');
 
-    // Try to uninstall the PHP module by itself. This should be rejected,
+    // Try to uninstall the XML-RPC module by itself. This should be rejected,
     // since the modules which it depends on need to be uninstalled first, and
     // that is too destructive to perform automatically.
-    $result = module_uninstall(array('php'));
+    $result = module_uninstall(array('xmlrpc'));
     $this->assertFalse($result, 'Calling module_uninstall() on a module whose dependents are not uninstalled fails.');
-    foreach (array('forum', 'ban', 'php') as $module) {
+    foreach (array('forum', 'ban', 'xmlrpc') as $module) {
       $this->assertNotEqual(drupal_get_installed_schema_version($module), SCHEMA_UNINSTALLED, format_string('The @module module was not uninstalled.', array('@module' => $module)));
     }
 
     // Now uninstall all three modules explicitly, but in the incorrect order,
     // and make sure that drupal_uninstal_modules() uninstalled them in the
     // correct sequence.
-    $result = module_uninstall(array('ban', 'php', 'forum'));
+    $result = module_uninstall(array('ban', 'xmlrpc', 'forum'));
     $this->assertTrue($result, 'module_uninstall() returns the correct value.');
-    foreach (array('forum', 'ban', 'php') as $module) {
+    foreach (array('forum', 'ban', 'xmlrpc') as $module) {
       $this->assertEqual(drupal_get_installed_schema_version($module), SCHEMA_UNINSTALLED, format_string('The @module module was uninstalled.', array('@module' => $module)));
     }
     $uninstalled_modules = \Drupal::state()->get('module_test.uninstall_order') ?: array();
-    $this->assertEqual($uninstalled_modules, array('forum', 'ban', 'php'), 'Modules were uninstalled in the correct order by module_uninstall().');
+    $this->assertEqual($uninstalled_modules, array('forum', 'ban', 'xmlrpc'), 'Modules were uninstalled in the correct order by module_uninstall().');
 
     // Uninstall the profile module from above, and make sure that the profile
     // itself is not on the list of dependent modules to be uninstalled.
@@ -239,25 +239,25 @@ class ModuleApiTest extends WebTestBase {
     $this->assertFalse(in_array($profile, $uninstalled_modules), 'The installation profile is not in the list of uninstalled modules.');
 
     // Enable forum module again, which should enable both the ban module and
-    // php module. But, this time do it with ban module declaring a dependency
-    // on a specific version of php module in its info file. Make sure that
-    // module_enable() still works.
+    // XML-RPC module. But, this time do it with ban module declaring a
+    // dependency on a specific version of XML-RPC module in its info file. Make
+    // sure that module_enable() still works.
     \Drupal::state()->set('module_test.dependency', 'version dependency');
     drupal_static_reset('system_rebuild_module_data');
     $result = module_enable(array('forum'));
     $this->assertTrue($result, 'module_enable() returns the correct value.');
     // Verify that the fake dependency chain was installed.
-    $this->assertTrue(module_exists('ban') && module_exists('php'), 'Dependency chain was installed by module_enable().');
+    $this->assertTrue(module_exists('ban') && module_exists('xmlrpc'), 'Dependency chain was installed by module_enable().');
     // Verify that the original module was installed.
     $this->assertTrue(module_exists('forum'), 'Module installation with version dependencies succeeded.');
     // Finally, verify that the modules were enabled in the correct order.
     $enable_order = \Drupal::state()->get('system_test.module_enable_order') ?: array();
-    $php_position = array_search('php', $enable_order);
+    $xmlrpc_position = array_search('xmlrpc', $enable_order);
     $ban_position = array_search('ban', $enable_order);
     $forum_position = array_search('forum', $enable_order);
-    $php_before_ban = $php_position !== FALSE && $ban_position !== FALSE && $php_position < $ban_position;
+    $xmlrpc_before_ban = $xmlrpc_position !== FALSE && $ban_position !== FALSE && $xmlrpc_position < $ban_position;
     $ban_before_forum = $ban_position !== FALSE && $forum_position !== FALSE && $ban_position < $forum_position;
-    $this->assertTrue($php_before_ban && $ban_before_forum, 'Modules were enabled in the correct order by module_enable().');
+    $this->assertTrue($xmlrpc_before_ban && $ban_before_forum, 'Modules were enabled in the correct order by module_enable().');
   }
 
   /**

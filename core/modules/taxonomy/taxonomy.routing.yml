@@ -61,6 +61,13 @@ taxonomy_autocomplete:
   requirements:
     _permission: 'access content'
 
+taxonomy_autocomplete_vid:
+  pattern: '/taxonomy/autocomplete_vid/{taxonomy_vocabulary}'
+  defaults:
+    _controller: '\Drupal\taxonomy\Controller\TermAutocompleteController::autocompletePerVid'
+  requirements:
+    _permission: 'access content'
+
 taxonomy_overview_terms:
   pattern: 'admin/structure/taxonomy/manage/{taxonomy_vocabulary}'
   defaults:

@@ -19,6 +19,20 @@ language_negotiation_selected:
   requirements:
     _permission: 'administer languages'
 
+language_add:
+  pattern: '/admin/config/regional/language/add'
+  defaults:
+    _entity_form: 'language_entity.add'
+  requirements:
+    _entity_create_access: 'language_entity'
+
+language_edit:
+  pattern: '/admin/config/regional/language/edit/{language_entity}'
+  defaults:
+    _entity_form: 'language_entity.edit'
+  requirements:
+    _entity_access: 'language_entity.update'
+
 language_admin_overview:
   pattern: '/admin/config/regional/language'
   defaults:
@@ -32,6 +46,14 @@ language_delete:
     _entity_form: 'language_entity.delete'
   requirements:
     _entity_access: 'language_entity.delete'
+
+language_negotiation_browser:
+  pattern: '/admin/config/regional/language/detection/browser'
+  defaults:
+    _form: '\Drupal\language\Form\NegotiationBrowserForm'
+    _title: 'Browser language detection configuration'
+  requirements:
+    _permission: 'administer languages'
 
 language_negotiation_browser_delete:
   pattern: 'admin/config/regional/language/detection/browser/delete/{browser_langcode}'

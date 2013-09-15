@@ -27,28 +27,12 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
   public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->configuration += $this->settings() + array(
+    $this->configuration += $this->defaultConfiguration() + array(
       'label' => '',
       'module' => $plugin_definition['module'],
       'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
       'cache' => DRUPAL_NO_CACHE,
     );
-  }
-
-  /**
-   * Returns plugin-specific settings for the block.
-   *
-   * Block plugins only need to override this method if they override the
-   * defaults provided in BlockBase::settings().
-   *
-   * @return array
-   *   An array of block-specific settings to override the defaults provided in
-   *   BlockBase::settings().
-   *
-   * @see \Drupal\block\BlockBase::settings().
-   */
-  public function settings() {
-    return array();
   }
 
   /**
@@ -63,6 +47,13 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
    */
   public function setConfiguration(array $configuration) {
     $this->configuration = $configuration;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return array();
   }
 
   /**

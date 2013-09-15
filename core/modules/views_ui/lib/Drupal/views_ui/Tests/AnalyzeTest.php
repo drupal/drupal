@@ -64,7 +64,7 @@ class AnalyzeTest extends ViewTestBase {
     }
 
     // This redirects the user back to the main views edit page.
-    $this->drupalPost(NULL, array(), t('Ok'));
+    $this->drupalPostForm(NULL, array(), t('Ok'));
   }
 
 }

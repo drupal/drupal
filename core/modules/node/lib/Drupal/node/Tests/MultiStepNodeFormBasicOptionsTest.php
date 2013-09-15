@@ -7,9 +7,6 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\Core\Language\Language;
-use Drupal\simpletest\WebTestBase;
-
 /**
  * Tests basic options of multi-step node forms.
  */
@@ -63,15 +60,13 @@ class MultiStepNodeFormBasicOptionsTest extends NodeTestBase {
       ))
       ->save();
 
-    $langcode = Language::LANGCODE_NOT_SPECIFIED;
-
     $edit = array(
       'title' => 'a',
       'promote' => FALSE,
       'sticky' => 1,
-      "{$this->field_name}[$langcode][0][value]" => $this->randomString(32),
+      "{$this->field_name}[0][value]" => $this->randomString(32),
     );
-    $this->drupalPost('node/add/page', $edit, t('Add another item'));
+    $this->drupalPostForm('node/add/page', $edit, t('Add another item'));
     $this->assertNoFieldChecked('edit-promote', 'promote stayed unchecked');
     $this->assertFieldChecked('edit-sticky', 'sticky stayed checked');
   }

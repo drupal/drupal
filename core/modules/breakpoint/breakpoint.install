@@ -11,8 +11,8 @@
  * Import breakpoints from all enabled themes.
  */
 function breakpoint_enable() {
-  // Import breakpoints from themes.
-  $themes = list_themes();
+  // Import breakpoints from enabled themes.
+  $themes = array_filter(list_themes(), function ($theme) {return $theme->status;});
   _breakpoint_theme_enabled(array_keys($themes));
 
   // Import breakpoints from modules.

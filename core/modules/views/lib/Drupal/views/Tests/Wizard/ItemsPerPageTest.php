@@ -53,7 +53,7 @@ class ItemsPerPageTest extends WizardTestBase {
     $view['block[create]'] = 1;
     $view['block[title]'] = $this->randomName(16);
     $view['block[items_per_page]'] = 3;
-    $this->drupalPost('admin/structure/views/add', $view, t('Save and edit'));
+    $this->drupalPostForm('admin/structure/views/add', $view, t('Save and edit'));
     $this->drupalGet($view['page[path]']);
     $this->assertResponse(200);
 
@@ -76,7 +76,7 @@ class ItemsPerPageTest extends WizardTestBase {
 
     // Confirm that the block is listed in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . \Drupal::config('system.theme')->get('default'));
-    $this->assertText('View: ' . $view['label']);
+    $this->assertText($view['label']);
 
     // Place the block, visit a page that displays the block, and check that the
     // nodes we expect appear in the correct order.

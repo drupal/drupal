@@ -28,8 +28,7 @@ class ImageToolkitManager extends DefaultPluginManager {
    *   The language manager.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager) {
-    $annotation_namespaces = array('Drupal\system\Annotation' => $namespaces['Drupal\system']);
-    parent::__construct('Plugin/ImageToolkit', $namespaces, $annotation_namespaces, 'Drupal\system\Annotation\ImageToolkit');
+    parent::__construct('Plugin/ImageToolkit', $namespaces, 'Drupal\system\Annotation\ImageToolkit');
     $this->setCacheBackend($cache_backend, $language_manager, 'image_toolkit');
   }
 

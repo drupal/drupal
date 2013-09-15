@@ -70,7 +70,7 @@ class FileWidget extends WidgetBase {
     // Load the items for form rebuilds from the field state as they might not be
     // in $form_state['values'] because of validation limitations. Also, they are
     // only passed in as $items when editing existing entities.
-    $field_state = field_form_get_state($parents, $field_name, $langcode, $form_state);
+    $field_state = field_form_get_state($parents, $field_name, $form_state);
     if (isset($field_state['items'])) {
       $items->setValue($field_state['items']);
     }

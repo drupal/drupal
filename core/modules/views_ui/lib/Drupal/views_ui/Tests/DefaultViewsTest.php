@@ -56,15 +56,15 @@ class DefaultViewsTest extends UITestBase {
     // displayed.
     $new_title = $this->randomName(16);
     $edit = array('title' => $new_title);
-    $this->drupalPost('admin/structure/views/nojs/display/glossary/page_1/title', $edit, t('Apply'));
-    $this->drupalPost('admin/structure/views/view/glossary/edit/page_1', array(), t('Save'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/glossary/page_1/title', $edit, t('Apply'));
+    $this->drupalPostForm('admin/structure/views/view/glossary/edit/page_1', array(), t('Save'));
     $this->drupalGet('glossary');
     $this->assertResponse(200);
     $this->assertText($new_title);
 
     // Save another view in the UI.
-    $this->drupalPost('admin/structure/views/nojs/display/archive/page_1/title', array(), t('Apply'));
-    $this->drupalPost('admin/structure/views/view/archive/edit/page_1', array(), t('Save'));
+    $this->drupalPostForm('admin/structure/views/nojs/display/archive/page_1/title', array(), t('Apply'));
+    $this->drupalPostForm('admin/structure/views/view/archive/edit/page_1', array(), t('Save'));
 
     // Check there is an enable link. i.e. The view has not been enabled after
     // editing.
@@ -76,7 +76,7 @@ class DefaultViewsTest extends UITestBase {
     // $this->drupalGet('admin/structure/views');
     // $this->assertLink(t('Revert'));
     // $this->assertLinkByHref($revert_href);
-    // $this->drupalPost($revert_href, array(), t('Revert'));
+    // $this->drupalPostForm($revert_href, array(), t('Revert'));
     // $this->drupalGet('glossary');
     // $this->assertNoText($new_title);
 
@@ -87,14 +87,14 @@ class DefaultViewsTest extends UITestBase {
       'id' => 'clone_of_glossary',
     );
     $this->assertTitle(t('Clone of @label | @site-name', array('@label' => 'Glossary', '@site-name' => \Drupal::config('system.site')->get('name'))));
-    $this->drupalPost(NULL, $edit, t('Clone'));
+    $this->drupalPostForm(NULL, $edit, t('Clone'));
     $this->assertUrl('admin/structure/views/view/clone_of_glossary', array(), 'The normal cloning name schema is applied.');
 
     // Clone a view and set a custom name.
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink(t('Clone'), '/glossary');
     $random_name = strtolower($this->randomName());
-    $this->drupalPost(NULL, array('id' => $random_name), t('Clone'));
+    $this->drupalPostForm(NULL, array('id' => $random_name), t('Clone'));
     $this->assertUrl("admin/structure/views/view/$random_name", array(), 'The custom view name got saved.');
 
     // Now disable the view, and make sure it stops appearing on the main view
@@ -116,7 +116,7 @@ class DefaultViewsTest extends UITestBase {
     $this->drupalGet('admin/structure/views');
     $this->clickViewsOperationLink(t('Delete'), '/glossary/');
     // Submit the confirmation form.
-    $this->drupalPost(NULL, array(), t('Delete'));
+    $this->drupalPostForm(NULL, array(), t('Delete'));
     // Ensure the view is no longer listed.
     $this->assertUrl('admin/structure/views');
     $this->assertNoLinkByHref($edit_href);

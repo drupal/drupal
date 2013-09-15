@@ -7,11 +7,10 @@
 
 namespace Drupal\comment\Form;
 
+use Drupal\comment\CommentManager;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityNGConfirmFormBase;
-use Drupal\comment\CommentManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides the comment delete confirmation form.
@@ -54,9 +53,20 @@ class DeleteForm extends EntityNGConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelPath() {
+  protected function actions(array $form, array &$form_state) {
+    $actions = parent::actions($form, $form_state);
+
+    // @todo Convert to getCancelRoute() after http://drupal.org/node/1987778.
     $uri = $this->commentManager->getParentEntityUri($this->entity);
-    return $uri['path'];
+    $actions['cancel']['#href'] = $uri['path'];
+
+    return $actions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCancelRoute() {
   }
 
   /**
