@@ -196,7 +196,8 @@ class BookManager {
 
     $form['book']['plid'] = $this->addParentSelectFormElements($node->book);
 
-    // @see _book_admin_table_tree(). The weight may be larger than 15.
+    // @see \Drupal\book\Form\BookAdminEditForm::bookAdminTableTree(). The
+    // weight may be larger than 15.
     $form['book']['weight'] = array(
       '#type' => 'weight',
       '#title' => $this->t('Weight'),

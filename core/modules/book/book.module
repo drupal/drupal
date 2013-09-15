@@ -79,6 +79,7 @@ function book_theme() {
     ),
     'book_admin_table' => array(
       'render element' => 'form',
+      'file' => 'book.admin.inc',
     ),
     'book_all_books_block' => array(
       'render element' => 'book_menus',
@@ -180,15 +181,6 @@ function book_menu() {
     'access arguments' => array('administer site configuration'),
     'type' => MENU_LOCAL_TASK,
     'weight' => 100,
-  );
-  $items['admin/structure/book/%node'] = array(
-    'title' => 'Re-order book pages and change titles',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('book_admin_edit', 3),
-    'access callback' => '_book_outline_access',
-    'access arguments' => array(3),
-    'type' => MENU_CALLBACK,
-    'file' => 'book.admin.inc',
   );
   $items['book'] = array(
     'title' => 'Books',
