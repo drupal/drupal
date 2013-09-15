@@ -55,7 +55,7 @@ class SiteMaintenanceModeForm extends SystemConfigFormBase {
    * {@inheritdoc}
    */
   public function getFormID() {
-    return 'system.site_maintenance_mode';
+    return 'system_site_maintenance_mode';
   }
 
   /**
