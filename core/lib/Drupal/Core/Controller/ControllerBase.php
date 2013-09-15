@@ -138,9 +138,9 @@ abstract class ControllerBase {
    */
   protected function config($name) {
     if (!$this->configFactory) {
-      $this->configFactory = $this->container()->get('config.factory')->get($name);
+      $this->configFactory = $this->container()->get('config.factory');
     }
-    return $this->configFactory;
+    return $this->configFactory->get($name);
   }
 
   /**
