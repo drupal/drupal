@@ -329,7 +329,11 @@ class EntityManager extends PluginManagerBase {
    *   A access controller instance.
    */
   public function getAccessController($entity_type) {
-    return $this->getController($entity_type, 'access');
+    if (!isset($this->controllers['access'][$entity_type])) {
+      $controller = $this->getController($entity_type, 'access');
+      $controller->setModuleHandler($this->moduleHandler);
+    }
+    return $this->controllers['access'][$entity_type];
   }
 
   /**

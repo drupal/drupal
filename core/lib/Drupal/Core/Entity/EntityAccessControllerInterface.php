@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 
@@ -57,5 +58,16 @@ interface EntityAccessControllerInterface {
    * Clears all cached access checks.
    */
   public function resetCache();
+
+  /**
+   * Sets the module handler for this form.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   *
+   * @return self
+   *   The entity access controller.
+   */
+  public function setModuleHandler(ModuleHandlerInterface $module_handler);
 
 }
