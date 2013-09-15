@@ -105,7 +105,7 @@ class CommentUserTest extends WebTestBase {
     $edit = array();
     $edit['comment_body[0][value]'] = $comment;
 
-    $instance = field_info_instance('user', 'comment', 'user');
+    $instance = $this->container->get('field.info')->getInstance('user', 'user', 'comment');
     $preview_mode = $instance['settings']['preview'];
     $subject_mode = $instance['settings']['subject'];
 
@@ -331,7 +331,7 @@ class CommentUserTest extends WebTestBase {
     $this->drupalGet('comment/reply/user/' . $this->web_user->id() . '/comment');
     $this->assertText('You are not authorized to post comments', 'Error attempting to post comment.');
     $this->assertNoFieldByName('subject', '', 'Subject field not found.');
-    $this->assertNoFieldByName("comment_body[0][value]", '', 'Comment field not found.');
+    $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field not found.');
 
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => TRUE,
@@ -355,7 +355,7 @@ class CommentUserTest extends WebTestBase {
     $this->drupalGet('user/' . $this->web_user->id());
     $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
     $this->assertFieldByName('subject', '', 'Subject field found.');
-    $this->assertFieldByName("comment_body[0][value]", '', 'Comment field found.');
+    $this->assertFieldByName('comment_body[0][value]', '', 'Comment field found.');
 
     $this->drupalGet('comment/reply/user/' . $this->web_user->id() . '/comment/' . $comment1->id());
     $this->assertText('You are not authorized to view comments');
@@ -367,16 +367,16 @@ class CommentUserTest extends WebTestBase {
     ));
     $this->drupalLogin($limited_user);
     $this->drupalGet('admin/config/people/accounts/fields/user.user.comment');
-    $this->assertNoField('edit-default-value-input-comment-und-0-status-0');
-    $this->assertNoFieldChecked('edit-default-value-input-comment-und-0-status-1');
-    $this->assertFieldChecked('edit-default-value-input-comment-und-0-status-2');
+    $this->assertNoField('edit-default-value-input-comment-0-status-0');
+    $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-1');
+    $this->assertFieldChecked('edit-default-value-input-comment-0-status-2');
     // Test hidden option change in field settings.
-    $edit = array('default_value_input[comment][und][0][status]' => COMMENT_CLOSED);
+    $edit = array('default_value_input[comment][0][status]' => COMMENT_CLOSED);
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
     $this->drupalGet('admin/config/people/accounts/fields/user.user.comment');
-    $this->assertNoFieldChecked('edit-default-value-input-comment-und-0-status-0');
-    $this->assertFieldChecked('edit-default-value-input-comment-und-0-status-1');
-    $this->assertNoFieldChecked('edit-default-value-input-comment-und-0-status-2');
+    $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-0');
+    $this->assertFieldChecked('edit-default-value-input-comment-0-status-1');
+    $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-2');
     $this->drupalGet('user/' . $this->web_user->id());
     $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
     $this->assertNoLink('Add new comment', 'Link to add comment was found.');
@@ -388,9 +388,9 @@ class CommentUserTest extends WebTestBase {
     $this->drupalLogin($limited_user);
     $this->drupalGet('user/' . $limited_user->id() . '/edit');
     // @todo somehow default status applied, should be 1 checked.
-    $this->assertFieldChecked('edit-comment-und-0-status-2');
-    $this->assertNoFieldChecked('edit-comment-und-0-status-1');
-    $this->assertNoFieldChecked('edit-comment-und-0-status-0');
+    $this->assertFieldChecked('edit-comment-0-status-2');
+    $this->assertNoFieldChecked('edit-comment-0-status-1');
+    $this->assertNoFieldChecked('edit-comment-0-status-0');
 
     $this->drupalGet('comment/reply/user/comment/' . $limited_user->id());
     $this->assertNoFieldByName('subject', '', 'Subject field found.');
