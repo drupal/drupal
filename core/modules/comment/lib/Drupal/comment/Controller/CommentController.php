@@ -45,18 +45,18 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
   protected $csrfToken;
 
   /**
-   * Field info service.
-   *
-   * @var \Drupal\field\FieldInfo
-   */
-  protected $fieldInfo;
-
-  /**
    * The current user service.
    *
    * @var \Drupal\Core\Session\AccountInterface
    */
   protected $currentUser;
+
+  /**
+   * Field info service.
+   *
+   * @var \Drupal\field\FieldInfo
+   */
+  protected $fieldInfo;
 
   /**
    * The comment manager service.
@@ -190,7 +190,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
     // Legacy nodes only had a single comment field, so use the first comment
     // field on the entity.
     if (!empty($fields) && ($field_names = array_keys($fields)) && ($field_name = reset($field_names))) {
-      return new RedirectResponse($this->urlGenerator->generateFromPath('comment/reply/node/' . $node->id() . '/' . $field_name, array('absolute' => TRUE)));
+      return new RedirectResponse($this->urlGenerator()->generateFromPath('comment/reply/node/' . $node->id() . '/' . $field_name, array('absolute' => TRUE)));
     }
     throw new NotFoundHttpException();
   }
@@ -235,7 +235,6 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
    *     - If current entity comments are disable.
    */
   public function getReplyForm(Request $request, $entity_type, $entity_id, $field_name, $pid = NULL) {
-    $account = $this->currentUser();
 
     // Check if entity and field exists.
     $fields = $this->commentManager->getFields($entity_type);
@@ -243,7 +242,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
       throw new NotFoundHttpException();
     }
 
-    // Entity loaded.
+    $account = $this->currentUser();
     $uri = $entity->uri();
     $build = array();
 
@@ -329,7 +328,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
     $links = array();
     foreach ($nids as $nid) {
       $node = node_load($nid);
-      $new = comment_num_new($node->id());
+      $new = comment_num_new($node->id(), 'node');
       $query = comment_new_page_count($node->comment_count, $new, $node);
       $links[$nid] = array(
         'new_comment_count' => (int)$new,
