@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 
@@ -28,6 +29,13 @@ class EntityAccessController implements EntityAccessControllerInterface {
    * @var string
    */
   protected $entityType;
+
+  /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
 
   /**
    * Constructs an access controller instance.
@@ -58,7 +66,7 @@ class EntityAccessController implements EntityAccessControllerInterface {
     // We grant access to the entity if both of these conditions are met:
     // - No modules say to deny access.
     // - At least one module says to grant access.
-    $access = module_invoke_all($entity->entityType() . '_access', $entity, $operation, $account, $langcode);
+    $access = $this->moduleHandler->invokeAll($entity->entityType() . '_access', array($entity, $operation, $account, $langcode));
 
     if (($return = $this->processAccessHookResults($access)) === NULL) {
       // No module had an opinion about the access, so let's the access
@@ -196,7 +204,7 @@ class EntityAccessController implements EntityAccessControllerInterface {
     // We grant access to the entity if both of these conditions are met:
     // - No modules say to deny access.
     // - At least one module says to grant access.
-    $access = module_invoke_all($this->entity_type . '_create_access', $account, $context['langcode']);
+    $access = $this->moduleHandler->invokeAll($this->entity_type . '_create_access', array($account, $context['langcode']));
 
     if (($return = $this->processAccessHookResults($access)) === NULL) {
       // No module had an opinion about the access, so let's the access
@@ -242,6 +250,14 @@ class EntityAccessController implements EntityAccessControllerInterface {
       $account = $GLOBALS['user'];
     }
     return $account;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setModuleHandler(ModuleHandlerInterface $module_handler) {
+    $this->moduleHandler = $module_handler;
+    return $this;
   }
 
 }
