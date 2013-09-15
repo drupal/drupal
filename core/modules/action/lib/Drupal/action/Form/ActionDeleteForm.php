@@ -33,7 +33,7 @@ class ActionDeleteForm extends EntityConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'action_admin',
+      'route_name' => 'action.admin',
     );
   }
 

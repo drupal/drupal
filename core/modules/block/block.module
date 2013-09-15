@@ -102,7 +102,7 @@ function block_menu() {
   $items['admin/structure/block'] = array(
     'title' => 'Block layout',
     'description' => 'Configure what block content appears in your site\'s sidebars and other regions.',
-    'route_name' => 'block_admin_display',
+    'route_name' => 'block.admin_display',
   );
   $items['admin/structure/block/list'] = array(
     'title' => 'Block layout',
@@ -110,7 +110,7 @@ function block_menu() {
   );
   $items['admin/structure/block/manage/%block'] = array(
     'title' => 'Configure block',
-    'route_name' => 'block_admin_edit',
+    'route_name' => 'block.admin_edit',
   );
   $items['admin/structure/block/manage/%block/configure'] = array(
     'title' => 'Configure block',
@@ -121,12 +121,12 @@ function block_menu() {
     'title' => 'Delete block',
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_NONE,
-    'route_name' => 'block_admin_block_delete',
+    'route_name' => 'block.admin_block_delete',
   );
   $items['admin/structure/block/add/%/%'] = array(
     'title' => 'Place block',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
-    'route_name' => 'block_admin_add',
+    'route_name' => 'block.admin_add',
   );
   // Block administration is tied to the theme and plugin definition so
   // that the plugin can appropriately attach to this URL structure.
@@ -138,7 +138,7 @@ function block_menu() {
     $items["admin/structure/block/list/$key"] = array(
       'title' => check_plain($theme->info['name']),
       'type' => $key == $default_theme ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
-      'route_name' => "block_admin_display.$key",
+      'route_name' => "block.admin_display_$key",
     );
     $items["admin/structure/block/demo/$key"] = array(
       'title' => check_plain($theme->info['name']),

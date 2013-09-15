@@ -1,121 +1,123 @@
-menu_login_callback:
+menu_test.login_callback:
   pattern: '/menu_login_callback'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::testLogin'
   requirements:
     _access: 'TRUE'
 
-menu_callback_description:
+menu_test.callback_description:
   pattern: 'menu_callback_description'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access content'
 
-menu_router_test1:
+menu_test.router_test1:
   pattern: '/foo/{bar}'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::test1'
   requirements:
     _access: 'TRUE'
-menu_router_test2:
+
+menu_test.router_test2:
   pattern: '/foo/{bar}/b'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::test2'
   requirements:
     _access: 'TRUE'
-menu_router_test3:
+
+menu_test.router_test3:
   pattern: '/foo/{bar}/c'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::test2'
   requirements:
     _access: 'FALSE'
 
-menu_test_local_action1:
+menu_test.local_action1:
   pattern: '/menu-test-local-action'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::test1'
   requirements:
     _access: 'TRUE'
 
-menu_test_local_action2:
+menu_test.local_action2:
   pattern: '/menu-test-local-action/hook_menu'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::test2'
   requirements:
     _access: 'TRUE'
 
-menu_test_local_action3:
+menu_test.local_action3:
   pattern: '/menu-test-local-action/routing'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::test2'
   requirements:
     _access: 'TRUE'
 
-menu_test_local_action4:
+menu_test.local_action4:
   pattern: '/menu-test-local-action/dynamic-title'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::test2'
   requirements:
     _access: 'TRUE'
 
-menu_local_task_test_tasks:
+menu_test.local_task_test_tasks:
   pattern: '/menu-local-task-test/tasks'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::test1'
   requirements:
     _access: 'TRUE'
 
-menu_local_task_test_tasks_tasks:
+menu_test.local_task_test_tasks_tasks:
   pattern: '/menu-local-task-test/tasks/tasks'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::test1'
   requirements:
     _access: 'TRUE'
 
-menu_local_task_test_tasks_view:
+menu_test.local_task_test_tasks_view:
   pattern: '/menu-local-task-test/tasks/view'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::test1'
   requirements:
     _access: 'TRUE'
 
-menu_local_task_test_tasks_edit:
+menu_test.local_task_test_tasks_edit:
   pattern: '/menu-local-task-test/tasks/edit'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::test1'
   requirements:
     _access: 'TRUE'
 
-menu_local_task_test_tasks_settings:
+menu_test.local_task_test_tasks_settings:
   pattern: '/menu-local-task-test/tasks/settings'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::test1'
   requirements:
     _access: 'TRUE'
 
-menu_local_task_test_tasks_settings_sub1:
+menu_test.local_task_test_tasks_settings_sub1:
   pattern: '/menu-local-task-test/tasks/settings/sub1'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::test1'
   requirements:
     _access: 'TRUE'
 
-menu_local_task_test_tasks_settings_sub2:
+menu_test.local_task_test_tasks_settings_sub2:
   pattern: '/menu-local-task-test/tasks/settings/sub2'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::test1'
   requirements:
     _access: 'TRUE'
 
-menu_local_task_test_tasks_settings_sub3:
+menu_test.local_task_test_tasks_settings_sub3:
   pattern: '/menu-local-task-test/tasks/settings/sub3'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::test1'
   requirements:
     _access: 'TRUE'
 
-menu_test_optional_placeholder:
+menu_test.optional_placeholder:
   pattern: '/menu-test/optional/{placeholder}'
   defaults:
     _content: '\Drupal\menu_test\TestControllers::testDefaults'

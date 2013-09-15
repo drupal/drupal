@@ -33,7 +33,7 @@ class ConfigTestDeleteForm extends EntityConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'config_test_list_page',
+      'route_name' => 'config_test.list_page',
     );
   }
 

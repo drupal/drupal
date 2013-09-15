@@ -1,74 +1,74 @@
-taxonomy_vocabulary_list:
+taxonomy.vocabulary_list:
   pattern: '/admin/structure/taxonomy'
   defaults:
     _entity_list: 'taxonomy_vocabulary'
   requirements:
     _permission: 'administer taxonomy'
 
-taxonomy_term_add:
+taxonomy.term_add:
   pattern: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/add'
   defaults:
     _content: '\Drupal\taxonomy\Controller\TaxonomyController::addForm'
   requirements:
     _entity_create_access: 'taxonomy_term:{taxonomy_vocabulary}'
 
-taxonomy_term_edit:
+taxonomy.term_edit:
   pattern: '/taxonomy/term/{taxonomy_term}/edit'
   defaults:
     _entity_form: 'taxonomy_term.default'
   requirements:
     _entity_access: 'taxonomy_term.update'
 
-taxonomy_term_delete:
+taxonomy.term_delete:
   pattern: '/taxonomy/term/{taxonomy_term}/delete'
   defaults:
     _entity_form: 'taxonomy_term.delete'
   requirements:
     _entity_access: 'taxonomy_term.delete'
 
-taxonomy_vocabulary_add:
+taxonomy.vocabulary_add:
   pattern: '/admin/structure/taxonomy/add'
   defaults:
     _entity_form: 'taxonomy_vocabulary'
   requirements:
     _entity_create_access: 'taxonomy_vocabulary'
 
-taxonomy_vocabulary_edit:
+taxonomy.vocabulary_edit:
   pattern: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/edit'
   defaults:
     _entity_form: 'taxonomy_vocabulary.default'
   requirements:
     _entity_access: 'taxonomy_vocabulary.update'
 
-taxonomy_vocabulary_delete:
+taxonomy.vocabulary_delete:
   pattern: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/delete'
   defaults:
     _entity_form: 'taxonomy_vocabulary.delete'
   requirements:
     _entity_access: 'taxonomy_vocabulary.delete'
 
-taxonomy_vocabulary_reset:
+taxonomy.vocabulary_reset:
   pattern: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/reset'
   defaults:
     _entity_form: 'taxonomy_vocabulary.reset'
   requirements:
     _permission: 'administer taxonomy'
 
-taxonomy_autocomplete:
+taxonomy.autocomplete:
   pattern: '/taxonomy/autocomplete/{entity_type}/{field_name}'
   defaults:
     _controller: '\Drupal\taxonomy\Controller\TermAutocompleteController::autocomplete'
   requirements:
     _permission: 'access content'
 
-taxonomy_autocomplete_vid:
+taxonomy.autocomplete_vid:
   pattern: '/taxonomy/autocomplete_vid/{taxonomy_vocabulary}'
   defaults:
     _controller: '\Drupal\taxonomy\Controller\TermAutocompleteController::autocompletePerVid'
   requirements:
     _permission: 'access content'
 
-taxonomy_overview_terms:
+taxonomy.overview_terms:
   pattern: 'admin/structure/taxonomy/manage/{taxonomy_vocabulary}'
   defaults:
     _form: 'Drupal\taxonomy\Form\OverviewTerms'

@@ -1,11 +1,11 @@
-comment_edit_page:
+comment.edit_page:
   pattern: '/comment/{comment}/edit'
   defaults:
     _entity_form: 'comment.default'
   requirements:
     _entity_access: 'comment.update'
 
-comment_approve:
+comment.approve:
   pattern: '/comment/{comment}/approve'
   defaults:
     _content: '\Drupal\comment\Controller\CommentController::commentApprove'
@@ -13,21 +13,21 @@ comment_approve:
   requirements:
     _entity_access: 'comment.approve'
 
-comment_permalink:
+comment.permalink:
   pattern: '/comment/{comment}'
   defaults:
     _controller: '\Drupal\comment\Controller\CommentController::commentPermalink'
   requirements:
     _entity_access: 'comment.view'
 
-comment_confirm_delete:
+comment.confirm_delete:
   pattern: '/comment/{comment}/delete'
   defaults:
     _entity_form: 'comment.delete'
   requirements:
     _entity_access: 'comment.delete'
 
-comment_reply:
+comment.reply:
   pattern: 'comment/reply/{node}/{pid}'
   defaults:
     _content: '\Drupal\comment\Controller\CommentController::getReplyForm'
@@ -35,7 +35,7 @@ comment_reply:
   requirements:
     _entity_access: 'node.view'
 
-comment_new_comments_node_links:
+comment.new_comments_node_links:
   pattern: '/comments/render_new_comments_node_links'
   defaults:
     _controller: '\Drupal\comment\Controller\CommentController::renderNewCommentsNodeLinks'

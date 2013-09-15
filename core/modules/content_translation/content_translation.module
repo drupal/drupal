@@ -203,7 +203,7 @@ function content_translation_menu() {
   $items['admin/config/regional/content_translation/translatable/%/%'] = array(
     'title' => 'Confirm change in translatability.',
     'description' => 'Confirm page for changing field translatability.',
-    'route_name' => 'content_translation_translatable',
+    'route_name' => 'content_translation.translatable',
   );
 
   return $items;

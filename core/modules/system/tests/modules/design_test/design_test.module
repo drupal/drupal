@@ -68,7 +68,7 @@ function design_test_menu() {
 
   $items['design_test'] = array(
     'title' => 'Design test',
-    'route_name' => 'design_test',
+    'route_name' => 'design.test',
   );
 
   $items['design_test/list'] = array(
@@ -80,7 +80,7 @@ function design_test_menu() {
   foreach ($categories as $category) {
     $items["design_test/{$category}"] = array(
       'title' => drupal_ucfirst($category),
-      'route_name' => 'design_test',
+      'route_name' => 'design.test',
       'type' => MENU_LOCAL_TASK | MENU_VISIBLE_IN_TREE,
     );
   }

@@ -43,7 +43,7 @@ function file_menu() {
   $items = array();
 
   $items['file/ajax'] = array(
-    'route_name' => 'file.ajax.upload',
+    'route_name' => 'file.ajax_upload',
     'theme callback' => 'ajax_base_page_theme',
     'type' => MENU_CALLBACK,
   );

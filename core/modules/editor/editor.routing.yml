@@ -1,4 +1,4 @@
-editor_field_untransformed_text:
+editor.field_untransformed_text:
   pattern: '/editor/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
   defaults:
     _controller: '\Drupal\editor\EditorController::getUntransformedText'
@@ -8,14 +8,14 @@ editor_field_untransformed_text:
     _permission: 'access in-place editing'
     _access_edit_entity_field: 'TRUE'
 
-editor_image_dialog:
+editor.image_dialog:
   pattern: '/editor/dialog/image/{filter_format}'
   defaults:
     _form: '\Drupal\editor\Form\EditorImageDialog'
   requirements:
     _entity_access: 'filter_format.view'
 
-editor_link_dialog:
+editor.link_dialog:
   pattern: '/editor/dialog/link/{filter_format}'
   defaults:
     _form: '\Drupal\editor\Form\EditorLinkDialog'

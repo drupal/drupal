@@ -30,7 +30,7 @@ class RebuildPermissionsForm extends ConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'system_status',
+      'route_name' => 'system.status',
     );
   }
 

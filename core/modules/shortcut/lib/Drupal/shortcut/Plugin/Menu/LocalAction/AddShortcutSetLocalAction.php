@@ -14,9 +14,9 @@ use Drupal\Core\Menu\LocalActionBase;
 /**
  * @LocalAction(
  *   id = "shortcut_set_add_local_action",
- *   route_name = "shortcut_set_add",
+ *   route_name = "shortcut.set_add",
  *   title = @Translation("Add shortcut set"),
- *   appears_on = {"shortcut_set_admin"}
+ *   appears_on = {"shortcut.set_admin"}
  * )
  */
 class AddShortcutSetLocalAction extends LocalActionBase {

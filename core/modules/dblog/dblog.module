@@ -43,7 +43,7 @@ function dblog_menu() {
   $items['admin/reports/dblog'] = array(
     'title' => 'Recent log messages',
     'description' => 'View events that have recently been logged.',
-    'route_name' => 'dblog_overview',
+    'route_name' => 'dblog.overview',
     'weight' => -1,
   );
   $items['admin/reports/page-not-found'] = array(
@@ -64,7 +64,7 @@ function dblog_menu() {
   );
   $items['admin/reports/event/%'] = array(
     'title' => 'Details',
-    'route_name' => 'dblog_event',
+    'route_name' => 'dblog.event',
   );
 
   if (module_exists('search')) {

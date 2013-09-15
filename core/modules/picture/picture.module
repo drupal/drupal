@@ -57,24 +57,24 @@ function picture_menu() {
     'title' => 'Picture Mappings',
     'description' => 'Manage picture mappings',
     'weight' => 10,
-    'route_name' => 'picture_mapping_page',
+    'route_name' => 'picture.mapping_page',
   );
   $items['admin/config/media/picturemapping/add'] = array(
     'title' => 'Add picture mapping',
-    'route_name' => 'picture_mapping_page_add',
+    'route_name' => 'picture.mapping_page_add',
     'type' => MENU_LOCAL_ACTION,
   );
   $items['admin/config/media/picturemapping/%picture_mapping'] = array(
     'title' => 'Edit picture mapping',
-    'route_name' => 'picture_mapping_page_edit',
+    'route_name' => 'picture.mapping_page_edit',
   );
   $items['admin/config/media/picturemapping/%picture_mapping/duplicate'] = array(
     'title' => 'Duplicate picture mapping',
-    'route_name' => 'picture_mapping_page_duplicate',
+    'route_name' => 'picture.mapping_page_duplicate',
   );
   $items['admin/config/media/picturemapping/%picture_mapping/delete'] = array(
     'title' => 'Delete',
-    'route_name' => 'picture_mapping_action_confirm',
+    'route_name' => 'picture.mapping_action_confirm',
   );
 
   return $items;

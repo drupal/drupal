@@ -75,7 +75,7 @@ class ModulesListConfirmForm extends ConfirmFormBase implements ContainerInjecti
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'system_modules_list',
+      'route_name' => 'system.modules_list',
     );
   }
 
@@ -109,7 +109,7 @@ class ModulesListConfirmForm extends ConfirmFormBase implements ContainerInjecti
 
     // Redirect to the modules list page if the key value store is empty.
     if (!$this->modules) {
-      return new RedirectResponse($this->urlGenerator()->generate('system_modules_list', array(), TRUE));
+      return new RedirectResponse($this->urlGenerator()->generate('system.modules_list', array(), TRUE));
     }
 
     $items = array();

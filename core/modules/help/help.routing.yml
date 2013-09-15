@@ -1,10 +1,11 @@
-help_main:
+help.main:
   pattern: 'admin/help'
   defaults:
     _content: '\Drupal\help\Controller\HelpController::helpMain'
   requirements:
     _permission: 'access administration pages'
-help_page:
+
+help.page:
   pattern: 'admin/help/{name}'
   defaults:
     _content: '\Drupal\help\Controller\HelpController::helpPage'

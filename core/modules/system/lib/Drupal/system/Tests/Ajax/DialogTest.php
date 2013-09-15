@@ -83,7 +83,7 @@ class DialogTest extends AjaxTestBase {
     );
     $no_target_expected_response = array(
       'command' => 'openDialog',
-      'selector' => '#drupal-dialog-ajax-test-dialog-contents',
+      'selector' => '#drupal-dialog-ajax-testdialog-contents',
       'settings' => NULL,
       'data' => $dialog_contents,
       'dialogOptions' => array(

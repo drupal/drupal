@@ -978,7 +978,7 @@ function node_menu() {
   $items['admin/structure/types'] = array(
     'title' => 'Content types',
     'description' => 'Manage content types, including default status, front page promotion, comment settings, etc.',
-    'route_name' => 'node_overview_types',
+    'route_name' => 'node.overview_types',
   );
   $items['admin/structure/types/list'] = array(
     'title' => 'List',
@@ -986,14 +986,14 @@ function node_menu() {
   );
   $items['admin/structure/types/add'] = array(
     'title' => 'Add content type',
-    'route_name' => 'node_type_add',
+    'route_name' => 'node.type_add',
     'type' => MENU_LOCAL_ACTION,
   );
   $items['admin/structure/types/manage/%node_type'] = array(
     'title' => 'Edit content type',
     'title callback' => 'entity_page_label',
     'title arguments' => array(4),
-    'route_name' => 'node_type_edit',
+    'route_name' => 'node.type_edit',
   );
   $items['admin/structure/types/manage/%node_type/edit'] = array(
     'title' => 'Edit',
@@ -1001,7 +1001,7 @@ function node_menu() {
   );
   $items['admin/structure/types/manage/%node_type/delete'] = array(
     'title' => 'Delete',
-    'route_name' => 'node_type_delete_confirm',
+    'route_name' => 'node.type_delete_confirm',
   );
   $items['node/add'] = array(
     'title' => 'Add content',
@@ -1036,13 +1036,13 @@ function node_menu() {
   );
   $items['node/%node/edit'] = array(
     'title' => 'Edit',
-    'route_name' => 'node_page_edit',
+    'route_name' => 'node.page_edit',
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
   $items['node/%node/delete'] = array(
     'title' => 'Delete',
-    'route_name' => 'node_delete_confirm',
+    'route_name' => 'node.delete_confirm',
     'weight' => 10,
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
@@ -1066,11 +1066,11 @@ function node_menu() {
   );
   $items['node/%node/revisions/%node_revision/revert'] = array(
     'title' => 'Revert to earlier revision',
-    'route_name' => 'node_revision_revert_confirm',
+    'route_name' => 'node.revision_revert_confirm',
   );
   $items['node/%node/revisions/%node_revision/delete'] = array(
     'title' => 'Delete earlier revision',
-    'route_name' => 'node_revision_delete_confirm',
+    'route_name' => 'node.revision_delete_confirm',
   );
   return $items;
 }

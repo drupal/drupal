@@ -48,7 +48,7 @@ class ImageEffectDeleteForm extends ConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'image_style_edit',
+      'route_name' => 'image.style_edit',
       'route_parameters' => array(
         'image_style' => $this->imageStyle->id(),
       ),

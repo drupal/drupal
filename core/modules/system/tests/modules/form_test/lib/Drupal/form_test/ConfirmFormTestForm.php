@@ -33,7 +33,7 @@ class ConfirmFormTestForm extends ConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'system_admin',
+      'route_name' => 'system.admin',
     );
   }
 

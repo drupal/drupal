@@ -1,4 +1,4 @@
-batch_test_redirect:
+batch_test.redirect:
   pattern: '/batch-test/redirect'
   defaults:
     _content: '\Drupal\batch_test\Controller\BatchTestController::testRedirect'
@@ -6,7 +6,7 @@ batch_test_redirect:
   requirements:
     _access:  'TRUE'
 
-batch_test_large_percentage:
+batch_test.large_percentage:
   pattern: '/batch-test/large-percentage'
   defaults:
     _content: '\Drupal\batch_test\Controller\BatchTestController::testLargePercentage'
@@ -14,7 +14,7 @@ batch_test_large_percentage:
   requirements:
     _access:  'TRUE'
 
-batch_test_nested_programmatic:
+batch_test.nested_programmatic:
   pattern: '/batch-test/nested-programmatic/{value}'
   defaults:
     _content: '\Drupal\batch_test\Controller\BatchTestController::testNestedDrupalFormSubmit'
@@ -23,7 +23,7 @@ batch_test_nested_programmatic:
   requirements:
     _access: 'TRUE'
 
-batch_test_no_form:
+batch_test.no_form:
   pattern: '/batch-test/no-form'
   defaults:
     _content: '\Drupal\batch_test\Controller\BatchTestController::testNoForm'
@@ -31,7 +31,7 @@ batch_test_no_form:
   requirements:
     _access: 'TRUE'
 
-batch_test_programmatic:
+batch_test.programmatic:
   pattern: '/batch-test/programmatic/{value}'
   defaults:
     _content: '\Drupal\batch_test\Controller\BatchTestController::testProgrammatic'
@@ -40,7 +40,7 @@ batch_test_programmatic:
   requirements:
     _access: 'TRUE'
 
-batch_test_test_theme:
+batch_test.test_theme:
   pattern: '/admin/batch-test/test-theme'
   defaults:
     _content: '\Drupal\batch_test\Controller\BatchTestController::testThemeBatch'

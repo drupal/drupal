@@ -1,4 +1,4 @@
-condition_test_1:
+condition_test.1:
   pattern: '/condition_test'
   defaults:
     _form: '\Drupal\condition_test\FormController'

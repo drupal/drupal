@@ -64,22 +64,22 @@ function config_menu() {
   $items['admin/config/development/sync'] = array(
     'title' => 'Synchronize configuration',
     'description' => 'Synchronize configuration changes.',
-    'route_name' => 'config_sync',
+    'route_name' => 'config.sync',
   );
   $items['admin/config/development/export'] = array(
     'title' => 'Configuration export',
     'description' => 'Export your site configuration',
-    'route_name' => 'config_export',
+    'route_name' => 'config.export',
   );
   $items['admin/config/development/import'] = array(
     'title' => 'Configuration import',
     'description' => 'Import configuration for your site',
-    'route_name' => 'config_import',
+    'route_name' => 'config.import',
   );
   $items['admin/config/development/sync/diff/%'] = array(
     'title' => 'Configuration file diff',
     'description' => 'Diff between active and staged configuration.',
-    'route_name' => 'config_diff',
+    'route_name' => 'config.diff',
   );
   $items['admin/config/development/sync/import'] = array(
     'title' => 'Import',

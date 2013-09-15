@@ -276,7 +276,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
         '#type' => 'textfield',
         '#title' => t('Authored by'),
         '#maxlength' => 60,
-        '#autocomplete_route_name' => 'user_autocomplete',
+        '#autocomplete_route_name' => 'user.autocomplete',
         '#default_value' => $name,
         '#description' => t('Leave blank for %anonymous.', array('%anonymous' => variable_get('anonymous', t('Anonymous')))),
       );

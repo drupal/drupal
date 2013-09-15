@@ -70,7 +70,7 @@ class ForumBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       }
     }
 
-    if (!empty($attributes[RouteObjectInterface::ROUTE_NAME]) && $attributes[RouteObjectInterface::ROUTE_NAME] == 'forum_page' && isset($attributes['taxonomy_term'])) {
+    if (!empty($attributes[RouteObjectInterface::ROUTE_NAME]) && $attributes[RouteObjectInterface::ROUTE_NAME] == 'forum.page' && isset($attributes['taxonomy_term'])) {
       $breadcrumb = $this->forumTermBreadcrumb($attributes['taxonomy_term']);
     }
 

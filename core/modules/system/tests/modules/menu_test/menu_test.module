@@ -29,7 +29,7 @@ function menu_test_menu() {
   $items['menu_callback_description'] = array(
     'title' => 'Menu item title',
     'description' => 'Menu item description parent',
-    'route_name' => 'menu_callback_description',
+    'route_name' => 'menu_test.callback_description',
   );
   // This item tests the description key.
   $items['menu_callback_description/description-plain'] = array(
@@ -377,7 +377,7 @@ function menu_test_menu() {
   // Parent page for controller-based local tasks.
   $items['foo/%'] = array(
     'title' => 'Controller-based local tasks',
-    'route_name' => 'menu_router_test1',
+    'route_name' => 'menu_test.router_test1',
   );
   // Controller-based local task.
   $items['foo/%/a'] = array(
@@ -387,23 +387,23 @@ function menu_test_menu() {
   // Controller-based local task.
   $items['foo/%/b'] = array(
     'title' => 'Local task B',
-    'route_name' => 'menu_router_test2',
+    'route_name' => 'menu_test.router_test2',
     'type' => MENU_LOCAL_TASK,
   );
   $items['foo/%/c'] = array(
     'title' => 'Local task C',
-    'route_name' => 'menu_router_test3',
+    'route_name' => 'menu_test.router_test3',
     'type' => MENU_LOCAL_TASK,
   );
 
   $items['menu-test-local-action'] = array(
     'title' => 'Local action parent',
-    'route_name' => 'menu_test_local_action1',
+    'route_name' => 'menu_test.local_action1',
   );
 
   $items['menu-test-local-action/hook_menu'] = array(
     'title' => 'My hook_menu action',
-    'route_name' => 'menu_test_local_action2',
+    'route_name' => 'menu_test.local_action2',
     'weight' => -10,
     'type' => MENU_LOCAL_ACTION,
   );
@@ -412,18 +412,18 @@ function menu_test_menu() {
     'title' => 'My dynamic title action',
     'title callback' => 'menu_test_local_action_dynamic_title',
     'title arguments' => array(1),
-    'route_name' => 'menu_test_local_action4',
+    'route_name' => 'menu_test.local_action4',
     'weight' => -10,
     'type' => MENU_LOCAL_ACTION,
   );
 
   $items['menu-local-task-test/tasks'] = array(
     'title' => 'Local tasks',
-    'route_name' => 'menu_local_task_test_tasks',
+    'route_name' => 'menu_test.local_task_test_tasks',
   );
   $items['menu-test/optional'] = array(
     'title' => 'Test optional placeholder',
-    'route_name' => 'menu_test_optional_placeholder',
+    'route_name' => 'menu_test.optional_placeholder',
     'type' => MENU_LOCAL_TASK,
   );
 

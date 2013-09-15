@@ -70,7 +70,7 @@ function language_menu() {
   $items['admin/config/regional/language'] = array(
     'title' => 'Languages',
     'description' => 'Configure languages for content and the user interface.',
-    'route_name' => 'language_admin_overview',
+    'route_name' => 'language.admin_overview',
     'weight' => -10,
   );
   $items['admin/config/regional/language/list'] = array(
@@ -78,15 +78,15 @@ function language_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/config/regional/language/add'] = array(
-    'route_name' => 'language_add',
+    'route_name' => 'language.add',
     'type' => MENU_SIBLING_LOCAL_TASK,
   );
   $items['admin/config/regional/language/edit/%language'] = array(
     'title' => 'Edit language',
-    'route_name' => 'language_edit',
+    'route_name' => 'language.edit',
   );
   $items['admin/config/regional/language/delete/%language'] = array(
-    'route_name' => 'language_delete',
+    'route_name' => 'language.delete',
   );
 
   // Language negotiation.
@@ -101,22 +101,22 @@ function language_menu() {
   );
   $items['admin/config/regional/language/detection/url'] = array(
     'title' => 'URL language detection configuration',
-    'route_name' => 'language_negotiation_url',
+    'route_name' => 'language.negotiation_url',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
   $items['admin/config/regional/language/detection/session'] = array(
     'title' => 'Session language detection configuration',
-    'route_name' => 'language_negotiation_session',
+    'route_name' => 'language.negotiation_session',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
   $items['admin/config/regional/language/detection/browser'] = array(
     'title' => 'Browser language detection configuration',
-    'route_name' => 'language_negotiation_browser',
+    'route_name' => 'language.negotiation_browser',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
   $items['admin/config/regional/language/detection/selected'] = array(
     'title' => 'Selected language detection configuration',
-    'route_name' => 'language_negotiation_selected',
+    'route_name' => 'language.negotiation_selected',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
   );
 

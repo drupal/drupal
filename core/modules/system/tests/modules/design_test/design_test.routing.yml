@@ -1,4 +1,4 @@
-design_test:
+design.test:
   pattern: '/design_test/{category}'
   defaults:
     _content: '\Drupal\design_test\Controller\DesignTestController::categoryPage'

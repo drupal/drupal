@@ -146,7 +146,7 @@ function editor_menu() {
   // @todo Remove this menu item in http://drupal.org/node/1954892 when theme
   //   callbacks are replaced with something else.
   $items['editor/%/%/%/%/%'] = array(
-    'route_name' => 'editor_field_untransformed_text',
+    'route_name' => 'editor.field_untransformed_text',
     'theme callback' => 'ajax_base_page_theme',
     'type' => MENU_CALLBACK,
   );

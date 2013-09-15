@@ -61,17 +61,17 @@ function contact_menu() {
   $items['admin/structure/contact'] = array(
     'title' => 'Contact form categories',
     'description' => 'Create a system contact form and set up categories for the form to use.',
-    'route_name' => 'contact_category_list',
+    'route_name' => 'contact.category_list',
   );
   $items['admin/structure/contact/add'] = array(
     'title' => 'Add category',
-    'route_name' => 'contact_category_add',
+    'route_name' => 'contact.category_add',
     'type' => MENU_LOCAL_ACTION,
     'weight' => 1,
   );
   $items['admin/structure/contact/manage/%contact_category'] = array(
     'title' => 'Edit contact category',
-    'route_name' => 'contact_category_edit',
+    'route_name' => 'contact.category_edit',
   );
   $items['admin/structure/contact/manage/%contact_category/edit'] = array(
     'title' => 'Edit',
@@ -79,7 +79,7 @@ function contact_menu() {
   );
   $items['admin/structure/contact/manage/%contact_category/delete'] = array(
     'title' => 'Delete',
-    'route_name' => 'contact_category_delete',
+    'route_name' => 'contact.category_delete',
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
   );

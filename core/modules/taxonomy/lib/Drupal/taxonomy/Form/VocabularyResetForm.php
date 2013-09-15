@@ -58,7 +58,7 @@ class VocabularyResetForm extends EntityConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'taxonomy_overview_terms',
+      'route_name' => 'taxonomy.overview_terms',
       'route_parameters' => array(
         'taxonomy_vocabulary' => $this->entity->id(),
       ),

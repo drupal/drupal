@@ -44,12 +44,12 @@ function ban_menu() {
   $items['admin/config/people/ban'] = array(
     'title' => 'IP address bans',
     'description' => 'Manage banned IP addresses.',
-    'route_name' => 'ban_admin_page',
+    'route_name' => 'ban.admin_page',
     'weight' => 10,
   );
   $items['admin/config/people/ban/delete/%'] = array(
     'title' => 'Delete IP address',
-    'route_name' => 'ban_delete',
+    'route_name' => 'ban.delete',
   );
   return $items;
 }

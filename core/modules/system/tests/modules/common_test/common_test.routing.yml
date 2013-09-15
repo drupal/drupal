@@ -1,23 +1,26 @@
-common_test_l_active_class:
+common_test.l_active_class:
   pattern: '/common-test/type-link-active-class'
   defaults:
     _content: '\Drupal\common_test\Controller\CommonTestController::typeLinkActiveClass'
   requirements:
     _access: 'TRUE'
-common_test_destination:
+
+common_test.destination:
   pattern: '/common-test/destination'
   defaults:
     _controller: '\Drupal\common_test\Controller\CommonTestController::destination'
   requirements:
     _permission: 'access content'
-common_test_drupal_render_invalid_keys:
+
+common_test.drupal_render_invalid_keys:
   pattern: 'common-test/drupal-render-invalid-keys'
   defaults:
     _title: 'Drupal Render'
     _content: '\Drupal\common_test\Controller\CommonTestController::drupalRenderInvalidKeys'
   requirements:
     _permission: 'access content'
-common_test_js_and_css_querystring:
+
+common_test.js_and_css_querystring:
   pattern: '/common-test/query-string'
   defaults:
     _title: 'Test querystring'

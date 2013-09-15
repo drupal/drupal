@@ -173,7 +173,7 @@ function locale_menu() {
   $items['admin/config/regional/translate'] = array(
     'title' => 'User interface translation',
     'description' => 'Translate the built-in user interface.',
-    'route_name' => 'locale_translate_page',
+    'route_name' => 'locale.translate_page',
     'weight' => -5,
   );
   $items['admin/config/regional/translate/translate'] = array(
@@ -200,7 +200,7 @@ function locale_menu() {
   );
   $items['admin/config/regional/translate/settings'] = array(
     'title' => 'Settings',
-    'route_name' => 'locale_settings',
+    'route_name' => 'locale.settings',
     'weight' => 100,
     'type' => MENU_LOCAL_TASK,
   );

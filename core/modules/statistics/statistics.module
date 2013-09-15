@@ -79,7 +79,7 @@ function statistics_menu() {
   $items['admin/config/system/statistics'] = array(
     'title' => 'Statistics',
     'description' => 'Control details about what and how your site logs content statistics.',
-    'route_name' => 'statistics_settings',
+    'route_name' => 'statistics.settings',
     'access arguments' => array('administer statistics'),
     'weight' => -15,
   );

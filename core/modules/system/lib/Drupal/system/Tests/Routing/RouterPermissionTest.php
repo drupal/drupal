@@ -39,7 +39,7 @@ class RouterPermissionTest extends WebTestBase {
     $this->assertResponse(403, "Access denied for a route where we don't have a permission");
     // An invalid path should throw an exception.
     $map = array();
-    $route = \Drupal::service('router.route_provider')->getRouteByName('router_test_7');
+    $route = \Drupal::service('router.route_provider')->getRouteByName('router_test.7');
     try {
       menu_item_route_access($route, $path . 'invalid', $map);
       $exception = FALSE;

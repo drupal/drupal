@@ -1,39 +1,39 @@
-node_multiple_delete_confirm:
+node.multiple_delete_confirm:
   pattern: '/admin/content/node/delete'
   defaults:
     _form: '\Drupal\node\Form\DeleteMultiple'
   requirements:
     _permission: 'administer nodes'
 
-node_page_edit:
+node.page_edit:
   pattern: '/node/{node}/edit'
   defaults:
     _entity_form: 'node.edit'
   requirements:
     _entity_access: 'node.update'
 
-node_delete_confirm:
+node.delete_confirm:
   pattern: '/node/{node}/delete'
   defaults:
     _entity_form: 'node.delete'
   requirements:
     _entity_access: 'node.delete'
 
-node_revision_revert_confirm:
+node.revision_revert_confirm:
   pattern: '/node/{node}/revisions/{node_revision}/revert'
   defaults:
     _form: '\Drupal\node\Form\NodeRevisionRevertForm'
   requirements:
     _access_node_revision: 'update'
 
-node_revision_delete_confirm:
+node.revision_delete_confirm:
   pattern: '/node/{node}/revisions/{node_revision}/delete'
   defaults:
     _form: '\Drupal\node\Form\NodeRevisionDeleteForm'
   requirements:
     _access_node_revision: 'delete'
 
-node_overview_types:
+node.overview_types:
   pattern: '/admin/structure/types'
   defaults:
     _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
@@ -41,35 +41,28 @@ node_overview_types:
   requirements:
     _permission: 'administer content types'
 
-node_type_add:
+node.type_add:
   pattern: '/admin/structure/types/add'
   defaults:
     _entity_form: 'node_type.add'
   requirements:
     _permission: 'administer content types'
 
-node_type_edit:
+node.type_edit:
   pattern: '/admin/structure/types/manage/{node_type}'
   defaults:
     _entity_form: 'node_type.edit'
   requirements:
     _permission: 'administer content types'
 
-node_type_edit_default:
-  pattern: '/admin/structure/types/manage/{node_type}/edit'
-  defaults:
-    _entity_form: 'node_type.edit'
-  requirements:
-    _permission: 'administer content types'
-
-node_type_delete_confirm:
+node.type_delete_confirm:
   pattern: '/admin/structure/types/manage/{node_type}/delete'
   defaults:
     _entity_form: 'node_type.delete'
   requirements:
     _entity_access: 'node_type.delete'
 
-node_configure_rebuild_confirm:
+node.configure_rebuild_confirm:
   pattern: '/admin/reports/status/rebuild'
   defaults:
     _form: 'Drupal\node\Form\RebuildPermissionsForm'

@@ -57,7 +57,7 @@ function field_ui_menu() {
   $items['admin/reports/fields'] = array(
     'title' => 'Field list',
     'description' => 'Overview of fields on all entity types.',
-    'route_name' => 'field_list',
+    'route_name' => 'field_ui.list',
     'type' => MENU_NORMAL_ITEM,
   );
   $items['admin/reports/fields/list'] = array(
@@ -78,13 +78,13 @@ function field_ui_menu() {
       $items["$path/fields"] = array(
         'title' => 'Manage fields',
         'type' => MENU_LOCAL_TASK,
-        'route_name' => "field_ui.overview.$entity_type",
+        'route_name' => "field_ui.overview_$entity_type",
         'weight' => 1,
       );
       $items["$path/fields/%"] = array(
         'title callback' => 'entity_page_label',
         'title arguments' => array($field_position),
-        'route_name' => "field_ui.instance_edit.$entity_type",
+        'route_name' => "field_ui.instance_edit_$entity_type",
       );
       $items["$default_path/fields/%/edit"] = array(
         'title' => 'Edit',
@@ -93,12 +93,12 @@ function field_ui_menu() {
       $items["$path/fields/%/field"] = array(
         'title' => 'Field settings',
         'type' => MENU_LOCAL_TASK,
-        'route_name' => "field_ui.field_edit.$entity_type",
+        'route_name' => "field_ui.field_edit_$entity_type",
       );
       $items["$path/fields/%/delete"] = array(
         'title' => 'Delete',
         'type' => MENU_VISIBLE_IN_BREADCRUMB,
-        'route_name' => "field_ui.delete.$entity_type",
+        'route_name' => "field_ui.delete_$entity_type",
         'weight' => 10,
       );
 
@@ -106,7 +106,7 @@ function field_ui_menu() {
       $items["$path/form-display"] = array(
         'title' => 'Manage form display',
         'type' => MENU_LOCAL_TASK,
-        'route_name' => "field_ui.form_display_overview.$entity_type",
+        'route_name' => "field_ui.form_display_overview_$entity_type",
         'weight' => 2,
       );
 
@@ -114,7 +114,7 @@ function field_ui_menu() {
       $items["$path/display"] = array(
         'title' => 'Manage display',
         'type' => MENU_LOCAL_TASK,
-        'route_name' => "field_ui.display_overview.$entity_type",
+        'route_name' => "field_ui.display_overview_$entity_type",
         'weight' => 3,
       );
 
@@ -139,7 +139,7 @@ function field_ui_menu() {
           'title' => $form_mode_info['label'],
           'type' => MENU_LOCAL_TASK,
           'weight' => $weight++,
-          'route_name' => "field_ui.form_display_overview.$entity_type.$form_mode",
+          'route_name' => "field_ui.form_display_overview_$entity_type" . '_' . $form_mode,
         );
       }
       $weight = 0;
@@ -148,7 +148,7 @@ function field_ui_menu() {
           'title' => $view_mode_info['label'],
           'type' => MENU_LOCAL_TASK,
           'weight' => $weight++,
-          'route_name' => "field_ui.display_overview.$entity_type.$view_mode",
+          'route_name' => "field_ui.display_overview_$entity_type" . '_' . $view_mode,
         );
       }
     }

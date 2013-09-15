@@ -1,4 +1,4 @@
-session_test_get:
+session_test.get:
   pattern: '/session-test/get'
   defaults:
     _title: 'Session value'
@@ -6,7 +6,7 @@ session_test_get:
   requirements:
     _permission: 'access content'
 
-session_test_id:
+session_test.id:
   pattern: '/session-test/id'
   defaults:
     _title: 'Session ID'
@@ -14,7 +14,7 @@ session_test_id:
   requirements:
     _permission: 'access content'
 
-session_test_id_from_cookie:
+session_test.id_from_cookie:
   pattern: '/session-test/id-from-cookie'
   defaults:
     _title: 'Session ID from cookie'
@@ -22,7 +22,7 @@ session_test_id_from_cookie:
   requirements:
     _permission: 'access content'
 
-session_test_set:
+session_test.set:
   pattern: '/session-test/set/{test_value}'
   defaults:
     _title: 'Set session value'
@@ -33,7 +33,7 @@ session_test_set:
   requirements:
     _permission: 'access content'
 
-session_test_no_set:
+session_test.no_set:
   pattern: '/session-test/no-set/{test_value}'
   defaults:
     _title: 'Set session value but do not save session'
@@ -44,7 +44,7 @@ session_test_no_set:
   requirements:
     _permission: 'access content'
 
-session_test_set_message:
+session_test.set_message:
   pattern: '/session-test/set-message'
   defaults:
     _title: 'Set message'
@@ -52,7 +52,7 @@ session_test_set_message:
   requirements:
     _permission: 'access content'
 
-session_test_set_message_but_dont_save:
+session_test.set_message_but_dont_save:
   pattern: '/session-test/set-message-but-dont-save'
   defaults:
     _title: 'Set message but do not save session'
@@ -60,7 +60,7 @@ session_test_set_message_but_dont_save:
   requirements:
     _permission: 'access content'
 
-session_test_set_not_started:
+session_test.set_not_started:
   pattern: '/session-test/set-not-started'
   defaults:
     _title: 'Set message when session is not started'
@@ -68,7 +68,7 @@ session_test_set_not_started:
   requirements:
     _permission: 'access content'
 
-session_test_is_logged_in:
+session_test.is_logged_in:
   pattern: '/session-test/is-logged-in'
   defaults:
     _title: 'Check if user is logged in'

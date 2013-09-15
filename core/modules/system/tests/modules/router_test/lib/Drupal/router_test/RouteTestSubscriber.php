@@ -38,7 +38,7 @@ class RouteTestSubscriber implements EventSubscriberInterface {
     ), array(
       '_access' => 'TRUE'
     ));
-    $collection->add('router_test_5', $route);
+    $collection->add('router_test.5', $route);
   }
 
   /**
@@ -53,7 +53,7 @@ class RouteTestSubscriber implements EventSubscriberInterface {
   public function alterRoutes(RouteBuildEvent $event) {
     if ($event->getModule() == 'router_test') {
       $collection = $event->getRouteCollection();
-      $route = $collection->get('router_test_6');
+      $route = $collection->get('router_test.6');
       // Change controller method from test1 to test5.
       $route->setDefault('_controller', '\Drupal\router_test\TestControllers::test5');
     }

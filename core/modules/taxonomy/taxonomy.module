@@ -235,14 +235,14 @@ function taxonomy_menu() {
   $items['admin/structure/taxonomy'] = array(
     'title' => 'Taxonomy',
     'description' => 'Manage tagging, categorization, and classification of your content.',
-    'route_name' => 'taxonomy_vocabulary_list',
+    'route_name' => 'taxonomy.vocabulary_list',
   );
   $items['admin/structure/taxonomy/list'] = array(
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['admin/structure/taxonomy/add'] = array(
-    'route_name' => 'taxonomy_vocabulary_add',
+    'route_name' => 'taxonomy.vocabulary_add',
     'type' => MENU_SIBLING_LOCAL_TASK,
   );
 
@@ -264,7 +264,7 @@ function taxonomy_menu() {
     'title' => 'Edit',
     'title callback' => 'entity_page_label',
     'title arguments' => array(2),
-    'route_name' => 'taxonomy_term_edit',
+    'route_name' => 'taxonomy.term_edit',
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'weight' => 10,
@@ -274,7 +274,7 @@ function taxonomy_menu() {
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
     'weight' => 20,
-    'route_name' => 'taxonomy_term_delete',
+    'route_name' => 'taxonomy.term_delete',
   );
   $items['taxonomy/term/%taxonomy_term/feed'] = array(
     'title' => 'Taxonomy term',
@@ -289,7 +289,7 @@ function taxonomy_menu() {
   );
 
   $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary'] = array(
-    'route_name' => 'taxonomy_overview_terms',
+    'route_name' => 'taxonomy.overview_terms',
     'title callback' => 'entity_page_label',
     'title arguments' => array(4),
   );
@@ -299,7 +299,7 @@ function taxonomy_menu() {
   );
   $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary/edit'] = array(
     'title' => 'Edit',
-    'route_name' => 'taxonomy_vocabulary_edit',
+    'route_name' => 'taxonomy.vocabulary_edit',
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/structure/taxonomy/%taxonomy_vocabulary/delete'] = array(
@@ -307,12 +307,12 @@ function taxonomy_menu() {
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
     'weight' => 20,
-    'route_name' => 'taxonomy_vocabulary_delete',
+    'route_name' => 'taxonomy.vocabulary_delete',
   );
 
   $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary/add'] = array(
     'title' => 'Add term',
-    'route_name' => 'taxonomy_term_add',
+    'route_name' => 'taxonomy.term_add',
     'type' => MENU_LOCAL_ACTION,
   );
 

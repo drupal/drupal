@@ -1,4 +1,4 @@
-aggregator_test_feed:
+aggregator_test.feed:
   pattern: '/aggregator/test-feed/{use_last_modified}/{use_etag}'
   defaults:
     _controller: '\Drupal\aggregator_test\Controller\AggregatorTestRssController::testFeed'
@@ -8,7 +8,7 @@ aggregator_test_feed:
   requirements:
     _permission: 'access content'
 
-aggregator_redirect:
+aggregator_test.redirect:
   pattern: '/aggregator/redirect'
   defaults:
     _controller: '\Drupal\aggregator_test\Controller\AggregatorTestRssController::testRedirect'

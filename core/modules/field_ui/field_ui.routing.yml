@@ -1,4 +1,4 @@
-field_list:
+field_ui.list:
   pattern: 'admin/reports/fields'
   defaults:
     _entity_list: 'field_entity'

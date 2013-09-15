@@ -104,18 +104,18 @@ function forum_theme() {
 function forum_menu() {
   $items['forum'] = array(
     'title' => 'Forums',
-    'route_name' => 'forum_index',
+    'route_name' => 'forum.index',
   );
   $items['forum/%forum'] = array(
     'title' => 'Forums',
     'title callback' => 'entity_page_label',
     'title arguments' => array(1),
-    'route_name' => 'forum_page',
+    'route_name' => 'forum.page',
   );
   $items['admin/structure/forum'] = array(
     'title' => 'Forums',
     'description' => 'Control forum hierarchy settings.',
-    'route_name' => 'forum_overview',
+    'route_name' => 'forum.overview',
   );
   $items['admin/structure/forum/list'] = array(
     'title' => 'List',
@@ -126,19 +126,19 @@ function forum_menu() {
     'weight' => 100,
     'type' => MENU_LOCAL_TASK,
     'parent' => 'admin/structure/forum',
-    'route_name' => 'forum_settings',
+    'route_name' => 'forum.settings',
   );
   $items['admin/structure/forum/edit/container/%taxonomy_term'] = array(
     'title' => 'Edit container',
-    'route_name' => 'forum_edit_container',
+    'route_name' => 'forum.edit_container',
   );
   $items['admin/structure/forum/edit/forum/%taxonomy_term'] = array(
     'title' => 'Edit forum',
-    'route_name' => 'forum_edit_forum',
+    'route_name' => 'forum.edit_forum',
   );
   $items['admin/structure/forum/delete/forum/%taxonomy_term'] = array(
     'title' => 'Delete forum',
-    'route_name' => 'forum_delete',
+    'route_name' => 'forum.delete',
   );
   return $items;
 }

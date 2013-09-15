@@ -37,7 +37,7 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * {@inheritdoc}
    */
   public function build(array $attributes) {
-    if (isset($attributes[RouteObjectInterface::ROUTE_NAME]) && $attributes[RouteObjectInterface::ROUTE_NAME] == 'comment_reply' && isset($attributes['node'])) {
+    if (isset($attributes[RouteObjectInterface::ROUTE_NAME]) && $attributes[RouteObjectInterface::ROUTE_NAME] == 'comment.reply' && isset($attributes['node'])) {
       $node = $attributes['node'];
       $uri = $node->uri();
       $breadcrumb[] = l($this->t('Home'), NULL);

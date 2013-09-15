@@ -69,7 +69,7 @@ class BanDelete extends ConfirmFormBase {
    */
   public function getCancelRoute() {
     return array(
-      'route_name' => 'ban_admin_page',
+      'route_name' => 'ban.admin_page',
     );
   }
 
