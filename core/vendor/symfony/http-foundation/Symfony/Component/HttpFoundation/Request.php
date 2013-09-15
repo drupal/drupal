@@ -38,6 +38,16 @@ class Request
     protected static $trustedProxies = array();
 
     /**
+     * @var string[]
+     */
+    protected static $trustedHostPatterns = array();
+
+    /**
+     * @var string[]
+     */
+    protected static $trustedHosts = array();
+
+    /**
      * Names for headers that can be trusted when
      * using trusted proxies.
      *
@@ -394,6 +404,10 @@ class Request
         $dup->method = null;
         $dup->format = null;
 
+        if (!$dup->get('_format')) {
+            $dup->setRequestFormat($this->getRequestFormat());
+        }
+
         return $dup;
     }
 
@@ -484,6 +498,32 @@ class Request
     public static function getTrustedProxies()
     {
         return self::$trustedProxies;
+    }
+
+    /**
+     * Sets a list of trusted host patterns.
+     *
+     * You should only list the hosts you manage using regexs.
+     *
+     * @param array $hostPatterns A list of trusted host patterns
+     */
+    public static function setTrustedHosts(array $hostPatterns)
+    {
+        self::$trustedHostPatterns = array_map(function ($hostPattern) {
+            return sprintf('{%s}i', str_replace('}', '\\}', $hostPattern));
+        }, $hostPatterns);
+        // we need to reset trusted hosts on trusted host patterns change
+        self::$trustedHosts = array();
+    }
+
+    /**
+     * Gets the list of trusted host patterns.
+     *
+     * @return array An array of trusted host patterns.
+     */
+    public static function getTrustedHosts()
+    {
+        return self::$trustedHostPatterns;
     }
 
     /**
@@ -1065,7 +1105,25 @@ class Request
         // as the host can come from the user (HTTP_HOST and depending on the configuration, SERVER_NAME too can come from the user)
         // check that it does not contain forbidden characters (see RFC 952 and RFC 2181)
         if ($host && !preg_match('/^\[?(?:[a-zA-Z0-9-:\]_]+\.?)+$/', $host)) {
-            throw new \UnexpectedValueException('Invalid Host');
+            throw new \UnexpectedValueException('Invalid Host "'.$host.'"');
+        }
+
+        if (count(self::$trustedHostPatterns) > 0) {
+            // to avoid host header injection attacks, you should provide a list of trusted host patterns
+
+            if (in_array($host, self::$trustedHosts)) {
+                return $host;
+            }
+
+            foreach (self::$trustedHostPatterns as $pattern) {
+                if (preg_match($pattern, $host)) {
+                    self::$trustedHosts[] = $host;
+
+                    return $host;
+                }
+            }
+
+            throw new \UnexpectedValueException('Untrusted Host "'.$host.'"');
         }
 
         return $host;

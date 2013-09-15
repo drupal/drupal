@@ -110,7 +110,7 @@ class HIncludeFragmentRenderer extends RoutableFragmentRenderer
         }
         $renderedAttributes = '';
         if (count($attributes) > 0) {
-            foreach($attributes as $attribute => $value) {
+            foreach ($attributes as $attribute => $value) {
                 $renderedAttributes .= sprintf(
                     ' %s="%s"',
                     htmlspecialchars($attribute, ENT_QUOTES | ENT_SUBSTITUTE, $this->charset, false),
@@ -130,7 +130,11 @@ class HIncludeFragmentRenderer extends RoutableFragmentRenderer
     private function templateExists($template)
     {
         if ($this->templating instanceof EngineInterface) {
-            return $this->templating->exists($template);
+            try {
+                return $this->templating->exists($template);
+            } catch (\InvalidArgumentException $e) {
+                return false;
+            }
         }
 
         $loader = $this->templating->getLoader();

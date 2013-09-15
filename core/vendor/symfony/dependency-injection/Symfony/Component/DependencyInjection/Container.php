@@ -88,6 +88,7 @@ class Container implements IntrospectableContainerInterface
         $this->parameterBag = null === $parameterBag ? new ParameterBag() : $parameterBag;
 
         $this->services       = array();
+        $this->aliases        = array();
         $this->scopes         = array();
         $this->scopeChildren  = array();
         $this->scopedServices = array();
@@ -183,6 +184,9 @@ class Container implements IntrospectableContainerInterface
     /**
      * Sets a service.
      *
+     * Setting a service to null resets the service: has() returns false and get()
+     * behaves in the same way as if the service was never created.
+     *
      * @param string $id      The service identifier
      * @param object $service The service instance
      * @param string $scope   The scope of the service
@@ -213,6 +217,14 @@ class Container implements IntrospectableContainerInterface
         if (method_exists($this, $method = 'synchronize'.strtr($id, array('_' => '', '.' => '_')).'Service')) {
             $this->$method();
         }
+
+        if (self::SCOPE_CONTAINER !== $scope && null === $service) {
+            unset($this->scopedServices[$scope][$id]);
+        }
+
+        if (null === $service) {
+            unset($this->services[$id]);
+        }
     }
 
     /**
@@ -228,7 +240,10 @@ class Container implements IntrospectableContainerInterface
     {
         $id = strtolower($id);
 
-        return array_key_exists($id, $this->services) || method_exists($this, 'get'.strtr($id, array('_' => '', '.' => '_')).'Service');
+        return array_key_exists($id, $this->services)
+            || array_key_exists($id, $this->aliases)
+            || method_exists($this, 'get'.strtr($id, array('_' => '', '.' => '_')).'Service')
+        ;
     }
 
     /**
@@ -509,7 +524,7 @@ class Container implements IntrospectableContainerInterface
      */
     public static function camelize($id)
     {
-        return preg_replace_callback('/(^|_|\.)+(.)/', function ($match) { return ('.' === $match[1] ? '_' : '').strtoupper($match[2]); }, $id);
+        return strtr(ucwords(strtr($id, array('_' => ' ', '.' => '_ '))), array(' ' => ''));
     }
 
     /**
