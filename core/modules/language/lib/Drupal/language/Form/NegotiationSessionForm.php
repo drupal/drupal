@@ -7,12 +7,12 @@
 
 namespace Drupal\language\Form;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Configure the session language negotiation method for this site.
  */
-class NegotiationSessionForm extends SystemConfigFormBase {
+class NegotiationSessionForm extends ConfigFormBase {
 
   /**
    * Implements \Drupal\Core\Form\FormInterface::getFormID().

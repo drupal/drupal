@@ -6,12 +6,12 @@
 
 namespace Drupal\locale\Form;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Configure locale settings for this site.
  */
-class LocaleSettingsForm extends SystemConfigFormBase {
+class LocaleSettingsForm extends ConfigFormBase {
 
   /**
    * Implements \Drupal\Core\Form\FormInterface::getFormID().

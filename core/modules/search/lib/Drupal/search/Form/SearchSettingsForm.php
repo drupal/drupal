@@ -12,13 +12,13 @@ use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\search\SearchPluginManager;
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure search settings for this site.
  */
-class SearchSettingsForm extends SystemConfigFormBase {
+class SearchSettingsForm extends ConfigFormBase {
 
   /**
    * A configuration object with the current search settings.

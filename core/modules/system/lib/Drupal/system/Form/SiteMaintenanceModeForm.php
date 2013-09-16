@@ -10,14 +10,13 @@ namespace Drupal\system\Form;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-
 
 /**
  * Configure maintenance settings for this site.
  */
-class SiteMaintenanceModeForm extends SystemConfigFormBase {
+class SiteMaintenanceModeForm extends ConfigFormBase {
 
   /**
    * The state keyvalue collection.
@@ -27,7 +26,7 @@ class SiteMaintenanceModeForm extends SystemConfigFormBase {
   protected $state;
 
   /**
-   * Constructs a \Drupal\system\SystemConfigFormBase object.
+   * Constructs a new SiteMaintenanceModeForm.
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The factory for configuration objects.

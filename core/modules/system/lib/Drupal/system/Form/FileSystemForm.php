@@ -8,12 +8,12 @@
 namespace Drupal\system\Form;
 
 use Drupal\Core\StreamWrapper\PublicStream;
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Configure file system settings for this site.
  */
-class FileSystemForm extends SystemConfigFormBase {
+class FileSystemForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}

@@ -8,14 +8,14 @@ namespace Drupal\statistics;
 
 use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Config\ConfigFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure statistics settings for this site.
  */
-class StatisticsSettingsForm extends SystemConfigFormBase {
+class StatisticsSettingsForm extends ConfigFormBase {
 
   /**
    * The module handler.

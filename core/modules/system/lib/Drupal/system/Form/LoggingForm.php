@@ -7,12 +7,12 @@
 
 namespace Drupal\system\Form;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Configure logging settings for this site.
  */
-class LoggingForm extends SystemConfigFormBase {
+class LoggingForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}

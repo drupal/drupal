@@ -10,13 +10,13 @@ namespace Drupal\system\Form;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\Path\AliasManagerInterface;
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure site information settings for this site.
  */
-class SiteInformationForm extends SystemConfigFormBase {
+class SiteInformationForm extends ConfigFormBase {
 
   /**
    * The path alias manager.
