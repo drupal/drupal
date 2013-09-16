@@ -15,8 +15,6 @@ use Drupal\Core\Database\TransactionCommitFailedException;
 use Drupal\Core\Database\DatabaseException;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 
-use PDO;
-
 /**
  * @addtogroup database
  * @{
@@ -39,7 +37,7 @@ class Connection extends DatabaseConnection {
   /**
    * Constructs a Connection object.
    */
-  public function __construct(PDO $connection, array $connection_options = array()) {
+  public function __construct(\PDO $connection, array $connection_options = array()) {
     parent::__construct($connection, $connection_options);
 
     // This driver defaults to transaction support, except if explicitly passed FALSE.
@@ -71,18 +69,18 @@ class Connection extends DatabaseConnection {
       'pdo' => array(),
     );
     $connection_options['pdo'] += array(
-      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+      \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
       // So we don't have to mess around with cursors and unbuffered queries by default.
-      PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => TRUE,
+      \PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => TRUE,
       // Make sure MySQL returns all matched rows on update queries including
       // rows that actually didn't have to be updated because the values didn't
       // change. This matches common behaviour among other database systems.
-      PDO::MYSQL_ATTR_FOUND_ROWS => TRUE,
+      \PDO::MYSQL_ATTR_FOUND_ROWS => TRUE,
       // Because MySQL's prepared statements skip the query cache, because it's dumb.
-      PDO::ATTR_EMULATE_PREPARES => TRUE,
+      \PDO::ATTR_EMULATE_PREPARES => TRUE,
     );
 
-    $pdo = new PDO($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
+    $pdo = new \PDO($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
 
     // Force MySQL to use the UTF-8 character set. Also set the collation, if a
     // certain one has been set; otherwise, MySQL defaults to 'utf8_general_ci'

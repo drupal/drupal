@@ -8,7 +8,6 @@
 namespace Drupal\statistics\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use PDO;
 
 /**
  * Tests that logging via statistics_exit() works for all pages.

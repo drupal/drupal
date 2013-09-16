@@ -7,9 +7,6 @@
 
 namespace Drupal\Core\FileTransfer;
 
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
-
 /**
  * Defines the local connection class for copying files as the httpd user.
  */
@@ -55,7 +52,7 @@ class Local extends FileTransfer implements ChmodInterface {
       // Programmer error assertion, not something we expect users to see.
       throw new FileTransferException('removeDirectoryJailed() called with a path (%directory) that is not a directory.', NULL, array('%directory' => $directory));
     }
-    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, RecursiveDirectoryIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $filename => $file) {
+    foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::CHILD_FIRST) as $filename => $file) {
       if ($file->isDir()) {
         if (@!drupal_rmdir($filename)) {
           throw new FileTransferException('Cannot remove directory %directory.', NULL, array('%directory' => $filename));

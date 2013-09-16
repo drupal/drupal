@@ -11,7 +11,6 @@ use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use IteratorAggregate;
 use Drupal\Core\Session\AccountInterface;
 
 /**
@@ -22,7 +21,7 @@ use Drupal\Core\Session\AccountInterface;
  * This class can be used as-is by simple entity types. Entity types requiring
  * special handling can extend the class.
  */
-class Entity implements IteratorAggregate, EntityInterface {
+class Entity implements \IteratorAggregate, EntityInterface {
 
   /**
    * The language code of the entity's default language.

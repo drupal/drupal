@@ -10,9 +10,6 @@ namespace Drupal\Core\Database;
 use Drupal\Core\Database\TransactionNoActiveException;
 use Drupal\Core\Database\TransactionOutOfOrderException;
 
-use PDO;
-use PDOException;
-
 /**
  * Base Database API class.
  *
@@ -145,13 +142,13 @@ abstract class Connection implements \Serializable {
   /**
    * Constructs a Connection object.
    */
-  public function __construct(PDO $connection, array $connection_options) {
+  public function __construct(\PDO $connection, array $connection_options) {
     // Initialize and prepare the connection prefix.
     $this->setPrefix(isset($connection_options['prefix']) ? $connection_options['prefix'] : '');
 
     // Set a Statement class, unless the driver opted out.
     if (!empty($this->statementClass)) {
-      $connection->setAttribute(PDO::ATTR_STATEMENT_CLASS, array($this->statementClass, array($this)));
+      $connection->setAttribute(\PDO::ATTR_STATEMENT_CLASS, array($this->statementClass, array($this)));
     }
 
     $this->connection = $connection;
@@ -181,7 +178,7 @@ abstract class Connection implements \Serializable {
     // Destroy all references to this connection by setting them to NULL.
     // The Statement class attribute only accepts a new value that presents a
     // proper callable, so we reset it to PDOStatement.
-    $this->connection->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('PDOStatement', array()));
+    $this->connection->setAttribute(\PDO::ATTR_STATEMENT_CLASS, array('PDOStatement', array()));
     $this->schema = NULL;
   }
 
@@ -233,7 +230,7 @@ abstract class Connection implements \Serializable {
   protected function defaultOptions() {
     return array(
       'target' => 'default',
-      'fetch' => PDO::FETCH_OBJ,
+      'fetch' => \PDO::FETCH_OBJ,
       'return' => Database::RETURN_STATEMENT,
       'throw_exception' => TRUE,
     );
@@ -518,7 +515,7 @@ abstract class Connection implements \Serializable {
    *   this method will return NULL and may throw an exception if
    *   $options['throw_exception'] is TRUE.
    *
-   * @throws PDOException
+   * @throws \PDOException
    * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
    */
   public function query($query, array $args = array(), $options = array()) {
@@ -553,10 +550,10 @@ abstract class Connection implements \Serializable {
         case Database::RETURN_NULL:
           return;
         default:
-          throw new PDOException('Invalid return directive: ' . $options['return']);
+          throw new \PDOException('Invalid return directive: ' . $options['return']);
       }
     }
-    catch (PDOException $e) {
+    catch (\PDOException $e) {
       if ($options['throw_exception']) {
         // Wrap the exception in another exception, because PHP does not allow
         // overriding Exception::getMessage(). Its message is the extra database
@@ -1101,7 +1098,7 @@ abstract class Connection implements \Serializable {
    * Returns the version of the database server.
    */
   public function version() {
-    return $this->connection->getAttribute(PDO::ATTR_SERVER_VERSION);
+    return $this->connection->getAttribute(\PDO::ATTR_SERVER_VERSION);
   }
 
   /**
@@ -1268,7 +1265,7 @@ abstract class Connection implements \Serializable {
 
     // Re-set a Statement class if necessary.
     if (!empty($this->statementClass)) {
-      $this->connection->setAttribute(PDO::ATTR_STATEMENT_CLASS, array($this->statementClass, array($this)));
+      $this->connection->setAttribute(\PDO::ATTR_STATEMENT_CLASS, array($this->statementClass, array($this)));
     }
   }
 

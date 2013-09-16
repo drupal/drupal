@@ -6,8 +6,6 @@
 
 namespace Drupal\Component\Plugin\Factory;
 
-use ReflectionClass;
-
 /**
  * A plugin factory that maps instance configuration to constructor arguments.
  *
@@ -25,7 +23,7 @@ class ReflectionFactory extends DefaultFactory {
 
     // Lets figure out of there's a constructor for this class and pull
     // arguments from the $options array if so to populate it.
-    $reflector = new ReflectionClass($plugin_class);
+    $reflector = new \ReflectionClass($plugin_class);
     if ($reflector->hasMethod('__construct')) {
       $arguments = $this->getInstanceArguments($reflector, $plugin_id, $plugin_definition, $configuration);
       $instance = $reflector->newInstanceArgs($arguments);
@@ -43,7 +41,7 @@ class ReflectionFactory extends DefaultFactory {
    * This is provided as a helper method so factories extending this class can
    * replace this and insert their own reflection logic.
    *
-   * @param ReflectionClass $reflector
+   * @param \ReflectionClass $reflector
    *   The reflector object being used to inspect the plugin class.
    * @param string $plugin_id
    *   The identifier of the plugin implementation.
@@ -55,7 +53,7 @@ class ReflectionFactory extends DefaultFactory {
    * @return array
    *   An array of arguments to be passed to the constructor.
    */
-  protected function getInstanceArguments(ReflectionClass $reflector, $plugin_id, array $plugin_definition, array $configuration) {
+  protected function getInstanceArguments(\ReflectionClass $reflector, $plugin_id, array $plugin_definition, array $configuration) {
 
     $arguments = array();
     foreach ($reflector->getMethod('__construct')->getParameters() as $param) {

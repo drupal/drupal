@@ -8,7 +8,6 @@
 namespace Drupal\locale;
 
 use Drupal\locale\LocaleString;
-use PDO;
 
 /**
  * Defines the locale source string object.

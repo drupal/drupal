@@ -7,9 +7,7 @@
 
 namespace Drupal\Core\Config;
 
-use RuntimeException;
-
 /**
  * A base exception thrown in any configuration system operations.
  */
-class ConfigException extends RuntimeException {}
+class ConfigException extends \RuntimeException {}

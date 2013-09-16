@@ -10,7 +10,6 @@ namespace Drupal\text;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\TypedData;
 use Drupal\Core\TypedData\ReadOnlyException;
-use InvalidArgumentException;
 
 /**
  * A computed property for processing text with a format.
@@ -34,7 +33,7 @@ class TextProcessed extends TypedData {
     parent::__construct($definition, $name, $parent);
 
     if (!isset($definition['settings']['text source'])) {
-      throw new InvalidArgumentException("The definition's 'source' key has to specify the name of the text property to be processed.");
+      throw new \InvalidArgumentException("The definition's 'source' key has to specify the name of the text property to be processed.");
     }
   }
 

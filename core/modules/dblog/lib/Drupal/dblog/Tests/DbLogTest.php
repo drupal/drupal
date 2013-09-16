@@ -10,7 +10,6 @@ namespace Drupal\dblog\Tests;
 use Drupal\Core\Language\Language;
 use Drupal\dblog\Controller\DbLogController;
 use Drupal\simpletest\WebTestBase;
-use SimpleXMLElement;
 
 /**
  * Tests logging messages to the database.
@@ -590,13 +589,13 @@ class DbLogTest extends WebTestBase {
   /**
    * Extracts the text contained by the XHTML element.
    *
-   * @param SimpleXMLElement $element
+   * @param \SimpleXMLElement $element
    *   Element to extract text from.
    *
    * @return string
    *   Extracted text.
    */
-  protected function asText(SimpleXMLElement $element) {
+  protected function asText(\SimpleXMLElement $element) {
     if (!is_object($element)) {
       return $this->fail('The element is not an element.');
     }

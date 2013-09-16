@@ -7,10 +7,6 @@
 
 namespace Drupal\Core\TypedData;
 
-use ArrayAccess;
-use Countable;
-use Traversable;
-
 /**
  * Interface for a list of typed data.
  *
@@ -20,7 +16,7 @@ use Traversable;
  * When implementing this interface which extends Traversable, make sure to list
  * IteratorAggregate or Iterator before this interface in the implements clause.
  */
-interface ListInterface extends TypedDataInterface, ArrayAccess, Countable, Traversable {
+interface ListInterface extends TypedDataInterface, \ArrayAccess, \Countable, \Traversable {
 
   /**
    * Determines whether the list contains any non-empty items.

@@ -8,17 +8,14 @@
 namespace Drupal\Core\Database;
 
 use Drupal\Core\Database\Connection;
-use Iterator;
-use PDO;
-use PDOException;
 
 /**
  * An implementation of StatementInterface that prefetches all data.
  *
- * This class behaves very similar to a PDOStatement but as it always fetches
+ * This class behaves very similar to a \PDOStatement but as it always fetches
  * every row it is possible to manipulate those results.
  */
-class StatementPrefetch implements Iterator, StatementInterface {
+class StatementPrefetch implements \Iterator, StatementInterface {
 
   /**
    * The query string.
@@ -37,9 +34,9 @@ class StatementPrefetch implements Iterator, StatementInterface {
   /**
    * Reference to the database connection object for this statement.
    *
-   * This is part of the public interface of PDOStatement.
+   * This is part of the public interface of \PDOStatement.
    *
-   * @var PDO
+   * @var \PDO
    */
   public $dbh;
 
@@ -58,7 +55,7 @@ class StatementPrefetch implements Iterator, StatementInterface {
   protected $data = array();
 
   /**
-   * The current row, retrieved in PDO::FETCH_ASSOC format.
+   * The current row, retrieved in \PDO::FETCH_ASSOC format.
    *
    * @var Array
    */
@@ -94,11 +91,11 @@ class StatementPrefetch implements Iterator, StatementInterface {
 
   /**
    * Holds the current fetch style (which will be used by the next fetch).
-   * @see PDOStatement::fetch()
+   * @see \PDOStatement::fetch()
    *
    * @var int
    */
-  protected $fetchStyle = PDO::FETCH_OBJ;
+  protected $fetchStyle = \PDO::FETCH_OBJ;
 
   /**
    * Holds supplementary current fetch options (which will be used by the next fetch).
@@ -117,7 +114,7 @@ class StatementPrefetch implements Iterator, StatementInterface {
    *
    * @var int
    */
-  protected $defaultFetchStyle = PDO::FETCH_OBJ;
+  protected $defaultFetchStyle = \PDO::FETCH_OBJ;
 
   /**
    * Holds supplementary default fetch options.
@@ -131,7 +128,7 @@ class StatementPrefetch implements Iterator, StatementInterface {
     'column' => 0,
   );
 
-  public function __construct(PDO $dbh, Connection $connection, $query, array $driver_options = array()) {
+  public function __construct(\PDO $dbh, Connection $connection, $query, array $driver_options = array()) {
     $this->dbh = $dbh;
     $this->connection = $connection;
     $this->queryString = $query;
@@ -154,7 +151,7 @@ class StatementPrefetch implements Iterator, StatementInterface {
         // Default to an object. Note: db fields will be added to the object
         // before the constructor is run. If you need to assign fields after
         // the constructor is run, see http://drupal.org/node/315092.
-        $this->setFetchMode(PDO::FETCH_CLASS, $options['fetch']);
+        $this->setFetchMode(\PDO::FETCH_CLASS, $options['fetch']);
       }
       else {
         $this->setFetchMode($options['fetch']);
@@ -180,7 +177,7 @@ class StatementPrefetch implements Iterator, StatementInterface {
     // Fetch all the data from the reply, in order to release any lock
     // as soon as possible.
     $this->rowCount = $statement->rowCount();
-    $this->data = $statement->fetchAll(PDO::FETCH_ASSOC);
+    $this->data = $statement->fetchAll(\PDO::FETCH_ASSOC);
     // Destroy the statement as soon as possible. See
     // DatabaseConnection_sqlite::PDOPrepare() for explanation.
     unset($statement);
@@ -211,7 +208,7 @@ class StatementPrefetch implements Iterator, StatementInterface {
   protected function throwPDOException() {
     $error_info = $this->dbh->errorInfo();
     // We rebuild a message formatted in the same way as PDO.
-    $exception = new PDOException("SQLSTATE[" . $error_info[0] . "]: General error " . $error_info[1] . ": " . $error_info[2]);
+    $exception = new \PDOException("SQLSTATE[" . $error_info[0] . "]: General error " . $error_info[1] . ": " . $error_info[2]);
     $exception->errorInfo = $error_info;
     throw $exception;
   }
@@ -241,21 +238,21 @@ class StatementPrefetch implements Iterator, StatementInterface {
   }
 
   /**
-   * @see PDOStatement::setFetchMode()
+   * @see \PDOStatement::setFetchMode()
    */
   public function setFetchMode($fetchStyle, $a2 = NULL, $a3 = NULL) {
     $this->defaultFetchStyle = $fetchStyle;
     switch ($fetchStyle) {
-      case PDO::FETCH_CLASS:
+      case \PDO::FETCH_CLASS:
         $this->defaultFetchOptions['class'] = $a2;
         if ($a3) {
           $this->defaultFetchOptions['constructor_args'] = $a3;
         }
         break;
-      case PDO::FETCH_COLUMN:
+      case \PDO::FETCH_COLUMN:
         $this->defaultFetchOptions['column'] = $a2;
         break;
-      case PDO::FETCH_INTO:
+      case \PDO::FETCH_INTO:
         $this->defaultFetchOptions['object'] = $a2;
         break;
     }
@@ -278,23 +275,23 @@ class StatementPrefetch implements Iterator, StatementInterface {
   public function current() {
     if (isset($this->currentRow)) {
       switch ($this->fetchStyle) {
-        case PDO::FETCH_ASSOC:
+        case \PDO::FETCH_ASSOC:
           return $this->currentRow;
-        case PDO::FETCH_BOTH:
-          // PDO::FETCH_BOTH returns an array indexed by both the column name
+        case \PDO::FETCH_BOTH:
+          // \PDO::FETCH_BOTH returns an array indexed by both the column name
           // and the column number.
           return $this->currentRow + array_values($this->currentRow);
-        case PDO::FETCH_NUM:
+        case \PDO::FETCH_NUM:
           return array_values($this->currentRow);
-        case PDO::FETCH_LAZY:
+        case \PDO::FETCH_LAZY:
           // We do not do lazy as everything is fetched already. Fallback to
-          // PDO::FETCH_OBJ.
-        case PDO::FETCH_OBJ:
+          // \PDO::FETCH_OBJ.
+        case \PDO::FETCH_OBJ:
           return (object) $this->currentRow;
-        case PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE:
+        case \PDO::FETCH_CLASS | \PDO::FETCH_CLASSTYPE:
           $class_name = array_unshift($this->currentRow);
           // Deliberate no break.
-        case PDO::FETCH_CLASS:
+        case \PDO::FETCH_CLASS:
           if (!isset($class_name)) {
             $class_name = $this->fetchOptions['class'];
           }
@@ -309,12 +306,12 @@ class StatementPrefetch implements Iterator, StatementInterface {
             $result->$k = $v;
           }
           return $result;
-        case PDO::FETCH_INTO:
+        case \PDO::FETCH_INTO:
           foreach ($this->currentRow as $k => $v) {
             $this->fetchOptions['object']->$k = $v;
           }
           return $this->fetchOptions['object'];
-        case PDO::FETCH_COLUMN:
+        case \PDO::FETCH_COLUMN:
           if (isset($this->columnNames[$this->fetchOptions['column']])) {
             return $this->currentRow[$k][$this->columnNames[$this->fetchOptions['column']]];
           }
@@ -356,7 +353,7 @@ class StatementPrefetch implements Iterator, StatementInterface {
     return $this->rowCount;
   }
 
-  public function fetch($fetch_style = NULL, $cursor_orientation = PDO::FETCH_ORI_NEXT, $cursor_offset = NULL) {
+  public function fetch($fetch_style = NULL, $cursor_orientation = \PDO::FETCH_ORI_NEXT, $cursor_offset = NULL) {
     if (isset($this->currentRow)) {
       // Set the fetch parameter.
       $this->fetchStyle = isset($fetch_style) ? $fetch_style : $this->defaultFetchStyle;
@@ -400,7 +397,7 @@ class StatementPrefetch implements Iterator, StatementInterface {
         $result = (object) $this->currentRow;
       }
       else {
-        $this->fetchStyle = PDO::FETCH_CLASS;
+        $this->fetchStyle = \PDO::FETCH_CLASS;
         $this->fetchOptions = array('constructor_args' => $constructor_args);
         // Grab the row in the format specified above.
         $result = $this->current();
@@ -491,7 +488,7 @@ class StatementPrefetch implements Iterator, StatementInterface {
     $result = array();
     // Traverse the array as PHP would have done.
     while (isset($this->currentRow)) {
-      // Grab the row in its raw PDO::FETCH_ASSOC format.
+      // Grab the row in its raw \PDO::FETCH_ASSOC format.
       $result_row = $this->current();
       $result[$this->currentRow[$key]] = $result_row;
       $this->next();

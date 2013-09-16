@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Pager;
 
 use Drupal\simpletest\WebTestBase;
-use SimpleXMLElement;
 
 /**
  * Tests pager functionality.
@@ -138,14 +137,14 @@ class PagerTest extends WebTestBase {
   /**
    * Asserts that an element has a given class.
    *
-   * @param SimpleXMLElement $element
+   * @param \SimpleXMLElement $element
    *   The element to test.
    * @param string $class
    *   The class to assert.
    * @param string $message
    *   (optional) A verbose message to output.
    */
-  protected function assertClass(SimpleXMLElement $element, $class, $message = NULL) {
+  protected function assertClass(\SimpleXMLElement $element, $class, $message = NULL) {
     if (!isset($message)) {
       $message = "Class .$class found.";
     }
@@ -155,14 +154,14 @@ class PagerTest extends WebTestBase {
   /**
    * Asserts that an element does not have a given class.
    *
-   * @param SimpleXMLElement $element
+   * @param \SimpleXMLElement $element
    *   The element to test.
    * @param string $class
    *   The class to assert.
    * @param string $message
    *   (optional) A verbose message to output.
    */
-  protected function assertNoClass(SimpleXMLElement $element, $class, $message = NULL) {
+  protected function assertNoClass(\SimpleXMLElement $element, $class, $message = NULL) {
     if (!isset($message)) {
       $message = "Class .$class not found.";
     }

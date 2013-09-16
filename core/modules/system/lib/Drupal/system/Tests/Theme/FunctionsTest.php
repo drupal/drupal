@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Theme;
 
 use Drupal\simpletest\WebTestBase;
-use DOMDocument;
 
 /**
  * Tests for common theme functions.
@@ -264,7 +263,7 @@ class FunctionsTest extends WebTestBase {
     // it.
     $render_array = $base_array;
     $html = drupal_render($render_array);
-    $dom = new DOMDocument();
+    $dom = new \DOMDocument();
     $dom->loadHTML($html);
     $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, 'One "ul" tag found in the rendered HTML.');
     $list_elements = $dom->getElementsByTagName('li');
@@ -282,7 +281,7 @@ class FunctionsTest extends WebTestBase {
     $child_html = drupal_render($render_array['first_child']);
     $parent_html = drupal_render($render_array);
     // First check the child HTML.
-    $dom = new DOMDocument();
+    $dom = new \DOMDocument();
     $dom->loadHTML($child_html);
     $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, 'One "ul" tag found in the rendered child HTML.');
     $list_elements = $dom->getElementsByTagName('li');
@@ -290,7 +289,7 @@ class FunctionsTest extends WebTestBase {
     $this->assertEqual($list_elements->item(0)->nodeValue, 'Parent link copy', 'First expected link found.');
     $this->assertEqual($list_elements->item(1)->nodeValue, 'First child link', 'Second expected link found.');
     // Then check the parent HTML.
-    $dom = new DOMDocument();
+    $dom = new \DOMDocument();
     $dom->loadHTML($parent_html);
     $this->assertEqual($dom->getElementsByTagName('ul')->length, 1, 'One "ul" tag found in the rendered parent HTML.');
     $list_elements = $dom->getElementsByTagName('li');

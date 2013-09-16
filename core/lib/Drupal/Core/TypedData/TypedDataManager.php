@@ -12,7 +12,6 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
-use InvalidArgumentException;
 use Drupal\Core\TypedData\Validation\MetadataFactory;
 use Drupal\Core\Validation\ConstraintManager;
 use Drupal\Core\Validation\DrupalTranslator;
@@ -74,7 +73,7 @@ class TypedDataManager extends DefaultPluginManager {
     $type_definition = $this->getDefinition($plugin_id);
 
     if (!isset($type_definition)) {
-      throw new InvalidArgumentException(format_string('Invalid data type %plugin_id has been given.', array('%plugin_id' => $plugin_id)));
+      throw new \InvalidArgumentException(format_string('Invalid data type %plugin_id has been given.', array('%plugin_id' => $plugin_id)));
     }
 
     // Allow per-data definition overrides of the used classes, i.e. take over
@@ -236,11 +235,11 @@ class TypedDataManager extends DefaultPluginManager {
         $definition = $object->getItemDefinition();
       }
       else {
-        throw new InvalidArgumentException("The passed object has to either implement the ComplexDataInterface or the ListInterface.");
+        throw new \InvalidArgumentException("The passed object has to either implement the ComplexDataInterface or the ListInterface.");
       }
       // Make sure we have got a valid definition.
       if (!$definition) {
-        throw new InvalidArgumentException('Property ' . check_plain($property_name) . ' is unknown.');
+        throw new \InvalidArgumentException('Property ' . check_plain($property_name) . ' is unknown.');
       }
       // Now create the prototype using the definition, but do not pass the
       // given value as it will serve as prototype for any further instance.

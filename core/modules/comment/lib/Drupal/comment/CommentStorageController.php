@@ -10,7 +10,6 @@ namespace Drupal\comment;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\DatabaseStorageControllerNG;
 use Drupal\Component\Uuid\Uuid;
-use LogicException;
 
 /**
  * Defines the controller class for comments.

@@ -8,7 +8,6 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\Language\Language;
-use IteratorAggregate;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -38,7 +37,7 @@ use Drupal\Core\Session\AccountInterface;
  *
  * @todo: Remove once everything is converted to use the new entity field API.
  */
-class EntityBCDecorator implements IteratorAggregate, EntityInterface {
+class EntityBCDecorator implements \IteratorAggregate, EntityInterface {
 
   /**
    * The EntityInterface object being decorated.

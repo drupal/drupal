@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\Database;
 
-use Traversable;
-
 /**
  * Represents a prepared statement.
  *
@@ -28,7 +26,7 @@ use Traversable;
  * class Drupal\Core\Database\Driver\oracle\Statement implements Iterator, Drupal\Core\Database\StatementInterface {}
  * @endcode
  */
-interface StatementInterface extends Traversable {
+interface StatementInterface extends \Traversable {
 
   /**
    * Constructs a new PDOStatement object.

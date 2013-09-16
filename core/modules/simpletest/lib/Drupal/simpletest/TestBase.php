@@ -18,8 +18,6 @@ use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Language\Language;
 use Drupal\Core\StreamWrapper\PublicStream;
-use ReflectionMethod;
-use ReflectionObject;
 
 /**
  * Base class for Drupal tests.
@@ -741,7 +739,7 @@ abstract class TestBase {
     }
     $missing_requirements = $this->checkRequirements();
     if (!empty($missing_requirements)) {
-      $missing_requirements_object = new ReflectionObject($this);
+      $missing_requirements_object = new \ReflectionObject($this);
       $caller = array(
         'file' => $missing_requirements_object->getFileName(),
       );
@@ -755,7 +753,7 @@ abstract class TestBase {
         if (strtolower(substr($method, 0, 4)) == 'test') {
           // Insert a fail record. This will be deleted on completion to ensure
           // that testing completed.
-          $method_info = new ReflectionMethod($class, $method);
+          $method_info = new \ReflectionMethod($class, $method);
           $caller = array(
             'file' => $method_info->getFileName(),
             'line' => $method_info->getStartLine(),

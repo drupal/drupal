@@ -8,7 +8,6 @@
 namespace Drupal\simpletest\Tests;
 
 use Drupal\simpletest\WebTestBase;
-use SimpleXMLElement;
 
 class SimpleTestTest extends WebTestBase {
 
@@ -325,7 +324,7 @@ class SimpleTestTest extends WebTestBase {
    * @return
    *   Extracted text.
    */
-  function asText(SimpleXMLElement $element) {
+  function asText(\SimpleXMLElement $element) {
     if (!is_object($element)) {
       return $this->fail('The element is not an element.');
     }
