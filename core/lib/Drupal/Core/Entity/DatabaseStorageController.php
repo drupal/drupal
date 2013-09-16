@@ -1140,7 +1140,8 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
       // Use a shorter separator, a truncated entity_type, and a hash of the
       // field UUID.
       $separator = $revision ? '_r__' : '__';
-      $entity_type = substr($field->entity_type, 0, 38 - strlen($separator));
+      // Truncate to the same length for the current and revision tables.
+      $entity_type = substr($field->entity_type, 0, 34);
       $field_hash = substr(hash('sha256', $field->uuid), 0, 10);
       $table_name = $entity_type . $separator . $field_hash;
     }
