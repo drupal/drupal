@@ -66,17 +66,17 @@ function config_install_default_config($type, $name) {
     $config_to_install = array_merge($config_to_install, $other_module_config);
   }
   if (!empty($config_to_install)) {
-    $storage_comparer = new ExtensionInstallStorageComparer($source_storage, Drupal::service('config.storage'));
+    $storage_comparer = new ExtensionInstallStorageComparer($source_storage, \Drupal::service('config.storage'));
     $storage_comparer->setSourceNames($config_to_install);
     // Only import new config. Changed config is from previous enables and
     // should not be overwritten.
     $storage_comparer->addChangelistCreate();
     $installer = new ConfigInstaller(
       $storage_comparer,
-      Drupal::service('event_dispatcher'),
-      Drupal::service('config.factory'),
-      Drupal::entityManager(),
-      Drupal::lock()
+      \Drupal::service('event_dispatcher'),
+      \Drupal::service('config.factory'),
+      \Drupal::entityManager(),
+      \Drupal::lock()
     );
     $installer->import();
   }
@@ -94,7 +94,7 @@ function config_uninstall_default_config($type, $name) {
   $storage = drupal_container()->get('config.storage');
   $config_names = $storage->listAll($name . '.');
   foreach ($config_names as $config_name) {
-    Drupal::config($config_name)->delete();
+    \Drupal::config($config_name)->delete();
   }
 }
 
@@ -126,7 +126,7 @@ function config_get_storage_names_with_prefix($prefix = '') {
  *   A configuration object.
  */
 function config($name) {
-  return Drupal::config($name);
+  return \Drupal::config($name);
 }
 
 /**
@@ -134,7 +134,7 @@ function config($name) {
  *
  * This allows configuration objects to be created using special configuration
  * contexts eg. global override free or locale using a user preferred language.
- * Calling this function affects all subsequent calls to Drupal::config() until
+ * Calling this function affects all subsequent calls to \Drupal::config() until
  * config_context_leave() is called.
  *
  * @see config_context_leave()

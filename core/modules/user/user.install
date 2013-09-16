@@ -495,7 +495,7 @@ function user_update_8004() {
     '2' => 'visitors_admin_approval',
   );
 
-  $config = Drupal::config('user.settings');
+  $config = \Drupal::config('user.settings');
   $user_register = $config->get('register');
   $user_cancel_method = $config->get('cancel_method');
 
@@ -1045,7 +1045,7 @@ function user_update_8018() {
     ->fetchAll();
 
   foreach ($roles as $role) {
-    Drupal::config('user.role.' . $role->rid)
+    \Drupal::config('user.role.' . $role->rid)
       ->set('id', $role->rid)
       ->set('uuid', $uuid->generate())
       ->set('label', $role->name)
@@ -1128,7 +1128,7 @@ function user_update_8020() {
     }
   }
   foreach ($new_permissions as $rid => $permissions) {
-    Drupal::config("user.role.$rid")
+    \Drupal::config("user.role.$rid")
       ->set('permissions', $permissions)
       ->save();
   }
@@ -1140,7 +1140,7 @@ function user_update_8020() {
 function user_update_8021() {
   $uuid = new Uuid();
 
-  Drupal::config("entity.form_mode.user.register")
+  \Drupal::config("entity.form_mode.user.register")
     ->set('id', "user.register")
     ->set('uuid', $uuid->generate())
     ->set('label', 'Register')

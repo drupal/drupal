@@ -18,9 +18,9 @@ function system_themes_page() {
   $themes = system_rebuild_theme_data();
   uasort($themes, 'system_sort_modules_by_info_name');
 
-  $theme_default = Drupal::config('system.theme')->get('default');
+  $theme_default = \Drupal::config('system.theme')->get('default');
   $theme_groups  = array();
-  $admin_theme = Drupal::config('system.theme')->get('admin');
+  $admin_theme = \Drupal::config('system.theme')->get('admin');
 
   foreach ($themes as &$theme) {
     if (!empty($theme->info['hidden'])) {
@@ -55,7 +55,7 @@ function system_themes_page() {
      // Ensure this theme is compatible with this version of core.
      // Require the 'content' region to make sure the main page
      // content has a common place in all themes.
-      $theme->incompatible_core = !isset($theme->info['core']) || ($theme->info['core'] != Drupal::CORE_COMPATIBILITY) || (!isset($theme->info['regions']['content']));
+      $theme->incompatible_core = !isset($theme->info['core']) || ($theme->info['core'] != \Drupal::CORE_COMPATIBILITY) || (!isset($theme->info['regions']['content']));
       $theme->incompatible_php = version_compare(phpversion(), $theme->info['php']) < 0;
       // Confirmed that the base theme is available.
       $theme->incompatible_base = (isset($theme->info['base theme']) && !isset($themes[$theme->info['base theme']]));
@@ -157,7 +157,7 @@ function system_themes_admin_form($form, &$form_state, $theme_options) {
     '#options' => array(0 => t('Default theme')) + $theme_options,
     '#title' => t('Administration theme'),
     '#description' => t('Choose "Default theme" to always use the same theme as the rest of the site.'),
-    '#default_value' => Drupal::config('system.theme')->get('admin'),
+    '#default_value' => \Drupal::config('system.theme')->get('admin'),
   );
   $form['admin_theme']['actions'] = array('#type' => 'actions');
   $form['admin_theme']['actions']['submit'] = array(
@@ -172,14 +172,14 @@ function system_themes_admin_form($form, &$form_state, $theme_options) {
  */
 function system_themes_admin_form_submit($form, &$form_state) {
   drupal_set_message(t('The configuration options have been saved.'));
-  Drupal::config('system.theme')->set('admin', $form_state['values']['admin_theme'])->save();
+  \Drupal::config('system.theme')->set('admin', $form_state['values']['admin_theme'])->save();
 }
 
 /**
  * Menu callback; Set the default theme.
  */
 function system_theme_default() {
-  $request = Drupal::request();
+  $request = \Drupal::request();
   $theme = $request->get('theme');
   $token = $request->get('token');
   if (!empty($theme) && !empty($token) && drupal_valid_token($token, 'system-theme-operation-link')) {
@@ -193,7 +193,7 @@ function system_theme_default() {
        theme_enable(array($theme));
       }
       // Set the default theme.
-      Drupal::config('system.theme')
+      \Drupal::config('system.theme')
         ->set('default', $theme)
         ->save();
 
@@ -207,7 +207,7 @@ function system_theme_default() {
 
       // The status message depends on whether an admin theme is currently in use:
       // a value of 0 means the admin theme is set to be the default theme.
-      $admin_theme = Drupal::config('system.theme')->get('admin');
+      $admin_theme = \Drupal::config('system.theme')->get('admin');
       if ($admin_theme != 0 && $admin_theme != $theme) {
         drupal_set_message(t('Please note that the administration theme is still set to the %admin_theme theme; consequently, the theme on this page remains unchanged. All non-administrative sections of the site, however, will show the selected %selected_theme theme by default.', array(
           '%admin_theme' => $themes[$admin_theme]->info['name'],
@@ -691,7 +691,7 @@ function theme_system_themes_page($variables) {
 
       // Make sure to provide feedback on compatibility.
       if (!empty($theme->incompatible_core)) {
-        $output .= '<div class="incompatible">' . t('This version is not compatible with Drupal !core_version and should be replaced.', array('!core_version' => Drupal::CORE_COMPATIBILITY)) . '</div>';
+        $output .= '<div class="incompatible">' . t('This version is not compatible with Drupal !core_version and should be replaced.', array('!core_version' => \Drupal::CORE_COMPATIBILITY)) . '</div>';
       }
       elseif (!empty($theme->incompatible_php)) {
         if (substr_count($theme->info['php'], '.') < 2) {
@@ -748,8 +748,8 @@ function system_date_format_localize_form($form, &$form_state, $langcode) {
   );
 
   // Get list of available formats.
-  $date_service = Drupal::service('date');
-  $formats = Drupal::entityManager()
+  $date_service = \Drupal::service('date');
+  $formats = \Drupal::entityManager()
     ->getStorageController('date_format')
     ->loadMultiple();
   $choices = array();
@@ -849,7 +849,7 @@ function theme_system_date_format_localize_form($variables) {
  */
 function system_date_format_localize_form_save($langcode, $date_format_id, DateFormatInterface $format) {
   $format->addLocale($langcode)->save();
-  Drupal::config('locale.config.' . $langcode . '.system.date_format.' . $date_format_id)
+  \Drupal::config('locale.config.' . $langcode . '.system.date_format.' . $date_format_id)
     ->set('pattern', $format->get('pattern'))
     ->save();
 }

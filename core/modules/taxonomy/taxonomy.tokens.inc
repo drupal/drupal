@@ -89,7 +89,7 @@ function taxonomy_token_info() {
  * Implements hook_tokens().
  */
 function taxonomy_tokens($type, $tokens, array $data = array(), array $options = array()) {
-  $token_service = Drupal::token();
+  $token_service = \Drupal::token();
 
   $replacements = array();
   $sanitize = !empty($options['sanitize']);

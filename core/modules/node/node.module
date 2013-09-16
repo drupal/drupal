@@ -220,7 +220,7 @@ function node_uri(EntityInterface $node) {
  * Implements hook_admin_paths().
  */
 function node_admin_paths() {
-  if (Drupal::config('node.settings')->get('use_admin_theme')) {
+  if (\Drupal::config('node.settings')->get('use_admin_theme')) {
     $paths = array(
       'node/*/edit' => TRUE,
       'node/*/delete' => TRUE,
@@ -326,7 +326,7 @@ function node_type_get_names() {
   $config_names = config_get_storage_names_with_prefix('node.type.');
   $names = array();
   foreach ($config_names as $config_name) {
-    $config = Drupal::config($config_name);
+    $config = \Drupal::config($config_name);
     $names[$config->get('type')] = $config->get('name');
   }
   cache()->set($cid, $names, CacheBackendInterface::CACHE_PERMANENT, array(
@@ -586,7 +586,7 @@ function node_show(EntityInterface $node, $message = FALSE) {
 
   // Update the history table, stating that this user viewed this node.
   global $user;
-  if (Drupal::moduleHandler()->moduleExists('history') && $user->isAuthenticated()) {
+  if (\Drupal::moduleHandler()->moduleExists('history') && $user->isAuthenticated()) {
     $page['#attached'] = array(
       'js' => array(
         // When the window's "load" event is triggered, mark the node as read.
@@ -684,7 +684,7 @@ function template_preprocess_node(&$variables) {
 
   // Display post information only on certain node types.
   // Avoid loading the entire node type config entity here.
-  $submitted = Drupal::config('node.type.' . $node->bundle())->get('settings.node.submitted') ?: TRUE;
+  $submitted = \Drupal::config('node.type.' . $node->bundle())->get('settings.node.submitted') ?: TRUE;
   if ($submitted) {
     $variables['display_submitted'] = TRUE;
     $variables['submitted'] = t('Submitted by !username on !datetime', array('!username' => $variables['name'], '!datetime' => $variables['date']));
@@ -808,7 +808,7 @@ function node_ranking() {
   );
 
   // Add relevance based on creation or changed date.
-  if ($node_cron_last = Drupal::state()->get('node.cron_last')) {
+  if ($node_cron_last = \Drupal::state()->get('node.cron_last')) {
     $ranking['recent'] = array(
       'title' => t('Recently posted'),
       // Exponential decay with half-life of 6 months, starting at last indexed node
@@ -931,7 +931,7 @@ function theme_node_search_admin($variables) {
  * @see node_menu()
  */
 function _node_revision_access(EntityInterface $node, $op = 'view', $account = NULL, $langcode = NULL) {
-  return Drupal::service('access_check.node.revision')->checkAccess($node, $op, $account, $langcode);
+  return \Drupal::service('access_check.node.revision')->checkAccess($node, $op, $account, $langcode);
 }
 
 /**
@@ -1308,7 +1308,7 @@ function node_modules_uninstalled($modules) {
   // Remove module-specific settings from all node types.
   $config_names = config_get_storage_names_with_prefix('node.type.');
   foreach ($config_names as $config_name) {
-    $config = Drupal::config($config_name);
+    $config = \Drupal::config($config_name);
     $changed = FALSE;
     foreach ($modules as $module) {
       if ($config->get('settings.' . $module)) {
@@ -1391,7 +1391,7 @@ function node_block_access($block) {
 function node_feed($nids = FALSE, $channel = array()) {
   global $base_url;
   $language_content = language(Language::TYPE_CONTENT);
-  $rss_config = Drupal::config('system.rss');
+  $rss_config = \Drupal::config('system.rss');
 
   if ($nids === FALSE) {
     $nids = db_select('node_field_data', 'n')
@@ -1443,7 +1443,7 @@ function node_feed($nids = FALSE, $channel = array()) {
 
   $channel_defaults = array(
     'version'     => '2.0',
-    'title'       => Drupal::config('system.site')->get('name'),
+    'title'       => \Drupal::config('system.site')->get('name'),
     'link'        => $base_url,
     'description' => $rss_config->get('channel.description'),
     'language'    => $language_content->id
@@ -1540,9 +1540,9 @@ function node_form_system_site_information_settings_form_alter(&$form, &$form_st
   $form['front_page']['default_nodes_main'] = array(
     '#type' => 'select',
     '#title' => t('Number of posts on front page'),
-    '#default_value' => Drupal::config('node.settings')->get('items_per_page'),
+    '#default_value' => \Drupal::config('node.settings')->get('items_per_page'),
     '#options' => drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30)),
-    '#access' => (Drupal::config('system.site')->get('page.front') == 'node'),
+    '#access' => (\Drupal::config('system.site')->get('page.front') == 'node'),
     '#description' => t('The maximum number of posts displayed on overview pages such as the front page.'),
   );
   $form['#submit'][] = 'node_form_system_site_information_settings_form_submit';
@@ -1554,7 +1554,7 @@ function node_form_system_site_information_settings_form_alter(&$form, &$form_st
  * @see node_form_system_site_information_settings_form_alter()
  */
 function node_form_system_site_information_settings_form_submit($form, &$form_state) {
-  Drupal::config('node.settings')
+  \Drupal::config('node.settings')
     ->set('items_per_page', $form_state['values']['default_nodes_main'])
     ->save();
 }
@@ -1570,7 +1570,7 @@ function node_form_system_themes_admin_form_alter(&$form, &$form_state, $form_id
   $form['admin_theme']['use_admin_theme'] = array(
     '#type' => 'checkbox',
     '#title' => t('Use the administration theme when editing or creating content'),
-    '#default_value' => Drupal::config('node.settings')->get('use_admin_theme'),
+    '#default_value' => \Drupal::config('node.settings')->get('use_admin_theme'),
   );
   $form['#submit'][] = 'node_form_system_themes_admin_form_submit';
 }
@@ -1581,7 +1581,7 @@ function node_form_system_themes_admin_form_alter(&$form, &$form_state, $form_id
  * @see node_form_system_themes_admin_form_alter()
  */
 function node_form_system_themes_admin_form_submit($form, &$form_state) {
-  Drupal::config('node.settings')
+  \Drupal::config('node.settings')
     ->set('use_admin_theme', $form_state['values']['use_admin_theme'])
     ->save();
 }
@@ -1656,7 +1656,7 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  * @see node_menu()
  */
 function node_access($op, $node, $account = NULL, $langcode = NULL) {
-  $access_controller = Drupal::entityManager()->getAccessController('node');
+  $access_controller = \Drupal::entityManager()->getAccessController('node');
 
   if ($op == 'create') {
     if (!$node instanceof EntityInterface) {
@@ -1801,7 +1801,7 @@ function node_access_grants($op, $account = NULL) {
   }
 
   // Fetch node access grants from other modules.
-  $grants = Drupal::moduleHandler()->invokeAll('node_grants', array($account, $op));
+  $grants = \Drupal::moduleHandler()->invokeAll('node_grants', array($account, $op));
   // Allow modules to alter the assigned grants.
   drupal_alter('node_grants', $grants, $account, $op);
 
@@ -1843,11 +1843,11 @@ function node_access_view_all_nodes($account = NULL) {
   }
 
   // If no modules implement the node access system, access is always TRUE.
-  if (!Drupal::moduleHandler()->getImplementations('node_grants')) {
+  if (!\Drupal::moduleHandler()->getImplementations('node_grants')) {
     $access[$account->id()] = TRUE;
   }
   else {
-    $access[$account->id()] = Drupal::entityManager()->getAccessController('node')->checkAllGrants($account);
+    $access[$account->id()] = \Drupal::entityManager()->getAccessController('node')->checkAllGrants($account);
   }
 
   return $access[$account->id()];
@@ -1887,7 +1887,7 @@ function node_query_node_access_alter(AlterableInterface $query) {
   if (user_access('bypass node access', $account)) {
     return;
   }
-  if (!count(Drupal::moduleHandler()->getImplementations('node_grants'))) {
+  if (!count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {
     return;
   }
   if ($op == 'view' && node_access_view_all_nodes($account)) {
@@ -1915,7 +1915,7 @@ function node_query_node_access_alter(AlterableInterface $query) {
   }
 
   // Update the query for the given storage method.
-  Drupal::service('node.grant_storage')->alterQuery($query, $tables, $op, $account, $base_table);
+  \Drupal::service('node.grant_storage')->alterQuery($query, $tables, $op, $account, $base_table);
 }
 
 /**
@@ -1940,13 +1940,13 @@ function node_query_node_access_alter(AlterableInterface $query) {
  */
 function node_access_needs_rebuild($rebuild = NULL) {
   if (!isset($rebuild)) {
-    return Drupal::state()->get('node.node_access_needs_rebuild') ?: FALSE;
+    return \Drupal::state()->get('node.node_access_needs_rebuild') ?: FALSE;
   }
   elseif ($rebuild) {
-    Drupal::state()->set('node.node_access_needs_rebuild', TRUE);
+    \Drupal::state()->set('node.node_access_needs_rebuild', TRUE);
   }
   else {
-    Drupal::state()->delete('node.node_access_needs_rebuild');
+    \Drupal::state()->delete('node.node_access_needs_rebuild');
   }
 }
 
@@ -1973,10 +1973,10 @@ function node_access_needs_rebuild($rebuild = NULL) {
  * @see node_access_needs_rebuild()
  */
 function node_access_rebuild($batch_mode = FALSE) {
-  $access_controller = Drupal::entityManager()->getAccessController('node');
+  $access_controller = \Drupal::entityManager()->getAccessController('node');
   $access_controller->deleteGrants();
   // Only recalculate if the site is using a node_access module.
-  if (count(Drupal::moduleHandler()->getImplementations('node_grants'))) {
+  if (count(\Drupal::moduleHandler()->getImplementations('node_grants'))) {
     if ($batch_mode) {
       $batch = array(
         'title' => t('Rebuilding content access permissions'),
@@ -1992,7 +1992,7 @@ function node_access_rebuild($batch_mode = FALSE) {
       drupal_set_time_limit(240);
 
       // Rebuild newest nodes first so that recent content becomes available quickly.
-      $entity_query = Drupal::entityQuery('node');
+      $entity_query = \Drupal::entityQuery('node');
       $entity_query->sort('nid', 'DESC');
       $nids = $entity_query->execute();
       foreach ($nids as $nid) {
@@ -2032,12 +2032,12 @@ function _node_access_rebuild_batch_operation(&$context) {
     // Initiate multistep processing.
     $context['sandbox']['progress'] = 0;
     $context['sandbox']['current_node'] = 0;
-    $context['sandbox']['max'] = Drupal::entityQuery('node')->count()->execute();
+    $context['sandbox']['max'] = \Drupal::entityQuery('node')->count()->execute();
   }
 
   // Process the next 20 nodes.
   $limit = 20;
-  $nids = Drupal::entityQuery('node')
+  $nids = \Drupal::entityQuery('node')
     ->condition('nid', $context['sandbox']['current_node'], '>')
     ->sort('nid', 'DESC')
     ->range(0, $limit)
@@ -2047,7 +2047,7 @@ function _node_access_rebuild_batch_operation(&$context) {
     // To preserve database integrity, only write grants if the node
     // loads successfully.
     if (!empty($node)) {
-      Drupal::entityManager()->getAccessController('node')->writeGrants($node);
+      \Drupal::entityManager()->getAccessController('node')->writeGrants($node);
     }
     $context['sandbox']['progress']++;
     $context['sandbox']['current_node'] = $nid;
@@ -2093,8 +2093,8 @@ function node_requirements($phase) {
     // Only show rebuild button if there are either 0, or 2 or more, rows
     // in the {node_access} table, or if there are modules that
     // implement hook_node_grants().
-    $grant_count = Drupal::entityManager()->getAccessController('node')->countGrants();
-    if ($grant_count != 1 || count(Drupal::moduleHandler()->getImplementations('node_grants')) > 0) {
+    $grant_count = \Drupal::entityManager()->getAccessController('node')->countGrants();
+    if ($grant_count != 1 || count(\Drupal::moduleHandler()->getImplementations('node_grants')) > 0) {
       $value = format_plural($grant_count, 'One permission in use', '@count permissions in use', array('@count' => $grant_count));
     }
     else {
@@ -2117,7 +2117,7 @@ function node_requirements($phase) {
 function node_modules_enabled($modules) {
   // Check if any of the newly enabled modules require the node_access table to
   // be rebuilt.
-  if (!node_access_needs_rebuild() && array_intersect($modules, Drupal::moduleHandler()->getImplementations('node_grants'))) {
+  if (!node_access_needs_rebuild() && array_intersect($modules, \Drupal::moduleHandler()->getImplementations('node_grants'))) {
     node_access_needs_rebuild(TRUE);
   }
 }
@@ -2134,14 +2134,14 @@ function node_modules_disabled($modules) {
     // check whether a hook implementation function exists and do not invoke it.
     // Node access also needs to be rebuilt if language module is disabled to
     // remove any language-specific grants.
-    if (!node_access_needs_rebuild() && (Drupal::moduleHandler()->implementsHook($module, 'node_grants') || $module == 'language')) {
+    if (!node_access_needs_rebuild() && (\Drupal::moduleHandler()->implementsHook($module, 'node_grants') || $module == 'language')) {
       node_access_needs_rebuild(TRUE);
     }
   }
 
   // If there remains no more node_access module, rebuilding will be
   // straightforward, we can do it right now.
-  if (node_access_needs_rebuild() && count(Drupal::moduleHandler()->getImplementations('node_grants')) == 0) {
+  if (node_access_needs_rebuild() && count(\Drupal::moduleHandler()->getImplementations('node_grants')) == 0) {
     node_access_rebuild();
   }
 }
@@ -2172,7 +2172,7 @@ function node_language_delete($language) {
 function node_library_info() {
   $libraries['drupal.node'] = array(
     'title' => 'Node',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'node') . '/node.js' => array(),
     ),
@@ -2185,7 +2185,7 @@ function node_library_info() {
   );
   $libraries['drupal.node.preview'] = array(
     'title' => 'Node preview',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'node') . '/node.preview.js' => array(),
     ),
@@ -2196,7 +2196,7 @@ function node_library_info() {
   );
   $libraries['drupal.content_types'] = array(
     'title' => 'Content types',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'node') . '/content_types.js' => array(),
     ),
@@ -2222,7 +2222,7 @@ function node_library_info() {
  */
 function node_system_info_alter(&$info, $file, $type) {
   if ($type == 'module' && $file->name == 'translation') {
-    $info['hidden'] = !module_exists('translation') && Drupal::config('system.module.disabled')->get('translation') === NULL;
+    $info['hidden'] = !module_exists('translation') && \Drupal::config('system.module.disabled')->get('translation') === NULL;
   }
 }
 
@@ -2233,7 +2233,7 @@ function node_system_info_alter(&$info, $file, $type) {
  *   The node ID.
  */
 function node_reindex_node_search($nid) {
-  if (Drupal::moduleHandler()->moduleExists('search')) {
+  if (\Drupal::moduleHandler()->moduleExists('search')) {
     // Reindex node context indexed by the node module search plugin.
     search_mark_for_reindex('node_search', $nid);
   }

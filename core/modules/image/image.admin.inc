@@ -75,13 +75,13 @@ function theme_image_style_effects($variables) {
 function theme_image_style_preview($variables) {
   $style = $variables['style'];
 
-  $sample_image = Drupal::config('image.settings')->get('preview_image');
+  $sample_image = \Drupal::config('image.settings')->get('preview_image');
   $sample_width = 160;
   $sample_height = 160;
 
   // Set up original file information.
   $original_path = $sample_image;
-  $image_factory = Drupal::service('image.factory');
+  $image_factory = \Drupal::service('image.factory');
   $original_image = $image_factory->get($original_path);
   $original_image = array(
     'width' => $original_image->getWidth(),

@@ -69,7 +69,7 @@ function image_help($path, $arg) {
     case 'admin/config/media/image-styles':
       return '<p>' . t('Image styles commonly provide thumbnail sizes by scaling and cropping images, but can also add various effects before an image is displayed. When an image is displayed with a style, a new file is created and the original image is left unchanged.') . '</p>';
     case 'admin/config/media/image-styles/manage/%/add/%':
-      $effect = Drupal::service('plugin.manager.image.effect')->getDefinition($arg[7]);
+      $effect = \Drupal::service('plugin.manager.image.effect')->getDefinition($arg[7]);
       return isset($effect['description']) ? ('<p>' . $effect['description'] . '</p>') : NULL;
     case 'admin/config/media/image-styles/manage/%/effects/%':
       $effect = entity_load('image_style', $arg[5])->getEffect($arg[7])->getPluginDefinition();
@@ -248,10 +248,10 @@ function image_file_download($uri) {
     $original_uri = file_uri_scheme($uri) . '://' . implode('/', $args);
 
     // Check that the file exists and is an image.
-    $image = Drupal::service('image.factory')->get($uri);
+    $image = \Drupal::service('image.factory')->get($uri);
     if ($image->getExtension()) {
       // Check the permissions of the original to grant access to this image.
-      $headers = Drupal::moduleHandler()->invokeAll('file_download', array($original_uri));
+      $headers = \Drupal::moduleHandler()->invokeAll('file_download', array($original_uri));
       // Confirm there's at least one module granting access and none denying access.
       if (!empty($headers) && !in_array(-1, $headers)) {
         return array(

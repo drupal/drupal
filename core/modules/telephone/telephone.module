@@ -9,7 +9,7 @@
  * Implements hook_field_info_alter().
  */
 function telephone_field_info_alter(&$info) {
-  if (Drupal::moduleHandler()->moduleExists('text')) {
+  if (\Drupal::moduleHandler()->moduleExists('text')) {
     $info['telephone']['default_formatter'] = 'text_plain';
   }
 }

@@ -24,16 +24,16 @@ use Drupal\field\Field;
  *   keyed by field type name.
  *
  * @deprecated as of Drupal 8.0. Use
- *   Drupal::service('plugin.manager.entity.field.field_type')->getDefinition()
+ *   \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition()
  *   or
- *   Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions()
+ *   \Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions()
  */
 function field_info_field_types($field_type = NULL) {
   if ($field_type) {
-    return Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field_type);
+    return \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field_type);
   }
   else {
-    return Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
+    return \Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
   }
 }
 
@@ -48,7 +48,7 @@ function field_info_field_types($field_type = NULL) {
  *   are not defined.
  *
  * @deprecated as of Drupal 8.0. Use
- *   Drupal::service('plugin.manager.entity.field.field_type')->getDefaultSettings()
+ *   \Drupal::service('plugin.manager.entity.field.field_type')->getDefaultSettings()
  */
 function field_info_field_settings($type) {
   return \Drupal::service('plugin.manager.entity.field.field_type')->getDefaultSettings($type);
@@ -65,7 +65,7 @@ function field_info_field_settings($type) {
  *   settings are not defined.
  *
  * @deprecated as of Drupal 8.0. Use
- *   Drupal::service('plugin.manager.entity.field.field_type')->getDefaultInstanceSettings()
+ *   \Drupal::service('plugin.manager.entity.field.field_type')->getDefaultInstanceSettings()
  */
 function field_info_instance_settings($type) {
   return \Drupal::service('plugin.manager.entity.field.field_type')->getDefaultInstanceSettings($type);
@@ -83,9 +83,9 @@ function field_info_instance_settings($type) {
  *   or an array of all existing widget types, keyed by widget type name.
  *
  * @deprecated as of Drupal 8.0. Use
- *   Drupal::service('plugin.manager.field.widget')->getDefinition()
+ *   \Drupal::service('plugin.manager.field.widget')->getDefinition()
  *   or
- *   Drupal::service('plugin.manager.field.widget')->getDefinitions()
+ *   \Drupal::service('plugin.manager.field.widget')->getDefinitions()
  */
 function field_info_widget_types($widget_type = NULL) {
   if ($widget_type) {
@@ -108,7 +108,7 @@ function field_info_widget_types($widget_type = NULL) {
  *   undefined.
  *
  * @deprecated as of Drupal 8.0. Use
- *   Drupal::service('plugin.manager.field.widget')->getDefaultSettings()
+ *   \Drupal::service('plugin.manager.field.widget')->getDefaultSettings()
  */
 function field_info_widget_settings($type) {
   return \Drupal::service('plugin.manager.field.widget')->getDefaultSettings($type);
@@ -127,9 +127,9 @@ function field_info_widget_settings($type) {
  *   formatter type name.
  *
  * @deprecated as of Drupal 8.0. Use
- *   Drupal::service('plugin.manager.field.formatter')->getDefinition()
+ *   \Drupal::service('plugin.manager.field.formatter')->getDefinition()
  *   or
- *   Drupal::service('plugin.manager.field.formatter')->getDefinitions()
+ *   \Drupal::service('plugin.manager.field.formatter')->getDefinitions()
  */
 function field_info_formatter_types($formatter_type = NULL) {
   if ($formatter_type) {
@@ -152,7 +152,7 @@ function field_info_formatter_types($formatter_type = NULL) {
  *   undefined.
  *
  * @deprecated as of Drupal 8.0. Use
- *   Drupal::service('plugin.manager.field.formatter')->getDefaultSettings()
+ *   \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings()
  */
 function field_info_formatter_settings($type) {
   return \Drupal::service('plugin.manager.field.formatter')->getDefaultSettings($type);
@@ -577,7 +577,7 @@ function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langc
   // Let other modules make changes to the form.
   // Avoid \Drupal::moduleHandler()->invokeAll()
   // to let parameters be taken by reference.
-  foreach (Drupal::moduleHandler()->getImplementations('field_attach_form') as $module) {
+  foreach (\Drupal::moduleHandler()->getImplementations('field_attach_form') as $module) {
     $function = $module . '_field_attach_form';
     $function($entity, $form, $form_state, $langcode);
   }
@@ -673,7 +673,7 @@ function field_attach_extract_form_values(EntityInterface $entity, $form, &$form
   // Let other modules act on submitting the entity.
   // Avoid \Drupal::moduleHandler()->invokeAll()
   // to let $form_state be taken by reference.
-  foreach (Drupal::moduleHandler()->getImplementations('field_attach_extract_form_values') as $module) {
+  foreach (\Drupal::moduleHandler()->getImplementations('field_attach_extract_form_values') as $module) {
     $function = $module . 'field_attach_extract_form_values';
     $function($entity, $form, $form_state);
   }

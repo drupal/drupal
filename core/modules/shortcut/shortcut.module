@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Implements hook_help().
  */
 function shortcut_help($path, $arg) {
-  $user = Drupal::currentUser();
+  $user = \Drupal::currentUser();
 
   switch ($path) {
     case 'admin/help#shortcut':
@@ -171,7 +171,7 @@ function shortcut_admin_paths() {
  *   otherwise.
  */
 function shortcut_set_edit_access($shortcut_set = NULL) {
-  $account = Drupal::currentUser();
+  $account = \Drupal::currentUser();
   // Sufficiently-privileged users can edit their currently displayed shortcut
   // set, but not other sets. Shortcut administrators can edit any set.
   if ($account->hasPermission('administer shortcuts')) {
@@ -196,7 +196,7 @@ function shortcut_set_edit_access($shortcut_set = NULL) {
  *   provided account, FALSE otherwise.
  */
 function shortcut_set_switch_access($account = NULL) {
-  $user = Drupal::currentUser();
+  $user = \Drupal::currentUser();
 
   if ($user->hasPermission('administer shortcuts')) {
     // Administrators can switch anyone's shortcut set.
@@ -286,7 +286,7 @@ function shortcut_set_reset_link_weights(&$shortcut_set) {
  *   A user account that will be assigned to use the set.
  */
 function shortcut_set_assign_user($shortcut_set, $account) {
-  Drupal::entityManager()
+  \Drupal::entityManager()
     ->getStorageController('shortcut_set')
     ->assignUser($shortcut_set, $account);
 }
@@ -305,7 +305,7 @@ function shortcut_set_assign_user($shortcut_set, $account) {
  *   to any set.
  */
 function shortcut_set_unassign_user($account) {
-  return (bool) Drupal::entityManager()
+  return (bool) \Drupal::entityManager()
     ->getStorageController('shortcut_set')
     ->unassignUser($account);
 }
@@ -334,7 +334,7 @@ function shortcut_current_displayed_set($account = NULL) {
   }
   // If none was found, try to find a shortcut set that is explicitly assigned
   // to this user.
-  $shortcut_set_name = Drupal::entityManager()
+  $shortcut_set_name = \Drupal::entityManager()
     ->getStorageController('shortcut_set')
     ->getAssignedToUser($account);
   if ($shortcut_set_name) {
@@ -370,7 +370,7 @@ function shortcut_default_set($account = NULL) {
   // have one, we allow the last module which returns a valid result to take
   // precedence. If no module returns a valid set, fall back on the site-wide
   // default, which is the lowest-numbered shortcut set.
-  $suggestions = array_reverse(Drupal::moduleHandler()->invokeAll('shortcut_default_set', array($account)));
+  $suggestions = array_reverse(\Drupal::moduleHandler()->invokeAll('shortcut_default_set', array($account)));
   $suggestions[] = 'default';
   foreach ($suggestions as $name) {
     if ($shortcut_set = shortcut_set_load($name)) {
@@ -414,13 +414,13 @@ function shortcut_set_title_exists($title) {
  */
 function shortcut_valid_link($path) {
   // Do not use URL aliases.
-  $normal_path = Drupal::service('path.alias_manager')->getSystemPath($path);
+  $normal_path = \Drupal::service('path.alias_manager')->getSystemPath($path);
   if ($path != $normal_path) {
     $path = $normal_path;
   }
 
   // An empty path is valid too and will be converted to <front>.
-  return (!url_is_external($path) && (Drupal::service('router.route_provider')->getRoutesByPattern('/' . $path)->count() > 0 || menu_get_item($path))) || empty($path) || $path == '<front>';
+  return (!url_is_external($path) && (\Drupal::service('router.route_provider')->getRoutesByPattern('/' . $path)->count() > 0 || menu_get_item($path))) || empty($path) || $path == '<front>';
 }
 
 /**
@@ -564,7 +564,7 @@ function shortcut_library_info() {
   $path = drupal_get_path('module', 'shortcut');
   $libraries['drupal.shortcut.admin'] = array(
     'title' => 'Shortcut configuration',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       $path . '/shortcut.admin.js' => array(),
     ),
@@ -575,7 +575,7 @@ function shortcut_library_info() {
   );
   $libraries['drupal.shortcut'] = array(
     'title' => 'Shortcut UI',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'css' => array(
       $path . '/css/shortcut.module.css' => array(),
       $path . '/css/shortcut.theme.css' => array(),

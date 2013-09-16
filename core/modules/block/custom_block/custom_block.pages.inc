@@ -22,10 +22,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 function template_preprocess_custom_block_add_list(&$variables) {
   $variables['types'] = array();
-  $query = Drupal::request()->query->all();
+  $query = \Drupal::request()->query->all();
   foreach ($variables['content'] as $type) {
     $variables['types'][$type->id()] = array(
-      'link' => Drupal::l($type->label(), 'custom_block.add_form', array('custom_block_type' => $type->id()), array('query' => $query)),
+      'link' => \Drupal::l($type->label(), 'custom_block.add_form', array('custom_block_type' => $type->id()), array('query' => $query)),
       'description' => filter_xss_admin($type->description),
       'title' => $type->label(),
       'localized_options' => array(

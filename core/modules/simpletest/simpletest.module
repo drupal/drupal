@@ -159,7 +159,7 @@ function simpletest_run_tests($test_list, $reporter = 'drupal') {
   );
   batch_set($batch);
 
-  Drupal::moduleHandler()->invokeAll('test_group_started');
+  \Drupal::moduleHandler()->invokeAll('test_group_started');
 
   return $test_id;
 }
@@ -305,7 +305,7 @@ function _simpletest_batch_operation($test_list_init, $test_id, &$context) {
   $size = count($test_list);
   $info = $test->getInfo();
 
-  Drupal::moduleHandler()->invokeAll('test_finished', array($test->results));
+  \Drupal::moduleHandler()->invokeAll('test_finished', array($test->results));
 
   // Gather results and compose the report.
   $test_results[$test_class] = $test->results;
@@ -352,7 +352,7 @@ function _simpletest_batch_finished($success, $results, $operations, $elapsed) {
     drupal_set_message(t('The test run did not successfully finish.'), 'error');
     drupal_set_message(t('Use the <em>Clean environment</em> button to clean-up temporary files and tables.'), 'warning');
   }
-  Drupal::moduleHandler()->invokeAll('test_group_finished');
+  \Drupal::moduleHandler()->invokeAll('test_group_finished');
 }
 
 /**
@@ -573,7 +573,7 @@ function simpletest_generate_file($filename, $width, $lines, $type = 'binary-tex
 function simpletest_clean_environment() {
   simpletest_clean_database();
   simpletest_clean_temporary_directories();
-  if (Drupal::config('simpletest.settings')->get('clear_results')) {
+  if (\Drupal::config('simpletest.settings')->get('clear_results')) {
     $count = simpletest_clean_results_table();
     drupal_set_message(format_plural($count, 'Removed 1 test result.', 'Removed @count test results.'));
   }
@@ -643,7 +643,7 @@ function simpletest_clean_temporary_directories() {
  *   The number of results removed.
  */
 function simpletest_clean_results_table($test_id = NULL) {
-  if (Drupal::config('simpletest.settings')->get('clear_results')) {
+  if (\Drupal::config('simpletest.settings')->get('clear_results')) {
     if ($test_id) {
       $count = db_query('SELECT COUNT(test_id) FROM {simpletest_test_id} WHERE test_id = :test_id', array(':test_id' => $test_id))->fetchField();
 
@@ -686,7 +686,7 @@ function simpletest_mail_alter(&$message) {
 function simpletest_library_info() {
   $libraries['drupal.simpletest'] = array(
     'title' => 'Simpletest',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'simpletest') . '/simpletest.js' => array(),
     ),

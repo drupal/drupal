@@ -116,7 +116,7 @@ function file_field_widget_process($element, &$form_state, $form) {
 
   // Add the description field if enabled.
   if ($element['#description_field'] && $item['fids']) {
-    $config = Drupal::config('file.settings');
+    $config = \Drupal::config('file.settings');
     $element['description'] = array(
       '#type' => $config->get('description.type'),
       '#title' => t('Description'),

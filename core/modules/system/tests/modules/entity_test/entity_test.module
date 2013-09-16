@@ -59,7 +59,7 @@ function entity_test_entity_types($filter = NULL) {
  */
 function entity_test_entity_info_alter(&$info) {
   // Optionally specify a translation handler for testing translations.
-  if (Drupal::state()->get('entity_test.translation')) {
+  if (\Drupal::state()->get('entity_test.translation')) {
     foreach(entity_test_entity_types() as $entity_type) {
       $info[$entity_type]['translation'][$entity_type] = TRUE;
     }
@@ -79,9 +79,9 @@ function entity_test_entity_info_alter(&$info) {
  *   'entity_test'.
  */
 function entity_test_create_bundle($bundle, $text = NULL, $entity_type = 'entity_test') {
-  $bundles = Drupal::state()->get($entity_type . '.bundles') ?: array('entity_test' => array('label' => 'Entity Test Bundle'));
+  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: array('entity_test' => array('label' => 'Entity Test Bundle'));
   $bundles += array($bundle => array('label' => $text ? $text : $bundle));
-  Drupal::state()->set($entity_type . '.bundles', $bundles);
+  \Drupal::state()->set($entity_type . '.bundles', $bundles);
 
   entity_invoke_bundle_hook('create', $entity_type, $bundle);
 }
@@ -98,10 +98,10 @@ function entity_test_create_bundle($bundle, $text = NULL, $entity_type = 'entity
  *   'entity_test'.
  */
 function entity_test_rename_bundle($bundle_old, $bundle_new, $entity_type = 'entity_test') {
-  $bundles = Drupal::state()->get($entity_type . '.bundles') ?: array('entity_test' => array('label' => 'Entity Test Bundle'));
+  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: array('entity_test' => array('label' => 'Entity Test Bundle'));
   $bundles[$bundle_new] = $bundles[$bundle_old];
   unset($bundles[$bundle_old]);
-  Drupal::state()->set($entity_type . '.bundles', $bundles);
+  \Drupal::state()->set($entity_type . '.bundles', $bundles);
 
   entity_invoke_bundle_hook('rename', $entity_type, $bundle_old, $bundle_new);
 }
@@ -116,9 +116,9 @@ function entity_test_rename_bundle($bundle_old, $bundle_new, $entity_type = 'ent
  *   'entity_test'.
  */
 function entity_test_delete_bundle($bundle, $entity_type = 'entity_test') {
-  $bundles = Drupal::state()->get($entity_type . '.bundles') ?: array('entity_test' => array('label' => 'Entity Test Bundle'));
+  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: array('entity_test' => array('label' => 'Entity Test Bundle'));
   unset($bundles[$bundle]);
-  Drupal::state()->set($entity_type . '.bundles', $bundles);
+  \Drupal::state()->set($entity_type . '.bundles', $bundles);
 
   entity_invoke_bundle_hook('delete', $entity_type, $bundle);
 }
@@ -131,7 +131,7 @@ function entity_test_entity_bundle_info() {
   $entity_info = entity_get_info();
   foreach ($entity_info as $entity_type => $info) {
     if ($info['module'] == 'entity_test') {
-      $bundles[$entity_type] = Drupal::state()->get($entity_type . '.bundles') ?: array($entity_type => array('label' => 'Entity Test Bundle'));
+      $bundles[$entity_type] = \Drupal::state()->get($entity_type . '.bundles') ?: array($entity_type => array('label' => 'Entity Test Bundle'));
     }
   }
   return $bundles;
@@ -242,7 +242,7 @@ function entity_test_menu() {
  */
 function entity_test_form_node_form_alter(&$form, &$form_state, $form_id) {
   $langcode = $form_state['controller']->getFormLangcode($form_state);
-  Drupal::state()->set('entity_test.form_langcode', $langcode);
+  \Drupal::state()->set('entity_test.form_langcode', $langcode);
 }
 
 /**
@@ -259,7 +259,7 @@ function entity_test_form_node_form_alter(&$form, &$form_state, $form_id) {
 function entity_test_add($entity_type) {
   drupal_set_title(t('Create an @type', array('@type' => $entity_type)));
   $entity = entity_create($entity_type, array());
-  return Drupal::entityManager()->getForm($entity);
+  return \Drupal::entityManager()->getForm($entity);
 }
 
 /**
@@ -275,7 +275,7 @@ function entity_test_add($entity_type) {
  */
 function entity_test_edit(EntityInterface $entity) {
   drupal_set_title($entity->label(), PASS_THROUGH);
-  return Drupal::entityManager()->getForm($entity);
+  return \Drupal::entityManager()->getForm($entity);
 }
 
 /**

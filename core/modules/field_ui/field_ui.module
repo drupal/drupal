@@ -264,7 +264,7 @@ function field_ui_entity_info(&$entity_info) {
 function field_ui_entity_bundle_create($entity_type, $bundle) {
   // When a new bundle is created, the menu needs to be rebuilt to add our
   // menu item tabs.
-  Drupal::state()->set('menu_rebuild_needed', TRUE);
+  \Drupal::state()->set('menu_rebuild_needed', TRUE);
 }
 
 /**
@@ -273,7 +273,7 @@ function field_ui_entity_bundle_create($entity_type, $bundle) {
 function field_ui_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
   // When a bundle is renamed, the menu needs to be rebuilt to add our
   // menu item tabs.
-  Drupal::state()->set('menu_rebuild_needed', TRUE);
+  \Drupal::state()->set('menu_rebuild_needed', TRUE);
 }
 
 /**
@@ -338,7 +338,7 @@ function field_ui_entity_operation_alter(array &$operations, EntityInterface $en
  */
 function field_ui_form_node_type_form_submit($form, &$form_state) {
   if ($form_state['triggering_element']['#parents'][0] === 'save_continue') {
-    $admin_path = Drupal::entityManager()->getAdminPath('node', $form_state['values']['type']);
+    $admin_path = \Drupal::entityManager()->getAdminPath('node', $form_state['values']['type']);
     $form_state['redirect'] = "$admin_path/fields";
   }
 }
@@ -349,7 +349,7 @@ function field_ui_form_node_type_form_submit($form, &$form_state) {
 function field_ui_library_info() {
   $libraries['drupal.field_ui'] = array(
     'title' => 'Field UI',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'field_ui') . '/field_ui.js' => array(),
     ),
@@ -371,14 +371,14 @@ function field_ui_library_info() {
  * Implements hook_view_mode_presave().
  */
 function field_ui_view_mode_presave(EntityViewModeInterface $view_mode) {
-  Drupal::state()->set('menu_rebuild_needed', TRUE);
+  \Drupal::state()->set('menu_rebuild_needed', TRUE);
 }
 
 /**
  * Implements hook_view_mode_delete().
  */
 function field_ui_view_mode_delete(EntityViewModeInterface $view_mode) {
-  Drupal::state()->set('menu_rebuild_needed', TRUE);
+  \Drupal::state()->set('menu_rebuild_needed', TRUE);
 }
 
 /**

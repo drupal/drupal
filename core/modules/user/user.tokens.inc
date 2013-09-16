@@ -63,7 +63,7 @@ function user_token_info() {
  */
 function user_tokens($type, $tokens, array $data = array(), array $options = array()) {
 
-  $token_service = Drupal::token();
+  $token_service = \Drupal::token();
   $url_options = array('absolute' => TRUE);
   if (isset($options['langcode'])) {
     $url_options['language'] = language_load($options['langcode']);

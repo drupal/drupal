@@ -163,7 +163,7 @@ function file_requirements($phase) {
   // Check the server's ability to indicate upload progress.
   if ($phase == 'runtime') {
     $implementation = file_progress_implementation();
-    $server_software = Drupal::request()->server->get('SERVER_SOFTWARE');
+    $server_software = \Drupal::request()->server->get('SERVER_SOFTWARE');
     $apache = strpos($server_software, 'Apache') !== FALSE;
     $fastcgi = strpos($server_software, 'mod_fastcgi') !== FALSE || strpos($server_software, 'mod_fcgi') !== FALSE;
     $description = NULL;
@@ -266,7 +266,7 @@ function file_update_8002() {
  */
 function file_update_8003() {
   foreach (config_get_storage_names_with_prefix('field.field.') as $config_name) {
-    $field_config = Drupal::config($config_name);
+    $field_config = \Drupal::config($config_name);
     // Only update file fields that use the default SQL storage.
     if (in_array($field_config->get('type'), array('file', 'image'))) {
       $field = new Field($field_config->get());

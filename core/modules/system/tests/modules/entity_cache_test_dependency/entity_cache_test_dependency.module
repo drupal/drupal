@@ -9,5 +9,5 @@
  * Implements hook_entity_info_alter().
  */
 function entity_cache_test_dependency_entity_info_alter(&$info) {
-  $info['entity_cache_test']['label'] = Drupal::state()->get('entity_cache_test.label') ?: 'Entity Cache Test';
+  $info['entity_cache_test']['label'] = \Drupal::state()->get('entity_cache_test.label') ?: 'Entity Cache Test';
 }

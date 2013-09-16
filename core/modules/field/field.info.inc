@@ -38,8 +38,8 @@ function field_info_cache_clear() {
   entity_info_cache_clear();
 
   // Clear typed data definitions.
-  Drupal::typedData()->clearCachedDefinitions();
-  Drupal::service('plugin.manager.entity.field.field_type')->clearCachedDefinitions();
+  \Drupal::typedData()->clearCachedDefinitions();
+  \Drupal::service('plugin.manager.entity.field.field_type')->clearCachedDefinitions();
 
   Field::fieldInfo()->flush();
 }

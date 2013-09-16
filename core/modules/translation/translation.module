@@ -98,7 +98,7 @@ function _translation_tab_access(NodeInterface $node) {
  * Implements hook_admin_paths().
  */
 function translation_admin_paths() {
-  if (Drupal::config('node.settings')->get('use_admin_theme')) {
+  if (\Drupal::config('node.settings')->get('use_admin_theme')) {
     $paths = array(
       'node/*/translate' => TRUE,
     );
@@ -124,7 +124,7 @@ function translation_permission() {
  * Implements hook_node_create_access().
  */
 function translation_node_create_access($account) {
-  $query = Drupal::request()->query;
+  $query = \Drupal::request()->query;
   $translation = $query->get('translation');
   $target = $query->get('target');
   $request_has_translation_arg = !empty($translation) && !empty($target) && is_numeric($translation);
@@ -152,7 +152,7 @@ function translation_node_create_access($account) {
 function translation_user_can_translate_node($node, $account = NULL) {
   // If no user object is supplied, the access check is for the current user.
   if (empty($account)) {
-    $account = Drupal::currentUser();
+    $account = \Drupal::currentUser();
   }
   return node_access('view', $node, $account) && (user_access('translate all content', $account) || ($node->getAuthorId() == $account->id() && user_access('translate own content', $account)));
 }
@@ -276,7 +276,7 @@ function translation_node_view(EntityInterface $node, EntityDisplay $display, $v
     // only for configurable language types and interface language is the only
     // configurable language type in core, we use it as default. Contributed
     // modules can change this behavior by setting the system variable below.
-    $type = Drupal::config('translation.settings')->get('language_type');
+    $type = \Drupal::config('translation.settings')->get('language_type');
     $custom_links = language_negotiation_get_switch_links($type, 'node/' . $node->id());
     $links = array();
 
@@ -319,7 +319,7 @@ function translation_node_view(EntityInterface $node, EntityDisplay $display, $v
  * Implements hook_node_prepare_form().
  */
 function translation_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
-  $query = Drupal::request()->query;
+  $query = \Drupal::request()->query;
   $translation = $query->get('translation');
   $target = $query->get('target');
   // Only act if we are dealing with a content type supporting translations.
@@ -555,7 +555,7 @@ function translation_path_get_translations($path) {
  * Replaces links with pointers to translated versions of the content.
  */
 function translation_language_switch_links_alter(array &$links, $type, $path) {
-  $language_type = Drupal::config('translation.settings')->get('language_type');
+  $language_type = \Drupal::config('translation.settings')->get('language_type');
   if ($type == $language_type && preg_match("!^node/(\d+)(/.+|)!", $path, $matches)) {
     $node = node_load((int) $matches[1]);
 
@@ -594,7 +594,7 @@ function translation_language_switch_links_alter(array &$links, $type, $path) {
 function translation_library_info() {
   $libraries['drupal.translation'] = array(
     'title' => 'Translation',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'translation') . '/translation.js' => array(),
     ),

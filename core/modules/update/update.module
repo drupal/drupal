@@ -281,10 +281,10 @@ function update_theme() {
  * Implements hook_cron().
  */
 function update_cron() {
-  $update_config = Drupal::config('update.settings');
+  $update_config = \Drupal::config('update.settings');
   $frequency = $update_config->get('check.interval_days');
   $interval = 60 * 60 * 24 * $frequency;
-  $last_check = Drupal::state()->get('update.last_check') ?: 0;
+  $last_check = \Drupal::state()->get('update.last_check') ?: 0;
   if ((REQUEST_TIME - $last_check) > $interval) {
     // If the configured update interval has elapsed, we want to invalidate
     // the data for all projects, attempt to re-fetch, and trigger any
@@ -297,7 +297,7 @@ function update_cron() {
     // missing data, and if so, try to fetch the data.
     update_get_available(TRUE);
   }
-  $last_email_notice = Drupal::state()->get('update.last_email_notification') ?: 0;
+  $last_email_notice = \Drupal::state()->get('update.last_email_notification') ?: 0;
   if ((REQUEST_TIME - $last_email_notice) > $interval) {
     // If configured time between notifications elapsed, send email about
     // updates possibly available.
@@ -388,7 +388,7 @@ function update_get_available($refresh = FALSE) {
   $needs_refresh = FALSE;
 
   // Grab whatever data we currently have.
-  $available = Drupal::keyValueExpirable('update_available_releases')->getAll();
+  $available = \Drupal::keyValueExpirable('update_available_releases')->getAll();
 
   $projects = update_get_projects();
   foreach ($projects as $key => $project) {
@@ -427,7 +427,7 @@ function update_get_available($refresh = FALSE) {
     update_fetch_data();
     // After processing the queue, we've (hopefully) got better data, so pull
     // the latest data again and use that directly.
-    $available = Drupal::keyValueExpirable('update_available_releases')->getAll();
+    $available = \Drupal::keyValueExpirable('update_available_releases')->getAll();
   }
 
   return $available;
@@ -489,7 +489,7 @@ function update_fetch_data() {
 function update_mail($key, &$message, $params) {
   $langcode = $message['langcode'];
   $language = language_load($langcode);
-  $message['subject'] .= t('New release(s) available for !site_name', array('!site_name' => Drupal::config('system.site')->get('name')), array('langcode' => $langcode));
+  $message['subject'] .= t('New release(s) available for !site_name', array('!site_name' => \Drupal::config('system.site')->get('name')), array('langcode' => $langcode));
   foreach ($params as $msg_type => $msg_reason) {
     $message['body'][] = _update_message_text($msg_type, $msg_reason, FALSE, $langcode);
   }
@@ -498,7 +498,7 @@ function update_mail($key, &$message, $params) {
     $message['body'][] = t('You can automatically install your missing updates using the Update manager:', array(), array('langcode' => $langcode)) . "\n" . url('admin/reports/updates/update', array('absolute' => TRUE, 'language' => $language));
   }
   $settings_url = url('admin/reports/updates/settings', array('absolute' => TRUE));
-  if (Drupal::config('update.settings')->get('notification.threshold') == 'all') {
+  if (\Drupal::config('update.settings')->get('notification.threshold') == 'all') {
     $message['body'][] = t('Your site is currently configured to send these emails when any updates are available. To get notified only for security updates, !url.', array('!url' => $settings_url));
   }
   else {
@@ -677,7 +677,7 @@ function update_verify_update_archive($project, $archive_file, $directory) {
     $info = drupal_parse_info_file($file->uri);
 
     // If the module or theme is incompatible with Drupal core, set an error.
-    if (empty($info['core']) || $info['core'] != Drupal::CORE_COMPATIBILITY) {
+    if (empty($info['core']) || $info['core'] != \Drupal::CORE_COMPATIBILITY) {
       $incompatible[] = !empty($info['name']) ? $info['name'] : t('Unknown');
     }
     else {
@@ -694,7 +694,7 @@ function update_verify_update_archive($project, $archive_file, $directory) {
       count($incompatible),
       '%archive_file contains a version of %names that is not compatible with Drupal !version.',
       '%archive_file contains versions of modules or themes that are not compatible with Drupal !version: %names',
-      array('!version' => Drupal::CORE_COMPATIBILITY, '%archive_file' => drupal_basename($archive_file), '%names' => implode(', ', $incompatible))
+      array('!version' => \Drupal::CORE_COMPATIBILITY, '%archive_file' => drupal_basename($archive_file), '%names' => implode(', ', $incompatible))
     );
   }
 
@@ -705,8 +705,8 @@ function update_verify_update_archive($project, $archive_file, $directory) {
  * Invalidates stored data relating to update status.
  */
 function update_storage_clear() {
-  Drupal::keyValueExpirable('update')->deleteAll();
-  Drupal::keyValueExpirable('update_available_release')->deleteAll();
+  \Drupal::keyValueExpirable('update')->deleteAll();
+  \Drupal::keyValueExpirable('update_available_release')->deleteAll();
 }
 
 /**

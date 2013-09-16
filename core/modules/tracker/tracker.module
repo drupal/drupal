@@ -81,10 +81,10 @@ function tracker_menu() {
  * process, 'tracker.index_nid' will be 0.
  */
 function tracker_cron() {
-  $state = Drupal::state();
+  $state = \Drupal::state();
   $max_nid = $state->get('tracker.index_nid') ?: 0;
   if ($max_nid > 0) {
-    $batch_size = Drupal::config('tracker.settings')->get('cron_index_limit');
+    $batch_size = \Drupal::config('tracker.settings')->get('cron_index_limit');
     $last_nid = FALSE;
     // @todo This should be actually filtering on the desired language and just
     //   fall back to the default language.
@@ -173,7 +173,7 @@ function tracker_cron() {
  */
 function _tracker_myrecent_access(AccountInterface $account) {
   // This path is only allowed for authenticated users looking at their own content.
-  return $account->id() && (Drupal::currentUser()->id() == $account->id()) && $account->hasPermission('access content');
+  return $account->id() && (\Drupal::currentUser()->id() == $account->id()) && $account->hasPermission('access content');
 }
 
 /**

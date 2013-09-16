@@ -113,7 +113,7 @@ function history_user_delete($account) {
 function history_library_info() {
   $libraries['drupal.history'] = array(
     'title' => 'History',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'history') . '/js/history.js' => array(),
     ),

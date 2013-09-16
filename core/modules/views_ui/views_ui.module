@@ -193,7 +193,7 @@ function views_ui_library_info() {
 
   $libraries['views_ui.admin'] = array(
     'title' => 'Views UI ADMIN',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       $path . 'ajax.js' => array('group' => JS_DEFAULT),
       $path . 'views-admin.js' => array('group' => JS_DEFAULT),
@@ -218,7 +218,7 @@ function views_ui_library_info() {
  */
 function views_ui_preprocess_views_view(&$variables) {
   $view = $variables['view'];
-  if (!empty($view->live_preview) && Drupal::moduleHandler()->moduleExists('contextual')) {
+  if (!empty($view->live_preview) && \Drupal::moduleHandler()->moduleExists('contextual')) {
     $view->setShowAdminLinks(FALSE);
     foreach (array('title', 'header', 'exposed', 'rows', 'pager', 'more', 'footer', 'empty', 'attachment_after', 'attachment_before') as $section) {
       if (!empty($variables[$section])) {
@@ -422,7 +422,7 @@ function views_ui_views_analyze(ViewExecutable $view) {
       continue;
     }
     if ($display->hasPath() && $path = $display->getOption('path')) {
-      $normal_path = Drupal::service('path.alias_manager.cached')->getSystemPath($path);
+      $normal_path = \Drupal::service('path.alias_manager.cached')->getSystemPath($path);
       if ($path != $normal_path) {
         $ret[] = Analyzer::formatMessage(t('You have configured display %display with a path which is an path alias as well. This might lead to unwanted effects so better use an internal path.', array('%display' => $display->display['display_title'])), 'warning');
       }

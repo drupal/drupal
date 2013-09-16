@@ -27,7 +27,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
  * @see shortcut_set_switch_submit()
  */
 function shortcut_set_switch($form, &$form_state, $account = NULL) {
-  $user = Drupal::currentUser();
+  $user = \Drupal::currentUser();
 
   if (!isset($account)) {
     $account = $user;
@@ -244,7 +244,7 @@ function _shortcut_link_form_elements($shortcut_link = NULL) {
     ));
   }
   else {
-    $shortcut_link['link_path'] = ($shortcut_link['link_path'] == '<front>') ? '' : Drupal::service('path.alias_manager')->getPathAlias($shortcut_link['link_path']);
+    $shortcut_link['link_path'] = ($shortcut_link['link_path'] == '<front>') ? '' : \Drupal::service('path.alias_manager')->getPathAlias($shortcut_link['link_path']);
   }
 
   $form['shortcut_link']['#tree'] = TRUE;
@@ -291,7 +291,7 @@ function shortcut_link_edit_validate($form, &$form_state) {
  */
 function shortcut_link_edit_submit($form, &$form_state) {
   // Normalize the path in case it is an alias.
-  $shortcut_path = Drupal::service('path.alias_manager')->getSystemPath($form_state['values']['shortcut_link']['link_path']);
+  $shortcut_path = \Drupal::service('path.alias_manager')->getSystemPath($form_state['values']['shortcut_link']['link_path']);
   if (empty($shortcut_path)) {
     $shortcut_path = '<front>';
   }
@@ -335,7 +335,7 @@ function shortcut_link_add_submit($form, &$form_state) {
  */
 function shortcut_admin_add_link($shortcut_link, &$shortcut_set) {
   // Normalize the path in case it is an alias.
-  $shortcut_link['link_path'] = Drupal::service('path.alias_manager')->getSystemPath($shortcut_link['link_path']);
+  $shortcut_link['link_path'] = \Drupal::service('path.alias_manager')->getSystemPath($shortcut_link['link_path']);
   if (empty($shortcut_link['link_path'])) {
     $shortcut_link['link_path'] = '<front>';
   }

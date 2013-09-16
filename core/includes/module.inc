@@ -24,7 +24,7 @@
  * @see list_themes()
  *
  * @todo There are too many layers/levels of caching involved for system_list()
- *   data. Consider to add a Drupal::config($name, $cache = TRUE) argument to allow
+ *   data. Consider to add a \Drupal::config($name, $cache = TRUE) argument to allow
  *   callers like system_list() to force-disable a possible configuration
  *   storage controller cache or some other way to circumvent it/take it over.
  */
@@ -39,12 +39,12 @@ function system_list($type) {
       'filepaths' => array(),
     );
     // Build a list of themes.
-    $enabled_themes = (array) Drupal::config('system.theme')->get('enabled');
+    $enabled_themes = (array) \Drupal::config('system.theme')->get('enabled');
     // @todo Themes include all themes, including disabled/uninstalled. This
     //   system.theme.data state will go away entirely as soon as themes have
     //   a proper installation status.
     // @see http://drupal.org/node/1067408
-    $theme_data = Drupal::state()->get('system.theme.data');
+    $theme_data = \Drupal::state()->get('system.theme.data');
     if (empty($theme_data)) {
       // @todo: system_list() may be called from _drupal_bootstrap_code(), in
       // which case system.module is not loaded yet.
@@ -119,7 +119,7 @@ function system_list_reset() {
   // will cause system_list_reset() to be called, but theme data is not
   // necessarily rebuilt afterwards.
   // @todo Obsolete with proper installation status for themes.
-  Drupal::state()->delete('system.theme.data');
+  \Drupal::state()->delete('system.theme.data');
 }
 
 /**
@@ -206,30 +206,30 @@ function module_load_include($type, $module, $name = NULL) {
  * Enables or installs a given list of modules.
  *
  * @deprecated as of Drupal 8.0. Use
- *   Drupal::moduleHandler()->enable($module_list, $enable_dependencies = TRUE).
+ *   \Drupal::moduleHandler()->enable($module_list, $enable_dependencies = TRUE).
  */
 function module_enable($module_list, $enable_dependencies = TRUE) {
-  return Drupal::moduleHandler()->enable($module_list, $enable_dependencies);
+  return \Drupal::moduleHandler()->enable($module_list, $enable_dependencies);
 }
 
 /**
  * Disables a given set of modules.
  *
  * @deprecated as of Drupal 8.0. Use
- *   Drupal::moduleHandler()->disable($module_list, $disable_dependents = TRUE).
+ *   \Drupal::moduleHandler()->disable($module_list, $disable_dependents = TRUE).
  */
 function module_disable($module_list, $disable_dependents = TRUE) {
-  Drupal::moduleHandler()->disable($module_list, $disable_dependents);
+  \Drupal::moduleHandler()->disable($module_list, $disable_dependents);
 }
 
 /**
  * Uninstalls a given list of disabled modules.
  *
  * @deprecated as of Drupal 8.0. Use
- *   Drupal::moduleHandler()->uninstall($module_list, $uninstall_dependents = TRUE).
+ *   \Drupal::moduleHandler()->uninstall($module_list, $uninstall_dependents = TRUE).
  */
 function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) {
-  return Drupal::moduleHandler()->uninstall($module_list, $uninstall_dependents);
+  return \Drupal::moduleHandler()->uninstall($module_list, $uninstall_dependents);
 }
 
 /**
@@ -324,7 +324,7 @@ function drupal_required_modules() {
  */
 function module_set_weight($module, $weight) {
   // Update the module weight in the config file that contains it.
-  $module_config = Drupal::config('system.module');
+  $module_config = \Drupal::config('system.module');
   if ($module_config->get("enabled.$module") !== NULL) {
     $module_config
       ->set("enabled.$module", $weight)
@@ -333,7 +333,7 @@ function module_set_weight($module, $weight) {
 
     // Prepare the new module list, sorted by weight, including filenames.
     // @see module_enable()
-    $module_handler = Drupal::moduleHandler();
+    $module_handler = \Drupal::moduleHandler();
     $current_module_filenames = $module_handler->getModuleList();
     $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
     $current_modules = module_config_sort(array_merge($current_modules, $module_config->get('enabled')));
@@ -345,7 +345,7 @@ function module_set_weight($module, $weight) {
     $module_handler->setModuleList($module_filenames);
     return;
   }
-  $disabled_config = Drupal::config('system.module.disabled');
+  $disabled_config = \Drupal::config('system.module.disabled');
   if ($disabled_config->get($module) !== NULL) {
     $disabled_config
       ->set($module, $weight)

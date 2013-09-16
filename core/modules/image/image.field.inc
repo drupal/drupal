@@ -40,7 +40,7 @@ function image_field_widget_process($element, &$form_state, $form) {
       $variables['height'] = $element['#value']['height'];
     }
     else {
-      $image = Drupal::service('image.factory')->get($file->getFileUri());
+      $image = \Drupal::service('image.factory')->get($file->getFileUri());
       if ($image->getExtension()) {
         $variables['width'] = $image->getWidth();
         $variables['height'] = $image->getHeight();

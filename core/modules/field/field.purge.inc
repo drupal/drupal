@@ -73,7 +73,7 @@ function field_purge_batch($batch_size) {
   // Retrieve all deleted field instances. We cannot use field_info_instances()
   // because that function does not return deleted instances.
   $instances = field_read_instances(array('deleted' => TRUE), array('include_deleted' => TRUE));
-  $factory = Drupal::service('entity.query');
+  $factory = \Drupal::service('entity.query');
   $info = entity_get_info();
   foreach ($instances as $instance) {
     $entity_type = $instance['entity_type'];
@@ -111,7 +111,7 @@ function field_purge_batch($batch_size) {
         $ids->revision_id = $revision_id;
         $ids->entity_id = $entity_id;
         $entity = _field_create_entity_from_ids($ids);
-        Drupal::entityManager()->getStorageController($entity_type)->onFieldItemsPurge($entity, $instance);
+        \Drupal::entityManager()->getStorageController($entity_type)->onFieldItemsPurge($entity, $instance);
       }
     }
     else {
@@ -121,7 +121,7 @@ function field_purge_batch($batch_size) {
   }
 
   // Retrieve all deleted fields. Any that have no instances can be purged.
-  $deleted_fields = Drupal::state()->get('field.field.deleted') ?: array();
+  $deleted_fields = \Drupal::state()->get('field.field.deleted') ?: array();
   foreach ($deleted_fields as $field) {
     $field = new Field($field);
 
@@ -149,7 +149,7 @@ function field_purge_batch($batch_size) {
  *   The instance record to purge.
  */
 function field_purge_instance($instance) {
-  $state = Drupal::state();
+  $state = \Drupal::state();
   $deleted_instances = $state->get('field.instance.deleted');
   unset($deleted_instances[$instance['uuid']]);
   $state->set('field.instance.deleted', $deleted_instances);
@@ -158,7 +158,7 @@ function field_purge_instance($instance) {
   field_info_cache_clear();
 
   // Invoke external hooks after the cache is cleared for API consistency.
-  Drupal::moduleHandler()->invokeAll('field_purge_instance', array($instance));
+  \Drupal::moduleHandler()->invokeAll('field_purge_instance', array($instance));
 }
 
 /**
@@ -176,19 +176,19 @@ function field_purge_field($field) {
     throw new FieldException(t('Attempt to purge a field @field_name that still has instances.', array('@field_name' => $field['field_name'])));
   }
 
-  $state = Drupal::state();
+  $state = \Drupal::state();
   $deleted_fields = $state->get('field.field.deleted');
   unset($deleted_fields[$field['uuid']]);
   $state->set('field.field.deleted', $deleted_fields);
 
   // Notify the storage layer.
-  Drupal::entityManager()->getStorageController($field->entity_type)->onFieldPurge($field);
+  \Drupal::entityManager()->getStorageController($field->entity_type)->onFieldPurge($field);
 
   // Clear the cache.
   field_info_cache_clear();
 
   // Invoke external hooks after the cache is cleared for API consistency.
-  Drupal::moduleHandler()->invokeAll('field_purge_field', array($field));
+  \Drupal::moduleHandler()->invokeAll('field_purge_field', array($field));
 }
 
 /**

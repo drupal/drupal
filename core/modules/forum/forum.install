@@ -14,9 +14,9 @@ function forum_install() {
   // Set the weight of the forum.module to 1 so it is loaded after the taxonomy.module.
   module_set_weight('forum', 1);
   // Do not allow to delete the forum's node type machine name.
-  $locked = Drupal::state()->get('node.type.locked');
+  $locked = \Drupal::state()->get('node.type.locked');
   $locked['forum'] = 'forum';
-  Drupal::state()->set('node.type.locked', $locked);
+  \Drupal::state()->set('node.type.locked', $locked);
 }
 
 /**
@@ -26,7 +26,7 @@ function forum_enable() {
   // Create the forum vocabulary if it does not exist.
   // @todo Change Forum module so forum.settings can contain the vocabulary's
   //   machine name.
-  $config = Drupal::config('forum.settings');
+  $config = \Drupal::config('forum.settings');
   // If the module was disabled only, the current config may contain a valid
   // vocabulary ID already.
   $vocabulary = entity_load('taxonomy_vocabulary', $config->get('vocabulary'));
@@ -115,7 +115,7 @@ function forum_enable() {
  * Implements hook_modules_preinstall().
  */
 function forum_modules_preinstall($modules) {
-  $list_boolean = Drupal::service('plugin.manager.entity.field.field_type')->getDefinition('list_boolean');
+  $list_boolean = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition('list_boolean');
   if (empty($list_boolean) && in_array('forum', $modules)) {
     // Make sure that the list_boolean field type is available before our
     // default config is installed.
@@ -145,9 +145,9 @@ function forum_uninstall() {
   field_purge_batch(10);
   field_purge_batch(10);
   // Allow to delete a forum's node type.
-  $locked = Drupal::state()->get('node.type.locked');
+  $locked = \Drupal::state()->get('node.type.locked');
   unset($locked['forum']);
-  Drupal::state()->set('node.type.locked', $locked);
+  \Drupal::state()->set('node.type.locked', $locked);
 }
 
 /**

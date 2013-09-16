@@ -29,7 +29,7 @@ function theme_book_admin_table($variables) {
 
   $rows = array();
   $destination = drupal_get_destination();
-  $access = Drupal::currentUser()->hasPermission('administer nodes');
+  $access = \Drupal::currentUser()->hasPermission('administer nodes');
   foreach (element_children($form) as $key) {
     $nid = $form[$key]['nid']['#value'];
     $href = $form[$key]['href']['#value'];

@@ -356,7 +356,7 @@ function content_translation_library_info() {
   $path = drupal_get_path('module', 'content_translation');
   $libraries['drupal.content_translation.admin'] = array(
     'title' => 'Content translation UI',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       $path . '/content_translation.admin.js' => array(),
     ),
@@ -413,7 +413,7 @@ function content_translation_get_config_key($entity_type, $bundle, $setting) {
  */
 function content_translation_get_config($entity_type, $bundle, $setting) {
   $key = content_translation_get_config_key($entity_type, $bundle, $setting);
-  return Drupal::config('content_translation.settings')->get($key);
+  return \Drupal::config('content_translation.settings')->get($key);
 }
 
 /**
@@ -430,7 +430,7 @@ function content_translation_get_config($entity_type, $bundle, $setting) {
  */
 function content_translation_set_config($entity_type, $bundle, $setting, $value) {
   $key = content_translation_get_config_key($entity_type, $bundle, $setting);
-  return Drupal::config('content_translation.settings')->set($key, $value)->save();
+  return \Drupal::config('content_translation.settings')->set($key, $value)->save();
 }
 
 /**
@@ -871,8 +871,8 @@ function content_translation_entity_presave(EntityInterface $entity) {
   if ($entity->isTranslatable()) {
     // @todo Avoid using request attributes once translation metadata become
     //   regular fields.
-    $attributes = Drupal::request()->attributes;
-    Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->id, $attributes->get('source_langcode'));
+    $attributes = \Drupal::request()->attributes;
+    \Drupal::service('content_translation.synchronizer')->synchronizeFields($entity, $entity->language()->id, $attributes->get('source_langcode'));
   }
 }
 

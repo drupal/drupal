@@ -991,7 +991,7 @@ abstract class TestBase {
   }
 
   /**
-   * Rebuild Drupal::getContainer().
+   * Rebuild \Drupal::getContainer().
    *
    * Use this to build a new kernel and service container. For example, when the
    * list of enabled modules is changed via the internal browser, in which case
@@ -1002,14 +1002,14 @@ abstract class TestBase {
    * @see TestBase::tearDown()
    *
    * @todo Fix http://drupal.org/node/1708692 so that module enable/disable
-   *   changes are immediately reflected in Drupal::getContainer(). Until then,
+   *   changes are immediately reflected in \Drupal::getContainer(). Until then,
    *   tests can invoke this workaround when requiring services from newly
    *   enabled modules to be immediately available in the same request.
    */
   protected function rebuildContainer() {
     $this->kernel = new DrupalKernel('testing', drupal_classloader(), FALSE);
     $this->kernel->boot();
-    // DrupalKernel replaces the container in Drupal::getContainer() with a
+    // DrupalKernel replaces the container in \Drupal::getContainer() with a
     // different object, so we need to replace the instance on this test class.
     $this->container = \Drupal::getContainer();
     // The global $user is set in TestBase::prepareEnvironment().

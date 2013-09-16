@@ -20,7 +20,7 @@ require_once __DIR__ . '/locale.translation.inc';
  */
 function locale_translation_flush_projects() {
   // Followup issue: http://drupal.org/node/1842362
-  // Replace {locale_project} table by Drupal::state() variable(s).
+  // Replace {locale_project} table by \Drupal::state() variable(s).
   db_truncate('locale_project')->execute();
 }
 
@@ -47,7 +47,7 @@ function locale_translation_flush_projects() {
  */
 function locale_translation_build_projects() {
   // This function depends on Update module. We degrade gracefully.
-  if (!Drupal::moduleHandler()->moduleExists('update')) {
+  if (!\Drupal::moduleHandler()->moduleExists('update')) {
     return array();
   }
 
@@ -92,7 +92,7 @@ function locale_translation_build_projects() {
     // For every project store information.
     $data += array(
       'version' => isset($data['info']['version']) ? $data['info']['version'] : '',
-      'core' => isset($data['info']['core']) ? $data['info']['core'] : Drupal::CORE_COMPATIBILITY,
+      'core' => isset($data['info']['core']) ? $data['info']['core'] : \Drupal::CORE_COMPATIBILITY,
       // A project can provide the path and filename pattern to download the
       // gettext file. Use the default if not.
       'server_pattern' => isset($data['info']['interface translation server pattern']) && $data['info']['interface translation server pattern'] ? $data['info']['interface translation server pattern'] : $default_server['pattern'],
@@ -130,7 +130,7 @@ function locale_translation_project_list() {
   $projects = &drupal_static(__FUNCTION__, array());
   if (empty($projects)) {
     module_load_include('compare.inc', 'update');
-    $config = Drupal::config('locale.settings');
+    $config = \Drupal::config('locale.settings');
     $projects = array();
 
     $additional_whitelist = array(
@@ -195,9 +195,9 @@ function _locale_translation_prepare_project_list($data, $type) {
  *   - "server_pattern": URI containing po file pattern.
  */
 function locale_translation_default_translation_server() {
-  $pattern = Drupal::config('locale.settings')->get('translation.default_server_pattern');
+  $pattern = \Drupal::config('locale.settings')->get('translation.default_server_pattern');
   // An additional check is required here. During the upgrade process
-  // Drupal::config()->get() returns NULL. We use the defined value as fallback.
+  // \Drupal::config()->get() returns NULL. We use the defined value as fallback.
   $pattern  = $pattern ? $pattern : LOCALE_TRANSLATION_DEFAULT_SERVER_PATTERN;
 
   return array(
@@ -226,7 +226,7 @@ function locale_translation_check_projects($projects = array(), $langcodes = arr
   else {
     // Retrieve and save the status of local translations only.
     locale_translation_check_projects_local($projects, $langcodes);
-    Drupal::state()->set('locale.translation_last_checked', REQUEST_TIME);
+    \Drupal::state()->set('locale.translation_last_checked', REQUEST_TIME);
   }
 }
 

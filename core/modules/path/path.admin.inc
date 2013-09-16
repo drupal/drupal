@@ -77,7 +77,7 @@ function path_admin_overview($keys = NULL) {
 
     // If the system path maps to a different URL alias, highlight this table
     // row to let the user know of old aliases.
-    if ($data->alias != Drupal::service('path.alias_manager')->getPathAlias($data->source, $data->langcode)) {
+    if ($data->alias != \Drupal::service('path.alias_manager')->getPathAlias($data->source, $data->langcode)) {
       $row['class'] = array('warning');
     }
 
@@ -204,7 +204,7 @@ function path_admin_form($form, &$form_state, $path = array('source' => '', 'ali
  */
 function path_admin_form_delete_submit($form, &$form_state) {
   $destination = array();
-  $query = Drupal::request()->query;
+  $query = \Drupal::request()->query;
   if ($query->has('destination')) {
     $destination = drupal_get_destination();
     $query->remove('destination');
@@ -220,7 +220,7 @@ function path_admin_form_delete_submit($form, &$form_state) {
  */
 function path_admin_form_validate($form, &$form_state) {
   $source = &$form_state['values']['source'];
-  $source = Drupal::service('path.alias_manager')->getSystemPath($source);
+  $source = \Drupal::service('path.alias_manager')->getSystemPath($source);
   $alias = $form_state['values']['alias'];
   $pid = isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0;
   // Language is only set if language.module is enabled, otherwise save for all
@@ -254,13 +254,13 @@ function path_admin_form_submit($form, &$form_state) {
 
   $pid = isset($form_state['values']['pid']) ? $form_state['values']['pid'] : 0;
   $source = &$form_state['values']['source'];
-  $source = Drupal::service('path.alias_manager')->getSystemPath($source);
+  $source = \Drupal::service('path.alias_manager')->getSystemPath($source);
   $alias = $form_state['values']['alias'];
   // Language is only set if language.module is enabled, otherwise save for all
   // languages.
   $langcode = isset($form_state['values']['langcode']) ? $form_state['values']['langcode'] : Language::LANGCODE_NOT_SPECIFIED;
 
-  Drupal::service('path.crud')->save($source, $alias, $langcode, $pid);
+  \Drupal::service('path.crud')->save($source, $alias, $langcode, $pid);
 
   drupal_set_message(t('The alias has been saved.'));
   $form_state['redirect'] = 'admin/config/search/path';

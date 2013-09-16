@@ -56,7 +56,7 @@ function block_help($path, $arg) {
       $demo_theme = $arg[4];
     }
     else {
-      $demo_theme = Drupal::config('system.theme')->get('default');
+      $demo_theme = \Drupal::config('system.theme')->get('default');
     }
     $themes = list_themes();
     $output = '<p>' . t('This page provides a drag-and-drop interface for adding a block to a region, and for controlling the order of blocks within regions. To add a block to a region, or to configure its specific title and visibility settings, click the block title under <em>Place blocks</em>. Since not all themes implement the same regions, or display regions in the same way, blocks are positioned on a per-theme basis. Remember that your changes will not be saved until you click the <em>Save blocks</em> button at the bottom of the page.') . '</p>';
@@ -98,7 +98,7 @@ function block_permission() {
  * @todo Clarify the documentation for the per-plugin block admin links.
  */
 function block_menu() {
-  $default_theme = Drupal::config('system.theme')->get('default');
+  $default_theme = \Drupal::config('system.theme')->get('default');
   $items['admin/structure/block'] = array(
     'title' => 'Block layout',
     'description' => 'Configure what block content appears in your site\'s sidebars and other regions.',
@@ -236,7 +236,7 @@ function block_page_build(&$page) {
     $page['page_top']['backlink'] = array(
       '#type' => 'link',
       '#title' => t('Exit block region demonstration'),
-      '#href' => 'admin/structure/block' . (Drupal::config('system.theme')->get('default') == $theme ? '' : '/list/' . $theme),
+      '#href' => 'admin/structure/block' . (\Drupal::config('system.theme')->get('default') == $theme ? '' : '/list/' . $theme),
       // Add the "overlay-restore" class to indicate this link should restore
       // the context in which the region demonstration page was opened.
       '#options' => array('attributes' => array('class' => array('block-demo-backlink', 'overlay-restore'))),
@@ -279,9 +279,9 @@ function _block_get_renderable_region($list = array()) {
   // the regular 'roles define permissions' schema, it brings too many
   // chances of having unwanted output get in the cache and later be served
   // to other users. We therefore exclude user 1 from block caching.
-  $not_cacheable = Drupal::currentUser()->id() == 1 ||
-    count(Drupal::moduleHandler()->getImplementations('node_grants')) ||
-    !Drupal::request()->isMethodSafe();
+  $not_cacheable = \Drupal::currentUser()->id() == 1 ||
+    count(\Drupal::moduleHandler()->getImplementations('node_grants')) ||
+    !\Drupal::request()->isMethodSafe();
 
   foreach ($list as $key => $block) {
     $settings = $block->get('settings');
@@ -336,7 +336,7 @@ function _block_get_renderable_region($list = array()) {
  *   Blocks currently exported by modules.
  */
 function _block_rehash($theme = NULL) {
-  $theme = $theme ? $theme : Drupal::config('system.theme')->get('default');
+  $theme = $theme ? $theme : \Drupal::config('system.theme')->get('default');
   $regions = system_region_list($theme);
   $blocks = entity_load_multiple_by_properties('block', array('theme' => $theme));
   foreach ($blocks as $block_id => $block) {
@@ -385,7 +385,7 @@ function block_theme_initialize($theme) {
   // Initialize theme's blocks if none already registered.
   $has_blocks = entity_load_multiple_by_properties('block', array('theme' => $theme));
   if (!$has_blocks) {
-    $default_theme = Drupal::config('system.theme')->get('default');
+    $default_theme = \Drupal::config('system.theme')->get('default');
     // Apply only to new theme's visible regions.
     $regions = system_region_list($theme, REGIONS_VISIBLE);
     $default_theme_blocks = entity_load_multiple_by_properties('block', array('theme' => $default_theme));
@@ -615,7 +615,7 @@ function block_language_delete($language) {
 function block_library_info() {
   $libraries['drupal.block'] = array(
     'title' => 'Block',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'block') . '/block.js' => array(),
     ),
@@ -626,7 +626,7 @@ function block_library_info() {
   );
   $libraries['drupal.block.admin'] = array(
     'title' => 'Block admin',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'block') . '/js/block.admin.js' => array(),
     ),

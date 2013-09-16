@@ -27,7 +27,7 @@ use Drupal\Component\Utility\Url;
  * @see pager_default_initialize()
  */
 function pager_find_page($element = 0) {
-  $page = Drupal::request()->query->get('page', '');
+  $page = \Drupal::request()->query->get('page', '');
   $page_array = explode(',', $page);
   if (!isset($page_array[$element])) {
     $page_array[$element] = 0;
@@ -137,7 +137,7 @@ function pager_default_initialize($total, $limit, $element = 0) {
 function pager_get_query_parameters() {
   $query = &drupal_static(__FUNCTION__);
   if (!isset($query)) {
-    $query = Url::filterQueryParameters(Drupal::request()->query->all(), array('page'));
+    $query = Url::filterQueryParameters(\Drupal::request()->query->all(), array('page'));
   }
   return $query;
 }
@@ -426,7 +426,7 @@ function pager_query_add_page(array $query, $element, $index) {
   // Determine the first result to display on the linked page.
   $page_new = pager_load_array($index, $element, $pager_page_array);
 
-  $page = Drupal::request()->query->get('page', '');
+  $page = \Drupal::request()->query->get('page', '');
   if ($new_page = implode(',', pager_load_array($page_new[$element], $element, explode(',', $page)))) {
     $query['page'] = $new_page;
   }

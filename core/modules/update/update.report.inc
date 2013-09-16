@@ -17,7 +17,7 @@
 function theme_update_report($variables) {
   $data = $variables['data'];
 
-  $last = Drupal::state()->get('update.last_check') ?: 0;
+  $last = \Drupal::state()->get('update.last_check') ?: 0;
   $update_last_check = array(
     '#theme' => 'update_last_check',
     '#last' => $last,
@@ -32,7 +32,7 @@ function theme_update_report($variables) {
   $header = array();
   $rows = array();
 
-  $notification_level = Drupal::config('update.settings')->get('notification.threshold');
+  $notification_level = \Drupal::config('update.settings')->get('notification.threshold');
 
   // Create an array of status values keyed by module or theme name, since
   // we'll need this while generating the report if we have to cross reference

@@ -43,7 +43,7 @@ function _update_8003_field_create_field(array &$field_config) {
   );
 
   // Save in config.
-  Drupal::config('field.field.' . $field_config['id'])
+  \Drupal::config('field.field.' . $field_config['id'])
     ->setData($field_config)
     ->save();
 
@@ -88,7 +88,7 @@ function _update_8003_field_create_instance(array $field_config, array &$instanc
   );
 
   // Save in config.
-  Drupal::config('field.instance.' . $instance_config['id'])
+  \Drupal::config('field.instance.' . $instance_config['id'])
     ->setData($instance_config)
     ->save();
 }
@@ -116,7 +116,7 @@ function _update_8006_field_write_data_sql($entity_type, $bundle, $entity_id, $r
     $revision_id = $entity_id;
   }
 
-  $field_config = Drupal::config("field.field.$entity_type.$field_name");
+  $field_config = \Drupal::config("field.field.$entity_type.$field_name");
   $field = new Field($field_config);
 
   $table_name = DatabaseStorageController::_fieldTableName($field);
@@ -313,7 +313,7 @@ function field_update_8002() {
 function field_update_8003() {
   $uuid = new Uuid();
 
-  $state = Drupal::state();
+  $state = \Drupal::state();
   $deleted_fields = $state->get('field.field.deleted') ?: array();
   $deleted_instances = $state->get('field.instance.deleted') ?: array();
 
@@ -348,7 +348,7 @@ function field_update_8003() {
 
     // Save in either config or state.
     if (!$record['deleted']) {
-      Drupal::config('field.field.' . $config['id'])
+      \Drupal::config('field.field.' . $config['id'])
         ->setData($config)
         ->save();
     }
@@ -403,7 +403,7 @@ function field_update_8003() {
 
     // Save in either config or state.
     if (!$record['deleted']) {
-      Drupal::config('field.instance.' . $config['id'])
+      \Drupal::config('field.instance.' . $config['id'])
         ->setData($config)
         ->save();
     }
@@ -448,7 +448,7 @@ function field_update_8004() {
 function field_update_8005() {
   $uuid = new Uuid();
 
-  $user_default_form_display = Drupal::config('entity.form_display.user.user.default');
+  $user_default_form_display = \Drupal::config('entity.form_display.user.user.default');
   $user_register_config_data = array(
     'id' => 'user.user.register',
     'uuid' => $uuid->generate(),
@@ -458,7 +458,7 @@ function field_update_8005() {
     'content' => array(),
   );
   foreach (config_get_storage_names_with_prefix('field.instance') as $config_id) {
-    $instance_config = Drupal::config($config_id);
+    $instance_config = \Drupal::config($config_id);
     if ($instance_config->get('entity_type') == 'user' && $instance_config->get('settings.user_register_form')) {
       list(, , $field_id) = explode('.', $instance_config->get('id'));
       $user_register_config_data['content'][$field_id] = $user_default_form_display->get('content.' . $field_id);
@@ -469,7 +469,7 @@ function field_update_8005() {
   }
 
   // Save the new 'register' form display.
-  Drupal::config('entity.form_display.user.user.register')
+  \Drupal::config('entity.form_display.user.user.register')
     ->setData($user_register_config_data)
     ->save();
 }
@@ -481,7 +481,7 @@ function field_update_8005() {
 function field_update_8006(&$sandbox) {
   // Get field definitions from config, and deleted fields from state system.
   $config_names = config_get_storage_names_with_prefix('field.field');
-  $deleted_fields = Drupal::state()->get('field.field.deleted') ?: array();
+  $deleted_fields = \Drupal::state()->get('field.field.deleted') ?: array();
   // Ditch UUID keys, we will iterate through deleted fields using a numeric
   // index.
   $deleted_fields = array_values($deleted_fields);
@@ -498,7 +498,7 @@ function field_update_8006(&$sandbox) {
   // Retrieve the next field definition. When the index exceeds the number of
   // 'configuration' fields, use it to iterate on deleted fields.
   if (isset($config_names[$sandbox['index']])) {
-    $field_config = Drupal::config($config_names[$sandbox['index']])->get();
+    $field_config = \Drupal::config($config_names[$sandbox['index']])->get();
   }
   else {
     $field_config = $deleted_fields[$sandbox['index'] - count($config_names)];

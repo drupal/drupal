@@ -91,7 +91,7 @@ function hook_entity_bundle_info_alter(&$bundles) {
 function hook_entity_bundle_create($entity_type, $bundle) {
   // When a new bundle is created, the menu needs to be rebuilt to add the
   // Field UI menu item tabs.
-  Drupal::state()->set('menu_rebuild_needed', TRUE);
+  \Drupal::state()->set('menu_rebuild_needed', TRUE);
 }
 
 /**
@@ -108,7 +108,7 @@ function hook_entity_bundle_create($entity_type, $bundle) {
  */
 function hook_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
   // Update the settings associated with the bundle in my_module.settings.
-  $config = Drupal::config('my_module.settings');
+  $config = \Drupal::config('my_module.settings');
   $bundle_settings = $config->get('bundle_settings');
   if (isset($bundle_settings[$entity_type][$bundle_old])) {
     $bundle_settings[$entity_type][$bundle_new] = $bundle_settings[$entity_type][$bundle_old];
@@ -129,7 +129,7 @@ function hook_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
  */
 function hook_entity_bundle_delete($entity_type, $bundle) {
   // Remove the settings associated with the bundle in my_module.settings.
-  $config = Drupal::config('my_module.settings');
+  $config = \Drupal::config('my_module.settings');
   $bundle_settings = $config->get('bundle_settings');
   if (isset($bundle_settings[$entity_type][$bundle])) {
     unset($bundle_settings[$entity_type][$bundle]);

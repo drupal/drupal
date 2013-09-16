@@ -84,7 +84,7 @@ function views_pre_render_view_element($element) {
  * definitions.
  */
 function views_theme($existing, $type, $theme, $path) {
-  Drupal::moduleHandler()->loadInclude('views', 'inc', 'views.theme');
+  \Drupal::moduleHandler()->loadInclude('views', 'inc', 'views.theme');
 
   // Some quasi clever array merging here.
   $base = array(
@@ -121,7 +121,7 @@ function views_theme($existing, $type, $theme, $path) {
   );
 
   $plugins = views_get_plugin_definitions();
-  $module_handler = Drupal::moduleHandler();
+  $module_handler = \Drupal::moduleHandler();
 
   // Register theme functions for all style plugins. It provides a basic auto
   // implementation of theme functions or template files by using the plugin
@@ -256,7 +256,7 @@ function views_plugin_list() {
  * node portion of the theme registry.
  */
 function views_preprocess_node(&$variables) {
-  Drupal::moduleHandler()->loadInclude('node', 'views.inc');
+  \Drupal::moduleHandler()->loadInclude('node', 'views.inc');
   // The 'view' attribute of the node is added in
   // \Drupal\views\Plugin\views\row\EntityRow::preRender().
   if (!empty($variables['node']->view) && $variables['node']->view->storage->id()) {
@@ -685,20 +685,20 @@ function views_invalidate_cache() {
   Cache::deleteTags(array('content' => TRUE));
 
   // Set the menu as needed to be rebuilt.
-  Drupal::state()->set('menu_rebuild_needed', TRUE);
+  \Drupal::state()->set('menu_rebuild_needed', TRUE);
 
-  $module_handler = Drupal::moduleHandler();
+  $module_handler = \Drupal::moduleHandler();
 
   // Set the router to be rebuild.
   // @todo Figure out why the cache rebuild is trigged but the route table
   //   does not exist yet.
   if (db_table_exists('router')) {
-    Drupal::service('router.builder')->rebuild();
+    \Drupal::service('router.builder')->rebuild();
   }
 
   // Invalidate the block cache to update views block derivatives.
   if ($module_handler->moduleExists('block')) {
-    Drupal::service('plugin.manager.block')->clearCachedDefinitions();
+    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
 
   // Allow modules to respond to the Views cache being cleared.
@@ -802,14 +802,14 @@ function views_library_info() {
   $path = drupal_get_path('module', 'views');
   $libraries['views.module'] = array(
     'title' => 'Views base',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'css' => array(
       "$path/css/views.module.css"
     ),
   );
   $libraries['views.ajax'] = array(
     'title' => 'Views AJAX',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       "$path/js/base.js" => array('group' => JS_DEFAULT),
       "$path/js/ajax_view.js" => array('group' => JS_DEFAULT),
@@ -825,7 +825,7 @@ function views_library_info() {
   );
   $libraries['views.contextual-links'] = array(
     'title' => 'Views Contextual links',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       // Set to -10 to move it before the contextual links javascript file.
       "$path/js/views-contextual.js" => array('group' => JS_LIBRARY, 'weight' => -10),
@@ -837,7 +837,7 @@ function views_library_info() {
   );
   $libraries['views.exposed-form'] = array(
     'title' => 'Views exposed form',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'css' => array(
       "$path/css/views.exposed_form.css",
     ),
@@ -902,7 +902,7 @@ function views_get_plugin_definitions() {
  * Get enabled display extenders.
  */
 function views_get_enabled_display_extenders() {
-  $enabled = array_filter((array) Drupal::config('views.settings')->get('display_extenders'));
+  $enabled = array_filter((array) \Drupal::config('views.settings')->get('display_extenders'));
 
   return drupal_map_assoc($enabled);
 }
@@ -933,13 +933,13 @@ function views_get_applicable_views($type) {
     }
   }
 
-  $entity_ids = Drupal::service('entity.query')->get('view')
+  $entity_ids = \Drupal::service('entity.query')->get('view')
     ->condition('status', TRUE)
     ->condition("display.*.display_plugin", $ids, 'IN')
     ->execute();
 
   $result = array();
-  foreach (Drupal::entityManager()->getStorageController('view')->loadMultiple($entity_ids) as $view) {
+  foreach (\Drupal::entityManager()->getStorageController('view')->loadMultiple($entity_ids) as $view) {
     // Check each display to see if it meets the criteria and is enabled.
     $executable = $view->getExecutable();
     $executable->initDisplay();
@@ -957,14 +957,14 @@ function views_get_applicable_views($type) {
  * Returns an array of all views as fully loaded $view objects.
  */
 function views_get_all_views() {
-  return Drupal::entityManager()->getStorageController('view')->loadMultiple();
+  return \Drupal::entityManager()->getStorageController('view')->loadMultiple();
 }
 
 /**
  * Returns an array of all enabled views, as fully loaded $view objects.
  */
 function views_get_enabled_views() {
-  $query = Drupal::entityQuery('view')
+  $query = \Drupal::entityQuery('view')
     ->condition('status', TRUE)
     ->execute();
 
@@ -975,7 +975,7 @@ function views_get_enabled_views() {
  * Returns an array of all disabled views, as fully loaded $view objects.
  */
 function views_get_disabled_views() {
-  $query = Drupal::entityQuery('view')
+  $query = \Drupal::entityQuery('view')
     ->condition('status', FALSE)
     ->execute();
 
@@ -1334,7 +1334,7 @@ function views_pre_render_views_form_views_form($element) {
     $replace[] = isset($element[$field_name][$row_id]) ? drupal_render($element[$field_name][$row_id]) : '';
   }
   // Add in substitutions from hook_views_form_substitutions().
-  $substitutions = Drupal::moduleHandler()->invokeAll('views_form_substitutions');
+  $substitutions = \Drupal::moduleHandler()->invokeAll('views_form_substitutions');
   foreach ($substitutions as $placeholder => $substitution) {
     $search[] = $placeholder;
     $replace[] = $substitution;
@@ -1675,7 +1675,7 @@ function views_element_validate_tags($element, &$form_state) {
  *   If TRUE, the data will be cached specific to the currently active language.
  */
 function views_cache_set($cid, $data, $use_language = FALSE) {
-  if (Drupal::config('views.settings')->get('skip_cache')) {
+  if (\Drupal::config('views.settings')->get('skip_cache')) {
     return;
   }
   if ($use_language) {
@@ -1699,7 +1699,7 @@ function views_cache_set($cid, $data, $use_language = FALSE) {
  *   The cache or FALSE on failure.
  */
 function views_cache_get($cid, $use_language = FALSE) {
-  if (Drupal::config('views.settings')->get('skip_cache')) {
+  if (\Drupal::config('views.settings')->get('skip_cache')) {
     return FALSE;
   }
   if ($use_language) {

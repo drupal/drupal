@@ -96,10 +96,10 @@ function menu_link_delete_multiple(array $mlids, $force = FALSE, $prevent_repare
     return;
   }
 
-  $controller = Drupal::entityManager()
+  $controller = \Drupal::entityManager()
     ->getStorageController('menu_link');
   if (!$force) {
-    $entity_query = Drupal::entityQuery('menu_link');
+    $entity_query = \Drupal::entityQuery('menu_link');
     $group = $entity_query->orConditionGroup()
       ->condition('module', 'system', '<>')
       ->condition('updated', 0, '<>');
@@ -151,7 +151,7 @@ function menu_link_save(MenuLink $menu_link) {
  *   The insert op returns the mlid of the new item. Others op return NULL.
  */
 function menu_link_maintain($module, $op, $link_path, $link_title = NULL) {
-  $menu_link_controller = Drupal::entityManager()
+  $menu_link_controller = \Drupal::entityManager()
     ->getStorageController('menu_link');
   switch ($op) {
     case 'insert':
@@ -188,7 +188,7 @@ function menu_link_maintain($module, $op, $link_path, $link_title = NULL) {
       break;
 
     case 'delete':
-      $result = Drupal::entityQuery('menu_link')->condition('link_path', $link_path)->execute();
+      $result = \Drupal::entityQuery('menu_link')->condition('link_path', $link_path)->execute();
       if (!empty($result)) {
         menu_link_delete_multiple($result);
       }

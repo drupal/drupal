@@ -37,21 +37,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  *   // Correct procedural code.
  *   function hook_do_stuff() {
- *     $lock = Drupal::lock()->acquire('stuff_lock');
+ *     $lock = \Drupal::lock()->acquire('stuff_lock');
  *     // ...
  *   }
  *
  *   // The preferred way: dependency injected code.
  *   function hook_do_stuff() {
  *     // Move the actual implementation to a class and instantiate it.
- *     $instance = new StuffDoingClass(Drupal::lock());
+ *     $instance = new StuffDoingClass(\Drupal::lock());
  *     $instance->doStuff();
  *
  *     // Or, even better, rely on the service container to avoid hard coding a
  *     // specific interface implementation, so that the actual logic can be
  *     // swapped. This might not always make sense, but in general it is a good
  *     // practice.
- *     Drupal::service('stuff.doing')->doStuff();
+ *     \Drupal::service('stuff.doing')->doStuff();
  *   }
  *
  *   interface StuffDoingInterface {
@@ -455,7 +455,7 @@ class Drupal {
    * However, for links enclosed in translatable text you should use t() and
    * embed the HTML anchor tag directly in the translated string. For example:
    * @code
-   * t('Visit the <a href="@url">content types</a> page', array('@url' => Drupal::url('node.overview_types')));
+   * t('Visit the <a href="@url">content types</a> page', array('@url' => \Drupal::url('node.overview_types')));
    * @endcode
    * This keeps the context of the link title ('settings' in the example) for
    * translators.

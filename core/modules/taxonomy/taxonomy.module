@@ -114,7 +114,7 @@ function taxonomy_permission() {
 function taxonomy_entity_bundle_info() {
   $bundles = array();
   foreach (taxonomy_vocabulary_get_names() as $id) {
-    $config = Drupal::config('taxonomy.vocabulary.' . $id);
+    $config = \Drupal::config('taxonomy.vocabulary.' . $id);
     $bundles['taxonomy_term'][$id]['label'] = $config->get('name');
   }
   return $bundles;
@@ -182,7 +182,7 @@ function taxonomy_field_extra_fields() {
  *   An array of nids matching the query.
  */
 function taxonomy_select_nodes($tid, $pager = TRUE, $limit = FALSE, $order = array('t.sticky' => 'DESC', 't.created' => 'DESC')) {
-  if (!Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
+  if (!\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
     return array();
   }
   $query = db_select('taxonomy_index', 't');
@@ -474,7 +474,7 @@ function taxonomy_term_is_page(Term $term) {
  * Clear all static cache variables for terms.
  */
 function taxonomy_terms_static_reset() {
-  Drupal::entityManager()->getStorageController('taxonomy_term')->resetCache();
+  \Drupal::entityManager()->getStorageController('taxonomy_term')->resetCache();
 }
 
 /**
@@ -484,7 +484,7 @@ function taxonomy_terms_static_reset() {
  *   An array of ids to reset in entity controller cache.
  */
 function taxonomy_vocabulary_static_reset(array $ids = NULL) {
-  Drupal::entityManager()->getStorageController('taxonomy_vocabulary')->resetCache($ids);
+  \Drupal::entityManager()->getStorageController('taxonomy_vocabulary')->resetCache($ids);
 }
 
 /**
@@ -1107,7 +1107,7 @@ function taxonomy_node_insert(EntityInterface $node) {
 function taxonomy_build_node_index($node) {
   // We maintain a denormalized table of term/node relationships, containing
   // only data for current, published nodes.
-  if (!Drupal::config('taxonomy.settings')->get('maintain_index_table') || !(Drupal::entityManager()->getStorageController('node') instanceof DatabaseStorageController)) {
+  if (!\Drupal::config('taxonomy.settings')->get('maintain_index_table') || !(\Drupal::entityManager()->getStorageController('node') instanceof DatabaseStorageController)) {
     return;
   }
 
@@ -1170,7 +1170,7 @@ function taxonomy_node_predelete(EntityInterface $node) {
  *   The node entity.
  */
 function taxonomy_delete_node_index(EntityInterface $node) {
-  if (Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
+  if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
     db_delete('taxonomy_index')->condition('nid', $node->id())->execute();
   }
 }
@@ -1179,7 +1179,7 @@ function taxonomy_delete_node_index(EntityInterface $node) {
  * Implements hook_taxonomy_term_delete().
  */
 function taxonomy_taxonomy_term_delete(Term $term) {
-  if (Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
+  if (\Drupal::config('taxonomy.settings')->get('maintain_index_table')) {
     // Clean up the {taxonomy_index} table when terms are deleted.
     db_delete('taxonomy_index')->condition('tid', $term->id())->execute();
   }
@@ -1195,7 +1195,7 @@ function taxonomy_taxonomy_term_delete(Term $term) {
 function taxonomy_library_info() {
   $libraries['drupal.taxonomy'] = array(
     'title' => 'Taxonomy',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'taxonomy') . '/taxonomy.js' => array(),
     ),

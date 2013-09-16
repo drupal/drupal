@@ -222,7 +222,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
     }
   }
 
-  if (Drupal::request()->isXmlHttpRequest()) {
+  if (\Drupal::request()->isXmlHttpRequest()) {
     if ($fatal) {
       if (error_displayable($error)) {
         // When called from JavaScript, simply output the error message.
@@ -295,7 +295,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
  * DRUPAL_BOOTSTRAP_KERNEL or before Drupal is installed. In all other
  * situations the following code is preferred:
  * @code
- * Drupal::config('system.logging')->get('error_level');
+ * \Drupal::config('system.logging')->get('error_level');
  * @endcode
  *
  * @return string
@@ -303,7 +303,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
  */
 function _drupal_get_error_level() {
   try {
-    return Drupal::config('system.logging')->get('error_level');
+    return \Drupal::config('system.logging')->get('error_level');
   }
   catch (Exception $e) {
     // During very early install the cache_config table does not exist.

@@ -44,7 +44,7 @@ function ckeditor_library_info() {
   );
   $libraries['drupal.ckeditor'] = array(
     'title' => 'Drupal behavior to enable CKEditor on textareas.',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       $module_path . '/js/ckeditor.js' => array(),
       array('data' => $settings, 'type' => 'setting'),
@@ -60,7 +60,7 @@ function ckeditor_library_info() {
   );
   $libraries['drupal.ckeditor.admin'] = array(
     'title' => 'Drupal behavior for drag-and-drop CKEditor toolbar builder UI.',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       $module_path . '/js/ckeditor.admin.js' => array(),
     ),
@@ -83,7 +83,7 @@ function ckeditor_library_info() {
   );
   $libraries['drupal.ckeditor.drupalimage.admin'] = array(
     'title' => 'Only show the "drupalimage" plugin settings when its button is enabled.',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       $module_path . '/js/ckeditor.drupalimage.admin.js' => array(),
     ),
@@ -97,7 +97,7 @@ function ckeditor_library_info() {
   );
   $libraries['drupal.ckeditor.stylescombo.admin'] = array(
     'title' => 'Only show the "stylescombo" plugin settings when its button is enabled.',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       $module_path . '/js/ckeditor.stylescombo.admin.js' => array(),
     ),
@@ -111,7 +111,7 @@ function ckeditor_library_info() {
   );
   $libraries['drupal.ckeditor.drupalimagecaption-theme'] = array(
     'title' => 'Theming support for the imagecaption plugin.',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       $module_path . '/js/plugins/drupalimagecaption/theme.js' => array(),
     ),
@@ -176,7 +176,7 @@ function ckeditor_ckeditor_css_alter(array &$css, Editor $editor) {
 function _ckeditor_theme_css($theme = NULL) {
   $css = array();
   if (!isset($theme)) {
-    $theme = Drupal::config('system.theme')->get('default');
+    $theme = \Drupal::config('system.theme')->get('default');
   }
   if ($theme_path = drupal_get_path('theme', $theme)) {
     $info = system_get_info('theme', $theme);

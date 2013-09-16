@@ -561,7 +561,7 @@ function _xmlrpc($url, array $args, array $headers = array()) {
     $args = $args[$method];
   }
   $xmlrpc_request = xmlrpc_request($method, $args);
-  $request = Drupal::httpClient()->post($url, $headers, $xmlrpc_request->xml);
+  $request = \Drupal::httpClient()->post($url, $headers, $xmlrpc_request->xml);
   $request->setHeader('Content-Type', 'text/xml');
   try {
     $response = $request->send();

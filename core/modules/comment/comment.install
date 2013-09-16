@@ -12,7 +12,7 @@ function comment_uninstall() {
   // Remove variables.
   variable_del('comment_block_count');
   $node_types = array_keys(node_type_get_types());
-  Drupal::entityManager()->addNamespaces(new ArrayIterator(array(
+  \Drupal::entityManager()->addNamespaces(new ArrayIterator(array(
     'Drupal\comment' => DRUPAL_ROOT . '/core/modules/comment/lib',
   )));
   drupal_classloader_register('comment', 'core/modules/comment');
@@ -30,7 +30,7 @@ function comment_uninstall() {
   }
 
   // Remove states.
-  Drupal::state()->delete('comment.node_comment_statistics_scale');
+  \Drupal::state()->delete('comment.node_comment_statistics_scale');
 }
 
 /**

@@ -101,7 +101,7 @@ function tablesort_cell($cell, $header, $ts, $i) {
  *   page request except for those pertaining to table sorting.
  */
 function tablesort_get_query_parameters() {
-  return Url::filterQueryParameters(Drupal::request()->query->all(), array('sort', 'order'));
+  return Url::filterQueryParameters(\Drupal::request()->query->all(), array('sort', 'order'));
 }
 
 /**
@@ -116,7 +116,7 @@ function tablesort_get_query_parameters() {
  *   - "sql": The name of the database field to sort on.
  */
 function tablesort_get_order($headers) {
-  $order = Drupal::request()->query->get('order', '');
+  $order = \Drupal::request()->query->get('order', '');
   foreach ($headers as $header) {
     if (is_array($header)) {
       if (isset($header['data']) && $order == $header['data']) {
@@ -151,7 +151,7 @@ function tablesort_get_order($headers) {
  *   The current sort direction ("asc" or "desc").
  */
 function tablesort_get_sort($headers) {
-  $query = Drupal::request()->query;
+  $query = \Drupal::request()->query;
   if ($query->has('sort')) {
     return (strtolower($query->get('sort')) == 'desc') ? 'desc' : 'asc';
   }

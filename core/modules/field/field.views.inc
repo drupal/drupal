@@ -20,7 +20,7 @@ use Drupal\field\FieldInterface;
  */
 function field_views_data() {
   $data = array();
-  $module_handler = Drupal::moduleHandler();
+  $module_handler = \Drupal::moduleHandler();
 
   foreach (field_info_fields() as $field) {
     if (_field_views_is_sql_entity_type($field)) {
@@ -68,7 +68,7 @@ function field_views_data_alter(&$data) {
  *   True if the entity type uses DatabaseStorageController.
  */
 function _field_views_is_sql_entity_type(FieldInterface $field) {
-  $entity_manager = Drupal::entityManager();
+  $entity_manager = \Drupal::entityManager();
   try {
     if ($entity_manager->getStorageController($field->entity_type) instanceof DatabaseStorageController) {
       return TRUE;
@@ -129,7 +129,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
   $field_name = $field['field_name'];
 
   // Grab information about the entity type tables.
-  $entity_manager = Drupal::entityManager();
+  $entity_manager = \Drupal::entityManager();
   $entity_type = $field->entity_type;
   $entity_info = $entity_manager->getDefinition($entity_type);
   if (!isset($entity_info['base_table'])) {

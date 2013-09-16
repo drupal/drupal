@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 function xmlrpc_server_page() {
   module_load_include('inc', 'xmlrpc');
-  return xmlrpc_server(Drupal::moduleHandler()->invokeAll('xmlrpc'));
+  return xmlrpc_server(\Drupal::moduleHandler()->invokeAll('xmlrpc'));
 }
 
 /**

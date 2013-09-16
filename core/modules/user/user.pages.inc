@@ -39,7 +39,7 @@ function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $a
   }
   else {
     // Time out, in seconds, until login URL expires.
-    $timeout = Drupal::config('user.settings')->get('password_reset_timeout');
+    $timeout = \Drupal::config('user.settings')->get('password_reset_timeout');
     $current = REQUEST_TIME;
     $account = user_load($uid);
     // Verify that the user exists and is active.
@@ -130,12 +130,12 @@ function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
   $current = REQUEST_TIME;
 
   // Basic validation of arguments.
-  $account_data = Drupal::service('user.data')->get('user', $account->id());
+  $account_data = \Drupal::service('user.data')->get('user', $account->id());
   if (isset($account_data['cancel_method']) && !empty($timestamp) && !empty($hashed_pass)) {
     // Validate expiration and hashed password/login.
     if ($timestamp <= $current && $current - $timestamp < $timeout && $account->id() && $timestamp >= $account->getLastLoginTime() && $hashed_pass == user_pass_rehash($account->getPassword(), $timestamp, $account->getLastLoginTime())) {
       $edit = array(
-        'user_cancel_notify' => isset($account_data['cancel_notify']) ? $account_data['cancel_notify'] : Drupal::config('user.settings')->get('notify.status_canceled'),
+        'user_cancel_notify' => isset($account_data['cancel_notify']) ? $account_data['cancel_notify'] : \Drupal::config('user.settings')->get('notify.status_canceled'),
       );
       user_cancel($edit, $account->id(), $account_data['cancel_method']);
       // Since user_cancel() is not invoked via Form API, batch processing needs

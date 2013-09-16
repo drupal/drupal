@@ -219,7 +219,7 @@ function system_permission() {
     ),
     'view the administration theme' => array(
       'title' => t('View the administration theme'),
-      'description' => Drupal::config('system.theme')->get('admin') ?: t('This is only used when the site is configured to use a separate administration theme on the <a href="@appearance-url">Appearance</a> page.', array('@appearance-url' => url('admin/appearance'))),
+      'description' => \Drupal::config('system.theme')->get('admin') ?: t('This is only used when the site is configured to use a separate administration theme on the <a href="@appearance-url">Appearance</a> page.', array('@appearance-url' => url('admin/appearance'))),
     ),
     'access site reports' => array(
       'title' => t('View site reports'),
@@ -932,7 +932,7 @@ function _system_batch_theme() {
   // Retrieve the current state of the batch.
   $batch = &batch_get();
   if (!$batch && isset($_REQUEST['id'])) {
-    $batch = Drupal::service('batch.storage')->load($_REQUEST['id']);
+    $batch = \Drupal::service('batch.storage')->load($_REQUEST['id']);
   }
   // Use the same theme as the page that started the batch.
   if (!empty($batch['theme'])) {
@@ -947,7 +947,7 @@ function system_library_info() {
   // Drupal-specific JavaScript.
   $libraries['drupal'] = array(
     'title' => 'Drupal',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/drupal.js' => array('group' => JS_LIBRARY, 'weight' => -18),
     ),
@@ -959,7 +959,7 @@ function system_library_info() {
   // Drupal settings.
   $libraries['drupalSettings'] = array(
     'title' => 'Drupal Settings',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       array('type' => 'setting', 'data' => array()),
     ),
@@ -969,7 +969,7 @@ function system_library_info() {
   $libraries['drupal.ajax'] = array(
     'title' => 'Drupal AJAX',
     'website' => 'http://api.drupal.org/api/group/ajax/8',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/ajax.js' => array('group' => JS_LIBRARY, 'weight' => 2),
     ),
@@ -985,7 +985,7 @@ function system_library_info() {
   // Drupal's Screen Reader change announcement utility.
   $libraries['drupal.announce'] = array(
     'title' => 'Drupal announce',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/announce.js' => array('group' => JS_LIBRARY),
     ),
@@ -998,7 +998,7 @@ function system_library_info() {
   // Drupal's batch API.
   $libraries['drupal.batch'] = array(
     'title' => 'Drupal batch API',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/batch.js' => array('group' => JS_DEFAULT, 'cache' => FALSE),
     ),
@@ -1015,7 +1015,7 @@ function system_library_info() {
   // Drupal's progress indicator.
   $libraries['drupal.progress'] = array(
     'title' => 'Drupal progress indicator',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/progress.js' => array('group' => JS_DEFAULT),
     ),
@@ -1029,7 +1029,7 @@ function system_library_info() {
   // Drupal's form library.
   $libraries['drupal.form'] = array(
     'title' => 'Drupal form library',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/form.js' => array('group' => JS_LIBRARY, 'weight' => 1),
     ),
@@ -1044,7 +1044,7 @@ function system_library_info() {
   // Drupal's dialog component.
   $libraries['drupal.dialog'] = array(
     'title' => 'Drupal Dialog',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/dialog.js' => array('group' => JS_LIBRARY),
     ),
@@ -1063,7 +1063,7 @@ function system_library_info() {
   // Drupal's integration between AJAX and dialogs.
   $libraries['drupal.dialog.ajax'] = array(
     'title' => 'Drupal Dialog AJAX',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/dialog.ajax.js' => array('group' => JS_LIBRARY, 'weight' => 3),
     ),
@@ -1079,7 +1079,7 @@ function system_library_info() {
   // Drupal's states library.
   $libraries['drupal.states'] = array(
     'title' => 'Drupal states',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/states.js' => array('group' => JS_LIBRARY, 'weight' => 1),
     ),
@@ -1094,7 +1094,7 @@ function system_library_info() {
   // Drupal's tabledrag library.
   $libraries['drupal.tabledrag'] = array(
     'title' => 'Drupal tabledrag',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/tabledrag.js' => array('group' => JS_LIBRARY, 'weight' => -1),
     ),
@@ -1111,7 +1111,7 @@ function system_library_info() {
   // Drupal's responsive table API.
   $libraries['drupal.tableresponsive'] = array(
     'title' => 'Drupal responsive table API',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/tableresponsive.js' => array('group' => JS_LIBRARY),
     ),
@@ -1125,7 +1125,7 @@ function system_library_info() {
   // Collapsible details.
   $libraries['drupal.collapse'] = array(
     'title' => 'Collapsible details',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/collapse.js' => array('group' => JS_DEFAULT),
     ),
@@ -1142,7 +1142,7 @@ function system_library_info() {
   // Drupal's autocomplete widget.
   $libraries['drupal.autocomplete'] = array(
     'title' => 'Drupal autocomplete',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/autocomplete.js' => array('group' => JS_DEFAULT),
     ),
@@ -1158,7 +1158,7 @@ function system_library_info() {
   // elements like the overlay.
   $libraries['drupal.displace'] = array(
     'title' => 'Drupal displace',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/displace.js' => array('group' => JS_LIBRARY),
     ),
@@ -1172,7 +1172,7 @@ function system_library_info() {
   // Manages tab orders in the document.
   $libraries['drupal.tabbingmanager'] = array(
     'title' => 'Drupal tabbing manager',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/tabbingmanager.js' => array('group' => JS_LIBRARY),
     ),
@@ -1187,7 +1187,7 @@ function system_library_info() {
   // A utility function to limit calls to a function with a given time.
   $libraries['drupal.debounce'] = array(
     'title' => 'Drupal debounce',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/debounce.js' => array('group' => JS_LIBRARY),
     ),
@@ -1301,7 +1301,7 @@ function system_library_info() {
   $libraries['matchmedia'] = array(
     'title' => 'window.matchMedia polyfill',
     'website' => 'http://drupal.org/node/1815602',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/matchmedia.js' => array(),
     ),
@@ -1372,7 +1372,7 @@ function system_library_info() {
   // Drupal's base CSS.
   $libraries['drupal.base'] = array(
     'title' => 'Drupal base CSS',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'css' => array(
       'core/misc/drupal.base.css' => array(
         'every_page' => TRUE,
@@ -1872,7 +1872,7 @@ function system_library_info() {
   );
   $libraries['drupal.tableselect'] = array(
     'title' => 'Tableselect',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/tableselect.js' => array(),
     ),
@@ -1883,7 +1883,7 @@ function system_library_info() {
   );
   $libraries['drupal.tableheader'] = array(
     'title' => 'Table header',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/tableheader.js' => array(),
     ),
@@ -1897,7 +1897,7 @@ function system_library_info() {
   );
   $libraries['drupal.timezone'] = array(
     'title' => 'Timezone',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/timezone.js' => array(),
     ),
@@ -1908,7 +1908,7 @@ function system_library_info() {
   );
   $libraries['drupal.machine-name'] = array(
     'title' => 'Machine name',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       'core/misc/machine-name.js' => array(),
     ),
@@ -1922,7 +1922,7 @@ function system_library_info() {
 
   $libraries['drupal.system'] = array(
     'title' => 'System',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'system') . '/system.js' => array(),
     ),
@@ -1935,7 +1935,7 @@ function system_library_info() {
   );
   $libraries['drupal.system.modules'] = array(
     'title' => 'System modules',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'system') . '/system.modules.js' => array(),
     ),
@@ -1969,7 +1969,7 @@ function system_stream_wrappers() {
   );
 
   // Only register the private file stream wrapper if a file path has been set.
-  if (Drupal::config('system.file')->get('path.private')) {
+  if (\Drupal::config('system.file')->get('path.private')) {
     $wrappers['private'] = array(
       'name' => t('Private files'),
       'class' => 'Drupal\Core\StreamWrapper\PrivateStream',
@@ -2204,7 +2204,7 @@ function system_custom_theme() {
     $request = drupal_container()->get('request');
     $path = $request->attributes->get('_system_path');
     if (user_access('view the administration theme') && path_is_admin($path)) {
-      return Drupal::config('system.theme')->get('admin');
+      return \Drupal::config('system.theme')->get('admin');
     }
   }
 }
@@ -2213,7 +2213,7 @@ function system_custom_theme() {
  * Implements hook_form_FORM_ID_alter().
  */
 function system_form_user_form_alter(&$form, &$form_state) {
-  if (Drupal::config('system.date')->get('timezone.user.configurable')) {
+  if (\Drupal::config('system.date')->get('timezone.user.configurable')) {
     system_user_timezone($form, $form_state);
   }
 }
@@ -2222,7 +2222,7 @@ function system_form_user_form_alter(&$form, &$form_state) {
  * Implements hook_form_FORM_ID_alter().
  */
 function system_form_user_register_form_alter(&$form, &$form_state) {
-  $config = Drupal::config('system.date');
+  $config = \Drupal::config('system.date');
   if ($config->get('timezone.user.configurable') && $config->get('timezone.user.default') == DRUPAL_USER_TIMEZONE_SELECT) {
     system_user_timezone($form, $form_state);
   }
@@ -2232,7 +2232,7 @@ function system_form_user_register_form_alter(&$form, &$form_state) {
  * Implements hook_user_presave().
  */
 function system_user_presave(UserInterface $account) {
-  $config = Drupal::config('system.date');
+  $config = \Drupal::config('system.date');
   if ($config->get('timezone.user.configurable') && !$account->getTimeZone() && !$config->get('timezone.user.default')) {
     $account->timezone = $config->get('timezone.default');
   }
@@ -2242,7 +2242,7 @@ function system_user_presave(UserInterface $account) {
  * Implements hook_user_login().
  */
 function system_user_login($account) {
-  $config = Drupal::config('system.date');
+  $config = \Drupal::config('system.date');
   // If the user has a NULL time zone, notify them to set a time zone.
   if (!$account->getTimezone() && $config->get('timezone.user.configurable') && $config->get('timezone.user.warn')) {
     drupal_set_message(t('Configure your <a href="@user-edit">account time zone setting</a>.', array('@user-edit' => url("user/$account->id()/edit", array('query' => drupal_get_destination(), 'fragment' => 'edit-timezone')))));
@@ -2264,7 +2264,7 @@ function system_user_timezone(&$form, &$form_state) {
   $form['timezone']['timezone'] = array(
     '#type' => 'select',
     '#title' => t('Time zone'),
-    '#default_value' => $account->getTimezone() ? $account->getTimezone() : Drupal::config('system.date')->get('timezone.default'),
+    '#default_value' => $account->getTimezone() ? $account->getTimezone() : \Drupal::config('system.date')->get('timezone.default'),
     '#options' => system_time_zones($account->id() != $user->id()),
     '#description' => t('Select the desired local time and time zone. Dates and times throughout this site will be displayed using this time zone.'),
   );
@@ -2367,7 +2367,7 @@ function system_get_info($type, $name = NULL) {
   $info = array();
   if ($type == 'module') {
     $data = system_rebuild_module_data();
-    foreach (Drupal::moduleHandler()->getModuleList() as $module => $filename) {
+    foreach (\Drupal::moduleHandler()->getModuleList() as $module => $filename) {
       if (isset($data[$module])) {
         $info[$module] = $data[$module]->info;
       }
@@ -2501,8 +2501,8 @@ function system_rebuild_module_data() {
     $files = array();
     ksort($modules);
     // Add name, status, weight, and schema version.
-    $enabled_modules = (array) Drupal::config('system.module')->get('enabled');
-    $disabled_modules = (array) Drupal::config('system.module.disabled')->get();
+    $enabled_modules = (array) \Drupal::config('system.module')->get('enabled');
+    $disabled_modules = (array) \Drupal::config('system.module.disabled')->get();
     $all_modules = $enabled_modules + $disabled_modules;
     foreach ($modules as $module => $record) {
       $record->name = $module;
@@ -2511,12 +2511,12 @@ function system_rebuild_module_data() {
       $record->schema_version = SCHEMA_UNINSTALLED;
       $files[$module] = $record->filename;
     }
-    $modules = Drupal::moduleHandler()->buildModuleDependencies($modules);
+    $modules = \Drupal::moduleHandler()->buildModuleDependencies($modules);
     $modules_cache = $modules;
 
     // Store filenames to allow system_list() and drupal_get_filename() to
     // retrieve them without having to rebuild or scan the filesystem.
-    Drupal::state()->set('system.module.files', $files);
+    \Drupal::state()->set('system.module.files', $files);
   }
   return $modules_cache;
 }
@@ -2531,7 +2531,7 @@ function _system_rebuild_theme_data() {
   // Find themes
   $themes = drupal_system_listing('/^' . DRUPAL_PHP_FUNCTION_PATTERN . '\.info.yml$/', 'themes');
   // Allow modules to add further themes.
-  if ($module_themes = Drupal::moduleHandler()->invokeAll('system_theme_info')) {
+  if ($module_themes = \Drupal::moduleHandler()->invokeAll('system_theme_info')) {
     foreach ($module_themes as $name => $uri) {
       // @see file_scan_directory()
       $themes[$name] = (object) array(
@@ -2655,7 +2655,7 @@ function system_rebuild_theme_data() {
   //   based on the current config. Remove this code when themes have a proper
   //   installation status.
   // @see http://drupal.org/node/1067408
-  $enabled_themes = (array) Drupal::config('system.theme')->get('enabled');
+  $enabled_themes = (array) \Drupal::config('system.theme')->get('enabled');
   $files = array();
   foreach ($themes as $name => $theme) {
     $theme->status = (int) isset($enabled_themes[$name]);
@@ -2663,11 +2663,11 @@ function system_rebuild_theme_data() {
   }
   // Replace last known theme data state.
   // @todo Obsolete with proper installation status for themes.
-  Drupal::state()->set('system.theme.data', $themes);
+  \Drupal::state()->set('system.theme.data', $themes);
 
   // Store filenames to allow system_list() and drupal_get_filename() to
   // retrieve them without having to rebuild or scan the filesystem.
-  Drupal::state()->set('system.theme.files', $files);
+  \Drupal::state()->set('system.theme.files', $files);
 
   return $themes;
 }
@@ -2882,7 +2882,7 @@ function confirm_form($form, $question, $path, $description = NULL, $yes = NULL,
 function system_admin_compact_mode() {
   // PHP converts dots into underscores in cookie names to avoid problems with
   // its parser, so we use a converted cookie name.
-  return isset($_COOKIE['Drupal_visitor_admin_compact_mode']) ? $_COOKIE['Drupal_visitor_admin_compact_mode'] : Drupal::config('system.site')->get('admin_compact_mode');
+  return isset($_COOKIE['Drupal_visitor_admin_compact_mode']) ? $_COOKIE['Drupal_visitor_admin_compact_mode'] : \Drupal::config('system.site')->get('admin_compact_mode');
 }
 
 /**
@@ -2947,7 +2947,7 @@ function system_get_module_admin_tasks($module, $info) {
   }
 
   // Append link for permissions.
-  if (Drupal::moduleHandler()->implementsHook($module, 'permission')) {
+  if (\Drupal::moduleHandler()->implementsHook($module, 'permission')) {
     $item = menu_get_item('admin/people/permissions');
     if (!empty($item['access'])) {
       $item['link_path'] = $item['href'];
@@ -2969,7 +2969,7 @@ function system_get_module_admin_tasks($module, $info) {
  */
 function system_cron() {
   // Cleanup the flood.
-  Drupal::service('flood')->garbageCollection();
+  \Drupal::service('flood')->garbageCollection();
 
   foreach (Cache::getBins() as $cache_backend) {
     $cache_backend->garbageCollection();
@@ -2996,7 +2996,7 @@ function system_cron() {
  * Implements hook_mail().
  */
 function system_mail($key, &$message, $params) {
-  $token_service = Drupal::token();
+  $token_service = \Drupal::token();
 
   $context = $params['context'];
 
@@ -3099,7 +3099,7 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
     }
   }
   try {
-    $data = Drupal::httpClient()
+    $data = \Drupal::httpClient()
       ->get($url)
       ->send()
       ->getBody(TRUE);
@@ -3143,8 +3143,8 @@ function system_run_automated_cron() {
   // If the site is not fully installed, suppress the automated cron run.
   // Otherwise it could be triggered prematurely by Ajax requests during
   // installation.
-  if (($threshold = Drupal::config('system.cron')->get('threshold.autorun')) > 0 && variable_get('install_task') == 'done') {
-    $cron_last = Drupal::state()->get('system.cron_last') ?: NULL;
+  if (($threshold = \Drupal::config('system.cron')->get('threshold.autorun')) > 0 && variable_get('install_task') == 'done') {
+    $cron_last = \Drupal::state()->get('system.cron_last') ?: NULL;
     if (!isset($cron_last) || (REQUEST_TIME - $cron_last > $threshold)) {
       drupal_cron_run();
     }

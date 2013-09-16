@@ -112,7 +112,7 @@ function locale_translation_status_form($form, &$form_state) {
     });
   }
 
-  $last_checked = Drupal::state()->get('locale.translation_last_checked');
+  $last_checked = \Drupal::state()->get('locale.translation_last_checked');
   $form['last_checked'] = array(
     '#theme' => 'locale_translation_last_check',
     '#last' => $last_checked,
@@ -197,7 +197,7 @@ function locale_translation_status_form_submit($form, &$form_state) {
   // If the status was updated recently we can immediately start fetching the
   // translation updates. If the status is expired we clear it an run a batch to
   // update the status and then fetch the translation updates.
-  $last_checked = Drupal::state()->get('locale.translation_last_checked');
+  $last_checked = \Drupal::state()->get('locale.translation_last_checked');
   if ($last_checked < REQUEST_TIME - LOCALE_TRANSLATION_STATUS_TTL) {
     locale_translation_clear_status();
     $batch = locale_translation_batch_update_build(array(), $langcodes, $options);

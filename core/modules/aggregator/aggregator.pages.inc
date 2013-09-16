@@ -37,7 +37,7 @@ use Drupal\Core\Entity\EntityInterface;
  *   An array of the feed items.
  */
 function aggregator_load_feed_items($type, $data = NULL, $limit = 20) {
-  $storage_controller = Drupal::entityManager()->getStorageController('aggregator_item');
+  $storage_controller = \Drupal::entityManager()->getStorageController('aggregator_item');
   switch ($type) {
     case 'sum':
       return $storage_controller->loadAll($limit);
@@ -148,7 +148,7 @@ function theme_aggregator_page_opml($variables) {
   $output  = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<opml version=\"1.1\">\n";
   $output .= "<head>\n";
-  $output .= '<title>' . check_plain(Drupal::config('system.site')->get('name')) . "</title>\n";
+  $output .= '<title>' . check_plain(\Drupal::config('system.site')->get('name')) . "</title>\n";
   $output .= '<dateModified>' . gmdate(DATE_RFC2822, REQUEST_TIME) . "</dateModified>\n";
   $output .= "</head>\n";
   $output .= "<body>\n";

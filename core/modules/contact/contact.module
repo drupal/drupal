@@ -148,13 +148,13 @@ function _contact_personal_tab_access(UserInterface $account) {
 
   // If the requested user has disabled their contact form, do not allow users
   // to contact them.
-  $account_data = Drupal::service('user.data')->get('contact', $account->id(), 'enabled');
+  $account_data = \Drupal::service('user.data')->get('contact', $account->id(), 'enabled');
   if (isset($account_data) && empty($account_data)) {
     return FALSE;
   }
   // If the requested user did not save a preference yet, deny access if the
   // configured default is disabled.
-  elseif (!Drupal::config('contact.settings')->get('user_default_enabled')) {
+  elseif (!\Drupal::config('contact.settings')->get('user_default_enabled')) {
     return FALSE;
   }
 
@@ -167,7 +167,7 @@ function _contact_personal_tab_access(UserInterface $account) {
 function contact_entity_bundle_info() {
   $bundles = array();
   foreach (config_get_storage_names_with_prefix('contact.category.') as $config_name) {
-    $config = Drupal::config($config_name);
+    $config = \Drupal::config($config_name);
     $bundles['contact_message'][$config->get('id')]['label'] = $config->get('label');
   }
   return $bundles;
@@ -264,7 +264,7 @@ function contact_mail($key, &$message, $params) {
   $language = language_load($message['langcode']);
 
   $variables = array(
-    '!site-name' => Drupal::config('system.site')->get('name'),
+    '!site-name' => \Drupal::config('system.site')->get('name'),
     '!subject' => $contact_message->getSubject(),
     '!category' => !empty($params['contact_category']) ? $params['contact_category']->label() : NULL,
     '!form-url' => url(current_path(), array('absolute' => TRUE, 'language' => $language)),
@@ -324,11 +324,11 @@ function contact_form_user_form_alter(&$form, &$form_state) {
     '#weight' => 5,
   );
   $account = $form_state['controller']->getEntity();
-  $account_data = !user_is_anonymous() ? Drupal::service('user.data')->get('contact', $account->id(), 'enabled') : NULL;
+  $account_data = !user_is_anonymous() ? \Drupal::service('user.data')->get('contact', $account->id(), 'enabled') : NULL;
   $form['contact']['contact'] = array(
     '#type' => 'checkbox',
     '#title' => t('Personal contact form'),
-    '#default_value' => isset($account_data) ? $account_data : Drupal::config('contact.settings')->get('user_default_enabled'),
+    '#default_value' => isset($account_data) ? $account_data : \Drupal::config('contact.settings')->get('user_default_enabled'),
     '#description' => t('Allow other users to contact you via a personal contact form which keeps your e-mail address hidden. Note that some privileged users such as site administrators are still able to contact you even if you choose to disable this feature.'),
   );
   $form['actions']['submit']['#submit'][] = 'contact_user_profile_form_submit';
@@ -340,7 +340,7 @@ function contact_form_user_form_alter(&$form, &$form_state) {
 function contact_user_profile_form_submit($form, &$form_state) {
   $account = $form_state['controller']->getEntity();
   if ($account->id() && isset($form_state['values']['contact'])) {
-    Drupal::service('user.data')->set('contact', $account->id(), 'enabled', (int) $form_state['values']['contact']);
+    \Drupal::service('user.data')->set('contact', $account->id(), 'enabled', (int) $form_state['values']['contact']);
   }
 }
 
@@ -361,7 +361,7 @@ function contact_form_user_admin_settings_alter(&$form, &$form_state) {
     '#type' => 'checkbox',
     '#title' => t('Enable the personal contact form by default for new users.'),
     '#description' => t('Changing this setting will not affect existing users.'),
-    '#default_value' => Drupal::config('contact.settings')->get('user_default_enabled'),
+    '#default_value' => \Drupal::config('contact.settings')->get('user_default_enabled'),
   );
   // Add submit handler to save contact configuration.
   $form['#submit'][] = 'contact_form_user_admin_settings_submit';
@@ -373,7 +373,7 @@ function contact_form_user_admin_settings_alter(&$form, &$form_state) {
  * @see contact_form_user_admin_settings_alter()
  */
 function contact_form_user_admin_settings_submit($form, &$form_state) {
-  Drupal::config('contact.settings')
+  \Drupal::config('contact.settings')
     ->set('user_default_enabled', $form_state['values']['contact_default_status'])
     ->save();
 }
