@@ -179,7 +179,7 @@ function search_menu() {
 
   $default_info = search_get_default_plugin_info();
   if ($default_info) {
-    foreach (Drupal::service('plugin.manager.search')->getActiveDefinitions() as $plugin_id => $search_info) {
+    foreach (\Drupal::service('plugin.manager.search')->getActiveDefinitions() as $plugin_id => $search_info) {
       $path = 'search/' . $search_info['path'];
       $items[$path] = array(
         'title' => $search_info['title'],
@@ -218,8 +218,8 @@ function search_menu() {
  */
 function search_is_active() {
   // This path cannot be accessed if there are no active plugins.
-  $account = Drupal::request()->attributes->get('_account');
-  return !empty($account) && $account->hasPermission('search content') && Drupal::service('plugin.manager.search')->getActiveDefinitions();
+  $account = \Drupal::request()->attributes->get('_account');
+  return !empty($account) && $account->hasPermission('search content') && \Drupal::service('plugin.manager.search')->getActiveDefinitions();
 }
 
 /**
@@ -229,8 +229,8 @@ function search_is_active() {
  *   The search plugin definition for the default search plugin, if any.
  */
 function search_get_default_plugin_info() {
-  $info = Drupal::service('plugin.manager.search')->getActiveDefinitions();
-  $default = Drupal::config('search.settings')->get('default_plugin');
+  $info = \Drupal::service('plugin.manager.search')->getActiveDefinitions();
+  $default = \Drupal::config('search.settings')->get('default_plugin');
   if (isset($info[$default])) {
     return $info[$default];
   }
@@ -251,12 +251,12 @@ function search_get_default_plugin_info() {
  * @see search_menu()
  */
 function _search_menu_access($plugin_id) {
-  $account = Drupal::request()->attributes->get('_account');
+  $account = \Drupal::request()->attributes->get('_account');
   // @todo - remove the empty() check once we are more confident
   // that the account will be populated, especially during tests.
   // @see https://drupal.org/node/2032553
   $access = !empty($account) && $account->hasPermission('search content');
-  return $access && Drupal::service('plugin.manager.search')->pluginAccess($plugin_id, $account);
+  return $access && \Drupal::service('plugin.manager.search')->pluginAccess($plugin_id, $account);
 }
 
 /**
@@ -277,7 +277,7 @@ function _search_menu_access($plugin_id) {
  */
 function search_reindex($sid = NULL, $type = NULL, $reindex = FALSE, $langcode = NULL) {
   if ($type == NULL && $sid == NULL) {
-    foreach (Drupal::service('plugin.manager.search')->getActiveIndexingPlugins() as $plugin) {
+    foreach (\Drupal::service('plugin.manager.search')->getActiveIndexingPlugins() as $plugin) {
       $plugin->resetIndex();
     }
   }
@@ -328,7 +328,7 @@ function search_cron() {
   // to date.
   drupal_register_shutdown_function('search_update_totals');
 
-  foreach (Drupal::service('plugin.manager.search')->getActiveIndexingPlugins() as $plugin) {
+  foreach (\Drupal::service('plugin.manager.search')->getActiveIndexingPlugins() as $plugin) {
     $plugin->updateIndex();
   }
 }
@@ -388,7 +388,7 @@ function search_simplify($text, $langcode = NULL) {
   search_invoke_preprocess($text, $langcode);
 
   // Simple CJK handling
-  if (Drupal::config('search.settings')->get('index.overlap_cjk')) {
+  if (\Drupal::config('search.settings')->get('index.overlap_cjk')) {
     $text = preg_replace_callback('/[' . PREG_CLASS_CJK . ']+/u', 'search_expand_cjk', $text);
   }
 
@@ -442,7 +442,7 @@ function search_simplify($text, $langcode = NULL) {
  *   Tokenized text, starting and ending with a space character.
  */
 function search_expand_cjk($matches) {
-  $min = Drupal::config('search.settings')->get('index.minimum_word_size');
+  $min = \Drupal::config('search.settings')->get('index.minimum_word_size');
   $str = $matches[0];
   $length = drupal_strlen($str);
   // If the text is shorter than the minimum word size, don't tokenize it.
@@ -502,7 +502,7 @@ function _search_index_truncate(&$text) {
  * Invokes hook_search_preprocess() in modules.
  */
 function search_invoke_preprocess(&$text, $langcode = NULL) {
-  foreach (Drupal::moduleHandler()->getImplementations('search_preprocess') as $module) {
+  foreach (\Drupal::moduleHandler()->getImplementations('search_preprocess') as $module) {
     $text = module_invoke($module, 'search_preprocess', $text, $langcode);
   }
 }
@@ -522,12 +522,12 @@ function search_invoke_preprocess(&$text, $langcode = NULL) {
  * @ingroup search
  */
 function search_index($sid, $type, $text, $langcode) {
-  $minimum_word_size = Drupal::config('search.settings')->get('index.minimum_word_size');
+  $minimum_word_size = \Drupal::config('search.settings')->get('index.minimum_word_size');
 
   // Multipliers for scores of words inside certain HTML tags. The weights are
   // stored in config so that modules can overwrite the default weights.
   // Note: 'a' must be included for link ranking to work.
-  $tags = Drupal::config('search.settings')->get('index.tag_weights');
+  $tags = \Drupal::config('search.settings')->get('index.tag_weights');
 
   // Strip off all ignored tags to speed up processing, but insert space before
   // and after them to keep word boundaries.

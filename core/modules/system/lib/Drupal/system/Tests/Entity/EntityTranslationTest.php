@@ -9,7 +9,6 @@ namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\TranslatableInterface;
-use InvalidArgumentException;
 
 /**
  * Tests entity translation.
@@ -168,7 +167,7 @@ class EntityTranslationTest extends EntityUnitTestBase {
       $entity->getTranslation('invalid')->get($this->field_name)->value;
       $this->fail('Getting a translation for an invalid language is NULL.');
     }
-    catch (InvalidArgumentException $e) {
+    catch (\InvalidArgumentException $e) {
       $this->pass('A translation for an invalid language is NULL.');
     }
 
@@ -177,7 +176,7 @@ class EntityTranslationTest extends EntityUnitTestBase {
       $entity->getTranslation('invalid')->set($this->field_name, NULL);
       $this->fail(format_string('%entity_type: Setting a translation for an invalid language throws an exception.', array('%entity_type' => $entity_type)));
     }
-    catch (InvalidArgumentException $e) {
+    catch (\InvalidArgumentException $e) {
       $this->pass(format_string('%entity_type: Setting a translation for an invalid language throws an exception.', array('%entity_type' => $entity_type)));
     }
 

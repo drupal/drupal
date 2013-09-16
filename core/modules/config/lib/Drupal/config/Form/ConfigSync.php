@@ -53,11 +53,6 @@ class ConfigSync extends FormBase {
   protected $eventDispatcher;
 
   /**
-   * @var \Drupal\Core\Config\ConfigFactory;
-   */
-  protected $configFactory;
-
-  /**
    * @var \Drupal\Core\Entity\EntityManager;
    */
   protected $entity_manager;
@@ -81,7 +76,7 @@ class ConfigSync extends FormBase {
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   Event dispatcher.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
-   *   Configuration object factory.
+   *   The config factory.
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   Entity manager.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator

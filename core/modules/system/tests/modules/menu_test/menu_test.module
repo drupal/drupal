@@ -444,7 +444,7 @@ function menu_test_local_action_dynamic_title($arg) {
  * several local tasks to menu-test/tasks.
  */
 function menu_test_menu_local_tasks(&$data, $router_item, $root_path) {
-  if (!Drupal::config('menu_test.settings')->get('tasks.add')) {
+  if (!\Drupal::config('menu_test.settings')->get('tasks.add')) {
     return;
   }
   if (strpos($router_item['tab_root'], 'menu-test/tasks/') === 0) {
@@ -474,7 +474,7 @@ function menu_test_menu_local_tasks(&$data, $router_item, $root_path) {
  * several local tasks to menu-test/tasks.
  */
 function menu_test_menu_local_tasks_alter(&$data, $router_item, $root_path) {
-  if (!Drupal::config('menu_test.settings')->get('tasks.alter')) {
+  if (!\Drupal::config('menu_test.settings')->get('tasks.alter')) {
     return;
   }
   if (strpos($router_item['tab_root'], 'menu-test/tasks/') === 0) {
@@ -547,7 +547,7 @@ function menu_test_callback() {
  * @see menu_test_menu().
  */
 function menu_test_menu_trail_callback() {
-  $menu_path = Drupal::state()->get('menu_test.menu_tree_set_path') ?: array();
+  $menu_path = \Drupal::state()->get('menu_test.menu_tree_set_path') ?: array();
   if (!empty($menu_path)) {
     menu_tree_set_path($menu_path['menu_name'], $menu_path['path']);
   }
@@ -566,8 +566,8 @@ function menu_test_custom_403_404_callback() {
   // When requested by one of the TrailTest tests, record the final
   // active trail now that the user has been redirected to the custom 403 or
   // 404 page.
-  if (Drupal::state()->get('menu_test.record_active_trail') ?: FALSE) {
-    Drupal::state()->set('menu_test.active_trail_final', menu_get_active_trail());
+  if (\Drupal::state()->get('menu_test.record_active_trail') ?: FALSE) {
+    \Drupal::state()->set('menu_test.active_trail_final', menu_get_active_trail());
   }
 
   return 'This is menu_test_custom_403_404_callback().';
@@ -617,7 +617,7 @@ function menu_test_theme_page_callback($inherited = FALSE) {
 function menu_test_theme_callback($argument) {
   // Test using the variable administrative theme.
   if ($argument == 'use-admin-theme') {
-    return Drupal::config('system.theme')->get('admin');
+    return \Drupal::config('system.theme')->get('admin');
   }
   // Test using a theme that exists, but may or may not be enabled.
   elseif ($argument == 'use-stark-theme') {
@@ -642,10 +642,10 @@ function menu_test_custom_theme() {
   // When requested by one of the MenuTrailTestCase tests, record the initial
   // active trail during Drupal's bootstrap (before the user is redirected to a
   // custom 403 or 404 page). See menu_test_custom_403_404_callback().
-  if (Drupal::state()->get('menu_test.record_active_trail') ?: FALSE) {
-    Drupal::state()->set('menu_test.active_trail_initial', menu_get_active_trail());
+  if (\Drupal::state()->get('menu_test.record_active_trail') ?: FALSE) {
+    \Drupal::state()->set('menu_test.active_trail_initial', menu_get_active_trail());
   }
-  if ($theme = Drupal::state()->get('menu_test.hook_custom_theme_name') ?: FALSE) {
+  if ($theme = \Drupal::state()->get('menu_test.hook_custom_theme_name') ?: FALSE) {
     return $theme;
   }
 }

@@ -153,9 +153,9 @@ function forum_menu_local_tasks(&$data, $router_item, $root_path) {
 
   // Add action link to 'node/add/forum' on 'forum' sub-pages.
   if ($root_path == 'forum' || $root_path == 'forum/%') {
-    $request = Drupal::request();
+    $request = \Drupal::request();
     $forum_term = $request->attributes->get('taxonomy_term');
-    $vid = Drupal::config('forum.settings')->get('vocabulary');
+    $vid = \Drupal::config('forum.settings')->get('vocabulary');
     $links = array();
     // Loop through all bundles for forum taxonomy vocabulary field.
     $field = Field::fieldInfo()->getField('node', 'taxonomy_forums');
@@ -217,7 +217,7 @@ function forum_entity_info(&$info) {
  */
 function forum_entity_bundle_info_alter(&$bundles) {
   // Take over URI construction for taxonomy terms that are forums.
-  if ($vid = Drupal::config('forum.settings')->get('vocabulary')) {
+  if ($vid = \Drupal::config('forum.settings')->get('vocabulary')) {
     if (isset($bundles['taxonomy_term'][$vid])) {
       $bundles['taxonomy_term'][$vid]['uri_callback'] = 'forum_uri';
     }
@@ -240,7 +240,7 @@ function forum_uri($forum) {
  * forum taxonomy.
  */
 function forum_node_validate(EntityInterface $node, $form) {
-  if (Drupal::service('forum_manager')->checkNodeType($node)) {
+  if (\Drupal::service('forum_manager')->checkNodeType($node)) {
     // vocabulary is selected, not a "container" term.
     if (!$node->taxonomy_forums->isEmpty()) {
       // Extract the node's proper topic ID.
@@ -274,7 +274,7 @@ function forum_node_validate(EntityInterface $node, $form) {
  * Assigns the forum taxonomy when adding a topic from within a forum.
  */
 function forum_node_presave(EntityInterface $node) {
-  if (Drupal::service('forum_manager')->checkNodeType($node)) {
+  if (\Drupal::service('forum_manager')->checkNodeType($node)) {
     // Make sure all fields are set properly:
     $node->icon = !empty($node->icon) ? $node->icon : '';
     if (!$node->taxonomy_forums->isEmpty()) {
@@ -295,7 +295,7 @@ function forum_node_presave(EntityInterface $node) {
  * Implements hook_node_update().
  */
 function forum_node_update(EntityInterface $node) {
-  if (Drupal::service('forum_manager')->checkNodeType($node)) {
+  if (\Drupal::service('forum_manager')->checkNodeType($node)) {
     // If this is not a new revision and does exist, update the forum record,
     // otherwise insert a new one.
     if ($node->getRevisionId() == $node->original->getRevisionId() && db_query('SELECT tid FROM {forum} WHERE nid=:nid', array(':nid' => $node->id()))->fetchField()) {
@@ -360,7 +360,7 @@ function forum_node_update(EntityInterface $node) {
       $query->execute();
       // The logic for determining last_comment_count is fairly complex, so
       // update the index too.
-      Drupal::service('forum_manager')->updateIndex($node->id());
+      \Drupal::service('forum_manager')->updateIndex($node->id());
     }
     // When a forum node is unpublished, remove it from the forum_index table.
     else {
@@ -373,7 +373,7 @@ function forum_node_update(EntityInterface $node) {
  * Implements hook_node_insert().
  */
 function forum_node_insert(EntityInterface $node) {
-  if (Drupal::service('forum_manager')->checkNodeType($node)) {
+  if (\Drupal::service('forum_manager')->checkNodeType($node)) {
     if (!empty($node->forum_tid)) {
       $nid = db_insert('forum')
         ->fields(array(
@@ -408,7 +408,7 @@ function forum_node_insert(EntityInterface $node) {
  * Implements hook_node_predelete().
  */
 function forum_node_predelete(EntityInterface $node) {
-  if (Drupal::service('forum_manager')->checkNodeType($node)) {
+  if (\Drupal::service('forum_manager')->checkNodeType($node)) {
     db_delete('forum')
       ->condition('nid', $node->id())
       ->execute();
@@ -424,7 +424,7 @@ function forum_node_predelete(EntityInterface $node) {
 function forum_node_load($nodes) {
   $node_vids = array();
   foreach ($nodes as $node) {
-    if (Drupal::service('forum_manager')->checkNodeType($node)) {
+    if (\Drupal::service('forum_manager')->checkNodeType($node)) {
       $node_vids[] = $node->getRevisionId();
     }
   }
@@ -460,7 +460,7 @@ function forum_permission() {
  */
 function forum_comment_publish($comment) {
   if ($comment->entity_type->value == 'node') {
-    Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
+    \Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
   }
 }
 
@@ -474,7 +474,7 @@ function forum_comment_update($comment) {
   // $comment->save() calls hook_comment_publish() for all published comments,
   // so we need to handle all other values here.
   if (!$comment->status->value && $comment->entity_type->value == 'node') {
-    Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
+    \Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
   }
 }
 
@@ -483,7 +483,7 @@ function forum_comment_update($comment) {
  */
 function forum_comment_unpublish($comment) {
   if ($comment->entity_type->value == 'node') {
-    Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
+    \Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
   }
 }
 
@@ -492,7 +492,7 @@ function forum_comment_unpublish($comment) {
  */
 function forum_comment_delete($comment) {
   if ($comment->entity_type->value == 'node') {
-    Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
+    \Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
   }
 }
 
@@ -500,7 +500,7 @@ function forum_comment_delete($comment) {
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function forum_form_taxonomy_vocabulary_form_alter(&$form, &$form_state, $form_id) {
-  $vid = Drupal::config('forum.settings')->get('vocabulary');
+  $vid = \Drupal::config('forum.settings')->get('vocabulary');
   $vocabulary = $form_state['controller']->getEntity();
   if ($vid == $vocabulary->id()) {
     $form['help_forum_vocab'] = array(
@@ -522,7 +522,7 @@ function forum_form_taxonomy_vocabulary_form_alter(&$form, &$form_state, $form_i
  * Implements hook_form_FORM_ID_alter() for taxonomy_term_form().
  */
 function forum_form_taxonomy_term_form_alter(&$form, &$form_state, $form_id) {
-  $vid = Drupal::config('forum.settings')->get('vocabulary');
+  $vid = \Drupal::config('forum.settings')->get('vocabulary');
   if (isset($form['vid']['#value']) && $form['vid']['#value'] == $vid) {
     // Hide multiple parents select from forum terms.
     $form['relations']['parent']['#access'] = FALSE;
@@ -691,7 +691,7 @@ function template_preprocess_forum_list(&$variables) {
     $variables['forums'][$id]->icon_class = 'default';
     $variables['forums'][$id]->icon_title = t('No new posts');
     if ($user->isAuthenticated()) {
-      $variables['forums'][$id]->new_topics = Drupal::service('forum_manager')->unreadTopics($forum->id(), $user->id());
+      $variables['forums'][$id]->new_topics = \Drupal::service('forum_manager')->unreadTopics($forum->id(), $user->id());
       if ($variables['forums'][$id]->new_topics) {
         $variables['forums'][$id]->new_text = format_plural($variables['forums'][$id]->new_topics, '1 new post<span class="visually-hidden"> in forum %title</span>', '@count new posts<span class="visually-hidden"> in forum %title</span>', array('%title' => $variables['forums'][$id]->label()));
         $variables['forums'][$id]->new_url = url('forum/' . $forum->id(), array('fragment' => 'new'));
@@ -814,7 +814,7 @@ function template_preprocess_forum_topic_list(&$variables) {
  *   - first_new: Indicates whether this is the first topic with new posts.
  */
 function template_preprocess_forum_icon(&$variables) {
-  $variables['hot_threshold'] = Drupal::config('forum.settings')->get('topics.hot_threshold');
+  $variables['hot_threshold'] = \Drupal::config('forum.settings')->get('topics.hot_threshold');
 
   if ($variables['num_posts'] > $variables['hot_threshold']) {
     $icon_status_class = $variables['new_posts'] ? 'hot-new' : 'hot';

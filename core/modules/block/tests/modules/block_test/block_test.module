@@ -17,7 +17,7 @@ function block_test_system_theme_info() {
  * Implements hook_block_alter().
  */
 function block_test_block_alter(&$block_info) {
-  if (Drupal::state()->get('block_test_info_alter') && isset($block_info['test_block_instantiation'])) {
+  if (\Drupal::state()->get('block_test_info_alter') && isset($block_info['test_block_instantiation'])) {
     $block_info['test_block_instantiation']['category'] = t('Custom category');
   }
 }

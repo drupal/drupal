@@ -11,7 +11,6 @@ use Drupal\Component\Gettext\PoHeader;
 use Drupal\Component\Gettext\PoItem;
 use Drupal\Component\Gettext\PoReaderInterface;
 use Drupal\locale\TranslationString;
-use PDO;
 
 /**
  * Gettext PO reader working with the locale module database.

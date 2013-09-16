@@ -10,8 +10,6 @@ namespace Drupal\Core\Database\Driver\pgsql;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Update as QueryUpdate;
 
-use PDO;
-
 class Update extends QueryUpdate {
 
   public function execute() {
@@ -48,7 +46,7 @@ class Update extends QueryUpdate {
         $blobs[$blob_count] = fopen('php://memory', 'a');
         fwrite($blobs[$blob_count], $value);
         rewind($blobs[$blob_count]);
-        $stmt->bindParam($placeholder, $blobs[$blob_count], PDO::PARAM_LOB);
+        $stmt->bindParam($placeholder, $blobs[$blob_count], \PDO::PARAM_LOB);
         ++$blob_count;
       }
       else {

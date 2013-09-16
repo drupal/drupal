@@ -110,7 +110,7 @@ function comment_token_info() {
  * Implements hook_tokens().
  */
 function comment_tokens($type, $tokens, array $data = array(), array $options = array()) {
-  $token_service = Drupal::token();
+  $token_service = \Drupal::token();
 
   $url_options = array('absolute' => TRUE);
   if (isset($options['langcode'])) {
@@ -140,7 +140,7 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'name':
-          $name = ($comment->uid->target_id == 0) ? Drupal::config('user.settings')->get('anonymous') : $comment->name->value;
+          $name = ($comment->uid->target_id == 0) ? \Drupal::config('user.settings')->get('anonymous') : $comment->name->value;
           $replacements[$original] = $sanitize ? filter_xss($name) : $name;
           break;
 

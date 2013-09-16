@@ -97,7 +97,7 @@ function drupal_theme_initialize() {
 
   // Only select the user selected theme if it is available in the
   // list of themes that can be accessed.
-  $theme = !empty($user->theme) && drupal_theme_access($user->theme) ? $user->theme : Drupal::config('system.theme')->get('default');
+  $theme = !empty($user->theme) && drupal_theme_access($user->theme) ? $user->theme : \Drupal::config('system.theme')->get('default');
 
   // Allow modules to override the theme. Validation has already been performed
   // inside menu_get_custom_theme(), so we do not need to check it again here.
@@ -372,14 +372,14 @@ function _theme_load_registry($theme, $base_theme = NULL, $theme_engine = NULL, 
       $registry = _theme_build_registry($theme, $base_theme, $theme_engine);
       // Only persist this registry if all modules are loaded. This assures a
       // complete set of theme hooks.
-      if (Drupal::moduleHandler()->isLoaded()) {
+      if (\Drupal::moduleHandler()->isLoaded()) {
         _theme_save_registry($theme, $registry);
       }
     }
     return $registry;
   }
   else {
-    return new ThemeRegistry('theme_registry:runtime:' . $theme->name, 'cache', array('theme_registry' => TRUE), Drupal::moduleHandler()->isLoaded());
+    return new ThemeRegistry('theme_registry:runtime:' . $theme->name, 'cache', array('theme_registry' => TRUE), \Drupal::moduleHandler()->isLoaded());
   }
 }
 
@@ -457,7 +457,7 @@ function _theme_process_registry(&$cache, $name, $type, $theme, $path) {
     'base hook' => TRUE,
   );
 
-  $module_list = array_keys(Drupal::moduleHandler()->getModuleList());
+  $module_list = array_keys(\Drupal::moduleHandler()->getModuleList());
 
   // Invoke the hook_theme() implementation, preprocess what is returned, and
   // merge it into $cache.
@@ -610,11 +610,11 @@ function _theme_build_registry($theme, $base_theme, $theme_engine) {
     $cache = $cached->data;
   }
   else {
-    foreach (Drupal::moduleHandler()->getImplementations('theme') as $module) {
+    foreach (\Drupal::moduleHandler()->getImplementations('theme') as $module) {
       _theme_process_registry($cache, $module, 'module', $module, drupal_get_path('module', $module));
     }
     // Only cache this registry if all modules are loaded.
-    if (Drupal::moduleHandler()->isLoaded()) {
+    if (\Drupal::moduleHandler()->isLoaded()) {
       cache()->set("theme_registry:build:modules", $cache, CacheBackendInterface::CACHE_PERMANENT, array('theme_registry' => TRUE));
     }
   }
@@ -914,7 +914,7 @@ function theme($hook, $variables = array()) {
   // If called before all modules are loaded, we do not necessarily have a full
   // theme registry to work with, and therefore cannot process the theme
   // request properly. See also _theme_load_registry().
-  if (!Drupal::moduleHandler()->isLoaded() && !defined('MAINTENANCE_MODE')) {
+  if (!\Drupal::moduleHandler()->isLoaded() && !defined('MAINTENANCE_MODE')) {
     throw new Exception(t('theme() may not be called until all modules are loaded.'));
   }
 
@@ -1363,11 +1363,11 @@ function theme_get_setting($setting_name, $theme = NULL) {
     }
 
     // Get the global settings from configuration.
-    $cache[$theme]->mergeData(Drupal::config('system.theme.global')->get());
+    $cache[$theme]->mergeData(\Drupal::config('system.theme.global')->get());
 
     if ($theme) {
       // Get the saved theme-specific settings from the configuration system.
-      $cache[$theme]->mergeData(Drupal::config($theme . '.settings')->get());
+      $cache[$theme]->mergeData(\Drupal::config($theme . '.settings')->get());
 
       // If the theme does not support a particular feature, override the global
       // setting and set the value to NULL.
@@ -1464,8 +1464,8 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
  */
 function theme_enable($theme_list) {
   drupal_clear_css_cache();
-  $theme_config = Drupal::config('system.theme');
-  $disabled_themes = Drupal::config('system.theme.disabled');
+  $theme_config = \Drupal::config('system.theme');
+  $disabled_themes = \Drupal::config('system.theme.disabled');
   foreach ($theme_list as $key) {
     // Throw an exception if the theme name is too long.
     if (strlen($key) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
@@ -1486,12 +1486,12 @@ function theme_enable($theme_list) {
     config_install_default_config('theme', $key);
   }
 
-  Drupal::service('router.builder')->rebuild();
+  \Drupal::service('router.builder')->rebuild();
   menu_router_rebuild();
   drupal_theme_rebuild();
 
   // Invoke hook_themes_enabled() after the themes have been enabled.
-  Drupal::moduleHandler()->invokeAll('themes_enabled', array($theme_list));
+  \Drupal::moduleHandler()->invokeAll('themes_enabled', array($theme_list));
 }
 
 /**
@@ -1502,7 +1502,7 @@ function theme_enable($theme_list) {
  */
 function theme_disable($theme_list) {
   // Don't disable the default theme.
-  if ($pos = array_search(Drupal::config('system.theme')->get('default'), $theme_list) !== FALSE) {
+  if ($pos = array_search(\Drupal::config('system.theme')->get('default'), $theme_list) !== FALSE) {
     unset($theme_list[$pos]);
     if (empty($theme_list)) {
       return;
@@ -1511,8 +1511,8 @@ function theme_disable($theme_list) {
 
   drupal_clear_css_cache();
 
-  $theme_config = Drupal::config('system.theme');
-  $disabled_themes = Drupal::config('system.theme.disabled');
+  $theme_config = \Drupal::config('system.theme');
+  $disabled_themes = \Drupal::config('system.theme.disabled');
   foreach ($theme_list as $key) {
     // The value is not used; the weight is ignored for themes currently.
     $theme_config->clear("enabled.$key");
@@ -1522,12 +1522,12 @@ function theme_disable($theme_list) {
   $disabled_themes->save();
 
   list_themes(TRUE);
-  Drupal::service('router.builder')->rebuild();
+  \Drupal::service('router.builder')->rebuild();
   menu_router_rebuild();
   drupal_theme_rebuild();
 
   // Invoke hook_themes_disabled after the themes have been disabled.
-  Drupal::moduleHandler()->invokeAll('themes_disabled', array($theme_list));
+  \Drupal::moduleHandler()->invokeAll('themes_disabled', array($theme_list));
 }
 
 /**
@@ -1572,44 +1572,22 @@ function template_preprocess_datetime(&$variables) {
 }
 
 /**
- * Returns HTML for status and/or error messages, grouped by type.
+ * Prepares variables for status message templates.
  *
- * An invisible heading identifies the messages for assistive technology.
- * Sighted users see a colored box. See http://www.w3.org/TR/WCAG-TECHS/H69.html
- * for info.
+ * Default template: status-messages.html.twig.
  *
- * @param $variables
+ * @param array $variables
  *   An associative array containing:
- *   - display: (optional) Set to 'status' or 'error' to display only messages
- *     of that type.
+ *   - display: (optional) May have a value of 'status' or 'error' when only
+ *     displaying messages of that specific type.
  */
-function theme_status_messages($variables) {
-  $display = $variables['display'];
-  $output = '';
-
-  $status_heading = array(
+function template_preprocess_status_messages(&$variables) {
+  $variables['message_list'] = drupal_get_messages($variables['display']);
+  $variables['status_headings'] = array(
     'status' => t('Status message'),
     'error' => t('Error message'),
     'warning' => t('Warning message'),
   );
-  foreach (drupal_get_messages($display) as $type => $messages) {
-    $output .= "<div class=\"messages messages--$type\">\n";
-    if (!empty($status_heading[$type])) {
-      $output .= '<h2 class="visually-hidden">' . $status_heading[$type] . "</h2>\n";
-    }
-    if (count($messages) > 1) {
-      $output .= " <ul class=\"messages__list\">\n";
-      foreach ($messages as $message) {
-        $output .= '  <li class="messages__item">' . $message . "</li>\n";
-      }
-      $output .= " </ul>\n";
-    }
-    else {
-      $output .= $messages[0];
-    }
-    $output .= "</div>\n";
-  }
-  return $output;
 }
 
 /**
@@ -2564,7 +2542,7 @@ function template_preprocess_html(&$variables) {
     drupal_add_html_head_link(array('rel' => 'shortcut icon', 'href' => drupal_strip_dangerous_protocols($favicon), 'type' => $type));
   }
 
-  $site_config = Drupal::config('system.site');
+  $site_config = \Drupal::config('system.site');
   // Construct page title.
   if (isset($variables['page']['#title'])) {
     $head_title = array(
@@ -2663,7 +2641,7 @@ function template_preprocess_html(&$variables) {
  */
 function template_preprocess_page(&$variables) {
   $language_interface = language(Language::TYPE_INTERFACE);
-  $site_config = Drupal::config('system.site');
+  $site_config = \Drupal::config('system.site');
 
   // Move some variables to the top level for themer convenience and template cleanliness.
   $variables['show_messages'] = $variables['page']['#show_messages'];
@@ -2866,7 +2844,7 @@ function template_preprocess_maintenance_page(&$variables) {
     $variables['layout'] = ($variables['layout'] == 'first') ? 'both' : 'second';
   }
 
-  $site_config = Drupal::config('system.site');
+  $site_config = \Drupal::config('system.site');
   $site_name = $site_config->get('name');
   $site_slogan = $site_config->get('slogan');
 
@@ -3032,6 +3010,7 @@ function drupal_common_theme() {
     ),
     'status_messages' => array(
       'variables' => array('display' => NULL),
+      'template' => 'status-messages',
     ),
     'links' => array(
       'variables' => array('links' => array(), 'attributes' => array('class' => array('links')), 'heading' => array()),

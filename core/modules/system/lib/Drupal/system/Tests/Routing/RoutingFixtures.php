@@ -123,8 +123,8 @@ class RoutingFixtures {
           'not null' => TRUE,
           'default' => '',
         ),
-        'pattern' => array(
-          'description' => 'The path pattern for this URI',
+        'path' => array(
+          'description' => 'The path for this URI',
           'type' => 'varchar',
           'length' => 255,
           'not null' => TRUE,

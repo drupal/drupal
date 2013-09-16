@@ -1,138 +1,138 @@
 aggregator.admin_overview:
-  pattern: '/admin/config/services/aggregator'
+  path: '/admin/config/services/aggregator'
   defaults:
     _content: '\Drupal\aggregator\Controller\AggregatorController::adminOverview'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator.admin_settings:
-  pattern: '/admin/config/services/aggregator/settings'
+  path: '/admin/config/services/aggregator/settings'
   defaults:
     _form: '\Drupal\aggregator\Form\SettingsForm'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator.feed_items_delete:
-  pattern: '/admin/config/services/aggregator/remove/{aggregator_feed}'
+  path: '/admin/config/services/aggregator/remove/{aggregator_feed}'
   defaults:
     _entity_form: 'aggregator_feed.remove_items'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator.feed_delete:
-  pattern: '/admin/config/services/aggregator/delete/feed/{aggregator_feed}'
+  path: '/admin/config/services/aggregator/delete/feed/{aggregator_feed}'
   defaults:
     _entity_form: 'aggregator_feed.delete'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator.feed_add:
-  pattern: '/admin/config/services/aggregator/add/feed'
+  path: '/admin/config/services/aggregator/add/feed'
   defaults:
     _content: '\Drupal\aggregator\Controller\AggregatorController::feedAdd'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator.feed_configure:
-  pattern: '/aggregator/sources/{aggregator_feed}/configure'
+  path: '/aggregator/sources/{aggregator_feed}/configure'
   defaults:
     _entity_form: 'aggregator_feed.default'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator.feed_edit:
-  pattern: '/admin/config/services/aggregator/edit/feed/{aggregator_feed}'
+  path: '/admin/config/services/aggregator/edit/feed/{aggregator_feed}'
   defaults:
     _entity_form: 'aggregator_feed.default'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator.feed_refresh:
-  pattern: '/admin/config/services/aggregator/update/{aggregator_feed}'
+  path: '/admin/config/services/aggregator/update/{aggregator_feed}'
   defaults:
     _controller: '\Drupal\aggregator\Controller\AggregatorController::feedRefresh'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator.opml_add:
-  pattern: '/admin/config/services/aggregator/add/opml'
+  path: '/admin/config/services/aggregator/add/opml'
   defaults:
     _form: '\Drupal\aggregator\Form\OpmlFeedAdd'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator.feed_view:
-  pattern: '/aggregator/sources/{aggregator_feed}'
+  path: '/aggregator/sources/{aggregator_feed}'
   defaults:
     _content: '\Drupal\aggregator\Controller\AggregatorController::viewFeed'
   requirements:
     _permission: 'access news feeds'
 
 aggregator.page_last:
-  pattern: '/aggregator'
+  path: '/aggregator'
   defaults:
     _controller: '\Drupal\aggregator\Controller\AggregatorController::pageLast'
   requirements:
     _permission: 'access news feeds'
 
 aggregator.sources:
-  pattern: '/aggregator/sources'
+  path: '/aggregator/sources'
   defaults:
     _content: '\Drupal\aggregator\Controller\AggregatorController::sources'
   requirements:
     _permission: 'access news feeds'
 
 aggregator.categories:
-  pattern: '/aggregator/categories'
+  path: '/aggregator/categories'
   defaults:
     _content: '\Drupal\aggregator\Controller\AggregatorController::categories'
   requirements:
     _access_aggregator_categories: 'TRUE'
 
 aggregator.category_view:
-  pattern: '/aggregator/categories/{cid}'
+  path: '/aggregator/categories/{cid}'
   defaults:
     _content: '\Drupal\aggregator\Controller\AggregatorController::viewCategory'
   requirements:
     _permission: 'access news feeds'
 
 aggregator.category_edit:
-  pattern: '/aggregator/categories/{cid}/configure'
+  path: '/aggregator/categories/{cid}/configure'
   defaults:
     _form: '\Drupal\aggregator\Form\CategoryAdminForm'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator.category_admin_edit:
-  pattern: '/admin/config/services/aggregator/edit/category/{cid}'
+  path: '/admin/config/services/aggregator/edit/category/{cid}'
   defaults:
     _form: '\Drupal\aggregator\Form\CategoryAdminForm'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator.category_delete:
-  pattern: '/admin/config/services/aggregator/delete/category/{cid}'
+  path: '/admin/config/services/aggregator/delete/category/{cid}'
   defaults:
     _form: '\Drupal\aggregator\Form\CategoryDeleteForm'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator.category_add:
-  pattern: '/admin/config/services/aggregator/add/category'
+  path: '/admin/config/services/aggregator/add/category'
   defaults:
     _form: '\Drupal\aggregator\Form\CategoryAdminForm'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator.categorize_category_form:
-  pattern: '/aggregator/categories/{cid}/categorize'
+  path: '/aggregator/categories/{cid}/categorize'
   defaults:
     _form: '\Drupal\aggregator\Form\CategorizeCategoryForm'
   requirements:
     _permission: 'administer news feeds'
 
 aggregator.categorize_feed_form:
-  pattern: '/aggregator/sources/{aggregator_feed}/categorize'
+  path: '/aggregator/sources/{aggregator_feed}/categorize'
   defaults:
     _form: '\Drupal\aggregator\Form\CategorizeFeedForm'
   requirements:

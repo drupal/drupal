@@ -199,7 +199,7 @@ function toolbar_pre_render($element) {
   }
 
   // Get toolbar items from all modules that implement hook_toolbar().
-  $items = Drupal::moduleHandler()->invokeAll('toolbar');
+  $items = \Drupal::moduleHandler()->invokeAll('toolbar');
   // Allow for altering of hook_toolbar().
   drupal_alter('toolbar', $items);
   // Sort the children.
@@ -473,7 +473,7 @@ function toolbar_toolbar() {
  */
 function toolbar_get_menu_tree() {
   $tree = array();
-  $query = Drupal::entityQuery('menu_link')
+  $query = \Drupal::entityQuery('menu_link')
     ->condition('menu_name', 'admin')
     ->condition('module', 'system')
     ->condition('link_path', 'admin');
@@ -585,7 +585,7 @@ function toolbar_in_active_trail($path) {
 function toolbar_library_info() {
   $libraries['toolbar'] = array(
     'title' => 'Toolbar',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'toolbar') . '/js/toolbar.js' => array(),
     ),
@@ -609,7 +609,7 @@ function toolbar_library_info() {
 
   $libraries['toolbar.menu'] = array(
     'title' => 'Toolbar nested accordion menus.',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'toolbar') . '/js/toolbar.menu.js' => array(),
     ),
@@ -630,7 +630,7 @@ function toolbar_library_info() {
  * Returns the hash of the per-user rendered toolbar subtrees.
  */
 function _toolbar_get_subtree_hash() {
-  $user = Drupal::currentUser();
+  $user = \Drupal::currentUser();
   $cid = $user->id() . ':' . language(Language::TYPE_INTERFACE)->id;
   if ($cache = cache('toolbar')->get($cid)) {
     $hash = $cache->data;

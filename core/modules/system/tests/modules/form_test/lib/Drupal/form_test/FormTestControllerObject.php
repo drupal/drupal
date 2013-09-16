@@ -7,7 +7,6 @@
 
 namespace Drupal\form_test;
 
-use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Form\FormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -15,23 +14,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a test form object.
  */
 class FormTestControllerObject extends FormBase {
-
-  /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactory
-   */
-  protected $configFactory;
-
-  /**
-   * Constructs a new FormTestControllerObject.
-   *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
-   *   The config factory.
-   */
-  public function __construct(ConfigFactory $config_factory) {
-    $this->configFactory = $config_factory;
-  }
 
   /**
    * {@inheritdoc}
@@ -45,9 +27,7 @@ class FormTestControllerObject extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     drupal_set_message(t('The FormTestControllerObject::create() method was used for this form.'));
-    return new static(
-      $container->get('config.factory')
-    );
+    return new static();
   }
 
   /**
@@ -84,7 +64,7 @@ class FormTestControllerObject extends FormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     drupal_set_message($this->t('The FormTestControllerObject::submitForm() method was used for this form.'));
-    $this->configFactory->get('form_test.object')
+    $this->config('form_test.object')
       ->set('bananas', $form_state['values']['bananas'])
       ->save();
   }

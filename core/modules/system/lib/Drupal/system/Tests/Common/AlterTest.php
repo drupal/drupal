@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\simpletest\WebTestBase;
-use stdClass;
 
 /**
  * Tests alteration of arguments passed to drupal_alter().
@@ -41,7 +40,7 @@ class AlterTest extends WebTestBase {
     $base_theme_info = array();
 
     $array = array('foo' => 'bar');
-    $entity = new stdClass();
+    $entity = new \stdClass();
     $entity->foo = 'bar';
 
     // Verify alteration of a single argument.

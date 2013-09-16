@@ -7,9 +7,6 @@
 
 namespace Drupal\Core\FileTransfer;
 
-use RecursiveIteratorIterator;
-use RecursiveDirectoryIterator;
-
 /**
  * Defines the base FileTransfer class.
  *
@@ -280,7 +277,7 @@ abstract class FileTransfer {
       $destination = $destination . '/' . drupal_basename($source);
     }
     $this->createDirectory($destination);
-    foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source, RecursiveDirectoryIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST) as $filename => $file) {
+    foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST) as $filename => $file) {
       $relative_path = substr($filename, strlen($source));
       if ($file->isDir()) {
         $this->createDirectory($destination . $relative_path);

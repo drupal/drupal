@@ -74,7 +74,7 @@ require_once __DIR__ . '/includes/ajax.inc';
 drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES);
 
 $request = Request::createFromGlobals();
-Drupal::getContainer()->set('request', $request);
+\Drupal::getContainer()->set('request', $request);
 
 // This must go after drupal_bootstrap(), which unsets globals!
 global $conf;
@@ -83,9 +83,9 @@ global $conf;
 // display errors via the maintenance theme.
 $module_list['system'] = 'core/modules/system/system.module';
 $module_list['user'] = 'core/modules/user/user.module';
-Drupal::moduleHandler()->setModuleList($module_list);
-Drupal::moduleHandler()->load('system');
-Drupal::moduleHandler()->load('user');
+\Drupal::moduleHandler()->setModuleList($module_list);
+\Drupal::moduleHandler()->load('system');
+\Drupal::moduleHandler()->load('user');
 
 // Initialize the language system.
 drupal_language_initialize();

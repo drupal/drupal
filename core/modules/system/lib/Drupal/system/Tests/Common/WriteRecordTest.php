@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Common;
 
 use Drupal\simpletest\WebTestBase;
-use stdClass;
 
 /**
  * Tests writing of data records with drupal_write_record().
@@ -40,7 +39,7 @@ class WriteRecordTest extends WebTestBase {
     $this->assertTrue($insert_result == SAVED_NEW, 'Correct value returned when an empty record is inserted with drupal_write_record().');
 
     // Insert a record - no columns allow NULL values.
-    $person = new stdClass();
+    $person = new \stdClass();
     $person->name = 'John';
     $person->unknown_column = 123;
     $insert_result = drupal_write_record('test', $person);
@@ -70,7 +69,7 @@ class WriteRecordTest extends WebTestBase {
     $this->assertIdentical($result->job, '', 'Job field set and cast to string.');
 
     // Try to insert NULL in columns that does not allow this.
-    $person = new stdClass();
+    $person = new \stdClass();
     $person->name = 'Ringo';
     $person->age = NULL;
     $person->job = NULL;
@@ -82,7 +81,7 @@ class WriteRecordTest extends WebTestBase {
     $this->assertIdentical($result->job, '', 'Job field set.');
 
     // Insert a record - the "age" column allows NULL.
-    $person = new stdClass();
+    $person = new \stdClass();
     $person->name = 'Paul';
     $person->age = NULL;
     $insert_result = drupal_write_record('test_null', $person);
@@ -92,7 +91,7 @@ class WriteRecordTest extends WebTestBase {
     $this->assertIdentical($result->age, NULL, 'Age field set.');
 
     // Insert a record - do not specify the value of a column that allows NULL.
-    $person = new stdClass();
+    $person = new \stdClass();
     $person->name = 'Meredith';
     $insert_result = drupal_write_record('test_null', $person);
     $this->assertTrue(isset($person->id), 'Primary key is set on record created with drupal_write_record().');
@@ -110,7 +109,7 @@ class WriteRecordTest extends WebTestBase {
     $this->assertIdentical($result->age, NULL, 'Age field set.');
 
     // Insert a record - the "data" column should be serialized.
-    $person = new stdClass();
+    $person = new \stdClass();
     $person->name = 'Dave';
     $update_result = drupal_write_record('test_serialized', $person);
     $result = db_query("SELECT * FROM {test_serialized} WHERE id = :id", array(':id' => $person->id))->fetchObject();
@@ -136,7 +135,7 @@ class WriteRecordTest extends WebTestBase {
     $this->assertTrue($update_result == SAVED_UPDATED, 'Correct value returned when a valid update is run without changing any values.');
 
     // Insert an object record for a table with a multi-field primary key.
-    $node_access = new stdClass();
+    $node_access = new \stdClass();
     $node_access->nid = mt_rand();
     $node_access->gid = mt_rand();
     $node_access->realm = $this->randomName();

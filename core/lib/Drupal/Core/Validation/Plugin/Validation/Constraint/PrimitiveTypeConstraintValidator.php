@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Validation\Plugin\Validation\Constraint;
 
-use DateInterval;
 use Drupal\Core\TypedData\Type\BinaryInterface;
 use Drupal\Core\TypedData\Type\BooleanInterface;
 use Drupal\Core\TypedData\Type\DateTimeInterface;
@@ -58,7 +57,7 @@ class PrimitiveTypeConstraintValidator extends ConstraintValidator {
       if ($typed_data instanceof DateTimeInterface && $typed_data->getDateTime()->hasErrors()) {
         $valid = FALSE;
       }
-      if ($typed_data instanceof DurationInterface && !($typed_data->getDuration() instanceof DateInterval)) {
+      if ($typed_data instanceof DurationInterface && !($typed_data->getDuration() instanceof \DateInterval)) {
         $valid = FALSE;
       }
     }

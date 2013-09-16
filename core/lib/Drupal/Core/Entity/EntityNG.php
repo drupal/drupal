@@ -10,8 +10,6 @@ namespace Drupal\Core\Entity;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use ArrayIterator;
-use InvalidArgumentException;
 
 /**
  * Implements Entity Field API specific enhancements to the Entity class.
@@ -296,7 +294,7 @@ class EntityNG extends Entity {
     if (!isset($this->fields[$property_name][$langcode])) {
       $definition = $this->getPropertyDefinition($property_name);
       if (!$definition) {
-        throw new InvalidArgumentException('Field ' . check_plain($property_name) . ' is unknown.');
+        throw new \InvalidArgumentException('Field ' . check_plain($property_name) . ' is unknown.');
       }
       // Non-translatable fields are always stored with
       // Language::LANGCODE_DEFAULT as key.
@@ -347,7 +345,7 @@ class EntityNG extends Entity {
    * Implements \IteratorAggregate::getIterator().
    */
   public function getIterator() {
-    return new ArrayIterator($this->getProperties());
+    return new \ArrayIterator($this->getProperties());
   }
 
   /**

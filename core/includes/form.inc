@@ -545,10 +545,10 @@ function drupal_rebuild_form($form_id, &$form_state, $old_form = NULL) {
  * Fetches a form from the cache.
  */
 function form_get_cache($form_build_id, &$form_state) {
-  if ($form = Drupal::keyValueExpirable('form')->get($form_build_id)) {
+  if ($form = \Drupal::keyValueExpirable('form')->get($form_build_id)) {
     global $user;
     if ((isset($form['#cache_token']) && drupal_valid_token($form['#cache_token'])) || (!isset($form['#cache_token']) && $user->isAnonymous())) {
-      if ($stored_form_state = Drupal::keyValueExpirable('form_state')->get($form_build_id)) {
+      if ($stored_form_state = \Drupal::keyValueExpirable('form_state')->get($form_build_id)) {
         // Re-populate $form_state for subsequent rebuilds.
         $form_state = $stored_form_state + $form_state;
 
@@ -582,12 +582,12 @@ function form_set_cache($form_build_id, $form, $form_state) {
     if ($GLOBALS['user']->isAuthenticated()) {
       $form['#cache_token'] = drupal_get_token();
     }
-    Drupal::keyValueExpirable('form')->setWithExpire($form_build_id, $form, $expire);
+    \Drupal::keyValueExpirable('form')->setWithExpire($form_build_id, $form, $expire);
   }
 
   // Cache form state.
   if ($data = array_diff_key($form_state, array_flip(form_state_keys_no_cache()))) {
-    Drupal::keyValueExpirable('form_state')->setWithExpire($form_build_id, $data, $expire);
+    \Drupal::keyValueExpirable('form_state')->setWithExpire($form_build_id, $data, $expire);
   }
 }
 
@@ -820,7 +820,7 @@ function drupal_retrieve_form($form_id, &$form_state) {
     // So, we call the hook if $forms isn't yet populated, OR if it doesn't
     // yet have an entry for the requested form_id.
     if (!isset($forms) || !isset($forms[$form_id])) {
-      $forms = Drupal::moduleHandler()->invokeAll('forms', array($form_id, $args));
+      $forms = \Drupal::moduleHandler()->invokeAll('forms', array($form_id, $args));
     }
     $form_definition = $forms[$form_id];
     if (isset($form_definition['callback arguments'])) {
@@ -1346,8 +1346,8 @@ function drupal_redirect_form($form_state) {
         }
       }
     }
-    $url = url(Drupal::request()->attributes->get('_system_path'), array(
-      'query' => Drupal::request()->query->all(),
+    $url = url(\Drupal::request()->attributes->get('_system_path'), array(
+      'query' => \Drupal::request()->query->all(),
       'absolute' => TRUE,
     ));
     return new RedirectResponse($url);
@@ -4106,8 +4106,8 @@ function form_process_autocomplete($element, &$form_state) {
   if (!empty($element['#autocomplete_route_name'])) {
     $parameters = isset($element['#autocomplete_route_parameters']) ? $element['#autocomplete_route_parameters'] : array();
 
-    $path = Drupal::urlGenerator()->generate($element['#autocomplete_route_name'], $parameters);
-    $access = Drupal::service('access_manager')->checkNamedRoute($element['#autocomplete_route_name'], $parameters);
+    $path = \Drupal::urlGenerator()->generate($element['#autocomplete_route_name'], $parameters);
+    $access = \Drupal::service('access_manager')->checkNamedRoute($element['#autocomplete_route_name'], $parameters);
   }
   elseif (!empty($element['#autocomplete_path'])) {
     $path = url($element['#autocomplete_path'], array('absolute' => TRUE));
@@ -4600,7 +4600,7 @@ function form_process_weight($element) {
   $element['#is_weight'] = TRUE;
 
   // If the number of options is small enough, use a select field.
-  $max_elements = Drupal::config('system.site')->get('weight_select_max');
+  $max_elements = \Drupal::config('system.site')->get('weight_select_max');
   if ($element['#delta'] <= $max_elements) {
     $element['#type'] = 'select';
     for ($n = (-1 * $element['#delta']); $n <= $element['#delta']; $n++) {
@@ -4881,11 +4881,11 @@ function _form_set_attributes(&$element, $class = array()) {
  *   A response object.
  */
 function _drupal_form_send_response(Response $response) {
-  $request = Drupal::request();
-  $kernel = Drupal::service('http_kernel');
+  $request = \Drupal::request();
+  $kernel = \Drupal::service('http_kernel');
   $event = new FilterResponseEvent($kernel, $request, $kernel::MASTER_REQUEST, $response);
 
-  Drupal::service('event_dispatcher')->dispatch(KernelEvents::RESPONSE, $event);
+  \Drupal::service('event_dispatcher')->dispatch(KernelEvents::RESPONSE, $event);
   // Prepare and send the response.
   $event->getResponse()
     ->prepare($request)
@@ -5173,14 +5173,14 @@ function batch_process($redirect = NULL, $url = 'batch', $redirect_callback = NU
 
       // Clear the way for the redirection to the batch processing page, by
       // saving and unsetting the 'destination', if there is any.
-      $request = Drupal::request();
+      $request = \Drupal::request();
       if ($request->query->has('destination')) {
         $batch['destination'] = $request->query->get('destination');
         $request->query->remove('destination');
       }
 
       // Store the batch.
-      Drupal::service('batch.storage')->create($batch);
+      \Drupal::service('batch.storage')->create($batch);
 
       // Set the batch number in the session to guarantee that it will stay alive.
       $_SESSION['batches'][$batch['id']] = TRUE;

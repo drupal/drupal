@@ -1,5 +1,5 @@
 aggregator_test.feed:
-  pattern: '/aggregator/test-feed/{use_last_modified}/{use_etag}'
+  path: '/aggregator/test-feed/{use_last_modified}/{use_etag}'
   defaults:
     _controller: '\Drupal\aggregator_test\Controller\AggregatorTestRssController::testFeed'
     _title: 'Test feed static last modified date'
@@ -9,7 +9,7 @@ aggregator_test.feed:
     _permission: 'access content'
 
 aggregator_test.redirect:
-  pattern: '/aggregator/redirect'
+  path: '/aggregator/redirect'
   defaults:
     _controller: '\Drupal\aggregator_test\Controller\AggregatorTestRssController::testRedirect'
     _title: 'Test feed with a redirect'

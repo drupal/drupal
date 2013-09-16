@@ -189,7 +189,7 @@ function update_helpful_links() {
  */
 function update_flush_all_caches() {
   unset($GLOBALS['conf']['container_service_providers']['UpdateServiceProvider']);
-  Drupal::service('kernel')->updateModules(Drupal::moduleHandler()->getModuleList());
+  \Drupal::service('kernel')->updateModules(\Drupal::moduleHandler()->getModuleList());
 
   // No updates to run, so caches won't get flushed later.  Clear them now.
   drupal_flush_all_caches();
@@ -351,7 +351,7 @@ function update_access_allowed() {
   // Calls to user_access() might fail during the Drupal 6 to 7 update process,
   // so we fall back on requiring that the user be logged in as user #1.
   try {
-    $module_handler = Drupal::moduleHandler();
+    $module_handler = \Drupal::moduleHandler();
     $module_filenames = $module_handler->getModuleList();
     $module_filenames['user'] = 'core/modules/user/user.module';
     $module_handler->setModuleList($module_filenames);
@@ -407,7 +407,7 @@ function update_extra_requirements($requirements = NULL) {
  */
 function update_check_requirements($skip_warnings = FALSE) {
   // Check requirements of all loaded modules.
-  $requirements = Drupal::moduleHandler()->invokeAll('requirements', array('update'));
+  $requirements = \Drupal::moduleHandler()->invokeAll('requirements', array('update'));
   $requirements += update_extra_requirements();
   $severity = drupal_requirements_severity($requirements);
 
@@ -454,11 +454,11 @@ drupal_session_initialize();
 
 // A request object from the HTTPFoundation to tell us about the request.
 $request = Request::createFromGlobals();
-Drupal::getContainer()->set('request', $request);
+\Drupal::getContainer()->set('request', $request);
 
 // Ensure that URLs generated for the home and admin pages don't have 'update.php'
 // in them.
-$generator = Drupal::urlGenerator();
+$generator = \Drupal::urlGenerator();
 $generator->setBasePath(str_replace('/core', '', $request->getBasePath()) . '/');
 $generator->setScriptPath('');
 

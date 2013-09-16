@@ -25,7 +25,7 @@ function contextual_menu() {
  */
 function contextual_toolbar() {
 
-  if (!Drupal::currentUser()->hasPermission('access contextual links')) {
+  if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
     return;
   }
 
@@ -64,7 +64,7 @@ function contextual_toolbar() {
  */
 function contextual_page_build(&$page) {
 
-  if (!Drupal::currentUser()->hasPermission('access contextual links')) {
+  if (!\Drupal::currentUser()->hasPermission('access contextual links')) {
     return;
   }
 
@@ -109,7 +109,7 @@ function contextual_library_info() {
   $libraries['drupal.contextual-links'] = array(
     'title' => 'Contextual Links',
     'website' => 'http://drupal.org/node/473268',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       // Add the JavaScript, with a group and weight such that it will run
       // before modules/contextual/js/contextual.toolbar.js.
@@ -131,7 +131,7 @@ function contextual_library_info() {
   );
   $libraries['drupal.contextual-toolbar'] = array(
     'title' => 'Contextual Links Toolbar Tab',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       // Add the JavaScript, with a group and weight such that it will run
       // before modules/overlay/overlay-parent.js.

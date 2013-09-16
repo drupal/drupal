@@ -18,11 +18,11 @@ use Drupal\comment\Form\ConfirmDeleteMultiple;
  * @see comment_multiple_delete_confirm()
  */
 function comment_admin($type = 'new') {
-  $request = Drupal::request();
+  $request = \Drupal::request();
   $edit = $request->request->all();
 
   if (isset($edit['operation']) && ($edit['operation'] == 'delete') && isset($edit['comments']) && $edit['comments']) {
-    return drupal_get_form(ConfirmDeleteMultiple::create(Drupal::getContainer()), $request);
+    return drupal_get_form(ConfirmDeleteMultiple::create(\Drupal::getContainer()), $request);
   }
   else {
     return drupal_get_form('comment_admin_overview', $type);

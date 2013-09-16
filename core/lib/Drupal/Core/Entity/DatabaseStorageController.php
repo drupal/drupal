@@ -1094,7 +1094,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
    * @private Calling this function circumvents the entity system and is
    * strongly discouraged. This function is not considered part of the public
    * API and modules relying on it might break even in minor releases. Only
-   * call this function to write a query that Drupal::entityQuery() does not
+   * call this function to write a query that \Drupal::entityQuery() does not
    * support. Always call entity_load() before using the data found in the
    * table.
    *

@@ -14,7 +14,7 @@ use Drupal\field\Entity\Field;
  */
 function comment_uninstall() {
   // @todo Remove when disabled modules go away.
-  Drupal::entityManager()->addNamespaces(new ArrayIterator(array(
+  \Drupal::entityManager()->addNamespaces(new ArrayIterator(array(
     'Drupal\comment' => DRUPAL_ROOT . '/core/modules/comment/lib',
   )));
   drupal_classloader_register('comment', 'core/modules/comment');
@@ -32,7 +32,7 @@ function comment_uninstall() {
   }
 
   // Remove state setting.
-  Drupal::state()->delete('comment.node_comment_statistics_scale');
+  \Drupal::state()->delete('comment.node_comment_statistics_scale');
 }
 
 /**

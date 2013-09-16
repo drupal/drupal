@@ -1,12 +1,12 @@
 twig_theme_test.php_variables:
-  pattern: '/twig-theme-test/php-variables'
+  path: '/twig-theme-test/php-variables'
   defaults:
     _content: '\Drupal\twig_theme_test\TwigThemeTestController::phpVariablesRender'
   requirements:
     _permission: 'access content'
 
 twig_theme_test.trans:
-  pattern: '/twig-theme-test/trans'
+  path: '/twig-theme-test/trans'
   defaults:
     _content: '\Drupal\twig_theme_test\TwigThemeTestController::transBlockRender'
   requirements:

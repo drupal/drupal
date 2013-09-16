@@ -26,7 +26,7 @@ use Drupal\Core\Cache\Cache;
  * @see Drupal\Core\Cache\CacheBackendInterface
  */
 function cache($bin = 'cache') {
-  return Drupal::cache($bin);
+  return \Drupal::cache($bin);
 }
 
 /**

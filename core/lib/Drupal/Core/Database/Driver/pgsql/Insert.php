@@ -10,8 +10,6 @@ namespace Drupal\Core\Database\Driver\pgsql;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Insert as QueryInsert;
 
-use PDO;
-
 /**
  * @ingroup database
  * @{
@@ -39,7 +37,7 @@ class Insert extends QueryInsert {
           fwrite($blobs[$blob_count], $insert_values[$idx]);
           rewind($blobs[$blob_count]);
 
-          $stmt->bindParam(':db_insert_placeholder_' . $max_placeholder++, $blobs[$blob_count], PDO::PARAM_LOB);
+          $stmt->bindParam(':db_insert_placeholder_' . $max_placeholder++, $blobs[$blob_count], \PDO::PARAM_LOB);
 
           // Pre-increment is faster in PHP than increment.
           ++$blob_count;

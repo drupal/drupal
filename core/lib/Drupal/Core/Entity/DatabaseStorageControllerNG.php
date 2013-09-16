@@ -9,8 +9,6 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Language\Language;
 use Drupal\field\FieldInfo;
-use PDO;
-
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\DatabaseStorageController;
@@ -268,7 +266,7 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
       // If a revision table is available, we need all the properties of the
       // latest revision. Otherwise we fall back to the data table.
       $table = $this->revisionTable ?: $this->dataTable;
-      $query = $this->database->select($table, 'data', array('fetch' => PDO::FETCH_ASSOC))
+      $query = $this->database->select($table, 'data', array('fetch' => \PDO::FETCH_ASSOC))
         ->fields('data')
         ->condition($this->idKey, array_keys($entities))
         ->orderBy('data.' . $this->idKey);

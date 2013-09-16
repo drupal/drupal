@@ -31,7 +31,7 @@ function email_help($path, $arg) {
  * Implements hook_field_info_alter().
  */
 function email_field_info_alter(&$info) {
-  if (Drupal::moduleHandler()->moduleExists('text')) {
+  if (\Drupal::moduleHandler()->moduleExists('text')) {
     $info['email']['default_formatter'] = 'text_plain';
   }
 }

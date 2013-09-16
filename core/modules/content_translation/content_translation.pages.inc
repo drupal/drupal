@@ -17,7 +17,7 @@ use Drupal\Core\Entity\EntityNG;
  */
 function content_translation_overview(EntityInterface $entity) {
   $controller = content_translation_controller($entity->entityType());
-  $entity_manager = Drupal::entityManager();
+  $entity_manager = \Drupal::entityManager();
   $languages = language_list();
   $original = $entity->getUntranslated()->language()->id;
   $translations = $entity->getTranslationLanguages();
@@ -201,7 +201,7 @@ function content_translation_add_page(EntityInterface $entity, Language $source 
   $form_state['content_translation']['target'] = $target;
   $controller = content_translation_controller($entity->entityType());
   $form_state['content_translation']['translation_form'] = !$entity->access('update');
-  return Drupal::entityManager()->getForm($entity, $operation, $form_state);
+  return \Drupal::entityManager()->getForm($entity, $operation, $form_state);
 }
 
 /**
@@ -222,7 +222,7 @@ function content_translation_edit_page(EntityInterface $entity, Language $langua
   $operation = isset($info['default_operation']) ? $info['default_operation'] : 'default';
   $form_state['langcode'] = $language->id;
   $form_state['content_translation']['translation_form'] = TRUE;
-  return Drupal::entityManager()->getForm($entity, $operation, $form_state);
+  return \Drupal::entityManager()->getForm($entity, $operation, $form_state);
 }
 
 /**
@@ -287,7 +287,7 @@ function content_translation_delete_confirm_submit(array $form, array &$form_sta
   // @todo This should be taken care of by the Path module.
   if (module_exists('path')) {
     $conditions = array('source' => $controller->getViewPath($entity), 'langcode' => $language->id);
-    Drupal::service('path.crud')->delete($conditions);
+    \Drupal::service('path.crud')->delete($conditions);
   }
 
   $form_state['redirect'] = $controller->getBasePath($entity) . '/translations';

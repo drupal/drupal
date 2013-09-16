@@ -12,7 +12,6 @@ use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\field\FieldException;
 use Drupal\field\Entity\Field;
 use Drupal\system\Tests\Entity\EntityUnitTestBase;
-use PDO;
 
 /**
  * Tests field storage.
@@ -179,7 +178,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $entity->save();
 
     // Read the tables and check the correct values have been stored.
-    $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
+    $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', \PDO::FETCH_ASSOC);
     $this->assertEqual(count($rows), $this->field['cardinality']);
     foreach ($rows as $delta => $row) {
       $expected = array(
@@ -202,7 +201,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     }
     $entity->{$this->field_name} = $values;
     $entity->save();
-    $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
+    $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', \PDO::FETCH_ASSOC);
     $this->assertEqual(count($rows), count($values));
     foreach ($rows as $delta => $row) {
       $expected = array(
@@ -230,7 +229,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
 
     // Check that data for both revisions are in the revision table.
     foreach ($revision_values as $revision_id => $values) {
-      $rows = db_select($this->revision_table, 't')->fields('t')->condition('revision_id', $revision_id)->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
+      $rows = db_select($this->revision_table, 't')->fields('t')->condition('revision_id', $revision_id)->execute()->fetchAllAssoc('delta', \PDO::FETCH_ASSOC);
       $this->assertEqual(count($rows), min(count($values), $this->field['cardinality']));
       foreach ($rows as $delta => $row) {
         $expected = array(
@@ -249,7 +248,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     // Test emptying the field.
     $entity->{$this->field_name} = NULL;
     $entity->save();
-    $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', PDO::FETCH_ASSOC);
+    $rows = db_select($this->table, 't')->fields('t')->execute()->fetchAllAssoc('delta', \PDO::FETCH_ASSOC);
     $this->assertEqual(count($rows), 0);
   }
 

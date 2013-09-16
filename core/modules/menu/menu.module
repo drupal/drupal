@@ -143,7 +143,7 @@ function menu_entity_bundle_info() {
   $bundles = array();
   $config_names = config_get_storage_names_with_prefix('system.menu.');
   foreach ($config_names as $config_name) {
-    $config = Drupal::config($config_name);
+    $config = \Drupal::config($config_name);
     $bundles['menu_link'][$config->get('id')] = array(
       'label' => $config->get('label'),
     );
@@ -182,7 +182,7 @@ function menu_theme() {
  * Add a link for each custom menu.
  */
 function menu_enable() {
-  Drupal::service('router.builder')->rebuild();
+  \Drupal::service('router.builder')->rebuild();
   menu_router_rebuild();
   $system_link = entity_load_multiple_by_properties('menu_link', array('link_path' => 'admin/structure/menu', 'module' => 'system'));
   $system_link = reset($system_link);
@@ -200,7 +200,7 @@ function menu_enable() {
     $link->link_title = $menu->label();
     $link->link_path = 'admin/structure/menu/manage/' . $menu->id();
 
-    $query = Drupal::entityQuery('menu_link')
+    $query = \Drupal::entityQuery('menu_link')
       ->condition('link_path', $link->link_path)
       ->condition('plid', $link->plid);
     $result = $query->execute();
@@ -231,12 +231,12 @@ function menu_menu_insert(Menu $menu) {
   menu_cache_clear_all();
   // Invalidate the block cache to update menu-based derivatives.
   if (module_exists('block')) {
-    Drupal::service('plugin.manager.block')->clearCachedDefinitions();
+    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
   // Make sure the menu is present in the active menus variable so that its
   // items may appear in the menu active trail.
   // See menu_set_active_menu_names().
-  $config = Drupal::config('system.menu');
+  $config = \Drupal::config('system.menu');
 
   $active_menus = $config->get('active_menus_default') ?: array_keys(menu_get_menus());
   if (!in_array($menu->id(), $active_menus)) {
@@ -254,7 +254,7 @@ function menu_menu_update(Menu $menu) {
   menu_cache_clear_all();
   // Invalidate the block cache to update menu-based derivatives.
   if (module_exists('block')) {
-    Drupal::service('plugin.manager.block')->clearCachedDefinitions();
+    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
 }
 
@@ -283,7 +283,7 @@ function menu_menu_delete(Menu $menu) {
 
   // Invalidate the block cache to update menu-based derivatives.
   if (module_exists('block')) {
-    Drupal::service('plugin.manager.block')->clearCachedDefinitions();
+    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
 }
 
@@ -312,7 +312,7 @@ function menu_parent_options(array $menus, MenuLink $menu_link = NULL, $type = N
   // allow contrib modules to provide more scalable pattern choosers.
   // hook_form_alter is too late in itself because all the possible parents are
   // retrieved here, unless override_parent_selector is set to TRUE.
-  if (Drupal::config('menu.settings')->get('override_parent_selector')) {
+  if (\Drupal::config('menu.settings')->get('override_parent_selector')) {
     return array();
   }
 
@@ -444,7 +444,7 @@ function menu_node_save(EntityInterface $node) {
  */
 function menu_node_predelete(EntityInterface $node) {
   // Delete all menu module links that point to this node.
-  $query = Drupal::entityQuery('menu_link')
+  $query = \Drupal::entityQuery('menu_link')
     ->condition('link_path', 'node/' . $node->id())
     ->condition('module', 'menu');
   $result = $query->execute();
@@ -467,7 +467,7 @@ function menu_node_prepare_form(NodeInterface $node, $form_display, $operation, 
       // Give priority to the default menu
       $type_menus = variable_get('menu_options_' . $node->getType(), array('main' => 'main'));
       if (in_array($menu_name, $type_menus)) {
-        $query = Drupal::entityQuery('menu_link')
+        $query = \Drupal::entityQuery('menu_link')
           ->condition('link_path', 'node/' . $node->id())
           ->condition('menu_name', $menu_name)
           ->condition('module', 'menu')
@@ -479,7 +479,7 @@ function menu_node_prepare_form(NodeInterface $node, $form_display, $operation, 
       }
       // Check all allowed menus if a link does not exist in the default menu.
       if (!$mlid && !empty($type_menus)) {
-        $query = Drupal::entityQuery('menu_link')
+        $query = \Drupal::entityQuery('menu_link')
           ->condition('link_path', 'node/' . $node->id())
           ->condition('menu_name', array_values($type_menus), 'IN')
           ->condition('module', 'menu')
@@ -714,7 +714,7 @@ function menu_preprocess_block(&$variables) {
 function menu_library_info() {
   $libraries['drupal.menu'] = array(
     'title' => 'Menu',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'menu') . '/menu.js' => array(),
     ),
@@ -726,7 +726,7 @@ function menu_library_info() {
   );
   $libraries['drupal.menu.admin'] = array(
     'title' => 'Menu admin',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'menu') . '/menu.admin.js' => array(),
     ),

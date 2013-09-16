@@ -54,7 +54,7 @@ function _drupal_maintenance_theme() {
     //   otherwise, as it looks generic enough and way more user-friendly.
     $custom_theme = variable_get('maintenance_theme');
     if (!$custom_theme)  {
-      $config = Drupal::config('system.theme');
+      $config = \Drupal::config('system.theme');
       // A broken install might not return an object.
       if (is_object($config)) {
         $custom_theme = $config->get('default');
@@ -68,7 +68,7 @@ function _drupal_maintenance_theme() {
   // Ensure that system.module is loaded.
   if (!function_exists('_system_rebuild_theme_data')) {
     $module_list['system'] = 'core/modules/system/system.module';
-    $module_handler = Drupal::moduleHandler();
+    $module_handler = \Drupal::moduleHandler();
     $module_handler->setModuleList($module_list);
     $module_handler->load('system');
   }

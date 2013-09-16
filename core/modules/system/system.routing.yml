@@ -1,103 +1,103 @@
 system.ajax:
-  pattern: '/system/ajax'
+  path: '/system/ajax'
   defaults:
     _controller: '\Drupal\system\Controller\FormAjaxController::content'
   requirements:
     _access: 'TRUE'
 
 system.admin:
-  pattern: '/admin'
+  path: '/admin'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access administration pages'
 
 system.admin_structure:
-  pattern: '/admin/structure'
+  path: '/admin/structure'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access administration pages'
 
 system.admin_reports:
-  pattern: '/admin/reports'
+  path: '/admin/reports'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access site reports'
 
 system.admin_config_media:
-  pattern: '/admin/config/media'
+  path: '/admin/config/media'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access administration pages'
 
 system.admin_config_services:
-  pattern: '/admin/config/services'
+  path: '/admin/config/services'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access administration pages'
 
 system.admin_config_development:
-  pattern: '/admin/config/development'
+  path: '/admin/config/development'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access administration pages'
 
 system.admin_config_regional:
-  pattern: '/admin/config/regional'
+  path: '/admin/config/regional'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access administration pages'
 
 system.admin_config_search:
-  pattern: '/admin/config/search'
+  path: '/admin/config/search'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access administration pages'
 
 system.admin_config_system:
-  pattern: '/admin/config/system'
+  path: '/admin/config/system'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access administration pages'
 
 system.admin_config_ui:
-  pattern: '/admin/config/user-interface'
+  path: '/admin/config/user-interface'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access administration pages'
 
 system.admin_config_workflow:
-  pattern: '/admin/config/workflow'
+  path: '/admin/config/workflow'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access administration pages'
 
 system.admin_config_content:
-  pattern: '/admin/config/content'
+  path: '/admin/config/content'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access administration pages'
 
 system.cron:
-  pattern: '/cron/{key}'
+  path: '/cron/{key}'
   defaults:
     _controller: '\Drupal\system\CronController::run'
   requirements:
     _access_system_cron: 'TRUE'
 
 system.admin_compact_page:
-  pattern: '/admin/compact/{mode}'
+  path: '/admin/compact/{mode}'
   defaults:
     _controller: 'Drupal\system\Controller\SystemController::compactPage'
     mode: 'off'
@@ -105,175 +105,175 @@ system.admin_compact_page:
     _permission: 'access administration pages'
 
 system.machine_name_transliterate:
-  pattern: '/machine_name/transliterate'
+  path: '/machine_name/transliterate'
   defaults:
     _controller: '\Drupal\system\MachineNameController::transliterate'
   requirements:
     _permission: 'access content'
 
 system.site_information_settings:
-  pattern: '/admin/config/system/site-information'
+  path: '/admin/config/system/site-information'
   defaults:
     _form: 'Drupal\system\Form\SiteInformationForm'
   requirements:
     _permission: 'administer site configuration'
 
 system.cron_settings:
-  pattern: '/admin/config/system/cron'
+  path: '/admin/config/system/cron'
   defaults:
     _form: 'Drupal\system\Form\CronForm'
   requirements:
     _permission: 'administer site configuration'
 
 system.logging_settings:
-  pattern: '/admin/config/development/logging'
+  path: '/admin/config/development/logging'
   defaults:
     _form: 'Drupal\system\Form\LoggingForm'
   requirements:
     _permission: 'administer site configuration'
 
 system.performance_settings:
-  pattern: '/admin/config/development/performance'
+  path: '/admin/config/development/performance'
   defaults:
     _form: 'Drupal\system\Form\PerformanceForm'
   requirements:
     _permission: 'administer site configuration'
 
 system.file_system_settings:
-  pattern: '/admin/config/media/file-system'
+  path: '/admin/config/media/file-system'
   defaults:
     _form: 'Drupal\system\Form\FileSystemForm'
   requirements:
     _permission: 'administer site configuration'
 
 system.rss_feeds_settings:
-  pattern: '/admin/config/services/rss-publishing'
+  path: '/admin/config/services/rss-publishing'
   defaults:
     _form: 'Drupal\system\Form\RssFeedsForm'
   requirements:
     _permission: 'administer site configuration'
 
 system.regional_settings:
-  pattern: '/admin/config/regional/settings'
+  path: '/admin/config/regional/settings'
   defaults:
     _form: 'Drupal\system\Form\RegionalForm'
   requirements:
     _permission: 'administer site configuration'
 
 system.image_toolkit_settings:
-  pattern: '/admin/config/media/image-toolkit'
+  path: '/admin/config/media/image-toolkit'
   defaults:
     _form: 'Drupal\system\Form\ImageToolkitForm'
   requirements:
     _permission: 'administer administration pages'
 
 system.site_maintenance_mode:
-  pattern: '/admin/config/development/maintenance'
+  path: '/admin/config/development/maintenance'
   defaults:
     _form: 'Drupal\system\Form\SiteMaintenanceModeForm'
   requirements:
     _permission: 'administer site configuration'
 
 system.run_cron:
-  pattern: '/admin/reports/status/run-cron'
+  path: '/admin/reports/status/run-cron'
   defaults:
     _controller: '\Drupal\system\CronController::runManually'
   requirements:
     _permission: 'administer site configuration'
 
 system.date_format_list:
-  pattern: '/admin/config/regional/date-time'
+  path: '/admin/config/regional/date-time'
   defaults:
     _entity_list: 'date_format'
   requirements:
     _permission: 'administer site configuration'
 
 system.date_format_add:
-  pattern: '/admin/config/regional/date-time/formats/add'
+  path: '/admin/config/regional/date-time/formats/add'
   defaults:
     _entity_form: 'date_format.add'
   requirements:
     _permission: 'administer site configuration'
 
 system.date_format_edit:
-  pattern: '/admin/config/regional/date-time/formats/manage/{date_format}'
+  path: '/admin/config/regional/date-time/formats/manage/{date_format}'
   defaults:
     _entity_form: 'date_format.edit'
   requirements:
     _entity_access: 'date_format.update'
 
 system.date_format_language_overview:
-  pattern: '/admin/config/regional/date-time/locale'
+  path: '/admin/config/regional/date-time/locale'
   defaults:
     _controller: '\Drupal\system\Controller\DateFormatLanguageController::overviewPage'
   requirements:
     _permission: 'administer site configuration'
 
 system.date_format_delete:
-  pattern: 'admin/config/regional/date-time/formats/manage/{date_format}/delete'
+  path: 'admin/config/regional/date-time/formats/manage/{date_format}/delete'
   defaults:
     _entity_form: 'date_format.delete'
   requirements:
     _entity_access: 'date_format.delete'
 
 system.date_format_localize_reset:
-  pattern: 'admin/config/regional/date-time/locale/{langcode}/reset'
+  path: 'admin/config/regional/date-time/locale/{langcode}/reset'
   defaults:
     _form: '\Drupal\system\Form\DateFormatLocalizeResetForm'
   requirements:
     _permission: 'administer site configuration'
 
 system.modules_list:
-  pattern: 'admin/modules'
+  path: 'admin/modules'
   defaults:
     _form: 'Drupal\system\Form\ModulesListForm'
   requirements:
     _permission: 'administer modules'
 
 system.modules_list_confirm:
-  pattern: 'admin/modules/list/confirm'
+  path: 'admin/modules/list/confirm'
   defaults:
     _form: 'Drupal\system\Form\ModulesListConfirmForm'
   requirements:
     _permission: 'administer modules'
 
 system.theme_disable:
-  pattern: '/admin/appearance/disable'
+  path: '/admin/appearance/disable'
   defaults:
     _controller: 'Drupal\system\Controller\ThemeController::disable'
   requirements:
     _permission: 'administer themes'
 
 system.theme_enable:
-  pattern: '/admin/appearance/enable'
+  path: '/admin/appearance/enable'
   defaults:
     _controller: 'Drupal\system\Controller\ThemeController::enable'
   requirements:
     _permission: 'administer themes'
 
 system.status:
-  pattern: '/admin/reports/status'
+  path: '/admin/reports/status'
   defaults:
     _controller: 'Drupal\system\Controller\SystemInfoController::status'
   requirements:
     _permission: 'administer site configuration'
 
 system.php:
-  pattern: '/admin/reports/status/php'
+  path: '/admin/reports/status/php'
   defaults:
     _controller: 'Drupal\system\Controller\SystemInfoController::php'
   requirements:
     _permission: 'administer site configuration'
 
 system.admin_index:
-  pattern: 'admin/index'
+  path: 'admin/index'
   defaults:
     _content: 'Drupal\system\Controller\AdminController::index'
   requirements:
     _permission: 'access administration pages'
 
 system.files:
-  pattern: '/system/files/{scheme}'
+  path: '/system/files/{scheme}'
   defaults:
     _controller: 'Drupal\system\FileDownloadController::download'
     scheme: private
@@ -281,47 +281,47 @@ system.files:
     _access: 'TRUE'
 
 system.theme_settings:
-  pattern: '/admin/appearance/settings'
+  path: '/admin/appearance/settings'
   defaults:
     _form: '\Drupal\system\Form\ThemeSettingsForm'
   requirements:
     _permission: 'administer themes'
 
 '<front>':
-  pattern: '/'
+  path: '/'
   requirements:
     _access: 'TRUE'
 
 system.modules_uninstall:
-  pattern: 'admin/modules/uninstall'
+  path: 'admin/modules/uninstall'
   defaults:
     _form: 'Drupal\system\Form\ModulesUninstallForm'
   requirements:
     _permission: 'administer modules'
 
 system.modules_uninstall_confirm:
-  pattern: 'admin/modules/uninstall/confirm'
+  path: 'admin/modules/uninstall/confirm'
   defaults:
     _form: 'Drupal\system\Form\ModulesUninstallConfirmForm'
   requirements:
     _permission: 'administer modules'
 
 system.timezone:
-  pattern: '/system/timezone'
+  path: '/system/timezone'
   defaults:
     _controller: '\Drupal\system\Controller\TimezoneController::getTimezone'
   requirements:
     _access: 'TRUE'
 
 system.admin_config:
-  pattern: '/admin/config'
+  path: '/admin/config'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::overview'
   requirements:
     _permission: 'access administration pages'
 
 system.batch_page:
-  pattern: '/batch'
+  path: '/batch'
   defaults:
     _controller: '\Drupal\system\Controller\BatchController::batchPage'
   requirements:

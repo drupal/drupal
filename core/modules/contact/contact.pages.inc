@@ -30,7 +30,7 @@ function contact_site_page(Category $category = NULL) {
 
   if (!isset($category)) {
     $categories = entity_load_multiple('contact_category');
-    $default_category = Drupal::config('contact.settings')->get('default_category');
+    $default_category = \Drupal::config('contact.settings')->get('default_category');
     if (isset($categories[$default_category])) {
       $category = $categories[$default_category];
     }
@@ -51,7 +51,7 @@ function contact_site_page(Category $category = NULL) {
   $message = entity_create('contact_message', array(
     'category' => $category->id(),
   ));
-  return Drupal::entityManager()->getForm($message);
+  return \Drupal::entityManager()->getForm($message);
 }
 
 /**
@@ -81,7 +81,7 @@ function contact_personal_page($recipient) {
     'recipient' => $recipient,
     'category' => 'personal',
   ));
-  return Drupal::entityManager()->getForm($message);
+  return \Drupal::entityManager()->getForm($message);
 }
 
 /**
@@ -93,10 +93,10 @@ function contact_personal_page($recipient) {
  * @see contact_personal_page()
  */
 function contact_flood_control() {
-  $config = Drupal::config('contact.settings');
+  $config = \Drupal::config('contact.settings');
   $limit = $config->get('flood.limit');
   $interval = $config->get('flood.interval');
-  if (!Drupal::service('flood')->isAllowed('contact', $limit, $interval)) {
+  if (!\Drupal::service('flood')->isAllowed('contact', $limit, $interval)) {
     drupal_set_message(t("You cannot send more than %limit messages in @interval. Try again later.", array(
       '%limit' => $limit,
       '@interval' => format_interval($interval),

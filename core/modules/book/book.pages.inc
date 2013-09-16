@@ -50,7 +50,7 @@ function book_remove_form($form, &$form_state, EntityInterface $node) {
  */
 function book_remove_form_submit($form, &$form_state) {
   $node = $form['#node'];
-  if (Drupal::service('book.manager')->checkNodeIsRemovable($node)) {
+  if (\Drupal::service('book.manager')->checkNodeIsRemovable($node)) {
     menu_link_delete($node->book['mlid']);
     db_delete('book')
       ->condition('nid', $node->id())

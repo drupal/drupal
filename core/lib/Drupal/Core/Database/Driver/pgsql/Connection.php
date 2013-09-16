@@ -13,10 +13,6 @@ use Drupal\Core\Database\DatabaseNotFoundException;
 use Drupal\Core\Database\StatementInterface;
 use Drupal\Core\Database\IntegrityConstraintViolationException;
 
-use Locale;
-use PDO;
-use PDOException;
-
 /**
  * @addtogroup database
  * @{
@@ -37,7 +33,7 @@ class Connection extends DatabaseConnection {
   /**
    * Constructs a connection object.
    */
-  public function __construct(PDO $connection, array $connection_options) {
+  public function __construct(\PDO $connection, array $connection_options) {
     parent::__construct($connection, $connection_options);
 
     // This driver defaults to transaction support, except if explicitly passed FALSE.
@@ -89,18 +85,18 @@ class Connection extends DatabaseConnection {
       'pdo' => array(),
     );
     $connection_options['pdo'] += array(
-      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+      \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
       // Prepared statements are most effective for performance when queries
       // are recycled (used several times). However, if they are not re-used,
       // prepared statements become ineffecient. Since most of Drupal's
       // prepared queries are not re-used, it should be faster to emulate
       // the preparation than to actually ready statements for re-use. If in
       // doubt, reset to FALSE and measure performance.
-      PDO::ATTR_EMULATE_PREPARES => TRUE,
+      \PDO::ATTR_EMULATE_PREPARES => TRUE,
       // Convert numeric values to strings when fetching.
-      PDO::ATTR_STRINGIFY_FETCHES => TRUE,
+      \PDO::ATTR_STRINGIFY_FETCHES => TRUE,
     );
-    $pdo = new PDO($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
+    $pdo = new \PDO($dsn, $connection_options['username'], $connection_options['password'], $connection_options['pdo']);
 
     return $pdo;
   }
@@ -142,10 +138,10 @@ class Connection extends DatabaseConnection {
         case Database::RETURN_NULL:
           return;
         default:
-          throw new PDOException('Invalid return directive: ' . $options['return']);
+          throw new \PDOException('Invalid return directive: ' . $options['return']);
       }
     }
-    catch (PDOException $e) {
+    catch (\PDOException $e) {
       if ($options['throw_exception']) {
         // Match all SQLSTATE 23xxx errors.
         if (substr($e->getCode(), -6, -3) == '23') {
@@ -209,7 +205,7 @@ class Connection extends DatabaseConnection {
     // If the PECL intl extension is installed, use it to determine the proper
     // locale.  Otherwise, fall back to en_US.
     if (class_exists('Locale')) {
-      $locale = Locale::getDefault();
+      $locale = \Locale::getDefault();
     }
     else {
       $locale = 'en_US';

@@ -108,7 +108,7 @@ abstract class ResourceBase extends PluginBase implements ContainerFactoryPlugin
           // HTTP Accept headers.
           foreach ($this->serializerFormats as $format_name) {
             // Expose one route per available format.
-            //$format_route = new Route($route->getPattern(), $route->getDefaults(), $route->getRequirements());
+            //$format_route = new Route($route->getPath(), $route->getDefaults(), $route->getRequirements());
             $format_route = clone $route;
             $format_route->addRequirements(array('_format' => $format_name));
             $collection->add("$route_name.$method.$format_name", $format_route);

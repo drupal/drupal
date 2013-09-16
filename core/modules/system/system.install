@@ -22,7 +22,7 @@ function system_requirements($phase) {
   if ($phase == 'runtime') {
     $requirements['drupal'] = array(
       'title' => t('Drupal'),
-      'value' => Drupal::VERSION,
+      'value' => \Drupal::VERSION,
       'severity' => REQUIREMENT_INFO,
       'weight' => -10,
     );
@@ -260,7 +260,7 @@ function system_requirements($phase) {
 
   // Report cron status.
   if ($phase == 'runtime') {
-    $cron_config = Drupal::config('system.cron');
+    $cron_config = \Drupal::config('system.cron');
     // Cron warning threshold defaults to two days.
     $threshold_warning = $cron_config->get('threshold.requirements_warning');
     // Cron error threshold defaults to two weeks.
@@ -269,7 +269,7 @@ function system_requirements($phase) {
     $help = t('For more information, see the online handbook entry for <a href="@cron-handbook">configuring cron jobs</a>.', array('@cron-handbook' => 'http://drupal.org/cron'));
 
     // Determine when cron last ran.
-    $cron_last = Drupal::state()->get('system.cron_last');
+    $cron_last = \Drupal::state()->get('system.cron_last');
     if (!is_numeric($cron_last)) {
       $cron_last = variable_get('install_time', 0);
     }
@@ -291,7 +291,7 @@ function system_requirements($phase) {
     }
 
     $description .= ' ' . t('You can <a href="@cron">run cron manually</a>.', array('@cron' => url('admin/reports/status/run-cron')));
-    $description .= '<br />' . t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron/' . Drupal::state()->get('system.cron_key'), array('absolute' => TRUE))));
+    $description .= '<br />' . t('To run cron from outside the site, go to <a href="!cron">!cron</a>', array('!cron' => url('cron/' . \Drupal::state()->get('system.cron_key'), array('absolute' => TRUE))));
 
     $requirements['cron'] = array(
       'title' => t('Cron maintenance tasks'),
@@ -301,7 +301,7 @@ function system_requirements($phase) {
     );
   }
   if ($phase != 'install') {
-    $filesystem_config = Drupal::config('system.file');
+    $filesystem_config = \Drupal::config('system.file');
     $directories = array(
       PublicStream::basePath(),
       // By default no private files directory is configured. For private files
@@ -413,7 +413,7 @@ function system_requirements($phase) {
     );
 
     // Check installed modules.
-    foreach (Drupal::moduleHandler()->getModuleList() as $module => $filename) {
+    foreach (\Drupal::moduleHandler()->getModuleList() as $module => $filename) {
       $updates = drupal_get_schema_versions($module);
       if ($updates !== FALSE) {
         $default = drupal_get_installed_schema_version($module);
@@ -476,7 +476,7 @@ function system_requirements($phase) {
         // Check for an incompatible version.
         $required_file = $files[$required_module];
         $required_name = $required_file->info['name'];
-        $version = str_replace(Drupal::CORE_COMPATIBILITY . '-', '', $required_file->info['version']);
+        $version = str_replace(\Drupal::CORE_COMPATIBILITY . '-', '', $required_file->info['version']);
         $compatibility = drupal_check_incompatibility($requirement, $version);
         if ($compatibility) {
           $compatibility = rtrim(substr($compatibility, 2), ')');
@@ -523,13 +523,13 @@ function system_install() {
   // Enable and set the default theme. Can't use theme_enable() this early in
   // installation.
   config_install_default_config('theme', 'stark');
-  Drupal::config('system.theme')
+  \Drupal::config('system.theme')
     ->set('default', 'stark')
     ->save();
 
   // Populate the cron key state variable.
   $cron_key = Crypt::randomStringHashed(55);
-  Drupal::state()->set('system.cron_key', $cron_key);
+  \Drupal::state()->set('system.cron_key', $cron_key);
 }
 
 /**
@@ -922,8 +922,8 @@ function system_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'pattern' => array(
-        'description' => 'The path pattern for this URI',
+      'path' => array(
+        'description' => 'The path for this URI',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -1427,7 +1427,7 @@ function system_update_8013() {
 function system_update_8014() {
   // Not using update_variables_to_config(), since the only value is
   // 'error_level', which needs to be mapped to a new value.
-  $config = Drupal::config('system.logging');
+  $config = \Drupal::config('system.logging');
   $error_level = db_query("SELECT value FROM {variable} WHERE name = 'error_level'")->fetchField();
   if ($error_level !== FALSE) {
     $error_level = unserialize($error_level);
@@ -1580,8 +1580,8 @@ function system_update_8022() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'pattern' => array(
-        'description' => 'The path pattern for this URI',
+      'path' => array(
+        'description' => 'The path for this URI',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -1688,7 +1688,7 @@ function system_update_8028() {
  */
 function system_update_8029() {
   if ($value = update_variable_get('path_alias_whitelist', FALSE)) {
-    Drupal::state()->set('system.path_alias_whitelist', $value);
+    \Drupal::state()->set('system.path_alias_whitelist', $value);
   }
   update_variable_del('path_alias_whitelist');
 }
@@ -1884,7 +1884,7 @@ function system_update_8045() {
   if (!empty($date_formats)) {
     foreach ($date_formats as $type => $format) {
       // Set name and locked properties.
-      $config = Drupal::config("system.date_format.$type")
+      $config = \Drupal::config("system.date_format.$type")
         ->set('id', $type)
         ->set('label', $format['title'])
         ->set('locked', $format['locked'])
@@ -1929,7 +1929,7 @@ function system_update_8046() {
   update_install_default_config('module', 'views.view.user_admin_people', 'user');
   update_install_default_config('module', 'views.view.content', 'node');
 
-  $front_page = Drupal::config('system.site')->get('page.front') ?: 'node';
+  $front_page = \Drupal::config('system.site')->get('page.front') ?: 'node';
   if ($front_page == 'node') {
     // This imports the node frontpage view.
     update_install_default_config('module', 'views.view.frontpage', 'node');
@@ -2132,7 +2132,7 @@ function system_update_8055() {
   // Convert array of theme settings from Drupal 7's variable system to Drupal
   // 8's configuration management system.
   foreach ($theme_settings_to_config_map as $variable => $config_name) {
-    $config = Drupal::config($config_name);
+    $config = \Drupal::config($config_name);
     $theme_settings = update_variable_get($variable);
     if (!empty($theme_settings)) {
       theme_settings_convert_to_config($theme_settings, $config)->save();
@@ -2176,7 +2176,7 @@ function system_update_8056() {
   foreach ($entity_view_modes as $entity_type => $view_modes) {
     foreach ($view_modes as $key => $name) {
       $status = in_array($key, array('teaser', 'compact'));
-      Drupal::config("entity.view_mode.$entity_type.$key")
+      \Drupal::config("entity.view_mode.$entity_type.$key")
         ->set('id', "$entity_type.$key")
         ->set('label', $name)
         ->set('targetEntityType', $entity_type)
@@ -2193,14 +2193,14 @@ function system_update_8056() {
  */
 function system_update_8057() {
   $actions = db_query("SELECT * FROM {actions}")->fetchAllAssoc('aid', PDO::FETCH_ASSOC);
-  $action_plugins = Drupal::service('plugin.manager.action')->getDefinitions();
+  $action_plugins = \Drupal::service('plugin.manager.action')->getDefinitions();
   foreach ($actions as $action) {
     if (isset($action_plugins[$action['callback']])) {
       if (is_numeric($action['aid'])) {
         $action['aid'] = $action['callback'] . '_' . $action['aid'];
       }
       $configuration = unserialize($action['parameters']) ?: array();
-      Drupal::config('system.action.' . $action['aid'])
+      \Drupal::config('system.action.' . $action['aid'])
         ->set('id', $action['aid'])
         ->set('label', $action['label'])
         ->set('status', '1')

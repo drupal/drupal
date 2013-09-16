@@ -90,14 +90,14 @@ function statistics_menu() {
  * Implements hook_cron().
  */
 function statistics_cron() {
-  $statistics_timestamp = Drupal::state()->get('statistics.day_timestamp') ?: 0;
+  $statistics_timestamp = \Drupal::state()->get('statistics.day_timestamp') ?: 0;
 
   if ((REQUEST_TIME - $statistics_timestamp) >= 86400) {
     // Reset day counts.
     db_update('node_counter')
       ->fields(array('daycount' => 0))
       ->execute();
-    Drupal::state()->set('statistics.day_timestamp', REQUEST_TIME);
+    \Drupal::state()->set('statistics.day_timestamp', REQUEST_TIME);
   }
 }
 
@@ -174,7 +174,7 @@ function statistics_get($nid) {
  *   A string as a link, truncated to the width, linked to the given $path.
  */
 function _statistics_link($path, $width = 35) {
-  $title = Drupal::service('path.alias_manager')->getPathAlias($path);
+  $title = \Drupal::service('path.alias_manager')->getPathAlias($path);
   $title = truncate_utf8($title, $width, FALSE, TRUE);
   return l($title, $path);
 }
@@ -211,7 +211,7 @@ function statistics_node_predelete(EntityInterface $node) {
  * Implements hook_ranking().
  */
 function statistics_ranking() {
-  if (Drupal::config('statistics.settings')->get('count_content_views')) {
+  if (\Drupal::config('statistics.settings')->get('count_content_views')) {
     return array(
       'views' => array(
         'title' => t('Number of views'),
@@ -223,7 +223,7 @@ function statistics_ranking() {
         ),
         // Inverse law that maps the highest view count on the site to 1 and 0 to 0.
         'score' => '2.0 - 2.0 / (1.0 + node_counter.totalcount * CAST(:scale AS DECIMAL))',
-        'arguments' => array(':scale' => Drupal::state()->get('statistics.node_counter_scale') ?: 0),
+        'arguments' => array(':scale' => \Drupal::state()->get('statistics.node_counter_scale') ?: 0),
       ),
     );
   }
@@ -233,7 +233,7 @@ function statistics_ranking() {
  * Implements hook_update_index().
  */
 function statistics_update_index() {
-  Drupal::state()->set('statistics.node_counter_scale', 1.0 / max(1, db_query('SELECT MAX(totalcount) FROM {node_counter}')->fetchField()));
+  \Drupal::state()->set('statistics.node_counter_scale', 1.0 / max(1, db_query('SELECT MAX(totalcount) FROM {node_counter}')->fetchField()));
 }
 
 /**
@@ -251,7 +251,7 @@ function statistics_preprocess_block(&$variables) {
 function statistics_library_info() {
   $libraries['drupal.statistics'] = array(
     'title' => 'Statistics',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'statistics') . '/statistics.js' => array(
         'scope' => 'footer'
@@ -274,7 +274,7 @@ function statistics_library_info() {
  * to count content views.
  */
 function statistics_block_alter(&$definitions) {
-  $statistics_count_content_views = Drupal::config('statistics.settings')->get('count_content_views');
+  $statistics_count_content_views = \Drupal::config('statistics.settings')->get('count_content_views');
   if (empty($statistics_count_content_views)) {
     unset($definitions['statistics_popular_block']);
   }

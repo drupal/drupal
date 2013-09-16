@@ -71,4 +71,15 @@ abstract class SystemConfigFormBase extends FormBase {
     drupal_set_message($this->t('The configuration options have been saved.'));
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  protected function config($name) {
+    if (!$this->configFactory) {
+      $container = $this->container();
+      $this->configFactory = $container->get('config.factory');
+      $this->configFactory->enterContext($container->get('config.context.free'));
+    }
+    return $this->configFactory->get($name);
+  }
 }

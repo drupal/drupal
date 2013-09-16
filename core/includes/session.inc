@@ -92,7 +92,7 @@ function _drupal_session_read($sid) {
   // client's session in the database. If it's HTTPS then we are either have
   // a HTTPS session or we are about to log in so we check the sessions table
   // for an anonymous session with the non-HTTPS-only cookie.
-  if (Drupal::request()->isSecure()) {
+  if (\Drupal::request()->isSecure()) {
     $values = db_query("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.ssid = :ssid", array(':ssid' => $sid))->fetchAssoc();
     if (!$values) {
       if (isset($_COOKIE[$insecure_session_name])) {
@@ -176,7 +176,7 @@ function _drupal_session_write($sid, $value) {
       // Either ssid or sid or both will be added from $key below.
       $fields = array(
         'uid' => $user->id(),
-        'hostname' => Drupal::request()->getClientIP(),
+        'hostname' => \Drupal::request()->getClientIP(),
         'session' => $value,
         'timestamp' => REQUEST_TIME,
       );
@@ -186,7 +186,7 @@ function _drupal_session_write($sid, $value) {
       // default.
       $key = array('sid' => $sid, 'ssid' => '');
       // On HTTPS connections, use the session ID as both 'sid' and 'ssid'.
-      if (Drupal::request()->isSecure()) {
+      if (\Drupal::request()->isSecure()) {
         $key['ssid'] = $sid;
         // The "secure pages" setting allows a site to simultaneously use both
         // secure and insecure session cookies. If enabled and both cookies are
@@ -240,7 +240,7 @@ function drupal_session_initialize() {
 
   session_set_save_handler('_drupal_session_open', '_drupal_session_close', '_drupal_session_read', '_drupal_session_write', '_drupal_session_destroy', '_drupal_session_garbage_collection');
 
-  $is_https = Drupal::request()->isSecure();
+  $is_https = \Drupal::request()->isSecure();
   // We use !empty() in the following check to ensure that blank session IDs
   // are not valid.
   if (!empty($_COOKIE[session_name()]) || ($is_https && settings()->get('mixed_mode_sessions', FALSE) && !empty($_COOKIE[substr(session_name(), 1)]))) {
@@ -319,7 +319,7 @@ function drupal_session_commit() {
     // started.
     if (!drupal_session_started()) {
       drupal_session_start();
-      if (Drupal::request()->isSecure() && settings()->get('mixed_mode_sessions', FALSE)) {
+      if (\Drupal::request()->isSecure() && settings()->get('mixed_mode_sessions', FALSE)) {
         $insecure_session_name = substr(session_name(), 1);
         $params = session_get_cookie_params();
         $expire = $params['lifetime'] ? REQUEST_TIME + $params['lifetime'] : 0;
@@ -355,7 +355,7 @@ function drupal_session_regenerate() {
     return;
   }
 
-  $is_https = Drupal::request()->isSecure();
+  $is_https = \Drupal::request()->isSecure();
 
   if ($is_https && settings()->get('mixed_mode_sessions', FALSE)) {
     $insecure_session_name = substr(session_name(), 1);
@@ -431,7 +431,7 @@ function _drupal_session_destroy($sid) {
     return;
   }
 
-  $is_https = Drupal::request()->isSecure();
+  $is_https = \Drupal::request()->isSecure();
   // Delete session data.
   db_delete('sessions')
     ->condition($is_https ? 'ssid' : 'sid', $sid)
@@ -461,7 +461,7 @@ function _drupal_session_destroy($sid) {
  *   Force the secure value of the cookie.
  */
 function _drupal_session_delete_cookie($name, $secure = NULL) {
-  if (isset($_COOKIE[$name]) || (!Drupal::request()->isSecure() && $secure === TRUE)) {
+  if (isset($_COOKIE[$name]) || (!\Drupal::request()->isSecure() && $secure === TRUE)) {
     $params = session_get_cookie_params();
     if ($secure !== NULL) {
       $params['secure'] = $secure;

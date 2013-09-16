@@ -7,7 +7,6 @@
 
 namespace Drupal\system\Tests\Menu;
 
-use PDO;
 use Drupal\simpletest\WebTestBase;
 
 /**

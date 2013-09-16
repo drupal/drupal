@@ -7,8 +7,6 @@
 
 namespace Drupal\Component\PhpStorage;
 
-use DirectoryIterator;
-
 /**
  * Stores PHP code in files with securely hashed names.
  *
@@ -164,7 +162,7 @@ class MTimeProtectedFastFileStorage extends FileStorage {
    */
   protected function cleanDirectory($directory) {
     chmod($directory, 0700);
-    foreach (new DirectoryIterator($directory) as $fileinfo) {
+    foreach (new \DirectoryIterator($directory) as $fileinfo) {
       if (!$fileinfo->isDot()) {
         $this->unlink($fileinfo->getPathName());
       }

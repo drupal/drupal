@@ -1,19 +1,19 @@
 edit.metadata:
-  pattern: '/edit/metadata'
+  path: '/edit/metadata'
   defaults:
     _controller: '\Drupal\edit\EditController::metadata'
   requirements:
     _permission: 'access in-place editing'
 
 edit.attachments:
-  pattern: '/edit/attachments'
+  path: '/edit/attachments'
   defaults:
     _controller: '\Drupal\edit\EditController::attachments'
   requirements:
     _permission: 'access in-place editing'
 
 edit.field_form:
-  pattern: '/edit/form/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
+  path: '/edit/form/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
   defaults:
     _controller: '\Drupal\edit\EditController::fieldForm'
   options:
@@ -23,7 +23,7 @@ edit.field_form:
     _access_edit_entity_field: 'TRUE'
 
 edit.entity_save:
-  pattern: '/edit/entity/{entity_type}/{entity}'
+  path: '/edit/entity/{entity_type}/{entity}'
   defaults:
     _controller: '\Drupal\edit\EditController::entitySave'
   options:

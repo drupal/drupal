@@ -1,11 +1,11 @@
 twig_extension_test.filter:
-  pattern: '/twig-extension-test/filter'
+  path: '/twig-extension-test/filter'
   defaults:
     _content: '\Drupal\twig_extension_test\TwigExtensionTestController::testFilterRender'
   requirements:
     _permission: 'access content'
 twig_extension_test.function:
-  pattern: '/twig-extension-test/function'
+  path: '/twig-extension-test/function'
   defaults:
     _content: '\Drupal\twig_extension_test\TwigExtensionTestController::testFunctionRender'
   requirements:

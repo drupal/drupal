@@ -125,7 +125,7 @@ class RouteCompiler extends SymfonyRouteCompiler implements RouteCompilerInterfa
    *   The path string, stripped of placeholders that have default values.
    */
   protected static function getPathWithoutDefaults(Route $route) {
-    $path = $route->getPattern();
+    $path = $route->getPath();
     $defaults = $route->getDefaults();
 
     // Remove placeholders with default values from the outline, so that they

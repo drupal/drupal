@@ -9,8 +9,6 @@ namespace Drupal\Core\Database\Install;
 
 use Drupal\Core\Database\Database;
 
-use PDO;
-
 /**
  * Database installer structure.
  *
@@ -80,7 +78,7 @@ abstract class Tasks {
    * Ensure the PDO driver is supported by the version of PHP in use.
    */
   protected function hasPdoDriver() {
-    return in_array($this->pdoDriver, PDO::getAvailableDrivers());
+    return in_array($this->pdoDriver, \PDO::getAvailableDrivers());
   }
 
   /**

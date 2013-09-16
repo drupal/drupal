@@ -1,12 +1,12 @@
 update.settings:
-  pattern: '/admin/reports/updates/settings'
+  path: '/admin/reports/updates/settings'
   defaults:
     _form: '\Drupal\update\UpdateSettingsForm'
   requirements:
     _permission: 'administer site configuration'
 
 update.status:
-  pattern: '/admin/reports/updates'
+  path: '/admin/reports/updates'
   defaults:
     _content: '\Drupal\update\Controller\UpdateController::updateStatus'
   requirements:

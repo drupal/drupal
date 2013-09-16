@@ -14,7 +14,7 @@ use Drupal\field_test\Entity\TestEntity;
 function field_test_entity_info() {
   // If requested, clear the field cache while this is being called. See
   // Drupal\field\Tests\FieldInfoTest::testFieldInfoCache().
-  if (Drupal::state()->get('field_test.clear_info_cache_in_hook_entity_info')) {
+  if (\Drupal::state()->get('field_test.clear_info_cache_in_hook_entity_info')) {
     field_info_cache_clear();
   }
 }

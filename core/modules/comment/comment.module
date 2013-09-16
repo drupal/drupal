@@ -123,7 +123,7 @@ function comment_help($path, $arg) {
  */
 function comment_entity_bundle_info() {
   $bundles = array();
-  foreach (Drupal::service('comment.manager')->getAllFields() as $entity_type => $fields) {
+  foreach (\Drupal::service('comment.manager')->getAllFields() as $entity_type => $fields) {
     foreach ($fields as $field_name => $field_info) {
       $bundles['comment'][$entity_type . '__' . $field_name] = array(
         'label' => $entity_type . '_' . $field_name,
@@ -172,7 +172,7 @@ function comment_uri(Comment $comment) {
  */
 function comment_field_extra_fields() {
   $return = array();
-  foreach (Drupal::service('comment.manager')->getAllFields() as $entity_type => $fields) {
+  foreach (\Drupal::service('comment.manager')->getAllFields() as $entity_type => $fields) {
     foreach ($fields as $field_name => $field_info) {
       $return['comment'][$entity_type . '__' . $field_name] = array(
         'form' => array(
@@ -305,8 +305,8 @@ function comment_count_unpublished() {
  */
 function comment_field_instance_create(FieldInstanceInterface $instance) {
   if ($instance->getFieldType() == 'comment') {
-    Drupal::service('comment.manager')->addBodyField($instance->entity_type, $instance->getFieldName());
-    Drupal::cache()->delete('comment_entity_info');
+    \Drupal::service('comment.manager')->addBodyField($instance->entity_type, $instance->getFieldName());
+    \Drupal::cache()->delete('comment_entity_info');
   }
 }
 
@@ -317,7 +317,7 @@ function comment_field_entity_delete(FieldInterface $field) {
   if ($field->getFieldType() == 'comment') {
     // Delete all fields and displays attached to the comment bundle.
     entity_invoke_bundle_hook('delete', 'comment', $field->getFieldName());
-    Drupal::cache()->delete('comment_entity_info');
+    \Drupal::cache()->delete('comment_entity_info');
   }
 }
 
@@ -332,7 +332,7 @@ function comment_field_instance_delete(FieldInstanceInterface $instance) {
       ':field_id' => $instance->entityType() . '__' . $instance->getFieldName(),
     ))->fetchCol();
     entity_delete_multiple('comment', $comments);
-    Drupal::cache()->delete('comment_entity_info');
+    \Drupal::cache()->delete('comment_entity_info');
   }
 }
 
@@ -376,7 +376,7 @@ function comment_get_recent($number = 10) {
   $query->addMetaData('base_table', 'comment');
   $query->fields('c')
     ->condition('c.status', COMMENT_PUBLISHED);
-  if (Drupal::moduleHandler()->moduleExists('node')) {
+  if (\Drupal::moduleHandler()->moduleExists('node')) {
     // Special case to filter by published content.
     $query->innerJoin('node_field_data', 'n', "n.nid = c.entity_id AND c.entity_type = 'node'");
     $query->addTag('node_access');
@@ -414,7 +414,7 @@ function comment_get_recent($number = 10) {
  *   "page=X" if the page number is greater than zero; empty string otherwise.
  */
 function comment_new_page_count($num_comments, $new_replies, EntityInterface $entity, $field_name = 'comment') {
-  $instance = Drupal::service('field.info')->getInstance($entity->entityType(), $entity->bundle(), $field_name);
+  $instance = \Drupal::service('field.info')->getInstance($entity->entityType(), $entity->bundle(), $field_name);
   $mode = $instance->getFieldSetting('default_mode');
   $comments_per_page = $instance->getFieldSetting('per_page');
   $pagenum = NULL;
@@ -515,7 +515,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
     //   http://drupal.org/node/1901110
     return;
   }
-  $fields = Drupal::service('comment.manager')->getFields('node');
+  $fields = \Drupal::service('comment.manager')->getFields('node');
   foreach ($fields as $field_name => $detail) {
     // Skip fields that entity does not have.
     if (!$entity->getPropertyDefinition($field_name)) {
@@ -524,7 +524,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
     $links = array();
     $commenting_status = $entity->get($field_name)->status;
     if ($commenting_status) {
-      $instance = Drupal::service('field.info')->getInstance('node', $entity->bundle(), $field_name);
+      $instance = \Drupal::service('field.info')->getInstance('node', $entity->bundle(), $field_name);
       // Entity have commenting open or close.
       $uri = $entity->uri();
       if ($view_mode == 'rss') {
@@ -551,7 +551,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
               'fragment' => 'comments',
               'html' => TRUE,
             );
-            if (Drupal::moduleHandler()->moduleExists('history')) {
+            if (\Drupal::moduleHandler()->moduleExists('history')) {
               $links['comment-new-comments'] = array(
                 'title' => '',
                 'href' => '',
@@ -634,7 +634,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
       '#links' => $links,
       '#attributes' => array('class' => array('links', 'inline')),
     );
-    if ($view_mode == 'teaser' && Drupal::moduleHandler()->moduleExists('history')) {
+    if ($view_mode == 'teaser' && \Drupal::moduleHandler()->moduleExists('history')) {
       $entity->content['links']['#attached']['library'][] = array('comment', 'drupal.node-new-comments-link');
     }
   }
@@ -644,7 +644,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
  * Implements hook_node_view_alter().
  */
 function comment_node_view_alter(&$build, EntityInterface $node, EntityDisplay $display) {
-  if (Drupal::moduleHandler()->moduleExists('history')) {
+  if (\Drupal::moduleHandler()->moduleExists('history')) {
     $build['#attributes']['data-history-node-id'] = $node->id();
   }
 }
@@ -671,7 +671,7 @@ function comment_add(EntityInterface $entity, $field_name = 'comment', $pid = NU
     'pid' => $pid,
   );
   $comment = entity_create('comment', $values);
-  return Drupal::entityManager()->getForm($comment);
+  return \Drupal::entityManager()->getForm($comment);
 }
 
 /**
@@ -937,7 +937,7 @@ function comment_view_multiple($comments, $view_mode = 'full', $langcode = NULL)
 function comment_form_field_ui_field_instance_edit_form_alter(&$form, $form_state) {
   if ($form['#field']['type'] == 'comment') {
     // Collect translation settings.
-    if (Drupal::moduleHandler()->moduleExists('content_translation')) {
+    if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
       array_unshift($form['#submit'], 'comment_translation_configuration_element_submit');
     }
 
@@ -1002,7 +1002,7 @@ function comment_translation_configuration_element_submit($form, &$form_state) {
  * @see \Drupal\comment\Plugin\field\field_type\CommentItem::getPropertyDefinitions()
  */
 function comment_entity_load($entities, $entity_type) {
-  if (!Drupal::service('comment.manager')->getFields($entity_type)) {
+  if (!\Drupal::service('comment.manager')->getFields($entity_type)) {
     // Do not query database when entity has no comment fields.
     return;
   }
@@ -1032,8 +1032,8 @@ function comment_entity_insert(EntityInterface $entity) {
   global $user;
   // Allow bulk updates and inserts to temporarily disable the
   // maintenance of the {comment_entity_statistics} table.
-  if (Drupal::state()->get('comment.maintain_entity_statistics') &&
-    $fields = Drupal::service('comment.manager')->getFields($entity->entityType())) {
+  if (\Drupal::state()->get('comment.maintain_entity_statistics') &&
+    $fields = \Drupal::service('comment.manager')->getFields($entity->entityType())) {
     $query = db_insert('comment_entity_statistics')
      ->fields(array(
       'entity_id',
@@ -1111,7 +1111,7 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
     // edit could change the security situation so it is not safe to index the
     // comments.
     $index_comments = TRUE;
-    $roles = Drupal::entityManager()->getStorageController('user_role')->loadMultiple();
+    $roles = \Drupal::entityManager()->getStorageController('user_role')->loadMultiple();
     $authenticated_can_access = $roles[DRUPAL_AUTHENTICATED_RID]->hasPermission('access comments');
     foreach ($roles as $rid => $role) {
       if ($role->hasPermission('search content') && !$role->hasPermission('access comments')) {
@@ -1126,12 +1126,12 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
   $return = '';
 
   if ($index_comments) {
-    foreach (Drupal::service('comment.manager')->getFields('node') as $field_name => $info) {
+    foreach (\Drupal::service('comment.manager')->getFields('node') as $field_name => $info) {
       // Skip fields that entity does not have.
       if (!$node->getPropertyDefinition($field_name)) {
         continue;
       }
-      $instance = Drupal::service('field.info')->getInstance('node', $node->getType(), $field_name);
+      $instance = \Drupal::service('field.info')->getInstance('node', $node->getType(), $field_name);
       $mode = $instance->getFieldSetting('default_mode');
       $comments_per_page = $instance->getFieldSetting('per_page');
       if ($node->get($field_name)->status && $cids = comment_get_thread($node, $field_name, $mode, $comments_per_page)) {
@@ -1150,7 +1150,7 @@ function comment_node_update_index(EntityInterface $node, $langcode) {
  */
 function comment_update_index() {
   // Store the maximum possible comments per thread (used for ranking by reply count)
-  Drupal::state()->set('comment.node_comment_statistics_scale', 1.0 / max(1, db_query('SELECT MAX(comment_count) FROM {comment_entity_statistics}')->fetchField()));
+  \Drupal::state()->set('comment.node_comment_statistics_scale', 1.0 / max(1, db_query('SELECT MAX(comment_count) FROM {comment_entity_statistics}')->fetchField()));
 }
 
 /**
@@ -1160,7 +1160,7 @@ function comment_update_index() {
  * results.
  */
 function comment_node_search_result(EntityInterface $node) {
-  $comment_fields = Drupal::service('comment.manager')->getFields('node');
+  $comment_fields = \Drupal::service('comment.manager')->getFields('node');
   $comments = 0;
   $open = FALSE;
   foreach ($comment_fields as $field_name => $info) {
@@ -1400,7 +1400,7 @@ function comment_preview(CommentInterface $comment) {
       $comment->name->value = check_plain($account->getUsername());
     }
     elseif (empty($comment->name->value)) {
-      $comment->name->value = Drupal::config('user.settings')->get('anonymous');
+      $comment->name->value = \Drupal::config('user.settings')->get('anonymous');
     }
 
     $comment->created->value = !empty($comment->created->value) ? $comment->created->value : REQUEST_TIME;
@@ -1516,7 +1516,7 @@ function template_preprocess_comment(&$variables) {
     $variables['user_picture'] = array();
   }
 
-  if (Drupal::config('user.settings')->get('signatures') && $account->getSignature()) {
+  if (\Drupal::config('user.settings')->get('signatures') && $account->getSignature()) {
     $variables['signature'] = check_markup($account->getSignature(), $account->getSignatureFormat(), '', TRUE) ;
   }
   else {
@@ -1635,7 +1635,7 @@ function theme_comment_post_forbidden($variables) {
     }
 
     if ($authenticated_post_comments) {
-      $instance = Drupal::service('field.info')->getInstance($entity->entityType(), $entity->bundle(), $field_name);
+      $instance = \Drupal::service('field.info')->getInstance($entity->entityType(), $entity->bundle(), $field_name);
       // We cannot use drupal_get_destination() because these links
       // sometimes appear on /node and taxonomy listing pages.
       if ($instance->getFieldSetting('form_location') == COMMENT_FORM_SEPARATE_PAGE) {
@@ -1646,7 +1646,7 @@ function theme_comment_post_forbidden($variables) {
         $destination = array('destination' => $uri['path'] . '#comment-form');
       }
 
-      if (Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
+      if (\Drupal::config('user.settings')->get('register') != USER_REGISTER_ADMINISTRATORS_ONLY) {
         // Users can register themselves.
         return t('<a href="@login">Log in</a> or <a href="@register">register</a> to post comments', array('@login' => url('user/login', array('query' => $destination)), '@register' => url('user/register', array('query' => $destination))));
       }
@@ -1752,7 +1752,7 @@ function comment_ranking() {
       ),
       // Inverse law that maps the highest reply count on the site to 1 and 0 to 0.
       'score' => '2.0 - 2.0 / (1.0 + ces.comment_count * CAST(:scale AS DECIMAL))',
-      'arguments' => array(':scale' => Drupal::state()->get('comment.node_comment_statistics_scale') ?: 0),
+      'arguments' => array(':scale' => \Drupal::state()->get('comment.node_comment_statistics_scale') ?: 0),
     ),
   );
 }
@@ -1778,7 +1778,7 @@ function comment_library_info() {
   $path = drupal_get_path('module', 'comment');
   $libraries['drupal.comment'] = array(
     'title' => 'Comment',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       $path . '/comment-entity-form.js' => array(),
     ),
@@ -1790,7 +1790,7 @@ function comment_library_info() {
   );
   $libraries['drupal.comment-by-viewer'] = array(
     'title' => 'Annotate comments by the current viewer for targeted styling',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       $path . '/js/comment-by-viewer.js' => array(),
     ),
@@ -1802,7 +1802,7 @@ function comment_library_info() {
   );
   $libraries['drupal.comment-new-indicator'] = array(
     'title' => 'New comment indicator',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       $path . '/js/comment-new-indicator.js' => array(),
     ),
@@ -1815,7 +1815,7 @@ function comment_library_info() {
   );
   $libraries['drupal.node-new-comments-link'] = array(
     'title' => 'New comments link',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       $path . '/js/node-new-comments-link.js' => array(),
     ),

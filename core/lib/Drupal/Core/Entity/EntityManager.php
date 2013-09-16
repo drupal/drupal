@@ -374,7 +374,7 @@ class EntityManager extends PluginManagerBase {
    *   langcode. Defaults to an empty array.
    * @code
    *   $form_state['langcode'] = $langcode;
-   *   $manager = Drupal::entityManager();
+   *   $manager = \Drupal::entityManager();
    *   $form = $manager->getForm($entity, 'default', $form_state);
    * @endcode
    *

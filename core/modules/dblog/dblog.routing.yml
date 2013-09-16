@@ -1,12 +1,12 @@
 dblog.overview:
-  pattern: '/admin/reports/dblog'
+  path: '/admin/reports/dblog'
   defaults:
     _content: '\Drupal\dblog\Controller\DbLogController::overview'
   requirements:
     _permission: 'access site reports'
 
 dblog.event:
-  pattern: 'admin/reports/event/{event_id}'
+  path: 'admin/reports/event/{event_id}'
   defaults:
     _content: '\Drupal\dblog\Controller\DbLogController::eventDetails'
   requirements:

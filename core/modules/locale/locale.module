@@ -292,7 +292,7 @@ function locale_language_update($language) {
  */
 function locale_language_delete($language) {
   // Remove translations.
-  Drupal::service('locale.storage')->deleteTranslations(array('language' => $language->id));
+  \Drupal::service('locale.storage')->deleteTranslations(array('language' => $language->id));
 
   // Remove interface translation files.
   module_load_include('inc', 'locale', 'locale.bulk');
@@ -354,7 +354,7 @@ function locale_get_plural($count, $langcode = NULL) {
   if (!isset($plural_indexes[$langcode][$count])) {
     // Retrieve and statically cache the plural formulas for all languages.
     if (empty($plural_formulas)) {
-      $plural_formulas = Drupal::state()->get('locale.translation.plurals') ?: array();
+      $plural_formulas = \Drupal::state()->get('locale.translation.plurals') ?: array();
     }
     // If there is a plural formula for the language, evaluate it for the given
     // $count and statically cache the result for the combination of language
@@ -424,7 +424,7 @@ function locale_cron() {
   // and a translatable language was set.
   // Update tasks are added to the queue here but processed by Drupal's cron
   // using the cron worker defined in locale_queue_info().
-  if ($frequency = Drupal::config('locale.settings')->get('translation.update_interval_days') && locale_translatable_language_list()) {
+  if ($frequency = \Drupal::config('locale.settings')->get('translation.update_interval_days') && locale_translatable_language_list()) {
     module_load_include('translation.inc', 'locale');
     locale_cron_fill_queue();
   }
@@ -494,7 +494,7 @@ function locale_translation_worker($data) {
   // continue the task. This is typically the translation import task.
   if ($batch_context['finished'] < 1) {
     unset($batch_context['strings']);
-    $queue = Drupal::queue('locale_translation', TRUE);
+    $queue = \Drupal::queue('locale_translation', TRUE);
     $queue->createItem(array($function, $args));
   }
 }
@@ -516,7 +516,7 @@ function locale_system_update(array $components) {
   // Skip running the translation imports if in the installer,
   // because it would break out of the installer flow. We have
   // built-in support for translation imports in the installer.
-  if (!drupal_installation_attempted() && locale_translatable_language_list() && Drupal::config('locale.settings')->get('translation.import_enabled')) {
+  if (!drupal_installation_attempted() && locale_translatable_language_list() && \Drupal::config('locale.settings')->get('translation.import_enabled')) {
     module_load_include('compare.inc', 'locale');
 
     // Update the list of translatable projects and start the import batch.
@@ -530,7 +530,7 @@ function locale_system_update(array $components) {
       $batch = locale_translation_batch_update_build($list, array(), $options);
       batch_set($batch);
     }
-    Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+    \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
     if ($batch = locale_config_batch_update_components(array(), array(), $components)) {
       batch_set($batch);
     }
@@ -553,7 +553,7 @@ function locale_system_remove($components) {
   $list = array_merge($components['module'], $components['theme']);
   if ($language_list = locale_translatable_language_list()) {
     module_load_include('compare.inc', 'locale');
-    Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+    \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
     // Delete configuration translations.
     \Drupal\locale\Locale::config()->deleteComponentTranslations($components, array_keys($language_list));
 
@@ -612,8 +612,8 @@ function locale_js_alter(&$javascript) {
 function locale_js_translate(array $files = array()) {
   $language_interface = language(Language::TYPE_INTERFACE);
 
-  $dir = 'public://' . Drupal::config('locale.settings')->get('javascript.directory');
-  $parsed = Drupal::state()->get('system.javascript_parsed') ?: array();
+  $dir = 'public://' . \Drupal::config('locale.settings')->get('javascript.directory');
+  $parsed = \Drupal::state()->get('system.javascript_parsed') ?: array();
   $new_files = FALSE;
 
   foreach ($files as $filepath) {
@@ -642,16 +642,16 @@ function locale_js_translate(array $files = array()) {
       unset($parsed['refresh:' . $language_interface->id]);
     }
     // Store any changes after refresh was attempted.
-    Drupal::state()->set('system.javascript_parsed', $parsed);
+    \Drupal::state()->set('system.javascript_parsed', $parsed);
   }
   // If no refresh was attempted, but we have new source files, we need
   // to store them too. This occurs if current page is in English.
   elseif ($new_files) {
-    Drupal::state()->set('system.javascript_parsed', $parsed);
+    \Drupal::state()->set('system.javascript_parsed', $parsed);
   }
 
   // Add the translation JavaScript file to the page.
-  $locale_javascripts = Drupal::state()->get('translation.javascript') ?: array();
+  $locale_javascripts = \Drupal::state()->get('translation.javascript') ?: array();
   $translation_file = NULL;
   if (!empty($files) && !empty($locale_javascripts[$language_interface->id])) {
     // Add the translation JavaScript file to the page.
@@ -666,7 +666,7 @@ function locale_js_translate(array $files = array()) {
 function locale_library_info() {
   $libraries['drupal.locale.admin'] = array(
     'title' => 'Locale',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'locale') . '/locale.admin.js' => array(),
     ),
@@ -678,7 +678,7 @@ function locale_library_info() {
   );
   $libraries['drupal.locale.datepicker'] = array(
     'title' => 'Locale Datepicker UI',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'locale') . '/locale.datepicker.js' => array(),
     ),
@@ -710,7 +710,7 @@ function locale_library_info_alter(&$libraries, $module) {
           'ui' => array(
             'datepicker' => array(
               'isRTL' => $language_interface->direction == Language::DIRECTION_RTL,
-              'firstDay' => Drupal::config('system.date')->get('first_day'),
+              'firstDay' => \Drupal::config('system.date')->get('first_day'),
             ),
           ),
         ),
@@ -726,12 +726,12 @@ function locale_library_info_alter(&$libraries, $module) {
 function locale_form_language_admin_overview_form_alter(&$form, &$form_state) {
   $languages = $form['languages']['#languages'];
 
-  $total_strings = Drupal::service('locale.storage')->countStrings();
+  $total_strings = \Drupal::service('locale.storage')->countStrings();
   $stats = array_fill_keys(array_keys($languages), array());
 
   // If we have source strings, count translations and calculate progress.
   if (!empty($total_strings)) {
-    $translations = Drupal::service('locale.storage')->countTranslations();
+    $translations = \Drupal::service('locale.storage')->countTranslations();
     foreach ($translations as $langcode => $translated) {
       $stats[$langcode]['translated'] = $translated;
       if ($translated > 0) {
@@ -787,7 +787,7 @@ function locale_form_language_admin_add_form_alter(&$form, &$form_state) {
  * Set a batch for a newly-added language.
  */
 function locale_form_language_admin_add_form_alter_submit($form, $form_state) {
-  if (Drupal::config('locale.settings')->get('translation.import_enabled')) {
+  if (\Drupal::config('locale.settings')->get('translation.import_enabled')) {
     if (empty($form_state['values']['predefined_langcode']) || $form_state['values']['predefined_langcode'] == 'custom') {
       $langcode = $form_state['values']['langcode'];
     }
@@ -802,7 +802,7 @@ function locale_form_language_admin_add_form_alter_submit($form, $form_state) {
     batch_set($batch);
 
     // Create or update all configuration translations for this language.
-    Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+    \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
     if ($batch = locale_config_batch_update_components($options, array($langcode))) {
       batch_set($batch);
     }
@@ -849,7 +849,7 @@ function locale_form_system_file_system_settings_alter(&$form, $form_state) {
   $form['translation_path'] = array(
     '#type' => 'textfield',
     '#title' => t('Interface translations directory'),
-    '#default_value' => Drupal::config('locale.settings')->get('translation.path'),
+    '#default_value' => \Drupal::config('locale.settings')->get('translation.path'),
     '#maxlength' => 255,
     '#description' => t('A local file system path where interface translation files will be stored.'),
     '#required' => TRUE,
@@ -874,7 +874,7 @@ function locale_system_file_system_settings_submit(&$form, $form_state) {
     locale_translation_clear_status();
   }
 
-  Drupal::config('locale.settings')
+  \Drupal::config('locale.settings')
     ->set('translation.path', $form_state['values']['translation_path'])
     ->save();
 }
@@ -975,7 +975,7 @@ function locale_translation_file_history_delete($projects = array(), $langcodes 
  */
 function locale_translation_get_status($projects = NULL, $langcodes = NULL) {
   $result = array();
-  $status = Drupal::state()->get('locale.translation_status');
+  $status = \Drupal::state()->get('locale.translation_status');
   module_load_include('translation.inc', 'locale');
   $projects = $projects ? $projects : array_keys(locale_translation_get_projects());
   $langcodes = $langcodes ? $langcodes : array_keys(locale_translatable_language_list());
@@ -1052,8 +1052,8 @@ function locale_translation_status_save($project, $langcode, $type, $data) {
         break;
     }
 
-    Drupal::state()->set('locale.translation_status', $status);
-    Drupal::state()->set('locale.translation_last_checked', REQUEST_TIME);
+    \Drupal::state()->set('locale.translation_status', $status);
+    \Drupal::state()->set('locale.translation_last_checked', REQUEST_TIME);
   }
 }
 
@@ -1072,7 +1072,7 @@ function locale_translation_status_delete_languages($langcodes) {
         }
       }
     }
-    Drupal::state()->set('locale.translation_status', $status);
+    \Drupal::state()->set('locale.translation_status', $status);
   }
 }
 
@@ -1090,15 +1090,15 @@ function locale_translation_status_delete_projects($projects) {
       unset($status[$project]);
     }
   }
-  Drupal::state()->set('locale.translation_status', $status);
+  \Drupal::state()->set('locale.translation_status', $status);
 }
 
 /**
  * Clear the translation status cache.
  */
 function locale_translation_clear_status() {
-  Drupal::state()->delete('locale.translation_status');
-  Drupal::state()->delete('locale.translation_last_checked');
+  \Drupal::state()->delete('locale.translation_status');
+  \Drupal::state()->delete('locale.translation_last_checked');
 }
 
 /**
@@ -1109,7 +1109,7 @@ function locale_translation_clear_status() {
  *   when checking or importing translation files, FALSE otherwise.
  */
 function locale_translation_use_remote_source() {
-  return Drupal::config('locale.settings')->get('translation.use_source') == LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL;
+  return \Drupal::config('locale.settings')->get('translation.use_source') == LOCALE_TRANSLATION_USE_SOURCE_REMOTE_AND_LOCAL;
 }
 
 /**
@@ -1147,7 +1147,7 @@ function _locale_refresh_translations($langcodes, $lids = array()) {
   if (!empty($langcodes)) {
     // Update javascript translations if any of the strings has a javascript
     // location, or if no string ids were provided, update all languages.
-    if (empty($lids) || ($strings = Drupal::service('locale.storage')->getStrings(array('lid' => $lids, 'type' => 'javascript')))) {
+    if (empty($lids) || ($strings = \Drupal::service('locale.storage')->getStrings(array('lid' => $lids, 'type' => 'javascript')))) {
       array_map('_locale_invalidate_js', $langcodes);
     }
   }
@@ -1169,7 +1169,7 @@ function _locale_refresh_translations($langcodes, $lids = array()) {
  */
 function _locale_refresh_configuration(array $langcodes, array $lids) {
   if ($lids && $langcodes && $names = \Drupal\locale\Locale::config()->getStringNames($lids)) {
-    Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
+    \Drupal::moduleHandler()->loadInclude('locale', 'bulk.inc');
     locale_config_update_multiple($names, $langcodes);
   }
 }
@@ -1267,11 +1267,11 @@ function _locale_parse_js_file($filepath) {
     $string =  implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($match['string'], 1, -1)));
     $context = implode('', preg_split('~(?<!\\\\)[\'"]\s*\+\s*[\'"]~s', substr($match['context'], 1, -1)));
 
-    $source = Drupal::service('locale.storage')->findString(array('source' => $string, 'context' => $context));
+    $source = \Drupal::service('locale.storage')->findString(array('source' => $string, 'context' => $context));
 
     if (!$source) {
       // We don't have the source string yet, thus we insert it into the database.
-      $source = Drupal::service('locale.storage')->createString(array(
+      $source = \Drupal::service('locale.storage')->createString(array(
         'source'    => $string,
         'context'   => $context,
       ));
@@ -1297,7 +1297,7 @@ function _locale_parse_js_file($filepath) {
  *   New content of the 'system.javascript_parsed' variable.
  */
 function _locale_invalidate_js($langcode = NULL) {
-  $parsed = Drupal::state()->get('system.javascript_parsed') ?: array();
+  $parsed = \Drupal::state()->get('system.javascript_parsed') ?: array();
 
   if (empty($langcode)) {
     // Invalidate all languages.
@@ -1311,7 +1311,7 @@ function _locale_invalidate_js($langcode = NULL) {
     $parsed['refresh:' . $langcode] = 'waiting';
   }
 
-  Drupal::state()->set('system.javascript_parsed', $parsed);
+  \Drupal::state()->set('system.javascript_parsed', $parsed);
   return $parsed;
 }
 
@@ -1322,7 +1322,7 @@ function _locale_invalidate_js($langcode = NULL) {
  *   The language, the translation file should be (re)created for.
  */
 function _locale_rebuild_js($langcode = NULL) {
-  $config = Drupal::config('locale.settings');
+  $config = \Drupal::config('locale.settings');
   if (!isset($langcode)) {
     $language = language(Language::TYPE_INTERFACE);
   }
@@ -1340,7 +1340,7 @@ function _locale_rebuild_js($langcode = NULL) {
     'translated' => TRUE,
   );
   $translations = array();
-  foreach (Drupal::service('locale.storage')->getTranslations($conditions) as $data) {
+  foreach (\Drupal::service('locale.storage')->getTranslations($conditions) as $data) {
     $translations[$data->context][$data->source] = $data->translation;
   }
 
@@ -1350,7 +1350,7 @@ function _locale_rebuild_js($langcode = NULL) {
   if (!empty($translations)) {
 
     $data = "Drupal.locale = { ";
-    $locale_plurals = Drupal::state()->get('locale.translation.plurals') ?: array();
+    $locale_plurals = \Drupal::state()->get('locale.translation.plurals') ?: array();
     if (!empty($locale_plurals[$language->id])) {
       $data .= "'pluralFormula': function (\$n) { return Number({$locale_plurals[$language->id]['formula']}); }, ";
     }
@@ -1364,7 +1364,7 @@ function _locale_rebuild_js($langcode = NULL) {
   $dir = 'public://' . $config->get('javascript.directory');
 
   // Delete old file, if we have no translations anymore, or a different file to be saved.
-  $locale_javascripts = Drupal::state()->get('locale.translation.javascript') ?: array();
+  $locale_javascripts = \Drupal::state()->get('locale.translation.javascript') ?: array();
   $changed_hash = !isset($locale_javascripts[$language->id]) || ($locale_javascripts[$language->id] != $data_hash);
   if (!empty($locale_javascripts[$language->id]) && (!$data || $changed_hash)) {
     file_unmanaged_delete($dir . '/' . $language->id . '_' . $locale_javascripts[$language->id] . '.js');
@@ -1408,7 +1408,7 @@ function _locale_rebuild_js($langcode = NULL) {
   // deleted). Act only if some operation was executed that changed the hash
   // code.
   if ($status && $changed_hash) {
-    Drupal::state()->set('locale.translation.javascript', $locale_javascripts);
+    \Drupal::state()->set('locale.translation.javascript', $locale_javascripts);
   }
 
   // Log the operation and return success flag.

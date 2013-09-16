@@ -11,7 +11,6 @@ use Drupal\Core\DrupalKernel;
 use Drupal\Component\PhpStorage\MTimeProtectedFastFileStorage;
 use Drupal\Component\PhpStorage\FileReadOnlyStorage;
 use Drupal\simpletest\UnitTestBase;
-use ReflectionClass;
 
 /**
  * Tests compilation of the DIC.
@@ -58,7 +57,7 @@ class DrupalKernelTest extends UnitTestBase {
     $kernel->updateModules($module_enabled);
     $kernel->boot();
     $container = $kernel->getContainer();
-    $refClass = new ReflectionClass($container);
+    $refClass = new \ReflectionClass($container);
     $is_compiled_container =
       $refClass->getParentClass()->getName() == 'Drupal\Core\DependencyInjection\Container' &&
       !$refClass->isSubclassOf('Symfony\Component\DependencyInjection\ContainerBuilder');
@@ -72,14 +71,14 @@ class DrupalKernelTest extends UnitTestBase {
     $kernel->updateModules($module_enabled);
     $kernel->boot();
     $container = $kernel->getContainer();
-    $refClass = new ReflectionClass($container);
+    $refClass = new \ReflectionClass($container);
     $is_compiled_container =
       $refClass->getParentClass()->getName() == 'Drupal\Core\DependencyInjection\Container' &&
       !$refClass->isSubclassOf('Symfony\Component\DependencyInjection\ContainerBuilder');
     $this->assertTrue($is_compiled_container);
     // Test that our synthetic services are there.
     $classloader = $container->get('class_loader');
-    $refClass = new ReflectionClass($classloader);
+    $refClass = new \ReflectionClass($classloader);
     $this->assertTrue($refClass->hasMethod('loadClass'), 'Container has a classloader');
 
     // We make this assertion here purely to show that the new container below
@@ -100,14 +99,14 @@ class DrupalKernelTest extends UnitTestBase {
     $kernel->updateModules($module_enabled);
     $kernel->boot();
     $container = $kernel->getContainer();
-    $refClass = new ReflectionClass($container);
+    $refClass = new \ReflectionClass($container);
     $is_container_builder = $refClass->isSubclassOf('Symfony\Component\DependencyInjection\ContainerBuilder');
     $this->assertTrue($is_container_builder);
     // Assert that the new module's bundle was registered to the new container.
     $this->assertTrue($container->has('service_provider_test_class'));
     // Test that our synthetic services are there.
     $classloader = $container->get('class_loader');
-    $refClass = new ReflectionClass($classloader);
+    $refClass = new \ReflectionClass($classloader);
     $this->assertTrue($refClass->hasMethod('loadClass'), 'Container has a classloader');
     // Check that the location of the new module is registered.
     $modules = $container->getParameter('container.modules');

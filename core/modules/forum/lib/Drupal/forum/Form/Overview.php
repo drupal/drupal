@@ -29,15 +29,13 @@ class Overview extends OverviewTerms {
   /**
    * Constructs a \Drupal\forum\Form\OverviewForm object.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
-   *   The factory for configuration objects.
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The entity manager service.
    * @param \Drupal\Core\Extension\ModuleHandlerInteface $module_handler
    *   The module handler service.
    */
-  public function __construct(ConfigFactory $config_factory, EntityManager $entity_manager, ModuleHandlerInterface $module_handler) {
-    parent::__construct($config_factory, $module_handler);
+  public function __construct(EntityManager $entity_manager, ModuleHandlerInterface $module_handler) {
+    parent::__construct($module_handler);
     $this->entityManager = $entity_manager;
   }
 
@@ -46,7 +44,6 @@ class Overview extends OverviewTerms {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('config.factory'),
       $container->get('entity.manager'),
       $container->get('module_handler')
     );
@@ -63,7 +60,7 @@ class Overview extends OverviewTerms {
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    $forum_config = $this->configFactory->get('forum.settings');
+    $forum_config = $this->config('forum.settings');
     $vid = $forum_config->get('vocabulary');
     $vocabulary = $this->entityManager->getStorageController('taxonomy_vocabulary')->load($vid);
     if (!$vocabulary) {

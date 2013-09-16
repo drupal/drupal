@@ -134,13 +134,13 @@ class CompiledRoute extends SymfonyCompiledRoute {
   }
 
   /**
-   * Returns the pattern.
+   * Returns the path.
    *
    * @return string
-   *   The pattern.
+   *   The path.
    */
-  public function getPattern() {
-    return $this->route->getPattern();
+  public function getPath() {
+    return $this->route->getPath();
   }
 
   /**

@@ -1,5 +1,5 @@
 system_test.page_cache_accept_header:
-  pattern: '/system-test/page-cache/accept-header'
+  path: '/system-test/page-cache/accept-header'
   defaults:
     _controller: '\Drupal\system_test\Controller\PageCacheAcceptHeaderController::content'
   requirements:

@@ -53,7 +53,7 @@ class FormTestServiceObject extends FormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     drupal_set_message($this->t('The FormTestServiceObject::submitForm() method was used for this form.'));
-    \Drupal::config('form_test.object')
+    $this->config('form_test.object')
       ->set('bananas', $form_state['values']['bananas'])
       ->save();
   }

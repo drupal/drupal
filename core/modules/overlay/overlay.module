@@ -84,7 +84,7 @@ function overlay_field_extra_fields() {
 function overlay_form_user_form_alter(&$form, &$form_state) {
   $account = $form_state['controller']->getEntity();
   if ($account->hasPermission('access overlay')) {
-    $account_data = Drupal::service('user.data')->get('overlay', $account->id(), 'enabled');
+    $account_data = \Drupal::service('user.data')->get('overlay', $account->id(), 'enabled');
     $form['overlay_control'] = array(
       '#type' => 'details',
       '#title' => t('Administrative overlay'),
@@ -106,7 +106,7 @@ function overlay_form_user_form_alter(&$form, &$form_state) {
 function overlay_user_profile_form_submit($form, &$form_state) {
   $account = $form_state['controller']->getEntity();
   if ($account->id() && isset($form_state['values']['overlay'])) {
-    Drupal::service('user.data')->set('overlay', $account->id(), 'enabled', (int) $form_state['values']['overlay']);
+    \Drupal::service('user.data')->set('overlay', $account->id(), 'enabled', (int) $form_state['values']['overlay']);
   }
 }
 
@@ -223,7 +223,7 @@ function overlay_disable_message() {
     return $build;
   }
 
-  $user_data = Drupal::service('user.data')->get('overlay', $user->id());
+  $user_data = \Drupal::service('user.data')->get('overlay', $user->id());
   if (empty($user_data['message_dismissed']) && (!isset($user_data['enabled']) || $user_data['enabled'])) {
     $build = array(
       '#theme' => 'overlay_disable_message',
@@ -474,14 +474,14 @@ function overlay_set_mode($mode = NULL) {
       drupal_add_library('overlay', 'drupal.overlay.parent');
 
       // Allow modules to act upon overlay events.
-      Drupal::moduleHandler()->invokeAll('overlay_parent_initialize');
+      \Drupal::moduleHandler()->invokeAll('overlay_parent_initialize');
       break;
 
     case 'child':
       drupal_add_library('overlay', 'drupal.overlay.child');
 
       // Allow modules to act upon overlay events.
-      Drupal::moduleHandler()->invokeAll('overlay_child_initialize');
+      \Drupal::moduleHandler()->invokeAll('overlay_child_initialize');
       break;
   }
   return $overlay_mode;
@@ -494,13 +494,13 @@ function overlay_overlay_parent_initialize() {
   // Let the client side know which paths are administrative.
   $paths = path_get_admin_paths();
   foreach ($paths as &$type) {
-    $type = str_replace('<front>', Drupal::config('system.site')->get('page.front'), $type);
+    $type = str_replace('<front>', \Drupal::config('system.site')->get('page.front'), $type);
   }
   drupal_add_js(array('overlay' => array('paths' => $paths)), 'setting');
   $path_prefixes = array();
   if (module_exists('language')) {
     language_negotiation_include();
-    if (Drupal::config('language.negotiation')->get('url.source') == LANGUAGE_NEGOTIATION_URL_PREFIX) {
+    if (\Drupal::config('language.negotiation')->get('url.source') == LANGUAGE_NEGOTIATION_URL_PREFIX) {
       // Skip the empty string indicating the default language. We always accept
       // paths without a prefix.
       $path_prefixes = language_negotiation_url_prefixes();
@@ -527,8 +527,8 @@ function overlay_overlay_child_initialize() {
   // at the end of the page request. This allows us to check if anything
   // actually did change, and, if so, trigger an immediate Ajax refresh
   // of the parent window.
-  $token = Drupal::request()->query->get('token');
-  $post = Drupal::request()->request->count();
+  $token = \Drupal::request()->query->get('token');
+  $post = \Drupal::request()->request->count();
   if (!empty($post) || isset($token)) {
     foreach (overlay_supplemental_regions() as $region) {
       overlay_store_rendered_content($region, overlay_render_region($region));

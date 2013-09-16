@@ -37,7 +37,7 @@ function language_negotiation_configure_form() {
     '#language_negotiation_info' => language_negotiation_info(),
   );
   $form['#language_types'] = array();
-  $configurable = Drupal::config('system.language.types')->get('configurable');
+  $configurable = \Drupal::config('system.language.types')->get('configurable');
   foreach ($form['#language_types_info'] as $type => $info) {
     // Show locked language types only if they are configurable.
     if (empty($info['locked']) || in_array($type, $configurable)) {
@@ -73,7 +73,7 @@ function language_negotiation_configure_form_table(&$form, $type) {
   );
   // Only show configurability checkbox for the unlocked language types.
   if (empty($info['locked'])) {
-    $configurable = Drupal::config('system.language.types')->get('configurable');
+    $configurable = \Drupal::config('system.language.types')->get('configurable');
     $table_form['configurable'] = array(
       '#type' => 'checkbox',
       '#title' => t('Customize %language_name language detection to differ from User interface text language detection settings.', array('%language_name' => $info['name'])),
@@ -236,7 +236,7 @@ function theme_language_negotiation_configure_form($variables) {
 function language_negotiation_configure_form_submit($form, &$form_state) {
   $configurable_types = $form['#language_types'];
 
-  $stored_values = Drupal::config('system.language.types')->get('configurable');
+  $stored_values = \Drupal::config('system.language.types')->get('configurable');
   $customized = array();
   $method_weights_type = array();
 
@@ -276,7 +276,7 @@ function language_negotiation_configure_form_submit($form, &$form_state) {
     // made not configurable, deactivate it first.
     $non_configurable = array_keys(array_diff($customized, array_filter($customized)));
     _language_disable_language_switcher($non_configurable);
-    Drupal::service('plugin.manager.block')->clearCachedDefinitions();
+    \Drupal::service('plugin.manager.block')->clearCachedDefinitions();
   }
 
   $form_state['redirect'] = 'admin/config/regional/language/detection';

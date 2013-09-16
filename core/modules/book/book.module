@@ -130,11 +130,11 @@ function book_entity_info(&$entity_info) {
  */
 function book_node_view_link(NodeInterface $node, $view_mode) {
   $links = array();
-  $account = Drupal::currentUser();
+  $account = \Drupal::currentUser();
 
   if (isset($node->book['depth'])) {
     if ($view_mode == 'full' && node_is_page($node)) {
-      $child_type = Drupal::config('book.settings')->get('child_type');
+      $child_type = \Drupal::config('book.settings')->get('child_type');
       if (($account->hasPermission('add content to books') || $account->hasPermission('administer book outlines')) && node_access('create', $child_type) && $node->isPublished() && $node->book['depth'] < MENU_MAX_DEPTH) {
         $links['book_add_child'] = array(
           'title' => t('Add child page'),
@@ -218,7 +218,7 @@ function book_menu() {
  * @see book_menu()
  */
 function _book_outline_access(EntityInterface $node) {
-  return Drupal::currentUser()->hasPermission('administer book outlines') && node_access('view', $node);
+  return \Drupal::currentUser()->hasPermission('administer book outlines') && node_access('view', $node);
 }
 
 /**
@@ -230,7 +230,7 @@ function _book_outline_access(EntityInterface $node) {
  * @see book_menu()
  */
 function _book_outline_remove_access(EntityInterface $node) {
-  return Drupal::service('book.manager')->checkNodeIsRemovable($node)
+  return \Drupal::service('book.manager')->checkNodeIsRemovable($node)
     && _book_outline_access($node);
 }
 
@@ -238,7 +238,7 @@ function _book_outline_remove_access(EntityInterface $node) {
  * Implements hook_admin_paths().
  */
 function book_admin_paths() {
-  if (Drupal::config('node.settings')->get('use_admin_theme')) {
+  if (\Drupal::config('node.settings')->get('use_admin_theme')) {
     $paths = array(
       'node/*/outline' => TRUE,
       'node/*/outline/remove' => TRUE,
@@ -259,7 +259,7 @@ function book_admin_paths() {
  *   An array of all books.
  */
 function book_get_books() {
-  return Drupal::service('book.manager')->getAllBooks();
+  return \Drupal::service('book.manager')->getAllBooks();
 }
 
 /**
@@ -271,7 +271,7 @@ function book_get_books() {
  */
 function book_form_node_form_alter(&$form, &$form_state, $form_id) {
   $node = $form_state['controller']->getEntity();
-  $account = Drupal::currentUser();
+  $account = \Drupal::currentUser();
   $access = $account->hasPermission('administer book outlines');
   if (!$access) {
     if ($account->hasPermission('add content to books') && ((!empty($node->book['mlid']) && !$node->isNew()) || book_type_is_allowed($node->getType()))) {
@@ -281,7 +281,7 @@ function book_form_node_form_alter(&$form, &$form_state, $form_id) {
   }
 
   if ($access) {
-    $form = Drupal::service('book.manager')->addFormElements($form, $form_state, $node, $account);
+    $form = \Drupal::service('book.manager')->addFormElements($form, $form_state, $node, $account);
     // Since the "Book" dropdown can't trigger a form submission when
     // JavaScript is disabled, add a submit button to do that. book.admin.css hides
     // this button when JavaScript is enabled.
@@ -541,7 +541,7 @@ function book_page_alter(&$page) {
  */
 function book_node_presave(EntityInterface $node) {
   // Always save a revision for non-administrators.
-  if (!empty($node->book['bid']) && !Drupal::currentUser()->hasPermission('administer nodes')) {
+  if (!empty($node->book['bid']) && !\Drupal::currentUser()->hasPermission('administer nodes')) {
     $node->setNewRevision();
   }
   // Make sure a new node gets a new menu link.
@@ -554,7 +554,7 @@ function book_node_presave(EntityInterface $node) {
  * Implements hook_node_insert().
  */
 function book_node_insert(EntityInterface $node) {
-  $book_manager = Drupal::service('book.manager');
+  $book_manager = \Drupal::service('book.manager');
   if (!empty($node->book['bid'])) {
     if ($node->book['bid'] == 'new') {
       // New nodes that are their own book.
@@ -570,7 +570,7 @@ function book_node_insert(EntityInterface $node) {
  * Implements hook_node_update().
  */
 function book_node_update(EntityInterface $node) {
-  $book_manager = Drupal::service('book.manager');
+  $book_manager = \Drupal::service('book.manager');
   if (!empty($node->book['bid'])) {
     if ($node->book['bid'] == 'new') {
       // New nodes that are their own book.
@@ -595,7 +595,7 @@ function book_node_predelete(EntityInterface $node) {
       foreach ($result as $child) {
         $child_node = node_load($child->id());
         $child_node->book['bid'] = $child_node->id();
-        Drupal::service('book.manager')->updateOutline($child_node);
+        \Drupal::service('book.manager')->updateOutline($child_node);
       }
     }
     menu_link_delete($node->book['mlid']);
@@ -611,10 +611,10 @@ function book_node_predelete(EntityInterface $node) {
  */
 function book_node_prepare_form(NodeInterface $node, $form_display, $operation, array &$form_state) {
   // Get BookManager service
-  $book_manager = Drupal::service('book.manager');
+  $book_manager = \Drupal::service('book.manager');
 
   // Prepare defaults for the add/edit form.
-  $account = Drupal::currentUser();
+  $account = \Drupal::currentUser();
   if (empty($node->book) && ($account->hasPermission('add content to books') || $account->hasPermission('administer book outlines'))) {
     $node->book = array();
 
@@ -809,7 +809,7 @@ function template_preprocess_book_node_export_html(&$variables) {
  *   A Boolean TRUE if the node type can be included in books; otherwise, FALSE.
  */
 function book_type_is_allowed($type) {
-  return in_array($type, Drupal::config('book.settings')->get('allowed_types'));
+  return in_array($type, \Drupal::config('book.settings')->get('allowed_types'));
 }
 
 /**
@@ -820,7 +820,7 @@ function book_type_is_allowed($type) {
  */
 function book_node_type_update(NodeTypeInterface $type) {
   if ($type->getOriginalID() != $type->id()) {
-    $config = Drupal::config('book.settings');
+    $config = \Drupal::config('book.settings');
     // Update the list of node types that are allowed to be added to books.
     $allowed_types = $config->get('allowed_types');
     $old_key = array_search($type->getOriginalID(), $allowed_types);
@@ -937,7 +937,7 @@ function book_menu_subtree_data($link) {
 function book_library_info() {
   $libraries['drupal.book'] = array(
     'title' => 'Book',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'book') . '/book.js' => array(),
     ),

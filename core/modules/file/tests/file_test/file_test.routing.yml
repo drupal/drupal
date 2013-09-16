@@ -1,5 +1,5 @@
 file.test:
-  pattern: '/file-test/upload'
+  path: '/file-test/upload'
   defaults:
     _form: 'Drupal\file_test\Form\FileTestForm'
   requirements:

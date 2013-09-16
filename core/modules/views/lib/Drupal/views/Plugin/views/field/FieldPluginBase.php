@@ -20,23 +20,6 @@ use Drupal\views\ViewExecutable;
  */
 
 /**
- * Indicator of the renderText() method for rendering a single item.
- * (If no render_item() is present).
- */
-define('VIEWS_HANDLER_RENDER_TEXT_PHASE_SINGLE_ITEM', 0);
-
-/**
- * Indicator of the renderText() method for rendering the whole element.
- * (if no render_item() method is available).
- */
-define('VIEWS_HANDLER_RENDER_TEXT_PHASE_COMPLETELY', 1);
-
-/**
- * Indicator of the renderText() method for rendering the empty text.
- */
-define('VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY', 2);
-
-/**
  * Base field handler that has no options and renders an unformatted field.
  *
  * Definition terms:
@@ -50,6 +33,23 @@ define('VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY', 2);
  * @ingroup views_field_handlers
  */
 abstract class FieldPluginBase extends HandlerBase {
+
+  /**
+   * Indicator of the renderText() method for rendering a single item.
+   * (If no render_item() is present).
+   */
+  const RENDER_TEXT_PHASE_SINGLE_ITEM = 0;
+
+  /**
+   * Indicator of the renderText() method for rendering the whole element.
+   * (if no render_item() method is available).
+   */
+  const RENDER_TEXT_PHASE_COMPLETELY = 1;
+
+  /**
+   * Indicator of the renderText() method for rendering the empty text.
+   */
+  const RENDER_TEXT_PHASE_EMPTY = 2;
 
   var $field_alias = 'unknown';
   var $aliases = array();
@@ -1142,14 +1142,14 @@ abstract class FieldPluginBase extends HandlerBase {
           $this->original_value = $this->last_render;
 
           $alter = $item + $this->options['alter'];
-          $alter['phase'] = VIEWS_HANDLER_RENDER_TEXT_PHASE_SINGLE_ITEM;
+          $alter['phase'] = static::RENDER_TEXT_PHASE_SINGLE_ITEM;
           $items[] = $this->renderText($alter);
         }
 
         $value = $this->renderItems($items);
       }
       else {
-        $alter = array('phase' => VIEWS_HANDLER_RENDER_TEXT_PHASE_COMPLETELY) + $this->options['alter'];
+        $alter = array('phase' => static::RENDER_TEXT_PHASE_COMPLETELY) + $this->options['alter'];
         $value = $this->renderText($alter);
       }
 
@@ -1166,7 +1166,7 @@ abstract class FieldPluginBase extends HandlerBase {
         $alter = $this->options['alter'];
         $alter['alter_text'] = 1;
         $alter['text'] = $this->options['empty'];
-        $alter['phase'] = VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY;
+        $alter['phase'] = static::RENDER_TEXT_PHASE_EMPTY;
         $this->last_render = $this->renderText($alter);
       }
     }
@@ -1226,12 +1226,12 @@ abstract class FieldPluginBase extends HandlerBase {
     // First check whether the field should be hidden if the value(hide_alter_empty = TRUE) /the rewrite is empty (hide_alter_empty = FALSE).
     // For numeric values you can specify whether "0"/0 should be empty.
     if ((($this->options['hide_empty'] && empty($value))
-        || ($alter['phase'] != VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY && $no_rewrite_for_empty))
+        || ($alter['phase'] != static::RENDER_TEXT_PHASE_EMPTY && $no_rewrite_for_empty))
       && $this->isValueEmpty($value, $this->options['empty_zero'], FALSE)) {
       return '';
     }
     // Only in empty phase.
-    if ($alter['phase'] == VIEWS_HANDLER_RENDER_TEXT_PHASE_EMPTY && $no_rewrite_for_empty) {
+    if ($alter['phase'] == static::RENDER_TEXT_PHASE_EMPTY && $no_rewrite_for_empty) {
       // If we got here then $alter contains the value of "No results text"
       // and so there is nothing left to do.
       return $value;

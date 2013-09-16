@@ -285,7 +285,7 @@ function update_manager_update_form($form, $form_state = array(), $context) {
  */
 function theme_update_manager_update_form($variables) {
   $form = $variables['form'];
-  $last = Drupal::state()->get('update.last_check') ?: 0;
+  $last = \Drupal::state()->get('update.last_check') ?: 0;
   $update_last_check = array(
     '#theme' => 'update_last_check',
     '#last' => $last,
@@ -435,9 +435,9 @@ function update_manager_update_ready_form($form, &$form_state) {
  */
 function update_manager_update_ready_form_submit($form, &$form_state) {
   // Store maintenance_mode setting so we can restore it when done.
-  $_SESSION['maintenance_mode'] = Drupal::state()->get('system.maintenance_mode');
+  $_SESSION['maintenance_mode'] = \Drupal::state()->get('system.maintenance_mode');
   if ($form_state['values']['maintenance_mode'] == TRUE) {
-    Drupal::state()->set('system.maintenance_mode', TRUE);
+    \Drupal::state()->set('system.maintenance_mode', TRUE);
   }
 
   if (!empty($_SESSION['update_manager_update_projects'])) {
@@ -821,7 +821,7 @@ function update_manager_archive_extract($file, $directory) {
  *   are no errors, it will be an empty array.
  */
 function update_manager_archive_verify($project, $archive_file, $directory) {
-  return Drupal::moduleHandler()->invokeAll('verify_update_archive', array($project, $archive_file, $directory));
+  return \Drupal::moduleHandler()->invokeAll('verify_update_archive', array($project, $archive_file, $directory));
 }
 
 /**

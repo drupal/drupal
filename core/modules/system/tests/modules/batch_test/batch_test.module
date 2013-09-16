@@ -448,12 +448,12 @@ function _batch_test_theme_callback() {
  */
 function batch_test_stack($data = NULL, $reset = FALSE) {
   if ($reset) {
-    Drupal::state()->delete('batch_test.stack');
+    \Drupal::state()->delete('batch_test.stack');
   }
   if (!isset($data)) {
-    return Drupal::state()->get('batch_test.stack');
+    return \Drupal::state()->get('batch_test.stack');
   }
-  $stack = Drupal::state()->get('batch_test.stack');
+  $stack = \Drupal::state()->get('batch_test.stack');
   $stack[] = $data;
-  Drupal::state()->set('batch_test.stack', $stack);
+  \Drupal::state()->set('batch_test.stack', $stack);
 }

@@ -1,26 +1,26 @@
 action.admin:
-  pattern: '/admin/config/system/actions'
+  path: '/admin/config/system/actions'
   defaults:
     _entity_list: 'action'
   requirements:
     _permission: 'administer actions'
 
 action.admin_add:
-  pattern: '/admin/config/system/actions/add/{action_id}'
+  path: '/admin/config/system/actions/add/{action_id}'
   defaults:
     _entity_form: 'action.add'
   requirements:
     _permission: 'administer actions'
 
 action.admin_configure:
-  pattern: '/admin/config/system/actions/configure/{action}'
+  path: '/admin/config/system/actions/configure/{action}'
   defaults:
     _entity_form: 'action.edit'
   requirements:
     _permission: 'administer actions'
 
 action.delete:
-  pattern: 'admin/config/system/actions/configure/{action}/delete'
+  path: 'admin/config/system/actions/configure/{action}/delete'
   defaults:
     _entity_form: 'action.delete'
   requirements:

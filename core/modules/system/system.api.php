@@ -125,7 +125,7 @@ function hook_cron() {
     ':time' => REQUEST_TIME,
     ':never' => AGGREGATOR_CLEAR_NEVER,
   ));
-  $queue = Drupal::queue('aggregator_feeds');
+  $queue = \Drupal::queue('aggregator_feeds');
   foreach ($result as $feed) {
     $queue->createItem($feed);
   }
@@ -1357,14 +1357,14 @@ function hook_mail_alter(&$message) {
       $message['send'] = FALSE;
       return;
     }
-    $message['body'][] = "--\nMail sent out from " . Drupal::config('system.site')->get('name');
+    $message['body'][] = "--\nMail sent out from " . \Drupal::config('system.site')->get('name');
   }
 }
 
 /**
  * Alter the registry of modules implementing a hook.
  *
- * This hook is invoked during Drupal::moduleHandler()->getImplementations().
+ * This hook is invoked during \Drupal::moduleHandler()->getImplementations().
  * A module may implement this hook in order to reorder the implementing
  * modules, which are otherwise ordered by the module's system weight.
  *
@@ -1387,7 +1387,7 @@ function hook_mail_alter(&$message) {
 function hook_module_implements_alter(&$implementations, $hook) {
   if ($hook == 'rdf_mapping') {
     // Move my_module_rdf_mapping() to the end of the list.
-    // Drupal::moduleHandler()->getImplementations()
+    // \Drupal::moduleHandler()->getImplementations()
     // iterates through $implementations with a foreach loop which PHP iterates
     // in the order that the items were added, so to move an item to the end of
     // the array, we remove it and then add it.
@@ -1717,7 +1717,7 @@ function hook_template_preprocess_default_variables_alter(&$variables) {
  */
 function hook_custom_theme() {
   // Allow the user to request a particular theme via a query parameter.
-  return Drupal::request()->query->get('theme');
+  return \Drupal::request()->query->get('theme');
 }
 
 /**
@@ -1775,7 +1775,7 @@ function hook_watchdog(array $log_entry) {
   $to = 'someone@example.com';
   $params = array();
   $params['subject'] = t('[@site_name] @severity_desc: Alert from your web site', array(
-    '@site_name' => Drupal::config('system.site')->get('name'),
+    '@site_name' => \Drupal::config('system.site')->get('name'),
     '@severity_desc' => $severity_list[$log_entry['severity']],
   ));
 
@@ -1841,7 +1841,7 @@ function hook_mail($key, &$message, $params) {
   $account = $params['account'];
   $context = $params['context'];
   $variables = array(
-    '%site_name' => Drupal::config('system.site')->get('name'),
+    '%site_name' => \Drupal::config('system.site')->get('name'),
     '%username' => user_format_name($account),
   );
   if ($context['hook'] == 'taxonomy') {
@@ -2150,7 +2150,7 @@ function hook_file_download($uri) {
       return -1;
     }
     else {
-      $image = Drupal::service('image.factory')->get($uri);
+      $image = \Drupal::service('image.factory')->get($uri);
       return array('Content-Type' => $image->getMimeType());
     }
   }
@@ -2277,7 +2277,7 @@ function hook_requirements($phase) {
   if ($phase == 'runtime') {
     $requirements['drupal'] = array(
       'title' => t('Drupal'),
-      'value' => Drupal::VERSION,
+      'value' => \Drupal::VERSION,
       'severity' => REQUIREMENT_INFO
     );
   }
@@ -3119,7 +3119,7 @@ function hook_url_outbound_alter(&$path, &$options, $original_path) {
  * @see hook_tokens_alter()
  */
 function hook_tokens($type, $tokens, array $data = array(), array $options = array()) {
-  $token_service = Drupal::token();
+  $token_service = \Drupal::token();
 
   $url_options = array('absolute' => TRUE);
   if (isset($options['langcode'])) {

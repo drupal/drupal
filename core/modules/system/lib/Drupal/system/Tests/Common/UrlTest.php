@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Tests for URL generation functions.
  *
- * url() calls Drupal::moduleHandler()->getImplementations(),
+ * url() calls \Drupal::moduleHandler()->getImplementations(),
  * which may issue a db query, which requires
  * inheriting from a web test case rather than a unit test case.
  */

@@ -249,7 +249,7 @@ function language_from_user_admin(array $languages, Request $request = NULL) {
  *   A valid language code on success, FALSE otherwise.
  */
 function language_from_session($languages) {
-  $param = Drupal::config('language.negotiation')->get('session.parameter');
+  $param = \Drupal::config('language.negotiation')->get('session.parameter');
 
   // Request parameter: we need to update the session parameter only if we have
   // an authenticated user.
@@ -289,7 +289,7 @@ function language_from_url($languages, Request $request = NULL) {
     return $language_url;
   }
 
-  switch (Drupal::config('language.negotiation')->get('url.source')) {
+  switch (\Drupal::config('language.negotiation')->get('url.source')) {
     case LANGUAGE_NEGOTIATION_URL_PREFIX:
 
       $request_path = urldecode(trim($request->getPathInfo(), '/'));
@@ -365,7 +365,7 @@ function language_from_url($languages, Request $request = NULL) {
  */
 function language_url_fallback($language = NULL, $request = NULL, $language_type = Language::TYPE_INTERFACE) {
   $default = language_default();
-  $prefix = (Drupal::config('language.negotiation')->get('url.source') == LANGUAGE_NEGOTIATION_URL_PREFIX);
+  $prefix = (\Drupal::config('language.negotiation')->get('url.source') == LANGUAGE_NEGOTIATION_URL_PREFIX);
 
   // If the default language is not configured to convey language information,
   // a missing URL language information indicates that URL language should be
@@ -406,7 +406,7 @@ function language_switcher_url($type, $path) {
  * Return the session language switcher block.
  */
 function language_switcher_session($type, $path) {
-  $param = Drupal::config('language.negotiation')->get('session.parameter');
+  $param = \Drupal::config('language.negotiation')->get('session.parameter');
   $language_query = isset($_SESSION[$param]) ? $_SESSION[$param] : language($type)->id;
 
   $languages = language_list();
@@ -437,7 +437,7 @@ function language_switcher_session($type, $path) {
  * Reads language prefixes and uses the langcode if no prefix is set.
  */
 function language_negotiation_url_prefixes() {
-  return Drupal::config('language.negotiation')->get('url.prefixes');
+  return \Drupal::config('language.negotiation')->get('url.prefixes');
 }
 
 /**
@@ -462,7 +462,7 @@ function language_negotiation_url_prefixes_update() {
  * Saves language prefix settings.
  */
 function language_negotiation_url_prefixes_save(array $prefixes) {
-  Drupal::config('language.negotiation')
+  \Drupal::config('language.negotiation')
     ->set('url.prefixes', $prefixes)
     ->save();
 }
@@ -471,14 +471,14 @@ function language_negotiation_url_prefixes_save(array $prefixes) {
  * Reads language domains.
  */
 function language_negotiation_url_domains() {
-  return Drupal::config('language.negotiation')->get('url.domains');
+  return \Drupal::config('language.negotiation')->get('url.domains');
 }
 
 /**
  * Saves the language domain settings.
  */
 function language_negotiation_url_domains_save(array $domains) {
-  Drupal::config('language.negotiation')
+  \Drupal::config('language.negotiation')
     ->set('url.domains', $domains)
     ->save();
 }
@@ -495,7 +495,7 @@ function language_url_rewrite_session(&$path, &$options) {
     global $user;
     if (!$user->id()) {
       $languages = language_list();
-      $query_param = check_plain(Drupal::config('language.negotiation')->get('session.parameter'));
+      $query_param = check_plain(\Drupal::config('language.negotiation')->get('session.parameter'));
       $query_value = isset($_GET[$query_param]) ? check_plain($_GET[$query_param]) : NULL;
       $query_rewrite = isset($languages[$query_value]) && language_negotiation_method_enabled(LANGUAGE_NEGOTIATION_SESSION);
     }

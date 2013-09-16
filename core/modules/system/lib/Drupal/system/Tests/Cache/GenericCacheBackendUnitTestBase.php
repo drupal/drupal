@@ -10,8 +10,6 @@ namespace Drupal\system\Tests\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\simpletest\DrupalUnitTestBase;
 
-use stdClass;
-
 /**
  * Tests any cache backend.
  *

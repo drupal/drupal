@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Database;
 
 use Drupal\Core\Database\StatementInterface;
-use PDO;
 
 /**
  * Tests fetch actions.
@@ -46,7 +45,7 @@ class FetchTest extends DatabaseTestBase {
    */
   function testQueryFetchObject() {
     $records = array();
-    $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_OBJ));
+    $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => \PDO::FETCH_OBJ));
     foreach ($result as $record) {
       $records[] = $record;
       $this->assertTrue(is_object($record), 'Record is an object.');
@@ -61,7 +60,7 @@ class FetchTest extends DatabaseTestBase {
    */
   function testQueryFetchArray() {
     $records = array();
-    $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_ASSOC));
+    $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => \PDO::FETCH_ASSOC));
     foreach ($result as $record) {
       $records[] = $record;
       if ($this->assertTrue(is_array($record), 'Record is an array.')) {
@@ -95,7 +94,7 @@ class FetchTest extends DatabaseTestBase {
    */
   function testQueryFetchNum() {
     $records = array();
-    $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_NUM));
+    $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => \PDO::FETCH_NUM));
     foreach ($result as $record) {
       $records[] = $record;
       if ($this->assertTrue(is_array($record), 'Record is an array.')) {
@@ -111,7 +110,7 @@ class FetchTest extends DatabaseTestBase {
    */
   function testQueryFetchBoth() {
     $records = array();
-    $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => PDO::FETCH_BOTH));
+    $result = db_query('SELECT name FROM {test} WHERE age = :age', array(':age' => 25), array('fetch' => \PDO::FETCH_BOTH));
     foreach ($result as $record) {
       $records[] = $record;
       if ($this->assertTrue(is_array($record), 'Record is an array.')) {

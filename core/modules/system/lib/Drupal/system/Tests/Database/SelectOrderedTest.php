@@ -7,8 +7,6 @@
 
 namespace Drupal\system\Tests\Database;
 
-use PDO;
-
 /**
  * Tests SELECT with ORDER BY clauses.
  */
@@ -62,7 +60,7 @@ class SelectOrderedTest extends DatabaseTestBase {
       array('George', 27, 'Singer'),
       array('Paul', 26, 'Songwriter'),
     );
-    $results = $result->fetchAll(PDO::FETCH_NUM);
+    $results = $result->fetchAll(\PDO::FETCH_NUM);
     foreach ($expected as $k => $record) {
       $num_records++;
       foreach ($record as $kk => $col) {

@@ -1,5 +1,5 @@
 session_test.get:
-  pattern: '/session-test/get'
+  path: '/session-test/get'
   defaults:
     _title: 'Session value'
     _controller: '\Drupal\session_test\Controller\SessionTestController::get'
@@ -7,7 +7,7 @@ session_test.get:
     _permission: 'access content'
 
 session_test.id:
-  pattern: '/session-test/id'
+  path: '/session-test/id'
   defaults:
     _title: 'Session ID'
     _controller: '\Drupal\session_test\Controller\SessionTestController::getId'
@@ -15,7 +15,7 @@ session_test.id:
     _permission: 'access content'
 
 session_test.id_from_cookie:
-  pattern: '/session-test/id-from-cookie'
+  path: '/session-test/id-from-cookie'
   defaults:
     _title: 'Session ID from cookie'
     _controller: '\Drupal\session_test\Controller\SessionTestController::getIdFromCookie'
@@ -23,7 +23,7 @@ session_test.id_from_cookie:
     _permission: 'access content'
 
 session_test.set:
-  pattern: '/session-test/set/{test_value}'
+  path: '/session-test/set/{test_value}'
   defaults:
     _title: 'Set session value'
     _controller: '\Drupal\session_test\Controller\SessionTestController::set'
@@ -34,7 +34,7 @@ session_test.set:
     _permission: 'access content'
 
 session_test.no_set:
-  pattern: '/session-test/no-set/{test_value}'
+  path: '/session-test/no-set/{test_value}'
   defaults:
     _title: 'Set session value but do not save session'
     _controller: '\Drupal\session_test\Controller\SessionTestController::noSet'
@@ -45,7 +45,7 @@ session_test.no_set:
     _permission: 'access content'
 
 session_test.set_message:
-  pattern: '/session-test/set-message'
+  path: '/session-test/set-message'
   defaults:
     _title: 'Set message'
     _controller: '\Drupal\session_test\Controller\SessionTestController::setMessage'
@@ -53,7 +53,7 @@ session_test.set_message:
     _permission: 'access content'
 
 session_test.set_message_but_dont_save:
-  pattern: '/session-test/set-message-but-dont-save'
+  path: '/session-test/set-message-but-dont-save'
   defaults:
     _title: 'Set message but do not save session'
     _controller: '\Drupal\session_test\Controller\SessionTestController::setMessageButDontSave'
@@ -61,7 +61,7 @@ session_test.set_message_but_dont_save:
     _permission: 'access content'
 
 session_test.set_not_started:
-  pattern: '/session-test/set-not-started'
+  path: '/session-test/set-not-started'
   defaults:
     _title: 'Set message when session is not started'
     _controller: '\Drupal\session_test\Controller\SessionTestController::setNotStarted'
@@ -69,7 +69,7 @@ session_test.set_not_started:
     _permission: 'access content'
 
 session_test.is_logged_in:
-  pattern: '/session-test/is-logged-in'
+  path: '/session-test/is-logged-in'
   defaults:
     _title: 'Check if user is logged in'
     _controller: '\Drupal\session_test\Controller\SessionTestController::isLoggedIn'

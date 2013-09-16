@@ -1,26 +1,26 @@
 contact.category_delete:
-  pattern: 'admin/structure/contact/manage/{contact_category}/delete'
+  path: 'admin/structure/contact/manage/{contact_category}/delete'
   defaults:
     _entity_form: contact_category.delete
   requirements:
     _entity_access: contact_category.delete
 
 contact.category_list:
-  pattern: '/admin/structure/contact'
+  path: '/admin/structure/contact'
   defaults:
     _entity_list: 'contact_category'
   requirements:
     _permission: 'administer contact forms'
 
 contact.category_add:
-  pattern: '/admin/structure/contact/add'
+  path: '/admin/structure/contact/add'
   defaults:
     _entity_form: contact_category.add
   requirements:
     _permission: 'administer contact forms'
 
 contact.category_edit:
-  pattern: '/admin/structure/contact/manage/{contact_category}'
+  path: '/admin/structure/contact/manage/{contact_category}'
   defaults:
     _entity_form: contact_category.edit
   requirements:

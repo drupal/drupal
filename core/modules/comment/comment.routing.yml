@@ -1,12 +1,12 @@
 comment.edit_page:
-  pattern: '/comment/{comment}/edit'
+  path: '/comment/{comment}/edit'
   defaults:
     _entity_form: 'comment.default'
   requirements:
     _entity_access: 'comment.update'
 
 comment.approve:
-  pattern: '/comment/{comment}/approve'
+  path: '/comment/{comment}/approve'
   defaults:
     _content: '\Drupal\comment\Controller\CommentController::commentApprove'
     entity_type: 'comment'
@@ -14,21 +14,21 @@ comment.approve:
     _entity_access: 'comment.approve'
 
 comment.permalink:
-  pattern: '/comment/{comment}'
+  path: '/comment/{comment}'
   defaults:
     _controller: '\Drupal\comment\Controller\CommentController::commentPermalink'
   requirements:
     _entity_access: 'comment.view'
 
 comment.confirm_delete:
-  pattern: '/comment/{comment}/delete'
+  path: '/comment/{comment}/delete'
   defaults:
     _entity_form: 'comment.delete'
   requirements:
     _entity_access: 'comment.delete'
 
 comment.reply:
-  pattern: 'comment/reply/{entity_type}/{entity_id}/{field_name}/{pid}'
+  path: 'comment/reply/{entity_type}/{entity_id}/{field_name}/{pid}'
   defaults:
     _content: '\Drupal\comment\Controller\CommentController::getReplyForm'
     _title: 'Add new comment'
@@ -37,7 +37,7 @@ comment.reply:
     _access: 'TRUE'
 
 comment.new_comments_node_links:
-  pattern: '/comments/render_new_comments_node_links'
+  path: '/comments/render_new_comments_node_links'
   defaults:
     _controller: '\Drupal\comment\Controller\CommentController::renderNewCommentsNodeLinks'
   requirements:

@@ -1,19 +1,19 @@
 block.admin_block_delete:
-  pattern: '/admin/structure/block/manage/{block}/delete'
+  path: '/admin/structure/block/manage/{block}/delete'
   defaults:
     _entity_form: 'block.delete'
   requirements:
     _permission: 'administer blocks'
 
 block.admin_edit:
-  pattern: '/admin/structure/block/manage/{block}'
+  path: '/admin/structure/block/manage/{block}'
   defaults:
     _entity_form: 'block.default'
   requirements:
     _entity_access: 'block.update'
 
 block.admin_display:
-  pattern: '/admin/structure/block'
+  path: '/admin/structure/block'
   defaults:
     _content: '\Drupal\block\Controller\BlockListController::listing'
     entity_type: 'block'
@@ -21,7 +21,7 @@ block.admin_display:
     _permission: 'administer blocks'
 
 block.admin_add:
-  pattern: '/admin/structure/block/add/{plugin_id}/{theme}'
+  path: '/admin/structure/block/add/{plugin_id}/{theme}'
   defaults:
     _content: '\Drupal\block\Controller\BlockAddController::blockAddConfigureForm'
     theme: null
@@ -30,7 +30,7 @@ block.admin_add:
     _permission: 'administer blocks'
 
 block.category_autocomplete:
-  pattern: '/block-category/autocomplete'
+  path: '/block-category/autocomplete'
   defaults:
     _controller: '\Drupal\block\Controller\CategoryAutocompleteController::autocomplete'
   requirements:

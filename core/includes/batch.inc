@@ -36,7 +36,7 @@ function _batch_page(Request $request) {
 
   // Retrieve the current state of the batch.
   if (!$batch) {
-    $batch = Drupal::service('batch.storage')->load($request_id);
+    $batch = \Drupal::service('batch.storage')->load($request_id);
     if (!$batch) {
       drupal_set_message(t('No active batch.'), 'error');
       return new RedirectResponse(url('<front>', array('absolute' => TRUE)));
@@ -394,7 +394,7 @@ function _batch_finished() {
 
   // Clean up the batch table and unset the static $batch variable.
   if ($batch['progressive']) {
-    Drupal::service('batch.storage')->delete($batch['id']);
+    \Drupal::service('batch.storage')->delete($batch['id']);
     foreach ($batch['sets'] as $batch_set) {
       if ($queue = _batch_queue($batch_set)) {
         $queue->deleteQueue();
@@ -415,7 +415,7 @@ function _batch_finished() {
   if ($_batch['progressive']) {
     // Revert the 'destination' that was saved in batch_process().
     if (isset($_batch['destination'])) {
-      Drupal::request()->query->set('destination', $_batch['destination']);
+      \Drupal::request()->query->set('destination', $_batch['destination']);
     }
 
     // Determine the target path to redirect to.
@@ -463,6 +463,6 @@ function _batch_finished() {
  */
 function _batch_shutdown() {
   if ($batch = batch_get()) {
-    Drupal::service('batch.storage')->update($batch);
+    \Drupal::service('batch.storage')->update($batch);
   }
 }

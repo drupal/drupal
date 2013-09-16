@@ -7,8 +7,6 @@
 
 namespace Drupal\Component\Archiver;
 
-use ZipArchive;
-
 /**
  * Defines a archiver implementation for .zip files.
  *
@@ -19,7 +17,7 @@ class Zip implements ArchiverInterface {
   /**
    * The underlying ZipArchive instance that does the heavy lifting.
    *
-   * @var ZipArchive
+   * @var \ZipArchive
    */
   protected $zip;
 
@@ -34,7 +32,7 @@ class Zip implements ArchiverInterface {
    * @throws Drupal\Component\Archiver\ArchiverException
    */
   public function __construct($file_path) {
-    $this->zip = new ZipArchive();
+    $this->zip = new \ZipArchive();
     if ($this->zip->open($file_path) !== TRUE) {
       throw new ArchiverException(t('Cannot open %file_path', array('%file_path' => $file_path)));
     }
@@ -90,7 +88,7 @@ class Zip implements ArchiverInterface {
    * ZipArchive object for implementation-specific logic. This is for advanced
    * use only as it is not shared by other implementations of ArchiveInterface.
    *
-   * @return ZipArchive
+   * @return \ZipArchive
    *   The ZipArchive object used by this object.
    */
   public function getArchive() {

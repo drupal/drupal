@@ -1,26 +1,26 @@
 book.render:
-  pattern: '/book'
+  path: '/book'
   defaults:
     _content: '\Drupal\book\Controller\BookController::bookRender'
   requirements:
     _permission: 'access content'
 
 book.admin:
-  pattern: '/admin/structure/book'
+  path: '/admin/structure/book'
   defaults:
     _content: '\Drupal\book\Controller\BookController::adminOverview'
   requirements:
     _permission: 'administer book outlines'
 
 book.settings:
-  pattern: '/admin/structure/book/settings'
+  path: '/admin/structure/book/settings'
   defaults:
     _form: '\Drupal\book\Form\BookSettingsForm'
   requirements:
     _permission: 'administer site configuration'
 
 book.export:
-  pattern: '/book/export/{type}/{node}'
+  path: '/book/export/{type}/{node}'
   defaults:
     _controller: '\Drupal\book\Controller\BookController::bookExport'
   options:
@@ -30,7 +30,7 @@ book.export:
     _entity_access: 'node.view'
 
 book.outline:
-  pattern: '/node/{node}/outline'
+  path: '/node/{node}/outline'
   defaults:
     _entity_form: 'node.book_outline'
   options:
@@ -40,7 +40,7 @@ book.outline:
     _entity_access: 'node.view'
 
 book.admin_edit:
-  pattern: '/admin/structure/book/{node}'
+  path: '/admin/structure/book/{node}'
   defaults:
     _form: 'Drupal\book\Form\BookAdminEditForm'
     _title: 'Re-order book pages and change titles'

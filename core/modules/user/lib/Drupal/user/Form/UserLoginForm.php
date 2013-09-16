@@ -7,7 +7,6 @@
 
 namespace Drupal\user\Form;
 
-use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Flood\FloodInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\user\UserStorageControllerInterface;
@@ -17,13 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a user login form.
  */
 class UserLoginForm extends FormBase {
-
-  /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactory
-   */
-  protected $configFactory;
 
   /**
    * The flood service.
@@ -42,15 +34,12 @@ class UserLoginForm extends FormBase {
   /**
    * Constructs a new UserLoginForm.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
-   *   The config factory.
    * @param \Drupal\Core\Flood\FloodInterface $flood
    *   The flood service.
    * @param \Drupal\user\UserStorageControllerInterface $user_storage
    *   The user storage controller.
    */
-  public function __construct(ConfigFactory $config_factory, FloodInterface $flood, UserStorageControllerInterface $user_storage) {
-    $this->configFactory = $config_factory;
+  public function __construct(FloodInterface $flood, UserStorageControllerInterface $user_storage) {
     $this->flood = $flood;
     $this->userStorage = $user_storage;
   }
@@ -60,7 +49,6 @@ class UserLoginForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('config.factory'),
       $container->get('flood'),
       $container->get('entity.manager')->getStorageController('user')
     );
@@ -83,7 +71,7 @@ class UserLoginForm extends FormBase {
       '#title' => $this->t('Username'),
       '#size' => 60,
       '#maxlength' => USERNAME_MAX_LENGTH,
-      '#description' => $this->t('Enter your @s username.', array('@s' => $this->configFactory->get('system.site')->get('name'))),
+      '#description' => $this->t('Enter your @s username.', array('@s' => $this->config('system.site')->get('name'))),
       '#required' => TRUE,
       '#attributes' => array(
         'autocorrect' => 'off',
@@ -138,7 +126,7 @@ class UserLoginForm extends FormBase {
    */
   public function validateAuthentication(array &$form, array &$form_state) {
     $password = trim($form_state['values']['pass']);
-    $flood_config = $this->configFactory->get('user.flood');
+    $flood_config = $this->config('user.flood');
     if (!empty($form_state['values']['name']) && !empty($password)) {
       // Do not allow any login from the current user's IP if the limit has been
       // reached. Default is 50 failed attempts allowed in one hour. This is
@@ -184,7 +172,7 @@ class UserLoginForm extends FormBase {
    * This validation function should always be the last one.
    */
   public function validateFinal(array &$form, array &$form_state) {
-    $flood_config = $this->configFactory->get('user.flood');
+    $flood_config = $this->config('user.flood');
     if (empty($form_state['uid'])) {
       // Always register an IP-based failed login event.
       $this->flood->register('user.failed_login_ip', $flood_config->get('ip_window'));

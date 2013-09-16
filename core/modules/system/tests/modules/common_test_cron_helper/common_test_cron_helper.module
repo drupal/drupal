@@ -14,5 +14,5 @@
  * @see common_test_cron()
  */
 function common_test_cron_helper_cron() {
-  Drupal::state()->set('common_test.cron', 'success');
+  \Drupal::state()->set('common_test.cron', 'success');
 }

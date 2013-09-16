@@ -102,7 +102,7 @@ function path_form_node_form_alter(&$form, $form_state) {
     if ($node->language()->id != Language::LANGCODE_NOT_SPECIFIED) {
       $conditions['langcode'] = $node->language()->id;
     }
-    $path = Drupal::service('path.crud')->load($conditions);
+    $path = \Drupal::service('path.crud')->load($conditions);
     if ($path === FALSE) {
       $path = array();
     }
@@ -114,7 +114,7 @@ function path_form_node_form_alter(&$form, $form_state) {
     'langcode' => $node->language()->id,
   );
 
-  $account = Drupal::currentUser();
+  $account = \Drupal::currentUser();
   $form['path'] = array(
     '#type' => 'details',
     '#title' => t('URL path settings'),
@@ -184,11 +184,11 @@ function path_form_element_validate($element, &$form_state, $complete_form) {
  * Implements hook_form_FORM_ID_alter() for taxonomy_term_form().
  */
 function path_form_taxonomy_term_form_alter(&$form, $form_state) {
-  $account = Drupal::currentUser();
+  $account = \Drupal::currentUser();
   // Make sure this does not show up on the delete confirmation form.
   if (empty($form_state['confirm_delete'])) {
     $term = $form_state['controller']->getEntity();
-    $path = ($term->id() ? Drupal::service('path.crud')->load(array('source' => 'taxonomy/term/' . $term->id())) : array());
+    $path = ($term->id() ? \Drupal::service('path.crud')->load(array('source' => 'taxonomy/term/' . $term->id())) : array());
     if ($path === FALSE) {
       $path = array();
     }
@@ -245,7 +245,7 @@ function path_entity_insert(EntityInterface $entity) {
       // Ensure fields for programmatic executions.
       $uri = $entity->uri();
       $langcode = $entity->language()->id;
-      Drupal::service('path.crud')->save($uri['path'], $entity->path->alias, $langcode);
+      \Drupal::service('path.crud')->save($uri['path'], $entity->path->alias, $langcode);
     }
   }
 }
@@ -258,7 +258,7 @@ function path_entity_update(EntityInterface $entity) {
     $entity->path->alias = trim($entity->path->alias);
     // Delete old alias if user erased it.
     if ($entity->path->pid && !$entity->path->alias) {
-      Drupal::service('path.crud')->delete(array('pid' => $entity->path->pid));
+      \Drupal::service('path.crud')->delete(array('pid' => $entity->path->pid));
     }
     // Only save a non-empty alias.
     if ($entity->path->alias) {
@@ -266,7 +266,7 @@ function path_entity_update(EntityInterface $entity) {
       // Ensure fields for programmatic executions.
       $uri = $entity->uri();
       $langcode = $entity->language()->id;
-      Drupal::service('path.crud')->save($uri['path'], $entity->path->alias, $langcode, $pid);
+      \Drupal::service('path.crud')->save($uri['path'], $entity->path->alias, $langcode, $pid);
     }
   }
 }
@@ -278,7 +278,7 @@ function path_entity_predelete(EntityInterface $entity) {
   if ($entity->getPropertyDefinition('path')) {
     // Delete all aliases associated with this term.
     $uri = $entity->uri();
-    Drupal::service('path.crud')->delete(array('source' => $uri['path']));
+    \Drupal::service('path.crud')->delete(array('source' => $uri['path']));
   }
 }
 
@@ -288,7 +288,7 @@ function path_entity_predelete(EntityInterface $entity) {
 function path_library_info() {
   $libraries['drupal.path'] = array(
     'title' => 'Path',
-    'version' => Drupal::VERSION,
+    'version' => \Drupal::VERSION,
     'js' => array(
       drupal_get_path('module', 'path') . '/path.js' => array(),
     ),

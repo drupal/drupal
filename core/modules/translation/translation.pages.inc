@@ -33,7 +33,7 @@ function translation_node_overview(EntityInterface $node) {
     $translations = array($node->language()->id => $node);
   }
 
-  $type = Drupal::config('translation.settings')->get('language_type');
+  $type = \Drupal::config('translation.settings')->get('language_type');
   $header = array(t('Language'), t('Title'), t('Status'), t('Operations'));
 
   foreach (language_list() as $langcode => $language) {

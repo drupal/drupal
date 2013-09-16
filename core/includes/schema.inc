@@ -77,11 +77,11 @@ function drupal_get_complete_schema($rebuild = FALSE) {
     else {
       $schema = array();
       // Load the .install files to get hook_schema.
-      Drupal::moduleHandler()->loadAllIncludes('install');
+      \Drupal::moduleHandler()->loadAllIncludes('install');
 
       require_once __DIR__ . '/common.inc';
       // Invoke hook_schema for all modules.
-      foreach (Drupal::moduleHandler()->getImplementations('schema') as $module) {
+      foreach (\Drupal::moduleHandler()->getImplementations('schema') as $module) {
         // Cast the result of hook_schema() to an array, as a NULL return value
         // would cause array_merge() to set the $schema variable to NULL as well.
         // That would break modules which use $schema further down the line.
@@ -121,7 +121,7 @@ function drupal_get_schema_versions($module) {
   $updates = &drupal_static(__FUNCTION__, NULL);
   if (!isset($updates[$module])) {
     $updates = array();
-    foreach (Drupal::moduleHandler()->getModuleList() as $loaded_module => $filename) {
+    foreach (\Drupal::moduleHandler()->getModuleList() as $loaded_module => $filename) {
       $updates[$loaded_module] = array();
     }
 
@@ -173,7 +173,7 @@ function drupal_get_installed_schema_version($module, $reset = FALSE, $array = F
   }
 
   if (!$versions) {
-    if (!$versions = Drupal::keyValue('system.schema')->getAll()) {
+    if (!$versions = \Drupal::keyValue('system.schema')->getAll()) {
       $versions = array();
     }
   }
@@ -195,7 +195,7 @@ function drupal_get_installed_schema_version($module, $reset = FALSE, $array = F
  *   The new schema version.
  */
 function drupal_set_installed_schema_version($module, $version) {
-  Drupal::keyValue('system.schema')->set($module, $version);
+  \Drupal::keyValue('system.schema')->set($module, $version);
   // Reset the static cache of module schema versions.
   drupal_get_installed_schema_version(NULL, TRUE);
 }

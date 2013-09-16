@@ -1,5 +1,5 @@
 rest.csrftoken:
-  pattern: '/rest/session/token'
+  path: '/rest/session/token'
   defaults:
     _controller: '\Drupal\rest\RequestHandler::csrfToken'
   requirements:

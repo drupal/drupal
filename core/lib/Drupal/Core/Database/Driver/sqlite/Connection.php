@@ -15,9 +15,6 @@ use Drupal\Core\Database\TransactionCommitFailedException;
 use Drupal\Core\Database\Driver\sqlite\Statement;
 use Drupal\Core\Database\Connection as DatabaseConnection;
 
-use PDO;
-use SplFileInfo;
-
 /**
  * Specific SQLite implementation of DatabaseConnection.
  */
@@ -68,7 +65,7 @@ class Connection extends DatabaseConnection {
   /**
    * Constructs a \Drupal\Core\Database\Driver\sqlite\Connection object.
    */
-  public function __construct(PDO $connection, array $connection_options) {
+  public function __construct(\PDO $connection, array $connection_options) {
     parent::__construct($connection, $connection_options);
 
     // We don't need a specific PDOStatement class here, we simulate it below.
@@ -112,11 +109,11 @@ class Connection extends DatabaseConnection {
       'pdo' => array(),
     );
     $connection_options['pdo'] += array(
-      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+      \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
       // Convert numeric values to strings when fetching.
-      PDO::ATTR_STRINGIFY_FETCHES => TRUE,
+      \PDO::ATTR_STRINGIFY_FETCHES => TRUE,
     );
-    $pdo = new PDO('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
+    $pdo = new \PDO('sqlite:' . $connection_options['database'], '', '', $connection_options['pdo']);
 
     // Create functions needed by SQLite.
     $pdo->sqliteCreateFunction('if', array(__CLASS__, 'sqlFunctionIf'));

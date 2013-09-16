@@ -7,7 +7,6 @@
 
 namespace Drupal\Component\Plugin\Discovery;
 
-use DirectoryIterator;
 use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
 use Drupal\Component\Reflection\MockFileFinder;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -79,7 +78,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
       foreach ($dirs as $dir) {
         $dir .= DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $namespace);
         if (file_exists($dir)) {
-          foreach (new DirectoryIterator($dir) as $fileinfo) {
+          foreach (new \DirectoryIterator($dir) as $fileinfo) {
             // @todo Once core requires 5.3.6, use $fileinfo->getExtension().
             if (pathinfo($fileinfo->getFilename(), PATHINFO_EXTENSION) == 'php') {
               $class = $namespace . '\\' . $fileinfo->getBasename('.php');

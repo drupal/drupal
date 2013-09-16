@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Utility;
 
-use ArrayAccess;
 use Drupal\Core\Cache\CacheBackendInterface;
 
 /**
@@ -66,7 +65,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
  *
  * @see SchemaCache
  */
-abstract class CacheArray implements ArrayAccess {
+abstract class CacheArray implements \ArrayAccess {
 
   /**
    * A cid to pass to cache()->set() and cache()->get().

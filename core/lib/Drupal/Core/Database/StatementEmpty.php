@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Database;
 
-use Iterator;
 
 /**
  * Empty implementation of a database statement.
@@ -20,7 +19,7 @@ use Iterator;
  *
  * @see Drupal\search\SearchQuery
  */
-class StatementEmpty implements Iterator, StatementInterface {
+class StatementEmpty implements \Iterator, StatementInterface {
 
   public function execute($args = array(), $options = array()) {
     return FALSE;

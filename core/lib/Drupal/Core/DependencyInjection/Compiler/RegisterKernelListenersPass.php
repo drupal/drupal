@@ -7,8 +7,6 @@
 
 namespace Drupal\Core\DependencyInjection\Compiler;
 
-use InvalidArgumentException;
-use ReflectionClass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 
@@ -25,10 +23,10 @@ class RegisterKernelListenersPass implements CompilerPassInterface {
       // We must assume that the class value has been correcly filled, even if the service is created by a factory
       $class = $container->getDefinition($id)->getClass();
 
-      $refClass = new ReflectionClass($class);
+      $refClass = new \ReflectionClass($class);
       $interface = 'Symfony\Component\EventDispatcher\EventSubscriberInterface';
       if (!$refClass->implementsInterface($interface)) {
-        throw new InvalidArgumentException(sprintf('Service "%s" must implement interface "%s".', $id, $interface));
+        throw new \InvalidArgumentException(sprintf('Service "%s" must implement interface "%s".', $id, $interface));
       }
       $definition->addMethodCall('addSubscriberService', array($id, $class));
     }

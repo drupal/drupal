@@ -17,11 +17,6 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\UserSession;
 use Drupal\Core\StreamWrapper\PublicStream;
-use PDO;
-use stdClass;
-use DOMDocument;
-use DOMXPath;
-use SimpleXMLElement;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -94,7 +89,7 @@ abstract class WebTestBase extends TestBase {
   /**
    * The parsed version of the page.
    *
-   * @var SimpleXMLElement
+   * @var \SimpleXMLElement
    */
   protected $elements = NULL;
 
@@ -1231,7 +1226,7 @@ abstract class WebTestBase extends TestBase {
     if (!$this->elements) {
       // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
       // them.
-      $htmlDom = new DOMDocument();
+      $htmlDom = new \DOMDocument();
       @$htmlDom->loadHTML('<?xml encoding="UTF-8">' . $this->drupalGetContent());
       if ($htmlDom) {
         $this->pass(t('Valid HTML found on "@path"', array('@path' => $this->getUrl())), t('Browser'));
@@ -1597,10 +1592,10 @@ abstract class WebTestBase extends TestBase {
       );
       // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
       // them.
-      $dom = new DOMDocument();
+      $dom = new \DOMDocument();
       @$dom->loadHTML($content);
       // XPath allows for finding wrapper nodes better than DOM does.
-      $xpath = new DOMXPath($dom);
+      $xpath = new \DOMXPath($dom);
       foreach ($return as $command) {
         switch ($command['command']) {
           case 'settings':
@@ -1622,7 +1617,7 @@ abstract class WebTestBase extends TestBase {
             }
             if ($wrapperNode) {
               // ajax.js adds an enclosing DIV to work around a Safari bug.
-              $newDom = new DOMDocument();
+              $newDom = new \DOMDocument();
               @$newDom->loadHTML('<div>' . $command['data'] . '</div>');
               $newNode = $dom->importNode($newDom->documentElement->firstChild->firstChild, TRUE);
               $method = isset($command['method']) ? $command['method'] : $ajax_settings['method'];
@@ -2063,7 +2058,7 @@ abstract class WebTestBase extends TestBase {
    * @return
    *   Option elements in select.
    */
-  protected function getAllOptions(SimpleXMLElement $element) {
+  protected function getAllOptions(\SimpleXMLElement $element) {
     $options = array();
     // Add all options items.
     foreach ($element->option as $option) {
@@ -2889,7 +2884,7 @@ abstract class WebTestBase extends TestBase {
    * @return
    *   The selected value or FALSE.
    */
-  protected function getSelectedItem(SimpleXMLElement $element) {
+  protected function getSelectedItem(\SimpleXMLElement $element) {
     foreach ($element->children() as $item) {
       if (isset($item['selected'])) {
         return $item['value'];

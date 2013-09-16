@@ -10,7 +10,6 @@ namespace Drupal\aggregator\Form;
 use Drupal\aggregator\FeedInterface;
 use Drupal\aggregator\ItemStorageControllerInterface;
 use Drupal\Component\Utility\String;
-use Drupal\Core\Config\Config;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityRenderControllerInterface;
 use Drupal\Core\Form\FormBase;
@@ -63,15 +62,13 @@ abstract class AggregatorCategorizeFormBase extends FormBase {
    *   The item render controller.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection.
-   * @param \Drupal\Core\Config\Config $config
-   *   The aggregator config.
    * @param \Drupal\aggregator\ItemStorageControllerInterface $aggregator_item_storage
    *   The aggregator item storage controller.
    */
-  public function __construct(EntityRenderControllerInterface $aggregator_item_renderer, Connection $database, Config $config, ItemStorageControllerInterface $aggregator_item_storage) {
+  public function __construct(EntityRenderControllerInterface $aggregator_item_renderer, Connection $database, ItemStorageControllerInterface $aggregator_item_storage) {
     $this->aggregatorItemRenderer = $aggregator_item_renderer;
     $this->database = $database;
-    $this->config = $config;
+    $this->config = $this->config('aggregator.settings');
     $this->aggregatorItemStorage = $aggregator_item_storage;
   }
 
@@ -82,7 +79,6 @@ abstract class AggregatorCategorizeFormBase extends FormBase {
     return new static(
       $container->get('plugin.manager.entity')->getRenderController('aggregator_item'),
       $container->get('database'),
-      $container->get('config.factory')->get('aggregator.settings'),
       $container->get('plugin.manager.entity')->getStorageController('aggregator_item')
     );
   }

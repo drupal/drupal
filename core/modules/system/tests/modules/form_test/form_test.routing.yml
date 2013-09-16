@@ -1,68 +1,68 @@
 form_test.route1:
-  pattern: '/form-test/object-builder'
+  path: '/form-test/object-builder'
   defaults:
     _form: '\Drupal\form_test\FormTestObject'
   requirements:
     _access: 'TRUE'
 
 form_test.route2:
-  pattern: '/form-test/object-arguments-builder/{arg}'
+  path: '/form-test/object-arguments-builder/{arg}'
   defaults:
     _form: '\Drupal\form_test\FormTestArgumentsObject'
   requirements:
     _access: 'TRUE'
 
 form_test.route3:
-  pattern: '/form-test/object-service-builder'
+  path: '/form-test/object-service-builder'
   defaults:
     _form: 'form_test.form.serviceForm'
   requirements:
     _access: 'TRUE'
 
 form_test.route4:
-  pattern: '/form-test/object-controller-builder'
+  path: '/form-test/object-controller-builder'
   defaults:
     _form: '\Drupal\form_test\FormTestControllerObject'
   requirements:
     _access: 'TRUE'
 
 form_test.route5:
-  pattern: '/form-test/system-config-form'
+  path: '/form-test/system-config-form'
   defaults:
     _form: '\Drupal\form_test\SystemConfigFormTestForm'
   requirements:
     _access: 'TRUE'
 
 form_test.route6:
-  pattern: '/form-test/confirm-form'
+  path: '/form-test/confirm-form'
   defaults:
     _form: '\Drupal\form_test\ConfirmFormTestForm'
   requirements:
     _access: 'TRUE'
 
 form_test.route7:
-  pattern: '/form-test/confirm-form-array-path'
+  path: '/form-test/confirm-form-array-path'
   defaults:
     _form: '\Drupal\form_test\ConfirmFormArrayPathTestForm'
   requirements:
     _access: 'TRUE'
 
 form_test.route8:
-  pattern: '/form-test/autocomplete'
+  path: '/form-test/autocomplete'
   defaults:
     _form: '\Drupal\form_test\FormTestAutocompleteForm'
   requirements:
     _access: 'TRUE'
 
 form_test.autocomplete_1:
-  pattern: '/form-test/autocomplete-1'
+  path: '/form-test/autocomplete-1'
   defaults:
     controller: '\Drupal\form_test\AutocompleteController::autocomplete1'
   requirements:
     _permission: 'access autocomplete test'
 
 form_test.autocomplete_2:
-  pattern: '/form-test/autocomplete-2/{param}'
+  path: '/form-test/autocomplete-2/{param}'
   defaults:
     controller: '\Drupal\form_test\AutocompleteController::autocomplete1'
   requirements:

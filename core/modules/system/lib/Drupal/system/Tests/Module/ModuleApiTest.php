@@ -81,7 +81,7 @@ class ModuleApiTest extends WebTestBase {
   }
 
   /**
-   * Test Drupal::moduleHandler()->getImplementations() caching.
+   * Test \Drupal::moduleHandler()->getImplementations() caching.
    */
   function testModuleImplements() {
     // Clear the cache.

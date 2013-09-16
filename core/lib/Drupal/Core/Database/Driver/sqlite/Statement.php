@@ -10,9 +10,6 @@ namespace Drupal\Core\Database\Driver\sqlite;
 use Drupal\Core\Database\StatementPrefetch;
 use Drupal\Core\Database\StatementInterface;
 
-use Iterator;
-use PDOException;
-
 /**
  * Specific SQLite implementation of DatabaseConnection.
  *
@@ -22,7 +19,7 @@ use PDOException;
  * user-space mock of PDOStatement that buffers all the data and doesn't
  * have those limitations.
  */
-class Statement extends StatementPrefetch implements Iterator, StatementInterface {
+class Statement extends StatementPrefetch implements \Iterator, StatementInterface {
 
   /**
    * SQLite specific implementation of getStatement().
@@ -94,7 +91,7 @@ class Statement extends StatementPrefetch implements Iterator, StatementInterfac
     try {
       $return = parent::execute($args, $options);
     }
-    catch (PDOException $e) {
+    catch (\PDOException $e) {
       if (!empty($e->errorInfo[1]) && $e->errorInfo[1] === 17) {
         // The schema has changed. SQLite specifies that we must resend the query.
         $return = parent::execute($args, $options);
