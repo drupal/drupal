@@ -399,7 +399,6 @@ function theme_admin_page($variables) {
 function theme_system_admin_index($variables) {
   $menu_items = $variables['menu_items'];
 
-  $stripe = 0;
   $container = array('left' => '', 'right' => '');
   $flip = array('left' => 'right', 'right' => 'left');
   $position = 'left';
