@@ -8,7 +8,6 @@
 namespace Drupal\taxonomy\Form;
 
 use Drupal\Core\Form\FormBase;
-use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\taxonomy\VocabularyInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -17,13 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides terms overview form for a taxonomy vocabulary.
  */
 class OverviewTerms extends FormBase {
-
-  /**
-   * Taxonomy config.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $configFactory;
 
   /**
    * The module handler service.
@@ -35,13 +27,10 @@ class OverviewTerms extends FormBase {
   /**
    * Constructs an OverviewTerms object.
    *
-   * @param \Drupal\Core\Config\ConfigFactory $config_factory
-   *   The config factory service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
    */
-  public function __construct(ConfigFactory $config_factory, ModuleHandlerInterface $module_handler) {
-    $this->configFactory = $config_factory;
+  public function __construct(ModuleHandlerInterface $module_handler) {
     $this->moduleHandler = $module_handler;
   }
 
@@ -50,7 +39,6 @@ class OverviewTerms extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('config.factory'),
       $container->get('module_handler')
     );
   }
@@ -87,7 +75,7 @@ class OverviewTerms extends FormBase {
 
     $page = $this->getRequest()->query->get('page') ?: 0;
     // Number of terms per page.
-    $page_increment = $this->configFactory->get('taxonomy.settings')->get('terms_per_page_admin');
+    $page_increment = $this->config('taxonomy.settings')->get('terms_per_page_admin');
     // Elements shown on this page.
     $page_entries = 0;
     // Elements at the root level before this page.
