@@ -14,7 +14,7 @@ use Drupal\views\ViewExecutable;
 /**
  * @todo.
  */
-abstract class QueryPluginBase extends PluginBase implements QueryInterface {
+abstract class QueryPluginBase extends PluginBase {
 
   /**
    * A pager plugin that should be provided by the display.
