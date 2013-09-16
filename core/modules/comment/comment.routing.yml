@@ -44,14 +44,14 @@ comment.new_comments_node_links:
     _permission: 'access content'
 
 comment.bundle_list:
-  pattern: '/admin/structure/comments'
+  path: '/admin/structure/comments'
   defaults:
     _content: 'Drupal\comment\Controller\AdminController::overviewBundles'
   requirements:
     _permission: 'administer comments'
 
 comment.bundle:
-  pattern: '/admin/structure/comments/manage/{field_name}'
+  path: '/admin/structure/comments/manage/{field_name}'
   defaults:
     _content: 'Drupal\comment\Controller\AdminController::bundleInfo'
   requirements:
