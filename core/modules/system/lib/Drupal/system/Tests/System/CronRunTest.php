@@ -30,8 +30,6 @@ class CronRunTest extends WebTestBase {
    * Test cron runs.
    */
   function testCronRun() {
-    global $base_url;
-
     // Run cron anonymously without any cron key.
     $this->drupalGet('cron');
     $this->assertResponse(404);
