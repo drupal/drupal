@@ -329,7 +329,7 @@ class RouteProviderTest extends UnitTestBase {
       $routes = $provider->getRoutesByPattern($path);
       $this->assertFalse(count($routes), 'No path found with this pattern.');
 
-      $routes = $provider->getRouteCollectionForRequest($request);
+      $provider->getRouteCollectionForRequest($request);
       $this->fail(t('No exception was thrown.'));
     }
     catch (\Exception $e) {
