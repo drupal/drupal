@@ -38,7 +38,7 @@ class CommentItem extends ConfigFieldItemBase {
    *
    * @var array
    */
-  static $propertyDefinitions;
+  public static $propertyDefinitions;
 
   /**
    * {@inheritdoc}
@@ -49,41 +49,41 @@ class CommentItem extends ConfigFieldItemBase {
         'status' => array(
           'type' => 'integer',
           'label' => t('Comment status value'),
-          'settings' => array('default_value' => COMMENT_OPEN),
+          'settings' => array('default_value' => NULL),
         ),
         'cid' => array(
           'type' => 'entity_reference_field',
           'label' => t('Last comment ID'),
           'settings' => array(
             'target_type' => 'comment',
-            'default_value' => 0,
+            'default_value' => NULL,
           ),
         ),
         'last_comment_timestamp' => array(
           'label' => t('Last comment timestamp'),
           'description' => t('The time that the last comment was created.'),
-          'type' => 'integer_field',
-          'settings' => array('default_value' => 0)
+          'type' => 'integer',
+          'settings' => array('default_value' => NULL)
         ),
         'last_comment_name' => array(
           'label' => t('Last comment name'),
           'description' => t('The name of the user posting the last comment.'),
-          'type' => 'string_field',
-          'settings' => array('default_value' => '')
+          'type' => 'string',
+          'settings' => array('default_value' => NULL)
         ),
         'last_comment_uid' => array(
           'type' => 'entity_reference_field',
           'label' => t('Last comment user ID'),
           'settings' => array(
             'target_type' => 'user',
-            'default_value' => 0,
+            'default_value' => NULL,
           ),
         ),
         'comment_count' => array(
           'label' => t('Number of comments'),
           'description' => t('The number of comments.'),
-          'type' => 'integer_field',
-          'settings' => array('default_value' => 0)
+          'type' => 'integer',
+          'settings' => array('default_value' => NULL)
         ),
       );
     }
@@ -187,14 +187,20 @@ class CommentItem extends ConfigFieldItemBase {
    */
   public function applyDefaultValue($notify = TRUE) {
     // Retrieve the configured default value for the instance.
-    $this->setValue(array(
-      'status' => COMMENT_OPEN,
-      'cid' => 0,
-      'last_comment_timestamp' => 0,
-      'last_comment_name' => '',
-      'last_comment_uid' => 0,
-      'comment_count' => 0,
-    ), $notify);
+    $instance = $this->getFieldDefinition();
+    if (!empty($instance->default_value)) {
+      $this->setValue($instance->default_value, $notify);
+    }
+    else {
+      $this->setValue(array(
+        'status' => COMMENT_OPEN,
+        'cid' => 0,
+        'last_comment_timestamp' => 0,
+        'last_comment_name' => '',
+        'last_comment_uid' => 0,
+        'comment_count' => 0,
+      ), $notify);
+    }
     return $this;
   }
 
