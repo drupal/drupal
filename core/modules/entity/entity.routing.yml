@@ -1,75 +1,75 @@
 entity.display_mode:
-  path:  '/admin/structure/display-modes'
+  path: '/admin/structure/display-modes'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'administer display modes'
 
 entity.view_mode_list:
-  path:  '/admin/structure/display-modes/view'
+  path: '/admin/structure/display-modes/view'
   defaults:
     _entity_list: 'view_mode'
   requirements:
     _permission: 'administer display modes'
 
 entity.view_mode_add:
-  path:  '/admin/structure/display-modes/view/add'
+  path: '/admin/structure/display-modes/view/add'
   defaults:
     _content: '\Drupal\entity\Controller\EntityDisplayModeController::viewModeTypeSelection'
   requirements:
     _permission: 'administer display modes'
 
 entity.view_mode_add_type:
-  path:  '/admin/structure/display-modes/view/add/{entity_type}'
+  path: '/admin/structure/display-modes/view/add/{entity_type}'
   defaults:
     _entity_form: 'view_mode.add'
   requirements:
     _permission: 'administer display modes'
 
 entity.view_mode_edit:
-  path:  '/admin/structure/display-modes/view/manage/{view_mode}'
+  path: '/admin/structure/display-modes/view/manage/{view_mode}'
   defaults:
     _entity_form: 'view_mode.edit'
   requirements:
     _entity_access: 'view_mode.update'
 
 entity.view_mode_delete:
-  path:  '/admin/structure/display-modes/view/manage/{view_mode}/delete'
+  path: '/admin/structure/display-modes/view/manage/{view_mode}/delete'
   defaults:
     _entity_form: 'view_mode.delete'
   requirements:
     _entity_access: 'view_mode.delete'
 
 entity.form_mode_list:
-  path:  '/admin/structure/display-modes/form'
+  path: '/admin/structure/display-modes/form'
   defaults:
     _entity_list: 'form_mode'
   requirements:
     _permission: 'administer display modes'
 
 entity.form_mode_add:
-  path:  '/admin/structure/display-modes/form/add'
+  path: '/admin/structure/display-modes/form/add'
   defaults:
     _content: '\Drupal\entity\Controller\EntityDisplayModeController::formModeTypeSelection'
   requirements:
     _permission: 'administer display modes'
 
 entity.form_mode_add_type:
-  path:  '/admin/structure/display-modes/form/add/{entity_type}'
+  path: '/admin/structure/display-modes/form/add/{entity_type}'
   defaults:
     _entity_form: 'form_mode.add'
   requirements:
     _permission: 'administer display modes'
 
 entity.form_mode_edit:
-  path:  '/admin/structure/display-modes/form/manage/{form_mode}'
+  path: '/admin/structure/display-modes/form/manage/{form_mode}'
   defaults:
     _entity_form: 'form_mode.edit'
   requirements:
     _entity_access: 'form_mode.update'
 
 entity.form_mode_delete:
-  path:  '/admin/structure/display-modes/form/manage/{form_mode}/delete'
+  path: '/admin/structure/display-modes/form/manage/{form_mode}/delete'
   defaults:
     _entity_form: 'form_mode.delete'
   requirements:

@@ -1,5 +1,5 @@
 statistics.settings:
-  path:  '/admin/config/system/statistics'
+  path: '/admin/config/system/statistics'
   defaults:
     _form: 'Drupal\statistics\StatisticsSettingsForm'
   requirements:

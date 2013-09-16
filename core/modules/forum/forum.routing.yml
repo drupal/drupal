@@ -1,61 +1,61 @@
 forum.delete:
-  path:  '/admin/structure/forum/delete/forum/{taxonomy_term}'
+  path: '/admin/structure/forum/delete/forum/{taxonomy_term}'
   defaults:
     _form: '\Drupal\forum\Form\DeleteForm'
   requirements:
     _permission: 'administer forums'
 
 forum.settings:
-  path:  '/admin/structure/forum/settings'
+  path: '/admin/structure/forum/settings'
   defaults:
     _form: '\Drupal\forum\ForumSettingsForm'
   requirements:
     _permission: 'administer forums'
 
 forum.index:
-  path:  '/forum'
+  path: '/forum'
   defaults:
     _content: '\Drupal\forum\Controller\ForumController::forumIndex'
   requirements:
     _permission: 'access content'
 
 forum.page:
-  path:  '/forum/{taxonomy_term}'
+  path: '/forum/{taxonomy_term}'
   defaults:
     _content: '\Drupal\forum\Controller\ForumController::forumPage'
   requirements:
     _permission: 'access content'
 
 forum.add_container:
-  path:  '/admin/structure/forum/add/container'
+  path: '/admin/structure/forum/add/container'
   defaults:
     _content: '\Drupal\forum\Controller\ForumController::addContainer'
   requirements:
     _permission: 'administer forums'
 
 forum.add_forum:
-  path:  '/admin/structure/forum/add/forum'
+  path: '/admin/structure/forum/add/forum'
   defaults:
     _content: '\Drupal\forum\Controller\ForumController::addForum'
   requirements:
     _permission: 'administer forums'
 
 forum.edit_container:
-  path:  '/admin/structure/forum/edit/container/{taxonomy_term}'
+  path: '/admin/structure/forum/edit/container/{taxonomy_term}'
   defaults:
     _entity_form: 'taxonomy_term.container'
   requirements:
     _permission: 'administer forums'
 
 forum.edit_forum:
-  path:  '/admin/structure/forum/edit/forum/{taxonomy_term}'
+  path: '/admin/structure/forum/edit/forum/{taxonomy_term}'
   defaults:
     _entity_form: 'taxonomy_term.forum'
   requirements:
     _permission: 'administer forums'
 
 forum.overview:
-  path:  '/admin/structure/forum'
+  path: '/admin/structure/forum'
   defaults:
     _form: '\Drupal\forum\Form\Overview'
   requirements:

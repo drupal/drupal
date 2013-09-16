@@ -1,5 +1,5 @@
 user_form_test.current_password:
-  path:  '/user_form_test_current_password/{user}'
+  path: '/user_form_test_current_password/{user}'
   defaults:
     _form: '\Drupal\user_form_test\Form\TestCurrentPassword'
   requirements:

@@ -1,5 +1,5 @@
 views_test_data.element:
-  path:  '/views_test_data_element_form'
+  path: '/views_test_data_element_form'
   defaults:
     _form: '\Drupal\views_test_data\Form\ViewsTestDataElementForm'
   requirements:

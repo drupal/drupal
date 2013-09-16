@@ -1,12 +1,12 @@
 paramconverter_test.user_node_foo:
-  path:  '/paramconverter_test/test_user_node_foo/{user}/{node}/{foo}'
+  path: '/paramconverter_test/test_user_node_foo/{user}/{node}/{foo}'
   defaults:
     _content: '\Drupal\paramconverter_test\TestControllers::testUserNodeFoo'
   requirements:
     _access: 'TRUE'
 
 paramconverter_test.node_user_user:
-  path:  '/paramconverter_test/test_node_user_user/{node}/{foo}/{user}'
+  path: '/paramconverter_test/test_node_user_user/{node}/{foo}/{user}'
   defaults:
     _content: '\Drupal\paramconverter_test\TestControllers::testUserNodeFoo'
   requirements:
@@ -17,7 +17,7 @@ paramconverter_test.node_user_user:
         type: 'entity:user'
 
 paramconverter_test.node_node_foo:
-  path:  '/paramconverter_test/test_node_node_foo/{user}/{node}/{foo}'
+  path: '/paramconverter_test/test_node_node_foo/{user}/{node}/{foo}'
   defaults:
     _content: '\Drupal\paramconverter_test\TestControllers::testUserNodeFoo'
   requirements:
@@ -28,7 +28,7 @@ paramconverter_test.node_node_foo:
         type: 'entity:node'
 
 paramconverter_test.node_set_parent:
-  path:  '/paramconverter_test/node/{node}/set/parent/{parent}'
+  path: '/paramconverter_test/node/{node}/set/parent/{parent}'
   requirements:
     _access: 'TRUE'
   defaults:

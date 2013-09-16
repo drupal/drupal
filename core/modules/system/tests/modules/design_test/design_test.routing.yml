@@ -1,5 +1,5 @@
 design.test:
-  path:  '/design_test/{category}'
+  path: '/design_test/{category}'
   defaults:
     _content: '\Drupal\design_test\Controller\DesignTestController::categoryPage'
     category: 'FALSE'

@@ -1,75 +1,75 @@
 taxonomy.vocabulary_list:
-  path:  '/admin/structure/taxonomy'
+  path: '/admin/structure/taxonomy'
   defaults:
     _entity_list: 'taxonomy_vocabulary'
   requirements:
     _permission: 'administer taxonomy'
 
 taxonomy.term_add:
-  path:  '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/add'
+  path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/add'
   defaults:
     _content: '\Drupal\taxonomy\Controller\TaxonomyController::addForm'
   requirements:
     _entity_create_access: 'taxonomy_term:{taxonomy_vocabulary}'
 
 taxonomy.term_edit:
-  path:  '/taxonomy/term/{taxonomy_term}/edit'
+  path: '/taxonomy/term/{taxonomy_term}/edit'
   defaults:
     _entity_form: 'taxonomy_term.default'
   requirements:
     _entity_access: 'taxonomy_term.update'
 
 taxonomy.term_delete:
-  path:  '/taxonomy/term/{taxonomy_term}/delete'
+  path: '/taxonomy/term/{taxonomy_term}/delete'
   defaults:
     _entity_form: 'taxonomy_term.delete'
   requirements:
     _entity_access: 'taxonomy_term.delete'
 
 taxonomy.vocabulary_add:
-  path:  '/admin/structure/taxonomy/add'
+  path: '/admin/structure/taxonomy/add'
   defaults:
     _entity_form: 'taxonomy_vocabulary'
   requirements:
     _entity_create_access: 'taxonomy_vocabulary'
 
 taxonomy.vocabulary_edit:
-  path:  '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/edit'
+  path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/edit'
   defaults:
     _entity_form: 'taxonomy_vocabulary.default'
   requirements:
     _entity_access: 'taxonomy_vocabulary.update'
 
 taxonomy.vocabulary_delete:
-  path:  '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/delete'
+  path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/delete'
   defaults:
     _entity_form: 'taxonomy_vocabulary.delete'
   requirements:
     _entity_access: 'taxonomy_vocabulary.delete'
 
 taxonomy.vocabulary_reset:
-  path:  '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/reset'
+  path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}/reset'
   defaults:
     _entity_form: 'taxonomy_vocabulary.reset'
   requirements:
     _permission: 'administer taxonomy'
 
 taxonomy.autocomplete:
-  path:  '/taxonomy/autocomplete/{entity_type}/{field_name}'
+  path: '/taxonomy/autocomplete/{entity_type}/{field_name}'
   defaults:
     _controller: '\Drupal\taxonomy\Controller\TermAutocompleteController::autocomplete'
   requirements:
     _permission: 'access content'
 
 taxonomy.autocomplete_vid:
-  path:  '/taxonomy/autocomplete_vid/{taxonomy_vocabulary}'
+  path: '/taxonomy/autocomplete_vid/{taxonomy_vocabulary}'
   defaults:
     _controller: '\Drupal\taxonomy\Controller\TermAutocompleteController::autocompletePerVid'
   requirements:
     _permission: 'access content'
 
 taxonomy.overview_terms:
-  path:  'admin/structure/taxonomy/manage/{taxonomy_vocabulary}'
+  path: 'admin/structure/taxonomy/manage/{taxonomy_vocabulary}'
   defaults:
     _form: 'Drupal\taxonomy\Form\OverviewTerms'
   requirements:

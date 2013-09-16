@@ -1,47 +1,47 @@
 views_ui.list:
-  path:  '/admin/structure/views'
+  path: '/admin/structure/views'
   defaults:
     _entity_list: 'view'
   requirements:
     _permission: 'administer views'
 
 views_ui.add:
-  path:  '/admin/structure/views/add'
+  path: '/admin/structure/views/add'
   defaults:
     _entity_form: 'view.add'
   requirements:
     _permission: 'administer views'
 
 views_ui.settings_basic:
-  path:  '/admin/structure/views/settings'
+  path: '/admin/structure/views/settings'
   defaults:
     _form: '\Drupal\views_ui\Form\BasicSettingsForm'
   requirements:
     _permission: 'administer views'
 
 views_ui.settings_advanced:
-  path:  '/admin/structure/views/settings/advanced'
+  path: '/admin/structure/views/settings/advanced'
   defaults:
     _form: '\Drupal\views_ui\Form\AdvancedSettingsForm'
   requirements:
     _permission: 'administer views'
 
 views_ui.reports_fields:
-  path:  '/admin/reports/fields/views-fields'
+  path: '/admin/reports/fields/views-fields'
   defaults:
     _content: '\Drupal\views_ui\Controller\ViewsUIController::reportFields'
   requirements:
     _permission: 'administer views'
 
 views_ui.reports_plugins:
-  path:  '/admin/reports/views-plugins'
+  path: '/admin/reports/views-plugins'
   defaults:
     _content: '\Drupal\views_ui\Controller\ViewsUIController::reportPlugins'
   requirements:
     _permission: 'administer views'
 
 views_ui.operation:
-  path:  '/admin/structure/views/view/{view}/{op}'
+  path: '/admin/structure/views/view/{view}/{op}'
   defaults:
     _controller: '\Drupal\views_ui\Controller\ViewsUIController::ajaxOperation'
   requirements:
@@ -49,28 +49,28 @@ views_ui.operation:
     op: 'enable|disable'
 
 views_ui.clone:
-  path:  '/admin/structure/views/view/{view}/clone'
+  path: '/admin/structure/views/view/{view}/clone'
   defaults:
     _entity_form: 'view.clone'
   requirements:
     _permission: 'administer views'
 
 views_ui.delete:
-  path:  '/admin/structure/views/view/{view}/delete'
+  path: '/admin/structure/views/view/{view}/delete'
   defaults:
     _entity_form: 'view.delete'
   requirements:
     _permission: 'administer views'
 
 views_ui.autocomplete:
-  path:  '/admin/views/ajax/autocomplete/tag'
+  path: '/admin/views/ajax/autocomplete/tag'
   defaults:
     _controller: '\Drupal\views_ui\Controller\ViewsUIController::autocompleteTag'
   requirements:
     _permission: 'administer views'
 
 views_ui.edit:
-  path:  '/admin/structure/views/view/{view}'
+  path: '/admin/structure/views/view/{view}'
   options:
     parameters:
       view:
@@ -81,7 +81,7 @@ views_ui.edit:
     _permission: 'administer views'
 
 views_ui.edit_display:
-  path:  '/admin/structure/views/view/{view}/edit/{display_id}'
+  path: '/admin/structure/views/view/{view}/edit/{display_id}'
   options:
     parameters:
       view:
@@ -93,7 +93,7 @@ views_ui.edit_display:
     _permission: 'administer views'
 
 views_ui.preview:
-  path:  '/admin/structure/views/view/{view}/preview/{display_id}'
+  path: '/admin/structure/views/view/{view}/preview/{display_id}'
   options:
     parameters:
       view:
@@ -105,14 +105,14 @@ views_ui.preview:
     _permission: 'administer views'
 
 views_ui.break_lock:
-  path:  '/admin/structure/views/view/{view}/break-lock'
+  path: '/admin/structure/views/view/{view}/break-lock'
   defaults:
     _entity_form: 'view.break_lock'
   requirements:
     _permission: 'administer views'
 
 views_ui.form_add_item:
-  path:  '/admin/structure/views/{js}/add-item/{view}/{display_id}/{type}'
+  path: '/admin/structure/views/{js}/add-item/{view}/{display_id}/{type}'
   options:
     parameters:
       view:
@@ -124,7 +124,7 @@ views_ui.form_add_item:
     js: 'nojs|ajax'
 
 views_ui.form_edit_details:
-  path:  '/admin/structure/views/{js}/edit-details/{view}/{display_id}'
+  path: '/admin/structure/views/{js}/edit-details/{view}/{display_id}'
   options:
     parameters:
       view:
@@ -136,7 +136,7 @@ views_ui.form_edit_details:
     js: 'nojs|ajax'
 
 views_ui.form_reorder_displays:
-  path:  '/admin/structure/views/{js}/reorder-displays/{view}/{display_id}'
+  path: '/admin/structure/views/{js}/reorder-displays/{view}/{display_id}'
   options:
     parameters:
       view:
@@ -148,7 +148,7 @@ views_ui.form_reorder_displays:
     js: 'nojs|ajax'
 
 views_ui.form_analyze:
-  path:  '/admin/structure/views/{js}/analyze/{view}/{display_id}'
+  path: '/admin/structure/views/{js}/analyze/{view}/{display_id}'
   options:
     parameters:
       view:
@@ -160,7 +160,7 @@ views_ui.form_analyze:
     js: 'nojs|ajax'
 
 views_ui.form_rearrange:
-  path:  '/admin/structure/views/{js}/rearrange/{view}/{display_id}/{type}'
+  path: '/admin/structure/views/{js}/rearrange/{view}/{display_id}/{type}'
   options:
     parameters:
       view:
@@ -172,7 +172,7 @@ views_ui.form_rearrange:
     js: 'nojs|ajax'
 
 views_ui.form_rearrange_filter:
-  path:  '/admin/structure/views/{js}/rearrange-filter/{view}/{display_id}'
+  path: '/admin/structure/views/{js}/rearrange-filter/{view}/{display_id}'
   options:
     parameters:
       view:
@@ -184,7 +184,7 @@ views_ui.form_rearrange_filter:
     js: 'nojs|ajax'
 
 views_ui.form_display:
-  path:  '/admin/structure/views/{js}/display/{view}/{display_id}/{type}'
+  path: '/admin/structure/views/{js}/display/{view}/{display_id}/{type}'
   options:
     parameters:
       view:
@@ -196,7 +196,7 @@ views_ui.form_display:
     js: 'nojs|ajax'
 
 views_ui.form_config_item:
-  path:  '/admin/structure/views/{js}/config-item/{view}/{display_id}/{type}/{id}'
+  path: '/admin/structure/views/{js}/config-item/{view}/{display_id}/{type}/{id}'
   options:
     parameters:
       view:
@@ -208,7 +208,7 @@ views_ui.form_config_item:
     js: 'nojs|ajax'
 
 views_ui.form_config_item_extra:
-  path:  '/admin/structure/views/{js}/config-item-extra/{view}/{display_id}/{type}/{id}'
+  path: '/admin/structure/views/{js}/config-item-extra/{view}/{display_id}/{type}/{id}'
   options:
     parameters:
       view:
@@ -220,7 +220,7 @@ views_ui.form_config_item_extra:
     js: 'nojs|ajax'
 
 views_ui.form_config_item_group:
-  path:  '/admin/structure/views/{js}/config-item-group/{view}/{display_id}/{type}/{id}'
+  path: '/admin/structure/views/{js}/config-item-group/{view}/{display_id}/{type}/{id}'
   options:
     parameters:
       view:

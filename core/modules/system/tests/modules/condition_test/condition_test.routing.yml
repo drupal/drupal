@@ -1,5 +1,5 @@
 condition_test.1:
-  path:  '/condition_test'
+  path: '/condition_test'
   defaults:
     _form: '\Drupal\condition_test\FormController'
   requirements:

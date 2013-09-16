@@ -1,12 +1,12 @@
 test_page_test.render_title:
-  path:  "/test-render-title"
+  path: "/test-render-title"
   defaults:
     _content: 'Drupal\test_page_test\Controller\Test::renderTitle'
   requirements:
     _access: 'TRUE'
 
 test_page_test.static_title:
-  path:  "/test-page-static-title"
+  path: "/test-page-static-title"
   defaults:
     _content: 'Drupal\test_page_test\Controller\Test::staticTitle'
     _title: 'Static title'
@@ -14,14 +14,14 @@ test_page_test.static_title:
     _access: 'TRUE'
 
 test_page_test.admin_render_title:
-  path:  "/admin/test-render-title"
+  path: "/admin/test-render-title"
   defaults:
     _content: 'Drupal\test_page_test\Controller\Test::renderTitle'
   requirements:
     _access: 'TRUE'
 
 test_page_test.render_title_controller:
-  path:  "/test-render-title-controller"
+  path: "/test-render-title-controller"
   defaults:
     _controller: 'Drupal\test_page_test\Controller\Test::renderTitle'
   requirements:

@@ -32,7 +32,7 @@ class HtmlEntityFormController extends HtmlFormController {
    * representing the entity and operation being performed.
    * Consider the following route:
    * @code
-   *   path:  '/foo/{node}/bar'
+   *   path: '/foo/{node}/bar'
    *   defaults:
    *     _entity_form: 'node.edit'
    * @endcode
@@ -40,7 +40,7 @@ class HtmlEntityFormController extends HtmlFormController {
    * If the entity type has a default form controller, only the name of the
    * entity {param} needs to be passed:
    * @code
-   *   path:  '/foo/{node}/baz'
+   *   path: '/foo/{node}/baz'
    *   defaults:
    *     _entity_form: 'node'
    * @endcode
