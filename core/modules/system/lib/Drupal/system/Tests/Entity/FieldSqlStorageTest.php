@@ -458,4 +458,85 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $this->assertEqual($foreign_key['columns'][$foreign_key_column], 'id', 'Foreign key column name preserved in the schema');
   }
 
+  /**
+   * Tests table name generation.
+   */
+  public function testTableNames() {
+    // Note: we need to test entity types with long names. We therefore use
+    // fields on imaginary entity types (works as long as we don't actually save
+    // them), and just check the generated table names.
+
+    // Short entity type and field name.
+    $entity_type = 'short_entity_type';
+    $field_name = 'short_field_name';
+    $field = entity_create('field_entity', array(
+      'entity_type' => $entity_type,
+      'name' => $field_name,
+      'type' => 'test_field',
+    ));
+    $expected = 'short_entity_type__short_field_name';
+    $this->assertEqual(DatabaseStorageController::_fieldTableName($field), $expected);
+    $expected = 'short_entity_type_revision__short_field_name';
+    $this->assertEqual(DatabaseStorageController::_fieldRevisionTableName($field), $expected);
+
+    // Short entity type, long field name
+    $entity_type = 'short_entity_type';
+    $field_name = 'long_field_name_abcdefghijklmnopqrstuvwxyz';
+    $field = entity_create('field_entity', array(
+      'entity_type' => $entity_type,
+      'name' => $field_name,
+      'type' => 'test_field',
+    ));
+    $expected = 'short_entity_type__' . substr(hash('sha256', $field->uuid), 0, 10);
+    $this->assertEqual(DatabaseStorageController::_fieldTableName($field), $expected);
+    $expected = 'short_entity_type_r__' . substr(hash('sha256', $field->uuid), 0, 10);
+    $this->assertEqual(DatabaseStorageController::_fieldRevisionTableName($field), $expected);
+
+    // Long entity type, short field name
+    $entity_type = 'long_entity_type_abcdefghijklmnopqrstuvwxyz';
+    $field_name = 'short_field_name';
+    $field = entity_create('field_entity', array(
+      'entity_type' => $entity_type,
+      'name' => $field_name,
+      'type' => 'test_field',
+    ));
+    $expected = 'long_entity_type_abcdefghijklmnopq__' . substr(hash('sha256', $field->uuid), 0, 10);
+    $this->assertEqual(DatabaseStorageController::_fieldTableName($field), $expected);
+    $expected = 'long_entity_type_abcdefghijklmnopq_r__' . substr(hash('sha256', $field->uuid), 0, 10);
+    $this->assertEqual(DatabaseStorageController::_fieldRevisionTableName($field), $expected);
+
+    // Long entity type and field name.
+    $entity_type = 'long_entity_type_abcdefghijklmnopqrstuvwxyz';
+    $field_name = 'long_field_name_abcdefghijklmnopqrstuvwxyz';
+    $field = entity_create('field_entity', array(
+      'entity_type' => $entity_type,
+      'name' => $field_name,
+      'type' => 'test_field',
+    ));
+    $expected = 'long_entity_type_abcdefghijklmnopq__' . substr(hash('sha256', $field->uuid), 0, 10);
+    $this->assertEqual(DatabaseStorageController::_fieldTableName($field), $expected);
+    $expected = 'long_entity_type_abcdefghijklmnopq_r__' . substr(hash('sha256', $field->uuid), 0, 10);
+    $this->assertEqual(DatabaseStorageController::_fieldRevisionTableName($field), $expected);
+    // Try creating a second field and check there are no clashes.
+    $field2 = entity_create('field_entity', array(
+      'entity_type' => $entity_type,
+      'name' => $field_name . '2',
+      'type' => 'test_field',
+    ));
+    $this->assertNotEqual(DatabaseStorageController::_fieldTableName($field), DatabaseStorageController::_fieldTableName($field2));
+    $this->assertNotEqual(DatabaseStorageController::_fieldRevisionTableName($field), DatabaseStorageController::_fieldRevisionTableName($field2));
+
+    // Deleted field.
+    $field = entity_create('field_entity', array(
+      'entity_type' => 'some_entity_type',
+      'name' => 'some_field_name',
+      'type' => 'test_field',
+      'deleted' => TRUE,
+    ));
+    $expected = 'field_deleted_data_' . substr(hash('sha256', $field->uuid), 0, 10);
+    $this->assertEqual(DatabaseStorageController::_fieldTableName($field), $expected);
+    $expected = 'field_deleted_revision_' . substr(hash('sha256', $field->uuid), 0, 10);
+    $this->assertEqual(DatabaseStorageController::_fieldRevisionTableName($field), $expected);
+  }
+
 }

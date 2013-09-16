@@ -7,7 +7,6 @@
 
 namespace Drupal\user;
 
-use Drupal\Core\Entity\EntityBCDecorator;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Password\PasswordInterface;
 use Drupal\Core\Database\Connection;

@@ -13,13 +13,13 @@ use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configures aggregator settings for this site.
  */
-class SettingsForm extends SystemConfigFormBase {
+class SettingsForm extends ConfigFormBase {
 
   /**
    * The aggregator plugin managers.

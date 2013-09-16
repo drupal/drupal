@@ -37,12 +37,6 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
    * {@inheritdoc}
    */
   public function synchronizeFields(EntityInterface $entity, $sync_langcode, $original_langcode = NULL) {
-    // Field synchronization is only supported for NG entities.
-    $entity = $entity->getNGEntity();
-    if (!($entity instanceof EntityNG)) {
-      return;
-    }
-
     $translations = $entity->getTranslationLanguages();
 
     // If we have no information about what to sync to, if we are creating a new

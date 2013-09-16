@@ -40,7 +40,7 @@ class AutocompleteWidget extends AutocompleteWidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
     // We let the Field API handles multiple values for us, only take care of
     // the one matching our delta.
     if (isset($items[$delta])) {
@@ -50,7 +50,7 @@ class AutocompleteWidget extends AutocompleteWidgetBase {
       $items->setValue(array());
     }
 
-    return parent::formElement($items, $delta, $element, $langcode, $form, $form_state);
+    return parent::formElement($items, $delta, $element, $form, $form_state);
   }
 
   /**

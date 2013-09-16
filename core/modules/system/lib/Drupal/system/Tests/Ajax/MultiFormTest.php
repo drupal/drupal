@@ -75,7 +75,7 @@ class MultiFormTest extends AjaxTestBase {
     // of field items and "add more" button for the multi-valued field within
     // each form.
     $this->drupalGet('form-test/two-instances-of-same-form');
-    foreach ($field_xpaths as $form_html_id => $field_xpath) {
+    foreach ($field_xpaths as $field_xpath) {
       $this->assert(count($this->xpath($field_xpath . $field_items_xpath_suffix)) == 1, 'Found the correct number of field items on the initial page.');
       $this->assertFieldByXPath($field_xpath . $button_xpath_suffix, NULL, 'Found the "add more" button on the initial page.');
     }

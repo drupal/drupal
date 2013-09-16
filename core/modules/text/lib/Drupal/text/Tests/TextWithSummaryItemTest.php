@@ -122,8 +122,8 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
     // Inject values into the cache to make sure that these are used as-is and
     // not re-calculated.
     $data = array(
-      'summary_field' => array(
-        Language::LANGCODE_DEFAULT => array(
+      Language::LANGCODE_DEFAULT => array(
+        'summary_field' => array(
           0 => array(
             'value' => $value,
             'summary' => $summary,

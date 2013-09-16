@@ -9,14 +9,14 @@ namespace Drupal\system\Form;
 
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\Context\ContextInterface;
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\system\Plugin\ImageToolkitManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configures image toolkit settings for this site.
  */
-class ImageToolkitForm extends SystemConfigFormBase {
+class ImageToolkitForm extends ConfigFormBase {
 
   /**
    * An array containing currently available toolkits.

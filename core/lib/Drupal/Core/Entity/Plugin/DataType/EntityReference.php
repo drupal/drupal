@@ -99,10 +99,6 @@ class EntityReference extends DataReferenceBase {
     // Both the entity ID and the entity object may be passed as value. The
     // reference may also be unset by passing NULL as value.
     if (!isset($value) || $value instanceof EntityInterface) {
-      // Ensure we reference a NG Entity object.
-      if (isset($value)) {
-        $value = $value->getNGEntity();
-      }
       $this->target = $value;
     }
     elseif (!is_scalar($value) || empty($this->definition['constraints']['EntityType'])) {

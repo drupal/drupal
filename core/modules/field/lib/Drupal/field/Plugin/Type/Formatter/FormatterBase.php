@@ -7,7 +7,6 @@
 
 namespace Drupal\field\Plugin\Type\Formatter;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\FieldInstanceInterface;
@@ -74,11 +73,12 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
   /**
    * {@inheritdoc}
    */
-  public function view(EntityInterface $entity, $langcode, FieldInterface $items) {
+  public function view(FieldInterface $items) {
     $addition = array();
 
-    $elements = $this->viewElements($entity, $langcode, $items);
+    $elements = $this->viewElements($items);
     if ($elements) {
+      $entity = $items->getEntity();
       $entity_type = $entity->entityType();
       $field_name = $this->fieldDefinition->getFieldName();
       $info = array(
@@ -87,7 +87,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
         '#access' => $this->checkFieldAccess('view', $entity),
         '#label_display' => $this->label,
         '#view_mode' => $this->viewMode,
-        '#language' => $langcode,
+        '#language' => $items->getLangcode(),
         '#field_name' => $field_name,
         '#field_type' => $this->fieldDefinition->getFieldType(),
         '#field_translatable' => $this->fieldDefinition->isFieldTranslatable(),
@@ -121,7 +121,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
   /**
    * {@inheritdoc}
    */
-  public function prepareView(array $entities, $langcode, array $items) { }
+  public function prepareView(array $entities_items) { }
 
   /**
    * Returns whether the currently logged in user has access to the field.

@@ -198,10 +198,8 @@ function hook_field_widget_info_alter(array &$info) {
  *   - form: The form structure to which widgets are being attached. This may be
  *     a full form structure, or a sub-element of a larger form.
  *   - widget: The widget plugin instance.
- *   - field_definition: The field definition.
- *   - entity: The entity.
- *   - langcode: The language associated with $items.
- *   - items: Array of default values for this field.
+ *   - items: The field values, as a \Drupal\Core\Entity\Field\FieldInterface
+ *     object.
  *   - delta: The order of this item in the array of subelements (0, 1, 2, etc).
  *   - default: A boolean indicating whether the form is being shown as a dummy
  *     form to set default values.
@@ -211,7 +209,8 @@ function hook_field_widget_info_alter(array &$info) {
  */
 function hook_field_widget_form_alter(&$element, &$form_state, $context) {
   // Add a css class to widget form elements for all fields of type mytype.
-  if ($context['field']['type'] == 'mytype') {
+  $field_definition = $context['items']->getFieldDefinition();
+  if ($field_definition->getFieldType() == 'mytype') {
     // Be sure not to overwrite existing attributes.
     $element['#attributes']['class'][] = 'myclass';
   }

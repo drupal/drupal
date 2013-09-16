@@ -10,7 +10,6 @@ namespace Drupal\telephone\Plugin\field\formatter;
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
@@ -62,38 +61,19 @@ class TelephoneLinkFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function prepareView(array $entities, $langcode, array $items) {
-    $settings = $this->getSettings();
-
-    foreach ($entities as $id => $entity) {
-      foreach ($items[$id] as $item) {
-        // If available, set custom link text.
-        if (!empty($settings['title'])) {
-          $item->title = $settings['title'];
-        }
-        // Otherwise, use telephone number itself as title.
-        else {
-          $item->title = $item->value;
-        }
-      }
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
+  public function viewElements(FieldInterface $items) {
     $element = array();
+    $title_setting = $this->getSetting('title');
 
     foreach ($items as $delta => $item) {
-      // Prepend 'tel:' to the telephone number.
-      $href = 'tel:' . rawurlencode(preg_replace('/\s+/', '', $item->value));
-
       // Render each element as link.
       $element[$delta] = array(
         '#type' => 'link',
-        '#title' => $item->title,
-        '#href' => $href,
+        // Use custom title if available, otherwise use the telephone number
+        // itself as title.
+        '#title' => $title_setting ?: $item->value,
+        // Prepend 'tel:' to the telephone number.
+        '#href' => 'tel:' . rawurlencode(preg_replace('/\s+/', '', $item->value)),
         '#options' => array('external' => TRUE),
       );
     }

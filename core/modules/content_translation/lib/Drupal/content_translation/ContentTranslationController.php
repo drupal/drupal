@@ -46,7 +46,6 @@ class ContentTranslationController implements ContentTranslationControllerInterf
    * Implements ContentTranslationControllerInterface::removeTranslation().
    */
   public function removeTranslation(EntityInterface $entity, $langcode) {
-    $translations = $entity->getTranslationLanguages();
     // @todo Handle properties.
     // Remove field translations.
     foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
@@ -236,7 +235,7 @@ class ContentTranslationController implements ContentTranslationControllerInterf
         // A new translation is not available in the translation metadata, hence
         // it should count as one more.
         $published = $new_translation;
-        foreach ($entity->translation as $langcode => $translation) {
+        foreach ($entity->translation as $translation) {
           $published += $translation['status'];
         }
         $enabled = $published > 1;

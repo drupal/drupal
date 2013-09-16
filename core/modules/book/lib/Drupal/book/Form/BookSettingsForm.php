@@ -7,12 +7,12 @@
 
 namespace Drupal\book\Form;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Configure book settings for this site.
  */
-class BookSettingsForm extends SystemConfigFormBase {
+class BookSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}

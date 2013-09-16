@@ -9,7 +9,6 @@ namespace Drupal\entity_reference\Plugin\field\formatter;
 
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
 
@@ -55,7 +54,7 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
+  public function viewElements(FieldInterface $items) {
     $elements = array();
 
     foreach ($items as $delta => $item) {
@@ -83,4 +82,5 @@ class EntityReferenceLabelFormatter extends EntityReferenceFormatterBase {
 
     return $elements;
   }
+
 }

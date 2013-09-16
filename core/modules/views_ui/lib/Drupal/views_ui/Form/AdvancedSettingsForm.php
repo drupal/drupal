@@ -7,12 +7,12 @@
 
 namespace Drupal\views_ui\Form;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Form builder for the advanced admin settings page.
  */
-class AdvancedSettingsForm extends SystemConfigFormBase {
+class AdvancedSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}

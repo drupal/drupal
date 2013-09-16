@@ -110,8 +110,7 @@ class EntityNormalizer extends NormalizerBase {
       }
     }
 
-    // Get links and remove from data array.
-    $links = $data['_links'];
+    // Remove links from data array.
     unset($data['_links']);
     // Get embedded resources and remove from data array.
     $embedded = array();

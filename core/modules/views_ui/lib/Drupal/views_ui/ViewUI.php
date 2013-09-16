@@ -1025,20 +1025,6 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::getBCEntity().
-   */
-  public function getBCEntity() {
-    return $this->storage->getBCEntity();
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\EntityInterface::getNGEntity().
-   */
-  public function getNGEntity() {
-    return $this->storage->getNGEntity();
-  }
-
-  /**
    * Implements \Drupal\Core\Entity\EntityInterface::isTranslatable().
    */
   public function isTranslatable() {

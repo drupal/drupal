@@ -10,13 +10,13 @@ namespace Drupal\language\Form;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure the browser language negotiation method for this site.
  */
-class NegotiationBrowserForm extends SystemConfigFormBase {
+class NegotiationBrowserForm extends ConfigFormBase {
 
   /**
    * The module handler.

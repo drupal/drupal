@@ -558,9 +558,6 @@ function field_read_instances($conditions = array(), $include_additional = array
  * @see field_form_set_state()
  */
 function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langcode = NULL, array $options = array()) {
-  // Ensure we are working with a BC mode entity.
-  $entity = $entity->getBCEntity();
-
   // Set #parents to 'top-level' by default.
   $form += array('#parents' => array());
 
@@ -615,11 +612,6 @@ function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langc
  * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function field_attach_form_validate(EntityInterface $entity, $form, &$form_state, array $options = array()) {
-  // Only support NG entities.
-  if (!($entity->getNGEntity() instanceof EntityNG)) {
-    return;
-  }
-
   $has_violations = FALSE;
   foreach ($entity as $field_name => $field) {
     $definition = $field->getDefinition();
@@ -663,9 +655,6 @@ function field_attach_form_validate(EntityInterface $entity, $form, &$form_state
  * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function field_attach_extract_form_values(EntityInterface $entity, $form, &$form_state, array $options = array()) {
-  // Ensure we are working with a BC mode entity.
-  $entity = $entity->getBCEntity();
-
   // Extract field values from submitted values.
   $form_display = $form_state['form_display'];
   field_invoke_method('extractFormValues', _field_invoke_widget_target($form_display), $entity, $form, $form_state, $options);
@@ -714,9 +703,6 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
   $prepare = array();
   foreach ($entities as $id => $entity) {
     if (empty($entity->_field_view_prepared)) {
-      // Ensure we are working with a BC mode entity.
-      $entity = $entity->getBCEntity();
-
       // Add this entity to the items to be prepared.
       $prepare[$id] = $entity;
 
@@ -770,8 +756,6 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
  * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
 function field_attach_view(EntityInterface $entity, EntityDisplay $display, $langcode = NULL, array $options = array()) {
-  // Ensure we are working with a BC mode entity.
-  $entity = $entity->getBCEntity();
   // Determine the actual language code to display for each field, given the
   // language codes available in the field data.
   $options['langcode'] = field_language($entity, NULL, $langcode);
@@ -783,8 +767,6 @@ function field_attach_view(EntityInterface $entity, EntityDisplay $display, $lan
   };
   $null = NULL;
   $output = field_invoke_method('view', $target_function, $entity, $null, $null, $options);
-  // Remove the BC layer now.
-  $entity = $entity->getNGEntity();
 
   // Let other modules alter the renderable array.
   $view_mode = $display->originalMode;
@@ -822,7 +804,6 @@ function field_attach_view(EntityInterface $entity, EntityDisplay $display, $lan
  *   $entity->getTranslation($langcode)->{$field_name}
  */
 function field_get_items(EntityInterface $entity, $field_name, $langcode = NULL) {
-  $entity = $entity->getBCEntity();
   $langcode = field_language($entity, $field_name, $langcode);
   return isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
 }

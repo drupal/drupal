@@ -7,6 +7,7 @@
 
 namespace Drupal\image\Plugin\field\formatter;
 
+use Drupal\field\FieldInstanceInterface;
 use Drupal\file\Plugin\field\formatter\FileFormatterBase;
 
 /**
@@ -17,28 +18,22 @@ abstract class ImageFormatterBase extends FileFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function prepareView(array $entities, $langcode, array $items) {
-    parent::prepareView($entities, $langcode, $items);
+  public function prepareView(array $entities_items) {
+    parent::prepareView($entities_items);
 
     // If there are no files specified at all, use the default.
-    foreach ($entities as $id => $entity) {
-      if ($items[$id]->isEmpty()) {
-        $fid = array();
-        $instance = field_info_instance($entity->entityType(), $this->fieldDefinition->getFieldName(), $entity->bundle());
-        // Use the default for the instance if one is available.
-        if (!empty($instance['settings']['default_image'])) {
-          $fid = array($instance['settings']['default_image']);
-        }
-        // Otherwise, use the default for the field.
-        // Note, that we have to bypass getFieldSetting() as this returns the
-        // instance-setting default.
-        elseif (($field = $this->fieldDefinition->getField()) && !empty($field->settings['default_image'])) {
-          $fid = array($field->settings['default_image']);
+    foreach ($entities_items as $items) {
+      if ($items->isEmpty()) {
+        // Add the default image if one is found.
+        $fid = $this->getFieldSetting('default_image');
+        // If we are dealing with a configurable field, look in both
+        // instance-level and field-level settings.
+        if (empty($fid) && $this->fieldDefinition instanceof FieldInstanceInterface) {
+          $fid = $this->fieldDefinition->getField()->getFieldSetting('default_image');
         }
 
-        // Add the default image if one is found.
-        if ($fid && ($file = file_load($fid[0]))) {
-          $items[$id]->setValue(array(array(
+        if ($fid && ($file = file_load($fid))) {
+          $items->setValue(array(array(
             'is_default' => TRUE,
             'alt' => '',
             'title' => '',

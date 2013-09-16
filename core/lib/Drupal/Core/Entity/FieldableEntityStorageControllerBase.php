@@ -42,11 +42,6 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
     $info = entity_get_info($this->entityType);
     $use_cache = $load_current && $info['field_cache'];
 
-    // Ensure we are working with a BC mode entity.
-    foreach ($entities as $id => $entity) {
-      $entities[$id] = $entity->getBCEntity();
-    }
-
     // Assume all entities will need to be queried. Entities found in the cache
     // will be removed from the list.
     $queried_entities = $entities;
@@ -65,8 +60,13 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
         $cid = "field:{$this->entityType}:$id";
         if (isset($cache[$cid])) {
           unset($queried_entities[$id]);
-          foreach ($cache[$cid]->data as $field_name => $values) {
-            $entity->$field_name = $values;
+          foreach ($cache[$cid]->data as $langcode => $values) {
+            $translation = $entity->getTranslation($langcode);
+            // We do not need to worry about field translatability here, the
+            // translation object will manage that automatically.
+            foreach ($values as $field_name => $items) {
+              $translation->$field_name = $items;
+            }
           }
         }
       }
@@ -87,8 +87,11 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
         foreach ($queried_entities as $id => $entity) {
           $data = array();
           $instances = field_info_instances($this->entityType, $entity->bundle());
-          foreach ($instances as $instance) {
-            $data[$instance['field_name']] = $queried_entities[$id]->{$instance['field_name']};
+          foreach ($entity->getTranslationLanguages() as $langcode => $language) {
+            $translation = $entity->getTranslation($langcode);
+            foreach ($instances as $instance) {
+              $data[$langcode][$instance['field_name']] = $translation->{$instance['field_name']}->getValue();
+            }
           }
           $cid = "field:{$this->entityType}:$id";
           cache('field')->set($cid, $data);
@@ -110,9 +113,6 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
    *   TRUE if the entity is being updated, FALSE if it is being inserted.
    */
   protected function saveFieldItems(EntityInterface $entity, $update = TRUE) {
-    // Ensure we are working with a BC mode entity.
-    $entity = $entity->getBCEntity();
-
     $this->doSaveFieldItems($entity, $update);
 
     if ($update) {
@@ -134,9 +134,6 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
    *   The entity.
    */
   protected function deleteFieldItems(EntityInterface $entity) {
-    // Ensure we are working with a BC mode entity.
-    $entity = $entity->getBCEntity();
-
     $this->doDeleteFieldItems($entity);
 
     $entity_info = $entity->entityInfo();
@@ -156,7 +153,7 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
    *   The entity. It must have a revision ID attribute.
    */
   protected function deleteFieldItemsRevision(EntityInterface $entity) {
-    $this->doDeleteFieldItemsRevision($entity->getBCEntity());
+    $this->doDeleteFieldItemsRevision($entity);
   }
 
   /**

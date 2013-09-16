@@ -56,7 +56,7 @@ class TestFieldWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $element += array(
       '#type' => 'textfield',
       '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : '',

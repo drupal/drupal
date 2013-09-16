@@ -153,7 +153,8 @@ function field_test_field_attach_view_alter(&$output, $context) {
  * Implements hook_field_widget_form_alter().
  */
 function field_test_field_widget_form_alter(&$element, &$form_state, $context) {
-  switch ($context['field_definition']->getFieldName()) {
+  $field_definition = $context['items']->getFieldDefinition();
+  switch ($field_definition->getFieldName()) {
     case 'alter_test_text':
       drupal_set_message('Field size: ' . $context['widget']->getSetting('size'));
       break;

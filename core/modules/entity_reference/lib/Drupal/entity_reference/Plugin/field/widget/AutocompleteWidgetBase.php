@@ -70,9 +70,10 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
     global $user;
-    $entity = $element['#entity'];
+
+    $entity = $items->getEntity();
 
     // Prepare the autocomplete path.
     $autocomplete_path = $this->getSetting('autocomplete_path');

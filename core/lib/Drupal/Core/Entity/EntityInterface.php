@@ -291,26 +291,6 @@ interface EntityInterface extends IdentifiableInterface, ComplexDataInterface, A
   public function getExportProperties();
 
   /**
-   * Gets a backward compatibility decorator entity.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   The backward compatible entity.
-   *
-   * @see \Drupal\Core\Entity\EntityInterface::getNGEntity()
-   */
-  public function getBCEntity();
-
-  /**
-   * Removes any possible (backward compatibility) decorator in use.
-   *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   The original, not backward compatible entity object.
-   *
-   * @see \Drupal\Core\Entity\EntityInterface::getBCEntity()
-   */
-  public function getNGEntity();
-
-  /**
    * Returns the translation support status.
    *
    * @return bool

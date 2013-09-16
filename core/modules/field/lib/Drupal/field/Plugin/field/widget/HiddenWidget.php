@@ -27,7 +27,7 @@ class HiddenWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
     // The purpose of this widget is to be hidden, so nothing to do here.
     return array();
   }

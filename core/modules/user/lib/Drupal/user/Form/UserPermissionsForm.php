@@ -114,7 +114,7 @@ class UserPermissionsForm extends FormBase {
       '#id' => 'permissions',
       '#sticky' => TRUE,
     );
-    foreach ($role_names as $rid => $name) {
+    foreach ($role_names as $name) {
       $form['permissions']['#header'][] = array(
         'data' => $name,
         'class' => array('checkbox'),

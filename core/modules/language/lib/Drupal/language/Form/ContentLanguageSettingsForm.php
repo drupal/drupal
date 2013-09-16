@@ -10,13 +10,13 @@ namespace Drupal\language\Form;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\Entity\EntityManager;
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure the content language settings for this site.
  */
-class ContentLanguageSettingsForm extends SystemConfigFormBase {
+class ContentLanguageSettingsForm extends ConfigFormBase {
 
   /**
    * The entity manager.

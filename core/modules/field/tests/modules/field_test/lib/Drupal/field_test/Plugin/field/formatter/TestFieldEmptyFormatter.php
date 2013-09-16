@@ -9,7 +9,6 @@ namespace Drupal\field_test\Plugin\field\formatter;
 
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 
@@ -32,7 +31,7 @@ class TestFieldEmptyFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
+  public function viewElements(FieldInterface $items) {
     $elements = array();
 
     if ($items->isEmpty()) {

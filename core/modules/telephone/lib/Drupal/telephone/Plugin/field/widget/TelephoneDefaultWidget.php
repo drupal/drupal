@@ -62,7 +62,7 @@ class TelephoneDefaultWidget extends WidgetBase {
   /**
    * Implements \Drupal\field\Plugin\Type\Widget\WidgetInterface::formElement().
    */
-  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $element['value'] = $element + array(
       '#type' => 'tel',
       '#default_value' => isset($items[$delta]->value) ? $items[$delta]->value : NULL,

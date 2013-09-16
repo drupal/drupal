@@ -54,23 +54,24 @@ class ConfigTestTranslationUITest extends ContentTranslationUITest {
   }
 
   /**
-   * Overrides ContentTranslationTest::testTranslationUI().
+   * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::::testTranslationUI().
    *
-   * @todo This override is a copy-paste of parts of the parent method. Turn
-   *   ConfigTest into a properly translatable entity and remove this override.
+   * @todo Config entities are not translatable, but Content Translation module
+   *   doesn't have a clean way to enforce that, so this test is here to ensure
+   *   the module doesn't interfere with basic config entity storage.
+   *   Reconsider the purpose of this test after http://drupal.org/node/2004244
+   *   and either remove it or rewrite it to more clearly test what is needed.
    */
   function testTranslationUI() {
     // Create a new test entity with original values in the default language.
     $default_langcode = $this->langcodes[0];
-    $values[$default_langcode] = $this->getNewEntityValues($default_langcode);
-    $id = $this->createEntity($values[$default_langcode], $default_langcode);
+    $values = $this->getNewEntityValues($default_langcode);
+    $id = $this->createEntity($values, $default_langcode);
     $entity = entity_load($this->entityType, $id, TRUE);
     $this->assertTrue($entity, 'Entity found in the database.');
 
-    $translation = $this->getTranslation($entity, $default_langcode);
-    foreach ($values[$default_langcode] as $property => $value) {
-      $stored_value = $this->getValue($translation, $property, $default_langcode);
-      $value = is_array($value) ? $value[0]['value'] : $value;
+    foreach ($values as $property => $value) {
+      $stored_value = $entity->{$property};
       $message = format_string('@property correctly stored in the default language.', array('@property' => $property));
       $this->assertIdentical($stored_value, $value, $message);
     }

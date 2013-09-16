@@ -7,12 +7,12 @@
 
 namespace Drupal\simpletest\Form;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Configure simpletest settings for this site.
  */
-class SimpletestSettingsForm extends SystemConfigFormBase {
+class SimpletestSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}

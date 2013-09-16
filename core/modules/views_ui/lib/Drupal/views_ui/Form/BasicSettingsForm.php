@@ -7,12 +7,12 @@
 
 namespace Drupal\views_ui\Form;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Form builder for the admin display defaults page.
  */
-class BasicSettingsForm extends SystemConfigFormBase {
+class BasicSettingsForm extends ConfigFormBase {
 
   /**
    * {@inheritdoc}

@@ -9,7 +9,6 @@ namespace Drupal\file\Plugin\field\formatter;
 
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
@@ -28,8 +27,8 @@ class RSSEnclosureFormatter extends FileFormatterBase {
   /**
    * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
    */
-  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
-
+  public function viewElements(FieldInterface $items) {
+    $entity = $items->getEntity();
     // Add the first file as an enclosure to the RSS item. RSS allows only one
     // enclosure per item. See: http://en.wikipedia.org/wiki/RSS_enclosure
     foreach ($items as $item) {

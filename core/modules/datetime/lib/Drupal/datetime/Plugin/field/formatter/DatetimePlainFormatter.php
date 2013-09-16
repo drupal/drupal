@@ -10,7 +10,6 @@ namespace Drupal\datetime\Plugin\field\formatter;
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 
@@ -30,7 +29,7 @@ class DateTimePlainFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
+  public function viewElements(FieldInterface $items) {
 
     $elements = array();
 

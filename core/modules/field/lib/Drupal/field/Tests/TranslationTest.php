@@ -318,7 +318,7 @@ class TranslationTest extends FieldUnitTestBase {
     \Drupal::state()->set('field_test.language_fallback', FALSE);
     $entity->getTranslation($requested_langcode)->{$this->field_name}->value = mt_rand(1, 127);
     drupal_static_reset('field_language');
-    $display_langcode = field_language($entity->getBCEntity(), $this->field_name, $requested_langcode);
+    $display_langcode = field_language($entity, $this->field_name, $requested_langcode);
     $this->assertEqual($display_langcode, $requested_langcode, 'Display language behave correctly when language fallback is disabled');
   }
 

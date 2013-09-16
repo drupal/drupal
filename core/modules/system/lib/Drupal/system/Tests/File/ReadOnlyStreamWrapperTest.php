@@ -51,7 +51,7 @@ class ReadOnlyStreamWrapperTest extends FileTestBase {
 
     // Generate a read-only stream wrapper instance
     $uri = $this->scheme . '://' . $filename;
-    $instance = file_stream_wrapper_get_instance_by_scheme($this->scheme);
+    file_stream_wrapper_get_instance_by_scheme($this->scheme);
 
     // Attempt to open a file in read/write mode
     $handle = @fopen($uri, 'r+');

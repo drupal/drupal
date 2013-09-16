@@ -58,7 +58,7 @@ class TestFieldWidgetMultiple extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $values = array();
     foreach ($items as $delta => $item) {
       $values[] = $item->value;

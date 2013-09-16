@@ -54,7 +54,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
     // Prepare some properties for the child methods to build the actual form
     // element.
     $this->required = $element['#required'];
@@ -163,7 +163,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * Determines selected options from the incoming field values.
    *
-   * @param FieldInterface $items
+   * @param \Drupal\Core\Entity\Field\FieldInterface $items
    *   The field values.
    * @param int $delta
    *   (optional) The delta of the item to get options for. Defaults to 0.

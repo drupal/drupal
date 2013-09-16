@@ -9,6 +9,7 @@ namespace Drupal\Core\Entity;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\Query\QueryInterface;
+use Drupal\Core\Language\Language;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Uuid\Uuid;
 use Drupal\field\FieldInfo;
@@ -569,15 +570,20 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
     }
 
     // Load field data.
+    $all_langcodes = array_keys(language_list());
     foreach ($fields as $field_name => $field) {
       $table = $load_current ? static::_fieldTableName($field) : static::_fieldRevisionTableName($field);
 
+      // If the field is translatable ensure that only values having valid
+      // languages are retrieved. Since we are loading values for multiple
+      // entities, we cannot limit the query to the available translations.
+      $langcodes = $field['translatable'] ? $all_langcodes : array(Language::LANGCODE_NOT_SPECIFIED);
       $results = $this->database->select($table, 't')
         ->fields('t')
         ->condition($load_current ? 'entity_id' : 'revision_id', $ids, 'IN')
-        ->condition('langcode', field_available_languages($this->entityType, $field), 'IN')
-        ->orderBy('delta')
         ->condition('deleted', 0)
+        ->condition('langcode', $langcodes, 'IN')
+        ->orderBy('delta')
         ->execute();
 
       $delta_count = array();
@@ -597,7 +603,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
           }
 
           // Add the item to the field values for the entity.
-          $entities[$row->entity_id]->{$field_name}[$row->langcode][] = $item;
+          $entities[$row->entity_id]->getTranslation($row->langcode)->{$field_name}[$delta_count[$row->entity_id][$row->langcode]] = $item;
           $delta_count[$row->entity_id][$row->langcode]++;
         }
       }
@@ -621,29 +627,19 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
       $table_name = static::_fieldTableName($field);
       $revision_name = static::_fieldRevisionTableName($field);
 
-      $all_langcodes = field_available_languages($entity_type, $field);
-      $field_langcodes = array_intersect($all_langcodes, array_keys((array) $entity->$field_name));
-
       // Delete and insert, rather than update, in case a value was added.
       if ($update) {
-        // Delete language codes present in the incoming $entity->$field_name.
-        // Delete all language codes if $entity->$field_name is empty.
-        $langcodes = !empty($entity->$field_name) ? $field_langcodes : $all_langcodes;
-        if ($langcodes) {
-          // Only overwrite the field's base table if saving the default revision
-          // of an entity.
-          if ($entity->isDefaultRevision()) {
-            $this->database->delete($table_name)
-              ->condition('entity_id', $id)
-              ->condition('langcode', $langcodes, 'IN')
-              ->execute();
-          }
-          $this->database->delete($revision_name)
+        // Only overwrite the field's base table if saving the default revision
+        // of an entity.
+        if ($entity->isDefaultRevision()) {
+          $this->database->delete($table_name)
             ->condition('entity_id', $id)
-            ->condition('revision_id', $vid)
-            ->condition('langcode', $langcodes, 'IN')
             ->execute();
         }
+        $this->database->delete($revision_name)
+          ->condition('entity_id', $id)
+          ->condition('revision_id', $vid)
+          ->execute();
       }
 
       // Prepare the multi-insert query.
@@ -655,8 +651,12 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
       $query = $this->database->insert($table_name)->fields($columns);
       $revision_query = $this->database->insert($revision_name)->fields($columns);
 
-      foreach ($field_langcodes as $langcode) {
-        $items = (array) $entity->{$field_name}[$langcode];
+      $langcodes = $field['translatable'] ? array_keys($entity->getTranslationLanguages()) : array(Language::LANGCODE_NOT_SPECIFIED);
+      foreach ($langcodes as $langcode) {
+        $items = $entity->getTranslation($langcode)->{$field_name}->getValue();
+        if (!isset($items)) {
+          continue;
+        }
         $delta_count = 0;
         foreach ($items as $delta => $item) {
           // We now know we have someting to insert.
@@ -1140,7 +1140,8 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
       // Use a shorter separator, a truncated entity_type, and a hash of the
       // field UUID.
       $separator = $revision ? '_r__' : '__';
-      $entity_type = substr($field->entity_type, 0, 38 - strlen($separator));
+      // Truncate to the same length for the current and revision tables.
+      $entity_type = substr($field->entity_type, 0, 34);
       $field_hash = substr(hash('sha256', $field->uuid), 0, 10);
       $table_name = $entity_type . $separator . $field_hash;
     }

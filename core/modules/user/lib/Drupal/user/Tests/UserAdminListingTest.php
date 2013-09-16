@@ -34,17 +34,17 @@ class UserAdminListingTest extends WebTestBase {
     // Create a bunch of users.
     $accounts = array();
     for ($i = 0; $i < 3; $i++) {
-      $account = $this->drupalCreateUser()->getNGEntity();
+      $account = $this->drupalCreateUser();
       $accounts[$account->label()] = $account;
     }
     // Create a blocked user.
-    $account = $this->drupalCreateUser()->getNGEntity();
+    $account = $this->drupalCreateUser();
     $account->block();
     $account->save();
     $accounts[$account->label()] = $account;
 
     // Create a user at a certain timestamp.
-    $account = $this->drupalCreateUser()->getNGEntity();
+    $account = $this->drupalCreateUser();
     $account->created = 1363219200;
     $account->save();
     $accounts[$account->label()] = $account;
@@ -53,7 +53,7 @@ class UserAdminListingTest extends WebTestBase {
     $rid_1 = $this->drupalCreateRole(array(), 'custom_role_1', 'custom_role_1');
     $rid_2 = $this->drupalCreateRole(array(), 'custom_role_2', 'custom_role_2');
 
-    $account = $this->drupalCreateUser()->getNGEntity();
+    $account = $this->drupalCreateUser();
     $account->addRole($rid_1);
     $account->addRole($rid_2);
     $account->save();
@@ -61,7 +61,7 @@ class UserAdminListingTest extends WebTestBase {
     $role_account_name = $account->label();
 
     // Create an admin user and look at the listing.
-    $admin_user = $this->drupalCreateUser(array('administer users'))->getNGEntity();
+    $admin_user = $this->drupalCreateUser(array('administer users'));
     $accounts[$admin_user->label()] = $admin_user;
 
     $accounts['admin'] = entity_load('user', 1);

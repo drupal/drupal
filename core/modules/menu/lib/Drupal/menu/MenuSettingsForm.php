@@ -7,12 +7,12 @@
 
 namespace Drupal\menu;
 
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 
 /**
  * Select the menus to be used for the main and secondary links for this site.
  */
-class MenuSettingsForm extends SystemConfigFormBase {
+class MenuSettingsForm extends ConfigFormBase {
 
   /**
    * Implements \Drupal\Core\Form\FormInterface::getFormID().

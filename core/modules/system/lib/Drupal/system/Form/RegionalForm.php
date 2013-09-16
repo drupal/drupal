@@ -10,13 +10,13 @@ namespace Drupal\system\Form;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\Locale\CountryManagerInterface;
-use Drupal\system\SystemConfigFormBase;
+use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure regional settings for this site.
  */
-class RegionalForm extends SystemConfigFormBase {
+class RegionalForm extends ConfigFormBase {
 
   /**
    * The country manager.

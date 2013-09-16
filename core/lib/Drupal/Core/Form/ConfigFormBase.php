@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\system\SystemConfigFormBase.
+ * Contains \Drupal\Core\Form\ConfigFormBase.
  */
 
-namespace Drupal\system;
+namespace Drupal\Core\Form;
 
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\Context\ContextInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base class for implementing system configuration forms.
  */
-abstract class SystemConfigFormBase extends FormBase {
+abstract class ConfigFormBase extends FormBase {
 
   /**
    * Stores the configuration factory.
@@ -25,7 +25,7 @@ abstract class SystemConfigFormBase extends FormBase {
   protected $configFactory;
 
   /**
-   * Constructs a \Drupal\system\SystemConfigFormBase object.
+   * Constructs a \Drupal\system\ConfigFormBase object.
    *
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The factory for configuration objects.
