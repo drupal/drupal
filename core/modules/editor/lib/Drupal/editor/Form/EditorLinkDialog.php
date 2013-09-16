@@ -7,7 +7,7 @@
 
 namespace Drupal\editor\Form;
 
-use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormBase;
 use Drupal\filter\Entity\FilterFormat;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
@@ -17,7 +17,7 @@ use Drupal\Core\Ajax\CloseModalDialogCommand;
 /**
  * Provides a link dialog for text editors.
  */
-class EditorLinkDialog implements FormInterface {
+class EditorLinkDialog extends FormBase {
 
   /**
    * {@inheritdoc}
@@ -45,14 +45,14 @@ class EditorLinkDialog implements FormInterface {
     // Everything under the "attributes" key is merged directly into the
     // generated link tag's attributes.
     $form['attributes']['href'] = array(
-      '#title' => t('URL'),
+      '#title' => $this->t('URL'),
       '#type' => 'textfield',
       '#default_value' => isset($input['href']) ? $input['href'] : '',
       '#maxlength' => 2048,
     );
 
     $form['attributes']['target'] = array(
-      '#title' => t('Open in new window'),
+      '#title' => $this->t('Open in new window'),
       '#type' => 'checkbox',
       '#default_value' => !empty($input['target']),
       '#return_value' => '_blank',
@@ -63,7 +63,7 @@ class EditorLinkDialog implements FormInterface {
     );
     $form['actions']['save_modal'] = array(
       '#type' => 'submit',
-      '#value' => t('Save'),
+      '#value' => $this->t('Save'),
       // No regular submit-handler. This form only works via JavaScript.
       '#submit' => array(),
       '#ajax' => array(
@@ -73,12 +73,6 @@ class EditorLinkDialog implements FormInterface {
     );
 
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, array &$form_state) {
   }
 
   /**
