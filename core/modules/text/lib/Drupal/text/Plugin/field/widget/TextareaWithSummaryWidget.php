@@ -59,8 +59,8 @@ class TextareaWithSummaryWidget extends TextareaWidget {
   /**
    * {@inheritdoc}
    */
-  function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
-    $element = parent::formElement($items, $delta, $element, $langcode, $form, $form_state);
+  function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
+    $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $display_summary = $items[$delta]->summary || $this->getFieldSetting('display_summary');
     $element['summary'] = array(

@@ -8,7 +8,6 @@
 namespace Drupal\field\Plugin\Type\Widget;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\FieldInstanceInterface;
@@ -56,7 +55,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * {@inheritdoc}
    */
-  public function form(EntityInterface $entity, $langcode, FieldInterface $items, array &$form, array &$form_state, $get_delta = NULL) {
+  public function form(FieldInterface $items, array &$form, array &$form_state, $get_delta = NULL) {
     $field_name = $this->fieldDefinition->getFieldName();
     $parents = $form['#parents'];
 
@@ -83,7 +82,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         '#title' => check_plain($this->fieldDefinition->getFieldLabel()),
         '#description' => field_filter_xss(\Drupal::token()->replace($this->fieldDefinition->getFieldDescription())),
       );
-      $element = $this->formSingleElement($entity, $items, $delta, $langcode, $element, $form, $form_state);
+      $element = $this->formSingleElement($items, $delta, $element, $form, $form_state);
 
       if ($element) {
         if (isset($get_delta)) {
@@ -102,7 +101,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     // If the widget does not handle multiple values itself, (and we are not
     // displaying an individual element), process the multiple value form.
     else {
-      $elements = $this->formMultipleElements($entity, $items, $langcode, $form, $form_state);
+      $elements = $this->formMultipleElements($items, $form, $form_state);
     }
 
     // Populate the 'array_parents' information in $form_state['field'] after
@@ -110,8 +109,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
     // in alter() hooks.
     $elements['#after_build'][] = 'field_form_element_after_build';
     $elements['#field_name'] = $field_name;
-    // @todo Not strictly needed anymore.
-    $elements['#language'] = $langcode;
     $elements['#field_parents'] = $parents;
     // Enforce the structure of submitted values.
     $elements['#parents'] = array_merge($parents, array($field_name));
@@ -131,7 +128,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
             'field-widget-' . drupal_html_class($this->getPluginId()),
           ),
         ),
-        '#access' => $this->checkFieldAccess('edit', $entity),
+        '#access' => $this->checkFieldAccess('edit', $items->getEntity()),
         'widget' => $elements,
       ),
     );
@@ -147,7 +144,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    * - AHAH-'add more' button
    * - table display and drag-n-drop value reordering
    */
-  protected function formMultipleElements(EntityInterface $entity, FieldInterface $items, $langcode, array &$form, array &$form_state) {
+  protected function formMultipleElements(FieldInterface $items, array &$form, array &$form_state) {
     $field_name = $this->fieldDefinition->getFieldName();
     $cardinality = $this->fieldDefinition->getFieldCardinality();
     $parents = $form['#parents'];
@@ -181,7 +178,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
         '#title' => $is_multiple ? '' : $title,
         '#description' => $is_multiple ? '' : $description,
       );
-      $element = $this->formSingleElement($entity, $items, $delta, $langcode, $element, $form, $form_state);
+      $element = $this->formSingleElement($items, $delta, $element, $form, $form_state);
 
       if ($element) {
         // Input field for the delta (drag-n-drop reordering).
@@ -223,7 +220,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
           '#name' => strtr($id_prefix, '-', '_') . '_add_more',
           '#value' => t('Add another item'),
           '#attributes' => array('class' => array('field-add-more-submit')),
-          '#limit_validation_errors' => array(array_merge($parents, array($field_name, $langcode))),
+          '#limit_validation_errors' => array(array_merge($parents, array($field_name))),
           '#submit' => array('field_add_more_submit'),
           '#ajax' => array(
               'callback' => 'field_add_more_js',
@@ -240,13 +237,15 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * Generates the form element for a single copy of the widget.
    */
-  protected function formSingleElement(EntityInterface $entity, FieldInterface $items, $delta, $langcode, array $element, array &$form, array &$form_state) {
+  protected function formSingleElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
+    $entity = $items->getEntity();
+
     $element += array(
       '#entity_type' => $entity->entityType(),
       '#bundle' => $entity->bundle(),
       '#entity' => $entity,
       '#field_name' => $this->fieldDefinition->getFieldName(),
-      '#language' => $langcode,
+      '#language' => $items->getLangcode(),
       '#field_parents' => $form['#parents'],
       // Only the first widget should be required.
       '#required' => $delta == 0 && $this->fieldDefinition->isFieldRequired(),
@@ -254,16 +253,13 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       '#weight' => $delta,
     );
 
-    $element = $this->formElement($items, $delta, $element, $langcode, $form, $form_state);
+    $element = $this->formElement($items, $delta, $element, $form, $form_state);
 
     if ($element) {
       // Allow modules to alter the field widget form element.
       $context = array(
         'form' => $form,
         'widget' => $this,
-        'field_definition' => $this->fieldDefinition,
-        'entity' => $entity,
-        'langcode' => $langcode,
         'items' => $items,
         'delta' => $delta,
         'default' => !empty($entity->field_ui_default_value),
@@ -277,7 +273,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * {@inheritdoc}
    */
-  public function extractFormValues(EntityInterface $entity, $langcode, FieldInterface $items, array $form, array &$form_state) {
+  public function extractFormValues(FieldInterface $items, array $form, array &$form_state) {
     $field_name = $this->fieldDefinition->getFieldName();
 
     // Extract the values from $form_state['values'].
@@ -330,7 +326,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * {@inheritdoc}
    */
-  public function flagErrors(EntityInterface $entity, $langcode, FieldInterface $items, array $form, array &$form_state) {
+  public function flagErrors(FieldInterface $items, array $form, array &$form_state) {
     $field_name = $this->fieldDefinition->getFieldName();
 
     $field_state = field_form_get_state($form['#parents'], $field_name, $form_state);
@@ -409,7 +405,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * Sorts submitted field values according to drag-n-drop reordering.
    *
-   * @param FieldInterface $items
+   * @param \Drupal\Core\Entity\Field\FieldInterface $items
    *   The field values.
    */
   protected function sortItems(FieldInterface $items) {

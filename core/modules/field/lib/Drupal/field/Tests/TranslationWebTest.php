@@ -116,7 +116,6 @@ class TranslationWebTest extends FieldTestBase {
     $entity->save();
 
     // Create a new revision.
-    $langcode = $entity->language()->id;
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),

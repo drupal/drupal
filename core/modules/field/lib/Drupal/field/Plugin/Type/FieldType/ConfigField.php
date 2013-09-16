@@ -78,11 +78,10 @@ class ConfigField extends Field implements ConfigFieldInterface {
    */
   public function defaultValuesForm(array &$form, array &$form_state) {
     if (empty($this->getFieldDefinition()->default_value_function)) {
-      $widget = $this->defaultValueWidget($form_state);
-
       // Place the input in a separate place in the submitted values tree.
+      $widget = $this->defaultValueWidget($form_state);
       $element = array('#parents' => array('default_value_input'));
-      $element += $widget->form($this->getEntity(), $this->getLangcode(), $this, $element, $form_state);
+      $element += $widget->form($this, $element, $form_state);
 
       return $element;
     }
@@ -92,12 +91,9 @@ class ConfigField extends Field implements ConfigFieldInterface {
    * {@inheritdoc}
    */
   public function defaultValuesFormValidate(array $element, array &$form, array &$form_state) {
-    $entity = $this->getEntity();
-    $langcode = $this->getLangcode();
-
     // Extract the submitted value, and validate it.
     $widget = $this->defaultValueWidget($form_state);
-    $widget->extractFormValues($entity, $langcode, $this, $element, $form_state);
+    $widget->extractFormValues($this, $element, $form_state);
     $violations = $this->validate();
 
     if (count($violations)) {
@@ -108,7 +104,7 @@ class ConfigField extends Field implements ConfigFieldInterface {
       field_form_set_state($element['#parents'], $field_name, $form_state, $field_state);
 
       // Assign reported errors to the correct form element.
-      $widget->flagErrors($entity, $langcode, $this, $element, $form_state);
+      $widget->flagErrors($this, $element, $form_state);
     }
   }
 
@@ -118,7 +114,7 @@ class ConfigField extends Field implements ConfigFieldInterface {
   public function defaultValuesFormSubmit(array $element, array &$form, array &$form_state) {
     // Extract the submitted value, and return it as an array.
     $widget = $this->defaultValueWidget($form_state);
-    $widget->extractFormValues($this->getEntity(), $this->getLangcode(), $this, $element, $form_state);
+    $widget->extractFormValues($this, $element, $form_state);
     return $this->getValue();
   }
 

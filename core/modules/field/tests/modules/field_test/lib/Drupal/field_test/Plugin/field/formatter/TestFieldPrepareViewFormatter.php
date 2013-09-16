@@ -10,7 +10,6 @@ namespace Drupal\field_test\Plugin\field\formatter;
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
@@ -56,9 +55,9 @@ class TestFieldPrepareViewFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function prepareView(array $entities, $langcode, array $items) {
-    foreach ($entities as $id => $entity) {
-      foreach ($items[$id] as $delta => $item) {
+  public function prepareView(array $entities_items) {
+    foreach ($entities_items as $items) {
+      foreach ($items as $item) {
         // Don't add anything on empty values.
         if (!$item->isEmpty()) {
           $item->additional_formatter_value = $item->value + 1;
@@ -70,7 +69,7 @@ class TestFieldPrepareViewFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
+  public function viewElements(FieldInterface $items) {
     $elements = array();
 
     foreach ($items as $delta => $item) {

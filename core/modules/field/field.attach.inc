@@ -123,7 +123,7 @@ function field_invoke_method($method, $target_function, EntityInterface $entity,
         $items = $entity->getTranslation($langcode)->get($field_name);
         $items->filterEmptyValues();
 
-        $result = $target->$method($entity, $langcode, $items, $a, $b);
+        $result = $target->$method($items, $a, $b);
 
         if (isset($result)) {
           // For methods with array results, we merge results together.
@@ -187,7 +187,6 @@ function field_invoke_method_multiple($method, $target_function, array $entities
   $options += $default_options;
 
   $instances = array();
-  $grouped_entities = array();
   $grouped_items = array();
   $grouped_targets = array();
   $return = array();
@@ -224,8 +223,7 @@ function field_invoke_method_multiple($method, $target_function, array $entities
         $langcode = !empty($options['langcode'][$id]) ? $options['langcode'][$id] : $options['langcode'];
         $langcodes = _field_language_suggestion($available_langcodes, $langcode, $field_name);
         foreach ($langcodes as $langcode) {
-          // Group the entities and items corresponding to the current field.
-          $grouped_entities[$instance_id][$langcode][$id] = $entities[$id];
+          // Group the items corresponding to the current field.
           $items = $entity->getTranslation($langcode)->get($field_name);
           $items->filterEmptyValues();
           $grouped_items[$instance_id][$langcode][$id] = $items;
@@ -238,12 +236,9 @@ function field_invoke_method_multiple($method, $target_function, array $entities
 
   // For each instance, invoke the method and collect results.
   foreach ($instances as $instance_id => $instance) {
-    $field_name = $instance['field_name'];
-
     // Iterate over all the field translations.
     foreach ($grouped_items[$instance_id] as $langcode => $items) {
-      $entities = $grouped_entities[$instance_id][$langcode];
-      $results = $grouped_targets[$instance_id]->$method($entities, $langcode, $items, $a, $b);
+      $results = $grouped_targets[$instance_id]->$method($items, $a, $b);
 
       if (isset($results)) {
         // Collect results by entity.

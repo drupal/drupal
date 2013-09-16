@@ -30,8 +30,8 @@ class SelectWidget extends OptionsWidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
-    $element = parent::formElement($items, $delta, $element, $langcode, $form, $form_state);
+  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
+    $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $element += array(
       '#type' => 'select',

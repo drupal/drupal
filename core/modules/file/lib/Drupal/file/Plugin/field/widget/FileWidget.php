@@ -10,7 +10,6 @@ namespace Drupal\file\Plugin\field\widget;
 use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
@@ -62,9 +61,8 @@ class FileWidget extends WidgetBase {
    *
    * Special handling for draggable multiple widgets and 'add more' button.
    */
-  protected function formMultipleElements(EntityInterface $entity, FieldInterface $items, $langcode, array &$form, array &$form_state) {
+  protected function formMultipleElements(FieldInterface $items, array &$form, array &$form_state) {
     $field_name = $this->fieldDefinition->getFieldName();
-
     $parents = $form['#parents'];
 
     // Load the items for form rebuilds from the field state as they might not be
@@ -101,7 +99,7 @@ class FileWidget extends WidgetBase {
         '#title' => $title,
         '#description' => $description,
       );
-      $element = $this->formSingleElement($entity, $items, $delta, $langcode, $element, $form, $form_state);
+      $element = $this->formSingleElement($items, $delta, $element, $form, $form_state);
 
       if ($element) {
         // Input field for the delta (drag-n-drop reordering).
@@ -134,7 +132,7 @@ class FileWidget extends WidgetBase {
         '#title' => $title,
         '#description' => $description,
       );
-      $element = $this->formSingleElement($entity, $items, $delta, $langcode, $element, $form, $form_state);
+      $element = $this->formSingleElement($items, $delta, $element, $form, $form_state);
       if ($element) {
         $element['#required'] = ($element['#required'] && $delta == 0);
         $elements[$delta] = $element;
@@ -174,7 +172,7 @@ class FileWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $field_settings = $this->getFieldSettings();
 
     // The field settings include defaults for the field type. However, this

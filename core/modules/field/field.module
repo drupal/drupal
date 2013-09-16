@@ -697,9 +697,8 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
 
     // Invoke the formatter's prepareView() and view() methods.
     $items = $entity->getTranslation($display_langcode)->get($field_name);
-    $id = $entity->id();
-    $formatter->prepareView(array($id => $entity), $display_langcode, array($id => $items));
-    $result = $formatter->view($entity, $display_langcode, $items);
+    $formatter->prepareView(array($entity->id() => $items));
+    $result = $formatter->view($items);
 
     // Invoke hook_field_attach_view_alter() to let other modules alter the
     // renderable array, as in a full field_attach_view() execution.

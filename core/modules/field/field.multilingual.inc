@@ -34,7 +34,7 @@ use Drupal\Core\Entity\EntityInterface;
  * is attached to supports translation.
  *
  * By default, field_invoke_method() processes a field in all available
- * languages, unless they are given a language code suggestion. Based on that
+ * languages, unless it is given a language code suggestion. Based on that
  * suggestion, _field_language_suggestion() determines the languages to act on.
  *
  * Most field_attach_*() functions act on all available language codes, except

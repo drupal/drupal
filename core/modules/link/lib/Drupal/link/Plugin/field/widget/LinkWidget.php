@@ -32,7 +32,7 @@ class LinkWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $element['url'] = array(
       '#type' => 'url',
       '#title' => t('URL'),

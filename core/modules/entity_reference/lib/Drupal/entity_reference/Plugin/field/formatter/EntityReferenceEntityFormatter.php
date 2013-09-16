@@ -9,7 +9,6 @@ namespace Drupal\entity_reference\Plugin\field\formatter;
 
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\entity_reference\RecursiveRenderingException;
 use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
@@ -79,7 +78,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
+  public function viewElements(FieldInterface $items) {
     $view_mode = $this->getSetting('view_mode');
     $links = $this->getSetting('links');
 
@@ -96,13 +95,13 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
       static $depth = 0;
       $depth++;
       if ($depth > 20) {
-        throw new RecursiveRenderingException(format_string('Recursive rendering detected when rendering entity @entity_type(@entity_id). Aborting rendering.', array('@entity_type' => $entity_type, '@entity_id' => $item->target_id)));
+        throw new RecursiveRenderingException(format_string('Recursive rendering detected when rendering entity @entity_type(@entity_id). Aborting rendering.', array('@entity_type' => $item->entity->entityType(), '@entity_id' => $item->target_id)));
       }
 
       if (!empty($item->target_id)) {
         $entity = clone $item->entity;
         unset($entity->content);
-        $elements[$delta] = entity_view($entity, $view_mode, $langcode);
+        $elements[$delta] = entity_view($entity, $view_mode, $item->getLangcode());
 
         if (empty($links) && isset($result[$delta][$target_type][$item->target_id]['links'])) {
           // Hide the element links.
@@ -111,11 +110,12 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
       }
       else {
         // This is an "auto_create" item.
-        $elements[$delta] = array('#markup' => $entity->label());
+        $elements[$delta] = array('#markup' => $item->entity->label());
       }
       $depth = 0;
     }
 
     return $elements;
   }
+
 }

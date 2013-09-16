@@ -17,11 +17,11 @@ abstract class FileFormatterBase extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function prepareView(array $entities, $langcode, array $items) {
+  public function prepareView(array $entities_items) {
     // Remove files specified to not be displayed.
     $fids = array();
-    foreach ($entities as $id => $entity) {
-      foreach ($items[$id] as $item) {
+    foreach ($entities_items as $items) {
+      foreach ($items as $item) {
         if ($this->isDisplayed($item) && !empty($item->target_id)) {
           // Load the files from the files table.
           $fids[] = $item->target_id;
@@ -32,8 +32,8 @@ abstract class FileFormatterBase extends FormatterBase {
     if ($fids) {
       $files = file_load_multiple($fids);
 
-      foreach ($entities as $id => $entity) {
-        foreach ($items[$id] as $item) {
+      foreach ($entities_items as $items) {
+        foreach ($items as $item) {
           // If the file does not exist, mark the entire item as empty.
           if (!empty($item->target_id)) {
             $item->entity = isset($files[$item->target_id]) ? $files[$item->target_id] : NULL;

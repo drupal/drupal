@@ -14,7 +14,6 @@ namespace Drupal\link\Plugin\field\formatter;
 
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
@@ -38,8 +37,9 @@ class LinkSeparateFormatter extends LinkFormatter {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
+  public function viewElements(FieldInterface $items) {
     $element = array();
+    $entity = $items->getEntity();
     $settings = $this->getSettings();
 
     foreach ($items as $delta => $item) {

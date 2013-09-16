@@ -9,7 +9,6 @@ namespace Drupal\image\Plugin\field\formatter;
 
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 
 /**
@@ -92,13 +91,13 @@ class ImageFormatter extends ImageFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
+  public function viewElements(FieldInterface $items) {
     $elements = array();
 
     $image_link_setting = $this->getSetting('image_link');
     // Check if the formatter involves a link.
     if ($image_link_setting == 'content') {
-      $uri = $entity->uri();
+      $uri = $items->getEntity()->uri();
     }
     elseif ($image_link_setting == 'file') {
       $link_file = TRUE;

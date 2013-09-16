@@ -11,7 +11,6 @@ use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Datetime\Date;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
@@ -95,7 +94,7 @@ class DateTimeDefaultFormatter extends FormatterBase implements ContainerFactory
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
+  public function viewElements(FieldInterface $items) {
 
     $elements = array();
 

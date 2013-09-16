@@ -65,7 +65,7 @@ class TaxonomyAutocompleteWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, $langcode, array &$form, array &$form_state) {
+  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $tags = array();
     foreach ($items as $item) {
       $tags[$item->target_id] = isset($item->taxonomy_term) ? $item->taxonomy_term : entity_load('taxonomy_term', $item->target_id);
