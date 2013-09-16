@@ -332,7 +332,7 @@ class Comment extends EntityNG implements CommentInterface {
     $child_cids = $storage_controller->getChildCids($entities);
     entity_delete_multiple('comment', $child_cids);
 
-    foreach ($entities as $id => $entity) {
+    foreach ($entities as $entity) {
       $storage_controller->updateNodeStatistics($entity->nid->target_id);
     }
   }
