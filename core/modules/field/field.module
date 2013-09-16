@@ -577,8 +577,7 @@ function _field_filter_xss_display_allowed_tags() {
  * @param $field_name
  *   The name of the field to display.
  * @param $item
- *   The field value to display, as found in
- *   $entity->field_name[$langcode][$delta].
+ *   The field item value to display.
  * @param $display
  *   Can be either the name of a view mode, or an array of display settings. See
  *   field_view_field() for more information.
@@ -592,9 +591,6 @@ function _field_filter_xss_display_allowed_tags() {
 function field_view_value(EntityInterface $entity, $field_name, $item, $display = array(), $langcode = NULL) {
   $output = array();
 
-  // Ensure we are working with a BC mode entity.
-  $entity = $entity->getBCEntity();
-
   if ($field = field_info_field($entity->entityType(), $field_name)) {
     // Determine the langcode that will be used by language fallback.
     $langcode = field_language($entity, $field_name, $langcode);
@@ -602,7 +598,7 @@ function field_view_value(EntityInterface $entity, $field_name, $item, $display 
     // Push the item as the single value for the field, and defer to
     // field_view_field() to build the render array for the whole field.
     $clone = clone $entity;
-    $clone->{$field_name}[$langcode] = array($item);
+    $clone->getTranslation($langcode)->{$field_name}->setValue(array($item));
     $elements = field_view_field($clone, $field_name, $display, $langcode);
 
     // Extract the part of the render array we need.
@@ -700,7 +696,7 @@ function field_view_field(EntityInterface $entity, $field_name, $display_options
     $display_langcode = field_language($entity, $field_name, $langcode);
 
     // Invoke the formatter's prepareView() and view() methods.
-    $items = $entity->getNGEntity()->getTranslation($display_langcode)->get($field_name);
+    $items = $entity->getTranslation($display_langcode)->get($field_name);
     $id = $entity->id();
     $formatter->prepareView(array($id => $entity), $display_langcode, array($id => $items));
     $result = $formatter->view($entity, $display_langcode, $items);

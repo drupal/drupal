@@ -274,31 +274,10 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
 
     $violations = array();
 
-    // @todo Simplify when all entity types are converted to EntityNG.
-    if ($entity instanceof EntityNG) {
-      foreach ($entity as $field_name => $field) {
-        $field_violations = $field->validate();
-        if (count($field_violations)) {
-          $violations[$field_name] = $field_violations;
-        }
-      }
-    }
-    else {
-      // For BC entities, iterate through each field instance and
-      // instantiate NG items objects manually.
-      $definitions = \Drupal::entityManager()->getFieldDefinitions($entity_type, $entity->bundle());
-      foreach (field_info_instances($entity_type, $entity->bundle()) as $field_name => $instance) {
-        $langcode = field_is_translatable($entity_type, $instance->getField()) ? $entity_langcode : Language::LANGCODE_NOT_SPECIFIED;
-
-        // Create the field object.
-        $items = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : array();
-        // @todo Exception : calls setValue(), tries to set the 'formatted'
-        // property.
-        $field = \Drupal::typedData()->create($definitions[$field_name], $items, $field_name, $entity);
-        $field_violations = $field->validate();
-        if (count($field_violations)) {
-          $violations[$field->getName()] = $field_violations;
-        }
+    foreach ($entity as $field_name => $field) {
+      $field_violations = $field->validate();
+      if (count($field_violations)) {
+        $violations[$field_name] = $field_violations;
       }
     }
 

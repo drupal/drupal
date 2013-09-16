@@ -89,16 +89,16 @@ function field_language_fallback(&$field_langcodes, EntityInterface $entity, $la
   foreach ($field_langcodes as $field_name => $field_langcode) {
     // If the requested language is defined for the current field use it,
     // otherwise search for a fallback value among the fallback candidates.
-    if (isset($entity->{$field_name}[$langcode])) {
+    if (_field_translated_value_exists($entity, $langcode, $field_name)) {
       $field_langcodes[$field_name] = $langcode;
     }
-    elseif (!empty($entity->{$field_name})) {
+    else {
       if (!isset($fallback_candidates)) {
         require_once DRUPAL_ROOT . '/core/includes/language.inc';
         $fallback_candidates = language_fallback_get_candidates();
       }
       foreach ($fallback_candidates as $fallback_langcode) {
-        if (isset($entity->{$field_name}[$fallback_langcode])) {
+        if (_field_translated_value_exists($entity, $fallback_langcode, $field_name)) {
           $field_langcodes[$field_name] = $fallback_langcode;
           break;
         }
@@ -309,7 +309,7 @@ function field_language(EntityInterface $entity, $field_name = NULL, $langcode =
     // if the field translation is not available. It is up to translation
     // handlers to implement language fallback rules.
     foreach (field_info_instances($entity_type, $bundle) as $instance) {
-      if (isset($entity->{$instance['field_name']}[$langcode])) {
+      if (_field_translated_value_exists($entity, $langcode, $instance['field_name'])) {
         $display_langcode[$instance['field_name']] = $langcode;
       }
       else {
@@ -350,4 +350,17 @@ function field_language(EntityInterface $entity, $field_name = NULL, $langcode =
   }
 
   return $display_langcode;
+}
+
+/**
+ * Returns TRUE if a non-empty value exists for a given entity/language/field.
+ */
+function _field_translated_value_exists(EntityInterface $entity, $langcode, $field_name) {
+  if (!$entity->hasTranslation($langcode)) {
+    return FALSE;
+  }
+  $field = $entity->getTranslation($langcode)->$field_name;
+  $field->filterEmptyValues();
+  $value = $field->getValue();
+  return !empty($value);
 }

@@ -258,9 +258,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
    *   The translation object to act on.
    */
   protected function getTranslation(EntityInterface $entity, $langcode) {
-    // @todo remove once EntityBCDecorator is gone.
-    $entity = $entity->getNGEntity();
-    return $entity instanceof EntityNG ? $entity->getTranslation($langcode) : $entity;
+    return $entity->getTranslation($langcode);
   }
 
   /**
@@ -278,13 +276,7 @@ abstract class ContentTranslationUITest extends ContentTranslationTestBase {
    */
   protected function getValue(EntityInterface $translation, $property, $langcode) {
     $key = $property == 'user_id' ? 'target_id' : 'value';
-    // @todo remove EntityBCDecorator condition once EntityBCDecorator is gone.
-    if (($translation instanceof EntityInterface) && !($translation instanceof EntityNG) && !($translation instanceof EntityBCDecorator)) {
-      return is_array($translation->$property) ? $translation->{$property}[$langcode][0][$key] : $translation->$property;
-    }
-    else {
-      return $translation->get($property)->{$key};
-    }
+    return $translation->get($property)->{$key};
   }
 
 }

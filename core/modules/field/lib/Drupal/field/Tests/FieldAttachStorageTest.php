@@ -230,7 +230,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
 
     // Insert: Field is NULL.
     $entity = clone($entity_init);
-    $entity->getBCEntity()->{$this->field_name} = NULL;
+    $entity->{$this->field_name} = NULL;
     $entity->enforceIsNew();
     $entity = $this->entitySaveReload($entity);
     $this->assertTrue($entity->{$this->field_name}->isEmpty(), 'Insert: NULL field results in no value saved');

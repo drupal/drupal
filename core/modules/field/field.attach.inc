@@ -353,13 +353,11 @@ function _field_invoke_widget_target($form_display) {
  *   values.
  */
 function field_attach_preprocess(EntityInterface $entity, $element, &$variables) {
-  // Ensure we are working with a BC mode entity.
-  $entity = $entity->getBCEntity();
   foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
     $field_name = $instance['field_name'];
     if (isset($element[$field_name]['#language'])) {
       $langcode = $element[$field_name]['#language'];
-      $variables[$field_name] = isset($entity->{$field_name}[$langcode]) ? $entity->{$field_name}[$langcode] : NULL;
+      $variables[$field_name] = $entity->getTranslation($langcode)->{$field_name}->getValue();
     }
   }
 

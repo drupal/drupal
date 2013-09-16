@@ -330,9 +330,6 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   public function save(EntityInterface $entity) {
     $transaction = $this->database->startTransaction();
     try {
-      // Ensure we are dealing with the actual entity.
-      $entity = $entity->getNGEntity();
-
       // Sync the changes made in the fields array to the internal values array.
       $entity->updateOriginalValues();
 
@@ -571,11 +568,6 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
     try {
       $entity_class = $this->entityClass;
       $entity_class::preDelete($this, $entities);
-
-      // Ensure we are dealing with the actual entities.
-      foreach ($entities as $id => $entity) {
-        $entities[$id] = $entity->getNGEntity();
-      }
 
       foreach ($entities as $entity) {
         $this->invokeHook('predelete', $entity);

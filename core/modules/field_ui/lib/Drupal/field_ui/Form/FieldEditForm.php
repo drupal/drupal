@@ -231,14 +231,7 @@ class FieldEditForm extends FormBase {
    *   The field item object.
    */
   protected function getFieldItem(EntityInterface $entity, $field_name) {
-    if ($entity instanceof EntityNG) {
-      $item = $entity->get($field_name)->offsetGet(0);
-    }
-    else {
-      $definitions = $this->entityManager->getFieldDefinitions($entity->entityType(), $entity->bundle());
-      $item = $this->typedData->create($definitions[$field_name], array(), $field_name, $entity)->offsetGet(0);
-    }
-    return $item;
+    return $entity->get($field_name)->offsetGet(0);
   }
 
 }

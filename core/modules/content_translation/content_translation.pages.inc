@@ -236,23 +236,8 @@ function content_translation_edit_page(EntityInterface $entity, Language $langua
  *   The language to be used as target.
  */
 function content_translation_prepare_translation(EntityInterface $entity, Language $source, Language $target) {
-  // @todo Unify field and property handling.
-  $entity = $entity->getNGEntity();
-  if ($entity instanceof EntityNG) {
-    $source_translation = $entity->getTranslation($source->id);
-    $entity->addTranslation($target->id, $source_translation->getPropertyValues());
-  }
-  else {
-    $instances = field_info_instances($entity->entityType(), $entity->bundle());
-    foreach ($instances as $field_name => $instance) {
-      $field = $instance->getField();
-      if (!empty($field['translatable'])) {
-        $value = $entity->get($field_name);
-        $value[$target->id] = isset($value[$source->id]) ? $value[$source->id] : array();
-        $entity->set($field_name, $value);
-      }
-    }
-  }
+  $source_translation = $entity->getTranslation($source->id);
+  $entity->addTranslation($target->id, $source_translation->getPropertyValues());
 }
 
 /**

@@ -413,20 +413,6 @@ class Entity implements \IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::getBCEntity().
-   */
-  public function getBCEntity() {
-    return $this;
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\EntityInterface::getNGEntity().
-   */
-  public function getNGEntity() {
-    return $this;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getDefinition() {

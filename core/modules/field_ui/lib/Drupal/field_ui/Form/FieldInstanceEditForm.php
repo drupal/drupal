@@ -218,14 +218,7 @@ class FieldInstanceEditForm extends FormBase {
    *   The field object.
    */
   protected function getFieldItems(EntityInterface $entity, $field_name) {
-    if ($entity instanceof EntityNG) {
-      $item = $entity->get($field_name);
-    }
-    else {
-      $definitions = \Drupal::entityManager()->getFieldDefinitions($entity->entityType(), $entity->bundle());
-      $item = \Drupal::typedData()->create($definitions[$field_name], $this->instance->default_value, $field_name, $entity);
-    }
-    return $item;
+    return $entity->get($field_name);
   }
 
   /**

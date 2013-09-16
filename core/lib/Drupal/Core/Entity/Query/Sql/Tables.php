@@ -142,8 +142,7 @@ class Tables implements TablesInterface {
             }
             $entity = $entity_manager
               ->getStorageController($entity_type)
-              ->create($values)
-              ->getNGEntity();
+              ->create($values);
             $propertyDefinitions = $entity->$field_name->getPropertyDefinitions();
 
             // If the column is not yet known, ie. the
@@ -196,8 +195,7 @@ class Tables implements TablesInterface {
           }
           $entity = $entity_manager
             ->getStorageController($entity_type)
-            ->create($values)
-            ->getNGEntity();
+            ->create($values);
           $propertyDefinitions = $entity->$specifier->getPropertyDefinitions();
           $relationship_specifier = $specifiers[$key + 1];
           $next_index_prefix = $relationship_specifier;
