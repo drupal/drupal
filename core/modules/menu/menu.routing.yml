@@ -1,68 +1,68 @@
 menu.settings:
-  pattern: '/admin/structure/menu/settings'
+  path:  '/admin/structure/menu/settings'
   defaults:
     _form: 'Drupal\menu\MenuSettingsForm'
   requirements:
     _permission: 'administer menu'
 
 menu.overview_page:
-  pattern: '/admin/structure/menu'
+  path:  '/admin/structure/menu'
   defaults:
     _entity_list: 'menu'
   requirements:
     _permission: 'administer menu'
 
 menu.parent_options_js:
-  pattern: '/admin/structure/menu/parents'
+  path:  '/admin/structure/menu/parents'
   defaults:
     _controller: '\Drupal\menu\Controller\MenuController::getParentOptions'
   requirements:
     _permission: 'administer menu'
 
 menu.link_add:
-  pattern: '/admin/structure/menu/manage/{menu}/add'
+  path:  '/admin/structure/menu/manage/{menu}/add'
   defaults:
     _content: '\Drupal\menu\Controller\MenuController::addLink'
   requirements:
     _entity_create_access: 'menu_link'
 
 menu.link_edit:
-  pattern: '/admin/structure/menu/item/{menu_link}/edit'
+  path:  '/admin/structure/menu/item/{menu_link}/edit'
   defaults:
     _entity_form: 'menu_link'
   requirements:
     _entity_access: 'menu_link.update'
 
 menu.link_reset:
-  pattern: 'admin/structure/menu/item/{menu_link}/reset'
+  path:  'admin/structure/menu/item/{menu_link}/reset'
   defaults:
     _entity_form: 'menu_link.reset'
   requirements:
     _entity_access: 'menu_link.reset'
 
 menu.link_delete:
-  pattern: 'admin/structure/menu/item/{menu_link}/delete'
+  path:  'admin/structure/menu/item/{menu_link}/delete'
   defaults:
     _entity_form: 'menu_link.delete'
   requirements:
     _entity_access: 'menu_link.delete'
 
 menu.menu_add:
-  pattern: '/admin/structure/menu/add'
+  path:  '/admin/structure/menu/add'
   defaults:
     _entity_form: 'menu.add'
   requirements:
     _entity_create_access: 'menu'
 
 menu.menu_edit:
-  pattern: '/admin/structure/menu/manage/{menu}'
+  path:  '/admin/structure/menu/manage/{menu}'
   defaults:
     _entity_form: 'menu.edit'
   requirements:
     _entity_access: 'menu.update'
 
 menu.delete_menu:
-  pattern: 'admin/structure/menu/manage/{menu}/delete'
+  path:  'admin/structure/menu/manage/{menu}/delete'
   defaults:
     _entity_form: 'menu.delete'
   requirements:

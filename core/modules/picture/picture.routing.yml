@@ -1,33 +1,33 @@
 picture.mapping_page:
-  pattern: '/admin/config/media/picturemapping'
+  path:  '/admin/config/media/picturemapping'
   defaults:
     _entity_list: 'picture_mapping'
   requirements:
     _permission: 'administer pictures'
 
 picture.mapping_page_add:
-  pattern: '/admin/config/media/picturemapping/add'
+  path:  '/admin/config/media/picturemapping/add'
   defaults:
     _entity_form: 'picture_mapping.add'
   requirements:
     _permission: 'administer pictures'
 
 picture.mapping_page_edit:
-  pattern: '/admin/config/media/picturemapping/{picture_mapping}'
+  path:  '/admin/config/media/picturemapping/{picture_mapping}'
   defaults:
     _entity_form: 'picture_mapping.edit'
   requirements:
     _permission: 'administer pictures'
 
 picture.mapping_page_duplicate:
-  pattern: '/admin/config/media/picturemapping/{picture_mapping}/duplicate'
+  path:  '/admin/config/media/picturemapping/{picture_mapping}/duplicate'
   defaults:
     _entity_form: 'picture_mapping.duplicate'
   requirements:
     _permission: 'administer pictures'
 
 picture.mapping_action_confirm:
-  pattern: '/admin/config/media/picturemapping/{picture_mapping}/delete'
+  path:  '/admin/config/media/picturemapping/{picture_mapping}/delete'
   defaults:
     _entity_form: 'picture_mapping.delete'
   requirements:

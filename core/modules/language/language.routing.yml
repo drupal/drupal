@@ -1,54 +1,54 @@
 language.negotiation_url:
-  pattern: '/admin/config/regional/language/detection/url'
+  path:  '/admin/config/regional/language/detection/url'
   defaults:
     _form: 'Drupal\language\Form\NegotiationUrlForm'
   requirements:
     _permission: 'administer languages'
 
 language.negotiation_session:
-  pattern: '/admin/config/regional/language/detection/session'
+  path:  '/admin/config/regional/language/detection/session'
   defaults:
     _form: 'Drupal\language\Form\NegotiationSessionForm'
   requirements:
     _permission: 'administer languages'
 
 language.negotiation_selected:
-  pattern: '/admin/config/regional/language/detection/selected'
+  path:  '/admin/config/regional/language/detection/selected'
   defaults:
     _form: 'Drupal\language\Form\NegotiationSelectedForm'
   requirements:
     _permission: 'administer languages'
 
 language.add:
-  pattern: '/admin/config/regional/language/add'
+  path:  '/admin/config/regional/language/add'
   defaults:
     _entity_form: 'language_entity.add'
   requirements:
     _entity_create_access: 'language_entity'
 
 language.edit:
-  pattern: '/admin/config/regional/language/edit/{language_entity}'
+  path:  '/admin/config/regional/language/edit/{language_entity}'
   defaults:
     _entity_form: 'language_entity.edit'
   requirements:
     _entity_access: 'language_entity.update'
 
 language.admin_overview:
-  pattern: '/admin/config/regional/language'
+  path:  '/admin/config/regional/language'
   defaults:
     _entity_list: 'language_entity'
   requirements:
     _permission: 'administer languages'
 
 language.delete:
-  pattern: '/admin/config/regional/language/delete/{language_entity}'
+  path:  '/admin/config/regional/language/delete/{language_entity}'
   defaults:
     _entity_form: 'language_entity.delete'
   requirements:
     _entity_access: 'language_entity.delete'
 
 language.negotiation_browser:
-  pattern: '/admin/config/regional/language/detection/browser'
+  path:  '/admin/config/regional/language/detection/browser'
   defaults:
     _form: '\Drupal\language\Form\NegotiationBrowserForm'
     _title: 'Browser language detection configuration'
@@ -56,7 +56,7 @@ language.negotiation_browser:
     _permission: 'administer languages'
 
 language.negotiation_browser_delete:
-  pattern: 'admin/config/regional/language/detection/browser/delete/{browser_langcode}'
+  path:  'admin/config/regional/language/detection/browser/delete/{browser_langcode}'
   defaults:
     _form: '\Drupal\language\Form\NegotiationBrowserDeleteForm'
   requirements:

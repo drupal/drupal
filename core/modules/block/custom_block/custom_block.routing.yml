@@ -1,33 +1,33 @@
 custom_block.type_list:
-  pattern: '/admin/structure/block/custom-blocks/types'
+  path:  '/admin/structure/block/custom-blocks/types'
   defaults:
     _entity_list: 'custom_block_type'
   requirements:
     _permission: 'administer blocks'
 
 custom_block.add_page:
-  pattern: '/block/add'
+  path:  '/block/add'
   defaults:
     _content: 'Drupal\custom_block\Controller\CustomBlockController::add'
   requirements:
     _permission: 'administer blocks'
 
 custom_block.add_form:
-  pattern: block/add/{custom_block_type}
+  path:  block/add/{custom_block_type}
   defaults:
     _content: 'Drupal\custom_block\Controller\CustomBlockController::addForm'
   requirements:
     _permission: 'administer blocks'
 
 custom_block.type_delete:
-  pattern: '/admin/structure/block/custom-blocks/manage/{custom_block_type}/delete'
+  path:  '/admin/structure/block/custom-blocks/manage/{custom_block_type}/delete'
   defaults:
     _entity_form: 'custom_block_type.delete'
   requirements:
     _entity_access: 'custom_block_type.delete'
 
 custom_block.edit:
-  pattern: '/block/{custom_block}'
+  path:  '/block/{custom_block}'
   defaults:
     _entity_form: 'custom_block.edit'
   requirements:
@@ -35,28 +35,28 @@ custom_block.edit:
     custom_block: \d+
 
 custom_block.delete:
-  pattern: '/block/{custom_block}/delete'
+  path:  '/block/{custom_block}/delete'
   defaults:
     _entity_form: 'custom_block.delete'
   requirements:
     _entity_access: 'custom_block.delete'
 
 custom_block.type_add:
-  pattern: '/admin/structure/block/custom-blocks/types/add'
+  path:  '/admin/structure/block/custom-blocks/types/add'
   defaults:
     _entity_form: 'custom_block_type.add'
   requirements:
     _permission: 'administer blocks'
 
 custom_block.type_edit:
-  pattern: '/admin/structure/block/custom-blocks/manage/{custom_block_type}'
+  path:  '/admin/structure/block/custom-blocks/manage/{custom_block_type}'
   defaults:
     _entity_form: 'custom_block_type.edit'
   requirements:
     _entity_access: 'custom_block_type.update'
 
 custom_block.list:
-  pattern: '/admin/structure/block/custom-blocks'
+  path:  '/admin/structure/block/custom-blocks'
   defaults:
     _title: 'Custom block library'
     _entity_list: 'custom_block'

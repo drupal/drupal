@@ -1,47 +1,47 @@
 shortcut.link_delete:
-  pattern: '/admin/config/user-interface/shortcut/link/{menu_link}/delete'
+  path:  '/admin/config/user-interface/shortcut/link/{menu_link}/delete'
   defaults:
     _form: 'Drupal\shortcut\Form\LinkDelete'
   requirements:
     _access_shortcut_link_delete: 'TRUE'
 
 shortcut.set_delete:
-  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/delete'
+  path:  '/admin/config/user-interface/shortcut/manage/{shortcut_set}/delete'
   defaults:
     _entity_form: 'shortcut_set.delete'
   requirements:
     _entity_access: 'shortcut_set.delete'
 
 shortcut.set_admin:
-  pattern: '/admin/config/user-interface/shortcut'
+  path:  '/admin/config/user-interface/shortcut'
   defaults:
     _entity_list: 'shortcut_set'
   requirements:
     _permission: 'administer shortcuts'
 
 shortcut.set_add:
-  pattern: '/admin/config/user-interface/shortcut/add-set'
+  path:  '/admin/config/user-interface/shortcut/add-set'
   defaults:
     _entity_form: 'shortcut_set.add'
   requirements:
     _entity_create_access: 'shortcut_set'
 
 shortcut.set_edit:
-  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/edit'
+  path:  '/admin/config/user-interface/shortcut/manage/{shortcut_set}/edit'
   defaults:
     _entity_form: 'shortcut_set.edit'
   requirements:
     _entity_access: 'shortcut_set.update'
 
 shortcut.link_add_inline:
-  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/add-link-inline'
+  path:  '/admin/config/user-interface/shortcut/manage/{shortcut_set}/add-link-inline'
   defaults:
     _controller: 'Drupal\shortcut\Controller\ShortcutSetController::addShortcutLinkInline'
   requirements:
     _entity_access: 'shortcut_set.update'
 
 shortcut.set_customize:
-  pattern: '/admin/config/user-interface/shortcut/manage/{shortcut_set}'
+  path:  '/admin/config/user-interface/shortcut/manage/{shortcut_set}'
   defaults:
     _entity_form: 'shortcut_set.customize'
   requirements:

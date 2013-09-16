@@ -1,19 +1,19 @@
 locale.settings:
-  pattern: '/admin/config/regional/translate/settings'
+  path:  '/admin/config/regional/translate/settings'
   defaults:
     _form: 'Drupal\locale\Form\LocaleSettingsForm'
   requirements:
     _permission: 'translate interface'
 
 locale.check_translation:
-  pattern: '/admin/reports/translations/check'
+  path:  '/admin/reports/translations/check'
   defaults:
     _controller: 'Drupal\locale\Controller\LocaleController::checkTranslation'
   requirements:
     _permission: 'translate interface'
 
 locale.translate_page:
-  pattern: '/admin/config/regional/translate'
+  path:  '/admin/config/regional/translate'
   defaults:
     _content: 'Drupal\locale\Controller\LocaleController::translatePage'
   requirements:

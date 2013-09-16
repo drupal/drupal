@@ -1,5 +1,5 @@
 plugin_test.definition:
-  pattern: '/plugin_definition_test'
+  path:  '/plugin_definition_test'
   defaults:
     _content: '\Drupal\plugin_test\Controller\PluginTest::testDefinitions'
   requirements:

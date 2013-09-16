@@ -922,8 +922,8 @@ function system_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'pattern' => array(
-        'description' => 'The path pattern for this URI',
+      'path' => array(
+        'description' => 'The path for this URI',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -1580,8 +1580,8 @@ function system_update_8022() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'pattern' => array(
-        'description' => 'The path pattern for this URI',
+      'path' => array(
+        'description' => 'The path for this URI',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,

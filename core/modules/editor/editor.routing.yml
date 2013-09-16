@@ -1,5 +1,5 @@
 editor.field_untransformed_text:
-  pattern: '/editor/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
+  path:  '/editor/{entity_type}/{entity}/{field_name}/{langcode}/{view_mode_id}'
   defaults:
     _controller: '\Drupal\editor\EditorController::getUntransformedText'
   options:
@@ -9,14 +9,14 @@ editor.field_untransformed_text:
     _access_edit_entity_field: 'TRUE'
 
 editor.image_dialog:
-  pattern: '/editor/dialog/image/{filter_format}'
+  path:  '/editor/dialog/image/{filter_format}'
   defaults:
     _form: '\Drupal\editor\Form\EditorImageDialog'
   requirements:
     _entity_access: 'filter_format.view'
 
 editor.link_dialog:
-  pattern: '/editor/dialog/link/{filter_format}'
+  path:  '/editor/dialog/link/{filter_format}'
   defaults:
     _form: '\Drupal\editor\Form\EditorLinkDialog'
   requirements:

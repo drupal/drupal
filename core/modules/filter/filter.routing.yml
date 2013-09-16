@@ -1,19 +1,19 @@
 filter.tips_all:
-  pattern: '/filter/tips'
+  path:  '/filter/tips'
   defaults:
     _content: '\Drupal\filter\Controller\FilterController::filterTips'
   requirements:
     _access: 'TRUE'
 
 filter.tips:
-  pattern: '/filter/tips/{filter_format}'
+  path:  '/filter/tips/{filter_format}'
   defaults:
     _content: '\Drupal\filter\Controller\FilterController::filterTips'
   requirements:
     _entity_access: 'filter_format.view'
 
 filter.admin_overview:
-  pattern: '/admin/config/content/formats'
+  path:  '/admin/config/content/formats'
   defaults:
     _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
     entity_type: 'filter_format'
@@ -21,21 +21,21 @@ filter.admin_overview:
     _permission: 'administer filters'
 
 filter.format_add:
-  pattern: '/admin/config/content/formats/add'
+  path:  '/admin/config/content/formats/add'
   defaults:
     _entity_form: filter_format.add
   requirements:
     _permission: 'administer filters'
 
 filter.format_edit:
-  pattern: '/admin/config/content/formats/manage/{filter_format}'
+  path:  '/admin/config/content/formats/manage/{filter_format}'
   defaults:
     _entity_form: filter_format.edit
   requirements:
     _permission: 'administer filters'
 
 filter.admin_disable:
-  pattern: '/admin/config/content/formats/manage/{filter_format}/disable'
+  path:  '/admin/config/content/formats/manage/{filter_format}/disable'
   defaults:
     _entity_form: 'filter_format.disable'
   options:

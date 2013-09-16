@@ -94,7 +94,7 @@ class RouteBuilder {
           'options' => array(),
         );
 
-        $route = new Route($route_info['pattern'], $route_info['defaults'], $route_info['requirements'], $route_info['options']);
+        $route = new Route($route_info['path'], $route_info['defaults'], $route_info['requirements'], $route_info['options']);
         $collection->add($name, $route);
       }
 

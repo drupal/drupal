@@ -1,26 +1,26 @@
 theme_test.function_template_override:
-  pattern: '/theme-test/function-template-overridden'
+  path:  '/theme-test/function-template-overridden'
   defaults:
     _content: '\Drupal\theme_test\ThemeTestController::functionTemplateOverridden'
   requirements:
     _permission: 'access content'
 
 theme_test.info_stylesheets:
-  pattern: '/theme-test/info/stylesheets'
+  path:  '/theme-test/info/stylesheets'
   defaults:
     _content: '\Drupal\theme_test\ThemeTestController::testInfoStylesheets'
   requirements:
     _access: 'TRUE'
 
 theme_test.template_test:
-  pattern: '/theme-test/template-test'
+  path:  '/theme-test/template-test'
   defaults:
     _content: '\Drupal\theme_test\ThemeTestController::testTemplate'
   requirements:
     _access: 'TRUE'
 
 theme_test.suggestion:
-  pattern: '/theme-test/suggestion'
+  path:  '/theme-test/suggestion'
   defaults:
     _content: '\Drupal\theme_test\ThemeTestController::testSuggestion'
     _title: 'Suggestion'
@@ -28,7 +28,7 @@ theme_test.suggestion:
     _access: 'TRUE'
 
 theme_test.alter:
-  pattern: '/theme-test/alter'
+  path:  '/theme-test/alter'
   defaults:
     _content: '\Drupal\theme_test\ThemeTestController::testAlter'
     _title: 'Suggestion'
@@ -36,7 +36,7 @@ theme_test.alter:
     _access: 'TRUE'
 
 theme_test.request_listener:
-  pattern: '/theme-test/request-listener'
+  path:  '/theme-test/request-listener'
   defaults:
     _content: '\Drupal\theme_test\ThemeTestController::testRequestListener'
   requirements:
