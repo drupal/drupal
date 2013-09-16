@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Controller\ContainerInjectionInterface.
+ * Contains \Drupal\Core\DependencyInjection\ContainerInjectionInterface.
  */
 
 namespace Drupal\Core\DependencyInjection;
