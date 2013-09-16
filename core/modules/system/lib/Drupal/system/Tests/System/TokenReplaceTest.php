@@ -51,7 +51,7 @@ class TokenReplaceTest extends WebTestBase {
 
     // Test that the clear parameter cleans out non-existent tokens.
     $result = $token_service->replace($source, array('node' => $node), array('langcode' => $language_interface->id, 'clear' => TRUE));
-    $result = $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens cleared out.');
+    $this->assertEqual($target, $result, 'Valid tokens replaced while invalid tokens cleared out.');
 
     // Test without using the clear parameter (non-existent token untouched).
     $target .= '[user:name]';
