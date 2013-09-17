@@ -266,7 +266,7 @@ class CustomBlock extends EntityNG implements CustomBlockInterface {
     );
     $properties['langcode'] = array(
       'label' => t('Language code'),
-      'description' => t('The comment language code.'),
+      'description' => t('The custom block language code.'),
       'type' => 'language_field',
     );
     $properties['info'] = array(
@@ -288,6 +288,9 @@ class CustomBlock extends EntityNG implements CustomBlockInterface {
       'label' => t('Changed'),
       'description' => t('The time that the custom block was last edited.'),
       'type' => 'integer_field',
+      'property_constraints' => array(
+        'value' => array('EntityChanged' => array()),
+      ),
     );
     return $properties;
   }
