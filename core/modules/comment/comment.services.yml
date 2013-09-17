@@ -3,7 +3,7 @@ services:
     class: Drupal\comment\CommentBreadcrumbBuilder
     tags:
       - { name: breadcrumb_builder, priority: 100 }
-    arguments: ['@string_translation', '@plugin.manager.entity']
+    arguments: ['@string_translation', '@entity.manager']
 
   comment.subscriber:
     class: Drupal\comment\Routing\RouteSubscriber
@@ -13,4 +13,4 @@ services:
 
   comment.manager:
     class: Drupal\comment\CommentManager
-    arguments: ['@field.info', '@plugin.manager.entity']
+    arguments: ['@field.info', '@entity.manager']

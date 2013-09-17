@@ -360,7 +360,7 @@ function comment_permission() {
  *   An array of comment objects or an empty array if there are no recent
  *   comments visible to the current user.
  *
- * @todo entity access for other entity types?
+ * @todo Fix entity access for all entity types https://drupal.org/node/1938062
  */
 function comment_get_recent($number = 10) {
   $query = db_select('comment', 'c');
@@ -1020,7 +1020,6 @@ function comment_entity_load($entities, $entity_type) {
  * Implements hook_entity_insert().
  */
 function comment_entity_insert(EntityInterface $entity) {
-  global $user;
   // Allow bulk updates and inserts to temporarily disable the
   // maintenance of the {comment_entity_statistics} table.
   if (\Drupal::state()->get('comment.maintain_entity_statistics') &&
@@ -1042,11 +1041,13 @@ function comment_entity_insert(EntityInterface $entity) {
         continue;
       }
       // There is at least one comment field, the query needs to be executed.
-      // Default to current user when entity does not have a uid property.
-      $last_comment_uid = $user->id();
       // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
       if ($entity->getPropertyDefinition('uid')) {
         $last_comment_uid = $entity->get('uid')->value;
+      }
+      else {
+        // Default to current user when entity does not have a uid property.
+        $last_comment_uid = \Drupal::currentUser()->id();
       }
       // Default to REQUEST_TIME when entity does not have a changed property.
       $last_comment_timestamp = REQUEST_TIME;
