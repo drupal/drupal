@@ -17,7 +17,7 @@ interface TranslationInterface {
    * @param array $args
    *   An associative array of replacements to make after translation. Based
    *   on the first character of the key, the value is escaped and/or themed.
-   *   See \Drupal\Core\Utility\String::format() for details.
+   *   See \Drupal\Component\Utility\String::format() for details.
    * @param array $options
    *   An associative array of additional options, with the following elements:
    *   - 'langcode': The language code to translate to a language other than
@@ -27,7 +27,7 @@ interface TranslationInterface {
    * @return string
    *   The translated string.
    *
-   * @see \Drupal\Core\Utility\String::format()
+   * @see \Drupal\Component\Utility\String::format()
    */
   public function translate($string, array $args = array(), array $options = array());
 

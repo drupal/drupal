@@ -4379,12 +4379,12 @@ function form_validate_number(&$element, &$form_state) {
 
   // Ensure that the input is greater than the #min property, if set.
   if (isset($element['#min']) && $value < $element['#min']) {
-    form_error($element, t('%name must be higher or equal to %min.', array('%name' => $name, '%min' => $element['#min'])));
+    form_error($element, t('%name must be higher than or equal to %min.', array('%name' => $name, '%min' => $element['#min'])));
   }
 
   // Ensure that the input is less than the #max property, if set.
   if (isset($element['#max']) && $value > $element['#max']) {
-    form_error($element, t('%name must be below or equal to %max.', array('%name' => $name, '%max' => $element['#max'])));
+    form_error($element, t('%name must be lower than or equal to %max.', array('%name' => $name, '%max' => $element['#max'])));
   }
 
   if (isset($element['#step']) && strtolower($element['#step']) != 'any') {
