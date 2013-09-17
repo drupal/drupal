@@ -328,10 +328,9 @@ class CommentFormController extends EntityFormControllerNG {
     $field_name = $this->entity->field_name->value;
     $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
     $items = field_get_items($entity, $field_name);
-    $status = reset($items);
     $uri = $entity->uri();
 
-    if (user_access('post comments') && (user_access('administer comments') || $status['status'] == COMMENT_OPEN)) {
+    if (user_access('post comments') && (user_access('administer comments') || $entity->{$field_name}->status == COMMENT_OPEN)) {
       // Save the anonymous user information to a cookie for reuse.
       if (user_is_anonymous()) {
         user_cookie_save(array_intersect_key($form_state['values'], array_flip(array('name', 'mail', 'homepage'))));

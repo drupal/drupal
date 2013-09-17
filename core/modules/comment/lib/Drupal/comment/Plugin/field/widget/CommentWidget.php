@@ -37,7 +37,7 @@ class CommentWidget extends WidgetBase {
       '#title' => t('Comments'),
       '#title_display' => 'invisible',
       //'#default_value' => $items[$delta]->status,
-      '#default_value' => $entity->get($field->getFieldName())->status,
+      '#default_value' => $field->getFieldDefaultValue($entity)->status,
       '#options' => array(
         COMMENT_OPEN => t('Open'),
         COMMENT_CLOSED => t('Closed'),
