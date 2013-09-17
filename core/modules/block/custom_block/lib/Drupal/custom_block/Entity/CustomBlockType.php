@@ -94,6 +94,8 @@ class CustomBlockType extends ConfigEntityBase implements CustomBlockTypeInterfa
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    parent::postSave($storage_controller, $update);
+
     if (!$update) {
       entity_invoke_bundle_hook('create', 'custom_block', $this->id());
       custom_block_add_body_field($this->id);
@@ -107,8 +109,11 @@ class CustomBlockType extends ConfigEntityBase implements CustomBlockTypeInterfa
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::postDelete($storage_controller, $entities);
+
     foreach ($entities as $entity) {
       entity_invoke_bundle_hook('delete', 'custom_block', $entity->id());
     }
   }
+
 }

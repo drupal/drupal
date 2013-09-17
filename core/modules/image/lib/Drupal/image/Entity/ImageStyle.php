@@ -99,6 +99,8 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    parent::postSave($storage_controller, $update);
+
     if ($update) {
       if (!empty($this->original) && $this->id() !== $this->original->id()) {
         // The old image style name needs flushing after a rename.
@@ -117,6 +119,8 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::postDelete($storage_controller, $entities);
+
     foreach ($entities as $style) {
       // Flush cached media for the deleted style.
       $style->flush();

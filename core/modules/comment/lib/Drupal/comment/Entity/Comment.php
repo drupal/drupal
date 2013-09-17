@@ -208,6 +208,8 @@ class Comment extends EntityNG implements CommentInterface {
    * {@inheritdoc}
    */
   public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
+    parent::preCreate($storage_controller, $values);
+
     if (empty($values['node_type']) && !empty($values['nid'])) {
       $node = node_load(is_object($values['nid']) ? $values['nid']->value : $values['nid']);
       $values['node_type'] = 'comment_node_' . $node->getType();
@@ -218,6 +220,8 @@ class Comment extends EntityNG implements CommentInterface {
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
+    parent::preSave($storage_controller);
+
     global $user;
 
     if (!isset($this->status->value)) {
@@ -307,6 +311,8 @@ class Comment extends EntityNG implements CommentInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    parent::postSave($storage_controller, $update);
+
     $this->releaseThreadLock();
     // Update the {node_comment_statistics} table prior to executing the hook.
     $storage_controller->updateNodeStatistics($this->nid->target_id);
@@ -329,6 +335,8 @@ class Comment extends EntityNG implements CommentInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::postDelete($storage_controller, $entities);
+
     $child_cids = $storage_controller->getChildCids($entities);
     entity_delete_multiple('comment', $child_cids);
 
@@ -341,7 +349,6 @@ class Comment extends EntityNG implements CommentInterface {
    * {@inheritdoc}
    */
   public function permalink() {
-
     $url['path'] = 'node/' . $this->nid->value;
     $url['options'] = array('fragment' => 'comment-' . $this->id());
 

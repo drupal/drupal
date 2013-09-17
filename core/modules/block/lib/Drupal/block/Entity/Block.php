@@ -168,6 +168,8 @@ class Block extends ConfigEntityBase implements BlockInterface {
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
+    parent::preSave($storage_controller);
+
     $this->set('settings', $this->getPlugin()->getConfiguration());
   }
 

@@ -136,6 +136,8 @@ class Item extends EntityNG implements ItemInterface {
    * {@inheritdoc}
    */
   public function postCreate(EntityStorageControllerInterface $storage_controller) {
+    parent::postCreate($storage_controller);
+
     if (!isset($this->timestamp->value)) {
       $this->timestamp->value = REQUEST_TIME;
     }
@@ -145,6 +147,8 @@ class Item extends EntityNG implements ItemInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    parent::postSave($storage_controller, $update);
+
     $storage_controller->saveCategories($this);
   }
 
@@ -152,6 +156,8 @@ class Item extends EntityNG implements ItemInterface {
    * {@inheritdoc}
    */
   public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::preDelete($storage_controller, $entities);
+
     $storage_controller->deleteCategories($entities);
   }
 
@@ -207,4 +213,5 @@ class Item extends EntityNG implements ItemInterface {
     );
     return $fields;
   }
+
 }

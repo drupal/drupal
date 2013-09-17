@@ -178,10 +178,12 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface {
     return $properties;
   }
 
-    /**
+  /**
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
+    parent::preSave($storage_controller);
+
     $plugin = $this->getPlugin();
     // If this plugin has any configuration, ensure that it is set.
     if ($plugin instanceof ConfigurablePluginInterface) {

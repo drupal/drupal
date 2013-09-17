@@ -390,6 +390,8 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
    * {@inheritdoc}
    */
   public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::preDelete($storage_controller, $entities);
+
     // Nothing to do if we don't want to reparent children.
     if ($storage_controller->getPreventReparenting()) {
       return;
@@ -411,6 +413,8 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::postDelete($storage_controller, $entities);
+
     $affected_menus = array();
     // Update the has_children status of the parent.
     foreach ($entities as $entity) {
@@ -434,6 +438,8 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
+    parent::preSave($storage_controller);
+
     // This is the easiest way to handle the unique internal path '<front>',
     // since a path marked as external does not need to match a router path.
     $this->external = (url_is_external($this->link_path) || $this->link_path == '<front>') ? 1 : 0;
@@ -506,6 +512,8 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    parent::postSave($storage_controller, $update);
+
     // Check the has_children status of the parent.
     $storage_controller->updateParentalStatus($this);
 

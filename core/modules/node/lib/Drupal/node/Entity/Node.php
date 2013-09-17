@@ -79,6 +79,8 @@ class Node extends EntityNG implements NodeInterface {
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
+    parent::preSave($storage_controller);
+
     // Before saving the node, set changed and revision times.
     $this->changed->value = REQUEST_TIME;
   }
@@ -87,6 +89,8 @@ class Node extends EntityNG implements NodeInterface {
    * {@inheritdoc}
    */
   public function preSaveRevision(EntityStorageControllerInterface $storage_controller, \stdClass $record) {
+    parent::preSaveRevision($storage_controller, $record);
+
     if ($this->newRevision) {
       // When inserting either a new node or a new node revision, $node->log
       // must be set because {node_field_revision}.log is a text column and
@@ -113,6 +117,8 @@ class Node extends EntityNG implements NodeInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    parent::postSave($storage_controller, $update);
+
     // Update the node access table for this node, but only if it is the
     // default revision. There's no need to delete existing records if the node
     // is new.
@@ -125,6 +131,8 @@ class Node extends EntityNG implements NodeInterface {
    * {@inheritdoc}
    */
   public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::preDelete($storage_controller, $entities);
+
     if (module_exists('search')) {
       foreach ($entities as $entity) {
         search_reindex($entity->nid->value, 'node');
