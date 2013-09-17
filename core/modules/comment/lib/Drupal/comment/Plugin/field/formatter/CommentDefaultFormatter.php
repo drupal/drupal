@@ -30,11 +30,12 @@ class CommentDefaultFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(EntityInterface $entity, $langcode, FieldInterface $items) {
+  public function viewElements(FieldInterface $items) {
     $elements = array();
 
     $field = $this->fieldDefinition;
     $field_name = $field->getFieldName();
+    $entity = $items->getEntity();
 
     $commenting_status = $items->status;
     if ($commenting_status != COMMENT_HIDDEN && empty($entity->in_preview)) {
