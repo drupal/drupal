@@ -194,35 +194,38 @@ function field_update_8002() {
       continue;
     }
 
-    // Migrate 'widget' settings.
-    if (isset($data['widget'])) {
-      $widget_options = $data['widget'];
-      // Determine name and create initial entry in the $form_displays array.
-      $form_display_id = $record->entity_type . '.' . $record->bundle . '.default';
-      if (!isset($form_displays[$form_display_id])) {
-        $form_displays[$form_display_id] = _update_8000_entity_get_form_display($record->entity_type, $record->bundle, 'default');
-      }
-
-      // We do not need the 'module' key anymore.
-      unset($widget_options['module']);
-      $form_displays[$form_display_id]->set("content.$record->field_name", $widget_options);
-    }
-
-    // Migrate 'display' settings.
-    if (isset($data['display'])) {
-      foreach ($data['display'] as $view_mode => $display_options) {
-        // Determine name and create initial entry in the $displays array if it
-        // does not exist yet.
-        $display_id = $record->entity_type . '.' . $record->bundle . '.' . $view_mode;
-        if (!isset($displays[$display_id])) {
-          $displays[$display_id] = _update_8000_entity_get_display($record->entity_type, $record->bundle, $view_mode);
+    // Do not place deleted fields in entity displays.
+    if (empty($record->deleted)) {
+      // Migrate 'widget' settings.
+      if (isset($data['widget'])) {
+        $widget_options = $data['widget'];
+        // Determine name and create initial entry in the $form_displays array.
+        $form_display_id = $record->entity_type . '.' . $record->bundle . '.default';
+        if (!isset($form_displays[$form_display_id])) {
+          $form_displays[$form_display_id] = _update_8000_entity_get_form_display($record->entity_type, $record->bundle, 'default');
         }
 
-        // The display object does not store hidden fields.
-        if ($display_options['type'] != 'hidden') {
-          // We do not need the 'module' key anymore.
-          unset($display_options['module']);
-          $displays[$display_id]->set("content.$record->field_name", $display_options);
+        // We do not need the 'module' key anymore.
+        unset($widget_options['module']);
+        $form_displays[$form_display_id]->set("content.$record->field_name", $widget_options);
+      }
+
+      // Migrate 'display' settings.
+      if (isset($data['display'])) {
+        foreach ($data['display'] as $view_mode => $display_options) {
+          // Determine name and create initial entry in the $displays array if it
+          // does not exist yet.
+          $display_id = $record->entity_type . '.' . $record->bundle . '.' . $view_mode;
+          if (!isset($displays[$display_id])) {
+            $displays[$display_id] = _update_8000_entity_get_display($record->entity_type, $record->bundle, $view_mode);
+          }
+
+          // The display object does not store hidden fields.
+          if ($display_options['type'] != 'hidden') {
+            // We do not need the 'module' key anymore.
+            unset($display_options['module']);
+            $displays[$display_id]->set("content.$record->field_name", $display_options);
+          }
         }
       }
     }

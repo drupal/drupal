@@ -117,12 +117,6 @@ function block_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'context' => MENU_CONTEXT_INLINE,
   );
-  $items['admin/structure/block/manage/%block/delete'] = array(
-    'title' => 'Delete block',
-    'type' => MENU_LOCAL_TASK,
-    'context' => MENU_CONTEXT_NONE,
-    'route_name' => 'block.admin_block_delete',
-  );
   $items['admin/structure/block/add/%/%'] = array(
     'title' => 'Place block',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,

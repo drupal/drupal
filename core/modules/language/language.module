@@ -85,9 +85,6 @@ function language_menu() {
     'title' => 'Edit language',
     'route_name' => 'language.edit',
   );
-  $items['admin/config/regional/language/delete/%language'] = array(
-    'route_name' => 'language.delete',
-  );
 
   // Language negotiation.
   $items['admin/config/regional/language/detection'] = array(

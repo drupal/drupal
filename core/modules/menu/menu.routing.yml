@@ -65,5 +65,6 @@ menu.delete_menu:
   path: 'admin/structure/menu/manage/{menu}/delete'
   defaults:
     _entity_form: 'menu.delete'
+    _title: 'Delete menu'
   requirements:
     _entity_access: 'menu.delete'

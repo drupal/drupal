@@ -2,6 +2,7 @@ block.admin_block_delete:
   path: '/admin/structure/block/manage/{block}/delete'
   defaults:
     _entity_form: 'block.delete'
+    _title: 'Delete block'
   requirements:
     _permission: 'administer blocks'
 

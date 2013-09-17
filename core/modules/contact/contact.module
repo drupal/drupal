@@ -77,12 +77,6 @@ function contact_menu() {
     'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/structure/contact/manage/%contact_category/delete'] = array(
-    'title' => 'Delete',
-    'route_name' => 'contact.category_delete',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 10,
-  );
 
   $items['contact'] = array(
     'title' => 'Contact',

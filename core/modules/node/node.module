@@ -999,10 +999,6 @@ function node_menu() {
     'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/structure/types/manage/%node_type/delete'] = array(
-    'title' => 'Delete',
-    'route_name' => 'node.type_delete_confirm',
-  );
   $items['node/add'] = array(
     'title' => 'Add content',
     'page callback' => 'node_add_page',

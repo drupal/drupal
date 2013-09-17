@@ -819,11 +819,6 @@ function system_menu() {
     'description' => 'Allow users to edit a configured date format.',
     'route_name' => 'system.date_format_edit',
   );
-  $items['admin/config/regional/date-time/formats/manage/%/delete'] = array(
-    'title' => 'Delete date format',
-    'description' => 'Allow users to delete a configured date format.',
-    'route_name' => 'system.date_format_delete',
-  );
 
   // Search settings.
   $items['admin/config/search'] = array(

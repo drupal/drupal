@@ -69,6 +69,10 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
     $body_instance = field_info_instance('node', 'body', 'article');
     $this->assertTrue(!isset($body_instance['display']));
 
+    // Check that deleted fields were not added to the display.
+    $this->assertFalse(isset($displays['default']['content']['test_deleted_field']));
+    $this->assertFalse(isset($displays['teaser']['content']['test_deleted_field']));
+
     // Check that the 'language' extra field is configured as expected.
     $expected = array(
       'default' => array(
@@ -107,6 +111,9 @@ class FieldUpgradePathTest extends UpgradePathTestBase {
     // Check that the display key in the instance data was removed.
     $body_instance = field_info_instance('node', 'body', 'article');
     $this->assertTrue(!isset($body_instance['widget']));
+
+    // Check that deleted fields were not added to the display.
+    $this->assertFalse(isset($form_display['content']['test_deleted_field']));
 
     // Check that the 'title' extra field is configured as expected.
     $expected = array(

@@ -213,6 +213,7 @@ system.date_format_delete:
   path: 'admin/config/regional/date-time/formats/manage/{date_format}/delete'
   defaults:
     _entity_form: 'date_format.delete'
+    _title: 'Delete date format'
   requirements:
     _entity_access: 'date_format.delete'
 

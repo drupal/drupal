@@ -73,13 +73,4 @@ abstract class ImageStyleFormBase extends EntityFormController {
     return $this->entity->save();
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function actions(array $form, array &$form_state) {
-    $actions = parent::actions($form, $form_state);
-    unset($actions['delete']);
-    return $actions;
-  }
-
 }
