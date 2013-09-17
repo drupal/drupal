@@ -9,6 +9,7 @@ shortcut.set_delete:
   path: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/delete'
   defaults:
     _entity_form: 'shortcut_set.delete'
+    _title: 'Delete shortcut set'
   requirements:
     _entity_access: 'shortcut_set.delete'
 

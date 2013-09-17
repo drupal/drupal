@@ -23,6 +23,7 @@ custom_block.type_delete:
   path: '/admin/structure/block/custom-blocks/manage/{custom_block_type}/delete'
   defaults:
     _entity_form: 'custom_block_type.delete'
+    _title: 'Delete'
   requirements:
     _entity_access: 'custom_block_type.delete'
 

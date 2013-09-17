@@ -30,5 +30,6 @@ picture.mapping_action_confirm:
   path: '/admin/config/media/picturemapping/{picture_mapping}/delete'
   defaults:
     _entity_form: 'picture_mapping.delete'
+    _title: 'Delete'
   requirements:
     _permission: 'administer pictures'

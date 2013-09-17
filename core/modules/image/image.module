@@ -116,13 +116,6 @@ function image_menu() {
     'title' => 'Edit',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/config/media/image-styles/manage/%image_style/delete'] = array(
-    'title' => 'Delete',
-    'description' => 'Delete an image style.',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 10,
-    'route_name' => 'image.style_delete',
-  );
   $items['admin/config/media/image-styles/manage/%/effects/%'] = array(
     'title' => 'Edit image effect',
     'description' => 'Edit an existing effect within a style.',

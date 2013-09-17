@@ -59,6 +59,7 @@ node.type_delete_confirm:
   path: '/admin/structure/types/manage/{node_type}/delete'
   defaults:
     _entity_form: 'node_type.delete'
+    _title: 'Delete'
   requirements:
     _entity_access: 'node_type.delete'
 

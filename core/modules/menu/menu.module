@@ -101,10 +101,6 @@ function menu_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
-  $items['admin/structure/menu/manage/%menu/delete'] = array(
-    'title' => 'Delete menu',
-    'route_name' => 'menu.delete_menu',
-  );
   $items['admin/structure/menu/item/%menu_link/edit'] = array(
     'title' => 'Edit menu link',
     'route_name' => 'menu.link_edit',

@@ -98,12 +98,6 @@ function custom_block_menu() {
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
-  $items['admin/structure/block/custom-blocks/manage/%custom_block_type/delete'] = array(
-    'title' => 'Delete',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 10,
-    'route_name' => 'custom_block.type_delete',
-  );
   $items['block/add'] = array(
     'title' => 'Add custom block',
     'route_name' => 'custom_block.add_page',

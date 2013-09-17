@@ -111,10 +111,6 @@ function shortcut_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
   );
-  $items['admin/config/user-interface/shortcut/manage/%shortcut_set/delete'] = array(
-    'title' => 'Delete shortcut set',
-    'route_name' => 'shortcut.set_delete',
-  );
   $items['admin/config/user-interface/shortcut/manage/%shortcut_set/add-link'] = array(
     'title' => 'Add shortcut',
     'page callback' => 'drupal_get_form',
