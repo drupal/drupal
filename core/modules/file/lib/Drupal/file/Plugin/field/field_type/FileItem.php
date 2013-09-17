@@ -50,16 +50,6 @@ class FileItem extends EntityReferenceItem implements ConfigFieldItemInterface {
   /**
    * {@inheritdoc}
    */
-  public function getInstance() {
-    if (!isset($this->instance) && $parent = $this->getParent()) {
-      $this->instance = $parent->getInstance();
-    }
-    return $this->instance;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function schema(FieldInterface $field) {
     return array(
       'columns' => array(
