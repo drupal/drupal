@@ -80,15 +80,6 @@ const COMMENT_CLOSED = 1;
 const COMMENT_OPEN = 2;
 
 /**
- * Denotes that access is denied for an entity to which a comment field is
- * attached and no {%entity_type}_access function exists.
- *
- * Modules should return this value from hook_comment_access() to deny
- * access to commenting on an entity
- */
-const COMMENT_ACCESS_DENY = 'deny';
-
-/**
  * The time cutoff for comments marked as read for entity types other node.
  *
  * Comments changed before this time are always marked as read.
