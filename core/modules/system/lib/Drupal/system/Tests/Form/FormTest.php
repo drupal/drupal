@@ -374,8 +374,8 @@ class FormTest extends WebTestBase {
     // Array with all the error messages to be checked.
     $error_messages = array(
       'no_number' => '%name must be a number.',
-      'too_low' => '%name must be higher or equal to %min.',
-      'too_high' => '%name must be below or equal to %max.',
+      'too_low' => '%name must be higher than or equal to %min.',
+      'too_high' => '%name must be lower than or equal to %max.',
       'step_mismatch' => '%name is not a valid number.',
     );
 
