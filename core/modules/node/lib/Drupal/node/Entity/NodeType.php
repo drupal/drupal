@@ -36,6 +36,9 @@ use Drupal\Core\Annotation\Translation;
  *     "id" = "type",
  *     "label" = "name",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/structure/types/manage/{node_type}"
  *   }
  * )
  */
@@ -134,19 +137,6 @@ class NodeType extends ConfigEntityBase implements NodeTypeInterface {
    */
   public function id() {
     return $this->type;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function uri() {
-    return array(
-      'path' => 'admin/structure/types/manage/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      ),
-    );
   }
 
   /**

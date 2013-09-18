@@ -37,6 +37,9 @@ use Drupal\custom_block\CustomBlockTypeInterface;
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/structure/block/custom-blocks/manage/{custom_block_type}"
  *   }
  * )
  */
@@ -76,19 +79,6 @@ class CustomBlockType extends ConfigEntityBase implements CustomBlockTypeInterfa
    * @var string
    */
   public $description;
-
-  /**
-   * Overrides \Drupal\Core\Entity\Entity::uri().
-   */
-  public function uri() {
-    return array(
-      'path' => 'admin/structure/block/custom-blocks/manage/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      )
-    );
-  }
 
   /**
    * {@inheritdoc}

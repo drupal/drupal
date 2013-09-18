@@ -235,21 +235,6 @@ function contact_category_load($id) {
 }
 
 /**
- * Entity URI callback.
- *
- * @param Drupal\contact\Entity\Category $category
- *   A contact category entity.
- *
- * @return array
- *   An array with 'path' as the key and the path to the category as the value.
- */
-function contact_category_uri(Category $category) {
-  return array(
-    'path' => 'admin/structure/contact/manage/' . $category->id(),
-  );
-}
-
-/**
  * Implements hook_mail().
  */
 function contact_mail($key, &$message, $params) {

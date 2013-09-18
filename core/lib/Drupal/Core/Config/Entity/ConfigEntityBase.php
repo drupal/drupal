@@ -188,4 +188,11 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function uri() {
+    return parent::uri('edit-form');
+  }
+
 }

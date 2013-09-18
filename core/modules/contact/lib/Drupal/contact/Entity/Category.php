@@ -30,13 +30,15 @@ use Drupal\contact\CategoryInterface;
  *       "delete" = "Drupal\contact\Form\CategoryDeleteForm"
  *     }
  *   },
- *   uri_callback = "contact_category_uri",
  *   config_prefix = "contact.category",
  *   bundle_of = "contact_message",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/structure/contact/manage/{contact_category}"
  *   }
  * )
  */

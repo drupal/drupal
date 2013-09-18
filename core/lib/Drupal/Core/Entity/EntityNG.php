@@ -208,61 +208,6 @@ class EntityNG extends Entity {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public function uri($rel = 'canonical') {
-    $entity_info = $this->entityInfo();
-
-    $link_templates = isset($entity_info['links']) ? $entity_info['links'] : array();
-
-    if (isset($link_templates[$rel])) {
-      $template = $link_templates[$rel];
-      $replacements = $this->uriPlaceholderReplacements();
-      $uri['path'] = str_replace(array_keys($replacements), array_values($replacements), $template);
-
-      // @todo Remove this once http://drupal.org/node/1888424 is in and we can
-      //   move the BC handling of / vs. no-/ to the generator.
-      $uri['path'] = trim($uri['path'], '/');
-
-      // Pass the entity data to url() so that alter functions do not need to
-      // look up this entity again.
-      $uri['options']['entity_type'] = $this->entityType;
-      $uri['options']['entity'] = $this;
-      return $uri;
-    }
-
-    // For a canonical link (that is, a link to self), look up the stack for
-    // default logic. Other relationship types are not supported by parent
-    // classes.
-    if ($rel == 'canonical') {
-      return parent::uri();
-    }
-  }
-
-  /**
-   * Returns an array of placeholders for this entity.
-   *
-   * Individual entity classes may override this method to add additional
-   * placeholders if desired. If so, they should be sure to replicate the
-   * property caching logic.
-   *
-   * @return array
-   *   An array of URI placeholders.
-   */
-  protected function uriPlaceholderReplacements() {
-    if (empty($this->uriPlaceholderReplacements)) {
-      $this->uriPlaceholderReplacements = array(
-        '{entityType}' => $this->entityType(),
-        '{bundle}' => $this->bundle(),
-        '{id}' => $this->id(),
-        '{uuid}' => $this->uuid(),
-        '{' . $this->entityType() . '}' => $this->id(),
-      );
-    }
-    return $this->uriPlaceholderReplacements;
-  }
-
-  /**
    * Implements \Drupal\Core\TypedData\ComplexDataInterface::get().
    */
   public function get($property_name) {

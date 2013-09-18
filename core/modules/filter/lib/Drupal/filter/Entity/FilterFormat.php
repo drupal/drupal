@@ -38,6 +38,9 @@ use Drupal\filter\FilterBag;
  *     "uuid" = "uuid",
  *     "weight" = "weight",
  *     "status" = "status"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/config/content/formats/manage/{filter_format}"
  *   }
  * )
  */
@@ -186,19 +189,6 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
     cache('filter')->deleteTags(array('filter_format' => $this->format));
 
     return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function uri() {
-    return array(
-      'path' => 'admin/config/content/formats/manage/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      ),
-    );
   }
 
   /**

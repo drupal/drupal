@@ -35,6 +35,9 @@ use Drupal\user\RoleInterface;
  *     "uuid" = "uuid",
  *     "weight" = "weight",
  *     "label" = "label"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/people/roles/manage/{user_role}"
  *   }
  * )
  */
@@ -74,19 +77,6 @@ class Role extends ConfigEntityBase implements RoleInterface {
    * @var array
    */
   public $permissions = array();
-
-  /**
-   * {@inheritdoc}
-   */
-  public function uri() {
-    return array(
-      'path' => 'admin/people/roles/manage/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      ),
-    );
-  }
 
   /**
    * {@inheritdoc}

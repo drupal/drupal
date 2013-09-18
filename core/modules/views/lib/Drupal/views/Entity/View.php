@@ -33,6 +33,9 @@ use Drupal\Core\Annotation\Translation;
  *     "label" = "label",
  *     "uuid" = "uuid",
  *     "status" = "status"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/structure/views/view/{view}"
  *   }
  * )
  */
@@ -132,19 +135,6 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
     }
 
     return $this->executable;
-  }
-
-  /**
-   * Overrides Drupal\Core\Entity\EntityInterface::uri().
-   */
-  public function uri() {
-    return array(
-      'path' => 'admin/structure/views/view/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      ),
-    );
   }
 
   /**

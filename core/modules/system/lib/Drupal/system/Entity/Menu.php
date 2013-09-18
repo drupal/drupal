@@ -28,6 +28,9 @@ use Drupal\system\MenuInterface;
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/structure/menu/manage/{menu}"
  *   }
  * )
  */

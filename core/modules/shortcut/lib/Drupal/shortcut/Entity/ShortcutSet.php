@@ -37,6 +37,9 @@ use Drupal\shortcut\ShortcutSetInterface;
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/config/user-interface/shortcut/manage/{shortcut_set}"
  *   }
  * )
  */
@@ -69,19 +72,6 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
    * @var array
    */
   public $links = array();
-
-  /**
-   * Overrides \Drupal\Core\Entity\Entity::uri().
-   */
-  public function uri() {
-    return array(
-      'path' => 'admin/config/user-interface/shortcut/manage/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      ),
-    );
-  }
 
   /**
    * {@inheritdoc}
