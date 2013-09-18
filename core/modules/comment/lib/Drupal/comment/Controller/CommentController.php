@@ -254,7 +254,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
 
     // The user is not just previewing a comment.
     if ($request->request->get('op') != $this->t('Preview')) {
-      if ($entity->$field_name->status != COMMENT_OPEN) {
+      if ($entity->{$field_name}->status != COMMENT_OPEN) {
         drupal_set_message($this->t("This discussion is closed: you can't post new comments."), 'error');
         return new RedirectResponse($this->urlGenerator()->generateFromPath($uri['path'], array('absolute' => TRUE)));
       }
@@ -329,6 +329,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
     foreach ($nids as $nid) {
       $node = node_load($nid);
       $new = comment_num_new($node->id(), 'node');
+      // @todo Fix comment_count to use proper field.
       $query = comment_new_page_count($node->comment_count, $new, $node);
       $links[$nid] = array(
         'new_comment_count' => (int)$new,
