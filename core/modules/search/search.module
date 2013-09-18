@@ -152,11 +152,8 @@ function search_preprocess_block(&$variables) {
 function search_menu() {
   $items['search'] = array(
     'title' => 'Search',
-    'page callback' => 'search_view',
-    'page arguments' => array(NULL, '', ''),
-    'access callback' => 'search_is_active',
     'type' => MENU_SUGGESTED_ITEM,
-    'file' => 'search.pages.inc',
+    'route_name' => 'search.view',
   );
   $items['admin/config/search/settings'] = array(
     'title' => 'Search settings',
@@ -183,43 +180,13 @@ function search_menu() {
       $path = 'search/' . $search_info['path'];
       $items[$path] = array(
         'title' => $search_info['title'],
-        'page callback' => 'search_view',
-        'page arguments' => array($plugin_id, ''),
-        'access callback' => '_search_menu_access',
-        'access arguments' => array($plugin_id),
+        'route_name' => 'search.view_' . $plugin_id,
         'type' => MENU_LOCAL_TASK,
-        'file' => 'search.pages.inc',
         'weight' => $plugin_id == $default_info['id'] ? -10 : 0,
-      );
-      $items["$path/%menu_tail"] = array(
-        'title' => $search_info['title'],
-        'load arguments' => array('%map', '%index'),
-        'page callback' => 'search_view',
-        'page arguments' => array($plugin_id, 2),
-        'access callback' => '_search_menu_access',
-        'access arguments' => array($plugin_id),
-        // The default local task points to its parent, but this item points to
-        // where it should so it should not be changed.
-        'type' => MENU_LOCAL_TASK,
-        'file' => 'search.pages.inc',
-        'weight' => 0,
-        // These tabs are not subtabs.
-        'tab_root' => 'search/' . $default_info['path'] . '/%',
-        // These tabs need to display at the same level.
-        'tab_parent' => 'search/' . $default_info['path'],
       );
     }
   }
   return $items;
-}
-
-/**
- * Determines access for the 'search' path.
- */
-function search_is_active() {
-  // This path cannot be accessed if there are no active plugins.
-  $account = \Drupal::request()->attributes->get('_account');
-  return !empty($account) && $account->hasPermission('search content') && \Drupal::service('plugin.manager.search')->getActiveDefinitions();
 }
 
 /**
@@ -251,12 +218,7 @@ function search_get_default_plugin_info() {
  * @see search_menu()
  */
 function _search_menu_access($plugin_id) {
-  $account = \Drupal::request()->attributes->get('_account');
-  // @todo - remove the empty() check once we are more confident
-  // that the account will be populated, especially during tests.
-  // @see https://drupal.org/node/2032553
-  $access = !empty($account) && $account->hasPermission('search content');
-  return $access && \Drupal::service('plugin.manager.search')->pluginAccess($plugin_id, $account);
+  return \Drupal::service('access_manager')->checkNamedRoute('search.view_' . $plugin_id);
 }
 
 /**

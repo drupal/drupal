@@ -1,0 +1,6 @@
+services:
+  dblog.route_subscriber:
+    class: Drupal\dblog\Routing\RouteSubscriber
+    arguments: ['@module_handler']
+    tags:
+      - { name: event_subscriber}

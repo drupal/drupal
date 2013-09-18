@@ -2,3 +2,21 @@ services:
   plugin.manager.search:
     class: Drupal\search\SearchPluginManager
     arguments: ['@container.namespaces', '@config.factory']
+
+  access_check.search:
+    class: Drupal\search\Access\SearchAccessCheck
+    arguments: ['@plugin.manager.search']
+    tags:
+      - { name: access_check }
+
+  access_check.search_plugin:
+    class: Drupal\search\Access\SearchPluginAccessCheck
+    arguments: ['@plugin.manager.search']
+    tags:
+      - { name: access_check }
+
+  route_subscriber.search:
+    class: Drupal\search\Routing\SearchRouteSubscriber
+    arguments: ['@plugin.manager.search']
+    tags:
+     - { name: event_subscriber }

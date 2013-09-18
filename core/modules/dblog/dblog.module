@@ -49,18 +49,12 @@ function dblog_menu() {
   $items['admin/reports/page-not-found'] = array(
     'title' => "Top 'page not found' errors",
     'description' => "View 'page not found' errors (404s).",
-    'page callback' => 'dblog_top',
-    'page arguments' => array('page not found'),
-    'access arguments' => array('access site reports'),
-    'file' => 'dblog.admin.inc',
+    'route_name' => 'dblog.page_not_found',
   );
   $items['admin/reports/access-denied'] = array(
     'title' => "Top 'access denied' errors",
     'description' => "View 'access denied' errors (403s).",
-    'page callback' => 'dblog_top',
-    'page arguments' => array('access denied'),
-    'access arguments' => array('access site reports'),
-    'file' => 'dblog.admin.inc',
+    'route_name' => 'dblog.access_denied',
   );
   $items['admin/reports/event/%'] = array(
     'title' => 'Details',
@@ -71,10 +65,7 @@ function dblog_menu() {
     $items['admin/reports/search'] = array(
       'title' => 'Top search phrases',
       'description' => 'View most popular search phrases.',
-      'page callback' => 'dblog_top',
-      'page arguments' => array('search'),
-      'access arguments' => array('access site reports'),
-      'file' => 'dblog.admin.inc',
+      'route_name' => 'dblog.search',
     );
   }
 

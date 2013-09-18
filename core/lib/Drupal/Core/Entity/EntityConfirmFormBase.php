@@ -57,6 +57,8 @@ abstract class EntityConfirmFormBase extends EntityFormController implements Con
   public function buildForm(array $form, array &$form_state) {
     $form = parent::buildForm($form, $form_state);
 
+    $form['#title'] = $this->getQuestion();
+
     $form['#attributes']['class'][] = 'confirmation';
     $form['description'] = array('#markup' => $this->getDescription());
     $form[$this->getFormName()] = array('#type' => 'hidden', '#value' => 1);
@@ -66,15 +68,6 @@ abstract class EntityConfirmFormBase extends EntityFormController implements Con
       $form['#theme'] = 'confirm_form';
     }
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function init(array &$form_state) {
-    parent::init($form_state);
-
-    drupal_set_title($this->getQuestion(), PASS_THROUGH);
   }
 
   /**

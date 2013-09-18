@@ -410,6 +410,10 @@ services:
     arguments: ['@entity.manager']
     tags:
       - { name: access_check }
+  access_check.theme:
+    class: Drupal\Core\Theme\ThemeAccessCheck
+    tags:
+      - { name: access_check }
   maintenance_mode_subscriber:
     class: Drupal\Core\EventSubscriber\MaintenanceModeSubscriber
     tags:

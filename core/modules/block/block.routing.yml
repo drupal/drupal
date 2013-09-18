@@ -1,3 +1,13 @@
+block.admin_demo:
+  path: '/admin/structure/block/demo/{theme}'
+  defaults:
+    _content: '\Drupal\block\Controller\BlockController::demo'
+  options:
+    _access_mode: 'ALL'
+  requirements:
+    _access_theme: 'TRUE'
+    _permission: 'administer blocks'
+
 block.admin_block_delete:
   path: '/admin/structure/block/manage/{block}/delete'
   defaults:

@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *   Search plugin_id to use for the search.
  * @param $keys
  *   Keywords to use for the search.
+ *
+ * @deprecated Use \Drupal\search\Controller\SearchController::searchView()
  */
 function search_view($plugin_id = NULL, $keys = '') {
   $info = FALSE;

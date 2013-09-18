@@ -70,15 +70,14 @@ const RESPONSIVE_PRIORITY_LOW = 'priority-low';
  * @return
  *   Boolean TRUE if the theme is enabled or is the site administration theme;
  *   FALSE otherwise.
+ *
+ * @deprecated Use \Drupal::service('access_check.theme')->checkAccess().
  */
 function drupal_theme_access($theme) {
   if (is_object($theme)) {
-    return !empty($theme->status);
+    $theme = $theme->name;
   }
-  else {
-    $themes = list_themes();
-    return !empty($themes[$theme]->status);
-  }
+  return Drupal::service('access_check.theme')->checkAccess($theme);
 }
 
 /**

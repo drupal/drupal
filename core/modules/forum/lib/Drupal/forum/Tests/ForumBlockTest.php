@@ -177,7 +177,7 @@ class ForumBlockTest extends WebTestBase {
       );
 
       // Create the forum topic, preselecting the forum ID via a URL parameter.
-      $this->drupalPostForm('node/add/forum/1', $edit, t('Save and publish'));
+      $this->drupalPostForm('node/add/forum', $edit, t('Save and publish'), array('query' => array('forum_id' => 1)));
       $topics[] = $title;
     }
 

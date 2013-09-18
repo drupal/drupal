@@ -126,9 +126,7 @@ function language_menu() {
   $items['admin/config/regional/content-language'] = array(
     'title' => 'Content language settings',
     'description' => 'Configure content language support for any multilingual element.',
-    'page callback' => 'language_content_settings_page',
-    'access arguments' => array('administer languages'),
-    'file' => 'language.admin.inc',
+    'route_name' => 'language.content_settings_page',
   );
 
   return $items;

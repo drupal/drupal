@@ -605,13 +605,6 @@ function system_element_info() {
  * Implements hook_menu().
  */
 function system_menu() {
-  $items['system/temporary'] = array(
-    'title' => 'Temporary files',
-    'page callback' => 'file_download',
-    'page arguments' => array('temporary'),
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
   $items['system/ajax'] = array(
     'title' => 'AHAH callback',
     'route_name' => 'system.ajax',
@@ -648,23 +641,14 @@ function system_menu() {
   $items['admin/appearance'] = array(
     'title' => 'Appearance',
     'description' => 'Select and configure your themes.',
-    'page callback' => 'system_themes_page',
-    'access arguments' => array('administer themes'),
+    'route_name' => 'system.themes_page',
     'position' => 'left',
     'weight' => -6,
-    'file' => 'system.admin.inc',
   );
   $items['admin/appearance/list'] = array(
     'title' => 'List',
     'description' => 'Select and configure your theme',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'file' => 'system.admin.inc',
-  );
-  $items['admin/appearance/default'] = array(
-    'title' => 'Set default theme',
-    'page callback' => 'system_theme_default',
-    'access arguments' => array('administer themes'),
-    'type' => MENU_CALLBACK,
     'file' => 'system.admin.inc',
   );
   $items['admin/appearance/settings'] = array(

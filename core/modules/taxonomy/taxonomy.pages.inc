@@ -12,6 +12,8 @@ use Drupal\taxonomy\Entity\Term;
  *
  * @param Drupal\taxonomy\Entity\Term $term
  *   The taxonomy term entity.
+ *
+ * @deprecated Use \Drupal\taxonomy\Controller\TaxonomyController::termPage()
  */
 function taxonomy_term_page(Term $term) {
   // Assign the term name as the page title.
@@ -65,6 +67,8 @@ function taxonomy_term_page(Term $term) {
  *
  * @param Drupal\taxonomy\Entity\Term $term
  *   The taxonomy term entity.
+ *
+ * @deprecated Use \Drupal\taxonomy\Controller\TaxonomyController::termFeed()
  */
 function taxonomy_term_feed(Term $term) {
   $channel['link'] = url('taxonomy/term/' . $term->id(), array('absolute' => TRUE));

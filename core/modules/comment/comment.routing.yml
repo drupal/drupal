@@ -1,3 +1,21 @@
+comment.admin:
+  path: '/admin/content/comment'
+  defaults:
+    _title: 'Comments'
+    _content: '\Drupal\comment\Controller\CommentController::adminPage'
+    type: 'new'
+  requirements:
+    _permission: 'administer comments'
+
+comment.admin_approval:
+  path: '/admin/content/comment/approval'
+  defaults:
+    _title: 'Unapproved comments'
+    _content: '\Drupal\comment\Controller\CommentController::adminPage'
+    type: 'approval'
+  requirements:
+    _permission: 'administer comments'
+
 comment.edit_page:
   path: '/comment/{comment}/edit'
   defaults:

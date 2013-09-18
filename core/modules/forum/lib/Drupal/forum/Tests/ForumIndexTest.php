@@ -52,7 +52,7 @@ class ForumIndexTest extends WebTestBase {
     );
 
     // Create the forum topic, preselecting the forum ID via a URL parameter.
-    $this->drupalPostForm('node/add/forum/' . $tid, $edit, t('Save and publish'));
+    $this->drupalPostForm('node/add/forum', $edit, t('Save and publish'), array('query' => array('forum_id' => $tid)));
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($title);

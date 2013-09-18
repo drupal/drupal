@@ -59,23 +59,16 @@ class ForumBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * {@inheritdoc}
    */
   public function build(array $attributes) {
-    // @todo This only works for legacy routes. Once node/% and forum/% are
-    //   converted to the new router this code will need to be updated.
-    if (isset($attributes['_drupal_menu_item']) && ($item = $attributes['_drupal_menu_item']) && $item['path'] == 'node/%') {
-      $node = $item['map'][1];
-      // Load the object in case of missing wildcard loaders.
-      $node = is_object($node) ? $node : node_load($node);
-      if ($this->forumManager->checkNodeType($node)) {
-        $breadcrumb = $this->forumPostBreadcrumb($node);
+    if (!empty($attributes[RouteObjectInterface::ROUTE_NAME])) {
+      $route_name = $attributes[RouteObjectInterface::ROUTE_NAME];
+      if ($route_name == 'node.view' && isset($attributes['node'])) {
+        if ($this->forumManager->checkNodeType($attributes['node'])) {
+          return $this->forumPostBreadcrumb($attributes['node']);
+        }
       }
-    }
-
-    if (!empty($attributes[RouteObjectInterface::ROUTE_NAME]) && $attributes[RouteObjectInterface::ROUTE_NAME] == 'forum.page' && isset($attributes['taxonomy_term'])) {
-      $breadcrumb = $this->forumTermBreadcrumb($attributes['taxonomy_term']);
-    }
-
-    if (!empty($breadcrumb)) {
-      return $breadcrumb;
+      if ($route_name == 'forum.page' && isset($attributes['taxonomy_term'])) {
+        return $this->forumTermBreadcrumb($attributes['taxonomy_term']);
+      }
     }
   }
 

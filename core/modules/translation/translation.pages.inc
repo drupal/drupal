@@ -18,6 +18,8 @@ use Drupal\Core\Entity\EntityInterface;
  *   A render array for a page containing a list of content.
  *
  * @see translation_menu()
+ *
+ * @deprecated Use \Drupal\translation\Controller\TranslationController::nodeOverview()
  */
 function translation_node_overview(EntityInterface $node) {
   include_once DRUPAL_ROOT . '/core/includes/language.inc';
@@ -91,7 +93,7 @@ function translation_node_overview(EntityInterface $node) {
     $rows[] = $row;
   }
 
-  drupal_set_title(t('Translations of %title', array('%title' => $node->label())), PASS_THROUGH);
+  $build['#title'] = t('Translations of %title', array('%title' => $node->label()));
 
   $build['translation_node_overview'] = array(
     '#theme' => 'table',

@@ -145,4 +145,20 @@ class SystemController extends ControllerBase implements ContainerInjectionInter
     return $this->systemManager->getBlockContents();
   }
 
+  /**
+   * @todo Remove system_themes_page().
+   */
+  public function themesPage() {
+    module_load_include('admin.inc', 'system');
+    return system_themes_page();
+  }
+
+  /**
+   * @todo Remove system_theme_default().
+   */
+  public function themeSetDefault() {
+    module_load_include('admin.inc', 'system');
+    return system_theme_default();
+  }
+
 }

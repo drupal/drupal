@@ -114,6 +114,8 @@ function template_preprocess_aggregator_item(&$variables) {
  *   An OPML formatted string.
  *
  * @see aggregator_menu()
+ *
+ * @deprecated Use \Drupal\aggregator\Controller\AggregatorController::opmlPage()
  */
 function aggregator_page_opml($cid = NULL) {
   if ($cid) {

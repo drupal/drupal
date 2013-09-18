@@ -11,3 +11,19 @@ dblog.event:
     _content: '\Drupal\dblog\Controller\DbLogController::eventDetails'
   requirements:
     _permission: 'access site reports'
+
+dblog.page_not_found:
+  path: '/admin/reports/page-not-found'
+  defaults:
+    _title: "Top 'page not found' errors"
+    _content: '\Drupal\dblog\Controller\DbLogController::pageNotFound'
+  requirements:
+    _permission: 'access site reports'
+
+dblog.access_denied:
+  path: '/admin/reports/access-denied'
+  defaults:
+    _title: "Top 'access denied' errors"
+    _content: '\Drupal\dblog\Controller\DbLogController::accessDenied'
+  requirements:
+    _permission: 'access site reports'

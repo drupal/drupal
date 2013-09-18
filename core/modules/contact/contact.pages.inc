@@ -21,6 +21,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @see contact_menu()
  * @see contact_site_form_submit()
  * @ingroup forms
+ *
+ * @deprecated Use \Drupal\contact\Controller\ContactController::contactSitePage()
  */
 function contact_site_page(Category $category = NULL) {
   // Check if flood control has been activated for sending e-mails.
@@ -66,6 +68,8 @@ function contact_site_page(Category $category = NULL) {
  * @see contact_personal_form_submit()
  *
  * @ingroup forms
+ *
+ * @deprecated Use \Drupal\contact\Controller\ContactController::contactPersonalPage()
  */
 function contact_personal_page($recipient) {
   global $user;

@@ -849,25 +849,18 @@ function user_menu() {
     'title' => 'My account',
     'title callback' => 'user_page_title',
     'title arguments' => array(1),
-    'page callback' => 'user_view_page',
-    'page arguments' => array(1),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1),
+    'route_name' => 'user.view',
   );
   $items['user/%user/view'] = array(
     'title' => 'View',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   $items['user/%user/cancel'] = array(
-    'route_name' => 'user.cancel_confirm',
+    'route_name' => 'user.cancel',
   );
   $items['user/%user/cancel/confirm/%/%'] = array(
     'title' => 'Confirm account cancellation',
-    'page callback' => 'user_cancel_confirm',
-    'page arguments' => array(1, 4, 5),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'delete'),
-    'file' => 'user.pages.inc',
+    'route_name' => 'user.cancel_confirm',
   );
   $items['user/%user/edit'] = array(
     'title' => 'Edit',
@@ -1368,18 +1361,6 @@ function user_delete($uid) {
  */
 function user_delete_multiple(array $uids) {
   entity_delete_multiple('user', $uids);
-}
-
-/**
- * Page callback wrapper for user_view().
- */
-function user_view_page($account) {
-  if (is_object($account)) {
-    return user_view($account);
-  }
-  // An administrator may try to view a non-existent account,
-  // so we give them a 404 (versus a 403 for non-admins).
-  throw new NotFoundHttpException();
 }
 
 /**

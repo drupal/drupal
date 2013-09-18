@@ -511,7 +511,7 @@ class ForumTest extends WebTestBase {
     $tid = $forum['tid'];
 
     // Create the forum topic, preselecting the forum ID via a URL parameter.
-    $this->drupalPostForm('node/add/forum/' . $tid, $edit, t('Save'));
+    $this->drupalPostForm('node/add/forum', $edit, t('Save'), array('query' => array('forum_id' => $tid)));
 
     $type = t('Forum topic');
     if ($container) {

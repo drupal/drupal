@@ -8,6 +8,7 @@
 namespace Drupal\user\Controller;
 
 use Drupal\user\Form\UserLoginForm;
+use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,6 +54,14 @@ class UserController extends ContainerAware {
   public function logout(Request $request) {
     user_logout();
     return new RedirectResponse(url('<front>', array('absolute' => TRUE)));
+  }
+
+  /**
+   * @todo Remove user_cancel_confirm().
+   */
+  public function confirmCancel(UserInterface $user, $timestamp = 0, $hashed_pass = '') {
+    module_load_include('pages.inc', 'user');
+    return user_cancel_confirm($user, $timestamp, $hashed_pass);
   }
 
 }

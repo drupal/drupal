@@ -8,6 +8,7 @@
  * API pattern.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Language\Language;
 use Symfony\Component\HttpFoundation\Response;
 use Drupal\Core\Cache\CacheBackendInterface;
@@ -575,14 +576,16 @@ function node_revision_delete($revision_id) {
  *   A $page element suitable for use by drupal_render().
  *
  * @see node_menu()
+ *
+ * @deprecated Use \Drupal\node\Controller\NodeController::revisionShow()
  */
 function node_show(EntityInterface $node, $message = FALSE) {
-  if ($message) {
-    drupal_set_title(t('Revision of %title from %date', array('%title' => $node->label(), '%date' => format_date($node->getRevisionCreationTime()))), PASS_THROUGH);
-  }
-
   // For markup consistency with other pages, use node_view_multiple() rather than node_view().
   $page = array('nodes' => node_view_multiple(array($node->id() => $node), 'full'));
+
+  if ($message) {
+    $page['#title'] = t('Revision of %title from %date', array('%title' => $node->label(), '%date' => format_date($node->getRevisionCreationTime())));
+  }
 
   // Update the history table, stating that this user viewed this node.
   global $user;
@@ -941,21 +944,12 @@ function _node_revision_access(EntityInterface $node, $op = 'view', $account = N
  *   TRUE if the user has add permission, otherwise FALSE.
  *
  * @see node_menu()
+ *
+ * @deprecated
+ *   Use \Drupal::service('access_manager')->checkNamedRoute('node.add_page');
  */
 function _node_add_access() {
-  $types = node_type_get_types();
-  foreach ($types as $type) {
-    if (node_access('create', $type->type)) {
-      return TRUE;
-    }
-  }
-  if (user_access('administer content types')) {
-    // There are no content types defined that the user has permission to create,
-    // but the user does have the permission to administer the content types, so
-    // grant them access to the page anyway.
-    return TRUE;
-  }
-  return FALSE;
+  return \Drupal::service('access_manager')->checkNamedRoute('node.add_page');
 }
 
 /**
@@ -1001,30 +995,21 @@ function node_menu() {
   );
   $items['node/add'] = array(
     'title' => 'Add content',
-    'page callback' => 'node_add_page',
-    'access callback' => '_node_add_access',
-    'file' => 'node.pages.inc',
+    'route_name' => 'node.add_page',
   );
   $items['node/add/%node_type'] = array(
     'title callback' => 'entity_page_label',
     'title arguments' => array(2),
-    'page callback' => 'node_add',
-    'page arguments' => array(2),
-    'access callback' => 'node_access',
-    'access arguments' => array('create', 2),
     'description callback' => 'node_type_get_description',
     'description arguments' => array(2),
-    'file' => 'node.pages.inc',
+    'route_name' => 'node.add',
   );
   $items['node/%node'] = array(
     'title callback' => 'node_page_title',
     'title arguments' => array(1),
-    // The page callback also invokes drupal_set_title() in case
-    // the menu router's title is overridden by a menu link.
-    'page callback' => 'node_page_view',
-    'page arguments' => array(1),
-    'access callback' => 'node_access',
-    'access arguments' => array('view', 1),
+    // The controller also sets the #title in case the routes' title is
+    // overridden by a menu link.
+    'route_name' => 'node.view',
   );
   $items['node/%node/view'] = array(
     'title' => 'View',
@@ -1045,20 +1030,13 @@ function node_menu() {
   );
   $items['node/%node/revisions'] = array(
     'title' => 'Revisions',
-    'page callback' => 'node_revision_overview',
-    'page arguments' => array(1),
-    'access callback' => '_node_revision_access',
-    'access arguments' => array(1),
+    'route_name' => 'node.revision_overview',
     'weight' => 20,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'node.pages.inc',
   );
   $items['node/%node/revisions/%node_revision/view'] = array(
     'title' => 'Revisions',
-    'page callback' => 'node_show',
-    'page arguments' => array(3, TRUE),
-    'access callback' => '_node_revision_access',
-    'access arguments' => array(3),
+    'route_name' => 'node.revision_show',
   );
   $items['node/%node/revisions/%node_revision/revert'] = array(
     'title' => 'Revert to earlier revision',
@@ -1501,13 +1479,10 @@ function node_view_multiple($nodes, $view_mode = 'teaser', $langcode = NULL) {
  *   A page array suitable for use by drupal_render().
  *
  * @see node_menu()
+ *
+ * @deprecated Use \Drupal\node\Controller\NodeController::viewPage()
  */
 function node_page_view(EntityInterface $node) {
-  // If there is a menu link to this node, the link becomes the last part
-  // of the active trail, and the link name becomes the page title.
-  // Thus, we must explicitly set the page title to be the node title.
-  drupal_set_title($node->label());
-
   foreach ($node->uriRelationships() as $rel) {
     $uri = $node->uri($rel);
     // Set the node path as the canonical URL to prevent duplicate content.
@@ -1519,7 +1494,13 @@ function node_page_view(EntityInterface $node) {
     }
   }
 
-  return node_show($node);
+  $build = node_show($node);
+
+  // If there is a menu link to this node, the link becomes the last part
+  // of the active trail, and the link name becomes the page title.
+  // Thus, we must explicitly set the page title to be the node title.
+  $build['#title'] = String::checkPlain($node->label());
+  return $build;
 }
 
 /**

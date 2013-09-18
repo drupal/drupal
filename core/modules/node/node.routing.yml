@@ -12,12 +12,51 @@ node.page_edit:
   requirements:
     _entity_access: 'node.update'
 
+node.add_page:
+  path: '/node/add'
+  defaults:
+    _title: 'Add page'
+    _content: '\Drupal\node\Controller\NodeController::addPage'
+  requirements:
+    _permission: 'administer content types'
+    _node_add_access: 'node'
+
+node.add:
+  path: '/node/add/{node_type}'
+  defaults:
+    _content: '\Drupal\node\Controller\NodeController::add'
+  requirements:
+    _node_add_access: 'node:{node_type}'
+
+node.view:
+  path: '/node/{node}'
+  defaults:
+    _content: '\Drupal\node\Controller\NodeController::viewPage'
+  requirements:
+    _entity_access: 'node.view'
+
 node.delete_confirm:
   path: '/node/{node}/delete'
   defaults:
     _entity_form: 'node.delete'
   requirements:
     _entity_access: 'node.delete'
+
+node.revision_overview:
+  path: '/node/{node}/revisions'
+  defaults:
+    _title: 'Revisions'
+    _content: '\Drupal\node\Controller\NodeController::revisionOverview'
+  requirements:
+    _access_node_revision: 'view'
+
+node.revision_show:
+  path: '/node/{node}/revisions/{node_revision}/view'
+  defaults:
+    _title: 'Revisions'
+    _content: '\Drupal\node\Controller\NodeController::revisionShow'
+  requirements:
+    _access_node_revision: 'view'
 
 node.revision_revert_confirm:
   path: '/node/{node}/revisions/{node_revision}/revert'

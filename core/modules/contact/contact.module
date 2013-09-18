@@ -80,31 +80,22 @@ function contact_menu() {
 
   $items['contact'] = array(
     'title' => 'Contact',
-    'page callback' => 'contact_site_page',
-    'access arguments' => array('access site-wide contact form'),
+    'route_name' => 'contact.site_page',
     'menu_name' => 'footer',
     'type' => MENU_SUGGESTED_ITEM,
-    'file' => 'contact.pages.inc',
   );
   $items['contact/%contact_category'] = array(
     'title' => 'Contact category form',
     'title callback' => 'entity_page_label',
     'title arguments' => array(1),
-    'page callback' => 'contact_site_page',
-    'page arguments' => array(1),
-    'access arguments' => array('access site-wide contact form'),
+    'route_name' => 'contact.site_page_category',
     'type' => MENU_VISIBLE_IN_BREADCRUMB,
-    'file' => 'contact.pages.inc',
   );
   $items['user/%user/contact'] = array(
     'title' => 'Contact',
-    'page callback' => 'contact_personal_page',
-    'page arguments' => array(1),
+    'route_name' => 'contact.personal_page',
     'type' => MENU_LOCAL_TASK,
-    'access callback' => '_contact_personal_tab_access',
-    'access arguments' => array(1),
     'weight' => 2,
-    'file' => 'contact.pages.inc',
   );
   return $items;
 }
@@ -118,41 +109,7 @@ function contact_menu() {
  * @see contact_menu()
  */
 function _contact_personal_tab_access(UserInterface $account) {
-  global $user;
-
-  // Anonymous users cannot have contact forms.
-  if ($account->isAnonymous()) {
-    return FALSE;
-  }
-
-  // Users may not contact themselves.
-  if ($user->id() == $account->id()) {
-    return FALSE;
-  }
-
-  // User administrators should always have access to personal contact forms.
-  if (user_access('administer users')) {
-    return TRUE;
-  }
-
-  // If requested user has been blocked, do not allow users to contact them.
-  if ($account->isBlocked()) {
-    return FALSE;
-  }
-
-  // If the requested user has disabled their contact form, do not allow users
-  // to contact them.
-  $account_data = \Drupal::service('user.data')->get('contact', $account->id(), 'enabled');
-  if (isset($account_data) && empty($account_data)) {
-    return FALSE;
-  }
-  // If the requested user did not save a preference yet, deny access if the
-  // configured default is disabled.
-  elseif (!\Drupal::config('contact.settings')->get('user_default_enabled')) {
-    return FALSE;
-  }
-
-  return user_access('access user contact forms');
+  return \Drupal::service('access_manager')->checkNamedRoute('contact.personal_page', array('user' => $account->id()));
 }
 
 /**

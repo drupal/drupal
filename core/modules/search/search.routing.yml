@@ -11,3 +11,17 @@ search.reindex_confirm:
     _form: 'Drupal\search\Form\ReindexConfirm'
   requirements:
     _permission: 'administer search'
+
+search.view:
+  path: '/search/{plugin_id}'
+  defaults:
+    _title: 'Search'
+    _content: '\Drupal\search\Controller\SearchController::searchView'
+    plugin_id: NULL
+    keys: ''
+  options:
+    _access_mode: 'ALL'
+  requirements:
+    keys: '.+'
+    _permission: 'search content'
+    _search_access: 'TRUE'

@@ -319,4 +319,28 @@ class DbLogController extends ControllerBase implements ContainerInjectionInterf
     );
   }
 
+  /**
+   * @todo Remove dblog_top().
+   */
+  public function pageNotFound() {
+    module_load_include('admin.inc', 'dblog');
+    return dblog_top('page not found');
+  }
+
+  /**
+   * @todo Remove dblog_top().
+   */
+  public function accessDenied() {
+    module_load_include('admin.inc', 'dblog');
+    return dblog_top('access denied');
+  }
+
+  /**
+   * @todo Remove dblog_top().
+   */
+  public function search() {
+    module_load_include('admin.inc', 'dblog');
+    return dblog_top('search');
+  }
+
 }

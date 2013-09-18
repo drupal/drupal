@@ -11,3 +11,11 @@ update.status:
     _content: '\Drupal\update\Controller\UpdateController::updateStatus'
   requirements:
     _permission: 'administer site configuration'
+
+update.manual_status:
+  path: '/admin/reports/updates/check'
+  defaults:
+    _title: 'Manual update check'
+    _content: '\Drupal\update\Controller\UpdateController::updateStatusManually'
+  requirements:
+    _permission: 'administer site configuration'

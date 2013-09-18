@@ -271,4 +271,12 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
     return new JsonResponse($links);
   }
 
+  /**
+   * @todo Remove comment_admin().
+   */
+  public function adminPage($type) {
+    module_load_include('admin.inc', 'comment');
+    return comment_admin($type);
+  }
+
 }

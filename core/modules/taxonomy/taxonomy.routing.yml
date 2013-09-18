@@ -75,3 +75,16 @@ taxonomy.overview_terms:
   requirements:
     _entity_access: 'taxonomy_vocabulary.view'
 
+taxonomy.term_page:
+  path: '/taxonomy/term/{taxonomy_term}'
+  defaults:
+    _content: '\Drupal\taxonomy\Controller\TaxonomyController::termPage'
+  requirements:
+    _entity_access: 'taxonomy_term.view'
+
+taxonomy.term_feed:
+  path: '/taxonomy/term/{taxonomy_term}/feed'
+  defaults:
+    _content: '\Drupal\taxonomy\Controller\TaxonomyController::termFeed'
+  requirements:
+    _entity_access: 'taxonomy_term.view'

@@ -12,6 +12,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Menu callback; displays a listing of all themes.
+ *
+ * @deprecated Use \Drupal\system\Controller\SystemController::themesPage()
  */
 function system_themes_page() {
   // Get current list of themes.

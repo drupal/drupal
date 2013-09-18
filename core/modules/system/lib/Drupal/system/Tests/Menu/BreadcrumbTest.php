@@ -172,9 +172,6 @@ class BreadcrumbTest extends MenuTestBase {
     $this->assertBreadcrumb("node/$nid1", $trail);
     // Also verify that the node does not appear elsewhere (e.g., menu trees).
     $this->assertNoLink($node1->getTitle());
-    // The node itself should not be contained in the breadcrumb on the default
-    // local task, since there is no difference between both pages.
-    $this->assertBreadcrumb("node/$nid1/view", $trail);
     // Also verify that the node does not appear elsewhere (e.g., menu trees).
     $this->assertNoLink($node1->getTitle());
 
@@ -218,9 +215,6 @@ class BreadcrumbTest extends MenuTestBase {
         "node/$nid2" => $node2->menu['link_title'],
       );
       $this->assertBreadcrumb("node/$nid2", $trail, $node2->getTitle(), $tree);
-      // The node itself should not be contained in the breadcrumb on the
-      // default local task, since there is no difference between both pages.
-      $this->assertBreadcrumb("node/$nid2/view", $trail, $node2->getTitle(), $tree);
       $trail += array(
         "node/$nid2" => $node2->menu['link_title'],
       );
@@ -242,9 +236,6 @@ class BreadcrumbTest extends MenuTestBase {
       $nid3 = $node3->id();
 
       $this->assertBreadcrumb("node/$nid3", $trail, $node3->getTitle(), $tree, FALSE);
-      // The node itself should not be contained in the breadcrumb on the
-      // default local task, since there is no difference between both pages.
-      $this->assertBreadcrumb("node/$nid3/view", $trail, $node3->getTitle(), $tree, FALSE);
       $trail += array(
         "node/$nid3" => $node3->menu['link_title'],
       );
