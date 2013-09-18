@@ -31,13 +31,21 @@ class CommentWidget extends WidgetBase {
   public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $field = $this->fieldDefinition;
     $entity = $items->getParent();
+    $default_value = $field->getFieldDefaultValue($entity);
+    if (isset($default_value->status)) {
+      $status = $default_value->status;
+    }
+    else {
+      $defaults = reset($field->default_value);
+      $status = $defaults['status'];
+    }
 
     $element['status'] = array(
       '#type' => 'radios',
       '#title' => t('Comments'),
       '#title_display' => 'invisible',
       //'#default_value' => $items[$delta]->status,
-      '#default_value' => $field->getFieldDefaultValue($entity)->status,
+      '#default_value' => $status,
       '#options' => array(
         COMMENT_OPEN => t('Open'),
         COMMENT_CLOSED => t('Closed'),
