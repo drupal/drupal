@@ -85,6 +85,11 @@ function language_menu() {
     'title' => 'Edit language',
     'route_name' => 'language.edit',
   );
+  $items['admin/config/regional/language/edit/%language/edit'] = array(
+    'title' => 'Edit',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+   );
 
   // Language negotiation.
   $items['admin/config/regional/language/detection'] = array(

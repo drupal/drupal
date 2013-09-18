@@ -819,6 +819,11 @@ function system_menu() {
     'description' => 'Allow users to edit a configured date format.',
     'route_name' => 'system.date_format_edit',
   );
+  $items['admin/config/regional/date-time/formats/manage/%/edit'] = array(
+    'title' => 'Edit',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
 
   // Search settings.
   $items['admin/config/search'] = array(

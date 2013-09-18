@@ -115,7 +115,7 @@ function block_menu() {
   $items['admin/structure/block/manage/%block/configure'] = array(
     'title' => 'Configure block',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
   $items['admin/structure/block/add/%/%'] = array(
     'title' => 'Place block',
