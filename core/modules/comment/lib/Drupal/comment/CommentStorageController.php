@@ -42,7 +42,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
    */
   protected function attachLoad(&$records, $load_revision = FALSE) {
     // Prepare standard comment fields.
-    foreach ($records as $key => &$record) {
+    foreach ($records as &$record) {
       $record->name = $record->uid ? $record->registered_name : $record->name;
     }
     parent::attachLoad($records, $load_revision);
@@ -52,7 +52,6 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
    * {@inheritdoc}
    */
   public function updateEntityStatistics(CommentInterface $comment) {
-    global $user;
     // Allow bulk updates and inserts to temporarily disable the
     // maintenance of the {comment_entity_statistics} table.
     if (!\Drupal::state()->get('comment.maintain_entity_statistics')) {
@@ -107,7 +106,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
           // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
           // Get the user ID from the entity if it's set, or default to the
           // currently logged in user.
-          'last_comment_uid' => $entity->getPropertyDefinition('uid') ? $entity->get('uid')->value : $user->id(),
+          'last_comment_uid' => $entity->getPropertyDefinition('uid') ? $entity->get('uid')->value : \Drupal::currentUser()->id(),
         ))
         ->condition('entity_id', $comment->entity_id->value)
         ->condition('entity_type', $comment->entity_type->value)

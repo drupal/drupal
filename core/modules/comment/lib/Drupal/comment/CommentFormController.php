@@ -10,6 +10,7 @@ namespace Drupal\comment;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\EntityFormControllerNG;
 use Drupal\Core\Language\Language;
+use Drupal\field\Field;
 
 /**
  * Base for controller for comment forms.
@@ -22,13 +23,13 @@ class CommentFormController extends EntityFormControllerNG {
   public function form(array $form, array &$form_state) {
     global $user;
     $comment = $this->entity;
-
     $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
-    $instance = field_info_instance($comment->entity_type->value, $comment->field_name->value, $entity->bundle());
+    $field_name = $comment->field_name->value;
+    $instance = Field::fieldInfo()->getInstance($entity->entityType(), $entity->bundle(), $field_name);
 
     // Use #comment-form as unique jump target, regardless of entity type.
     $form['#id'] = drupal_html_id('comment_form');
-    $form['#theme'] = array('comment_form__' . $comment->entity_type->value . '__' . $entity->bundle() . '__' . $comment->field_name->value, 'comment_form');
+    $form['#theme'] = array('comment_form__' . $entity->entityType() . '__' . $entity->bundle() . '__' . $field_name, 'comment_form');
 
     $anonymous_contact = $instance->getFieldSetting('anonymous');
     $is_admin = $comment->id() && user_access('administer comments');
@@ -41,7 +42,7 @@ class CommentFormController extends EntityFormControllerNG {
     // If not replying to a comment, use our dedicated page callback for new
     // comments on entities.
     if (!$comment->id() && empty($comment->pid->target_id)) {
-      $form['#action'] = url('comment/reply/' . $comment->entity_type->value . '/' . $comment->entity_id->value . '/' . $comment->field_name->value);
+      $form['#action'] = url('comment/reply/' . $entity->entityType() . '/' . $entity->id() . '/' . $field_name);
     }
 
     if (isset($form_state['comment_preview'])) {
@@ -152,7 +153,7 @@ class CommentFormController extends EntityFormControllerNG {
       '#title' => t('Subject'),
       '#maxlength' => 64,
       '#default_value' => $comment->subject->value,
-      '#access' => $instance['settings']['subject'],
+      '#access' => $instance->getFieldSetting('subject'),
     );
 
     // Used for conditional validation of author fields.
@@ -185,8 +186,8 @@ class CommentFormController extends EntityFormControllerNG {
     $element = parent::actions($form, $form_state);
     $comment = $this->entity;
     $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
-    $instance = field_info_instance($comment->entity_type->value, $comment->field_name->value, $entity->bundle());
-    $preview_mode = $instance['settings']['preview'];
+    $instance = Field::fieldInfo()->getInstance($comment->entity_type->value, $entity->bundle(), $comment->field_name->value);
+    $preview_mode = $instance->getFieldSetting('preview');
 
     // No delete action on the comment form.
     unset($element['delete']);
@@ -325,9 +326,7 @@ class CommentFormController extends EntityFormControllerNG {
   public function save(array $form, array &$form_state) {
     $entity = entity_load($form_state['values']['entity_type'], $form_state['values']['entity_id']);
     $comment = $this->entity;
-    $field_name = $this->entity->field_name->value;
-    $instance = field_info_instance($entity->entityType(), $field_name, $entity->bundle());
-    $items = field_get_items($entity, $field_name);
+    $field_name = $comment->field_name->value;
     $uri = $entity->uri();
 
     if (user_access('post comments') && (user_access('administer comments') || $entity->{$field_name}->status == COMMENT_OPEN)) {
@@ -353,11 +352,12 @@ class CommentFormController extends EntityFormControllerNG {
       }
       $query = array();
       // Find the current display page for this comment.
+      $instance = Field::fieldInfo()->getInstance($entity->entityType(), $entity->bundle(), $field_name);
       $page = comment_get_display_page($comment->id(), $instance);
       if ($page > 0) {
         $query['page'] = $page;
       }
-      // Redirect to the newly posted comment. @todo up to here.
+      // Redirect to the newly posted comment.
       $redirect = array($uri['path'], array('query' => $query, 'fragment' => 'comment-' . $comment->id()) + $uri['options']);
     }
     else {
