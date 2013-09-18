@@ -67,11 +67,14 @@ Drupal.behaviors.toolbar = {
         strings: options.strings
       });
 
-      // Handle the resolution of Drupal.toolbar.setSubtrees().
+      // Handle the resolution of Drupal.toolbar.setSubtrees.
       // This is handled with a deferred so that the function may be invoked
       // asynchronously.
       Drupal.toolbar.setSubtrees.done(function (subtrees) {
         menuModel.set('subtrees', subtrees);
+        localStorage.setItem('Drupal.toolbar.subtrees', JSON.stringify(subtrees));
+        // Indicate on the toolbarModel that subtrees are now loaded.
+        model.set('areSubtreesLoaded', true);
       });
 
       // Attach a listener to the configured media query breakpoints.
@@ -87,6 +90,15 @@ Drupal.behaviors.toolbar = {
           Drupal.toolbar.mediaQueryChangeHandler.call(null, model, label, mql);
         }
       }
+
+      // Trigger an initial attempt to load menu subitems. This first attempt
+      // is made after the media query handlers have had an opportunity to
+      // process. The toolbar starts in the vertical orientation by default,
+      // unless the viewport is wide enough to accomodate a horizontal
+      // orientation. Thus we give the Toolbar a chance to determine if it
+      // should be set to horizontal orientation before attempting to load menu
+      // subtrees.
+      Drupal.toolbar.views.toolbarVisualView.loadSubtrees();
 
       $(document)
         // Update the model when the viewport offset changes.
@@ -196,6 +208,9 @@ Drupal.toolbar = {
       // Indicates whether the toolbar is positioned absolute (false) or fixed
       // (true).
       isFixed: false,
+      // Menu subtrees are loaded through an AJAX request only when the Toolbar
+      // is set to a vertical orientation.
+      areSubtreesLoaded: false,
       // If the viewport overflow becomes constrained, such as when the overlay
       // is open, isFixed must be true so that elements in the trays aren't
       // lost offscreen and impossible to get to.
@@ -316,10 +331,25 @@ Drupal.toolbar = {
     /**
      * {@inheritdoc}
      */
-    render: function (model) {
+    render: function () {
       this.updateTabs();
       this.updateTrayOrientation();
       this.updateBarAttributes();
+      // Load the subtrees if the orientation of the toolbar is changed to
+      // vertical. This condition responds to the case that the toolbar switches
+      // from horizontal to vertical orientation. The toolbar starts in a
+      // vertical orientation by default and then switches to horizontal during
+      // initialization if the media query conditions are met. Simply checking
+      // that the orientation is vertical here would result in the subtrees
+      // always being loaded, even when the toolbar initialization ultimately
+      // results in a horizontal orientation.
+      //
+      // @see Drupal.behaviors.toolbar.attach() where admin menu subtrees
+      // loading is invoked during initialization after media query conditions
+      // have been processed.
+      if (this.model.changed.orientation === 'vertical' || this.model.changed.activeTab) {
+        this.loadSubtrees();
+      }
       // Trigger a recalculation of viewport displacing elements. Use setTimeout
       // to ensure this recalculation happens after changes to visual elements
       // have processed.
@@ -484,6 +514,49 @@ Drupal.toolbar = {
         // The navbar container is invisible. Its placement is used to determine
         // the container for the trays.
         $trays.css('padding-top', this.$el.find('.toolbar-bar').outerHeight());
+      }
+    },
+
+    /**
+     * Calls the endpoint URI that will return rendered subtrees with JSONP.
+     *
+     * The rendered admin menu subtrees HTML is cached on the client in
+     * localStorage until the cache of the admin menu subtrees on the server-
+     * side is invalidated. The subtreesHash is stored in localStorage as well
+     * and compared to the subtreesHash in drupalSettings to determine when the
+     * admin menu subtrees cache has been invalidated.
+     */
+    loadSubtrees: function () {
+      var $activeTab = $(this.model.get('activeTab'));
+      var orientation = this.model.get('orientation');
+      // Only load and render the admin menu subtrees if:
+      //   (1) They have not been loaded yet.
+      //   (2) The active tab is the administration menu tab, indicated by the
+      //       presence of the data-drupal-subtrees attribute.
+      //   (3) The orientation of the tray is vertical.
+      if (!this.model.get('areSubtreesLoaded') && $activeTab.data('drupal-subtrees') !== undefined && orientation === 'vertical') {
+        var subtreesHash = drupalSettings.toolbar.subtreesHash;
+        var endpoint = Drupal.url('toolbar/subtrees/' + subtreesHash);
+        var cachedSubtreesHash = localStorage.getItem('Drupal.toolbar.subtreesHash');
+        var cachedSubtrees = JSON.parse(localStorage.getItem('Drupal.toolbar.subtrees'));
+        var isVertical = this.model.get('orientation') === 'vertical';
+        // If we have the subtrees in localStorage and the subtree hash has not
+        // changed, then use the cached data.
+        if (isVertical && subtreesHash === cachedSubtreesHash && cachedSubtrees) {
+          Drupal.toolbar.setSubtrees.resolve(cachedSubtrees);
+        }
+        // Only make the call to get the subtrees if the orientation of the
+        // toolbar is vertical.
+        else if (isVertical) {
+          // Remove the cached menu information.
+          localStorage.removeItem('Drupal.toolbar.subtreesHash');
+          localStorage.removeItem('Drupal.toolbar.subtrees');
+          // The response from the server will call the resolve method of the
+          // Drupal.toolbar.setSubtrees Promise.
+          $.ajax(endpoint);
+          // Cache the hash for the subtrees locally.
+          localStorage.setItem('Drupal.toolbar.subtreesHash', subtreesHash);
+        }
       }
     }
   }),
