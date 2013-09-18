@@ -167,6 +167,8 @@ class DateFormat extends ConfigEntityBase implements DateFormatInterface {
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
+    parent::preSave($storage_controller);
+
     if ($this->hasLocales()) {
       $config_factory = \Drupal::service('config.factory');
       $properties = $this->getExportProperties();
@@ -186,6 +188,8 @@ class DateFormat extends ConfigEntityBase implements DateFormatInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::postDelete($storage_controller, $entities);
+
     // Clean up the localized entry if required.
     if (\Drupal::moduleHandler()->moduleExists('language')) {
       $languages = language_list();

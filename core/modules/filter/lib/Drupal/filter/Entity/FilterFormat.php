@@ -205,6 +205,8 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
+    parent::preSave($storage_controller);
+
     $this->name = trim($this->label());
 
     // @todo Do not save disabled filters whose properties are identical to
@@ -224,6 +226,8 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    parent::postSave($storage_controller, $update);
+
     // Clear the static caches of filter_formats() and others.
     filter_formats_reset();
 

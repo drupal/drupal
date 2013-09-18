@@ -171,6 +171,8 @@ class NodeType extends ConfigEntityBase implements NodeTypeInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    parent::postSave($storage_controller, $update);
+
     if (!$update) {
       // Clear the node type cache, so the new type appears.
       \Drupal::cache()->deleteTags(array('node_types' => TRUE));
@@ -209,6 +211,8 @@ class NodeType extends ConfigEntityBase implements NodeTypeInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::postDelete($storage_controller, $entities);
+
     // Clear the node type cache to reflect the removal.
     $storage_controller->resetCache(array_keys($entities));
     foreach ($entities as $entity) {

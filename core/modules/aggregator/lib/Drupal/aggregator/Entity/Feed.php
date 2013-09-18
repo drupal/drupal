@@ -242,6 +242,8 @@ class Feed extends EntityNG implements FeedInterface {
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
+    parent::preSave($storage_controller);
+
     $this->clearBlockCacheDefinitions();
     $storage_controller->deleteCategories(array($this->id() => $this));
   }
@@ -250,6 +252,8 @@ class Feed extends EntityNG implements FeedInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = FALSE) {
+    parent::postSave($storage_controller, $update);
+
     if (!empty($this->categories)) {
       $storage_controller->saveCategories($this, $this->categories);
     }

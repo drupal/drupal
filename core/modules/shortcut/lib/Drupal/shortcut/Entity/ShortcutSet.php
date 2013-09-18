@@ -87,6 +87,8 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
    * {@inheritdoc}
    */
   public function postCreate(EntityStorageControllerInterface $storage_controller) {
+    parent::postCreate($storage_controller);
+
     // Generate menu-compatible set name.
     if (!$this->getOriginalID()) {
       // Save a new shortcut set with links copied from the user's default set.
@@ -111,6 +113,8 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
+    parent::preSave($storage_controller);
+
     // Just store the UUIDs.
     foreach ($this->links as $uuid => $link) {
       $this->links[$uuid] = $uuid;
@@ -121,6 +125,8 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    parent::postSave($storage_controller, $update);
+
     foreach ($this->links as $uuid) {
       if ($menu_link = entity_load_by_uuid('menu_link', $uuid)) {
         // Do not specifically associate these links with the shortcut module,
@@ -137,11 +143,13 @@ class ShortcutSet extends ConfigEntityBase implements ShortcutSetInterface {
    * {@inheritdoc}
    */
   public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::preDelete($storage_controller, $entities);
+
     foreach ($entities as $entity) {
       $storage_controller->deleteAssignedShortcutSets($entity);
       // Next, delete the menu links for this set.
       menu_delete_links('shortcut-' . $entity->id());
-
     }
   }
+
 }

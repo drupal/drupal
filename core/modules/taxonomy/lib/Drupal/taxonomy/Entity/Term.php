@@ -148,6 +148,8 @@ class Term extends EntityNG implements TermInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::postDelete($storage_controller, $entities);
+
     // See if any of the term's children are about to be become orphans.
     $orphans = array();
     foreach (array_keys($entities) as $tid) {
@@ -177,6 +179,8 @@ class Term extends EntityNG implements TermInterface {
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
+    parent::preSave($storage_controller);
+
     // Before saving the term, set changed time.
     $this->changed->value = REQUEST_TIME;
   }
@@ -185,6 +189,8 @@ class Term extends EntityNG implements TermInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    parent::preSave($storage_controller, $update);
+
     // Only change the parents if a value is set, keep the existing values if
     // not.
     if (isset($this->parent->value)) {

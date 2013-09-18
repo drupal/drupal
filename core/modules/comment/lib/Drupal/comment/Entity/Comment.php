@@ -218,6 +218,8 @@ class Comment extends EntityNG implements CommentInterface {
    * {@inheritdoc}
    */
   public function preSave(EntityStorageControllerInterface $storage_controller) {
+    parent::preSave($storage_controller);
+
     global $user;
 
     if (!isset($this->status->value)) {
@@ -303,6 +305,8 @@ class Comment extends EntityNG implements CommentInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    parent::postSave($storage_controller, $update);
+
     $this->releaseThreadLock();
     // Update the {comment_entity_statistics} table prior to executing the hook.
     $storage_controller->updateEntityStatistics($this);
@@ -325,6 +329,8 @@ class Comment extends EntityNG implements CommentInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::postDelete($storage_controller, $entities);
+
     $child_cids = $storage_controller->getChildCids($entities);
     entity_delete_multiple('comment', $child_cids);
 

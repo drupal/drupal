@@ -113,6 +113,8 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    parent::postSave($storage_controller, $update);
+
     if (!$update) {
       entity_invoke_bundle_hook('create', 'taxonomy_term', $this->id());
     }
@@ -144,6 +146,8 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
    * {@inheritdoc}
    */
   public static function preDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::preDelete($storage_controller, $entities);
+
     // Only load terms without a parent, child terms will get deleted too.
     entity_delete_multiple('taxonomy_term', $storage_controller->getToplevelTids(array_keys($entities)));
   }
@@ -152,6 +156,8 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::postDelete($storage_controller, $entities);
+
     $vocabularies = array();
     foreach ($entities as $vocabulary) {
       $vocabularies[$vocabulary->id()] = $vocabulary->id();

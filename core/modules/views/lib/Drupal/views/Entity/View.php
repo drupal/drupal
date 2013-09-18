@@ -291,6 +291,8 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    parent::postSave($storage_controller, $update);
+
     views_invalidate_cache();
   }
 
@@ -298,6 +300,8 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    * {@inheritdoc}
    */
   public static function preCreate(EntityStorageControllerInterface $storage_controller, array &$values) {
+    parent::preCreate($storage_controller, $values);
+
     // If there is no information about displays available add at least the
     // default display.
     $values += array(
@@ -317,6 +321,8 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    * {@inheritdoc}
    */
   public function postCreate(EntityStorageControllerInterface $storage_controller) {
+    parent::postCreate($storage_controller);
+
     $this->mergeDefaultDisplaysOptions();
   }
 
@@ -324,6 +330,8 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    parent::postDelete($storage_controller, $entities);
+
     $tempstore = \Drupal::service('user.tempstore')->get('views');
     foreach ($entities as $entity) {
       $tempstore->delete($entity->id());
