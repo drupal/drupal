@@ -367,10 +367,10 @@ class CommentUserTest extends WebTestBase {
     ));
     $this->drupalLogin($limited_user);
     $this->drupalGet('admin/config/people/accounts/fields/user.user.comment');
-    $this->assertNoField('edit-default-value-input-comment-0-status-0');
+    $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-0');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-1');
     $this->assertFieldChecked('edit-default-value-input-comment-0-status-2');
-    // Test hidden option change in field settings.
+    // Test comment option change in field settings.
     $edit = array('default_value_input[comment][0][status]' => COMMENT_CLOSED);
     $this->drupalPostForm(NULL, $edit, t('Save settings'));
     $this->drupalGet('admin/config/people/accounts/fields/user.user.comment');
@@ -387,10 +387,9 @@ class CommentUserTest extends WebTestBase {
     ));
     $this->drupalLogin($limited_user);
     $this->drupalGet('user/' . $limited_user->id() . '/edit');
-    // @todo somehow default status applied, should be 1 checked.
-    $this->assertFieldChecked('edit-comment-0-status-2');
-    $this->assertNoFieldChecked('edit-comment-0-status-1');
-    $this->assertNoFieldChecked('edit-comment-0-status-0');
+    $this->assertFieldChecked('edit-comment-0-status-1');
+    $this->assertNoFieldChecked('edit-comment-0-status-2');
+    $this->assertNoField('edit-comment-0-status-0');
 
     $this->drupalGet('comment/reply/user/comment/' . $limited_user->id());
     $this->assertNoFieldByName('subject', '', 'Subject field found.');

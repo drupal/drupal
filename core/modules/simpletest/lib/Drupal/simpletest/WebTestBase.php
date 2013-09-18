@@ -258,13 +258,6 @@ abstract class WebTestBase extends TestBase {
       'langcode'  => Language::LANGCODE_NOT_SPECIFIED,
     );
 
-    // Add in comment settings for nodes.
-    if (module_exists('comment')) {
-      $settings += array(
-        'comment' => array(array('status' => COMMENT_OPEN)),
-      );
-    }
-
     // Use the original node's created time for existing nodes.
     if (isset($settings['created']) && !isset($settings['date'])) {
       $settings['date'] = format_date($settings['created'], 'custom', 'Y-m-d H:i:s O');

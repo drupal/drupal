@@ -136,7 +136,15 @@ class CommentManager {
         'entity_type' => $entity_type,
         'bundle' => $bundle,
         'required' => 1,
-        'default_value' => array(array('status' => $default_value)),
+        'default_value' => array(
+          array(
+            'status' => $default_value,
+            'cid' => 0,
+            'last_comment_name' => '',
+            'last_comment_timestamp' => 0,
+            'last_comment_uid' => 0,
+          ),
+        ),
       ));
       $instance->save();
 

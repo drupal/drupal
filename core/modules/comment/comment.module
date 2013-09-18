@@ -1161,16 +1161,13 @@ function comment_node_search_result(EntityInterface $node) {
       continue;
     }
     // Do not make a string if comments are hidden.
-    if (user_access('access comments') && ($items = field_get_items($node, $field_name)) &&
-      isset($items[0]['status']) && $items[0]['status'] != COMMENT_HIDDEN) {
-      if ($items[0]['status'] == COMMENT_OPEN) {
+    $status = $node->get($field_name)->status;
+    if (user_access('access comments') && $status != COMMENT_HIDDEN) {
+      if ($status == COMMENT_OPEN) {
         // At least one comment field is open.
         $open = TRUE;
       }
-      $comments += db_query("SELECT comment_count FROM {comment_entity_statistics} WHERE entity_id = :nid AND entity_type = 'node' AND field_id = :field_id", array(
-        'nid' => $node->id(),
-        'field_id' => 'node__' . $field_name)
-      )->fetchField();
+      $comments += $node->get($field_name)->comment_count;
     }
   }
   // Do not make a string if there are no comment fields, or no comments exist
