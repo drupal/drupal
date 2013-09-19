@@ -74,7 +74,7 @@ class RouteSubscriber implements EventSubscriberInterface {
           }
           // Check if there are authentication provider restrictions in the
           // configuration and apply them to the route.
-          if (is_array($enabled_methods[$method]['supported_auth']) && !empty($enabled_methods[$method]['supported_auth'])) {
+          if (!empty($enabled_methods[$method]['supported_auth']) && is_array($enabled_methods[$method]['supported_auth'])) {
             $route->setOption('_auth', $enabled_methods[$method]['supported_auth']);
           }
           // If there is no format requirement or if it matches the
