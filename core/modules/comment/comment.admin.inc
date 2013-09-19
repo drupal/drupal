@@ -16,6 +16,8 @@ use Drupal\comment\Form\ConfirmDeleteMultiple;
  *
  * @see comment_menu()
  * @see comment_multiple_delete_confirm()
+ *
+ * @deprecated Use \Drupal\comment\Controller\CommentController::adminPage()
  */
 function comment_admin($type = 'new') {
   $request = \Drupal::request();

@@ -42,7 +42,7 @@ class DefaultMobileMetaTagsTest extends WebTestBase {
    * Verifies that the default mobile meta tags can be removed.
    */
   public function testRemovingDefaultMetaTags() {
-    module_enable(array('system_module_test'));
+    \Drupal::moduleHandler()->install(array('system_module_test'));
     $this->drupalGet('');
     foreach ($this->default_metatags as $name => $metatag) {
       $this->assertNoRaw($metatag, String::format('Default Mobile meta tag "@name" removed properly.', array('@name' => $name)), 'System');

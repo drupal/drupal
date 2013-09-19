@@ -24,12 +24,14 @@ use Drupal\Core\Annotation\Translation;
  *       "default" = "Drupal\config_test\ConfigTestFormController"
  *     }
  *   },
- *   uri_callback = "config_test_uri",
  *   config_prefix = "config_query_test.dynamic",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/structure/config_test/manage/{config_query_test}"
  *   }
  * )
  *

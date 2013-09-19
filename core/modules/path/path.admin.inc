@@ -12,6 +12,8 @@ use Drupal\Core\Language\Language;
  *
  * When filter key passed, perform a standard search on the given key,
  * and return the list of matching URL aliases.
+ *
+ * @deprecated Use \Drupal\path\Controller\PathController::adminOverview()
  */
 function path_admin_overview($keys = NULL) {
   // Add the filter form above the overview table.
@@ -105,6 +107,9 @@ function path_admin_overview($keys = NULL) {
  *   A form for adding or editing a URL alias.
  *
  * @see path_menu()
+ *
+ * @deprecated Use \Drupal\path\Controller\PathController::adminEdit() or
+ *   \Drupal\path\Controller\PathController::adminEdit()
  */
 function path_admin_edit($path = array()) {
   if ($path) {

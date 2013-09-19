@@ -31,7 +31,7 @@ class PreviewTest extends UITestBase {
    * Tests contextual links in the preview form.
    */
   protected function testPreviewContextual() {
-    module_enable(array('contextual'));
+    \Drupal::moduleHandler()->install(array('contextual'));
     $this->drupalGet('admin/structure/views/view/test_preview/edit');
     $this->assertResponse(200);
     $this->drupalPostForm(NULL, $edit = array(), t('Update preview'));

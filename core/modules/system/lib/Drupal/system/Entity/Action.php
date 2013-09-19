@@ -31,6 +31,9 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/config/system/actions/configure/{action}"
  *   }
  * )
  */
@@ -135,19 +138,6 @@ class Action extends ConfigEntityBase implements ActionConfigEntityInterface {
    */
   public function getType() {
     return $this->type;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function uri() {
-    return array(
-      'path' => 'admin/config/system/actions/configure/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      ),
-    );
   }
 
   /**

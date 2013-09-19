@@ -72,7 +72,7 @@ class UpdateFeedItemTest extends AggregatorTestBase {
     // Make sure updating items works even after disabling a module
     // that provides the selected plugins.
     $this->enableTestPlugins();
-    module_disable(array('aggregator_test'));
+    module_uninstall(array('aggregator_test'));
     $this->updateFeedItems($feed);
     $this->assertResponse(200);
   }

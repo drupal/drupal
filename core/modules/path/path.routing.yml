@@ -4,3 +4,28 @@ path.delete:
     _form: '\Drupal\path\Form\DeleteForm'
   requirements:
     _permission: 'administer url aliases'
+
+path.admin_overview:
+  path: '/admin/config/search/path/{keys}'
+  defaults:
+    _title: 'URL aliases'
+    _content: '\Drupal\path\Controller\PathController::adminOverview'
+    keys: NULL
+  requirements:
+    _permission: 'administer url aliases'
+
+path.admin_add:
+  path: '/admin/config/search/path/add'
+  defaults:
+    _title: 'Add alias'
+    _content: '\Drupal\path\Controller\PathController::adminAdd'
+  requirements:
+    _permission: 'administer url aliases'
+
+path.admin_edit:
+  path: '/admin/config/search/path/edit/{path}'
+  defaults:
+    _title: 'Edit alias'
+    _content: '\Drupal\path\Controller\PathController::adminEdit'
+  requirements:
+    _permission: 'administer url aliases'

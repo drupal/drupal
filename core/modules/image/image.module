@@ -78,15 +78,6 @@ function image_help($path, $arg) {
 }
 
 /**
- * Entity URI callback for image style.
- */
-function image_style_entity_uri(ImageStyle $style) {
-  return array(
-    'path' => 'admin/config/media/image-styles/manage/' . $style->id(),
-  );
-}
-
-/**
  * Implements hook_menu().
  */
 function image_menu() {

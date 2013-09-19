@@ -149,8 +149,7 @@ function content_translation_menu() {
 
       $items["$path/translations"] = array(
         'title' => 'Translate',
-        'page callback' => 'content_translation_overview',
-        'page arguments' => array($entity_position),
+        'route_name' => "content_translation.translation_overview_$entity_type",
         'type' => MENU_LOCAL_TASK,
         'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
         'weight' => 2,
@@ -169,25 +168,17 @@ function content_translation_menu() {
       $args = array($entity_position, $language_position, $language_position + 1);
       $items["$path/translations/add/%language/%language"] = array(
         'title' => 'Add',
-        'page callback' => 'content_translation_add_page',
-        'page arguments' => $args,
-        'access callback' => 'content_translation_add_access',
-        'access arguments' => $args,
-        'type' => MENU_LOCAL_TASK,
+        'route_name' => "content_translation.translation_add_$entity_type",
         'weight' => 1,
-      ) + $item;
+      );
 
       // Edit translation callback.
       $args = array($entity_position, $language_position);
       $items["$path/translations/edit/%language"] = array(
         'title' => 'Edit',
-        'page callback' => 'content_translation_edit_page',
-        'page arguments' => $args,
-        'access callback' => 'content_translation_edit_access',
-        'access arguments' => $args,
-        'type' => MENU_LOCAL_TASK,
+        'route_name' => "content_translation.translation_edit_$entity_type",
         'weight' => 1,
-      ) + $item;
+      );
 
       // Delete translation callback.
       $items["$path/translations/delete/%language"] = array(

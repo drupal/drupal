@@ -21,6 +21,9 @@ function language_install() {
     module_load_include('inc', 'language', 'language.negotiation');
     language_negotiation_set($type, array(LANGUAGE_NEGOTIATION_URL => 0));
   }
+
+  // Update the language count.
+  language_update_count();
 }
 
 /**
@@ -44,24 +47,10 @@ function language_uninstall() {
   // Re-initialize the language system so successive calls to t() and other
   // functions will not expect languages to be present.
   drupal_language_initialize();
-}
 
-/**
- * Implements hook_enable().
- */
-function language_enable() {
-  // Update the language count, if the module was disabled before, the
-  // language_count state was forced to 1.
-  language_update_count();
-}
-
-/**
- * Implements hook_disable().
- */
-function language_disable() {
-  // Force the language_count state to be 1, so that the when checking if the
+  // Force the language_count state to be 1, so that when checking if the
   // site is multilingual (for example in language_multilingual()), the result
-  // will be FALSE, because the language module is disabled.
+  // will be FALSE, because the language module is not installed.
   \Drupal::state()->set('language_count', 1);
 }
 

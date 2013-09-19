@@ -138,8 +138,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
     // Quick test to ensure translation file exists.
     $this->assertEqual(\Drupal::config('locale.config.xx.image.style.medium')->get('label'), $image_style_label);
 
-    // Disable and uninstall the module.
-    $this->drupalPostForm('admin/modules', array('modules[Core][image][enable]' => FALSE), t('Save configuration'));
+    // Uninstall the module.
     $this->drupalPostForm('admin/modules/uninstall', array('uninstall[image]' => "image"), t('Uninstall'));
     $this->drupalPostForm(NULL, array(), t('Uninstall'));
 

@@ -815,7 +815,7 @@ abstract class WebTestBase extends TestBase {
     }
     if ($modules) {
       $modules = array_unique($modules);
-      $success = module_enable($modules, TRUE);
+      $success = \Drupal::moduleHandler()->install($modules, TRUE);
       $this->assertTrue($success, t('Enabled modules: %modules', array('%modules' => implode(', ', $modules))));
       $this->rebuildContainer();
     }

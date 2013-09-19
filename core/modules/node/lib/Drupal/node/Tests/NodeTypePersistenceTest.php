@@ -50,24 +50,7 @@ class NodeTypePersistenceTest extends NodeTestBase {
     $this->drupalGet('node/add');
     $this->assertText($description, 'Customized description found');
 
-    // Disable forum and check that the node type gets disabled.
-    $this->drupalPostForm('admin/modules', $forum_disable, t('Save configuration'));
-    $forum = entity_load('node_type', 'forum');
-    $this->assertTrue($forum->isLocked(), 'Forum node type is node locked');
-    $this->drupalGet('node/add');
-    $this->assertNoText('forum', 'forum type is not found on node/add');
-
-    // Reenable forum and check that the customization survived the module
-    // disable.
-    $this->drupalPostForm('admin/modules', $forum_enable, t('Save configuration'));
-    $forum = entity_load('node_type', 'forum');
-    $this->assertTrue($forum->id(), 'Forum node type found.');
-    $this->assertTrue($forum->isLocked(), 'Forum node type is locked');
-    $this->drupalGet('node/add');
-    $this->assertText($description, 'Customized description found');
-
-    // Disable and uninstall forum.
-    $this->drupalPostForm('admin/modules', $forum_disable, t('Save configuration'));
+    // Uninstall forum.
     $edit = array('uninstall[forum]' => 'forum');
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPostForm(NULL, array(), t('Uninstall'));

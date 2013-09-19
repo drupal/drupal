@@ -14,6 +14,8 @@ use Drupal\Component\Utility\Crypt;
  * Manually checks the update status without the use of cron.
  *
  * @see update_menu()
+ *
+ * @deprecated Use \Drupal\update\Controller\UpdateController::updateStatusManually()
  */
 function update_manual_status() {
   _update_refresh();

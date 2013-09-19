@@ -7,9 +7,9 @@
 
 namespace Drupal\Core\Menu;
 
-use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Menu\LocalActionInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\StringTranslation\Translator\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

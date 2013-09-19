@@ -35,12 +35,14 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  *     "list" = "Drupal\image\ImageStyleListController",
  *     "access" = "Drupal\image\ImageStyleAccessController"
  *   },
- *   uri_callback = "image_style_entity_uri",
  *   config_prefix = "image.style",
  *   entity_keys = {
  *     "id" = "name",
  *     "label" = "label",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/config/media/image-styles/manage/{image_style}"
  *   }
  * )
  */

@@ -8,11 +8,11 @@
 /**
  * Implements hook_watchdog().
  *
- * This hook is called during module_enable() and since this hook
- * implementation is invoked, we have to expect that this module and dependent
- * modules have been properly installed already. So we expect to be able to
- * retrieve the entity information that has been registered by the required
- * dependency module.
+ * This hook is called during \Drupal\Core\Extension\ModuleHandler::install()
+ * and since this hook implementation is invoked, we have to expect that this
+ * module and dependent modules have been properly installed already. So we
+ * expect to be able to retrieve the entity information that has been registered
+ * by the required dependency module.
  *
  * @see EnableDisableTestCase::testEntityCache()
  */

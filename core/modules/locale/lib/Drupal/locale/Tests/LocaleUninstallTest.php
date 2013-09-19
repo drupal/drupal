@@ -109,7 +109,6 @@ class LocaleUninstallTest extends WebTestBase {
       ->save();
 
     // Uninstall Locale.
-    module_disable($locale_module);
     module_uninstall($locale_module);
     $this->rebuildContainer();
 

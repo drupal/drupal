@@ -1,0 +1,6 @@
+services:
+  access_check.contact_personal:
+    class: Drupal\contact\Access\ContactPageAccess
+    tags:
+      - { name: access_check }
+    arguments: ['@config.factory', '@user.data']

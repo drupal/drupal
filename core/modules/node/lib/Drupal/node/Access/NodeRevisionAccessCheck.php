@@ -73,8 +73,18 @@ class NodeRevisionAccessCheck implements AccessCheckInterface {
    * {@inheritdoc}
    */
   public function access(Route $route, Request $request) {
-    $revision = $this->nodeStorage->loadRevision($request->attributes->get('node_revision'));
-    return $this->checkAccess($revision, $route->getRequirement('_access_node_revision')) ? static::ALLOW : static::DENY;
+    // If the route has a {node_revision} placeholder, load the node for that
+    // revision. Otherwise, try to use a {node} placeholder.
+    if ($request->attributes->has('node_revision')) {
+      $node = $this->nodeStorage->loadRevision($request->attributes->get('node_revision'));
+    }
+    elseif ($request->attributes->has('node')) {
+      $node = $request->attributes->get('node');
+    }
+    else {
+      return static::DENY;
+    }
+    return $this->checkAccess($node, $route->getRequirement('_access_node_revision')) ? static::ALLOW : static::DENY;
   }
 
   /**

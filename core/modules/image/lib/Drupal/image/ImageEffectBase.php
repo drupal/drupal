@@ -7,7 +7,7 @@
 
 namespace Drupal\image;
 
-use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\PluginBase;
 
 /**
  * Provides a base class for image effects.

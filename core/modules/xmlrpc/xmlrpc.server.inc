@@ -13,6 +13,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  *
  * @return \Symfony\Component\HttpFoundation\Response
  *   A Response object.
+ *
+ * @deprecated Use \Drupal\xmlrpc\Controller\XmlrpcController::php()
  */
 function xmlrpc_server_page() {
   module_load_include('inc', 'xmlrpc');

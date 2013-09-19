@@ -49,7 +49,7 @@ class NodeAdminTest extends NodeTestBase {
 
     // Create nodes that have different node.changed values.
     $this->container->get('state')->set('node_test.storage_controller', TRUE);
-    module_enable(array('node_test'));
+    \Drupal::moduleHandler()->install(array('node_test'));
     $changed = REQUEST_TIME;
     foreach (array('dd', 'aa', 'DD', 'bb', 'cc', 'CC', 'AA', 'BB') as $prefix) {
       $changed += 1000;

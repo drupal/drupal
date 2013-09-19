@@ -7,3 +7,8 @@ services:
     arguments: ['@entity.manager', '@database']
     tags:
       - { name: access_check }
+  access_check.node.add:
+    class: Drupal\node\Access\NodeAddAccessCheck
+    arguments: ['@plugin.manager.entity']
+    tags:
+      - { name: access_check }

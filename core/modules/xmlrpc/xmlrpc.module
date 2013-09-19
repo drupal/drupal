@@ -21,20 +21,6 @@ function xmlrpc_help($path, $args) {
 }
 
 /**
- * Implements hook_menu().
- */
-function xmlrpc_menu() {
-  $items['xmlrpc.php'] = array(
-    'title' => 'XML-RPC',
-    'page callback' => 'xmlrpc_server_page',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-    'file' => 'xmlrpc.server.inc',
-  );
-  return $items;
-}
-
-/**
  * Performs one or more XML-RPC request(s).
  *
  * Usage example:

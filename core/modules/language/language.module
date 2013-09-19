@@ -85,6 +85,11 @@ function language_menu() {
     'title' => 'Edit language',
     'route_name' => 'language.edit',
   );
+  $items['admin/config/regional/language/edit/%language/edit'] = array(
+    'title' => 'Edit',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+   );
 
   // Language negotiation.
   $items['admin/config/regional/language/detection'] = array(
@@ -121,9 +126,7 @@ function language_menu() {
   $items['admin/config/regional/content-language'] = array(
     'title' => 'Content language settings',
     'description' => 'Configure content language support for any multilingual element.',
-    'page callback' => 'language_content_settings_page',
-    'access arguments' => array('administer languages'),
-    'file' => 'language.admin.inc',
+    'route_name' => 'language.content_settings_page',
   );
 
   return $items;
@@ -711,9 +714,9 @@ function language_negotiation_include() {
 }
 
 /**
- * Implements hook_modules_enabled().
+ * Implements hook_modules_installed().
  */
-function language_modules_enabled($modules) {
+function language_modules_installed($modules) {
   include_once DRUPAL_ROOT . '/core/includes/language.inc';
   // Load configurability options from configuration.
   language_types_set(array());
@@ -721,10 +724,10 @@ function language_modules_enabled($modules) {
 }
 
 /**
- * Implements hook_modules_disabled().
+ * Implements hook_modules_uninstalled().
  */
-function language_modules_disabled($modules) {
-  language_modules_enabled($modules);
+function language_modules_uninstalled($modules) {
+  language_modules_installed($modules);
 }
 
 /**

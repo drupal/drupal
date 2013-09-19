@@ -475,6 +475,7 @@ function menu_get_item($path = NULL, $router_item = NULL) {
     // occurs rarely, likely due to a race condition of multiple rebuilds.
     if (\Drupal::state()->get('menu_rebuild_needed') || !\Drupal::state()->get('menu.masks')) {
       menu_router_rebuild();
+      \Drupal::service('router.builder')->rebuild();
     }
     $original_map = arg(NULL, $path);
 
@@ -1024,11 +1025,31 @@ function menu_item_route_access(Route $route, $href, &$map) {
  *   it's 2. Defaults to 1.
  * @param $path
  *   See menu_get_item() for more on this. Defaults to the current path.
+ *
+ * @todo Remove this function in https://drupal.org/node/2091399.
  */
 function menu_get_object($type = 'node', $position = 1, $path = NULL) {
   $router_item = menu_get_item($path);
-  if (isset($router_item['load_functions'][$position]) && !empty($router_item['map'][$position]) && $router_item['load_functions'][$position] == $type . '_load') {
+  if (empty($router_item['map'][$position])) {
+    return;
+  }
+
+  if (isset($router_item['load_functions'][$position]) && $router_item['load_functions'][$position] == $type . '_load') {
     return $router_item['map'][$position];
+  }
+
+  // If the path is route-based, use the route path instead of the menu item.
+  // The most common use of this function is for the node page, which has a
+  // route path of '/node/{node}'. By splitting that path into parts, we check
+  // for the $type wrapped in curly braces at the correct $position, returning
+  // the value found there.
+  $request = \Drupal::request();
+  if ($request->attributes->has(RouteObjectInterface::ROUTE_OBJECT)) {
+    $path = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT)->getPath();
+    $parts = explode('/', ltrim($path, '/'));
+    if (isset($parts[$position]) && $parts[$position] == '{' . $type . '}') {
+      return $router_item['map'][$position];
+    }
   }
 }
 

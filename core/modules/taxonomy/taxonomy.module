@@ -250,11 +250,7 @@ function taxonomy_menu() {
     'title' => 'Taxonomy term',
     'title callback' => 'taxonomy_term_title',
     'title arguments' => array(2),
-    'page callback' => 'taxonomy_term_page',
-    'page arguments' => array(2),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(2, 'view'),
-    'file' => 'taxonomy.pages.inc',
+    'route_name' => 'taxonomy.term_page',
   );
   $items['taxonomy/term/%taxonomy_term/view'] = array(
     'title' => 'View',
@@ -280,12 +276,8 @@ function taxonomy_menu() {
     'title' => 'Taxonomy term',
     'title callback' => 'taxonomy_term_title',
     'title arguments' => array(2),
-    'page callback' => 'taxonomy_term_feed',
-    'page arguments' => array(2),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(2, 'view'),
+    'route_name' => 'taxonomy.term_feed',
     'type' => MENU_CALLBACK,
-    'file' => 'taxonomy.pages.inc',
   );
 
   $items['admin/structure/taxonomy/manage/%taxonomy_vocabulary'] = array(

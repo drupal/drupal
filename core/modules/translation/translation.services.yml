@@ -1,0 +1,5 @@
+services:
+  access_check.translation.node_overview:
+    class: Drupal\translation\Access\TranslationNodeOverviewAccessCheck
+    tags:
+      - { name: access_check }

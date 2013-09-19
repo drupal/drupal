@@ -62,7 +62,7 @@ class ConfigEntityTest extends WebTestBase {
     $this->assertIdentical($empty->isNewRevision(), FALSE);
     $this->assertIdentical($empty->entityType(), 'config_test');
     $uri = $empty->uri();
-    $this->assertIdentical($uri['path'], 'admin/structure/config_test/manage/');
+    $this->assertIdentical($uri['path'], 'admin/structure/config_test/manage');
     $this->assertIdentical($empty->isDefaultRevision(), TRUE);
 
     // Verify that an empty entity cannot be saved.

@@ -38,7 +38,6 @@ class ForumUninstallTest extends WebTestBase {
     $this->assertNotNull($field, 'The taxonomy_forums field exists.');
 
     // Uninstall the forum module which should trigger field deletion.
-    $this->container->get('module_handler')->disable(array('forum'));
     $this->container->get('module_handler')->uninstall(array('forum'));
 
     // Check that the field is now deleted.
@@ -62,7 +61,6 @@ class ForumUninstallTest extends WebTestBase {
 
     // Ensure that uninstallation succeeds even if the field has already been
     // deleted manually beforehand.
-    $this->container->get('module_handler')->disable(array('forum'));
     $this->container->get('module_handler')->uninstall(array('forum'));
   }
 

@@ -26,7 +26,7 @@ class EntityApiInfoTest extends WebTestBase  {
    * Ensures entity info cache is updated after changes.
    */
   function testEntityInfoChanges() {
-    module_enable(array('entity_cache_test'));
+    \Drupal::moduleHandler()->install(array('entity_cache_test'));
     $entity_info = entity_get_info();
     $this->assertTrue(isset($entity_info['entity_cache_test']), 'Test entity type found.');
 
@@ -39,8 +39,8 @@ class EntityApiInfoTest extends WebTestBase  {
     $info = entity_get_info('entity_cache_test');
     $this->assertEqual($info['label'], 'New label.', 'New label appears in entity info.');
 
-    // Disable the providing module and make sure the entity type is gone.
-    module_disable(array('entity_cache_test', 'entity_cache_test_dependency'));
+    // Uninstall the providing module and make sure the entity type is gone.
+    module_uninstall(array('entity_cache_test', 'entity_cache_test_dependency'));
     $entity_info = entity_get_info();
     $this->assertFalse(isset($entity_info['entity_cache_test']), 'Entity type of the providing module is gone.');
   }
@@ -51,7 +51,7 @@ class EntityApiInfoTest extends WebTestBase  {
    * @see entity_cache_test_watchdog()
    */
   function testEntityInfoCacheWatchdog() {
-    module_enable(array('entity_cache_test'));
+    \Drupal::moduleHandler()->install(array('entity_cache_test'));
     $info = \Drupal::state()->get('entity_cache_test');
     $this->assertEqual($info['label'], 'Entity Cache Test', 'Entity info label is correct.');
     $this->assertEqual($info['controllers']['storage'], 'Drupal\Core\Entity\DatabaseStorageController', 'Entity controller class info is correct.');

@@ -86,8 +86,10 @@ function entity_invoke_bundle_hook($hook, $entity_type, $bundle, $bundle_new = N
 
   // Notify the entity storage controller.
   $method = 'onBundle' . ucfirst($hook);
-  \Drupal::entityManager()->getStorageController($entity_type)->$method($bundle, $bundle_new);
-
+  $storage_controller = \Drupal::entityManager()->getStorageController($entity_type);
+  if (method_exists($storage_controller, $method)) {
+    $storage_controller->$method($bundle, $bundle_new);
+  }
   // Invoke hook_entity_bundle_*() hooks.
   \Drupal::moduleHandler()->invokeAll('entity_bundle_' . $hook, array($entity_type, $bundle, $bundle_new));
 }

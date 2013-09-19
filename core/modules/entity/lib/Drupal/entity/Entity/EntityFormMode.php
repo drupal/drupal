@@ -48,22 +48,12 @@ use Drupal\entity\EntityFormModeInterface;
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/structure/display-modes/form/manage/{form_mode}"
  *   }
  * )
  */
 class EntityFormMode extends EntityDisplayModeBase implements EntityFormModeInterface {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function uri() {
-    return array(
-      'path' => 'admin/structure/display-modes/form/manage/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      ),
-    );
-  }
 
 }

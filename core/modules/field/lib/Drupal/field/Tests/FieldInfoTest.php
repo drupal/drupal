@@ -191,7 +191,7 @@ class FieldInfoTest extends FieldUnitTestBase {
     entity_create('field_instance', $instance_definition);
 
     // Disable coment module. This clears field_info cache.
-    module_disable(array('comment'));
+    module_uninstall(array('comment'));
     $this->assertNull(field_info_instance('comment', 'field', 'comment_node_article'), 'No instances are returned on disabled entity types.');
   }
 

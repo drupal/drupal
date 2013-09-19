@@ -102,9 +102,9 @@ class LanguageNegotiationInfoTest extends WebTestBase {
       $this->assertEqual($langcode, $value, format_string('The negotiated language for %type is %language', array('%type' => $type, '%language' => $value)));
     }
 
-    // Disable language_test and check that everything is set back to the
+    // Uninstall language_test and check that everything is set back to the
     // original status.
-    $this->languageNegotiationUpdate('disable');
+    $this->languageNegotiationUpdate('uninstall');
 
     // Check that only the core language types are available.
     foreach (language_types_get_all() as $type) {
@@ -128,25 +128,24 @@ class LanguageNegotiationInfoTest extends WebTestBase {
   /**
    * Update language types/negotiation information.
    *
-   * Manually invoke language_modules_enabled()/language_modules_disabled()
-   * since they would not be invoked after enabling/disabling language_test the
-   * first time.
+   * Manually invoke language_modules_installed()/language_modules_uninstalled()
+   * since they would not be invoked after installing/uninstalling language_test
+   * the first time.
    */
-  protected function languageNegotiationUpdate($op = 'enable') {
+  protected function languageNegotiationUpdate($op = 'install') {
     static $last_op = NULL;
     $modules = array('language_test');
 
-    // Enable/disable language_test only if we did not already before.
+    // Install/uninstall language_test only if we did not already before.
     if ($last_op != $op) {
-      $function = "module_{$op}";
-      $function($modules);
+      call_user_func(array($this->container->get('module_handler'), $op), $modules);
       // Reset hook implementation cache.
       $this->container->get('module_handler')->resetImplementations();
     }
 
     drupal_static_reset('language_types_info');
     drupal_static_reset('language_negotiation_info');
-    $function = "language_modules_{$op}d";
+    $function = "language_modules_{$op}ed";
     if (function_exists($function)) {
       $function($modules);
     }

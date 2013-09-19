@@ -34,25 +34,21 @@ class ModulesDisabledUpgradePathTest extends UpgradePathTestBase {
    * Tests an upgrade with all non-required modules installed but disabled.
    */
   public function testDisabledUpgrade() {
-    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
-
-    // Get enabled modules.
-    $enabled = \Drupal::moduleHandler()->getModuleList();
-    // Get all available modules.
-    $available = system_rebuild_module_data();
-    // Filter out hidden test modules.
-    foreach ($available as $module => $data) {
-      if (!empty($data->info['hidden'])) {
-        unset($available[$module]);
-      }
+    $modules = db_query('SELECT name, info FROM {system} WHERE type = :module AND status = 0 AND schema_version <> :schema_uninstalled', array(
+      ':module' => 'module',
+      ':schema_uninstalled' => SCHEMA_UNINSTALLED,
+    ))->fetchAllKeyed(0, 1);
+    array_walk($modules, function (&$value, $key) {
+      $info = unserialize($value);
+      $value = $info['name'];
+    });
+    // Load the first update screen.
+    $this->getUpdatePhp();
+    if (!$this->assertResponse(200)) {
+      throw new \Exception('Initial GET to update.php did not return HTTP 200 status.');
     }
-    $to_enable = array_diff_key($available, $enabled);
-    module_enable(array_keys($to_enable));
-    // Check for updates.
-    require_once DRUPAL_ROOT . '/core/includes/update.inc';
-    require_once DRUPAL_ROOT . '/core/includes/install.inc';
-    $updates = update_get_update_list();
-    $this->assertEqual($updates, array(), 'No pending updates after enabling all modules.');
-    $this->assertTrue(\Drupal::state()->get('update_test_1_update_dependencies_run'), 'Module update dependencies resolved for disabled modules');
+    $this->assertNoFieldByXPath('//input[@type="submit"]', NULL, 'No continue button found on update.php.');
+    $this->assertText('Drupal 8 no longer supports disabled modules. Please either enable or uninstall them before upgrading.');
+    $this->assertText(implode(', ', $modules));
   }
 }

@@ -12,6 +12,8 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * Menu callback; displays a listing of all themes.
+ *
+ * @deprecated Use \Drupal\system\Controller\SystemController::themesPage()
  */
 function system_themes_page() {
   // Get current list of themes.
@@ -617,11 +619,11 @@ function theme_system_modules_uninstall($variables) {
   // Display table.
   $rows = array();
   foreach (element_children($form['modules']) as $module) {
-    if (!empty($form['modules'][$module]['#dependents'])) {
-      $disabled_message = format_plural(count($form['modules'][$module]['#dependents']),
+    if (!empty($form['modules'][$module]['#required_by'])) {
+      $disabled_message = format_plural(count($form['modules'][$module]['#required_by']),
         'To uninstall @module, the following module must be uninstalled first: @required_modules',
         'To uninstall @module, the following modules must be uninstalled first: @required_modules',
-        array('@module' => $form['modules'][$module]['#module_name'], '@required_modules' => implode(', ', $form['modules'][$module]['#dependents'])));
+        array('@module' => $form['modules'][$module]['#module_name'], '@required_modules' => implode(', ', $form['modules'][$module]['#required_by'])));
       $disabled_message = '<div class="admin-requirements">' . $disabled_message . '</div>';
     }
     else {

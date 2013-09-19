@@ -156,3 +156,18 @@ function entity_entity_bundle_delete($entity_type, $bundle) {
   }
   entity_delete_multiple('entity_form_display', $ids);
 }
+
+/**
+ * Implements hook_module_preuninstall().
+ */
+function entity_module_preuninstall($module) {
+  // Clean up all entity bundles (including field instances) of every entity
+  // type provided by the module that is being uninstalled.
+  foreach (Drupal::entityManager()->getDefinitions() as $entity_type => $entity_info) {
+    if ($entity_info['module'] == $module) {
+      foreach (array_keys(entity_get_bundles($entity_type)) as $bundle) {
+        entity_invoke_bundle_hook('delete', $entity_type, $bundle);
+      }
+    }
+  }
+}

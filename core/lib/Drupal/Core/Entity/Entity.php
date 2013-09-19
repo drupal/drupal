@@ -148,36 +148,109 @@ class Entity implements \IteratorAggregate, EntityInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::uri().
+   * Returns the URI elements of the entity.
+   *
+   * URI templates might be set in the links array in an annotation, for
+   * example:
+   * @code
+   * links = {
+   *   "canonical" = "/node/{node}",
+   *   "edit-form" = "/node/{node}/edit",
+   *   "version-history" = "/node/{node}/revisions"
+   * }
+   * @endcode
+   * or specified in a callback function set like:
+   * @code
+   * uri_callback = "contact_category_uri",
+   * @endcode
+   * If looking for the canonical URI, and it was not set in the links array
+   * or in a uri_callback function, the path is set using the default template:
+   * entity/entityType/id.
+   *
+   * @param string $rel
+   *   The link relationship type, for example: canonical or edit-form.
+   *
+   * @return array
+   *   An array containing the 'path' and 'options' keys used to build the URI
+   *   of the entity, and matching the signature of url().
    */
-  public function uri() {
-    $bundle = $this->bundle();
-    // A bundle-specific callback takes precedence over the generic one for the
-    // entity type.
+  public function uri($rel = 'canonical') {
     $entity_info = $this->entityInfo();
-    $bundles = entity_get_bundles($this->entityType);
-    if (isset($bundles[$bundle]['uri_callback'])) {
-      $uri_callback = $bundles[$bundle]['uri_callback'];
-    }
-    elseif (isset($entity_info['uri_callback'])) {
-      $uri_callback = $entity_info['uri_callback'];
+
+    // The links array might contain URI templates set in annotations.
+    $link_templates = isset($entity_info['links']) ? $entity_info['links'] : array();
+
+    if (isset($link_templates[$rel])) {
+      // If there is a template for the given relationship type, do the
+      // placeholder replacement and use that as the path.
+      $template = $link_templates[$rel];
+      $replacements = $this->uriPlaceholderReplacements();
+      $uri['path'] = str_replace(array_keys($replacements), array_values($replacements), $template);
+
+      // @todo Remove this once http://drupal.org/node/1888424 is in and we can
+      //   move the BC handling of / vs. no-/ to the generator.
+      $uri['path'] = trim($uri['path'], '/');
+
+      // Pass the entity data to url() so that alter functions do not need to
+      // look up this entity again.
+      $uri['options']['entity_type'] = $this->entityType;
+      $uri['options']['entity'] = $this;
+      return $uri;
     }
 
-    // Invoke the callback to get the URI. If there is no callback, use the
-    // default URI format.
-    if (isset($uri_callback) && function_exists($uri_callback)) {
-      $uri = $uri_callback($this);
+    // Only use these defaults for a canonical link (that is, a link to self).
+    // Other relationship types are not supported by this logic.
+    if ($rel == 'canonical') {
+      $bundle = $this->bundle();
+      // A bundle-specific callback takes precedence over the generic one for
+      // the entity type.
+      $bundles = entity_get_bundles($this->entityType);
+      if (isset($bundles[$bundle]['uri_callback'])) {
+        $uri_callback = $bundles[$bundle]['uri_callback'];
+      }
+      elseif (isset($entity_info['uri_callback'])) {
+        $uri_callback = $entity_info['uri_callback'];
+      }
+
+      // Invoke the callback to get the URI. If there is no callback, use the
+      // default URI format.
+      if (isset($uri_callback) && function_exists($uri_callback)) {
+        $uri = $uri_callback($this);
+      }
+      else {
+        $uri = array(
+          'path' => 'entity/' . $this->entityType . '/' . $this->id(),
+        );
+      }
+      // Pass the entity data to url() so that alter functions do not need to
+      // look up this entity again.
+      $uri['options']['entity_type'] = $this->entityType;
+      $uri['options']['entity'] = $this;
+      return $uri;
     }
-    else {
-      $uri = array(
-        'path' => 'entity/' . $this->entityType . '/' . $this->id(),
+  }
+
+  /**
+   * Returns an array of placeholders for this entity.
+   *
+   * Individual entity classes may override this method to add additional
+   * placeholders if desired. If so, they should be sure to replicate the
+   * property caching logic.
+   *
+   * @return array
+   *   An array of URI placeholders.
+   */
+  protected function uriPlaceholderReplacements() {
+    if (empty($this->uriPlaceholderReplacements)) {
+      $this->uriPlaceholderReplacements = array(
+        '{entityType}' => $this->entityType(),
+        '{bundle}' => $this->bundle(),
+        '{id}' => $this->id(),
+        '{uuid}' => $this->uuid(),
+        '{' . $this->entityType() . '}' => $this->id(),
       );
     }
-    // Pass the entity data to url() so that alter functions do not need to
-    // look up this entity again.
-    $uri['options']['entity_type'] = $this->entityType;
-    $uri['options']['entity'] = $this;
-    return $uri;
+    return $this->uriPlaceholderReplacements;
   }
 
   /**

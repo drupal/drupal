@@ -56,7 +56,7 @@ class ForumNodeAccessTest extends WebTestBase {
       'body[0][value]' => $this->randomName(200),
       'private' => TRUE,
     );
-    $this->drupalPostForm('node/add/forum/1', $edit, t('Save'));
+    $this->drupalPostForm('node/add/forum', $edit, t('Save'), array('query' => array('forum_id' => 1)));
     $private_node = $this->drupalGetNodeByTitle($private_node_title);
     $this->assertTrue(!empty($private_node), 'New private forum node found in database.');
 
@@ -66,7 +66,7 @@ class ForumNodeAccessTest extends WebTestBase {
       'title' => $public_node_title,
       'body[0][value]' => $this->randomName(200),
     );
-    $this->drupalPostForm('node/add/forum/1', $edit, t('Save'));
+    $this->drupalPostForm('node/add/forum', $edit, t('Save'), array('query' => array('forum_id' => 1)));
     $public_node = $this->drupalGetNodeByTitle($public_node_title);
     $this->assertTrue(!empty($public_node), 'New public forum node found in database.');
 

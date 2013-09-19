@@ -137,3 +137,12 @@ aggregator.categorize_feed_form:
     _form: '\Drupal\aggregator\Form\CategorizeFeedForm'
   requirements:
     _permission: 'administer news feeds'
+
+aggregator.opml_page:
+  path: '/aggregator/opml/{cid}'
+  defaults:
+    _title: 'OPML feed'
+    _controller: '\Drupal\aggregator\Controller\AggregatorController::opmlPage'
+    cid: null
+  requirements:
+    _permission: 'access news feeds'

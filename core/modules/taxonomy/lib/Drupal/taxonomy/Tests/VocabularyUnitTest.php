@@ -202,10 +202,9 @@ class VocabularyUnitTest extends TaxonomyTestBase {
     );
     entity_create('field_instance', $this->instance_definition)->save();
 
-    module_disable(array('taxonomy'));
     require_once DRUPAL_ROOT . '/core/includes/install.inc';
     module_uninstall(array('taxonomy'));
-    module_enable(array('taxonomy'));
+    \Drupal::moduleHandler()->install(array('taxonomy'));
 
     // Now create a vocabulary with the same name. All field instances
     // connected to this vocabulary name should have been removed when the

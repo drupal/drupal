@@ -60,9 +60,9 @@ class CommentFieldsTest extends CommentTestBase {
   }
 
   /**
-   * Tests that comment module works when enabled after a content module.
+   * Tests that comment module works when installed after a content module.
    */
-  function testCommentEnable() {
+  function testCommentInstallAfterContentModule() {
     // Create a user to do module administration.
     $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
     $this->drupalLogin($this->admin_user);
@@ -83,17 +83,18 @@ class CommentFieldsTest extends CommentTestBase {
 
     // Disable the comment module.
     $edit = array();
-    $edit['modules[Core][comment][enable]'] = FALSE;
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+    $edit['uninstall[comment]'] = TRUE;
+    $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
+    $this->drupalPostForm(NULL, array(), t('Uninstall'));
     $this->rebuildContainer();
-    $this->assertFalse($this->container->get('module_handler')->moduleExists('comment'), 'Comment module disabled.');
+    $this->assertFalse($this->container->get('module_handler')->moduleExists('comment'), 'Comment module uninstalled.');
 
     // Enable core content type module (book).
     $edit = array();
     $edit['modules[Core][book][enable]'] = 'book';
     $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
 
-    // Now enable the comment module.
+    // Now install the comment module.
     $edit = array();
     $edit['modules[Core][comment][enable]'] = 'comment';
     $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));

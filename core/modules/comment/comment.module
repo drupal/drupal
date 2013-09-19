@@ -226,10 +226,8 @@ function comment_menu() {
   $items['admin/content/comment'] = array(
     'title' => 'Comments',
     'description' => 'List and edit site comments and the comment approval queue.',
-    'page callback' => 'comment_admin',
-    'access arguments' => array('administer comments'),
+    'route_name' => 'comment.admin',
     'type' => MENU_LOCAL_TASK | MENU_NORMAL_ITEM,
-    'file' => 'comment.admin.inc',
   );
   // Tabs begin here.
   $items['admin/content/comment/new'] = array(
@@ -239,8 +237,7 @@ function comment_menu() {
   $items['admin/content/comment/approval'] = array(
     'title' => 'Unapproved comments',
     'title callback' => 'comment_count_unpublished',
-    'page arguments' => array('approval'),
-    'access arguments' => array('administer comments'),
+    'route_name' => 'comment.admin_approval',
     'type' => MENU_LOCAL_TASK,
   );
   $items['comment/%comment'] = array(

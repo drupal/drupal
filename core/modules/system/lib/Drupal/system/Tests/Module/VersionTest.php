@@ -12,13 +12,6 @@ namespace Drupal\system\Tests\Module;
  */
 class VersionTest extends ModuleTestBase {
 
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('module_test');
-
   public static function getInfo() {
     return array(
       'name' => 'Module versions',

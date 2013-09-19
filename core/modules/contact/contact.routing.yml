@@ -26,3 +26,28 @@ contact.category_edit:
     _entity_form: contact_category.edit
   requirements:
     _entity_access: contact_category.update
+
+contact.site_page:
+  path: '/contact'
+  defaults:
+    _title: 'Contact'
+    _content: '\Drupal\contact\Controller\ContactController::contactSitePage'
+    contact_category: NULL
+  requirements:
+    _permission: 'access site-wide contact form'
+
+contact.site_page_category:
+  path: '/contact/{contact_category}'
+  defaults:
+    _title: 'Contact category form'
+    _content: '\Drupal\contact\Controller\ContactController::contactSitePage'
+  requirements:
+    _permission: 'access site-wide contact form'
+
+contact.personal_page:
+  path: '/user/{user}/contact'
+  defaults:
+    _title: 'Contact'
+    _content: '\Drupal\contact\Controller\ContactController::contactPersonalPage'
+  requirements:
+    _access_contact_personal_tab: 'TRUE'

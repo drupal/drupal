@@ -18,6 +18,10 @@
  *   A build array in the format expected by drupal_render().
  *
  * @see dblog_menu()
+ *
+ * @deprecated Use \Drupal\dblog\Controller\DblogController::pageNotFound(),
+ *   \Drupal\dblog\Controller\DblogController::accessDenied(), or
+ *   \Drupal\dblog\Controller\DblogController::search()
  */
 function dblog_top($type) {
 

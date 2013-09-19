@@ -52,12 +52,13 @@ class MainContentFallbackTest extends WebTestBase {
    */
   function testMainContentFallback() {
     $edit = array();
-    // Disable the block module.
-    $edit['modules[Core][block][enable]'] = FALSE;
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
+    // Uninstall the block module.
+    $edit['uninstall[block]'] = 'block';
+    $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
+    $this->drupalPostForm(NULL, NULL, t('Uninstall'));
+    $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
     $this->rebuildContainer();
-    $this->assertFalse(module_exists('block'), 'Block module disabled.');
+    $this->assertFalse(module_exists('block'), 'Block module uninstall.');
 
     // At this point, no region is filled and fallback should be triggered.
     $this->drupalGet('admin/config/system/site-information');

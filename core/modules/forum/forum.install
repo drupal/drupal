@@ -17,12 +17,7 @@ function forum_install() {
   $locked = \Drupal::state()->get('node.type.locked');
   $locked['forum'] = 'forum';
   \Drupal::state()->set('node.type.locked', $locked);
-}
 
-/**
- * Implements hook_enable().
- */
-function forum_enable() {
   // Create the forum vocabulary if it does not exist.
   // @todo Change Forum module so forum.settings can contain the vocabulary's
   //   machine name.
@@ -122,11 +117,11 @@ function forum_enable() {
 }
 
 /**
- * Implements hook_modules_preinstall().
+ * Implements hook_module_preinstall().
  */
-function forum_modules_preinstall($modules) {
+function forum_module_preinstall($module) {
   $list_boolean = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition('list_boolean');
-  if (empty($list_boolean) && in_array('forum', $modules)) {
+  if (empty($list_boolean) && $module == 'forum') {
     // Make sure that the list_boolean field type is available before our
     // default config is installed.
     field_info_cache_clear();

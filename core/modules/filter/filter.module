@@ -149,6 +149,11 @@ function filter_menu() {
     'title arguments' => array(5),
     'route_name' => 'filter.format_edit',
   );
+  $items['admin/config/content/formats/manage/%/edit'] = array(
+    'title' => 'Configure',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
   $items['admin/config/content/formats/manage/%/disable'] = array(
     'title' => 'Disable text format',
     'route_name' => 'filter.admin_disable',

@@ -11,18 +11,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 require_once dirname(__FILE__) . '/config_test.hooks.inc';
 
 /**
- * Entity URI callback.
- *
- * @param Drupal\config_test\Entity\ConfigTest $config_test
- *   A ConfigTest entity.
- */
-function config_test_uri(ConfigTest $config_test) {
-  return array(
-    'path' => 'admin/structure/config_test/manage/' . $config_test->id(),
-  );
-}
-
-/**
  * Implements hook_menu().
  */
 function config_test_menu() {

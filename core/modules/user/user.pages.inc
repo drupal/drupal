@@ -123,6 +123,8 @@ function template_preprocess_user(&$variables) {
  *
  * @see user_cancel_confirm_form()
  * @see user_cancel_url()
+ *
+ * @deprecated Use \Drupal\user\Controller\UserController::confirmCancel()
  */
 function user_cancel_confirm($account, $timestamp = 0, $hashed_pass = '') {
   // Time out in seconds until cancel URL expires; 24 hours = 86400 seconds.

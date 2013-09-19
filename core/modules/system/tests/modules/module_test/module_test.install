@@ -31,12 +31,3 @@ function module_test_install() {
   $record = array('data' => 'Data inserted in hook_install()');
   drupal_write_record('module_test', $record);
 }
-
-/**
- * Implements hook_enable().
- */
-function module_test_enable() {
-  $record = array('data' => 'Data inserted in hook_enable()');
-  drupal_write_record('module_test', $record);
-}
-

@@ -44,7 +44,7 @@ abstract class ConfirmFormBase extends FormBase implements ConfirmFormInterface 
    * {@inheritdoc}
    */
   public function buildForm(array $form, array &$form_state) {
-    drupal_set_title($this->getQuestion(), PASS_THROUGH);
+    $form['#title'] = $this->getQuestion();
 
     $form['#attributes']['class'][] = 'confirmation';
     $form['description'] = array('#markup' => $this->getDescription());

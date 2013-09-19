@@ -37,6 +37,9 @@ use Drupal\taxonomy\VocabularyInterface;
  *     "label" = "name",
  *     "weight" = "weight",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/structure/taxonomy/manage/{taxonomy_vocabulary}"
  *   }
  * )
  */
@@ -94,19 +97,6 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
    */
   public function id() {
     return $this->vid;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function uri() {
-    return array(
-      'path' => 'admin/structure/taxonomy/manage/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      ),
-    );
   }
 
   /**

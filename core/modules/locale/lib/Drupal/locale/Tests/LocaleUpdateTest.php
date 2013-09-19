@@ -332,7 +332,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
   /**
    * Tests automatic translation import when a module is enabled.
    */
-  function testEnableDisableModule() {
+  function testEnableUninstallModule() {
     // Make the hidden test modules look like a normal custom module.
     \Drupal::state()->set('locale.test_system_info_alter', TRUE);
 
@@ -350,11 +350,6 @@ class LocaleUpdateTest extends LocaleUpdateBase {
       array('%number' => 7, '%update' => 0, '%delete' => 0)), 'One translation file imported.');
     $this->assertTranslation('Tuesday', 'Dienstag', 'de');
 
-    // Disable and uninstall a module.
-    $edit = array(
-      'modules[Testing][locale_test_translate][enable]' => FALSE,
-    );
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $edit = array(
       'uninstall[locale_test_translate]' => 1,
     );
@@ -375,7 +370,7 @@ class LocaleUpdateTest extends LocaleUpdateBase {
    * enabled modules and will import them. When a language is removed the system
    * will remove all translations of that langugue from the database.
    */
-  function testEnableDisableLanguage() {
+  function testEnableLanguage() {
     // Make the hidden test modules look like a normal custom module.
     \Drupal::state()->set('locale.test_system_info_alter', TRUE);
 

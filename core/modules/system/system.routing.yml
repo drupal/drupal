@@ -281,6 +281,30 @@ system.files:
   requirements:
     _access: 'TRUE'
 
+system.temporary:
+  path: '/system/temporary'
+  defaults:
+    _controller: '\Drupal\system\FileDownloadController::download'
+    scheme: temporary
+  requirements:
+    _access: 'TRUE'
+
+system.themes_page:
+  path: '/admin/appearance'
+  defaults:
+    _title: 'Appearance'
+    _content: '\Drupal\system\Controller\SystemController::themesPage'
+  requirements:
+    _permission: 'administer themes'
+
+system.theme_set_default:
+  path: '/admin/appearance/default'
+  defaults:
+    _title: 'Set default theme'
+    _content: '\Drupal\system\Controller\SystemController::themeSetDefault'
+  requirements:
+    _permission: 'administer themes'
+
 system.theme_settings:
   path: '/admin/appearance/settings'
   defaults:

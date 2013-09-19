@@ -59,14 +59,10 @@ function translation_menu() {
   $items = array();
   $items['node/%node/translate'] = array(
     'title' => 'Translate',
-    'page callback' => 'translation_node_overview',
-    'page arguments' => array(1),
-    'access callback' => '_translation_tab_access',
-    'access arguments' => array(1),
+    'route_name' => 'translation.node_overview',
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
     'weight' => 2,
-    'file' => 'translation.pages.inc',
   );
   return $items;
 }

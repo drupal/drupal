@@ -36,6 +36,9 @@ use Drupal\Core\Annotation\Translation;
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/config/regional/date-time/formats/manage/{date_format}"
  *   }
  * )
  */
@@ -80,19 +83,6 @@ class DateFormat extends ConfigEntityBase implements DateFormatInterface {
    * @var array
    */
   protected $locales = array();
-
-  /**
-   * {@inheritdoc}
-   */
-  public function uri() {
-    return array(
-      'path' => 'admin/config/regional/date-time/formats/manage/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      ),
-    );
-  }
 
   /**
    * {@inheritdoc}

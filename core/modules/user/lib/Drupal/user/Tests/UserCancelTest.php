@@ -66,7 +66,7 @@ class UserCancelTest extends WebTestBase {
    * administer the site.
    */
   function testUserCancelUid1() {
-    module_enable(array('views'));
+    \Drupal::moduleHandler()->install(array('views'));
     // Update uid 1's name and password to we know it.
     $password = user_password();
     $account = array(
@@ -275,7 +275,7 @@ class UserCancelTest extends WebTestBase {
    */
   function testUserDelete() {
     \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_delete')->save();
-    module_enable(array('comment'));
+    \Drupal::moduleHandler()->install(array('comment'));
     $this->resetAll();
     $this->container->get('comment.manager')->addDefaultField('node', 'page');
 
@@ -391,7 +391,7 @@ class UserCancelTest extends WebTestBase {
    * Create an administrative user and mass-delete other users.
    */
   function testMassUserCancelByAdmin() {
-    module_enable(array('views'));
+    \Drupal::moduleHandler()->install(array('views'));
     \Drupal::config('user.settings')->set('cancel_method', 'user_cancel_reassign')->save();
     // Enable account cancellation notification.
     \Drupal::config('user.settings')->set('notify.status_canceled', TRUE)->save();

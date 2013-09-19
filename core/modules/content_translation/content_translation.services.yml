@@ -2,3 +2,21 @@ services:
   content_translation.synchronizer:
     class: Drupal\content_translation\FieldTranslationSynchronizer
     arguments: ['@entity.manager']
+
+  content_translation.subscriber:
+    class: Drupal\content_translation\Routing\ContentTranslationRouteSubscriber
+    arguments: ['@plugin.manager.entity']
+    tags:
+      - { name: event_subscriber }
+
+  content_translation.overview_access:
+    class: Drupal\content_translation\Access\ContentTranslationOverviewAccess
+    arguments: ['@plugin.manager.entity']
+    tags:
+      - { name: access_check }
+
+  content_translation.manage_access:
+    class: Drupal\content_translation\Access\ContentTranslationManageAccessCheck
+    arguments: ['@plugin.manager.entity']
+    tags:
+      - { name: access_check }

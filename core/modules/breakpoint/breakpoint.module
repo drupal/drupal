@@ -62,7 +62,7 @@ function breakpoint_themes_disabled($theme_list) {
 }
 
 /**
- * Implements hook_modules_enabled().
+ * Implements hook_modules_installed().
  *
  * @param array $modules
  *   An array of the modules that were enabled.
@@ -71,8 +71,8 @@ function breakpoint_themes_disabled($theme_list) {
  *
  * @todo: This should be removed if https://drupal.org/node/1813100 is resolved.
  */
-function breakpoint_modules_enabled($modules) {
-  _breakpoint_modules_enabled($modules);
+function breakpoint_modules_installed($modules) {
+  _breakpoint_modules_installed($modules);
 }
 
 /**
@@ -106,12 +106,12 @@ function _breakpoint_theme_enabled($theme_list) {
 }
 
 /**
- * Import breakpoints from all new enabled modules.
+ * Import breakpoints from all new installed modules.
  *
  * @param array $modules
- *   An array of the modules that were enabled.
+ *   An array of the modules that were installed.
  */
-function _breakpoint_modules_enabled($modules) {
+function _breakpoint_modules_installed($modules) {
   foreach ($modules as $module) {
     $media_queries = breakpoint_get_module_media_queries($module);
     _breakpoint_import_media_queries($module, $module, Breakpoint::SOURCE_TYPE_MODULE, $media_queries);

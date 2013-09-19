@@ -6,12 +6,12 @@
  */
 
 /**
- * Implements hook_enable().
+ * Implements hook_install().
  *
  * If the module is being enabled through the admin UI, and not from an
  * installation profile, reopen the modules page in an overlay.
  */
-function overlay_enable() {
+function overlay_install() {
   if (strpos(current_path(), 'admin/modules') === 0) {
     // Flag for a redirect to <front>#overlay=admin/modules on hook_init().
     $_SESSION['overlay_enable_redirect'] = 1;

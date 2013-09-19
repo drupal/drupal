@@ -34,7 +34,7 @@ class ClassLoaderTest extends WebTestBase {
    */
   function testClassLoading() {
     // Enable the module_test and module_autoload_test modules.
-    module_enable(array('module_test', 'module_autoload_test'), FALSE);
+    \Drupal::moduleHandler()->install(array('module_test', 'module_autoload_test'), FALSE);
     $this->resetAll();
     // Check twice to test an unprimed and primed system_list() cache.
     for ($i=0; $i<2; $i++) {
@@ -50,7 +50,7 @@ class ClassLoaderTest extends WebTestBase {
    */
   function testClassLoadingDisabledModules() {
     // Ensure that module_autoload_test is disabled.
-    module_disable(array('module_autoload_test'), FALSE);
+    module_uninstall(array('module_autoload_test'), FALSE);
     $this->resetAll();
     // Check twice to test an unprimed and primed system_list() cache.
     for ($i=0; $i<2; $i++) {

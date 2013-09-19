@@ -155,8 +155,6 @@ class DbLogTest extends WebTestBase {
    *   (optional) HTTP response code. Defaults to 200.
    */
   private function verifyReports($response = 200) {
-    $quote = '&#039;';
-
     // View the database log help page.
     $this->drupalGet('admin/help/dblog');
     $this->assertResponse($response);
@@ -175,14 +173,14 @@ class DbLogTest extends WebTestBase {
     $this->drupalGet('admin/reports/page-not-found');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Top ' . $quote . 'page not found' . $quote . ' errors'), 'DBLog page-not-found report was displayed');
+      $this->assertText("Top 'page not found' errors", 'DBLog page-not-found report was displayed');
     }
 
     // View the database log access-denied report page.
     $this->drupalGet('admin/reports/access-denied');
     $this->assertResponse($response);
     if ($response == 200) {
-      $this->assertText(t('Top ' . $quote . 'access denied' . $quote . ' errors'), 'DBLog access-denied report was displayed');
+      $this->assertText("Top 'access denied' errors", 'DBLog access-denied report was displayed');
     }
 
     // View the database log event page.

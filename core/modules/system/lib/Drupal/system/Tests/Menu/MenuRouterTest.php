@@ -622,7 +622,7 @@ class MenuRouterTest extends WebTestBase {
    * Tests a menu on a router page.
    */
   public function testMenuOnRoute() {
-    module_enable(array('router_test'));
+    \Drupal::moduleHandler()->install(array('router_test'));
     \Drupal::service('router.builder')->rebuild();
 
     $this->drupalGet('router_test/test2');

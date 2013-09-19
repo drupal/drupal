@@ -13,7 +13,3 @@ services:
     class: Drupal\block\Routing\RouteSubscriber
     tags:
       - { name: event_subscriber}
-  block.theme_access_check:
-    class: Drupal\block\Access\BlockThemeAccessCheck
-    tags:
-      - { name: access_check}

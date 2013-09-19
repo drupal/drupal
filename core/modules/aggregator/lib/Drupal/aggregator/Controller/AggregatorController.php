@@ -346,4 +346,12 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
     return $build;
   }
 
+  /**
+   * @todo Remove aggregator_opml().
+   */
+  public function opmlPage($cid = NULL) {
+    module_load_include('pages.inc', 'aggregator');
+    return aggregator_page_opml($cid);
+  }
+
 }

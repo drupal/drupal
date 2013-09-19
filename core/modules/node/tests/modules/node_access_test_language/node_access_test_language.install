@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the node_access_test_language
+ * module.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * Creates the 'private' field, which allows the node to be marked as private
+ * (restricted access) in a given translation.
+ */
+function node_access_test_language_install() {
+  $field_private = entity_create('field_entity', array(
+    'name' => 'field_private',
+    'entity_type' => 'node',
+    'type' => 'list_boolean',
+    'cardinality' => 1,
+    'translatable'  => TRUE,
+    'settings' => array(
+      'allowed_values' => array(0 => 'Not private', 1 => 'Private'),
+    ),
+  ));
+  $field_private->save();
+
+  entity_create('field_instance', array(
+    'field_name' => $field_private->name,
+    'entity_type' => 'node',
+    'bundle' => 'page',
+    'widget' => array(
+      'type' => 'options_buttons',
+    ),
+  ))->save();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function node_access_test_language_uninstall() {
+  field_read_instance('node', 'field_private', 'page')->delete();
+}

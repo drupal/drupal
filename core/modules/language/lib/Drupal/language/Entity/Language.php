@@ -37,6 +37,9 @@ use Drupal\language\LanguageInterface;
  *     "label" = "label",
  *     "weight" = "weight",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/config/regional/language/edit/{language_entity}"
  *   }
  * )
  */
@@ -95,19 +98,6 @@ class Language extends ConfigEntityBase implements LanguageInterface {
     // For the uncommon case of custom languages the label should be given in
     // English.
     $this->langcode = 'en';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function uri() {
-    return array(
-      'path' => 'admin/config/regional/language/edit/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      ),
-    );
   }
 
 }

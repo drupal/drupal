@@ -12,6 +12,8 @@ use Drupal\Core\Template\Attribute;
  * Page callback: Attaches CSS for the block region demo.
  *
  * @see block_menu()
+ *
+ * @deprecated Use \Drupal\block\Controller\BlockController::demo()
  */
 function block_admin_demo($theme = NULL) {
   return array(

@@ -115,7 +115,7 @@ function block_menu() {
   $items['admin/structure/block/manage/%block/configure'] = array(
     'title' => 'Configure block',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-    'context' => MENU_CONTEXT_INLINE,
+    'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
   $items['admin/structure/block/add/%/%'] = array(
     'title' => 'Place block',
@@ -136,14 +136,10 @@ function block_menu() {
     );
     $items["admin/structure/block/demo/$key"] = array(
       'title' => check_plain($theme->info['name']),
-      'page callback' => 'block_admin_demo',
-      'page arguments' => array($key),
+      'route_name' => 'block.admin_demo',
       'type' => MENU_CALLBACK,
-      'access callback' => '_block_themes_access',
-      'access arguments' => array($key),
       'theme callback' => '_block_custom_theme',
       'theme arguments' => array($key),
-      'file' => 'block.admin.inc',
     );
   }
   return $items;

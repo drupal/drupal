@@ -13,9 +13,9 @@ function tracker_uninstall() {
 }
 
 /**
- * Implements hook_enable().
+ * Implements hook_install().
  */
-function tracker_enable() {
+function tracker_install() {
   $max_nid = db_query('SELECT MAX(nid) FROM {node}')->fetchField();
   if ($max_nid != 0) {
     \Drupal::state()->set('tracker.index_nid', $max_nid);

@@ -173,13 +173,6 @@ function update_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 50,
   );
-  $items['admin/reports/updates/check'] = array(
-    'title' => 'Manual update check',
-    'page callback' => 'update_manual_status',
-    'access arguments' => array('administer site configuration'),
-    'type' => MENU_CALLBACK,
-    'file' => 'update.fetch.inc',
-  );
 
   // We want action links for updating projects at a few different locations:
   // both the module and theme administration pages, and on the available

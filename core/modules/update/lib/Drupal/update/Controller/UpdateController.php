@@ -62,4 +62,12 @@ class UpdateController implements ContainerInjectionInterface {
     return $build;
   }
 
+  /**
+   * @todo Remove update_manual_status().
+   */
+  public function updateStatusManually() {
+    module_load_include('fetch.inc', 'update');
+    return update_manual_status();
+  }
+
 }

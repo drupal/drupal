@@ -36,6 +36,9 @@ use Drupal\picture\PictureMappingInterface;
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/config/media/picturemapping/{picture_mapping}"
  *   }
  * )
  */
@@ -161,18 +164,5 @@ class PictureMapping extends ConfigEntityBase implements PictureMappingInterface
       }
     }
     return $mapping_found;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function uri() {
-    return array(
-      'path' => 'admin/config/media/picturemapping/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      ),
-    );
   }
 }
