@@ -619,7 +619,7 @@ class EntityNG extends Entity {
    * Implements the magic method for setting object properties.
    *
    * @todo: A lot of code still uses non-fields (e.g. $entity->content in render
-   *   controllers by reference. Clean that up.
+   *   controllers) by reference. Clean that up.
    */
   public function &__get($name) {
     // If this is an entity field, handle it accordingly. We first check whether
