@@ -54,20 +54,6 @@ class DependencyTest extends ModuleTestBase {
     $this->assertRaw(t('@module (<span class="admin-missing">missing</span>)', array('@module' => drupal_ucfirst('_missing_dependency'))), 'A module with missing dependencies is marked as such.');
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="modules[Testing][system_dependencies_test][enable]"]');
     $this->assert(count($checkbox) == 1, 'Checkbox for the module is disabled.');
-
-    // Force enable the system_dependencies_test module.
-    module_enable(array('system_dependencies_test'), FALSE);
-
-    // Verify that the module is forced to be disabled when submitting
-    // the module page.
-    $this->drupalPostForm('admin/modules', array(), t('Save configuration'));
-    $this->assertText(t('The @module module is missing, so the following module will be disabled: @depends.', array('@module' => '_missing_dependency', '@depends' => 'System dependency test')), 'The module missing dependencies will be disabled.');
-
-    // Confirm.
-    $this->drupalPostForm(NULL, NULL, t('Continue'));
-
-    // Verify that the module has been disabled.
-    $this->assertModules(array('system_dependencies_test'), FALSE);
   }
 
   /**
@@ -103,7 +89,7 @@ class DependencyTest extends ModuleTestBase {
    * Tests enabling a module that depends on a module which fails hook_requirements().
    */
   function testEnableRequirementsFailureDependency() {
-    module_enable(array('comment'));
+    \Drupal::moduleHandler()->install(array('comment'));
 
     $this->assertModules(array('requirements1_test'), FALSE);
     $this->assertModules(array('requirements2_test'), FALSE);
@@ -130,7 +116,7 @@ class DependencyTest extends ModuleTestBase {
    * UI. Dependencies should be enabled before their dependents.
    */
   function testModuleEnableOrder() {
-    module_enable(array('module_test'), FALSE);
+    \Drupal::moduleHandler()->install(array('module_test'), FALSE);
     $this->resetAll();
     $this->assertModules(array('module_test'), TRUE);
     \Drupal::state()->set('module_test.dependency', 'dependency');
@@ -161,7 +147,7 @@ class DependencyTest extends ModuleTestBase {
     $this->assertModules(array('forum', 'ban', 'xmlrpc', 'datetime', 'comment', 'history', 'taxonomy', 'options', 'number'), TRUE);
 
     // Check the actual order which is saved by module_test_modules_enabled().
-    $module_order = \Drupal::state()->get('system_test.module_enable_order') ?: array();
+    $module_order = \Drupal::state()->get('module_test.install_order') ?: array();
     $this->assertIdentical($module_order, $expected_order);
   }
 
@@ -174,14 +160,6 @@ class DependencyTest extends ModuleTestBase {
     $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
     $this->drupalPostForm(NULL, array(), t('Continue'));
     $this->assertModules(array('forum'), TRUE);
-
-    // Disable forum and comment. Both should now be installed but disabled.
-    $edit = array('modules[Core][forum][enable]' => FALSE);
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('forum'), FALSE);
-    $edit = array('modules[Core][comment][enable]' => FALSE);
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('comment'), FALSE);
 
     // Check that the taxonomy module cannot be uninstalled.
     $this->drupalGet('admin/modules/uninstall');

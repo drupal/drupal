@@ -337,17 +337,17 @@ function field_rebuild() {
 }
 
 /**
- * Implements hook_modules_enabled().
+ * Implements hook_modules_installed().
  */
-function field_modules_enabled($modules) {
+function field_modules_installed($modules) {
   // Refresh the 'active' status of fields.
   field_sync_field_status();
 }
 
 /**
- * Implements hook_modules_disabled().
+ * Implements hook_modules_uninstalled().
  */
-function field_modules_disabled($modules) {
+function field_modules_uninstalled($modules) {
   // Refresh the 'active' status of fields.
   field_sync_field_status();
 }

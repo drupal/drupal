@@ -50,7 +50,7 @@ class NodeTest extends RESTTestBase {
    */
   public function testNodes() {
     // Tests that the node resource works with comment module enabled.
-    $this->container->get('module_handler')->enable(array('comment'));
+    $this->container->get('module_handler')->install(array('comment'));
     $this->enableNodeConfiguration('GET', 'view');
 
     $node = $this->entityCreate('node');

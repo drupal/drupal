@@ -118,10 +118,6 @@ class BreakpointThemeTest extends BreakpointGroupTestBase {
     theme_disable(array('breakpoint_test_theme'));
     $this->assertTrue(entity_load('breakpoint_group', $breakpoint_group_obj->id()), 'Breakpoint group still exists if theme is disabled.');
 
-    // Disable the test module and verify the breakpoint group still exists.
-    module_disable(array('breakpoint_theme_test'));
-    $this->assertTrue(entity_load('breakpoint_group', $breakpoint_group_obj->id()), 'Breakpoint group still exists if module is disabled.');
-
     // Uninstall the test module and verify the breakpoint group is deleted.
     module_uninstall(array('breakpoint_theme_test'));
     $this->assertFalse(entity_load('breakpoint_group', $breakpoint_group_obj->id()), 'Breakpoint group is removed if module is uninstalled.');

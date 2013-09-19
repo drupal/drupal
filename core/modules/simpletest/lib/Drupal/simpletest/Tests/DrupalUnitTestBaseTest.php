@@ -89,7 +89,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertFalse($schema, "'$table' table schema not found.");
 
     // Install the module.
-    module_enable(array($module));
+    \Drupal::moduleHandler()->install(array($module));
 
     // Verify that the enabled module exists.
     $this->assertTrue(module_exists($module), "$module module found.");
@@ -198,6 +198,9 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
    * Tests that the module list is retained after enabling/installing/disabling.
    */
   function testEnableModulesFixedList() {
+    // Install system module.
+    $this->container->get('module_handler')->install(array('system'));
+
     // entity_test is loaded via $modules; its entity type should exist.
     $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
     $this->assertTrue(TRUE == entity_get_info('entity_test'));
@@ -208,12 +211,12 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertTrue(TRUE == entity_get_info('entity_test'));
 
     // Install some other modules; entity_test should still exist.
-    module_enable(array('field', 'field_sql_storage', 'field_test'), FALSE);
+    $this->container->get('module_handler')->install(array('field', 'field_sql_storage', 'field_test'), FALSE);
     $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
     $this->assertTrue(TRUE == entity_get_info('entity_test'));
 
-    // Disable one of those modules; entity_test should still exist.
-    module_disable(array('field_test'));
+    // Uninstall one of those modules; entity_test should still exist.
+    $this->container->get('module_handler')->uninstall(array('field_test'));
     $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
     $this->assertTrue(TRUE == entity_get_info('entity_test'));
 
@@ -222,7 +225,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
     $this->assertTrue(TRUE == entity_get_info('entity_test'));
 
-    // Reactivate the disabled module without enabling it.
+    // Reactivate the previously uninstalled module.
     $this->enableModules(array('field_test'));
 
     // Create a field and an instance.

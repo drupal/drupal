@@ -75,7 +75,7 @@ class LanguageSelectElementTest extends WebTestBase {
   function testHiddenLanguageSelectElement() {
     // Disable the language module, so that the language select field will not
     // be rendered.
-    module_disable(array('language'));
+    module_uninstall(array('language'));
     $this->drupalGet('form-test/language_select');
     // Check that the language fields were rendered on the page.
     $ids = array('edit-languages-all', 'edit-languages-configurable', 'edit-languages-locked', 'edit-languages-config-and-locked');

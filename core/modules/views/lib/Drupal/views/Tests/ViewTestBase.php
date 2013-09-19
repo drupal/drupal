@@ -52,7 +52,7 @@ abstract class ViewTestBase extends WebTestBase {
     \Drupal::state()->set('views_test_data_schema', $this->schemaDefinition());
     \Drupal::state()->set('views_test_data_views_data', $this->viewsData());
 
-    module_enable(array('views_test_data'));
+    \Drupal::moduleHandler()->install(array('views_test_data'));
     $this->resetAll();
     $this->rebuildContainer();
     $this->container->get('module_handler')->reload();

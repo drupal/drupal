@@ -11,11 +11,10 @@ use Drupal\Component\Graph\Graph;
 use Symfony\Component\Yaml\Parser;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class that manages enabled modules in a Drupal installation.
+ * Class that manages modules in a Drupal installation.
  */
 class ModuleHandler implements ModuleHandlerInterface {
 
@@ -29,7 +28,7 @@ class ModuleHandler implements ModuleHandlerInterface {
   protected $loadedFiles;
 
   /**
-   * List of enabled modules.
+   * List of installed modules.
    *
    * @var array
    *   An associative array whose keys are the names of the modules and whose
@@ -69,7 +68,7 @@ class ModuleHandler implements ModuleHandlerInterface {
    * Constructs a ModuleHandler object.
    *
    * @param array $module_list
-   *   An associative array whose keys are the names of enabled modules and
+   *   An associative array whose keys are the names of installed modules and
    *   whose values are the module filenames. This is normally the
    *   %container.modules% parameter being set up by DrupalKernel.
    *
@@ -502,78 +501,71 @@ class ModuleHandler implements ModuleHandlerInterface {
   /**
    * {@inheritdoc}
    */
-  public function enable($module_list, $enable_dependencies = TRUE) {
+  public function install(array $module_list, $enable_dependencies = TRUE) {
+    $module_config = \Drupal::config('system.module');
     if ($enable_dependencies) {
       // Get all module data so we can find dependencies and sort.
       $module_data = system_rebuild_module_data();
-      // Create an associative array with weights as values.
-      $module_list = array_flip(array_values($module_list));
+      $module_list = $module_list ? array_combine($module_list, $module_list) : array();
+      if (array_diff_key($module_list, $module_data)) {
+        // One or more of the given modules doesn't exist.
+        return FALSE;
+      }
 
-      while (list($module) = each($module_list)) {
-        if (!isset($module_data[$module])) {
-          // This module is not found in the filesystem, abort.
-          return FALSE;
-        }
-        if ($module_data[$module]->status) {
-          // Skip already enabled modules.
-          unset($module_list[$module]);
-          continue;
-        }
-        $module_list[$module] = $module_data[$module]->sort;
+      // Only process currently uninstalled modules.
+      $installed_modules = $module_config->get('enabled') ?: array();
+      if (!$module_list = array_diff_key($module_list, $installed_modules)) {
+        // Nothing to do. All modules already installed.
+        return TRUE;
+      }
 
-        // Add dependencies to the list, with a placeholder weight.
-        // The new modules will be processed as the while loop continues.
-        foreach (array_keys($module_data[$module]->requires) as $dependency) {
-          if (!isset($module_list[$dependency])) {
-            $module_list[$dependency] = 0;
+      // Conditionally add the dependencies to the list of modules.
+      if ($enable_dependencies) {
+        // Add dependencies to the list. The new modules will be processed as the
+        // while loop continues.
+        while (list($module) = each($module_list)) {
+          foreach (array_keys($module_data[$module]->requires) as $dependency) {
+            if (!isset($module_data[$dependency])) {
+              // The dependency does not exist.
+              return FALSE;
+            }
+
+            // Skip already installed modules.
+            if (!isset($module_list[$dependency]) && !isset($installed_modules[$dependency])) {
+              $module_list[$dependency] = $dependency;
+            }
           }
         }
       }
 
-      if (!$module_list) {
-        // Nothing to do. All modules already enabled.
-        return TRUE;
-      }
+      // Set the actual module weights.
+      $module_list = array_map(function ($module) use ($module_data) {
+        return $module_data[$module]->sort;
+      }, $module_list);
 
-      // Sort the module list by pre-calculated weights.
+      // Sort the module list by their weights (reverse).
       arsort($module_list);
       $module_list = array_keys($module_list);
-    }
-
-    foreach ($module_list as $module) {
-      // Throw an exception if the module name is too long.
-      if (strlen($module) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
-        throw new ExtensionNameLengthException(format_string('Module name %name is over the maximum allowed length of @max characters.', array(
-          '%name' => $module,
-          '@max' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
-        )));
-      }
     }
 
     // Required for module installation checks.
     include_once DRUPAL_ROOT . '/core/includes/install.inc';
 
     $modules_installed = array();
-    $modules_enabled = array();
-    $module_config = \Drupal::config('system.module');
-    $disabled_config = \Drupal::config('system.module.disabled');
     foreach ($module_list as $module) {
-      // Only process modules that are not already enabled.
-      // A module is only enabled if it is configured as enabled. Custom or
-      // overridden module handlers might contain the module already, which means
-      // that it might be loaded, but not necessarily installed or enabled.
       $enabled = $module_config->get("enabled.$module") !== NULL;
       if (!$enabled) {
-        $weight = $disabled_config->get($module);
-        if ($weight === NULL) {
-          $weight = 0;
+        // Throw an exception if the module name is too long.
+        if (strlen($module) > DRUPAL_EXTENSION_NAME_MAX_LENGTH) {
+          throw new ExtensionNameLengthException(format_string('Module name %name is over the maximum allowed length of @max characters.', array(
+            '%name' => $module,
+            '@max' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
+          )));
         }
+
         $module_config
-          ->set("enabled.$module", $weight)
+          ->set("enabled.$module", 0)
           ->set('enabled', module_config_sort($module_config->get('enabled')))
-          ->save();
-        $disabled_config
-          ->clear($module)
           ->save();
 
         // Prepare the new module list, sorted by weight, including filenames.
@@ -591,12 +583,11 @@ class ModuleHandler implements ModuleHandlerInterface {
         $module_filenames = array();
         foreach ($current_modules as $name => $weight) {
           if (isset($current_module_filenames[$name])) {
-            $filename = $current_module_filenames[$name];
+            $module_filenames[$name] = $current_module_filenames[$name];
           }
           else {
-            $filename = drupal_get_filename('module', $name);
+            $module_filenames[$name] = drupal_get_filename('module', $name);
           }
-          $module_filenames[$name] = $filename;
         }
 
         // Update the module handler in order to load the module's code.
@@ -618,7 +609,7 @@ class ModuleHandler implements ModuleHandlerInterface {
         // taken over as %container.modules% parameter, which is passed to a fresh
         // ModuleHandler instance upon first retrieval.
         // @todo install_begin_request() creates a container without a kernel.
-        if ($kernel = drupal_container()->get('kernel', ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
+        if ($kernel = \Drupal::service('kernel', ContainerInterface::NULL_ON_INVALID_REFERENCE)) {
           $kernel->updateModules($module_filenames, $module_filenames);
         }
 
@@ -628,47 +619,37 @@ class ModuleHandler implements ModuleHandlerInterface {
         drupal_theme_rebuild();
 
         // Allow modules to react prior to the installation of a module.
-        $this->invokeAll('modules_preinstall', array(array($module)));
+        $this->invokeAll('module_preinstall', array($module));
 
         // Clear the entity info cache before importing new configuration.
         entity_info_cache_clear();
 
-        // Now install the module if necessary.
-        if (drupal_get_installed_schema_version($module, TRUE) == SCHEMA_UNINSTALLED) {
-          drupal_install_schema($module);
+        // Now install the module's schema if necessary.
+        drupal_install_schema($module);
 
-          // Set the schema version to the number of the last update provided
-          // by the module.
-          $versions = drupal_get_schema_versions($module);
-          $version = $versions ? max($versions) : SCHEMA_INSTALLED;
+        // Set the schema version to the number of the last update provided
+        // by the module.
+        $versions = drupal_get_schema_versions($module);
+        $version = $versions ? max($versions) : SCHEMA_INSTALLED;
 
-          // Install default configuration of the module.
-          config_install_default_config('module', $module);
+        // Install default configuration of the module.
+        config_install_default_config('module', $module);
 
-          // If the module has no current updates, but has some that were
-          // previously removed, set the version to the value of
-          // hook_update_last_removed().
-          if ($last_removed = $this->invoke($module, 'update_last_removed')) {
-            $version = max($version, $last_removed);
-          }
-          drupal_set_installed_schema_version($module, $version);
-          // Allow the module to perform install tasks.
-          $this->invoke($module, 'install');
-          // Record the fact that it was installed.
-          $modules_installed[] = $module;
-          watchdog('system', '%module module installed.', array('%module' => $module), WATCHDOG_INFO);
+        // If the module has no current updates, but has some that were
+        // previously removed, set the version to the value of
+        // hook_update_last_removed().
+        if ($last_removed = $this->invoke($module, 'update_last_removed')) {
+          $version = max($version, $last_removed);
         }
+        drupal_set_installed_schema_version($module, $version);
 
-        // Allow modules to react prior to the enabling of a module.
-        entity_info_cache_clear();
-        $this->invokeAll('modules_preenable', array(array($module)));
+        // Record the fact that it was installed.
+        $modules_installed[] = $module;
 
-        // Enable the module.
-        $this->invoke($module, 'enable');
-
-        // Record the fact that it was enabled.
-        $modules_enabled[] = $module;
-        watchdog('system', '%module module enabled.', array('%module' => $module), WATCHDOG_INFO);
+        // Allow the module to perform install tasks.
+        $this->invoke($module, 'install');
+        // Record the fact that it was installed.
+        watchdog('system', '%module module installed.', array('%module' => $module), WATCHDOG_INFO);
       }
     }
 
@@ -677,142 +658,66 @@ class ModuleHandler implements ModuleHandlerInterface {
       $this->invokeAll('modules_installed', array($modules_installed));
     }
 
-    // If any modules were newly enabled, invoke hook_modules_enabled().
-    if (!empty($modules_enabled)) {
-      $this->invokeAll('modules_enabled', array($modules_enabled));
-    }
-
     return TRUE;
   }
 
   /**
    * {@inheritdoc}
    */
-  function disable($module_list, $disable_dependents = TRUE) {
-    if ($disable_dependents) {
-      // Get all module data so we can find dependents and sort.
-      $module_data = system_rebuild_module_data();
-      // Create an associative array with weights as values.
-      $module_list = array_flip(array_values($module_list));
-
-      $profile = drupal_get_profile();
-      while (list($module) = each($module_list)) {
-        if (!isset($module_data[$module]) || !$module_data[$module]->status) {
-          // This module doesn't exist or is already disabled, skip it.
-          unset($module_list[$module]);
-          continue;
-        }
-        $module_list[$module] = $module_data[$module]->sort;
-
-        // Add dependent modules to the list, with a placeholder weight.
-        // The new modules will be processed as the while loop continues.
-        foreach ($module_data[$module]->required_by as $dependent => $dependent_data) {
-          if (!isset($module_list[$dependent]) && $dependent != $profile) {
-            $module_list[$dependent] = 0;
-          }
-        }
-      }
-
-      // Sort the module list by pre-calculated weights.
-      asort($module_list);
-      $module_list = array_keys($module_list);
+  public function uninstall(array $module_list, $uninstall_dependents = TRUE) {
+    // Get all module data so we can find dependencies and sort.
+    $module_data = system_rebuild_module_data();
+    $module_list = $module_list ? array_combine($module_list, $module_list) : array();
+    if (array_diff_key($module_list, $module_data)) {
+      // One or more of the given modules doesn't exist.
+      return FALSE;
     }
 
-    $invoke_modules = array();
-
+    // Only process currently installed modules.
     $module_config = \Drupal::config('system.module');
-    $disabled_config = \Drupal::config('system.module.disabled');
-    foreach ($module_list as $module) {
-      // Only process modules that are enabled.
-      // A module is only enabled if it is configured as enabled. Custom or
-      // overridden module handlers might contain the module already, which means
-      // that it might be loaded, but not necessarily installed or enabled.
-      $enabled = $module_config->get("enabled.$module") !== NULL;
-      if ($enabled) {
-        module_load_install($module);
-        module_invoke($module, 'disable');
-
-        $disabled_config
-          ->set($module, $module_config->get($module))
-          ->save();
-        $module_config
-          ->clear("enabled.$module")
-          ->save();
-
-        // Update the module handler to remove the module.
-        // The current ModuleHandler instance is obsolete with the kernel rebuild
-        // below.
-        $module_filenames = $this->getModuleList();
-        unset($module_filenames[$module]);
-        $this->setModuleList($module_filenames);
-
-        // Record the fact that it was disabled.
-        $invoke_modules[] = $module;
-        watchdog('system', '%module module disabled.', array('%module' => $module), WATCHDOG_INFO);
-      }
+    $installed_modules = $module_config->get('enabled') ?: array();
+    if (!$module_list = array_intersect_key($module_list, $installed_modules)) {
+      // Nothing to do. All modules already uninstalled.
+      return TRUE;
     }
 
-    if (!empty($invoke_modules)) {
-      // @todo Most of the following should happen in above loop already.
-
-      // Refresh the system list to exclude the disabled modules.
-      // @todo Only needed to rebuild theme info.
-      // @see system_list_reset()
-      system_list_reset();
-
-      entity_info_cache_clear();
-
-      // Invoke hook_modules_disabled before disabling modules,
-      // so we can still call module hooks to get information.
-      $this->invokeAll('modules_disabled', array($invoke_modules));
-
-      // Update the kernel to exclude the disabled modules.
-      $enabled = $this->getModuleList();
-      drupal_container()->get('kernel')->updateModules($enabled, $enabled);
-
-      // Update the theme registry to remove the newly-disabled module.
-      drupal_theme_rebuild();
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function uninstall($module_list = array(), $uninstall_dependents = TRUE) {
     if ($uninstall_dependents) {
-      // Get all module data so we can find dependents and sort.
-      $module_data = system_rebuild_module_data();
-      // Create an associative array with weights as values.
-      $module_list = array_flip(array_values($module_list));
-
+      // Add dependent modules to the list. The new modules will be processed as
+      // the while loop continues.
       $profile = drupal_get_profile();
       while (list($module) = each($module_list)) {
-        if (!isset($module_data[$module]) || drupal_get_installed_schema_version($module) == SCHEMA_UNINSTALLED) {
-          // This module doesn't exist or is already uninstalled. Skip it.
-          unset($module_list[$module]);
-          continue;
-        }
-        $module_list[$module] = $module_data[$module]->sort;
-
-        // If the module has any dependents which are not already uninstalled and
-        // not included in the passed-in list, abort. It is not safe to uninstall
-        // them automatically because uninstalling a module is a destructive
-        // operation.
         foreach (array_keys($module_data[$module]->required_by) as $dependent) {
-          if (!isset($module_list[$dependent]) && drupal_get_installed_schema_version($dependent) != SCHEMA_UNINSTALLED && $dependent != $profile) {
+          if (!isset($module_data[$dependent])) {
+            // The dependent module does not exist.
             return FALSE;
           }
+
+          // Skip already uninstalled modules.
+          if (isset($installed_modules[$dependent]) && !isset($module_list[$dependent]) && $dependent != $profile) {
+            $module_list[$dependent] = TRUE;
+          }
         }
       }
-
-      // Sort the module list by pre-calculated weights.
-      asort($module_list);
-      $module_list = array_keys($module_list);
     }
 
+    // Set the actual module weights.
+    $module_list = array_map(function ($module) use ($module_data) {
+      return $module_data[$module]->sort;
+    }, $module_list);
+
+    // Sort the module list by their weights.
+    asort($module_list);
+    $module_list = array_keys($module_list);
+
+    // Only process modules that are enabled. A module is only enabled if it is
+    // configured as enabled. Custom or overridden module handlers might contain
+    // the module already, which means that it might be loaded, but not
+    // necessarily installed.
     $schema_store = \Drupal::keyValue('system.schema');
-    $disabled_config = \Drupal::config('system.module.disabled');
     foreach ($module_list as $module) {
+      // Allow modules to react prior to the uninstallation of a module.
+      $this->invokeAll('module_preuninstall', array($module));
+
       // Uninstall the module.
       module_load_install($module);
       $this->invoke($module, 'uninstall');
@@ -821,51 +726,85 @@ class ModuleHandler implements ModuleHandlerInterface {
       // Remove all configuration belonging to the module.
       config_uninstall_default_config('module', $module);
 
-      // Remove any cache bins defined by the module.
-      $service_yaml_file = drupal_get_path('module', $module) . "/$module.services.yml";
-      if (file_exists($service_yaml_file)) {
-        $parser = new Parser;
-        $definitions = $parser->parse(file_get_contents($service_yaml_file));
-        if (isset($definitions['services'])) {
-          foreach ($definitions['services'] as $id => $definition) {
-            if (isset($definition['tags'])) {
-              foreach ($definition['tags'] as $tag) {
-                // This works for the default cache registration and even in some
-                // cases when a non-default "super" factory is used. That should
-                // be extremely rare.
-                if ($tag['name'] == 'cache.bin' && isset($definition['factory_service']) && isset($definition['factory_method']) && !empty($definition['arguments'])) {
-                  try {
-                    $factory = \Drupal::service($definition['factory_service']);
-                    if (method_exists($factory, $definition['factory_method'])) {
-                      $backend = call_user_func_array(array($factory, $definition['factory_method']), $definition['arguments']);
-                      if ($backend instanceof CacheBackendInterface) {
-                        $backend->removeBin();
-                      }
+      // Remove the module's entry from the config.
+      $module_config->clear("enabled.$module")->save();
+
+      // Update the module handler to remove the module.
+      // The current ModuleHandler instance is obsolete with the kernel rebuild
+      // below.
+      $module_filenames = $this->getModuleList();
+      unset($module_filenames[$module]);
+      $this->setModuleList($module_filenames);
+
+      // Remove any potential cache bins provided by the module.
+      $this->removeCacheBins($module);
+
+      // Refresh the system list to exclude the uninstalled modules.
+      // @todo Only needed to rebuild theme info.
+      // @see system_list_reset()
+      system_list_reset();
+
+      // Clear the entity info cache.
+      entity_info_cache_clear();
+
+      // Update the kernel to exclude the uninstalled modules.
+      \Drupal::service('kernel')->updateModules($module_filenames, $module_filenames);
+
+      // Update the theme registry to remove the newly uninstalled module.
+      drupal_theme_rebuild();
+
+      watchdog('system', '%module module uninstalled.', array('%module' => $module), WATCHDOG_INFO);
+
+      $schema_store->delete($module);
+    }
+    drupal_get_installed_schema_version(NULL, TRUE);
+
+    // Let other modules react.
+    $this->invokeAll('modules_uninstalled', array($module_list));
+
+    drupal_flush_all_caches();
+
+    return TRUE;
+  }
+
+  /**
+   * Helper method for removing all cache bins registered by a given module.
+   *
+   * @param string $module
+   *   The name of the module for which to remove all registered cache bins.
+   */
+  protected function removeCacheBins($module) {
+    // Remove any cache bins defined by a module.
+    $service_yaml_file = drupal_get_path('module', $module) . "/$module.services.yml";
+    if (file_exists($service_yaml_file)) {
+      $parser = new Parser;
+      $definitions = $parser->parse(file_get_contents($service_yaml_file));
+      if (isset($definitions['services'])) {
+        foreach ($definitions['services'] as $id => $definition) {
+          if (isset($definition['tags'])) {
+            foreach ($definition['tags'] as $tag) {
+              // This works for the default cache registration and even in some
+              // cases when a non-default "super" factory is used. That should
+              // be extremely rare.
+              if ($tag['name'] == 'cache.bin' && isset($definition['factory_service']) && isset($definition['factory_method']) && !empty($definition['arguments'])) {
+                try {
+                  $factory = \Drupal::service($definition['factory_service']);
+                  if (method_exists($factory, $definition['factory_method'])) {
+                    $backend = call_user_func_array(array($factory, $definition['factory_method']), $definition['arguments']);
+                    if ($backend instanceof CacheBackendInterface) {
+                      $backend->removeBin();
                     }
                   }
-                  catch (\Exception $e) {
-                    watchdog_exception('system', $e, 'Failed to remove cache bin defined by the service %id.', array('%id' => $id));
-                  }
+                }
+                catch (\Exception $e) {
+                  watchdog_exception('system', $e, 'Failed to remove cache bin defined by the service %id.', array('%id' => $id));
                 }
               }
             }
           }
         }
       }
-
-      watchdog('system', '%module module uninstalled.', array('%module' => $module), WATCHDOG_INFO);
-      $schema_store->delete($module);
-      $disabled_config->clear($module);
     }
-    $disabled_config->save();
-    drupal_get_installed_schema_version(NULL, TRUE);
-
-    if (!empty($module_list)) {
-      // Let other modules react.
-      $this->invokeAll('modules_uninstalled', array($module_list));
-    }
-
-    return TRUE;
   }
 
   /**

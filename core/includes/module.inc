@@ -201,32 +201,21 @@ function module_load_include($type, $module, $name = NULL) {
   return FALSE;
 }
 
-
 /**
- * Enables or installs a given list of modules.
+ * Installs a given list of modules.
  *
  * @deprecated as of Drupal 8.0. Use
- *   \Drupal::moduleHandler()->enable($module_list, $enable_dependencies = TRUE).
+ *  \Drupal::moduleHandler()->install($module_list, $enable_dependencies = TRUE)
  */
-function module_enable($module_list, $enable_dependencies = TRUE) {
-  return \Drupal::moduleHandler()->enable($module_list, $enable_dependencies);
+function module_install($module_list, $enable_dependencies = TRUE) {
+  return \Drupal::moduleHandler()->install($module_list, $enable_dependencies);
 }
 
 /**
- * Disables a given set of modules.
+ * Installs a given list of modules.
  *
  * @deprecated as of Drupal 8.0. Use
- *   \Drupal::moduleHandler()->disable($module_list, $disable_dependents = TRUE).
- */
-function module_disable($module_list, $disable_dependents = TRUE) {
-  \Drupal::moduleHandler()->disable($module_list, $disable_dependents);
-}
-
-/**
- * Uninstalls a given list of disabled modules.
- *
- * @deprecated as of Drupal 8.0. Use
- *   \Drupal::moduleHandler()->uninstall($module_list, $uninstall_dependents = TRUE).
+ *   \Drupal::moduleHandler()->install($module_list, $enable_dependencies = TRUE).
  */
 function module_uninstall($module_list = array(), $uninstall_dependents = TRUE) {
   return \Drupal::moduleHandler()->uninstall($module_list, $uninstall_dependents);
@@ -332,7 +321,7 @@ function module_set_weight($module, $weight) {
       ->save();
 
     // Prepare the new module list, sorted by weight, including filenames.
-    // @see module_enable()
+    // @see Drupal\Core\Extension\ModuleHandler::install()
     $module_handler = \Drupal::moduleHandler();
     $current_module_filenames = $module_handler->getModuleList();
     $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);
@@ -343,13 +332,6 @@ function module_set_weight($module, $weight) {
     }
     // Update the module list in the extension handler.
     $module_handler->setModuleList($module_filenames);
-    return;
-  }
-  $disabled_config = \Drupal::config('system.module.disabled');
-  if ($disabled_config->get($module) !== NULL) {
-    $disabled_config
-      ->set($module, $weight)
-      ->save();
     return;
   }
 }

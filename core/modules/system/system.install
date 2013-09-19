@@ -513,6 +513,25 @@ function system_requirements($phase) {
     $requirements['update status']['title'] = t('Update notifications');
   }
 
+  // Ensure that if upgrading from 7 to 8 we have no disabled modules.
+  if ($phase == 'update' && db_table_exists('system')) {
+    $modules = db_query('SELECT name, info FROM {system} WHERE type = :module AND status = 0 AND schema_version <> :schema_uninstalled', array(
+      ':module' => 'module',
+      ':schema_uninstalled' => SCHEMA_UNINSTALLED,
+    ))->fetchAllKeyed(0, 1);
+    array_walk($modules, function (&$value, $key) {
+      $info = unserialize($value);
+      $value = $info['name'];
+    });
+    if (!empty($modules)) {
+      $requirements['disabled_modules'] = array(
+        'severity' => REQUIREMENT_ERROR,
+        'title' => t('Disabled modules'),
+        'value' => format_plural(count($modules), 'The %modules module is disabled.', 'The following modules are disabled: %modules', array('%modules' => implode(', ', $modules))),
+        'description' => t('Drupal 8 no longer supports disabled modules. Please either enable or uninstall them before upgrading.'),
+      );
+    }
+  }
   return $requirements;
 }
 
@@ -1531,7 +1550,7 @@ function system_update_8020() {
       ->condition('aid', 'system_block_ip_action')
       ->execute();
     // Enable the new Ban module.
-    module_enable(array('ban'));
+    Drupal::moduleHandler()->install(array('ban'));
   }
   else {
     // Drop old table.
@@ -1544,7 +1563,7 @@ function system_update_8020() {
  */
 function system_update_8021() {
   // Enable the module without re-installing the schema.
-  module_enable(array('action'));
+  Drupal::moduleHandler()->install(array('action'));
   // Rename former System module actions.
   $map = array(
     'system_message_action' => 'action_message_action',
@@ -1845,7 +1864,7 @@ function system_update_8041() {
  * Enable the new Entity module.
  */
 function system_update_8042() {
-  module_enable(array('entity'));
+  Drupal::moduleHandler()->install(array('entity'));
 }
 
 /**
@@ -1959,7 +1978,7 @@ function system_update_8047() {
  */
 function system_update_8048() {
   // Enable the module without re-installing the schema.
-  module_enable(array('menu_link'));
+  Drupal::moduleHandler()->install(array('menu_link'));
 
   // Add the langcode column if it doesn't exist.
   if (!db_field_exists('menu_inks', 'langcode')) {
@@ -2228,7 +2247,6 @@ function system_update_8058() {
     );
     db_change_field('menu_links', 'module', 'module', $spec);
   }
-
 }
 
 /**

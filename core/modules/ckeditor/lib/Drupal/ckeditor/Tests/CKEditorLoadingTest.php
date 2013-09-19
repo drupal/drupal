@@ -119,7 +119,7 @@ class CKEditorLoadingTest extends WebTestBase {
     // NOTE: the tests in CKEditorTest already ensure that changing the
     // configuration also results in modified CKEditor configuration, so we
     // don't test that here.
-    module_enable(array('ckeditor_test'));
+    \Drupal::moduleHandler()->install(array('ckeditor_test'));
     $this->container->get('plugin.manager.ckeditor.plugin')->clearCachedDefinitions();
     $editor->settings['toolbar']['buttons'][0][] = 'Llama';
     $editor->save();

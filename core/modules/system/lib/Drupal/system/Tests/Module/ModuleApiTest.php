@@ -43,7 +43,7 @@ class ModuleApiTest extends WebTestBase {
     $this->assertModuleList($module_list, t('Standard profile'));
 
     // Try to install a new module.
-    module_enable(array('ban'));
+    \Drupal::moduleHandler()->install(array('ban'));
     $module_list[] = 'ban';
     sort($module_list);
     $this->assertModuleList($module_list, t('After adding a module'));
@@ -98,18 +98,18 @@ class ModuleApiTest extends WebTestBase {
     $this->assertTrue(cache('bootstrap')->get('module_implements'), 'The module implements cache is populated after requesting a page.');
 
     // Prime ModuleHandler's hook implementation cache by invoking a random hook
-    // name. The subsequent module_enable() below will only call into
-    // setModuleList(), but will not explicitly reset the hook implementation
-    // cache, as that is expected to happen implicitly by setting the module
-    // list. This verifies that the hook implementation cache is cleared
-    // whenever setModuleList() is called.
+    // name. The subsequent \Drupal\Core\Extension\ModuleHandler::install()
+    // below will only call into setModuleList(), but will not explicitly reset
+    // the hook implementation cache, as that is expected to happen implicitly
+    // by setting the module list. This verifies that the hook implementation
+    // cache is cleared whenever setModuleList() is called.
     $module_handler = \Drupal::moduleHandler();
     $module_handler->invokeAll('test');
 
     // Make sure group include files are detected properly even when the file is
     // already loaded when the cache is rebuilt.
     // For that activate the module_test which provides the file to load.
-    module_enable(array('module_test'));
+    \Drupal::moduleHandler()->install(array('module_test'));
     $module_handler->loadAll();
     module_load_include('inc', 'module_test', 'module_test.file');
     $modules = $module_handler->getImplementations('test_hook');
@@ -120,7 +120,7 @@ class ModuleApiTest extends WebTestBase {
    * Test that module_invoke() can load a hook defined in hook_hook_info().
    */
   function testModuleInvoke() {
-    module_enable(array('module_test'), FALSE);
+    \Drupal::moduleHandler()->install(array('module_test'), FALSE);
     $this->resetAll();
     $this->drupalGet('module-test/hook-dynamic-loading-invoke');
     $this->assertText('success!', 'module_invoke() dynamically loads a hook defined in hook_hook_info().');
@@ -130,7 +130,7 @@ class ModuleApiTest extends WebTestBase {
    * Test that module_invoke_all() can load a hook defined in hook_hook_info().
    */
   function testModuleInvokeAll() {
-    module_enable(array('module_test'), FALSE);
+    \Drupal::moduleHandler()->install(array('module_test'), FALSE);
     $this->resetAll();
     $this->drupalGet('module-test/hook-dynamic-loading-invoke-all');
     $this->assertText('success!', 'module_invoke_all() dynamically loads a hook defined in hook_hook_info().');
@@ -143,7 +143,7 @@ class ModuleApiTest extends WebTestBase {
    * functions execute early in the request handling.
    */
   function testModuleInvokeAllDuringLoadFunction() {
-    module_enable(array('module_test'), FALSE);
+    \Drupal::moduleHandler()->install(array('module_test'), FALSE);
     $this->resetAll();
     $this->drupalGet('module-test/hook-dynamic-loading-invoke-all-during-load/module_test');
     $this->assertText('success!', 'Menu item load function invokes a hook defined in hook_hook_info().');
@@ -156,7 +156,7 @@ class ModuleApiTest extends WebTestBase {
     // Enable the test module, and make sure that other modules we are testing
     // are not already enabled. (If they were, the tests below would not work
     // correctly.)
-    module_enable(array('module_test'), FALSE);
+    \Drupal::moduleHandler()->install(array('module_test'), FALSE);
     $this->assertTrue(module_exists('module_test'), 'Test module is enabled.');
     $this->assertFalse(module_exists('forum'), 'Forum module is disabled.');
     $this->assertFalse(module_exists('ban'), 'Ban module is disabled.');
@@ -166,53 +166,24 @@ class ModuleApiTest extends WebTestBase {
     // depends on a made-up module, foo. Nothing should be installed.
     \Drupal::state()->set('module_test.dependency', 'missing dependency');
     drupal_static_reset('system_rebuild_module_data');
-    $result = module_enable(array('forum'));
-    $this->assertFalse($result, 'module_enable() returns FALSE if dependencies are missing.');
-    $this->assertFalse(module_exists('forum'), 'module_enable() aborts if dependencies are missing.');
+    $result = \Drupal::moduleHandler()->install(array('forum'));
+    $this->assertFalse($result, '\Drupal\Core\Extension\ModuleHandler::install() returns FALSE if dependencies are missing.');
+    $this->assertFalse(module_exists('forum'), '\Drupal\Core\Extension\ModuleHandler::install() aborts if dependencies are missing.');
 
     // Now, fix the missing dependency. Forum module depends on ban, but ban
-    // depends on the XML-RPC module. module_enable() should work.
+    // depends on the XML-RPC module.
+    // \Drupal\Core\Extension\ModuleHandler::install() should work.
     \Drupal::state()->set('module_test.dependency', 'dependency');
     drupal_static_reset('system_rebuild_module_data');
-    $result = module_enable(array('forum'));
-    $this->assertTrue($result, 'module_enable() returns the correct value.');
+    $result = \Drupal::moduleHandler()->install(array('forum'));
+    $this->assertTrue($result, '\Drupal\Core\Extension\ModuleHandler::install() returns the correct value.');
     // Verify that the fake dependency chain was installed.
-    $this->assertTrue(module_exists('ban') && module_exists('xmlrpc'), 'Dependency chain was installed by module_enable().');
+    $this->assertTrue(module_exists('ban') && module_exists('xmlrpc'), 'Dependency chain was installed.');
     // Verify that the original module was installed.
     $this->assertTrue(module_exists('forum'), 'Module installation with unlisted dependencies succeeded.');
     // Finally, verify that the modules were enabled in the correct order.
-    $module_order = \Drupal::state()->get('system_test.module_enable_order') ?: array();
-    $this->assertEqual($module_order, array('xmlrpc', 'ban', 'forum'), 'Modules were enabled in the correct order by module_enable().');
-
-    // Now, disable the XML-RPC module. Both forum and ban should be disabled as
-    // well, in the correct order.
-    module_disable(array('xmlrpc'));
-    $this->assertTrue(!module_exists('forum') && !module_exists('ban'), 'Depedency chain was disabled by module_disable().');
-    $this->assertFalse(module_exists('xmlrpc'), 'Disabling a module with unlisted dependents succeeded.');
-    $disabled_modules = \Drupal::state()->get('module_test.disable_order') ?: array();
-    $this->assertEqual($disabled_modules, array('forum', 'ban', 'xmlrpc'), 'Modules were disabled in the correct order by module_disable().');
-
-    // Disable a module that is listed as a dependency by the installation
-    // profile. Make sure that the profile itself is not on the list of
-    // dependent modules to be disabled.
-    $profile = drupal_get_profile();
-    $info = install_profile_info($profile);
-    $this->assertTrue(in_array('comment', $info['dependencies']), 'Comment module is listed as a dependency of the installation profile.');
-    $this->assertTrue(module_exists('comment'), 'Comment module is enabled.');
-    module_disable(array('comment'));
-    $this->assertFalse(module_exists('comment'), 'Comment module was disabled.');
-    $disabled_modules = \Drupal::state()->get('module_test.disable_order') ?: array();
-    $this->assertTrue(in_array('comment', $disabled_modules), 'Comment module is in the list of disabled modules.');
-    $this->assertFalse(in_array($profile, $disabled_modules), 'The installation profile is not in the list of disabled modules.');
-
-    // Try to uninstall the XML-RPC module by itself. This should be rejected,
-    // since the modules which it depends on need to be uninstalled first, and
-    // that is too destructive to perform automatically.
-    $result = module_uninstall(array('xmlrpc'));
-    $this->assertFalse($result, 'Calling module_uninstall() on a module whose dependents are not uninstalled fails.');
-    foreach (array('forum', 'ban', 'xmlrpc') as $module) {
-      $this->assertNotEqual(drupal_get_installed_schema_version($module), SCHEMA_UNINSTALLED, format_string('The @module module was not uninstalled.', array('@module' => $module)));
-    }
+    $module_order = \Drupal::state()->get('module_test.install_order') ?: array();
+    $this->assertEqual($module_order, array('xmlrpc', 'ban', 'forum'), 'Modules were enabled in the correct order.');
 
     // Now uninstall all three modules explicitly, but in the incorrect order,
     // and make sure that drupal_uninstal_modules() uninstalled them in the
@@ -232,28 +203,28 @@ class ModuleApiTest extends WebTestBase {
     $this->assertEqual(drupal_get_installed_schema_version('comment'), SCHEMA_UNINSTALLED, 'Comment module was uninstalled.');
     $uninstalled_modules = \Drupal::state()->get('module_test.uninstall_order') ?: array();
     $this->assertTrue(in_array('comment', $uninstalled_modules), 'Comment module is in the list of uninstalled modules.');
-    $this->assertFalse(in_array($profile, $uninstalled_modules), 'The installation profile is not in the list of uninstalled modules.');
+    $this->assertFalse(in_array($this->profile, $uninstalled_modules), 'The installation profile is not in the list of uninstalled modules.');
 
     // Enable forum module again, which should enable both the ban module and
     // XML-RPC module. But, this time do it with ban module declaring a
     // dependency on a specific version of XML-RPC module in its info file. Make
-    // sure that module_enable() still works.
+    // sure that Drupal\Core\Extension\ModuleHandler::install() still works.
     \Drupal::state()->set('module_test.dependency', 'version dependency');
     drupal_static_reset('system_rebuild_module_data');
-    $result = module_enable(array('forum'));
-    $this->assertTrue($result, 'module_enable() returns the correct value.');
+    $result = \Drupal::moduleHandler()->install(array('forum'));
+    $this->assertTrue($result, '\Drupal\Core\Extension\ModuleHandler::install() returns the correct value.');
     // Verify that the fake dependency chain was installed.
-    $this->assertTrue(module_exists('ban') && module_exists('xmlrpc'), 'Dependency chain was installed by module_enable().');
+    $this->assertTrue(module_exists('ban') && module_exists('xmlrpc'), 'Dependency chain was installed.');
     // Verify that the original module was installed.
     $this->assertTrue(module_exists('forum'), 'Module installation with version dependencies succeeded.');
     // Finally, verify that the modules were enabled in the correct order.
-    $enable_order = \Drupal::state()->get('system_test.module_enable_order') ?: array();
+    $enable_order = \Drupal::state()->get('module_test.install_order') ?: array();
     $xmlrpc_position = array_search('xmlrpc', $enable_order);
     $ban_position = array_search('ban', $enable_order);
     $forum_position = array_search('forum', $enable_order);
     $xmlrpc_before_ban = $xmlrpc_position !== FALSE && $ban_position !== FALSE && $xmlrpc_position < $ban_position;
     $ban_before_forum = $ban_position !== FALSE && $forum_position !== FALSE && $ban_position < $forum_position;
-    $this->assertTrue($xmlrpc_before_ban && $ban_before_forum, 'Modules were enabled in the correct order by module_enable().');
+    $this->assertTrue($xmlrpc_before_ban && $ban_before_forum, 'Modules were enabled in the correct order.');
   }
 
   /**

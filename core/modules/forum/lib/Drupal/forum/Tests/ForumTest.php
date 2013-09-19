@@ -106,30 +106,6 @@ class ForumTest extends WebTestBase {
   }
 
   /**
-   * Tests disabling and re-enabling the Forum module.
-   */
-  function testEnableForumField() {
-    $this->drupalLogin($this->admin_user);
-
-    // Disable the Forum module.
-    $edit = array();
-    $edit['modules[Core][forum][enable]'] = FALSE;
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
-    $this->rebuildContainer();
-    $this->assertFalse(module_exists('forum'), 'Forum module is not enabled.');
-
-    // Attempt to re-enable the Forum module and ensure it does not try to
-    // recreate the taxonomy_forums field.
-    $edit = array();
-    $edit['modules[Core][forum][enable]'] = 'forum';
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
-    $this->assertText(t('The configuration options have been saved.'), 'Modules status has been updated.');
-    $this->rebuildContainer();
-    $this->assertTrue(module_exists('forum'), 'Forum module is enabled.');
-  }
-
-  /**
    * Tests forum functionality through the admin and user interfaces.
    */
   function testForum() {
@@ -253,7 +229,7 @@ class ForumTest extends WebTestBase {
     $this->assertEqual(0, $nid_count, 'A forum node was not created when missing a forum vocabulary.');
 
     // Reset the defaults for future tests.
-    module_enable(array('forum'));
+    \Drupal::moduleHandler()->install(array('forum'));
   }
 
   /**

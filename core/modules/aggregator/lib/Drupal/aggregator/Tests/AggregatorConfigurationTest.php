@@ -59,7 +59,7 @@ class AggregatorConfigurationTest extends AggregatorTestBase {
 
     // Make sure settings form is still accessible even after disabling a module
     // that provides the selected plugins.
-    module_disable(array('aggregator_test'));
+    module_uninstall(array('aggregator_test'));
     $this->resetAll();
     $this->drupalGet('admin/config/services/aggregator/settings');
     $this->assertResponse(200);

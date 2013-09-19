@@ -150,21 +150,12 @@ function module_test_class_loading() {
 }
 
 /**
- * Implements hook_modules_enabled().
+ * Implements hook_modules_installed().
  */
-function module_test_modules_enabled($modules) {
+function module_test_modules_installed($modules) {
   // Record the ordered list of modules that were passed in to this hook so we
   // can check that the modules were enabled in the correct sequence.
-  \Drupal::state()->set('system_test.module_enable_order', $modules);
-}
-
-/**
- * Implements hook_modules_disabled().
- */
-function module_test_modules_disabled($modules) {
-  // Record the ordered list of modules that were passed in to this hook so we
-  // can check that the modules were disabled in the correct sequence.
-  \Drupal::state()->set('module_test.disable_order', $modules);
+  \Drupal::state()->set('module_test.install_order', $modules);
 }
 
 /**

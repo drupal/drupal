@@ -37,7 +37,7 @@ class ConfigInstallWebTest extends WebTestBase {
     $default_configuration_entity = 'config_test.dynamic.config_integration_test';
 
     // Install the config_test module we're integrating with.
-    module_enable(array('config_test'));
+    \Drupal::moduleHandler()->install(array('config_test'));
 
     // Verify the configuration does not exist prior to installation.
     $config_static = \Drupal::config($default_config);
@@ -46,7 +46,7 @@ class ConfigInstallWebTest extends WebTestBase {
     $this->assertIdentical($config_entity->isNew(), TRUE);
 
     // Install the integration module.
-    module_enable(array('config_integration_test'));
+    \Drupal::moduleHandler()->install(array('config_integration_test'));
 
     // Verify that default module config exists.
     $config_static = \Drupal::config($default_config);
@@ -66,20 +66,7 @@ class ConfigInstallWebTest extends WebTestBase {
     //   In other words: This test passes even without this reset, but it shouldn't.
     $this->container->get('config.factory')->reset();
 
-    // Disable and enable the integration module.
-    module_disable(array('config_integration_test'));
-    module_enable(array('config_integration_test'));
-
-    // Verify that customized config exists.
-    $config_static = \Drupal::config($default_config);
-    $this->assertIdentical($config_static->isNew(), FALSE);
-    $this->assertIdentical($config_static->get('foo'), 'customized setting');
-    $config_entity = \Drupal::config($default_configuration_entity);
-    $this->assertIdentical($config_entity->isNew(), FALSE);
-    $this->assertIdentical($config_entity->get('label'), 'Customized integration config label');
-
     // Disable and uninstall the integration module.
-    module_disable(array('config_integration_test'));
     module_uninstall(array('config_integration_test'));
 
     // Verify the integration module's config was uninstalled.
@@ -92,7 +79,7 @@ class ConfigInstallWebTest extends WebTestBase {
     $this->assertIdentical($config_entity->get('label'), 'Customized integration config label');
 
     // Reinstall the integration module.
-    module_enable(array('config_integration_test'));
+    \Drupal::moduleHandler()->install(array('config_integration_test'));
 
     // Verify the integration module's config was re-installed.
     $config_static = \Drupal::config($default_config);

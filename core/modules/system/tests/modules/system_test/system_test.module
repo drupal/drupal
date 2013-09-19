@@ -98,28 +98,6 @@ function system_test_modules_installed($modules) {
 }
 
 /**
- * Implements hook_modules_enabled().
- */
-function system_test_modules_enabled($modules) {
-  if (\Drupal::state()->get('system_test.verbose_module_hooks')) {
-    foreach ($modules as $module) {
-      drupal_set_message(t('hook_modules_enabled fired for @module', array('@module' => $module)));
-    }
-  }
-}
-
-/**
- * Implements hook_modules_disabled().
- */
-function system_test_modules_disabled($modules) {
-  if (\Drupal::state()->get('system_test.verbose_module_hooks')) {
-    foreach ($modules as $module) {
-      drupal_set_message(t('hook_modules_disabled fired for @module', array('@module' => $module)));
-    }
-  }
-}
-
-/**
  * Implements hook_modules_uninstalled().
  */
 function system_test_modules_uninstalled($modules) {
@@ -279,4 +257,18 @@ function system_test_authorize_init_page($page_title) {
   $authorize_url = $GLOBALS['base_url'] . '/core/authorize.php';
   system_authorized_init('system_test_authorize_run', drupal_get_path('module', 'system_test') . '/system_test.module', array(), $page_title);
   return new RedirectResponse($authorize_url);
+}
+
+/**
+ * Implements hook_module_preinstall().
+ */
+function system_test_module_preinstall($module) {
+  Drupal::state()->set('system_test_preinstall_module', $module);
+}
+
+/**
+ * Implements hook_module_preuninstall().
+ */
+function system_test_module_preuninstall($module) {
+  Drupal::state()->set('system_test_preuninstall_module', $module);
 }

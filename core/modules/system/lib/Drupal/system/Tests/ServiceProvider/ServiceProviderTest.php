@@ -46,12 +46,12 @@ class ServiceProviderTest extends WebTestBase {
    * Tests that the DIC keeps up with module enable/disable in the same request.
    */
   function testServiceProviderRegistrationDynamic() {
-    // Disable the module and ensure the service provider's service is not registered.
-    module_disable(array('service_provider_test'));
+    // Uninstall the module and ensure the service provider's service is not registered.
+    \Drupal::moduleHandler()->uninstall(array('service_provider_test'));
     $this->assertFalse(drupal_container()->has('service_provider_test_class'), 'The service_provider_test_class service does not exist in the DIC.');
 
-    // Enable the module and ensure the service provider's service is registered.
-    module_enable(array('service_provider_test'));
+    // Install the module and ensure the service provider's service is registered.
+    \Drupal::moduleHandler()->install(array('service_provider_test'));
     $this->assertTrue(drupal_container()->has('service_provider_test_class'), 'The service_provider_test_class service exists in the DIC.');
   }
 

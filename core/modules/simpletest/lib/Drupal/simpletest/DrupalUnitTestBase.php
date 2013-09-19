@@ -162,9 +162,9 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
       // away with a simple container holding the absolute bare minimum. When
       // a kernel is overridden then there's no need to re-register the keyvalue
       // service but when a test is happy with the superminimal container put
-      // together here, it still might a keyvalue storage for anything (for
-      // eg. module_enable) using \Drupal::state() -- that's why a memory
-      // service was added in the first place.
+      // together here, it still might a keyvalue storage for anything using
+      // \Drupal::state() -- that's why a memory service was added in the first
+      // place.
       $container
         ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')
         ->addArgument(new Reference('service_container'));

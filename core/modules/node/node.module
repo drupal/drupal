@@ -1276,27 +1276,6 @@ function node_form_block_form_alter(&$form, &$form_state) {
 }
 
 /**
- * Implements hook_modules_uninstalled().
- */
-function node_modules_uninstalled($modules) {
-  // Remove module-specific settings from all node types.
-  $config_names = config_get_storage_names_with_prefix('node.type.');
-  foreach ($config_names as $config_name) {
-    $config = \Drupal::config($config_name);
-    $changed = FALSE;
-    foreach ($modules as $module) {
-      if ($config->get('settings.' . $module)) {
-        $config->clear('settings.' . $module);
-        $changed = TRUE;
-      }
-    }
-    if ($changed) {
-      $config->save();
-    }
-  }
-}
-
-/**
  * Implements hook_block_access().
  *
  * Checks the content type specific visibility settings and removes the block
@@ -1937,7 +1916,7 @@ function node_access_needs_rebuild($rebuild = NULL) {
  * rebuild only once he is done.
  *
  * Note : As of Drupal 6, node access modules are not required to (and actually
- * should not) call node_access_rebuild() in hook_enable/disable anymore.
+ * should not) call node_access_rebuild() in hook_install/uninstall anymore.
  *
  * @param $batch_mode
  *   (optional) Set to TRUE to process in 'batch' mode, spawning processing over
@@ -2089,9 +2068,9 @@ function node_requirements($phase) {
 }
 
 /**
- * Implements hook_modules_enabled().
+ * Implements hook_modules_installed().
  */
-function node_modules_enabled($modules) {
+function node_modules_installed($modules) {
   // Check if any of the newly enabled modules require the node_access table to
   // be rebuilt.
   if (!node_access_needs_rebuild() && array_intersect($modules, \Drupal::moduleHandler()->getImplementations('node_grants'))) {
@@ -2100,9 +2079,25 @@ function node_modules_enabled($modules) {
 }
 
 /**
- * Implements hook_modules_disabled().
+ * Implements hook_modules_uninstalled().
  */
-function node_modules_disabled($modules) {
+function node_modules_uninstalled($modules) {
+  // Remove module-specific settings from all node types.
+  $config_names = config_get_storage_names_with_prefix('node.type.');
+  foreach ($config_names as $config_name) {
+    $config = config($config_name);
+    $changed = FALSE;
+    foreach ($modules as $module) {
+      if ($config->get('settings.' . $module)) {
+        $config->clear('settings.' . $module);
+        $changed = TRUE;
+      }
+    }
+    if ($changed) {
+      $config->save();
+    }
+  }
+
   // Check whether any of the disabled modules implemented hook_node_grants(),
   // in which case the node access table needs to be rebuilt.
   foreach ($modules as $module) {
@@ -2199,7 +2194,7 @@ function node_library_info() {
  */
 function node_system_info_alter(&$info, $file, $type) {
   if ($type == 'module' && $file->name == 'translation') {
-    $info['hidden'] = !module_exists('translation') && \Drupal::config('system.module.disabled')->get('translation') === NULL;
+    $info['hidden'] = !module_exists('translation');
   }
 }
 

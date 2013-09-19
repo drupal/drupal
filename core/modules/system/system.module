@@ -116,7 +116,7 @@ function system_help($path, $arg) {
       }
       return $output;
     case 'admin/modules/uninstall':
-      return '<p>' . t('The uninstall process removes all data related to a module. To uninstall a module, you must first disable it on the main <a href="@modules">Modules page</a>.', array('@modules' => url('admin/modules'))) . '</p>';
+      return '<p>' . t('The uninstall process removes all data related to a module.') . '</p>';
     case 'admin/structure/block/manage':
       if ($arg[4] == 'system' && $arg[5] == 'powered-by') {
         return '<p>' . t('The <em>Powered by Drupal</em> block is an optional link to the home page of the Drupal project. While there is absolutely no requirement that sites feature this link, it may be used to show support for Drupal.') . '</p>';
@@ -2328,7 +2328,7 @@ function system_check_directory($form_element) {
 /**
  * Returns an array of information about enabled modules or themes.
  *
- * This function returns the contents of the .info.yml file for each enabled
+ * This function returns the contents of the .info.yml file for each installed
  * module or theme.
  *
  * @param $type
@@ -2485,13 +2485,11 @@ function system_rebuild_module_data() {
     $files = array();
     ksort($modules);
     // Add name, status, weight, and schema version.
-    $enabled_modules = (array) \Drupal::config('system.module')->get('enabled');
-    $disabled_modules = (array) \Drupal::config('system.module.disabled')->get();
-    $all_modules = $enabled_modules + $disabled_modules;
+    $installed_modules = (array) \Drupal::config('system.module')->get('enabled');
     foreach ($modules as $module => $record) {
       $record->name = $module;
-      $record->weight = isset($all_modules[$module]) ? $all_modules[$module] : 0;
-      $record->status = (int) isset($enabled_modules[$module]);
+      $record->weight = isset($installed_modules[$module]) ? $installed_modules[$module] : 0;
+      $record->status = (int) isset($installed_modules[$module]);
       $record->schema_version = SCHEMA_UNINSTALLED;
       $files[$module] = $record->filename;
     }

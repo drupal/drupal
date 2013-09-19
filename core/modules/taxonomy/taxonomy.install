@@ -10,22 +10,6 @@ use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\field\Entity\Field;
 
 /**
- * Implements hook_uninstall().
- */
-function taxonomy_uninstall() {
-  \Drupal::entityManager()->addNamespaces(new ArrayIterator(array(
-    'Drupal\taxonomy' => DRUPAL_ROOT . '/core/modules/taxonomy/lib',
-  )));
-  drupal_classloader_register('taxonomy', 'core/modules/taxonomy');
-  // Remove taxonomy_term bundles.
-  $config_names = config_get_storage_names_with_prefix('taxonomy.vocabulary.');
-  foreach ($config_names as $config_name) {
-    $vid = substr($config_name, strlen('taxonomy.vocabulary.'));
-    entity_invoke_bundle_hook('delete', 'taxonomy_term', $vid);
-  }
-}
-
-/**
  * Implements hook_schema().
  */
 function taxonomy_schema() {

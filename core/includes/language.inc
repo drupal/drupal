@@ -203,8 +203,9 @@ function language_types_disable($types) {
  */
 function language_types_set(array $configurable_language_types) {
   // Ensure that we are getting the defined language negotiation information. An
-  // invocation of module_enable() or module_disable() could outdate the cached
-  // information.
+  // invocation of \Drupal\Core\Extension\ModuleHandler::install() or
+  // \Drupal\Core\Extension\ModuleHandler::uninstall() could invalidate the
+  // cached information.
   drupal_static_reset('language_types_info');
   drupal_static_reset('language_negotiation_info');
 
@@ -343,8 +344,9 @@ function language_negotiation_get_switch_links($type, $path) {
  */
 function language_negotiation_purge() {
   // Ensure that we are getting the defined language negotiation information. An
-  // invocation of module_enable() or module_disable() could outdate the cached
-  // information.
+  // invocation of \Drupal\Core\Extension\ModuleHandler::install() or
+  // \Drupal\Core\Extension\ModuleHandler::uninstall() could invalidate the
+  // cached information.
   drupal_static_reset('language_negotiation_info');
   drupal_static_reset('language_types_info');
 

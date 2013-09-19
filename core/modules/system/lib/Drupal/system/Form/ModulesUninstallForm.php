@@ -70,15 +70,15 @@ class ModulesUninstallForm extends FormBase {
 
     // Get a list of disabled, installed modules.
     $modules = system_rebuild_module_data();
-    $disabled = array_filter($modules, function ($module) {
-      return empty($module->status) && drupal_get_installed_schema_version($module->name) > SCHEMA_UNINSTALLED;
+    $uninstallable = array_filter($modules, function ($module) use ($modules) {
+      return empty($modules[$module->name]->info['required']) && drupal_get_installed_schema_version($module->name) > SCHEMA_UNINSTALLED;
     });
 
     $form['modules'] = array();
 
     // Only build the rest of the form if there are any modules available to
     // uninstall;
-    if (empty($disabled)) {
+    if (empty($uninstallable)) {
       return $form;
     }
 
@@ -86,10 +86,10 @@ class ModulesUninstallForm extends FormBase {
 
     // Sort all modules by their name.
     $this->moduleHandler->loadInclude('system', 'inc', 'system.admin');
-    uasort($disabled, 'system_sort_modules_by_info_name');
+    uasort($uninstallable, 'system_sort_modules_by_info_name');
 
     $form['uninstall'] = array('#tree' => TRUE);
-    foreach ($disabled as $module) {
+    foreach ($uninstallable as $module) {
       $name = $module->info['name'] ?: $module->name;
       $form['modules'][$module->name]['#module_name'] = $name;
       $form['modules'][$module->name]['name']['#markup'] = $name;
@@ -107,7 +107,7 @@ class ModulesUninstallForm extends FormBase {
       foreach (array_keys($module->required_by) as $dependent) {
         if ($dependent != $profile && drupal_get_installed_schema_version($dependent) != SCHEMA_UNINSTALLED) {
           $name = isset($modules[$dependent]->info['name']) ? $modules[$dependent]->info['name'] : $dependent;
-          $form['modules'][$module->name]['#dependents'][] = $name;
+          $form['modules'][$module->name]['#required_by'][] = $name;
           $form['uninstall'][$module->name]['#disabled'] = TRUE;
         }
       }

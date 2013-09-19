@@ -335,7 +335,6 @@ function update_prepare_d8_bootstrap() {
       }
 
       $module_config = \Drupal::config('system.module');
-      $disabled_modules = \Drupal::config('system.module.disabled');
       $theme_config = \Drupal::config('system.theme');
       $disabled_themes = \Drupal::config('system.theme.disabled');
       $schema_store = \Drupal::keyValue('system.schema');
@@ -378,9 +377,6 @@ function update_prepare_d8_bootstrap() {
           if ($record->status && isset($module_data[$record->name])) {
             $module_config->set('enabled.' . $record->name, $record->weight);
           }
-          else {
-            $disabled_modules->set($record->name, $record->weight);
-          }
         }
         elseif ($record->type == 'theme') {
           if ($record->status) {
@@ -399,7 +395,6 @@ function update_prepare_d8_bootstrap() {
         $sorted_with_filenames[$m] = drupal_get_filename('module', $m);
       }
       \Drupal::moduleHandler()->setModuleList($sorted_with_filenames);
-      $disabled_modules->save();
       $theme_config->save();
       $disabled_themes->save();
 
@@ -490,8 +485,7 @@ function update_prepare_stored_includes() {
  */
 function update_prepare_d8_language() {
   if (db_table_exists('languages')) {
-
-    module_enable(array('language'));
+    Drupal::moduleHandler()->install(array('language'));
 
     $languages = db_select('languages', 'l')
       ->fields('l')
@@ -683,7 +677,7 @@ function update_fix_d8_requirements() {
 
     // Make sure that file.module is enabled as it is required for the user
     // picture upgrade path.
-    module_enable(array('file'));
+    Drupal::moduleHandler()->install(array('file'));
 
     $schema = array(
       'description' => 'Generic key/value storage table with an expiration.',
@@ -727,8 +721,8 @@ function update_fix_d8_requirements() {
     // views configurations.
     // Like any other module APIs and services, Views' services are not available
     // in update.php. Existing listings are migrated into configuration, using
-    // the limited standard tools of raw database queries and \Drupal::config().
-    module_enable(array('views'));
+    // the limited standard tools of raw database queries and Drupal::config().
+    \Drupal::moduleHandler()->install(array('views'));
 
     update_variable_set('update_d8_requirements', TRUE);
   }

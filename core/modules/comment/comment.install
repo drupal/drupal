@@ -17,7 +17,6 @@ function comment_uninstall() {
   )));
   drupal_classloader_register('comment', 'core/modules/comment');
   foreach ($node_types as $node_type) {
-    entity_invoke_bundle_hook('delete', 'comment', 'comment_node_' . $node_type);
     variable_del('comment_' . $node_type);
     variable_del('comment_anonymous_' . $node_type);
     variable_del('comment_controls_' . $node_type);
@@ -34,9 +33,9 @@ function comment_uninstall() {
 }
 
 /**
- * Implements hook_enable().
+ * Implements hook_install().
  */
-function comment_enable() {
+function comment_install() {
   // Insert records into the node_comment_statistics for nodes that are missing.
   $query = db_select('node_field_data', 'n');
   $query->leftJoin('node_comment_statistics', 'ncs', 'ncs.nid = n.nid AND n.default_langcode = 1');
@@ -53,12 +52,13 @@ function comment_enable() {
 }
 
 /**
- * Implements hook_modules_enabled().
+ * Implements hook_modules_installed().
  *
  * Creates comment body fields for node types existing before the Comment module
- * is enabled. We use hook_modules_enabled() rather than hook_enable() so we can
- * react to node types of existing modules, and those of modules being enabled
- * both before and after the Comment module in the loop of module_enable().
+ * is enabled. We use hook_modules_installed() rather than hook_install() so we
+ * can react to node types of existing modules, and those of modules being
+ * enabled both before and after the Comment module in the loop of
+ * \Drupal\Core\Extension\ModuleHandler::install().
  *
  * There is a separate comment bundle for each node type to allow for
  * per-node-type customization of comment fields. Each one of these bundles
@@ -68,7 +68,7 @@ function comment_enable() {
  *
  * @see comment_node_type_insert()
  */
-function comment_modules_enabled($modules) {
+function comment_modules_installed($modules) {
   // Only react if the Comment module is one of the modules being enabled.
   // hook_node_type_insert() is used to create body fields while the comment
   // module is enabled.

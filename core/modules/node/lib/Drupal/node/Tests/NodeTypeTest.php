@@ -134,7 +134,7 @@ class NodeTypeTest extends NodeTestBase {
    */
   function testNodeTypeStatus() {
     // Enable all core node modules, and all types should be active.
-    $this->container->get('module_handler')->enable(array('book'), FALSE);
+    $this->container->get('module_handler')->install(array('book'), FALSE);
     $types = node_type_get_types();
     foreach (array('book', 'article', 'page') as $type) {
       $this->assertTrue(isset($types[$type]), format_string('%type is found in node types.', array('%type' => $type)));
@@ -143,14 +143,14 @@ class NodeTypeTest extends NodeTestBase {
 
     // Disable book module and the respective type should still be active, since
     // it is not provided by shipped configuration entity.
-    $this->container->get('module_handler')->disable(array('book'), FALSE);
+    $this->container->get('module_handler')->uninstall(array('book'), FALSE);
     $types = node_type_get_types();
     $this->assertFalse($types['book']->isLocked(), "Book module's node type still active.");
     $this->assertFalse($types['article']->isLocked(), 'Article node type still active.');
     $this->assertFalse($types['page']->isLocked(), 'Basic page node type still active.');
 
-    // Re-enable the modules and verify that the types are active again.
-    $this->container->get('module_handler')->enable(array('book'), FALSE);
+    // Re-install the modules and verify that the types are active again.
+    $this->container->get('module_handler')->install(array('book'), FALSE);
     $types = node_type_get_types();
     foreach (array('book', 'article', 'page') as $type) {
       $this->assertTrue(isset($types[$type]), format_string('%type is found in node types.', array('%type' => $type)));
@@ -192,10 +192,9 @@ class NodeTypeTest extends NodeTestBase {
     );
     $this->assertText(t('This action cannot be undone.'), 'The node type deletion confirmation form is available.');
     // Test that forum node type could not be deleted while forum active.
-    $this->container->get('module_handler')->enable(array('forum'));
+    $this->container->get('module_handler')->install(array('forum'));
     $this->drupalGet('admin/structure/types/manage/forum/delete');
     $this->assertResponse(403);
-    $this->container->get('module_handler')->disable(array('forum'));
     $this->container->get('module_handler')->uninstall(array('forum'));
     $this->drupalGet('admin/structure/types/manage/forum/delete');
     $this->assertResponse(200);

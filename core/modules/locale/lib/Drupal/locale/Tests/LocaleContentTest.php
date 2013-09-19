@@ -214,7 +214,7 @@ class LocaleContentTest extends WebTestBase {
    *  Test filtering Node content by language.
    */
   function testNodeAdminLanguageFilter() {
-    module_enable(array('views'));
+    \Drupal::moduleHandler()->install(array('views'));
     // User to add and remove language.
     $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'access content overview', 'administer nodes', 'bypass node access'));
 
