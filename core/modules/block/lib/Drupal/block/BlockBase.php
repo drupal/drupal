@@ -7,7 +7,7 @@
 
 namespace Drupal\block;
 
-use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\block\BlockInterface;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\Language;
@@ -91,14 +91,14 @@ abstract class BlockBase extends PluginBase implements BlockPluginInterface {
 
     $form['label'] = array(
       '#type' => 'textfield',
-      '#title' => t('Title'),
+      '#title' => $this->t('Title'),
       '#maxlength' => 255,
       '#default_value' => !empty($this->configuration['label']) ? $this->configuration['label'] : $definition['admin_label'],
       '#required' => TRUE,
     );
     $form['label_display'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Display title'),
+      '#title' => $this->t('Display title'),
       '#default_value' => $this->configuration['label_display'] == BlockInterface::BLOCK_LABEL_VISIBLE,
       '#return_value' => BlockInterface::BLOCK_LABEL_VISIBLE,
     );

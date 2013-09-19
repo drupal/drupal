@@ -7,7 +7,7 @@
 
 namespace Drupal\edit;
 
-use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\edit\EditPluginInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 

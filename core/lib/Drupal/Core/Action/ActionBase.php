@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Action;
 
-use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Action\ActionInterface;
 
 /**

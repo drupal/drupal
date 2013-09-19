@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Plugin;
 
-use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\field\Plugin\PluginSettingsInterface;
 
 /**

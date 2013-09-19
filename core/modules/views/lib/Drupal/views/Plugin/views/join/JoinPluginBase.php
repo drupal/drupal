@@ -7,7 +7,7 @@
 
 namespace Drupal\views\Plugin\views\join;
 
-use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\PluginBase;
 
 /**
  * @defgroup views_join_handlers Views join handlers

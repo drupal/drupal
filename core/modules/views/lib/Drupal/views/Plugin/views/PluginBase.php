@@ -7,8 +7,8 @@
 
 namespace Drupal\views\Plugin\views;
 
-use Drupal\Component\Plugin\PluginBase as ComponentPluginBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Plugin\PluginBase as ComponentPluginBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
 use Symfony\Component\DependencyInjection\ContainerInterface;

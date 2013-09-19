@@ -7,7 +7,7 @@
 
 namespace Drupal\tour;
 
-use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\PluginBase;
 use Drupal\tour\TipPluginInterface;
 
 /**
