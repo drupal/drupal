@@ -126,6 +126,9 @@ class ContactSitewideTest extends WebTestBase {
     $this->assertEqual($config['reply'], $reply);
     $this->assertNotEqual($id, \Drupal::config('contact.settings')->get('default_category'));
     $this->assertRaw(t('Category %label has been updated.', array('%label' => $label)));
+    // Ensure the label is displayed on the contact page for this category.
+    $this->drupalGet('contact/' . $id);
+    $this->assertText($label);
 
     // Reset the category back to be the default category.
     \Drupal::config('contact.settings')->set('default_category', $id)->save();

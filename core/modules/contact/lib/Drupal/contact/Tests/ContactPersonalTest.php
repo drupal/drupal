@@ -94,6 +94,8 @@ class ContactPersonalTest extends WebTestBase {
     $this->drupalLogin($this->web_user);
     $this->drupalGet('user/' . $this->admin_user->id() . '/contact');
     $this->assertResponse(200);
+    // Check the page title is properly displayed.
+    $this->assertRaw(t('Contact @username', array('@username' => $this->admin_user->getUsername())));
 
     // Test denied access to admin user's own contact form.
     $this->drupalLogout();
