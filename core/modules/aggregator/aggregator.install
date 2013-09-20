@@ -200,13 +200,6 @@ function aggregator_schema() {
         'default' => 0,
         'description' => 'When the feed was last modified, as a Unix timestamp.',
       ),
-      'block' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-        'size' => 'tiny',
-        'description' => "Number of items to display in the feed's block.",
-      )
     ),
     'primary key' => array('fid'),
     'indexes' => array(

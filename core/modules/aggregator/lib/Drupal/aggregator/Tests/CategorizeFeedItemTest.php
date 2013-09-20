@@ -11,6 +11,14 @@ namespace Drupal\aggregator\Tests;
  * Tests categorization functionality in the Aggregator module.
  */
 class CategorizeFeedItemTest extends AggregatorTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('block');
+
   public static function getInfo() {
     return array(
       'name' => 'Categorize feed item functionality',
@@ -54,7 +62,7 @@ class CategorizeFeedItemTest extends AggregatorTestBase {
 
     // For each category of a feed, ensure feed items have that category, too.
     if (!empty($feed->categories) && !empty($feed->items)) {
-      foreach ($feed->categories as $category) {
+      foreach ($feed->categories as $cid) {
         $categorized_count = db_select('aggregator_category_item')
           ->condition('iid', $feed->items, 'IN')
           ->countQuery()
@@ -63,6 +71,20 @@ class CategorizeFeedItemTest extends AggregatorTestBase {
 
         $this->assertEqual($feed->item_count, $categorized_count, 'Total items in feed equal to the total categorized feed items in database');
       }
+    }
+
+    // Place a category block.
+    $block = $this->drupalPlaceBlock("aggregator_category_block", array('label' => 'category-' . $category->title));
+
+    // Configure the feed that should be displayed.
+    $block->getPlugin()->setConfigurationValue('cid', $category->cid);
+    $block->save();
+
+    // Visit the frontpage, assert that the block and the feeds are displayed.
+    $this->drupalGet('');
+    $this->assertText('category-' . $category->title);
+    foreach (\Drupal::entityManager()->getStorageController('aggregator_item')->loadMultiple() as $item) {
+      $this->assertText($item->label());
     }
 
     // Delete feed.

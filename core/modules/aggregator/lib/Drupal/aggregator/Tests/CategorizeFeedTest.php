@@ -37,7 +37,7 @@ class CategorizeFeedTest extends AggregatorTestBase {
     $categories = $this->getCategories();
 
     // Create a feed and assign 2 categories to it.
-    $feed = $this->getFeedEditObject(NULL, array('block' => 5));
+    $feed = $this->getFeedEditObject();
     foreach ($categories as $cid => $category) {
       $feed->categories[$cid] = $cid;
     }

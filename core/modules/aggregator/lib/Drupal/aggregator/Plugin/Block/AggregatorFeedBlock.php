@@ -10,17 +10,69 @@ namespace Drupal\aggregator\Plugin\Block;
 use Drupal\block\BlockBase;
 use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides an 'Aggregator feed' block with the latest items from the feed.
  *
  * @Block(
  *   id = "aggregator_feed_block",
- *   admin_label = @Translation("Aggregator feed"),
- *   derivative = "Drupal\aggregator\Plugin\Derivative\AggregatorFeedBlock"
+ *   admin_label = @Translation("Aggregator feed")
  * )
  */
-class AggregatorFeedBlock extends BlockBase {
+class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The entity storage controller for feeds.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   */
+  protected $storageController;
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
+   * Constructs an AggregatorFeedBlock object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $storage_controller
+   *   The entity storage controller for feeds.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityStorageControllerInterface $storage_controller, Connection $connection) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->storageController = $storage_controller;
+    $this->connection = $connection;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('plugin.manager.entity')->getStorageController('aggregator_feed'),
+      $container->get('database')
+    );
+  }
+
 
   /**
    * {@inheritdoc}
@@ -29,6 +81,7 @@ class AggregatorFeedBlock extends BlockBase {
     // By default, the block will contain 10 feed items.
     return array(
       'block_count' => 10,
+      'feed' => NULL,
     );
   }
 
@@ -44,6 +97,17 @@ class AggregatorFeedBlock extends BlockBase {
    * Overrides \Drupal\block\BlockBase::blockForm().
    */
   public function blockForm($form, &$form_state) {
+    $feeds = $this->storageController->loadMultiple();
+    $options = array();
+    foreach ($feeds as $feed) {
+      $options[$feed->id()] = $feed->label();
+    }
+    $form['feed'] = array(
+      '#type' => 'select',
+      '#title' => t('Select the feed that should be displayed'),
+      '#default_value' => $this->configuration['feed'],
+      '#options' => $options,
+    );
     $form['block_count'] = array(
       '#type' => 'select',
       '#title' => t('Number of news items in block'),
@@ -58,19 +122,19 @@ class AggregatorFeedBlock extends BlockBase {
    */
   public function blockSubmit($form, &$form_state) {
     $this->configuration['block_count'] = $form_state['values']['block_count'];
+    $this->configuration['feed'] = $form_state['values']['feed'];
   }
 
   /**
    * {@inheritdoc}
    */
   public function build() {
-    // Plugin IDs look something like this: aggregator_feed_block:1.
-    list(, $id) = explode(':', $this->getPluginId());
-    if ($feed = db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE block <> 0 AND fid = :fid', array(':fid' => $id))->fetchObject()) {
-      $result = db_query_range("SELECT * FROM {aggregator_item} WHERE fid = :fid ORDER BY timestamp DESC, iid DESC", 0, $this->configuration['block_count'], array(':fid' => $id));
+    // Load the selected feed.
+    if ($feed = $this->storageController->load($this->configuration['feed'])) {
+      $result = $this->connection->queryRange("SELECT * FROM {aggregator_item} WHERE fid = :fid ORDER BY timestamp DESC, iid DESC", 0, $this->configuration['block_count'], array(':fid' => $feed->id()));
       $more_link = array(
         '#theme' => 'more_link',
-        '#url' => 'aggregator/sources/' . $feed->fid,
+        '#url' => 'aggregator/sources/' . $feed->id(),
         '#title' => t("View this feed's recent news."),
       );
       $read_more = drupal_render($more_link);
@@ -91,6 +155,7 @@ class AggregatorFeedBlock extends BlockBase {
         return array(
           '#children' => drupal_render($item_list) . $read_more,
         );
+        return $build;
       }
     }
   }
