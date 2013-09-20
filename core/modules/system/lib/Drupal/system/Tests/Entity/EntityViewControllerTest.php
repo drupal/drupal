@@ -102,7 +102,7 @@ class EntityViewControllerTest extends WebTestBase {
 
     // Enable the RDF module to ensure that two modules can add attributes to
     // the same field item.
-    module_enable(array('rdf'));
+    \Drupal::moduleHandler()->install(array('rdf'));
     // Set an RDF mapping for the field_test_text field. This RDF mapping will
     // be turned into RDFa attributes in the field item output.
     $mapping = rdf_get_mapping('entity_test_render', 'entity_test_render');
