@@ -1785,29 +1785,6 @@ function drupal_help_arg($arg = array()) {
 }
 
 /**
- * Returns the help associated with the active menu item.
- */
-function menu_get_active_help() {
-  $output = '';
-  $router_path = menu_tab_root_path();
-  // We will always have a path unless we are on a 403 or 404.
-  if (!$router_path) {
-    return '';
-  }
-
-  $arg = drupal_help_arg(arg(NULL));
-
-  foreach (\Drupal::moduleHandler()->getImplementations('help') as $module) {
-    $function = $module . '_help';
-    // Lookup help for this path.
-    if ($help = $function($router_path, $arg)) {
-      $output .= $help . "\n";
-    }
-  }
-  return $output;
-}
-
-/**
  * Gets the custom theme for the current page, if there is one.
  *
  * @param $initialize

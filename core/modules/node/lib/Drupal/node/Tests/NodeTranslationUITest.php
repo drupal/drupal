@@ -25,7 +25,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
    *
    * @var array
    */
-  public static $modules = array('language', 'content_translation', 'node', 'datetime', 'field_ui');
+  public static $modules = array('block', 'language', 'content_translation', 'node', 'datetime', 'field_ui');
 
   public static function getInfo() {
     return array(
@@ -40,6 +40,7 @@ class NodeTranslationUITest extends ContentTranslationUITest {
     $this->bundle = 'article';
     $this->title = $this->randomName();
     parent::setUp();
+    $this->drupalPlaceBlock('system_help_block', array('region' => 'content'));
   }
 
   /**
