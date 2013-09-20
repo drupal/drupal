@@ -164,23 +164,17 @@ class DependencyTest extends ModuleTestBase {
     // Check that the taxonomy module cannot be uninstalled.
     $this->drupalGet('admin/modules/uninstall');
     $checkbox = $this->xpath('//input[@type="checkbox" and @disabled="disabled" and @name="uninstall[comment]"]');
-    $this->assert(count($checkbox) == 1, 'Checkbox for uninstalling the comment module is disabled.');
+    $this->assert(count($checkbox) == 0, 'Checkbox for uninstalling the comment module is absent.');
 
-    // Uninstall the forum module.
+    // Uninstall the forum module, and check that taxonomy now can also be
+    // uninstalled.
     $edit = array('uninstall[forum]' => 'forum');
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPostForm(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
-
-    // Disable the comment module.
-    $edit = array('modules[Core][comment][enable]' => FALSE);
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
-    $this->assertModules(array('comment'), FALSE);
-    // Uninstall comment module.
     $edit = array('uninstall[comment]' => 'comment');
     $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
     $this->drupalPostForm(NULL, NULL, t('Uninstall'));
     $this->assertText(t('The selected modules have been uninstalled.'), 'Modules status has been updated.');
   }
-
 }
