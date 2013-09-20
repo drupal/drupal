@@ -51,7 +51,10 @@ class UpdateTest extends RESTTestBase {
     $entity->save();
 
     // Create a second stub entity for overwriting a field.
-    $patch_values['field_test_text'] = array(0 => array('value' => $this->randomString()));
+    $patch_values['field_test_text'] = array(0 => array(
+      'value' => $this->randomString(),
+      'format' => 'plain_text',
+    ));
     $patch_entity = entity_create($entity_type, $patch_values);
     // We don't want to overwrite the UUID.
     unset($patch_entity->uuid);
@@ -90,7 +93,8 @@ class UpdateTest extends RESTTestBase {
 
     // Enable access protection for the text field.
     // @see entity_test_entity_field_access()
-    $entity->field_test_text->value = 'no access value';
+    $entity->field_test_text->value = 'no delete access value';
+    $entity->field_test_text->format = 'plain_text';
     $entity->save();
 
     // Try to empty a field that is access protected.
@@ -99,16 +103,30 @@ class UpdateTest extends RESTTestBase {
 
     // Re-load the entity from the database.
     $entity = entity_load($entity_type, $entity->id(), TRUE);
-    $this->assertEqual($entity->field_test_text->value, 'no access value', 'Text field was not updated.');
+    $this->assertEqual($entity->field_test_text->value, 'no delete access value', 'Text field was not deleted.');
 
     // Try to update an access protected field.
+    $patch_entity->get('field_test_text')->value = 'no access value';
     $serialized = $serializer->serialize($patch_entity, $this->defaultFormat);
     $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', $serialized, $this->defaultMimeType);
     $this->assertResponse(403);
 
     // Re-load the entity from the database.
     $entity = entity_load($entity_type, $entity->id(), TRUE);
-    $this->assertEqual($entity->field_test_text->value, 'no access value', 'Text field was not updated.');
+    $this->assertEqual($entity->field_test_text->value, 'no delete access value', 'Text field was not updated.');
+
+    // Try to update the field with a text format this user has no access to.
+    $patch_entity->set('field_test_text', array(
+      'value' => 'test',
+      'format' => 'full_html',
+    ));
+    $serialized = $serializer->serialize($patch_entity, $this->defaultFormat);
+    $this->httpRequest('entity/' . $entity_type . '/' . $entity->id(), 'PATCH', $serialized, $this->defaultMimeType);
+    $this->assertResponse(422);
+
+    // Re-load the entity from the database.
+    $entity = entity_load($entity_type, $entity->id(), TRUE);
+    $this->assertEqual($entity->field_test_text->value, 'no delete access value', 'Text field was not updated.');
 
     // Restore the valid test value.
     $entity->field_test_text->value = $this->randomString();
