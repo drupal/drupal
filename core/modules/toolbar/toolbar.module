@@ -638,16 +638,16 @@ function _toolbar_get_subtrees_hash() {
 }
 
 /**
- * Implements hook_modules_enabled().
+ * Implements hook_modules_installed().
  */
-function toolbar_modules_enabled($modules) {
+function toolbar_modules_installed($modules) {
   _toolbar_clear_user_cache();
 }
 
 /**
- * Implements hook_modules_disabled().
+ * Implements hook_modules_uninstalled().
  */
-function toolbar_modules_disabled($modules) {
+function toolbar_modules_uninstalled($modules) {
   _toolbar_clear_user_cache();
 }
 
