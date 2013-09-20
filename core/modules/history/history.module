@@ -30,14 +30,51 @@ define('HISTORY_READ_LIMIT', REQUEST_TIME - 30 * 24 * 60 * 60);
  *   of when the last view occurred; otherwise, zero.
  */
 function history_read($nid) {
-  global $user;
+  $history = history_read_multiple(array($nid));
+  return $history[$nid];
+}
+
+/**
+ * Retrieves the last viewed timestamp for each of the passed node IDs.
+ *
+ * @param array $nids
+ *   An array of node IDs.
+ *
+ * @return array
+ *   Array of timestamps keyed by node ID. If a node has been previously viewed
+ *   by the user, the timestamp in seconds of when the last view occurred;
+ *   otherwise, zero.
+ */
+function history_read_multiple($nids) {
   $history = &drupal_static(__FUNCTION__, array());
 
-  if (!isset($history[$nid])) {
-    $history[$nid] = db_query("SELECT timestamp FROM {history} WHERE uid = :uid AND nid = :nid", array(':uid' => $user->id(), ':nid' => $nid))->fetchObject();
+  $return = array();
+
+  $nodes_to_read = array();
+  foreach ($nids as $nid) {
+    if (isset($history[$nid])) {
+      $return[$nid] = $history[$nid];
+    }
+    else {
+      // Initialize value if current user has not viewed the node.
+      $nodes_to_read[$nid] = 0;
+    }
   }
 
-  return (isset($history[$nid]->timestamp) ? $history[$nid]->timestamp : 0);
+  if (empty($nodes_to_read)) {
+    return $return;
+  }
+
+  $result = db_query('SELECT nid, timestamp FROM {history} WHERE uid = :uid AND nid IN(:nids)', array(
+    ':uid' => \Drupal::currentUser()->id(),
+    ':nids' => array_keys($nodes_to_read),
+  ));
+  foreach ($result as $row) {
+    $nodes_to_read[$row->nid] = (int) $row->timestamp;
+  }
+  $history += $nodes_to_read;
+
+  return $return + $nodes_to_read;
 }
 
 /**
@@ -64,7 +101,10 @@ function history_write($nid, $account = NULL) {
       ))
       ->fields(array('timestamp' => REQUEST_TIME))
       ->execute();
-   }
+    // Update static cache.
+    $history = &drupal_static('history_read_multiple', array());
+    $history[$nid] = REQUEST_TIME;
+  }
 }
 
 /**

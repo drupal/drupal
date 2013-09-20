@@ -37,12 +37,7 @@ class HistoryController extends ControllerBase {
     if (!isset($nids)) {
       throw new NotFoundHttpException();
     }
-
-    $timestamps = array();
-    foreach ($nids as $nid) {
-      $timestamps[$nid] = (int) history_read($nid);
-    }
-    return new JsonResponse($timestamps);
+    return new JsonResponse(history_read_multiple($nids));
   }
 
   /**
