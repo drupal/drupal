@@ -568,7 +568,7 @@ function file_theme() {
   return array(
     // file.module.
     'file_link' => array(
-      'variables' => array('file' => NULL, 'icon_directory' => NULL, 'description' => NULL),
+      'variables' => array('file' => NULL, 'icon_directory' => NULL, 'description' => NULL, 'attributes' => array()),
     ),
     'file_icon' => array(
       'variables' => array('file' => NULL, 'icon_directory' => NULL),
@@ -1558,19 +1558,19 @@ function file_managed_file_pre_render($element) {
  *     files. Defaults to the value of the "icon.directory"
  *     variable.
  *   - description: A description to be displayed instead of the filename.
+ *   - attributes: An associative array of attributes to be placed in the a tag.
  *
  * @ingroup themeable
  */
 function theme_file_link($variables) {
   $file = $variables['file'];
+  $options = array(
+    'attributes' => $variables['attributes'],
+  );
 
   // Set options as per anchor format described at
   // http://microformats.org/wiki/file-format-examples
-  $options = array(
-    'attributes' => array(
-      'type' => $file->getMimeType() . '; length=' . $file->getSize(),
-    ),
-  );
+  $options['attributes']['type'] = $file->getMimeType() . '; length=' . $file->getSize();
 
   // Use the description as the link text if available.
   if (empty($variables['description'])) {

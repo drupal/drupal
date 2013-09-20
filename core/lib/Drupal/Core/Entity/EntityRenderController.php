@@ -31,6 +31,24 @@ class EntityRenderController implements EntityRenderControllerInterface {
    */
   public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
     field_attach_prepare_view($this->entityType, $entities, $displays, $langcode);
+
+    // Initialize the field item attributes for the fields set to be displayed.
+    foreach ($entities as $entity) {
+      // The entity can include fields that aren't displayed, and the display
+      // can include components that aren't fields, so we want to iterate the
+      // intersection of $entity->getProperties() and $display->getComponents().
+      // However, the entity can have many more fields than are displayed, so we
+      // avoid the cost of calling $entity->getProperties() by iterating the
+      // intersection as follows.
+      foreach ($displays[$entity->bundle()]->getComponents() as $name => $options) {
+        if ($entity->getPropertyDefinition($name)) {
+          foreach ($entity->get($name) as $item) {
+            $item->_attributes = array();
+          }
+        }
+      }
+    }
+
     module_invoke_all('entity_prepare_view', $this->entityType, $entities, $displays, $view_mode);
 
     foreach ($entities as $entity) {

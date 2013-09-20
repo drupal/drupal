@@ -23,7 +23,6 @@ fieldMappings:
   uid:
     properties:
       - 'schema:author'
-    mapping_type: 'rel'
   comment:
     properties:
       - 'schema:comment'
@@ -38,8 +37,6 @@ fieldMappings:
   field_image:
     properties:
       - 'schema:image'
-    mapping_type: 'rel'
   field_tags:
     properties:
       - 'schema:about'
-    mapping_type: 'rel'

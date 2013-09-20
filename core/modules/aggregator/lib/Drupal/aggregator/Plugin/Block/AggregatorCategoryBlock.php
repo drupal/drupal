@@ -7,20 +7,69 @@
 
 namespace Drupal\aggregator\Plugin\Block;
 
+use Drupal\aggregator\CategoryStorageControllerInterface;
 use Drupal\block\BlockBase;
 use Drupal\block\Annotation\Block;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Database\Connection;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides an 'Aggregator category' block for the latest items in a category.
  *
  * @Block(
  *   id = "aggregator_category_block",
- *   admin_label = @Translation("Aggregator category"),
- *   derivative = "Drupal\aggregator\Plugin\Derivative\AggregatorCategoryBlock"
+ *   admin_label = @Translation("Aggregator category")
  * )
  */
-class AggregatorCategoryBlock extends BlockBase {
+class AggregatorCategoryBlock extends BlockBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The database connection.
+   *
+   * @var \Drupal\Core\Database\Connection
+   */
+  protected $connection;
+
+  /**
+   * The category storage controller.
+   *
+   * @var \Drupal\aggregator\CategoryStorageControllerInterface
+   */
+  protected $categoryStorageController;
+
+  /**
+   * Constructs an AggregatorFeedBlock object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Database\Connection $connection
+   *   The database connection.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, Connection $connection, CategoryStorageControllerInterface $category_storage_controller) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->connection = $connection;
+    $this->categoryStorageController = $category_storage_controller;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('database'),
+      $container->get('aggregator.category.storage')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -28,6 +77,7 @@ class AggregatorCategoryBlock extends BlockBase {
   public function defaultConfiguration() {
     // By default, the block will contain 10 feed items.
     return array(
+      'cid' => 0,
       'block_count' => 10,
     );
   }
@@ -44,6 +94,18 @@ class AggregatorCategoryBlock extends BlockBase {
    * Overrides \Drupal\block\BlockBase::blockForm().
    */
   public function blockForm($form, &$form_state) {
+    $result = $this->connection->query('SELECT cid, title FROM {aggregator_category} ORDER BY title');
+    $options = array();
+    foreach ($result as $category) {
+      $options[$category->cid] = check_plain($category->title);
+    }
+
+    $form['cid'] = array(
+      '#type' => 'select',
+      '#title' => t('Select the category that should be displayed'),
+      '#default_value' => $this->configuration['cid'],
+      '#options' => $options,
+    );
     $form['block_count'] = array(
       '#type' => 'select',
       '#title' => t('Number of news items in block'),
@@ -57,6 +119,7 @@ class AggregatorCategoryBlock extends BlockBase {
    * Overrides \Drupal\block\BlockBase::blockSubmit().
    */
   public function blockSubmit($form, &$form_state) {
+    $this->configuration['cid'] = $form_state['values']['cid'];
     $this->configuration['block_count'] = $form_state['values']['block_count'];
   }
 
@@ -64,9 +127,9 @@ class AggregatorCategoryBlock extends BlockBase {
    * {@inheritdoc}
    */
   public function build() {
-    $id = $this->getPluginId();
-    if ($category = db_query('SELECT cid, title, block FROM {aggregator_category} WHERE cid = :cid', array(':cid' => $id))->fetchObject()) {
-      $result = db_query_range('SELECT i.* FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON ci.iid = i.iid WHERE ci.cid = :cid ORDER BY i.timestamp DESC, i.iid DESC', 0, $this->configuration['block_count'], array(':cid' => $category->cid));
+    $cid = $this->configuration['cid'];
+    if ($category = $this->categoryStorageController->load($cid)) {
+      $result = $this->connection->queryRange('SELECT i.* FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON ci.iid = i.iid WHERE ci.cid = :cid ORDER BY i.timestamp DESC, i.iid DESC', 0, $this->configuration['block_count'], array(':cid' => $category->cid));
       $more_link = array(
         '#theme' => 'more_link',
         '#url' => 'aggregator/categories/' . $category->cid,

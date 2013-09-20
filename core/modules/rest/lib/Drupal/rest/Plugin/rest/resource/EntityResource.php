@@ -149,17 +149,13 @@ class EntityResource extends ResourceBase {
     // Overwrite the received properties.
     foreach ($entity as $field_name => $field) {
       if (isset($entity->{$field_name})) {
-        if (empty($entity->{$field_name})) {
-          if (!$original_entity->get($field_name)->access('delete')) {
-            throw new AccessDeniedHttpException(t('Access denied on deleting field @field.', array('@field' => $field_name)));
-          }
-        }
-        else {
-          if (!$original_entity->get($field_name)->access('update')) {
-            throw new AccessDeniedHttpException(t('Access denied on updating field @field.', array('@field' => $field_name)));
-          }
+        if ($field->isEmpty() && !$original_entity->get($field_name)->access('delete')) {
+          throw new AccessDeniedHttpException(t('Access denied on deleting field @field.', array('@field' => $field_name)));
         }
         $original_entity->set($field_name, $field->getValue());
+        if (!$original_entity->get($field_name)->access('update')) {
+          throw new AccessDeniedHttpException(t('Access denied on updating field @field.', array('@field' => $field_name)));
+        }
       }
     }
 

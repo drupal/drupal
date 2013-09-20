@@ -166,7 +166,10 @@ abstract class RESTTestBase extends WebTestBase {
         return array(
           'name' => $this->randomName(),
           'user_id' => 1,
-          'field_test_text' => array(0 => array('value' => $this->randomString())),
+          'field_test_text' => array(0 => array(
+            'value' => $this->randomString(),
+            'format' => 'plain_text',
+          )),
         );
       case 'node':
         return array('title' => $this->randomString(), 'type' => 'resttest');

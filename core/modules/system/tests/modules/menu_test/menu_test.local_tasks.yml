@@ -28,3 +28,10 @@ menu_local_task_test_tasks_settings_sub3:
   tab_root_id: menu_local_task_test_tasks_view
   tab_parent_id: menu_local_task_test_tasks_settings
   weight: 20
+menu_local_task_test_tasks_settings_derived:
+  route_name: menu_test.local_task_test_tasks_settings_derived
+  title: derived
+  tab_root_id: menu_local_task_test_tasks_view
+  tab_parent_id: menu_local_task_test_tasks_settings
+  derivative: Drupal\menu_test\Plugin\Derivative\LocalTaskTest
+  weight: 50

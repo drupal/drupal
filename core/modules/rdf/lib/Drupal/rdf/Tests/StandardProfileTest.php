@@ -419,7 +419,8 @@ class StandardProfileTest extends WebTestBase {
     $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/about', $expected_value), "$message_prefix tag was found (schema:about).");
 
     // Tag type.
-    $this->assertEqual($graph->type($this->termUri), 'schema:Thing', 'Tag type was found (schema:Thing).');
+    // @todo enable with https://drupal.org/node/2072791
+    //$this->assertEqual($graph->type($this->termUri), 'schema:Thing', 'Tag type was found (schema:Thing).');
 
     // Tag name.
     $expected_value = array(
@@ -427,7 +428,8 @@ class StandardProfileTest extends WebTestBase {
       'value' => $this->term->get('name')->offsetGet(0)->get('value')->getValue(),
       'lang' => 'en',
     );
-    $this->assertTrue($graph->hasProperty($this->termUri, 'http://schema.org/name', $expected_value), "$message_prefix name was found (schema:name).");
+    // @todo enable with https://drupal.org/node/2072791
+    //$this->assertTrue($graph->hasProperty($this->termUri, 'http://schema.org/name', $expected_value), "$message_prefix name was found (schema:name).");
   }
 
   /**

@@ -37,6 +37,14 @@ class GenericFileFormatter extends FileFormatterBase {
           '#file' => $item->entity,
           '#description' => $item->description,
         );
+        // Pass field item attributes to the theme function.
+        if (isset($item->_attributes)) {
+          $elements[$delta] += array('#attributes' => array());
+          $elements[$delta]['#attributes'] += $item->_attributes;
+          // Unset field item attributes since they have been included in the
+          // formatter output and should not be rendered in the field template.
+          unset($item->_attributes);
+        }
       }
     }
 

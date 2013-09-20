@@ -70,7 +70,6 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
     $feed = $entity_manager->getStorageController('aggregator_feed')
       ->create(array(
         'refresh' => 3600,
-        'block' => 5,
       ));
     return $entity_manager->getForm($feed);
   }
@@ -174,7 +173,7 @@ class AggregatorController extends ControllerBase implements ContainerInjectionI
    *   A render array as expected by drupal_render().
    */
   public function adminOverview() {
-    $result = $this->database->query('SELECT f.fid, f.title, f.url, f.refresh, f.checked, f.link, f.description, f.hash, f.etag, f.modified, f.image, f.block, COUNT(i.iid) AS items FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.checked, f.link, f.description, f.hash, f.etag, f.modified, f.image, f.block ORDER BY f.title');
+    $result = $this->database->query('SELECT f.fid, f.title, f.url, f.refresh, f.checked, f.link, f.description, f.hash, f.etag, f.modified, f.image, COUNT(i.iid) AS items FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.checked, f.link, f.description, f.hash, f.etag, f.modified, f.image ORDER BY f.title');
 
     $header = array($this->t('Title'), $this->t('Items'), $this->t('Last update'), $this->t('Next update'), $this->t('Operations'));
     $rows = array();

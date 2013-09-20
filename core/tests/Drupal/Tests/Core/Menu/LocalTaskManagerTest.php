@@ -69,6 +69,13 @@ class LocalTaskManagerTest extends UnitTestCase {
    */
   protected $cacheBackend;
 
+  /**
+   * The mocked access manager.
+   *
+   * @var \Drupal\Core\Access\AccessManager|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $accessManager;
+
   public static function getInfo() {
     return array(
       'name' => 'Local tasks manager.',
@@ -89,6 +96,9 @@ class LocalTaskManagerTest extends UnitTestCase {
     $this->pluginDiscovery = $this->getMock('Drupal\Component\Plugin\Discovery\DiscoveryInterface');
     $this->factory = $this->getMock('Drupal\Component\Plugin\Factory\FactoryInterface');
     $this->cacheBackend = $this->getMock('Drupal\Core\Cache\CacheBackendInterface');
+    $this->accessManager = $this->getMockBuilder('Drupal\Core\Access\AccessManager')
+      ->disableOriginalConstructor()
+      ->getMock();
 
     $this->setupLocalTaskManager();
   }
@@ -208,24 +218,6 @@ class LocalTaskManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getPath method.
-   *
-   * @see \Drupal\system\Plugin\Type\MenuLocalTaskManager::getPath()
-   */
-  public function testGetPath() {
-    $menu_local_task = $this->getMock('Drupal\Core\Menu\LocalTaskInterface');
-    $menu_local_task->expects($this->once())
-      ->method('getPath');
-
-    $this->controllerResolver->expects($this->once())
-      ->method('getArguments')
-      ->with($this->request, array($menu_local_task, 'getPath'))
-      ->will($this->returnValue(array()));
-
-    $this->manager->getPath($menu_local_task);
-  }
-
-  /**
    * Setups the local task manager for the test.
    */
   protected function setupLocalTaskManager() {
@@ -242,6 +234,10 @@ class LocalTaskManagerTest extends UnitTestCase {
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'request');
     $property->setAccessible(TRUE);
     $property->setValue($this->manager, $this->request);
+
+    $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'accessManager');
+    $property->setAccessible(TRUE);
+    $property->setValue($this->manager, $this->accessManager);
 
     $property = new \ReflectionProperty('Drupal\Core\Menu\LocalTaskManager', 'discovery');
     $property->setAccessible(TRUE);
@@ -274,14 +270,12 @@ class LocalTaskManagerTest extends UnitTestCase {
       'route_name' => 'menu_local_task_test_tasks_settings',
       'title' => 'Settings',
       'tab_root_id' => 'menu_local_task_test_tasks_view',
-      'class' => 'Drupal\menu_test\Plugin\Menu\MenuLocalTasksTestTasksSettings',
     );
     $definitions['menu_local_task_test_tasks_edit'] = array(
       'id' => 'menu_local_task_test_tasks_edit',
       'route_name' => 'menu_local_task_test_tasks_edit',
       'title' => 'Settings',
       'tab_root_id' => 'menu_local_task_test_tasks_view',
-      'class' => 'Drupal\menu_test\Plugin\Menu\MenuLocalTasksTestTasksEdit',
       'weight' => 20,
     );
     $definitions['menu_local_task_test_tasks_view'] = array(
@@ -289,13 +283,13 @@ class LocalTaskManagerTest extends UnitTestCase {
       'route_name' => 'menu_local_task_test_tasks_view',
       'title' => 'Settings',
       'tab_root_id' => 'menu_local_task_test_tasks_view',
-      'class' => 'Drupal\menu_test\Plugin\Menu\MenuLocalTasksTestTasksView',
     );
     // Add the defaults from the LocalTaskManager.
     foreach ($definitions as $id => &$info) {
       $info += array(
         'id' => '',
         'route_name' => '',
+        'route_parameters' => array(),
         'title' => '',
         'tab_root_id' => '',
         'tab_parent_id' => NULL,

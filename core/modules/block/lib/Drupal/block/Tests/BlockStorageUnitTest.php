@@ -7,19 +7,15 @@
 
 namespace Drupal\block\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\Core\Config\Entity\ConfigStorageController;
 use Drupal\simpletest\DrupalUnitTestBase;
 use Drupal\block_test\Plugin\Block\TestHtmlIdBlock;
 use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\block\BlockStorageController;
-use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\block\Entity\Block;
 use Drupal\block\BlockInterface;
 
 /**
  * Tests the storage of blocks.
- *
- * @see \Drupal\block\BlockStorageController
  */
 class BlockStorageUnitTest extends DrupalUnitTestBase {
 
@@ -33,7 +29,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
   /**
    * The block storage controller.
    *
-   * @var \Drupal\block\BlockStorageController.
+   * @var \Drupal\Core\Config\Entity\ConfigStorageController.
    */
   protected $controller;
 
@@ -55,7 +51,7 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
    * Tests CRUD operations.
    */
   public function testBlockCRUD() {
-    $this->assertTrue($this->controller instanceof BlockStorageController, 'The block storage controller is loaded.');
+    $this->assertTrue($this->controller instanceof ConfigStorageController, 'The block storage controller is loaded.');
 
     // Run each test method in the same installation.
     $this->createTests();

@@ -38,6 +38,13 @@ class TestControllers {
 
   /**
    * Prints out test data.
+   */
+  public function testDerived() {
+    return 'testDerived';
+  }
+
+  /**
+   * Prints out test data.
    *
    * @param string|null $placeholder
    *   A placeholder for the return string.

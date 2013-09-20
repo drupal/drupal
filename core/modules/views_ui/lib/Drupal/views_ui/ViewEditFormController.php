@@ -200,7 +200,7 @@ class ViewEditFormController extends ViewFormControllerBase {
         '#id' => 'views-ajax-popup',
       );
       $form['ajax-area']['ajax-title'] = array(
-        '#markup' => '<h2 id="views-ajax-title"></h2>',
+        '#markup' => '<div id="views-ajax-title"></div>',
       );
       $form['ajax-area']['ajax-body'] = array(
         '#type' => 'container',

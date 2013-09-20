@@ -36,7 +36,7 @@ class BlockFormControllerTest extends UnitTestCase {
    * @see \Drupal\block\BlockFormController::getUniqueMachineName()
    */
   public function testGetUniqueMachineName() {
-    $block_storage = $this->getMockBuilder('Drupal\block\BlockStorageController')
+    $block_storage = $this->getMockBuilder('Drupal\Core\Config\Entity\ConfigStorageController')
       ->disableOriginalConstructor()
       ->getMock();
     $blocks = array();

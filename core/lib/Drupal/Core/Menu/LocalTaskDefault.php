@@ -9,9 +9,10 @@ namespace Drupal\Core\Menu;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Default object used for LocalTaskPlugins.
@@ -26,11 +27,11 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface, Contain
   protected $stringTranslation;
 
   /**
-   * URL generator object.
+   * The route provider to load routes by name.
    *
-   * @var \Symfony\Component\Routing\Generator\UrlGeneratorInterface
+   * @var \Drupal\Core\Routing\RouteProviderInterface
    */
-  protected $generator;
+  protected $routeProvider;
 
   /**
    * TRUE if this plugin is forced active for options attributes.
@@ -50,12 +51,12 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface, Contain
    *   The plugin implementation definition.
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The string translation object.
-   * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface $generator
-   *   The url generator object.
+   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   *   The route provider.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, TranslationInterface $string_translation, UrlGeneratorInterface $generator) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, TranslationInterface $string_translation, RouteProviderInterface $route_provider) {
     $this->stringTranslation = $string_translation;
-    $this->generator = $generator;
+    $this->routeProvider = $route_provider;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
@@ -68,7 +69,7 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface, Contain
       $plugin_id,
       $plugin_definition,
       $container->get('string_translation'),
-      $container->get('url_generator')
+      $container->get('router.route_provider')
     );
   }
 
@@ -91,26 +92,43 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface, Contain
   /**
    * {@inheritdoc}
    */
-  public function getTitle() {
-    // Subclasses may pull in the request or specific attributes as parameters.
-    return $this->t($this->pluginDefinition['title']);
+  public function getRouteParameters(Request $request) {
+    $parameters = isset($this->pluginDefinition['route_parameters']) ? $this->pluginDefinition['route_parameters'] : array();
+    $route = $this->routeProvider->getRouteByName($this->getRouteName());
+    $variables = $route->compile()->getVariables();
+
+    // Normally the \Drupal\Core\ParamConverter\ParamConverterManager has
+    // processed the Request attributes, and in that case the _raw_variables
+    // attribute holds the original path strings keyed to the corresponding
+    // slugs in the path patterns. For example, if the route's path pattern is
+    // /filter/tips/{filter_format} and the path is /filter/tips/plain_text then
+    // $raw_variables->get('filter_format') == 'plain_text'.
+
+    $raw_variables = $request->attributes->get('_raw_variables');
+
+    foreach ($variables as $name) {
+      if (isset($parameters[$name])) {
+        continue;
+      }
+
+      if ($raw_variables && $raw_variables->has($name)) {
+        $parameters[$name] = $raw_variables->get($name);
+      }
+      elseif ($request->attributes->has($name)) {
+        $parameters[$name] = $request->attributes->get($name);
+      }
+    }
+    // The UrlGenerator will throw an exception if expected parameters are
+    // missing. This method should be overridden if that is possible.
+    return $parameters;
   }
 
   /**
    * {@inheritdoc}
-   *
-   * @todo update based on https://drupal.org/node/2045267
    */
-  public function getPath() {
-    // Subclasses may set a request into the generator or use any desired method
-    // to generate the path.
-    $path = $this->generator->generate($this->getRouteName());
-    // In order to get the Drupal path the base URL has to be stripped off.
-    $base_url = $this->generator->getContext()->getBaseUrl();
-    if (!empty($base_url) && strpos($path, $base_url) === 0) {
-      $path = substr($path, strlen($base_url));
-    }
-    return trim($path, '/');
+  public function getTitle() {
+    // Subclasses may pull in the request or specific attributes as parameters.
+    return $this->t($this->pluginDefinition['title']);
   }
 
   /**
@@ -136,7 +154,7 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface, Contain
   /**
    * {@inheritdoc}
    */
-  public function getOptions() {
+  public function getOptions(Request $request) {
     $options = $this->pluginDefinition['options'];
     if ($this->active) {
       if (empty($options['attributes']['class']) || !in_array('active', $options['attributes']['class'])) {

@@ -80,8 +80,16 @@ class CreateTest extends RESTTestBase {
         $this->assertResponse(403);
         $this->assertFalse(entity_load_multiple($entity_type, NULL, TRUE), 'No entity has been created in the database.');
 
-        // Restore the valid test value.
+        // Try to create a field with a text format this user has no access to.
         $entity->field_test_text->value = $entity_values['field_test_text'][0]['value'];
+        $entity->field_test_text->format = 'full_html';
+        $serialized = $serializer->serialize($entity, $this->defaultFormat);
+        $this->httpRequest('entity/' . $entity_type, 'POST', $serialized, $this->defaultMimeType);
+        $this->assertResponse(422);
+        $this->assertFalse(entity_load_multiple($entity_type, NULL, TRUE), 'No entity has been created in the database.');
+
+        // Restore the valid test value.
+        $entity->field_test_text->format = 'plain_text';
         $serialized = $serializer->serialize($entity, $this->defaultFormat);
       }
 

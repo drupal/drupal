@@ -330,6 +330,12 @@ function _block_rehash($theme = NULL) {
   $regions = system_region_list($theme);
   $blocks = entity_load_multiple_by_properties('block', array('theme' => $theme));
   foreach ($blocks as $block_id => $block) {
+    // Remove any invalid block from the list.
+    // @todo Remove this check as part of https://drupal.org/node/1776830.
+    if (!$block->getPlugin()) {
+      unset($blocks[$block_id]);
+      continue;
+    }
     $region = $block->get('region');
     $status = $block->status();
     // Disable blocks in invalid regions.
@@ -412,7 +418,11 @@ function block_list($region) {
     global $theme;
     $blocks = array();
     foreach (entity_load_multiple_by_properties('block', array('theme' => $theme)) as $block_id => $block) {
-      $blocks[$block->get('region')][$block_id] = $block;
+      // Onlye include valid blocks in the list.
+      // @todo Remove this check as part of https://drupal.org/node/1776830.
+      if ($block->getPlugin()) {
+        $blocks[$block->get('region')][$block_id] = $block;
+      }
     }
   }
 

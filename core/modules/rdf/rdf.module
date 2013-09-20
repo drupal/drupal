@@ -197,6 +197,27 @@ function rdf_rdfa_attributes($mapping, $data = NULL) {
  */
 
 /**
+ * Implements hook_entity_prepare_view().
+ */
+function rdf_entity_prepare_view($entity_type, array $entities, array $displays) {
+  // Iterate over the RDF mappings for each entity and prepare the RDFa
+  // attributes to be added inside field formatters.
+  foreach ($entities as $entity) {
+    $mapping = rdf_get_mapping($entity_type, $entity->bundle());
+    // Only prepare the RDFa attributes for the fields which are configured to
+    // be displayed.
+    foreach ($displays[$entity->bundle()]->getComponents() as $name => $options) {
+      $field_mapping = $mapping->getPreparedFieldMapping($name);
+      if ($field_mapping['properties']) {
+        foreach ($entity->get($name) as $item) {
+          $item->_attributes += rdf_rdfa_attributes($field_mapping, $item->getValue());
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_comment_load().
  */
 function rdf_comment_load($comments) {
@@ -324,43 +345,6 @@ function rdf_preprocess_node(&$variables) {
         );
         drupal_add_html_head($element, 'rdf_node_comment_count');
       }
-    }
-  }
-}
-
-/**
- * Implements hook_preprocess_HOOK() for field.tpl.php.
- */
-function rdf_preprocess_field(&$variables) {
-  $element = $variables['element'];
-  $entity_type = $element['#entity_type'];
-  $bundle = $element['#bundle'];
-  $field_name = $element['#field_name'];
-  $field_mapping = rdf_get_mapping($entity_type, $bundle)
-    ->getPreparedFieldMapping($field_name);
-
-  if (!empty($field_mapping)) {
-    foreach ($element['#items'] as $delta => $item) {
-      $variables['item_attributes'][$delta] = rdf_rdfa_attributes($field_mapping, $item);
-      // If this field is an image, RDFa will not output correctly when the
-      // image is in a containing <a> tag. If the field is a file, RDFa will
-      // not output correctly if the filetype icon comes before the link to the
-      // file. We correct this by adding a resource attribute to the div if
-      // this field has a URI.
-      if (isset($item['entity']->uri)) {
-        if (!empty($element[$delta]['#image_style'])) {
-          $variables['item_attributes'][$delta]['resource'] = entity_load('image_style', $element[$delta]['#image_style'])->buildUrl($item['entity']->getFileUri());
-        }
-        else {
-          $variables['item_attributes'][$delta]['resource'] = file_create_url($item['entity']->getFileUri());
-        }
-      }
-      // Convert the item_attributes for this field item back into an Attribute
-      // object for printing. This is necessary because at this time this
-      // preprocess function overwrites $variables['item_attributes'][$delta],
-      // which is initialized as an Attribute object in
-      // template_preprocess_field().
-      $variables['item_attributes'][$delta] = new Attribute($variables['item_attributes'][$delta]);
     }
   }
 }
@@ -567,38 +551,6 @@ function rdf_preprocess_taxonomy_term(&$variables) {
     ),
   );
   drupal_add_html_head($term_label_meta, 'rdf_term_label');
-}
-
-/**
- * Implements hook_field_attach_view_alter().
- */
-function rdf_field_attach_view_alter(&$output, $context) {
-  // Append term mappings on displayed taxonomy links.
-  foreach (element_children($output) as $field_name) {
-    $element = &$output[$field_name];
-    if ($element['#field_type'] == 'taxonomy_term_reference' && $element['#formatter'] == 'taxonomy_term_reference_link') {
-      foreach ($element['#items'] as $delta => $item) {
-        // This function is invoked during entity preview when taxonomy term
-        // reference items might contain free-tagging terms that do not exist
-        // yet and thus have no $item['entity'].
-        if (isset($item['entity'])) {
-          $term = $item['entity'];
-          $mapping = rdf_get_mapping('taxonomy_term', $term->bundle());
-          $bundle_mapping = $mapping->getPreparedBundleMapping();
-          if (!empty($bundle_mapping['types'])) {
-            $element[$delta]['#options']['attributes']['typeof'] = $bundle_mapping['types'];
-          }
-          $name_field_mapping = $mapping->getPreparedFieldMapping('name');
-          if (!empty($name_field_mapping['properties'])) {
-            // A property attribute is used with an empty datatype attribute so
-            // the term name is parsed as a plain literal in RDFa 1.0 and 1.1.
-            $element[$delta]['#options']['attributes']['property'] = $name_field_mapping['properties'];
-            $element[$delta]['#options']['attributes']['datatype'] = '';
-          }
-        }
-      }
-    }
-  }
 }
 
 /**
