@@ -100,14 +100,16 @@ class ToolbarAdminMenuTest extends WebTestBase {
   }
 
   /**
-   * Tests the toolbar_modules_enabled() and toolbar_modules_disabled() hook
+   * Tests the toolbar_modules_installed() and toolbar_modules_uninstalled() hook
    * implementations.
    */
   function testModuleStatusChangeSubtreesHashCacheClear() {
-    // Disable a module.
+    // Uninstall a module.
     $edit = array();
-    $edit['modules[Core][taxonomy][enable]'] = FALSE;
-    $this->drupalPostForm('admin/modules', $edit, t('Save configuration'));
+    $edit['uninstall[taxonomy]'] = TRUE;
+    $this->drupalPostForm('admin/modules/uninstall', $edit, t('Uninstall'));
+    // Confirm the uninstall form.
+    $this->drupalPostForm(NULL, array(), t('Uninstall'));
     $this->rebuildContainer();
 
     // Assert that the subtrees hash has been altered because the subtrees
