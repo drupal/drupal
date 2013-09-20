@@ -865,8 +865,16 @@ function template_preprocess_field(&$variables, $hook) {
   $variables['attributes'] = isset($variables['attributes']) ? new Attribute($variables['attributes']) : clone $default_attributes;
   $variables['title_attributes'] = isset($variables['title_attributes']) ? new Attribute($variables['title_attributes']) : clone($default_attributes);
   $variables['content_attributes'] = isset($variables['content_attributes']) ? new Attribute($variables['content_attributes']) : clone($default_attributes);
+
+  // Modules (e.g., rdf.module) can add field item attributes (to
+  // $item->_attributes) within hook_entity_prepare_view(). Some field
+  // formatters move those attributes into some nested formatter-specific
+  // element in order have them rendered on the desired HTML element (e.g., on
+  // the <a> element of a field item being rendered as a link). Other field
+  // formatters leave them within $element['#items'][$delta]['_attributes'] to
+  // be rendered on the item wrappers provided by theme_field().
   foreach ($variables['items'] as $delta => $item) {
-    $variables['item_attributes'][$delta] = isset($variables['item_attributes'][$delta]) ? new Attribute($variables['item_attributes'][$delta]) : clone($default_attributes);
+    $variables['item_attributes'][$delta] = !empty($element['#items'][$delta]['_attributes']) ? new Attribute($element['#items'][$delta]['_attributes']) : clone($default_attributes);
   }
 }
 

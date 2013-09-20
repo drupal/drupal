@@ -48,6 +48,14 @@ class LinkFormatter extends TaxonomyFormatterBase {
           '#href' => $uri['path'],
           '#options' => $uri['options'],
         );
+
+        if (!empty($item->_attributes)) {
+          $elements[$delta]['#options'] += array('attributes' => array());
+          $elements[$delta]['#options']['attributes'] += $item->_attributes;
+          // Unset field item attributes since they have been included in the
+          // formatter output and should not be rendered in the field template.
+          unset($item->_attributes);
+        }
       }
     }
 

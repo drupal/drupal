@@ -58,9 +58,14 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
    *   The object's type, either 'uri' or 'literal'.
    */
   protected function assertFormatterRdfa($formatter, $property, $value, $object_type = 'literal') {
-    $build = field_view_field($this->entity, $this->fieldName, array('type' => $formatter));
-    $rendered = "<div about='$this->uri'>" . drupal_render($build) . '</div>';
-    $graph = new \EasyRdf_Graph($this->uri, $rendered, 'rdfa');
+    // The field formatter will be rendered inside the entity. Set the field
+    // formatter in the entity display options before rendering the entity.
+    entity_get_display('entity_test_render', 'entity_test_render', 'default')
+      ->setComponent($this->fieldName, array('type' => $formatter))
+      ->save();
+    $build = entity_view($this->entity, 'default');
+    $output = drupal_render($build);
+    $graph = new \EasyRdf_Graph($this->uri, $output, 'rdfa');
 
     $expected_value = array(
       'type' => $object_type,
@@ -74,13 +79,14 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
    */
   protected function createTestField() {
     entity_create('field_entity', array(
-      'field_name' => $this->fieldName,
+      'name' => $this->fieldName,
+      'entity_type' => 'entity_test_render',
       'type' => $this->fieldType,
     ))->save();
     entity_create('field_instance', array(
-      'entity_type' => 'entity_test',
+      'entity_type' => 'entity_test_render',
       'field_name' => $this->fieldName,
-      'bundle' => 'entity_test',
+      'bundle' => 'entity_test_render',
     ))->save();
   }
 
@@ -97,4 +103,5 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
     $uri_info = $entity->uri();
     return url($uri_info['path'], array('absolute' => TRUE));
   }
+
 }

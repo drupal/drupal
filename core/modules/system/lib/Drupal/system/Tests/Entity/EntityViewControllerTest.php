@@ -68,4 +68,52 @@ class EntityViewControllerTest extends WebTestBase {
       $this->assertRaw('full');
     }
   }
+
+  /**
+   * Tests field item attributes.
+   */
+  public function testFieldItemAttributes() {
+    // Create a text field which will be rendered with custom item attributes.
+    entity_create('field_entity', array(
+      'name' => 'field_test_text',
+      'entity_type' => 'entity_test_render',
+      'type' => 'text',
+    ))->save();
+    entity_create('field_instance', array(
+      'entity_type' => 'entity_test_render',
+      'field_name' => 'field_test_text',
+      'bundle' => 'entity_test_render',
+    ))->save();
+    entity_get_display('entity_test_render', 'entity_test_render', 'full')
+      ->setComponent('field_test_text', array('type' => 'text_default'))
+      ->save();
+
+    // Create an entity and save test value in field_test_text.
+    $test_value = $this->randomName();
+    $entity = entity_create('entity_test_render', array());
+    $entity->field_test_text = $test_value;
+    $entity->save();
+
+    // Browse to the entity and verify that the attribute is rendered in the
+    // field item HTML markup.
+    $this->drupalGet('entity-test-render/' . $entity->id());
+    $xpath = $this->xpath('//div[@data-field-item-attr="foobar" and text()=:value]', array(':value' => $test_value));
+    $this->assertTrue($xpath, 'The field item attribute has been found in the rendered output of the field.');
+
+    // Enable the RDF module to ensure that two modules can add attributes to
+    // the same field item.
+    module_enable(array('rdf'));
+    // Set an RDF mapping for the field_test_text field. This RDF mapping will
+    // be turned into RDFa attributes in the field item output.
+    $mapping = rdf_get_mapping('entity_test_render', 'entity_test_render');
+    $mapping->setFieldMapping('field_test_text', array(
+      'properties' => array('schema:text'),
+    ))->save();
+    // Browse to the entity and verify that the attributes from both modules
+    // are rendered in the field item HTML markup.
+    $this->drupalGet('entity-test-render/' . $entity->id());
+    $xpath = $this->xpath('//div[@data-field-item-attr="foobar" and @property="schema:text" and text()=:value]', array(':value' => $test_value));
+    $this->assertTrue($xpath, 'The field item attributes from both modules have been found in the rendered output of the field.');
+  }
+
 }
