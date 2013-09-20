@@ -1738,8 +1738,15 @@ function theme_menu_local_task($variables) {
     $link['localized_options']['html'] = TRUE;
     $link_text = t('!local-task-title!active', array('!local-task-title' => $link['title'], '!active' => $active));
   }
+  if (!empty($link['href'])) {
+    // @todo - remove this once all pages are converted to routes.
+    $a_tag = l($link_text, $link['href'], $link['localized_options']);
+  }
+  else {
+    $a_tag = Drupal::l($link_text, $link['route_name'], $link['route_parameters'], $link['localized_options']);
+  }
 
-  return '<li' . (!empty($variables['element']['#active']) ? ' class="active"' : '') . '>' . l($link_text, $link['href'], $link['localized_options']) . '</li>';
+  return '<li' . (!empty($variables['element']['#active']) ? ' class="active"' : '') . '>' . $a_tag . '</li>';
 }
 
 /**
@@ -1979,6 +1986,20 @@ function menu_local_tasks($level = 0) {
     $actions = $empty['actions'];
     $tabs = array();
 
+    // Look for route-based tabs.
+    $data['tabs'] = array();
+    $data['actions'] = array();
+
+    $route_name = Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_NAME);
+    if (!empty($route_name)) {
+      $manager = Drupal::service('plugin.manager.menu.local_task');
+      $local_tasks = $manager->getTasksBuild($route_name);
+      foreach ($local_tasks as $level => $items) {
+        $data['tabs'][$level] = empty($data['tabs'][$level]) ? $items : array_merge($data['tabs'][$level], $items);
+      }
+    }
+
+    // @todo Remove the code below once the old menu router system got removed.
     $router_item = menu_get_item();
 
     // If this router item points to its parent, start from the parents to
@@ -2164,16 +2185,7 @@ function menu_local_tasks($level = 0) {
     ksort($tabs);
     // Remove the depth, we are interested only in their relative placement.
     $tabs = array_values($tabs);
-    $data['tabs'] = $tabs;
-    // Look for route-based tabs.
-    $route_name = \Drupal::request()->attributes->get('_route');
-    if (!empty($route_name)) {
-      $manager = \Drupal::service('plugin.manager.menu.local_task');
-      $local_tasks = $manager->getTasksBuild($route_name);
-      foreach ($local_tasks as $level => $items) {
-        $data['tabs'][$level] = empty($data['tabs'][$level]) ? $items : array_merge($data['tabs'][$level], $items);
-      }
-    }
+    $data['tabs'] += $tabs;
 
     // Allow modules to dynamically add further tasks.
     $module_handler = \Drupal::moduleHandler();

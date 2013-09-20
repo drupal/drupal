@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Menu;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Defines an interface for menu local tasks.
  */
@@ -32,15 +34,17 @@ interface LocalTaskInterface {
   public function getTitle();
 
   /**
-   * Returns an internal Drupal path to use when creating the link for the tab.
+   * Returns the route parameters needed to render a link for the local task.
    *
-   * Subclasses may add optional arguments like NodeInterface $node = NULL that
-   * will be supplied by the ControllerResolver.
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The HttpRequest object representing the current request.
    *
-   * @return string
-   *   The path of this local task.
+   * @return array
+   *   An array of parameter names and values.
+   *
+   * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
    */
-  public function getPath();
+  public function getRouteParameters(Request $request);
 
   /**
    * Returns the weight of the local task.
@@ -51,14 +55,17 @@ interface LocalTaskInterface {
   public function getWeight();
 
   /**
-   * Returns an array of options suitable to pass to l().
+   * Returns options for rendering a link to the local task.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The HttpRequest object representing the current request.
    *
    * @return array
-   *   Associative array of options.
+   *   An array of options.
    *
-   * @see l()
+   * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
    */
-  public function getOptions();
+  public function getOptions(Request $request);
 
   /**
    * Sets the active status.

@@ -1,0 +1,8 @@
+menu_local_task_test_placeholder_sub1:
+ route_name: menu_local_task_test_placeholder_sub1
+ title: 'placeholder sub1'
+ tab_root_id: menu_local_task_test_placeholder_sub1
+menu_local_task_test_placeholder_sub2:
+ route_name: menu_local_task_test_placeholder_sub2
+ title: 'placeholder sub2'
+ tab_root_id: menu_local_task_test_placeholder_sub1
