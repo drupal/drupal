@@ -877,9 +877,10 @@ ul#views-display-menu-tabs li.add ul.action-list li{
   margin: 0;
 }
 
-.views-ui-dialog #views-ajax-title {
+.views-ui-dialog #views-ajax-title h2 {
   font-size: 15px;
   padding: 8px 13px;
+  margin: 0;
 }
 
 .views-ui-dialog #views-progress-indicator {

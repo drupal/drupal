@@ -10,7 +10,7 @@
     var ajax_title = Drupal.settings.views.ajax.title;
     var ajax_body = Drupal.settings.views.ajax.id;
     var ajax_popup = Drupal.settings.views.ajax.popup;
-    $(ajax_title).html(response.title);
+    $(ajax_title).html('<h2>' + response.title + '</h2>');
     $(ajax_body).html(response.output);
     $(ajax_popup).dialog('open');
     Drupal.attachBehaviors($(ajax_popup), ajax.settings);
