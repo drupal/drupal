@@ -35,10 +35,26 @@ class XmlEncoder extends SerializerAwareEncoder implements EncoderInterface, Dec
   protected $baseEncoder;
 
   /**
-   * Constucts the XmlEncoder object, creating a BaseXmlEncoder class also.
+   * Gets the base encoder instance.
+   *
+   * @return \Symfony\Component\Serializer\Encoder\XmlEncoder
+   *   The base encoder.
    */
-  public function __construct() {
-    $this->baseEncoder = new BaseXmlEncoder();
+  public function getBaseEncoder() {
+    if (!isset($this->baseEncoder)) {
+      $this->baseEncoder = new BaseXmlEncoder();
+    }
+
+    return $this->baseEncoder;
+  }
+
+  /**
+   * Sets the base encoder instance.
+   *
+   * @param \Symfony\Component\Serializer\Encoder\XmlEncoder $encoder
+   */
+  public function setBaseEncoder($encoder) {
+    $this->baseEncoder = $encoder;
   }
 
   /**
@@ -46,7 +62,7 @@ class XmlEncoder extends SerializerAwareEncoder implements EncoderInterface, Dec
    */
   public function encode($data, $format, array $context = array()){
     $normalized = $this->serializer->normalize($data, $format, $context);
-    return $this->baseEncoder->encode($normalized, $format, $context);
+    return $this->getBaseEncoder()->encode($normalized, $format, $context);
   }
 
   /**
@@ -60,7 +76,7 @@ class XmlEncoder extends SerializerAwareEncoder implements EncoderInterface, Dec
    * Implements \Symfony\Component\Serializer\Encoder\EncoderInterface::decode().
    */
   public function decode($data, $format, array $context = array()){
-    return $this->baseEncoder->decode($data, $format, $context);
+    return $this->getBaseEncoder()->decode($data, $format, $context);
   }
 
   /**
