@@ -2011,7 +2011,7 @@ function install_finished(&$install_state) {
   // in it.
   $request = Request::createFromGlobals();
   $generator = \Drupal::urlGenerator();
-  $generator->setBasePath(str_replace('/core', '', $request->getBasePath()) . '/');
+  $generator->setBasePath(preg_replace('#/core$#', '', $request->getBasePath()) . '/' );
   $generator->setScriptPath('');
   $url = $generator->generateFromPath('');
   $output .= '<p>' . (isset($messages['error']) ? t('Review the messages above before visiting <a href="@url">your new site</a>.', array('@url' => $url)) : t('<a href="@url">Visit your new site</a>.', array('@url' => $url))) . '</p>';
