@@ -995,7 +995,7 @@ function install_base_system(&$install_state) {
 
   // Enable the user module so that sessions can be recorded during the
   // upcoming bootstrap step.
-  Drupal::moduleHandler()->install(array('user'), FALSE);
+  \Drupal::moduleHandler()->install(array('user'), FALSE);
 
   // Save the list of other modules to install for the upcoming tasks.
   // variable_set() can be used now that system.module is installed.
@@ -2037,7 +2037,7 @@ function _install_module_batch($module, $module_name, &$context) {
   // loaded by drupal_bootstrap in subsequent batch requests, and other
   // modules possibly depending on it can safely perform their installation
   // steps.
-  Drupal::moduleHandler()->install(array($module), FALSE);
+  \Drupal::moduleHandler()->install(array($module), FALSE);
   $context['results'][] = $module;
   $context['message'] = t('Installed %module module.', array('%module' => $module_name));
 }
@@ -2529,7 +2529,7 @@ function install_configure_form_submit($form, &$form_state) {
 
   // Enable update.module if this option was selected.
   if ($form_state['values']['update_status_module'][1]) {
-    Drupal::moduleHandler()->install(array('file', 'update'), FALSE);
+    \Drupal::moduleHandler()->install(array('file', 'update'), FALSE);
 
     // Add the site maintenance account's email address to the list of
     // addresses to be notified when updates are available, if selected.

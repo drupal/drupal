@@ -184,7 +184,7 @@ function block_update_8005() {
  * Enable the Custom Block module.
  */
 function block_update_8006() {
-  Drupal::moduleHandler()->install(array('custom_block'));
+  \Drupal::moduleHandler()->install(array('custom_block'));
 }
 
 /**

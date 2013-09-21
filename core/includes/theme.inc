@@ -77,7 +77,7 @@ function drupal_theme_access($theme) {
   if (is_object($theme)) {
     $theme = $theme->name;
   }
-  return Drupal::service('access_check.theme')->checkAccess($theme);
+  return \Drupal::service('access_check.theme')->checkAccess($theme);
 }
 
 /**

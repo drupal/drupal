@@ -548,7 +548,7 @@ function forum_form_node_form_alter(&$form, &$form_state, $form_id) {
       // If there is no default forum already selected, try to get the forum
       // ID from the URL (e.g., if we are on a page like node/add/forum/2, we
       // expect "2" to be the ID of the forum that was requested).
-      $requested_forum_id = Drupal::request()->query->get('forum_id');
+      $requested_forum_id = \Drupal::request()->query->get('forum_id');
       $widget['#default_value'] = is_numeric($requested_forum_id) ? $requested_forum_id : '';
     }
   }

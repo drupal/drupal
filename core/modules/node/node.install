@@ -696,7 +696,7 @@ function node_update_8011() {
  */
 function node_update_8012() {
   // Enable the history module without re-installing the schema.
-  Drupal::moduleHandler()->install(array('history'));
+  \Drupal::moduleHandler()->install(array('history'));
 }
 
 /**
