@@ -175,13 +175,3 @@ function edit_preprocess_field(&$variables) {
 function edit_entity_view_alter(&$build, EntityInterface $entity, EntityDisplay $display) {
   $build['#attributes']['data-edit-entity'] = $entity->entityType() . '/' . $entity->id();
 }
-
-/**
- * Form constructor for the field editing form.
- *
- * @ingroup forms
- */
-function edit_field_form(array $form, array &$form_state, EntityInterface $entity, $field_name, TempStoreFactory $temp_store_factory) {
-  $form_handler = new EditFieldForm();
-  return $form_handler->build($form, $form_state, $entity, $field_name, $temp_store_factory);
-}

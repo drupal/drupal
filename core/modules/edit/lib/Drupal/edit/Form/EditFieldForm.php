@@ -7,13 +7,18 @@
 
 namespace Drupal\edit\Form;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\FormInterface;
 use Drupal\user\TempStoreFactory;
 
 /**
  * Builds and process a form for editing a single entity field.
  */
-class EditFieldForm {
+class EditFieldForm implements FormInterface, ContainerInjectionInterface {
 
   /**
    * Stores the tempstore factory.
@@ -23,13 +28,62 @@ class EditFieldForm {
   protected $tempStoreFactory;
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The node type storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageControllerInterface
+   */
+  protected $nodeTypeStorage;
+
+  /**
+   * Constructs a new EditFieldForm.
+   *
+   * @param \Drupal\user\TempStoreFactory $temp_store_factory
+   *   The tempstore factory.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   * @param \Drupal\Core\Entity\EntityStorageControllerInterface $node_type_storage
+   *   The node type storage.
+   */
+  public function __construct(TempStoreFactory $temp_store_factory, ModuleHandlerInterface $module_handler, EntityStorageControllerInterface $node_type_storage) {
+    $this->moduleHandler = $module_handler;
+    $this->nodeTypeStorage = $node_type_storage;
+    $this->tempStoreFactory = $temp_store_factory;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('user.tempstore'),
+      $container->get('module_handler'),
+      $container->get('plugin.manager.entity')->getStorageController('node_type')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormID() {
+    return 'edit_field_form';
+  }
+
+  /**
+   * {@inheritdoc}
+   *
    * Builds a form for a single entity field.
    */
-  public function build(array $form, array &$form_state, EntityInterface $entity, $field_name, TempStoreFactory $temp_store_factory) {
+  public function buildForm(array $form, array &$form_state, EntityInterface $entity = NULL, $field_name = NULL) {
     if (!isset($form_state['entity'])) {
       $this->init($form_state, $entity, $field_name);
     }
-    $this->tempStoreFactory = $temp_store_factory;
 
     // Add the field form.
     field_attach_form($form_state['entity'], $form, $form_state, $form_state['langcode'], array('field_name' =>  $form_state['field_name']));
@@ -41,10 +95,6 @@ class EditFieldForm {
       '#value' => t('Save'),
       '#attributes' => array('class' => array('edit-form-submit')),
     );
-
-    // Add validation and submission handlers.
-    $form['#validate'][] = array($this, 'validate');
-    $form['#submit'][] = array($this, 'submit');
 
     // Simplify it for optimal in-place use.
     $this->simplify($form, $form_state);
@@ -59,7 +109,9 @@ class EditFieldForm {
     // @todo Rather than special-casing $node->revision, invoke prepareEdit()
     //   once http://drupal.org/node/1863258 lands.
     if ($entity->entityType() == 'node') {
-      $entity->setNewRevision(in_array('revision', variable_get('node_options_' . $entity->bundle(), array())));
+      $node_type_settings = $this->nodeTypeStorage->load($entity->bundle())->getModuleSettings('node');
+      $options = (isset($node_type_settings['options'])) ? $node_type_settings['options'] : array();
+      $entity->setNewRevision(in_array('revision', $options));
       $entity->log = NULL;
     }
 
@@ -76,23 +128,25 @@ class EditFieldForm {
       'bundle' => $entity->bundle(),
       'form_mode' => 'default',
     );
-    \Drupal::moduleHandler()->alter('entity_form_display', $form_display, $form_display_context);
+    $this->moduleHandler->alter('entity_form_display', $form_display, $form_display_context);
 
     $form_state['form_display'] = $form_display;
   }
 
   /**
-   * Validates the form.
+   * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validateForm(array &$form, array &$form_state) {
     $entity = $this->buildEntity($form, $form_state);
     field_attach_form_validate($entity, $form, $form_state, array('field_name' =>  $form_state['field_name']));
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Saves the entity with updated values for the edited field.
    */
-  public function submit(array $form, array &$form_state) {
+  public function submitForm(array &$form, array &$form_state) {
     $form_state['entity'] = $this->buildEntity($form, $form_state);
 
     // Store entity in tempstore with its UUID as tempstore key.

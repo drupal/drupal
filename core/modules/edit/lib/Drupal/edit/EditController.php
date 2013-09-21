@@ -2,11 +2,12 @@
 
 /**
  * @file
- * Contains of \Drupal\edit\EditController.
+ * Contains \Drupal\edit\EditController.
  */
 
 namespace Drupal\edit;
 
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,12 +24,13 @@ use Drupal\edit\Ajax\FieldFormSavedCommand;
 use Drupal\edit\Ajax\FieldFormValidationErrorsCommand;
 use Drupal\edit\Ajax\EntitySavedCommand;
 use Drupal\edit\Ajax\MetadataCommand;
+use Drupal\edit\Form\EditFieldForm;
 use Drupal\user\TempStoreFactory;
 
 /**
  * Returns responses for Edit module routes.
  */
-class EditController implements ContainerInjectionInterface {
+class EditController extends ContainerAware implements ContainerInjectionInterface {
 
   /**
    * The TempStore factory.
@@ -205,9 +207,10 @@ class EditController implements ContainerInjectionInterface {
     $form_state = array(
       'langcode' => $langcode,
       'no_redirect' => TRUE,
-      'build_info' => array('args' => array($entity, $field_name, $this->tempStoreFactory)),
+      'build_info' => array('args' => array($entity, $field_name)),
     );
-    $form = drupal_build_form('edit_field_form', $form_state);
+    $form_id = _drupal_form_id(EditFieldForm::create($this->container), $form_state);
+    $form = drupal_build_form($form_id, $form_state);
 
     if (!empty($form_state['executed'])) {
       // The form submission saved the entity in tempstore. Return the
