@@ -6,12 +6,12 @@
  */
 
 $base = array(
-  0x00 => NULL, 'k', 'kh', 'kh', 'kh', 'kh', 'kh', 'ng', 'cch', 'ch', 'ch', 'ch', 'ch', 'y', 'd', 't',
+  0x00 => NULL, 'k', 'kh', 'kh', 'kh', 'kh', 'kh', 'ng', 'c', 'ch', 'ch', 's', 'ch', 'y', 'd', 't',
   0x10 => 'th', 'th', 'th', 'n', 'd', 't', 'th', 'th', 'th', 'n', 'b', 'p', 'ph', 'f', 'ph', 'f',
-  0x20 => 'ph', 'm', 'y', 'r', 'R', 'l', 'L', 'w', 's', 's', 's', 'h', 'l', '`', 'h', '~',
-  0x30 => 'a', 'a', 'aa', 'am', 'i', 'ii', 'ue', 'uue', 'u', 'uu', '\'', NULL, NULL, NULL, NULL, 'Bh.',
-  0x40 => 'e', 'ae', 'o', 'ai', 'ai', 'ao', '+', '', '', '', '', '', '', 'M', '', ' * ',
-  0x50 => '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' // ', ' /// ', NULL, NULL, NULL, NULL,
+  0x20 => 'ph', 'm', 'y', 'r', 'v', 'l', 'l', 'w', 's', 's', 's', 'h', 'l', 'x', 'h', '~',
+  0x30 => 'a', 'a', 'a', 'a', 'i', 'ii', 'ue', 'uue', 'u', 'uu', '\'', NULL, NULL, NULL, NULL, 'Bh.',
+  0x40 => 'e', 'ae', 'o', 'i', 'i', 'i', '<<', '', '', '', '', '', '', 'M', '', ' * ',
+  0x50 => '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '||', '>>', NULL, NULL, NULL, NULL,
   0x60 => NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
   0x70 => NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
   0x80 => NULL, 'k', 'kh', NULL, 'kh', NULL, NULL, 'ng', 'ch', NULL, 's', NULL, NULL, 'ny', NULL, NULL,
