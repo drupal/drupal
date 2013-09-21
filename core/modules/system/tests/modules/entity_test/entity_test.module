@@ -500,7 +500,7 @@ function _entity_test_record_hooks($hook, $data) {
  */
 function entity_test_entity_prepare_view($entity_type, array $entities, array $displays) {
   // Add a dummy field item attribute on field_test_text if it exists.
-  if ($entity_type = 'entity_test_render') {
+  if ($entity_type == 'entity_test_render') {
     foreach ($entities as $entity) {
       if ($entity->getPropertyDefinition('field_test_text')) {
         foreach ($entity->get('field_test_text') as $item) {
