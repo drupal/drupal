@@ -183,10 +183,7 @@ function content_translation_menu() {
       // Delete translation callback.
       $items["$path/translations/delete/%language"] = array(
         'title' => 'Delete',
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array('content_translation_delete_confirm', $entity_position, $language_position),
-        'access callback' => 'content_translation_delete_access',
-        'access arguments' => $args,
+        'route_name' => "content_translation.delete_$entity_type",
       ) + $item;
     }
   }

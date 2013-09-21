@@ -120,4 +120,53 @@ class EntityFormDisplayTest extends DrupalUnitTestBase {
     $this->assertEqual($widget->getPluginId(), $default_widget);
   }
 
+  /**
+   * Tests deleting field instance.
+   */
+  public function testDeleteFieldInstance() {
+    $this->enableModules(array('field_sql_storage', 'field_test'));
+
+    $field_name = 'test_field';
+    // Create a field and an instance.
+    $field = entity_create('field_entity', array(
+      'name' => $field_name,
+      'entity_type' => 'entity_test',
+      'type' => 'test_field'
+    ));
+    $field->save();
+    $instance = entity_create('field_instance', array(
+      'field_name' => $field_name,
+      'entity_type' => 'entity_test',
+      'bundle' => 'entity_test',
+    ));
+    $instance->save();
+
+    // Create default and compact entity display.
+    entity_create('entity_form_display', array(
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'default',
+    ))->setComponent($field_name)->save();
+    entity_create('entity_form_display', array(
+      'targetEntityType' => 'entity_test',
+      'bundle' => 'entity_test',
+      'mode' => 'compact',
+    ))->setComponent($field_name)->save();
+
+    // Check the component exists.
+    $display = entity_get_form_display('entity_test', 'entity_test', 'default');
+    $this->assertTrue($display->getComponent($field_name));
+    $display = entity_get_form_display('entity_test', 'entity_test', 'compact');
+    $this->assertTrue($display->getComponent($field_name));
+
+    // Delete the instance.
+    $instance->delete();
+
+    // Check that the component has been removed from the entity displays.
+    $display = entity_get_form_display('entity_test', 'entity_test', 'default');
+    $this->assertFalse($display->getComponent($field_name));
+    $display = entity_get_form_display('entity_test', 'entity_test', 'compact');
+    $this->assertFalse($display->getComponent($field_name));
+  }
+
 }

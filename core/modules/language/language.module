@@ -94,11 +94,8 @@ function language_menu() {
   // Language negotiation.
   $items['admin/config/regional/language/detection'] = array(
     'title' => 'Detection and selection',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('language_negotiation_configure_form'),
-    'access arguments' => array('administer languages'),
+    'route_name' => 'language.negotiation',
     'weight' => 10,
-    'file' => 'language.admin.inc',
     'type' => MENU_LOCAL_TASK,
   );
   $items['admin/config/regional/language/detection/url'] = array(

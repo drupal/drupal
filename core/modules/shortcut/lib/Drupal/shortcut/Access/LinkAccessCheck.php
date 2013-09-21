@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\shortcut\Access\LinkDeleteAccessCheck.
+ * Contains Drupal\shortcut\Access\LinkAccessCheck.
  */
 
 namespace Drupal\shortcut\Access;
@@ -14,13 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Provides an access check for shortcut link delete routes.
  */
-class LinkDeleteAccessCheck implements StaticAccessCheckInterface {
+class LinkAccessCheck implements StaticAccessCheckInterface {
 
   /**
    * {@inheritdoc}
    */
   public function appliesTo() {
-    return array('_access_shortcut_link_delete');
+    return array('_access_shortcut_link');
   }
 
   /**
@@ -32,6 +32,7 @@ class LinkDeleteAccessCheck implements StaticAccessCheckInterface {
     if ($shortcut_set = shortcut_set_load($set_name)) {
       return shortcut_set_edit_access($shortcut_set) ? static::ALLOW : static::DENY;
     }
+    return static::DENY;
   }
 
 }

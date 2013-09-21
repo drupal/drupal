@@ -1743,7 +1743,7 @@ function theme_menu_local_task($variables) {
     $a_tag = l($link_text, $link['href'], $link['localized_options']);
   }
   else {
-    $a_tag = Drupal::l($link_text, $link['route_name'], $link['route_parameters'], $link['localized_options']);
+    $a_tag = \Drupal::l($link_text, $link['route_name'], $link['route_parameters'], $link['localized_options']);
   }
 
   return '<li' . (!empty($variables['element']['#active']) ? ' class="active"' : '') . '>' . $a_tag . '</li>';
@@ -1967,9 +1967,9 @@ function menu_local_tasks($level = 0) {
     $data['tabs'] = array();
     $data['actions'] = array();
 
-    $route_name = Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_NAME);
+    $route_name = \Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_NAME);
     if (!empty($route_name)) {
-      $manager = Drupal::service('plugin.manager.menu.local_task');
+      $manager = \Drupal::service('plugin.manager.menu.local_task');
       $local_tasks = $manager->getTasksBuild($route_name);
       foreach ($local_tasks as $level => $items) {
         $data['tabs'][$level] = empty($data['tabs'][$level]) ? $items : array_merge($data['tabs'][$level], $items);

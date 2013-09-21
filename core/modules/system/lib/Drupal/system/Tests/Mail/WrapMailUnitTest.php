@@ -40,7 +40,7 @@ class WrapMailUnitTest extends UnitTestBase {
     // 77 characters.
     $this->assertEqual($headers_in_body, $processed_headers, 'Headers in the body are not wrapped.');
     // Check that the body text is wrapped.
-    $this->assertEqual(wordwrap($body, 77, "  \n"), $processed_body, 'Body text is wrapped.');
+    $this->assertEqual(wordwrap($body, 77, " \n"), $processed_body, 'Body text is wrapped.');
   }
 }
 

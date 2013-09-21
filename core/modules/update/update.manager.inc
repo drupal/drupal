@@ -62,6 +62,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * @see update_manager_update_form_submit()
  * @see update_menu()
  * @ingroup forms
+ *
+ * @deprecated Use \Drupal\update\Form\UpdateForm::reportUpdate(),
+ *   \Drupal\update\Form\UpdateForm::moduleUpdate(), or
+ *   \Drupal\update\Form\UpdateForm::moduleUpdate()
  */
 function update_manager_update_form($form, $form_state = array(), $context) {
   if (!_update_manager_check_backends($form, 'update')) {
@@ -507,6 +511,10 @@ function update_manager_update_ready_form_submit($form, &$form_state) {
  * @see update_manager_install_form_submit()
  * @see update_menu()
  * @ingroup forms
+ *
+ * @deprecated Use \Drupal\update\Form\UpdateForm::reportInstall(),
+ *   \Drupal\update\Form\UpdateForm::moduleInstall(), or
+ *   \Drupal\update\Form\UpdateForm::moduleInstall()
  */
 function update_manager_install_form($form, &$form_state, $context) {
   if (!_update_manager_check_backends($form, 'install')) {

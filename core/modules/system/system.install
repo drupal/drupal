@@ -1550,7 +1550,7 @@ function system_update_8020() {
       ->condition('aid', 'system_block_ip_action')
       ->execute();
     // Enable the new Ban module.
-    Drupal::moduleHandler()->install(array('ban'));
+    \Drupal::moduleHandler()->install(array('ban'));
   }
   else {
     // Drop old table.
@@ -1563,7 +1563,7 @@ function system_update_8020() {
  */
 function system_update_8021() {
   // Enable the module without re-installing the schema.
-  Drupal::moduleHandler()->install(array('action'));
+  \Drupal::moduleHandler()->install(array('action'));
   // Rename former System module actions.
   $map = array(
     'system_message_action' => 'action_message_action',
@@ -1864,7 +1864,7 @@ function system_update_8041() {
  * Enable the new Entity module.
  */
 function system_update_8042() {
-  Drupal::moduleHandler()->install(array('entity'));
+  \Drupal::moduleHandler()->install(array('entity'));
 }
 
 /**
@@ -1978,7 +1978,7 @@ function system_update_8047() {
  */
 function system_update_8048() {
   // Enable the module without re-installing the schema.
-  Drupal::moduleHandler()->install(array('menu_link'));
+  \Drupal::moduleHandler()->install(array('menu_link'));
 
   // Add the langcode column if it doesn't exist.
   if (!db_field_exists('menu_inks', 'langcode')) {

@@ -195,11 +195,7 @@ function book_menu() {
   );
   $items['node/%node/outline/remove'] = array(
     'title' => 'Remove from outline',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('book_remove_form', 1),
-    'access callback' => '_book_outline_remove_access',
-    'access arguments' => array(1),
-    'file' => 'book.pages.inc',
+    'route_name' => 'book.remove',
   );
 
   return $items;

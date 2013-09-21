@@ -13,6 +13,8 @@ use Drupal\Component\Utility\Crypt;
 
 /**
  * Menu callback; process one time login link and redirects to the user page on success.
+ *
+ * @deprecated Use \Drupal\user\Form\UserForm::resetPass()
  */
 function user_pass_reset($form, &$form_state, $uid, $timestamp, $hashed_pass, $action = NULL) {
   global $user;

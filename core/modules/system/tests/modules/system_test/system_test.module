@@ -263,12 +263,12 @@ function system_test_authorize_init_page($page_title) {
  * Implements hook_module_preinstall().
  */
 function system_test_module_preinstall($module) {
-  Drupal::state()->set('system_test_preinstall_module', $module);
+  \Drupal::state()->set('system_test_preinstall_module', $module);
 }
 
 /**
  * Implements hook_module_preuninstall().
  */
 function system_test_module_preuninstall($module) {
-  Drupal::state()->set('system_test_preuninstall_module', $module);
+  \Drupal::state()->set('system_test_preuninstall_module', $module);
 }

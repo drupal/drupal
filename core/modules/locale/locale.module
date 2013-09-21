@@ -182,21 +182,15 @@ function locale_menu() {
   );
   $items['admin/config/regional/translate/import'] = array(
     'title' => 'Import',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('locale_translate_import_form'),
-    'access arguments' => array('translate interface'),
+    'route_name' => 'locale.translate_import',
     'weight' => 20,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'locale.bulk.inc',
   );
   $items['admin/config/regional/translate/export'] = array(
     'title' => 'Export',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('locale_translate_export_form'),
-    'access arguments' => array('translate interface'),
+    'route_name' => 'locale.translate_export',
     'weight' => 30,
     'type' => MENU_LOCAL_TASK,
-    'file' => 'locale.bulk.inc',
   );
   $items['admin/config/regional/translate/settings'] = array(
     'title' => 'Settings',
@@ -206,11 +200,8 @@ function locale_menu() {
   );
   $items['admin/reports/translations'] = array(
     'title' => 'Available translation updates',
+    'route_name' => 'locale.translate_status',
     'description' => 'Get a status report about available interface translations for your installed modules and themes.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('locale_translation_status_form'),
-    'access arguments' => array('translate interface'),
-    'file' => 'locale.pages.inc',
   );
 
   return $items;

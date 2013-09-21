@@ -6,14 +6,14 @@
  */
 
 $base = array(
-  0x00 => '(g)', '(n)', '(d)', '(r)', '(m)', '(b)', '(s)', '()', '(j)', '(c)', '(k)', '(t)', '(p)', '(h)', '(ga)', '(na)',
-  0x10 => '(da)', '(ra)', '(ma)', '(ba)', '(sa)', '(a)', '(ja)', '(ca)', '(ka)', '(ta)', '(pa)', '(ha)', '(ju)', NULL, NULL, NULL,
+  0x00 => '(g)', '(n)', '(d)', '(l)', '(m)', '(b)', '(s)', '()', '(j)', '(ch)', '(k)', '(t)', '(p)', '(h)', '(ga)', '(na)',
+  0x10 => '(da)', '(la)', '(ma)', '(ba)', '(sa)', '(a)', '(ja)', '(cha)', '(ka)', '(ta)', '(pa)', '(ha)', '(ju)', NULL, NULL, NULL,
   0x20 => '(1) ', '(2) ', '(3) ', '(4) ', '(5) ', '(6) ', '(7) ', '(8) ', '(9) ', '(10) ', '(Yue) ', '(Huo) ', '(Shui) ', '(Mu) ', '(Jin) ', '(Tu) ',
   0x30 => '(Ri) ', '(Zhu) ', '(You) ', '(She) ', '(Ming) ', '(Te) ', '(Cai) ', '(Zhu) ', '(Lao) ', '(Dai) ', '(Hu) ', '(Xue) ', '(Jian) ', '(Qi) ', '(Zi) ', '(Xie) ',
   0x40 => '(Ji) ', '(Xiu) ', '<<', '>>', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
   0x50 => NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-  0x60 => '(g)', '(n)', '(d)', '(r)', '(m)', '(b)', '(s)', '()', '(j)', '(c)', '(k)', '(t)', '(p)', '(h)', '(ga)', '(na)',
-  0x70 => '(da)', '(ra)', '(ma)', '(ba)', '(sa)', '(a)', '(ja)', '(ca)', '(ka)', '(ta)', '(pa)', '(ha)', NULL, NULL, NULL, 'KIS ',
+  0x60 => 'g', 'n', 'd', 'l', 'm', 'b', 's', '()', 'j', 'ch', 'k', 't', 'p', 'h', 'ga', 'na',
+  0x70 => 'da', 'la', 'ma', 'ba', 'sa', 'a', 'ja', 'cha', 'ka', 'ta', 'pa', 'ha', NULL, NULL, NULL, 'KIS ',
   0x80 => '(1) ', '(2) ', '(3) ', '(4) ', '(5) ', '(6) ', '(7) ', '(8) ', '(9) ', '(10) ', '(Yue) ', '(Huo) ', '(Shui) ', '(Mu) ', '(Jin) ', '(Tu) ',
   0x90 => '(Ri) ', '(Zhu) ', '(You) ', '(She) ', '(Ming) ', '(Te) ', '(Cai) ', '(Zhu) ', '(Lao) ', '(Mi) ', '(Nan) ', '(Nu) ', '(Shi) ', '(You) ', '(Yin) ', '(Zhu) ',
   0xA0 => '(Xiang) ', '(Xiu) ', '(Xie) ', '(Zheng) ', '(Shang) ', '(Zhong) ', '(Xia) ', '(Zuo) ', '(You) ', '(Yi) ', '(Zong) ', '(Xue) ', '(Jian) ', '(Qi) ', '(Zi) ', '(Xie) ',

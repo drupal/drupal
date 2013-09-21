@@ -47,6 +47,14 @@ language.delete:
   requirements:
     _entity_access: 'language_entity.delete'
 
+language.negotiation:
+  path: '/admin/config/regional/language/detection'
+  defaults:
+    _content: '\Drupal\language\Form\LanguageForm::negotiation'
+    _title: 'Detection and selection'
+  requirements:
+    _permission: 'administer languages'
+
 language.negotiation_browser:
   path: '/admin/config/regional/language/detection/browser'
   defaults:

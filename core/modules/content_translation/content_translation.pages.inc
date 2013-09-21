@@ -248,6 +248,8 @@ function content_translation_prepare_translation(EntityInterface $entity, Langua
 
 /**
  * Form constructor for the translation deletion confirmation.
+ *
+ * @deprecated Use \Drupal\content_translation\Form\ContentTranslationForm::deleteTranslation()
  */
 function content_translation_delete_confirm(array $form, array $form_state, EntityInterface $entity, Language $language) {
   $langcode = $language->id;

@@ -759,13 +759,12 @@ function user_menu() {
     'route_name' => 'user.pass',
     'type' => MENU_LOCAL_TASK,
   );
+  // Since menu_get_ancestors() does not support multiple placeholders in a row,
+  // this MENU_CALLBACK cannot be removed yet.
   $items['user/reset/%/%/%'] = array(
     'title' => 'Reset password',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('user_pass_reset', 2, 3, 4),
-    'access callback' => TRUE,
+    'route_name' => 'user.reset',
     'type' => MENU_CALLBACK,
-    'file' => 'user.pages.inc',
   );
 
   $items['user/logout'] = array(

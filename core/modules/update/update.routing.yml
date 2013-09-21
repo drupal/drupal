@@ -19,3 +19,77 @@ update.manual_status:
     _content: '\Drupal\update\Controller\UpdateController::updateStatusManually'
   requirements:
     _permission: 'administer site configuration'
+
+update.report_install:
+  path: '/admin/reports/updates/install'
+  defaults:
+    _content: '\Drupal\update\Form\UpdateForm::reportInstall'
+  options:
+    _access_mode: 'ALL'
+  requirements:
+    _permission: 'administer software updates'
+    _access_update_manager: 'TRUE'
+
+update.report_update:
+  path: '/admin/reports/updates/update'
+  defaults:
+    _content: '\Drupal\update\Form\UpdateForm::reportUpdate'
+    _title: 'Update'
+  options:
+    _access_mode: 'ALL'
+  requirements:
+    _permission: 'administer software updates'
+    _access_update_manager: 'TRUE'
+
+update.module_install:
+  path: '/admin/modules/install'
+  defaults:
+    _content: '\Drupal\update\Form\UpdateForm::moduleInstall'
+  options:
+    _access_mode: 'ALL'
+  requirements:
+    _permission: 'administer software updates'
+    _access_update_manager: 'TRUE'
+
+update.module_update:
+  path: '/admin/modules/update'
+  defaults:
+    _content: '\Drupal\update\Form\UpdateForm::moduleUpdate'
+    _title: 'Update'
+  options:
+    _access_mode: 'ALL'
+  requirements:
+    _permission: 'administer software updates'
+    _access_update_manager: 'TRUE'
+
+update.theme_install:
+  path: '/admin/theme/install'
+  defaults:
+    _content: '\Drupal\update\Form\UpdateForm::themeInstall'
+  options:
+    _access_mode: 'ALL'
+  requirements:
+    _permission: 'administer software updates'
+    _access_update_manager: 'TRUE'
+
+update.theme_update:
+  path: '/admin/theme/update'
+  defaults:
+    _content: '\Drupal\update\Form\UpdateForm::themeUpdate'
+    _title: 'Update'
+  options:
+    _access_mode: 'ALL'
+  requirements:
+    _permission: 'administer software updates'
+    _access_update_manager: 'TRUE'
+
+update.confirmation_page:
+  path: '/admin/update/ready'
+  defaults:
+    _content: '\Drupal\update\Form\UpdateForm::confirmUpdates'
+    _title: 'Ready to update'
+  options:
+    _access_mode: 'ALL'
+  requirements:
+    _permission: 'administer software updates'
+    _access_update_manager: 'TRUE'

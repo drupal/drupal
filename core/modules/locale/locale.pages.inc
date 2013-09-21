@@ -40,6 +40,8 @@ function locale_translation_manual_status() {
  * Page callback: Display the current translation status.
  *
  * @see locale_menu()
+ *
+ * @deprecated Use \Drupal\locale\Form\LocaleForm::status()
  */
 function locale_translation_status_form($form, &$form_state) {
   module_load_include('translation.inc', 'locale');

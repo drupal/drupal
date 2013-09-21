@@ -351,3 +351,11 @@ system.batch_page:
     _controller: '\Drupal\system\Controller\BatchController::batchPage'
   requirements:
     _access: 'TRUE'
+
+system.localize_date_format:
+  path: '/admin/config/regional/date-time/locale/{langcode}/edit'
+  defaults:
+    _content: '\Drupal\system\Form\SystemForm::localizeDateFormat'
+    _title: 'Localize date formats'
+  requirements:
+    _permission: 'administer site configuration'

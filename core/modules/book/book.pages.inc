@@ -30,6 +30,8 @@ function book_remove_button_submit($form, &$form_state) {
  * @see book_remove_form_submit()
  * @see book_menu()
  * @ingroup forms
+ *
+ * @deprecated Use \Drupal\book\Form\BookForm::remove()
  */
 function book_remove_form($form, &$form_state, EntityInterface $node) {
   $form['#node'] = $node;

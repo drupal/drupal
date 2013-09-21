@@ -3,7 +3,7 @@ shortcut.link_delete:
   defaults:
     _form: 'Drupal\shortcut\Form\LinkDelete'
   requirements:
-    _access_shortcut_link_delete: 'TRUE'
+    _access_shortcut_link: 'TRUE'
 
 shortcut.set_delete:
   path: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/delete'
@@ -47,3 +47,28 @@ shortcut.set_customize:
     _entity_form: 'shortcut_set.customize'
   requirements:
     _entity_access: 'shortcut_set.update'
+
+shortcut.link_add:
+  path: '/admin/config/user-interface/shortcut/manage/{shortcut_set}/add-link'
+  defaults:
+    _content: '\Drupal\shortcut\Form\ShortcutForm::add'
+    _title: 'Add Shortcut'
+  requirements:
+    _access_shortcut_set_edit: 'TRUE'
+
+shortcut.link_edit:
+  path: '/admin/config/user-interface/shortcut/link/{menu_link}'
+  defaults:
+    _content: '\Drupal\shortcut\Form\ShortcutForm::edit'
+    _title: 'Add Shortcut'
+  requirements:
+    _access_shortcut_link: 'TRUE'
+
+shortcut.overview:
+  path: 'user/{user}/shortcuts'
+  defaults:
+    _content: '\Drupal\shortcut\Form\ShortcutForm::overview'
+    _title: 'Shortcuts'
+  requirements:
+    _access_shortcut_set_switch: 'TRUE'
+

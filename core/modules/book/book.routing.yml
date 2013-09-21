@@ -50,3 +50,15 @@ book.admin_edit:
     _permission: 'administer book outlines'
     _entity_access: 'node.view'
     node: \d+
+
+book.remove:
+  path: '/node/{node}/outline/remove'
+  defaults:
+    _content: '\Drupal\book\Form\BookForm::remove'
+    _title: 'Remove from outline'
+  options:
+    _access_mode: 'ALL'
+  requirements:
+    _permission: 'administer book outlines'
+    _entity_access: 'node.view'
+    _access_book_removable: 'TRUE'

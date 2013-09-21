@@ -150,3 +150,12 @@ user.cancel_confirm:
     hashed_pass: ''
   requirements:
     _entity_access: 'user.delete'
+
+user.reset:
+  path: '/user/reset/{uid}/{timestamp}/{hash}/{operation}'
+  defaults:
+    _content: '\Drupal\user\Form\UserForm::resetPass'
+    _title: 'Reset password'
+    operation: NULL
+  requirements:
+    _access: 'TRUE'

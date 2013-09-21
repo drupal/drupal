@@ -159,6 +159,23 @@ function entity_test_entity_view_mode_info_alter(&$view_modes) {
 }
 
 /**
+ * Implements hook_entity_form_mode_info_alter().
+ */
+function entity_test_entity_form_mode_info_alter(&$form_modes) {
+  $entity_info = entity_get_info();
+  foreach ($entity_info as $entity_type => $info) {
+    if ($entity_info[$entity_type]['module'] == 'entity_test') {
+      $form_modes[$entity_type] = array(
+        'compact' => array(
+          'label' => t('Compact version'),
+          'status' => TRUE,
+        ),
+      );
+    }
+  }
+}
+
+/**
  * Implements hook_field_extra_fields().
  */
 function entity_test_field_extra_fields() {
@@ -500,7 +517,7 @@ function _entity_test_record_hooks($hook, $data) {
  */
 function entity_test_entity_prepare_view($entity_type, array $entities, array $displays) {
   // Add a dummy field item attribute on field_test_text if it exists.
-  if ($entity_type = 'entity_test_render') {
+  if ($entity_type == 'entity_test_render') {
     foreach ($entities as $entity) {
       if ($entity->getPropertyDefinition('field_test_text')) {
         foreach ($entity->get('field_test_text') as $item) {

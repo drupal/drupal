@@ -57,26 +57,28 @@ class ContentTranslationManageAccessCheck implements StaticAccessCheckInterface 
       $translations = $entity->getTranslationLanguages();
       $languages = language_list();
 
-      if ($operation == 'create') {
-        $source = language_load($request->attributes->get('source'));
-        $target = language_load($request->attributes->get('target'));
-        $source = !empty($source) ? $source : $entity->language();
-        $target = !empty($target) ? $target : language(Language::TYPE_CONTENT);
-        return ($source->id != $target->id
-          && isset($languages[$source->id])
-          && isset($languages[$target->id])
-          && !isset($translations[$target->id])
-          && $controller->getTranslationAccess($entity, $operation))
-          ? static::ALLOW : static::DENY;
-      }
-      elseif ($operation == 'update') {
-        $language = language_load($request->attributes->get('language'));
-        $language = !empty($language) ? $language : language(Language::TYPE_CONTENT);
-        return isset($languages[$language->id])
-          && $language->id != $entity->getUntranslated()->language()->id
-          && isset($translations[$language->id])
-          && $controller->getTranslationAccess($entity, $operation)
-          ? static::ALLOW : static::DENY;
+      switch ($operation) {
+        case 'create':
+          $source = language_load($request->attributes->get('source'));
+          $target = language_load($request->attributes->get('target'));
+          $source = !empty($source) ? $source : $entity->language();
+          $target = !empty($target) ? $target : language(Language::TYPE_CONTENT);
+          return ($source->id != $target->id
+            && isset($languages[$source->id])
+            && isset($languages[$target->id])
+            && !isset($translations[$target->id])
+            && $controller->getTranslationAccess($entity, $operation))
+            ? static::ALLOW : static::DENY;
+
+        case 'update':
+        case 'delete':
+          $language = language_load($request->attributes->get('language'));
+          $language = !empty($language) ? $language : language(Language::TYPE_CONTENT);
+          return isset($languages[$language->id])
+            && $language->id != $entity->getUntranslated()->language()->id
+            && isset($translations[$language->id])
+            && $controller->getTranslationAccess($entity, $operation)
+            ? static::ALLOW : static::DENY;
       }
     }
     return static::DENY;

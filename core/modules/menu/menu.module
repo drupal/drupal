@@ -499,7 +499,7 @@ function menu_form_node_form_alter(&$form, $form_state) {
   $form['menu'] = array(
     '#type' => 'details',
     '#title' => t('Menu settings'),
-    '#access' => Drupal::currentUser()->hasPermission('administer menu'),
+    '#access' => \Drupal::currentUser()->hasPermission('administer menu'),
     '#collapsed' => !$link['link_title'],
     '#group' => 'advanced',
     '#attached' => array(
