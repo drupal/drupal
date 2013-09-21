@@ -7,12 +7,15 @@
 
 "use strict";
 
-var options = $.extend({
-  strings: {
-    open: Drupal.t('open'),
-    close: Drupal.t('close')
+var options = $.extend(drupalSettings.contextual,
+  // Merge strings on top of drupalSettings so that they are not mutable.
+  {
+    strings: {
+      open: Drupal.t('Open'),
+      close: Drupal.t('Close')
+    }
   }
-}, drupalSettings.contextual);
+);
 
 /**
  * Initializes a contextual link: updates its DOM, sets up model and views

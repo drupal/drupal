@@ -8,17 +8,23 @@
 "use strict";
 
 // Merge run-time settings with the defaults.
-var options = $.extend({
-  breakpoints: {
-    'module.toolbar.narrow': '',
-    'module.toolbar.standard': '',
-    'module.toolbar.wide': ''
+var options = $.extend(
+  {
+    breakpoints: {
+      'module.toolbar.narrow': '',
+      'module.toolbar.standard': '',
+      'module.toolbar.wide': ''
+    },
   },
-  strings: {
-    horizontal: Drupal.t('Horizontal orientation'),
-    vertical: Drupal.t('Vertical orientation')
+  drupalSettings.toolbar,
+  // Merge strings on top of drupalSettings so that they are not mutable.
+  {
+    strings: {
+      horizontal: Drupal.t('Horizontal orientation'),
+      vertical: Drupal.t('Vertical orientation')
+    }
   }
-}, drupalSettings.toolbar);
+);
 
 /**
  * Registers tabs with the toolbar.
