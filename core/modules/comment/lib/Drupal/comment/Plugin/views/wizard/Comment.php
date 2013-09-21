@@ -54,13 +54,13 @@ class Comment extends WizardPluginBase {
       'value' => TRUE,
       'table' => 'comment',
       'field' => 'status',
-      'provider' => 'user'
+      'provider' => 'comment'
     ),
     'status_node' => array(
       'value' => TRUE,
       'table' => 'node_field_data',
       'field' => 'status',
-      'provider' => 'user',
+      'provider' => 'node',
       'relationship' => 'nid'
     )
   );
