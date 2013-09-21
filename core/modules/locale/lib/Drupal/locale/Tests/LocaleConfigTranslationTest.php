@@ -21,7 +21,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('locale');
+  public static $modules = array('locale', 'contact');
 
   public static function getInfo() {
     return array(
@@ -43,7 +43,7 @@ class LocaleConfigTranslationTest extends WebTestBase {
   function testConfigTranslation() {
     // Add custom language.
     $langcode = 'xx';
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'translate interface', 'administer modules'));
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'access administration pages', 'translate interface', 'administer modules', 'access site-wide contact form'));
     $this->drupalLogin($admin_user);
     $name = $this->randomName(16);
     $edit = array(
@@ -144,6 +144,27 @@ class LocaleConfigTranslationTest extends WebTestBase {
 
     // Ensure that the translated configuration has been removed.
     $this->assertFalse(\Drupal::config('locale.config.xx.image.style.medium')->get('label'), 'Translated configuration for image module removed.');
+
+    // Translate default category using the UI so configuration is refreshed.
+    $category_label = $this->randomName(20);
+    $search = array(
+      'string' => 'Website feedback',
+      'langcode' => $langcode,
+      'translation' => 'all',
+    );
+    $this->drupalPostForm('admin/config/regional/translate', $search, t('Filter'));
+    $textarea = current($this->xpath('//textarea'));
+    $lid = (string) $textarea[0]['name'];
+    $edit = array(
+      $lid => $category_label,
+    );
+    $this->drupalPostForm('admin/config/regional/translate', $edit, t('Save translations'));
+
+    // Check if this category displayed in this language will use the
+    // translation. This test ensures the entity loaded from the request
+    // upcasting will already work.
+    $this->drupalGet($langcode . '/contact/feedback');
+    $this->assertText($category_label);
   }
 
 }
