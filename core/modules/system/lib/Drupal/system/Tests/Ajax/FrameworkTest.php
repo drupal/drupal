@@ -210,7 +210,7 @@ class FrameworkTest extends AjaxTestBase {
     $this->drupalPostAjaxForm('ajax_forms_test_lazy_load_form', array('add_files' => TRUE), array('op' => t('Submit')));
 
     // Verify that the resulting HTML does not load the overridden CSS file.
-    // We add a "?" to the assertion, because Drupal.settings may include
+    // We add a "?" to the assertion, because drupalSettings may include
     // information about the file; we only really care about whether it appears
     // in a LINK or STYLE tag, for which Drupal always adds a query string for
     // cache control.

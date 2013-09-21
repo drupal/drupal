@@ -129,7 +129,7 @@ class AjaxResponse extends JsonResponse {
       $this->addCommand($resource_command, TRUE);
     }
 
-    // Prepend a command to merge changes and additions to Drupal.settings.
+    // Prepend a command to merge changes and additions to drupalSettings.
     $scripts = drupal_add_js();
     if (!empty($scripts['settings'])) {
       $settings = drupal_merge_js_settings($scripts['settings']['data']);

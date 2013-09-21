@@ -978,7 +978,7 @@ Drupal.viewsUi.resizeModal = function (e, no_shrink) {
   });
 
   // Ensure inner popup height matches.
-  $(Drupal.settings.views.ajax.popup).css('height', height + 'px');
+  $(drupalSettings.views.ajax.popup).css('height', height + 'px');
 
   $scroll.css({
     'height': scrollHeight + 'px',

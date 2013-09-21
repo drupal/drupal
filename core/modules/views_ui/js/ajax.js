@@ -2,14 +2,14 @@
  * @file
  * Handles AJAX submission and response in Views UI.
  */
-(function ($) {
+(function ($, Drupal, drupalSettings) {
 
   "use strict";
 
   Drupal.AjaxCommands.prototype.viewsSetForm = function (ajax, response, status) {
-    var ajax_title = Drupal.settings.views.ajax.title;
-    var ajax_body = Drupal.settings.views.ajax.id;
-    var ajax_popup = Drupal.settings.views.ajax.popup;
+    var ajax_title = drupalSettings.views.ajax.title;
+    var ajax_body = drupalSettings.views.ajax.id;
+    var ajax_popup = drupalSettings.views.ajax.popup;
     $(ajax_title).html('<h2>' + response.title + '</h2>');
     $(ajax_body).html(response.output);
     $(ajax_popup).dialog('open');
@@ -38,8 +38,8 @@
   };
 
   Drupal.AjaxCommands.prototype.viewsDismissForm = function (ajax, response, status) {
-    Drupal.AjaxCommands.prototype.viewsSetForm({}, {'title': '', 'output': Drupal.settings.views.ajax.defaultForm});
-    $(Drupal.settings.views.ajax.popup).dialog('close');
+    Drupal.AjaxCommands.prototype.viewsSetForm({}, {'title': '', 'output': drupalSettings.views.ajax.defaultForm});
+    $(drupalSettings.views.ajax.popup).dialog('close');
   };
 
   Drupal.AjaxCommands.prototype.viewsHighlight = function (ajax, response, status) {
@@ -220,4 +220,4 @@
     }
   };
 
-})(jQuery);
+})(jQuery, Drupal, drupalSettings);

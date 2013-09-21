@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, Drupal, drupalSettings) {
 
 "use strict";
 
@@ -1069,9 +1069,9 @@ Drupal.tableDrag.prototype.row.prototype.isValidSwap = function (row) {
  *   DOM element what will be swapped with the row group.
  */
 Drupal.tableDrag.prototype.row.prototype.swap = function (position, row) {
-  Drupal.detachBehaviors(this.group, Drupal.settings, 'move');
+  Drupal.detachBehaviors(this.group, drupalSettings, 'move');
   $(row)[position](this.group);
-  Drupal.attachBehaviors(this.group, Drupal.settings);
+  Drupal.attachBehaviors(this.group, drupalSettings);
   this.changed = true;
   this.onSwap(row);
 };
@@ -1257,4 +1257,4 @@ $.extend(Drupal.theme, {
   }
 });
 
-})(jQuery);
+})(jQuery, Drupal, drupalSettings);

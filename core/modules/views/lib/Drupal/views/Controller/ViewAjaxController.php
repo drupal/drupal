@@ -127,7 +127,7 @@ class ViewAjaxController implements ContainerInjectionInterface {
           $response->addCommand(new ScrollTopCommand(".view-dom-id-$dom_id"));
           $view->displayHandlers->get($display_id)->setOption('pager_element', $pager_element);
         }
-        // Reuse the same DOM id so it matches that in Drupal.settings.
+        // Reuse the same DOM id so it matches that in drupalSettings.
         $view->dom_id = $dom_id;
 
         $preview = $view->preview($display_id, $args);

@@ -14,9 +14,6 @@ if (window.jQuery) {
 
 "use strict";
 
-// Populate Drupal.settings with the drupalSettings variable.
-Drupal.settings = drupalSettings;
-
 /**
  * Custom error type thrown after attach/detach if one or more behaviors failed.
  *
@@ -75,7 +72,7 @@ DrupalBehaviorError.prototype = new Error();
  *   is used.
  * @param settings
  *   An object containing settings for the current context. If none is given,
- *   the global Drupal.settings object is used.
+ *   the global drupalSettings object is used.
  */
 Drupal.attachBehaviors = function (context, settings) {
   context = context || document;
@@ -120,7 +117,7 @@ domready(function () { Drupal.attachBehaviors(document, drupalSettings); });
  *   is used.
  * @param settings
  *   An object containing settings for the current context. If none given, the
- *   global Drupal.settings object is used.
+ *   global drupalSettings object is used.
  * @param trigger
  *   A string containing what's causing the behaviors to be detached. The
  *   possible triggers are:
