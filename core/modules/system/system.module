@@ -893,11 +893,8 @@ function system_menu() {
     );
     $items['admin/config/regional/date-time/locale/%/edit'] = array(
       'title' => 'Localize date formats',
+      'route_name' => 'system.localize_date_format',
       'description' => 'Configure date formats for each locale',
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('system_date_format_localize_form', 5),
-      'access arguments' => array('administer site configuration'),
-      'file' => 'system.admin.inc',
     );
     $items['admin/config/regional/date-time/locale/%/reset'] = array(
       'title' => 'Reset date formats',

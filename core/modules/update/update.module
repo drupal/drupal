@@ -187,23 +187,15 @@ function update_menu() {
   );
   foreach ($paths as $context => $path) {
     $items[$path . '/install'] = array(
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('update_manager_install_form', $context),
-      'access callback' => 'update_manager_access',
-      'access arguments' => array(),
+      'route_name' => "update.{$context}_install",
       'weight' => 25,
       'type' => MENU_LOCAL_ACTION,
-      'file' => 'update.manager.inc',
     );
     $items[$path . '/update'] = array(
-      'page callback' => 'drupal_get_form',
-      'page arguments' => array('update_manager_update_form', $context),
-      'access callback' => 'update_manager_access',
-      'access arguments' => array(),
+      'route_name' => "update.{$context}_update",
       'weight' => 10,
       'title' => 'Update',
       'type' => MENU_LOCAL_TASK,
-      'file' => 'update.manager.inc',
     );
   }
   // Customize the titles of the action links depending on where they appear.
@@ -211,18 +203,6 @@ function update_menu() {
   $items['admin/reports/updates/install'] += array('title' => 'Install new module or theme');
   $items['admin/modules/install'] += array('title' => 'Install new module');
   $items['admin/appearance/install'] += array('title' => 'Install new theme');
-
-  // Menu callback used for the confirmation page after all the releases
-  // have been downloaded, asking you to backup before installing updates.
-  $items['admin/update/ready'] = array(
-    'title' => 'Ready to update',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('update_manager_update_ready_form'),
-    'access callback' => 'update_manager_access',
-    'access arguments' => array(),
-    'type' => MENU_CALLBACK,
-    'file' => 'update.manager.inc',
-  );
 
   return $items;
 }

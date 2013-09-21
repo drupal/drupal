@@ -113,20 +113,12 @@ function shortcut_menu() {
   );
   $items['admin/config/user-interface/shortcut/manage/%shortcut_set/add-link'] = array(
     'title' => 'Add shortcut',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('shortcut_link_add', 5),
-    'access callback' => 'shortcut_set_edit_access',
-    'access arguments' => array(5),
+    'route_name' => 'shortcut.link_edit',
     'type' => MENU_LOCAL_ACTION,
-    'file' => 'shortcut.admin.inc',
   );
   $items['admin/config/user-interface/shortcut/link/%menu_link'] = array(
     'title' => 'Edit shortcut',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('shortcut_link_edit', 5),
-    'access callback' => 'shortcut_link_access',
-    'access arguments' => array(5),
-    'file' => 'shortcut.admin.inc',
+    'route_name' => 'shortcut.link_edit',
   );
   $items['admin/config/user-interface/shortcut/link/%menu_link/delete'] = array(
     'title' => 'Delete shortcut',
@@ -134,12 +126,8 @@ function shortcut_menu() {
   );
   $items['user/%user/shortcuts'] = array(
     'title' => 'Shortcuts',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('shortcut_set_switch', 1),
-    'access callback' => 'shortcut_set_switch_access',
-    'access arguments' => array(1),
+    'route_name' => 'shortcut.overview',
     'type' => MENU_LOCAL_TASK,
-    'file' => 'shortcut.admin.inc',
   );
 
   return $items;

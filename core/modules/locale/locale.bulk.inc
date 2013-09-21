@@ -17,6 +17,8 @@ use Drupal\file\FileInterface;
  *
  * @see locale_translate_import_form_submit()
  * @ingroup forms
+ *
+ * @deprecated Use \Drupal\locale\Form\LocaleForm::import()
  */
 function locale_translate_import_form($form, &$form_state) {
   drupal_static_reset('language_list');
@@ -144,6 +146,8 @@ function locale_translate_import_form_submit($form, &$form_state) {
  *
  * @see locale_translate_export_form_submit()
  * @ingroup forms
+ *
+ * @deprecated Use \Drupal\locale\Form\LocaleForm::export()
  */
 function locale_translate_export_form($form, &$form_state) {
   $languages = language_list();

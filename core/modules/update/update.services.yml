@@ -1,0 +1,6 @@
+services:
+  access_check.update.manager_access:
+    class: Drupal\update\Access\UpdateManagerAccessCheck
+    arguments: ['@settings']
+    tags:
+      - { name: access_check }

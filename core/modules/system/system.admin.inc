@@ -734,6 +734,8 @@ function theme_system_themes_page($variables) {
  * @see locale_menu()
  * @see system_date_format_localize_form_submit()
  * @ingroup forms
+ *
+ * @deprecated Use \Drupal\system\Form\SystemForm::localizeDateFormat()
  */
 function system_date_format_localize_form($form, &$form_state, $langcode) {
   // Display the current language name.

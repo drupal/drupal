@@ -26,6 +26,8 @@ function language_admin_predefined_list() {
 
 /**
  * Builds the configuration form for language negotiation.
+ *
+ * @deprecated Use \Drupal\language\Form\LanguageForm::negotiation()
  */
 function language_negotiation_configure_form() {
   language_negotiation_include();
