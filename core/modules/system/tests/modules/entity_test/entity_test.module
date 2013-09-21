@@ -159,6 +159,23 @@ function entity_test_entity_view_mode_info_alter(&$view_modes) {
 }
 
 /**
+ * Implements hook_entity_form_mode_info_alter().
+ */
+function entity_test_entity_form_mode_info_alter(&$form_modes) {
+  $entity_info = entity_get_info();
+  foreach ($entity_info as $entity_type => $info) {
+    if ($entity_info[$entity_type]['module'] == 'entity_test') {
+      $form_modes[$entity_type] = array(
+        'compact' => array(
+          'label' => t('Compact version'),
+          'status' => TRUE,
+        ),
+      );
+    }
+  }
+}
+
+/**
  * Implements hook_field_extra_fields().
  */
 function entity_test_field_extra_fields() {
