@@ -37,6 +37,9 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
+ *   },
+ *   links = {
+ *     "edit-form" = "admin/structure/block/manage/{block}"
  *   }
  * )
  */
@@ -114,18 +117,6 @@ class Block extends ConfigEntityBase implements BlockInterface {
     return $this->pluginBag->get($this->plugin);
   }
 
-  /**
-   * Overrides \Drupal\Core\Entity\Entity::uri();
-   */
-  public function uri() {
-    return array(
-      'path' => 'admin/structure/block/manage/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      ),
-    );
-  }
   /**
    * Overrides \Drupal\Core\Entity\Entity::label();
    */
