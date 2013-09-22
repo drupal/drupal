@@ -75,4 +75,14 @@ interface EntityRenderControllerInterface {
    *   be available for loading.
    */
   public function viewMultiple(array $entities = array(), $view_mode = 'full', $langcode = NULL);
+
+  /**
+   * Resets the entity render cache.
+   *
+   * @param array|null $ids
+   *   (optional) If specified, the cache is reset for the given entity IDs
+   *   only.
+   */
+  public function resetCache(array $ids = NULL);
+
 }

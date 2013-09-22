@@ -189,7 +189,7 @@ class Term extends EntityNG implements TermInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
-    parent::preSave($storage_controller, $update);
+    parent::postSave($storage_controller, $update);
 
     // Only change the parents if a value is set, keep the existing values if
     // not.

@@ -1232,4 +1232,19 @@ class ViewUI implements ViewStorageInterface {
     //   https://drupal.org/node/2004244.
     return array();
   }
+
+  /**
+   * {@inheritdoc}
+   */
+   public function referencedEntities() {
+     return $this->storage->referencedEntities();
+   }
+
+   /**
+    * {@inheritdoc}
+    */
+   public function changed() {
+     return $this->storage->changed();
+   }
+
 }

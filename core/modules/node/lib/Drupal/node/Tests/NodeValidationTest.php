@@ -7,19 +7,19 @@
 
 namespace Drupal\node\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
  * Tests node validation constraints.
  */
-class NodeValidationTest extends DrupalUnitTestBase {
+class NodeValidationTest extends EntityUnitTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('node', 'entity', 'field', 'text', 'field_sql_storage', 'filter');
+  public static $modules = array('node');
 
   public static function getInfo() {
     return array(
@@ -34,9 +34,7 @@ class NodeValidationTest extends DrupalUnitTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $this->installSchema('node', 'node');
-    $this->installSchema('node', 'node_field_data');
-    $this->installSchema('node', 'node_field_revision');
+    $this->installSchema('node', array('node', 'node_field_data', 'node_field_revision'));
 
     // Create a node type for testing.
     $type = entity_create('node_type', array('type' => 'page', 'name' => 'page'));
@@ -47,7 +45,8 @@ class NodeValidationTest extends DrupalUnitTestBase {
    * Tests the node validation constraints.
    */
   public function testValidation() {
-    $node = entity_create('node', array('type' => 'page', 'title' => 'test'));
+    $this->createUser();
+    $node = entity_create('node', array('type' => 'page', 'title' => 'test', 'uid' => 1));
     $violations = $node->validate();
     $this->assertEqual(count($violations), 0, 'No violations when validating a default node.');
 

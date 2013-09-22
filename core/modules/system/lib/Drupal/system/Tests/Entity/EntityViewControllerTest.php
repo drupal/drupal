@@ -84,7 +84,7 @@ class EntityViewControllerTest extends WebTestBase {
       'field_name' => 'field_test_text',
       'bundle' => 'entity_test_render',
     ))->save();
-    entity_get_display('entity_test_render', 'entity_test_render', 'full')
+    entity_get_display('entity_test_render', 'entity_test_render', 'default')
       ->setComponent('field_test_text', array('type' => 'text_default'))
       ->save();
 

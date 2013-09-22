@@ -43,7 +43,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
 
   public function setUp() {
     parent::setUp();
-    $this->installSchema('user', array('users_roles', 'users_data'));
+    $this->installSchema('user', array('users_data'));
     $this->installSchema('node', array('node', 'node_field_data', 'node_field_revision', 'node_access'));
     $this->installSchema('comment', array('comment', 'node_comment_statistics'));
   }

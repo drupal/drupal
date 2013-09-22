@@ -20,7 +20,7 @@ class UserValidationTest extends DrupalUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('field', 'user', 'system');
+  public static $modules = array('entity', 'field', 'user', 'system');
 
   public static function getInfo() {
     return array(

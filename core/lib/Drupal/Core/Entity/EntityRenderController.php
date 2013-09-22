@@ -6,8 +6,8 @@
  */
 
 namespace Drupal\Core\Entity;
-use Drupal\entity\Entity\EntityDisplay;
 
+use Drupal\entity\Entity\EntityDisplay;
 use Drupal\Core\Language\Language;
 
 /**
@@ -22,8 +22,37 @@ class EntityRenderController implements EntityRenderControllerInterface {
    */
   protected $entityType;
 
+  /**
+   * The entity info array.
+   *
+   * @var array
+   *
+   * @see entity_get_info()
+   */
+  protected $entityInfo;
+
+  /**
+   * An array of view mode info for the type of entities for which this
+   * controller is instantiated.
+   *
+   * @var array
+   */
+  protected $viewModesInfo;
+
+  /**
+   * The cache bin used to store the render cache.
+   *
+   * @todo Defaults to 'cache' for now, until http://drupal.org/node/1194136 is
+   * fixed.
+   *
+   * @var string
+   */
+  protected $cacheBin = 'cache';
+
   public function __construct($entity_type) {
     $this->entityType = $entity_type;
+    $this->entityInfo = entity_get_info($entity_type);
+    $this->viewModesInfo = entity_get_view_modes($entity_type);
   }
 
   /**
@@ -80,6 +109,23 @@ class EntityRenderController implements EntityRenderControllerInterface {
       '#view_mode' => $view_mode,
       '#langcode' => $langcode,
     );
+
+    // Cache the rendered output if permitted by the view mode and global entity
+    // type configuration. The isset() checks below are necessary because
+    // 'default' is not an actual view mode.
+    $view_mode_is_cacheable = !isset($this->viewModesInfo[$view_mode]) || (isset($this->viewModesInfo[$view_mode]) && $this->viewModesInfo[$view_mode]['cache']);
+    if ($view_mode_is_cacheable && !$entity->isNew() && !isset($entity->in_preview) && $this->entityInfo['render_cache']) {
+      $return['#cache'] = array(
+        'keys' => array('entity_view', $this->entityType, $entity->id(), $view_mode),
+        'granularity' => DRUPAL_CACHE_PER_ROLE,
+        'bin' => $this->cacheBin,
+        'tags' => array(
+          $this->entityType . '_view' => TRUE,
+          $this->entityType => array($entity->id()),
+        ),
+      );
+    }
+
     return $return;
   }
 
@@ -181,5 +227,21 @@ class EntityRenderController implements EntityRenderControllerInterface {
     }
 
     return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function resetCache(array $ids = NULL) {
+    if (isset($ids)) {
+      $tags = array();
+      foreach ($ids as $entity_id) {
+        $tags[$this->entityType][$entity_id] = $entity_id;
+      }
+      \Drupal::cache($this->cacheBin)->deleteTags($tags);
+    }
+    else {
+      \Drupal::cache($this->cacheBin)->deleteTags(array($this->entityType . '_view' => TRUE));
+    }
   }
 }

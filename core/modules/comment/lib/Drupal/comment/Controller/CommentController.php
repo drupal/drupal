@@ -219,6 +219,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
       elseif ($account->hasPermission('access content')) {
         // Display the node.
         $build['comment_node'] = $this->entityManager()->getRenderController('node')->view($node);
+        unset($build['comment_node']['#cache']);
       }
     }
     else {

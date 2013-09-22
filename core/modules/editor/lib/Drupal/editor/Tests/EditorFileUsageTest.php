@@ -7,19 +7,19 @@
 
 namespace Drupal\editor\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
  * Unit tests for editor.module's entity hooks to track file usage.
  */
-class EditorFileUsageTest extends DrupalUnitTestBase {
+class EditorFileUsageTest extends EntityUnitTestBase {
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('system', 'editor', 'editor_test', 'filter', 'node', 'entity', 'field', 'text', 'field_sql_storage', 'file');
+  public static $modules = array('editor', 'editor_test', 'node', 'file');
 
   public static function getInfo() {
     return array(
@@ -31,13 +31,8 @@ class EditorFileUsageTest extends DrupalUnitTestBase {
 
   function setUp() {
     parent::setUp();
-    $this->installSchema('system', 'url_alias');
-    $this->installSchema('node', 'node');
-    $this->installSchema('node', 'node_access');
-    $this->installSchema('node', 'node_field_data');
-    $this->installSchema('node', 'node_field_revision');
-    $this->installSchema('file', 'file_managed');
-    $this->installSchema('file', 'file_usage');
+    $this->installSchema('node', array('node', 'node_access', 'node_field_data', 'node_field_revision'));
+    $this->installSchema('file', array('file_managed', 'file_usage'));
 
     // Add text formats.
     $filtered_html_format = entity_create('filter_format', array(
@@ -71,13 +66,15 @@ class EditorFileUsageTest extends DrupalUnitTestBase {
     $this->assertIdentical(array(), file_usage()->listUsage($image), 'The image has zero usages.');
 
     // Test editor_entity_insert(): increment.
+    $this->createUser();
     $node = entity_create('node', array(
       'type' => 'page',
       'title' => 'test',
       'body' => array(
         'value' => '<p>Hello, world!</p><img src="awesome-llama.jpg" data-editor-file-uuid="' . $image->uuid() . '" />',
         'format' => 'filtered_html',
-      )
+      ),
+      'uid' => 1,
     ));
     $node->save();
     $this->assertIdentical(array('editor' => array('node' => array(1 => '1'))), file_usage()->listUsage($image), 'The image has 1 usage.');

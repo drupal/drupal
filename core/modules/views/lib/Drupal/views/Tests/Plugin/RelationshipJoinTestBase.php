@@ -20,7 +20,7 @@ abstract class RelationshipJoinTestBase extends PluginUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'user', 'field');
+  public static $modules = array('system', 'user', 'entity', 'field');
 
   /**
    * Overrides \Drupal\views\Tests\ViewUnitTestBase::setUpFixtures().

@@ -20,7 +20,7 @@ abstract class UserUnitTestBase extends ViewUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('user_test_views', 'user', 'system', 'field');
+  public static $modules = array('user_test_views', 'user', 'system', 'entity', 'field');
 
   /**
    * Users to use during this test.

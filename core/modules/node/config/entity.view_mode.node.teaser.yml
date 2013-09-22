@@ -1,4 +1,5 @@
 id: node.teaser
 label: Teaser
 status: '1'
+cache: '1'
 targetEntityType: node

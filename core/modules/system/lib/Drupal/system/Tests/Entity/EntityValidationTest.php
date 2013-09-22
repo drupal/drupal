@@ -37,7 +37,7 @@ class EntityValidationTest extends EntityUnitTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $this->installSchema('user', array('users_roles', 'users_data'));
+    $this->installSchema('user', array('users_data'));
     $this->installSchema('entity_test', array(
       'entity_test_mul',
       'entity_test_mul_property_data',

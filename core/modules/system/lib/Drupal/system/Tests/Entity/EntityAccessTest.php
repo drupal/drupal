@@ -29,7 +29,6 @@ class EntityAccessTest extends EntityUnitTestBase  {
 
   function setUp() {
     parent::setUp();
-    $this->installSchema('user', array('users_roles'));
     $this->installSchema('system', array('variable', 'url_alias'));
     $this->installConfig(array('language'));
 

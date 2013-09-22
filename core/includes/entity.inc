@@ -47,6 +47,18 @@ function entity_info_cache_clear() {
 }
 
 /**
+ * Clears the entity render cache for all entity types.
+ */
+function entity_render_cache_clear() {
+  $entity_manager = Drupal::entityManager();
+  foreach ($entity_manager->getDefinitions() as $entity_type => $info) {
+    if ($entity_manager->hasController($entity_type, 'render')) {
+      $entity_manager->getRenderController($entity_type)->resetCache();
+    }
+  }
+}
+
+/**
  * Returns the entity bundle info.
  *
  * @param string|null $entity_type
@@ -611,14 +623,19 @@ function entity_render_controller($entity_type) {
  * @param string $langcode
  *   (optional) For which language the entity should be rendered, defaults to
  *   the current content language.
+ * @param bool $reset
+ *   (optional) Whether to reset the render cache for the requested entity.
+ *   Defaults to FALSE.
  *
  * @return array
  *   A render array for the entity.
  */
-function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL) {
-  return \Drupal::entityManager()
-    ->getRenderController($entity->entityType())
-    ->view($entity, $view_mode, $langcode);
+function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL, $reset = FALSE) {
+  $render_controller = \Drupal::entityManager()->getRenderController($entity->entityType());
+  if ($reset) {
+    $render_controller->resetCache(array($entity->id()));
+  }
+  return $render_controller->view($entity, $view_mode, $langcode);
 }
 
 /**
@@ -631,15 +648,20 @@ function entity_view(EntityInterface $entity, $view_mode, $langcode = NULL) {
  * @param string $langcode
  *   (optional) For which language the entity should be rendered, defaults to
  *   the current content language.
+ * @param bool $reset
+ *   (optional) Whether to reset the render cache for the requested entities.
+ *   Defaults to FALSE.
  *
  * @return array
  *   A render array for the entities, indexed by the same keys as the
  *   entities array passed in $entities.
  */
-function entity_view_multiple(array $entities, $view_mode, $langcode = NULL) {
-  return \Drupal::entityManager()
-    ->getRenderController(reset($entities)->entityType())
-    ->viewMultiple($entities, $view_mode, $langcode);
+function entity_view_multiple(array $entities, $view_mode, $langcode = NULL, $reset = FALSE) {
+  $render_controller = \Drupal::entityManager()->getRenderController(reset($entities)->entityType());
+  if ($reset) {
+    $render_controller->resetCache(array_keys($entities));
+  }
+  return $render_controller->viewMultiple($entities, $view_mode, $langcode);
 }
 
 /**

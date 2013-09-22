@@ -31,7 +31,6 @@ class FilterAPITest extends EntityUnitTestBase {
     parent::setUp();
 
     $this->installConfig(array('system', 'filter'));
-    $this->installSchema('user', array('users_roles'));
 
     // Create Filtered HTML format.
     $filtered_html_format = entity_create('filter_format', array(

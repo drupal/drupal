@@ -121,6 +121,20 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   /**
    * {@inheritdoc}
    */
+  public function save() {
+    $return = parent::save();
+
+    // Reset the render cache for the target entity type.
+    if (\Drupal::entityManager()->hasController($this->targetEntityType, 'render')) {
+      \Drupal::entityManager()->getRenderController($this->targetEntityType)->resetCache();
+    }
+
+    return $return;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getExportProperties() {
     $names = array(
       'id',

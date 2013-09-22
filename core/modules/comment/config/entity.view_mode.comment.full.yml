@@ -1,4 +1,5 @@
 id: comment.full
 label: Full comment
 status: '0'
+cache: '1'
 targetEntityType: comment

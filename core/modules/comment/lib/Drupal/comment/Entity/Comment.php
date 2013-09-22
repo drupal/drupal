@@ -36,6 +36,7 @@ use Drupal\Core\Language\Language;
  *   uri_callback = "comment_uri",
  *   fieldable = TRUE,
  *   translatable = TRUE,
+ *   render_cache = FALSE,
  *   route_base_path = "admin/structure/types/manage/{bundle}/comment",
  *   bundle_prefix = "comment_node_",
  *   entity_keys = {

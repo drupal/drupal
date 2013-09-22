@@ -7,14 +7,14 @@
 
 namespace Drupal\node\Tests\Condition;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\system\Tests\Entity\EntityUnitTestBase;
 
 /**
  * Tests the node conditions.
  */
-class NodeConditionTest extends DrupalUnitTestBase {
+class NodeConditionTest extends EntityUnitTestBase {
 
-  public static $modules = array('system', 'node', 'field');
+  public static $modules = array('node');
 
   public static function getInfo() {
     return array(
@@ -24,11 +24,9 @@ class NodeConditionTest extends DrupalUnitTestBase {
     );
   }
 
-  protected function setUp() {
+  public function setUp() {
     parent::setUp();
-    $this->installSchema('node', 'node');
-    $this->installSchema('node', 'node_field_data');
-    $this->installSchema('node', 'node_field_revision');
+    $this->installSchema('node', array('node', 'node_field_data', 'node_field_revision'));
   }
 
   /**
@@ -36,13 +34,14 @@ class NodeConditionTest extends DrupalUnitTestBase {
    */
   function testConditions() {
     $manager = $this->container->get('plugin.manager.condition', $this->container->get('container.namespaces'));
+    $this->createUser();
 
     // Get some nodes of various types to check against.
-    $page = entity_create('node', array('type' => 'page', 'title' => $this->randomName()));
+    $page = entity_create('node', array('type' => 'page', 'title' => $this->randomName(), 'uid' => 1));
     $page->save();
-    $article = entity_create('node', array('type' => 'article', 'title' => $this->randomName()));
+    $article = entity_create('node', array('type' => 'article', 'title' => $this->randomName(), 'uid' => 1));
     $article->save();
-    $test = entity_create('node', array('type' => 'test', 'title' => $this->randomName()));
+    $test = entity_create('node', array('type' => 'test', 'title' => $this->randomName(), 'uid' => 1));
     $test->save();
 
     // Grab the node type condition and configure it to check against node type

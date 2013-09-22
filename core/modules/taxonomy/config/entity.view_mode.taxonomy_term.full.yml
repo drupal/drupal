@@ -1,4 +1,5 @@
 id: taxonomy_term.full
 label: Taxonomy term page
 status: '0'
+cache: '1'
 targetEntityType: taxonomy_term

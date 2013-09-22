@@ -143,15 +143,17 @@ function entity_test_entity_bundle_info() {
 function entity_test_entity_view_mode_info_alter(&$view_modes) {
   $entity_info = entity_get_info();
   foreach ($entity_info as $entity_type => $info) {
-    if ($entity_info[$entity_type]['module'] == 'entity_test') {
+    if ($entity_info[$entity_type]['module'] == 'entity_test' && !isset($view_modes[$entity_type])) {
       $view_modes[$entity_type] = array(
         'full' => array(
           'label' => t('Full object'),
           'status' => TRUE,
+          'cache' => TRUE,
         ),
         'teaser' => array(
           'label' => t('Teaser'),
           'status' => TRUE,
+          'cache' => TRUE,
         ),
       );
     }
