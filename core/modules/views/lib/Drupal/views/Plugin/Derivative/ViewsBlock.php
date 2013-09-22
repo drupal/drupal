@@ -30,7 +30,7 @@ class ViewsBlock implements ContainerDerivativeInterface {
    *
    * @var string
    */
-  protected $base_plugin_id;
+  protected $basePluginId;
 
   /**
    * The view storage controller.
