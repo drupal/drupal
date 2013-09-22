@@ -191,6 +191,9 @@ services:
   controller_resolver:
     class: Drupal\Core\Controller\ControllerResolver
     arguments: ['@service_container']
+  title_resolver:
+    class: Drupal\Core\Controller\TitleResolver
+    arguments: ['@controller_resolver', '@string_translation']
   http_kernel:
     class: Drupal\Core\HttpKernel
     arguments: ['@event_dispatcher', '@service_container', '@controller_resolver']
@@ -358,7 +361,7 @@ services:
       - { name: event_subscriber }
   controller.page:
     class: Drupal\Core\Controller\HtmlPageController
-    arguments: ['@http_kernel', '@controller_resolver', '@string_translation']
+    arguments: ['@http_kernel', '@controller_resolver', '@string_translation', '@title_resolver']
   controller.dialog:
     class: Drupal\Core\Controller\DialogController
     arguments: ['@http_kernel']

@@ -115,6 +115,7 @@ user.view:
   path: '/user/{user}'
   defaults:
     _entity_view: 'user.full'
+    _title_callback: 'Drupal\user\Controller\UserController::userTitle'
   requirements:
     user: \d+
     _entity_access: 'user.view'

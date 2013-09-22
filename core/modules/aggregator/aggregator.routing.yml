@@ -2,6 +2,7 @@ aggregator.admin_overview:
   path: '/admin/config/services/aggregator'
   defaults:
     _content: '\Drupal\aggregator\Controller\AggregatorController::adminOverview'
+    _title: 'Feed aggregator'
   requirements:
     _permission: 'administer news feeds'
 
