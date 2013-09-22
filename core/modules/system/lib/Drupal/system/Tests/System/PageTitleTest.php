@@ -125,9 +125,10 @@ class PageTitleTest extends WebTestBase {
   /**
    * Tests the page title of render arrays.
    *
-   * @see \Drupal\test_page_test\Controller\Test::renderTitle()
+   * @see \Drupal\test_page_test\Controller\Test
    */
-  public function testRenderTitle() {
+  public function testRoutingTitle() {
+    // Test the '#title' render array attribute.
     $this->drupalGet('test-render-title');
 
     $this->assertTitle('Foo | Drupal');
@@ -159,6 +160,13 @@ class PageTitleTest extends WebTestBase {
     $this->assertTitle('Static title translated | Drupal');
     $result = $this->xpath('//h1');
     $this->assertEqual('Static title translated', (string) $result[0]);
+
+    // Test the dynamic '_title_callback' route option.
+    $this->drupalGet('test-page-dynamic-title');
+
+    $this->assertTitle('Dynamic title | Drupal');
+    $result = $this->xpath('//h1');
+    $this->assertEqual('Dynamic title', (string) $result[0]);
   }
 
 }

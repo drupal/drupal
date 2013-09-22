@@ -7,6 +7,7 @@
 
 namespace Drupal\user\Controller;
 
+use Drupal\Component\Utility\Xss;
 use Drupal\user\Form\UserLoginForm;
 use Drupal\user\UserInterface;
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -40,6 +41,19 @@ class UserController extends ContainerAware {
       $response = drupal_get_form(UserLoginForm::create($this->container), $request);
     }
     return $response;
+  }
+
+  /**
+   * Route title callback.
+   *
+   * @param \Drupal\user\UserInterface $user
+   *   The user account.
+   *
+   * @return string
+   *   The user account name.
+   */
+  public function userTitle(UserInterface $user = NULL) {
+    return $user ? Xss::filter($user->getUsername()) : '';
   }
 
   /**

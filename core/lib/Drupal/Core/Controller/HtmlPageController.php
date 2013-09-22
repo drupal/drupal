@@ -8,6 +8,7 @@
 namespace Drupal\Core\Controller;
 
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -39,16 +40,28 @@ class HtmlPageController {
   protected $translationManager;
 
   /**
+   * The title resolver.
+   *
+   * @var \Drupal\Core\Controller\TitleResolver
+   */
+  protected $titleResolver;
+
+  /**
    * Constructs a new HtmlPageController.
    *
    * @param \Symfony\Component\HttpKernel\HttpKernelInterface $kernel
    * @param \Drupal\Core\Controller\ControllerResolverInterface $controller_resolver
    *   The controller resolver.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation_manager
+   *   The translation manager.
+   * @param \Drupal\Core\Controller\TitleResolver $title_resolver
+   *   The title resolver.
    */
-  public function __construct(HttpKernelInterface $kernel, ControllerResolverInterface $controller_resolver, TranslationInterface $translation_manager) {
+  public function __construct(HttpKernelInterface $kernel, ControllerResolverInterface $controller_resolver, TranslationInterface $translation_manager, TitleResolver $title_resolver) {
     $this->httpKernel = $kernel;
     $this->controllerResolver = $controller_resolver;
     $this->translationManager = $translation_manager;
+    $this->titleResolver = $title_resolver;
   }
 
   /**
@@ -74,9 +87,12 @@ class HtmlPageController {
         '#markup' => $page_content,
       );
     }
-    // If no title was returned fall back to one defined in the route.
-    if (!isset($page_content['#title']) && $request->attributes->has('_title')) {
-      $page_content['#title'] = $this->t($request->attributes->get('_title'));
+    if (!isset($page_content['#title'])) {
+      $title = $this->titleResolver->getTitle($request, $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
+      // Ensure that #title will not be set if no title was returned.
+      if (isset($title)) {
+        $page_content['#title'] = $title;
+      }
     }
 
     $response = new Response(drupal_render_page($page_content));
