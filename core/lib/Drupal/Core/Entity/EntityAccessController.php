@@ -44,7 +44,7 @@ class EntityAccessController implements EntityAccessControllerInterface {
    *   The entity type of the access controller instance.
    */
   public function __construct($entity_type) {
-    $this->entity_type = $entity_type;
+    $this->entityType = $entity_type;
   }
 
   /**
@@ -58,15 +58,19 @@ class EntityAccessController implements EntityAccessControllerInterface {
       return $access;
     }
 
-    // Invoke hook_entity_access(), hook results take precedence over overridden
-    // implementations of EntityAccessController::checkAccess(). Entities
-    // that have checks that need to be done before the hook is invoked should
-    // do so by overridding this method.
+    // Invoke hook_entity_access() and hook_ENTITY_TYPE_access(). Hook results
+    // take precedence over overridden implementations of
+    // EntityAccessController::checkAccess(). Entities that have checks that
+    // need to be done before the hook is invoked should do so by overriding
+    // this method.
 
     // We grant access to the entity if both of these conditions are met:
     // - No modules say to deny access.
     // - At least one module says to grant access.
-    $access = $this->moduleHandler->invokeAll($entity->entityType() . '_access', array($entity, $operation, $account, $langcode));
+    $access = array_merge(
+      $this->moduleHandler->invokeAll('entity_access', array($entity, $operation, $account, $langcode)),
+      $this->moduleHandler->invokeAll($entity->entityType() . '_access', array($entity, $operation, $account, $langcode))
+    );
 
     if (($return = $this->processAccessHookResults($access)) === NULL) {
       // No module had an opinion about the access, so let's the access
@@ -196,15 +200,19 @@ class EntityAccessController implements EntityAccessControllerInterface {
       return $access;
     }
 
-    // Invoke hook_entity_access(), hook results take precedence over overridden
-    // implementations of EntityAccessController::checkAccess(). Entities
-    // that have checks that need to be done before the hook is invoked should
-    // do so by overridding this method.
+    // Invoke hook_entity_create_access() and hook_ENTITY_TYPE_create_access().
+    // Hook results take precedence over overridden implementations of
+    // EntityAccessController::checkAccess(). Entities that have checks that
+    // need to be done before the hook is invoked should do so by overriding
+    // this method.
 
     // We grant access to the entity if both of these conditions are met:
     // - No modules say to deny access.
     // - At least one module says to grant access.
-    $access = $this->moduleHandler->invokeAll($this->entity_type . '_create_access', array($account, $context['langcode']));
+    $access = array_merge(
+      $this->moduleHandler->invokeAll('entity_create_access', array($account, $context['langcode'])),
+      $this->moduleHandler->invokeAll($this->entityType . '_create_access', array($account, $context['langcode']))
+    );
 
     if (($return = $this->processAccessHookResults($access)) === NULL) {
       // No module had an opinion about the access, so let's the access

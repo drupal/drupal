@@ -11,6 +11,86 @@
  */
 
 /**
+ * Control entity operation access.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity to check access to.
+ * @param string $operation
+ *   The operation that is to be performed on $entity.
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *    The account trying to access the entity.
+ * @param string $langcode
+ *    The code of the language $entity is accessed in.
+ *
+ * @return bool|null
+ *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
+ *   deny access.
+ *
+ * @see \Drupal\Core\Entity\EntityAccessController
+ */
+function hook_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account, $langcode) {
+  return NULL;
+}
+
+/**
+ * Control entity operation access for a specific entity type.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity to check access to.
+ * @param string $operation
+ *   The operation that is to be performed on $entity.
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *    The account trying to access the entity.
+ * @param string $langcode
+ *    The code of the language $entity is accessed in.
+ *
+ * @return bool|null
+ *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
+ *   deny access.
+ *
+ * @see \Drupal\Core\Entity\EntityAccessController
+ */
+function hook_ENTITY_TYPE_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account, $langcode) {
+  return NULL;
+}
+
+/**
+ * Control entity create access.
+ *
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *    The account trying to access the entity.
+ * @param string $langcode
+ *    The code of the language $entity is accessed in.
+ *
+ * @return bool|null
+ *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
+ *   deny access.
+ *
+ * @see \Drupal\Core\Entity\EntityAccessController
+ */
+function hook_entity_create_access(\Drupal\Core\Session\AccountInterface $account, $langcode) {
+  return NULL;
+}
+
+/**
+ * Control entity create access for a specific entity type.
+ *
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *    The account trying to access the entity.
+ * @param string $langcode
+ *    The code of the language $entity is accessed in.
+ *
+ * @return bool|null
+ *   A boolean to explicitly allow or deny access, or NULL to neither allow nor
+ *   deny access.
+ *
+ * @see \Drupal\Core\Entity\EntityAccessController
+ */
+function hook_ENTITY_TYPE_create_access(\Drupal\Core\Session\AccountInterface $account, $langcode) {
+  return NULL;
+}
+
+/**
  * Add to entity type definitions.
  *
  * Modules may implement this hook to add information to defined entity types.
