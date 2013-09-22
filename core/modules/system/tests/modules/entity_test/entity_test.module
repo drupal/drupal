@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\entity\Entity\EntityFormDisplay;
 use Drupal\field\Entity\Field;
 use Drupal\field\Entity\FieldInstance;
@@ -528,4 +529,32 @@ function entity_test_entity_prepare_view($entity_type, array $entities, array $d
       }
     }
   }
+}
+
+/**
+ * Implements hook_entity_access().
+ */
+function entity_test_entity_access(EntityInterface $entity, $operation, AccountInterface $account, $langcode) {
+  \Drupal::state()->set('entity_test_entity_access', TRUE);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function entity_test_entity_test_access(EntityInterface $entity, $operation, AccountInterface $account, $langcode) {
+  \Drupal::state()->set('entity_test_entity_test_access', TRUE);
+}
+
+/**
+ * Implements hook_entity_create_access().
+ */
+function entity_test_entity_create_access(AccountInterface $account, $langcode) {
+  \Drupal::state()->set('entity_test_entity_create_access', TRUE);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_create_access().
+ */
+function entity_test_entity_test_create_access(AccountInterface $account, $langcode) {
+  \Drupal::state()->set('entity_test_entity_test_create_access', TRUE);
 }
