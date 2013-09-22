@@ -1,4 +1,5 @@
 id: user.compact
 label: Compact
 status: '1'
+cache: '1'
 targetEntityType: user

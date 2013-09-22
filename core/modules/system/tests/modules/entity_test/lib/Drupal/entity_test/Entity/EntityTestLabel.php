@@ -18,9 +18,11 @@ use Drupal\Core\Annotation\Translation;
  *   label = @Translation("Entity Test label"),
  *   module = "entity_test",
  *   controllers = {
- *     "storage" = "Drupal\entity_test\EntityTestStorageController"
+ *     "storage" = "Drupal\entity_test\EntityTestStorageController",
+ *     "render" = "Drupal\entity_test\EntityTestRenderController"
  *   },
  *   base_table = "entity_test",
+ *   render_cache = FALSE,
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "name",

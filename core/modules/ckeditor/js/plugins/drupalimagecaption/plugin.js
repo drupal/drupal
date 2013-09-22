@@ -114,6 +114,13 @@ CKEDITOR.plugins.add('drupalimagecaption', {
         if (this.data.data_align) {
           el.attributes['data-align'] = this.data.data_align;
         }
+
+        if (!this.data.width) {
+          el.attributes['data-cke-saved-width'] = this.parts.image.$.naturalWidth;
+        }
+        if (!this.data.height) {
+          el.attributes['data-cke-saved-height'] = this.parts.image.$.naturalHeight;
+        }
       },
 
       _selectionWillCreateInlineImage: function () {

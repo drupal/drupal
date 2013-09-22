@@ -2,7 +2,7 @@
  * @file
  * Preview for the Bartik theme.
  */
-(function ($) {
+(function ($, Drupal, drupalSettings) {
 
   "use strict";
 
@@ -11,11 +11,11 @@
     callback: function(context, settings, form, farb, height, width) {
       // Change the logo to be the real one.
       if (!this.logoChanged) {
-        $('#preview #preview-logo img').attr('src', Drupal.settings.color.logo);
+        $('#preview #preview-logo img').attr('src', drupalSettings.color.logo);
         this.logoChanged = true;
       }
       // Remove the logo if the setting is toggled off.
-      if (Drupal.settings.color.logo === null) {
+      if (drupalSettings.color.logo === null) {
         $('div').remove('#preview-logo');
       }
 
@@ -42,4 +42,4 @@
       form.find('#preview #preview-site-name').css('color', form.find('#palette input[name="palette[titleslogan]"]').val());
     }
   };
-})(jQuery);
+})(jQuery, Drupal, drupalSettings);

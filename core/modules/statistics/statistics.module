@@ -73,6 +73,17 @@ function statistics_node_view(EntityInterface $node, EntityDisplay $display, $vi
 }
 
 /**
+ * Implements hook_node_view_alter().
+ */
+function statistics_node_view_alter(&$build, EntityInterface $node, EntityDisplay $display) {
+  // If statistics were added to the node render array, we can't use the render
+  // cache.
+  if (isset($build['links']['statistics'])) {
+    unset($build['#cache']);
+  }
+}
+
+/**
  * Implements hook_menu().
  */
 function statistics_menu() {

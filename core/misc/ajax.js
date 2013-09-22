@@ -1,4 +1,4 @@
-(function ($, window) {
+(function ($, window, Drupal, drupalSettings) {
 
 "use strict";
 
@@ -366,7 +366,7 @@ Drupal.ajax.prototype.beforeSerialize = function (element, options) {
   // $.ajax(). When there is no form and $.ajax() is used, beforeSerialize()
   // isn't called, but don't rely on that: explicitly check this.form.
   if (this.form) {
-    var settings = this.settings || Drupal.settings;
+    var settings = this.settings || drupalSettings;
     Drupal.detachBehaviors(this.form, settings, 'serialize');
   }
 
@@ -385,7 +385,7 @@ Drupal.ajax.prototype.beforeSerialize = function (element, options) {
   // @see ajax_base_page_theme()
   // @see drupal_get_css()
   // @see drupal_get_js()
-  var pageState = Drupal.settings.ajaxPageState;
+  var pageState = drupalSettings.ajaxPageState;
   options.data['ajax_page_state[theme]'] = pageState.theme;
   options.data['ajax_page_state[theme_token]'] = pageState.theme_token;
   for (var cssFile in pageState.css) {
@@ -492,7 +492,7 @@ Drupal.ajax.prototype.success = function (response, status) {
   // commands is not sufficient, because behaviors from the entire form need
   // to be reattached.
   if (this.form) {
-    var settings = this.settings || Drupal.settings;
+    var settings = this.settings || drupalSettings;
     Drupal.attachBehaviors(this.form, settings);
   }
 
@@ -545,7 +545,7 @@ Drupal.ajax.prototype.error = function (response, uri) {
   $(this.element).removeClass('progress-disabled').prop('disabled', false);
   // Reattach behaviors, if they were detached in beforeSerialize().
   if (this.form) {
-    var settings = response.settings || this.settings || Drupal.settings;
+    var settings = response.settings || this.settings || drupalSettings;
     Drupal.attachBehaviors(this.form, settings);
   }
   throw new Drupal.AjaxError(response, uri);
@@ -596,7 +596,7 @@ Drupal.AjaxCommands.prototype = {
       case 'replaceAll':
       case 'empty':
       case 'remove':
-        settings = response.settings || ajax.settings || Drupal.settings;
+        settings = response.settings || ajax.settings || drupalSettings;
         Drupal.detachBehaviors(wrapper, settings);
     }
 
@@ -624,7 +624,7 @@ Drupal.AjaxCommands.prototype = {
     // optional.
     if (new_content.parents('html').length > 0) {
       // Apply any settings from the returned JSON if available.
-      settings = response.settings || ajax.settings || Drupal.settings;
+      settings = response.settings || ajax.settings || drupalSettings;
       Drupal.attachBehaviors(new_content, settings);
     }
   },
@@ -633,7 +633,7 @@ Drupal.AjaxCommands.prototype = {
    * Command to remove a chunk from the page.
    */
   remove: function (ajax, response, status) {
-    var settings = response.settings || ajax.settings || Drupal.settings;
+    var settings = response.settings || ajax.settings || drupalSettings;
     Drupal.detachBehaviors($(response.selector), settings);
     $(response.selector).remove();
   },
@@ -676,7 +676,7 @@ Drupal.AjaxCommands.prototype = {
    */
   settings: function (ajax, response, status) {
     if (response.merge) {
-      $.extend(true, Drupal.settings, response.settings);
+      $.extend(true, drupalSettings, response.settings);
     }
     else {
       ajax.settings = response.settings;
@@ -733,4 +733,4 @@ Drupal.AjaxCommands.prototype = {
   }
 };
 
-})(jQuery, this);
+})(jQuery, this, Drupal, drupalSettings);

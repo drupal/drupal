@@ -78,9 +78,9 @@ abstract class WebTestBase extends TestBase {
   protected $plainTextContent;
 
   /**
-   * The value of Drupal.settings for the currently-loaded page.
+   * The value of drupalSettings for the currently-loaded page.
    *
-   * Drupal.settings refers to the Drupal.settings JavaScript variable.
+   * drupalSettings refers to the drupalSettings JavaScript variable.
    *
    * @var Array
    */
@@ -2341,9 +2341,9 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Gets the value of Drupal.settings for the currently-loaded page.
+   * Gets the value of drupalSettings for the currently-loaded page.
    *
-   * Drupal.settings refers to the Drupal.settings JavaScript variable.
+   * drupalSettings refers to the drupalSettings JavaScript variable.
    */
   protected function drupalGetSettings() {
     return $this->drupalSettings;
@@ -2397,9 +2397,9 @@ abstract class WebTestBase extends TestBase {
   }
 
   /**
-   * Sets the value of Drupal.settings for the currently-loaded page.
+   * Sets the value of drupalSettings for the currently-loaded page.
    *
-   * Drupal.settings refers to the Drupal.settings JavaScript variable.
+   * drupalSettings refers to the drupalSettings JavaScript variable.
    */
   protected function drupalSetSettings($settings) {
     $this->drupalSettings = $settings;

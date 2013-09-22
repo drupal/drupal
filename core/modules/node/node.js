@@ -3,7 +3,7 @@
  * Defines Javascript behaviors for the node module.
  */
 
-(function ($) {
+(function ($, Drupal, drupalSettings) {
 
 "use strict";
 
@@ -27,7 +27,7 @@ Drupal.behaviors.nodeDetailsSummaries = {
 
     $context.find('.node-form-author').drupalSetSummary(function (context) {
       var $context = $(context);
-      var name = $context.find('.form-item-name input').val() || Drupal.settings.anonymous,
+      var name = $context.find('.form-item-name input').val() || drupalSettings.anonymous,
         date = $context.find('.form-item-date input').val();
       return date ?
         Drupal.t('By @name on @date', { '@name': name, '@date': date }) :
@@ -67,4 +67,4 @@ Drupal.behaviors.nodeDetailsSummaries = {
   }
 };
 
-})(jQuery);
+})(jQuery, Drupal, drupalSettings);

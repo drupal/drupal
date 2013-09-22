@@ -2063,7 +2063,7 @@ function drupal_html_id($id) {
  *   on.
  * - Add settings ('setting'): Adds settings to Drupal's global storage of
  *   JavaScript settings. Per-page settings are required by some modules to
- *   function properly. All settings will be accessible at Drupal.settings.
+ *   function properly. All settings will be accessible at drupalSettings.
  *
  * Examples:
  * @code
@@ -2108,9 +2108,9 @@ function drupal_html_id($id) {
  *     hosted on the local server. These files will not be aggregated if
  *     JavaScript aggregation is enabled.
  *   - 'setting': An associative array with configuration options. The array is
- *     merged directly into Drupal.settings. All modules should wrap their
+ *     merged directly into drupalSettings. All modules should wrap their
  *     actual configuration settings in another variable to prevent conflicts in
- *     the Drupal.settings namespace. Items added with a string key will replace
+ *     the drupalSettings namespace. Items added with a string key will replace
  *     existing settings with that key; items with numeric array keys will be
  *     added to the existing settings array.
  * @param $options
@@ -2371,7 +2371,7 @@ function drupal_get_js($scope = 'header', $javascript = NULL, $skip_alter = FALS
       // considered "used" and prevented from being added in a later AJAX
       // request.
       // Skip if no files were added to the page otherwise jQuery.extend() will
-      // overwrite the Drupal.settings.ajaxPageState.css object with an empty
+      // overwrite the drupalSettings.ajaxPageState.css object with an empty
       // array.
       $css = drupal_add_css();
       if (!empty($css)) {
@@ -4139,7 +4139,7 @@ function drupal_render_cache_set(&$markup, $elements) {
   }
   $bin = isset($elements['#cache']['bin']) ? $elements['#cache']['bin'] : 'cache';
   $expire = isset($elements['#cache']['expire']) ? $elements['#cache']['expire'] : CacheBackendInterface::CACHE_PERMANENT;
-  $tags = isset($elements['#cache']['tags']) ? $elements['#cache']['tags'] : array();
+  $tags = drupal_render_collect_cache_tags($elements);
   cache($bin)->set($cid, $data, $expire, $tags);
 }
 
@@ -4184,6 +4184,50 @@ function drupal_render_collect_attached($elements, $return = FALSE) {
     $attached = array();
     return $return;
   }
+}
+
+/**
+ * Collects cache tags for an element and its children into a single array.
+ *
+ * The cache tags array is returned in a format that is valid for
+ * \Drupal\Core\Cache\CacheBackendInterface::set().
+ *
+ * When caching elements, it is necessary to collect all cache tags into a
+ * single array, from both the element itself and all child elements. This
+ * allows items to be invalidated based on all tags attached to the content
+ * they're constituted from.
+ *
+ * @param array $element
+ *   The element to collect cache tags from.
+ * @param array $tags
+ *   (optional) An array of already collected cache tags (i.e. from a parent
+ *   element). Defaults to an empty array.
+ *
+ * @return array
+ *   The cache tags array for this element and its descendants.
+ */
+function drupal_render_collect_cache_tags($element, $tags = array()) {
+  if (isset($element['#cache']['tags'])) {
+    foreach ($element['#cache']['tags'] as $namespace => $values) {
+      if (is_array($values)) {
+        foreach ($values as $value) {
+          $tags[$namespace][$value] = $value;
+        }
+      }
+      else {
+        if (!isset($tags[$namespace])) {
+          $tags[$namespace] = $values;
+        }
+      }
+    }
+  }
+  if ($children = element_children($element)) {
+    foreach ($children as $child) {
+      $tags = drupal_render_collect_cache_tags($element[$child], $tags);
+    }
+  }
+
+  return $tags;
 }
 
 /**

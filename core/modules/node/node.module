@@ -585,6 +585,8 @@ function node_show(EntityInterface $node, $message = FALSE) {
 
   if ($message) {
     $page['#title'] = t('Revision of %title from %date', array('%title' => $node->label(), '%date' => format_date($node->getRevisionCreationTime())));
+    // Don't use the render cache when a revision is displayed.
+    unset($page['nodes'][$node->id()]['#cache']);
   }
 
   // Update the history table, stating that this user viewed this node.

@@ -285,6 +285,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
         $entity->{$field_name}->status = COMMENT_HIDDEN;
         // Render array of the entity full view mode.
         $build['comment_entity'] = entity_view($entity, 'full');
+        unset($build['comment_entity']['#cache']);
         $entity->{$field_name}->status = $original_value;
       }
     }

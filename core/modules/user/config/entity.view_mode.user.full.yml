@@ -1,4 +1,5 @@
 id: user.full
 label: User account
 status: '0'
+cache: '1'
 targetEntityType: user

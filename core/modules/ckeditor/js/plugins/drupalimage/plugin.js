@@ -89,8 +89,8 @@ CKEDITOR.plugins.add('drupalimage', {
             imageDOMElement = imageElement.$;
 
             // Width and height are populated by actual dimensions.
-            existingValues.width = imageDOMElement ? imageDOMElement.width : '';
-            existingValues.height = imageDOMElement ? imageDOMElement.height : '';
+            existingValues.width = imageDOMElement ? imageDOMElement.naturalWidth : '';
+            existingValues.height = imageDOMElement ? imageDOMElement.naturalHeight : '';
             // Populate all other attributes by their specified attribute values.
             var attribute = null, attributeName;
             for (var key = 0; key < imageDOMElement.attributes.length; key++) {

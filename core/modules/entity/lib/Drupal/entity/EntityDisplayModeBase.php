@@ -58,6 +58,13 @@ abstract class EntityDisplayModeBase extends ConfigEntityBase implements EntityD
   public $status = TRUE;
 
   /**
+   * Whether or not the rendered output of this view mode is cached by default.
+   *
+   * @var bool
+   */
+  public $cache = TRUE;
+
+  /**
    * {@inheritdoc}
    */
   public static function sort($a, $b) {

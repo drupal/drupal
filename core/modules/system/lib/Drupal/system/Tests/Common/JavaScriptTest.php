@@ -148,13 +148,13 @@ class JavaScriptTest extends DrupalUnitTestBase {
     $this->assertTrue(strpos($javascript, 'pathPrefix') > 0, 'Rendered JavaScript header returns pathPrefix setting.');
     $this->assertTrue(strpos($javascript, 'currentPath') > 0, 'Rendered JavaScript header returns currentPath setting.');
 
-    // Only the second of these two entries should appear in Drupal.settings.
+    // Only the second of these two entries should appear in drupalSettings.
     drupal_add_js(array('commonTest' => 'commonTestShouldNotAppear'), 'setting');
     drupal_add_js(array('commonTest' => 'commonTestShouldAppear'), 'setting');
-    // Only the second of these entries should appear in Drupal.settings.
+    // Only the second of these entries should appear in drupalSettings.
     drupal_add_js(array('commonTestJsArrayLiteral' => array('commonTestJsArrayLiteralOldValue')), 'setting');
     drupal_add_js(array('commonTestJsArrayLiteral' => array('commonTestJsArrayLiteralNewValue')), 'setting');
-    // Only the second of these two entries should appear in Drupal.settings.
+    // Only the second of these two entries should appear in drupalSettings.
     drupal_add_js(array('commonTestJsObjectLiteral' => array('key' => 'commonTestJsObjectLiteralOldValue')), 'setting');
     drupal_add_js(array('commonTestJsObjectLiteral' => array('key' => 'commonTestJsObjectLiteralNewValue')), 'setting');
     // Real world test case: multiple elements in a render array are adding the

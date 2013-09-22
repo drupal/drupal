@@ -325,4 +325,17 @@ interface EntityInterface extends IdentifiableInterface, ComplexDataInterface, A
    */
   public static function baseFieldDefinitions($entity_type);
 
+  /**
+   * Returns a list of entities referenced by this entity.
+   *
+   * @return array
+   *   An array of entities.
+   */
+  public function referencedEntities();
+
+  /**
+   * Acts on an entity after it was saved or deleted.
+   */
+  public function changed();
+
 }

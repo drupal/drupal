@@ -2,7 +2,7 @@
  * @file
  * Some basic behaviors and utility functions for Views.
  */
-(function ($) {
+(function ($, Drupal, drupalSettings) {
 
   "use strict";
 
@@ -63,7 +63,7 @@
    */
   Drupal.Views.getPath = function (href) {
     href = Drupal.Views.pathPortion(href);
-    href = href.substring(Drupal.settings.basePath.length, href.length);
+    href = href.substring(drupalSettings.basePath.length, href.length);
     // 3 is the length of the '?q=' added to the url without clean urls.
     if (href.substring(0, 3) === '?q=') {
       href = href.substring(3, href.length);
@@ -77,4 +77,4 @@
     return href;
   };
 
-})(jQuery);
+})(jQuery, Drupal, drupalSettings);

@@ -1,4 +1,4 @@
-(function ($) {
+(function ($, Drupal, drupalSettings) {
 
   "use strict";
 
@@ -6,8 +6,8 @@
     $.ajax({
       type: "POST",
       cache: false,
-      url: Drupal.settings.statistics.url,
-      data: Drupal.settings.statistics.data
+      url: drupalSettings.statistics.url,
+      data: drupalSettings.statistics.data
     });
   });
-})(jQuery);
+})(jQuery, Drupal, drupalSettings);

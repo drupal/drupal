@@ -3,7 +3,7 @@
  * Attaches the behaviors for the Overlay parent pages.
  */
 
-(function ($, Drupal, displace) {
+(function ($, Drupal, displace, drupalSettings) {
 
 "use strict";
 
@@ -372,13 +372,13 @@ Drupal.overlay.isAdminLink = function (url) {
   // Turn the list of administrative paths into a regular expression.
   if (!this.adminPathRegExp) {
     var prefix = '';
-    if (Drupal.settings.overlay.pathPrefixes.length) {
+    if (drupalSettings.overlay.pathPrefixes.length) {
       // Allow path prefixes used for language negatiation followed by slash,
       // and the empty string.
-      prefix = '(' + Drupal.settings.overlay.pathPrefixes.join('/|') + '/|)';
+      prefix = '(' + drupalSettings.overlay.pathPrefixes.join('/|') + '/|)';
     }
-    var adminPaths = '^' + prefix + '(' + Drupal.settings.overlay.paths.admin.replace(/\s+/g, '|') + ')$';
-    var nonAdminPaths = '^' + prefix + '(' + Drupal.settings.overlay.paths.non_admin.replace(/\s+/g, '|') + ')$';
+    var adminPaths = '^' + prefix + '(' + drupalSettings.overlay.paths.admin.replace(/\s+/g, '|') + ')$';
+    var nonAdminPaths = '^' + prefix + '(' + drupalSettings.overlay.paths.non_admin.replace(/\s+/g, '|') + ')$';
     adminPaths = adminPaths.replace(/\*/g, '.*');
     nonAdminPaths = nonAdminPaths.replace(/\*/g, '.*');
     this.adminPathRegExp = new RegExp(adminPaths);
@@ -750,9 +750,9 @@ Drupal.overlay.fragmentizeLink = function (link, parentLocation) {
 function refreshRegion(regionName, regionSelector) {
   var $region = $(regionSelector);
   Drupal.detachBehaviors($region);
-  $.get(Drupal.url(Drupal.settings.overlay.ajaxCallback + '/' + regionName), function (newElement) {
+  $.get(Drupal.url(drupalSettings.overlay.ajaxCallback + '/' + regionName), function (newElement) {
     $region.replaceWith($(newElement));
-    Drupal.attachBehaviors($region, Drupal.settings);
+    Drupal.attachBehaviors($region, drupalSettings);
   });
 }
 
@@ -827,7 +827,7 @@ Drupal.overlay.getPath = function (link) {
   if (path.charAt(0) !== '/') {
     path = '/' + path;
   }
-  path = path.replace(new RegExp(Drupal.settings.basePath + Drupal.settings.scriptPath), '');
+  path = path.replace(new RegExp(drupalSettings.basePath + drupalSettings.scriptPath), '');
 
   return path;
 };
@@ -875,4 +875,4 @@ $.extend(Drupal.theme, {
   }
 });
 
-})(jQuery, Drupal, Drupal.displace);
+})(jQuery, Drupal, Drupal.displace, drupalSettings);

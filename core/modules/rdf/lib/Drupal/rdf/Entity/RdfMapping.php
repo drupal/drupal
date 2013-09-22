@@ -10,6 +10,7 @@ namespace Drupal\rdf\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\rdf\RdfMappingInterface;
 
 /**
@@ -163,6 +164,17 @@ class RdfMapping extends ConfigEntityBase implements RdfMappingInterface {
       $properties[$name] = $this->get($name);
     }
     return $properties;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    parent::postSave($storage_controller, $update);
+
+    if (\Drupal::entityManager()->hasController($this->targetEntityType, 'render')) {
+      \Drupal::entityManager()->getRenderController($this->targetEntityType)->resetCache();
+    }
   }
 
 }

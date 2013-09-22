@@ -20,11 +20,14 @@
 
 "use strict";
 
-var options = $.extend({
-  strings: {
-    quickEdit: Drupal.t('Quick edit')
+var options = $.extend(drupalSettings.edit,
+  // Merge strings on top of drupalSettings so that they are not mutable.
+  {
+    strings: {
+      quickEdit: Drupal.t('Quick edit')
+    }
   }
-}, drupalSettings.edit);
+);
 
 /**
  * Tracks fields without metadata. Contains objects with the following keys:

@@ -8,6 +8,7 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Component\Uuid\Uuid;
+use Drupal\Core\Entity\Plugin\DataType\EntityReferenceItem;
 use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\TranslatableInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
@@ -611,6 +612,7 @@ class Entity implements \IteratorAggregate, EntityInterface {
    * {@inheritdoc}
    */
   public function postSave(EntityStorageControllerInterface $storage_controller, $update = TRUE) {
+    $this->changed();
   }
 
   /**
@@ -635,6 +637,9 @@ class Entity implements \IteratorAggregate, EntityInterface {
    * {@inheritdoc}
    */
   public static function postDelete(EntityStorageControllerInterface $storage_controller, array $entities) {
+    foreach ($entities as $entity) {
+      $entity->changed();
+    }
   }
 
   /**
@@ -696,6 +701,49 @@ class Entity implements \IteratorAggregate, EntityInterface {
    */
   public static function baseFieldDefinitions($entity_type) {
     return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function referencedEntities() {
+    $referenced_entities = array();
+
+    // @todo Remove when all entities are converted to EntityNG.
+    if (!$this->getPropertyDefinitions()) {
+      return $referenced_entities;
+    }
+
+    // Gather a list of referenced entities.
+    foreach ($this->getProperties() as $name => $definition) {
+      $field_items = $this->get($name);
+      foreach ($field_items as $offset => $field_item) {
+        if ($field_item instanceof EntityReferenceItem && $entity = $field_item->entity) {
+          $referenced_entities[] = $entity;
+        }
+      }
+    }
+
+    return $referenced_entities;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function changed() {
+    $referenced_entity_ids = array(
+      $this->entityType() => array($this->id() => TRUE),
+    );
+
+    foreach ($this->referencedEntities() as $referenced_entity) {
+      $referenced_entity_ids[$referenced_entity->entityType()][$referenced_entity->id()] = TRUE;
+    }
+
+    foreach ($referenced_entity_ids as $entity_type => $entity_ids) {
+      if (\Drupal::entityManager()->hasController($entity_type, 'render')) {
+        \Drupal::entityManager()->getRenderController($entity_type)->resetCache(array_keys($entity_ids));
+      }
+    }
   }
 
 }

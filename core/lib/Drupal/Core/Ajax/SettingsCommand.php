@@ -13,7 +13,7 @@ use Drupal\Core\Ajax\CommandInterface;
  * AJAX command for adjusting Drupal's JavaScript settings.
  *
  * The 'settings' command instructs the client either to use the given array as
- * the settings for ajax-loaded content or to extend Drupal.settings with the
+ * the settings for ajax-loaded content or to extend drupalSettings with the
  * given array, depending on the value of the $merge parameter.
  *
  * This command is implemented by Drupal.AjaxCommands.prototype.settings()
@@ -32,10 +32,10 @@ class SettingsCommand implements CommandInterface {
   protected $settings;
 
   /**
-   * Whether the settings should be merged into the global Drupal.settings.
+   * Whether the settings should be merged into the global drupalSettings.
    *
    * By default (FALSE), the settings that are passed to Drupal.attachBehaviors
-   * will not include the global Drupal.settings.
+   * will not include the global drupalSettings.
    *
    * @var boolean
    */
@@ -47,7 +47,7 @@ class SettingsCommand implements CommandInterface {
    * @param array $settings
    *   An array of key/value pairs of JavaScript settings.
    * @param boolean $merge
-   *   Whether the settings should be merged into the global Drupal.settings.
+   *   Whether the settings should be merged into the global drupalSettings.
    */
   public function __construct(array $settings, $merge = FALSE) {
     $this->settings = $settings;

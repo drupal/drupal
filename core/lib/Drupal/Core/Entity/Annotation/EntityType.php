@@ -138,6 +138,14 @@ class EntityType extends Plugin {
   public $static_cache = TRUE;
 
   /**
+   * Boolean indicating whether the rendered output of entities should be
+   * cached.
+   *
+   * @var bool (optional)
+   */
+  public $render_cache = TRUE;
+
+  /**
    * Boolean indicating whether entities of this type have multilingual support.
    *
    * At an entity level, this indicates language support and at a bundle level

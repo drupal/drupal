@@ -62,4 +62,9 @@ class BlockRenderController implements EntityRenderControllerInterface {
     return $build;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function resetCache(array $ids = NULL) { }
+
 }

@@ -3,7 +3,7 @@
  * Datepicker JavaScript for the Locale module.
  */
 
-(function ($) {
+(function ($, Drupal, drupalSettings) {
 
 "use strict";
 
@@ -12,7 +12,7 @@
  */
 Drupal.behaviors.localeDatepicker = {
   attach: function(context, settings) {
-    // This code accesses Drupal.settings and localized strings via Drupal.t().
+    // This code accesses drupalSettings and localized strings via Drupal.t().
     // So this code should run after these are initialized. By placing it in an
     // attach behavior this is assured.
     $.datepicker.regional['drupal-locale'] = $.extend({
@@ -78,9 +78,9 @@ Drupal.behaviors.localeDatepicker = {
       dateFormat: Drupal.t('mm/dd/yy'),
       firstDay: 0,
       isRTL: 0
-    }, Drupal.settings.jquery.ui.datepicker);
+    }, drupalSettings.jquery.ui.datepicker);
     $.datepicker.setDefaults($.datepicker.regional['drupal-locale']);
   }
 };
 
-})(jQuery);
+})(jQuery, Drupal, drupalSettings);

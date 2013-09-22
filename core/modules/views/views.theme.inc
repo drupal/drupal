@@ -99,7 +99,7 @@ function template_preprocess_views_view(&$variables) {
     // with its HTML, because one view may appear several times on the page. So
     // we set up a hash with the current time, $dom_id, to issue a "unique"
     // identifier for each view. This identifier is written to both
-    // Drupal.settings and the DIV wrapper.
+    // drupalSettings and the DIV wrapper.
     $variables['dom_id'] = $view->dom_id;
     $variables['attributes']['class'][] = 'view-dom-id-' . $variables['dom_id'];
   }
