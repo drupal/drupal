@@ -57,6 +57,20 @@ class AnnotatedClassDiscovery extends ComponentAnnotatedClassDiscovery {
   /**
    * {@inheritdoc}
    */
+  protected function getAnnotationReader() {
+    if (!isset($this->annotationReader)) {
+      $reader = parent::getAnnotationReader();
+
+      // Add the Core annotation classes like @Translation.
+      $reader->addNamespace('Drupal\Core\Annotation', array(DRUPAL_ROOT . '/core/lib/Drupal/Core/Annotation'));
+      $this->annotationReader = $reader;
+    }
+    return $this->annotationReader;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDefinitions() {
     $definitions = parent::getDefinitions();
     foreach ($definitions as &$definition) {

@@ -10,8 +10,6 @@ namespace Drupal\user\Entity;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityNG;
-use Drupal\Core\Entity\Annotation\EntityType;
-use Drupal\Core\Annotation\Translation;
 use Drupal\user\UserInterface;
 
 /**
