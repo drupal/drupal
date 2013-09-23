@@ -40,7 +40,7 @@ class ExtensionViewsFieldTest extends ViewUnitTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    ViewTestData::importTestViews(get_class($this), array('file_test_views'));
+    ViewTestData::createTestViews(get_class($this), array('file_test_views'));
   }
 
   /**

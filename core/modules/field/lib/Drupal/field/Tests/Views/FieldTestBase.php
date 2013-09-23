@@ -51,7 +51,7 @@ abstract class FieldTestBase extends ViewTestBase {
   protected function setUp() {
     parent::setUp();
 
-    ViewTestData::importTestViews(get_class($this), array('field_test_views'));
+    ViewTestData::createTestViews(get_class($this), array('field_test_views'));
   }
 
   function setUpFields($amount = 3) {

@@ -606,11 +606,6 @@ services:
     class: Drupal\Core\Authentication\Provider\Cookie
     tags:
       - { name: authentication_provider, priority: 0 }
-  authentication.http_basic:
-    class: Drupal\Core\Authentication\Provider\HttpBasic
-    arguments: ['@config.factory']
-    tags:
-      - { name: authentication_provider, priority: 100 }
   authentication_subscriber:
     class: Drupal\Core\EventSubscriber\AuthenticationSubscriber
     tags:

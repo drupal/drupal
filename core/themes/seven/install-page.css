@@ -50,10 +50,6 @@ body.install-page {
     width: 75%;
     max-width: 770px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    padding: 1em 2em 1em 0; /* LTR */
-  }
-  [dir="rtl"] body.install-page #page {
-    padding: 1em 0 1em 2em;
   }
   body.install-page #content {
     -webkit-box-sizing: border-box;
@@ -61,13 +57,12 @@ body.install-page {
     box-sizing: border-box;
     clear: none;
     float: left;
-    padding-left: 50px; /* LTR */
+    padding-left: 50px;
+    padding-right: 50px;
     width: 65%;
   }
   [dir="rtl"] body.install-page #content {
     float: right;
-    padding-left: 0;
-    padding-right: 50px;
   }
   ul{
     padding: 15px;

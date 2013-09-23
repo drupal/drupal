@@ -7,9 +7,8 @@
 
 namespace Drupal\Component\Plugin\Discovery;
 
-use Drupal\Component\Plugin\Discovery\DiscoveryInterface;
+use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Drupal\Component\Reflection\MockFileFinder;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Reflection\StaticReflectionParser;
 
@@ -36,6 +35,13 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   protected $pluginDefinitionAnnotationName;
 
   /**
+   * The doctrine annotation reader.
+   *
+   * @var \Doctrine\Common\Annotations\Reader
+   */
+  protected $annotationReader;
+
+  /**
    * Constructs an AnnotatedClassDiscovery object.
    *
    * @param array $plugin_namespaces
@@ -51,6 +57,23 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
   }
 
   /**
+   * Returns the used doctrine annotation reader.
+   *
+   * @return \Doctrine\Common\Annotations\Reader
+   *   The annotation reader.
+   */
+  protected function getAnnotationReader() {
+    if (!isset($this->annotationReader)) {
+      $this->annotationReader = new SimpleAnnotationReader();
+
+      // Add the namespaces from the main plugin annotation, like @EntityType.
+      $namespace = substr($this->pluginDefinitionAnnotationName, 0, strrpos($this->pluginDefinitionAnnotationName, '\\'));
+      $this->annotationReader->addNamespace($namespace);
+    }
+    return $this->annotationReader;
+  }
+
+  /**
    * Implements Drupal\Component\Plugin\Discovery\DiscoveryInterface::getDefinition().
    */
   public function getDefinition($plugin_id) {
@@ -63,10 +86,8 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
    */
   public function getDefinitions() {
     $definitions = array();
-    $reader = new AnnotationReader();
-    // Prevent @endlink from being parsed as an annotation.
-    $reader->addGlobalIgnoredName('endlink');
-    $reader->addGlobalIgnoredName('file');
+
+    $reader = $this->getAnnotationReader();
 
     // Clear the annotation loaders of any previous annotation classes.
     AnnotationRegistry::reset();

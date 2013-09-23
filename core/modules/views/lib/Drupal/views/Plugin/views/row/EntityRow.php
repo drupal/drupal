@@ -10,7 +10,6 @@ namespace Drupal\views\Plugin\views\row;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
 use Drupal\views\ViewExecutable;
-use Drupal\views\Annotation\ViewsRow;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

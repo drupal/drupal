@@ -7,8 +7,6 @@
 
 namespace Drupal\contact\Entity;
 
-use Drupal\Core\Entity\Annotation\EntityType;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\EntityNG;
 use Drupal\contact\MessageInterface;
 

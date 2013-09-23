@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Authentication\Provider\HttpBasic.
+ * Contains \Drupal\basic_auth\Authentication\Provider\HttpBasic.
  */
 
-namespace Drupal\Core\Authentication\Provider;
+namespace Drupal\basic_auth\Authentication\Provider;
 
 use \Drupal\Component\Utility\String;
 use Drupal\Core\Authentication\AuthenticationProviderInterface;

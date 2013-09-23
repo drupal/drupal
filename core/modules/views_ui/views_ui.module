@@ -210,6 +210,14 @@ function views_ui_library_info() {
     ),
   );
 
+  $libraries['views_ui.listing'] = array(
+    'title' => 'Views UI listing',
+    'version' => Drupal::VERSION,
+    'js' => array(
+      $path . 'views_ui.listing.js' => array('group' => JS_DEFAULT),
+    ),
+  );
+
   return $libraries;
 }
 

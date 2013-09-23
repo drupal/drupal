@@ -38,7 +38,7 @@ abstract class ViewTestBase extends WebTestBase {
     foreach (ViewExecutable::getPluginTypes() as $plugin_type) {
       $this->container->get("plugin.manager.views.$plugin_type")->clearCachedDefinitions();
     }
-    ViewTestData::importTestViews(get_class($this), array('views_test_config'));
+    ViewTestData::createTestViews(get_class($this), array('views_test_config'));
   }
 
   /**

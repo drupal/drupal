@@ -7,9 +7,6 @@
 
 namespace Drupal\views\Plugin\views\style;
 
-use Drupal\views\Annotation\ViewsStyle;
-use Drupal\Core\Annotation\Translation;
-
 /**
  * Unformatted style plugin to render rows one after another with no
  * decorations.

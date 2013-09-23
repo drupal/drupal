@@ -50,7 +50,7 @@ class StyleSerializerTest extends PluginTestBase {
   protected function setUp() {
     parent::setUp();
 
-    ViewTestData::importTestViews(get_class($this), array('rest_test_views'));
+    ViewTestData::createTestViews(get_class($this), array('rest_test_views'));
 
     $this->adminUser = $this->drupalCreateUser(array('administer views', 'administer entity_test content', 'access user profiles', 'view test entity'));
 

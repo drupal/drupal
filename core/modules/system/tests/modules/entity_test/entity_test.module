@@ -80,7 +80,7 @@ function entity_test_entity_info_alter(&$info) {
  *   'entity_test'.
  */
 function entity_test_create_bundle($bundle, $text = NULL, $entity_type = 'entity_test') {
-  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: array('entity_test' => array('label' => 'Entity Test Bundle'));
+  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: array($entity_type => array('label' => 'Entity Test Bundle'));
   $bundles += array($bundle => array('label' => $text ? $text : $bundle));
   \Drupal::state()->set($entity_type . '.bundles', $bundles);
 
@@ -99,7 +99,7 @@ function entity_test_create_bundle($bundle, $text = NULL, $entity_type = 'entity
  *   'entity_test'.
  */
 function entity_test_rename_bundle($bundle_old, $bundle_new, $entity_type = 'entity_test') {
-  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: array('entity_test' => array('label' => 'Entity Test Bundle'));
+  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: array($entity_type => array('label' => 'Entity Test Bundle'));
   $bundles[$bundle_new] = $bundles[$bundle_old];
   unset($bundles[$bundle_old]);
   \Drupal::state()->set($entity_type . '.bundles', $bundles);
@@ -117,7 +117,7 @@ function entity_test_rename_bundle($bundle_old, $bundle_new, $entity_type = 'ent
  *   'entity_test'.
  */
 function entity_test_delete_bundle($bundle, $entity_type = 'entity_test') {
-  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: array('entity_test' => array('label' => 'Entity Test Bundle'));
+  $bundles = \Drupal::state()->get($entity_type . '.bundles') ?: array($entity_type => array('label' => 'Entity Test Bundle'));
   unset($bundles[$bundle]);
   \Drupal::state()->set($entity_type . '.bundles', $bundles);
 

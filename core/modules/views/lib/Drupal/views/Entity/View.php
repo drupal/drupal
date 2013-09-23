@@ -13,8 +13,6 @@ use Drupal\views\Views;
 use Drupal\views_ui\ViewUI;
 use Drupal\views\ViewStorageInterface;
 use Drupal\views\ViewExecutable;
-use Drupal\Core\Entity\Annotation\EntityType;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines a View configuration entity class.

@@ -48,7 +48,7 @@ class ViewsIntegrationTest extends ViewUnitTestBase {
     $this->enableModules(array('system', 'dblog'));
     $this->installSchema('dblog', array('watchdog'));
 
-    ViewTestData::importTestViews(get_class($this), array('dblog_test_views'));
+    ViewTestData::createTestViews(get_class($this), array('dblog_test_views'));
   }
 
   /**

@@ -6,9 +6,6 @@
  */
 namespace Drupal\system\Tests\Entity;
 
-use Drupal\field_sql_storage\Entity\ConditionAggregate;
-use Drupal\simpletest\DrupalUnitTestBase;
-
 /**
  * Defines a test for testing aggregation support for entity query.
  *

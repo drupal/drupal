@@ -94,7 +94,12 @@ class ViewListController extends ConfigEntityListController implements EntityCon
             '#displays' => $this->getDisplaysList($view)
           ),
         ),
-        'description' => $view->get('description'),
+        'description' => array(
+          'data' => array(
+            '#markup' => String::checkPlain($view->get('description')),
+          ),
+          'class' => array('views-table-filter-text-source'),
+        ),
         'tag' => $view->get('tag'),
         'path' => implode(', ', $this->getDisplayPaths($view)),
         'operations' => $row['operations'],
@@ -179,9 +184,25 @@ class ViewListController extends ConfigEntityListController implements EntityCon
   public function render() {
     $entities = $this->load();
     $list['#type'] = 'container';
+    $list['#attributes']['id'] = 'views-entity-list';
+
     $list['#attached']['css'] = ViewFormControllerBase::getAdminCSS();
     $list['#attached']['library'][] = array('system', 'drupal.ajax');
-    $list['#attributes']['id'] = 'views-entity-list';
+    $list['#attached']['library'][] = array('views_ui', 'views_ui.listing');
+
+    $list['search'] = array(
+      '#type' => 'search',
+      '#title' => $this->t('Search'),
+      '#size' => 30,
+      '#placeholder' => $this->t('Enter view name'),
+      '#attributes' => array(
+        'class' => array('views-filter-text'),
+        'data-table' => '.views-listing-table',
+        'autocomplete' => 'off',
+        'title' => $this->t('Enter a part of the view name or description to filter by.'),
+      ),
+    );
+
     $list['enabled']['heading']['#markup'] = '<h2>' . t('Enabled') . '</h2>';
     $list['disabled']['heading']['#markup'] = '<h2>' . t('Disabled') . '</h2>';
     foreach (array('enabled', 'disabled') as $status) {
@@ -189,6 +210,9 @@ class ViewListController extends ConfigEntityListController implements EntityCon
       $list[$status]['#attributes'] = array('class' => array('views-list-section', $status));
       $list[$status]['table'] = array(
         '#theme' => 'table',
+        '#attributes' => array(
+          'class' => array('views-listing-table'),
+        ),
         '#header' => $this->buildHeader(),
         '#rows' => array(),
       );

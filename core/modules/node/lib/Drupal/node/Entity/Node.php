@@ -9,8 +9,6 @@ namespace Drupal\node\Entity;
 
 use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
-use Drupal\Core\Entity\Annotation\EntityType;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeInterface;
