@@ -20,7 +20,7 @@ class EntityQueryRelationshipTest extends EntityUnitTestBase  {
   public static $modules = array('taxonomy', 'options');
 
   /**
-   * @var \Drupal\field_sql_storage\Entity\QueryFactory
+   * @var \Drupal\Core\Entity\Query\QueryFactory
    */
   protected $factory;
 

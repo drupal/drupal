@@ -867,22 +867,22 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
    * {@inheritdoc}
    */
   public function onBundleRename($bundle, $bundle_new) {
-    // We need to account for deleted or inactive fields and instances.
-    $instances = field_read_instances(array('entity_type' => $this->entityType, 'bundle' => $bundle_new), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
+    // We need to account for deleted or inactive fields and instances. The
+    // method runs before the instance definitions are updated, so we need to
+    // fetch them using the old bundle name.
+    $instances = field_read_instances(array('entity_type' => $this->entityType, 'bundle' => $bundle), array('include_deleted' => TRUE, 'include_inactive' => TRUE));
     foreach ($instances as $instance) {
       $field = $instance->getField();
-      if ($field['storage']['type'] == 'field_sql_storage') {
-        $table_name = static::_fieldTableName($field);
-        $revision_name = static::_fieldRevisionTableName($field);
-        $this->database->update($table_name)
-          ->fields(array('bundle' => $bundle_new))
-          ->condition('bundle', $bundle)
-          ->execute();
-        $this->database->update($revision_name)
-          ->fields(array('bundle' => $bundle_new))
-          ->condition('bundle', $bundle)
-          ->execute();
-      }
+      $table_name = static::_fieldTableName($field);
+      $revision_name = static::_fieldRevisionTableName($field);
+      $this->database->update($table_name)
+        ->fields(array('bundle' => $bundle_new))
+        ->condition('bundle', $bundle)
+        ->execute();
+      $this->database->update($revision_name)
+        ->fields(array('bundle' => $bundle_new))
+        ->condition('bundle', $bundle)
+        ->execute();
     }
   }
 

@@ -108,7 +108,7 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
    */
   function testEnableModulesInstallContainer() {
     // Install Node module.
-    $this->enableModules(array('field_sql_storage', 'field', 'node'));
+    $this->enableModules(array('field', 'node'));
 
     $this->installSchema('node', array('node', 'node_field_data'));
     // Perform an entity query against node.
@@ -206,12 +206,12 @@ class DrupalUnitTestBaseTest extends DrupalUnitTestBase {
     $this->assertTrue(TRUE == entity_get_info('entity_test'));
 
     // Load some additional modules; entity_test should still exist.
-    $this->enableModules(array('entity', 'field', 'field_sql_storage', 'text', 'entity_test'));
+    $this->enableModules(array('entity', 'field', 'text', 'entity_test'));
     $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
     $this->assertTrue(TRUE == entity_get_info('entity_test'));
 
     // Install some other modules; entity_test should still exist.
-    $this->container->get('module_handler')->install(array('field', 'field_sql_storage', 'field_test'), FALSE);
+    $this->container->get('module_handler')->install(array('field', 'field_test'), FALSE);
     $this->assertEqual($this->container->get('module_handler')->moduleExists('entity_test'), TRUE);
     $this->assertTrue(TRUE == entity_get_info('entity_test'));
 

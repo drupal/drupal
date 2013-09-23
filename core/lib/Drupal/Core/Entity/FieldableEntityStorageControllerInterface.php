@@ -81,6 +81,9 @@ interface FieldableEntityStorageControllerInterface extends EntityStorageControl
   /**
    * Allows reaction to a bundle being renamed.
    *
+   * This method runs before field instance definitions are updated with the new
+   * bundle name.
+   *
    * @param string $bundle
    *   The name of the bundle being renamed.
    * @param string $bundle_new
@@ -90,6 +93,8 @@ interface FieldableEntityStorageControllerInterface extends EntityStorageControl
 
   /**
    * Allows reaction to a bundle being deleted.
+   *
+   * This method runs before field and instance definitions are deleted.
    *
    * @param string $bundle
    *   The name of the bundle being deleted.

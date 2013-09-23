@@ -26,7 +26,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('field', 'field_test', 'text', 'number', 'entity_test');
+  public static $modules = array('system', 'field', 'field_test', 'text', 'number', 'entity_test');
 
   /**
    * The name of the created field.
@@ -67,6 +67,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
   function setUp() {
     parent::setUp();
     $this->installSchema('entity_test', array('entity_test_rev', 'entity_test_rev_revision'));
+    $this->installSchema('system', array('variable'));
     $entity_type = 'entity_test_rev';
 
     $this->field_name = strtolower($this->randomName());
@@ -456,6 +457,34 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
     $foreign_key_column = DatabaseStorageController::_fieldColumnName($field, $foreign_key_name);
     $this->assertEqual($foreign_key['table'], $foreign_key_name, 'Foreign key table name preserved in the schema');
     $this->assertEqual($foreign_key['columns'][$foreign_key_column], 'id', 'Foreign key column name preserved in the schema');
+  }
+
+  /**
+   * Tests reacting to a bundle being renamed.
+   */
+  function testFieldSqlStorageBundleRename() {
+    $entity_type = $bundle = 'entity_test_rev';
+
+    // Create an entity.
+    $value = mt_rand(1, 127);
+    $entity = entity_create($entity_type, array(
+      'type' => $bundle,
+      $this->field->name => $value,
+    ));
+    $entity->save();
+
+    // Rename the bundle.
+    $bundle_new = $bundle . '_renamed';
+    entity_test_rename_bundle($bundle, $bundle_new, $entity_type);
+
+    // Check that the 'bundle' column has been updated in storage.
+    $row = db_select($this->table, 't')
+      ->fields('t', array('bundle', $this->field->name . '_value'))
+      ->condition('entity_id', $entity->id())
+      ->execute()
+      ->fetch();
+    $this->assertEqual($row->bundle, $bundle_new);
+    $this->assertEqual($row->{$this->field->name . '_value'}, $value);
   }
 
   /**
