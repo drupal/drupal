@@ -26,7 +26,7 @@ abstract class TrackerTestBase extends ViewTestBase {
   protected function setUp() {
     parent::setUp();
 
-    ViewTestData::importTestViews(get_class($this), array('tracker_test_views'));
+    ViewTestData::createTestViews(get_class($this), array('tracker_test_views'));
 
     $this->drupalCreateContentType(array('type' => 'page', 'name' => 'Basic page'));
 

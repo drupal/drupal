@@ -66,7 +66,7 @@ abstract class ViewUnitTestBase extends DrupalUnitTestBase {
     // Tests implementing ViewUnitTestBase depend on the theme system being
     // properly configured.
     $this->installConfig(array('system'));
-    ViewTestData::importTestViews(get_class($this), array('views_test_config'));
+    ViewTestData::createTestViews(get_class($this), array('views_test_config'));
   }
 
   /**

@@ -48,7 +48,7 @@ abstract class TaxonomyTestBase extends ViewTestBase {
     parent::setUp();
     $this->mockStandardInstall();
 
-    ViewTestData::importTestViews(get_class($this), array('taxonomy_test_views'));
+    ViewTestData::createTestViews(get_class($this), array('taxonomy_test_views'));
 
     $this->term1 = $this->createTerm();
     $this->term2 = $this->createTerm();

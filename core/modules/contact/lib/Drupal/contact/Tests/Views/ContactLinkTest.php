@@ -52,7 +52,7 @@ class ContactLinkTest extends ViewTestBase {
   protected function setUp() {
     parent::setUp();
 
-    ViewTestData::importTestViews(get_class($this), array('contact_test_views'));
+    ViewTestData::createTestViews(get_class($this), array('contact_test_views'));
 
     $this->userData = $this->container->get('user.data');
   }

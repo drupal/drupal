@@ -8,7 +8,6 @@
 namespace Drupal\views\Tests;
 
 use Drupal\Core\Config\FileStorage;
-use Drupal\Core\Config\StorageComparer;
 
 /**
  * Provides tests view data and the base test schema with sample data records.
@@ -21,17 +20,14 @@ use Drupal\Core\Config\StorageComparer;
 class ViewTestData {
 
   /**
-   * Imports test views from config.
+   * Create test views from config.
    *
    * @param string $class
    *   The name of the test class.
    * @param array $modules
-   *   (optional) The module directories to look in for test views.
-   *   Defaults to an empty array.
-   *
-   * @see config_install_default_config()
+   *   The module directories to look in for test views.
    */
-  public static function importTestViews($class, $modules = array()) {
+  public static function createTestViews($class, array $modules) {
     $views = array();
     while ($class) {
       if (property_exists($class, 'testViews')) {
@@ -40,6 +36,7 @@ class ViewTestData {
       $class = get_parent_class($class);
     }
     if (!empty($views)) {
+      $storage_controller = \Drupal::entityManager()->getStorageController('view');
       $module_handler = \Drupal::moduleHandler();
       foreach ($modules as $module) {
         $config_dir = drupal_get_path('module', $module) . '/test_views';
@@ -47,28 +44,15 @@ class ViewTestData {
           continue;
         }
 
-        $source_storage = new FileStorage($config_dir);
-        // Only import views used by test.
-        $views_to_import = array();
-        foreach ($source_storage->listAll('views.view.') as $config_name) {
+        $file_storage = new FileStorage($config_dir);
+        foreach ($file_storage->listAll('views.view.') as $config_name) {
           $id = str_replace('views.view.', '', $config_name);
           if (in_array($id, $views)) {
-            $views_to_import[] = $config_name;
+            $storage_controller
+              ->create($file_storage->read($config_name))
+              ->save();
           }
         }
-        $storage_comparer = new StorageComparer(
-          $source_storage,
-          \Drupal::service('config.storage')
-        );
-        $storage_comparer->addChangelist('create', $views_to_import);
-        $installer = new ViewTestConfigInstaller(
-          $storage_comparer,
-          \Drupal::service('event_dispatcher'),
-          \Drupal::service('config.factory'),
-          \Drupal::entityManager(),
-          \Drupal::lock()
-        );
-        $installer->import();
       }
     }
   }

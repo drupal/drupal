@@ -24,7 +24,7 @@ class RevisionRelationships extends ViewTestBase {
   protected function setUp() {
     parent::setUp();
 
-    ViewTestData::importTestViews(get_class($this), array('node_test_views'));
+    ViewTestData::createTestViews(get_class($this), array('node_test_views'));
   }
 
   /**

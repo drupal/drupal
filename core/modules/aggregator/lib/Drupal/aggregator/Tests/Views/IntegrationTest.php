@@ -56,7 +56,7 @@ class IntegrationTest extends ViewUnitTestBase {
 
     $this->installSchema('aggregator', array('aggregator_item', 'aggregator_feed', 'aggregator_category_feed', 'aggregator_category', 'aggregator_category_item'));
 
-    ViewTestData::importTestViews(get_class($this), array('aggregator_test_views'));
+    ViewTestData::createTestViews(get_class($this), array('aggregator_test_views'));
 
     $this->itemStorageController = $this->container->get('entity.manager')->getStorageController('aggregator_item');
     $this->feedStorageController = $this->container->get('entity.manager')->getStorageController('aggregator_feed');
