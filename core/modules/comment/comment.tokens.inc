@@ -88,7 +88,7 @@ function comment_token_info() {
   // and can't be upgraded directly.
   $comment['node'] = array(
     'name' => t("Node"),
-    'description' => t("The node the comment was posted to (deprecated)."),
+    'description' => t("DEPRECATED: The node the comment was posted to."),
     'type' => 'node',
   );
   $comment['author'] = array(

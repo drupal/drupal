@@ -1258,7 +1258,7 @@ function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestam
   global $user;
 
   if ($user->isAuthenticated() && \Drupal::moduleHandler()->moduleExists('history')) {
-    // Retrieve the timestamp at which the current user last viewed this node.
+    // Retrieve the timestamp at which the current user last viewed this entity.
     if (!$timestamp) {
       if ($entity_type == 'node') {
         $timestamp = history_read($entity_id);
