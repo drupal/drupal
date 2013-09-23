@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Authentication\HttpBasicTest.
+ * Contains \Drupal\basic_auth\Tests\Authentication\HttpBasicTest.
  */
 
-namespace Drupal\system\Tests\Authentication;
+namespace Drupal\basic_auth\Tests\Authentication;
 
 use Drupal\Core\Authentication\Provider\HttpBasic;
 use Drupal\simpletest\WebTestBase;
@@ -21,7 +21,7 @@ class HttpBasicTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('router_test');
+  public static $modules = array('basic_auth', 'router_test');
 
   public static function getInfo() {
     return array(

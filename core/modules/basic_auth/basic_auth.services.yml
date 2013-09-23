@@ -1,0 +1,6 @@
+services:
+  authentication.http_basic:
+    class: Drupal\basic_auth\Authentication\Provider\HttpBasic
+    arguments: ['@config.factory']
+    tags:
+      - { name: authentication_provider, priority: 100 }

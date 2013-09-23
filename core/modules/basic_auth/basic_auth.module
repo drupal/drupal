@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Provides an HTTP Basic authentication provider.
+ */
+
+ /**
+ * Implements hook_help().
+ */
+function basic_auth_help($path, $arg) {
+  switch ($path) {
+    case 'admin/help#basic_auth':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The basic auth module implements basic user authentication using the HTTP Basic authentication provider.') . '</p>';
+      return $output;
+  }
+}
