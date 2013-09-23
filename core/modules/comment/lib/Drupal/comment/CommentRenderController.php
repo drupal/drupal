@@ -8,13 +8,83 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityRenderController;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\entity\Entity\EntityDisplay;
+use Drupal\field\FieldInfo;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Render controller for comments.
  */
-class CommentRenderController extends EntityRenderController {
+class CommentRenderController extends EntityRenderController implements EntityControllerInterface {
+
+  /**
+   * The entity manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
+   * The field info service.
+   *
+   * @var \Drupal\field\FieldInfo
+   */
+  protected $fieldInfo;
+
+  /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
+    return new static(
+      $entity_type,
+      $container->get('entity.manager'),
+      $container->get('field.info'),
+      $container->get('module_handler'),
+      $container->get('current_user')
+    );
+  }
+
+  /**
+   * Constructs a new CommentRenderController.
+   *
+   * @param string $entity_type
+   *   The entity type.
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager service.
+   * @param \Drupal\field\FieldInfo $field_info
+   *   The field info service.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
+   */
+
+  public function __construct($entity_type, EntityManager $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
+    parent::__construct($entity_type);
+    $this->entityManager = $entity_manager;
+    $this->fieldInfo = $field_info;
+    $this->moduleHandler = $module_handler;
+    $this->currentUser = $current_user;
+  }
 
   /**
    * Overrides Drupal\Core\Entity\EntityRenderController::buildContent().
@@ -33,7 +103,7 @@ class CommentRenderController extends EntityRenderController {
     foreach ($entities as $entity) {
       $uids[] = $entity->uid->target_id;
     }
-    user_load_multiple(array_unique($uids));
+    $this->entityManager->getStorageController('user')->loadMultiple(array_unique($uids));
 
     parent::buildContent($entities, $displays, $view_mode, $langcode);
 
@@ -46,10 +116,8 @@ class CommentRenderController extends EntityRenderController {
     // Load entities in bulk. This is more performant than using
     // $comment->entity_id->value as we can load them in bulk per type.
     foreach ($comment_entity_ids as $entity_type => $entity_ids) {
-      $comment_entities[$entity_type] = entity_load_multiple($entity_type, $entity_ids);
+      $comment_entities[$entity_type] = $this->entityManager->getStorageController($entity_type)->loadMultiple($entity_ids);
     }
-
-    global $user;
 
     foreach ($entities as $entity) {
       if (isset($comment_entities[$entity->entity_type->value][$entity->entity_id->value])) {
@@ -70,6 +138,8 @@ class CommentRenderController extends EntityRenderController {
           '#theme' => 'links__comment__comment',
           // The "entity" property is specified to be present, so no need to
           // check.
+          // @todo replace this with a method on the manager and deprecate
+          //   comment_links().
           '#links' => comment_links($entity, $comment_entity, $entity->field_name->value),
           '#attributes' => array('class' => array('links', 'inline')),
         );
@@ -79,7 +149,7 @@ class CommentRenderController extends EntityRenderController {
         $entity->content['#attached'] = array();
       }
       $entity->content['#attached']['library'][] = array('comment', 'drupal.comment-by-viewer');
-      if (\Drupal::moduleHandler()->moduleExists('history') && $user->isAuthenticated()) {
+      if ($this->moduleHandler->moduleExists('history') && $this->currentUser->isAuthenticated()) {
         $entity->content['#attached']['library'][] = array('comment', 'drupal.comment-new-indicator');
       }
     }
@@ -92,10 +162,10 @@ class CommentRenderController extends EntityRenderController {
     parent::alterBuild($build, $comment, $display, $view_mode, $langcode);
     if (empty($comment->in_preview)) {
       $prefix = '';
-      $comment_entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
-      $instance = field_info_instance($comment_entity->entityType(), $comment->field_name->value, $comment_entity->bundle());
+      $comment_entity = $this->entityManager->getStorageController($comment->entity_type->value)->load($comment->entity_id->value);
+      $instance = $this->fieldInfo->getInstance($comment_entity->entityType(), $comment_entity->bundle(), $comment->field_name->value);
       $is_threaded = isset($comment->divs)
-        && $instance['settings']['default_mode'] == COMMENT_MODE_THREADED;
+        && $instance->getFieldSetting('default_mode') == COMMENT_MODE_THREADED;
 
       // Add indentation div or close open divs as needed.
       if ($is_threaded) {
