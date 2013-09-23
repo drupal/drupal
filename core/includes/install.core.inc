@@ -799,7 +799,7 @@ function install_tasks($install_state) {
     $profile = $install_state['parameters']['profile'];
     $profile_install_file = dirname($install_state['profiles'][$profile]->uri) . '/' . $profile . '.install';
     if (file_exists($profile_install_file)) {
-      include_once $profile_install_file;
+      include_once DRUPAL_ROOT . '/' . $profile_install_file;
     }
     $function = $install_state['parameters']['profile'] . '_install_tasks';
     if (function_exists($function)) {
@@ -834,7 +834,7 @@ function install_tasks($install_state) {
     $profile = $install_state['parameters']['profile'];
     $profile_file = $install_state['profiles'][$profile]->uri;
     if (file_exists($profile_file)) {
-      include_once $profile_file;
+      include_once DRUPAL_ROOT . '/' .  $profile_file;
       $function = $install_state['parameters']['profile'] . '_install_tasks_alter';
       if (function_exists($function)) {
         $function($tasks, $install_state);
@@ -1751,7 +1751,7 @@ function install_load_profile(&$install_state) {
   $profile = $install_state['parameters']['profile'];
   $profile_file = $install_state['profiles'][$profile]->uri;
   if (file_exists($profile_file)) {
-    include_once $profile_file;
+    include_once DRUPAL_ROOT . '/' . $profile_file;
     $install_state['profile_info'] = install_profile_info($install_state['parameters']['profile'], $install_state['parameters']['langcode']);
   }
   else {
