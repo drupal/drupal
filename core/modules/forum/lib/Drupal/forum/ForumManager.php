@@ -214,7 +214,7 @@ class ForumManager implements ForumManagerInterface {
       $result = array();
       foreach ($query->execute() as $row) {
         $topic = $nodes[$row->nid];
-        $topic->comment_mode = $topic->comment;
+        $topic->comment_mode = $topic->comment_forum->status;
 
         foreach ($row as $key => $value) {
           $topic->{$key} = $value;
