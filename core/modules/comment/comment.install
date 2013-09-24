@@ -39,7 +39,7 @@ function comment_uninstall() {
  * Implements hook_install().
  */
 function comment_install() {
-  $comment_fields = _update_comment_get_comment_fields();
+  $comment_fields = _comment_get_comment_fields();
   $entity_info = Drupal::service('entity.manager')->getDefinitions();
   foreach ($comment_fields as $field_name => $info) {
     foreach ($info['bundles'] as $entity_type => $bundles) {
@@ -90,13 +90,13 @@ function comment_install() {
 /**
  * Returns comment fields.
  *
- * This function similar to CommentManager::getFields() that cannot be used in
- * maintenance mode because comment.module is disabled and it's fields inactive.
+ * comment_get_comment_fields() cannot be used in maintenance mode because
+ * comment is disabled and its fields are inactive.
  *
  * @return
  *   An array of comment fields keyed by field ID.
  */
-function _update_comment_get_comment_fields() {
+function _comment_get_comment_fields() {
   $fields = entity_load_multiple_by_properties('field_entity', array(
     'type' => 'comment',
     'include_inactive' => TRUE,

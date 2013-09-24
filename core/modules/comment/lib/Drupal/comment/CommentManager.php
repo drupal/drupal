@@ -101,8 +101,8 @@ class CommentManager {
   /**
    * Utility method to add the default comment field to an entity.
    *
-   * Attaches a comment field named 'comment' to the given entity type and bundle.
-   * Largely replicates the default behaviour in Drupal 7 and earlier.
+   * Attaches a comment field named 'comment' to the given entity type and
+   * bundle. Largely replicates the default behaviour in Drupal 7 and earlier.
    *
    * @param string $entity_type
    *   The entity type to attach the default comment field to.
