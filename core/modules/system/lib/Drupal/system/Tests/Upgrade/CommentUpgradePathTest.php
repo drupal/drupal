@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Upgrade\LanguageUpgradePathTest.
+ * Definition of Drupal\system\Tests\Upgrade\CommentUpgradePathTest.
  */
 
 namespace Drupal\system\Tests\Upgrade;
@@ -30,6 +30,8 @@ class CommentUpgradePathTest extends UpgradePathTestBase {
       drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.filled.standard_all.database.php.gz',
       // Language dataset includes nodes with comments so can be reused.
       drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.language.database.php',
+      // Comment dataset sets some settings to values other than the default.
+      drupal_get_path('module', 'system') . '/tests/upgrade/drupal-7.comment.database.php',
     );
     parent::setUp();
   }
@@ -56,12 +58,12 @@ class CommentUpgradePathTest extends UpgradePathTestBase {
         'preview' => 1,
       ),
       'blog' => array (
-        'default_mode' => 1,
-        'per_page' => 50,
-        'form_location' => 1,
-        'anonymous' => 0,
-        'subject' => 1,
-        'preview' => 1,
+        'default_mode' => 0,
+        'per_page' => 25,
+        'form_location' => 0,
+        'anonymous' => 1,
+        'subject' => 0,
+        'preview' => 0,
       ),
       'book' => array (
         'default_mode' => 1,
