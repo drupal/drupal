@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\Upgrade;
 
+use Drupal\field\Field;
+
 /**
  * Tests upgrading a filled database with comment data.
  *
@@ -102,7 +104,7 @@ class CommentUpgradePathTest extends UpgradePathTestBase {
     sort($types);
     $this->assertIdentical(array_keys($expected_settings), $types, 'All node types are upgraded');
     foreach ($types as $type) {
-      $instance = field_info_instance('node', 'comment_' . $type, $type);
+      $instance = Field::fieldInfo()->getInstance($node, $type, 'comment_'. $type);
       $this->assertTrue($instance, format_string('Comment field found for the %type node type', array(
         '%type' => $type
       )));
