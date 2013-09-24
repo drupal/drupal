@@ -40,7 +40,7 @@ class CommentWidget extends WidgetBase {
       '#type' => 'radios',
       '#title' => t('Comments'),
       '#title_display' => 'invisible',
-      '#default_value' => $default_value->status,
+      '#default_value' => !empty($default_value->status) ? $default_value->status : COMMENT_OPEN,
       '#options' => array(
         COMMENT_OPEN => t('Open'),
         COMMENT_CLOSED => t('Closed'),

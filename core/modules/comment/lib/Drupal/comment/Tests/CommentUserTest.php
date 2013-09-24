@@ -381,6 +381,18 @@ class CommentUserTest extends WebTestBase {
     $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
     $this->assertNoLink('Add new comment', 'Link to add comment was found.');
 
+    // Add a new comment-field.
+    $this->drupalGet('admin/config/people/accounts/fields');
+    $edit = array(
+      'fields[_add_new_field][label]' => 'Foobar',
+      'fields[_add_new_field][field_name]' => 'foobar',
+      'fields[_add_new_field][type]' => 'comment',
+    );
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm(NULL, array(), t('Save field settings'));
+    $this->drupalPostForm(NULL, array(), t('Save settings'));
+    $this->assertRaw(t('Saved %name configuration', array('%name' => 'Foobar')));
+
     // Test the new user commenting inherits default.
     $limited_user = $this->drupalCreateUser(array(
       'access user profiles',
