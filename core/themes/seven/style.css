@@ -439,13 +439,13 @@ ul.inline li {
 ul.inline li {
   display: inline;
 }
-.admin-list {
+ul.admin-list {
   margin: 0;
   padding: 0;
 }
 .admin-list li {
   position: relative;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #bfbfbf;
   margin: 0;
   list-style-type: none;
   list-style-image: none;
@@ -455,23 +455,33 @@ ul.inline li {
   border: none;
 }
 .admin-list li a {
-  background: url(images/list-item.png) no-repeat 9px 11px; /* LTR */
+  background: url(../../misc/icons/bebebe/chevron-disc-right.svg) no-repeat 1px 16px; /* LTR */
   display: block;
-  padding: 9px 9px 9px 39px; /* LTR */
+  padding: 14px 15px 14px 25px; /* LTR */
   min-height: 0;
 }
+.no-svg .admin-list li a {
+  background-image: url(../../misc/icons/bebebe/chevron-disc-right.png); /* LTR */
+}
 [dir="rtl"] .admin-list li a {
-  background: url(images/list-item-rtl.png) no-repeat right 11px;
-  padding: 9px 39px 9px 9px;
+  background: url(../../misc/icons/bebebe/chevron-disc-left.svg) no-repeat right 16px;
+  padding-right: 25px;
+  padding-left: 15px;
+}
+.no-svg [dir="rtl"] .admin-list li a {
+  background-image: url(../../misc/icons/bebebe/chevron-disc-left.png);
 }
 .admin-list.compact li a {
   background-image:  none;
-  padding: 2px 19px;
+  padding: 2px 0;
 }
 .admin-list li a:hover,
 .admin-list li a:focus,
 .admin-list li a:active {
   text-decoration: none;
+}
+.admin-list li a .label {
+  font-size: 1.0769em;
 }
 .admin-list li a:hover .label,
 .admin-list li a:focus .label,
@@ -681,7 +691,7 @@ div.description,
   margin: 5px 0;
   line-height: 1.231em;
   font-size: 0.923em;
-  color: #666;
+  color: #555;
 }
 ul.tips li {
   margin: 0.25em 0 0.25em 1.5em; /* LTR */

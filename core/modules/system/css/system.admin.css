@@ -14,12 +14,7 @@ div.admin-panel .description {
   margin: 0 0 3px;
   padding: 2px 0 3px 0;
 }
-div.admin-panel .body {
-  padding: 0 4px 2px 8px; /* LTR */
-}
-[dir="rtl"] div.admin-panel .body {
-  padding: 0 8px 2px 4px;
-}
+
 div.admin {
   padding-top: 15px;
 }
@@ -27,22 +22,16 @@ div.admin {
   div.admin .left {
     float: left; /* LTR */
     width: 47%;
-    margin-left: 1em; /* LTR */
   }
   [dir="rtl"] div.admin .left {
     float: right;
-    margin-left: 0;
-    margin-right: 1em;
   }
   div.admin .right {
     float: right; /* LTR */
     width: 47%;
-    margin-right: 1em; /* LTR */
   }
   [dir="rtl"] div.admin .right {
     float: left;
-    margin-left: 1em;
-    margin-right: 0;
   }
 }
 div.admin .expert-link {
