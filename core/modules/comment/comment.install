@@ -49,7 +49,7 @@ function comment_install() {
             !empty($entity_detail['entity_keys']['id'])) {
           $table = $entity_detail['base_table'];
           $schema = drupal_get_schema($table);
-          // Insert records into the comment_entity_statistics for entities that
+          // Insert records into {comment_entity_statistics} for entities that
           // are missing.
           $query = db_select($table, 'e');
           // Filter by bundle.
