@@ -35,7 +35,12 @@
 .dblog-warning.even .active {
   background: #eeedbd;
 }
-.admin-dblog .icon {
+.admin-dblog .icon,
+.admin-dblog .dblog-warning .icon,
+.admin-dblog .dblog-error .icon,
+.admin-dblog .dblog-critical .icon,
+.admin-dblog .dblog-alert .icon,
+.admin-dblog .dblog-emergency .icon {
   background: no-repeat center;
   width: 16px;
 }
