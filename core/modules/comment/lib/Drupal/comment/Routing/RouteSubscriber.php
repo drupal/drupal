@@ -44,7 +44,10 @@ class RouteSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * Adds routes for comment.
+   * If node module is present, adds the legacy /comment/{node}/reply route.
+   *
+   * @param \Drupal\Core\Routing\RouteBuildEvent $event
+   *   The route build event.
    */
   public function routes(RouteBuildEvent $event) {
     $collection = $event->getRouteCollection();
