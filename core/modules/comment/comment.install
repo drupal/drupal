@@ -93,7 +93,7 @@ function comment_install() {
  * comment_get_comment_fields() cannot be used in maintenance mode because
  * comment is disabled and its fields are inactive.
  *
- * @return
+ * @return array
  *   An array of comment fields keyed by field ID.
  */
 function _comment_get_comment_fields() {
