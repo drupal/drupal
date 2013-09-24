@@ -98,8 +98,8 @@ class InstallerTranslationTest extends InstallerTest {
     // translated interface.
     $submit_value = (string) current($this->xpath('//input[@type="submit"]/@value'));
 
-    // Submit the minimal profile installation.
-    $this->drupalPostForm(NULL, array('profile' => 'minimal'), $submit_value);
+    // Submit the standard profile installation.
+    $this->drupalPostForm(NULL, array('profile' => 'standard'), $submit_value);
 
     // Submit the next step.
     $this->drupalPostForm(NULL, array(), $submit_value);
