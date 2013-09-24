@@ -7,8 +7,10 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
+use Drupal\Core\Entity\EntityManager;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\ResultRow;
 
 /**
@@ -19,6 +21,42 @@ use Drupal\views\ResultRow;
  * @PluginID("comment_link")
  */
 class Link extends FieldPluginBase {
+
+  /**
+   * Entity Manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity.manager')
+    );
+  }
+
+  /**
+   * Constructs a Link field plugin.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager service.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManager $entity_manager) {
+    parent::_construct($configuration, $plugin_id, $plugin_definition);
+    $this->entityManager = $entity_manager;
+  }
 
   protected function defineOptions() {
     $options = parent::defineOptions();
@@ -67,7 +105,7 @@ class Link extends FieldPluginBase {
     elseif ($this->options['link_to_node']) {
       $entity_id = $comment->entity_id;
       $entity_type = $comment->entity_type;
-      $entity = entity_load($entity_type, $entity_id);
+      $entity = $this->entityManager->getStorageController($entity_type)->load($entity_id);
       $uri = $entity->uri();
       $this->options['alter']['path'] = $uri['path'];
     }

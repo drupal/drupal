@@ -66,8 +66,8 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       $configuration['label'],
       $configuration['view_mode'],
       $container->get('current_user'),
-      $container->get('entity_manager')->getStorageController('comment'),
-      $container->get('entity_manager')->getRenderController('comment')
+      $container->get('entity.manager')->getStorageController('comment'),
+      $container->get('entity.manager')->getRenderController('comment')
     );
   }
 
