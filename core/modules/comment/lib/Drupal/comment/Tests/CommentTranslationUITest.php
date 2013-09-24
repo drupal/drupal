@@ -51,6 +51,11 @@ class CommentTranslationUITest extends ContentTranslationUITest {
     $this->drupalCreateContentType(array('type' => $this->nodeBundle, 'name' => $this->nodeBundle));
     // Add a comment field to the article content type.
     $this->container->get('comment.manager')->addDefaultField('node', 'article', 'comment_article');
+    // Create a page content type.
+    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'page'));
+    // Add a comment field to the page content type - this one won't be
+    // translatable.
+    $this->container->get('comment.manager')->addDefaultField('node', 'page', 'comment');
     // Mark this bundle as translatable.
     content_translation_set_config('comment', 'node__comment_article', 'enabled', TRUE);
     // Refresh entity info.
@@ -80,11 +85,17 @@ class CommentTranslationUITest extends ContentTranslationUITest {
    * Overrides \Drupal\content_translation\Tests\ContentTranslationUITest::createEntity().
    */
   protected function createEntity($values, $langcode, $node_bundle = 'node__comment_article') {
+    // The argument is called 'node_bundle' but its actually just the entity
+    // bundle. Comment entity's bundle is of the form
+    // {entity_type}__{field_name}. Based on the passed bundle we need to
+    // determine the type of node and the name of the comment field.
     if ($node_bundle == 'node__comment_article') {
+      // This is the article node type, with the 'comment_article' field.
       $node_type = 'article';
       $field_name = 'comment_article';
     }
     else {
+      // This is the page node type with the non-translatable 'comment' field.
       $node_type = 'page';
       $field_name = 'comment';
     }
@@ -144,9 +155,6 @@ class CommentTranslationUITest extends ContentTranslationUITest {
    * Tests translate link on comment content admin page.
    */
   function testTranslateLinkCommentAdminPage() {
-    $this->drupalCreateContentType(array('type' => 'page', 'name' => 'page'));
-    // Add comment field to the page content type.
-    $this->container->get('comment.manager')->addDefaultField('node', 'page');
     $this->admin_user = $this->drupalCreateUser(array_merge(parent::getTranslatorPermissions(), array('access administration pages', 'administer comments')));
     $this->drupalLogin($this->admin_user);
 
