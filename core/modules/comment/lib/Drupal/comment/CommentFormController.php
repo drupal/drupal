@@ -51,8 +51,6 @@ class CommentFormController extends EntityFormControllerNG {
   /**
    * Constructs a new CommentRenderController.
    *
-   * @param string $entity_type
-   *   The entity type.
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The entity manager service.
    * @param \Drupal\field\FieldInfo $field_info
