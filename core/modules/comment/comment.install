@@ -472,7 +472,7 @@ function comment_update_8004() {
 }
 
 /**
- * Updates the {comment_node_statistics} and {comment} tables to new structure.
+ * Update the {comment_node_statistics} and {comment} tables to new structure.
  */
 function comment_update_8005(&$sandbox) {
   // Drop old indexes.
