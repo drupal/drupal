@@ -682,7 +682,7 @@ function comment_update_8006(&$sandbox) {
 }
 
 /**
- * Updates existing values.
+ * Update existing comment values from node table to field data.
  */
 function comment_update_8007(&$sandbox) {
 
