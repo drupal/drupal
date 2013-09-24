@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Route;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
- * Subscriber for Comment routes.
+ * Defines a route subscriber for the comment module.
  */
 class RouteSubscriber implements EventSubscriberInterface {
 
