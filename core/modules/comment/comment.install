@@ -782,6 +782,8 @@ function comment_update_8007(&$sandbox) {
 
 /**
  * Removes the existing fields.
+ *
+ * Data was migrated in comment_update_8007().
  */
 function comment_update_8008(&$sandbox) {
   // Remove the {node}.comment field.
