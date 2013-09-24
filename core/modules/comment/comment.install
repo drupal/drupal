@@ -40,7 +40,7 @@ function comment_uninstall() {
  */
 function comment_install() {
   $comment_fields = _comment_get_comment_fields();
-  $entity_info = Drupal::service('entity.manager')->getDefinitions();
+  $entity_info = \Drupal::service('entity.manager')->getDefinitions();
   foreach ($comment_fields as $field_name => $info) {
     foreach ($info['bundles'] as $entity_type => $bundles) {
       foreach ($bundles as $bundle) {
@@ -85,7 +85,7 @@ function comment_install() {
   }
   // By default, maintain entity statistics for comments.
   // @see \Drupal\comment\CommentStorageController::updateEntityStatistics().
-  Drupal::state()->set('comment.maintain_entity_statistics', TRUE);
+  \Drupal::state()->set('comment.maintain_entity_statistics', TRUE);
 }
 
 /**
@@ -594,7 +594,7 @@ function comment_update_8006(&$sandbox) {
     $index = 0;
 
     // @todo Refactor once https://drupal.org/node/1856972 lands.
-    while (!Drupal::config('field.field.node.' . $field['name'])->isNew()) {
+    while (!\Drupal::config('field.field.node.' . $field['name'])->isNew()) {
       // Append a numeric index.
       $field['id'] = 'node.' . $field_name . '_' . $index;
       $field['name'] = $field_name . '_' . $index;
@@ -603,7 +603,7 @@ function comment_update_8006(&$sandbox) {
     }
     // Comment module may be disabled so we will need to inject the schema to
     // avoid attempting to create a Field of an unknown type.
-    if (!Drupal::moduleHandler()->moduleExists('comment')) {
+    if (!\Drupal::moduleHandler()->moduleExists('comment')) {
       // We can't use the autoloader because the comment namespace isn't
       // registered.
       // @todo Remove once https://drupal.org/node/1199946 is in.
@@ -614,7 +614,7 @@ function comment_update_8006(&$sandbox) {
     _update_8003_field_create_field($field);
 
     // @todo Refactor once https://drupal.org/node/1856972 lands.
-    if (Drupal::config("field.instance.node.$node_type." . $field['name'])->isNew()) {
+    if (\Drupal::config("field.instance.node.$node_type." . $field['name'])->isNew()) {
       // Add the comment field, setting the instance settings to match those for
       // the given node_type.
       $instance_settings = array(

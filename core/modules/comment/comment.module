@@ -101,7 +101,7 @@ function comment_help($path, $arg) {
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Default and custom settings') . '</dt>';
-      $output .= '<dd>' . t("Comment functionality can be attached to any Drupal entity, eg a content <a href='@content-type'> type</a> and the behavior can be customised to suit. Each entity can have its own default comment settings configured as: <em>Open</em> to allow new comments, <em>Hidden</em> to hide existing comments and prevent new comments, or <em>Closed</em> to view existing comments, but prevent new comments. These defaults will apply to all new content created (changes to the settings on existing content must be done manually). Other comment settings can also be customized per content type and entity, and can be overridden for any given item of content. When a comment has no replies, it remains editable by its author, as long as the author has a user account and is logged in.", array('@content-type' => url('admin/structure/types'))) . '</dd>';
+      $output .= '<dd>' . t("Comment functionality can be attached to any Drupal entity, eg. a content <a href='@content-type'>type</a> and the behavior can be customised to suit. Each entity can have its own default comment settings configured as: <em>Open</em> to allow new comments, <em>Hidden</em> to hide existing comments and prevent new comments, or <em>Closed</em> to view existing comments, but prevent new comments. These defaults will apply to all new content created (changes to the settings on existing content must be done manually). Other comment settings can also be customized per content type and entity, and can be overridden for any given item of content. When a comment has no replies, it remains editable by its author, as long as the author has a user account and is logged in.", array('@content-type' => url('admin/structure/types'))) . '</dd>';
       $output .= '<dt>' . t('Comment approval') . '</dt>';
       $output .= '<dd>' . t("Comments from users who have the <em>Skip comment approval</em> permission are published immediately. All other comments are placed in the <a href='@comment-approval'>Unapproved comments</a> queue, until a user who has permission to <em>Administer comments</em> publishes or deletes them. Published comments can be bulk managed on the <a href='@admin-comment'>Published comments</a> administration page.", array('@comment-approval' => url('admin/content/comment/approval'), '@admin-comment' => url('admin/content/comment'))) . '</dd>';
       $output .= '</dl>';
@@ -122,30 +122,6 @@ function comment_entity_bundle_info() {
     }
   }
   return $bundles;
-}
-
-/**
- * Menu callback for loading the actual name of a comment field.
- *
- * @param string $field_id
- *   The name of the field to load.
- *
- * @return string|false
- *   The field name of the comment field entity or FALSE if $field_name
- *   is not a comment field.
- *
- * @todo remove as unused.
- */
-function comment_field_name_load($field_name) {
-  $fields = entity_load_multiple('field_entity', array(
-    'name' => $field_name,
-    'type' => 'comment',
-  ));
-  if (!empty($fields) && ($field = reset($fields))) {
-    return $field->getFieldName();
-  }
-
-  return FALSE;
 }
 
 /**
@@ -274,9 +250,10 @@ function comment_menu() {
  * Implements hook_menu_alter().
  */
 function comment_menu_alter(&$items) {
-  // Add comments to the description for admin/content.
-  // @todo Revisit after this becomes a view - https://drupal.org/node/1986606.
-  $items['admin/content']['description'] = 'Administer content and comments.';
+  if (isset($items['admin/content'])) {
+    // Add comments to the description for admin/content if any.
+    $items['admin/content']['description'] = 'Administer content and comments.';
+  }
 }
 
 /**
@@ -357,8 +334,6 @@ function comment_permission() {
  * @return
  *   An array of comment objects or an empty array if there are no recent
  *   comments visible to the current user.
- *
- * @todo Replace with a view https://drupal.org/node/1938062
  */
 function comment_get_recent($number = 10) {
   $query = db_select('comment', 'c');
