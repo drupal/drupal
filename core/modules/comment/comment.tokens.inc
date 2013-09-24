@@ -248,8 +248,9 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
       $replacements += $token_service->generate('user', $author_tokens, array('user' => $account), $options);
     }
   }
-  elseif ($type == 'entity' & !empty($data['entity'])) {
-    $entity = $data['entity'];
+  elseif (($type == 'entity' & !empty($data['entity'])) ||
+    ($type == 'node' & !empty($data['node']))) {
+    $entity = !empty($data['entity']) ? $data['entity'] : $data['node'];
 
     foreach ($tokens as $name => $original) {
       switch($name) {
