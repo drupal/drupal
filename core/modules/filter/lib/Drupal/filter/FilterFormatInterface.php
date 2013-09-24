@@ -29,7 +29,7 @@ interface FilterFormatInterface extends ConfigEntityInterface {
    * Sets the configuration for a filter plugin instance.
    *
    * Sets or replaces the configuration of a filter plugin in $this->filters,
-   * and if instantianted already, also ensures that the actual filter plugin on
+   * and if instantiated already, also ensures that the actual filter plugin on
    * the FilterBag contains the identical configuration.
    *
    * @param string $instance_id
