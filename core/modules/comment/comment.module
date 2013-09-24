@@ -548,6 +548,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
                   'class' => 'hidden',
                   'title' => t('Jump to the first new comment of this posting.'),
                   'data-history-node-last-comment-timestamp' => $entity->get($field_name)->last_comment_timestamp,
+                  'data-history-node-field-name' => $field_name,
                 ),
                 'html' => TRUE,
               );

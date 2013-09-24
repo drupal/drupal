@@ -320,6 +320,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
     }
 
     $nids = $request->request->get('node_ids');
+    $field_name = $request->request->get('field_name');
     if (!isset($nids)) {
       throw new NotFoundHttpException();
     }
@@ -331,7 +332,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
       $node = node_load($nid);
       $new = comment_num_new($node->id(), 'node');
       // @todo Fix comment_count to use proper field.
-      $query = comment_new_page_count($node->comment_count, $new, $node);
+      $query = comment_new_page_count($node->{$field_name}->comment_count, $new, $node);
       $links[$nid] = array(
         'new_comment_count' => (int)$new,
         'first_new_comment_link' => $this->urlGenerator()->generateFromPath('node/' . $node->id(), array('query' => $query, 'fragment' => 'new')),

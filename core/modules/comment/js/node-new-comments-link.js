@@ -74,10 +74,12 @@ function show($placeholder) {
 function processNodeNewCommentLinks($placeholders) {
   // Figure out which placeholders need the "x new comments" links.
   var $placeholdersToUpdate = {};
+  var fieldName = 'comment';
   var $placeholder;
   $placeholders.each(function (index, placeholder) {
     $placeholder = $(placeholder);
     var timestamp = parseInt($placeholder.attr('data-history-node-last-comment-timestamp'), 10);
+    fieldName = $placeholder.attr('data-history-node-field-name');
     var nodeID = $placeholder.closest('[data-history-node-id]').attr('data-history-node-id');
     var lastViewTimestamp = Drupal.history.getLastRead(nodeID);
 
@@ -100,7 +102,7 @@ function processNodeNewCommentLinks($placeholders) {
   $.ajax({
     url: Drupal.url('comments/render_new_comments_node_links'),
     type: 'POST',
-    data: { 'node_ids[]' : nodeIDs },
+    data: { 'node_ids[]' : nodeIDs, 'field_name' : fieldName },
     dataType: 'json',
     success: function (results) {
       for (var nodeID in results) {
