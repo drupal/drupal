@@ -18,7 +18,7 @@ function config_help($path, $arg) {
       )) . '</p>';
       return $output;
 
-    case 'admin/config/development/sync':
+    case 'admin/config/development/configuration/sync':
       $output = '';
       $output .= '<p>' . t('Import configuration that is placed in your staging directory. All changes, deletions, renames, and additions are listed below.') . '</p>';
       return $output;
@@ -61,27 +61,38 @@ function config_file_download($uri) {
  * Implements hook_menu().
  */
 function config_menu() {
-  $items['admin/config/development/sync'] = array(
-    'title' => 'Synchronize configuration',
+  $items['admin/config/development/configuration'] = array(
+    'title' => 'Configuration management',
+    'description' => 'Import, export, or synchronize your site configuration.',
+    'route_name' => 'config_management',
+  );
+  $items['admin/config/development/configuration/sync'] = array(
+    'title' => 'Synchronize',
     'description' => 'Synchronize configuration changes.',
     'route_name' => 'config.sync',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => 0,
   );
-  $items['admin/config/development/export'] = array(
-    'title' => 'Configuration export',
+  $items['admin/config/development/configuration/export'] = array(
+    'title' => 'Export',
     'description' => 'Export your site configuration',
     'route_name' => 'config.export',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 1,
   );
-  $items['admin/config/development/import'] = array(
-    'title' => 'Configuration import',
+  $items['admin/config/development/configuration/import'] = array(
+    'title' => 'Import',
     'description' => 'Import configuration for your site',
     'route_name' => 'config.import',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
   );
-  $items['admin/config/development/sync/diff/%'] = array(
+  $items['admin/config/development/configuration/sync/diff/%'] = array(
     'title' => 'Configuration file diff',
     'description' => 'Diff between active and staged configuration.',
     'route_name' => 'config.diff',
   );
-  $items['admin/config/development/sync/import'] = array(
+  $items['admin/config/development/configuration/sync/import'] = array(
     'title' => 'Import',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
