@@ -351,7 +351,7 @@ function comment_schema() {
  * Implements hook_update_dependencies().
  */
 function comment_update_dependencies() {
-  // Node comment status have been turned to fields after the fields and
+  // Node comment status cannot be turned into fields until after the fields and
   // instances are converted to ConfigEntities.
   $dependencies['comment'][8006]['field'] = 8003;
   return $dependencies;
