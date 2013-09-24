@@ -357,7 +357,7 @@ function comment_permission() {
  *   An array of comment objects or an empty array if there are no recent
  *   comments visible to the current user.
  *
- * @todo Fix entity access for all entity types https://drupal.org/node/1938062
+ * @todo Replace with a view https://drupal.org/node/1938062
  */
 function comment_get_recent($number = 10) {
   $query = db_select('comment', 'c');
