@@ -305,7 +305,7 @@
 }
 .toolbar .menu .menu .toolbar-icon.toolbar-handle:before {
   background-image: url("../../../misc/icons/5181c6/twistie-down.svg");
-  background-size: 75% 75%;
+  background-size: 75%;
 }
 .no-svg .toolbar .menu .menu .toolbar-icon.toolbar-handle:before {
   background-image: url("../../../misc/icons/5181c6/twistie-down.png");
@@ -313,7 +313,7 @@
 }
 .toolbar .menu .menu .toolbar-icon.toolbar-handle.open:before {
   background-image: url("../../../misc/icons/787878/twistie-up.svg");
-  background-size: 75% 75%;
+  background-size: 75%;
 }
 .no-svg .toolbar .menu .menu .toolbar-icon.toolbar-handle.open:before {
   background-image: url("../../../misc/icons/787878/twistie-up.png");

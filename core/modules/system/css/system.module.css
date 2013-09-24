@@ -106,11 +106,14 @@ a.tabledrag-handle:hover {
   text-decoration: none;
 }
 a.tabledrag-handle .handle {
-  background: url(../../../misc/draggable.png) no-repeat 6px 9px;
+  background: url(../../../misc/icons/787878/move.svg) no-repeat 6px 9px;
   height: 13px;
   margin: -0.4em 0.5em; /* LTR */
   padding: 0.42em 0.5em; /* LTR */
   width: 13px;
+}
+.no-svg a.tabledrag-handle .handle {
+  background: url(../../../misc/icons/787878/move.svg) no-repeat 6px 9px;
 }
 [dir="rtl"] a.tabledrag-handle .handle {
   margin: -0.4em 0.5em;

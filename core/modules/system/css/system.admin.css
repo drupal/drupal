@@ -14,12 +14,7 @@ div.admin-panel .description {
   margin: 0 0 3px;
   padding: 2px 0 3px 0;
 }
-div.admin-panel .body {
-  padding: 0 4px 2px 8px; /* LTR */
-}
-[dir="rtl"] div.admin-panel .body {
-  padding: 0 8px 2px 4px;
-}
+
 div.admin {
   padding-top: 15px;
 }
@@ -27,22 +22,16 @@ div.admin {
   div.admin .left {
     float: left; /* LTR */
     width: 47%;
-    margin-left: 1em; /* LTR */
   }
   [dir="rtl"] div.admin .left {
     float: right;
-    margin-left: 0;
-    margin-right: 1em;
   }
   div.admin .right {
     float: right; /* LTR */
     width: 47%;
-    margin-right: 1em; /* LTR */
   }
   [dir="rtl"] div.admin .right {
     float: left;
-    margin-left: 1em;
-    margin-right: 0;
   }
 }
 div.admin .expert-link {
@@ -177,13 +166,22 @@ a.module-link {
   float: left; /* LTR */
 }
 a.module-link-help {
-  background: url(../../../misc/help.png) 0 50% no-repeat; /* LTR */
+  background: url(../../../misc/icons/787878/questionmark-disc.svg) 0 50% no-repeat; /* LTR */
+}
+.no-svg a.module-link-help {
+  background: url(../../../misc/icons/787878/questionmark-disc.png) 0 50% no-repeat; /* LTR */
 }
 a.module-link-permissions {
-  background: url(../../../misc/permissions.png) 0 50% no-repeat; /* LTR */
+  background: url(../../../misc/icons/787878/key.svg) 0 50% no-repeat; /* LTR */
+}
+.no-svg a.module-link-permissions {
+  background: url(../../../misc/icons/787878/key.png) 0 50% no-repeat; /* LTR */
 }
 a.module-link-configure {
-  background: url(../../../misc/configure.png) 0 50% no-repeat; /* LTR */
+  background: url(../../../misc/icons/787878/cog.svg) 0 50% no-repeat; /* LTR */
+}
+.no-svg a.module-link-configure {
+  background: url(../../../misc/icons/787878/cog.svg) 0 50% no-repeat; /* LTR */
 }
 .module-help {
   margin-left: 1em; /* LTR */
@@ -214,10 +212,16 @@ table.system-status-report td.status-icon div {
   width: 16px;
 }
 table.system-status-report tr.error td.status-icon div {
-  background-image: url(../../../misc/message-16-error.png);
+  background-image: url(../../../misc/icons/ea2800/error.svg);
+}
+.no-svg table.system-status-report tr.error td.status-icon div {
+  background-image: url(../../../misc/icons/ea2800/error.png);
 }
 table.system-status-report tr.warning td.status-icon div {
-  background-image: url(../../../misc/message-16-warning.png);
+  background-image: url(../../../misc/icons/e29700/warning.svg);
+}
+.no-svg table.system-status-report tr.warning td.status-icon div {
+  background-image: url(../../../misc/icons/e29700/warning.png);
 }
 table.system-status-report .status-title {
   width: 25%;
