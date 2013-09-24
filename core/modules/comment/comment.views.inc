@@ -437,9 +437,13 @@ function comment_views_data() {
     if ($type == 'comment' || empty($entity_info['fieldable']) || !isset($entity_info['base_table'])) {
       continue;
     }
-    // @todo As you can't have multiple joins this join doesn't use the field_id yet.
+    // This relationship does not use the 'field id' column, if the entity has
+    // multiple comment-fields, then this might introduce duplicates, in which
+    // case the site-builder should enable aggregation and SUM the comment_count
+    // field. We cannot create a relationships from the base table to
+    // {comment_entity_statistics} for each field as multiple joins between
+    // the same two tables is not supported.
     if (Drupal::service('comment.manager')->getFields($type)) {
-      // Explain how this table joins to others.
       $data['comment_entity_statistics']['table']['join'][$entity_info['base_table']] = array(
         'type' => 'INNER',
         'left_field' => $entity_info['entity_keys']['id'],
