@@ -7,6 +7,8 @@
 
 namespace Drupal\comment\Tests;
 
+use Drupal\field\Field;
+
 /**
  * Tests fields on comments.
  */
@@ -70,7 +72,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Drop default comment field added in CommentTestBase::setup().
     // @todo WTF#1497374
     entity_load('field_entity', 'node.comment')->delete();
-    if ($field = field_info_field('node', 'comment_node_forum')) {
+    if ($field = Field::fieldInfo()->getField('node', 'comment_node_forum')) {
       $field->delete();
     }
 
