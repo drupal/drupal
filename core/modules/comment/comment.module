@@ -275,6 +275,7 @@ function comment_menu() {
  */
 function comment_menu_alter(&$items) {
   // Add comments to the description for admin/content.
+  // @todo Revisit after this becomes a view - https://drupal.org/node/1986606.
   $items['admin/content']['description'] = 'Administer content and comments.';
 }
 
