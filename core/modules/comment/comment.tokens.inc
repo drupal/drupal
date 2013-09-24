@@ -102,6 +102,8 @@ function comment_token_info() {
     'tokens' => array(
       'entity' => $entity,
       'comment' => $comment,
+      // Support deprecated node tokens.
+      'node' => $entity,
     ),
   );
 }

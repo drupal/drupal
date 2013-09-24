@@ -106,7 +106,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests['[node:comment-count-new]'] = 2;
 
     foreach ($tests as $input => $expected) {
-      $output = $token_service->replace($input, array('entity' => $node), array('langcode' => $language_interface->id));
+      $output = $token_service->replace($input, array('entity' => $node, 'node' => $node), array('langcode' => $language_interface->id));
       $this->assertEqual($output, $expected, format_string('Node comment token %token replaced.', array('%token' => $input)));
     }
   }
