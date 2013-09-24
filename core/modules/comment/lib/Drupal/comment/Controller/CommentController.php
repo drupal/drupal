@@ -154,7 +154,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
    *   The comment listing set to the page on which the comment appears.
    */
   public function commentPermalink(Request $request, CommentInterface $comment) {
-    if ($entity = entity_load($comment->entity_type->value, $comment->entity_id->value)) {
+    if ($entity = $this->entityManager()->getStorageController($comment->entity_type->value)->load($comment->entity_id->value)) {
       // Check access permissions for the entity.
       if (!$entity->access('view')) {
         throw new AccessDeniedHttpException();
