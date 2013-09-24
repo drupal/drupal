@@ -80,7 +80,6 @@ class CommentStatisticsTest extends CommentTestBase {
     // Post comment #2 as anonymous (comment approval enabled).
     $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $anonymous_comment = $this->postComment($this->node, $this->randomName(), '', TRUE);
-    $comment_unpublished_loaded = comment_load($anonymous_comment->id());
 
     // Checks the new values of node comment statistics with comment #2 and
     // ensure they haven't changed since the comment has not been moderated.
