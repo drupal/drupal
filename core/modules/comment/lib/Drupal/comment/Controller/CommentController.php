@@ -334,7 +334,7 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
       $query = comment_new_page_count($node->comment_count, $new, $node);
       $links[$nid] = array(
         'new_comment_count' => (int)$new,
-        'first_new_comment_link' => url('node/' . $node->id(), array('query' => $query, 'fragment' => 'new')),
+        'first_new_comment_link' => $this->urlGenerator()->generateFromPath('node/' . $node->id(), array('query' => $query, 'fragment' => 'new')),
       );
     }
 
