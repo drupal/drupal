@@ -83,7 +83,8 @@ function comment_install() {
       }
     }
   }
-  // Set default value of comment.maintain_entity_statistics.
+  // By default, maintain entity statistics for comments.
+  // @see \Drupal\comment\CommentStorageController::updateEntityStatistics().
   Drupal::state()->set('comment.maintain_entity_statistics', TRUE);
 }
 
