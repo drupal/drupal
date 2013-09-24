@@ -54,7 +54,21 @@ function tracker_page($account = NULL, $set_title = FALSE) {
     $nodes = node_load_multiple($nids);
     // @todo This should be actually filtering on the desired language and just
     //   fall back to the default language.
-    $result = db_query("SELECT n.nid, SUM(l.comment_count) AS comment_count FROM {node_field_data} n INNER JOIN {comment_entity_statistics} l ON n.nid = l.entity_id AND l.entity_type = 'node' INNER JOIN {users} u ON n.uid = u.uid WHERE n.nid IN (:nids) AND n.default_langcode = 1 GROUP BY n.nid ORDER BY n.changed DESC", array(':nids' => array_keys($nodes)), array('target' => 'slave'))->fetchAllKeyed();
+    $result = db_query("
+    SELECT
+      n.nid,
+      SUM(l.comment_count) AS comment_count
+    FROM {node_field_data} n
+      INNER JOIN {comment_entity_statistics} l
+        ON n.nid = l.entity_id AND l.entity_type = 'node'
+      INNER JOIN {users} u
+        ON n.uid = u.uid
+    WHERE n.nid IN (:nids)
+      AND n.default_langcode = 1
+    GROUP BY n.nid
+    ORDER BY n.changed DESC", array(
+      ':nids' => array_keys($nodes)
+    ), array('target' => 'slave'))-an>fetchAllKeyed();
     foreach ($result as $nid => $comment_count) {
       $nodes[$nid]->last_activity = $tracker_data[$nid]->changed;
       $nodes[$nid]->comment_count = $comment_count;
