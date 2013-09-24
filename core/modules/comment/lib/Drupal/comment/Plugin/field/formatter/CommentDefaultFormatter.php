@@ -7,11 +7,17 @@
 
 namespace Drupal\comment\Plugin\field\formatter;
 
+use Drupal\comment\CommentStorageControllerInterface;
+use Drupal\Core\Entity\EntityRenderControllerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a default comment formatter.
@@ -25,7 +31,74 @@ use Drupal\Core\Entity\EntityInterface;
  *   }
  * )
  */
-class CommentDefaultFormatter extends FormatterBase {
+class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
+
+  /**
+   * The comment storage controller.
+   *
+   * @var \Drupal\comment\CommentStorageControllerInterface
+   */
+  protected $storageController;
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * The comment render controller.
+   *
+   * @var \Drupal\Core\Entity\EntityRenderControllerInterface
+   */
+  protected $renderController;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['label'],
+      $configuration['view_mode'],
+      $container->get('current_user'),
+      $container->get('entity_manager')->getStorageController('comment'),
+      $container->get('entity_manager')->getRenderController('comment')
+    );
+  }
+
+  /**
+   * Constructs a new CommentDefaultFormatter.
+   *
+   * @param string $plugin_id
+   *   The plugin_id for the formatter.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+   *   The definition of the field to which the formatter is associated.
+   * @param array $settings
+   *   The formatter settings.
+   * @param string $label
+   *   The formatter label display setting.
+   * @param string $view_mode
+   *   The view mode.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
+   * @param \Drupal\comment\CommentStorageControllerInterface
+   *   The comment storage controller.
+   * @param \Drupal\Core\Entity\EntityRenderControllerInterface
+   *   The comment render controller.
+   */
+  public function __construct($plugin_id, array $plugin_definition,  FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, AccountInterface $current_user, CommentStorageControllerInterface $comment_storage_controller, EntityRenderControllerInterface $comment_render_controller) {
+    parent::_construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode);
+    $this->renderController = $comment_render_controller;
+    $this->storageController = $comment_storage_controller;
+    $this->currentUser = $current_user;
+  }
 
   /**
    * {@inheritdoc}
@@ -45,7 +118,7 @@ class CommentDefaultFormatter extends FormatterBase {
       // Unpublished comments are not included in
       // $entity->get($field_name)->comment_count, but unpublished comments
       // should display if the user is an administrator.
-      if ((($entity->get($field_name)->comment_count && user_access('access comments')) || user_access('administer comments')) &&
+      if ((($entity->get($field_name)->comment_count && $this->currentUser->hasPermission('access comments')) || $this->currentUser->hasPermission('administer comments')) &&
       !empty($entity->content['#view_mode']) &&
       !in_array($entity->content['#view_mode'], array('search_result', 'search_index'))) {
 
@@ -54,9 +127,9 @@ class CommentDefaultFormatter extends FormatterBase {
         $mode = $comment_settings['default_mode'];
         $comments_per_page = $comment_settings['per_page'];
         if ($cids = comment_get_thread($entity, $field_name, $mode, $comments_per_page)) {
-          $comments = comment_load_multiple($cids);
+          $comments = $this->storageController->loadMultiple($cids);
           comment_prepare_thread($comments);
-          $build = comment_view_multiple($comments);
+          $build = $this->renderController->viewMultiple($comments);
           $build['pager']['#theme'] = 'pager';
           $additions['comments'] = $build;
         }
@@ -67,7 +140,7 @@ class CommentDefaultFormatter extends FormatterBase {
       if ($commenting_status == COMMENT_OPEN && $comment_settings['form_location'] == COMMENT_FORM_BELOW) {
         // Only show the add comment form if the user has permission and the
         // view mode is not search_result or search_index.
-        if (user_access('post comments') && !empty($entity->content['#view_mode']) &&
+        if ($this->currentUser->hasPermission('post comments') && !empty($entity->content['#view_mode']) &&
           !in_array($entity->content['#view_mode'], array('search_result', 'search_index'))) {
           $additions['comment_form'] = comment_add($entity, $field_name);
         }
