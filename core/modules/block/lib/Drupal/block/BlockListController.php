@@ -101,6 +101,7 @@ class BlockListController extends ConfigEntityListController implements FormInte
     // @todo Move the functionality of _block_rehash() out of the listing page.
     $entities = _block_rehash($this->theme);
 
+    // Sort the blocks using \Drupal\block\Entity\Block::sort().
     uasort($entities, array($this->entityInfo['class'], 'sort'));
     return $entities;
   }
