@@ -7,12 +7,11 @@
 
 namespace Drupal\comment;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityControllerInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityRenderController;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\entity\Entity\EntityDisplay;
 use Drupal\field\FieldInfo;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -44,13 +43,6 @@ class CommentRenderController extends EntityRenderController implements EntityCo
   protected $moduleHandler;
 
   /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $currentUser;
-
-  /**
    * {@inheritdoc}
    */
   public static function createInstance(ContainerInterface $container, $entity_type, array $entity_info) {
@@ -58,8 +50,7 @@ class CommentRenderController extends EntityRenderController implements EntityCo
       $entity_type,
       $container->get('entity.manager'),
       $container->get('field.info'),
-      $container->get('module_handler'),
-      $container->get('current_user')
+      $container->get('module_handler')
     );
   }
 
@@ -74,16 +65,12 @@ class CommentRenderController extends EntityRenderController implements EntityCo
    *   The field info service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   The current user.
    */
-
-  public function __construct($entity_type, EntityManager $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler, AccountInterface $current_user) {
+  public function __construct($entity_type, EntityManager $entity_manager, FieldInfo $field_info, ModuleHandlerInterface $module_handler) {
     parent::__construct($entity_type);
     $this->entityManager = $entity_manager;
     $this->fieldInfo = $field_info;
     $this->moduleHandler = $module_handler;
-    $this->currentUser = $current_user;
   }
 
   /**
@@ -138,8 +125,7 @@ class CommentRenderController extends EntityRenderController implements EntityCo
           '#theme' => 'links__comment__comment',
           // The "entity" property is specified to be present, so no need to
           // check.
-          // @todo replace this with a method on the manager and deprecate
-          //   comment_links().
+          // @todo deprecate comment_links(). https://drupal.org/node/1975962
           '#links' => comment_links($entity, $comment_entity, $entity->field_name->value),
           '#attributes' => array('class' => array('links', 'inline')),
         );
@@ -149,7 +135,7 @@ class CommentRenderController extends EntityRenderController implements EntityCo
         $entity->content['#attached'] = array();
       }
       $entity->content['#attached']['library'][] = array('comment', 'drupal.comment-by-viewer');
-      if ($this->moduleHandler->moduleExists('history') && $this->currentUser->isAuthenticated()) {
+      if ($this->moduleHandler->moduleExists('history') &&  \Drupal::currentUser()->isAuthenticated()) {
         $entity->content['#attached']['library'][] = array('comment', 'drupal.comment-new-indicator');
       }
     }
