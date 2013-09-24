@@ -593,6 +593,7 @@ function comment_update_8006(&$sandbox) {
     // Make sure field doesn't already exist.
     $index = 0;
 
+    // @todo Refactor once https://drupal.org/node/1856972 lands.
     while (!Drupal::config('field.field.node.' . $field['name'])->isNew()) {
       // Append a numeric index.
       $field['id'] = 'node.' . $field_name . '_' . $index;
@@ -612,6 +613,7 @@ function comment_update_8006(&$sandbox) {
     $field['schema'] = CommentItem::schema($field_object);
     _update_8003_field_create_field($field);
 
+    // @todo Refactor once https://drupal.org/node/1856972 lands.
     if (Drupal::config("field.instance.node.$node_type." . $field['name'])->isNew()) {
       // Add the comment field, setting the instance settings to match those for
       // the given node_type.
