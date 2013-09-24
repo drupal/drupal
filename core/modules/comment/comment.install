@@ -145,14 +145,14 @@ function comment_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The entity_id to which this comment is a reply.',
+        'description' => 'The entity_id of the entity to which this comment is a reply.',
       ),
       'entity_type' => array(
         'type' => 'varchar',
         'not null' => TRUE,
         'default' => 'node',
         'length' => 255,
-        'description' => 'The entity_type to which this comment is a reply.',
+        'description' => 'The entity_type of the entity to which this comment is a reply.',
       ),
       'field_id' => array(
         'type' => 'varchar',
@@ -274,14 +274,14 @@ function comment_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
         'default' => 0,
-        'description' => 'The entity_id for which the statistics are compiled.',
+        'description' => 'The entity_id of the entity for which the statistics are compiled.',
       ),
       'entity_type' => array(
         'type' => 'varchar',
         'not null' => TRUE,
         'default' => 'node',
         'length' => 255,
-        'description' => 'The entity_type to which this comment is a reply.',
+        'description' => 'The entity_type of the entity to which this comment is a reply.',
       ),
       'field_id' => array(
         'type' => 'varchar',
@@ -489,7 +489,7 @@ function comment_update_8005(&$sandbox) {
     'not null' => TRUE,
     'default' => 'node',
     'length' => 255,
-    'description' => 'The entity_type to which this comment is a reply.',
+    'description' => 'The entity_type of the entity to which this comment is a reply.',
   ));
   db_add_field('comment', 'field_id', array(
     'type' => 'varchar',
@@ -503,7 +503,7 @@ function comment_update_8005(&$sandbox) {
     'type' => 'int',
     'not null' => TRUE,
     'default' => 0,
-    'description' => 'The entity_id to which this comment is a reply.',
+    'description' => 'The entity_id of the entity to which this comment is a reply.',
   ));
   db_add_index('comment', 'comment_num_new', array(
     'entity_id',
@@ -541,7 +541,7 @@ function comment_update_8005(&$sandbox) {
     'not null' => TRUE,
     'default' => 'node',
     'length' => 255,
-    'description' => 'The entity_type to which this comment is a reply.',
+    'description' => 'The entity_type of the entity to which this comment is a reply.',
   ));
   db_add_field('comment_entity_statistics', 'field_id', array(
     'type' => 'varchar',
@@ -555,7 +555,7 @@ function comment_update_8005(&$sandbox) {
     'type' => 'int',
     'not null' => TRUE,
     'default' => 0,
-    'description' => 'The entity_id to which this comment is a reply.',
+    'description' => 'The entity_id of the entity to which this comment is a reply.',
   ));
 
   // Add indexes.
