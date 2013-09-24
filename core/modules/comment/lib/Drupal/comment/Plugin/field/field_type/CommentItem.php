@@ -199,7 +199,8 @@ class CommentItem extends ConfigFieldItemBase {
    * {@inheritdoc}
    */
   public function isEmpty() {
-    // We always want the values saved so we can rely on them.
+    // There is always a value for this field, it is one of COMMENT_OPEN,
+    // COMMENT_CLOSED or COMMENT_HIDDEN.
     return FALSE;
   }
 
