@@ -653,11 +653,9 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
 
       $langcodes = $field['translatable'] ? array_keys($entity->getTranslationLanguages()) : array(Language::LANGCODE_NOT_SPECIFIED);
       foreach ($langcodes as $langcode) {
-        $items = $entity->getTranslation($langcode)->{$field_name}->getValue();
-        if (!isset($items)) {
-          continue;
-        }
         $delta_count = 0;
+        $items = $entity->getTranslation($langcode)->get($field_name);
+        $items->filterEmptyValues();
         foreach ($items as $delta => $item) {
           // We now know we have someting to insert.
           $do_insert = TRUE;
@@ -670,9 +668,8 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
           );
           foreach ($field['columns'] as $column => $attributes) {
             $column_name = static::_fieldColumnName($field, $column);
-            $value = isset($item[$column]) ? $item[$column] : NULL;
             // Serialize the value if specified in the column schema.
-            $record[$column_name] = (!empty($attributes['serialize'])) ? serialize($value) : $value;
+            $record[$column_name] = !empty($attributes['serialize']) ? serialize($item->$column) : $item->$column;
           }
           $query->values($record);
           $revision_query->values($record);
