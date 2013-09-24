@@ -514,14 +514,14 @@ ul.tabs {
 .messages {
   background: no-repeat 10px 18px;  /* LTR */
   border: 1px solid;
-  border-width: 1px 1px 1px 8px;  /* LTR */
+  border-width: 1px 1px 1px 0;  /* LTR */
   border-radius: 2px;
   padding: 15px 20px 15px 35px; /* LTR */
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
 [dir="rtl"] .messages {
-  border-width: 1px 8px 1px 1px;
+  border-width: 1px 0 1px 1px;
   background-position-x: 99%;
   padding-left: 20px;
   padding-right: 35px;
@@ -541,13 +541,15 @@ ul.tabs {
 
 /* @TODO Separate tables and messages styling */
 .messages--status {
-  border-color: #c9e1bd #c9e1bd #c9e1bd #77b259;  /* LTR */
+  border-color: #c9e1bd #c9e1bd #c9e1bd transparent;  /* LTR */
   background-image: url(../../../misc/icons/73b355/check.svg);
   background-position: 12px 19px;  /* LTR */
+  box-shadow: -8px 0 0 #77b259; /* LTR */
 }
 [dir="rtl"] .messages--status {
   background-position: 99.3% 19px;
-  border-color: #c9e1bd #77b259 #c9e1bd #c9e1bd;
+  border-color: #c9e1bd transparent #c9e1bd #c9e1bd;
+  box-shadow: 8px 0 0 #77b259;
 }
 .no-svg .messages--status {
   background-image: url(../../../misc/icons/73b355/check.png);
@@ -563,10 +565,12 @@ table tr.ok {
 
 .messages--warning {
   background-image: url(../../../misc/icons/e29700/warning.svg);
-  border-color: #f4daa6 #f4daa6 #f4daa6 #e09600;  /* LTR */
+  border-color: #f4daa6 #f4daa6 #f4daa6 transparent;  /* LTR */
+  box-shadow: -8px 0 0 #e09600; /* LTR */
 }
 [dir="rtl"] .messages--warning {
-  border-color: #f4daa6 #e09600 #f4daa6 #f4daa6;
+  border-color: #f4daa6 transparent #f4daa6 #f4daa6;
+  box-shadow: 8px 0 0 #e09600;
 }
 .no-svg .messages--warning {
   background-image: url(../../../misc/icons/e29700/warning.png);
@@ -582,10 +586,12 @@ table tr.warning {
 
 .messages--error {
   background-image: url(../../../misc/icons/ea2800/error.svg);
-  border-color: #f9c9bf #f9c9bf #f9c9bf #e62600;  /* LTR */
+  border-color: #f9c9bf #f9c9bf #f9c9bf transparent;  /* LTR */
+  box-shadow: -8px 0 0 #e62600; /* LTR */
 }
 [dir="rtl"] .messages--error {
-  border-color: #f9c9bf #e62600 #f9c9bf #f9c9bf;
+  border-color: #f9c9bf transparent #f9c9bf #f9c9bf;
+  box-shadow: -8px 0 0 #e62600;
 }
 .no-svg .messages--error {
   background-image: url(../../../misc/icons/ea2800/error.png);
