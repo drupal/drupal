@@ -1230,6 +1230,9 @@ function comment_load($cid, $reset = FALSE) {
  *
  * @return
  *   The number of new comments or FALSE if the user is not logged in.
+ *
+ * @todo Move to a method on comment manager service
+ *   - https://drupal.org/node/2097123.
  */
 function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestamp = 0) {
   global $user;
