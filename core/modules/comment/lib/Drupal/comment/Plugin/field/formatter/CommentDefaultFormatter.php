@@ -94,7 +94,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    *   The comment render controller.
    */
   public function __construct($plugin_id, array $plugin_definition,  FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, AccountInterface $current_user, CommentStorageControllerInterface $comment_storage_controller, EntityRenderControllerInterface $comment_render_controller) {
-    parent::_construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode);
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode);
     $this->renderController = $comment_render_controller;
     $this->storageController = $comment_storage_controller;
     $this->currentUser = $current_user;
