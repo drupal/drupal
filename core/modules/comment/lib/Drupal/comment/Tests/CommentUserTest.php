@@ -346,6 +346,9 @@ class CommentUserTest extends WebTestBase {
     $this->assertLink('Log in', 0, 'Link to log in was found.');
     $this->assertLink('register', 0, 'Link to register was found.');
 
+    // Test the combination of anonymous users being able to post, but not view
+    // comments, to ensure that access to post comments doesn't grant access to
+    // view them.
     user_role_change_permissions(DRUPAL_ANONYMOUS_RID, array(
       'access comments' => FALSE,
       'post comments' => TRUE,
