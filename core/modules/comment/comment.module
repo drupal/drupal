@@ -593,7 +593,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
             if ($comment_form_location == COMMENT_FORM_SEPARATE_PAGE || (!empty($entity->get($field_name)->comment_count) && user_access('access comments'))) {
               $links['comment-add'] = array(
                 'title' => t('Add new comment'),
-                'attributes' => array('title' => t('Share your thoughts and opinions related to this item.')),
+                'attributes' => array('title' => t('Share your thoughts and opinions related to this posting.')),
                 'href' => $uri['path'],
                 'fragment' => 'comment-form',
               );
