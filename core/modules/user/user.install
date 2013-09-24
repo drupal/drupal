@@ -5,7 +5,6 @@
  * Install, update and uninstall functions for the user module.
  */
 
-use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Language\Language;
 
 /**
@@ -635,7 +634,7 @@ function user_update_8011() {
     // of file_save_data() by updating an eventually existing record for that
     // file.
     file_unmanaged_save_data($default_image, $destination, FILE_EXISTS_REPLACE);
-    $uuid = new Uuid();
+    $uuid = \Drupal::service('uuid');
     db_merge('file_managed')
       ->key(array(
         'uri' => $destination,
@@ -1037,7 +1036,7 @@ function user_update_8017() {
  * @ingroup config_upgrade
  */
 function user_update_8018() {
-  $uuid = new Uuid();
+  $uuid = \Drupal::service('uuid');
 
   $roles = db_select('role', 'r')
     ->fields('r')
@@ -1138,7 +1137,7 @@ function user_update_8020() {
  * Create the 'register' form mode.
  */
 function user_update_8021() {
-  $uuid = new Uuid();
+  $uuid = \Drupal::service('uuid');
 
   \Drupal::config("entity.form_mode.user.register")
     ->set('id', "user.register")

@@ -4,7 +4,7 @@
  * @file
  * Install, update and uninstall functions for the block module.
  */
-use Drupal\Component\Uuid\Uuid;
+
 use Drupal\Core\Language\Language;
 
 /**
@@ -198,7 +198,7 @@ function block_update_8007() {
   // Populate the {custom_block} and {custom_block_revision} table.
   $results = db_select('block_custom', 'bc')->fields('bc')->execute();
 
-  $uuid = new Uuid();
+  $uuid = \Drupal::service('uuid');
   $execute = FALSE;
   $block_insert = db_insert('custom_block')->fields(array(
     'id',

@@ -111,7 +111,7 @@ function menu_update_8003() {
  * @ingroup config_upgrade
  */
 function menu_update_8004() {
-  $uuid = new Uuid();
+  $uuid = \Drupal::service('uuid');
   $result = db_query('SELECT * FROM {menu_custom}');
   foreach ($result as $menu) {
     // Save the config object.

@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Entity;
 
-use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\Plugin\DataType\EntityReferenceItem;
 use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\TranslatableInterface;
@@ -448,8 +447,8 @@ class Entity implements \IteratorAggregate, EntityInterface {
 
     // Check if the entity type supports UUIDs and generate a new one if so.
     if (!empty($entity_info['entity_keys']['uuid'])) {
-      $uuid = new Uuid();
-      $duplicate->{$entity_info['entity_keys']['uuid']} = $uuid->generate();
+      // @todo Inject the UUID service into the Entity class once possible.
+      $duplicate->{$entity_info['entity_keys']['uuid']} = \Drupal::service('uuid')->generate();
     }
     return $duplicate;
   }

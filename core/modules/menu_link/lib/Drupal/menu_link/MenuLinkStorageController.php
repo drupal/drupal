@@ -7,6 +7,7 @@
 
 namespace Drupal\menu_link;
 
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageException;
@@ -55,11 +56,13 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
    *   The database connection to be used.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
+   * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
+   *   The UUID Service.
    * @param \Symfony\Cmf\Component\Routing\RouteProviderInterface $route_provider
    *   The route provider service.
    */
-  public function __construct($entity_type, array $entity_info, Connection $database, FieldInfo $field_info, RouteProviderInterface $route_provider) {
-    parent::__construct($entity_type, $entity_info, $database, $field_info);
+  public function __construct($entity_type, array $entity_info, Connection $database, FieldInfo $field_info, UuidInterface $uuid_service, RouteProviderInterface $route_provider) {
+    parent::__construct($entity_type, $entity_info, $database, $field_info, $uuid_service);
 
     $this->routeProvider = $route_provider;
 
@@ -89,6 +92,7 @@ class MenuLinkStorageController extends DatabaseStorageController implements Men
       $entity_info,
       $container->get('database'),
       $container->get('field.info'),
+      $container->get('uuid'),
       $container->get('router.route_provider')
     );
   }

@@ -6,7 +6,6 @@
  */
 
 use Drupal\Component\Utility\Crypt;
-use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Language\Language;
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -1897,7 +1896,7 @@ function system_update_8044() {
  * @ingroup config_upgrade
  */
 function system_update_8045() {
-  $uuid = new Uuid();
+  $uuid = \Drupal::service('uuid');
   // Fetch all date types from {date_format_type}.
   $date_formats = db_query('SELECT * FROM {date_format_type}')->fetchAllAssoc('type', PDO::FETCH_ASSOC);
   if (!empty($date_formats)) {

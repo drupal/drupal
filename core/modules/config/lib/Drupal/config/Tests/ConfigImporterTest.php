@@ -60,7 +60,8 @@ class ConfigImporterTest extends DrupalUnitTestBase {
       $this->container->get('event_dispatcher'),
       $this->container->get('config.factory'),
       $this->container->get('entity.manager'),
-      $this->container->get('lock')
+      $this->container->get('lock'),
+      $this->container->get('uuid')
     );
     $this->copyConfig($this->container->get('config.storage'), $this->container->get('config.storage.staging'));
   }

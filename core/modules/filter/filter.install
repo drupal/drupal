@@ -5,8 +5,6 @@
  * Install, update, and uninstall functions for the Filter module.
  */
 
-use Drupal\Component\Uuid\Uuid;
-
 /**
  * @addtogroup updates-7.x-to-8.x
  * @{
@@ -29,7 +27,7 @@ function filter_update_8000() {
  * @ingroup config_upgrade
  */
 function filter_update_8001() {
-  $uuid = new Uuid();
+  $uuid = \Drupal::service('uuid');
   $result = db_query('SELECT format, name, cache, status, weight FROM {filter_format}', array(), array('fetch' => PDO::FETCH_ASSOC));
   foreach ($result as $format) {
     $id = $format['format'];

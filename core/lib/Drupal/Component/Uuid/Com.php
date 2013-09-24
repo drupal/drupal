@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Uuid\Com.
+ * Contains \Drupal\Component\Uuid\Com.
  */
 
 namespace Drupal\Component\Uuid;

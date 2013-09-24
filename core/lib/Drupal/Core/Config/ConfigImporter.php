@@ -10,6 +10,7 @@ namespace Drupal\Core\Config;
 use Drupal\Core\Config\Context\FreeConfigContext;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Lock\LockBackendInterface;
+use Drupal\Component\Uuid\UuidInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -95,6 +96,13 @@ class ConfigImporter {
   protected $validated;
 
   /**
+   * The UUID service.
+   *
+   * @var \Drupal\Component\Uuid\UuidInterface
+   */
+  protected $uuidService;
+
+  /**
    * Constructs a configuration import object.
    *
    * @param \Drupal\Core\Config\StorageComparerInterface $storage_comparer
@@ -108,18 +116,21 @@ class ConfigImporter {
    *   The entity manager used to import config entities.
    * @param \Drupal\Core\Lock\LockBackendInterface
    *   The lock backend to ensure multiple imports do not occur at the same time.
+   * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
+   *   The UUID service.
    */
-  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigFactory $config_factory, EntityManager $entity_manager, LockBackendInterface $lock) {
+  public function __construct(StorageComparerInterface $storage_comparer, EventDispatcherInterface $event_dispatcher, ConfigFactory $config_factory, EntityManager $entity_manager, LockBackendInterface $lock, UuidInterface $uuid_service) {
     $this->storageComparer = $storage_comparer;
     $this->eventDispatcher = $event_dispatcher;
     $this->configFactory = $config_factory;
     $this->entityManager = $entity_manager;
     $this->lock = $lock;
+    $this->uuidService = $uuid_service;
     $this->processed = $this->storageComparer->getEmptyChangelist();
     // Use an override free context for importing so that overrides to do not
     // pollute the imported data. The context is hard coded to ensure this is
     // the case.
-    $this->context = new FreeConfigContext($this->eventDispatcher);
+    $this->context = new FreeConfigContext($this->eventDispatcher, $this->uuidService);
   }
 
   /**

@@ -9,7 +9,6 @@ namespace Drupal\comment;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\DatabaseStorageControllerNG;
-use Drupal\Component\Uuid\Uuid;
 
 /**
  * Defines the controller class for comments.

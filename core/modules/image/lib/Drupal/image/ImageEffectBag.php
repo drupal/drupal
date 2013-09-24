@@ -8,7 +8,6 @@
 namespace Drupal\image;
 
 use Drupal\Component\Utility\MapArray;
-use Drupal\Component\Uuid\Uuid;
 use Drupal\Component\Plugin\DefaultPluginBag;
 
 /**
@@ -40,7 +39,7 @@ class ImageEffectBag extends DefaultPluginBag {
   public function updateConfiguration(array $configuration) {
     // Derive the instance ID from the configuration.
     if (empty($configuration['uuid'])) {
-      $uuid_generator = new Uuid();
+      $uuid_generator = \Drupal::service('uuid');
       $configuration['uuid'] = $uuid_generator->generate();
     }
     $instance_id = $configuration['uuid'];

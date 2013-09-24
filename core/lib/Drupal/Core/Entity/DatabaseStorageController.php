@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Language\Language;
@@ -28,6 +29,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * requiring special handling can extend the class.
  */
 class DatabaseStorageController extends FieldableEntityStorageControllerBase {
+
+  /**
+   * The UUID service.
+   *
+   * @var \Drupal\Component\Uuid\UuidInterface
+   */
+  protected $uuidService;
 
   /**
    * Name of entity's revision database table field, if it supports revisions.
@@ -76,7 +84,8 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
       $entity_type,
       $entity_info,
       $container->get('database'),
-      $container->get('field.info')
+      $container->get('field.info'),
+      $container->get('uuid')
     );
   }
 
@@ -91,12 +100,15 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
    *   The database connection to be used.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
+   * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
+   *   The UUID service.
    */
-  public function __construct($entity_type, array $entity_info, Connection $database, FieldInfo $field_info) {
+  public function __construct($entity_type, array $entity_info, Connection $database, FieldInfo $field_info, UuidInterface $uuid_service) {
     parent::__construct($entity_type, $entity_info);
 
     $this->database = $database;
     $this->fieldInfo = $field_info;
+    $this->uuidService = $uuid_service;
 
     // Check if the entity type supports IDs.
     if (isset($this->entityInfo['entity_keys']['id'])) {
@@ -380,8 +392,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
 
     // Assign a new UUID if there is none yet.
     if ($this->uuidKey && !isset($entity->{$this->uuidKey})) {
-      $uuid = new Uuid();
-      $entity->{$this->uuidKey} = $uuid->generate();
+      $entity->{$this->uuidKey} = $this->uuidService->generate();
     }
     $entity->postCreate($this);
 

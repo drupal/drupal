@@ -9,6 +9,7 @@ namespace Drupal\Core\Config\Context;
 
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigException;
+use Drupal\Component\Uuid\UuidInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -28,13 +29,23 @@ class ConfigContextFactory {
   protected $eventDispatcher;
 
   /**
+   * The UUID service.
+   *
+   * @var \Drupal\Component\Uuid\UuidInterface
+   */
+  protected $uuidService;
+
+  /**
    * Constructs the configuration context.
    *
    * @param \Symfony\Component\EventDispatcher\EventDispatcher $event_dispatcher
    *   An event dispatcher instance to use for configuration events.
+   * @param \Drupal\Component\Uuid\UuidInterface
+   *   The UUID service.
    */
-  public function __construct(EventDispatcher $event_dispatcher) {
+  public function __construct(EventDispatcher $event_dispatcher, UuidInterface $uuid) {
     $this->eventDispatcher = $event_dispatcher;
+    $this->uuidService = $uuid;
   }
 
   /**
@@ -52,7 +63,7 @@ class ConfigContextFactory {
       $class = 'Drupal\Core\Config\Context\ConfigContext';
     }
     if (class_exists($class)) {
-      $context = new $class($this->eventDispatcher);
+      $context = new $class($this->eventDispatcher, $this->uuidService);
     }
     else {
       throw new ConfigException(sprintf('Unknown config context class: %s', $class));

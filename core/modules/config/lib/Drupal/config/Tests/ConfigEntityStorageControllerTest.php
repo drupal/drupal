@@ -8,7 +8,6 @@
 namespace Drupal\config\Tests;
 
 use Drupal\simpletest\DrupalUnitTestBase;
-use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Config\ConfigDuplicateUUIDException;
 
 /**
@@ -44,8 +43,7 @@ class ConfigEntityStorageControllerTest extends DrupalUnitTestBase {
     $original_properties = $entity->getExportProperties();
 
     // Override with a new UUID and try to save.
-    $uuid = new Uuid();
-    $new_uuid = $uuid->generate();
+    $new_uuid = $this->container->get('uuid')->generate();
     $entity->set('uuid', $new_uuid);
 
     try {

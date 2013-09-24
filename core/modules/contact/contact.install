@@ -5,7 +5,6 @@
  * Install, update and uninstall functions for the contact module.
  */
 
-use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Language\Language;
 
 /**
@@ -54,7 +53,7 @@ function contact_update_8000() {
  * @ingroup config_upgrade
  */
 function contact_update_8001() {
-  $uuid = new Uuid();
+  $uuid = \Drupal::service('uuid');
   $result = db_query('SELECT * FROM {contact}');
   foreach ($result as $category) {
     // Take over the category's serial ID as new machine name.
