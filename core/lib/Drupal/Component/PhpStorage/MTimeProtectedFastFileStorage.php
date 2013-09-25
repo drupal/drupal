@@ -41,6 +41,8 @@ class MTimeProtectedFastFileStorage extends FileStorage {
 
   /**
    * The .htaccess code to make a directory private.
+   *
+   * Disabling Options Indexes is particularly important.
    */
   const HTACCESS="SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006\nDeny from all\nOptions None\nOptions +FollowSymLinks";
 
@@ -71,7 +73,11 @@ class MTimeProtectedFastFileStorage extends FileStorage {
    * Implements Drupal\Component\PhpStorage\PhpStorageInterface::save().
    */
   public function save($name, $data) {
-    $this->ensureDirectory();
+    $this->ensureDirectory($this->directory);
+    $htaccess_path =  $this->directory . '/.htaccess';
+    if (!file_exists($htaccess_path) && file_put_contents($htaccess_path, self::HTACCESS)) {
+      @chmod($htaccess_path, 0444);
+    }
 
     // Write the file out to a temporary location. Prepend with a '.' to keep it
     // hidden from listings and web servers.
@@ -79,7 +85,9 @@ class MTimeProtectedFastFileStorage extends FileStorage {
     if (!@file_put_contents($temporary_path, $data)) {
       return FALSE;
     }
-    chmod($temporary_path, 0400);
+    // The file will not be chmod() in the future so this is the final
+    // permission.
+    chmod($temporary_path, 0444);
 
     // Prepare a directory dedicated for just this file. Ensure it has a current
     // mtime so that when the file (hashed on that mtime) is moved into it, the
@@ -87,12 +95,9 @@ class MTimeProtectedFastFileStorage extends FileStorage {
     // the rename, in which case we'll try again).
     $directory = $this->getContainingDirectoryFullPath($name);
     if (file_exists($directory)) {
-      $this->cleanDirectory($directory);
-      touch($directory);
+      $this->unlink($directory);
     }
-    else {
-      mkdir($directory);
-    }
+    $this->ensureDirectory($directory);
 
     // Move the file to its final place. The mtime of a directory is the time of
     // the last file create or delete in the directory. So the moving will
@@ -105,7 +110,6 @@ class MTimeProtectedFastFileStorage extends FileStorage {
     $i = 0;
     while (($mtime = $this->getUncachedMTime($directory)) && ($mtime != $previous_mtime)) {
       $previous_mtime = $mtime;
-      chmod($directory, 0700);
       // Reset the file back in the temporary location if this is not the first
       // iteration.
       if ($i > 0) {
@@ -118,55 +122,9 @@ class MTimeProtectedFastFileStorage extends FileStorage {
       }
       $full_path = $this->getFullPath($name, $directory, $mtime);
       rename($temporary_path, $full_path);
-
-      // Leave the directory neither readable nor writable. Since the file
-      // itself is not writable (set to 0400 at the beginning of this function),
-      // there's no way to tamper with it without access to change permissions.
-      chmod($directory, 0100);
       $i++;
     }
     return TRUE;
-  }
-
-  /**
-   * Implements Drupal\Component\PhpStorage\PhpStorageInterface::delete().
-   */
-  public function delete($name) {
-    $directory = dirname($this->getFullPath($name));
-    if (file_exists($directory)) {
-      $this->cleanDirectory($directory);
-      return rmdir($directory);
-    }
-    return FALSE;
-  }
-
-  /**
-   * Ensures the root directory exists and has correct permissions.
-   */
-  protected function ensureDirectory() {
-    if (!file_exists($this->directory)) {
-      mkdir($this->directory, 0700, TRUE);
-    }
-    chmod($this->directory, 0700);
-    $htaccess_path =  $this->directory . '/.htaccess';
-    if (!file_exists($htaccess_path) && file_put_contents($htaccess_path, self::HTACCESS)) {
-      @chmod($htaccess_path, 0444);
-    }
-  }
-
-  /**
-   * Removes everything in a directory, leaving it empty.
-   *
-   * @param string $directory
-   *   The directory to be emptied out.
-   */
-  protected function cleanDirectory($directory) {
-    chmod($directory, 0700);
-    foreach (new \DirectoryIterator($directory) as $fileinfo) {
-      if (!$fileinfo->isDot()) {
-        $this->unlink($fileinfo->getPathName());
-      }
-    }
   }
 
   /**

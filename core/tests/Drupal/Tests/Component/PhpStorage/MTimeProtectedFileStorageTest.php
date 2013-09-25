@@ -71,8 +71,8 @@ class MTimeProtectedFileStorageTest extends PhpStorageTestBase {
     // minimal permissions. fileperms() can return high bits unrelated to
     // permissions, so mask with 0777.
     $this->assertTrue(file_exists($expected_filename));
-    $this->assertSame(fileperms($expected_filename) & 0777, 0400);
-    $this->assertSame(fileperms($expected_directory) & 0777, 0100);
+    $this->assertSame(fileperms($expected_filename) & 0777, 0444);
+    $this->assertSame(fileperms($expected_directory) & 0777, 0777);
 
     // Ensure the root directory for the bin has a .htaccess file denying web
     // access.

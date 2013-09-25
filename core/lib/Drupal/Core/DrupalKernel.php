@@ -366,6 +366,7 @@ class DrupalKernel implements DrupalKernelInterface, TerminableInterface {
    * Initializes the service container.
    */
   protected function initializeContainer() {
+    $this->containerNeedsDumping = FALSE;
     $persist = $this->getServicesToPersist();
     // If we are rebuilding the kernel and we are in a request scope, store
     // request info so we can add them back after the rebuild.
