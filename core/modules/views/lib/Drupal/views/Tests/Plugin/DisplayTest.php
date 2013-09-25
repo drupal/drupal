@@ -242,8 +242,8 @@ class DisplayTest extends PluginTestBase {
     $this->assertResponse(200);
     $this->assertText(t('The plugin (invalid) did not specify an instance class.'));
 
-    // Rebuild the menu, and ensure that the path is not accessible anymore.
-    menu_router_rebuild();
+    // Rebuild the router, and ensure that the path is not accessible anymore.
+    views_invalidate_cache();
 
     $this->drupalGet('test_display_invalid');
     $this->assertResponse(404);
