@@ -198,6 +198,8 @@ function comment_menu() {
   );
   $items['admin/structure/comments/manage/%'] = array(
     'title' => 'Comment form',
+    'title callback' => '_comment_admin_title',
+    'title arguments' => array(4),
     'route_name' => 'comment.bundle',
   );
   $items['admin/content/comment'] = array(
@@ -265,6 +267,22 @@ function comment_count_unpublished() {
     ':status' => COMMENT_NOT_PUBLISHED,
   ))->fetchField();
   return t('Unapproved comments (@count)', array('@count' => $count));
+}
+
+/**
+ * Returns menu title for administrative pages.
+ *
+ * @param string $field_name
+ *   The field where comment is attached to.
+ *
+ * @return string
+ *   The menu item title.
+ */
+function _comment_admin_title($field_name) {
+  // @todo Provide dynamic routing to get entity type and field name.
+  list($entity_type, $field) = explode('__', $field_name, 2);
+  $field_info = \Drupal::service('field.info')->getField($entity_type, $field);
+  return String::checkPlain($field_info->getFieldName());
 }
 
 /**
@@ -382,7 +400,7 @@ function comment_get_recent($number = 10) {
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The first new comment entity.
  * @param string $field_name
- *   The field name
+ *   The field name of the entity where comments attached to.
  *
  * @return
  *   "page=X" if the page number is greater than zero; empty string otherwise.
