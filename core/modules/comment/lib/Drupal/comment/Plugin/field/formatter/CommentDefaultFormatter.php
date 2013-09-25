@@ -112,19 +112,18 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
     $entity = $items->getEntity();
 
     $commenting_status = $items->status;
-    if ($commenting_status != COMMENT_HIDDEN && empty($entity->in_preview)) {
+    if ($commenting_status != COMMENT_HIDDEN && empty($entity->in_preview) &&
+      // Comment threads aren't added to search results/indexes using the
+      // formatter, @see comment_node_update_index().
+      !in_array($this->viewMode, array('search_result', 'search_index'))) {
       $comment_settings = $this->getFieldSettings();
 
       // Only attempt to render comments if the entity has visible comments.
       // Unpublished comments are not included in
       // $entity->get($field_name)->comment_count, but unpublished comments
       // should display if the user is an administrator.
-      if ((($entity->get($field_name)->comment_count && $this->currentUser->hasPermission('access comments')) || $this->currentUser->hasPermission('administer comments')) &&
-      !empty($entity->content['#view_mode']) &&
-      !in_array($entity->content['#view_mode'], array('search_result', 'search_index'))) {
-
-        // Comment threads aren't added to search results/indexes using the
-        // formatter, @see comment_node_update_index().
+      if ((($entity->get($field_name)->comment_count && $this->currentUser->hasPermission('access comments')) ||
+        $this->currentUser->hasPermission('administer comments'))) {
         $mode = $comment_settings['default_mode'];
         $comments_per_page = $comment_settings['per_page'];
         if ($cids = comment_get_thread($entity, $field_name, $mode, $comments_per_page)) {
@@ -139,13 +138,12 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       // Append comment form if the comments are open and the form
       // is set to display below the entity.
       if ($commenting_status == COMMENT_OPEN && $comment_settings['form_location'] == COMMENT_FORM_BELOW) {
-        // Only show the add comment form if the user has permission and the
-        // view mode is not search_result or search_index.
-        if ($this->currentUser->hasPermission('post comments') && !empty($entity->content['#view_mode']) &&
-          !in_array($entity->content['#view_mode'], array('search_result', 'search_index'))) {
+        // Only show the add comment form if the user has permission.
+        if ($this->currentUser->hasPermission('post comments')) {
           $additions['comment_form'] = comment_add($entity, $field_name);
         }
       }
+
       $elements[] = $additions + array(
         '#theme' => 'comment_wrapper__' . $entity->entityType() . '__' . $entity->bundle() . '__' . $field_name,
         '#entity' => $entity,
