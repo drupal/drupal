@@ -98,26 +98,26 @@ class CommentRenderController extends EntityRenderController implements EntityCo
     parent::buildContent($entities, $displays, $view_mode, $langcode);
 
     // Load all the entities that have comments attached.
-    $comment_entity_ids = array();
-    $comment_entities = array();
+    $commented_entity_ids = array();
+    $commented_entities = array();
     foreach ($entities as $entity) {
-      $comment_entity_ids[$entity->entity_type->value][] = $entity->entity_id->value;
+      $commented_entity_ids[$entity->entity_type->value][] = $entity->entity_id->value;
     }
     // Load entities in bulk. This is more performant than using
     // $comment->entity_id->value as we can load them in bulk per type.
-    foreach ($comment_entity_ids as $entity_type => $entity_ids) {
-      $comment_entities[$entity_type] = $this->entityManager->getStorageController($entity_type)->loadMultiple($entity_ids);
+    foreach ($commented_entity_ids as $entity_type => $entity_ids) {
+      $commented_entities[$entity_type] = $this->entityManager->getStorageController($entity_type)->loadMultiple($entity_ids);
     }
 
     foreach ($entities as $entity) {
-      if (isset($comment_entities[$entity->entity_type->value][$entity->entity_id->value])) {
-        $comment_entity = $comment_entities[$entity->entity_type->value][$entity->entity_id->value];
+      if (isset($commented_entities[$entity->entity_type->value][$entity->entity_id->value])) {
+        $commented_entity = $commented_entities[$entity->entity_type->value][$entity->entity_id->value];
       }
       else {
         throw new \InvalidArgumentException(t('Invalid entity for comment.'));
       }
       $entity->content['#entity'] = $entity;
-      $entity->content['#theme'] = 'comment__' . $entity->field_id->value . '__' . $comment_entity->bundle();
+      $entity->content['#theme'] = 'comment__' . $entity->field_id->value . '__' . $commented_entity->bundle();
       $entity->content['links'] = array(
         '#theme' => 'links__comment',
         '#pre_render' => array('drupal_pre_render_links'),
@@ -129,7 +129,7 @@ class CommentRenderController extends EntityRenderController implements EntityCo
           // The "entity" property is specified to be present, so no need to
           // check.
           // @todo deprecate comment_links(). https://drupal.org/node/1975962
-          '#links' => comment_links($entity, $comment_entity, $entity->field_name->value),
+          '#links' => comment_links($entity, $commented_entity, $entity->field_name->value),
           '#attributes' => array('class' => array('links', 'inline')),
         );
       }
@@ -151,8 +151,8 @@ class CommentRenderController extends EntityRenderController implements EntityCo
     parent::alterBuild($build, $comment, $display, $view_mode, $langcode);
     if (empty($comment->in_preview)) {
       $prefix = '';
-      $comment_entity = $this->entityManager->getStorageController($comment->entity_type->value)->load($comment->entity_id->value);
-      $instance = $this->fieldInfo->getInstance($comment_entity->entityType(), $comment_entity->bundle(), $comment->field_name->value);
+      $commented_entity = $this->entityManager->getStorageController($comment->entity_type->value)->load($comment->entity_id->value);
+      $instance = $this->fieldInfo->getInstance($commented_entity->entityType(), $commented_entity->bundle(), $comment->field_name->value);
       $is_threaded = isset($comment->divs)
         && $instance->getFieldSetting('default_mode') == COMMENT_MODE_THREADED;
 

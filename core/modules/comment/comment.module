@@ -17,7 +17,7 @@ use Drupal\comment\Entity\Comment;
 use Drupal\entity\Entity\EntityDisplay;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\field\FieldInterface;
-use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
 
 /**
  * Comment is awaiting approval.
@@ -475,9 +475,6 @@ function theme_comment_block($variables) {
 
 /**
  * Implements hook_entity_view().
- *
- * @todo Make node links as comment_links formatter
- *   http://drupal.org/node/1901110
  */
 function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $view_mode, $langcode) {
   if ($entity->entityType() != 'node') {
@@ -624,10 +621,10 @@ function comment_node_view_alter(&$build, EntityInterface $node, EntityDisplay $
 }
 
 /**
- * Returns a rendered form to comment the given node.
+ * Returns a rendered form to comment the given entity.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity to which the comments are in reply to.
+ *   The entity to which comments are in reply to.
  * @param string $field_name
  *   The field name where the comments were entered.
  * @param int $pid
@@ -821,14 +818,12 @@ function comment_view(CommentInterface $comment, $view_mode = 'full', $langcode 
  * @param \Drupal\comment\CommentInterface $comment
  *   The comment object.
  * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity the comment is attached to.
+ *   The entity to which the comment is attached to.
  * @param string $field_name
  *   The field the comment is attached to.
  *
  * @return
  *   A structured array of links.
- *
- * @todo Move to CommentRenderController - https://drupal.org/node/1975962
  */
 function comment_links(CommentInterface $comment, EntityInterface $entity, $field_name) {
   $links = array();
@@ -908,7 +903,7 @@ function comment_view_multiple($comments, $view_mode = 'full', $langcode = NULL)
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for field_ui_field_instance_edit_form().
+ * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_field_ui_field_instance_edit_form_alter(&$form, $form_state) {
   if ($form['#field']['type'] == 'comment') {
@@ -923,7 +918,7 @@ function comment_form_field_ui_field_instance_edit_form_alter(&$form, $form_stat
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for field_ui_field_overview_form().
+ * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_field_ui_field_overview_form_alter(&$form, $form_state) {
   // @todo Remove when https://drupal.org/node/2076085 is in.
@@ -931,7 +926,7 @@ function comment_form_field_ui_field_overview_form_alter(&$form, $form_state) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for field_ui_display_overview_form().
+ * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_field_ui_display_overview_form_alter(&$form, $form_state) {
   // @todo Remove when https://drupal.org/node/2076085 is in.
@@ -939,7 +934,7 @@ function comment_form_field_ui_display_overview_form_alter(&$form, $form_state) 
 }
 
 /**
- * Implements hook_form_FORM_ID_alter() for field_ui_field_edit_form().
+ * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_field_ui_field_edit_form_alter(&$form, $form_state) {
   if ($form['#field']['type'] == 'comment') {
@@ -1147,7 +1142,7 @@ function comment_node_search_result(EntityInterface $node) {
     }
     // Do not make a string if comments are hidden.
     $status = $node->get($field_name)->status;
-    if (user_access('access comments') && $status != COMMENT_HIDDEN) {
+    if (\Drupal::currentUser()->hasPermission('access comments') && $status != COMMENT_HIDDEN) {
       if ($status == COMMENT_OPEN) {
         // At least one comment field is open.
         $open = TRUE;
@@ -1241,9 +1236,6 @@ function comment_load($cid, $reset = FALSE) {
  *
  * @return
  *   The number of new comments or FALSE if the user is not logged in.
- *
- * @todo Move to a method on comment manager service
- *   - https://drupal.org/node/2097123.
  */
 function comment_num_new($entity_id, $entity_type, $field_name = NULL, $timestamp = 0) {
   global $user;
@@ -1737,7 +1729,7 @@ function comment_ranking() {
 /**
  * Implements hook_file_download_access().
  */
-function comment_file_download_access($field, EntityInterface $entity, File $file) {
+function comment_file_download_access($field, EntityInterface $entity, FileInterface $file) {
   if ($entity->entityType() == 'comment') {
     if (user_access('access comments') && $entity->status->value == COMMENT_PUBLISHED || user_access('administer comments')) {
       $commented_entity = entity_load($entity->entity_type->value, $entity->entity_id->value);

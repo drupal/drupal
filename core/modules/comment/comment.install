@@ -13,13 +13,6 @@ use Drupal\field\Entity\Field;
  * Implements hook_uninstall().
  */
 function comment_uninstall() {
-  // @todo Remove when disabled modules go away.
-  \Drupal::entityManager()->addNamespaces(new ArrayIterator(array(
-    'Drupal\comment' => DRUPAL_ROOT . '/core/modules/comment/lib',
-  )));
-  drupal_classloader_register('comment', 'core/modules/comment');
-  entity_info_cache_clear();
-
   // Remove the comment fields.
   $fields = entity_load_multiple_by_properties('field_entity', array(
     'type' => 'comment',
@@ -556,14 +549,6 @@ function comment_update_8006(&$sandbox) {
       $field['name'] = $field_name . '_' . $index;
       // Increment index.
       $index++;
-    }
-    // Comment module may be disabled so we will need to inject the schema to
-    // avoid attempting to create a Field of an unknown type.
-    if (!\Drupal::moduleHandler()->moduleExists('comment')) {
-      // We can't use the autoloader because the comment namespace isn't
-      // registered.
-      // @todo Remove once https://drupal.org/node/1199946 is in.
-      require_once __DIR__ . '/lib/Drupal/comment/Plugin/field/field_type/CommentItem.php';
     }
     $field_object = new Field($field);
     $field['schema'] = CommentItem::schema($field_object);
