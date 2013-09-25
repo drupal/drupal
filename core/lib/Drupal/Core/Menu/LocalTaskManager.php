@@ -261,16 +261,17 @@ class LocalTaskManager extends DefaultPluginManager {
 
     foreach ($tree as $level => $instances) {
       foreach ($instances as $plugin_id => $child) {
-        // In order to get the Drupal path the base URL has to be stripped off.
         $route_name = $child->getRouteName();
         $route_parameters = $child->getRouteParameters($this->request);
 
         // Find out whether the user has access to the task.
         $access = $this->accessManager->checkNamedRoute($route_name, $route_parameters);
         if ($access) {
-          // Need to flag the list element as active for a tab for the current
-          // route or if the plugin is set active (i.e. the parent tab).
-          $active = (($current_route_name == $route_name && (array_intersect_assoc($route_parameters, $this->request->attributes->all()) == $route_parameters)) || $child->getActive());
+          $active = $this->isRouteActive($current_route_name, $route_name, $route_parameters);
+
+          // The plugin may have been set active in getLocalTasksForRoute() if
+          // one of its child tabs is the active tab.
+          $active = $active || $child->getActive();
           // @todo It might make sense to use menu link entities instead of
           //   arrays.
 
@@ -291,6 +292,35 @@ class LocalTaskManager extends DefaultPluginManager {
       }
     }
     return $build;
+  }
+
+  /**
+   * Determines whether the route of a certain local task is currently active.
+   *
+   * @param string $current_route_name
+   *   The route name of the current main request.
+   * @param string $route_name
+   *   The route name of the local task to determine the active status.
+   * @param array $route_parameters
+   *
+   * @return bool
+   *   Returns TRUE if the passed route_name and route_parameters is considered
+   *   as the same as the one from the request, otherwise FALSE.
+   */
+  protected function isRouteActive($current_route_name, $route_name, $route_parameters) {
+    // Flag the list element as active if this tab's route and parameters match
+    // the current request's route and route variables.
+    $active = $current_route_name == $route_name;
+    if ($active) {
+      // The request is injected, so we need to verify that we have the expected
+      // _raw_variables attribute.
+      $raw_variables_bag = $this->request->attributes->get('_raw_variables');
+      // If we don't have _raw_variables, we assume the attributes are still the
+      // original values.
+      $raw_variables = $raw_variables_bag ? $raw_variables_bag->all() : $this->request->attributes->all();
+      $active = array_intersect_assoc($route_parameters, $raw_variables) == $route_parameters;
+    }
+    return $active;
   }
 
 }

@@ -138,6 +138,20 @@ menu_test.local_task_test_placeholder_sub2:
   requirements:
     _access: 'TRUE'
 
+menu_test.local_task_test_upcasting_sub1:
+  path: '/menu-local-task-test-upcasting/{entity_test}/sub1'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+
+menu_test.local_task_test_upcasting_sub2:
+  path: '/menu-local-task-test-upcasting/{entity_test}/sub2'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::test1'
+  requirements:
+    _access: 'TRUE'
+
 menu_test.optional_placeholder:
   path: '/menu-test/optional/{placeholder}'
   defaults:
