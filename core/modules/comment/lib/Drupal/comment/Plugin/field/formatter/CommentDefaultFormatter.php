@@ -105,6 +105,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    */
   public function viewElements(FieldInterface $items) {
     $elements = array();
+    $additions = array();
 
     $field = $this->fieldDefinition;
     $field_name = $field->getFieldName();
@@ -145,9 +146,6 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
           $additions['comment_form'] = comment_add($entity, $field_name);
         }
       }
-    }
-
-    if (!empty($additions)) {
       $elements[] = $additions + array(
         '#theme' => 'comment_wrapper__' . $entity->entityType() . '__' . $entity->bundle() . '__' . $field_name,
         '#entity' => $entity,
