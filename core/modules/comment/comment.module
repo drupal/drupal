@@ -818,6 +818,8 @@ function comment_view(CommentInterface $comment, $view_mode = 'full', $langcode 
  *
  * @return
  *   A structured array of links.
+ *
+ * @todo Move to CommentRenderController - https://drupal.org/node/1975962
  */
 function comment_links(CommentInterface $comment, EntityInterface $entity, $field_name) {
   $links = array();
