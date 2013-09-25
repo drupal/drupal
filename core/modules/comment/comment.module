@@ -273,7 +273,7 @@ function comment_count_unpublished() {
  * Returns menu title for administrative pages.
  *
  * @param string $field_name
- *   The field where comment is attached to.
+ *   The field that comments are attached to.
  *
  * @return string
  *   The menu item title.
@@ -400,7 +400,7 @@ function comment_get_recent($number = 10) {
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The first new comment entity.
  * @param string $field_name
- *   The field name of the entity where comments attached to.
+ *   The field name on the entity to which comments are attached to.
  *
  * @return
  *   "page=X" if the page number is greater than zero; empty string otherwise.
@@ -643,7 +643,7 @@ function comment_node_view_alter(&$build, EntityInterface $node, EntityDisplay $
  * Returns a rendered form to comment the given entity.
  *
  * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity to which comments are in reply to.
+ *   The entity to which the comments are in reply to.
  * @param string $field_name
  *   The field name where the comments were entered.
  * @param int $pid
