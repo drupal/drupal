@@ -31,16 +31,19 @@ class CommentWidget extends WidgetBase {
   public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $field = $this->fieldDefinition;
     $entity = $items->getParent();
-    $default_value = $field->getFieldDefaultValue($entity);
-    if (!isset($default_value->status)) {
-      $default_value = (object) reset($field->default_value);
+
+    // Get default value from the field instance.
+    $field_default_values = $this->fieldDefinition->getFieldDefaultValue($entity);
+    $status = $items->status;
+    if (!isset($status)) {
+      $status = $field_default_values[0]['status'];
     }
 
     $element['status'] = array(
       '#type' => 'radios',
       '#title' => t('Comments'),
       '#title_display' => 'invisible',
-      '#default_value' => !empty($default_value->status) ? $default_value->status : COMMENT_OPEN,
+      '#default_value' => $status,
       '#options' => array(
         COMMENT_OPEN => t('Open'),
         COMMENT_CLOSED => t('Closed'),
@@ -70,10 +73,9 @@ class CommentWidget extends WidgetBase {
     if (isset($form['advanced'])) {
       $element += array(
         '#type' => 'details',
-        // Collapse this field when the selected value is the same as the
-        // defaults for the instance.
-        // @todo Add $this->defaultStatus($field) and compare actual values.
-        '#collapsed' => ($items->getValue() == $field->getFieldDefaultValue($entity)),
+        // Collapse this field when the selected value is the same as stored in
+        // default values for the field instance.
+        '#collapsed' => ($items->status == $field_default_values[0]['status']),
         '#group' => 'advanced',
         '#attributes' => array(
           'class' => array('comment-' . drupal_html_class($element['#entity_type']) . '-settings-form'),

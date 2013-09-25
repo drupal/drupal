@@ -107,12 +107,11 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
     $elements = array();
     $output = array();
 
-    $field = $this->fieldDefinition;
-    $field_name = $field->getFieldName();
+    $field_name = $this->fieldDefinition->getFieldName();
     $entity = $items->getEntity();
 
-    $commenting_status = $items->status;
-    if ($commenting_status != COMMENT_HIDDEN && empty($entity->in_preview) &&
+    $status = $items->status;
+    if ($status != COMMENT_HIDDEN && empty($entity->in_preview) &&
       // Comments are added to the search results and search index by
       // comment_node_update_index() instead of by this formatter, so don't
       // return anything if the view mode is search_index or search_result.
@@ -138,7 +137,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
 
       // Append comment form if the comments are open and the form
       // is set to display below the entity.
-      if ($commenting_status == COMMENT_OPEN && $comment_settings['form_location'] == COMMENT_FORM_BELOW) {
+      if ($status == COMMENT_OPEN && $comment_settings['form_location'] == COMMENT_FORM_BELOW) {
         // Only show the add comment form if the user has permission.
         if ($this->currentUser->hasPermission('post comments')) {
           $output['comment_form'] = comment_add($entity, $field_name);

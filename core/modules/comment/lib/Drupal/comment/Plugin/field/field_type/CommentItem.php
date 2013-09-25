@@ -183,21 +183,6 @@ class CommentItem extends ConfigFieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function applyDefaultValue($notify = TRUE) {
-    $this->setValue(array(
-      'status' => COMMENT_OPEN,
-      'cid' => 0,
-      'last_comment_timestamp' => 0,
-      'last_comment_name' => '',
-      'last_comment_uid' => 0,
-      'comment_count' => 0,
-    ), $notify);
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function isEmpty() {
     // There is always a value for this field, it is one of COMMENT_OPEN,
     // COMMENT_CLOSED or COMMENT_HIDDEN.

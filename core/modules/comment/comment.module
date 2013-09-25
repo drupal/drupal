@@ -273,6 +273,15 @@ function comment_field_instance_create(FieldInstanceInterface $instance) {
   if ($instance->getFieldType() == 'comment') {
     \Drupal::service('comment.manager')->addBodyField($instance->entity_type, $instance->getFieldName());
     \Drupal::cache()->delete('comment_entity_info');
+    // Assign default values for the field instance.
+    $instance->default_value = array(array(
+      'status' => COMMENT_OPEN,
+      'cid' => 0,
+      'last_comment_timestamp' => 0,
+      'last_comment_name' => '',
+      'last_comment_uid' => 0,
+      'comment_count' => 0,
+    ));
   }
 }
 
