@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\comment\CommentNewItem.
+ * Contains \Drupal\comment\CommentFieldName.
  */
 
 namespace Drupal\comment;
@@ -24,7 +24,7 @@ class CommentFieldName extends StringItem {
   static $propertyDefinitions;
 
   /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
+   * {@inheritdoc}
    */
   public function getPropertyDefinitions() {
 
@@ -38,4 +38,5 @@ class CommentFieldName extends StringItem {
     }
     return static::$propertyDefinitions;
   }
+
 }

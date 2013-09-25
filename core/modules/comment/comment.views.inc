@@ -351,14 +351,14 @@ function comment_views_data() {
     ),
   );
 
-  $entities_info = Drupal::entityManager()->getDefinitions();
+  $entities_info = \Drupal::entityManager()->getDefinitions();
 
   // Provide a relationship for each entity type except comment.
   foreach ($entities_info as $type => $entity_info) {
     if ($type == 'comment' || empty($entity_info['fieldable']) || !isset($entity_info['base_table'])) {
       continue;
     }
-    if ($fields = Drupal::service('comment.manager')->getFields($type)) {
+    if ($fields = \Drupal::service('comment.manager')->getFields($type)) {
       $data['comment'][$type] = array(
         'relationship' => array(
           'title' => $entity_info['label'],
@@ -440,10 +440,10 @@ function comment_views_data() {
     // This relationship does not use the 'field id' column, if the entity has
     // multiple comment-fields, then this might introduce duplicates, in which
     // case the site-builder should enable aggregation and SUM the comment_count
-    // field. We cannot create a relationships from the base table to
+    // field. We cannot create a relationship from the base table to
     // {comment_entity_statistics} for each field as multiple joins between
     // the same two tables is not supported.
-    if (Drupal::service('comment.manager')->getFields($type)) {
+    if (\Drupal::service('comment.manager')->getFields($type)) {
       $data['comment_entity_statistics']['table']['join'][$entity_info['base_table']] = array(
         'type' => 'INNER',
         'left_field' => $entity_info['entity_keys']['id'],
@@ -555,7 +555,7 @@ function comment_views_data() {
 
   $data['comment_entity_statistics']['entity_type'] = array(
     'title' => t('Entity type'),
-    'help' => t('The Entity type to which the comment is a reply to.'),
+    'help' => t('The entity type to which the comment is a reply to.'),
     'field' => array(
       'id' => 'standard',
     ),
@@ -570,8 +570,8 @@ function comment_views_data() {
     ),
   );
   $data['comment_entity_statistics']['field_id'] = array(
-    'title' => t('Comment field id'),
-    'help' => t('The Field id from which the comment originated.'),
+    'title' => t('Comment field ID'),
+    'help' => t('The field ID from which the comment originated.'),
     'field' => array(
       'id' => 'standard',
     ),
@@ -605,11 +605,11 @@ function comment_views_data_alter(&$data) {
   );
 
   // Provide a integration for each entity type except comment.
-  foreach (Drupal::entityManager()->getDefinitions() as $entity_type => $entity_info) {
+  foreach (\Drupal::entityManager()->getDefinitions() as $entity_type => $entity_info) {
     if ($entity_type == 'comment' || empty($entity_info['fieldable']) || !isset($entity_info['base_table'])) {
       continue;
     }
-    $fields = Drupal::service('comment.manager')->getFields($entity_type);
+    $fields = \Drupal::service('comment.manager')->getFields($entity_type);
     $base_table = $entity_info['base_table'];
     $args = array('@entity_type' => $entity_type);
 

@@ -68,9 +68,9 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
    */
   public function overviewBundles() {
     $header = array(
-      'field_name' => t('Field name'),
+      'field_name' => $this->t('Field name'),
       'usage' => array(
-        'data' => t('Used in'),
+        'data' => $this->t('Used in'),
         'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
       ),
     );
@@ -78,7 +78,7 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
     // Add a column for field UI operations if the Field UI module is enabled.
     $field_ui_enabled = $this->moduleHandler()->moduleExists('field_ui');
     if ($field_ui_enabled) {
-      $header['operations'] = t('Operations');
+      $header['operations'] = $this->t('Operations');
     }
 
     $entity_bundles = $this->entityManager()->getAllBundleInfo();
@@ -95,7 +95,7 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
         $row = array(
           'class' => $field_info->get('locked') ? array('field-disabled') : array(''),
         );
-        $row['data']['field_name']['data'] = $field_info->get('locked') ? t('@field_name (Locked)', array('@field_name' => $field_name)) : String::checkPlain($field_name);
+        $row['data']['field_name']['data'] = $field_info->get('locked') ? $this->t('@field_name (Locked)', array('@field_name' => $field_name)) : String::checkPlain($field_name);
 
         $row['data']['usage']['data'] = array(
           '#theme' => 'item_list',
@@ -105,8 +105,8 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
         foreach ($field_info_map['bundles'] as $bundle) {
           if (isset($entity_bundles[$entity_type][$bundle])) {
             // Add the current instance.
-            if ($field_ui_enabled && ($path = $this->entityManager()->getAdminPath($entity_type, $bundle))) {
-              $row['data']['usage']['data']['#items'][] = l($entity_bundles[$entity_type][$bundle]['label'], $path . '/fields');
+            if ($field_ui_enabled && ($route_info = $this->entityManager()->getAdminRouteInfo($entity_type, $bundle))) {
+              $row['data']['usage']['data']['#items'][] = $this->l($entity_bundles[$entity_type][$bundle]['label'], $route_info['route_name'], $route_info['route_parameters']);
             }
             else {
               $row['data']['usage']['data']['#items'][] = $entity_bundles[$entity_type][$bundle]['label'];
@@ -117,21 +117,21 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
         if ($field_ui_enabled) {
           if ($this->currentUser()->hasPermission('administer comment fields')) {
             $links['fields'] = array(
-              'title' => t('Manage fields'),
+              'title' => $this->t('Manage fields'),
               'href' => 'admin/structure/comments/manage/' . $entity_type . '__' . $field_name . '/fields',
               'weight' => 5,
             );
           }
           if ($this->currentUser()->hasPermission('administer comment display')) {
             $links['display'] = array(
-              'title' => t('Manage display'),
+              'title' => $this->t('Manage display'),
               'href' => 'admin/structure/comments/manage/' . $entity_type . '__' . $field_name . '/display',
               'weight' => 10,
             );
           }
           if ($this->currentUser()->hasPermission('administer comment form display')) {
             $links['form_display'] = array(
-              'title' => t('Manage form display'),
+              'title' => $this->t('Manage form display'),
               'href' => 'admin/structure/comments/manage/' . $entity_type . '__' . $field_name . '/form-display',
               'weight' => 10,
             );
@@ -150,9 +150,9 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
       '#theme' => 'table',
       '#header' => $header,
       '#rows' => $rows,
-      '#empty' => t('No comment forms available.'),
+      '#empty' => $this->t('No comment forms available.'),
     );
-    $build['#title'] = t('Comment forms');
+    $build['#title'] = $this->t('Comment forms');
 
     return $build;
   }
@@ -171,12 +171,12 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
     $entity_bundles = $this->entityManager()->getAllBundleInfo();
     $entity_types = $this->entityManager()->getDefinitions();
     // Add a link to manage entity fields if the Field UI module is enabled.
-    $field_ui_enabled = $this->moduleHandler->moduleExists('field_ui');
+    $field_ui_enabled = $this->moduleHandler()->moduleExists('field_ui');
 
     // @todo Provide dynamic routing to get entity type and field name.
     list($entity_type, $field) = explode('__', $field_name, 2);
     $field_info = $this->fieldInfo->getField($entity_type, $field);
-    // @todo Decide on better UX http://drupal.org/node/1901110
+
     $build['usage'] = array(
       '#theme' => 'item_list',
       '#title' => String::checkPlain($entity_types[$entity_type]['label']),
@@ -187,10 +187,10 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
     foreach ($field_info->getBundles() as $bundle) {
       if (isset($entity_bundles[$entity_type][$bundle])) {
         // Add the current instance to the list of bundles.
-        if ($field_ui_enabled && ($path = $this->entityManager()->getAdminPath($entity_type, $bundle))) {
+        if ($field_ui_enabled && ($route_info = $this->entityManager()->getAdminRouteInfo($entity_type, $bundle))) {
           // Add a link to configure the fields on the given bundle and entity
           // type combination.
-          $build['usage']['#items'][] = l($entity_bundles[$entity_type][$bundle]['label'], $path . '/fields');
+          $build['usage']['#items'][] = $this->l($entity_bundles[$entity_type][$bundle]['label'], $route_info['route_name'], $route_info['route_parameters']);
         }
         else {
           // Field UI is disabled so fallback to a list of bundle labels

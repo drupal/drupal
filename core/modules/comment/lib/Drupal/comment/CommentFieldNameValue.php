@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\comment\CommentNewValue.
+ * Contains \Drupal\comment\CommentFieldNameValue.
  */
 
 namespace Drupal\comment;
@@ -17,7 +17,7 @@ use InvalidArgumentException;
 class CommentFieldNameValue extends TypedData {
 
   /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::getValue().
+   * {@inheritdoc}
    */
   public function getValue() {
     if (!isset($this->value)) {
@@ -38,7 +38,7 @@ class CommentFieldNameValue extends TypedData {
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\TypedDataInterface::setValue().
+   * {@inheritdoc}
    */
   public function setValue($value, $notify = TRUE) {
     if (isset($value)) {
