@@ -113,8 +113,9 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
 
     $commenting_status = $items->status;
     if ($commenting_status != COMMENT_HIDDEN && empty($entity->in_preview) &&
-      // Comment threads aren't added to search results/indexes using the
-      // formatter, @see comment_node_update_index().
+      // Comments are added to the search results and search index by
+      // comment_node_update_index() instead of by this formatter, so don't
+      // return anything if the view mode is search_index or search_result.
       !in_array($this->viewMode, array('search_result', 'search_index'))) {
       $comment_settings = $this->getFieldSettings();
 
