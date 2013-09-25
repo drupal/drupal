@@ -64,7 +64,9 @@ class CommentWidget extends WidgetBase {
       // Also adjust the description of the "closed" option.
       $element['status'][COMMENT_CLOSED]['#description'] = t('Users cannot post comments.');
     }
-    // Integrate with advanced settings, if available.
+    // If the advanced settings tabs-set is available (normally rendered in the
+    // second column on wide-resolutions), place the field as a details element
+    // in this tab-set.
     if (isset($form['advanced'])) {
       $element += array(
         '#type' => 'details',
