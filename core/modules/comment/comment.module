@@ -280,6 +280,7 @@ function comment_count_unpublished() {
  */
 function _comment_admin_title($field_name) {
   // @todo Provide dynamic routing to get entity type and field name.
+  //   https://drupal.org/node/2098011.
   list($entity_type, $field) = explode('__', $field_name, 2);
   $field_info = \Drupal::service('field.info')->getField($entity_type, $field);
   return String::checkPlain($field_info->getFieldName());

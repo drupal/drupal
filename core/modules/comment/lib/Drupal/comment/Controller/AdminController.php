@@ -170,6 +170,7 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
     $field_ui_enabled = $this->moduleHandler()->moduleExists('field_ui');
 
     // @todo Provide dynamic routing to get entity type and field name.
+    //   https://drupal.org/node/2098011.
     list($entity_type, $field) = explode('__', $field_name, 2);
     $field_info = $this->fieldInfo->getField($entity_type, $field);
 
