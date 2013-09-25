@@ -70,8 +70,8 @@ class CommentWidget extends WidgetBase {
     if (isset($form['advanced'])) {
       $element += array(
         '#type' => 'details',
-        // Collapse the advanced settings when they are the same
-        // as the defaults for the instance.
+        // Collapse this field when the selected value is the same as the
+        // defaults for the instance.
         // @todo Add $this->defaultStatus($field) and compare actual values.
         '#collapsed' => ($items->getValue() == $field->getFieldDefaultValue($entity)),
         '#group' => 'advanced',
