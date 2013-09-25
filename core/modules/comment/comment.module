@@ -922,16 +922,14 @@ function comment_form_field_ui_field_instance_edit_form_alter(&$form, $form_stat
  * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_field_ui_field_overview_form_alter(&$form, $form_state) {
-  // @todo Remove when https://drupal.org/node/2076085 is in.
-  drupal_set_title(t('Manage Fields: %field_name', array('%field_name' => $form['#bundle'])), TRUE);
+  $form['#title'] = t('Manage Fields: %field_name', array('%field_name' => $form['#bundle']));
 }
 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_field_ui_display_overview_form_alter(&$form, $form_state) {
-  // @todo Remove when https://drupal.org/node/2076085 is in.
-  drupal_set_title(t('Manage Display: %field_name', array('%field_name' => $form['#bundle'])), TRUE);
+  $form['#title'] = t('Manage Display: %field_name', array('%field_name' => $form['#bundle']));
 }
 
 /**
