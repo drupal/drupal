@@ -78,6 +78,9 @@ class CommentRenderController extends EntityRenderController implements EntityCo
    *
    * In addition to modifying the content key on entities, this implementation
    * will also set the comment entity key which all comments carry.
+   *
+   * @throws \InvalidArgumentException
+   *   Thrown when a comment is attached to an entity that no longer exists.
    */
   public function buildContent(array $entities, array $displays, $view_mode, $langcode = NULL) {
     $return = array();
