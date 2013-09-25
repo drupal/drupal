@@ -39,50 +39,6 @@ function comment_uninstall() {
  * Implements hook_install().
  */
 function comment_install() {
-  $comment_fields = _comment_get_comment_fields();
-  $entity_info = \Drupal::service('entity.manager')->getDefinitions();
-  foreach ($comment_fields as $field_name => $info) {
-    foreach ($info['bundles'] as $entity_type => $bundles) {
-      foreach ($bundles as $bundle) {
-        $entity_detail = $entity_info[$entity_type];
-        if (!empty($entity_detail['base_table']) &&
-            !empty($entity_detail['entity_keys']['id'])) {
-          $table = $entity_detail['base_table'];
-          $schema = drupal_get_schema($table);
-          // Insert records into {comment_entity_statistics} for entities that
-          // are missing.
-          $query = db_select($table, 'e');
-          // Filter by bundle.
-          $query->condition($entity_detail['entity_keys']['bundle'], $bundle);
-          $query->leftJoin('comment_entity_statistics', 'ces', 'ces.entity_id = e.' . $entity_detail['entity_keys']['id'] . " AND ces.entity_type = '$entity_type'");
-          if (!empty($schema[$table]['fields']['created'])) {
-            $query->addField('e', 'created', 'last_comment_timestamp');
-          }
-          else {
-            // No created field for this entity type, default to now.
-            $query->addExpression(REQUEST_TIME, 'last_comment_timestamp');
-          }
-          if (!empty($schema[$table]['fields']['uid'])) {
-            $query->addField('e', 'uid', 'last_comment_uid');
-          }
-          else {
-            // No uid field for this entity type, default to anonymous.
-            $query->addExpression(0, 'last_comment_uid');
-          }
-          $query->addField('e', $entity_detail['entity_keys']['id'], 'entity_id');
-          $query->addExpression("'$entity_type'", 'entity_type');
-          $query->addExpression("'$entity_type.$field_name'", 'field_id');
-          $query->addExpression('0', 'comment_count');
-          $query->addExpression('NULL', 'last_comment_name');
-          $query->isNull('ces.comment_count');
-
-          db_insert('comment_entity_statistics')
-            ->from($query)
-            ->execute();
-        }
-      }
-    }
-  }
   // By default, maintain entity statistics for comments.
   // @see \Drupal\comment\CommentStorageController::updateEntityStatistics().
   \Drupal::state()->set('comment.maintain_entity_statistics', TRUE);
