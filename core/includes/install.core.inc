@@ -375,7 +375,8 @@ function install_begin_request(&$install_state) {
 
     $container->register('config.storage', 'Drupal\Core\Config\InstallStorage');
     $container->register('config.context.factory', 'Drupal\Core\Config\Context\ConfigContextFactory')
-      ->addArgument(new Reference('event_dispatcher'));
+      ->addArgument(new Reference('event_dispatcher'))
+      ->addArgument(new Reference('uuid'));
 
     $container->register('config.context', 'Drupal\Core\Config\Context\ContextInterface')
       ->setFactoryService(new Reference('config.context.factory'))
@@ -434,6 +435,9 @@ function install_begin_request(&$install_state) {
     CoreServiceProvider::registerTwig($container);
 
     $container->register('url_generator', 'Drupal\Core\Routing\NullGenerator');
+
+    // Register UUID.
+    CoreServiceProvider::registerUuid($container);
 
     // Register the CSS and JavaScript asset collection renderers.
     $container->register('asset.css.collection_renderer', 'Drupal\Core\Asset\CssCollectionRenderer');

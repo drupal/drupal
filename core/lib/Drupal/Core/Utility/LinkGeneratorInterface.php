@@ -8,7 +8,7 @@
 namespace Drupal\Core\Utility;
 
 /**
- * Defines an interface for a service which generates a link out of a
+ * Defines an interface for generating links from route names and parameters.
  */
 interface LinkGeneratorInterface {
 

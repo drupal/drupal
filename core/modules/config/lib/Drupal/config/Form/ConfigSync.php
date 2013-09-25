@@ -7,6 +7,7 @@
 
 namespace Drupal\config\Form;
 
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Config\StorageInterface;
@@ -65,6 +66,13 @@ class ConfigSync extends FormBase {
   protected $urlGenerator;
 
   /**
+   * The UUID service.
+   *
+   * @var \Drupal\Component\Uuid\UuidInterface
+   */
+  protected $uuidService;
+
+  /**
    * Constructs the object.
    *
    * @param \Drupal\Core\Config\StorageInterface $sourceStorage
@@ -81,8 +89,10 @@ class ConfigSync extends FormBase {
    *   Entity manager.
    * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
    *   The url generator service.
+   * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
+   * The UUID Service.
    */
-  public function __construct(StorageInterface $sourceStorage, StorageInterface $targetStorage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigFactory $config_factory, EntityManager $entity_manager, UrlGeneratorInterface $url_generator) {
+  public function __construct(StorageInterface $sourceStorage, StorageInterface $targetStorage, LockBackendInterface $lock, EventDispatcherInterface $event_dispatcher, ConfigFactory $config_factory, EntityManager $entity_manager, UrlGeneratorInterface $url_generator, UuidInterface $uuid_service) {
     $this->sourceStorage = $sourceStorage;
     $this->targetStorage = $targetStorage;
     $this->lock = $lock;
@@ -90,6 +100,7 @@ class ConfigSync extends FormBase {
     $this->configFactory = $config_factory;
     $this->entity_manager = $entity_manager;
     $this->urlGenerator = $url_generator;
+    $this->uuidService = $uuid_service;
   }
 
   /**
@@ -103,7 +114,8 @@ class ConfigSync extends FormBase {
       $container->get('event_dispatcher'),
       $container->get('config.factory'),
       $container->get('entity.manager'),
-      $container->get('url_generator')
+      $container->get('url_generator'),
+      $container->get('uuid')
     );
   }
 
@@ -206,7 +218,8 @@ class ConfigSync extends FormBase {
       $this->eventDispatcher,
       $this->configFactory,
       $this->entity_manager,
-      $this->lock
+      $this->lock,
+      $this->uuidService
     );
     if ($config_importer->alreadyImporting()) {
       drupal_set_message($this->t('Another request may be synchronizing configuration already.'));

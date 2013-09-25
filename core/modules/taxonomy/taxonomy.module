@@ -458,8 +458,12 @@ function template_preprocess_taxonomy_term(&$variables) {
  *   A taxonomy term entity.
  */
 function taxonomy_term_is_page(Term $term) {
-  $page_term = menu_get_object('taxonomy_term', 2);
-  return (!empty($page_term) ? $page_term->id() == $term->id() : FALSE);
+  $request = \Drupal::request();
+  if ($request->attributes->has('taxonomy_term')) {
+    $page_term = $request->attributes->get('taxonomy_term');
+    return $page_term->id() == $term->id();
+  }
+  return FALSE;
 }
 
 /**

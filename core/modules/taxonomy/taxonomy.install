@@ -5,7 +5,6 @@
  * Install, update and uninstall functions for the taxonomy module.
  */
 
-use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\field\Entity\Field;
 
@@ -303,7 +302,7 @@ function taxonomy_update_8004() {
  * Convert vocabularies into configuration.
  */
 function taxonomy_update_8005() {
-  $uuid = new Uuid();
+  $uuid = \Drupal::service('uuid');
 
   $result = db_query('SELECT * FROM {taxonomy_vocabulary}');
   foreach ($result as $vocabulary) {

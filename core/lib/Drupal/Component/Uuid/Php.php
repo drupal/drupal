@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Uuid\Php.
+ * Contains \Drupal\Component\Uuid\Php.
  */
 
 namespace Drupal\Component\Uuid;
@@ -46,4 +46,5 @@ class Php implements UuidInterface {
 
     return $uuid;
   }
+
 }

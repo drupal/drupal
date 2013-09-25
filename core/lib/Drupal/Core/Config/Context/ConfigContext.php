@@ -10,7 +10,7 @@ namespace Drupal\Core\Config\Context;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigEvent;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Uuid\Uuid;
+use Drupal\Component\Uuid\UuidInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -50,13 +50,23 @@ class ConfigContext implements ContextInterface {
   protected $uuid;
 
   /**
+   * The UUID service.
+   *
+   * @var \Drupal\Component\Uuid\UuidInterface
+   */
+  protected $uuidService;
+
+  /**
    * Constructs the configuration context.
    *
    * @param \Symfony\Component\EventDispatcher\EventDispatcher $event_dispatcher
    *   An event dispatcher instance to use for configuration events.
+   * @param \Drupal\Component\Uuid\UuidInterface
+   *   The UUID service.
    */
-  public function __construct(EventDispatcher $event_dispatcher) {
+  public function __construct(EventDispatcher $event_dispatcher, UuidInterface $uuid) {
     $this->eventDispatcher = $event_dispatcher;
+    $this->uuidService = $uuid;
   }
 
   /**
@@ -89,8 +99,7 @@ class ConfigContext implements ContextInterface {
    * Implements \Drupal\Core\Config\Context\ContextInterface::setUuid().
    */
   public function setUuid() {
-    $uuid = new Uuid();
-    $this->uuid = $uuid->generate();
+    $this->uuid = $this->uuidService->generate();
   }
 
   /**

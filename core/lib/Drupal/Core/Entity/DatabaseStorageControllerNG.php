@@ -13,7 +13,7 @@ use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\EntityStorageException;
-use Drupal\Component\Uuid\Uuid;
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Database\Connection;
 
 /**
@@ -52,8 +52,8 @@ class DatabaseStorageControllerNG extends DatabaseStorageController {
   /**
    * Overrides DatabaseStorageController::__construct().
    */
-  public function __construct($entity_type, array $entity_info, Connection $database, FieldInfo $field_info) {
-    parent::__construct($entity_type,$entity_info, $database, $field_info);
+  public function __construct($entity_type, array $entity_info, Connection $database, FieldInfo $field_info, UuidInterface $uuid_service) {
+    parent::__construct($entity_type,$entity_info, $database, $field_info, $uuid_service);
     $this->bundleKey = !empty($this->entityInfo['entity_keys']['bundle']) ? $this->entityInfo['entity_keys']['bundle'] : FALSE;
     $this->entityClass = $this->entityInfo['class'];
 

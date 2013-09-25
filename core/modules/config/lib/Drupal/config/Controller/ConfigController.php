@@ -123,7 +123,7 @@ class ConfigController implements ContainerInjectionInterface {
         ),
       ),
       '#title' => "Back to 'Synchronize configuration' page.",
-      '#href' => 'admin/config/development/sync',
+      '#href' => 'admin/config/development/configuration/sync',
     );
 
     return $build;

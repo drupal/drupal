@@ -18,7 +18,7 @@ namespace Drupal\system\Tests\Upgrade;
 class UuidUpgradePathTest extends UpgradePathTestBase {
   public static function getInfo() {
     return array(
-      'name'  => 'Uuid upgrade test',
+      'name'  => 'UUID upgrade test',
       'description'  => 'Upgrade tests for a node and user data.',
       'group' => 'Upgrade path',
     );

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Component\Uuid\Pecl.
+ * Contains \Drupal\Component\Uuid\Pecl.
  */
 
 namespace Drupal\Component\Uuid;

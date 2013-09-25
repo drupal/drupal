@@ -7,7 +7,6 @@
 
 namespace Drupal\Core\Config\Entity;
 
-use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityMalformedException;
 use Drupal\Core\Entity\EntityStorageControllerBase;
@@ -15,6 +14,7 @@ use Drupal\Core\Config\Config;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\StorageInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Component\Uuid\UuidInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -40,6 +40,13 @@ class ConfigStorageController extends EntityStorageControllerBase {
    * @var string
    */
   protected $uuidKey = 'uuid';
+
+  /**
+   * The UUID service.
+   *
+   * @var \Drupal\Component\Uuid\UuidInterface
+   */
+  protected $uuidService;
 
   /**
    * Name of the entity's status key or FALSE if a status is not supported.
@@ -82,8 +89,10 @@ class ConfigStorageController extends EntityStorageControllerBase {
    *   The config storage service.
    * @param \Drupal\Core\Entity\Query\QueryFactory $entity_query_factory
    *   The entity query factory.
+   * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
+   *   The UUID service.
    */
-  public function __construct($entity_type, array $entity_info, ConfigFactory $config_factory, StorageInterface $config_storage, QueryFactory $entity_query_factory) {
+  public function __construct($entity_type, array $entity_info, ConfigFactory $config_factory, StorageInterface $config_storage, QueryFactory $entity_query_factory, UuidInterface $uuid_service) {
     parent::__construct($entity_type, $entity_info);
 
     $this->idKey = $this->entityInfo['entity_keys']['id'];
@@ -98,6 +107,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
     $this->configFactory = $config_factory;
     $this->configStorage = $config_storage;
     $this->entityQueryFactory = $entity_query_factory;
+    $this->uuidService = $uuid_service;
   }
 
   /**
@@ -109,7 +119,8 @@ class ConfigStorageController extends EntityStorageControllerBase {
       $entity_info,
       $container->get('config.factory'),
       $container->get('config.storage'),
-      $container->get('entity.query')
+      $container->get('entity.query'),
+      $container->get('uuid')
     );
   }
 
@@ -323,8 +334,7 @@ class ConfigStorageController extends EntityStorageControllerBase {
 
     // Assign a new UUID if there is none yet.
     if (!isset($entity->{$this->uuidKey})) {
-      $uuid = new Uuid();
-      $entity->{$this->uuidKey} = $uuid->generate();
+      $entity->{$this->uuidKey} = $this->uuidService->generate();
     }
     $entity->postCreate($this);
 

@@ -1044,7 +1044,7 @@ function node_update_8019() {
  * @ingroup config_upgrade
 */
 function node_update_8020() {
-  $uuid = new Uuid();
+  $uuid = \Drupal::service('uuid');
   // Properties to drop: custom, disabled.
   $locked = array();
   // Note: {node_type}.name was the label, .type the machine name.

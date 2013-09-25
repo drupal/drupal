@@ -190,7 +190,14 @@ class ViewListController extends ConfigEntityListController implements EntityCon
     $list['#attached']['library'][] = array('system', 'drupal.ajax');
     $list['#attached']['library'][] = array('views_ui', 'views_ui.listing');
 
-    $list['search'] = array(
+    $form['filters'] = array(
+      '#type' => 'container',
+      '#attributes' => array(
+        'class' => array('table-filter', 'js-show'),
+      ),
+    );
+
+    $list['filters']['text'] = array(
       '#type' => 'search',
       '#title' => $this->t('Search'),
       '#size' => 30,

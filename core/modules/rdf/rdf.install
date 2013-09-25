@@ -13,7 +13,7 @@ use Drupal\Component\Uuid\Uuid;
  * @ingroup config_upgrade
  */
 function rdf_update_8000() {
-  $uuid = new Uuid();
+  $uuid = \Drupal::service('uuid');
   $query = db_query("SELECT * FROM {rdf_mapping}");
 
   // Iterate through all the stored mappings.

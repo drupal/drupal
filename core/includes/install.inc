@@ -486,10 +486,10 @@ function drupal_install_config_directories() {
     // to the drupal core repo.
     switch ($config_type) {
       case CONFIG_ACTIVE_DIRECTORY:
-        $text = 'This directory contains the active configuration for your Drupal site. To move this configuration between environments, contents from this directory should be placed in the staging directory on the target server. To make this configuration active, see admin/config/development/sync on the target server.';
+        $text = 'This directory contains the active configuration for your Drupal site. To move this configuration between environments, contents from this directory should be placed in the staging directory on the target server. To make this configuration active, see admin/config/development/configuration/sync on the target server.';
         break;
       case CONFIG_STAGING_DIRECTORY:
-        $text = 'This directory contains configuration to be imported into your Drupal site. To make this configuration active, see admin/config/development/sync.';
+        $text = 'This directory contains configuration to be imported into your Drupal site. To make this configuration active, see admin/config/development/configuration/sync.';
         break;
     }
     $text .=  ' For information about deploying configuration between servers, see http://drupal.org/documentation/administer/config';

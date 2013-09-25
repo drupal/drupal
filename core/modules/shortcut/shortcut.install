@@ -68,7 +68,7 @@ function shortcut_schema() {
  * Migrate shortcuts into configuration.
  */
 function shortcut_update_8000() {
-  $uuid = new Uuid();
+  $uuid = \Drupal::service('uuid');
   $result = db_query('SELECT * from {shortcut_set}');
   $ids = array();
   foreach ($result as $set) {

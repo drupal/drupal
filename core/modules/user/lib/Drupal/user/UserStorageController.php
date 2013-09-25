@@ -7,6 +7,7 @@
 
 namespace Drupal\user;
 
+use Drupal\Component\Uuid\UuidInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Password\PasswordInterface;
 use Drupal\Core\Database\Connection;
@@ -40,21 +41,23 @@ class UserStorageController extends DatabaseStorageControllerNG implements UserS
   /**
    * Constructs a new UserStorageController object.
    *
-   * @param string $entityType
-   *   The entity type for which the instance is created.
+   * @param string $entity_type
+   *  The entity type for which the instance is created.
    * @param array $entity_info
    *   An array of entity info for the entity type.
    * @param \Drupal\Core\Database\Connection $database
    *   The database connection to be used.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
+   * @param \Drupal\Component\Uuid\UuidInterface $uuid_service
+   *   The UUID Service.
    * @param \Drupal\Core\Password\PasswordInterface $password
    *   The password hashing service.
    * @param \Drupal\user\UserDataInterface $user_data
    *   The user data service.
    */
-  public function __construct($entity_type, $entity_info, Connection $database, FieldInfo $field_info, PasswordInterface $password, UserDataInterface $user_data) {
-    parent::__construct($entity_type, $entity_info, $database, $field_info);
+  public function __construct($entity_type, $entity_info, Connection $database, FieldInfo $field_info, UuidInterface $uuid_service, PasswordInterface $password, UserDataInterface $user_data) {
+    parent::__construct($entity_type, $entity_info, $database, $field_info, $uuid_service);
 
     $this->password = $password;
     $this->userData = $user_data;
@@ -69,6 +72,7 @@ class UserStorageController extends DatabaseStorageControllerNG implements UserS
       $entity_info,
       $container->get('database'),
       $container->get('field.info'),
+      $container->get('uuid'),
       $container->get('password'),
       $container->get('user.data')
     );

@@ -5,8 +5,6 @@
  * Install, update and uninstall functions for the entity module.
  */
 
-use Drupal\Component\Uuid\Uuid;
-
 /**
  * Returns the raw configuration object for an EntityDisplay entity.
  *
@@ -31,7 +29,7 @@ function _update_8000_entity_get_display($entity_type, $bundle, $view_mode) {
   }
 
   // Initialize a fresh structure.
-  $uuid = new Uuid();
+  $uuid = \Drupal::service('uuid');
   $properties = array(
     'id' => $id,
     'uuid' => $uuid->generate(),
@@ -70,7 +68,7 @@ function _update_8000_entity_get_form_display($entity_type, $bundle, $form_mode)
   }
 
   // Initialize a fresh structure.
-  $uuid = new Uuid();
+  $uuid = \Drupal::service('uuid');
   $properties = array(
     'id' => $id,
     'uuid' => $uuid->generate(),

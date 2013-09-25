@@ -76,7 +76,8 @@ function config_install_default_config($type, $name) {
       \Drupal::service('event_dispatcher'),
       \Drupal::service('config.factory'),
       \Drupal::entityManager(),
-      \Drupal::lock()
+      \Drupal::lock(),
+      \Drupal::service('uuid')
     );
     $installer->import();
   }
