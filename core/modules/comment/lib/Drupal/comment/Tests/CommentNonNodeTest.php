@@ -375,8 +375,8 @@ class CommentNonNodeTest extends WebTestBase {
     $new_entity = entity_create('entity_test_render', $data);
     $new_entity->save();
     $this->drupalGet('entity_test_render/manage/' . $new_entity->id() . '/edit');
-    $this->assertFieldChecked('edit-field-foobar-0-status-1');
-    $this->assertNoFieldChecked('edit-field-foobar-0-status-2');
+    $this->assertNoFieldChecked('edit-field-foobar-0-status-1');
+    $this->assertFieldChecked('edit-field-foobar-0-status-2');
     $this->assertNoField('edit-field-foobar-0-status-0');
 
     $this->drupalGet('comment/reply/entity_test_render/comment/' . $new_entity->id());
