@@ -105,7 +105,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
    */
   public function viewElements(FieldInterface $items) {
     $elements = array();
-    $additions = array();
+    $output = array();
 
     $field = $this->fieldDefinition;
     $field_name = $field->getFieldName();
@@ -132,7 +132,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
           comment_prepare_thread($comments);
           $build = $this->renderController->viewMultiple($comments);
           $build['pager']['#theme'] = 'pager';
-          $additions['comments'] = $build;
+          $output['comments'] = $build;
         }
       }
 
@@ -141,11 +141,11 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       if ($commenting_status == COMMENT_OPEN && $comment_settings['form_location'] == COMMENT_FORM_BELOW) {
         // Only show the add comment form if the user has permission.
         if ($this->currentUser->hasPermission('post comments')) {
-          $additions['comment_form'] = comment_add($entity, $field_name);
+          $output['comment_form'] = comment_add($entity, $field_name);
         }
       }
 
-      $elements[] = $additions + array(
+      $elements[] = $output + array(
         '#theme' => 'comment_wrapper__' . $entity->entityType() . '__' . $entity->bundle() . '__' . $field_name,
         '#entity' => $entity,
         '#display_mode' => $this->getFieldSetting('default_mode'),
