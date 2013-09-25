@@ -44,6 +44,7 @@ function entity_test_entity_types($filter = NULL) {
   $types = array();
   if ($filter == NULL) {
     $types[] = 'entity_test';
+    $types[] = 'entity_test_render';
   }
   if ($filter != ENTITY_TEST_TYPES_REVISABLE) {
     $types[] = 'entity_test_mul';
@@ -311,6 +312,21 @@ function entity_test_edit(EntityInterface $entity) {
  */
 function entity_test_load($id, $reset = FALSE) {
   return entity_load('entity_test', $id, $reset);
+}
+
+/**
+ * Loads a test entity.
+ *
+ * @param int $id
+ *   A test entity ID.
+ * @param bool $reset
+ *   A boolean indicating that the internal cache should be reset.
+ *
+ * @return \Drupal\entity_test\Entity\EntityRenderTest
+ *   The loaded entity object, or NULL if the entity cannot be loaded.
+ */
+function entity_test_render_load($id, $reset = FALSE) {
+  return entity_load('entity_test_render', $id, $reset);
 }
 
 /**
