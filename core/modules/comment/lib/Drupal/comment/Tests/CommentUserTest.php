@@ -402,9 +402,9 @@ class CommentUserTest extends WebTestBase {
     ));
     $this->drupalLogin($limited_user);
     $this->drupalGet('user/' . $limited_user->id() . '/edit');
-    $this->assertFieldChecked('edit-comment-0-status-1');
-    $this->assertNoFieldChecked('edit-comment-0-status-2');
-    $this->assertNoField('edit-comment-0-status-0');
+    $this->assertFieldChecked('edit-field-foobar-0-status-2');
+    $this->assertNoFieldChecked('edit-field-foobar-0-status-1');
+    $this->assertNoField('edit-field-foobar-0-status-0');
 
     $this->drupalGet('comment/reply/user/comment/' . $limited_user->id());
     $this->assertNoFieldByName('subject', '', 'Subject field found.');
