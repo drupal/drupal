@@ -139,7 +139,10 @@ function system_help($path, $arg) {
 function system_theme() {
   return array_merge(drupal_common_theme(), array(
     'system_themes_page' => array(
-      'variables' => array('theme_groups' => NULL),
+      'variables' => array(
+        'theme_groups' => NULL,
+        'theme_group_titles' => NULL,
+      ),
       'file' => 'system.admin.inc',
     ),
     'system_config_form' => array(
@@ -3183,7 +3186,12 @@ function theme_exposed_filters($variables) {
     foreach (element_children($form['current']) as $key) {
       $items[] = $form['current'][$key];
     }
-    $output .= theme('item_list', array('items' => $items, 'attributes' => array('class' => array('clearfix', 'current-filters'))));
+    $item_list = array(
+      '#theme' => 'item_list',
+      '#items' => $items,
+      '#attributes' => array('class' => array('clearfix', 'current-filters')),
+    );
+    $output .= drupal_render($item_list);
   }
 
   $output .= drupal_render_children($form);
