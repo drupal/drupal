@@ -10,8 +10,6 @@ namespace Drupal\comment\Controller;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Entity\EntityManager;
-use Drupal\Core\Extension\ModuleHandler;
 use Drupal\comment\CommentManager;
 use Drupal\field\FieldInfo;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -168,8 +166,6 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
    *   combinations on which the comment field is in use.
    */
   public function bundleInfo($field_name) {
-    $entity_bundles = $this->entityManager()->getAllBundleInfo();
-    $entity_types = $this->entityManager()->getDefinitions();
     // Add a link to manage entity fields if the Field UI module is enabled.
     $field_ui_enabled = $this->moduleHandler()->moduleExists('field_ui');
 
@@ -177,30 +173,46 @@ class AdminController extends ControllerBase implements ContainerInjectionInterf
     list($entity_type, $field) = explode('__', $field_name, 2);
     $field_info = $this->fieldInfo->getField($entity_type, $field);
 
+    $entity_type_info = $this->entityManager()->getDefinition($entity_type);
+    $entity_bundle_info = $this->entityManager()->getBundleInfo($entity_type);
+
     $build['usage'] = array(
       '#theme' => 'item_list',
-      '#title' => String::checkPlain($entity_types[$entity_type]['label']),
+      '#title' => String::checkPlain($entity_type_info['label']),
       '#items' => array(),
     );
-    // Loop over all of the entity types to which this comment field is
-    // attached.
+    // Loop over all of bundles to which this comment field is attached.
     foreach ($field_info->getBundles() as $bundle) {
-      if (isset($entity_bundles[$entity_type][$bundle])) {
-        // Add the current instance to the list of bundles.
-        if ($field_ui_enabled && ($route_info = $this->entityManager()->getAdminRouteInfo($entity_type, $bundle))) {
-          // Add a link to configure the fields on the given bundle and entity
-          // type combination.
-          $build['usage']['#items'][] = $this->l($entity_bundles[$entity_type][$bundle]['label'], $route_info['route_name'], $route_info['route_parameters']);
-        }
-        else {
-          // Field UI is disabled so fallback to a list of bundle labels
-          // instead of links to configure fields.
-          $build['usage']['#items'][] = String::checkPlain($entity_bundles[$entity_type][$bundle]['label']);
-        }
+      // Add the current instance to the list of bundles.
+      if ($field_ui_enabled && ($route_info = $this->entityManager()->getAdminRouteInfo($entity_type, $bundle))) {
+        // Add a link to configure the fields on the given bundle and entity
+        // type combination.
+        $build['usage']['#items'][] = $this->l($entity_bundle_info[$bundle]['label'], $route_info['route_name'], $route_info['route_parameters']);
+      }
+      else {
+        // Field UI is disabled so fallback to a list of bundle labels
+        // instead of links to configure fields.
+        $build['usage']['#items'][] = String::checkPlain($entity_bundle_info[$bundle]['label']);
       }
     }
 
     return $build;
+  }
+
+  /**
+   * Route title callback.
+   *
+   * @param string $field_name
+   *   The comment field for which the overview is to be displayed.
+   *
+   * @return string
+   *   The human readable field name.
+   */
+  public function bundleTitle($field_name) {
+    // @todo Provide dynamic routing to get entity type and field name.
+    list($entity_type, $field) = explode('__', $field_name, 2);
+    $field_info = $this->fieldInfo->getField($entity_type, $field);
+    return String::checkPlain($field_info->getFieldName());
   }
 
 }

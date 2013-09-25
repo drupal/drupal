@@ -10,6 +10,7 @@
  * book page, user etc.
  */
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
 use Drupal\comment\CommentInterface;
@@ -922,14 +923,27 @@ function comment_form_field_ui_field_instance_edit_form_alter(&$form, $form_stat
  * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_field_ui_field_overview_form_alter(&$form, $form_state) {
-  $form['#title'] = t('Manage Fields: %field_name', array('%field_name' => $form['#bundle']));
+  if ($form['#entity_type'] == 'comment') {
+    $form['#title'] = String::checkPlain($form['#bundle']);
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function comment_form_field_ui_form_display_overview_form_alter(&$form, $form_state) {
+  if ($form['#entity_type'] == 'comment') {
+    $form['#title'] = String::checkPlain($form['#bundle']);
+  }
 }
 
 /**
  * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_field_ui_display_overview_form_alter(&$form, $form_state) {
-  $form['#title'] = t('Manage Display: %field_name', array('%field_name' => $form['#bundle']));
+  if ($form['#entity_type'] == 'comment') {
+    $form['#title'] = String::checkPlain($form['#bundle']);
+  }
 }
 
 /**

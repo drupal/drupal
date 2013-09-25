@@ -72,5 +72,6 @@ comment.bundle:
   path: '/admin/structure/comments/manage/{field_name}'
   defaults:
     _content: 'Drupal\comment\Controller\AdminController::bundleInfo'
+    _title_callback: 'Drupal\comment\Controller\AdminController::bundleTitle'
   requirements:
     _permission: 'administer comments'
