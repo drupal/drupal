@@ -53,11 +53,36 @@ class FileStorage implements PhpStorageInterface {
    */
   public function save($name, $code) {
     $path = $this->getFullPath($name);
-    $dir = dirname($path);
-    if (!file_exists($dir)) {
-      mkdir($dir, 0700, TRUE);
-    }
+    $this->ensureDirectory(dirname($path));
     return (bool) file_put_contents($path, $code);
+  }
+
+  /**
+   * Ensures the root directory exists and has the right permissions.
+   *
+   * @param string $directory
+   *   The directory path.
+   *
+   * @param int $mode
+   *   The mode, permissions, the directory should have.
+   */
+  protected function ensureDirectory($directory, $mode = 0777) {
+    if (!file_exists($directory)) {
+      // mkdir() obeys umask() so we need to mkdir() and chmod() manually.
+      $parts = explode('/', $directory);
+      $path = '';
+      $delimiter = '';
+      do {
+        $part = array_shift($parts);
+        $path .= $delimiter . $part;
+        $delimiter = '/';
+        // For absolute paths the first part will be empty.
+        if ($part && !file_exists($path)) {
+          mkdir($path);
+          chmod($path, $mode);
+        }
+      } while ($parts);
+    }
   }
 
   /**
@@ -109,16 +134,13 @@ class FileStorage implements PhpStorageInterface {
   protected function unlink($path) {
     if (file_exists($path)) {
       // Ensure the file / folder is writable.
-      chmod($path, 0700);
       if (is_dir($path)) {
-        $dir = dir($path);
-        while (($entry = $dir->read()) !== FALSE) {
-          if ($entry == '.' || $entry == '..') {
-            continue;
+        @chmod($path, 0777);
+        foreach (new \DirectoryIterator($path) as $fileinfo) {
+          if (!$fileinfo->isDot()) {
+            $this->unlink($fileinfo->getPathName());
           }
-          $this->unlink($path . '/' . $entry);
         }
-        $dir->close();
         return @rmdir($path);
       }
       return @unlink($path);
