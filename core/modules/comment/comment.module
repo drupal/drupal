@@ -177,7 +177,7 @@ function comment_theme() {
       'render element' => 'elements',
     ),
     'comment_post_forbidden' => array(
-      'variables' => array('entity' => NULL, 'field_name' => 'comment'),
+      'variables' => array('commented_entity' => NULL, 'field_name' => 'comment'),
     ),
     'comment_wrapper' => array(
       'template' => 'comment-wrapper',
@@ -553,7 +553,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
           else {
             $comment_post_forbidden = array(
               '#theme' => 'comment_post_forbidden',
-              '#entity' => $entity,
+              '#commented_entity' => $entity,
               '#field_name' => $field_name,
             );
             $links['comment-forbidden'] = array(
@@ -588,7 +588,7 @@ function comment_entity_view(EntityInterface $entity, EntityDisplay $display, $v
           else {
             $comment_post_forbidden = array(
               '#theme' => 'comment_post_forbidden',
-              '#entity' => $entity,
+              '#commented_entity' => $entity,
               '#field_name' => $field_name,
             );
             $links['comment-forbidden'] = array(
@@ -861,7 +861,7 @@ function comment_links(CommentInterface $comment, EntityInterface $entity, $fiel
     if (empty($links)) {
       $comment_post_forbidden = array(
         '#theme' => 'comment_post_forbidden',
-        '#entity' => $entity,
+        '#commented_entity' => $entity,
         '#field_name' => $field_name,
       );
       $links['comment-forbidden']['title'] = drupal_render($comment_post_forbidden);
@@ -1450,14 +1450,14 @@ function comment_prepare_author(CommentInterface $comment) {
  *
  * @param array $variables
  *   An associative array containing:
- *   - elements: An associative array containing the comment and node objects.
- *     Array keys: #comment, #node.
+ *   - elements: An associative array containing the comment and entity objects.
+ *     Array keys: #comment, #commented_entity.
  */
 function template_preprocess_comment(&$variables) {
   $comment = $variables['elements']['#comment'];
-  $comment_entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+  $commented_entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
   $variables['comment'] = $comment;
-  $variables['comment_entity'] = $comment_entity;
+  $variables['commented_entity'] = $commented_entity;
 
   $account = comment_prepare_author($comment);
   // @todo Do not call theme() here. We do this for purposes of t().
@@ -1563,8 +1563,8 @@ function template_preprocess_comment(&$variables) {
   }
   else {
     // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
-    if ($comment_entity->getPropertyDefinition('uid') && $comment->uid->target_id == $comment_entity->get('uid')->value) {
-      $variables['attributes']['class'][] = 'by-' . $comment_entity->entityType() . '-author';
+    if ($commented_entity->getPropertyDefinition('uid') && $comment->uid->target_id == $commented_entity->get('uid')->value) {
+      $variables['attributes']['class'][] = 'by-' . $commented_entity->entityType() . '-author';
     }
   }
   // Add clearfix class.
@@ -1581,13 +1581,13 @@ function template_preprocess_comment(&$variables) {
  *
  * @param $variables
  *   An associative array containing:
- *   - entity: The comment entity.
+ *   - commented_entity: The entity to which comments are attached to.
  *   - field_name: The comment field.
  *
  * @ingroup themeable
  */
 function theme_comment_post_forbidden($variables) {
-  $entity = $variables['entity'];
+  $entity = $variables['commented_entity'];
   $field_name = $variables['field_name'];
   global $user;
 
