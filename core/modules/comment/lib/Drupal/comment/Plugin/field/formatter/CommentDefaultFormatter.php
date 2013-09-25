@@ -111,6 +111,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
     $entity = $items->getEntity();
 
     $status = $items->status;
+
     if ($status != COMMENT_HIDDEN && empty($entity->in_preview) &&
       // Comments are added to the search results and search index by
       // comment_node_update_index() instead of by this formatter, so don't

@@ -35,9 +35,6 @@ class CommentWidget extends WidgetBase {
     // Get default value from the field instance.
     $field_default_values = $this->fieldDefinition->getFieldDefaultValue($entity);
     $status = $items->status;
-    if (!isset($status)) {
-      $status = $field_default_values[0]['status'];
-    }
 
     $element['status'] = array(
       '#type' => 'radios',

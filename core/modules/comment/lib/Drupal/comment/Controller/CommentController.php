@@ -254,7 +254,8 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
 
     // The user is not just previewing a comment.
     if ($request->request->get('op') != $this->t('Preview')) {
-      if ($entity->{$field_name}->status != COMMENT_OPEN) {
+      $status = $entity->{$field_name}->status;
+      if ($status != COMMENT_OPEN) {
         drupal_set_message($this->t("This discussion is closed: you can't post new comments."), 'error');
         return new RedirectResponse($this->urlGenerator()->generateFromPath($uri['path'], array('absolute' => TRUE)));
       }
@@ -281,12 +282,11 @@ class CommentController extends ControllerBase implements ContainerInjectionInte
       elseif ($entity->access('view', $account)) {
         // We make sure the field value isn't set so we don't end up with a
         // redirect loop.
-        $original_value = $entity->{$field_name}->status;
         $entity->{$field_name}->status = COMMENT_HIDDEN;
         // Render array of the entity full view mode.
-        $build['comment_entity'] = $this->entityManager()->getRenderController($entity->entityType())->view($entity, 'full');
-        unset($build['comment_entity']['#cache']);
-        $entity->{$field_name}->status = $original_value;
+        $build['commented_entity'] = $this->entityManager()->getRenderController($entity->entityType())->view($entity, 'full');
+        unset($build['commented_entity']['#cache']);
+        $entity->{$field_name}->status = $status;
       }
     }
     else {

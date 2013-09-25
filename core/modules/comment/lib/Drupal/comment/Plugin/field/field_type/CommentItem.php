@@ -183,6 +183,20 @@ class CommentItem extends ConfigFieldItemBase {
   /**
    * {@inheritdoc}
    */
+  public function __get($name) {
+    if ($name == 'status' && !isset($this->values[$name])) {
+      // Get default value from field instance when no data saved in entity.
+      $field_default_values = $this->getFieldDefinition()->getFieldDefaultValue($this->getEntity());
+      return $field_default_values[0]['status'];
+    }
+    else {
+      return parent::__get($name);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function isEmpty() {
     // There is always a value for this field, it is one of COMMENT_OPEN,
     // COMMENT_CLOSED or COMMENT_HIDDEN.

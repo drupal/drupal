@@ -828,6 +828,7 @@ function comment_view(CommentInterface $comment, $view_mode = 'full', $langcode 
 function comment_links(CommentInterface $comment, EntityInterface $entity, $field_name) {
   $links = array();
   $status = $entity->get($field_name)->status;
+
   if ($status == COMMENT_OPEN) {
     if ($comment->access('delete')) {
       $links['comment-delete'] = array(
