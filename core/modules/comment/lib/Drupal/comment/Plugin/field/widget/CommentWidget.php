@@ -81,7 +81,6 @@ class CommentWidget extends WidgetBase {
         '#attached' => array(
           'library' => array('comment', 'drupal.comment'),
         ),
-        '#weight' => 30,
       );
     }
 
