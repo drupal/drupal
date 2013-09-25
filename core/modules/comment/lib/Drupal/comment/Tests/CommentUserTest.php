@@ -339,8 +339,9 @@ class CommentUserTest extends WebTestBase {
       'access user profiles' => TRUE,
       'skip comment approval' => FALSE,
     ));
-    // Ensure the page cache is flushed.
-    drupal_flush_all_caches();
+    // Ensure the render cache is flushed.
+    // @todo Fix render cache per user.
+    \Drupal::entityManager()->getRenderController('user')->resetCache();
     $this->drupalGet('user/' . $this->web_user->id());
     $this->assertPattern('@<h2[^>]*>Comments</h2>@', 'Comments were displayed.');
     $this->assertLink('Log in', 0, 'Link to log in was found.');
@@ -355,6 +356,9 @@ class CommentUserTest extends WebTestBase {
       'skip comment approval' => TRUE,
       'access user profiles' => TRUE,
     ));
+    // Ensure the render cache is flushed.
+    // @todo Fix render cache per user.
+    \Drupal::entityManager()->getRenderController('user')->resetCache();
     $this->drupalGet('user/' . $this->web_user->id());
     $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
     $this->assertFieldByName('subject', '', 'Subject field found.');
