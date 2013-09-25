@@ -126,7 +126,11 @@ function system_requirements($phase) {
       '@system_requirements' => 'http://drupal.org/requirements',
     ));
 
-    $description .= theme('item_list', array('items' => $missing_extensions));
+    $item_list = array(
+      '#theme' => 'item_list',
+      '#items' => $missing_extensions,
+    );
+    $description .= drupal_render($item_list);
 
     $requirements['php_extensions']['value'] = t('Disabled');
     $requirements['php_extensions']['severity'] = REQUIREMENT_ERROR;
@@ -241,7 +245,11 @@ function system_requirements($phase) {
         $description = $conf_errors[0];
       }
       else {
-        $description = theme('item_list', array('items' => $conf_errors));
+        $item_list = array(
+          '#theme' => 'item_list',
+          '#items' => $conf_errors,
+        );
+        $description = drupal_render($item_list);
       }
       $requirements['settings.php'] = array(
         'value' => t('Not protected'),

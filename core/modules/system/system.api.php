@@ -410,7 +410,8 @@ function hook_css_alter(&$css) {
  */
 function hook_ajax_render_alter($commands) {
   // Inject any new status messages into the content area.
-  $commands[] = ajax_command_prepend('#block-system-main .content', theme('status_messages'));
+  $status_messages = array('#theme' => 'status_messages');
+  $commands[] = ajax_command_prepend('#block-system-main .content', drupal_render($status_messages));
 }
 
 /**
