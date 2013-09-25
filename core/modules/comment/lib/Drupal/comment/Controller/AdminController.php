@@ -8,6 +8,7 @@
 namespace Drupal\comment\Controller;
 
 use Drupal\Component\Utility\String;
+use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Extension\ModuleHandler;
@@ -18,21 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Returns responses for comment module administrative routes.
  */
-class AdminController implements ContainerInjectionInterface {
-
-  /**
-   * The entity manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityManager
-   */
-  protected $entityManager;
-
-  /**
-   * The module handler service.
-   *
-   * @var \Drupal\Core\Extension\ModuleHandler
-   */
-  protected $moduleHandler;
+class AdminController extends ControllerBase implements ContainerInjectionInterface {
 
   /**
    * The field info service.
@@ -53,8 +40,6 @@ class AdminController implements ContainerInjectionInterface {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.entity'),
-      $container->get('module_handler'),
       $container->get('field.info'),
       $container->get('comment.manager')
     );
@@ -63,16 +48,12 @@ class AdminController implements ContainerInjectionInterface {
   /**
    * Constructs an AdminController object.
    *
-   * @param \Drupal\Core\Entity\EntityManager $entity_manager
-   *   The entity manager service.
-   * @param \Drupal\Core\Extension\ModuleHandler $module_handler
-   *   The module handler service.
    * @param \Drupal\field\FieldInfo $field_info
    *   The field info service.
+   * @param \Drupal\comment\CommentManager $comment_manager
+   *   The comment manager service.
    */
-  public function __construct(EntityManager $entity_manager, ModuleHandler $module_handler, FieldInfo $field_info, CommentManager $comment_manager) {
-    $this->entityManager = $entity_manager;
-    $this->moduleHandler = $module_handler;
+  public function __construct(FieldInfo $field_info, CommentManager $comment_manager) {
     $this->fieldInfo = $field_info;
     $this->commentManager = $comment_manager;
   }
@@ -95,13 +76,13 @@ class AdminController implements ContainerInjectionInterface {
     );
 
     // Add a column for field UI operations if the Field UI module is enabled.
-    $field_ui_enabled = $this->moduleHandler->moduleExists('field_ui');
+    $field_ui_enabled = $this->moduleHandler()->moduleExists('field_ui');
     if ($field_ui_enabled) {
       $header['operations'] = t('Operations');
     }
 
-    $entity_bundles = $this->entityManager->getAllBundleInfo();
-    $entity_types = $this->entityManager->getDefinitions();
+    $entity_bundles = $this->entityManager()->getAllBundleInfo();
+    $entity_types = $this->entityManager()->getDefinitions();
     $rows = array();
 
     // Fetch a list of all comment fields.
@@ -124,7 +105,7 @@ class AdminController implements ContainerInjectionInterface {
         foreach ($field_info_map['bundles'] as $bundle) {
           if (isset($entity_bundles[$entity_type][$bundle])) {
             // Add the current instance.
-            if ($field_ui_enabled && ($path = $this->entityManager->getAdminPath($entity_type, $bundle))) {
+            if ($field_ui_enabled && ($path = $this->entityManager()->getAdminPath($entity_type, $bundle))) {
               $row['data']['usage']['data']['#items'][] = l($entity_bundles[$entity_type][$bundle]['label'], $path . '/fields');
             }
             else {
@@ -134,17 +115,27 @@ class AdminController implements ContainerInjectionInterface {
         }
 
         if ($field_ui_enabled) {
-          // @todo Check proper permissions for operations.
-          $links['fields'] = array(
-            'title' => t('Manage fields'),
-            'href' => 'admin/structure/comments/manage/' . $entity_type . '__' . $field_name . '/fields',
-            'weight' => 5,
-          );
-          $links['display'] = array(
-            'title' => t('Manage display'),
-            'href' => 'admin/structure/comments/manage/' . $entity_type . '__' . $field_name . '/display',
-            'weight' => 10,
-          );
+          if ($this->currentUser()->hasPermission('administer comment fields')) {
+            $links['fields'] = array(
+              'title' => t('Manage fields'),
+              'href' => 'admin/structure/comments/manage/' . $entity_type . '__' . $field_name . '/fields',
+              'weight' => 5,
+            );
+          }
+          if ($this->currentUser()->hasPermission('administer comment display')) {
+            $links['display'] = array(
+              'title' => t('Manage display'),
+              'href' => 'admin/structure/comments/manage/' . $entity_type . '__' . $field_name . '/display',
+              'weight' => 10,
+            );
+          }
+          if ($this->currentUser()->hasPermission('administer comment form display')) {
+            $links['form_display'] = array(
+              'title' => t('Manage form display'),
+              'href' => 'admin/structure/comments/manage/' . $entity_type . '__' . $field_name . '/form-display',
+              'weight' => 10,
+            );
+          }
 
           $row['data']['operations']['data'] = array(
             '#type' => 'operations',
@@ -177,8 +168,8 @@ class AdminController implements ContainerInjectionInterface {
    *   combinations on which the comment field is in use.
    */
   public function bundleInfo($field_name) {
-    $entity_bundles = $this->entityManager->getAllBundleInfo();
-    $entity_types = $this->entityManager->getDefinitions();
+    $entity_bundles = $this->entityManager()->getAllBundleInfo();
+    $entity_types = $this->entityManager()->getDefinitions();
     // Add a link to manage entity fields if the Field UI module is enabled.
     $field_ui_enabled = $this->moduleHandler->moduleExists('field_ui');
 
@@ -196,7 +187,7 @@ class AdminController implements ContainerInjectionInterface {
     foreach ($field_info->getBundles() as $bundle) {
       if (isset($entity_bundles[$entity_type][$bundle])) {
         // Add the current instance to the list of bundles.
-        if ($field_ui_enabled && ($path = $this->entityManager->getAdminPath($entity_type, $bundle))) {
+        if ($field_ui_enabled && ($path = $this->entityManager()->getAdminPath($entity_type, $bundle))) {
           // Add a link to configure the fields on the given bundle and entity
           // type combination.
           $build['usage']['#items'][] = l($entity_bundles[$entity_type][$bundle]['label'], $path . '/fields');
