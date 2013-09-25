@@ -128,7 +128,6 @@ class CommentRenderController extends EntityRenderController implements EntityCo
           '#theme' => 'links__comment__comment',
           // The "entity" property is specified to be present, so no need to
           // check.
-          // @todo deprecate comment_links(). https://drupal.org/node/1975962
           '#links' => comment_links($entity, $commented_entity, $entity->field_name->value),
           '#attributes' => array('class' => array('links', 'inline')),
         );

@@ -115,7 +115,7 @@ class CommentManager {
    *   COMMENT_CLOSED. Defaults to COMMENT_OPEN.
    */
   public function addDefaultField($entity_type, $bundle, $field_name = 'comment', $default_value = COMMENT_OPEN) {
-    // Make sure field doesn't already exist.
+    // Make sure the field doesn't already exist.
     if (!$this->fieldInfo->getField($entity_type, $field_name)) {
       // Add a default comment field for existing node comments.
       $field = $this->entityManager->getStorageController('field_entity')->create(array(

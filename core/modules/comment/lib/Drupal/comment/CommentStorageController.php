@@ -51,8 +51,8 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
    * {@inheritdoc}
    */
   public function updateEntityStatistics(CommentInterface $comment) {
-    // Allow bulk updates and inserts to temporarily disable the
-    // maintenance of the {comment_entity_statistics} table.
+    // Allow bulk updates and inserts to temporarily disable the maintenance of
+    // the {comment_entity_statistics} table.
     if (!\Drupal::state()->get('comment.maintain_entity_statistics')) {
       return;
     }
@@ -98,8 +98,8 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
         ->fields(array(
           'cid' => 0,
           'comment_count' => 0,
-          // Use the created date of the entity if it's set,
-          // or default to REQUEST_TIME.
+          // Use the created date of the entity if it's set, or default to
+          // REQUEST_TIME.
           'last_comment_timestamp' => ($entity instanceof EntityChangedInterface) ? $entity->getChangedTime() : REQUEST_TIME,
           'last_comment_name' => '',
           // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
