@@ -622,7 +622,7 @@ function comment_update_8006(&$sandbox) {
         'default_mode' => update_variable_get('comment_default_mode_' . $node_type, 1),
         'per_page' => update_variable_get('comment_default_per_page_' . $node_type, 50),
         // COMMENT_FORM_BELOW
-        'form_location' => update_variable_get('comment_form_location' . $node_type, 1),
+        'form_location' => update_variable_get('comment_form_location_' . $node_type, 1),
         // COMMENT_ANONYMOUS_MAYNOT_CONTACT
         'anonymous' => update_variable_get('comment_anonymous_' . $node_type, 0),
         'subject' => update_variable_get('comment_subject_field_' . $node_type, 1),

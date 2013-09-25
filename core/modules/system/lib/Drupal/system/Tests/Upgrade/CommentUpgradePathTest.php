@@ -106,7 +106,7 @@ class CommentUpgradePathTest extends UpgradePathTestBase {
     sort($types);
     $this->assertIdentical(array_keys($expected_settings), $types, 'All node types are upgraded');
     foreach ($types as $type) {
-      $instance = Field::fieldInfo()->getInstance($node, $type, 'comment_'. $type);
+      $instance = Field::fieldInfo()->getInstance('node', $type, 'comment_'. $type);
       $this->assertTrue($instance, format_string('Comment field found for the %type node type', array(
         '%type' => $type
       )));

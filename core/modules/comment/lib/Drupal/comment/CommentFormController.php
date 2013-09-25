@@ -357,7 +357,7 @@ class CommentFormController extends EntityFormControllerNG {
    */
   public function preview(array $form, array &$form_state) {
     $comment = $this->entity;
-    $form['#title'] = $this->t('Preview comment');
+    drupal_set_title(t('Preview comment'), PASS_THROUGH);
     $form_state['comment_preview'] = comment_preview($comment);
     $form_state['rebuild'] = TRUE;
   }

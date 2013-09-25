@@ -13,10 +13,10 @@
 // Set up variables needed for comment support.
 $variables = array(
   'comment_default_mode_blog' => 0,
-  'comment_per_page_blog' => 25,
+  'comment_default_per_page_blog' => 25,
   'comment_form_location_blog' => 0,
   'comment_anonymous_blog' => 1,
-  'comment_subject_blog' => 0,
+  'comment_subject_field_blog' => 0,
   'comment_preview_blog' => 0,
 );
 db_delete('variable')
@@ -30,7 +30,7 @@ $query = db_insert('variable')->fields(array(
 foreach ($variables as $key => $value) {
   $query->values(array(
     'name' => $key,
-    'value' => $value,
+    'value' => serialize($value),
   ));
 }
 $query->execute();
