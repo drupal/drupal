@@ -68,7 +68,7 @@ function tracker_page($account = NULL, $set_title = FALSE) {
     GROUP BY n.nid
     ORDER BY n.changed DESC", array(
       ':nids' => array_keys($nodes)
-    ), array('target' => 'slave'))-an>fetchAllKeyed();
+    ), array('target' => 'slave'))->fetchAllKeyed();
     foreach ($result as $nid => $comment_count) {
       $nodes[$nid]->last_activity = $tracker_data[$nid]->changed;
       $nodes[$nid]->comment_count = $comment_count;
