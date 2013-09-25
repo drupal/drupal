@@ -221,6 +221,7 @@ services:
     arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@module_handler']
   lock:
     class: Drupal\Core\Lock\DatabaseLockBackend
+    arguments: ['@database']
   user.tempstore:
     class: Drupal\user\TempStoreFactory
     arguments: ['@database', '@lock']

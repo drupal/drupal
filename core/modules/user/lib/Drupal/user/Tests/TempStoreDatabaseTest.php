@@ -83,7 +83,7 @@ class TempStoreDatabaseTest extends UnitTestBase {
    */
   public function testUserTempStore() {
     // Create a key/value collection.
-    $factory = new TempStoreFactory(Database::getConnection(), new DatabaseLockBackend());
+    $factory = new TempStoreFactory(Database::getConnection(), new DatabaseLockBackend(Database::getConnection()));
     $collection = $this->randomName();
 
     // Create two mock users.

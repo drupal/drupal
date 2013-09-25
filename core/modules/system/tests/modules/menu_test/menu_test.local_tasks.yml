@@ -35,3 +35,20 @@ menu_local_task_test_tasks_settings_derived:
   tab_parent_id: menu_local_task_test_tasks_settings
   derivative: Drupal\menu_test\Plugin\Derivative\LocalTaskTest
   weight: 50
+menu_local_task_test.placeholder_sub1:
+  route_name: menu_test.local_task_test_placeholder_sub1
+  title: 'placeholder sub1'
+  tab_root_id: menu_local_task_test_placeholder_sub1
+menu_local_task_test_placeholder_sub2:
+  route_name: menu_test.local_task_test_placeholder_sub2
+  title: 'placeholder sub2'
+  tab_root_id: menu_local_task_test_placeholder_sub1
+menu_local_task_test.upcasting_sub1:
+  route_name: menu_test.local_task_test_upcasting_sub1
+  title: 'upcasting sub1'
+  tab_root_id: menu_local_task_test_upcasting_sub1
+menu_local_task_test_upcasting_sub2:
+  route_name: menu_test.local_task_test_upcasting_sub2
+  title: 'upcasting sub2'
+  tab_root_id: menu_local_task_test_upcasting_sub1
+  weight: 10

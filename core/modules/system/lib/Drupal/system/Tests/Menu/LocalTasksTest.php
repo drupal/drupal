@@ -14,7 +14,7 @@ use Drupal\simpletest\WebTestBase;
  */
 class LocalTasksTest extends WebTestBase {
 
-  public static $modules = array('menu_test');
+  public static $modules = array('menu_test', 'entity_test');
 
   public static function getInfo() {
     return array(
@@ -198,6 +198,35 @@ class LocalTasksTest extends WebTestBase {
     $this->assertEqual($definitions['menu_local_task_test_tasks_settings_sub1']['provider'], 'menu_test');
     $this->assertEqual($definitions['menu_local_task_test_tasks_settings_sub2']['provider'], 'menu_test');
     $this->assertEqual($definitions['menu_local_task_test_tasks_settings_sub3']['provider'], 'menu_test');
+
+    // Test that we we correctly apply the active class to tabs where one of the
+    // request attributes is upcast to an entity object.
+    $entity = \Drupal::entityManager()->getStorageController('entity_test')->create(array('bundle' => 'test'));
+    $entity->save();
+
+    $this->drupalGet('menu-local-task-test-upcasting/1/sub1');
+
+    $tasks = array(
+      'menu-local-task-test-upcasting/1/sub1',
+      'menu-local-task-test-upcasting/1/sub2',
+    );
+    $this->assertLocalTasks($tasks, 0);
+
+    $result = $this->xpath('//ul[contains(@class, "tabs")]//li[contains(@class, "active")]');
+    $this->assertEqual(1, count($result), 'There is one active tab.');
+    $this->assertEqual('upcasting sub1', (string) $result[0]->a, 'The "upcasting sub1" tab is active.');
+
+    $this->drupalGet('menu-local-task-test-upcasting/1/sub2');
+
+    $tasks = array(
+      'menu-local-task-test-upcasting/1/sub1',
+      'menu-local-task-test-upcasting/1/sub2',
+    );
+    $this->assertLocalTasks($tasks, 0);
+
+    $result = $this->xpath('//ul[contains(@class, "tabs")]//li[contains(@class, "active")]');
+    $this->assertEqual(1, count($result), 'There is one active tab.');
+    $this->assertEqual('upcasting sub2', (string) $result[0]->a, 'The "upcasting sub2" tab is active.');
   }
 
 }
