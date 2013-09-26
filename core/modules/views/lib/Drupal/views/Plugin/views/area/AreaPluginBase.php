@@ -107,6 +107,19 @@ abstract class AreaPluginBase extends HandlerBase {
   public abstract function render($empty = FALSE);
 
   /**
+   * Does that area have nothing to show.
+   *
+   * This method should be overridden by more complex handlers where the output
+   * is not static and maybe itself be empty if it's rendered.
+   *
+   * @return bool
+   *   Return TRUE if the area is empty, else FALSE.
+   */
+  public function isEmpty() {
+    return empty($this->options['empty']);
+  }
+
+  /**
    * Area handlers shouldn't have groupby.
    */
   public function usesGroupBy() {
