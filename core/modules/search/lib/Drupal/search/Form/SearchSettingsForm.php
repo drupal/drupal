@@ -123,15 +123,15 @@ class SearchSettingsForm extends ConfigFormBase {
     $this->moduleHandler->loadAllIncludes('admin.inc');
     $count = format_plural($remaining, 'There is 1 item left to index.', 'There are @count items left to index.');
     $percentage = ((int) min(100, 100 * ($total - $remaining) / max(1, $total))) . '%';
-    $status = '<p><strong>' . t('%percentage of the site has been indexed.', array('%percentage' => $percentage)) . ' ' . $count . '</strong></p>';
+    $status = '<p><strong>' . $this->t('%percentage of the site has been indexed.', array('%percentage' => $percentage)) . ' ' . $count . '</strong></p>';
     $form['status'] = array(
       '#type' => 'details',
-      '#title' => t('Indexing status'),
+      '#title' => $this->t('Indexing status'),
     );
     $form['status']['status'] = array('#markup' => $status);
     $form['status']['wipe'] = array(
       '#type' => 'submit',
-      '#value' => t('Re-index site'),
+      '#value' => $this->t('Re-index site'),
       '#submit' => array(array($this, 'searchAdminReindexSubmit')),
     );
 
@@ -140,57 +140,57 @@ class SearchSettingsForm extends ConfigFormBase {
     // Indexing throttle:
     $form['indexing_throttle'] = array(
       '#type' => 'details',
-      '#title' => t('Indexing throttle')
+      '#title' => $this->t('Indexing throttle')
     );
     $form['indexing_throttle']['cron_limit'] = array(
       '#type' => 'select',
-      '#title' => t('Number of items to index per cron run'),
+      '#title' => $this->t('Number of items to index per cron run'),
       '#default_value' => $this->searchSettings->get('index.cron_limit'),
       '#options' => $items,
-      '#description' => t('The maximum number of items indexed in each pass of a <a href="@cron">cron maintenance task</a>. If necessary, reduce the number of items to prevent timeouts and memory errors while indexing.', array('@cron' => $this->url('system.status')))
+      '#description' => $this->t('The maximum number of items indexed in each pass of a <a href="@cron">cron maintenance task</a>. If necessary, reduce the number of items to prevent timeouts and memory errors while indexing.', array('@cron' => $this->url('system.status')))
     );
     // Indexing settings:
     $form['indexing_settings'] = array(
       '#type' => 'details',
-      '#title' => t('Indexing settings')
+      '#title' => $this->t('Indexing settings')
     );
     $form['indexing_settings']['info'] = array(
-      '#markup' => t('<p><em>Changing the settings below will cause the site index to be rebuilt. The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed.</em></p><p><em>The default settings should be appropriate for the majority of sites.</em></p>')
+      '#markup' => $this->t('<p><em>Changing the settings below will cause the site index to be rebuilt. The search index is not cleared but systematically updated to reflect the new settings. Searching will continue to work but new content won\'t be indexed until all existing content has been re-indexed.</em></p><p><em>The default settings should be appropriate for the majority of sites.</em></p>')
     );
     $form['indexing_settings']['minimum_word_size'] = array(
       '#type' => 'number',
-      '#title' => t('Minimum word length to index'),
+      '#title' => $this->t('Minimum word length to index'),
       '#default_value' => $this->searchSettings->get('index.minimum_word_size'),
       '#min' => 1,
       '#max' => 1000,
-      '#description' => t('The number of characters a word has to be to be indexed. A lower setting means better search result ranking, but also a larger database. Each search query must contain at least one keyword that is this size (or longer).')
+      '#description' => $this->t('The number of characters a word has to be to be indexed. A lower setting means better search result ranking, but also a larger database. Each search query must contain at least one keyword that is this size (or longer).')
     );
     $form['indexing_settings']['overlap_cjk'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Simple CJK handling'),
+      '#title' => $this->t('Simple CJK handling'),
       '#default_value' => $this->searchSettings->get('index.overlap_cjk'),
-      '#description' => t('Whether to apply a simple Chinese/Japanese/Korean tokenizer based on overlapping sequences. Turn this off if you want to use an external preprocessor for this instead. Does not affect other languages.')
+      '#description' => $this->t('Whether to apply a simple Chinese/Japanese/Korean tokenizer based on overlapping sequences. Turn this off if you want to use an external preprocessor for this instead. Does not affect other languages.')
     );
 
     $form['active'] = array(
       '#type' => 'details',
-      '#title' => t('Active search plugins')
+      '#title' => $this->t('Active search plugins')
     );
     $options = $this->getOptions();
     $form['active']['active_plugins'] = array(
       '#type' => 'checkboxes',
-      '#title' => t('Active plugins'),
+      '#title' => $this->t('Active plugins'),
       '#title_display' => 'invisible',
       '#default_value' => $this->searchSettings->get('active_plugins'),
       '#options' => $options,
-      '#description' => t('Choose which search plugins are active from the available plugins.')
+      '#description' => $this->t('Choose which search plugins are active from the available plugins.')
     );
     $form['active']['default_plugin'] = array(
-      '#title' => t('Default search plugin'),
+      '#title' => $this->t('Default search plugin'),
       '#type' => 'radios',
       '#default_value' => $this->searchSettings->get('default_plugin'),
       '#options' => $options,
-      '#description' => t('Choose which search plugin is the default.')
+      '#description' => $this->t('Choose which search plugin is the default.')
     );
 
     // Per plugin settings.
@@ -211,11 +211,11 @@ class SearchSettingsForm extends ConfigFormBase {
     parent::validateForm($form, $form_state);
 
     // Check whether we selected a valid default.
-    if ($form_state['triggering_element']['#value'] != t('Reset to defaults')) {
+    if ($form_state['triggering_element']['#value'] != $this->t('Reset to defaults')) {
       $new_plugins = array_filter($form_state['values']['active_plugins']);
       $default = $form_state['values']['default_plugin'];
       if (!in_array($default, $new_plugins, TRUE)) {
-        form_set_error('default_plugin', t('Your default search plugin is not selected as an active plugin.'));
+        form_set_error('default_plugin', $this->t('Your default search plugin is not selected as an active plugin.'));
       }
     }
   }
@@ -230,7 +230,7 @@ class SearchSettingsForm extends ConfigFormBase {
     if (($this->searchSettings->get('index.minimum_word_size') != $form_state['values']['minimum_word_size']) || ($this->searchSettings->get('index.overlap_cjk') != $form_state['values']['overlap_cjk'])) {
       $this->searchSettings->set('index.minimum_word_size', $form_state['values']['minimum_word_size']);
       $this->searchSettings->set('index.overlap_cjk', $form_state['values']['overlap_cjk']);
-      drupal_set_message(t('The index will be rebuilt.'));
+      drupal_set_message($this->t('The index will be rebuilt.'));
       search_reindex();
     }
     $this->searchSettings->set('index.cron_limit', $form_state['values']['cron_limit']);
@@ -242,7 +242,7 @@ class SearchSettingsForm extends ConfigFormBase {
     }
 
     // Check whether we are resetting the values.
-    if ($form_state['triggering_element']['#value'] == t('Reset to defaults')) {
+    if ($form_state['triggering_element']['#value'] == $this->t('Reset to defaults')) {
       $new_plugins = array('node_search', 'user_search');
     }
     else {
@@ -250,7 +250,7 @@ class SearchSettingsForm extends ConfigFormBase {
     }
     if ($this->searchSettings->get('active_plugins') != $new_plugins) {
       $this->searchSettings->set('active_plugins', $new_plugins);
-      drupal_set_message(t('The active search plugins have been changed.'));
+      drupal_set_message($this->t('The active search plugins have been changed.'));
       $this->state->set('menu_rebuild_needed', TRUE);
     }
     $this->searchSettings->save();

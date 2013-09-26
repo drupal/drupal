@@ -91,7 +91,7 @@ class ExceptionController extends ContainerAware {
         $request->query->set('destination', $system_path);
       }
 
-      $subrequest = Request::create('/' . $path, 'get', array('destination' => $system_path), $request->cookies->all(), array(), $request->server->all());
+      $subrequest = Request::create($request->getBaseUrl() . '/' . $path, 'get', array('destination' => $system_path), $request->cookies->all(), array(), $request->server->all());
 
       // The active trail is being statically cached from the parent request to
       // the subrequest, like any other static.  Unfortunately that means the
@@ -164,7 +164,7 @@ class ExceptionController extends ContainerAware {
       //   that and sub-call the kernel rather than using meah().
       // @todo The create() method expects a slash-prefixed path, but we store a
       //   normal system path in the site_404 variable.
-      $subrequest = Request::create('/' . $path, 'get', array(), $request->cookies->all(), array(), $request->server->all());
+      $subrequest = Request::create($request->getBaseUrl() . '/' . $path, 'get', array('destination' => $system_path), $request->cookies->all(), array(), $request->server->all());
 
       // The active trail is being statically cached from the parent request to
       // the subrequest, like any other static.  Unfortunately that means the

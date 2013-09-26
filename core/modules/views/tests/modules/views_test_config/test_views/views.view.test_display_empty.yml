@@ -1,0 +1,44 @@
+base_table: views_test_data
+core: '8'
+description: ''
+status: '1'
+display:
+  default:
+    display_options:
+      defaults:
+        fields: '0'
+        pager: '0'
+        pager_options: '0'
+        sorts: '0'
+      fields:
+        id:
+          field: id
+          id: id
+          relationship: none
+          table: views_test_data
+          plugin_id: numeric
+      pager:
+        options:
+          offset: '0'
+        type: none
+      pager_options: {  }
+      header:
+        area:
+          field: area
+          id: area
+          table: views
+          plugin_id: text
+      empty:
+        area:
+          field: area
+          id: area
+          table: views
+          plugin_id: text
+    display_plugin: default
+    display_title: Master
+    id: default
+    position: '0'
+label: ''
+langcode: en
+id: test_display_empty
+tag: ''

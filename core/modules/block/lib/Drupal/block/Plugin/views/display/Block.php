@@ -49,6 +49,7 @@ class Block extends DisplayPluginBase {
     $options['block_description'] = array('default' => '', 'translatable' => TRUE);
     $options['block_category'] = array('default' => 'Views', 'translatable' => TRUE);
     $options['block_caching'] = array('default' => DRUPAL_NO_CACHE);
+    $options['block_hide_empty'] = array('default' => FALSE);
 
     $options['allow'] = array(
       'contains' => array(
@@ -83,11 +84,12 @@ class Block extends DisplayPluginBase {
     // Prior to this being called, the $view should already be set to this
     // display, and arguments should be set on the view.
     $element = $this->view->render();
-    if (!empty($this->view->result) || $this->getOption('empty') || !empty($this->view->style_plugin->definition['even empty'])) {
+    if ($this->outputIsEmpty() && $this->getOption('block_hide_empty') && empty($this->view->style_plugin->definition['even empty'])) {
+      return array();
+    }
+    else {
       return $element;
     }
-
-    return array();
   }
 
   /**
@@ -136,6 +138,12 @@ class Block extends DisplayPluginBase {
       'category' => 'other',
       'title' => t('Block caching'),
       'value' => $types[$this->getCacheType()],
+    );
+
+    $options['block_hide_empty'] = array(
+      'category' => 'other',
+      'title' => t('Hide block if the view output is empty'),
+      'value' => $this->getOption('block_hide_empty') ? t('Hide') : t('Show'),
     );
   }
 
@@ -200,6 +208,16 @@ class Block extends DisplayPluginBase {
           '#default_value' => $this->getCacheType(),
         );
         break;
+      case 'block_hide_empty':
+        $form['#title'] .= t('Block empty settings');
+
+        $form['block_hide_empty'] = array(
+          '#title' => t('Hide block if no result/empty text'),
+          '#type' => 'checkbox',
+          '#description' => t('Hide the block if there is no result and no empty text and no header/footer which is shown on empty result'),
+          '#default_value' => $this->getOption('block_hide_empty'),
+        );
+        break;
       case 'exposed_form_options':
         $this->view->initHandlers();
         if (!$this->usesExposed() && parent::usesExposed()) {
@@ -237,6 +255,7 @@ class Block extends DisplayPluginBase {
       case 'block_category':
       case 'block_caching':
       case 'allow':
+      case 'block_hide_empty':
         $this->setOption($form_state['section'], $form_state['values'][$form_state['section']]);
         break;
     }

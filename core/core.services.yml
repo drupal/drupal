@@ -531,6 +531,7 @@ services:
     arguments: ['@image.toolkit']
   breadcrumb:
     class: Drupal\Core\Breadcrumb\BreadcrumbManager
+    arguments: ['@module_handler']
   token:
     class: Drupal\Core\Utility\Token
     arguments: ['@module_handler']

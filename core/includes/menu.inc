@@ -146,7 +146,7 @@ const MENU_IS_LOCAL_ACTION = 0x0100;
  */
 
 /**
- * Menu type -- A "normal" menu item that's shown in menu and breadcrumbs.
+ * Menu type -- A "normal" menu item that's shown in menus.
  *
  * Normal menu items show up in the menu tree and can be moved/hidden by
  * the administrator. Use this for most menu items. It is the default value if
@@ -158,7 +158,7 @@ define('MENU_NORMAL_ITEM', MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB);
  * Menu type -- A hidden, internal callback, typically used for API calls.
  *
  * Callbacks simply register a path so that the correct function is fired
- * when the URL is accessed. They do not appear in menus or breadcrumbs.
+ * when the URL is accessed. They do not appear in menus.
  */
 const MENU_CALLBACK = 0x0000;
 
@@ -200,7 +200,7 @@ define('MENU_LOCAL_ACTION', MENU_IS_LOCAL_TASK | MENU_IS_LOCAL_ACTION | MENU_VIS
 /**
  * Menu type -- A task specific to the parent, which is never rendered.
  *
- * Sibling local tasks are not rendered themselves, but affect the breadcrumb
+ * Sibling local tasks are not rendered themselves, but affect the active
  * trail and need their sibling tasks rendered as tabs.
  */
 define('MENU_SIBLING_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_IS_LOCAL_ACTION | MENU_VISIBLE_IN_BREADCRUMB);
@@ -437,7 +437,7 @@ function menu_unserialize($data, $map) {
  * @param $router_item
  *   The router item. Usually a router entry from menu_get_item() is either
  *   modified or set to a different path. This allows the navigation block,
- *   the page title, the breadcrumb, and the page help to be modified in one
+ *   the page title, the active trail, and the page help to be modified in one
  *   call.
  */
 function menu_set_item($path, $router_item) {
@@ -898,7 +898,6 @@ function _menu_link_translate(&$item, $translate = FALSE) {
       // current path, and we can take over the argument map for a link like
       // 'foo/%/bar'. This inheritance is only valid for breadcrumb links.
       // @see _menu_tree_check_access()
-      // @see menu_get_active_breadcrumb()
       elseif ($translate && ($current_router_item = menu_get_item())) {
         // If $translate is TRUE, then this link is in the active trail.
         // Only translate paths within the current path.
@@ -1281,7 +1280,7 @@ function menu_tree_get_path($menu_name) {
  * @param $only_active_trail
  *   (optional) Whether to only return the links in the active trail (TRUE)
  *   instead of all links on every level of the menu link tree (FALSE). Defaults
- *   to FALSE. Internally used for breadcrumbs only.
+ *   to FALSE.
  *
  * @return
  *   An array of menu links, in the order they should be rendered. The array
@@ -1328,7 +1327,7 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
     // template_preprocess_page(). So in order to not build a giant menu tree
     // that needs to be checked for access on all levels, we simply check
     // whether we have the menu already in cache, or otherwise, build a minimum
-    // tree containing the breadcrumb/active trail only.
+    // tree containing the active trail only.
     // @see menu_set_active_trail()
     if (!isset($tree[$cid]) && $only_active_trail) {
       $cid .= ':trail';
@@ -1430,8 +1429,7 @@ function menu_tree_page_data($menu_name, $max_depth = NULL, $only_active_trail =
  *   - active_trail: An array of mlids, representing the coordinates of the
  *     currently active menu link.
  *   - only_active_trail: Whether to only return links that are in the active
- *     trail. This option is ignored, if 'expanded' is non-empty. Internally
- *     used for breadcrumbs.
+ *     trail. This option is ignored, if 'expanded' is non-empty.
  *   - min_depth: The minimum depth of menu links in the resulting tree.
  *     Defaults to 1, which is the default to build a whole tree for a menu
  *     (excluding menu container itself).
@@ -1641,7 +1639,7 @@ function _menu_tree_data(&$links, $parents, $depth) {
   $tree = array();
   while ($item = array_pop($links)) {
     // We need to determine if we're on the path to root so we can later build
-    // the correct active trail and breadcrumb.
+    // the correct active trail.
     $item['in_active_trail'] = in_array($item['mlid'], $parents);
     // Add the current link to the tree.
     $tree[$item['mlid']] = array(
@@ -2441,9 +2439,7 @@ function menu_set_active_item($path) {
  *
  * Any trail set by this function will only be used for functionality that calls
  * menu_get_active_trail(). Drupal core only uses trails set here for
- * breadcrumbs and the page title and not for menu trees or page content.
- * Additionally, breadcrumbs set by drupal_set_breadcrumb() will override any
- * trail set here.
+ * the page title and not for menu trees or page content.
  *
  * To affect the trail used by menu trees, use menu_tree_set_path(). To affect
  * the page content, use menu_set_active_item() instead.
@@ -2637,57 +2633,6 @@ function menu_link_get_preferred($path = NULL, $selected_menu = NULL) {
  */
 function menu_get_active_trail() {
   return menu_set_active_trail();
-}
-
-/**
- * Gets the breadcrumb for the current page, as determined by the active trail.
- *
- * @see menu_set_active_trail()
- */
-function menu_get_active_breadcrumb() {
-  $breadcrumb = array();
-
-  // No breadcrumb for the front page.
-  if (drupal_is_front_page()) {
-    return $breadcrumb;
-  }
-
-  $item = menu_get_item();
-  if (!empty($item['access'])) {
-    $active_trail = menu_get_active_trail();
-
-    // Allow modules to alter the breadcrumb, if possible, as that is much
-    // faster than rebuilding an entirely new active trail.
-    drupal_alter('menu_breadcrumb', $active_trail, $item);
-
-    // Don't show a link to the current page in the breadcrumb trail.
-    $end = end($active_trail);
-    if (\Drupal::request()->attributes->get('_system_path') == $end['href']) {
-      array_pop($active_trail);
-    }
-
-    // Remove the tab root (parent) if the current path links to its parent.
-    // Normally, the tab root link is included in the breadcrumb, as soon as we
-    // are on a local task or any other child link. However, if we are on a
-    // default local task (e.g., node/%/view), then we do not want the tab root
-    // link (e.g., node/%) to appear, as it would be identical to the current
-    // page. Since this behavior also needs to work recursively (i.e., on
-    // default local tasks of default local tasks), and since the last non-task
-    // link in the trail is used as page title (see menu_get_active_title()),
-    // this condition cannot be cleanly integrated into menu_get_active_trail().
-    // menu_get_active_trail() already skips all links that link to their parent
-    // (commonly MENU_DEFAULT_LOCAL_TASK). In order to also hide the parent link
-    // itself, we always remove the last link in the trail, if the current
-    // router item links to its parent.
-    if (($item['type'] & MENU_LINKS_TO_PARENT) == MENU_LINKS_TO_PARENT) {
-      array_pop($active_trail);
-    }
-
-    foreach ($active_trail as $parent) {
-      $breadcrumb[] = l($parent['title'], $parent['href'], $parent['localized_options']);
-    }
-  }
-  return $breadcrumb;
 }
 
 /**

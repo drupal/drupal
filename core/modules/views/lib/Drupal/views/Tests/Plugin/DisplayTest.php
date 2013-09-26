@@ -7,6 +7,7 @@
 
 namespace Drupal\views\Tests\Plugin;
 
+use Drupal\views\Views;
 use Drupal\views_test_data\Plugin\views\display\DisplayTest as DisplayTestPlugin;
 
 /**
@@ -19,7 +20,7 @@ class DisplayTest extends PluginTestBase {
    *
    * @var array
    */
-  public static $testViews = array('test_filter_groups', 'test_get_attach_displays', 'test_view', 'test_display_more', 'test_display_invalid');
+  public static $testViews = array('test_filter_groups', 'test_get_attach_displays', 'test_view', 'test_display_more', 'test_display_invalid', 'test_display_empty');
 
   /**
    * Modules to enable.
@@ -271,6 +272,49 @@ class DisplayTest extends PluginTestBase {
     $this->assertResponse(200);
     $this->assertText(t('The plugin (invalid) did not specify an instance class.'));
     $this->assertNoBlockAppears($block);
+  }
+
+  /**
+   * Tests the outputIsEmpty method on the display.
+   */
+  public function testOutputIsEmpty() {
+    $view = Views::getView('test_display_empty');
+    $this->executeView($view);
+    $this->assertTrue(count($view->result) > 0, 'Ensure the result of the view is not empty.');
+    $this->assertFalse($view->display_handler->outputIsEmpty(), 'Ensure the view output is marked as not empty.');
+    $view->destroy();
+
+    // Add a filter, so the view result is empty.
+    $view->setDisplay('default');
+    $item = array(
+      'table' => 'views_test_data',
+      'field' => 'id',
+      'id' => 'id',
+      'value' => array('value' => 7297)
+    );
+    $view->setItem('default', 'filter', 'id', $item);
+    $this->executeView($view);
+    $this->assertFalse(count($view->result), 'Ensure the result of the view is empty.');
+    $this->assertFalse($view->display_handler->outputIsEmpty(), 'Ensure the view output is marked as not empty, because the empty text still appears.');
+    $view->destroy();
+
+    // Remove the empty area, but mark the header area to still appear.
+    $view->removeItem('default', 'empty', 'area');
+    $item = $view->getItem('default', 'header', 'area');
+    $item['empty'] = TRUE;
+    $view->setItem('default', 'header', 'area', $item);
+    $this->executeView($view);
+    $this->assertFalse(count($view->result), 'Ensure the result of the view is empty.');
+    $this->assertFalse($view->display_handler->outputIsEmpty(), 'Ensure the view output is marked as not empty, because the header text still appears.');
+    $view->destroy();
+
+    // Hide the header on empty results.
+    $item = $view->getItem('default', 'header', 'area');
+    $item['empty'] = FALSE;
+    $view->setItem('default', 'header', 'area', $item);
+    $this->executeView($view);
+    $this->assertFalse(count($view->result), 'Ensure the result of the view is empty.');
+    $this->assertTrue($view->display_handler->outputIsEmpty(), 'Ensure the view output is marked as empty.');
   }
 
 }

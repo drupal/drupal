@@ -1477,10 +1477,6 @@ function node_page_view(EntityInterface $node) {
 
   $build = node_show($node);
 
-  // If there is a menu link to this node, the link becomes the last part
-  // of the active trail, and the link name becomes the page title.
-  // Thus, we must explicitly set the page title to be the node title.
-  $build['#title'] = String::checkPlain($node->label());
   return $build;
 }
 

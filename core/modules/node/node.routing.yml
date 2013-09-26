@@ -31,7 +31,8 @@ node.add:
 node.view:
   path: '/node/{node}'
   defaults:
-    _content: '\Drupal\node\Controller\NodeController::viewPage'
+    _content: '\Drupal\node\Controller\NodeView::page'
+    _title_callback: '\Drupal\node\Controller\NodeView::pageTitle'
   requirements:
     _entity_access: 'node.view'
 
@@ -77,6 +78,7 @@ node.overview_types:
   defaults:
     _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
     entity_type: 'node_type'
+    _title: 'Content types'
   requirements:
     _permission: 'administer content types'
 

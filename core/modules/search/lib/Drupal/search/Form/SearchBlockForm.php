@@ -8,12 +8,13 @@
 namespace Drupal\search\Form;
 
 use Drupal\Core\Form\FormInterface;
+use Drupal\Core\Form\FormBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Builds the search form for the search block.
  */
-class SearchBlockForm implements FormInterface {
+class SearchBlockForm extends FormBase implements FormInterface {
 
   /**
    * The current request.
@@ -38,23 +39,16 @@ class SearchBlockForm implements FormInterface {
 
     $form['search_block_form'] = array(
       '#type' => 'search',
-      '#title' => t('Search'),
+      '#title' => $this->t('Search'),
       '#title_display' => 'invisible',
       '#size' => 15,
       '#default_value' => '',
-      '#attributes' => array('title' => t('Enter the terms you wish to search for.')),
+      '#attributes' => array('title' => $this->t('Enter the terms you wish to search for.')),
     );
     $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array('#type' => 'submit', '#value' => t('Search'));
+    $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Search'));
 
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, array &$form_state) {
-    // No validation necessary at this time.
   }
 
   /**
@@ -75,7 +69,7 @@ class SearchBlockForm implements FormInterface {
     // "field is required" because the search keywords field has no title.
     // The error message would also complain about a missing #title field.)
     if ($form_state['values']['search_block_form'] == '') {
-      form_set_error('keys', t('Please enter some keywords.'));
+      form_set_error('keys', $this->t('Please enter some keywords.'));
     }
 
     $form_id = $form['form_id']['#value'];
@@ -84,7 +78,7 @@ class SearchBlockForm implements FormInterface {
       $form_state['redirect'] = 'search/' . $info['path'] . '/' . trim($form_state['values'][$form_id]);
     }
     else {
-      form_set_error(NULL, t('Search is currently disabled.'), 'error');
+      form_set_error(NULL, $this->t('Search is currently disabled.'), 'error');
     }
   }
 }

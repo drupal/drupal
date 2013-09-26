@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Breadcrumb;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
+
 /**
  * Provides a breadcrumb manager.
  *
@@ -14,6 +16,13 @@ namespace Drupal\Core\Breadcrumb;
  * a path, in order of processor priority.
  */
 class BreadcrumbManager implements BreadcrumbBuilderInterface {
+
+  /**
+   * The module handler to invoke the alter hook.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
 
   /**
    * Holds arrays of breadcrumb builders, keyed by priority.
@@ -30,6 +39,16 @@ class BreadcrumbManager implements BreadcrumbBuilderInterface {
    * @var array|NULL
    */
   protected $sortedBuilders;
+
+  /**
+   * Constructs a \Drupal\Core\Breadcrumb\BreadcrumbManager object.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   */
+  public function __construct(ModuleHandlerInterface $module_handler) {
+    $this->moduleHandler = $module_handler;
+  }
 
   /**
    * Adds another breadcrumb builder.
@@ -49,25 +68,30 @@ class BreadcrumbManager implements BreadcrumbBuilderInterface {
    * {@inheritdoc}
    */
   public function build(array $attributes) {
+    $breadcrumb = array();
+    $context = array('builder' => NULL);
     // Call the build method of registered breadcrumb builders,
     // until one of them returns an array.
     foreach ($this->getSortedBuilders() as $builder) {
-      $breadcrumb = $builder->build($attributes);
-      if (!isset($breadcrumb)) {
+      $build = $builder->build($attributes);
+      if (!isset($build)) {
         // The builder returned NULL, so we continue with the other builders.
         continue;
       }
-      elseif (is_array($breadcrumb)) {
+      elseif (is_array($build)) {
         // The builder returned an array of breadcrumb links.
-        return $breadcrumb;
+        $breadcrumb = $build;
+        $context['builder'] = $builder;
+        break;
       }
       else {
         throw new \UnexpectedValueException(format_string('Invalid breadcrumb returned by !class::build().', array('!class' => get_class($builder))));
       }
     }
-
+    // Allow modules to alter the breadcrumb.
+    $this->moduleHandler->alter('system_breadcrumb', $breadcrumb, $attributes, $context);
     // Fall back to an empty breadcrumb.
-    return array();
+    return $breadcrumb;
   }
 
   /**

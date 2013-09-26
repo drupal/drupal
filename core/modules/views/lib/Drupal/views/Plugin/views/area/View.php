@@ -18,6 +18,16 @@ use Drupal\Component\Annotation\PluginID;
  */
 class View extends AreaPluginBase {
 
+  /**
+   * Stores whether the embedded view is actually empty.
+   *
+   * @var bool
+   */
+  protected $isEmpty;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function defineOptions() {
     $options = parent::defineOptions();
 
@@ -77,14 +87,28 @@ class View extends AreaPluginBase {
       }
       else {
         if (!empty($this->options['inherit_arguments']) && !empty($this->view->args)) {
-          return $view->preview($display_id, $this->view->args);
+          $output = $view->preview($display_id, $this->view->args);
         }
         else {
-          return $view->preview($display_id);
+          $output = $view->preview($display_id);
         }
+        $this->isEmpty = $view->display_handler->outputIsEmpty();
+        return $output;
       }
     }
     return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isEmpty() {
+    if (isset($this->isEmpty)) {
+      return $this->isEmpty;
+    }
+    else {
+      return parent::isEmpty();
+    }
   }
 
 }

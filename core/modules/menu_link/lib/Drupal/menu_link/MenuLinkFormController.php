@@ -76,17 +76,6 @@ class MenuLinkFormController extends EntityFormController {
     // item, do it here instead.
     _menu_link_translate($menu_link);
 
-    if (!$menu_link->isNew()) {
-      // Get the human-readable menu title from the given menu name.
-      $titles = menu_get_menus();
-      $current_title = $titles[$menu_link->menu_name];
-
-      // Get the current breadcrumb and add a link to that menu's overview page.
-      $breadcrumb = menu_get_active_breadcrumb();
-      $breadcrumb[] = l($current_title, 'admin/structure/menu/manage/' . $menu_link->menu_name);
-      drupal_set_breadcrumb($breadcrumb);
-    }
-
     $form['link_title'] = array(
       '#type' => 'textfield',
       '#title' => t('Menu link title'),
