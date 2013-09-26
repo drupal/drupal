@@ -59,8 +59,9 @@ abstract class MenuTestBase extends WebTestBase {
     // Compare paths with actual breadcrumb.
     $parts = $this->getBreadcrumbParts();
     $pass = TRUE;
-    // There may be more than one breadcrumb on the page.
-    while (!empty($parts)) {
+    // There may be more than one breadcrumb on the page. If $trail is empty
+    // this test would go into an infinite loop, so we need to check that too.
+    while ($trail && !empty($parts)) {
       foreach ($trail as $path => $title) {
         $url = url($path);
         $part = array_shift($parts);

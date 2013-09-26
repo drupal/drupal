@@ -17,6 +17,7 @@ filter.admin_overview:
   defaults:
     _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
     entity_type: 'filter_format'
+    _title: 'Text formats and editors'
   requirements:
     _permission: 'administer filters'
 

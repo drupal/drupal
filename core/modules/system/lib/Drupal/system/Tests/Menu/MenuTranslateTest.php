@@ -45,7 +45,11 @@ class MenuTranslateTest extends WebTestBase {
     // Attempt to access a restricted local task.
     $this->drupalGet('foo/asdf/c');
     $this->assertResponse(403);
-    $this->assertNoLinkByHref('foo/asdf');
+    $elements = $this->xpath('//ul[@class=:class]/li/a[@href=:href]', array(
+      ':class' => 'tabs primary',
+      ':href' => url('foo/asdf'),
+    ));
+    $this->assertTrue(empty($elements), 'No tab linking to foo/asdf found');
     $this->assertNoLinkByHref('foo/asdf/b');
     $this->assertNoLinkByHref('foo/asdf/c');
   }

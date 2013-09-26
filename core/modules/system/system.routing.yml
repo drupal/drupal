@@ -9,6 +9,7 @@ system.admin:
   path: '/admin'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Administration'
   requirements:
     _permission: 'access administration pages'
 
@@ -16,6 +17,7 @@ system.admin_structure:
   path: '/admin/structure'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Structure'
   requirements:
     _permission: 'access administration pages'
 
@@ -23,6 +25,7 @@ system.admin_reports:
   path: '/admin/reports'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Reports'
   requirements:
     _permission: 'access site reports'
 
@@ -30,6 +33,7 @@ system.admin_config_media:
   path: '/admin/config/media'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Media'
   requirements:
     _permission: 'access administration pages'
 
@@ -37,6 +41,7 @@ system.admin_config_services:
   path: '/admin/config/services'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Web services'
   requirements:
     _permission: 'access administration pages'
 
@@ -44,6 +49,7 @@ system.admin_config_development:
   path: '/admin/config/development'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Development'
   requirements:
     _permission: 'access administration pages'
 
@@ -51,6 +57,7 @@ system.admin_config_regional:
   path: '/admin/config/regional'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Regional and language'
   requirements:
     _permission: 'access administration pages'
 
@@ -58,6 +65,7 @@ system.admin_config_search:
   path: '/admin/config/search'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Search and metadata'
   requirements:
     _permission: 'access administration pages'
 
@@ -65,6 +73,7 @@ system.admin_config_system:
   path: '/admin/config/system'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'System'
   requirements:
     _permission: 'access administration pages'
 
@@ -72,6 +81,7 @@ system.admin_config_ui:
   path: '/admin/config/user-interface'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'User interface'
   requirements:
     _permission: 'access administration pages'
 
@@ -79,6 +89,7 @@ system.admin_config_workflow:
   path: '/admin/config/workflow'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Workflow'
   requirements:
     _permission: 'access administration pages'
 
@@ -86,6 +97,7 @@ system.admin_config_content:
   path: '/admin/config/content'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Content authoring'
   requirements:
     _permission: 'access administration pages'
 
@@ -342,6 +354,7 @@ system.admin_config:
   path: '/admin/config'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::overview'
+    _title: 'Configuration'
   requirements:
     _permission: 'access administration pages'
 

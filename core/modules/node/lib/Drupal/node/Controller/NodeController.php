@@ -32,13 +32,6 @@ class NodeController {
   }
 
   /**
-   * @todo Remove node_page_view().
-   */
-  public function viewPage(NodeInterface $node) {
-    return node_page_view($node);
-  }
-
-  /**
    * @todo Remove node_show().
    */
   public function revisionShow($node_revision) {

@@ -81,14 +81,20 @@ class RouteSubscriber implements EventSubscriberInterface {
         }
         $route = new Route(
           "$path/fields",
-          array('_form' => '\Drupal\field_ui\FieldOverview') + $defaults,
+          array(
+            '_form' => '\Drupal\field_ui\FieldOverview',
+            '_title' => 'Manage fields',
+          ) + $defaults,
           array('_permission' => 'administer ' . $entity_type . ' fields')
         );
         $collection->add("field_ui.overview_$entity_type", $route);
 
         $route = new Route(
           "$path/form-display",
-          array('_form' => '\Drupal\field_ui\FormDisplayOverview') + $defaults,
+          array(
+            '_form' => '\Drupal\field_ui\FormDisplayOverview',
+            '_title' => 'Manage form display',
+          ) + $defaults,
           array('_permission' => 'administer ' . $entity_type . ' form display')
         );
         $collection->add("field_ui.form_display_overview_$entity_type", $route);
@@ -106,7 +112,10 @@ class RouteSubscriber implements EventSubscriberInterface {
 
         $route = new Route(
           "$path/display",
-          array('_form' => '\Drupal\field_ui\DisplayOverview') + $defaults,
+          array(
+            '_form' => '\Drupal\field_ui\DisplayOverview',
+            '_title' => 'Manage display',
+          ) + $defaults,
           array('_permission' => 'administer ' . $entity_type . ' display')
         );
         $collection->add("field_ui.display_overview_$entity_type", $route);

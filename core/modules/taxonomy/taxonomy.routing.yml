@@ -2,6 +2,7 @@ taxonomy.vocabulary_list:
   path: '/admin/structure/taxonomy'
   defaults:
     _entity_list: 'taxonomy_vocabulary'
+    _title: 'Taxonomy'
   requirements:
     _permission: 'administer taxonomy'
 

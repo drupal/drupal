@@ -1,5 +1,0 @@
-services:
-  menu_link.breadcrumb:
-    class: Drupal\menu_link\MenuLinkBreadcrumbBuilder
-    tags:
-      - { name: breadcrumb_builder, priority: 0 }

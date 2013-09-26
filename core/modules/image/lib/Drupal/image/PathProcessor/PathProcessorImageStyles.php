@@ -46,12 +46,17 @@ class PathProcessorImageStyles implements InboundPathProcessorInterface {
     $rest = preg_replace('|^' . $path_prefix . '|', '', $path);
 
     // Get the image style, scheme and path.
-    list($image_style, $scheme, $file) = explode('/', $rest, 3);
+    if (substr_count($rest, '/') >= 2) {
+      list($image_style, $scheme, $file) = explode('/', $rest, 3);
 
-    // Set the file as query parameter.
-    $request->query->set('file', $file);
+      // Set the file as query parameter.
+      $request->query->set('file', $file);
 
-    return $path_prefix . $image_style . '/' . $scheme;
+      return $path_prefix . $image_style . '/' . $scheme;
+    }
+    else {
+      return $path;
+    }
   }
 
 }

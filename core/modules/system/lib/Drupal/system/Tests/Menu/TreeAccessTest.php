@@ -33,6 +33,13 @@ class TreeAccessTest extends DrupalUnitTestBase {
    */
   protected $routeCollection;
 
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('menu_link');
+
   public static function getInfo() {
     return array(
       'name' => 'Menu tree access',
