@@ -78,7 +78,7 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
     $styles = drupal_get_css();
     $this->assertTrue(strpos($styles, $css) > 0, 'Rendered CSS includes the added stylesheet.');
     // Verify that newlines are properly added inside style tags.
-    $query_string = variable_get('css_js_query_string', '0');
+    $query_string = $this->container->get('state')->get('system.css_js_query_string') ?: '0';
     $css_processed = '<link rel="stylesheet" href="' . check_plain(file_create_url($css)) . "?" . $query_string . '" media="all" />';
     $this->assertEqual(trim($styles), $css_processed, 'Rendered CSS includes newlines inside style tags for JavaScript use.');
   }
@@ -184,7 +184,7 @@ class CascadingStylesheetsTest extends DrupalUnitTestBase {
     drupal_add_css($css_with_query_string);
 
     $styles = drupal_get_css();
-    $query_string = variable_get('css_js_query_string', '0');
+    $query_string = $this->container->get('state')->get('system.css_js_query_string') ?: '0';
     $this->assertTrue(strpos($styles, $css_without_query_string . '?' . $query_string), 'Query string was appended correctly to css.');
     $this->assertTrue(strpos($styles, str_replace('&', '&amp;', $css_with_query_string)), 'Query string not escaped on a URI.');
   }

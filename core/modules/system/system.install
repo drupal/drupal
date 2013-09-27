@@ -1749,12 +1749,13 @@ function system_update_8031() {
 }
 
 /**
- * Remove the drupal_js_cache_files variable.
+ * Remove the drupal_js_cache_files and css_js_query_string variables.
  *
  * @ingroup config_upgrade
  */
 function system_update_8032() {
   update_variable_del('drupal_js_cache_files');
+  update_variable_del('css_js_query_string');
 }
 
 /**

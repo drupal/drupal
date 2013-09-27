@@ -4845,7 +4845,7 @@ function drupal_flush_all_caches() {
  */
 function _drupal_flush_css_js() {
   // The timestamp is converted to base 36 in order to make it more compact.
-  variable_set('css_js_query_string', base_convert(REQUEST_TIME, 10, 36));
+  Drupal::state()->set('system.css_js_query_string', base_convert(REQUEST_TIME, 10, 36));
 }
 
 /**

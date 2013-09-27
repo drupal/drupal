@@ -25,14 +25,6 @@ if (!function_exists('file_create_url')) {
 
 }
 
-if (!function_exists('variable_get')) {
-
-  function variable_get($variable, $default) {
-    return $default;
-  }
-
-}
-
 }
 
 
@@ -71,6 +63,13 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    */
   protected $inline_css_group;
 
+  /**
+   * The state mock class.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface|\PHPUnit_Framework_MockObject_MockObject
+   */
+  protected $state;
+
   public static function getInfo() {
     return array(
       'name' => 'CSS asset collection renderer functionality',
@@ -82,7 +81,9 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
   function setUp() {
     parent::setUp();
 
-    $this->renderer = new CssCollectionRenderer();
+    $this->state = $this->getMock('Drupal\Core\KeyValueStore\KeyValueStoreInterface');
+
+    $this->renderer = new CssCollectionRenderer($this->state);
     $this->file_css_group = array(
       'group' => -100,
       'every_page' => TRUE,
@@ -540,6 +541,10 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    * @dataProvider testRenderProvider
    */
   function testRender(array $css_assets, array $render_elements) {
+    $this->state->expects($this->once())
+      ->method('get')
+      ->with('system.css_js_query_string')
+      ->will($this->returnValue(NULL));
     $this->assertSame($render_elements, $this->renderer->render($css_assets));
   }
 
@@ -547,6 +552,10 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    * Tests a CSS asset group with the invalid 'type' => 'internal'.
    */
   function testRenderInvalidType() {
+    $this->state->expects($this->once())
+      ->method('get')
+      ->with('system.css_js_query_string')
+      ->will($this->returnValue(NULL));
     $this->setExpectedException('Exception', 'Invalid CSS asset type.');
 
     $css_group = array(

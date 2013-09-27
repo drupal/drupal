@@ -621,6 +621,7 @@ services:
     scope: request
   asset.css.collection_renderer:
     class: Drupal\Core\Asset\CssCollectionRenderer
+    arguments: [ '@state' ]
   asset.css.collection_optimizer:
     class: Drupal\Core\Asset\CssCollectionOptimizer
     arguments: [ '@asset.css.collection_grouper', '@asset.css.optimizer', '@asset.css.dumper', '@state' ]
@@ -632,6 +633,7 @@ services:
     class: Drupal\Core\Asset\AssetDumper
   asset.js.collection_renderer:
     class: Drupal\Core\Asset\JsCollectionRenderer
+    arguments: [ '@state' ]
   asset.js.collection_optimizer:
     class: Drupal\Core\Asset\JsCollectionOptimizer
     arguments: [ '@asset.js.collection_grouper', '@asset.js.optimizer', '@asset.js.dumper', '@state' ]

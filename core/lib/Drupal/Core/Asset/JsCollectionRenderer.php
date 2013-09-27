@@ -7,11 +7,29 @@
 namespace Drupal\Core\Asset;
 
 use Drupal\Core\Asset\AssetCollectionRendererInterface;
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 
 /**
  * Renders JavaScript assets.
  */
 class JsCollectionRenderer implements AssetCollectionRendererInterface {
+
+  /**
+   * The state key/value store.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $state;
+
+  /**
+   * Constructs a CssCollectionRenderer.
+   *
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   *   The state key/value store.
+   */
+  public function __construct(KeyValueStoreInterface $state) {
+    $this->state = $state;
+  }
 
   /**
    * {@inheritdoc}
@@ -25,7 +43,7 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
     // URL changed. Files that should not be cached (see drupal_add_js())
     // get REQUEST_TIME as query-string instead, to enforce reload on every
     // page request.
-    $default_query_string = variable_get('css_js_query_string', '0');
+    $default_query_string = $this->state->get('system.css_js_query_string') ?: '0';
 
     // For inline JavaScript to validate as XHTML, all JavaScript containing
     // XHTML needs to be wrapped in CDATA. To make that backwards compatible

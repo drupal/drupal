@@ -423,6 +423,13 @@ function install_begin_request(&$install_state) {
       ))
       ->addMethodCall('setUserAgent', array('Drupal (+http://drupal.org/)'));
 
+    $container->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')
+      ->addArgument(new Reference('service_container'));
+    $container->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
+    // Override the default keyvalue storage to use memory as the database is
+    // not available.
+    $conf['keyvalue_default'] = 'keyvalue.memory';
+
     // Register the expirable key value store used by form cache.
     $container
       ->register('keyvalue.expirable', 'Drupal\Core\KeyValueStore\KeyValueExpirableFactory')
@@ -430,6 +437,11 @@ function install_begin_request(&$install_state) {
     $container
       ->register('keyvalue.expirable.null', 'Drupal\Core\KeyValueStore\KeyValueNullExpirableFactory');
     $conf['keyvalue_expirable_default'] = 'keyvalue.expirable.null';
+
+    $container->register('state', 'Drupal\Core\KeyValueStore\KeyValueStoreInterface')
+      ->setFactoryService(new Reference('keyvalue'))
+      ->setFactoryMethod('get')
+      ->addArgument('state');
 
     // Register Twig template engine for use during install.
     CoreServiceProvider::registerTwig($container);
@@ -440,8 +452,10 @@ function install_begin_request(&$install_state) {
     CoreServiceProvider::registerUuid($container);
 
     // Register the CSS and JavaScript asset collection renderers.
-    $container->register('asset.css.collection_renderer', 'Drupal\Core\Asset\CssCollectionRenderer');
-    $container->register('asset.js.collection_renderer', 'Drupal\Core\Asset\JsCollectionRenderer');
+    $container->register('asset.css.collection_renderer', 'Drupal\Core\Asset\CssCollectionRenderer')
+      ->addArgument(new Reference('state'));
+    $container->register('asset.js.collection_renderer', 'Drupal\Core\Asset\JsCollectionRenderer')
+      ->addArgument(new Reference('state'));
 
   }
   // Set the request in the kernel to the new created Request above
@@ -1205,7 +1219,7 @@ function install_database_errors($database, $settings_file) {
  * @see install_settings_form_validate()
  */
 function install_settings_form_submit($form, &$form_state) {
-  global $install_state;
+  global $install_state, $conf;
 
   // Update global settings array and save.
   $settings = array();
@@ -1250,6 +1264,10 @@ function install_settings_form_submit($form, &$form_state) {
 
   // Add the config directories to settings.php.
   drupal_install_config_directories();
+
+  // The container is about to be rebuilt so we need to unset the keyvalue
+  // storage override that the installer is using.
+  unset($conf['keyvalue_default']);
 
   // Indicate that the settings file has been verified, and check the database
   // for the last completed task, now that we have a valid connection. This
