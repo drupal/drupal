@@ -24,22 +24,21 @@ class Tasks extends InstallTasks {
   protected $pdoDriver = 'mysql';
 
   /**
-   * Returns a human-readable name string for MySQL and equivalent databases.
+   * {@inheritdoc}
    */
   public function name() {
     return t('MySQL, MariaDB, Percona Server, or equivalent');
   }
 
   /**
-   * Returns the minimum version for MySQL.
+   * {@inheritdoc}
    */
   public function minimumVersion() {
     return '5.0.15';
   }
 
   /**
-   * Check database connection and attempt to create database if the database is
-   * missing.
+   * {@inheritdoc}
    */
   protected function connect() {
     try {

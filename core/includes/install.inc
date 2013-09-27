@@ -1103,6 +1103,9 @@ function db_run_tasks($driver) {
  *
  * @param $driver
  *   The name of the driver.
+ *
+ * @return \Drupal\Core\Database\Install\Tasks
+ *    A class defining the requirements and tasks for installing the database.
  */
 function db_installer_object($driver) {
   // We cannot use Database::getConnection->getDriverClass() here, because

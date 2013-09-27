@@ -17,6 +17,13 @@ use Drupal\Core\Database\Database;
 abstract class Tasks {
 
   /**
+   * The name of the PDO driver this database type requires.
+   *
+   * @var string
+   */
+  protected $pdoDriver;
+
+  /**
    * Structure that describes each task to run.
    *
    * @var array
