@@ -10,10 +10,12 @@
 
 drupalSettings.dialog = {
   autoOpen: true,
+  // This option will turn off resizable and draggable.
   autoResize: true,
+  maxHeight: '95%',
   dialogClass: '',
-  close: function (e) {
-    Drupal.detachBehaviors(e.target, null, 'unload');
+  close: function (event) {
+    Drupal.detachBehaviors(event.target, null, 'unload');
   }
 };
 
@@ -24,9 +26,13 @@ Drupal.dialog = function (element, options) {
     // Trigger a global event to allow scripts to bind events to the dialog.
     $(window).trigger('dialog:beforecreate', [dialog, $element, settings]);
     $element.dialog(settings);
-    if (settings.autoResize !== 'false' && settings.autoResize !== false) {
-      $(window).on('resize.dialogResize scroll.dialogResize', autoResize);
-      resetPosition();
+    if (settings.autoResize === true || settings.autoResize === 'true') {
+      $element
+        .dialog('option', { resizable: false, draggable: false })
+        .dialog('widget').css('position', 'fixed');
+      $(window)
+        .on('resize.dialogResize scroll.dialogResize', settings, autoResize)
+        .trigger('resize.dialogResize');
     }
     dialog.open = true;
     $(window).trigger('dialog:aftercreate', [dialog, $element, settings]);
@@ -49,22 +55,23 @@ Drupal.dialog = function (element, options) {
    * be disabled by setting autoResize: false in the options array when creating
    * a new Drupal.dialog().
    */
-  function resetPosition () {
+  function resetPosition (event) {
     var positionOptions = ['width', 'height', 'minWidth', 'minHeight', 'maxHeight', 'maxWidth', 'position'];
     var windowHeight = $(window).height();
-    var adjustedOptions = $.extend({ position: { my: "center", at: "center", of: window }}, options);
-    var optionValue, adjustedValue;
+    var adjustedOptions = {};
+    var option, optionValue, adjustedValue;
     for (var n = 0; n < positionOptions.length; n++) {
-      if (adjustedOptions[positionOptions[n]]) {
-        optionValue = adjustedOptions[positionOptions[n]];
+      option = positionOptions[n];
+      optionValue = event.data[option];
+      if (optionValue) {
         // jQuery UI does not support percentages on heights, convert to pixels.
-        if (positionOptions[n].match(/height/i) && typeof optionValue === 'string' && optionValue.match(/%$/)) {
+        if (typeof optionValue === 'string' && /%$/.test(optionValue) && /height/i.test(option)) {
           adjustedValue = parseInt(0.01 * parseInt(optionValue, 10) * windowHeight, 10);
           // Don't force the dialog to be bigger vertically than needed.
-          if (positionOptions[n] === 'height' && $element.parent().outerHeight() < adjustedValue) {
+          if (option === 'height' && $element.parent().outerHeight() < adjustedValue) {
             adjustedValue = 'auto';
           }
-          adjustedOptions[positionOptions[n]] = adjustedValue;
+          adjustedOptions[option] = adjustedValue;
         }
       }
     }

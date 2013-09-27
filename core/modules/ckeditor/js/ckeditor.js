@@ -217,9 +217,7 @@ Drupal.ckeditor = {
     var classes = dialogSettings.dialogClass ? dialogSettings.dialogClass.split(' ') : [];
     classes.push('editor-dialog');
     dialogSettings.dialogClass = classes.join(' ');
-    dialogSettings.maxHeight = '95%';
-    dialogSettings.resizable = false;
-    dialogSettings.autoResize = $(window).width() > 600;
+    dialogSettings.autoResize = Drupal.checkWidthBreakpoint(600);
 
     // Add a "Loading…" message, hide it underneath the CKEditor toolbar, create
     // a Drupal.ajax instance to load the dialog and trigger it.
