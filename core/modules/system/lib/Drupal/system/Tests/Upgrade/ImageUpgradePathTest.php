@@ -7,6 +7,8 @@
 
 namespace Drupal\system\Tests\Upgrade;
 
+use Drupal\Component\Utility\String;
+
 /**
  * Test upgrade of overridden and custom image styles.
  */
@@ -33,9 +35,12 @@ class ImageUpgradePathTest extends UpgradePathTestBase {
   public function testImageStyleUpgrade() {
     $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
 
-    // Verify that image styles were properly upgraded.
+    // A custom user image style.
     $expected_styles['test-custom'] = array(
       'name' => 'test-custom',
+      'label' => 'Test custom',
+      'status' => '1',
+      'langcode' => 'en',
       'effects' => array(
         'image_rotate' => array(
           'id' => 'image_rotate',
@@ -53,8 +58,12 @@ class ImageUpgradePathTest extends UpgradePathTestBase {
         ),
       ),
     );
+    // An image style shipped with Drupal 7 but overwritten by the user.
     $expected_styles['thumbnail'] = array(
       'name' => 'thumbnail',
+      'label' => 'Thumbnail (100x100)',
+      'status' => '1',
+      'langcode' => 'en',
       'effects' => array (
         'image_scale' => array(
           'id' => 'image_scale',
@@ -67,11 +76,38 @@ class ImageUpgradePathTest extends UpgradePathTestBase {
         ),
       ),
     );
+    // A non-overwritten image style. Has to be imported in Drupal 8 as well.
+    $expected_styles['large'] = array(
+      'name' => 'large',
+      'label' => 'Large (480x480)',
+      'status' => '1',
+      'langcode' => 'en',
+      'effects' => array (
+        'image_scale' => array(
+          'id' => 'image_scale',
+          'data' => array (
+            'width' => '480',
+            'height' => '480',
+            'upscale' => '0',
+          ),
+          'weight' => '0',
+        ),
+      ),
+    );
+    $config_factory = $this->container->get('config.factory');
     foreach ($expected_styles as $name => $style) {
-      $config = \Drupal::config('image.style.' . $name);
+      $configured_style = $config_factory->get('image.style.' . $name)->get();
+
+      // Maybe the image style hasn't been imported?
+      $imported = !empty($configured_style);
+      $this->assertTrue($imported, String::format('%name has been imported', array('%name' => $style['label'])));
+      if (!$imported) {
+        continue;
+      }
+
       // Replace placeholder with image effect name keys with UUID's generated
       // during by the image style upgrade functions.
-      foreach ($config->get('effects') as $uuid => $effect) {
+      foreach ($configured_style['effects'] as $uuid => $effect) {
         // Copy placeholder data.
         $style['effects'][$uuid] = $style['effects'][$effect['id']];
         // Set the missing uuid key as this is unknown because it is a UUID.
@@ -79,12 +115,14 @@ class ImageUpgradePathTest extends UpgradePathTestBase {
         // Remove the placeholder data.
         unset($style['effects'][$effect['id']]);
       }
-      $this->assertEqual($this->sortByKey($style), $config->get(), format_string('@first is equal to @second.', array(
-        '@first' => var_export($this->sortByKey($style), TRUE),
-        '@second' => var_export($config->get(), TRUE),
-      )));
+      // Make sure UUID assigned to new style.
+      $this->assertTrue($configured_style['uuid'], 'UUID assigned to converted style.');
+      // Copy generated UUID to compared style.
+      $style['uuid'] = $configured_style['uuid'];
+      $this->assertEqual($this->sortByKey($style), $this->sortByKey($configured_style));
     }
   }
+
   /**
    * Sorts all keys in configuration data.
    *
@@ -102,7 +140,7 @@ class ImageUpgradePathTest extends UpgradePathTestBase {
     ksort($data);
     foreach ($data as &$value) {
       if (is_array($value)) {
-        $this->sortByKey($value);
+        $value = $this->sortByKey($value);
       }
     }
     return $data;

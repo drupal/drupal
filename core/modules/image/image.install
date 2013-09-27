@@ -58,7 +58,7 @@ function image_requirements($phase) {
 }
 
 /**
- * Loads all effects for an image style.
+ * Loads all effects for an image style from backend.
  *
  * @param array $style
  *   The image style (array) to retrieve effects for.
@@ -68,28 +68,118 @@ function image_requirements($phase) {
  *
  * @see image_update_8000()
  */
-function _image_update_get_style_with_effects(array $style) {
-  // Retrieve image effects.
-  $effects = array();
+function _image_update_get_backend_effects(array $style) {
   $result = db_select('image_effects', NULL, array('fetch' => PDO::FETCH_ASSOC))
     ->fields('image_effects')
     ->condition('isid', $style['isid'])
     ->execute();
+  $effects = array();
   foreach ($result as $effect) {
     $effect['data'] = unserialize($effect['data']);
+    $effects[] = $effect;
+  }
 
-    // Generate a unique image effect ID for the effect.
-    $uuid = \Drupal::service('uuid');
+  return _image_update_convert_effects($effects);
+}
+
+/**
+ * Retuns the default image styles shipped with Drupal 7.
+ *
+ * @return array
+ *   An associative array keyed by style id, having the style and associated
+ *   effects as values. The array values are defined to be usable in
+ *   image_update_8000().
+ *
+ * @see image_update_8000()
+ * @see https://api.drupal.org/api/drupal/modules%21image%21image.module/function/image_image_default_styles/7
+ */
+function _image_update_get_default_styles() {
+  // Clone from Drupal 7 image_image_default_styles().
+  $styles = array(
+    'thumbnail' => array(
+      'label' => 'Thumbnail (100x100)',
+      'effects' => array(
+        array(
+          'name' => 'image_scale',
+          'data' => array(
+            'width' => '100',
+            'height' => '100',
+            'upscale' => '1',
+          ),
+          'weight' => '0',
+        ),
+      ),
+    ),
+    'medium' => array(
+      'label' => 'Medium (220x220)',
+      'effects' => array(
+        array(
+          'name' => 'image_scale',
+          'data' => array(
+            'width' => '220',
+            'height' => '220',
+            'upscale' => '1',
+          ),
+          'weight' => '0',
+        ),
+      ),
+    ),
+    'large' => array(
+      'label' => 'Large (480x480)',
+      'effects' => array(
+        array(
+          'name' => 'image_scale',
+          'data' => array(
+            'width' => '480',
+            'height' => '480',
+            'upscale' => '0',
+          ),
+          'weight' => '0',
+        ),
+      ),
+    ),
+  );
+
+  // Add uuid, status, langcode and convert effects.
+  $langcode = language_default()->id;
+  $uuid = \Drupal::service('uuid');
+  foreach ($styles as $id => $style) {
+    $styles[$id]['name'] = $id;
+    $styles[$id]['uuid'] = $uuid->generate();
+    $styles[$id]['status'] = 1;
+    $styles[$id]['langcode'] = $langcode;
+    $styles[$id]['effects'] = _image_update_convert_effects($style['effects']);
+  }
+
+  return $styles;
+}
+
+/**
+ * Normalizes effects from Drupal 7 to Drupal 8 format.
+ *
+ * @param array $legacy_effects
+ *   An array containing a list of effects obtained from database or from code.
+ *
+ * @return array
+ *   A list of effects keyed by effect uuid and having the effect definition in
+ *   a Drupal 8 configuration format.
+ */
+function _image_update_convert_effects(array $legacy_effects) {
+  $uuid = \Drupal::service('uuid');
+  $effects = array();
+
+  foreach ($legacy_effects as $effect) {
     $effect['uuid'] = $uuid->generate();
 
     // Use 'id' instead of 'name'.
     $effect['id'] = $effect['name'];
 
-    // Clear out legacy keys.
+    // Clear out legacy keys, if case.
     unset($effect['isid'], $effect['ieid'], $effect['name']);
 
     $effects[$effect['uuid']] = $effect;
   }
+
   return $effects;
 }
 
@@ -97,22 +187,36 @@ function _image_update_get_style_with_effects(array $style) {
  * Convert existing image styles to the new config system.
  */
 function image_update_8000() {
-  $styles = array();
+  $langcode = language_default()->id;
+  $uuid = \Drupal::service('uuid');
+
   $result = db_select('image_styles', NULL, array('fetch' => PDO::FETCH_ASSOC))
     ->fields('image_styles')
-    ->execute()
-    ->fetchAllAssoc('name', PDO::FETCH_ASSOC);
-  foreach ($result as $style_name => $style) {
-    $style['effects'] = _image_update_get_style_with_effects($style);
-    $styles[$style_name] = $style;
+    ->execute();
+
+  // Prepare image styles from backend.
+  $styles = array();
+  foreach ($result as $style) {
+    $styles[$style['name']] = array(
+      'name' => $style['name'],
+      'label' => $style['label'],
+      'uuid' => $uuid->generate(),
+      'status' => 1,
+      'langcode' => $langcode,
+      'effects' => _image_update_get_backend_effects($style),
+    );
   }
 
-  // Convert each style into a configuration object.
-  foreach ($styles as $name => $style) {
-    $config = \Drupal::config('image.style.' . $name);
-    $config->set('name', $name);
-    $config->set('effects', $style['effects']);
-    $config->save();
+  // Append Drupal 7 default image styles from code. Note that some of them may
+  // be overwritten in the backend. Using this array operator assures that we
+  // are migrating the overwritten version of the image style.
+  $styles += _image_update_get_default_styles();
+
+  // Save as Drupal 8 configuration.
+  foreach ($styles as $id => $style) {
+    \Drupal::config('image.style.' . $id)
+      ->setData($style)
+      ->save();
   }
 }
 

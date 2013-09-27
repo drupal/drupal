@@ -14,16 +14,19 @@
 db_insert('image_styles')->fields(array(
   'isid',
   'name',
+  'label'
 ))
 // Override thumbnail style.
 ->values(array(
   'isid' => '1',
   'name' => 'thumbnail',
+  'label' => 'Thumbnail (100x100)',
 ))
 // Custom style.
 ->values(array(
   'isid' => '2',
   'name' => 'test-custom',
+  'label' => 'Test custom',
 ))
 ->execute();
 
