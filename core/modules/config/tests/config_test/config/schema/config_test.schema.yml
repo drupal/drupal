@@ -71,3 +71,23 @@ config_test.someschema.somemodule.*.*:
     description:
       type: text
       label: 'Description'
+
+config_test.dynamic.*:
+  type: mapping
+  label: 'Config test entity'
+  mapping:
+    id:
+      type: string
+      label: 'Machine name'
+    label:
+      type: label
+      label: 'Label'
+    weight:
+      type: integer
+      label: 'Weight'
+    style:
+      type: string
+      label: 'Image style'
+    protected_property:
+      type: string
+      label: 'Protected property'
