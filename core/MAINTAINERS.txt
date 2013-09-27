@@ -85,7 +85,7 @@ Database system
     - Károly Négyesi 'chx' http://drupal.org/user/9446
 
 Database update system
-- Károly Négyesi 'chx' http://drupal.org/user/9446
+- ?
 
 Entity system
 - Wolfgang Ziegler 'fago' http://drupal.org/user/16747
@@ -130,6 +130,10 @@ Mail system
 
 Markup
 - Daniel F. Kudwien 'sun' http://drupal.org/user/54136
+
+Migrate
+- Károly Négyesi 'chx' http://drupal.org/user/9446
+- Mike Ryan 'mikeryan' http://drupal.org/user/4420
 
 Menu system
 - Károly Négyesi 'chx' http://drupal.org/user/9446
