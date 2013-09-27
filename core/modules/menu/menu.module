@@ -121,7 +121,7 @@ function menu_menu() {
  */
 function menu_entity_info(&$entity_info) {
   $entity_info['menu']['controllers']['list'] = 'Drupal\menu\MenuListController';
-  $entity_info['menu']['uri_callback'] = 'menu_uri';
+  $entity_info['menu']['links']['edit-form'] = 'admin/structure/menu/manage/{menu}';
   $entity_info['menu']['controllers']['form'] = array(
     'add' => 'Drupal\menu\MenuFormController',
     'edit' => 'Drupal\menu\MenuFormController',
@@ -146,18 +146,6 @@ function menu_entity_bundle_info() {
   }
 
   return $bundles;
-}
-
-/**
- * Entity URI callback.
- *
- * @param \Drupal\system\Entity\Menu $menu
- *   A Menu entity.
- */
-function menu_uri(Menu $menu) {
-  return array(
-    'path' => 'admin/structure/menu/manage/' . $menu->id(),
-  );
 }
 
 /**

@@ -31,9 +31,6 @@ use Drupal\Component\Plugin\ConfigurablePluginInterface;
  *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
- *   },
- *   links = {
- *     "edit-form" = "admin/config/system/actions/configure/{action}"
  *   }
  * )
  */

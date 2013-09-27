@@ -163,8 +163,9 @@ class Entity implements \IteratorAggregate, EntityInterface {
    * @code
    * uri_callback = "contact_category_uri",
    * @endcode
-   * If looking for the canonical URI, and it was not set in the links array
-   * or in a uri_callback function, the path is set using the default template:
+   * If the path is not set in the links array, the uri_callback function is
+   * used for setting the path. If this does not exist and the link relationship
+   * type is canonical, the path is set using the default template:
    * entity/entityType/id.
    *
    * @param string $rel
@@ -198,36 +199,38 @@ class Entity implements \IteratorAggregate, EntityInterface {
       return $uri;
     }
 
+    $bundle = $this->bundle();
+    // A bundle-specific callback takes precedence over the generic one for
+    // the entity type.
+    $bundles = entity_get_bundles($this->entityType);
+    if (isset($bundles[$bundle]['uri_callback'])) {
+      $uri_callback = $bundles[$bundle]['uri_callback'];
+    }
+    elseif (isset($entity_info['uri_callback'])) {
+      $uri_callback = $entity_info['uri_callback'];
+    }
+
+    // Invoke the callback to get the URI. If there is no callback, use the
+    // default URI format.
+    if (isset($uri_callback) && function_exists($uri_callback)) {
+      $uri = $uri_callback($this);
+    }
     // Only use these defaults for a canonical link (that is, a link to self).
     // Other relationship types are not supported by this logic.
-    if ($rel == 'canonical') {
-      $bundle = $this->bundle();
-      // A bundle-specific callback takes precedence over the generic one for
-      // the entity type.
-      $bundles = entity_get_bundles($this->entityType);
-      if (isset($bundles[$bundle]['uri_callback'])) {
-        $uri_callback = $bundles[$bundle]['uri_callback'];
-      }
-      elseif (isset($entity_info['uri_callback'])) {
-        $uri_callback = $entity_info['uri_callback'];
-      }
-
-      // Invoke the callback to get the URI. If there is no callback, use the
-      // default URI format.
-      if (isset($uri_callback) && function_exists($uri_callback)) {
-        $uri = $uri_callback($this);
-      }
-      else {
-        $uri = array(
-          'path' => 'entity/' . $this->entityType . '/' . $this->id(),
-        );
-      }
-      // Pass the entity data to url() so that alter functions do not need to
-      // look up this entity again.
-      $uri['options']['entity_type'] = $this->entityType;
-      $uri['options']['entity'] = $this;
-      return $uri;
+    elseif ($rel == 'canonical') {
+      $uri = array(
+        'path' => 'entity/' . $this->entityType . '/' . $this->id(),
+      );
     }
+    else {
+      return array();
+    }
+
+    // Pass the entity data to url() so that alter functions do not need to
+    // look up this entity again.
+    $uri['options']['entity_type'] = $this->entityType;
+    $uri['options']['entity'] = $this;
+    return $uri;
   }
 
   /**
