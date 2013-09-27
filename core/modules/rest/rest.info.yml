@@ -1,7 +1,7 @@
 name: 'RESTful Web Services'
 type: module
 description: 'Exposes entities and other resources as RESTful web API'
-package: Core
+package: Web services
 version: VERSION
 core: 8.x
 dependencies:
