@@ -1,0 +1,25 @@
+# Schema for the configuration files of the Email module.
+
+field.email.settings:
+  type: sequence
+  label: 'E-mail settings'
+  sequence:
+    - type: string
+
+field.email.instance_settings:
+  type: sequence
+  label: 'E-mail settings'
+  sequence:
+    - type: string
+      label: 'Setting'
+
+field.email.value:
+  type: sequence
+  label: 'Default value'
+  sequence:
+    - type: mapping
+      label: 'Default'
+      mapping:
+        value:
+          type: email
+          label: 'Value'
