@@ -177,8 +177,7 @@ function field_views_field_default_views_data(FieldInterface $field) {
     );
   }
 
-  // Override Node to Content.
-  $group_name = ($entity_info['label'] == t('Node')) ? t('Content') : $entity_info['label'];
+  $group_name = $entity_info['label'];
   // Get the list of bundles the field appears in.
   $bundles_names = $field->getBundles();
   // Build the list of additional fields to add to queries.

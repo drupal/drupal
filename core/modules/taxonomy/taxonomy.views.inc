@@ -440,11 +440,10 @@ function taxonomy_field_views_data_views_data_alter(array &$data, FieldInterface
   $pseudo_field_name = 'reverse_' . $field['field_name'] . '_' . $entity_type;
 
   list($label,) = field_views_field_label($entity_type, $field['field_name']);
-  $entity_label = ($entity_info['label'] == t('Node')) ? t('Content') : $entity_info['label'];
 
   $data['taxonomy_term_data'][$pseudo_field_name]['relationship'] = array(
-    'title' => t('@entity using @field', array('@entity' => $entity_label, '@field' => $label)),
-    'help' => t('Relate each @entity with a @field set to the term.', array('@entity' => $entity_label, '@field' => $label)),
+    'title' => t('@entity using @field', array('@entity' => $entity_info['label'], '@field' => $label)),
+    'help' => t('Relate each @entity with a @field set to the term.', array('@entity' => $entity_info['label'], '@field' => $label)),
     'id' => 'entity_reverse',
     'field_name' => $field['field_name'],
     'entity_type' => $field['entity_type'],
