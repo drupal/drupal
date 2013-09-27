@@ -202,6 +202,9 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    * Tests a file field with a "Private files" upload destination setting.
    */
   function testPrivateFileSetting() {
+    // Grant the admin user required permissions.
+    user_role_grant_permissions($this->admin_user->roles[0]->value, array('administer node fields'));
+
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
     $this->createFileField($field_name, 'node', $type_name);
@@ -240,7 +243,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
 
     // Grant the admin user required comment permissions.
     $roles = $this->admin_user->getRoles();
-    user_role_grant_permissions($roles[1], array('administer comment fields'));
+    user_role_grant_permissions($roles[1], array('administer comment fields', 'administer comments'));
 
     // Revoke access comments permission from anon user, grant post to
     // authenticated.
@@ -248,12 +251,13 @@ class FileFieldWidgetTest extends FileFieldTestBase {
     user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('post comments', 'skip comment approval'));
 
     // Create a new field.
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
     $edit = array(
       'fields[_add_new_field][label]' => $label = $this->randomName(),
       'fields[_add_new_field][field_name]' => $name = strtolower($this->randomName()),
       'fields[_add_new_field][type]' => 'file',
     );
-    $this->drupalPostForm('admin/structure/types/manage/article/comment/fields', $edit, t('Save'));
+    $this->drupalPostForm('admin/structure/comments/manage/node__comment/fields', $edit, t('Save'));
     $edit = array('field[settings][uri_scheme]' => 'private');
     $this->drupalPostForm(NULL, $edit, t('Save field settings'));
     $this->drupalPostForm(NULL, array(), t('Save settings'));
@@ -274,7 +278,7 @@ class FileFieldWidgetTest extends FileFieldTestBase {
       'files[field_' . $name . '_' . 0 . ']' => drupal_realpath($text_file->getFileUri()),
       'comment_body[0][value]' => $comment_body = $this->randomName(),
     );
-    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->drupalPostForm('node/' . $node->id(), $edit, t('Save'));
 
     // Get the comment ID.
     preg_match('/comment-([0-9]+)/', $this->getUrl(), $matches);

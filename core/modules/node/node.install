@@ -152,12 +152,6 @@ function node_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'comment' => array(
-        'description' => 'Whether comments are allowed on this node translation: 0 = no, 1 = closed (read only), 2 = open (read/write).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'promote' => array(
         'description' => 'Boolean indicating whether the node translation should be displayed on the front page.',
         'type' => 'int',
@@ -272,12 +266,6 @@ function node_schema() {
       ),
       'changed' => array(
         'description' => 'The Unix timestamp when the version was most recently saved.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'comment' => array(
-        'description' => 'Whether comments are allowed on this node (at the time of this revision): 0 = no, 1 = closed (read only), 2 = open (read/write).',
         'type' => 'int',
         'not null' => TRUE,
         'default' => 0,
@@ -817,12 +805,6 @@ function _node_update_8016_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'comment' => array(
-        'description' => 'Whether comments are allowed on this node translation: 0 = no, 1 = closed (read only), 2 = open (read/write).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'promote' => array(
         'description' => 'Boolean indicating whether the node translation should be displayed on the front page.',
         'type' => 'int',
@@ -939,12 +921,6 @@ function _node_update_8016_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
-      'comment' => array(
-        'description' => 'Whether comments are allowed on this node (at the time of this revision): 0 = no, 1 = closed (read only), 2 = open (read/write).',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'promote' => array(
         'description' => 'Boolean indicating whether the node (at the time of this revision) should be displayed on the front page.',
         'type' => 'int',
@@ -1041,7 +1017,7 @@ function node_update_8018() {
   foreach ($indexes as $index) {
     db_drop_index('node', $index);
   }
-  $fields = array('title', 'uid', 'status', 'created', 'changed', 'comment', 'promote', 'sticky');
+  $fields = array('title', 'uid', 'status', 'created', 'changed', 'promote', 'sticky');
   foreach ($fields as $field) {
     db_drop_field('node', $field);
   }

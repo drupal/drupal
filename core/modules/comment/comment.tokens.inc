@@ -15,14 +15,14 @@ function comment_token_info() {
     'needs-data' => 'comment',
   );
 
-  // Comment-related tokens for nodes
-  $node['comment-count'] = array(
+  // @todo Make this work per field. See http://drupal.org/node/2031903
+  $entity['comment-count'] = array(
     'name' => t("Comment count"),
-    'description' => t("The number of comments posted on a node."),
+    'description' => t("The number of comments posted on an entity."),
   );
-  $node['comment-count-new'] = array(
+  $entity['comment-count-new'] = array(
     'name' => t("New comment count"),
-    'description' => t("The number of comments posted on a node since the reader last viewed it."),
+    'description' => t("The number of comments posted on an entity since the reader last viewed it."),
   );
 
   // Core comment tokens
@@ -79,9 +79,16 @@ function comment_token_info() {
     'description' => t("The comment's parent, if comment threading is active."),
     'type' => 'comment',
   );
+  $comment['entity'] = array(
+    'name' => t("Entity"),
+    'description' => t("The entity the comment was posted to."),
+    'type' => 'entity',
+  );
+  // Support legacy comment node tokens, since tokes are embedded in user data
+  // and can't be upgraded directly.
   $comment['node'] = array(
     'name' => t("Node"),
-    'description' => t("The node the comment was posted to."),
+    'description' => t("DEPRECATED: The node the comment was posted to."),
     'type' => 'node',
   );
   $comment['author'] = array(
@@ -93,8 +100,10 @@ function comment_token_info() {
   return array(
     'types' => array('comment' => $type),
     'tokens' => array(
-      'node' => $node,
+      'entity' => $entity,
       'comment' => $comment,
+      // Support deprecated node tokens.
+      'node' => $entity,
     ),
   );
 }
@@ -177,8 +186,8 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
 
         case 'parent':
           if (!empty($comment->pid->target_id)) {
-            $parent = comment_load($comment->pid->target_id);
-            $replacements[$original] = $sanitize ? filter_xss($parent->subject) : $parent->subject;
+            $parent = entity_load('comment', $comment->pid->target_id);
+            $replacements[$original] = $sanitize ? filter_xss($parent->subject->value) : $parent->subject->value;
           }
           break;
 
@@ -190,17 +199,36 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
           $replacements[$original] = format_date($comment->changed->value, 'medium', '', NULL, $langcode);
           break;
 
-        case 'node':
-          $node = $comment->nid->entity;
-          $title = $node->label();
+        case 'entity':
+          $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+          $title = $entity->label();
           $replacements[$original] = $sanitize ? filter_xss($title) : $title;
+          break;
+
+        case 'node':
+          // Support legacy comment node tokens, since tokes are embedded in
+          // user data and can't be upgraded directly.
+          // @todo Remove in Drupal 9, see https://drupal.org/node/2031901.
+          if ($comment->entity_type->value == 'node') {
+            $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+            $title = $entity->label();
+            $replacements[$original] = $sanitize ? filter_xss($title) : $title;
+          }
+          else {
+            $replacements[$original] = NULL;
+          }
           break;
       }
     }
 
     // Chained token relationships.
-    if ($node_tokens = $token_service->findwithPrefix($tokens, 'node')) {
-      $node = $comment->nid->entity;
+    if ($entity_tokens = $token_service->findwithPrefix($tokens, 'entity')) {
+      $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+      $replacements += $token_service->generate($comment->entity_type->value, $entity_tokens, array($comment->entity_type->value => $entity), $options);
+    }
+
+    if (($node_tokens = $token_service->findwithPrefix($tokens, 'node')) && $comment->entity_type->value == 'node') {
+      $node = entity_load($comment->entity_type->value, $comment->entity_id->value);
       $replacements += $token_service->generate('node', $node_tokens, array('node' => $node), $options);
     }
 
@@ -220,17 +248,25 @@ function comment_tokens($type, $tokens, array $data = array(), array $options = 
       $replacements += $token_service->generate('user', $author_tokens, array('user' => $account), $options);
     }
   }
-  elseif ($type == 'node' & !empty($data['node'])) {
-    $node = $data['node'];
+  elseif (($type == 'entity' & !empty($data['entity'])) ||
+    ($type == 'node' & !empty($data['node']))) {
+    $entity = !empty($data['entity']) ? $data['entity'] : $data['node'];
 
     foreach ($tokens as $name => $original) {
       switch($name) {
         case 'comment-count':
-          $replacements[$original] = $node->comment_count;
+          $count = 0;
+          $fields = array_keys(\Drupal::service('comment.manager')->getFields($entity->entityType()));
+          $definitions = array_keys($entity->getPropertyDefinitions());
+          $valid_fields = array_intersect($fields, $definitions);
+          foreach ($valid_fields as $field_name) {
+            $count += $entity->get($field_name)->comment_count;
+          }
+          $replacements[$original] = $count;
           break;
 
         case 'comment-count-new':
-          $replacements[$original] = comment_num_new($node->id());
+          $replacements[$original] = comment_num_new($entity->id(), $entity->entityType());
           break;
       }
     }

@@ -623,20 +623,10 @@ function node_views_data() {
  * Implements hook_preprocess_node().
  */
 function node_row_node_view_preprocess_node(&$variables) {
-  $node = $variables['node'];
   $options = $variables['view']->rowPlugin->options;
-
-  // Prevent the comment form from showing up if this is not a page display.
-  if ($variables['view_mode'] == 'full' && !$variables['view']->display_handler->hasPath()) {
-    $node->comment = FALSE;
-  }
 
   if (!$options['links']) {
     unset($variables['content']['links']);
-  }
-
-  if (!empty($options['comments']) && user_access('access comments') && $node->comment->value) {
-    $variables['content']['comments'] = comment_node_page_additions($node);
   }
 }
 

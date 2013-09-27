@@ -26,7 +26,11 @@ class UserUid extends FilterPluginBase {
     $subselect = db_select('comment', 'c');
     $subselect->addField('c', 'cid');
     $subselect->condition('c.uid', $this->value, $this->operator);
-    $subselect->where("c.nid = $this->tableAlias.nid");
+
+    $entity_id = $this->definition['entity_id'];
+    $entity_type = $this->definition['entity_type'];
+    $subselect->where("c.entity_id = $this->tableAlias.$entity_id");
+    $subselect->condition('c.entity_type', $entity_type);
 
     $condition = db_or()
       ->condition("$this->tableAlias.uid", $this->value, $this->operator)

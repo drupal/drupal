@@ -59,7 +59,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalLogout();
 
     // Post anonymous comment with contact info (optional).
-    $this->drupalGet('comment/reply/' . $this->node->id());
+    $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->assertTrue($this->commentContactInfoAvailable(), 'Contact information available.');
 
     $anonymous_comment2 = $this->postComment($this->node, $this->randomName(), $this->randomName());
@@ -72,7 +72,7 @@ class CommentAnonymousTest extends CommentTestBase {
       'subject' => $this->randomName(),
       'comment_body[0][value]' => $this->randomName(),
     );
-    $this->drupalPostForm('comment/reply/' . $this->node->id(), $edit, t('Save'));
+    $this->drupalPostForm('comment/reply/node/' . $this->node->id() . '/comment', $edit, t('Save'));
     $this->assertText(t('The name you used belongs to a registered user.'));
 
     // Require contact info.
@@ -81,7 +81,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->drupalLogout();
 
     // Try to post comment with contact info (required).
-    $this->drupalGet('comment/reply/' . $this->node->id());
+    $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->assertTrue($this->commentContactInfoAvailable(), 'Contact information available.');
 
     $anonymous_comment3 = $this->postComment($this->node, $this->randomName(), $this->randomName(), TRUE);
@@ -135,7 +135,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->assertNoLink('Add new comment', 'Link to add comment was found.');
 
     // Attempt to view node-comment form while disallowed.
-    $this->drupalGet('comment/reply/' . $this->node->id());
+    $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment');
     $this->assertText('You are not authorized to post comments', 'Error attempting to post comment.');
     $this->assertNoFieldByName('subject', '', 'Subject field not found.');
     $this->assertNoFieldByName('comment_body[0][value]', '', 'Comment field not found.');
@@ -160,7 +160,7 @@ class CommentAnonymousTest extends CommentTestBase {
     $this->assertFieldByName('subject', '', 'Subject field found.');
     $this->assertFieldByName('comment_body[0][value]', '', 'Comment field found.');
 
-    $this->drupalGet('comment/reply/' . $this->node->id() . '/' . $anonymous_comment3->id());
+    $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $anonymous_comment3->id());
     $this->assertText('You are not authorized to view comments', 'Error attempting to post reply.');
     $this->assertNoText($author_name, 'Comment not displayed.');
   }

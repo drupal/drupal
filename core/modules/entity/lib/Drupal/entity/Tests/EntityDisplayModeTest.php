@@ -76,11 +76,11 @@ class EntityDisplayModeTest extends WebTestBase {
     $this->drupalGet('admin/structure/display-modes/form');
     $this->assertResponse(200);
 
-    $this->drupalGet('admin/structure/display-modes/form/add/entity_test_render');
+    $this->drupalGet('admin/structure/display-modes/form/add/entity_test_no_label');
     $this->assertResponse(404);
 
     $this->drupalGet('admin/structure/display-modes/form/add');
-    $this->assertNoLink(t('Test render entity'), 'An entity type with no form controller cannot have form modes.');
+    $this->assertNoLink(t('Entity Test without label'), 'An entity type with no form controller cannot have form modes.');
 
     // Test adding a form mode.
     $this->clickLink(t('Test entity'));

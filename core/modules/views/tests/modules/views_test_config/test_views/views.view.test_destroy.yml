@@ -146,9 +146,9 @@ display:
       query:
         type: views_query
       relationships:
-        cid:
-          field: cid
-          id: cid
+        comment_cid:
+          field: comment_cid
+          id: comment_cid
           table: node
           plugin_id: standard
           provider: views
@@ -156,27 +156,27 @@ display:
           field: pid
           id: pid
           table: comment
-          relationship: cid
+          relationship: comment_cid
           plugin_id: standard
           provider: views
         uid:
           field: uid
           id: uid
           table: comment
-          relationship: cid
+          relationship: comment_cid
           plugin_id: standard
           provider: views
       sorts:
         last_comment_name:
           field: last_comment_name
           id: last_comment_name
-          table: node_comment_statistics
-          plugin_id: comment_ncs_last_comment_name
+          table: comment_entity_statistics
+          plugin_id: comment_ces_last_comment_name
           provider: comment
         last_comment_timestamp:
           field: last_comment_timestamp
           id: last_comment_timestamp
-          table: node_comment_statistics
+          table: comment_entity_statistics
           plugin_id: date
           provider: views
       style:

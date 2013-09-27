@@ -234,8 +234,6 @@ class EntityType extends Plugin {
   /**
    * The prefix for the bundles of this entity type.
    *
-   * For example, the comment bundle is prefixed with 'comment_node_'.
-   *
    * @var string (optional)
    */
   public $bundle_prefix;

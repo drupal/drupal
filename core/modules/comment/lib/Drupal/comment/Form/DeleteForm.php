@@ -7,14 +7,41 @@
 
 namespace Drupal\comment\Form;
 
+use Drupal\comment\CommentManager;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityNGConfirmFormBase;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the comment delete confirmation form.
  */
 class DeleteForm extends EntityNGConfirmFormBase {
+
+  /**
+   * The comment manager.
+   *
+   * @var \Drupal\comment\CommentManager
+   */
+  protected $commentManager;
+
+  /**
+   * Constructs a DeleteForm object.
+   *
+   * @param \Drupal\comment\CommentManager $comment_manager
+   *   The comment manager service.
+   */
+  public function __construct(CommentManager $comment_manager) {
+    $this->commentManager = $comment_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('comment.manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -30,7 +57,8 @@ class DeleteForm extends EntityNGConfirmFormBase {
     $actions = parent::actions($form, $form_state);
 
     // @todo Convert to getCancelRoute() after http://drupal.org/node/1987778.
-    $actions['cancel']['#href'] = 'node/' . $this->entity->nid->target_id;
+    $uri = $this->commentManager->getParentEntityUri($this->entity);
+    $actions['cancel']['#href'] = $uri['path'];
 
     return $actions;
   }
@@ -66,7 +94,8 @@ class DeleteForm extends EntityNGConfirmFormBase {
     // Clear the cache so an anonymous user sees that his comment was deleted.
     Cache::invalidateTags(array('content' => TRUE));
 
-    $form_state['redirect'] = "node/{$this->entity->nid->target_id}";
+    $uri = $this->commentManager->getParentEntityUri($this->entity);
+    $form_state['redirect'] = $uri['path'];
   }
 
 }

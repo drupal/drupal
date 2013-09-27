@@ -117,8 +117,6 @@ class BreadcrumbTest extends MenuTestBase {
       "admin/structure/types/manage/$type/display" => t('Manage display'),
     );
     $this->assertBreadcrumb("admin/structure/types/manage/$type/display/teaser", $trail_teaser);
-    $this->assertBreadcrumb("admin/structure/types/manage/$type/comment/fields", $trail);
-    $this->assertBreadcrumb("admin/structure/types/manage/$type/comment/display", $trail);
     $this->assertBreadcrumb("admin/structure/types/manage/$type/delete", $trail);
     $trail += array(
       "admin/structure/types/manage/$type/fields" => t('Manage fields'),

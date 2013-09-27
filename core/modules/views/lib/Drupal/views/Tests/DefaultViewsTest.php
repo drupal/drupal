@@ -83,6 +83,10 @@ class DefaultViewsTest extends ViewTestBase {
     // Create a time in the past for the archive.
     $time = REQUEST_TIME - 3600;
 
+    $this->container->get('comment.manager')->addDefaultField('node', 'page');
+
+    $this->container->get('views.views_data')->clear();
+
     for ($i = 0; $i <= 10; $i++) {
       $user = $this->drupalCreateUser();
       $term = $this->createTerm($this->vocabulary);
@@ -102,8 +106,9 @@ class DefaultViewsTest extends ViewTestBase {
 
       $comment = array(
         'uid' => $user->id(),
-        'nid' => $node->id(),
-        'node_type' => 'node_type_' . $node->bundle(),
+        'entity_id' => $node->id(),
+        'entity_type' => 'node',
+        'field_name' => 'comment'
       );
       entity_create('comment', $comment)->save();
     }

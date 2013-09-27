@@ -36,6 +36,8 @@ class WizardTest extends WizardTestBase {
    * Tests adding a view of comments.
    */
   public function testCommentWizard() {
+    // Add comment field to page node type.
+    $this->container->get('comment.manager')->addDefaultField('node', 'page');
     $view = array();
     $view['label'] = $this->randomName(16);
     $view['id'] = strtolower($this->randomName(16));

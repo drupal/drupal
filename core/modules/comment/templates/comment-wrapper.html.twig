@@ -18,7 +18,7 @@
  *     be displayed after the main title tag that appears in the template.
  *
  * The following variables are provided for contextual information.
- * - node: The node entity to which the comments belong.
+ * - entity: The entity to which the comments belong.
  * - display_mode: The display mode for the comment listing, flat or threaded.
  *   The constants below show the possible values and should be used for
  *   comparison, as in the following example:
@@ -36,7 +36,7 @@
  */
 #}
 <section{{ attributes }}>
-  {% if comments and node.type != 'forum' %}
+  {% if comments and (entity.entityType != 'node' or entity.bundle != 'forum') %}
     {{ title_prefix }}
     <h2 class="title">{{ 'Comments'|t }}</h2>
     {{ title_suffix }}

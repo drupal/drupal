@@ -25,11 +25,11 @@ display:
       row:
         type: fields
       relationships:
-        nid:
-          id: nid
-          table: comment
-          field: nid
+        node:
+          field: node
+          id: node
           required: '1'
+          table: comment
           provider: views
       fields:
         subject:

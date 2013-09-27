@@ -65,9 +65,9 @@ class ForumIntegrationTest extends ViewTestBase {
     $comments = array();
     foreach ($nodes as $index => $node) {
       for ($i = 0; $i <= $index; $i++) {
-        $comment = $comment_storage_controller->create(array('node_type' => 'node_type_forum', 'nid' => $node->id()));
+        $comment = $comment_storage_controller->create(array('entity_type' => 'node', 'entity_id' => $node->id(), 'field_name' => 'comment_forum'));
         $comment->save();
-        $comments[$comment->get('nid')->target_id][$comment->id()] = $comment;
+        $comments[$comment->get('entity_id')->target_id][$comment->id()] = $comment;
       }
     }
 

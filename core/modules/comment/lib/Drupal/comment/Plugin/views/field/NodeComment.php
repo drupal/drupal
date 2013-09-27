@@ -26,12 +26,12 @@ class NodeComment extends FieldPluginBase {
   public function render(ResultRow $values) {
     $value = $this->getValue($values);
     switch ($value) {
-      case COMMENT_NODE_HIDDEN:
+      case COMMENT_HIDDEN:
       default:
         return t('Hidden');
-      case COMMENT_NODE_CLOSED:
+      case COMMENT_CLOSED:
         return t('Closed');
-      case COMMENT_NODE_OPEN:
+      case COMMENT_OPEN:
         return t('Open');
     }
   }

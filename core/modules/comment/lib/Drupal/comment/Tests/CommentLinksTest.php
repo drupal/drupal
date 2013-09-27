@@ -67,7 +67,7 @@ class CommentLinksTest extends CommentTestBase {
       // test; there is only a difference between open and closed registration.
       'user_register'   => array(USER_REGISTER_VISITORS, USER_REGISTER_ADMINISTRATORS_ONLY),
       // @todo Complete test coverage for:
-      //'comments'        => array(COMMENT_NODE_OPEN, COMMENT_NODE_CLOSED, COMMENT_NODE_HIDDEN),
+      //'comments'        => array(COMMENT_OPEN, COMMENT_CLOSED, COMMENT_HIDDEN),
       //// COMMENT_ANONYMOUS_MUST_CONTACT is irrelevant for this test.
       //'contact '        => array(COMMENT_ANONYMOUS_MAY_CONTACT, COMMENT_ANONYMOUS_MAYNOT_CONTACT),
     );
@@ -94,8 +94,7 @@ class CommentLinksTest extends CommentTestBase {
    *       USER_REGISTER_VISITORS.
    *     - contact: COMMENT_ANONYMOUS_MAY_CONTACT or
    *       COMMENT_ANONYMOUS_MAYNOT_CONTACT.
-   *     - comments: COMMENT_NODE_OPEN, COMMENT_NODE_CLOSED, or
-   *       COMMENT_NODE_HIDDEN.
+   *     - comments: COMMENT_OPEN, COMMENT_CLOSED, or COMMENT_HIDDEN.
    *   - User permissions:
    *     These are granted or revoked for the user, according to the
    *     'authenticated' flag above. Pass 0 or 1 as parameter values. See
@@ -116,7 +115,7 @@ class CommentLinksTest extends CommentTestBase {
         'form' => COMMENT_FORM_BELOW,
         'user_register' => USER_REGISTER_VISITORS,
         'contact' => COMMENT_ANONYMOUS_MAY_CONTACT,
-        'comments' => COMMENT_NODE_OPEN,
+        'comments' => COMMENT_OPEN,
         'access comments' => 0,
         'post comments' => 0,
         // Enabled by default, because it's irrelevant for this test.
@@ -142,8 +141,9 @@ class CommentLinksTest extends CommentTestBase {
         // $this->postComment() relies on actual user permissions.
         $comment = entity_create('comment', array(
           'cid' => NULL,
-          'nid' => $this->node->id(),
-          'node_type' => $this->node->getType(),
+          'entity_id' => $this->node->id(),
+          'entity_type' => 'node',
+          'field_name' => 'comment',
           'pid' => 0,
           'uid' => 0,
           'status' => COMMENT_PUBLISHED,
@@ -163,9 +163,9 @@ class CommentLinksTest extends CommentTestBase {
     }
 
     // Change comment settings.
-    variable_set('comment_form_location_' . $this->node->getType(), $info['form']);
-    variable_set('comment_anonymous_' . $this->node->getType(), $info['contact']);
-    if ($this->node->comment->value != $info['comments']) {
+    $this->setCommentSettings('form_location', $info['form'], 'Set comment form location');
+    $this->setCommentAnonymous($info['contact']);
+    if ($this->node->comment->status != $info['comments']) {
       $this->node->comment = $info['comments'];
       $this->node->save();
     }
@@ -190,9 +190,9 @@ class CommentLinksTest extends CommentTestBase {
       COMMENT_ANONYMOUS_MUST_CONTACT => 'required',
     );
     $t_comments = array(
-      COMMENT_NODE_OPEN => 'open',
-      COMMENT_NODE_CLOSED => 'closed',
-      COMMENT_NODE_HIDDEN => 'hidden',
+      COMMENT_OPEN => 'open',
+      COMMENT_CLOSED => 'closed',
+      COMMENT_HIDDEN => 'hidden',
     );
     $verbose = $info;
     $verbose['form'] = $t_form[$info['form']];
@@ -291,12 +291,12 @@ class CommentLinksTest extends CommentTestBase {
           // Verify that the "Add new comment" link points to the correct URL
           // based on the comment form location configuration.
           if ($info['form'] == COMMENT_FORM_SEPARATE_PAGE) {
-            $this->assertLinkByHref("comment/reply/$nid#comment-form", 0, 'Comment form link destination is on a separate page.');
+            $this->assertLinkByHref("comment/reply/node/$nid/comment#comment-form", 0, 'Comment form link destination is on a separate page.');
             $this->assertNoLinkByHref("node/$nid#comment-form");
           }
           else {
             $this->assertLinkByHref("node/$nid#comment-form", 0, 'Comment form link destination is on node.');
-            $this->assertNoLinkByHref("comment/reply/$nid#comment-form");
+            $this->assertNoLinkByHref("comment/reply/node/$nid/comment#comment-form");
           }
         }
 

@@ -69,6 +69,9 @@ class CommentLanguageTest extends WebTestBase {
     $edit = array('preferred_langcode' => 'fr');
     $this->drupalPostForm("user/" . $admin_user->id() . "/edit", $edit, t('Save'));
 
+    // Create comment field on article.
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
+
     // Make comment body translatable.
     $field = field_info_field('comment', 'comment_body');
     $field['translatable'] = TRUE;
@@ -95,6 +98,7 @@ class CommentLanguageTest extends WebTestBase {
         'title' => $title,
         'body[0][value]' => $this->randomName(),
         'langcode' => $node_langcode,
+        'comment[0][status]' => COMMENT_OPEN,
       );
       $this->drupalPostForm("node/add/article", $edit, t('Save'));
       $node = $this->drupalGetNodeByTitle($title);
@@ -114,7 +118,9 @@ class CommentLanguageTest extends WebTestBase {
         // Check that comment language matches the current content language.
         $cid = db_select('comment', 'c')
           ->fields('c', array('cid'))
-          ->condition('nid', $node->id())
+          ->condition('entity_id', $node->id())
+          ->condition('entity_type', 'node')
+          ->condition('field_id', 'node__comment')
           ->orderBy('cid', 'DESC')
           ->range(0, 1)
           ->execute()

@@ -34,7 +34,9 @@ function hook_comment_presave(Drupal\comment\Comment $comment) {
  */
 function hook_comment_insert(Drupal\comment\Comment $comment) {
   // Reindex the node when comments are added.
-  node_reindex_node_search($comment->nid->target_id);
+  if ($comment->entity_type->value == 'node') {
+    node_reindex_node_search($comment->entity_id->value);
+  }
 }
 
 /**
@@ -45,7 +47,9 @@ function hook_comment_insert(Drupal\comment\Comment $comment) {
  */
 function hook_comment_update(Drupal\comment\Comment $comment) {
   // Reindex the node when comments are updated.
-  node_reindex_node_search($comment->nid->target_id);
+  if ($comment->entity_type->value == 'node') {
+    node_reindex_node_search($comment->entity_id->value);
+  }
 }
 
 /**

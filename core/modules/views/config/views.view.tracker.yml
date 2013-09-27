@@ -224,7 +224,7 @@ display:
           provider: user
         comment_count:
           id: comment_count
-          table: node_comment_statistics
+          table: comment_entity_statistics
           field: comment_count
           label: Replies
           plugin_id: numeric
@@ -283,7 +283,7 @@ display:
           provider: views
         last_comment_timestamp:
           id: last_comment_timestamp
-          table: node_comment_statistics
+          table: comment_entity_statistics
           field: last_comment_timestamp
           label: 'Last Post'
           plugin_id: comment_last_timestamp
@@ -449,7 +449,7 @@ display:
       sorts:
         last_comment_timestamp:
           id: last_comment_timestamp
-          table: node_comment_statistics
+          table: comment_entity_statistics
           field: last_comment_timestamp
           plugin_id: date
           relationship: none

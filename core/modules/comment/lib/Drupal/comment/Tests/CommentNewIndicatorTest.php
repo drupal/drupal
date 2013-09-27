@@ -46,6 +46,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
     for ($i = 0; $i < count($node_ids); $i++) {
       $post['node_ids[' . $i . ']'] = $node_ids[$i];
     }
+    $post['field_name'] = 'comment';
 
     // Serialize POST values.
     foreach ($post as $key => $value) {
@@ -75,7 +76,6 @@ class CommentNewIndicatorTest extends CommentTestBase {
     // Test if the right links are displayed when no comment is present for the
     // node.
     $this->drupalLogin($this->admin_user);
-    $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'comment' => COMMENT_NODE_OPEN));
     $this->drupalGet('node');
     $this->assertNoLink(t('@count comments', array('@count' => 0)));
     $this->assertLink(t('Read more'));
@@ -89,8 +89,9 @@ class CommentNewIndicatorTest extends CommentTestBase {
     // comment settings so use $comment->save() to avoid complex setup.
     $comment = entity_create('comment', array(
       'cid' => NULL,
-      'nid' => $this->node->id(),
-      'node_type' => $this->node->getType(),
+      'entity_id' => $this->node->id(),
+      'entity_type' => 'node',
+      'field_name' => 'comment',
       'pid' => 0,
       'uid' => $this->loggedInUser->id(),
       'status' => COMMENT_PUBLISHED,
@@ -110,6 +111,7 @@ class CommentNewIndicatorTest extends CommentTestBase {
     // node received a comment after the user last viewed it, and hence it would
     // perform an HTTP request to render the "new comments" node link.
     $this->assertIdentical(1, count($this->xpath('//*[@data-history-node-last-comment-timestamp="' . $comment->changed->value .  '"]')), 'data-history-node-last-comment-timestamp attribute is set to the correct value.');
+    $this->assertIdentical(1, count($this->xpath('//*[@data-history-node-field-name="comment"]')), 'data-history-node-field-name attribute is set to the correct value.');
     $response = $this->renderNewCommentsNodeLinks(array($this->node->id()));
     $this->assertResponse(200);
     $json = drupal_json_decode($response);

@@ -8,6 +8,7 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
+use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\StringTranslation\TranslationManager;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
@@ -24,24 +25,40 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   protected $translation;
 
   /**
+   * Stores the Entity manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
    * Constructs a CommentBreadcrumbBuilder object.
    *
    * @param \Drupal\Core\StringTranslation\TranslationManager $translation
    *   The translation manager.
+   * @param \Drupal\Core\Entity\EntityManager
+   *   The entity manager.
    */
-  public function __construct(TranslationManager $translation) {
+  public function __construct(TranslationManager $translation, EntityManager $entity_manager) {
     $this->translation = $translation;
+    $this->entityManager = $entity_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public function build(array $attributes) {
-    if (isset($attributes[RouteObjectInterface::ROUTE_NAME]) && $attributes[RouteObjectInterface::ROUTE_NAME] == 'comment.reply' && isset($attributes['node'])) {
-      $node = $attributes['node'];
-      $uri = $node->uri();
+    if (isset($attributes[RouteObjectInterface::ROUTE_NAME]) && $attributes[RouteObjectInterface::ROUTE_NAME] == 'comment.reply'
+      && isset($attributes['entity_type'])
+      && isset($attributes['entity_id'])
+      && isset($attributes['field_name'])
+      ) {
       $breadcrumb[] = l($this->t('Home'), NULL);
-      $breadcrumb[] = l($node->label(), $uri['path']);
+      $entity = $this->entityManager
+        ->getStorageController($attributes['entity_type'])
+        ->load($attributes['entity_id']);
+      $uri = $entity->uri();
+      $breadcrumb[] = l($entity->label(), $uri['path'], $uri['options']);
       return $breadcrumb;
     }
   }

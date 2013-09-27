@@ -13,17 +13,17 @@ display:
           plugin_id: node
           provider: node
       relationships:
-        cid:
-          id: cid
+        comment_cid:
+          id: comment_cid
           table: node
-          field: cid
+          field: comment_cid
           plugin_id: standard
           provider: views
         nid:
           id: nid
           table: comment
-          field: nid
-          relationship: cid
+          field: node
+          relationship: comment_cid
           plugin_id: standard
           provider: views
     display_plugin: default

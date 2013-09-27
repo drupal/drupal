@@ -228,8 +228,10 @@ function entity_test_permission() {
  */
 function entity_test_menu() {
   $items = array();
+  $types = entity_test_entity_types();
+  $types[] = 'entity_test_render';
 
-  foreach(entity_test_entity_types() as $entity_type) {
+  foreach($types as $entity_type) {
     $items[$entity_type . '/add'] = array(
       'title' => 'Add an @type',
       'title arguments' => array('@type' => $entity_type),
@@ -311,6 +313,21 @@ function entity_test_edit(EntityInterface $entity) {
  */
 function entity_test_load($id, $reset = FALSE) {
   return entity_load('entity_test', $id, $reset);
+}
+
+/**
+ * Loads a test entity.
+ *
+ * @param int $id
+ *   A test entity ID.
+ * @param bool $reset
+ *   A boolean indicating that the internal cache should be reset.
+ *
+ * @return \Drupal\entity_test\Entity\EntityRenderTest
+ *   The loaded entity object, or NULL if the entity cannot be loaded.
+ */
+function entity_test_render_load($id, $reset = FALSE) {
+  return entity_load('entity_test_render', $id, $reset);
 }
 
 /**

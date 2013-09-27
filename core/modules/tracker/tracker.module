@@ -127,10 +127,12 @@ function tracker_cron() {
       // Force PostgreSQL to do an implicit cast by adding 0.
       $query->addExpression('0 + :changed', 'changed', array(':changed' => $changed));
       $query->addField('c', 'status', 'published');
+      $query->addField('c', 'entity_id', 'nid');
       $query
         ->distinct()
-        ->fields('c', array('uid', 'nid'))
-        ->condition('c.nid', $row->nid)
+        ->fields('c', array('uid'))
+        ->condition('c.entity_id', $row->nid)
+        ->condition('c.entity_type', 'node')
         ->condition('c.uid', $row->uid, '<>')
         ->condition('c.status', COMMENT_PUBLISHED);
 
@@ -233,8 +235,8 @@ function tracker_node_predelete(EntityInterface $node, $arg = 0) {
 function tracker_comment_update($comment) {
   // $comment->save() calls hook_comment_publish() for all published comments
   // so we need to handle all other values here.
-  if ($comment->status->value != COMMENT_PUBLISHED) {
-    _tracker_remove($comment->nid->target_id, $comment->uid->target_id, $comment->changed->value);
+  if ($comment->status->value != COMMENT_PUBLISHED && $comment->entity_type->value == 'node') {
+    _tracker_remove($comment->entity_id->target_id, $comment->uid->target_id, $comment->changed->value);
   }
 }
 
@@ -245,21 +247,27 @@ function tracker_comment_update($comment) {
  * $comment->save() calls hook_comment_publish() for all published comments.
  */
 function tracker_comment_publish($comment) {
-  _tracker_add($comment->nid->target_id, $comment->uid->target_id, $comment->changed->value);
+  if ($comment->entity_type->value == 'node') {
+    _tracker_add($comment->entity_id->target_id, $comment->uid->target_id, $comment->changed->value);
+  }
 }
 
 /**
  * Implements hook_comment_unpublish().
  */
 function tracker_comment_unpublish($comment) {
-  _tracker_remove($comment->nid->target_id, $comment->uid->target_id, $comment->changed->value);
+  if ($comment->entity_type->value == 'node') {
+    _tracker_remove($comment->entity_id->target_id, $comment->uid->target_id, $comment->changed->value);
+  }
 }
 
 /**
  * Implements hook_comment_delete().
  */
 function tracker_comment_delete($comment) {
-  _tracker_remove($comment->nid->target_id, $comment->uid->target_id, $comment->changed->value);
+  if ($comment->entity_type->value == 'node') {
+    _tracker_remove($comment->entity_id->target_id, $comment->uid->target_id, $comment->changed->value);
+  }
 }
 
 /**
@@ -317,7 +325,7 @@ function _tracker_calculate_changed($nid) {
   // @todo This should be actually filtering on the desired language and just
   //   fall back to the default language.
   $changed = db_query('SELECT changed FROM {node_field_data} WHERE nid = :nid AND default_langcode = 1 ORDER BY changed DESC', array(':nid' => $nid), array('target' => 'slave'))->fetchField();
-  $latest_comment = db_query_range('SELECT cid, changed FROM {comment} WHERE nid = :nid AND status = :status ORDER BY changed DESC', 0, 1, array(
+  $latest_comment = db_query_range("SELECT cid, changed FROM {comment} WHERE entity_type = 'node' AND entity_id = :nid AND status = :status ORDER BY changed DESC", 0, 1, array(
     ':nid' => $nid,
     ':status' => COMMENT_PUBLISHED,
   ), array('target' => 'slave'))->fetchObject();
@@ -354,7 +362,7 @@ function _tracker_remove($nid, $uid = NULL, $changed = NULL) {
     // Comments are a second reason to keep the user's subscription.
     if (!$keep_subscription) {
       // Check if the user has commented at least once on the given nid.
-      $keep_subscription = db_query_range('SELECT COUNT(*) FROM {comment} WHERE nid = :nid AND uid = :uid AND status = :status', 0, 1, array(
+      $keep_subscription = db_query_range("SELECT COUNT(*) FROM {comment} WHERE entity_type = 'node' AND entity_id = :nid AND uid = :uid AND status = :status", 0, 1, array(
         ':nid' => $nid,
         ':uid' => $uid,
         ':status' => COMMENT_PUBLISHED,

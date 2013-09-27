@@ -31,7 +31,7 @@ class CommentThreadingTest extends CommentTestBase {
     $this->setCommentPreview(DRUPAL_DISABLED);
     $this->setCommentForm(TRUE);
     $this->setCommentSubject(TRUE);
-    $this->setCommentSettings('comment_default_mode', COMMENT_MODE_THREADED, 'Comment paging changed.');
+    $this->setCommentSettings('default_mode', COMMENT_MODE_THREADED, 'Comment paging changed.');
     $this->drupalLogout();
 
     // Create a node.
@@ -51,7 +51,7 @@ class CommentThreadingTest extends CommentTestBase {
 
     // Reply to comment #1 creating comment #2.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('comment/reply/' . $this->node->id() . '/' . $comment1->id());
+    $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment1->id());
     $comment2 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
     $this->assertTrue($this->commentExists($comment2, TRUE), 'Comment #2. Reply found.');
@@ -60,7 +60,7 @@ class CommentThreadingTest extends CommentTestBase {
     $this->assertParentLink($comment2->id(), $comment1->id());
 
     // Reply to comment #2 creating comment #3.
-    $this->drupalGet('comment/reply/' . $this->node->id() . '/' . $comment2->id());
+    $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment2->id());
     $comment3 = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     // Confirm that the comment was created and has the correct threading.
     $this->assertTrue($this->commentExists($comment3, TRUE), 'Comment #3. Second reply found.');
@@ -70,7 +70,7 @@ class CommentThreadingTest extends CommentTestBase {
 
     // Reply to comment #1 creating comment #4.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('comment/reply/' . $this->node->id() . '/' . $comment1->id());
+    $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment1->id());
     $comment4 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
     $this->assertTrue($this->commentExists($comment4), 'Comment #4. Third reply found.');
@@ -91,7 +91,7 @@ class CommentThreadingTest extends CommentTestBase {
 
     // Reply to comment #5 creating comment #6.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('comment/reply/' . $this->node->id() . '/' . $comment5->id());
+    $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment5->id());
     $comment6 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
     $this->assertTrue($this->commentExists($comment6, TRUE), 'Comment #6. Reply found.');
@@ -100,7 +100,7 @@ class CommentThreadingTest extends CommentTestBase {
     $this->assertParentLink($comment6->id(), $comment5->id());
 
     // Reply to comment #6 creating comment #7.
-    $this->drupalGet('comment/reply/' . $this->node->id() . '/' . $comment6->id());
+    $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment6->id());
     $comment7 = $this->postComment(NULL, $this->randomName(), $this->randomName(), TRUE);
     // Confirm that the comment was created and has the correct threading.
     $this->assertTrue($this->commentExists($comment7, TRUE), 'Comment #7. Second reply found.');
@@ -110,7 +110,7 @@ class CommentThreadingTest extends CommentTestBase {
 
     // Reply to comment #5 creating comment #8.
     $this->drupalLogin($this->web_user);
-    $this->drupalGet('comment/reply/' . $this->node->id() . '/' . $comment5->id());
+    $this->drupalGet('comment/reply/node/' . $this->node->id() . '/comment/' . $comment5->id());
     $comment8 = $this->postComment(NULL, $this->randomName(), '', TRUE);
     // Confirm that the comment was created and has the correct threading.
     $this->assertTrue($this->commentExists($comment8), 'Comment #8. Third reply found.');

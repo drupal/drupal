@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Language\Language;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\field\Field;
 use Drupal\node\NodeInterface;
 
@@ -457,7 +459,9 @@ function forum_permission() {
  * $comment->save() calls hook_comment_publish() for all published comments.
  */
 function forum_comment_publish($comment) {
-  \Drupal::service('forum_manager')->updateIndex($comment->nid->target_id);
+  if ($comment->entity_type->value == 'node') {
+    \Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
+  }
 }
 
 /**
@@ -469,8 +473,8 @@ function forum_comment_publish($comment) {
 function forum_comment_update($comment) {
   // $comment->save() calls hook_comment_publish() for all published comments,
   // so we need to handle all other values here.
-  if (!$comment->status->value) {
-    \Drupal::service('forum_manager')->updateIndex($comment->nid->target_id);
+  if (!$comment->status->value && $comment->entity_type->value == 'node') {
+    \Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
   }
 }
 
@@ -478,14 +482,18 @@ function forum_comment_update($comment) {
  * Implements hook_comment_unpublish().
  */
 function forum_comment_unpublish($comment) {
-  \Drupal::service('forum_manager')->updateIndex($comment->nid->target_id);
+  if ($comment->entity_type->value == 'node') {
+    \Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
+  }
 }
 
 /**
  * Implements hook_comment_delete().
  */
 function forum_comment_delete($comment) {
-  \Drupal::service('forum_manager')->updateIndex($comment->nid->target_id);
+  if ($comment->entity_type->value == 'node') {
+    \Drupal::service('forum_manager')->updateIndex($comment->entity_id->value);
+  }
 }
 
 /**
@@ -773,7 +781,7 @@ function template_preprocess_forum_topic_list(&$variables) {
       $variables['topics'][$id]->new_url = '';
       if ($topic->new_replies) {
         $variables['topics'][$id]->new_text = format_plural($topic->new_replies, '1 new post<span class="visually-hidden"> in topic %title</span>', '@count new posts<span class="visually-hidden"> in topic %title</span>', array('%title' => $variables['topics'][$id]->label()));
-        $variables['topics'][$id]->new_url = url('node/' . $topic->id(), array('query' => comment_new_page_count($topic->comment_count, $topic->new_replies, $topic), 'fragment' => 'new'));
+        $variables['topics'][$id]->new_url = url('node/' . $topic->id(), array('query' => comment_new_page_count($topic->comment_count, $topic->new_replies, $topic, 'comment_node_forum'), 'fragment' => 'new'));
       }
 
     }
@@ -817,7 +825,7 @@ function template_preprocess_forum_icon(&$variables) {
     $variables['icon_title'] = $variables['new_posts'] ? t('New comments') : t('Normal topic');
   }
 
-  if ($variables['comment_mode'] == COMMENT_NODE_CLOSED || $variables['comment_mode'] == COMMENT_NODE_HIDDEN) {
+  if ($variables['comment_mode'] == COMMENT_CLOSED || $variables['comment_mode'] == COMMENT_HIDDEN) {
     $icon_status_class = 'closed';
     $variables['icon_title'] = t('Closed topic');
   }

@@ -20,7 +20,7 @@ class ContentTranslationSettingsTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'content_translation', 'comment');
+  public static $modules = array('language', 'content_translation', 'comment', 'field_ui');
 
   public static function getInfo() {
     return array(
@@ -37,8 +37,9 @@ class ContentTranslationSettingsTest extends WebTestBase {
     // bundles.
     $this->drupalCreateContentType(array('type' => 'article'));
     $this->drupalCreateContentType(array('type' => 'page'));
+    $this->container->get('comment.manager')->addDefaultField('node', 'article', 'comment_article');
 
-    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content translation', 'administer content types'));
+    $admin_user = $this->drupalCreateUser(array('administer languages', 'administer content translation', 'administer content types', 'administer comment fields'));
     $this->drupalLogin($admin_user);
   }
 
@@ -48,21 +49,21 @@ class ContentTranslationSettingsTest extends WebTestBase {
   function testSettingsUI() {
     // Test that the translation settings are ignored if the bundle is marked
     // translatable but the entity type is not.
-    $edit = array('settings[comment][comment_node_article][translatable]' => TRUE);
+    $edit = array('settings[comment][node__comment_article][translatable]' => TRUE);
     $this->assertSettings('comment', NULL, FALSE, $edit);
 
     // Test that the translation settings are ignored if only a field is marked
     // as translatable and not the related entity type and bundle.
-    $edit = array('settings[comment][comment_node_article][fields][comment_body]' => TRUE);
+    $edit = array('settings[comment][node__comment_article][fields][comment_body]' => TRUE);
     $this->assertSettings('comment', NULL, FALSE, $edit);
 
     // Test that the translation settings are not stored if an entity type and
     // bundle are marked as translatable but no field is.
     $edit = array(
       'entity_types[comment]' => TRUE,
-      'settings[comment][comment_node_article][translatable]' => TRUE,
+      'settings[comment][node__comment_article][translatable]' => TRUE,
     );
-    $this->assertSettings('comment', 'comment_node_article', FALSE, $edit);
+    $this->assertSettings('comment', 'node__comment_article', FALSE, $edit);
     $xpath_err = '//div[contains(@class, "error")]';
     $this->assertTrue($this->xpath($xpath_err), 'Enabling translation only for entity bundles generates a form error.');
 
@@ -70,37 +71,37 @@ class ContentTranslationSettingsTest extends WebTestBase {
     // language is set as default and the language selector is hidden.
     $edit = array(
       'entity_types[comment]' => TRUE,
-      'settings[comment][comment_node_article][settings][language][langcode]' => Language::LANGCODE_NOT_SPECIFIED,
-      'settings[comment][comment_node_article][settings][language][language_show]' => FALSE,
-      'settings[comment][comment_node_article][translatable]' => TRUE,
-      'settings[comment][comment_node_article][fields][comment_body]' => TRUE,
+      'settings[comment][node__comment_article][settings][language][langcode]' => Language::LANGCODE_NOT_SPECIFIED,
+      'settings[comment][node__comment_article][settings][language][language_show]' => FALSE,
+      'settings[comment][node__comment_article][translatable]' => TRUE,
+      'settings[comment][node__comment_article][fields][comment_body]' => TRUE,
     );
-    $this->assertSettings('comment', 'comment_node_article', FALSE, $edit);
+    $this->assertSettings('comment', 'node__comment_article', FALSE, $edit);
     $this->assertTrue($this->xpath($xpath_err), 'Enabling translation with a fixed non-configurable language generates a form error.');
 
     // Test that a field shared among different bundles can be enabled without
     // needing to make all the related bundles translatable.
     $edit = array(
       'entity_types[comment]' => TRUE,
-      'settings[comment][comment_node_article][settings][language][langcode]' => 'current_interface',
-      'settings[comment][comment_node_article][settings][language][language_show]' => TRUE,
-      'settings[comment][comment_node_article][translatable]' => TRUE,
-      'settings[comment][comment_node_article][fields][comment_body]' => TRUE,
+      'settings[comment][node__comment_article][settings][language][langcode]' => 'current_interface',
+      'settings[comment][node__comment_article][settings][language][language_show]' => TRUE,
+      'settings[comment][node__comment_article][translatable]' => TRUE,
+      'settings[comment][node__comment_article][fields][comment_body]' => TRUE,
     );
-    $this->assertSettings('comment', 'comment_node_article', TRUE, $edit);
+    $this->assertSettings('comment', 'node__comment_article', TRUE, $edit);
     field_info_cache_clear();
     $field = field_info_field('comment', 'comment_body');
     $this->assertTrue($field['translatable'], 'Comment body is translatable.');
 
     // Test that language settings are correctly stored.
-    $language_configuration = language_get_default_configuration('comment', 'comment_node_article');
+    $language_configuration = language_get_default_configuration('comment', 'node__comment_article');
     $this->assertEqual($language_configuration['langcode'], 'current_interface', 'The default language for article comments is set to the current interface language.');
     $this->assertTrue($language_configuration['language_show'], 'The language selector for article comments is shown.');
 
     // Verify language widget appears on node type form.
-    $this->drupalGet('admin/structure/types/manage/article');
-    $this->assertField('content_translation');
-    $this->assertFieldChecked('edit-content-translation');
+    $this->drupalGet('admin/structure/comments/manage/node__comment_article/fields/comment.node__comment_article.comment_body/field');
+    $this->assertField('field[translatable]');
+    $this->assertFieldChecked('edit-field-translatable');
 
     // Verify that translation may be enabled for the article content type.
     $edit = array(

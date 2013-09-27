@@ -41,6 +41,8 @@ class SearchRankingTest extends SearchTestBase {
   public function testRankings() {
     // Login with sufficient privileges.
     $this->drupalLogin($this->drupalCreateUser(array('post comments', 'skip comment approval', 'create page content')));
+    // Add a comment field.
+    $this->container->get('comment.manager')->addDefaultField('node', 'page');
 
     // Build a list of the rankings to test.
     $node_ranks = array('sticky', 'promote', 'relevance', 'recent', 'comments', 'views');
@@ -49,6 +51,9 @@ class SearchRankingTest extends SearchTestBase {
     foreach ($node_ranks as $node_rank) {
       $settings = array(
         'type' => 'page',
+        'comment' => array(array(
+          'status' => COMMENT_HIDDEN,
+        )),
         'title' => 'Drupal rocks',
         'body' => array(array('value' => "Drupal's search rocks")),
       );
@@ -66,7 +71,7 @@ class SearchRankingTest extends SearchTestBase {
               $settings['created'] = REQUEST_TIME + 3600;
               break;
             case 'comments':
-              $settings['comment'] = 2;
+              $settings['comment'][0]['status'] = COMMENT_OPEN;
               break;
           }
         }
@@ -85,7 +90,7 @@ class SearchRankingTest extends SearchTestBase {
     $edit = array();
     $edit['subject'] = 'my comment title';
     $edit['comment_body[0][value]'] = 'some random comment';
-    $this->drupalGet('comment/reply/' . $nodes['comments'][1]->id());
+    $this->drupalGet('comment/reply/node/' . $nodes['comments'][1]->id() . '/comment');
     $this->drupalPostForm(NULL, $edit, t('Preview'));
     $this->drupalPostForm(NULL, $edit, t('Save'));
 

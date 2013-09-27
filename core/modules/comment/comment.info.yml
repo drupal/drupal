@@ -6,6 +6,5 @@ version: VERSION
 core: 8.x
 dependencies:
   - datetime
-  - node
   - text
 configure: admin/content/comment

@@ -47,6 +47,8 @@ class SearchCommentTest extends SearchTestBase {
     );
     $this->admin_user = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->admin_user);
+    // Add a comment field.
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
   }
 
   /**
@@ -55,7 +57,10 @@ class SearchCommentTest extends SearchTestBase {
   function testSearchResultsComment() {
     $comment_body = 'Test comment body';
 
-    variable_set('comment_preview_article', DRUPAL_OPTIONAL);
+    // Make preview optional.
+    $instance = field_info_instance('node', 'comment', 'article');
+    $instance['settings']['preview'] = DRUPAL_OPTIONAL;
+    $instance->save();
     // Enable check_plain() for 'Basic HTML' text format.
     $basic_html_format_id = 'basic_html';
     $edit = array(
@@ -78,7 +83,7 @@ class SearchCommentTest extends SearchTestBase {
     $edit_comment['comment_body[0][value]'] = '<h1>' . $comment_body . '</h1>';
     $full_html_format_id = 'full_html';
     $edit_comment['comment_body[0][format]'] = $full_html_format_id;
-    $this->drupalPostForm('comment/reply/' . $node->id(), $edit_comment, t('Save'));
+    $this->drupalPostForm('comment/reply/node/' . $node->id() .'/comment', $edit_comment, t('Save'));
 
     // Invoke search index update.
     $this->drupalLogout();
@@ -107,7 +112,7 @@ class SearchCommentTest extends SearchTestBase {
 
     // Hide comments.
     $this->drupalLogin($this->admin_user);
-    $node->comment = 0;
+    $node->set('comment', COMMENT_HIDDEN);
     $node->save();
 
     // Invoke search index update.
@@ -129,14 +134,17 @@ class SearchCommentTest extends SearchTestBase {
     $this->admin_role = $roles[0];
 
     // Create a node.
-    variable_set('comment_preview_article', DRUPAL_OPTIONAL);
+    // Make preview optional.
+    $instance = field_info_instance('node', 'comment', 'article');
+    $instance['settings']['preview'] = DRUPAL_OPTIONAL;
+    $instance->save();
     $this->node = $this->drupalCreateNode(array('type' => 'article'));
 
     // Post a comment using 'Full HTML' text format.
     $edit_comment = array();
     $edit_comment['subject'] = $this->comment_subject;
     $edit_comment['comment_body[0][value]'] = '<h1>' . $comment_body . '</h1>';
-    $this->drupalPostForm('comment/reply/' . $this->node->id(), $edit_comment, t('Save'));
+    $this->drupalPostForm('comment/reply/node/' . $this->node->id() . '/comment', $edit_comment, t('Save'));
 
     $this->drupalLogout();
     $this->setRolePermissions(DRUPAL_ANONYMOUS_RID);
@@ -154,6 +162,7 @@ class SearchCommentTest extends SearchTestBase {
     $this->setRolePermissions($this->admin_role);
     $this->assertCommentAccess(FALSE, 'Admin user has search permission but no access comments permission, comments should not be indexed');
 
+    $this->drupalGet('node/' . $this->node->id());
     $this->setRolePermissions($this->admin_role, TRUE);
     $this->assertCommentAccess(TRUE, 'Admin user has search permission and access comments permission, comments should be indexed');
 

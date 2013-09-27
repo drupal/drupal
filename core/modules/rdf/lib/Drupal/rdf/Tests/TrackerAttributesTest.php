@@ -86,6 +86,9 @@ class TrackerAttributesTest extends WebTestBase {
       'skip comment approval' => TRUE,
     ));
 
+    // Create comment field on article.
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
+
     // Sets base URI of the site used by the RDFa parser.
     $this->base_uri = url('<front>', array('absolute' => TRUE));
   }
@@ -169,7 +172,7 @@ class TrackerAttributesTest extends WebTestBase {
       'subject' => $this->randomName(),
       'comment_body[0][value]' => $this->randomName(),
     );
-    $this->drupalPostForm('comment/reply/' . $node->id(), $comment, t('Save'));
+    $this->drupalPostForm('comment/reply/node/' . $node->id() .'/comment', $comment, t('Save'));
 
     // Parses tracker page where the nodes are displayed in a table.
     $parser = new \EasyRdf_Parser_Rdfa();

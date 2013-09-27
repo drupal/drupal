@@ -46,6 +46,8 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     // Create searching user.
     $this->searching_user = $this->drupalCreateUser(array('search content', 'access content', 'access comments', 'skip comment approval'));
 
+    // Add a comment field.
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
     // Create initial nodes.
     $node_params = array('type' => 'article', 'body' => array(array('value' => 'SearchCommentToggleTestCase')));
 
@@ -61,7 +63,7 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     $edit_comment['comment_body[0][value]'] = $this->randomName();
 
     // Post comment to the test node with comment
-    $this->drupalPostForm('comment/reply/' . $this->searchable_nodes['1 comment']->id(), $edit_comment, t('Save'));
+    $this->drupalPostForm('comment/reply/node/' . $this->searchable_nodes['1 comment']->id() . '/comment', $edit_comment, t('Save'));
 
     // First update the index. This does the initial processing.
     $this->container->get('plugin.manager.search')->createInstance('node_search')->updateIndex();
@@ -87,9 +89,9 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     $this->assertText(t('1 comment'), 'Non-empty comment count displays for nodes with comment status set to Open');
 
     // Test comment count display for nodes with comment status set to Closed
-    $this->searchable_nodes['0 comments']->comment = COMMENT_NODE_CLOSED;
+    $this->searchable_nodes['0 comments']->set('comment', COMMENT_CLOSED);
     $this->searchable_nodes['0 comments']->save();
-    $this->searchable_nodes['1 comment']->comment = COMMENT_NODE_CLOSED;
+    $this->searchable_nodes['1 comment']->set('comment', COMMENT_CLOSED);
     $this->searchable_nodes['1 comment']->save();
 
     $this->drupalPostForm('', $edit, t('Search'));
@@ -97,9 +99,9 @@ class SearchCommentCountToggleTest extends SearchTestBase {
     $this->assertText(t('1 comment'), 'Non-empty comment count displays for nodes with comment status set to Closed');
 
     // Test comment count display for nodes with comment status set to Hidden
-    $this->searchable_nodes['0 comments']->comment = COMMENT_NODE_HIDDEN;
+    $this->searchable_nodes['0 comments']->set('comment', COMMENT_HIDDEN);
     $this->searchable_nodes['0 comments']->save();
-    $this->searchable_nodes['1 comment']->comment = COMMENT_NODE_HIDDEN;
+    $this->searchable_nodes['1 comment']->set('comment', COMMENT_HIDDEN);
     $this->searchable_nodes['1 comment']->save();
 
     $this->drupalPostForm('', $edit, t('Search'));

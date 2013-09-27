@@ -85,16 +85,23 @@ class UserUid extends ArgumentPluginBase {
   public function query($group_by = FALSE) {
     $this->ensureMyTable();
 
-    $subselect = $this->database->select('comment', 'c');
-    $subselect->addField('c', 'cid');
-    $subselect->condition('c.uid', $this->argument);
-    $subselect->where("c.nid = $this->tableAlias.nid");
+    // Use the table definition to correctly add this user ID condition.
+    if ($this->table != 'comment') {
+      $subselect = $this->database->select('comment', 'c');
+      $subselect->addField('c', 'cid');
+      $subselect->condition('c.uid', $this->argument);
 
-    $condition = db_or()
-      ->condition("$this->tableAlias.uid", $this->argument, '=')
-      ->exists($subselect);
+      $entity_id = $this->definition['entity_id'];
+      $entity_type = $this->definition['entity_type'];
+      $subselect->where("c.entity_id = $this->tableAlias.$entity_id");
+      $subselect->condition('c.entity_type', $entity_type);
 
-    $this->query->addWhere(0, $condition);
+      $condition = db_or()
+        ->condition("$this->tableAlias.uid", $this->argument, '=')
+        ->exists($subselect);
+
+      $this->query->addWhere(0, $condition);
+    }
   }
 
   /**
