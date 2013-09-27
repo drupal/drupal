@@ -78,7 +78,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
         ->range(0, 1)
         ->execute()
         ->fetchObject();
-      $this->database->update('comment_entity_statistics')
+      $this->database->merge('comment_entity_statistics')
         ->fields(array(
           'cid' => $last_reply->cid,
           'comment_count' => $count,
@@ -86,9 +86,11 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
           'last_comment_name' => $last_reply->uid ? '' : $last_reply->name,
           'last_comment_uid' => $last_reply->uid,
         ))
-        ->condition('entity_id', $comment->entity_id->value)
-        ->condition('entity_type', $comment->entity_type->value)
-        ->condition('field_id', $comment->field_id->value)
+        ->key(array(
+          'entity_id' => $comment->entity_id->value,
+          'entity_type' => $comment->entity_type->value,
+          'field_id' => $comment->field_id->value,
+        ))
         ->execute();
     }
     else {
