@@ -305,9 +305,8 @@ class CommentNonNodeTest extends WebTestBase {
       'view test entity' => TRUE,
       'skip comment approval' => FALSE,
     ));
-    // Ensure the page cache is flushed.
-    \Drupal::cache('page')->deleteAll();
     // We've changed role permissions, so need to reset render cache.
+    // @todo Revisit after https://drupal.org/node/2099105
     \Drupal::entityManager()->getRenderController('entity_test_render')->resetCache(array($this->entity->id()));
     $this->drupalGet('entity-test-render/' . $this->entity->id());
     $this->assertPattern('@<h2[^>]*>Comments</h2>@', 'Comments were displayed.');
@@ -326,6 +325,7 @@ class CommentNonNodeTest extends WebTestBase {
       'view test entity' => TRUE,
     ));
     // We've changed role permissions, so need to reset render cache.
+    // @todo Revisit after https://drupal.org/node/2099105
     \Drupal::entityManager()->getRenderController('entity_test_render')->resetCache(array($this->entity->id()));
     $this->drupalGet('entity-test-render/' . $this->entity->id());
     $this->assertNoPattern('@<h2[^>]*>Comments</h2>@', 'Comments were not displayed.');
@@ -343,8 +343,6 @@ class CommentNonNodeTest extends WebTestBase {
       'administer entity_test content',
     ));
     $this->drupalLogin($limited_user);
-    // @todo Remove when entity render cache supports roles.
-    \Drupal::entityManager()->getRenderController('entity_test_render')->resetCache(array($this->entity->id()));
     $this->drupalGet('admin/structure/entity-test-render/manage/entity_test_render/fields/entity_test_render.entity_test_render.comment');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-0');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-1');

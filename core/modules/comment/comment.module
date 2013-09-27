@@ -287,6 +287,15 @@ function comment_field_instance_create(FieldInstanceInterface $instance) {
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_update() for 'field_instance'.
+ */
+function comment_field_instance_update(FieldInstanceInterface $instance) {
+  if ($instance->getFieldType() == 'comment') {
+    \Drupal::entityManager()->getRenderController($instance->entity_type)->resetCache();
+  }
+}
+
+/**
  * Implements hook_ENTITY_TYPE_delete() for 'field_entity'.
  */
 function comment_field_entity_delete(FieldInterface $field) {
