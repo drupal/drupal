@@ -2820,6 +2820,13 @@ function template_preprocess_maintenance_page(&$variables) {
   $theme_data = list_themes();
   $regions = $theme_data[$theme]->info['regions'];
 
+  // Initializes attributes which are specific to the html element.
+  $variables['html_attributes'] = new Attribute;
+
+  // HTML element attributes.
+  $variables['html_attributes']['lang'] = $language_interface->id;
+  $variables['html_attributes']['dir'] = $language_interface->direction ? 'rtl' : 'ltr';
+
   // Add favicon
   if (theme_get_setting('features.favicon')) {
     $favicon = theme_get_setting('favicon.url');
