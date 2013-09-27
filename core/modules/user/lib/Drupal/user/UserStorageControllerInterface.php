@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
 /**
  * Defines a common interface for user entity controller classes.
  */
-interface UserStorageControllerInterface extends EntityStorageControllerInterface {
+interface UserStorageControllerInterface {
 
   /**
    * Add any roles from the storage to the user.
