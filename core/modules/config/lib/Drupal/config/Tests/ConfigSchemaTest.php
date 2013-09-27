@@ -44,6 +44,7 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
    */
   function testSchemaMapping() {
     // Nonexistent configuration key will have Unknown as metadata.
+    $this->assertIdentical(FALSE, config_typed()->hasConfigSchema('config_test.no_such_key'));
     $definition = config_typed()->getDefinition('config_test.no_such_key');
     $expected = array();
     $expected['label'] = 'Unknown';
@@ -51,10 +52,12 @@ class ConfigSchemaTest extends DrupalUnitTestBase {
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for nonexistent configuration.');
 
     // Configuration file without schema will return Unknown as well.
+    $this->assertIdentical(FALSE, config_typed()->hasConfigSchema('config_test.noschema'));
     $definition = config_typed()->getDefinition('config_test.noschema');
     $this->assertEqual($definition, $expected, 'Retrieved the right metadata for configuration with no schema.');
 
     // Configuration file with only some schema.
+    $this->assertIdentical(TRUE, config_typed()->hasConfigSchema('config_test.someschema'));
     $definition = config_typed()->getDefinition('config_test.someschema');
     $expected = array();
     $expected['label'] = 'Schema test data';

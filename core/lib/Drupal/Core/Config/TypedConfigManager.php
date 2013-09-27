@@ -11,11 +11,12 @@ use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\PluginManagerBase;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Component\Utility\String;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 
 /**
  * Manages config type plugins.
  */
-class TypedConfigManager extends PluginManagerBase {
+class TypedConfigManager extends PluginManagerBase implements TypedConfigManagerInterface {
 
   /**
    * A storage controller instance for reading configuration data.
@@ -283,6 +284,16 @@ class TypedConfigManager extends PluginManagerBase {
         }
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasConfigSchema($name) {
+    // The schema system falls back on the Property class for unknown types.
+    // See http://drupal.org/node/1905230
+    $definition = $this->getDefinition($name);
+    return is_array($definition) && ($definition['class'] != '\Drupal\Core\Config\Schema\Property');
   }
 
 }
