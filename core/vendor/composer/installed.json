@@ -2064,5 +2064,51 @@
         ],
         "description": "Symfony Process Component",
         "homepage": "http://symfony.com"
+    },
+    {
+        "name": "sdboyer/gliph",
+        "version": "0.1.4",
+        "version_normalized": "0.1.4.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/sdboyer/gliph.git",
+            "reference": "aad932ef7d808105341cc9a36538e9fe2cb5ee82"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/sdboyer/gliph/zipball/aad932ef7d808105341cc9a36538e9fe2cb5ee82",
+            "reference": "aad932ef7d808105341cc9a36538e9fe2cb5ee82",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3"
+        },
+        "time": "2013-09-27 01:15:21",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Gliph": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Sam Boyer",
+                "email": "tech@samboyer.org"
+            }
+        ],
+        "description": "A graph library for PHP.",
+        "homepage": "http://github.com/sdboyer/gliph",
+        "keywords": [
+            "gliph",
+            "graph",
+            "library",
+            "php",
+            "spl"
+        ]
     }
 ]

@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "204b3755db988998bcc618e71b2f235c",
+    "hash": "4c727150110aeae10efe10a92ff256f5",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1110,6 +1110,50 @@
                 "psr-3"
             ],
             "time": "2012-12-21 11:40:51"
+        },
+        {
+            "name": "sdboyer/gliph",
+            "version": "0.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sdboyer/gliph.git",
+                "reference": "aad932ef7d808105341cc9a36538e9fe2cb5ee82"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sdboyer/gliph/zipball/aad932ef7d808105341cc9a36538e9fe2cb5ee82",
+                "reference": "aad932ef7d808105341cc9a36538e9fe2cb5ee82",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Gliph": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sam Boyer",
+                    "email": "tech@samboyer.org"
+                }
+            ],
+            "description": "A graph library for PHP.",
+            "homepage": "http://github.com/sdboyer/gliph",
+            "keywords": [
+                "gliph",
+                "graph",
+                "library",
+                "php",
+                "spl"
+            ],
+            "time": "2013-09-27 01:15:21"
         },
         {
             "name": "symfony-cmf/routing",

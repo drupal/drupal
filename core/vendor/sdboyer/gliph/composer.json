@@ -1,0 +1,20 @@
+{
+    "name": "sdboyer/gliph",
+    "description": "A graph library for PHP.",
+    "license": "MIT",
+    "keywords": ["gliph", "library", "php", "spl", "graph"],
+    "homepage": "http://github.com/sdboyer/gliph",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Sam Boyer",
+            "email": "tech@samboyer.org"
+        }
+    ],
+    "require": {
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "psr-0": { "Gliph": "src/" }
+    }
+}
