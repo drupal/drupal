@@ -356,7 +356,7 @@ class CommentNonNodeTest extends WebTestBase {
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-0');
     $this->assertFieldChecked('edit-default-value-input-comment-0-status-1');
     $this->assertNoFieldChecked('edit-default-value-input-comment-0-status-2');
-    
+
     // Add a new comment field.
     $this->drupalGet('admin/structure/entity-test-render/manage/entity_test_render/fields');
     $edit = array(

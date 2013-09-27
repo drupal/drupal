@@ -102,7 +102,7 @@ class CommentTokenReplaceTest extends CommentTestBase {
     $tests = array();
     $tests['[entity:comment-count]'] = 2;
     $tests['[entity:comment-count-new]'] = 2;
-    // Also test the Deprecated legacy token.
+    // Also test the deprecated legacy token.
     $tests['[node:comment-count]'] = 2;
 
     foreach ($tests as $input => $expected) {

@@ -203,8 +203,6 @@ class FileFieldWidgetTest extends FileFieldTestBase {
    */
   function testPrivateFileSetting() {
     // Grant the admin user required permissions.
-    // @todo Add method to roles list_class to exclude built in roles and use
-    //   User::getRoles() instead - https://drupal.org/node/2096717.
     user_role_grant_permissions($this->admin_user->roles[0]->value, array('administer node fields'));
 
     $type_name = 'article';

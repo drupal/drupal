@@ -26,7 +26,7 @@ class LinkDelete extends Link {
 
   protected function renderLink($data, ResultRow $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('delete');
-    $comment = $this->get_entity($values);
+    $comment = $this->getEntity($values);
 
     $this->options['alter']['make_link'] = TRUE;
     $this->options['alter']['path'] = "comment/" . $comment->id(). "/delete";

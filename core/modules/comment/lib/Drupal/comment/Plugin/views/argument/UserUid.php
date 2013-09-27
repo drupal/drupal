@@ -85,9 +85,7 @@ class UserUid extends ArgumentPluginBase {
   public function query($group_by = FALSE) {
     $this->ensureMyTable();
 
-    // Load the table information to get the entity information to finally
-    // be able to join to filter by the original entity type this join is
-    // attached to.
+    // Use the table definition to correctly add this user ID condition.
     if ($this->table != 'comment') {
       $subselect = $this->database->select('comment', 'c');
       $subselect->addField('c', 'cid');

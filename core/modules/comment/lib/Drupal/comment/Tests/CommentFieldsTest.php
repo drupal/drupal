@@ -7,8 +7,6 @@
 
 namespace Drupal\comment\Tests;
 
-use Drupal\field\Field;
-
 /**
  * Tests fields on comments.
  */
@@ -70,13 +68,12 @@ class CommentFieldsTest extends CommentTestBase {
     $this->drupalLogin($this->admin_user);
 
     // Drop default comment field added in CommentTestBase::setup().
-    // @todo WTF#1497374
     entity_load('field_entity', 'node.comment')->delete();
-    if ($field = Field::fieldInfo()->getField('node', 'comment_node_forum')) {
+    if ($field = $this->container->get('field.info')->getField('node', 'comment_node_forum')) {
       $field->delete();
     }
 
-    // Purge field data now to allow comment module to be disabled once the
+    // Purge field data now to allow comment module to be uninstalled once the
     // field has been deleted.
     field_purge_batch(10);
     // Call again as field_purge_batch() won't remove both the instances and
@@ -124,7 +121,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Disable text processing for comments.
     $this->drupalLogin($this->admin_user);
     $edit = array('instance[settings][text_processing]' => 0);
-    $this->drupalPostForm('admin/structure/comments/manage/comment/fields/comment.node__comment.comment_body', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/structure/comments/manage/node__comment/fields/comment.node__comment.comment_body', $edit, t('Save settings'));
 
     // Post a comment without an explicit subject.
     $this->drupalLogin($this->web_user);
