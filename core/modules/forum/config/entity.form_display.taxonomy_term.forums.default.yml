@@ -3,6 +3,7 @@ uuid: c8eab085-8fd3-4545-8600-e13b7d8bb9c4
 targetEntityType: taxonomy_term
 bundle: forums
 mode: default
+status: 1
 content:
   name:
     weight: '-5'

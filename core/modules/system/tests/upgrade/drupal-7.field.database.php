@@ -12,19 +12,19 @@
 $value = array(
   'view_modes' => array(
     'teaser' => array(
-      'status' => 1,
+      'custom_settings' => 1,
     ),
     'full' => array(
-      'status' => 0,
+      'custom_settings' => 0,
     ),
     'rss' => array(
-      'status' => 0,
+      'custom_settings' => 0,
     ),
     'search_index' => array(
-      'status' => 0,
+      'custom_settings' => 0,
     ),
     'search_result' => array(
-      'status' => 0,
+      'custom_settings' => 0,
     ),
   ),
   'extra_fields' => array(

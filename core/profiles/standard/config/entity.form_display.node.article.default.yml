@@ -2,6 +2,7 @@ id: node.article.default
 targetEntityType: node
 bundle: article
 mode: default
+status: 1
 content:
   body:
     type: text_textarea_with_summary

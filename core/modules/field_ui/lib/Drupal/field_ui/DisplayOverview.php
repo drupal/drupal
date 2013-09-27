@@ -139,17 +139,8 @@ class DisplayOverview extends DisplayOverviewBase {
   /**
    * {@inheritdoc}
    */
-  protected function getDisplayModeSettings() {
-    return field_view_mode_settings($this->entity_type, $this->bundle);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function saveDisplayModeSettings($display_mode_settings) {
-    $bundle_settings = field_bundle_settings($this->entity_type, $this->bundle);
-    $bundle_settings['view_modes'] = NestedArray::mergeDeep($bundle_settings['view_modes'], $display_mode_settings);
-    field_bundle_settings($this->entity_type, $this->bundle, $bundle_settings);
+  protected function getDisplayType() {
+    return 'entity_display';
   }
 
   /**

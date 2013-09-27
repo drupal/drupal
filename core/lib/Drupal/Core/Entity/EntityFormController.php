@@ -186,11 +186,15 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
       }
     }
 
-    // Hide extra fields.
+    // Hide or assign weights for extra fields.
     $extra_fields = field_info_extra_fields($this->entity->entityType(), $this->entity->bundle(), 'form');
     foreach ($extra_fields as $extra_field => $info) {
-      if (!$this->getFormDisplay($form_state)->getComponent($extra_field)) {
+      $component = $this->getFormDisplay($form_state)->getComponent($extra_field);
+      if (!$component) {
         $element[$extra_field]['#access'] = FALSE;
+      }
+      else {
+        $element[$extra_field]['#weight'] = $component['weight'];
       }
     }
 

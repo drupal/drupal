@@ -51,6 +51,14 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   public $mode;
 
   /**
+   * Whether this display is enabled or not. If the entity (form) display
+   * is disabled, we'll fall back to the 'default' display.
+   *
+   * @var boolean
+   */
+  public $status;
+
+  /**
    * List of component display options, keyed by component name.
    *
    * @var array
@@ -143,6 +151,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       'bundle',
       'mode',
       'content',
+      'status',
     );
     $properties = array();
     foreach ($names as $name) {

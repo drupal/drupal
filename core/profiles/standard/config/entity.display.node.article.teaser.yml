@@ -2,6 +2,7 @@ id: node.article.teaser
 targetEntityType: node
 bundle: article
 mode: teaser
+status: 1
 content:
   body:
     label: hidden

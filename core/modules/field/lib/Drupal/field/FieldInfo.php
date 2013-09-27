@@ -545,13 +545,10 @@ class FieldInfo {
     // Cache miss: read from hook_field_extra_fields(). Note: given the current
     // shape of the hook, we have no other way than collecting extra fields on
     // all bundles.
-    $info = array();
     $extra = $this->moduleHandler->invokeAll('field_extra_fields');
     drupal_alter('field_extra_fields', $extra);
-    // Merge in saved settings.
-    if (isset($extra[$entity_type][$bundle])) {
-      $info = $this->prepareExtraFields($extra[$entity_type][$bundle], $entity_type, $bundle);
-    }
+    $info = isset($extra[$entity_type][$bundle]) ? $extra[$entity_type][$bundle] : array();
+    $info += array('form' => array(), 'display' => array());
 
     // Store in the 'static' and persistent caches.
     $this->bundleExtraFields[$entity_type][$bundle] = $info;
@@ -597,40 +594,6 @@ class FieldInfo {
     }
 
     return $instance;
-  }
-
-  /**
-   * Prepares 'extra fields' for the current run-time context.
-   *
-   * @param $extra_fields
-   *   The array of extra fields, as collected in hook_field_extra_fields().
-   * @param $entity_type
-   *   The entity type.
-   * @param $bundle
-   *   The bundle name.
-   *
-   * @return
-   *   The list of extra fields completed for the current runtime context.
-   */
-  public function prepareExtraFields($extra_fields, $entity_type, $bundle) {
-    $entity_type_info = entity_get_info($entity_type);
-    $bundle_settings = field_bundle_settings($entity_type, $bundle);
-    $extra_fields += array('form' => array(), 'display' => array());
-
-    $result = array();
-    // Extra fields in forms.
-    foreach ($extra_fields['form'] as $name => $field_data) {
-      $settings = isset($bundle_settings['extra_fields']['form'][$name]) ? $bundle_settings['extra_fields']['form'][$name] : array();
-      if (isset($settings['weight'])) {
-        $field_data['weight'] = $settings['weight'];
-      }
-      $result['form'][$name] = $field_data;
-    }
-
-    // Extra fields in displayed entities.
-    $result['display'] = $extra_fields['display'];
-
-    return $result;
   }
 
 }

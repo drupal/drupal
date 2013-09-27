@@ -46,9 +46,7 @@ class CommentFormController extends EntityFormControllerNG {
       $form += $form_state['comment_preview'];
     }
 
-    $form['author'] = array(
-      '#weight' => 10,
-    );
+    $form['author'] = array();
     // Display author information in a details element for comment moderators.
     if ($is_admin) {
       $form['author'] += array(

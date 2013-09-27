@@ -26,7 +26,8 @@ use Drupal\entity\EntityFormDisplayInterface;
  *   config_prefix = "entity.form_display",
  *   entity_keys = {
  *     "id" = "id",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "status" = "status"
  *   }
  * )
  */

@@ -360,11 +360,11 @@ function user_update_dependencies() {
  * The 'Member for' extra field has moved one level up in the array.
  */
 function user_update_8000() {
-  $settings = field_bundle_settings('user', 'user');
+  $settings = update_variable_get('field_bundle_settings_user__user', array());
   if (isset($settings['extra_fields']['display']['summary'])) {
     $settings['extra_fields']['display']['member_for'] = $settings['extra_fields']['display']['summary'];
     unset($settings['extra_fields']['display']['summary']);
-    field_bundle_settings('user', 'user', $settings);
+    update_variable_set('field_bundle_settings_user__user', $settings);
   }
 }
 
@@ -739,7 +739,7 @@ function user_update_8011() {
   }
 
   // Assign form settings for the 'default' form mode.
-  $form_display = _update_8000_entity_get_form_display('user', 'user', 'default');
+  $form_display = _update_8000_entity_get_form_display('user', 'user', 'default', TRUE);
   $form_display->set('content.user_picture', array(
       'type' => $widget,
       'settings' => array(
@@ -748,6 +748,7 @@ function user_update_8011() {
       ),
       'weight' => -1,
     ))
+    ->set('status', 1)
     ->save();
 
   // Assign display settings for the 'default' and 'compact' view modes.
@@ -761,6 +762,7 @@ function user_update_8011() {
       ),
       'weight' => 0,
     ))
+    ->set('status', 1)
     ->save();
 
   $display = _update_8000_entity_get_display('user', 'user', 'compact');
@@ -772,8 +774,9 @@ function user_update_8011() {
         'image_link' => 'content',
       ),
       'weight' => 0,
-    ));
-  $display->set('content.member_for', array(
+    ))
+    ->set('status', 1)
+    ->set('content.member_for', array(
       'visible' => FALSE,
     ));
   $display->save();

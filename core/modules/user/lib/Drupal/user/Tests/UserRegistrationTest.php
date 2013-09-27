@@ -213,6 +213,8 @@ class UserRegistrationTest extends WebTestBase {
     entity_get_form_display('user', 'user', 'default')
       ->setComponent('test_user_field', array('type' => 'test_field_widget'))
       ->save();
+    entity_get_form_display('user', 'user', 'register')
+      ->save();
 
     // Check that the field does not appear on the registration form.
     $this->drupalGet('user/register');

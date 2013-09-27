@@ -717,6 +717,7 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
       'targetEntityType' => $entity_type,
       'bundle' => $bundle,
       'mode' => $view_mode,
+      'status' => TRUE,
     ));
   }
 
@@ -750,12 +751,20 @@ function entity_get_display($entity_type, $bundle, $view_mode) {
 function entity_get_render_display(EntityInterface $entity, $view_mode) {
   $entity_type = $entity->entityType();
   $bundle = $entity->bundle();
+  $render_view_mode = 'default';
 
-  // Determine the display to use for rendering this entity. Depending on the
-  // configuration of the view mode for this bundle, this will be either the
-  // display associated to the view mode, or the 'default' display.
-  $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
-  $render_view_mode = !empty($view_mode_settings[$view_mode]['status']) ? $view_mode : 'default';
+  // Look at the default display and display for the view mode, and fallback to
+  // the former if the latter does not exist is disabled.
+  if ($view_mode != 'default') {
+    $ids = array(
+      'default' => $entity_type . '.' . $bundle . '.default',
+      $view_mode => $entity_type . '.' . $bundle . '.' . $view_mode,
+    );
+    $entity_displays = entity_load_multiple('entity_display', $ids);
+    if (isset($entity_displays[$ids[$view_mode]]) && $entity_displays[$ids[$view_mode]]->status()) {
+      $render_view_mode = $view_mode;
+    }
+  }
 
   $display = entity_get_display($entity_type, $bundle, $render_view_mode);
   $display->originalMode = $view_mode;
@@ -812,6 +821,7 @@ function entity_get_form_display($entity_type, $bundle, $form_mode) {
       'targetEntityType' => $entity_type,
       'bundle' => $bundle,
       'mode' => $form_mode,
+      'status' => TRUE,
     ));
   }
 
@@ -841,12 +851,20 @@ function entity_get_form_display($entity_type, $bundle, $form_mode) {
 function entity_get_render_form_display(EntityInterface $entity, $form_mode) {
   $entity_type = $entity->entityType();
   $bundle = $entity->bundle();
+  $render_form_mode = 'default';
 
-  // Determine the form display to use for rendering this entity form. Depending
-  // on the configuration of the form mode for this bundle, this will be either
-  // the form display associated to the form mode, or the 'default' display.
-  $form_mode_settings = field_form_mode_settings($entity_type, $bundle);
-  $render_form_mode = !empty($form_mode_settings[$form_mode]['status']) ? $form_mode : 'default';
+  // Look at the default form display and form display for the view mode, and
+  // fallback to the former if the latter does not exist is disabled.
+  if ($form_mode != 'default') {
+    $ids = array(
+      'default' => $entity_type . '.' . $bundle . '.default',
+      $form_mode => $entity_type . '.' . $bundle . '.' . $form_mode,
+    );
+    $entity_form_displays = entity_load_multiple('entity_form_display', $ids);
+    if (isset($entity_form_displays[$ids[$form_mode]]) && $entity_form_displays[$ids[$form_mode]]->status()) {
+      $render_form_mode = $form_mode;
+    }
+  }
 
   $form_display = entity_get_form_display($entity_type, $bundle, $render_form_mode);
   $form_display->originalMode = $form_mode;

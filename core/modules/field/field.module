@@ -295,11 +295,6 @@ function field_entity_bundle_rename($entity_type, $bundle_old, $bundle_new) {
 
   // Clear the field cache.
   field_cache_clear();
-
-  // Update bundle settings.
-  $settings = variable_get('field_bundle_settings_' . $entity_type . '__' . $bundle_old, array());
-  variable_set('field_bundle_settings_' . $entity_type . '__' . $bundle_new, $settings);
-  variable_del('field_bundle_settings_' . $entity_type . '__' . $bundle_old);
 }
 
 /**
@@ -323,9 +318,6 @@ function field_entity_bundle_delete($entity_type, $bundle) {
 
   // Clear the cache.
   field_cache_clear();
-
-  // Clear bundle display settings.
-  variable_del('field_bundle_settings_' . $entity_type . '__' . $bundle);
 }
 
 /**
@@ -406,124 +398,6 @@ function field_sync_field_status() {
   $state->set('field.field.deleted', $deleted_fields);
 
   field_cache_clear();
-}
-
-/**
- * Gets or sets administratively defined bundle settings.
- *
- * @param string $entity_type
- *   The type of $entity; e.g., 'node' or 'user'.
- * @param string $bundle
- *   The bundle name.
- * @param array|null $settings
- *   (optional) The settings to store, an associative array with the following
- *   elements:
- *   - view_modes: An associative array keyed by view mode, with the following
- *     key/value pairs:
- *     - status: Boolean specifying whether the view mode uses a dedicated set
- *       of display options (TRUE), or the 'default' options (FALSE). Defaults
- *       to FALSE.
- *   - extra_fields: An associative array containing the form and display
- *     settings for extra fields (also known as pseudo-fields):
- *     - form: An associative array whose keys are the names of extra fields,
- *       and whose values are associative arrays with the following elements:
- *       - weight: The weight of the extra field, determining its position on an
- *         entity form.
- *     - display: An associative array whose keys are the names of extra fields,
- *       and whose values are associative arrays keyed by the name of view
- *       modes. This array must include an item for the 'default' view mode.
- *       Each view mode sub-array contains the following elements:
- *       - weight: The weight of the extra field, determining its position when
- *         an entity is viewed.
- *       - visible: TRUE if the extra field is visible, FALSE otherwise.
- *
- * @return array|null
- *   If no $settings are passed, the current settings are returned.
- */
-function field_bundle_settings($entity_type, $bundle, $settings = NULL) {
-  if (isset($settings)) {
-    variable_set('field_bundle_settings_' . $entity_type . '__' . $bundle, $settings);
-    field_info_cache_clear();
-  }
-  else {
-    $settings = variable_get('field_bundle_settings_' . $entity_type . '__' . $bundle, array());
-    $settings += array(
-      'view_modes' => array(),
-      'form_modes' => array(),
-    );
-
-    return $settings;
-  }
-}
-
-/**
- * Returns form mode settings in a given bundle.
- *
- * @param string $entity_type
- *   The type of entity; e.g. 'node' or 'user'.
- * @param string $bundle
- *   The bundle name to return form mode settings for.
- *
- * @return
- *   An array keyed by form mode, with the following key/value pairs:
- *   - status: Boolean specifying whether the form mode uses a dedicated set of
- *     display options (TRUE), or the 'default' options (FALSE). Defaults to
- *     FALSE.
- */
-function field_form_mode_settings($entity_type, $bundle) {
-  $cache = &drupal_static(__FUNCTION__, array());
-
-  if (!isset($cache[$entity_type][$bundle])) {
-    $bundle_settings = field_bundle_settings($entity_type, $bundle);
-    $settings = $bundle_settings['form_modes'];
-    // Include form modes for which nothing has been stored yet, but whose
-    // definition in hook_entity_info_alter() specify they should use custom
-    // settings by default.
-    $form_modes = entity_get_form_modes($entity_type);
-    foreach ($form_modes as $form_mode => $form_mode_info) {
-      if (!isset($settings[$form_mode]['status']) && $form_mode_info['status']) {
-        $settings[$form_mode]['status'] = TRUE;
-      }
-    }
-    $cache[$entity_type][$bundle] = $settings;
-  }
-
-  return $cache[$entity_type][$bundle];
-}
-
-/**
- * Returns view mode settings in a given bundle.
- *
- * @param $entity_type
- *   The type of entity; e.g. 'node' or 'user'.
- * @param $bundle
- *   The bundle name to return view mode settings for.
- *
- * @return
- *   An array keyed by view mode, with the following key/value pairs:
- *   - status: Boolean specifying whether the view mode uses a dedicated set of
- *     display options (TRUE), or the 'default' options (FALSE). Defaults to
- *     FALSE.
- */
-function field_view_mode_settings($entity_type, $bundle) {
-  $cache = &drupal_static(__FUNCTION__, array());
-
-  if (!isset($cache[$entity_type][$bundle])) {
-    $bundle_settings = field_bundle_settings($entity_type, $bundle);
-    $settings = $bundle_settings['view_modes'];
-    // Include view modes for which nothing has been stored yet, but whose
-    // definition in hook_entity_info_alter() specify they should use custom
-    // settings by default.
-    $view_modes = entity_get_view_modes($entity_type);
-    foreach ($view_modes as $view_mode => $view_mode_info) {
-      if (!isset($settings[$view_mode]['status']) && $view_mode_info['status']) {
-        $settings[$view_mode]['status'] = TRUE;
-      }
-    }
-    $cache[$entity_type][$bundle] = $settings;
-  }
-
-  return $cache[$entity_type][$bundle];
 }
 
 /**

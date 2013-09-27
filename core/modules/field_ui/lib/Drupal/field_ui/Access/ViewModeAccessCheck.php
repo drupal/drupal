@@ -31,8 +31,16 @@ class ViewModeAccessCheck implements StaticAccessCheckInterface {
       $bundle = $request->attributes->get('bundle');
       $view_mode = $request->attributes->get('mode');
 
-      $view_mode_settings = field_view_mode_settings($entity_type, $bundle);
-      $visibility = ($view_mode == 'default') || !empty($view_mode_settings[$view_mode]['status']);
+      if ($view_mode == 'default') {
+        $visibility = TRUE;
+      }
+      elseif ($entity_display = entity_load('entity_display', $entity_type . '.' . $bundle . '.' . $view_mode)) {
+        $visibility = $entity_display->status();
+      }
+      else {
+        $visibility = FALSE;
+      }
+
       if ($visibility) {
         $permission = $route->getRequirement('_field_ui_view_mode_access');
         return user_access($permission) ? static::ALLOW : static::DENY;

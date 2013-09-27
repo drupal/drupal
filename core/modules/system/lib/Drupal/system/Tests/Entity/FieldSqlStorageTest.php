@@ -26,7 +26,7 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'field', 'field_test', 'text', 'number', 'entity_test');
+  public static $modules = array('field', 'field_test', 'text', 'number', 'entity_test');
 
   /**
    * The name of the created field.
@@ -67,7 +67,6 @@ class FieldSqlStorageTest extends EntityUnitTestBase {
   function setUp() {
     parent::setUp();
     $this->installSchema('entity_test', array('entity_test_rev', 'entity_test_rev_revision'));
-    $this->installSchema('system', array('variable'));
     $entity_type = 'entity_test_rev';
 
     $this->field_name = strtolower($this->randomName());

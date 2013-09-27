@@ -31,8 +31,16 @@ class FormModeAccessCheck implements StaticAccessCheckInterface {
       $bundle = $request->attributes->get('bundle');
       $form_mode = $request->attributes->get('mode');
 
-      $form_mode_settings = field_form_mode_settings($entity_type, $bundle);
-      $visibility = ($form_mode == 'default') || !empty($form_mode_settings[$form_mode]['status']);
+      if ($form_mode == 'default') {
+        $visibility = TRUE;
+      }
+      elseif ($entity_form_display = entity_load('entity_form_display', $entity_type . '.' . $bundle . '.' . $form_mode)) {
+        $visibility = $entity_form_display->status();
+      }
+      else {
+        $visibility = FALSE;
+      }
+
       if ($visibility) {
         $permission = $route->getRequirement('_field_ui_form_mode_access');
         return user_access($permission) ? static::ALLOW : static::DENY;

@@ -26,7 +26,8 @@ use Drupal\entity\EntityDisplayInterface;
  *   config_prefix = "entity.display",
  *   entity_keys = {
  *     "id" = "id",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "status" = "status"
  *   }
  * )
  */
