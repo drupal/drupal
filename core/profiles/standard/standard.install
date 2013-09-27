@@ -24,8 +24,8 @@ function standard_install() {
   // Set front page to "node".
   \Drupal::config('system.site')->set('page.front', 'node')->save();
 
-  // Default "Basic page" to have comments disabled.
-  variable_set('comment_page', COMMENT_NODE_HIDDEN);
+  // Add comment field to article node type.
+  \Drupal::service('comment.manager')->addDefaultField('node', 'article', 'comment', COMMENT_OPEN);
 
   // Allow visitor account creation with administrative approval.
   $user_settings = \Drupal::config('user.settings');

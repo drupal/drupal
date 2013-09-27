@@ -9,6 +9,7 @@ namespace Drupal\comment;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\comment\CommentInterface;
 
 /**
  * Defines a common interface for comment entity controller classes.
@@ -51,19 +52,19 @@ interface CommentStorageControllerInterface extends EntityStorageControllerInter
   /**
    * Updates the comment statistics for a given node.
    *
-   * The {node_comment_statistics} table has the following fields:
-   * - last_comment_timestamp: The timestamp of the last comment for this node,
-   *   or the node created timestamp if no comments exist for the node.
+   * The {comment_entity_statistics} table has the following fields:
+   * - last_comment_timestamp: The timestamp of the last comment for the entity,
+   *   or the entity created timestamp if no comments exist for the entity.
    * - last_comment_name: The name of the anonymous poster for the last comment.
    * - last_comment_uid: The user ID of the poster for the last comment for
-   *   this node, or the node author's user ID if no comments exist for the
-   *   node.
+   *   this entity, or the entity author's user ID if no comments exist for the
+   *   entity.
    * - comment_count: The total number of approved/published comments on this
-   *   node.
+   *   entity.
    *
-   * @param $nid
-   *   The node ID.
+   * @param \Drupal\comment\CommentInterface $comment
+   *   The comment being saved.
    */
-  public function updateNodeStatistics($nid);
+  public function updateEntityStatistics(CommentInterface $comment);
 
 }

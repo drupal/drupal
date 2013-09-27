@@ -27,7 +27,6 @@ class NodeRow extends EntityRow {
     $options['view_mode']['default'] = 'teaser';
 
     $options['links'] = array('default' => TRUE, 'bool' => TRUE);
-    $options['comments'] = array('default' => FALSE, 'bool' => TRUE);
 
     return $options;
   }
@@ -42,11 +41,6 @@ class NodeRow extends EntityRow {
       '#type' => 'checkbox',
       '#title' => t('Display links'),
       '#default_value' => $this->options['links'],
-    );
-    $form['comments'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Display comments'),
-      '#default_value' => $this->options['comments'],
     );
   }
 

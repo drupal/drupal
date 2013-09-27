@@ -76,9 +76,9 @@ class HistoryUserTimestamp extends FilterPluginBase {
     $clause = '';
     $clause2 = '';
     if (module_exists('comment')) {
-      $ncs = $this->query->ensureTable('node_comment_statistics', $this->relationship);
-      $clause = ("OR $ncs.last_comment_timestamp > (***CURRENT_TIME*** - $limit)");
-      $clause2 = "OR $field < $ncs.last_comment_timestamp";
+      $ces = $this->query->ensureTable('comment_entity_statistics', $this->relationship);
+      $clause = ("OR $ces.last_comment_timestamp > (***CURRENT_TIME*** - $limit)");
+      $clause2 = "OR $field < $ces.last_comment_timestamp";
     }
 
     // NULL means a history record doesn't exist. That's clearly new content.

@@ -398,9 +398,14 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
       $nodes[$key] = $node;
     }
 
+    // Create comment field on article.
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
+
     $comment_values = array(
       'published_published' => array(
-        'nid' => $nodes['published']->id(),
+        'entity_id' => $nodes['published']->id(),
+        'entity_type' => 'node',
+        'field_name' => 'comment',
         'uid' => 1,
         'cid' => NULL,
         'pid' => 0,
@@ -409,7 +414,9 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         'language' => Language::LANGCODE_NOT_SPECIFIED,
       ),
       'published_unpublished' => array(
-        'nid' => $nodes['published']->id(),
+        'entity_id' => $nodes['published']->id(),
+        'entity_type' => 'node',
+        'field_name' => 'comment',
         'uid' => 1,
         'cid' => NULL,
         'pid' => 0,
@@ -418,7 +425,9 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
         'language' => Language::LANGCODE_NOT_SPECIFIED,
       ),
       'unpublished_published' => array(
-        'nid' => $nodes['unpublished']->id(),
+        'entity_id' => $nodes['unpublished']->id(),
+        'entity_type' => 'node',
+        'field_name' => 'comment',
         'uid' => 1,
         'cid' => NULL,
         'pid' => 0,
@@ -447,7 +456,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
           array(NULL, 'CONTAINS'),
         ),
         'result' => array(
-          'comment_node_article' => array(
+          'node__comment' => array(
             $comments['published_published']->cid->value => $comment_labels['published_published'],
           ),
         ),
@@ -457,7 +466,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
           array('Published', 'CONTAINS'),
         ),
         'result' => array(
-          'comment_node_article' => array(
+          'node__comment' => array(
             $comments['published_published']->cid->value => $comment_labels['published_published'],
           ),
         ),
@@ -486,7 +495,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
           array(NULL, 'CONTAINS'),
         ),
         'result' => array(
-          'comment_node_article' => array(
+          'node__comment' => array(
             $comments['published_published']->cid->value => $comment_labels['published_published'],
             $comments['published_unpublished']->cid->value => $comment_labels['published_unpublished'],
           ),
@@ -504,7 +513,7 @@ class EntityReferenceSelectionAccessTest extends WebTestBase {
           array(NULL, 'CONTAINS'),
         ),
         'result' => array(
-          'comment_node_article' => array(
+          'node__comment' => array(
             $comments['published_published']->cid->value => $comment_labels['published_published'],
             $comments['published_unpublished']->cid->value => $comment_labels['published_unpublished'],
             $comments['unpublished_published']->cid->value => $comment_labels['unpublished_published'],

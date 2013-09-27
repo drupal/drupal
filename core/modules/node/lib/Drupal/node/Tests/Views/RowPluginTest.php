@@ -55,6 +55,8 @@ class RowPluginTest extends NodeTestBase {
     parent::setUp();
 
     $this->drupalCreateContentType(array('type' => 'article'));
+    // Create comment field on article.
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
 
     // Create two nodes, with 5 comments on all of them.
     for ($i = 0; $i < 2; $i++) {
@@ -74,7 +76,7 @@ class RowPluginTest extends NodeTestBase {
 
     foreach ($this->nodes as $node) {
       for ($i = 0; $i < 5; $i++) {
-        $this->comments[$node->id()][] = $this->drupalCreateComment(array('nid' => $node->id()));
+        $this->comments[$node->id()][] = $this->drupalCreateComment(array('entity_id' => $node->id()));
       }
     }
   }
@@ -90,10 +92,11 @@ class RowPluginTest extends NodeTestBase {
    *   Returns the created and saved comment.
    */
   public function drupalCreateComment(array $settings = array()) {
-    $node = node_load($settings['nid']);
     $settings += array(
       'subject' => $this->randomName(),
-      'node_type' => 'comment_node_' . $node->bundle(),
+      'entity_id' => $settings['entity_id'],
+      'field_name' => 'comment',
+      'entity_type' => 'node',
       'comment_body' => $this->randomName(40),
     );
 
@@ -147,25 +150,6 @@ class RowPluginTest extends NodeTestBase {
       $this->assertTrue($this->xpath('//li[contains(@class, :class)]/a[contains(@href, :href)]', array(':class' => 'node-readmore', ':href' => "node/{$node->id()}")), 'Make sure no readmore link appears.');
     }
 
-    // Test with comments enabled.
-    $view->rowPlugin->options['comments'] = TRUE;
-    $output = $view->preview();
-    $output = drupal_render($output);
-    foreach ($this->nodes as $node) {
-      foreach ($this->comments[$node->id()] as $comment) {
-        $this->assertTrue(strpos($output, $comment->comment_body->value) !== FALSE, 'Make sure the comment appears in the output.');
-      }
-    }
-
-    // Test with comments disabled.
-    $view->rowPlugin->options['comments'] = FALSE;
-    $output = $view->preview();
-    $output = drupal_render($output);
-    foreach ($this->nodes as $node) {
-      foreach ($this->comments[$node->id()] as $comment) {
-        $this->assertFalse(strpos($output, $comment->comment_body->value) !== FALSE, 'Make sure the comment does not appears in the output when the comments option disabled.');
-      }
-    }
   }
 
 }

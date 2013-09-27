@@ -42,6 +42,7 @@ class UserPictureTest extends WebTestBase {
       'skip comment approval',
     ));
     $this->drupalCreateContentType(array('type' => 'article', 'name' => 'Article'));
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
 
     // @see standard.install
     module_load_install('user');
@@ -112,7 +113,7 @@ class UserPictureTest extends WebTestBase {
     $edit = array(
       'comment_body[0][value]' => $this->randomString(),
     );
-    $this->drupalPostForm('comment/reply/' . $node->id(), $edit, t('Save'));
+    $this->drupalPostForm('comment/reply/node/' . $node->id() . '/comment', $edit, t('Save'));
     $this->assertRaw(file_uri_target($file->getFileUri()), 'User picture found on comment.');
 
     // Disable user pictures on comments and nodes.

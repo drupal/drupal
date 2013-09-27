@@ -71,16 +71,6 @@ class NodeStorageController extends DatabaseStorageControllerNG {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  protected function mapToDataStorageRecord(EntityInterface $entity, $langcode) {
-    // @todo Remove this once comment is a regular entity field.
-    $record = parent::mapToDataStorageRecord($entity, $langcode);
-    $record->comment = isset($record->comment) ? intval($record->comment) : 0;
-    return $record;
-  }
-
-  /**
    * Overrides Drupal\Core\Entity\DatabaseStorageController::postDelete().
    */
   protected function postDelete($nodes) {

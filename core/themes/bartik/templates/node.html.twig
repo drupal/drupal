@@ -15,13 +15,6 @@
  *   - sticky: Whether the node is 'sticky'. Sticky nodes are ordered above
  *     other non-sticky nodes in teaser listings
  *   - published: Whether the node is published.
- *   - comment: A value representing the comment status of the current node. May
- *     be one of the following:
- *     - 0: The comment form and any existing comments are hidden.
- *     - 1: Comments are closed. No new comments may be posted, but existing
- *       comments are displayed.
- *     - 2: Comments are open on this node.
- *   - comment_count: Number of comments attached to the node.
  * - label: The title of the node.
  * - content: All node items. Use {{ content }} to print them all,
  *   or print a subset such as {{ content.field_example }}. Use
@@ -98,8 +91,7 @@
   </header>
 
   <div class="content clearfix"{{ content_attributes }}>
-    {# We hide the comments and links now so that we can render them later. #}
-    {% hide(content.comments) %}
+    {# We hide links now so that we can render them later. #}
     {% hide(content.links) %}
     {{ content }}
   </div>
@@ -109,7 +101,5 @@
       {{ content.links }}
     </footer>
   {% endif %}
-
-  {{ content.comments }}
 
 </article>

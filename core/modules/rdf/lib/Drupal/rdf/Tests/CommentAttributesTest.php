@@ -67,7 +67,7 @@ class CommentAttributesTest extends CommentTestBase {
     $user_mapping->setFieldMapping('homepage', array('properties' => array('foaf:page'), 'mapping_type' => 'rel'))->save();
 
     // Save comment mapping.
-    $mapping = rdf_get_mapping('comment', 'comment_node_article');
+    $mapping = rdf_get_mapping('comment', 'node__comment');
     $mapping->setBundleMapping(array('types' => array('sioc:Post', 'sioct:Comment')))->save();
     $field_mappings = array(
       'subject' => array(
@@ -334,10 +334,11 @@ class CommentAttributesTest extends CommentTestBase {
    */
   function saveComment($nid, $uid, $contact = NULL, $pid = 0) {
     $values = array(
-      'nid' => $nid,
+      'entity_id' => $nid,
+      'entity_type' => 'node',
+      'field_name' => 'comment',
       'uid' => $uid,
       'pid' => $pid,
-      'node_type' => 'comment_node_article',
       'subject' => $this->randomName(),
       'comment_body' => $this->randomName(),
       'status' => 1,

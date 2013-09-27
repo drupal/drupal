@@ -7,9 +7,12 @@
 
 namespace Drupal\comment\Plugin\views\field;
 
+use Drupal\Core\Entity\EntityManager;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\Component\Annotation\PluginID;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\views\ResultRow;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base field handler to present a link.
@@ -20,10 +23,46 @@ use Drupal\views\ResultRow;
  */
 class Link extends FieldPluginBase {
 
+  /**
+   * Entity Manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity.manager')
+    );
+  }
+
+  /**
+   * Constructs a Link field plugin.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager service.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManager $entity_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->entityManager = $entity_manager;
+  }
+
   protected function defineOptions() {
     $options = parent::defineOptions();
     $options['text'] = array('default' => '', 'translatable' => TRUE);
-    $options['link_to_node'] = array('default' => FALSE, 'bool' => TRUE);
+    $options['link_to_entity'] = array('default' => FALSE, 'bool' => TRUE);
     return $options;
   }
 
@@ -33,10 +72,10 @@ class Link extends FieldPluginBase {
       '#title' => t('Text to display'),
       '#default_value' => $this->options['text'],
     );
-    $form['link_to_node'] = array(
-      '#title' => t('Link field to the node if there is no comment.'),
+    $form['link_to_entity'] = array(
+      '#title' => t('Link field to the entity if there is no comment.'),
       '#type' => 'checkbox',
-      '#default_value' => $this->options['link_to_node'],
+      '#default_value' => $this->options['link_to_entity'],
     );
     parent::buildOptionsForm($form, $form_state);
   }
@@ -54,7 +93,6 @@ class Link extends FieldPluginBase {
   protected function renderLink($data, ResultRow $values) {
     $text = !empty($this->options['text']) ? $this->options['text'] : t('view');
     $comment = $data;
-    $nid = $comment->nid;
     $cid = $comment->id();
 
     $this->options['alter']['make_link'] = TRUE;
@@ -66,7 +104,11 @@ class Link extends FieldPluginBase {
     }
     // If there is no comment link to the node.
     elseif ($this->options['link_to_node']) {
-      $this->options['alter']['path'] = "node/" . $nid;
+      $entity_id = $comment->entity_id;
+      $entity_type = $comment->entity_type;
+      $entity = $this->entityManager->getStorageController($entity_type)->load($entity_id);
+      $uri = $entity->uri();
+      $this->options['alter']['path'] = $uri['path'];
     }
 
     return $text;

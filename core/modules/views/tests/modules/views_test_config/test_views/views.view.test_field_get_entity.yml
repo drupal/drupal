@@ -22,7 +22,7 @@ display:
           field: nid
           id: nid
           table: node
-          relationship: nid
+          relationship: node
           plugin_id: node
           provider: node
         uid:
@@ -41,9 +41,9 @@ display:
       query:
         type: views_query
       relationships:
-        nid:
-          field: nid
-          id: nid
+        node:
+          field: node
+          id: node
           required: '1'
           table: comment
           plugin_id: standard
@@ -54,7 +54,7 @@ display:
           group_type: group
           id: uid
           label: author
-          relationship: nid
+          relationship: node
           required: '0'
           table: node_field_data
           plugin_id: standard

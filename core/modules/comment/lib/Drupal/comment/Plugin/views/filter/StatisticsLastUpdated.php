@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Plugin\views\filter\NcsLastUpdated.
+ * Contains \Drupal\comment\Plugin\views\filter\StatisticsLastUpdated.
  */
 
 namespace Drupal\comment\Plugin\views\filter;
@@ -15,9 +15,9 @@ use Drupal\Component\Annotation\PluginID;
  *
  * @ingroup views_filter_handlers
  *
- * @PluginID("ncs_last_updated")
+ * @PluginID("comment_ces_last_updated")
  */
-class NcsLastUpdated extends Date {
+class StatisticsLastUpdated extends Date {
 
   public function query() {
     $this->ensureMyTable();

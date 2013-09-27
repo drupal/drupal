@@ -115,16 +115,6 @@ class Node extends WizardPluginBase {
           ),
           '#default_value' => 1,
         );
-        $style_form['row_options']['comments'] = array(
-          '#type' => 'select',
-          '#title' => t('Should comments be displayed below each node'),
-          '#title_display' => 'invisible',
-          '#options' => array(
-            1 => t('with comments'),
-            0 => t('without comments'),
-          ),
-          '#default_value' => 0,
-        );
         break;
     }
   }
@@ -222,13 +212,11 @@ class Node extends WizardPluginBase {
         $display_options['row']['type'] = 'entity:node';
         $display_options['row']['options']['build_mode'] = 'full';
         $display_options['row']['options']['links'] = !empty($row_options['links']);
-        $display_options['row']['options']['comments'] = !empty($row_options['comments']);
         break;
       case 'teasers':
         $display_options['row']['type'] = 'entity:node';
         $display_options['row']['options']['build_mode'] = 'teaser';
         $display_options['row']['options']['links'] = !empty($row_options['links']);
-        $display_options['row']['options']['comments'] = !empty($row_options['comments']);
         break;
       case 'titles_linked':
         $display_options['row']['type'] = 'fields';

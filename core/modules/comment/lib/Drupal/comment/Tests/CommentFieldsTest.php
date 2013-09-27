@@ -34,30 +34,29 @@ class CommentFieldsTest extends CommentTestBase {
     // Do not make assumptions on default node types created by the test
     // installation profile, and create our own.
     $this->drupalCreateContentType(array('type' => 'test_node_type'));
+    $this->container->get('comment.manager')->addDefaultField('node', 'test_node_type');
 
-    // Check that the 'comment_body' field is present on all comment bundles.
-    $instances = field_info_instances('comment');
-    foreach (node_type_get_types() as $type_name => $info) {
-      $this->assertTrue(isset($instances['comment_node_' . $type_name]['comment_body']), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
+    // Check that the 'comment_body' field is present on the comment bundle.
+    $instance = $this->container->get('field.info')->getInstance('comment', 'node__comment', 'comment_body');
+    $this->assertTrue(!empty($instance), 'The comment_body field is added when a comment bundle is created');
 
-      // Delete the instance along the way.
-      $instances['comment_node_' . $type_name]['comment_body']->delete();
-    }
+    $instance->delete();
 
     // Check that the 'comment_body' field is deleted.
-    $field = field_info_field('comment', 'comment_body');
+    $field = $this->container->get('field.info')->getField('comment', 'comment_body');
     $this->assertTrue(empty($field), 'The comment_body field was deleted');
 
     // Create a new content type.
     $type_name = 'test_node_type_2';
     $this->drupalCreateContentType(array('type' => $type_name));
+    $this->container->get('comment.manager')->addDefaultField('node', $type_name);
 
     // Check that the 'comment_body' field exists and has an instance on the
     // new comment bundle.
-    $field = field_info_field('comment', 'comment_body');
+    $field = $this->container->get('field.info')->getField('comment', 'comment_body');
     $this->assertTrue($field, 'The comment_body field exists');
-    $instances = field_info_instances('comment');
-    $this->assertTrue(isset($instances['comment_node_' . $type_name]['comment_body']), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
+    $instances = $this->container->get('field.info')->getInstances('comment');
+    $this->assertTrue(isset($instances['node__comment']['comment_body']), format_string('The comment_body field is present for comments on type @type', array('@type' => $type_name)));
   }
 
   /**
@@ -67,6 +66,19 @@ class CommentFieldsTest extends CommentTestBase {
     // Create a user to do module administration.
     $this->admin_user = $this->drupalCreateUser(array('access administration pages', 'administer modules'));
     $this->drupalLogin($this->admin_user);
+
+    // Drop default comment field added in CommentTestBase::setup().
+    entity_load('field_entity', 'node.comment')->delete();
+    if ($field = $this->container->get('field.info')->getField('node', 'comment_node_forum')) {
+      $field->delete();
+    }
+
+    // Purge field data now to allow comment module to be uninstalled once the
+    // field has been deleted.
+    field_purge_batch(10);
+    // Call again as field_purge_batch() won't remove both the instances and
+    // field in a single pass.
+    field_purge_batch(10);
 
     // Disable the comment module.
     $edit = array();
@@ -89,6 +101,7 @@ class CommentFieldsTest extends CommentTestBase {
     $this->assertTrue($this->container->get('module_handler')->moduleExists('comment'), 'Comment module enabled.');
 
     // Create nodes of each type.
+    $this->container->get('comment.manager')->addDefaultField('node', 'book');
     $book_node = $this->drupalCreateNode(array('type' => 'book'));
 
     $this->drupalLogout();
@@ -108,7 +121,7 @@ class CommentFieldsTest extends CommentTestBase {
     // Disable text processing for comments.
     $this->drupalLogin($this->admin_user);
     $edit = array('instance[settings][text_processing]' => 0);
-    $this->drupalPostForm('admin/structure/types/manage/article/comment/fields/comment.comment_node_article.comment_body', $edit, t('Save settings'));
+    $this->drupalPostForm('admin/structure/comments/manage/node__comment/fields/comment.node__comment.comment_body', $edit, t('Save settings'));
 
     // Post a comment without an explicit subject.
     $this->drupalLogin($this->web_user);

@@ -42,10 +42,11 @@ display:
           items_per_page: '5'
           offset: '0'
       relationships:
-        nid:
-          id: nid
+        node:
+          field: node
+          id: node
+          required: '1'
           table: comment
-          field: nid
           plugin_id: standard
           relationship: none
           group_type: group
@@ -178,7 +179,7 @@ display:
           id: status_extra
           table: node_field_data
           field: status_extra
-          relationship: nid
+          relationship: node
           group: '0'
           plugin_id: node_status
           provider: node
@@ -224,7 +225,7 @@ display:
           id: title
           table: node_field_data
           field: title
-          relationship: nid
+          relationship: node
           label: 'Reply to'
           link_to_node: '1'
           plugin_id: node

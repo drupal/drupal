@@ -9,6 +9,7 @@ namespace Drupal\comment;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\DatabaseStorageControllerNG;
+use Drupal\Core\Entity\EntityChangedInterface;
 
 /**
  * Defines the controller class for comments.
@@ -28,9 +29,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
    */
   protected function buildQuery($ids, $revision_id = FALSE) {
     $query = parent::buildQuery($ids, $revision_id);
-    // Specify additional fields from the user and node tables.
-    $query->innerJoin('node', 'n', 'base.nid = n.nid');
-    $query->addField('n', 'type', 'node_type');
+    // Specify additional fields from the user table.
     $query->innerJoin('users', 'u', 'base.uid = u.uid');
     // @todo: Move to a computed 'name' field instead.
     $query->addField('u', 'name', 'registered_name');
@@ -42,10 +41,8 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
    */
   protected function attachLoad(&$records, $load_revision = FALSE) {
     // Prepare standard comment fields.
-    foreach ($records as $key => $record) {
+    foreach ($records as &$record) {
       $record->name = $record->uid ? $record->registered_name : $record->name;
-      $record->node_type = 'comment_node_' . $record->node_type;
-      $records[$key] = $record;
     }
     parent::attachLoad($records, $load_revision);
   }
@@ -53,25 +50,36 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
   /**
    * {@inheritdoc}
    */
-  public function updateNodeStatistics($nid) {
-    // Allow bulk updates and inserts to temporarily disable the
-    // maintenance of the {node_comment_statistics} table.
-    if (!variable_get('comment_maintain_node_statistics', TRUE)) {
+  public function updateEntityStatistics(CommentInterface $comment) {
+    // Allow bulk updates and inserts to temporarily disable the maintenance of
+    // the {comment_entity_statistics} table.
+    if (!\Drupal::state()->get('comment.maintain_entity_statistics')) {
       return;
     }
 
-    $count = db_query('SELECT COUNT(cid) FROM {comment} WHERE nid = :nid AND status = :status', array(
-      ':nid' => $nid,
-      ':status' => COMMENT_PUBLISHED,
-    ))->fetchField();
+    $query = $this->database->select('comment', 'c');
+    $query->addExpression('COUNT(cid)');
+    $count = $query->condition('c.entity_id', $comment->entity_id->value)
+      ->condition('c.entity_type', $comment->entity_type->value)
+      ->condition('c.field_id', $comment->field_id->value)
+      ->condition('c.status', COMMENT_PUBLISHED)
+      ->execute()
+      ->fetchField();
 
     if ($count > 0) {
       // Comments exist.
-      $last_reply = db_query_range('SELECT cid, name, changed, uid FROM {comment} WHERE nid = :nid AND status = :status ORDER BY cid DESC', 0, 1, array(
-        ':nid' => $nid,
-        ':status' => COMMENT_PUBLISHED,
-      ))->fetchObject();
-      db_update('node_comment_statistics')
+      $last_reply = $this->database->select('comment', 'c')
+        ->fields('c', array('cid', 'name', 'changed', 'uid'))
+        ->condition('c.entity_id', $comment->entity_id->value)
+        ->condition('c.entity_type', $comment->entity_type->value)
+        ->condition('c.field_id', $comment->field_id->value)
+        ->condition('c.status', COMMENT_PUBLISHED)
+        ->orderBy('c.created', 'DESC')
+        ->range(0, 1)
+        ->execute()
+        ->fetchObject();
+      // Use merge here because entity could be created before comment field.
+      $this->database->merge('comment_entity_statistics')
         ->fields(array(
           'cid' => $last_reply->cid,
           'comment_count' => $count,
@@ -79,21 +87,32 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
           'last_comment_name' => $last_reply->uid ? '' : $last_reply->name,
           'last_comment_uid' => $last_reply->uid,
         ))
-        ->condition('nid', $nid)
+        ->key(array(
+          'entity_id' => $comment->entity_id->value,
+          'entity_type' => $comment->entity_type->value,
+          'field_id' => $comment->field_id->value,
+        ))
         ->execute();
     }
     else {
       // Comments do not exist.
-      $node = db_query('SELECT uid, created FROM {node_field_data} WHERE nid = :nid LIMIT 1', array(':nid' => $nid))->fetchObject();
-      db_update('node_comment_statistics')
+      $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+      $this->database->update('comment_entity_statistics')
         ->fields(array(
           'cid' => 0,
           'comment_count' => 0,
-          'last_comment_timestamp' => $node->created,
+          // Use the created date of the entity if it's set, or default to
+          // REQUEST_TIME.
+          'last_comment_timestamp' => ($entity instanceof EntityChangedInterface) ? $entity->getChangedTime() : REQUEST_TIME,
           'last_comment_name' => '',
-          'last_comment_uid' => $node->uid,
+          // @todo Use $entity->getAuthorId() after https://drupal.org/node/2078387
+          // Get the user ID from the entity if it's set, or default to the
+          // currently logged in user.
+          'last_comment_uid' => $entity->getPropertyDefinition('uid') ? $entity->get('uid')->value : \Drupal::currentUser()->id(),
         ))
-        ->condition('nid', $nid)
+        ->condition('entity_id', $comment->entity_id->value)
+        ->condition('entity_type', $comment->entity_type->value)
+        ->condition('field_id', $comment->field_id->value)
         ->execute();
     }
   }
@@ -102,17 +121,27 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
    * {@inheritdoc}
    */
   public function getMaxThread(EntityInterface $comment) {
-    return db_query('SELECT MAX(thread) FROM {comment} WHERE nid = :nid', array(':nid' => $comment->nid->target_id))->fetchField();
+    $query = $this->database->select('comment', 'c')
+      ->condition('entity_id', $comment->entity_id->value)
+      ->condition('field_id', $comment->field_id->value)
+      ->condition('entity_type', $comment->entity_type->value);
+    $query->addExpression('MAX(thread)', 'thread');
+    return $query->execute()
+      ->fetchField();
   }
 
   /**
    * {@inheritdoc}
    */
   public function getMaxThreadPerThread(EntityInterface $comment) {
-    return $this->database->query("SELECT MAX(thread) FROM {comment} WHERE thread LIKE :thread AND nid = :nid", array(
-      ':thread' => rtrim($comment->pid->entity->thread->value, '/') . '.%',
-      ':nid' => $comment->nid->target_id,
-    ))->fetchField();
+    $query = $this->database->select('comment', 'c')
+      ->condition('entity_id', $comment->entity_id->value)
+      ->condition('field_id', $comment->field_id->value)
+      ->condition('entity_type', $comment->entity_type->value)
+      ->condition('thread', $comment->pid->entity->thread->value . '.%', 'LIKE');
+    $query->addExpression('MAX(thread)', 'thread');
+    return $query->execute()
+      ->fetchField();
   }
 
   /**

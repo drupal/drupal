@@ -161,7 +161,7 @@ class StandardProfileTest extends WebTestBase {
     $this->drupalCreateNode(array('type' => 'article', 'promote' => NODE_PROMOTED,));
 
     // Create article comment.
-    $this->articleComment = $this->saveComment($this->article->id(), $this->webUser->id(), NULL, 0, 'comment_node_article');
+    $this->articleComment = $this->saveComment($this->article->id(), $this->webUser->id(), NULL, 0);
 
     // Create page.
     $this->page = $this->drupalCreateNode(array('type' => 'page'));
@@ -439,8 +439,13 @@ class StandardProfileTest extends WebTestBase {
    *   The EasyRDF graph object.
    */
   protected function assertRdfaNodeCommentProperties($graph) {
-    // @todo Test relationship between comment and node once it is a field:
-    //   https://drupal.org/node/731724
+    // Relationship between node and comment.
+    $expected_value = array(
+      'type' => 'uri',
+      'value' => $this->articleCommentUri,
+    );
+    $this->assertTrue($graph->hasProperty($this->articleUri, 'http://schema.org/comment', $expected_value), 'Relationship between node and comment found (schema:comment).');
+
     // Comment type.
     $this->assertEqual($graph->type($this->articleCommentUri), 'schema:Comment', 'Comment type was found (schema:Comment).');
 
@@ -502,18 +507,17 @@ class StandardProfileTest extends WebTestBase {
    *   array of values to set contact info.
    * @param int $pid
    *   Comment id of the parent comment in a thread.
-   * @param string $bundle
-   *   The bundle of the comment.
    *
    * @return \Drupal\comment\Entity\Comment
    *   The saved comment.
    */
-  protected function saveComment($nid, $uid, $contact = NULL, $pid = 0, $bundle = '') {
+  protected function saveComment($nid, $uid, $contact = NULL, $pid = 0) {
     $values = array(
-      'nid' => $nid,
+      'entity_id' => $nid,
+      'entity_type' => 'node',
+      'field_name' => 'comment',
       'uid' => $uid,
       'pid' => $pid,
-      'node_type' => $bundle,
       'subject' => $this->randomName(),
       'comment_body' => $this->randomName(),
       'status' => 1,

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\comment\Tests\CommentApprovalTest.
+ * Contains \Drupal\comment\Tests\CommentAdminTest.
  */
 
 namespace Drupal\comment\Tests;
@@ -10,11 +10,11 @@ namespace Drupal\comment\Tests;
 /**
  * Tests comment approval functionality.
  */
-class CommentApprovalTest extends CommentTestBase {
+class CommentAdminTest extends CommentTestBase {
   public static function getInfo() {
     return array(
-      'name' => 'Comment approval',
-      'description' => 'Test comment approval functionality.',
+      'name' => 'Comment admin',
+      'description' => 'Test comment admin functionality.',
       'group' => 'Comment',
     );
   }
@@ -47,7 +47,14 @@ class CommentApprovalTest extends CommentTestBase {
     // Get unapproved comment id.
     $this->drupalLogin($this->admin_user);
     $anonymous_comment4 = $this->getUnapprovedComment($subject);
-    $anonymous_comment4 = entity_create('comment', array('cid' => $anonymous_comment4, 'node_type' => '', 'subject' => $subject, 'comment_body' => $body, 'nid' => $this->node->id()));
+    $anonymous_comment4 = entity_create('comment', array(
+      'cid' => $anonymous_comment4,
+      'subject' => $subject,
+      'comment_body' => $body,
+      'entity_id' => $this->node->id(),
+      'entity_type' => 'node',
+      'field_name' => 'comment'
+    ));
     $this->drupalLogout();
 
     $this->assertFalse($this->commentExists($anonymous_comment4), 'Anonymous comment was not published.');
@@ -111,7 +118,14 @@ class CommentApprovalTest extends CommentTestBase {
     // Get unapproved comment id.
     $this->drupalLogin($this->admin_user);
     $anonymous_comment4 = $this->getUnapprovedComment($subject);
-    $anonymous_comment4 = entity_create('comment', array('cid' => $anonymous_comment4, 'node_type' => '', 'subject' => $subject, 'comment_body' => $body, 'nid' => $this->node->id()));
+    $anonymous_comment4 = entity_create('comment', array(
+      'cid' => $anonymous_comment4,
+      'subject' => $subject,
+      'comment_body' => $body,
+      'entity_id' => $this->node->id(),
+      'entity_type' => 'node',
+      'field_name' => 'comment'
+    ));
     $this->drupalLogout();
 
     $this->assertFalse($this->commentExists($anonymous_comment4), 'Anonymous comment was not published.');
@@ -129,4 +143,25 @@ class CommentApprovalTest extends CommentTestBase {
     $this->drupalGet('node/' . $this->node->id());
     $this->assertTrue($this->commentExists($anonymous_comment4), 'Anonymous comment visible.');
   }
+
+  /**
+   * Tests comment bundle admin.
+   */
+  public function testCommentAdmin() {
+    // Login.
+    $this->drupalLogin($this->admin_user);
+    // Browse to comment bundle overview.
+    $this->drupalGet('admin/structure/comments');
+    $this->assertResponse(200);
+    // Make sure titles visible.
+    $this->assertText('Field name');
+    $this->assertText('Used in');
+    // Manage fields.
+    $this->clickLink('Manage fields');
+    $this->assertResponse(200);
+    // Make sure comment_body field is shown.
+    $this->assertText('comment_body');
+    // Rest from here on in is field_ui.
+  }
+
 }

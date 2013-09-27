@@ -73,6 +73,9 @@ abstract class CommentTestBase extends WebTestBase {
       'access content',
     ));
 
+    // Create comment field on article.
+    $this->container->get('comment.manager')->addDefaultField('node', 'article');
+
     // Create a test node authored by the web user.
     $this->node = $this->drupalCreateNode(array('type' => 'article', 'promote' => 1, 'uid' => $this->web_user->id()));
   }
@@ -97,12 +100,18 @@ abstract class CommentTestBase extends WebTestBase {
     $edit = array();
     $edit['comment_body[0][value]'] = $comment;
 
-    $preview_mode = variable_get('comment_preview_article', DRUPAL_OPTIONAL);
-    $subject_mode = variable_get('comment_subject_field_article', 1);
+    if ($entity !== NULL) {
+      $instance = $this->container->get('field.info')->getInstance('node', $entity->bundle(), 'comment');
+    }
+    else {
+      $instance = $this->container->get('field.info')->getInstance('node', 'article', 'comment');
+    }
+    $preview_mode = $instance->settings['preview'];
+    $subject_mode = $instance->settings['subject'];
 
     // Must get the page before we test for fields.
     if ($entity !== NULL) {
-      $this->drupalGet('comment/reply/' . $entity->id());
+      $this->drupalGet('comment/reply/node/' . $entity->id() . '/comment');
     }
 
     if ($subject_mode == TRUE) {
@@ -196,7 +205,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   Boolean specifying whether the subject field should be enabled.
    */
   function setCommentSubject($enabled) {
-    $this->setCommentSettings('comment_subject_field', ($enabled ? '1' : '0'), 'Comment subject ' . ($enabled ? 'enabled' : 'disabled') . '.');
+    $this->setCommentSettings('subject', ($enabled ? '1' : '0'), 'Comment subject ' . ($enabled ? 'enabled' : 'disabled') . '.');
   }
 
   /**
@@ -219,7 +228,7 @@ abstract class CommentTestBase extends WebTestBase {
         $mode_text = 'required';
         break;
     }
-    $this->setCommentSettings('comment_preview', $mode, format_string('Comment preview @mode_text.', array('@mode_text' => $mode_text)));
+    $this->setCommentSettings('preview', $mode, format_string('Comment preview @mode_text.', array('@mode_text' => $mode_text)));
   }
 
   /**
@@ -230,7 +239,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   comments; FALSE if it should be displayed on its own page.
    */
   function setCommentForm($enabled) {
-    $this->setCommentSettings('comment_form_location', ($enabled ? COMMENT_FORM_BELOW : COMMENT_FORM_SEPARATE_PAGE), 'Comment controls ' . ($enabled ? 'enabled' : 'disabled') . '.');
+    $this->setCommentSettings('form_location', ($enabled ? COMMENT_FORM_BELOW : COMMENT_FORM_SEPARATE_PAGE), 'Comment controls ' . ($enabled ? 'enabled' : 'disabled') . '.');
   }
 
   /**
@@ -243,7 +252,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   - 2: Contact information required.
    */
   function setCommentAnonymous($level) {
-    $this->setCommentSettings('comment_anonymous', $level, format_string('Anonymous commenting set to level @level.', array('@level' => $level)));
+    $this->setCommentSettings('anonymous', $level, format_string('Anonymous commenting set to level @level.', array('@level' => $level)));
   }
 
   /**
@@ -253,7 +262,7 @@ abstract class CommentTestBase extends WebTestBase {
    *   Comments per page value.
    */
   function setCommentsPerPage($number) {
-    $this->setCommentSettings('comment_default_per_page', $number, format_string('Number of comments per page set to @number.', array('@number' => $number)));
+    $this->setCommentSettings('per_page', $number, format_string('Number of comments per page set to @number.', array('@number' => $number)));
   }
 
   /**
@@ -267,7 +276,9 @@ abstract class CommentTestBase extends WebTestBase {
    *   Status message to display.
    */
   function setCommentSettings($name, $value, $message) {
-    variable_set($name . '_article', $value);
+    $instance = $this->container->get('field.info')->getInstance('node', 'article', 'comment');
+    $instance->settings[$name] = $value;
+    $instance->save();
     // Display status message.
     $this->pass($message);
   }

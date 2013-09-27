@@ -228,7 +228,9 @@ function rdf_comment_load($comments) {
     $created_mapping = rdf_get_mapping('comment', $comment->bundle())
       ->getPreparedFieldMapping('created');
     $comment->rdf_data['date'] = rdf_rdfa_attributes($created_mapping, $comment->created->value);
-    $comment->rdf_data['nid_uri'] = url('node/' . $comment->nid->target_id);
+    $entity = entity_load($comment->entity_type->value, $comment->entity_id->value);
+    $uri = $entity->uri();
+    $comment->rdf_data['entity_uri'] = url($uri['path']);
     if ($comment->pid->target_id) {
       $comment->rdf_data['pid_uri'] = url('comment/' . $comment->pid->target_id);
     }
@@ -308,32 +310,41 @@ function rdf_preprocess_node(&$variables) {
 
   // Adds RDFa markup annotating the number of comments a node has.
   $comment_count_mapping = $mapping->getPreparedFieldMapping('comment_count');
-  if (isset($variables['node']->comment_count) && !empty($comment_count_mapping['properties'])) {
-    // Annotates the 'x comments' link in teaser view.
-    if (isset($variables['content']['links']['comment']['#links']['comment-comments'])) {
-      $comment_count_attributes = rdf_rdfa_attributes($comment_count_mapping, $variables['node']->comment_count);
-      // According to RDFa parsing rule number 4, a new subject URI is created
-      // from the href attribute if no rel/rev attribute is present. To get the
-      // original node URL from the about attribute of the parent container we
-      // set an empty rel attribute which triggers rule number 5. See
-      // http://www.w3.org/TR/rdfa-syntax/#sec_5.5.
-      $comment_count_attributes['rel'] = '';
-      $variables['content']['links']['comment']['#links']['comment-comments']['attributes'] += $comment_count_attributes;
-    }
-    // In full node view, the number of comments is not displayed by
-    // node.html.twig so it is expressed in RDFa in the <head> tag of the HTML
-    // page.
-    if ($variables['page'] && user_access('access comments')) {
-      $element = array(
-        '#tag' => 'meta',
-        '#attributes' => array(
-          'about' => $variables['node_url'],
-          'property' => $comment_count_mapping['properties'],
-          'content' => $variables['node']->comment_count,
-          'datatype' => $comment_count_mapping['datatype'],
-        ),
-      );
-      drupal_add_html_head($element, 'rdf_node_comment_count');
+  if (\Drupal::moduleHandler()->moduleExists('comment')) {
+    if (!empty($comment_count_mapping['properties'])) {
+      $fields = array_keys(\Drupal::service('comment.manager')->getFields('node'));
+      $definitions = array_keys($variables['node']->getPropertyDefinitions());
+      $valid_fields = array_intersect($fields, $definitions);
+      $count = 0;
+      foreach ($valid_fields as $field_name) {
+        $count += $variables['node']->get($field_name)->comment_count;
+        // Annotates the 'x comments' link in teaser view.
+        if (isset($variables['content']['links']['comment__' . $field_name]['#links']['comment-comments'])) {
+          $comment_count_attributes = rdf_rdfa_attributes($comment_count_mapping, $variables['node']->get($field_name)->comment_count);
+          // According to RDFa parsing rule number 4, a new subject URI is created
+          // from the href attribute if no rel/rev attribute is present. To get
+          // the original node URL from the about attribute of the parent
+          // container we set an empty rel attribute which triggers rule number 5.
+          // See http://www.w3.org/TR/rdfa-syntax/#sec_5.5.
+          $comment_count_attributes['rel'] = '';
+          $variables['content']['links']['comment__' . $field_name]['#links']['comment-comments']['attributes'] += $comment_count_attributes;
+        }
+      }
+      // In full node view, the number of comments is not displayed by
+      // node.html.twig so it is expressed in RDFa in the <head> tag of the HTML
+      // page.
+      if ($variables['page'] && user_access('access comments')) {
+        $element = array(
+          '#tag' => 'meta',
+          '#attributes' => array(
+            'about' => $variables['node_url'],
+            'property' => $comment_count_mapping['properties'],
+            'content' => $count,
+            'datatype' => $comment_count_mapping['datatype'],
+          ),
+        );
+        drupal_add_html_head($element, 'rdf_node_comment_count');
+      }
     }
   }
 }
@@ -492,12 +503,12 @@ function rdf_preprocess_comment(&$variables) {
   // Currently there is no mapping relating a comment to its node.
   $pid_mapping = $mapping->getPreparedFieldMapping('pid');
   if (!empty($pid_mapping)) {
-    // Adds the relation to the parent node.
-    $parent_node_attributes['rel'] = $pid_mapping['properties'];
-    // The parent node URI is precomputed as part of the rdf_data so that it can
-    // be cached as part of the entity.
-    $parent_node_attributes['resource'] = $comment->rdf_data['nid_uri'];
-    $variables['rdf_metadata_attributes'][] = $parent_node_attributes;
+    // Adds the relation to the parent entity.
+    $parent_entity_attributes['rel'] = $pid_mapping['properties'];
+    // The parent entity URI is precomputed as part of the rdf_data so that it
+    // can be cached as part of the entity.
+    $parent_entity_attributes['resource'] = $comment->rdf_data['entity_uri'];
+    $variables['rdf_metadata_attributes'][] = $parent_entity_attributes;
 
     // Adds the relation to parent comment, if it exists.
     if ($comment->pid->target_id != 0) {

@@ -64,11 +64,11 @@ display:
           links: '1'
           view_mode: full
       relationships:
-        nid:
-          id: nid
-          table: comment
-          field: nid
+        node:
+          field: node
+          id: node
           required: '1'
+          table: comment
           relationship: none
           group_type: group
           admin_label: Content
@@ -118,7 +118,7 @@ display:
           value: '1'
           table: node_field_data
           field: status
-          relationship: nid
+          relationship: node
           id: status_node
           expose:
             operator: '0'

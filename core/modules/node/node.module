@@ -242,7 +242,7 @@ function node_admin_paths() {
  *
  * @param $result
  *   A database result object from a query to fetch node entities. If your
- *   query joins the {node_comment_statistics} table so that the comment_count
+ *   query joins the {comment_entity_statistics} table so that the comment_count
  *   field is available, a title attribute will be added to show the number of
  *   comments.
  * @param $title
@@ -2223,7 +2223,9 @@ function node_node_update(EntityInterface $node) {
  */
 function node_comment_insert($comment) {
   // Reindex the node when comments are added.
-  node_reindex_node_search($comment->nid->target_id);
+  if ($comment->entity_type->value == 'node') {
+    node_reindex_node_search($comment->entity_id->value);
+  }
 }
 
 /**
@@ -2231,7 +2233,9 @@ function node_comment_insert($comment) {
  */
 function node_comment_update($comment) {
   // Reindex the node when comments are changed.
-  node_reindex_node_search($comment->nid->target_id);
+  if ($comment->entity_type->value == 'node') {
+    node_reindex_node_search($comment->entity_id->value);
+  }
 }
 
 /**
@@ -2239,7 +2243,9 @@ function node_comment_update($comment) {
  */
 function node_comment_delete($comment) {
   // Reindex the node when comments are deleted.
-  node_reindex_node_search($comment->nid->target_id);
+  if ($comment->entity_type->value == 'node') {
+    node_reindex_node_search($comment->entity_id->value);
+  }
 }
 
 /**
@@ -2247,7 +2253,9 @@ function node_comment_delete($comment) {
  */
 function node_comment_publish($comment) {
   // Reindex the node when comments are published.
-  node_reindex_node_search($comment->nid->target_id);
+  if ($comment->entity_type->value == 'node') {
+    node_reindex_node_search($comment->entity_id->value);
+  }
 }
 
 /**
@@ -2255,5 +2263,7 @@ function node_comment_publish($comment) {
  */
 function node_comment_unpublish($comment) {
   // Reindex the node when comments are unpublished.
-  node_reindex_node_search($comment->nid->target_id);
+  if ($comment->entity_type->value == 'node') {
+    node_reindex_node_search($comment->entity_id->value);
+  }
 }

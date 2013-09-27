@@ -228,7 +228,7 @@ abstract class WebTestBase extends TestBase {
    *       );
    *     @endcode
    *   - title: Random string.
-   *   - comment: COMMENT_NODE_OPEN.
+   *   - comment: COMMENT_OPEN.
    *   - changed: REQUEST_TIME.
    *   - promote: NODE_NOT_PROMOTED.
    *   - log: Empty string.
@@ -257,13 +257,6 @@ abstract class WebTestBase extends TestBase {
       'type'      => 'page',
       'langcode'  => Language::LANGCODE_NOT_SPECIFIED,
     );
-
-    // Add in comment settings for nodes.
-    if (module_exists('comment')) {
-      $settings += array(
-        'comment' => COMMENT_NODE_OPEN,
-      );
-    }
 
     // Use the original node's created time for existing nodes.
     if (isset($settings['created']) && !isset($settings['date'])) {

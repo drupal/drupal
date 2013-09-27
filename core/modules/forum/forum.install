@@ -104,6 +104,16 @@ function forum_install() {
       ))
       ->save();
   }
+  // Add the comment field to the forum node type.
+  $fields = entity_load_multiple_by_properties('field_entity', array(
+    'type' => 'comment',
+    'name' => 'comment_forum',
+    'include_inactive' => TRUE,
+    'include_deleted' => FALSE,
+  ));
+  if (empty($fields)) {
+    Drupal::service('comment.manager')->addDefaultField('node', 'forum', 'comment_forum', COMMENT_OPEN);
+  }
 }
 
 /**
@@ -126,6 +136,13 @@ function forum_uninstall() {
   drupal_load('module', 'taxonomy');
 
   if ($field = field_info_field('node', 'taxonomy_forums')) {
+    $field->delete();
+  }
+
+  // Load the dependent Comment module, in case it has been disabled.
+  drupal_load('module', 'comment');
+
+  if ($field = field_info_field('node', 'comment_forum')) {
     $field->delete();
   }
 
@@ -226,7 +243,7 @@ function forum_schema() {
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
-        'default'=> 0,
+        'default' => 0,
       ),
       'last_comment_timestamp' => array(
         'type' => 'int',
@@ -260,7 +277,6 @@ function forum_schema() {
       ),
     ),
   );
-
 
   return $schema;
 }
