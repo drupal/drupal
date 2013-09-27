@@ -1,6 +1,6 @@
 name: Seven
 type: theme
-description: 'A simple one-column, tableless, fluid width administration theme.'
+description: 'A clean and friendly administration theme.'
 package: Core
 version: VERSION
 core: 8.x
