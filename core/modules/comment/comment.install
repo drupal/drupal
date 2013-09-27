@@ -235,7 +235,7 @@ function comment_schema() {
       'field_id' => array(
         'type' => 'varchar',
         'not null' => TRUE,
-        'default' => 'node.comment',
+        'default' => 'node__comment',
         'length' => 255,
         'description' => 'The field_id of the field that was used to add this comment.',
       ),
