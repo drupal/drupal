@@ -36,4 +36,12 @@ class LanguageReference extends DataReferenceBase {
       'type' => 'language',
     );
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTargetIdentifier() {
+    $language = $this->getTarget();
+    return isset($language) ? $language->id() : NULL;
+  }
 }
