@@ -78,6 +78,7 @@ class CommentStorageController extends DatabaseStorageControllerNG implements Co
         ->range(0, 1)
         ->execute()
         ->fetchObject();
+      // Use merge here because entity could be created before comment field.
       $this->database->merge('comment_entity_statistics')
         ->fields(array(
           'cid' => $last_reply->cid,
