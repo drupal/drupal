@@ -95,7 +95,7 @@ function _drupal_maintenance_theme() {
   // These CSS files are normally added by system_page_build(), except
   // system.maintenance.css. When the database is inactive, it's not called so
   // we add them here.
-  drupal_add_library('system', 'drupal.base');
+  drupal_add_library('system', 'normalize');
 }
 
 /**

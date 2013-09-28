@@ -43,9 +43,6 @@ p {
 del {
   text-decoration: line-through;
 }
-tr.odd {
-  background-color: #dddddd;
-}
 img {
   outline: 0;
 }
@@ -202,6 +199,19 @@ table table {
 #footer-wrapper table {
   font-size: 1em;
 }
+tr {
+  border-bottom: 1px solid #ccc;
+  padding: 0.1em 0.6em;
+  background: #efefef;
+  background: rgba(0, 0, 0, 0.063);
+}
+thead > tr {
+  border-bottom: 1px solid #000;
+}
+tr.odd {
+  background: #e4e4e4;
+  background: rgba(0, 0, 0, 0.105);
+}
 table tr th {
   background: #757575;
   background: rgba(0, 0, 0, 0.51);
@@ -230,15 +240,6 @@ tr th {
 #footer-wrapper tr th {
   border-color: #555;
   border-color: rgba(255, 255, 255, 0.18);
-}
-tr.odd {
-  background: #e4e4e4;
-  background: rgba(0, 0, 0, 0.105);
-}
-tr,
-tr.even {
-  background: #efefef;
-  background: rgba(0, 0, 0, 0.063);
 }
 table ul.links {
   margin: 0;
@@ -1274,6 +1275,13 @@ div.password-confirm {
 
 /* -------------- Form Elements   ------------- */
 
+form {
+  margin: 0;
+  padding: 0;
+}
+fieldset {
+  margin: 1em 0;
+}
 details,
 fieldset,
 .filter-wrapper {
@@ -1305,9 +1313,18 @@ details summary a:active {
 details .details-description {
   font-style: italic;
 }
+label {
+  display: block;
+  font-weight: bold;
+}
 input {
   margin: 2px 0;
   padding: 4px;
+  /* Keep form elements from overflowing their containers. */
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 input,
 textarea {

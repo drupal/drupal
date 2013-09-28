@@ -500,6 +500,12 @@ table {
   margin: 0 0 10px;
   font-size: 0.923em;
 }
+caption {
+  text-align: left; /* LTR */
+}
+[dir="rtl"] caption {
+  text-align: right;
+}
 th {
   padding: 10px 12px;
   background: #f5f5f2;
@@ -512,8 +518,12 @@ th {
 [dir="rtl"] th {
   text-align: right;
 }
-tbody tr {
+tr {
   border-bottom: 1px solid #e6e4df;
+  padding: 0.1em 0.6em;
+}
+thead > tr {
+  border-bottom: 1px solid #000;
 }
 tbody tr:hover {
   background: #f7fcff;
@@ -649,15 +659,24 @@ details summary {
 /**
  * Form elements.
  */
+form {
+  margin: 0;
+  padding: 0;
+}
+fieldset {
+  margin: 1em 0;
+}
 .form-item {
   margin: 1em 0;
 }
 .form-type-checkbox {
   padding: 0;
 }
-.form-item label {
+label {
+  display: block;
   margin: 0;
   padding: 0;
+  font-weight: bold;
 }
 .form-item label.option {
   font-size: 0.923em;

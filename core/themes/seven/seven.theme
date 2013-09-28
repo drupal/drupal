@@ -31,25 +31,6 @@ function seven_library_info() {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for maintenance-page.html.twig.
- */
-function seven_preprocess_maintenance_page(&$variables) {
-  // While markup for normal pages is split into page.tpl.php and html.tpl.php,
-  // the markup for the maintenance page is all in the single
-  // maintenance-page.html.twig template. So, to have what's done in
-  // seven_preprocess_html() also happen on the maintenance page, it has to be
-  // called here.
-  seven_preprocess_html($variables);
-}
-
-/**
- * Implements hook_preprocess_HOOK() for html.tpl.php.
- */
-function seven_preprocess_html(&$variables) {
-  drupal_add_library('system', 'normalize');
-}
-
-/**
  * Implements hook_preprocess_HOOK() for page.tpl.php.
  */
 function seven_preprocess_page(&$variables) {

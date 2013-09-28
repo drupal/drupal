@@ -49,7 +49,7 @@
 }
 input.password-confirm,
 input.password-field {
-  width: 16em;
+  width: 13.7em;
   margin-bottom: 0.4em;
 }
 div.password-confirm {
@@ -63,7 +63,7 @@ div.password-confirm {
 div.form-item div.password-suggestions {
   padding: 0.2em 0.5em;
   margin: 0.7em 0;
-  width: 38.5em;
+  max-width: 34.7em;
   border: 1px solid #b4b4b4;
 }
 div.password-suggestions ul {
@@ -73,7 +73,7 @@ div.password-suggestions ul {
 .password-parent {
   clear: left; /* LTR */
   margin: 0;
-  width: 36.3em;
+  max-width: 33em;
 }
 [dir="rtl"] .confirm-parent,
 [dir="rtl"] .password-parent {
@@ -88,6 +88,7 @@ div.password-suggestions ul {
   div.password-confirm {
     float: none;
     width: auto;
+    max-width: 100%;
   }
   .password-indicator {
     margin-bottom: 0.4em;
@@ -96,13 +97,16 @@ div.password-suggestions ul {
   input.password-field {
     margin-bottom: 0;
     width: 100%;
+    max-width: none;
   }
   div.form-item div.password-suggestions {
     width: auto;
+    max-width: 100%;
   }
   .confirm-parent,
   .password-parent {
     clear: none;
     width: 100%;
+    max-width: none;
   }
 }

@@ -77,10 +77,6 @@ h4.label {
 .form-type-checkbox .description {
   margin-left: 2.4em;
 }
-input.form-checkbox,
-input.form-radio {
-  vertical-align: middle;
-}
 .marker,
 .form-required {
   color: #e00;

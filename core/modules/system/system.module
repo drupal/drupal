@@ -1353,18 +1353,6 @@ function system_library_info() {
     ),
   );
 
-  // Drupal's base CSS.
-  $libraries['drupal.base'] = array(
-    'title' => 'Drupal base CSS',
-    'version' => \Drupal::VERSION,
-    'css' => array(
-      'core/misc/drupal.base.css' => array(
-        'every_page' => TRUE,
-        'weight' => CSS_BASE - 10,
-       ),
-     ),
-   );
-
   // jQuery UI.
   $libraries['jquery.ui.core'] = array(
     'title' => 'jQuery UI: Core',
@@ -2170,7 +2158,7 @@ function system_filetransfer_info() {
  */
 function system_page_build(&$page) {
   // Note: ensure the same CSS is loaded in _drupal_maintenance_theme().
-  $page['#attached']['library'][] = array('system', 'drupal.base');
+  $page['#attached']['library'][] = array('system', 'normalize');
   $path = drupal_get_path('module', 'system');
   // Adjust the weights to load these early.
   $page['#attached']['css'][$path . '/css/system.module.css'] = array('weight' => CSS_COMPONENT - 10, 'every_page' => TRUE);
