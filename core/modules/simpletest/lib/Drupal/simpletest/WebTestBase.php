@@ -1481,11 +1481,9 @@ abstract class WebTestBase extends TestBase {
   /**
    * Executes an Ajax form submission.
    *
-   * This executes a POST as ajax.js does. It uses the returned JSON data, an
-   * array of commands, to update $this->content using equivalent DOM
-   * manipulation as is used by ajax.js. It also returns the array of commands.
-   * It does not apply custom AJAX commands though, because emulation is only
-   * implemented for the AJAX commands that ship with Drupal core.
+   * This executes a POST as ajax.js does. The returned JSON data is used to
+   * update $this->content via drupalProcessAjaxResponse(). It also returns
+   * the array of AJAX commands received.
    *
    * @param $path
    *   Location of the form containing the Ajax enabled element to test. Can be
@@ -1520,6 +1518,7 @@ abstract class WebTestBase extends TestBase {
    *   An array of Ajax commands.
    *
    * @see drupalPostForm()
+   * @see drupalProcessAjaxResponse()
    * @see ajax.js
    */
   protected function drupalPostAjaxForm($path, $edit, $triggering_element, $ajax_path = NULL, array $options = array(), array $headers = array(), $form_html_id = NULL, $ajax_settings = NULL) {
@@ -1578,95 +1577,123 @@ abstract class WebTestBase extends TestBase {
 
     // Change the page content by applying the returned commands.
     if (!empty($ajax_settings) && !empty($return)) {
-      // ajax.js applies some defaults to the settings object, so do the same
-      // for what's used by this function.
-      $ajax_settings += array(
-        'method' => 'replaceWith',
-      );
-      // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
-      // them.
-      $dom = new \DOMDocument();
-      @$dom->loadHTML($content);
-      // XPath allows for finding wrapper nodes better than DOM does.
-      $xpath = new \DOMXPath($dom);
-      foreach ($return as $command) {
-        switch ($command['command']) {
-          case 'settings':
-            $drupal_settings = drupal_merge_js_settings(array($drupal_settings, $command['settings']));
-            break;
-
-          case 'insert':
-            $wrapperNode = NULL;
-            // When a command doesn't specify a selector, use the
-            // #ajax['wrapper'] which is always an HTML ID.
-            if (!isset($command['selector'])) {
-              $wrapperNode = $xpath->query('//*[@id="' . $ajax_settings['wrapper'] . '"]')->item(0);
-            }
-            // @todo Ajax commands can target any jQuery selector, but these are
-            //   hard to fully emulate with XPath. For now, just handle 'head'
-            //   and 'body', since these are used by ajax_render().
-            elseif (in_array($command['selector'], array('head', 'body'))) {
-              $wrapperNode = $xpath->query('//' . $command['selector'])->item(0);
-            }
-            if ($wrapperNode) {
-              // ajax.js adds an enclosing DIV to work around a Safari bug.
-              $newDom = new \DOMDocument();
-              @$newDom->loadHTML('<div>' . $command['data'] . '</div>');
-              $newNode = $dom->importNode($newDom->documentElement->firstChild->firstChild, TRUE);
-              $method = isset($command['method']) ? $command['method'] : $ajax_settings['method'];
-              // The "method" is a jQuery DOM manipulation function. Emulate
-              // each one using PHP's DOMNode API.
-              switch ($method) {
-                case 'replaceWith':
-                  $wrapperNode->parentNode->replaceChild($newNode, $wrapperNode);
-                  break;
-                case 'append':
-                  $wrapperNode->appendChild($newNode);
-                  break;
-                case 'prepend':
-                  // If no firstChild, insertBefore() falls back to
-                  // appendChild().
-                  $wrapperNode->insertBefore($newNode, $wrapperNode->firstChild);
-                  break;
-                case 'before':
-                  $wrapperNode->parentNode->insertBefore($newNode, $wrapperNode);
-                  break;
-                case 'after':
-                  // If no nextSibling, insertBefore() falls back to
-                  // appendChild().
-                  $wrapperNode->parentNode->insertBefore($newNode, $wrapperNode->nextSibling);
-                  break;
-                case 'html':
-                  foreach ($wrapperNode->childNodes as $childNode) {
-                    $wrapperNode->removeChild($childNode);
-                  }
-                  $wrapperNode->appendChild($newNode);
-                  break;
-              }
-            }
-            break;
-
-          // @todo Add suitable implementations for these commands in order to
-          //   have full test coverage of what ajax.js can do.
-          case 'remove':
-            break;
-          case 'changed':
-            break;
-          case 'css':
-            break;
-          case 'data':
-            break;
-          case 'restripe':
-            break;
-          case 'add_css':
-            break;
-        }
-      }
-      $content = $dom->saveHTML();
+      $this->drupalProcessAjaxResponse($content, $return, $ajax_settings, $drupal_settings);
     }
+
+    return $return;
+  }
+
+  /**
+   * Processes an AJAX response into current content.
+   *
+   * This processes the AJAX response as ajax.js does. It uses the response's
+   * JSON data, an array of commands, to update $this->content using equivalent
+   * DOM manipulation as is used by ajax.js.
+   * It does not apply custom AJAX commands though, because emulation is only
+   * implemented for the AJAX commands that ship with Drupal core.
+   *
+   * @param string $content
+   *   The current HTML content.
+   * @param array $ajax_response
+   *   An array of AJAX commands.
+   * @param array $ajax_settings
+   *   An array of AJAX settings which will be used to process the response.
+   * @param array $drupal_settings
+   *   An array of settings to update the value of drupalSettings for the
+   *   currently-loaded page.
+   *
+   * @see drupalPostAjaxForm()
+   * @see ajax.js
+   */
+  protected function drupalProcessAjaxResponse($content, array $ajax_response, array $ajax_settings, array $drupal_settings) {
+
+    // ajax.js applies some defaults to the settings object, so do the same
+    // for what's used by this function.
+    $ajax_settings += array(
+      'method' => 'replaceWith',
+    );
+    // DOM can load HTML soup. But, HTML soup can throw warnings, suppress
+    // them.
+    $dom = new \DOMDocument();
+    @$dom->loadHTML($content);
+    // XPath allows for finding wrapper nodes better than DOM does.
+    $xpath = new \DOMXPath($dom);
+    foreach ($ajax_response as $command) {
+      switch ($command['command']) {
+        case 'settings':
+          $drupal_settings = drupal_merge_js_settings(array($drupal_settings, $command['settings']));
+          break;
+
+        case 'insert':
+          $wrapperNode = NULL;
+          // When a command doesn't specify a selector, use the
+          // #ajax['wrapper'] which is always an HTML ID.
+          if (!isset($command['selector'])) {
+            $wrapperNode = $xpath->query('//*[@id="' . $ajax_settings['wrapper'] . '"]')->item(0);
+          }
+          // @todo Ajax commands can target any jQuery selector, but these are
+          //   hard to fully emulate with XPath. For now, just handle 'head'
+          //   and 'body', since these are used by ajax_render().
+          elseif (in_array($command['selector'], array('head', 'body'))) {
+            $wrapperNode = $xpath->query('//' . $command['selector'])->item(0);
+          }
+          if ($wrapperNode) {
+            // ajax.js adds an enclosing DIV to work around a Safari bug.
+            $newDom = new \DOMDocument();
+            @$newDom->loadHTML('<div>' . $command['data'] . '</div>');
+            $newNode = $dom->importNode($newDom->documentElement->firstChild->firstChild, TRUE);
+            $method = isset($command['method']) ? $command['method'] : $ajax_settings['method'];
+            // The "method" is a jQuery DOM manipulation function. Emulate
+            // each one using PHP's DOMNode API.
+            switch ($method) {
+              case 'replaceWith':
+                $wrapperNode->parentNode->replaceChild($newNode, $wrapperNode);
+                break;
+              case 'append':
+                $wrapperNode->appendChild($newNode);
+                break;
+              case 'prepend':
+                // If no firstChild, insertBefore() falls back to
+                // appendChild().
+                $wrapperNode->insertBefore($newNode, $wrapperNode->firstChild);
+                break;
+              case 'before':
+                $wrapperNode->parentNode->insertBefore($newNode, $wrapperNode);
+                break;
+              case 'after':
+                // If no nextSibling, insertBefore() falls back to
+                // appendChild().
+                $wrapperNode->parentNode->insertBefore($newNode, $wrapperNode->nextSibling);
+                break;
+              case 'html':
+                foreach ($wrapperNode->childNodes as $childNode) {
+                  $wrapperNode->removeChild($childNode);
+                }
+                $wrapperNode->appendChild($newNode);
+                break;
+            }
+          }
+          break;
+
+        // @todo Add suitable implementations for these commands in order to
+        //   have full test coverage of what ajax.js can do.
+        case 'remove':
+          break;
+        case 'changed':
+          break;
+        case 'css':
+          break;
+        case 'data':
+          break;
+        case 'restripe':
+          break;
+        case 'add_css':
+          break;
+      }
+    }
+    $content = $dom->saveHTML();
     $this->drupalSetContent($content);
     $this->drupalSetSettings($drupal_settings);
-    return $return;
   }
 
   /**
