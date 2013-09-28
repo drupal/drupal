@@ -8,6 +8,7 @@
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\file\FileInterface;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
@@ -826,6 +827,15 @@ function taxonomy_term_load($tid) {
     return NULL;
   }
   return entity_load('taxonomy_term', $tid);
+}
+
+/**
+ * Implements hook_file_download_access().
+ */
+function taxonomy_file_download_access($field, EntityInterface $entity, FileInterface $file) {
+  if ($entity->entityType() == 'taxonomy_term') {
+    return $entity->access('view');
+  }
 }
 
 /**
