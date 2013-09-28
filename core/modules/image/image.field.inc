@@ -41,7 +41,7 @@ function image_field_widget_process($element, &$form_state, $form) {
     }
     else {
       $image = \Drupal::service('image.factory')->get($file->getFileUri());
-      if ($image->getExtension()) {
+      if ($image->isSupported()) {
         $variables['width'] = $image->getWidth();
         $variables['height'] = $image->getHeight();
       }

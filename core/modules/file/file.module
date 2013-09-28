@@ -7,6 +7,7 @@
 
 use Drupal\file\Entity\File;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Template\Attribute;
 use Drupal\file\FileUsage\FileUsageInterface;
@@ -411,8 +412,13 @@ function file_validate_is_image(File $file) {
   $errors = array();
 
   $image = \Drupal::service('image.factory')->get($file->getFileUri());
-  if (!$image->getExtension()) {
-    $errors[] = t('Only JPEG, PNG and GIF images are allowed.');
+  if (!$image->isSupported()) {
+    $toolkit = \Drupal::service('image.toolkit');
+    $extensions = array();
+    foreach ($toolkit->supportedTypes() as $image_type) {
+      $extensions[] = Unicode::strtoupper(image_type_to_extension($image_type));
+    }
+    $errors[] = t('Image type not supported. Allowed types: @types.', array('@types' => implode(', ', $extensions)));
   }
 
   return $errors;
@@ -447,7 +453,7 @@ function file_validate_image_resolution(File $file, $maximum_dimensions = 0, $mi
   // Check first that the file is an image.
   $image_factory = \Drupal::service('image.factory');
   $image = $image_factory->get($file->getFileUri());
-  if ($image->getExtension()) {
+  if ($image->isSupported()) {
     if ($maximum_dimensions) {
       // Check that it is smaller than the given dimensions.
       list($width, $height) = explode('x', $maximum_dimensions);

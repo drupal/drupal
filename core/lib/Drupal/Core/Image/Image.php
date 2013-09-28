@@ -63,7 +63,14 @@ class Image implements ImageInterface {
   protected $extension = '';
 
   /**
-   * MIME type ('image/jpeg', 'image/gif', 'image/png').
+   * Image type represented by a PHP IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG).
+   *
+   * @var int
+   */
+  protected $type;
+
+  /**
+   * MIME type (e.g. 'image/jpeg', 'image/gif', 'image/png').
    *
    * @var string
    */
@@ -94,6 +101,13 @@ class Image implements ImageInterface {
   public function __construct($source, ImageToolkitInterface $toolkit) {
     $this->source = $source;
     $this->toolkit = $toolkit;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isSupported() {
+    return in_array($this->getType(), $this->toolkit->supportedTypes());
   }
 
   /**
@@ -142,6 +156,14 @@ class Image implements ImageInterface {
   public function getFileSize() {
     $this->processInfo();
     return $this->fileSize;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getType() {
+    $this->processInfo();
+    return $this->type;
   }
 
   /**
@@ -245,9 +267,17 @@ class Image implements ImageInterface {
     if ($details = $this->toolkit->getInfo($this)) {
       $this->height = $details['height'];
       $this->width = $details['width'];
-      $this->extension = $details['extension'];
+      $this->type = $details['type'];
       $this->mimeType = $details['mime_type'];
       $this->fileSize = filesize($destination);
+      $this->extension = pathinfo($destination, PATHINFO_EXTENSION);
+
+      // It may be a temporary file, without extension, or an image created from
+      // an image resource. Fallback to default extension for this image type.
+      if (empty($this->extension)) {
+        $this->extension = image_type_to_extension($this->type, FALSE);
+      }
+
       $this->processed = TRUE;
     }
     return TRUE;

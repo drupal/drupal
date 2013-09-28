@@ -13,6 +13,14 @@ namespace Drupal\Core\Image;
 interface ImageInterface {
 
   /**
+   * Checks if the image format is supported.
+   *
+   * @return bool
+   *   Returns TRUE if the image format is supported by the toolkit.
+   */
+  public function isSupported();
+
+  /**
    * Returns the extension of the image file.
    *
    * @return string
@@ -63,6 +71,15 @@ interface ImageInterface {
    *   The size of the file in bytes, or 0 if the file is invalid.
    */
   public function getFileSize();
+
+  /**
+   * Returns the type of the image.
+   *
+   * @return int
+   *   The image type represented by a PHP IMAGETYPE_* constant (e.g.
+   *   IMAGETYPE_JPEG).
+   */
+  public function getType();
 
   /**
    * Returns the MIME type of the image file.

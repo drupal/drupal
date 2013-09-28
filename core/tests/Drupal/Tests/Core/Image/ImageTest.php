@@ -54,6 +54,7 @@ class ImageTest extends UnitTestCase {
         'width'     => 88,
         'height'    => 100,
         'extension' => 'png',
+        'type'      => IMAGETYPE_PNG,
         'mime_type' => 'image/png',
       )));
 
@@ -104,6 +105,13 @@ class ImageTest extends UnitTestCase {
    */
   public function testGetFileSize() {
     $this->assertEquals($this->image->getFileSize(), 3905);
+  }
+
+  /**
+   * Tests \Drupal\Core\Image\Image::getType().
+   */
+  public function testGetType() {
+    $this->assertEquals($this->image->getType(), IMAGETYPE_PNG);
   }
 
   /**

@@ -98,7 +98,7 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
 
     // Images are assigned a new color palette when rotating, removing any
     // transparency flags. For GIF images, keep a record of the transparent color.
-    if ($image->getExtension() == 'gif') {
+    if ($image->getType() == IMAGETYPE_GIF) {
       $transparent_index = imagecolortransparent($image->getResource());
       if ($transparent_index != 0) {
         $transparent_gif_color = imagecolorsforindex($image->getResource(), $transparent_index);
@@ -155,8 +155,7 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
    * {@inheritdoc}
    */
   public function load(ImageInterface $image) {
-    $extension = str_replace('jpg', 'jpeg', $image->getExtension());
-    $function = 'imagecreatefrom' . $extension;
+    $function = 'imagecreatefrom' . image_type_to_extension($image->getType(), FALSE);
     if (function_exists($function) && $resource = $function($image->getSource())) {
       $image->setResource($resource);
       if (!imageistruecolor($resource)) {
@@ -190,17 +189,16 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
       $destination = drupal_realpath($destination);
     }
 
-    $extension = str_replace('jpg', 'jpeg', $image->getExtension());
-    $function = 'image' . $extension;
+    $function = 'image' . image_type_to_extension($image->getType(), FALSE);
     if (!function_exists($function)) {
       return FALSE;
     }
-    if ($extension == 'jpeg') {
+    if ($image->getType() == IMAGETYPE_JPEG) {
       $success = $function($image->getResource(), $destination, \Drupal::config('system.image.gd')->get('jpeg_quality'));
     }
     else {
       // Always save PNG images with full transparency.
-      if ($extension == 'png') {
+      if ($image->getType() == IMAGETYPE_PNG) {
         imagealphablending($image->getResource(), FALSE);
         imagesavealpha($image->getResource(), TRUE);
       }
@@ -221,12 +219,10 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
     $data = getimagesize($image->getSource());
 
     if (isset($data) && is_array($data)) {
-      $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
-      $extension = isset($extensions[$data[2]]) ?  $extensions[$data[2]] : '';
       $details = array(
         'width'     => $data[0],
         'height'    => $data[1],
-        'extension' => $extension,
+        'type'      => $data[2],
         'mime_type' => $data['mime'],
       );
     }
@@ -250,7 +246,7 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
   public function createTmp(ImageInterface $image, $width, $height) {
     $res = imagecreatetruecolor($width, $height);
 
-    if ($image->getExtension() == 'gif') {
+    if ($image->getType() == IMAGETYPE_GIF) {
       // Grab transparent color index from image resource.
       $transparent = imagecolortransparent($image->getResource());
 
@@ -264,7 +260,7 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
         imagecolortransparent($res, $transparent);
       }
     }
-    elseif ($image->getExtension() == 'png') {
+    elseif ($image->getType() == IMAGETYPE_PNG) {
       imagealphablending($res, FALSE);
       $transparency = imagecolorallocatealpha($res, 0, 0, 0, 127);
       imagefill($res, 0, 0, $transparency);
@@ -289,5 +285,12 @@ class GDToolkit extends PluginBase implements ImageToolkitInterface {
       }
     }
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function supportedTypes() {
+    return array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
   }
 }

@@ -230,7 +230,7 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         $image_truecolor = imageistruecolor($image->getResource());
         $this->assertTrue($image_truecolor, format_string('Image %file after load is a truecolor image.', array('%file' => $file)));
 
-        if ($image->getExtension() == 'gif') {
+        if ($image->getType() == IMAGETYPE_GIF) {
           if ($op == 'desaturate') {
             // Transparent GIFs and the imagefilter function don't work together.
             $values['corners'][3][3] = 0;
@@ -264,7 +264,7 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         $this->assertTrue($correct_dimensions_object, format_string('Image %file object after %action action is reporting the proper height and width values.', array('%file' => $file, '%action' => $op)));
 
         // JPEG colors will always be messed up due to compression.
-        if ($image->getExtension() != 'jpg') {
+        if ($image->getType() != IMAGETYPE_JPEG) {
           // Now check each of the corners to ensure color correctness.
           foreach ($values['corners'] as $key => $corner) {
             // Get the location of the corner.
@@ -293,6 +293,6 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         }
       }
     }
-
   }
+
 }

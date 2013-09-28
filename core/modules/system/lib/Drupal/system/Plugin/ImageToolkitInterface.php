@@ -50,14 +50,14 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    *
    * @see system_image_toolkit_settings()
    */
-  function settingsForm();
+  public function settingsForm();
 
   /**
    * Handles submissions for toolkit's settings form.
    *
    * @see system_image_toolkit_settings_submit()
    */
-  function settingsFormSubmit($form, &$form_state);
+  public function settingsFormSubmit($form, &$form_state);
 
   /**
    * Scales an image to the specified size.
@@ -73,7 +73,7 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    * @return bool
    *   TRUE or FALSE, based on success.
    */
-  function resize(ImageInterface $image, $width, $height);
+  public function resize(ImageInterface $image, $width, $height);
 
   /**
    * Rotates an image the given number of degrees.
@@ -93,7 +93,7 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    * @return bool
    *   TRUE or FALSE, based on success.
    */
-  function rotate(ImageInterface $image, $degrees, $background = NULL);
+  public function rotate(ImageInterface $image, $degrees, $background = NULL);
 
   /**
    * Crops an image.
@@ -115,7 +115,7 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    *
    * @see image_crop()
    */
-  function crop(ImageInterface $image, $x, $y, $width, $height);
+  public function crop(ImageInterface $image, $x, $y, $width, $height);
 
   /**
    * Converts an image resource to grayscale.
@@ -129,7 +129,7 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    * @return bool
    *   TRUE or FALSE, based on success.
    */
-  function desaturate(ImageInterface $image);
+  public function desaturate(ImageInterface $image);
 
   /**
    * Creates an image resource from a file.
@@ -140,7 +140,7 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    * @return bool
    *   TRUE or FALSE, based on success.
    */
-  function load(ImageInterface $image);
+  public function load(ImageInterface $image);
 
   /**
    * Writes an image resource to a destination file.
@@ -153,7 +153,7 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    * @return bool
    *   TRUE or FALSE, based on success.
    */
-  function save(ImageInterface $image, $destination);
+  public function save(ImageInterface $image, $destination);
 
   /**
    * Gets details about an image.
@@ -166,12 +166,12 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    *   keyed array containing information about the image:
    *   - "width": Width, in pixels.
    *   - "height": Height, in pixels.
-   *   - "extension": Commonly used file extension for the image.
-   *   - "mime_type": MIME type ('image/jpeg', 'image/gif', 'image/png').
+   *   - "type": Image type represented as an IMAGETYPE_* constant.
+   *   - "mime_type": MIME type (e.g. 'image/jpeg', 'image/gif', 'image/png').
    *
    * @see \Drupal\Core\Image\ImageInterface::processInfo()
    */
-  function getInfo(ImageInterface $image);
+  public function getInfo(ImageInterface $image);
 
   /**
    * Verifies Image Toolkit is set up correctly.
@@ -179,5 +179,14 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    * @return bool
    *   True if the GD toolkit is available on this machine.
    */
-  static function isAvailable();
+  public static function isAvailable();
+
+  /**
+   * Returns a list of image types supported by the toolkit.
+   *
+   * @return array
+   *   An array of available image types. An image type is represented by a PHP
+   *   IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG, IMAGETYPE_PNG, etc.).
+   */
+  public static function supportedTypes();
 }
