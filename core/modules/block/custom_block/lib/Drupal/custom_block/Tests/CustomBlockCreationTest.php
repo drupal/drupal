@@ -49,7 +49,7 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
     // Create a block.
     $edit = array();
     $edit['info'] = $this->randomName(8);
-    $edit['block_body[0][value]'] = $this->randomName(16);
+    $edit['body[0][value]'] = $this->randomName(16);
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Check that the Basic block has been created.
@@ -83,7 +83,7 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
   public function testDefaultCustomBlockCreation() {
     $edit = array();
     $edit['info'] = $this->randomName(8);
-    $edit['block_body[0][value]'] = $this->randomName(16);
+    $edit['body[0][value]'] = $this->randomName(16);
     // Don't pass the custom block type in the url so the default is forced.
     $this->drupalPostForm('block/add', $edit, t('Save'));
 
@@ -144,7 +144,7 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
     $edit = array();
     $edit['info'] = $this->randomName(8);
     $body = $this->randomName(16);
-    $edit['block_body[0][value]'] = $body;
+    $edit['body[0][value]'] = $body;
     $this->drupalPostForm('block/add/basic', $edit, t('Save'));
 
     // Place the block.
@@ -177,7 +177,7 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
     $edit2 = array();
     $edit2['info'] = $this->randomName(8);
     $body2 = $this->randomName(16);
-    $edit2['block_body[0][value]'] = $body2;
+    $edit2['body[0][value]'] = $body2;
     $this->drupalPostForm('block/add/basic', $edit2, t('Save'));
 
     $this->assertNoRaw('Error message');
@@ -187,7 +187,7 @@ class CustomBlockCreationTest extends CustomBlockTestBase {
     $edit3 = array();
     $edit3['info'] = $this->randomName(8);
     $body = $this->randomName(16);
-    $edit3['block_body[0][value]'] = $body;
+    $edit3['body[0][value]'] = $body;
     $this->drupalPostForm('block/add/basic', $edit3, t('Save'));
 
     // Show the delete confirm form.

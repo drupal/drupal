@@ -88,11 +88,11 @@ class CustomBlockRevisionsTest extends CustomBlockTestBase {
     // Save this as a non-default revision.
     $loaded->setNewRevision();
     $loaded->isDefaultRevision = FALSE;
-    $loaded->block_body = $this->randomName(8);
+    $loaded->body = $this->randomName(8);
     $loaded->save();
 
     $this->drupalGet('block/' . $loaded->id->value);
-    $this->assertNoText($loaded->block_body->value, 'Revision body text is not present on default version of block.');
+    $this->assertNoText($loaded->body->value, 'Revision body text is not present on default version of block.');
 
     // Verify that the non-default revision id is greater than the default
     // revision id.

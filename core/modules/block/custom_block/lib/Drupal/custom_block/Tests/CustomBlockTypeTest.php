@@ -78,7 +78,7 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     // We need two block types to prevent /block/add redirecting.
     $this->createCustomBlockType('other');
 
-    $instance = field_info_instance('custom_block', 'block_body', 'basic');
+    $instance = field_info_instance('custom_block', 'body', 'basic');
     $this->assertEqual($instance['label'], 'Block body', 'Body field was found.');
 
     // Verify that title and body fields are displayed.
@@ -99,7 +99,7 @@ class CustomBlockTypeTest extends CustomBlockTestBase {
     $this->assertEqual(url('block/add/basic', array('absolute' => TRUE)), $this->getUrl(), 'Original machine name was used in URL.');
 
     // Remove the body field.
-    $this->drupalPostForm('admin/structure/block/custom-blocks/manage/basic/fields/custom_block.basic.block_body/delete', array(), t('Delete'));
+    $this->drupalPostForm('admin/structure/block/custom-blocks/manage/basic/fields/custom_block.basic.body/delete', array(), t('Delete'));
     // Resave the settings for this type.
     $this->drupalPostForm('admin/structure/block/custom-blocks/manage/basic', array(), t('Save'));
     // Check that the body field doesn't exist.

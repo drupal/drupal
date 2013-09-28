@@ -32,7 +32,7 @@ class PageEditTest extends CustomBlockTestBase {
     $this->drupalLogin($this->adminUser);
 
     $title_key = 'info';
-    $body_key = 'block_body[0][value]';
+    $body_key = 'body[0][value]';
     // Create block to edit.
     $edit = array();
     $edit['info'] = drupal_strtolower($this->randomName(8));

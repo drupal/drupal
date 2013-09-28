@@ -245,7 +245,7 @@ function block_update_8007() {
 }
 
 /**
- * Migrate {block_custom}.body and {block_custom}.format to block_body field.
+ * Migrate {block_custom}.body and {block_custom}.format to body field.
  */
 function block_update_8008() {
   $sandbox['#finished'] = 0;
@@ -255,7 +255,7 @@ function block_update_8008() {
 
     // First, create the body field.
     $body_field = array(
-      'name' => 'block_body',
+      'name' => 'body',
       'entity_type' => 'custom_block',
       'type' => 'text_with_summary',
       'module' => 'text',
@@ -346,7 +346,7 @@ function block_update_8008() {
         );
         // This is a core update and no contrib modules are enabled yet, so
         // we can assume default field storage for a faster update.
-        _update_8006_field_write_data_sql('custom_block', 'basic', $block->bid, $block->bid, 'block_body', $data);
+        _update_8006_field_write_data_sql('custom_block', 'basic', $block->bid, $block->bid, 'body', $data);
 
         $sandbox['last'] = $block->bid;
         $sandbox['count'] += 1;
