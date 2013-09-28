@@ -569,12 +569,12 @@ class TypedDataTest extends DrupalUnitTestBase {
 
     // Test the Null constraint with typed data containers.
     $definition = array(
-      'type' => 'integer_field',
+      'type' => 'float_field',
       'constraints' => array(
         'Null' => array(),
       ),
     );
-    $field_item = $this->typedData->create($definition, array('value' => 10));
+    $field_item = $this->typedData->create($definition, array('value' => 11.5));
     $violations = $field_item->validate();
     $this->assertEqual($violations->count(), 1);
     $field_item = $this->typedData->create($definition);
