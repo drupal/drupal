@@ -739,7 +739,7 @@ function hook_entity_field_access($operation, $field, \Drupal\Core\Session\Accou
  * @param array $context
  *   Context array on the performed operation with the following keys:
  *   - operation: The operation to be performed (string).
- *   - field: The entity field object (\Drupal\Core\Entity\Field\Field).
+ *   - field: The entity field object (\Drupal\Core\Entity\Field\FieldItemList).
  *   - account: The user account to check access for
  *     (Drupal\user\Entity\User).
  */

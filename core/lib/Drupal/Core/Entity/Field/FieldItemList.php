@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Field\Field.
+ * Contains \Drupal\Core\Entity\Field\FieldItemList.
  */
 
 namespace Drupal\Core\Entity\Field;
