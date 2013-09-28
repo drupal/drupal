@@ -1701,7 +1701,12 @@ details.fieldset-no-legend {
 
   [class*="page-node-add-"] #console,
   .page-node-edit #console {
-    margin-right: 2.5em;
+    margin: 0 2em;
+  }
+  [class*="page-node-add-"] .messages,
+  .page-node-edit .messages {
+    margin-top: 1em;
+    margin-bottom: 1em;
   }
 
   .layout-node-form {
