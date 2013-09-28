@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Contains \Drupal\field\Plugin\field\field_type\LegacyConfigField.
+ * Contains \Drupal\field\Plugin\field\field_type\LegacyConfigFieldItemList.
  */
 
 namespace Drupal\field\Plugin\field\field_type;
 
-use Drupal\field\Plugin\Type\FieldType\ConfigField;
+use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemList;
 use Drupal\field\FieldInstanceInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 
@@ -24,7 +24,7 @@ use Symfony\Component\Validator\ConstraintViolation;
  * @todo Remove once all core field types have been converted (see
  * http://drupal.org/node/2014671).
  */
-class LegacyConfigField extends ConfigField {
+class LegacyConfigFieldItemList extends ConfigFieldItemList {
 
   /**
    * {@inheritdoc}
@@ -132,7 +132,7 @@ class LegacyConfigField extends ConfigField {
   protected function getFieldInstance() {
     $instance = $this->getFieldDefinition();
     if (!($instance instanceof FieldInstanceInterface)) {
-      throw new \UnexpectedValueException('LegacyConfigField::getFieldInstance() called for a field whose definition is not a field instance.');
+      throw new \UnexpectedValueException('LegacyConfigFieldItemList::getFieldInstance() called for a field whose definition is not a field instance.');
     }
     return $instance;
   }

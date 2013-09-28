@@ -2,17 +2,17 @@
 
 /**
  * @file
- * Contains \Drupal\field\Plugin\Type\FieldType\ConfigFieldInterface.
+ * Contains \Drupal\field\Plugin\Type\FieldType\ConfigFieldItemListInterface.
  */
 
 namespace Drupal\field\Plugin\Type\FieldType;
 
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 
 /**
  * Interface definition for "configurable fields".
  */
-interface ConfigFieldInterface extends FieldInterface {
+interface ConfigFieldItemListInterface extends FieldItemListInterface {
 
   /**
    * Returns a form for the default value input.

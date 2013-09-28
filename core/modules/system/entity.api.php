@@ -704,13 +704,14 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
 /**
  * Control access to fields.
  *
- * This hook is invoked from \Drupal\Core\Entity\Field\Field::access() to
- * let modules grant or deny operations on fields.
+ * This hook is invoked from
+ * \Drupal\Core\Entity\Field\FieldItemListInterface::access() to let modules
+ * grant or deny operations on fields.
  *
  * @param string $operation
  *   The operation to be performed. See
  *   \Drupal\Core\TypedData\AccessibleInterface::access() for possible values.
- * @param \Drupal\Core\Entity\Field\Field $field
+ * @param \Drupal\Core\Entity\Field\FieldItemListInterface $field
  *   The entity field object on which the operation is to be performed.
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The user account to check.

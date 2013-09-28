@@ -9,7 +9,7 @@ namespace Drupal\entity_reference\Plugin\field\formatter;
 
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
 
 /**
@@ -29,7 +29,7 @@ class EntityReferenceIdFormatter extends EntityReferenceFormatterBase {
   /**
    * Overrides \Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase::viewElements().
    */
-  public function viewElements(FieldInterface $items) {
+  public function viewElements(FieldItemListInterface $items) {
     $elements = array();
 
     foreach ($items as $delta => $item) {

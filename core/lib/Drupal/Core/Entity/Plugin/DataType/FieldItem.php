@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
  * @DataType(
  *   id = "field_item",
  *   label = @Translation("Field item"),
- *   list_class = "\Drupal\Core\Entity\Field\Field",
+ *   list_class = "\Drupal\Core\Entity\Field\FieldItemList",
  *   derivative = "Drupal\Core\Entity\Plugin\DataType\Deriver\FieldItemDeriver"
  * )
  */

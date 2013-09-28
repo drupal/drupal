@@ -8,7 +8,7 @@
 namespace Drupal\field\Plugin\Type\Formatter;
 
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\field\Plugin\PluginSettingsBase;
 
@@ -73,7 +73,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
   /**
    * {@inheritdoc}
    */
-  public function view(FieldInterface $items) {
+  public function view(FieldItemListInterface $items) {
     $addition = array();
 
     $elements = $this->viewElements($items);

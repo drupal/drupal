@@ -33,7 +33,7 @@ use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemInterface;
  *   },
  *   default_widget = "file_generic",
  *   default_formatter = "file_default",
- *   list_class = "\Drupal\file\Plugin\field\field_type\FileField"
+ *   list_class = "\Drupal\file\Plugin\field\field_type\FileFieldItemList"
  * )
  */
 class FileItem extends EntityReferenceItem implements ConfigFieldItemInterface {

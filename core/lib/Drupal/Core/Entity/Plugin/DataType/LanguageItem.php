@@ -19,7 +19,7 @@ use Drupal\Core\Language\Language;
  *   id = "language_field",
  *   label = @Translation("Language field item"),
  *   description = @Translation("An entity field referencing a language."),
- *   list_class = "\Drupal\Core\Entity\Field\Field",
+ *   list_class = "\Drupal\Core\Entity\Field\FieldItemList",
  *   constraints = {
  *     "ComplexData" = {
  *       "value" = {"Length" = {"max" = 12}}

@@ -18,7 +18,7 @@ use Drupal\Core\Entity\Field\FieldItemBase;
  *   id = "date_field",
  *   label = @Translation("Date field item"),
  *   description = @Translation("An entity field containing a date value."),
- *   list_class = "\Drupal\Core\Entity\Field\Field"
+ *   list_class = "\Drupal\Core\Entity\Field\FieldItemList"
  * )
  */
 class DateItem extends FieldItemBase {

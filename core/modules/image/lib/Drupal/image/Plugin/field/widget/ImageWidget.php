@@ -10,7 +10,7 @@ namespace Drupal\image\Plugin\field\widget;
 use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\file\Plugin\field\widget\FileWidget;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'image_image' widget.
@@ -77,7 +77,7 @@ class ImageWidget extends FileWidget {
    *
    * Special handling for draggable multiple widgets and 'add more' button.
    */
-  protected function formMultipleElements(FieldInterface $items, array &$form, array &$form_state) {
+  protected function formMultipleElements(FieldItemListInterface $items, array &$form, array &$form_state) {
     $elements = parent::formMultipleElements($items, $form, $form_state);
 
     $cardinality = $this->fieldDefinition->getFieldCardinality();
@@ -103,7 +103,7 @@ class ImageWidget extends FileWidget {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $field_settings = $this->getFieldSettings();

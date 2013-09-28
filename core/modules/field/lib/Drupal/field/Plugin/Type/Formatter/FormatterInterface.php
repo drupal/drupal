@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Plugin\Type\Formatter;
 
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\field\Plugin\PluginSettingsInterface;
 
 /**
@@ -61,32 +61,32 @@ interface FormatterInterface extends PluginSettingsInterface {
    * parameter by reference.
    *
    * @param array $entities_items
-   *   Array of field values (Drupal\Core\Entity\Field\FieldInterface), keyed by
-   *   entity ID.
+   *   Array of field values (Drupal\Core\Entity\Field\FieldItemListInterface),
+   *   keyed by entity ID.
    */
   public function prepareView(array $entities_items);
 
   /**
    * Builds a renderable array for one field on one entity instance.
    *
-   * @param Drupal\Core\Entity\Field\FieldInterface $items
+   * @param Drupal\Core\Entity\Field\FieldItemListInterface $items
    *   The field values to be rendered.
    *
    * @return array
    *   A renderable array for a themed field with its label and all its values.
    */
-  public function view(FieldInterface $items);
+  public function view(FieldItemListInterface $items);
 
   /**
    * Builds a renderable array for a field value.
    *
-   * @param Drupal\Core\Entity\Field\FieldInterface $items
+   * @param Drupal\Core\Entity\Field\FieldItemListInterface $items
    *   The field values to be rendered.
    *
    * @return array
    *   A renderable array for $items, as an array of child elements keyed by
    *   numeric indexes starting from 0.
    */
-  public function viewElements(FieldInterface $items);
+  public function viewElements(FieldItemListInterface $items);
 
 }

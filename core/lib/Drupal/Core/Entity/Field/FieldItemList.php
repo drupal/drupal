@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Entity\Field;
 
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
 use Drupal\Core\TypedData\ItemList;
@@ -24,10 +24,8 @@ use Drupal\Core\Language\Language;
  *
  * Supported settings (below the definition's 'settings' key) are:
  * - default_value: (optional) If set, the default value to apply to the field.
- *
- * @see \Drupal\Core\Entity\Field\FieldInterface
  */
-class Field extends ItemList implements FieldInterface {
+class FieldItemList extends ItemList implements FieldItemListInterface {
 
   /**
    * Numerically indexed array of field items, implementing the
@@ -148,49 +146,49 @@ class Field extends ItemList implements FieldInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\Field\FieldInterface::getPropertyDefinition().
+   * Implements \Drupal\Core\Entity\Field\FieldItemListInterface::getPropertyDefinition().
    */
   public function getPropertyDefinition($name) {
     return $this->offsetGet(0)->getPropertyDefinition($name);
   }
 
   /**
-   * Implements \Drupal\Core\Entity\Field\FieldInterface::getPropertyDefinitions().
+   * Implements \Drupal\Core\Entity\Field\FieldItemListInterface::getPropertyDefinitions().
    */
   public function getPropertyDefinitions() {
     return $this->offsetGet(0)->getPropertyDefinitions();
   }
 
   /**
-   * Implements \Drupal\Core\Entity\Field\FieldInterface::__get().
+   * Implements \Drupal\Core\Entity\Field\FieldItemListInterface::__get().
    */
   public function __get($property_name) {
     return $this->offsetGet(0)->__get($property_name);
   }
 
   /**
-   * Implements \Drupal\Core\Entity\Field\FieldInterface::get().
+   * Implements \Drupal\Core\Entity\Field\FieldItemListInterface::get().
    */
   public function get($property_name) {
     return $this->offsetGet(0)->get($property_name);
   }
 
   /**
-   * Implements \Drupal\Core\Entity\Field\FieldInterface::__set().
+   * Implements \Drupal\Core\Entity\Field\FieldItemListInterface::__set().
    */
   public function __set($property_name, $value) {
     $this->offsetGet(0)->__set($property_name, $value);
   }
 
   /**
-   * Implements \Drupal\Core\Entity\Field\FieldInterface::__isset().
+   * Implements \Drupal\Core\Entity\Field\FieldItemListInterface::__isset().
    */
   public function __isset($property_name) {
     return $this->offsetGet(0)->__isset($property_name);
   }
 
   /**
-   * Implements \Drupal\Core\Entity\Field\FieldInterface::__unset().
+   * Implements \Drupal\Core\Entity\Field\FieldItemListInterface::__unset().
    */
   public function __unset($property_name) {
     return $this->offsetGet(0)->__unset($property_name);

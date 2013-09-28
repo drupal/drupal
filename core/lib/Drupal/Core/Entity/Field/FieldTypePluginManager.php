@@ -25,7 +25,7 @@ class FieldTypePluginManager extends DefaultPluginManager {
   protected $defaults = array(
     'settings' => array(),
     'instance_settings' => array(),
-    'list_class' => '\Drupal\field\Plugin\Type\FieldType\ConfigField',
+    'list_class' => '\Drupal\field\Plugin\Type\FieldType\ConfigFieldItemList',
   );
 
   /**

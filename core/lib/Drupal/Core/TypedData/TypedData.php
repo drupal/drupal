@@ -176,7 +176,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
   /**
    * Implements \Drupal\Core\TypedData\TypedDataInterface::getParent().
    *
-   * @return \Drupal\Core\Entity\Field\FieldInterface
+   * @return \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public function getParent() {
     return $this->parent;

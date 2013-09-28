@@ -8,7 +8,7 @@
 namespace Drupal\text\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
 
@@ -76,7 +76,7 @@ class TextWithSummaryItemTest extends FieldUnitTestBase {
     $entity->save();
 
     $entity = entity_load($entity_type, $entity->id());
-    $this->assertTrue($entity->summary_field instanceof FieldInterface, 'Field implements interface.');
+    $this->assertTrue($entity->summary_field instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->summary_field[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->summary_field->value, $value);
     $this->assertEqual($entity->summary_field->processed, $value);

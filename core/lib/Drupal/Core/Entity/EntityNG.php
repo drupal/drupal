@@ -62,7 +62,7 @@ class EntityNG extends Entity {
   protected $values = array();
 
   /**
-   * The array of fields, each being an instance of FieldInterface.
+   * The array of fields, each being an instance of FieldItemListInterface.
    *
    * @var array
    */
@@ -221,7 +221,7 @@ class EntityNG extends Entity {
   /**
    * Gets a translated field.
    *
-   * @return \Drupal\Core\Entity\Field\FieldInterface
+   * @return \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   protected function getTranslatedField($property_name, $langcode) {
     if ($this->translations[$this->activeLangcode]['status'] == static::TRANSLATION_REMOVED) {

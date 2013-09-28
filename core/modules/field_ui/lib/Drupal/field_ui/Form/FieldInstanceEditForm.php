@@ -214,7 +214,7 @@ class FieldInstanceEditForm extends FormBase {
    * @param string $field_name
    *   The field name.
    *
-   * @return \Drupal\field\Plugin\Type\FieldType\ConfigFieldInterface
+   * @return \Drupal\field\Plugin\Type\FieldType\ConfigFieldItemListInterface
    *   The field object.
    */
   protected function getFieldItems(EntityInterface $entity, $field_name) {

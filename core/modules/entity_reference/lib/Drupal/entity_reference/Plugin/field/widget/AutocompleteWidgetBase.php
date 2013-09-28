@@ -9,7 +9,7 @@ namespace Drupal\entity_reference\Plugin\field\widget;
 
 use Drupal\Component\Annotation\Plugin;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
@@ -70,7 +70,7 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
     global $user;
 
     $entity = $items->getEntity();
@@ -117,7 +117,7 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
   /**
    * Gets the entity labels.
    */
-  protected function getLabels(FieldInterface $items) {
+  protected function getLabels(FieldItemListInterface $items) {
     if ($items->isEmpty()) {
       return array();
     }

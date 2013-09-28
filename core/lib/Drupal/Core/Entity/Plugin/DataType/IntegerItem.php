@@ -18,7 +18,7 @@ use Drupal\Core\Entity\Field\FieldItemBase;
  *   id = "integer_field",
  *   label = @Translation("Integer field item"),
  *   description = @Translation("An entity field containing an integer value."),
- *   list_class = "\Drupal\Core\Entity\Field\Field"
+ *   list_class = "\Drupal\Core\Entity\Field\FieldItemList"
  * )
  */
 class IntegerItem extends FieldItemBase {

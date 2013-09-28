@@ -18,7 +18,7 @@ use Drupal\Core\Entity\Field\FieldItemBase;
  *   id = "path_field",
  *   label = @Translation("Path field item"),
  *   description = @Translation("An entity field containing a path alias and related data."),
- *   list_class = "\Drupal\Core\Entity\Field\Field"
+ *   list_class = "\Drupal\Core\Entity\Field\FieldItemList"
  * )
  */
 class PathItem extends FieldItemBase {

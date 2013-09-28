@@ -8,7 +8,7 @@
 namespace Drupal\number\Tests;
 
 use Drupal\Core\Entity\Field\FieldItemInterface;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
 
 /**
@@ -67,15 +67,15 @@ class NumberItemTest extends FieldUnitTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = entity_load('entity_test', $id);
-    $this->assertTrue($entity->field_integer instanceof FieldInterface, 'Field implements interface.');
+    $this->assertTrue($entity->field_integer instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->field_integer[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->field_integer->value, $integer);
     $this->assertEqual($entity->field_integer[0]->value, $integer);
-    $this->assertTrue($entity->field_float instanceof FieldInterface, 'Field implements interface.');
+    $this->assertTrue($entity->field_float instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->field_float[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->field_float->value, $float);
     $this->assertEqual($entity->field_float[0]->value, $float);
-    $this->assertTrue($entity->field_decimal instanceof FieldInterface, 'Field implements interface.');
+    $this->assertTrue($entity->field_decimal instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->field_decimal[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->field_decimal->value, $decimal);
     $this->assertEqual($entity->field_decimal[0]->value, $decimal);

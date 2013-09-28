@@ -18,7 +18,7 @@ use Drupal\Core\TypedData\ComplexDataInterface;
  * When implementing this interface which extends Traversable, make sure to list
  * IteratorAggregate or Iterator before this interface in the implements clause.
  *
- * @see \Drupal\Core\Entity\Field\FieldInterface
+ * @see \Drupal\Core\Entity\Field\FieldItemListInterface
  * @see \Drupal\Core\Entity\Field\FieldItemBase
  */
 interface FieldItemInterface extends ComplexDataInterface {

@@ -7,7 +7,7 @@
 
 namespace Drupal\image\Tests;
 
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
 
@@ -80,7 +80,7 @@ class ImageItemTest extends FieldUnitTestBase {
     $entity->save();
 
     $entity = entity_load('entity_test', $entity->id());
-    $this->assertTrue($entity->image_test instanceof FieldInterface, 'Field implements interface.');
+    $this->assertTrue($entity->image_test instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->image_test[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->image_test->target_id, $this->image->id());
     $this->assertEqual($entity->image_test->alt, $alt);

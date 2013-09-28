@@ -19,7 +19,7 @@ use Drupal\Core\Annotation\Translation;
  *   id = "uuid_field",
  *   label = @Translation("UUID field item"),
  *   description = @Translation("An entity field containing a UUID."),
- *   list_class = "\Drupal\Core\Entity\Field\Field",
+ *   list_class = "\Drupal\Core\Entity\Field\FieldItemList",
  *   constraints = {
  *     "ComplexData" = {
  *       "value" = {"Length" = {"max" = 128}}

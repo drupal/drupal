@@ -14,7 +14,7 @@ namespace Drupal\link\Plugin\field\formatter;
 
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'link_separate' formatter.
@@ -37,7 +37,7 @@ class LinkSeparateFormatter extends LinkFormatter {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldInterface $items) {
+  public function viewElements(FieldItemListInterface $items) {
     $element = array();
     $entity = $items->getEntity();
     $settings = $this->getSettings();

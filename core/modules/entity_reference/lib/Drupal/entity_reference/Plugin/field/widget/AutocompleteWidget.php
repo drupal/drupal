@@ -9,7 +9,7 @@ namespace Drupal\entity_reference\Plugin\field\widget;
 
 use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\entity_reference\Plugin\field\widget\AutocompleteWidgetBase;
 
 /**
@@ -40,7 +40,7 @@ class AutocompleteWidget extends AutocompleteWidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
     // We let the Field API handles multiple values for us, only take care of
     // the one matching our delta.
     if (isset($items[$delta])) {

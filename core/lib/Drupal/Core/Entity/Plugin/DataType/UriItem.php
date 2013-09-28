@@ -18,7 +18,7 @@ use Drupal\Core\Entity\Field\FieldItemBase;
  *   id = "uri_field",
  *   label = @Translation("URI field item"),
  *   description = @Translation("An entity field containing a URI."),
- *   list_class = "\Drupal\Core\Entity\Field\Field"
+ *   list_class = "\Drupal\Core\Entity\Field\FieldItemList"
  * )
  */
 class UriItem extends FieldItemBase {

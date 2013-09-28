@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\Field\FieldInterface.
+ * Contains \Drupal\Core\Entity\Field\FieldItemListInterface.
  */
 
 namespace Drupal\Core\Entity\Field;
@@ -25,7 +25,7 @@ use Drupal\Core\TypedData\ListInterface;
  * When implementing this interface which extends Traversable, make sure to list
  * IteratorAggregate or Iterator before this interface in the implements clause.
  */
-interface FieldInterface extends ListInterface, AccessibleInterface {
+interface FieldItemListInterface extends ListInterface, AccessibleInterface {
 
   /**
    * Gets the entity that field belongs to.

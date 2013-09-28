@@ -8,7 +8,7 @@
 namespace Drupal\system\Tests\Entity;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\TypedData\Type\StringInterface;
@@ -97,7 +97,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $entity = $this->createTestEntity($entity_type);
 
     // Access the name field.
-    $this->assertTrue($entity->name instanceof FieldInterface, format_string('%entity_type: Field implements interface', array('%entity_type' => $entity_type)));
+    $this->assertTrue($entity->name instanceof FieldItemListInterface, format_string('%entity_type: Field implements interface', array('%entity_type' => $entity_type)));
     $this->assertTrue($entity->name[0] instanceof FieldItemInterface, format_string('%entity_type: Field item implements interface', array('%entity_type' => $entity_type)));
 
     $this->assertEqual($this->entity_name, $entity->name->value, format_string('%entity_type: Name value can be read.', array('%entity_type' => $entity_type)));
@@ -115,7 +115,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $this->assertEqual($new_name, $entity->name->value, format_string('%entity_type: Name can be updated and read through list access.', array('%entity_type' => $entity_type)));
 
     // Access the user field.
-    $this->assertTrue($entity->user_id instanceof FieldInterface, format_string('%entity_type: Field implements interface', array('%entity_type' => $entity_type)));
+    $this->assertTrue($entity->user_id instanceof FieldItemListInterface, format_string('%entity_type: Field implements interface', array('%entity_type' => $entity_type)));
     $this->assertTrue($entity->user_id[0] instanceof FieldItemInterface, format_string('%entity_type: Field item implements interface', array('%entity_type' => $entity_type)));
 
     $this->assertEqual($this->entity_user->id(), $entity->user_id->target_id, format_string('%entity_type: User id can be read.', array('%entity_type' => $entity_type)));
@@ -430,7 +430,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     $entity = $this->createTestEntity($entity_type);
 
     foreach ($entity as $name => $field) {
-      $this->assertTrue($field instanceof FieldInterface, $entity_type . ": Field $name implements interface.");
+      $this->assertTrue($field instanceof FieldItemListInterface, $entity_type . ": Field $name implements interface.");
 
       foreach ($field as $delta => $item) {
         $this->assertTrue($field[0] instanceof FieldItemInterface, $entity_type . ": Item $delta of field $name implements interface.");

@@ -19,7 +19,7 @@ use Drupal\field\Plugin\field\field_type\LegacyConfigFieldItem;
  *   id = "email_field",
  *   label = @Translation("E-mail field item"),
  *   description = @Translation("An entity field containing an e-mail value."),
- *   list_class = "\Drupal\Core\Entity\Field\Field"
+ *   list_class = "\Drupal\Core\Entity\Field\FieldItemList"
  * )
  */
 class EmailItem extends LegacyConfigFieldItem {

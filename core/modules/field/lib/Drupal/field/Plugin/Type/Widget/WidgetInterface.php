@@ -8,7 +8,7 @@
 namespace Drupal\field\Plugin\Type\Widget;
 
 use Symfony\Component\Validator\ConstraintViolationInterface;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 
 /**
  * Interface definition for field widget plugins.
@@ -73,7 +73,7 @@ interface WidgetInterface extends WidgetBaseInterface {
    * definition and set them as ad-hoc $element['#custom'] properties, for later
    * use by its element callbacks.
    *
-   * @param \Drupal\Core\Entity\Field\FieldInterface $items
+   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
    *   Array of default values for this field.
    * @param int $delta
    *   The order of this item in the array of subelements (0, 1, 2, etc).
@@ -111,7 +111,7 @@ interface WidgetInterface extends WidgetBaseInterface {
    * @see hook_field_widget_form_alter()
    * @see hook_field_widget_WIDGET_TYPE_form_alter()
    */
-  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state);
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state);
 
   /**
    * Assigns a field-level validation error to the right widget sub-element.

@@ -9,7 +9,7 @@ namespace Drupal\field\Plugin\Type\Widget;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\field\Plugin\PluginSettingsBase;
 use Symfony\Component\Validator\ConstraintViolationInterface;
@@ -55,7 +55,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * {@inheritdoc}
    */
-  public function form(FieldInterface $items, array &$form, array &$form_state, $get_delta = NULL) {
+  public function form(FieldItemListInterface $items, array &$form, array &$form_state, $get_delta = NULL) {
     $field_name = $this->fieldDefinition->getFieldName();
     $parents = $form['#parents'];
 
@@ -144,7 +144,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    * - AHAH-'add more' button
    * - table display and drag-n-drop value reordering
    */
-  protected function formMultipleElements(FieldInterface $items, array &$form, array &$form_state) {
+  protected function formMultipleElements(FieldItemListInterface $items, array &$form, array &$form_state) {
     $field_name = $this->fieldDefinition->getFieldName();
     $cardinality = $this->fieldDefinition->getFieldCardinality();
     $parents = $form['#parents'];
@@ -237,7 +237,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * Generates the form element for a single copy of the widget.
    */
-  protected function formSingleElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  protected function formSingleElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $entity = $items->getEntity();
 
     $element += array(
@@ -273,7 +273,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * {@inheritdoc}
    */
-  public function extractFormValues(FieldInterface $items, array $form, array &$form_state) {
+  public function extractFormValues(FieldItemListInterface $items, array $form, array &$form_state) {
     $field_name = $this->fieldDefinition->getFieldName();
 
     // Extract the values from $form_state['values'].
@@ -326,7 +326,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * {@inheritdoc}
    */
-  public function flagErrors(FieldInterface $items, array $form, array &$form_state) {
+  public function flagErrors(FieldItemListInterface $items, array $form, array &$form_state) {
     $field_name = $this->fieldDefinition->getFieldName();
 
     $field_state = field_form_get_state($form['#parents'], $field_name, $form_state);
@@ -405,10 +405,10 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
   /**
    * Sorts submitted field values according to drag-n-drop reordering.
    *
-   * @param \Drupal\Core\Entity\Field\FieldInterface $items
+   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
    *   The field values.
    */
-  protected function sortItems(FieldInterface $items) {
+  protected function sortItems(FieldItemListInterface $items) {
     $cardinality = $this->fieldDefinition->getFieldCardinality();
     $is_multiple = ($cardinality == FIELD_CARDINALITY_UNLIMITED) || ($cardinality > 1);
     if ($is_multiple && isset($items[0]->_weight)) {

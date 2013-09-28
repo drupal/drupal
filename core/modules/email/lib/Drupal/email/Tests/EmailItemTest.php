@@ -7,7 +7,7 @@
 
 namespace Drupal\email\Tests;
 
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\field\Tests\FieldUnitTestBase;
 
@@ -68,7 +68,7 @@ class EmailItemTest extends FieldUnitTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = entity_load('entity_test', $id);
-    $this->assertTrue($entity->field_email instanceof FieldInterface, 'Field implements interface.');
+    $this->assertTrue($entity->field_email instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->field_email[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->field_email->value, $value);
     $this->assertEqual($entity->field_email[0]->value, $value);

@@ -8,7 +8,7 @@
 namespace Drupal\field\Tests;
 
 use Drupal\Core\Entity\Field\FieldItemInterface;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 
 /**
  * Tests the new entity API for the shape field type.
@@ -71,7 +71,7 @@ class ShapeItemTest extends FieldUnitTestBase {
     // Verify entity has been created properly.
     $id = $entity->id();
     $entity = entity_load('entity_test', $id);
-    $this->assertTrue($entity->{$this->field_name} instanceof FieldInterface, 'Field implements interface.');
+    $this->assertTrue($entity->{$this->field_name} instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->{$this->field_name}[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->{$this->field_name}->shape, $shape);
     $this->assertEqual($entity->{$this->field_name}->color, $color);

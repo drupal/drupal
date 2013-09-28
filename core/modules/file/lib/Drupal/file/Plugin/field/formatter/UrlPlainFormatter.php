@@ -9,7 +9,7 @@ namespace Drupal\file\Plugin\field\formatter;
 
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'file_url_plain' formatter.
@@ -27,7 +27,7 @@ class UrlPlainFormatter extends FileFormatterBase {
   /**
    * Implements \Drupal\field\Plugin\Type\Formatter\FormatterInterface::viewElements().
    */
-  public function viewElements(FieldInterface $items) {
+  public function viewElements(FieldItemListInterface $items) {
     $elements = array();
 
     foreach ($items as $delta => $item) {

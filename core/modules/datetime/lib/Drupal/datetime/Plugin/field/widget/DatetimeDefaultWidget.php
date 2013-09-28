@@ -6,11 +6,11 @@
 
 namespace Drupal\datetime\Plugin\field\widget;
 
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
-use Drupal\Core\Entity\Field\FieldInterface;
 use Drupal\field\FieldInstanceInterface;
 
 /**
@@ -62,7 +62,7 @@ class DateTimeDefaultWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $format_type = datetime_default_format_type();
 
     // We are nesting some sub-elements inside the parent, so we need a wrapper.

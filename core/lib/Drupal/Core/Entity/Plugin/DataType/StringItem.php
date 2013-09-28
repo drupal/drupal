@@ -18,7 +18,7 @@ use Drupal\Core\Entity\Field\FieldItemBase;
  *   id = "string_field",
  *   label = @Translation("String field item"),
  *   description = @Translation("An entity field containing a string value."),
- *   list_class = "\Drupal\Core\Entity\Field\Field"
+ *   list_class = "\Drupal\Core\Entity\Field\FieldItemList"
  * )
  */
 class StringItem extends FieldItemBase {

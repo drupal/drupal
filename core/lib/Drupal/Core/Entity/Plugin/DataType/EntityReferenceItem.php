@@ -25,7 +25,7 @@ use Drupal\Core\TypedData\TypedDataInterface;
  *   id = "entity_reference_field",
  *   label = @Translation("Entity reference field item"),
  *   description = @Translation("An entity field containing an entity reference."),
- *   list_class = "\Drupal\Core\Entity\Field\Field",
+ *   list_class = "\Drupal\Core\Entity\Field\FieldItemList",
  *   constraints = {"ValidReference" = TRUE}
  * )
  */

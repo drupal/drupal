@@ -9,7 +9,7 @@ namespace Drupal\taxonomy\Plugin\field\formatter;
 
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\taxonomy\Plugin\field\formatter\TaxonomyFormatterBase;
 
 /**
@@ -28,7 +28,7 @@ class LinkFormatter extends TaxonomyFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldInterface $items) {
+  public function viewElements(FieldItemListInterface $items) {
     $elements = array();
 
     // Terms without target_id do not exist yet, theme such terms as just their

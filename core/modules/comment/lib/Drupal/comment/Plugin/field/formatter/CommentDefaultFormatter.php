@@ -9,6 +9,7 @@ namespace Drupal\comment\Plugin\field\formatter;
 
 use Drupal\comment\CommentStorageControllerInterface;
 use Drupal\Core\Entity\EntityRenderControllerInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
@@ -103,7 +104,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldInterface $items) {
+  public function viewElements(FieldItemListInterface $items) {
     $elements = array();
     $output = array();
 

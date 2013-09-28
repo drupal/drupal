@@ -9,7 +9,7 @@ namespace Drupal\entity_reference\Plugin\field\formatter;
 
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\entity_reference\RecursiveRenderingException;
 use Drupal\entity_reference\Plugin\field\formatter\EntityReferenceFormatterBase;
 
@@ -78,7 +78,7 @@ class EntityReferenceEntityFormatter extends EntityReferenceFormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldInterface $items) {
+  public function viewElements(FieldItemListInterface $items) {
     $view_mode = $this->getSetting('view_mode');
     $links = $this->getSetting('links');
 

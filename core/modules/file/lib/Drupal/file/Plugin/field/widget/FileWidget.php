@@ -10,7 +10,7 @@ namespace Drupal\file\Plugin\field\widget;
 use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'file_generic' widget.
@@ -61,7 +61,7 @@ class FileWidget extends WidgetBase {
    *
    * Special handling for draggable multiple widgets and 'add more' button.
    */
-  protected function formMultipleElements(FieldInterface $items, array &$form, array &$form_state) {
+  protected function formMultipleElements(FieldItemListInterface $items, array &$form, array &$form_state) {
     $field_name = $this->fieldDefinition->getFieldName();
     $parents = $form['#parents'];
 
@@ -172,7 +172,7 @@ class FileWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $field_settings = $this->getFieldSettings();
 
     // The field settings include defaults for the field type. However, this

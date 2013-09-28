@@ -58,63 +58,63 @@ class Comment extends EntityNG implements CommentInterface {
   /**
    * The comment ID.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $cid;
 
   /**
    * The comment UUID.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $uuid;
 
   /**
    * The parent comment ID if this is a reply to another comment.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $pid;
 
   /**
    * The entity ID for the entity to which this comment is attached.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $entity_id;
 
   /**
    * The entity type of the entity to which this comment is attached.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $entity_type;
 
   /**
    * The field to which this comment is attached.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $field_id;
 
   /**
    * The comment language code.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $langcode;
 
   /**
    * The comment title.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $subject;
 
   /**
    * The comment author ID.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $uid;
 
@@ -123,7 +123,7 @@ class Comment extends EntityNG implements CommentInterface {
    *
    * For anonymous authors, this is the value as typed in the comment form.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $name;
 
@@ -132,7 +132,7 @@ class Comment extends EntityNG implements CommentInterface {
    *
    * For anonymous authors, this is the value as typed in the comment form.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $mail;
 
@@ -141,42 +141,42 @@ class Comment extends EntityNG implements CommentInterface {
    *
    * For anonymous authors, this is the value as typed in the comment form.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $homepage;
 
   /**
    * The comment author's hostname.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $hostname;
 
   /**
    * The time that the comment was created.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $created;
 
   /**
    * The time that the comment was last edited.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $changed;
 
   /**
    * A boolean field indicating whether the comment is published.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $status;
 
   /**
    * The alphadecimal representation of the comment's place in a thread.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $thread;
 

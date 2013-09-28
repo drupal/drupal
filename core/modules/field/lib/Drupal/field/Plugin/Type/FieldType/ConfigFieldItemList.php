@@ -2,19 +2,19 @@
 
 /**
  * @file
- * Contains \Drupal\field\Plugin\Type\FieldType\ConfigField.
+ * Contains \Drupal\field\Plugin\Type\FieldType\ConfigFieldItemList.
  */
 
 namespace Drupal\field\Plugin\Type\FieldType;
 
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\Core\Entity\Field\Field;
+use Drupal\Core\Entity\Field\FieldItemList;
 use Drupal\field\Field as FieldAPI;
 
 /**
- * Represents a configurable entity field.
+ * Represents a configurable entity field item list.
  */
-class ConfigField extends Field implements ConfigFieldInterface {
+class ConfigFieldItemList extends FieldItemList implements ConfigFieldItemListInterface {
 
   /**
    * The Field instance definition.

@@ -7,7 +7,7 @@
 
 namespace Drupal\field\Plugin\Type\Widget;
 
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\field\Plugin\PluginSettingsInterface;
 
 /**
@@ -27,7 +27,7 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    * TRUE), the 'default value', if any, is pre-populated. Also allows other
    * modules to alter the form element by implementing their own hooks.
    *
-   * @param \Drupal\Core\Entity\Field\FieldInterface $items
+   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
    *   An array of the field values. When creating a new entity this may be NULL
    *   or an empty array to use default values.
    * @param array $form
@@ -41,12 +41,12 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    * @return array
    *   The form element array created for this field.
    */
-  public function form(FieldInterface $items, array &$form, array &$form_state, $get_delta = NULL);
+  public function form(FieldItemListInterface $items, array &$form, array &$form_state, $get_delta = NULL);
 
   /**
    * Extracts field values from submitted form values.
    *
-   * @param \Drupal\Core\Entity\Field\FieldInterface $items
+   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
    *   The field values. This parameter is altered by reference to receive the
    *   incoming form values.
    * @param array $form
@@ -55,12 +55,12 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    * @param array $form_state
    *   The form state.
    */
-  public function extractFormValues(FieldInterface $items, array $form, array &$form_state);
+  public function extractFormValues(FieldItemListInterface $items, array $form, array &$form_state);
 
   /**
    * Reports field-level validation errors against actual form elements.
    *
-   * @param \Drupal\Core\Entity\Field\FieldInterface $items
+   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
    *   The field values.
    * @param array $form
    *   The form structure where field elements are attached to. This might be a
@@ -68,6 +68,6 @@ interface WidgetBaseInterface extends PluginSettingsInterface {
    * @param array $form_state
    *   The form state.
    */
-  public function flagErrors(FieldInterface $items, array $form, array &$form_state);
+  public function flagErrors(FieldItemListInterface $items, array $form, array &$form_state);
 
 }

@@ -10,8 +10,7 @@ namespace Drupal\datetime\Plugin\field\formatter;
 use Drupal\field\Annotation\FieldFormatter;
 use Drupal\Core\Annotation\Translation;
 use Drupal\field\Plugin\Type\Formatter\FormatterBase;
-use Drupal\Core\Entity\Field\FieldInterface;
-use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'datetime_plain' formatter.
@@ -29,7 +28,7 @@ class DateTimePlainFormatter extends FormatterBase {
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldInterface $items) {
+  public function viewElements(FieldItemListInterface $items) {
 
     $elements = array();
 

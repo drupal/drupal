@@ -51,7 +51,7 @@ use Drupal\file\Plugin\field\field_type\FileItem;
  *   },
  *   default_widget = "image_image",
  *   default_formatter = "image",
- *   list_class = "\Drupal\file\Plugin\field\field_type\FileField"
+ *   list_class = "\Drupal\file\Plugin\field\field_type\FileFieldItemList"
  * )
  */
 class ImageItem extends FileItem {

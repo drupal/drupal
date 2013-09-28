@@ -7,6 +7,7 @@
 
 namespace Drupal\comment\Plugin\field\widget;
 
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\Field\FieldInterface;
@@ -28,7 +29,7 @@ class CommentWidget extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $field = $this->fieldDefinition;
     $entity = $items->getParent();
 

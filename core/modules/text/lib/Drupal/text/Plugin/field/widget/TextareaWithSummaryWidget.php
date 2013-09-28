@@ -10,7 +10,7 @@ namespace Drupal\text\Plugin\field\widget;
 use Drupal\field\Annotation\FieldWidget;
 use Drupal\Core\Annotation\Translation;
 use Symfony\Component\Validator\ConstraintViolationInterface;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 
 /**
  * Plugin implementation of the 'text_textarea_with_summary' widget.
@@ -59,7 +59,7 @@ class TextareaWithSummaryWidget extends TextareaWidget {
   /**
    * {@inheritdoc}
    */
-  function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
 
     $display_summary = $items[$delta]->summary || $this->getFieldSetting('display_summary');

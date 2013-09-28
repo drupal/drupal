@@ -8,7 +8,7 @@
 namespace Drupal\options\Plugin\field\widget;
 
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\field\Plugin\Type\Widget\WidgetBase;
 
@@ -54,7 +54,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldInterface $items, $delta, array $element, array &$form, array &$form_state) {
+  public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, array &$form_state) {
     // Prepare some properties for the child methods to build the actual form
     // element.
     $this->required = $element['#required'];
@@ -163,7 +163,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
   /**
    * Determines selected options from the incoming field values.
    *
-   * @param \Drupal\Core\Entity\Field\FieldInterface $items
+   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
    *   The field values.
    * @param int $delta
    *   (optional) The delta of the item to get options for. Defaults to 0.
@@ -171,7 +171,7 @@ abstract class OptionsWidgetBase extends WidgetBase {
    * @return array
    *   The array of corresponding selected options.
    */
-  protected function getSelectedOptions(FieldInterface $items, $delta = 0) {
+  protected function getSelectedOptions(FieldItemListInterface $items, $delta = 0) {
     // We need to check against a flat list of options.
     $flat_options = $this->flattenOptions($this->getOptions($items[$delta]));
 

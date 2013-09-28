@@ -43,7 +43,7 @@ class EntityTestRev extends EntityTest {
   /**
    * The entity revision id.
    *
-   * @var \Drupal\Core\Entity\Field\FieldInterface
+   * @var \Drupal\Core\Entity\Field\FieldItemListInterface
    */
   public $revision_id;
 

@@ -8,7 +8,7 @@
 namespace Drupal\entity_reference\Tests;
 
 use Drupal\Core\Entity\DatabaseStorageController;
-use Drupal\Core\Entity\Field\FieldInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\Core\Entity\Field\FieldItemInterface;
 use Drupal\Core\Language\Language;
 use Drupal\field\Tests\FieldUnitTestBase;
@@ -73,7 +73,7 @@ class EntityReferenceItemTest extends FieldUnitTestBase {
     $entity->save();
 
     $entity = entity_load('entity_test', $entity->id());
-    $this->assertTrue($entity->field_test_taxonomy instanceof FieldInterface, 'Field implements interface.');
+    $this->assertTrue($entity->field_test_taxonomy instanceof FieldItemListInterface, 'Field implements interface.');
     $this->assertTrue($entity->field_test_taxonomy[0] instanceof FieldItemInterface, 'Field item implements interface.');
     $this->assertEqual($entity->field_test_taxonomy->target_id, $tid);
     $this->assertEqual($entity->field_test_taxonomy->entity->name->value, $this->term->name->value);

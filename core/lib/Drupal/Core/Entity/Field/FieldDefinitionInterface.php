@@ -13,7 +13,7 @@ use Drupal\Core\Entity\EntityInterface;
  * Defines an interface for entity field definitions.
  *
  * An entity field is a data object that holds the values of a particular field
- * for a particular entity (see \Drupal\Core\Entity\Field\FieldInterface). For
+ * for a particular entity (see \Drupal\Core\Entity\Field\FieldItemListInterface). For
  * example, $node_1->body and $node_2->body contain different data and therefore
  * are different field objects.
  *

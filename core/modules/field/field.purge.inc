@@ -19,7 +19,7 @@ use Drupal\field\FieldException;
  *
  * When a single entity is deleted, the Entity storage controller performs the
  * following operations:
- * - Invoking the FieldInterface delete() method for each field on the
+ * - Invoking the FieldItemListInterface delete() method for each field on the
  *   entity. A file field type might use this method to delete uploaded files
  *   from the filesystem.
  * - Removing the data from storage.
