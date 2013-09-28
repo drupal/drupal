@@ -1585,24 +1585,20 @@ abstract class DisplayPluginBase extends PluginBase {
           $this->view->query->buildOptionsForm($form['query']['options'], $form_state);
         }
         break;
-      case 'field_language':
+      case 'field_langcode':
         $form['#title'] .= t('Field Language');
 
-        $entities = entity_get_info();
-        $entity_tables = array();
-        $has_translation_handlers = FALSE;
-        foreach ($entities as $type => $entity_info) {
-          $entity_tables[] = $entity_info['base_table'];
-
-          if (!empty($entity_info['translation'])) {
-            $has_translation_handlers = TRUE;
+        $translatable_entity_tables = array();
+        foreach (\Drupal::entityManager()->getDefinitions() as $entity_info) {
+          if (isset($entity_info['base_table']) && !empty($entity_info['translatable'])) {
+            $translatable_entity_tables[] = $entity_info['base_table'];
           }
         }
 
         // Doesn't make sense to show a field setting here if we aren't querying
         // an entity base table. Also, we make sure that there's at least one
         // entity type with a translation handler attached.
-        if (in_array($this->view->storage->get('base_table'), $entity_tables) && $has_translation_handlers) {
+        if (in_array($this->view->storage->get('base_table'), $translatable_entity_tables)) {
           $languages = array(
             '***CURRENT_LANGUAGE***' => t("Current user's language"),
             '***DEFAULT_LANGUAGE***' => t("Default site language"),
