@@ -26,7 +26,7 @@ use Drupal\views\ViewExecutable;
  *  You can set some specific behavior by setting up the following flags on
  *  your custom class.
  *
- * - always_multiple:
+ * - alwaysMultiple:
  *    Disable the possibility to force a single value.
  * - no_operator:
  *    Disable the possibility to use operators.
@@ -61,7 +61,7 @@ abstract class FilterPluginBase extends HandlerBase {
    * @var bool
    * Disable the possibility to force a single value.
    */
-  var $always_multiple = FALSE;
+  protected $alwaysMultiple = FALSE;
 
   /**
    * @var bool
@@ -560,7 +560,7 @@ abstract class FilterPluginBase extends HandlerBase {
       );
     }
 
-    if (empty($this->always_multiple)) {
+    if (empty($this->alwaysMultiple)) {
       $form['expose']['multiple'] = array(
         '#type' => 'checkbox',
         '#title' => t('Allow multiple selections'),
@@ -1331,13 +1331,13 @@ abstract class FilterPluginBase extends HandlerBase {
           }
         }
 
-        if (!empty($this->always_multiple) && $value === '') {
+        if (!empty($this->alwaysMultiple) && $value === '') {
           return FALSE;
         }
       }
       if (isset($value)) {
         $this->value = $value;
-        if (empty($this->always_multiple) && empty($this->options['expose']['multiple'])) {
+        if (empty($this->alwaysMultiple) && empty($this->options['expose']['multiple'])) {
           $this->value = array($value);
         }
       }

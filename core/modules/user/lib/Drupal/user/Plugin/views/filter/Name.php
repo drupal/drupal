@@ -19,7 +19,7 @@ use Drupal\Component\Annotation\PluginID;
  */
 class Name extends InOperator {
 
-  var $always_multiple = TRUE;
+  protected $alwaysMultiple = TRUE;
 
   protected function valueForm(&$form, &$form_state) {
     $values = array();

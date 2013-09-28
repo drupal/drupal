@@ -19,7 +19,7 @@ use Drupal\Component\Annotation\PluginID;
 class Equality extends FilterPluginBase {
 
   // exposed filter options
-  var $always_multiple = TRUE;
+  protected $alwaysMultiple = TRUE;
 
   /**
    * Provide simple equality operator

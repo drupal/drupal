@@ -21,7 +21,7 @@ use Drupal\Component\Annotation\PluginID;
 class String extends FilterPluginBase {
 
   // exposed filter options
-  var $always_multiple = TRUE;
+  protected $alwaysMultiple = TRUE;
 
   protected function defineOptions() {
     $options = parent::defineOptions();

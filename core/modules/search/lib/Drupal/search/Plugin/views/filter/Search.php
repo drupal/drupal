@@ -20,7 +20,7 @@ use Drupal\Component\Annotation\PluginID;
  */
 class Search extends FilterPluginBase {
 
-  var $always_multiple = TRUE;
+  protected $alwaysMultiple = TRUE;
 
   /**
    * Stores an extended query extender from the search module.

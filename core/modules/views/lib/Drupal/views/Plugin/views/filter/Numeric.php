@@ -19,7 +19,7 @@ use Drupal\Component\Annotation\PluginID;
  */
 class Numeric extends FilterPluginBase {
 
-  var $always_multiple = TRUE;
+  protected $alwaysMultiple = TRUE;
 
   protected function defineOptions() {
     $options = parent::defineOptions();
