@@ -26,7 +26,7 @@ function history_help($path, $arg) {
   switch ($path) {
     case 'admin/help#history':
       $output  = '<h3>' . t('About') . '</h3>';
-      $output .= '<p>'  . t('The History module keeps track of which content a user has read. Its data is available through the Views module. The History module marks content as <em>new</em> or <em>updated</em> depending on the last time the user viewed that content. It also provides a filter to Views to show new or updated content. History records older than one month will be removed during cron. This means that content older than one month will always be considered <em>read</em>. The module does not provide a user interface  For more information, see the online handbook entry for the <a href="@url">History module</a>.', array('@url' => 'https://drupal.org/documentation/modules/history')) . '</p>';
+      $output .= '<p>'  . t('The History module keeps track of which content a user has read. Its data is available through the Views module. The History module marks content as <em>new</em> or <em>updated</em> depending on the last time the user viewed that content. It also provides a filter to <a href="!views-help">Views</a>  to show new or updated content. History records older than one month will be removed during cron. This means that content older than one month will always be considered <em>read</em>. The module does not provide a user interface.  For more information, see the online documentation for the <a href="!url">History module</a>.', array('!views-help' => \Drupal::url('help.page', array ('name' => 'views')), '!url' => 'https://drupal.org/documentation/modules/history')) . '</p>';
       return $output;
   }
 }
