@@ -63,7 +63,7 @@ $.extend(CollapsibleDetails.prototype, {
     $('<span class="details-summary-prefix visually-hidden"></span>')
       .append(this.$node.attr('open') ? Drupal.t('Hide') : Drupal.t('Show'))
       .prependTo($legend)
-      .after(' ');
+      .after(document.createTextNode(' '));
 
     // .wrapInner() does not retain bound events.
     $('<a class="details-title"></a>')
