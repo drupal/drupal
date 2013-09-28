@@ -2,12 +2,12 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Ajax\AjaxCommandsUnitTest.
+ * Contains \Drupal\Tests\Core\Ajax\AjaxCommandsTest.
  */
 
-namespace Drupal\system\Tests\Ajax;
+namespace Drupal\Tests\Core\Ajax {
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Ajax\AddCssCommand;
 use Drupal\Core\Ajax\AfterCommand;
 use Drupal\Core\Ajax\AlertCommand;
@@ -34,8 +34,11 @@ use Drupal\Core\Ajax\RedirectCommand;
 
 /**
  * Tests for all AJAX Commands.
+ *
+ * @group Drupal
+ * @group Ajax
  */
-class AjaxCommandsUnitTest extends DrupalUnitTestBase {
+class AjaxCommandsTest extends UnitTestCase {
 
   public static function getInfo() {
     return array(
@@ -48,8 +51,7 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
   /**
    * Tests that AddCssCommand objects can be constructed and rendered.
    */
-  function testAddCssCommand() {
-
+  public function testAddCssCommand() {
     $command = new AddCssCommand('p{ text-decoration:blink; }');
 
     $expected = array(
@@ -57,14 +59,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'data' => 'p{ text-decoration:blink; }',
     );
 
-    $this->assertEqual($command->render(), $expected, 'AddCssCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "AddCssCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that AfterCommand objecst can be constructed and rendered.
    */
-  function testAfterCommand() {
-
+  public function testAfterCommand() {
     $command = new AfterCommand('#page-title', '<p>New Text!</p>', array('my-setting' => 'setting'));
 
     $expected = array(
@@ -75,27 +76,26 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'settings' => array('my-setting' => 'setting'),
     );
 
-    $this->assertEqual($command->render(), $expected, 'AfterCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "AfterCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that AlertCommand objects can be constructed and rendered.
    */
-  function testAlertCommand() {
+  public function testAlertCommand() {
     $command = new AlertCommand('Set condition 1 throughout the ship!');
     $expected = array(
       'command' => 'alert',
       'text' => 'Set condition 1 throughout the ship!',
     );
 
-    $this->assertEqual($command->render(), $expected, 'AlertCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "AlertCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that AppendCommand objects can be constructed and rendered.
    */
-  function testAppendCommand() {
-    // Test AppendCommand.
+  public function testAppendCommand() {
     $command = new AppendCommand('#page-title', '<p>New Text!</p>', array('my-setting' => 'setting'));
 
     $expected = array(
@@ -106,14 +106,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'settings' => array('my-setting' => 'setting'),
     );
 
-    $this->assertEqual($command->render(), $expected, 'AppendCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "AppendCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that BeforeCommand objects can be constructed and rendered.
    */
-  function testBeforeCommand() {
-
+  public function testBeforeCommand() {
     $command = new BeforeCommand('#page-title', '<p>New Text!</p>', array('my-setting' => 'setting'));
 
     $expected = array(
@@ -124,13 +123,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'settings' => array('my-setting' => 'setting'),
     );
 
-    $this->assertEqual($command->render(), $expected, 'BeforeCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "BeforeCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that ChangedCommand objects can be constructed and rendered.
    */
-  function testChangedCommand() {
+  public function testChangedCommand() {
     $command = new ChangedCommand('#page-title', '#page-title-changed');
 
     $expected = array(
@@ -139,14 +138,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'asterisk' => '#page-title-changed',
     );
 
-    $this->assertEqual($command->render(), $expected, 'ChangedCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "ChangedCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that CssCommand objects can be constructed and rendered.
    */
-  function testCssCommand() {
-
+  public function testCssCommand() {
     $command = new CssCommand('#page-title', array('text-decoration' => 'blink'));
     $command->setProperty('font-size', '40px')->setProperty('font-weight', 'bold');
 
@@ -160,14 +158,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       ),
     );
 
-    $this->assertEqual($command->render(), $expected, 'CssCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "CssCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that DataCommand objects can be constructed and rendered.
    */
-  function testDataCommand() {
-
+  public function testDataCommand() {
     $command = new DataCommand('#page-title', 'my-data', array('key' => 'value'));
 
     $expected = array(
@@ -177,14 +174,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'value' => array('key' => 'value'),
     );
 
-    $this->assertEqual($command->render(), $expected, 'DataCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "DataCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that HtmlCommand objects can be constructed and rendered.
    */
-  function testHtmlCommand() {
-
+  public function testHtmlCommand() {
     $command = new HtmlCommand('#page-title', '<p>New Text!</p>', array('my-setting' => 'setting'));
 
     $expected = array(
@@ -195,14 +191,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'settings' => array('my-setting' => 'setting'),
     );
 
-    $this->assertEqual($command->render(), $expected, 'HtmlCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "HtmlCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that InsertCommand objects can be constructed and rendered.
    */
-  function testInsertCommand() {
-
+  public function testInsertCommand() {
     $command = new InsertCommand('#page-title', '<p>New Text!</p>', array('my-setting' => 'setting'));
 
     $expected = array(
@@ -213,14 +208,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'settings' => array('my-setting' => 'setting'),
     );
 
-    $this->assertEqual($command->render(), $expected, 'InsertCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "InsertCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that InvokeCommand objects can be constructed and rendered.
    */
-  function testInvokeCommand() {
-
+  public function testInvokeCommand() {
     $command = new InvokeCommand('#page-title', 'myMethod', array('var1', 'var2'));
 
     $expected = array(
@@ -230,14 +224,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'args' => array('var1', 'var2'),
     );
 
-    $this->assertEqual($command->render(), $expected, 'InvokeCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "InvokeCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that PrependCommand objects can be constructed and rendered.
    */
-  function testPrependCommand() {
-
+  public function testPrependCommand() {
     $command = new PrependCommand('#page-title', '<p>New Text!</p>', array('my-setting' => 'setting'));
 
     $expected = array(
@@ -248,14 +241,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'settings' => array('my-setting' => 'setting'),
     );
 
-    $this->assertEqual($command->render(), $expected, 'PrependCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "PrependCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that RemoveCommand objects can be constructed and rendered.
    */
-  function testRemoveCommand() {
-
+  public function testRemoveCommand() {
     $command = new RemoveCommand('#page-title');
 
     $expected = array(
@@ -263,13 +255,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'selector' => '#page-title',
     );
 
-    $this->assertEqual($command->render(), $expected, 'RemoveCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "RemoveCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that ReplaceCommand objects can be constructed and rendered.
    */
-  function testReplaceCommand() {
+  public function testReplaceCommand() {
     $command = new ReplaceCommand('#page-title', '<p>New Text!</p>', array('my-setting' => 'setting'));
 
     $expected = array(
@@ -280,13 +272,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'settings' => array('my-setting' => 'setting'),
     );
 
-    $this->assertEqual($command->render(), $expected, 'ReplaceCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "ReplaceCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that RestripeCommand objects can be constructed and rendered.
    */
-  function testRestripeCommand() {
+  public function testRestripeCommand() {
     $command = new RestripeCommand('#page-title');
 
     $expected = array(
@@ -294,13 +286,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'selector' => '#page-title',
     );
 
-    $this->assertEqual($command->render(), $expected, 'RestripeCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "RestripeCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that SettingsCommand objects can be constructed and rendered.
    */
-  function testSettingsCommand() {
+  public function testSettingsCommand() {
     $command = new SettingsCommand(array('key' => 'value'), TRUE);
 
     $expected = array(
@@ -309,13 +301,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'merge' => TRUE,
     );
 
-    $this->assertEqual($command->render(), $expected, 'SettingsCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "SettingsCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that OpenDialogCommand objects can be constructed and rendered.
    */
-  function testOpenDialogCommand() {
+  public function testOpenDialogCommand() {
     $command = new OpenDialogCommand('#some-dialog', 'Title', '<p>Text!</p>', array(
       'url' => FALSE,
       'width' => 500,
@@ -333,13 +325,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
         'modal' => FALSE,
       ),
     );
-    $this->assertEqual($command->render(), $expected, 'OpenDialogCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "OpenDialogCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that OpenModalDialogCommand objects can be constructed and rendered.
    */
-  function testOpenModalDialogCommand() {
+  public function testOpenModalDialogCommand() {
     $command = new OpenModalDialogCommand('Title', '<p>Text!</p>', array(
       'url' => 'example',
       'width' => 500,
@@ -357,39 +349,39 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
         'modal' => TRUE,
       ),
     );
-    $this->assertEqual($command->render(), $expected, 'OpenModalDialogCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "OpenModalDialogCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that CloseModalDialogCommand objects can be constructed and rendered.
    */
-  function testCloseModalDialogCommand() {
+  public function testCloseModalDialogCommand() {
     $command = new CloseModalDialogCommand();
     $expected = array(
       'command' => 'closeDialog',
       'selector' => '#drupal-modal',
     );
 
-    $this->assertEqual($command->render(), $expected, 'CloseModalDialogCommand::render() returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "CloseModalDialogCommand::render() didn't return the expected array.");
   }
 
   /**
    * Tests that CloseDialogCommand objects can be constructed and rendered.
    */
-  function testCloseDialogCommand() {
+  public function testCloseDialogCommand() {
     $command = new CloseDialogCommand('#some-dialog');
     $expected = array(
       'command' => 'closeDialog',
       'selector' => '#some-dialog',
     );
 
-    $this->assertEqual($command->render(), $expected, 'CloseDialogCommand::render() with a selector returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "CloseDialogCommand::render() with a selector didn't return the expected array.");
   }
 
   /**
    * Tests that SetDialogOptionCommand objects can be constructed and rendered.
    */
-  function testSetDialogOptionCommand() {
+  public function testSetDialogOptionCommand() {
     $command = new SetDialogOptionCommand('#some-dialog', 'width', '500');
     $expected = array(
       'command' => 'setDialogOption',
@@ -398,13 +390,13 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'optionValue' => '500',
     );
 
-    $this->assertEqual($command->render(), $expected, 'SetDialogOptionCommand::render() with a selector returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "SetDialogOptionCommand::render() with a selector didn't return the expected array.");
   }
 
   /**
    * Tests that SetDialogTitleCommand objects can be constructed and rendered.
    */
-  function testSetDialogTitleCommand() {
+  public function testSetDialogTitleCommand() {
     $command = new SetDialogTitleCommand('#some-dialog', 'Example');
     $expected = array(
       'command' => 'setDialogOption',
@@ -413,20 +405,30 @@ class AjaxCommandsUnitTest extends DrupalUnitTestBase {
       'optionValue' => 'Example',
     );
 
-    $this->assertEqual($command->render(), $expected, 'SetDialogTitleCommand::render() with a selector returns a proper array.');
+    $this->assertEquals($command->render(), $expected, "SetDialogTitleCommand::render() with a selector didn't return the expected array.");
   }
 
   /**
    * Tests that RedirectCommand objects can be constructed and rendered.
    */
-  function testRedirectCommand() {
+  public function testRedirectCommand() {
     $command = new RedirectCommand('http://example.com');
     $expected = array(
       'command' => 'redirect',
       'url' => 'http://example.com',
     );
 
-    $this->assertEqual($command->render(), $expected, 'RedirectCommand::render() with the expected command array.');
+    $this->assertEquals($command->render(), $expected, "RedirectCommand::render() didn't return the expected command array.");
   }
 
+}
+
+}
+
+namespace {
+  if (!function_exists('drupal_add_library')) {
+    function drupal_add_library() {
+      return TRUE;
+    }
+  }
 }
