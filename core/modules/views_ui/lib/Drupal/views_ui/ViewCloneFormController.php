@@ -39,7 +39,6 @@ class ViewCloneFormController extends ViewFormControllerBase {
       '#title' => $this->t('View name'),
       '#required' => TRUE,
       '#size' => 32,
-      '#default_value' => '',
       '#maxlength' => 255,
       '#default_value' => $this->t('Clone of @label', array('@label' => $this->entity->label())),
     );
