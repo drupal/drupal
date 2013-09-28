@@ -9,6 +9,7 @@ namespace Drupal\Tests\Core\Entity;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
+use Drupal\Core\Access\AccessCheckInterface;
 use Drupal\Core\Entity\EntityAccessCheck;
 use Drupal\Tests\UnitTestCase;
 
@@ -50,7 +51,7 @@ class EntityAccessCheckTest extends UnitTestCase {
     $access_check = new EntityAccessCheck();
     $request->attributes->set('node', $node);
     $access = $access_check->access($route, $request);
-    $this->assertEquals(TRUE, $access);
+    $this->assertSame(AccessCheckInterface::ALLOW, $access);
   }
 
 }
