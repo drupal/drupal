@@ -666,8 +666,6 @@ class Field extends FieldPluginBase {
 
     $items = array();
     if ($this->options['field_api_classes']) {
-      // Make a copy.
-      $array = $render_array;
       return array(array('rendered' => drupal_render($render_array)));
     }
 
