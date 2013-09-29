@@ -84,7 +84,6 @@ class MTimeProtectedFileStorageTest extends PhpStorageTestBase {
     // a second of the initial save().
     sleep(1);
     for ($i = 0; $i < 2; $i++) {
-      $storageFactory = new PhpStorageFactory();
       $php = $this->storageFactory->get('simpletest');
       $GLOBALS['hacked'] = FALSE;
       $untrusted_code = "<?php\n" . '$GLOBALS["hacked"] = TRUE;';
