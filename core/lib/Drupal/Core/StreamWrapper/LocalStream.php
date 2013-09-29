@@ -403,7 +403,7 @@ abstract class LocalStream implements StreamWrapperInterface {
    * @see drupal_dirname()
    */
   public function dirname($uri = NULL) {
-    list($scheme, ) = explode('://', $uri, 2);
+    list($scheme) = explode('://', $uri, 2);
     $target = $this->getTarget($uri);
     $dirname = dirname($target);
 
