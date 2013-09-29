@@ -20,7 +20,6 @@ use Drupal\views\ResultRow;
 class Language extends User {
 
   protected function renderLink($data, ResultRow $values) {
-    $uid = $this->getValue($values, 'uid');
     if (!empty($this->options['link_to_user'])) {
       $uid = $this->getValue($values, 'uid');
       if (user_access('access user profiles') && $uid) {
