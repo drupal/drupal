@@ -493,7 +493,7 @@ class DbLogTest extends WebTestBase {
 
     // Set the filter to match each of the two filter-type attributes and
     // confirm the correct number of entries are displayed.
-    foreach ($types as $key => $type) {
+    foreach ($types as $type) {
       $edit = array(
         'type[]' => array($type['type']),
         'severity[]' => array($type['severity']),
