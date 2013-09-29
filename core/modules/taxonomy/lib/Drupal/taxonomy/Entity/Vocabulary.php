@@ -112,10 +112,10 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
       // Reflect machine name changes in the definitions of existing 'taxonomy'
       // fields.
       $fields = field_read_fields();
-      foreach ($fields as $field_name => $field) {
+      foreach ($fields as $field) {
         $update_field = FALSE;
         if ($field['type'] == 'taxonomy_term_reference') {
-          foreach ($field['settings']['allowed_values'] as $key => &$value) {
+          foreach ($field['settings']['allowed_values'] as &$value) {
             if ($value['vocabulary'] == $this->getOriginalID()) {
               $value['vocabulary'] = $this->id();
               $update_field = TRUE;
@@ -155,7 +155,7 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
     // Load all Taxonomy module fields and delete those which use only this
     // vocabulary.
     $taxonomy_fields = field_read_fields(array('module' => 'taxonomy'));
-    foreach ($taxonomy_fields as $field_name => $taxonomy_field) {
+    foreach ($taxonomy_fields as $taxonomy_field) {
       $modified_field = FALSE;
       // Term reference fields may reference terms from more than one
       // vocabulary.
