@@ -507,7 +507,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
         }
       }
       elseif ($wrapper instanceof \Drupal\Core\TypedData\ComplexDataInterface) {
-        foreach ($wrapper as $name => $property) {
+        foreach ($wrapper as $property) {
           $this->getContainedStrings($property, $depth + 1, $strings);
         }
       }

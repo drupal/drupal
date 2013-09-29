@@ -3099,7 +3099,6 @@ function hook_tokens_alter(array &$replacements, array $context) {
   else {
     $langcode = NULL;
   }
-  $sanitize = !empty($options['sanitize']);
 
   if ($context['type'] == 'node' && !empty($context['data']['node'])) {
     $node = $context['data']['node'];

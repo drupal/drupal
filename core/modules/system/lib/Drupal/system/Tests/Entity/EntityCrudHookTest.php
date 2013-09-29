@@ -526,7 +526,7 @@ class EntityCrudHookTest extends EntityUnitTestBase {
   function testEntityNGRollback() {
     // Create a block.
     try {
-      $entity = entity_create('entity_test', array('name' => 'fail_insert'))->save();
+      entity_create('entity_test', array('name' => 'fail_insert'))->save();
       $this->fail('Expected exception has not been thrown.');
     }
     catch (\Exception $e) {

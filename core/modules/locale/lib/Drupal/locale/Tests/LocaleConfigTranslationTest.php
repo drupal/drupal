@@ -53,7 +53,6 @@ class LocaleConfigTranslationTest extends WebTestBase {
       'direction' => '0',
     );
     $this->drupalPostForm('admin/config/regional/language/add', $edit, t('Add custom language'));
-    $language = new Language(array('id' => $langcode));
     // Set path prefix.
     $edit = array( "prefix[$langcode]" => $langcode );
     $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, t('Save configuration'));
