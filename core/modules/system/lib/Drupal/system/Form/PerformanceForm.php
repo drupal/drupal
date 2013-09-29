@@ -113,7 +113,6 @@ class PerformanceForm extends ConfigFormBase {
       '#description' => t('External resources can be optimized automatically, which can reduce both the size and number of requests made to your website.') . $disabled_message,
     );
 
-    $js_hide = ($config->get('cache.page.max_age') > 0) ? '' : ' class="js-hide"';
     $form['bandwidth_optimization']['page_compression'] = array(
       '#type' => 'checkbox',
       '#title' => t('Compress cached pages.'),
