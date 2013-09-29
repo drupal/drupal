@@ -1,0 +1,137 @@
+.dev-query, .dev-timer, .dev-memory-usage {
+  padding: 1em;
+}
+
+.devel-obj-output .field {
+  color: red;
+}
+
+.devel-obj-output dd {
+  display: block;
+}
+
+/**
+ * Query summary
+ */
+div.dev-query {
+  font-size:11px;
+  background:#fff;
+  border-top:3px solid #ccc;
+  color:#333;
+  /*padding:.5em;*/
+  }
+
+div.dev-query .marker {
+  color: #f00;
+  font-weight: bold;
+}
+
+/**
+ * Querylog
+ */
+div.devel-querylog {
+  color:#333;
+  border-bottom:1px solid #eee;
+  font-size:11px;
+  line-height:100%;
+  padding-left:30em;
+  padding-right:2em;
+  position:relative;
+  overflow:hidden;
+  }
+
+div.devel-querylog .marker {
+  color: #f00;
+  font-weight: bold;
+}
+
+div.devel-querylog-header {
+  border-top:3px solid #ccc;
+  background:#fff;
+  font-weight:bold;
+  }
+
+div.devel-querylog-even {
+  background:#fff;
+  }
+
+div.devel-querylog-odd {
+  background:#f8f8f8;
+  }
+
+div.devel-querylog div.cell {
+  overflow:hidden;
+  padding: 1em .5em;
+  }
+
+  div.devel-querylog div.cell-1 {
+    position:absolute;
+    left:0px;
+    width:4em;
+    }
+
+  div.devel-querylog div.cell-2 {
+    position:absolute;
+    left:4em;
+    width:3em;
+    }
+
+  div.devel-querylog div.cell-3 {
+    position:absolute;
+    left:6em;
+    width:19em;
+    }
+
+  div.devel-querylog div.cell-4 {
+    position:absolute;
+    left:26em;
+    width:4em;
+    }
+
+  div.devel-querylog-even div.cell-5,
+  div.devel-querylog-odd div.cell-5 {
+    /*max-height:18em;*/
+    font-family: 'Andale Mono', monospace;
+    }
+
+  div.devel-querylog div.cell-6 {
+    position:absolute;
+    right:0em;
+    top:0em;
+    /*width:9em;*/
+    }
+
+
+/**
+ * Switch User block
+ */
+#content .block-devel-switch-user ul.links,
+#footer .block-devel-switch-user ul.links {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+#content .block-devel-switch-user ul.links li,
+#footer .block-devel-switch-user ul.links li {
+  display: inline-block;
+  margin-left: 0;
+  margin-right: 1.5em;
+  padding-right: 0;
+}
+
+#footer .block-devel-switch-user ul.links li a {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+#content #devel-switch-user-form .form-item-username,
+#footer #devel-switch-user-form .form-item-username {
+  float: left;
+  margin-right: 2em;
+}
+
+#content #devel-switch-user-form .button-primary,
+#footer #devel-switch-user-form .button-primary {
+  margin-top: 1em;
+}

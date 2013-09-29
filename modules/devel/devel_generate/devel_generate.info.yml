@@ -1,0 +1,9 @@
+name: 'Devel generate'
+description: 'Generate dummy users, nodes, and taxonomy terms.'
+package: Development
+core: 8.x
+configure: admin/config/development/generate
+dependencies:
+ - devel
+tags:
+ - developer

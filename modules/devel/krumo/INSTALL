@@ -1,0 +1,32 @@
+------------------------------------------------------------------------------
+
+                     SETUP: How to install Krumo ?
+
+------------------------------------------------------------------------------
+
+In order to use Krumo you have to put it on your (development) server, and 
+include it in your script. You can put it somewhere in the INCLUDE_PATH, or 
+specify the full path to the "class.krumo.php" file.
+
+You have to modify the "krumo.ini" file too. It is the configuration file for 
+Krumo. The first option is choosing a skin:
+
+ [skin]
+ selected = "orange"
+
+The value for this setting has to be the name of one of the sub-folders from the 
+"Krumo/skins/" folder. If the value provided for the skin results in not finding 
+the skin, the `default` skin will be used instead.
+
+The second option is used to set the correct web path to the folder where Krumo 
+is installed. This is used in order to make the images from Krumo's CSS skins 
+web-accessible.
+
+ [css]
+ url = "http://www.example.com/Krumo/"
+
+So far those two are the only configuration options.
+
+All the CSS files ("skin.css") from the "Krumo/skins/" sub-folders must have the 
+proper permissions in order to be readable from Krumo. Same applies for 
+"krumo.ini" and "krumo.js" files.

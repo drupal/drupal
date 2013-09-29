@@ -1,0 +1,328 @@
+<?php
+/**
+ * @file
+ *
+ * This module gives developers feedback as to what their
+ * node_access table contains, and which nodes are protected or
+ * visible to the public.
+ *
+ */
+
+use Drupal\devel_node_access\DnaBlockBase;
+
+define('DNA_ACCESS_VIEW', 'view devel_node_access information');
+
+/**
+ * Implements hook_permission().
+ */
+function devel_node_access_permission() {
+  return array(
+    'view devel_node_access information' => array(
+      'description' => t('View the node access information blocks on node pages and the summary page.'),
+      'title'       => t('Access DNA information'),
+      'restrict access' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_help().
+ */
+function devel_node_access_help($path, $arg) {
+  switch ($path) {
+    case 'admin/settings/modules#description':
+      return t('Development helper for node_access table');
+      break;
+    case 'admin/help#devel_node_access':
+      $output  = '<p>' . t('This module helps in site development.  Specifically, when an access control module is used to limit access to some or all nodes, this module provides some feedback showing the node_access table in the database.') . "</p>\n";
+      $output .= '<p>' . t('The node_access table is one method Drupal provides to hide content from some users while displaying it to others.  By default, Drupal shows all nodes to all users.  There are a number of optional modules which may be installed to hide content from some users.') . "</p>\n";
+      $output .= '<p>' . t('If you have not installed any of these modules, you really have no need for the devel_node_access module.  This module is intended for use during development, so that developers and admins can confirm that the node_access table is working as expected.  You probably do not want this module enabled on a production site.') . "</p>\n";
+      $output .= '<p>' . t('This module provides two blocks.  One called Devel Node Access by User is visible when a single node is shown on a page.  This block shows which users can view, update or delete the node shown.  Note that this block uses an inefficient algorithm to produce its output.  You should only enable this block on sites with very few user accounts.') . "</p>\n";
+      $output .= '<p>' . t('The second block provided by this module shows the entries in the node_access table for any nodes shown on the current page.  You can enable the debug mode on the <a href="@settings_page">settings page</a> to display much more information, but this can cause considerable overhead.  Because the tables shown are wide, it is recommended to enable the blocks in the page footer rather than a sidebar.',
+                          array('@settings_page' => url('admin/config/development/devel', array('fragment' => 'edit-devel-node-access')))
+                          ) . "</p>\n";
+      $output .= '<p>' . t('This module also provides a <a href="@summary_page">summary page</a> which shows general information about your node_access table.  If you have installed the Views module, you may browse node_access by realm.',
+                          array('@summary_page' => url('devel/node_access/summary'))
+                          ) . "</p>\n";
+      return $output;
+  }
+}
+
+/**
+ * Implements hook_menu().
+ */
+function devel_node_access_menu() {
+  $items = array();
+
+  if (!module_exists('devel')) {
+    // We have to create the 'Devel settings' menu item ourselves.
+    $items['admin/config/development/devel'] = array(
+      'title'            => 'Devel settings',
+      'description'      => 'Helper pages and blocks to assist Drupal developers and admins with node_access. The devel blocks can be managed via the <a href="' . url('admin/structure/block') . '">block administration</a> page.',
+      'page callback'    => 'drupal_get_form',
+      'page arguments'   => array('devel_node_access_admin_settings'),
+      'access arguments' => array('administer site configuration'),
+    );
+    $items['devel/settings'] = $items['admin/config/development/devel'] + array(
+      'menu_name' => 'devel',
+    );
+  }
+
+  // Create a callback for use by devel_node_access_user_ajax().
+  $items['devel/node_access/by_user/%/%'] = array(
+    'page callback'    => 'devel_node_access_user_ajax',
+    'page arguments'   => array(3, 4),
+    'access arguments' => array(DNA_ACCESS_VIEW),
+    'type'             => MENU_CALLBACK,
+  );
+
+  // Add this to the custom menu 'devel' created by the devel module.
+  $items['devel/node_access/summary'] = array(
+    'title'            => 'Node_access summary',
+    'page callback'    => 'dna_summary',
+    'access arguments' => array(DNA_ACCESS_VIEW),
+    'menu_name'        => 'devel',
+  );
+
+  return $items;
+}
+
+/**
+ * Builds the DNA settings form.
+ *
+ * Actually, this returns just an empty settings form, which is then
+ * form_altered(), just like the Devel settings form.
+ *
+ * @see devel_node_access_form_alter()
+ */
+function devel_node_access_admin_settings($form, &$form_state) {
+  return system_config_form($form, $form_state);
+}
+
+/**
+ * Submit handler for the DNA settings form.
+ */
+function devel_node_access_admin_settings_submit($form, &$form_state) {
+  config('devel_node_access.settings')
+    ->set('debug_mode', $form_state['values']['debug_mode'])
+    ->set('user_ajax', $form_state['values']['user_ajax'])
+    ->save();
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function devel_node_access_form_alter(&$form, $form_state, $form_id) {
+  $tr = 't';
+  $config_devel_node_access = config('devel_node_access.settings');
+  if ($form_id == 'devel_admin_settings' || $form_id == 'devel_node_access_admin_settings') {
+    $form['devel_node_access'] = array(
+      '#type'        => 'fieldset',
+      '#title'       => t('Devel Node Access'),
+      '#collapsible' => TRUE,
+    );
+    $form['devel_node_access']['debug_mode'] = array(
+      '#type'          => 'checkbox',
+      '#title'         => t('Debug mode'),
+      '#default_value' => $config_devel_node_access->get('debug_mode'),
+      '#description'   => t('Debug mode verifies the grant records in the node_access table against those that would be set by running !Rebuild_permissions, and displays them all; this can cause considerable overhead.<br />For even more information enable the <a href="@link">%DNAbU block</a>, too.', array(
+        '!Rebuild_permissions' => l('[' . $tr('Rebuild permissions') . ']', 'admin/reports/status/rebuild'),
+        '%DNAbU' => t('Devel Node Access by User'),
+        '@link' => url('admin/structure/block/list'),
+      )),
+    );
+    $form['devel_node_access']['user_ajax'] = array(
+      '#type'          => 'checkbox',
+      '#title'         => t('Asynchronously populate the <em>Devel Node Access by User</em> block'),
+      '#default_value' => $config_devel_node_access->get('user_ajax'),
+      '#description'   => t("Use Ajax to populate the second DNA block. This loads the initial page faster and uses dynamic calls to build the data in the table, one request at a time. It's especially useful during development, if some of the calls are failing.") . '<br />' . t('JavaScript must be enabled in your browser.'),
+    );
+    // Push the Save button down.
+    $form['actions']['#weight'] = 10;
+    $form['#submit'][] = 'devel_node_access_admin_settings_submit';
+  }
+}
+
+/**
+ * Builds the DNA Summary page.
+ */
+function dna_summary() {
+  // Warn user if they have any entries that could grant access to all nodes.
+  $output = '';
+  $result = db_query('SELECT DISTINCT realm FROM {node_access} WHERE nid = 0 AND gid = 0');
+  $rows = array();
+  foreach ($result as $row) {
+    $rows[] = array($row->realm);
+  }
+  if (!empty($rows)) {
+    $output .= '<h3>' . t('Access Granted to All Nodes (All Users)') . "</h3>\n";
+    $output .= '<p>' . t('Your node_access table contains entries that may be granting all users access to all nodes.  Depending on which access control module(s) you use, you may want to delete these entries.  If you are not using an access control module, you should probably leave these entries as is.') . "</p>\n";
+    $headers = array(t('realm'));
+    $output .= theme('table', array('header' => $headers, 'rows' => $rows));
+    $access_granted_to_all_nodes = TRUE;
+  }
+
+  // How many nodes are not represented in the node_access table?
+  $num = db_query('SELECT COUNT(n.nid) AS num_nodes FROM {node} n LEFT JOIN {node_access} na ON n.nid = na.nid WHERE na.nid IS NULL')->fetchField();
+  if ($num) {
+    $output .= '<h3>' . t('Legacy Nodes') . "</h3>\n";
+    $output .= '<p>' .
+      t('You have !num nodes in your node table which are not represented in your node_access table.  If you have an access control module installed, these nodes may be hidden from all users.  This could be caused by publishing nodes before enabling the access control module.  If this is the case, manually updating each node should add it to the node_access table and fix the problem.', array('!num' => l($num, 'devel/node_access/view/NULL')))
+      . "</p>\n";
+    if (!empty($access_granted_to_all_nodes)) {
+      $output .= '<p>' .
+        t('This issue may be masked by the one above, so look into the former first.')
+        . "</p>\n";
+    }
+  }
+  else {
+    $output .= '<h3>' . t('All Nodes Represented') . "</h3>\n";
+    $output .= '<p>' . t('All nodes are represented in the node_access table.') . "</p>\n";
+  }
+
+
+  // A similar warning to the one above, but slightly more specific.
+  $result = db_query('SELECT DISTINCT realm FROM {node_access} WHERE nid = 0 AND gid <> 0');
+  $rows = array();
+  foreach ($result as $row) {
+    $rows[] = array($row->realm);
+  }
+  if (!empty($rows)) {
+    $output .= '<h3>' . t('Access Granted to All Nodes (Some Users)') . "</h3>\n";
+    $output .= '<p>' . t('Your node_access table contains entries that may be granting some users access to all nodes.  This may be perfectly normal, depending on which access control module(s) you use.') . "</p>\n";
+    $headers = array(t('realm'));
+    $output .= theme('table', array('header' => $headers, 'rows' => $rows));
+  }
+
+
+  // Find specific nodes which may be visible to all users.
+  $result = db_query('SELECT DISTINCT realm, COUNT(DISTINCT nid) as node_count FROM {node_access} WHERE gid = 0 AND nid > 0 GROUP BY realm');
+  $rows = array();
+  foreach ($result as $row) {
+    $rows[] = array(
+      $row->realm,
+      array(
+        'data'  => $row->node_count,
+        'align' => 'center',
+      ),
+    );
+  }
+  if (!empty($rows)) {
+    $output .= '<h3>' . t('Access Granted to Some Nodes') . "</h3>\n";
+    $output .= '<p>' .
+      t('The following realms appear to grant all users access to some specific nodes. This may be perfectly normal, if some of your content is available to the public.')
+      . "</p>\n";
+    $headers = array(t('realm'), t('public nodes'));
+    $output .= theme('table', array('header' => $headers, 'rows' => $rows, 'caption' => t('Public Nodes')));
+  }
+
+
+  // Find specific nodes protected by node_access table.
+  $result = db_query('SELECT DISTINCT realm, COUNT(DISTINCT nid) as node_count FROM {node_access} WHERE gid <> 0 AND nid > 0 GROUP BY realm');
+  $rows = array();
+  foreach ($result as $row) {
+    // No Views yet:
+    //$rows[] = array(l($row->realm, "devel/node_access/view/$row->realm"),
+    $rows[] = array(
+      $row->realm,
+      array(
+        'data' => $row->node_count,
+        'align' => 'center',
+      ),
+    );
+  }
+  if (!empty($rows)) {
+    $output .= '<h3>' . t('Summary by Realm') . "</h3>\n";
+    $output .= '<p>' . t('The following realms grant limited access to some specific nodes.') . "</p>\n";
+    $headers = array(t('realm'), t('private nodes'));
+    $output .= theme('table', array('header' => $headers, 'rows' => $rows, 'caption' => t('Protected Nodes')));
+  }
+
+  return $output;
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function devel_node_access_node_view($node, $build_mode) {
+  // Remember this node, for display in our block.
+  DnaBlockBase::visible_nodes($node->nid);
+}
+
+/**
+ * Callback function for Node Access by User block ajax.
+ */
+function devel_node_access_user_ajax($data_type, $cell) {
+  list($op, $nid, $uid) = explode('-', $cell);
+  $node = node_load($nid);
+  $account = user_load($uid);
+  $output = array(
+    '#theme' => 'dna_permission',
+    '#permission' => DnaBlockBase::explain_access($op, $node, $account),
+  );
+  // JSON output for Ajax callbacks.
+  if ($data_type == 'json') {
+    drupal_json_output(drupal_render($output));
+    exit;
+  }
+  // HTML output for error message click-throughs.
+  if ($node) {
+    $node_title = l($node->title, 'node/' . $node->nid);
+  }
+  else {
+    $node_title = t('unknown node %nid', array('%nid' => $nid));
+  }
+  drupal_set_title(
+    t(
+      'Devel node access: %op permission for !user on !node',
+      array(
+        '%op'   => $op,
+        '!user' => theme('username', array('account' => $account)),
+        '!node' => $node_title,
+      )
+    ),
+    PASS_THROUGH
+  );
+  return $output;
+}
+
+/**
+ * Implements hook_node_access_explain().
+ */
+function devel_node_access_node_access_explain($row) {
+  if ($row->gid == 0 && $row->realm == 'all') {
+    foreach (array('view', 'update', 'delete') as $op) {
+      $gop = 'grant_' . $op;
+      if (!empty($row->$gop)) {
+        $ops[] = $op;
+      }
+    }
+    if (empty($ops)) {
+      return '(No access granted to ' . ($row->nid == 0 ? 'any nodes.)' : 'this node.)');
+    }
+    else {
+      return 'All users may ' . implode('/', $ops) . ($row->nid == 0 ? ' all nodes.' : ' this node.');
+    }
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function devel_node_access_theme() {
+  return array(
+    'dna_permission' => array(
+      'variables'    => array(
+        'permission' => NULL,
+      ),
+    ),
+  );
+}
+
+/**
+ * Indicates whether user has a permission or not.
+ */
+function theme_dna_permission($variables) {
+  $permission = &$variables['permission'];
+  return '<span class="' . ($permission[0] ? 'ok' : 'error') . '" title="' . $permission[2] . '">' . $permission[1] . '</span>';
+}

@@ -1,0 +1,24 @@
+******************************************************************************
+
+                                 Krumo: TODO
+
+******************************************************************************
+
+BUGS
+----------------
+ - watch the SourceForge.net Bug Tracker
+
+Features: PHP
+----------------
+ - Try to detect anonymous (lambda) functions
+ - Try to detect whether an array is indexed or associated
+ - Add var_export support for arrays and objects
+ - Add JSON support for arrays and objects
+ 
+Features: GUI
+----------------
+ - Nicer and friendlier skin(s)
+ - Add top-level links for collapsing and expanding the whole tree
+ - Add object & array -level links for collapsing and expanding all the
+ 	nested nodes
+ - Print all parent classes for the rendered objects
