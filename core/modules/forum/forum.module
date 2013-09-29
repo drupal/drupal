@@ -589,6 +589,33 @@ function forum_preprocess_block(&$variables) {
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function forum_theme_suggestions_forums(array $variables) {
+  $suggestions = array();
+  $tid = $variables['term']->id();
+
+  // Provide separate template suggestions based on what's being output. Topic
+  // ID is also accounted for. Check both variables to be safe then the inverse.
+  // Forums with topic IDs take precedence.
+  if ($variables['forums'] && !$variables['topics']) {
+    $suggestions[] = 'forums__containers';
+    $suggestions[] = 'forums__' . $tid;
+    $suggestions[] = 'forums__containers__' . $tid;
+  }
+  elseif (!$variables['forums'] && $variables['topics']) {
+    $suggestions[] = 'forums__topics';
+    $suggestions[] = 'forums__' . $tid;
+    $suggestions[] = 'forums__topics__' . $tid;
+  }
+  else {
+    $suggestions[] = 'forums__' . $tid;
+  }
+
+  return $suggestions;
+}
+
+/**
  * Prepares variables for forums templates.
  *
  * Default template: forums.html.twig.
@@ -635,23 +662,6 @@ function template_preprocess_forums(&$variables) {
     else {
       $variables['topics'] = array();
     }
-
-    // Provide separate template suggestions based on what's being output. Topic id is also accounted for.
-    // Check both variables to be safe then the inverse. Forums with topic ID's take precedence.
-    if ($variables['forums'] && !$variables['topics']) {
-      $variables['theme_hook_suggestions'][] = 'forums__containers';
-      $variables['theme_hook_suggestions'][] = 'forums__' . $variables['tid'];
-      $variables['theme_hook_suggestions'][] = 'forums__containers__' . $variables['tid'];
-    }
-    elseif (!$variables['forums'] && $variables['topics']) {
-      $variables['theme_hook_suggestions'][] = 'forums__topics';
-      $variables['theme_hook_suggestions'][] = 'forums__' . $variables['tid'];
-      $variables['theme_hook_suggestions'][] = 'forums__topics__' . $variables['tid'];
-    }
-    else {
-      $variables['theme_hook_suggestions'][] = 'forums__' . $variables['tid'];
-    }
-
   }
   else {
     $variables['forums'] = array();

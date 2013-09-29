@@ -41,3 +41,31 @@ theme_test.request_listener:
     _content: '\Drupal\theme_test\ThemeTestController::testRequestListener'
   requirements:
     _access: 'TRUE'
+
+suggestion_alter:
+  path: '/theme-test/suggestion-alter'
+  defaults:
+    _content: '\Drupal\theme_test\ThemeTestController::suggestionAlter'
+  requirements:
+    _permission: 'access content'
+
+suggestion_provided:
+  path: '/theme-test/suggestion-provided'
+  defaults:
+    _content: '\Drupal\theme_test\ThemeTestController::suggestionProvided'
+  requirements:
+    _permission: 'access content'
+
+specific_suggestion_alter:
+  path: '/theme-test/specific-suggestion-alter'
+  defaults:
+    _content: '\Drupal\theme_test\ThemeTestController::specificSuggestionAlter'
+  requirements:
+    _permission: 'access content'
+
+function_suggestion_alter:
+  path: '/theme-test/function-suggestion-alter'
+  defaults:
+    _content: '\Drupal\theme_test\ThemeTestController::functionSuggestionAlter'
+  requirements:
+    _permission: 'access content'

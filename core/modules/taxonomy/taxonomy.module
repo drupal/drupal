@@ -407,6 +407,20 @@ function taxonomy_term_view_multiple(array $terms, $view_mode = 'full', $langcod
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function taxonomy_theme_suggestions_taxonomy_term(array $variables) {
+  $suggestions = array();
+
+  $term = $variables['elements']['#term'];
+
+  $suggestions[] = 'taxonomy_term__' . $term->bundle();
+  $suggestions[] = 'taxonomy_term__' . $term->id();
+
+  return $suggestions;
+}
+
+/**
  * Prepares variables for taxonomy term templates.
  *
  * Default template: taxonomy-term.html.twig.
@@ -447,9 +461,6 @@ function template_preprocess_taxonomy_term(&$variables) {
   $variables['attributes']['class'][] = 'taxonomy-term';
   $vocabulary_name_css = str_replace('_', '-', $term->bundle());
   $variables['attributes']['class'][] = 'vocabulary-' . $vocabulary_name_css;
-
-  $variables['theme_hook_suggestions'][] = 'taxonomy_term__' . $term->bundle();
-  $variables['theme_hook_suggestions'][] = 'taxonomy_term__' . $term->id();
 }
 
 /**

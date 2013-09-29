@@ -485,6 +485,39 @@ function block_rebuild() {
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function block_theme_suggestions_block(array $variables) {
+  $suggestions = array();
+
+  $suggestions[] = 'block__' . $variables['elements']['#configuration']['module'];
+  // Hyphens (-) and underscores (_) play a special role in theme suggestions.
+  // Theme suggestions should only contain underscores, because within
+  // drupal_find_theme_templates(), underscores are converted to hyphens to
+  // match template file names, and then converted back to underscores to match
+  // pre-processing and other function names. So if your theme suggestion
+  // contains a hyphen, it will end up as an underscore after this conversion,
+  // and your function names won't be recognized. So, we need to convert
+  // hyphens to underscores in block deltas for the theme suggestions.
+
+  // We can safely explode on : because we know the Block plugin type manager
+  // enforces that delimiter for all derivatives.
+  $parts = explode(':', $variables['elements']['#plugin_id']);
+  $suggestion = 'block';
+  while ($part = array_shift($parts)) {
+    $suggestions[] = $suggestion .= '__' . strtr($part, '-', '_');
+  }
+
+  if ($id = $variables['elements']['#block']->id()) {
+    $config_id = explode('.', $id);
+    $machine_name = array_pop($config_id);
+    $suggestions[] = 'block__' . $machine_name;
+  }
+
+  return $suggestions;
+}
+
+/**
  * Prepares variables for block templates.
  *
  * Default template: block.html.twig.
@@ -527,29 +560,11 @@ function template_preprocess_block(&$variables) {
   // Add default class for block content.
   $variables['content_attributes']['class'][] = 'content';
 
-  $variables['theme_hook_suggestions'][] = 'block__' . $variables['configuration']['module'];
-  // Hyphens (-) and underscores (_) play a special role in theme suggestions.
-  // Theme suggestions should only contain underscores, because within
-  // drupal_find_theme_templates(), underscores are converted to hyphens to
-  // match template file names, and then converted back to underscores to match
-  // pre-processing and other function names. So if your theme suggestion
-  // contains a hyphen, it will end up as an underscore after this conversion,
-  // and your function names won't be recognized. So, we need to convert
-  // hyphens to underscores in block deltas for the theme suggestions.
-
-  // We can safely explode on : because we know the Block plugin type manager
-  // enforces that delimiter for all derivatives.
-  $parts = explode(':', $variables['plugin_id']);
-  $suggestion = 'block';
-  while ($part = array_shift($parts)) {
-    $variables['theme_hook_suggestions'][] = $suggestion .= '__' . strtr($part, '-', '_');
-  }
   // Create a valid HTML ID and make sure it is unique.
   if ($id = $variables['elements']['#block']->id()) {
     $config_id = explode('.', $id);
     $machine_name = array_pop($config_id);
     $variables['attributes']['id'] = drupal_html_id('block-' . $machine_name);
-    $variables['theme_hook_suggestions'][] = 'block__' . $machine_name;
   }
 }
 

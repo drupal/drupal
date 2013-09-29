@@ -75,6 +75,13 @@ function search_view($plugin_id = NULL, $keys = '') {
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function search_theme_suggestions_search_results(array $variables) {
+  return array('search_results__' . $variables['plugin_id']);
+}
+
+/**
  * Prepares variables for search results templates.
  *
  * Default template: search-results.html.twig.
@@ -100,7 +107,13 @@ function template_preprocess_search_results(&$variables) {
   // @todo Revisit where this help text is added, see also
   //   http://drupal.org/node/1918856.
   $variables['help'] = search_help('search#noresults', drupal_help_arg());
-  $variables['theme_hook_suggestions'][] = 'search_results__' . $variables['plugin_id'];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function search_theme_suggestions_search_result(array $variables) {
+  return array('search_result__' . $variables['plugin_id']);
 }
 
 /**
@@ -148,7 +161,6 @@ function template_preprocess_search_result(&$variables) {
   // Provide separated and grouped meta information..
   $variables['info_split'] = $info;
   $variables['info'] = implode(' - ', $info);
-  $variables['theme_hook_suggestions'][] = 'search_result__' . $variables['plugin_id'];
 }
 
 /**

@@ -24,6 +24,11 @@ class UpdateModuleHandler extends ModuleHandler {
     if (substr($hook, -6) === '_alter') {
       return array();
     }
+    // theme() is called during updates and fires hooks, so whitelist the
+    // system module.
+    if (substr($hook, 0, 6) == 'theme_') {
+      return array('system');
+    }
     switch ($hook) {
       // hook_requirements is necessary for updates to work.
       case 'requirements':

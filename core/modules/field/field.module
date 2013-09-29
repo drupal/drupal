@@ -660,6 +660,22 @@ function field_page_build(&$page) {
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function field_theme_suggestions_field(array $variables) {
+  $suggestions = array();
+  $element = $variables['element'];
+
+  $suggestions[] = 'field__' . $element['#field_type'];
+  $suggestions[] = 'field__' . $element['#field_name'];
+  $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#bundle'];
+  $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#field_name'];
+  $suggestions[] = 'field__' . $element['#entity_type'] . '__' . $element['#field_name'] . '__' . $element['#bundle'];
+
+  return $suggestions;
+}
+
+/**
  * Prepares variables for field templates.
  *
  * Default template: field.html.twig.
@@ -715,15 +731,6 @@ function template_preprocess_field(&$variables, $hook) {
   if ($element['#label_display'] == 'inline') {
     $variables['attributes']['class'][] = 'clearfix';
   }
-
-  // Add specific suggestions that can override the default implementation.
-  $variables['theme_hook_suggestions'] = array(
-    'field__' . $element['#field_type'],
-    'field__' . $element['#field_name'],
-    'field__' . $element['#entity_type'] . '__' . $element['#bundle'],
-    'field__' . $element['#entity_type'] . '__' . $element['#field_name'],
-    'field__' . $element['#entity_type'] . '__' . $element['#field_name'] . '__' . $element['#bundle'],
-  );
 
   static $default_attributes;
   if (!isset($default_attributes)) {

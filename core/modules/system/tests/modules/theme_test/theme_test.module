@@ -14,6 +14,21 @@ function theme_test_theme($existing, $type, $theme, $path) {
   $items['theme_test_template_test_2'] = array(
     'template' => 'theme_test.template_test',
   );
+  $items['theme_test_suggestion_provided'] = array(
+    'template' => 'theme-test-suggestion-provided',
+    'variables' => array(),
+  );
+  $items['theme_test_specific_suggestions'] = array(
+    'template' => 'theme-test-specific-suggestions',
+    'variables' => array(),
+  );
+  $items['theme_test_suggestions'] = array(
+    'template' => 'theme-test-suggestions',
+    'variables' => array(),
+  );
+  $items['theme_test_function_suggestions'] = array(
+    'variables' => array(),
+  );
   $items['theme_test_foo'] = array(
     'variables' => array('foo' => NULL),
   );
@@ -130,4 +145,18 @@ function template_preprocess_theme_test_render_element(&$variables) {
  */
 function theme_theme_test_render_element_children($variables) {
   return drupal_render($variables['element']);
+}
+
+/**
+ * Returns HTML for a theme function suggestion test.
+ */
+function theme_theme_test_function_suggestions($variables) {
+  return 'Original theme function.';
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function theme_test_theme_suggestions_theme_test_suggestion_provided(array $variables) {
+  return array('theme_test_suggestion_provided__' . 'foo');
 }

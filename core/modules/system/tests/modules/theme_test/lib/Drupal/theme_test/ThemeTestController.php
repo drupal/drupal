@@ -92,4 +92,32 @@ class ThemeTestController extends ControllerBase {
     return $GLOBALS['theme_test_output'];
   }
 
+  /**
+   * Menu callback for testing suggestion alter hooks with template files.
+   */
+  function suggestionProvided() {
+    return array('#theme' => 'theme_test_suggestion_provided');
+  }
+
+  /**
+   * Menu callback for testing suggestion alter hooks with template files.
+   */
+  function suggestionAlter() {
+    return array('#theme' => 'theme_test_suggestions');
+  }
+
+  /**
+   * Menu callback for testing suggestion alter hooks with specific suggestions.
+   */
+  function specificSuggestionAlter() {
+    return array('#theme' => 'theme_test_specific_suggestions__variant');
+  }
+
+  /**
+   * Menu callback for testing suggestion alter hooks with theme functions.
+   */
+  function functionSuggestionAlter() {
+    return array('#theme' => 'theme_test_function_suggestions');
+  }
+
 }

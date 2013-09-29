@@ -642,6 +642,19 @@ function node_preprocess_block(&$variables) {
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function node_theme_suggestions_node(array $variables) {
+  $suggestions = array();
+  $node = $variables['elements']['#node'];
+
+  $suggestions[] = 'node__' . $node->bundle();
+  $suggestions[] = 'node__' . $node->id();
+
+  return $suggestions;
+}
+
+/**
  * Prepares variables for node templates.
  *
  * Default template: node.html.twig.
@@ -730,11 +743,6 @@ function template_preprocess_node(&$variables) {
   if (isset($variables['preview'])) {
     $variables['attributes']['class'][] = 'preview';
   }
-
-  // Clean up name so there are no underscores.
-  $variables['theme_hook_suggestions'][] = 'node__' . $node->bundle();
-  $variables['theme_hook_suggestions'][] = 'node__' . $node->id();
-
   $variables['content_attributes']['class'][] = 'content';
 }
 

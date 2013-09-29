@@ -910,6 +910,54 @@ function system_menu() {
 }
 
 /**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function system_theme_suggestions_html(array $variables) {
+  return theme_get_suggestions(arg(), 'html');
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function system_theme_suggestions_page(array $variables) {
+  return theme_get_suggestions(arg(), 'page');
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function system_theme_suggestions_maintenance_page(array $variables) {
+  $suggestions = array();
+
+  // Dead databases will show error messages so supplying this template will
+  // allow themers to override the page and the content completely.
+  $offline = defined('MAINTENANCE_MODE');
+  try {
+    drupal_is_front_page();
+  }
+  catch (Exception $e) {
+    // The database is not yet available.
+    $offline = TRUE;
+  }
+  if ($offline) {
+    $suggestions[] = 'maintenance_page__offline';
+  }
+
+  return $suggestions;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function system_theme_suggestions_region(array $variables) {
+  $suggestions = array();
+  if (!empty($variables['elements']['#region'])) {
+    $suggestions[] = 'region__' . $variables['elements']['#region'];
+  }
+  return $suggestions;
+}
+
+/**
  * Theme callback for the default batch page.
  */
 function _system_batch_theme() {

@@ -261,21 +261,32 @@ function views_preprocess_node(&$variables) {
   // \Drupal\views\Plugin\views\row\EntityRow::preRender().
   if (!empty($variables['node']->view) && $variables['node']->view->storage->id()) {
     $variables['view'] = $variables['node']->view;
-    $variables['theme_hook_suggestions'][] = 'node__view__' . $variables['node']->view->storage->id();
-    if (!empty($variables['node']->view->current_display)) {
-      $variables['theme_hook_suggestions'][] = 'node__view__' . $variables['node']->view->storage->id() . '__' . $variables['node']->view->current_display;
-
-      // If a node is being rendered in a view, and the view does not have a path,
-      // prevent drupal from accidentally setting the $page variable:
-      if ($variables['page'] && $variables['view_mode'] == 'full' && !$variables['view']->display_handler->hasPath()) {
-        $variables['page'] = FALSE;
-      }
+    // If a node is being rendered in a view, and the view does not have a path,
+    // prevent drupal from accidentally setting the $page variable:
+    if (!empty($variables['view']->current_display)
+        && $variables['page']
+        && $variables['view_mode'] == 'full'
+        && !$variables['view']->display_handler->hasPath()) {
+      $variables['page'] = FALSE;
     }
   }
 
   // Allow to alter comments and links based on the settings in the row plugin.
   if (!empty($variables['view']->rowPlugin) && $variables['view']->rowPlugin->getPluginId() == 'entity:node') {
     node_row_node_view_preprocess_node($variables);
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function views_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+  $node = $variables['elements']['#node'];
+  if (!empty($node->view) && $node->view->storage->id()) {
+    $suggestions[] = 'node__view__' . $node->view->storage->id();
+    if (!empty($node->view->current_display)) {
+      $suggestions[] = 'node__view__' . $node->view->storage->id() . '__' . $node->view->current_display;
+    }
   }
 }
 
@@ -288,9 +299,18 @@ function views_preprocess_comment(&$variables) {
   // \Drupal\views\Plugin\views\row\EntityRow::preRender().
   if (!empty($variables['comment']->view) && $variables['comment']->view->storage->id()) {
     $variables['view'] = &$variables['comment']->view;
-    $variables['theme_hook_suggestions'][] = 'comment__view__' . $variables['comment']->view->storage->id();
-    if (!empty($variables['node']->view->current_display)) {
-      $variables['theme_hook_suggestions'][] = 'comment__view__' . $variables['comment']->view->storage->id() . '__' . $variables['comment']->view->current_display;
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function views_theme_suggestions_comment_alter(array &$suggestions, array $variables) {
+  $comment = $variables['elements']['#comment'];
+  if (!empty($comment->view) && $comment->view->storage->id()) {
+    $suggestions[] = 'comment__view__' . $comment->view->storage->id();
+    if (!empty($comment->view->current_display)) {
+      $suggestions[] = 'comment__view__' . $comment->view->storage->id() . '__' . $comment->view->current_display;
     }
   }
 }
