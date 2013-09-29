@@ -14,7 +14,6 @@ use Drupal\Core\StreamWrapper\PublicStream;
  * Implements hook_requirements().
  */
 function system_requirements($phase) {
-  global $base_url;
   $requirements = array();
 
   // Report Drupal version
