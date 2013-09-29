@@ -51,7 +51,7 @@ class FilterUidRevisionTest extends NodeTestBase {
 
     // Create one  node on which the author has neither authorship of revisions
     // or the main node.
-    $node = $this->drupalCreateNode(array('uid' => $no_author->id()));
+    $this->drupalCreateNode(array('uid' => $no_author->id()));
 
     $view = views_get_view('test_filter_node_uid_revision');
     $view->initHandlers();
