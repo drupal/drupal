@@ -7,6 +7,7 @@
 
 namespace Drupal\Core\Entity\Field;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\AccessibleInterface;
 use Drupal\Core\TypedData\ListInterface;
 
@@ -58,6 +59,17 @@ interface FieldItemListInterface extends ListInterface, AccessibleInterface {
    *   The field definition.
    */
   public function getFieldDefinition();
+
+  /**
+   * Contains the default access logic of this field.
+   *
+   * See \Drupal\Core\Entity\EntityAccessControllerInterface::fieldAccess() for
+   * the parameter documentation.
+   *
+   * @return bool
+   *   TRUE if access to this field is allowed per default, FALSE otherwise.
+   */
+  public function defaultAccess($operation = 'view', AccountInterface $account = NULL);
 
   /**
    * Filters out empty field items and re-numbers the item deltas.

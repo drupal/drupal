@@ -7,7 +7,9 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 
@@ -266,6 +268,44 @@ class EntityAccessController implements EntityAccessControllerInterface {
   public function setModuleHandler(ModuleHandlerInterface $module_handler) {
     $this->moduleHandler = $module_handler;
     return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function fieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account = NULL, FieldItemListInterface $items = NULL) {
+    $account = $this->prepareUser($account);
+
+    // Get the default access restriction that lives within this field.
+    $default = $items ? $items->defaultAccess($operation, $account) : TRUE;
+
+    // Invoke hook and collect grants/denies for field access from other
+    // modules. Our default access flag is masked under the ':default' key.
+    $grants = array(':default' => $default);
+    $hook_implementations = $this->moduleHandler->getImplementations('entity_field_access');
+    foreach ($hook_implementations as $module) {
+      $grants = array_merge($grants, array($module => $this->moduleHandler->invoke($module, 'entity_field_access', array($operation, $field_definition, $account, $items))));
+    }
+
+    // Also allow modules to alter the returned grants/denies.
+    $context = array(
+      'operation' => $operation,
+      'field_definition' => $field_definition,
+      'items' => $items,
+      'account' => $account,
+    );
+    $this->moduleHandler->alter('entity_field_access', $grants, $context);
+
+    // One grant being FALSE is enough to deny access immediately.
+    if (in_array(FALSE, $grants, TRUE)) {
+      return FALSE;
+    }
+    // At least one grant has the explicit opinion to allow access.
+    if (in_array(TRUE, $grants, TRUE)) {
+      return TRUE;
+    }
+    // All grants are NULL and have no opinion - deny access in that case.
+    return FALSE;
   }
 
 }

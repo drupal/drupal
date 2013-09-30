@@ -649,7 +649,7 @@ function file_file_download($uri, $field_type = 'file') {
       foreach ($entities as $entity) {
         $field = field_info_field($entity_type, $field_name);
         // Check if access to this field is not disallowed.
-        if (!field_access('view', $field, $entity_type, $entity)) {
+        if (!$entity->get($field_name)->access('view')) {
           $denied = TRUE;
           continue;
         }

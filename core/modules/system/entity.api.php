@@ -705,23 +705,26 @@ function hook_entity_operation_alter(array &$operations, \Drupal\Core\Entity\Ent
  * Control access to fields.
  *
  * This hook is invoked from
- * \Drupal\Core\Entity\Field\FieldItemListInterface::access() to let modules
+ * \Drupal\Core\Entity\EntityAccessController::fieldAccess() to let modules
  * grant or deny operations on fields.
  *
  * @param string $operation
  *   The operation to be performed. See
  *   \Drupal\Core\TypedData\AccessibleInterface::access() for possible values.
- * @param \Drupal\Core\Entity\Field\FieldItemListInterface $field
- *   The entity field object on which the operation is to be performed.
+ * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+ *   The field definition.
  * @param \Drupal\Core\Session\AccountInterface $account
  *   The user account to check.
+ * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
+ *   (optional) The entity field object on which the operation is to be
+ *   performed.
  *
  * @return bool|NULL
  *   TRUE if access should be allowed, FALSE if access should be denied and NULL
  *   if the implementation has no opinion.
  */
-function hook_entity_field_access($operation, $field, \Drupal\Core\Session\AccountInterface $account) {
-  if ($field->getName() == 'field_of_interest' && $operation == 'update') {
+function hook_entity_field_access($operation, \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition, \Drupal\Core\Session\AccountInterface $account, \Drupal\Core\Entity\Field\FieldItemListInterface $items = NULL) {
+  if ($field_definition->getFieldName() == 'field_of_interest' && $operation == 'edit') {
     return user_access('update field of interest', $account);
   }
 }
@@ -739,13 +742,16 @@ function hook_entity_field_access($operation, $field, \Drupal\Core\Session\Accou
  * @param array $context
  *   Context array on the performed operation with the following keys:
  *   - operation: The operation to be performed (string).
- *   - field: The entity field object (\Drupal\Core\Entity\Field\FieldItemList).
+ *   - field_definition: The field definition object
+ *     (\Drupal\Core\Entity\Field\FieldDefinitionInterface)
  *   - account: The user account to check access for
  *     (Drupal\user\Entity\User).
+ *   - items: (optional) The entity field items
+ *     (\Drupal\Core\Entity\Field\FieldItemListInterface).
  */
 function hook_entity_field_access_alter(array &$grants, array $context) {
-  $field = $context['field'];
-  if ($field->getName() == 'field_of_interest' && $grants['node'] === FALSE) {
+  $field_definition = $context['field_definition'];
+  if ($field_definition->getFieldName() == 'field_of_interest' && $grants['node'] === FALSE) {
     // Override node module's restriction to no opinion. We don't want to
     // provide our own access hook, we only want to take out node module's part
     // in the access handling of this field. We also don't want to switch node

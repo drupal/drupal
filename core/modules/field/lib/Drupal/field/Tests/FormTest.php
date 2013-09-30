@@ -505,7 +505,8 @@ class FormTest extends FieldTestBase {
       ->setComponent($field_name)
       ->save();
 
-    // Create a field with no edit access - see field_test_field_access().
+    // Create a field with no edit access. See
+    // field_test_entity_field_access().
     $field_no_access = array(
       'name' => 'field_no_edit_access',
       'entity_type' => $entity_type,

@@ -84,7 +84,7 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
       $info = array(
         '#theme' => 'field',
         '#title' => $this->fieldDefinition->getFieldLabel(),
-        '#access' => $this->checkFieldAccess('view', $entity),
+        '#access' => $items->access('view'),
         '#label_display' => $this->label,
         '#view_mode' => $this->viewMode,
         '#language' => $items->getLangcode(),
@@ -135,22 +135,6 @@ abstract class FormatterBase extends PluginSettingsBase implements FormatterInte
    * {@inheritdoc}
    */
   public function prepareView(array $entities_items) { }
-
-  /**
-   * Returns whether the currently logged in user has access to the field.
-   *
-   * @todo Remove this once Field API access is unified with entity field
-   *   access: http://drupal.org/node/1994140.
-   */
-  protected function checkFieldAccess($op, $entity) {
-    if ($this->fieldDefinition instanceof FieldInstanceInterface) {
-      $field = $this->fieldDefinition->getField();
-      return field_access($op, $field, $entity->entityType(), $entity);
-    }
-    else {
-      return FALSE;
-    }
-  }
 
   /**
    * Returns the array of field settings.

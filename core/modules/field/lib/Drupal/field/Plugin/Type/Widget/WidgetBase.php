@@ -128,7 +128,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
             'field-widget-' . drupal_html_class($this->getPluginId()),
           ),
         ),
-        '#access' => $this->checkFieldAccess('edit', $items->getEntity()),
+        '#access' => $items->access('edit'),
         'widget' => $elements,
       ),
     );
@@ -423,22 +423,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       foreach ($items as $delta => $item) {
         unset($item->_weight);
       }
-    }
-  }
-
-  /**
-   * Returns whether the currently logged in user has access to the field.
-   *
-   * @todo Remove this once Field API access is unified with entity field
-   *   access: http://drupal.org/node/1994140.
-   */
-  protected function checkFieldAccess($op, $entity) {
-    if ($this->fieldDefinition instanceof FieldInstanceInterface) {
-      $field = $this->fieldDefinition->getField();
-      return field_access($op, $field, $entity->entityType(), $entity);
-    }
-    else {
-      return FALSE;
     }
   }
 

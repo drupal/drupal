@@ -11,6 +11,7 @@ use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Entity\EntityManager;
 use Drupal\field\Plugin\Type\Formatter\FormatterPluginManager;
 use Drupal\views\ViewExecutable;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -71,6 +72,13 @@ class Field extends FieldPluginBase {
   protected $formatterOptions;
 
   /**
+   * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
    * The field formatter plugin manager.
    *
    * @var \Drupal\field\Plugin\Type\Formatter\FormatterPluginManager
@@ -86,12 +94,15 @@ class Field extends FieldPluginBase {
    *   The plugin_id for the plugin instance.
    * @param array $plugin_definition
    *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The field formatter plugin manager.
    * @param \Drupal\field\Plugin\Type\Formatter\FormatterPluginManager $formatter_plugin_manager
    *   The field formatter plugin manager.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, FormatterPluginManager $formatter_plugin_manager) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManager $entity_manager, FormatterPluginManager $formatter_plugin_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
+    $this->entityManager = $entity_manager;
     $this->formatterPluginManager = $formatter_plugin_manager;
   }
 
@@ -103,6 +114,7 @@ class Field extends FieldPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
+      $container->get('entity.manager'),
       $container->get('plugin.manager.field.formatter')
     );
   }
@@ -147,7 +159,8 @@ class Field extends FieldPluginBase {
    */
   public function access() {
     $base_table = $this->get_base_table();
-    return field_access('view', $this->field_info, $this->definition['entity_tables'][$base_table]);
+    $access_controller = $this->entityManager->getAccessController($this->definition['entity_tables'][$base_table]);
+    return $access_controller->fieldAccess('view', $this->field_info);
   }
 
   /**

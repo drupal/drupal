@@ -216,7 +216,7 @@ function hook_file_delete(Drupal\file\FileInterface $file) {
  *   that denial may be overridden by another entity controller, making this
  *   grant permissive rather than restrictive.
  *
- * @see hook_field_access().
+ * @see hook_entity_field_access().
  */
 function hook_file_download_access($field, Drupal\Core\Entity\EntityInterface $entity, Drupal\file\FileInterface $file) {
   if ($entity->entityType() == 'node') {

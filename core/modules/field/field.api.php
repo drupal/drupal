@@ -573,32 +573,5 @@ function hook_field_purge_instance($instance) {
  */
 
 /**
- * Determine whether the user has access to a given field.
- *
- * This hook is invoked from field_access() to let modules block access to
- * operations on fields. If no module returns FALSE, the operation is allowed.
- *
- * @param $op
- *   The operation to be performed. Possible values: 'edit', 'view'.
- * @param \Drupal\field\FieldInterface $field
- *   The field on which the operation is to be performed.
- * @param $entity_type
- *   The type of $entity; for example, 'node' or 'user'.
- * @param $entity
- *   (optional) The entity for the operation.
- * @param $account
- *   (optional) The account to check; if not given use currently logged in user.
- *
- * @return
- *   TRUE if the operation is allowed, and FALSE if the operation is denied.
- */
-function hook_field_access($op, \Drupal\field\FieldInterface $field, $entity_type, $entity, $account) {
-  if ($field['field_name'] == 'field_of_interest' && $op == 'edit') {
-    return $account->hasPermission('edit field of interest');
-  }
-  return TRUE;
-}
-
-/**
  * @} End of "addtogroup hooks".
  */

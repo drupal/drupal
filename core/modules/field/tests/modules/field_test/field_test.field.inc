@@ -6,8 +6,10 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\field\FieldException;
-use Drupal\field\FieldInterface;
 
 /**
  * Implements hook_field_info().
@@ -199,16 +201,16 @@ function field_test_default_value(EntityInterface $entity, $field, $instance) {
 }
 
 /**
- * Implements hook_field_access().
+ * Implements hook_entity_field_access().
  */
-function field_test_field_access($op, FieldInterface $field, $entity_type, $entity, $account) {
-  if ($field['field_name'] == "field_no_{$op}_access") {
+function field_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  if ($field_definition->getFieldName() == "field_no_{$operation}_access") {
     return FALSE;
   }
 
   // Only grant view access to test_view_field fields when the user has
   // 'view test_view_field content' permission.
-  if ($field['field_name'] == 'test_view_field' && $op == 'view' && !$account->hasPermission('view test_view_field content')) {
+  if ($field_definition->getFieldName() == 'test_view_field' && $operation == 'view' && !$account->hasPermission('view test_view_field content')) {
     return FALSE;
   }
 

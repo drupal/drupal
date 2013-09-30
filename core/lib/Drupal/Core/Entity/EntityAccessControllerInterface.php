@@ -7,7 +7,9 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
 
@@ -69,5 +71,23 @@ interface EntityAccessControllerInterface {
    *   The entity access controller.
    */
   public function setModuleHandler(ModuleHandlerInterface $module_handler);
+
+  /**
+   * Checks access to an operation on a given entity field.
+   *
+   * @param string $operation
+   *   The operation access should be checked for.
+   *   Usually one of "view" or "edit".
+   * @param \Drupal\Core\Entity\Field\FieldDefinitionInterface $field_definition
+   *   The field definition.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *  (optional) The user session for which to check access, or NULL to check
+   *   access for the current user. Defaults to NULL.
+   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
+   *   (optional) The field values for which to check access, or NULL if access
+   *    is checked for the field definition, without any specific value
+   *    available. Defaults to NULL.
+   */
+  public function fieldAccess($operation, FieldDefinitionInterface $field_definition, AccountInterface $account = NULL, FieldItemListInterface $items = NULL);
 
 }

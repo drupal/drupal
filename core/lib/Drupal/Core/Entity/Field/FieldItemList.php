@@ -47,6 +47,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    */
   public function __construct(array $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     parent::__construct($definition, $name, $parent);
+    $this->definition['field_name'] = $name;
     // Always initialize one empty item as most times a value for at least one
     // item will be present. That way prototypes created by
     // \Drupal\Core\TypedData\TypedDataManager::getPropertyInstance() will
@@ -79,8 +80,7 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
    * {@inheritdoc}
    */
   public function getFieldDefinition() {
-    // @todo https://drupal.org/node/1988612
-    return NULL;
+    return new FieldDefinition($this->definition);
   }
 
   /**
@@ -195,52 +195,15 @@ class FieldItemList extends ItemList implements FieldItemListInterface {
   }
 
   /**
-   * Implements \Drupal\Core\TypedData\AccessibleInterface::access().
+   * {@inheritdoc}
    */
   public function access($operation = 'view', AccountInterface $account = NULL) {
-    global $user;
-    if (!isset($account)) {
-      $account = $user;
-    }
-    // Get the default access restriction that lives within this field.
-    $access = $this->defaultAccess($operation, $account);
-    // Invoke hook and collect grants/denies for field access from other
-    // modules. Our default access flag is masked under the ':default' key.
-    $grants = array(':default' => $access);
-    $hook_implementations = \Drupal::moduleHandler()->getImplementations('entity_field_access');
-    foreach ($hook_implementations as $module) {
-      $grants = array_merge($grants, array($module => module_invoke($module, 'entity_field_access', $operation, $this, $account)));
-    }
-    // Also allow modules to alter the returned grants/denies.
-    $context = array(
-      'operation' => $operation,
-      'field' => $this,
-      'account' => $account,
-    );
-    drupal_alter('entity_field_access', $grants, $context);
-
-    // One grant being FALSE is enough to deny access immediately.
-    if (in_array(FALSE, $grants, TRUE)) {
-      return FALSE;
-    }
-    // At least one grant has the explicit opinion to allow access.
-    if (in_array(TRUE, $grants, TRUE)) {
-      return TRUE;
-    }
-    // All grants are NULL and have no opinion - deny access in that case.
-    return FALSE;
+    $access_controller = \Drupal::entityManager()->getAccessController($this->getParent()->entityType());
+    return $access_controller->fieldAccess($operation, $this->getFieldDefinition(), $account, $this);
   }
 
   /**
-   * Contains the default access logic of this field.
-   *
-   * See \Drupal\Core\TypedData\AccessibleInterface::access() for the parameter
-   * doucmentation. This method can be overriden by field sub classes to provide
-   * a different default access logic. That allows them to inherit the complete
-   * access() method which contains the access hook invocation logic.
-   *
-   * @return bool
-   *   TRUE if access to this field is allowed per default, FALSE otherwise.
+   * {@inheritdoc}
    */
   public function defaultAccess($operation = 'view', AccountInterface $account = NULL) {
     // Grant access per default.

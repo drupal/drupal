@@ -68,10 +68,9 @@ interface FieldDefinitionInterface {
    * Returns the field type.
    *
    * @return string
-   *   The field type.
+   *   The field type, i.e. the id of a field type plugin. For example 'text'.
    *
-   * @todo Provide more information about field types after
-   *   https://drupal.org/node/1969728 is implemented.
+   * @see \Drupal\Core\Entity\Field\FieldTypePluginManager
    */
   public function getFieldType();
 
@@ -121,6 +120,13 @@ interface FieldDefinitionInterface {
    *   TRUE if the field is translatable.
    */
   public function isFieldTranslatable();
+
+  /**
+   * Determines whether the field is configurable via field.module.
+   *
+   * @return bool
+   */
+  public function isFieldConfigurable();
 
   /**
    * Returns the human-readable label for the field.

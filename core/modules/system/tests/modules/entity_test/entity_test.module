@@ -6,6 +6,8 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\Core\Entity\Field\FieldItemListInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\entity\Entity\EntityFormDisplay;
 use Drupal\field\Entity\Field;
@@ -406,13 +408,15 @@ function entity_test_label_callback($entity_type, $entity, $langcode = NULL) {
  *
  * @see \Drupal\system\Tests\Entity\FieldAccessTest::testFieldAccess()
  */
-function entity_test_entity_field_access($operation, $field, $account) {
-  if ($field->getName() == 'field_test_text') {
-    if ($field->value == 'no access value') {
-      return FALSE;
-    }
-    elseif ($operation == 'delete' && $field->value == 'no delete access value') {
-      return FALSE;
+function entity_test_entity_field_access($operation, FieldDefinitionInterface $field_definition, AccountInterface $account, FieldItemListInterface $items = NULL) {
+  if ($field_definition->getFieldName() == 'field_test_text') {
+    if ($items) {
+      if ($items[0]->value == 'no access value') {
+        return FALSE;
+      }
+      elseif ($operation == 'delete' && $items[0]->value == 'no delete access value') {
+        return FALSE;
+      }
     }
   }
 }
@@ -423,8 +427,7 @@ function entity_test_entity_field_access($operation, $field, $account) {
  * @see \Drupal\system\Tests\Entity\FieldAccessTest::testFieldAccess()
  */
 function entity_test_entity_field_access_alter(array &$grants, array $context) {
-  $field = $context['field'];
-  if ($field->getName() == 'field_test_text' && $field->value == 'access alter value') {
+  if ($context['field_definition']->getFieldName() == 'field_test_text' && $context['items'][0]->value == 'access alter value') {
     $grants[':default'] = FALSE;
   }
 }

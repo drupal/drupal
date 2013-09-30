@@ -71,8 +71,7 @@ class EditEntityFieldAccessCheck implements StaticAccessCheckInterface, EditEnti
    * {@inheritdoc}
    */
   public function accessEditEntityField(EntityInterface $entity, $field_name) {
-    $entity_type = $entity->entityType();
-    return $entity->access('update') && ($field = $this->fieldInfo->getField($entity_type, $field_name)) && field_access('edit', $field, $entity_type, $entity);
+    return $entity->access('update') && $entity->get($field_name)->access('edit');
   }
 
   /**
