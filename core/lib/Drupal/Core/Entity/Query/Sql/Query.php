@@ -80,8 +80,8 @@ class Query extends QueryBase implements QueryInterface {
    * @param \Drupal\Core\Database\Connection $connection
    *   The database connection to run the query against.
    */
-  public function __construct($entity_type, EntityManager $entity_manager, $conjunction, Connection $connection) {
-    parent::__construct($entity_type, $conjunction, $connection);
+  public function __construct($entity_type, EntityManager $entity_manager, $conjunction, Connection $connection, array $namespaces) {
+    parent::__construct($entity_type, $conjunction, $namespaces);
     $this->entityManager = $entity_manager;
     $this->connection = $connection;
   }
@@ -324,7 +324,7 @@ class Query extends QueryBase implements QueryInterface {
    *   The object that adds tables and fields to the SQL query object.
    */
   public function getTables(SelectInterface $sql_query) {
-    $class = QueryBase::getNamespace($this) . '\\Tables';
+    $class = QueryBase::getClass($this->namespaces, 'Tables');
     return new $class($sql_query);
   }
 

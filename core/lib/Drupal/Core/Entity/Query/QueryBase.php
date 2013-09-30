@@ -119,11 +119,19 @@ abstract class QueryBase {
   protected $pager = array();
 
   /**
+   * List of potential namespaces of the classes belonging to this query.
+   *
+   * @var array
+   */
+  protected $namespaces = array();
+
+  /**
    * Constructs this object.
    */
-  public function __construct($entity_type, $conjunction) {
+  public function __construct($entity_type, $conjunction, array $namespaces) {
     $this->entityType = $entity_type;
     $this->conjunction = $conjunction;
+    $this->namespaces = $namespaces;
     $this->condition = $this->conditionGroupFactory($conjunction);
     if ($this instanceof QueryAggregateInterface) {
       $this->conditionAggregate = $this->conditionAggregateGroupFactory($conjunction);
@@ -185,8 +193,10 @@ abstract class QueryBase {
    *   An object holding a group of conditions.
    */
   protected function conditionGroupFactory($conjunction = 'AND') {
-    $class = static::getNamespace($this) . '\\Condition';
-    return new $class($conjunction, $this);
+    // As the factory classes hardwire QueryBase::getClass, it needs to be
+    // hardwired here too.
+    $class = QueryBase::getClass($this->namespaces, 'Condition');
+    return new $class($conjunction, $this, $this->namespaces);
   }
 
   /**
@@ -422,17 +432,41 @@ abstract class QueryBase {
   }
 
   /**
-   * Returns the namespace of an object.
+   * Gets a list of namespaces of the ancestors of a class.
    *
    * @param $object
-   *   The object.
+   *   An object within a namespace.
+   *
+   * @return array
+   *   A list containing the namespace of the class, the namespace of the
+   *   parent of the class and so on and so on.
+   */
+  public static function getNamespaces($object) {
+    $namespaces = array();
+    for ($class = get_class($object); $class; $class = get_parent_class($class)) {
+      $namespaces[] = substr($class, 0, strrpos($class, '\\'));
+    }
+    return $namespaces;
+  }
+
+  /**
+   * Finds a class in a list of namespaces.
+   *
+   * @param array $namespaces
+   *   A list of namespaces.
+   * @param string $short_class_name
+   *   A class name without namespace.
    *
    * @return string
-   *   The namespace.
+   *   The fully qualified name of the class.
    */
-  public static function getNamespace($object) {
-    $class = get_class($object);
-    return substr($class, 0, strrpos($class, '\\'));
+  public static function getClass(array $namespaces, $short_class_name) {
+    foreach ($namespaces as $namespace) {
+      $class = $namespace . '\\' . $short_class_name;
+      if (class_exists($class)) {
+        return $class;
+      }
+    }
   }
 
 }

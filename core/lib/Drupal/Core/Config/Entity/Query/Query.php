@@ -43,9 +43,11 @@ class Query extends QueryBase implements QueryInterface {
    *   The entity manager that stores all meta information.
    * @param \Drupal\Core\Config\StorageInterface $config_storage
    *   The actual config storage which is used to list all config items.
+   * @param array $namespaces
+   *   List of potential namespaces of the classes belonging to this query.
    */
-  function __construct($entity_type, $conjunction, EntityManager $entity_manager, StorageInterface $config_storage) {
-    parent::__construct($entity_type, $conjunction);
+  function __construct($entity_type, $conjunction, EntityManager $entity_manager, StorageInterface $config_storage, array $namespaces) {
+    parent::__construct($entity_type, $conjunction, $namespaces);
     $this->entityManager = $entity_manager;
     $this->configStorage = $config_storage;
   }
