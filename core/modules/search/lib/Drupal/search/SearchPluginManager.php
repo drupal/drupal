@@ -11,6 +11,8 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Cache\CacheBackendInterface;
+use Drupal\Core\Language\LanguageManager;
 
 /**
  * SearchExecute plugin manager.
@@ -27,10 +29,11 @@ class SearchPluginManager extends DefaultPluginManager {
   /**
    * {@inheritdoc}
    */
-  public function __construct(\Traversable $namespaces, ConfigFactory $config_factory) {
+  public function __construct(\Traversable $namespaces, ConfigFactory $config_factory, CacheBackendInterface $cache_backend, LanguageManager $language_manager) {
     parent::__construct('Plugin/Search', $namespaces, 'Drupal\search\Annotation\SearchPlugin');
 
     $this->configFactory = $config_factory;
+    $this->setCacheBackend($cache_backend, $language_manager, 'search_plugins');
   }
 
   /**
