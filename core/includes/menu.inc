@@ -2851,6 +2851,7 @@ function _menu_navigation_links_rebuild($menu) {
       if ($existing_item) {
         $existing_item = reset($existing_item);
         $existing_item->options = unserialize($existing_item->options);
+        $existing_item->route_parameters = unserialize($existing_item->route_parameters);
 
         $router_item['mlid'] = $existing_item->mlid;
         $router_item['uuid'] = $existing_item->uuid;
