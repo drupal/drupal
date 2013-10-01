@@ -33,9 +33,6 @@ class Node extends FieldPluginBase {
     // Don't add the additional fields to groupby
     if (!empty($this->options['link_to_node'])) {
       $this->additional_fields['nid'] = array('table' => 'node', 'field' => 'nid');
-      if (module_exists('translation')) {
-        $this->additional_fields['langcode'] = array('table' => 'node', 'field' => 'langcode');
-      }
     }
   }
 

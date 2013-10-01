@@ -1,7 +1,0 @@
-translation.node_overview:
-  path: '/node/{node}/translate'
-  defaults:
-    _title: 'Translate'
-    _content: '\Drupal\translation\Controller\TranslationController::nodeOverview'
-  requirements:
-    _access_translation_tab: 'node'

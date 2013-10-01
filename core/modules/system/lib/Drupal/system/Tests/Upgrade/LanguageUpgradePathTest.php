@@ -82,18 +82,10 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
     // Test that the 'language' property was properly renamed to 'langcode'.
     $language_none_nid = 50;
     $spanish_nid = 51;
-    $translation_source_nid = 52;
-    $translation_nid = 53;
     // Check directly for the node langcode.
     $this->assertEqual(node_load($language_none_nid)->language()->id, Language::LANGCODE_NOT_SPECIFIED, "'language' property was renamed to 'langcode' for Language::LANGCODE_NOT_SPECIFIED node.");
     $this->assertEqual(node_load($spanish_nid)->language()->id, 'ca', "'language' property was renamed to 'langcode' for Catalan node.");
-    // Check that the translation table works correctly.
-    $this->drupalGet("node/$translation_source_nid/translate");
-    $this->assertResponse(200, 'The translated node has a proper translation table.');
-    $this->assertRaw('<td><strong>English</strong> (source)</td>', 'English is the source node of the translation.');
-    $this->assertRaw('<td>Chuvash</td>', 'There is a Chuvash translation of the node.');
-    $this->assertLinkByHref("node/$translation_nid", 0, 'The translation table links to the Chuvash translation.');
-    $this->assertRaw('<td>Catalan</td><td>n/a</td><td>Not translated</td>', 'There is no Catalan translation of this node.');
+
     // Check for node content type settings upgrade.
     $this->drupalGet('node/add/article');
     $this->assertField('langcode', 'There is a language selector.');
@@ -201,21 +193,4 @@ class LanguageUpgradePathTest extends UpgradePathTestBase {
     $this->assertFalse(db_index_exists('locales_target', 'plural'), 'Translations without plurals upgraded.');
   }
 
-  /**
-   * Tests upgrading translations permissions.
-   */
-  public function testLanguagePermissionsUpgrade() {
-    // Insert a permission into the Drupal 7 database before running the
-    // upgrade.
-    db_insert('role_permission')->fields(array(
-      'rid' => 2,
-      'permission' => 'translate content',
-      'module' => 'translation',
-    ))->execute();
-
-    $this->assertTrue($this->performUpgrade(), 'The upgrade was completed successfully.');
-    $this->assertFalse(user_roles(FALSE, 'translate content'), 'No translate content role left in config.');
-    // Check that translate content has been renamed to translate all content.
-    $this->assertTrue(user_roles(FALSE, 'translate all content'), 'Rename role translate content to translate all content was completed successfully.');
-  }
 }

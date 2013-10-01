@@ -26,10 +26,6 @@ function node_token_info() {
     'name' => t("Revision ID"),
     'description' => t("The unique ID of the node's latest revision."),
   );
-  $node['tnid'] = array(
-    'name' => t("Translation set ID"),
-    'description' => t("The unique ID of the original-language version of this node, if one exists."),
-  );
   $node['type'] = array(
     'name' => t("Content type"),
     'description' => t("The type of the node."),
@@ -116,10 +112,6 @@ function node_tokens($type, $tokens, array $data = array(), array $options = arr
 
         case 'vid':
           $replacements[$original] = $node->getRevisionId();
-          break;
-
-        case 'tnid':
-          $replacements[$original] = $node->tnid->value;
           break;
 
         case 'type':

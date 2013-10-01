@@ -396,11 +396,6 @@ class Node extends ContentEntityBase implements NodeInterface {
       'description' => t('A boolean indicating whether the node should be displayed at the top of lists in which it appears.'),
       'type' => 'boolean_field',
     );
-    $properties['tnid'] = array(
-      'label' => t('Translation set ID'),
-      'description' => t('The translation set id for this node, which equals the node id of the source post in each set.'),
-      'type' => 'integer_field',
-    );
     $properties['translate'] = array(
       'label' => t('Translate'),
       'description' => t('A boolean indicating whether this translation page needs to be updated.'),

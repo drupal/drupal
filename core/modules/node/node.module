@@ -2189,22 +2189,6 @@ function node_library_info() {
 }
 
 /**
- * Implements hook_system_info_alter().
- *
- * The Content Translation module is deprecated in Drupal 8 in favor of the
- * Entity Translation and is planned for removal. Until an upgrade path is
- * available, it will still be possible to enable it, if necessary, through the
- * module API or by tweaking the system module list configuration by hand.
- * Morever every D8 site where Content Translation is installed (not necessarily
- * enabled) will still be able to see it as usual in the module page.
- */
-function node_system_info_alter(&$info, $file, $type) {
-  if ($type == 'module' && $file->name == 'translation') {
-    $info['hidden'] = !module_exists('translation');
-  }
-}
-
-/**
  * Marks a node to be re-indexed by the node_search plugin.
  *
  * @param int $nid

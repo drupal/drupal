@@ -38,7 +38,6 @@ class HandlerAllTest extends HandlerTestBase {
     'search',
     'statistics',
     'taxonomy',
-    'translation',
     'user',
   );
 

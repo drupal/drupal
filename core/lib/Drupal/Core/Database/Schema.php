@@ -130,7 +130,6 @@ use Drupal\Core\Database\Query\PlaceholderInterface;
  *     'promote'   => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
  *     'moderate'  => array('type' => 'int', 'not null' => TRUE,'default' => 0),
  *     'sticky'    => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
- *     'tnid'      => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0),
  *     'translate' => array('type' => 'int', 'not null' => TRUE, 'default' => 0),
  *   ),
  *   'indexes' => array(
@@ -142,7 +141,6 @@ use Drupal\Core\Database\Query\PlaceholderInterface;
  *     'node_title_type'     => array('title', array('type', 4)),
  *     'node_type'           => array(array('type', 4)),
  *     'uid'                 => array('uid'),
- *     'tnid'                => array('tnid'),
  *     'translate'           => array('translate'),
  *   ),
  *   'unique keys' => array(

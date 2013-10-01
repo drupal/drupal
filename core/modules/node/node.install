@@ -50,15 +50,6 @@ function node_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      // @todo Remove the following columns when removing the legacy Content
-      //   Translation module. See http://drupal.org/node/1952062.
-      'tnid' => array(
-        'description' => 'The translation set ID for this node, which equals the node ID of the source post in each set.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
       'translate' => array(
         'description' => 'A boolean indicating whether this translation page needs to be updated.',
         'type' => 'int',
@@ -68,7 +59,6 @@ function node_schema() {
     ),
     'indexes' => array(
       'node_type' => array(array('type', 4)),
-      'tnid' => array('tnid'),
       'translate' => array('translate'),
     ),
     'unique keys' => array(

@@ -17,7 +17,7 @@ class PathLanguageTest extends PathTestBase {
    *
    * @var array
    */
-  public static $modules = array('path', 'locale', 'translation');
+  public static $modules = array('path', 'locale', 'content_translation');
 
   public static function getInfo() {
     return array(
@@ -30,8 +30,20 @@ class PathLanguageTest extends PathTestBase {
   function setUp() {
     parent::setUp();
 
+    $permissions = array(
+      'access administration pages',
+      'administer content translation',
+      'administer content types',
+      'administer languages',
+      'administer url aliases',
+      'create content translations',
+      'create page content',
+      'create url aliases',
+      'edit any page content',
+      'translate any entity',
+    );
     // Create and login user.
-    $this->web_user = $this->drupalCreateUser(array('edit any page content', 'create page content', 'administer url aliases', 'create url aliases', 'administer languages', 'translate all content', 'access administration pages', 'administer content types'));
+    $this->web_user = $this->drupalCreateUser($permissions);
     $this->drupalLogin($this->web_user);
 
     // Enable French language.
@@ -43,6 +55,16 @@ class PathLanguageTest extends PathTestBase {
     // Enable URL language detection and selection.
     $edit = array('language_interface[enabled][language-url]' => 1);
     $this->drupalPostForm('admin/config/regional/language/detection', $edit, t('Save settings'));
+
+    // Enable translation for page node.
+    $edit = array(
+      'entity_types[node]' => 1,
+      'settings[node][page][translatable]' => 1,
+      'settings[node][page][fields][body]' => 1,
+      'settings[node][page][settings][language][language_show]' => 1,
+    );
+    $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save'));
+
   }
 
   /**
@@ -57,12 +79,11 @@ class PathLanguageTest extends PathTestBase {
     $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
     variable_set('node_type_language_translation_enabled_page', TRUE);
 
-    $english_node = $this->drupalCreateNode(array('type' => 'page'));
+    $english_node = $this->drupalCreateNode(array('type' => 'page', 'langcode' => 'en'));
     $english_alias = $this->randomName();
 
     // Edit the node to set language and path.
     $edit = array();
-    $edit['langcode'] = 'en';
     $edit['path[alias]'] = $english_alias;
     $this->drupalPostForm('node/' . $english_node->id() . '/edit', $edit, t('Save'));
 
@@ -71,8 +92,9 @@ class PathLanguageTest extends PathTestBase {
     $this->assertText($english_node->label(), 'Alias works.');
 
     // Translate the node into French.
-    $this->drupalGet('node/' . $english_node->id() . '/translate');
-    $this->clickLink(t('Add translation'));
+    $this->drupalGet('node/' . $english_node->id() . '/translations');
+    $this->clickLink(t('Add'));
+
     $edit = array();
     $edit['title'] = $this->randomName();
     $edit['body[0][value]'] = $this->randomName();
@@ -89,7 +111,7 @@ class PathLanguageTest extends PathTestBase {
     $languages = language_list();
 
     // Ensure the node was created.
-    $french_node = $this->drupalGetNodeByTitle($edit["title"]);
+    $french_node = $english_node->getTranslation('fr');
     $this->assertTrue(($french_node), 'Node found in database.');
 
     // Confirm that the alias works.
@@ -97,7 +119,7 @@ class PathLanguageTest extends PathTestBase {
     $this->assertText($french_node->label(), 'Alias for French translation works.');
 
     // Confirm that the alias is returned by url().
-    $url = $this->container->get('url_generator')->generateFromPath('node/' . $french_node->id(), array('language' => $languages[$french_node->language()->id]));
+    $url = $this->container->get('url_generator')->generateFromPath('node/' . $french_node->id(), array('language' => $languages['fr']));
 
     $this->assertTrue(strpos($url, $edit['path[alias]']), 'URL contains the path alias.');
 
@@ -148,17 +170,17 @@ class PathLanguageTest extends PathTestBase {
     // The alias manager has an internal path lookup cache. Check to see that
     // it has the appropriate contents at this point.
     $this->container->get('path.alias_manager')->cacheClear();
-    $french_node_path = $this->container->get('path.alias_manager')->getSystemPath($french_alias, $french_node->language()->id);
+    $french_node_path = $this->container->get('path.alias_manager')->getSystemPath($french_alias, 'fr');
     $this->assertEqual($french_node_path, 'node/' . $french_node->id(), 'Normal path works.');
     // Second call should return the same path.
-    $french_node_path = $this->container->get('path.alias_manager')->getSystemPath($french_alias, $french_node->language()->id);
+    $french_node_path = $this->container->get('path.alias_manager')->getSystemPath($french_alias, 'fr');
     $this->assertEqual($french_node_path, 'node/' . $french_node->id(), 'Normal path is the same.');
 
     // Confirm that the alias works.
-    $french_node_alias = $this->container->get('path.alias_manager')->getPathAlias('node/' . $french_node->id(), $french_node->language()->id);
+    $french_node_alias = $this->container->get('path.alias_manager')->getPathAlias('node/' . $french_node->id(), 'fr');
     $this->assertEqual($french_node_alias, $french_alias, 'Alias works.');
     // Second call should return the same alias.
-    $french_node_alias = $this->container->get('path.alias_manager')->getPathAlias('node/' . $french_node->id(), $french_node->language()->id);
+    $french_node_alias = $this->container->get('path.alias_manager')->getPathAlias('node/' . $french_node->id(), 'fr');
     $this->assertEqual($french_node_alias, $french_alias, 'Alias is the same.');
   }
 }

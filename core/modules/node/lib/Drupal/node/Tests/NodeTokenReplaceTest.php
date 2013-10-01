@@ -50,7 +50,6 @@ class NodeTokenReplaceTest extends NodeTestBase {
     $tests = array();
     $tests['[node:nid]'] = $node->id();
     $tests['[node:vid]'] = $node->getRevisionId();
-    $tests['[node:tnid]'] = $node->tnid->value;
     $tests['[node:type]'] = 'article';
     $tests['[node:type-name]'] = 'Article';
     $tests['[node:title]'] = check_plain($node->getTitle());

@@ -1,9 +1,0 @@
-# Schema for the configuration files of the translation module.
-
-translation.settings:
-  type: mapping
-  label: 'Translation settings'
-  mapping:
-    language_type:
-      type: string
-      label: 'Language type'
