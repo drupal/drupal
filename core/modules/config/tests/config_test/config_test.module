@@ -18,11 +18,6 @@ function config_test_menu() {
     'title' => 'Test configuration',
     'route_name' => 'config_test.list_page',
   );
-  $items['admin/structure/config_test/add'] = array(
-    'title' => 'Add test configuration',
-    'route_name' => 'config_test.entity_add',
-    'type' => MENU_SIBLING_LOCAL_TASK,
-  );
   $items['admin/structure/config_test/manage/%config_test'] = array(
     'route_name' => 'config_test.entity',
   );

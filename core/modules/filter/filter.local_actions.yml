@@ -1,0 +1,5 @@
+filter_format_add_local_action:
+  route_name: filter.format_add
+  title: 'Add text format'
+  appears_on:
+    - filter.admin_overview

@@ -1763,12 +1763,21 @@ function theme_menu_local_action($variables) {
   $link += array(
     'href' => '',
     'localized_options' => array(),
+    'route_parameters' => array(),
   );
   $link['localized_options']['attributes']['class'][] = 'button';
   $link['localized_options']['attributes']['class'][] = 'button-action';
 
   $output = '<li>';
-  $output .= l($link['title'], $link['href'], $link['localized_options']);
+  // @todo Remove this check and the call to l() when all pages are converted to
+  //   routes.
+  // @todo Figure out how to support local actions without a href properly.
+  if ($link['href'] === '' && !empty($link['route_name'])) {
+    $output .= Drupal::l($link['title'], $link['route_name'], $link['route_parameters'], $link['localized_options']);
+  }
+  else {
+    $output .= l($link['title'], $link['href'], $link['localized_options']);
+  }
   $output .= "</li>";
 
   return $output;
@@ -2316,21 +2325,9 @@ function menu_secondary_local_tasks() {
  */
 function menu_get_local_actions() {
   $links = menu_local_tasks();
-  $router_item = menu_get_item();
+  $route_name = Drupal::request()->attributes->get(RouteObjectInterface::ROUTE_NAME);
   $manager = \Drupal::service('plugin.manager.menu.local_action');
-  $local_actions = $manager->getActionsForRoute($router_item['route_name']);
-  foreach ($local_actions as $plugin) {
-    $route_path = $manager->getPath($plugin);
-    $action_router_item = menu_get_item($route_path);
-    $links['actions'][$route_path] = array(
-      '#theme' => 'menu_local_action',
-      '#link' => array(
-        'title' => $manager->getTitle($plugin),
-        'href' => $route_path,
-      ),
-      '#access' => $action_router_item['access'],
-    );
-  }
+  $links['actions'] += $manager->getActionsForRoute($route_name);
   return $links['actions'];
 }
 

@@ -7,11 +7,17 @@
 
 namespace Drupal\Core\Menu;
 
+use Drupal\Core\Access\AccessManager;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Menu\LocalActionInterface;
 use Drupal\Core\Plugin\DefaultPluginManager;
+use Drupal\Component\Plugin\Discovery\ProcessDecorator;
+use Drupal\Core\Plugin\Discovery\ContainerDerivativeDiscoveryDecorator;
+use Drupal\Core\Plugin\Discovery\YamlDiscovery;
+use Drupal\Core\Plugin\Factory\ContainerFactory;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 
@@ -24,6 +30,30 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
  * and the list of routes where the action should be rendered.
  */
 class LocalActionManager extends DefaultPluginManager {
+
+  /**
+   * Provides some default values for all local action plugins.
+   *
+   * @var array
+   */
+  protected $defaults = array(
+    // The plugin id. Set by the plugin system based on the top-level YAML key.
+    'id' => NULL,
+    // The static title for the local action.
+    'title' => '',
+    // The weight of the local action.
+    'weight' => NULL,
+    // (Required) the route name used to generate a link.
+    'route_name' => NULL,
+    // Default route parameters for generating links.
+    'route_parameters' => array(),
+    // Associative array of link options.
+    'options' => array(),
+    // The route names where this local action appears.
+    'appears_on' => array(),
+    // Default class for local action implementations.
+    'class' => 'Drupal\Core\Menu\LocalActionDefault',
+  );
 
   /**
    * A controller resolver object.
@@ -40,6 +70,20 @@ class LocalActionManager extends DefaultPluginManager {
   protected $request;
 
   /**
+   * The route provider to load routes by name.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected $routeProvider;
+
+  /**
+   * The access manager.
+   *
+   * @var \Drupal\Core\Access\AccessManager
+   */
+  protected $accessManager;
+
+/**
    * The plugin instances.
    *
    * @var array
@@ -49,28 +93,35 @@ class LocalActionManager extends DefaultPluginManager {
   /**
    * Constructs a LocalActionManager object.
    *
-   * @param \Traversable $namespaces
-   *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations.
    * @param \Symfony\Component\HttpKernel\Controller\ControllerResolverInterface $controller_resolver
    *   An object to use in introspecting route methods.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object to use for building titles and paths for plugin
    *   instances.
+   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   *   The route provider.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
+   * @param \Drupal\Core\Access\AccessManager $access_manager
+   *   The access manager.
    */
-  public function __construct(\Traversable $namespaces, ControllerResolverInterface $controller_resolver, Request $request, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManager $language_manager) {
-    parent::__construct('Plugin/Menu/LocalAction', $namespaces, 'Drupal\Core\Annotation\Menu\LocalAction');
-
+  public function __construct(ControllerResolverInterface $controller_resolver, Request $request, RouteProviderInterface $route_provider, ModuleHandlerInterface $module_handler, CacheBackendInterface $cache_backend, LanguageManager $language_manager, AccessManager $access_manager) {
+    // Skip calling the parent constructor, since that assumes annotation-based
+    // discovery.
+    $this->discovery = new YamlDiscovery('local_actions', $module_handler->getModuleDirectories());
+    $this->discovery = new ContainerDerivativeDiscoveryDecorator($this->discovery);
+    $this->factory = new ContainerFactory($this);
+    $this->routeProvider = $route_provider;
+    $this->accessManager = $access_manager;
     $this->controllerResolver = $controller_resolver;
     $this->request = $request;
     $this->alterInfo($module_handler, 'menu_local_actions');
-    $this->setCacheBackend($cache_backend, $language_manager, 'local_action_plugins');
+    $this->setCacheBackend($cache_backend, $language_manager, 'local_action_plugins', array('local_action' => TRUE));
+
   }
 
   /**
@@ -92,44 +143,49 @@ class LocalActionManager extends DefaultPluginManager {
   }
 
   /**
-   * Gets the Drupal path for a local action.
-   *
-   * @param \Drupal\Core\Menu\LocalActionInterface $local_action
-   *   An object to get the path from.
-   *
-   * @return string
-   *   The path.
-   *
-   * @throws \BadMethodCallException
-   *   If the plugin does not implement the getPath() method.
-   */
-  public function getPath(LocalActionInterface $local_action) {
-    $controller = array($local_action, 'getPath');
-    $arguments = $this->controllerResolver->getArguments($this->request, $controller);
-    return call_user_func_array($controller, $arguments);
-  }
-
-  /**
    * Finds all local actions that appear on a named route.
    *
-   * @param string $route_name
-   *   The route for which to find local actions.
+   * @param string $route_appears
+   *   The route name for which to find local actions.
    *
-   * @return \Drupal\Core\Menu\LocalActionInterface[]
-   *   An array of LocalActionInterface objects that appear on the route path.
+   * @return array
+   *   An array of link render arrays.
    */
-  public function getActionsForRoute($route_name) {
-    if (!isset($this->instances[$route_name])) {
-      $this->instances[$route_name] = array();
+  public function getActionsForRoute($route_appears) {
+    if (!isset($this->instances[$route_appears])) {
+      $route_names = array();
+      $this->instances[$route_appears] = array();
       // @todo - optimize this lookup by compiling or caching.
       foreach ($this->getDefinitions() as $plugin_id => $action_info) {
-        if (in_array($route_name, $action_info['appears_on'])) {
+        if (in_array($route_appears, $action_info['appears_on'])) {
           $plugin = $this->createInstance($plugin_id);
-          $this->instances[$route_name][$plugin_id] = $plugin;
+          $route_names[] = $plugin->getRouteName();
+          $this->instances[$route_appears][$plugin_id] = $plugin;
         }
       }
+      // Pre-fetch all the action route objects. This reduces the number of SQL
+      // queries that would otherwise be triggered by the access manager.
+      if (!empty($route_names)) {
+        $this->routeProvider->getRoutesByNames($route_names);
+      }
     }
-    return $this->instances[$route_name];
+    $links = array();
+    foreach ($this->instances[$route_appears] as $plugin) {
+      $route_name = $plugin->getRouteName();
+      $route_parameters = $plugin->getRouteParameters($this->request);
+      $links[$route_name] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => array(
+          'title' => $this->getTitle($plugin),
+          'route_name' => $route_name,
+          'route_parameters' => $route_parameters,
+          'localized_options' => $plugin->getOptions($this->request),
+        ),
+        '#access' => $this->accessManager->checkNamedRoute($route_name, $route_parameters),
+        '#weight' => $plugin->getWeight(),
+      );
+    }
+    return $links;
   }
 
 }

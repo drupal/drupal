@@ -140,10 +140,6 @@ function filter_menu() {
     'title' => 'List',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/config/content/formats/add'] = array(
-    'route_name' => 'filter.format_add',
-    'type' => MENU_SIBLING_LOCAL_TASK,
-  );
   $items['admin/config/content/formats/manage/%'] = array(
     'title callback' => 'entity_page_label',
     'title arguments' => array(5),

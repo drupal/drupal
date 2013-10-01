@@ -90,11 +90,6 @@ function shortcut_menu() {
     'description' => 'Add and modify shortcut sets.',
     'route_name' => 'shortcut.set_admin',
   );
-  $items['admin/config/user-interface/shortcut/add-set'] = array(
-    'title' => 'Add shortcut set',
-    'route_name' => 'shortcut.set_add',
-    'type' => MENU_SIBLING_LOCAL_TASK,
-  );
   $items['admin/config/user-interface/shortcut/manage/%shortcut_set'] = array(
     'title' => 'Edit shortcuts',
     'route_name' => 'shortcut.set_customize',

@@ -174,7 +174,7 @@ services:
     arguments: ['@container.namespaces']
   plugin.manager.menu.local_action:
     class: Drupal\Core\Menu\LocalActionManager
-    arguments: ['@container.namespaces', '@controller_resolver', '@request', '@module_handler', '@cache.cache', '@language_manager']
+    arguments: ['@controller_resolver', '@request', '@router.route_provider', '@module_handler', '@cache.cache', '@language_manager', '@access_manager']
   plugin.manager.menu.local_task:
     class: Drupal\Core\Menu\LocalTaskManager
     arguments: ['@controller_resolver', '@request', '@router.route_provider', '@module_handler', '@cache.cache', '@language_manager', '@access_manager']

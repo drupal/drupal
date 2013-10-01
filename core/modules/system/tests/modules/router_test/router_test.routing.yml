@@ -48,6 +48,8 @@ router_test.8:
 
 router_test.9:
   path: '/router_test/test9'
+  options:
+    _access_mode: 'ANY'
   defaults:
     _controller: '\Drupal\router_test\TestControllers::test8'
   requirements:

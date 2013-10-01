@@ -93,11 +93,6 @@ function image_menu() {
     'description' => 'List the current image styles on the site.',
     'type' => MENU_DEFAULT_LOCAL_TASK,
   );
-  $items['admin/config/media/image-styles/add'] = array(
-    'route_name' => 'image.style_add',
-    'type' => MENU_SIBLING_LOCAL_TASK,
-    'weight' => 1,
-  );
   $items['admin/config/media/image-styles/manage/%image_style'] = array(
     'title' => 'Edit style',
     'description' => 'Configure an image style.',

@@ -61,6 +61,13 @@ menu_test.local_action4:
   requirements:
     _access: 'TRUE'
 
+menu_test.local_action5:
+  path: '/menu-test-local-action/routing2'
+  defaults:
+    _content: '\Drupal\menu_test\TestControllers::test2'
+  requirements:
+    _access: 'TRUE'
+
 menu_test.local_task_test_tasks:
   path: '/menu-local-task-test/tasks'
   defaults:

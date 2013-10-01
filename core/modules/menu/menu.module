@@ -91,11 +91,6 @@ function menu_menu() {
     'title callback' => 'entity_page_label',
     'title arguments' => array(4),
   );
-  $items['admin/structure/menu/manage/%menu/add'] = array(
-    'title' => 'Add link',
-    'route_name' => 'menu.link_add',
-    'type' => MENU_LOCAL_ACTION,
-  );
   $items['admin/structure/menu/manage/%menu/edit'] = array(
     'title' => 'Edit menu',
     'type' => MENU_DEFAULT_LOCAL_TASK,

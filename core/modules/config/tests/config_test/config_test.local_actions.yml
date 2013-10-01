@@ -1,0 +1,5 @@
+config_test_entity_add_local_action:
+  route_name: config_test.entity_add
+  title: 'Add test configuration'
+  appears_on:
+    - config_test.list_page

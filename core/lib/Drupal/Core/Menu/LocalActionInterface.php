@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Menu;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Defines an interface for menu local actions.
  */
@@ -21,6 +23,39 @@ interface LocalActionInterface {
   public function getRouteName();
 
   /**
+   * Returns the route parameters needed to render a link for the local action.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The HttpRequest object representing the current request.
+   *
+   * @return array
+   *   An array of parameter names and values.
+   *
+   * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
+   */
+  public function getRouteParameters(Request $request);
+
+   /**
+    * Returns the weight for the local action.
+    *
+    * @return int
+    */
+   public function getWeight();
+
+  /**
+   * Returns options for rendering a link for the local action.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The HTTP request object representing the current request.
+   *
+   * @return array
+   *   An associative array of options.
+   *
+   * @see \Drupal\Core\Utility\LinkGeneratorInterface::generate()
+   */
+  public function getOptions(Request $request);
+
+  /**
    * Returns the localized title to be shown for this action.
    *
    * Subclasses may add optional arguments like NodeInterface $node = NULL that
@@ -33,17 +68,6 @@ interface LocalActionInterface {
    */
   public function getTitle();
 
-  /**
-   * Return an internal Drupal path to use when linking to the action.
-   *
-   * Subclasses may add arguments for request attributes which will then be
-   * automatically supplied by the controller resolver.
-   *
-   * @return string
-   *   The path to use when linking to the action.
-   *
-   * @see \Drupal\Core\Menu\LocalActionManager::getPath()
-   */
-  public function getPath();
+
 
 }

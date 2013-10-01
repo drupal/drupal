@@ -3,3 +3,11 @@ menu_test_local_action4:
   title: 'My YAML discovery action'
   appears_on:
     - menu_test.local_action1
+
+menu_test.local_action5:
+  route_name: menu_test.local_action5
+  class: '\Drupal\menu_test\Plugin\Menu\LocalAction\TestLocalAction'
+  weight: 10
+  appears_on:
+    - menu_test.local_action1
+

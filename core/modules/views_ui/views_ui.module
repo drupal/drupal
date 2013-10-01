@@ -25,11 +25,6 @@ function views_ui_menu() {
     'route_name' => 'views_ui.list',
   );
 
-  $items['admin/structure/views/add'] = array(
-    'route_name' => 'views_ui.add',
-    'type' => MENU_SIBLING_LOCAL_TASK,
-  );
-
   // @todo - remove all items of type MENU_VISIBLE_IN_BREADCRUMB
   // when there is a route-aware breadcrumb builder.
   $items['admin/structure/views/settings'] = array(
