@@ -618,7 +618,6 @@ services:
     factory_method: authenticate
     factory_service: authentication
     arguments: ['@request']
-    scope: request
   asset.css.collection_renderer:
     class: Drupal\Core\Asset\CssCollectionRenderer
     arguments: [ '@state' ]
