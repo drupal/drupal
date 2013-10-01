@@ -152,7 +152,7 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
       ->register('config.storage', 'Drupal\Core\Config\FileStorage')
       ->addArgument($this->configDirectories[CONFIG_ACTIVE_DIRECTORY]);
 
-    $conf['keyvalue_default'] = 'keyvalue.memory';
+    $this->settingsSet('keyvalue_default', 'keyvalue.memory');
     $container->set('keyvalue.memory', $this->keyValueFactory);
     if (!$container->has('keyvalue')) {
       // TestBase::setUp puts a completely empty container in
@@ -165,9 +165,14 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
       // together here, it still might a keyvalue storage for anything using
       // \Drupal::state() -- that's why a memory service was added in the first
       // place.
+      $container->register('settings', 'Drupal\Component\Utility\Settings')
+        ->setFactoryClass('Drupal\Component\Utility\Settings')
+        ->setFactoryMethod('getSingleton');
+
       $container
         ->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')
-        ->addArgument(new Reference('service_container'));
+        ->addArgument(new Reference('service_container'))
+        ->addArgument(new Reference('settings'));
 
       $container->register('state', 'Drupal\Core\KeyValueStore\KeyValueStoreInterface')
         ->setFactoryService(new Reference('keyvalue'))
