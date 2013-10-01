@@ -205,20 +205,57 @@ class DateTimePlus extends \DateTime {
     // invalid it doesn't return an exception.
     $datetimeplus = new static('', $timezone, $settings);
 
-    $date = \DateTime::createFromFormat($format, $time, $datetimeplus->getTimezone());
+    $format_string_type = isset($settings['format_string_type']) ? $settings['format_string_type'] : static::PHP;
+    if ($datetimeplus->canUseIntl() && $format_string_type == static::INTL) {
+      // Construct the $locale variable needed by the IntlDateFormatter.
+      $locale = $datetimeplus->langcode . '_' . $datetimeplus->country;
+
+      // If we have information about a calendar, add it.
+      if (!empty($datetimeplus->calendar) && $datetimeplus->calendar != static::CALENDAR) {
+        $locale .= '@calendar=' . $datetimeplus->calendar;
+      }
+
+      // If we're working with a non-gregorian calendar, indicate that.
+      $calendar_type = \IntlDateFormatter::GREGORIAN;
+      if ($datetimeplus->calendar != static::CALENDAR) {
+        $calendar_type = \IntlDateFormatter::TRADITIONAL;
+      }
+
+      $date_type = !empty($settings['date_type']) ? $settings['date_type'] : \IntlDateFormatter::FULL;
+      $time_type = !empty($settings['time_type']) ? $settings['time_type'] : \IntlDateFormatter::FULL;
+      $timezone = !empty($settings['timezone']) ? $settings['timezone'] : $datetimeplus->getTimezone()->getName();
+      $formatter = new \IntlDateFormatter($locale, $date_type, $time_type, $timezone, $calendar_type, $format);
+
+      $timestamp = $formatter->parse($time);
+      if ($timestamp) {
+        $date = $datetimeplus->createFromTimestamp($timestamp, $timezone, $settings);
+      }
+      else {
+        $date = NULL;
+      }
+    }
+    else {
+      $date = \DateTime::createFromFormat($format, $time, $datetimeplus->getTimezone());
+    }
     if (!$date instanceOf \DateTime) {
       throw new \Exception('The date cannot be created from a format.');
     }
     else {
+      // Functions that parse date is forgiving, it might create a date that
+      // is not exactly a match for the provided value, so test for that by
+      // re-creating the date/time formatted string and comparing it to the input. For
+      // instance, an input value of '11' using a format of Y (4 digits) gets
+      // created as '0011' instead of '2011'.
+      if ($date instanceOf DateTimePlus) {
+        $test_time = $date->format($format, $settings);
+      }
+      elseif ($date instanceOf \DateTime) {
+        $test_time = $date->format($format);
+      }
       $datetimeplus->setTimestamp($date->getTimestamp());
       $datetimeplus->setTimezone($date->getTimezone());
 
-      // The createFromFormat function is forgiving, it might create a date that
-      // is not exactly a match for the provided value, so test for that. For
-      // instance, an input value of '11' using a format of Y (4 digits) gets
-      // created as '0011' instead of '2011'. Use the parent::format() because
-      // we do not want to use the IntlDateFormatter here.
-      if ($settings['validate_format'] && $date->format($format) != $time) {
+      if ($settings['validate_format'] && $test_time != $time) {
         throw new \Exception('The created date does not match the input value.');
       }
     }

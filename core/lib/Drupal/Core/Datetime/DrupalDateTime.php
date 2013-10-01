@@ -119,17 +119,15 @@ class DrupalDateTime extends DateTimePlus {
    */
   public function format($format, $settings = array()) {
 
-    $format_string_type = isset($settings['format_string_type']) ? $settings['format_string_type'] : static::PHP;
-
+    $settings['format_string_type'] = isset($settings['format_string_type']) ? $settings['format_string_type'] : static::PHP;
     $settings['calendar'] = !empty($settings['calendar']) ? $settings['calendar'] : $this->calendar;
     $settings['langcode'] = !empty($settings['langcode']) ? $settings['langcode'] : $this->langcode;
     $settings['country'] = !empty($settings['country']) ? $settings['country'] : $this->country;
-
     // Format the date and catch errors.
     try {
 
       // If we have what we need to use the IntlDateFormatter, do so.
-      if ($this->canUseIntl($settings['calendar'], $settings['langcode'], $settings['country']) && $format_string_type == parent::INTL) {
+      if ($this->canUseIntl($settings['calendar'], $settings['langcode'], $settings['country']) && $settings['format_string_type'] == parent::INTL) {
         $value = parent::format($format, $settings);
       }
 

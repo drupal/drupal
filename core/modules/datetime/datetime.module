@@ -50,6 +50,7 @@ function datetime_element_info() {
     '#theme' => 'datetime_form',
     '#theme_wrappers' => array('datetime_wrapper'),
     '#date_date_format' => $date_format,
+    '#date_format_string_type' => $format_type,
     '#date_date_element' => 'date',
     '#date_date_callbacks' => array(),
     '#date_time_format' => $time_format,
@@ -383,7 +384,7 @@ function template_preprocess_datetime_wrapper(&$variables) {
  *   The form element whose value has been processed.
  */
 function datetime_datetime_form_process($element, &$form_state) {
-
+  $format_settings = array('format_string_type' => $element['#date_format_string_type']);
   // The value callback has populated the #value array.
   $date = !empty($element['#value']['object']) ? $element['#value']['object'] : NULL;
 
@@ -403,7 +404,7 @@ function datetime_datetime_form_process($element, &$form_state) {
   if ($element['#date_date_element'] != 'none') {
 
     $date_format = $element['#date_date_element'] != 'none' ? datetime_html5_format('date', $element) : '';
-    $date_value = !empty($date) ? $date->format($date_format) : $element['#value']['date'];
+    $date_value = !empty($date) ? $date->format($date_format, $format_settings) : $element['#value']['date'];
 
     // Creating format examples on every individual date item is messy, and
     // placeholders are invalid for HTML5 date and datetime, so an example
@@ -422,8 +423,8 @@ function datetime_datetime_form_process($element, &$form_state) {
       $html5_max->setDate($range[1], 12, 31)->setTime(23, 59, 59);
 
       $extra_attributes += array(
-        'min' => $html5_min->format($date_format),
-        'max' => $html5_max->format($date_format),
+        'min' => $html5_min->format($date_format, $format_settings),
+        'max' => $html5_max->format($date_format, $format_settings),
       );
     }
 
@@ -450,7 +451,7 @@ function datetime_datetime_form_process($element, &$form_state) {
   if ($element['#date_time_element'] != 'none') {
 
     $time_format = $element['#date_time_element'] != 'none' ? datetime_html5_format('time', $element) : '';
-    $time_value = !empty($date) ? $date->format($time_format) : $element['#value']['time'];
+    $time_value = !empty($date) ? $date->format($time_format, $format_settings) : $element['#value']['time'];
 
     // Adds the HTML5 attributes.
     $extra_attributes = array(
@@ -508,7 +509,10 @@ function form_type_datetime_value($element, $input = FALSE) {
     }
 
     try {
-      $date = DrupalDateTime::createFromFormat(trim($date_format . ' ' . $time_format), trim($date_input . ' ' . $time_input), $timezone);
+      $date_time_format = trim($date_format . ' ' . $time_format);
+      $date_time_input = trim($date_input . ' ' . $time_input);
+      $date_time_settings = array('format_string_type' => $element['#date_format_string_type']);
+      $date = DrupalDateTime::createFromFormat($date_time_format, $date_time_input, $timezone, $date_time_settings);
     }
     catch (\Exception $e) {
       $date = NULL;
@@ -523,8 +527,8 @@ function form_type_datetime_value($element, $input = FALSE) {
     $date = $element['#default_value'];
     if ($date instanceOf DrupalDateTime && !$date->hasErrors()) {
       $input = array(
-        'date'   => $date->format($element['#date_date_format']),
-        'time'   => $date->format($element['#date_time_format']),
+        'date'   => $date->format($element['#date_date_format'], array('format_string_type' => $element['#date_format_string_type'])),
+        'time'   => $date->format($element['#date_time_format'], array('format_string_type' => $element['#date_format_string_type'])),
         'object' => $date,
       );
     }
@@ -643,11 +647,12 @@ function datetime_html5_format($part, $element) {
  *
  */
 function datetime_format_example($format) {
+  $format_type = datetime_default_format_type();
   $date = &drupal_static(__FUNCTION__);
   if (empty($date)) {
     $date = new DrupalDateTime();
   }
-  return $date->format($format);
+  return $date->format($format, array('format_string_type' => $format_type));
 }
 
 /**
