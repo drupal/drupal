@@ -11,6 +11,7 @@ use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheCollector;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\DestructableInterface;
+use Drupal\Core\KeyValueStore\KeyValueFactory;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Utility\CacheArray;

@@ -2,7 +2,6 @@
 
 use Drupal\Component\Utility\Crypt;
 
-use Drupal\Component\Utility\Settings;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\CoreServiceProvider;
@@ -292,6 +291,9 @@ function install_begin_request(&$install_state) {
   // A request object from the HTTPFoundation to tell us about the request.
   $request = Request::createFromGlobals();
 
+  // This must go after drupal_bootstrap(), which unsets globals!
+  global $conf;
+
   // If we have a language selected and it is not yet saved in the system
   // (eg. pre-database data screens we are unable to persistently store
   // the default language), we should set language_default so the proper
@@ -421,27 +423,20 @@ function install_begin_request(&$install_state) {
       ))
       ->addMethodCall('setUserAgent', array('Drupal (+http://drupal.org/)'));
 
-    $container->register('settings', 'Drupal\Component\Utility\Settings')
-      ->setFactoryClass('Drupal\Component\Utility\Settings')
-      ->setFactoryMethod('getSingleton');
     $container->register('keyvalue', 'Drupal\Core\KeyValueStore\KeyValueFactory')
-      ->addArgument(new Reference('service_container'))
-      ->addArgument(new Reference('settings'));
+      ->addArgument(new Reference('service_container'));
+    $container->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
+    // Override the default keyvalue storage to use memory as the database is
+    // not available.
+    $conf['keyvalue_default'] = 'keyvalue.memory';
+
     // Register the expirable key value store used by form cache.
     $container
       ->register('keyvalue.expirable', 'Drupal\Core\KeyValueStore\KeyValueExpirableFactory')
-      ->addArgument(new Reference('service_container'))
-      ->addArgument(new Reference('settings'));
-    $container->register('keyvalue.memory', 'Drupal\Core\KeyValueStore\KeyValueMemoryFactory');
+      ->addArgument(new Reference('service_container'));
     $container
       ->register('keyvalue.expirable.null', 'Drupal\Core\KeyValueStore\KeyValueNullExpirableFactory');
-    $settings = Settings::getSingleton()->getAll();
-    $settings['settings_old'] = $settings;
-    $settings['keyvalue_expirable_default'] = 'keyvalue.expirable.null';
-    // Override the default keyvalue storage to use memory as the database is
-    // not available.
-    $settings['keyvalue_default'] = 'keyvalue.memory';
-    new Settings($settings);
+    $conf['keyvalue_expirable_default'] = 'keyvalue.expirable.null';
 
     $container->register('state', 'Drupal\Core\KeyValueStore\KeyValueStoreInterface')
       ->setFactoryService(new Reference('keyvalue'))
@@ -1272,8 +1267,7 @@ function install_settings_form_submit($form, &$form_state) {
 
   // The container is about to be rebuilt so we need to unset the keyvalue
   // storage override that the installer is using.
-  $settings = Settings::getSingleton()->getAll();
-  new Settings($settings['settings_old']);
+  unset($conf['keyvalue_default']);
 
   // Indicate that the settings file has been verified, and check the database
   // for the last completed task, now that we have a valid connection. This
