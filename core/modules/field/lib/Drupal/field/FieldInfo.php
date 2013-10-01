@@ -588,11 +588,6 @@ class FieldInfo {
     // Make sure all expected instance settings are present.
     $instance['settings'] += $this->fieldTypeManager->getDefaultInstanceSettings($field_type);
 
-    // Set a default value for the instance.
-    if (field_behaviors_widget('default value', $instance) == FIELD_BEHAVIOR_DEFAULT && !isset($instance['default_value'])) {
-      $instance['default_value'] = NULL;
-    }
-
     return $instance;
   }
 
