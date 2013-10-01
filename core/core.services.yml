@@ -320,6 +320,11 @@ services:
     tags:
       - { name: paramconverter }
     arguments: ['@entity.manager']
+  route_subscriber.module:
+    class: Drupal\Core\EventSubscriber\ModuleRouteSubscriber
+    tags:
+      - { name: event_subscriber }
+    arguments: ['@module_handler']
   route_subscriber.entity:
     class: Drupal\Core\EventSubscriber\EntityRouteAlterSubscriber
     tags:

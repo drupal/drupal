@@ -27,3 +27,12 @@ dblog.access_denied:
     _content: '\Drupal\dblog\Controller\DbLogController::accessDenied'
   requirements:
     _permission: 'access site reports'
+
+dblog.search:
+  path: '/admin/reports/search'
+  defaults:
+    _content: '\Drupal\dblog\Controller\DbLogController::search'
+    _title: 'Top search phrases'
+  requirements:
+    _module_dependencies: 'search'
+    _permission: 'access site reports'

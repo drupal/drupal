@@ -5,12 +5,6 @@ services:
       - { name: breadcrumb_builder, priority: 100 }
     arguments: ['@string_translation', '@entity.manager']
 
-  comment.subscriber:
-    class: Drupal\comment\Routing\RouteSubscriber
-    arguments: ['@module_handler']
-    tags:
-     - { name: event_subscriber }
-
   comment.manager:
     class: Drupal\comment\CommentManager
     arguments: ['@field.info', '@entity.manager']
