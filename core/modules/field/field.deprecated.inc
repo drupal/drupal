@@ -6,7 +6,7 @@
  */
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Field\PrepareCacheInterface;
 use Drupal\Core\Language\Language;
 use Drupal\entity\Entity\EntityDisplay;
@@ -597,7 +597,7 @@ function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langc
  * elements. Fieldable entity types should call this function during their own
  * form validation function.
  *
- * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
  *   The entity being submitted. The actual field values will be read
  *   from $form_state['values'].
  * @param $form
@@ -611,7 +611,7 @@ function field_attach_form(EntityInterface $entity, &$form, &$form_state, $langc
  *
  * @deprecated as of Drupal 8.0. Use the entity system instead.
  */
-function field_attach_form_validate(EntityInterface $entity, $form, &$form_state, array $options = array()) {
+function field_attach_form_validate(ContentEntityInterface $entity, $form, &$form_state, array $options = array()) {
   $has_violations = FALSE;
   foreach ($entity as $field_name => $field) {
     $definition = $field->getDefinition();

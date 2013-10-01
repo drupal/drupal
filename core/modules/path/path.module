@@ -7,6 +7,7 @@
 
 use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 
 /**
  * Implements hook_help().
@@ -231,7 +232,7 @@ function path_entity_field_info($entity_type) {
  * @todo: Move this to methods on the FieldItem class.
  */
 function path_entity_insert(EntityInterface $entity) {
-  if ($entity->getPropertyDefinition('path')) {
+  if ($entity instanceof ContentEntityInterface && $entity->getPropertyDefinition('path')) {
     $entity->path->alias = trim($entity->path->alias);
     // Only save a non-empty alias.
     if (!empty($entity->path->alias)) {
@@ -247,7 +248,7 @@ function path_entity_insert(EntityInterface $entity) {
  * Implements hook_entity_update().
  */
 function path_entity_update(EntityInterface $entity) {
-  if ($entity->getPropertyDefinition('path')) {
+  if ($entity instanceof ContentEntityInterface && $entity->getPropertyDefinition('path')) {
     $entity->path->alias = trim($entity->path->alias);
     // Delete old alias if user erased it.
     if ($entity->path->pid && !$entity->path->alias) {
@@ -268,7 +269,7 @@ function path_entity_update(EntityInterface $entity) {
  * Implements hook_entity_predelete().
  */
 function path_entity_predelete(EntityInterface $entity) {
-  if ($entity->getPropertyDefinition('path')) {
+  if ($entity instanceof ContentEntityInterface && $entity->getPropertyDefinition('path')) {
     // Delete all aliases associated with this term.
     $uri = $entity->uri();
     \Drupal::service('path.crud')->delete(array('source' => $uri['path']));

@@ -12,7 +12,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 /**
  * Defines an interface for View storage classes.
  */
-interface ViewStorageInterface extends \IteratorAggregate, ConfigEntityInterface {
+interface ViewStorageInterface extends ConfigEntityInterface {
 
   /**
    * Retrieves a specific display's configuration by reference.

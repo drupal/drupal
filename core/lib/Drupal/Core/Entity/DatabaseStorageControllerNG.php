@@ -22,9 +22,7 @@ use Drupal\Core\Database\Connection;
  * @todo: Once all entity types have been converted, merge improvements into the
  * DatabaseStorageController class.
  *
- * See the EntityNG documentation for an explanation of "NG".
- *
- * @see \Drupal\Core\EntityNG
+ * @see \Drupal\Core\ContentEntityBase
  */
 class DatabaseStorageControllerNG extends DatabaseStorageController {
 

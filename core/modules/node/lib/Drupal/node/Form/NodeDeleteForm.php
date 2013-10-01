@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Form;
 
-use Drupal\Core\Entity\EntityNGConfirmFormBase;
+use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a form for deleting a node.
  */
-class NodeDeleteForm extends EntityNGConfirmFormBase {
+class NodeDeleteForm extends ContentEntityConfirmFormBase {
 
   /**
    * The URL generator.

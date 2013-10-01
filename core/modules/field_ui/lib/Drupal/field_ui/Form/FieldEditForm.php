@@ -7,9 +7,8 @@
 
 namespace Drupal\field_ui\Form;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityManager;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\TypedData\TypedDataManager;
 use Drupal\field\FieldInfo;
@@ -161,7 +160,7 @@ class FieldEditForm extends FormBase {
     // FieldItem.
     $ids = (object) array('entity_type' => $this->instance['entity_type'], 'bundle' => $this->instance['bundle'], 'entity_id' => NULL);
     $entity = _field_create_entity_from_ids($ids);
-    $form['field']['settings'] += $this->getFieldItem($entity, $field['field_name'])->settingsForm($form, $form_state, $field->hasData());
+    $form['field']['settings'] += $entity->get($field['field_name'])->offsetGet(0)->settingsForm($form, $form_state, $field->hasData());
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Save field settings'));
@@ -215,23 +214,6 @@ class FieldEditForm extends FormBase {
     catch (\Exception $e) {
       drupal_set_message($this->t('Attempt to update field %label failed: %message.', array('%label' => $this->instance->label(), '%message' => $e->getMessage())), 'error');
     }
-  }
-
-  /**
-   * Returns a FieldItem object for an entity.
-   *
-   * @todo Remove when all entity types extend EntityNG.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   An entity.
-   * @param string $field_name
-   *   The field name.
-   *
-   * @return \Drupal\field\Plugin\Type\FieldType\ConfigFieldItemInterface
-   *   The field item object.
-   */
-  protected function getFieldItem(EntityInterface $entity, $field_name) {
-    return $entity->get($field_name)->offsetGet(0);
   }
 
 }

@@ -8,13 +8,13 @@
 namespace Drupal\aggregator;
 
 use Drupal\Component\Utility\String;
-use Drupal\Core\Entity\EntityFormControllerNG;
+use Drupal\Core\Entity\ContentEntityFormController;
 use Drupal\Core\Language\Language;
 
 /**
  * Form controller for the aggregator feed edit forms.
  */
-class FeedFormController extends EntityFormControllerNG {
+class FeedFormController extends ContentEntityFormController {
 
   /**
    * {@inheritdoc}

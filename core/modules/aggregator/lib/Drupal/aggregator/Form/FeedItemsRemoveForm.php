@@ -7,12 +7,12 @@
 
 namespace Drupal\aggregator\Form;
 
-use Drupal\Core\Entity\EntityNGConfirmFormBase;
+use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 
 /**
  * Provides a deletion confirmation form for items that belong to a feed.
  */
-class FeedItemsRemoveForm extends EntityNGConfirmFormBase {
+class FeedItemsRemoveForm extends ContentEntityConfirmFormBase {
 
   /**
    * {@inheritdoc}

@@ -9,12 +9,12 @@
 namespace Drupal\comment;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\content_translation\ContentTranslationControllerNG;
+use Drupal\content_translation\ContentTranslationController;
 
 /**
  * Defines the translation controller class for comments.
  */
-class CommentTranslationController extends ContentTranslationControllerNG {
+class CommentTranslationController extends ContentTranslationController {
 
   /**
    * Overrides ContentTranslationController::entityFormTitle().

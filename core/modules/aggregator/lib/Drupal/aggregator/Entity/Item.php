@@ -7,7 +7,7 @@
 
 namespace Drupal\aggregator\Entity;
 
-use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
@@ -32,7 +32,7 @@ use Drupal\aggregator\ItemInterface;
  *   }
  * )
  */
-class Item extends EntityNG implements ItemInterface {
+class Item extends ContentEntityBase implements ItemInterface {
 
   /**
    * The feed item ID.
@@ -102,7 +102,7 @@ class Item extends EntityNG implements ItemInterface {
   public $guid;
 
   /**
-   * Overrides Drupal\Core\Entity\EntityNG::init().
+   * {@inheritdoc}
    */
   public function init() {
     parent::init();

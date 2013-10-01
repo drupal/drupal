@@ -7,9 +7,9 @@
 
 namespace Drupal\content_translation;
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
-use Drupal\Core\Entity\EntityNG;
 
 /**
  * Provides field translation synchronization capabilities.
@@ -36,7 +36,7 @@ class FieldTranslationSynchronizer implements FieldTranslationSynchronizerInterf
   /**
    * {@inheritdoc}
    */
-  public function synchronizeFields(EntityInterface $entity, $sync_langcode, $original_langcode = NULL) {
+  public function synchronizeFields(ContentEntityInterface $entity, $sync_langcode, $original_langcode = NULL) {
     $translations = $entity->getTranslationLanguages();
 
     // If we have no information about what to sync to, if we are creating a new

@@ -793,13 +793,6 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
-   * Implements \IteratorAggregate::getIterator().
-   */
-  public function getIterator() {
-    return $this->storage->getIterator();
-  }
-
-  /**
    * Implements \Drupal\Core\Entity\EntityInterface::id().
    */
   public function id() {
@@ -832,20 +825,6 @@ class ViewUI implements ViewStorageInterface {
    */
   public function bundle() {
     return $this->storage->bundle();
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\EntityInterface::isDefaultRevision().
-   */
-  public function isDefaultRevision($new_value = NULL) {
-    return $this->storage->isDefaultRevision($new_value);
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\EntityInterface::getRevisionId().
-   */
-  public function getRevisionId() {
-    return $this->storage->getRevisionId();
   }
 
   /**
@@ -891,20 +870,6 @@ class ViewUI implements ViewStorageInterface {
   }
 
   /**
-   * Implements \Drupal\Core\Entity\EntityInterface::isNewRevision().
-   */
-  public function isNewRevision() {
-    return $this->storage->isNewRevision();
-  }
-
-  /**
-   * Implements \Drupal\Core\Entity\EntityInterface::setNewRevision().
-   */
-  public function setNewRevision($value = TRUE) {
-    return $this->storage->setNewRevision($value);
-  }
-
-  /**
    * Implements \Drupal\Core\Entity\EntityInterface::enforceIsNew().
    */
   public function enforceIsNew($value = TRUE) {
@@ -918,23 +883,9 @@ class ViewUI implements ViewStorageInterface {
     return $this->storage->getExportProperties();
   }
 
-  /**
-   * Implements \Drupal\Core\TypedData\TranslatableInterface::getTranslation().
-   */
-  public function getTranslation($langcode) {
-    // @todo Revisit this once config entities are converted to NG.
-    return $this;
-  }
 
   /**
-   * Implements \Drupal\Core\TypedData\TranslatableInterface::getTranslationLanguages().
-   */
-  public function getTranslationLanguages($include_default = TRUE) {
-    return $this->storage->getTranslationLanguages($include_default);
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\TranslatableInterface::language)().
+   * {@inheritdoc}
    */
   public function language() {
     return $this->storage->language();
@@ -945,48 +896,6 @@ class ViewUI implements ViewStorageInterface {
    */
   public function access($operation = 'view', AccountInterface $account = NULL) {
     return $this->storage->access($operation, $account);
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::isEmpty)().
-   */
-  public function isEmpty() {
-    return $this->storage->isEmpty();
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyValues().
-   */
-  public function getPropertyValues() {
-    return $this->storage->getPropertyValues();
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinitions().
-   */
-  public function getPropertyDefinitions() {
-    return $this->storage->getPropertyDefinitions();
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getPropertyDefinition().
-   */
-  public function getPropertyDefinition($name) {
-    return $this->storage->getPropertyDefinition($name);
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::setPropertyValues().
-   */
-  public function setPropertyValues($values) {
-    return $this->storage->setPropertyValues($values);
-  }
-
-  /**
-   * Implements \Drupal\Core\TypedData\ComplexDataInterface::getProperties().
-   */
-  public function getProperties($include_computed = FALSE) {
-    return $this->storage->getProperties($include_computed);
   }
 
   /**
@@ -1205,13 +1114,6 @@ class ViewUI implements ViewStorageInterface {
   /**
    * {@inheritdoc}
    */
-  public function preSaveRevision(EntityStorageControllerInterface $storage_controller, \stdClass $record) {
-    $this->storage->preSaveRevision($storage_controller, $record);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function mergeDefaultDisplaysOptions() {
     $this->storage->mergeDefaultDisplaysOptions();
   }
@@ -1221,16 +1123,6 @@ class ViewUI implements ViewStorageInterface {
    */
   public function uriRelationships() {
     return $this->storage->uriRelationships();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function baseFieldDefinitions($entity_type) {
-    // @todo: This class is not directly defined as an entity type and does
-    //   not have base definitions but has to implement this method. Remove in
-    //   https://drupal.org/node/2004244.
-    return array();
   }
 
   /**

@@ -8,7 +8,7 @@
 namespace Drupal\hal\Normalizer;
 
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Language\Language;
 use Symfony\Component\Serializer\Exception\UnexpectedValueException;
 

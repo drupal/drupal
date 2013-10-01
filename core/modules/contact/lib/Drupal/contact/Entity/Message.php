@@ -7,7 +7,7 @@
 
 namespace Drupal\contact\Entity;
 
-use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\contact\MessageInterface;
 
 /**
@@ -34,7 +34,7 @@ use Drupal\contact\MessageInterface;
  *   }
  * )
  */
-class Message extends EntityNG implements MessageInterface {
+class Message extends ContentEntityBase implements MessageInterface {
 
   /**
    * Overrides Drupal\Core\Entity\Entity::id().

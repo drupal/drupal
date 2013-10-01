@@ -15,7 +15,7 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
 /**
  * Provides an interface defining a menu link entity.
  */
-interface MenuLinkInterface extends ContentEntityInterface {
+interface MenuLinkInterface extends EntityInterface {
 
   /**
    * Returns the Route object associated with this link, if any.

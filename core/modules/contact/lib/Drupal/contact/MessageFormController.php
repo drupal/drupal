@@ -7,14 +7,14 @@
 
 namespace Drupal\contact;
 
-use Drupal\Core\Entity\EntityFormControllerNG;
+use Drupal\Core\Entity\ContentEntityFormController;
 use Drupal\Core\Language\Language;
 use Drupal\user\UserInterface;
 
 /**
  * Form controller for contact message forms.
  */
-class MessageFormController extends EntityFormControllerNG {
+class MessageFormController extends ContentEntityFormController {
 
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().

@@ -126,11 +126,11 @@ class Block extends ConfigEntityBase implements BlockInterface {
   }
 
   /**
-   * Overrides \Drupal\Core\Config\Entity\ConfigEntityBase::get();
+   * {@inheritdoc}
    */
-  public function get($property_name, $langcode = NULL) {
+  public function get($property_name) {
     // The theme is stored in the entity ID.
-    $value = parent::get($property_name, $langcode);
+    $value = parent::get($property_name);
     if ($property_name == 'theme' && !$value) {
       list($value) = explode('.', $this->id());
     }

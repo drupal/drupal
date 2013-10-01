@@ -7,7 +7,7 @@
 
 namespace Drupal\comment\Entity;
 
-use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\comment\CommentInterface;
@@ -53,7 +53,7 @@ use Drupal\Core\Language\Language;
  *   }
  * )
  */
-class Comment extends EntityNG implements CommentInterface {
+class Comment extends ContentEntityBase implements CommentInterface {
 
   /**
    * The comment ID.

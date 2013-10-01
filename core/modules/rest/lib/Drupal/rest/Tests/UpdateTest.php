@@ -34,8 +34,7 @@ class UpdateTest extends RESTTestBase {
    */
   public function testPatchUpdate() {
     $serializer = $this->container->get('serializer');
-    // @todo once EntityNG is implemented for other entity types test all other
-    // entity types here as well.
+    // @todo Test all other entity types here as well.
     $entity_type = 'entity_test';
 
     $this->enableService('entity:' . $entity_type, 'PATCH');

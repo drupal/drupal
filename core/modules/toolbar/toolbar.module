@@ -655,7 +655,7 @@ function toolbar_modules_uninstalled($modules) {
  * Implements hook_ENTITY_TYPE_update().
  */
 function toolbar_menu_link_update(MenuLinkInterface $menu_link) {
-  if ($menu_link->get('menu_name') === 'admin') {
+  if ($menu_link->menu_name === 'admin') {
     _toolbar_clear_user_cache();
   }
 }

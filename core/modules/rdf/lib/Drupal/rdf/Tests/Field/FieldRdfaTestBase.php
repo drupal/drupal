@@ -34,7 +34,7 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
   /**
    * The entity to render for testing.
    *
-   * @var \Drupal\Core\Entity\EntityNG
+   * @var \Drupal\Core\Entity\ContentEntityBase
    */
   protected $entity;
 
@@ -93,7 +93,7 @@ abstract class FieldRdfaTestBase extends FieldUnitTestBase {
   /**
    * Gets the absolute URI of an entity.
    *
-   * @param \Drupal\Core\Entity\EntityNG $entity
+   * @param \Drupal\Core\Entity\ContentEntityBase $entity
    *   The entity for which to generate the URI.
    *
    * @return string

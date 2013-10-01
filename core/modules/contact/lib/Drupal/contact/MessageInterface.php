@@ -7,12 +7,12 @@
 
 namespace Drupal\contact;
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 
 /**
  * Provides an interface defining a contant message entity
  */
-interface MessageInterface extends EntityInterface {
+interface MessageInterface extends ContentEntityInterface {
 
   /**
    * Returns the category this contact message belongs to.

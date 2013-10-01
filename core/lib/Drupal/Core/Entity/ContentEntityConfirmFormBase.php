@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Core\Entity\EntityNGConfirmFormBase.
+ * Contains \Drupal\Core\Entity\ContentEntityConfirmFormBase.
  */
 
 namespace Drupal\Core\Entity;
@@ -13,7 +13,7 @@ use Drupal\Core\Form\ConfirmFormInterface;
 /**
  * Provides a generic base class for an entity-based confirmation form.
  */
-abstract class EntityNGConfirmFormBase extends EntityFormControllerNG implements ConfirmFormInterface {
+abstract class ContentEntityConfirmFormBase extends ContentEntityFormController implements ConfirmFormInterface {
 
   /**
    * {@inheritdoc}

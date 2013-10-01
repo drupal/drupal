@@ -43,18 +43,10 @@ class ContentTranslationController implements ContentTranslationControllerInterf
   }
 
   /**
-   * Implements ContentTranslationControllerInterface::removeTranslation().
+   * {@inheritdoc}
    */
   public function removeTranslation(EntityInterface $entity, $langcode) {
-    // @todo Handle properties.
-    // Remove field translations.
-    foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
-      $field_name = $instance['field_name'];
-      $field = $instance->getField();
-      if ($field['translatable']) {
-        $entity->{$field_name}[$langcode] = array();
-      }
-    }
+    $entity->removeTranslation($langcode);
   }
 
   /**

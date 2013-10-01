@@ -8,12 +8,12 @@
 namespace Drupal\node;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\content_translation\ContentTranslationControllerNG;
+use Drupal\content_translation\ContentTranslationController;
 
 /**
  * Defines the translation controller class for nodes.
  */
-class NodeTranslationController extends ContentTranslationControllerNG {
+class NodeTranslationController extends ContentTranslationController {
 
   /**
    * Overrides ContentTranslationController::entityFormAlter().

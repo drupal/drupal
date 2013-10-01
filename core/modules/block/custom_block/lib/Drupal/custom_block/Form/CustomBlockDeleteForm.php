@@ -7,13 +7,13 @@
 
 namespace Drupal\custom_block\Form;
 
-use Drupal\Core\Entity\EntityNGConfirmFormBase;
+use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides a confirmation form for deleting a custom block entity.
  */
-class CustomBlockDeleteForm extends EntityNGConfirmFormBase {
+class CustomBlockDeleteForm extends ContentEntityConfirmFormBase {
 
   /**
    * {@inheritdoc}

@@ -90,4 +90,12 @@ interface TranslatableInterface {
    */
   public function removeTranslation($langcode);
 
+  /**
+   * Returns the translation support status.
+   *
+   * @return bool
+   *   TRUE if the object has translation support enabled.
+   */
+  public function isTranslatable();
+
 }

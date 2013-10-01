@@ -8,13 +8,13 @@
 namespace Drupal\custom_block;
 
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityFormControllerNG;
+use Drupal\Core\Entity\ContentEntityFormController;
 use Drupal\Core\Language\Language;
 
 /**
  * Form controller for the custom block edit forms.
  */
-class CustomBlockFormController extends EntityFormControllerNG {
+class CustomBlockFormController extends ContentEntityFormController {
 
   /**
    * Overrides \Drupal\Core\Entity\EntityFormController::prepareEntity().

@@ -5,7 +5,7 @@
  * Adds bindings for client-side "text editors" to text formats.
  */
 
-use Drupal\file\Entity\File;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\editor\Entity\Editor;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityInterface;
@@ -393,6 +393,10 @@ function editor_pre_render_format($element) {
  * Implements hook_entity_insert().
  */
 function editor_entity_insert(EntityInterface $entity) {
+  // Only act on content entities.
+  if (!($entity instanceof ContentEntityInterface)) {
+    return;
+  }
   $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
   foreach ($referenced_files_by_field as $field => $uuids) {
     _editor_record_file_usage($uuids, $entity);
@@ -403,6 +407,11 @@ function editor_entity_insert(EntityInterface $entity) {
  * Implements hook_entity_update().
  */
 function editor_entity_update(EntityInterface $entity) {
+  // Only act on content entities.
+  if (!($entity instanceof ContentEntityInterface)) {
+    return;
+  }
+
   // On new revisions, all files are considered to be a new usage and no
   // deletion of previous file usages are necessary.
   if (!empty($entity->original) && $entity->getRevisionId() != $entity->original->getRevisionId()) {
@@ -437,6 +446,10 @@ function editor_entity_update(EntityInterface $entity) {
  * Implements hook_entity_delete().
  */
 function editor_entity_delete(EntityInterface $entity) {
+  // Only act on content entities.
+  if (!($entity instanceof ContentEntityInterface)) {
+    return;
+  }
   $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
   foreach ($referenced_files_by_field as $field => $uuids) {
     _editor_delete_file_usage($uuids, $entity, 0);
@@ -447,6 +460,10 @@ function editor_entity_delete(EntityInterface $entity) {
  * Implements hook_entity_revision_delete().
  */
 function editor_entity_revision_delete(EntityInterface $entity) {
+  // Only act on content entities.
+  if (!($entity instanceof ContentEntityInterface)) {
+    return;
+  }
   $referenced_files_by_field = _editor_get_file_uuids_by_field($entity);
   foreach ($referenced_files_by_field as $field => $uuids) {
     _editor_delete_file_usage($uuids, $entity, 1);
@@ -524,7 +541,7 @@ function _editor_get_file_uuids_by_field(EntityInterface $entity) {
  * @return array
  *   The names of the fields on this entity that have text processing enabled.
  */
-function _editor_get_processed_text_fields(EntityInterface $entity) {
+function _editor_get_processed_text_fields(ContentEntityInterface $entity) {
   $properties = $entity->getPropertyDefinitions();
   if (empty($properties)) {
     return array();

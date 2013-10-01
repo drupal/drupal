@@ -7,7 +7,7 @@
 
 namespace Drupal\taxonomy\Entity;
 
-use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Annotation\Translation;
@@ -54,7 +54,7 @@ use Drupal\taxonomy\TermInterface;
  *   permission_granularity = "bundle"
  * )
  */
-class Term extends EntityNG implements TermInterface {
+class Term extends ContentEntityBase implements TermInterface {
 
   /**
    * The taxonomy term ID.
@@ -130,7 +130,7 @@ class Term extends EntityNG implements TermInterface {
   }
 
   /**
-   * Overides \Drupal\Core\Entity\EntityNG::init().
+   * {@inheritdoc}
    */
   protected function init() {
     parent::init();

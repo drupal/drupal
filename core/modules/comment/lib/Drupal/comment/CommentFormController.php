@@ -11,7 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityFormControllerNG;
+use Drupal\Core\Entity\ContentEntityFormController;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
@@ -21,7 +21,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Base for controller for comment forms.
  */
-class CommentFormController extends EntityFormControllerNG {
+class CommentFormController extends ContentEntityFormController {
 
   /**
    * The entity manager service.

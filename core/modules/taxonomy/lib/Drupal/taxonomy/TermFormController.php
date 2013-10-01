@@ -9,14 +9,14 @@ namespace Drupal\taxonomy;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Entity\EntityFormControllerNG;
+use Drupal\Core\Entity\ContentEntityFormController;
 use Drupal\Core\Language\Language;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base for controller for taxonomy term edit forms.
  */
-class TermFormController extends EntityFormControllerNG {
+class TermFormController extends ContentEntityFormController {
 
   /**
    * The vocabulary storage.

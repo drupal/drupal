@@ -7,9 +7,7 @@
 
 namespace Drupal\field_ui\Form;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityManager;
-use Drupal\Core\Entity\EntityNG;
 use Drupal\Core\Form\FormBase;
 use Drupal\field\FieldInstanceInterface;
 use Drupal\field_ui\FieldUI;
@@ -80,7 +78,7 @@ class FieldInstanceEditForm extends FormBase {
     // Create an arbitrary entity object (used by the 'default value' widget).
     $ids = (object) array('entity_type' => $this->instance['entity_type'], 'bundle' => $this->instance['bundle'], 'entity_id' => NULL);
     $form['#entity'] = _field_create_entity_from_ids($ids);
-    $items = $this->getFieldItems($form['#entity'], $this->instance['field_name']);
+    $items = $form['#entity']->get($this->instance['field_name']);
 
     if (!empty($field['locked'])) {
       $form['locked'] = array(
@@ -165,7 +163,7 @@ class FieldInstanceEditForm extends FormBase {
    */
   public function validateForm(array &$form, array &$form_state) {
     if (isset($form['instance']['default_value'])) {
-      $items = $this->getFieldItems($form['#entity'], $this->instance['field_name']);
+      $items = $form['#entity']->get($this->instance['field_name']);
       $items->defaultValuesFormValidate($form['instance']['default_value'], $form, $form_state);
     }
   }
@@ -177,7 +175,7 @@ class FieldInstanceEditForm extends FormBase {
     // Handle the default value.
     $default_value = array();
     if (isset($form['instance']['default_value'])) {
-      $items = $this->getFieldItems($form['#entity'], $this->instance['field_name']);
+      $items = $form['#entity']->get($this->instance['field_name']);
       $default_value = $items->defaultValuesFormSubmit($form['instance']['default_value'], $form, $form_state);
     }
     $this->instance['default_value'] = $default_value;
@@ -204,21 +202,6 @@ class FieldInstanceEditForm extends FormBase {
       $request->query->remove('destination');
     }
     $form_state['redirect'] = array('admin/structure/types/manage/' . $this->instance['bundle'] . '/fields/' . $this->instance->id() . '/delete', array('query' => $destination));
-  }
-
-  /**
-   * Returns a Field object for an entity.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   An entity.
-   * @param string $field_name
-   *   The field name.
-   *
-   * @return \Drupal\field\Plugin\Type\FieldType\ConfigFieldItemListInterface
-   *   The field object.
-   */
-  protected function getFieldItems(EntityInterface $entity, $field_name) {
-    return $entity->get($field_name);
   }
 
   /**

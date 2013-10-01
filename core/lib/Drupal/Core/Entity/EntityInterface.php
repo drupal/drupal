@@ -8,26 +8,11 @@
 namespace Drupal\Core\Entity;
 
 use Drupal\Core\TypedData\AccessibleInterface;
-use Drupal\Core\TypedData\ComplexDataInterface;
-use Drupal\Core\TypedData\TranslatableInterface;
 
 /**
  * Defines a common interface for all entity objects.
- *
- * This interface builds upon the general interfaces provided by the typed data
- * API, while extending them with entity-specific additions. I.e., an entity
- * implements the ComplexDataInterface among others, thus is complex data
- * containing fields as its data properties. The contained fields have to
- * implement the \Drupal\Core\Entity\Field\FieldItemListInterface, which builds upon
- * typed data interfaces as well.
- *
- * When implementing this interface which extends Traversable, make sure to list
- * IteratorAggregate or Iterator before this interface in the implements clause.
- *
- * @see \Drupal\Core\TypedData\TypedDataManager
- * @see \Drupal\Core\Field\FieldItemListInterface
  */
-interface EntityInterface extends ComplexDataInterface, AccessibleInterface, TranslatableInterface {
+interface EntityInterface extends AccessibleInterface {
 
   /**
    * Returns the entity UUID (Universally Unique Identifier).
@@ -50,6 +35,14 @@ interface EntityInterface extends ComplexDataInterface, AccessibleInterface, Tra
   public function id();
 
   /**
+   * Returns the language of the entity.
+   *
+   * @return \Drupal\Core\Language\Language
+   *   The language object.
+   */
+  public function language();
+
+  /**
    * Returns whether the entity is new.
    *
    * Usually an entity is new if no ID exists for it yet. However, entities may
@@ -61,26 +54,6 @@ interface EntityInterface extends ComplexDataInterface, AccessibleInterface, Tra
    * @see \Drupal\Core\Entity\EntityInterface::enforceIsNew()
    */
   public function isNew();
-
-  /**
-   * Returns whether a new revision should be created on save.
-   *
-   * @return bool
-   *   TRUE if a new revision should be created.
-   *
-   * @see \Drupal\Core\Entity\EntityInterface::setNewRevision()
-   */
-  public function isNewRevision();
-
-  /**
-   * Enforces an entity to be saved as a new revision.
-   *
-   * @param bool $value
-   *   (optional) Whether a new revision should be saved.
-   *
-   * @see \Drupal\Core\Entity\EntityInterface::isNewRevision()
-   */
-  public function setNewRevision($value = TRUE);
 
   /**
    * Enforces an entity to be new.
@@ -176,16 +149,6 @@ interface EntityInterface extends ComplexDataInterface, AccessibleInterface, Tra
   public function preSave(EntityStorageControllerInterface $storage_controller);
 
   /**
-   * Acts on a revision before it gets saved.
-   *
-   * @param EntityStorageControllerInterface $storage_controller
-   *   The entity storage controller object.
-   * @param \stdClass $record
-   *   The revision object.
-   */
-  public function preSaveRevision(EntityStorageControllerInterface $storage_controller, \stdClass $record);
-
-  /**
    * Acts on a saved entity before the insert or update hook is invoked.
    *
    * Used after the entity is saved, but before invoking the insert or update
@@ -268,70 +231,6 @@ interface EntityInterface extends ComplexDataInterface, AccessibleInterface, Tra
    * @see entity_get_info()
    */
   public function entityInfo();
-
-  /**
-   * Returns the revision identifier of the entity.
-   *
-   * @return
-   *   The revision identifier of the entity, or NULL if the entity does not
-   *   have a revision identifier.
-   */
-  public function getRevisionId();
-
-  /**
-   * Checks if this entity is the default revision.
-   *
-   * @param bool $new_value
-   *   (optional) A Boolean to (re)set the isDefaultRevision flag.
-   *
-   * @return bool
-   *   TRUE if the entity is the default revision, FALSE otherwise. If
-   *   $new_value was passed, the previous value is returned.
-   */
-  public function isDefaultRevision($new_value = NULL);
-
-  /**
-   * Retrieves the exportable properties of the entity.
-   *
-   * @return array
-   *   An array of exportable properties and their values.
-   */
-  public function getExportProperties();
-
-  /**
-   * Returns the translation support status.
-   *
-   * @return bool
-   *   TRUE if the entity bundle has translation support enabled.
-   */
-  public function isTranslatable();
-
-  /**
-   * Marks the translation identified by the given language code as existing.
-   *
-   * @todo Remove this as soon as translation metadata have been converted to
-   *    regular fields.
-   *
-   * @param string $langcode
-   *   The language code identifying the translation to be initialized.
-   */
-  public function initTranslation($langcode);
-
-  /**
-   * Defines the base fields of the entity type.
-   *
-   * @param string $entity_type
-   *   The entity type to return properties for. Useful when a single class is
-   *   used for multiple, possibly dynamic entity types.
-   *
-   * @return array
-   *   An array of entity field definitions as specified by
-   *   \Drupal\Core\Entity\EntityManager::getFieldDefinitions(), keyed by field
-   *   name.
-   *
-   * @see \Drupal\Core\Entity\EntityManager::getFieldDefinitions()
-   */
-  public static function baseFieldDefinitions($entity_type);
 
   /**
    * Returns a list of entities referenced by this entity.

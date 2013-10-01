@@ -8,12 +8,12 @@
 namespace Drupal\user;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\content_translation\ContentTranslationControllerNG;
+use Drupal\content_translation\ContentTranslationController;
 
 /**
- * Defines the translation controller class for terms.
+ * Defines the translation controller class for users.
  */
-class ProfileTranslationController extends ContentTranslationControllerNG {
+class ProfileTranslationController extends ContentTranslationController {
 
   /**
    * Overrides ContentTranslationController::entityFormAlter().

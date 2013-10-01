@@ -7,6 +7,7 @@
 
 namespace Drupal\menu_link\Entity;
 
+use Drupal\Core\Language\Language;
 use Drupal\menu_link\MenuLinkInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -267,6 +268,56 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
    * @var \Symfony\Component\Routing\Route
    */
   protected $routeObject;
+
+  /**
+   * Boolean indicating whether a new revision should be created on save.
+   *
+   * @var bool
+   */
+  protected $newRevision = FALSE;
+
+  /**
+   * Indicates whether this is the default revision.
+   *
+   * @var bool
+   */
+  protected $isDefaultRevision = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setNewRevision($value = TRUE) {
+    $this->newRevision = $value;
+  }
+  /**
+   * {@inheritdoc}
+   */
+  public function isNewRevision() {
+    $info = $this->entityInfo();
+    return $this->newRevision || (!empty($info['entity_keys']['revision']) && !$this->getRevisionId());
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRevisionId() {
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isTranslatable() {
+    // @todo Inject the entity manager and retrieve bundle info from it.
+    $bundles = entity_get_bundles($this->entityType);
+    return !empty($bundles[$this->bundle()]['translatable']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSaveRevision(EntityStorageControllerInterface $storage_controller, \stdClass $record) {
+  }
 
   /**
    * Overrides Entity::id().

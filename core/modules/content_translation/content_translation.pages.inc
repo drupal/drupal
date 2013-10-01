@@ -7,7 +7,7 @@
 
 use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\ContentEntityInterface;
 
 /**
  * Translations overview page callback.
@@ -242,8 +242,10 @@ function content_translation_edit_page(EntityInterface $entity, Language $langua
  *   The language to be used as target.
  */
 function content_translation_prepare_translation(EntityInterface $entity, Language $source, Language $target) {
-  $source_translation = $entity->getTranslation($source->id);
-  $entity->addTranslation($target->id, $source_translation->getPropertyValues());
+  if ($entity instanceof ContentEntityInterface) {
+    $source_translation = $entity->getTranslation($source->id);
+    $entity->addTranslation($target->id, $source_translation->getPropertyValues());
+  }
 }
 
 /**

@@ -8,13 +8,13 @@
 namespace Drupal\user\Form;
 
 use Drupal\Core\Config\ConfigFactory;
-use Drupal\Core\Entity\EntityNGConfirmFormBase;
+use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a confirmation form for cancelling user account.
  */
-class UserCancelForm extends EntityNGConfirmFormBase {
+class UserCancelForm extends ContentEntityConfirmFormBase {
 
   /**
    * Available account cancellation methods.

@@ -9,13 +9,13 @@ namespace Drupal\comment\Form;
 
 use Drupal\comment\CommentManager;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Entity\EntityNGConfirmFormBase;
+use Drupal\Core\Entity\ContentEntityConfirmFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the comment delete confirmation form.
  */
-class DeleteForm extends EntityNGConfirmFormBase {
+class DeleteForm extends ContentEntityConfirmFormBase {
 
   /**
    * The comment manager.

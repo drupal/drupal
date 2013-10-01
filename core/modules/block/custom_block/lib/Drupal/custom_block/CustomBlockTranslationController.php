@@ -8,12 +8,12 @@
 namespace Drupal\custom_block;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\content_translation\ContentTranslationControllerNG;
+use Drupal\content_translation\ContentTranslationController;
 
 /**
  * Defines the translation controller class for custom blocks.
  */
-class CustomBlockTranslationController extends ContentTranslationControllerNG {
+class CustomBlockTranslationController extends ContentTranslationController {
 
   /**
    * Overrides ContentTranslationController::entityFormAlter().

@@ -7,7 +7,7 @@
 
 namespace Drupal\node\Entity;
 
-use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Session\AccountInterface;
@@ -58,7 +58,7 @@ use Drupal\node\NodeInterface;
  *   }
  * )
  */
-class Node extends EntityNG implements NodeInterface {
+class Node extends ContentEntityBase implements NodeInterface {
 
   /**
    * Implements Drupal\Core\Entity\EntityInterface::id().

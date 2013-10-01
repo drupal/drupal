@@ -137,8 +137,7 @@ class CreateTest extends RESTTestBase {
     $this->assertResponse(404);
     $this->assertFalse(entity_load_multiple($entity_type, NULL, TRUE), 'No entity has been created in the database.');
 
-    // @todo Once EntityNG is implemented for other entity types add a security
-    // test. It should not be possible for example to create a test entity on a
-    // node resource route.
+    // @todo Add a security test. It should not be possible for example to
+    //   create a test entity on a node resource route.
   }
 }

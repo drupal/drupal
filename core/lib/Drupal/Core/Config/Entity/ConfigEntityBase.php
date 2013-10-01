@@ -74,24 +74,16 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   }
 
   /**
-   * Overrides Entity::get().
-   *
-   * EntityInterface::get() implements support for fieldable entities, but
-   * configuration entities are not fieldable.
+   * {@inheritdoc}
    */
-  public function get($property_name, $langcode = NULL) {
-    // @todo: Add support for translatable properties being not fields.
+  public function get($property_name) {
     return isset($this->{$property_name}) ? $this->{$property_name} : NULL;
   }
 
   /**
-   * Overrides Entity::set().
-   *
-   * EntityInterface::set() implements support for fieldable entities, but
-   * configuration entities are not fieldable.
+   * {@inheritdoc}
    */
-  public function set($property_name, $value, $langcode = NULL, $notify = TRUE) {
-    // @todo: Add support for translatable properties being not fields.
+  public function set($property_name, $value) {
     $this->{$property_name} = $value;
   }
 
@@ -149,7 +141,7 @@ abstract class ConfigEntityBase extends Entity implements ConfigEntityInterface 
   }
 
   /**
-   * Overrides \Drupal\Core\Entity\Entity::getExportProperties().
+   * {@inheritdoc}
    */
   public function getExportProperties() {
     // Configuration objects do not have a schema. Extract all key names from

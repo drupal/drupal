@@ -7,7 +7,7 @@
 
 namespace Drupal\aggregator\Entity;
 
-use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\ContentEntityBase;
 use Symfony\Component\DependencyInjection\Container;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
@@ -38,7 +38,7 @@ use Drupal\aggregator\FeedInterface;
  *   }
  * )
  */
-class Feed extends EntityNG implements FeedInterface {
+class Feed extends ContentEntityBase implements FeedInterface {
 
   /**
    * The feed ID.
@@ -135,7 +135,7 @@ class Feed extends EntityNG implements FeedInterface {
   public $modified;
 
   /**
-   * Overrides Drupal\Core\Entity\EntityNG::init().
+   * {@inheritdoc}
    */
   public function init() {
     parent::init();

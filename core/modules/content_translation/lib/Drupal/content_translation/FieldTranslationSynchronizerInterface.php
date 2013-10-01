@@ -7,7 +7,7 @@
 
 namespace Drupal\content_translation;
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 
 /**
  * Provides field translation synchronization capabilities.
@@ -26,7 +26,7 @@ interface FieldTranslationSynchronizerInterface {
    * instance to translate the "alt" and "title" textual elements of an image
    * field, while keeping the same image on every translation.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
+   * @param \Drupal\Core\Entity\ContentEntityInterface $entity
    *   The entity whose values should be synchronized.
    * @param string $sync_langcode
    *   The language of the translation whose values should be used as source for
@@ -35,7 +35,7 @@ interface FieldTranslationSynchronizerInterface {
    *   (optional) If a new translation is being created, this should be the
    *   language code of the original values. Defaults to NULL.
    */
-  public function synchronizeFields(EntityInterface $entity, $sync_langcode, $original_langcode = NULL);
+  public function synchronizeFields(ContentEntityInterface $entity, $sync_langcode, $original_langcode = NULL);
 
   /**
    * Synchronize the items of a single field.

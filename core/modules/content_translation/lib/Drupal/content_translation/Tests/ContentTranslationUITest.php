@@ -8,7 +8,7 @@
 namespace Drupal\content_translation\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Language\Language;
 
 /**

@@ -24,7 +24,7 @@ use Drupal\Core\Annotation\Translation;
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestFormController"
  *     },
- *     "translation" = "Drupal\content_translation\ContentTranslationControllerNG"
+ *     "translation" = "Drupal\content_translation\ContentTranslationController"
  *   },
  *   base_table = "entity_test_mul",
  *   data_table = "entity_test_mul_property_data",

@@ -8,12 +8,12 @@
 namespace Drupal\taxonomy;
 
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\content_translation\ContentTranslationControllerNG;
+use Drupal\content_translation\ContentTranslationController;
 
 /**
  * Defines the translation controller class for terms.
  */
-class TermTranslationController extends ContentTranslationControllerNG {
+class TermTranslationController extends ContentTranslationController {
 
   /**
    * Overrides ContentTranslationController::entityFormAlter().

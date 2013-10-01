@@ -7,13 +7,13 @@
 
 namespace Drupal\user;
 
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Session\AccountInterface;
 
 /**
  * Provides an interface defining a user entity.
  */
-interface UserInterface extends EntityInterface, AccountInterface {
+interface UserInterface extends ContentEntityInterface, AccountInterface {
 
   /**
    * Returns a list of roles.

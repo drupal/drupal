@@ -9,13 +9,13 @@ namespace Drupal\node;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Entity\EntityFormControllerNG;
+use Drupal\Core\Entity\ContentEntityFormController;
 use Drupal\Core\Language\Language;
 
 /**
  * Form controller for the node edit forms.
  */
-class NodeFormController extends EntityFormControllerNG {
+class NodeFormController extends ContentEntityFormController {
 
   /**
    * Default settings for this content/node type.

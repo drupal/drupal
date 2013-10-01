@@ -6,13 +6,13 @@
 
 namespace Drupal\entity_test;
 
-use Drupal\Core\Entity\EntityFormControllerNG;
+use Drupal\Core\Entity\ContentEntityFormController;
 use Drupal\Core\Language\Language;
 
 /**
  * Form controller for the test entity edit forms.
  */
-class EntityTestFormController extends EntityFormControllerNG {
+class EntityTestFormController extends ContentEntityFormController {
 
   /**
    * Overrides Drupal\Core\Entity\EntityFormController::form().

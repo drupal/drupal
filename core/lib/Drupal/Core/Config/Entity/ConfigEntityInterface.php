@@ -76,6 +76,27 @@ interface ConfigEntityInterface extends EntityInterface {
   public function status();
 
   /**
+   * Returns the value of a property.
+   *
+   * @param string $property_name
+   *   The name of the property that should be returned.
+   *
+   * @return mixed
+   *   The property, if existing, NULL otherwise.
+   */
+  public function get($property_name);
+
+  /**
+   * Sets the value of a property.
+   *
+   * @param string $property_name
+   *   The name of the property that should be set.
+   * @param mixed $value
+   *   The value the property should be set to.
+   */
+  public function set($property_name, $value);
+
+  /**
    * Retrieves the exportable properties of the entity.
    *
    * These are the values that get saved into config.

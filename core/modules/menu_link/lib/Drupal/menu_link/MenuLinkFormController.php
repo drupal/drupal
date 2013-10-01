@@ -241,6 +241,35 @@ class MenuLinkFormController extends EntityFormController {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function buildEntity(array $form, array &$form_state) {
+    // @todo: Remove this when menu links are converted to content entities in
+    //   http://drupal.org/node/1842858.
+    $entity = clone $this->entity;
+    // If you submit a form, the form state comes from caching, which forces
+    // the controller to be the one before caching. Ensure to have the
+    // controller of the current request.
+    $form_state['controller'] = $this;
+
+    // Copy top-level form values to entity properties, without changing
+    // existing entity properties that are not being edited by
+    // this form.
+    foreach ($form_state['values'] as $key => $value) {
+      $entity->$key = $value;
+    }
+
+    // Invoke all specified builders for copying form values to entity properties.
+    if (isset($form['#entity_builders'])) {
+      foreach ($form['#entity_builders'] as $function) {
+        call_user_func_array($function, array($entity->entityType(), $entity, &$form, &$form_state));
+      }
+    }
+
+    return $entity;
+  }
+
+  /**
    * Overrides EntityFormController::submit().
    */
   public function submit(array $form, array &$form_state) {

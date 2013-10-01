@@ -7,9 +7,9 @@
 
 namespace Drupal\user\Entity;
 
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\EntityMalformedException;
-use Drupal\Core\Entity\EntityNG;
 use Drupal\user\UserInterface;
 
 /**
@@ -46,7 +46,7 @@ use Drupal\user\UserInterface;
  *   }
  * )
  */
-class User extends EntityNG implements UserInterface {
+class User extends ContentEntityBase implements UserInterface {
 
   /**
    * {@inheritdoc}

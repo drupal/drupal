@@ -24,7 +24,7 @@ use Drupal\Core\Annotation\Translation;
  *     "form" = {
  *       "default" = "Drupal\entity_test\EntityTestFormController"
  *     },
- *     "translation" = "Drupal\content_translation\ContentTranslationControllerNG"
+ *     "translation" = "Drupal\content_translation\ContentTranslationController"
  *   },
  *   base_table = "entity_test_rev",
  *   revision_table = "entity_test_rev_revision",
@@ -48,7 +48,7 @@ class EntityTestRev extends EntityTest {
   public $revision_id;
 
   /**
-   * Overrides EntityNG::init().
+   * {@inheritdoc}
    */
   public function init() {
     parent::init();

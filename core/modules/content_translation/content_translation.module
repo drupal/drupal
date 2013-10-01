@@ -5,11 +5,12 @@
  * Allows entities to be translated into different languages.
  */
 
-use Drupal\Core\Language\Language;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityFormControllerInterface;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Language\Language;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\TypedData\TranslatableInterface;
 
 /**
  * Implements hook_help().
@@ -264,8 +265,7 @@ function _content_translation_menu_strip_loaders($path) {
  *   The entity whose translation overview should be displayed.
  */
 function content_translation_translate_access(EntityInterface $entity) {
-  $entity_type = $entity->entityType();
-  return empty($entity->getUntranslated()->language()->locked) && language_multilingual() && $entity->isTranslatable() &&
+  return $entity instanceof ContentEntityInterface && empty($entity->getUntranslated()->language()->locked) && language_multilingual() && $entity->isTranslatable() &&
     (user_access('create content translations') || user_access('update content translations') || user_access('delete content translations'));
 }
 
@@ -586,7 +586,7 @@ function content_translation_permission() {
  * Implements hook_form_alter().
  */
 function content_translation_form_alter(array &$form, array &$form_state) {
-  if (($form_controller = content_translation_form_controller($form_state)) && ($entity = $form_controller->getEntity()) && !$entity->isNew() && $entity->isTranslatable()) {
+  if (($form_controller = content_translation_form_controller($form_state)) && ($entity = $form_controller->getEntity()) && !$entity->isNew() && $entity instanceof ContentEntityInterface && $entity->isTranslatable()) {
     $controller = content_translation_controller($entity->entityType());
     $controller->entityFormAlter($form, $form_state, $entity);
 
@@ -617,7 +617,7 @@ function content_translation_field_language_alter(&$display_language, $context) 
   $entity = $context['entity'];
   $entity_type = $entity->entityType();
 
-  if (isset($entity->translation[$context['langcode']]) && $entity->isTranslatable() && !content_translation_view_access($entity, $context['langcode'])) {
+  if ($entity instanceof ContentEntityInterface && isset($entity->translation[$context['langcode']]) && $entity->isTranslatable() && !content_translation_view_access($entity, $context['langcode'])) {
     $instances = field_info_instances($entity_type, $entity->bundle());
     // Avoid altering the real entity.
     $entity = clone($entity);
@@ -642,7 +642,7 @@ function content_translation_entity_load(array $entities, $entity_type) {
 
   if (content_translation_enabled($entity_type)) {
     foreach ($entities as $entity) {
-      if ($entity->isTranslatable()) {
+      if ($entity instanceof ContentEntityInterface && $entity->isTranslatable()) {
         $enabled_entities[$entity->id()] = $entity;
       }
     }
@@ -685,7 +685,7 @@ function content_translation_load_translation_metadata(array $entities, $entity_
  */
 function content_translation_entity_insert(EntityInterface $entity) {
   // Only do something if translation support for the given entity is enabled.
-  if (!$entity->isTranslatable()) {
+  if (!($entity instanceof ContentEntityInterface) || !$entity->isTranslatable()) {
     return;
   }
 
@@ -725,7 +725,7 @@ function content_translation_entity_insert(EntityInterface $entity) {
  */
 function content_translation_entity_delete(EntityInterface $entity) {
   // Only do something if translation support for the given entity is enabled.
-  if (!$entity->isTranslatable()) {
+  if (!($entity instanceof ContentEntityInterface) || !$entity->isTranslatable()) {
     return;
   }
 
@@ -740,7 +740,7 @@ function content_translation_entity_delete(EntityInterface $entity) {
  */
 function content_translation_entity_update(EntityInterface $entity) {
   // Only do something if translation support for the given entity is enabled.
-  if (!$entity->isTranslatable()) {
+  if (!($entity instanceof ContentEntityInterface) || !$entity->isTranslatable()) {
     return;
   }
 
@@ -835,7 +835,7 @@ function content_translation_field_info_alter(&$info) {
  * Implements hook_entity_presave().
  */
 function content_translation_entity_presave(EntityInterface $entity) {
-  if ($entity->isTranslatable()) {
+  if ($entity instanceof ContentEntityInterface && $entity->isTranslatable()) {
     // @todo Avoid using request attributes once translation metadata become
     //   regular fields.
     $attributes = \Drupal::request()->attributes;
