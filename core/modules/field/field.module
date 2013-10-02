@@ -120,25 +120,29 @@ function field_help($path, $arg) {
       $output .= '<dt>' . t('Enabling field types') . '</dt>';
       $output .= '<dd>' . t('The Field module provides the infrastructure for fields and field attachment; the field types and input widgets themselves are provided by additional modules. Some of the modules are required; the optional modules can be enabled from the <a href="@modules">Modules administration page</a>. Drupal core includes the following field type modules: Number (required), Text (required), List (required), Taxonomy (optional), Image (optional), and File (optional); the required Options module provides input widgets for other field modules. Additional fields and widgets may be provided by contributed modules, which you can find in the <a href="@contrib">contributed module section of Drupal.org</a>. Currently enabled field and input widget modules:', array('@modules' => url('admin/modules'), '@contrib' => 'http://drupal.org/project/modules', '@options' => url('admin/help/options')));
 
-      // Make a list of all widget and field modules currently enabled, in
-      // order by displayed module name (module names are not translated).
+      // Make a list of all widget and field modules currently enabled, ordered
+      // by displayed module name (module names are not translated).
       $items = array();
       $info = system_get_info('module');
-      $modules = array_merge(\Drupal::moduleHandler()->getImplementations('field_info'), \Drupal::moduleHandler()->getImplementations('field_widget_info'));
+      $field_widgets = \Drupal::service('plugin.manager.field.widget')->getDefinitions();
+      $field_types = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinitions();
+      foreach (array_merge($field_types, $field_widgets) as $field_module) {
+        $modules[] = $field_module['provider'];
+      }
       $modules = array_unique($modules);
       sort($modules);
       foreach ($modules as $module) {
         $display = $info[$module]['name'];
         if (\Drupal::moduleHandler()->implementsHook($module, 'help')) {
-          $items['items'][] = l($display, 'admin/help/' . $module);
+          $items[] = l($display, 'admin/help/' . $module);
         }
         else {
-          $items['items'][] = $display;
+          $items[] = $display;
         }
       }
       $item_list = array(
         '#theme' => 'item_list',
-        '#items' => $items['items'],
+        '#items' => $items,
       );
       $output .= drupal_render($item_list);
       return $output;
