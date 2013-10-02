@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\Template;
 
+use Drupal\Component\Utility\String;
+
 /**
  * Defines the base class for an attribute type.
  *
@@ -53,7 +55,7 @@ abstract class AttributeValueBase {
    *   The string representation of the attribute.
    */
   public function render() {
-    return $this->name . '="' . $this . '"';
+    return String::checkPlain($this->name) . '="' . $this . '"';
   }
 
   /**

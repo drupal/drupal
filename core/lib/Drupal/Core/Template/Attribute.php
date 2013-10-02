@@ -18,7 +18,7 @@ use Drupal\Component\Utility\String;
  *  $attributes = new Attribute(array('id' => 'socks'));
  *  $attributes['class'] = array('black-cat', 'white-cat');
  *  $attributes['class'][] = 'black-white-cat';
- *  echo '<cat ' . $attributes . '>';
+ *  echo '<cat' . $attributes . '>';
  *  // Produces <cat id="socks" class="black-cat white-cat black-white-cat">
  * @endcode
  *
@@ -27,7 +27,7 @@ use Drupal\Component\Utility\String;
  *  $attributes = new Attribute(array('id' => 'socks'));
  *  $attributes['class'] = array('black-cat', 'white-cat');
  *  $attributes['class'][] = 'black-white-cat';
- *  echo '<cat class="cat ' . $attributes['class'] . '" ' . $attributes . '>';
+ *  echo '<cat class="cat ' . $attributes['class'] . '"' . $attributes . '>';
  *  // Produces <cat class="cat black-cat white-cat black-white-cat" id="socks">
  * @endcode
  */
@@ -65,6 +65,21 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
    * Implements ArrayAccess::offsetSet().
    */
   public function offsetSet($name, $value) {
+    $this->storage[$name] = $this->createAttributeValue($name, $value);
+  }
+
+  /**
+   * Creates the different types of attribute values.
+   *
+   * @param string $name
+   *   The attribute name.
+   * @param mixed $value
+   *   The attribute value.
+   *
+   * @return \Drupal\Core\Template\AttributeValueBase
+   *   An AttributeValueBase representation of the attribute's value.
+   */
+  protected function createAttributeValue($name, $value) {
     if (is_array($value)) {
       $value = new AttributeArray($name, $value);
     }
@@ -74,13 +89,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
     elseif (!is_object($value)) {
       $value = new AttributeString($name, $value);
     }
-    // The $name could be NULL.
-    if (isset($name)) {
-      $this->storage[$name] = $value;
-    }
-    else {
-      $this->storage[] = $value;
-    }
+    return $value;
   }
 
   /**
@@ -104,9 +113,9 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
     $return = '';
     foreach ($this->storage as $name => $value) {
       if (!$value->printed()) {
-        $rendered = is_object($value) ? $value->render() : (String::checkPlain($name) . ' = "' . String::checkPlain($value) . '"');
+        $rendered = $value->render();
         if ($rendered) {
-          $return .= " $rendered";
+          $return .= ' ' . $rendered;
         }
       }
     }
@@ -118,9 +127,7 @@ class Attribute implements \ArrayAccess, \IteratorAggregate {
    */
   public function  __clone() {
     foreach ($this->storage as $name => $value) {
-      if (is_object($value)) {
-        $this->storage[$name] = clone $value;
-      }
+      $this->storage[$name] = clone $value;
     }
   }
 

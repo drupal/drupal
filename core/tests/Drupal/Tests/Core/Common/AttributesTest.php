@@ -31,9 +31,13 @@ class AttributesTest extends UnitTestCase {
   public function providerTestAttributeData() {
     return array(
       // Verify that special characters are HTML encoded.
+      array(array('&"\'<>' => 'value'), ' &amp;&quot;&#039;&lt;&gt;="value"', 'HTML encode attribute names.'),
       array(array('title' => '&"\'<>'), ' title="&amp;&quot;&#039;&lt;&gt;"', 'HTML encode attribute values.'),
       // Verify multi-value attributes are concatenated with spaces.
       array(array('class' => array('first', 'last')), ' class="first last"', 'Concatenate multi-value attributes.'),
+      // Verify boolean attribute values are rendered correctly.
+      array(array('disabled' => TRUE), ' disabled', 'Boolean attribute is rendered.'),
+      array(array('disabled' => FALSE), '', 'Boolean attribute is not rendered.'),
       // Verify empty attribute values are rendered.
       array(array('alt' => ''), ' alt=""', 'Empty attribute value #1.'),
       array(array('alt' => NULL), ' alt=""', 'Empty attribute value #2.'),

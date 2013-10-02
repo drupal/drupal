@@ -15,13 +15,13 @@ use Drupal\Component\Utility\String;
  * To use with Attribute, the array must be specified.
  * Correct:
  * @code
- *  $attributes = new Attribute(array());
+ *  $attributes = new Attribute();
  *  $attributes['class'] = array();
  *  $attributes['class'][] = 'cat';
  * @endcode
  * Incorrect:
  * @code
- *  $attributes = new Attribute(array());
+ *  $attributes = new Attribute();
  *  $attributes['class'][] = 'cat';
  * @endcode
  *
@@ -67,7 +67,7 @@ class AttributeArray extends AttributeValueBase implements \ArrayAccess, \Iterat
    */
   public function __toString() {
     $this->printed = TRUE;
-    return implode(' ', array_map(array('Drupal\Component\Utility\String', 'checkPlain'), $this->value));
+    return String::checkPlain(implode(' ', $this->value));
   }
 
   /**
