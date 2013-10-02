@@ -5,6 +5,8 @@
  * Functions to support theming in the Bartik theme.
  */
 
+use Drupal\Core\Template\RenderWrapper;
+
 /**
  * Implements hook_preprocess_HOOK() for html.tpl.php.
  *
@@ -84,8 +86,18 @@ function bartik_preprocess_maintenance_page(&$variables) {
   if (!$variables['db_is_active']) {
     $variables['site_name'] = '';
   }
-  drupal_add_css(drupal_get_path('theme', 'bartik') . '/css/maintenance-page.css');
-  $variables['styles'] = drupal_get_css();
+  $variables['styles'] = new RenderWrapper('drupal_get_css');
+  // Normally we could attach libraries via hook_page_alter(), but when the
+  // database is inactive it's not called so we add them here.
+  $libraries = array(
+    '#attached' => array(
+      'library' => array(
+        array('bartik', 'maintenance_page'),
+      ),
+    ),
+  );
+
+  drupal_render($libraries);
 
   $site_config = \Drupal::config('system.site');
   // Always print the site name and slogan, but if they are toggled off, we'll
@@ -100,6 +112,23 @@ function bartik_preprocess_maintenance_page(&$variables) {
     // If toggle_site_slogan is FALSE, the site_slogan will be empty, so we rebuild it.
     $variables['site_slogan'] = filter_xss_admin($site_config->get('slogan'));
   }
+}
+
+/**
+ * Implements hook_library_info().
+ */
+function bartik_library_info() {
+  $path = drupal_get_path('theme', 'bartik');
+  $libraries['maintenance_page'] = array(
+    'version' => \DRUPAL::VERSION,
+    'css' => array(
+      $path . '/css/maintenance-page.css' => array(
+        'group' => CSS_AGGREGATE_THEME,
+      ),
+    ),
+  );
+
+  return $libraries;
 }
 
 /**
