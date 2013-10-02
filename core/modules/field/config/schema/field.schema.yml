@@ -11,7 +11,7 @@ field.settings:
       type: integer
       label: 'Maximum number of field data records to purge'
 
-field.field.*:
+field.field.*.*:
   type: mapping
   label: 'Field'
   mapping:
