@@ -8,7 +8,12 @@
 namespace Drupal\file\Plugin\views\argument;
 
 use Drupal\Component\Annotation\PluginID;
+use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\views\Plugin\views\argument\Numeric;
+use Drupal\Component\Utility\String;
+use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Argument handler to accept multiple file ids.
@@ -17,19 +22,67 @@ use Drupal\views\Plugin\views\argument\Numeric;
  *
  * @PluginID("file_fid")
  */
-class Fid extends Numeric {
+class Fid extends Numeric implements ContainerFactoryPluginInterface {
+
+  /**
+   * The entity manager service
+   *
+   * @var \Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
+   * The entity query factory service.
+   *
+   * @var \Drupal\Core\Entity\Query\QueryFactory
+   */
+  protected $entityQuery;
+
+  /**
+   * Constructs a Drupal\file\Plugin\views\argument\Fid object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Entity\EntityManager $entity_manager
+   *   The entity manager.
+   * @param \Drupal\Core\Entity\Query\QueryFactory
+   *   The entity query factory.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, EntityManager $entity_manager, QueryFactory $entity_query) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->entityManager = $entity_manager;
+    $this->entityQuery = $entity_query;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('plugin.manager.entity'),
+      $container->get('entity.query')
+    );
+  }
 
   /**
    * Override the behavior of titleQuery(). Get the filenames.
    */
   public function titleQuery() {
-    $titles = db_select('file_managed', 'f')
-      ->fields('f', array('filename'))
+    $fids = $this->entityQuery->get('file')
       ->condition('fid', $this->value)
-      ->execute()
-      ->fetchCol();
-    foreach ($titles as &$title) {
-      $title = check_plain($title);
+      ->execute();
+    $controller = $this->entityManager->getStorageController('file');
+    $files = $controller->loadMultiple($fids);
+    $titles = array();
+    foreach ($files as $file) {
+      $titles[] = String::checkPlain($file->getFilename());
     }
     return $titles;
   }
