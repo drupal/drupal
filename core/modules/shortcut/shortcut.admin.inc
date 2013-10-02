@@ -133,7 +133,7 @@ function shortcut_set_switch_validate($form, &$form_state) {
  * Submit handler for shortcut_set_switch().
  */
 function shortcut_set_switch_submit($form, &$form_state) {
-  global $user;
+  $user = \Drupal::currentUser();
   $account = $form_state['values']['account'];
 
   if ($form_state['values']['set'] == 'new') {

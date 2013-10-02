@@ -303,7 +303,7 @@ function shortcut_set_unassign_user($account) {
  */
 function shortcut_current_displayed_set($account = NULL) {
   $shortcut_sets = &drupal_static(__FUNCTION__, array());
-  global $user;
+  $user = \Drupal::currentUser();
   if (!isset($account)) {
     $account = $user;
   }
@@ -340,7 +340,7 @@ function shortcut_current_displayed_set($account = NULL) {
  *   An object representing the default shortcut set.
  */
 function shortcut_default_set($account = NULL) {
-  global $user;
+  $user = \Drupal::currentUser();
   if (!isset($account)) {
     $account = $user;
   }
