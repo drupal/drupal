@@ -11,9 +11,9 @@ Drupal.behaviors.textSummary = {
       var $widget = $(this).closest('.text-format-wrapper');
 
       var $summary = $widget.find('.text-summary-wrapper');
-      var $summaryLabel = $summary.find('label');
+      var $summaryLabel = $summary.find('label').first();
       var $full = $widget.find('.text-full').closest('.form-item');
-      var $fullLabel = $full.find('label');
+      var $fullLabel = $full.find('label').first();
 
       // Create a placeholder label when the field cardinality is greater
       // than 1.
