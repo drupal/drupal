@@ -10,7 +10,6 @@ namespace Drupal\Core\Menu;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\Core\Routing\RouteProviderInterface;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,13 +17,6 @@ use Symfony\Component\HttpFoundation\Request;
  * Default object used for LocalTaskPlugins.
  */
 class LocalTaskDefault extends PluginBase implements LocalTaskInterface, ContainerFactoryPluginInterface {
-
-  /**
-   * String translation object.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface
-   */
-  protected $stringTranslation;
 
   /**
    * The route provider to load routes by name.
@@ -49,13 +41,10 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface, Contain
    *   The plugin_id for the plugin instance.
    * @param array $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
-   *   The string translation object.
    * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
    *   The route provider.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, TranslationInterface $string_translation, RouteProviderInterface $route_provider) {
-    $this->stringTranslation = $string_translation;
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, RouteProviderInterface $route_provider) {
     $this->routeProvider = $route_provider;
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -68,18 +57,8 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface, Contain
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('string_translation'),
       $container->get('router.route_provider')
     );
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->stringTranslation->translate($string, $args, $options);
   }
 
   /**

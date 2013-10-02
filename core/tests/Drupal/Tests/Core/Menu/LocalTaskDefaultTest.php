@@ -7,6 +7,7 @@
 
 namespace Drupal\Tests\Core\Menu;
 
+use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Menu\LocalTaskDefault;
 use Drupal\Tests\UnitTestCase;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -83,7 +84,10 @@ class LocalTaskDefaultTest extends UnitTestCase {
    * Setups the local task default.
    */
   protected function setupLocalTaskDefault() {
-    $this->localTaskBase = new LocalTaskDefault($this->config, $this->pluginId, $this->pluginDefinition, $this->stringTranslation, $this->routeProvider);
+    $container = new ContainerBuilder();
+    $container->set('string_translation', $this->stringTranslation);
+    \Drupal::setContainer($container);
+    $this->localTaskBase = new LocalTaskDefault($this->config, $this->pluginId, $this->pluginDefinition, $this->routeProvider);
   }
 
   /**
