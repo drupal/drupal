@@ -831,7 +831,7 @@ function system_menu() {
   );
   $items['admin/config/system/site-information'] = array(
     'title' => 'Site information',
-    'description' => 'Change site name, e-mail address, slogan, default front page, and number of posts per page, error pages.',
+    'description' => 'Change site name, e-mail address, slogan, default front page and error pages.',
     'route_name' => 'system.site_information_settings',
     'weight' => -20,
   );
