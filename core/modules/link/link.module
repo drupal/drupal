@@ -13,8 +13,21 @@ function link_help($path, $arg) {
     case 'admin/help#link':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Link module defines a simple link field type for the Field module. Links are external URLs, can have an optional link text for each link, and they can be formatted when displayed. See the <a href="@field-help">Field module help page</a> for more information about fields.', array('@field-help' => url('admin/help/field'))) . '</p>';
-      return $output;
+      $output .= '<p>' . t('The Link module allows you to create fields that contain external URLs and optional link text. See the <a href="!field">Field module help</a> and the <a href="!field_ui">Field UI help</a> pages for general information on fields and how to create and manage them. For more information, see the <a href="!link_documentation">online documentation for the Link module</a>.', array('!field' => \Drupal::url('help.page', array('name' => 'field')), '!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')), '!link_documentation' => 'https://drupal.org/documentation/modules/link')) . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('Managing and displaying link fields') . '</dt>';
+      $output .= '<dd>' . t('The <em>settings</em> and the <em>display</em> of the link field can be configured separately. See the <a href="!field_ui">Field UI help</a> for more information on how to manage fields and their display.', array('!field_ui' => \Drupal::url('help.page', array('name' => 'field_ui')))) . '</dd>';
+      $output .= '<dt>' . t('Adding link text') . '</dt>';
+      $output .= '<dd>' . t('In the field settings you can define additional link text to be <em>optional</em> or <em>required</em> in any link field.') . '</dd>';
+      $output .= '<dt>' . t('Displaying link text') . '</dt>';
+      $output .= '<dd>' . t('If link text has been submitted for a URL, then by default this link text is displayed as a link to the URL. If you want to display both the link text <em>and</em> the URL, choose the appropriate link format from the drop-down menu in the <em>Manage display</em> page. If you only want to display the URL even if link text has been submitted, choose <em>Link</em> as the format, and then change its <em>Format settings</em> to display <em>URL only</em>.') . '</dd>';
+      $output .= '<dt>' . t('Adding attributes to links') . '</dt>';
+      $output .= '<dd>' . t('You can add attributes to links, by changing the <em>Format settings</em> in the <em>Manage display</em> page. Adding <em>rel="nofollow"</em> notifies search engines that links should not be followed.') . '</dd>';
+      $output .= '<dt>' . t('Validating URLs') . '</dt>';
+      $output .= '<dd>' . t('All links are validated after a link field is filled in. They can include anchors or query strings. Links need to start with either the scheme name <em>http</em> or <em>https</em>; other scheme names (for example ftp or git) are not supported.') . '</dd>';
+      $output .= '</dl>';
+    return $output;
   }
 }
 
