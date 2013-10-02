@@ -51,7 +51,7 @@ class SearchExcerptTest extends WebTestBase {
     $this->assertEqual($result, 'The quick brown <strong>fox</strong> &amp; jumps over the lazy dog ...', 'Found keyword is highlighted');
 
     $longtext = str_repeat($text . ' ', 10);
-    $result = preg_replace('| +|', ' ', search_excerpt('nothing', $text));
+    $result = preg_replace('| +|', ' ', search_excerpt('nothing', $longtext));
     $this->assertTrue(strpos($result, $expected) === 0, 'When keyword is not found in long string, return value starts as expected');
 
     $entities = str_repeat('k&eacute;sz&iacute;t&eacute;se ', 20);
