@@ -255,7 +255,9 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
     // Delete the style directory in each registered wrapper.
     $wrappers = file_get_stream_wrappers(STREAM_WRAPPERS_WRITE_VISIBLE);
     foreach ($wrappers as $wrapper => $wrapper_data) {
-      file_unmanaged_delete_recursive($wrapper . '://styles/' . $this->id());
+      if (file_exists($directory = $wrapper . '://styles/' . $this->id())) {
+        file_unmanaged_delete_recursive($directory);
+      }
     }
 
     // Let other modules update as necessary on flush.
