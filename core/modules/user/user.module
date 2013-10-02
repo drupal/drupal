@@ -791,12 +791,6 @@ function user_menu() {
     'route_name' => 'user.admin_permissions',
     'type' => MENU_LOCAL_TASK,
   );
-  $items['admin/people/roles'] = array(
-    'title' => 'Roles',
-    'description' => 'List, edit, or add user roles.',
-    'route_name' => 'user.role_list',
-    'type' => MENU_LOCAL_TASK,
-  );
   $items['admin/people/roles/add'] = array(
     'title' => 'Add role',
     'route_name' => 'user.role_add',

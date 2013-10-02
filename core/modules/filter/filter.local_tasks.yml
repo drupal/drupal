@@ -1,0 +1,5 @@
+filter.format_edit_tab:
+  route_name: filter.format_edit
+  title: 'Configure'
+  tab_root_id: filter.format_edit_tab
+  weight: -10
