@@ -244,7 +244,6 @@ class ToolkitGdTest extends DrupalUnitTestBase {
         // value for whether each group of values fail.
         $correct_dimensions_real = TRUE;
         $correct_dimensions_object = TRUE;
-        $correct_colors = TRUE;
 
         // Check the real dimensions of the image first.
         if (imagesy($image->getResource()) != $values['height'] || imagesx($image->getResource()) != $values['width']) {

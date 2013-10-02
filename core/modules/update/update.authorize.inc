@@ -31,7 +31,7 @@ use Drupal\Core\Updater\UpdaterException;
  */
 function update_authorize_run_update($filetransfer, $projects) {
   $operations = array();
-  foreach ($projects as $project => $project_info) {
+  foreach ($projects as $project_info) {
     $operations[] = array(
       'update_authorize_batch_copy_project',
       array(
@@ -186,7 +186,7 @@ function update_authorize_batch_copy_project($project, $updater_name, $local_url
  *   An associative array of results from the batch operation.
  */
 function update_authorize_update_batch_finished($success, $results) {
-  foreach ($results['log'] as $project => $messages) {
+  foreach ($results['log'] as $messages) {
     if (!empty($messages['#abort'])) {
       $success = FALSE;
     }
@@ -253,7 +253,7 @@ function update_authorize_update_batch_finished($success, $results) {
  *   An associative array of results from the batch operation.
  */
 function update_authorize_install_batch_finished($success, $results) {
-  foreach ($results['log'] as $project => $messages) {
+  foreach ($results['log'] as $messages) {
     if (!empty($messages['#abort'])) {
       $success = FALSE;
     }

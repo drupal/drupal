@@ -218,8 +218,6 @@ class GroupwiseMax extends RelationshipPluginBase {
     $temp_view->args[] = '**CORRELATED**';
 
     // Add the base table ID field.
-    $views_data = Views::viewsData()->get($this->definition['base']);
-    $base_field = $views_data['table']['base']['field'];
     $temp_view->addItem('default', 'field', $this->definition['base'], $this->definition['field']);
 
     $relationship_id = NULL;

@@ -161,7 +161,6 @@ function pager_get_query_parameters() {
  *   - quantity: The number of pages in the list.
  */
 function template_preprocess_pager(&$variables) {
-  $tags = $variables['tags'];
   $element = $variables['element'];
   $parameters = $variables['parameters'];
   $quantity = $variables['quantity'];

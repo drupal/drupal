@@ -114,7 +114,7 @@ class ColorTest extends WebTestBase {
     $this->drupalGet('<front>');
     $stylesheets = \Drupal::state()->get('drupal_css_cache_files') ?: array();
     $stylesheet_content = '';
-    foreach ($stylesheets as $key => $uri) {
+    foreach ($stylesheets as $uri) {
       $stylesheet_content .= join("\n", file(drupal_realpath($uri)));
     }
     $this->assertTrue(strpos($stylesheet_content, 'public://') === FALSE, 'Make sure the color paths have been translated to local paths. (' . $theme . ')');

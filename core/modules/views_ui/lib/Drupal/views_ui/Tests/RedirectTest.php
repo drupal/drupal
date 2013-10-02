@@ -32,7 +32,6 @@ class RedirectTest extends UITestBase {
    */
   public function testRedirect() {
     $view_name = 'test_view';
-    $view = views_get_view($view_name);
 
     $random_destination = $this->randomName();
     $edit_path = "admin/structure/views/view/$view_name/edit";
@@ -44,8 +43,6 @@ class RedirectTest extends UITestBase {
     // but have the old url in the destination the user should be redirected to
     // the new path.
     $view_name = 'test_redirect_view';
-    $view = views_get_view($view_name);
-    $random_destination = $this->randomName();
     $new_path = $this->randomName();
 
     $edit_path = "admin/structure/views/view/$view_name/edit";

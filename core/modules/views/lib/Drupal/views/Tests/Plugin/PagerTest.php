@@ -57,7 +57,6 @@ class PagerTest extends PluginTestBase {
     $this->assertText('20 items');
 
     // Change type and check whether the type is new type is stored.
-    $edit = array();
     $edit = array(
       'pager[type]' => 'mini',
     );
@@ -72,7 +71,6 @@ class PagerTest extends PluginTestBase {
 
     $this->drupalGet('admin/structure/views/view/test_store_pager_settings/edit');
 
-    $edit = array();
     $edit = array(
       'pager[type]' => 'full',
     );

@@ -25,7 +25,7 @@ function node_views_analyze(ViewExecutable $view) {
   $ret = array();
   // Check for something other than the default display:
   if ($view->storage->get('base_table') == 'node') {
-    foreach ($view->displayHandlers as $id => $display) {
+    foreach ($view->displayHandlers as $display) {
       if (!$display->isDefaulted('access') || !$display->isDefaulted('filters')) {
         // check for no access control
         $access = $display->getOption('access');

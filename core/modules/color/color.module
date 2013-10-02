@@ -68,7 +68,7 @@ function color_css_alter(&$css) {
 
   if (!empty($color_paths) && !empty($themes[$theme_key]->stylesheets['all'])) {
 
-    foreach ($themes[$theme_key]->stylesheets['all'] as $base_filename => $old_path) {
+    foreach ($themes[$theme_key]->stylesheets['all'] as $old_path) {
       // Loop over the path array with recolored CSS files to find matching
       // paths which could replace the non-recolored paths.
       foreach ($color_paths as $color_path) {
@@ -408,7 +408,6 @@ function color_scheme_form_submit($form, &$form_state) {
  * Rewrites the stylesheet to match the colors in the palette.
  */
 function _color_rewrite_stylesheet($theme, &$info, &$paths, $palette, $style) {
-  $themes = list_themes();
   // Prepare color conversion table.
   $conversion = $palette;
   foreach ($conversion as $k => $v) {

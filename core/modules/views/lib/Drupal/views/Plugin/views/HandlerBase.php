@@ -111,11 +111,6 @@ abstract class HandlerBase extends PluginBase {
       $options['field'] = $this->actualField;
     }
 
-    $plural = $this->definition['plugin_type'];
-    if (isset($types[$plural]['plural'])) {
-      $plural = $types[$plural]['plural'];
-    }
-
     $this->unpackOptions($this->options, $options);
 
     // This exist on most handlers, but not all. So they are still optional.

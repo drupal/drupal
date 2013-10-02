@@ -211,7 +211,6 @@ class DisplayApiTest extends FieldUnitTestBase {
       ),
     );
     $setting = $display['settings']['test_formatter_setting_multiple'];
-    $array = array();
     foreach ($this->values as $delta => $value) {
       $item = $this->entity->{$this->field_name}[$delta]->getValue();
       $output = field_view_value($this->entity, $this->field_name, $item, $display);
@@ -227,7 +226,6 @@ class DisplayApiTest extends FieldUnitTestBase {
       ),
     );
     $setting = $display['settings']['test_formatter_setting_additional'];
-    $array = array();
     foreach ($this->values as $delta => $value) {
       $item = $this->entity->{$this->field_name}[$delta]->getValue();
       $output = field_view_value($this->entity, $this->field_name, $item, $display);

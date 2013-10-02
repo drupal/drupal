@@ -375,7 +375,7 @@ function forum_node_update(EntityInterface $node) {
 function forum_node_insert(EntityInterface $node) {
   if (\Drupal::service('forum_manager')->checkNodeType($node)) {
     if (!empty($node->forum_tid)) {
-      $nid = db_insert('forum')
+      db_insert('forum')
         ->fields(array(
           'tid' => $node->forum_tid,
           'vid' => $node->getRevisionId(),

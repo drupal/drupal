@@ -127,7 +127,7 @@ class TranslationTest extends FieldUnitTestBase {
     \Drupal::state()->set('field_test.field_available_languages_alter', TRUE);
     $langcodes = field_content_languages();
     $available_langcodes = field_available_languages($this->entity_type, $this->field);
-    foreach ($available_langcodes as $delta => $langcode) {
+    foreach ($available_langcodes as $langcode) {
       if ($langcode != 'xx' && $langcode != 'en') {
         $this->assertTrue(in_array($langcode, $langcodes), format_string('%language is an enabled language.', array('%language' => $langcode)));
       }

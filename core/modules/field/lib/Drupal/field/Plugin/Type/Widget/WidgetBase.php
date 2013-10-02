@@ -420,7 +420,7 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
       });
       $items->setValue($itemValues);
       // Remove the '_weight' entries.
-      foreach ($items as $delta => $item) {
+      foreach ($items as $item) {
         unset($item->_weight);
       }
     }

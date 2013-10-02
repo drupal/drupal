@@ -166,7 +166,6 @@ class HandlerFilterUserNameTest extends ViewTestBase {
     // Pass in just valid usernames.
     $users = $this->names;
     $options['query']['uid'] = implode(', ', $users);
-    $users = array_map('strtolower', $users);
 
     $this->drupalGet($path, $options);
     $this->assertNoRaw('Unable to find user');

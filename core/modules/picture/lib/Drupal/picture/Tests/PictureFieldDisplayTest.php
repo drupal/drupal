@@ -63,7 +63,6 @@ class PictureFieldDisplayTest extends ImageFieldTestBase {
       'sourceType' => Breakpoint::SOURCE_TYPE_USER_DEFINED,
     ));
 
-    $breakpoints = array();
     $breakpoint_names = array('small', 'medium', 'large');
     for ($i = 0; $i < 3; $i++) {
       $width = ($i + 1) * 200;

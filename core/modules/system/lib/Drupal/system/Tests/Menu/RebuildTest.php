@@ -30,7 +30,7 @@ class RebuildTest extends WebTestBase {
     $this->assertEqual($admin_exists, 'admin', "The path 'admin/' exists prior to deleting.");
 
     // Delete the path item 'admin', and test that the path doesn't exist in the database.
-    $delete = db_delete('menu_router')
+    db_delete('menu_router')
       ->condition('path', 'admin')
       ->execute();
     $admin_exists = db_query('SELECT path from {menu_router} WHERE path = :path', array(':path' => 'admin'))->fetchField();

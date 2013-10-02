@@ -59,7 +59,6 @@ class GlossaryTest extends ViewTestBase {
     $view->executeDisplay('attachment_1');
 
     // Check that the amount of nodes per char.
-    $result_nodes_per_char = array();
     foreach ($view->result as $item) {
       $this->assertEqual($nodes_per_char[$item->title_truncated], $item->num_records);
     }

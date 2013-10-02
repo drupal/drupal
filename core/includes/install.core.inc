@@ -2542,8 +2542,6 @@ function install_configure_form_validate($form, &$form_state) {
  * @see install_configure_form_validate()
  */
 function install_configure_form_submit($form, &$form_state) {
-  global $user;
-
   \Drupal::config('system.site')
     ->set('name', $form_state['values']['site_name'])
     ->set('mail', $form_state['values']['site_mail'])
