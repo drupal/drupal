@@ -25,10 +25,14 @@ interface TransliterationInterface {
    * @param string $unknown_character
    *   (optional) The character to substitute for characters in $string without
    *   transliterated equivalents. Defaults to '?'.
+   * @param int $max_length
+   *   (optional) If provided, return at most this many characters, ensuring
+   *   that the transliteration does not split in the middle of an input
+   *   character's transliteration.
    *
    * @return string
    *   $string with non-US-ASCII characters transliterated to US-ASCII
    *   characters, and unknown characters replaced with $unknown_character.
    */
-  public function transliterate($string, $langcode = 'en', $unknown_character = '?');
+  public function transliterate($string, $langcode = 'en', $unknown_character = '?', $max_length = NULL);
 }

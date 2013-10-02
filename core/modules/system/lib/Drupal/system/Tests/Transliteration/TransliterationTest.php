@@ -106,5 +106,13 @@ class TransliterationTest extends DrupalUnitTestBase {
         '@actual' => $actual,
       )));
     }
+
+    // Test with max length, using German. It should never split up the
+    // transliteration of a single character.
+    $input = 'Ä Ö Ü Å Ø äöüåøhello';
+    $trunc_output = 'Ae Oe Ue A O aeoe';
+    $this->assertIdentical($trunc_output, $transliterator_service->transliterate($input, 'de', '?', 17), 'Truncating to 17 characters works');
+    $this->assertIdentical($trunc_output, $transliterator_service->transliterate($input, 'de', '?', 18), 'Truncating to 18 characters works');
+
   }
 }
