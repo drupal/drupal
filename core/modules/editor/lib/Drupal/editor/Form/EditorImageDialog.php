@@ -112,7 +112,7 @@ class EditorImageDialog extends FormBase {
       '#maxlength' => 8,
       '#min' => 1,
       '#max' => 99999,
-      '#placeholder' => 'width',
+      '#placeholder' => $this->t('width'),
       '#field_suffix' => ' x ',
       '#parents' => array('attributes', 'width'),
     );
@@ -125,8 +125,8 @@ class EditorImageDialog extends FormBase {
       '#maxlength' => 8,
       '#min' => 1,
       '#max' => 99999,
-      '#placeholder' => 'height',
-      '#field_suffix' => 'pixels',
+      '#placeholder' => $this->t('height'),
+      '#field_suffix' => $this->t('pixels'),
       '#parents' => array('attributes', 'height'),
     );
 

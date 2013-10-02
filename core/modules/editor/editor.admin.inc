@@ -109,7 +109,7 @@ function editor_image_upload_settings_form(Editor $editor) {
     '#maxlength' => 8,
     '#min' => 1,
     '#max' => 99999,
-    '#placeholder' => 'width',
+    '#placeholder' => t('width'),
     '#field_suffix' => ' x ',
     '#states' => $show_if_image_uploads_enabled,
   );
@@ -122,8 +122,8 @@ function editor_image_upload_settings_form(Editor $editor) {
     '#maxlength' => 8,
     '#min' => 1,
     '#max' => 99999,
-    '#placeholder' => 'height',
-    '#field_suffix' => 'pixels',
+    '#placeholder' => t('height'),
+    '#field_suffix' => t('pixels'),
     '#states' => $show_if_image_uploads_enabled,
   );
 
