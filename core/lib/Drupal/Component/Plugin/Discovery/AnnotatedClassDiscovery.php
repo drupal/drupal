@@ -108,7 +108,7 @@ class AnnotatedClassDiscovery implements DiscoveryInterface {
               // file. However, StaticReflectionParser needs a finder, so use a
               // mock version.
               $finder = MockFileFinder::create($fileinfo->getPathName());
-              $parser = new StaticReflectionParser($class, $finder);
+              $parser = new StaticReflectionParser($class, $finder, TRUE);
 
               if ($annotation = $reader->getClassAnnotation($parser->getReflectionClass(), $this->pluginDefinitionAnnotationName)) {
                 // AnnotationInterface::get() returns the array definition
