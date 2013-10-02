@@ -44,8 +44,11 @@ class PathProcessorAlias implements InboundPathProcessorInterface, OutboundPathP
    * Implements Drupal\Core\PathProcessor\OutboundPathProcessorInterface::processOutbound().
    */
   public function processOutbound($path, &$options = array(), Request $request = NULL) {
-    $langcode = isset($options['language']) ? $options['language']->id : NULL;
-    $path = $this->aliasManager->getPathAlias($path, $langcode);
+    if (empty($options['alias'])) {
+      $langcode = isset($options['language']) ? $options['language']->id : NULL;
+      $path = $this->aliasManager->getPathAlias($path, $langcode);
+    }
     return $path;
   }
+
 }

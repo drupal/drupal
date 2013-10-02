@@ -154,6 +154,12 @@ class PathAliasTest extends PathTestBase {
     $this->assertText($node1->label(), 'Alias works.');
     $this->assertResponse(200);
 
+    // Confirm the 'canonical' and 'shortlink' URLs.
+    $elements = $this->xpath("//link[contains(@rel, 'canonical') and contains(@href, '" . $edit['path[alias]'] . "')]");
+    $this->assertTrue(!empty($elements), 'Page contains canonical link URL.');
+    $elements = $this->xpath("//link[contains(@rel, 'shortlink') and contains(@href, 'node/" . $node1->id() . "')]");
+    $this->assertTrue(!empty($elements), 'Page contains shortlink URL.');
+
     // Change alias to one containing "exotic" characters.
     $previous = $edit['path[alias]'];
     $edit['path[alias]'] = "- ._~!$'\"()*@[]?&+%#,;=:" . // "Special" ASCII characters.

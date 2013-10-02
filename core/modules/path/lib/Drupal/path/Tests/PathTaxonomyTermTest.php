@@ -55,13 +55,19 @@ class PathTaxonomyTermTest extends PathTestBase {
       'path[alias]' => $this->randomName(),
     );
     $this->drupalPostForm('admin/structure/taxonomy/manage/' . $vocabulary->id() . '/add', $edit, t('Save'));
+    $tid = db_query("SELECT tid FROM {taxonomy_term_data} WHERE name = :name", array(':name' => $edit['name']))->fetchField();
 
     // Confirm that the alias works.
     $this->drupalGet($edit['path[alias]']);
     $this->assertText($description, 'Term can be accessed on URL alias.');
 
+    // Confirm the 'canonical' and 'shortlink' URLs.
+    $elements = $this->xpath("//link[contains(@rel, 'canonical') and contains(@href, '" . $edit['path[alias]'] . "')]");
+    $this->assertTrue(!empty($elements), 'Term page contains canonical link URL.');
+    $elements = $this->xpath("//link[contains(@rel, 'shortlink') and contains(@href, 'taxonomy/term/" . $tid . "')]");
+    $this->assertTrue(!empty($elements), 'Term page contains shortlink URL.');
+
     // Change the term's URL alias.
-    $tid = db_query("SELECT tid FROM {taxonomy_term_data} WHERE name = :name", array(':name' => $edit['name']))->fetchField();
     $edit2 = array();
     $edit2['path[alias]'] = $this->randomName();
     $this->drupalPostForm('taxonomy/term/' . $tid . '/edit', $edit2, t('Save'));
