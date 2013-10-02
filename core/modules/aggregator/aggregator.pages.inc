@@ -51,21 +51,6 @@ function aggregator_load_feed_items($type, $data = NULL, $limit = 20) {
 }
 
 /**
- * Default theme implementation to present a linked feed item for summaries.
- *
- * @param $variables
- *   An associative array containing:
- *   - item_link: Link to item.
- *   - item_age: Age of the item.
- *
- * @see template_preprocess()
- * @see template_preprocess_aggregator_summary_item()
- */
-function theme_aggregator_summary_item($variables) {
-  return $variables['item_url'] . ' ' . $variables['item_age'];
-}
-
-/**
  * Prepares variables for aggregator item templates.
  *
  * Default template: aggregator-item.html.twig.
@@ -200,21 +185,20 @@ function template_preprocess_aggregator_summary_items(&$variables) {
 function template_preprocess_aggregator_summary_item(&$variables) {
   $item = $variables['aggregator_item'];
 
-  $variables['item_url'] = l(check_plain($item->label()), check_url(url($item->link->value, array('absolute' => TRUE))), array(
+  $variables['url'] = l(check_plain($item->label()), check_url(url($item->link->value, array('absolute' => TRUE))), array(
     'attributes' => array(
       'class' => array('feed-item-url',),
     ),
   ));
-  $datetime = array(
+  $variables['age'] = array(
     '#theme' => 'datetime',
     '#attributes' => array(
       'datetime' => format_date($item->timestamp->value, 'html_datetime', '', 'UTC'),
-      'class' => array('feed-item-age',),
+      'class' => array('feed-item-age'),
     ),
     '#text' => t('%age old', array('%age' => format_interval(REQUEST_TIME - $item->timestamp->value))),
     '#html' => TRUE,
   );
-  $variables['item_age'] = drupal_render($datetime);
 }
 
 /**

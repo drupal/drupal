@@ -59,6 +59,7 @@ function aggregator_theme() {
     ),
     'aggregator_block_item' => array(
       'variables' => array('item' => NULL, 'feed' => 0),
+      'template' => 'aggregator-block-item',
     ),
     'aggregator_summary_items' => array(
       'variables' => array('summary_items' => NULL, 'source' => NULL),
@@ -68,6 +69,7 @@ function aggregator_theme() {
     'aggregator_summary_item' => array(
       'variables' => array('aggregator_item' => NULL, 'view_mode' => NULL),
       'file' => 'aggregator.pages.inc',
+      'template' => 'aggregator-summary-item',
     ),
     'aggregator_item' => array(
       'variables' => array('aggregator_item' => NULL, 'view_mode' => NULL),
@@ -435,18 +437,19 @@ function aggregator_category_load($cid) {
 }
 
 /**
- * Returns HTML for an individual feed item for display in the block.
+ * Prepares variables for individual feed item block templates.
  *
- * @param $variables
+ * Default template: aggregator-block-item.html.twig.
+ *
+ * @param array $variables
  *   An associative array containing:
  *   - item: The item to be displayed.
  *   - feed: Not used.
- *
- * @ingroup themeable
  */
-function theme_aggregator_block_item($variables) {
+function template_preprocess_aggregator_block_item(&$variables) {
   // Display the external link to the item.
-  return '<a href="' . check_url($variables['item']->link) . '">' . check_plain($variables['item']->title) . "</a>\n";
+  $variables['url'] = check_url($variables['item']->link);
+  $variables['title'] = check_plain($variables['item']->title);
 }
 
 /**
