@@ -1381,7 +1381,7 @@ function _filter_html_image_secure_process($text) {
     // Remove absolute URLs pointing to the local domain to prevent mixed
     // content errors.
     $request = \Drupal::request();
-    $image->setAttribute('src', preg_replace('|^https?://' . $request->getHost() . '|', '', $src));
+    $image->setAttribute('src', preg_replace('|^https?://' . $request->getHttpHost() . '|', '', $src));
 
     // Verify that $src starts with $base_path.
     // This also ensures that external images cannot be referenced.

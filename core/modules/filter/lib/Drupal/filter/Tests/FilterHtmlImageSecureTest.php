@@ -97,9 +97,16 @@ class FilterHtmlImageSecureTest extends WebTestBase {
     // Create a list of test image sources.
     // The keys become the value of the IMG 'src' attribute, the values are the
     // expected filter conversions.
+    $host = $this->container->get('request')->getHost();
+    $host_pattern = '|^http\://' . $host . '(\:[0-9]{0,5})|';
     $images = array(
       $http_base_url . '/' . $druplicon => base_path() . $druplicon,
       $https_base_url . '/' . $druplicon => base_path() . $druplicon,
+      // Test a url that includes a port.
+      preg_replace($host_pattern, 'http://' . $host . ':', $http_base_url . '/' . $druplicon) => base_path() . $druplicon,
+      preg_replace($host_pattern, 'http://' . $host . ':80', $http_base_url . '/' . $druplicon) => base_path() . $druplicon,
+      preg_replace($host_pattern, 'http://' . $host . ':443', $http_base_url . '/' . $druplicon) => base_path() . $druplicon,
+      preg_replace($host_pattern, 'http://' . $host . ':8080', $http_base_url . '/' . $druplicon) => base_path() . $druplicon,
       base_path() . $druplicon => base_path() . $druplicon,
       $files_path . '/' . $test_image => $files_path . '/' . $test_image,
       $http_base_url . '/' . $public_files_path . '/' . $test_image => $files_path . '/' . $test_image,
