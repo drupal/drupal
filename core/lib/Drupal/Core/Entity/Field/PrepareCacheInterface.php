@@ -10,22 +10,28 @@ namespace Drupal\Core\Entity\Field;
 /**
  * Interface for preparing field values before they enter cache.
  *
- * If a field type implements this interface, the prepareCache() method will be
- * invoked before field values get cached.
+ * If a field type implements this interface, this method will be used instead
+ * of the regular getValue() to collect the data to include in the cache of
+ * field values.
  */
 interface PrepareCacheInterface {
 
   /**
-   * Massages loaded field values before they enter the field cache.
+   * Returns the data to store in the field cache.
    *
-   * You should never load fieldable entities within this method, since this is
-   * likely to cause infinite recursions. Use the prepareView() method instead.
+   * This method is called if the entity type has field caching enabled, when an
+   * entity is loaded and no existing cache entry was found in the field cache.
    *
-   * Also note that the method is not called on field values displayed during
-   * entity preview. If the method adds elements that might be needed during
-   * display, you might want to also use prepareView() to add those elements in
-   * case they are not present.
+   * This method should never trigger the loading of fieldable entities, since
+   * this is likely to cause infinite recursions. A common workaround is to
+   * provide a base formatter class implementing the prepareView() method
+   * instead.
+   *
+   * The recommended way to implement it is to provide a computed field item
+   * property that can accepts setting a value through setValue(). See
+   * \Drupal\text\Plugin\field\field_type\TextItemBase and the corresponding
+   * computed property Drupal\text\TextProcessed for an example.
    */
-  public function prepareCache();
+  public function getCacheData();
 
 }

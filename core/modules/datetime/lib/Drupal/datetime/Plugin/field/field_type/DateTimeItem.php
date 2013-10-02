@@ -49,6 +49,16 @@ class DateTimeItem extends ConfigFieldItemBase implements PrepareCacheInterface 
         'type' => 'datetime_iso8601',
         'label' => t('Date value'),
       );
+      static::$propertyDefinitions['date'] = array(
+        'type' => 'datetime_computed',
+        'label' => t('Computed date'),
+        'description' => t('The computed DateTime object.'),
+        'computed' => TRUE,
+        'class' => '\Drupal\datetime\DateTimeComputed',
+        'settings' => array(
+          'date source' => 'value',
+        ),
+      );
     }
 
     return static::$propertyDefinitions;
@@ -114,24 +124,16 @@ class DateTimeItem extends ConfigFieldItemBase implements PrepareCacheInterface 
   /**
    * {@inheritdoc}
    */
-  public function prepareCache() {
+  public function getCacheData() {
+    $data = $this->getValue();
     // The function generates a Date object for each field early so that it is
     // cached in the field cache. This avoids the need to generate the object
     // later. The date will be retrieved in UTC, the local timezone adjustment
     // must be made in real time, based on the preferences of the site and user.
-    $value = $this->get('value')->getValue();
-    if (!empty($value)) {
-      $storage_format = $this->getFieldSetting('datetime_type') == 'date' ? DATETIME_DATE_STORAGE_FORMAT : DATETIME_DATETIME_STORAGE_FORMAT;
-      try {
-        $date = DrupalDateTime::createFromFormat($storage_format, $value, DATETIME_STORAGE_TIMEZONE);
-        if ($date instanceOf DrupalDateTime && !$date->hasErrors()) {
-          $this->set('date', $date);
-        }
-      }
-      catch (\Exception $e) {
-        // @todo Handle this.
-      }
+    if (!empty($data['value'])) {
+      $data['date'] = $this->date;
     }
+    return $data;
   }
 
   /**
@@ -140,6 +142,18 @@ class DateTimeItem extends ConfigFieldItemBase implements PrepareCacheInterface 
   public function isEmpty() {
     $value = $this->get('value')->getValue();
     return $value === NULL || $value === '';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function onChange($property_name) {
+    parent::onChange($property_name);
+
+    // Enforce that the computed date is recalculated.
+    if ($property_name == 'value') {
+      $this->date = NULL;
+    }
   }
 
 }

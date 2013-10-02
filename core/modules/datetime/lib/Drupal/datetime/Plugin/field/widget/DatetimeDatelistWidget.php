@@ -126,7 +126,7 @@ class DateTimeDatelistWidget extends WidgetBase {
     // validator will not have access to the field definition.
     $element['value']['#date_storage_format'] = $storage_format;
 
-    if (!empty($items[$delta]->date)) {
+    if ($items[$delta]->date) {
       $date = $items[$delta]->date;
       // The date was created and verified during field_load(), so it is safe to
       // use without further inspection.

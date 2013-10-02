@@ -86,7 +86,7 @@ abstract class LegacyConfigFieldItem extends ConfigFieldItemBase implements Prep
    *
    * @see \Drupal\Core\Entity\DatabaseStorageController::invokeFieldItemPrepareCache()
    */
-  public function prepareCache() {
+  public function getCacheData() {
     if ($callback = $this->getLegacyCallback('load')) {
       $entity = $this->getEntity();
       $entity_id = $entity->id();
@@ -105,7 +105,9 @@ abstract class LegacyConfigFieldItem extends ConfigFieldItemBase implements Prep
       );
       call_user_func_array($callback, $args);
       $this->setValue($items[$entity_id][0]);
+      return $items[$entity_id][0];
     }
+    return $this->getValue();
   }
 
   /**

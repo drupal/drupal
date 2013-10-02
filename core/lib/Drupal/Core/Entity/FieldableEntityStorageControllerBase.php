@@ -7,8 +7,10 @@
 
 namespace Drupal\Core\Entity;
 
+use Drupal\Core\Entity\Field\PrepareCacheInterface;
 use Drupal\field\FieldInterface;
 use Drupal\field\FieldInstanceInterface;
+use Drupal\field\Plugin\Type\FieldType\ConfigFieldItemListInterface;
 use Symfony\Component\DependencyInjection\Container;
 
 abstract class FieldableEntityStorageControllerBase extends EntityStorageControllerBase implements FieldableEntityStorageControllerInterface {
@@ -77,20 +79,28 @@ abstract class FieldableEntityStorageControllerBase extends EntityStorageControl
       // Let the storage controller actually load the values.
       $this->doLoadFieldItems($queried_entities, $age);
 
-      // Invoke the field type's prepareCache() method.
-      foreach ($queried_entities as $entity) {
-        $this->invokeFieldItemPrepareCache($entity);
-      }
-
       // Build cache data.
+      // @todo: Improve this logic to avoid instantiating field objects once
+      // the field logic is improved to not do that anyway.
       if ($use_cache) {
         foreach ($queried_entities as $id => $entity) {
           $data = array();
-          $instances = field_info_instances($this->entityType, $entity->bundle());
           foreach ($entity->getTranslationLanguages() as $langcode => $language) {
             $translation = $entity->getTranslation($langcode);
-            foreach ($instances as $instance) {
-              $data[$langcode][$instance['field_name']] = $translation->{$instance['field_name']}->getValue();
+            foreach ($translation as $field_name => $items) {
+              if ($items instanceof ConfigFieldItemListInterface && !$items->isEmpty()) {
+                foreach ($items as $delta => $item) {
+                  // If the field item needs to prepare the cache data, call the
+                  // corresponding method, otherwise use the values as cache
+                  // data.
+                  if ($item instanceof PrepareCacheInterface) {
+                    $data[$langcode][$field_name][$delta] = $item->getCacheData();
+                  }
+                  else {
+                    $data[$langcode][$field_name][$delta] = $item->getValue();
+                  }
+                }
+              }
             }
           }
           $cid = "field:{$this->entityType}:$id";

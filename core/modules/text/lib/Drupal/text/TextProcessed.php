@@ -47,7 +47,12 @@ class TextProcessed extends TypedData {
 
     $item = $this->getParent();
     $text = $item->{($this->definition['settings']['text source'])};
-    if ($item->getFieldDefinition()->getFieldSetting('text_processing')) {
+
+    // Avoid running check_markup() or check_plain() on empty strings.
+    if (!isset($text) || $text === '') {
+      $this->processed = '';
+    }
+    elseif ($item->getFieldDefinition()->getFieldSetting('text_processing')) {
       $this->processed = check_markup($text, $item->format, $item->getLangcode());
     }
     else {

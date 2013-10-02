@@ -103,11 +103,8 @@ class DateTimeDefaultFormatter extends FormatterBase implements ContainerFactory
       $formatted_date = '';
       $iso_date = '';
 
-      if (!empty($item->date)) {
-        // The date was created and verified during field_load(), so it is safe
-        // to use without further inspection.
+      if ($item->date) {
         $date = $item->date;
-
         // Create the ISO date in Universal Time.
         $iso_date = $date->format("Y-m-d\TH:i:s") . 'Z';
 

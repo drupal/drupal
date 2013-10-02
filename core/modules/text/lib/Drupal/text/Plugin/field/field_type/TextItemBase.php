@@ -70,7 +70,8 @@ abstract class TextItemBase extends ConfigFieldItemBase implements PrepareCacheI
   /**
    * {@inheritdoc}
    */
-  public function prepareCache() {
+  public function getCacheData() {
+    $data = $this->getValue();
     // Where possible, generate the processed (sanitized) version of each
     // textual property (e.g., 'value', 'summary') within this field item early
     // so that it is cached in the field cache. This avoids the need to look up
@@ -79,10 +80,11 @@ abstract class TextItemBase extends ConfigFieldItemBase implements PrepareCacheI
     if (!$text_processing || filter_format_allowcache($this->get('format')->getValue())) {
       foreach ($this->getPropertyDefinitions() as $property => $definition) {
         if (isset($definition['class']) && ($definition['class'] == '\Drupal\text\TextProcessed')) {
-          $this->get($property)->getValue();
+          $data[$property] = $this->get($property)->getValue();
         }
       }
     }
+    return $data;
   }
 
   /**

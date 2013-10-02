@@ -163,12 +163,4 @@ interface EntityStorageControllerInterface {
    */
   public function invokeFieldMethod($method, EntityInterface $entity);
 
-  /**
-   * Invokes the prepareCache() method on all the relevant FieldItem objects.
-   *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity object.
-   */
-  public function invokeFieldItemPrepareCache(EntityInterface $entity);
-
 }

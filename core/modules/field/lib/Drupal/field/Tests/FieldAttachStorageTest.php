@@ -90,8 +90,6 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
       for ($delta = 0; $delta < $this->field['cardinality']; $delta++) {
         // The field value loaded matches the one inserted or updated.
         $this->assertEqual($entity->{$this->field_name}[$delta]->value, $values[$revision_id][$delta]['value'], format_string('Revision %revision_id: expected value %delta was found.', array('%revision_id' => $revision_id, '%delta' => $delta)));
-        // The value added in hook_field_load() is found.
-        $this->assertEqual($entity->{$this->field_name}[$delta]->additional_key, 'additional_value', format_string('Revision %revision_id: extra information for value %delta was found', array('%revision_id' => $revision_id, '%delta' => $delta)));
       }
     }
   }
@@ -100,7 +98,7 @@ class FieldAttachStorageTest extends FieldUnitTestBase {
    * Test the 'multiple' load feature.
    */
   function testFieldAttachLoadMultiple() {
-    $entity_type = 'entity_test';
+    $entity_type = 'entity_test_rev';
 
     // Define 2 bundles.
     $bundles = array(
