@@ -30,12 +30,9 @@ class Crypt {
     static $random_state, $bytes;
     // Initialize on the first call. The contents of $_SERVER includes a mix of
     // user-specific and system information that varies a little with each page.
+    // Further initialize with the somewhat random PHP process ID.
     if (!isset($random_state)) {
-      $random_state = print_r($_SERVER, TRUE);
-      if (function_exists('getmypid')) {
-        // Further initialize with the somewhat random PHP process ID.
-        $random_state .= getmypid();
-      }
+      $random_state = print_r($_SERVER, TRUE) . getmypid();
       $bytes = '';
     }
     if (strlen($bytes) < $count) {

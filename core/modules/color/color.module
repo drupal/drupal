@@ -295,26 +295,24 @@ function color_scheme_form_submit($form, &$form_state) {
     $palette += $info['schemes']['default']['colors'];
   }
 
-  // Make sure enough memory is available, if PHP's memory limit is compiled in.
-  if (function_exists('memory_get_usage')) {
-    // Fetch source image dimensions.
-    $source = drupal_get_path('theme', $theme) . '/' . $info['base_image'];
-    list($width, $height) = getimagesize($source);
+  // Make sure enough memory is available.
+  // Fetch source image dimensions.
+  $source = drupal_get_path('theme', $theme) . '/' . $info['base_image'];
+  list($width, $height) = getimagesize($source);
 
-    // We need at least a copy of the source and a target buffer of the same
-    // size (both at 32bpp).
-    $required = $width * $height * 8;
-    // We intend to prevent color scheme changes if there isn't enough memory
-    // available.  memory_get_usage(TRUE) returns a more accurate number than
-    // memory_get_usage(), therefore we won't inadvertently reject a color
-    // scheme change based on a faulty memory calculation.
-    $usage = memory_get_usage(TRUE);
-    $memory_limit = ini_get('memory_limit');
-    $size = parse_size($memory_limit);
-    if (!drupal_check_memory_limit($usage + $required, $memory_limit)) {
-      drupal_set_message(t('There is not enough memory available to PHP to change this theme\'s color scheme. You need at least %size more. Check the <a href="@url">PHP documentation</a> for more information.', array('%size' => format_size($usage + $required - $size), '@url' => 'http://www.php.net/manual/ini.core.php#ini.sect.resource-limits')), 'error');
-      return;
-    }
+  // We need at least a copy of the source and a target buffer of the same
+  // size (both at 32bpp).
+  $required = $width * $height * 8;
+  // We intend to prevent color scheme changes if there isn't enough memory
+  // available.  memory_get_usage(TRUE) returns a more accurate number than
+  // memory_get_usage(), therefore we won't inadvertently reject a color
+  // scheme change based on a faulty memory calculation.
+  $usage = memory_get_usage(TRUE);
+  $memory_limit = ini_get('memory_limit');
+  $size = parse_size($memory_limit);
+  if (!drupal_check_memory_limit($usage + $required, $memory_limit)) {
+    drupal_set_message(t('There is not enough memory available to PHP to change this theme\'s color scheme. You need at least %size more. Check the <a href="@url">PHP documentation</a> for more information.', array('%size' => format_size($usage + $required - $size), '@url' => 'http://www.php.net/manual/ini.core.php#ini.sect.resource-limits')), 'error');
+    return;
   }
 
   // Delete old files.
