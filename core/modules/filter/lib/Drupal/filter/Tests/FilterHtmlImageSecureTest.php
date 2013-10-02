@@ -94,6 +94,12 @@ class FilterHtmlImageSecureTest extends WebTestBase {
     $test_images = $this->drupalGetTestFiles('image');
     $test_image = $test_images[0]->filename;
 
+    // Put a test image in the files directory with special filename.
+    $special_filename = 'tést fïle nàme.png';
+    $special_image = rawurlencode($special_filename);
+    $special_uri = str_replace($test_images[0]->filename, $special_filename, $test_images[0]->uri);
+    file_unmanaged_copy($test_images[0]->uri, $special_uri);
+
     // Create a list of test image sources.
     // The keys become the value of the IMG 'src' attribute, the values are the
     // expected filter conversions.
@@ -111,6 +117,8 @@ class FilterHtmlImageSecureTest extends WebTestBase {
       $files_path . '/' . $test_image => $files_path . '/' . $test_image,
       $http_base_url . '/' . $public_files_path . '/' . $test_image => $files_path . '/' . $test_image,
       $https_base_url . '/' . $public_files_path . '/' . $test_image => $files_path . '/' . $test_image,
+      $http_base_url . '/' . $public_files_path . '/' . $special_image => $files_path . '/' . $special_image,
+      $https_base_url . '/' . $public_files_path . '/' . $special_image => $files_path . '/' . $special_image,
       $files_path . '/example.png' => $red_x_image,
       'http://example.com/' . $druplicon => $red_x_image,
       'https://example.com/' . $druplicon => $red_x_image,

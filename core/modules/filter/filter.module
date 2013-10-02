@@ -1391,6 +1391,7 @@ function _filter_html_image_secure_process($text) {
       // Ensure the path refers to an actual image by prefixing the image source
       // with the Drupal root and running getimagesize() on it.
       $local_image_path = $local_dir . drupal_substr($src, $base_path_length);
+      $local_image_path = rawurldecode($local_image_path);
       if (@getimagesize($local_image_path)) {
         // The image has the right path. Erroneous images are dealt with below.
         continue;
