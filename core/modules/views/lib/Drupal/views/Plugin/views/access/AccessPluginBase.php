@@ -9,7 +9,6 @@ namespace Drupal\views\Plugin\views\access;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\views\Plugin\views\PluginBase;
-use Drupal\views\ViewExecutable;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -27,29 +26,7 @@ use Symfony\Component\Routing\Route;
 abstract class AccessPluginBase extends PluginBase {
 
   /**
-   * Retrieve the options when this is a new access
-   * control plugin
-   */
-  protected function defineOptions() { return array(); }
-
-  /**
-   * Provide the default form for setting options.
-   */
-  public function buildOptionsForm(&$form, &$form_state) { }
-
-  /**
-   * Provide the default form form for validating options
-   */
-  public function validateOptionsForm(&$form, &$form_state) { }
-
-  /**
-   * Provide the default form form for submitting options
-   */
-  public function submitOptionsForm(&$form, &$form_state) { }
-
-  /**
-   * Return a string to display as the clickable title for the
-   * access control.
+   * {@inheritdoc}
    */
   public function summaryTitle() {
     return t('Unknown');

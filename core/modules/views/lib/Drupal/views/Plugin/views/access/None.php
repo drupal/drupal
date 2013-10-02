@@ -7,10 +7,7 @@
 
 namespace Drupal\views\Plugin\views\access;
 
-use Drupal\views\Annotation\ViewsAccess;
-use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Session\AccountInterface;
-
 use Symfony\Component\Routing\Route;
 
 /**
@@ -26,12 +23,15 @@ use Symfony\Component\Routing\Route;
  */
 class None extends AccessPluginBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public function summaryTitle() {
     return t('Unrestricted');
   }
 
   /**
-   * Implements Drupal\views\Plugin\views\access\AccessPluginBase::access().
+   * {@inheritdoc}
    */
   public function access(AccountInterface $account) {
     // No access control.
