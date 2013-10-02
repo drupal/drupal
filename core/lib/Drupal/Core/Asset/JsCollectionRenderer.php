@@ -51,10 +51,6 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
     $embed_prefix = "\n<!--//--><![CDATA[//><!--\n";
     $embed_suffix = "\n//--><!]]>\n";
 
-    // Since JavaScript may look for arguments in the URL and act on them, some
-    // third-party code might require the use of a different query string.
-    $js_version_string = variable_get('drupal_js_version_query_string', 'v=');
-
     // Defaults for each SCRIPT element.
     $element_defaults = array(
       '#type' => 'html_tag',
@@ -83,7 +79,7 @@ class JsCollectionRenderer implements AssetCollectionRendererInterface {
           break;
 
         case 'file':
-          $query_string = empty($js_asset['version']) ? $default_query_string : $js_version_string . $js_asset['version'];
+          $query_string = empty($js_asset['version']) ? $default_query_string : 'v=' . $js_asset['version'];
           $query_string_separator = (strpos($js_asset['data'], '?') !== FALSE) ? '&' : '?';
           $element['#attributes']['src'] = file_create_url($js_asset['data']);
           // Only add the cache-busting query string if this isn't an aggregate
