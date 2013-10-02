@@ -61,7 +61,7 @@ class NodeFormButtonsTest extends NodeTestBase {
     // Save the node and verify it's still published after clicking
     // 'Save and keep published'.
     $this->drupalPostForm(NULL, $edit, t('Save and keep published'));
-    $node = node_load(1, TRUE);
+    $node_1 = node_load(1, TRUE);
     $this->assertTrue($node_1->isPublished(), 'Node is published');
 
     // Save the node and verify it's unpublished after clicking
