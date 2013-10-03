@@ -13,6 +13,7 @@ if (!defined('DRUPAL_ROOT')) {
 
 use Drupal\Core\Extension\ModuleHandler;
 use Drupal\Tests\UnitTestCase;
+use PHPUnit_Framework_Error_Notice;
 
 /**
  * Tests the ModuleHandler class.
@@ -34,9 +35,12 @@ class ModuleHandlerUnitTest extends UnitTestCase {
     $this->moduleHandler = new ModuleHandler;
   }
 
-  function testloadInclude() {
-    // Make sure that load include does not throw notices on nonexisiting
-    // modules.
-    $this->moduleHandler->loadInclude('foo', 'inc');
+  /**
+   * Tests loading of an include from a nonexistent module.
+   */
+  public function testLoadInclude() {
+    // Attepmting to load a file from a non-existent module should return FALSE.
+    $this->assertFalse($this->moduleHandler->loadInclude('foo', 'inc'));
   }
+
 }

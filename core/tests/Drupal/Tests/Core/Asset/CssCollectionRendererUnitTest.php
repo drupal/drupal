@@ -153,7 +153,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
    *
    * @see testRender
    */
-  function testRenderProvider() {
+  function providerTestRender() {
     // Default for 'browsers' key in CSS asset.
     $browsers_default = array('IE' => TRUE, '!IE' => TRUE);
 
@@ -538,7 +538,7 @@ class CssCollectionRendererUnitTest extends UnitTestCase {
   /**
    * Tests CSS asset rendering.
    *
-   * @dataProvider testRenderProvider
+   * @dataProvider providerTestRender
    */
   function testRender(array $css_assets, array $render_elements) {
     $this->state->expects($this->once())

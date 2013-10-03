@@ -57,6 +57,9 @@ class MTimeProtectedFileStorageTest extends PhpStorageTestBase {
    *
    * We test two attacks: first changes the file mtime, then the directory
    * mtime too.
+   *
+   * We need to delay over 1 second for mtime test.
+   * @medium
    */
   function testSecurity() {
     $php = $this->storageFactory->get('simpletest');

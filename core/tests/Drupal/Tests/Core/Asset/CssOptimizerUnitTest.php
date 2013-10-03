@@ -86,7 +86,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
   /**
    * Provides data for the CSS asset optimizing test.
    */
-  function testOptimizeProvider() {
+  function providerTestOptimize() {
     $path = dirname(__FILE__)  . '/css_test_files/';
     return array(
       // File. Tests:
@@ -194,7 +194,7 @@ class CssOptimizerUnitTest extends UnitTestCase {
   /**
    * Tests optimizing a CSS asset group containing 'type' => 'file'.
    *
-   * @dataProvider testOptimizeProvider
+   * @dataProvider providerTestOptimize
    */
   function testOptimize($css_asset, $expected) {
     $this->assertEquals($expected, $this->optimizer->optimize($css_asset), 'Group of file CSS assets optimized correctly.');
