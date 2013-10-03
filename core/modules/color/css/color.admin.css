@@ -2,62 +2,33 @@
  * @file
  * Stylesheet for the administration pages of the Color module.
  */
-
-/* Farbtastic placement */
 .color-form {
   max-width: 50em;
-  position: relative;
 }
-#placeholder {
-  position: absolute;
-  top: 0;
-  right: 0; /* LTR */
+.farbtastic {
+  margin: 0 auto;
 }
-[dir="rtl"] #placeholder {
-  left: 0;
-  right: auto;
-}
-
-/* Palette */
 .color-form .form-item {
-  height: 2em;
-  line-height: 2em;
-  padding-left: 1em; /* LTR */
+  overflow: hidden;
   margin: 0.5em 0;
 }
-[dir="rtl"] .color-form .form-item {
-  padding-left: 0;
-  padding-right: 1em;
-}
 .color-form label {
-  float: left; /* LTR */
   clear: left; /* LTR */
-  width: 10em;
 }
 [dir="rtl"] .color-form label {
-  float: right;
   clear: right;
 }
-.color-form .form-text,
-.color-form .form-select {
-  float: left; /* LTR */
-}
-[dir="rtl"] .color-form .form-text,
-[dir="rtl"] .color-form .form-select {
-  float: right;
-}
 .color-form .form-text {
+  float: left; /* LTR */
+  width: 86%;
   text-align: center;
-  margin-right: 5px; /* LTR */
   cursor: pointer;
 }
 [dir="rtl"] .color-form .form-text {
-  margin-right: 0;
-  margin-left: 5px;
+  float: right;
 }
 #palette .hook {
   float: left; /* LTR */
-  margin-top: 3px;
   width: 16px;
   height: 16px;
 }
@@ -72,7 +43,7 @@
 [dir="rtl"] #palette .down,
 [dir="rtl"] #palette .up,
 [dir="rtl"] #palette .both {
-  background: url(images/hook-rtl.png) no-repeat 0 0;
+  background: url(../images/hook-rtl.png) no-repeat 0 0;
 }
 #palette .up {
   background-position: 100% -27px; /* LTR */
@@ -88,25 +59,65 @@
 }
 #palette .lock {
   float: left; /* LTR */
-  position: relative;
-  top: -1.4em;
-  left: -10px; /* LTR */
   width: 20px;
-  height: 25px;
-  background: url(../images/lock.png) no-repeat 50% 2px;
+  height: 19px;
+  background: url(../images/lock.png) no-repeat 50% 0;
   cursor: pointer;
 }
 [dir="rtl"] #palette .lock {
   float: right;
-  right: -10px;
 }
 #palette .unlocked {
   background-position: 50% -22px;
 }
-#palette .form-item {
-  width: 20em;
+
+/* wide viewport. */
+@media screen and (min-width: 37.5625em) { /* 601px */
+  #placeholder {
+    float: right; /* LTR */
+  }
+  [dir="rtl"] #placeholder {
+    float: left;
+  }
+  .color-form .form-item {
+    margin: 0.5em 195px 0.5em 0; /* LTR */
+  }
+  [dir="rtl"] .color-form .form-item {
+    margin: 0.5em 0 0.5em 195px;
+  }
+  .color-form label {
+    float: left; /* LTR */
+    clear: left; /* LTR */
+    width: 15em;
+  }
+  [dir="rtl"] .color-form label {
+    float: right;
+    clear: right;
+  }
+  .color-form .form-text,
+  .color-form .form-select {
+    float: left; /* LTR */
+    width: auto;
+  }
+  [dir="rtl"] .color-form .form-text,
+  [dir="rtl"] .color-form .form-select {
+    float: right;
+  }
+  #palette .hook {
+    float: left; /* LTR */
+    margin-top: 3px;
+  }
+  [dir="rtl"] #palette .hook {
+    float: right;
+  }
+  #palette .lock {
+    float: left; /* LTR */
+  }
+  [dir="rtl"] #palette .lock {
+    float: right;
+  }
 }
-#palette .item-selected {
+.item-selected {
   background: #eee;
 }
 
@@ -121,4 +132,11 @@
 }
 .js[dir="rtl"] #preview {
   float: right;
+}
+@media screen and (max-width: 30em) { /* 480px */
+  .color-form #preview-sidebar,
+  .color-form #preview-content {
+    width: auto;
+    margin: 0;
+  }
 }

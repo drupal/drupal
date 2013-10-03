@@ -1,14 +1,4 @@
-
-/* ---------- Color form ----------- */
-#color_scheme_form #palette .form-item {
-  width: 25em;
-}
-#color_scheme_form #palette .form-item label {
-  width: 15em;
-}
-
 /* ---------- Preview Styles ----------- */
-
 .js #preview {
   clear: both;
   float: none !important;
