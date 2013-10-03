@@ -2584,12 +2584,14 @@ function hook_update_N(&$sandbox) {
 
   $sandbox['#finished'] = empty($sandbox['max']) ? 1 : ($sandbox['progress'] / $sandbox['max']);
 
+  if ($some_error_condition_met) {
+    // In case of an error, simply throw an exception with an error message.
+    throw new UpdateException('Something went wrong; here is what you should do.');
+  }
+
   // To display a message to the user when the update is completed, return it.
   // If you do not want to display a completion message, simply return nothing.
   return t('The update did what it was supposed to do.');
-
-  // In case of an error, simply throw an exception with an error message.
-  throw new UpdateException('Something went wrong; here is what you should do.');
 }
 
 /**
