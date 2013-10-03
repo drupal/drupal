@@ -186,8 +186,8 @@ class SimpleTestTest extends WebTestBase {
 
     $this->pass(t('Test ID is @id.', array('@id' => $this->testId)));
 
-    // Generates a warning.
-    $i = 1 / 0;
+    // Call trigger_error() without the required argument to trigger an E_WARNING.
+    trigger_error();
 
     // Call an assert function specific to that class.
     $this->assertNothing();
@@ -217,8 +217,9 @@ class SimpleTestTest extends WebTestBase {
     $this->assertAssertion(t('Created permissions: @perms', array('@perms' => $this->valid_permission)), 'Role', 'Pass', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
     $this->assertAssertion(t('Invalid permission %permission.', array('%permission' => $this->invalid_permission)), 'Role', 'Fail', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
 
-    // Check that a warning is caught by simpletest.
-    $this->assertAssertion('Division by zero', 'Warning', 'Fail', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
+    // Check that a warning is caught by simpletest. The exact error message
+    // differs between PHP versions so only the function name is checked.
+    $this->assertAssertion('trigger_error()', 'Warning', 'Fail', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
 
     // Check that the backtracing code works for specific assert function.
     $this->assertAssertion('This is nothing.', 'Other', 'Pass', 'SimpleTestTest.php', 'Drupal\simpletest\Tests\SimpleTestTest->stubTest()');
