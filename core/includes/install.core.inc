@@ -568,7 +568,7 @@ function install_run_tasks(&$install_state) {
       $install_state['tasks_performed'][] = $task_name;
       $install_state['installation_finished'] = empty($tasks_to_perform);
       if ($install_state['database_tables_exist'] && ($task['run'] == INSTALL_TASK_RUN_IF_NOT_COMPLETED || $install_state['installation_finished'])) {
-        variable_set('install_task', $install_state['installation_finished'] ? 'done' : $task_name);
+        \Drupal::state()->set('install_task', $install_state['installation_finished'] ? 'done' : $task_name);
       }
     }
     // Stop when there are no tasks left. In the case of an interactive
@@ -641,7 +641,7 @@ function install_run_task($task, &$install_state) {
   elseif ($task['type'] == 'batch') {
     // Start a new batch based on the task function, if one is not running
     // already.
-    $current_batch = variable_get('install_current_batch');
+    $current_batch = \Drupal::state()->get('install_current_batch');
     if (!$install_state['interactive'] || !$current_batch) {
       $batch = $function($install_state);
       if (empty($batch)) {
@@ -654,7 +654,7 @@ function install_run_task($task, &$install_state) {
       // task is currently running. Otherwise, we need to make sure the batch
       // will complete in one page request.
       if ($install_state['interactive']) {
-        variable_set('install_current_batch', $function);
+        \Drupal::state()->set('install_current_batch', $function);
       }
       else {
         $batch =& batch_get();
@@ -690,7 +690,7 @@ function install_run_task($task, &$install_state) {
       // longer requesting a batch ID.
       if ($output === FALSE) {
         // Return nothing so the next task will run in the same request.
-        variable_del('install_current_batch');
+        \Drupal::state()->delete('install_current_batch');
         return;
       }
       else {
@@ -1021,7 +1021,7 @@ function install_base_system(&$install_state) {
   \Drupal::moduleHandler()->install(array('user'), FALSE);
 
   // Save the list of other modules to install for the upcoming tasks.
-  // variable_set() can be used now that system.module is installed.
+  // State can be set to the database now that system.module is installed.
   $modules = $install_state['profile_info']['dependencies'];
 
   // The installation profile is also a module, which needs to be installed
@@ -1041,9 +1041,7 @@ function install_base_system(&$install_state) {
  */
 function install_verify_completed_task() {
   try {
-    if ($result = db_query("SELECT value FROM {variable} WHERE name = :name", array('name' => 'install_task'))) {
-      $task = unserialize($result->fetchField());
-    }
+    $task = \Drupal::state()->get('install_task');
   }
   // Do not trigger an error if the database query fails, since the database
   // might not be set up yet.
@@ -2578,5 +2576,5 @@ function install_configure_form_submit($form, &$form_state) {
   user_login_finalize($account);
 
   // Record when this install ran.
-  variable_set('install_time', $_SERVER['REQUEST_TIME']);
+  \Drupal::state()->set('install_time', $_SERVER['REQUEST_TIME']);
 }
