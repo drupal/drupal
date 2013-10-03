@@ -210,7 +210,7 @@ function user_schema() {
         'type' => 'varchar',
         'length' => 64,
         'not null' => TRUE,
-        'description' => 'Primary Key: {role}.rid for role.',
+        'description' => 'Primary Key: ID for the role.',
       ),
     ),
     'primary key' => array('uid', 'rid'),
@@ -221,10 +221,6 @@ function user_schema() {
       'user' => array(
         'table' => 'users',
         'columns' => array('uid' => 'uid'),
-      ),
-      'role' => array(
-        'table' => 'role',
-        'columns' => array('rid' => 'rid'),
       ),
     ),
   );
