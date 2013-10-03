@@ -30,7 +30,7 @@ use Drupal\entity_reference\Plugin\field\widget\AutocompleteWidgetBase;
  *   settings = {
  *     "match_operator" = "CONTAINS",
  *     "size" = 60,
- *     "autocomplete_path" = "entity_reference/autocomplete/single",
+ *     "autocomplete_type" = "single",
  *     "placeholder" = ""
  *   }
  * )

@@ -75,23 +75,24 @@ abstract class AutocompleteWidgetBase extends WidgetBase {
 
     $entity = $items->getEntity();
 
-    // Prepare the autocomplete path.
-    $autocomplete_path = $this->getSetting('autocomplete_path');
-    $autocomplete_path .= '/' . $this->fieldDefinition->getFieldName() . '/' . $entity->entityType() . '/' . $entity->bundle() . '/';
+    // Prepare the autocomplete route parameters.
+    $autocomplete_route_parameters = array(
+      'type' => $this->getSetting('autocomplete_type'),
+      'field_name' => $this->fieldDefinition->getFieldName(),
+      'entity_type' => $entity->entityType(),
+      'bundle_name' => $entity->bundle(),
+    );
 
-    // Use <NULL> as a placeholder in the URL when we don't have an entity.
-    // Most web servers collapse two consecutive slashes.
-    $id = 'NULL';
-    if ($entity && $entity_id = $entity->id()) {
-      $id = $entity_id;
+    if ($entity_id = $entity->id()) {
+      $autocomplete_route_parameters['entity_id'] = $entity_id;
     }
-    $autocomplete_path .= $id;
 
     $element += array(
       '#type' => 'textfield',
       '#maxlength' => 1024,
       '#default_value' => implode(', ', $this->getLabels($items)),
-      '#autocomplete_path' => $autocomplete_path,
+      '#autocomplete_route_name' => 'entity_reference.autocomplete',
+      '#autocomplete_route_parameters' => $autocomplete_route_parameters,
       '#size' => $this->getSetting('size'),
       '#placeholder' => $this->getSetting('placeholder'),
       '#element_validate' => array(array($this, 'elementValidate')),

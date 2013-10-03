@@ -24,7 +24,7 @@ use Drupal\entity_reference\Plugin\field\widget\AutocompleteWidgetBase;
  *   settings = {
  *     "match_operator" = "CONTAINS",
  *     "size" = 60,
- *     "autocomplete_path" = "entity_reference/autocomplete/tags",
+ *     "autocomplete_type" = "tags",
  *     "placeholder" = ""
  *   },
  *   multiple_values = TRUE
