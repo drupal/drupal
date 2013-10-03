@@ -1,19 +1,85 @@
 <?php
 
-// Register the namespaces we'll need to autoload from.
-$loader = require __DIR__ . "/../vendor/autoload.php";
-$loader->add('Drupal\\Tests', __DIR__);
+/**
+ * @file
+ * Autoloader for Drupal PHPUnit testing.
+ *
+ * @see phpunit.xml.dist
+ */
 
-foreach (scandir(__DIR__ . "/../modules") as $module) {
-  $loader->add('Drupal\\' . $module, __DIR__ . "/../modules/" . $module . "/lib");
-  // Add test module classes.
-  $test_modules_dir = __DIR__ . "/../modules/$module/tests/modules";
-  if (is_dir($test_modules_dir)) {
-    foreach (scandir($test_modules_dir) as $test_module) {
-      $loader->add('Drupal\\' . $test_module, $test_modules_dir . '/' . $test_module . '/lib');
+/**
+ * Finds all valid extension directories recursively within a given directory.
+ *
+ * @param string $scan_directory
+ *   The directory that should be recursively scanned.
+ * @return array
+ *   An associative array of extension directories found within the scanned
+ *   directory, keyed by extension name.
+ */
+function drupal_phpunit_find_extension_directories($scan_directory) {
+  $extensions = array();
+  $dirs = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($scan_directory, \RecursiveDirectoryIterator::FOLLOW_SYMLINKS));
+  foreach ($dirs as $dir) {
+    if (strpos($dir->getPathname(), 'info.yml') !== FALSE) {
+      // Cut off ".info.yml" from the filename for use as the extension name.
+      $extensions[substr($dir->getFilename(), 0, -9)] = $dir->getPathInfo()->getRealPath();
+    }
+  }
+  return $extensions;
+}
+
+/**
+ * Returns directories under which contributed extensions may exist.
+ *
+ * @return array
+ *   An array of directories under which contributed extensions may exist.
+ */
+function drupal_phpunit_contrib_extension_directory_roots() {
+  $sites_path = __DIR__ . '/../../sites';
+  $paths = array();
+  // Note this also checks sites/../modules and sites/../profiles.
+  foreach (scandir($sites_path) as $site) {
+    $path = "$sites_path/$site";
+    $paths[] = is_dir("$path/modules") ? realpath("$path/modules") : NULL;
+    $paths[] = is_dir("$path/profiles") ? realpath("$path/profiles") : NULL;
+  }
+  return array_filter($paths);
+}
+
+/**
+ * Registers the namespace for each extension directory with the autoloader.
+ *
+ * @param Composer\Autoload\ClassLoader $loader
+ *   The supplied autoloader.
+ * @param array $dirs
+ *   An associative array of extension directories, keyed by extension name.
+ */
+function drupal_phpunit_register_extension_dirs(Composer\Autoload\ClassLoader $loader, $dirs) {
+  foreach ($dirs as $extension => $dir) {
+    $lib_path = $dir . '/lib';
+    if (is_dir($lib_path)) {
+      $loader->add('Drupal\\' . $extension, $lib_path);
+    }
+    $tests_path = $dir . '/tests';
+    if (is_dir($tests_path)) {
+      $loader->add('Drupal\\' . $extension, $tests_path);
     }
   }
 }
+
+// Start with classes in known locations.
+$loader = require __DIR__ . '/../vendor/autoload.php';
+$loader->add('Drupal\\Tests', __DIR__);
+
+// Scan for arbitrary extension namespaces from core and contrib.
+$extension_roots = array_merge(array(
+  __DIR__ . '/../modules',
+  __DIR__ . '/../profiles',
+), drupal_phpunit_contrib_extension_directory_roots());
+
+$dirs = array_map('drupal_phpunit_find_extension_directories', $extension_roots);
+$dirs = array_reduce($dirs, 'array_merge', array());
+drupal_phpunit_register_extension_dirs($loader, $dirs);
 
 // Look into removing this later.
 define('REQUEST_TIME', (int) $_SERVER['REQUEST_TIME']);

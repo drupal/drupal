@@ -1,0 +1,7 @@
+name: PHPUnit Test
+type: module
+description: 'Provides dummy classes for use by SimpleTest tests.'
+package: Testing
+version: VERSION
+core: 8.x
+hidden: TRUE
