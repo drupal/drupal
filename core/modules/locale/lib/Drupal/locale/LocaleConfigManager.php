@@ -280,6 +280,23 @@ class LocaleConfigManager extends TypedConfigManager {
   }
 
   /**
+   * Checks whether a language has configuration translation.
+   *
+   * @param string $name
+   *   Configuration name.
+   * @param \Drupal\Core\Language\Language $language
+   *   A language object.
+   *
+   * @return bool
+   *   A boolean indicating if a language has configuration translations.
+   */
+  public function hasTranslation($name, Language $language) {
+    $locale_name = static::localeConfigName($language->id, $name);
+    $translation = $this->configStorage->read($locale_name);
+    return !empty($translation);
+  }
+
+  /**
    * Provides configuration data location for given langcode and name.
    *
    * @param string $langcode
@@ -293,4 +310,5 @@ class LocaleConfigManager extends TypedConfigManager {
   public static function localeConfigName($langcode, $name = NULL) {
     return rtrim('locale.config.' . $langcode . '.' . $name, '.');
   }
+
 }
