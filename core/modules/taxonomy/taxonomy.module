@@ -259,8 +259,6 @@ function taxonomy_menu() {
   );
   $items['taxonomy/term/%taxonomy_term/edit'] = array(
     'title' => 'Edit',
-    'title callback' => 'entity_page_label',
-    'title arguments' => array(2),
     'route_name' => 'taxonomy.term_edit',
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
