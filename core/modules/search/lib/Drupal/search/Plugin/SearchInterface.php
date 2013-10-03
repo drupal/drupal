@@ -98,32 +98,4 @@ interface SearchInterface extends PluginInspectionInterface {
    */
   public function searchFormAlter(array &$form, array &$form_state);
 
-  /**
-   * Adds elements to the search settings form.
-   *
-   * The core search module only invokes this method on active module plugins.
-   *
-   * @param array $form
-   *   Nested array of form elements that comprise the form.
-   * @param array $form_state
-   *   A keyed array containing the current state of the form. The arguments
-   *   that drupal_get_form() was originally called with are available in the
-   *   array $form_state['build_info']['args'].
-   */
-  public function addToAdminForm(array &$form, array &$form_state);
-
-  /**
-   * Handles any submission for elements on the search settings form.
-   *
-   * The core search module only invokes this method on active module plugins.
-   *
-   * @param array $form
-   *   Nested array of form elements that comprise the form.
-   * @param array $form_state
-   *   A keyed array containing the current state of the form. The arguments
-   *   that drupal_get_form() was originally called with are available in the
-   *   array $form_state['build_info']['args'].
-   */
-  public function submitAdminForm(array &$form, array &$form_state);
-
 }

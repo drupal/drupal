@@ -94,18 +94,4 @@ abstract class SearchPluginBase extends PluginBase implements ContainerFactoryPl
     // Empty default implementation.
   }
 
- /**
-   * {@inheritdoc}
-   */
-  public function addToAdminForm(array &$form, array &$form_state) {
-    // Empty default implementation.
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function submitAdminForm(array &$form, array &$form_state) {
-    // Empty default implementation.
-  }
-
 }

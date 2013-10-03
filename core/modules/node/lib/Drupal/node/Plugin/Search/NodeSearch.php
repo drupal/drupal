@@ -16,6 +16,7 @@ use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\TypedData\AccessibleInterface;
 use Drupal\Core\Database\Query\Condition;
@@ -34,7 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   path = "node"
  * )
  */
-class NodeSearch extends SearchPluginBase implements AccessibleInterface, SearchIndexingInterface {
+class NodeSearch extends SearchPluginBase implements AccessibleInterface, SearchIndexingInterface, PluginFormInterface {
 
   /**
    * A database connection object.
@@ -516,7 +517,7 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
   /**
    * {@inheritdoc}
    */
-  public function addToAdminForm(array &$form, array &$form_state) {
+  public function buildConfigurationForm(array $form, array &$form_state) {
     // Output form for defining rank factor weights.
     $form['content_ranking'] = array(
       '#type' => 'details',
@@ -537,12 +538,19 @@ class NodeSearch extends SearchPluginBase implements AccessibleInterface, Search
         '#default_value' => variable_get('node_rank_' . $var, 0),
       );
     }
+    return $form;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitAdminForm(array &$form, array &$form_state) {
+  public function validateConfigurationForm(array &$form, array &$form_state) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, array &$form_state) {
     foreach ($this->moduleHandler->invokeAll('ranking') as $var => $values) {
       if (isset($form_state['values']['node_rank_' . $var])) {
         // @todo Fix when https://drupal.org/node/1831632 is in.

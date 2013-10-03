@@ -10,6 +10,7 @@ use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Config\Context\ContextInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
+use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\search\SearchPluginManager;
 use Drupal\Core\Form\ConfigFormBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -195,7 +196,9 @@ class SearchSettingsForm extends ConfigFormBase {
 
     // Per plugin settings.
     foreach ($active_plugins as $plugin) {
-      $plugin->addToAdminForm($form, $form_state);
+      if ($plugin instanceof PluginFormInterface) {
+        $form = $plugin->buildConfigurationForm($form, $form_state);
+      }
     }
     // Set #submit so we are sure it's invoked even if one of
     // the active search plugins added its own #submit.
@@ -218,6 +221,12 @@ class SearchSettingsForm extends ConfigFormBase {
         form_set_error('default_plugin', $this->t('Your default search plugin is not selected as an active plugin.'));
       }
     }
+    // Handle per-plugin validation logic.
+    foreach ($this->searchPluginManager->getActivePlugins() as $plugin) {
+      if ($plugin instanceof PluginFormInterface) {
+        $plugin->validateConfigurationForm($form, $form_state);
+      }
+    }
   }
 
   /**
@@ -238,7 +247,9 @@ class SearchSettingsForm extends ConfigFormBase {
 
     // Handle per-plugin submission logic.
     foreach ($this->searchPluginManager->getActivePlugins() as $plugin) {
-      $plugin->submitAdminForm($form, $form_state);
+      if ($plugin instanceof PluginFormInterface) {
+        $plugin->submitConfigurationForm($form, $form_state);
+      }
     }
 
     // Check whether we are resetting the values.

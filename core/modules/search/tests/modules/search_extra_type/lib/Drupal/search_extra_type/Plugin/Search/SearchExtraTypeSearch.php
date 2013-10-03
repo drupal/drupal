@@ -9,6 +9,7 @@ namespace Drupal\search_extra_type\Plugin\Search;
 
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Config\Config;
+use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\search\Plugin\SearchPluginBase;
 use Drupal\search\Annotation\SearchPlugin;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -22,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   path = "dummy_path"
  * )
  */
-class SearchExtraTypeSearch extends SearchPluginBase {
+class SearchExtraTypeSearch extends SearchPluginBase implements PluginFormInterface {
 
   /**
    * @var \Drupal\Core\Config\Config
@@ -124,7 +125,7 @@ class SearchExtraTypeSearch extends SearchPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function addToAdminForm(array &$form, array &$form_state) {
+  public function buildConfigurationForm(array $form, array &$form_state) {
     // Output form for defining rank factor weights.
     $form['extra_type_settings'] = array(
       '#type' => 'fieldset',
@@ -141,12 +142,19 @@ class SearchExtraTypeSearch extends SearchPluginBase {
       ),
       '#default_value' => $this->configSettings->get('boost'),
     );
+    return $form;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitAdminForm(array &$form, array &$form_state) {
+  public function validateConfigurationForm(array &$form, array &$form_state) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, array &$form_state) {
     $this->configSettings
       ->set('boost', $form_state['values']['extra_type_settings']['boost'])
       ->save();
