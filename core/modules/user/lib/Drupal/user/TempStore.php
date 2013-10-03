@@ -43,14 +43,14 @@ class TempStore {
   /**
    * The key/value storage object used for this data.
    *
-   * @var Drupal\Core\KeyValueStore\KeyValueStoreExpireInterface;
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreExpireInterface;
    */
   protected $storage;
 
   /**
    * The lock object used for this data.
    *
-   * @var Drupal\Core\Lock\LockBackendInterface
+   * @var \Drupal\Core\Lock\LockBackendInterface
    */
   protected $lockBackend;
 
@@ -80,7 +80,7 @@ class TempStore {
    *   The key/value storage object used for this data. Each storage object
    *   represents a particular collection of data and will contain any number
    *   of key/value pairs.
-   * @param Drupal\Core\Lock\LockBackendInterface $lockBackend
+   * @param \Drupal\Core\Lock\LockBackendInterface $lockBackend
    *   The lock object used for this data.
    * @param mixed $owner
    *   The owner key to store along with the data (e.g. a user or session ID).

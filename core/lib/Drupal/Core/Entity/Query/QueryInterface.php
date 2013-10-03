@@ -62,8 +62,8 @@ interface QueryInterface extends AlterableInterface {
    *   Language code (optional).
    *
    * @return \Drupal\Core\Entity\Query\QueryInterface
-   * @see Drupal\Core\Entity\Query\andConditionGroup
-   * @see Drupal\Core\Entity\Query\orConditionGroup
+   * @see \Drupal\Core\Entity\Query\andConditionGroup
+   * @see \Drupal\Core\Entity\Query\orConditionGroup
    */
   public function condition($field, $value = NULL, $operator = NULL, $langcode = NULL);
 

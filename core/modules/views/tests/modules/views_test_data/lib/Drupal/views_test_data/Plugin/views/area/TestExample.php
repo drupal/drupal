@@ -13,7 +13,7 @@ use Drupal\Component\Annotation\PluginID;
 /**
  * Test area plugin.
  *
- * @see Drupal\views\Tests\Handler\AreaTest
+ * @see \Drupal\views\Tests\Handler\AreaTest
  *
  * @PluginID("test_example")
  */

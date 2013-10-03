@@ -67,7 +67,7 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
    * @param string $bin
    *   Bin name to use for this backend instance.
    *
-   * @return Drupal\Core\Cache\CacheBackendInterface
+   * @return \Drupal\Core\Cache\CacheBackendInterface
    *   Cache backend to test.
    */
   protected abstract function createCacheBackend($bin);
@@ -90,7 +90,7 @@ abstract class GenericCacheBackendUnitTestBase extends DrupalUnitTestBase {
   /**
    * Gets a backend to test; this will get a shared instance set in the object.
    *
-   * @return Drupal\Core\Cache\CacheBackendInterface
+   * @return \Drupal\Core\Cache\CacheBackendInterface
    *   Cache backend to test.
    */
   final function getCacheBackend($bin = null) {

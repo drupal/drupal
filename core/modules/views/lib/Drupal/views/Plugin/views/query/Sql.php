@@ -263,7 +263,7 @@ class Sql extends QueryPluginBase {
    * @param $alias
    *   What this relationship will be called, and is also the alias
    *   for the table.
-   * @param Drupal\views\Plugin\views\join\JoinPluginBase $join
+   * @param \Drupal\views\Plugin\views\join\JoinPluginBase $join
    *   A Join object (or derived object) to join the alias in.
    * @param $base
    *   The name of the 'base' table this relationship represents; this
@@ -335,7 +335,7 @@ class Sql extends QueryPluginBase {
    *   tables exist and are properly aliased. If set to NULL the path to
    *   the primary table will be ensured. If the path cannot be made, the
    *   table will NOT be added.
-   * @param Drupal\views\Plugin\views\join\JoinPluginBase $join
+   * @param \Drupal\views\Plugin\views\join\JoinPluginBase $join
    *   In some join configurations this table may actually join back through
    *   a different method; this is most likely to be used when tracing
    *   a hierarchy path. (node->parent->parent2->parent3). This parameter
@@ -374,7 +374,7 @@ class Sql extends QueryPluginBase {
    * @param $relationship
    *   The primary table alias this table is related to. If not set, the
    *   primary table will be used.
-   * @param Drupal\views\Plugin\views\join\JoinPluginBase $join
+   * @param \Drupal\views\Plugin\views\join\JoinPluginBase $join
    *   In some join configurations this table may actually join back through
    *   a different method; this is most likely to be used when tracing
    *   a hierarchy path. (node->parent->parent2->parent3). This parameter
@@ -486,7 +486,7 @@ class Sql extends QueryPluginBase {
    *   The relationship to ensure the table links to. Each relationship will
    *   get a unique instance of the table being added. If not specified,
    *   will be the primary table.
-   * @param Drupal\views\Plugin\views\join\JoinPluginBase $join
+   * @param \Drupal\views\Plugin\views\join\JoinPluginBase $join
    *   A Join object (or derived object) to join the alias in.
    *
    * @return
@@ -674,7 +674,7 @@ class Sql extends QueryPluginBase {
    * @param $base_table
    *   The path we're following to get this join.
    *
-   * @return Drupal\views\Plugin\views\join\JoinPluginBase
+   * @return \Drupal\views\Plugin\views\join\JoinPluginBase
    *   A Join object or child object, if one exists.
    */
   public function getJoinData($table, $base_table) {
@@ -816,8 +816,8 @@ class Sql extends QueryPluginBase {
    *   );
    * @endcode
    *
-   * @see Drupal\Core\Database\Query\ConditionInterface::condition()
-   * @see Drupal\Core\Database\Query\Condition
+   * @see \Drupal\Core\Database\Query\ConditionInterface::condition()
+   * @see \Drupal\Core\Database\Query\Condition
    */
   public function addWhere($group, $field, $value = NULL, $operator = NULL) {
     // Ensure all variants of 0 are actually 0. Thus '', 0 and NULL are all
@@ -1118,7 +1118,7 @@ class Sql extends QueryPluginBase {
   /**
    * Adds fields to the query.
    *
-   * @param Drupal\Core\Database\Query\SelectInterface $query
+   * @param \Drupal\Core\Database\Query\SelectInterface $query
    *   The drupal query object.
    */
   protected function compileFields($query) {

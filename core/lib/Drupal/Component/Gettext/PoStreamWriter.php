@@ -28,7 +28,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
   /**
    * The Gettext PO header.
    *
-   * @var Drupal\Component\Gettext\PoHeader
+   * @var \Drupal\Component\Gettext\PoHeader
    */
   private $_header;
 
@@ -42,7 +42,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
   /**
    * Get the PO header of the current stream.
    *
-   * @return Drupal\Component\Gettext\PoHeader
+   * @return \Drupal\Component\Gettext\PoHeader
    *   The Gettext PO header.
    */
   public function getHeader() {
@@ -52,7 +52,7 @@ class PoStreamWriter implements PoWriterInterface, PoStreamInterface {
   /**
    * Set the PO header for the current stream.
    *
-   * @param Drupal\Component\Gettext\PoHeader $header
+   * @param \Drupal\Component\Gettext\PoHeader $header
    *   The Gettext PO header to set.
    */
   public function setHeader(PoHeader $header) {

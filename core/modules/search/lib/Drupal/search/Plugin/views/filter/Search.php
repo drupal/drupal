@@ -28,7 +28,7 @@ class Search extends FilterPluginBase {
    * This value extends the query extender to be able to provide methods
    * which returns the protected values.
    *
-   * @var Drupal\search\ViewsSearchQuery
+   * @var \Drupal\search\ViewsSearchQuery
    */
   var $search_query = NULL;
 

@@ -10,7 +10,7 @@ class ConfigEvent extends Event {
   /**
    * Configuration object.
    *
-   * @var Drupal\Core\Config\Config
+   * @var \Drupal\Core\Config\Config
    */
   protected $config;
 

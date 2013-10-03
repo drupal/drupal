@@ -62,9 +62,9 @@ class QueueTest extends DrupalUnitTestBase {
   /**
    * Queues and dequeues a set of items to check the basic queue functionality.
    *
-   * @param Drupal\Core\Queue\QueueInterface $queue1
+   * @param \Drupal\Core\Queue\QueueInterface $queue1
    *   An instantiated queue object.
-   * @param Drupal\Core\Queue\QueueInterface $queue2
+   * @param \Drupal\Core\Queue\QueueInterface $queue2
    *   An instantiated queue object.
    */
   protected function queueTest($queue1, $queue2) {

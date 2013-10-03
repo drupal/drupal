@@ -27,7 +27,7 @@ use Drupal\Component\Annotation\PluginID;
 class ManyToOne extends InOperator {
 
   /**
-   * @var Drupal\views\ManyToOneHelper
+   * @var \Drupal\views\ManyToOneHelper
    *
    * Stores the Helper object which handles the many_to_one complexity.
    */

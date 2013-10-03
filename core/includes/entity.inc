@@ -192,7 +192,7 @@ function entity_get_view_modes($entity_type = NULL) {
  * @param bool $reset
  *   Whether to reset the internal cache for the requested entity type.
  *
- * @return Drupal\Core\Entity\EntityInterface
+ * @return \Drupal\Core\Entity\EntityInterface
  *   The entity object, or NULL if there is no entity with the given id.
  *
  * @see \Drupal\Core\Entity\EntityManager
@@ -216,7 +216,7 @@ function entity_load($entity_type, $id, $reset = FALSE) {
  * @param int $revision_id
  *   The id of the entity to load.
  *
- * @return Drupal\Core\Entity\EntityInterface
+ * @return \Drupal\Core\Entity\EntityInterface
  *   The entity object, or FALSE if there is no entity with the given revision
  *   id.
  *
@@ -259,7 +259,7 @@ function entity_revision_delete($entity_type, $revision_id) {
  * @return EntityInterface|FALSE
  *   The entity object, or FALSE if there is no entity with the given UUID.
  *
- * @throws Drupal\Core\Entity\EntityStorageException
+ * @throws \Drupal\Core\Entity\EntityStorageException
  *   Thrown in case the requested entity type does not support UUIDs.
  *
  * @see \Drupal\Core\Entity\EntityManager
@@ -383,7 +383,7 @@ function entity_delete_multiple($entity_type, array $ids) {
  *   An array of values to set, keyed by property name. If the entity type has
  *   bundles the bundle key has to be specified.
  *
- * @return Drupal\Core\Entity\EntityInterface
+ * @return \Drupal\Core\Entity\EntityInterface
  *   A new entity object.
  */
 function entity_create($entity_type, array $values) {
@@ -395,7 +395,7 @@ function entity_create($entity_type, array $values) {
 /**
  * Gets the entity controller class for an entity type.
  *
- * @return Drupal\Core\Entity\EntityStorageControllerInterface
+ * @return \Drupal\Core\Entity\EntityStorageControllerInterface
  *
  * @deprecated Use \Drupal\Core\Entity\EntityManager::getStorageController().
  */
@@ -410,7 +410,7 @@ function entity_get_controller($entity_type) {
  * This is a wrapper for Drupal\Core\Entity\EntityInterface::label(). This function
  * should only be used as a callback, e.g. for menu title callbacks.
  *
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity for which to generate the label.
  * @param $langcode
  *   (optional) The language code of the language that should be used for
@@ -420,7 +420,7 @@ function entity_get_controller($entity_type) {
  * @return
  *   The label of the entity, or NULL if there is no label defined.
  *
- * @see Drupal\Core\Entity\EntityInterface::label()
+ * @see \Drupal\Core\Entity\EntityInterface::label()
  */
 function entity_page_label(EntityInterface $entity, $langcode = NULL) {
   return $entity->label($langcode);
@@ -460,7 +460,7 @@ function entity_access_controller($entity_type) {
  *   identifying the controlled form. Defaults to 'default' which is the usual
  *   create/edit form.
  *
- * @return Drupal\Core\Entity\EntityFormControllerInterface
+ * @return \Drupal\Core\Entity\EntityFormControllerInterface
  *   An entity form controller instance.
  *
  * @deprecated Use \Drupal\Core\Entity\EntityManager::getFormController().
@@ -541,7 +541,7 @@ function entity_get_form(EntityInterface $entity, $operation = 'default', array 
  * @param string $entity_type
  *   The type of the entity.
  *
- * @return Drupal\Core\Entity\EntityListControllerInterface
+ * @return \Drupal\Core\Entity\EntityListControllerInterface
  *   An entity list controller.
  *
  * @deprecated Use \Drupal\Core\Entity\EntityManager::getFormController().
@@ -557,7 +557,7 @@ function entity_list_controller($entity_type) {
  * @param string $entity_type
  *   The type of the entity.
  *
- * @return Drupal\Core\Entity\EntityRenderControllerInterface
+ * @return \Drupal\Core\Entity\EntityRenderControllerInterface
  *   An entity render controller.
  *
  * @deprecated Use \Drupal\Core\Entity\EntityManager::getFormController().
@@ -570,7 +570,7 @@ function entity_render_controller($entity_type) {
 /**
  * Returns the render array for an entity.
  *
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity to be rendered.
  * @param string $view_mode
  *   The view mode that should be used to display the entity.

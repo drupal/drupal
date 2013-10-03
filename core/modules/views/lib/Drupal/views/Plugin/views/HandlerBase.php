@@ -22,7 +22,7 @@ abstract class HandlerBase extends PluginBase {
   /**
    * Where the $query object will reside:
    *
-   * @var Drupal\views\Plugin\views\query\QueryPluginBase
+   * @var \Drupal\views\Plugin\views\query\QueryPluginBase
    */
   public $query = NULL;
 
@@ -665,7 +665,7 @@ abstract class HandlerBase extends PluginBase {
    * @param string $base_table
    *   The table to join to.
    *
-   * @return Drupal\views\Plugin\views\join\JoinPluginBase
+   * @return \Drupal\views\Plugin\views\join\JoinPluginBase
    */
   public static function getTableJoin($table, $base_table) {
     $data = Views::viewsData()->get($table);
@@ -732,11 +732,11 @@ abstract class HandlerBase extends PluginBase {
    *
    * @param string $str
    *   The string to parse.
-   * @param Drupal\views\Plugin\views\HandlerBase|null $handler
+   * @param \Drupal\views\Plugin\views\HandlerBase|null $handler
    *   The handler object to use as a base. If not specified one will
    *   be created.
    *
-   * @return Drupal\views\Plugin\views\HandlerBase|stdClass $handler
+   * @return \Drupal\views\Plugin\views\HandlerBase|stdClass $handler
    *   The new handler object.
    */
   public static function breakPhrase($str, &$handler = NULL) {
@@ -787,11 +787,11 @@ abstract class HandlerBase extends PluginBase {
    *
    * @param string $str
    *   The string to parse.
-   * @param Drupal\views\Plugin\views\HandlerBase|null $handler
+   * @param \Drupal\views\Plugin\views\HandlerBase|null $handler
    *   The object to use as a base. If not specified one will
    *   be created.
    *
-   * @return Drupal\views\Plugin\views\HandlerBase|stdClass $handler
+   * @return \Drupal\views\Plugin\views\HandlerBase|stdClass $handler
    *   The new handler object.
    */
   public static function breakPhraseString($str, &$handler = NULL) {

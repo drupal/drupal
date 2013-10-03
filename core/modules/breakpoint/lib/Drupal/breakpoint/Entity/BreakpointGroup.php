@@ -68,7 +68,7 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
    * @var array
    *   Array containing all breakpoints of this group.
    *
-   * @see Drupal\breakpoint\Entity\Breakpoint
+   * @see \Drupal\breakpoint\Entity\Breakpoint
    */
   public $breakpoints = array();
 
@@ -89,7 +89,7 @@ class BreakpointGroup extends ConfigEntityBase implements BreakpointGroupInterfa
    *     Breakpoint::SOURCE_TYPE_MODULE
    *     Breakpoint::SOURCE_TYPE_USER_DEFINED
    *
-   * @see Drupal\breakpoint\Entity\Breakpoint
+   * @see \Drupal\breakpoint\Entity\Breakpoint
    */
   public $sourceType = Breakpoint::SOURCE_TYPE_USER_DEFINED;
 

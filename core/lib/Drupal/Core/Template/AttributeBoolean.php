@@ -26,7 +26,7 @@ use Drupal\Component\Utility\String;
  *  // produces <select>;
  * @endcode
  *
- * @see Drupal\Core\Template\Attribute
+ * @see \Drupal\Core\Template\Attribute
  */
 class AttributeBoolean extends AttributeValueBase {
 

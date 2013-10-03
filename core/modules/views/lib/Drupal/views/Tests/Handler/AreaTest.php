@@ -10,8 +10,8 @@ namespace Drupal\views\Tests\Handler;
 /**
  * Tests the abstract area handler.
  *
- * @see Drupal\views\Plugin\views\area\AreaPluginBase
- * @see Drupal\views_test\Plugin\views\area\TestExample
+ * @see \Drupal\views\Plugin\views\area\AreaPluginBase
+ * @see \Drupal\views_test\Plugin\views\area\TestExample
  */
 class AreaTest extends HandlerTestBase {
 

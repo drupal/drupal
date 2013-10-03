@@ -297,7 +297,7 @@ function drupal_get_profile() {
  * @deprecated This will be removed in 8.0. Instead, register a new breadcrumb
  *   builder service.
  *
- * @see Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface
+ * @see \Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface
  */
 function drupal_set_breadcrumb($breadcrumb = NULL) {
   $stored_breadcrumb = &drupal_static(__FUNCTION__);
@@ -3135,8 +3135,8 @@ function _drupal_bootstrap_code() {
  *
  * DrupalKernel skips this and replicates it via event listeners.
  *
- * @see Drupal\Core\EventSubscriber\PathSubscriber;
- * @see Drupal\Core\EventSubscriber\LegacyRequestSubscriber;
+ * @see \Drupal\Core\EventSubscriber\PathSubscriber;
+ * @see \Drupal\Core\EventSubscriber\LegacyRequestSubscriber;
  */
 function _drupal_bootstrap_full($skip = FALSE) {
   static $called = FALSE;
@@ -4949,7 +4949,7 @@ function archiver_get_archiver($file) {
  * @return array
  *   The Drupal Updater class registry.
  *
- * @see Drupal\Core\Updater\Updater
+ * @see \Drupal\Core\Updater\Updater
  * @see hook_updater_info()
  * @see hook_updater_info_alter()
  */
@@ -4969,7 +4969,7 @@ function drupal_get_updaters() {
  * @return
  *   The Drupal FileTransfer class registry.
  *
- * @see Drupal\Core\FileTransfer\FileTransfer
+ * @see \Drupal\Core\FileTransfer\FileTransfer
  * @see hook_filetransfer_info()
  * @see hook_filetransfer_info_alter()
  */

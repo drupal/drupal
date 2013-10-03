@@ -534,7 +534,7 @@ class RenderTest extends WebTestBase {
       . '<hr />' . $this->drupalGetContent()
     );
 
-    // @see Drupal\simpletest\WebTestBase::xpath()
+    // @see \Drupal\simpletest\WebTestBase::xpath()
     $xpath = $this->buildXPathQuery($xpath, $xpath_args);
     $element += array('#value' => NULL);
     $this->assertFieldByXPath($xpath, $element['#value'], format_string('#type @type was properly rendered.', array(

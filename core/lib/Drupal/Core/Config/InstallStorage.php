@@ -59,7 +59,7 @@ class InstallStorage extends FileStorage {
   /**
    * Overrides Drupal\Core\Config\FileStorage::write().
    *
-   * @throws Drupal\Core\Config\StorageException
+   * @throws \Drupal\Core\Config\StorageException
    */
   public function write($name, array $data) {
     throw new StorageException('Write operation is not allowed during install.');
@@ -68,7 +68,7 @@ class InstallStorage extends FileStorage {
   /**
    * Overrides Drupal\Core\Config\FileStorage::delete().
    *
-   * @throws Drupal\Core\Config\StorageException
+   * @throws \Drupal\Core\Config\StorageException
    */
   public function delete($name) {
     throw new StorageException('Delete operation is not allowed during install.');
@@ -77,7 +77,7 @@ class InstallStorage extends FileStorage {
   /**
    * Overrides Drupal\Core\Config\FileStorage::rename().
    *
-   * @throws Drupal\Core\Config\StorageException
+   * @throws \Drupal\Core\Config\StorageException
    */
   public function rename($name, $new_name) {
     throw new StorageException('Rename operation is not allowed during install.');
@@ -162,7 +162,7 @@ class InstallStorage extends FileStorage {
   /**
    * Overrides Drupal\Core\Config\FileStorage::deleteAll().
    *
-   * @throws Drupal\Core\Config\StorageException
+   * @throws \Drupal\Core\Config\StorageException
    */
   public function deleteAll($prefix = '') {
     throw new StorageException('Delete operation is not allowed during install.');

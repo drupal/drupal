@@ -10,7 +10,7 @@ namespace Drupal\views_ui\Tests;
 /**
  * Tests the UI of row plugins.
  *
- * @see Drupal\views_test_data\Plugin\views\row\RowTest.
+ * @see \Drupal\views_test_data\Plugin\views\row\RowTest.
  */
 class RowUITest extends UITestBase {
 

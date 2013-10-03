@@ -50,7 +50,7 @@ abstract class TypedData implements TypedDataInterface, PluginInspectionInterfac
    *   (optional) The parent object of the data property, or NULL if it is the
    *   root of a typed data tree. Defaults to NULL.
    *
-   * @see Drupal\Core\TypedData\TypedDataManager::create()
+   * @see \Drupal\Core\TypedData\TypedDataManager::create()
    */
   public function __construct(array $definition, $name = NULL, TypedDataInterface $parent = NULL) {
     $this->definition = $definition;

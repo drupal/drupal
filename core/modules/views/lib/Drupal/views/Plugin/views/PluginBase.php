@@ -48,7 +48,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
   /**
    * The top object of a view.
    *
-   * @var Drupal\views\ViewExecutable
+   * @var \Drupal\views\ViewExecutable
    */
   public $view = NULL;
 
@@ -59,7 +59,7 @@ abstract class PluginBase extends ComponentPluginBase implements ContainerFactor
    *
    * @todo find a better description
    *
-   * @var Drupal\views\Plugin\views\display\DisplayPluginBase
+   * @var \Drupal\views\Plugin\views\display\DisplayPluginBase
    */
   public $displayHandler;
 

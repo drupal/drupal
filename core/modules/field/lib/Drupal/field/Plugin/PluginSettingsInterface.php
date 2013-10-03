@@ -48,7 +48,7 @@ interface PluginSettingsInterface extends PluginInspectionInterface {
    *   The array of settings, keyed by setting names. Missing settings will be
    *   assigned their default values.
    *
-   * @return Drupal\field\Plugin\PluginSettingsInterface
+   * @return \Drupal\field\Plugin\PluginSettingsInterface
    *   The plugin itself.
    */
   public function setSettings(array $settings);
@@ -61,7 +61,7 @@ interface PluginSettingsInterface extends PluginInspectionInterface {
    * @param mixed $value
    *   The setting value.
    *
-   * @return Drupal\field\Plugin\PluginSettingsInterface
+   * @return \Drupal\field\Plugin\PluginSettingsInterface
    *   The plugin itself.
    */
   public function setSetting($key, $value);

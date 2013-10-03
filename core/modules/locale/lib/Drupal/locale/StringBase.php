@@ -52,7 +52,7 @@ abstract class StringBase implements StringInterface {
   /**
    * The locale storage this string comes from or is to be saved to.
    *
-   * @var Drupal\locale\StringStorageInterface
+   * @var \Drupal\locale\StringStorageInterface
    */
   protected $storage;
 

@@ -13,7 +13,7 @@ use Drupal\views\Tests\Plugin\RelationshipJoinTestBase;
 /**
  * Tests the base relationship handler.
  *
- * @see Drupal\views\Plugin\views\relationship\RelationshipPluginBase
+ * @see \Drupal\views\Plugin\views\relationship\RelationshipPluginBase
  */
 class RelationshipTest extends RelationshipJoinTestBase {
 

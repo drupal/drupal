@@ -10,7 +10,7 @@ namespace Drupal\views_ui\Tests;
 /**
  * Tests the UI of style plugins.
  *
- * @see Drupal\views_test_data\Plugin\views\style\StyleTest.
+ * @see \Drupal\views_test_data\Plugin\views\style\StyleTest.
  */
 class StyleUITest extends UITestBase {
 

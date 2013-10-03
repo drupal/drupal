@@ -65,7 +65,7 @@ use Drupal\entity\Entity\EntityFormDisplay;
  * @param callable $target_function
  *   A function that receives an $instance object and returns the object on
  *   which the method should be invoked.
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The fully formed $entity_type entity.
  * @param mixed $a
  *   (optional) A parameter for the invoked method. Defaults to NULL.

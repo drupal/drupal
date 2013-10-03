@@ -173,7 +173,7 @@ function field_test_field_widget_form_alter(&$element, &$form_state, $context) {
 /**
  * Implements hook_query_TAG_alter() for tag 'efq_table_prefixing_test'.
  *
- * @see Drupal\system\Tests\Entity\EntityFieldQueryTest::testTablePrefixing()
+ * @see \Drupal\system\Tests\Entity\EntityFieldQueryTest::testTablePrefixing()
  */
 function field_test_query_efq_table_prefixing_test_alter(&$query) {
   // Add an additional join onto the entity base table. This will cause an
@@ -185,7 +185,7 @@ function field_test_query_efq_table_prefixing_test_alter(&$query) {
 /**
  * Implements hook_query_TAG_alter() for tag 'efq_metadata_test'.
  *
- * @see Drupal\system\Tests\Entity\EntityQueryTest::testMetaData()
+ * @see \Drupal\system\Tests\Entity\EntityQueryTest::testMetaData()
  */
 function field_test_query_efq_metadata_test_alter(&$query) {
   global $efq_test_metadata;

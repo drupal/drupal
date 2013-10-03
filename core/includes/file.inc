@@ -1350,7 +1350,7 @@ function drupal_unlink($uri, $context = NULL) {
  * @return string|false
  *   The absolute local filepath (with no symbolic links), or FALSE on failure.
  *
- * @see Drupal\Core\StreamWrapper\StreamWrapperInterface::realpath()
+ * @see \Drupal\Core\StreamWrapper\StreamWrapperInterface::realpath()
  * @see http://php.net/manual/function.realpath.php
  * @ingroup php_wrappers
  */

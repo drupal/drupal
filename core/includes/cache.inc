@@ -20,10 +20,10 @@ use Drupal\Core\Cache\Cache;
  *   The cache bin for which the cache object should be returned, defaults to
  *   'cache'.
  *
- * @return Drupal\Core\Cache\CacheBackendInterface
+ * @return \Drupal\Core\Cache\CacheBackendInterface
  *   The cache object associated with the specified bin.
  *
- * @see Drupal\Core\Cache\CacheBackendInterface
+ * @see \Drupal\Core\Cache\CacheBackendInterface
  */
 function cache($bin = 'cache') {
   return \Drupal::cache($bin);

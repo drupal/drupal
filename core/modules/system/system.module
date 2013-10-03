@@ -2045,7 +2045,7 @@ function _system_themes_access($theme) {
  * as a Batch API processing page, if the operation requires a batch.
  *
  * @see authorize.php
- * @see Drupal\Core\FileTransfer\FileTransfer
+ * @see \Drupal\Core\FileTransfer\FileTransfer
  * @see hook_filetransfer_info()
  */
 
@@ -2418,7 +2418,7 @@ function system_get_info($type, $name = NULL) {
  *   Only modules with the property specified in their .info.yml file will be
  *   returned.
  *
- * @see Drupal\Core\Utility\ModuleInfo
+ * @see \Drupal\Core\Utility\ModuleInfo
  */
 function system_get_module_info($property) {
   static $info;

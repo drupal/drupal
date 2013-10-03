@@ -360,7 +360,7 @@ class DatabaseBackend implements CacheBackendInterface {
    * @return int
    *   Sum of all invalidations.
    *
-   * @see Drupal\Core\Cache\DatabaseBackend::flattenTags()
+   * @see \Drupal\Core\Cache\DatabaseBackend::flattenTags()
    */
   protected function checksumTags($flat_tags) {
     $tag_cache = &drupal_static('Drupal\Core\Cache\CacheBackendInterface::tagCache', array());

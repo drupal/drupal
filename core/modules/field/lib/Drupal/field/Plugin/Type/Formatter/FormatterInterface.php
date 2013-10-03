@@ -69,7 +69,7 @@ interface FormatterInterface extends PluginSettingsInterface {
   /**
    * Builds a renderable array for one field on one entity instance.
    *
-   * @param Drupal\Core\Entity\Field\FieldItemListInterface $items
+   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
    *   The field values to be rendered.
    *
    * @return array
@@ -80,7 +80,7 @@ interface FormatterInterface extends PluginSettingsInterface {
   /**
    * Builds a renderable array for a field value.
    *
-   * @param Drupal\Core\Entity\Field\FieldItemListInterface $items
+   * @param \Drupal\Core\Entity\Field\FieldItemListInterface $items
    *   The field values to be rendered.
    *
    * @return array

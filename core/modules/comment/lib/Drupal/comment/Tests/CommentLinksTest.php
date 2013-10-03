@@ -179,7 +179,7 @@ class CommentLinksTest extends CommentTestBase {
     user_role_change_permissions($rid, $perms);
 
     // Output verbose debugging information.
-    // @see Drupal\simpletest\TestBase::error()
+    // @see \Drupal\simpletest\TestBase::error()
     $t_form = array(
       COMMENT_FORM_BELOW => 'below',
       COMMENT_FORM_SEPARATE_PAGE => 'separate page',

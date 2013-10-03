@@ -45,7 +45,7 @@ class BackendChain implements CacheBackendInterface {
    * @param CacheBackendInterface $backend
    *   The cache backend to be appended to the cache chain.
    *
-   * @return Drupal\Core\Cache\BackendChain
+   * @return \Drupal\Core\Cache\BackendChain
    *   The called object.
    */
   public function appendBackend(CacheBackendInterface $backend) {
@@ -60,7 +60,7 @@ class BackendChain implements CacheBackendInterface {
    * @param CacheBackendInterface $backend
    *   The backend to be prepended to the cache chain.
    *
-   * @return Drupal\Core\Cache\BackendChain
+   * @return \Drupal\Core\Cache\BackendChain
    *   The called object.
    */
   public function prependBackend(CacheBackendInterface $backend) {

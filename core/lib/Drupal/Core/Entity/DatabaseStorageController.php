@@ -168,7 +168,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
       if (!empty($this->entityInfo['class'])) {
         // We provide the necessary arguments for PDO to create objects of the
         // specified entity class.
-        // @see Drupal\Core\Entity\EntityInterface::__construct()
+        // @see \Drupal\Core\Entity\EntityInterface::__construct()
         $query_result->setFetchMode(\PDO::FETCH_CLASS, $this->entityInfo['class'], array(array(), $this->entityType));
       }
       $queried_entities = $query_result->fetchAllAssoc($this->idKey);
@@ -221,7 +221,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
     if (!empty($this->entityInfo['class'])) {
       // We provide the necessary arguments for PDO to create objects of the
       // specified entity class.
-      // @see Drupal\Core\Entity\EntityInterface::__construct()
+      // @see \Drupal\Core\Entity\EntityInterface::__construct()
       $query_result->setFetchMode(\PDO::FETCH_CLASS, $this->entityInfo['class'], array(array(), $this->entityType));
     }
     $queried_entities = $query_result->fetchAllAssoc($this->idKey);

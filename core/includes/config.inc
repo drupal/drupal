@@ -102,7 +102,7 @@ function config_uninstall_default_config($type, $name) {
 /**
  * Gets configuration object names starting with a given prefix.
  *
- * @see Drupal\Core\Config\StorageInterface::listAll()
+ * @see \Drupal\Core\Config\StorageInterface::listAll()
  */
 function config_get_storage_names_with_prefix($prefix = '') {
   return drupal_container()->get('config.storage')->listAll($prefix);
@@ -123,7 +123,7 @@ function config_get_storage_names_with_prefix($prefix = '') {
  *   config object returned will contain the contents of book.admin
  *   configuration file.
  *
- * @return Drupal\Core\Config\Config
+ * @return \Drupal\Core\Config\Config
  *   A configuration object.
  */
 function config($name) {
@@ -219,9 +219,9 @@ function config_get_entity_type_by_name($name) {
  *
  * Use the typed data manager service for creating typed configuration objects.
  *
- * @see Drupal\Core\TypedData\TypedDataManager::create()
+ * @see \Drupal\Core\TypedData\TypedDataManager::create()
  *
- * @return Drupal\Core\TypedData\TypedConfigManager
+ * @return \Drupal\Core\TypedData\TypedConfigManager
  */
 function config_typed() {
   return drupal_container()->get('config.typed');
@@ -230,9 +230,9 @@ function config_typed() {
 /**
  * Creates a configuration snapshot following a successful import.
  *
- * @param Drupal\Core\Config\StorageInterface $source_storage
+ * @param \Drupal\Core\Config\StorageInterface $source_storage
  *   The storage to synchronize configuration from.
- * @param Drupal\Core\Config\StorageInterface $snapshot_storage
+ * @param \Drupal\Core\Config\StorageInterface $snapshot_storage
  *   The storage to synchronize configuration to.
  */
 function config_import_create_snapshot(StorageInterface $source_storage, StorageInterface $snapshot_storage) {
@@ -245,9 +245,9 @@ function config_import_create_snapshot(StorageInterface $source_storage, Storage
 /**
  * Return a formatted diff of a named config between two storages.
  *
- * @param Drupal\Core\Config\StorageInterface $source_storage
+ * @param \Drupal\Core\Config\StorageInterface $source_storage
  *   The storage to diff configuration from.
- * @param Drupal\Core\Config\StorageInterface $target_storage
+ * @param \Drupal\Core\Config\StorageInterface $target_storage
  *   The storage to diff configuration to.
  * @param string $name
  *   The name of the configuration object to diff.

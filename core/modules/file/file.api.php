@@ -172,7 +172,7 @@ function hook_file_move(Drupal\file\FileInterface $file, Drupal\file\FileInterfa
  *   The file that is about to be deleted.
  *
  * @see hook_file_delete()
- * @see Drupal\file\FileStorageController::delete()
+ * @see \Drupal\file\FileStorageController::delete()
  * @see upload_file_delete()
  */
 function hook_file_predelete(Drupal\file\FileInterface $file) {
@@ -190,7 +190,7 @@ function hook_file_predelete(Drupal\file\FileInterface $file) {
  *   The file that has just been deleted.
  *
  * @see hook_file_predelete()
- * @see Drupal\file\FileStorageController::delete()
+ * @see \Drupal\file\FileStorageController::delete()
  */
 function hook_file_delete(Drupal\file\FileInterface $file) {
   // Delete all information associated with the file.

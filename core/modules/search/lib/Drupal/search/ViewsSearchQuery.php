@@ -64,7 +64,7 @@ class ViewsSearchQuery extends SearchQuery {
    *   The searched value.
    * @param string $replace
    *   The value which replaces the search value.
-   * @param Drupal\Core\Database\Query\Condition $condition
+   * @param \Drupal\Core\Database\Query\Condition $condition
    *   The query condition in which the string is replaced.
    */
   function condition_replace_string($search, $replace, &$condition) {

@@ -2528,7 +2528,7 @@ function hook_install() {
  * @param $sandbox
  *   Stores information for multipass updates. See above for more information.
  *
- * @throws Drupal\Core\Utility\UpdateException, PDOException
+ * @throws \Drupal\Core\Utility\UpdateException, PDOException
  *   In case of error, update hooks should throw an instance of
  *   Drupal\Core\Utility\UpdateException with a meaningful message for the user.
  *   If a database query fails for whatever reason, it will throw a
@@ -3354,7 +3354,7 @@ function hook_countries_alter(&$countries) {
  *   - 'weight': Optional. Integer weight used for sorting connection types on
  *     the authorize.php form.
  *
- * @see Drupal\Core\FileTransfer\FileTransfer
+ * @see \Drupal\Core\FileTransfer\FileTransfer
  * @see authorize.php
  * @see hook_filetransfer_info_alter()
  * @see drupal_get_filetransfer_info()

@@ -12,7 +12,7 @@ use Drupal\user\Plugin\views\access\Permission;
 /**
  * Tests views perm access plugin.
  *
- * @see Drupal\user\Plugin\views\access\Permission
+ * @see \Drupal\user\Plugin\views\access\Permission
  */
 class AccessPermissionTest extends AccessTestBase {
 

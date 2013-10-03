@@ -22,7 +22,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
   /**
    * The connection object for this storage.
    *
-   * @var Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Database\Connection
    */
   protected $connection;
 

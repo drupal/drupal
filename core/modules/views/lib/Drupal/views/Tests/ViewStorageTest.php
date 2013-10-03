@@ -16,8 +16,8 @@ use Drupal\views\Plugin\views\display\Feed;
 /**
  * Tests the functionality of View and ViewStorageController.
  *
- * @see Drupal\views\Entity\View
- * @see Drupal\views\ViewStorageController
+ * @see \Drupal\views\Entity\View
+ * @see \Drupal\views\ViewStorageController
  */
 class ViewStorageTest extends ViewUnitTestBase {
 
@@ -48,7 +48,7 @@ class ViewStorageTest extends ViewUnitTestBase {
   /**
    * The configuration entity storage controller.
    *
-   * @var Drupal\views\ViewStorageController
+   * @var \Drupal\views\ViewStorageController
    */
   protected $controller;
 

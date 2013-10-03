@@ -15,7 +15,7 @@ class Tar implements ArchiverInterface {
   /**
    * The underlying ArchiveTar instance that does the heavy lifting.
    *
-   * @var Drupal\Component\Archiver\ArchiveTar
+   * @var \Drupal\Component\Archiver\ArchiveTar
    */
   protected $tar;
 
@@ -27,7 +27,7 @@ class Tar implements ArchiverInterface {
    *   are supported. If the file does not yet exist, it will be created if
    *   appropriate.
    *
-   * @throws Drupal\Component\Archiver\ArchiverException
+   * @throws \Drupal\Component\Archiver\ArchiverException
    */
   public function __construct($file_path) {
     $this->tar = new ArchiveTar($file_path);

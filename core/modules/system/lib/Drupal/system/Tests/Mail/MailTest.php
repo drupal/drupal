@@ -101,7 +101,7 @@ class MailTest extends WebTestBase implements MailInterface {
   /**
    * Concatenate and wrap the e-mail body for plain-text mails.
    *
-   * @see Drupal\Core\Mail\PhpMail
+   * @see \Drupal\Core\Mail\PhpMail
    */
   public function format(array $message) {
     // Join the body array into one string.

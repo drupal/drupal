@@ -15,18 +15,18 @@ use Drupal\Core\Config\Context\ContextInterface;
  * The configuration object factory instantiates a Config object for each
  * configuration object name that is accessed and returns it to callers.
  *
- * @see Drupal\Core\Config\Config
+ * @see \Drupal\Core\Config\Config
  *
  * Each configuration object gets a storage controller object injected, which
  * is used for reading and writing the configuration data.
  *
- * @see Drupal\Core\Config\StorageInterface
+ * @see \Drupal\Core\Config\StorageInterface
  *
  * A configuration context is an object containing parameters that will be
  * available to the configuration plug-ins for them to customize the
  * configuration data in different ways.
  *
- * @see Drupal\Core\Config\Context\ContextInterface
+ * @see \Drupal\Core\Config\Context\ContextInterface
  */
 class ConfigFactory {
 

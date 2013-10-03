@@ -1054,7 +1054,7 @@ function update_get_update_list() {
  *   - 'module': The name of the module that this update function belongs to.
  *   - 'number': The number of this update function within that module.
  *
- * @see Drupal\Component\Graph\Graph::searchAndSort()
+ * @see \Drupal\Component\Graph\Graph::searchAndSort()
  */
 function update_resolve_dependencies($starting_updates) {
   // Obtain a dependency graph for the requested update functions.
@@ -1170,7 +1170,7 @@ function update_get_update_function_list($starting_updates) {
  *   - 'module': The name of the module that this update function belongs to.
  *   - 'number': The number of this update function within that module.
  *
- * @see Drupal\Component\Graph\Graph::searchAndSort()
+ * @see \Drupal\Component\Graph\Graph::searchAndSort()
  * @see update_resolve_dependencies()
  */
 function update_build_dependency_graph($update_functions) {

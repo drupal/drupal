@@ -29,7 +29,7 @@ class Zip implements ArchiverInterface {
    *   are supported. If the file does not yet exist, it will be created if
    *   appropriate.
    *
-   * @throws Drupal\Component\Archiver\ArchiverException
+   * @throws \Drupal\Component\Archiver\ArchiverException
    */
   public function __construct($file_path) {
     $this->zip = new \ZipArchive();

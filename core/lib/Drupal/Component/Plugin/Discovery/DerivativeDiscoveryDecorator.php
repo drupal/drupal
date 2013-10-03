@@ -133,7 +133,7 @@ class DerivativeDiscoveryDecorator implements DiscoveryInterface {
    * @param array $base_definition
    *   The base plugin definition to build derivatives.
    *
-   * @return Drupal\Component\Plugin\Discovery\DerivativeInterface|null
+   * @return \Drupal\Component\Plugin\Discovery\DerivativeInterface|null
    *   A DerivativeInterface or null if none exists for the plugin.
    */
   protected function getDerivativeFetcher($base_plugin_id, array $base_definition) {

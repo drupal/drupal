@@ -15,14 +15,14 @@ use Drupal\Core\Database\Database;
 /**
  * Tests the TempStore namespace.
  *
- * @see Drupal\Core\TempStore\TempStore.
+ * @see \Drupal\Core\TempStore\TempStore.
  */
 class TempStoreDatabaseTest extends UnitTestBase {
 
   /**
    * A key/value store factory.
    *
-   * @var Drupal\user\TempStoreFactory
+   * @var \Drupal\user\TempStoreFactory
    */
   protected $storeFactory;
 

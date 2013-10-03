@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Tests the ViewExecutable class.
  *
- * @see Drupal\views\ViewExecutable
+ * @see \Drupal\views\ViewExecutable
  */
 class ViewExecutableTest extends ViewUnitTestBase {
 

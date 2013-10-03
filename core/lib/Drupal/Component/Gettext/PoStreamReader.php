@@ -87,14 +87,14 @@ class PoStreamReader implements PoStreamInterface, PoReaderInterface {
   /**
    * The PO stream header.
    *
-   * @var Drupal\Component\Gettext\PoHeader
+   * @var \Drupal\Component\Gettext\PoHeader
    */
   private $_header;
 
   /**
    * Object wrapper for the last read source/translation pair.
    *
-   * @var Drupal\Component\Gettext\PoItem
+   * @var \Drupal\Component\Gettext\PoItem
    */
   private $_last_item;
 

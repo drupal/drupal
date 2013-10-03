@@ -12,7 +12,7 @@ use Drupal\Core\Language\Language;
 /**
  * Tests the field language handler.
  *
- * @see Drupal\language\Plugin\views\field\Language
+ * @see \Drupal\language\Plugin\views\field\Language
  */
 class FieldLanguageTest extends LanguageTestBase {
 

@@ -10,7 +10,7 @@ use Drupal\taxonomy\Entity\Term;
 /**
  * Menu callback; displays all nodes associated with a term.
  *
- * @param Drupal\taxonomy\Entity\Term $term
+ * @param \Drupal\taxonomy\Entity\Term $term
  *   The taxonomy term entity.
  *
  * @deprecated Use \Drupal\taxonomy\Controller\TaxonomyController::termPage()
@@ -65,7 +65,7 @@ function taxonomy_term_page(Term $term) {
 /**
  * Generate the content feed for a taxonomy term.
  *
- * @param Drupal\taxonomy\Entity\Term $term
+ * @param \Drupal\taxonomy\Entity\Term $term
  *   The taxonomy term entity.
  *
  * @deprecated Use \Drupal\taxonomy\Controller\TaxonomyController::termFeed()

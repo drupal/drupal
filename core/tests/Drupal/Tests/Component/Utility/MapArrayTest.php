@@ -37,8 +37,8 @@ class MapArrayTest extends UnitTestCase {
    * @param callable $callable
    *   The optional callable.
    *
-   * @see Drupal\Component\Utility\MapArray::copyValuesToKey()
-   * @see Drupal\Tests\Component\Utility\MapArrayTest::providerCopyValuesToKey()
+   * @see \Drupal\Component\Utility\MapArray::copyValuesToKey()
+   * @see \Drupal\Tests\Component\Utility\MapArrayTest::providerCopyValuesToKey()
    */
   public function testCopyValuesToKey(array $input, array $expected, $callable = NULL) {
     $output = MapArray::copyValuesToKeys($input, $callable);
@@ -51,8 +51,8 @@ class MapArrayTest extends UnitTestCase {
    * @return array
    *   An array of tests, matching the parameter inputs for testCopyValuesToKey.
    *
-   * @see Drupal\Component\Utility\MapArray::copyValuesToKey()
-   * @see Drupal\Tests\Component\Utility\MapArrayTest::testCopyValuesToKey()
+   * @see \Drupal\Component\Utility\MapArray::copyValuesToKey()
+   * @see \Drupal\Tests\Component\Utility\MapArrayTest::testCopyValuesToKey()
    */
   public function providerCopyValuesToKey() {
     // Test an empty array.

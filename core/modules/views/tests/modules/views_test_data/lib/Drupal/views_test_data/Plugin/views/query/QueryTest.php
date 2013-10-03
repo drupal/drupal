@@ -87,7 +87,7 @@ class QueryTest extends QueryPluginBase {
   /**
    * Implements Drupal\views\Plugin\views\query\QueryPluginBase::build().
    *
-   * @param Drupal\views\ViewExecutable $view
+   * @param \Drupal\views\ViewExecutable $view
    */
   public function build(ViewExecutable $view) {
     $this->view = $view;

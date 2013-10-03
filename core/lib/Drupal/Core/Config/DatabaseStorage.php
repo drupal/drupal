@@ -18,7 +18,7 @@ class DatabaseStorage implements StorageInterface {
   /**
    * The database connection.
    *
-   * @var Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Database\Connection
    */
   protected $connection;
 
@@ -39,7 +39,7 @@ class DatabaseStorage implements StorageInterface {
   /**
    * Constructs a new DatabaseStorage controller.
    *
-   * @param Drupal\Core\Database\Connection $connection
+   * @param \Drupal\Core\Database\Connection $connection
    *   A Database connection to use for reading and writing configuration data.
    * @param string $table
    *   A database table name to store configuration data in.
@@ -65,7 +65,7 @@ class DatabaseStorage implements StorageInterface {
    * Implements Drupal\Core\Config\StorageInterface::read().
    *
    * @throws PDOException
-   * @throws Drupal\Core\Database\DatabaseExceptionWrapper
+   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    *   Only thrown in case $this->options['throw_exception'] is TRUE.
    */
   public function read($name) {
@@ -171,7 +171,7 @@ class DatabaseStorage implements StorageInterface {
    * Implements Drupal\Core\Config\StorageInterface::listAll().
    *
    * @throws PDOException
-   * @throws Drupal\Core\Database\DatabaseExceptionWrapper
+   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    *   Only thrown in case $this->options['throw_exception'] is TRUE.
    */
   public function listAll($prefix = '') {
@@ -184,7 +184,7 @@ class DatabaseStorage implements StorageInterface {
    * Implements Drupal\Core\Config\StorageInterface::deleteAll().
    *
    * @throws PDOException
-   * @throws Drupal\Core\Database\DatabaseExceptionWrapper
+   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
    *   Only thrown in case $this->options['throw_exception'] is TRUE.
    */
   public function deleteAll($prefix = '') {

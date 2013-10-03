@@ -12,7 +12,7 @@ use Drupal\Component\Utility\String;
 /**
  * Defines the base class for an attribute type.
  *
- * @see Drupal\Core\Template\Attribute
+ * @see \Drupal\Core\Template\Attribute
  */
 abstract class AttributeValueBase {
 

@@ -16,8 +16,8 @@ use Drupal\Core\Config\Config;
  * by the configuration object for storage operations and notifications
  * and contextual data to be used by configuration event listeners.
  *
- * @see Drupal\Core\Config\Config
- * @see Drupal\Core\Config\ConfigFactory
+ * @see \Drupal\Core\Config\Config
+ * @see \Drupal\Core\Config\ConfigFactory
  * @see \Drupal::config()
  */
 interface ContextInterface {

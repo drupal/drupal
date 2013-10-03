@@ -23,7 +23,7 @@ class RouteProvider implements RouteProviderInterface {
   /**
    * The database connection from which to read route information.
    *
-   * @var Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Database\Connection
    */
   protected $connection;
 

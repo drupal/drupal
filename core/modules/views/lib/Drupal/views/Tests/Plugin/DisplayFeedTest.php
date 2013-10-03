@@ -10,7 +10,7 @@ namespace Drupal\views\Tests\Plugin;
 /**
  * Tests the feed display plugin.
  *
- * @see Drupal\views\Plugin\views\display\Feed
+ * @see \Drupal\views\Plugin\views\display\Feed
  */
 class DisplayFeedTest extends PluginTestBase {
 

@@ -364,7 +364,7 @@ function breakpoint_select_options() {
  * @param string $source_type
  *   Either Breakpoint::SOURCE_TYPE_THEME or Breakpoint::SOURCE_TYPE_MODULE.
  *
- * @return Drupal\breakpoint\Entity\BreakpointGroup
+ * @return \Drupal\breakpoint\Entity\BreakpointGroup
  *
  * @see _breakpoint_import_media_queries()
  * @see _breakpoint_import_breakpoint_groups()

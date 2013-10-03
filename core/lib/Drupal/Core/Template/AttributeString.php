@@ -22,7 +22,7 @@ use Drupal\Component\Utility\String;
  *  // Produces: <cat id="socks" style="background-color:white">.
  * @endcode
  *
- * @see Drupal\Core\Template\Attribute
+ * @see \Drupal\Core\Template\Attribute
  */
 class AttributeString extends AttributeValueBase {
 

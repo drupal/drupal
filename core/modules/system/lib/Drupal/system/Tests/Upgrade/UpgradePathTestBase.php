@@ -84,9 +84,9 @@ abstract class UpgradePathTestBase extends WebTestBase {
   /**
    * Overrides Drupal\simpletest\WebTestBase::setUp() for upgrade testing.
    *
-   * @see Drupal\simpletest\WebTestBase::prepareDatabasePrefix()
-   * @see Drupal\simpletest\WebTestBase::changeDatabasePrefix()
-   * @see Drupal\simpletest\WebTestBase::prepareEnvironment()
+   * @see \Drupal\simpletest\WebTestBase::prepareDatabasePrefix()
+   * @see \Drupal\simpletest\WebTestBase::changeDatabasePrefix()
+   * @see \Drupal\simpletest\WebTestBase::prepareEnvironment()
    */
   protected function setUp() {
     global $user, $conf;

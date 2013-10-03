@@ -14,9 +14,9 @@ use Drupal\Component\Plugin\PluginBase;
  *
  * No implementation here as there are no tests for this yet.
  *
- * @see Drupal\plugin_test\Plugin\MockBlockManager
- * @see Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock
- * @see Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock
+ * @see \Drupal\plugin_test\Plugin\MockBlockManager
+ * @see \Drupal\plugin_test\Plugin\plugin_test\mock_block\MockUserLoginBlock
+ * @see \Drupal\plugin_test\Plugin\plugin_test\mock_block\MockMenuBlock
  */
 class MockLayoutBlock extends PluginBase {
 }

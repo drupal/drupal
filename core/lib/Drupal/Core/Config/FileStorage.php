@@ -106,7 +106,7 @@ class FileStorage implements StorageInterface {
    * Implements Drupal\Core\Config\StorageInterface::write().
    *
    * @throws Symfony\Component\Yaml\Exception\DumpException
-   * @throws Drupal\Core\Config\StorageException
+   * @throws \Drupal\Core\Config\StorageException
    */
   public function write($name, array $data) {
     $data = $this->encode($data);

@@ -19,7 +19,7 @@ interface ArchiverInterface {
    *   The full system path of the file or directory to add. Only local files
    *   and directories are supported.
    *
-   * @return Drupal\Component\Archiver\ArchiverInterface
+   * @return \Drupal\Component\Archiver\ArchiverInterface
    *   The called object.
    */
   public function add($file_path);
@@ -30,7 +30,7 @@ interface ArchiverInterface {
    * @param string $path
    *   The file name relative to the root of the archive to remove.
    *
-   * @return Drupal\Component\Archiver\ArchiverInterface
+   * @return \Drupal\Component\Archiver\ArchiverInterface
    *   The called object.
    */
   public function remove($path);
@@ -45,7 +45,7 @@ interface ArchiverInterface {
    *   relative to the root of the archive. If not specified, all files
    *   in the archive will be extracted.
    *
-   * @return Drupal\Component\Archiver\ArchiverInterface
+   * @return \Drupal\Component\Archiver\ArchiverInterface
    *   The called object.
    */
   public function extract($path, array $files = array());

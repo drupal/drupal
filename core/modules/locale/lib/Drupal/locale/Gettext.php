@@ -44,7 +44,7 @@ class Gettext {
    * @return array
    *   Report array as defined in Drupal\locale\PoDatabaseWriter.
    *
-   * @see Drupal\locale\PoDatabaseWriter
+   * @see \Drupal\locale\PoDatabaseWriter
    */
   static function fileToDatabase($file, $options) {
     // Add the default values to the options array.

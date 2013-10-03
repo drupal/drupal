@@ -67,7 +67,7 @@ namespace Drupal\Core\Cache;
  * item has been updated, all future requests will use the updated value.
  *
  * @see cache()
- * @see Drupal\Core\Cache\DatabaseBackend
+ * @see \Drupal\Core\Cache\DatabaseBackend
  */
 interface CacheBackendInterface {
 
@@ -92,7 +92,7 @@ interface CacheBackendInterface {
    * @return object|false
    *   The cache item or FALSE on failure.
    *
-   * @see Drupal\Core\Cache\CacheBackendInterface::getMultiple()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::getMultiple()
    */
   public function get($cid, $allow_invalid = FALSE);
 
@@ -114,7 +114,7 @@ interface CacheBackendInterface {
    * @return array
    *   An array of cache item objects indexed by cache ID.
    *
-   * @see Drupal\Core\Cache\CacheBackendInterface::get()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::get()
    */
   public function getMultiple(&$cids, $allow_invalid = FALSE);
 
@@ -143,8 +143,8 @@ interface CacheBackendInterface {
    *   a node, both the node ID and the author's user ID might be passed in as
    *   tags. For example array('node' => array(123), 'user' => array(92)).
    *
-   * @see Drupal\Core\Cache\CacheBackendInterface::get()
-   * @see Drupal\Core\Cache\CacheBackendInterface::getMultiple()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::get()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::getMultiple()
    */
   public function set($cid, $data, $expire = CacheBackendInterface::CACHE_PERMANENT, array $tags = array());
 
@@ -159,10 +159,10 @@ interface CacheBackendInterface {
    * @param string $cid
    *   The cache ID to delete.
    *
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidate()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteTags()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteAll()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidate()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteTags()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteAll()
    */
   public function delete($cid);
 
@@ -178,10 +178,10 @@ interface CacheBackendInterface {
    * @param array $cids
    *   An array of cache IDs to delete.
    *
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple()
-   * @see Drupal\Core\Cache\CacheBackendInterface::delete()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteTags()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteAll()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::delete()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteTags()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteAll()
    */
   public function deleteMultiple(array $cids);
 
@@ -198,21 +198,21 @@ interface CacheBackendInterface {
    *   Associative array of tags, in the same format that is passed to
    *   CacheBackendInterface::set().
    *
-   * @see Drupal\Core\Cache\CacheBackendInterface::set()
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidateTags()
-   * @see Drupal\Core\Cache\CacheBackendInterface::delete()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteAll()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::set()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateTags()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::delete()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteAll()
    */
   public function deleteTags(array $tags);
 
   /**
    * Deletes all cache items in a bin.
    *
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidateAll()
-   * @see Drupal\Core\Cache\CacheBackendInterface::delete()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteTags()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateAll()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::delete()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteTags()
    */
   public function deleteAll();
 
@@ -225,10 +225,10 @@ interface CacheBackendInterface {
    * @param string $cid
    *   The cache ID to invalidate.
    *
-   * @see Drupal\Core\Cache\CacheBackendInterface::delete()
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple()
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidateTags()
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidateAll()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::delete()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateTags()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateAll()
    */
   public function invalidate($cid);
 
@@ -241,10 +241,10 @@ interface CacheBackendInterface {
    * @param string $cids
    *   An array of cache IDs to invalidate.
    *
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidate()
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidateTags()
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidateAll()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteMultiple()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidate()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateTags()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateAll()
    */
   public function invalidateMultiple(array $cids);
 
@@ -255,11 +255,11 @@ interface CacheBackendInterface {
    *   Associative array of tags, in the same format that is passed to
    *   CacheBackendInterface::set().
    *
-   * @see Drupal\Core\Cache\CacheBackendInterface::set()
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteTags()
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidate()
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple()
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidateAll()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::set()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteTags()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidate()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateAll()
    */
   public function invalidateTags(array $tags);
 
@@ -272,10 +272,10 @@ interface CacheBackendInterface {
    * @param string $cids
    *   An array of cache IDs to invalidate.
    *
-   * @see Drupal\Core\Cache\CacheBackendInterface::deleteAll()
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidate()
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple()
-   * @see Drupal\Core\Cache\CacheBackendInterface::invalidateTags()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::deleteAll()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidate()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateMultiple()
+   * @see \Drupal\Core\Cache\CacheBackendInterface::invalidateTags()
    */
   public function invalidateAll();
 

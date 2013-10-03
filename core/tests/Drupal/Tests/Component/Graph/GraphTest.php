@@ -13,7 +13,7 @@ use Drupal\Tests\UnitTestCase;
 /**
  * Unit tests for the graph handling features.
  *
- * @see Drupal\Component\Graph\Graph
+ * @see \Drupal\Component\Graph\Graph
  * @group Graph
  */
 class GraphTest extends UnitTestCase {

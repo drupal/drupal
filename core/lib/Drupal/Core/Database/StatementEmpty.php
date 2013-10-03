@@ -17,7 +17,7 @@ namespace Drupal\Core\Database;
  * database.  Calling code can then treat it the same as if it were an actual
  * result set that happens to contain no records.
  *
- * @see Drupal\search\SearchQuery
+ * @see \Drupal\search\SearchQuery
  */
 class StatementEmpty implements \Iterator, StatementInterface {
 

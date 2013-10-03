@@ -12,7 +12,7 @@ use Drupal\Core\Language\Language;
 /**
  * Tests the argument language handler.
  *
- * @see Drupal\language\Plugin\views\argument\Language.php
+ * @see \Drupal\language\Plugin\views\argument\Language.php
  */
 class ArgumentLanguageTest extends LanguageTestBase {
 

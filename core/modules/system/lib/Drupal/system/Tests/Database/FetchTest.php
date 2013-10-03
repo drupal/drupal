@@ -74,7 +74,7 @@ class FetchTest extends DatabaseTestBase {
   /**
    * Confirms that we can fetch a record into a new instance of a custom class.
    *
-   * @see Drupal\system\Tests\Database\FakeRecord
+   * @see \Drupal\system\Tests\Database\FakeRecord
    */
   function testQueryFetchClass() {
     $records = array();

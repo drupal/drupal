@@ -14,7 +14,7 @@ use Drupal\views\Plugin\views\area\Result;
 /**
  * Tests the result area handler.
  *
- * @see Drupal\views\Plugin\views\area\Result
+ * @see \Drupal\views\Plugin\views\area\Result
  */
 class ResultTest extends UnitTestCase {
 

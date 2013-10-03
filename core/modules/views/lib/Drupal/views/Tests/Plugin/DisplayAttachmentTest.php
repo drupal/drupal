@@ -10,7 +10,7 @@ namespace Drupal\views\Tests\Plugin;
 /**
  * Tests the attachment display plugin.
  *
- * @see Drupal\views\Plugin\views\display\Attachment
+ * @see \Drupal\views\Plugin\views\display\Attachment
  */
 class DisplayAttachmentTest extends PluginTestBase {
 

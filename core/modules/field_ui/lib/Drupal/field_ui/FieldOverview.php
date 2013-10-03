@@ -306,7 +306,7 @@ class FieldOverview extends OverviewBase {
    * @param array $form_state
    *   A reference to a keyed array containing the current state of the form.
    *
-   * @see Drupal\field_ui\FieldOverview::validateForm()
+   * @see \Drupal\field_ui\FieldOverview::validateForm()
    */
   protected function validateAddNew(array $form, array &$form_state) {
     $field = $form_state['values']['fields']['_add_new_field'];
@@ -346,7 +346,7 @@ class FieldOverview extends OverviewBase {
    * @param array $form_state
    *   A reference to a keyed array containing the current state of the form.
    *
-   * @see Drupal\field_ui\FieldOverview::validate()
+   * @see \Drupal\field_ui\FieldOverview::validate()
    */
   protected function validateAddExisting(array $form, array &$form_state) {
     // The form element might be absent if no existing fields can be added to

@@ -28,7 +28,7 @@ class TimerTest extends UnitTestCase {
   /**
    * Tests Timer::read() time accumulation accuracy across multiple restarts.
    *
-   * @see Drupal\Component\Utility\Timer::read()
+   * @see \Drupal\Component\Utility\Timer::read()
    */
   public function testTimer() {
     Timer::start('test');

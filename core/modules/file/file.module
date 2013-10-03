@@ -94,7 +94,7 @@ function file_element_info() {
  * @see hook_file_load()
  * @see file_load()
  * @see entity_load()
- * @see Drupal\Core\Entity\Query\EntityQueryInterface
+ * @see \Drupal\Core\Entity\Query\EntityQueryInterface
  */
 function file_load_multiple(array $fids = NULL, $reset = FALSE) {
   return entity_load_multiple('file', $fids, $reset);
@@ -121,7 +121,7 @@ function file_load($fid, $reset = FALSE) {
 /**
  * Returns the file usage service.
  *
- * @return Drupal\file\FileUsage\FileUsageInterface.
+ * @return \Drupal\file\FileUsage\FileUsageInterface.
  */
 function file_usage() {
   return \Drupal::service('file.usage');
@@ -142,7 +142,7 @@ function file_usage() {
  *   temporary file, the resulting file will also be a temporary file. See
  *   file_save_upload() for details on temporary files.
  *
- * @param Drupal\file\File $source
+ * @param \Drupal\file\File $source
  *   A file entity.
  * @param $destination
  *   A string containing the destination that $source should be copied to.
@@ -214,7 +214,7 @@ function file_copy(File $source, $destination = NULL, $replace = FILE_EXISTS_REN
  *   replace the file or rename the file based on the $replace parameter.
  * - Adds the new file to the files database.
  *
- * @param Drupal\file\File $source
+ * @param \Drupal\file\File $source
  *   A file entity.
  * @param $destination
  *   A string containing the destination that $source should be moved to.
@@ -230,7 +230,7 @@ function file_copy(File $source, $destination = NULL, $replace = FILE_EXISTS_REN
  *       unique.
  *   - FILE_EXISTS_ERROR - Do nothing and return FALSE.
  *
- * @return Drupal\file\File
+ * @return \Drupal\file\File
  *   Resulting file entity for success, or FALSE in the event of an error.
  *
  * @see file_unmanaged_move()
@@ -289,7 +289,7 @@ function file_move(File $source, $destination = NULL, $replace = FILE_EXISTS_REN
  * After executing the validator callbacks specified hook_file_validate() will
  * also be called to allow other modules to report errors about the file.
  *
- * @param Drupal\file\File $file
+ * @param \Drupal\file\File $file
  *   A file entity.
  * @param $validators
  *   An optional, associative array of callback functions used to validate the
@@ -321,7 +321,7 @@ function file_validate(File $file, $validators = array()) {
 /**
  * Checks for files with names longer than can be stored in the database.
  *
- * @param Drupal\file\File $file
+ * @param \Drupal\file\File $file
  *   A file entity.
  *
  * @return
@@ -342,7 +342,7 @@ function file_validate_name_length(File $file) {
 /**
  * Checks that the filename ends with an allowed extension.
  *
- * @param Drupal\file\File $file
+ * @param \Drupal\file\File $file
  *   A file entity.
  * @param $extensions
  *   A string with a space separated list of allowed extensions.
@@ -366,7 +366,7 @@ function file_validate_extensions(File $file, $extensions) {
 /**
  * Checks that the file's size is below certain limits.
  *
- * @param Drupal\file\File $file
+ * @param \Drupal\file\File $file
  *   A file entity.
  * @param $file_limit
  *   An integer specifying the maximum file size in bytes. Zero indicates that
@@ -400,7 +400,7 @@ function file_validate_size(File $file, $file_limit = 0, $user_limit = 0) {
 /**
  * Checks that the file is recognized by Image::getInfo() as an image.
  *
- * @param Drupal\file\File $file
+ * @param \Drupal\file\File $file
  *   A file entity.
  *
  * @return
@@ -430,7 +430,7 @@ function file_validate_is_image(File $file) {
  * Non-image files will be ignored. If a image toolkit is available the image
  * will be scaled to fit within the desired maximum dimensions.
  *
- * @param Drupal\file\File $file
+ * @param \Drupal\file\File $file
  *   A file entity. This function may resize the file affecting its size.
  * @param $maximum_dimensions
  *   An optional string in the form WIDTHxHEIGHT e.g. '640x480' or '85x85'. If
@@ -550,7 +550,7 @@ function file_save_data($data, $destination = NULL, $replace = FILE_EXISTS_RENAM
 /**
  * Examines a file entity and returns appropriate content headers for download.
  *
- * @param Drupal\file\File $file
+ * @param \Drupal\file\File $file
  *   A file entity.
  *
  * @return
@@ -1620,7 +1620,7 @@ function theme_file_icon($variables) {
 /**
  * Creates a URL to the icon for a file entity.
  *
- * @param Drupal\file\File $file
+ * @param \Drupal\file\File $file
  *   A file entity.
  * @param $icon_directory
  *   (optional) A path to a directory of icons to be used for files. Defaults to
@@ -1639,7 +1639,7 @@ function file_icon_url(File $file, $icon_directory = NULL) {
 /**
  * Creates a path to the icon for a file entity.
  *
- * @param Drupal\file\File $file
+ * @param \Drupal\file\File $file
  *   A file entity.
  * @param $icon_directory
  *   (optional) A path to a directory of icons to be used for files. Defaults to
@@ -1692,7 +1692,7 @@ function file_icon_path(File $file, $icon_directory = NULL) {
 /**
  * Determines the generic icon MIME package based on a file's MIME type.
  *
- * @param Drupal\file\File $file
+ * @param \Drupal\file\File $file
  *   A file entity.
  *
  * @return
@@ -1824,7 +1824,7 @@ function file_icon_map(File $file) {
 /**
  * Retrieves a list of references to a file.
  *
- * @param Drupal\file\File $file
+ * @param \Drupal\file\File $file
  *   A file entity.
  * @param $field
  *   (optional) A field array to be used for this check. If given, limits the

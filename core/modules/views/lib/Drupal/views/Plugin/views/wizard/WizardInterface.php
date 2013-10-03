@@ -50,10 +50,10 @@ interface WizardInterface {
    * @param array $form_state
    *   The current state of the wizard form.
    *
-   * @return Drupal\views\ViewExecutable
+   * @return \Drupal\views\ViewExecutable
    *   The created view object.
    *
-   * @throws Drupal\views\Plugin\views\wizard\WizardException
+   * @throws \Drupal\views\Plugin\views\wizard\WizardException
    */
   public function createView(array $form, array &$form_state);
 

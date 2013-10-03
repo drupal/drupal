@@ -25,7 +25,7 @@ use Drupal\Component\Plugin\Mapper\MapperInterface;
  * To follow this pattern, plugin managers can extend from the PluginManagerBase
  * class, which contains the proxying logic.
  *
- * @see Drupal\Component\Plugin\PluginManagerBase
+ * @see \Drupal\Component\Plugin\PluginManagerBase
  */
 interface PluginManagerInterface extends DiscoveryInterface, FactoryInterface, MapperInterface {
 }

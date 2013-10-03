@@ -15,7 +15,7 @@ class RoutingFixtures {
   /**
    * Create the tables required for the sample data.
    *
-   * @param Drupal\Core\Database\Connection $connection
+   * @param \Drupal\Core\Database\Connection $connection
    *   The connection to use to create the tables.
    */
   public function createTables(Connection $connection) {
@@ -31,7 +31,7 @@ class RoutingFixtures {
   /**
    * Drop the tables used for the sample data.
    *
-   * @param Drupal\Core\Database\Connection $connection
+   * @param \Drupal\Core\Database\Connection $connection
    *   The connection to use to drop the tables.
    */
   public function dropTables(Connection $connection) {

@@ -127,7 +127,7 @@ class CssOptimizer implements AssetOptimizerInterface {
    * @return
    *   The contents of the CSS file at $matches[1], with corrected paths.
    *
-   * @see Drupal\Core\Asset\AssetOptimizerInterface::loadFile()
+   * @see \Drupal\Core\Asset\AssetOptimizerInterface::loadFile()
    */
   protected function loadNestedFile($matches) {
     $filename = $matches[1];

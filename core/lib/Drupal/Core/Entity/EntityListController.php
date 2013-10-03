@@ -145,7 +145,7 @@ class EntityListController implements EntityListControllerInterface, EntityContr
    * @return array
    *   A render array structure of header strings.
    *
-   * @see Drupal\Core\Entity\EntityListController::render()
+   * @see \Drupal\Core\Entity\EntityListController::render()
    */
   public function buildHeader() {
     $row['operations'] = t('Operations');
@@ -161,7 +161,7 @@ class EntityListController implements EntityListControllerInterface, EntityContr
    * @return array
    *   A render array structure of fields for this entity.
    *
-   * @see Drupal\Core\Entity\EntityListController::render()
+   * @see \Drupal\Core\Entity\EntityListController::render()
    */
   public function buildRow(EntityInterface $entity) {
     $row['operations']['data'] = $this->buildOperations($entity);
@@ -177,7 +177,7 @@ class EntityListController implements EntityListControllerInterface, EntityContr
    * @return array
    *   A renderable array of operation links.
    *
-   * @see Drupal\Core\Entity\EntityListController::render()
+   * @see \Drupal\Core\Entity\EntityListController::render()
    */
   public function buildOperations(EntityInterface $entity) {
     // Retrieve and sort operations.

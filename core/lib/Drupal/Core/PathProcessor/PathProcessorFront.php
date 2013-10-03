@@ -25,7 +25,7 @@ class PathProcessorFront implements InboundPathProcessorInterface, OutboundPathP
   /**
    * Constructs a PathProcessorFront object.
    *
-   * @param Drupal\Core\Config\ConfigFactory $config
+   * @param \Drupal\Core\Config\ConfigFactory $config
    *   A config factory for retrieving the site front page configuration.
    */
   public function __construct(ConfigFactory $config) {

@@ -1467,7 +1467,7 @@ function install_find_translations() {
 /**
  * Build a file translation service for installation.
  *
- * @return Drupal\Core\StringTranslation\Translator\FileTranslation
+ * @return \Drupal\Core\StringTranslation\Translator\FileTranslation
  *   File translation service for the installer.
  */
 function install_file_translation_service() {

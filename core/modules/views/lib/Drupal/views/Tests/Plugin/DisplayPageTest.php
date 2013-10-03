@@ -17,7 +17,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Tests the page display plugin.
  *
- * @see Drupal\views\Plugin\display\Page
+ * @see \Drupal\views\Plugin\display\Page
  */
 class DisplayPageTest extends ViewUnitTestBase {
 

@@ -618,7 +618,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
   /**
    * Instantiates a view object from form values.
    *
-   * @return Drupal\views_ui\ViewUI
+   * @return \Drupal\views_ui\ViewUI
    *   The instantiated view UI object.
    */
   protected function instantiateView($form, &$form_state) {
@@ -1059,11 +1059,11 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @param array $options
    *   An array whose keys are the name of each option and whose values are the
    *   desired values to set.
-   * @param Drupal\views\View\plugin\display\DisplayPluginBase $display
+   * @param \Drupal\views\View\plugin\display\DisplayPluginBase $display
    *   The display handler which the options will be applied to. The default
    *   display will actually be assigned the options (and this display will
    *   inherit them) when possible.
-   * @param Drupal\views\View\plugin\display\DisplayPluginBase $default_display
+   * @param \Drupal\views\View\plugin\display\DisplayPluginBase $default_display
    *   The default display handler, which will store the options when possible.
    */
   protected function setDefaultOptions($options, DisplayPluginBase $display, DisplayPluginBase $default_display) {
@@ -1095,11 +1095,11 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @param array $options
    *   An array whose keys are the name of each option and whose values are the
    *   desired values to set.
-   * @param Drupal\views\View\plugin\display\DisplayPluginBase $display
+   * @param \Drupal\views\View\plugin\display\DisplayPluginBase $display
    *   The display handler which the options will be applied to. The default
    *   display will actually be assigned the options (and this display will
    *   inherit them) when possible.
-   * @param Drupal\views\View\plugin\display\DisplayPluginBase $default_display
+   * @param \Drupal\views\View\plugin\display\DisplayPluginBase $default_display
    *   The default display handler, which will store the options when possible.
    */
   protected function setOverrideOptions(array $options, DisplayPluginBase $display, DisplayPluginBase $default_display) {
@@ -1126,7 +1126,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    * @param bool $unset
    *   Should the view be removed from the list of validated views.
    *
-   * @return Drupal\views_ui\ViewUI $view
+   * @return \Drupal\views_ui\ViewUI $view
    *   The validated view object.
    */
   protected function retrieveValidatedView(array $form, array &$form_state, $unset = TRUE) {
@@ -1147,7 +1147,7 @@ abstract class WizardPluginBase extends PluginBase implements WizardInterface {
    *   The full wizard form array.
    * @param array $form_state
    *   The current state of the wizard form.
-   * @param Drupal\views_ui\ViewUI $view
+   * @param \Drupal\views_ui\ViewUI $view
    *   The validated view object.
    */
   protected function setValidatedView(array $form, array &$form_state, ViewUI $view) {

@@ -24,14 +24,14 @@ class ExceptionController extends ContainerAware {
   /**
    * The content negotiation library.
    *
-   * @var Drupal\Core\ContentNegotiation
+   * @var \Drupal\Core\ContentNegotiation
    */
   protected $negotiation;
 
   /**
    * Constructor.
    *
-   * @param Drupal\Core\ContentNegotiation $negotiation
+   * @param \Drupal\Core\ContentNegotiation $negotiation
    *   The content negotiation library to use to determine the correct response
    *   format.
    */

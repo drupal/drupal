@@ -15,7 +15,7 @@ use Drupal\Core\Language\Language;
  * This class extends the basic component and adds in Drupal-specific
  * handling, like translation of the format() method.
  *
- * @see Drupal/Component/Datetime/DateTimePlus.php
+ * @see \Drupal/Component/Datetime/DateTimePlus.php
  */
 class DrupalDateTime extends DateTimePlus {
 

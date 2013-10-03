@@ -16,7 +16,7 @@ use Drupal\views_test_data\Plugin\views\style\StyleTest as StyleTestPlugin;
 /**
  * Tests some general style plugin related functionality.
  *
- * @see Drupal\views_test_data\Plugin\views\style\StyleTest.
+ * @see \Drupal\views_test_data\Plugin\views\style\StyleTest.
  */
 class StyleTest extends ViewTestBase {
 

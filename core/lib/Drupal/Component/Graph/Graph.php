@@ -101,7 +101,7 @@ class Graph {
    * @param $component
    *   The component of the last vertex.
    *
-   * @see Drupal\Component\Graph\Graph::searchAndSort()
+   * @see \Drupal\Component\Graph\Graph::searchAndSort()
    */
   protected function depthFirstSearch(&$state, $start, &$component = NULL) {
     // Assign new component for each new vertex, i.e. when not called recursively.

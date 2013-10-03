@@ -54,7 +54,7 @@ Drupal.behaviors.ckeditorStylesComboSettings = {
   /**
    * Builds the "stylesSet" configuration part of the CKEditor JS settings.
    *
-   * @see Drupal\ckeditor\Plugin\ckeditor\plugin\StylesCombo::generateStylesSetSetting()
+   * @see \Drupal\ckeditor\Plugin\ckeditor\plugin\StylesCombo::generateStylesSetSetting()
    *
    * Note that this is a more forgiving implementation than the PHP version: the
    * parsing works identically, but instead of failing on invalid styles, we

@@ -70,7 +70,7 @@ class AccessTest extends PluginTestBase {
   /**
    * Tests static access check.
    *
-   * @see Drupal\views_test\Plugin\views\access\StaticTest
+   * @see \Drupal\views_test\Plugin\views\access\StaticTest
    */
   function testStaticAccessPlugin() {
     $view = views_get_view('test_access_static');

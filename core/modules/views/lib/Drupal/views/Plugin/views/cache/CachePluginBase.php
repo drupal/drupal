@@ -44,7 +44,7 @@ abstract class CachePluginBase extends PluginBase {
    *
    * @var string
    *
-   * @see Drupal\views\Plugin\views\cache\CachePluginBase::generateResultsKey()
+   * @see \Drupal\views\Plugin\views\cache\CachePluginBase::generateResultsKey()
    */
   protected $resultsKey;
 
@@ -54,7 +54,7 @@ abstract class CachePluginBase extends PluginBase {
    *
    * @var string
    *
-   * @see Drupal\views\Plugin\views\cache\CachePluginBase::generateOutputKey()
+   * @see \Drupal\views\Plugin\views\cache\CachePluginBase::generateOutputKey()
    */
   protected $outputKey;
 

@@ -109,7 +109,7 @@ class View extends ConfigEntityBase implements ViewStorageInterface {
   /**
    * Stores a reference to the executable version of this view.
    *
-   * @var Drupal\views\ViewExecutable
+   * @var \Drupal\views\ViewExecutable
    */
   protected $executable;
 

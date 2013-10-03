@@ -144,7 +144,7 @@ class EntityFormController extends FormBase implements EntityFormControllerInter
   /**
    * Returns the actual form array to be built.
    *
-   * @see Drupal\Core\Entity\EntityFormController::build()
+   * @see \Drupal\Core\Entity\EntityFormController::build()
    */
   public function form(array $form, array &$form_state) {
     $entity = $this->entity;

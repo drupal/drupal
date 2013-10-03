@@ -18,7 +18,7 @@ use Drupal\Core\Entity\EntityInterface;
  * This hook is invoked from $comment->save() before the comment is saved to the
  * database.
  *
- * @param Drupal\comment\Comment $comment
+ * @param \Drupal\comment\Comment $comment
  *   The comment object.
  */
 function hook_comment_presave(Drupal\comment\Comment $comment) {
@@ -29,7 +29,7 @@ function hook_comment_presave(Drupal\comment\Comment $comment) {
 /**
  * Respond to creation of a new comment.
  *
- * @param Drupal\comment\Comment $comment
+ * @param \Drupal\comment\Comment $comment
  *   The comment object.
  */
 function hook_comment_insert(Drupal\comment\Comment $comment) {
@@ -42,7 +42,7 @@ function hook_comment_insert(Drupal\comment\Comment $comment) {
 /**
  * Respond to updates to a comment.
  *
- * @param Drupal\comment\Comment $comment
+ * @param \Drupal\comment\Comment $comment
  *   The comment object.
  */
 function hook_comment_update(Drupal\comment\Comment $comment) {
@@ -144,7 +144,7 @@ function hook_comment_view_alter(&$build, \Drupal\comment\Entity\Comment $commen
 /**
  * Respond to a comment being published by a moderator.
  *
- * @param Drupal\comment\Comment $comment
+ * @param \Drupal\comment\Comment $comment
  *   The comment the action is being performed on.
  */
 function hook_comment_publish(Drupal\comment\Comment $comment) {
@@ -154,7 +154,7 @@ function hook_comment_publish(Drupal\comment\Comment $comment) {
 /**
  * Respond to a comment being unpublished by a moderator.
  *
- * @param Drupal\comment\Comment $comment
+ * @param \Drupal\comment\Comment $comment
  *   The comment the action is being performed on.
  */
 function hook_comment_unpublish(Drupal\comment\Comment $comment) {
@@ -167,7 +167,7 @@ function hook_comment_unpublish(Drupal\comment\Comment $comment) {
  * This hook is invoked from entity_delete_multiple() before field values are
  * deleted and before the comment is actually removed from the database.
  *
- * @param Drupal\comment\Comment $comment
+ * @param \Drupal\comment\Comment $comment
  *   The comment object for the comment that is about to be deleted.
  *
  * @see hook_comment_delete()
@@ -186,7 +186,7 @@ function hook_comment_predelete(Drupal\comment\Comment $comment) {
  * This hook is invoked from entity_delete_multiple() after field values are
  * deleted and after the comment has been removed from the database.
  *
- * @param Drupal\comment\Comment $comment
+ * @param \Drupal\comment\Comment $comment
  *   The comment object for the comment that has been deleted.
  *
  * @see hook_comment_predelete()

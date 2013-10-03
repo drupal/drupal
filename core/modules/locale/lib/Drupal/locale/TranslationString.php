@@ -63,7 +63,7 @@ class TranslationString extends StringBase {
    * @param bool $customized
    *   (optional) Whether the string is customized or not. Defaults to TRUE.
    *
-   * @return Drupal\locale\TranslationString
+   * @return \Drupal\locale\TranslationString
    *   The called object.
    */
   public function setCustomized($customized = TRUE) {

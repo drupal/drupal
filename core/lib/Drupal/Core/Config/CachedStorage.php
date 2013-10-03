@@ -22,14 +22,14 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
   /**
    * The configuration storage to be cached.
    *
-   * @var Drupal\Core\Config\StorageInterface
+   * @var \Drupal\Core\Config\StorageInterface
    */
   protected $storage;
 
   /**
    * The instantiated Cache backend.
    *
-   * @var Drupal\Core\Cache\CacheBackendInterface
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $cache;
 
@@ -43,9 +43,9 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
   /**
    * Constructs a new CachedStorage controller.
    *
-   * @param Drupal\Core\Config\StorageInterface $storage
+   * @param \Drupal\Core\Config\StorageInterface $storage
    *   A configuration storage controller to be cached.
-   * @param Drupal\Core\Cache\CacheBackendInterface $cache
+   * @param \Drupal\Core\Cache\CacheBackendInterface $cache
    *   A cache backend instance to use for caching.
    */
   public function __construct(StorageInterface $storage, CacheBackendInterface $cache) {
@@ -94,7 +94,7 @@ class CachedStorage implements StorageInterface, StorageCacheInterface {
     $list = array();
     // The names array is passed by reference and will only contain the names of
     // config object not found after the method call.
-    // @see Drupal\Core\Cache\CacheBackendInterface::getMultiple()
+    // @see \Drupal\Core\Cache\CacheBackendInterface::getMultiple()
     $cached_list = $this->cache->getMultiple($names);
 
     if (!empty($names)) {

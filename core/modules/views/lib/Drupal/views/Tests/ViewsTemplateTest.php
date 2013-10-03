@@ -13,7 +13,7 @@ use Drupal\views\Views;
 /**
  * Tests the views custom templates.
  *
- * @see Drupal\views_test_data\Plugin\views\style\StyleTemplateTest
+ * @see \Drupal\views_test_data\Plugin\views\style\StyleTemplateTest
  */
 class ViewsTemplateTest extends ViewTestBase {
 

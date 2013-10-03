@@ -19,7 +19,7 @@ class DatabaseFileUsageBackend extends FileUsageBase {
   /**
    * The database connection used to store file usage information.
    *
-   * @var Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Database\Connection
    */
   protected $connection;
 
@@ -33,7 +33,7 @@ class DatabaseFileUsageBackend extends FileUsageBase {
   /**
    * Construct the DatabaseFileUsageBackend.
    *
-   * @param Drupal\Core\Database\Connection $connection
+   * @param \Drupal\Core\Database\Connection $connection
    *   The database connection which will be used to store the file usage
    *   information.
    * @param string $table

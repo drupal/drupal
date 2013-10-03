@@ -54,7 +54,7 @@ class DisplayTest extends PluginTestBase {
   /**
    * Tests the display test plugin.
    *
-   * @see Drupal\views_test_data\Plugin\views\display\DisplayTest
+   * @see \Drupal\views_test_data\Plugin\views\display\DisplayTest
    */
   public function testDisplayPlugin() {
     $view = views_get_view('test_view');

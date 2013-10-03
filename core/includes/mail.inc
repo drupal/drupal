@@ -206,7 +206,7 @@ function drupal_mail($module, $key, $to, $langcode, $params = array(), $from = N
  *   A key to identify the e-mail sent. The final e-mail ID for the e-mail
  *   alter hook in drupal_mail() would have been {$module}_{$key}.
  *
- * @return Drupal\Core\Mail\MailInterface
+ * @return \Drupal\Core\Mail\MailInterface
  *   An object that implements Drupal\Core\Mail\MailInterface.
  *
  * @throws \Exception

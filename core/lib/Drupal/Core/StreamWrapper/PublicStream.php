@@ -40,7 +40,7 @@ class PublicStream extends LocalStream {
     $base_path = settings()->get('file_public_path', conf_path() . '/files');
     if ($test_prefix = drupal_valid_test_ua()) {
       // Append the testing suffix unless already given.
-      // @see Drupal\simpletest\WebTestBase::setUp()
+      // @see \Drupal\simpletest\WebTestBase::setUp()
       if (strpos($base_path, '/simpletest/' . substr($test_prefix, 10)) === FALSE) {
         return $base_path . '/simpletest/' . substr($test_prefix, 10);
       }

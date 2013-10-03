@@ -371,7 +371,7 @@ function taxonomy_check_vocabulary_hierarchy(VocabularyInterface $vocabulary, $c
 /**
  * Generates an array which displays a term detail page.
  *
- * @param Drupal\taxonomy\Entity\Term $term
+ * @param \Drupal\taxonomy\Entity\Term $term
  *   A taxonomy term object.
  * @param string $view_mode
  *   View mode, e.g. 'full', 'teaser'...
@@ -464,7 +464,7 @@ function template_preprocess_taxonomy_term(&$variables) {
 /**
  * Returns whether the current page is the page of the passed-in term.
  *
- * @param Drupal\taxonomy\Entity\Term $term
+ * @param \Drupal\taxonomy\Entity\Term $term
  *   A taxonomy term entity.
  */
 function taxonomy_term_is_page(Term $term) {
@@ -755,7 +755,7 @@ function taxonomy_term_load_multiple_by_name($name, $vocabulary = NULL) {
  * database access if loaded again during the same page request.
  *
  * @see entity_load_multiple()
- * @see Drupal\Core\Entity\Query\EntityQueryInterface
+ * @see \Drupal\Core\Entity\Query\EntityQueryInterface
  *
  * @deprecated use entity_load_multiple('taxonomy_term', $tids) instead.
  *
@@ -1014,7 +1014,7 @@ function taxonomy_allowed_values(FieldDefinitionInterface $field_definition, Ent
 /**
  * Title callback for term pages.
  *
- * @param Drupal\taxonomy\Entity\Term $term
+ * @param \Drupal\taxonomy\Entity\Term $term
  *   A taxonomy term entity.
  *
  * @return
@@ -1029,7 +1029,7 @@ function taxonomy_term_title(Term $term) {
  */
 function taxonomy_autocomplete_validate($element, &$form_state) {
   // Split the values into an array.
-  // @see Drupal\taxonomy\Plugin\field\widget\TaxonomyAutocompleteWidget:massageFormValues()
+  // @see \Drupal\taxonomy\Plugin\field\widget\TaxonomyAutocompleteWidget:massageFormValues()
   $typed_terms = array();
   if ($tags = $element['#value']) {
     $typed_terms = drupal_explode_tags($tags);

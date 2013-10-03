@@ -74,7 +74,7 @@ class EditController extends ContainerAware implements ContainerInjectionInterfa
    *   The TempStore factory.
    * @param \Drupal\edit\MetadataGeneratorInterface $metadata_generator
    *   The in-place editing metadata generator.
-   * @param Drupal\edit\EditorSelectorInterface $editor_selector
+   * @param \Drupal\edit\EditorSelectorInterface $editor_selector
    *   The in-place editor selector.
    * @param \Drupal\Core\Entity\EntityManager $entity_manager
    *   The entity manager.

@@ -542,7 +542,7 @@ function hook_node_load($nodes, $types) {
  * the default home page at path 'node', a recent content block, etc.) See
  * @link node_access Node access rights @endlink for a full explanation.
  *
- * @param Drupal\Core\Entity\EntityInterface|string $node
+ * @param \Drupal\Core\Entity\EntityInterface|string $node
  *   Either a node entity or the machine name of the content type on which to
  *   perform the access check.
  * @param string $op

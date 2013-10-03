@@ -45,7 +45,7 @@ class PoDatabaseWriter implements PoWriterInterface {
   /**
    * Header of the po file written to the database.
    *
-   * @var Drupal\Component\Gettext\PoHeader
+   * @var \Drupal\Component\Gettext\PoHeader
    */
   private $_header;
 
@@ -148,7 +148,7 @@ class PoDatabaseWriter implements PoWriterInterface {
    *
    * A langcode is required to set the current header's PluralForm.
    *
-   * @param Drupal\Component\Gettext\PoHeader $header
+   * @param \Drupal\Component\Gettext\PoHeader $header
    *   Header metadata.
    *
    * @throws Exception
@@ -209,7 +209,7 @@ class PoDatabaseWriter implements PoWriterInterface {
   /**
    * Imports one string into the database.
    *
-   * @param Drupal\Component\Gettext\PoItem $item
+   * @param \Drupal\Component\Gettext\PoItem $item
    *   The item being imported.
    *
    * @return int

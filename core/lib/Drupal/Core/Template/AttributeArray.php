@@ -25,7 +25,7 @@ use Drupal\Component\Utility\String;
  *  $attributes['class'][] = 'cat';
  * @endcode
  *
- * @see Drupal\Core\Template\Attribute
+ * @see \Drupal\Core\Template\Attribute
  */
 class AttributeArray extends AttributeValueBase implements \ArrayAccess, \IteratorAggregate {
 

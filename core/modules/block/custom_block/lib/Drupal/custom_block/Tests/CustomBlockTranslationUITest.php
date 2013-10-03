@@ -77,7 +77,7 @@ class CustomBlockTranslationUITest extends ContentTranslationUITest {
    *   (optional) Bundle name. When no value is given, defaults to
    *   $this->bundle. Defaults to FALSE.
    *
-   * @return Drupal\custom_block\Entity\CustomBlock
+   * @return \Drupal\custom_block\Entity\CustomBlock
    *   Created custom block.
    */
   protected function createCustomBlock($title = FALSE, $bundle = FALSE) {

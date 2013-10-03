@@ -59,7 +59,7 @@ class Config {
   /**
    * The storage used to load and save this configuration object.
    *
-   * @var Drupal\Core\Config\StorageInterface
+   * @var \Drupal\Core\Config\StorageInterface
    */
   protected $storage;
 
@@ -97,7 +97,7 @@ class Config {
   /**
    * Initializes a configuration object.
    *
-   * @return Drupal\Core\Config\Config
+   * @return \Drupal\Core\Config\Config
    *   The configuration object.
    */
   public function init() {
@@ -113,7 +113,7 @@ class Config {
    * @param array $data
    *   Array of loaded data for this configuration object.
    *
-   * @return Drupal\Core\Config\Config
+   * @return \Drupal\Core\Config\Config
    *   The configuration object.
    */
   public function initWithData(array $data) {
@@ -139,7 +139,7 @@ class Config {
   /**
    * Sets the name of this configuration object.
    *
-   * @return Drupal\Core\Config\Config
+   * @return \Drupal\Core\Config\Config
    *   The configuration object.
    */
   public function setName($name) {
@@ -246,7 +246,7 @@ class Config {
    * @param array $data
    *   The new configuration data.
    *
-   * @return Drupal\Core\Config\Config
+   * @return \Drupal\Core\Config\Config
    *   The configuration object.
    */
   public function setData(array $data) {
@@ -266,7 +266,7 @@ class Config {
    * @param array $data
    *   The new configuration data.
    *
-   * @return Drupal\Core\Config\Config
+   * @return \Drupal\Core\Config\Config
    *   The configuration object.
    */
   protected function replaceData(array $data) {
@@ -283,7 +283,7 @@ class Config {
    * @param array $data
    *   The overridden values of the configuration data.
    *
-   * @return Drupal\Core\Config\Config
+   * @return \Drupal\Core\Config\Config
    *   The configuration object.
    */
   public function setOverride(array $data) {
@@ -297,7 +297,7 @@ class Config {
    *
    * Merges overridden configuration data into the original data.
    *
-   * @return Drupal\Core\Config\Config
+   * @return \Drupal\Core\Config\Config
    *   The configuration object.
    */
   protected function setOverriddenData() {
@@ -315,7 +315,7 @@ class Config {
    * This method should be called after the original data or the overridden data
    * has been changed.
    *
-   * @return Drupal\Core\Config\Config
+   * @return \Drupal\Core\Config\Config
    *   The configuration object.
    */
   protected function resetOverriddenData() {
@@ -331,7 +331,7 @@ class Config {
    * @param string $value
    *   Value to associate with identifier.
    *
-   * @return Drupal\Core\Config\Config
+   * @return \Drupal\Core\Config\Config
    *   The configuration object.
    */
   public function set($key, $value) {
@@ -400,7 +400,7 @@ class Config {
    * @param string $key
    *   Name of the key whose value should be unset.
    *
-   * @return Drupal\Core\Config\Config
+   * @return \Drupal\Core\Config\Config
    *   The configuration object.
    */
   public function clear($key) {
@@ -421,7 +421,7 @@ class Config {
   /**
    * Loads configuration data into this object.
    *
-   * @return Drupal\Core\Config\Config
+   * @return \Drupal\Core\Config\Config
    *   The configuration object.
    */
   public function load() {
@@ -443,7 +443,7 @@ class Config {
   /**
    * Saves the configuration object.
    *
-   * @return Drupal\Core\Config\Config
+   * @return \Drupal\Core\Config\Config
    *   The configuration object.
    */
   public function save() {
@@ -461,7 +461,7 @@ class Config {
   /**
    * Deletes the configuration object.
    *
-   * @return Drupal\Core\Config\Config
+   * @return \Drupal\Core\Config\Config
    *   The configuration object.
    */
   public function delete() {

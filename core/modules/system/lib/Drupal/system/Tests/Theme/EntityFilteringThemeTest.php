@@ -34,7 +34,7 @@ class EntityFilteringThemeTest extends WebTestBase {
   /**
    * A test user.
    *
-   * @var Drupal\user\User
+   * @var \Drupal\user\User
    */
   protected $user;
 
@@ -42,7 +42,7 @@ class EntityFilteringThemeTest extends WebTestBase {
   /**
    * A test node.
    *
-   * @var Drupal\node\Node
+   * @var \Drupal\node\Node
    */
   protected $node;
 
@@ -50,7 +50,7 @@ class EntityFilteringThemeTest extends WebTestBase {
   /**
    * A test taxonomy term.
    *
-   * @var Drupal\taxonomy\Term
+   * @var \Drupal\taxonomy\Term
    */
   protected $term;
 
@@ -58,7 +58,7 @@ class EntityFilteringThemeTest extends WebTestBase {
   /**
    * A test comment.
    *
-   * @var Drupal\comment\Comment
+   * @var \Drupal\comment\Comment
    */
   protected $comment;
 

@@ -52,7 +52,7 @@ function hook_taxonomy_vocabulary_load(array $vocabularies) {
  * Modules implementing this hook can act on the vocabulary object before it is
  * inserted or updated.
  *
- * @param Drupal\taxonomy\Entity\Vocabulary $vocabulary
+ * @param \Drupal\taxonomy\Entity\Vocabulary $vocabulary
  *   A taxonomy vocabulary entity.
  */
 function hook_taxonomy_vocabulary_presave(Drupal\taxonomy\Entity\Vocabulary $vocabulary) {
@@ -65,7 +65,7 @@ function hook_taxonomy_vocabulary_presave(Drupal\taxonomy\Entity\Vocabulary $voc
  * Modules implementing this hook can act on the vocabulary object when saved
  * to the database.
  *
- * @param Drupal\taxonomy\Entity\Vocabulary $vocabulary
+ * @param \Drupal\taxonomy\Entity\Vocabulary $vocabulary
  *   A taxonomy vocabulary entity.
  */
 function hook_taxonomy_vocabulary_insert(Drupal\taxonomy\Entity\Vocabulary $vocabulary) {
@@ -79,7 +79,7 @@ function hook_taxonomy_vocabulary_insert(Drupal\taxonomy\Entity\Vocabulary $voca
  *
  * Modules implementing this hook can act on the vocabulary object when updated.
  *
- * @param Drupal\taxonomy\Entity\Vocabulary $vocabulary
+ * @param \Drupal\taxonomy\Entity\Vocabulary $vocabulary
  *   A taxonomy vocabulary entity.
  */
 function hook_taxonomy_vocabulary_update(Drupal\taxonomy\Entity\Vocabulary $vocabulary) {
@@ -95,7 +95,7 @@ function hook_taxonomy_vocabulary_update(Drupal\taxonomy\Entity\Vocabulary $voca
  * This hook is invoked before entity_bundle_delete() is called and before
  * the vocabulary is actually removed.
  *
- * @param Drupal\taxonomy\Entity\Vocabulary $vocabulary
+ * @param \Drupal\taxonomy\Entity\Vocabulary $vocabulary
  *   The taxonomy vocabulary entity that is about to be deleted.
  *
  * @see hook_taxonomy_vocabulary_delete()
@@ -112,7 +112,7 @@ function hook_taxonomy_vocabulary_predelete(Drupal\taxonomy\Entity\Vocabulary $v
  * This hook is invoked after entity_bundle_delete() has been called and after
  * the vocabulary has been removed.
  *
- * @param Drupal\taxonomy\Entity\Vocabulary $vocabulary
+ * @param \Drupal\taxonomy\Entity\Vocabulary $vocabulary
  *   The taxonomy vocabulary entity that has been deleted.
  *
  * @see hook_taxonomy_vocabulary_predelete()
@@ -170,7 +170,7 @@ function hook_taxonomy_term_load(array $terms) {
  * Modules implementing this hook can act on the term object before it is
  * inserted or updated.
  *
- * @param Drupal\taxonomy\Term $term
+ * @param \Drupal\taxonomy\Term $term
  *   A taxonomy term entity.
  */
 function hook_taxonomy_term_presave(Drupal\taxonomy\Term $term) {
@@ -183,7 +183,7 @@ function hook_taxonomy_term_presave(Drupal\taxonomy\Term $term) {
  * Modules implementing this hook can act on the term object when saved to
  * the database.
  *
- * @param Drupal\taxonomy\Term $term
+ * @param \Drupal\taxonomy\Term $term
  *   A taxonomy term entity.
  */
 function hook_taxonomy_term_insert(Drupal\taxonomy\Term $term) {
@@ -200,7 +200,7 @@ function hook_taxonomy_term_insert(Drupal\taxonomy\Term $term) {
  *
  * Modules implementing this hook can act on the term object when updated.
  *
- * @param Drupal\taxonomy\Term $term
+ * @param \Drupal\taxonomy\Term $term
  *   A taxonomy term entity.
  */
 function hook_taxonomy_term_update(Drupal\taxonomy\Term $term) {
@@ -216,7 +216,7 @@ function hook_taxonomy_term_update(Drupal\taxonomy\Term $term) {
  * This hook is invoked from taxonomy term deletion before field values are
  * deleted and before the term is actually removed from the database.
  *
- * @param Drupal\taxonomy\Term $term
+ * @param \Drupal\taxonomy\Term $term
  *   The taxonomy term entity that is about to be deleted.
  */
 function hook_taxonomy_term_predelete(Drupal\taxonomy\Term $term) {
@@ -231,7 +231,7 @@ function hook_taxonomy_term_predelete(Drupal\taxonomy\Term $term) {
  * This hook is invoked from taxonomy term deletion after field values are
  * deleted and after the term has been removed from the database.
  *
- * @param Drupal\taxonomy\Term $term
+ * @param \Drupal\taxonomy\Term $term
  *   The taxonomy term entity that has been deleted.
  */
 function hook_taxonomy_term_delete(Drupal\taxonomy\Term $term) {

@@ -278,7 +278,7 @@ function hook_entity_load($entities, $entity_type) {
 /**
  * Act on an entity before it is about to be created or updated.
  *
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
  */
 function hook_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
@@ -288,7 +288,7 @@ function hook_entity_presave(Drupal\Core\Entity\EntityInterface $entity) {
 /**
  * Act on entities when inserted.
  *
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
  */
 function hook_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
@@ -306,7 +306,7 @@ function hook_entity_insert(Drupal\Core\Entity\EntityInterface $entity) {
 /**
  * Act on entities when updated.
  *
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object.
  */
 function hook_entity_update(Drupal\Core\Entity\EntityInterface $entity) {
@@ -354,7 +354,7 @@ function hook_entity_translation_delete(\Drupal\Core\Entity\EntityInterface $tra
  *
  * This hook runs after the entity type-specific predelete hook.
  *
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object for the entity that is about to be deleted.
  */
 function hook_entity_predelete(Drupal\Core\Entity\EntityInterface $entity) {
@@ -383,7 +383,7 @@ function hook_entity_predelete(Drupal\Core\Entity\EntityInterface $entity) {
  *
  * This hook runs after the entity type-specific delete hook.
  *
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object for the entity that has been deleted.
  */
 function hook_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
@@ -399,7 +399,7 @@ function hook_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
  *
  * This hook runs after the entity type-specific revision delete hook.
  *
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object for the entity revision that has been deleted.
  */
 function hook_entity_revision_delete(Drupal\Core\Entity\EntityInterface $entity) {
@@ -470,7 +470,7 @@ function hook_entity_view(\Drupal\Core\Entity\EntityInterface $entity, \Drupal\e
  *
  * @param $build
  *   A renderable array representing the entity content.
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object being rendered.
  * @param \Drupal\entity\Entity\EntityDisplay $display
  *   The entity_display object holding the display options configured for the
@@ -535,7 +535,7 @@ function hook_entity_prepare_view($entity_type, array $entities, array $displays
  *
  * @param string $view_mode
  *   The view_mode that is to be used to display the entity.
- * @param Drupal\Core\Entity\EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity that is being viewed.
  * @param array $context
  *   Array with additional context information, currently only contains the

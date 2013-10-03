@@ -12,7 +12,7 @@ use Drupal\Component\Plugin\Derivative\DerivativeInterface;
 /**
  * Mock implementation of DerivativeInterface for the mock layout block plugin.
  *
- * @see Drupal\plugin_test\Plugin\MockBlockManager
+ * @see \Drupal\plugin_test\Plugin\MockBlockManager
  */
 class MockLayoutBlockDeriver implements DerivativeInterface {
 

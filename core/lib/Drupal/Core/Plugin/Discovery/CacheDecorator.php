@@ -54,7 +54,7 @@ class CacheDecorator implements CachedDiscoveryInterface {
   /**
    * The Discovery object being decorated.
    *
-   * @var Drupal\Component\Plugin\Discovery\DiscoveryInterface
+   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface
    */
   protected $decorated;
 
@@ -63,7 +63,7 @@ class CacheDecorator implements CachedDiscoveryInterface {
    *
    * It uses the DiscoveryInterface object it should decorate.
    *
-   * @param Drupal\Component\Plugin\Discovery\DiscoveryInterface $decorated
+   * @param \Drupal\Component\Plugin\Discovery\DiscoveryInterface $decorated
    *   The object implementing DiscoveryInterface that is being decorated.
    * @param string $cache_key
    *   The cache identifier used for storage of the definition list.

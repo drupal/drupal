@@ -207,8 +207,8 @@ abstract class StorageTestBase extends UnitTestBase {
    * destructed, after tearDown() has deleted the database tables. Instead,
    * create the storage objects locally in each test using this method.
    *
-   * @see Drupal\system\Tests\KeyValueStore\DatabaseStorageExpirable
-   * @see Drupal\Core\KeyValueStore\DatabaseStorageExpirable::garbageCollection()
+   * @see \Drupal\system\Tests\KeyValueStore\DatabaseStorageExpirable
+   * @see \Drupal\Core\KeyValueStore\DatabaseStorageExpirable::garbageCollection()
    */
   protected function createStorage() {
     $stores = array();

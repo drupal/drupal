@@ -30,28 +30,28 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   /**
    * Chain that will be heavily tested.
    *
-   * @var Drupal\Core\Cache\BackendChain
+   * @var \Drupal\Core\Cache\BackendChain
    */
   protected $chain;
 
   /**
    * First backend in the chain.
    *
-   * @var Drupal\Core\Cache\CacheBackendInterface
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $firstBackend;
 
   /**
    * Second backend in the chain.
    *
-   * @var Drupal\Core\Cache\CacheBackendInterface
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $secondBackend;
 
   /**
    * Third backend in the chain.
    *
-   * @var Drupal\Core\Cache\CacheBackendInterface
+   * @var \Drupal\Core\Cache\CacheBackendInterface
    */
   protected $thirdBackend;
 

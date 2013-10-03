@@ -2277,7 +2277,7 @@ function _drupal_load_test_overrides($test_prefix) {
   global $conf, $config_directories;
 
   // Do not use the parent site's config directories. Use only the child site's.
-  // @see Drupal\simpletest\TestBase::prepareConfigDirectories()
+  // @see \Drupal\simpletest\TestBase::prepareConfigDirectories()
   $path_prefix = 'simpletest/' . substr($test_prefix, 10);
   $config_directories = array();
   foreach (array(CONFIG_ACTIVE_DIRECTORY, CONFIG_STAGING_DIRECTORY) as $type) {
@@ -2353,7 +2353,7 @@ function drupal_language_initialize() {
 /**
  * Returns the language object for a given language type.
  *
- * @see Drupal\Core\Language\LanguageManager
+ * @see \Drupal\Core\Language\LanguageManager
  *
  * @param string $type
  *   The type of language object needed, e.g. Language::TYPE_INTERFACE.
@@ -2561,7 +2561,7 @@ function language_is_locked($langcode) {
 /**
  * Returns the default language used on the site.
  *
- * @return Drupal\Core\Language\Language
+ * @return \Drupal\Core\Language\Language
  *   A language object.
  */
 function language_default() {
@@ -3086,7 +3086,7 @@ function drupal_check_memory_limit($required, $memory_limit = NULL) {
  * @deprecated Use \Drupal::lock() instead, or even better have the lock service
  *   injected into your object.
  *
- * @return Drupal\Core\Lock\LockBackendInterface
+ * @return \Drupal\Core\Lock\LockBackendInterface
  */
 function lock() {
   return \Drupal::lock();

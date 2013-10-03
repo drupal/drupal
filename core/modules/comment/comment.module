@@ -1228,7 +1228,7 @@ function comment_user_predelete($account) {
  *   An array of comment objects, indexed by comment ID.
  *
  * @see entity_load()
- * @see Drupal\Core\Entity\Query\QueryInterface
+ * @see \Drupal\Core\Entity\Query\QueryInterface
  */
 function comment_load_multiple(array $cids = NULL, $reset = FALSE) {
   return entity_load_multiple('comment', $cids, $reset);

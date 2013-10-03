@@ -19,23 +19,23 @@ class TempStoreFactory {
   /**
    * The connection object used for this data.
    *
-   * @var Drupal\Core\Database\Connection $connection
+   * @var \Drupal\Core\Database\Connection $connection
    */
   protected $connection;
 
   /**
    * The lock object used for this data.
    *
-   * @var Drupal\Core\Lock\LockBackendInterface $lockBackend
+   * @var \Drupal\Core\Lock\LockBackendInterface $lockBackend
    */
   protected $lockBackend;
 
   /**
    * Constructs a Drupal\user\TempStoreFactory object.
    *
-   * @param Drupal\Core\Database\Connection $connection
+   * @param \Drupal\Core\Database\Connection $connection
    *   The connection object used for this data.
-   * @param Drupal\Core\Lock\LockBackendInterface $lockBackend
+   * @param \Drupal\Core\Lock\LockBackendInterface $lockBackend
    *   The lock object used for this data.
    */
   function __construct(Connection $connection, LockBackendInterface $lockBackend) {
@@ -54,7 +54,7 @@ class TempStoreFactory {
    *   owned by the currently authenticated user, or by the active anonymous
    *   session if no user is logged in.
    *
-   * @return Drupal\user\TempStore
+   * @return \Drupal\user\TempStore
    *   An instance of the the key/value store.
    */
   function get($collection, $owner = NULL) {

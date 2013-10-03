@@ -27,7 +27,7 @@ class LocaleStringTest extends WebTestBase {
   /**
    * The locale storage.
    *
-   * @var Drupal\locale\StringStorageInterface
+   * @var \Drupal\locale\StringStorageInterface
    */
   protected $storage;
 

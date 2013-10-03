@@ -12,7 +12,7 @@ use Drupal\user\Plugin\views\access\Role;
 /**
  * Tests views role access plugin.
  *
- * @see Drupal\user\Plugin\views\access\Role
+ * @see \Drupal\user\Plugin\views\access\Role
  */
 class AccessRoleTest extends AccessTestBase {
 

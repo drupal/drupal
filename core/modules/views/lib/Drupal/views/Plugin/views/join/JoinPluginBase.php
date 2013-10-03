@@ -112,7 +112,7 @@ class JoinPluginBase extends PluginBase {
    *
    * @var array
    *
-   * @see Drupal\views\Plugin\views\join\JoinPluginBase::initJoin()
+   * @see \Drupal\views\Plugin\views\join\JoinPluginBase::initJoin()
    */
   public $configuration = array();
 
@@ -134,9 +134,9 @@ class JoinPluginBase extends PluginBase {
    *
    * @var bool
    *
-   * @see Drupal\views\Plugin\HandlerBase::getTableJoin()
-   * @see Drupal\views\Plugin\views\query\Sql::adjustJoin()
-   * @see Drupal\views\Plugin\views\relationship\RelationshipPluginBase::query()
+   * @see \Drupal\views\Plugin\HandlerBase::getTableJoin()
+   * @see \Drupal\views\Plugin\views\query\Sql::adjustJoin()
+   * @see \Drupal\views\Plugin\views\relationship\RelationshipPluginBase::query()
    */
   public $adjusted;
 

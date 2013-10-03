@@ -12,7 +12,7 @@ use Drupal\views_test_data\Plugin\views\filter\FilterTest as FilterPlugin;
 /**
  * Tests general filter plugin functionality.
  *
- * @see Drupal\views\Plugin\views\filter\FilterPluginBase
+ * @see \Drupal\views\Plugin\views\filter\FilterPluginBase
  */
 class FilterTest extends PluginTestBase {
 

@@ -515,7 +515,7 @@ function node_type_update_nodes($old_id, $new_id) {
  *   An array of node entities indexed by nid.
  *
  * @see entity_load_multiple()
- * @see Drupal\Core\Entity\Query\EntityQueryInterface
+ * @see \Drupal\Core\Entity\Query\EntityQueryInterface
  */
 function node_load_multiple(array $nids = NULL, $reset = FALSE) {
   return entity_load_multiple('node', $nids, $reset);
@@ -1600,7 +1600,7 @@ function node_form_system_themes_admin_form_submit($form, &$form_state) {
  *   - "update"
  *   - "delete"
  *   - "create"
- * @param Drupal\Core\Entity\EntityInterface|string|stdClass $node
+ * @param \Drupal\Core\Entity\EntityInterface|string|stdClass $node
  *   The node entity on which the operation is to be performed, or the node type
  *   object, or node type string (e.g., 'forum') for the 'create' operation.
  * @param $account

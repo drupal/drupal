@@ -29,7 +29,7 @@ use Drupal\Component\Annotation\Plugin;
  * items of a certain type may be specified using the 'list class' key.
  *
  * @see \Drupal::typedData()
- * @see Drupal\Core\TypedData\TypedDataManager::create()
+ * @see \Drupal\Core\TypedData\TypedDataManager::create()
  * @see hook_data_type_info_alter()
  *
  * @Annotation

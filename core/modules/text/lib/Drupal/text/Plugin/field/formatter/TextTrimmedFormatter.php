@@ -18,7 +18,7 @@ use Drupal\Core\Entity\Field\FieldItemListInterface;
  * Note: This class also contains the implementations used by the
  * 'text_summary_or_trimmed' formatter.
  *
- * @see Drupal\text\Field\Formatter\TextSummaryOrTrimmedFormatter
+ * @see \Drupal\text\Field\Formatter\TextSummaryOrTrimmedFormatter
  *
  * @FieldFormatter(
  *   id = "text_trimmed",

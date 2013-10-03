@@ -17,7 +17,7 @@ interface PoReaderInterface extends PoMetadataInterface {
   /**
    * Reads and returns a PoItem (source/translation pair).
    *
-   * @return Drupal\Component\Gettext\PoItem
+   * @return \Drupal\Component\Gettext\PoItem
    *   Wrapper for item data instance.
    */
   public function readItem();

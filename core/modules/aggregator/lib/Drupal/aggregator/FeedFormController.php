@@ -111,7 +111,7 @@ class FeedFormController extends ContentEntityFormController {
     $insert = (bool) $feed->id();
     if (!empty($form_state['values']['category'])) {
       // Store category values for post save operations.
-      // @see Drupal\Core\Entity\FeedStorageController::postSave()
+      // @see \Drupal\Core\Entity\FeedStorageController::postSave()
       $feed->categories = $form_state['values']['category'];
     }
     $feed->save();

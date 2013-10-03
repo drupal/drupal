@@ -12,7 +12,7 @@ use Drupal\views\Tests\ViewUnitTestBase;
 /**
  * Tests the title area handler.
  *
- * @see Drupal\views\Plugin\views\area\Title
+ * @see \Drupal\views\Plugin\views\area\Title
  */
 class AreaTitleTest extends ViewUnitTestBase {
 

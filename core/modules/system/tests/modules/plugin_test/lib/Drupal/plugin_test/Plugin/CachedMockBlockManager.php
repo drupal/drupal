@@ -18,7 +18,7 @@ class CachedMockBlockManager extends MockBlockManager {
   /**
    * Adds a cache decorator to the MockBlockManager's discovery.
    *
-   * @see Drupal\plugin_test\Plugin\MockBlockManager::__construct().
+   * @see \Drupal\plugin_test\Plugin\MockBlockManager::__construct().
    */
   public function __construct() {
     parent::__construct();

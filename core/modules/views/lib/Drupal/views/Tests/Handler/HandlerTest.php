@@ -222,7 +222,7 @@ class HandlerTest extends ViewTestBase {
    *
    * @param $first
    *   The first value to check.
-   * @param Drupal\views\Plugin\views\HandlerBase $handler
+   * @param \Drupal\views\Plugin\views\HandlerBase $handler
    *   The handler that has the $handler->value property to compare with first.
    * @param string $message
    *   The message to display along with the assertion.
@@ -315,7 +315,7 @@ class HandlerTest extends ViewTestBase {
   /**
    * Tests the placeholder function.
    *
-   * @see Drupal\views\Plugin\views\HandlerBase::placeholder()
+   * @see \Drupal\views\Plugin\views\HandlerBase::placeholder()
    */
   public function testPlaceholder() {
     $view = views_get_view('test_view');

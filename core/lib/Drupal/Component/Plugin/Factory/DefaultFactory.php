@@ -26,7 +26,7 @@ class DefaultFactory implements FactoryInterface {
    * The plugin definition includes the plugin class and possibly other
    * information necessary for proper instantiation.
    *
-   * @var Drupal\Component\Plugin\Discovery\DiscoveryInterface
+   * @var \Drupal\Component\Plugin\Discovery\DiscoveryInterface
    */
   protected $discovery;
 

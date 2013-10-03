@@ -12,7 +12,7 @@ use Drupal\views\Tests\Wizard\WizardTestBase;
 /**
  * Tests the comment module integration into the wizard.
  *
- * @see Drupal\comment\Plugin\views\wizard\Comment
+ * @see \Drupal\comment\Plugin\views\wizard\Comment
  */
 class WizardTest extends WizardTestBase {
 

@@ -12,7 +12,7 @@ use Drupal\views\Tests\ViewUnitTestBase;
 /**
  * Tests the text area handler.
  *
- * @see Drupal\views\Plugin\views\area\Text
+ * @see \Drupal\views\Plugin\views\area\Text
  */
 class AreaTextTest extends ViewUnitTestBase {
 

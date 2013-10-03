@@ -27,7 +27,7 @@ class AlterDecoratorTest extends WebTestBase {
   /**
    * Stores a plugin manager which uses the AlterDecorator.
    *
-   * @var Drupal\plugin_test\Plugin\AlterDecoratorTestPluginManager;
+   * @var \Drupal\plugin_test\Plugin\AlterDecoratorTestPluginManager;
    */
   protected $alterTestPluginManager;
 

@@ -321,7 +321,7 @@ function module_set_weight($module, $weight) {
       ->save();
 
     // Prepare the new module list, sorted by weight, including filenames.
-    // @see Drupal\Core\Extension\ModuleHandler::install()
+    // @see \Drupal\Core\Extension\ModuleHandler::install()
     $module_handler = \Drupal::moduleHandler();
     $current_module_filenames = $module_handler->getModuleList();
     $current_modules = array_fill_keys(array_keys($current_module_filenames), 0);

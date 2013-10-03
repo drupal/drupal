@@ -12,7 +12,7 @@ use Drupal\Core\Language\Language;
 /**
  * Tests the filter language handler.
  *
- * @see Drupal\language\Plugin\views\filter\Language
+ * @see \Drupal\language\Plugin\views\filter\Language
  */
 class FilterLanguageTest extends LanguageTestBase {
 

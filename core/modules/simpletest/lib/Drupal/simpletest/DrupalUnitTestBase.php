@@ -25,8 +25,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Additional modules needed in a test may be loaded and added to the fixed
  * module list.
  *
- * @see DrupalUnitTestBase::$modules
- * @see DrupalUnitTestBase::enableModules()
+ * @see \DrupalUnitTestBase::$modules
+ * @see \DrupalUnitTestBase::enableModules()
  */
 abstract class DrupalUnitTestBase extends UnitTestBase {
 
@@ -44,8 +44,8 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
    * Unlike WebTestBase::setUp(), the specified modules are loaded only, but not
    * automatically installed. Modules need to be installed manually, if needed.
    *
-   * @see DrupalUnitTestBase::enableModules()
-   * @see DrupalUnitTestBase::setUp()
+   * @see \DrupalUnitTestBase::enableModules()
+   * @see \DrupalUnitTestBase::setUp()
    *
    * @var array
    */
@@ -73,8 +73,8 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
   /**
    * Sets up Drupal unit test environment.
    *
-   * @see DrupalUnitTestBase::$modules
-   * @see DrupalUnitTestBase
+   * @see \DrupalUnitTestBase::$modules
+   * @see \DrupalUnitTestBase
    */
   protected function setUp() {
     // Copy/prime extension file lists once to avoid filesystem scans.
@@ -136,9 +136,9 @@ abstract class DrupalUnitTestBase extends UnitTestBase {
    * that need to persist a DrupalKernel reboot. This method is called whenever
    * the kernel is rebuilt.
    *
-   * @see DrupalUnitTestBase::setUp()
-   * @see DrupalUnitTestBase::enableModules()
-   * @see DrupalUnitTestBase::disableModules()
+   * @see \DrupalUnitTestBase::setUp()
+   * @see \DrupalUnitTestBase::enableModules()
+   * @see \DrupalUnitTestBase::disableModules()
    */
   public function containerBuild(ContainerBuilder $container) {
     global $conf;

@@ -503,7 +503,7 @@ function _editor_record_file_usage(array $uuids, EntityInterface $entity) {
  *   The number of references to delete. Should be 1 when deleting a single
  *   revision and 0 when deleting an entity entirely.
  *
- * @see Drupal\file\FileUsage\FileUsageInterface::delete()
+ * @see \Drupal\file\FileUsage\FileUsageInterface::delete()
  */
 function _editor_delete_file_usage(array $uuids, EntityInterface $entity, $count) {
   foreach ($uuids as $uuid) {

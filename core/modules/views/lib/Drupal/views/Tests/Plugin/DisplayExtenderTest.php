@@ -12,7 +12,7 @@ use Drupal\views\Tests\Plugin\PluginTestBase;
 /**
  * Tests the display extender plugins.
  *
- * @see Drupal\views_test_data\Plugin\views\display_extender\DisplayExtenderTest
+ * @see \Drupal\views_test_data\Plugin\views\display_extender\DisplayExtenderTest
  */
 class DisplayExtenderTest extends PluginTestBase {
 

@@ -10,7 +10,7 @@ namespace Drupal\views_ui\Tests;
 /**
  * Tests the UI for the attachment display plugin.
  *
- * @see Drupal\views\Plugin\views\display\Attachment
+ * @see \Drupal\views\Plugin\views\display\Attachment
  */
 class DisplayAttachmentTest extends UITestBase {
 
