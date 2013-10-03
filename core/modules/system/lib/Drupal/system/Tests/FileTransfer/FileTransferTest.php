@@ -38,7 +38,7 @@ class FileTransferTest extends WebTestBase {
       'fake.module',
       'fake.info.yml',
       'theme' => array(
-        'fake.tpl.php'
+        'fake.html.twig'
       ),
       'inc' => array(
         'fake.inc'

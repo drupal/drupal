@@ -248,7 +248,7 @@ function statistics_update_index() {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for block.html.twig.
+ * Implements hook_preprocess_HOOK() for block templates.
  */
 function statistics_preprocess_block(&$variables) {
   if ($variables['configuration']['module'] == 'statistics') {

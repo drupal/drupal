@@ -630,7 +630,7 @@ function hook_node_prepare_form(\Drupal\node\NodeInterface $node, $form_display,
  *   theming.
  *
  * @see template_preprocess_search_result()
- * @see search-result.tpl.php
+ * @see search-result.html.twig
  *
  * @ingroup node_api_hooks
  */

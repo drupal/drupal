@@ -231,7 +231,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  *   functions.
  */
 function ajax_render($commands = array()) {
-  // Ajax responses aren't rendered with html.tpl.php, so we have to call
+  // Ajax responses aren't rendered with html.html.twig, so we have to call
   // drupal_get_css() and drupal_get_js() here, in order to have new files added
   // during this request to be loaded by the page. We only want to send back
   // files that the page hasn't already loaded, so we implement simple diffing

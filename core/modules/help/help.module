@@ -59,7 +59,7 @@ function help_help($path, $arg) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for block.html.twig.
+ * Implements hook_preprocess_HOOK() for block templates.
  */
 function help_preprocess_block(&$variables) {
   if ($variables['plugin_id'] == 'system_help_block') {

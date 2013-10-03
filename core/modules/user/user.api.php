@@ -346,7 +346,7 @@ function hook_user_view(\Drupal\user\UserInterface $account, \Drupal\entity\Enti
  * If the module wishes to act on the rendered HTML of the user rather than the
  * structured content array, it may use this hook to add a #post_render callback.
  * Alternatively, it could also implement hook_preprocess_HOOK() for
- * user.tpl.php. See drupal_render() and theme() documentation
+ * user.html.twig. See drupal_render() and theme() documentation
  * respectively for details.
  *
  * @param $build

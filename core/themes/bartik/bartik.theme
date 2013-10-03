@@ -8,7 +8,7 @@
 use Drupal\Core\Template\RenderWrapper;
 
 /**
- * Implements hook_preprocess_HOOK() for html.tpl.php.
+ * Implements hook_preprocess_HOOK() for HTML document templates.
  *
  * Adds body classes if certain regions have content.
  */
@@ -32,7 +32,7 @@ function bartik_preprocess_html(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for page.html.twig.
+ * Implements hook_preprocess_HOOK() for page templates.
  */
 function bartik_preprocess_page(&$variables) {
   // Pass the main menu and secondary menu to the template as render arrays.
@@ -76,7 +76,7 @@ function bartik_preprocess_page(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for maintenance-page.html.twig.
+ * Implements hook_preprocess_HOOK() for maintenance page templates.
  */
 function bartik_preprocess_maintenance_page(&$variables) {
   // By default, site_name is set to Drupal if no db connection is available
@@ -132,7 +132,7 @@ function bartik_library_info() {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for node.html.twig.
+ * Implements hook_preprocess_HOOK() for node templates.
  */
 function bartik_preprocess_node(&$variables) {
   // Remove the "Add new comment" link on teasers or when the comment form is

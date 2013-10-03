@@ -814,7 +814,7 @@ function drupal_find_base_themes($themes, $key, $used_keys = array()) {
  * (see hook_theme() for details). Default templates are implemented with the
  * Twig rendering engine and are named the same as the theme hook, with
  * underscores changed to hyphens, so for the 'taxonomy_term' theme hook, the
- * default template is 'taxonomy-term.tpl.php'.
+ * default template is 'taxonomy-term.html.twig'.
  *
  * @subsection sub_overriding_theme_hooks Overriding Theme Hooks
  * Themes may also register new theme hooks within a hook_theme()
@@ -2580,7 +2580,7 @@ function template_preprocess_html(&$variables) {
   $variables['head_title_array'] = $head_title;
   $variables['head_title'] = implode(' | ', $head_title);
 
-  // Display the html.tpl.php's default mobile metatags for responsive design.
+  // Display the html.html.twig's default mobile metatags for responsive design.
   $elements = array(
     'MobileOptimized' => array(
       '#tag' => 'meta',
@@ -2973,13 +2973,17 @@ function template_preprocess_install_page(&$variables) {
 }
 
 /**
- * Preprocess variables for region.tpl.php
+ * Prepares variables for region templates.
+ *
+ * Default template: region.html.twig.
  *
  * Prepares the values passed to the theme_region function to be passed into a
  * pluggable template engine. Uses the region name to generate a template file
- * suggestions. If none are found, the default region.tpl.php is used.
+ * suggestions.
  *
- * @see region.tpl.php
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing properties of the region.
  */
 function template_preprocess_region(&$variables) {
   // Create the $content variable that templates expect.

@@ -137,7 +137,7 @@ function search_permission() {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for block.html.twig.
+ * Implements hook_preprocess_HOOK() for block templates.
  */
 function search_preprocess_block(&$variables) {
   if ($variables['plugin_id'] == 'search_form_block') {

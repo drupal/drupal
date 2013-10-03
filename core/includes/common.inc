@@ -2930,8 +2930,8 @@ function drupal_get_library($module, $name = NULL) {
  * relationships.
  *
  * Note that this function should be called from the theme layer, such as in a
- * .tpl.php file, theme_ function, or in a template_preprocess function, not in
- * a form declaration. Though the same JavaScript could be added to the page
+ * .html.twig file, theme_ function, or in a template_preprocess function, not
+ * in a form declaration. Though the same JavaScript could be added to the page
  * using drupal_add_js() directly, this function helps keep template files
  * clean and readable. It also prevents tabledrag.js from being added twice
  * accidentally.
@@ -2965,7 +2965,6 @@ function drupal_get_library($module, $name = NULL) {
  *   column should not be hidden.
  * @param $limit
  *   (optional) Limit the maximum amount of parenting in this table.
- * @see block-admin-display-form.tpl.php
  * @see theme_menu_overview_form()
  */
 function drupal_add_tabledrag($table_id, $action, $relationship, $group, $subgroup = NULL, $source = NULL, $hidden = TRUE, $limit = 0) {
@@ -3915,7 +3914,7 @@ function drupal_render(&$elements) {
   // children.
   // #states and #attached have to be processed before #theme_wrappers, because
   // the #type 'page' render array from drupal_render_page() would render the
-  // $page and wrap it into the html.tpl.php template without the attached
+  // $page and wrap it into the html.html.twig template without the attached
   // assets otherwise.
   // If the internal #render_children property is set, do not call the
   // #theme_wrappers function(s) to prevent infinite recursion.

@@ -92,7 +92,7 @@ function _theme_custom_theme() {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for html.tpl.php.
+ * Implements hook_preprocess_HOOK() for HTML document templates.
  */
 function theme_test_preprocess_html(&$variables) {
   $variables['html_attributes']['theme_test_html_attribute'] = 'theme test html attribute value';
@@ -126,7 +126,13 @@ function theme_theme_test_function_template_override($variables) {
 }
 
 /**
- * Process variables for theme-test-render-element.tpl.php.
+ * Prepares variables for test render element templates.
+ *
+ * Default template: theme-test-render-element.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the properties of the element.
  */
 function template_preprocess_theme_test_render_element(&$variables) {
   $variables['attributes']['data-variables-are-preprocessed'] = TRUE;

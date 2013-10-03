@@ -217,7 +217,7 @@ function views_ui_library_info() {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for views-view.html.twig.
+ * Implements hook_preprocess_HOOK() for views templates.
  */
 function views_ui_preprocess_views_view(&$variables) {
   $view = $variables['view'];

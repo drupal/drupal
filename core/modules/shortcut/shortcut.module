@@ -421,7 +421,7 @@ function shortcut_renderable_links($shortcut_set = NULL) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for block.html.twig.
+ * Implements hook_preprocess_HOOK() for block templates.
  */
 function shortcut_preprocess_block(&$variables) {
   if ($variables['configuration']['module'] == 'shortcut') {
@@ -430,7 +430,7 @@ function shortcut_preprocess_block(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for page.tpl.php.
+ * Implements hook_preprocess_HOOK() for page templates.
  */
 function shortcut_preprocess_page(&$variables) {
   // Only display the shortcut link if the user has the ability to edit

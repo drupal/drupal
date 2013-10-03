@@ -466,7 +466,7 @@ function aggregator_filter_xss($value) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for block.html.twig.
+ * Implements hook_preprocess_HOOK() for block templates.
  */
 function aggregator_preprocess_block(&$variables) {
   if ($variables['configuration']['module'] == 'aggregator') {

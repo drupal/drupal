@@ -580,7 +580,7 @@ function forum_block_view_pre_render($elements) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for block.html.twig.
+ * Implements hook_preprocess_HOOK() for block templates.
  */
 function forum_preprocess_block(&$variables) {
   if ($variables['configuration']['module'] == 'forum') {

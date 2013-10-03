@@ -488,9 +488,9 @@ $.extend(Drupal.viewsUi.RearrangeFilterHandler.prototype, {
   insertAddRemoveFilterGroupLinks: function () {
 
     // Insert a link for adding a new group at the top of the page, and make it
-    // match the action links styling used in a typical page.tpl.php. Note that
-    // Drupal does not provide a theme function for this markup, so this is the
-    // best we can do.
+    // match the action link styling used in a typical page.html.twig. Since
+    // Drupal does not provide a theme function for this markup this is the best
+    // we can do.
     $('<ul class="action-links"><li><a id="views-add-group-link" href="#">' + this.addGroupButton.val() + '</a></li></ul>')
       .prependTo(this.table.parent())
       // When the link is clicked, dynamically click the hidden form button for

@@ -249,7 +249,7 @@ function rdf_theme() {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for html.tpl.php.
+ * Implements hook_preprocess_HOOK() for HTML document templates.
  */
 function rdf_preprocess_html(&$variables) {
   // Adds RDF namespace prefix bindings in the form of an RDFa 1.1 prefix
@@ -264,7 +264,7 @@ function rdf_preprocess_html(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for node.html.twig.
+ * Implements hook_preprocess_HOOK() for node templates.
  */
 function rdf_preprocess_node(&$variables) {
   // Adds RDFa markup to the node container. The about attribute specifies the
@@ -350,7 +350,7 @@ function rdf_preprocess_node(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for user.tpl.php.
+ * Implements hook_preprocess_HOOK() for user templates.
  */
 function rdf_preprocess_user(&$variables) {
   $account = $variables['elements']['#user'];
@@ -444,7 +444,7 @@ function rdf_preprocess_username(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for comment.html.twig.
+ * Implements hook_preprocess_HOOK() for comment templates.
  */
 function rdf_preprocess_comment(&$variables) {
   $comment = $variables['comment'];
@@ -533,7 +533,7 @@ function rdf_preprocess_comment(&$variables) {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for taxonomy-term.tpl.php.
+ * Implements hook_preprocess_HOOK() for taxonomy term templates.
  */
 function rdf_preprocess_taxonomy_term(&$variables) {
   $term = $variables['term'];

@@ -1530,7 +1530,7 @@ function hook_permission() {
  *     path, include it here. This path should be relative to the Drupal root
  *     directory.
  *   - template: If specified, this theme implementation is a template, and
- *     this is the template file without an extension. Do not put .tpl.php on
+ *     this is the template file without an extension. Do not put .html.twig on
  *     this file; that extension will be added automatically by the default
  *     rendering engine (which is Twig). If 'path' above is specified, the
  *     template should also be in this path.
@@ -1560,7 +1560,7 @@ function hook_permission() {
  *   - override preprocess functions: Set to TRUE when a theme does NOT want
  *     the standard preprocess functions to run. This can be used to give a
  *     theme FULL control over how variables are set. For example, if a theme
- *     wants total control over how certain variables in the page.tpl.php are
+ *     wants total control over how certain variables in the page.html.twig are
  *     set, this can be set to true. Please keep in mind that when this is used
  *     by a theme, that theme becomes responsible for making sure necessary
  *     variables are set.

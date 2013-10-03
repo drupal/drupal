@@ -31,7 +31,7 @@ function seven_library_info() {
 }
 
 /**
- * Implements hook_preprocess_HOOK() for page.tpl.php.
+ * Implements hook_preprocess_HOOK() for page templates.
  */
 function seven_preprocess_page(&$variables) {
   $variables['primary_local_tasks'] = $variables['tabs'];

@@ -56,7 +56,7 @@ function views_test_data_handler_test_access_callback_argument($argument = FALSE
 }
 
 /**
- * Implements hook_preprocess_HOOK() for views-view-table.tpl.php.
+ * Implements hook_preprocess_HOOK() for views table templates.
  */
 function views_test_data_preprocess_views_view_table(&$variables) {
   if ($variables['view']->storage->id() == 'test_view_render') {
