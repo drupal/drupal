@@ -639,6 +639,7 @@ abstract class WebTestBase extends TestBase {
     $pass = $this->assert($this->drupalUserIsLoggedIn($account), format_string('User %name successfully logged in.', array('%name' => $account->getUsername())), 'User login');
     if ($pass) {
       $this->loggedInUser = $account;
+      $this->container->set('current_user', $account);
     }
   }
 
@@ -682,6 +683,7 @@ abstract class WebTestBase extends TestBase {
       // @see WebTestBase::drupalUserIsLoggedIn()
       unset($this->loggedInUser->session_id);
       $this->loggedInUser = FALSE;
+      $this->container->set('current_user', drupal_anonymous_user());
     }
   }
 
