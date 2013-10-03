@@ -122,6 +122,18 @@ DirectoryIndex index.php index.html index.htm
   RewriteCond %{REQUEST_URI} !=/favicon.ico
   RewriteRule ^ index.php [L]
 
+  # If this is a production site you may want to forbid access to PHP files in
+  # subfolders for security reasons. If you need to directly execute PHP files
+  # in a module or want to run another PHP application somewhere in your
+  # docroot tree you might want to modify this. Uncomment the following two
+  # lines to only allow PHP files in the webroot and in "/core":
+  # RewriteCond %{REQUEST_URI} !^/core/[^/]*\.php$
+  # RewriteRule "^.+/.*\.php$" - [F]
+  # Example for allowing just one PHP file of statistics module:
+  # RewriteCond %{REQUEST_URI} !^/core/[^/]*\.php$
+  # RewriteCond %{REQUEST_URI} !^/core/modules/statistics/statistics.php$
+  # RewriteRule "^.+/.*\.php$" - [F]
+
   # Rules to correctly serve gzip compressed CSS and JS files.
   # Requires both mod_rewrite and mod_headers to be enabled.
   <IfModule mod_headers.c>
