@@ -48,7 +48,7 @@ class UserSignatureTest extends WebTestBase {
       'filters' => array(
         'filter_html' => array(
           'module' => 'filter',
-          'status' => '1',
+          'status' => TRUE,
           'settings' => array(
             'allowed_html' => '<a> <em> <strong>',
           ),

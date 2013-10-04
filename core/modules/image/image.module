@@ -444,8 +444,12 @@ function image_field_entity_update(FieldInterface $field) {
   // The value of a managed_file element can be an array if #extended == TRUE.
   $fid_new = (isset($field->settings['default_image']['fids']) ? $field->settings['default_image']['fids'] : $field->settings['default_image']);
   $fid_old = (isset($prior_field->settings['default_image']['fids']) ? $prior_field->settings['default_image']['fids'] : $prior_field->settings['default_image']);
+  // Ensure sure that fid_new and old are arrays, because default_image might
+  // be the fallback value 0, see image_field_info().
+  $fid_old = (array) $fid_old;
+  $fid_new = (array) $fid_new;
 
-  $file_new = $fid_new ? file_load($fid_new) : FALSE;
+  $file_new = $fid_new ? file_load(reset($fid_new)) : FALSE;
 
   if ($fid_new != $fid_old) {
 
@@ -457,7 +461,7 @@ function image_field_entity_update(FieldInterface $field) {
     }
 
     // Is there an old file?
-    if ($fid_old && ($file_old = file_load($fid_old[0]))) {
+    if ($fid_old && ($file_old = file_load(reset($fid_old)))) {
       file_usage()->delete($file_old, 'image', 'default_image', $field->uuid);
     }
   }

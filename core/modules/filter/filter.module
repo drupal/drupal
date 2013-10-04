@@ -202,7 +202,7 @@ function filter_formats(AccountInterface $account = NULL) {
       $formats['all'] = $cache->data;
     }
     else {
-      $formats['all'] = \Drupal::entityManager()->getStorageController('filter_format')->loadByProperties(array('status' => '1'));
+      $formats['all'] = \Drupal::entityManager()->getStorageController('filter_format')->loadByProperties(array('status' => TRUE));
       uasort($formats['all'], 'Drupal\Core\Config\Entity\ConfigEntityBase::sort');
       \Drupal::cache()->set("filter_formats:{$language_interface->id}", $formats['all'], CacheBackendInterface::CACHE_PERMANENT, array('filter_formats' => TRUE));
     }

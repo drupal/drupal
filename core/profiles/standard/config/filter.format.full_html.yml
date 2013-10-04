@@ -1,10 +1,10 @@
 format: full_html
 name: 'Full HTML'
-status: '1'
-weight: '1'
+status: true
+weight: 1
 roles:
   - administrator
-cache: '1'
+cache: true
 filters:
   filter_caption:
     id: filter_caption

@@ -491,8 +491,8 @@ function language_save($language) {
   // Assign language properties to language entity.
   $language_entity->label = isset($language->name) ? $language->name : '';
   $language_entity->direction = isset($language->direction) ? $language->direction : '0';
-  $language_entity->locked = isset($language->locked) ? $language->locked : '0';
-  $language_entity->weight = isset($language->weight) ? $language->weight : '0';
+  $language_entity->locked = !empty($language->locked);
+  $language_entity->weight = isset($language->weight) ? $language->weight : 0;
 
   // Save the record and inform others about the change.
   $language_entity->save();

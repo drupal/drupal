@@ -45,6 +45,7 @@ function filter_update_8001() {
       $filter['settings'] = unserialize($filter['settings']);
     }
     $format['filters'] = $filters;
+    $format['status'] = (bool) $format['status'];
 
     // Save the config object.
     $config = \Drupal::config('filter.format.' . $id);

@@ -91,18 +91,18 @@ class BlockStorageUnitTest extends DrupalUnitTestBase {
     // Ensure that default values are filled in.
     $expected_properties = array(
       'id' => 'stark.test_block',
-      'weight' => '',
-      'status' => '1',
+      'weight' => NULL,
+      'status' => TRUE,
       'langcode' => language_default()->id,
-      'region' => '-1',
+      'region' => -1,
       'plugin' => 'test_html_id',
       'settings' => array(
-        'cache' => '1',
+        'cache' => 1,
         'label' => '',
         'module' => 'block_test',
         'label_display' => BlockInterface::BLOCK_LABEL_VISIBLE,
       ),
-      'visibility' => '',
+      'visibility' => NULL,
     );
     $this->assertIdentical($actual_properties, $expected_properties, 'The block properties are exported correctly.');
 

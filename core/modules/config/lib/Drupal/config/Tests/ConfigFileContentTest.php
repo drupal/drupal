@@ -123,7 +123,7 @@ class ConfigFileContentTest extends DrupalUnitTestBase {
     $this->assertEqual($config->get($true_key), '1', format_string("Boolean TRUE value returned the string '1'."));
 
     // Read null value.
-    $this->assertIdentical($config->get('null'), '');
+    $this->assertIdentical($config->get('null'), NULL);
 
     // Read false that had been nested in an array value
     $this->assertEqual($config->get($casting_array_false_value_key), '0', format_string("Nested boolean FALSE value returned the string '0'."));

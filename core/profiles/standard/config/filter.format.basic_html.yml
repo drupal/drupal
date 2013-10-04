@@ -1,10 +1,10 @@
 format: basic_html
 name: 'Basic HTML'
-status: '1'
-weight: '0'
+status: true
+weight: 0
 roles:
   - authenticated
-cache: '1'
+cache: true
 filters:
   filter_html:
     id: filter_html

@@ -105,7 +105,7 @@ class FilterFormat extends ConfigEntityBase implements FilterFormatInterface {
    *
    * @var bool
    */
-  public $cache = 0;
+  public $cache = FALSE;
 
   /**
    * Configured filters for this text format.

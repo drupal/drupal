@@ -208,13 +208,6 @@ class Config {
    *   would return array('bar' => 'baz').
    *   If no key is specified, then the entire data array is returned.
    *
-   * The configuration system does not retain data types. Every saved value is
-   * casted to a string. In most cases this is not an issue; however, it can
-   * cause issues with Booleans, which are casted to "1" (TRUE) or "0" (FALSE).
-   * In particular, code relying on === or !== will no longer function properly.
-   *
-   * @see http://php.net/manual/language.operators.comparison.php
-   *
    * @return mixed
    *   The data that was requested.
    */
@@ -338,8 +331,6 @@ class Config {
     if (!$this->isLoaded) {
       $this->load();
     }
-    // Type-cast value into a string.
-    $value = $this->castValue($value);
 
     // The dot/period is a reserved character; it may appear between keys, but
     // not within keys.
@@ -352,46 +343,6 @@ class Config {
     }
     $this->resetOverriddenData();
     return $this;
-  }
-
-  /**
-   * Casts a saved value to a string.
-   *
-   * The configuration system only saves strings or arrays. Any scalar
-   * non-string value is cast to a string. The one exception is boolean FALSE
-   * which would normally become '' when cast to a string, but is manually
-   * cast to '0' here for convenience and consistency.
-   *
-   * Any non-scalar value that is not an array (aka objects) gets cast
-   * to an array.
-   *
-   * @param mixed $value
-   *   A value being saved into the configuration system.
-   *
-   * @return string
-   *   The value cast to a string or array.
-   */
-  public function castValue($value) {
-    if (is_scalar($value) || $value === NULL) {
-      // Handle special case of FALSE, which should be '0' instead of ''.
-      if ($value === FALSE) {
-        $value = '0';
-      }
-      else {
-        $value = (string) $value;
-      }
-    }
-    else {
-      // Any non-scalar value must be an array.
-      if (!is_array($value)) {
-        $value = (array) $value;
-      }
-      // Recurse into any nested keys.
-      foreach ($value as $key => $nested_value) {
-        $value[$key] = $this->castValue($nested_value);
-      }
-    }
-    return $value;
   }
 
   /**

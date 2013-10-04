@@ -9,6 +9,7 @@ namespace Drupal\config\Tests;
 
 use Drupal\Core\Config\ConfigNameException;
 use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\Core\Config\FileStorage;
 
 /**
  * Tests CRUD operations on configuration objects.
@@ -183,5 +184,56 @@ class ConfigCRUDTest extends DrupalUnitTestBase {
     }
 
   }
-}
 
+  /**
+   * Tests data type handling.
+   */
+  public function testDataTypes() {
+    \Drupal::moduleHandler()->install(array('config_test'));
+    $storage = new FileStorage($this->configDirectories[CONFIG_ACTIVE_DIRECTORY]);
+    $name = 'config_test.types';
+    $config = $this->container->get('config.factory')->get($name);
+    $original_content = file_get_contents($storage->getFilePath($name));
+    $this->verbose('<pre>' . $original_content . "\n" . var_export($storage->read($name), TRUE));
+
+    // Verify variable data types are intact.
+    $data = array(
+      'array' => array(),
+      'boolean' => TRUE,
+      'exp' => 1.2e+34,
+      'float' => 3.14159,
+      'hex' => 0xC,
+      'int' => 99,
+      'octal' => 0775,
+      'string' => 'string',
+      'string_int' => '1',
+    );
+    $this->assertIdentical($config->get(), $data);
+
+    // Re-set each key using Config::set().
+    foreach($data as $key => $value) {
+      $config->set($key, $value);
+    }
+    $config->save();
+    $this->assertIdentical($config->get(), $data);
+    // Assert the data against the file storage.
+    $this->assertIdentical($storage->read($name), $data);
+    $this->verbose('<pre>' . file_get_contents($storage->getFilePath($name)) . var_export($storage->read($name), TRUE));
+
+    // Set data using config::setData().
+    $config->setData($data)->save();
+    $this->assertIdentical($config->get(), $data);
+    $this->assertIdentical($storage->read($name), $data);
+
+    try {
+      $config->set('stream', fopen(__FILE__, 'r'))->save();
+      $this->fail('No Exception thrown upon saving invalid data type.');
+    }
+    catch (\Exception $e) {
+      $this->pass(format_string('%class thrown upon saving invalid data type.', array(
+        '%class' => get_class($e),
+      )));
+    }
+  }
+
+}

@@ -1,10 +1,10 @@
 format: restricted_html
 name: 'Restricted HTML'
-status: '1'
-weight: '0'
+status: true
+weight: 0
 roles:
   - anonymous
-cache: '1'
+cache: true
 filters:
   filter_html:
     id: filter_html

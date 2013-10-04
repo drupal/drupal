@@ -41,13 +41,13 @@ class CommentPreviewTest extends CommentTestBase {
     $filter_format = $filter_format_storage_controller->create(array(
       'format' => 'basic_html',
       'name' => 'Basic HTML',
-      'status' => '1',
+      'status' => TRUE,
       'roles' => array('authenticated'),
     ), 'filter_format');
 
     $filter_format->setFilterConfig('filter_html', array(
       'module' => 'filter',
-      'status' => '1',
+      'status' => TRUE,
       'settings' => array(
         'allowed_html' => '<a> <em> <strong> <cite> <blockquote> <code> <ul> <ol> <li> <dl> <dt> <dd> <h4> <h5> <h6> <p> <span> <img>',
       ),

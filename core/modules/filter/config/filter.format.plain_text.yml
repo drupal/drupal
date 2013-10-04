@@ -4,12 +4,12 @@
 # - may be modified by installation profiles to have other properties.
 format: plain_text
 name: 'Plain text'
-status: '1'
-weight: '10'
+status: true
+weight: 10
 roles:
   - anonymous
   - authenticated
-cache: '1'
+cache: true
 filters:
   # Escape all HTML.
   filter_html_escape:

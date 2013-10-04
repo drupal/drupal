@@ -161,6 +161,30 @@ abstract class ConfigStorageTestBase extends DrupalUnitTestBase {
 
   }
 
+  /**
+   * Tests storage controller writing and reading data preserving data type.
+   */
+  function testDataTypes() {
+    $name = 'config_test.types';
+    $data = array(
+      'array' => array(),
+      'boolean' => TRUE,
+      'exp' => 1.2e+34,
+      'float' => 3.14159,
+      'hex' => 0xC,
+      'int' => 99,
+      'octal' => 0775,
+      'string' => 'string',
+      'string_int' => '1',
+    );
+
+    $result = $this->storage->write($name, $data);
+    $this->assertIdentical($result, TRUE);
+
+    $read_data = $this->storage->read($name);
+    $this->assertIdentical($read_data, $data);
+  }
+
   abstract protected function read($name);
 
   abstract protected function insert($name, $data);

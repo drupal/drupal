@@ -4,8 +4,8 @@ weight: '2'
 roles:
   - anonymous
   - authenticated
-cache: '1'
-status: '1'
+cache: true
+status: true
 langcode: en
 filters:
   filter_html_escape:

@@ -23,7 +23,7 @@ class LanguageListController extends DraggableListController {
    * {@inheritdoc}
    */
   public function load() {
-    $entities = $this->storage->loadByProperties(array('locked' => '0'));
+    $entities = $this->storage->loadByProperties(array('locked' => FALSE));
 
     // Sort the entities using the entity class's sort() method.
     // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().

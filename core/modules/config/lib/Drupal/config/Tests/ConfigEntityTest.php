@@ -146,8 +146,7 @@ class ConfigEntityTest extends WebTestBase {
     // Verify that the entity was overwritten.
     $same_id = entity_load('config_test', $config_test->id());
     $this->assertIdentical($same_id->id(), $config_test->id());
-    // Note: Reloading loads from FileStorage, and FileStorage enforces strings.
-    $this->assertIdentical($same_id->label(), '');
+    $this->assertIdentical($same_id->label(), NULL);
     $this->assertNotEqual($same_id->uuid(), $config_test->uuid());
 
     // Delete the overridden entity first.
