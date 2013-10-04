@@ -7,6 +7,7 @@
 
 namespace Drupal\menu\Tests;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\Language;
 
 /**
@@ -40,7 +41,7 @@ class MenuLanguageTest extends MenuWebTestBase {
     $this->drupalLogin($this->admin_user);
 
     // Add some custom languages.
-    foreach (array('aa', 'bb', 'cc') as $language_code) {
+    foreach (array('aa', 'bb', 'cc', 'cs') as $language_code) {
       $language = new Language(array(
         'id' => $language_code,
         'name' => $this->randomName(),
@@ -55,7 +56,7 @@ class MenuLanguageTest extends MenuWebTestBase {
   function testMenuLanguage() {
     // Create a test menu to test the various language-related settings.
     // Machine name has to be lowercase.
-    $menu_name = drupal_strtolower($this->randomName(16));
+    $menu_name = Unicode::strtolower($this->randomName(16));
     $label = $this->randomString();
     $edit = array(
       'id' => $menu_name,
@@ -155,6 +156,38 @@ class MenuLanguageTest extends MenuWebTestBase {
     // Check that the language selector is not available on menu link add page.
     $this->drupalGet("admin/structure/menu/manage/$menu_name/add");
     $this->assertNoField('edit-langcode', 'The language selector field was hidden the page');
+  }
+
+  /**
+   * Tests menu configuration is still English after English has been deleted.
+   */
+  function testMenuLanguageRemovedEnglish() {
+    // Create a test menu to test language settings.
+    // Machine name has to be lowercase.
+    $menu_name = Unicode::strtolower($this->randomName(16));
+    $edit = array(
+      'id' => $menu_name,
+      'description' => '',
+      'label' => $this->randomString(),
+      'langcode' => 'en',
+    );
+    $this->drupalPostForm('admin/structure/menu/add', $edit, t('Save'));
+
+    // Check that the language settings were saved.
+    $menu = menu_load($menu_name);
+    $this->assertEqual($menu->langcode, 'en');
+
+    // Remove English language. To do that another language has to be set as
+    // default.
+    $language = language_load('cs');
+    $language->default = TRUE;
+    language_save($language);
+    language_delete('en');
+
+    // Save the menu again and check if the language is still the same.
+    $this->drupalPostForm("admin/structure/menu/manage/$menu_name", array(), t('Save'));
+    $menu = menu_load($menu_name);
+    $this->assertEqual($menu->langcode, 'en');
   }
 
 }
