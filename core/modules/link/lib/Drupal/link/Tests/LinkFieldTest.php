@@ -107,7 +107,7 @@ class LinkFieldTest extends WebTestBase {
       "{$field_name}[0][url]" => $value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
     $this->assertRaw($value);
@@ -228,7 +228,7 @@ class LinkFieldTest extends WebTestBase {
       "{$field_name}[0][title]" => '',
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
 
@@ -243,7 +243,7 @@ class LinkFieldTest extends WebTestBase {
       'name' => $this->randomName(),
       "{$field_name}[0][title]" => $title,
     );
-    $this->drupalPostForm("entity_test/manage/$id/edit", $edit, t('Save'));
+    $this->drupalPostForm("entity_test/manage/$id", $edit, t('Save'));
     $this->assertText(t('entity_test @id has been updated.', array('@id' => $id)));
 
     $this->renderTestEntity($id);
@@ -309,7 +309,7 @@ class LinkFieldTest extends WebTestBase {
     // Assert label is shown.
     $this->assertText('Read more about this entity');
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
 
@@ -445,7 +445,7 @@ class LinkFieldTest extends WebTestBase {
       "{$field_name}[1][title]" => $title2,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
 

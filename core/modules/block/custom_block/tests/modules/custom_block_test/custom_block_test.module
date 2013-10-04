@@ -92,10 +92,7 @@ function custom_block_test_menu() {
   $items['custom-block/%custom_block'] = array(
     'title callback' => 'entity_page_label',
     'title arguments' => array(1),
-    'page callback' => 'entity_view',
-    'page arguments' => array(1, 'default'),
-    'access callback' => 'entity_page_access',
-    'access arguments' => array(1, 'view'),
+    'route_name' => 'custom_block_test.custom_block_view',
   );
   return $items;
 }

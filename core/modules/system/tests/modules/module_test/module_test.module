@@ -70,24 +70,15 @@ function module_test_hook_info() {
 function module_test_menu() {
   $items['module-test/hook-dynamic-loading-invoke'] = array(
     'title' => 'Test hook dynamic loading (invoke)',
-    'page callback' => 'module_test_hook_dynamic_loading_invoke',
-    'access arguments' => array('access content'),
+    'route_name' => 'module_test.dynamic_invoke',
   );
   $items['module-test/hook-dynamic-loading-invoke-all'] = array(
     'title' => 'Test hook dynamic loading (invoke_all)',
-    'page callback' => 'module_test_hook_dynamic_loading_invoke_all',
-    'access arguments' => array('access content'),
-  );
-  $items['module-test/hook-dynamic-loading-invoke-all-during-load/%module_test'] = array(
-    'title' => 'Test hook dynamic loading (menu item load)',
-    'page callback' => 'module_test_hook_dynamic_loading_invoke_all_during_load',
-    'page arguments' => array(2),
-    'access arguments' => array('access content'),
+    'route_name' => 'module_test.dynamic_invoke_all',
   );
   $items['module-test/class-loading'] = array(
     'title' => 'Test loading a class from another module',
-    'page callback' => 'module_test_class_loading',
-    'access callback' => TRUE,
+    'route_name' => 'module_test.class_loading',
   );
   return $items;
 }
@@ -97,6 +88,8 @@ function module_test_menu() {
  *
  * If the hook is dynamically loaded correctly, the menu callback should
  * return 'success!'.
+ *
+ * @deprecated \Drupal\module_test\Controller\ModuleTestController::hookDynamicLoadingInvoke()
  */
 function module_test_hook_dynamic_loading_invoke() {
   $result = module_invoke('module_test', 'test_hook');
@@ -108,20 +101,12 @@ function module_test_hook_dynamic_loading_invoke() {
  *
  * If the hook is dynamically loaded correctly, the menu callback should
  * return 'success!'.
+ *
+ * @deprecated \Drupal\module_test\Controller\ModuleTestController::hookDynamicLoadingInvokeAll()
  */
 function module_test_hook_dynamic_loading_invoke_all() {
   $result = \Drupal::moduleHandler()->invokeAll('test_hook');
   return $result['module_test'];
-}
-
-/**
- * Page callback for 'hook dynamic loading' test.
- *
- * If the hook is dynamically loaded correctly, the menu callback should
- * return 'success!'.
- */
-function module_test_hook_dynamic_loading_invoke_all_during_load($param) {
-  return $param;
 }
 
 /**
@@ -141,6 +126,8 @@ function module_test_load($param) {
  * that module is enabled, this function should return the string
  * 'Drupal\\module_autoload_test\\SomeClass::testMethod() was invoked.'. If
  * that module is not enabled, this function should return nothing.
+ *
+ * @deprecated \Drupal\module_test\Controller\ModuleTestController::testClassLoading()
  */
 function module_test_class_loading() {
   if (class_exists('Drupal\module_autoload_test\SomeClass')) {

@@ -16,34 +16,10 @@ use Drupal\Core\Ajax\HtmlCommand;
  * Implements hook_menu().
  */
 function ajax_test_menu() {
-  $items['ajax-test/render'] = array(
-    'title' => 'ajax_render',
-    'page callback' => 'ajax_test_render',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
   $items['ajax-test/order'] = array(
     'title' => 'AJAX commands order',
-    'page callback' => 'ajax_test_order',
+    'route_name' => 'ajax_test.order',
     'theme callback' => 'ajax_base_page_theme',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-  $items['ajax-test/render-error'] = array(
-    'title' => 'ajax_render_error',
-    'page callback' => 'ajax_test_error',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-  $items['ajax-test/dialog'] = array(
-    'title' => 'AJAX Dialog',
-    'page callback' => 'ajax_test_dialog',
-    'access callback' => TRUE,
-  );
-  $items['ajax-test/dialog-close'] = array(
-    'title' => 'AJAX Dialog close',
-    'page callback' => 'ajax_test_dialog_close',
-    'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
   return $items;
@@ -63,6 +39,8 @@ function ajax_test_system_theme_info() {
  * Additionally ensures that ajax_render() incorporates JavaScript settings
  * generated during the page request by invoking drupal_add_js() with a dummy
  * setting.
+ *
+ * @deprecated \Drupal\ajax_test\Controller\AjaxTestController::render()
  */
 function ajax_test_render() {
   drupal_add_js(array('ajax' => 'test'), 'setting');
@@ -74,6 +52,8 @@ function ajax_test_render() {
  * Menu callback: Returns an AjaxResponse; settings command set last.
  *
  * Helps verifying AjaxResponse reorders commands to ensure correct execution.
+ *
+ * @deprecated \Drupal\ajax_test\Controller\AjaxTestController::order()
  */
 function ajax_test_order() {
   $response = new AjaxResponse();
@@ -93,6 +73,8 @@ function ajax_test_order() {
 
 /**
  * Menu callback: Returns AJAX element with #error property set.
+ *
+ * @deprecated \Drupal\ajax_test\Controller\AjaxTestController::renderError()
  */
 function ajax_test_error() {
   $message = '';
@@ -106,6 +88,8 @@ function ajax_test_error() {
 
 /**
  * Menu callback: Renders a form elements and links with #ajax['dialog'].
+ *
+ * @deprecated \Drupal\ajax_test\Controller\AjaxTestController::dialog()
  */
 function ajax_test_dialog() {
   // Add two wrapper elements for testing non-modal dialogs. Modal dialogs use
@@ -293,6 +277,8 @@ function ajax_test_dialog_contents() {
 
 /**
  * Menu callback: Close the ajax dialog.
+ *
+ * @deprecated \Drupal\ajax_test\Controller\AjaxTestController::dialogClose()
  */
 function ajax_test_dialog_close() {
   $response = new AjaxResponse();

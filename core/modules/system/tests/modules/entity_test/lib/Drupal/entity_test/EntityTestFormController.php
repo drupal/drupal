@@ -93,7 +93,7 @@ class EntityTestFormController extends ContentEntityFormController {
     drupal_set_message($message);
 
     if ($entity->id()) {
-      $form_state['redirect'] = $entity->entityType() . '/manage/' . $entity->id() . '/edit';
+      $form_state['redirect'] = $entity->entityType() . '/manage/' . $entity->id();
     }
     else {
       // Error on save.

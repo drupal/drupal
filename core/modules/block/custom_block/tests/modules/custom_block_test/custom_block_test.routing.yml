@@ -1,0 +1,6 @@
+custom_block_test.custom_block_view:
+  path: '/custom-block/{custom_block}'
+  defaults:
+    _entity_view: 'custom_block'
+  requirements:
+    _entity_access: 'custom_block.view'

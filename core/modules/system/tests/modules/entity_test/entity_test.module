@@ -61,9 +61,12 @@ function entity_test_entity_types($filter = NULL) {
  * Implements hook_entity_info_alter().
  */
 function entity_test_entity_info_alter(&$info) {
-  // Optionally specify a translation handler for testing translations.
-  if (\Drupal::state()->get('entity_test.translation')) {
-    foreach(entity_test_entity_types() as $entity_type) {
+  foreach (entity_test_entity_types() as $entity_type) {
+    // Ensure these test entity types use their base path as their edit path.
+    $info[$entity_type]['menu_edit_path'] = $info[$entity_type]['menu_base_path'];
+
+    // Optionally specify a translation handler for testing translations.
+    if (\Drupal::state()->get('entity_test.translation')) {
       $info[$entity_type]['translation'][$entity_type] = TRUE;
     }
   }
@@ -237,19 +240,13 @@ function entity_test_menu() {
     $items[$entity_type . '/add'] = array(
       'title' => 'Add an @type',
       'title arguments' => array('@type' => $entity_type),
-      'page callback' => 'entity_test_add',
-      'page arguments' => array($entity_type),
-      'access arguments' => array('administer entity_test content'),
-      'type' => MENU_NORMAL_ITEM,
+      'route_name' => "entity_test.add_$entity_type",
     );
 
     $items[$entity_type . '/manage/%' . $entity_type] = array(
       'title' => 'Edit @type',
       'title arguments' => array('@type' => $entity_type),
-      'page callback' => 'entity_test_edit',
-      'page arguments' => array(2),
-      'access arguments' => array('administer entity_test content'),
-      'type' => MENU_NORMAL_ITEM,
+      'route_name' => "entity_test.edit_$entity_type",
     );
 
     $items[$entity_type . '/manage/%' . $entity_type . '/edit'] = array(
@@ -279,6 +276,8 @@ function entity_test_form_node_form_alter(&$form, &$form_state, $form_id) {
  *   The processed form for a new entity_test.
  *
  * @see entity_test_menu()
+ *
+ * @deprecated \Drupal\entity_test\Controller\EntityTestController::testAdd()
  */
 function entity_test_add($entity_type) {
   drupal_set_title(t('Create an @type', array('@type' => $entity_type)));
@@ -296,6 +295,8 @@ function entity_test_add($entity_type) {
  *   The processed form for the edited entity.
  *
  * @see entity_test_menu()
+ *
+ * @deprecated \Drupal\entity_test\Controller\EntityTestController::testEdit()
  */
 function entity_test_edit(EntityInterface $entity) {
   drupal_set_title($entity->label(), PASS_THROUGH);

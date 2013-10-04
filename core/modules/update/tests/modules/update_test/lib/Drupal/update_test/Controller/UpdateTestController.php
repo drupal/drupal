@@ -28,4 +28,11 @@ class UpdateTestController {
     return $response;
   }
 
+  /**
+   * @todo Remove update_test_mock_page().
+   */
+  public function updateTest($project_name, $version) {
+    return update_test_mock_page($project_name, $version);
+  }
+
 }

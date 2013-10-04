@@ -5,3 +5,71 @@ system_test.page_cache_accept_header:
   requirements:
     _access: 'TRUE'
 
+system_test.main_content_handling:
+  path: '/system-test/main-content-handling'
+  defaults:
+    _title: 'Test main content handling'
+    _content: '\Drupal\system_test\Controller\SystemTestController::mainContentFallback'
+  requirements:
+    _access: 'TRUE'
+
+system_test.main_content_fallback:
+  path: '/system-test/main-content-fallback'
+  defaults:
+    _title: 'Test main content fallback'
+    _content: '\Drupal\system_test\Controller\SystemTestController::mainContentFallback'
+  requirements:
+    _access: 'TRUE'
+
+system_test.main_content_duplication:
+  path: '/system-test/main-content-duplication'
+  defaults:
+    _title: 'Test main content duplication'
+    _content: '\Drupal\system_test\Controller\SystemTestController::mainContentFallback'
+  requirements:
+    _access: 'TRUE'
+
+system_test.lock_acquire:
+  path: '/system-test/lock-acquire'
+  defaults:
+    _title: 'Lock acquire'
+    _content: '\Drupal\system_test\Controller\SystemTestController::lockAcquire'
+  requirements:
+    _access: 'TRUE'
+
+system_test.lock_exit:
+  path: '/system-test/lock-exit'
+  defaults:
+    _title: 'Lock acquire then exit'
+    _content: '\Drupal\system_test\Controller\SystemTestController::lockExit'
+  requirements:
+    _access: 'TRUE'
+
+system_test.authorize_init:
+  path: '/system-test/authorize-init/{page_title}'
+  defaults:
+    _controller: '\Drupal\system_test\Controller\SystemTestController::authorizeInit'
+  requirements:
+    _permission: 'administer software updates'
+
+system_test.variable_get:
+  path: '/system-test/variable-get'
+  defaults:
+    _title: 'Variable Get'
+    _content: '\Drupal\system_test\Controller\SystemTestController::variableGet'
+  requirements:
+    _permission: 'access content'
+
+system_test.set_header:
+  path: '/system-test/set-header'
+  defaults:
+    _content: '\Drupal\system_test\Controller\SystemTestController::setHeader'
+  requirements:
+    _permission: 'access content'
+
+system_test.shutdown_functions:
+  path: '/system-test/shutdown-functions/{arg1}/{arg2}'
+  defaults:
+    _content: '\Drupal\system_test\Controller\SystemTestController::shutdownFunctions'
+  requirements:
+    _access: 'TRUE'

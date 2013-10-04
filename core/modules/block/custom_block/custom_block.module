@@ -30,8 +30,8 @@ function custom_block_help($path, $arg) {
 /**
  * Implements hook_menu_local_tasks().
  */
-function custom_block_menu_local_tasks(&$data, $router_item, $root_path) {
-  if ($router_item['route_name'] == 'custom_block.list') {
+function custom_block_menu_local_tasks(&$data, $route_name) {
+  if ($route_name == 'custom_block.list') {
     // @todo Move to a LocalAction plugin when https://drupal.org/node/2045267
     //   allows local actions to work with query strings.
     $item = menu_get_item('block/add');
@@ -48,13 +48,13 @@ function custom_block_menu_local_tasks(&$data, $router_item, $root_path) {
   $routes = array_map(function ($theme) {
     return "block.admin_display_$theme";
   }, array_keys(list_themes()));
-  if (in_array($router_item['route_name'], $routes)) {
+  if (in_array($route_name, $routes)) {
     // @todo Move to a LocalAction plugin when https://drupal.org/node/2045267
     //   allows local actions to work with query strings.
     $item = menu_get_item('block/add');
     if ($item['access']) {
       // Add a destination parameter.
-      $item['localized_options']['query']['theme'] = end($router_item['map']);
+      $item['localized_options']['query']['theme'] = \Drupal::request()->attributes->get('theme');
       $data['actions']['block/add'] = array(
         '#theme' => 'menu_local_action',
         '#link' => $item,

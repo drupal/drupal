@@ -3,84 +3,10 @@
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
- * Implements hook_menu().
+ * Sets a header.
+ *
+ * @deprecated \Drupal\system_test\Controller\SystemTestController::setHeader()
  */
-function system_test_menu() {
-  $items['system-test/auth'] = array(
-    'page callback' => 'system_test_basic_auth_page',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-  $items['system-test/authorize-init/%'] = array(
-    'page callback' => 'system_test_authorize_init_page',
-    'page arguments' => array(2),
-    'access arguments' => array('administer software updates'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['system-test/set-header'] = array(
-    'page callback' => 'system_test_set_header',
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-  $items['system-test/variable-get'] = array(
-    'title' => 'Variable Get',
-    'page callback' => 'variable_get',
-    'page arguments' => array('simpletest_bootstrap_variable_test', NULL),
-    'access arguments' => array('access content'),
-    'type' => MENU_CALLBACK,
-  );
-
-  $items['system-test/lock-acquire'] = array(
-    'title' => 'Lock acquire',
-    'page callback' => 'system_test_lock_acquire',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-
-  $items['system-test/lock-exit'] = array(
-    'title' => 'Lock acquire then exit',
-    'page callback' => 'system_test_lock_exit',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-
-  $items['system-test/main-content-handling'] = array(
-    'title' => 'Test main content handling',
-    'page callback' => 'system_test_main_content_fallback',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-
-  $items['system-test/main-content-fallback'] = array(
-    'title' => 'Test main content fallback',
-    'page callback' => 'system_test_main_content_fallback',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-
-  $items['system-test/main-content-duplication'] = array(
-    'title' => 'Test main content duplication',
-    'page callback' => 'system_test_main_content_fallback',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-
-  $items['system-test/shutdown-functions'] = array(
-    'title' => 'Test main content duplication',
-    'page callback' => 'system_test_page_shutdown_functions',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-
-  return $items;
-}
-
-function system_test_basic_auth_page() {
-  $output = t('$_SERVER[\'PHP_AUTH_USER\'] is @username.', array('@username' => $_SERVER['PHP_AUTH_USER']));
-  $output .= t('$_SERVER[\'PHP_AUTH_PW\'] is @password.', array('@password' => $_SERVER['PHP_AUTH_PW']));
-  return $output;
-}
-
 function system_test_set_header() {
   drupal_add_http_header($_GET['name'], $_GET['value']);
   return t('The following header was set: %name: %value', array('%name' => $_GET['name'], '%value' => $_GET['value']));
@@ -146,6 +72,8 @@ function system_test_system_info_alter(&$info, $file, $type) {
 
 /**
  * Try to acquire a named lock and report the outcome.
+ *
+ * @deprecated \Drupal\system_test\Controller\SystemTestController::lockAcquire()
  */
 function system_test_lock_acquire() {
   if (lock()->acquire('system_test_lock_acquire')) {
@@ -159,6 +87,8 @@ function system_test_lock_acquire() {
 
 /**
  * Try to acquire a specific lock, and then exit.
+ *
+ * @deprecated \Drupal\system_test\Controller\SystemTestController::lockExit()
  */
 function system_test_lock_exit() {
   if (lock()->acquire('system_test_lock_exit', 900)) {
@@ -175,7 +105,7 @@ function system_test_lock_exit() {
  * Implements hook_page_build().
  */
 function system_test_page_build(&$page) {
-  $menu_item = menu_get_item();
+  $menu_item['path'] = \Drupal::request()->attributes->get('_system_path');
   $main_content_display = &drupal_static('system_main_content_added', FALSE);
 
   if ($menu_item['path'] == 'system-test/main-content-handling') {
@@ -197,14 +127,9 @@ function system_test_page_build(&$page) {
 }
 
 /**
- * Menu callback to test main content fallback().
- */
-function system_test_main_content_fallback() {
-  return t('Content to test main content fallback');
-}
-
-/**
  * A simple page callback which adds a register shutdown function.
+ *
+ * @deprecated \Drupal\system_test\Controller\SystemTestController::shutdownFunctions()
  */
 function system_test_page_shutdown_functions($arg1, $arg2) {
   drupal_register_shutdown_function('_system_test_first_shutdown_function', $arg1, $arg2);
@@ -252,6 +177,8 @@ function system_test_filetransfer_info() {
  * Page callback to initialize authorize.php during testing.
  *
  * @see system_authorized_init().
+ *
+ * @deprecated \Drupal\system_test\Controller\SystemTestController::authorizeInit()
  */
 function system_test_authorize_init_page($page_title) {
   $authorize_url = $GLOBALS['base_url'] . '/core/authorize.php';

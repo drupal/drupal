@@ -111,7 +111,7 @@ class TermFieldTest extends TaxonomyTestBase {
       $this->field_name => array($term->id()),
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)));
 

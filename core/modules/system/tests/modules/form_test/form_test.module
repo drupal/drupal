@@ -32,11 +32,6 @@ function form_test_menu() {
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
-  $items['form-test/system-config-form'] = array(
-    'title' => 'Form object builder test',
-    'page callback' => 'NOT_USED',
-    'type' => MENU_CALLBACK,
-  );
   $items['form-test/validate-required'] = array(
     'title' => 'Form #required validation',
     'page callback' => 'drupal_get_form',
@@ -113,14 +108,6 @@ function form_test_menu() {
     'title' => 'Form storage test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_storage_form'),
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-
-  $items['form_test/wrapper-callback'] = array(
-    'title' => 'Form wrapper callback test',
-    'page callback' => 'form_test_wrapper_callback',
-    'page arguments' => array('form_test_wrapper_callback_form'),
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -273,13 +260,6 @@ function form_test_menu() {
     'title' => 'Clicked button test',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('form_test_clicked_button'),
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-
-  $items['form-test/double-form'] = array(
-    'title' => 'Double form test',
-    'page callback' => 'form_test_double_form',
     'access callback' => TRUE,
     'type' => MENU_CALLBACK,
   );
@@ -1059,6 +1039,8 @@ function form_label_test_form() {
 
 /**
  * Menu callback; Invokes a form builder function with a wrapper callback.
+ *
+ * @deprecated \Drupal\form_test\Controller\FormTestController::wrapperCallback()
  */
 function form_test_wrapper_callback($form_id) {
   $form_state = array(
@@ -2338,6 +2320,8 @@ function form_test_required_attribute($form, &$form_state) {
 
 /**
  * Menu callback returns two instances of the same form.
+ *
+ * @deprecated \Drupal\form_test\Controller\FormTestController::doubleForm()
  */
 function form_test_double_form() {
   return array(

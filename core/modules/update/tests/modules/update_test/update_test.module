@@ -18,22 +18,6 @@ function update_test_system_theme_info() {
 }
 
 /**
- * Implements hook_menu().
- */
-function update_test_menu() {
-  $items = array();
-
-  $items['update-test'] = array(
-    'title' => t('Update test'),
-    'page callback' => 'update_test_mock_page',
-    'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_system_info_alter().
  *
  * Checks the 'update_test.settings:system_info' configuration and sees if we
@@ -101,6 +85,8 @@ function update_test_update_status_alter(&$projects) {
  *   content otherwise.
  *
  * @see update_test_menu()
+ *
+ * @deprecated \Drupal\update_test\Controller\UpdateTestController::updateTest()
  */
 function update_test_mock_page($project_name) {
   $xml_map = \Drupal::config('update_test.settings')->get('xml_map');

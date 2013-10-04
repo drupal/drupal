@@ -67,3 +67,20 @@ form_test.autocomplete_2:
     controller: '\Drupal\form_test\AutocompleteController::autocomplete1'
   requirements:
     _permission: 'access autocomplete test'
+
+form_test.wrapper:
+  path: '/form_test/wrapper-callback'
+  defaults:
+    _title: 'Form wrapper callback test'
+    _content: '\Drupal\form_test\Controller\FormTestController::wrapperCallback'
+    form_id: 'form_test_wrapper_callback_form'
+  requirements:
+    _access: 'TRUE'
+
+form_test.double_form:
+  path: '/form-test/double-form'
+  defaults:
+    _title: 'Double form test'
+    _content: '\Drupal\form_test\Controller\FormTestController::doubleForm'
+  requirements:
+    _access: 'TRUE'

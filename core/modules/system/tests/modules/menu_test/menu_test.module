@@ -14,15 +14,8 @@ function menu_test_menu() {
   // The name of the menu changes during the course of the test. Using a $_GET.
   $items['menu_name_test'] = array(
     'title' => 'Test menu_name router item',
-    'page callback' => 'menu_test_callback',
+    'route_name' => 'menu_test.menu_name_test',
     'menu_name' => menu_test_menu_name(),
-  );
-  // This item is of type MENU_CALLBACK with no parents to test title.
-  $items['menu_callback_title'] = array(
-    'title' => 'Menu Callback Title',
-    'page callback' => 'menu_test_callback',
-    'type' => MENU_CALLBACK,
-    'access arguments' => array('access content'),
   );
   // This item uses SystemController::systemAdminMenuBlockPage() to list child
   // items.
@@ -34,64 +27,56 @@ function menu_test_menu() {
   // This item tests the description key.
   $items['menu_callback_description/description-plain'] = array(
     'title' => 'Menu item with a regular description',
-    'page callback' => 'menu_test_callback',
     'description' => 'Menu item description text',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.callback_description_plain',
   );
   // This item tests using a description callback.
   $items['menu_callback_description/description-callback'] = array(
     'title' => 'Menu item with a description set with a callback',
-    'page callback' => 'menu_test_callback',
     'description callback' => 'check_plain',
     'description arguments' => array('<strong>Menu item description arguments</strong>'),
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.callback_description_callback',
   );
   // Use FALSE as 'title callback' to bypass t().
   $items['menu_no_title_callback'] = array(
     'title' => 'A title with @placeholder',
     'title callback' => FALSE,
     'title arguments' => array('@placeholder' => 'some other text'),
-    'page callback' => 'menu_test_callback',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.menu_no_title_callback',
   );
 
   // Hidden link for menu_link_maintain tests
   $items['menu_test_maintain/%'] = array(
     'title' => 'Menu maintain test',
-    'page callback' => 'test_page_test_page',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.menu_test_maintain',
    );
   // Hierarchical tests.
   $items['menu-test/hierarchy/parent'] = array(
     'title' => 'Parent menu router',
-    'page callback' => 'test_page_test_page',
+    'route_name' => 'menu_test.hierarchy_parent',
   );
   $items['menu-test/hierarchy/parent/child'] = array(
     'title' => 'Child menu router',
-    'page callback' => 'test_page_test_page',
+    'route_name' => 'menu_test.hierarchy_parent_child',
   );
   $items['menu-test/hierarchy/parent/child2/child'] = array(
     'title' => 'Unattached subchild router',
-    'page callback' => 'test_page_test_page',
+    'route_name' => 'menu_test.hierarchy_parent_child2',
   );
   // Theme callback tests.
   $items['menu-test/theme-callback/%'] = array(
     'title' => 'Page that displays different themes',
-    'page callback' => 'menu_test_theme_page_callback',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.theme_callback',
     'theme callback' => 'menu_test_theme_callback',
     'theme arguments' => array(2),
   );
   $items['menu-test/theme-callback/%/inheritance'] = array(
     'title' => 'Page that tests theme callback inheritance.',
-    'page callback' => 'menu_test_theme_page_callback',
-    'page arguments' => array(TRUE),
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.theme_callback_inheritance',
   );
   $items['menu-test/no-theme-callback'] = array(
     'title' => 'Page that displays different themes without using a theme callback.',
-    'page callback' => 'menu_test_theme_page_callback',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.no_theme_callback',
   );
   // Path containing "exotic" characters.
   $path = "menu-test/ -._~!$'\"()*@[]?&+%#,;=:" . // "Special" ASCII characters.
@@ -99,8 +84,7 @@ function menu_test_menu() {
     "éøïвβ中國書۞"; // Characters from various non-ASCII alphabets.
   $items[$path] = array(
     'title' => '"Exotic" path',
-    'page callback' => 'menu_test_callback',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.exotic_path',
   );
 
   // Hidden tests; base parents.
@@ -108,20 +92,17 @@ function menu_test_menu() {
   // change, we need to simulate our own in here.
   $items['menu-test'] = array(
     'title' => 'Menu test root',
-    'page callback' => 'test_page_test_page',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.menu_test',
   );
   $items['menu-test/hidden'] = array(
     'title' => 'Hidden test root',
-    'page callback' => 'test_page_test_page',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.hidden',
   );
 
   // Hidden tests; one dynamic argument.
   $items['menu-test/hidden/menu'] = array(
     'title' => 'Menus',
-    'page callback' => 'test_page_test_page',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.hidden_menu',
   );
   $items['menu-test/hidden/menu/list'] = array(
     'title' => 'List menus',
@@ -129,21 +110,18 @@ function menu_test_menu() {
   );
   $items['menu-test/hidden/menu/add'] = array(
     'title' => 'Add menu',
-    'page callback' => 'test_page_test_page',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.hidden_menu_add',
     'type' => MENU_LOCAL_ACTION,
   );
   $items['menu-test/hidden/menu/settings'] = array(
     'title' => 'Settings',
-    'page callback' => 'test_page_test_page',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.hidden_menu_settings',
     'type' => MENU_LOCAL_TASK,
     'weight' => 5,
   );
   $items['menu-test/hidden/menu/manage/%menu'] = array(
     'title' => 'Customize menu',
-    'page callback' => 'test_page_test_page',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.hidden_manage',
   );
   $items['menu-test/hidden/menu/manage/%menu/list'] = array(
     'title' => 'List links',
@@ -152,28 +130,24 @@ function menu_test_menu() {
   );
   $items['menu-test/hidden/menu/manage/%menu/add'] = array(
     'title' => 'Add link',
-    'page callback' => 'test_page_test_page',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.hidden_manage_add',
     'type' => MENU_LOCAL_ACTION,
   );
   $items['menu-test/hidden/menu/manage/%menu/edit'] = array(
     'title' => 'Edit menu',
-    'page callback' => 'test_page_test_page',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.hidden_manage_edit',
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_PAGE | MENU_CONTEXT_INLINE,
   );
   $items['menu-test/hidden/menu/manage/%menu/delete'] = array(
     'title' => 'Delete menu',
-    'page callback' => 'test_page_test_page',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.hidden_manage_delete',
   );
 
   // Hidden tests; two dynamic arguments.
   $items['menu-test/hidden/block'] = array(
     'title' => 'Blocks',
-    'page callback' => 'test_page_test_page',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.hidden_block',
   );
   $items['menu-test/hidden/block/list'] = array(
     'title' => 'List',
@@ -181,14 +155,12 @@ function menu_test_menu() {
   );
   $items['menu-test/hidden/block/add'] = array(
     'title' => 'Add block',
-    'page callback' => 'test_page_test_page',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.hidden_block_add',
     'type' => MENU_LOCAL_ACTION,
   );
   $items['menu-test/hidden/block/manage/%/%'] = array(
     'title' => 'Configure block',
-    'page callback' => 'test_page_test_page',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.hidden_block_configure',
   );
   $items['menu-test/hidden/block/manage/%/%/configure'] = array(
     'title' => 'Configure block',
@@ -197,181 +169,111 @@ function menu_test_menu() {
   );
   $items['menu-test/hidden/block/manage/%/%/delete'] = array(
     'title' => 'Delete block',
-    'page callback' => 'test_page_test_page',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.hidden_block_delete',
     'type' => MENU_LOCAL_TASK,
     'context' => MENU_CONTEXT_NONE,
   );
 
   // Breadcrumbs tests.
   // @see \Drupal\system\Tests\Menu\BreadcrumbTest
-  $base = array(
-    'page callback' => 'menu_test_callback',
-    'access callback' => TRUE,
-  );
   // Local tasks: Second level below default local task.
   $items['menu-test/breadcrumb/tasks'] = array(
     'title' => 'Breadcrumbs test: Local tasks',
-  ) + $base;
+    'route_name' => 'menu_test.breadcrumbs',
+  );
   $items['menu-test/breadcrumb/tasks/first'] = array(
     'title' => 'First',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-  ) + $base;
+    'route_name' => 'menu_test.breadcrumbs_first',
+  );
   $items['menu-test/breadcrumb/tasks/second'] = array(
     'title' => 'Second',
     'type' => MENU_LOCAL_TASK,
-  ) + $base;
+    'route_name' => 'menu_test.breadcrumbs_second',
+  );
   $items['menu-test/breadcrumb/tasks/first/first'] = array(
     'title' => 'First first',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-  ) + $base;
+    'route_name' => 'menu_test.breadcrumbs_first_first',
+  );
   $items['menu-test/breadcrumb/tasks/first/second'] = array(
     'title' => 'First second',
     'type' => MENU_LOCAL_TASK,
-  ) + $base;
+    'route_name' => 'menu_test.breadcrumbs_first_second',
+  );
   $items['menu-test/breadcrumb/tasks/second/first'] = array(
     'title' => 'Second first',
     'type' => MENU_DEFAULT_LOCAL_TASK,
-  ) + $base;
+    'route_name' => 'menu_test.breadcrumbs_second_first',
+  );
   $items['menu-test/breadcrumb/tasks/second/second'] = array(
     'title' => 'Second second',
     'type' => MENU_LOCAL_TASK,
-  ) + $base;
+    'route_name' => 'menu_test.breadcrumbs_second_second',
+  );
 
   // Menu local tasks tests.
   // @see \Drupal\system\Tests\Menu\TrailTest
   $items['menu-test/tasks'] = array(
     'title' => 'Local tasks',
-  ) + $base;
+    'route_name' => 'menu_test.tasks',
+  );
   $items['menu-test/tasks/empty'] = array(
     'title' => 'Empty',
-  ) + $base;
+    'route_name' => 'menu_test.tasks_empty',
+  );
   $items['menu-test/tasks/default'] = array(
     'title' => 'Default only',
-  ) + $base;
-  $items['menu-test/tasks/default/view'] = array(
-    'title' => 'View',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  ) + $base;
+    'route_name' => 'menu_test.tasks_default',
+  );
   $items['menu-test/tasks/tasks'] = array(
     'title' => 'With tasks',
-  ) + $base;
-  $items['menu-test/tasks/tasks/view'] = array(
-    'title' => 'View',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  ) + $base;
-  $items['menu-test/tasks/tasks/edit'] = array(
-    'title' => 'Edit',
-    'type' => MENU_LOCAL_TASK,
-  ) + $base;
-  $items['menu-test/tasks/tasks/settings'] = array(
-    'title' => 'Settings',
-    'type' => MENU_LOCAL_TASK,
-    'weight' => 100,
-  ) + $base;
+    'route_name' => 'menu_test.tasks_tasks',
+  );
 
   // Menu trail tests.
   // @see MenuTrailTestCase
   $items['menu-test/menu-trail'] = array(
     'title' => 'Menu trail - Case 1',
-    'page callback' => 'menu_test_menu_trail_callback',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.menu_trail',
   );
   $items['admin/config/development/menu-trail'] = array(
     'title' => 'Menu trail - Case 2',
     'description' => 'Tests menu_tree_set_path()',
-    'page callback' => 'menu_test_menu_trail_callback',
-    'access arguments' => array('access administration pages'),
+    'route_name' => 'menu_test.menu_trail_admin',
   );
   $items['menu-test/custom-403-page'] = array(
     'title' => 'Custom 403 page',
-    'page callback' => 'menu_test_custom_403_404_callback',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.custom_403',
   );
   $items['menu-test/custom-404-page'] = array(
     'title' => 'Custom 404 page',
-    'page callback' => 'menu_test_custom_403_404_callback',
-    'access arguments' => array('access content'),
+    'route_name' => 'menu_test.custom_404',
   );
 
   // Test the access key.
   $items['menu-title-test/case1'] = array(
-   'title' => 'Example title - Case 1',
-   'access callback' => TRUE,
-   'page callback' => 'menu_test_callback',
+    'title' => 'Example title - Case 1',
+    'route_name' => 'menu_test.title_test_case1',
   );
   $items['menu-title-test/case2'] = array(
-   'title' => 'Example @sub1 - Case @op2',
-   // If '2' is not in quotes, the argument becomes arg(2).
-   'title arguments' => array('@sub1' => 'title', '@op2' => '2'),
-   'access callback' => TRUE,
-   'page callback' => 'menu_test_callback',
+    'title' => 'Example @sub1 - Case @op2',
+    // If '2' is not in quotes, the argument becomes arg(2).
+    'title arguments' => array('@sub1' => 'title', '@op2' => '2'),
+    'route_name' => 'menu_test.title_test_case2',
   );
   $items['menu-title-test/case3'] = array(
-   'title' => 'Example title',
-   'title callback' => 'menu_test_title_callback',
-   'access callback' => TRUE,
-   'page callback' => 'menu_test_callback',
+    'title' => 'Example title',
+    'title callback' => 'menu_test_title_callback',
+    'route_name' => 'menu_test.title_test_case3',
   );
   $items['menu-title-test/case4'] = array(
-   // Title gets completely ignored. Good thing, too.
-   'title' => 'Bike sheds full of blue smurfs',
-   'title callback' => 'menu_test_title_callback',
-   // If '4' is not in quotes, the argument becomes arg(4).
-   'title arguments' => array('Example title', '4'),
-   'access callback' => TRUE,
-   'page callback' => 'menu_test_callback',
-  );
-
-  // Load arguments inheritance test.
-  $items['menu-test/arguments/%menu_test_argument/%'] = array(
-    'title' => 'Load arguments inheritance test',
-    'load arguments' => array(3),
-    'page callback' => 'menu_test_callback',
-    'access callback' => TRUE,
-  );
-  $items['menu-test/arguments/%menu_test_argument/%/default'] = array(
-    'title' => 'Default local task',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['menu-test/arguments/%menu_test_argument/%/task'] = array(
-    'title' => 'Local task',
-    'page callback' => 'menu_test_callback',
-    'access callback' => TRUE,
-    'type' => MENU_LOCAL_TASK,
-  );
-  // For this path, load arguments should be inherited for the first loader only.
-  $items['menu-test/arguments/%menu_test_argument/%menu_test_other_argument/common-loader'] = array(
-    'title' => 'Local task',
-    'page callback' => 'menu_test_callback',
-    'access callback' => TRUE,
-    'type' => MENU_LOCAL_TASK,
-  );
-  // For these paths, no load arguments should be inherited.
-  // Not on the same position.
-  $items['menu-test/arguments/%/%menu_test_argument/different-loaders-1'] = array(
-    'title' => 'An item not sharing the same loader',
-    'page callback' => 'menu_test_callback',
-    'access callback' => TRUE,
-  );
-  // Not the same loader.
-  $items['menu-test/arguments/%menu_test_other_argument/%/different-loaders-2'] = array(
-    'title' => 'An item not sharing the same loader',
-    'page callback' => 'menu_test_callback',
-    'access callback' => TRUE,
-  );
-  // Not the same loader.
-  $items['menu-test/arguments/%/%/different-loaders-3'] = array(
-    'title' => 'An item not sharing the same loader',
-    'page callback' => 'menu_test_callback',
-    'access callback' => TRUE,
-  );
-  // Explicit load arguments should not be overridden (even if empty).
-  $items['menu-test/arguments/%menu_test_argument/%/explicit-arguments'] = array(
-    'title' => 'An item defining explicit load arguments',
-    'load arguments' => array(),
-    'page callback' => 'menu_test_callback',
-    'access callback' => TRUE,
+    // Title gets completely ignored. Good thing, too.
+    'title' => 'Bike sheds full of blue smurfs',
+    'title callback' => 'menu_test_title_callback',
+    // If '4' is not in quotes, the argument becomes arg(4).
+    'title arguments' => array('Example title', '4'),
+    'route_name' => 'menu_test.title_test_case4',
   );
 
   // Parent page for controller-based local tasks.
@@ -443,11 +345,11 @@ function menu_test_local_action_dynamic_title($arg) {
  * If the menu_test.settings configuration 'tasks.add' has been set, adds
  * several local tasks to menu-test/tasks.
  */
-function menu_test_menu_local_tasks(&$data, $router_item, $root_path) {
+function menu_test_menu_local_tasks(&$data, $route_name) {
   if (!\Drupal::config('menu_test.settings')->get('tasks.add')) {
     return;
   }
-  if (strpos($router_item['tab_root'], 'menu-test/tasks/') === 0) {
+  if (in_array($route_name, array('menu_test.tasks_default', 'menu_test.tasks_empty', 'menu_test.tasks_tasks'))) {
     $data['tabs'][0]['foo'] = array(
       '#theme' => 'menu_local_task',
       '#link' => array(
@@ -473,17 +375,17 @@ function menu_test_menu_local_tasks(&$data, $router_item, $root_path) {
  * If the menu_test.settings configuration 'tasks.alter' has been set, adds
  * several local tasks to menu-test/tasks.
  */
-function menu_test_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+function menu_test_menu_local_tasks_alter(&$data, $route_name) {
   if (!\Drupal::config('menu_test.settings')->get('tasks.alter')) {
     return;
   }
-  if (strpos($router_item['tab_root'], 'menu-test/tasks/') === 0) {
+  if (in_array($route_name, array('menu_test.tasks_default', 'menu_test.tasks_empty', 'menu_test.tasks_tasks'))) {
     // Rename the default local task from 'View' to 'Show'.
     // $data['tabs'] is expected to be keyed by link hrefs.
     // The default local task always links to its parent path, which means that
     // if the tab root path appears as key in $data['tabs'], then that key is
     // the default local task.
-    $key = $router_item['tab_root'];
+    $key = $route_name . '_tab';
     if (isset($data['tabs'][0][$key])) {
       $data['tabs'][0][$key]['#link']['title'] = 'Show it';
     }
@@ -530,6 +432,8 @@ function menu_test_other_argument_load($arg1) {
  *   A string that can be used for comparison.
  *
  * @see menu_test_menu().
+ *
+ * @deprecated Use \Drupal\menu_test\Controller\MenuTestController::menuTestCallback()
  */
 function menu_test_callback() {
   return 'This is menu_test_callback().';
@@ -545,6 +449,8 @@ function menu_test_callback() {
  *   A string that can be used for comparison.
  *
  * @see menu_test_menu().
+ *
+ * @deprecated Use \Drupal\menu_test\Controller\MenuTestController::menuTrail()
  */
 function menu_test_menu_trail_callback() {
   $menu_path = \Drupal::state()->get('menu_test.menu_tree_set_path') ?: array();
@@ -561,6 +467,8 @@ function menu_test_menu_trail_callback() {
  *   A text string that can be used for comparison.
  *
  * @see menu_test_menu().
+ *
+ * @deprecated Use \Drupal\menu_test\Controller\MenuTestController::custom403404()
  */
 function menu_test_custom_403_404_callback() {
   // When requested by one of the TrailTest tests, record the final
@@ -585,6 +493,8 @@ function menu_test_custom_403_404_callback() {
  *   for the current page request.
  *
  * @see menu_test_menu().
+ *
+ * @deprecated Use \Drupal\menu_test\Controller\MenuTestController::themePage()
  */
 function menu_test_theme_page_callback($inherited = FALSE) {
   global $theme_key;

@@ -77,14 +77,14 @@ class EntityFormTest extends WebTestBase {
     $this->assertTrue($entity, format_string('%entity_type: Entity found in the database.', array('%entity_type' => $entity_type)));
 
     $edit['name'] = $name2;
-    $this->drupalPostForm($entity_type . '/manage/' . $entity->id() . '/edit', $edit, t('Save'));
+    $this->drupalPostForm($entity_type . '/manage/' . $entity->id(), $edit, t('Save'));
     $entity = $this->loadEntityByName($entity_type, $name1);
     $this->assertFalse($entity, format_string('%entity_type: The entity has been modified.', array('%entity_type' => $entity_type)));
     $entity = $this->loadEntityByName($entity_type, $name2);
     $this->assertTrue($entity, format_string('%entity_type: Modified entity found in the database.', array('%entity_type' => $entity_type)));
     $this->assertNotEqual($entity->name->value, $name1, format_string('%entity_type: The entity name has been modified.', array('%entity_type' => $entity_type)));
 
-    $this->drupalPostForm($entity_type . '/manage/' . $entity->id() . '/edit', array(), t('Delete'));
+    $this->drupalPostForm($entity_type . '/manage/' . $entity->id(), array(), t('Delete'));
     $entity = $this->loadEntityByName($entity_type, $name2);
     $this->assertFalse($entity, format_string('%entity_type: Entity not found in the database.', array('%entity_type' => $entity_type)));
   }

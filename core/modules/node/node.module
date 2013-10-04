@@ -1062,9 +1062,10 @@ function node_menu() {
 /**
  * Implements hook_menu_local_tasks().
  */
-function node_menu_local_tasks(&$data, $router_item, $root_path) {
+function node_menu_local_tasks(&$data, $route_name) {
   // Add action link to 'node/add' on 'admin/content' page.
-  if ($root_path == 'admin/content') {
+  // @todo Switch to inspecting route name in https://drupal.org/node/2021161.
+  if (current_path() == 'admin/content') {
     $item = menu_get_item('node/add');
     if ($item['access']) {
       $data['actions'][] = array(

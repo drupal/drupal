@@ -132,7 +132,7 @@ class TextFieldTest extends WebTestBase {
       "{$this->field_name}[0][value]" => $value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
 
@@ -205,7 +205,7 @@ class TextFieldTest extends WebTestBase {
       "{$this->field_name}[0][value]" => $value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
-    preg_match('|entity_test/manage/(\d+)/edit|', $this->url, $match);
+    preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
     $id = $match[1];
     $this->assertText(t('entity_test @id has been created.', array('@id' => $id)), 'Entity was created');
 
@@ -237,7 +237,7 @@ class TextFieldTest extends WebTestBase {
 
     // Display edition form.
     // We should now have a 'text format' selector.
-    $this->drupalGet('entity_test/manage/' . $id . '/edit');
+    $this->drupalGet('entity_test/manage/' . $id);
     $this->assertFieldByName("{$this->field_name}[0][value]", NULL, 'Widget is displayed');
     $this->assertFieldByName("{$this->field_name}[0][format]", NULL, 'Format selector is displayed');
 

@@ -148,11 +148,11 @@ function forum_menu() {
 /**
  * Implements hook_menu_local_tasks().
  */
-function forum_menu_local_tasks(&$data, $router_item, $root_path) {
+function forum_menu_local_tasks(&$data, $route_name) {
   global $user;
 
   // Add action link to 'node/add/forum' on 'forum' sub-pages.
-  if ($root_path == 'forum' || $root_path == 'forum/%') {
+  if (in_array($route_name, array('forum.index', 'forum.page'))) {
     $request = \Drupal::request();
     $forum_term = $request->attributes->get('taxonomy_term');
     $vid = \Drupal::config('forum.settings')->get('vocabulary');

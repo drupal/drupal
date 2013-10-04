@@ -1,3 +1,11 @@
+test_page_test.test_page:
+  path: '/test-page'
+  defaults:
+    _title: 'Test front page'
+    _content: '\Drupal\test_page_test\Controller\TestPageTestController::testPage'
+  requirements:
+    _access: 'TRUE'
+
 test_page_test.render_title:
   path: "/test-render-title"
   defaults:

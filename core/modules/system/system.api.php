@@ -858,12 +858,10 @@ function hook_menu_alter(&$items) {
  *     associative array as described above.
  *   - tabs: A list of (up to 2) tab levels that contain a list of of tabs keyed
  *     by their href, each one being an associative array as described above.
- * @param array $router_item
- *   The menu system router item of the page.
- * @param string $root_path
- *   The path to the root item for this set of tabs.
+ * @param string $route_name
+ *   The route name of the page.
  */
-function hook_menu_local_tasks(&$data, $router_item, $root_path) {
+function hook_menu_local_tasks(&$data, $route_name) {
   // Add an action linking to node/add to all pages.
   $data['actions']['node/add'] = array(
     '#theme' => 'menu_local_action',
@@ -890,8 +888,6 @@ function hook_menu_local_tasks(&$data, $router_item, $root_path) {
         ),
       ),
     ),
-    // Define whether this link is active. This can usually be omitted.
-    '#active' => ($router_item['path'] == $root_path),
   );
 }
 
@@ -904,14 +900,12 @@ function hook_menu_local_tasks(&$data, $router_item, $root_path) {
  * @param array $data
  *   An associative array containing tabs and actions. See
  *   hook_menu_local_tasks() for details.
- * @param array $router_item
- *   The menu system router item of the page.
- * @param string $root_path
- *   The path to the root item for this set of tabs.
+ * @param string $route_name
+ *   The route name of the page.
  *
  * @see hook_menu_local_tasks()
  */
-function hook_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+function hook_menu_local_tasks_alter(&$data, $route_name) {
 }
 
 /**

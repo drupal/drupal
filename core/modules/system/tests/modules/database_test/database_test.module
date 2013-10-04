@@ -49,26 +49,6 @@ function database_test_query_database_test_alter_remove_range_alter(AlterableInt
  * Implements hook_menu().
  */
 function database_test_menu() {
-  $items['database_test/db_query_temporary'] = array(
-    'access callback' => TRUE,
-    'page callback' => 'database_test_db_query_temporary',
-  );
-  $items['database_test/pager_query_even'] = array(
-    'access callback' => TRUE,
-    'page callback' => 'database_test_even_pager_query',
-  );
-  $items['database_test/pager_query_odd'] = array(
-    'access callback' => TRUE,
-    'page callback' => 'database_test_odd_pager_query',
-  );
-  $items['database_test/tablesort'] = array(
-    'access callback' => TRUE,
-    'page callback' => 'database_test_tablesort',
-  );
-  $items['database_test/tablesort_first'] = array(
-    'access callback' => TRUE,
-    'page callback' => 'database_test_tablesort_first',
-  );
   $items['database_test/tablesort_default_sort'] = array(
     'access callback' => TRUE,
     'page callback' => 'drupal_get_form',
@@ -83,6 +63,8 @@ function database_test_menu() {
  * We need to test that the table created is temporary, so we run it here, in a
  * separate menu callback request; After this request is done, the temporary
  * table should automatically dropped.
+ *
+ * @deprecated \Drupal\database_test\Controller\DatabaseTestController::dbQueryTemporary()
  */
 function database_test_db_query_temporary() {
   $table_name = db_query_temporary('SELECT age FROM {test}', array());
@@ -97,6 +79,8 @@ function database_test_db_query_temporary() {
  *
  * This function does care about the page GET parameter, as set by the
  * simpletest HTTP call.
+ *
+ * @deprecated \Drupal\database_test\Controller\DatabaseTestController::pagerQueryEven()
  */
 function database_test_even_pager_query($limit) {
 
@@ -122,6 +106,8 @@ function database_test_even_pager_query($limit) {
  *
  * This function does care about the page GET parameter, as set by the
  * simpletest HTTP call.
+ *
+ * @deprecated \Drupal\database_test\Controller\DatabaseTestController::pagerQueryOdd()
  */
 function database_test_odd_pager_query($limit) {
 
@@ -147,6 +133,8 @@ function database_test_odd_pager_query($limit) {
  *
  * This function does care about the page GET parameter, as set by the
  * simpletest HTTP call.
+ *
+ * @deprecated \Drupal\database_test\Controller\DatabaseTestController::testTablesort()
  */
 function database_test_tablesort() {
   $header = array(
@@ -177,6 +165,8 @@ function database_test_tablesort() {
  *
  * This function does care about the page GET parameter, as set by the
  * simpletest HTTP call.
+ *
+ * @deprecated \Drupal\database_test\Controller\DatabaseTestController::testTablesortFirst()
  */
 function database_test_tablesort_first() {
   $header = array(

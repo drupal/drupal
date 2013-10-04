@@ -84,7 +84,9 @@ class HtmlPageController {
     }
     if (!is_array($page_content)) {
       $page_content = array(
-        '#markup' => $page_content,
+        'main' => array(
+          '#markup' => $page_content,
+        ),
       );
     }
     if (!isset($page_content['#title'])) {
