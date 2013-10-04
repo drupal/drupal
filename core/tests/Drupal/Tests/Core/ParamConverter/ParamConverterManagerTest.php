@@ -9,7 +9,10 @@ namespace Drupal\Tests\Core\ParamConverter;
 
 use Drupal\Core\ParamConverter\ParamConverterManager;
 use Drupal\Tests\UnitTestCase;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Route;
 
 /**
  * Tests the typed data resolver manager.
@@ -140,6 +143,51 @@ class ParamConverterManagerTest extends UnitTestCase {
       array('zebra', 10, 'ZebraConverterClass'),
       array('eagle', 5, 'EagleConverterClass'),
     );
+  }
+
+  /**
+   * Tests the enhance method.
+   *
+   * @see \Drupal\Core\ParamConverter\ParamConverterManager::enhance().
+   */
+  public function testEnhance() {
+    // Create a mock route using a mock parameter converter.
+    $converter = $this->getMock('Drupal\Core\ParamConverter\ParamConverterInterface');
+    $this->manager->addConverter('test_convert');
+
+    $this->container->set('test_convert', $converter);
+
+    $route = new Route('/test/{id}');
+    $parameters = array();
+    $parameters['id'] = array(
+      'converter' => 'test_convert'
+    );
+    $route->setOption('parameters', $parameters);
+
+    $defaults = array();
+    $defaults[RouteObjectInterface::ROUTE_OBJECT] = $route;
+    $defaults['id'] = 1;
+    $defaults['_entity'] = &$defaults['id'];
+
+    $request = new Request();
+
+    $entity = $this->getMockBuilder('\Drupal\user\Entity\User')
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $converter->expects($this->once())
+      ->method('convert')
+      ->with($this->equalTo(1))
+      ->will($this->returnValue($entity));
+
+    $defaults = $this->manager->enhance($defaults, $request);
+
+    // The value of 1 should be upcast to the User object for UID 1.
+    $this->assertSame($entity, $defaults['id']);
+    // The parameter for the user ID should be stored in the raw variables.
+    $this->assertTrue($defaults['_raw_variables']->has('id'));
+    // The raw non-upcasted value for the user should be the UID.
+    $this->assertEquals(1, $defaults['_raw_variables']->get('id'));
   }
 
 }

@@ -156,7 +156,14 @@ class ParamConverterManager extends ContainerAware implements RouteEnhancerInter
     // variables in the route path pattern.
     $route = $defaults[RouteObjectInterface::ROUTE_OBJECT];
     $variables = array_flip($route->compile()->getVariables());
-    $defaults['_raw_variables'] = new ParameterBag(array_intersect_key($defaults, $variables));
+    // Foreach  will copy the values from the array it iterates. Even if they
+    // are references, use it to break them. This avoids any scenarios where raw
+    // variables also get replaced with converted values.
+    $raw_variables = array();
+    foreach (array_intersect_key($defaults, $variables) as $key => $value) {
+      $raw_variables[$key] = $value;
+    }
+    $defaults['_raw_variables'] = new ParameterBag($raw_variables);
 
     // Skip this enhancer if there are no parameter definitions.
     if (!$parameters = $route->getOption('parameters')) {
