@@ -76,7 +76,6 @@ class IntegrationTest extends ViewUnitTestBase {
       // Add a image to ensure that the sanitizing can be tested below.
       $values['author'] = $this->randomName() . '<img src="http://example.com/example.png" \>"';
       $values['link'] = 'http://drupal.org/node/' . mt_rand(1000, 10000);
-      $values['guid'] = $this->randomString();
 
       $aggregator_item = $this->itemStorageController->create($values);
       $aggregator_item->save();

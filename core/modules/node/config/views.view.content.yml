@@ -422,7 +422,7 @@ display:
           provider: views
         langcode:
           id: langcode
-          table: node_revision
+          table: node
           field: langcode
           operator: in
           value: {  }
