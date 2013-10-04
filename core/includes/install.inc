@@ -415,7 +415,7 @@ function _drupal_rewrite_settings_dump($variable, $variable_name) {
  *
  * Dump the value of a value property and adds the comment if it exists.
  *
- * @param stdClass $variable
+ * @param object $variable
  *   A stdClass object with at least a value property.
  * @param string $prefix
  *   A string to prepend to the variable's value.

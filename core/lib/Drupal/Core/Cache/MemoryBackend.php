@@ -70,7 +70,7 @@ class MemoryBackend implements CacheBackendInterface {
    * Checks that items are either permanent or did not expire, and returns data
    * as appropriate.
    *
-   * @param stdClass $cache
+   * @param object $cache
    *   An item loaded from cache_get() or cache_get_multiple().
    *
    * @return mixed

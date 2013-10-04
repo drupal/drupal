@@ -295,7 +295,7 @@ function locale_translation_source_build($project, $langcode, $filename = NULL) 
 /**
  * Build path to translation source, out of a server path replacement pattern.
  *
- * @param stdClass $project
+ * @param object $project
  *   Project object containing data to be inserted in the template.
  * @param string $template
  *   String containing placeholders. Available placeholders:

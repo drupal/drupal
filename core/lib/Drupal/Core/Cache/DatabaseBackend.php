@@ -94,7 +94,7 @@ class DatabaseBackend implements CacheBackendInterface {
    * Checks that items are either permanent or did not expire, and unserializes
    * data as appropriate.
    *
-   * @param stdClass $cache
+   * @param object $cache
    *   An item loaded from cache_get() or cache_get_multiple().
    * @param bool $allow_invalid
    *   If FALSE, the method returns FALSE if the cache item is not valid.

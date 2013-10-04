@@ -815,7 +815,7 @@ function theme_field($variables) {
 /**
  * Assembles a partial entity structure with initial IDs.
  *
- * @param stdClass $ids
+ * @param object $ids
  *   An object with the properties entity_type (required), entity_id (required),
  *   revision_id (optional) and bundle (optional).
  *
