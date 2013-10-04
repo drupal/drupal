@@ -135,8 +135,6 @@ class FilterFormatListController extends DraggableListController implements Enti
       unset($operations['disable']);
     }
 
-    // Formats can never be deleted.
-    unset($operations['delete']);
     return $operations;
   }
 

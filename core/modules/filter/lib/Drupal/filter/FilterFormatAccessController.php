@@ -22,8 +22,13 @@ class FilterFormatAccessController extends EntityAccessController {
   protected function checkAccess(EntityInterface $entity, $operation, $langcode, AccountInterface $account) {
     // Handle special cases up front. All users have access to the fallback
     // format.
-    if ($entity->isFallbackFormat()) {
+    if ($operation == 'view' && $entity->isFallbackFormat()) {
       return TRUE;
+    }
+    // We do not allow filter formats to be deleted through the UI, because that
+    // would render any content that uses them unusable.
+    if ($operation == 'delete') {
+      return FALSE;
     }
 
     if ($operation != 'view' && $account->hasPermission('administer filters')) {
