@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\NestedArray;
+use Drupal\field\FieldInterface;
 
 /**
  * Implements hook_field_info_alter().
@@ -52,16 +53,19 @@ function file_field_widget_value($element, $input = FALSE, $form_state) {
  */
 function file_field_widget_multiple_count_validate($element, &$form_state, $form) {
   $parents = $element['#parents'];
+  $entity_type = $element['#entity_type'];
+  $field_name = $element['#field_name'];
   $values = NestedArray::getValue($form_state['values'], $parents);
 
   array_pop($parents);
   $current = count(element_children(NestedArray::getValue($form, $parents))) - 1;
 
-  $field = field_info_field($element['#entity_type'], $element['#field_name']);
+  $field = field_info_field($entity_type, $field_name);
+  $cardinality = $field->getFieldCardinality();
   $uploaded = count($values['fids']);
   $count = $uploaded + $current;
-  if ($count > $field['cardinality']) {
-    $keep = $uploaded - $count + $field['cardinality'];
+  if ($count > $cardinality) {
+    $keep = $uploaded - $count + $cardinality;
     $removed_files = array_slice($values['fids'], $keep);
     $removed_names = array();
     foreach ($removed_files as $fid) {
@@ -72,8 +76,8 @@ function file_field_widget_multiple_count_validate($element, &$form_state, $form
       t(
         'Field %field can only hold @max values but there were @count uploaded. The following files have been omitted as a result: %list.',
         array(
-          '%field' => $field['field_name'],
-          '@max' => $field['cardinality'],
+          '%field' => $field_name,
+          '@max' => $cardinality,
           '@count' => $keep,
           '%list' => implode(', ', $removed_names),
         )
@@ -485,15 +489,16 @@ function theme_file_upload_help($variables) {
 /**
  * Determine whether a field references files stored in {file_managed}.
  *
- * @param array $field
- *   A field array.
+ * @param Drupal\field\FieldInterface $field
+ *   A field definition.
  *
  * @return
  *   The field column if the field references {file_managed}.fid, typically
  *   fid, FALSE if it doesn't.
  */
-function file_field_find_file_reference_column($field) {
-  foreach ($field['foreign keys'] as $data) {
+function file_field_find_file_reference_column(FieldInterface $field) {
+  $schema = $field->getSchema();
+  foreach ($schema['foreign keys'] as $data) {
     if ($data['table'] == 'file_managed') {
       foreach ($data['columns'] as $field_column => $column) {
         if ($column == 'fid') {

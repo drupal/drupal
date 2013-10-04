@@ -76,7 +76,7 @@ function field_purge_batch($batch_size) {
   $factory = \Drupal::service('entity.query');
   $info = entity_get_info();
   foreach ($instances as $instance) {
-    $entity_type = $instance['entity_type'];
+    $entity_type = $instance->entity_type;
 
     // We cannot purge anything if the entity type is unknown (e.g. the
     // providing module was uninstalled).
@@ -93,13 +93,11 @@ function field_purge_batch($batch_size) {
 
     $ids = (object) array(
       'entity_type' => $entity_type,
-      'bundle' => $instance['bundle'],
+      'bundle' => $instance->bundle,
     );
-    // field_purge_data() will need the field array.
-    $field = $instance->getField();
     // Retrieve some entities.
     $query = $factory->get($entity_type)
-      ->condition('id:' . $field['uuid'] . '.deleted', 1)
+      ->condition('id:' . $instance->getField()->uuid() . '.deleted', 1)
       ->range(0, $batch_size);
     // If there's no bundle key, all results will have the same bundle.
     if (!empty($info[$entity_type]['entity_keys']['bundle'])) {
@@ -132,7 +130,7 @@ function field_purge_batch($batch_size) {
       continue;
     }
 
-    $instances = field_read_instances(array('field_id' => $field['uuid']), array('include_deleted' => 1));
+    $instances = field_read_instances(array('field_id' => $field->uuid()), array('include_deleted' => 1));
     if (empty($instances)) {
       field_purge_field($field);
     }
@@ -151,7 +149,7 @@ function field_purge_batch($batch_size) {
 function field_purge_instance($instance) {
   $state = \Drupal::state();
   $deleted_instances = $state->get('field.instance.deleted');
-  unset($deleted_instances[$instance['uuid']]);
+  unset($deleted_instances[$instance->uuid()]);
   $state->set('field.instance.deleted', $deleted_instances);
 
   // Clear the cache.
@@ -171,14 +169,14 @@ function field_purge_instance($instance) {
  *   The field record to purge.
  */
 function field_purge_field($field) {
-  $instances = field_read_instances(array('field_id' => $field['uuid']), array('include_deleted' => 1));
+  $instances = field_read_instances(array('field_id' => $field->uuid()), array('include_deleted' => 1));
   if (count($instances) > 0) {
-    throw new FieldException(t('Attempt to purge a field @field_name that still has instances.', array('@field_name' => $field['field_name'])));
+    throw new FieldException(t('Attempt to purge a field @field_name that still has instances.', array('@field_name' => $field->getFieldName())));
   }
 
   $state = \Drupal::state();
   $deleted_fields = $state->get('field.field.deleted');
-  unset($deleted_fields[$field['uuid']]);
+  unset($deleted_fields[$field->uuid()]);
   $state->set('field.field.deleted', $deleted_fields);
 
   // Notify the storage layer.

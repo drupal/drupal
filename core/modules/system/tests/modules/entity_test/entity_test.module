@@ -517,7 +517,7 @@ function entity_test_entity_test_mul_translation_delete(EntityInterface $transla
  *   The field language code to fill-in with the default value.
  */
 function entity_test_field_default_value(EntityInterface $entity, Field $field, FieldInstance $instance, $langcode) {
-  return array(array('value' => $field['field_name'] . '_' . $langcode));
+  return array(array('value' => $field->getFieldName() . '_' . $langcode));
 }
 
 /**

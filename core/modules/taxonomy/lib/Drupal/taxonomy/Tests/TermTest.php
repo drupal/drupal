@@ -26,8 +26,9 @@ class TermTest extends TaxonomyTestBase {
     $this->drupalLogin($this->admin_user);
     $this->vocabulary = $this->createVocabulary();
 
+    $field_name = 'taxonomy_' . $this->vocabulary->id();
     $field = array(
-      'name' => 'taxonomy_' . $this->vocabulary->id(),
+      'name' => $field_name,
       'entity_type' => 'node',
       'type' => 'taxonomy_term_reference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
@@ -43,18 +44,18 @@ class TermTest extends TaxonomyTestBase {
     entity_create('field_entity', $field)->save();
 
     $this->instance = entity_create('field_instance', array(
-      'field_name' => 'taxonomy_' . $this->vocabulary->id(),
+      'field_name' => $field_name,
       'bundle' => 'article',
       'entity_type' => 'node',
     ));
     $this->instance->save();
     entity_get_form_display('node', 'article', 'default')
-      ->setComponent('taxonomy_' . $this->vocabulary->id(), array(
+      ->setComponent($field_name, array(
         'type' => 'options_select',
       ))
       ->save();
     entity_get_display('node', 'article', 'default')
-      ->setComponent($this->instance['field_name'], array(
+      ->setComponent($field_name, array(
         'type' => 'taxonomy_term_reference_link',
       ))
       ->save();
@@ -111,7 +112,7 @@ class TermTest extends TaxonomyTestBase {
     $edit = array();
     $edit['title'] = $this->randomName();
     $edit['body[0][value]'] = $this->randomName();
-    $edit[$this->instance['field_name'] . '[]'] = $term1->id();
+    $edit[$this->instance->getFieldName() . '[]'] = $term1->id();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
 
     // Check that the term is displayed when the node is viewed.
@@ -125,7 +126,7 @@ class TermTest extends TaxonomyTestBase {
     $this->assertText($term1->label(), 'Term is displayed after saving the node with no changes.');
 
     // Edit the node with a different term.
-    $edit[$this->instance['field_name'] . '[]'] = $term2->id();
+    $edit[$this->instance->getFieldName() . '[]'] = $term2->id();
     $this->drupalPostForm('node/' . $node->id() . '/edit', $edit, t('Save'));
 
     $this->drupalGet('node/' . $node->id());
@@ -144,8 +145,8 @@ class TermTest extends TaxonomyTestBase {
   function testNodeTermCreationAndDeletion() {
     // Enable tags in the vocabulary.
     $instance = $this->instance;
-    entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')
-      ->setComponent($instance['field_name'], array(
+    entity_get_form_display($instance->entity_type, $instance->bundle, 'default')
+      ->setComponent($instance->getFieldName(), array(
         'type' => 'taxonomy_autocomplete',
         'settings' => array(
           'placeholder' => 'Start typing here.',
@@ -164,7 +165,7 @@ class TermTest extends TaxonomyTestBase {
     $edit['body[0][value]'] = $this->randomName();
     // Insert the terms in a comma separated list. Vocabulary 1 is a
     // free-tagging field created by the default profile.
-    $edit[$instance['field_name']] = drupal_implode_tags($terms);
+    $edit[$instance->getFieldName()] = drupal_implode_tags($terms);
 
     // Verify the placeholder is there.
     $this->drupalGet('node/add/article');
@@ -508,8 +509,8 @@ class TermTest extends TaxonomyTestBase {
   function testReSavingTags() {
     // Enable tags in the vocabulary.
     $instance = $this->instance;
-    entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')
-      ->setComponent($instance['field_name'], array(
+    entity_get_form_display($instance->entity_type, $instance->bundle, 'default')
+      ->setComponent($instance->getFieldName(), array(
         'type' => 'taxonomy_autocomplete',
       ))
       ->save();
@@ -519,7 +520,7 @@ class TermTest extends TaxonomyTestBase {
     $edit = array();
     $edit['title'] = $this->randomName(8);
     $edit['body[0][value]'] = $this->randomName(16);
-    $edit[$this->instance['field_name']] = $term->label();
+    $edit[$this->instance->getFieldName()] = $term->label();
     $this->drupalPostForm('node/add/article', $edit, t('Save'));
 
     // Check that the term is displayed when editing and saving the node with no

@@ -68,9 +68,10 @@ function options_field_info() {
  * Implements hook_field_settings_form().
  */
 function options_field_settings_form($field, $instance) {
-  $settings = $field['settings'];
+  $settings = $field->getFieldSettings();
+  $field_type = $field->getFieldType();
 
-  switch ($field['type']) {
+  switch ($field_type) {
     case 'list_integer':
     case 'list_float':
     case 'list_text':
@@ -82,12 +83,12 @@ function options_field_settings_form($field, $instance) {
         '#element_validate' => array('options_field_settings_form_validate_allowed_values'),
         '#field_has_data' => $field->hasData(),
         '#field' => $field,
-        '#field_type' => $field['type'],
+        '#field_type' => $field_type,
         '#access' => empty($settings['allowed_values_function']),
       );
 
       $description = '<p>' . t('The possible values this field can contain. Enter one value per line, in the format key|label.');
-      if ($field['type'] == 'list_integer' || $field['type'] == 'list_float') {
+      if ($field_type == 'list_integer' || $field_type == 'list_float') {
         $description .= '<br/>' . t('The key is the stored value, and must be numeric. The label will be used in displayed values and edit forms.');
         $description .= '<br/>' . t('The label is optional: if a line contains a single number, it will be used as key and label.');
         $description .= '<br/>' . t('Lists of labels are also accepted (one label per line), only if the field does not hold any values yet. Numeric keys will be automatically generated from the positions in the list.');
@@ -142,11 +143,8 @@ function options_field_settings_form($field, $instance) {
   }
 
   // Alter the description for allowed values depending on the widget type.
-  if ($instance['widget']['type'] == 'options_onoff') {
+  if ($field_type == 'list_boolean') {
     $form['allowed_values']['#description'] .= '<p>' . t("For a 'single on/off checkbox' widget, define the 'off' value first, then the 'on' value in the <strong>Allowed values</strong> section. Note that the checkbox will be labeled with the label of the 'on' value.") . '</p>';
-  }
-  elseif ($instance['widget']['type'] == 'options_buttons') {
-    $form['allowed_values']['#description'] .= '<p>' . t("The 'checkboxes/radio buttons' widget will display checkboxes if the <em>Number of values</em> option is greater than 1 for this field, otherwise radios will be displayed.") . '</p>';
   }
   $form['allowed_values']['#description'] .= '<p>' . t('Allowed HTML tags in labels: @tags', array('@tags' => _field_filter_xss_display_allowed_tags())) . '</p>';
 
@@ -167,10 +165,10 @@ function options_field_settings_form($field, $instance) {
 function options_field_settings_form_validate_allowed_values($element, &$form_state) {
   $field = $element['#field'];
   $has_data = $element['#field_has_data'];
-  $field_type = $field['type'];
+  $field_type = $field->getFieldType();
   $generate_keys = ($field_type == 'list_integer' || $field_type == 'list_float') && !$has_data;
 
-  $values = options_extract_allowed_values($element['#value'], $field['type'], $generate_keys);
+  $values = options_extract_allowed_values($element['#value'], $field_type, $generate_keys);
 
   if (!is_array($values)) {
     form_error($element, t('Allowed values list: invalid input.'));
@@ -194,7 +192,7 @@ function options_field_settings_form_validate_allowed_values($element, &$form_st
 
     // Prevent removing values currently in use.
     if ($has_data) {
-      $lost_keys = array_diff(array_keys($field['settings']['allowed_values']), array_keys($values));
+      $lost_keys = array_diff(array_keys($field->getFieldSetting('allowed_values')), array_keys($values));
       if (_options_values_in_use($field, $lost_keys)) {
         form_error($element, t('Allowed values list: some values are being removed while currently in use.'));
       }
@@ -368,11 +366,13 @@ function options_allowed_values_string($values) {
  * Implements hook_field_update_forbid().
  */
 function options_field_update_forbid($field, $prior_field) {
-  if ($field['module'] == 'options' && $field->hasData()) {
+  if ($field->module == 'options' && $field->hasData()) {
     // Forbid any update that removes allowed values with actual data.
-    $lost_keys = array_diff(array_keys($prior_field['settings']['allowed_values']), array_keys($field['settings']['allowed_values']));
+    $allowed_values = $field->getFieldSetting('allowed_values');
+    $prior_allowed_values = $prior_field->getFieldSetting('allowed_values');
+    $lost_keys = array_diff(array_keys($prior_allowed_values), array_keys($allowed_values));
     if (_options_values_in_use($field, $lost_keys)) {
-      throw new FieldUpdateForbiddenException(t('A list field (@field_name) with existing data cannot have its keys changed.', array('@field_name' => $field['field_name'])));
+      throw new FieldUpdateForbiddenException(t('A list field (@field_name) with existing data cannot have its keys changed.', array('@field_name' => $field->getFieldName())));
     }
   }
 }
@@ -380,12 +380,11 @@ function options_field_update_forbid($field, $prior_field) {
 /**
  * Checks if a list of values are being used in actual field values.
  */
-function _options_values_in_use($field, $values) {
+function _options_values_in_use(FieldInterface $field, $values) {
   if ($values) {
-    $field = field_info_field_by_id($field['uuid']);
     $factory = \Drupal::service('entity.query');
     $result = $factory->get($field->entity_type)
-      ->condition($field['field_name'] . '.value', $values)
+      ->condition($field->getFieldName() . '.value', $values)
       ->count()
       ->accessCheck(FALSE)
       ->range(0, 1)
@@ -418,9 +417,9 @@ function options_field_validate(EntityInterface $entity = NULL, $field, $instanc
   foreach ($items as $delta => $item) {
     if (!empty($item['value'])) {
       if (!empty($allowed_values) && !isset($allowed_values[$item['value']])) {
-        $errors[$field['field_name']][$langcode][$delta][] = array(
+        $errors[$instance->getFieldName()][$langcode][$delta][] = array(
           'error' => 'list_illegal_value',
-          'message' => t('%name: illegal value.', array('%name' => $instance['label'])),
+          'message' => t('%name: illegal value.', array('%name' => $instance->getFieldLabel())),
         );
       }
     }

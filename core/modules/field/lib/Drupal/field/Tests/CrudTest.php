@@ -44,8 +44,8 @@ class CrudTest extends FieldUnitTestBase {
     $field = entity_create('field_entity', $field_definition);
     $field->save();
     $mem = field_test_memorize();
-    $this->assertIdentical($mem['field_test_field_entity_create'][0][0]['field_name'], $field_definition['name'], 'hook_entity_create() called with correct arguments.');
-    $this->assertIdentical($mem['field_test_field_entity_create'][0][0]['type'], $field_definition['type'], 'hook_entity_create() called with correct arguments.');
+    $this->assertIdentical($mem['field_test_field_entity_create'][0][0]->getFieldName(), $field_definition['name'], 'hook_entity_create() called with correct arguments.');
+    $this->assertIdentical($mem['field_test_field_entity_create'][0][0]->getFieldType(), $field_definition['type'], 'hook_entity_create() called with correct arguments.');
 
     // Read the configuration. Check against raw configuration data rather than
     // the loaded ConfigEntity, to be sure we check that the defaults are
@@ -310,18 +310,18 @@ class CrudTest extends FieldUnitTestBase {
 
     // Test that the first field is not deleted, and then delete it.
     $field = field_read_field('entity_test', $this->field['name'], array('include_deleted' => TRUE));
-    $this->assertTrue(!empty($field) && empty($field['deleted']), 'A new field is not marked for deletion.');
+    $this->assertTrue(!empty($field) && empty($field->deleted), 'A new field is not marked for deletion.');
     field_info_field('entity_test', $this->field['name'])->delete();
 
     // Make sure that the field is marked as deleted when it is specifically
     // loaded.
     $field = field_read_field('entity_test', $this->field['name'], array('include_deleted' => TRUE));
-    $this->assertTrue(!empty($field['deleted']), 'A deleted field is marked for deletion.');
+    $this->assertTrue(!empty($field->deleted), 'A deleted field is marked for deletion.');
 
     // Make sure that this field's instance is marked as deleted when it is
     // specifically loaded.
     $instance = field_read_instance('entity_test', $this->instance_definition['field_name'], $this->instance_definition['bundle'], array('include_deleted' => TRUE));
-    $this->assertTrue(!empty($instance['deleted']), 'An instance for a deleted field is marked for deletion.');
+    $this->assertTrue(!empty($instance->deleted), 'An instance for a deleted field is marked for deletion.');
 
     // Try to load the field normally and make sure it does not show up.
     $field = field_read_field('entity_test', $this->field['name']);
@@ -333,29 +333,29 @@ class CrudTest extends FieldUnitTestBase {
 
     // Make sure the other field (and its field instance) are not deleted.
     $another_field = field_read_field('entity_test', $this->another_field['name']);
-    $this->assertTrue(!empty($another_field) && empty($another_field['deleted']), 'A non-deleted field is not marked for deletion.');
+    $this->assertTrue(!empty($another_field) && empty($another_field->deleted), 'A non-deleted field is not marked for deletion.');
     $another_instance = field_read_instance('entity_test', $another_instance_definition['field_name'], $another_instance_definition['bundle']);
-    $this->assertTrue(!empty($another_instance) && empty($another_instance['deleted']), 'An instance of a non-deleted field is not marked for deletion.');
+    $this->assertTrue(!empty($another_instance) && empty($another_instance->deleted), 'An instance of a non-deleted field is not marked for deletion.');
 
     // Try to create a new field the same name as a deleted field and
     // write data into it.
     entity_create('field_entity', $this->field)->save();
     entity_create('field_instance', $this->instance_definition)->save();
     $field = field_read_field('entity_test', $this->field['name']);
-    $this->assertTrue(!empty($field) && empty($field['deleted']), 'A new field with a previously used name is created.');
+    $this->assertTrue(!empty($field) && empty($field->deleted), 'A new field with a previously used name is created.');
     $instance = field_read_instance('entity_test', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $this->assertTrue(!empty($instance) && empty($instance['deleted']), 'A new instance for a previously used field name is created.');
+    $this->assertTrue(!empty($instance) && empty($instance->deleted), 'A new instance for a previously used field name is created.');
 
     // Save an entity with data for the field
     $entity = entity_create('entity_test', array());
     $values[0]['value'] = mt_rand(1, 127);
-    $entity->{$field['field_name']}->value = $values[0]['value'];
+    $entity->{$field->getFieldName()}->value = $values[0]['value'];
     $entity = $this->entitySaveReload($entity);
 
     // Verify the field is present on load
-    $this->assertIdentical(count($entity->{$field['field_name']}), count($values), "Data in previously deleted field saves and loads correctly");
+    $this->assertIdentical(count($entity->{$field->getFieldName()}), count($values), "Data in previously deleted field saves and loads correctly");
     foreach ($values as $delta => $value) {
-      $this->assertEqual($entity->{$field['field_name']}[$delta]->value, $values[$delta]['value'], "Data in previously deleted field saves and loads correctly");
+      $this->assertEqual($entity->{$field->getFieldName()}[$delta]->value, $values[$delta]['value'], "Data in previously deleted field saves and loads correctly");
     }
   }
 

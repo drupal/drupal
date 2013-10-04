@@ -85,7 +85,7 @@ class EntityReferenceAutocomplete {
 
     if (isset($string)) {
       // Get an array of matching entities.
-      $widget = entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')->getComponent($instance['field_name']);
+      $widget = entity_get_form_display($instance->entity_type, $instance->bundle, 'default')->getComponent($instance->getFieldName());
       $match_operator = !empty($widget['settings']['match_operator']) ? $widget['settings']['match_operator'] : 'CONTAINS';
       $entity_labels = $handler->getReferenceableEntities($string, $match_operator, 10);
 

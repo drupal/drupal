@@ -47,7 +47,6 @@ abstract class WidgetBase extends PluginSettingsBase implements WidgetInterface 
    */
   public function __construct($plugin_id, array $plugin_definition, FieldDefinitionInterface $field_definition, array $settings) {
     parent::__construct(array(), $plugin_id, $plugin_definition);
-
     $this->fieldDefinition = $field_definition;
     $this->settings = $settings;
   }

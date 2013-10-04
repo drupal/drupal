@@ -77,7 +77,7 @@ class CommentTranslationUITest extends ContentTranslationUITest {
   function setupTestFields() {
     parent::setupTestFields();
     $field = field_info_field('comment', 'comment_body');
-    $field['translatable'] = TRUE;
+    $field->translatable = TRUE;
     $field->save();
   }
 

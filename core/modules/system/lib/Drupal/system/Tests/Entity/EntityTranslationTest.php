@@ -483,7 +483,7 @@ class EntityTranslationTest extends EntityUnitTestBase {
     $entity = $this->reloadEntity($entity);
     $instance_id = implode('.', array($entity->entityType(), $entity->bundle(), $this->field_name));
     $instance = $this->entityManager->getStorageController('field_instance')->load($instance_id);
-    $instance['default_value_function'] = 'entity_test_field_default_value';
+    $instance->default_value_function = 'entity_test_field_default_value';
     $instance->save();
     $translation = $entity->addTranslation($langcode2);
     $field = $translation->get($this->field_name);

@@ -42,7 +42,7 @@ class FormDisplayOverview extends DisplayOverviewBase {
     $field_row = parent::buildFieldRow($field_id, $instance, $entity_display, $form, $form_state);
 
     // Update the (invisible) title of the 'plugin' column.
-    $field_row['plugin']['#title'] = $this->t('Formatter for @title', array('@title' => $instance['label']));
+    $field_row['plugin']['#title'] = $this->t('Formatter for @title', array('@title' => $instance->getFieldLabel()));
     if (!empty($field_row['plugin']['settings_edit_form']) && ($plugin = $entity_display->getRenderer($field_id))) {
       $plugin_type_info = $plugin->getPluginDefinition();
       $field_row['plugin']['settings_edit_form']['label']['#markup'] = $this->t('Widget settings:') . ' <span class="plugin-name">' . $plugin_type_info['label'] . '</span>';

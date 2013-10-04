@@ -129,7 +129,8 @@ class Field extends FieldPluginBase {
     $this->multiple = FALSE;
     $this->limit_values = FALSE;
 
-    if ($field['cardinality'] > 1 || $field['cardinality'] == FIELD_CARDINALITY_UNLIMITED) {
+    $cardinality = $field->getFieldCardinality();
+    if ($cardinality > 1 || $cardinality == FIELD_CARDINALITY_UNLIMITED) {
       $this->multiple = TRUE;
 
       // If "Display all values in the same row" is FALSE, then we always limit
@@ -145,7 +146,7 @@ class Field extends FieldPluginBase {
 
       // Otherwise, we only limit values if the user hasn't selected "all", 0, or
       // the value matching field cardinality.
-      if ((intval($this->options['delta_limit']) && ($this->options['delta_limit'] != $field['cardinality'])) || intval($this->options['delta_offset'])) {
+      if ((intval($this->options['delta_limit']) && ($this->options['delta_limit'] != $cardinality)) || intval($this->options['delta_offset'])) {
         $this->limit_values = TRUE;
       }
     }
@@ -315,8 +316,8 @@ class Field extends FieldPluginBase {
 
     // defineOptions runs before init/construct, so no $this->field_info
     $field = field_info_field($this->definition['entity_type'], $this->definition['field_name']);
-    $field_type = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field['type']);
-    $column_names = array_keys($field['columns']);
+    $field_type = \Drupal::service('plugin.manager.entity.field.field_type')->getDefinition($field->getFieldType());
+    $column_names = array_keys($field->getColumns());
     $default_column = '';
     // Try to determine a sensible default.
     if (count($column_names) == 1) {
@@ -351,7 +352,7 @@ class Field extends FieldPluginBase {
     // If we know the exact number of allowed values, then that can be
     // the default. Otherwise, default to 'all'.
     $options['delta_limit'] = array(
-      'default' => ($field['cardinality'] > 1) ? $field['cardinality'] : 'all',
+      'default' => ($field->getFieldCardinality() > 1) ? $field->getFieldCardinality() : 'all',
     );
     $options['delta_offset'] = array(
       'default' => 0,
@@ -387,8 +388,8 @@ class Field extends FieldPluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     $field = $this->field_info;
-    $formatters = $this->formatterPluginManager->getOptions($field['type']);
-    $column_names = array_keys($field['columns']);
+    $formatters = $this->formatterPluginManager->getOptions($field->getFieldType());
+    $column_names = array_keys($field->getColumns());
 
     // If this is a multiple value field, add its options.
     if ($this->multiple) {
@@ -396,7 +397,7 @@ class Field extends FieldPluginBase {
     }
 
     // No need to ask the user anything if the field has only one column.
-    if (count($field['columns']) == 1) {
+    if (count($field->getColumns()) == 1) {
       $form['click_sort_column'] = array(
         '#type' => 'value',
         '#value' => isset($column_names[0]) ? $column_names[0] : '',
@@ -486,14 +487,14 @@ class Field extends FieldPluginBase {
     // translating prefix and suffix separately.
     list($prefix, $suffix) = explode('@count', t('Display @count value(s)'));
 
-    if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED) {
+    if ($field->getFieldCardinality() == FIELD_CARDINALITY_UNLIMITED) {
       $type = 'textfield';
       $options = NULL;
       $size = 5;
     }
     else {
       $type = 'select';
-      $options = drupal_map_assoc(range(1, $field['cardinality']));
+      $options = drupal_map_assoc(range(1, $field->getFieldCardinality()));
       $size = 1;
     }
     $form['multi_type'] = array(
@@ -812,14 +813,14 @@ class Field extends FieldPluginBase {
 
   protected function documentSelfTokens(&$tokens) {
     $field = $this->field_info;
-    foreach ($field['columns'] as $id => $column) {
+    foreach ($field->getColumns() as $id => $column) {
       $tokens['[' . $this->options['id'] . '-' . $id . ']'] = t('Raw @column', array('@column' => $id));
     }
   }
 
   protected function addSelfTokens(&$tokens, $item) {
     $field = $this->field_info;
-    foreach ($field['columns'] as $id => $column) {
+    foreach ($field->getColumns() as $id => $column) {
       // Use filter_xss_admin because it's user data and we can't be sure it is safe.
       // We know nothing about the data, though, so we can't really do much else.
 

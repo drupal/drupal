@@ -43,7 +43,7 @@ class TranslatableForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    if ($this->field['translatable']) {
+    if ($this->field->isFieldTranslatable()) {
       $question = t('Are you sure you want to disable translation for the %name field?', array('%name' => $this->fieldName));
     }
     else {
@@ -59,7 +59,7 @@ class TranslatableForm extends ConfirmFormBase {
     $description = t('By submitting this form these changes will apply to the %name field everywhere it is used.',
       array('%name' => $this->fieldName)
     );
-    $description .= $this->field['translatable'] ? "<br>" . t("<strong>All the existing translations of this field will be deleted.</strong><br>This action cannot be undone.") : '';
+    $description .= $this->field->isFieldTranslatable() ? "<br>" . t("<strong>All the existing translations of this field will be deleted.</strong><br>This action cannot be undone.") : '';
     return $description;
   }
 
@@ -107,7 +107,7 @@ class TranslatableForm extends ConfirmFormBase {
   public function submitForm(array &$form, array &$form_state) {
     // This is the current state that we want to reverse.
     $translatable = $form_state['values']['translatable'];
-    if ($this->field['translatable'] !== $translatable) {
+    if ($this->field->translatable !== $translatable) {
       // Field translatability has changed since form creation, abort.
       $t_args = array('%field_name');
       $msg = $translatable ?

@@ -588,7 +588,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
       // If the field is translatable ensure that only values having valid
       // languages are retrieved. Since we are loading values for multiple
       // entities, we cannot limit the query to the available translations.
-      $langcodes = $field['translatable'] ? $all_langcodes : array(Language::LANGCODE_NOT_SPECIFIED);
+      $langcodes = $field->isFieldTranslatable() ? $all_langcodes : array(Language::LANGCODE_NOT_SPECIFIED);
       $results = $this->database->select($table, 't')
         ->fields('t')
         ->condition($load_current ? 'entity_id' : 'revision_id', $ids, 'IN')
@@ -603,11 +603,11 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
           $delta_count[$row->entity_id][$row->langcode] = 0;
         }
 
-        if ($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->langcode] < $field['cardinality']) {
+        if ($field->getFieldCardinality() == FIELD_CARDINALITY_UNLIMITED || $delta_count[$row->entity_id][$row->langcode] < $field->getFieldCardinality()) {
           $item = array();
           // For each column declared by the field, populate the item from the
           // prefixed database column.
-          foreach ($field['columns'] as $column => $attributes) {
+          foreach ($field->getColumns() as $column => $attributes) {
             $column_name = static::_fieldColumnName($field, $column);
             // Unserialize the value if specified in the column schema.
             $item[$column] = (!empty($attributes['serialize'])) ? unserialize($row->$column_name) : $row->$column_name;
@@ -656,13 +656,13 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
       // Prepare the multi-insert query.
       $do_insert = FALSE;
       $columns = array('entity_id', 'revision_id', 'bundle', 'delta', 'langcode');
-      foreach ($field['columns'] as $column => $attributes) {
+      foreach ($field->getColumns() as $column => $attributes) {
         $columns[] = static::_fieldColumnName($field, $column);
       }
       $query = $this->database->insert($table_name)->fields($columns);
       $revision_query = $this->database->insert($revision_name)->fields($columns);
 
-      $langcodes = $field['translatable'] ? array_keys($entity->getTranslationLanguages()) : array(Language::LANGCODE_NOT_SPECIFIED);
+      $langcodes = $field->isFieldTranslatable() ? array_keys($entity->getTranslationLanguages()) : array(Language::LANGCODE_NOT_SPECIFIED);
       foreach ($langcodes as $langcode) {
         $delta_count = 0;
         $items = $entity->getTranslation($langcode)->get($field_name);
@@ -677,7 +677,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
             'delta' => $delta,
             'langcode' => $langcode,
           );
-          foreach ($field['columns'] as $column => $attributes) {
+          foreach ($field->getColumns() as $column => $attributes) {
             $column_name = static::_fieldColumnName($field, $column);
             // Serialize the value if specified in the column schema.
             $record[$column_name] = !empty($attributes['serialize']) ? serialize($item->$column) : $item->$column;
@@ -685,7 +685,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
           $query->values($record);
           $revision_query->values($record);
 
-          if ($field['cardinality'] != FIELD_CARDINALITY_UNLIMITED && ++$delta_count == $field['cardinality']) {
+          if ($field->getFieldCardinality() != FIELD_CARDINALITY_UNLIMITED && ++$delta_count == $field->getFieldCardinality()) {
             break;
           }
         }
@@ -788,7 +788,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
       }
     }
     else {
-      if ($field['columns'] != $original['columns']) {
+      if ($field->getColumns() != $original->getColumns()) {
         throw new FieldUpdateForbiddenException("The SQL storage cannot change the schema for an existing field with data.");
       }
       // There is data, so there are no column changes. Drop all the prior
@@ -838,7 +838,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
    */
   public function onFieldDelete(FieldInterface $field) {
     // Mark all data associated with the field for deletion.
-    $field['deleted'] = FALSE;
+    $field->deleted = FALSE;
     $table = static::_fieldTableName($field);
     $revision_table = static::_fieldRevisionTableName($field);
     $this->database->update($table)
@@ -847,7 +847,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
 
     // Move the table to a unique name while the table contents are being
     // deleted.
-    $field['deleted'] = TRUE;
+    $field->deleted = TRUE;
     $new_table = static::_fieldTableName($field);
     $revision_new_table = static::_fieldRevisionTableName($field);
     $this->database->schema()->renameTable($table, $new_table);
@@ -863,11 +863,11 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
     $revision_name = static::_fieldRevisionTableName($field);
     $this->database->update($table_name)
       ->fields(array('deleted' => 1))
-      ->condition('bundle', $instance['bundle'])
+      ->condition('bundle', $instance->bundle)
       ->execute();
     $this->database->update($revision_name)
       ->fields(array('deleted' => 1))
-      ->condition('bundle', $instance['bundle'])
+      ->condition('bundle', $instance->bundle)
       ->execute();
   }
 
@@ -953,13 +953,13 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
    * @see hook_schema()
    */
   public static function _fieldSqlSchema(FieldInterface $field, array $schema = NULL) {
-    if ($field['deleted']) {
-      $description_current = "Data storage for deleted field {$field['id']} ({$field['entity_type']}, {$field['field_name']}).";
-      $description_revision = "Revision archive storage for deleted field {$field['id']} ({$field['entity_type']}, {$field['field_name']}).";
+    if ($field->deleted) {
+      $description_current = "Data storage for deleted field {$field->uuid()} ({$field->entity_type}, {$field->getFieldName()}).";
+      $description_revision = "Revision archive storage for deleted field {$field->uuid()} ({$field->entity_type}, {$field->getFieldName()}).";
     }
     else {
-      $description_current = "Data storage for {$field['entity_type']} field {$field['field_name']}.";
-      $description_revision = "Revision archive storage for {$field['entity_type']} field {$field['field_name']}.";
+      $description_current = "Data storage for {$field->entity_type} field {$field->getFieldName()}.";
+      $description_revision = "Revision archive storage for {$field->entity_type} field {$field->getFieldName()}.";
     }
 
     $current = array(
@@ -1084,12 +1084,12 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
    *
    */
   static public function _fieldTableName(FieldInterface $field) {
-    if ($field['deleted']) {
+    if ($field->deleted) {
       // When a field is a deleted, the table is renamed to
       // {field_deleted_data_FIELD_UUID}. To make sure we don't end up with
       // table names longer than 64 characters, we hash the uuid and return the
       // first 10 characters so we end up with a short unique ID.
-      return "field_deleted_data_" . substr(hash('sha256', $field['uuid']), 0, 10);
+      return "field_deleted_data_" . substr(hash('sha256', $field->uuid()), 0, 10);
     }
     else {
       return static::_generateFieldTableName($field, FALSE);
@@ -1113,12 +1113,12 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
    *   A string containing the generated name for the database table.
    */
   static public function _fieldRevisionTableName(FieldInterface $field) {
-    if ($field['deleted']) {
+    if ($field->deleted) {
       // When a field is a deleted, the table is renamed to
       // {field_deleted_revision_FIELD_UUID}. To make sure we don't end up with
       // table names longer than 64 characters, we hash the uuid and return the
       // first 10 characters so we end up with a short unique ID.
-      return "field_deleted_revision_" . substr(hash('sha256', $field['uuid']), 0, 10);
+      return "field_deleted_revision_" . substr(hash('sha256', $field->uuid()), 0, 10);
     }
     else {
       return static::_generateFieldTableName($field, TRUE);
@@ -1139,7 +1139,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
    * @return string
    *   The final table name.
    */
-  static protected function _generateFieldTableName($field, $revision) {
+  static protected function _generateFieldTableName(FieldInterface $field, $revision) {
     $separator = $revision ? '_revision__' : '__';
     $table_name = $field->entity_type . $separator .  $field->name;
     // Limit the string to 48 characters, keeping a 16 characters margin for db

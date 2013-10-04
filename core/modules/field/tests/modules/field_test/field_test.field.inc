@@ -67,7 +67,7 @@ function field_test_field_widget_info_alter(&$info) {
  * Implements hook_field_update_forbid().
  */
 function field_test_field_update_forbid($field, $prior_field) {
-  if ($field['type'] == 'test_field' && $field['settings']['unchangeable'] != $prior_field['settings']['unchangeable']) {
+  if ($field->getFieldType() == 'test_field' && $field->getFieldSetting('unchangeable') != $prior_field->getFieldSetting('unchangeable')) {
     throw new FieldException("field_test 'unchangeable' setting cannot be changed'");
   }
 }
@@ -82,7 +82,8 @@ function field_test_field_load($entity_type, $entities, $field, $instances, $lan
   foreach ($items as $id => $item) {
     // To keep the test non-intrusive, only act for instances with the
     // test_hook_field_load setting explicitly set to TRUE.
-    if (!empty($instances[$id]['settings']['test_hook_field_load'])) {
+    $test_hook_field_load = $instances[$id]->getFieldSetting('test_hook_field_load');
+    if (!empty($test_hook_field_load)) {
       foreach ($item as $delta => $value) {
         // Don't add anything on empty values.
         if ($value) {
@@ -129,9 +130,9 @@ function field_test_field_validate(EntityInterface $entity = NULL, $field, $inst
 
   foreach ($items as $delta => $item) {
     if ($item['value'] == -1) {
-      $errors[$field['field_name']][$langcode][$delta][] = array(
+      $errors[$field->getFieldName()][$langcode][$delta][] = array(
         'error' => 'field_test_invalid',
-        'message' => t('%name does not accept the value -1.', array('%name' => $instance['label'])),
+        'message' => t('%name does not accept the value -1.', array('%name' => $instance->getFieldLabel())),
       );
     }
   }
@@ -151,7 +152,7 @@ function field_test_field_is_empty($item, $field_type) {
  * Implements hook_field_settings_form().
  */
 function field_test_field_settings_form($field, $instance) {
-  $settings = $field['settings'];
+  $settings = $field->getFieldSettings();
 
   $form['test_field_setting'] = array(
     '#type' => 'textfield',
@@ -168,7 +169,7 @@ function field_test_field_settings_form($field, $instance) {
  * Implements hook_field_instance_settings_form().
  */
 function field_test_field_instance_settings_form($field, $instance) {
-  $settings = $instance['settings'];
+  $settings = $instance->getFieldSettings();
 
   $form['test_instance_setting'] = array(
     '#type' => 'textfield',

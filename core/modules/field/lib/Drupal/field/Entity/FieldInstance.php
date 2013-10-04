@@ -614,47 +614,7 @@ class FieldInstance extends ConfigEntityBase implements FieldInstanceInterface {
     return TRUE;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function offsetExists($offset) {
-    return (isset($this->{$offset}) || $offset == 'field_id' || $offset == 'field_name');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function &offsetGet($offset) {
-    if ($offset == 'field_id') {
-      return $this->field_uuid;
-    }
-    if ($offset == 'field_name') {
-      return $this->field->name;
-    }
-    return $this->{$offset};
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function offsetSet($offset, $value) {
-    if ($offset == 'field_id') {
-      $offset = 'field_uuid';
-    }
-    $this->{$offset} = $value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function offsetUnset($offset) {
-    if ($offset == 'field_id') {
-      $offset = 'field_uuid';
-    }
-    unset($this->{$offset});
-  }
-
-  /**
+  /*
    * Implements the magic __sleep() method.
    *
    * Using the Serialize interface and serialize() / unserialize() methods

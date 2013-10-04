@@ -592,8 +592,8 @@ class FormTest extends FieldTestBase {
     entity_create('field_entity', $field)->save();
     $this->instance = entity_create('field_instance', $this->instance);
     $this->instance->save();
-    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
-      ->setComponent($this->instance['field_name'], array(
+    entity_get_form_display($this->instance->entity_type, $this->instance->bundle, 'default')
+      ->setComponent($this->instance->getFieldName(), array(
         'type' => 'hidden',
       ))
       ->save();
@@ -613,10 +613,10 @@ class FormTest extends FieldTestBase {
 
     // Update the instance to remove the default value and switch to the
     // default widget.
-    $this->instance['default_value'] = NULL;
+    $this->instance->default_value = NULL;
     $this->instance->save();
-    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
-      ->setComponent($this->instance['field_name'], array(
+    entity_get_form_display($entity_type, $this->instance->bundle, 'default')
+      ->setComponent($this->instance->getFieldName(), array(
         'type' => 'test_field_widget',
       ))
       ->save();
@@ -635,8 +635,8 @@ class FormTest extends FieldTestBase {
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');
 
     // Update the form display and switch to the Hidden widget again.
-    entity_get_form_display($this->instance['entity_type'], $this->instance['bundle'], 'default')
-      ->setComponent($this->instance['field_name'], array(
+    entity_get_form_display($entity_type, $this->instance->bundle, 'default')
+      ->setComponent($this->instance->getFieldName(), array(
         'type' => 'hidden',
       ))
       ->save();

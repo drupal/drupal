@@ -923,7 +923,7 @@ function comment_view_multiple($comments, $view_mode = 'full', $langcode = NULL)
  * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_field_ui_field_instance_edit_form_alter(&$form, $form_state) {
-  if ($form['#field']['type'] == 'comment') {
+  if ($form['#field']->getFieldType() == 'comment') {
     // Collect translation settings.
     if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
       array_unshift($form['#submit'], 'comment_translation_configuration_element_submit');
@@ -965,7 +965,7 @@ function comment_form_field_ui_display_overview_form_alter(&$form, $form_state) 
  * Implements hook_form_FORM_ID_alter().
  */
 function comment_form_field_ui_field_edit_form_alter(&$form, $form_state) {
-  if ($form['#field']['type'] == 'comment') {
+  if ($form['#field']->getFieldType() == 'comment') {
     // We only support posting one comment at the time so it doesn't make sense
     // to let the site builder choose anything else.
     $form['field']['cardinality_container']['cardinality']['#options'] = drupal_map_assoc(array(1));

@@ -719,8 +719,8 @@ function field_attach_prepare_view($entity_type, array $entities, array $display
   // instance, call the prepareView() method on the formatter object handed by
   // the entity display.
   $target_function = function ($instance) use ($displays) {
-    if (isset($displays[$instance['bundle']])) {
-      return $displays[$instance['bundle']]->getRenderer($instance['field_name']);
+    if (isset($displays[$instance->bundle])) {
+      return $displays[$instance->bundle]->getRenderer($instance->getFieldName());
     }
   };
   $null = NULL;
@@ -763,7 +763,7 @@ function field_attach_view(EntityInterface $entity, EntityDisplay $display, $lan
   // For each instance, call the view() method on the formatter object handed
   // by the entity display.
   $target_function = function ($instance) use ($display) {
-    return $display->getRenderer($instance['field_name']);
+    return $display->getRenderer($instance->getFieldName());
   };
   $null = NULL;
   $output = field_invoke_method('view', $target_function, $entity, $null, $null, $options);

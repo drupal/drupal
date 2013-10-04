@@ -8,6 +8,7 @@
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Language\Language;
 use Drupal\field\Field;
+use Drupal\field\FieldInstanceInterface;
 
 /**
  * @defgroup field_info Field Info API

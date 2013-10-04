@@ -775,9 +775,9 @@ function content_translation_field_extra_fields() {
  */
 function content_translation_form_field_ui_field_edit_form_alter(array &$form, array &$form_state, $form_id) {
   $field = $form['#field'];
-  $entity_type = $field['entity_type'];
-  $field_name = $field['field_name'];
-  $translatable = $field['translatable'];
+  $field_name = $field->getFieldName();
+  $translatable = $field->isFieldTranslatable();
+  $entity_type = $field->entity_type;
   $label = t('Field translation');
 
   if ($field->hasData()) {
@@ -810,9 +810,9 @@ function content_translation_form_field_ui_field_edit_form_alter(array &$form, a
  * Implements hook_form_FORM_ID_alter() for 'field_ui_field_instance_edit_form'.
  */
 function content_translation_form_field_ui_field_instance_edit_form_alter(array &$form, array &$form_state, $form_id) {
-  if ($form['#field']['translatable']) {
+  if ($form['#instance']->isFieldTranslatable()) {
     module_load_include('inc', 'content_translation', 'content_translation.admin');
-    $element = content_translation_field_sync_widget($form['#field'], $form['#instance']);
+    $element = content_translation_field_sync_widget($form['#instance']);
     if ($element) {
       $form['instance']['settings']['translation_sync'] = $element;
     }
@@ -990,10 +990,9 @@ function content_translation_save_settings($settings) {
         // Store whether fields have translation enabled or not.
         if (!empty($bundle_settings['columns'])) {
           foreach ($bundle_settings['columns'] as $field_name => $column_settings) {
-            $field = field_info_field($entity_type, $field_name);
             $instance = field_info_instance($entity_type, $field_name, $bundle);
-            if ($field['translatable']) {
-              $instance['settings']['translation_sync'] = $column_settings;
+            if ($instance->isFieldTranslatable()) {
+              $instance->settings['translation_sync'] = $column_settings;
             }
             // If the field does not have translatable enabled we need to reset
             // the sync settings to their defaults.

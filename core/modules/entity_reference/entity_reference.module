@@ -37,15 +37,14 @@ function entity_reference_field_info_alter(&$info) {
 function entity_reference_entity_field_info_alter(&$info, $entity_type) {
   foreach (field_info_instances($entity_type) as $bundle_name => $instances) {
     foreach ($instances as $field_name => $instance) {
-      $field = $instance->getField();
-      if ($field['type'] != 'entity_reference') {
+      if ($instance->getFieldType() != 'entity_reference') {
         continue;
       }
       if (isset($info['definitions'][$field_name])) {
-        $info['definitions'][$field_name]['settings']['target_type'] = $field['settings']['target_type'];
+        $info['definitions'][$field_name]['settings']['target_type'] = $instance->getFieldSetting('target_type');
       }
       elseif (isset($info['optional'][$field_name])) {
-        $info['optional'][$field_name]['settings']['target_type'] = $field['settings']['target_type'];
+        $info['optional'][$field_name]['settings']['target_type'] = $instance->getFieldSetting('target_type');
       }
     }
   }
@@ -74,7 +73,7 @@ function entity_reference_field_entity_update(FieldInterface $field) {
     return;
   }
 
-  if ($field->settings['target_type'] == $field->original->settings['target_type']) {
+  if ($field->getFieldSetting('target_type') == $field->original->getFieldSetting('target_type')) {
     // Target type didn't change.
     return;
   }

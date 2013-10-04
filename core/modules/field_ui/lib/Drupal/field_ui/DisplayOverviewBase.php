@@ -218,8 +218,8 @@ abstract class DisplayOverviewBase extends OverviewBase {
    *   A table row array.
    */
   protected function buildFieldRow($field_id, FieldInstanceInterface $instance, EntityDisplayBaseInterface $entity_display, array $form, array &$form_state) {
-    $field = $instance->getField();
     $display_options = $entity_display->getComponent($field_id);
+    $label = $instance->getFieldLabel();
 
     $field_row = array(
       '#attributes' => array('class' => array('draggable', 'tabledrag-leaf')),
@@ -227,14 +227,14 @@ abstract class DisplayOverviewBase extends OverviewBase {
       '#region_callback' => array($this, 'getRowRegion'),
       '#js_settings' => array(
         'rowHandler' => 'field',
-        'defaultPlugin' => $this->getDefaultPlugin($field['type']),
+        'defaultPlugin' => $this->getDefaultPlugin($instance->getFieldType()),
       ),
       'human_name' => array(
-        '#markup' => check_plain($instance['label']),
+        '#markup' => check_plain($label),
       ),
       'weight' => array(
         '#type' => 'textfield',
-        '#title' => $this->t('Weight for @title', array('@title' => $instance['label'])),
+        '#title' => $this->t('Weight for @title', array('@title' => $label)),
         '#title_display' => 'invisible',
         '#default_value' => $display_options ? $display_options['weight'] : '0',
         '#size' => 3,
@@ -243,7 +243,7 @@ abstract class DisplayOverviewBase extends OverviewBase {
       'parent_wrapper' => array(
         'parent' => array(
           '#type' => 'select',
-          '#title' => $this->t('Label display for @title', array('@title' => $instance['label'])),
+          '#title' => $this->t('Label display for @title', array('@title' => $label)),
           '#title_display' => 'invisible',
           '#options' => drupal_map_assoc(array_keys($this->getRegions())),
           '#empty_value' => '',
@@ -262,9 +262,9 @@ abstract class DisplayOverviewBase extends OverviewBase {
     $field_row['plugin'] = array(
       'type' => array(
         '#type' => 'select',
-        '#title' => $this->t('Plugin for @title', array('@title' => $instance['label'])),
+        '#title' => $this->t('Plugin for @title', array('@title' => $label)),
         '#title_display' => 'invisible',
-        '#options' => $this->getPluginOptions($field['type']),
+        '#options' => $this->getPluginOptions($instance->getFieldType()),
         '#default_value' => $display_options ? $display_options['type'] : 'hidden',
         '#parents' => array('fields', $field_id, 'type'),
         '#attributes' => array('class' => array('field-plugin-type')),

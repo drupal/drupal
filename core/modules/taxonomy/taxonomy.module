@@ -8,6 +8,8 @@
 use Drupal\Core\Entity\DatabaseStorageController;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Field\FieldDefinitionInterface;
+use Drupal\field\FieldInterface;
+use Drupal\field\FieldInstanceInterface;
 use Drupal\file\FileInterface;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
@@ -931,7 +933,7 @@ function taxonomy_options_list(FieldDefinitionInterface $field_definition, Entit
  * Possible error codes:
  * - 'taxonomy_term_illegal_value': The value is not part of the list of allowed values.
  */
-function taxonomy_field_validate(EntityInterface $entity = NULL, $field, $instance, $langcode, $items, &$errors) {
+function taxonomy_field_validate(EntityInterface $entity = NULL, FieldInterface $field, FieldInstanceInterface $instance, $langcode, $items, &$errors) {
   // Build an array of existing term IDs so they can be loaded with
   // entity_load_multiple('taxonomy_term');
   foreach ($items as $delta => $item) {
@@ -948,7 +950,7 @@ function taxonomy_field_validate(EntityInterface $entity = NULL, $field, $instan
       $validate = TRUE;
       if (!empty($item['target_id']) && $item['target_id'] != 'autocreate') {
         $validate = FALSE;
-        foreach ($field['settings']['allowed_values'] as $settings) {
+        foreach ($instance->getFieldSetting('allowed_values') as $settings) {
           // If no parent is specified, check if the term is in the vocabulary.
           if (isset($settings['vocabulary']) && empty($settings['parent'])) {
             if ($settings['vocabulary'] == $terms[$item['target_id']]->bundle()) {
@@ -970,9 +972,9 @@ function taxonomy_field_validate(EntityInterface $entity = NULL, $field, $instan
         }
       }
       if (!$validate) {
-        $errors[$field['field_name']][$langcode][$delta][] = array(
+        $errors[$instance->getFieldName()][$langcode][$delta][] = array(
           'error' => 'taxonomy_term_reference_illegal_value',
-          'message' => t('%name: illegal value.', array('%name' => $instance['label'])),
+          'message' => t('%name: illegal value.', array('%name' => $instance->getFieldLabel())),
         );
       }
     }
@@ -1051,7 +1053,7 @@ function taxonomy_field_settings_form($field, $instance) {
     '#tree' => TRUE,
   );
 
-  foreach ($field['settings']['allowed_values'] as $delta => $tree) {
+  foreach ($field->getFieldSetting('allowed_values') as $delta => $tree) {
     $form['allowed_values'][$delta]['vocabulary'] = array(
       '#type' => 'select',
       '#title' => t('Vocabulary'),
@@ -1135,7 +1137,7 @@ function taxonomy_build_node_index($node) {
     foreach (field_info_instances('node', $node->getType()) as $instance) {
       $field = $instance->getField();
       $field_name = $field->getFieldName();
-      if ($field['module'] == 'taxonomy') {
+      if ($field->module == 'taxonomy') {
         foreach ($node->getTranslationLanguages() as $language) {
           foreach ($node->getTranslation($language->id)->$field_name as $item) {
             if (!$item->isEmpty()) {

@@ -243,10 +243,6 @@ class ManageDisplayTest extends FieldUiTestBase {
     );
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->type, $edit);
 
-    // Check that no settings have been set for the 'teaser' mode.
-    $instance = field_info_instance('node', 'field_test', $this->type);
-    $this->assertFalse(isset($instance['display']['teaser']));
-
     // Check that the field appears as 'hidden' on the 'Manage display' page
     // for the 'teaser' mode.
     $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display/teaser');

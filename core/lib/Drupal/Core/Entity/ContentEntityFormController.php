@@ -53,7 +53,6 @@ class ContentEntityFormController extends EntityFormController {
     // Map errors back to form elements.
     if ($violations) {
       foreach ($violations as $field_name => $field_violations) {
-        $langcode = field_is_translatable($entity_type, field_info_field($entity_type, $field_name)) ? $entity_langcode : Language::LANGCODE_NOT_SPECIFIED;
         $field_state = field_form_get_state($form['#parents'], $field_name, $form_state);
         $field_state['constraint_violations'] = $field_violations;
         field_form_set_state($form['#parents'], $field_name, $form_state, $field_state);

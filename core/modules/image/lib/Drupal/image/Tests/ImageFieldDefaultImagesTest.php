@@ -82,7 +82,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     ));
     $instance2->save();
 
-    $widget_settings = entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')->getComponent($field_name);
+    $widget_settings = entity_get_form_display('node', $instance->bundle, 'default')->getComponent($field_name);
     entity_get_form_display('node', 'page', 'default')
       ->setComponent($field_name, $widget_settings)
       ->save();
@@ -157,7 +157,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     // Upload a new default for the field.
-    $field['settings']['default_image'] = array($default_images['field_new']->id());
+    $field->settings['default_image'] = array($default_images['field_new']->id());
     $field->save();
 
     // Confirm that the new default is used on the article field settings form.
@@ -192,7 +192,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     // Upload a new default for the article's field instance.
-    $instance['settings']['default_image'] = $default_images['instance_new']->id();
+    $instance->settings['default_image'] = $default_images['instance_new']->id();
     $instance->save();
 
     // Confirm the new field instance default is used on the article field
@@ -231,7 +231,7 @@ class ImageFieldDefaultImagesTest extends ImageFieldTestBase {
     );
 
     // Remove the instance default from articles.
-    $instance['settings']['default_image'] = 0;
+    $instance->settings['default_image'] = 0;
     $instance->save();
 
     // Confirm the article field instance default has been removed.

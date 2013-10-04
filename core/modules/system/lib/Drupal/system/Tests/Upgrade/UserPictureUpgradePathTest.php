@@ -42,8 +42,10 @@ class UserPictureUpgradePathTest extends UpgradePathTestBase {
 
     // Retrieve the field instance and check for migrated settings.
     $instance = field_info_instance('user', 'user_picture', 'user');
-    $file = entity_load('file', $instance['settings']['default_image'][0]);
-    $this->assertIdentical($instance['settings']['default_image'][0], $file->id(), 'Default user picture has been migrated.');
+    // We explicitly avoid using the getFieldSetting() method here, since it
+    // merges field and instance settings.
+    $file = entity_load('file', $instance->settings['default_image'][0]);
+    $this->assertTrue($file, 'Default user picture has been migrated.');
     $this->assertEqual($file->getFileUri(), 'public://user_pictures_dir/druplicon.png', 'File id matches the uri expected.');
     $this->assertEqual($file->getFilename(), 'druplicon.png');
     $this->assertEqual($file->langcode->value, Language::LANGCODE_NOT_SPECIFIED);
@@ -53,12 +55,12 @@ class UserPictureUpgradePathTest extends UpgradePathTestBase {
     // Check file usage for the default image.
     $usage = file_usage()->listUsage($file);
     $field = field_info_field('user', 'user_picture');
-    $this->assertTrue(isset($usage['image']['default_image'][$field['uuid']]));
+    $this->assertTrue(isset($usage['image']['default_image'][$field->uuid()]));
 
-    $this->assertEqual($instance['settings']['max_resolution'], '800x800', 'User picture maximum resolution has been migrated.');
-    $this->assertEqual($instance['settings']['max_filesize'], '700 KB', 'User picture maximum filesize has been migrated.');
-    $this->assertEqual($instance['description'], 'These are user picture guidelines.', 'User picture guidelines are now the user picture field description.');
-    $this->assertEqual($instance['settings']['file_directory'], 'user_pictures_dir', 'User picture directory path has been migrated.');
+    $this->assertEqual($instance->getFieldSetting('max_resolution'), '800x800', 'User picture maximum resolution has been migrated.');
+    $this->assertEqual($instance->getFieldSetting('max_filesize'), '700 KB', 'User picture maximum filesize has been migrated.');
+    $this->assertEqual($instance->getFieldDescription(), 'These are user picture guidelines.', 'User picture guidelines are now the user picture field description.');
+    $this->assertEqual($instance->getFieldSetting('file_directory'), 'user_pictures_dir', 'User picture directory path has been migrated.');
 
     $display_options = entity_get_display('user', 'user', 'default')->getComponent('user_picture');
     $this->assertEqual($display_options['settings']['image_style'], 'thumbnail', 'User picture image style setting has been migrated.');

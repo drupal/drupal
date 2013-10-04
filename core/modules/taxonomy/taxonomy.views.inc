@@ -412,16 +412,18 @@ function taxonomy_field_views_data(FieldInterface $field) {
     foreach ($table_data as $field_name => $field_data) {
       if (isset($field_data['filter']) && $field_name != 'delta') {
         $data[$table_name][$field_name]['filter']['id'] = 'taxonomy_index_tid';
-        $data[$table_name][$field_name]['filter']['vocabulary'] = $field['settings']['allowed_values'][0]['vocabulary'];
+        $allowed_values = $field->getFieldSetting('allowed_values');
+        $data[$table_name][$field_name]['filter']['vocabulary'] = $allowed_values[0]['vocabulary'];
       }
     }
 
     // Add the relationship only on the tid field.
-    $data[$table_name][$field['field_name'] . '_target_id']['relationship'] = array(
+    $field_name = $field->getFieldName();
+    $data[$table_name][$field_name . '_target_id']['relationship'] = array(
       'id' => 'standard',
       'base' => 'taxonomy_term_data',
       'base field' => 'tid',
-      'label' => t('term from !field_name', array('!field_name' => $field['field_name'])),
+      'label' => t('term from !field_name', array('!field_name' => $field_name)),
     );
 
   }
@@ -435,23 +437,24 @@ function taxonomy_field_views_data(FieldInterface $field) {
  * Views integration to provide reverse relationships on term references.
  */
 function taxonomy_field_views_data_views_data_alter(array &$data, FieldInterface $field) {
-  $entity_type = $field['entity_type'];
+  $field_name = $field->getFieldName();
+  $entity_type = $field->entity_type;
   $entity_info = entity_get_info($entity_type);
-  $pseudo_field_name = 'reverse_' . $field['field_name'] . '_' . $entity_type;
+  $pseudo_field_name = 'reverse_' . $field_name . '_' . $entity_type;
 
-  list($label,) = field_views_field_label($entity_type, $field['field_name']);
+  list($label,) = field_views_field_label($entity_type, $field_name);
 
   $data['taxonomy_term_data'][$pseudo_field_name]['relationship'] = array(
     'title' => t('@entity using @field', array('@entity' => $entity_info['label'], '@field' => $label)),
     'help' => t('Relate each @entity with a @field set to the term.', array('@entity' => $entity_info['label'], '@field' => $label)),
     'id' => 'entity_reverse',
-    'field_name' => $field['field_name'],
-    'entity_type' => $field['entity_type'],
+    'field_name' => $field_name,
+    'entity_type' => $entity_type,
     'field table' => DatabaseStorageController::_fieldTableName($field),
-    'field field' => $field['field_name'] . '_target_id',
+    'field field' => $field_name . '_target_id',
     'base' => $entity_info['base_table'],
     'base field' => $entity_info['entity_keys']['id'],
-    'label' => t('!field_name', array('!field_name' => $field['field_name'])),
+    'label' => t('!field_name', array('!field_name' => $field_name)),
     'join_extra' => array(
       0 => array(
         'field' => 'deleted',

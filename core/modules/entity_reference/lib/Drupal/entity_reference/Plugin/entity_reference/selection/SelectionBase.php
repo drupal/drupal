@@ -106,10 +106,9 @@ class SelectionBase implements SelectionInterface {
     // converted to the new Field API.
     $fields = drupal_map_assoc(drupal_schema_fields_sql($entity_info['base_table']));
     foreach (field_info_instances($target_type) as $bundle_instances) {
-      foreach ($bundle_instances as $instance_name => $instance_info) {
-        $field_info = $instance_info->getField();
-        foreach ($field_info['columns'] as $column_name => $column_info) {
-          $fields[$instance_name . '.' . $column_name] = t('@label (@column)', array('@label' => $instance_info['label'], '@column' => $column_name));
+      foreach ($bundle_instances as $instance_name => $instance) {
+        foreach ($instance->getField()->getColumns() as $column_name => $column_info) {
+          $fields[$instance_name . '.' . $column_name] = t('@label (@column)', array('@label' => $instance->getFieldLabel(), '@column' => $column_name));
         }
       }
     }

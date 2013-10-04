@@ -74,7 +74,7 @@ abstract class FieldUnitTestBase extends DrupalUnitTestBase {
       'cardinality' => 4,
     ));
     $this->$field->save();
-    $this->$field_id = $this->{$field}['uuid'];
+    $this->$field_id = $this->{$field}->uuid();
     $this->$instance_definition = array(
       'field_name' => $this->$field_name,
       'entity_type' => $entity_type,

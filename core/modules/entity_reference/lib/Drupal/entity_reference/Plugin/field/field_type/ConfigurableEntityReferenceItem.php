@@ -68,15 +68,13 @@ class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase impl
 
     // Create a foreign key to the target entity type base type.
     $entity_manager = \Drupal::service('entity.manager');
-    if (is_subclass_of($entity_manager->getControllerClass($field['settings']['target_type'], 'storage'), 'Drupal\Core\Entity\DatabaseStorageController')) {
-      $entity_info = $entity_manager->getDefinition($field['settings']['target_type']);
-
+    $target_type = $field->getFieldSetting('target_type');
+    if (is_subclass_of($entity_manager->getControllerClass($target_type, 'storage'), 'Drupal\Core\Entity\DatabaseStorageController')) {
+      $entity_info = $entity_manager->getDefinition($target_type);
       $base_table = $entity_info['base_table'];
-      $id_column = $entity_info['entity_keys']['id'];
-
       $schema['foreign keys'][$base_table] = array(
         'table' => $base_table,
-        'columns' => array('target_id' => $id_column),
+        'columns' => array('target_id' => $entity_info['entity_keys']['id']),
       );
     }
 
@@ -203,7 +201,7 @@ class ConfigurableEntityReferenceItem extends ConfigEntityReferenceItemBase impl
   public static function instanceSettingsFormValidate($form, &$form_state) {
     if (isset($form_state['values']['instance'])) {
       unset($form_state['values']['instance']['settings']['handler_submit']);
-      $form_state['instance']['settings'] = $form_state['values']['instance']['settings'];
+      $form_state['instance']->settings = $form_state['values']['instance']['settings'];
     }
   }
 

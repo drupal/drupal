@@ -82,16 +82,12 @@ class EntityReferenceController implements ContainerInjectionInterface {
    *   The matched labels as json.
    */
   public function handleAutocomplete(Request $request, $type, $field_name, $entity_type, $bundle_name, $entity_id) {
-    if (!$field = field_info_field($entity_type, $field_name)) {
-      throw new AccessDeniedHttpException();
-    }
-
     if (!$instance = field_info_instance($entity_type, $field_name, $bundle_name)) {
       throw new AccessDeniedHttpException();
     }
 
     $access_controller = $this->entityManager->getAccessController($entity_type);
-    if ($field['type'] != 'entity_reference' || !$access_controller->fieldAccess('edit', $instance)) {
+    if ($instance->getFieldType() != 'entity_reference' || !$access_controller->fieldAccess('edit', $instance)) {
       throw new AccessDeniedHttpException();
     }
 
@@ -107,7 +103,7 @@ class EntityReferenceController implements ContainerInjectionInterface {
       $prefix = count($items_typed) ? drupal_implode_tags($items_typed) . ', ' : '';
     }
 
-    $matches = $this->entityReferenceAutocomplete->getMatches($field, $instance, $entity_type, $entity_id, $prefix, $last_item);
+    $matches = $this->entityReferenceAutocomplete->getMatches($instance->getField(), $instance, $entity_type, $entity_id, $prefix, $last_item);
 
     return new JsonResponse($matches);
   }

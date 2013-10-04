@@ -46,7 +46,7 @@ class FieldDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to delete the field %field?', array('%field' => $this->entity->label()));
+    return $this->t('Are you sure you want to delete the field %field?', array('%field' => $this->entity->getFieldLabel()));
   }
 
   /**
@@ -71,7 +71,7 @@ class FieldDeleteForm extends EntityConfirmFormBase {
     $bundles = entity_get_bundles();
     $bundle_label = $bundles[$this->entity->entity_type][$this->entity->bundle]['label'];
 
-    if ($field && !$field['locked']) {
+    if ($field && !$field->locked) {
       $this->entity->delete();
       drupal_set_message($this->t('The field %field has been deleted from the %type content type.', array('%field' => $this->entity->label(), '%type' => $bundle_label)));
     }

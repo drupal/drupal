@@ -125,14 +125,14 @@ class FieldOverview extends OverviewBase {
           'id' => drupal_html_class($name),
         ),
         'label' => array(
-          '#markup' => check_plain($instance['label']),
+          '#markup' => check_plain($instance->getFieldLabel()),
         ),
         'field_name' => array(
-          '#markup' => $instance['field_name'],
+          '#markup' => $instance->getFieldName(),
         ),
         'type' => array(
           '#type' => 'link',
-          '#title' => $field_types[$field['type']]['label'],
+          '#title' => $field_types[$field->getFieldType()]['label'],
           '#href' => $admin_field_path . '/field',
           '#options' => array('attributes' => array('title' => $this->t('Edit field settings.'))),
         ),
@@ -161,7 +161,7 @@ class FieldOverview extends OverviewBase {
         '#links' => $links,
       );
 
-      if (!empty($field['locked'])) {
+      if (!empty($field->locked)) {
         $table[$name]['operations'] = array('#markup' => $this->t('Locked'));
         $table[$name]['#attributes']['class'][] = 'menu-disabled';
       }
@@ -423,20 +423,21 @@ class FieldOverview extends OverviewBase {
         $form_state['fields_added']['_add_new_field'] = $values['field_name'];
       }
       catch (\Exception $e) {
-        drupal_set_message($this->t('There was a problem creating field %label: !message', array('%label' => $instance['label'], '!message' => $e->getMessage())), 'error');
+        drupal_set_message($this->t('There was a problem creating field %label: !message', array('%label' => $instance->getFieldLabel(), '!message' => $e->getMessage())), 'error');
       }
     }
 
     // Re-use existing field.
     if (!empty($form_values['_add_existing_field']['field_name'])) {
       $values = $form_values['_add_existing_field'];
-      $field = field_info_field($this->entity_type, $values['field_name']);
-      if (!empty($field['locked'])) {
+      $field_name = $values['field_name'];
+      $field = field_info_field($this->entity_type, $field_name);
+      if (!empty($field->locked)) {
         drupal_set_message($this->t('The field %label cannot be added because it is locked.', array('%label' => $values['label'])), 'error');
       }
       else {
         $instance = array(
-          'field_name' => $field['field_name'],
+          'field_name' => $field_name,
           'entity_type' => $this->entity_type,
           'bundle' => $this->bundle,
           'label' => $values['label'],
@@ -450,14 +451,14 @@ class FieldOverview extends OverviewBase {
           // default widget and settings). It stays hidden for other form modes
           // until it is explicitly configured.
           entity_get_form_display($this->entity_type, $this->bundle, 'default')
-            ->setComponent($field['field_name'])
+            ->setComponent($field_name)
             ->save();
 
           // Make sure the field is displayed in the 'default' view mode (using
           // default formatter and settings). It stays hidden for other view
           // modes until it is explicitly configured.
           entity_get_display($this->entity_type, $this->bundle, 'default')
-            ->setComponent($field['field_name'])
+            ->setComponent($field_name)
             ->save();
 
           $destinations[] = $this->adminPath . '/fields/' . $new_instance->id();
@@ -465,7 +466,7 @@ class FieldOverview extends OverviewBase {
           $form_state['fields_added']['_add_existing_field'] = $instance['field_name'];
         }
         catch (\Exception $e) {
-          drupal_set_message($this->t('There was a problem creating field instance %label: @message.', array('%label' => $instance['label'], '@message' => $e->getMessage())), 'error');
+          drupal_set_message($this->t('There was a problem creating field instance %label: @message.', array('%label' => $instance->getFieldLabel(), '@message' => $e->getMessage())), 'error');
         }
       }
     }
@@ -511,16 +512,17 @@ class FieldOverview extends OverviewBase {
       $field_types = $this->fieldTypeManager->getDefinitions();
       $instances = $this->entityManager->getStorageController('field_instance')->loadMultiple($instance_ids);
       foreach ($instances as $instance) {
-        $field = $instance->getField();
         // Do not show:
         // - locked fields,
         // - fields that should not be added via user interface.
-        if (empty($field['locked']) && empty($field_types[$field['type']]['no_ui'])) {
-          $options[$field->name] = array(
-            'type' => $field->type,
-            'type_label' => $field_types[$field->type]['label'],
-            'field' => $field->name,
-            'label' => $instance->label,
+        $field_type = $instance->getFieldType();
+        $field = $instance->getField();
+        if (empty($field->locked) && empty($field_types[$field_type]['no_ui'])) {
+          $options[$instance->getFieldName()] = array(
+            'type' => $field_type,
+            'type_label' => $field_types[$field_type]['label'],
+            'field' => $instance->getFieldName(),
+            'label' => $instance->getFieldLabel(),
           );
         }
       }

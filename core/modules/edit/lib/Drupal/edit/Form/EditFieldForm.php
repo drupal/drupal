@@ -168,7 +168,7 @@ class EditFieldForm implements FormInterface, ContainerInjectionInterface {
     //   types: http://drupal.org/node/1678002.
     if ($entity->entityType() == 'node' && $entity->isNewRevision() && !isset($entity->log)) {
       $instance = field_info_instance($entity->entityType(), $form_state['field_name'], $entity->bundle());
-      $entity->log = t('Updated the %field-name field through in-place editing.', array('%field-name' => $instance['label']));
+      $entity->log = t('Updated the %field-name field through in-place editing.', array('%field-name' => $instance->getFieldLabel()));
     }
 
     return $entity;

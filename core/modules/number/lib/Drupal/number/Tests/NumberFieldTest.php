@@ -62,23 +62,23 @@ class NumberFieldTest extends WebTestBase {
    */
   function testNumberDecimalField() {
     // Create a field with settings to validate.
-    $this->field = entity_create('field_entity', array(
-      'name' => drupal_strtolower($this->randomName()),
+    $field_name = drupal_strtolower($this->randomName());
+    entity_create('field_entity', array(
+      'name' => $field_name,
       'entity_type' => 'entity_test',
       'type' => 'number_decimal',
       'settings' => array(
         'precision' => 8, 'scale' => 4, 'decimal_separator' => '.',
       )
-    ));
-    $this->field->save();
+    ))->save();
     entity_create('field_instance', array(
-      'field_name' => $this->field->name,
+      'field_name' => $field_name,
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     ))->save();
 
     entity_get_form_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->field->name, array(
+      ->setComponent($field_name, array(
         'type' => 'number',
         'settings' => array(
           'placeholder' => '0.00'
@@ -86,14 +86,14 @@ class NumberFieldTest extends WebTestBase {
       ))
       ->save();
     entity_get_display('entity_test', 'entity_test', 'default')
-      ->setComponent($this->field->name, array(
+      ->setComponent($field_name, array(
         'type' => 'number_decimal',
       ))
       ->save();
 
     // Display creation form.
     $this->drupalGet('entity_test/add');
-    $this->assertFieldByName("{$this->field['field_name']}[0][value]", '', 'Widget is displayed');
+    $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget is displayed');
     $this->assertRaw('placeholder="0.00"');
 
     // Submit a signed decimal value within the allowed precision and scale.
@@ -101,7 +101,7 @@ class NumberFieldTest extends WebTestBase {
     $edit = array(
       'user_id' => 1,
       'name' => $this->randomName(),
-      "{$this->field['field_name']}[0][value]" => $value,
+      "{$field_name}[0][value]" => $value,
     );
     $this->drupalPostForm(NULL, $edit, t('Save'));
     preg_match('|entity_test/manage/(\d+)|', $this->url, $match);
@@ -121,10 +121,10 @@ class NumberFieldTest extends WebTestBase {
     foreach ($wrong_entries as $wrong_entry) {
       $this->drupalGet('entity_test/add');
       $edit = array(
-        "{$this->field['field_name']}[0][value]" => $wrong_entry,
+        "{$field_name}[0][value]" => $wrong_entry,
       );
       $this->drupalPostForm(NULL, $edit, t('Save'));
-      $this->assertRaw(t('%name must be a number.', array('%name' => $this->field['field_name'])), 'Correctly failed to save decimal value with more than one decimal point.');
+      $this->assertRaw(t('%name must be a number.', array('%name' => $field_name)), 'Correctly failed to save decimal value with more than one decimal point.');
     }
 
     // Try to create entries with minus sign not in the first position.
@@ -139,10 +139,10 @@ class NumberFieldTest extends WebTestBase {
     foreach ($wrong_entries as $wrong_entry) {
       $this->drupalGet('entity_test/add');
       $edit = array(
-        "{$this->field['field_name']}[0][value]" => $wrong_entry,
+        "{$field_name}[0][value]" => $wrong_entry,
       );
       $this->drupalPostForm(NULL, $edit, t('Save'));
-      $this->assertRaw(t('%name must be a number.', array('%name' => $this->field['field_name'])), 'Correctly failed to save decimal value with minus sign in the wrong position.');
+      $this->assertRaw(t('%name must be a number.', array('%name' => $field_name)), 'Correctly failed to save decimal value with minus sign in the wrong position.');
     }
   }
 

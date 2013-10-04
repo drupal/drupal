@@ -13,7 +13,7 @@ use Drupal\Core\Entity\Field\FieldDefinitionInterface;
 /**
  * Provides an interface defining a field entity.
  */
-interface FieldInterface extends ConfigEntityInterface, FieldDefinitionInterface, \ArrayAccess {
+interface FieldInterface extends ConfigEntityInterface, FieldDefinitionInterface {
 
   /**
    * Returns the field schema.

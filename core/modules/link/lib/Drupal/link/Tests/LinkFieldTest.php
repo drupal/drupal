@@ -460,7 +460,7 @@ class LinkFieldTest extends WebTestBase {
         // Update the field formatter settings.
         $display_options['settings'] = array($setting => $new_value);
         entity_get_display('entity_test', 'entity_test', 'full')
-          ->setComponent($this->field['field_name'], $display_options)
+          ->setComponent($field_name, $display_options)
           ->save();
 
         $this->renderTestEntity($id);

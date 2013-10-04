@@ -114,8 +114,8 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
       $fields = field_read_fields();
       foreach ($fields as $field) {
         $update_field = FALSE;
-        if ($field['type'] == 'taxonomy_term_reference') {
-          foreach ($field['settings']['allowed_values'] as &$value) {
+        if ($field->getFieldType() == 'taxonomy_term_reference') {
+          foreach ($field->settings['allowed_values'] as &$value) {
             if ($value['vocabulary'] == $this->getOriginalID()) {
               $value['vocabulary'] = $this->id();
               $update_field = TRUE;
@@ -159,14 +159,14 @@ class Vocabulary extends ConfigEntityBase implements VocabularyInterface {
       $modified_field = FALSE;
       // Term reference fields may reference terms from more than one
       // vocabulary.
-      foreach ($taxonomy_field['settings']['allowed_values'] as $key => $allowed_value) {
+      foreach ($taxonomy_field->settings['allowed_values'] as $key => $allowed_value) {
         if (isset($vocabularies[$allowed_value['vocabulary']])) {
-          unset($taxonomy_field['settings']['allowed_values'][$key]);
+          unset($taxonomy_field->settings['allowed_values'][$key]);
           $modified_field = TRUE;
         }
       }
       if ($modified_field) {
-        if (empty($taxonomy_field['settings']['allowed_values'])) {
+        if (empty($taxonomy_field->settings['allowed_values'])) {
           $taxonomy_field->delete();
         }
         else {

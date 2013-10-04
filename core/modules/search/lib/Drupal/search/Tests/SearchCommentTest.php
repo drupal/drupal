@@ -7,6 +7,8 @@
 
 namespace Drupal\search\Tests;
 
+use Drupal\field\Field;
+
 /**
  * Test integration searching comments.
  */
@@ -58,8 +60,8 @@ class SearchCommentTest extends SearchTestBase {
     $comment_body = 'Test comment body';
 
     // Make preview optional.
-    $instance = field_info_instance('node', 'comment', 'article');
-    $instance['settings']['preview'] = DRUPAL_OPTIONAL;
+    $instance = Field::fieldInfo()->getInstance('node', 'article', 'comment');
+    $instance->settings['preview'] = DRUPAL_OPTIONAL;
     $instance->save();
     // Enable check_plain() for 'Basic HTML' text format.
     $basic_html_format_id = 'basic_html';
@@ -135,8 +137,8 @@ class SearchCommentTest extends SearchTestBase {
 
     // Create a node.
     // Make preview optional.
-    $instance = field_info_instance('node', 'comment', 'article');
-    $instance['settings']['preview'] = DRUPAL_OPTIONAL;
+    $instance = Field::fieldInfo()->getInstance('node', 'article', 'comment');
+    $instance->settings['preview'] = DRUPAL_OPTIONAL;
     $instance->save();
     $this->node = $this->drupalCreateNode(array('type' => 'article'));
 

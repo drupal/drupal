@@ -145,30 +145,29 @@ class ImageStyle extends ConfigEntityBase implements ImageStyleInterface {
    */
   protected static function replaceImageStyle(ImageStyleInterface $style) {
     if ($style->id() != $style->getOriginalID()) {
-      $instances = field_read_instances();
       // Loop through all fields searching for image fields.
-      foreach ($instances as $instance) {
-        if ($instance->getField()->type == 'image') {
-          $view_modes = entity_get_view_modes($instance['entity_type']);
-          $view_modes = array('default') + array_keys($view_modes);
+      foreach (field_read_instances() as $instance) {
+        if ($instance->getFieldType() == 'image') {
+          $field_name = $instance->getFieldName();
+          $view_modes = array('default') + array_keys(entity_get_view_modes($instance->entity_type));
           foreach ($view_modes as $view_mode) {
-            $display = entity_get_display($instance['entity_type'], $instance['bundle'], $view_mode);
-            $display_options = $display->getComponent($instance['field_name']);
+            $display = entity_get_display($instance->entity_type, $instance->bundle, $view_mode);
+            $display_options = $display->getComponent($field_name);
 
             // Check if the formatter involves an image style.
             if ($display_options && $display_options['type'] == 'image' && $display_options['settings']['image_style'] == $style->getOriginalID()) {
               // Update display information for any instance using the image
               // style that was just deleted.
               $display_options['settings']['image_style'] = $style->id();
-              $display->setComponent($instance['field_name'], $display_options)
+              $display->setComponent($field_name, $display_options)
                 ->save();
             }
           }
-          $entity_form_display = entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default');
-          $widget_configuration = $entity_form_display->getComponent($instance['field_name']);
+          $entity_form_display = entity_get_form_display($instance->entity_type, $instance->bundle, 'default');
+          $widget_configuration = $entity_form_display->getComponent($field_name);
           if ($widget_configuration['settings']['preview_image_style'] == $style->getOriginalID()) {
             $widget_options['settings']['preview_image_style'] = $style->id();
-            $entity_form_display->setComponent($instance['field_name'], $widget_options)
+            $entity_form_display->setComponent($field_name, $widget_options)
               ->save();
           }
         }

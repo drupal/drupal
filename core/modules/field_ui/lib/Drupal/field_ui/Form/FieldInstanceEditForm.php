@@ -64,25 +64,25 @@ class FieldInstanceEditForm extends FormBase {
   public function buildForm(array $form, array &$form_state, FieldInstanceInterface $field_instance = NULL) {
     $this->instance = $form_state['instance'] = $field_instance;
 
-    $bundle = $this->instance['bundle'];
-    $entity_type = $this->instance['entity_type'];
+    $bundle = $this->instance->bundle;
+    $entity_type = $this->instance->entity_type;
     $field = $this->instance->getField();
     $bundles = entity_get_bundles();
 
     drupal_set_title($this->t('%instance settings for %bundle', array(
-      '%instance' => $this->instance->label(),
+      '%instance' => $this->instance->getFieldLabel(),
       '%bundle' => $bundles[$entity_type][$bundle]['label'],
     )), PASS_THROUGH);
 
     $form['#field'] = $field;
     // Create an arbitrary entity object (used by the 'default value' widget).
-    $ids = (object) array('entity_type' => $this->instance['entity_type'], 'bundle' => $this->instance['bundle'], 'entity_id' => NULL);
+    $ids = (object) array('entity_type' => $this->instance->entity_type, 'bundle' => $this->instance->bundle, 'entity_id' => NULL);
     $form['#entity'] = _field_create_entity_from_ids($ids);
-    $items = $form['#entity']->get($this->instance['field_name']);
+    $items = $form['#entity']->get($this->instance->getFieldName());
 
-    if (!empty($field['locked'])) {
+    if (!empty($field->locked)) {
       $form['locked'] = array(
-        '#markup' => $this->t('The field %field is locked and cannot be edited.', array('%field' => $this->instance->label())),
+        '#markup' => $this->t('The field %field is locked and cannot be edited.', array('%field' => $this->instance->getFieldLabel())),
       );
       return $form;
     }
@@ -95,7 +95,7 @@ class FieldInstanceEditForm extends FormBase {
     // Build the non-configurable instance values.
     $form['instance']['field_name'] = array(
       '#type' => 'value',
-      '#value' => $this->instance['field_name'],
+      '#value' => $this->instance->getFieldName(),
     );
     $form['instance']['entity_type'] = array(
       '#type' => 'value',
@@ -110,7 +110,7 @@ class FieldInstanceEditForm extends FormBase {
     $form['instance']['label'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
-      '#default_value' => $this->instance->label() ?: $field['field_name'],
+      '#default_value' => $this->instance->getFieldLabel() ?: $field->getFieldName(),
       '#required' => TRUE,
       '#weight' => -20,
     );
@@ -118,7 +118,7 @@ class FieldInstanceEditForm extends FormBase {
     $form['instance']['description'] = array(
       '#type' => 'textarea',
       '#title' => $this->t('Help text'),
-      '#default_value' => !empty($this->instance['description']) ? $this->instance['description'] : '',
+      '#default_value' => $this->instance->getFieldDescription(),
       '#rows' => 5,
       '#description' => $this->t('Instructions to present to the user below this field on the editing form.<br />Allowed HTML tags: @tags', array('@tags' => _field_filter_xss_display_allowed_tags())) . '<br />' . $this->t('This field supports tokens.'),
       '#weight' => -10,
@@ -127,7 +127,7 @@ class FieldInstanceEditForm extends FormBase {
     $form['instance']['required'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Required field'),
-      '#default_value' => !empty($this->instance['required']),
+      '#default_value' => $this->instance->isFieldRequired(),
       '#weight' => -5,
     );
 
@@ -163,7 +163,7 @@ class FieldInstanceEditForm extends FormBase {
    */
   public function validateForm(array &$form, array &$form_state) {
     if (isset($form['instance']['default_value'])) {
-      $items = $form['#entity']->get($this->instance['field_name']);
+      $items = $form['#entity']->get($this->instance->getFieldName());
       $items->defaultValuesFormValidate($form['instance']['default_value'], $form, $form_state);
     }
   }
@@ -175,18 +175,18 @@ class FieldInstanceEditForm extends FormBase {
     // Handle the default value.
     $default_value = array();
     if (isset($form['instance']['default_value'])) {
-      $items = $form['#entity']->get($this->instance['field_name']);
+      $items = $form['#entity']->get($this->instance->getFieldName());
       $default_value = $items->defaultValuesFormSubmit($form['instance']['default_value'], $form, $form_state);
     }
-    $this->instance['default_value'] = $default_value;
+    $this->instance->default_value = $default_value;
 
     // Merge incoming values into the instance.
     foreach ($form_state['values']['instance'] as $key => $value) {
-      $this->instance[$key] = $value;
+      $this->instance->$key = $value;
     }
     $this->instance->save();
 
-    drupal_set_message($this->t('Saved %label configuration.', array('%label' => $this->instance->label())));
+    drupal_set_message($this->t('Saved %label configuration.', array('%label' => $this->instance->getFieldLabel())));
 
     $form_state['redirect'] = $this->getNextDestination();
   }

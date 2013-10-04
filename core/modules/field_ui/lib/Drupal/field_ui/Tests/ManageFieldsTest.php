@@ -225,11 +225,11 @@ class ManageFieldsTest extends FieldUiTestBase {
     field_info_cache_clear();
     // Assert field settings.
     $field = field_info_field($entity_type, $field_name);
-    $this->assertTrue($field['settings']['test_field_setting'] == $string, 'Field settings were found.');
+    $this->assertTrue($field->getFieldSetting('test_field_setting') == $string, 'Field settings were found.');
 
     // Assert instance settings.
     $instance = field_info_instance($entity_type, $field_name, $bundle);
-    $this->assertTrue($instance['settings']['test_instance_setting'] == $string, 'Field instance settings were found.');
+    $this->assertTrue($instance->getFieldSetting('test_instance_setting') == $string, 'Field instance settings were found.');
   }
 
   /**
@@ -301,7 +301,7 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
     field_info_cache_clear();
     $instance = field_info_instance('node', $field_name, $this->type);
-    $this->assertEqual($instance['default_value'], array(array('value' => 1)), 'The default value was correctly saved.');
+    $this->assertEqual($instance->default_value, array(array('value' => 1)), 'The default value was correctly saved.');
 
     // Check that the default value shows up in the form
     $this->drupalGet($admin_path);
@@ -313,10 +313,10 @@ class ManageFieldsTest extends FieldUiTestBase {
     $this->assertText("Saved $field_name configuration", 'The form was successfully submitted.');
     field_info_cache_clear();
     $instance = field_info_instance('node', $field_name, $this->type);
-    $this->assertEqual($instance['default_value'], NULL, 'The default value was correctly saved.');
+    $this->assertEqual($instance->default_value, NULL, 'The default value was correctly saved.');
 
     // Check that the default widget is used when the field is hidden.
-    entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')
+    entity_get_form_display($instance->entity_type, $instance->bundle, 'default')
       ->removeComponent($field_name)->save();
     $this->drupalGet($admin_path);
     $this->assertFieldById($element_id, '', 'The default value widget was displayed when field is hidden.');

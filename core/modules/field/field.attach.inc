@@ -113,7 +113,7 @@ function field_invoke_method($method, $target_function, EntityInterface $entity,
 
     if (method_exists($target, $method)) {
       $field = $instance->getField();
-      $field_name = $field['field_name'];
+      $field_name = $field->getFieldName();
 
       // Determine the list of languages to iterate on.
       $available_langcodes = field_available_languages($entity_type, $field);
@@ -201,19 +201,19 @@ function field_invoke_method_multiple($method, $target_function, array $entities
     $entity_instances = _field_invoke_get_instances($entity_type, $entity->bundle(), $options);
 
     foreach ($entity_instances as $instance) {
-      $instance_id = $instance['id'];
-      $field_name = $instance['field_name'];
+      $instance_uuid = $instance->uuid();
+      $field_name = $instance->getFieldName();
 
       // Let the closure determine the target object on which the method should
       // be called.
-      if (empty($grouped_targets[$instance_id])) {
-        $grouped_targets[$instance_id] = call_user_func($target_function, $instance);
+      if (empty($grouped_targets[$instance_uuid])) {
+        $grouped_targets[$instance_uuid] = call_user_func($target_function, $instance);
       }
 
-      if (method_exists($grouped_targets[$instance_id], $method)) {
+      if (method_exists($grouped_targets[$instance_uuid], $method)) {
         // Add the instance to the list of instances to invoke the hook on.
-        if (!isset($instances[$instance_id])) {
-          $instances[$instance_id] = $instance;
+        if (!isset($instances[$instance_uuid])) {
+          $instances[$instance_uuid] = $instance;
         }
 
         // Unless a language code suggestion is provided we iterate on all the
@@ -226,7 +226,7 @@ function field_invoke_method_multiple($method, $target_function, array $entities
           // Group the items corresponding to the current field.
           $items = $entity->getTranslation($langcode)->get($field_name);
           $items->filterEmptyValues();
-          $grouped_items[$instance_id][$langcode][$id] = $items;
+          $grouped_items[$instance_uuid][$langcode][$id] = $items;
         }
       }
     }
@@ -235,10 +235,10 @@ function field_invoke_method_multiple($method, $target_function, array $entities
   }
 
   // For each instance, invoke the method and collect results.
-  foreach ($instances as $instance_id => $instance) {
+  foreach ($instances as $instance_uuid => $instance) {
     // Iterate over all the field translations.
-    foreach ($grouped_items[$instance_id] as $langcode => $items) {
-      $results = $grouped_targets[$instance_id]->$method($items, $a, $b);
+    foreach ($grouped_items[$instance_uuid] as $items) {
+      $results = $grouped_targets[$instance_uuid]->$method($items, $a, $b);
 
       if (isset($results)) {
         // Collect results by entity.
@@ -303,7 +303,7 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
       // Single-field mode by field id: we need to loop on each instance to
       // find the right one.
       foreach ($instances as $instance) {
-        if ($instance['field_id'] == $options['field_id']) {
+        if ($instance->getField()->uuid() == $options['field_id']) {
           $instances = array($instance);
           break;
         }
@@ -327,7 +327,7 @@ function _field_invoke_get_instances($entity_type, $bundle, $options) {
  */
 function _field_invoke_widget_target($form_display) {
   return function ($instance) use ($form_display) {
-    return $form_display->getRenderer($instance['field_name']);
+    return $form_display->getRenderer($instance->getFieldName());
   };
 }
 
@@ -348,8 +348,7 @@ function _field_invoke_widget_target($form_display) {
  *   values.
  */
 function field_attach_preprocess(EntityInterface $entity, $element, &$variables) {
-  foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
-    $field_name = $instance['field_name'];
+  foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $field_name => $instance) {
     if (isset($element[$field_name]['#language'])) {
       $langcode = $element[$field_name]['#language'];
       $variables[$field_name] = $entity->getTranslation($langcode)->{$field_name}->getValue();

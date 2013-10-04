@@ -7,6 +7,7 @@
 
 use Drupal\Core\Language\Language;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\field\FieldInterface;
 
 /**
  * @defgroup field_language Field Language API
@@ -124,13 +125,13 @@ function field_language_fallback(&$field_langcodes, EntityInterface $entity, $la
  * @return
  *   An array of valid language codes.
  */
-function field_available_languages($entity_type, $field) {
+function field_available_languages($entity_type, FieldInterface $field) {
   static $drupal_static_fast;
   if (!isset($drupal_static_fast)) {
     $drupal_static_fast['field_langcodes'] = &drupal_static(__FUNCTION__);
   }
   $field_langcodes = &$drupal_static_fast['field_langcodes'];
-  $field_name = $field['field_name'];
+  $field_name = $field->getFieldName();
 
   if (!isset($field_langcodes[$entity_type][$field_name])) {
     // If the field has language support enabled we retrieve an (alterable) list
@@ -215,8 +216,8 @@ function field_language_fallback_enabled() {
  * @return
  *   TRUE if the field can be translated.
  */
-function field_is_translatable($entity_type, $field) {
-  return $field['translatable'] && field_has_translation_handler($entity_type);
+function field_is_translatable($entity_type, FieldInterface $field) {
+  return $field->isFieldTranslatable() && field_has_translation_handler($entity_type);
 }
 
 /**
@@ -296,7 +297,7 @@ function field_valid_language($langcode, $default = TRUE) {
  *   A language code if a field name is specified, an array of language codes
  *   keyed by field name otherwise.
  */
-function field_language(EntityInterface $entity, $field_name = NULL, $langcode = NULL) {
+function field_language(EntityInterface $entity, $displayed_field_name = NULL, $langcode = NULL) {
   $display_langcodes = &drupal_static(__FUNCTION__, array());
   $id = $entity->id();
   $bundle = $entity->bundle();
@@ -308,18 +309,18 @@ function field_language(EntityInterface $entity, $field_name = NULL, $langcode =
     // By default, display language is set to one of the locked languages
     // if the field translation is not available. It is up to translation
     // handlers to implement language fallback rules.
-    foreach (field_info_instances($entity_type, $bundle) as $instance) {
-      if (_field_translated_value_exists($entity, $langcode, $instance['field_name'])) {
-        $display_langcode[$instance['field_name']] = $langcode;
+    foreach (field_info_instances($entity_type, $bundle) as $field_name => $instance) {
+      if (_field_translated_value_exists($entity, $langcode, $field_name)) {
+        $display_langcode[$field_name] = $langcode;
       }
       else {
         // If the field has a value for one of the locked languages, then use
         // that language for display. If not, the default one will be
         // Language::LANGCODE_NOT_SPECIFIED.
-        $display_langcode[$instance['field_name']] = Language::LANGCODE_NOT_SPECIFIED;
+        $display_langcode[$field_name] = Language::LANGCODE_NOT_SPECIFIED;
         foreach (language_list(Language::STATE_LOCKED) as $language_locked) {
-          if (isset($entity->{$instance['field_name']}[$language_locked->id])) {
-            $display_langcode[$instance['field_name']] = $language_locked->id;
+          if (isset($entity->{$field_name}[$language_locked->id])) {
+            $display_langcode[$field_name] = $language_locked->id;
             break;
           }
         }
@@ -345,8 +346,8 @@ function field_language(EntityInterface $entity, $field_name = NULL, $langcode =
   $display_langcode = $display_langcodes[$entity_type][$id][$langcode];
 
   // Single-field mode.
-  if (isset($field_name)) {
-    return isset($display_langcode[$field_name]) ? $display_langcode[$field_name] : FALSE;
+  if (isset($displayed_field_name)) {
+    return isset($display_langcode[$displayed_field_name]) ? $display_langcode[$displayed_field_name] : FALSE;
   }
 
   return $display_langcode;

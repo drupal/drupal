@@ -161,7 +161,7 @@ class DatetimeFieldTest extends WebTestBase {
   function testDatetimeField() {
     $field_name = $this->field->name;
     // Change the field to a datetime field.
-    $this->field['settings']['datetime_type'] = 'datetime';
+    $this->field->settings['datetime_type'] = 'datetime';
     $this->field->save();
 
     // Display creation form.

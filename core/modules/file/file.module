@@ -1869,15 +1869,15 @@ function file_get_file_references(File $file, $field = NULL, $age = EntityStorag
           // This contains the possible field names.
           $instances = field_info_instances($entity_type, $bundle);
           foreach ($instances as $field_name => $instance) {
-            $current_field = $instance->getField();
+            $field_type = $instance->getFieldType();
             // If this is the first time this field type is seen, check
             // whether it references files.
-            if (!isset($field_columns[$current_field['type']])) {
-              $field_columns[$current_field['type']] = file_field_find_file_reference_column($current_field);
+            if (!isset($field_columns[$field_type])) {
+              $field_columns[$field_type] = file_field_find_file_reference_column($instance->getField());
             }
             // If the field type does reference files then record it.
-            if ($field_columns[$current_field['type']]) {
-              $file_fields[$entity_type][$bundle][$field_name] = $field_columns[$current_field['type']];
+            if ($field_columns[$field_type]) {
+              $file_fields[$entity_type][$bundle][$field_name] = $field_columns[$field_type];
             }
           }
         }
@@ -1909,7 +1909,7 @@ function file_get_file_references(File $file, $field = NULL, $age = EntityStorag
     foreach ($return as $field_name => $data) {
       foreach (array_keys($data) as $entity_type) {
         $current_field = field_info_field($entity_type, $field_name);
-        if (($field_type && $current_field['type'] != $field_type) || ($field && $field['id'] != $current_field['id'])) {
+        if (($field_type && $current_field->getFieldType() != $field_type) || ($field && $field->uuid() != $current_field->uuid())) {
           unset($return[$field_name][$entity_type]);
         }
       }

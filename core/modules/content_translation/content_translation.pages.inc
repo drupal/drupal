@@ -42,8 +42,7 @@ function content_translation_overview(EntityInterface $entity) {
     // Determine whether the current entity is translatable.
     $translatable = FALSE;
     foreach (field_info_instances($entity->entityType(), $entity->bundle()) as $instance) {
-      $field = $instance->getField();
-      if ($field['translatable']) {
+      if ($instance->isFieldTranslatable()) {
         $translatable = TRUE;
         break;
       }

@@ -7,7 +7,7 @@
 
 namespace Drupal\file\Tests;
 
-use Drupal\Core\Language\Language;
+use Drupal\field\Field;
 
 /**
  * Tests various validations.
@@ -31,14 +31,14 @@ class FileFieldValidateTest extends FileFieldTestBase {
     $type_name = 'article';
     $field_name = strtolower($this->randomName());
     $field = $this->createFileField($field_name, 'node', $type_name, array(), array('required' => '1'));
-    $instance = field_info_instance($field_name, 'node', $type_name);
+    $instance = Field::fieldInfo()->getInstance('node', $type_name, $field_name);
 
     $test_file = $this->getTestFile('text');
 
     // Try to post a new node without uploading a file.
     $edit = array("title" => $this->randomName());
     $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save and publish'));
-    $this->assertRaw(t('!title field is required.', array('!title' => $instance['label'])), 'Node save failed when required file field was empty.');
+    $this->assertRaw(t('!title field is required.', array('!title' => $instance->getFieldLabel())), 'Node save failed when required file field was empty.');
 
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
@@ -57,7 +57,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     // Try to post a new node without uploading a file in the multivalue field.
     $edit = array('title' => $this->randomName());
     $this->drupalPostForm('node/add/' . $type_name, $edit, t('Save and publish'));
-    $this->assertRaw(t('!title field is required.', array('!title' => $instance['label'])), 'Node save failed when required multiple value file field was empty.');
+    $this->assertRaw(t('!title field is required.', array('!title' => $instance->getFieldLabel())), 'Node save failed when required multiple value file field was empty.');
 
     // Create a new node with the uploaded file into the multivalue field.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);

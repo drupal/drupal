@@ -109,7 +109,7 @@ class FieldEditForm extends FormBase {
     }
 
     // Build the configurable field values.
-    $cardinality = $field['cardinality'];
+    $cardinality = $field->getFieldCardinality();
     $form['field']['cardinality_container'] = array(
       // We can't use the container element because it doesn't support the title
       // or description properties.
@@ -145,10 +145,10 @@ class FieldEditForm extends FormBase {
     );
 
     // Build the non-configurable field values.
-    $form['field']['field_name'] = array('#type' => 'value', '#value' => $field['field_name']);
-    $form['field']['type'] = array('#type' => 'value', '#value' => $field['type']);
-    $form['field']['module'] = array('#type' => 'value', '#value' => $field['module']);
-    $form['field']['active'] = array('#type' => 'value', '#value' => $field['active']);
+    $form['field']['field_name'] = array('#type' => 'value', '#value' => $field->getFieldName());
+    $form['field']['type'] = array('#type' => 'value', '#value' => $field->getFieldType());
+    $form['field']['module'] = array('#type' => 'value', '#value' => $field->module);
+    $form['field']['active'] = array('#type' => 'value', '#value' => $field->active);
 
     // Add settings provided by the field module. The field module is
     // responsible for not returning settings that cannot be changed if
@@ -158,9 +158,9 @@ class FieldEditForm extends FormBase {
     );
     // Create an arbitrary entity object, so that we can have an instantiated
     // FieldItem.
-    $ids = (object) array('entity_type' => $this->instance['entity_type'], 'bundle' => $this->instance['bundle'], 'entity_id' => NULL);
+    $ids = (object) array('entity_type' => $this->instance->entity_type, 'bundle' => $this->instance->bundle, 'entity_id' => NULL);
     $entity = _field_create_entity_from_ids($ids);
-    $form['field']['settings'] += $entity->get($field['field_name'])->offsetGet(0)->settingsForm($form, $form_state, $field->hasData());
+    $form['field']['settings'] += $entity->get($field->getFieldName())->offsetGet(0)->settingsForm($form, $form_state, $field->hasData());
 
     $form['actions'] = array('#type' => 'actions');
     $form['actions']['submit'] = array('#type' => 'submit', '#value' => $this->t('Save field settings'));
@@ -198,7 +198,7 @@ class FieldEditForm extends FormBase {
     // Merge incoming form values into the existing field.
     $field = $this->instance->getField();
     foreach ($field_values as $key => $value) {
-      $field[$key] = $value;
+      $field->{$key} = $value;
     }
 
     // Update the field.

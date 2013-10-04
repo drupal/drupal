@@ -51,7 +51,7 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
     $this->field = entity_create('field_entity', $this->field_definition);
     $this->field->save();
     $this->instance_definition = array(
-      'field_name' => $this->field->name,
+      'field_name' => $this->field->getFieldName(),
       'entity_type' => 'entity_test',
       'bundle' => 'entity_test',
     );
@@ -115,9 +115,9 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
 
     // Read the instance back.
     $instance = field_read_instance('entity_test', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $this->assertTrue($this->instance_definition['field_name'] == $instance['field_name'], 'The field was properly read.');
-    $this->assertTrue($this->instance_definition['entity_type'] == $instance['entity_type'], 'The field was properly read.');
-    $this->assertTrue($this->instance_definition['bundle'] == $instance['bundle'], 'The field was properly read.');
+    $this->assertTrue($this->instance_definition['field_name'] == $instance->getFieldName(), 'The field was properly read.');
+    $this->assertTrue($this->instance_definition['entity_type'] == $instance->entity_type, 'The field was properly read.');
+    $this->assertTrue($this->instance_definition['bundle'] == $instance->bundle, 'The field was properly read.');
   }
 
   /**
@@ -128,16 +128,16 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
 
     // Check that basic changes are saved.
     $instance = field_read_instance('entity_test', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $instance['required'] = !$instance['required'];
-    $instance['label'] = $this->randomName();
-    $instance['description'] = $this->randomName();
-    $instance['settings']['test_instance_setting'] = $this->randomName();
+    $instance->required = !$instance->isFieldRequired();
+    $instance->label = $this->randomName();
+    $instance->description = $this->randomName();
+    $instance->settings['test_instance_setting'] = $this->randomName();
     $instance->save();
 
     $instance_new = field_read_instance('entity_test', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
-    $this->assertEqual($instance['required'], $instance_new['required'], '"required" change is saved');
-    $this->assertEqual($instance['label'], $instance_new['label'], '"label" change is saved');
-    $this->assertEqual($instance['description'], $instance_new['description'], '"description" change is saved');
+    $this->assertEqual($instance->isFieldRequired(), $instance_new->isFieldRequired(), '"required" change is saved');
+    $this->assertEqual($instance->getFieldLabel(), $instance_new->getFieldLabel(), '"label" change is saved');
+    $this->assertEqual($instance->getFieldDescription(), $instance_new->getFieldDescription(), '"description" change is saved');
 
     // TODO: test failures.
   }
@@ -159,13 +159,13 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
 
     // Test that the first instance is not deleted, and then delete it.
     $instance = field_read_instance('entity_test', $this->instance_definition['field_name'], $this->instance_definition['bundle'], array('include_deleted' => TRUE));
-    $this->assertTrue(!empty($instance) && empty($instance['deleted']), 'A new field instance is not marked for deletion.');
+    $this->assertTrue(!empty($instance) && empty($instance->deleted), 'A new field instance is not marked for deletion.');
     $instance->delete();
 
     // Make sure the instance is marked as deleted when the instance is
     // specifically loaded.
     $instance = field_read_instance('entity_test', $this->instance_definition['field_name'], $this->instance_definition['bundle'], array('include_deleted' => TRUE));
-    $this->assertTrue(!empty($instance['deleted']), 'A deleted field instance is marked for deletion.');
+    $this->assertTrue(!empty($instance->deleted), 'A deleted field instance is marked for deletion.');
 
     // Try to load the instance normally and make sure it does not show up.
     $instance = field_read_instance('entity_test', $this->instance_definition['field_name'], $this->instance_definition['bundle']);
@@ -173,13 +173,13 @@ class FieldInstanceCrudTest extends FieldUnitTestBase {
 
     // Make sure the other field instance is not deleted.
     $another_instance = field_read_instance('entity_test', $another_instance_definition['field_name'], $another_instance_definition['bundle']);
-    $this->assertTrue(!empty($another_instance) && empty($another_instance['deleted']), 'A non-deleted field instance is not marked for deletion.');
+    $this->assertTrue(!empty($another_instance) && empty($another_instance->deleted), 'A non-deleted field instance is not marked for deletion.');
 
     // Make sure the field is deleted when its last instance is deleted.
     $another_instance->delete();
     $deleted_fields = \Drupal::state()->get('field.field.deleted');
-    $this->assertTrue(isset($deleted_fields[$another_instance['field_id']]), 'A deleted field is marked for deletion.');
-    $field = field_read_field($another_instance['entity_type'], $another_instance['field_name']);
+    $this->assertTrue(isset($deleted_fields[$another_instance->field_uuid]), 'A deleted field is marked for deletion.');
+    $field = field_read_field($another_instance->entity_type, $another_instance->getFieldName());
     $this->assertFalse($field, 'The field marked to be deleted is not found anymore in the configuration.');
   }
 

@@ -134,7 +134,7 @@ class EntityReferenceSelectionSortTest extends WebTestBase {
     $this->assertIdentical($result['article'], $expected_result, 'Query sorted by field returned expected values.');
 
     // Assert sort by property.
-    $instance['settings']['handler_settings']['sort'] = array(
+    $instance->settings['handler_settings']['sort'] = array(
       'field' => 'nid',
       'direction' => 'ASC',
     );

@@ -124,12 +124,11 @@ abstract class FileFieldTestBase extends WebTestBase {
    */
   function updateFileField($name, $type_name, $instance_settings = array(), $widget_settings = array()) {
     $instance = field_info_instance('node', $name, $type_name);
-    $instance['settings'] = array_merge($instance['settings'], $instance_settings);
-
+    $instance->settings = array_merge($instance->settings, $instance_settings);
     $instance->save();
 
-    entity_get_form_display($instance['entity_type'], $instance['bundle'], 'default')
-      ->setComponent($instance['field_name'], array(
+    entity_get_form_display('node', $type_name, 'default')
+      ->setComponent($name, array(
         'settings' => $widget_settings,
       ))
       ->save();
@@ -162,7 +161,7 @@ abstract class FileFieldTestBase extends WebTestBase {
     // Attach a file to the node.
     $field = field_info_field('node', $field_name);
     $name = 'files[' . $field_name . '_0]';
-    if ($field['cardinality'] != 1) {
+    if ($field->getFieldCardinality() != 1) {
       $name .= '[]';
     }
     $edit[$name] = drupal_realpath($file->getFileUri());

@@ -123,8 +123,8 @@ class TermFieldMultipleVocabularyTest extends TaxonomyTestBase {
     $this->assertNoText($term2->label(), 'Term 2 name is not displayed.');
 
     // Verify that field and instance settings are correct.
-    $field_info = field_info_field('entity_test', $this->field_name);
-    $this->assertEqual(count($field_info['settings']['allowed_values']), 1, 'Only one vocabulary is allowed for the field.');
+    $field = field_info_field('entity_test', $this->field_name);
+    $this->assertEqual(count($field->getFieldSetting('allowed_values')), 1, 'Only one vocabulary is allowed for the field.');
 
     // The widget should still be displayed.
     $this->drupalGet('entity_test/add');
