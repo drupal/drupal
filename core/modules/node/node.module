@@ -1124,7 +1124,7 @@ function node_last_changed($nid, $langcode = NULL) {
  */
 function node_revision_list(EntityInterface $node) {
   $revisions = array();
-  $result = db_query('SELECT nfr.vid, nfr.title, nfr.log, nfr.revision_uid AS uid, n.vid AS current_vid, nfr.revision_timestamp, u.name FROM {node_field_revision} nfr LEFT JOIN {node} n ON n.vid = nfr.vid INNER JOIN {users} u ON u.uid = nfr.revision_uid WHERE nfr.nid = :nid AND nfr.default_langcode = 1 ORDER BY nfr.vid DESC', array(':nid' => $node->id()));
+  $result = db_query('SELECT nr.vid, nfr.title, nr.log, nr.revision_uid AS uid, n.vid AS current_vid, nr.revision_timestamp, u.name FROM {node_field_revision} nfr JOIN {node_revision} nr ON nr.vid = nfr.vid LEFT JOIN {node} n ON n.vid = nfr.vid INNER JOIN {users} u ON u.uid = nr.revision_uid WHERE nfr.nid = :nid AND nfr.default_langcode = 1 ORDER BY nfr.vid DESC', array(':nid' => $node->id()));
   foreach ($result as $revision) {
     $revisions[$revision->vid] = $revision;
   }
@@ -2139,7 +2139,7 @@ function node_file_download_access($field, EntityInterface $entity, File $file) 
  */
 function node_language_delete($language) {
   // On nodes with this language, unset the language.
-  db_update('node')
+  db_update('node_revision')
     ->fields(array('langcode' => ''))
     ->condition('langcode', $language->id)
     ->execute();

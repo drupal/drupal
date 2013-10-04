@@ -43,23 +43,9 @@ function node_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'langcode' => array(
-        'description' => 'The {language}.langcode of this node.',
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'translate' => array(
-        'description' => 'A boolean indicating whether this translation page needs to be updated.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
     ),
     'indexes' => array(
       'node_type' => array(array('type', 4)),
-      'translate' => array('translate'),
     ),
     'unique keys' => array(
       'vid' => array('vid'),
@@ -67,20 +53,80 @@ function node_schema() {
     ),
     'foreign keys' => array(
       'node_revision' => array(
-        'table' => 'node_field_revision',
+        'table' => 'node_revision',
         'columns' => array('vid' => 'vid'),
       ),
     ),
     'primary key' => array('nid'),
   );
 
+  $schema['node_revision'] = array(
+    'description' => 'Stores information about each saved version of a {node}.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The {node} this version belongs to.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'vid' => array(
+        'description' => 'The primary identifier for this version.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'revision_uid' => array(
+        'description' => 'The {users}.uid that created this version.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'log' => array(
+        'description' => 'The log entry explaining the changes in this version.',
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+      ),
+      'revision_timestamp' => array(
+        'description' => 'The Unix timestamp when the version was created.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'langcode' => array(
+        'description' => 'The {language}.langcode of this version.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'revision_uid' => array('revision_uid'),
+      'node_langcode' => array('langcode'),
+    ),
+    'foreign keys' => array(
+      'versioned_node' => array(
+        'table' => 'node',
+        'columns' => array('nid' => 'nid'),
+      ),
+      'version_author' => array(
+        'table' => 'users',
+        'columns' => array('revision_uid' => 'uid'),
+      ),
+    ),
+    'primary key' => array('vid'),
+  );
+
   // Node field storage.
   $schema['node_field_data'] = array(
-    'description' => 'Base table for node properties.',
+    'description' => 'Data table for node base fields.',
     'fields' => array(
       'nid' => array(
         'description' => 'The primary identifier for a node.',
-        'type' => 'serial',
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
@@ -164,7 +210,6 @@ function node_schema() {
       'node_status_type' => array('status', 'type', 'nid'),
       'node_title_type' => array('title', array('type', 4)),
       'node_type' => array(array('type', 4)),
-      'nid' => array('nid'),
       'vid' => array('vid'),
       'uid' => array('uid'),
     ),
@@ -178,11 +223,11 @@ function node_schema() {
         'columns' => array('uid' => 'uid'),
       ),
     ),
-    'primary key' => array('nid', 'vid', 'langcode'),
+    'primary key' => array('nid', 'langcode'),
   );
 
   $schema['node_field_revision'] = array(
-    'description' => 'Stores information about each saved version of a {node}.',
+    'description' => 'Revision table for node base fields.',
     'fields' => array(
       'nid' => array(
         'description' => 'The {node} this version belongs to.',
@@ -192,7 +237,7 @@ function node_schema() {
       ),
       'vid' => array(
         'description' => 'The primary identifier for this version.',
-        'type' => 'serial',
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
@@ -208,25 +253,6 @@ function node_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 1,
-      ),
-      'log' => array(
-        'description' => 'The log entry explaining the changes in this version.',
-        'type' => 'text',
-        'not null' => FALSE,
-        'size' => 'big',
-      ),
-      'revision_timestamp' => array(
-        'description' => 'The Unix timestamp when the version was created.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'revision_uid' => array(
-        'description' => 'The {users}.uid that created this version.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
       ),
       'title' => array(
         'description' => 'The title of this version, always treated as non-markup plain text.',
@@ -274,10 +300,7 @@ function node_schema() {
       ),
     ),
     'indexes' => array(
-      'nid' => array('nid'),
       'uid' => array('uid'),
-      'revision_uid' => array('revision_uid'),
-      'vid' => array('vid'),
       'node_default_langcode' => array('default_langcode'),
       'node_langcode' => array('langcode'),
     ),
@@ -286,12 +309,12 @@ function node_schema() {
         'table' => 'node',
         'columns' => array('nid' => 'nid'),
       ),
-      'version_author' => array(
+      'node_author' => array(
         'table' => 'users',
         'columns' => array('uid' => 'uid'),
       ),
     ),
-    'primary key' => array('nid', 'vid', 'langcode'),
+    'primary key' => array('vid', 'langcode'),
   );
 
   $schema['node_access'] = array(
@@ -728,12 +751,13 @@ function node_update_8015() {
 function _node_update_8016_schema() {
   $schema = array();
 
+  // Node field storage.
   $schema['node_field_data'] = array(
-    'description' => 'Base table for node properties.',
+    'description' => 'Data table for node base fields.',
     'fields' => array(
       'nid' => array(
         'description' => 'The primary identifier for a node.',
-        'type' => 'serial',
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
@@ -811,11 +835,12 @@ function _node_update_8016_schema() {
     'indexes' => array(
       'node_changed' => array('changed'),
       'node_created' => array('created'),
+      'node_default_langcode' => array('default_langcode'),
+      'node_langcode' => array('langcode'),
       'node_frontpage' => array('promote', 'status', 'sticky', 'created'),
       'node_status_type' => array('status', 'type', 'nid'),
       'node_title_type' => array('title', array('type', 4)),
       'node_type' => array(array('type', 4)),
-      'nid' => array('nid'),
       'vid' => array('vid'),
       'uid' => array('uid'),
     ),
@@ -829,11 +854,11 @@ function _node_update_8016_schema() {
         'columns' => array('uid' => 'uid'),
       ),
     ),
-    'primary key' => array('nid', 'vid', 'langcode'),
+    'primary key' => array('nid', 'langcode'),
   );
 
   $schema['node_field_revision'] = array(
-    'description' => 'Stores information about each saved version of a {node}.',
+    'description' => 'Revision table for node base fields.',
     'fields' => array(
       'nid' => array(
         'description' => 'The {node} this version belongs to.',
@@ -843,7 +868,7 @@ function _node_update_8016_schema() {
       ),
       'vid' => array(
         'description' => 'The primary identifier for this version.',
-        'type' => 'serial',
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
@@ -859,25 +884,6 @@ function _node_update_8016_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'default' => 1,
-      ),
-      'log' => array(
-        'description' => 'The log entry explaining the changes in this version.',
-        'type' => 'text',
-        'not null' => FALSE,
-        'size' => 'big',
-      ),
-      'revision_timestamp' => array(
-        'description' => 'The Unix timestamp when the version was created.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'revision_uid' => array(
-        'description' => 'The {users}.uid that created this version.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
       ),
       'title' => array(
         'description' => 'The title of this version, always treated as non-markup plain text.',
@@ -925,34 +931,62 @@ function _node_update_8016_schema() {
       ),
     ),
     'indexes' => array(
-      'nid' => array('nid'),
       'uid' => array('uid'),
-      'revision_uid' => array('revision_uid'),
-      'vid' => array('vid'),
+      'node_default_langcode' => array('default_langcode'),
+      'node_langcode' => array('langcode'),
     ),
     'foreign keys' => array(
       'versioned_node' => array(
         'table' => 'node',
         'columns' => array('nid' => 'nid'),
       ),
-      'version_author' => array(
+      'node_author' => array(
         'table' => 'users',
         'columns' => array('uid' => 'uid'),
       ),
     ),
-    'primary key' => array('nid', 'vid', 'langcode'),
+    'primary key' => array('vid', 'langcode'),
   );
 
   return $schema;
 }
 
 /**
- * Upgrade node schema to the standard entity SQL schema: create new tables.
+ * Upgrade node schema to the standard entity SQL schema: prepare schema.
  */
 function node_update_8016() {
   foreach (_node_update_8016_schema() as $table => $table_schema) {
     db_create_table($table, $table_schema);
   }
+
+  $spec = array(
+    'description' => 'The {language}.langcode of this version.',
+    'type' => 'varchar',
+    'length' => 12,
+    'not null' => TRUE,
+    'default' => '',
+  );
+  $keys_new = array('indexes' => array('node_langcode' => array('langcode')));
+  db_add_field('node_revision', 'langcode', $spec, $keys_new);
+
+  $spec = array(
+    'description' => 'The Unix timestamp when the version was created.',
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+  );
+  db_change_field('node_revision', 'timestamp', 'revision_timestamp', $spec);
+
+  db_drop_index('node_revision', 'uid');
+  $spec = array(
+    'description' => 'The {users}.uid that created this version.',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+  );
+  db_change_field('node_revision', 'uid', 'revision_uid', $spec);
+  db_add_index('node_revision', 'revision_uid', array('revision_uid'));
 }
 
 /**
@@ -968,10 +1002,11 @@ function node_update_8017(&$sandbox) {
   // Prepare the new records.
   $queries = array();
   $schema = _node_update_8016_schema();
-  $result = db_query_range('SELECT nr.*, nr.timestamp AS revision_timestamp, nr.uid as revision_uid, 1 AS default_langcode, n.langcode, n.vid = nr.vid AS default_revision, n.uid, n.changed, n.created, n.type FROM {node_revision} nr JOIN {node} n ON nr.nid = n.nid ORDER BY nr.nid ASC, nr.vid ASC', $sandbox['progress'], 50);
+  $result = db_query_range('SELECT nr.*, nr.revision_timestamp, nr.revision_uid, 1 AS default_langcode, n.langcode, n.vid = nr.vid AS default_revision, n.uid, n.changed, n.created, n.type FROM {node_revision} nr JOIN {node} n ON nr.nid = n.nid ORDER BY nr.nid ASC, nr.vid ASC', $sandbox['progress'], 50);
 
   foreach ($result as $row) {
     $sandbox['progress']++;
+
     foreach ($schema as $table => $table_schema) {
       // We need to store the data table record only when dealing with the
       // default revision.
@@ -989,6 +1024,13 @@ function node_update_8017(&$sandbox) {
         $queries[$table]->values($record);
       }
     }
+
+    // Populate the langcode column with the same value for each revision as we
+    // have no other data available.
+    db_update('node_revision')
+      ->fields(array('langcode' => $row->langcode))
+      ->condition('vid', $row->vid)
+      ->execute();
   }
 
   // Store the new records.
@@ -1007,9 +1049,13 @@ function node_update_8018() {
   foreach ($indexes as $index) {
     db_drop_index('node', $index);
   }
-  $fields = array('title', 'uid', 'status', 'created', 'changed', 'promote', 'sticky');
+  $fields = array('title', 'uid', 'status', 'created', 'changed', 'promote', 'sticky', 'langcode');
   foreach ($fields as $field) {
     db_drop_field('node', $field);
+  }
+  $fields = array('title', 'status', 'comment', 'promote', 'sticky');
+  foreach ($fields as $field) {
+    db_drop_field('node_revision', $field);
   }
 }
 

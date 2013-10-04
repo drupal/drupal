@@ -198,25 +198,6 @@ function node_views_data() {
     ),
   );
 
-  if (module_exists('language')) {
-    $data['node']['langcode'] = array(
-      'title' => t('Language'),
-      'help' => t('The language the content is in.'),
-      'field' => array(
-        'id' => 'node_language',
-      ),
-      'filter' => array(
-        'id' => 'language',
-      ),
-      'argument' => array(
-        'id' => 'language',
-      ),
-      'sort' => array(
-        'id' => 'standard',
-      ),
-    );
-  }
-
   if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
     $data['node']['translation_link'] = array(
       'title' => t('Translation link'),
@@ -419,15 +400,14 @@ function node_views_data() {
     ),
   );
 
-  $data['node_field_revision']['table']['entity type'] = 'node';
+  $data['node_revision']['table']['entity type'] = 'node';
   // Define the base group of this table. Fields that don't have a group defined
   // will go into this field by default.
-  $data['node_field_revision']['table']['group']  = t('Content revision');
-  $data['node_field_revision']['table']['wizard_id'] = 'node_revision';
-
+  $data['node_revision']['table']['group']  = t('Content revision');
+  $data['node_revision']['table']['wizard_id'] = 'node_revision';
 
   // Advertise this table as a possible base table.
-  $data['node_field_revision']['table']['base'] = array(
+  $data['node_revision']['table']['base'] = array(
     'field' => 'vid',
     'title' => t('Content revision'),
     'help' => t('Content revision is a history of changes to content.'),
@@ -437,25 +417,14 @@ function node_views_data() {
   );
 
   // For other base tables, explain how we join.
-  $data['node_field_revision']['table']['join'] = array(
+  $data['node_revision']['table']['join'] = array(
     'node' => array(
       'left_field' => 'vid',
       'field' => 'vid',
     ),
   );
 
-  $data['node_field_revision']['revision_uid'] = array(
-    'title' => t('User'),
-    'help' => t('Relate a content revision to the user who created the revision.'),
-    'relationship' => array(
-      'id' => 'standard',
-      'base' => 'users',
-      'base field' => 'uid',
-      'label' => t('revision user'),
-    ),
-  );
-
-  $data['node_field_revision']['nid'] = array(
+  $data['node_revision']['nid'] = array(
     'title' => t('Nid'),
     'help' => t('The revision NID of the content revision.'),
     'field' => array(
@@ -480,7 +449,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node_field_revision']['vid'] = array(
+  $data['node_revision']['vid'] = array(
     'title' => t('Vid'),
     'help' => t('The revision ID of the content revision.'),
     'field' => array(
@@ -502,6 +471,61 @@ function node_views_data() {
       'base field' => 'vid',
       'title' => t('Content'),
       'label' => t('Get the actual content from a content revision.'),
+    ),
+  );
+
+  if (\Drupal::moduleHandler()->moduleExists('language')) {
+    $data['node_revision']['langcode'] = array(
+      'title' => t('Language'),
+      'help' => t('The language the content is in.'),
+      'field' => array(
+        'id' => 'node_language',
+      ),
+      'filter' => array(
+        'id' => 'language',
+      ),
+      'argument' => array(
+        'id' => 'language',
+      ),
+      'sort' => array(
+        'id' => 'standard',
+      ),
+    );
+  }
+
+  $data['node_revision']['log'] = array(
+    'title' => t('Log message'),
+    'help' => t('The log message entered when the revision was created.'),
+    'field' => array(
+      'id' => 'xss',
+    ),
+    'filter' => array(
+      'id' => 'string',
+    ),
+  );
+
+  $data['node_revision']['revision_uid'] = array(
+    'title' => t('User'),
+    'help' => t('Relate a content revision to the user who created the revision.'),
+    'relationship' => array(
+      'id' => 'standard',
+      'base' => 'users',
+      'base field' => 'uid',
+      'label' => t('revision user'),
+    ),
+  );
+
+  $data['node_field_revision']['table']['entity type'] = 'node';
+  // Define the base group of this table. Fields that don't have a group defined
+  // will go into this field by default.
+  $data['node_field_revision']['table']['group']  = t('Content revision');
+  $data['node_field_revision']['table']['wizard_id'] = 'node_field_revision';
+
+  // For other base tables, explain how we join.
+  $data['node_field_revision']['table']['join'] = array(
+    'node' => array(
+      'left_field' => 'vid',
+      'field' => 'vid',
     ),
   );
 
@@ -544,17 +568,6 @@ function node_views_data() {
     ),
   );
 
-  $data['node_field_revision']['log'] = array(
-    'title' => t('Log message'),
-    'help' => t('The log message entered when the revision was created.'),
-    'field' => array(
-      'id' => 'xss',
-     ),
-    'filter' => array(
-      'id' => 'string',
-    ),
-  );
-
   $data['node_field_revision']['changed'] = array(
     'title' => t('Updated date'),
     'help' => t('The date the node was last updated.'),
@@ -569,7 +582,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node_field_revision']['link_to_revision'] = array(
+  $data['node_revision']['link_to_revision'] = array(
     'field' => array(
       'title' => t('Link to revision'),
       'help' => t('Provide a simple link to the revision.'),
@@ -578,7 +591,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node_field_revision']['revert_revision'] = array(
+  $data['node_revision']['revert_revision'] = array(
     'field' => array(
       'title' => t('Link to revert revision'),
       'help' => t('Provide a simple link to revert to the revision.'),
@@ -587,7 +600,7 @@ function node_views_data() {
     ),
   );
 
-  $data['node_field_revision']['delete_revision'] = array(
+  $data['node_revision']['delete_revision'] = array(
     'field' => array(
       'title' => t('Link to delete revision'),
       'help' => t('Provide a simple link to delete the content revision.'),

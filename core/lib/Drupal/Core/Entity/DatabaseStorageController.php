@@ -318,7 +318,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
     if ($this->revisionKey) {
       // Add all fields from the {entity_revision} table.
       $entity_revision_fields = drupal_map_assoc(drupal_schema_fields_sql($this->entityInfo['revision_table']));
-      // The id field is provided by entity, so remove it.
+      // The ID field is provided by entity, so remove it.
       unset($entity_revision_fields[$this->idKey]);
 
       // Remove all fields from the base table that are also fields by the same
@@ -331,7 +331,7 @@ class DatabaseStorageController extends FieldableEntityStorageControllerBase {
       }
       $query->fields('revision', $entity_revision_fields);
 
-      // Compare revision id of the base and revision table, if equal then this
+      // Compare revision ID of the base and revision table, if equal then this
       // is the default revision.
       $query->addExpression('base.' . $this->revisionKey . ' = revision.' . $this->revisionKey, 'isDefaultRevision');
     }
