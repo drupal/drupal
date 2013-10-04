@@ -34,7 +34,7 @@ function _drupal_maintenance_theme() {
 
   // Install and update pages are treated differently to prevent theming overrides.
   if (defined('MAINTENANCE_MODE') && (MAINTENANCE_MODE == 'install' || MAINTENANCE_MODE == 'update')) {
-    $custom_theme = (isset($conf['maintenance_theme']) ? $conf['maintenance_theme'] : 'seven');
+    $custom_theme = settings()->get('maintenance_theme', 'seven');
   }
   else {
     // The bootstrap was not complete. So we are operating in a crippled
@@ -44,23 +44,23 @@ function _drupal_maintenance_theme() {
       require_once __DIR__ . '/database.inc';
     }
 
-    // We use the default theme as the maintenance theme. If a default theme
-    // isn't specified in the database or in settings.php, we use Bartik.
-    // @todo Should use the actual default theme configured, but that depends on
-    //   configuration being available while possibly not having a working
-    //   database connection (yet). And only if that fails, should fall back to
-    //   Stark otherwise. Since there is no low-level access to configuration
-    //   currently, we only consult settings.php and fall back to Bartik
-    //   otherwise, as it looks generic enough and way more user-friendly.
-    $custom_theme = variable_get('maintenance_theme');
-    if (!$custom_theme)  {
-      $config = \Drupal::config('system.theme');
-      // A broken install might not return an object.
-      if (is_object($config)) {
+    // Use the maintenance theme if specified, otherwise attempt to use the
+    // default site theme.
+    try {
+      $custom_theme = settings()->get('maintenance_theme', '');
+      if (!$custom_theme) {
+        $config = \Drupal::config('system.theme');
         $custom_theme = $config->get('default');
       }
     }
-    if (!$custom_theme)  {
+    catch (\Exception $e) {
+      // Whatever went wrong (often a database connection problem), we are
+      // about to fall back to a sensible theme so there is no need for special
+      // handling.
+    }
+    if (!$custom_theme) {
+      // We have been unable to identify the configured theme, so fall back to
+      // a safe default. Bartik is reasonably user friendly and fairly generic.
       $custom_theme = 'bartik';
     }
   }

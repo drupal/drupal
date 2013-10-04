@@ -473,6 +473,17 @@ $settings['update_free_access'] = FALSE;
 # $settings['session_write_interval'] = 180;
 
 /**
+ * A custom theme for the offline page:
+ *
+ * This applies when the site is explicitly set to maintenance mode through the
+ * administration page or when the database is inactive due to an error.
+ * The template file should also be copied into the theme. It is located inside
+ * 'core/modules/system/maintenance-page.tpl.php'.
+ * Note: This setting does not apply to installation and update pages.
+ */
+# $settings['maintenance_theme'] = 'bartik';
+
+/**
  * Base URL (optional).
  *
  * If Drupal is generating incorrect URLs on your site, which could
@@ -572,16 +583,6 @@ ini_set('session.cookie_lifetime', 2000000);
 # $conf['system.site']['name'] = 'My Drupal site';
 # $conf['system.theme']['default'] = 'stark';
 # $conf['anonymous'] = 'Visitor';
-
-/**
- * A custom theme can be set for the offline page. This applies when the site
- * is explicitly set to maintenance mode through the administration page or when
- * the database is inactive due to an error. It can be set through the
- * 'maintenance_theme' key. The template file should also be copied into the
- * theme. It is located inside 'core/modules/system/maintenance-page.tpl.php'.
- * Note: This setting does not apply to installation and update pages.
- */
-# $conf['maintenance_theme'] = 'bartik';
 
 /**
  * CSS/JS aggregated file gzip compression:
