@@ -27,7 +27,7 @@ interface NodeTypeInterface extends ConfigEntityInterface {
   public function getModuleSettings($module);
 
   /**
-   * Returns a locked state of the type.
+   * Determines whether the node type is locked.
    *
    * @return string|false
    *   The module name that locks the type or FALSE.
