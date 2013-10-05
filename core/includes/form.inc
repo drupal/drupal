@@ -4067,7 +4067,7 @@ function form_pre_render_vertical_tabs($element) {
  */
 function theme_vertical_tabs($variables) {
   $element = $variables['element'];
-  return '<div class="vertical-tabs-panes">' . $element['#children'] . '</div>';
+  return '<div data-vertical-tabs-panes>' . $element['#children'] . '</div>';
 }
 
 /**

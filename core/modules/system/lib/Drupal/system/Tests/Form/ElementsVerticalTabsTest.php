@@ -55,13 +55,13 @@ class ElementsVerticalTabsTest extends WebTestBase {
   function testWrapperNotShownWhenEmpty() {
     // Test admin user can see vertical tabs and wrapper.
     $this->drupalGet('form_test/vertical-tabs');
-    $wrapper = $this->xpath("//div[@class='vertical-tabs-panes']");
+    $wrapper = $this->xpath("//div[@data-vertical-tabs-panes]");
     $this->assertTrue(isset($wrapper[0]), 'Vertical tab panes found.');
 
     // Test wrapper markup not present for non-privileged web user.
     $this->drupalLogin($this->web_user);
     $this->drupalGet('form_test/vertical-tabs');
-    $wrapper = $this->xpath("//div[@class='vertical-tabs-panes']");
+    $wrapper = $this->xpath("//div[@data-vertical-tabs-panes]");
     $this->assertFalse(isset($wrapper[0]), 'Vertical tab wrappers are not displayed to unprivileged users.');
   }
 }

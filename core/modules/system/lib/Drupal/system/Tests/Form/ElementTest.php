@@ -121,9 +121,9 @@ class ElementTest extends WebTestBase {
     $elements = $this->xpath('//fieldset[@id="edit-fieldset"]//div[@id="edit-meta"]//label');
     $this->assertTrue(count($elements) == 1);
     $this->drupalGet('form-test/group-vertical-tabs');
-    $elements = $this->xpath('//div[@class="vertical-tabs-panes"]//details[@id="edit-meta"]//label');
+    $elements = $this->xpath('//div[@data-vertical-tabs-panes]//details[@id="edit-meta"]//label');
     $this->assertTrue(count($elements) == 1);
-    $elements = $this->xpath('//div[@class="vertical-tabs-panes"]//details[@id="edit-meta-2"]//label');
+    $elements = $this->xpath('//div[@data-vertical-tabs-panes]//details[@id="edit-meta-2"]//label');
     $this->assertTrue(count($elements) == 1);
   }
 

@@ -68,15 +68,15 @@
 .vertical-tab-button.selected a:focus {
   color: #007ecc;
 }
-.vertical-tabs-panes {
+[data-vertical-tabs-panes] {
   background-color: #fcfcfa;
 }
-html.js .vertical-tabs-panes {
+.vertical-tabs-panes {
   margin: 0 0 0 240px; /* LTR */
   padding: 10px 15px 10px 15px;
   border-left: 1px solid #a6a5a1; /* LTR */
 }
-html.js[dir="rtl"] .vertical-tabs-panes {
+[dir="rtl"] .vertical-tabs-panes {
   margin: 0 240px 0 0;
   border-left: none;
   border-right: 1px solid #a6a5a1;
