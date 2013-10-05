@@ -11,6 +11,7 @@
 .edit-editable {
   z-index: 98;
   position: relative;
+  cursor: pointer;
 }
 .edit-editable:focus {
   outline: none;

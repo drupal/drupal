@@ -164,6 +164,10 @@ Drupal.edit.EntityToolbarView = Backbone.View.extend({
     var delay = 0;
     // Determines what check in the series of checks below should be evaluated
     var check = 0;
+    // When positioned against an active field that has padding, we should
+    // ignore that padding when positioning the toolbar, to not unnecessarily
+    // move the toolbar horizontally, which feels annoying.
+    var horizontalPadding = 0;
     var of, activeField, highlightedField;
     // There are several elements in the page that the entity toolbar might be
     // positioned against. They are considered below in a priority order.
@@ -181,6 +185,9 @@ Drupal.edit.EntityToolbarView = Backbone.View.extend({
         case 2:
           // Position against an active field.
           of = activeField && activeField.editorView && activeField.editorView.getEditedElement();
+          if (activeField && activeField.editorView && activeField.editorView.getEditUISettings().padding) {
+            horizontalPadding = 5;
+          }
           break;
         case 3:
           // Position against a highlighted field.
@@ -233,8 +240,10 @@ Drupal.edit.EntityToolbarView = Backbone.View.extend({
       that.$el
         .position({
           my: edge + ' bottom',
-          // Move the toolbar 2px towards the start edge of the 'of' element.
-          at: edge + '+1 top',
+          // Move the toolbar 1px towards the start edge of the 'of' element,
+          // plus any horizontal padding that may have been added to the element
+          // that is being added, to prevent unwanted horizontal movement.
+          at: edge + '+' + (1 + horizontalPadding) + ' top',
           of: of,
           collision: 'flipfit',
           using: refinePosition,

@@ -52,6 +52,13 @@ Drupal.edit.editors.form = Drupal.edit.EditorView.extend({
   },
 
   /**
+   * {@inheritdoc}
+   */
+  getEditUISettings: function () {
+    return { padding: true, unifiedToolbar: true, fullWidthToolbar: true, popup: true };
+  },
+
+  /**
    * Loads the form for this field, displays it on top of the actual field.
    */
   loadForm: function () {

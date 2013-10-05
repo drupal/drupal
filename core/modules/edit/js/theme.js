@@ -35,7 +35,7 @@ Drupal.theme.editEntityToolbar = function (settings) {
   html += '<div id="' + settings.id + '" class="edit edit-toolbar-container clearfix">';
   html += '<i class="edit-toolbar-pointer"></i>';
   html += '<div class="edit-toolbar-content">';
-  html += '<div class="edit-toolbar edit-toolbar-entity clearfix">';
+  html += '<div class="edit-toolbar edit-toolbar-entity clearfix icon icon-pencil">';
   html += '<div class="edit-toolbar-label" />';
   html += '</div>';
   html += '<div class="edit-toolbar edit-toolbar-field clearfix" />';
@@ -54,7 +54,7 @@ Drupal.theme.editEntityToolbar = function (settings) {
  *   The corresponding HTML.
  */
 Drupal.theme.editEntityToolbarLabel = function (settings) {
-  return settings.entityLabel + ': <b>' + settings.fieldLabel + '</b>';
+  return '<span class="field">' + settings.fieldLabel + '</span>' + settings.entityLabel;
 };
 
 /**

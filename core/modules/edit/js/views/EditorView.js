@@ -77,7 +77,7 @@ Drupal.edit.EditorView = Backbone.View.extend({
    *    just long enough to accomodate a label.
    */
   getEditUISettings: function () {
-    return { padding: false, unifiedToolbar: false, fullWidthToolbar: false };
+    return { padding: false, unifiedToolbar: false, fullWidthToolbar: false, popup: false };
   },
 
   /**

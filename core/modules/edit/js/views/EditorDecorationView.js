@@ -173,6 +173,12 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
    */
   prepareEdit: function () {
     this.$el.addClass('edit-editing');
+
+    // Allow the field to be styled differently while editing in a pop-up
+    // in-place editor.
+    if (this.editorView.getEditUISettings().popup) {
+      this.$el.addClass('edit-editor-is-popup');
+    }
   },
 
   /**
@@ -183,6 +189,11 @@ Drupal.edit.EditorDecorationView = Backbone.View.extend({
    */
   stopEdit: function () {
     this.$el.removeClass('edit-highlighted edit-editing');
+
+    // Done editing in a pop-up in-place editor; remove the class.
+    if (this.editorView.getEditUISettings().popup) {
+      this.$el.removeClass('edit-editor-is-popup');
+    }
 
     // Make the other editors show up again.
     $('.edit-candidate').addClass('edit-editable');

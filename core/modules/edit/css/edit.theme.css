@@ -13,7 +13,7 @@
  */
 .edit-field.edit-editable,
 .edit-field .edit-editable {
-  box-shadow: 0 0 0 2px #4d9de9;
+  box-shadow: 0 0 0 2px #74b7ff;
 }
 
 /**
@@ -22,16 +22,19 @@
 .edit-field.edit-highlighted,
 .edit-form.edit-highlighted,
 .edit-field .edit-highlighted {
-  box-shadow: 0 0 0 2px #0199ff, 0 1px 0 3px rgba(153, 153, 153, .5);
+  box-shadow: 0 0 0 1px #74b7ff, 0 0 0 2px #007fff;
 }
 .edit-field.edit-changed,
 .edit-form.edit-changed,
 .edit-field .edit-changed {
-  box-shadow: 0 0 0px 2px orange, 0px 1px 0px 3px rgba(153, 153, 153, .5);
+  box-shadow: 0 0 0 1px #fec17e, 0 0 0 2px #f7870a;
 }
 .edit-editing.edit-validation-error,
 .edit-form.edit-validation-error {
-  box-shadow: 0 0 1px 2px red, 0 0 3px 5px rgba(153, 153, 153, .5);
+  box-shadow: 0 0 0px 1px #ee8b74, 0 0 0 2px #fa2209;
+}
+.edit-editing.edit-editor-is-popup {
+  box-shadow: none;
 }
 .edit-form .form-item .error {
   border: 1px solid #eea0a0;
@@ -102,18 +105,20 @@
  */
 .edit-toolbar-container {
   font-family: 'Source Sans Pro','Lucida Grande', sans-serif;
-  font-size: 1.1em;
   padding-bottom: 7px;
   padding-top: 7px;
   -webkit-transition: all 1s;
   transition: all 1s;
 }
 .edit-toolbar-container > .edit-toolbar-content {
-  background-color: #45545E;
+  background-image: -webkit-linear-gradient(top, #fff, #e4e4e4);
+  background-image:    -moz-linear-gradient(top, #fff, #e4e4e4);
+  background-image:      -o-linear-gradient(top, #fff, #e4e4e4);
+  background-image:   linear-gradient(to bottom, #fff, #e4e4e4);
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  color: white;
+  color: black;
   padding: 0.1667em;
   position: relative;
   -webkit-user-select: none;
@@ -123,9 +128,9 @@
   z-index: 2;
 }
 .edit-toolbar-container > .edit-toolbar-pointer {
-  background-color: #45545E;
+  background-color: #e4e4e4;
   bottom: 2px;
-  box-shadow: 0px 0px 0 4px rgba(150, 150, 150, 0.5);
+  box-shadow: 0 0 0 1px #818181, 0px 0px 0 4px rgba(150, 150, 150, 0.5);
   display: block;
   height: 16px;
   left: 18px; /* LTR */
@@ -146,7 +151,7 @@
 }
 .edit-toolbar-container > .edit-toolbar-lining {
   bottom: 7px;
-  box-shadow: 0px 1px 0px 3px rgba(150, 150, 150, 0.5);
+  box-shadow: 0 0 0 1px #818181, 0px 3px 0px 1px rgba(150, 150, 150, 0.5);
   display: block;
   left: 0;
   position: absolute;
@@ -156,11 +161,16 @@
 }
 
 .edit-toolbar-label {
+  font-style: italic;
   overflow: hidden;
-  padding: 0.333em 0.5em;
+  padding: 0.333em 0.4em;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.edit-toolbar-label .field:after {
+  content: ' → ';
+}
+
 /* The toolbar; these are not necessarily visible. */
 .edit-toolbar {
   font-family: 'Droid sans', 'Lucida Grande', sans-serif;
@@ -202,9 +212,9 @@
   display: inline-block;
   margin: 0;
   opacity: 1;
-  padding: 0.4545em;
-  -webkit-transition: all .1s ease;
-  transition: all .1s ease;
+  padding: 0.345em;
+  -webkit-transition: opacity .1s ease;
+  transition: opacity .1s ease;
 }
 .edit-button[aria-hidden="true"] {
   visibility: hidden;
@@ -228,23 +238,18 @@
   background-color: transparent;
   border: 1px solid transparent;
 }
-.edit-toolbar-container .edit-button.action-cancel:hover {
-  background-color: transparent;
-  border: 1px solid #686868;
-}
 .edit-button.action-save {
   color: white;
   background-color: #50a0e9;
-  background-image: -moz-linear-gradient(-90deg, #50a0e9, #4481dc);
-  background-image: -o-linear-gradient(-90deg, #50a0e9, #4481dc);
-  background-image: -webkit-linear-gradient(-90deg, #50a0e9, #4481dc);
-  background-image: linear-gradient(180deg, #50a0e9, #4481dc);
+  background-image: -webkit-linear-gradient(top, #50a0e9, #4481dc);
+  background-image:    -moz-linear-gradient(top, #50a0e9, #4481dc);
+  background-image:      -o-linear-gradient(top, #50a0e9, #4481dc);
+  background-image:   linear-gradient(to bottom, #50a0e9, #4481dc);
   border: 1px solid transparent;
 }
 .edit-button.action-save:hover,
 .edit-button.action-save:active {
   border: 1px solid #a0a0a0;
-  color: white;
 }
 .edit-button.action-saving,
 .edit-button.action-saving:hover,

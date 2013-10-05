@@ -46,20 +46,28 @@
 .edit button.icon {
   font-size: 1em;
 }
+.edit .icon-pencil {
+  margin-left: .5em;
+  padding-left: 1.5em;
+}
 
 /**
  * Images.
  */
 .edit .icon-close:before {
-  background-image: url("../images/icon-close.png");
-  background-position: center top;
+  background-image: url('../../../misc/icons/787878/ex.svg');
   height: 12px;
   top: 10px;
 }
-.edit .icon-close:hover:before {
-  background-image: url("../images/icon-close.png");
-  background-position: center bottom;
+.edit .icon-close:hover:before,
+.edit .icon-close:active:before {
+  background-image: url('../../../misc/icons/000000/ex.svg');
 }
 .edit .icon-throbber:before {
   background-image: url("../images/icon-throbber.gif");
+}
+.edit .icon-pencil:before {
+  background-image: url('../../../misc/icons/5181c6/pencil.svg');
+  background-position: left center;
+  background-size: 1.3em;
 }

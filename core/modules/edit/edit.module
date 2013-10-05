@@ -144,6 +144,22 @@ function edit_library_info() {
 }
 
 /**
+ * Implement hook_library_info_alter().
+ *
+ * Allow the admin theme to override the Edit entity toolbar's default styling.
+ * We must do it this way, because an admin theme's hooks do not fire while on
+ * the front-end.
+ */
+function edit_library_info_alter(&$libraries, $module) {
+  if ($module == 'edit' && isset($libraries['edit'])) {
+    $css = _edit_theme_css();
+    foreach ($css as $css_file) {
+      $libraries['edit']['css'][$css_file] = array();
+    }
+  }
+}
+
+/**
  * Implements hook_field_formatter_info_alter().
  *
  * Edit extends the @FieldFormatter annotation with the following keys:
@@ -174,4 +190,43 @@ function edit_preprocess_field(&$variables) {
  */
 function edit_entity_view_alter(&$build, EntityInterface $entity, EntityDisplay $display) {
   $build['#attributes']['data-edit-entity'] = $entity->entityType() . '/' . $entity->id();
+}
+
+/**
+ * Retrieves the admin theme's Edit stylesheets.
+ *
+ * Admin themes may specify CSS files to make the front-end administration
+ * experience of in-place editing match the administration experience on the
+ * Drupal back-end.
+ * They can specify such CSS files using the "edit_stylesheets" key in
+ * the theme .info.yml file.
+ *
+ * @code
+ * edit_stylesheets[] = css/edit.css
+ * @endcode
+ *
+ * @param string|NULL $theme
+ *   The theme name for which to retrieve the edit_stylesheets CSS files.
+ *
+ * @return array
+ *   An array of CSS file paths.
+ */
+function _edit_theme_css($theme = NULL) {
+  $css = array();
+  if (!isset($theme)) {
+    $theme = Drupal::config('system.theme')->get('admin');
+  }
+  if ($theme_path = drupal_get_path('theme', $theme)) {
+    $info = system_get_info('theme', $theme);
+    if (isset($info['edit_stylesheets'])) {
+      $css = $info['edit_stylesheets'];
+      foreach ($css as $key => $path) {
+        $css[$key] = $theme_path . '/' . $path;
+      }
+    }
+    if (isset($info['base theme'])) {
+      $css = array_merge(_edit_theme_css($info['base theme'], $css));
+    }
+  }
+  return $css;
 }

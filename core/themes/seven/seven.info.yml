@@ -10,6 +10,8 @@ stylesheets:
 stylesheets-override:
   - vertical-tabs.css
   - jquery.ui.theme.css
+edit_stylesheets:
+  - edit.css
 settings:
   # @todo D8: Remove once themes have to be installed.
   shortcut_module_link: '1'

@@ -92,7 +92,7 @@ Drupal.edit.editors.direct = Drupal.edit.EditorView.extend({
    * {@inheritdoc}
    */
   getEditUISettings: function () {
-    return { padding: true, unifiedToolbar: false, fullWidthToolbar: false };
+    return { padding: true, unifiedToolbar: false, fullWidthToolbar: false, popup: false };
   },
 
   /**
