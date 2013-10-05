@@ -3569,6 +3569,9 @@ function hook_link_alter(&$variables) {
  * * )
  * @endcode
  *
+ * Note that you must use double quotes; single quotes will not work in
+ * annotations.
+ *
  * The available annotation classes are listed in this topic, and can be
  * identified when you are looking at the Drupal source code by having
  * "@ Annotation" in their documentation blocks (without the space after @). To
