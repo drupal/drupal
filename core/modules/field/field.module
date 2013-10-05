@@ -81,32 +81,6 @@ require_once __DIR__ . '/field.deprecated.inc';
 const FIELD_CARDINALITY_UNLIMITED = -1;
 
 /**
- * Value for field API indicating a widget doesn't accept default values.
- *
- * @see hook_field_widget_info()
- */
-const FIELD_BEHAVIOR_NONE = 0x0001;
-
-/**
- * Value for field API concerning widget default and multiple value settings.
- *
- * @see hook_field_widget_info()
- *
- * When used in a widget default context, indicates the widget accepts default
- * values. When used in a multiple value context for a widget that allows the
- * input of one single field value, indicates that the widget will be repeated
- * for each value input.
- */
-const FIELD_BEHAVIOR_DEFAULT = 0x0002;
-
-/**
- * Value for field API indicating a widget can receive several field values.
- *
- * @see hook_field_widget_info()
- */
-const FIELD_BEHAVIOR_CUSTOM = 0x0004;
-
-/**
  * Implements hook_help().
  */
 function field_help($path, $arg) {
