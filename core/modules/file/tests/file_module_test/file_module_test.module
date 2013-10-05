@@ -10,27 +10,13 @@ use Drupal\file\Entity\File;
 use Drupal\field\FieldInterface;
 
 /**
- * Implements hook_menu().
- */
-function file_module_test_menu() {
-  $items = array();
-
-  $items['file/test'] = array(
-    'title' => 'Managed file test',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('file_module_test_form'),
-    'access arguments' => array('access content'),
-  );
-
-  return $items;
-}
-
-/**
  * Form constructor for testing a 'managed_file' element.
  *
  * @see file_module_test_menu()
  * @see file_module_test_form_submit()
  * @ingroup forms
+ *
+ * @deprecated Use \Drupal\file_module_test\Form\FileModuleTestForm::managedFileTest()
  */
 function file_module_test_form($form, &$form_state, $tree = TRUE, $extended = TRUE, $multiple = FALSE, $default_fids = NULL) {
   $form['#tree'] = (bool) $tree;

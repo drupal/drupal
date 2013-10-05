@@ -6,27 +6,6 @@
  */
 
 /**
- * Implements hook_menu().
- */
-function language_elements_test_menu() {
-  $items['language-tests/language_configuration_element'] = array(
-    'title' => 'Language configuration form element',
-    'type' => MENU_CALLBACK,
-    'access callback' => TRUE,
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('language_elements_configuration_element'),
-  );
-  $items['language-tests/language_configuration_element_test'] = array(
-    'title' => 'Language configuration form element',
-    'type' => MENU_CALLBACK,
-    'access callback' => TRUE,
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('language_elements_configuration_element_test'),
-  );
-  return $items;
-}
-
-/**
  * A form containing a language configuration element.
  */
 function language_elements_configuration_element() {

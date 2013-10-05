@@ -10,39 +10,9 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\ajax_forms_test\Callbacks;
 
 /**
- * Implements hook_menu().
- */
-function ajax_forms_test_menu() {
-  $items = array();
-  $items['ajax_forms_test_get_form'] = array(
-    'title' => 'AJAX forms simple form test',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('ajax_forms_test_simple_form'),
-    'access callback' => TRUE,
-  );
-  $items['ajax_forms_test_ajax_commands_form'] = array(
-    'title' => 'AJAX forms AJAX commands test',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('ajax_forms_test_ajax_commands_form'),
-    'access callback' => TRUE,
-  );
-  $items['ajax_validation_test'] = array(
-    'title' => 'AJAX Validation Test',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('ajax_forms_test_validation_form'),
-    'access callback' => TRUE,
-  );
-  $items['ajax_forms_test_lazy_load_form'] = array(
-    'title' => 'AJAX forms lazy load test',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('ajax_forms_test_lazy_load_form'),
-    'access callback' => TRUE,
-  );
-  return $items;
-}
-
-/**
  * Tests form_state['values'] during callback.
+ *
+ * @deprecated Use \Drupal\ajax_forms_test\Form\AjaxFormsTestForm::getForm()
  */
 function ajax_forms_test_simple_form($form, &$form_state) {
   $object = new Callbacks();
@@ -95,6 +65,8 @@ function ajax_forms_test_simple_form($form, &$form_state) {
 
 /**
  * Form constructor for the Ajax Command display form.
+ *
+ * @deprecated Use \Drupal\ajax_forms_test\Form\AjaxFormsTestForm::commandsForm()
  */
 function ajax_forms_test_ajax_commands_form($form, &$form_state) {
   $form = array();
@@ -462,6 +434,8 @@ function ajax_forms_test_advanced_commands_settings_with_merging_callback($form,
  * be able to trigger without causing validation of the "required_field".
  *
  * @see ajax_forms_test_validation_form_submit()
+ *
+ * @deprecated Use \Drupal\ajax_forms_test\Form\AjaxFormsTestForm::validationForm()
  */
 function ajax_forms_test_validation_form($form, &$form_state) {
 
@@ -534,6 +508,8 @@ function ajax_forms_test_validation_number_form_callback($form, $form_state) {
 
 /**
  * Form builder: Builds a form that triggers a simple AJAX callback.
+ *
+ * @deprecated Use \Drupal\ajax_forms_test\Form\AjaxFormsTestForm::lazyLoadForm()
  */
 function ajax_forms_test_lazy_load_form($form, &$form_state) {
   // We attach a JavaScript setting, so that one of the generated AJAX commands

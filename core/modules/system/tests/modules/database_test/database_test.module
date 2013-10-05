@@ -46,18 +46,6 @@ function database_test_query_database_test_alter_remove_range_alter(AlterableInt
 }
 
 /**
- * Implements hook_menu().
- */
-function database_test_menu() {
-  $items['database_test/tablesort_default_sort'] = array(
-    'access callback' => TRUE,
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('database_test_theme_tablesort'),
-  );
-  return $items;
-}
-
-/**
  * Runs db_query_temporary() and outputs the table name and its number of rows.
  *
  * We need to test that the table created is temporary, so we run it here, in a
@@ -195,6 +183,8 @@ function database_test_tablesort_first() {
 
 /**
  * Outputs a form without setting a header sort.
+ *
+ * @deprecated \Drupal\database_test\Form\DatabaseTestForm::testTablesortDefaultSort()
  */
 function database_test_theme_tablesort($form, &$form_state) {
   $header = array(

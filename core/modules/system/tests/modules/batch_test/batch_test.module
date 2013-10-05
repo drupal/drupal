@@ -13,9 +13,7 @@ function batch_test_menu() {
 
   $items['batch-test'] = array(
     'title' => 'Batch test',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('batch_test_simple_form'),
-    'access callback' => TRUE,
+    'route_name' => 'batch_test.test_form',
   );
   // Simple form: one submit handler, setting a batch.
   $items['batch-test/simple'] = array(
@@ -26,18 +24,14 @@ function batch_test_menu() {
   // Multistep form: two steps, each setting a batch.
   $items['batch-test/multistep'] = array(
     'title' => 'Multistep',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('batch_test_multistep_form'),
-    'access callback' => TRUE,
+    'route_name' => 'batch_test.multistep',
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
   );
   // Chained form: four submit handlers, several of which set a batch.
   $items['batch-test/chained'] = array(
     'title' => 'Chained',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('batch_test_chained_form'),
-    'access callback' => TRUE,
+    'route_name' => 'batch_test.chained',
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
   );
@@ -80,6 +74,8 @@ function batch_test_menu() {
  * Form constructor for a batch selection form.
  *
  * @see batch_test_simple_form_submit()
+ *
+ * @deprecated Use \Drupal\batch_test\Form\BatchTestForm::testForm()
  */
 function batch_test_simple_form() {
   $form['batch'] = array(
@@ -120,6 +116,8 @@ function batch_test_simple_form_submit($form, &$form_state) {
  * Form constructor for a multistep form.
  *
  * @see batch_test_multistep_form_submit()
+ *
+ * @deprecated Use \Drupal\batch_test\Form\BatchTestForm::testMultistepForm()
  */
 function batch_test_multistep_form($form, &$form_state) {
   if (empty($form_state['storage']['step'])) {
@@ -170,6 +168,8 @@ function batch_test_multistep_form_submit($form, &$form_state) {
  * @see batch_test_chained_form_submit_3()
  * @see batch_test_chained_form_submit_3()
  * @see batch_test_chained_form_submit_4()
+ *
+ * @deprecated Use \Drupal\batch_test\Form\BatchTestForm::testChainedForm()
  */
 function batch_test_chained_form() {
   // This value is used to test that $form_state persists through batched

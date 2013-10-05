@@ -10,24 +10,11 @@
  */
 
 /**
-  * Implements hook_menu().
-  */
-function search_embedded_form_menu() {
-  $items['search_embedded_form'] = array(
-    'title' => 'Search_Embed_Form',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('search_embedded_form_form'),
-    'access arguments' => array('search content'),
-    'type' => MENU_CALLBACK,
-  );
-
-  return $items;
-}
-
-/**
  * Form constructor for embedding search results for testing.
  *
  * @see search_embedded_form_form_submit().
+ *
+ * @deprecated Use \Drupal\search_embedded_form\Form\SearchEmbeddedForm::testEmbeddedForm()
  */
 function search_embedded_form_form($form, &$form_state) {
   $count = \Drupal::config('search_embedded_form.settings')->get('submitted');

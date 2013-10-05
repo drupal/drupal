@@ -84,3 +84,352 @@ form_test.double_form:
     _content: '\Drupal\form_test\Controller\FormTestController::doubleForm'
   requirements:
     _access: 'TRUE'
+
+form_test.alter_form:
+  path: '/form-test/alter'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::alterForm'
+    _title: 'Form altering test'
+  requirements:
+    _access: 'TRUE'
+
+form_test.validate_form:
+  path: '/form-test/validate'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::validateForm'
+    _title: 'Form validation handlers test'
+  requirements:
+    _access: 'TRUE'
+
+form_test.validate_required:
+  path: '/form-test/validate-required'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::validateRequiredForm'
+    _title: 'Form #required validation'
+  requirements:
+    _access: 'TRUE'
+
+form_test.validate_required_no_title:
+  path: '/form-test/validate-required-no-title'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::validateRequiredFormNoTitle'
+    _title: 'Form #required validation without #title'
+  requirements:
+    _access: 'TRUE'
+
+form_test.validate_with_error_suppresion:
+  path: '/form-test/limit-validation-errors'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::validateFormWithErrorSuppression'
+    _title: 'Form validation with some error suppression'
+  requirements:
+    _access: 'TRUE'
+
+form_test.pattern:
+  path: '/form-test/pattern'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::validatePattern'
+    _title: 'Pattern validation'
+  requirements:
+    _access: 'TRUE'
+
+form_test.tableselect_checkboxes:
+  path: '/form_test/tableselect/multiple-true'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testTableSelectCheckboxes'
+    _title: 'Tableselect checkboxes test'
+  requirements:
+    _access: 'TRUE'
+
+form_test.tableselect_radios:
+  path: '/form_test/tableselect/multiple-false'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testTableSelectRadios'
+    _title: 'Tableselect radio button test'
+  requirements:
+    _access: 'TRUE'
+
+form_test.tableselect_colspan:
+  path: '/form_test/tableselect/colspan'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testTableSelectColspan'
+    _title: 'Tableselect colspan test'
+  requirements:
+    _access: 'TRUE'
+
+form_test.tableselect_empty_text:
+  path: '/form_test/tableselect/empty-text'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testTableSelectEmptyText'
+    _title: 'Tableselect empty text test'
+  requirements:
+    _access: 'TRUE'
+
+form_test.tableselect_js:
+  path: '/form_test/tableselect/advanced-select/{test_action}'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testTableSelectJS'
+    _title: 'Tableselect js_select tests'
+  requirements:
+    _access: 'TRUE'
+
+form_test.vertical_tabs:
+  path: '/form_test/vertical-tabs'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testVerticalTabs'
+    _title: 'Vertical tabs tests'
+  requirements:
+    _access: 'TRUE'
+
+form_test.storage:
+  path: '/form_test/form-storage'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testStorage'
+    _title: 'Form storage test'
+  requirements:
+    _access: 'TRUE'
+
+form_test.state_clean:
+  path: '/form_test/form-state-values-clean'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testFormStateClean'
+    _title: 'Form state values clearance test'
+  requirements:
+    _access: 'TRUE'
+
+form_test.state_clean_advanced:
+  path: '/form_test/form-state-values-clean-advanced'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testFormStateCleanAdvanced'
+    _title: 'Form state values clearance advanced test'
+  requirements:
+    _access: 'TRUE'
+
+form_test.checkbox:
+  path: '/form-test/checkbox'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testCheckbox'
+    _title: 'Form test'
+  requirements:
+    _access: 'TRUE'
+
+form_test.select:
+  path: '/form-test/select'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testSelect'
+    _title: 'Select'
+  requirements:
+    _access: 'TRUE'
+
+form_test.empty_select:
+  path: '/form-test/empty-select'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testEmptySelect'
+    _title: 'Empty Select Element'
+  requirements:
+    _access: 'TRUE'
+
+form_test.language_select:
+  path: '/form-test/language_select'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testLanguageSelect'
+    _title: 'Language Select'
+  requirements:
+    _access: 'TRUE'
+
+form_test.placeholder:
+  path: '/form-test/placeholder-text'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testPlaceholder'
+    _title: 'Placeholder'
+  requirements:
+    _access: 'TRUE'
+
+form_test.number:
+  path: '/form-test/number'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testNumber'
+    _title: 'Number'
+  requirements:
+    _access: 'TRUE'
+
+form_test.number_range:
+  path: '/form-test/number/range'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testNumberRange'
+    _title: 'Range'
+  requirements:
+    _access: 'TRUE'
+
+form_test.range:
+  path: '/form-test/range'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testRange'
+    _title: 'Range'
+  requirements:
+    _access: 'TRUE'
+
+form_test.range_invalid:
+  path: '/form-test/range/invalid'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testRangeInvalid'
+    _title: 'Invalid range'
+  requirements:
+    _access: 'TRUE'
+
+form_test.color:
+  path: '/form-test/color'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testColor'
+    _title: 'Color'
+  requirements:
+    _access: 'TRUE'
+
+form_test.checkboxes_radios:
+  path: '/form-test/checkboxes-radios/{customize}'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testCheckboxesRadios'
+    _title: 'Checkboxes, Radios'
+    customize: FALSE
+  requirements:
+    _access: 'TRUE'
+
+form_test.email:
+  path: '/form-test/email'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testEmail'
+    _title: 'E-Mail fields'
+  requirements:
+    _access: 'TRUE'
+
+form_test.url:
+  path: '/form-test/url'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testUrl'
+    _title: 'URL'
+  requirements:
+    _access: 'TRUE'
+
+form_test.disabled_elements:
+  path: '/form-test/disabled-elements'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testDisabledElements'
+    _title: 'Form test'
+  requirements:
+    _access: 'TRUE'
+
+form_test.input_forgery:
+  path: '/form-test/input-forgery'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testInputForgery'
+    _title: 'Form test'
+  requirements:
+    _access: 'TRUE'
+
+form_test.rebuild_preservation:
+  path: '/form-test/form-rebuild-preserve-values'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testRebuildPreservation'
+    _title: 'Form values preservation during rebuild test'
+  requirements:
+    _access: 'TRUE'
+
+form_test.redirect:
+  path: '/form-test/redirect'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testRedirect'
+    _title: 'Redirect test'
+  requirements:
+    _access: 'TRUE'
+
+form_test.label:
+  path: '/form_test/form-labels'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testLabel'
+    _title: 'Form label test'
+  requirements:
+    _access: 'TRUE'
+
+form_test.state_persistence:
+  path: '/form-test/state-persist'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testStatePersistence'
+    _title: 'Form state persistence without storage'
+  requirements:
+    _access: 'TRUE'
+
+form_test.clicked_button:
+  path: '/form-test/clicked-button/{first}/{second}/{third}'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testClickedButton'
+    _title: 'Clicked button test'
+    first: NULL
+    second: NULL
+    third: NULL
+  requirements:
+    _access: 'TRUE'
+
+form_test.checkboxes_zero:
+  path: '/form-test/checkboxes-zero/{json}'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testCheckboxesZero'
+    _title: 'FAPI test involving checkboxes and zero'
+    json: TRUE
+  requirements:
+    _access: 'TRUE'
+
+form_test.required:
+  path: '/form-test/required-attribute'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testRequired'
+    _title: 'Required'
+  requirements:
+    _access: 'TRUE'
+
+form_test.button_class:
+  path: '/form-test/button-class'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testButtonClass'
+    _title: 'Button class testing'
+  requirements:
+    _access: 'TRUE'
+
+form_test.group_details:
+  path: '/form-test/group-details'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testGroupDetails'
+    _title: 'Group details testing'
+  requirements:
+    _access: 'TRUE'
+
+form_test.group_container:
+  path: '/form-test/group-container'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testGroupContainer'
+    _title: 'Group container testing'
+  requirements:
+    _access: 'TRUE'
+
+form_test.group_fieldset:
+  path: '/form-test/group-fieldset'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testGroupFieldset'
+    _title: 'Group fieldset testing'
+  requirements:
+    _access: 'TRUE'
+
+form_test.group_vertical_tabs:
+  path: '/form-test/group-vertical-tabs'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testGroupVerticalTabs'
+    _title: 'Group vertical tabs testing'
+  requirements:
+    _access: 'TRUE'
+
+form_test.form_state_database:
+  path: '/form-test/form_state-database'
+  defaults:
+    _content: '\Drupal\form_test\Form\FormTestForm::testFormStateDatabase'
+    _title: 'Form state with a database connection'
+  requirements:
+    _access: 'TRUE'
