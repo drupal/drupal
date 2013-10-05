@@ -4,3 +4,36 @@
  * @file
  * Helper module for the Edit tests.
  */
+
+use Drupal\Core\Language\Language;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\entity\Entity\EntityDisplay;
+
+/**
+ * Implements hook_entity_view_alter().
+ */
+function edit_test_entity_view_alter(&$build, EntityInterface $entity, EntityDisplay $display) {
+  if ($entity->entityType() == 'node' && $entity->bundle() == 'article') {
+    $build['pseudo'] = array(
+      '#theme' => 'field',
+      '#title' => 'My pseudo field',
+      '#field_name' => 'edit_test_pseudo_field',
+      '#label_display' => 'Label',
+      '#entity_type' => $entity->entityType(),
+      '#bundle' => $entity->bundle(),
+      '#language' => Language::LANGCODE_NOT_SPECIFIED,
+      '#field_type' => 'pseudo',
+      '#view_mode' => 'default',
+      '#object' => $entity,
+      '#access' => TRUE,
+      '#items' => array(
+        0 => array(
+          'value' => 'pseudo field',
+        ),
+      ),
+      0 => array(
+        '#markup' => 'pseudo field',
+      ),
+    );
+  }
+}

@@ -291,4 +291,17 @@ class EditLoadingTest extends WebTestBase {
     }
   }
 
+  /**
+   * Tests that Edit doesn't make pseudo fields or computed fields editable.
+   */
+  function testPseudoFields() {
+    \Drupal::moduleHandler()->install(array('edit_test'));
+
+    $this->drupalLogin($this->author_user);
+    $this->drupalGet('node/1');
+
+    // Check that the data- attribute is not added.
+    $this->assertNoRaw('data-edit-id="node/1/edit_test_pseudo_field/und/default"');
+  }
+
 }

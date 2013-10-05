@@ -182,7 +182,13 @@ function edit_field_formatter_info_alter(&$info) {
 function edit_preprocess_field(&$variables) {
   $element = $variables['element'];
   $entity = $element['#object'];
-  $variables['attributes']['data-edit-id'] = $entity->entityType() . '/' . $entity->id() . '/' . $element['#field_name'] . '/' . $element['#language'] . '/' . $element['#view_mode'];
+
+  // Fields that are not part of the entity (i.e. dynamically injected "pseudo
+  // fields") and computed fields are not editable.
+  $definition = $entity->getPropertyDefinition($element['#field_name']);
+  if ($definition && empty($definition['computed'])) {
+    $variables['attributes']['data-edit-id'] = $entity->entityType() . '/' . $entity->id() . '/' . $element['#field_name'] . '/' . $element['#language'] . '/' . $element['#view_mode'];
+  }
 }
 
 /**
