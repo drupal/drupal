@@ -94,6 +94,11 @@ class FileItemTest extends FieldUnitTestBase {
     $entity->file_test->target_id = $file2->id();
     $this->assertEqual($entity->file_test->entity->id(), $file2->id());
     $this->assertEqual($entity->file_test->entity->getFileUri(), $file2->getFileUri());
+
+    // Test the deletion of an entity having an entity reference field targeting
+    // a non-existing entity.
+    $file2->delete();
+    $entity->delete();
   }
 
 }
