@@ -222,7 +222,7 @@ system.date_format_language_overview:
     _permission: 'administer site configuration'
 
 system.date_format_delete:
-  path: 'admin/config/regional/date-time/formats/manage/{date_format}/delete'
+  path: '/admin/config/regional/date-time/formats/manage/{date_format}/delete'
   defaults:
     _entity_form: 'date_format.delete'
     _title: 'Delete date format'
@@ -230,21 +230,21 @@ system.date_format_delete:
     _entity_access: 'date_format.delete'
 
 system.date_format_localize_reset:
-  path: 'admin/config/regional/date-time/locale/{langcode}/reset'
+  path: '/admin/config/regional/date-time/locale/{langcode}/reset'
   defaults:
     _form: '\Drupal\system\Form\DateFormatLocalizeResetForm'
   requirements:
     _permission: 'administer site configuration'
 
 system.modules_list:
-  path: 'admin/modules'
+  path: '/admin/modules'
   defaults:
     _form: 'Drupal\system\Form\ModulesListForm'
   requirements:
     _permission: 'administer modules'
 
 system.modules_list_confirm:
-  path: 'admin/modules/list/confirm'
+  path: '/admin/modules/list/confirm'
   defaults:
     _form: 'Drupal\system\Form\ModulesListConfirmForm'
   requirements:
@@ -279,7 +279,7 @@ system.php:
     _permission: 'administer site configuration'
 
 system.admin_index:
-  path: 'admin/index'
+  path: '/admin/index'
   defaults:
     _content: 'Drupal\system\Controller\AdminController::index'
   requirements:
@@ -330,14 +330,14 @@ system.theme_settings:
     _access: 'TRUE'
 
 system.modules_uninstall:
-  path: 'admin/modules/uninstall'
+  path: '/admin/modules/uninstall'
   defaults:
     _form: 'Drupal\system\Form\ModulesUninstallForm'
   requirements:
     _permission: 'administer modules'
 
 system.modules_uninstall_confirm:
-  path: 'admin/modules/uninstall/confirm'
+  path: '/admin/modules/uninstall/confirm'
   defaults:
     _form: 'Drupal\system\Form\ModulesUninstallConfirmForm'
   requirements:

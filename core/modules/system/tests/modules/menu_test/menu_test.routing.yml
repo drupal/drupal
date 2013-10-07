@@ -22,14 +22,14 @@ menu_test.login_callback:
     _access: 'TRUE'
 
 menu_test.callback_description:
-  path: 'menu_callback_description'
+  path: '/menu_callback_description'
   defaults:
     _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
   requirements:
     _permission: 'access content'
 
 menu_test.callback_description_plain:
-  path: 'menu_callback_description/description-plain'
+  path: '/menu_callback_description/description-plain'
   defaults:
     _title: 'Menu item with a regular description'
     _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
@@ -37,7 +37,7 @@ menu_test.callback_description_plain:
     _permission: 'access content'
 
 menu_test.callback_description_callback:
-  path: 'menu_callback_description/description-callback'
+  path: '/menu_callback_description/description-callback'
   defaults:
     _title: 'Menu item with a description set with a callback'
     _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'
@@ -45,7 +45,7 @@ menu_test.callback_description_callback:
     _permission: 'access content'
 
 menu_test.menu_no_title_callback:
-  path: 'menu_no_title_callback'
+  path: '/menu_no_title_callback'
   defaults:
     _title: 'A title with @placeholder'
     _content: '\Drupal\menu_test\Controller\MenuTestController::menuTestCallback'

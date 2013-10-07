@@ -70,7 +70,7 @@ taxonomy.autocomplete_vid:
     _permission: 'access content'
 
 taxonomy.overview_terms:
-  path: 'admin/structure/taxonomy/manage/{taxonomy_vocabulary}'
+  path: '/admin/structure/taxonomy/manage/{taxonomy_vocabulary}'
   defaults:
     _form: 'Drupal\taxonomy\Form\OverviewTerms'
   requirements:

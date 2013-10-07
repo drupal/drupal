@@ -1,5 +1,5 @@
 path.delete:
-  path: 'admin/config/search/path/delete/{pid}'
+  path: '/admin/config/search/path/delete/{pid}'
   defaults:
     _form: '\Drupal\path\Form\DeleteForm'
   requirements:

@@ -13,7 +13,7 @@ custom_block.add_page:
     _permission: 'administer blocks'
 
 custom_block.add_form:
-  path: block/add/{custom_block_type}
+  path: '/block/add/{custom_block_type}'
   defaults:
     _content: 'Drupal\custom_block\Controller\CustomBlockController::addForm'
   requirements:

@@ -13,7 +13,7 @@ common_test.destination:
     _permission: 'access content'
 
 common_test.drupal_render_invalid_keys:
-  path: 'common-test/drupal-render-invalid-keys'
+  path: '/common-test/drupal-render-invalid-keys'
   defaults:
     _title: 'Drupal Render'
     _content: '\Drupal\common_test\Controller\CommonTestController::drupalRenderInvalidKeys'

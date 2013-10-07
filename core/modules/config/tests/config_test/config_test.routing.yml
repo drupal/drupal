@@ -6,14 +6,14 @@ config_test.list_page:
     _access: 'TRUE'
 
 config_test.entity_add:
-  path: 'admin/structure/config_test/add'
+  path: '/admin/structure/config_test/add'
   defaults:
     _entity_form: 'config_test'
   requirements:
     _access: 'TRUE'
 
 config_test.entity:
-  path: 'admin/structure/config_test/manage/{config_test}'
+  path: '/admin/structure/config_test/manage/{config_test}'
   defaults:
     _controller: '\Drupal\config_test\ConfigTestController::edit'
     entity_type: 'config_test'
@@ -21,7 +21,7 @@ config_test.entity:
     _access: 'TRUE'
 
 config_test.entity_enable:
-  path: 'admin/structure/config_test/manage/{config_test}/enable'
+  path: '/admin/structure/config_test/manage/{config_test}/enable'
   defaults:
     _content: '\Drupal\config_test\ConfigTestController::enable'
     entity_type: 'config_test'
@@ -29,7 +29,7 @@ config_test.entity_enable:
     _access: 'TRUE'
 
 config_test.entity_disable:
-  path: 'admin/structure/config_test/manage/{config_test}/disable'
+  path: '/admin/structure/config_test/manage/{config_test}/disable'
   defaults:
     _content: '\Drupal\config_test\ConfigTestController::disable'
     entity_type: 'config_test'
@@ -37,7 +37,7 @@ config_test.entity_disable:
     _access: 'TRUE'
 
 config_test.entity_delete:
-  path: 'admin/structure/config_test/manage/{config_test}/delete'
+  path: '/admin/structure/config_test/manage/{config_test}/delete'
   defaults:
     _entity_form: 'config_test.delete'
     entity_type: 'config_test'

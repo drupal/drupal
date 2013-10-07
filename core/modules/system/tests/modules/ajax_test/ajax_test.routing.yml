@@ -1,12 +1,12 @@
 ajax_test.dialog_contents:
-  path: ajax-test/dialog-contents
+  path: '/ajax-test/dialog-contents'
   defaults:
     _content: '\Drupal\ajax_test\Controller\AjaxTestController::dialogContents'
   requirements:
     _access: 'TRUE'
 
 ajax_test.dialog_form:
-  path: ajax-test/dialog-form
+  path: '/ajax-test/dialog-form'
   defaults:
     _form: '\Drupal\ajax_test\AjaxTestForm'
   requirements:

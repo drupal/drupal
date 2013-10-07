@@ -20,7 +20,7 @@ action.admin_configure:
     _permission: 'administer actions'
 
 action.delete:
-  path: 'admin/config/system/actions/configure/{action}/delete'
+  path: '/admin/config/system/actions/configure/{action}/delete'
   defaults:
     _entity_form: 'action.delete'
   requirements:

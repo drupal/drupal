@@ -46,7 +46,7 @@ comment.confirm_delete:
     _entity_access: 'comment.delete'
 
 comment.reply:
-  path: 'comment/reply/{entity_type}/{entity_id}/{field_name}/{pid}'
+  path: '/comment/reply/{entity_type}/{entity_id}/{field_name}/{pid}'
   defaults:
     _content: '\Drupal\comment\Controller\CommentController::getReplyForm'
     _title: 'Add new comment'

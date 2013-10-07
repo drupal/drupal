@@ -65,7 +65,7 @@ shortcut.link_edit:
     _access_shortcut_link: 'TRUE'
 
 shortcut.overview:
-  path: 'user/{user}/shortcuts'
+  path: '/user/{user}/shortcuts'
   defaults:
     _content: '\Drupal\shortcut\Form\ShortcutForm::overview'
     _title: 'Shortcuts'

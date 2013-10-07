@@ -13,7 +13,7 @@ image.style_edit:
     _permission: 'administer image styles'
 
 image.style_delete:
-  path: 'admin/config/media/image-styles/manage/{image_style}/delete'
+  path: '/admin/config/media/image-styles/manage/{image_style}/delete'
   defaults:
     _entity_form: 'image_style.delete'
     _title: 'Delete'
@@ -21,7 +21,7 @@ image.style_delete:
     _permission: 'administer image styles'
 
 image.effect_delete:
-  path: 'admin/config/media/image-styles/manage/{image_style}/effects/{image_effect}/delete'
+  path: '/admin/config/media/image-styles/manage/{image_style}/effects/{image_effect}/delete'
   defaults:
     _form: '\Drupal\image\Form\ImageEffectDeleteForm'
   requirements:

@@ -1,19 +1,19 @@
 tour_test.1:
-  path: 'tour-test-1'
+  path: '/tour-test-1'
   defaults:
     _content: '\Drupal\tour_test\Controller\TourTestController::tourTest1'
   requirements:
     _access: 'TRUE'
 
 tour_test.1_action:
-  path: 'tour-test-1/action'
+  path: '/tour-test-1/action'
   defaults:
     _content: '\Drupal\tour_test\Controller\TourTestController::tourTest1'
   requirements:
     _access: 'TRUE'
 
 tour_test.2:
-  path: 'tour-test-2/subpath'
+  path: '/tour-test-2/subpath'
   defaults:
     _content: '\Drupal\tour_test\Controller\TourTestController::tourTest2'
   requirements:
