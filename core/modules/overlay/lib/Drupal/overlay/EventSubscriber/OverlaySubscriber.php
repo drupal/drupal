@@ -72,7 +72,7 @@ class OverlaySubscriber implements EventSubscriberInterface {
       // Only act on html pages.
       return;
     }
-    global $user;
+    $user = \Drupal::currentUser();
 
     $mode = overlay_get_mode();
 

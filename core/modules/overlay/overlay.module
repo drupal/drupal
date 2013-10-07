@@ -216,7 +216,7 @@ function overlay_page_alter(&$page) {
  * @see http://drupal.org/node/890284
  */
 function overlay_disable_message() {
-  global $user;
+  $user = \Drupal::currentUser();
 
   $build = array();
   if ($user->isAnonymous() || !$user->hasPermission('access overlay')) {
