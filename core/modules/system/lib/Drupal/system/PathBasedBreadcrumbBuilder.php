@@ -7,16 +7,13 @@
 
 namespace Drupal\system;
 
-use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
+use Drupal\Core\Breadcrumb\BreadcrumbBuilderBase;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Controller\TitleResolverInterface;
 use Drupal\Core\Entity\EntityManager;
-use Drupal\Core\Routing\RequestHelper;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\Core\Access\AccessManager;
 use Drupal\Core\PathProcessor\InboundPathProcessorInterface;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Core\Utility\LinkGeneratorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -26,7 +23,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 /**
  * Class to define the menu_link breadcrumb builder.
  */
-class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
+class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
 
   /**
    * The current request.
@@ -41,13 +38,6 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * @var \Drupal\Core\Access\AccessManager
    */
   protected $accessManager;
-
-  /**
-   * The translation manager service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationInterface;
-   */
-  protected $translation;
 
   /**
    * The menu storage controller.
@@ -69,13 +59,6 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    * @var \Drupal\Core\PathProcessor\InboundPathProcessorInterface
    */
   protected $pathProcessor;
-
-  /**
-   * The link generator service.
-   *
-   * @var \Drupal\Core\Utility\LinkGeneratorInterface
-   */
-  protected $linkGenerator;
 
   /**
    * Site config object.
@@ -101,28 +84,22 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
    *   The entity manager service.
    * @param \Drupal\Core\Access\AccessManager $access_manager
    *   The menu link access service.
-   * @param \Drupal\Core\StringTranslation\TranslationInterface $translation
-   *   The translation manager service.
    * @param \Symfony\Component\Routing\Matcher\RequestMatcherInterface $router
    *   The dynamic router service.
    * @param \Drupal\Core\PathProcessor\InboundPathProcessorInterface $path_processor
    *   The inbound path processor.
    * @param \Drupal\Core\Config\ConfigFactory $config_factory
    *   The config factory service.
-   * @param \Drupal\Core\Utility\LinkGeneratorInterface $link_generator
-   *   The link generator.
    * @param \Drupal\Core\Controller\TitleResolverInterface $title_resolver
    *   The title resolver service.
    */
-  public function __construct(Request $request, EntityManager $entity_manager, AccessManager $access_manager, TranslationInterface $translation, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactory $config_factory, LinkGeneratorInterface $link_generator, TitleResolverInterface $title_resolver) {
+  public function __construct(Request $request, EntityManager $entity_manager, AccessManager $access_manager, RequestMatcherInterface $router, InboundPathProcessorInterface $path_processor, ConfigFactory $config_factory, TitleResolverInterface $title_resolver) {
     $this->request = $request;
     $this->accessManager = $access_manager;
-    $this->translation = $translation;
     $this->menuStorage = $entity_manager->getStorageController('menu');
     $this->router = $router;
     $this->pathProcessor = $path_processor;
     $this->config = $config_factory->get('system.site');
-    $this->linkGenerator = $link_generator;
     $this->titleResolver = $title_resolver;
   }
 
@@ -184,7 +161,7 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     }
     if ($path && $path != $front) {
       // Add the Home link, except for the front page.
-      $links[] = $this->linkGenerator->generate($this->t('Home'), '<front>');
+      $links[] = $this->l($this->t('Home'), '<front>');
     }
     return array_reverse($links);
   }
@@ -225,15 +202,6 @@ class PathBasedBreadcrumbBuilder implements BreadcrumbBuilderInterface {
     catch (ResourceNotFoundException $e) {
       return NULL;
     }
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translation->translate($string, $args, $options);
   }
 
 }

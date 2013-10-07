@@ -7,22 +7,14 @@
 
 namespace Drupal\comment;
 
-use Drupal\Core\Breadcrumb\BreadcrumbBuilderInterface;
+use Drupal\Core\Breadcrumb\BreadcrumbBuilderBase;
 use Drupal\Core\Entity\EntityManager;
-use Drupal\Core\StringTranslation\TranslationManager;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 
 /**
  * Class to define the comment breadcrumb builder.
  */
-class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
-
-  /**
-   * The translation manager service.
-   *
-   * @var \Drupal\Core\StringTranslation\TranslationManager
-   */
-  protected $translation;
+class CommentBreadcrumbBuilder extends BreadcrumbBuilderBase {
 
   /**
    * Stores the Entity manager service.
@@ -34,13 +26,10 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
   /**
    * Constructs a CommentBreadcrumbBuilder object.
    *
-   * @param \Drupal\Core\StringTranslation\TranslationManager $translation
-   *   The translation manager.
    * @param \Drupal\Core\Entity\EntityManager
    *   The entity manager.
    */
-  public function __construct(TranslationManager $translation, EntityManager $entity_manager) {
-    $this->translation = $translation;
+  public function __construct(EntityManager $entity_manager) {
     $this->entityManager = $entity_manager;
   }
 
@@ -53,7 +42,7 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       && isset($attributes['entity_id'])
       && isset($attributes['field_name'])
       ) {
-      $breadcrumb[] = l($this->t('Home'), NULL);
+      $breadcrumb[] = $this->l($this->t('Home'), '<front>');
       $entity = $this->entityManager
         ->getStorageController($attributes['entity_type'])
         ->load($attributes['entity_id']);
@@ -61,15 +50,6 @@ class CommentBreadcrumbBuilder implements BreadcrumbBuilderInterface {
       $breadcrumb[] = l($entity->label(), $uri['path'], $uri['options']);
       return $breadcrumb;
     }
-  }
-
-  /**
-   * Translates a string to the current language or to a given language.
-   *
-   * See the t() documentation for details.
-   */
-  protected function t($string, array $args = array(), array $options = array()) {
-    return $this->translation->translate($string, $args, $options);
   }
 
 }
