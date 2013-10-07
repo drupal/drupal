@@ -27,7 +27,6 @@ block.admin_display:
   path: '/admin/structure/block'
   defaults:
     _content: '\Drupal\block\Controller\BlockListController::listing'
-    entity_type: 'block'
   requirements:
     _permission: 'administer blocks'
 
