@@ -126,7 +126,7 @@ class NodeRevisionAccessCheck implements AccessCheckInterface {
     }
 
     if (!isset($account)) {
-      $account = $GLOBALS['user'];
+      $account = \Drupal::currentUser();
     }
 
     // If no language code was provided, default to the node revision's langcode.
