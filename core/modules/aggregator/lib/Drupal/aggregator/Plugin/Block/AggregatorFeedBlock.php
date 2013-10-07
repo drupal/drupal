@@ -155,7 +155,6 @@ class AggregatorFeedBlock extends BlockBase implements ContainerFactoryPluginInt
         return array(
           '#children' => drupal_render($item_list) . $read_more,
         );
-        return $build;
       }
     }
   }
