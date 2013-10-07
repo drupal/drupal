@@ -86,7 +86,7 @@ function theme_node_add_list($variables) {
  * @deprecated Use \Drupal\node\Controller\NodeController::add()
  */
 function node_add($node_type) {
-  global $user;
+  $user = \Drupal::currentUser();
 
   $type = $node_type->type;
   $langcode = module_invoke('language', 'get_default_langcode', 'node', $type);
