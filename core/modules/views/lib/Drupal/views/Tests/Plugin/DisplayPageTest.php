@@ -93,7 +93,7 @@ class DisplayPageTest extends ViewUnitTestBase {
    * Checks that the router items are properly registered
    */
   public function testPageRouterItems() {
-    $subscriber = new RouteSubscriber();
+    $subscriber = new RouteSubscriber($this->container->get('entity.manager'), $this->container->get('state'));
     $collection = new RouteCollection();
     $subscriber->dynamicRoutes(new RouteBuildEvent($collection, 'dynamic_routes'));
 

@@ -83,9 +83,10 @@ services:
     arguments: [views_results]
   views.route_subscriber:
     class: Drupal\views\EventSubscriber\RouteSubscriber
-    arguments: ['@config.factory']
+    arguments: ['@entity.manager', '@state']
     tags:
       - { name: 'event_subscriber' }
+      - { name: 'needs_destruction' }
   views.route_access_check:
     class: Drupal\views\ViewsAccessCheck
     tags:

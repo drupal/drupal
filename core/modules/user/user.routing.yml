@@ -40,6 +40,13 @@ user.account_settings:
   requirements:
     _permission: 'administer account settings'
 
+user.admin_account:
+  path: '/admin/people'
+  defaults:
+    _controller: '\Drupal\user\Controller\UserAdmin::userList'
+  requirements:
+    _permission: 'administer users'
+
 user.admin_create:
   path: '/admin/people/create'
   defaults:

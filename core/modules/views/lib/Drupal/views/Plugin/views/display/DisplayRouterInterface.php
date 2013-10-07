@@ -7,14 +7,14 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Symfony\Component\Routing\RouteCollection;
+
 /**
  * Defines an interface for displays that can collect routes.
  *
  * In addition to implementing the interface, specify 'uses_routes' in the
  * plugin definition.
  */
-use Symfony\Component\Routing\RouteCollection;
-
 interface DisplayRouterInterface {
 
   /**
@@ -24,5 +24,18 @@ interface DisplayRouterInterface {
    *   A collection of routes that should be registered for this resource.
    */
   public function collectRoutes(RouteCollection $collection);
+
+  /**
+   * Alters a collection of routes and replaces definitions to the view.
+   *
+   * Most of the collections won't have the needed route, so by the return value
+   * the method can specify to break the search.
+   *
+   * @param \Symfony\Component\Routing\RouteCollection $collection
+   *
+   * @return array
+   *   Returns a list of "$view_id.$display_id" elements which got overridden.
+   */
+  public function alterRoutes(RouteCollection $collection);
 
 }

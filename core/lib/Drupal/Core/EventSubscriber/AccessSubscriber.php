@@ -71,7 +71,7 @@ class AccessSubscriber implements EventSubscriberInterface {
   static function getSubscribedEvents() {
     $events[KernelEvents::REQUEST][] = array('onKernelRequestAccessCheck', 30);
     // Setting very low priority to ensure access checks are run after alters.
-    $events[RoutingEvents::ALTER][] = array('onRoutingRouteAlterSetAccessCheck', 0);
+    $events[RoutingEvents::ALTER][] = array('onRoutingRouteAlterSetAccessCheck', -50);
 
     return $events;
   }

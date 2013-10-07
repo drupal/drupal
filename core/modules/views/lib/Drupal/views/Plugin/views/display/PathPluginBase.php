@@ -7,8 +7,12 @@
 
 namespace Drupal\views\Plugin\views\display;
 
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
+use Drupal\Core\Routing\RouteCompiler;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\views\Views;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Route;
@@ -16,8 +20,58 @@ use Symfony\Component\Routing\RouteCollection;
 
 /**
  * The base display plugin for path/callbacks. This is used for pages and feeds.
+ *
+ * @see \Drupal\views\EventSubscriber\RouteSubscriber
  */
 abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouterInterface {
+
+  /**
+   * The route provider.
+   *
+   * @var \Drupal\Core\Routing\RouteProviderInterface
+   */
+  protected $routeProvider;
+
+  /**
+   * The state key value store.
+   *
+   * @var \Drupal\Core\KeyValueStore\KeyValueStoreInterface
+   */
+  protected $state;
+
+  /**
+   * Constructs a PathPluginBase object.
+   *
+   * @param array $configuration
+   *   A configuration array containing information about the plugin instance.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param array $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   *   The route provider.
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state
+   *   The state key value store.
+   */
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, RouteProviderInterface $route_provider, KeyValueStoreInterface $state) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+
+    $this->routeProvider = $route_provider;
+    $this->state = $state;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('router.route_provider'),
+      $container->get('state')
+    );
+  }
 
   /**
    * Overrides \Drupal\views\Plugin\views\display\DisplayPluginBase::hasPath().
@@ -60,12 +114,17 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   }
 
   /**
-   * {@inheritdoc}
+   * Generates a route entry for a given view and display.
+   *
+   * @param string $view_id
+   *   The ID of the view.
+   * @param string $display_id
+   *   The current display ID.
+   *
+   * @return \Symfony\Component\Routing\Route
+   *   The route for the view.
    */
-  public function collectRoutes(RouteCollection $collection) {
-    $view_id = $this->view->storage->id();
-    $display_id = $this->display['id'];
-
+  protected function getRoute($view_id, $display_id) {
     $defaults = array(
       '_controller' => 'Drupal\views\Routing\ViewPageController::handle',
       'view_id' => $view_id,
@@ -80,7 +139,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
     $arg_counter = 0;
 
     $this->view->initHandlers();
-    $view_arguments = $this->view->argument;
+    $view_arguments = (array) $this->view->argument;
 
     $argument_ids = array_keys($view_arguments);
     $total_arguments = count($argument_ids);
@@ -126,8 +185,50 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
       $access_plugin = Views::pluginManager('access')->createInstance('none');
     }
     $access_plugin->alterRouteDefinition($route);
+    return $route;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function collectRoutes(RouteCollection $collection) {
+    $view_id = $this->view->storage->id();
+    $display_id = $this->display['id'];
+
+    $route = $this->getRoute($view_id, $display_id);
 
     $collection->add("view.$view_id.$display_id", $route);
+    return array("$view_id.$display_id" => "view.$view_id.$display_id");
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function alterRoutes(RouteCollection $collection) {
+    $view_route_names = array();
+    $view_path = $this->getPath();
+    foreach ($collection->all() as $name => $route) {
+      // Find all paths which match the path of the current display..
+      $route_path = RouteCompiler::getPathWithoutDefaults($route);
+      $route_path = RouteCompiler::getPatternOutline($route_path);
+      // Ensure that we don't override a route which is already controlled by
+      // views.
+      if (!$route->hasDefault('view_id') && ('/' . $view_path == $route_path)) {
+        // @todo Figure out whether we need to merge some settings (like
+        // requirements).
+
+        // Replace the existing route with a new one based on views.
+        $collection->remove($name);
+
+        $view_id = $this->view->storage->id();
+        $display_id = $this->display['id'];
+        $route = $this->getRoute($view_id, $display_id);
+        $collection->add($name, $route);
+        $view_route_names[$view_id . '.' . $display_id] = $name;
+      }
+    }
+
+    return $view_route_names;
   }
 
   /**
@@ -157,9 +258,14 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
 
     $path = implode('/', $bits);
 
+    $view_route_names = $this->state->get('views.view_route_names') ?: array();
+
     if ($path) {
+      // Some views might override existing paths, so we have to set the route
+      // name based upon the altering.
+      $view_id_display =  "{$this->view->storage->id()}.{$this->display['id']}";
       $items[$path] = array(
-        'route_name' => "view.{$this->view->storage->id()}.{$this->display['id']}",
+        'route_name' => isset($view_route_names[$view_id_display]) ? $view_route_names[$view_id_display] : "view.$view_id_display",
         // Identify URL embedded arguments and correlate them to a handler.
         'load arguments'  => array($this->view->storage->id(), $this->display['id'], '%index'),
       );

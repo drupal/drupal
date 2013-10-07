@@ -778,11 +778,13 @@ function user_menu() {
   $items['admin/people'] = array(
     'title' => 'People',
     'description' => 'Manage user accounts, roles, and permissions.',
-    'page callback' => 'user_admin_account',
-    'access arguments' => array('administer users'),
+    'route_name' => 'user.admin_account',
     'position' => 'left',
     'weight' => -4,
-    'file' => 'user.admin.inc',
+  );
+  $items['admin/people/list'] = array(
+    'title' => 'List',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
   );
   // Permissions and role forms.
   $items['admin/people/permissions'] = array(
@@ -810,12 +812,6 @@ function user_menu() {
     'route_name' => 'user.role_delete',
     'weight' => 10,
     'context' => MENU_CONTEXT_INLINE,
-  );
-
-  $items['admin/people/create'] = array(
-    'title' => 'Add user',
-    'route_name' => 'user.admin_create',
-    'type' => MENU_LOCAL_ACTION,
   );
 
   // Administration pages.

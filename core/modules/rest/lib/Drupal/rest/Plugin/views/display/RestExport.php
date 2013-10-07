@@ -8,6 +8,8 @@
 namespace Drupal\rest\Plugin\views\display;
 
 
+use Drupal\Core\KeyValueStore\KeyValueStoreInterface;
+use Drupal\Core\Routing\RouteProviderInterface;
 use Drupal\views\Annotation\ViewsDisplay;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\ContentNegotiation;
@@ -95,13 +97,17 @@ class RestExport extends PathPluginBase {
    *   The plugin_id for the plugin instance.
    * @param array $plugin_definition
    *   The plugin implementation definition.
+   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
+   *   The route provider
+   * @param \Drupal\Core\KeyValueStore\KeyValueStoreInterface $state
+   *   The state key value store.
    * @param \Drupal\Core\ContentNegotiation $content_negotiation
    *   The content negotiation library.
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   The request object.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ContentNegotiation $content_negotiation, Request $request) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, RouteProviderInterface $route_provider, KeyValueStoreInterface $state, ContentNegotiation $content_negotiation, Request $request) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $route_provider, $state);
     $this->contentNegotiation = $content_negotiation;
     $this->request = $request;
   }
@@ -114,6 +120,8 @@ class RestExport extends PathPluginBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
+      $container->get('router.route_provider'),
+      $container->get('state'),
       $container->get('content_negotiation'),
       $container->get('request')
     );

@@ -706,6 +706,9 @@ function views_invalidate_cache() {
 
   $module_handler = \Drupal::moduleHandler();
 
+  // Reset the RouteSubscriber from views.
+  \Drupal::getContainer()->get('views.route_subscriber')->reset();
+
   // Set the router to be rebuild.
   // @todo Figure out why the cache rebuild is trigged but the route table
   //   does not exist yet.
