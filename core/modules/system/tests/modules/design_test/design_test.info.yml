@@ -1,7 +1,0 @@
-name: 'Design test'
-type: module
-description: 'Support module for design, markup, JavaScript, and CSS testing.'
-package: Testing
-version: VERSION
-core: 8.x
-hidden: true

@@ -1,7 +1,0 @@
-design.test:
-  path: '/design_test/{category}'
-  defaults:
-    _content: '\Drupal\design_test\Controller\DesignTestController::categoryPage'
-    category: 'FALSE'
-  requirements:
-    _access: 'TRUE'
