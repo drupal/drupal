@@ -1,3 +1,11 @@
+node.content_overview:
+  path: '/admin/content'
+  defaults:
+    _title: 'Content'
+    _content: '\Drupal\node\Controller\NodeController::contentOverview'
+  requirements:
+    _permission: 'access content overview'
+
 node.multiple_delete_confirm:
   path: '/admin/content/node/delete'
   defaults:

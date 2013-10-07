@@ -969,10 +969,8 @@ function node_menu() {
   $items['admin/content'] = array(
     'title' => 'Content',
     'description' => 'Find and manage content.',
-    'page callback' => 'node_admin_nodes',
-    'access arguments' => array('access content overview'),
+    'route_name' => 'node.content_overview',
     'weight' => -10,
-    'file' => 'node.admin.inc',
   );
   $items['admin/content/node'] = array(
     'title' => 'Content',
