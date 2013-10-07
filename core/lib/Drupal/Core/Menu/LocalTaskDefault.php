@@ -7,16 +7,13 @@
 
 namespace Drupal\Core\Menu;
 
-use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginBase;
-use Drupal\Core\Routing\RouteProviderInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Default object used for LocalTaskPlugins.
  */
-class LocalTaskDefault extends PluginBase implements LocalTaskInterface, ContainerFactoryPluginInterface {
+class LocalTaskDefault extends PluginBase implements LocalTaskInterface {
 
   /**
    * The route provider to load routes by name.
@@ -33,35 +30,6 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface, Contain
   protected $active = FALSE;
 
   /**
-   * Constructs a \Drupal\system\Plugin\LocalTaskDefault object.
-   *
-   * @param array $configuration
-   *   A configuration array containing information about the plugin instance.
-   * @param string $plugin_id
-   *   The plugin_id for the plugin instance.
-   * @param array $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Routing\RouteProviderInterface $route_provider
-   *   The route provider.
-   */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition, RouteProviderInterface $route_provider) {
-    $this->routeProvider = $route_provider;
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, array $plugin_definition) {
-    return new static(
-      $configuration,
-      $plugin_id,
-      $plugin_definition,
-      $container->get('router.route_provider')
-    );
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getRouteName() {
@@ -73,7 +41,7 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface, Contain
    */
   public function getRouteParameters(Request $request) {
     $parameters = isset($this->pluginDefinition['route_parameters']) ? $this->pluginDefinition['route_parameters'] : array();
-    $route = $this->routeProvider->getRouteByName($this->getRouteName());
+    $route = $this->routeProvider()->getRouteByName($this->getRouteName());
     $variables = $route->compile()->getVariables();
 
     // Normally the \Drupal\Core\ParamConverter\ParamConverterManager has
@@ -156,6 +124,19 @@ class LocalTaskDefault extends PluginBase implements LocalTaskInterface, Contain
    */
   public function getActive() {
     return $this->active;
+  }
+
+  /**
+   * Returns the route provider.
+   *
+   * @return \Drupal\Core\Routing\RouteProviderInterface
+   *   The route provider.
+   */
+  protected function routeProvider() {
+    if (!$this->routeProvider) {
+      $this->routeProvider = \Drupal::service('router.route_provider');
+    }
+    return $this->routeProvider;
   }
 
 }

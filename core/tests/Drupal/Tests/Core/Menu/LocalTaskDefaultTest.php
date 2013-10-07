@@ -86,8 +86,9 @@ class LocalTaskDefaultTest extends UnitTestCase {
   protected function setupLocalTaskDefault() {
     $container = new ContainerBuilder();
     $container->set('string_translation', $this->stringTranslation);
+    $container->set('router.route_provider', $this->routeProvider);
     \Drupal::setContainer($container);
-    $this->localTaskBase = new LocalTaskDefault($this->config, $this->pluginId, $this->pluginDefinition, $this->routeProvider);
+    $this->localTaskBase = new LocalTaskDefault($this->config, $this->pluginId, $this->pluginDefinition);
   }
 
   /**

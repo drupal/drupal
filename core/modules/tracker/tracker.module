@@ -31,48 +31,6 @@ function tracker_help($path, $arg) {
 }
 
 /**
- * Implements hook_menu().
- */
-function tracker_menu() {
-  $items['tracker'] = array(
-    'title' => 'Recent content',
-    'page callback' => 'tracker_page',
-    'access arguments' => array('access content'),
-    'weight' => 1,
-    'file' => 'tracker.pages.inc',
-  );
-  $items['tracker/all'] = array(
-    'title' => 'All recent content',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-  $items['tracker/%user_uid_optional'] = array(
-    'title' => 'My recent content',
-    'page callback' => 'tracker_page',
-    'access callback' => '_tracker_myrecent_access',
-    'access arguments' => array(1),
-    'page arguments' => array(1),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'tracker.pages.inc',
-  );
-
-  $items['user/%user/track'] = array(
-    'title' => 'Track',
-    'page callback' => 'tracker_page',
-    'page arguments' => array(1, TRUE),
-    'access callback' => '_tracker_user_access',
-    'access arguments' => array(1),
-    'type' => MENU_LOCAL_TASK,
-    'file' => 'tracker.pages.inc',
-  );
-  $items['user/%user/track/content'] = array(
-    'title' => 'Track content',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_cron().
  *
  * Updates tracking information for any items still to be tracked. The state

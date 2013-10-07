@@ -1,0 +1,10 @@
+tracker.page_tab:
+  route_name: tracker.page
+  title: 'Recent content'
+  tab_root_id: tracker.page_tab
+
+tracker.users_recent_tab:
+  route_name: tracker.users_recent_content
+  title: 'My recent content'
+  tab_root_id: tracker.page_tab
+  class: '\Drupal\tracker\Plugin\Menu\UserTrackerTab'
