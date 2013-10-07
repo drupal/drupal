@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
+use Drupal\Component\Utility\String;
 use Drupal\Core\Form\FormInterface;
 use Drupal\Core\Form\BaseFormIdInterface;
 use Drupal\Core\Database\Database;
@@ -2824,7 +2825,7 @@ function form_select_options($element, $choices = NULL) {
       else {
         $selected = '';
       }
-      $options .= '<option value="' . check_plain($key) . '"' . $selected . '>' . check_plain($choice) . '</option>';
+      $options .= '<option value="' . String::checkPlain($key) . '"' . $selected . '>' . String::checkPlain($choice) . '</option>';
     }
   }
   return $options;
@@ -4569,7 +4570,7 @@ function theme_textarea($variables) {
   }
 
   $output = '<div' . new Attribute($wrapper_attributes) . '>';
-  $output .= '<textarea' . new Attribute($element['#attributes']) . '>' . check_plain($element['#value']) . '</textarea>';
+  $output .= '<textarea' . new Attribute($element['#attributes']) . '>' . String::checkPlain($element['#value']) . '</textarea>';
   $output .= '</div>';
   return $output;
 }
@@ -4932,9 +4933,9 @@ function _drupal_form_send_response(Response $response) {
  * Note: if the batch 'title', 'init_message', 'progress_message', or
  * 'error_message' could contain any user input, it is the responsibility of
  * the code calling batch_set() to sanitize them first with a function like
- * check_plain() or filter_xss(). Furthermore, if the batch operation
- * returns any user input in the 'results' or 'message' keys of $context,
- * it must also sanitize them first.
+ * \Drupal\Component\Utility\String::checkPlain() or filter_xss(). Furthermore,
+ * if the batch operation returns any user input in the 'results' or 'message'
+ * keys of $context, it must also sanitize them first.
  *
  * Sample batch operations:
  * @code
@@ -4958,8 +4959,8 @@ function _drupal_form_send_response(Response $response) {
  *
  *   $nodes = entity_load_multiple_by_properties('node', array('uid' => $uid, 'type' => $type));
  *   $node = reset($nodes);
- *   $context['results'][] = $node->id() . ' : ' . check_plain($node->label());
- *   $context['message'] = check_plain($node->label());
+ *   $context['results'][] = $node->id() . ' : ' . String::checkPlain($node->label());
+ *   $context['message'] = String::checkPlain($node->label());
  * }
  *
  * // A more advanced example is a multi-step operation that loads all rows,
@@ -4978,10 +4979,10 @@ function _drupal_form_send_response(Response $response) {
  *     ->range(0, $limit)
  *     ->execute();
  *   foreach ($result as $row) {
- *     $context['results'][] = $row->id . ' : ' . check_plain($row->title);
+ *     $context['results'][] = $row->id . ' : ' . String:checkPlain($row->title);
  *     $context['sandbox']['progress']++;
  *     $context['sandbox']['current_id'] = $row->id;
- *     $context['message'] = check_plain($row->title);
+ *     $context['message'] = String:checkPlain($row->title);
  *   }
  *   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
  *     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];

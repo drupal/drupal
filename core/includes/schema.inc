@@ -232,7 +232,8 @@ function drupal_install_schema($module) {
  * @return array
  *   An array of arrays with the following key/value pairs:
  *    - success: a boolean indicating whether the query succeeded.
- *    - query: the SQL query(s) executed, passed through check_plain().
+ *    - query: the SQL query(s) executed, passed through
+ *      \Drupal\Component\Utility\String::checkPlain().
  */
 function drupal_uninstall_schema($module) {
   $schema = drupal_get_schema_unprocessed($module);

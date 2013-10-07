@@ -700,7 +700,7 @@ function valid_number_step($value, $step, $offset = 0.0) {
  * string, so this function can be called independently when the output needs to
  * be a plain-text string for passing to t(), l(),
  * Drupal\Core\Template\Attribute, or another function that will call
- * check_plain() separately.
+ * \Drupal\Component\Utility\String::checkPlain() separately.
  *
  * @param $uri
  *   A plain-text URI that might contain dangerous protocols.
@@ -708,8 +708,8 @@ function valid_number_step($value, $step, $offset = 0.0) {
  * @return
  *   A plain-text URI stripped of dangerous protocols. As with all plain-text
  *   strings, this return value must not be output to an HTML page without
- *   check_plain() being called on it. However, it can be passed to functions
- *   expecting plain-text strings.
+ *   \Drupal\Component\Utility\String::checkPlain() being called on it. However,
+ *   it can be passed to functions expecting plain-text strings.
  *
  * @see \Drupal\Component\Utility\Url::stripDangerousProtocols()
  */
@@ -744,7 +744,8 @@ function check_url($uri) {
  *
  * Use only for fields where it is impractical to use the
  * whole filter system, but where some (mainly inline) mark-up
- * is desired (so check_plain() is not acceptable).
+ * is desired (so \Drupal\Component\Utility\String::checkPlain() is not
+ * acceptable).
  *
  * Allows all tags that can be used inside an HTML body, save
  * for scripts and styles.
@@ -826,14 +827,14 @@ function format_rss_channel($title, $link, $description, $items, $langcode = NUL
   $langcode = $langcode ? $langcode : language(Language::TYPE_CONTENT)->id;
 
   $output = "<channel>\n";
-  $output .= ' <title>' . check_plain($title) . "</title>\n";
+  $output .= ' <title>' . String::checkPlain($title) . "</title>\n";
   $output .= ' <link>' . check_url($link) . "</link>\n";
 
   // The RSS 2.0 "spec" doesn't indicate HTML can be used in the description.
   // We strip all HTML tags, but need to prevent double encoding from properly
   // escaped source data (such as &amp becoming &amp;amp;).
-  $output .= ' <description>' . check_plain(decode_entities(strip_tags($description))) . "</description>\n";
-  $output .= ' <language>' . check_plain($langcode) . "</language>\n";
+  $output .= ' <description>' . String::checkPlain(decode_entities(strip_tags($description))) . "</description>\n";
+  $output .= ' <language>' . String::checkPlain($langcode) . "</language>\n";
   $output .= format_xml_elements($args);
   $output .= $items;
   $output .= "</channel>\n";
@@ -848,9 +849,9 @@ function format_rss_channel($title, $link, $description, $items, $langcode = NUL
  */
 function format_rss_item($title, $link, $description, $args = array()) {
   $output = "<item>\n";
-  $output .= ' <title>' . check_plain($title) . "</title>\n";
+  $output .= ' <title>' . String::checkPlain($title) . "</title>\n";
   $output .= ' <link>' . check_url($link) . "</link>\n";
-  $output .= ' <description>' . check_plain($description) . "</description>\n";
+  $output .= ' <description>' . String::checkPlain($description) . "</description>\n";
   $output .= format_xml_elements($args);
   $output .= "</item>\n";
 
@@ -882,7 +883,7 @@ function format_xml_elements($array) {
         }
 
         if (isset($value['value']) && $value['value'] != '') {
-          $output .= '>' . (is_array($value['value']) ? format_xml_elements($value['value']) : check_plain($value['value'])) . '</' . $value['key'] . ">\n";
+          $output .= '>' . (is_array($value['value']) ? format_xml_elements($value['value']) : String::checkPlain($value['value'])) . '</' . $value['key'] . ">\n";
         }
         else {
           $output .= " />\n";
@@ -890,7 +891,7 @@ function format_xml_elements($array) {
       }
     }
     else {
-      $output .= ' <' . $key . '>' . (is_array($value) ? format_xml_elements($value) : check_plain($value)) . "</$key>\n";
+      $output .= ' <' . $key . '>' . (is_array($value) ? format_xml_elements($value) : String::checkPlain($value)) . "</$key>\n";
     }
   }
   return $output;
@@ -1285,8 +1286,9 @@ function drupal_http_header_attributes(array $attributes = array()) {
  *   The internal path or external URL being linked to, such as "node/34" or
  *   "http://example.com/foo". After the url() function is called to construct
  *   the URL from $path and $options, the resulting URL is passed through
- *   check_plain() before it is inserted into the HTML anchor tag, to ensure
- *   well-formed HTML. See url() for more information and notes.
+ *   \Drupal\Component\Utility\String::checkPlain() before it is inserted into
+ *   the HTML anchor tag, to ensure well-formed HTML. See url() for more
+ *   information and notes.
  * @param array $options
  *   An associative array of additional options. Defaults to an empty array. It
  *   may contain the following elements.
@@ -1379,10 +1381,10 @@ function l($text, $path, array $options = array()) {
 
   // The result of url() is a plain-text URL. Because we are using it here
   // in an HTML argument context, we need to encode it properly.
-  $url = check_plain(url($variables['path'], $variables['options']));
+  $url = String::checkPlain(url($variables['path'], $variables['options']));
 
   // Sanitize the link text if necessary.
-  $text = $variables['options']['html'] ? $variables['text'] : check_plain($variables['text']);
+  $text = $variables['options']['html'] ? $variables['text'] : String::checkPlain($variables['text']);
 
   return '<a href="' . $url . '"' . $attributes . '>' . $text . '</a>';
 }
@@ -1481,7 +1483,7 @@ function drupal_add_html_head_link($attributes, $header = FALSE) {
 
   if ($header) {
     // Also add a HTTP header "Link:".
-    $href = '<' . check_plain($attributes['href']) . '>;';
+    $href = '<' . String::checkPlain($attributes['href']) . '>;';
     unset($attributes['href']);
     $element['#attached']['drupal_add_http_header'][] = array('Link',  $href . drupal_http_header_attributes($attributes), TRUE);
   }
@@ -4864,7 +4866,7 @@ function _drupal_flush_css_js() {
  */
 function debug($data, $label = NULL, $print_r = FALSE) {
   // Print $data contents to string.
-  $string = check_plain($print_r ? print_r($data, TRUE) : var_export($data, TRUE));
+  $string = String::checkPlain($print_r ? print_r($data, TRUE) : var_export($data, TRUE));
 
   // Display values with pre-formatting to increase readability.
   $string = '<pre>' . $string . '</pre>';

@@ -10,6 +10,7 @@
 
 use Drupal\Component\Graph\Graph;
 use Drupal\Component\Utility\Settings;
+use Drupal\Component\Utility\String;
 use Drupal\Core\Config\FileStorage;
 use Drupal\Core\Config\ConfigException;
 use Drupal\Core\DrupalKernel;
@@ -813,7 +814,9 @@ function update_do_one($module, $number, $dependency_map, &$context) {
       require_once __DIR__ . '/errors.inc';
       $variables = _drupal_decode_exception($e);
       unset($variables['backtrace']);
-      // The exception message is run through check_plain() by _drupal_decode_exception().
+      // The exception message is run through
+      // \Drupal\Component\Utility\String::checkPlain() by
+      // _drupal_decode_exception().
       $ret['#abort'] = array('success' => FALSE, 'query' => t('%type: !message in %function (line %line of %file).', $variables));
     }
   }
@@ -841,7 +844,7 @@ function update_do_one($module, $number, $dependency_map, &$context) {
     drupal_set_installed_schema_version($module, $number);
   }
 
-  $context['message'] = 'Updating ' . check_plain($module) . ' module';
+  $context['message'] = 'Updating ' . String::checkPlain($module) . ' module';
 }
 
 /**

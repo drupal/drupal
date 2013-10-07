@@ -1467,7 +1467,9 @@ function watchdog_exception($type, Exception $exception, $message = NULL, $varia
 
    // Use a default value if $message is not set.
    if (empty($message)) {
-     // The exception message is run through check_plain() by _drupal_decode_exception().
+     // The exception message is run through
+     // \Drupal\Component\Utility\String::checkPlain() by
+     // _drupal_decode_exception().
      $message = '%type: !message in %function (line %line of %file).';
    }
    // $variables must be an array so that we can add the exception information.
@@ -1672,7 +1674,7 @@ function drupal_get_title() {
 
   // During a bootstrap, menu.inc is not included and thus we cannot provide a title.
   if (!isset($title) && function_exists('menu_get_active_title')) {
-    $title = check_plain(menu_get_active_title());
+    $title = String::checkPlain(menu_get_active_title());
   }
 
   return $title;
@@ -1689,7 +1691,8 @@ function drupal_get_title() {
  * @param $output
  *   Optional flag - normally should be left as Title::CHECK_PLAIN. Only set to
  *   PASS_THROUGH if you have already removed any possibly dangerous code
- *   from $title using a function like check_plain() or filter_xss(). With this
+ *   from $title using a function like
+ *   \Drupal\Component\Utility\String::checkPlain() or filter_xss(). With this
  *   flag the string will be passed through unchanged.
  *
  * @return
@@ -1699,7 +1702,7 @@ function drupal_set_title($title = NULL, $output = Title::CHECK_PLAIN) {
   $stored_title = &drupal_static(__FUNCTION__);
 
   if (isset($title)) {
-    $stored_title = ($output == PASS_THROUGH) ? $title : check_plain($title);
+    $stored_title = ($output == PASS_THROUGH) ? $title : String::checkPlain($title);
   }
 
   return $stored_title;
