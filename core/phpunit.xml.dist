@@ -3,14 +3,22 @@
 <phpunit bootstrap="tests/bootstrap.php" colors="true">
   <testsuites>
     <testsuite name="Drupal Unit Test Suite">
-      <directory>./tests/*</directory>
-      <directory>./modules/*/tests/*</directory>
-      <directory>../modules/*/tests/*</directory>
-      <directory>../sites/*/modules/*/tests/*</directory>
-      <!-- Exclude files that end in Test.php that aren't actually phpunit tests. -->
+      <directory>./tests</directory>
+      <directory>./modules/*/tests</directory>
+      <directory>../modules</directory>
+      <directory>../sites/*/modules</directory>
+      <!-- Exclude Composer's vendor directory so we don't run tests there. -->
+      <exclude>./vendor</exclude>
+      <!-- Exclude Drush tests. -->
+      <exclude>./drush/tests</exclude>
+      <!-- Exclude special-case files from config's test modules. -->
       <exclude>./modules/config/tests/config_test/lib/Drupal/config_test</exclude>
-      <exclude>./modules/views/tests/views_test_data/lib/Drupal/views_test_data</exclude>
     </testsuite>
   </testsuites>
+  <!-- Filter for coverage reports. -->
+  <filter>
+    <blacklist>
+      <directory>./vendor</directory>
+    </blacklist>
+  </filter>
 </phpunit>
-
