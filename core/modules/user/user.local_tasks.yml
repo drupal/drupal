@@ -2,3 +2,7 @@ user.role_list_tab:
   route_name: user.role_list
   title: 'Roles'
   tab_root_id: user.role_list_tab
+user.account_settings_tab:
+  route_name: user.account_settings
+  title: 'Settings'
+  tab_root_id: user.account_settings_tab

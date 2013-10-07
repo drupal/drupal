@@ -3,10 +3,10 @@ system.rss_feeds_settings_tab:
   title: Settings
   tab_root_id: system.rss_feeds_settings_tab
 
-system.site_maintenance_mode_settings_tab:
+system.site_maintenance_mode_tab:
   route_name: system.site_maintenance_mode
   title: Settings
-  tab_root_id: system.site_maintenance_mode_settings_tab
+  tab_root_id: system.site_maintenance_mode_tab
 
 system.site_information_settings_tab:
   route_name: system.site_information_settings

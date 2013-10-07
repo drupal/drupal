@@ -21,10 +21,6 @@ function config_test_menu() {
   $items['admin/structure/config_test/manage/%config_test'] = array(
     'route_name' => 'config_test.entity',
   );
-  $items['admin/structure/config_test/manage/%config_test/edit'] = array(
-    'title' => 'Edit',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
   $items['admin/structure/config_test/manage/%config_test/delete'] = array(
     'title' => 'Delete',
     'route_name' => 'config_test.entity_delete',

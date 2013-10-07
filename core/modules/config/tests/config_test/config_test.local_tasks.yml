@@ -1,0 +1,4 @@
+config_test.entity_tab:
+  route_name: config_test.entity
+  title: 'Edit'
+  tab_root_id: config_test.entity_tab

@@ -833,10 +833,6 @@ function user_menu() {
     'weight' => -10,
     'route_name' => 'user.account_settings',
   );
-  $items['admin/config/people/accounts/settings'] = array(
-    'title' => 'Settings',
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-  );
 
   $items['user/%user'] = array(
     'title' => 'My account',
