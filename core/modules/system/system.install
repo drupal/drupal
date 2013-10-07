@@ -371,7 +371,8 @@ function system_requirements($phase) {
       continue;
     }
     if ($phase == 'install') {
-      file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+      $mode = isset($GLOBALS['install_state']['mode']) ? $GLOBALS['install_state']['mode'] : NULL;
+      file_prepare_directory($directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS, $mode);
     }
     $is_writable = is_writable($directory);
     $is_directory = is_dir($directory);

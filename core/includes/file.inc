@@ -482,12 +482,15 @@ function file_create_url($uri) {
  *   A bitmask to indicate if the directory should be created if it does
  *   not exist (FILE_CREATE_DIRECTORY) or made writable if it is read-only
  *   (FILE_MODIFY_PERMISSIONS).
+ * @param int $mode
+ *   Octal value for the permissions. Consult PHP chmod() documentation for
+ *   more information.
  *
  * @return
  *   TRUE if the directory exists (or was created) and is writable. FALSE
  *   otherwise.
  */
-function file_prepare_directory(&$directory, $options = FILE_MODIFY_PERMISSIONS) {
+function file_prepare_directory(&$directory, $options = FILE_MODIFY_PERMISSIONS, $mode = NULL) {
   if (!file_stream_wrapper_valid_scheme(file_uri_scheme($directory))) {
     // Only trim if we're not dealing with a stream.
     $directory = rtrim($directory, '/\\');
@@ -498,14 +501,14 @@ function file_prepare_directory(&$directory, $options = FILE_MODIFY_PERMISSIONS)
     // Let mkdir() recursively create directories and use the default directory
     // permissions.
     if ($options & FILE_CREATE_DIRECTORY) {
-      return @drupal_mkdir($directory, NULL, TRUE);
+      return @drupal_mkdir($directory, $mode, TRUE);
     }
     return FALSE;
   }
   // The directory exists, so check to see if it is writable.
   $writable = is_writable($directory);
   if (!$writable && ($options & FILE_MODIFY_PERMISSIONS)) {
-    return drupal_chmod($directory);
+    return drupal_chmod($directory, $mode);
   }
 
   return $writable;
@@ -1258,8 +1261,8 @@ function file_get_mimetype($uri, $mapping = NULL) {
  *
  * @param $uri
  *   A string containing a URI file, or directory path.
- * @param $mode
- *   Integer value for the permissions. Consult PHP chmod() documentation for
+ * @param int $mode
+ *   Octal value for the permissions. Consult PHP chmod() documentation for
  *   more information.
  *
  * @return bool

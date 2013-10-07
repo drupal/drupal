@@ -182,6 +182,8 @@ function install_state_defaults() {
     // Whether or not this installation is interactive. By default this will
     // be set to FALSE if settings are passed in to install_drupal().
     'interactive' => TRUE,
+    // The mode for directories that are created during install.
+    'mode' => NULL,
     // An array of parameters for the installation, pre-populated by the URL
     // or by the settings passed in to install_drupal(). This is primarily
     // used to store 'profile' (the name of the chosen installation profile)
@@ -1266,7 +1268,7 @@ function install_settings_form_submit($form, &$form_state) {
   drupal_rewrite_settings($settings);
 
   // Add the config directories to settings.php.
-  drupal_install_config_directories();
+  drupal_install_config_directories($install_state['mode']);
 
   // The container is about to be rebuilt so we need to unset the keyvalue
   // storage override that the installer is using.
@@ -2092,9 +2094,9 @@ function install_check_translations($install_state) {
   $online = FALSE;
 
   // First attempt to create or make writable the files directory.
-  file_prepare_directory($files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+  file_prepare_directory($files_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS, $install_state['mode']);
   // Then, attempt to create or make writable the translations directory.
-  file_prepare_directory($translations_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS);
+  file_prepare_directory($translations_directory, FILE_CREATE_DIRECTORY | FILE_MODIFY_PERMISSIONS, $install_state['mode']);
 
   // Get values so the requirements errors can be specific.
   if (drupal_verify_install_file($translations_directory, FILE_EXIST|FILE_WRITABLE, 'dir')) {
