@@ -470,9 +470,18 @@ function language_negotiation_method_invoke($method_id, $method = NULL, $request
     if (isset($method['file'])) {
       require_once DRUPAL_ROOT . '/' . $method['file'];
     }
+    // Check for a cache mode force from settings.php.
+    if (settings()->get('page_cache_without_database')) {
+      $cache_enabled = TRUE;
+    }
+    else {
+      drupal_bootstrap(DRUPAL_BOOTSTRAP_VARIABLES, FALSE);
+      $config = \Drupal::config('system.performance');
+      $cache_enabled = $config->get('cache.page.use_internal');
+    }
     // If the language negotiation method has no cache preference or this is
     // satisfied we can execute the callback.
-    $cache = !isset($method['cache']) || $user->isAuthenticated() || $method['cache'] == variable_get('cache', 0);
+    $cache = !isset($method['cache']) || $user->isAuthenticated() || $method['cache'] == $cache_enabled;
     $callback = isset($method['callbacks']['negotiation']) ? $method['callbacks']['negotiation'] : FALSE;
     $langcode = $cache && function_exists($callback) ? $callback($languages, $request) : FALSE;
     $results[$method_id] = isset($languages[$langcode]) ? $languages[$langcode] : FALSE;
