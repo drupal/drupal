@@ -976,7 +976,7 @@ function menu_item_route_access(Route $route, $href, &$map) {
   // Attempt to match this path to provide a fully built request to the
   // access checker.
   try {
-    $request->attributes->add(\Drupal::service('router.dynamic')->matchRequest($request));
+    $request->attributes->add(\Drupal::service('router')->matchRequest($request));
   }
   catch (NotFoundHttpException $e) {
     return FALSE;

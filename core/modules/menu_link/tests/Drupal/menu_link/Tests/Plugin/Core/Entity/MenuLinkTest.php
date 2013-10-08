@@ -40,7 +40,7 @@ class MenuLinkTest extends UnitTestCase {
   public function testFindRouteNameParameters() {
     $router = $this->getMock('Symfony\Component\Routing\Matcher\RequestMatcherInterface');
     $container = new ContainerBuilder();
-    $container->set('router.dynamic', $router);
+    $container->set('router', $router);
     \Drupal::setContainer($container);
 
     $router->expects($this->at(0))

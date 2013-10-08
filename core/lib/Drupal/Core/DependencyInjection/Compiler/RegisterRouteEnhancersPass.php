@@ -32,11 +32,5 @@ class RegisterRouteEnhancersPass implements CompilerPassInterface {
       $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
       $router->addMethodCall('addRouteEnhancer', array(new Reference($id), $priority));
     }
-
-    $legacy_router = $container->getDefinition('legacy_router');
-    foreach ($container->findTaggedServiceIds('legacy_route_enhancer') as $id => $attributes) {
-      $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
-      $legacy_router->addMethodCall('addRouteEnhancer', array(new Reference($id), $priority));
-    }
   }
 }

@@ -136,16 +136,6 @@ class PathBasedBreadcrumbBuilder extends BreadcrumbBuilderBase {
             $title = $this->titleResolver->getTitle($route_request, $route_request->attributes->get(RouteObjectInterface::ROUTE_OBJECT));
           }
         }
-        // @todo - remove this once all of core is converted to the new router.
-        else {
-          $menu_item = $route_request->attributes->get('_drupal_menu_item');
-          // Skip the breadcrumb step for menu items linking to the parent item.
-          if (($menu_item['type'] & MENU_LINKS_TO_PARENT) == MENU_LINKS_TO_PARENT) {
-            continue;
-          }
-          $access = $menu_item['access'];
-          $title = $menu_item['title'];
-        }
         if ($access) {
           if (!$title) {
             // Fallback to using the raw path component as the title if the

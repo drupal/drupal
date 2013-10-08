@@ -178,17 +178,8 @@ class AuthenticationManager implements AuthenticationProviderInterface, Authenti
   public function handleException(GetResponseForExceptionEvent $event) {
     $request = $event->getRequest();
 
-    // Legacy routes won't have a Route object; they have drupal_menu_item
-    // instead.  Assume those were authenticated by cookie, because the legacy
-    // router didn't support anything else.
-    // @todo Remove this check once the old router is fully removed.
-    if ($request->attributes->has('_drupal_menu_item')) {
-      $active_providers = array('cookie');
-    }
-    else {
-      $route = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT);
-      $active_providers = ($route && $route->getOption('_auth')) ? $route->getOption('_auth') : array($this->defaultProviderId());
-    }
+    $route = $request->attributes->get(RouteObjectInterface::ROUTE_OBJECT);
+    $active_providers = ($route && $route->getOption('_auth')) ? $route->getOption('_auth') : array($this->defaultProviderId());
 
     // Get the sorted list of active providers for the given route.
     $providers = array_intersect($active_providers, array_keys($this->providers));

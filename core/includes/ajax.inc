@@ -204,9 +204,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  *   $commands[] = ajax_command_replace('#object-1', 'some html here');
  *   // Add a visual "changed" marker to the '#object-1' element.
  *   $commands[] = ajax_command_changed('#object-1');
- *   // Menu 'page callback' and #ajax['callback'] functions are supposed to
- *   // return render arrays. If returning an Ajax commands array, it must be
- *   // encapsulated in a render array structure.
+ *   // #ajax['callback'] functions are supposed to return render arrays. If
+ *   // returning an Ajax commands array, it must be encapsulated in a render
+ *   // array structure.
  *   return array('#type' => 'ajax', '#commands' => $commands);
  * @endcode
  *

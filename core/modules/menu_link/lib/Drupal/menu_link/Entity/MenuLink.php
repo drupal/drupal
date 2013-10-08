@@ -583,10 +583,7 @@ class MenuLink extends Entity implements \ArrayAccess, MenuLinkInterface {
     $request = Request::create('/' . $link_path);
     $request->attributes->set('_system_path', $link_path);
     try {
-      // Use router.dynamic instead of router, because router will call the
-      // legacy router which will call hook_menu() and you will get back to
-      // this method.
-      $result = \Drupal::service('router.dynamic')->matchRequest($request);
+      $result = \Drupal::service('router')->matchRequest($request);
       $return = array();
       $return[] = isset($result['_route']) ? $result['_route'] : '';
       $return[] = $result['_raw_variables']->all();

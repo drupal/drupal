@@ -255,19 +255,11 @@ services:
   router.dynamic:
     class: Symfony\Cmf\Component\Routing\DynamicRouter
     arguments: ['@router.request_context', '@router.matcher', '@url_generator']
-  legacy_generator:
-    class: Drupal\Core\Routing\NullGenerator
-  legacy_url_matcher:
-    class: Drupal\Core\LegacyUrlMatcher
-  legacy_router:
-    class: Symfony\Cmf\Component\Routing\DynamicRouter
-    arguments: ['@router.request_context', '@legacy_url_matcher', '@legacy_generator']
   router:
     class: Symfony\Cmf\Component\Routing\ChainRouter
     calls:
       - [setContext, ['@router.request_context']]
       - [add, ['@router.dynamic']]
-      - [add, ['@legacy_router']]
   entity.query:
     class: Drupal\Core\Entity\Query\QueryFactory
     arguments: ['@entity.manager']
@@ -383,10 +375,6 @@ services:
     tags:
       - { name: event_subscriber }
     arguments: ['@content_negotiation']
-  legacy_access_subscriber:
-    class: Drupal\Core\EventSubscriber\LegacyAccessSubscriber
-    tags:
-      - { name: event_subscriber }
   private_key:
     class: Drupal\Core\PrivateKey
     arguments: ['@state']
@@ -434,10 +422,6 @@ services:
     arguments: ['@path.alias_manager.cached', '@path_processor_manager']
   legacy_request_subscriber:
     class: Drupal\Core\EventSubscriber\LegacyRequestSubscriber
-    tags:
-      - { name: event_subscriber }
-  legacy_controller_subscriber:
-    class: Drupal\Core\EventSubscriber\LegacyControllerSubscriber
     tags:
       - { name: event_subscriber }
   finish_response_subscriber:
