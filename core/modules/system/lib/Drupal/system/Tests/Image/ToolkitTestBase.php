@@ -8,7 +8,6 @@
 namespace Drupal\system\Tests\Image;
 
 use Drupal\simpletest\WebTestBase;
-use Drupal\system\Plugin\ImageToolkitManager;
 
 /**
  * Base class for image manipulation testing.
@@ -47,7 +46,7 @@ abstract class ToolkitTestBase extends WebTestBase {
     parent::setUp();
 
     // Use the image_test.module's test toolkit.
-    $manager = new ImageToolkitManager($this->container->get('container.namespaces'), $this->container->get('cache.cache'), $this->container->get('language_manager'));
+    $manager = $this->container->get('image.toolkit.manager');
     $this->toolkit = $manager->createInstance('test');
 
     // Pick a file for testing.
