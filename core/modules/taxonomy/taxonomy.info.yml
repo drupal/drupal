@@ -6,4 +6,4 @@ version: VERSION
 core: 8.x
 dependencies:
   - options
-configure: admin/structure/taxonomy
+configure: taxonomy.vocabulary_list

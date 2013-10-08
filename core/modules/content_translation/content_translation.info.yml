@@ -6,4 +6,4 @@ dependencies:
 package: Multilingual
 version: VERSION
 core: 8.x
-configure: admin/config/regional/content-language
+configure: language.content_settings_page

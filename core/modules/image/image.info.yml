@@ -6,4 +6,4 @@ version: VERSION
 core: 8.x
 dependencies:
   - file
-configure: admin/config/media/image-styles
+configure: image.style_list

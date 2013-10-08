@@ -4,4 +4,4 @@ description: 'Enables banning of IP addresses.'
 package: Core
 version: VERSION
 core: 8.x
-configure: admin/config/people/ban
+configure: ban.admin_page

@@ -4,4 +4,4 @@ description: 'Allows users to rename URLs.'
 package: Core
 version: VERSION
 core: 8.x
-configure: admin/config/search/path
+configure: path.admin_overview

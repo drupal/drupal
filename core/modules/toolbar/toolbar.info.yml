@@ -7,4 +7,3 @@ version: VERSION
 dependencies:
   - breakpoint
   - menu_link
-configure: admin/structure/toolbar

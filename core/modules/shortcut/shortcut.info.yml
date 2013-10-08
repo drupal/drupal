@@ -6,4 +6,4 @@ version: VERSION
 core: 8.x
 dependencies:
   - menu_link
-configure: admin/config/user-interface/shortcut
+configure: shortcut.set_admin

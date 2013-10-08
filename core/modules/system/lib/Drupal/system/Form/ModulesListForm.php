@@ -12,6 +12,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Access\AccessManager;
 
 /**
  * Provides module installation interface.
@@ -43,7 +44,8 @@ class ModulesListForm extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('module_handler'),
-      $container->get('keyvalue.expirable')->get('module_list')
+      $container->get('keyvalue.expirable')->get('module_list'),
+      $container->get('access_manager')
     );
   }
 
@@ -54,10 +56,13 @@ class ModulesListForm extends FormBase {
    *   The module handler.
    * @param \Drupal\Core\KeyValueStore\KeyValueStoreExpirableInterface $key_value_expirable
    *   The key value expirable factory.
+   * @param \Drupal\Core\Access\AccessManager $access_manager
+   *   Access manager.
    */
-  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable) {
+  public function __construct(ModuleHandlerInterface $module_handler, KeyValueStoreExpirableInterface $key_value_expirable, AccessManager $access_manager) {
     $this->moduleHandler = $module_handler;
     $this->keyValueExpirable = $key_value_expirable;
+    $this->accessManager = $access_manager;
   }
 
   /**
@@ -193,12 +198,18 @@ class ModulesListForm extends FormBase {
     // Generate link for module's configuration page, if it has one.
     $row['links']['configure'] = array();
     if ($module->status && isset($module->info['configure'])) {
-      if (($configure = menu_get_item($module->info['configure'])) && $configure['access']) {
+      if ($this->accessManager->checkNamedRoute($module->info['configure'])) {
+        $item = menu_get_item(trim($this->url($module->info['configure']), '/'));
         $row['links']['configure'] = array(
           '#type' => 'link',
           '#title' => $this->t('Configure'),
-          '#href' => $configure['href'],
-          '#options' => array('attributes' => array('class' => array('module-link', 'module-link-configure'), 'title' => $configure['description'])),
+          '#route_name' => $module->info['configure'],
+          '#options' => array(
+            'attributes' => array(
+              'class' => array('module-link', 'module-link-configure'),
+              'title' => $item['description'],
+            ),
+          ),
         );
       }
     }

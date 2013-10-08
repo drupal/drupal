@@ -6,4 +6,4 @@ version: VERSION
 core: 8.x
 dependencies:
   - filter
-configure: admin/config/content/formats
+configure: filter.admin_overview

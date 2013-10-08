@@ -4,6 +4,6 @@ description: 'Allows administrators to customize the site navigation menu.'
 package: Core
 version: VERSION
 core: 8.x
-configure: admin/structure/menu
+configure: menu.overview_page
 dependencies:
   - menu_link
