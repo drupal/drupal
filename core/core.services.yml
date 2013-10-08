@@ -509,10 +509,10 @@ services:
     tags:
       - { name: event_subscriber }
   image.toolkit.manager:
-    class: Drupal\system\Plugin\ImageToolkitManager
+    class: Drupal\Core\ImageToolkit\ImageToolkitManager
     arguments: ['@container.namespaces', '@cache.cache', '@language_manager', '@config.factory']
   image.toolkit:
-    class: Drupal\system\Plugin\ImageToolkitInterface
+    class: Drupal\Core\ImageToolkit\ImageToolkitInterface
     factory_method: getDefaultToolkit
     factory_service: image.toolkit.manager
   image.factory:

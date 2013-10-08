@@ -21,7 +21,7 @@ use Drupal\Core\Annotation\Translation;
 class BrokenToolkit extends TestToolkit {
 
   /**
-   * Implements \Drupal\system\Plugin\ImageToolkitInterface::isAvailable().
+   * {@inheritdoc}
    */
   public static function isAvailable() {
     return FALSE;

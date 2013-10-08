@@ -11,7 +11,7 @@ use Drupal\Core\Plugin\PluginBase;
 use Drupal\system\Annotation\ImageToolkit;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Image\ImageInterface;
-use Drupal\system\Plugin\ImageToolkitInterface;
+use Drupal\Core\ImageToolkit\ImageToolkitInterface;
 
 /**
  * Defines the GD2 toolkit for image manipulation within Drupal.

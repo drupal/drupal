@@ -7,7 +7,7 @@
 
 namespace Drupal\Core\Image;
 
-use Drupal\system\Plugin\ImageToolkitInterface;
+use Drupal\Core\ImageToolkit\ImageToolkitInterface;
 
 /**
  * Provides a factory for image objects.
@@ -17,14 +17,14 @@ class ImageFactory {
   /**
    * The image toolkit to use for this factory.
    *
-   * @var \Drupal\system\Plugin\ImageToolkitInterface
+   * @var \Drupal\Core\ImageToolkit\ImageToolkitInterface
    */
   protected $toolkit;
 
   /**
    * Constructs a new ImageFactory object.
    *
-   * @param \Drupal\system\Plugin\ImageToolkitInterface $toolkit
+   * @param \Drupal\Core\ImageToolkit\ImageToolkitInterface $toolkit
    *   The image toolkit to use for this image factory.
    */
   public function __construct(ImageToolkitInterface $toolkit) {
@@ -34,7 +34,7 @@ class ImageFactory {
   /**
    * Sets a custom image toolkit.
    *
-   * @param \Drupal\system\Plugin\ImageToolkitInterface $toolkit
+   * @param \Drupal\Core\ImageToolkit\ImageToolkitInterface $toolkit
    *   The image toolkit to use for this image factory.
    *
    * @return self

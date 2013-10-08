@@ -25,7 +25,7 @@ class ImageTest extends UnitTestCase {
   /**
    * Image toolkit.
    *
-   * @var \Drupal\system\Plugin\ImageToolkitInterface
+   * @var \Drupal\Core\ImageToolkit\ImageToolkitInterface
    */
   protected $toolkit;
 

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\system\Plugin\ImageToolkitInterface.
+ * Contains \Drupal\Core\ImageToolkit\ImageToolkitInterface.
  */
 
-namespace Drupal\system\Plugin;
+namespace Drupal\Core\ImageToolkit;
 
 use Drupal\Component\Plugin\PluginInspectionInterface;
 use Drupal\Core\Image\ImageInterface;
@@ -28,13 +28,13 @@ use Drupal\Core\Image\ImageInterface;
  * software.
  *
  * Image toolkits are discovered using the Plugin system using
- * \Drupal\system\Plugin\ImageToolkitManager. The toolkit must then be enabled
- * using the admin/config/media/image-toolkit form.
+ * \Drupal\Core\ImageToolkit\ImageToolkitManager. The toolkit must then be
+ * enabled using the admin/config/media/image-toolkit form.
  *
  * Only one toolkit may be selected at a time. If a module author wishes to call
  * a specific toolkit they can check that it is installed by calling
- * \Drupal\system\Plugin\ImageToolkitManager::getAvailableToolkits(), and then
- * calling its functions directly.
+ * \Drupal\Core\ImageToolkit\ImageToolkitManager::getAvailableToolkits(), and
+ * then calling its functions directly.
  */
 
 /**
@@ -189,4 +189,5 @@ interface ImageToolkitInterface extends PluginInspectionInterface {
    *   IMAGETYPE_* constant (e.g. IMAGETYPE_JPEG, IMAGETYPE_PNG, etc.).
    */
   public static function supportedTypes();
+
 }

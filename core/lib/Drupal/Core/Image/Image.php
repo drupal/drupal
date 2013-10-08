@@ -7,13 +7,13 @@
 
 namespace Drupal\Core\Image;
 
-use Drupal\system\Plugin\ImageToolkitInterface;
+use Drupal\Core\ImageToolkit\ImageToolkitInterface;
 use Drupal\Component\Utility\Image as ImageUtility;
 
 /**
  * Defines an image object to represent an image file.
  *
- * @see \Drupal\system\Plugin\ImageToolkitInterface
+ * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface
  * @see \Drupal\image\ImageEffectInterface
  *
  * @ingroup image
@@ -30,7 +30,7 @@ class Image implements ImageInterface {
   /**
    * An image toolkit object.
    *
-   * @var \Drupal\system\Plugin\ImageToolkitInterface
+   * @var \Drupal\Core\ImageToolkit\ImageToolkitInterface
    */
   protected $toolkit;
 
@@ -95,7 +95,7 @@ class Image implements ImageInterface {
    *
    * @param string $source
    *   The path to an image file.
-   * @param \Drupal\system\Plugin\ImageToolkitInterface $toolkit
+   * @param \Drupal\Core\ImageToolkit\ImageToolkitInterface $toolkit
    *   The image toolkit.
    */
   public function __construct($source, ImageToolkitInterface $toolkit) {

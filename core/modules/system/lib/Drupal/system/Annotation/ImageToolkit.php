@@ -14,8 +14,8 @@ use Drupal\Component\Annotation\Plugin;
  *
  * @Annotation
  *
- * @see \Drupal\system\Plugin\ImageToolkitInterface
- * @see \Drupal\system\Plugin\ImageToolkitManager
+ * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface
+ * @see \Drupal\Core\ImageToolkit\ImageToolkitManager
  */
 class ImageToolkit extends Plugin {
 

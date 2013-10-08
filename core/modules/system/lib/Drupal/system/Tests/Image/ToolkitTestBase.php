@@ -24,7 +24,7 @@ abstract class ToolkitTestBase extends WebTestBase {
   /**
    * The image toolkit.
    *
-   * @var \Drupal\system\Plugin\ImageToolkitInterface
+   * @var \Drupal\Core\ImageToolkit\ImageToolkitInterface
    */
   protected $toolkit;
 

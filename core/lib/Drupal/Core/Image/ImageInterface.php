@@ -153,7 +153,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    *
-   * @see \Drupal\system\Plugin\ImageToolkitInterface::save()
+   * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface::save()
    */
   public function save($destination = NULL);
 
@@ -211,7 +211,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    *
-   * @see \Drupal\system\Plugin\ImageToolkitInterface::crop()
+   * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface::crop()
    */
   public function crop($x, $y, $width, $height);
 
@@ -226,7 +226,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    *
-   * @see \Drupal\system\Plugin\ImageToolkitInterface::resize()
+   * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface::resize()
    */
   public function resize($width, $height);
 
@@ -236,7 +236,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    *
-   * @see \Drupal\system\Plugin\ImageToolkitInterface::desaturate()
+   * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface::desaturate()
    */
   public function desaturate();
 
@@ -255,7 +255,7 @@ interface ImageInterface {
    * @return bool
    *   TRUE on success, FALSE on failure.
    *
-   * @see \Drupal\system\Plugin\ImageToolkitInterface::rotate()
+   * @see \Drupal\Core\ImageToolkit\ImageToolkitInterface::rotate()
    */
   public function rotate($degrees, $background = NULL);
 

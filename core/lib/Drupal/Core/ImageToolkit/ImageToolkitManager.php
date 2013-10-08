@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\system\Plugin\ImageToolkitManager.
+ * Contains \Drupal\Core\ImageToolkit\ImageToolkitManager.
  */
 
-namespace Drupal\system\Plugin;
+namespace Drupal\Core\ImageToolkit;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Config\ConfigFactory;
@@ -47,11 +47,7 @@ class ImageToolkitManager extends DefaultPluginManager {
   /**
    * Gets the default image toolkit.
    *
-   * @param string $toolkit_id
-   *   (optional) String specifying toolkit to load. NULL will load the default
-   *   toolkit.
-   *
-   * @return \Drupal\system\Plugin\ImageToolkitInterface
+   * @return \Drupal\Core\ImageToolkit\ImageToolkitInterface
    *   Object of the default toolkit, or FALSE on error.
    */
   public function getDefaultToolkit() {
