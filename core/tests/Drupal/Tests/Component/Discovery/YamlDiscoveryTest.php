@@ -32,14 +32,17 @@ class YamlDiscoveryTest extends UnitTestCase {
     $directories = array(
       'test_1' => $base_path . '/test_1',
       'test_2' => $base_path . '/test_2',
+      // Use the same directory with a different provider name.
+      'test_3' => $base_path . '/test_2',
     );
 
     $discovery = new YamlDiscovery('test', $directories);
     $data = $discovery->findAll();
 
-    $this->assertEquals(count($data), 2);
+    $this->assertEquals(count($data), count($directories));
     $this->assertArrayHasKey('test_1', $data);
     $this->assertArrayHasKey('test_2', $data);
+    $this->assertArrayHasKey('test_3', $data);
 
     foreach ($data as $item) {
       $this->assertArrayHasKey('name', $item);
