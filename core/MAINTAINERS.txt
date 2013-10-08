@@ -108,7 +108,7 @@ Form system
 - Franz Heinzmann 'Frando' http://drupal.org/user/21850
 
 Image system
-- Andrew Morton 'drewish' http://drupal.org/user/34869
+- Claudiu Cristea 'claudiu.cristea' https://drupal.org/user/56348
 
 Install system
 - ?
@@ -291,7 +291,7 @@ Help module
 - ?
 
 Image module
-- ?
+- Claudiu Cristea 'claudiu.cristea' https://drupal.org/user/56348
 
 Link module
 - ?
