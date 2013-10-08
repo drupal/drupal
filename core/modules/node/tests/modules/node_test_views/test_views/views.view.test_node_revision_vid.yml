@@ -1,5 +1,5 @@
 id: test_node_revision_vid
-base_table: node_field_revision
+base_table: node_revision
 core: 8
 display:
   default:
@@ -7,7 +7,7 @@ display:
       relationships:
         vid:
           id: vid
-          table: node_field_revision
+          table: node_revision
           field: vid
           required: true
           plugin_id: standard
@@ -15,13 +15,13 @@ display:
       fields:
         vid:
           id: vid
-          table: node_field_revision
+          table: node_revision
           field: vid
           plugin_id: standard
           provider: views
         nid_1:
           id: nid_1
-          table: node_field_revision
+          table: node_revision
           field: nid
           plugin_id: standard
           provider: views
@@ -35,7 +35,7 @@ display:
       arguments:
         nid:
           id: nid
-          table: node_field_revision
+          table: node_revision
           field: nid
           plugin_id: node_nid
           provider: node

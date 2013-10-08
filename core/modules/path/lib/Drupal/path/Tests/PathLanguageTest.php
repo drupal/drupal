@@ -7,6 +7,8 @@
 
 namespace Drupal\path\Tests;
 
+use Drupal\field\Field;
+
 /**
  * Tests URL aliases for translated nodes.
  */
@@ -65,20 +67,16 @@ class PathLanguageTest extends PathTestBase {
     );
     $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save'));
 
+    // Ensure configuration changes are picked up in the host environment.
+    Field::fieldInfo()->flush();
+    $field = Field::fieldInfo()->getField('node', 'body');
+    $this->assertTrue($field->isFieldTranslatable(), 'Node body is translatable.');
   }
 
   /**
    * Test alias functionality through the admin interfaces.
    */
   function testAliasTranslation() {
-    // Set 'page' content type to enable translation.
-    $edit = array(
-      'language_configuration[language_show]' => TRUE,
-    );
-    $this->drupalPostForm('admin/structure/types/manage/page', $edit, t('Save content type'));
-    $this->assertRaw(t('The content type %type has been updated.', array('%type' => 'Basic page')), 'Basic page content type has been updated.');
-    variable_set('node_type_language_translation_enabled_page', TRUE);
-
     $english_node = $this->drupalCreateNode(array('type' => 'page', 'langcode' => 'en'));
     $english_alias = $this->randomName();
 
@@ -89,7 +87,7 @@ class PathLanguageTest extends PathTestBase {
 
     // Confirm that the alias works.
     $this->drupalGet($english_alias);
-    $this->assertText($english_node->label(), 'Alias works.');
+    $this->assertText($english_node->body->value, 'Alias works.');
 
     // Translate the node into French.
     $this->drupalGet('node/' . $english_node->id() . '/translations');
@@ -111,12 +109,13 @@ class PathLanguageTest extends PathTestBase {
     $languages = language_list();
 
     // Ensure the node was created.
+    $english_node = node_load($english_node->id(), TRUE);
     $french_node = $english_node->getTranslation('fr');
     $this->assertTrue(($french_node), 'Node found in database.');
 
     // Confirm that the alias works.
     $this->drupalGet('fr/' . $edit['path[alias]']);
-    $this->assertText($french_node->label(), 'Alias for French translation works.');
+    $this->assertText($french_node->body->value, 'Alias for French translation works.');
 
     // Confirm that the alias is returned by url().
     $url = $this->container->get('url_generator')->generateFromPath('node/' . $french_node->id(), array('language' => $languages['fr']));
@@ -146,11 +145,11 @@ class PathLanguageTest extends PathTestBase {
     // path alias for French matching the english alias. So the alias manager
     // needs to use the URL language to check whether the alias is valid.
     $this->drupalGet($english_alias);
-    $this->assertText($english_node->label(), 'Alias for English translation works.');
+    $this->assertText($english_node->body->value, 'Alias for English translation works.');
 
     // Check that the French alias works.
     $this->drupalGet("fr/$french_alias");
-    $this->assertText($french_node->label(), 'Alias for French translation works.');
+    $this->assertText($french_node->body->value, 'Alias for French translation works.');
 
     // Disable URL language negotiation.
     $edit = array('language_interface[enabled][language-url]' => FALSE);
@@ -158,7 +157,7 @@ class PathLanguageTest extends PathTestBase {
 
     // Check that the English alias still works.
     $this->drupalGet($english_alias);
-    $this->assertText($english_node->label(), 'Alias for English translation works.');
+    $this->assertText($english_node->body->value, 'Alias for English translation works.');
 
     // Check that the French alias is not available. We check the unprefixed
     // alias because we disabled URL language negotiation above. In this

@@ -120,19 +120,19 @@ function entity_test_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'langcode' => array(
-        'description' => 'The {language}.langcode of the original variant of this test entity.',
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-      ),
       'name' => array(
         'description' => 'The name of the test entity.',
         'type' => 'varchar',
         'length' => 32,
         'not null' => TRUE,
         'default' => '',
+      ),
+      'user_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+        'description' => 'The {users}.uid of the associated user.',
       ),
     ),
     'primary key' => array('id'),
@@ -184,7 +184,7 @@ function entity_test_schema() {
       'user_id' => array('users' => 'uid'),
       'id' => array('entity_test_rev' => 'id'),
     ),
-    'primary key' => array('revision_id', 'id', 'langcode'),
+    'primary key' => array('revision_id'),
   );
 
   // Schema for entity with data table.
@@ -297,18 +297,39 @@ function entity_test_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+    ),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'uuid' => array('uuid'),
+    ),
+  );
+  $schema['entity_test_mulrev_revision'] = array(
+    'description' => 'Stores entity_test_rev item property revisions.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The {entity_test_rev}.id of the test entity.',
+      ),
+      'revision_id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The primary identifier for this version.',
+      ),
       'langcode' => array(
-        'description' => 'The {language}.langcode of the original variant of this test entity.',
+        'description' => 'The {language}.langcode of this variant of this test entity.',
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
         'default' => '',
       ),
     ),
-    'primary key' => array('id'),
-    'unique keys' => array(
-      'uuid' => array('uuid'),
+    'foreign keys' => array(
+      'id' => array('entity_test_rev' => 'id'),
     ),
+    'primary key' => array('revision_id'),
   );
   $schema['entity_test_mulrev_property_data'] = array(
     'description' => 'Stores entity_test_mulrev item properties.',
@@ -373,7 +394,7 @@ function entity_test_schema() {
         'description' => 'The {entity_test_mulrev}.id of the test entity.',
       ),
       'revision_id' => array(
-        'type' => 'serial',
+        'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
         'description' => 'The primary identifier for this version.',
@@ -413,7 +434,7 @@ function entity_test_schema() {
       'user_id' => array('users' => 'uid'),
       'id' => array('entity_test_mulrev' => 'id'),
     ),
-    'primary key' => array('revision_id', 'id', 'langcode'),
+    'primary key' => array('revision_id', 'langcode'),
   );
 
   return $schema;

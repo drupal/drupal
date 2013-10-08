@@ -526,14 +526,17 @@ function drupal_write_record($table, &$record, $primary_keys = array()) {
  *   The converted value.
  */
 function drupal_schema_get_field_value(array $info, $value) {
-  if ($info['type'] == 'int' || $info['type'] == 'serial') {
-    $value = (int) $value;
-  }
-  elseif ($info['type'] == 'float') {
-    $value = (float) $value;
-  }
-  else {
-    $value = (string) $value;
+  // Preserve legal NULL values.
+  if (isset($value) || !empty($info['not null'])) {
+    if ($info['type'] == 'int' || $info['type'] == 'serial') {
+      $value = (int) $value;
+    }
+    elseif ($info['type'] == 'float') {
+      $value = (float) $value;
+    }
+    else {
+      $value = (string) $value;
+    }
   }
   return $value;
 }

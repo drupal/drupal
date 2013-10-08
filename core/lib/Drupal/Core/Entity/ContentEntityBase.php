@@ -393,7 +393,10 @@ abstract class ContentEntityBase extends Entity implements \IteratorAggregate, C
       // Non-translatable fields are always stored with
       // Language::LANGCODE_DEFAULT as key.
       if ($langcode != Language::LANGCODE_DEFAULT && empty($definition['translatable'])) {
-        $this->fields[$property_name][$langcode] = $this->getTranslatedField($property_name, Language::LANGCODE_DEFAULT);
+        if (!isset($this->fields[$property_name][Language::LANGCODE_DEFAULT])) {
+          $this->fields[$property_name][Language::LANGCODE_DEFAULT] = $this->getTranslatedField($property_name, Language::LANGCODE_DEFAULT);
+        }
+        $this->fields[$property_name][$langcode] = &$this->fields[$property_name][Language::LANGCODE_DEFAULT];
       }
       else {
         $value = NULL;

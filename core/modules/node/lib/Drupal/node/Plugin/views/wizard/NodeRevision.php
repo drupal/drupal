@@ -20,7 +20,7 @@ use Drupal\Core\Annotation\Translation;
  *
  * @ViewsWizard(
  *   id = "node_revision",
- *   base_table = "node_field_revision",
+ *   base_table = "node_revision",
  *   title = @Translation("Content revisions")
  * )
  */
@@ -36,7 +36,7 @@ class NodeRevision extends WizardPluginBase {
    */
   protected $pathField = array(
     'id' => 'vid',
-    'table' => 'node_field_revision',
+    'table' => 'node_revision',
     'field' => 'vid',
     'exclude' => TRUE,
     'alter' => array(
@@ -97,7 +97,7 @@ class NodeRevision extends WizardPluginBase {
 
     /* Field: Content revision: Created date */
     $display_options['fields']['timestamp']['id'] = 'timestamp';
-    $display_options['fields']['timestamp']['table'] = 'node_field_revision';
+    $display_options['fields']['timestamp']['table'] = 'node_revision';
     $display_options['fields']['timestamp']['field'] = 'timestamp';
     $display_options['fields']['timestamp']['provider'] = 'node';
     $display_options['fields']['timestamp']['alter']['alter_text'] = 0;

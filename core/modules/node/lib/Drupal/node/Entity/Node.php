@@ -34,7 +34,8 @@ use Drupal\node\NodeInterface;
  *   },
  *   base_table = "node",
  *   data_table = "node_field_data",
- *   revision_table = "node_field_revision",
+ *   revision_table = "node_revision",
+ *   revision_data_table = "node_field_revision",
  *   uri_callback = "node_uri",
  *   fieldable = TRUE,
  *   translatable = TRUE,
@@ -394,11 +395,6 @@ class Node extends ContentEntityBase implements NodeInterface {
     $properties['sticky'] = array(
       'label' => t('Sticky'),
       'description' => t('A boolean indicating whether the node should be displayed at the top of lists in which it appears.'),
-      'type' => 'boolean_field',
-    );
-    $properties['translate'] = array(
-      'label' => t('Translate'),
-      'description' => t('A boolean indicating whether this translation page needs to be updated.'),
       'type' => 'boolean_field',
     );
     $properties['revision_timestamp'] = array(

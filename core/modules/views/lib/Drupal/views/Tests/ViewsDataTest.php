@@ -295,7 +295,7 @@ class ViewsDataTest extends ViewUnitTestBase {
 
     // Test the number of tables returned and their order.
     $this->assertEqual(count($base_tables), 3, 'The correct amount of base tables were returned.');
-    $this->assertIdentical(array_keys($base_tables), array('node', 'node_field_revision', 'views_test_data'), 'The tables are sorted as expected.');
+    $this->assertIdentical(array_keys($base_tables), array('node', 'node_revision', 'views_test_data'), 'The tables are sorted as expected.');
 
     // Test the values returned for each base table.
     $defaults = array(

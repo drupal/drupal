@@ -134,14 +134,14 @@ class NodeRevisionsAllTestCase extends NodeTestBase {
         '%title' => $nodes[1]->getTitle(),
       )),
       'Revision deleted.');
-    $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_field_revision} WHERE nid = :nid and vid = :vid',
+    $this->assertTrue(db_query('SELECT COUNT(vid) FROM {node_revision} WHERE nid = :nid and vid = :vid',
       array(':nid' => $node->id(), ':vid' => $nodes[1]->getRevisionId()))->fetchField() == 0,
       'Revision not found.');
 
     // Set the revision timestamp to an older date to make sure that the
     // confirmation message correctly displays the stored revision date.
     $old_revision_date = REQUEST_TIME - 86400;
-    db_update('node_field_revision')
+    db_update('node_revision')
       ->condition('vid', $nodes[2]->getRevisionId())
       ->fields(array(
         'revision_timestamp' => $old_revision_date,

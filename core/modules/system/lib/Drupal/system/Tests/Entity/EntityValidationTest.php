@@ -44,6 +44,7 @@ class EntityValidationTest extends EntityUnitTestBase {
       'entity_test_rev',
       'entity_test_rev_revision',
       'entity_test_mulrev',
+      'entity_test_mulrev_revision',
       'entity_test_mulrev_property_data',
       'entity_test_mulrev_property_revision'
     ));
