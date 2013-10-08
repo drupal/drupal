@@ -35,7 +35,8 @@ use Drupal\Core\Annotation\Translation;
  *     "uuid" = "uuid",
  *     "bundle" = "type"
  *   },
- *   menu_base_path = "entity_test_mul/manage/%entity_test_mul"
+ *   menu_base_path = "entity_test_mul/manage/%entity_test_mul",
+ *   route_base_path = "entity_test_mul/structure/{bundle}"
  * )
  */
 class EntityTestMul extends EntityTest {

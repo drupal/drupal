@@ -34,7 +34,7 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
    *
    * @var array
    */
-  public static $modules = array('language', 'content_translation', 'entity_test', 'image');
+  public static $modules = array('language', 'content_translation', 'entity_test', 'image', 'field_ui');
 
   public static function getInfo() {
     return array(
@@ -80,9 +80,42 @@ class ContentTranslationSyncImageTest extends ContentTranslationTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getEditorPermissions() {
+    // Every entity-type-specific test needs to define these.
+    return array('administer entity_test_mul fields', 'administer languages', 'administer content translation');
+  }
+
+  /**
    * Tests image field field synchronization.
    */
   function testImageFieldSync() {
+    // Check that the alt and title fields are enabled for the image field.
+    $this->drupalLogin($this->editor);
+    $this->drupalGet('entity_test_mul/structure/' . $this->entityType . '/fields/' . $this->entityType . '.' . $this->entityType . '.' . $this->fieldName);
+    $this->assertFieldChecked('edit-instance-settings-translation-sync-alt');
+    $this->assertFieldChecked('edit-instance-settings-translation-sync-title');
+    $edit = array(
+      'instance[settings][translation_sync][alt]' => FALSE,
+      'instance[settings][translation_sync][title]' => FALSE,
+    );
+    $this->drupalPostForm(NULL, $edit, t('Save settings'));
+
+    // Check that the content translation settings page reflects the changes
+    // performed in the field edit page.
+    $this->drupalGet('admin/config/regional/content-language');
+    $this->assertNoFieldChecked('edit-settings-entity-test-mul-entity-test-mul-columns-field-test-et-ui-image-alt');
+    $this->assertNoFieldChecked('edit-settings-entity-test-mul-entity-test-mul-columns-field-test-et-ui-image-title');
+    $edit = array(
+      'settings[entity_test_mul][entity_test_mul][columns][field_test_et_ui_image][alt]' => TRUE,
+      'settings[entity_test_mul][entity_test_mul][columns][field_test_et_ui_image][title]' => TRUE,
+    );
+    $this->drupalPostForm('admin/config/regional/content-language', $edit, t('Save'));
+    $this->assertFieldChecked('edit-settings-entity-test-mul-entity-test-mul-columns-field-test-et-ui-image-alt');
+    $this->assertFieldChecked('edit-settings-entity-test-mul-entity-test-mul-columns-field-test-et-ui-image-title');
+    $this->drupalLogin($this->translator);
+
     $default_langcode = $this->langcodes[0];
     $langcode = $this->langcodes[1];
 
